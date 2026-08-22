@@ -246,6 +246,14 @@ periods = 4.667 supervised hours a week = 177.3 GLH a year per lane** — the to
 1–7 period band pass PEQ-YEAR-1 §1 measured. See
 [`DERIVATION_YEAR1.md`](DERIVATION_YEAR1.md).
 
+**Measured in BUILD only.** The seven-period week was established on BUILD's planners.
+**GROW and LAUNCH are not establishable** — GROW's ASDAN row is empty in all eight built weeks;
+LAUNCH's eight planners disagree on their own row structure (a populated PEQ row in three of
+eight, absent from four). The map runs all three *level* lanes at one rate, which is correct for
+one mixed class in one kitchen, but is an **assumption** if read as a statement about the GROW or
+LAUNCH *rooms*. **Outstanding for Matt: GROW/LAUNCH PEQ slots — confirm from the September
+timetable.**
+
 **All three lanes target the full Certificate**, every milestone proven in the ledger rather
 than asserted:
 

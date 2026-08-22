@@ -13,19 +13,25 @@ Commands and their real output are quoted so anyone can re-run them.
 
 ## 1 · What is live at this pass's merge
 
+**Refreshed for PEQ-YEAR-2, 22 Aug 2026.** The PEQ-YEAR-1 entry below it still stands; this
+section supersedes its SHAs.
+
 | | |
 |---|---|
-| Base | `2a8f9f5` — *Merge PEQ-L2K close: P9 lodged (#146)* |
-| Branch | `claude/new-session-yed8ua` |
-| Rollback | `git reset --hard 2a8f9f56344f323436b86558e0aee51839657262` |
-| Serves from | `main` only — there is no `gh-pages` branch among the 162 remote heads, and every workflow pins `ref: main` |
+| **Lessons base** | `63271c33` (PEQ-YEAR-1's record commit) |
+| **Lessons branch** | `claude/peq-year-2` |
+| **Apps base** | `a7e80737` — *Merge PEQ-L2K pin: resources.json digest moves with Lessons #145 (#19)* |
+| **Apps branch** | `claude/peq-year-2` (the gate copy only) |
+| **Rollback** | `git reset --hard 63271c33` (Lessons) · `git reset --hard a7e80737` (Apps) |
+| **Serves from** | `main` only — no `gh-pages` among the remote heads; every workflow pins `main`; all 695 Pages deployments have run from `main` |
 
-**Live after this merge** — new, teacher-facing, print-first, all under `GROW_ASDAN/PEQ_L2_Kitchen/`:
-
-- `COOKING_HANDOVER.md` + `Cooking_Handover.html` — the colleague's frame
-- `Kitchen_Week_Shell.html` — 38 pre-filled week pages with an empty cooking box
-- `Criteria_By_Week.html` — the coverage matrix inverted by week
-- `Kitchen_Completion_Checklist.html` — the weekly tick sheet
+**New in PEQ-YEAR-2:** the four Kitchen frame pages are **in the catalogue** (`resources.json`
+647 → 651, pin `de9e7c615153` → moved, both gate copies together); `resources.json` line 6109 no
+longer contradicts the page it indexes; the autumn block boundaries match the **evidenced 15
+teaching weeks**; spring and summer are labelled **assumptions** on the page; the AQA UAS codes
+are recorded as an **unverified centre record awaiting confirmation** with the surface count
+re-measured (25 → 60); and the measured-vs-ruled provenance for 4.667 h/wk now travels to the
+handover and the year map, both gated.
 
 **Also live: the year map re-anchored on the derived weekly rate.** `WEEKLY_MIN` 210 → **280**
 (7 timetabled 40-minute periods = 4.667 h/wk), following the owner ruling of 22 Aug that all six
@@ -48,108 +54,66 @@ registration-contingent hedge strings rewritten across the estate,
 
 ---
 
-## 2 · SL and SBX — measured, and left alone
+## 2 · SL and SBX — re-measured 22 Aug, and left alone
 
-Measured on an **unshallowed** clone. This matters: the clone arrives shallow, and on a truncated
-graph `git merge-base` exits 1, which makes `A...B` silently degenerate into "every commit on
-each side" and produces garbage ahead/behind counts. `git fetch --unshallow` first, or do not
-believe the numbers.
+**Both counts are unchanged from the PEQ-YEAR-1 read: SL 12 ahead / 7 conflicted files; SBX 5
+ahead / 8 conflicted files.** `origin/main` moved `2a8f9f5` → `63271c33` (the eight PEQ-YEAR-1
+commits), and PEQ-YEAR-1 happened to work in a corner of the estate disjoint from both branches,
+so no conflict set grew.
 
-### `pass-sl-sow-launch` — LIVE, not merged
+The clone was **not** shallow this time (`git rev-parse --is-shallow-repository` → `false`, no
+`.git/shallow`, 1395 commits on `origin/main`), and both `git merge-base` calls exited 0 — so the
+behind-counts (911 and 902) are real, not the degenerate "every commit on each side" the shallow
+trap produces.
 
-```
-git rev-parse origin/pass-sl-sow-launch        2a1cfdad9cdbc09eba538be3190b89f5e35cf6f9
-git rev-list --left-right --count origin/main...origin/pass-sl-sow-launch
-                                               903     12          # behind  ahead
-git merge-base origin/main origin/pass-sl-sow-launch
-                                               32ca685e  (2026-07-28)
-git log -1 --format='%ci %s' origin/pass-sl-sow-launch
-   2026-07-29  Pass SL: FREEZE + HANDOVER (12th, final) — park unmerged for 29 Aug sitting
-```
+| branch | SHA | behind / ahead | conflicted files | ancestor of main? |
+|---|---|---|---|---|
+| `pass-sl-sow-launch` | `2a1cfdad` | 911 / **12** | **7** | no |
+| `pass-sbx-art-a2` | `462cfa6a` | 902 / **5** | **8** | no |
 
-25 files, +11 728 / −8. **Conflict prediction: NOT clean — 7 conflicted files.**
+### What is actually left in each — checked against main, not assumed
 
-```
-git merge-tree --write-tree --name-only origin/main origin/pass-sl-sow-launch   # exit 1
-Art_Teesside/Launch/LAUNCH_ART_W2_Practice_Careers_and_Pathways.html
-Art_Teesside/Launch/LAUNCH_ART_W4_Arts_Experience_Attend_Analyse_and_Share.html
-Art_Teesside/Launch/LAUNCH_ART_W5_Design_the_Leadership_Project.html
-Art_Teesside/Launch/LAUNCH_ART_W6_Pilot_Lead_and_Adapt.html
-Art_Teesside/Launch/LAUNCH_ART_W7_Deliver_and_Curate_the_Arts_Project.html
-Art_Teesside/Launch/LAUNCH_ART_W8_Review_Influence_and_Portfolio_Audit.html
-_passsl/inputs/LAUNCH KS4 - 2026-27.xlsx          CONFLICT (add/add)
-```
+**SBX is superseded, and its headline change is a rejected regression.** Main's own
+`Art_Teesside/HANDOVER.md:25` rules SBX's C1 (Bronze → Explore on the seven BUILD A2 decks) a
+**REGRESSION**, confirmed on two independent signals: Matt's design record (Autumn 2 is Bronze
+across two terms) and the deployed printable pack's own badges. *"Both say Bronze; SBX's Explore
+matches neither."* Verified again this pass directly against main — the A2 decks carry **Bronze
+only, zero occurrences of Explore**, and all **seven** A2 lessons are in the catalogue
+(`art-tees-build-a2-w1` … `-w7`). C2 and C3 were done identically by R1 (sow-strips
+byte-identical to SBX's) and C5's catalogue entries are already present with richer descriptions.
+**Merging SBX would reintroduce known-bad content into seven live pupil-facing decks.**
+`HANDOVER.md:29`: *"`pass-sbx-art-a2` is superseded; its deletion is Matt's."*
 
-The `add/add` on the workbook is explained and is the important part: **main already carries that
-workbook**, landed independently by pass SCA-1 (`7208b3d6`, `a946f1ce`), and has since edited it.
-Main's blob is `080360e3` (111 721 bytes); SL's is `73b9de37` (115 585). **Merging SL would
-regress a file main has moved past.** Only SL's *analysis outputs* are genuinely unmerged.
+**SL's residue is a proposal, not a fix.** Its Art re-align (relabelling LAUNCH Art W2/W4 to
+"Arts Aut 2" and W5–W8 to Unit 2 Spring/Summer) lives in `_passsl/ART_REALIGN_PROPOSAL.md` and is
+**Matt's to accept or reject** — it was never ruled in. SL's one operationally valuable artefact,
+the LAUNCH KS4 workbook, was already lifted off the branch and landed on main by pass SCA-1, and
+main's copy has since been edited past SL's — which is why the merge shows a binary `add/add`
+conflict on it. **Merging SL would regress a file main has moved past.**
 
-### `pass-sbx-art-a2` — LIVE, not merged
+### The estate's own record, unchanged
 
-```
-git rev-parse origin/pass-sbx-art-a2           462cfa6af0733f92fbeba00d635b6db9cdae30c7
-git rev-list --left-right --count origin/main...origin/pass-sbx-art-a2
-                                               894     5
-git merge-base origin/main origin/pass-sbx-art-a2
-                                               4f5c6a4e   (= pass-sb-sow-build tip)
-git log -1 --format='%ci %s' origin/pass-sbx-art-a2
-   2026-07-28  Pass SBX §4: workbook vC-PROPOSED + change table + C4 SC proposals
-```
-
-11 files, +199 / −7. **Conflict prediction: NOT clean — 8 conflicted files** (all seven BUILD Art
-decks plus `resources.json`).
-
-Main's own `Art_Teesside/HANDOVER.md:29` already adjudicates this branch: *"SBX reconciliation —
-nothing to re-land; C1 rejected."* It records that C2 and C3 were done identically by R1
-(byte-identical sow-strips), that C5's `resources.json` entries are already present with richer
-descriptions, and that **C1 is rejected as a regression**. SBX's decks additionally carry
-pre-remediation `pull` language its base predates. **Merging it would reintroduce known-bad
-content into seven live decks.**
-
-### Already absorbed — nothing to do
-
-| branch | SHA | ahead |
-|---|---|---|
-| `pass-sb-sow-build` | `4f5c6a4e` | **0** |
-| `pass-sg-sow-grow` | `dc41a560` | **0** |
-
-Note `_passsb/` on main is **SB**, not SBX — SBX writes to `_passsbx/`, which does not exist on
-main at all.
-
-### The estate's own record agrees
-
-- `_sixclose/LEDGER.md:442` — *"Never-merge list intact: `pass-sl-sow-launch` at `2a1cfda` … and `pass-sbx-art-a2` at `462cfa6`. Neither merged."* Both SHAs match the measurement exactly.
-- `_close/OPEN_ITEMS.md:40-42` — filed under *"Remote branches WITH unique commits — do NOT delete (real unmerged work)"*: SL 12 commits, SBX 5. Counts match.
-- `REGISTER.md:1475` — where those branches overlap this estate it is on `resources.json` and `REGISTER.md` only, *"both append-only-union: at the sitting keep both sides, never reorder."*
+`_sixclose/LEDGER.md:442` — *"Never-merge list intact: `pass-sl-sow-launch` at `2a1cfda` … and
+`pass-sbx-art-a2` at `462cfa6`. Neither merged."* Both SHAs still match.
+`_close/OPEN_ITEMS.md:40-42` files them under *"Remote branches WITH unique commits — do NOT
+delete (real unmerged work)"*.
 
 **This pass did not merge them and did not delete them.** Report only, as instructed.
 
----
-
 ## 3 · If nobody merges on the 29th
 
-**Nothing breaks.** Stated plainly because the honest answer is the reassuring one:
+**Nothing breaks.** Nothing is served from either branch; nothing on main depends on either; and
+on the evidence above, merging either would make the estate *worse*, not better — SBX by
+reintroducing a ruled regression, SL by regressing a workbook main has already moved past.
 
-- **Nothing is served from them.** Pages builds from `main`; neither branch is deployed to anyone.
-- **Nothing on main depends on them.** No live file references `_passsbx/` (absent from main
-  entirely); the `_passsl/` references on main are backward-looking provenance notes in closed
-  records; neither pass directory contains a single servable `.html`.
-- **SL's one operationally valuable artefact is already on main** — and main's copy is newer.
-  Merging would regress it.
-- **SBX is worse than unnecessary** — main's own handover records C1 as a rejected regression.
-- **Both merges are non-trivial** — 7 and 8 conflicted files, all live lesson decks plus the
-  append-only-union `resources.json`. A rushed merge on a day Matt is away carries real risk and
-  delivers no benefit.
+The one thing that does decay with time is the merge itself: SBX is 902 commits behind against a
+`resources.json` that has been rewritten end to end since its base, and the next pass that touches
+`Art_Teesside/` or the catalogue will raise both conflict counts. If the sitting slips, the honest
+recommendation is to stop treating these as mergeable branches: the surviving value is
+`_passsl`/`_passsbx`'s pass records plus two *proposed* workbooks for Matt to accept or reject,
+not the twelve and five commits of history around them.
 
-The only genuinely open residue is **decision-shaped, not code-shaped**: two *proposed* workbooks
-(`_passsbx/proposed/Build SOW 2026-2027 vC-PROPOSED.xlsx` and SL's `ART_REALIGN_PROPOSAL.md`) for
-Matt to accept or reject at his leisure. They lose nothing by sitting.
-
-**The correct action on 29 August is: do not merge, do not delete.** Both branches are on the
-recorded do-not-delete list precisely so the history stays auditable while staying out of `main`.
-
----
+**The correct action on 29 August is unchanged: do not merge, do not delete.**
 
 ## 4 · Two things that are blocked without Matt — do not wait on them
 
@@ -158,23 +122,25 @@ recorded do-not-delete list precisely so the history stays auditable while stayi
    lockup is not a Progress Schools pack."* It verifies the PNG by SHA-256, and the binary is
    deliberately **not in git** (it lives on Matt's machine). Nobody can produce the pack on the
    29th, and nothing in the kitchen year needs it.
-2. **`resources.json` cannot be re-pinned, so this pass did not touch it.** Its SHA is pinned
-   inside `tools/verify_cross_estate_unification.py`, and `tools/pin_manifests.py` writes **both
-   gate copies or neither** — Lessons *and* Apps. The Apps checkout is not reachable from this
-   session:
-   ```
-   $ python3 tools/pin_manifests.py --check
-   manifests:
-      MISSING apps.json (no owning checkout found)      # exit 1
-   ```
-   The current pin is correct and matches on disk
-   (`de9e7c61515397bae87ef3c7afadb57426afbe4fcf0f58dbe7b174cdac582374`), so the gate is green —
-   and it stays green precisely because the pass left the file alone. The four new Kitchen pages
-   are therefore **not registered in `resources.json`**; they are reachable from the year map and
-   the handover, and print correctly, but they will not appear in the catalogue until a pass with
-   both checkouts registers them and re-pins in the same commit. Logged in `PROPOSED_YEAR1.md`.
+2. **`resources.json` — no longer blocked. Closed in PEQ-YEAR-2.** PEQ-YEAR-1 left this file
+   untouched because `tools/pin_manifests.py` writes **both gate copies or neither** and the Apps
+   checkout was unreachable from that session. This pass attached
+   `MattRoper1977/Matt-s-Apps-`, so the tool ran properly:
 
----
+   ```
+   $ python3 tools/pin_manifests.py --apps /home/user/matt-s-apps- --lessons /home/user/Lessons
+      REPINNED  …/matt-s-apps-/tools/verify_cross_estate_unification.py   resources.json: de9e7c615153 -> 907e7875d0e4
+      REPINNED  …/Lessons/tools/verify_cross_estate_unification.py        resources.json: de9e7c615153 -> 907e7875d0e4
+   [DONE] pins moved in 2 copy/copies; both copies byte-identical
+   ```
+
+   `apps.json` is unchanged (`a4a06b999b5f`). The four Kitchen frame pages are now **in the
+   catalogue**, and `resources.json:6109` no longer contradicts the page it indexes. Both repos
+   merge together — Lessons first, then Apps.
+
+   One consequence to know for any future pass that lands here without the Apps checkout: the pin
+   cannot be moved, so `resources.json` must not be edited at all. That is what PEQ-YEAR-1 did,
+   and it was right.
 
 ## 5 · What the colleague can do without anybody
 

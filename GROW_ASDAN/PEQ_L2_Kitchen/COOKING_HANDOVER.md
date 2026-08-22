@@ -123,19 +123,41 @@ one when the wellbeing plans open (W27). They are on the page verbatim; they are
 
 ---
 
-## 7 · The hours, settled — and what it means for you
+## 7 · The hours — settled, and where the number came from
 
 The programme is timetabled at **seven 40-minute periods a week** (4.667 supervised hours): the
 PEQ session plus the six slots — Careers, Vocational/D&T, Living Independently, FoodWise,
 Community A and Community B — which all count, because PEQ evidence is generated *through* those
 activities rather than alongside them.
 
-**What that means in practice: all three lanes can finish the full Certificate this year**, with
-the Award banked by W14, the Extended Award by W26 and the Certificate by W38. There is real
-headroom in the plan — between 37 and 57 hours a lane of consolidation time that is deliberately
-*not* claimed against any unit. So a week that overruns, a trip, or a practical that needs a
-second go will not cost anyone their qualification.
+**Where that figure comes from, in two halves, because they are not the same kind of fact:**
+
+| | |
+|---|---|
+| **Measured** | The 40-minute period unit, and the **six weekly slots at one period each** — read off the BUILD planners and the Slot Planner. That bounded the week at **1–7 periods** and no further. |
+| **Ruled** | That **all six** of those slots may bank a guided hour to PEQ alongside their own ASDAN short course — an **owner ruling of 22 August 2026**, not something the repository could show. |
+
+So seven periods is **measured band + owner ruling**. It is the top of what was measured, chosen
+by a decision. Full record: [`_passpq/DERIVATION_YEAR1.md`](../../_passpq/DERIVATION_YEAR1.md).
+
+**One thing to be clear about if you also teach in the other rooms:** that measurement was taken
+in **BUILD**. **GROW and LAUNCH could not be established** — GROW's ASDAN planner row is empty in
+all eight built weeks, and LAUNCH's eight planners disagree with each other about their own row
+structure. The year map runs all three *level* lanes at the same rate, which is right for one
+mixed class in one kitchen; it is **not** a measurement of the GROW or LAUNCH timetables.
+Outstanding for Matt: confirm the GROW/LAUNCH PEQ slots from the September timetable.
+
+**What it means in practice: all three lanes can finish the full Certificate this year**, with the
+Award banked by W14, the Extended Award by W26 and the Certificate by W38. There is real headroom
+— between 37 and 57 hours a lane of consolidation time that is deliberately *not* claimed against
+any unit. So a week that overruns, a trip, or a practical that needs a second go will not cost
+anyone their qualification.
 
 You do not need to track any of this. It is why the week shells look unhurried: the hours are
-there. The one thing worth knowing is that **the criteria on each week's shell are the floor,
-not the ceiling** — if a session produces better evidence than the shell asks for, bank it.
+there. The one thing worth knowing is that **the criteria on each week's shell are the floor, not
+the ceiling** — if a session produces better evidence than the shell asks for, bank it.
+
+**A note on the weeks themselves.** Autumn is evidenced at 15 teaching weeks and the block labels
+now match it. Spring and summer term dates are **not in the repository at all**, so those block
+lengths are declared assumptions — the year map says which is which. It changes nothing you
+teach; it is flagged so nobody reads an assumed week as a fixed one.

@@ -155,7 +155,7 @@ def build_sow():
 <p style="font-size:.9rem">Re-based on the <b>measured 40-minute period</b> rather than round numbers: every row but one is a whole count of the school's real timetabled periods, across the band the timetable evidence actually supports (1&ndash;7 periods). The shaded row is the plan's declared owner input.</p>
 <table><tr><th>Supervised h/wk</th><th>Year GLH</th><th>Lane</th><th>Award</th><th>Extended Award</th><th>Certificate</th></tr>
 {''.join(rows)}</table>
-<p style="font-size:.88rem">&#8220;Short&#8221; = the gap between the lane's unit-GLH requirement and the year's physical hours plus that lane's declared co-delivery (E3 7 h &middot; L1 2 h &middot; L2 0 h). <b>No row is marked live.</b> The weekly rate is an owner input, not a derived figure &mdash; see <code>_passpq/DERIVATION_YEAR1.md</code> for what the timetable evidence does and does not fix. The ledger below is worked at the shaded row.</p>""")
+<p style="font-size:.88rem">&#8220;Short&#8221; = the gap between the lane's unit-GLH requirement and the year's physical hours, before any co-delivery. <b>The shaded seven-period row is the live plan.</b> Its provenance, which travels with the figure wherever it appears: the <b>40-minute period</b> and BUILD's <b>six weekly slots at one period each</b> were <b>MEASURED</b> from the planners, which bounded the lane at 1&ndash;7 periods; the choice of <b>seven</b> within that band is an <b>OWNER RULING</b> (22 Aug 2026) that all six carryable slots may bank a guided hour to PEQ. Measured band + ruling &mdash; not a pure repo measurement. Full record: <code>_passpq/DERIVATION_YEAR1.md</code>.</p>""")
 
     # staged milestones
     mrows = []
@@ -180,19 +180,31 @@ def build_sow():
 <p class="bank"><b>Thinking vs Critical thinking — the lane split.</b> The E3 and L1 lanes plan <b>ThSkE3 / ThSk1</b> (Thinking skills); only the L2 lane plans <b>CrThSk2</b> (Critical thinking skills) — the unit changes name, code and demand at Level 2 (spec pp11&ndash;13). The shared summer investigation runs at three demands: E3/L1 pupils work their Thinking plan; the L2 pupil assesses sources for credibility, accuracy and bias across &ge;2 sources, primary vs secondary (the blind taste test is the primary source).</p>""")
 
     # block spine
-    S.append("""<h2>The six blocks — one spine, three demands</h2>
-<table><tr><th>Block</th><th>Weeks</th><th>Delivers</th><th>Plan windows and review points</th></tr>
-<tr><td><b>Aut1</b></td><td>W1&ndash;7</td><td>Kitchen induction · the team plan (&ge;3 SMART team goals decided <em>with</em> the team) · wellbeing knowledge layer · the live deck spine begins (LAUNCH W1&ndash;6 = Communication knowledge at every lane's demand)</td><td>Team plan opens W2 (review point W6); TmWk 10-hour window W2&rarr;W12</td></tr>
-<tr><td><b>Aut2</b></td><td>W8&ndash;14</td><td>The menu &amp; budget project: decision situations (short/medium/long-term at L1·L2), tools compared (&ge;3 at L2), plans, cook cycles, both evaluations · GROW decks W2&ndash;6 · <b>Award milestone W14</b></td><td>Decision plan opens W9 (review point W11); window W9&rarr;W13; TmWk evaluation W13&ndash;14, DecMk evaluation W14</td></tr>
-<tr><td><b>Spr1</b></td><td>W15&ndash;20</td><td>The technique ladder — a named kitchen skill improved over the block; learning plans, barriers, ways of improving compared (L1·L2)</td><td>Learning plan opens W15 (review point W18); window W15&rarr;W19; evaluation W20</td></tr>
-<tr><td><b>Spr2</b></td><td>W21&ndash;26</td><td>Communication at full GLH: plans (E3/L1 one · <b>L2 two, over two different ways</b>), live demonstrations, discussion tables and written recipe/menu guides at the activity minima · <b>Extended Award milestone W26</b></td><td>No 10-hour window on Communication at any level — activity minima instead: E3 &ge;2&nbsp;min / &ge;5&nbsp;min / &ge;100 words · L1 &ge;3&nbsp;min / &ge;8&nbsp;min / &ge;250 words · L2 &ge;4&nbsp;min / &ge;10&nbsp;min / &ge;500 words · evaluation W26</td></tr>
-<tr><td><b>Sum1</b></td><td>W27&ndash;32</td><td>The food-claim investigation (Thinking at E3/L1 · Critical thinking at L2: &ge;2 sources, credibility/accuracy/bias, primary = own blind taste test) · wellbeing plans open and run through the learning weeks</td><td>Thinking plan opens W27 (review point W30), window W27&rarr;W32 · Wellbeing plan opens W27 (review point W32), window W27&rarr;W36</td></tr>
-<tr><td><b>Sum2</b></td><td>W33&ndash;38</td><td>Evaluations at the exact minima, portfolio assembly, IQA sample, EQA-window preparation, summer service · <b>Certificate milestone W38</b></td><td>Wellbeing evaluations W36&ndash;37; portfolio sign-off W38</td></tr></table>
+    BW = {b: (a, z) for (b, a, z) in LED["blocks"]}
+    TE = LED["term_evidence"]
+    def brow(b):
+        a, z = BW[b]; t = TE[b]
+        tag = ('<br><span style="font-size:.78rem;color:#166534"><b>evidenced</b></span>'
+               if t["evidenced"] else
+               '<br><span style="font-size:.78rem;color:#92400e"><b>assumption</b></span>')
+        return f"<td><b>{b}</b></td><td>W{a}&ndash;{z}<br><span style=\"font-size:.78rem;color:#475569\">{z-a+1} wks</span>{tag}</td>"
+    S.append(f"""<div class="safebox"><b>Which rooms this rate was measured in &mdash; and which it was not.</b> The seven-period week was established on <b>BUILD</b>, whose eight weekly planners carry a stable row layout with the PEQ row and six slots populated in every one. <b>GROW and LAUNCH are NOT establishable from the planners</b> and no rate was measured in either: GROW's ASDAN row exists but is <b>empty in all eight built weeks</b>, and LAUNCH's eight planners <b>disagree with one another on their own row structure</b>, carrying a populated PEQ row in three weeks and none at all in four. This year map runs <b>all three level lanes (Entry&nbsp;3 &middot; Level&nbsp;1 &middot; Level&nbsp;2) at the same 4.667 h/wk</b>. For the Kitchen Programme that is one mixed class in one kitchen, so a single rate is the right shape &mdash; but applied to the GROW and LAUNCH <em>rooms</em> it would be an <b>assumption, not a measurement</b>, and nothing here should be read as evidence about their timetables. <b>OUTSTANDING FOR MATT: GROW/LAUNCH PEQ slots &mdash; confirm from the September timetable.</b> Reproduce either finding with <code>python3 _passpq/tools/year1_derive.py</code>.</div>
+
+<h2>The six blocks &mdash; one spine, three demands</h2>
+<div class="note"><b>Which of these weeks are real, and which are assumed.</b> {esc(LED["calendar_note"])}</div>
+<table><tr><th>Block</th><th>Weeks</th><th>Delivers</th><th>Plan windows and review points</th></tr>""")
+    S.append(f"""
+<tr>{brow("Aut1")}<td>Kitchen induction · the team plan (&ge;3 SMART team goals decided <em>with</em> the team) · wellbeing knowledge layer · the live deck spine begins (LAUNCH W1&ndash;6 = Communication knowledge at every lane's demand)</td><td>Team plan opens W2 (review point W6); TmWk 10-hour window W2&rarr;W12</td></tr>
+<tr>{brow("Aut2")}<td>The menu &amp; budget project: decision situations (short/medium/long-term at L1·L2), tools compared (&ge;3 at L2), plans, cook cycles, both evaluations · GROW decks W2&ndash;6 · <b>Award milestone W14</b></td><td>Decision plan opens W9 (review point W11); window W9&rarr;W13; TmWk evaluation W13&ndash;14, DecMk evaluation W14</td></tr>
+<tr>{brow("Spr1")}<td>The technique ladder — a named kitchen skill improved over the block; learning plans, barriers, ways of improving compared (L1·L2)</td><td>Learning plan opens W15 (review point W18); window W15&rarr;W19; evaluation W20</td></tr>
+<tr>{brow("Spr2")}<td>Communication at full GLH: plans (E3/L1 one · <b>L2 two, over two different ways</b>), live demonstrations, discussion tables and written recipe/menu guides at the activity minima · <b>Extended Award milestone W26</b></td><td>No 10-hour window on Communication at any level — activity minima instead: E3 &ge;2&nbsp;min / &ge;5&nbsp;min / &ge;100 words · L1 &ge;3&nbsp;min / &ge;8&nbsp;min / &ge;250 words · L2 &ge;4&nbsp;min / &ge;10&nbsp;min / &ge;500 words · evaluation W26</td></tr>
+<tr>{brow("Sum1")}<td>The food-claim investigation (Thinking at E3/L1 · Critical thinking at L2: &ge;2 sources, credibility/accuracy/bias, primary = own blind taste test) · wellbeing plans open and run through the learning weeks</td><td>Thinking plan opens W27 (review point W30), window W27&rarr;W32 · Wellbeing plan opens W27 (review point W32), window W27&rarr;W36</td></tr>
+<tr>{brow("Sum2")}<td>Evaluations at the exact minima, portfolio assembly, IQA sample, EQA-window preparation, summer service · <b>Certificate milestone W38</b></td><td>Wellbeing evaluations W36&ndash;37; portfolio sign-off W38</td></tr></table>
 <p style="font-size:.88rem">Every plan opens early enough that its 10-hour window closes with headroom before its evaluation week (the ledger below carries the minutes); every review point has a named week; every assessment criterion lands on a week in the <a href="Criteria_Coverage_Matrix.html">coverage matrix</a>.</p>""")
 
     # per-lane weekly ledgers
     S.append("""<h2>The GLH ledger — every week &times; lane, minutes per unit</h2>
-<p>Times are <b>h:mm of supervised time</b> attributed per unit (spec &sect;9 p16). <b>Physical</b> is the timetabled 3:30. A <b>co-delivered</b> entry is the same physical session banked to a second unit, declared here and justified above; the unit columns include it, the physical column does not. <b>QA</b> is supervised portfolio/IQA/EQA time not attributed to a unit (L2 lane headroom).</p>""")
+<p>Times are <b>h:mm of supervised time</b> attributed per unit (spec &sect;9 p16). <b>Physical</b> is the timetabled 4:40 (seven 40-minute periods). A <b>co-delivered</b> entry is the same physical session banked to a second unit, declared here and justified above; the unit columns include it, the physical column does not. <b>QA</b> is supervised portfolio/IQA/EQA time not attributed to a unit (L2 lane headroom).</p>""")
     for lane in LANES:
         L = LED["lanes"][lane]
         head = ("<tr><th>Wk</th><th>Blk</th><th>Live deck</th><th>Focus (shared vehicle)</th>"
@@ -212,7 +224,7 @@ def build_sow():
                         f"<td>{co_txt}</td><td class=\"num\">{mins(sum(r.values()))}</td></tr>")
         tot = ("<tr><th colspan=\"4\">Ledger total (h) — must equal each unit's GLH</th>"
                + "".join(f"<th class=\"num\">{L['totals_min'][sk]//60}</th>" for sk in SKILLS)
-               + f"<th class=\"num\">{L['qa_min']//60}</th><th class=\"num\">{L['co_min']//60} h</th><th class=\"num\">133</th></tr>")
+               + f"<th class=\"num\">{L['qa_min']//60}</th><th class=\"num\">{L['co_min']//60} h</th><th class=\"num\">{LED['weekly_min_default'] * LED['weeks'] // 60}</th></tr>")
         spec = ("<tr><th colspan=\"4\">Unit GLH (spec pp11&ndash;13)</th>"
                 + "".join(f"<th class=\"num\">{unit_of(lane, sk)['glh']}</th>" for sk in SKILLS)
                 + "<th>&mdash;</th><th>&mdash;</th><th>&mdash;</th></tr>")
@@ -605,6 +617,29 @@ lists, quantities, substitutions.</li>
 that is how you think &mdash; then open that week's shell and check the criteria it has to
 carry. If a criterion has no natural home in what you have chosen, change the task slightly
 rather than the criterion. The criteria are fixed by the awarding body; the food is not.</p>
+
+<h2>The hours &mdash; settled, and where the number came from</h2>
+<p>The programme is timetabled at <b>seven 40-minute periods a week</b> (4.667 supervised hours):
+the PEQ session plus the six slots &mdash; Careers, Vocational/D&amp;T, Living Independently,
+FoodWise, Community&nbsp;A and Community&nbsp;B &mdash; which all count, because PEQ evidence is
+generated <em>through</em> those activities rather than alongside them.</p>
+<table><tr><th style="width:16%">&nbsp;</th><th>where the figure comes from</th></tr>
+<tr><td><b>Measured</b></td><td>The 40-minute period unit, and the <b>six weekly slots at one period each</b>, read off the BUILD planners and the Slot Planner. That bounded the week at <b>1&ndash;7 periods</b> and no further.</td></tr>
+<tr><td><b>Ruled</b></td><td>That <b>all six</b> of those slots may bank a guided hour to PEQ alongside their own ASDAN short course &mdash; an <b>owner ruling of 22 August 2026</b>, not something the repository could show.</td></tr></table>
+<p>Seven periods is therefore <b>measured band + owner ruling</b>: the top of what was measured,
+chosen by a decision. Full record: <code>_passpq/DERIVATION_YEAR1.md</code>.</p>
+<div class="safebox"><b>If you also teach in the other rooms.</b> That measurement was taken in
+<b>BUILD</b>. <b>GROW and LAUNCH could not be established</b> &mdash; GROW's ASDAN planner row is
+empty in all eight built weeks, and LAUNCH's eight planners disagree with each other about their
+own row structure. The year map runs all three <em>level</em> lanes at the same rate, which is
+right for one mixed class in one kitchen; it is <b>not</b> a measurement of the GROW or LAUNCH
+timetables. Outstanding for Matt: confirm the GROW/LAUNCH PEQ slots from the September timetable.</div>
+<p><b>What it means in practice:</b> all three lanes can finish the full Certificate this year
+&mdash; Award by W14, Extended Award by W26, Certificate by W38 &mdash; with 37 to 57 hours a lane
+of consolidation time that is deliberately <em>not</em> claimed against any unit. A week that
+overruns will not cost anyone their qualification. <b>Autumn is evidenced at 15 teaching weeks;
+spring and summer term dates are not in the repository at all</b>, so those block lengths are
+declared assumptions and the year map says which is which.</p>
 
 <h2>Where to ask</h2>
 <p>Anything about <b>criteria wording, levels, minima, plans or evidence</b> &mdash; the

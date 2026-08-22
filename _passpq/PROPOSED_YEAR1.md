@@ -147,3 +147,43 @@ ASDAN… keep the two named separately on surfaces."* Reduced to a **tense chang
 (*"registration via UAS coordinator"* → *"registered via the UAS coordinator"*). One
 pre-existing *"UAS/ASDAN coordinator"* on `GROW_ASDAN_Hub.html` predates this pass and was left
 alone. If the estate wants one canonical phrasing, that is an owner call.
+
+---
+
+# Lodged by PEQ-YEAR-2 (2026-08-22)
+
+Two questions for Matt, both blocking a figure that is currently carried as an assumption. Each
+is one line, as asked.
+
+### Q-Y2-1 · Term dates
+
+> **Confirm term dates / teaching weeks for spring and summer 2026-27.**
+
+**Why it is open.** Autumn is evidenced at **15** teaching weeks and the block boundaries now
+match it. Spring and summer have **no term date anywhere in the repo** — no Easter date, no
+February or May half-term, no INSET day. Their block lengths are declared assumptions, tagged as
+such on the year map.
+
+**What the answer unlocks.** The year length. `WEEKS = 38` is the SoW scheme's 39 with a week
+taken off summer, on top of the dead 14-week autumn. Evidenced autumn plus that scheme's
+spring/summer would give **40**. Neither 39 nor 40 can be set today: `lane_rows()` hand-allocates
+exactly 38 weeks and `build()` refuses any other length, so a real answer means re-allocating all
+three lanes — worth doing once, against a real calendar, not twice against guesses. It changes no
+milestone at the live seven-period rate; it *would* matter at 3 or 5 periods.
+
+### Q-Y2-2 · GROW and LAUNCH slots
+
+> **GROW/LAUNCH PEQ slots — confirm from the September timetable.**
+
+**Why it is open.** The 4.667 h/wk rate was established on **BUILD**. GROW's ASDAN planner row is
+**empty in all eight built weeks**; LAUNCH's eight planners **disagree with one another on their
+own row structure**, carrying a populated PEQ row in three weeks and none at all in four. Neither
+is a measurement, and neither was invented.
+
+**What the answer unlocks.** Whether the one-rate assumption is safe outside the kitchen. The
+year map runs all three *level* lanes at 4.667, which is correct for one mixed class in one
+kitchen; read as a statement about the GROW and LAUNCH *rooms* it is an assumption, and the pages
+now say so. Two repo defects sit underneath and are planner-authoring work, not PEQ work: GROW's
+row was created and never filled, and LAUNCH's weekly files need reconciling to one row structure.
+
+Reproduce either finding with `python3 _passpq/tools/year1_derive.py`.
