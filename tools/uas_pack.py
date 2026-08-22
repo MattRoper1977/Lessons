@@ -136,7 +136,8 @@ is the only version of this that stays true.</p>
 </div>
 
 <footer>PROGRESS SCHOOLS &middot; TEES VALLEY &mdash; internal pack. See
-<code>0_ABOUT_THIS_TOOL.txt</code> in this folder.<br>
+<code>0_ABOUT_THIS_TOOL/</code> in this folder &mdash; it holds a 60-second check
+worth running before anyone relies on the offline copy.<br>
 <span>by madebymatt.uk</span></footer>
 </div></body></html>
 """
@@ -147,6 +148,9 @@ ABOUT = """AQA UAS REGISTER - what is in this folder, and which one to use
 
 index.html                  The launcher. START HERE. It opens the live register.
 app_REFERENCE_ONLY.html     An offline copy. LOOK, DO NOT TYPE.
+0_ABOUT_THIS_TOOL/          This note, and STORAGE_CHECK.txt - a 60-second check
+                            to run on the real share before anyone relies on the
+                            offline copy for anything.
 0_STAFF_ONLY_cover_for_settings_upload/
                             The Progress evidence-pack cover image, for uploading
                             into the live register's Settings. Staff only.
@@ -188,6 +192,47 @@ store, not by reading the file: 0 pupils, 0 sessions, 0 evidence items, 0 marks,
 0 units, 0 saved settings.
 """
 
+
+STORAGE_CHECK = """DOES THIS COPY ACTUALLY KEEP WHAT YOU TYPE? - a 60-second check
+================================================================================
+
+WHY YOU HAVE TO CHECK ON THE REAL SHARE
+We tested this and it passed - but we could only test it on a local hard disk, and
+you will open it from OneDrive or a network share. Chrome treats some share paths
+as an origin with NO STORAGE, and when it does, what you type is thrown away with
+no error message and no warning. Nothing on screen tells you. That is exactly why
+this copy is marked REFERENCE ONLY, and why this check exists.
+
+Do it once, on the machine and the folder staff will really use.
+
+THE CHECK
+  1. Open app_REFERENCE_ONLY.html from the share - double-click it, the way staff
+     will. Do not drag it to your desktop first; that would test the wrong thing.
+  2. Add one pupil and call them:   TEST DELETE ME
+  3. Close the browser COMPLETELY. Not just the tab - every window.
+  4. Reopen the same file from the same folder.
+  5. Look for TEST DELETE ME.
+
+WHAT THE ANSWER MEANS
+  STILL THERE   The browser is keeping data from this share path. The copy would
+                work for training and for looking things up. It is STILL not the
+                record - the live register is - but nothing is being silently
+                discarded.
+
+  GONE          The browser is discarding everything typed into this copy, exactly
+                as feared. Anyone who used it for real would lose the lot without
+                being told. Reference-only was the right call. Say so to Matt so it
+                gets written down, and make sure nobody is being asked to use it.
+
+  IT WOULD NOT  Tell Matt what happened and what the machine said. That is an
+  OPEN AT ALL   answer too.
+
+EITHER WAY
+  Delete TEST DELETE ME afterwards if it is still there.
+  The live register at madebymatt.uk/uas/app.html is the record of truth. This
+  copy never is, whichever way this check comes out.
+"""
+
 COVER_NOTE = """PROGRESS SCHOOLS EVIDENCE-PACK COVER - staff only
 ================================================================================
 
@@ -225,9 +270,48 @@ RULING = """RULINGS CARRIED BY THIS PACK
       environment could not be tested here, and a pass measured somewhere staff
       will never open it is not evidence about where they will.
 
-3. NOTHING WAS COMMITTED TO THE SITE REPOSITORY.
+3. THE PACK'S DEAD LINKS WERE FIXED IN THE PACK, NOT IN THE REPOSITORY.
+   The OPEN_ITEMS item 17 byte-pristine hold protects the REPO. It does not protect
+   the zip: this pack rewrites links as its core function, so shipping dead ones to
+   staff would be a pack defect, not an inherited one. 48 dead links became 0, and
+   the repo copies of every file involved are byte-unchanged.
+
+   Three causes, three different answers, because they were three different faults:
+
+     43  ../../../index.html  "Back to the Lessons catalogue"
+         Resolved in the Network Library, dead in the Mirror. The LINK was never
+         wrong - the Mirror was missing the catalogue it names. The offline
+         catalogue is now generated into both trees, which fixes all 43 without
+         repointing anything or changing a single page. Repointing would have been
+         fixing the symptom, and would have left the four Science suite indexes
+         linking to themselves.
+
+      3  ../../../Baseline_Weeks/index.html
+      2  ../../../_sciv3/*/POLICY_ALIGNMENT.md
+         Both targets are deliberately outside this pack - Baseline_Weeks is a
+         separate public pack, _sciv3/ is the repo's own working directory, which
+         §9.3 excludes by name. The target is correctly absent, so the LINK is what
+         goes: the anchor is unwrapped and its text kept. "Baseline Weeks (public
+         HTML baseline pack)" is a sentence a teacher can act on; the underline
+         that goes nowhere is not.
+
+   The gate was ratcheted at the same time. It had been a ceiling of 51 against a
+   measured 48 - three spare, which is a grace period, not a gate. It is now exact
+   zero: any dead link at all stops the build.
+
+4. NOTHING WAS COMMITTED TO THE SITE REPOSITORY.
    MattRoper1977.github.io was cloned read-only to take this copy. 0 commits,
    0 pushes, 0 branches, 0 pull requests.
+
+5. "AQA UAS ALIGNED" ON THE LESSON HUB STAYS EXACTLY AS IT IS.
+   PEQ-YEAR-2 flagged the all-caps stamp at index.html:422 because "ALIGNED" reads
+   as a stronger claim than the register permits, and neither claim transform fits
+   it. Ruled at the close-out: that is the correct outcome, not a gap. It is an
+   awarding-body ALIGNMENT stamp, not a unit-code claim - it says the estate's
+   material is aligned to the AQA UAS framework, which is true, and is a different
+   assertion from "this unit code is confirmed", which is what Q-003 governs.
+   It is on the transform's named-exception list so the next sweep does not
+   rediscover it as an anomaly and make the estate less accurate by "fixing" it.
 """
 
 
@@ -308,7 +392,8 @@ def main():
 
     write_checked(dest / "app_REFERENCE_ONLY.html", text)
     write_checked(dest / "index.html", launcher(mark_uri))
-    write_checked(dest / "0_ABOUT_THIS_TOOL.txt", ABOUT)
+    write_checked(dest / "0_ABOUT_THIS_TOOL" / "0_READ_ME_FIRST.txt", ABOUT)
+    write_checked(dest / "0_ABOUT_THIS_TOOL" / "STORAGE_CHECK.txt", STORAGE_CHECK)
     write_checked(dest / "0_STAFF_ONLY_cover_for_settings_upload" / "0_HOW_TO_USE.txt",
                   COVER_NOTE)
     (dest / "0_STAFF_ONLY_cover_for_settings_upload" / "cover.png").write_bytes(
@@ -322,7 +407,8 @@ def main():
     print(f"  vendor/                     {len(vend_files)} file(s), "
           f"{vend_bytes/1048576:.1f} MB - jsPDF, PDF.js + worker, Tesseract + worker "
           f"+ wasm core + eng data")
-    print(f"  0_ABOUT_THIS_TOOL.txt")
+    print(f"  0_ABOUT_THIS_TOOL/0_READ_ME_FIRST.txt")
+    print(f"  0_ABOUT_THIS_TOOL/STORAGE_CHECK.txt   the 60-second check on the real share")
     print(f"  0_STAFF_ONLY_cover_for_settings_upload/cover.png + 0_HOW_TO_USE.txt")
     print(f"  _Pack_Notes/RULINGS.txt     the override and the reference-only ruling")
     print(f"\nverdict: LAUNCHER + REFERENCE-ONLY COPY (not writable)")

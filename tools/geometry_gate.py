@@ -44,7 +44,10 @@ DRIVE_FOLDERS = {
     "Tutor Time BF_BV_KCSIE", "Weekly Plans",
 }
 LOOSE_HUBS = {"art_teesside", "build_asdan", "build_dt_upcycling", "humanities_teesside"}
-LOOSE_DOCS = {"CHANGES_SINCE", "HOW_TO_USE_THESE_LESSONS", "README_FIRST"}
+LOOSE_DOCS = {"CHANGES_SINCE", "HOW_TO_USE_THESE_LESSONS", "README_FIRST",
+              # §9.9b handoff ledger. A declared NEW root file - it is not on the
+              # drive's own listing, so the placement guide names it under NEW.
+              "ASDAN_CHANGES_FOR_PLANNERS"}
 
 # Pack-internal, deliberately NOT drive folders. Each is allowed by name with a
 # reason, so a stray directory cannot hide among them.

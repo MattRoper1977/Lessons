@@ -1044,6 +1044,36 @@ def write_docs(pack, keep, fwd, back, clashes, logo_pages, rewrites, crawl_miss,
           "                                 or read them and bin them. They are deliberately",
           "                                 NOT part of the drag-and-merge set.", "",
           "-" * 74, "",
+          "NEW FOLDERS AND FILES - THESE DO NOT EXIST ON THE DRIVE YET",
+          "",
+          "  Everything above merges into a folder that is already there. These do not,",
+          "  so they are named here rather than appearing silently inside a merge. Read",
+          "  the one-line reason before you drop each one.",
+          ""]
+    # Generated from the assembled tree, not typed. A hand-maintained list of new
+    # folders is a list that stops being true the first time the pack gains one -
+    # and this section exists precisely so nothing arrives on the drive unannounced.
+    NEW_ITEMS = [
+        ("ASDAN PEQ/UAS Register/",
+         "the AQA UAS Register: a launcher to the live app, plus a REFERENCE-ONLY",
+         "offline copy. New subfolder inside the existing 'ASDAN PEQ'."),
+        ("ASDAN PEQ/UAS Register/0_STAFF_ONLY_cover_for_settings_upload/",
+         "the Progress evidence-pack cover image, for uploading into the live",
+         "register's Settings. STAFF ONLY - it is not lesson content."),
+        ("index.html",
+         "an offline catalogue of everything in this pack. It is also what the",
+         '"back to the Lessons catalogue" link on every lesson page points at.'),
+        ("ASDAN_CHANGES_FOR_PLANNERS.md",
+         "the weekly-plan handoff: one row per lane x week x slot. Roles only, no",
+         "pupil data - safe to send on."),
+    ]
+    for name, l1, l2 in NEW_ITEMS:
+        exists = (pack / name.rstrip("/")).exists()
+        g.append(f"  {'NEW  ' + name:<52} {'' if exists else '(NOT BUILT - report this)'}")
+        g.append(f"        {l1}")
+        g.append(f"        {l2}")
+        g.append("")
+    g += ["-" * 74, "",
           "FOLDER NAME - CONFIRMED BY MATT 2026-08-07",
           "",
           f'  "{HUM}"',
@@ -1170,6 +1200,25 @@ def write_docs(pack, keep, fwd, back, clashes, logo_pages, rewrites, crawl_miss,
          "  A Progress Schools-branded copy of the in-scope lessons, in a folder tree that",
          "  mirrors this drive exactly. Drag each top-level folder onto its twin and choose",
          "  merge. See _Pack_Notes/PLACEMENT_GUIDE.txt for the one-line-per-folder version.", "",
+         "-" * 74, "THE AQA UAS REGISTER - WHICH COPY IS THE RECORD",
+         "  ASDAN PEQ/UAS Register/ holds a launcher and an OFFLINE COPY.",
+         "",
+         "  THE LIVE APP AT madebymatt.uk/uas/app.html IS THE RECORD OF TRUTH.",
+         "  The packed copy is NOT, and never becomes it. It is marked REFERENCE /",
+         "  TRAINING ONLY on every screen and it means it: do not enter pupil evidence",
+         "  there. Open index.html in that folder and it takes you to the live one.",
+         "",
+         "  True of the live register as well, and these catch people out:",
+         "    - Data is stored PER MACHINE and PER BROWSER. Nothing syncs between them.",
+         "    - Clearing browser data WIPES IT.",
+         "    - EXPORT A BACKUP BEFORE ANY MACHINE REIMAGE.",
+         "  The same applies to Cold Call lists and evidence ticks anywhere in this pack.",
+         "  If a record matters, print the paper tracker.",
+         "",
+         "  Before anyone leans on the offline copy for anything, run the 60-second",
+         "  check in ASDAN PEQ/UAS Register/0_ABOUT_THIS_TOOL/STORAGE_CHECK.txt on the",
+         "  real share. It settles whether this machine keeps what is typed there at",
+         "  all - we could only test a local disk, and a network share can differ.", "",
          "-" * 74, "CAREERS WEEKS 6 AND 7 - GO BY THE SLIDE, NEVER THE FILENAME",
          "  Week 6 = 'What Happens After Year 11' = file CAREERS_W7_After_Year_11.html",
          "  Week 7 = 'My Career Profile'          = file CAREERS_W6_My_Career_Profile.html",
@@ -1331,48 +1380,49 @@ def mirror_main(logo, out, site=None):
                 f"{label} failed - refusing to continue to the manifest or the zip.\n"
                 + r.stdout[-2500:] + r.stderr[-800:])
 
+    # §C3: the offline catalogue is generated into the MIRROR, not only the Network
+    # Library. 43 pages carry a "<- Lessons / Back to the Lessons catalogue" link to
+    # ../../../index.html; it resolved in the Library and was dead in the Mirror, so
+    # the link was never wrong - the Mirror was missing the catalogue it names.
+    # Generating it here fixes 43 dead links by making the target exist, repointing
+    # nothing and touching no page. Repointing them would have fixed the symptom and
+    # left the four suite indexes linking to themselves. It must happen before
+    # crawl(), or the crawl measures a tree that is not the one being shipped.
+    if site:
+        n_idx = write_offline_index(pack, fwd, LOGO_URI[0], LOGO_URI[1])
+        print(f"\noffline library index generated into the Mirror: {n_idx} pages listed")
+        # AFTER the index exists, never before: pack_links measures what is on disk,
+        # and 43 of the dead links it would otherwise report are the very ones the
+        # line above just fixed.
+        import subprocess as _sp2
+        r2 = _sp2.run([sys.executable, str(Path(__file__).resolve().parent / "pack_links.py"),
+                       str(pack), "--fix"], capture_output=True, text=True)
+        print("\n".join(r2.stdout.strip().splitlines()[-4:]))
+        assert r2.returncode == 0, (
+            "pack links (§C3) failed - refusing to continue\n" + r2.stdout[-2500:])
+
     miss = crawl(pack)
     n_miss = sum(len(v) for v in miss.values())
     print(f"\nCRAWL: {'clean, 0 broken internal links' if not miss else str(n_miss) + ' UNRESOLVED'}")
     for f, ts in list(miss.items())[:15]:
         print(f"  {f} -> {', '.join(sorted(ts))[:110]}")
 
-    # §9.8 wants 0 broken internal links. The pack does not have 0, and the build
-    # used to PRINT that without failing on it - which is how 49 stayed unnoticed.
+    # §9.8 wants 0 broken internal links, and the tree now HAS 0. This used to be a
+    # ceiling of 51 against a measured 48, which licensed three more before anyone
+    # noticed - headroom that big is not a gate, it is a grace period. Ratcheted to
+    # exact equality: any dead link at all fails the build.
     #
-    # All of them are one family: Science_Teesside sub-suite pages linking
-    # ../../../index.html, i.e. a hub at the pack root. The Mirror deliberately has
-    # no root index (§9.4 gives one only to the Network Library), and the drive root
-    # has no index.html either, so these are dead in the zip AND on the drive. They
-    # are inherited, not introduced here - Science_Teesside is under the OPEN_ITEMS
-    # item 17 byte-pristine hold in the repo, so the fix belongs to the sitting that
-    # lifts it, not to a branding pass rewriting links in files it may not touch.
-    #
-    # So it is a CEILING, not a pass: the known family is recorded by shape and by
-    # count, and anything beyond it - a new dead link, or one of these spreading -
-    # fails the build. A number that can grow without going red is not a gate.
-    KNOWN_DEAD = {"../../../index.html", "../../../Baseline_Weeks/index.html",
-                  # two Science index pages link the repo's own working docs under
-                  # _sciv3/, which §9.3 excludes by name: "the derived staff
-                  # documents ship; the working directory does not".
-                  "../../../_sciv3/build/POLICY_ALIGNMENT.md",
-                  "../../../_sciv3/launch/SOW_AND_POLICY_ALIGNMENT.md"}
-    KNOWN_DEAD_MAX = 51
-    unknown = {f: sorted(set(ts) - KNOWN_DEAD) for f, ts in miss.items()
-               if set(ts) - KNOWN_DEAD}
-    if unknown:
-        all_fails_early = [f"NEW broken internal link in {f}: {ts}"
-                           for f, ts in list(unknown.items())[:10]]
-        for line in all_fails_early:
-            print("  FAIL:", line)
-        raise AssertionError(f"{len(unknown)} file(s) carry a broken internal link "
-                             "outside the recorded Science_Teesside root-hub family")
-    if n_miss > KNOWN_DEAD_MAX:
-        raise AssertionError(f"the recorded broken-link family grew: {n_miss} > "
-                             f"{KNOWN_DEAD_MAX}")
+    # Getting to 0 needed three fixes, because there were three causes. The 43
+    # "back to the catalogue" links were dead only in the Mirror and are fixed by
+    # generating the catalogue there. The 3 Baseline_Weeks and 2 _sciv3 links point
+    # at material deliberately outside the pack and are unwrapped to plain text by
+    # pack_links.py, which keeps the sentence and drops the underline that goes
+    # nowhere. See its docstring for why each cause gets a different answer.
     if miss:
-        print(f"  ^ all {n_miss} are the recorded Science_Teesside root-hub family "
-              f"(ceiling {KNOWN_DEAD_MAX}); see the note in mirror_main")
+        for f, ts in list(miss.items())[:10]:
+            print(f"  FAIL: dead internal link in {f}: {ts}")
+        raise AssertionError(f"{n_miss} dead internal link(s) in the assembled tree - "
+                             "the pack ships zero")
 
     print(f"\nAVL-1: {avl_seen} decks carry a marker pair; "
           f"{'all preserved byte-for-byte' if not avl_fails else str(len(avl_fails)) + ' ALTERED'}")
@@ -1442,7 +1492,9 @@ def mirror_main(logo, out, site=None):
     lib = out / "Progress_Schools_Network_Library"
     shutil.copytree(pack, lib)
     shutil.rmtree(lib / "_Pack_Notes")   # placement + build notes are a OneDrive concern only
-    pages = write_offline_index(lib, fwd, LOGO_URI[0], LOGO_URI[1])
+    # the Library inherits the Mirror's catalogue: same map, same file. The two
+    # trees are now identical apart from _Pack_Notes, a OneDrive concern only.
+    pages = len(list(lib.rglob("*.html")))
     n, sz = zip_tree(lib, out / "Progress_Schools_Network_Library.zip",
                      "Progress_Schools_Network_Library")
     zips.append(("Progress_Schools_Network_Library.zip", n, sz))

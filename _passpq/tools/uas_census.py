@@ -33,6 +33,17 @@ UAS = "AQA UAS"
 # Both canonical spellings, plus the one recorded §4-B deviation.
 QUAL = re.compile(r"\(unit unconfirmed|— unit unconfirmed\)")
 
+# NAMED EXCEPTIONS - sites that carry "AQA UAS" and are deliberately NOT qualified.
+# Recorded so a future sweep does not rediscover them as anomalies and "fix" them.
+NAMED_EXCEPTIONS = {
+    ("index.html", "AQA UAS ALIGNED"):
+        "an awarding-body ALIGNMENT stamp, not a unit-code claim. It says the estate's "
+        "material is aligned to the AQA UAS framework, which is true and is a different "
+        "assertion from 'this unit code is confirmed'. Q-003 governs the latter. Ruled "
+        "at the PEQ-YEAR-3 close-out: leave it exactly as it is.",
+}
+
+
 def bucket(path):
     if path.startswith("Science_Teesside/"):
         return "EXCLUDED · Science_Teesside — OPEN_ITEMS 17 byte-pristine hold"
@@ -70,6 +81,12 @@ for b in sorted(agg):
 tot=[sum(a[i] for a in agg.values()) for i in range(4)]
 print("-"*89)
 print(f"{'TOTAL':<62}{tot[0]:>6}{tot[1]:>7}{tot[2]:>7}{tot[3]:>7}")
+
+print("\n== named exceptions (carry AQA UAS, deliberately unqualified) ==")
+for (f, s), why in NAMED_EXCEPTIONS.items():
+    present = s in io.open(f, encoding="utf-8").read() if os.path.isfile(f) else False
+    print(f"  {'present' if present else 'ABSENT '}  {f}: {s!r}")
+    print(f"           {why}")
 
 print("\n== CONTENT bucket, per file ==")
 for b,f,n,q,bare in sorted(rows):

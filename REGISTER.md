@@ -2686,3 +2686,118 @@ C1/C2/C3 wording).
 **Live deployment rendering stays UNPROVEN by design** — the Pages API and madebymatt.uk are
 proxy-blocked from the pass environment; Matt phone-checks (list in HANDOVER queue entry 20).
 **Neither branch deleted — that is Matt's UI job.**
+
+---
+
+## PEQ-YEAR-3 — the timetable made evidence, and the school-network packs
+
+**Closed 2026-08-22.** Three stages ordered; two ran. Stage 3 (the official Progress
+Schools weekly plans) was explicitly not this session's and was not started.
+
+### Merge SHAs
+
+| repo | rollback (pre-merge) | merged |
+|---|---|---|
+| `MattRoper1977/Lessons` | `18aa280c` | **`1f6aa653`** |
+| `MattRoper1977/matt-s-apps-` | `93bbf98e` | **`13ae2e83`** |
+| `MattRoper1977.github.io` (site) | `b912ad05` | **unchanged — read-only all pass, 0 commits** |
+
+All seven workflows green on the two merge SHAs, including `pages build and
+deployment` and `Made by Matt cross-estate unification` (the one carrying the pin).
+
+### Stage 2 artefacts
+
+| | bytes | sha256 |
+|---|---:|---|
+| `Progress_Schools_OneDrive_Mirror.zip` | 17206463 | `b9ddc7312d81be95e2d213f3f1924f678bbd3b13a9cc5dc6e8d20d52cc16a7e1` |
+| `Progress_Schools_Network_Library.zip` | 17186641 | `6740732c3eaefd1a33d112d8a323f11c2adc197401f772c6d2099dc4c2d1708b` |
+
+389 and 384 entries. The two trees are identical apart from five `_Pack_Notes/`
+files, which are a OneDrive placement concern only.
+
+**Logo.** Master `b4d75c74b428600715bdbc91f210984f9b4b9c35685d3a207372b41fa426cb92`
+— 447×447 JPEG, 9,099 B, opaque white, no alpha, the owner-supplied 2026-08-22
+master recorded in REBRAND.md. Derived, resize-only:
+
+| asset | dims | bytes | sha256 |
+|---|---|---:|---|
+| lockup | 367×129 | 9,446 | `0af2830acd0357277b855fab299553cbbd9c0504245ee715b37ebbd24aaa97b8` |
+| mark | 113×129 | 6,576 | `24c155f2852ac0f4c5a7f237add4d9ea1c011da934bc0a1fb534c5e1cf8d2e77` |
+
+Brand inks navy `(41,43,91)` and magenta `(229,3,128)` reproduce to within 1/255 on
+the lockup and exactly on the mark. `--plant-recolour` reddens the gate at deltas of
+41 and 135.
+
+### Reproducibility — rebuilds both zips without this session
+
+```sh
+git -C Lessons checkout 1f6aa653
+git clone --depth 1 https://github.com/MattRoper1977/mattroper1977.github.io ../site
+python3 tools/build_staff_pack.py --mirror \
+  --logo <the 447x447 JPEG, sha256 b4d75c74...> \
+  --site ../site \
+  --out ./out
+```
+
+The logo binary is deliberately not in git; its hash above is what makes this
+reproducible without it. `--logo` absent is a hard stop, and an unrecognised binary
+stops on its hash. Note that the close-out fixes (§C3–§C7) sit on
+`claude/peq-year-3` **after** `1f6aa653`; rebuild from the branch tip to get them.
+
+### Rulings made at the close-out
+
+**§C3 — the pack's dead links are fixed in the pack, not the repository.** The
+OPEN_ITEMS item 17 byte-pristine hold protects the repo; it does not protect the
+zip. This pack rewrites links as its core function, so shipping dead ones would be
+a pack defect, not an inherited one. 48 → **0**. Three causes, three answers: 43
+"back to the Lessons catalogue" links were dead only in the Mirror and were fixed by
+generating the offline catalogue there (the link was never wrong — the target was
+missing); 3 Baseline_Weeks and 2 `_sciv3` links point at material deliberately
+outside the pack, and were unwrapped to plain text. The gate was ratcheted from a
+ceiling of 51 against a measured 48 to **exact zero**.
+
+**§C5 — `index.html:422` "AQA UAS ALIGNED" stays exactly as it is.** It is an
+awarding-body *alignment* stamp, not a unit-code claim: it says the estate's material
+is aligned to the AQA UAS framework, which is true, and is a different assertion from
+"this unit code is confirmed", which is what Q-003 governs. Neither transform fitting
+it is the correct outcome, not a gap. Recorded on the transform's named-exception
+list in `_passpq/tools/uas_census.py` so a future sweep does not "fix" it and make
+the estate less accurate.
+
+**§9.3b — the UAS Register ships pointer-first.** Launcher + a REFERENCE-ONLY offline
+copy. Both technical gates passed (IndexedDB wrote and survived a reload; 0 external
+origins at runtime; 0 records, proven by loading the packed copy). It ships
+reference-only anyway: the written owner consent the ruling requires alongside those
+gates has not been given, and the storage gate was measured on local disk, not the
+OneDrive/UNC share where Chrome gives an opaque origin. `--writable` refuses without
+`--owner-said-yes`.
+
+### Open — owner decisions, not defects
+
+1. **Spring and summer term dates.** The workbooks are weekly, not annual. Those
+   block lengths remain declared assumptions; autumn is evidenced at 15 weeks.
+2. **Who teaches the cooking slot(s) in September.** The timetable assigns Build
+   Wed P5 to the Science Teacher; a colleague is to teach and resource cooking.
+   One decision or two — not guessed.
+3. **Three DT-vs-Behaviour cells** where the two workbooks disagree: Build Wed P6,
+   Grow Thu P6, Launch Thu P5. Not resolved by preference.
+4. **Whether the ASDAN Register joins the pack.** Default **no** this round. It is
+   dependency-free and would pack cleanly under the same override and the same three
+   gates, but that is a written yes to obtain, not an assumption.
+5. **§C4 — 3 `x-brand` pages in the public repo.** All three are
+   `Science_Teesside/*/v3_40min/*_PRACTICALS_MATRIX_PROGRESS_SCHOOLS.html`, each with
+   a Made-by-Matt twin, authored deliberately in both brandings at `968fa2a3`
+   ("Progress Schools variant follows REBRAND.md … lockup pending Matt's asset,
+   AMBER logged"). **Not leaked pack output.** The other 64 occurrences of "Progress
+   Schools" are 61 files of prose naming the employer in curriculum-intent and
+   accreditation copy — legitimate. Proposed fix: either delete the three Progress
+   variants (their twins already serve the public site) or move them out of the
+   public repo into the pack. **Predates this pass; left for a ruling.**
+6. **§C6 — the share-side storage check.** `ASDAN PEQ/UAS Register/0_ABOUT_THIS_TOOL/
+   STORAGE_CHECK.txt` is a 60-second check to run on the real share. Its outcome
+   decides whether the offline copy is safe even for training.
+7. **The item-17 repo-side link fix.** The 48 dead links are fixed in the pack. The
+   repo copies still carry them and stay byte-pristine until the restore sitting.
+8. **Weeks 8–38 have no ASDAN decks.** Every authored deck sits in weeks 1–7. 947 of
+   the planner ledger's 1,064 rows are `NO-PLANNER-SURFACE`. The largest single
+   decision facing the weekly-plan job.

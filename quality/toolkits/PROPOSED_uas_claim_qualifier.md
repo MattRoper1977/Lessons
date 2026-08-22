@@ -86,9 +86,21 @@ entries would, and that is the trap to know about.
 Two items only. `resources.json`, which PEQ-YEAR-2 deferred, is **applied** — see the
 section immediately above.
 
-- **`index.html:422` — `AQA UAS ALIGNED` stamp.** Staff-facing, and "ALIGNED" is a
-  stronger claim than the register permits, but neither transform fits an all-caps stamp.
-  Left byte-unchanged; **Matt to rule the stamp wording.**
+### `index.html:422` — `AQA UAS ALIGNED` — RULED: named exception, leave as it is
+
+PEQ-YEAR-2 flagged this stamp because "ALIGNED" reads as a stronger claim than the
+register permits, and neither transform fits an all-caps stamp. **The close-out ruled
+it stays exactly as it is**, and the reason is worth recording so the next pass does
+not rediscover it as an anomaly:
+
+> It is an **awarding-body alignment stamp, not brand or claim text**. It says the
+> estate's material is aligned to the AQA UAS framework — which is true, and is a
+> different assertion from "this unit code is confirmed", which is what Q-003
+> governs. Neither transform fitting it is the correct outcome, not a gap.
+
+So it is on the transform's **named-exception list**, alongside the §4-B nested
+parenthesis and the §4-C adjacent parentheticals. A future sweep that finds it and
+"fixes" it would be making the estate less accurate, not more.
 - **§4-B nested parenthesis, `BUILD_ASDAN/Careers/START_HERE.html`.** The site sits inside
   an existing parenthesis, so literal T2 would give `((unit unconfirmed))`. Applied as
   `(banks ASDAN Living Independently M8 / AQA UAS — unit unconfirmed)`. This is a
