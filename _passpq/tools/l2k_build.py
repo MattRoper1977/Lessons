@@ -208,6 +208,13 @@ def build_sow():
             f"<td class=\"num\">{L['totals_min'][sk]/60:g}</td><td>W{L['complete_week'][sk]}</td></tr>" for sk in SKILLS)
         S.append(f"<table style=\"margin-top:8px\"><tr><th>Unit</th><th>Skill</th><th>Credits</th><th>GLH</th><th>Ledger (h)</th><th>Ledger complete</th></tr>{u_rows}</table>")
 
+    S.append("""<h2>The resource set (print-first, this folder)</h2>
+<ul><li><a href="Criteria_Coverage_Matrix.html">Criteria coverage matrix</a> — every AC of all 18 units &#8614; week + artefact (zero gaps, proven at build)</li>
+<li><a href="Plan_Templates.html">Plan templates</a> — six skills &times; three levels, level-correct elements (E3 without review points; L1/L2 with)</li>
+<li><a href="Evidence_Sheets.html">Portfolio evidence sheets</a> — per unit per level, assessor/learner/date + IQA sample box</li>
+<li><a href="Assessor_Checklists.html">Assessor criteria checklists</a> — tick-per-AC with the lane's own minima printed</li>
+<li><a href="Plan_Hours_Grid.html">Plan-hours tracking grid</a> — the five 10-hour windows, lane column</li>
+<li><a href="Staff_Kitchen_Guide.html">Staff guide</a> — the Level-2 route on one page, progression ladder, budget bands, kit, safety, safeguarding</li></ul>""")
     S.append(f"""<div class="note"><b>Registration and claims stay centre-side.</b> Every pupil is <b>working towards</b> these units; the coordinator registers learners before any assessment (spec &sect;14 p20), decides unit and level attribution, and confirms names &asymp;4 weeks before the EQA sampling date. Data twin for this page (for the office): <code>_passpq/inputs/PEQ_L2K_YearPlan_2026-27.xlsx</code>, built from the same proven ledger.</div>
 {FACTS_PANEL}""")
     return page("Made by Matt · GROW ASDAN · Kitchen Programme PEQ Year Map · 2026–27",
