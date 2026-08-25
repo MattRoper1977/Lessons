@@ -23,8 +23,9 @@ order and marked as applied where a phase leans on them.
 
 ## LT1 — Pupil-name remediation (safeguarding; LT-GO D3)
 
-- **Branch/PR/merge:** `claude/new-session-43lyml` → PR (this one) → merge SHA
-  recorded at next append.
+- **Branch/PR/merge:** `claude/new-session-43lyml` → PR #151 → merge `309cf7e`
+  (all 6 checks green, incl. the games-rendered gate over the edited WorldCup
+  files).
 - **Delivered:** 23 public files' hard-coded class rosters neutralised
   (`Pupil A…` style; WorldCup squads → England player surnames), one scenario
   and one placeholder sentence de-named, `MASTER_PROMPT_Live_Teach_Projector_Kit.md`
@@ -52,3 +53,51 @@ order and marked as applied where a phase leans on them.
   demo strings; git history retention.
 - **Decisions applied:** D3 (names first, contact-sheet + post-hoc veto),
   D4 (self-merge on green), D5 (container limits recorded, not blocking).
+
+## LT2 — Core shell, mode-agnostic (LT-GO D1)
+
+- **Branch/PR/merge:** `claude/new-session-43lyml` → PR → merge SHA recorded at
+  next append.
+- **Delivered:** `/liveteach/` — `index.html` (launcher: both setups explained,
+  the Win+P check, key map), `projector.html` (particle wave sim, timer / hint
+  / poll overlays, auto-hiding control strip carrying every teaching action,
+  high-lumen and Calm toggles, canonical splash, NAV-1 back link),
+  `teacher.html` (optional HUD: renders only what `PROJECTOR_STATE` reports,
+  drives the projector over the bus). Shared bus + keyboard-registry +
+  motion/theme code is ONE source (`tools/liveteach/core_source.js`) stamped
+  byte-identically into all three views (`stamp_core.mjs`, the inline-exit
+  pinning pattern); the canonical Made by Matt splash implementation is pinned
+  the same way (`stamp_splash.mjs`, hardening bytes verbatim from the Games
+  copy). CI: `.github/workflows/liveteach-verify.yml`, registered in
+  watch-main's trigger list in the same PR (`--verify-trigger-list` PASS, 12
+  workflows).
+- **Bus contract shipped as specified:** channel `mbm_liveteach_v1`; every
+  message `{v:1, type, payload}`; unknown type / missing v ignored;
+  addEventListener only; projector broadcasts `PROJECTOR_STATE` on load and on
+  every `HUD_HELLO`.
+- **Gates, with negative controls named:**
+  - `tools/liveteach/run.sh` — 7 steps, all green: stamp checks (core +
+    splash) with their `--self-test` perturbation controls; static gates
+    (onmessage assignment, one rAF loop per view, TDZ init rule) with a
+    6-vector self-test (3 red vectors must red, 3 green must pass); the
+    lt-shell browser suite (~30 checks).
+  - Named LT2 gates in lt-shell: resync after projector reload (HUD
+    reconciles to the fresh broadcast); H/P toggle both directions by real
+    keydown; single-window completeness (timer, hint, poll, pause/resume,
+    stop, speed, clear — all driven from the strip with no HUD open); S1 cap
+    bites at exactly 150 with the spawn volume proven to exceed it (negative
+    control); S2 pause vs stop as different verbs on frame evidence; S3
+    speed highlight follows state; S4 construction velocity identical at 1×
+    and 2× with the baked-in-speed failure value (80) checked absent
+    (negative control); canvas bitmap matches viewport (the estate's
+    default-canvas trap); reduced-motion holds the sim still while the
+    content stays painted; storage audit — the only key ever written is
+    `mbm_liveteach_v1_settings`.
+  - CI carries its own red-proof: the workflow perturbs a stamped byte,
+    demands rejection, restores, demands a pass.
+- **Found by the harness during the build (both fixed before the PR):** under
+  reduced motion the sim never painted its first frame — content lost, the
+  house rule's exact failure — fixed with an unconditional first draw; the
+  suite's http server 404'd favicon requests into the console-clean gate.
+- **Decisions applied:** D1 (single-window first-class; the HUD is optional on
+  identical bus code), D4, D5.

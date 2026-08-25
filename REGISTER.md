@@ -2719,3 +2719,21 @@ object keys, never merge the cohort silos (R-B02/R-B03), and per
 `quality/SAFEGUARDING_CONTENT_GATE.md` no tool reads, parses or rewrites any roster key without
 Matt's word — which is why the Live-Teach picker (order LT-GO D2) holds its roster in memory only,
 typed at lesson start, persisted and broadcast nowhere.
+
+## R-LT201 — Pass LT-GO phase LT2: the Live-Teach storage key and the stamped-region pattern
+
+**One localStorage key, registered here per §B convention: `mbm_liveteach_v1_settings`** — a JSON
+object of display preferences only (`highlumen`, `calm`), written by the `/liveteach/` views via
+try/catch-guarded accessors in `tools/liveteach/core_source.js`. **No pupil data can enter it by
+construction**: the kit's roster is session-memory only (LT-GO D2), and the lt-shell suite's
+storage audit reds if any other key is ever written by a liveteach page. The BroadcastChannel name
+`mbm_liveteach_v1` is namespaced for the same reason the storage key is — the estate is one
+origin, and a generic name invites cross-page collisions.
+
+**Shared code inside single self-contained files** follows the inline-exit precedent, not a
+`<script src>`: `tools/liveteach/core_source.js` (bus + keyboard registry + motion/theme) and
+`tools/liveteach/splash_canonical.html` (the canonical splash implementation, hardening bytes
+verbatim from the Games copy) are stamped into every view between `MBM-LIVETEACH-CORE` /
+`MBM-LIVETEACH-SPLASH` markers by their stampers, and `liveteach-verify` (registered in
+watch-main's trigger list, 12 workflows, control PASS) reds on a byte of drift. Edit the source,
+run the stamper — never the stamped copy.

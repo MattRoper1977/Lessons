@@ -1,0 +1,699 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live-Teach Projector Kit · Projector</title>
+<style>
+/* Dark-first: a projector in a lit classroom needs strong figure/ground.
+   High-lumen (correction S5) swaps to a light palette for washed-out
+   projectors; the page fill is painted on BOTH html and body — the estate's
+   recorded gotcha is that the fill lives on <html>. */
+html { background: #0b0f1d; }
+html.highlumen { background: #f6f4ec; }
+body {
+  margin: 0; background: #0b0f1d; color: #e8e2d4; overflow: hidden;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  min-height: 100vh;
+}
+body.highlumen { background: #f6f4ec; color: #1c2337; }
+canvas#sim { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; }
+
+/* Overlays. Hidden state uses visibility, never opacity alone (R-E22). */
+.overlay {
+  position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  background: rgba(10, 14, 30, .92); color: #e8e2d4;
+  border: 3px solid #f2a24a; border-radius: 18px; padding: 28px 44px;
+  text-align: center; z-index: 40; max-width: 80vw;
+  visibility: hidden;
+}
+.overlay.show { visibility: visible; }
+body.highlumen .overlay { background: rgba(255,255,255,.96); color: #1c2337; border-color: #b0731f; }
+#timerOverlay .clock { font-size: 16vmin; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: .04em; }
+#timerOverlay.done { border-color: #b9e6cd; }
+#timerOverlay.done .clock { color: #b9e6cd; }
+body.highlumen #timerOverlay.done .clock { color: #1e6e46; }
+#hintOverlay .hint-text { font-size: 6vmin; font-weight: 700; line-height: 1.3; }
+#hintOverlay .tag, #pollOverlay .tag, #timerOverlay .tag {
+  font-size: 2.6vmin; letter-spacing: .2em; text-transform: uppercase; opacity: .85; margin-bottom: 1vmin;
+}
+#pollOverlay .opts { display: flex; gap: 3vmin; justify-content: center; margin-top: 2vmin; }
+#pollOverlay .opt {
+  border: 2px solid currentColor; border-radius: 12px; padding: 2vmin 3.4vmin;
+  font-size: 5vmin; font-weight: 800;
+}
+
+/* Control strip: auto-hides in the flow of teaching, returns on pointer or
+   keyboard focus. Every teaching action lives HERE too, so the projector view
+   is complete with no HUD window (order LT-GO D1: single-window first-class). */
+#strip {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  padding: 10px 12px; box-sizing: border-box;
+  background: rgba(8, 11, 24, .92); border-top: 1px solid #2c3763;
+  transition: transform .35s ease, visibility .35s;
+}
+body.highlumen #strip { background: rgba(255,255,255,.95); border-top-color: #c9c2ae; }
+#strip.hidden { transform: translateY(110%); visibility: hidden; }
+#strip.hidden:focus-within { transform: none; visibility: visible; }
+#strip .grp { display: flex; gap: 6px; align-items: center; padding: 0 8px; border-right: 1px solid #2c3763; }
+body.highlumen #strip .grp { border-right-color: #c9c2ae; }
+#strip .grp:last-child { border-right: none; }
+#strip button, #strip a.navback {
+  min-width: 44px; min-height: 44px; border-radius: 10px; border: 1px solid #43518c;
+  background: #16204a; color: #e8e2d4; font: inherit; font-size: 14px; font-weight: 600;
+  padding: 6px 12px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+  text-decoration: none; box-sizing: border-box;
+}
+body.highlumen #strip button, body.highlumen #strip a.navback { background: #fffdf6; color: #1c2337; border-color: #8a7f5e; }
+#strip button[aria-pressed="true"] { background: #f2a24a; color: #131313; border-color: #f2a24a; }
+#strip button:focus-visible, #strip a.navback:focus-visible, #fsBtn:focus-visible { outline: 3px solid #b9e6cd; outline-offset: 2px; }
+#strip .lbl { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; opacity: .7; margin-right: 4px; }
+#hintInput { min-height: 44px; border-radius: 10px; border: 1px solid #43518c; background: #0d1430; color: inherit; font: inherit; padding: 6px 10px; width: 200px; }
+body.highlumen #hintInput { background: #fff; border-color: #8a7f5e; }
+
+#status { position: fixed; top: 10px; right: 12px; z-index: 55; font-size: 13px; opacity: .75; text-align: right; }
+#status .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #566; margin-right: 6px; }
+#status.linked .dot { background: #b9e6cd; }
+#status .word { letter-spacing: .06em; }
+
+@media print { #strip, #status, #fsBtn { display: none; } }
+
+/* Reduced motion, both halves of the house rule. The blanket form (no
+   enumerated class list to rot): every part stays visible, every label on —
+   only the motion goes. body.reduce is set by the JS half (OS setting, live
+   change subscription, OR the Calm choice). */
+body.reduce *, body.reduce *::before, body.reduce *::after {
+  animation-duration: .01ms !important; animation-iteration-count: 1 !important;
+  transition-duration: .01ms !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important; animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+  #strip.hidden { transform: none; visibility: visible; }
+}
+</style>
+</head>
+<body>
+<canvas id="sim" aria-hidden="true"></canvas>
+
+<div id="status" aria-hidden="true"><span class="dot"></span><span class="word">solo</span></div>
+
+<section id="timerOverlay" class="overlay" role="timer" aria-label="Class timer">
+  <div class="tag">⏱ Timer</div>
+  <div class="clock">0:00</div>
+  <div id="timerSaid" aria-live="polite" style="position:absolute;left:-9999px"></div>
+</section>
+
+<section id="hintOverlay" class="overlay" aria-label="Hint">
+  <div class="tag">💡 Hint</div>
+  <div class="hint-text">Look at the spacing between the wave crests.</div>
+</section>
+
+<section id="pollOverlay" class="overlay" aria-label="Show of hands poll">
+  <div class="tag">🙋 Show of hands</div>
+  <div class="opts"><span class="opt">A</span><span class="opt">B</span><span class="opt">C</span><span class="opt">D</span></div>
+</section>
+
+<nav id="strip" class="" aria-label="Teaching controls">
+  <div class="grp">
+    <a class="navback mbmhome" href="../index.html" aria-label="Back to the Lessons catalogue">← Lessons</a>
+  </div>
+  <div class="grp" aria-label="Simulation">
+    <span class="lbl">Sim</span>
+    <button id="btnPause" aria-pressed="false">⏸ Pause</button>
+    <button id="btnStop">⏹ Stop</button>
+    <button class="spd" data-spd="0.5" aria-pressed="false">½×</button>
+    <button class="spd" data-spd="1" aria-pressed="true">1×</button>
+    <button class="spd" data-spd="2" aria-pressed="false">2×</button>
+  </div>
+  <div class="grp" aria-label="Timers">
+    <span class="lbl">Timer</span>
+    <button class="tmr" data-min="1">1 min</button>
+    <button class="tmr" data-min="3">3 min</button>
+    <button class="tmr" data-min="5">5 min</button>
+  </div>
+  <div class="grp" aria-label="Overlays">
+    <input id="hintInput" type="text" placeholder="Hint text…" aria-label="Hint text">
+    <button id="btnHint" aria-pressed="false">💡 Hint</button>
+    <button id="btnPoll" aria-pressed="false">🙋 Poll</button>
+    <button id="btnClear">✖ Clear</button>
+  </div>
+  <div class="grp" aria-label="Display">
+    <button id="btnLumen" aria-pressed="false">☀ High lumen</button>
+    <button id="btnCalm" aria-pressed="false">🌙 Calm</button>
+  </div>
+</nav>
+
+<!-- MBM-LIVETEACH-CORE:BEGIN generated by tools/liveteach/stamp_core.mjs from tools/liveteach/core_source.js — do not edit by hand -->
+<script>
+/* Live-Teach core — bus contract, keyboard registry, motion + theme state.
+   ONE SOURCE, MANY COPIES: this file is stamped byte-identically into every
+   liveteach view by tools/liveteach/stamp_core.mjs (between the
+   MBM-LIVETEACH-CORE markers). Edit HERE, run the stamper, never edit a
+   stamped copy — tools/liveteach/static_gates.mjs reds on drift. The views
+   stay single self-contained files (the estate's offline-first promise); the
+   pinned-region pattern is the same one the inline exit region uses. */
+(function () {
+  'use strict';
+  var LT = window.LT = window.LT || {};
+  LT.CHANNEL = 'mbm_liveteach_v1';
+  LT.VERSION = 1;
+
+  /* --- message bus -------------------------------------------------------
+     Contract (order LT-GO / governing spec): every message is
+     { v: 1, type, payload }. Unknown type or missing v is ignored silently.
+     Listeners use addEventListener ONLY — assigning bus.onmessage anywhere in
+     liveteach is a static-gate failure: two of the reviewed fragments each
+     overwrote onmessage and silently killed the other's handlers. */
+  var bus = null;
+  LT.bus = function () {
+    if (!bus) bus = new BroadcastChannel(LT.CHANNEL);
+    return bus;
+  };
+  LT.send = function (type, payload) {
+    try { LT.bus().postMessage({ v: 1, type: type, payload: payload || {} }); } catch (e) {}
+  };
+  LT.on = function (handler) {
+    LT.bus().addEventListener('message', function (ev) {
+      var m = ev.data;
+      if (!m || m.v !== 1 || typeof m.type !== 'string') return;
+      handler(m.type, m.payload || {});
+    });
+  };
+
+  /* --- keyboard registry -------------------------------------------------
+     One keydown listener per view, total. Registering a code twice throws at
+     boot — the guard against the KeyB-class double-fire collision. Hotkeys
+     are skipped while focus is in INPUT / TEXTAREA / SELECT / contenteditable
+     (the fragments missed the last two). */
+  var keys = new Map();
+  LT.registerKey = function (code, handler, description) {
+    if (keys.has(code)) throw new Error('Live-Teach key registered twice: ' + code);
+    keys.set(code, { handler: handler, description: description || '' });
+  };
+  LT.keymap = function () {
+    var out = [];
+    keys.forEach(function (v, k) { out.push([k, v.description]); });
+    return out;
+  };
+  document.addEventListener('keydown', function (e) {
+    var t = e.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) return;
+    var entry = keys.get(e.code);
+    if (entry) entry.handler(e);
+  });
+
+  /* --- reduced motion ----------------------------------------------------
+     Both halves of the house rule: each view carries a CSS
+     @media (prefers-reduced-motion: reduce) blanket, and this JS half mirrors
+     the query onto body.reduce with a LIVE change subscription (a boot-only
+     read was a recorded estate defect). Calm is the pupil-facing stillness
+     choice, independent of the OS setting; either source reduces. */
+  var mq = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  var calmChoice = false;
+  LT.onMotion = [];
+  function applyMotion() {
+    var reduce = calmChoice || !!(mq && mq.matches);
+    document.body.classList.toggle('reduce', reduce);
+    for (var i = 0; i < LT.onMotion.length; i++) {
+      try { LT.onMotion[i](reduce); } catch (e) {}
+    }
+  }
+  LT.reduced = function () { return document.body.classList.contains('reduce'); };
+  LT.calm = function () { return calmChoice; };
+  LT.setCalm = function (on) { calmChoice = !!on; applyMotion(); saveSettings(); };
+  if (mq) {
+    if (mq.addEventListener) mq.addEventListener('change', applyMotion);
+    else if (mq.addListener) mq.addListener(applyMotion);
+  }
+
+  /* --- settings ----------------------------------------------------------
+     One key, JSON, display preferences only. Pupil data NEVER enters storage
+     from liveteach (order LT-GO D2: rosters live in memory for the lesson and
+     die with the tab). Registered in REGISTER.md §B via R-LT2xx. */
+  var SKEY = 'mbm_liveteach_v1_settings';
+  function loadSettings() {
+    try { return JSON.parse(localStorage.getItem(SKEY)) || {}; } catch (e) { return {}; }
+  }
+  function saveSettings() {
+    try { localStorage.setItem(SKEY, JSON.stringify({ highlumen: LT.highlumen(), calm: calmChoice })); } catch (e) {}
+  }
+  LT.saveSettings = saveSettings;
+
+  /* --- high-lumen (correction S5) ---------------------------------------
+     A washed-out classroom projector loses dark themes; highlumen swaps to a
+     light palette. Flags BOTH html and body — the page fill lives on <html>
+     (the estate's recorded CSS gotcha). Vocabulary follows the hub's
+     "High lumen — projector / IWB" mode. */
+  LT.highlumen = function () { return document.body.classList.contains('highlumen'); };
+  LT.setHighlumen = function (on) {
+    document.body.classList.toggle('highlumen', !!on);
+    document.documentElement.classList.toggle('highlumen', !!on);
+    saveSettings();
+  };
+
+  LT.boot = function () {
+    var s = loadSettings();
+    if (s.highlumen) {
+      document.body.classList.add('highlumen');
+      document.documentElement.classList.add('highlumen');
+    }
+    if (s.calm) calmChoice = true;
+    applyMotion();
+  };
+})();
+</script>
+<!-- MBM-LIVETEACH-CORE:END -->
+<script>
+/* Init immediately after the module it initialises, never above it, never in
+   a bare catch — the estate's TDZ rule, three times bitten. */
+LT.boot();
+
+(function () {
+  'use strict';
+
+  /* ---------- state: the projector is the single source of truth ----------
+     Everything the HUD shows comes from PROJECTOR_STATE broadcasts — the HUD
+     holds no independent counters (spec G2 groundwork). */
+  var state = {
+    stage: 0, stageCount: 1,          // stage engine lands in LT3
+    running: true, speed: 1,
+    blackout: false,                   // curtain lands in LT4
+    hint: { on: false, text: '' },
+    poll: { on: false },
+    telestrator: false,                // lands in LT5
+    timer: null,                       // {remaining, total} while active
+    aspect: 16 / 9
+  };
+  function broadcast() {
+    state.aspect = innerWidth / Math.max(1, innerHeight);
+    LT.send('PROJECTOR_STATE', JSON.parse(JSON.stringify(state)));
+  }
+
+  /* ---------- particle wave sim (corrections S1–S5) ---------- */
+  var canvas = document.getElementById('sim');
+  var ctx = canvas.getContext('2d');
+  var PARTICLE_CAP = 150;              // S1: hard cap; pulses recycle the oldest
+  var PAIR_BUDGET = 400;               // S1: connection lines drawn per frame, at most
+  var CELL = 90;                       // spatial grid cell for the connection pass
+  var parts = [];
+  var born = 0;
+
+  function sizeCanvas() {
+    var dpr = Math.min(2, window.devicePixelRatio || 1);
+    canvas.width = Math.round(innerWidth * dpr);
+    canvas.height = Math.round(innerHeight * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  window.addEventListener('resize', function () { sizeCanvas(); draw(); broadcast(); });
+  sizeCanvas();
+
+  function spawn(x, y) {
+    /* S4: velocity is stored UNSCALED — simSpeed multiplies in update() only,
+       never at construction, so changing speed never bakes into particles. */
+    var a = Math.random() * Math.PI * 2;
+    var p = { x: x, y: y, vx: Math.cos(a) * 40, vy: Math.sin(a) * 40, age: 0, id: born++ };
+    if (parts.length >= PARTICLE_CAP) parts.shift();  // recycle the oldest
+    parts.push(p);
+  }
+  function pulse(x, y) { for (var i = 0; i < 12; i++) spawn(x, y); }
+  canvas.addEventListener('pointerdown', function (e) { pulse(e.clientX, e.clientY); });
+
+  function seed() {
+    parts.length = 0;
+    for (var i = 0; i < 60; i++) spawn(Math.random() * innerWidth, Math.random() * innerHeight);
+  }
+  seed();
+  /* First frame is painted unconditionally (draw is a hoisted declaration):
+     under reduced motion the loop skips draw(), and a never-painted canvas
+     would lose the CONTENT, not just the motion — the house rule's exact
+     failure. */
+  draw();
+
+  function update(dt) {
+    var k = dt * state.speed;          // S4: the one and only speed application
+    for (var i = 0; i < parts.length; i++) {
+      var p = parts[i];
+      p.x += p.vx * k; p.y += p.vy * k; p.age += k;
+      if (p.x < 0 || p.x > innerWidth) p.vx *= -1;
+      if (p.y < 0 || p.y > innerHeight) p.vy *= -1;
+      p.x = Math.max(0, Math.min(innerWidth, p.x));
+      p.y = Math.max(0, Math.min(innerHeight, p.y));
+    }
+  }
+
+  function draw() {
+    var lumen = LT.highlumen();
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    /* S5: figure/ground holds on a washed-out projector — line and dot
+       colours are picked per theme, never low-alpha-on-dark alone. */
+    var dot = lumen ? '#1c2337' : '#e8e2d4';
+    var line = lumen ? 'rgba(28,35,55,.45)' : 'rgba(232,226,212,.35)';
+    // connection pass: spatial grid + hard pair budget (S1 — never O(n²) free-run)
+    var grid = new Map();
+    for (var i = 0; i < parts.length; i++) {
+      var p = parts[i];
+      var key = ((p.x / CELL) | 0) + ':' + ((p.y / CELL) | 0);
+      if (!grid.has(key)) grid.set(key, []);
+      grid.get(key).push(p);
+    }
+    var drawn = 0;
+    ctx.strokeStyle = line; ctx.lineWidth = 1;
+    ctx.beginPath();
+    outer:
+    for (var gi = 0; gi < parts.length; gi++) {
+      var a = parts[gi];
+      var cx = (a.x / CELL) | 0, cy = (a.y / CELL) | 0;
+      for (var ox = -1; ox <= 1; ox++) for (var oy = -1; oy <= 1; oy++) {
+        var cell = grid.get((cx + ox) + ':' + (cy + oy));
+        if (!cell) continue;
+        for (var ci = 0; ci < cell.length; ci++) {
+          var b = cell[ci];
+          if (b.id <= a.id) continue;
+          var dx = a.x - b.x, dy = a.y - b.y;
+          if (dx * dx + dy * dy < CELL * CELL) {
+            ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+            if (++drawn >= PAIR_BUDGET) break outer;
+          }
+        }
+      }
+    }
+    ctx.stroke();
+    ctx.fillStyle = dot;
+    for (var di = 0; di < parts.length; di++) {
+      var d = parts[di];
+      ctx.beginPath(); ctx.arc(d.x, d.y, 2.5, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+
+  /* ---------- the one animation loop (G4: overlays draw inside it too) ----
+     Under reduced motion the sim holds its last frame — content stays
+     visible, only the motion goes. Frames are counted as harness evidence. */
+  var frames = 0;
+  var last = performance.now();
+  function loop(now) {
+    var dt = Math.min(.05, (now - last) / 1000);
+    last = now;
+    if (state.running && !LT.reduced()) {
+      update(dt);
+      draw();
+      frames++;
+    }
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+  LT.onMotion.push(function () { draw(); });  // repaint the static frame on toggle
+
+  /* ---------- sim controls (S2: Pause/Resume and Stop are different verbs) */
+  var btnPause = document.getElementById('btnPause');
+  function setRunning(on) {
+    state.running = !!on;
+    btnPause.setAttribute('aria-pressed', String(!state.running));
+    btnPause.textContent = state.running ? '⏸ Pause' : '▶ Resume';
+    broadcast();
+  }
+  function stopSim() { setRunning(false); seed(); draw(); broadcast(); }
+  function setSpeed(v) {
+    state.speed = v;
+    /* S3: the buttons follow the state, and the state travels in
+       PROJECTOR_STATE so a HUD shows the same highlight. */
+    document.querySelectorAll('#strip .spd').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(Number(b.dataset.spd) === v));
+    });
+    broadcast();
+  }
+  btnPause.addEventListener('click', function () { setRunning(!state.running); });
+  document.getElementById('btnStop').addEventListener('click', stopSim);
+  document.querySelectorAll('#strip .spd').forEach(function (b) {
+    b.addEventListener('click', function () { setSpeed(Number(b.dataset.spd)); });
+  });
+
+  /* ---------- timer (no aria-live on the ticking clock — announcements at
+     start and end only, the estate's named wrong-fix) ---------- */
+  var timerBox = document.getElementById('timerOverlay');
+  var timerClock = timerBox.querySelector('.clock');
+  var timerSaid = document.getElementById('timerSaid');
+  var timerInt = null;
+  function fmt(s) { return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
+  function startTimer(mins) {
+    clearInterval(timerInt);
+    var total = mins * 60;
+    state.timer = { remaining: total, total: total };
+    timerBox.classList.remove('done');
+    timerBox.classList.add('show');
+    timerClock.textContent = fmt(total);
+    timerSaid.textContent = mins + ' minute timer started';
+    broadcast();
+    timerInt = setInterval(function () {
+      if (!state.timer) return;
+      state.timer.remaining--;
+      timerClock.textContent = fmt(Math.max(0, state.timer.remaining));
+      if (state.timer.remaining <= 0) {
+        clearInterval(timerInt); timerInt = null;
+        timerBox.classList.add('done');
+        timerClock.textContent = '0:00';
+        timerSaid.textContent = 'Timer finished';
+        state.timer = null;
+      }
+      broadcast();
+    }, 1000);
+  }
+  function clearTimer() {
+    clearInterval(timerInt); timerInt = null;
+    state.timer = null;
+    timerBox.classList.remove('show', 'done');
+    broadcast();
+  }
+  document.querySelectorAll('#strip .tmr').forEach(function (b) {
+    b.addEventListener('click', function () { startTimer(Number(b.dataset.min)); });
+  });
+
+  /* ---------- hint & poll (H/P state lives HERE, never read back from DOM
+     copies — the spec's toggle-state rule) ---------- */
+  var hintBox = document.getElementById('hintOverlay');
+  var hintText = hintBox.querySelector('.hint-text');
+  var hintInput = document.getElementById('hintInput');
+  var btnHint = document.getElementById('btnHint');
+  var pollBox = document.getElementById('pollOverlay');
+  var btnPoll = document.getElementById('btnPoll');
+  function setHint(on, text) {
+    state.hint.on = !!on;
+    if (typeof text === 'string' && text.trim()) state.hint.text = text.trim();
+    if (state.hint.text) hintText.textContent = state.hint.text;
+    hintBox.classList.toggle('show', state.hint.on);
+    btnHint.setAttribute('aria-pressed', String(state.hint.on));
+    broadcast();
+  }
+  function setPoll(on) {
+    state.poll.on = !!on;
+    pollBox.classList.toggle('show', state.poll.on);
+    btnPoll.setAttribute('aria-pressed', String(state.poll.on));
+    broadcast();
+  }
+  function clearOverlays() { setHint(false); setPoll(false); clearTimer(); }
+  btnHint.addEventListener('click', function () { setHint(!state.hint.on, hintInput.value); });
+  btnPoll.addEventListener('click', function () { setPoll(!state.poll.on); });
+  document.getElementById('btnClear').addEventListener('click', clearOverlays);
+
+  /* ---------- display toggles ---------- */
+  var btnLumen = document.getElementById('btnLumen');
+  var btnCalm = document.getElementById('btnCalm');
+  function syncDisplayButtons() {
+    btnLumen.setAttribute('aria-pressed', String(LT.highlumen()));
+    btnCalm.setAttribute('aria-pressed', String(LT.calm()));
+  }
+  btnLumen.addEventListener('click', function () { LT.setHighlumen(!LT.highlumen()); syncDisplayButtons(); draw(); });
+  btnCalm.addEventListener('click', function () { LT.setCalm(!LT.calm()); syncDisplayButtons(); });
+  syncDisplayButtons();
+
+  /* ---------- control strip auto-hide ---------- */
+  var strip = document.getElementById('strip');
+  var hideT = null;
+  function stripShow() {
+    strip.classList.remove('hidden');
+    clearTimeout(hideT);
+    hideT = setTimeout(function () {
+      if (!strip.contains(document.activeElement)) strip.classList.add('hidden');
+    }, 4000);
+  }
+  ['pointermove', 'pointerdown', 'keydown'].forEach(function (ev) {
+    window.addEventListener(ev, stripShow, { passive: true });
+  });
+  stripShow();
+
+  /* ---------- keyboard (registry: one listener, collisions throw) -------- */
+  LT.registerKey('Space', function (e) { e.preventDefault(); setRunning(!state.running); }, 'Sim pause / resume');
+  LT.registerKey('Digit1', function () { startTimer(1); }, 'Timer 1 min');
+  LT.registerKey('Digit2', function () { startTimer(3); }, 'Timer 3 min');
+  LT.registerKey('Digit3', function () { startTimer(5); }, 'Timer 5 min');
+  LT.registerKey('Digit0', function () { clearOverlays(); }, 'Clear all overlays');
+  LT.registerKey('KeyH', function () { setHint(!state.hint.on); }, 'Hint toggle');
+  LT.registerKey('KeyP', function () { setPoll(!state.poll.on); }, 'Poll toggle');
+  LT.registerKey('Escape', function () {
+    /* topmost first: poll, then hint, then timer; blackout joins in LT4 */
+    if (state.poll.on) return setPoll(false);
+    if (state.hint.on) return setHint(false);
+    if (state.timer || timerBox.classList.contains('show')) return clearTimer();
+    if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+  }, 'Close topmost overlay');
+
+  /* ---------- bus: resync kills the reload-desync bug class --------------
+     The projector broadcasts PROJECTOR_STATE on load AND on every HUD_HELLO;
+     a HUD reconciles everything it shows from that one message. */
+  var linked = document.getElementById('status');
+  var linkT = null;
+  LT.on(function (type, payload) {
+    if (type === 'HUD_HELLO') {
+      broadcast();
+      linked.classList.add('linked');
+      linked.querySelector('.word').textContent = 'linked';
+      clearTimeout(linkT);
+      linkT = setTimeout(function () {
+        linked.classList.remove('linked');
+        linked.querySelector('.word').textContent = 'solo';
+      }, 12000);
+    }
+    else if (type === 'SIM_RUN') setRunning(!!payload.on);
+    else if (type === 'SIM_STOP') stopSim();
+    else if (type === 'SIM_SPEED') setSpeed(Number(payload.value) || 1);
+    else if (type === 'TIMER_START') startTimer(Number(payload.mins) || 1);
+    else if (type === 'HINT_SET') setHint(!!payload.on, payload.text);
+    else if (type === 'POLL_SET') setPoll(!!payload.on);
+    else if (type === 'OVERLAYS_CLEAR') clearOverlays();
+  });
+  broadcast();
+
+  /* ---------- read-only harness seams (the glitchclash pattern: add here,
+     never make internals global) ---------- */
+  window.__LT = {
+    state: function () { return JSON.parse(JSON.stringify(state)); },
+    particleCount: function () { return parts.length; },
+    particleCap: PARTICLE_CAP,
+    pairBudget: PAIR_BUDGET,
+    frames: function () { return frames; },
+    firstParticle: function () { return parts[0] ? { vx: parts[0].vx, vy: parts[0].vy } : null; },
+    lastParticle: function () { var p = parts[parts.length - 1]; return p ? { vx: p.vx, vy: p.vy } : null; },
+    spawnPulse: pulse,
+    canvasSize: function () { return { w: canvas.width, h: canvas.height }; },
+    keymap: LT.keymap
+  };
+})();
+</script>
+<!-- MBM-LIVETEACH-SPLASH:BEGIN generated by tools/liveteach/stamp_splash.mjs — canonical splash + per-view caller; do not edit by hand -->
+<!-- mbm-splash-inline: canonical Made by Matt splash, inlined from
+     site/assets/brand/mbm-splash.js (sha256 e375642c631358c6753a93c5e410742af2ad49c26634d0428352ec75ed87bc4c).
+     Inlined, not linked: these games are single-file and offline-first. -->
+<script>
+/* Made by Matt splash v2 — single file, no dependencies, self-styling.
+   Usage: MadeByMattSplash.start({title:"BOSS BATTLE", kicker:"A Made by Matt Simulation",
+          duration:3200, onComplete:function(){}});                                      */
+(function (g) {
+  var CSS = ".mbm-splash{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;" +
+    "background:radial-gradient(circle at 50% 38%,#222B55,#161D3D 68%);color:#E8E2D4;" +
+    "font-family:Poppins,'Segoe UI',system-ui,sans-serif;transition:opacity .55s ease,visibility .55s}" +
+    ".mbm-splash.is-leaving{opacity:0;visibility:hidden}" +
+    ".mbm-stage{text-align:center;padding:24px;max-width:860px}" +
+    ".mbm-mark{width:min(34vmin,200px);height:auto;filter:drop-shadow(0 18px 32px #0008)}" +
+    ".mbm-mark .mpath{stroke-dasharray:1;stroke-dashoffset:1;animation:mbmDraw 1s cubic-bezier(.6,0,.3,1) .2s forwards}" +
+    ".mbm-mark .mstar{transform-origin:50px 30px;transform:scale(0);opacity:0;" +
+    "animation:mbmPop .45s cubic-bezier(.34,1.56,.64,1) 1.1s forwards}" +
+    ".mbm-kicker,.mbm-title,.mbm-tagline{opacity:0;transform:translateY(12px);animation:mbmRise .6s ease forwards}" +
+    ".mbm-kicker{animation-delay:1.3s;margin-top:20px;color:#F2A24A;font-size:.78rem;" +
+    "letter-spacing:.32em;text-transform:uppercase}" +
+    ".mbm-title{animation-delay:1.45s;margin:.35rem 0 .2rem;font-size:clamp(2rem,7vw,5rem);" +
+    "line-height:.95;letter-spacing:.04em;text-transform:uppercase;font-weight:700}" +
+    ".mbm-tagline{animation-delay:1.65s;color:#B9E6CD;letter-spacing:.18em;text-transform:uppercase;font-weight:700}" +
+    ".mbm-skip{position:absolute;right:22px;bottom:20px;border:1px solid #b9e6cd70;border-radius:99px;" +
+    "background:#0a1026aa;color:#E8E2D4;padding:.65rem 1rem;cursor:pointer;font:inherit}" +
+    ".mbm-skip:focus-visible{outline:3px solid #F2A24A;outline-offset:3px}" +
+    "@keyframes mbmDraw{to{stroke-dashoffset:0}}@keyframes mbmPop{to{transform:scale(1);opacity:1}}" +
+    "@keyframes mbmRise{to{opacity:1;transform:translateY(0)}}" +
+    "@media(prefers-reduced-motion:reduce){.mbm-splash{transition:none}" +
+    ".mbm-mark .mpath{animation:none;stroke-dashoffset:0}.mbm-mark .mstar{animation:none;transform:scale(1);opacity:1}" +
+    ".mbm-kicker,.mbm-title,.mbm-tagline{animation:none;opacity:1;transform:none}}";
+  var MARK = '<svg class="mbm-mark" viewBox="0 0 100 100" role="img" aria-label="Made by Matt">' +
+    '<circle cx="50" cy="50" r="47" fill="none" stroke="#B9E6CD" stroke-width="3.4"/>' +
+    '<path class="mpath" pathLength="1" d="M28 71 L28 37 L50 59 L72 37 L72 71" fill="none" ' +
+    'stroke="#E8E2D4" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>' +
+    '<path class="mstar" d="M50 22.5 L51.48 28.52 L57.5 30 L51.48 31.48 L50 37.5 ' +
+    'L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"/></svg>';
+
+  function start(o) {
+    o = Object.assign({ title: "", kicker: "A Made by Matt Experience",
+      duration: 3200, onComplete: null }, o || {});
+    if (!document.getElementById("mbm-splash-css")) {
+      var st = document.createElement("style");
+      st.id = "mbm-splash-css"; st.textContent = CSS;
+      document.head.appendChild(st);
+    }
+    var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var prevFocus = document.activeElement;
+    var el = document.createElement("section");
+    el.className = "mbm-splash";
+    el.setAttribute("role", "dialog");
+    el.setAttribute("aria-modal", "true");
+    el.setAttribute("aria-label", "Made by Matt introduction");
+    el.innerHTML = '<div class="mbm-stage">' + MARK +
+      '<p class="mbm-kicker"></p><h1 class="mbm-title"></h1>' +
+      '<p class="mbm-tagline">Learn \u2022 Build \u2022 Explore</p></div>' +
+      '<button class="mbm-skip" type="button">Skip intro</button>';
+    el.querySelector(".mbm-kicker").textContent = o.kicker;
+    el.querySelector(".mbm-title").textContent = o.title;
+    document.body.appendChild(el);
+    var done = false, timer;
+    function close() {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      el.classList.add("is-leaving");
+      window.removeEventListener("keydown", onKey, true);
+      setTimeout(function () {
+        el.remove();
+        if (prevFocus && prevFocus.focus) prevFocus.focus();
+        if (typeof o.onComplete === "function") o.onComplete();
+      }, reduced ? 0 : 600);
+    }
+    el.querySelector(".mbm-skip").addEventListener("click", function (e) {
+      e.stopPropagation(); close();
+    });
+    /* the overlay swallows stray pointer input so a skip tap can never
+       reach the game underneath */
+    el.addEventListener("click", function (e) { e.stopPropagation(); });
+    /* capture on window: these games install their own window keydown
+       handlers, and preventDefault alone does not stop the skip key ALSO
+       firing a gameplay action. Capture + stopPropagation does. */
+    function onKey(e) {
+      if (done) return;
+      if (e.key === "Escape" || e.key === "Enter" || e.key === " ") {
+        e.preventDefault(); e.stopPropagation();
+        if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+        close();
+      }
+    }
+    window.addEventListener("keydown", onKey, true);
+    el.addEventListener("keydown", onKey);
+    el.tabIndex = -1;
+    el.focus();
+    timer = setTimeout(close, reduced ? Math.min(o.duration, 1200) : o.duration);
+    return { close: close, element: el };
+  }
+  g.MadeByMattSplash = { start: start };
+})(window);
+</script>
+<script>
+(function () {
+  function boot() {
+    /* One start state: the splash plays above the view and fades to reveal
+       it; onComplete adds nothing. */
+    window.MadeByMattSplash.start({ title: 'LIVE-TEACH', onComplete: function () {} });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+  else boot();
+})();
+</script>
+<!-- MBM-LIVETEACH-SPLASH:END -->
+</body>
+</html>

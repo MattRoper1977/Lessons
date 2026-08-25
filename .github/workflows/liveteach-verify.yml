@@ -1,0 +1,81 @@
+name: liveteach-verify
+
+# The Live-Teach Projector Kit's own gate: stamped-region pinning (core + the
+# canonical splash), the static gates (onmessage assignment, one rAF loop per
+# view, the TDZ init rule), and the lt-shell browser suite — headless Chromium
+# against the shipped files, evidence not proxies.
+#
+# Registered in watch-main.yml's workflows list IN THE SAME PR that adds this
+# file — `watch_main_runs.mjs --verify-trigger-list` reds post-merge otherwise.
+#
+# The "gate can go red" step is this estate's standing convention: a checker
+# that has never failed in CI proves nothing. It perturbs a stamped byte,
+# demands the check reject it, restores, and demands the check pass again.
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'liveteach/**'
+      - 'tools/liveteach/**'
+      - '.github/workflows/liveteach-verify.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'liveteach/**'
+      - 'tools/liveteach/**'
+      - '.github/workflows/liveteach-verify.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash -Eeo pipefail {0}
+
+jobs:
+  verify:
+    name: liveteach suites
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install playwright chromium
+        run: |
+          npm install --no-save playwright | tee "$RUNNER_TEMP/npm.txt"
+          npx playwright install --with-deps chromium | tee "$RUNNER_TEMP/pw.txt"
+
+      - name: The gate can go red (perturb, expect rejection, restore)
+        run: |
+          cp liveteach/projector.html "$RUNNER_TEMP/projector.bak"
+          sed -i "s/mbm_liveteach_v1/mbm_liveteach_vX/" liveteach/projector.html
+          if node tools/liveteach/stamp_core.mjs --check > "$RUNNER_TEMP/red.txt" 2>&1; then
+            echo "CONTROL FAILED: a perturbed stamped region was not rejected"
+            cat "$RUNNER_TEMP/red.txt"
+            exit 1
+          fi
+          echo "control: perturbed region correctly rejected"
+          cp "$RUNNER_TEMP/projector.bak" liveteach/projector.html
+          node tools/liveteach/stamp_core.mjs --check
+
+      - name: Live-Teach suites
+        run: |
+          tools/liveteach/run.sh | tee "$RUNNER_TEMP/suites.txt"
+          {
+            echo '### liveteach-verify'
+            tail -12 "$RUNNER_TEMP/suites.txt"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: liveteach-suites-output
+          path: ${{ runner.temp }}/suites.txt
+          if-no-files-found: ignore
