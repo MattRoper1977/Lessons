@@ -81,7 +81,13 @@ grep -iqwE 'address|birthday' "$TARGET" && fail "safeguarding: file contains 'ad
 # No written-out child age *inside the g_clara guide entry text*
 # (a whole-file search would false-match 'listen', 'height', etc.)
 GCLARA="$(grep -oE "\{id:'g_clara'[^}]*\}" "$TARGET" || true)"
-if printf '%s' "$GCLARA" | grep -iqwE 'eight|nine|ten|eleven|twelve'; then
+# Herestring, not a pipe: a printf that died of a broken pipe would make this
+# safeguarding check pass without having read the entry.
+if [ -z "$GCLARA" ]; then
+  # An entry that was never found cannot be clean. Saying "clean" here would be
+  # a safeguarding claim about text nobody read.
+  fail "safeguarding: MEASUREMENT INVALID - no g_clara entry found to check"
+elif grep -iqwE 'eight|nine|ten|eleven|twelve' <<<"$GCLARA"; then
   fail "safeguarding: g_clara entry contains a written-out age"
 fi
 ok "safeguarding: no age / city / address / birthday; g_clara entry clean"
