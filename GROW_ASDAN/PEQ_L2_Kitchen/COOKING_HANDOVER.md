@@ -42,12 +42,12 @@ three lanes — at three different levels, into three differently-coded units.
 
 | Block | Weeks | Skill in focus | Entry 3 | Level 1 | Level 2 |
 |---|---|---|---|---|---|
-| Aut1 | W1–7 | Team working | `TmWkSkE3` | `TmWkSk1` | `TmWkSk2` |
-| Aut2 | W8–14 | Decision making | `DecMkSkE3` | `DecMkSk1` | `DecMkSk2` |
-| Spr1 | W15–20 | Learning | `LSkE3` | `LSk1` | `LSk2` |
-| Spr2 | W21–26 | Communication | `ComSkE3` | `ComSk1` | `ComSk2` |
-| Sum1 | W27–32 | Thinking / Critical thinking | `ThSkE3` | `ThSk1` | **`CrThSk2`** |
-| Sum2 | W33–38 | Wellbeing in learning | `WellbLeE3` | `WellbLe1` | `WellbLe2` |
+| Aut1 | W1–8 | Team working | `TmWkSkE3` | `TmWkSk1` | `TmWkSk2` |
+| Aut2 | W9–15 | Decision making | `DecMkSkE3` | `DecMkSk1` | `DecMkSk2` |
+| Spr1 | W16–21 | Learning | `LSkE3` | `LSk1` | `LSk2` |
+| Spr2 | W22–27 | Communication | `ComSkE3` | `ComSk1` | `ComSk2` |
+| Sum1 | W28–33 | Thinking / Critical thinking | `ThSkE3` | `ThSk1` | **`CrThSk2`** |
+| Sum2 | W34–38 | Wellbeing in learning | `WellbLeE3` | `WellbLe1` | `WellbLe2` |
 
 At Level 2 the thinking unit is **Critical thinking (`CrThSk2`)**, not `ThSk` — a different unit,
 not a harder version of the same one.

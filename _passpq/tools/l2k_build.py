@@ -137,7 +137,7 @@ def build_sow():
         f"<td class=\"num\">{RM[r]['owner_decision']}</td></tr>"
         for r in ("Build", "Grow", "Launch"))
     HPW = f"{LED['weekly_min_default']/60:.3f}"
-    QA = " &middot; ".join(f"{LANE_NAME[l]} {LED['lanes'][l]['qa_min']//60}&nbsp;h" for l in LANES)
+    QA = " &middot; ".join(f"{LANE_NAME[l]} {mins(LED['lanes'][l]['qa_min'])}" for l in LANES)
 
     # the honest GLH statement + method
     S.append(f"""<h2>The hours, stated honestly</h2>
@@ -172,7 +172,7 @@ def build_sow():
 <p style="font-size:.9rem">Every row is a whole count of the school's <b>real 40-minute timetabled slots</b>, across the band the timetable actually supports (<b>1&ndash;8 slots</b>). The shaded row is the <b>measured</b> rate &mdash; the eight carryable slots each room independently has. This table is what a change to the timetable is read off: lose two slots and the row two above is the honest answer.</p>
 <table><tr><th>Supervised h/wk</th><th>Year GLH</th><th>Lane</th><th>Award</th><th>Extended Award</th><th>Certificate</th></tr>
 {''.join(rows)}</table>
-<p style="font-size:.88rem">&#8220;Short&#8221; = the gap between the lane's unit-GLH requirement and the year's physical hours, before any co-delivery. <b>The shaded eight-slot row is the live plan, and it is measured</b> &mdash; from the school's own 2026-27 timetable, with a workbook cell cited for every slot in <code>_passpq/TIMETABLE_2026-27.md</code>. Nothing on this page rests on a derived band or an owner ruling any more; both are retired.</p>""")
+<p style="font-size:.88rem">&#8220;Short&#8221; = the gap between the lane's unit-GLH requirement and the year's physical hours, after the ledger's recorded co-delivery netting (E3 7&nbsp;h &middot; L1 2&nbsp;h &mdash; a netting the year map has since withdrawn; see the lane-target note). <b>The shaded eight-slot row is the live plan, and it is measured</b> &mdash; from the school's own 2026-27 timetable, with a workbook cell cited for every slot in <code>_passpq/TIMETABLE_2026-27.md</code>. Nothing on this page rests on a derived band or an owner ruling any more; both are retired.</p>""")
 
     # staged milestones
     mrows = []
@@ -263,7 +263,8 @@ under its 106 published qual-GLH too). <b>The Certificate therefore turns on the
 slots.</b> The candidate that closes Launch's gap is named rather than quietly borrowed: its
 <b>Friday P4 Careers: work experience prep</b> or <b>Monday P5 Community project</b> &mdash; one
 more slot banked to PEQ takes Launch's floor to 3.33&nbsp;h/wk and 126.7 GLH, clearing the
-Certificate at every level.</div>
+Level&nbsp;2 Certificate (120 unit-GLH); the Entry&nbsp;3 and Level&nbsp;1 Certificates need 140/135
+unit-GLH &mdash; still about 6.3&nbsp;h short at that floor.</div>
 
 <h2>The kitchen &mdash; what the timetable actually gives</h2>
 <div class="safebox"><b>{esc(KIT['_cooking_labelled_whole_school']['statement'])}</b></div>
@@ -284,7 +285,7 @@ teaches the cooking slot(s) in September.</b></p>""")
 
     # per-lane weekly ledgers
     S.append("""<h2>The GLH ledger — every week &times; lane, minutes per unit</h2>
-<p>Times are <b>h:mm of supervised time</b> attributed per unit (spec &sect;9 p16). <b>Physical</b> is the timetabled 4:40 (seven 40-minute periods). A <b>co-delivered</b> entry is the same physical session banked to a second unit, declared here and justified above; the unit columns include it, the physical column does not. <b>QA</b> is supervised portfolio/IQA/EQA time not attributed to a unit (L2 lane headroom).</p>""")
+<p>Times are <b>h:mm of supervised time</b> attributed per unit (spec &sect;9 p16). <b>Physical</b> is the timetabled 5:20 (eight 40-minute periods). A <b>co-delivered</b> entry is the same physical session banked to a second unit, declared here and justified above; the unit columns include it, the physical column does not. <b>QA</b> is supervised portfolio/IQA/EQA time not attributed to a unit (L2 lane headroom).</p>""")
     for lane in LANES:
         L = LED["lanes"][lane]
         head = ("<tr><th>Wk</th><th>Blk</th><th>Live deck</th><th>Focus (shared vehicle)</th>"
@@ -304,7 +305,7 @@ teaches the cooking slot(s) in September.</b></p>""")
                         f"<td>{co_txt}</td><td class=\"num\">{mins(sum(r.values()))}</td></tr>")
         tot = ("<tr><th colspan=\"4\">Ledger total (h) — must equal each unit's GLH</th>"
                + "".join(f"<th class=\"num\">{L['totals_min'][sk]//60}</th>" for sk in SKILLS)
-               + f"<th class=\"num\">{L['qa_min']//60}</th><th class=\"num\">{L['co_min']//60} h</th><th class=\"num\">{LED['weekly_min_default'] * LED['weeks'] // 60}</th></tr>")
+               + f"<th class=\"num\">{mins(L['qa_min'])}</th><th class=\"num\">{L['co_min']//60} h</th><th class=\"num\">{mins(LED['weekly_min_default'] * LED['weeks'])}</th></tr>")
         spec = ("<tr><th colspan=\"4\">Unit GLH (spec pp11&ndash;13)</th>"
                 + "".join(f"<th class=\"num\">{unit_of(lane, sk)['glh']}</th>" for sk in SKILLS)
                 + "<th>&mdash;</th><th>&mdash;</th><th>&mdash;</th></tr>")
@@ -418,7 +419,7 @@ def sig_block(iqa=False):
             "<td>Assessor name + signature · date</td></tr>" + iqarow + "</table>")
 
 def build_templates():
-    S = ["""<div class="note no-print"><b>How to use.</b> One template per skill per level lane. Print the lane's copy — the required elements differ by level and are printed on the sheet: <b>Entry 3 plans carry NO review point</b>; Level 1 and Level 2 plans carry one (spec &sect;17 — verified per unit). Communication is the exception twice over: no 10-hour window at any level (activity minima instead), and at <b>Level 2 a pupil needs TWO plans over two DIFFERENT ways of communicating</b> — print the L2 communication sheet twice. Plans that carry a 10-hour window log their hours on the <a href="Plan_Hours_Grid.html">plan-hours grid</a>.</div>"""]
+    S = ["""<div class="note no-print"><b>How to use.</b> One template per skill per level lane. Print the lane's copy — the required elements differ by level and are printed on the sheet: <b>Entry 3 plans carry NO review point</b>; Level 1 and Level 2 plans carry one on five of the six units — never on Communication (spec &sect;17 — verified per unit). Communication is the exception twice over: no 10-hour window at any level (activity minima instead), and at <b>Level 2 a pupil needs TWO plans over two DIFFERENT ways of communicating</b> — print the L2 communication sheet twice. Plans that carry a 10-hour window log their hours on the <a href="Plan_Hours_Grid.html">plan-hours grid</a>.</div>"""]
     for lane in LANES:
         S.append(f"<h2 style=\"color:{LANE_HEX[lane]}\">{LANE_NAME[lane]} plan templates</h2>")
         for sk in SKILLS:
@@ -492,7 +493,7 @@ def build_checklists():
 
 # ------------------------------------------------- A3: plan-hours grid --------
 def build_grid():
-    S = ["""<div class="note no-print"><b>What this is.</b> The tracking grid for the five 10-hour plan-use windows (Decision making · Learning · Team working · Thinking/Critical thinking · Wellbeing — Communication has no window at any level; its activity minima are recorded on the witness sheet instead). One row per supervised session. <b>The lane column is part of the record</b>: a session can serve all three lanes at once; each pupil's grid still shows their own lane. Windows overlap (PEQ002 model) — one cook cycle can log against two open windows where both plans are genuinely in use, matching the declared co-delivery in the year map.</div>"""]
+    S = ["""<div class="note no-print"><b>What this is.</b> The tracking grid for the five 10-hour plan-use windows (Decision making · Learning · Team working · Thinking/Critical thinking · Wellbeing — Communication has no window at any level; its activity minima are recorded on the witness sheet instead). One row per supervised session. <b>The lane column is part of the record</b>: a session can serve all three lanes at once; each pupil's grid still shows their own lane. Windows overlap (PEQ002 model) — one cook cycle can log against two open windows where both plans are genuinely in use (PEQ002's own durations overlap; the year map declares no co-delivered GLH).</div>"""]
     wins = "".join(
         f"<tr><td><b>{SKILL_NAME[sk]}</b></td><td>W{v['open']}</td><td>W{v['review']}</td><td>W{v['close']}</td><td class=\"num\">600 min</td></tr>"
         for sk, v in LED["plan_windows"].items())
@@ -515,7 +516,7 @@ def build_staff():
 <ul>
 <li><b>Barred combinations (spec &sect;6.5):</b> each pupil banks each of the six skills at ONE level only — the credit from the highest-level unit counts. The witness sheet's Level tick (E3 · L1 · L2) is the record.</li>
 <li><b>Sizes (spec p4/p10):</b> L2 Award 4 cr all-at-level (32 GLH) · L2 Extended Award 9 cr, min 6 at L2 (68 GLH) · L2 Certificate 15 cr, min 12 at L2, max 3 below (106 GLH). At L2 the thinking unit is <b>Critical thinking (CrThSk2)</b>, not ThSk.</li>
-<li><b>Key L2 demands:</b> Communication = TWO plans over two DIFFERENT ways (presentation &ge;4 min · discussion &ge;10 min · text &ge;500 words) · Decision making = short/medium/long-term situations, &ge;3 tools COMPARED · plans at L1/L2 carry review points (never at E3) · five of six units carry the 10-hour plan-use window (never Communication) · Critical thinking = credibility/accuracy/bias across &ge;2 sources, primary vs secondary.</li>
+<li><b>Key L2 demands:</b> Communication = TWO plans over two DIFFERENT ways (presentation &ge;4 min · discussion &ge;10 min · text &ge;500 words) · Decision making = short/medium/long-term situations, &ge;3 tools COMPARED · plans at L1/L2 carry review points on five of six units (never on Communication, never at E3) · five of six units carry the 10-hour plan-use window (never Communication) · Critical thinking = credibility/accuracy/bias across &ge;2 sources, primary vs secondary.</li>
 <li><b>Wording:</b> every surface says <b>working towards</b>. No deck or sheet claims a pupil is registered or will certificate — registration, unit and level attribution are the coordinator's decisions (spec &sect;14 p20).</li>
 </ul>""")
     S.append("""<h2>Kitchen progression ladder</h2>
@@ -657,7 +658,7 @@ criterion.</div>
 Effectiveness Qualifications at <b>three levels at once</b> &mdash; the cohort at Entry&nbsp;3, a
 small group at Level&nbsp;1, a directed few at Level&nbsp;2. Everyone cooks in the same session;
 what differs is the <b>demand</b> placed on each pupil and the <b>level</b> their evidence banks
-at. An Entry&nbsp;3 pupil states and lists; a Level&nbsp;1 pupil describes and explains; a
+at. An Entry&nbsp;3 pupil states and lists; a Level&nbsp;1 pupil outlines and describes; a
 Level&nbsp;2 pupil compares, assesses and evaluates. Same bench, same task, three standards.</p>
 <p>The qualification is <b>not about food</b>. It is about six personal skills &mdash;
 communication, decision making, learning, team working, thinking, and wellbeing in learning
