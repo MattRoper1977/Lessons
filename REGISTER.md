@@ -2686,3 +2686,36 @@ C1/C2/C3 wording).
 **Live deployment rendering stays UNPROVEN by design** — the Pages API and madebymatt.uk are
 proxy-blocked from the pass environment; Matt phone-checks (list in HANDOVER queue entry 20).
 **Neither branch deleted — that is Matt's UI job.**
+
+## R-LT101 — Pass LT-GO phase LT1: hard-coded class names neutralised; the roster register brought up to the code
+
+**The exposure.** Real pupil first names were hard-coded as default rosters in publicly served
+files: the five Rivers decks (`ccPupils`), the ASDAN wellbeing homework (`DEFAULT_ROSTER`, which
+also **wrote those names into `ps_coldcall_roster`** on first run), the three WorldCup games, both
+`build-engine/roster-setup.html` presets, and the twelve `6 Art` decks' `_ccDefault` blocks (the
+art list's initials run A→L — probably synthetic, replaced regardless). All were swapped for
+`Pupil A…`-style neutrals — line-for-line, lengths and grades preserved, so no consumer parses
+differently; the WorldCup squads became England player surnames. Redacted before/after, the
+judged-and-left list (fictional-adjudicated consent family per the R-D03 provenance, idioms, the
+modal verb, base64 coincidences), and the items needing Matt's word are in
+`LIVETEACH_LT1_CONTACT_SHEET.md` — post-hoc veto per order LT-GO D3.
+
+**What deliberately remains.** `biology/Structure_of_the_Thorax.html:1372` (`Y10_FALLBACK`) still
+carries the real class list: the file is under `frozen_for_2025_26_delivery`
+(`quality/CONTENT_INTEGRITY_RULES.json`), and a frozen path plus the no-self-merged-safeguarding
+rule outrank this pass. It is the only file in this repo still naming the class; contact sheet C1
+is the switch. Git history keeps the removed strings (C3); two site-repo demo strings coincide
+with class names (C2).
+
+**The roster register is stale against the code, recorded here rather than rewritten there.**
+R-B01 still names `ps_coldcall_roster` (×65 files) the estate-wide roster, but the living
+convention is **`mbm_cc_v1`** — ×175 files across Art_Teesside, BUILD/GROW/LAUNCH_ASDAN,
+Science_Teesside, the Build/Grow/Launch slideshows and Tutor_Time; object entries `{n,g}` /
+legacy `{n,b}` / union `{n,g,b}`; Tutor_Time names it the "estate-shared roster", one-way-migrates
+the legacy key into it, and time-boxes it (`mbm_cc_v1__stamp`, 14 days). R-B01's own entry is not
+edited — append-only — but any future reader of §B starts from this paragraph. The standing
+prohibitions hold unchanged: never write objects into the string key, never strings into the
+object keys, never merge the cohort silos (R-B02/R-B03), and per
+`quality/SAFEGUARDING_CONTENT_GATE.md` no tool reads, parses or rewrites any roster key without
+Matt's word — which is why the Live-Teach picker (order LT-GO D2) holds its roster in memory only,
+typed at lesson start, persisted and broadcast nowhere.
