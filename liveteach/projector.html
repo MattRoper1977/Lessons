@@ -158,6 +158,57 @@ body.teleActive #teleChip { visibility: visible; }
 body.highlumen #toast { background: #fffdf6; color: #1c2337; border-color: #8a7f5e; }
 #toast.show { opacity: 1; }
 
+/* Share modal (LT6). The QR paints black-on-white INSIDE a white box whatever
+   the theme — a scanner needs that contrast, and the white padding is its
+   quiet zone. z-order: over the teaching surfaces, UNDER the blackout curtain
+   (58) and the strip (60) — the spec's Esc row closes blackout first, then
+   this. */
+#shareOverlay {
+  position: fixed; inset: 0; z-index: 56; background: rgba(5, 8, 18, .72);
+  display: flex; align-items: center; justify-content: center; visibility: hidden;
+}
+#shareOverlay.show { visibility: visible; }
+#shareCard {
+  background: #10173a; color: #e8e2d4; border: 3px solid #f2a24a;
+  border-radius: 18px; padding: 20px 26px; width: min(92vw, 480px);
+  box-sizing: border-box; text-align: center; max-height: 92vh; overflow: auto;
+}
+body.highlumen #shareCard { background: #fffdf6; color: #1c2337; border-color: #b0731f; }
+#shareCard h2 { margin: 0 0 6px; font-size: 20px; }
+#shareCard .sub { font-size: 14px; opacity: .88; margin: 0 0 10px; line-height: 1.45; }
+#shareQRBox { background: #fff; border-radius: 10px; padding: 12px; display: inline-block; line-height: 0; }
+#shareQR { width: min(52vmin, 260px); height: auto; image-rendering: pixelated; }
+#shareTooLong { color: #ffb3a0; font-weight: 700; }
+body.highlumen #shareTooLong { color: #8a2b12; }
+#shareURLBox {
+  width: 100%; box-sizing: border-box; min-height: 44px; margin: 10px 0 8px;
+  border-radius: 10px; border: 1px solid #43518c; background: #0d1430; color: inherit;
+  font: inherit; font-size: 13px; padding: 8px 10px;
+}
+body.highlumen #shareURLBox { background: #fff; border-color: #8a7f5e; }
+#shareCard .row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 8px; }
+#shareCard .row button {
+  min-width: 44px; min-height: 44px; border-radius: 10px; border: 1px solid #43518c;
+  background: #16204a; color: #e8e2d4; font: inherit; font-weight: 600; padding: 6px 14px; cursor: pointer;
+}
+body.highlumen #shareCard .row button { background: #fffdf6; color: #1c2337; border-color: #8a7f5e; }
+#shareCard .row button:focus-visible, #shareURLBox:focus-visible, #shareTagInput:focus-visible { outline: 3px solid #b9e6cd; outline-offset: 2px; }
+#shareTagRow { font-size: 14px; display: block; }
+#shareTagInput {
+  min-height: 40px; border-radius: 10px; border: 1px solid #43518c; background: #0d1430;
+  color: inherit; font: inherit; padding: 6px 10px; width: 14ch; margin-left: 6px;
+}
+body.highlumen #shareTagInput { background: #fff; border-color: #8a7f5e; }
+/* The tag chip mirrors ?tag= back at the room — which link is this? It is
+   free text off the wire, so it is only ever filled via textContent. */
+#tagChip {
+  position: fixed; top: 10px; left: 12px; z-index: 55;
+  background: #16204a; color: #e8e2d4; border: 1px solid #43518c;
+  border-radius: 999px; padding: 8px 14px; font-weight: 700; visibility: hidden;
+}
+#tagChip.show { visibility: visible; }
+body.highlumen #tagChip { background: #fffdf6; color: #1c2337; border-color: #8a7f5e; }
+
 /* Reduced motion, both halves of the house rule. The blanket form (no
    enumerated class list to rot): every part stays visible, every label on —
    only the motion goes. body.reduce is set by the JS half (OS setting, live
@@ -215,7 +266,41 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
 <div id="blackoutSaid" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap"></div>
 <div id="teleSaid" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap"></div>
 <div id="teleChip" aria-hidden="true">🖊 Draw — sim paused</div>
+<div id="tagChip"></div>
 <div id="toast" role="status" aria-live="polite"></div>
+
+<!-- role=dialog WITHOUT aria-modal: this panel is deliberately modeless — the
+     control strip stays live above it and the toast lives outside it, so
+     claiming a modal boundary the code does not enforce would be the exact
+     dishonest-semantics failure the estate bans. -->
+<div id="shareOverlay" role="dialog" aria-labelledby="shareTitle" aria-describedby="shareSub">
+  <div id="shareCard">
+    <h2 id="shareTitle">🔗 Share this lesson state</h2>
+    <p class="sub" id="shareSub">The address carries the lesson, stage, speed, display and tag — nothing
+      else travels, so keep pupils&rsquo; names out of the tag. Scan the code with a
+      phone, or copy the address.</p>
+    <div id="shareQRBox"><canvas id="shareQR" width="1" height="1" aria-label="QR code of the address below"></canvas></div>
+    <p id="shareTooLong" hidden>This address is too long for a QR code — shorten the tag, or copy it below instead.</p>
+    <input id="shareURLBox" type="text" readonly spellcheck="false" aria-label="Address of this lesson state">
+    <div class="row">
+      <button id="btnCopyURL">📋 Copy</button>
+      <button id="btnBookmark">🔖 Bookmark state</button>
+      <button id="btnShareClose">Close</button>
+    </div>
+    <label id="shareTagRow">Tag this address (optional):
+      <input id="shareTagInput" type="text" maxlength="24" spellcheck="false" placeholder="e.g. period 3"
+             aria-describedby="shareTagHelp">
+    </label>
+    <!-- The safeguarding rule reaches the tag field itself, not just the eye:
+         focus jumps straight to the address box, so a screen-reader user
+         would otherwise never meet the warning above. -->
+    <span id="shareTagHelp" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap">Never put a pupil&rsquo;s name in the tag — the tag travels in the address and in the QR code.</span>
+  </div>
+</div>
+<!-- Modal state changes (opened, too long, recovered) announce here: the
+     clipped live region is in the accessibility tree at all times, unlike the
+     visibility-hidden panel itself. -->
+<div id="shareSaid" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap"></div>
 
 <nav id="strip" class="" aria-label="Teaching controls">
   <div class="grp">
@@ -262,9 +347,343 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
     <button id="btnCalm" aria-pressed="false">🌙 Calm</button>
     <button id="btnBlackout" aria-pressed="false">✖ Blackout</button>
     <button id="fsBtn">⛶ Fullscreen</button>
+    <button id="btnShare">🔗 Share</button>
   </div>
 </nav>
 
+<!-- MBM-LIVETEACH-QR:BEGIN generated by tools/liveteach/stamp_qr.mjs from tools/liveteach/qr_source.js — do not edit by hand -->
+<script>
+/* Live-Teach QR encoder — byte mode, ECC level M, versions 1–6 ONLY.
+   ONE SOURCE, MANY COPIES: stamped into the views by stamp_qr.mjs (the
+   pinned-region pattern) and require()d by the node gate.
+
+   WHY THIS EXISTS AT ALL (spec Q1): the reviewed fragment's QR engine had a
+   WRONG block structure for versions 4 and 6 — ECC-M v4/v6 need multiple
+   interleaved Reed–Solomon blocks and it computed one, so codes above ~44
+   bytes could not scan. This implementation carries the standard per-version
+   block table WITH interleaving, evaluates all eight masks by the four
+   penalty rules, and is allowed to ship only while tools/liveteach/qr_gate.mjs
+   proves an INDEPENDENT decoder (vendored jsQR) round-trips every allowed
+   version. A QR that has not been machine-decoded in CI does not ship.
+   Payloads longer than version 6's 106 bytes throw an honest Error — the
+   serializer's default-omission keeps share URLs short instead. */
+(function (root, factory) {
+  if (typeof module === 'object' && module.exports) module.exports = factory();
+  else root.LTQR = factory();
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+
+  /* Version geometry + ECC-M block structure (ISO/IEC 18004 table 9):
+     [totalSize, ecPerBlock, blockCount, dataPerBlock] */
+  var VER = {
+    1: { size: 21, ec: 10, blocks: 1, dataPer: 16 },
+    2: { size: 25, ec: 16, blocks: 1, dataPer: 28 },
+    3: { size: 29, ec: 26, blocks: 1, dataPer: 44 },
+    4: { size: 33, ec: 18, blocks: 2, dataPer: 32 },
+    5: { size: 37, ec: 24, blocks: 2, dataPer: 43 },
+    6: { size: 41, ec: 16, blocks: 4, dataPer: 27 }
+  };
+
+  /* --- GF(256), polynomial 0x11d --- */
+  var EXP = new Uint8Array(512), LOG = new Uint8Array(256);
+  (function () {
+    var x = 1;
+    for (var i = 0; i < 255; i++) {
+      EXP[i] = x; LOG[x] = i;
+      x <<= 1;
+      if (x & 0x100) x ^= 0x11d;
+    }
+    for (var j = 255; j < 512; j++) EXP[j] = EXP[j - 255];
+  })();
+  function gmul(a, b) { return (a === 0 || b === 0) ? 0 : EXP[LOG[a] + LOG[b]]; }
+
+  function rsGenerator(degree) {
+    var g = [1];
+    for (var d = 0; d < degree; d++) {
+      var next = new Array(g.length + 1).fill(0);
+      for (var i = 0; i < g.length; i++) {
+        next[i] ^= gmul(g[i], EXP[d]);
+        next[i + 1] ^= g[i];
+      }
+      g = next;
+    }
+    return g.reverse(); // highest-degree first
+  }
+
+  function rsEncode(data, ecLen) {
+    var gen = rsGenerator(ecLen);
+    var rem = new Uint8Array(ecLen);
+    for (var i = 0; i < data.length; i++) {
+      var factor = data[i] ^ rem[0];
+      rem.copyWithin(0, 1);
+      rem[ecLen - 1] = 0;
+      if (factor !== 0) {
+        for (var j = 0; j < ecLen; j++) rem[j] ^= gmul(gen[j + 1], factor);
+      }
+    }
+    return rem;
+  }
+
+  function utf8Bytes(str) {
+    var out = [];
+    for (var i = 0; i < str.length; i++) {
+      var c = str.codePointAt(i);
+      if (c > 0xffff) i++;
+      if (c < 0x80) out.push(c);
+      else if (c < 0x800) out.push(0xc0 | (c >> 6), 0x80 | (c & 63));
+      else if (c < 0x10000) out.push(0xe0 | (c >> 12), 0x80 | ((c >> 6) & 63), 0x80 | (c & 63));
+      else out.push(0xf0 | (c >> 18), 0x80 | ((c >> 12) & 63), 0x80 | ((c >> 6) & 63), 0x80 | (c & 63));
+    }
+    return out;
+  }
+
+  function pickVersion(byteLen) {
+    for (var v = 1; v <= 6; v++) {
+      var cap = VER[v].blocks * VER[v].dataPer - 2; // mode nibble + 8-bit count + terminator fit in the 2 spare bytes
+      if (byteLen <= cap) return v;
+    }
+    throw new Error('LTQR: payload of ' + byteLen + ' bytes exceeds version 6 (106) — shorten the URL');
+  }
+
+  function buildCodewords(bytes, v) {
+    var info = VER[v];
+    var totalData = info.blocks * info.dataPer;
+    // bit stream: mode 0100, count (8 bits for v1-9 byte mode), data, terminator
+    var bits = [];
+    function push(val, n) { for (var i = n - 1; i >= 0; i--) bits.push((val >> i) & 1); }
+    push(4, 4);
+    push(bytes.length, 8);
+    for (var i = 0; i < bytes.length; i++) push(bytes[i], 8);
+    var capBits = totalData * 8;
+    push(0, Math.min(4, capBits - bits.length)); // terminator
+    while (bits.length % 8 !== 0) bits.push(0);
+    var data = [];
+    for (var b = 0; b < bits.length; b += 8) {
+      var byte = 0;
+      for (var k = 0; k < 8; k++) byte = (byte << 1) | bits[b + k];
+      data.push(byte);
+    }
+    var pads = [0xec, 0x11], p = 0;
+    while (data.length < totalData) data.push(pads[p++ % 2]);
+
+    /* Split into the version's RS blocks, then INTERLEAVE — the exact step
+       the broken fragment skipped. */
+    var blocks = [], ecs = [];
+    for (var bi = 0; bi < info.blocks; bi++) {
+      var chunk = data.slice(bi * info.dataPer, (bi + 1) * info.dataPer);
+      blocks.push(chunk);
+      ecs.push(rsEncode(chunk, info.ec));
+    }
+    var out = [];
+    for (var di = 0; di < info.dataPer; di++) {
+      for (var bj = 0; bj < info.blocks; bj++) out.push(blocks[bj][di]);
+    }
+    for (var ei = 0; ei < info.ec; ei++) {
+      for (var bk = 0; bk < info.blocks; bk++) out.push(ecs[bk][ei]);
+    }
+    return out;
+  }
+
+  /* --- matrix construction --- */
+  function newMatrix(size) {
+    return { size: size, m: new Int8Array(size * size).fill(-1) }; // -1 unset, 0 light, 1 dark
+  }
+  function set(mx, x, y, v) { mx.m[y * mx.size + x] = v; }
+  function get(mx, x, y) { return mx.m[y * mx.size + x]; }
+
+  function placeFinder(mx, x0, y0) {
+    for (var y = -1; y <= 7; y++) {
+      for (var x = -1; x <= 7; x++) {
+        var xx = x0 + x, yy = y0 + y;
+        if (xx < 0 || yy < 0 || xx >= mx.size || yy >= mx.size) continue;
+        var dark = (x >= 0 && x <= 6 && (y === 0 || y === 6)) ||
+          (y >= 0 && y <= 6 && (x === 0 || x === 6)) ||
+          (x >= 2 && x <= 4 && y >= 2 && y <= 4);
+        set(mx, xx, yy, dark ? 1 : 0);
+      }
+    }
+  }
+
+  function placeFixed(mx, v) {
+    var size = mx.size;
+    placeFinder(mx, 0, 0);
+    placeFinder(mx, size - 7, 0);
+    placeFinder(mx, 0, size - 7);
+    // timing
+    for (var i = 8; i < size - 8; i++) {
+      if (get(mx, i, 6) === -1) set(mx, i, 6, i % 2 === 0 ? 1 : 0);
+      if (get(mx, 6, i) === -1) set(mx, 6, i, i % 2 === 0 ? 1 : 0);
+    }
+    // one alignment pattern for v2-6 at (size-7, size-7)
+    if (v >= 2) {
+      var cx = size - 7, cy = size - 7;
+      for (var ay = -2; ay <= 2; ay++) {
+        for (var ax = -2; ax <= 2; ax++) {
+          var dark = Math.max(Math.abs(ax), Math.abs(ay)) !== 1;
+          set(mx, cx + ax, cy + ay, dark ? 1 : 0);
+        }
+      }
+    }
+    // format info areas reserved (filled later); dark module
+    for (var f = 0; f <= 8; f++) {
+      if (get(mx, f, 8) === -1) set(mx, f, 8, 0);
+      if (get(mx, 8, f) === -1) set(mx, 8, f, 0);
+      if (f < 8 && get(mx, size - 1 - f, 8) === -1) set(mx, size - 1 - f, 8, 0);
+      if (f < 7 && get(mx, 8, size - 1 - f) === -1) set(mx, 8, size - 1 - f, 0);
+    }
+    set(mx, 8, size - 8, 1); // the always-dark module
+  }
+
+  function functionMask(v) {
+    // a matrix marking which modules are functional (true) vs data (false)
+    var size = VER[v].size;
+    var mx = newMatrix(size);
+    placeFixed(mx, v);
+    var fn = new Uint8Array(size * size);
+    for (var i = 0; i < size * size; i++) fn[i] = mx.m[i] === -1 ? 0 : 1;
+    return fn;
+  }
+
+  function placeData(mx, fn, codewords) {
+    var size = mx.size;
+    var bitIdx = 0;
+    var total = codewords.length * 8;
+    var upward = true;
+    for (var col = size - 1; col > 0; col -= 2) {
+      if (col === 6) col--; // skip the timing column
+      for (var i = 0; i < size; i++) {
+        var y = upward ? size - 1 - i : i;
+        for (var c = 0; c < 2; c++) {
+          var x = col - c;
+          if (fn[y * size + x]) continue;
+          var bit = 0;
+          if (bitIdx < total) {
+            bit = (codewords[bitIdx >> 3] >> (7 - (bitIdx & 7))) & 1;
+          }
+          set(mx, x, y, bit);
+          bitIdx++;
+        }
+      }
+      upward = !upward;
+    }
+  }
+
+  var MASKS = [
+    function (x, y) { return (x + y) % 2 === 0; },
+    function (x, y) { return y % 2 === 0; },
+    function (x, y) { return x % 3 === 0; },
+    function (x, y) { return (x + y) % 3 === 0; },
+    function (x, y) { return (Math.floor(y / 2) + Math.floor(x / 3)) % 2 === 0; },
+    function (x, y) { return (x * y) % 2 + (x * y) % 3 === 0; },
+    function (x, y) { return ((x * y) % 2 + (x * y) % 3) % 2 === 0; },
+    function (x, y) { return ((x + y) % 2 + (x * y) % 3) % 2 === 0; }
+  ];
+
+  function applyMask(mx, fn, mask) {
+    var size = mx.size;
+    for (var y = 0; y < size; y++) {
+      for (var x = 0; x < size; x++) {
+        if (fn[y * size + x]) continue;
+        if (MASKS[mask](x, y)) mx.m[y * size + x] ^= 1;
+      }
+    }
+  }
+
+  function placeFormat(mx, mask) {
+    var size = mx.size;
+    var fmt = (0 /* ECC M = 00 */ << 3) | mask;
+    var rem = fmt << 10;
+    for (var i = 14; i >= 10; i--) {
+      if ((rem >> i) & 1) rem ^= 0x537 << (i - 10);
+    }
+    var bits = ((fmt << 10) | rem) ^ 0x5412;
+    for (var b = 0; b <= 5; b++) set(mx, 8, b, (bits >> b) & 1);
+    set(mx, 8, 7, (bits >> 6) & 1);
+    set(mx, 8, 8, (bits >> 7) & 1);
+    set(mx, 7, 8, (bits >> 8) & 1);
+    for (var b2 = 9; b2 <= 14; b2++) set(mx, 14 - b2, 8, (bits >> b2) & 1);
+    for (var c = 0; c <= 7; c++) set(mx, size - 1 - c, 8, (bits >> c) & 1);
+    for (var c2 = 8; c2 <= 14; c2++) set(mx, 8, size - 15 + c2, (bits >> c2) & 1);
+  }
+
+  /* The four penalty rules (N1=3, N2=3, N3=40, N4=10-step). */
+  function penalty(mx) {
+    var size = mx.size, score = 0, x, y;
+    // N1: runs of same colour >= 5, rows and columns
+    for (y = 0; y < size; y++) {
+      var run = 1;
+      for (x = 1; x <= size; x++) {
+        if (x < size && get(mx, x, y) === get(mx, x - 1, y)) run++;
+        else { if (run >= 5) score += 3 + (run - 5); run = 1; }
+      }
+    }
+    for (x = 0; x < size; x++) {
+      var runc = 1;
+      for (y = 1; y <= size; y++) {
+        if (y < size && get(mx, x, y) === get(mx, x, y - 1)) runc++;
+        else { if (runc >= 5) score += 3 + (runc - 5); runc = 1; }
+      }
+    }
+    // N2: 2x2 blocks of one colour
+    for (y = 0; y < size - 1; y++) {
+      for (x = 0; x < size - 1; x++) {
+        var v = get(mx, x, y);
+        if (v === get(mx, x + 1, y) && v === get(mx, x, y + 1) && v === get(mx, x + 1, y + 1)) score += 3;
+      }
+    }
+    // N3: 1011101 with 0000 on either side, rows and columns
+    var pat1 = [1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0], pat2 = [0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1];
+    function scan(getter, major) {
+      for (var a = 0; a < size; a++) {
+        for (var b = 0; b <= size - 11; b++) {
+          var hit1 = true, hit2 = true;
+          for (var k = 0; k < 11; k++) {
+            var cell = getter(a, b + k);
+            if (cell !== pat1[k]) hit1 = false;
+            if (cell !== pat2[k]) hit2 = false;
+          }
+          if (hit1) score += 40;
+          if (hit2) score += 40;
+        }
+      }
+    }
+    scan(function (a, i) { return get(mx, i, a); });
+    scan(function (a, i) { return get(mx, a, i); });
+    // N4: dark proportion
+    var dark = 0;
+    for (var i = 0; i < size * size; i++) if (mx.m[i] === 1) dark++;
+    var pct = (dark * 100) / (size * size);
+    score += Math.floor(Math.abs(pct - 50) / 5) * 10;
+    return score;
+  }
+
+  function build(text, forceMask) {
+    var bytes = utf8Bytes(String(text));
+    var v = pickVersion(bytes.length);
+    var codewords = buildCodewords(bytes, v);
+    var fn = functionMask(v);
+    var best = null, bestScore = Infinity, bestMask = 0;
+    for (var mask = 0; mask < 8; mask++) {
+      if (forceMask != null && mask !== forceMask) continue;
+      var mx = newMatrix(VER[v].size);
+      placeFixed(mx, v);
+      placeData(mx, fn, codewords);
+      applyMask(mx, fn, mask);
+      placeFormat(mx, mask);
+      var s = penalty(mx);
+      if (s < bestScore) { bestScore = s; best = mx; bestMask = mask; }
+    }
+    return { version: v, size: best.size, mask: bestMask, penalty: bestScore, modules: Uint8Array.from(best.m) };
+  }
+  function encode(text) { return build(text, null); }
+  /* Harness seam only: the spec's Q1 asks for proof that output at a GIVEN
+     mask still decodes, not just at whichever mask the penalty rules pick. */
+  function encodeWithMask(text, mask) { return build(text, mask); }
+
+  return { encode: encode, encodeWithMask: encodeWithMask, MAX_BYTES: 106 };
+});
+</script>
+<!-- MBM-LIVETEACH-QR:END -->
 <!-- MBM-LIVETEACH-CORE:BEGIN generated by tools/liveteach/stamp_core.mjs from tools/liveteach/core_source.js — do not edit by hand -->
 <script>
 /* Live-Teach core — bus contract, keyboard registry, motion + theme state.
@@ -391,10 +810,14 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
      (the estate's recorded CSS gotcha). Vocabulary follows the hub's
      "High lumen — projector / IWB" mode. */
   LT.highlumen = function () { return document.body.classList.contains('highlumen'); };
-  LT.setHighlumen = function (on) {
+  /* transient=true applies the display WITHOUT persisting it: a shared link
+     or a back-button hop reproduces the display it was made on for this
+     session, but must never silently rewrite the teacher's own saved
+     preference (LT6). Only a real button press persists. */
+  LT.setHighlumen = function (on, transient) {
     document.body.classList.toggle('highlumen', !!on);
     document.documentElement.classList.toggle('highlumen', !!on);
-    saveSettings();
+    if (!transient) saveSettings();
   };
 
   LT.boot = function () {
@@ -428,11 +851,15 @@ LT.boot();
     poll: { on: false },
     telestrator: false,                // lands in LT5
     timer: null,                       // {remaining, total} while active
-    aspect: 16 / 9
+    aspect: 16 / 9,
+    lesson: '',                        // manifest id — lets a HUD build the projector address (LT6)
+    hl: false                          // high-lumen display, for the same reason
   };
   function broadcast() {
     state.aspect = innerWidth / Math.max(1, innerHeight);
+    state.hl = LT.highlumen();
     LT.send('PROJECTOR_STATE', JSON.parse(JSON.stringify(state)));
+    syncStateToURL();   // U2: the address bar mirrors state — without history spam
   }
 
   /* ---------- particle wave sim (corrections S1–S5) ---------- */
@@ -711,7 +1138,9 @@ LT.boot();
     manifest = m;
     PX_PER_M = (m.units && m.units.px_per_m) || 100;
     state.stageCount = m.stages.length;
-    applyStage(0);
+    /* bootStage carries a ?stage= from a shared link (LT6); applyStage clamps
+       it, so a stale link to a shortened lesson lands on the last stage. */
+    applyStage(bootStage);
   }
   function showManifestError(which, kind) {
     /* A failed load is a VISIBLE error, never a silent catch — the estate's
@@ -852,7 +1281,9 @@ LT.boot();
     btnLumen.setAttribute('aria-pressed', String(LT.highlumen()));
     btnCalm.setAttribute('aria-pressed', String(LT.calm()));
   }
-  btnLumen.addEventListener('click', function () { LT.setHighlumen(!LT.highlumen()); syncDisplayButtons(); draw(); teleReplay(); });
+  /* hl travels in PROJECTOR_STATE (and the share URL) since LT6 — a display
+     flip must broadcast, or the HUD and address bar keep the stale value. */
+  btnLumen.addEventListener('click', function () { LT.setHighlumen(!LT.highlumen()); syncDisplayButtons(); draw(); teleReplay(); broadcast(); });
   btnCalm.addEventListener('click', function () { LT.setCalm(!LT.calm()); syncDisplayButtons(); });
   syncDisplayButtons();
 
@@ -899,6 +1330,10 @@ LT.boot();
   }
   function setBlackout(on) {
     state.blackout = !!on;
+    /* Blacking out while the share panel is open would bury it — and the
+       focus inside it — under the curtain. The curtain wins; the panel
+       stands down. (shareEscape is hoisted and guards its own element.) */
+    if (state.blackout) shareEscape();
     blackoutEl.classList.toggle('show', state.blackout);
     btnBlackout.setAttribute('aria-pressed', String(state.blackout));
     document.getElementById('blackoutSaid').textContent = state.blackout
@@ -1111,6 +1546,7 @@ LT.boot();
        from the HUD via ESC_TOPMOST, so both windows honour the same
        promise. */
     if (state.blackout) return setBlackout(false);
+    if (shareEscape()) return;   // share modal (LT6) sits under the curtain, above the rest
     if (errBox.classList.contains('show')) return errBox.classList.remove('show');
     if (state.poll.on) return setPoll(false);
     if (state.hint.on) return setHint(false);
@@ -1163,7 +1599,15 @@ LT.boot();
     }
     else if (type === 'SIM_RUN') { armLink(); setRunning(!!payload.on); }
     else if (type === 'SIM_STOP') { armLink(); stopSim(); }
-    else if (type === 'SIM_SPEED') { armLink(); setSpeed(Number(payload.value) || 1); }
+    else if (type === 'SIM_SPEED') {
+      armLink();
+      /* Validate against the shipped set, never coerce: since LT6 the speed
+         travels in the share URL, and a stray 7 or 0.31 would serialize into
+         an address whose boot params reject it — the link would not
+         reproduce the lesson it claims to. */
+      var sv = Number(payload.value);
+      setSpeed(sv === 0.5 || sv === 2 ? sv : 1);
+    }
     else if (type === 'TIMER_START') { armLink(); startTimer(Number(payload.mins) || 1); }
     else if (type === 'HINT_SET') { armLink(); setHint(!!payload.on, payload.text); }
     else if (type === 'POLL_SET') { armLink(); setPoll(!!payload.on); }
@@ -1218,13 +1662,211 @@ LT.boot();
       var dpr = tele.canvas.width / innerWidth;
       var d = tctx.getImageData(Math.round(nx * innerWidth * dpr), Math.round(ny * innerHeight * dpr), 1, 1).data;
       return d[3] > 0;
+    },
+    share: function () {
+      return { open: shareOverlayEl.classList.contains('show'), url: shareURL(), tag: shareTag };
     }
   };
 
-  /* ---------- manifest loader (G7: lessons are external data) ------------ */
+  /* ---------- URL serializer (U1–U3) + share modal (Q1–Q2) ----------------
+     The address is the ONE export this kit has, so the whitelist IS the
+     privacy boundary: lesson, stage, speed, hl, tag — five keys, nothing
+     else, and defaults are omitted so a fresh lesson shares as a bare
+     address (which also keeps the QR small; version 6's 106 bytes is the
+     encoder's honest ceiling). Hint text, poll state, ink and timers are
+     deliberately NOT serialized — anything that could carry pupil-facing
+     prose stays off the address. U3 note: f and λ never travel either; they
+     live in the manifest with real units (LT3). */
+  var shareOverlayEl = document.getElementById('shareOverlay');
+  var shareURLBox = document.getElementById('shareURLBox');
+  var shareTagInput = document.getElementById('shareTagInput');
+  var shareTooLongEl = document.getElementById('shareTooLong');
+  var shareQRCanvas = document.getElementById('shareQR');
+  var tagChip = document.getElementById('tagChip');
+  var shareReturnFocus = null;
+  var shareTag = '';     // RAW text (U1): stored unencoded, encoded exactly once at write time
+  var bootStage = 0;     // consumed by initStages above
+  var shareReady = false; // no URL writes until the boot params below are read
+
+  function shareParams() {
+    var p = new URLSearchParams();   // U1: the ONLY encoder — values go in raw
+    if (lessonId && lessonId !== 'waves_v1') p.set('lesson', lessonId);
+    /* Until the manifest lands, a shared link's ?stage= only exists in
+       bootStage — serialize THAT, or a broadcast in the loading window
+       (a HUD hello, say) would strip it from the address. */
+    var stg = state.stageCount ? state.stage : bootStage;
+    if (stg > 0) p.set('stage', String(stg + 1));  // 1-based, matching the banner
+    if (state.speed !== 1) p.set('speed', String(state.speed));
+    if (LT.highlumen()) p.set('hl', '1');
+    if (shareTag) p.set('tag', shareTag);
+    return p;
+  }
+  function shareURL() {
+    var qs = shareParams().toString();
+    return location.href.split(/[?#]/)[0] + (qs ? '?' + qs : '');
+  }
+  function syncStateToURL() {
+    /* U2: replaceState — an hour of teaching must never bloat the back
+       stack. pushState lives in exactly one place: the Bookmark button. */
+    if (!shareReady) return;
+    var url = shareURL();
+    if (url !== location.href) history.replaceState(null, '', url);
+    if (shareOverlayEl.classList.contains('show')) shareRender();
+  }
+  function setShareTag(t) {
+    shareTag = String(t == null ? '' : t).slice(0, 24);
+    tagChip.textContent = shareTag;   // free text off the wire: textContent ONLY
+    tagChip.classList.toggle('show', !!shareTag);
+    if (shareTagInput.value !== shareTag) shareTagInput.value = shareTag;
+    syncStateToURL();
+  }
+
+  var lastTooLong = null;
+  function shareRender() {
+    var url = shareURL();
+    shareURLBox.value = url;
+    var code = null;
+    try { code = window.LTQR.encode(url); }
+    catch (err) { code = null; }   // over version 6's capacity — handled honestly below
+    shareTooLongEl.hidden = !!code;
+    document.getElementById('shareQRBox').style.display = code ? '' : 'none';
+    /* The too-long flip is announced: focus sits in the tag field while
+       typing, so a sighted-only cue would silently strand a screen-reader
+       user with a code that has vanished. */
+    if (lastTooLong !== !code) {
+      lastTooLong = !code;
+      if (shareOverlayEl.classList.contains('show')) {
+        document.getElementById('shareSaid').textContent = lastTooLong
+          ? 'This address is now too long for a QR code — shorten the tag, or copy the address instead.'
+          : 'QR code ready.';
+      }
+    }
+    if (!code) return;             // Q2: the address stays selectable either way
+    /* One module = one canvas pixel, CSS-scaled with pixelated rendering.
+       ALWAYS black on white whatever the page theme — a scanner needs the
+       contrast; the white box around the canvas is the quiet zone. */
+    shareQRCanvas.width = code.size;
+    shareQRCanvas.height = code.size;
+    var qc = shareQRCanvas.getContext('2d');
+    qc.fillStyle = '#fff'; qc.fillRect(0, 0, code.size, code.size);
+    qc.fillStyle = '#000';
+    for (var qy = 0; qy < code.size; qy++)
+      for (var qx = 0; qx < code.size; qx++)
+        if (code.modules[qy * code.size + qx] === 1) qc.fillRect(qx, qy, 1, 1);
+  }
+  function shareOpen() {
+    shareReturnFocus = document.activeElement;
+    shareRender();
+    shareOverlayEl.classList.add('show');
+    shareURLBox.focus();
+    shareURLBox.select();   // Q2: ready to copy by hand from the first keystroke
+  }
+  function shareClose() {
+    shareOverlayEl.classList.remove('show');
+    if (shareReturnFocus && shareReturnFocus.focus) shareReturnFocus.focus();
+    shareReturnFocus = null;
+  }
+  function shareEscape() {
+    if (!shareOverlayEl || !shareOverlayEl.classList.contains('show')) return false;
+    shareClose();
+    return true;
+  }
+  function shareToggle() {
+    if (shareOverlayEl.classList.contains('show')) { shareClose(); return; }
+    /* The curtain sits ABOVE this panel by design (the screen is off for the
+       room). Opening underneath it would hand focus to something nobody can
+       see and deaden the hotkeys on a black screen — so say what to do
+       instead of opening a trap. */
+    if (state.blackout) { toast('The screen is blacked out — press B or the ✖ Blackout button first, then Share.'); return; }
+    shareOpen();
+  }
+  document.getElementById('btnShare').addEventListener('click', shareToggle);
+  document.getElementById('btnShareClose').addEventListener('click', shareClose);
+  shareOverlayEl.addEventListener('click', function (e) { if (e.target === shareOverlayEl) shareClose(); });
+  shareTagInput.addEventListener('input', function () { setShareTag(shareTagInput.value); });
+  LT.registerKey('KeyQ', function () { shareToggle(); }, 'Share / QR');
+
+  document.getElementById('btnCopyURL').addEventListener('click', function () {
+    var url = shareURLBox.value;
+    /* School machines can block the clipboard entirely — the fallback selects
+       the address and SAYS copy was blocked, never pretends it worked. */
+    var fallback = function () {
+      shareURLBox.focus(); shareURLBox.select();
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (err) { ok = false; }
+      toast(ok ? 'Address copied.' : 'Copy is blocked here — the address is selected, press Ctrl+C.');
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function () { toast('Address copied.'); }, fallback);
+    } else fallback();
+  });
+  document.getElementById('btnBookmark').addEventListener('click', function () {
+    /* U2's one pushState: a history entry the back button can return to.
+       The popstate handler below re-applies the address, so Back genuinely
+       restores the state, not just the URL. */
+    history.pushState(null, '', shareURL());
+    toast('State bookmarked — the back button now returns here. Ctrl+D keeps it for good.');
+  });
+
+  window.addEventListener('popstate', function () {
+    /* Back/forward across bookmarked states: re-read and re-apply. A
+       different lesson means a different manifest script — an honest
+       reload, never a half-swap. Between explicit states an absent key
+       means its default (stage 1, speed 1, high-lumen off, no tag). */
+    var pq = new URLSearchParams(location.search);
+    var les = pq.get('lesson') || 'waves_v1';
+    if (les !== lessonId) { location.reload(); return; }
+    var sp = Number(pq.get('speed'));
+    setSpeed(sp === 0.5 || sp === 2 ? sp : 1);
+    var hlOn = pq.get('hl') === '1';
+    /* transient: a history hop reproduces the display of the bookmarked
+       state without rewriting the teacher's saved preference. */
+    if (hlOn !== LT.highlumen()) { LT.setHighlumen(hlOn, true); syncDisplayButtons(); draw(); teleReplay(); }
+    setShareTag(pq.get('tag') || '');
+    var st = Number(pq.get('stage'));
+    if (state.stageCount) applyStage(Number.isInteger(st) && st >= 1 ? st - 1 : 0);
+  });
+
+  /* The manifest id is parsed BEFORE the first URL write below — a sync that
+     ran ahead of it would strip ?lesson= from the very address the loader is
+     about to read. */
   var lessonId = 'waves_v1';
   var q = new URLSearchParams(location.search).get('lesson');
   if (q && /^[a-z0-9_]{1,40}$/.test(q)) lessonId = q;
+  else if (q) {
+    /* A name the loader will not accept (a capital, a hyphen, a typo from a
+       transcribed address) must NOT silently become the default lesson: the
+       first URL sync below strips ?lesson= from the bar, so the evidence
+       would be gone and Share would then export the wrong lesson as if it
+       were meant. Say so, carrying the rejected name in the message itself —
+       an instruction to "check the address bar" goes stale the moment the
+       bar is rewritten. errBox is textContent-only, and the value reaches no
+       URL, script src or log. */
+    errBox.textContent = 'Lesson name "' + q + '" is not recognised (lowercase letters, digits and underscores only) — showing the default lesson instead.';
+    errBox.classList.add('show');
+  }
+  state.lesson = lessonId;
+
+  (function () {
+    /* Boot params from a shared link. hl=1 forces high-lumen so the link
+       reproduces the display it was made on; its ABSENCE leaves the
+       teacher's persisted preference alone — a bare address must not fight
+       the setting on every plain open (popstate above differs on purpose:
+       between explicit states, absence means off). */
+    var bq = new URLSearchParams(location.search);
+    var sp = Number(bq.get('speed'));
+    if (sp === 0.5 || sp === 2) setSpeed(sp);
+    /* transient again: opening someone's high-lumen link must not silently
+       flip the display preference this browser keeps for every later lesson. */
+    if (bq.get('hl') === '1' && !LT.highlumen()) { LT.setHighlumen(true, true); syncDisplayButtons(); draw(); teleReplay(); }
+    setShareTag(bq.get('tag') || '');
+    var st = Number(bq.get('stage'));
+    if (Number.isInteger(st) && st >= 2) bootStage = st - 1;
+    shareReady = true;
+    syncStateToURL();
+  })();
+
+  /* ---------- manifest loader (G7: lessons are external data) ------------ */
   var mscript = document.createElement('script');
   mscript.src = 'manifests/' + lessonId + '.js';
   mscript.onload = function () { initStages(window.LT_MANIFEST); };

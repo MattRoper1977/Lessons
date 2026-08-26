@@ -40,6 +40,10 @@ run_step "stamped core matches source"        node tools/liveteach/stamp_core.mj
 run_step "core stamper can go red"            node tools/liveteach/stamp_core.mjs --self-test
 run_step "splash regions match canonical"     node tools/liveteach/stamp_splash.mjs --check
 run_step "splash stamper can go red"          node tools/liveteach/stamp_splash.mjs --self-test
+run_step "stamped QR encoder matches source"  node tools/liveteach/stamp_qr.mjs --check
+run_step "QR stamper can go red"              node tools/liveteach/stamp_qr.mjs --self-test
+run_step "QR decode gate (jsQR round-trips v1–6)" node tools/liveteach/qr_gate.mjs
+run_step "QR gate can go red (incl. the fragment's v4 bug)" node tools/liveteach/qr_gate.mjs --self-test
 run_step "static gates (onmessage, one loop, TDZ)" node tools/liveteach/static_gates.mjs
 run_step "static gates can go red"            node tools/liveteach/static_gates.mjs --self-test
 run_step "units check (claims recompute, coords normalised)" node tools/liveteach/units_check.mjs
@@ -48,6 +52,7 @@ run_step "lt-shell browser suite"             node tools/liveteach/lt-shell.test
 run_step "lt-stage browser suite"             node tools/liveteach/lt-stage.test.js
 run_step "lt-clicker browser suite"           node tools/liveteach/lt-clicker.test.js
 run_step "lt-tele browser suite"              node tools/liveteach/lt-tele.test.js
+run_step "lt-share browser suite"             node tools/liveteach/lt-share.test.js
 
 if [ $failed -ne 0 ]; then echo "LIVETEACH SUITES FAILED"; exit 1; fi
 echo "LIVETEACH SUITES PASSED"

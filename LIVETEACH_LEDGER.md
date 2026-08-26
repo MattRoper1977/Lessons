@@ -223,8 +223,8 @@ order and marked as applied where a phase leans on them.
 
 ## LT5 — Telestrator (spec Phase 4: T1–T5)
 
-- **Branch/PR/merge:** `claude/new-session-43lyml` → PR → merge SHA recorded at
-  next append.
+- **Branch/PR/merge:** `claude/new-session-43lyml` → PR #155 → merged as
+  `ba1d57b`.
 - **Delivered:** an ink layer on the projector (above sim/banner/labels,
   below status/blackout/strip; pointer-active only in draw mode) and a
   mini-pad on the HUD, letterboxed to the projector's broadcast aspect (T3 —
@@ -271,3 +271,80 @@ order and marked as applied where a phase leans on them.
   `setPointerCapture` degrades gracefully for synthetic/assistive pointers.
   Tele suite now 22 checks.
 - **Decisions applied:** D1 (mini-pad dual-mode-only), D4, D5.
+
+---
+
+## LT6 — URL serializer + QR (spec Phase 5: U1–U3, Q1–Q2)
+
+- **Branch/PR/merge:** `claude/new-session-43lyml` → PR → merge SHA recorded at
+  next append.
+- **Delivered:** a share address and a QR panel on **both** views. The
+  serializer's whitelist is the privacy boundary: `lesson`, `stage`, `speed`,
+  `hl`, `tag` — five keys, defaults omitted (a fresh lesson shares as a bare
+  address), and nothing else is ever serialized. Hint prose, poll, timers and
+  ink deliberately stay off the wire; there is no path by which a pupil-facing
+  sentence reaches a URL or a QR code. **U1:** values are stored raw and
+  encoded exactly once, by `URLSearchParams` at write time — the fragment
+  stored `encodeURIComponent` output and let the params object encode it
+  again, so tags arrived mangled. **U2:** `broadcast()` mirrors state into the
+  address bar with `replaceState`, so an hour of teaching adds nothing to the
+  back stack; the single `pushState` is the Bookmark button, and a `popstate`
+  handler re-applies the address so the back button restores the *state*, not
+  just the URL. **U3:** `f` and λ never travel at all — they live in the
+  manifest with real units (LT3), so the "(Hz)" mislabel has nowhere to
+  recur. **Q2:** the address shows as a selectable readonly input,
+  pre-selected on open, and survives when the QR cannot render; Copy falls
+  back honestly when a school machine blocks the clipboard.
+- **Q1 — the QR engine, rebuilt and machine-proven.** The reviewed fragment's
+  encoder computed ONE Reed–Solomon block at versions 4 and 6, where ECC-M
+  requires 2 and 4 interleaved blocks — its own comments said "2 blocks"/"4
+  blocks" while never interleaving, so anything over ~44 bytes could not
+  scan. `tools/liveteach/qr_source.js` carries the standard per-version block
+  table *with* interleaving, evaluates all eight masks by the four penalty
+  rules, and caps at version 6 (106 bytes) with an honest throw above it. It
+  is stamped byte-identically into both views by `stamp_qr.mjs` (the pinned
+  region pattern; `--check` reds on drift, `--self-test` proves it can).
+- **Gates (`qr_gate.mjs`, an INDEPENDENT decoder):** vendored jsQR round-trips
+  the exact string at **every allowed version 1–6**; all **eight masks** are
+  forced and decoded at both a single-block and an interleaved version (the
+  registry asked for mask verification, not assumption); the shipped mask is
+  proven to be the lowest-penalty one, so the rules are live rather than
+  decorative; every capacity boundary v1–v5 is pinned at the last byte that
+  fits and the first that steps up. **Negative controls:** a corrupted matrix
+  fails to decode, and the fragment's own single-block v4 is *rebuilt here*
+  and shown undecodable — proving this gate would have caught the defect Q1
+  documents.
+- **Gates (`lt-share.test.js`, 50 checks):** the tag round-trips raw → URL →
+  raw with the double-encode red control alongside; history discipline
+  (walking a lesson adds nothing, Bookmark adds exactly one, back restores
+  stage AND speed); the QR canvas compared **module for module** against
+  `LTQR.encode` of the address actually shown, demanding pure black on pure
+  white, with a flipped-module red control proving the comparator can fail;
+  the whitelist audited with hint prose, poll and timer all live; hostile boot
+  params clamped or dropped; the Esc ladder; the HUD building the projector's
+  address from broadcast state. Full harness now **19 steps**.
+- **Adversarial review round (six lenses):** one confirmed by an independent
+  verifier, the rest adjudicated in-session after the verifier fleet hit a
+  usage limit — nothing was treated as refuted by default. Fixed: an unusable
+  `?lesson=` (wrong charset) silently became the default lesson while the
+  first URL sync destroyed the evidence, so Share exported the wrong lesson as
+  though it were meant — it now raises a visible error carrying the rejected
+  name, and does not tell the teacher to check a bar it is about to rewrite;
+  `SIM_SPEED` accepted any number and would serialize an address its own boot
+  params reject; `?hl=1` from someone else's link silently rewrote this
+  browser's saved display preference (`setHighlumen` gains a transient mode —
+  only a real button press persists); the panel claimed `aria-modal` while the
+  strip stayed live above it and its toast sat outside it; the safeguarding
+  warning never reached the tag field (focus lands past the visible line) and
+  the too-long flip was silent; Q during blackout opened a panel under the
+  curtain and handed focus to something invisible (Q now advises, and
+  blacking out stands the panel down); launcher and HUD copy claimed the
+  address "reopens this lesson state" when it carries stage, speed and display
+  only. **Five of my own new checks were vacuous** and were rebuilt on
+  evidence — the whitelist check could pass on an address with no params, the
+  reload check compared a state identical on both sides, the too-long check
+  read an inline-style proxy instead of what is visible, and neither the HUD
+  follow nor the too-long recovery verified the canvas re-encoded, so stale
+  pixels under a fresh address would have passed.
+- **Decisions applied:** D1 (both views first-class — the panel is on the
+  projector too, not HUD-only), D4, D5.
