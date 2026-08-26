@@ -2737,3 +2737,55 @@ verbatim from the Games copy) are stamped into every view between `MBM-LIVETEACH
 `MBM-LIVETEACH-SPLASH` markers by their stampers, and `liveteach-verify` (registered in
 watch-main's trigger list, 12 workflows, control PASS) reds on a byte of drift. Edit the source,
 run the stamper — never the stamped copy.
+
+## R-SATF01 — Sitting SAT-F: the frozen biology file neutralised; a mis-scoped LT1 adjudication found
+
+*Appended by sitting SAT-F, 2026-08-26. Append-only; R-LT101 left untouched. R-LT101's
+"What deliberately remains" paragraph is superseded on its first sentence only — the rest of
+that entry, including the roster-register correction, stands.*
+
+**C1 closed on Matt's word.** `biology/Structure_of_the_Thorax.html:1372` (`Y10_FALLBACK`) no
+longer carries the real class list. Matt released exactly one frozen legacy file (2026-08-26) and
+it took LT1's own neutralisation — nine names to `Pupil A`–`Pupil I`, line-for-line, array length
+and quote style preserved. `eviRoster()` at :1379 consumes the list only when the pasted roster is
+empty, so no consumer behaves differently. Gates: diffstat one file / one insertion / one deletion;
+the only change inside any `frozen_for_2025_26_delivery` path (`biology/`, `chemistry/`,
+`2 Physics 10/`, `5 Intervention 10/` otherwise untouched — the freeze stands); estate-wide census
+for the nine names returns **0** roster occurrences; `tools/verify_fixture_names.mjs` clean, its
+self-test passing in both directions. Landed `b37f1e5` (PR #159, 8 checks green).
+
+**C4 opened, NOT fixed — an adjudication applied wider than it was measured.** The census re-run
+that proved C1 closed also found what LT1 missed: `ASDAN/Consent_Aimee_La.html` and
+`ASDAN/Consent_Aimee_P2.html` each carry a teacher-facing TA deployment note naming **three real
+pupils** by first name (one the distinctive hyphenated entry), plus a named adult. LT1 filed the
+whole `Consent_*` family under contact-sheet **B1** on the R-D03 provenance — the *filename*
+character is a fictional RSE case study, and that adjudication is correct and stands. It was then
+applied to the file **bodies**, which were never read. The other eight `Consent_*` files are clean
+and the pattern appears nowhere else in the estate: one line, duplicated across two files.
+
+Left unfixed deliberately under the rule that held C1 for a year — **safeguarding changes are not
+self-merged**. The fix is the same neutralisation. Recorded name-free in `LIVETEACH_RESIDUE.md`
+and `LIVETEACH_LT1_CONTACT_SHEET.md` as C4. **Both files are live on Pages.**
+
+**The transferable rule:** an adjudication is scoped to what was actually examined. A name cleared
+is not a file cleared, and a file cleared is not a family cleared. Where a pass clears a *set* on
+the evidence of one member, the register should say which member was read.
+
+**Also this sitting.** `pass-sl-sow-launch` @ `2a1cfda` merged (§1) — 7 conflicts, one delegated
+rule each: estate-wins on the SoW workbook (main's copy is the branch's own blob `73b9de3` plus
+SCA-1 3b's baseline-week labelling), additive on six Art LAUNCH sow-strip lines (estate's
+`data-mbm-guide="route"` toggle + the branch's SoW-provenance correction — orthogonal edits on one
+line), hybrid on the W4 KO table (estate's PROP-1 F21 wording + the branch's three vocab rows). No
+estate content deleted to make the merge clean. SBX re-probed by content in R-SC01's own scope:
+`Bronze Part` 21 / `Explore Part` 0 — **still NOT-LANDED**, `pass-sbx-art-a2` retains 5 unique
+commits. Do-not-delete set re-measured against the merged head: `pass-sl-sow-launch` and
+`pass-art-a2b` both now 0 unique and relax (a2b had already landed independently — the season-close
+record's "2 unique commits" is stale); `pass-sbx-art-a2` (5) and `pass-u-audit` (1) stay.
+
+**Gated, not worked around.** §2 rulesets: venue blocked — the session token has no Administration
+on Lessons and branch protection returns 403; `Matt-s-Apps-` is out of scope; and
+`tools/report_required_checks.py`, which §2 names, **exists nowhere in this repo or its history**.
+§4 Planning refresh: export absent, hard gate held, nothing committed. §5 mirror delta: **Order MT
+never ran** — no `_Pack_Notes` in the repo or on any of the four mirror branches, and `REBRAND.md`
+records no pack base SHA; the full-mirror fallback is blocked twice, on the absent Progress logo and
+on the `MARK_SVG`/`gen_entry` M-mark precondition (12 entry docs) recorded at OPEN_ITEMS #23.
