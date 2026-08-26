@@ -309,6 +309,32 @@ const MARKUP_NAME = '<img src=x>Ophira';
   const hudSees = await hud.evaluate(() => window.__LT.seen() && window.__LT.seen().pick);
   check('resync: a name already on the wall reaches a freshly reloaded HUD (it is public by then)', hudSees === persisted && persisted === 'Solo', JSON.stringify({ hudSees, persisted }));
 
+  /* ============ a name must not escape into an exported FILE ============
+     Printing writes a document to disk, and the non-negotiables put pupil
+     names out of exported files without exception — on the wall is allowed,
+     in a PDF in someone's downloads is not. */
+  await proj.emulateMedia({ media: 'print' });
+  const printed = await proj.evaluate(() => ({
+    overlay: getComputedStyle(document.getElementById('pickOverlay')).display,
+    panel: getComputedStyle(document.getElementById('pickPanel')).display,
+    stateStillHasName: window.__LT.state().pick
+  }));
+  check('a projected name is suppressed when the page is PRINTED (never into an exported file)',
+    printed.overlay === 'none' && printed.panel === 'none' && printed.stateStillHasName === 'Solo',
+    JSON.stringify(printed));
+  await proj.emulateMedia({ media: 'screen' });
+  const backOnScreen = await proj.evaluate(() => getComputedStyle(document.getElementById('pickOverlay')).display);
+  check('and it comes straight back on screen (print-only suppression)', backOnScreen !== 'none', backOnScreen);
+
+  /* The roster field must not be offered back by the browser: autofill and
+     session restore are both routes a class list could outlive the tab. */
+  const fields = await Promise.all([proj, hud].map(p => p.evaluate(() => {
+    const t = document.getElementById('pickRoster');
+    return { auto: t.getAttribute('autocomplete'), spell: t.getAttribute('spellcheck') };
+  })));
+  check('D2: the roster field opts out of autofill and spellcheck in both views',
+    fields.every(f => f.auto === 'off' && f.spell === 'false'), JSON.stringify(fields));
+
   /* ================= no errors anywhere ================= */
   check('no console or page errors on the projector', perrs.length === 0, perrs.join(' | '));
   check('no console or page errors on the HUD', herrs.length === 0, herrs.join(' | '));

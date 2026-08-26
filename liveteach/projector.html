@@ -77,7 +77,11 @@ body.highlumen #hintInput { background: #fff; border-color: #8a7f5e; }
 #status.linked .dot { background: #b9e6cd; }
 #status .word { letter-spacing: .06em; }
 
-@media print { #strip, #status, #fsBtn { display: none; } }
+/* Printing makes a FILE, and the non-negotiables put pupil names out of
+   exported files without exception — a name is allowed on the wall, not in a
+   PDF sitting in someone's downloads. The cold-call surfaces (and the share
+   panel, which would print a QR of a stale address) are print-suppressed. */
+@media print { #strip, #status, #fsBtn, #pickOverlay, #pickPanel, #shareOverlay { display: none !important; } }
 
 /* The canonical splash ships its skip button a whisker under the estate's
    44px floor; this override lives OUTSIDE the pinned region so the canonical
@@ -343,7 +347,7 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
       never in the address or the QR code, and gone when you close the tab. On this window the class can
       see the screen, so a picked name is shown to the room.</p>
     <div id="pickEmpty">
-      <textarea id="pickRoster" rows="4" aria-label="Class list, one name per line" placeholder="Ana&#10;Ben&#10;Charlie"></textarea>
+      <textarea id="pickRoster" rows="4" autocomplete="off" autocorrect="off" spellcheck="false" aria-label="Class list, one name per line" placeholder="Ana&#10;Ben&#10;Charlie"></textarea>
       <div class="row">
         <button id="btnPickLoad">Load class list</button>
         <button id="btnPickClose">Close</button>
