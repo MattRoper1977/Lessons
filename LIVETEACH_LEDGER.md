@@ -656,3 +656,36 @@ order and marked as applied where a phase leans on them.
   on evidence, not on proxies** — and the practice that made it stick was
   writing the red control first: a check that has never been shown to fail is
   not yet a check.
+
+---
+
+## SAT-F — C1 closed, C4 opened (2026-08-26)
+
+LT1's phase record above stands as written; this block records what changed
+after it, rather than rewriting it.
+
+**C1 closed.** Matt's recorded word (2026-08-26) released exactly one frozen
+legacy file. `biology/Structure_of_the_Thorax.html:1372` took LT1's own
+neutralisation — nine names to `Pupil A`–`Pupil I`. Gates: one line swapped for
+one line with array length, quote style and delimiter count asserted
+programmatically; diffstat one file; the only change inside any
+`frozen_for_2025_26_delivery` path; estate-wide census for the nine names back
+to zero roster occurrences; `tools/verify_fixture_names.mjs` clean including its
+self-test. Landed at `b37f1e5` (PR #159, 8 checks green).
+
+**C4 opened — and it is the more interesting half.** Closing C1 required
+re-running the census estate-wide, and the census is what found it: two files in
+the `Consent_*` family carry a teacher-facing TA deployment note naming three
+real pupils. LT1 had adjudicated that family **fictional** and recorded the
+adjudication in this ledger's own "Corrections to the recon recorded" line
+above. That adjudication was correct *about the filename character* and was
+silently over-applied to the file bodies, which nobody then read.
+
+The lesson is the estate's own, in a new place: **an adjudication is scoped to
+what was actually examined.** LT1 examined a name and cleared a family. The
+census re-run is what turned that up, which is the argument for re-running a
+census on close rather than trusting the pass that wrote it.
+
+Not fixed — safeguarding changes are not self-merged, the same rule that held
+C1 for a year. Recorded name-free in `LIVETEACH_RESIDUE.md` and the contact
+sheet as C4.
