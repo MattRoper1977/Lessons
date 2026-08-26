@@ -98,6 +98,47 @@ body.highlumen #shareNoProj { color: #8a5413; }
 #shareCard .row { justify-content: center; margin-bottom: 8px; }
 #shareTagRow { font-size: 13px; display: block; }
 #shareTagInput { width: 14ch; flex: none; min-width: 0; margin-left: 6px; }
+/* Cold-call picker (LT7). The roster lives in this tab's memory only, so
+   there is nothing here to style as "saved". */
+#pickRoster {
+  width: 100%; box-sizing: border-box; border-radius: 10px; border: 1px solid #43518c;
+  background: #0d1430; color: inherit; font: inherit; font-size: 14px; padding: 8px 10px;
+  resize: vertical; min-height: 88px;
+}
+body.highlumen #pickRoster { background: #fff; border-color: #8a7f5e; }
+#pickName { font-size: 30px; line-height: 1.2; word-break: break-word; }
+/* The wall indicator states its meaning in words; the tint only reinforces. */
+#pickWall { font-size: 13px; }
+#pickWall.live { border-color: #f2a24a; font-weight: 700; }
+.subh { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; opacity: .7; margin: 12px 0 6px; }
+.pickrows { display: flex; flex-direction: column; gap: 4px; }
+.pickrow {
+  /* wrap, and give the NAME a floor: four rigid children used to squeeze it
+     to a couple of characters at phone width, with a decorative bar keeping
+     its 60px. The name is the content; the bar yields first. */
+  display: flex; align-items: center; gap: 8px; min-height: 44px; flex-wrap: wrap;
+  border: 1px solid #2c3763; border-radius: 10px; padding: 4px 10px; font-size: 14px;
+}
+body.highlumen .pickrow { border-color: #c9c2ae; }
+.pickrow .nm { flex: 1 1 8ch; min-width: 8ch; overflow-wrap: anywhere; }
+/* Status is stated in TEXT, never by tint alone (the estate's colour rule):
+   every row carries "here"/"away" and, when it applies, "just asked". */
+.pickrow .status { font-size: 12px; opacity: .95; white-space: nowrap; }
+.pickrow .odds { font-variant-numeric: tabular-nums; font-size: 12px; opacity: .95; min-width: 4.5ch; text-align: right; }
+/* Dimmed, but never below the contrast floor: the old .55 multiplied with
+   the .8 on .status/.odds to an effective .44, which measured 2.66:1 in
+   high-lumen — a pupil's own name, unreadable. The row is distinguished by
+   the strike-through and the word "away", so the fade only has to be
+   perceptible, not heavy. */
+.pickrow.away { opacity: .82; }
+.pickrow.away .nm { text-decoration: line-through; }
+/* 44px, not 36: the touch floor is not negotiable for compactness, and the
+   rows wrap now so nothing is squeezed by it. */
+.pickrow button.att { min-width: 44px; min-height: 44px; padding: 4px 10px; font-size: 12px; }
+/* The odds bar is decoration on top of the number, never instead of it. */
+.pickrow .bar { width: 60px; max-width: 22vw; height: 8px; border-radius: 999px; background: #2c3763; overflow: hidden; flex: 0 1 auto; }
+body.highlumen .pickrow .bar { background: #ded7c4; }
+.pickrow .bar i { display: block; height: 100%; background: #f2a24a; }
 @media print { body { display: none; } }
 body.reduce *, body.reduce *::before, body.reduce *::after {
   animation-duration: .01ms !important; animation-iteration-count: 1 !important;
@@ -139,6 +180,10 @@ body.reduce *, body.reduce *::before, body.reduce *::after {
     <span id="stageTitle" style="font-weight:700; flex:1; min-width:120px">—</span>
     <button id="btnNext" aria-label="Next stage">Next ▶</button>
   </div>
+  <!-- The worked answer lives HERE, not on the pupils' worksheet: the sheet
+       asks them to measure λ and compute v, so printing the result on it
+       would make the task pointless. -->
+  <div class="keys" id="stageMaths"></div>
 </section>
 
 <section class="card" aria-label="Simulation controls">
@@ -193,6 +238,69 @@ body.reduce *, body.reduce *::before, body.reduce *::after {
   </div>
   <canvas id="pad" aria-label="Drawing pad mirroring the projector"></canvas>
   <div class="keys">Turn 🖊 Draw mode on first — it pauses the sim and wakes the pad. The pad keeps the projector's exact shape, so ink lands where you draw it; a stroke appears on both screens when the pen lifts. D toggles draw mode, C clears.</div>
+</section>
+
+<section class="card" aria-label="Cold-call picker">
+  <h2>Cold call</h2>
+  <div id="pickEmpty">
+    <p class="keys" style="margin-top:0">Paste your class list — one name per line, or separated by commas.
+    <strong>The list stays in this tab&rsquo;s memory for this lesson only.</strong> It is never saved to this
+    device and never put in the address, and it disappears when you close the tab. The list itself never
+    leaves this window: the only thing that can reach the projector is a single picked name, and only when
+    you press <strong>Show on projector</strong>.</p>
+    <textarea id="pickRoster" rows="4" autocomplete="off" autocorrect="off" spellcheck="false" aria-label="Class list, one name per line" placeholder="Ana&#10;Ben&#10;Charlie"></textarea>
+    <div class="row" style="margin-top:8px">
+      <button id="btnPickLoad">Load class list</button>
+    </div>
+  </div>
+  <!-- OUTSIDE #pickLive on purpose: after a HUD reload there is no roster in
+       memory, but a name may still be on the wall, and the control that takes
+       it down must not be hidden behind the empty state. -->
+  <div class="row" style="margin-bottom:8px">
+    <span id="pickWall" class="ind">Nothing is on the projector.</span>
+    <button id="btnPickHide">🙈 Clear projector</button>
+  </div>
+  <div id="pickLive" hidden>
+    <div class="row" style="margin-bottom:8px">
+      <button id="btnPickNext">🎲 Pick (N)</button>
+      <button id="btnPickPass">↩ Pass / bounce (M)</button>
+      <button id="btnPickProject">📢 Show on projector</button>
+    </div>
+    <div class="big" id="pickName">—</div>
+    <div class="keys" id="pickNote">Picked names stay on this screen until you press <strong>Show on projector</strong>.</div>
+    <h3 class="subh">Who&rsquo;s here, and who&rsquo;s next</h3>
+    <div id="pickRows" class="pickrows"></div>
+    <div class="row" style="margin-top:8px">
+      <button id="btnPickClear">🗑 Clear class list</button>
+    </div>
+  </div>
+</section>
+<div id="pickSaid" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap"></div>
+<div id="extrasSaid" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap"></div>
+
+<section class="card" aria-label="Class check and extras">
+  <h2>Class check</h2>
+  <div class="row" style="margin-bottom:8px">
+    <button id="btnRagR">7 · Stuck</button>
+    <button id="btnRagA">8 · Nearly</button>
+    <button id="btnRagG">9 · Got it</button>
+    <button id="btnRagShow" aria-pressed="false">📊 Show tally</button>
+    <button id="btnRagReset">↺ Reset</button>
+  </div>
+  <div class="row" id="ragCounts">
+    <span class="ind">■ Stuck <span class="st" id="indRagR">0</span></span>
+    <span class="ind">▲ Nearly <span class="st" id="indRagA">0</span></span>
+    <span class="ind">● Got it <span class="st" id="indRagG">0</span></span>
+  </div>
+  <div class="keys">The tally counts responses only — never who said what. It lives for this lesson
+  and resets when you say so. 7, 8 and 9 work from either window.</div>
+  <div class="row" style="margin-top:8px">
+    <button id="btnBell">🔔 Silent bell</button>
+    <button id="btnAudio" aria-pressed="false">🔇 Sound off</button>
+  </div>
+  <div class="keys">The bell draws eyes with a slow amber glow on the projector — a still banner instead
+  if reduced motion or Calm is on. Sound is off every time the kit opens, on purpose, and turning it on
+  applies to the projector’s speakers for this session only.</div>
 </section>
 
 <section class="card" aria-label="Share">
@@ -572,6 +680,229 @@ body.reduce *, body.reduce *::before, body.reduce *::after {
 });
 </script>
 <!-- MBM-LIVETEACH-QR:END -->
+<!-- MBM-LIVETEACH-PICKER:BEGIN generated by tools/liveteach/stamp_picker.mjs from tools/liveteach/picker_source.js — do not edit by hand -->
+<script>
+/* Live-Teach cold-call picker engine — the rules only, no DOM, no storage.
+   ONE SOURCE, MANY COPIES: stamped into the views by stamp_picker.mjs (the
+   pinned-region pattern) and require()d by tools/liveteach/picker_gate.mjs,
+   so the 10,000-draw simulation exercises the exact bytes that ship.
+
+   THE ROSTER NEVER LEAVES MEMORY (order LT-GO D2). Nothing in this file
+   touches localStorage, the bus, the URL or the console; names live in a
+   plain array for the length of one lesson and die with the tab. The view
+   code renders them with textContent only.
+
+   P2 — THE NO-IMMEDIATE-REPEAT GUARANTEE, AND WHY IT IS ABSOLUTE.
+   The reviewed fragment gave every pupil a minimum weight, so the pupil who
+   had just answered could come straight back up — about a 1% chance per
+   draw. In a mainstream room that reads as keeping people on their toes. In
+   an SEMH alternative provision it does not: being asked twice in a row
+   reads as being singled out, and the escalation that follows costs the rest
+   of the lesson. So the guard here is structural rather than statistical.
+   Weight is "draws since you were last called", which is exactly 0 for the
+   pupil who just answered — they cannot be drawn at all on the next draw,
+   not merely rarely. One draw later their weight is 1 and they are back in
+   the pool, and it keeps climbing while they are not called, so the same
+   counter that guarantees the gap also does the decay-recovery that keeps
+   the room balanced. There is no floor to tune and no dice roll to lose. */
+(function (root, factory) {
+  if (typeof module === 'object' && module.exports) module.exports = factory();
+  else root.LTPick = factory();
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+
+  var MAX_NAMES = 40;      // a class, not a database
+  var MAX_LEN = 32;        // one name, not a paragraph
+  var HISTORY_CAP = 60;
+
+  /* Roster text → names. Splits on newlines OR commas so a paste from a
+     register works either way; trims, drops blanks, de-duplicates
+     case-insensitively (two "Sam"s would be indistinguishable on screen,
+     which is its own safeguarding problem — the view tells the teacher to
+     add an initial). */
+  function clampName(n) {
+    /* slice() counts UTF-16 code units, so a cut can land between the halves
+       of a surrogate pair and leave a lone high surrogate — which renders as
+       the replacement diamond in a name on the class screen. Cut by
+       CHARACTERS instead. */
+    var chars = Array.from(n);
+    return chars.length > MAX_LEN ? chars.slice(0, MAX_LEN).join('') : n;
+  }
+  function parseRoster(text) {
+    var seen = Object.create(null);
+    var out = [];
+    var dropped = 0;
+    String(text == null ? '' : text).split(/[\n,]/).forEach(function (raw) {
+      var n = clampName(String(raw).replace(/\s+/g, ' ').trim());
+      if (!n) return;
+      /* Normalise before comparing: a register pasted from two sources can
+         carry the same name in NFC and NFD, which are byte-different and
+         pixel-identical — exactly the indistinguishable-duplicate the dedupe
+         exists to prevent. */
+      var key = (n.normalize ? n.normalize('NFC') : n).toLowerCase();
+      if (seen[key]) return;
+      seen[key] = 1;
+      if (out.length < MAX_NAMES) out.push(n); else dropped++;
+    });
+    /* The caller is told what was lost, so a 45-name paste cannot be
+       confirmed as "40 names loaded" with no mention of the five. */
+    out.dropped = dropped;
+    return out;
+  }
+
+  /* since: draws since this pupil was last called. Everyone starts equal, so
+     the first draw is uniform over the room. */
+  function create(names) {
+    var list = Array.isArray(names) ? names : parseRoster(names);
+    return {
+      names: list.slice(),
+      present: list.map(function () { return true; }),
+      since: list.map(function () { return 1; }),
+      justPassed: -1,     // excluded for exactly one draw (see pass())
+      last: -1,
+      lastPriorSince: 0,
+      history: []         // {name, passed} — MEMORY ONLY, never broadcast (P5)
+    };
+  }
+
+  function setPresent(st, i, on) {
+    if (i < 0 || i >= st.names.length) return;
+    var was = st.present[i];
+    st.present[i] = !!on;
+    /* st.last is deliberately NOT cleared when that pupil is marked away. It
+       records who answered most recently, which is the single fact P2 rests
+       on; forgetting it meant a pupil could be called, marked away, marked
+       back, and called again immediately — a repeat, by the shipped buttons.
+       An away pupil is already excluded by `present`, so keeping `last`
+       costs the room nothing and keeps the guarantee true across attendance
+       changes. */
+    /* Coming BACK is the subtle one. since only advances for pupils who are
+       here, so a pupil marked away moments after being called keeps since=0
+       — and a frozen zero never expires. Returning with that zero made them
+       weightless, which in a small room emptied the pool into the uniform
+       fallback and let the pupil who had just answered be drawn again: the
+       exact repeat P2 exists to forbid. So a returning pupil re-enters at
+       least at 1 — in the pool, ordinary priority. Not higher: someone who
+       has just walked back in is the last person who should be cold-called
+       on the spot. */
+    if (st.present[i] && !was && st.since[i] < 1) st.since[i] = 1;
+  }
+
+  function weights(st) {
+    return st.names.map(function (_, i) {
+      if (!st.present[i]) return 0;        // P4: absent pupils are not in the draw
+      if (i === st.justPassed) return 0;   // a pass does not put you straight back up
+      return st.since[i];                  // P2: exactly 0 for the pupil just called
+    });
+  }
+
+  /* P3/P4 support: the numbers the view renders. Absent pupils are reported
+     with p = 0 so the view can show them greyed and stated as absent rather
+     than silently dropping them (a pupil who cannot see themselves listed
+     assumes they were forgotten). */
+  function probabilities(st) {
+    var w = weights(st);
+    var total = w.reduce(function (a, b) { return a + b; }, 0);
+    var fallback = total <= 0;
+    return st.names.map(function (name, i) {
+      var eligible = st.present[i] && (!fallback ? w[i] > 0 : true);
+      var p;
+      if (!st.present[i]) p = 0;
+      else if (fallback) p = 1 / Math.max(1, st.present.filter(Boolean).length);
+      else p = w[i] / total;
+      return {
+        name: name,
+        present: !!st.present[i],
+        cooldown: st.present[i] && w[i] === 0,
+        eligible: eligible,
+        p: p
+      };
+    });
+  }
+
+  /* rng is injectable so the harness can drive a deterministic sequence;
+     the views pass nothing and get Math.random. */
+  function pick(st, rng) {
+    var r = typeof rng === 'function' ? rng : Math.random;
+    var w = weights(st);
+    var total = w.reduce(function (a, b) { return a + b; }, 0);
+    var fellBack = false;
+    if (total <= 0) {
+      /* Nobody has any weight left. Falling back to "everyone present,
+         equally" is right — but it must NOT quietly re-admit the pupil who
+         just answered: P2 is the phase's one absolute, so the fallback drops
+         them too whenever anyone else is available, and only concedes when
+         there is literally nobody else to ask. */
+      var present = [];
+      for (var j = 0; j < st.names.length; j++) if (st.present[j]) present.push(j);
+      if (!present.length) return null;
+      var eligible = present.filter(function (i) { return i !== st.last && i !== st.justPassed; });
+      var pool = eligible.length ? eligible : present;
+      /* fellBack means precisely "this draw could not honour the no-repeat
+         guarantee" — not "the room is small". Both views word their notice
+         from that, so the notice is true whichever way the room got here. */
+      fellBack = !eligible.length;
+      w = st.names.map(function (_, i) { return pool.indexOf(i) === -1 ? 0 : 1; });
+      total = pool.length;
+    }
+    var t = r() * total, idx = -1;
+    for (var i = 0; i < w.length; i++) {
+      t -= w[i];
+      if (t < 0) { idx = i; break; }
+    }
+    if (idx === -1) for (var k = w.length - 1; k >= 0; k--) { if (w[k] > 0) { idx = k; break; } }
+    if (idx === -1) return null;
+
+    for (var m = 0; m < st.since.length; m++) if (st.present[m]) st.since[m]++;
+    st.lastPriorSince = st.since[idx];
+    st.since[idx] = 0;
+    st.last = idx;
+    st.justPassed = -1;
+    st.history.unshift({ name: st.names[idx], passed: false });
+    if (st.history.length > HISTORY_CAP) st.history.pop();
+    return { index: idx, name: st.names[idx], fellBack: fellBack };
+  }
+
+  /* M — pass / bounce. The question moves on, but passing is a scaffold, not
+     an exit: the pupil's place in the queue is handed back (their since is
+     restored to what it was before they were drawn) so they come round again
+     soon, while a one-draw exclusion stops the bounce landing straight back
+     on them. Their turn is recorded as a pass, so the history shows who was
+     asked and who answered. */
+  function pass(st, rng) {
+    if (st.last < 0) return null;
+    var passer = st.last;
+    st.since[passer] = st.lastPriorSince;
+    if (st.history.length && !st.history[0].passed) st.history[0].passed = true;
+    st.justPassed = passer;
+    var out = pick(st, rng);
+    st.justPassed = -1;
+    return out;
+  }
+
+  function clear(st) {
+    st.names.length = 0;
+    st.present.length = 0;
+    st.since.length = 0;
+    st.history.length = 0;
+    st.last = -1;
+    st.justPassed = -1;
+  }
+
+  return {
+    parseRoster: parseRoster,
+    create: create,
+    setPresent: setPresent,
+    probabilities: probabilities,
+    pick: pick,
+    pass: pass,
+    clear: clear,
+    MAX_NAMES: MAX_NAMES,
+    MAX_LEN: MAX_LEN
+  };
+});
+</script>
+<!-- MBM-LIVETEACH-PICKER:END -->
 <!-- MBM-LIVETEACH-CORE:BEGIN generated by tools/liveteach/stamp_core.mjs from tools/liveteach/core_source.js — do not edit by hand -->
 <script>
 /* Live-Teach core — bus contract, keyboard registry, motion + theme state.
@@ -747,6 +1078,7 @@ LT.boot();
        follow every stage/speed/display change as it happens. */
     if (shareOverlayEl.classList.contains('show')) shareRender();
     if (!seen) return;
+    extrasRender();
     el('indRun').textContent = seen.running ? 'running' : 'paused';
     el('indSpeed').textContent = seen.speed + '×';
     el('indHint').textContent = seen.hint && seen.hint.on ? 'ON' : 'off';
@@ -765,6 +1097,16 @@ LT.boot();
     }
     el('indStage').textContent = seen.stageCount ? (seen.stage + 1) + '/' + seen.stageCount : '—';
     el('stageTitle').textContent = seen.stageTitle || '—';
+    /* What is on the wall is a fact about the projector, so it is rendered
+       from the broadcast, never from this window's memory of what it sent. */
+    var onWall = seen.pick || '';
+    el('pickWall').textContent = onWall ? 'On the projector now: ' + onWall : 'Nothing is on the projector.';
+    el('pickWall').classList.toggle('live', !!onWall);
+    el('btnPickHide').disabled = !onWall;
+    var wv = seen.wave;
+    el('stageMaths').textContent = wv
+      ? 'Worked answer for the worksheet: v = f × λ = ' + wv.f + ' × ' + wv.lambda + ' = ' + (Math.round(wv.f * wv.lambda * 1000) / 1000) + ' m/s'
+      : '';
     if (seen.stageCount && seen.stage !== lastStageSaid) {
       lastStageSaid = seen.stage;
       el('stageSaid').textContent = 'Stage ' + (seen.stage + 1) + ' of ' + seen.stageCount + ': ' + (seen.stageTitle || '');
@@ -795,6 +1137,12 @@ LT.boot();
     if (type === 'PROJECTOR_STATE') {
       var newAspect = seen ? seen.aspect : null;
       seen = payload;
+      /* What is on the wall is the projector's fact, so this window's memory
+         of what it sent is reconciled to the broadcast rather than trusted.
+         Otherwise a name cleared on the projector — by 0, Escape or the
+         blackout — leaves this side still believing it is up. state.pick
+         already travels in PROJECTOR_STATE, so nothing new reaches the bus. */
+      if (typeof seen.pick === 'string') pickShown = seen.pick;
       seenAt = performance.now();
       render();
       if (seen.aspect && seen.aspect !== newAspect) sizePad();
@@ -802,6 +1150,13 @@ LT.boot();
     else if (type === 'TELE_STROKE') {
       var s = saneStroke(payload);
       if (s) padAdd(s);
+    }
+    else if (type === 'PICK_REFUSED') {
+      /* The projector declined to show a name (it is blacked out). Say so
+         rather than leaving this window claiming the name is up. */
+      pickShown = '';
+      toast('The projector is blacked out, so the name was not shown. Lift the blackout and try again.');
+      el('pickSaid').textContent = 'Not shown — the projector is blacked out.';
     }
     else if (type === 'TELE_CLEAR') { padClear(true); }
     else if (type === 'TELE_SYNC') {
@@ -855,6 +1210,203 @@ LT.boot();
     toast('Fullscreen can\'t be switched from here: click the projector window once, then press F11 or its ⛶ Fullscreen button.');
   }
   el('btnFsHelp').addEventListener('click', fsAdvice);
+
+  /* --- cold-call picker (LT7: P1–P5) -------------------------------------
+     ORDER LT-GO D2 overrides P1's "read the estate's roster storage": the
+     roster is SESSION-ONLY. It is typed or pasted at the start of the lesson,
+     lives in this one variable, and is never written to storage, never put in
+     the address, never logged, and never broadcast. Closing the tab is the
+     delete button. Nothing here creates a storage key, so the LT2 storage
+     audit still finds exactly one.
+
+     P5: history stays in the engine's memory object and is not broadcast.
+     Q2 (Matt's answer): a picked name shows HERE only. The ONE sanctioned
+     way a name reaches the projector is the explicit "Show on projector"
+     press below — the opt-in the non-negotiables carve out. */
+  var pick = null;                 // LTPick state, or null before a list is loaded
+  var pickShown = '';              // the name currently ON the projector, if any
+  /* A paste longer than a class silently lost the overflow while the
+     confirmation counted only the survivors. Say what was dropped. */
+  function loadReport(names) {
+    var msg = names.length + ' names loaded for this lesson only.';
+    if (names.dropped) msg += ' ' + names.dropped + ' more were not loaded — the list is capped at ' + window.LTPick.MAX_NAMES + ' names.';
+    return msg;
+  }
+  function pctText(r) {
+    /* An eligible pupil must never read as 0% — that is what an excluded one
+       shows, and in a full class the least-overdue pupil rounds below half a
+       percent. */
+    if (!r.present || r.cooldown) return '0%';
+    var pc = Math.round(r.p * 100);
+    return pc < 1 ? '<1%' : pc + '%';
+  }
+  function fallbackNote(st) {
+    var here = st.present.filter(Boolean).length;
+    return here <= 1
+      ? 'Only one pupil is marked here, so the no-repeat guard cannot apply — everyone else is away.'
+      : 'Everyone marked here has just been asked, so this draw could not avoid a repeat.';
+  }
+  function pickRender(refocus) {
+    el('pickEmpty').hidden = !!pick;
+    el('pickLive').hidden = !pick;
+    if (!pick) return;
+    var rows = window.LTPick.probabilities(pick);
+    var box = el('pickRows');
+    while (box.firstChild) box.removeChild(box.firstChild);
+    /* P3: every row is built with createElement + textContent. A name is
+       external text and must never reach innerHTML — with a real class list
+       loaded that is both a privacy and an injection question. */
+    rows.forEach(function (r, i) {
+      var row = document.createElement('div');
+      row.className = 'pickrow' + (r.present ? '' : ' away');
+      var nm = document.createElement('span');
+      nm.className = 'nm';
+      nm.textContent = r.name;
+      row.appendChild(nm);
+      var st = document.createElement('span');
+      st.className = 'status';
+      /* Text, not tint: "here"/"away" and the cooldown are stated. */
+      st.textContent = !r.present ? 'away' : (r.cooldown ? 'just asked' : 'here');
+      row.appendChild(st);
+      var bar = document.createElement('span');
+      bar.className = 'bar';
+      var fill = document.createElement('i');
+      fill.style.width = Math.round(r.p * 100) + '%';
+      bar.appendChild(fill);
+      row.appendChild(bar);
+      var odds = document.createElement('span');
+      odds.className = 'odds';
+      odds.textContent = pctText(r);
+      row.appendChild(odds);
+      var att = document.createElement('button');
+      att.className = 'att';
+      att.type = 'button';
+      att.textContent = r.present ? 'Mark away' : 'Mark here';
+      att.setAttribute('aria-label', (r.present ? 'Mark away: ' : 'Mark here: ') + r.name);
+      att.addEventListener('click', function () {
+        window.LTPick.setPresent(pick, i, !pick.present[i]);
+        /* Rebuilding the list deletes the button that was just pressed, so
+           focus has to be put back on the same row or a keyboard user is
+           dropped to the top of the class every time. */
+        pickRender(i);
+        el('pickSaid').textContent = r.name + (pick.present[i] ? ' marked here' : ' marked away');
+      });
+      row.appendChild(att);
+      box.appendChild(row);
+    });
+    if (typeof refocus === 'number') {
+      var back = box.children[refocus] && box.children[refocus].querySelector('button.att');
+      if (back) back.focus();
+    }
+  }
+  function pickAnnounce(got, passed) {
+    if (!got) { el('pickName').textContent = '—'; el('pickSaid').textContent = 'Nobody is marked here.'; return; }
+    el('pickName').textContent = got.name;
+    el('pickSaid').textContent = (passed ? 'Passed to ' : 'Picked ') + got.name;
+    /* Honest about the one case the guarantee cannot cover. */
+    el('pickNote').textContent = got.fellBack
+      ? fallbackNote(pick)
+      : 'Picked names stay on this screen until you press Show on projector.';
+  }
+  el('btnPickLoad').addEventListener('click', function () {
+    var names = window.LTPick.parseRoster(el('pickRoster').value);
+    if (!names.length) { toast('Type or paste at least one name first.'); return; }
+    pick = window.LTPick.create(names);
+    /* The textarea is emptied the moment the list is loaded: nothing should
+       sit in a form field where a browser might offer to remember it. */
+    el('pickRoster').value = '';
+    el('pickName').textContent = '—';
+    pickRender();
+    el('pickSaid').textContent = loadReport(names);
+  });
+  /* Drawing again while a name is on the wall used to leave the PREVIOUS
+     pupil named to the room while this screen showed the new one — the class
+     looking at Ben, the teacher reading Ana. Show-on-projector is a
+     one-shot, so a new draw RETRACTS what is up: the wall never carries a
+     name the teacher has moved on from, and they press Show again when they
+     mean to. */
+  function retractIfProjected() {
+    if (!pickShown) return;
+    pickShown = '';
+    LT.send('PICK_CLEAR', {});
+  }
+  el('btnPickNext').addEventListener('click', function () {
+    if (!pick) return;
+    retractIfProjected();
+    pickAnnounce(window.LTPick.pick(pick), false);
+    pickRender();
+  });
+  el('btnPickPass').addEventListener('click', function () {
+    if (!pick || pick.last < 0) { toast('Pick someone first, then Pass bounces the question on.'); return; }
+    retractIfProjected();
+    pickAnnounce(window.LTPick.pass(pick), true);
+    pickRender();
+  });
+  /* The Q2 opt-in, and the only line in this file that puts a name on the
+     bus. It sends ONE name, on an explicit press, and only the name — never
+     the list, the history or the odds. */
+  el('btnPickProject').addEventListener('click', function () {
+    var name = el('pickName').textContent;
+    if (!pick || !name || name === '—') { toast('Pick someone first.'); return; }
+    if (seen && seen.blackout) {
+      toast('The projector is blacked out, so nothing would be seen — lift the blackout first.');
+      return;
+    }
+    pickShown = name;
+    LT.send('PICK_SHOW', { name: name });
+    el('pickSaid').textContent = name + ' is now on the projector.';
+  });
+  el('btnPickHide').addEventListener('click', function () {
+    pickShown = '';
+    LT.send('PICK_CLEAR', {});
+    el('pickSaid').textContent = 'Projector name cleared.';
+  });
+  el('btnPickClear').addEventListener('click', function () {
+    if (pick) window.LTPick.clear(pick);
+    pick = null;
+    pickShown = '';
+    LT.send('PICK_CLEAR', {});
+    el('pickName').textContent = '—';
+    pickRender();
+    el('pickSaid').textContent = 'Class list cleared from memory.';
+  });
+  pickRender();
+
+  /* --- classroom extras (LT8) --------------------------------------------
+     The HUD renders the projector's counts and sends presses; it holds no
+     tally of its own, exactly like every other indicator here (G2). */
+  var lastRagSaid = null;
+  function extrasRender() {
+    if (!seen) return;
+    var rag = seen.rag || { r: 0, a: 0, g: 0 };
+    el('indRagR').textContent = String(rag.r);
+    el('indRagA').textContent = String(rag.a);
+    el('indRagG').textContent = String(rag.g);
+    /* Announced, like every other state change here. The counts were shown
+       in plain spans with no live region, so a screen-reader user pressing
+       7/8/9 got no confirmation the vote had landed at all. */
+    var stamp = rag.r + '/' + rag.a + '/' + rag.g;
+    if (lastRagSaid !== null && lastRagSaid !== stamp) {
+      el('extrasSaid').textContent = 'Tally: ' + rag.r + ' stuck, ' + rag.a + ' nearly, ' + rag.g + ' got it';
+    }
+    lastRagSaid = stamp;
+    el('btnRagShow').setAttribute('aria-pressed', String(!!seen.ragShow));
+    el('btnAudio').setAttribute('aria-pressed', String(!!seen.audio));
+    el('btnAudio').textContent = seen.audio ? '\uD83D\uDD0A Sound on' : '\uD83D\uDD07 Sound off';
+  }
+  el('btnRagR').addEventListener('click', function () { LT.send('RAG_BUMP', { level: 'r' }); });
+  el('btnRagA').addEventListener('click', function () { LT.send('RAG_BUMP', { level: 'a' }); });
+  el('btnRagG').addEventListener('click', function () { LT.send('RAG_BUMP', { level: 'g' }); });
+  el('btnRagShow').addEventListener('click', function () { LT.send('RAG_SHOW', { on: !(seen && seen.ragShow) }); });
+  el('btnRagReset').addEventListener('click', function () { LT.send('RAG_RESET', {}); });
+  el('btnBell').addEventListener('click', function () {
+    LT.send('BELL', {});
+    el('extrasSaid').textContent = 'Silent bell sent to the projector';
+  });
+  el('btnAudio').addEventListener('click', function () { LT.send('AUDIO_SET', { on: !(seen && seen.audio) }); });
+  LT.registerKey('Digit7', function () { LT.send('RAG_BUMP', { level: 'r' }); }, 'Tally: stuck');
+  LT.registerKey('Digit8', function () { LT.send('RAG_BUMP', { level: 'a' }); }, 'Tally: nearly there');
+  LT.registerKey('Digit9', function () { LT.send('RAG_BUMP', { level: 'g' }); }, 'Tally: got it');
 
   /* --- share / QR (LT6) --------------------------------------------------
      The HUD builds the PROJECTOR's address from the last broadcast state —
@@ -982,6 +1534,10 @@ LT.boot();
   LT.registerKey('KeyD', function () { LT.send('TELE_SET', { on: !(seen && seen.telestrator) }); }, 'Telestrator draw toggle');
   LT.registerKey('KeyC', function () { padClear(false); }, 'Telestrator clear');
   LT.registerKey('KeyQ', function () { shareToggle(); }, 'Share / QR');
+  LT.registerKey('KeyN', function () { if (pick) { retractIfProjected(); pickAnnounce(window.LTPick.pick(pick), false); pickRender(); } }, 'Cold call: pick next');
+  LT.registerKey('KeyM', function () {
+    if (pick && pick.last >= 0) { retractIfProjected(); pickAnnounce(window.LTPick.pass(pick), true); pickRender(); }
+  }, 'Cold call: pass / bounce');
 
   /* ---------- mini-pad (LT5; dual-mode only per order D1) ----------------
      T3: the pad letterboxes to the projector's broadcast aspect, so a stroke
@@ -1149,6 +1705,20 @@ LT.boot();
     },
     share: function () {
       return { open: shareOverlayEl.classList.contains('show'), url: hudShareURL(), tag: hudTag };
+    },
+    extras: function () {
+      return seen ? { rag: seen.rag, ragShow: seen.ragShow, audio: seen.audio } : null;
+    },
+    pick: function () {
+      if (!pick) return null;
+      return {
+        names: pick.names.slice(),
+        present: pick.present.slice(),
+        shown: el('pickName').textContent,
+        projected: pickShown,
+        rows: window.LTPick.probabilities(pick),
+        history: pick.history.slice(0, 12)
+      };
     }
   };
 })();

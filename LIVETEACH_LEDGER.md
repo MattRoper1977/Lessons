@@ -82,6 +82,11 @@ order and marked as applied where a phase leans on them.
     (onmessage assignment, one rAF loop per view, TDZ init rule) with a
     6-vector self-test (3 red vectors must red, 3 green must pass); the
     lt-shell browser suite (~30 checks).
+  - **S5 (a washed-out classroom projector)** is the high-lumen toggle: a full
+    light palette flagged on BOTH `<html>` and `<body>` — the estate's recorded
+    page-fill gotcha — with the sim's line and dot colours picked per theme
+    rather than low-alpha-on-dark, pinned by the persistence and figure/ground
+    checks below.
   - Named LT2 gates in lt-shell: resync after projector reload (HUD
     reconciles to the fresh broadcast); H/P toggle both directions by real
     keydown; single-window completeness (timer, hint, poll, pause/resume,
@@ -116,7 +121,7 @@ order and marked as applied where a phase leans on them.
   the canonical splash's skip button measured under 44 px (override added
   outside the pinned bytes — canonical untouched; site-repo note in the
   residue); the G-TDZ static gate was bypassable by any statement before the
-  wrapped init (regex hardened, new red vector). Suite now 44 checks.
+  wrapped init (regex hardened, new red vector). Suite now 45 checks.
 - **Decisions applied:** D1 (single-window first-class; the HUD is optional on
   identical bus code), D4, D5.
 
@@ -154,6 +159,14 @@ order and marked as applied where a phase leans on them.
     originally sent `STAGE_SET` from the projector's own page — a
     BroadcastChannel never hears its own messages, so the test proved
     nothing; it now travels the real HUD→projector path.
+  - **G5 (content accuracy) is a gate, not a promise.** `units_check.mjs`
+    reads the manifest and recomputes rather than trusting the prose:
+    `U-DOUBLE` requires a stage claiming doubled frequency to carry *exactly*
+    2f, `U-CLAIM` matches every stated value against the parameters on a digit
+    boundary, `U-VISIBLE` scans copy and labels for an f/λ/v that disagrees
+    with the numbers, and `U-COORD` keeps overlay coordinates normalised and
+    clear of the banner band. Its `--self-test` carries red vectors, among
+    them "12 m/s claimed for a value of 2" and a doubling stage set to 3f.
 - **Adversarial review round (four lenses, 26 confirmed findings, all fixed):**
   the sharpest were about honesty and about gates that could not fail. (1) The
   "one wavelength" label was pinned to viewport-relative coordinates while the
@@ -276,8 +289,9 @@ order and marked as applied where a phase leans on them.
 
 ## LT6 — URL serializer + QR (spec Phase 5: U1–U3, Q1–Q2)
 
-- **Branch/PR/merge:** `claude/new-session-43lyml` → PR → merge SHA recorded at
-  next append.
+- **Branch/PR/merge:** `claude/new-session-43lyml` → PR #156 → merged as
+  `b9493db` (all 6 checks green; the liveteach job's log read line-by-line to
+  confirm the 19 steps and the in-CI red-proof genuinely ran).
 - **Delivered:** a share address and a QR panel on **both** views. The
   serializer's whitelist is the privacy boundary: `lesson`, `stage`, `speed`,
   `hl`, `tag` — five keys, defaults omitted (a fresh lesson shares as a bare
@@ -314,7 +328,7 @@ order and marked as applied where a phase leans on them.
   fails to decode, and the fragment's own single-block v4 is *rebuilt here*
   and shown undecodable — proving this gate would have caught the defect Q1
   documents.
-- **Gates (`lt-share.test.js`, 50 checks):** the tag round-trips raw → URL →
+- **Gates (`lt-share.test.js`, 55 checks):** the tag round-trips raw → URL →
   raw with the double-encode red control alongside; history discipline
   (walking a lesson adds nothing, Bookmark adds exactly one, back restores
   stage AND speed); the QR canvas compared **module for module** against
@@ -348,3 +362,294 @@ order and marked as applied where a phase leans on them.
   pixels under a fresh address would have passed.
 - **Decisions applied:** D1 (both views first-class — the panel is on the
   projector too, not HUD-only), D4, D5.
+
+---
+
+## LT7 — Cold-call picker (spec Phase 6: P1–P5; order LT-GO D2)
+
+- **Branch/PR/merge:** `claude/new-session-43lyml` → PR → merge SHA recorded at
+  next append.
+- **The roster rule, and the ruling behind it.** P1 asked the picker to read
+  the estate's roster storage. Order LT-GO **D2 overrides it**: the class list
+  is **session-only** — typed or pasted at the start of the lesson, held in one
+  variable per tab, and written to no storage key, no address, no QR, no log
+  and no bus message. Closing the tab is the delete button, and the launcher
+  says so in as many words. The LT2 storage audit still finds exactly one key,
+  holding display settings. No new key family was created, so P1's actual
+  prohibition ("never a new key family without Matt's sign-off") is honoured
+  by having no key at all.
+- **P2 — the guarantee is structural, not statistical.** The reviewed fragment
+  gave every pupil a minimum weight, so the pupil who had just answered could
+  come straight back up. In a mainstream room that reads as keeping people on
+  their toes; in an SEMH alternative provision it reads as being singled out,
+  and the escalation costs the rest of the lesson. Weight here **is** "draws
+  since you were last called", which is exactly 0 for the pupil who just
+  answered — they cannot be drawn next, not merely rarely — and the same
+  counter does the decay-recovery that keeps the room balanced. No floor to
+  tune, no dice roll to lose. The pedagogy is documented at the top of
+  `tools/liveteach/picker_source.js`.
+- **Q2, as answered.** A picked name shows on the teacher's screen only. The
+  ONE sanctioned way a name crosses the bus is the explicit "Show on
+  projector" press, and that message carries the name and nothing else — no
+  list, no history, no odds. The projector also carries its own picker for
+  single-window teaching (D1: every teaching action reachable there). Rosters
+  do not travel between windows, so in a two-window setup that panel simply
+  stays empty; its copy says plainly that the class can see this screen rather
+  than implying a privacy it cannot offer.
+- **Gates (`picker_gate.mjs`, 10,000 draws):** zero immediate repeats; every
+  pupil within **3.04%** of an even share (min 808, max 858, even 833); zero
+  repeats with a quarter of turns passed, so passing is a scaffold rather than
+  an exit; the guarantee holding in rooms of 2, 3, 4 and 6; with one pupil
+  present it degrades **openly**, flagging every draw it could not cover
+  rather than pretending; attendance removing and restoring a pupil mid-lesson;
+  displayed odds summing to exactly 1 with the absent pupil listed at zero.
+  **Negative controls:** the fragment's own min-weight floor is rebuilt and
+  shown to produce back-to-back calls that this gate counts; a deliberately
+  biased draw blows the balance tolerance, so a passing balance means
+  something; an absent pupil is never drawn in 500 attempts.
+- **Gates (`lt-pick.test.js`, 62 checks — 36 at first write, the rest added by the review round below):** a third page taps the bus and
+  records every message, then every roster name is searched for across the lot
+  after 13 draws — with a check that the tap heard live traffic, so the
+  no-names result cannot be vacuous. Also: no storage key, no name in storage,
+  no name in the address, the textarea emptied on load; a name containing
+  markup renders literally with no element created from it (P3); attendance
+  stated in text and honoured over 40 further draws (P4); the cooldown visible
+  at 0% and labelled "just asked" (P2); a reload forgetting the list with
+  nothing left behind to restore it from (D2); N/M in both views, registered
+  once each; the projector's own picker, the Escape ladder and the blackout
+  stand-down; and a projected name suppressed under print media, because
+  printing makes a file and the non-negotiables put names out of exported
+  files. The roster fields opt out of autofill and spellcheck for the same
+  reason.
+- **Engine ships as one stamped source** (`picker_source.js` → both views via
+  `stamp_picker.mjs`), so the 10k simulation exercises the exact bytes that run
+  in the classroom. The stamper's self-test perturbs the P2 weight into a
+  min-weight floor and demands the drift gate notice. Harness now 23 steps.
+- **Adversarial review round (five lenses) — and it found a real break in the
+  guarantee this phase rests on.** Reproduced before fixing: pick Ann, mark Ann
+  away, draw, mark Ann back — Ann is drawn again immediately. Two causes.
+  `since` advanced only for pupils who were present, so a pupil marked away
+  moments after being called kept `since = 0`, and a frozen zero never
+  expires; and `setPresent` CLEARED `st.last` when that pupil went away,
+  erasing the single fact P2 depends on. Now: a returning pupil re-enters at
+  least at 1 (in the pool, ordinary priority — someone who has just walked
+  back in is the last person who should be cold-called on the spot), `st.last`
+  is kept because an away pupil is already excluded by `present`, and the
+  uniform fallback drops the just-called pupil too whenever anyone else is
+  available. The gate now fuzzes attendance churn — 16,000 draws across rooms
+  of 2, 3, 4 and 8, a third of turns flipping somebody's attendance — counting
+  only AVOIDABLE repeats, and a **red control rebuilds the pre-fix engine and
+  shows the same fuzz catching it: 140 avoidable repeats before, 0 after**.
+  The balance tolerance dropped 15% → 8% across six seeds (the engine's own
+  spread measures under 4.5%, so 15% sat five times above the noise it was
+  policing), and the roster-cap probe now uses 80 DISTINCT names — the old one
+  deduplicated to a single entry and asserted 1 ≤ 40.
+- **Also fixed, each pinned:** "0 — clear every overlay" left a pupil's name on
+  the wall; drawing again left the PREVIOUS pupil named to the room while the
+  HUD showed the new one (a new draw now retracts, and the HUD renders what is
+  actually on the projector from the broadcast, with a Clear control that stays
+  reachable after a reload); a name could be projected under the blackout
+  curtain and reported as shown; the two centred panels could both open at the
+  same depth and strand focus in a buried card; marking a pupil away destroyed
+  keyboard focus in both views, and the projector announced nothing when it
+  did; away rows measured 2.66:1 in high-lumen; rows could not wrap, so a name
+  collapsed at phone width while a decorative bar kept its 60 px; eligible
+  pupils rounded to "0%", which is what an *excluded* pupil shows; the
+  projector's forty attendance buttons had no focus ring. Roster parsing is
+  Unicode-safe (NFC dedupe, character-wise truncation) and reports names
+  dropped past the cap. Copy corrected where it outran the code — the absolute
+  no-repeat claim, the two-window safeguard described as if it applied to
+  single-window teaching, the HUD's "never sent to the projector" above a Show
+  on projector button, and the projector panel warning only about the picked
+  name while displaying every name on a class-facing screen.
+- **Suite gaps the review found, all closed:** the console listener filtered to
+  type `error`, so a `console.log` of a pupil name was invisible — it now
+  captures every level and scans them; the storage audit read only
+  localStorage, now sessionStorage and cookies too; the markup probe never
+  reached either of the projector's name sinks, so an `innerHTML` there would
+  have shipped green — both are now fed hostile text, one of them over the
+  bus; nothing had ever read the projector's ADDRESS or the string the QR
+  encodes while a name was on the wall; 40 draws were asserted against a
+  12-entry history window; and a `KeyQ` press documented as a check asserted
+  nothing. Suite now **62 checks**.
+- **Decisions applied:** D2 (session-only roster — the ruling this phase turns
+  on), D1 (a picker on the projector too, since rosters do not travel), D4, D5.
+
+---
+
+## LT8 — Classroom extras (spec Phase 7: X1–X4)
+
+- **Branch/PR/merge:** `claude/new-session-43lyml` → PR → merge SHA recorded at
+  next append.
+- **X1 RAG tally.** 7/8/9 count stuck / nearly / got it, from either window,
+  into the projector's state. **Counts only** — and that is the whole
+  safeguarding story: the panel is anonymous *by construction* rather than by
+  policy, so there is no name to leak and nothing to reconstruct one from.
+  Each row carries a word, a shape glyph and a number, so it reads with the
+  colour ignored. The panel reveals itself on the first vote (a counter nobody
+  can see is a counter nobody trusts). Counts live for the lesson: memory, a
+  reset button, and the tab close.
+- **X2 silent bell.** A slow amber breath plus a banner, **button-only** — the
+  spec retired the pulse key so B stays blackout and nothing else. Under
+  `prefers-reduced-motion` **or Calm** the breath is replaced by a held tint
+  and the banner alone: the house rule's named substitution, so the cue
+  survives when the motion goes. Announced, so a screen-reader user gets the
+  same signal.
+- **X3 audio.** Off at every load, with **no stored preference to inherit** —
+  in an SEMH room a toggle that remembers "on" from last lesson is exactly the
+  surprise the rule exists to prevent, so the *absence* of persistence is the
+  feature. Earcons are single shaped tones under 300 ms at a peak gain of
+  0.06, always scheduled to stop; TTS speaks a projected cold-call name and the
+  end of a timer, cancelling before each so nothing stacks or loops.
+- **X4 sparkline.** A standalone SVG built from the recorded series —
+  cumulative lines per colour, its own text labels and an aria-label, so it
+  still reads pasted into a report. Clipboard first, with the download
+  fallback treated as the real path rather than a courtesy, because school
+  machines block clipboard writes; the toast says which actually happened.
+- **Gates (`lt-extras.test.js`, 48 checks — 33 at first write, the rest added by the review round below).** The two the spec names for this
+  phase are both on evidence, not proxies. **Audio defaults:** a patched
+  `AudioContext` counts LIVE oscillators, so a wired-but-silent path is
+  distinguishable from a working one — zero starts with sound off across three
+  sound-capable actions, a real start with it on, peak gain in range, a
+  scheduled stop, and OFF again after a reload. **Reduced-motion bell:** a page
+  booted under the OS setting, reading the *computed* animation, then proving
+  the static banner and held tint carry the cue. Plus the SVG parsed back
+  through `DOMParser`, the clipboard-blocked download exercised, and the tally
+  proven to contain no name with a cold-called pupil live in the session.
+- **Adversarial review round (four lenses; nine findings confirmed by
+  verifiers who reproduced them).** "Copy graph" wrote SVG *source* as plain
+  text while the button, the toast and the launcher all promised an image —
+  paste that into a document and you get a wall of angle brackets. It now
+  writes a real PNG through `ClipboardItem` where the browser supports it,
+  falls back to SVG source, then to a download, and each path says which
+  happened. The exported graph separated its three series by hue alone, which
+  fails the colour rule in the one artefact most likely to be printed in black
+  and white: each series now carries its own dash and its own end label. A
+  single recorded vote exported a blank graph (one moveto, no lineto, which
+  SVG paints as nothing), and the 500-entry cap let the drawn curves drift
+  below the totals printed beside them — the legend is now read from the same
+  series the curves are. A vote forced the tally back up after the teacher had
+  hidden it to take an uninfluenced vote; the auto-reveal is now once per
+  tally and any explicit hide disarms it. "0 — clear every overlay" left the
+  tally and the bell on the board (the counts survive — that is what Reset is
+  for). Taking a name off the wall did not stop the speech saying it. The
+  panel's heading was an orphaned `h3`, and the HUD announced nothing at all
+  when the tally moved or the bell rang.
+- **The audio gate was the weakest part of the suite and is now the
+  strongest.** The probe wraps `AudioNode.connect`, so a tone routed nowhere
+  is distinguishable from one that reaches the speakers; it records start and
+  stop times, so the spec's "earcons ≤ 300 ms" is asserted rather than
+  assumed; and the silence-with-sound-off check now fires a path that can
+  actually speak, since the three it fired before could only ever make
+  earcons. **Every bell check read a class name on an element that ships
+  `visibility: hidden`** — all of them would have passed with nothing on
+  screen — so they now read what is painted. The no-persistence check
+  inspected values and never keys.
+- **Decisions applied:** D1 (every extra reachable on the projector; the HUD
+  mirrors), D4, D5.
+
+---
+
+## LT9 — Worksheet engine (spec Phase 8: W1–W5)
+
+- **Branch/PR/merge:** `claude/new-session-43lyml` → PR → merge SHA recorded at
+  next append.
+- **W1, the serious one.** The reviewed fragment's line-art conversion
+  stripped the grid, leaving a figure the worksheet then asked pupils to
+  *measure*. Here the threshold pass runs **first** and the calibrated grid is
+  drawn after it, so nothing can strip it: half-metre rules both ways, a
+  heavier line every metre, and a scale bar labelled "1 metre" on a white
+  backing. The arithmetic is checkable — at λ = 2 m the figure draws one
+  wavelength as 320 px against a 160 px scale bar, so a pupil measuring off
+  the grid gets 2 m exactly.
+- **W2 honest units.** The model-to-real mapping is *stated* ("the grid squares
+  are 0.5 m across"), the printed f, λ and A are the stage's own, and
+  v = f × λ works out. Off a wave stage there are no honest numbers to print,
+  so the sheet says there is nothing to measure rather than inventing some.
+  Frequency is handed over in as many words, because a still drawing cannot
+  show it and implying otherwise would be the same dishonesty W2 exists to
+  stop. **W3:** plain text "v = f × λ" — the fragment printed the LaTeX
+  source. **W4:** answer lines are bordered divs, because most print engines
+  drop background gradients and a worksheet whose lines vanish at the printer
+  is worse than none. **W5:** the threshold is live — it *is* the cut that
+  makes the line art.
+- **The answer is deliberately not on the sheet.** A first pass printed a
+  worked-answer box and quoted the wavelength back in task 4, which between
+  them made two of the four tasks pointless. Both are gone; the teacher gets
+  the working on the HUD's stage card instead, where the pupils are not
+  looking. The header prints the stage title and the date and leaves a **ruled
+  space** for a name rather than printing one — nothing is stored, so nothing
+  can be printed, and a cold-called name showing on the wall is not carried
+  onto the page.
+- **Gates (`lt-sheet.test.js`, 41 checks — 37 at first write, the rest added by the review round below).** The spec names this phase's gate
+  and both halves are here. The exported PNG is **decoded back to pixels** in
+  the page and searched for grey grid runs in both axes and for the scale
+  bar's longest contiguous black run with a tick at each end — with a **red
+  control** proving the same sampler finds neither in a blank image (the first
+  version of that sampler counted the "1 metre" label as bar, which the tick
+  check caught). The no-`$` half checks the printed text and the markup for
+  LaTeX escapes. Plus: bordered lines read under *print* media with their
+  computed border and no background image; the sheet proven to be the only
+  thing printed; the answer proven **absent** on both wave stages and present
+  on the HUD; and W5 proven live by rendering at two thresholds and showing
+  the pixels differ.
+- **Decisions applied:** D1, D4, D5.
+- **Adversarial review round — a content-accuracy break, confirmed by
+  rendering.** The scale bar was painted on an opaque backing plate AFTER the
+  curve, and on the full-amplitude stage that plate erased the bottom of the
+  trough: a pupil measuring the wave's height got **0.875 m where the lesson
+  said 1 m**. The geometry now keeps them apart by construction — the figure
+  reserves a band for the bar, and `pxm` is capped so a full wave always fits
+  the drawing area. The suite measures the exported PNG on **every** wave
+  stage and demands crest and trough be symmetric about the axis, with a red
+  control that plates over a trough and proves the scan reports it.
+- **The sheet also gave away its own tasks.** It printed the wavelength and
+  amplitude that tasks 1 and 4 ask pupils to measure, so the calibrated grid
+  and the scale bar existed for work nobody needed to do. The given box now
+  carries only what a still drawing genuinely cannot show — the frequency —
+  and discloses the playback speed when it is not 1×, since "what the class
+  saw" quietly meant something else at ½× or 2×. The print layer no longer
+  stays `aria-hidden` when it IS the printed document.
+- **The W1 gate proved existence, not calibration.** It counted grey runs and
+  a black run; it now MEASURES the grid pitch against the scale bar and
+  demands one be exactly half the other, so a bar drawn at half a metre while
+  labelled "1 metre" — or a grid at the wrong spacing — goes red.
+- **Decisions applied:** D1, D4, D5.
+
+---
+
+## LT10 — Close
+
+- **Branch/PR/merge:** `claude/new-session-43lyml` → PR #157 (LT7–LT10) →
+  merge SHA recorded in the final report.
+- **Delivered:** `LIVETEACH_README.md` (what the kit is, the same-device
+  constraint stated plainly, clicker setup, the full key map, and a section on
+  pupil names saying exactly what the kit does and does not do with them);
+  `LIVETEACH_PHONE_CHECKS.md` (the physical checks only a real device settles,
+  **none ticked by the session** — the first is that the deployed page exists at
+  all, since this container's proxy refuses the live host); and
+  `LIVETEACH_RESIDUE.md` (the handover: what was deferred, what could not be
+  verified from here, and every delegated decision with the override line that
+  reverses it). The launcher gained a troubleshooting card for the four things
+  most likely to look like faults and not be.
+- **Final gate state:** `tools/liveteach/run.sh` — **24 steps**, all green,
+  carrying **335 checks** in total.
+  Four stampers with their perturbation self-tests, the static gates
+  (`onmessage`, one rAF loop per view, the TDZ rule, manifests-are-data), the
+  units checker, the QR decode gate against a vendored independent decoder at
+  every allowed version and every mask, the picker's 10,000-draw simulation
+  plus the attendance-churn fuzz, and eight headless-browser suites
+  (`lt-shell` 45, `lt-stage` 30, `lt-clicker` 32, `lt-tele` 22, `lt-share` 55,
+  `lt-pick` 62, `lt-extras` 48, `lt-sheet` 41).
+- **The lesson worth keeping from this build.** Across the phases, the
+  adversarial review rounds found **more defects in my own gates than in the
+  product** — checks that read a class name on an element that ships hidden, a
+  console listener filtered to a level the defect would never use, a storage
+  audit that read one store of three, a probe that counted an oscillator
+  starting without asking whether it reached the speakers, a grid gate that
+  proved the grid existed but never that it was calibrated, and a roster-cap
+  probe whose input deduplicated to one name so it asserted 1 ≤ 40. Every one
+  of them was green. The rule that caught them is the estate's own — **assert
+  on evidence, not on proxies** — and the practice that made it stick was
+  writing the red control first: a check that has never been shown to fail is
+  not yet a check.

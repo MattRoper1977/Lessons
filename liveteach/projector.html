@@ -77,7 +77,11 @@ body.highlumen #hintInput { background: #fff; border-color: #8a7f5e; }
 #status.linked .dot { background: #b9e6cd; }
 #status .word { letter-spacing: .06em; }
 
-@media print { #strip, #status, #fsBtn { display: none; } }
+/* Printing makes a FILE, and the non-negotiables put pupil names out of
+   exported files without exception — a name is allowed on the wall, not in a
+   PDF sitting in someone's downloads. The cold-call surfaces (and the share
+   panel, which would print a QR of a stale address) are print-suppressed. */
+@media print { #strip, #status, #fsBtn, #pickOverlay, #pickPanel, #shareOverlay, #bell, #bellBanner { display: none !important; } }
 
 /* The canonical splash ships its skip button a whisker under the estate's
    44px floor; this override lives OUTSIDE the pinned region so the canonical
@@ -199,6 +203,159 @@ body.highlumen #shareCard .row button { background: #fffdf6; color: #1c2337; bor
   color: inherit; font: inherit; padding: 6px 10px; width: 14ch; margin-left: 6px;
 }
 body.highlumen #shareTagInput { background: #fff; border-color: #8a7f5e; }
+/* Cold-call name (LT7). A name reaches this screen ONLY when the teacher
+   asks for it — the HUD's "Show on projector" press, or a draw made in this
+   window (where this screen IS the teacher's screen). Filled by textContent,
+   never innerHTML. */
+#pickOverlay {
+  position: fixed; left: 50%; top: 18%; transform: translateX(-50%); z-index: 46;
+  background: rgba(10, 14, 30, .94); color: #e8e2d4; border: 3px solid #b9e6cd;
+  border-radius: 18px; padding: 20px 40px; text-align: center; visibility: hidden;
+  max-width: 86vw;
+}
+#pickOverlay.show { visibility: visible; }
+body.highlumen #pickOverlay { background: rgba(255,255,255,.96); color: #1c2337; border-color: #1e6e46; }
+#pickOverlay .tag { font-size: 2.4vmin; letter-spacing: .2em; text-transform: uppercase; opacity: .85; }
+#pickOverlay .who { font-size: 9vmin; font-weight: 800; line-height: 1.15; overflow-wrap: anywhere; }
+
+/* The projector's own picker panel — single-window completeness (D1). Same
+   shell as the share panel, and it sits at the same z-order. */
+#pickPanel {
+  position: fixed; inset: 0; z-index: 56; background: rgba(5, 8, 18, .72);
+  display: flex; align-items: center; justify-content: center; visibility: hidden;
+}
+#pickPanel.show { visibility: visible; }
+#pickCard {
+  background: #10173a; color: #e8e2d4; border: 3px solid #b9e6cd; border-radius: 18px;
+  padding: 20px 24px; width: min(94vw, 560px); box-sizing: border-box;
+  max-height: 92vh; overflow: auto;
+}
+body.highlumen #pickCard { background: #fffdf6; color: #1c2337; border-color: #1e6e46; }
+#pickCard h2 { margin: 0 0 6px; font-size: 20px; }
+#pickCard .sub { font-size: 14px; opacity: .88; margin: 0 0 10px; line-height: 1.5; }
+#pickCard textarea {
+  width: 100%; box-sizing: border-box; border-radius: 10px; border: 1px solid #43518c;
+  background: #0d1430; color: inherit; font: inherit; font-size: 14px; padding: 8px 10px;
+  min-height: 88px; resize: vertical;
+}
+body.highlumen #pickCard textarea { background: #fff; border-color: #8a7f5e; }
+#pickCard .row { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
+#pickCard .row button {
+  min-width: 44px; min-height: 44px; border-radius: 10px; border: 1px solid #43518c;
+  background: #16204a; color: #e8e2d4; font: inherit; font-weight: 600; padding: 6px 14px; cursor: pointer;
+}
+body.highlumen #pickCard .row button { background: #fffdf6; color: #1c2337; border-color: #8a7f5e; }
+/* The attendance buttons live in #pickRows, not in a .row, so the original
+   selector missed all forty of them — the only controls in the panel with no
+   focus ring. Scoped to the card instead. */
+#pickCard button:focus-visible, #pickCard textarea:focus-visible { outline: 3px solid #b9e6cd; outline-offset: 2px; }
+#pickRows { display: flex; flex-direction: column; gap: 4px; }
+#pickRows .pickrow {
+  display: flex; align-items: center; gap: 8px; min-height: 44px; flex-wrap: wrap;
+  border: 1px solid #2c3763; border-radius: 10px; padding: 4px 10px; font-size: 14px;
+}
+body.highlumen #pickRows .pickrow { border-color: #c9c2ae; }
+#pickRows .nm { flex: 1 1 8ch; min-width: 8ch; overflow-wrap: anywhere; }
+#pickRows .status { font-size: 12px; opacity: .95; white-space: nowrap; }
+#pickRows .odds { font-variant-numeric: tabular-nums; font-size: 12px; opacity: .95; min-width: 4.5ch; text-align: right; }
+/* Dimmed, but never below the contrast floor: the old .55 multiplied with
+   the .8 on .status/.odds to an effective .44, which measured 2.66:1 in
+   high-lumen — a pupil's own name, unreadable. The row is distinguished by
+   the strike-through and the word "away", so the fade only has to be
+   perceptible, not heavy. */
+#pickRows .pickrow.away { opacity: .82; }
+#pickRows .pickrow.away .nm { text-decoration: line-through; }
+/* The estate's 44px touch floor applies here too — these were 36px to keep
+   the rows compact, which is exactly the trade the rule exists to refuse.
+   The rows wrap now, so there is room. */
+#pickRows button.att { min-width: 44px; min-height: 44px; padding: 4px 10px; font-size: 12px; border-radius: 8px; border: 1px solid #43518c; background: #16204a; color: inherit; font: inherit; cursor: pointer; }
+body.highlumen #pickRows button.att { background: #fffdf6; border-color: #8a7f5e; }
+#pickRows .bar { width: 60px; max-width: 22vw; height: 8px; border-radius: 999px; background: #2c3763; overflow: hidden; flex: 0 1 auto; }
+body.highlumen #pickRows .bar { background: #ded7c4; }
+#pickRows .bar i { display: block; height: 100%; background: #f2a24a; }
+
+/* RAG tally (X1). COUNTS ONLY — the histogram never carries a name, and
+   there is nothing in it that identifies who voted which way. Each bar is
+   labelled in text with its colour word and its number, so the reading does
+   not depend on seeing the colour. */
+#ragPanel {
+  position: fixed; right: 12px; bottom: 90px; z-index: 47;
+  background: rgba(8, 11, 24, .92); border: 2px solid #2c3763; border-radius: 14px;
+  padding: 14px 18px; visibility: hidden; min-width: 210px;
+}
+#ragPanel.show { visibility: visible; }
+body.highlumen #ragPanel { background: rgba(255,255,255,.96); border-color: #c9c2ae; }
+#ragPanel h2 { margin: 0 0 8px; font-size: 2vmin; letter-spacing: .12em; text-transform: uppercase; opacity: .8; }
+#ragPanel .rrow { display: flex; align-items: center; gap: 8px; margin: 6px 0; font-size: 2.2vmin; }
+#ragPanel .rrow .word { min-width: 6ch; font-weight: 700; }
+#ragPanel .rrow .track { flex: 1; height: 14px; border-radius: 999px; background: #1b243f; overflow: hidden; }
+body.highlumen #ragPanel .rrow .track { background: #ded7c4; }
+#ragPanel .rrow .track i { display: block; height: 100%; }
+#ragPanel .rrow .n { font-variant-numeric: tabular-nums; font-weight: 800; min-width: 3ch; text-align: right; }
+/* Shapes as well as hues: the three bars differ by pattern for anyone who
+   cannot separate red from green. */
+#ragPanel .rrow.r .track i { background: #e2725b; }
+#ragPanel .rrow.a .track i { background: #f2a24a; }
+#ragPanel .rrow.g .track i { background: #7fc99a; }
+body.highlumen #ragPanel .rrow.r .track i { background: #a8321c; }
+body.highlumen #ragPanel .rrow.a .track i { background: #8a5413; }
+body.highlumen #ragPanel .rrow.g .track i { background: #1e6e46; }
+#ragPanel .glyph { font-weight: 800; }
+#ragPanel .total { font-size: 1.8vmin; opacity: .8; margin-top: 8px; }
+
+/* Silent bell (X2). A slow amber breath, never a strobe — and under reduced
+   motion or Calm it becomes a STATIC banner instead, which is the house
+   rule's named requirement rather than a nicety. */
+#bell {
+  position: fixed; inset: 0; z-index: 44; pointer-events: none;
+  background: radial-gradient(ellipse at 50% 50%, rgba(242,162,74,.30), rgba(242,162,74,0) 70%);
+  opacity: 0; visibility: hidden;
+}
+#bell.show { visibility: visible; animation: bellBreath 2.4s ease-in-out 3; }
+@keyframes bellBreath { 0%,100% { opacity: 0; } 50% { opacity: 1; } }
+#bellBanner {
+  position: fixed; left: 50%; top: 8px; transform: translateX(-50%); z-index: 45;
+  background: #f2a24a; color: #131313; font-weight: 800; font-size: 2.6vmin;
+  border-radius: 999px; padding: 10px 26px; visibility: hidden;
+}
+#bellBanner.show { visibility: visible; }
+/* The reduced-motion path: no breath at all, the banner alone, held. */
+body.reduce #bell.show { animation: none; opacity: .55; }
+@media (prefers-reduced-motion: reduce) {
+  #bell.show { animation: none; opacity: .55; }
+}
+
+/* Worksheet print layer (LT9: W1-W5). Off-screen on screen, the ONLY thing
+   on the page when printed. W4 is the load-bearing rule here: handwriting
+   lines are real bordered elements, never CSS background gradients, because
+   most print engines drop backgrounds and a worksheet whose answer lines
+   vanish at the printer is worse than no worksheet. */
+#sheet { display: none; }
+@media print {
+  html, body { background: #fff !important; color: #000 !important; height: auto; overflow: visible; }
+  body > *:not(#sheet) { display: none !important; }
+  #sheet {
+    display: block !important; position: static;
+    font-family: Georgia, "Times New Roman", serif; color: #000;
+    padding: 0; margin: 0; max-width: 100%;
+  }
+  #sheet .wsHead { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px;
+    border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 10px; }
+  #sheet h1 { font-size: 17pt; margin: 0 0 2px; }
+  #sheet .wsSub { font-size: 10pt; margin: 0; }
+  #sheet .wsName { font-size: 11pt; white-space: nowrap; }
+  #sheet .wsName b { display: inline-block; border-bottom: 1.5px solid #000; min-width: 46mm; }
+  #sheet img.wsFig { display: block; width: 100%; max-width: 170mm; border: 1.5px solid #000; }
+  #sheet .wsCap { font-size: 9.5pt; margin: 4px 0 10px; }
+  #sheet .wsBox { border: 1.5px solid #000; padding: 8px 10px; margin: 0 0 10px; font-size: 10.5pt; }
+  #sheet .wsBox h2 { font-size: 11pt; margin: 0 0 4px; }
+  #sheet ol { margin: 0 0 6px; padding-left: 18px; font-size: 11pt; }
+  #sheet li { margin-bottom: 3px; }
+  /* W4: one bordered div per handwriting line. Borders print; gradients do not. */
+  #sheet .wsLine { border-bottom: 1px solid #000; height: 8mm; margin: 0 0 1.5mm; }
+  #sheet .wsWork { page-break-inside: avoid; }
+}
+
 /* The tag chip mirrors ?tag= back at the room — which link is this? It is
    free text off the wire, so it is only ever filled via textContent. */
 #tagChip {
@@ -268,6 +425,58 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
 <div id="teleChip" aria-hidden="true">🖊 Draw — sim paused</div>
 <div id="tagChip"></div>
 <div id="toast" role="status" aria-live="polite"></div>
+
+<!-- Built fresh from the live stage each time Worksheet is pressed. -->
+<div id="sheet" aria-hidden="true"></div>
+
+<div id="bell" aria-hidden="true"></div>
+<div id="bellBanner">🔔 Eyes this way, please</div>
+
+<section id="ragPanel" aria-label="How the class is doing">
+  <h2>How are we doing?</h2>
+  <div class="rrow r"><span class="glyph" aria-hidden="true">■</span><span class="word">Stuck</span><span class="track"><i></i></span><span class="n">0</span></div>
+  <div class="rrow a"><span class="glyph" aria-hidden="true">▲</span><span class="word">Nearly</span><span class="track"><i></i></span><span class="n">0</span></div>
+  <div class="rrow g"><span class="glyph" aria-hidden="true">●</span><span class="word">Got it</span><span class="track"><i></i></span><span class="n">0</span></div>
+  <div class="total"></div>
+</section>
+
+<section id="pickOverlay" aria-label="Cold call">
+  <div class="tag">🎲 Cold call</div>
+  <div class="who"></div>
+</section>
+<div id="pickSaid" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap"></div>
+<div id="ragSaid" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap"></div>
+<div id="bellSaid" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap"></div>
+
+<div id="pickPanel" role="dialog" aria-labelledby="pickTitle" aria-describedby="pickSub">
+  <div id="pickCard">
+    <h2 id="pickTitle">🎲 Cold call</h2>
+    <p class="sub" id="pickSub">Paste your class list — one name per line, or separated by commas.
+      <strong>It stays in this tab&rsquo;s memory for this lesson only:</strong> never saved to this device,
+      never in the address or the QR code, and gone when you close the tab. <strong>This window is the one
+      the class can see</strong>, so while this panel is open the whole list — names, who is here, and
+      everyone&rsquo;s odds — is on the board, and a name you pick is shown to the room. On a two-screen
+      setup, load the list into the teacher window instead and this panel can stay shut.</p>
+    <div id="pickEmpty">
+      <textarea id="pickRoster" rows="4" autocomplete="off" autocorrect="off" spellcheck="false" aria-label="Class list, one name per line" placeholder="Ana&#10;Ben&#10;Charlie"></textarea>
+      <div class="row">
+        <button id="btnPickLoad">Load class list</button>
+        <button id="btnPickClose">Close</button>
+      </div>
+    </div>
+    <div id="pickLive" hidden>
+      <div class="row">
+        <button id="btnPickNext">🎲 Pick (N)</button>
+        <button id="btnPickPass">↩ Pass / bounce (M)</button>
+        <button id="btnPickHide">🙈 Clear name</button>
+        <button id="btnPickClear">🗑 Clear list</button>
+        <button id="btnPickClose2">Close</button>
+      </div>
+      <div id="pickNote" class="sub"></div>
+      <div id="pickRows"></div>
+    </div>
+  </div>
+</div>
 
 <!-- role=dialog WITHOUT aria-modal: this panel is deliberately modeless — the
      control strip stays live above it and the toast lives outside it, so
@@ -348,6 +557,16 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
     <button id="btnBlackout" aria-pressed="false">✖ Blackout</button>
     <button id="fsBtn">⛶ Fullscreen</button>
     <button id="btnShare">🔗 Share</button>
+    <button id="btnPick">🎲 Cold call</button>
+  </div>
+  <div class="grp" aria-label="Classroom extras">
+    <span class="lbl">Class</span>
+    <button id="btnRag" aria-pressed="false">📊 Tally</button>
+    <button id="btnRagReset">↺ Reset tally</button>
+    <button id="btnBell">🔔 Bell</button>
+    <button id="btnSpark">📈 Copy graph</button>
+    <button id="btnSheet">🖨 Worksheet</button>
+    <button id="btnAudio" aria-pressed="false">🔇 Sound off</button>
   </div>
 </nav>
 
@@ -684,6 +903,229 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
 });
 </script>
 <!-- MBM-LIVETEACH-QR:END -->
+<!-- MBM-LIVETEACH-PICKER:BEGIN generated by tools/liveteach/stamp_picker.mjs from tools/liveteach/picker_source.js — do not edit by hand -->
+<script>
+/* Live-Teach cold-call picker engine — the rules only, no DOM, no storage.
+   ONE SOURCE, MANY COPIES: stamped into the views by stamp_picker.mjs (the
+   pinned-region pattern) and require()d by tools/liveteach/picker_gate.mjs,
+   so the 10,000-draw simulation exercises the exact bytes that ship.
+
+   THE ROSTER NEVER LEAVES MEMORY (order LT-GO D2). Nothing in this file
+   touches localStorage, the bus, the URL or the console; names live in a
+   plain array for the length of one lesson and die with the tab. The view
+   code renders them with textContent only.
+
+   P2 — THE NO-IMMEDIATE-REPEAT GUARANTEE, AND WHY IT IS ABSOLUTE.
+   The reviewed fragment gave every pupil a minimum weight, so the pupil who
+   had just answered could come straight back up — about a 1% chance per
+   draw. In a mainstream room that reads as keeping people on their toes. In
+   an SEMH alternative provision it does not: being asked twice in a row
+   reads as being singled out, and the escalation that follows costs the rest
+   of the lesson. So the guard here is structural rather than statistical.
+   Weight is "draws since you were last called", which is exactly 0 for the
+   pupil who just answered — they cannot be drawn at all on the next draw,
+   not merely rarely. One draw later their weight is 1 and they are back in
+   the pool, and it keeps climbing while they are not called, so the same
+   counter that guarantees the gap also does the decay-recovery that keeps
+   the room balanced. There is no floor to tune and no dice roll to lose. */
+(function (root, factory) {
+  if (typeof module === 'object' && module.exports) module.exports = factory();
+  else root.LTPick = factory();
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+
+  var MAX_NAMES = 40;      // a class, not a database
+  var MAX_LEN = 32;        // one name, not a paragraph
+  var HISTORY_CAP = 60;
+
+  /* Roster text → names. Splits on newlines OR commas so a paste from a
+     register works either way; trims, drops blanks, de-duplicates
+     case-insensitively (two "Sam"s would be indistinguishable on screen,
+     which is its own safeguarding problem — the view tells the teacher to
+     add an initial). */
+  function clampName(n) {
+    /* slice() counts UTF-16 code units, so a cut can land between the halves
+       of a surrogate pair and leave a lone high surrogate — which renders as
+       the replacement diamond in a name on the class screen. Cut by
+       CHARACTERS instead. */
+    var chars = Array.from(n);
+    return chars.length > MAX_LEN ? chars.slice(0, MAX_LEN).join('') : n;
+  }
+  function parseRoster(text) {
+    var seen = Object.create(null);
+    var out = [];
+    var dropped = 0;
+    String(text == null ? '' : text).split(/[\n,]/).forEach(function (raw) {
+      var n = clampName(String(raw).replace(/\s+/g, ' ').trim());
+      if (!n) return;
+      /* Normalise before comparing: a register pasted from two sources can
+         carry the same name in NFC and NFD, which are byte-different and
+         pixel-identical — exactly the indistinguishable-duplicate the dedupe
+         exists to prevent. */
+      var key = (n.normalize ? n.normalize('NFC') : n).toLowerCase();
+      if (seen[key]) return;
+      seen[key] = 1;
+      if (out.length < MAX_NAMES) out.push(n); else dropped++;
+    });
+    /* The caller is told what was lost, so a 45-name paste cannot be
+       confirmed as "40 names loaded" with no mention of the five. */
+    out.dropped = dropped;
+    return out;
+  }
+
+  /* since: draws since this pupil was last called. Everyone starts equal, so
+     the first draw is uniform over the room. */
+  function create(names) {
+    var list = Array.isArray(names) ? names : parseRoster(names);
+    return {
+      names: list.slice(),
+      present: list.map(function () { return true; }),
+      since: list.map(function () { return 1; }),
+      justPassed: -1,     // excluded for exactly one draw (see pass())
+      last: -1,
+      lastPriorSince: 0,
+      history: []         // {name, passed} — MEMORY ONLY, never broadcast (P5)
+    };
+  }
+
+  function setPresent(st, i, on) {
+    if (i < 0 || i >= st.names.length) return;
+    var was = st.present[i];
+    st.present[i] = !!on;
+    /* st.last is deliberately NOT cleared when that pupil is marked away. It
+       records who answered most recently, which is the single fact P2 rests
+       on; forgetting it meant a pupil could be called, marked away, marked
+       back, and called again immediately — a repeat, by the shipped buttons.
+       An away pupil is already excluded by `present`, so keeping `last`
+       costs the room nothing and keeps the guarantee true across attendance
+       changes. */
+    /* Coming BACK is the subtle one. since only advances for pupils who are
+       here, so a pupil marked away moments after being called keeps since=0
+       — and a frozen zero never expires. Returning with that zero made them
+       weightless, which in a small room emptied the pool into the uniform
+       fallback and let the pupil who had just answered be drawn again: the
+       exact repeat P2 exists to forbid. So a returning pupil re-enters at
+       least at 1 — in the pool, ordinary priority. Not higher: someone who
+       has just walked back in is the last person who should be cold-called
+       on the spot. */
+    if (st.present[i] && !was && st.since[i] < 1) st.since[i] = 1;
+  }
+
+  function weights(st) {
+    return st.names.map(function (_, i) {
+      if (!st.present[i]) return 0;        // P4: absent pupils are not in the draw
+      if (i === st.justPassed) return 0;   // a pass does not put you straight back up
+      return st.since[i];                  // P2: exactly 0 for the pupil just called
+    });
+  }
+
+  /* P3/P4 support: the numbers the view renders. Absent pupils are reported
+     with p = 0 so the view can show them greyed and stated as absent rather
+     than silently dropping them (a pupil who cannot see themselves listed
+     assumes they were forgotten). */
+  function probabilities(st) {
+    var w = weights(st);
+    var total = w.reduce(function (a, b) { return a + b; }, 0);
+    var fallback = total <= 0;
+    return st.names.map(function (name, i) {
+      var eligible = st.present[i] && (!fallback ? w[i] > 0 : true);
+      var p;
+      if (!st.present[i]) p = 0;
+      else if (fallback) p = 1 / Math.max(1, st.present.filter(Boolean).length);
+      else p = w[i] / total;
+      return {
+        name: name,
+        present: !!st.present[i],
+        cooldown: st.present[i] && w[i] === 0,
+        eligible: eligible,
+        p: p
+      };
+    });
+  }
+
+  /* rng is injectable so the harness can drive a deterministic sequence;
+     the views pass nothing and get Math.random. */
+  function pick(st, rng) {
+    var r = typeof rng === 'function' ? rng : Math.random;
+    var w = weights(st);
+    var total = w.reduce(function (a, b) { return a + b; }, 0);
+    var fellBack = false;
+    if (total <= 0) {
+      /* Nobody has any weight left. Falling back to "everyone present,
+         equally" is right — but it must NOT quietly re-admit the pupil who
+         just answered: P2 is the phase's one absolute, so the fallback drops
+         them too whenever anyone else is available, and only concedes when
+         there is literally nobody else to ask. */
+      var present = [];
+      for (var j = 0; j < st.names.length; j++) if (st.present[j]) present.push(j);
+      if (!present.length) return null;
+      var eligible = present.filter(function (i) { return i !== st.last && i !== st.justPassed; });
+      var pool = eligible.length ? eligible : present;
+      /* fellBack means precisely "this draw could not honour the no-repeat
+         guarantee" — not "the room is small". Both views word their notice
+         from that, so the notice is true whichever way the room got here. */
+      fellBack = !eligible.length;
+      w = st.names.map(function (_, i) { return pool.indexOf(i) === -1 ? 0 : 1; });
+      total = pool.length;
+    }
+    var t = r() * total, idx = -1;
+    for (var i = 0; i < w.length; i++) {
+      t -= w[i];
+      if (t < 0) { idx = i; break; }
+    }
+    if (idx === -1) for (var k = w.length - 1; k >= 0; k--) { if (w[k] > 0) { idx = k; break; } }
+    if (idx === -1) return null;
+
+    for (var m = 0; m < st.since.length; m++) if (st.present[m]) st.since[m]++;
+    st.lastPriorSince = st.since[idx];
+    st.since[idx] = 0;
+    st.last = idx;
+    st.justPassed = -1;
+    st.history.unshift({ name: st.names[idx], passed: false });
+    if (st.history.length > HISTORY_CAP) st.history.pop();
+    return { index: idx, name: st.names[idx], fellBack: fellBack };
+  }
+
+  /* M — pass / bounce. The question moves on, but passing is a scaffold, not
+     an exit: the pupil's place in the queue is handed back (their since is
+     restored to what it was before they were drawn) so they come round again
+     soon, while a one-draw exclusion stops the bounce landing straight back
+     on them. Their turn is recorded as a pass, so the history shows who was
+     asked and who answered. */
+  function pass(st, rng) {
+    if (st.last < 0) return null;
+    var passer = st.last;
+    st.since[passer] = st.lastPriorSince;
+    if (st.history.length && !st.history[0].passed) st.history[0].passed = true;
+    st.justPassed = passer;
+    var out = pick(st, rng);
+    st.justPassed = -1;
+    return out;
+  }
+
+  function clear(st) {
+    st.names.length = 0;
+    st.present.length = 0;
+    st.since.length = 0;
+    st.history.length = 0;
+    st.last = -1;
+    st.justPassed = -1;
+  }
+
+  return {
+    parseRoster: parseRoster,
+    create: create,
+    setPresent: setPresent,
+    probabilities: probabilities,
+    pick: pick,
+    pass: pass,
+    clear: clear,
+    MAX_NAMES: MAX_NAMES,
+    MAX_LEN: MAX_LEN
+  };
+});
+</script>
+<!-- MBM-LIVETEACH-PICKER:END -->
 <!-- MBM-LIVETEACH-CORE:BEGIN generated by tools/liveteach/stamp_core.mjs from tools/liveteach/core_source.js — do not edit by hand -->
 <script>
 /* Live-Teach core — bus contract, keyboard registry, motion + theme state.
@@ -853,11 +1295,27 @@ LT.boot();
     timer: null,                       // {remaining, total} while active
     aspect: 16 / 9,
     lesson: '',                        // manifest id — lets a HUD build the projector address (LT6)
-    hl: false                          // high-lumen display, for the same reason
+    hl: false,                         // high-lumen display, for the same reason
+    /* LT7: the cold-call name CURRENTLY ON THIS SCREEN, or ''. This is the
+       one field that may ever hold a pupil's name, and it only holds one
+       while that name is already displayed to the room — put there by the
+       teacher's explicit press (the Q2 opt-in). It is never persisted and
+       never serialized into the address. */
+    pick: '',
+    /* LT8 extras. rag holds COUNTS ONLY — anonymous by construction, so
+       there is nothing here that could identify a pupil. audio is off at
+       every load and is deliberately not persisted. */
+    wave: null,                        // {f, lambda, A} on a wave stage (LT9)
+    rag: { r: 0, a: 0, g: 0 },
+    ragShow: false,
+    audio: false
   };
   function broadcast() {
     state.aspect = innerWidth / Math.max(1, innerHeight);
     state.hl = LT.highlumen();
+    /* The stage's real numbers travel so the HUD can show the teacher the
+       worked answer the pupils' worksheet deliberately omits (LT9). */
+    state.wave = state.mode === 'wave' ? { f: wave.f, lambda: wave.lambda, A: wave.A } : null;
     LT.send('PROJECTOR_STATE', JSON.parse(JSON.stringify(state)));
     syncStateToURL();   // U2: the address bar mirrors state — without history spam
   }
@@ -1232,6 +1690,9 @@ LT.boot();
         timerBox.classList.add('done');
         timerClock.textContent = '0:00';
         timerSaid.textContent = 'Timer finished';
+        /* One short tone and one sentence — never a repeating alarm. */
+        earcon(520);
+        say('Time is up');
         state.timer = null;
       }
       broadcast();
@@ -1269,7 +1730,18 @@ LT.boot();
     btnPoll.setAttribute('aria-pressed', String(state.poll.on));
     broadcast();
   }
-  function clearOverlays() { setHint(false); setPoll(false); clearTimer(); }
+  function clearOverlays() {
+    setHint(false); setPoll(false); clearTimer();
+    /* The key card and the launcher both promise 0 clears EVERY overlay, so
+       it means every one that is actually on the board: the name (the one it
+       most matters to be able to take down in a hurry), the tally panel and
+       the bell. The COUNTS survive — clearing the screen is not the same as
+       throwing away the lesson's data, which is what Reset tally is for.
+       (These are hoisted declarations from the blocks below.) */
+    showPickName('');
+    ragShow(false);
+    hideBell();
+  }
   btnHint.addEventListener('click', function () { setHint(!state.hint.on, hintInput.value); });
   btnPoll.addEventListener('click', function () { setPoll(!state.poll.on); });
   document.getElementById('btnClear').addEventListener('click', clearOverlays);
@@ -1333,7 +1805,7 @@ LT.boot();
     /* Blacking out while the share panel is open would bury it — and the
        focus inside it — under the curtain. The curtain wins; the panel
        stands down. (shareEscape is hoisted and guards its own element.) */
-    if (state.blackout) shareEscape();
+    if (state.blackout) { shareEscape(); pickEscape(); }
     blackoutEl.classList.toggle('show', state.blackout);
     btnBlackout.setAttribute('aria-pressed', String(state.blackout));
     document.getElementById('blackoutSaid').textContent = state.blackout
@@ -1547,7 +2019,11 @@ LT.boot();
        promise. */
     if (state.blackout) return setBlackout(false);
     if (shareEscape()) return;   // share modal (LT6) sits under the curtain, above the rest
+    if (pickEscape()) return;    // then the cold-call panel (LT7)
     if (errBox.classList.contains('show')) return errBox.classList.remove('show');
+    /* A name on the wall is a pupil-facing overlay: Escape takes it down
+       before the lesson overlays, so "get that off the screen" is one key. */
+    if (state.pick) return showPickName('');
     if (state.poll.on) return setPoll(false);
     if (state.hint.on) return setHint(false);
     if (state.timer || timerBox.classList.contains('show')) return clearTimer();
@@ -1634,6 +2110,16 @@ LT.boot();
     }
     else if (type === 'TELE_CLEAR') { armLink(); teleClear(true); }
     else if (type === 'TELE_SET') { armLink(); setTele(!!payload.on); }
+    /* LT7 / Q2: the sanctioned name-carrying message. It arrives only when a
+       teacher presses "Show on projector", carries ONE name and nothing else,
+       and is clamped and rendered with textContent like any external text. */
+    else if (type === 'PICK_SHOW') { armLink(); showPickName(typeof payload.name === 'string' ? payload.name : ''); }
+    else if (type === 'PICK_CLEAR') { armLink(); showPickName(''); }
+    else if (type === 'RAG_BUMP') { armLink(); ragBump(String(payload.level || '')); }
+    else if (type === 'RAG_RESET') { armLink(); ragReset(); }
+    else if (type === 'RAG_SHOW') { armLink(); ragShow(!!payload.on); }
+    else if (type === 'BELL') { armLink(); ringBell(); }
+    else if (type === 'AUDIO_SET') { armLink(); setAudio(!!payload.on); }
   });
   broadcast();
 
@@ -1665,6 +2151,43 @@ LT.boot();
     },
     share: function () {
       return { open: shareOverlayEl.classList.contains('show'), url: shareURL(), tag: shareTag };
+    },
+    sheet: function () {
+      var el = document.getElementById('sheet');
+      return {
+        built: el.childElementCount > 0,
+        text: el.textContent,
+        html: el.innerHTML,
+        lines: el.querySelectorAll('.wsLine').length,
+        figures: el.querySelectorAll('img.wsFig').length,
+        figSrc: el.querySelector('img.wsFig') ? el.querySelector('img.wsFig').src : null,
+        threshold: WS_THRESHOLD
+      };
+    },
+    buildSheet: function () { buildSheet(); },
+    gotoStage: function (i) { applyStage(i); },
+    figureAt: function (t) { return sheetFigure(t).url; },
+    extras: function () {
+      return {
+        rag: { r: state.rag.r, a: state.rag.a, g: state.rag.g },
+        ragShow: state.ragShow,
+        ragVisible: getComputedStyle(ragPanel).visibility === 'visible',
+        series: ragSeries.length,
+        audio: state.audio,
+        bellOn: bellEl.classList.contains('show'),
+        bannerOn: getComputedStyle(bellBanner).visibility === 'visible',
+        bellAnim: getComputedStyle(bellEl).animationName,
+        svg: ragSeries.length ? sparkSVG() : null
+      };
+    },
+    pick: function () {
+      return {
+        open: pickPanel.classList.contains('show'),
+        shown: pickWho.textContent,
+        visible: getComputedStyle(pickOverlay).visibility === 'visible',
+        loaded: pick ? pick.names.length : 0,
+        rows: pick ? window.LTPick.probabilities(pick) : null
+      };
     }
   };
 
@@ -1778,6 +2301,7 @@ LT.boot();
        see and deaden the hotkeys on a black screen — so say what to do
        instead of opening a trap. */
     if (state.blackout) { toast('The screen is blacked out — press B or the ✖ Blackout button first, then Share.'); return; }
+    pickEscape();   // one centred panel at a time (see pickOpen)
     shareOpen();
   }
   document.getElementById('btnShare').addEventListener('click', shareToggle);
@@ -1825,6 +2349,632 @@ LT.boot();
     setShareTag(pq.get('tag') || '');
     var st = Number(pq.get('stage'));
     if (state.stageCount) applyStage(Number.isInteger(st) && st >= 1 ? st - 1 : 0);
+  });
+
+  /* ---------- cold-call picker (LT7: P1–P5) ------------------------------
+     Two halves. The NAME OVERLAY is driven by the bus: the HUD's explicit
+     "Show on projector" press is the Q2 opt-in that lets one name — and only
+     a name — cross the wire.
+
+     The PANEL is single-window completeness (order LT-GO D1: every teaching
+     action is reachable on this view). Its roster lives in this tab's memory
+     alone (D2): never stored, never in the address, never broadcast, gone
+     with the tab. In a two-window setup a teacher simply loads the list into
+     the HUD instead, and this panel stays empty — rosters do not travel, so
+     there is nothing here to leak. On THIS window the class can see the
+     screen, and the panel says so rather than implying a privacy it cannot
+     offer. */
+  var pickOverlay = document.getElementById('pickOverlay');
+  var pickPanel = document.getElementById('pickPanel');
+  var pickWho = pickOverlay.querySelector('.who');
+  var pickSaid = document.getElementById('pickSaid');
+  var pick = null;                  // LTPick state, or null until a list is loaded
+  var pickReturnFocus = null;
+
+  function showPickName(name) {
+    /* External text, textContent only — the rule the whole registry turns on. */
+    var n = String(name == null ? '' : name).slice(0, 64);
+    /* Blacked out means the screen is off for the room, deliberately. Putting
+       a name under the curtain would tell the sender it is "on the
+       projector" when nobody can see it — and reveal it the moment the
+       curtain lifts, which is not what was agreed to. Refuse, and say so. */
+    if (n && state.blackout) { LT.send('PICK_REFUSED', { why: 'blackout' }); return; }
+    /* Taking a name off the wall has to take it out of the air too: the
+       utterance outlived the overlay, so a name cleared for a reason was
+       still being spoken to the room. */
+    if (!n && window.speechSynthesis) { try { window.speechSynthesis.cancel(); } catch (e) {} }
+    state.pick = n;                 // travels in PROJECTOR_STATE: it is already on the wall
+    pickWho.textContent = n;
+    pickOverlay.classList.toggle('show', !!n);
+    /* X3: speaking the name is the point of TTS in a cold call — a pupil who
+       is not looking up still hears they have been asked. Silent unless the
+       teacher has turned sound on for this session. (say() is a hoisted
+       declaration from the extras block below.) */
+    if (n) say(n);
+    pickSaid.textContent = n ? 'Cold call: ' + n : 'Cold call name cleared';
+    broadcast();
+  }
+  /* fellBack means precisely "this draw could not honour the no-repeat
+     guarantee", which can happen with one pupil here OR with everyone else
+     already on cooldown. Saying "only one pupil is marked here" when three
+     are would be a claim the screen contradicts. */
+  function fallbackNote(st) {
+    var here = st.present.filter(Boolean).length;
+    return here <= 1
+      ? 'Only one pupil is marked here, so the no-repeat guard cannot apply.'
+      : 'Everyone marked here has just been asked, so this draw could not avoid a repeat.';
+  }
+  /* A paste longer than a class silently lost the overflow while the
+     confirmation counted only the survivors. Say what was dropped. */
+  function loadReport(names) {
+    var msg = names.length + ' names loaded for this lesson only.';
+    if (names.dropped) msg += ' ' + names.dropped + ' more were not loaded — the list is capped at ' + window.LTPick.MAX_NAMES + ' names.';
+    return msg;
+  }
+  function pctText(r) {
+    if (!r.present) return '0%';
+    if (r.cooldown) return '0%';
+    var pc = Math.round(r.p * 100);
+    return pc < 1 ? '<1%' : pc + '%';
+  }
+  function pickRender(refocus) {
+    document.getElementById('pickEmpty').hidden = !!pick;
+    document.getElementById('pickLive').hidden = !pick;
+    if (!pick) return;
+    var rows = window.LTPick.probabilities(pick);
+    var box = document.getElementById('pickRows');
+    while (box.firstChild) box.removeChild(box.firstChild);
+    rows.forEach(function (r, i) {
+      /* P3: createElement + textContent for every row. */
+      var row = document.createElement('div');
+      row.className = 'pickrow' + (r.present ? '' : ' away');
+      var nm = document.createElement('span'); nm.className = 'nm'; nm.textContent = r.name; row.appendChild(nm);
+      var st = document.createElement('span'); st.className = 'status';
+      st.textContent = !r.present ? 'away' : (r.cooldown ? 'just asked' : 'here');
+      row.appendChild(st);
+      var bar = document.createElement('span'); bar.className = 'bar';
+      var fill = document.createElement('i'); fill.style.width = Math.round(r.p * 100) + '%';
+      bar.appendChild(fill); row.appendChild(bar);
+      var odds = document.createElement('span'); odds.className = 'odds';
+      /* A pupil who IS in the draw must never read as 0% — in a full class
+         the least-overdue pupil rounds below a half percent, and "0%" is
+         what an excluded pupil shows. */
+      odds.textContent = pctText(r); row.appendChild(odds);
+      var att = document.createElement('button');
+      att.className = 'att'; att.type = 'button';
+      att.textContent = r.present ? 'Mark away' : 'Mark here';
+      att.setAttribute('aria-label', (r.present ? 'Mark away: ' : 'Mark here: ') + r.name);
+      att.addEventListener('click', function () {
+        window.LTPick.setPresent(pick, i, !pick.present[i]);
+        /* The re-render deletes the very button that was just pressed, so
+           without this the keyboard user is dropped to <body> and has to tab
+           back down the whole class list — every single time. Rebuild, then
+           put focus back on the same row. And SAY what changed: the HUD
+           announced it and this view did not, which made the projector the
+           weaker surface for exactly the people who need it most. */
+        pickRender(i);
+        pickSaid.textContent = r.name + (pick.present[i] ? ' marked here' : ' marked away');
+      });
+      row.appendChild(att);
+      box.appendChild(row);
+    });
+    if (typeof refocus === 'number') {
+      var back = box.children[refocus] && box.children[refocus].querySelector('button.att');
+      if (back) back.focus();
+    }
+  }
+  function pickDraw(passed) {
+    if (!pick) return;
+    if (passed && pick.last < 0) { toast('Pick someone first, then Pass bounces the question on.'); return; }
+    var got = passed ? window.LTPick.pass(pick) : window.LTPick.pick(pick);
+    if (!got) { toast('Nobody is marked here — mark someone back in first.'); return; }
+    showPickName(got.name);
+    document.getElementById('pickNote').textContent = got.fellBack
+      ? fallbackNote(pick)
+      : '';
+    pickRender();
+  }
+  function pickOpen() {
+    if (state.blackout) { toast('The screen is blacked out — press B or the ✖ Blackout button first.'); return; }
+    /* Both panels are centred at the same depth, so two open at once puts
+       focus inside whichever lost the paint order and leaves the teacher
+       clicking a card that is not there. One at a time. */
+    shareEscape();
+    pickReturnFocus = document.activeElement;
+    pickRender();
+    pickPanel.classList.add('show');
+    var first = pick ? document.getElementById('btnPickNext') : document.getElementById('pickRoster');
+    if (first) first.focus();
+  }
+  function pickClose() {
+    pickPanel.classList.remove('show');
+    if (pickReturnFocus && pickReturnFocus.focus) pickReturnFocus.focus();
+    pickReturnFocus = null;
+  }
+  function pickEscape() {
+    if (!pickPanel || !pickPanel.classList.contains('show')) return false;
+    pickClose();
+    return true;
+  }
+  function pickToggle() { if (pickPanel.classList.contains('show')) pickClose(); else pickOpen(); }
+  document.getElementById('btnPick').addEventListener('click', pickToggle);
+  document.getElementById('btnPickClose').addEventListener('click', pickClose);
+  document.getElementById('btnPickClose2').addEventListener('click', pickClose);
+  pickPanel.addEventListener('click', function (e) { if (e.target === pickPanel) pickClose(); });
+  document.getElementById('btnPickLoad').addEventListener('click', function () {
+    var names = window.LTPick.parseRoster(document.getElementById('pickRoster').value);
+    if (!names.length) { toast('Type or paste at least one name first.'); return; }
+    pick = window.LTPick.create(names);
+    document.getElementById('pickRoster').value = '';   // nothing lingers in a form field
+    pickRender();
+    document.getElementById('btnPickNext').focus();
+    pickSaid.textContent = loadReport(names);
+  });
+  document.getElementById('btnPickNext').addEventListener('click', function () { pickDraw(false); });
+  document.getElementById('btnPickPass').addEventListener('click', function () { pickDraw(true); });
+  document.getElementById('btnPickHide').addEventListener('click', function () { showPickName(''); });
+  document.getElementById('btnPickClear').addEventListener('click', function () {
+    if (pick) window.LTPick.clear(pick);
+    pick = null;
+    showPickName('');
+    pickRender();
+    pickSaid.textContent = 'Class list cleared from memory.';
+  });
+  LT.registerKey('KeyN', function () { if (pick) pickDraw(false); }, 'Cold call: pick next');
+  LT.registerKey('KeyM', function () { if (pick) pickDraw(true); }, 'Cold call: pass / bounce');
+
+  /* ---------- classroom extras (LT8: X1–X4) ------------------------------
+     X1 RAG tally. COUNTS ONLY, and that is the whole safeguarding story: the
+     panel records how many hands went up for each answer and nothing about
+     whose. It is anonymous by construction, not by policy, so there is no
+     name to leak and no way to reconstruct one. Counts live for the lesson —
+     memory only, cleared by the reset button or by closing the tab. */
+  var ragPanel = document.getElementById('ragPanel');
+  var RAG_KEYS = ['r', 'a', 'g'];
+  var RAG_WORDS = { r: 'Stuck', a: 'Nearly there', g: 'Got it' };
+  /* X4's data array: one entry per vote, in order, so the sparkline is a
+     record of the lesson rather than a snapshot. Counts, never names. */
+  var ragSeries = [];
+  var ragEverShown = false;   // the auto-reveal is once per tally, not per vote
+  function ragRender() {
+    var total = state.rag.r + state.rag.a + state.rag.g;
+    RAG_KEYS.forEach(function (k) {
+      var row = ragPanel.querySelector('.rrow.' + k);
+      var n = state.rag[k];
+      row.querySelector('.n').textContent = String(n);
+      row.querySelector('.track i').style.width = (total ? Math.round(n / total * 100) : 0) + '%';
+    });
+    ragPanel.querySelector('.total').textContent = total === 1 ? '1 response' : total + ' responses';
+    ragPanel.classList.toggle('show', !!state.ragShow);
+    document.getElementById('btnRag').setAttribute('aria-pressed', String(!!state.ragShow));
+  }
+  function ragBump(k) {
+    if (RAG_KEYS.indexOf(k) === -1) return;
+    state.rag[k]++;
+    /* The series is the graph's ONLY source of truth: it used to be capped
+       at 500 while the headline counts kept climbing, so a long lesson drew
+       curves that ended below the totals printed beside them. The cap is
+       generous enough for any lesson and, if it ever bites, the legend is
+       taken from the series too (below) so the two cannot disagree. */
+    ragSeries.push(k);
+    if (ragSeries.length > 2000) ragSeries.shift();
+    /* The tally shows itself on the FIRST vote — a counter nobody can see is
+       a counter nobody trusts — but never again after that. A teacher who
+       hides it to take an uninfluenced vote had it forced back up by the
+       first hand that went in. */
+    if (!state.ragShow && !ragEverShown) { state.ragShow = true; ragEverShown = true; }
+    ragRender();
+    earcon(k === 'r' ? 320 : k === 'a' ? 440 : 590);
+    document.getElementById('ragSaid').textContent = RAG_WORDS[k] + ': ' + state.rag[k];
+    broadcast();
+  }
+  function ragReset() {
+    state.rag = { r: 0, a: 0, g: 0 };
+    ragSeries.length = 0;
+    ragEverShown = false;     // a fresh tally may reveal itself again
+    ragRender();
+    document.getElementById('ragSaid').textContent = 'Tally reset';
+    broadcast();
+  }
+  function ragShow(on) {
+    state.ragShow = !!on;
+    /* An explicit hide is the teacher speaking, and it disarms the one-time
+       auto-reveal for good: otherwise hiding the tally to take an
+       uninfluenced vote was undone by the first hand that went in. Only a
+       reset — a fresh tally — arms it again. */
+    if (!state.ragShow) ragEverShown = true;
+    ragRender();
+    broadcast();
+  }
+  document.getElementById('btnRag').addEventListener('click', function () { ragShow(!state.ragShow); });
+  document.getElementById('btnRagReset').addEventListener('click', ragReset);
+  LT.registerKey('Digit7', function () { ragBump('r'); }, 'Tally: stuck');
+  LT.registerKey('Digit8', function () { ragBump('a'); }, 'Tally: nearly there');
+  LT.registerKey('Digit9', function () { ragBump('g'); }, 'Tally: got it');
+
+  /* X2 silent bell — a slow amber breath to draw eyes without a noise, and
+     under reduced motion or Calm no movement at all: the banner alone, held
+     for the same span. The house rule names this exact substitution. Button
+     only; the spec retired the B binding to blackout and nothing else. */
+  var bellEl = document.getElementById('bell');
+  var bellBanner = document.getElementById('bellBanner');
+  var bellT = null;
+  function ringBell() {
+    clearTimeout(bellT);
+    bellEl.classList.remove('show');
+    void bellEl.offsetWidth;              // restart the breath on a repeat press
+    bellEl.classList.add('show');
+    bellBanner.classList.add('show');
+    document.getElementById('bellSaid').textContent = 'Eyes this way, please';
+    earcon(660);
+    bellT = setTimeout(hideBell, 7200);
+  }
+  function hideBell() {
+    clearTimeout(bellT);
+    bellEl.classList.remove('show');
+    bellBanner.classList.remove('show');
+  }
+  document.getElementById('btnBell').addEventListener('click', ringBell);
+
+  /* X3 audio — OFF at every load, with no stored preference to inherit. In
+     an SEMH room an unexpected sound is a sensory trigger, and a toggle that
+     remembers "on" from last lesson is exactly the surprise the rule exists
+     to prevent. Earcons are short (<=300 ms), quiet, and never repeat. */
+  var audioCtx = null;
+  function earcon(freq) {
+    if (!state.audio) return;
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      /* A context created outside a gesture can start suspended; resuming is
+         free when it is already running and is the difference between a
+         working toggle and a silent one. */
+      if (audioCtx.state === 'suspended' && audioCtx.resume) audioCtx.resume();
+      var o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.type = 'sine';
+      o.frequency.value = freq;
+      /* A short shaped envelope: no click at the edges, no tail that could
+         read as an alarm. */
+      var t0 = audioCtx.currentTime;
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.exponentialRampToValueAtTime(0.06, t0 + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.24);
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start(t0); o.stop(t0 + 0.26);
+    } catch (e) { /* audio is an enhancement; never let it break a lesson */ }
+  }
+  function say(text) {
+    if (!state.audio || !window.speechSynthesis) return;
+    try {
+      var u = new SpeechSynthesisUtterance(String(text));
+      u.rate = 1; u.pitch = 1; u.volume = 0.7;
+      window.speechSynthesis.cancel();     // never stack, never loop
+      window.speechSynthesis.speak(u);
+    } catch (e) {}
+  }
+  function setAudio(on) {
+    state.audio = !!on;
+    var b = document.getElementById('btnAudio');
+    b.setAttribute('aria-pressed', String(state.audio));
+    b.textContent = state.audio ? '🔊 Sound on' : '🔇 Sound off';
+    if (!state.audio && window.speechSynthesis) { try { window.speechSynthesis.cancel(); } catch (e) {} }
+    document.getElementById('bellSaid').textContent = state.audio ? 'Sound on' : 'Sound off';
+    broadcast();
+  }
+  document.getElementById('btnAudio').addEventListener('click', function () { setAudio(!state.audio); });
+
+  /* X4 sparkline — a clean standalone SVG of how the room's confidence moved
+     through the lesson, built from the counts array. Clipboard first;
+     school machines block clipboard writes often enough that the download
+     fallback is the real path, not a courtesy. */
+  function sparkSVG() {
+    var W = 480, H = 120, PAD = 8;
+    var running = { r: 0, a: 0, g: 0 };
+    var pts = { r: [], a: [], g: [] };
+    /* Each vote advances its own running total; the lines are cumulative, so
+       a flat green line and a climbing red one tell the story at a glance. */
+    ragSeries.forEach(function (k, i) {
+      running[k]++;
+      RAG_KEYS.forEach(function (kk) { pts[kk].push([i + 1, running[kk]]); });
+    });
+    var n = Math.max(1, ragSeries.length);
+    /* Totals read off the SERIES, so the curves and the numbers beside them
+       are the same arithmetic even if the cap has trimmed the front. */
+    var shown = { r: running.r, a: running.a, g: running.g };
+    var top = Math.max(1, shown.r, shown.a, shown.g);
+    var COL = { r: '#a8321c', a: '#8a5413', g: '#1e6e46' };
+    /* Each series gets its own DASH as well as its own hue, and its own end
+       label — the estate's rule that colour is never the only cue does not
+       stop at the edge of an exported file, and this one is likely to be
+       printed in black and white. */
+    var DASH = { r: '1 6', a: '9 5', g: '' };
+    var END = { r: 'Stuck', a: 'Nearly', g: 'Got it' };
+    var body = '';
+    RAG_KEYS.forEach(function (k) {
+      if (!pts[k].length) return;
+      var d = pts[k].map(function (p, i) {
+        var x = PAD + (p[0] / n) * (W - PAD * 2);
+        var y = H - PAD - (p[1] / top) * (H - PAD * 2);
+        return (i ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1);
+      }).join(' ');
+      /* A single recorded vote is one moveto and no lineto, which SVG paints
+         as nothing at all — so a lesson with one response exported a blank
+         graph. Round caps plus an explicit zero-length line render a dot. */
+      if (pts[k].length === 1) d += ' L' + d.slice(1).split(' ')[0] + ' ' + d.split(' ')[1];
+      body += '<path d="' + d + '" fill="none" stroke="' + COL[k] + '" stroke-width="2.5"' +
+        (DASH[k] ? ' stroke-dasharray="' + DASH[k] + '"' : '') +
+        ' stroke-linejoin="round" stroke-linecap="round"/>';
+      var last = pts[k][pts[k].length - 1];
+      var lx = PAD + (last[0] / n) * (W - PAD * 2);
+      var ly = H - PAD - (last[1] / top) * (H - PAD * 2);
+      body += '<text x="' + Math.min(W - 4, lx + 5).toFixed(1) + '" y="' + (ly - 4).toFixed(1) +
+        '" font-family="system-ui,sans-serif" font-size="10" fill="' + COL[k] + '">' + END[k] + '</text>';
+    });
+    /* Labelled in text inside the SVG: pasted into a report it must still be
+       readable without the legend that lived on the page. */
+    var legend = '<text x="' + PAD + '" y="14" font-family="system-ui,sans-serif" font-size="11" fill="#a8321c">Stuck (dotted) ' + shown.r + '</text>' +
+      '<text x="' + (PAD + 128) + '" y="14" font-family="system-ui,sans-serif" font-size="11" fill="#8a5413">Nearly (dashed) ' + shown.a + '</text>' +
+      '<text x="' + (PAD + 268) + '" y="14" font-family="system-ui,sans-serif" font-size="11" fill="#1e6e46">Got it (solid) ' + shown.g + '</text>';
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" role="img" ' +
+      'aria-label="Class confidence through the lesson: stuck ' + shown.r + ', nearly ' + shown.a + ', got it ' + shown.g + '">' +
+      '<rect width="' + W + '" height="' + H + '" fill="#ffffff"/>' + legend + body + '</svg>';
+  }
+  document.getElementById('btnSpark').addEventListener('click', function () {
+    if (!ragSeries.length) { toast('Nothing to graph yet — press 7, 8 or 9 to record how the class is doing.'); return; }
+    var svg = sparkSVG();
+    var fallback = function () {
+      /* The honest fallback: a real file the teacher can keep, and a message
+         that says what happened rather than claiming a copy that never
+         landed. */
+      try {
+        var blob = new Blob([svg], { type: 'image/svg+xml' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'class-confidence.svg';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+        toast('Copying is blocked here, so the graph downloaded as class-confidence.svg instead.');
+      } catch (e) {
+        toast('This browser blocked both copying and downloading the graph.');
+      }
+    };
+    /* An honest copy, in the order of what a document will actually accept.
+       writeText puts the SVG *source* on the clipboard — paste that into a
+       document and you get a wall of angle brackets, not a picture — so a
+       real PNG goes on first where the browser supports it, and each path
+       says exactly what landed. */
+    var copyText = function () {
+      navigator.clipboard.writeText(svg).then(function () {
+        toast('Copied as SVG code — paste it into a document that accepts SVG, or use the download for a picture.');
+      }, fallback);
+    };
+    if (window.ClipboardItem && navigator.clipboard && navigator.clipboard.write) {
+      var img = new Image();
+      img.onload = function () {
+        try {
+          var cv = document.createElement('canvas');
+          cv.width = 960; cv.height = 240;
+          var g2 = cv.getContext('2d');
+          g2.fillStyle = '#fff'; g2.fillRect(0, 0, cv.width, cv.height);
+          g2.drawImage(img, 0, 0, cv.width, cv.height);
+          cv.toBlob(function (blob) {
+            if (!blob) { copyText(); return; }
+            navigator.clipboard.write([new window.ClipboardItem({ 'image/png': blob })]).then(function () {
+              toast('Graph copied as a picture — paste it straight into a document.');
+            }, copyText);
+          }, 'image/png');
+        } catch (e) { copyText(); }
+      };
+      img.onerror = copyText;
+      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    } else if (navigator.clipboard && navigator.clipboard.writeText) {
+      copyText();
+    } else fallback();
+  });
+
+  ragRender();
+
+  /* ---------- worksheet engine (LT9: W1–W5) ------------------------------
+     Prints the figure the class has just been looking at, with the numbers
+     it was actually built from. Every correction here exists because the
+     reviewed fragment failed it:
+
+     W1  the line-art conversion stripped the grid, leaving a figure the
+         worksheet then asked pupils to MEASURE. The grid and a labelled
+         scale bar in real metres are drawn as part of the figure, after the
+         threshold pass, so nothing can strip them.
+     W2  no invented units. The mapping between the model and real metres is
+         stated on the sheet, and the v = f × λ task resolves with the
+         stage's own numbers.
+     W3  plain text "v = f × λ" — the fragment printed the LaTeX source.
+     W4  answer lines are bordered elements, not background gradients.
+     W5  the threshold parameter is USED (it is what makes the line art), not
+         carried dead. */
+  var WS_THRESHOLD = 186;      // luminance cut for the line-art pass (W5: live)
+  function sheetFigure(thresholdOverride) {
+    /* W5: the parameter is real. The reviewed fragment carried a threshold it
+       never applied; here it is the cut that turns the anti-aliased curve
+       into printable line art, and the harness proves it by rendering at two
+       values and comparing the pixels. */
+    var cut = typeof thresholdOverride === 'number' ? thresholdOverride : WS_THRESHOLD;
+    /* An offscreen render at print resolution: the on-screen canvas is sized
+       for a projector and would print soft. */
+    /* The bottom BAND is reserved for the scale bar. The bar's backing plate
+       is opaque and is painted last, so with the wave free to occupy the
+       whole canvas it clipped the trough on a full-amplitude stage — a pupil
+       measuring the height got 0.875 m where the sheet said 1 m. Content
+       accuracy is a hard gate, so the geometry keeps them apart by
+       construction rather than by luck. */
+    var W = 1000, BAND = 56, WAVE_H = 380, H = WAVE_H + BAND;
+    var c = document.createElement('canvas');
+    c.width = W; c.height = H;
+    var g = c.getContext('2d');
+    g.fillStyle = '#fff'; g.fillRect(0, 0, W, H);
+
+    /* The wave itself, in the same real-units space as the screen: the sheet
+       uses its own pixels-per-metre so the figure fits the page, and every
+       label below is derived from THAT number, never from the screen's. */
+    /* pxm is also capped so a full wave fits the band vertically: at A = 1 m
+       the curve needs 2 * A * pxm of height, and a figure whose crest is
+       clipped is a figure a pupil cannot measure. */
+    var pxm = Math.min(
+      160,
+      (W - 120) / Math.max(1, wave.lambda * 2.6),
+      (WAVE_H - 40) / Math.max(0.2, wave.A * 2)
+    );
+    var mid = WAVE_H / 2;
+    var Apx = wave.A * pxm, Lpx = wave.lambda * pxm;
+    g.strokeStyle = '#000'; g.lineWidth = 3;
+    g.beginPath();
+    for (var x = 0; x <= W; x += 2) {
+      var y = mid - Apx * Math.sin(2 * Math.PI * (x / Lpx));
+      if (x === 0) g.moveTo(x, y); else g.lineTo(x, y);
+    }
+    g.stroke();
+
+    /* W5: the threshold pass is real. Anything not dark enough becomes pure
+       white, so the figure photocopies and prints as clean line art — and
+       because it runs HERE, before the grid, the grid cannot be eaten by it. */
+    var img = g.getImageData(0, 0, W, H);
+    var d = img.data;
+    for (var i = 0; i < d.length; i += 4) {
+      var lum = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+      var v = lum < cut ? 0 : 255;
+      d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = 255;
+    }
+    g.putImageData(img, 0, 0);
+
+    /* W1: the calibrated grid, drawn AFTER the threshold so it survives —
+       one line every half metre, heavier on the metre. */
+    g.lineWidth = 1;
+    for (var m = 0; m * pxm / 2 <= W; m++) {
+      var gx = m * pxm / 2;
+      g.strokeStyle = (m % 2 === 0) ? '#7a7a7a' : '#c2c2c2';
+      g.beginPath(); g.moveTo(gx, 0); g.lineTo(gx, WAVE_H); g.stroke();
+    }
+    for (var yy = mid; yy > 0; yy -= pxm / 2) { g.strokeStyle = '#c2c2c2'; g.beginPath(); g.moveTo(0, yy); g.lineTo(W, yy); g.stroke(); }
+    for (var yd = mid; yd < WAVE_H; yd += pxm / 2) { g.strokeStyle = '#c2c2c2'; g.beginPath(); g.moveTo(0, yd); g.lineTo(W, yd); g.stroke(); }
+    g.strokeStyle = '#000'; g.lineWidth = 1.5;
+    g.beginPath(); g.moveTo(0, mid); g.lineTo(W, mid); g.stroke();   // the axis
+    g.beginPath(); g.moveTo(0, WAVE_H); g.lineTo(W, WAVE_H); g.stroke();   // band rule
+
+    /* W1: a labelled scale bar in REAL units, stating the one thing a pupil
+       needs to turn the drawing into a measurement. */
+    var bx = 30, by = WAVE_H + 30;
+    g.strokeStyle = '#000'; g.lineWidth = 3;
+    g.beginPath(); g.moveTo(bx, by); g.lineTo(bx + pxm, by); g.stroke();
+    g.beginPath(); g.moveTo(bx, by - 9); g.lineTo(bx, by + 9); g.stroke();
+    g.beginPath(); g.moveTo(bx + pxm, by - 9); g.lineTo(bx + pxm, by + 9); g.stroke();
+    g.fillStyle = '#000'; g.font = '600 20px Georgia, serif';
+    g.fillText('1 metre', bx + pxm + 12, by + 7);
+    return { url: c.toDataURL('image/png'), pxm: pxm, w: W, h: H };
+  }
+
+  function buildSheet() {
+    var sheet = document.getElementById('sheet');
+    /* It ships aria-hidden because on screen it is a hidden scratch layer.
+       Once built it is the whole printed document, and a print-to-PDF read
+       by assistive tech must reach its headings and the figure's alt text. */
+    sheet.removeAttribute('aria-hidden');
+    while (sheet.firstChild) sheet.removeChild(sheet.firstChild);
+    var isWave = state.mode === 'wave';
+    var fig = isWave ? sheetFigure() : null;
+    /* Everything below is createElement + textContent: stage titles and
+       lesson copy are external data (the manifest), and the estate's rule
+       does not soften for a print layer. */
+    var mk = function (tag, cls, text) {
+      var e = document.createElement(tag);
+      if (cls) e.className = cls;
+      if (text != null) e.textContent = text;
+      return e;
+    };
+
+    var head = mk('div', 'wsHead');
+    var left = mk('div');
+    left.appendChild(mk('h1', null, state.stageTitle || 'Waves'));
+    /* A date the pupil does not have to write, and no pupil name anywhere in
+       the DOCUMENT — the sheet leaves a RULED SPACE for one instead, which
+       is the only form a name may take here (D2: nothing is stored, so
+       nothing can be printed). */
+    left.appendChild(mk('p', 'wsSub', 'Live-Teach · ' + new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })));
+    head.appendChild(left);
+    var nm = mk('div', 'wsName');
+    nm.appendChild(document.createTextNode('Name: '));
+    nm.appendChild(mk('b', null, ' '));
+    head.appendChild(nm);
+    sheet.appendChild(head);
+
+    if (fig) {
+      var im = document.createElement('img');
+      im.className = 'wsFig';
+      im.src = fig.url;
+      im.alt = 'A wave drawn on a half-metre grid, with a one-metre scale bar.';
+      sheet.appendChild(im);
+      /* W2: the model-to-real mapping, stated rather than implied. */
+      sheet.appendChild(mk('p', 'wsCap', 'The grid squares are 0.5 m across, and the bar marked "1 metre" shows the scale. Measure straight off the drawing — the middle line is the resting position.'));
+
+      var box = mk('div', 'wsBox');
+      box.appendChild(mk('h2', null, 'What you are given'));
+      /* ONLY what cannot be measured off the page. Printing λ here made task
+         1 answerable by copying it two lines up, and printing the amplitude
+         did the same for the measuring in task 4 — the calibrated grid and
+         the scale bar existed for tasks that no longer needed them.
+         Frequency stays, because a still drawing genuinely cannot show it.
+         W3: plain text; the fragment printed the LaTeX source verbatim, so
+         pupils read a dollar sign and a backslash instead of an equation. */
+      box.appendChild(mk('p', null, 'frequency f = ' + wave.f + ' Hz'));
+      box.appendChild(mk('p', null, 'Wave speed: v = f × λ'));
+      /* Playback speed is a presentation choice, like slow motion, and the
+         frequency above is the wave's own. Saying so keeps "what the class
+         saw" from quietly meaning something else at ½× or 2×. */
+      if (state.speed !== 1) {
+        box.appendChild(mk('p', null, 'The animation was played at ' + state.speed + '× speed, so on screen it looked ' + (state.speed > 1 ? 'faster' : 'slower') + ' than ' + wave.f + ' Hz. The figure and the number above are the wave\u2019s own.'));
+      }
+      sheet.appendChild(box);
+
+      var tasks = mk('div', 'wsWork');
+      tasks.appendChild(mk('h2', null, 'Your turn'));
+      var ol = document.createElement('ol');
+      /* Task 2 hands the frequency over on purpose: it cannot be measured
+         from a still drawing, and pretending otherwise would be the same
+         dishonesty W2 exists to stop. The wavelength is NOT given — that is
+         the one the pupil measures — so no task may quote it back. */
+      [
+        'Measure one whole wavelength off the drawing, using the grid and the scale bar. Write it in metres.',
+        'Measure the amplitude: the distance from the middle line up to a crest. Write it in metres.',
+        'Work out the wave speed using v = f × λ, taking f from the box above. Show your working, and give the unit.',
+        'Check your measuring: find a different whole wavelength further along the drawing. Do you get the same answer? If not, by how much, and why might that be?'
+      ].forEach(function (t) { ol.appendChild(mk('li', null, t)); });
+      tasks.appendChild(ol);
+      /* W4: real bordered elements — six of them — because gradients do not
+         survive a print engine. */
+      for (var i = 0; i < 7; i++) tasks.appendChild(mk('div', 'wsLine'));
+      sheet.appendChild(tasks);
+
+      /* No answer box. This sheet goes to the pupils, and printing the
+         worked answer on it makes tasks 1 and 3 pointless. The teacher has
+         the numbers already — on the projector's own scale caption, and on
+         the HUD's stage card, which shows the working. */
+    } else {
+      /* Off a wave stage there are no honest numbers to print, and inventing
+         some is exactly what W2 forbids. */
+      var note = mk('div', 'wsBox');
+      note.appendChild(mk('h2', null, 'Nothing to measure on this stage'));
+      note.appendChild(mk('p', null, 'This worksheet prints the wave figure with its own scale. Move to a wave stage and press Worksheet again.'));
+      sheet.appendChild(note);
+      var blanks = mk('div', 'wsWork');
+      for (var j = 0; j < 10; j++) blanks.appendChild(mk('div', 'wsLine'));
+      sheet.appendChild(blanks);
+    }
+    return sheet;
+  }
+  document.getElementById('btnSheet').addEventListener('click', function () {
+    buildSheet();
+    toast('Worksheet ready — your browser’s print dialogue is opening. Choose Save as PDF to keep it.');
+    /* The print dialogue is a user gesture away, and a refusal is honest
+       rather than silent. */
+    setTimeout(function () { try { window.print(); } catch (e) { toast('This browser blocked printing — use Ctrl+P.'); } }, 60);
   });
 
   /* The manifest id is parsed BEFORE the first URL write below — a sync that
