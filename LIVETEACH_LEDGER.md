@@ -249,4 +249,25 @@ order and marked as applied where a phase leans on them.
   environmental truths worth recording): the pad card sat below the fold so
   the synthetic mouse never touched it (scrollIntoView first), and a
   backgrounded page throttles rAF, so frame counting fronts the page first.
+- **Adversarial review round (three lenses, 16 confirmed findings, all
+  fixed):** three blocking — a stale `savedRun` let draw-off silently revert
+  the teacher's explicit mid-draw Stop (any non-telestrator run change now
+  supersedes the saved state, with a negative control); all three ink colours
+  measured under 2:1 on the high-lumen page (strokes now carry a swatch NAME
+  on the wire and each view resolves a per-theme hex at draw time, with a
+  pixel control proving the light variant is darker); the strip parked itself
+  over the board during drawing (ink-layer pointer traffic no longer wakes
+  it). Also fixed: the pad now draws only while draw mode is on and dims
+  otherwise (a stray phone touch cannot paint the class screen, and the
+  projector refuses off-mode strokes too); capture now honours the
+  validator's own caps — points clamp 0–1 at capture and a marathon stroke
+  auto-splits at 2000 points so nothing a view sends can be something its
+  peer refuses (the split initially orphaned its continuation by resetting
+  the pointer id — caught by the suite, fixed); a second finger or palm never
+  hijacks a stroke (pointer-id guard); draw-off commits an in-flight stroke;
+  per-move rendering is incremental, not a full replay; `TELE_SYNC` answers
+  only fresh hellos, not every heartbeat; draw mode gets a persistent chip
+  (touch boards have no cursor) and polite announcements in both views;
+  `setPointerCapture` degrades gracefully for synthetic/assistive pointers.
+  Tele suite now 22 checks.
 - **Decisions applied:** D1 (mini-pad dual-mode-only), D4, D5.

@@ -156,6 +156,118 @@ async function open(page, url, errors) {
   const f4 = await proj.evaluate(() => window.__LT.frames());
   check('T5: draw mode off restores the sim, reversibly', off.tele === false && off.running === true && f4 > f3, JSON.stringify(off));
 
+  /* ---------- review-round controls ---------- */
+  // savedRun supersede: an explicit Stop DURING draw mode must survive draw-off.
+  await proj.bringToFront();
+  await proj.keyboard.press('KeyD');            // draw on (freezes)
+  await hud.waitForTimeout(300);
+  await hud.click('#btnStop');                  // teacher's explicit Stop mid-draw
+  await proj.waitForTimeout(300);
+  await proj.keyboard.press('KeyD');            // draw off
+  await proj.waitForTimeout(200);
+  const supersede = await proj.evaluate(() => window.__LT.state().running);
+  check('T5 negative control: an explicit Stop mid-draw is NOT reverted by draw-off', supersede === false);
+  await proj.evaluate(() => document.getElementById('btnPause').click()); // resume for later checks
+
+  // draw-mode chip: on a touch board the cursor is nothing — the chip persists.
+  await proj.keyboard.press('KeyD');
+  const chip = await proj.evaluate(() => ({
+    vis: getComputedStyle(document.getElementById('teleChip')).visibility,
+    said: document.getElementById('teleSaid').textContent
+  }));
+  check('a11y: draw mode shows a persistent chip and announces itself', chip.vis === 'visible' && chip.said.includes('Draw mode on'), JSON.stringify(chip));
+
+  // the strip must not park itself over the board while drawing
+  await proj.waitForTimeout(4300);
+  const stripHidden = await proj.evaluate(() => {
+    const c = document.getElementById('teleCanvas');
+    c.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, clientX: 500, clientY: 300 }));
+    return document.getElementById('strip').classList.contains('hidden');
+  });
+  check('a11y: ink-layer pointer traffic does not wake the strip mid-draw', stripHidden === true);
+
+  // capture cap == validator cap: a 2100-point scribble auto-splits, nothing drops.
+  const capSplit = await proj.evaluate(async () => {
+    const c = document.getElementById('teleCanvas');
+    const before = window.__LT.tele().strokes;
+    c.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 7, clientX: 100, clientY: 400 }));
+    for (let i = 0; i < 2100; i++) {
+      c.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, pointerId: 7, clientX: 100 + (i % 800), clientY: 400 + ((i / 20) | 0) % 100 }));
+    }
+    c.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 7, clientX: 500, clientY: 450 }));
+    await new Promise(r => setTimeout(r, 300));
+    return { added: window.__LT.tele().strokes - before };
+  });
+  await hud.waitForTimeout(400);
+  const capPeer = await hud.evaluate(() => window.__LT.pad().strokes);
+  check('T2: a marathon stroke splits at the cap — the peer receives every part', capSplit.added === 2 && capPeer >= 2, JSON.stringify({ added: capSplit.added, peer: capPeer }));
+
+  // a second pointer mid-stroke never hijacks
+  const hijack = await proj.evaluate(async () => {
+    const c = document.getElementById('teleCanvas');
+    const before = window.__LT.tele().strokes;
+    c.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 1, clientX: 200, clientY: 300 }));
+    c.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, pointerId: 1, clientX: 240, clientY: 300 }));
+    c.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 2, clientX: 600, clientY: 500 }));  // palm
+    c.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, pointerId: 2, clientX: 640, clientY: 500 }));
+    c.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 2, clientX: 640, clientY: 500 }));
+    c.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, pointerId: 1, clientX: 280, clientY: 300 }));
+    c.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 1, clientX: 280, clientY: 300 }));
+    await new Promise(r => setTimeout(r, 200));
+    return { added: window.__LT.tele().strokes - before };
+  });
+  check('bugs: a palm or second finger mid-stroke never hijacks or splits the stroke', hijack.added === 1, JSON.stringify(hijack));
+
+  // theme-honest ink: the same stroke re-renders darker under high-lumen.
+  const themed = await proj.evaluate(() => {
+    const c = document.getElementById('sim');
+    const t = document.getElementById('teleCanvas');
+    const g = t.getContext('2d');
+    const grab = () => {
+      const d = g.getImageData(0, 0, t.width, t.height).data;
+      for (let i = 0; i < d.length; i += 4) if (d[i + 3] > 0) return [d[i], d[i + 1], d[i + 2]];
+      return null;
+    };
+    const dark = grab();
+    document.getElementById('btnLumen').click();
+    const light = grab();
+    document.getElementById('btnLumen').click();
+    return { dark, light };
+  });
+  const darker = themed.dark && themed.light && (themed.light[0] + themed.light[1] + themed.light[2]) < (themed.dark[0] + themed.dark[1] + themed.dark[2]);
+  check('a11y: ink resolves to a darker variant under high-lumen (legible on light)', darker === true, JSON.stringify(themed));
+
+  await proj.keyboard.press('KeyC');
+  await proj.keyboard.press('KeyD');            // draw off
+  await hud.waitForTimeout(400);
+
+  // pad gating: with draw mode OFF the pad is dimmed and draws nothing.
+  const dimmed = await hud.evaluate(() => Number(getComputedStyle(document.getElementById('pad')).opacity));
+  const beforeGate = await proj.evaluate(() => window.__LT.tele().strokes);
+  await hud.locator('#pad').scrollIntoViewIfNeeded();
+  const gateBox = await hud.evaluate(() => {
+    const r = document.getElementById('pad').getBoundingClientRect();
+    return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+  });
+  await hud.mouse.move(gateBox.x, gateBox.y);
+  await hud.mouse.down();
+  await hud.mouse.move(gateBox.x + 40, gateBox.y, { steps: 4 });
+  await hud.mouse.up();
+  await proj.waitForTimeout(300);
+  const afterGate = await proj.evaluate(() => window.__LT.tele().strokes);
+  check('D1 honesty: with draw mode off the pad is dimmed and paints nothing', dimmed < 0.6 && afterGate === beforeGate, JSON.stringify({ dimmed, beforeGate, afterGate }));
+
+  // TELE_SYNC is boot-only: the heartbeat must not re-clone the ink.
+  const syncCount = await hud.evaluate(async () => {
+    let n = 0;
+    const bus = new BroadcastChannel('mbm_liveteach_v1');
+    bus.addEventListener('message', ev => { if (ev.data && ev.data.type === 'TELE_SYNC') n++; });
+    await new Promise(r => setTimeout(r, 6800));
+    bus.close();
+    return n;
+  });
+  check('perf: the 3s heartbeat never triggers a TELE_SYNC (boot-only)', syncCount === 0, String(syncCount));
+
   /* ---------- storage audit still holds: ink persists nowhere ------------ */
   const stor = await proj.evaluate(() => Object.keys(localStorage));
   check('storage audit: the telestrator writes no storage', stor.every(k => k === 'mbm_liveteach_v1_settings'), stor.join(','));
