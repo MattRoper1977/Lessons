@@ -122,8 +122,8 @@ order and marked as applied where a phase leans on them.
 
 ## LT3 — Stage engine (spec Phase 2: G1–G7)
 
-- **Branch/PR/merge:** `claude/new-session-43lyml` → PR → merge SHA recorded at
-  next append.
+- **Branch/PR/merge:** `claude/new-session-43lyml` → PR #153 → merge `fd9a4d7`
+  (6 checks green).
 - **Delivered:** manifest schema + loader (G7 — lessons are external data
   under `liveteach/manifests/`, selected by `?lesson=`, whitelisted id, a
   missing lesson is a VISIBLE `role=alert` error and the teaching tools stay
@@ -178,3 +178,45 @@ order and marked as applied where a phase leans on them.
   static gates recursively; warm-up copy rewritten to match what the field
   sim actually does. Stage suite now 30 checks.
 - **Decisions applied:** D4, D5.
+
+## LT4 — Clicker bridge (spec Phase 3: C1–C4)
+
+- **Branch/PR/merge:** `claude/new-session-43lyml` → PR → merge SHA recorded at
+  next append.
+- **Delivered:** the clicker keys registered in BOTH views (C4 — the remote
+  survives focus loss): PageUp/PageDown and ←/→ for stages, B and full stop
+  for the blackout, F5 answered with honest fullscreen advice; the blackout
+  curtain on the projector (above every teaching surface, below the control
+  strip so the way out stays reachable; Esc clears blackout FIRST per the
+  spec's key map); the projector-side ⛶ Fullscreen button — a real user
+  gesture, so it genuinely works — while the HUD's F5 and its Fullscreen
+  button only ever advise, because a bus message is not a user gesture (C2,
+  stated in the copy exactly as the code behaves); a shared toast channel
+  (role=status); blackout state rides PROJECTOR_STATE so the HUD indicator
+  and aria-pressed follow.
+- **Gates (lt-clicker.test.js, 24 checks):** simulated keydown proof for
+  every clicker key in each view; **C1 proof** that B fires exactly one
+  action per press (state sequence AND broadcast count over a second
+  listener); F5 `defaultPrevented` + toast + projector NOT fullscreened from
+  the HUD (the honest-copy negative control); the projector's own button
+  genuinely entering fullscreen; curtain z-order measured between banner and
+  strip; registry census — every clicker key present in both views exactly
+  once. Full harness (12 steps) green.
+- **Adversarial review round (three lenses, 12 confirmed findings, all
+  fixed):** a held B key strobed the curtain via auto-repeat (blocking —
+  repeats are now dropped centrally, one press one action); F5 with focus in
+  the hint input reloaded the projector mid-lesson (carve-out beside the
+  Escape one; suite asserts `defaultPrevented` at a focused input); clicker
+  presses acted invisibly BEHIND the boot splash (the registry now sleeps
+  while `.mbm-splash` exists — suite proves a pre-skip PageDown changes
+  nothing); the C1 broadcast count raced the 3 s heartbeat about 1 run in 6
+  (it now counts blackout TRANSITIONS); `BLACKOUT_SET` was dead code (the C3
+  class) — the HUD button now sends it as an idempotent SET, killing the
+  crossed-toggle race, with live coverage; a refused `requestFullscreen`
+  (managed classroom Chrome) was a silent unhandled rejection — now an honest
+  toast, with a stubbed-refusal control; blackout is announced politely in
+  both views; the toast hid via `visibility` (out of the accessibility tree —
+  the same trap the file itself documents) — now opacity + pointer-events;
+  toast hold time scales with message length. Clicker suite now 32 checks.
+- **Decisions applied:** D1 (every clicker action also works single-window),
+  D4, D5.

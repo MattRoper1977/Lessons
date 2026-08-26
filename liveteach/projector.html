@@ -120,6 +120,27 @@ body.highlumen #stageLabels .lbl { background: rgba(255,255,255,.94); border-col
 #stageReadout { font-size: 13px; opacity: .85; min-width: 52px; text-align: center; }
 #strip button:disabled { opacity: .4; cursor: default; }
 
+/* Blackout curtain (LT4): sits over every teaching surface but UNDER the
+   control strip, so the way back out stays reachable by pointer and key. */
+#blackout {
+  position: fixed; inset: 0; z-index: 58; background: #000;
+  visibility: hidden; display: flex; align-items: center; justify-content: center;
+}
+#blackout.show { visibility: visible; }
+#blackout .hintline { color: #333; font-size: 14px; letter-spacing: .1em; }
+#toast {
+  position: fixed; bottom: 88px; left: 50%; transform: translateX(-50%); z-index: 72;
+  background: #16204a; color: #e8e2d4; border: 1px solid #43518c; border-radius: 12px;
+  padding: 12px 18px; max-width: 80vw; text-align: center;
+  /* A live region hidden with visibility never announces (the same rule the
+     timer region documents above) — so the toast hides by opacity and stays
+     in the accessibility tree, with pointer-events off so the invisible box
+     never eats a tap. */
+  opacity: 0; pointer-events: none;
+}
+body.highlumen #toast { background: #fffdf6; color: #1c2337; border-color: #8a7f5e; }
+#toast.show { opacity: 1; }
+
 /* Reduced motion, both halves of the house rule. The blanket form (no
    enumerated class list to rot): every part stays visible, every label on —
    only the motion goes. body.reduce is set by the JS half (OS setting, live
@@ -172,6 +193,9 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
 <div id="stageLabels" aria-hidden="false"></div>
 <div id="playChip" aria-hidden="true">playback ×1</div>
 <div id="manifestError" role="alert"></div>
+<div id="blackout" aria-label="Blackout curtain"><span class="hintline">B, full stop, or ✖ Blackout brings the screen back</span></div>
+<div id="blackoutSaid" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap"></div>
+<div id="toast" role="status" aria-live="polite"></div>
 
 <nav id="strip" class="" aria-label="Teaching controls">
   <div class="grp">
@@ -206,6 +230,8 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
   <div class="grp" aria-label="Display">
     <button id="btnLumen" aria-pressed="false">☀ High lumen</button>
     <button id="btnCalm" aria-pressed="false">🌙 Calm</button>
+    <button id="btnBlackout" aria-pressed="false">✖ Blackout</button>
+    <button id="fsBtn">⛶ Fullscreen</button>
   </div>
 </nav>
 
@@ -265,12 +291,24 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
     /* Browser/OS chords are never teaching actions: Ctrl+P must print, not
        toggle the poll in front of the class. */
     if (e.ctrlKey || e.metaKey || e.altKey) return;
+    /* Auto-repeat never drives a teaching action: a held B would strobe the
+       blackout curtain — a sensory hazard, not a feature. One press, one
+       action. */
+    if (e.repeat) return;
+    /* While the splash is up, the view is not on stage yet: a teacher
+       test-clicking the remote must not advance stages or drop the blackout
+       behind the splash. */
+    if (document.querySelector('.mbm-splash')) return;
     var t = e.target;
     if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) {
       /* Escape is the one hotkey that must still work here — its whole spec
          is "blur inputs, then close the top thing". Blur only; the next
          Escape reaches the registered handler. */
       if (e.code === 'Escape' && t.blur) t.blur();
+      /* F5 must never reload a live lesson, wherever focus sits — the
+         browser default is prevented even though the toast handler is
+         skipped while typing. */
+      if (e.code === 'F5') e.preventDefault();
       return;
     }
     /* A focused button or link keeps its NATIVE Space/Enter activation —
@@ -806,10 +844,50 @@ LT.boot();
   LT.registerKey('Digit0', function () { clearOverlays(); }, 'Clear all overlays');
   LT.registerKey('KeyH', function () { setHint(!state.hint.on); }, 'Hint toggle');
   LT.registerKey('KeyP', function () { setPoll(!state.poll.on); }, 'Poll toggle');
+  /* ---------- blackout + toast + fullscreen (LT4: C1–C4) ---------- */
+  var blackoutEl = document.getElementById('blackout');
+  var btnBlackout = document.getElementById('btnBlackout');
+  var toastEl = document.getElementById('toast');
+  var toastT = null;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastT);
+    /* Reading time scales with the message: never less than 6 s, plus
+       ~400 ms a word for longer advice. */
+    var hold = Math.max(6000, msg.split(/\s+/).length * 400 + 2000);
+    toastT = setTimeout(function () { toastEl.classList.remove('show'); }, hold);
+  }
+  function setBlackout(on) {
+    state.blackout = !!on;
+    blackoutEl.classList.toggle('show', state.blackout);
+    btnBlackout.setAttribute('aria-pressed', String(state.blackout));
+    document.getElementById('blackoutSaid').textContent = state.blackout
+      ? 'Screen blacked out — B, full stop or Escape restores it'
+      : 'Screen restored';
+    broadcast();
+  }
+  btnBlackout.addEventListener('click', function () { setBlackout(!state.blackout); });
+  /* C2, the honest half that works: a REAL click on this view is a user
+     gesture, so requestFullscreen is allowed here — and only here. A refusal
+     (managed classroom Chrome can forbid it) gets an honest toast, never a
+     silent unhandled rejection. */
+  document.getElementById('fsBtn').addEventListener('click', function () {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function () {});
+    } else {
+      document.documentElement.requestFullscreen().catch(function () {
+        toast('Your browser refused fullscreen — press F11 instead.');
+      });
+    }
+  });
+
   function escTopmost() {
-    /* topmost first: the manifest error, then poll, hint, timer; blackout
-       joins in LT4. Reached from this view's Escape AND from the HUD via
-       ESC_TOPMOST, so both windows honour the same promise. */
+    /* topmost first, per the spec's Esc row: blackout, then the manifest
+       error, then poll, hint, timer. Reached from this view's Escape AND
+       from the HUD via ESC_TOPMOST, so both windows honour the same
+       promise. */
+    if (state.blackout) return setBlackout(false);
     if (errBox.classList.contains('show')) return errBox.classList.remove('show');
     if (state.poll.on) return setPoll(false);
     if (state.hint.on) return setHint(false);
@@ -817,6 +895,22 @@ LT.boot();
     if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
   }
   LT.registerKey('Escape', function () { escTopmost(); }, 'Close topmost overlay');
+  /* Clicker keys (C4): a USB remote is a keyboard sending PageUp/PageDown
+     (and sometimes B, ., F5). Registered here AND in the HUD, so the remote
+     works whichever window holds focus. The registry throws on a duplicate
+     code — the C1 double-fire class cannot ship. */
+  LT.registerKey('PageDown', function (e) { e.preventDefault(); applyStage(state.stage + 1); }, 'Stage next (clicker)');
+  LT.registerKey('PageUp', function (e) { e.preventDefault(); applyStage(state.stage - 1); }, 'Stage previous (clicker)');
+  LT.registerKey('ArrowRight', function (e) { e.preventDefault(); applyStage(state.stage + 1); }, 'Stage next');
+  LT.registerKey('ArrowLeft', function (e) { e.preventDefault(); applyStage(state.stage - 1); }, 'Stage previous');
+  LT.registerKey('KeyB', function () { setBlackout(!state.blackout); }, 'Blackout toggle');
+  LT.registerKey('Period', function () { setBlackout(!state.blackout); }, 'Blackout toggle (clicker)');
+  LT.registerKey('F5', function (e) {
+    /* C2: a bus message is not a user gesture, and pretending otherwise is
+       banned. On THIS view the honest answer is the real button. */
+    e.preventDefault();
+    toast('Use the ⛶ Fullscreen button on the strip below — or press F11.');
+  }, 'Fullscreen help (clicker)');
 
   /* ---------- bus: resync kills the reload-desync bug class --------------
      The projector broadcasts PROJECTOR_STATE on load AND on every HUD_HELLO;
@@ -852,6 +946,8 @@ LT.boot();
       var idx = Number(payload.index);
       if (Number.isInteger(idx)) applyStage(idx);
     }
+    else if (type === 'BLACKOUT_TOGGLE') { armLink(); setBlackout(!state.blackout); }
+    else if (type === 'BLACKOUT_SET') { armLink(); setBlackout(!!payload.on); }
   });
   broadcast();
 

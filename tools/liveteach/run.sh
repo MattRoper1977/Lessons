@@ -46,6 +46,7 @@ run_step "units check (claims recompute, coords normalised)" node tools/liveteac
 run_step "units check can go red"             node tools/liveteach/units_check.mjs --self-test
 run_step "lt-shell browser suite"             node tools/liveteach/lt-shell.test.js
 run_step "lt-stage browser suite"             node tools/liveteach/lt-stage.test.js
+run_step "lt-clicker browser suite"           node tools/liveteach/lt-clicker.test.js
 
 if [ $failed -ne 0 ]; then echo "LIVETEACH SUITES FAILED"; exit 1; fi
 echo "LIVETEACH SUITES PASSED"
