@@ -84,6 +84,42 @@ body.highlumen #hintInput { background: #fff; border-color: #8a7f5e; }
    bytes stay verbatim. */
 .mbm-skip { min-height: 44px; min-width: 44px; }
 
+/* Stage engine (LT3). The banner is safe-DOM-built from manifest text (G6);
+   labels are DOM elements at normalised positions (G3), so screen readers get
+   real text, not canvas paint. */
+#stageBanner {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 45;
+  padding: 12px 20px; background: rgba(8, 11, 24, .9);
+  border-bottom: 1px solid #2c3763; visibility: hidden;
+}
+#stageBanner.show { visibility: visible; }
+body.highlumen #stageBanner { background: rgba(255,255,255,.95); border-bottom-color: #c9c2ae; }
+#stageBanner .st-title { font-size: 3.4vmin; font-weight: 800; }
+#stageBanner .st-copy { font-size: 2.3vmin; opacity: .92; max-width: 72ch; line-height: 1.4; }
+#stageLabels { position: fixed; inset: 0; z-index: 42; pointer-events: none; }
+#stageLabels .lbl {
+  position: absolute; transform: translate(-50%, -50%);
+  background: rgba(8, 11, 24, .88); border: 2px solid #b9e6cd; color: #e8e2d4;
+  border-radius: 10px; padding: 6px 12px; font-size: 2.3vmin; font-weight: 700;
+  max-width: min(40ch, 88vw);
+}
+body.highlumen #stageLabels .lbl { background: rgba(255,255,255,.94); border-color: #1e6e46; color: #1c2337; }
+#playChip {
+  position: fixed; top: 44px; right: 12px; z-index: 55;
+  background: #f2a24a; color: #131313; font-weight: 800;
+  border-radius: 999px; padding: 8px 14px; visibility: hidden;
+}
+#playChip.show { visibility: visible; }
+#manifestError {
+  position: fixed; top: 30%; left: 50%; transform: translateX(-50%); z-index: 70;
+  background: #5b1f24; color: #ffdfe2; border: 2px solid #ff9aa2;
+  border-radius: 12px; padding: 16px 22px; visibility: hidden; max-width: 80vw; text-align: center;
+  pointer-events: none; /* informs, never intercepts a lesson's taps */
+}
+#manifestError.show { visibility: visible; }
+#stageReadout { font-size: 13px; opacity: .85; min-width: 52px; text-align: center; }
+#strip button:disabled { opacity: .4; cursor: default; }
+
 /* Reduced motion, both halves of the house rule. The blanket form (no
    enumerated class list to rot): every part stays visible, every label on —
    only the motion goes. body.reduce is set by the JS half (OS setting, live
@@ -117,6 +153,7 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
      under visibility:hidden is out of the accessibility tree, so announcements
      from inside it never fire) and hides by clipping, never visibility. -->
 <div id="timerSaid" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap"></div>
+<div id="stageSaid" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap"></div>
 
 <section id="hintOverlay" class="overlay" aria-label="Hint">
   <div class="tag">💡 Hint</div>
@@ -127,6 +164,14 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
   <div class="tag">🙋 Show of hands</div>
   <div class="opts"><span class="opt">A</span><span class="opt">B</span><span class="opt">C</span><span class="opt">D</span></div>
 </section>
+
+<header id="stageBanner" aria-live="off">
+  <div class="st-title"></div>
+  <div class="st-copy"></div>
+</header>
+<div id="stageLabels" aria-hidden="false"></div>
+<div id="playChip" aria-hidden="true">playback ×1</div>
+<div id="manifestError" role="alert"></div>
 
 <nav id="strip" class="" aria-label="Teaching controls">
   <div class="grp">
@@ -139,6 +184,12 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
     <button class="spd" data-spd="0.5" aria-pressed="false">½×</button>
     <button class="spd" data-spd="1" aria-pressed="true">1×</button>
     <button class="spd" data-spd="2" aria-pressed="false">2×</button>
+  </div>
+  <div class="grp" aria-label="Lesson stages">
+    <span class="lbl">Stage</span>
+    <button id="btnPrev" aria-label="Previous stage">◀</button>
+    <span id="stageReadout">–/–</span>
+    <button id="btnNext" aria-label="Next stage">▶</button>
   </div>
   <div class="grp" aria-label="Timers">
     <span class="lbl">Timer</span>
@@ -302,7 +353,7 @@ LT.boot();
      Everything the HUD shows comes from PROJECTOR_STATE broadcasts — the HUD
      holds no independent counters (spec G2 groundwork). */
   var state = {
-    stage: 0, stageCount: 1,          // stage engine lands in LT3
+    stage: 0, stageCount: 0, stageTitle: '', mode: 'field',
     running: true, speed: 1,
     blackout: false,                   // curtain lands in LT4
     hint: { on: false, text: '' },
@@ -343,7 +394,12 @@ LT.boot();
     parts.push(p);
   }
   function pulse(x, y) { for (var i = 0; i < 12; i++) spawn(x, y); }
-  canvas.addEventListener('pointerdown', function (e) { pulse(e.clientX, e.clientY); });
+  canvas.addEventListener('pointerdown', function (e) {
+    pulse(e.clientX, e.clientY);
+    /* Under Calm/reduced motion or pause the loop skips draw(), so a tap
+       would otherwise be invisible — one repaint is content, not motion. */
+    if (LT.reduced() || !state.running) draw();
+  });
 
   function seed() {
     parts.length = 0;
@@ -357,7 +413,12 @@ LT.boot();
   draw();
 
   function update(dt) {
-    var k = dt * state.speed;          // S4: the one and only speed application
+    /* S4: the one and only speed application. The wave takes dt UNCLAMPED
+       (capped at 1 s only against tab-restore phase jumps) — clamping it to
+       50 ms silently slowed the clock under load and made "f is real hertz"
+       untrue. The decorative field keeps the 50 ms integration clamp. */
+    if (state.mode === 'wave') { wave.t += Math.min(1, dt) * state.speed; return; }
+    var k = Math.min(.05, dt) * state.speed;
     for (var i = 0; i < parts.length; i++) {
       var p = parts[i];
       p.x += p.vx * k; p.y += p.vy * k; p.age += k;
@@ -369,6 +430,14 @@ LT.boot();
   }
 
   function draw() {
+    if (state.mode === 'wave') drawWave();
+    else drawField();
+    drawSpotlight(); // G1: dimming happens OVER the sim, never through it
+    /* The units apparatus (scale bar, caption, wavelength bracket) paints
+       AFTER the veil: the measurement a pupil reads must never be dimmed. */
+    if (state.mode === 'wave') drawScale();
+  }
+  function drawField() {
     var lumen = LT.highlumen();
     ctx.clearRect(0, 0, innerWidth, innerHeight);
     /* S5: figure/ground holds on a washed-out projector — line and dot
@@ -412,13 +481,194 @@ LT.boot();
     }
   }
 
+  /* ---------- wave renderer (LT3, honest units per W2) -------------------
+     The animation clock is real seconds, so f is real hertz; lengths map to
+     metres through PX_PER_M, and the scale bar states that mapping on screen.
+     Pixels are never labelled as physical units. */
+  var wave = { f: 1, lambda: 2, A: 0.6, t: 0 };
+  var PX_PER_M = 100;
+  function drawWave() {
+    var lumen = LT.highlumen();
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    var stroke = lumen ? '#1c2337' : '#e8e2d4';
+    var accent = lumen ? '#b0731f' : '#f2a24a';
+    var midY = innerHeight * 0.55;
+    var Apx = wave.A * PX_PER_M;
+    var Lpx = wave.lambda * PX_PER_M;
+    ctx.strokeStyle = stroke; ctx.lineWidth = 4;
+    ctx.beginPath();
+    for (var x = 0; x <= innerWidth; x += 4) {
+      var y = midY - Apx * Math.sin(2 * Math.PI * (x / Lpx - wave.f * wave.t));
+      if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    // the medium's own particles, riding the wave — energy travels, they don't
+    ctx.fillStyle = accent;
+    for (var mx = 20; mx < innerWidth; mx += 60) {
+      var my = midY - Apx * Math.sin(2 * Math.PI * (mx / Lpx - wave.f * wave.t));
+      ctx.beginPath(); ctx.arc(mx, my, 6, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+  function drawScale() {
+    /* Painted after the spotlight veil, clear of the control strip, so the
+       measurement apparatus is never dimmed and never covered. */
+    var lumen = LT.highlumen();
+    var stroke = lumen ? '#1c2337' : '#e8e2d4';
+    var midY = innerHeight * 0.55;
+    var Apx = wave.A * PX_PER_M;
+    var Lpx = wave.lambda * PX_PER_M;
+    // the honest scale bar: PX_PER_M pixels IS one metre on this screen
+    var bx = 24, by = innerHeight - 150;
+    ctx.strokeStyle = stroke; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx + PX_PER_M, by); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(bx, by - 8); ctx.lineTo(bx, by + 8); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(bx + PX_PER_M, by - 8); ctx.lineTo(bx + PX_PER_M, by + 8); ctx.stroke();
+    ctx.fillStyle = stroke; ctx.font = '600 16px system-ui, sans-serif';
+    ctx.fillText('1 m', bx + PX_PER_M / 2 - 12, by - 14);
+    ctx.fillText('f = ' + wave.f + ' Hz · λ = ' + wave.lambda + ' m', bx, by + 30);
+    /* The wavelength bracket lives in WAVE space — two ticks exactly Lpx
+       apart, anchored to a real crest — so the labelled span IS one
+       wavelength at every viewport. (A viewport-relative DOM label claiming a
+       physical length was the review's blocking find: at 1280 px wide it
+       captioned 2.88 wavelengths as "one".) */
+    if (curStage && curStage.showBracket) {
+      var frac = (0.25 + wave.f * wave.t) % 1;
+      if (frac < 0) frac += 1;
+      var xc = frac * Lpx;
+      while (xc < 40) xc += Lpx;
+      if (xc + Lpx < innerWidth - 20) {
+        var byr = midY - Apx - 26;
+        ctx.strokeStyle = stroke; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.moveTo(xc, byr); ctx.lineTo(xc + Lpx, byr); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(xc, byr - 8); ctx.lineTo(xc, byr + 8); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(xc + Lpx, byr - 8); ctx.lineTo(xc + Lpx, byr + 8); ctx.stroke();
+        ctx.fillStyle = stroke;
+        ctx.fillText('λ = ' + wave.lambda + ' m', xc + Lpx / 2 - 30, byr - 12);
+      }
+    }
+  }
+  function drawSpotlight() {
+    var sp = curStage && curStage.spotlight;
+    if (!sp) return;
+    /* G1: dim everything EXCEPT the region of interest with a single evenodd
+       fill — outer rect plus inner ROI, one path. The reviewed fragment's
+       destination-out deleted the very pixels being highlighted; this paints
+       shadow AROUND them and touches nothing beneath. Coordinates arrive
+       normalised 0–1 (G3) and scale here at draw time. */
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(0, 0, innerWidth, innerHeight);
+    ctx.rect(sp.x * innerWidth, sp.y * innerHeight, sp.w * innerWidth, sp.h * innerHeight);
+    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+    ctx.fill('evenodd');
+    ctx.restore();
+  }
+
+  /* ---------- stage engine (LT3: G1–G7) ---------- */
+  var manifest = null;
+  var curStage = null;
+  var banner = document.getElementById('stageBanner');
+  var labelsBox = document.getElementById('stageLabels');
+  var chip = document.getElementById('playChip');
+  var errBox = document.getElementById('manifestError');
+  var btnPrev = document.getElementById('btnPrev');
+  var btnNext = document.getElementById('btnNext');
+  var readout = document.getElementById('stageReadout');
+
+  function updateChip() {
+    /* Honest copy under playback speed: the manifest's f is the MODEL value;
+       whenever the wave is played at ≠1×, the chip says so on screen. */
+    chip.textContent = 'playback ×' + state.speed;
+    chip.classList.toggle('show', state.mode === 'wave' && state.speed !== 1);
+  }
+  function syncStageButtons() {
+    btnPrev.disabled = !manifest || state.stage <= 0;
+    btnNext.disabled = !manifest || state.stage >= state.stageCount - 1;
+    readout.textContent = manifest ? (state.stage + 1) + '/' + state.stageCount : '–/–';
+  }
+  function applyStage(i) {
+    if (!manifest) return;
+    /* G2: clamp first, so Next at the last stage is a no-op immediately on
+       both sides — no unbounded counter exists anywhere. */
+    state.stage = Math.max(0, Math.min(state.stageCount - 1, i));
+    curStage = manifest.stages[state.stage];
+    state.stageTitle = curStage.title;
+    state.mode = curStage.mode === 'wave' ? 'wave' : 'field';
+    if (state.mode === 'wave') {
+      wave.f = curStage.params.f;
+      wave.lambda = curStage.params.lambda;
+      wave.A = curStage.params.A;
+    }
+    /* G6: banner and labels are DOM-built from manifest text with
+       createElement/textContent only — manifests are authored per-lesson data
+       and must never reach innerHTML. */
+    banner.querySelector('.st-title').textContent = curStage.title;
+    banner.querySelector('.st-copy').textContent = curStage.copy || '';
+    banner.classList.add('show');
+    while (labelsBox.firstChild) labelsBox.removeChild(labelsBox.firstChild);
+    (curStage.labels || []).forEach(function (l) {
+      var d = document.createElement('div');
+      d.className = 'lbl';
+      d.textContent = l.text;
+      d.style.left = (l.x * 100) + '%';
+      d.style.top = (l.y * 100) + '%';
+      labelsBox.appendChild(d);
+    });
+    /* Concise stage announcement for keyboard/screen-reader users — the
+       banner itself stays aria-live=off so multi-sentence copy is not
+       re-read; this one line is. */
+    document.getElementById('stageSaid').textContent = 'Stage ' + (state.stage + 1) + ' of ' + state.stageCount + ': ' + curStage.title;
+    updateChip();
+    syncStageButtons();
+    draw();
+    broadcast();
+  }
+  function validManifest(m) {
+    if (!m || !Array.isArray(m.stages) || !m.stages.length) return false;
+    return m.stages.every(function (s) {
+      if (!s || typeof s !== 'object') return false;
+      if (s.mode === 'wave') {
+        if (!s.params) return false;
+        return ['f', 'lambda', 'A'].every(function (k) {
+          var v = s.params[k];
+          return typeof v === 'number' && isFinite(v) && v > 0;
+        });
+      }
+      return true;
+    });
+  }
+  function initStages(m) {
+    if (!validManifest(m)) { showManifestError(lessonId, 'broken'); return; }
+    m.stages.forEach(function (s) { if (typeof s.title !== 'string') s.title = ''; });
+    manifest = m;
+    PX_PER_M = (m.units && m.units.px_per_m) || 100;
+    state.stageCount = m.stages.length;
+    applyStage(0);
+  }
+  function showManifestError(which, kind) {
+    /* A failed load is a VISIBLE error, never a silent catch — the estate's
+       swallowed-init lesson, generalised. Two honest messages: a file that
+       never arrived points at the address bar; a file that arrived broken
+       points at the manifest itself. The projector still teaches (field
+       mode, timers, hint, poll); only the stages are absent. */
+    errBox.textContent = kind === 'broken'
+      ? 'The lesson file manifests/' + which + '.js loaded but is empty or broken — fix the manifest. Timers, hint and poll still work; stages are off.'
+      : 'Lesson "' + which + '" could not be loaded — check the ?lesson= name in the address bar. Timers, hint and poll still work; stages are off.';
+    errBox.classList.add('show');
+    syncStageButtons();
+    broadcast();
+  }
+  btnPrev.addEventListener('click', function () { applyStage(state.stage - 1); });
+  btnNext.addEventListener('click', function () { applyStage(state.stage + 1); });
+  syncStageButtons();
+
   /* ---------- the one animation loop (G4: overlays draw inside it too) ----
      Under reduced motion the sim holds its last frame — content stays
      visible, only the motion goes. Frames are counted as harness evidence. */
   var frames = 0;
   var last = performance.now();
   function loop(now) {
-    var dt = Math.min(.05, (now - last) / 1000);
+    var dt = (now - last) / 1000;   // raw; update() clamps per mode
     last = now;
     if (state.running && !LT.reduced()) {
       update(dt);
@@ -446,6 +696,7 @@ LT.boot();
     document.querySelectorAll('#strip .spd').forEach(function (b) {
       b.setAttribute('aria-pressed', String(Number(b.dataset.spd) === v));
     });
+    updateChip();
     broadcast();
   }
   btnPause.addEventListener('click', function () { setRunning(!state.running); });
@@ -556,9 +807,10 @@ LT.boot();
   LT.registerKey('KeyH', function () { setHint(!state.hint.on); }, 'Hint toggle');
   LT.registerKey('KeyP', function () { setPoll(!state.poll.on); }, 'Poll toggle');
   function escTopmost() {
-    /* topmost first: poll, then hint, then timer; blackout joins in LT4.
-       Reached from this view's Escape AND from the HUD via ESC_TOPMOST, so
-       both windows honour the same "close whatever is on top" promise. */
+    /* topmost first: the manifest error, then poll, hint, timer; blackout
+       joins in LT4. Reached from this view's Escape AND from the HUD via
+       ESC_TOPMOST, so both windows honour the same promise. */
+    if (errBox.classList.contains('show')) return errBox.classList.remove('show');
     if (state.poll.on) return setPoll(false);
     if (state.hint.on) return setHint(false);
     if (state.timer || timerBox.classList.contains('show')) return clearTimer();
@@ -591,6 +843,15 @@ LT.boot();
     else if (type === 'POLL_SET') { armLink(); setPoll(!!payload.on); }
     else if (type === 'OVERLAYS_CLEAR') { armLink(); clearOverlays(); }
     else if (type === 'ESC_TOPMOST') { armLink(); escTopmost(); }
+    else if (type === 'STAGE_NEXT') { armLink(); applyStage(state.stage + 1); }
+    else if (type === 'STAGE_PREV') { armLink(); applyStage(state.stage - 1); }
+    else if (type === 'STAGE_SET') {
+      armLink();
+      /* Validate, never coerce: a fractional index would reach stages[] as
+         undefined; a malformed one must not teleport the lesson to stage 1. */
+      var idx = Number(payload.index);
+      if (Number.isInteger(idx)) applyStage(idx);
+    }
   });
   broadcast();
 
@@ -606,8 +867,23 @@ LT.boot();
     lastParticle: function () { var p = parts[parts.length - 1]; return p ? { vx: p.vx, vy: p.vy } : null; },
     spawnPulse: pulse,
     canvasSize: function () { return { w: canvas.width, h: canvas.height }; },
-    keymap: LT.keymap
+    keymap: LT.keymap,
+    stage: function () { return { index: state.stage, count: state.stageCount, title: state.stageTitle, mode: state.mode }; },
+    wave: function () { return { f: wave.f, lambda: wave.lambda, A: wave.A, pxPerM: PX_PER_M, t: wave.t }; },
+    manifestId: function () { return manifest ? manifest.id : null; },
+    stageButtons: function () { return { prevDisabled: btnPrev.disabled, nextDisabled: btnNext.disabled, readout: readout.textContent }; },
+    spotlight: function () { return curStage && curStage.spotlight ? JSON.parse(JSON.stringify(curStage.spotlight)) : null; }
   };
+
+  /* ---------- manifest loader (G7: lessons are external data) ------------ */
+  var lessonId = 'waves_v1';
+  var q = new URLSearchParams(location.search).get('lesson');
+  if (q && /^[a-z0-9_]{1,40}$/.test(q)) lessonId = q;
+  var mscript = document.createElement('script');
+  mscript.src = 'manifests/' + lessonId + '.js';
+  mscript.onload = function () { initStages(window.LT_MANIFEST); };
+  mscript.onerror = function () { showManifestError(lessonId); };
+  document.head.appendChild(mscript);
 })();
 </script>
 <!-- MBM-LIVETEACH-SPLASH:BEGIN generated by tools/liveteach/stamp_splash.mjs — canonical splash + per-view caller; do not edit by hand -->

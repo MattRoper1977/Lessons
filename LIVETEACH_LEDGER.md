@@ -56,8 +56,9 @@ order and marked as applied where a phase leans on them.
 
 ## LT2 — Core shell, mode-agnostic (LT-GO D1)
 
-- **Branch/PR/merge:** `claude/new-session-43lyml` → PR → merge SHA recorded at
-  next append.
+- **Branch/PR/merge:** `claude/new-session-43lyml` → PR #152 → merge `7d80bb0`
+  (6 checks green; the first liveteach-verify CI run passed with its in-CI
+  red-proof step — job log verified line-by-line, not trusted from the tick).
 - **Delivered:** `/liveteach/` — `index.html` (launcher: both setups explained,
   the Win+P check, key map), `projector.html` (particle wave sim, timer / hint
   / poll overlays, auto-hiding control strip carrying every teaching action,
@@ -118,3 +119,62 @@ order and marked as applied where a phase leans on them.
   wrapped init (regex hardened, new red vector). Suite now 44 checks.
 - **Decisions applied:** D1 (single-window first-class; the HUD is optional on
   identical bus code), D4, D5.
+
+## LT3 — Stage engine (spec Phase 2: G1–G7)
+
+- **Branch/PR/merge:** `claude/new-session-43lyml` → PR → merge SHA recorded at
+  next append.
+- **Delivered:** manifest schema + loader (G7 — lessons are external data
+  under `liveteach/manifests/`, selected by `?lesson=`, whitelisted id, a
+  missing lesson is a VISIBLE `role=alert` error and the teaching tools stay
+  alive); the exemplar `waves_v1` manifest (real units per W2: f is real hertz
+  because the clock is real seconds, lengths are metres through a declared
+  `px_per_m` stated on-screen as a scale bar, and every quantitative claim
+  carries a machine-checkable `{expr, value, unit}` form); the wave renderer
+  inside the ONE existing loop (G4); the evenodd spotlight (G1 — outer rect +
+  ROI, single fill, sim untouched beneath); DOM labels and banner built with
+  createElement/textContent only (G6) at normalised 0–1 coordinates scaled at
+  draw (G3); clamped bidirectional stage sync with the HUD authoritative-free
+  (G2); a "playback ×N" chip whenever the wave runs off 1× so the manifest's
+  stated f stays honest copy; stage prev/next on the strip AND the HUD.
+- **Gates, with negative controls named:**
+  - `units_check.mjs` (new): recomputes every claim from its stage's params,
+    demands the printed number and unit appear in the claim text, rejects any
+    non-normalised coordinate, and enforces the exact-2f rule wherever prose
+    says frequency doubles; its `--self-test` proves each rule can red
+    (wrong value, pixel coordinate, f=3 "doubling").
+  - `lt-stage.test.js` (new, 19 checks): the G1 pixel proof (bright sim
+    content sampled INSIDE the ROI, dark veil outside); G2 no-ops at both
+    ends on both windows plus a wild `STAGE_SET{index:99}` clamped over the
+    bus; G3 label centred at its normalised position; W2 rendered wavelength
+    = λ×px_per_m and the playback chip at ×2/gone at 1×; G6 hostile markup in
+    stage text stays literal; G7 external load positive + missing-manifest
+    negative control with timers proven alive after it.
+  - One suite defect found and fixed during the build: the clamp test
+    originally sent `STAGE_SET` from the projector's own page — a
+    BroadcastChannel never hears its own messages, so the test proved
+    nothing; it now travels the real HUD→projector path.
+- **Adversarial review round (four lenses, 26 confirmed findings, all fixed):**
+  the sharpest were about honesty and about gates that could not fail. (1) The
+  "one wavelength" label was pinned to viewport-relative coordinates while the
+  wavelength renders in fixed pixels — at 1280 px it captioned 2.88
+  wavelengths as one; physical lengths are now shown ONLY by an engine-drawn
+  bracket in wave space (`showBracket`), and viewport labels may not claim
+  lengths. (2) The 50 ms dt clamp silently slowed "real hertz" under load —
+  the wave now takes raw dt. (3) The G6 test was a tautology (it set
+  textContent itself); it now serves a HOSTILE manifest through the suite's
+  own server and was proven to red against an innerHTML-regressed engine
+  before landing. (4) The units gate matched numbers by substring ("12 m/s"
+  passed for 2) and never read pupil-visible copy — now digit-boundary
+  matching plus a U-VISIBLE scan of copy and labels against params, with new
+  red vectors. (5) The wavelength check was arithmetic on the seam — now
+  MEASURED from canvas pixels (crest spacing 200 px ±10, scale bar = px_per_m
+  ±6). Also fixed: scale bar drawn after the veil and clear of the strip;
+  taps repaint under Calm/pause; STAGE_SET validates integers; broken-vs-
+  missing manifests get different honest errors, Escape dismisses them, and
+  the box never intercepts taps; stage changes announce politely off-screen;
+  disabled buttons look disabled; the chip moved clear of the banner title;
+  manifests themselves are now gated as pure data (G-DATA) and swept by the
+  static gates recursively; warm-up copy rewritten to match what the field
+  sim actually does. Stage suite now 30 checks.
+- **Decisions applied:** D4, D5.

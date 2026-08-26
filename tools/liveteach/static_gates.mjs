@@ -22,12 +22,26 @@ const ONMSG = /\.onmessage\s*=/;
 
 function viewFiles(dir) {
   if (!fs.existsSync(dir)) return [];
-  return fs.readdirSync(dir).filter(f => f.endsWith('.html') || f.endsWith('.js')).map(f => path.join(dir, f));
+  const out = [];
+  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+    const p = path.join(dir, e.name);
+    if (e.isDirectory()) out.push(...viewFiles(p));
+    else if (e.name.endsWith('.html') || e.name.endsWith('.js')) out.push(p);
+  }
+  return out;
 }
 
 export function judge(file, text) {
   const fails = [];
   if (ONMSG.test(text)) fails.push('G-ONMSG: `.onmessage =` assignment found');
+  if (/[\\/]manifests[\\/]/.test(file)) {
+    /* G-DATA: manifests execute as scripts inside the projector page, so they
+       must BE data — comments plus exactly one window.LT_MANIFEST object
+       assignment, nothing else that runs. */
+    const stripped = text.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+    if (!/^\s*window\.LT_MANIFEST\s*=\s*\{[\s\S]*\};?\s*$/.test(stripped))
+      fails.push('G-DATA: a manifest may contain only comments and one window.LT_MANIFEST = {...} assignment');
+  }
   if (file.endsWith('.html')) {
     const rafs = [...text.matchAll(/requestAnimationFrame\(\s*([A-Za-z_$][\w$]*)\s*\)/g)].map(m => m[1]);
     const distinct = [...new Set(rafs)];
@@ -70,6 +84,8 @@ if (process.argv[2] === '--self-test') {
   say(judge('x.html', '<!-- MBM-LIVETEACH-CORE:END -->\n<script>\nsomethingElse();\n</script>').some(s => s.includes('G-TDZ')), 'RED: a missing post-region LT.boot() is reported');
   say(judge('x.html', '<!-- MBM-LIVETEACH-CORE:END -->\n<script>\ntry { window.__pre = 1; LT.boot(); } catch (e) {}\n</script>').some(s => s.includes('try block')), 'RED: a catch-wrapped init is reported even with statements before the call');
   say(judge('x.html', '<!-- MBM-LIVETEACH-CORE:END -->\n<script>\nLT.boot();\n</script>').every(s => !s.includes('G-TDZ')), 'GREEN: immediate LT.boot() is clean');
+  say(judge('liveteach/manifests/x.js', 'window.LT_MANIFEST = { id: "x" };\nfetch("http://evil");').some(s => s.includes('G-DATA')), 'RED: executable code in a manifest is reported');
+  say(judge('liveteach/manifests/x.js', '/* note */\nwindow.LT_MANIFEST = {\n id: "x"\n};\n').every(s => !s.includes('G-DATA')), 'GREEN: a pure data manifest passes');
   console.log(bad ? '[SELF-TEST] FAIL — ' + bad + ' check(s)' : '[SELF-TEST] PASS');
   process.exit(bad ? 1 : 0);
 } else {

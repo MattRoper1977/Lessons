@@ -43,6 +43,7 @@ button {
 }
 body.highlumen button { background: #fffdf6; color: #1c2337; border-color: #8a7f5e; }
 button[aria-pressed="true"] { background: #f2a24a; color: #131313; border-color: #f2a24a; }
+button:disabled { opacity: .4; cursor: default; }
 button:focus-visible, a.navback:focus-visible, input:focus-visible { outline: 3px solid #b9e6cd; outline-offset: 2px; }
 input[type=text] { min-height: 44px; border-radius: 10px; border: 1px solid #43518c; background: #0d1430; color: inherit; font: inherit; padding: 6px 10px; flex: 1; min-width: 140px; box-sizing: border-box; }
 body.highlumen input[type=text] { background: #fff; border-color: #8a7f5e; }
@@ -71,6 +72,7 @@ body.reduce *, body.reduce *::before, body.reduce *::after {
   <h1>Live-Teach · Teacher HUD</h1>
   <div id="linkState"><span class="dot"></span><span class="word">no projector heard yet</span></div>
 </header>
+<div id="stageSaid" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap"></div>
 
 <section class="card" aria-label="Projector state">
   <h2>Projector</h2>
@@ -81,6 +83,15 @@ body.reduce *, body.reduce *::before, body.reduce *::after {
     <span class="ind">💡 Hint <span class="st" id="indHint">off</span></span>
     <span class="ind">🙋 Poll <span class="st" id="indPoll">off</span></span>
     <span class="ind">Stage <span class="st" id="indStage">—</span></span>
+  </div>
+</section>
+
+<section class="card" aria-label="Lesson stages">
+  <h2>Stage</h2>
+  <div class="row">
+    <button id="btnPrev" aria-label="Previous stage">◀ Back</button>
+    <span id="stageTitle" style="font-weight:700; flex:1; min-width:120px">—</span>
+    <button id="btnNext" aria-label="Next stage">Next ▶</button>
   </div>
 </section>
 
@@ -264,6 +275,7 @@ LT.boot();
      THIS object and nothing else. */
   var seen = null;
   var seenAt = 0;
+  var lastStageSaid = null;
 
   var el = function (id) { return document.getElementById(id); };
   var linkState = el('linkState');
@@ -277,7 +289,16 @@ LT.boot();
     el('indSpeed').textContent = seen.speed + '×';
     el('indHint').textContent = seen.hint && seen.hint.on ? 'ON' : 'off';
     el('indPoll').textContent = seen.poll && seen.poll.on ? 'ON' : 'off';
-    el('indStage').textContent = (seen.stage + 1) + '/' + seen.stageCount;
+    el('indStage').textContent = seen.stageCount ? (seen.stage + 1) + '/' + seen.stageCount : '—';
+    el('stageTitle').textContent = seen.stageTitle || '—';
+    if (seen.stageCount && seen.stage !== lastStageSaid) {
+      lastStageSaid = seen.stage;
+      el('stageSaid').textContent = 'Stage ' + (seen.stage + 1) + ' of ' + seen.stageCount + ': ' + (seen.stageTitle || '');
+    }
+    /* G2: the ends are dead immediately, driven by broadcast state — the HUD
+       holds no counter of its own. */
+    el('btnPrev').disabled = !seen.stageCount || seen.stage <= 0;
+    el('btnNext').disabled = !seen.stageCount || seen.stage >= seen.stageCount - 1;
     el('btnPause').setAttribute('aria-pressed', String(!seen.running));
     el('btnPause').textContent = seen.running ? '⏸ Pause' : '▶ Resume';
     el('btnHint').setAttribute('aria-pressed', String(!!(seen.hint && seen.hint.on)));
@@ -326,6 +347,8 @@ LT.boot();
   });
   el('btnPoll').addEventListener('click', function () { LT.send('POLL_SET', { on: !(seen && seen.poll && seen.poll.on) }); });
   el('btnClear').addEventListener('click', function () { LT.send('OVERLAYS_CLEAR', {}); });
+  el('btnPrev').addEventListener('click', function () { LT.send('STAGE_PREV', {}); });
+  el('btnNext').addEventListener('click', function () { LT.send('STAGE_NEXT', {}); });
 
   /* Same teaching keys as the projector view (the clicker set joins in LT4,
      registered in BOTH views so the remote survives focus loss). */
