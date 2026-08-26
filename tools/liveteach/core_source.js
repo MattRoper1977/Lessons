@@ -49,8 +49,20 @@
     return out;
   };
   document.addEventListener('keydown', function (e) {
+    /* Browser/OS chords are never teaching actions: Ctrl+P must print, not
+       toggle the poll in front of the class. */
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
     var t = e.target;
-    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) return;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) {
+      /* Escape is the one hotkey that must still work here — its whole spec
+         is "blur inputs, then close the top thing". Blur only; the next
+         Escape reaches the registered handler. */
+      if (e.code === 'Escape' && t.blur) t.blur();
+      return;
+    }
+    /* A focused button or link keeps its NATIVE Space/Enter activation —
+       stealing it broke the Calm button for keyboard users. */
+    if ((e.code === 'Space' || e.code === 'Enter') && t && t.closest && t.closest('button, a, [role="button"], summary')) return;
     var entry = keys.get(e.code);
     if (entry) entry.handler(e);
   });

@@ -45,6 +45,8 @@ body.highlumen .launch a { background: #fffdf6; }
 ol { margin: 0; padding-left: 20px; line-height: 1.6; }
 p { line-height: 1.55; }
 footer { opacity: .7; font-size: 13px; margin: 12px 0 20px; }
+/* Splash skip-button floor — outside the pinned canonical region. */
+.mbm-skip { min-height: 44px; min-width: 44px; }
 body.reduce *, body.reduce *::before, body.reduce *::after {
   animation-duration: .01ms !important; animation-iteration-count: 1 !important;
   transition-duration: .01ms !important;
@@ -147,8 +149,20 @@ body.reduce *, body.reduce *::before, body.reduce *::after {
     return out;
   };
   document.addEventListener('keydown', function (e) {
+    /* Browser/OS chords are never teaching actions: Ctrl+P must print, not
+       toggle the poll in front of the class. */
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
     var t = e.target;
-    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) return;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) {
+      /* Escape is the one hotkey that must still work here — its whole spec
+         is "blur inputs, then close the top thing". Blur only; the next
+         Escape reaches the registered handler. */
+      if (e.code === 'Escape' && t.blur) t.blur();
+      return;
+    }
+    /* A focused button or link keeps its NATIVE Space/Enter activation —
+       stealing it broke the Calm button for keyboard users. */
+    if ((e.code === 'Space' || e.code === 'Enter') && t && t.closest && t.closest('button, a, [role="button"], summary')) return;
     var entry = keys.get(e.code);
     if (entry) entry.handler(e);
   });

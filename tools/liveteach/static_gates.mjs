@@ -36,8 +36,11 @@ export function judge(file, text) {
       const after = text.slice(text.indexOf('MBM-LIVETEACH-CORE:END'));
       const bootAt = after.indexOf('LT.boot()');
       if (bootAt === -1 || bootAt > 400) fails.push('G-TDZ: LT.boot() must directly follow the stamped core region');
+      // ANY `try` token between the region end and the init is a swallowed
+      // init waiting to happen — the original `/try{$/` form only caught a
+      // try that immediately abutted the call and was trivially bypassed.
       const guard = after.slice(0, bootAt === -1 ? 400 : bootAt);
-      if (/try\s*\{\s*$/.test(guard.trimEnd())) fails.push('G-TDZ: LT.boot() is wrapped in a catch — a failed init must be a visible error');
+      if (/\btry\b/.test(guard)) fails.push('G-TDZ: a try block sits between the core region and LT.boot() — a failed init must be a visible error');
     }
   }
   return fails;
@@ -65,6 +68,7 @@ if (process.argv[2] === '--self-test') {
   say(judge('x.html', 'requestAnimationFrame(loop); requestAnimationFrame(secondLoop);').some(s => s.includes('G-RAF')), 'RED: a second rAF loop is reported');
   say(judge('x.html', 'requestAnimationFrame(loop); requestAnimationFrame(loop);').every(s => !s.includes('G-RAF')), 'GREEN: one callback, called twice, is one loop');
   say(judge('x.html', '<!-- MBM-LIVETEACH-CORE:END -->\n<script>\nsomethingElse();\n</script>').some(s => s.includes('G-TDZ')), 'RED: a missing post-region LT.boot() is reported');
+  say(judge('x.html', '<!-- MBM-LIVETEACH-CORE:END -->\n<script>\ntry { window.__pre = 1; LT.boot(); } catch (e) {}\n</script>').some(s => s.includes('try block')), 'RED: a catch-wrapped init is reported even with statements before the call');
   say(judge('x.html', '<!-- MBM-LIVETEACH-CORE:END -->\n<script>\nLT.boot();\n</script>').every(s => !s.includes('G-TDZ')), 'GREEN: immediate LT.boot() is clean');
   console.log(bad ? '[SELF-TEST] FAIL — ' + bad + ' check(s)' : '[SELF-TEST] PASS');
   process.exit(bad ? 1 : 0);

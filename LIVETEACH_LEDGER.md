@@ -99,5 +99,22 @@ order and marked as applied where a phase leans on them.
   reduced motion the sim never painted its first frame — content lost, the
   house rule's exact failure — fixed with an unconditional first draw; the
   suite's http server 404'd favicon requests into the console-clean gate.
+- **Adversarial review round (four lenses, 18 confirmed findings, every one
+  fixed and now pinned by a suite check):** no heartbeat, so a healthy idle
+  pair false-alarmed "projector quiet" at 5 s (live-reproduced; fixed with a
+  3 s HUD hello the projector already answers, plus the projector's linked
+  latch re-arming on any HUD message); Escape was swallowed by the
+  editable-focus guard exactly when its blur half was needed; browser chords
+  (Ctrl+P) fired teaching hotkeys; Space on a focused button was stolen from
+  native activation (the Calm button was unreachable by keyboard); the HUD's
+  Escape didn't do what both key cards promised (new `ESC_TOPMOST` message
+  into the projector's topmost chain); the suite's splash check passed
+  vacuously (now asserts the splash rendered AND skip beat the auto-close);
+  Calm alone still auto-hid the strip that had turned it on; the timer's
+  aria-live region sat inside a visibility-hidden subtree and never announced;
+  the canonical splash's skip button measured under 44 px (override added
+  outside the pinned bytes — canonical untouched; site-repo note in the
+  residue); the G-TDZ static gate was bypassable by any statement before the
+  wrapped init (regex hardened, new red vector). Suite now 44 checks.
 - **Decisions applied:** D1 (single-window first-class; the HUD is optional on
   identical bus code), D4, D5.

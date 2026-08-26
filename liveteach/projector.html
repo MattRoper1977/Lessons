@@ -79,14 +79,22 @@ body.highlumen #hintInput { background: #fff; border-color: #8a7f5e; }
 
 @media print { #strip, #status, #fsBtn { display: none; } }
 
+/* The canonical splash ships its skip button a whisker under the estate's
+   44px floor; this override lives OUTSIDE the pinned region so the canonical
+   bytes stay verbatim. */
+.mbm-skip { min-height: 44px; min-width: 44px; }
+
 /* Reduced motion, both halves of the house rule. The blanket form (no
    enumerated class list to rot): every part stays visible, every label on —
    only the motion goes. body.reduce is set by the JS half (OS setting, live
-   change subscription, OR the Calm choice). */
+   change subscription, OR the Calm choice) — so the keep-the-strip rule below
+   is written against body.reduce AND the media query, or Calm alone would
+   still auto-hide the very button that turned it on. */
 body.reduce *, body.reduce *::before, body.reduce *::after {
   animation-duration: .01ms !important; animation-iteration-count: 1 !important;
   transition-duration: .01ms !important;
 }
+body.reduce #strip.hidden { transform: none; visibility: visible; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: .01ms !important; animation-iteration-count: 1 !important;
@@ -104,8 +112,11 @@ body.reduce *, body.reduce *::before, body.reduce *::after {
 <section id="timerOverlay" class="overlay" role="timer" aria-label="Class timer">
   <div class="tag">⏱ Timer</div>
   <div class="clock">0:00</div>
-  <div id="timerSaid" aria-live="polite" style="position:absolute;left:-9999px"></div>
 </section>
+<!-- The live region lives OUTSIDE the visibility-hidden overlay (a subtree
+     under visibility:hidden is out of the accessibility tree, so announcements
+     from inside it never fire) and hides by clipping, never visibility. -->
+<div id="timerSaid" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap"></div>
 
 <section id="hintOverlay" class="overlay" aria-label="Hint">
   <div class="tag">💡 Hint</div>
@@ -200,8 +211,20 @@ body.reduce *, body.reduce *::before, body.reduce *::after {
     return out;
   };
   document.addEventListener('keydown', function (e) {
+    /* Browser/OS chords are never teaching actions: Ctrl+P must print, not
+       toggle the poll in front of the class. */
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
     var t = e.target;
-    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) return;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) {
+      /* Escape is the one hotkey that must still work here — its whole spec
+         is "blur inputs, then close the top thing". Blur only; the next
+         Escape reaches the registered handler. */
+      if (e.code === 'Escape' && t.blur) t.blur();
+      return;
+    }
+    /* A focused button or link keeps its NATIVE Space/Enter activation —
+       stealing it broke the Calm button for keyboard users. */
+    if ((e.code === 'Space' || e.code === 'Enter') && t && t.closest && t.closest('button, a, [role="button"], summary')) return;
     var entry = keys.get(e.code);
     if (entry) entry.handler(e);
   });
@@ -532,37 +555,42 @@ LT.boot();
   LT.registerKey('Digit0', function () { clearOverlays(); }, 'Clear all overlays');
   LT.registerKey('KeyH', function () { setHint(!state.hint.on); }, 'Hint toggle');
   LT.registerKey('KeyP', function () { setPoll(!state.poll.on); }, 'Poll toggle');
-  LT.registerKey('Escape', function () {
-    /* topmost first: poll, then hint, then timer; blackout joins in LT4 */
+  function escTopmost() {
+    /* topmost first: poll, then hint, then timer; blackout joins in LT4.
+       Reached from this view's Escape AND from the HUD via ESC_TOPMOST, so
+       both windows honour the same "close whatever is on top" promise. */
     if (state.poll.on) return setPoll(false);
     if (state.hint.on) return setHint(false);
     if (state.timer || timerBox.classList.contains('show')) return clearTimer();
     if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
-  }, 'Close topmost overlay');
+  }
+  LT.registerKey('Escape', function () { escTopmost(); }, 'Close topmost overlay');
 
   /* ---------- bus: resync kills the reload-desync bug class --------------
      The projector broadcasts PROJECTOR_STATE on load AND on every HUD_HELLO;
      a HUD reconciles everything it shows from that one message. */
   var linked = document.getElementById('status');
   var linkT = null;
+  function armLink() {
+    /* Any HUD-originated message proves a HUD is alive, not just hellos. */
+    linked.classList.add('linked');
+    linked.querySelector('.word').textContent = 'linked';
+    clearTimeout(linkT);
+    linkT = setTimeout(function () {
+      linked.classList.remove('linked');
+      linked.querySelector('.word').textContent = 'solo';
+    }, 12000);
+  }
   LT.on(function (type, payload) {
-    if (type === 'HUD_HELLO') {
-      broadcast();
-      linked.classList.add('linked');
-      linked.querySelector('.word').textContent = 'linked';
-      clearTimeout(linkT);
-      linkT = setTimeout(function () {
-        linked.classList.remove('linked');
-        linked.querySelector('.word').textContent = 'solo';
-      }, 12000);
-    }
-    else if (type === 'SIM_RUN') setRunning(!!payload.on);
-    else if (type === 'SIM_STOP') stopSim();
-    else if (type === 'SIM_SPEED') setSpeed(Number(payload.value) || 1);
-    else if (type === 'TIMER_START') startTimer(Number(payload.mins) || 1);
-    else if (type === 'HINT_SET') setHint(!!payload.on, payload.text);
-    else if (type === 'POLL_SET') setPoll(!!payload.on);
-    else if (type === 'OVERLAYS_CLEAR') clearOverlays();
+    if (type === 'HUD_HELLO') { armLink(); broadcast(); }
+    else if (type === 'SIM_RUN') { armLink(); setRunning(!!payload.on); }
+    else if (type === 'SIM_STOP') { armLink(); stopSim(); }
+    else if (type === 'SIM_SPEED') { armLink(); setSpeed(Number(payload.value) || 1); }
+    else if (type === 'TIMER_START') { armLink(); startTimer(Number(payload.mins) || 1); }
+    else if (type === 'HINT_SET') { armLink(); setHint(!!payload.on, payload.text); }
+    else if (type === 'POLL_SET') { armLink(); setPoll(!!payload.on); }
+    else if (type === 'OVERLAYS_CLEAR') { armLink(); clearOverlays(); }
+    else if (type === 'ESC_TOPMOST') { armLink(); escTopmost(); }
   });
   broadcast();
 

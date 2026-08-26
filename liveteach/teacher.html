@@ -50,6 +50,8 @@ body.highlumen input[type=text] { background: #fff; border-color: #8a7f5e; }
 .ind { display: inline-flex; align-items: center; gap: 6px; border: 1px solid #2c3763; border-radius: 999px; padding: 6px 12px; font-size: 13px; }
 .ind .st { font-weight: 800; }
 .keys { font-size: 12px; opacity: .7; line-height: 1.7; }
+/* Splash skip-button floor — outside the pinned canonical region. */
+.mbm-skip { min-height: 44px; min-width: 44px; }
 @media print { body { display: none; } }
 body.reduce *, body.reduce *::before, body.reduce *::after {
   animation-duration: .01ms !important; animation-iteration-count: 1 !important;
@@ -172,8 +174,20 @@ body.reduce *, body.reduce *::before, body.reduce *::after {
     return out;
   };
   document.addEventListener('keydown', function (e) {
+    /* Browser/OS chords are never teaching actions: Ctrl+P must print, not
+       toggle the poll in front of the class. */
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
     var t = e.target;
-    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) return;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) {
+      /* Escape is the one hotkey that must still work here — its whole spec
+         is "blur inputs, then close the top thing". Blur only; the next
+         Escape reaches the registered handler. */
+      if (e.code === 'Escape' && t.blur) t.blur();
+      return;
+    }
+    /* A focused button or link keeps its NATIVE Space/Enter activation —
+       stealing it broke the Calm button for keyboard users. */
+    if ((e.code === 'Space' || e.code === 'Enter') && t && t.closest && t.closest('button, a, [role="button"], summary')) return;
     var entry = keys.get(e.code);
     if (entry) entry.handler(e);
   });
@@ -289,10 +303,12 @@ LT.boot();
       render();
     }
   });
-  /* On load: say hello; the projector answers with PROJECTOR_STATE both on
-     its own load and on every hello — the resync contract that kills the
-     reload-desync bug class in both directions. */
+  /* On load AND as a heartbeat: the projector answers every hello with
+     PROJECTOR_STATE and re-arms its linked latch, so a healthy pair never
+     false-alarms during quiet teaching — and a genuinely closed projector
+     still goes quiet, because the hellos stop being answered. */
   LT.send('HUD_HELLO', {});
+  setInterval(function () { LT.send('HUD_HELLO', {}); }, 3000);
 
   /* Controls: the HUD only ever SENDS; it never mutates its indicators
      directly. The projector's answering broadcast is what updates them. */
@@ -321,8 +337,11 @@ LT.boot();
   LT.registerKey('KeyH', function () { LT.send('HINT_SET', { on: !(seen && seen.hint && seen.hint.on), text: hintDraft() }); }, 'Hint toggle');
   LT.registerKey('KeyP', function () { LT.send('POLL_SET', { on: !(seen && seen.poll && seen.poll.on) }); }, 'Poll toggle');
   LT.registerKey('Escape', function () {
-    if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
-  }, 'Blur inputs');
+    /* The key card promises "close whatever is on top" from both windows —
+       so send the projector its own topmost-close. (An Escape typed inside an
+       input blurs it instead, handled in the core guard.) */
+    LT.send('ESC_TOPMOST', {});
+  }, 'Close topmost overlay on the projector');
 
   /* Read-only harness seams. */
   window.__LT = {
