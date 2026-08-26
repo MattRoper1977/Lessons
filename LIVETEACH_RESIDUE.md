@@ -10,13 +10,30 @@ the kit; several items are decisions that are yours rather than mine.
 
 These came out of the pupil-name sweep and were deliberately left.
 
-**C1 — one file still names the real class.**
-`biology/Structure_of_the_Thorax.html:1372` carries a nine-name `Y10_FALLBACK`
-list. It sits under `frozen_for_2025_26_delivery` in
-`quality/CONTENT_INTEGRITY_RULES.json`, and your rules say frozen paths are not
-touched and safeguarding changes are not self-merged. It is now **the only file
-in this repo naming the real class**. Say *"unfreeze Thorax for LT1"* and it
-gets the same one-line neutralisation the other twenty-three files got.
+**C1 — CLOSED 2026-08-26 (sitting SAT-F §6).** `biology/Structure_of_the_Thorax.html:1372`
+carried a nine-name `Y10_FALLBACK` list. On Matt's recorded word the freeze was
+lifted for that one file and it took the same one-line neutralisation the other
+twenty-three files got — nine names to `Pupil A`–`Pupil I`, array length and
+quote style preserved. `eviRoster()` at :1379 only reads the list when the
+pasted roster is empty, so behaviour is unchanged. The legacy-science freeze
+otherwise stands; no other file under a frozen path was touched.
+
+**C4 — NEW, found by the same census, NOT fixed.** Closing C1 meant re-running
+the nine-name sweep estate-wide, and it surfaced a line LT1 never read:
+`ASDAN/Consent_Aimee_La.html` and `ASDAN/Consent_Aimee_P2.html` each carry a
+teacher-facing TA deployment note naming **three real pupils** by first name
+(one of them the distinctive hyphenated entry), plus a named adult. LT1
+classified this whole `Consent_*` family under contact-sheet **B1** — the
+filename character is adjudicated fictional, which is correct — and so never
+looked past the filename at the body text. The other eight `Consent_*` files
+are clean; the pattern appears nowhere else in the estate. It is one line,
+duplicated across the two files.
+
+Left unfixed deliberately: this is a safeguarding change, and your rule is that
+safeguarding changes are not self-merged — the same rule that held C1 for a
+year. It needs the same one word. The fix is the neutralisation LT1 already
+uses. **These two files are live on Pages**, which is why this is the first
+item in the readback rather than a footnote.
 
 **C2 — two strings in the site repo.**
 `mattroper1977.github.io`: `uas/app.html:449` (a placeholder caption) and
