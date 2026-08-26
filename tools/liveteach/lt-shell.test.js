@@ -250,13 +250,20 @@ async function stripClick(page, sel) {
   check('resync: projector-side change reaches the HUD indicator', back === 'off', back);
 
   // The reload gate: reload the projector; the HUD must reconcile to the
-  // fresh broadcast (speed back to 1, nothing stale kept).
+  // reloaded projector's REAL state, keeping nothing stale of its own.
+  // Since LT6 the address bar mirrors whitelisted state (U2), so speed=2
+  // legitimately SURVIVES the reload via ?speed= — while the hint, which is
+  // deliberately never serialized (prose stays off the address), resets.
+  // Both directions of that boundary are pinned here.
   await proj.reload({ waitUntil: 'load' });
   try { await proj.locator('.mbm-skip').click({ timeout: 4000 }); } catch (e) {}
   await proj.waitForFunction(() => !document.querySelector('.mbm-splash'), null, { timeout: 8000 });
   await hud.waitForTimeout(600);
   const rec = await hud.evaluate(() => window.__LT.seen());
-  check('resync: after projector reload the HUD shows the fresh state', rec && rec.speed === 1 && rec.hint.on === false, JSON.stringify({ speed: rec && rec.speed, hint: rec && rec.hint }));
+  const recURL = await proj.evaluate(() => location.search);
+  check('resync: after projector reload the HUD mirrors the reloaded state — URL-carried speed kept, unserialized hint reset',
+    rec && rec.speed === 2 && rec.hint.on === false && /speed=2/.test(recURL),
+    JSON.stringify({ speed: rec && rec.speed, hint: rec && rec.hint, recURL }));
 
   // HUD Escape closes the projector's topmost overlay — the key cards promise
   // "both windows", so the promise is proven, not assumed.
