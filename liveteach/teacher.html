@@ -84,6 +84,15 @@ body.reduce *, body.reduce *::before, body.reduce *::after {
   </div>
 </section>
 
+<section class="card" aria-label="Lesson stages">
+  <h2>Stage</h2>
+  <div class="row">
+    <button id="btnPrev" aria-label="Previous stage">◀ Back</button>
+    <span id="stageTitle" style="font-weight:700; flex:1; min-width:120px">—</span>
+    <button id="btnNext" aria-label="Next stage">Next ▶</button>
+  </div>
+</section>
+
 <section class="card" aria-label="Simulation controls">
   <h2>Sim</h2>
   <div class="row">
@@ -277,7 +286,12 @@ LT.boot();
     el('indSpeed').textContent = seen.speed + '×';
     el('indHint').textContent = seen.hint && seen.hint.on ? 'ON' : 'off';
     el('indPoll').textContent = seen.poll && seen.poll.on ? 'ON' : 'off';
-    el('indStage').textContent = (seen.stage + 1) + '/' + seen.stageCount;
+    el('indStage').textContent = seen.stageCount ? (seen.stage + 1) + '/' + seen.stageCount : '—';
+    el('stageTitle').textContent = seen.stageTitle || '—';
+    /* G2: the ends are dead immediately, driven by broadcast state — the HUD
+       holds no counter of its own. */
+    el('btnPrev').disabled = !seen.stageCount || seen.stage <= 0;
+    el('btnNext').disabled = !seen.stageCount || seen.stage >= seen.stageCount - 1;
     el('btnPause').setAttribute('aria-pressed', String(!seen.running));
     el('btnPause').textContent = seen.running ? '⏸ Pause' : '▶ Resume';
     el('btnHint').setAttribute('aria-pressed', String(!!(seen.hint && seen.hint.on)));
@@ -326,6 +340,8 @@ LT.boot();
   });
   el('btnPoll').addEventListener('click', function () { LT.send('POLL_SET', { on: !(seen && seen.poll && seen.poll.on) }); });
   el('btnClear').addEventListener('click', function () { LT.send('OVERLAYS_CLEAR', {}); });
+  el('btnPrev').addEventListener('click', function () { LT.send('STAGE_PREV', {}); });
+  el('btnNext').addEventListener('click', function () { LT.send('STAGE_NEXT', {}); });
 
   /* Same teaching keys as the projector view (the clicker set joins in LT4,
      registered in BOTH views so the remote survives focus loss). */

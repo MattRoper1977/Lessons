@@ -42,7 +42,10 @@ run_step "splash regions match canonical"     node tools/liveteach/stamp_splash.
 run_step "splash stamper can go red"          node tools/liveteach/stamp_splash.mjs --self-test
 run_step "static gates (onmessage, one loop, TDZ)" node tools/liveteach/static_gates.mjs
 run_step "static gates can go red"            node tools/liveteach/static_gates.mjs --self-test
+run_step "units check (claims recompute, coords normalised)" node tools/liveteach/units_check.mjs
+run_step "units check can go red"             node tools/liveteach/units_check.mjs --self-test
 run_step "lt-shell browser suite"             node tools/liveteach/lt-shell.test.js
+run_step "lt-stage browser suite"             node tools/liveteach/lt-stage.test.js
 
 if [ $failed -ne 0 ]; then echo "LIVETEACH SUITES FAILED"; exit 1; fi
 echo "LIVETEACH SUITES PASSED"
