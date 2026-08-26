@@ -276,8 +276,9 @@ order and marked as applied where a phase leans on them.
 
 ## LT6 — URL serializer + QR (spec Phase 5: U1–U3, Q1–Q2)
 
-- **Branch/PR/merge:** `claude/new-session-43lyml` → PR → merge SHA recorded at
-  next append.
+- **Branch/PR/merge:** `claude/new-session-43lyml` → PR #156 → merged as
+  `b9493db` (all 6 checks green; the liveteach job's log read line-by-line to
+  confirm the 19 steps and the in-CI red-proof genuinely ran).
 - **Delivered:** a share address and a QR panel on **both** views. The
   serializer's whitelist is the privacy boundary: `lesson`, `stage`, `speed`,
   `hl`, `tag` — five keys, defaults omitted (a fresh lesson shares as a bare
@@ -348,3 +349,68 @@ order and marked as applied where a phase leans on them.
   pixels under a fresh address would have passed.
 - **Decisions applied:** D1 (both views first-class — the panel is on the
   projector too, not HUD-only), D4, D5.
+
+---
+
+## LT7 — Cold-call picker (spec Phase 6: P1–P5; order LT-GO D2)
+
+- **Branch/PR/merge:** `claude/new-session-43lyml` → PR → merge SHA recorded at
+  next append.
+- **The roster rule, and the ruling behind it.** P1 asked the picker to read
+  the estate's roster storage. Order LT-GO **D2 overrides it**: the class list
+  is **session-only** — typed or pasted at the start of the lesson, held in one
+  variable per tab, and written to no storage key, no address, no QR, no log
+  and no bus message. Closing the tab is the delete button, and the launcher
+  says so in as many words. The LT2 storage audit still finds exactly one key,
+  holding display settings. No new key family was created, so P1's actual
+  prohibition ("never a new key family without Matt's sign-off") is honoured
+  by having no key at all.
+- **P2 — the guarantee is structural, not statistical.** The reviewed fragment
+  gave every pupil a minimum weight, so the pupil who had just answered could
+  come straight back up. In a mainstream room that reads as keeping people on
+  their toes; in an SEMH alternative provision it reads as being singled out,
+  and the escalation costs the rest of the lesson. Weight here **is** "draws
+  since you were last called", which is exactly 0 for the pupil who just
+  answered — they cannot be drawn next, not merely rarely — and the same
+  counter does the decay-recovery that keeps the room balanced. No floor to
+  tune, no dice roll to lose. The pedagogy is documented at the top of
+  `tools/liveteach/picker_source.js`.
+- **Q2, as answered.** A picked name shows on the teacher's screen only. The
+  ONE sanctioned way a name crosses the bus is the explicit "Show on
+  projector" press, and that message carries the name and nothing else — no
+  list, no history, no odds. The projector also carries its own picker for
+  single-window teaching (D1: every teaching action reachable there). Rosters
+  do not travel between windows, so in a two-window setup that panel simply
+  stays empty; its copy says plainly that the class can see this screen rather
+  than implying a privacy it cannot offer.
+- **Gates (`picker_gate.mjs`, 10,000 draws):** zero immediate repeats; every
+  pupil within **3.04%** of an even share (min 808, max 858, even 833); zero
+  repeats with a quarter of turns passed, so passing is a scaffold rather than
+  an exit; the guarantee holding in rooms of 2, 3, 4 and 6; with one pupil
+  present it degrades **openly**, flagging every draw it could not cover
+  rather than pretending; attendance removing and restoring a pupil mid-lesson;
+  displayed odds summing to exactly 1 with the absent pupil listed at zero.
+  **Negative controls:** the fragment's own min-weight floor is rebuilt and
+  shown to produce back-to-back calls that this gate counts; a deliberately
+  biased draw blows the balance tolerance, so a passing balance means
+  something; an absent pupil is never drawn in 500 attempts.
+- **Gates (`lt-pick.test.js`, 36 checks):** a third page taps the bus and
+  records every message, then every roster name is searched for across the lot
+  after 13 draws — with a check that the tap heard live traffic, so the
+  no-names result cannot be vacuous. Also: no storage key, no name in storage,
+  no name in the address, the textarea emptied on load; a name containing
+  markup renders literally with no element created from it (P3); attendance
+  stated in text and honoured over 40 further draws (P4); the cooldown visible
+  at 0% and labelled "just asked" (P2); a reload forgetting the list with
+  nothing left behind to restore it from (D2); N/M in both views, registered
+  once each; the projector's own picker, the Escape ladder and the blackout
+  stand-down; and a projected name suppressed under print media, because
+  printing makes a file and the non-negotiables put names out of exported
+  files. The roster fields opt out of autofill and spellcheck for the same
+  reason.
+- **Engine ships as one stamped source** (`picker_source.js` → both views via
+  `stamp_picker.mjs`), so the 10k simulation exercises the exact bytes that run
+  in the classroom. The stamper's self-test perturbs the P2 weight into a
+  min-weight floor and demands the drift gate notice. Harness now **23 steps**.
+- **Decisions applied:** D2 (session-only roster — the ruling this phase turns
+  on), D1 (a picker on the projector too, since rosters do not travel), D4, D5.
