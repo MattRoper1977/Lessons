@@ -689,3 +689,5 @@ census on close rather than trusting the pass that wrote it.
 Not fixed — safeguarding changes are not self-merged, the same rule that held
 C1 for a year. Recorded name-free in `LIVETEACH_RESIDUE.md` and the contact
 sheet as C4.
+
+*Annotation 2026-08-26 — C4 was closed as a false positive on this date. The block above is retained unaltered as the record of what was believed when it was written.*

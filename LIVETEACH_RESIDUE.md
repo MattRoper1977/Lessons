@@ -29,6 +29,8 @@ looked past the filename at the body text. The other eight `Consent_*` files
 are clean; the pattern appears nowhere else in the estate. It is one line,
 duplicated across the two files.
 
+**Record status: CLOSED 2026-08-26 — false positive.** The names in that note are invented worked exemplars (declared fiction), not learner data. Ruling: Matt, 2026-08-26.
+
 Left unfixed deliberately: this is a safeguarding change, and your rule is that
 safeguarding changes are not self-merged — the same rule that held C1 for a
 year. It needs the same one word. The fix is the neutralisation LT1 already
