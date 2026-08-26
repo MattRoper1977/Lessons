@@ -58,6 +58,7 @@ run_step "lt-clicker browser suite"           node tools/liveteach/lt-clicker.te
 run_step "lt-tele browser suite"              node tools/liveteach/lt-tele.test.js
 run_step "lt-share browser suite"             node tools/liveteach/lt-share.test.js
 run_step "lt-pick browser suite"              node tools/liveteach/lt-pick.test.js
+run_step "lt-extras browser suite"            node tools/liveteach/lt-extras.test.js
 
 if [ $failed -ne 0 ]; then echo "LIVETEACH SUITES FAILED"; exit 1; fi
 echo "LIVETEACH SUITES PASSED"

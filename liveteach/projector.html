@@ -81,7 +81,7 @@ body.highlumen #hintInput { background: #fff; border-color: #8a7f5e; }
    exported files without exception — a name is allowed on the wall, not in a
    PDF sitting in someone's downloads. The cold-call surfaces (and the share
    panel, which would print a QR of a stale address) are print-suppressed. */
-@media print { #strip, #status, #fsBtn, #pickOverlay, #pickPanel, #shareOverlay { display: none !important; } }
+@media print { #strip, #status, #fsBtn, #pickOverlay, #pickPanel, #shareOverlay, #bell, #bellBanner { display: none !important; } }
 
 /* The canonical splash ships its skip button a whisker under the estate's
    44px floor; this override lives OUTSIDE the pinned region so the canonical
@@ -263,6 +263,57 @@ body.highlumen #pickRows button.att { background: #fffdf6; border-color: #8a7f5e
 body.highlumen #pickRows .bar { background: #ded7c4; }
 #pickRows .bar i { display: block; height: 100%; background: #f2a24a; }
 
+/* RAG tally (X1). COUNTS ONLY — the histogram never carries a name, and
+   there is nothing in it that identifies who voted which way. Each bar is
+   labelled in text with its colour word and its number, so the reading does
+   not depend on seeing the colour. */
+#ragPanel {
+  position: fixed; right: 12px; bottom: 90px; z-index: 47;
+  background: rgba(8, 11, 24, .92); border: 2px solid #2c3763; border-radius: 14px;
+  padding: 14px 18px; visibility: hidden; min-width: 210px;
+}
+#ragPanel.show { visibility: visible; }
+body.highlumen #ragPanel { background: rgba(255,255,255,.96); border-color: #c9c2ae; }
+#ragPanel h3 { margin: 0 0 8px; font-size: 2vmin; letter-spacing: .12em; text-transform: uppercase; opacity: .8; }
+#ragPanel .rrow { display: flex; align-items: center; gap: 8px; margin: 6px 0; font-size: 2.2vmin; }
+#ragPanel .rrow .word { min-width: 6ch; font-weight: 700; }
+#ragPanel .rrow .track { flex: 1; height: 14px; border-radius: 999px; background: #1b243f; overflow: hidden; }
+body.highlumen #ragPanel .rrow .track { background: #ded7c4; }
+#ragPanel .rrow .track i { display: block; height: 100%; }
+#ragPanel .rrow .n { font-variant-numeric: tabular-nums; font-weight: 800; min-width: 3ch; text-align: right; }
+/* Shapes as well as hues: the three bars differ by pattern for anyone who
+   cannot separate red from green. */
+#ragPanel .rrow.r .track i { background: #e2725b; }
+#ragPanel .rrow.a .track i { background: #f2a24a; }
+#ragPanel .rrow.g .track i { background: #7fc99a; }
+body.highlumen #ragPanel .rrow.r .track i { background: #a8321c; }
+body.highlumen #ragPanel .rrow.a .track i { background: #8a5413; }
+body.highlumen #ragPanel .rrow.g .track i { background: #1e6e46; }
+#ragPanel .glyph { font-weight: 800; }
+#ragPanel .total { font-size: 1.8vmin; opacity: .8; margin-top: 8px; }
+
+/* Silent bell (X2). A slow amber breath, never a strobe — and under reduced
+   motion or Calm it becomes a STATIC banner instead, which is the house
+   rule's named requirement rather than a nicety. */
+#bell {
+  position: fixed; inset: 0; z-index: 44; pointer-events: none;
+  background: radial-gradient(ellipse at 50% 50%, rgba(242,162,74,.30), rgba(242,162,74,0) 70%);
+  opacity: 0; visibility: hidden;
+}
+#bell.show { visibility: visible; animation: bellBreath 2.4s ease-in-out 3; }
+@keyframes bellBreath { 0%,100% { opacity: 0; } 50% { opacity: 1; } }
+#bellBanner {
+  position: fixed; left: 50%; top: 8px; transform: translateX(-50%); z-index: 45;
+  background: #f2a24a; color: #131313; font-weight: 800; font-size: 2.6vmin;
+  border-radius: 999px; padding: 10px 26px; visibility: hidden;
+}
+#bellBanner.show { visibility: visible; }
+/* The reduced-motion path: no breath at all, the banner alone, held. */
+body.reduce #bell.show { animation: none; opacity: .55; }
+@media (prefers-reduced-motion: reduce) {
+  #bell.show { animation: none; opacity: .55; }
+}
+
 /* The tag chip mirrors ?tag= back at the room — which link is this? It is
    free text off the wire, so it is only ever filled via textContent. */
 #tagChip {
@@ -333,11 +384,24 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
 <div id="tagChip"></div>
 <div id="toast" role="status" aria-live="polite"></div>
 
+<div id="bell" aria-hidden="true"></div>
+<div id="bellBanner">🔔 Eyes this way, please</div>
+
+<section id="ragPanel" aria-label="How the class is doing">
+  <h3>How are we doing?</h3>
+  <div class="rrow r"><span class="glyph" aria-hidden="true">■</span><span class="word">Stuck</span><span class="track"><i></i></span><span class="n">0</span></div>
+  <div class="rrow a"><span class="glyph" aria-hidden="true">▲</span><span class="word">Nearly</span><span class="track"><i></i></span><span class="n">0</span></div>
+  <div class="rrow g"><span class="glyph" aria-hidden="true">●</span><span class="word">Got it</span><span class="track"><i></i></span><span class="n">0</span></div>
+  <div class="total"></div>
+</section>
+
 <section id="pickOverlay" aria-label="Cold call">
   <div class="tag">🎲 Cold call</div>
   <div class="who"></div>
 </section>
 <div id="pickSaid" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap"></div>
+<div id="ragSaid" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap"></div>
+<div id="bellSaid" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap"></div>
 
 <div id="pickPanel" role="dialog" aria-labelledby="pickTitle" aria-describedby="pickSub">
   <div id="pickCard">
@@ -447,6 +511,14 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
     <button id="fsBtn">⛶ Fullscreen</button>
     <button id="btnShare">🔗 Share</button>
     <button id="btnPick">🎲 Cold call</button>
+  </div>
+  <div class="grp" aria-label="Classroom extras">
+    <span class="lbl">Class</span>
+    <button id="btnRag" aria-pressed="false">📊 Tally</button>
+    <button id="btnRagReset">↺ Reset tally</button>
+    <button id="btnBell">🔔 Bell</button>
+    <button id="btnSpark">📈 Copy graph</button>
+    <button id="btnAudio" aria-pressed="false">🔇 Sound off</button>
   </div>
 </nav>
 
@@ -1144,7 +1216,13 @@ LT.boot();
        while that name is already displayed to the room — put there by the
        teacher's explicit press (the Q2 opt-in). It is never persisted and
        never serialized into the address. */
-    pick: ''
+    pick: '',
+    /* LT8 extras. rag holds COUNTS ONLY — anonymous by construction, so
+       there is nothing here that could identify a pupil. audio is off at
+       every load and is deliberately not persisted. */
+    rag: { r: 0, a: 0, g: 0 },
+    ragShow: false,
+    audio: false
   };
   function broadcast() {
     state.aspect = innerWidth / Math.max(1, innerHeight);
@@ -1523,6 +1601,9 @@ LT.boot();
         timerBox.classList.add('done');
         timerClock.textContent = '0:00';
         timerSaid.textContent = 'Timer finished';
+        /* One short tone and one sentence — never a repeating alarm. */
+        earcon(520);
+        say('Time is up');
         state.timer = null;
       }
       broadcast();
@@ -1934,6 +2015,11 @@ LT.boot();
        and is clamped and rendered with textContent like any external text. */
     else if (type === 'PICK_SHOW') { armLink(); showPickName(typeof payload.name === 'string' ? payload.name : ''); }
     else if (type === 'PICK_CLEAR') { armLink(); showPickName(''); }
+    else if (type === 'RAG_BUMP') { armLink(); ragBump(String(payload.level || '')); }
+    else if (type === 'RAG_RESET') { armLink(); ragReset(); }
+    else if (type === 'RAG_SHOW') { armLink(); ragShow(!!payload.on); }
+    else if (type === 'BELL') { armLink(); ringBell(); }
+    else if (type === 'AUDIO_SET') { armLink(); setAudio(!!payload.on); }
   });
   broadcast();
 
@@ -1965,6 +2051,19 @@ LT.boot();
     },
     share: function () {
       return { open: shareOverlayEl.classList.contains('show'), url: shareURL(), tag: shareTag };
+    },
+    extras: function () {
+      return {
+        rag: { r: state.rag.r, a: state.rag.a, g: state.rag.g },
+        ragShow: state.ragShow,
+        ragVisible: getComputedStyle(ragPanel).visibility === 'visible',
+        series: ragSeries.length,
+        audio: state.audio,
+        bellOn: bellEl.classList.contains('show'),
+        bannerOn: getComputedStyle(bellBanner).visibility === 'visible',
+        bellAnim: getComputedStyle(bellEl).animationName,
+        svg: ragSeries.length ? sparkSVG() : null
+      };
     },
     pick: function () {
       return {
@@ -2162,6 +2261,11 @@ LT.boot();
     state.pick = n;                 // travels in PROJECTOR_STATE: it is already on the wall
     pickWho.textContent = n;
     pickOverlay.classList.toggle('show', !!n);
+    /* X3: speaking the name is the point of TTS in a cold call — a pupil who
+       is not looking up still hears they have been asked. Silent unless the
+       teacher has turned sound on for this session. (say() is a hoisted
+       declaration from the extras block below.) */
+    if (n) say(n);
     pickSaid.textContent = n ? 'Cold call: ' + n : 'Cold call name cleared';
     broadcast();
   }
@@ -2251,6 +2355,191 @@ LT.boot();
   });
   LT.registerKey('KeyN', function () { if (pick) pickDraw(false); }, 'Cold call: pick next');
   LT.registerKey('KeyM', function () { if (pick) pickDraw(true); }, 'Cold call: pass / bounce');
+
+  /* ---------- classroom extras (LT8: X1–X4) ------------------------------
+     X1 RAG tally. COUNTS ONLY, and that is the whole safeguarding story: the
+     panel records how many hands went up for each answer and nothing about
+     whose. It is anonymous by construction, not by policy, so there is no
+     name to leak and no way to reconstruct one. Counts live for the lesson —
+     memory only, cleared by the reset button or by closing the tab. */
+  var ragPanel = document.getElementById('ragPanel');
+  var RAG_KEYS = ['r', 'a', 'g'];
+  var RAG_WORDS = { r: 'Stuck', a: 'Nearly there', g: 'Got it' };
+  /* X4's data array: one entry per vote, in order, so the sparkline is a
+     record of the lesson rather than a snapshot. Counts, never names. */
+  var ragSeries = [];
+  function ragRender() {
+    var total = state.rag.r + state.rag.a + state.rag.g;
+    RAG_KEYS.forEach(function (k) {
+      var row = ragPanel.querySelector('.rrow.' + k);
+      var n = state.rag[k];
+      row.querySelector('.n').textContent = String(n);
+      row.querySelector('.track i').style.width = (total ? Math.round(n / total * 100) : 0) + '%';
+    });
+    ragPanel.querySelector('.total').textContent = total === 1 ? '1 response' : total + ' responses';
+    ragPanel.classList.toggle('show', !!state.ragShow);
+    document.getElementById('btnRag').setAttribute('aria-pressed', String(!!state.ragShow));
+  }
+  function ragBump(k) {
+    if (RAG_KEYS.indexOf(k) === -1) return;
+    state.rag[k]++;
+    ragSeries.push(k);
+    if (ragSeries.length > 500) ragSeries.shift();
+    /* The tally shows itself on the first vote: a counter nobody can see is
+       a counter nobody trusts. */
+    if (!state.ragShow) state.ragShow = true;
+    ragRender();
+    earcon(k === 'r' ? 320 : k === 'a' ? 440 : 590);
+    document.getElementById('ragSaid').textContent = RAG_WORDS[k] + ': ' + state.rag[k];
+    broadcast();
+  }
+  function ragReset() {
+    state.rag = { r: 0, a: 0, g: 0 };
+    ragSeries.length = 0;
+    ragRender();
+    document.getElementById('ragSaid').textContent = 'Tally reset';
+    broadcast();
+  }
+  function ragShow(on) {
+    state.ragShow = !!on;
+    ragRender();
+    broadcast();
+  }
+  document.getElementById('btnRag').addEventListener('click', function () { ragShow(!state.ragShow); });
+  document.getElementById('btnRagReset').addEventListener('click', ragReset);
+  LT.registerKey('Digit7', function () { ragBump('r'); }, 'Tally: stuck');
+  LT.registerKey('Digit8', function () { ragBump('a'); }, 'Tally: nearly there');
+  LT.registerKey('Digit9', function () { ragBump('g'); }, 'Tally: got it');
+
+  /* X2 silent bell — a slow amber breath to draw eyes without a noise, and
+     under reduced motion or Calm no movement at all: the banner alone, held
+     for the same span. The house rule names this exact substitution. Button
+     only; the spec retired the B binding to blackout and nothing else. */
+  var bellEl = document.getElementById('bell');
+  var bellBanner = document.getElementById('bellBanner');
+  var bellT = null;
+  function ringBell() {
+    clearTimeout(bellT);
+    bellEl.classList.remove('show');
+    void bellEl.offsetWidth;              // restart the breath on a repeat press
+    bellEl.classList.add('show');
+    bellBanner.classList.add('show');
+    document.getElementById('bellSaid').textContent = 'Eyes this way, please';
+    earcon(660);
+    bellT = setTimeout(function () {
+      bellEl.classList.remove('show');
+      bellBanner.classList.remove('show');
+    }, 7200);
+  }
+  document.getElementById('btnBell').addEventListener('click', ringBell);
+
+  /* X3 audio — OFF at every load, with no stored preference to inherit. In
+     an SEMH room an unexpected sound is a sensory trigger, and a toggle that
+     remembers "on" from last lesson is exactly the surprise the rule exists
+     to prevent. Earcons are short (<=300 ms), quiet, and never repeat. */
+  var audioCtx = null;
+  function earcon(freq) {
+    if (!state.audio) return;
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      var o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.type = 'sine';
+      o.frequency.value = freq;
+      /* A short shaped envelope: no click at the edges, no tail that could
+         read as an alarm. */
+      var t0 = audioCtx.currentTime;
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.exponentialRampToValueAtTime(0.06, t0 + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.24);
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start(t0); o.stop(t0 + 0.26);
+    } catch (e) { /* audio is an enhancement; never let it break a lesson */ }
+  }
+  function say(text) {
+    if (!state.audio || !window.speechSynthesis) return;
+    try {
+      var u = new SpeechSynthesisUtterance(String(text));
+      u.rate = 1; u.pitch = 1; u.volume = 0.7;
+      window.speechSynthesis.cancel();     // never stack, never loop
+      window.speechSynthesis.speak(u);
+    } catch (e) {}
+  }
+  function setAudio(on) {
+    state.audio = !!on;
+    var b = document.getElementById('btnAudio');
+    b.setAttribute('aria-pressed', String(state.audio));
+    b.textContent = state.audio ? '🔊 Sound on' : '🔇 Sound off';
+    if (!state.audio && window.speechSynthesis) { try { window.speechSynthesis.cancel(); } catch (e) {} }
+    document.getElementById('bellSaid').textContent = state.audio ? 'Sound on' : 'Sound off';
+    broadcast();
+  }
+  document.getElementById('btnAudio').addEventListener('click', function () { setAudio(!state.audio); });
+
+  /* X4 sparkline — a clean standalone SVG of how the room's confidence moved
+     through the lesson, built from the counts array. Clipboard first;
+     school machines block clipboard writes often enough that the download
+     fallback is the real path, not a courtesy. */
+  function sparkSVG() {
+    var W = 480, H = 120, PAD = 8;
+    var running = { r: 0, a: 0, g: 0 };
+    var pts = { r: [], a: [], g: [] };
+    /* Each vote advances its own running total; the lines are cumulative, so
+       a flat green line and a climbing red one tell the story at a glance. */
+    ragSeries.forEach(function (k, i) {
+      running[k]++;
+      RAG_KEYS.forEach(function (kk) { pts[kk].push([i + 1, running[kk]]); });
+    });
+    var n = Math.max(1, ragSeries.length);
+    var top = Math.max(1, state.rag.r, state.rag.a, state.rag.g);
+    var COL = { r: '#a8321c', a: '#8a5413', g: '#1e6e46' };
+    var body = '';
+    RAG_KEYS.forEach(function (k) {
+      if (!pts[k].length) return;
+      var d = pts[k].map(function (p, i) {
+        var x = PAD + (p[0] / n) * (W - PAD * 2);
+        var y = H - PAD - (p[1] / top) * (H - PAD * 2);
+        return (i ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1);
+      }).join(' ');
+      body += '<path d="' + d + '" fill="none" stroke="' + COL[k] + '" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';
+    });
+    /* Labelled in text inside the SVG: pasted into a report it must still be
+       readable without the legend that lived on the page. */
+    var legend = '<text x="' + PAD + '" y="14" font-family="system-ui,sans-serif" font-size="11" fill="#a8321c">Stuck ' + state.rag.r + '</text>' +
+      '<text x="' + (PAD + 80) + '" y="14" font-family="system-ui,sans-serif" font-size="11" fill="#8a5413">Nearly ' + state.rag.a + '</text>' +
+      '<text x="' + (PAD + 168) + '" y="14" font-family="system-ui,sans-serif" font-size="11" fill="#1e6e46">Got it ' + state.rag.g + '</text>';
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" role="img" ' +
+      'aria-label="Class confidence through the lesson: stuck ' + state.rag.r + ', nearly ' + state.rag.a + ', got it ' + state.rag.g + '">' +
+      '<rect width="' + W + '" height="' + H + '" fill="#ffffff"/>' + legend + body + '</svg>';
+  }
+  document.getElementById('btnSpark').addEventListener('click', function () {
+    if (!ragSeries.length) { toast('Nothing to graph yet — press 7, 8 or 9 to record how the class is doing.'); return; }
+    var svg = sparkSVG();
+    var fallback = function () {
+      /* The honest fallback: a real file the teacher can keep, and a message
+         that says what happened rather than claiming a copy that never
+         landed. */
+      try {
+        var blob = new Blob([svg], { type: 'image/svg+xml' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'class-confidence.svg';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+        toast('Copying is blocked here, so the graph downloaded as class-confidence.svg instead.');
+      } catch (e) {
+        toast('This browser blocked both copying and downloading the graph.');
+      }
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(svg).then(function () {
+        toast('Graph copied as an image you can paste into a document.');
+      }, fallback);
+    } else fallback();
+  });
+
+  ragRender();
 
   /* The manifest id is parsed BEFORE the first URL write below — a sync that
      ran ahead of it would strip ?lesson= from the very address the loader is
