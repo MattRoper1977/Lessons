@@ -154,4 +154,27 @@ order and marked as applied where a phase leans on them.
     originally sent `STAGE_SET` from the projector's own page — a
     BroadcastChannel never hears its own messages, so the test proved
     nothing; it now travels the real HUD→projector path.
+- **Adversarial review round (four lenses, 26 confirmed findings, all fixed):**
+  the sharpest were about honesty and about gates that could not fail. (1) The
+  "one wavelength" label was pinned to viewport-relative coordinates while the
+  wavelength renders in fixed pixels — at 1280 px it captioned 2.88
+  wavelengths as one; physical lengths are now shown ONLY by an engine-drawn
+  bracket in wave space (`showBracket`), and viewport labels may not claim
+  lengths. (2) The 50 ms dt clamp silently slowed "real hertz" under load —
+  the wave now takes raw dt. (3) The G6 test was a tautology (it set
+  textContent itself); it now serves a HOSTILE manifest through the suite's
+  own server and was proven to red against an innerHTML-regressed engine
+  before landing. (4) The units gate matched numbers by substring ("12 m/s"
+  passed for 2) and never read pupil-visible copy — now digit-boundary
+  matching plus a U-VISIBLE scan of copy and labels against params, with new
+  red vectors. (5) The wavelength check was arithmetic on the seam — now
+  MEASURED from canvas pixels (crest spacing 200 px ±10, scale bar = px_per_m
+  ±6). Also fixed: scale bar drawn after the veil and clear of the strip;
+  taps repaint under Calm/pause; STAGE_SET validates integers; broken-vs-
+  missing manifests get different honest errors, Escape dismisses them, and
+  the box never intercepts taps; stage changes announce politely off-screen;
+  disabled buttons look disabled; the chip moved clear of the banner title;
+  manifests themselves are now gated as pure data (G-DATA) and swept by the
+  static gates recursively; warm-up copy rewritten to match what the field
+  sim actually does. Stage suite now 30 checks.
 - **Decisions applied:** D4, D5.

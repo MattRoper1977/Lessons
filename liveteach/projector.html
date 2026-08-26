@@ -100,11 +100,12 @@ body.highlumen #stageBanner { background: rgba(255,255,255,.95); border-bottom-c
 #stageLabels .lbl {
   position: absolute; transform: translate(-50%, -50%);
   background: rgba(8, 11, 24, .88); border: 2px solid #b9e6cd; color: #e8e2d4;
-  border-radius: 10px; padding: 6px 12px; font-size: 2.3vmin; font-weight: 700; white-space: nowrap;
+  border-radius: 10px; padding: 6px 12px; font-size: 2.3vmin; font-weight: 700;
+  max-width: min(40ch, 88vw);
 }
 body.highlumen #stageLabels .lbl { background: rgba(255,255,255,.94); border-color: #1e6e46; color: #1c2337; }
 #playChip {
-  position: fixed; top: 12px; left: 12px; z-index: 55;
+  position: fixed; top: 44px; right: 12px; z-index: 55;
   background: #f2a24a; color: #131313; font-weight: 800;
   border-radius: 999px; padding: 8px 14px; visibility: hidden;
 }
@@ -113,9 +114,11 @@ body.highlumen #stageLabels .lbl { background: rgba(255,255,255,.94); border-col
   position: fixed; top: 30%; left: 50%; transform: translateX(-50%); z-index: 70;
   background: #5b1f24; color: #ffdfe2; border: 2px solid #ff9aa2;
   border-radius: 12px; padding: 16px 22px; visibility: hidden; max-width: 80vw; text-align: center;
+  pointer-events: none; /* informs, never intercepts a lesson's taps */
 }
 #manifestError.show { visibility: visible; }
 #stageReadout { font-size: 13px; opacity: .85; min-width: 52px; text-align: center; }
+#strip button:disabled { opacity: .4; cursor: default; }
 
 /* Reduced motion, both halves of the house rule. The blanket form (no
    enumerated class list to rot): every part stays visible, every label on —
@@ -150,6 +153,7 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
      under visibility:hidden is out of the accessibility tree, so announcements
      from inside it never fire) and hides by clipping, never visibility. -->
 <div id="timerSaid" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap"></div>
+<div id="stageSaid" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap"></div>
 
 <section id="hintOverlay" class="overlay" aria-label="Hint">
   <div class="tag">💡 Hint</div>
@@ -390,7 +394,12 @@ LT.boot();
     parts.push(p);
   }
   function pulse(x, y) { for (var i = 0; i < 12; i++) spawn(x, y); }
-  canvas.addEventListener('pointerdown', function (e) { pulse(e.clientX, e.clientY); });
+  canvas.addEventListener('pointerdown', function (e) {
+    pulse(e.clientX, e.clientY);
+    /* Under Calm/reduced motion or pause the loop skips draw(), so a tap
+       would otherwise be invisible — one repaint is content, not motion. */
+    if (LT.reduced() || !state.running) draw();
+  });
 
   function seed() {
     parts.length = 0;
@@ -404,8 +413,12 @@ LT.boot();
   draw();
 
   function update(dt) {
-    var k = dt * state.speed;          // S4: the one and only speed application
-    if (state.mode === 'wave') { wave.t += k; return; }
+    /* S4: the one and only speed application. The wave takes dt UNCLAMPED
+       (capped at 1 s only against tab-restore phase jumps) — clamping it to
+       50 ms silently slowed the clock under load and made "f is real hertz"
+       untrue. The decorative field keeps the 50 ms integration clamp. */
+    if (state.mode === 'wave') { wave.t += Math.min(1, dt) * state.speed; return; }
+    var k = Math.min(.05, dt) * state.speed;
     for (var i = 0; i < parts.length; i++) {
       var p = parts[i];
       p.x += p.vx * k; p.y += p.vy * k; p.age += k;
@@ -420,6 +433,9 @@ LT.boot();
     if (state.mode === 'wave') drawWave();
     else drawField();
     drawSpotlight(); // G1: dimming happens OVER the sim, never through it
+    /* The units apparatus (scale bar, caption, wavelength bracket) paints
+       AFTER the veil: the measurement a pupil reads must never be dimmed. */
+    if (state.mode === 'wave') drawScale();
   }
   function drawField() {
     var lumen = LT.highlumen();
@@ -492,8 +508,17 @@ LT.boot();
       var my = midY - Apx * Math.sin(2 * Math.PI * (mx / Lpx - wave.f * wave.t));
       ctx.beginPath(); ctx.arc(mx, my, 6, 0, Math.PI * 2); ctx.fill();
     }
+  }
+  function drawScale() {
+    /* Painted after the spotlight veil, clear of the control strip, so the
+       measurement apparatus is never dimmed and never covered. */
+    var lumen = LT.highlumen();
+    var stroke = lumen ? '#1c2337' : '#e8e2d4';
+    var midY = innerHeight * 0.55;
+    var Apx = wave.A * PX_PER_M;
+    var Lpx = wave.lambda * PX_PER_M;
     // the honest scale bar: PX_PER_M pixels IS one metre on this screen
-    var bx = 24, by = innerHeight - 84;
+    var bx = 24, by = innerHeight - 150;
     ctx.strokeStyle = stroke; ctx.lineWidth = 3;
     ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx + PX_PER_M, by); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(bx, by - 8); ctx.lineTo(bx, by + 8); ctx.stroke();
@@ -501,6 +526,26 @@ LT.boot();
     ctx.fillStyle = stroke; ctx.font = '600 16px system-ui, sans-serif';
     ctx.fillText('1 m', bx + PX_PER_M / 2 - 12, by - 14);
     ctx.fillText('f = ' + wave.f + ' Hz · λ = ' + wave.lambda + ' m', bx, by + 30);
+    /* The wavelength bracket lives in WAVE space — two ticks exactly Lpx
+       apart, anchored to a real crest — so the labelled span IS one
+       wavelength at every viewport. (A viewport-relative DOM label claiming a
+       physical length was the review's blocking find: at 1280 px wide it
+       captioned 2.88 wavelengths as "one".) */
+    if (curStage && curStage.showBracket) {
+      var frac = (0.25 + wave.f * wave.t) % 1;
+      if (frac < 0) frac += 1;
+      var xc = frac * Lpx;
+      while (xc < 40) xc += Lpx;
+      if (xc + Lpx < innerWidth - 20) {
+        var byr = midY - Apx - 26;
+        ctx.strokeStyle = stroke; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.moveTo(xc, byr); ctx.lineTo(xc + Lpx, byr); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(xc, byr - 8); ctx.lineTo(xc, byr + 8); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(xc + Lpx, byr - 8); ctx.lineTo(xc + Lpx, byr + 8); ctx.stroke();
+        ctx.fillStyle = stroke;
+        ctx.fillText('λ = ' + wave.lambda + ' m', xc + Lpx / 2 - 30, byr - 12);
+      }
+    }
   }
   function drawSpotlight() {
     var sp = curStage && curStage.spotlight;
@@ -569,23 +614,46 @@ LT.boot();
       d.style.top = (l.y * 100) + '%';
       labelsBox.appendChild(d);
     });
+    /* Concise stage announcement for keyboard/screen-reader users — the
+       banner itself stays aria-live=off so multi-sentence copy is not
+       re-read; this one line is. */
+    document.getElementById('stageSaid').textContent = 'Stage ' + (state.stage + 1) + ' of ' + state.stageCount + ': ' + curStage.title;
     updateChip();
     syncStageButtons();
     draw();
     broadcast();
   }
+  function validManifest(m) {
+    if (!m || !Array.isArray(m.stages) || !m.stages.length) return false;
+    return m.stages.every(function (s) {
+      if (!s || typeof s !== 'object') return false;
+      if (s.mode === 'wave') {
+        if (!s.params) return false;
+        return ['f', 'lambda', 'A'].every(function (k) {
+          var v = s.params[k];
+          return typeof v === 'number' && isFinite(v) && v > 0;
+        });
+      }
+      return true;
+    });
+  }
   function initStages(m) {
-    if (!m || !Array.isArray(m.stages) || !m.stages.length) { showManifestError('(empty manifest)'); return; }
+    if (!validManifest(m)) { showManifestError(lessonId, 'broken'); return; }
+    m.stages.forEach(function (s) { if (typeof s.title !== 'string') s.title = ''; });
     manifest = m;
     PX_PER_M = (m.units && m.units.px_per_m) || 100;
     state.stageCount = m.stages.length;
     applyStage(0);
   }
-  function showManifestError(which) {
+  function showManifestError(which, kind) {
     /* A failed load is a VISIBLE error, never a silent catch — the estate's
-       swallowed-init lesson, generalised. The projector still teaches
-       (field mode, timers, hint, poll); only the stages are absent. */
-    errBox.textContent = 'Lesson "' + which + '" could not be loaded — check the ?lesson= name in the address bar. Timers, hint and poll still work; stages are off.';
+       swallowed-init lesson, generalised. Two honest messages: a file that
+       never arrived points at the address bar; a file that arrived broken
+       points at the manifest itself. The projector still teaches (field
+       mode, timers, hint, poll); only the stages are absent. */
+    errBox.textContent = kind === 'broken'
+      ? 'The lesson file manifests/' + which + '.js loaded but is empty or broken — fix the manifest. Timers, hint and poll still work; stages are off.'
+      : 'Lesson "' + which + '" could not be loaded — check the ?lesson= name in the address bar. Timers, hint and poll still work; stages are off.';
     errBox.classList.add('show');
     syncStageButtons();
     broadcast();
@@ -600,7 +668,7 @@ LT.boot();
   var frames = 0;
   var last = performance.now();
   function loop(now) {
-    var dt = Math.min(.05, (now - last) / 1000);
+    var dt = (now - last) / 1000;   // raw; update() clamps per mode
     last = now;
     if (state.running && !LT.reduced()) {
       update(dt);
@@ -739,9 +807,10 @@ LT.boot();
   LT.registerKey('KeyH', function () { setHint(!state.hint.on); }, 'Hint toggle');
   LT.registerKey('KeyP', function () { setPoll(!state.poll.on); }, 'Poll toggle');
   function escTopmost() {
-    /* topmost first: poll, then hint, then timer; blackout joins in LT4.
-       Reached from this view's Escape AND from the HUD via ESC_TOPMOST, so
-       both windows honour the same "close whatever is on top" promise. */
+    /* topmost first: the manifest error, then poll, hint, timer; blackout
+       joins in LT4. Reached from this view's Escape AND from the HUD via
+       ESC_TOPMOST, so both windows honour the same promise. */
+    if (errBox.classList.contains('show')) return errBox.classList.remove('show');
     if (state.poll.on) return setPoll(false);
     if (state.hint.on) return setHint(false);
     if (state.timer || timerBox.classList.contains('show')) return clearTimer();
@@ -776,7 +845,13 @@ LT.boot();
     else if (type === 'ESC_TOPMOST') { armLink(); escTopmost(); }
     else if (type === 'STAGE_NEXT') { armLink(); applyStage(state.stage + 1); }
     else if (type === 'STAGE_PREV') { armLink(); applyStage(state.stage - 1); }
-    else if (type === 'STAGE_SET') { armLink(); applyStage(Number(payload.index) || 0); }
+    else if (type === 'STAGE_SET') {
+      armLink();
+      /* Validate, never coerce: a fractional index would reach stages[] as
+         undefined; a malformed one must not teleport the lesson to stage 1. */
+      var idx = Number(payload.index);
+      if (Number.isInteger(idx)) applyStage(idx);
+    }
   });
   broadcast();
 

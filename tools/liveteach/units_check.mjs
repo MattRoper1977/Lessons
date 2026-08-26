@@ -53,8 +53,31 @@ export function judge(m) {
       catch (e) { fails.push('U-CLAIM: ' + at + ' expr unreadable: ' + e.message); continue; }
       if (Math.abs(got - c.value) > 1e-9)
         fails.push('U-CLAIM: ' + at + ' says ' + c.value + ' ' + c.unit + ' but ' + c.expr + ' = ' + got);
-      if (!(c.text.includes(String(c.value)) && c.text.includes(c.unit)))
-        fails.push('U-CLAIM: ' + at + ' text does not print its own value and unit ("' + c.text + '")');
+      /* The printed number must be THE number attached to the unit, with
+         digit boundaries — a substring probe passed "12 m/s" for value 2
+         (the review's live false-pass). */
+      const esc = x => String(x).replace(/[.*+?^${}()|[\]\\/]/g, '\\$&');
+      const bound = new RegExp('(^|[^\\d.])' + esc(c.value) + '\\s*' + esc(c.unit) + '($|[^\\w])');
+      if (!bound.test(c.text))
+        fails.push('U-CLAIM: ' + at + ' text does not print exactly ' + c.value + ' ' + c.unit + ' ("' + c.text + '")');
+    }
+    /* Pupils never read claims[].text — they read copy and labels. Every
+       quantitative statement THERE must match the stage params too. */
+    if (s.mode === 'wave' && s.params) {
+      const visible = [s.copy || ''].concat((s.labels || []).map(l => l.text || ''));
+      const rules = [
+        [/f\s*=\s*([\d.]+)\s*Hz/g, s.params.f, 'f'],
+        [/λ\s*=\s*([\d.]+)\s*m(?![\w/])/g, s.params.lambda, 'λ'],
+        [/v\s*=[^=]*?([\d.]+)\s*m\/s/g, s.params.f * s.params.lambda, 'v'],
+      ];
+      for (const text of visible) {
+        for (const [re, want, name] of rules) {
+          for (const m of text.matchAll(re)) {
+            if (Math.abs(Number(m[1]) - want) > 1e-9)
+              fails.push('U-VISIBLE: ' + at + ' pupil-visible text prints ' + name + ' = ' + m[1] + ' but the stage params say ' + want + ' ("' + text.slice(0, 60) + '…")');
+          }
+        }
+      }
     }
     for (const [what, coords] of [['spotlight', s.spotlight ? [s.spotlight.x, s.spotlight.y, s.spotlight.w, s.spotlight.h] : null],
                                   ...((s.labels || []).map((l, j) => ['label ' + j, [l.x, l.y]]))]) {
@@ -62,6 +85,10 @@ export function judge(m) {
       for (const v of coords) {
         if (typeof v !== 'number' || v < 0 || v > 1) fails.push('U-COORD: ' + at + ' ' + what + ' carries a non-normalised coordinate (' + v + ') — 0–1 only, no pixels');
       }
+    }
+    for (const [j, l] of (s.labels || []).entries()) {
+      if (typeof l.y === 'number' && l.y < 0.12)
+        fails.push('U-COORD: ' + at + ' label ' + j + ' sits in the banner band (y=' + l.y + ' < 0.12) and will be covered');
     }
     const prose = ((s.title || '') + ' ' + (s.copy || '')).toLowerCase();
     if (s.mode === 'wave' && /doubl/.test(prose) && /frequen/.test(prose)) {
@@ -83,6 +110,14 @@ if (process.argv[2] === '--self-test') {
     .some(s => s.includes('U-CLAIM')), 'RED: a wrong claim value is reported (says 3, is 2)');
   say(judge({ ...base, stages: [wave({ claims: [{ text: 'v = 2 m/s', expr: 'f*lambda', value: 2, unit: 'm/s' }] })] })
     .length === 0, 'GREEN: a correct claim passes');
+  say(judge({ ...base, stages: [wave({ claims: [{ text: 'Wave speed v = f × λ = 12 m/s', expr: 'f*lambda', value: 2, unit: 'm/s' }] })] })
+    .some(s => s.includes('U-CLAIM')), 'RED: text printing 12 m/s for value 2 is reported (substring trap)');
+  say(judge({ ...base, stages: [wave({ claims: [{ text: 'v = 4 m/s (λ = 2 m)', expr: 'f*lambda', value: 2, unit: 'm/s' }] })] })
+    .some(s => s.includes('U-CLAIM')), 'RED: the value elsewhere in the sentence does not excuse a wrong speed');
+  say(judge({ ...base, stages: [wave({ copy: 'the wavelength λ = 3 m here' })] })
+    .some(s => s.includes('U-VISIBLE')), 'RED: pupil-visible copy contradicting params is reported');
+  say(judge({ ...base, stages: [wave({ labels: [{ x: .5, y: .05, text: 'hello' }] })] })
+    .some(s => s.includes('banner band')), 'RED: a label parked under the banner is reported');
   say(judge({ ...base, stages: [wave({ spotlight: { x: 120, y: .2, w: .1, h: .1 } })] })
     .some(s => s.includes('U-COORD')), 'RED: a pixel coordinate in a manifest is reported');
   say(judge({ ...base, stages: [wave({}), wave({ title: 'Double the frequency', params: { f: 3, lambda: 2, A: 1 } })] })

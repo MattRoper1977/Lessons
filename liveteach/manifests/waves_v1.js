@@ -24,35 +24,35 @@ window.LT_MANIFEST = {
   },
   stages: [
     {
-      title: 'Warm up: energy moves',
+      title: 'Warm up: energy spreads',
       mode: 'field',
-      copy: 'Watch the field drift. Tap the screen: each tap sends a pulse of energy through it. Energy moves; the dots mostly stay where they are.'
+      copy: 'Tap the screen and watch dots fly outward from your finger, carrying energy across the field. In a real wave — next stage — the medium behaves differently: its particles stay near home and only the energy travels.'
     },
     {
       title: 'Meet the wave',
       mode: 'wave',
       params: { f: 1, lambda: 2, A: 0.6 },
-      copy: 'This wave has frequency f = 1 Hz and wavelength λ = 2 m. One full wave shape passes any point once every second.',
+      copy: 'This wave has frequency f = 1 Hz and wavelength λ = 2 m. One full wave shape passes any point once every second. The bracket marks one wavelength against the 1 m scale bar.',
       claims: [
         { text: 'Wave speed v = f × λ = 2 m/s', expr: 'f*lambda', value: 2, unit: 'm/s' }
       ],
-      spotlight: { x: 0.1, y: 0.3, w: 0.45, h: 0.4 },
-      labels: [
-        { x: 0.32, y: 0.24, text: 'one wavelength λ = 2 m' }
-      ]
+      /* The wavelength measurement is drawn by the ENGINE as a bracket in
+         wave space (showBracket) — a viewport-positioned label must never
+         claim a physical length, because its span changes with screen size
+         while the wavelength renders in fixed px_per_m pixels. */
+      showBracket: true,
+      spotlight: { x: 0.1, y: 0.3, w: 0.45, h: 0.4 }
     },
     {
       title: 'Double the frequency',
       mode: 'wave',
       params: { f: 2, lambda: 1, A: 0.6 },
-      copy: 'Frequency doubles to f = 2 Hz. The rope does not change, so the wave speed cannot change — the wavelength halves to λ = 1 m instead.',
+      copy: 'Frequency doubles to f = 2 Hz. The rope does not change, so the wave speed cannot change — the wavelength halves to λ = 1 m instead. Watch the bracket shrink.',
       claims: [
         { text: 'Wave speed v = f × λ = 2 m/s — unchanged', expr: 'f*lambda', value: 2, unit: 'm/s' }
       ],
-      spotlight: { x: 0.1, y: 0.3, w: 0.28, h: 0.4 },
-      labels: [
-        { x: 0.24, y: 0.24, text: 'λ = 1 m now' }
-      ]
+      showBracket: true,
+      spotlight: { x: 0.1, y: 0.3, w: 0.28, h: 0.4 }
     },
     {
       title: 'Bigger wave, same speed',
