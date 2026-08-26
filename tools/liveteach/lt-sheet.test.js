@@ -139,6 +139,43 @@ const SCAN = `(src) => new Promise(res => {
   im.src = src;
 })`;
 
+const COVER = `(src) => new Promise(res => {
+  const im = new Image();
+  im.onload = () => {
+    const c = document.createElement('canvas');
+    c.width = im.width; c.height = im.height;
+    const g = c.getContext('2d');
+    g.drawImage(im, 0, 0);
+    const d = g.getImageData(0, 0, c.width, c.height).data;
+    const notWhite = (x, y) => { const i = (y * c.width + x) * 4; return d[i] < 250; };
+    // the axis: first full-width darkish row
+    const darkish = (x, y) => { const i = (y * c.width + x) * 4; return d[i] < 110; };
+    let axis = -1, floor = c.height;
+    const rows = [];
+    for (let y = 0; y < c.height; y++) {
+      let n = 0;
+      for (let x = 500; x < 900; x += 3) if (darkish(x, y)) n++;
+      if (n > 120) rows.push(y);
+    }
+    if (rows.length) { axis = rows[0]; floor = rows[rows.length - 1]; }
+    // Between the axis band and the floor rule, each column must have ink
+    // somewhere off the axis — the curve sweeps the whole width.
+    let gaps = 0, run = 0, worstRun = 0, firstGap = -1;
+    for (let x = 2; x < c.width - 2; x++) {
+      let ink = false;
+      for (let y = 2; y < floor - 3; y++) {
+        if (Math.abs(y - axis) < 4) continue;      // skip the axis itself
+        if (notWhite(x, y)) { ink = true; break; }
+      }
+      if (!ink) { gaps++; run++; if (run > worstRun) worstRun = run; if (firstGap < 0) firstGap = x; }
+      else run = 0;
+    }
+    res({ gaps, worstRun, firstGap, axis, floor });
+  };
+  im.onerror = () => res(null);
+  im.src = src;
+})`;
+
 const SYM = `(src) => new Promise(res => {
   const im = new Image();
   im.onload = () => {
@@ -268,6 +305,16 @@ const SYM = `(src) => new Promise(res => {
     const sym = await proj.evaluate(eval(SYM), src);
 
     if (!sym) { check('W1/W2: figure symmetry on "' + info.title + '"', false, 'image failed to decode; src len ' + String(src && src.length)); continue; }
+    /* Stronger than symmetry: EVERY column must carry curve ink where the
+       maths says the curve is. A plate erasing a band of the trough (the
+       defect this exists for) leaves a run of columns with nothing there,
+       which a crest/trough comparison alone can miss. The predicate is
+       "not white", not "black": where a grey grid line crosses the curve at
+       a flat extremum the ink blends to about 100-145. */
+    const cover = await proj.evaluate(eval(COVER), src);
+    check('W1: every column of the drawn curve carries ink on "' + info.title + '" (nothing is plated over)',
+      cover && cover.gaps === 0, JSON.stringify(cover && { gaps: cover.gaps, worstRun: cover.worstRun, at: cover.firstGap }));
+
     const up = sym.axis - sym.top, down = sym.bot - sym.axis;
     check('W1/W2: the figure is not clipped on "' + info.title + '" (A = ' + info.wave.A + ') — crest and trough are symmetric about the axis',
       sym.axis > 0 && up > 10 && Math.abs(up - down) <= 3,
