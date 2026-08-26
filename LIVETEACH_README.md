@@ -159,9 +159,9 @@ into the views; edit the source and run its stamper, never a stamped copy. The
 drift gates go red otherwise.
 
 ```sh
-tools/liveteach/run.sh        # 26 steps: stampers, static gates, units,
+tools/liveteach/run.sh        # 24 steps: stampers, static gates, units,
                               # the QR decode gate, the 10k picker simulation,
-                              # and seven headless-browser suites
+                              # and eight headless-browser suites (335 checks)
 ```
 
 Every gate has a **negative control** — a proof it can fail. That is the

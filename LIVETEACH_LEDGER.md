@@ -424,7 +424,7 @@ order and marked as applied where a phase leans on them.
 - **Engine ships as one stamped source** (`picker_source.js` → both views via
   `stamp_picker.mjs`), so the 10k simulation exercises the exact bytes that run
   in the classroom. The stamper's self-test perturbs the P2 weight into a
-  min-weight floor and demands the drift gate notice. Harness now **23 steps**.
+  min-weight floor and demands the drift gate notice. Harness now 23 steps.
 - **Adversarial review round (five lenses) — and it found a real break in the
   guarantee this phase rests on.** Reproduced before fixing: pick Ann, mark Ann
   away, draw, mark Ann back — Ann is drawn again immediately. Two causes.
@@ -632,14 +632,15 @@ order and marked as applied where a phase leans on them.
   verified from here, and every delegated decision with the override line that
   reverses it). The launcher gained a troubleshooting card for the four things
   most likely to look like faults and not be.
-- **Final gate state:** `tools/liveteach/run.sh` — **26 steps**, all green.
+- **Final gate state:** `tools/liveteach/run.sh` — **24 steps**, all green,
+  carrying **335 checks** in total.
   Four stampers with their perturbation self-tests, the static gates
   (`onmessage`, one rAF loop per view, the TDZ rule, manifests-are-data), the
   units checker, the QR decode gate against a vendored independent decoder at
   every allowed version and every mask, the picker's 10,000-draw simulation
   plus the attendance-churn fuzz, and seven headless-browser suites
-  (`lt-shell` 45, `lt-stage` 30, `lt-clicker` 32, `lt-tele` 22, `lt-share` 50,
-  `lt-pick` 60, `lt-extras` 40, `lt-sheet` 44).
+  (`lt-shell` 45, `lt-stage` 30, `lt-clicker` 32, `lt-tele` 22, `lt-share` 55,
+  `lt-pick` 62, `lt-extras` 48, `lt-sheet` 41).
 - **The lesson worth keeping from this build.** Across the phases, the
   adversarial review rounds found **more defects in my own gates than in the
   product** — checks that read a class name on an element that ships hidden, a
