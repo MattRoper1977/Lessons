@@ -199,6 +199,66 @@ body.highlumen #shareCard .row button { background: #fffdf6; color: #1c2337; bor
   color: inherit; font: inherit; padding: 6px 10px; width: 14ch; margin-left: 6px;
 }
 body.highlumen #shareTagInput { background: #fff; border-color: #8a7f5e; }
+/* Cold-call name (LT7). A name reaches this screen ONLY when the teacher
+   asks for it — the HUD's "Show on projector" press, or a draw made in this
+   window (where this screen IS the teacher's screen). Filled by textContent,
+   never innerHTML. */
+#pickOverlay {
+  position: fixed; left: 50%; top: 18%; transform: translateX(-50%); z-index: 46;
+  background: rgba(10, 14, 30, .94); color: #e8e2d4; border: 3px solid #b9e6cd;
+  border-radius: 18px; padding: 20px 40px; text-align: center; visibility: hidden;
+  max-width: 86vw;
+}
+#pickOverlay.show { visibility: visible; }
+body.highlumen #pickOverlay { background: rgba(255,255,255,.96); color: #1c2337; border-color: #1e6e46; }
+#pickOverlay .tag { font-size: 2.4vmin; letter-spacing: .2em; text-transform: uppercase; opacity: .85; }
+#pickOverlay .who { font-size: 9vmin; font-weight: 800; line-height: 1.15; overflow-wrap: anywhere; }
+
+/* The projector's own picker panel — single-window completeness (D1). Same
+   shell as the share panel, and it sits at the same z-order. */
+#pickPanel {
+  position: fixed; inset: 0; z-index: 56; background: rgba(5, 8, 18, .72);
+  display: flex; align-items: center; justify-content: center; visibility: hidden;
+}
+#pickPanel.show { visibility: visible; }
+#pickCard {
+  background: #10173a; color: #e8e2d4; border: 3px solid #b9e6cd; border-radius: 18px;
+  padding: 20px 24px; width: min(94vw, 560px); box-sizing: border-box;
+  max-height: 92vh; overflow: auto;
+}
+body.highlumen #pickCard { background: #fffdf6; color: #1c2337; border-color: #1e6e46; }
+#pickCard h2 { margin: 0 0 6px; font-size: 20px; }
+#pickCard .sub { font-size: 14px; opacity: .88; margin: 0 0 10px; line-height: 1.5; }
+#pickCard textarea {
+  width: 100%; box-sizing: border-box; border-radius: 10px; border: 1px solid #43518c;
+  background: #0d1430; color: inherit; font: inherit; font-size: 14px; padding: 8px 10px;
+  min-height: 88px; resize: vertical;
+}
+body.highlumen #pickCard textarea { background: #fff; border-color: #8a7f5e; }
+#pickCard .row { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
+#pickCard .row button {
+  min-width: 44px; min-height: 44px; border-radius: 10px; border: 1px solid #43518c;
+  background: #16204a; color: #e8e2d4; font: inherit; font-weight: 600; padding: 6px 14px; cursor: pointer;
+}
+body.highlumen #pickCard .row button { background: #fffdf6; color: #1c2337; border-color: #8a7f5e; }
+#pickCard .row button:focus-visible, #pickCard textarea:focus-visible { outline: 3px solid #b9e6cd; outline-offset: 2px; }
+#pickRows { display: flex; flex-direction: column; gap: 4px; }
+#pickRows .pickrow {
+  display: flex; align-items: center; gap: 8px; min-height: 44px;
+  border: 1px solid #2c3763; border-radius: 10px; padding: 4px 10px; font-size: 14px;
+}
+body.highlumen #pickRows .pickrow { border-color: #c9c2ae; }
+#pickRows .nm { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+#pickRows .status { font-size: 12px; opacity: .8; white-space: nowrap; }
+#pickRows .odds { font-variant-numeric: tabular-nums; font-size: 12px; opacity: .8; min-width: 4ch; text-align: right; }
+#pickRows .pickrow.away { opacity: .55; }
+#pickRows .pickrow.away .nm { text-decoration: line-through; }
+#pickRows button.att { min-width: 44px; min-height: 36px; padding: 4px 10px; font-size: 12px; border-radius: 8px; border: 1px solid #43518c; background: #16204a; color: inherit; font: inherit; cursor: pointer; }
+body.highlumen #pickRows button.att { background: #fffdf6; border-color: #8a7f5e; }
+#pickRows .bar { width: 60px; height: 8px; border-radius: 999px; background: #2c3763; overflow: hidden; flex: none; }
+body.highlumen #pickRows .bar { background: #ded7c4; }
+#pickRows .bar i { display: block; height: 100%; background: #f2a24a; }
+
 /* The tag chip mirrors ?tag= back at the room — which link is this? It is
    free text off the wire, so it is only ever filled via textContent. */
 #tagChip {
@@ -268,6 +328,40 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
 <div id="teleChip" aria-hidden="true">🖊 Draw — sim paused</div>
 <div id="tagChip"></div>
 <div id="toast" role="status" aria-live="polite"></div>
+
+<section id="pickOverlay" aria-label="Cold call">
+  <div class="tag">🎲 Cold call</div>
+  <div class="who"></div>
+</section>
+<div id="pickSaid" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap"></div>
+
+<div id="pickPanel" role="dialog" aria-labelledby="pickTitle" aria-describedby="pickSub">
+  <div id="pickCard">
+    <h2 id="pickTitle">🎲 Cold call</h2>
+    <p class="sub" id="pickSub">Paste your class list — one name per line, or separated by commas.
+      <strong>It stays in this tab&rsquo;s memory for this lesson only:</strong> never saved to this device,
+      never in the address or the QR code, and gone when you close the tab. On this window the class can
+      see the screen, so a picked name is shown to the room.</p>
+    <div id="pickEmpty">
+      <textarea id="pickRoster" rows="4" aria-label="Class list, one name per line" placeholder="Ana&#10;Ben&#10;Charlie"></textarea>
+      <div class="row">
+        <button id="btnPickLoad">Load class list</button>
+        <button id="btnPickClose">Close</button>
+      </div>
+    </div>
+    <div id="pickLive" hidden>
+      <div class="row">
+        <button id="btnPickNext">🎲 Pick (N)</button>
+        <button id="btnPickPass">↩ Pass / bounce (M)</button>
+        <button id="btnPickHide">🙈 Clear name</button>
+        <button id="btnPickClear">🗑 Clear list</button>
+        <button id="btnPickClose2">Close</button>
+      </div>
+      <div id="pickNote" class="sub"></div>
+      <div id="pickRows"></div>
+    </div>
+  </div>
+</div>
 
 <!-- role=dialog WITHOUT aria-modal: this panel is deliberately modeless — the
      control strip stays live above it and the toast lives outside it, so
@@ -348,6 +442,7 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
     <button id="btnBlackout" aria-pressed="false">✖ Blackout</button>
     <button id="fsBtn">⛶ Fullscreen</button>
     <button id="btnShare">🔗 Share</button>
+    <button id="btnPick">🎲 Cold call</button>
   </div>
 </nav>
 
@@ -684,6 +779,192 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
 });
 </script>
 <!-- MBM-LIVETEACH-QR:END -->
+<!-- MBM-LIVETEACH-PICKER:BEGIN generated by tools/liveteach/stamp_picker.mjs from tools/liveteach/picker_source.js — do not edit by hand -->
+<script>
+/* Live-Teach cold-call picker engine — the rules only, no DOM, no storage.
+   ONE SOURCE, MANY COPIES: stamped into the views by stamp_picker.mjs (the
+   pinned-region pattern) and require()d by tools/liveteach/picker_gate.mjs,
+   so the 10,000-draw simulation exercises the exact bytes that ship.
+
+   THE ROSTER NEVER LEAVES MEMORY (order LT-GO D2). Nothing in this file
+   touches localStorage, the bus, the URL or the console; names live in a
+   plain array for the length of one lesson and die with the tab. The view
+   code renders them with textContent only.
+
+   P2 — THE NO-IMMEDIATE-REPEAT GUARANTEE, AND WHY IT IS ABSOLUTE.
+   The reviewed fragment gave every pupil a minimum weight, so the pupil who
+   had just answered could come straight back up — about a 1% chance per
+   draw. In a mainstream room that reads as keeping people on their toes. In
+   an SEMH alternative provision it does not: being asked twice in a row
+   reads as being singled out, and the escalation that follows costs the rest
+   of the lesson. So the guard here is structural rather than statistical.
+   Weight is "draws since you were last called", which is exactly 0 for the
+   pupil who just answered — they cannot be drawn at all on the next draw,
+   not merely rarely. One draw later their weight is 1 and they are back in
+   the pool, and it keeps climbing while they are not called, so the same
+   counter that guarantees the gap also does the decay-recovery that keeps
+   the room balanced. There is no floor to tune and no dice roll to lose. */
+(function (root, factory) {
+  if (typeof module === 'object' && module.exports) module.exports = factory();
+  else root.LTPick = factory();
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+
+  var MAX_NAMES = 40;      // a class, not a database
+  var MAX_LEN = 32;        // one name, not a paragraph
+  var HISTORY_CAP = 60;
+
+  /* Roster text → names. Splits on newlines OR commas so a paste from a
+     register works either way; trims, drops blanks, de-duplicates
+     case-insensitively (two "Sam"s would be indistinguishable on screen,
+     which is its own safeguarding problem — the view tells the teacher to
+     add an initial). */
+  function parseRoster(text) {
+    var seen = Object.create(null);
+    var out = [];
+    String(text == null ? '' : text).split(/[\n,]/).forEach(function (raw) {
+      var n = String(raw).replace(/\s+/g, ' ').trim().slice(0, MAX_LEN);
+      if (!n) return;
+      var key = n.toLowerCase();
+      if (seen[key]) return;
+      seen[key] = 1;
+      if (out.length < MAX_NAMES) out.push(n);
+    });
+    return out;
+  }
+
+  /* since: draws since this pupil was last called. Everyone starts equal, so
+     the first draw is uniform over the room. */
+  function create(names) {
+    var list = Array.isArray(names) ? names : parseRoster(names);
+    return {
+      names: list.slice(),
+      present: list.map(function () { return true; }),
+      since: list.map(function () { return 1; }),
+      justPassed: -1,     // excluded for exactly one draw (see pass())
+      last: -1,
+      lastPriorSince: 0,
+      history: []         // {name, passed} — MEMORY ONLY, never broadcast (P5)
+    };
+  }
+
+  function setPresent(st, i, on) {
+    if (i < 0 || i >= st.names.length) return;
+    st.present[i] = !!on;
+    /* An absent pupil holding the cooldown slot would keep punishing the
+       room after they have gone; releasing it costs nothing. */
+    if (!st.present[i] && st.last === i) st.last = -1;
+  }
+
+  function weights(st) {
+    return st.names.map(function (_, i) {
+      if (!st.present[i]) return 0;        // P4: absent pupils are not in the draw
+      if (i === st.justPassed) return 0;   // a pass does not put you straight back up
+      return st.since[i];                  // P2: exactly 0 for the pupil just called
+    });
+  }
+
+  /* P3/P4 support: the numbers the view renders. Absent pupils are reported
+     with p = 0 so the view can show them greyed and stated as absent rather
+     than silently dropping them (a pupil who cannot see themselves listed
+     assumes they were forgotten). */
+  function probabilities(st) {
+    var w = weights(st);
+    var total = w.reduce(function (a, b) { return a + b; }, 0);
+    var fallback = total <= 0;
+    return st.names.map(function (name, i) {
+      var eligible = st.present[i] && (!fallback ? w[i] > 0 : true);
+      var p;
+      if (!st.present[i]) p = 0;
+      else if (fallback) p = 1 / Math.max(1, st.present.filter(Boolean).length);
+      else p = w[i] / total;
+      return {
+        name: name,
+        present: !!st.present[i],
+        cooldown: st.present[i] && w[i] === 0,
+        eligible: eligible,
+        p: p
+      };
+    });
+  }
+
+  /* rng is injectable so the harness can drive a deterministic sequence;
+     the views pass nothing and get Math.random. */
+  function pick(st, rng) {
+    var r = typeof rng === 'function' ? rng : Math.random;
+    var w = weights(st);
+    var total = w.reduce(function (a, b) { return a + b; }, 0);
+    var fellBack = false;
+    if (total <= 0) {
+      /* Everyone present is on cooldown — one pupil present, or two with the
+         other just called. The guarantee cannot hold with nobody left to
+         call, so it degrades openly: the view says the room is too small for
+         the no-repeat guard rather than pretending it applied. */
+      var present = [];
+      for (var j = 0; j < st.names.length; j++) if (st.present[j]) present.push(j);
+      if (!present.length) return null;
+      fellBack = true;
+      w = st.names.map(function (_, i) { return st.present[i] ? 1 : 0; });
+      total = present.length;
+    }
+    var t = r() * total, idx = -1;
+    for (var i = 0; i < w.length; i++) {
+      t -= w[i];
+      if (t < 0) { idx = i; break; }
+    }
+    if (idx === -1) for (var k = w.length - 1; k >= 0; k--) { if (w[k] > 0) { idx = k; break; } }
+    if (idx === -1) return null;
+
+    for (var m = 0; m < st.since.length; m++) if (st.present[m]) st.since[m]++;
+    st.lastPriorSince = st.since[idx];
+    st.since[idx] = 0;
+    st.last = idx;
+    st.justPassed = -1;
+    st.history.unshift({ name: st.names[idx], passed: false });
+    if (st.history.length > HISTORY_CAP) st.history.pop();
+    return { index: idx, name: st.names[idx], fellBack: fellBack };
+  }
+
+  /* M — pass / bounce. The question moves on, but passing is a scaffold, not
+     an exit: the pupil's place in the queue is handed back (their since is
+     restored to what it was before they were drawn) so they come round again
+     soon, while a one-draw exclusion stops the bounce landing straight back
+     on them. Their turn is recorded as a pass, so the history shows who was
+     asked and who answered. */
+  function pass(st, rng) {
+    if (st.last < 0) return null;
+    var passer = st.last;
+    st.since[passer] = st.lastPriorSince;
+    if (st.history.length && !st.history[0].passed) st.history[0].passed = true;
+    st.justPassed = passer;
+    var out = pick(st, rng);
+    st.justPassed = -1;
+    return out;
+  }
+
+  function clear(st) {
+    st.names.length = 0;
+    st.present.length = 0;
+    st.since.length = 0;
+    st.history.length = 0;
+    st.last = -1;
+    st.justPassed = -1;
+  }
+
+  return {
+    parseRoster: parseRoster,
+    create: create,
+    setPresent: setPresent,
+    probabilities: probabilities,
+    pick: pick,
+    pass: pass,
+    clear: clear,
+    MAX_NAMES: MAX_NAMES,
+    MAX_LEN: MAX_LEN
+  };
+});
+</script>
+<!-- MBM-LIVETEACH-PICKER:END -->
 <!-- MBM-LIVETEACH-CORE:BEGIN generated by tools/liveteach/stamp_core.mjs from tools/liveteach/core_source.js — do not edit by hand -->
 <script>
 /* Live-Teach core — bus contract, keyboard registry, motion + theme state.
@@ -853,7 +1134,13 @@ LT.boot();
     timer: null,                       // {remaining, total} while active
     aspect: 16 / 9,
     lesson: '',                        // manifest id — lets a HUD build the projector address (LT6)
-    hl: false                          // high-lumen display, for the same reason
+    hl: false,                         // high-lumen display, for the same reason
+    /* LT7: the cold-call name CURRENTLY ON THIS SCREEN, or ''. This is the
+       one field that may ever hold a pupil's name, and it only holds one
+       while that name is already displayed to the room — put there by the
+       teacher's explicit press (the Q2 opt-in). It is never persisted and
+       never serialized into the address. */
+    pick: ''
   };
   function broadcast() {
     state.aspect = innerWidth / Math.max(1, innerHeight);
@@ -1333,7 +1620,7 @@ LT.boot();
     /* Blacking out while the share panel is open would bury it — and the
        focus inside it — under the curtain. The curtain wins; the panel
        stands down. (shareEscape is hoisted and guards its own element.) */
-    if (state.blackout) shareEscape();
+    if (state.blackout) { shareEscape(); pickEscape(); }
     blackoutEl.classList.toggle('show', state.blackout);
     btnBlackout.setAttribute('aria-pressed', String(state.blackout));
     document.getElementById('blackoutSaid').textContent = state.blackout
@@ -1547,7 +1834,11 @@ LT.boot();
        promise. */
     if (state.blackout) return setBlackout(false);
     if (shareEscape()) return;   // share modal (LT6) sits under the curtain, above the rest
+    if (pickEscape()) return;    // then the cold-call panel (LT7)
     if (errBox.classList.contains('show')) return errBox.classList.remove('show');
+    /* A name on the wall is a pupil-facing overlay: Escape takes it down
+       before the lesson overlays, so "get that off the screen" is one key. */
+    if (state.pick) return showPickName('');
     if (state.poll.on) return setPoll(false);
     if (state.hint.on) return setHint(false);
     if (state.timer || timerBox.classList.contains('show')) return clearTimer();
@@ -1634,6 +1925,11 @@ LT.boot();
     }
     else if (type === 'TELE_CLEAR') { armLink(); teleClear(true); }
     else if (type === 'TELE_SET') { armLink(); setTele(!!payload.on); }
+    /* LT7 / Q2: the sanctioned name-carrying message. It arrives only when a
+       teacher presses "Show on projector", carries ONE name and nothing else,
+       and is clamped and rendered with textContent like any external text. */
+    else if (type === 'PICK_SHOW') { armLink(); showPickName(typeof payload.name === 'string' ? payload.name : ''); }
+    else if (type === 'PICK_CLEAR') { armLink(); showPickName(''); }
   });
   broadcast();
 
@@ -1665,6 +1961,15 @@ LT.boot();
     },
     share: function () {
       return { open: shareOverlayEl.classList.contains('show'), url: shareURL(), tag: shareTag };
+    },
+    pick: function () {
+      return {
+        open: pickPanel.classList.contains('show'),
+        shown: pickWho.textContent,
+        visible: getComputedStyle(pickOverlay).visibility === 'visible',
+        loaded: pick ? pick.names.length : 0,
+        rows: pick ? window.LTPick.probabilities(pick) : null
+      };
     }
   };
 
@@ -1826,6 +2131,122 @@ LT.boot();
     var st = Number(pq.get('stage'));
     if (state.stageCount) applyStage(Number.isInteger(st) && st >= 1 ? st - 1 : 0);
   });
+
+  /* ---------- cold-call picker (LT7: P1–P5) ------------------------------
+     Two halves. The NAME OVERLAY is driven by the bus: the HUD's explicit
+     "Show on projector" press is the Q2 opt-in that lets one name — and only
+     a name — cross the wire.
+
+     The PANEL is single-window completeness (order LT-GO D1: every teaching
+     action is reachable on this view). Its roster lives in this tab's memory
+     alone (D2): never stored, never in the address, never broadcast, gone
+     with the tab. In a two-window setup a teacher simply loads the list into
+     the HUD instead, and this panel stays empty — rosters do not travel, so
+     there is nothing here to leak. On THIS window the class can see the
+     screen, and the panel says so rather than implying a privacy it cannot
+     offer. */
+  var pickOverlay = document.getElementById('pickOverlay');
+  var pickPanel = document.getElementById('pickPanel');
+  var pickWho = pickOverlay.querySelector('.who');
+  var pickSaid = document.getElementById('pickSaid');
+  var pick = null;                  // LTPick state, or null until a list is loaded
+  var pickReturnFocus = null;
+
+  function showPickName(name) {
+    /* External text, textContent only — the rule the whole registry turns on. */
+    var n = String(name == null ? '' : name).slice(0, 64);
+    state.pick = n;                 // travels in PROJECTOR_STATE: it is already on the wall
+    pickWho.textContent = n;
+    pickOverlay.classList.toggle('show', !!n);
+    pickSaid.textContent = n ? 'Cold call: ' + n : 'Cold call name cleared';
+    broadcast();
+  }
+  function pickRender() {
+    document.getElementById('pickEmpty').hidden = !!pick;
+    document.getElementById('pickLive').hidden = !pick;
+    if (!pick) return;
+    var rows = window.LTPick.probabilities(pick);
+    var box = document.getElementById('pickRows');
+    while (box.firstChild) box.removeChild(box.firstChild);
+    rows.forEach(function (r, i) {
+      /* P3: createElement + textContent for every row. */
+      var row = document.createElement('div');
+      row.className = 'pickrow' + (r.present ? '' : ' away');
+      var nm = document.createElement('span'); nm.className = 'nm'; nm.textContent = r.name; row.appendChild(nm);
+      var st = document.createElement('span'); st.className = 'status';
+      st.textContent = !r.present ? 'away' : (r.cooldown ? 'just asked' : 'here');
+      row.appendChild(st);
+      var bar = document.createElement('span'); bar.className = 'bar';
+      var fill = document.createElement('i'); fill.style.width = Math.round(r.p * 100) + '%';
+      bar.appendChild(fill); row.appendChild(bar);
+      var odds = document.createElement('span'); odds.className = 'odds'; odds.textContent = Math.round(r.p * 100) + '%'; row.appendChild(odds);
+      var att = document.createElement('button');
+      att.className = 'att'; att.type = 'button';
+      att.textContent = r.present ? 'Mark away' : 'Mark here';
+      att.setAttribute('aria-label', (r.present ? 'Mark away: ' : 'Mark here: ') + r.name);
+      att.addEventListener('click', function () {
+        window.LTPick.setPresent(pick, i, !pick.present[i]);
+        pickRender();
+      });
+      row.appendChild(att);
+      box.appendChild(row);
+    });
+  }
+  function pickDraw(passed) {
+    if (!pick) return;
+    if (passed && pick.last < 0) { toast('Pick someone first, then Pass bounces the question on.'); return; }
+    var got = passed ? window.LTPick.pass(pick) : window.LTPick.pick(pick);
+    if (!got) { toast('Nobody is marked here — mark someone back in first.'); return; }
+    showPickName(got.name);
+    document.getElementById('pickNote').textContent = got.fellBack
+      ? 'Only one pupil is marked here, so the no-repeat guard cannot apply.'
+      : '';
+    pickRender();
+  }
+  function pickOpen() {
+    if (state.blackout) { toast('The screen is blacked out — press B or the ✖ Blackout button first.'); return; }
+    pickReturnFocus = document.activeElement;
+    pickRender();
+    pickPanel.classList.add('show');
+    var first = pick ? document.getElementById('btnPickNext') : document.getElementById('pickRoster');
+    if (first) first.focus();
+  }
+  function pickClose() {
+    pickPanel.classList.remove('show');
+    if (pickReturnFocus && pickReturnFocus.focus) pickReturnFocus.focus();
+    pickReturnFocus = null;
+  }
+  function pickEscape() {
+    if (!pickPanel || !pickPanel.classList.contains('show')) return false;
+    pickClose();
+    return true;
+  }
+  function pickToggle() { if (pickPanel.classList.contains('show')) pickClose(); else pickOpen(); }
+  document.getElementById('btnPick').addEventListener('click', pickToggle);
+  document.getElementById('btnPickClose').addEventListener('click', pickClose);
+  document.getElementById('btnPickClose2').addEventListener('click', pickClose);
+  pickPanel.addEventListener('click', function (e) { if (e.target === pickPanel) pickClose(); });
+  document.getElementById('btnPickLoad').addEventListener('click', function () {
+    var names = window.LTPick.parseRoster(document.getElementById('pickRoster').value);
+    if (!names.length) { toast('Type or paste at least one name first.'); return; }
+    pick = window.LTPick.create(names);
+    document.getElementById('pickRoster').value = '';   // nothing lingers in a form field
+    pickRender();
+    document.getElementById('btnPickNext').focus();
+    pickSaid.textContent = names.length + ' names loaded for this lesson only.';
+  });
+  document.getElementById('btnPickNext').addEventListener('click', function () { pickDraw(false); });
+  document.getElementById('btnPickPass').addEventListener('click', function () { pickDraw(true); });
+  document.getElementById('btnPickHide').addEventListener('click', function () { showPickName(''); });
+  document.getElementById('btnPickClear').addEventListener('click', function () {
+    if (pick) window.LTPick.clear(pick);
+    pick = null;
+    showPickName('');
+    pickRender();
+    pickSaid.textContent = 'Class list cleared from memory.';
+  });
+  LT.registerKey('KeyN', function () { if (pick) pickDraw(false); }, 'Cold call: pick next');
+  LT.registerKey('KeyM', function () { if (pick) pickDraw(true); }, 'Cold call: pass / bounce');
 
   /* The manifest id is parsed BEFORE the first URL write below — a sync that
      ran ahead of it would strip ?lesson= from the very address the loader is
