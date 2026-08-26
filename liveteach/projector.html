@@ -314,6 +314,37 @@ body.reduce #bell.show { animation: none; opacity: .55; }
   #bell.show { animation: none; opacity: .55; }
 }
 
+/* Worksheet print layer (LT9: W1-W5). Off-screen on screen, the ONLY thing
+   on the page when printed. W4 is the load-bearing rule here: handwriting
+   lines are real bordered elements, never CSS background gradients, because
+   most print engines drop backgrounds and a worksheet whose answer lines
+   vanish at the printer is worse than no worksheet. */
+#sheet { display: none; }
+@media print {
+  html, body { background: #fff !important; color: #000 !important; height: auto; overflow: visible; }
+  body > *:not(#sheet) { display: none !important; }
+  #sheet {
+    display: block !important; position: static;
+    font-family: Georgia, "Times New Roman", serif; color: #000;
+    padding: 0; margin: 0; max-width: 100%;
+  }
+  #sheet .wsHead { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px;
+    border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 10px; }
+  #sheet h1 { font-size: 17pt; margin: 0 0 2px; }
+  #sheet .wsSub { font-size: 10pt; margin: 0; }
+  #sheet .wsName { font-size: 11pt; white-space: nowrap; }
+  #sheet .wsName b { display: inline-block; border-bottom: 1.5px solid #000; min-width: 46mm; }
+  #sheet img.wsFig { display: block; width: 100%; max-width: 170mm; border: 1.5px solid #000; }
+  #sheet .wsCap { font-size: 9.5pt; margin: 4px 0 10px; }
+  #sheet .wsBox { border: 1.5px solid #000; padding: 8px 10px; margin: 0 0 10px; font-size: 10.5pt; }
+  #sheet .wsBox h2 { font-size: 11pt; margin: 0 0 4px; }
+  #sheet ol { margin: 0 0 6px; padding-left: 18px; font-size: 11pt; }
+  #sheet li { margin-bottom: 3px; }
+  /* W4: one bordered div per handwriting line. Borders print; gradients do not. */
+  #sheet .wsLine { border-bottom: 1px solid #000; height: 8mm; margin: 0 0 1.5mm; }
+  #sheet .wsWork { page-break-inside: avoid; }
+}
+
 /* The tag chip mirrors ?tag= back at the room — which link is this? It is
    free text off the wire, so it is only ever filled via textContent. */
 #tagChip {
@@ -383,6 +414,9 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
 <div id="teleChip" aria-hidden="true">🖊 Draw — sim paused</div>
 <div id="tagChip"></div>
 <div id="toast" role="status" aria-live="polite"></div>
+
+<!-- Built fresh from the live stage each time Worksheet is pressed. -->
+<div id="sheet" aria-hidden="true"></div>
 
 <div id="bell" aria-hidden="true"></div>
 <div id="bellBanner">🔔 Eyes this way, please</div>
@@ -518,6 +552,7 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
     <button id="btnRagReset">↺ Reset tally</button>
     <button id="btnBell">🔔 Bell</button>
     <button id="btnSpark">📈 Copy graph</button>
+    <button id="btnSheet">🖨 Worksheet</button>
     <button id="btnAudio" aria-pressed="false">🔇 Sound off</button>
   </div>
 </nav>
@@ -2052,6 +2087,20 @@ LT.boot();
     share: function () {
       return { open: shareOverlayEl.classList.contains('show'), url: shareURL(), tag: shareTag };
     },
+    sheet: function () {
+      var el = document.getElementById('sheet');
+      return {
+        built: el.childElementCount > 0,
+        text: el.textContent,
+        html: el.innerHTML,
+        lines: el.querySelectorAll('.wsLine').length,
+        figures: el.querySelectorAll('img.wsFig').length,
+        figSrc: el.querySelector('img.wsFig') ? el.querySelector('img.wsFig').src : null,
+        threshold: WS_THRESHOLD
+      };
+    },
+    buildSheet: function () { buildSheet(); },
+    figureAt: function (t) { return sheetFigure(t).url; },
     extras: function () {
       return {
         rag: { r: state.rag.r, a: state.rag.a, g: state.rag.g },
@@ -2540,6 +2589,176 @@ LT.boot();
   });
 
   ragRender();
+
+  /* ---------- worksheet engine (LT9: W1–W5) ------------------------------
+     Prints the figure the class has just been looking at, with the numbers
+     it was actually built from. Every correction here exists because the
+     reviewed fragment failed it:
+
+     W1  the line-art conversion stripped the grid, leaving a figure the
+         worksheet then asked pupils to MEASURE. The grid and a labelled
+         scale bar in real metres are drawn as part of the figure, after the
+         threshold pass, so nothing can strip them.
+     W2  no invented units. The mapping between the model and real metres is
+         stated on the sheet, and the v = f × λ task resolves with the
+         stage's own numbers.
+     W3  plain text "v = f × λ" — the fragment printed the LaTeX source.
+     W4  answer lines are bordered elements, not background gradients.
+     W5  the threshold parameter is USED (it is what makes the line art), not
+         carried dead. */
+  var WS_THRESHOLD = 186;      // luminance cut for the line-art pass (W5: live)
+  function sheetFigure(thresholdOverride) {
+    /* W5: the parameter is real. The reviewed fragment carried a threshold it
+       never applied; here it is the cut that turns the anti-aliased curve
+       into printable line art, and the harness proves it by rendering at two
+       values and comparing the pixels. */
+    var cut = typeof thresholdOverride === 'number' ? thresholdOverride : WS_THRESHOLD;
+    /* An offscreen render at print resolution: the on-screen canvas is sized
+       for a projector and would print soft. */
+    var W = 1000, H = 420;
+    var c = document.createElement('canvas');
+    c.width = W; c.height = H;
+    var g = c.getContext('2d');
+    g.fillStyle = '#fff'; g.fillRect(0, 0, W, H);
+
+    /* The wave itself, in the same real-units space as the screen: the sheet
+       uses its own pixels-per-metre so the figure fits the page, and every
+       label below is derived from THAT number, never from the screen's. */
+    var pxm = Math.min(160, (W - 120) / Math.max(1, wave.lambda * 2.6));
+    var mid = H / 2 + 10;
+    var Apx = wave.A * pxm, Lpx = wave.lambda * pxm;
+    g.strokeStyle = '#000'; g.lineWidth = 3;
+    g.beginPath();
+    for (var x = 0; x <= W; x += 2) {
+      var y = mid - Apx * Math.sin(2 * Math.PI * (x / Lpx));
+      if (x === 0) g.moveTo(x, y); else g.lineTo(x, y);
+    }
+    g.stroke();
+
+    /* W5: the threshold pass is real. Anything not dark enough becomes pure
+       white, so the figure photocopies and prints as clean line art — and
+       because it runs HERE, before the grid, the grid cannot be eaten by it. */
+    var img = g.getImageData(0, 0, W, H);
+    var d = img.data;
+    for (var i = 0; i < d.length; i += 4) {
+      var lum = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+      var v = lum < cut ? 0 : 255;
+      d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = 255;
+    }
+    g.putImageData(img, 0, 0);
+
+    /* W1: the calibrated grid, drawn AFTER the threshold so it survives —
+       one line every half metre, heavier on the metre. */
+    g.lineWidth = 1;
+    for (var m = 0; m * pxm / 2 <= W; m++) {
+      var gx = m * pxm / 2;
+      g.strokeStyle = (m % 2 === 0) ? '#7a7a7a' : '#c2c2c2';
+      g.beginPath(); g.moveTo(gx, 0); g.lineTo(gx, H); g.stroke();
+    }
+    for (var yy = mid; yy > 0; yy -= pxm / 2) { g.strokeStyle = '#c2c2c2'; g.beginPath(); g.moveTo(0, yy); g.lineTo(W, yy); g.stroke(); }
+    for (var yd = mid; yd < H; yd += pxm / 2) { g.strokeStyle = '#c2c2c2'; g.beginPath(); g.moveTo(0, yd); g.lineTo(W, yd); g.stroke(); }
+    g.strokeStyle = '#000'; g.lineWidth = 1.5;
+    g.beginPath(); g.moveTo(0, mid); g.lineTo(W, mid); g.stroke();   // the axis
+
+    /* W1: a labelled scale bar in REAL units, stating the one thing a pupil
+       needs to turn the drawing into a measurement. */
+    var bx = 30, by = H - 34;
+    g.fillStyle = '#fff'; g.fillRect(bx - 8, by - 26, pxm + 90, 46);
+    g.strokeStyle = '#000'; g.lineWidth = 3;
+    g.beginPath(); g.moveTo(bx, by); g.lineTo(bx + pxm, by); g.stroke();
+    g.beginPath(); g.moveTo(bx, by - 9); g.lineTo(bx, by + 9); g.stroke();
+    g.beginPath(); g.moveTo(bx + pxm, by - 9); g.lineTo(bx + pxm, by + 9); g.stroke();
+    g.fillStyle = '#000'; g.font = '600 20px Georgia, serif';
+    g.fillText('1 metre', bx + pxm + 12, by + 7);
+    return { url: c.toDataURL('image/png'), pxm: pxm, w: W, h: H };
+  }
+
+  function buildSheet() {
+    var sheet = document.getElementById('sheet');
+    while (sheet.firstChild) sheet.removeChild(sheet.firstChild);
+    var isWave = state.mode === 'wave';
+    var fig = isWave ? sheetFigure() : null;
+    /* Everything below is createElement + textContent: stage titles and
+       lesson copy are external data (the manifest), and the estate's rule
+       does not soften for a print layer. */
+    var mk = function (tag, cls, text) {
+      var e = document.createElement(tag);
+      if (cls) e.className = cls;
+      if (text != null) e.textContent = text;
+      return e;
+    };
+
+    var head = mk('div', 'wsHead');
+    var left = mk('div');
+    left.appendChild(mk('h1', null, state.stageTitle || 'Waves'));
+    /* A date the pupil does not have to write, and no pupil name anywhere in
+       the DOCUMENT — the sheet leaves a RULED SPACE for one instead, which
+       is the only form a name may take here (D2: nothing is stored, so
+       nothing can be printed). */
+    left.appendChild(mk('p', 'wsSub', 'Live-Teach · ' + new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })));
+    head.appendChild(left);
+    var nm = mk('div', 'wsName');
+    nm.appendChild(document.createTextNode('Name: '));
+    nm.appendChild(mk('b', null, ' '));
+    head.appendChild(nm);
+    sheet.appendChild(head);
+
+    if (fig) {
+      var im = document.createElement('img');
+      im.className = 'wsFig';
+      im.src = fig.url;
+      im.alt = 'A wave drawn on a half-metre grid, with a one-metre scale bar.';
+      sheet.appendChild(im);
+      /* W2: the model-to-real mapping, stated rather than implied. */
+      sheet.appendChild(mk('p', 'wsCap', 'The grid squares are 0.5 m across. The bar marked "1 metre" shows the scale — measure straight off the drawing.'));
+
+      var box = mk('div', 'wsBox');
+      box.appendChild(mk('h2', null, 'What the class saw'));
+      /* W3: plain text. The fragment printed the LaTeX source verbatim, so
+         pupils read a dollar sign and a backslash instead of an equation. */
+      box.appendChild(mk('p', null, 'frequency f = ' + wave.f + ' Hz    wavelength λ = ' + wave.lambda + ' m    height A = ' + wave.A + ' m'));
+      box.appendChild(mk('p', null, 'Wave speed: v = f × λ'));
+      sheet.appendChild(box);
+
+      var tasks = mk('div', 'wsWork');
+      tasks.appendChild(mk('h2', null, 'Your turn'));
+      var ol = document.createElement('ol');
+      [
+        'Measure one whole wavelength off the drawing, using the grid. Write it in metres.',
+        'The wave completed ' + wave.f + ' full wave' + (wave.f === 1 ? '' : 's') + ' every second. Write that down as the frequency, in Hz.',
+        'Work out the wave speed using v = f × λ. Show your working, and give the unit.',
+        'Check: does your measured wavelength agree with λ = ' + wave.lambda + ' m? If not, by how much, and why might that be?'
+      ].forEach(function (t) { ol.appendChild(mk('li', null, t)); });
+      tasks.appendChild(ol);
+      /* W4: real bordered elements — six of them — because gradients do not
+         survive a print engine. */
+      for (var i = 0; i < 6; i++) tasks.appendChild(mk('div', 'wsLine'));
+      sheet.appendChild(tasks);
+
+      var ans = mk('div', 'wsBox');
+      ans.appendChild(mk('h2', null, 'Answer'));
+      ans.appendChild(mk('p', null, 'v = f × λ = ' + wave.f + ' × ' + wave.lambda + ' = ' + (Math.round(wave.f * wave.lambda * 1000) / 1000) + ' m/s'));
+      sheet.appendChild(ans);
+    } else {
+      /* Off a wave stage there are no honest numbers to print, and inventing
+         some is exactly what W2 forbids. */
+      var note = mk('div', 'wsBox');
+      note.appendChild(mk('h2', null, 'Nothing to measure on this stage'));
+      note.appendChild(mk('p', null, 'This worksheet prints the wave figure with its own scale. Move to a wave stage and press Worksheet again.'));
+      sheet.appendChild(note);
+      var blanks = mk('div', 'wsWork');
+      for (var j = 0; j < 10; j++) blanks.appendChild(mk('div', 'wsLine'));
+      sheet.appendChild(blanks);
+    }
+    return sheet;
+  }
+  document.getElementById('btnSheet').addEventListener('click', function () {
+    buildSheet();
+    toast('Worksheet ready — your browser’s print dialogue is opening. Choose Save as PDF to keep it.');
+    /* The print dialogue is a user gesture away, and a refusal is honest
+       rather than silent. */
+    setTimeout(function () { try { window.print(); } catch (e) { toast('This browser blocked printing — use Ctrl+P.'); } }, 60);
+  });
 
   /* The manifest id is parsed BEFORE the first URL write below — a sync that
      ran ahead of it would strip ?lesson= from the very address the loader is
