@@ -36,17 +36,33 @@
      case-insensitively (two "Sam"s would be indistinguishable on screen,
      which is its own safeguarding problem — the view tells the teacher to
      add an initial). */
+  function clampName(n) {
+    /* slice() counts UTF-16 code units, so a cut can land between the halves
+       of a surrogate pair and leave a lone high surrogate — which renders as
+       the replacement diamond in a name on the class screen. Cut by
+       CHARACTERS instead. */
+    var chars = Array.from(n);
+    return chars.length > MAX_LEN ? chars.slice(0, MAX_LEN).join('') : n;
+  }
   function parseRoster(text) {
     var seen = Object.create(null);
     var out = [];
+    var dropped = 0;
     String(text == null ? '' : text).split(/[\n,]/).forEach(function (raw) {
-      var n = String(raw).replace(/\s+/g, ' ').trim().slice(0, MAX_LEN);
+      var n = clampName(String(raw).replace(/\s+/g, ' ').trim());
       if (!n) return;
-      var key = n.toLowerCase();
+      /* Normalise before comparing: a register pasted from two sources can
+         carry the same name in NFC and NFD, which are byte-different and
+         pixel-identical — exactly the indistinguishable-duplicate the dedupe
+         exists to prevent. */
+      var key = (n.normalize ? n.normalize('NFC') : n).toLowerCase();
       if (seen[key]) return;
       seen[key] = 1;
-      if (out.length < MAX_NAMES) out.push(n);
+      if (out.length < MAX_NAMES) out.push(n); else dropped++;
     });
+    /* The caller is told what was lost, so a 45-name paste cannot be
+       confirmed as "40 names loaded" with no mention of the five. */
+    out.dropped = dropped;
     return out;
   }
 
@@ -67,10 +83,25 @@
 
   function setPresent(st, i, on) {
     if (i < 0 || i >= st.names.length) return;
+    var was = st.present[i];
     st.present[i] = !!on;
-    /* An absent pupil holding the cooldown slot would keep punishing the
-       room after they have gone; releasing it costs nothing. */
-    if (!st.present[i] && st.last === i) st.last = -1;
+    /* st.last is deliberately NOT cleared when that pupil is marked away. It
+       records who answered most recently, which is the single fact P2 rests
+       on; forgetting it meant a pupil could be called, marked away, marked
+       back, and called again immediately — a repeat, by the shipped buttons.
+       An away pupil is already excluded by `present`, so keeping `last`
+       costs the room nothing and keeps the guarantee true across attendance
+       changes. */
+    /* Coming BACK is the subtle one. since only advances for pupils who are
+       here, so a pupil marked away moments after being called keeps since=0
+       — and a frozen zero never expires. Returning with that zero made them
+       weightless, which in a small room emptied the pool into the uniform
+       fallback and let the pupil who had just answered be drawn again: the
+       exact repeat P2 exists to forbid. So a returning pupil re-enters at
+       least at 1 — in the pool, ordinary priority. Not higher: someone who
+       has just walked back in is the last person who should be cold-called
+       on the spot. */
+    if (st.present[i] && !was && st.since[i] < 1) st.since[i] = 1;
   }
 
   function weights(st) {
@@ -113,16 +144,22 @@
     var total = w.reduce(function (a, b) { return a + b; }, 0);
     var fellBack = false;
     if (total <= 0) {
-      /* Everyone present is on cooldown — one pupil present, or two with the
-         other just called. The guarantee cannot hold with nobody left to
-         call, so it degrades openly: the view says the room is too small for
-         the no-repeat guard rather than pretending it applied. */
+      /* Nobody has any weight left. Falling back to "everyone present,
+         equally" is right — but it must NOT quietly re-admit the pupil who
+         just answered: P2 is the phase's one absolute, so the fallback drops
+         them too whenever anyone else is available, and only concedes when
+         there is literally nobody else to ask. */
       var present = [];
       for (var j = 0; j < st.names.length; j++) if (st.present[j]) present.push(j);
       if (!present.length) return null;
-      fellBack = true;
-      w = st.names.map(function (_, i) { return st.present[i] ? 1 : 0; });
-      total = present.length;
+      var eligible = present.filter(function (i) { return i !== st.last && i !== st.justPassed; });
+      var pool = eligible.length ? eligible : present;
+      /* fellBack means precisely "this draw could not honour the no-repeat
+         guarantee" — not "the room is small". Both views word their notice
+         from that, so the notice is true whichever way the room got here. */
+      fellBack = !eligible.length;
+      w = st.names.map(function (_, i) { return pool.indexOf(i) === -1 ? 0 : 1; });
+      total = pool.length;
     }
     var t = r() * total, idx = -1;
     for (var i = 0; i < w.length; i++) {

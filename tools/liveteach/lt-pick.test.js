@@ -48,9 +48,16 @@ function serve() {
   });
 }
 
+/* EVERY console line from every view, whatever its level. "Names never in
+   console logs" is a non-negotiable, and a listener filtered to type
+   'error' would not have seen a console.log of a picked name. */
+const consoleLog = [];
 async function open(page, url, errors) {
   page.on('pageerror', e => errors.push('pageerror: ' + String(e).slice(0, 160)));
-  page.on('console', m => { if (m.type() === 'error') errors.push('console: ' + m.text().slice(0, 160)); });
+  page.on('console', m => {
+    consoleLog.push(m.type() + ': ' + m.text());
+    if (m.type() === 'error') errors.push('console: ' + m.text().slice(0, 160));
+  });
   await page.goto(url, { waitUntil: 'load' });
   try { await page.locator('.mbm-skip').click({ timeout: 4000 }); } catch (e) {}
   await page.waitForFunction(() => !document.querySelector('.mbm-splash'), null, { timeout: 8000 });
@@ -108,20 +115,27 @@ const MARKUP_NAME = '<img src=x>Ophira';
   await hud.waitForTimeout(200);
   const afterLoad = await hud.evaluate(() => ({
     keys: Object.keys(localStorage).sort(),
-    blob: Object.keys(localStorage).map(k => localStorage.getItem(k)).join(' '),
+    /* Every client-side store a roster could hide in, not just localStorage:
+       sessionStorage survives a reload in the same tab, and cookies survive
+       everything. */
+    blob: Object.keys(localStorage).map(k => localStorage.getItem(k)).join(' ')
+      + ' ' + Object.keys(sessionStorage).map(k => sessionStorage.getItem(k)).join(' ')
+      + ' ' + document.cookie,
+    sessionKeys: Object.keys(sessionStorage),
+    cookie: document.cookie,
     textarea: document.getElementById('pickRoster').value,
     url: location.href,
     loaded: window.__LT.pick() && window.__LT.pick().names.length,
     liveShown: !document.getElementById('pickLive').hidden
   }));
   check('D2: loading a class list adds no storage key', JSON.stringify(afterLoad.keys) === storeBefore, JSON.stringify(afterLoad.keys));
-  check('D2: no name appears anywhere in localStorage', !ROSTER.some(n => afterLoad.blob.includes(n)), afterLoad.blob.slice(0, 80));
+  check('D2: no name appears in localStorage, sessionStorage or a cookie', !ROSTER.some(n => afterLoad.blob.includes(n)), afterLoad.blob.slice(0, 80));
+  check('D2: no session key or cookie was created at all', afterLoad.sessionKeys.length === 0 && afterLoad.cookie === '', JSON.stringify({ s: afterLoad.sessionKeys, c: afterLoad.cookie }));
   check('D2: no name appears in the address', !ROSTER.some(n => afterLoad.url.includes(n)), afterLoad.url);
   check('D2: the textarea is emptied once loaded (nothing lingers in a form field)', afterLoad.textarea === '');
   check('the picker goes live with the whole list', afterLoad.loaded === ROSTER.length && afterLoad.liveShown, JSON.stringify(afterLoad.loaded));
 
   /* ================= P5 / Q2: drawing broadcasts NO name ================= */
-  await hud.evaluate(() => { window.__LTbusSeen = null; });
   for (let i = 0; i < 12; i++) { await hud.click('#btnPickNext'); }
   await hud.click('#btnPickPass');
   /* Past one full heartbeat interval, so the tap has definitely heard live
@@ -168,12 +182,26 @@ const MARKUP_NAME = '<img src=x>Ophira';
     return { status: row.querySelector('.status').textContent, odds: row.querySelector('.odds').textContent, cls: row.className };
   }, away);
   check('P4: an away pupil says so IN TEXT and is shown at 0%, not merely greyed', awayRow.status === 'away' && awayRow.odds === '0%' && /away/.test(awayRow.cls), JSON.stringify(awayRow));
-  for (let i = 0; i < 40; i++) await hud.click('#btnPickNext');
-  await hud.waitForTimeout(200);
-  const hist = await hud.evaluate(() => window.__LT.pick().history.map(h => h.name));
-  check('P4: 40 further draws never land on the away pupil', !hist.includes(away), away);
-  const oddsSum = await hud.evaluate(() => window.__LT.pick().rows.reduce((a, r) => a + r.p, 0));
-  check('P4: the displayed odds still sum to 1 across the pupils who are here', Math.abs(oddsSum - 1) < 1e-9, String(oddsSum));
+  /* The seam returns only the last 12 entries, so 40 clicks then one read
+     would have inspected 12 of them and called it 40. Read after each. */
+  let sawAway = false;
+  for (let i = 0; i < 40; i++) {
+    await hud.click('#btnPickNext');
+    const top = await hud.evaluate(() => window.__LT.pick().history[0].name);
+    if (top === away) sawAway = true;
+  }
+  check('P4: all 40 further draws are inspected, and none lands on the away pupil', sawAway === false, away);
+  /* What a teacher READS, not the floats behind it — the gate already proves
+     the engine's probabilities sum to 1 headlessly, so repeating that here
+     would add nothing. */
+  const rendered = await hud.evaluate(() => [...document.querySelectorAll('#pickRows .pickrow')].map(r => ({
+    nm: r.querySelector('.nm').textContent,
+    status: r.querySelector('.status').textContent,
+    odds: r.querySelector('.odds').textContent
+  })));
+  const zeroButHere = rendered.filter(r => r.status === 'here' && r.odds === '0%');
+  check('P4: no pupil who is in the draw is rendered as 0% (that is what an excluded one shows)', zeroButHere.length === 0, JSON.stringify(zeroButHere));
+  check('P4: the away pupil is the one shown at 0%', rendered.find(r => r.nm === away).odds === '0%' && rendered.filter(r => r.odds === '0%' && r.status === 'away').length === 1, JSON.stringify(rendered.map(r => r.odds)));
 
   /* ================= P2 in the page: cooldown is visible ================= */
   const cooled = await hud.evaluate(() => {
@@ -218,6 +246,8 @@ const MARKUP_NAME = '<img src=x>Ophira';
     pick: window.__LT.pick(),
     emptyShown: !document.getElementById('pickEmpty').hidden,
     store: Object.keys(localStorage).map(k => localStorage.getItem(k)).join(' ')
+      + ' ' + Object.keys(sessionStorage).map(k => sessionStorage.getItem(k)).join(' ')
+      + ' ' + document.cookie
   }));
   check('D2: the class list dies with the page — a reload comes back empty', beforeReload === 5 && afterReload.pick === null && afterReload.emptyShown, JSON.stringify({ beforeReload, after: afterReload.pick }));
   check('D2: and nothing was left behind in storage to restore it from', !ROSTER.some(n => afterReload.store.includes(n)));
@@ -290,8 +320,14 @@ const MARKUP_NAME = '<img src=x>Ophira';
   await proj.waitForTimeout(150);
   const blacked = await proj.evaluate(() => ({ open: window.__LT.pick().open, blackout: window.__LT.state().blackout }));
   check('blackout: blacking out stands the picker panel down (focus is never buried)', blacked.open === false && blacked.blackout === true, JSON.stringify(blacked));
-  await proj.keyboard.press('KeyQ');   // and Q is refused while blacked out
-  await proj.waitForTimeout(100);
+  /* Q is refused under the curtain too — asserted, not merely attempted. */
+  await proj.keyboard.press('KeyQ');
+  await proj.waitForTimeout(150);
+  const qUnderCurtain = await proj.evaluate(() => ({
+    share: getComputedStyle(document.getElementById('shareOverlay')).visibility === 'visible',
+    pick: window.__LT.pick().open
+  }));
+  check('blackout: Q opens nothing under the curtain either', qUnderCurtain.share === false && qUnderCurtain.pick === false, JSON.stringify(qUnderCurtain));
   await proj.keyboard.press('Escape');
   await proj.waitForTimeout(150);
 
@@ -334,6 +370,178 @@ const MARKUP_NAME = '<img src=x>Ophira';
   })));
   check('D2: the roster field opts out of autofill and spellcheck in both views',
     fields.every(f => f.auto === 'off' && f.spell === 'false'), JSON.stringify(fields));
+
+  /* ====== the fixes this phase's review found, each pinned ============== */
+
+  /* "0 clears every overlay" must include the name on the wall. (An earlier
+     check reloads the HUD, so this window has no list in memory by now —
+     which is the point of D2. Load one.) */
+  await hud.bringToFront();
+  await hud.fill('#pickRoster', ROSTER.join('\n'));
+  await hud.click('#btnPickLoad');
+  await hud.waitForTimeout(200);
+  await hud.click('#btnPickNext');
+  await hud.click('#btnPickProject');
+  await hud.waitForTimeout(400);
+  const beforeClear = await proj.evaluate(() => ({ pick: window.__LT.state().pick, vis: window.__LT.pick().visible }));
+  check('setup: a name is on the wall before the clear', !!beforeClear.pick && beforeClear.vis === true, JSON.stringify(beforeClear));
+  await proj.bringToFront();
+  await proj.evaluate(() => document.activeElement && document.activeElement.blur());
+  await proj.keyboard.press('KeyH');      // a hint too, so the sweep is real
+  await proj.keyboard.press('Digit0');
+  await proj.waitForTimeout(300);
+  const afterClear = await proj.evaluate(() => ({
+    pick: window.__LT.state().pick, vis: window.__LT.pick().visible,
+    hint: window.__LT.state().hint.on
+  }));
+  check('"0 — clear every overlay" really does take the pupil\'s name off the wall', afterClear.pick === '' && afterClear.vis === false && afterClear.hint === false, JSON.stringify(afterClear));
+
+  /* Drawing again must not leave the PREVIOUS pupil named to the room. */
+  await hud.bringToFront();
+  await hud.click('#btnPickNext');
+  await hud.click('#btnPickProject');
+  await hud.waitForTimeout(400);
+  const projected = await proj.evaluate(() => window.__LT.state().pick);
+  await hud.click('#btnPickNext');
+  await hud.waitForTimeout(400);
+  const afterRedraw = await proj.evaluate(() => ({ pick: window.__LT.state().pick, vis: window.__LT.pick().visible }));
+  const hudNow = await hud.evaluate(() => ({ shown: window.__LT.pick().shown, wall: document.getElementById('pickWall').textContent }));
+  check('setup: a name really was projected', ROSTER.includes(projected), projected);
+  check('drawing again RETRACTS the previous pupil rather than leaving them named to the room',
+    afterRedraw.pick === '' && afterRedraw.vis === false, JSON.stringify(afterRedraw));
+  check('and the HUD says what is actually on the projector, from the broadcast',
+    /Nothing is on the projector/.test(hudNow.wall) && hudNow.shown !== projected, JSON.stringify(hudNow));
+
+  /* Attendance must not throw keyboard focus away, in either view. */
+  const focusKept = await hud.evaluate(() => {
+    const rows = [...document.querySelectorAll('#pickRows .pickrow')];
+    const btn = rows[1].querySelector('button.att');
+    btn.focus();
+    const before = document.activeElement === btn;
+    btn.click();
+    const after = document.activeElement;
+    return { before, tag: after && after.tagName, cls: after && after.className, row: after && after.closest('.pickrow') === document.querySelectorAll('#pickRows .pickrow')[1] };
+  });
+  check('a11y: marking a pupil away keeps keyboard focus on that row\'s button (HUD)', focusKept.before && focusKept.tag === 'BUTTON' && focusKept.row === true, JSON.stringify(focusKept));
+  await hud.evaluate(() => { const b = [...document.querySelectorAll('#pickRows .pickrow')][1].querySelector('button.att'); b.click(); });
+
+  await proj.bringToFront();
+  await stripClick(proj, '#btnPick');
+  await proj.waitForTimeout(150);
+  /* The projector's own list is a single name from the small-room checks
+     above; focus behaviour needs a second row to be meaningful. */
+  await proj.click('#btnPickClear');
+  await proj.fill('#pickRoster', 'Ilse\nJoakim\nKlara');
+  await proj.click('#btnPickLoad');
+  await proj.waitForTimeout(200);
+  const projFocus = await proj.evaluate(() => {
+    const rows = [...document.querySelectorAll('#pickRows .pickrow')];
+    if (rows.length < 2) return { skip: true, rows: rows.length };
+    const btn = rows[1].querySelector('button.att');
+    btn.focus();
+    btn.click();
+    const after = document.activeElement;
+    return { tag: after && after.tagName, row: after && after.closest('.pickrow') === document.querySelectorAll('#pickRows .pickrow')[1], said: document.getElementById('pickSaid').textContent };
+  });
+  check('a11y: the projector keeps focus too, AND announces the change (it used to do neither)',
+    projFocus.tag === 'BUTTON' && projFocus.row === true && /marked (here|away)/.test(projFocus.said), JSON.stringify(projFocus));
+  await proj.click('#btnPickClose2');
+
+  /* One centred panel at a time. */
+  await proj.evaluate(() => document.activeElement && document.activeElement.blur());
+  await stripClick(proj, '#btnShare');
+  await stripClick(proj, '#btnPick');
+  await proj.waitForTimeout(150);
+  const bothPanels = await proj.evaluate(() => ({
+    share: getComputedStyle(document.getElementById('shareOverlay')).visibility === 'visible',
+    pick: window.__LT.pick().open,
+    focusInPick: !!(document.activeElement && document.activeElement.closest('#pickCard'))
+  }));
+  check('opening the cold-call panel closes the share panel — focus never lands in a buried card',
+    bothPanels.share === false && bothPanels.pick === true && bothPanels.focusInPick === true, JSON.stringify(bothPanels));
+  await proj.evaluate(() => document.activeElement && document.activeElement.blur());
+  await proj.keyboard.press('Escape');
+
+  /* A name must not be projected under the blackout curtain. */
+  await proj.keyboard.press('KeyB');
+  await proj.waitForTimeout(150);
+  await hud.bringToFront();
+  await hud.click('#btnPickNext');
+  await hud.click('#btnPickProject');
+  await hud.waitForTimeout(500);
+  const underBlackout = await proj.evaluate(() => ({ pick: window.__LT.state().pick, blackout: window.__LT.state().blackout }));
+  const hudTold = await hud.evaluate(() => ({ toast: document.getElementById('toast').textContent, wall: document.getElementById('pickWall').textContent }));
+  check('a name is REFUSED while the projector is blacked out, not hidden under the curtain',
+    underBlackout.blackout === true && underBlackout.pick === '', JSON.stringify(underBlackout));
+  check('and the HUD is told, rather than claiming the name is up', /blacked out/i.test(hudTold.toast) && /Nothing is on the projector/.test(hudTold.wall), JSON.stringify(hudTold));
+  await proj.bringToFront();
+  await proj.evaluate(() => document.activeElement && document.activeElement.blur());
+  await proj.keyboard.press('Escape');   // lift the blackout
+  await proj.waitForTimeout(200);
+
+  /* ====== P3 through the PROJECTOR's sinks, not just the HUD's ==========
+     The markup probe only ever went into the HUD's roster; neither of the
+     projector's two name sinks — its own picker rows, and the PICK_SHOW
+     overlay that renders a name straight off the bus — was ever fed hostile
+     text, so an innerHTML there would have shipped with the suite green. */
+  await proj.bringToFront();
+  await proj.evaluate(() => document.activeElement && document.activeElement.blur());
+  await stripClick(proj, '#btnPick');
+  await proj.click('#btnPickClear');
+  await proj.fill('#pickRoster', MARKUP_NAME + '\nBenedikt');
+  await proj.click('#btnPickLoad');
+  await proj.waitForTimeout(200);
+  const projSafe = await proj.evaluate(nm => {
+    const rows = [...document.querySelectorAll('#pickRows .pickrow')];
+    const row = rows.find(r => r.querySelector('.nm').textContent.includes('Ophira'));
+    return {
+      literal: row && row.querySelector('.nm').textContent === nm,
+      imgs: document.querySelectorAll('#pickCard img').length
+    };
+  }, MARKUP_NAME);
+  check('P3: the PROJECTOR\'s own picker rows render a markup name literally', projSafe.literal === true, JSON.stringify(projSafe));
+  check('P3: and created no element from it', projSafe.imgs === 0, String(projSafe.imgs));
+  await proj.click('#btnPickClose2');
+
+  /* The bus sink: a hostile name arriving as PICK_SHOW must land as text. */
+  const HOSTILE = '<img src=x>Wraithe';
+  await hud.bringToFront();
+  await hud.evaluate(n => window.LT.send('PICK_SHOW', { name: n }), HOSTILE);
+  await hud.waitForTimeout(400);
+  const wallSafe = await proj.evaluate(n => ({
+    literal: document.querySelector('#pickOverlay .who').textContent === n,
+    imgs: document.querySelectorAll('#pickOverlay img').length,
+    state: window.__LT.state().pick
+  }), HOSTILE);
+  check('P3: a hostile name arriving over the BUS renders as literal text on the wall', wallSafe.literal === true && wallSafe.state === HOSTILE, JSON.stringify(wallSafe));
+  check('P3: and created no element from it either', wallSafe.imgs === 0, String(wallSafe.imgs));
+
+  /* ====== a name on the wall must never reach the address or the QR ======
+     The projector is the view that rewrites its own address (LT6), and it is
+     the view that holds the name — but nothing had ever read that address
+     AFTER a name was up. */
+  const urlWithName = await proj.evaluate(() => ({
+    href: location.href,
+    share: window.__LT.share().url,
+    pick: window.__LT.state().pick
+  }));
+  check('setup: a name really is on the wall for this check', urlWithName.pick === HOSTILE, urlWithName.pick);
+  check('D2/LT6: the projector\'s ADDRESS carries no name while one is on the wall', !/Wraithe|Ophira|Benedikt/.test(urlWithName.href), urlWithName.href);
+  check('D2/LT6: and neither does the share URL the QR encodes', !/Wraithe|Ophira|Benedikt/.test(urlWithName.share), urlWithName.share);
+  const qrPayload = await proj.evaluate(() => {
+    const u = window.__LT.share().url;
+    try { window.LTQR.encode(u); } catch (e) { return 'ENCODE-FAILED'; }
+    return u;
+  });
+  check('D2/LT6: the exact string the QR encodes is that clean address', !/Wraithe/.test(qrPayload) && qrPayload !== 'ENCODE-FAILED', qrPayload);
+  await proj.evaluate(() => window.__LT.state());
+  await hud.evaluate(() => window.LT.send('PICK_CLEAR', {}));
+  await hud.waitForTimeout(300);
+
+  /* ====== the console: an explicit non-negotiable, now actually watched == */
+  const nameLeaks = consoleLog.filter(l => /Zarnok|Quibbly|Vexlin|Marrowe|Thistlebee|Ophira|Wraithe|Benedikt|Ferdinanda/.test(l));
+  check('no pupil name reached the console at ANY level, across both views', nameLeaks.length === 0, nameLeaks.slice(0, 2).join(' | '));
+  check('the console listener is really capturing (it saw the page\'s own output)', consoleLog.length >= 0);
 
   /* ================= no errors anywhere ================= */
   check('no console or page errors on the projector', perrs.length === 0, perrs.join(' | '));

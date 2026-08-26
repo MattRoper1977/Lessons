@@ -107,23 +107,34 @@ body.highlumen #shareNoProj { color: #8a5413; }
 }
 body.highlumen #pickRoster { background: #fff; border-color: #8a7f5e; }
 #pickName { font-size: 30px; line-height: 1.2; word-break: break-word; }
+/* The wall indicator states its meaning in words; the tint only reinforces. */
+#pickWall { font-size: 13px; }
+#pickWall.live { border-color: #f2a24a; font-weight: 700; }
 .subh { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; opacity: .7; margin: 12px 0 6px; }
 .pickrows { display: flex; flex-direction: column; gap: 4px; }
 .pickrow {
-  display: flex; align-items: center; gap: 8px; min-height: 44px;
+  /* wrap, and give the NAME a floor: four rigid children used to squeeze it
+     to a couple of characters at phone width, with a decorative bar keeping
+     its 60px. The name is the content; the bar yields first. */
+  display: flex; align-items: center; gap: 8px; min-height: 44px; flex-wrap: wrap;
   border: 1px solid #2c3763; border-radius: 10px; padding: 4px 10px; font-size: 14px;
 }
 body.highlumen .pickrow { border-color: #c9c2ae; }
-.pickrow .nm { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.pickrow .nm { flex: 1 1 8ch; min-width: 8ch; overflow-wrap: anywhere; }
 /* Status is stated in TEXT, never by tint alone (the estate's colour rule):
    every row carries "here"/"away" and, when it applies, "just asked". */
-.pickrow .status { font-size: 12px; opacity: .8; white-space: nowrap; }
-.pickrow .odds { font-variant-numeric: tabular-nums; font-size: 12px; opacity: .8; min-width: 4ch; text-align: right; }
-.pickrow.away { opacity: .55; }
+.pickrow .status { font-size: 12px; opacity: .95; white-space: nowrap; }
+.pickrow .odds { font-variant-numeric: tabular-nums; font-size: 12px; opacity: .95; min-width: 4.5ch; text-align: right; }
+/* Dimmed, but never below the contrast floor: the old .55 multiplied with
+   the .8 on .status/.odds to an effective .44, which measured 2.66:1 in
+   high-lumen — a pupil's own name, unreadable. The row is distinguished by
+   the strike-through and the word "away", so the fade only has to be
+   perceptible, not heavy. */
+.pickrow.away { opacity: .82; }
 .pickrow.away .nm { text-decoration: line-through; }
 .pickrow button.att { min-width: 44px; min-height: 36px; padding: 4px 10px; font-size: 12px; }
 /* The odds bar is decoration on top of the number, never instead of it. */
-.pickrow .bar { width: 60px; height: 8px; border-radius: 999px; background: #2c3763; overflow: hidden; flex: none; }
+.pickrow .bar { width: 60px; max-width: 22vw; height: 8px; border-radius: 999px; background: #2c3763; overflow: hidden; flex: 0 1 auto; }
 body.highlumen .pickrow .bar { background: #ded7c4; }
 .pickrow .bar i { display: block; height: 100%; background: #f2a24a; }
 @media print { body { display: none; } }
@@ -232,18 +243,26 @@ body.reduce *, body.reduce *::before, body.reduce *::after {
   <div id="pickEmpty">
     <p class="keys" style="margin-top:0">Paste your class list — one name per line, or separated by commas.
     <strong>The list stays in this tab&rsquo;s memory for this lesson only.</strong> It is never saved to this
-    device, never put in the address, never sent to the projector, and it disappears when you close the tab.</p>
+    device and never put in the address, and it disappears when you close the tab. The list itself never
+    leaves this window: the only thing that can reach the projector is a single picked name, and only when
+    you press <strong>Show on projector</strong>.</p>
     <textarea id="pickRoster" rows="4" autocomplete="off" autocorrect="off" spellcheck="false" aria-label="Class list, one name per line" placeholder="Ana&#10;Ben&#10;Charlie"></textarea>
     <div class="row" style="margin-top:8px">
       <button id="btnPickLoad">Load class list</button>
     </div>
+  </div>
+  <!-- OUTSIDE #pickLive on purpose: after a HUD reload there is no roster in
+       memory, but a name may still be on the wall, and the control that takes
+       it down must not be hidden behind the empty state. -->
+  <div class="row" style="margin-bottom:8px">
+    <span id="pickWall" class="ind">Nothing is on the projector.</span>
+    <button id="btnPickHide">🙈 Clear projector</button>
   </div>
   <div id="pickLive" hidden>
     <div class="row" style="margin-bottom:8px">
       <button id="btnPickNext">🎲 Pick (N)</button>
       <button id="btnPickPass">↩ Pass / bounce (M)</button>
       <button id="btnPickProject">📢 Show on projector</button>
-      <button id="btnPickHide">🙈 Clear projector</button>
     </div>
     <div class="big" id="pickName">—</div>
     <div class="keys" id="pickNote">Picked names stay on this screen until you press <strong>Show on projector</strong>.</div>
@@ -698,17 +717,33 @@ body.reduce *, body.reduce *::before, body.reduce *::after {
      case-insensitively (two "Sam"s would be indistinguishable on screen,
      which is its own safeguarding problem — the view tells the teacher to
      add an initial). */
+  function clampName(n) {
+    /* slice() counts UTF-16 code units, so a cut can land between the halves
+       of a surrogate pair and leave a lone high surrogate — which renders as
+       the replacement diamond in a name on the class screen. Cut by
+       CHARACTERS instead. */
+    var chars = Array.from(n);
+    return chars.length > MAX_LEN ? chars.slice(0, MAX_LEN).join('') : n;
+  }
   function parseRoster(text) {
     var seen = Object.create(null);
     var out = [];
+    var dropped = 0;
     String(text == null ? '' : text).split(/[\n,]/).forEach(function (raw) {
-      var n = String(raw).replace(/\s+/g, ' ').trim().slice(0, MAX_LEN);
+      var n = clampName(String(raw).replace(/\s+/g, ' ').trim());
       if (!n) return;
-      var key = n.toLowerCase();
+      /* Normalise before comparing: a register pasted from two sources can
+         carry the same name in NFC and NFD, which are byte-different and
+         pixel-identical — exactly the indistinguishable-duplicate the dedupe
+         exists to prevent. */
+      var key = (n.normalize ? n.normalize('NFC') : n).toLowerCase();
       if (seen[key]) return;
       seen[key] = 1;
-      if (out.length < MAX_NAMES) out.push(n);
+      if (out.length < MAX_NAMES) out.push(n); else dropped++;
     });
+    /* The caller is told what was lost, so a 45-name paste cannot be
+       confirmed as "40 names loaded" with no mention of the five. */
+    out.dropped = dropped;
     return out;
   }
 
@@ -729,10 +764,25 @@ body.reduce *, body.reduce *::before, body.reduce *::after {
 
   function setPresent(st, i, on) {
     if (i < 0 || i >= st.names.length) return;
+    var was = st.present[i];
     st.present[i] = !!on;
-    /* An absent pupil holding the cooldown slot would keep punishing the
-       room after they have gone; releasing it costs nothing. */
-    if (!st.present[i] && st.last === i) st.last = -1;
+    /* st.last is deliberately NOT cleared when that pupil is marked away. It
+       records who answered most recently, which is the single fact P2 rests
+       on; forgetting it meant a pupil could be called, marked away, marked
+       back, and called again immediately — a repeat, by the shipped buttons.
+       An away pupil is already excluded by `present`, so keeping `last`
+       costs the room nothing and keeps the guarantee true across attendance
+       changes. */
+    /* Coming BACK is the subtle one. since only advances for pupils who are
+       here, so a pupil marked away moments after being called keeps since=0
+       — and a frozen zero never expires. Returning with that zero made them
+       weightless, which in a small room emptied the pool into the uniform
+       fallback and let the pupil who had just answered be drawn again: the
+       exact repeat P2 exists to forbid. So a returning pupil re-enters at
+       least at 1 — in the pool, ordinary priority. Not higher: someone who
+       has just walked back in is the last person who should be cold-called
+       on the spot. */
+    if (st.present[i] && !was && st.since[i] < 1) st.since[i] = 1;
   }
 
   function weights(st) {
@@ -775,16 +825,22 @@ body.reduce *, body.reduce *::before, body.reduce *::after {
     var total = w.reduce(function (a, b) { return a + b; }, 0);
     var fellBack = false;
     if (total <= 0) {
-      /* Everyone present is on cooldown — one pupil present, or two with the
-         other just called. The guarantee cannot hold with nobody left to
-         call, so it degrades openly: the view says the room is too small for
-         the no-repeat guard rather than pretending it applied. */
+      /* Nobody has any weight left. Falling back to "everyone present,
+         equally" is right — but it must NOT quietly re-admit the pupil who
+         just answered: P2 is the phase's one absolute, so the fallback drops
+         them too whenever anyone else is available, and only concedes when
+         there is literally nobody else to ask. */
       var present = [];
       for (var j = 0; j < st.names.length; j++) if (st.present[j]) present.push(j);
       if (!present.length) return null;
-      fellBack = true;
-      w = st.names.map(function (_, i) { return st.present[i] ? 1 : 0; });
-      total = present.length;
+      var eligible = present.filter(function (i) { return i !== st.last && i !== st.justPassed; });
+      var pool = eligible.length ? eligible : present;
+      /* fellBack means precisely "this draw could not honour the no-repeat
+         guarantee" — not "the room is small". Both views word their notice
+         from that, so the notice is true whichever way the room got here. */
+      fellBack = !eligible.length;
+      w = st.names.map(function (_, i) { return pool.indexOf(i) === -1 ? 0 : 1; });
+      total = pool.length;
     }
     var t = r() * total, idx = -1;
     for (var i = 0; i < w.length; i++) {
@@ -1038,6 +1094,12 @@ LT.boot();
     }
     el('indStage').textContent = seen.stageCount ? (seen.stage + 1) + '/' + seen.stageCount : '—';
     el('stageTitle').textContent = seen.stageTitle || '—';
+    /* What is on the wall is a fact about the projector, so it is rendered
+       from the broadcast, never from this window's memory of what it sent. */
+    var onWall = seen.pick || '';
+    el('pickWall').textContent = onWall ? 'On the projector now: ' + onWall : 'Nothing is on the projector.';
+    el('pickWall').classList.toggle('live', !!onWall);
+    el('btnPickHide').disabled = !onWall;
     var wv = seen.wave;
     el('stageMaths').textContent = wv
       ? 'Worked answer for the worksheet: v = f × λ = ' + wv.f + ' × ' + wv.lambda + ' = ' + (Math.round(wv.f * wv.lambda * 1000) / 1000) + ' m/s'
@@ -1079,6 +1141,13 @@ LT.boot();
     else if (type === 'TELE_STROKE') {
       var s = saneStroke(payload);
       if (s) padAdd(s);
+    }
+    else if (type === 'PICK_REFUSED') {
+      /* The projector declined to show a name (it is blacked out). Say so
+         rather than leaving this window claiming the name is up. */
+      pickShown = '';
+      toast('The projector is blacked out, so the name was not shown. Lift the blackout and try again.');
+      el('pickSaid').textContent = 'Not shown — the projector is blacked out.';
     }
     else if (type === 'TELE_CLEAR') { padClear(true); }
     else if (type === 'TELE_SYNC') {
@@ -1147,7 +1216,28 @@ LT.boot();
      press below — the opt-in the non-negotiables carve out. */
   var pick = null;                 // LTPick state, or null before a list is loaded
   var pickShown = '';              // the name currently ON the projector, if any
-  function pickRender() {
+  /* A paste longer than a class silently lost the overflow while the
+     confirmation counted only the survivors. Say what was dropped. */
+  function loadReport(names) {
+    var msg = names.length + ' names loaded for this lesson only.';
+    if (names.dropped) msg += ' ' + names.dropped + ' more were not loaded — the list is capped at ' + window.LTPick.MAX_NAMES + ' names.';
+    return msg;
+  }
+  function pctText(r) {
+    /* An eligible pupil must never read as 0% — that is what an excluded one
+       shows, and in a full class the least-overdue pupil rounds below half a
+       percent. */
+    if (!r.present || r.cooldown) return '0%';
+    var pc = Math.round(r.p * 100);
+    return pc < 1 ? '<1%' : pc + '%';
+  }
+  function fallbackNote(st) {
+    var here = st.present.filter(Boolean).length;
+    return here <= 1
+      ? 'Only one pupil is marked here, so the no-repeat guard cannot apply — everyone else is away.'
+      : 'Everyone marked here has just been asked, so this draw could not avoid a repeat.';
+  }
+  function pickRender(refocus) {
     el('pickEmpty').hidden = !!pick;
     el('pickLive').hidden = !pick;
     if (!pick) return;
@@ -1177,7 +1267,7 @@ LT.boot();
       row.appendChild(bar);
       var odds = document.createElement('span');
       odds.className = 'odds';
-      odds.textContent = Math.round(r.p * 100) + '%';
+      odds.textContent = pctText(r);
       row.appendChild(odds);
       var att = document.createElement('button');
       att.className = 'att';
@@ -1186,12 +1276,19 @@ LT.boot();
       att.setAttribute('aria-label', (r.present ? 'Mark away: ' : 'Mark here: ') + r.name);
       att.addEventListener('click', function () {
         window.LTPick.setPresent(pick, i, !pick.present[i]);
-        pickRender();
+        /* Rebuilding the list deletes the button that was just pressed, so
+           focus has to be put back on the same row or a keyboard user is
+           dropped to the top of the class every time. */
+        pickRender(i);
         el('pickSaid').textContent = r.name + (pick.present[i] ? ' marked here' : ' marked away');
       });
       row.appendChild(att);
       box.appendChild(row);
     });
+    if (typeof refocus === 'number') {
+      var back = box.children[refocus] && box.children[refocus].querySelector('button.att');
+      if (back) back.focus();
+    }
   }
   function pickAnnounce(got, passed) {
     if (!got) { el('pickName').textContent = '—'; el('pickSaid').textContent = 'Nobody is marked here.'; return; }
@@ -1199,7 +1296,7 @@ LT.boot();
     el('pickSaid').textContent = (passed ? 'Passed to ' : 'Picked ') + got.name;
     /* Honest about the one case the guarantee cannot cover. */
     el('pickNote').textContent = got.fellBack
-      ? 'Only one pupil is marked here, so the no-repeat guard cannot apply — everyone else is away.'
+      ? fallbackNote(pick)
       : 'Picked names stay on this screen until you press Show on projector.';
   }
   el('btnPickLoad').addEventListener('click', function () {
@@ -1211,11 +1308,28 @@ LT.boot();
     el('pickRoster').value = '';
     el('pickName').textContent = '—';
     pickRender();
-    el('pickSaid').textContent = names.length + ' names loaded for this lesson only.';
+    el('pickSaid').textContent = loadReport(names);
   });
-  el('btnPickNext').addEventListener('click', function () { if (pick) pickAnnounce(window.LTPick.pick(pick), false); pickRender(); });
+  /* Drawing again while a name is on the wall used to leave the PREVIOUS
+     pupil named to the room while this screen showed the new one — the class
+     looking at Ben, the teacher reading Ana. Show-on-projector is a
+     one-shot, so a new draw RETRACTS what is up: the wall never carries a
+     name the teacher has moved on from, and they press Show again when they
+     mean to. */
+  function retractIfProjected() {
+    if (!pickShown) return;
+    pickShown = '';
+    LT.send('PICK_CLEAR', {});
+  }
+  el('btnPickNext').addEventListener('click', function () {
+    if (!pick) return;
+    retractIfProjected();
+    pickAnnounce(window.LTPick.pick(pick), false);
+    pickRender();
+  });
   el('btnPickPass').addEventListener('click', function () {
     if (!pick || pick.last < 0) { toast('Pick someone first, then Pass bounces the question on.'); return; }
+    retractIfProjected();
     pickAnnounce(window.LTPick.pass(pick), true);
     pickRender();
   });
@@ -1225,6 +1339,10 @@ LT.boot();
   el('btnPickProject').addEventListener('click', function () {
     var name = el('pickName').textContent;
     if (!pick || !name || name === '—') { toast('Pick someone first.'); return; }
+    if (seen && seen.blackout) {
+      toast('The projector is blacked out, so nothing would be seen — lift the blackout first.');
+      return;
+    }
     pickShown = name;
     LT.send('PICK_SHOW', { name: name });
     el('pickSaid').textContent = name + ' is now on the projector.';
@@ -1395,9 +1513,9 @@ LT.boot();
   LT.registerKey('KeyD', function () { LT.send('TELE_SET', { on: !(seen && seen.telestrator) }); }, 'Telestrator draw toggle');
   LT.registerKey('KeyC', function () { padClear(false); }, 'Telestrator clear');
   LT.registerKey('KeyQ', function () { shareToggle(); }, 'Share / QR');
-  LT.registerKey('KeyN', function () { if (pick) { pickAnnounce(window.LTPick.pick(pick), false); pickRender(); } }, 'Cold call: pick next');
+  LT.registerKey('KeyN', function () { if (pick) { retractIfProjected(); pickAnnounce(window.LTPick.pick(pick), false); pickRender(); } }, 'Cold call: pick next');
   LT.registerKey('KeyM', function () {
-    if (pick && pick.last >= 0) { pickAnnounce(window.LTPick.pass(pick), true); pickRender(); }
+    if (pick && pick.last >= 0) { retractIfProjected(); pickAnnounce(window.LTPick.pass(pick), true); pickRender(); }
   }, 'Cold call: pass / bounce');
 
   /* ---------- mini-pad (LT5; dual-mode only per order D1) ----------------

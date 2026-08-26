@@ -245,21 +245,29 @@ body.highlumen #pickCard textarea { background: #fff; border-color: #8a7f5e; }
   background: #16204a; color: #e8e2d4; font: inherit; font-weight: 600; padding: 6px 14px; cursor: pointer;
 }
 body.highlumen #pickCard .row button { background: #fffdf6; color: #1c2337; border-color: #8a7f5e; }
-#pickCard .row button:focus-visible, #pickCard textarea:focus-visible { outline: 3px solid #b9e6cd; outline-offset: 2px; }
+/* The attendance buttons live in #pickRows, not in a .row, so the original
+   selector missed all forty of them — the only controls in the panel with no
+   focus ring. Scoped to the card instead. */
+#pickCard button:focus-visible, #pickCard textarea:focus-visible { outline: 3px solid #b9e6cd; outline-offset: 2px; }
 #pickRows { display: flex; flex-direction: column; gap: 4px; }
 #pickRows .pickrow {
-  display: flex; align-items: center; gap: 8px; min-height: 44px;
+  display: flex; align-items: center; gap: 8px; min-height: 44px; flex-wrap: wrap;
   border: 1px solid #2c3763; border-radius: 10px; padding: 4px 10px; font-size: 14px;
 }
 body.highlumen #pickRows .pickrow { border-color: #c9c2ae; }
-#pickRows .nm { flex: 1; min-width: 0; overflow-wrap: anywhere; }
-#pickRows .status { font-size: 12px; opacity: .8; white-space: nowrap; }
-#pickRows .odds { font-variant-numeric: tabular-nums; font-size: 12px; opacity: .8; min-width: 4ch; text-align: right; }
-#pickRows .pickrow.away { opacity: .55; }
+#pickRows .nm { flex: 1 1 8ch; min-width: 8ch; overflow-wrap: anywhere; }
+#pickRows .status { font-size: 12px; opacity: .95; white-space: nowrap; }
+#pickRows .odds { font-variant-numeric: tabular-nums; font-size: 12px; opacity: .95; min-width: 4.5ch; text-align: right; }
+/* Dimmed, but never below the contrast floor: the old .55 multiplied with
+   the .8 on .status/.odds to an effective .44, which measured 2.66:1 in
+   high-lumen — a pupil's own name, unreadable. The row is distinguished by
+   the strike-through and the word "away", so the fade only has to be
+   perceptible, not heavy. */
+#pickRows .pickrow.away { opacity: .82; }
 #pickRows .pickrow.away .nm { text-decoration: line-through; }
 #pickRows button.att { min-width: 44px; min-height: 36px; padding: 4px 10px; font-size: 12px; border-radius: 8px; border: 1px solid #43518c; background: #16204a; color: inherit; font: inherit; cursor: pointer; }
 body.highlumen #pickRows button.att { background: #fffdf6; border-color: #8a7f5e; }
-#pickRows .bar { width: 60px; height: 8px; border-radius: 999px; background: #2c3763; overflow: hidden; flex: none; }
+#pickRows .bar { width: 60px; max-width: 22vw; height: 8px; border-radius: 999px; background: #2c3763; overflow: hidden; flex: 0 1 auto; }
 body.highlumen #pickRows .bar { background: #ded7c4; }
 #pickRows .bar i { display: block; height: 100%; background: #f2a24a; }
 
@@ -442,8 +450,10 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
     <h2 id="pickTitle">🎲 Cold call</h2>
     <p class="sub" id="pickSub">Paste your class list — one name per line, or separated by commas.
       <strong>It stays in this tab&rsquo;s memory for this lesson only:</strong> never saved to this device,
-      never in the address or the QR code, and gone when you close the tab. On this window the class can
-      see the screen, so a picked name is shown to the room.</p>
+      never in the address or the QR code, and gone when you close the tab. <strong>This window is the one
+      the class can see</strong>, so while this panel is open the whole list — names, who is here, and
+      everyone&rsquo;s odds — is on the board, and a name you pick is shown to the room. On a two-screen
+      setup, load the list into the teacher window instead and this panel can stay shut.</p>
     <div id="pickEmpty">
       <textarea id="pickRoster" rows="4" autocomplete="off" autocorrect="off" spellcheck="false" aria-label="Class list, one name per line" placeholder="Ana&#10;Ben&#10;Charlie"></textarea>
       <div class="row">
@@ -930,17 +940,33 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
      case-insensitively (two "Sam"s would be indistinguishable on screen,
      which is its own safeguarding problem — the view tells the teacher to
      add an initial). */
+  function clampName(n) {
+    /* slice() counts UTF-16 code units, so a cut can land between the halves
+       of a surrogate pair and leave a lone high surrogate — which renders as
+       the replacement diamond in a name on the class screen. Cut by
+       CHARACTERS instead. */
+    var chars = Array.from(n);
+    return chars.length > MAX_LEN ? chars.slice(0, MAX_LEN).join('') : n;
+  }
   function parseRoster(text) {
     var seen = Object.create(null);
     var out = [];
+    var dropped = 0;
     String(text == null ? '' : text).split(/[\n,]/).forEach(function (raw) {
-      var n = String(raw).replace(/\s+/g, ' ').trim().slice(0, MAX_LEN);
+      var n = clampName(String(raw).replace(/\s+/g, ' ').trim());
       if (!n) return;
-      var key = n.toLowerCase();
+      /* Normalise before comparing: a register pasted from two sources can
+         carry the same name in NFC and NFD, which are byte-different and
+         pixel-identical — exactly the indistinguishable-duplicate the dedupe
+         exists to prevent. */
+      var key = (n.normalize ? n.normalize('NFC') : n).toLowerCase();
       if (seen[key]) return;
       seen[key] = 1;
-      if (out.length < MAX_NAMES) out.push(n);
+      if (out.length < MAX_NAMES) out.push(n); else dropped++;
     });
+    /* The caller is told what was lost, so a 45-name paste cannot be
+       confirmed as "40 names loaded" with no mention of the five. */
+    out.dropped = dropped;
     return out;
   }
 
@@ -961,10 +987,25 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
 
   function setPresent(st, i, on) {
     if (i < 0 || i >= st.names.length) return;
+    var was = st.present[i];
     st.present[i] = !!on;
-    /* An absent pupil holding the cooldown slot would keep punishing the
-       room after they have gone; releasing it costs nothing. */
-    if (!st.present[i] && st.last === i) st.last = -1;
+    /* st.last is deliberately NOT cleared when that pupil is marked away. It
+       records who answered most recently, which is the single fact P2 rests
+       on; forgetting it meant a pupil could be called, marked away, marked
+       back, and called again immediately — a repeat, by the shipped buttons.
+       An away pupil is already excluded by `present`, so keeping `last`
+       costs the room nothing and keeps the guarantee true across attendance
+       changes. */
+    /* Coming BACK is the subtle one. since only advances for pupils who are
+       here, so a pupil marked away moments after being called keeps since=0
+       — and a frozen zero never expires. Returning with that zero made them
+       weightless, which in a small room emptied the pool into the uniform
+       fallback and let the pupil who had just answered be drawn again: the
+       exact repeat P2 exists to forbid. So a returning pupil re-enters at
+       least at 1 — in the pool, ordinary priority. Not higher: someone who
+       has just walked back in is the last person who should be cold-called
+       on the spot. */
+    if (st.present[i] && !was && st.since[i] < 1) st.since[i] = 1;
   }
 
   function weights(st) {
@@ -1007,16 +1048,22 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
     var total = w.reduce(function (a, b) { return a + b; }, 0);
     var fellBack = false;
     if (total <= 0) {
-      /* Everyone present is on cooldown — one pupil present, or two with the
-         other just called. The guarantee cannot hold with nobody left to
-         call, so it degrades openly: the view says the room is too small for
-         the no-repeat guard rather than pretending it applied. */
+      /* Nobody has any weight left. Falling back to "everyone present,
+         equally" is right — but it must NOT quietly re-admit the pupil who
+         just answered: P2 is the phase's one absolute, so the fallback drops
+         them too whenever anyone else is available, and only concedes when
+         there is literally nobody else to ask. */
       var present = [];
       for (var j = 0; j < st.names.length; j++) if (st.present[j]) present.push(j);
       if (!present.length) return null;
-      fellBack = true;
-      w = st.names.map(function (_, i) { return st.present[i] ? 1 : 0; });
-      total = present.length;
+      var eligible = present.filter(function (i) { return i !== st.last && i !== st.justPassed; });
+      var pool = eligible.length ? eligible : present;
+      /* fellBack means precisely "this draw could not honour the no-repeat
+         guarantee" — not "the room is small". Both views word their notice
+         from that, so the notice is true whichever way the room got here. */
+      fellBack = !eligible.length;
+      w = st.names.map(function (_, i) { return pool.indexOf(i) === -1 ? 0 : 1; });
+      total = pool.length;
     }
     var t = r() * total, idx = -1;
     for (var i = 0; i < w.length; i++) {
@@ -1680,7 +1727,14 @@ LT.boot();
     btnPoll.setAttribute('aria-pressed', String(state.poll.on));
     broadcast();
   }
-  function clearOverlays() { setHint(false); setPoll(false); clearTimer(); }
+  function clearOverlays() {
+    setHint(false); setPoll(false); clearTimer();
+    /* The key card and the launcher both promise 0 clears EVERY overlay, and
+       a pupil's name on the wall is the one overlay it most matters to be
+       able to take down in one press. (showPickName is hoisted from the
+       picker block below.) */
+    showPickName('');
+  }
   btnHint.addEventListener('click', function () { setHint(!state.hint.on, hintInput.value); });
   btnPoll.addEventListener('click', function () { setPoll(!state.poll.on); });
   document.getElementById('btnClear').addEventListener('click', clearOverlays);
@@ -2239,6 +2293,7 @@ LT.boot();
        see and deaden the hotkeys on a black screen — so say what to do
        instead of opening a trap. */
     if (state.blackout) { toast('The screen is blacked out — press B or the ✖ Blackout button first, then Share.'); return; }
+    pickEscape();   // one centred panel at a time (see pickOpen)
     shareOpen();
   }
   document.getElementById('btnShare').addEventListener('click', shareToggle);
@@ -2311,6 +2366,11 @@ LT.boot();
   function showPickName(name) {
     /* External text, textContent only — the rule the whole registry turns on. */
     var n = String(name == null ? '' : name).slice(0, 64);
+    /* Blacked out means the screen is off for the room, deliberately. Putting
+       a name under the curtain would tell the sender it is "on the
+       projector" when nobody can see it — and reveal it the moment the
+       curtain lifts, which is not what was agreed to. Refuse, and say so. */
+    if (n && state.blackout) { LT.send('PICK_REFUSED', { why: 'blackout' }); return; }
     state.pick = n;                 // travels in PROJECTOR_STATE: it is already on the wall
     pickWho.textContent = n;
     pickOverlay.classList.toggle('show', !!n);
@@ -2322,7 +2382,30 @@ LT.boot();
     pickSaid.textContent = n ? 'Cold call: ' + n : 'Cold call name cleared';
     broadcast();
   }
-  function pickRender() {
+  /* fellBack means precisely "this draw could not honour the no-repeat
+     guarantee", which can happen with one pupil here OR with everyone else
+     already on cooldown. Saying "only one pupil is marked here" when three
+     are would be a claim the screen contradicts. */
+  function fallbackNote(st) {
+    var here = st.present.filter(Boolean).length;
+    return here <= 1
+      ? 'Only one pupil is marked here, so the no-repeat guard cannot apply.'
+      : 'Everyone marked here has just been asked, so this draw could not avoid a repeat.';
+  }
+  /* A paste longer than a class silently lost the overflow while the
+     confirmation counted only the survivors. Say what was dropped. */
+  function loadReport(names) {
+    var msg = names.length + ' names loaded for this lesson only.';
+    if (names.dropped) msg += ' ' + names.dropped + ' more were not loaded — the list is capped at ' + window.LTPick.MAX_NAMES + ' names.';
+    return msg;
+  }
+  function pctText(r) {
+    if (!r.present) return '0%';
+    if (r.cooldown) return '0%';
+    var pc = Math.round(r.p * 100);
+    return pc < 1 ? '<1%' : pc + '%';
+  }
+  function pickRender(refocus) {
     document.getElementById('pickEmpty').hidden = !!pick;
     document.getElementById('pickLive').hidden = !pick;
     if (!pick) return;
@@ -2340,18 +2423,33 @@ LT.boot();
       var bar = document.createElement('span'); bar.className = 'bar';
       var fill = document.createElement('i'); fill.style.width = Math.round(r.p * 100) + '%';
       bar.appendChild(fill); row.appendChild(bar);
-      var odds = document.createElement('span'); odds.className = 'odds'; odds.textContent = Math.round(r.p * 100) + '%'; row.appendChild(odds);
+      var odds = document.createElement('span'); odds.className = 'odds';
+      /* A pupil who IS in the draw must never read as 0% — in a full class
+         the least-overdue pupil rounds below a half percent, and "0%" is
+         what an excluded pupil shows. */
+      odds.textContent = pctText(r); row.appendChild(odds);
       var att = document.createElement('button');
       att.className = 'att'; att.type = 'button';
       att.textContent = r.present ? 'Mark away' : 'Mark here';
       att.setAttribute('aria-label', (r.present ? 'Mark away: ' : 'Mark here: ') + r.name);
       att.addEventListener('click', function () {
         window.LTPick.setPresent(pick, i, !pick.present[i]);
-        pickRender();
+        /* The re-render deletes the very button that was just pressed, so
+           without this the keyboard user is dropped to <body> and has to tab
+           back down the whole class list — every single time. Rebuild, then
+           put focus back on the same row. And SAY what changed: the HUD
+           announced it and this view did not, which made the projector the
+           weaker surface for exactly the people who need it most. */
+        pickRender(i);
+        pickSaid.textContent = r.name + (pick.present[i] ? ' marked here' : ' marked away');
       });
       row.appendChild(att);
       box.appendChild(row);
     });
+    if (typeof refocus === 'number') {
+      var back = box.children[refocus] && box.children[refocus].querySelector('button.att');
+      if (back) back.focus();
+    }
   }
   function pickDraw(passed) {
     if (!pick) return;
@@ -2360,12 +2458,16 @@ LT.boot();
     if (!got) { toast('Nobody is marked here — mark someone back in first.'); return; }
     showPickName(got.name);
     document.getElementById('pickNote').textContent = got.fellBack
-      ? 'Only one pupil is marked here, so the no-repeat guard cannot apply.'
+      ? fallbackNote(pick)
       : '';
     pickRender();
   }
   function pickOpen() {
     if (state.blackout) { toast('The screen is blacked out — press B or the ✖ Blackout button first.'); return; }
+    /* Both panels are centred at the same depth, so two open at once puts
+       focus inside whichever lost the paint order and leaves the teacher
+       clicking a card that is not there. One at a time. */
+    shareEscape();
     pickReturnFocus = document.activeElement;
     pickRender();
     pickPanel.classList.add('show');
@@ -2394,7 +2496,7 @@ LT.boot();
     document.getElementById('pickRoster').value = '';   // nothing lingers in a form field
     pickRender();
     document.getElementById('btnPickNext').focus();
-    pickSaid.textContent = names.length + ' names loaded for this lesson only.';
+    pickSaid.textContent = loadReport(names);
   });
   document.getElementById('btnPickNext').addEventListener('click', function () { pickDraw(false); });
   document.getElementById('btnPickPass').addEventListener('click', function () { pickDraw(true); });

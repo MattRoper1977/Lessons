@@ -83,7 +83,41 @@ if (process.argv[2] === '--self-test') {
   const bWorst = Math.max(...bVals.map(v => Math.abs(v - bExpect) / bExpect));
   say(bWorst > 0.15, 'RED: a biased draw blows the balance tolerance this gate applies', 'worst deviation ' + (bWorst * 100).toFixed(1) + '%');
 
-  /* RED 3 — absence must actually remove someone from the draw. */
+  /* RED 3 — the attendance hole itself, rebuilt. Re-introduce BOTH halves of
+     the original defect (clear `last` when a pupil is marked away, and let a
+     returning pupil keep a frozen zero) and demand the churn fuzz catches
+     it. Without this the churn checks could be passing for the wrong reason. */
+  const brokenSrc = require('node:fs').readFileSync(path.join(HERE, 'picker_source.js'), 'utf8')
+    .replace(/if \(st\.present\[i\] && !was && st\.since\[i\] < 1\) st\.since\[i\] = 1;/,
+             'if (!st.present[i] && st.last === i) st.last = -1;')
+    .replace(/var eligible = present\.filter\(function \(i\) \{ return i !== st\.last && i !== st\.justPassed; \}\);/,
+             'var eligible = present.slice();');
+  const bmod = { exports: {} };
+  new Function('module', 'exports', 'self', brokenSrc)(bmod, bmod.exports, undefined);
+  const BROKEN = bmod.exports;
+  say(BROKEN !== LTPick && typeof BROKEN.pick === 'function', 'setup: the broken engine rebuilt for the control');
+  let brokenAvoidable = 0;
+  {
+    const st = BROKEN.create(ROSTER.slice(0, 3));
+    const r = rng(4245);
+    let prev = null;
+    for (let i = 0; i < 4000; i++) {
+      if (r() < 0.34) {
+        const who = r() < 0.5 && st.last >= 0 ? st.last : Math.floor(r() * 3);
+        BROKEN.setPresent(st, who, !st.present[who]);
+      }
+      if (!st.present.some(Boolean)) BROKEN.setPresent(st, Math.floor(r() * 3), true);
+      const others = st.present.filter((p, idx) => p && st.names[idx] !== prev).length;
+      const got = BROKEN.pick(st, r);
+      if (!got) continue;
+      if (prev !== null && got.name === prev && others > 0) brokenAvoidable++;
+      prev = got.name;
+    }
+  }
+  say(brokenAvoidable > 0, 'RED: the ORIGINAL attendance hole produces avoidable repeats, and the churn fuzz counts them', 'avoidable=' + brokenAvoidable);
+  console.log('        (the pre-fix engine repeated an already-answered pupil ' + brokenAvoidable + ' times in 4000 churned draws)');
+
+  /* RED 4 — absence must actually remove someone from the draw. */
   const st = LTPick.create(ROSTER);
   LTPick.setPresent(st, 3, false);
   const rr = rng(11);
@@ -103,8 +137,23 @@ say(main.fellBack === 0, 'P2: the guarantee never had to degrade with a full roo
 const vals = [...main.counts.values()];
 const expect = DRAWS / ROSTER.length;
 const worst = Math.max(...vals.map(v => Math.abs(v - expect) / expect));
-say(worst <= 0.15, 'long-run balance: every pupil called within 15% of an even share', 'worst deviation ' + (worst * 100).toFixed(2) + '% (min ' + Math.min(...vals) + ', max ' + Math.max(...vals) + ', even ' + expect + ')');
+/* 8%, not 15%. The engine's own spread across seeds measures under ~4.5%, so
+   a 15% band sat about five times above the noise it was meant to police and
+   would have passed a real weighting bias. And one seed is not a
+   distribution: the same shape runs across six. */
+const TOL = 0.08;
+say(worst <= TOL, 'long-run balance: every pupil called within 8% of an even share', 'worst deviation ' + (worst * 100).toFixed(2) + '% (min ' + Math.min(...vals) + ', max ' + Math.max(...vals) + ', even ' + expect + ')');
 console.log('        call spread: min ' + Math.min(...vals) + ' / max ' + Math.max(...vals) + ' / even ' + expect + ' — worst deviation ' + (worst * 100).toFixed(2) + '%');
+let worstAcross = 0;
+for (const seed of [1, 7, 101, 5150, 90210, 31337]) {
+  const s2 = run(ROSTER, 6000, seed, 'pick');
+  const v2 = [...s2.counts.values()];
+  const e2 = 6000 / ROSTER.length;
+  const w2 = Math.max(...v2.map(v => Math.abs(v - e2) / e2));
+  worstAcross = Math.max(worstAcross, w2);
+  if (s2.repeats) say(false, 'seed ' + seed + ': zero repeats', 'repeats=' + s2.repeats);
+}
+say(worstAcross <= TOL, 'balance holds across six independent seeds, not just the one', 'worst across seeds ' + (worstAcross * 100).toFixed(2) + '%');
 
 /* Passing must not become an escape route: a pupil who passes every time
    should still be asked about as often as everyone else. */
@@ -125,6 +174,55 @@ const solo = run(ROSTER.slice(0, 1), 50, 5, 'pick');
    of 50 are flagged — every draw where the guarantee genuinely could not
    hold, and none where it could. */
 say(solo.repeats === 49 && solo.fellBack === 49, 'one pupil present: the guard degrades OPENLY (flagged on every draw it could not cover) rather than pretending', JSON.stringify({ repeats: solo.repeats, fellBack: solo.fellBack }));
+
+/* THE ATTENDANCE HOLE (found by review, reproduced, fixed). `since` only
+   advances for pupils who are here, so a pupil marked away just after being
+   called kept since=0 — and a frozen zero never expires. Returning with it
+   made them weightless, which in a small room emptied the pool into the
+   uniform fallback and let the pupil who had just answered be drawn again.
+   Attendance churn is now fuzzed hard, in the small rooms where it bites. */
+for (const n of [2, 3, 4, 8]) {
+  const st = LTPick.create(ROSTER.slice(0, n));
+  const r = rng(4242 + n);
+  let prev = null, avoidable = 0, churns = 0, conceded = 0, lied = 0;
+  for (let i = 0; i < 4000; i++) {
+    // flip somebody's attendance about a third of the time, including the
+    // pupil who has just been called — the exact move that broke it.
+    if (r() < 0.34) {
+      const who = r() < 0.5 && st.last >= 0 ? st.last : Math.floor(r() * n);
+      LTPick.setPresent(st, who, !st.present[who]);
+      churns++;
+    }
+    if (!st.present.some(Boolean)) { LTPick.setPresent(st, Math.floor(r() * n), true); }
+    /* Work out, BEFORE the draw, whether a repeat was avoidable: was anyone
+       other than the pupil who just answered actually in the room? That is
+       the true invariant — a repeat is a defect only when someone else
+       could have been asked. */
+    const others = st.present.filter((p, idx) => p && st.names[idx] !== prev).length;
+    const got = LTPick.pick(st, r);
+    if (!got) continue;
+    if (got.fellBack) {
+      conceded++;
+      if (others > 0) lied++;      // claimed it had no choice while it did
+    }
+    if (prev !== null && got.name === prev && others > 0) avoidable++;
+    prev = got.name;
+  }
+  say(avoidable === 0, 'P2 survives attendance churn in a room of ' + n + ': no AVOIDABLE repeat in 4000 draws (' + churns + ' flips)', 'avoidable=' + avoidable);
+  say(lied === 0, 'and it never claims it had no choice while someone else was in the room (room of ' + n + ')', 'false concessions=' + lied + ' of ' + conceded);
+}
+
+/* A returning pupil must come back into the pool, not sit weightless. */
+const ret = LTPick.create(ROSTER.slice(0, 4));
+const rr2 = rng(77);
+LTPick.pick(ret, rr2);
+const justCalled = ret.last;
+LTPick.setPresent(ret, justCalled, false);
+LTPick.setPresent(ret, justCalled, true);
+say(ret.since[justCalled] >= 1, 'a pupil marked away and straight back re-enters the pool rather than carrying a frozen zero', 'since=' + ret.since[justCalled]);
+let sawReturner = false;
+for (let i = 0; i < 400; i++) { const g = LTPick.pick(ret, rr2); if (g && g.index === justCalled) sawReturner = true; }
+say(sawReturner, 'and they are actually called again afterwards');
 
 /* Attendance mid-lesson: a pupil marked absent stops being drawn from that
    moment, and marking them back present returns them to the room. */
@@ -155,7 +253,11 @@ say(rows.filter(r => r.cooldown).length === 1, 'P2: exactly one pupil is shown o
 /* Roster parsing: a paste from a register, however it is shaped. */
 const parsed = LTPick.parseRoster(' Ana ,Ben\nCharlie\n\n Ana \n' + 'x'.repeat(60));
 say(parsed.length === 4 && parsed[0] === 'Ana' && parsed[3].length === 32, 'roster parse: commas and newlines both work, duplicates drop, long names clamp', JSON.stringify(parsed.slice(0, 4).map(s => s.slice(0, 8))));
-say(LTPick.parseRoster('a,'.repeat(80)).length <= LTPick.MAX_NAMES, 'roster parse: a runaway paste is capped at a class-sized list');
+/* DISTINCT names: the old probe pasted the same name eighty times, which the
+   dedupe collapsed to one entry before the cap was ever consulted — the
+   assertion was 1 <= 40 and passed with the cap deleted. */
+const runaway = LTPick.parseRoster(Array.from({ length: 80 }, (_, i) => 'Name' + i).join(','));
+say(runaway.length === LTPick.MAX_NAMES, 'roster parse: 80 DISTINCT names are capped at exactly the class-sized limit', 'got ' + runaway.length);
 
 /* Nothing in the engine may reach for storage, the bus, the URL or the log. */
 const src = require('node:fs').readFileSync(path.join(HERE, 'picker_source.js'), 'utf8');
