@@ -1255,6 +1255,7 @@ LT.boot();
     /* LT8 extras. rag holds COUNTS ONLY — anonymous by construction, so
        there is nothing here that could identify a pupil. audio is off at
        every load and is deliberately not persisted. */
+    wave: null,                        // {f, lambda, A} on a wave stage (LT9)
     rag: { r: 0, a: 0, g: 0 },
     ragShow: false,
     audio: false
@@ -1262,6 +1263,9 @@ LT.boot();
   function broadcast() {
     state.aspect = innerWidth / Math.max(1, innerHeight);
     state.hl = LT.highlumen();
+    /* The stage's real numbers travel so the HUD can show the teacher the
+       worked answer the pupils' worksheet deliberately omits (LT9). */
+    state.wave = state.mode === 'wave' ? { f: wave.f, lambda: wave.lambda, A: wave.A } : null;
     LT.send('PROJECTOR_STATE', JSON.parse(JSON.stringify(state)));
     syncStateToURL();   // U2: the address bar mirrors state — without history spam
   }
@@ -2723,11 +2727,15 @@ LT.boot();
       var tasks = mk('div', 'wsWork');
       tasks.appendChild(mk('h2', null, 'Your turn'));
       var ol = document.createElement('ol');
+      /* Task 2 hands the frequency over on purpose: it cannot be measured
+         from a still drawing, and pretending otherwise would be the same
+         dishonesty W2 exists to stop. The wavelength is NOT given — that is
+         the one the pupil measures — so no task may quote it back. */
       [
         'Measure one whole wavelength off the drawing, using the grid. Write it in metres.',
-        'The wave completed ' + wave.f + ' full wave' + (wave.f === 1 ? '' : 's') + ' every second. Write that down as the frequency, in Hz.',
+        'A still drawing cannot show you the frequency, so here it is: the wave completed ' + wave.f + ' full wave' + (wave.f === 1 ? '' : 's') + ' every second. Write that down, with its unit.',
         'Work out the wave speed using v = f × λ. Show your working, and give the unit.',
-        'Check: does your measured wavelength agree with λ = ' + wave.lambda + ' m? If not, by how much, and why might that be?'
+        'Check your measuring: find a different whole wavelength further along the drawing. Do you get the same answer? If not, by how much, and why might that be?'
       ].forEach(function (t) { ol.appendChild(mk('li', null, t)); });
       tasks.appendChild(ol);
       /* W4: real bordered elements — six of them — because gradients do not
@@ -2735,10 +2743,10 @@ LT.boot();
       for (var i = 0; i < 6; i++) tasks.appendChild(mk('div', 'wsLine'));
       sheet.appendChild(tasks);
 
-      var ans = mk('div', 'wsBox');
-      ans.appendChild(mk('h2', null, 'Answer'));
-      ans.appendChild(mk('p', null, 'v = f × λ = ' + wave.f + ' × ' + wave.lambda + ' = ' + (Math.round(wave.f * wave.lambda * 1000) / 1000) + ' m/s'));
-      sheet.appendChild(ans);
+      /* No answer box. This sheet goes to the pupils, and printing the
+         worked answer on it makes tasks 1 and 3 pointless. The teacher has
+         the numbers already — on the projector's own scale caption, and on
+         the HUD's stage card, which shows the working. */
     } else {
       /* Off a wave stage there are no honest numbers to print, and inventing
          some is exactly what W2 forbids. */

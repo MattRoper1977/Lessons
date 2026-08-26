@@ -177,7 +177,13 @@ const SCAN = `(src) => new Promise(res => {
 
   /* ============ W2: honest units, correct arithmetic ============ */
   check('W2: the stage\'s real numbers are on the sheet, with real units', /f = 1 Hz/.test(sheet.text) && /λ = 2 m/.test(sheet.text), sheet.text.slice(0, 200));
-  check('W2: v = f × λ resolves correctly, with a unit', /v = f × λ = 1 × 2 = 2 m\/s/.test(sheet.text), (sheet.text.match(/v = f × λ = [^A-Za-z]*m\/s/) || [''])[0]);
+  /* The sheet must NOT contain the worked answer, or tasks 1 and 3 are
+     pointless — and it must not quote back the wavelength it asks the pupil
+     to measure. The teacher gets the working on the HUD instead. */
+  check('the pupil sheet does NOT print the worked answer', !/=\s*2\s*m\/s/.test(sheet.text) && !/Answer/.test(sheet.text), (sheet.text.match(/[^.]*m\/s[^.]*/) || [''])[0]);
+  check('and no task quotes back the wavelength the pupil is asked to measure', !/λ = 2 m\?/.test(sheet.text) && (sheet.text.match(/λ = 2 m/g) || []).length === 1, String((sheet.text.match(/λ = 2 m/g) || []).length));
+  check('W2: the equation to use is given, and the frequency is handed over honestly (a still cannot show it)',
+    /v = f × λ/.test(sheet.text) && /still drawing cannot show you the frequency/.test(sheet.text), sheet.text.slice(0, 60));
   check('W2: the model-to-real mapping is STATED, so a pupil can measure off the page', /grid squares are 0\.5 m/.test(sheet.text) && /1 metre/.test(sheet.text));
   check('W2: no pixel count is ever presented as a physical unit', !/\d+\s*px\b/.test(sheet.text) && !/px\s*(Hz|m\b)/.test(sheet.text), (sheet.text.match(/\d+\s*px/) || [''])[0]);
 
@@ -236,9 +242,9 @@ const SCAN = `(src) => new Promise(res => {
   const w3 = await proj.evaluate(() => window.__LT.wave());
   check('the worksheet follows the stage: it prints THIS stage\'s numbers',
     sheet3.text.includes('f = ' + w3.f + ' Hz') && sheet3.text.includes('λ = ' + w3.lambda + ' m'), JSON.stringify(w3));
-  check('and its answer still resolves correctly at the new numbers',
-    sheet3.text.includes('= ' + (Math.round(w3.f * w3.lambda * 1000) / 1000) + ' m/s'),
-    (sheet3.text.match(/v = f × λ[^\n]*/) || [''])[0]);
+  check('and the second stage keeps the answer off the sheet too',
+    !new RegExp('=\\s*' + (Math.round(w3.f * w3.lambda * 1000) / 1000) + '\\s*m/s').test(sheet3.text),
+    (sheet3.text.match(/[^.]*m\/s[^.]*/) || [''])[0]);
   check('W3 still holds on the second stage: no dollar sign', !sheet3.text.includes('$'));
 
   /* ============ off a wave stage: honest, not invented ============ */
@@ -264,6 +270,30 @@ const SCAN = `(src) => new Promise(res => {
   await proj.evaluate(() => window.__LT.buildSheet());
   const sheetName = await proj.evaluate(() => window.__LT.sheet());
   check('a cold-called name on the wall is NOT carried into the printed sheet', !sheetName.text.includes('Ferdinanda'), sheetName.text.slice(0, 60));
+
+  /* The working has to exist SOMEWHERE for the teacher: on the HUD, which is
+     their screen, not the pupils'. */
+  const herrs = [];
+  const hud = await ctx.newPage();
+  await open(hud, base + 'teacher.html', herrs);
+  await hud.waitForTimeout(400);
+  await proj.bringToFront();
+  await proj.evaluate(() => document.activeElement && document.activeElement.blur());
+  await proj.keyboard.press('PageDown');    // onto a wave stage again
+  await proj.waitForTimeout(600);
+  const hudMaths = await hud.evaluate(() => document.getElementById('stageMaths').textContent);
+  const projWave = await proj.evaluate(() => window.__LT.wave());
+  check('the teacher gets the worked answer on the HUD instead of on the pupils\' sheet',
+    hudMaths.includes('v = f × λ = ' + projWave.f + ' × ' + projWave.lambda + ' = ' + (Math.round(projWave.f * projWave.lambda * 1000) / 1000) + ' m/s'),
+    hudMaths);
+  await proj.evaluate(() => document.activeElement && document.activeElement.blur());
+  await proj.keyboard.press('PageUp');
+  await proj.keyboard.press('PageUp');
+  await proj.keyboard.press('PageUp');
+  await proj.waitForTimeout(600);
+  const hudMathsOff = await hud.evaluate(() => document.getElementById('stageMaths').textContent);
+  check('and it clears off a wave stage rather than showing stale numbers', hudMathsOff === '', hudMathsOff);
+  check('no console or page errors on the HUD', herrs.length === 0, herrs.join(' | '));
 
   check('no console or page errors throughout', perrs.length === 0, perrs.join(' | '));
 

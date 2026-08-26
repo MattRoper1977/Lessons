@@ -167,6 +167,10 @@ body.reduce *, body.reduce *::before, body.reduce *::after {
     <span id="stageTitle" style="font-weight:700; flex:1; min-width:120px">—</span>
     <button id="btnNext" aria-label="Next stage">Next ▶</button>
   </div>
+  <!-- The worked answer lives HERE, not on the pupils' worksheet: the sheet
+       asks them to measure λ and compute v, so printing the result on it
+       would make the task pointless. -->
+  <div class="keys" id="stageMaths"></div>
 </section>
 
 <section class="card" aria-label="Simulation controls">
@@ -1034,6 +1038,10 @@ LT.boot();
     }
     el('indStage').textContent = seen.stageCount ? (seen.stage + 1) + '/' + seen.stageCount : '—';
     el('stageTitle').textContent = seen.stageTitle || '—';
+    var wv = seen.wave;
+    el('stageMaths').textContent = wv
+      ? 'Worked answer for the worksheet: v = f × λ = ' + wv.f + ' × ' + wv.lambda + ' = ' + (Math.round(wv.f * wv.lambda * 1000) / 1000) + ' m/s'
+      : '';
     if (seen.stageCount && seen.stage !== lastStageSaid) {
       lastStageSaid = seen.stage;
       el('stageSaid').textContent = 'Stage ' + (seen.stage + 1) + ' of ' + seen.stageCount + ': ' + (seen.stageTitle || '');
