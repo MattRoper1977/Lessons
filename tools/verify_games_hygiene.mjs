@@ -85,8 +85,24 @@ if (process.argv.includes('--self-test')) {
  * this exemption is the red line encoded, not a hole. Remove it the day Matt
  * lifts R2, and the gate will demand the cleanup automatically. */
 const R2_EXEMPT = new Set(['Slipstream_GP.html']);
-const files = readdirSync(GAMES).filter(f => f.endsWith('.html') && !R2_EXEMPT.has(f));
-if (files.length < 20) { console.error(`suspicious census: only ${files.length} Games/*.html`); process.exit(1); }
+/* A game that needs siblings (a service worker, a manifest) lives in its own
+ * directory rather than as a flat Games/*.html. A top-level readdir cannot see
+ * one, so the first such game — Micro-Tinkerer — silently escaped every gate
+ * here and shipped a raw markup ampersand that this file was written to catch.
+ * One level of descent closes that. Games/vendor holds no .html, so nothing
+ * else is newly in scope. */
+const censusFiles = () => {
+  const out = [];
+  for (const entry of readdirSync(GAMES, { withFileTypes: true })) {
+    if (entry.isFile() && entry.name.endsWith('.html')) { out.push(entry.name); continue; }
+    if (!entry.isDirectory() || entry.name === 'vendor') continue;
+    for (const inner of readdirSync(join(GAMES, entry.name), { withFileTypes: true }))
+      if (inner.isFile() && inner.name.endsWith('.html')) out.push(`${entry.name}/${inner.name}`);
+  }
+  return out;
+};
+const files = censusFiles().filter(f => !R2_EXEMPT.has(f));
+if (files.length < 20) { console.error(`suspicious census: only ${files.length} Games/**/*.html`); process.exit(1); }
 for (const f of files) check(readFileSync(join(GAMES, f), 'utf8'), f);
 for (const f of R2_EXEMPT) console.log(`  --  ${f}: EXEMPT under R2 (surgical-edit-only file); font links recorded, not judged`);
 console.log(`\n${fail === 0 ? `ALL ${pass} HYGIENE GATES PASSED (${files.length} files)` : `${pass} passed, ${fail} FAILED`}`);
