@@ -412,6 +412,53 @@ order and marked as applied where a phase leans on them.
   `stamp_picker.mjs`), so the 10k simulation exercises the exact bytes that run
   in the classroom. The stamper's self-test perturbs the P2 weight into a
   min-weight floor and demands the drift gate notice. Harness now **23 steps**.
+- **Adversarial review round (five lenses) — and it found a real break in the
+  guarantee this phase rests on.** Reproduced before fixing: pick Ann, mark Ann
+  away, draw, mark Ann back — Ann is drawn again immediately. Two causes.
+  `since` advanced only for pupils who were present, so a pupil marked away
+  moments after being called kept `since = 0`, and a frozen zero never
+  expires; and `setPresent` CLEARED `st.last` when that pupil went away,
+  erasing the single fact P2 depends on. Now: a returning pupil re-enters at
+  least at 1 (in the pool, ordinary priority — someone who has just walked
+  back in is the last person who should be cold-called on the spot), `st.last`
+  is kept because an away pupil is already excluded by `present`, and the
+  uniform fallback drops the just-called pupil too whenever anyone else is
+  available. The gate now fuzzes attendance churn — 16,000 draws across rooms
+  of 2, 3, 4 and 8, a third of turns flipping somebody's attendance — counting
+  only AVOIDABLE repeats, and a **red control rebuilds the pre-fix engine and
+  shows the same fuzz catching it: 140 avoidable repeats before, 0 after**.
+  The balance tolerance dropped 15% → 8% across six seeds (the engine's own
+  spread measures under 4.5%, so 15% sat five times above the noise it was
+  policing), and the roster-cap probe now uses 80 DISTINCT names — the old one
+  deduplicated to a single entry and asserted 1 ≤ 40.
+- **Also fixed, each pinned:** "0 — clear every overlay" left a pupil's name on
+  the wall; drawing again left the PREVIOUS pupil named to the room while the
+  HUD showed the new one (a new draw now retracts, and the HUD renders what is
+  actually on the projector from the broadcast, with a Clear control that stays
+  reachable after a reload); a name could be projected under the blackout
+  curtain and reported as shown; the two centred panels could both open at the
+  same depth and strand focus in a buried card; marking a pupil away destroyed
+  keyboard focus in both views, and the projector announced nothing when it
+  did; away rows measured 2.66:1 in high-lumen; rows could not wrap, so a name
+  collapsed at phone width while a decorative bar kept its 60 px; eligible
+  pupils rounded to "0%", which is what an *excluded* pupil shows; the
+  projector's forty attendance buttons had no focus ring. Roster parsing is
+  Unicode-safe (NFC dedupe, character-wise truncation) and reports names
+  dropped past the cap. Copy corrected where it outran the code — the absolute
+  no-repeat claim, the two-window safeguard described as if it applied to
+  single-window teaching, the HUD's "never sent to the projector" above a Show
+  on projector button, and the projector panel warning only about the picked
+  name while displaying every name on a class-facing screen.
+- **Suite gaps the review found, all closed:** the console listener filtered to
+  type `error`, so a `console.log` of a pupil name was invisible — it now
+  captures every level and scans them; the storage audit read only
+  localStorage, now sessionStorage and cookies too; the markup probe never
+  reached either of the projector's name sinks, so an `innerHTML` there would
+  have shipped green — both are now fed hostile text, one of them over the
+  bus; nothing had ever read the projector's ADDRESS or the string the QR
+  encodes while a name was on the wall; 40 draws were asserted against a
+  12-entry history window; and a `KeyQ` press documented as a check asserted
+  nothing. Suite now **60 checks**.
 - **Decisions applied:** D2 (session-only roster — the ruling this phase turns
   on), D1 (a picker on the projector too, since rosters do not travel), D4, D5.
 
@@ -456,6 +503,35 @@ order and marked as applied where a phase leans on them.
   the static banner and held tint carry the cue. Plus the SVG parsed back
   through `DOMParser`, the clipboard-blocked download exercised, and the tally
   proven to contain no name with a cold-called pupil live in the session.
+- **Adversarial review round (four lenses; nine findings confirmed by
+  verifiers who reproduced them).** "Copy graph" wrote SVG *source* as plain
+  text while the button, the toast and the launcher all promised an image —
+  paste that into a document and you get a wall of angle brackets. It now
+  writes a real PNG through `ClipboardItem` where the browser supports it,
+  falls back to SVG source, then to a download, and each path says which
+  happened. The exported graph separated its three series by hue alone, which
+  fails the colour rule in the one artefact most likely to be printed in black
+  and white: each series now carries its own dash and its own end label. A
+  single recorded vote exported a blank graph (one moveto, no lineto, which
+  SVG paints as nothing), and the 500-entry cap let the drawn curves drift
+  below the totals printed beside them — the legend is now read from the same
+  series the curves are. A vote forced the tally back up after the teacher had
+  hidden it to take an uninfluenced vote; the auto-reveal is now once per
+  tally and any explicit hide disarms it. "0 — clear every overlay" left the
+  tally and the bell on the board (the counts survive — that is what Reset is
+  for). Taking a name off the wall did not stop the speech saying it. The
+  panel's heading was an orphaned `h3`, and the HUD announced nothing at all
+  when the tally moved or the bell rang.
+- **The audio gate was the weakest part of the suite and is now the
+  strongest.** The probe wraps `AudioNode.connect`, so a tone routed nowhere
+  is distinguishable from one that reaches the speakers; it records start and
+  stop times, so the spec's "earcons ≤ 300 ms" is asserted rather than
+  assumed; and the silence-with-sound-off check now fires a path that can
+  actually speak, since the three it fired before could only ever make
+  earcons. **Every bell check read a class name on an element that ships
+  `visibility: hidden`** — all of them would have passed with nothing on
+  screen — so they now read what is painted. The no-persistence check
+  inspected values and never keys.
 - **Decisions applied:** D1 (every extra reachable on the projector; the HUD
   mirrors), D4, D5.
 
@@ -504,4 +580,25 @@ order and marked as applied where a phase leans on them.
   thing printed; the answer proven **absent** on both wave stages and present
   on the HUD; and W5 proven live by rendering at two thresholds and showing
   the pixels differ.
+- **Decisions applied:** D1, D4, D5.
+- **Adversarial review round — a content-accuracy break, confirmed by
+  rendering.** The scale bar was painted on an opaque backing plate AFTER the
+  curve, and on the full-amplitude stage that plate erased the bottom of the
+  trough: a pupil measuring the wave's height got **0.875 m where the lesson
+  said 1 m**. The geometry now keeps them apart by construction — the figure
+  reserves a band for the bar, and `pxm` is capped so a full wave always fits
+  the drawing area. The suite measures the exported PNG on **every** wave
+  stage and demands crest and trough be symmetric about the axis, with a red
+  control that plates over a trough and proves the scan reports it.
+- **The sheet also gave away its own tasks.** It printed the wavelength and
+  amplitude that tasks 1 and 4 ask pupils to measure, so the calibrated grid
+  and the scale bar existed for work nobody needed to do. The given box now
+  carries only what a still drawing genuinely cannot show — the frequency —
+  and discloses the playback speed when it is not 1×, since "what the class
+  saw" quietly meant something else at ½× or 2×. The print layer no longer
+  stays `aria-hidden` when it IS the printed document.
+- **The W1 gate proved existence, not calibration.** It counted grey runs and
+  a black run; it now MEASURES the grid pitch against the scale bar and
+  demands one be exactly half the other, so a bar drawn at half a metre while
+  labelled "1 metre" — or a grid at the wrong spacing — goes red.
 - **Decisions applied:** D1, D4, D5.
