@@ -282,7 +282,7 @@ body.highlumen #pickRows .bar { background: #ded7c4; }
 }
 #ragPanel.show { visibility: visible; }
 body.highlumen #ragPanel { background: rgba(255,255,255,.96); border-color: #c9c2ae; }
-#ragPanel h3 { margin: 0 0 8px; font-size: 2vmin; letter-spacing: .12em; text-transform: uppercase; opacity: .8; }
+#ragPanel h2 { margin: 0 0 8px; font-size: 2vmin; letter-spacing: .12em; text-transform: uppercase; opacity: .8; }
 #ragPanel .rrow { display: flex; align-items: center; gap: 8px; margin: 6px 0; font-size: 2.2vmin; }
 #ragPanel .rrow .word { min-width: 6ch; font-weight: 700; }
 #ragPanel .rrow .track { flex: 1; height: 14px; border-radius: 999px; background: #1b243f; overflow: hidden; }
@@ -430,7 +430,7 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
 <div id="bellBanner">🔔 Eyes this way, please</div>
 
 <section id="ragPanel" aria-label="How the class is doing">
-  <h3>How are we doing?</h3>
+  <h2>How are we doing?</h2>
   <div class="rrow r"><span class="glyph" aria-hidden="true">■</span><span class="word">Stuck</span><span class="track"><i></i></span><span class="n">0</span></div>
   <div class="rrow a"><span class="glyph" aria-hidden="true">▲</span><span class="word">Nearly</span><span class="track"><i></i></span><span class="n">0</span></div>
   <div class="rrow g"><span class="glyph" aria-hidden="true">●</span><span class="word">Got it</span><span class="track"><i></i></span><span class="n">0</span></div>
@@ -1729,11 +1729,15 @@ LT.boot();
   }
   function clearOverlays() {
     setHint(false); setPoll(false); clearTimer();
-    /* The key card and the launcher both promise 0 clears EVERY overlay, and
-       a pupil's name on the wall is the one overlay it most matters to be
-       able to take down in one press. (showPickName is hoisted from the
-       picker block below.) */
+    /* The key card and the launcher both promise 0 clears EVERY overlay, so
+       it means every one that is actually on the board: the name (the one it
+       most matters to be able to take down in a hurry), the tally panel and
+       the bell. The COUNTS survive — clearing the screen is not the same as
+       throwing away the lesson's data, which is what Reset tally is for.
+       (These are hoisted declarations from the blocks below.) */
     showPickName('');
+    ragShow(false);
+    hideBell();
   }
   btnHint.addEventListener('click', function () { setHint(!state.hint.on, hintInput.value); });
   btnPoll.addEventListener('click', function () { setPoll(!state.poll.on); });
@@ -2158,6 +2162,7 @@ LT.boot();
       };
     },
     buildSheet: function () { buildSheet(); },
+    gotoStage: function (i) { applyStage(i); },
     figureAt: function (t) { return sheetFigure(t).url; },
     extras: function () {
       return {
@@ -2371,6 +2376,10 @@ LT.boot();
        projector" when nobody can see it — and reveal it the moment the
        curtain lifts, which is not what was agreed to. Refuse, and say so. */
     if (n && state.blackout) { LT.send('PICK_REFUSED', { why: 'blackout' }); return; }
+    /* Taking a name off the wall has to take it out of the air too: the
+       utterance outlived the overlay, so a name cleared for a reason was
+       still being spoken to the room. */
+    if (!n && window.speechSynthesis) { try { window.speechSynthesis.cancel(); } catch (e) {} }
     state.pick = n;                 // travels in PROJECTOR_STATE: it is already on the wall
     pickWho.textContent = n;
     pickOverlay.classList.toggle('show', !!n);
@@ -2523,6 +2532,7 @@ LT.boot();
   /* X4's data array: one entry per vote, in order, so the sparkline is a
      record of the lesson rather than a snapshot. Counts, never names. */
   var ragSeries = [];
+  var ragEverShown = false;   // the auto-reveal is once per tally, not per vote
   function ragRender() {
     var total = state.rag.r + state.rag.a + state.rag.g;
     RAG_KEYS.forEach(function (k) {
@@ -2538,11 +2548,18 @@ LT.boot();
   function ragBump(k) {
     if (RAG_KEYS.indexOf(k) === -1) return;
     state.rag[k]++;
+    /* The series is the graph's ONLY source of truth: it used to be capped
+       at 500 while the headline counts kept climbing, so a long lesson drew
+       curves that ended below the totals printed beside them. The cap is
+       generous enough for any lesson and, if it ever bites, the legend is
+       taken from the series too (below) so the two cannot disagree. */
     ragSeries.push(k);
-    if (ragSeries.length > 500) ragSeries.shift();
-    /* The tally shows itself on the first vote: a counter nobody can see is
-       a counter nobody trusts. */
-    if (!state.ragShow) state.ragShow = true;
+    if (ragSeries.length > 2000) ragSeries.shift();
+    /* The tally shows itself on the FIRST vote — a counter nobody can see is
+       a counter nobody trusts — but never again after that. A teacher who
+       hides it to take an uninfluenced vote had it forced back up by the
+       first hand that went in. */
+    if (!state.ragShow && !ragEverShown) { state.ragShow = true; ragEverShown = true; }
     ragRender();
     earcon(k === 'r' ? 320 : k === 'a' ? 440 : 590);
     document.getElementById('ragSaid').textContent = RAG_WORDS[k] + ': ' + state.rag[k];
@@ -2551,12 +2568,18 @@ LT.boot();
   function ragReset() {
     state.rag = { r: 0, a: 0, g: 0 };
     ragSeries.length = 0;
+    ragEverShown = false;     // a fresh tally may reveal itself again
     ragRender();
     document.getElementById('ragSaid').textContent = 'Tally reset';
     broadcast();
   }
   function ragShow(on) {
     state.ragShow = !!on;
+    /* An explicit hide is the teacher speaking, and it disarms the one-time
+       auto-reveal for good: otherwise hiding the tally to take an
+       uninfluenced vote was undone by the first hand that went in. Only a
+       reset — a fresh tally — arms it again. */
+    if (!state.ragShow) ragEverShown = true;
     ragRender();
     broadcast();
   }
@@ -2581,10 +2604,12 @@ LT.boot();
     bellBanner.classList.add('show');
     document.getElementById('bellSaid').textContent = 'Eyes this way, please';
     earcon(660);
-    bellT = setTimeout(function () {
-      bellEl.classList.remove('show');
-      bellBanner.classList.remove('show');
-    }, 7200);
+    bellT = setTimeout(hideBell, 7200);
+  }
+  function hideBell() {
+    clearTimeout(bellT);
+    bellEl.classList.remove('show');
+    bellBanner.classList.remove('show');
   }
   document.getElementById('btnBell').addEventListener('click', ringBell);
 
@@ -2597,6 +2622,10 @@ LT.boot();
     if (!state.audio) return;
     try {
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      /* A context created outside a gesture can start suspended; resuming is
+         free when it is already running and is the difference between a
+         working toggle and a silent one. */
+      if (audioCtx.state === 'suspended' && audioCtx.resume) audioCtx.resume();
       var o = audioCtx.createOscillator(), g = audioCtx.createGain();
       o.type = 'sine';
       o.frequency.value = freq;
@@ -2645,8 +2674,17 @@ LT.boot();
       RAG_KEYS.forEach(function (kk) { pts[kk].push([i + 1, running[kk]]); });
     });
     var n = Math.max(1, ragSeries.length);
-    var top = Math.max(1, state.rag.r, state.rag.a, state.rag.g);
+    /* Totals read off the SERIES, so the curves and the numbers beside them
+       are the same arithmetic even if the cap has trimmed the front. */
+    var shown = { r: running.r, a: running.a, g: running.g };
+    var top = Math.max(1, shown.r, shown.a, shown.g);
     var COL = { r: '#a8321c', a: '#8a5413', g: '#1e6e46' };
+    /* Each series gets its own DASH as well as its own hue, and its own end
+       label — the estate's rule that colour is never the only cue does not
+       stop at the edge of an exported file, and this one is likely to be
+       printed in black and white. */
+    var DASH = { r: '1 6', a: '9 5', g: '' };
+    var END = { r: 'Stuck', a: 'Nearly', g: 'Got it' };
     var body = '';
     RAG_KEYS.forEach(function (k) {
       if (!pts[k].length) return;
@@ -2655,15 +2693,26 @@ LT.boot();
         var y = H - PAD - (p[1] / top) * (H - PAD * 2);
         return (i ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1);
       }).join(' ');
-      body += '<path d="' + d + '" fill="none" stroke="' + COL[k] + '" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';
+      /* A single recorded vote is one moveto and no lineto, which SVG paints
+         as nothing at all — so a lesson with one response exported a blank
+         graph. Round caps plus an explicit zero-length line render a dot. */
+      if (pts[k].length === 1) d += ' L' + d.slice(1).split(' ')[0] + ' ' + d.split(' ')[1];
+      body += '<path d="' + d + '" fill="none" stroke="' + COL[k] + '" stroke-width="2.5"' +
+        (DASH[k] ? ' stroke-dasharray="' + DASH[k] + '"' : '') +
+        ' stroke-linejoin="round" stroke-linecap="round"/>';
+      var last = pts[k][pts[k].length - 1];
+      var lx = PAD + (last[0] / n) * (W - PAD * 2);
+      var ly = H - PAD - (last[1] / top) * (H - PAD * 2);
+      body += '<text x="' + Math.min(W - 4, lx + 5).toFixed(1) + '" y="' + (ly - 4).toFixed(1) +
+        '" font-family="system-ui,sans-serif" font-size="10" fill="' + COL[k] + '">' + END[k] + '</text>';
     });
     /* Labelled in text inside the SVG: pasted into a report it must still be
        readable without the legend that lived on the page. */
-    var legend = '<text x="' + PAD + '" y="14" font-family="system-ui,sans-serif" font-size="11" fill="#a8321c">Stuck ' + state.rag.r + '</text>' +
-      '<text x="' + (PAD + 80) + '" y="14" font-family="system-ui,sans-serif" font-size="11" fill="#8a5413">Nearly ' + state.rag.a + '</text>' +
-      '<text x="' + (PAD + 168) + '" y="14" font-family="system-ui,sans-serif" font-size="11" fill="#1e6e46">Got it ' + state.rag.g + '</text>';
+    var legend = '<text x="' + PAD + '" y="14" font-family="system-ui,sans-serif" font-size="11" fill="#a8321c">Stuck (dotted) ' + shown.r + '</text>' +
+      '<text x="' + (PAD + 128) + '" y="14" font-family="system-ui,sans-serif" font-size="11" fill="#8a5413">Nearly (dashed) ' + shown.a + '</text>' +
+      '<text x="' + (PAD + 268) + '" y="14" font-family="system-ui,sans-serif" font-size="11" fill="#1e6e46">Got it (solid) ' + shown.g + '</text>';
     return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" role="img" ' +
-      'aria-label="Class confidence through the lesson: stuck ' + state.rag.r + ', nearly ' + state.rag.a + ', got it ' + state.rag.g + '">' +
+      'aria-label="Class confidence through the lesson: stuck ' + shown.r + ', nearly ' + shown.a + ', got it ' + shown.g + '">' +
       '<rect width="' + W + '" height="' + H + '" fill="#ffffff"/>' + legend + body + '</svg>';
   }
   document.getElementById('btnSpark').addEventListener('click', function () {
@@ -2687,10 +2736,37 @@ LT.boot();
         toast('This browser blocked both copying and downloading the graph.');
       }
     };
-    if (navigator.clipboard && navigator.clipboard.writeText) {
+    /* An honest copy, in the order of what a document will actually accept.
+       writeText puts the SVG *source* on the clipboard — paste that into a
+       document and you get a wall of angle brackets, not a picture — so a
+       real PNG goes on first where the browser supports it, and each path
+       says exactly what landed. */
+    var copyText = function () {
       navigator.clipboard.writeText(svg).then(function () {
-        toast('Graph copied as an image you can paste into a document.');
+        toast('Copied as SVG code — paste it into a document that accepts SVG, or use the download for a picture.');
       }, fallback);
+    };
+    if (window.ClipboardItem && navigator.clipboard && navigator.clipboard.write) {
+      var img = new Image();
+      img.onload = function () {
+        try {
+          var cv = document.createElement('canvas');
+          cv.width = 960; cv.height = 240;
+          var g2 = cv.getContext('2d');
+          g2.fillStyle = '#fff'; g2.fillRect(0, 0, cv.width, cv.height);
+          g2.drawImage(img, 0, 0, cv.width, cv.height);
+          cv.toBlob(function (blob) {
+            if (!blob) { copyText(); return; }
+            navigator.clipboard.write([new window.ClipboardItem({ 'image/png': blob })]).then(function () {
+              toast('Graph copied as a picture — paste it straight into a document.');
+            }, copyText);
+          }, 'image/png');
+        } catch (e) { copyText(); }
+      };
+      img.onerror = copyText;
+      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    } else if (navigator.clipboard && navigator.clipboard.writeText) {
+      copyText();
     } else fallback();
   });
 
@@ -2721,7 +2797,13 @@ LT.boot();
     var cut = typeof thresholdOverride === 'number' ? thresholdOverride : WS_THRESHOLD;
     /* An offscreen render at print resolution: the on-screen canvas is sized
        for a projector and would print soft. */
-    var W = 1000, H = 420;
+    /* The bottom BAND is reserved for the scale bar. The bar's backing plate
+       is opaque and is painted last, so with the wave free to occupy the
+       whole canvas it clipped the trough on a full-amplitude stage — a pupil
+       measuring the height got 0.875 m where the sheet said 1 m. Content
+       accuracy is a hard gate, so the geometry keeps them apart by
+       construction rather than by luck. */
+    var W = 1000, BAND = 56, WAVE_H = 380, H = WAVE_H + BAND;
     var c = document.createElement('canvas');
     c.width = W; c.height = H;
     var g = c.getContext('2d');
@@ -2730,8 +2812,15 @@ LT.boot();
     /* The wave itself, in the same real-units space as the screen: the sheet
        uses its own pixels-per-metre so the figure fits the page, and every
        label below is derived from THAT number, never from the screen's. */
-    var pxm = Math.min(160, (W - 120) / Math.max(1, wave.lambda * 2.6));
-    var mid = H / 2 + 10;
+    /* pxm is also capped so a full wave fits the band vertically: at A = 1 m
+       the curve needs 2 * A * pxm of height, and a figure whose crest is
+       clipped is a figure a pupil cannot measure. */
+    var pxm = Math.min(
+      160,
+      (W - 120) / Math.max(1, wave.lambda * 2.6),
+      (WAVE_H - 40) / Math.max(0.2, wave.A * 2)
+    );
+    var mid = WAVE_H / 2;
     var Apx = wave.A * pxm, Lpx = wave.lambda * pxm;
     g.strokeStyle = '#000'; g.lineWidth = 3;
     g.beginPath();
@@ -2759,17 +2848,17 @@ LT.boot();
     for (var m = 0; m * pxm / 2 <= W; m++) {
       var gx = m * pxm / 2;
       g.strokeStyle = (m % 2 === 0) ? '#7a7a7a' : '#c2c2c2';
-      g.beginPath(); g.moveTo(gx, 0); g.lineTo(gx, H); g.stroke();
+      g.beginPath(); g.moveTo(gx, 0); g.lineTo(gx, WAVE_H); g.stroke();
     }
     for (var yy = mid; yy > 0; yy -= pxm / 2) { g.strokeStyle = '#c2c2c2'; g.beginPath(); g.moveTo(0, yy); g.lineTo(W, yy); g.stroke(); }
-    for (var yd = mid; yd < H; yd += pxm / 2) { g.strokeStyle = '#c2c2c2'; g.beginPath(); g.moveTo(0, yd); g.lineTo(W, yd); g.stroke(); }
+    for (var yd = mid; yd < WAVE_H; yd += pxm / 2) { g.strokeStyle = '#c2c2c2'; g.beginPath(); g.moveTo(0, yd); g.lineTo(W, yd); g.stroke(); }
     g.strokeStyle = '#000'; g.lineWidth = 1.5;
     g.beginPath(); g.moveTo(0, mid); g.lineTo(W, mid); g.stroke();   // the axis
+    g.beginPath(); g.moveTo(0, WAVE_H); g.lineTo(W, WAVE_H); g.stroke();   // band rule
 
     /* W1: a labelled scale bar in REAL units, stating the one thing a pupil
        needs to turn the drawing into a measurement. */
-    var bx = 30, by = H - 34;
-    g.fillStyle = '#fff'; g.fillRect(bx - 8, by - 26, pxm + 90, 46);
+    var bx = 30, by = WAVE_H + 30;
     g.strokeStyle = '#000'; g.lineWidth = 3;
     g.beginPath(); g.moveTo(bx, by); g.lineTo(bx + pxm, by); g.stroke();
     g.beginPath(); g.moveTo(bx, by - 9); g.lineTo(bx, by + 9); g.stroke();
@@ -2781,6 +2870,10 @@ LT.boot();
 
   function buildSheet() {
     var sheet = document.getElementById('sheet');
+    /* It ships aria-hidden because on screen it is a hidden scratch layer.
+       Once built it is the whole printed document, and a print-to-PDF read
+       by assistive tech must reach its headings and the figure's alt text. */
+    sheet.removeAttribute('aria-hidden');
     while (sheet.firstChild) sheet.removeChild(sheet.firstChild);
     var isWave = state.mode === 'wave';
     var fig = isWave ? sheetFigure() : null;
@@ -2816,14 +2909,25 @@ LT.boot();
       im.alt = 'A wave drawn on a half-metre grid, with a one-metre scale bar.';
       sheet.appendChild(im);
       /* W2: the model-to-real mapping, stated rather than implied. */
-      sheet.appendChild(mk('p', 'wsCap', 'The grid squares are 0.5 m across. The bar marked "1 metre" shows the scale — measure straight off the drawing.'));
+      sheet.appendChild(mk('p', 'wsCap', 'The grid squares are 0.5 m across, and the bar marked "1 metre" shows the scale. Measure straight off the drawing — the middle line is the resting position.'));
 
       var box = mk('div', 'wsBox');
-      box.appendChild(mk('h2', null, 'What the class saw'));
-      /* W3: plain text. The fragment printed the LaTeX source verbatim, so
+      box.appendChild(mk('h2', null, 'What you are given'));
+      /* ONLY what cannot be measured off the page. Printing λ here made task
+         1 answerable by copying it two lines up, and printing the amplitude
+         did the same for the measuring in task 4 — the calibrated grid and
+         the scale bar existed for tasks that no longer needed them.
+         Frequency stays, because a still drawing genuinely cannot show it.
+         W3: plain text; the fragment printed the LaTeX source verbatim, so
          pupils read a dollar sign and a backslash instead of an equation. */
-      box.appendChild(mk('p', null, 'frequency f = ' + wave.f + ' Hz    wavelength λ = ' + wave.lambda + ' m    height A = ' + wave.A + ' m'));
+      box.appendChild(mk('p', null, 'frequency f = ' + wave.f + ' Hz'));
       box.appendChild(mk('p', null, 'Wave speed: v = f × λ'));
+      /* Playback speed is a presentation choice, like slow motion, and the
+         frequency above is the wave's own. Saying so keeps "what the class
+         saw" from quietly meaning something else at ½× or 2×. */
+      if (state.speed !== 1) {
+        box.appendChild(mk('p', null, 'The animation was played at ' + state.speed + '× speed, so on screen it looked ' + (state.speed > 1 ? 'faster' : 'slower') + ' than ' + wave.f + ' Hz. The figure and the number above are the wave\u2019s own.'));
+      }
       sheet.appendChild(box);
 
       var tasks = mk('div', 'wsWork');
@@ -2834,15 +2938,15 @@ LT.boot();
          dishonesty W2 exists to stop. The wavelength is NOT given — that is
          the one the pupil measures — so no task may quote it back. */
       [
-        'Measure one whole wavelength off the drawing, using the grid. Write it in metres.',
-        'A still drawing cannot show you the frequency, so here it is: the wave completed ' + wave.f + ' full wave' + (wave.f === 1 ? '' : 's') + ' every second. Write that down, with its unit.',
-        'Work out the wave speed using v = f × λ. Show your working, and give the unit.',
+        'Measure one whole wavelength off the drawing, using the grid and the scale bar. Write it in metres.',
+        'Measure the amplitude: the distance from the middle line up to a crest. Write it in metres.',
+        'Work out the wave speed using v = f × λ, taking f from the box above. Show your working, and give the unit.',
         'Check your measuring: find a different whole wavelength further along the drawing. Do you get the same answer? If not, by how much, and why might that be?'
       ].forEach(function (t) { ol.appendChild(mk('li', null, t)); });
       tasks.appendChild(ol);
       /* W4: real bordered elements — six of them — because gradients do not
          survive a print engine. */
-      for (var i = 0; i < 6; i++) tasks.appendChild(mk('div', 'wsLine'));
+      for (var i = 0; i < 7; i++) tasks.appendChild(mk('div', 'wsLine'));
       sheet.appendChild(tasks);
 
       /* No answer box. This sheet goes to the pupils, and printing the

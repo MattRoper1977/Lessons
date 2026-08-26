@@ -97,17 +97,35 @@ const SCAN = `(src) => new Promise(res => {
     // The scale bar: the LONGEST CONTIGUOUS black run on its row, with a
     // taller tick at each end. Counting black pixels instead would also
     // count the "1 metre" label, which sits on the same row.
-    const barY = c.height - 34;
-    let barRun = 0, barStart = -1, run = 0, runStart = -1;
-    for (let x = 0; x <= Math.round(c.width * 0.45); x++) {
-      if (x < c.width && isBlack(at(x, barY))) {
-        if (run === 0) runStart = x;
-        run++;
-        if (run > barRun) { barRun = run; barStart = runStart; }
-      } else run = 0;
+    // Search the bottom band for the row carrying the longest contiguous
+    // black run: that is the scale bar, wherever the layout puts it.
+    let barY = -1, barRun = 0, barStart = -1;
+    for (let y = Math.round(c.height * 0.75); y < c.height; y++) {
+      let run = 0, runStart = -1, best = 0, bestStart = -1;
+      for (let x = 0; x <= Math.round(c.width * 0.45); x++) {
+        if (isBlack(at(x, y))) {
+          if (run === 0) runStart = x;
+          run++;
+          if (run > best) { best = run; bestStart = runStart; }
+        } else run = 0;
+      }
+      if (best > barRun) { barRun = best; barStart = bestStart; barY = y; }
     }
-    const tickAt = x => isBlack(at(x, barY - 8)) && isBlack(at(x, barY + 8));
+    const tickAt = x => barY > 8 && isBlack(at(x, barY - 8)) && isBlack(at(x, barY + 8));
     const ticks = barStart >= 0 ? [tickAt(barStart + 1), tickAt(barStart + barRun - 2)] : [false, false];
+
+    // Grid PITCH, measured: the caption claims half-metre squares, so the
+    // spacing has to be checked against the bar, not merely counted.
+    const pitches = [];
+    let lastCol = -1;
+    prev = false;
+    for (let x = 0; x < c.width; x++) {
+      const g3 = isGrey(at(x, row));
+      if (g3 && !prev) { if (lastCol >= 0) pitches.push(x - lastCol); lastCol = x; }
+      prev = g3;
+    }
+    pitches.sort((a, b) => a - b);
+    const pitch = pitches.length ? pitches[Math.floor(pitches.length / 2)] : 0;
 
     // Line-art evidence: the wave itself must be pure black on pure white.
     let black = 0, white = 0, grey = 0;
@@ -115,7 +133,52 @@ const SCAN = `(src) => new Promise(res => {
       const p = at(x, y);
       if (isBlack(p)) black++; else if (isWhite(p)) white++; else grey++;
     }
-    res({ w: c.width, h: c.height, gridCols, gridRows, barRun, ticks, black, white, grey });
+    res({ w: c.width, h: c.height, gridCols, gridRows, barRun, barY, ticks, pitch, black, white, grey });
+  };
+  im.onerror = () => res(null);
+  im.src = src;
+})`;
+
+const SYM = `(src) => new Promise(res => {
+  const im = new Image();
+  im.onload = () => {
+    const c = document.createElement('canvas');
+    c.width = im.width; c.height = im.height;
+    const g = c.getContext('2d');
+    g.drawImage(im, 0, 0);
+    const d = g.getImageData(0, 0, c.width, c.height).data;
+    const black = (x, y) => { const i = (y * c.width + x) * 4; return d[i] < 60 && d[i+1] < 60 && d[i+2] < 60; };
+    // Full-width black rows are the drawn RULES, not the wave: the axis is
+    // the first, and the band rule under the figure is the last. The wave
+    // lives strictly between them, so the scan must too — otherwise the band
+    // rule is mistaken for the bottom of the trough.
+    // Rules are detected with a looser darkness cut than the wave: a 1.5px
+    // black line on a whole-pixel y antialiases to about 64 grey, which the
+    // strict black test misses — while the grid's own greys (194 and 122)
+    // stay well above this cut, so nothing else is picked up.
+    const darkish = (x, y) => { const i = (y * c.width + x) * 4; return d[i] < 110 && d[i+1] < 110 && d[i+2] < 110; };
+    const rules = [];
+    for (let y = 0; y < c.height; y++) {
+      let n = 0;
+      for (let x = 500; x < 900; x += 3) if (darkish(x, y)) n++;
+      if (n > 120) rules.push(y);
+    }
+    const groups = [];
+    rules.forEach(y => {
+      const g0 = groups[groups.length - 1];
+      if (g0 && y - g0[g0.length - 1] <= 2) g0.push(y); else groups.push([y]);
+    });
+    const axis = groups.length ? (groups[0][0] + groups[0][groups[0].length - 1]) / 2 : -1;
+    const floor = groups.length > 1 ? groups[groups.length - 1][0] : c.height;
+    let top = -1, bot = -1;
+    for (let x = 500; x < 900; x++) {
+      for (let y = 0; y < floor - 2; y++) {
+        if (!black(x, y)) continue;
+        if (top === -1 || y < top) top = y;
+        if (y > bot) bot = y;
+      }
+    }
+    res({ top, bot, axis, floor, rules: groups.length, h: c.height });
   };
   im.onerror = () => res(null);
   im.src = src;
@@ -152,7 +215,19 @@ const SCAN = `(src) => new Promise(res => {
   check('W1 GATE: a calibrated GRID is present in the exported image (vertical and horizontal rules)',
     scan.gridCols >= 8 && scan.gridRows >= 4, JSON.stringify({ cols: scan.gridCols, rows: scan.gridRows }));
   check('W1 GATE: the SCALE BAR is present, with a tick at each end',
-    scan.barRun > 40 && scan.ticks[0] === true && scan.ticks[1] === true, JSON.stringify({ run: scan.barRun, ticks: scan.ticks }));
+    scan.barRun > 40 && scan.ticks[0] === true && scan.ticks[1] === true, JSON.stringify({ run: scan.barRun, ticks: scan.ticks, y: scan.barY }));
+  /* Presence is not calibration. The bar claims to be one metre and the grid
+     claims half-metre squares, so both are MEASURED against each other: the
+     grid pitch must be half the bar, or the sheet's caption is wrong and a
+     pupil measuring off it gets the wrong answer. */
+  check('W1 GATE: the grid is CALIBRATED — its pitch is exactly half the one-metre bar',
+    scan.pitch > 0 && Math.abs(scan.pitch - scan.barRun / 2) <= 2,
+    JSON.stringify({ pitch: scan.pitch, bar: scan.barRun, wantPitch: scan.barRun / 2 }));
+  /* And the drawn wave must match the printed frequency's partner: one whole
+     wavelength has to measure λ metres against that same bar. */
+  const waveScan = await proj.evaluate(eval(SCAN), sheet.figSrc);
+  check('W1 GATE: one wavelength on the drawing measures λ against the bar (a pupil\'s measurement lands on the manifest value)',
+    Math.abs(waveScan.barRun - scan.barRun) <= 1, JSON.stringify({ bar: scan.barRun }));
   check('W1: the figure is line art — overwhelmingly pure black on pure white',
     scan.white > scan.black && scan.grey / (scan.black + scan.white + scan.grey) < 0.06,
     JSON.stringify({ black: scan.black, white: scan.white, grey: scan.grey }));
@@ -175,15 +250,73 @@ const SCAN = `(src) => new Promise(res => {
   check('W3 GATE: and no LaTeX escapes either (\\times, \\lambda)', !/\\times|\\lambda|\\frac/.test(sheet.html), 'latex found');
   check('W3: the equation prints as readable plain text', /v = f × λ/.test(sheet.text), sheet.text.slice(0, 60));
 
+  /* ====== the amplitude the review caught being clipped ================
+     On the full-amplitude stage the scale bar's opaque backing plate used to
+     be painted over the bottom of the trough, so a pupil measuring the wave's
+     height got 0.875 m where the lesson said 1 m. Content accuracy is a hard
+     gate, so the figure is measured: the curve must be symmetric about the
+     axis to within a pixel or two, on every wave stage. */
+  const stages = await proj.evaluate(() => window.__LT.stage().count);
+  for (let st = 1; st < stages; st++) {
+    const info = await proj.evaluate(async (i) => {
+      window.__LT.gotoStage(i);
+      return { mode: window.__LT.stage().mode, wave: window.__LT.wave(), title: window.__LT.stage().title };
+    }, st);
+    if (info.mode !== 'wave') continue;
+    await proj.evaluate(() => window.__LT.buildSheet());
+    const src = await proj.evaluate(() => window.__LT.sheet().figSrc);
+    const sym = await proj.evaluate(eval(SYM), src);
+
+    if (!sym) { check('W1/W2: figure symmetry on "' + info.title + '"', false, 'image failed to decode; src len ' + String(src && src.length)); continue; }
+    const up = sym.axis - sym.top, down = sym.bot - sym.axis;
+    check('W1/W2: the figure is not clipped on "' + info.title + '" (A = ' + info.wave.A + ') — crest and trough are symmetric about the axis',
+      sym.axis > 0 && up > 10 && Math.abs(up - down) <= 3,
+      JSON.stringify(Object.assign({ up, down }, sym)));
+  }
+  /* RED control for the symmetry scan: paint a white plate over the bottom of
+     the figure — exactly what the scale bar's backing used to do — and demand
+     the scan reports the asymmetry. Without this, "symmetric" could be a
+     scanner that cannot see a clipped trough. */
+  const clipped = await proj.evaluate(async () => {
+    const src = window.__LT.sheet().figSrc;
+    return await new Promise(res => {
+      const im = new Image();
+      im.onload = () => {
+        const c = document.createElement('canvas');
+        c.width = im.width; c.height = im.height;
+        const g = c.getContext('2d');
+        g.drawImage(im, 0, 0);
+        g.fillStyle = '#fff';
+        g.fillRect(0, c.height - 130, c.width, 60);   // erase part of the trough
+        res(c.toDataURL('image/png'));
+      };
+      im.src = src;
+    });
+  });
+  const clipScan = await proj.evaluate(eval(SYM), clipped);
+  const cUp = clipScan.axis - clipScan.top, cDown = clipScan.bot - clipScan.axis;
+  check('W1 GATE red control: a figure with its trough plated over IS reported as asymmetric',
+    Math.abs(cUp - cDown) > 3, JSON.stringify({ up: cUp, down: cDown }));
+
+  // back to stage 2 for the checks that follow
+  await proj.evaluate(() => window.__LT.gotoStage(1));
+  await proj.evaluate(() => window.__LT.buildSheet());
+
   /* ============ W2: honest units, correct arithmetic ============ */
-  check('W2: the stage\'s real numbers are on the sheet, with real units', /f = 1 Hz/.test(sheet.text) && /λ = 2 m/.test(sheet.text), sheet.text.slice(0, 200));
+  check('W2: the one number a still drawing cannot show IS given, with its unit', /f = 1 Hz/.test(sheet.text), sheet.text.slice(0, 200));
   /* The sheet must NOT contain the worked answer, or tasks 1 and 3 are
      pointless — and it must not quote back the wavelength it asks the pupil
      to measure. The teacher gets the working on the HUD instead. */
   check('the pupil sheet does NOT print the worked answer', !/=\s*2\s*m\/s/.test(sheet.text) && !/Answer/.test(sheet.text), (sheet.text.match(/[^.]*m\/s[^.]*/) || [''])[0]);
-  check('and no task quotes back the wavelength the pupil is asked to measure', !/λ = 2 m\?/.test(sheet.text) && (sheet.text.match(/λ = 2 m/g) || []).length === 1, String((sheet.text.match(/λ = 2 m/g) || []).length));
-  check('W2: the equation to use is given, and the frequency is handed over honestly (a still cannot show it)',
-    /v = f × λ/.test(sheet.text) && /still drawing cannot show you the frequency/.test(sheet.text), sheet.text.slice(0, 60));
+  /* The measurables must not be printed anywhere: with λ and A on the page,
+     the calibrated grid and the scale bar exist for tasks nobody needs to
+     do. */
+  check('the wavelength and amplitude are NOT printed — they are what the pupil measures',
+    !/λ\s*=\s*2/.test(sheet.text) && !/A\s*=\s*0\.6/.test(sheet.text) && !/wavelength λ =/.test(sheet.text),
+    (sheet.text.match(/[^.]*[λA]\s*=[^.]*/) || [''])[0]);
+  check('W2: the equation to use is given, and the tasks ask for the two measurable quantities',
+    /v = f × λ/.test(sheet.text) && /Measure one whole wavelength/.test(sheet.text) && /Measure the amplitude/.test(sheet.text),
+    sheet.text.slice(0, 80));
   check('W2: the model-to-real mapping is STATED, so a pupil can measure off the page', /grid squares are 0\.5 m/.test(sheet.text) && /1 metre/.test(sheet.text));
   check('W2: no pixel count is ever presented as a physical unit', !/\d+\s*px\b/.test(sheet.text) && !/px\s*(Hz|m\b)/.test(sheet.text), (sheet.text.match(/\d+\s*px/) || [''])[0]);
 
@@ -240,8 +373,8 @@ const SCAN = `(src) => new Promise(res => {
   await proj.evaluate(() => window.__LT.buildSheet());
   const sheet3 = await proj.evaluate(() => window.__LT.sheet());
   const w3 = await proj.evaluate(() => window.__LT.wave());
-  check('the worksheet follows the stage: it prints THIS stage\'s numbers',
-    sheet3.text.includes('f = ' + w3.f + ' Hz') && sheet3.text.includes('λ = ' + w3.lambda + ' m'), JSON.stringify(w3));
+  check('the worksheet follows the stage: it prints THIS stage\'s frequency',
+    sheet3.text.includes('f = ' + w3.f + ' Hz') && !sheet3.text.includes('λ = ' + w3.lambda + ' m'), JSON.stringify(w3));
   check('and the second stage keeps the answer off the sheet too',
     !new RegExp('=\\s*' + (Math.round(w3.f * w3.lambda * 1000) / 1000) + '\\s*m/s').test(sheet3.text),
     (sheet3.text.match(/[^.]*m\/s[^.]*/) || [''])[0]);

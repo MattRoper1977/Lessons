@@ -274,6 +274,7 @@ body.reduce *, body.reduce *::before, body.reduce *::after {
   </div>
 </section>
 <div id="pickSaid" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap"></div>
+<div id="extrasSaid" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap"></div>
 
 <section class="card" aria-label="Class check and extras">
   <h2>Class check</h2>
@@ -1366,12 +1367,21 @@ LT.boot();
   /* --- classroom extras (LT8) --------------------------------------------
      The HUD renders the projector's counts and sends presses; it holds no
      tally of its own, exactly like every other indicator here (G2). */
+  var lastRagSaid = null;
   function extrasRender() {
     if (!seen) return;
     var rag = seen.rag || { r: 0, a: 0, g: 0 };
     el('indRagR').textContent = String(rag.r);
     el('indRagA').textContent = String(rag.a);
     el('indRagG').textContent = String(rag.g);
+    /* Announced, like every other state change here. The counts were shown
+       in plain spans with no live region, so a screen-reader user pressing
+       7/8/9 got no confirmation the vote had landed at all. */
+    var stamp = rag.r + '/' + rag.a + '/' + rag.g;
+    if (lastRagSaid !== null && lastRagSaid !== stamp) {
+      el('extrasSaid').textContent = 'Tally: ' + rag.r + ' stuck, ' + rag.a + ' nearly, ' + rag.g + ' got it';
+    }
+    lastRagSaid = stamp;
     el('btnRagShow').setAttribute('aria-pressed', String(!!seen.ragShow));
     el('btnAudio').setAttribute('aria-pressed', String(!!seen.audio));
     el('btnAudio').textContent = seen.audio ? '\uD83D\uDD0A Sound on' : '\uD83D\uDD07 Sound off';
@@ -1381,7 +1391,10 @@ LT.boot();
   el('btnRagG').addEventListener('click', function () { LT.send('RAG_BUMP', { level: 'g' }); });
   el('btnRagShow').addEventListener('click', function () { LT.send('RAG_SHOW', { on: !(seen && seen.ragShow) }); });
   el('btnRagReset').addEventListener('click', function () { LT.send('RAG_RESET', {}); });
-  el('btnBell').addEventListener('click', function () { LT.send('BELL', {}); });
+  el('btnBell').addEventListener('click', function () {
+    LT.send('BELL', {});
+    el('extrasSaid').textContent = 'Silent bell sent to the projector';
+  });
   el('btnAudio').addEventListener('click', function () { LT.send('AUDIO_SET', { on: !(seen && seen.audio) }); });
   LT.registerKey('Digit7', function () { LT.send('RAG_BUMP', { level: 'r' }); }, 'Tally: stuck');
   LT.registerKey('Digit8', function () { LT.send('RAG_BUMP', { level: 'a' }); }, 'Tally: nearly there');

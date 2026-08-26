@@ -51,16 +51,33 @@ function serve() {
 /* Count LIVE oscillators, not "did we call a function". A wired-but-silent
    audio path and a working one are indistinguishable without this. */
 const AUDIO_PROBE = `() => {
-  window.__osc = { started: 0, peakGain: 0, stopped: 0 };
+  window.__osc = { started: 0, peakGain: 0, stopped: 0, durations: [], reachedOutput: 0 };
   const AC = window.AudioContext || window.webkitAudioContext;
   if (!AC) return;
   const realOsc = AC.prototype.createOscillator;
   const realGain = AC.prototype.createGain;
+  /* Counting start() proves a node was told to run, not that anyone can hear
+     it. Wrapping connect() as well means a tone routed nowhere — the whole
+     chain built and never joined to the speakers — is distinguishable from a
+     working earcon. */
+  const realConnect = AudioNode.prototype.connect;
+  AudioNode.prototype.connect = function (dest) {
+    try {
+      if (dest === this.context.destination) window.__osc.reachedOutput++;
+    } catch (e) {}
+    return realConnect.apply(this, arguments);
+  };
   AC.prototype.createOscillator = function () {
     const o = realOsc.call(this);
     const start = o.start.bind(o), stop = o.stop.bind(o);
-    o.start = function (t) { window.__osc.started++; return start(t); };
-    o.stop = function (t) { window.__osc.stopped++; return stop(t); };
+    let t0 = null;
+    o.start = function (t) { window.__osc.started++; t0 = (t == null ? o.context.currentTime : t); return start(t); };
+    o.stop = function (t) {
+      window.__osc.stopped++;
+      const t1 = (t == null ? o.context.currentTime : t);
+      if (t0 !== null) window.__osc.durations.push(t1 - t0);
+      return stop(t);
+    };
     return o;
   };
   AC.prototype.createGain = function () {
@@ -126,9 +143,21 @@ async function stripClick(page, sel) {
   await proj.keyboard.press('Digit7');
   await proj.keyboard.press('Digit8');
   await stripClick(proj, '#btnBell');
-  await proj.waitForTimeout(400);
-  const silent = await proj.evaluate(() => ({ started: window.__osc.started, spoke: window.__speech.length }));
-  check('X3: with sound off, three sound-capable actions start ZERO oscillators and speak nothing', silent.started === 0 && silent.spoke === 0, JSON.stringify(silent));
+  /* A speech-capable action too: the earlier version fired three things that
+     only ever make earcons, so "speak nothing" was true whatever say() did.
+     Projecting a name is the path that speaks. */
+  /* Sent from the HUD: a BroadcastChannel never delivers a page its own
+     messages, so a PICK_SHOW posted by the projector would reach nobody. */
+  await hud.evaluate(() => { window.LT.send('PICK_SHOW', { name: 'Quietly' }); });
+  await proj.waitForTimeout(600);
+  const silent = await proj.evaluate(() => ({
+    started: window.__osc.started, spoke: window.__speech.length,
+    onWall: window.__LT.state().pick
+  }));
+  check('X3: with sound off, four sound-capable actions start ZERO oscillators and speak nothing', silent.started === 0 && silent.spoke === 0, JSON.stringify(silent));
+  check('setup: one of those actions really was the speaking path', silent.onWall === 'Quietly', silent.onWall);
+  await hud.evaluate(() => { window.LT.send('PICK_CLEAR', {}); });
+  await proj.waitForTimeout(300);
 
   // Turn it on: now it really is audible — live oscillators at a modest gain.
   await stripClick(proj, '#btnAudio');
@@ -138,10 +167,16 @@ async function stripClick(page, sel) {
   await proj.waitForTimeout(400);
   const loud = await proj.evaluate(() => ({
     started: window.__osc.started, stopped: window.__osc.stopped, peak: window.__osc.peakGain,
+    durations: window.__osc.durations.slice(), reachedOutput: window.__osc.reachedOutput,
     state: window.__LT.extras().audio, label: document.getElementById('btnAudio').textContent
   }));
   check('X3: with sound on, a tally press starts a REAL oscillator (not a silent code path)', loud.started >= 1 && loud.state === true && /on/i.test(loud.label), JSON.stringify(loud));
+  check('X3: and the chain actually REACHES the speakers (a tone routed nowhere would count as started too)', loud.reachedOutput >= 1, 'connections to destination: ' + loud.reachedOutput);
   check('X3: the earcon is quiet (peak gain well under a tenth) and is scheduled to STOP — no ringing alarm', loud.peak > 0 && loud.peak <= 0.1 && loud.stopped >= 1, JSON.stringify({ peak: loud.peak, stopped: loud.stopped }));
+  /* The spec's number, asserted rather than assumed: earcons <= 300 ms. */
+  check('X3: every earcon is 300 ms or shorter, as the spec requires',
+    loud.durations.length >= 1 && loud.durations.every(d => d > 0 && d <= 0.3),
+    JSON.stringify(loud.durations.map(d => Math.round(d * 1000) + 'ms')));
 
   // TTS speaks a cold-called name, but only with sound on.
   await proj.evaluate(() => { window.__speech.length = 0; });
@@ -157,8 +192,15 @@ async function stripClick(page, sel) {
 
   /* THE persistence gate: the choice must NOT come back after a reload. */
   await proj.bringToFront();
-  const storedAudio = await proj.evaluate(() => JSON.stringify(Object.keys(localStorage).map(k => localStorage.getItem(k))));
-  check('X3: turning sound on writes nothing to storage', !/audio|sound/i.test(storedAudio), storedAudio.slice(0, 90));
+  const storedAudio = await proj.evaluate(() => JSON.stringify({
+    keys: Object.keys(localStorage),
+    values: Object.keys(localStorage).map(k => localStorage.getItem(k)),
+    session: Object.keys(sessionStorage)
+  }));
+  /* KEYS as well as values: a page storing lt.audio = "1" leaves a value of
+     "1", which matches nothing — the old check would have missed it. */
+  check('X3: turning sound on writes nothing to storage (keys or values, local or session)',
+    !/audio|sound/i.test(storedAudio) && !/"session":\[.+\]/.test(storedAudio), storedAudio.slice(0, 120));
   await proj.reload({ waitUntil: 'load' });
   try { await proj.locator('.mbm-skip').click({ timeout: 4000 }); } catch (e) {}
   await proj.waitForFunction(() => !document.querySelector('.mbm-splash'), null, { timeout: 8000 });
@@ -199,7 +241,27 @@ async function stripClick(page, sel) {
   check('X4: the sparkline is well-formed standalone SVG with the xmlns a paste needs', /^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg"/.test(svg) && /<\/svg>$/.test(svg), String(svg).slice(0, 70));
   const paths = (svg.match(/<path /g) || []).length;
   check('X4: it draws one line per colour actually recorded', paths === 3, 'paths=' + paths);
-  check('X4: it carries its own text labels and an aria-label, so it reads outside this page', /Stuck 2/.test(svg) && /Got it 3/.test(svg) && /aria-label=/.test(svg), svg.slice(0, 120));
+  check('X4: it carries its own text labels and an aria-label, so it reads outside this page', /Stuck \(dotted\) 2/.test(svg) && /Got it \(solid\) 3/.test(svg) && /aria-label=/.test(svg), svg.slice(0, 140));
+  /* Colour is never the only cue — including in a file that will be printed
+     in black and white. Each series must differ by dash and carry its own
+     end label. */
+  const dashes = (svg.match(/stroke-dasharray="[^"]+"/g) || []);
+  const endLabels = ['Stuck', 'Nearly', 'Got it'].filter(w => new RegExp('>' + w + '</text>').test(svg));
+  check('X4: the three series differ by DASH as well as hue, and each is labelled on the line',
+    dashes.length === 2 && endLabels.length === 3, JSON.stringify({ dashes, endLabels }));
+  /* A single vote used to export a blank graph: one moveto, no lineto, and
+     SVG paints nothing at all. Reset FIRST, so this is genuinely one vote. */
+  await stripClick(proj, '#btnRagReset');
+  await proj.evaluate(() => document.activeElement && document.activeElement.blur());
+  await proj.keyboard.press('Digit9');
+  await proj.waitForTimeout(200);
+  const solo = await proj.evaluate(() => ({ series: window.__LT.extras().series, svg: window.__LT.extras().svg }));
+  const soloDrawn = (solo.svg.match(/<path d="M[^"]*L[^"]*"/g) || []).length;
+  check('setup: exactly one vote is recorded', solo.series === 1, String(solo.series));
+  check('X4: a graph with a single recorded vote still draws something (it used to be blank)', soloDrawn >= 1, 'drawable paths: ' + soloDrawn);
+  // restore a fuller series for the checks that follow
+  for (const k of ['Digit7', 'Digit7', 'Digit8', 'Digit9', 'Digit9']) await proj.keyboard.press(k);
+  await proj.waitForTimeout(200);
   check('X4: no pupil name is anywhere in the exported graph', !/Wilhelmina/.test(svg));
   // It must parse as XML — a paste target will reject anything less.
   const parses = await proj.evaluate(s => {
@@ -230,12 +292,92 @@ async function stripClick(page, sel) {
   const reset = await proj.evaluate(() => window.__LT.extras());
   check('X1: reset zeroes the counts and empties the series behind the graph', reset.rag.r === 0 && reset.rag.a === 0 && reset.rag.g === 0 && reset.series === 0 && reset.svg === null, JSON.stringify(reset.rag));
 
+  /* ====== an explicit hide must survive the next vote ================== */
+  await stripClick(proj, '#btnRag');            // hide the tally deliberately
+  await proj.waitForTimeout(150);
+  const hidden = await proj.evaluate(() => window.__LT.extras());
+  check('setup: the teacher has hidden the tally', hidden.ragShow === false && hidden.ragVisible === false, JSON.stringify({ show: hidden.ragShow }));
+  await proj.evaluate(() => document.activeElement && document.activeElement.blur());
+  await proj.keyboard.press('Digit7');
+  await proj.waitForTimeout(200);
+  const afterVote = await proj.evaluate(() => window.__LT.extras());
+  check('X1: a vote does NOT force the hidden tally back up (an uninfluenced vote stays uninfluenced)',
+    afterVote.ragShow === false && afterVote.ragVisible === false && afterVote.rag.r === hidden.rag.r + 1,
+    JSON.stringify({ show: afterVote.ragShow, r: afterVote.rag.r }));
+  await stripClick(proj, '#btnRag');            // back on for what follows
+  await proj.waitForTimeout(150);
+
+  /* ====== "0 clears every overlay" means the tally and the bell too ==== */
+  await stripClick(proj, '#btnBell');
+  await proj.waitForTimeout(200);
+  const beforeSweep = await proj.evaluate(() => window.__LT.extras());
+  check('setup: the tally and the bell are both up', beforeSweep.ragVisible === true && beforeSweep.bannerOn === true, JSON.stringify({ tally: beforeSweep.ragVisible, bell: beforeSweep.bannerOn }));
+  await proj.evaluate(() => document.activeElement && document.activeElement.blur());
+  await proj.keyboard.press('Digit0');
+  await proj.waitForTimeout(250);
+  const afterSweep = await proj.evaluate(() => window.__LT.extras());
+  check('"0 — clear every overlay" retires the tally panel and the bell as well',
+    afterSweep.ragVisible === false && afterSweep.bannerOn === false && afterSweep.bellOn === false,
+    JSON.stringify({ tally: afterSweep.ragVisible, banner: afterSweep.bannerOn }));
+  check('...and the COUNTS survive it — clearing the screen is not throwing the lesson away',
+    afterSweep.rag.r === beforeSweep.rag.r && afterSweep.rag.g === beforeSweep.rag.g,
+    JSON.stringify({ before: beforeSweep.rag, after: afterSweep.rag }));
+
+  /* ====== the HUD announces the extras, like everything else here ====== */
+  await hud.bringToFront();
+  await hud.evaluate(() => { document.getElementById('extrasSaid').textContent = ''; });
+  await hud.click('#btnRagG');
+  await hud.waitForTimeout(1300);
+  const hudSaid = await hud.evaluate(() => document.getElementById('extrasSaid').textContent);
+  check('a11y: the HUD announces the tally after a vote (it used to change silent spans)', /got it/i.test(hudSaid), hudSaid);
+  await hud.click('#btnBell');
+  await hud.waitForTimeout(200);
+  const bellSaid = await hud.evaluate(() => document.getElementById('extrasSaid').textContent);
+  check('a11y: and announces the silent bell', /bell/i.test(bellSaid), bellSaid);
+  await proj.bringToFront();
+  await proj.evaluate(() => document.activeElement && document.activeElement.blur());
+  await proj.keyboard.press('Digit0');
+
+  /* ====== taking a name down stops the speech saying it ================= */
+  await stripClick(proj, '#btnAudio');           // sound back on
+  await proj.waitForTimeout(150);
+  const cancelled = await proj.evaluate(async () => {
+    let cancels = 0;
+    const real = window.speechSynthesis.cancel.bind(window.speechSynthesis);
+    window.speechSynthesis.cancel = function () { cancels++; return real(); };
+    window.__LT.state();
+    return cancels;
+  });
+  await hud.evaluate(() => window.LT.send('PICK_SHOW', { name: 'Reginald' }));
+  await proj.waitForTimeout(400);
+  await hud.evaluate(() => window.LT.send('PICK_CLEAR', {}));
+  await proj.waitForTimeout(400);
+  const afterClearName = await proj.evaluate(() => ({
+    spoke: window.__speech.slice(-1)[0],
+    pick: window.__LT.state().pick,
+    speaking: window.speechSynthesis.speaking
+  }));
+  check('X3: clearing the name off the wall also stops it being spoken', afterClearName.pick === '' && afterClearName.speaking === false, JSON.stringify(afterClearName));
+  await stripClick(proj, '#btnAudio');           // back off
+
   /* ================= X2: the bell, and its reduced-motion form ========= */
   await proj.evaluate(() => document.activeElement && document.activeElement.blur());
   await stripClick(proj, '#btnBell');
   await proj.waitForTimeout(200);
-  const bell = await proj.evaluate(() => window.__LT.extras());
+  const bell = await proj.evaluate(() => {
+    const b = document.getElementById('bell');
+    const cs = getComputedStyle(b);
+    return Object.assign(window.__LT.extras(), {
+      glowVisibility: cs.visibility, glowOpacity: cs.opacity, glowBg: cs.backgroundImage.slice(0, 30)
+    });
+  });
   check('X2: the bell shows the glow and the banner together', bell.bellOn === true && bell.bannerOn === true, JSON.stringify({ glow: bell.bellOn, banner: bell.bannerOn }));
+  /* A class name is a proxy. The glow has to be VISIBLE and actually paint
+     something — it ships at visibility:hidden, so every check that read the
+     class alone would have passed with nothing on the screen. */
+  check('X2: the glow is genuinely visible and painting (not just class-marked)',
+    bell.glowVisibility === 'visible' && bell.glowBg.includes('gradient'),
+    JSON.stringify({ vis: bell.glowVisibility, bg: bell.glowBg }));
   check('X2: normally it BREATHES (a named animation, not a strobe)', bell.bellAnim === 'bellBreath', bell.bellAnim);
   const said = await proj.evaluate(() => document.getElementById('bellSaid').textContent);
   check('X2: it is announced, so a screen-reader user gets the same cue', /eyes this way/i.test(said), said);
