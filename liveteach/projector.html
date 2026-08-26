@@ -269,10 +269,14 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
 <div id="tagChip"></div>
 <div id="toast" role="status" aria-live="polite"></div>
 
-<div id="shareOverlay" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
+<!-- role=dialog WITHOUT aria-modal: this panel is deliberately modeless — the
+     control strip stays live above it and the toast lives outside it, so
+     claiming a modal boundary the code does not enforce would be the exact
+     dishonest-semantics failure the estate bans. -->
+<div id="shareOverlay" role="dialog" aria-labelledby="shareTitle" aria-describedby="shareSub">
   <div id="shareCard">
     <h2 id="shareTitle">🔗 Share this lesson state</h2>
-    <p class="sub">The address carries the lesson, stage, speed, display and tag — nothing
+    <p class="sub" id="shareSub">The address carries the lesson, stage, speed, display and tag — nothing
       else travels, so keep pupils&rsquo; names out of the tag. Scan the code with a
       phone, or copy the address.</p>
     <div id="shareQRBox"><canvas id="shareQR" width="1" height="1" aria-label="QR code of the address below"></canvas></div>
@@ -284,10 +288,19 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
       <button id="btnShareClose">Close</button>
     </div>
     <label id="shareTagRow">Tag this address (optional):
-      <input id="shareTagInput" type="text" maxlength="24" spellcheck="false" placeholder="e.g. period 3">
+      <input id="shareTagInput" type="text" maxlength="24" spellcheck="false" placeholder="e.g. period 3"
+             aria-describedby="shareTagHelp">
     </label>
+    <!-- The safeguarding rule reaches the tag field itself, not just the eye:
+         focus jumps straight to the address box, so a screen-reader user
+         would otherwise never meet the warning above. -->
+    <span id="shareTagHelp" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap">Never put a pupil&rsquo;s name in the tag — the tag travels in the address and in the QR code.</span>
   </div>
 </div>
+<!-- Modal state changes (opened, too long, recovered) announce here: the
+     clipped live region is in the accessibility tree at all times, unlike the
+     visibility-hidden panel itself. -->
+<div id="shareSaid" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap"></div>
 
 <nav id="strip" class="" aria-label="Teaching controls">
   <div class="grp">
@@ -644,13 +657,14 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
     return score;
   }
 
-  function encode(text) {
+  function build(text, forceMask) {
     var bytes = utf8Bytes(String(text));
     var v = pickVersion(bytes.length);
     var codewords = buildCodewords(bytes, v);
     var fn = functionMask(v);
     var best = null, bestScore = Infinity, bestMask = 0;
     for (var mask = 0; mask < 8; mask++) {
+      if (forceMask != null && mask !== forceMask) continue;
       var mx = newMatrix(VER[v].size);
       placeFixed(mx, v);
       placeData(mx, fn, codewords);
@@ -659,10 +673,14 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
       var s = penalty(mx);
       if (s < bestScore) { bestScore = s; best = mx; bestMask = mask; }
     }
-    return { version: v, size: best.size, mask: bestMask, modules: Uint8Array.from(best.m) };
+    return { version: v, size: best.size, mask: bestMask, penalty: bestScore, modules: Uint8Array.from(best.m) };
   }
+  function encode(text) { return build(text, null); }
+  /* Harness seam only: the spec's Q1 asks for proof that output at a GIVEN
+     mask still decodes, not just at whichever mask the penalty rules pick. */
+  function encodeWithMask(text, mask) { return build(text, mask); }
 
-  return { encode: encode, MAX_BYTES: 106 };
+  return { encode: encode, encodeWithMask: encodeWithMask, MAX_BYTES: 106 };
 });
 </script>
 <!-- MBM-LIVETEACH-QR:END -->
@@ -792,10 +810,14 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
      (the estate's recorded CSS gotcha). Vocabulary follows the hub's
      "High lumen — projector / IWB" mode. */
   LT.highlumen = function () { return document.body.classList.contains('highlumen'); };
-  LT.setHighlumen = function (on) {
+  /* transient=true applies the display WITHOUT persisting it: a shared link
+     or a back-button hop reproduces the display it was made on for this
+     session, but must never silently rewrite the teacher's own saved
+     preference (LT6). Only a real button press persists. */
+  LT.setHighlumen = function (on, transient) {
     document.body.classList.toggle('highlumen', !!on);
     document.documentElement.classList.toggle('highlumen', !!on);
-    saveSettings();
+    if (!transient) saveSettings();
   };
 
   LT.boot = function () {
@@ -1308,6 +1330,10 @@ LT.boot();
   }
   function setBlackout(on) {
     state.blackout = !!on;
+    /* Blacking out while the share panel is open would bury it — and the
+       focus inside it — under the curtain. The curtain wins; the panel
+       stands down. (shareEscape is hoisted and guards its own element.) */
+    if (state.blackout) shareEscape();
     blackoutEl.classList.toggle('show', state.blackout);
     btnBlackout.setAttribute('aria-pressed', String(state.blackout));
     document.getElementById('blackoutSaid').textContent = state.blackout
@@ -1573,7 +1599,15 @@ LT.boot();
     }
     else if (type === 'SIM_RUN') { armLink(); setRunning(!!payload.on); }
     else if (type === 'SIM_STOP') { armLink(); stopSim(); }
-    else if (type === 'SIM_SPEED') { armLink(); setSpeed(Number(payload.value) || 1); }
+    else if (type === 'SIM_SPEED') {
+      armLink();
+      /* Validate against the shipped set, never coerce: since LT6 the speed
+         travels in the share URL, and a stray 7 or 0.31 would serialize into
+         an address whose boot params reject it — the link would not
+         reproduce the lesson it claims to. */
+      var sv = Number(payload.value);
+      setSpeed(sv === 0.5 || sv === 2 ? sv : 1);
+    }
     else if (type === 'TIMER_START') { armLink(); startTimer(Number(payload.mins) || 1); }
     else if (type === 'HINT_SET') { armLink(); setHint(!!payload.on, payload.text); }
     else if (type === 'POLL_SET') { armLink(); setPoll(!!payload.on); }
@@ -1687,6 +1721,7 @@ LT.boot();
     syncStateToURL();
   }
 
+  var lastTooLong = null;
   function shareRender() {
     var url = shareURL();
     shareURLBox.value = url;
@@ -1695,6 +1730,17 @@ LT.boot();
     catch (err) { code = null; }   // over version 6's capacity — handled honestly below
     shareTooLongEl.hidden = !!code;
     document.getElementById('shareQRBox').style.display = code ? '' : 'none';
+    /* The too-long flip is announced: focus sits in the tag field while
+       typing, so a sighted-only cue would silently strand a screen-reader
+       user with a code that has vanished. */
+    if (lastTooLong !== !code) {
+      lastTooLong = !code;
+      if (shareOverlayEl.classList.contains('show')) {
+        document.getElementById('shareSaid').textContent = lastTooLong
+          ? 'This address is now too long for a QR code — shorten the tag, or copy the address instead.'
+          : 'QR code ready.';
+      }
+    }
     if (!code) return;             // Q2: the address stays selectable either way
     /* One module = one canvas pixel, CSS-scaled with pixelated rendering.
        ALWAYS black on white whatever the page theme — a scanner needs the
@@ -1725,7 +1771,15 @@ LT.boot();
     shareClose();
     return true;
   }
-  function shareToggle() { if (shareOverlayEl.classList.contains('show')) shareClose(); else shareOpen(); }
+  function shareToggle() {
+    if (shareOverlayEl.classList.contains('show')) { shareClose(); return; }
+    /* The curtain sits ABOVE this panel by design (the screen is off for the
+       room). Opening underneath it would hand focus to something nobody can
+       see and deaden the hotkeys on a black screen — so say what to do
+       instead of opening a trap. */
+    if (state.blackout) { toast('The screen is blacked out — press B or the ✖ Blackout button first, then Share.'); return; }
+    shareOpen();
+  }
   document.getElementById('btnShare').addEventListener('click', shareToggle);
   document.getElementById('btnShareClose').addEventListener('click', shareClose);
   shareOverlayEl.addEventListener('click', function (e) { if (e.target === shareOverlayEl) shareClose(); });
@@ -1765,7 +1819,9 @@ LT.boot();
     var sp = Number(pq.get('speed'));
     setSpeed(sp === 0.5 || sp === 2 ? sp : 1);
     var hlOn = pq.get('hl') === '1';
-    if (hlOn !== LT.highlumen()) { LT.setHighlumen(hlOn); syncDisplayButtons(); draw(); teleReplay(); }
+    /* transient: a history hop reproduces the display of the bookmarked
+       state without rewriting the teacher's saved preference. */
+    if (hlOn !== LT.highlumen()) { LT.setHighlumen(hlOn, true); syncDisplayButtons(); draw(); teleReplay(); }
     setShareTag(pq.get('tag') || '');
     var st = Number(pq.get('stage'));
     if (state.stageCount) applyStage(Number.isInteger(st) && st >= 1 ? st - 1 : 0);
@@ -1777,6 +1833,18 @@ LT.boot();
   var lessonId = 'waves_v1';
   var q = new URLSearchParams(location.search).get('lesson');
   if (q && /^[a-z0-9_]{1,40}$/.test(q)) lessonId = q;
+  else if (q) {
+    /* A name the loader will not accept (a capital, a hyphen, a typo from a
+       transcribed address) must NOT silently become the default lesson: the
+       first URL sync below strips ?lesson= from the bar, so the evidence
+       would be gone and Share would then export the wrong lesson as if it
+       were meant. Say so, carrying the rejected name in the message itself —
+       an instruction to "check the address bar" goes stale the moment the
+       bar is rewritten. errBox is textContent-only, and the value reaches no
+       URL, script src or log. */
+    errBox.textContent = 'Lesson name "' + q + '" is not recognised (lowercase letters, digits and underscores only) — showing the default lesson instead.';
+    errBox.classList.add('show');
+  }
   state.lesson = lessonId;
 
   (function () {
@@ -1788,7 +1856,9 @@ LT.boot();
     var bq = new URLSearchParams(location.search);
     var sp = Number(bq.get('speed'));
     if (sp === 0.5 || sp === 2) setSpeed(sp);
-    if (bq.get('hl') === '1' && !LT.highlumen()) { LT.setHighlumen(true); syncDisplayButtons(); draw(); teleReplay(); }
+    /* transient again: opening someone's high-lumen link must not silently
+       flip the display preference this browser keeps for every later lesson. */
+    if (bq.get('hl') === '1' && !LT.highlumen()) { LT.setHighlumen(true, true); syncDisplayButtons(); draw(); teleReplay(); }
     setShareTag(bq.get('tag') || '');
     var st = Number(bq.get('stage'));
     if (Number.isInteger(st) && st >= 2) bootStage = st - 1;

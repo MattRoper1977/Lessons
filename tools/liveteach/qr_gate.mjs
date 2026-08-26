@@ -90,10 +90,46 @@ if (MODE === '--self-test') {
     const out = decode(code);
     say(out === p.text, 'v' + p.want + ' (mask ' + code.mask + '): jsQR round-trips the exact string', JSON.stringify({ want: p.text.slice(0, 30), got: out && out.slice(0, 30) }));
   }
+  /* The registry asks explicitly for mask verification, not assumption: prove
+     that output at EVERY mask decodes, not just at whichever mask the penalty
+     rules happened to pick above (mask 0 included — the fragment emitted
+     mask-0-only output, which is spec-non-compliant but usually scannable;
+     "usually" is not evidence). Two versions, one single-block and one
+     interleaved, × all 8 masks. */
+  for (const p of [PAYLOADS[1], PAYLOADS[5]]) {
+    for (let m = 0; m < 8; m++) {
+      const forced = LTQR.encodeWithMask(p.text, m);
+      const out = decode(forced);
+      say(forced.mask === m && out === p.text, 'v' + p.want + ' forced to mask ' + m + ': jsQR still round-trips the exact string', JSON.stringify({ mask: forced.mask, got: out && out.slice(0, 24) }));
+    }
+  }
+  /* And the chooser must actually be choosing: the mask it picks has to be
+     the lowest-penalty one, or the penalty rules are decorative. */
+  for (const p of [PAYLOADS[2], PAYLOADS[5]]) {
+    const chosen = LTQR.encode(p.text);
+    let bestM = 0, bestS = Infinity;
+    for (let m = 0; m < 8; m++) {
+      const s = LTQR.encodeWithMask(p.text, m).penalty;
+      if (s < bestS) { bestS = s; bestM = m; }
+    }
+    say(chosen.mask === bestM && chosen.penalty === bestS, 'v' + p.want + ': the shipped mask is the lowest-penalty one (the rules are live, not decorative)', JSON.stringify({ chose: chosen.mask, best: bestM }));
+  }
+
   // over-capacity is an honest error, never a silent truncation
   let threw = false;
   try { LTQR.encode('x'.repeat(107)); } catch (e) { threw = /shorten/.test(e.message); }
   say(threw, 'over-capacity payloads throw the honest shorten-the-URL error');
+  /* Capacity boundaries: the last byte that fits a version must stay on it,
+     and one more must step up — an off-by-one here ships codes that overflow
+     their block table. */
+  const CAP = { 1: 14, 2: 26, 3: 42, 4: 62, 5: 84, 6: 106 };
+  for (const v of [1, 2, 3, 4, 5]) {
+    const atCap = LTQR.encode('x'.repeat(CAP[v]));
+    const overCap = LTQR.encode('x'.repeat(CAP[v] + 1));
+    say(atCap.version === v && overCap.version === v + 1, 'capacity boundary at v' + v + ': ' + CAP[v] + 'B fits, ' + (CAP[v] + 1) + 'B steps up', JSON.stringify({ at: atCap.version, over: overCap.version }));
+    const back = decode(atCap);
+    say(back === 'x'.repeat(CAP[v]), 'v' + v + ' at exactly full capacity still decodes');
+  }
   console.log('masks exercised across payloads: ' + [...masksSeen].sort().join(','));
   console.log(bad ? 'QR GATE FAILED (' + bad + ')' : 'QR GATE PASSED');
   process.exit(bad ? 1 : 0);

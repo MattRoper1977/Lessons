@@ -302,13 +302,14 @@
     return score;
   }
 
-  function encode(text) {
+  function build(text, forceMask) {
     var bytes = utf8Bytes(String(text));
     var v = pickVersion(bytes.length);
     var codewords = buildCodewords(bytes, v);
     var fn = functionMask(v);
     var best = null, bestScore = Infinity, bestMask = 0;
     for (var mask = 0; mask < 8; mask++) {
+      if (forceMask != null && mask !== forceMask) continue;
       var mx = newMatrix(VER[v].size);
       placeFixed(mx, v);
       placeData(mx, fn, codewords);
@@ -317,8 +318,12 @@
       var s = penalty(mx);
       if (s < bestScore) { bestScore = s; best = mx; bestMask = mask; }
     }
-    return { version: v, size: best.size, mask: bestMask, modules: Uint8Array.from(best.m) };
+    return { version: v, size: best.size, mask: bestMask, penalty: bestScore, modules: Uint8Array.from(best.m) };
   }
+  function encode(text) { return build(text, null); }
+  /* Harness seam only: the spec's Q1 asks for proof that output at a GIVEN
+     mask still decodes, not just at whichever mask the penalty rules pick. */
+  function encodeWithMask(text, mask) { return build(text, mask); }
 
-  return { encode: encode, MAX_BYTES: 106 };
+  return { encode: encode, encodeWithMask: encodeWithMask, MAX_BYTES: 106 };
 });

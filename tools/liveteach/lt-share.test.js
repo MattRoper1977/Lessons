@@ -146,28 +146,59 @@ const QR_COMPARE = `(args) => {
   await stripClick(proj, '#btnLumen');
   await proj.waitForTimeout(150);
 
-  /* ================= Esc order: blackout closes FIRST ================= */
+  /* ============ Esc order: the panel outranks the lesson overlays ========
+     (Blackout cannot be part of this ladder any more: it stands the panel
+     down on the way in — proven in its own section below — so the pairing
+     the spec's row describes is tested where it can actually occur.) */
   await proj.evaluate(() => document.activeElement.blur());
-  await proj.keyboard.press('KeyB');
-  await proj.waitForTimeout(100);
-  await proj.keyboard.press('Escape');
-  await proj.waitForTimeout(100);
-  const esc1 = await proj.evaluate(() => ({
-    blackout: window.__LT.state().blackout,
+  await proj.keyboard.press('KeyP');       // poll ON, underneath the panel
+  await proj.keyboard.press('Digit1');     // and a timer under that
+  await proj.waitForTimeout(200);
+  const ladder0 = await proj.evaluate(() => ({
+    poll: window.__LT.state().poll.on, timer: window.__LT.state().timer !== null,
     modal: getComputedStyle(document.getElementById('shareOverlay')).visibility === 'visible'
   }));
-  check('Esc order: first Escape lifts the blackout, the share modal stays', esc1.blackout === false && esc1.modal === true, JSON.stringify(esc1));
+  check('Esc setup: panel, poll and timer are all live at once', ladder0.modal && ladder0.poll && ladder0.timer, JSON.stringify(ladder0));
   await proj.keyboard.press('Escape');
-  await proj.waitForTimeout(100);
-  const esc2 = await proj.evaluate(() => getComputedStyle(document.getElementById('shareOverlay')).visibility);
-  check('Esc order: second Escape closes the share modal', esc2 === 'hidden');
+  await proj.waitForTimeout(150);
+  const esc1 = await proj.evaluate(() => ({
+    modal: getComputedStyle(document.getElementById('shareOverlay')).visibility === 'visible',
+    poll: window.__LT.state().poll.on, timer: window.__LT.state().timer !== null
+  }));
+  check('Esc order: the first Escape closes the share panel and leaves the lesson overlays alone', esc1.modal === false && esc1.poll === true && esc1.timer === true, JSON.stringify(esc1));
+  await proj.keyboard.press('Escape');
+  await proj.waitForTimeout(150);
+  const esc2 = await proj.evaluate(() => ({ poll: window.__LT.state().poll.on, timer: window.__LT.state().timer !== null }));
+  check('Esc order: the next Escape takes the poll, then the timer waits its turn', esc2.poll === false && esc2.timer === true, JSON.stringify(esc2));
+  await proj.keyboard.press('Escape');
+  await proj.waitForTimeout(150);
+  const esc3 = await proj.evaluate(() => window.__LT.state().timer !== null);
+  check('Esc order: the timer goes last', esc3 === false);
 
-  /* focus returns to the opener */
+  /* focus returns to the opener (the panel is closed again by now) */
   await stripClick(proj, '#btnShare');
   await proj.evaluate(() => document.activeElement.blur());
   await proj.click('#btnShareClose');
   const focusBack = await proj.evaluate(() => document.activeElement && document.activeElement.id);
   check('a11y: closing the modal hands focus back to the Share button', focusBack === 'btnShare', String(focusBack));
+
+  /* Honest semantics: the panel does NOT trap focus and the strip stays live
+     above it, so it must not claim aria-modal. And the safeguarding warning
+     has to reach the tag field itself — focus lands on the address box, past
+     the visible line. */
+  const sem = await proj.evaluate(() => {
+    const ov = document.getElementById('shareOverlay');
+    const help = document.getElementById(document.getElementById('shareTagInput').getAttribute('aria-describedby') || '');
+    return {
+      modalClaim: ov.getAttribute('aria-modal'),
+      labelled: !!document.getElementById(ov.getAttribute('aria-labelledby') || ''),
+      described: !!document.getElementById(ov.getAttribute('aria-describedby') || ''),
+      tagHelp: help && help.textContent,
+      liveRegion: document.getElementById('shareSaid').getAttribute('aria-live')
+    };
+  });
+  check('a11y: the panel does not claim aria-modal it cannot enforce, and is labelled + described', sem.modalClaim === null && sem.labelled && sem.described, JSON.stringify(sem));
+  check('a11y: the tag field itself carries the never-name-a-pupil warning', /name/i.test(sem.tagHelp || '') && sem.liveRegion === 'polite', JSON.stringify(sem.tagHelp));
 
   /* ================= U1: tag round-trip, encoded exactly once ============ */
   const RAW_TAG = 'y10 & β 50%';
@@ -206,7 +237,11 @@ const QR_COMPARE = `(args) => {
   const busyKeys = [...new URLSearchParams(busy.url.split('?')[1] || '').keys()];
   const WHITELIST = ['lesson', 'stage', 'speed', 'hl', 'tag'];
   check('whitelist setup: hint (with prose), poll and timer really are live', busy.hintOn && busy.hintText.includes('crestwatch') && busy.pollOn && busy.timer, JSON.stringify(busy));
-  check('whitelist: with hint+poll+timer live, only the five allowed keys appear', busyKeys.every(k => WHITELIST.includes(k)), JSON.stringify(busyKeys));
+  /* Non-vacuity: an address with NO params would pass "every key allowed"
+     trivially, so the allowed keys actually present are demanded too. */
+  check('whitelist: with hint+poll+timer live, only the five allowed keys appear (and stage+speed really are among them)',
+    busyKeys.length >= 2 && busyKeys.includes('stage') && busyKeys.includes('speed') && busyKeys.every(k => WHITELIST.includes(k)),
+    JSON.stringify(busyKeys));
   check('whitelist: the hint prose is nowhere in the address', !busy.url.includes('crestwatch'), busy.url);
   await proj.keyboard.press('Digit0');   // clear overlays again
 
@@ -216,20 +251,30 @@ const QR_COMPARE = `(args) => {
   await proj.waitForTimeout(150);
   const tooLong = await proj.evaluate(() => ({
     msg: !document.getElementById('shareTooLong').hidden,
-    qrGone: document.getElementById('shareQRBox').style.display === 'none',
+    /* computed style, not the inline-style proxy: what the teacher can
+       actually see is the claim being made. */
+    qrGone: getComputedStyle(document.getElementById('shareQRBox')).display === 'none',
+    qrBox: document.getElementById('shareQR').getBoundingClientRect().width,
+    said: document.getElementById('shareSaid').textContent,
     boxVal: document.getElementById('shareURLBox').value,
     selectable: (function () { var b = document.getElementById('shareURLBox'); b.focus(); b.select(); return b.selectionEnd - b.selectionStart; })()
   }));
-  check('Q2: an over-capacity address shows the honest too-long line and drops the QR', tooLong.msg && tooLong.qrGone, JSON.stringify({ msg: tooLong.msg, qrGone: tooLong.qrGone }));
+  check('Q2: an over-capacity address shows the honest too-long line and the QR is really gone from the layout', tooLong.msg && tooLong.qrGone && tooLong.qrBox === 0, JSON.stringify({ msg: tooLong.msg, qrGone: tooLong.qrGone, qrBox: tooLong.qrBox }));
+  check('a11y: the too-long flip is ANNOUNCED, not only shown (focus is in the tag field)', /too long/i.test(tooLong.said), JSON.stringify(tooLong.said));
   check('Q2: the too-long address itself stays shown and selectable', tooLong.boxVal.includes('tag=') && tooLong.selectable === tooLong.boxVal.length, String(tooLong.selectable));
   await proj.fill('#shareTagInput', '');
   await proj.waitForTimeout(150);
   const recovered = await proj.evaluate(() => ({
     msg: !document.getElementById('shareTooLong').hidden,
-    qrBack: document.getElementById('shareQRBox').style.display !== 'none',
-    chipGone: getComputedStyle(document.getElementById('tagChip')).visibility === 'hidden'
+    qrBack: getComputedStyle(document.getElementById('shareQRBox')).display !== 'none',
+    chipGone: getComputedStyle(document.getElementById('tagChip')).visibility === 'hidden',
+    url: document.getElementById('shareURLBox').value
   }));
-  check('Q2: clearing the tag brings the QR back and retires the chip', !recovered.msg && recovered.qrBack && recovered.chipGone, JSON.stringify(recovered));
+  check('Q2: clearing the tag brings the QR back and retires the chip', !recovered.msg && recovered.qrBack && recovered.chipGone, JSON.stringify({ msg: recovered.msg, qrBack: recovered.qrBack, chipGone: recovered.chipGone }));
+  /* Recovery must REPAINT, not re-reveal: stale pixels from before the
+     too-long spell would encode an address nobody is looking at. */
+  const recoveredQR = await proj.evaluate(eval(QR_COMPARE), { url: recovered.url });
+  check('Q2: the recovered QR encodes the CURRENT address, not stale pixels', recoveredQR.ok === true, recoveredQR.why);
   await proj.evaluate(() => document.activeElement.blur());
   await proj.keyboard.press('Escape');   // close the modal
 
@@ -242,10 +287,15 @@ const QR_COMPARE = `(args) => {
   check('U2: Bookmark pushes exactly one history entry', histB === histA + 1, histA + ' -> ' + histB);
   await proj.evaluate(() => document.activeElement.blur());
   await proj.keyboard.press('Escape');
-  await proj.keyboard.press('PageUp');   // move OFF the bookmarked state (4 -> 3)
+  /* Move OFF the bookmark on BOTH serialized axes — stage AND speed — so the
+     restore below is real evidence: a check whose "at 2×" clause held on
+     both sides of goBack would prove nothing about speed. */
+  await proj.keyboard.press('PageUp');                       // stage 4 -> 3
+  await stripClick(proj, '#strip .spd[data-spd="0.5"]');     // 2× -> ½×
   await proj.waitForTimeout(200);
-  const moved = await proj.evaluate(() => ({ len: history.length, stage: window.__LT.stage().index, search: location.search }));
-  check('U2: teaching on after a bookmark still adds no history', moved.len === histB && moved.stage === 2, JSON.stringify(moved));
+  const moved = await proj.evaluate(() => ({ len: history.length, stage: window.__LT.stage().index, speed: window.__LT.state().speed, search: location.search }));
+  check('U2: teaching on after a bookmark still adds no history (and really moved off it: stage 3 at ½×)',
+    moved.len === histB && moved.stage === 2 && moved.speed === 0.5, JSON.stringify(moved));
   await proj.evaluate(() => { window.__ltNoReload = true; });
   await proj.goBack();
   await proj.waitForTimeout(300);
@@ -253,7 +303,8 @@ const QR_COMPARE = `(args) => {
     stage: window.__LT.stage().index, speed: window.__LT.state().speed,
     search: location.search, sameDoc: window.__ltNoReload === true
   }));
-  check('U2: the back button restores the bookmarked STATE (stage 4 at 2×), not just the URL', back.stage === 3 && back.speed === 2 && back.sameDoc === true, JSON.stringify(back));
+  check('U2: the back button restores the bookmarked STATE on both axes (stage 4 AND 2×), not just the URL',
+    back.stage === 3 && back.speed === 2 && back.sameDoc === true, JSON.stringify(back));
 
   /* hotkeys stay dead inside inputs: Q types, it does not open the modal */
   await stripClick(proj, '#hintInput');
@@ -283,6 +334,83 @@ const QR_COMPARE = `(args) => {
   check('boot: no console/page errors under hostile params', hp.length === 0, hp.join(' | '));
   await hostile.close();
 
+  /* An id the loader's charset rejects must not silently become the default
+     lesson: the boot URL sync strips ?lesson=, so the evidence would be gone
+     and Share would export the wrong lesson as though it were meant. */
+  const be = [];
+  const badLesson = await ctx.newPage();
+  await open(badLesson, base + 'projector.html?lesson=Waves-V1', be);
+  await badLesson.waitForFunction(() => window.__LT.manifestId() !== null, null, { timeout: 5000 });
+  await badLesson.waitForTimeout(300);
+  const badL = await badLesson.evaluate(() => ({
+    shown: getComputedStyle(document.getElementById('manifestError')).visibility === 'visible',
+    text: document.getElementById('manifestError').textContent,
+    lesson: window.__LT.manifestId(),
+    search: location.search,
+    teaches: (function () { document.dispatchEvent(new KeyboardEvent('keydown', { code: 'Digit1', bubbles: true })); return window.__LT.state().timer !== null; })()
+  }));
+  check('boot: an unusable ?lesson= raises a VISIBLE error naming the rejected value', badL.shown && badL.text.includes('Waves-V1') && badL.text.includes('not recognised'), JSON.stringify(badL.text.slice(0, 80)));
+  check('boot: it still falls back to the default lesson and keeps teaching', badL.lesson === 'waves_v1' && badL.teaches === true, JSON.stringify({ lesson: badL.lesson, teaches: badL.teaches }));
+  check('boot: the message does not depend on the address bar it is about to lose', !badL.text.includes('address bar') && !/lesson=/.test(badL.search), JSON.stringify(badL.search));
+  check('boot: no console/page errors on the unusable-lesson path', be.length === 0, be.join(' | '));
+  await badLesson.close();
+
+  /* ============ the bus cannot inject an unserializable speed ============ */
+  await hud.bringToFront();
+  await hud.evaluate(() => window.LT.send('SIM_SPEED', { value: 7 }));
+  await hud.waitForTimeout(400);
+  await proj.bringToFront();
+  const bogus = await proj.evaluate(() => ({ speed: window.__LT.state().speed, url: window.__LT.share().url }));
+  check('bus: a speed outside the shipped set falls to 1× rather than serializing an address that cannot round-trip',
+    bogus.speed === 1 && !/speed=7/.test(bogus.url), JSON.stringify(bogus));
+  await stripClick(proj, '#strip .spd[data-spd="2"]');   // back to 2× for the HUD checks below
+  await proj.waitForTimeout(200);
+
+  /* ============ a shared display never rewrites the saved one ============ */
+  const se = [];
+  const shared = await ctx.newPage();
+  await open(shared, base + 'projector.html?hl=1', se);
+  await shared.waitForFunction(() => window.__LT.manifestId() !== null, null, { timeout: 5000 });
+  const sharedHl = await shared.evaluate(() => ({
+    applied: document.body.classList.contains('highlumen') && document.documentElement.classList.contains('highlumen'),
+    stored: (JSON.parse(localStorage.getItem('mbm_liveteach_v1_settings') || '{}')).highlumen
+  }));
+  check('link hygiene: ?hl=1 applies high-lumen for this session but does NOT persist it', sharedHl.applied === true && !sharedHl.stored, JSON.stringify(sharedHl));
+  await stripClick(shared, '#btnLumen');   // a REAL press does persist
+  await shared.waitForTimeout(150);
+  const pressed = await shared.evaluate(() => (JSON.parse(localStorage.getItem('mbm_liveteach_v1_settings') || '{}')).highlumen);
+  check('link hygiene: a real button press still persists the preference (the transient path is scoped)', pressed === false, JSON.stringify(pressed));
+  await shared.evaluate(() => localStorage.removeItem('mbm_liveteach_v1_settings'));
+  check('link hygiene: no console/page errors on the shared-display path', se.length === 0, se.join(' | '));
+  await shared.close();
+
+  /* ============ blackout owns the screen: no modal buried under it ======= */
+  await proj.bringToFront();
+  await proj.evaluate(() => document.activeElement && document.activeElement.blur());
+  await proj.keyboard.press('KeyB');
+  await proj.waitForTimeout(150);
+  await proj.keyboard.press('KeyQ');
+  await proj.waitForTimeout(150);
+  const underCurtain = await proj.evaluate(() => ({
+    modal: getComputedStyle(document.getElementById('shareOverlay')).visibility === 'visible',
+    toast: document.getElementById('toast').textContent,
+    focusStillBody: document.activeElement === document.body
+  }));
+  check('blackout: Q does not open a modal nobody can see under the curtain — it says what to do', underCurtain.modal === false && /blacked out/i.test(underCurtain.toast) && underCurtain.focusStillBody, JSON.stringify(underCurtain));
+  await proj.keyboard.press('Escape');   // lift the blackout
+  await proj.waitForTimeout(150);
+  await stripClick(proj, '#btnShare');
+  await proj.keyboard.press('Escape');   // focus is in the box: blurs
+  await proj.keyboard.press('KeyB');     // blackout WHILE the panel is open
+  await proj.waitForTimeout(150);
+  const stoodDown = await proj.evaluate(() => ({
+    modal: getComputedStyle(document.getElementById('shareOverlay')).visibility === 'visible',
+    blackout: window.__LT.state().blackout
+  }));
+  check('blackout: blacking out while the panel is open stands the panel down (focus is never buried)', stoodDown.modal === false && stoodDown.blackout === true, JSON.stringify(stoodDown));
+  await proj.keyboard.press('Escape');   // lift the blackout again
+  await proj.waitForTimeout(150);
+
   /* ================= the HUD builds the projector's address ============== */
   await proj.bringToFront();
   await proj.keyboard.press('PageUp');       // stage 4 -> 3, speed stays 2×
@@ -306,8 +434,15 @@ const QR_COMPARE = `(args) => {
   await proj.keyboard.press('PageDown');     // 3 -> 4
   await hud.bringToFront();
   await hud.waitForTimeout(400);
-  const followed = await hud.evaluate(() => new URLSearchParams(document.getElementById('shareURLBox').value.split('?')[1] || '').get('stage'));
-  check('HUD: an open modal tracks the projector live (stage follows to 4)', followed === '4', String(followed));
+  const followed = await hud.evaluate(() => ({
+    stage: new URLSearchParams(document.getElementById('shareURLBox').value.split('?')[1] || '').get('stage'),
+    url: document.getElementById('shareURLBox').value
+  }));
+  check('HUD: an open modal tracks the projector live (stage follows to 4)', followed.stage === '4', JSON.stringify(followed.stage));
+  /* The CANVAS must follow too — a box that updates over a stale QR is the
+     worst outcome: a scan silently sends the room to the previous stage. */
+  const followedQR = await hud.evaluate(eval(QR_COMPARE), { url: followed.url });
+  check('HUD: the QR canvas re-encodes on every follow (no stale code under a fresh address)', followedQR.ok === true, followedQR.why);
   await hud.keyboard.press('Escape');        // Esc #1 — but focus sits in the box: blurs
   await hud.keyboard.press('Escape');        // Esc #2 closes the modal locally
   await hud.waitForTimeout(100);

@@ -255,6 +255,12 @@ async function stripClick(page, sel) {
   // legitimately SURVIVES the reload via ?speed= — while the hint, which is
   // deliberately never serialized (prose stays off the address), resets.
   // Both directions of that boundary are pinned here.
+  // Set the hint ON first, so its reset after the reload is real evidence
+  // rather than a value that was already false on both sides.
+  await hud.click('#btnHint');
+  await hud.waitForTimeout(400);
+  const preReload = await hud.evaluate(() => ({ hint: window.__LT.seen().hint.on, speed: window.__LT.seen().speed }));
+  check('resync setup: before the reload the hint is ON at 2×', preReload.hint === true && preReload.speed === 2, JSON.stringify(preReload));
   await proj.reload({ waitUntil: 'load' });
   try { await proj.locator('.mbm-skip').click({ timeout: 4000 }); } catch (e) {}
   await proj.waitForFunction(() => !document.querySelector('.mbm-splash'), null, { timeout: 8000 });

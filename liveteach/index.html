@@ -92,7 +92,7 @@ body.reduce *, body.reduce *::before, body.reduce *::after {
     <li><strong>PageUp / PageDown</strong> (that's the USB clicker) or <strong>← / →</strong> — lesson stages</li>
     <li><strong>B</strong> or <strong>.</strong> — blackout the projector</li>
     <li><strong>D</strong> — draw on the screen (telestrator) &nbsp;·&nbsp; <strong>C</strong> — clear the ink</li>
-    <li><strong>Q</strong> — share / QR: an address that reopens this lesson state</li>
+    <li><strong>Q</strong> — share / QR: an address that reopens the lesson at the same stage, speed and display (hints, timers and ink are not carried)</li>
     <li><strong>Esc</strong> — close whatever is on top (blackout first)</li>
   </ol>
 </div>
@@ -226,10 +226,14 @@ body.reduce *, body.reduce *::before, body.reduce *::after {
      (the estate's recorded CSS gotcha). Vocabulary follows the hub's
      "High lumen — projector / IWB" mode. */
   LT.highlumen = function () { return document.body.classList.contains('highlumen'); };
-  LT.setHighlumen = function (on) {
+  /* transient=true applies the display WITHOUT persisting it: a shared link
+     or a back-button hop reproduces the display it was made on for this
+     session, but must never silently rewrite the teacher's own saved
+     preference (LT6). Only a real button press persists. */
+  LT.setHighlumen = function (on, transient) {
     document.body.classList.toggle('highlumen', !!on);
     document.documentElement.classList.toggle('highlumen', !!on);
-    saveSettings();
+    if (!transient) saveSettings();
   };
 
   LT.boot = function () {

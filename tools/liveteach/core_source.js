@@ -122,10 +122,14 @@
      (the estate's recorded CSS gotcha). Vocabulary follows the hub's
      "High lumen — projector / IWB" mode. */
   LT.highlumen = function () { return document.body.classList.contains('highlumen'); };
-  LT.setHighlumen = function (on) {
+  /* transient=true applies the display WITHOUT persisting it: a shared link
+     or a back-button hop reproduces the display it was made on for this
+     session, but must never silently rewrite the teacher's own saved
+     preference (LT6). Only a real button press persists. */
+  LT.setHighlumen = function (on, transient) {
     document.body.classList.toggle('highlumen', !!on);
     document.documentElement.classList.toggle('highlumen', !!on);
-    saveSettings();
+    if (!transient) saveSettings();
   };
 
   LT.boot = function () {
