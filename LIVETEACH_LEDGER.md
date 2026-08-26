@@ -602,3 +602,40 @@ order and marked as applied where a phase leans on them.
   demands one be exactly half the other, so a bar drawn at half a metre while
   labelled "1 metre" — or a grid at the wrong spacing — goes red.
 - **Decisions applied:** D1, D4, D5.
+
+---
+
+## LT10 — Close
+
+- **Branch/PR/merge:** `claude/new-session-43lyml` → PR #157 (LT7–LT10) →
+  merge SHA recorded in the final report.
+- **Delivered:** `LIVETEACH_README.md` (what the kit is, the same-device
+  constraint stated plainly, clicker setup, the full key map, and a section on
+  pupil names saying exactly what the kit does and does not do with them);
+  `LIVETEACH_PHONE_CHECKS.md` (the physical checks only a real device settles,
+  **none ticked by the session** — the first is that the deployed page exists at
+  all, since this container's proxy refuses the live host); and
+  `LIVETEACH_RESIDUE.md` (the handover: what was deferred, what could not be
+  verified from here, and every delegated decision with the override line that
+  reverses it). The launcher gained a troubleshooting card for the four things
+  most likely to look like faults and not be.
+- **Final gate state:** `tools/liveteach/run.sh` — **26 steps**, all green.
+  Four stampers with their perturbation self-tests, the static gates
+  (`onmessage`, one rAF loop per view, the TDZ rule, manifests-are-data), the
+  units checker, the QR decode gate against a vendored independent decoder at
+  every allowed version and every mask, the picker's 10,000-draw simulation
+  plus the attendance-churn fuzz, and seven headless-browser suites
+  (`lt-shell` 45, `lt-stage` 30, `lt-clicker` 32, `lt-tele` 22, `lt-share` 50,
+  `lt-pick` 60, `lt-extras` 40, `lt-sheet` 44).
+- **The lesson worth keeping from this build.** Across the phases, the
+  adversarial review rounds found **more defects in my own gates than in the
+  product** — checks that read a class name on an element that ships hidden, a
+  console listener filtered to a level the defect would never use, a storage
+  audit that read one store of three, a probe that counted an oscillator
+  starting without asking whether it reached the speakers, a grid gate that
+  proved the grid existed but never that it was calibrated, and a roster-cap
+  probe whose input deduplicated to one name so it asserted 1 ≤ 40. Every one
+  of them was green. The rule that caught them is the estate's own — **assert
+  on evidence, not on proxies** — and the practice that made it stick was
+  writing the red control first: a check that has never been shown to fail is
+  not yet a check.
