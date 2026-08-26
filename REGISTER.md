@@ -2767,6 +2767,8 @@ Left unfixed deliberately under the rule that held C1 for a year — **safeguard
 self-merged**. The fix is the same neutralisation. Recorded name-free in `LIVETEACH_RESIDUE.md`
 and `LIVETEACH_LT1_CONTACT_SHEET.md` as C4. **Both files are live on Pages.**
 
+**Record status: CLOSED 2026-08-26 — false positive.** The names in that note are invented worked exemplars (declared fiction), not learner data. Ruling: Matt, 2026-08-26.
+
 **The transferable rule:** an adjudication is scoped to what was actually examined. A name cleared
 is not a file cleared, and a file cleared is not a family cleared. Where a pass clears a *set* on
 the evidence of one member, the register should say which member was read.
