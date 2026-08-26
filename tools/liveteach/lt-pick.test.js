@@ -436,6 +436,15 @@ const MARKUP_NAME = '<img src=x>Ophira';
     return { before, tag: after && after.tagName, cls: after && after.className, row: after && after.closest('.pickrow') === document.querySelectorAll('#pickRows .pickrow')[1] };
   });
   check('a11y: marking a pupil away keeps keyboard focus on that row\'s button (HUD)', focusKept.before && focusKept.tag === 'BUTTON' && focusKept.row === true, JSON.stringify(focusKept));
+  /* The estate's 44px touch floor, on the controls most likely to be tapped
+     in a hurry — and the ones a compact row layout is most tempted to shrink. */
+  const touchFloor = await hud.evaluate(() => [...document.querySelectorAll('#pickRows button.att')].map(b => {
+    const r = b.getBoundingClientRect();
+    return { w: Math.round(r.width), h: Math.round(r.height) };
+  }));
+  check('a11y: every attendance button meets the 44px touch floor (HUD)',
+    touchFloor.length > 0 && touchFloor.every(t => t.w >= 44 && t.h >= 44),
+    JSON.stringify(touchFloor.filter(t => t.w < 44 || t.h < 44).slice(0, 3)));
   await hud.evaluate(() => { const b = [...document.querySelectorAll('#pickRows .pickrow')][1].querySelector('button.att'); b.click(); });
 
   await proj.bringToFront();
@@ -458,6 +467,13 @@ const MARKUP_NAME = '<img src=x>Ophira';
   });
   check('a11y: the projector keeps focus too, AND announces the change (it used to do neither)',
     projFocus.tag === 'BUTTON' && projFocus.row === true && /marked (here|away)/.test(projFocus.said), JSON.stringify(projFocus));
+  const projTouch = await proj.evaluate(() => [...document.querySelectorAll('#pickRows button.att')].map(b => {
+    const r = b.getBoundingClientRect();
+    return { w: Math.round(r.width), h: Math.round(r.height) };
+  }));
+  check('a11y: and they meet the 44px touch floor on the projector too',
+    projTouch.length > 0 && projTouch.every(t => t.w >= 44 && t.h >= 44),
+    JSON.stringify(projTouch.filter(t => t.w < 44 || t.h < 44).slice(0, 3)));
   await proj.click('#btnPickClose2');
 
   /* One centred panel at a time. */

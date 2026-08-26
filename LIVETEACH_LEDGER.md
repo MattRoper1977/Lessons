@@ -638,7 +638,7 @@ order and marked as applied where a phase leans on them.
   (`onmessage`, one rAF loop per view, the TDZ rule, manifests-are-data), the
   units checker, the QR decode gate against a vendored independent decoder at
   every allowed version and every mask, the picker's 10,000-draw simulation
-  plus the attendance-churn fuzz, and seven headless-browser suites
+  plus the attendance-churn fuzz, and eight headless-browser suites
   (`lt-shell` 45, `lt-stage` 30, `lt-clicker` 32, `lt-tele` 22, `lt-share` 55,
   `lt-pick` 62, `lt-extras` 48, `lt-sheet` 41).
 - **The lesson worth keeping from this build.** Across the phases, the
