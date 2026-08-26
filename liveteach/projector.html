@@ -120,6 +120,23 @@ body.highlumen #stageLabels .lbl { background: rgba(255,255,255,.94); border-col
 #stageReadout { font-size: 13px; opacity: .85; min-width: 52px; text-align: center; }
 #strip button:disabled { opacity: .4; cursor: default; }
 
+/* Telestrator ink layer (LT5): above the sim, banner and labels so the
+   teacher can annotate anything; below status, blackout and the strip. It
+   only accepts the pointer while draw mode is on. */
+#teleCanvas { position: fixed; inset: 0; z-index: 50; pointer-events: none; }
+body.teleActive #teleCanvas { pointer-events: auto; cursor: crosshair; touch-action: none; }
+/* A persistent mode chip: on a touch board there is no cursor, and the strip
+   auto-hides — draw mode must stay visibly ON by something that never
+   leaves the screen. */
+#teleChip {
+  position: fixed; top: 92px; right: 12px; z-index: 55;
+  background: #b9e6cd; color: #131313; font-weight: 800;
+  border-radius: 999px; padding: 8px 14px; visibility: hidden;
+}
+body.teleActive #teleChip { visibility: visible; }
+#strip button.swatch { min-width: 44px; }
+#strip button.swatch .dotc { display: inline-block; width: 14px; height: 14px; border-radius: 50%; margin-right: 6px; border: 1px solid #0008; vertical-align: -2px; }
+
 /* Blackout curtain (LT4): sits over every teaching surface but UNDER the
    control strip, so the way back out stays reachable by pointer and key. */
 #blackout {
@@ -163,6 +180,7 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
 </head>
 <body>
 <canvas id="sim" aria-hidden="true"></canvas>
+<canvas id="teleCanvas" aria-hidden="true"></canvas>
 
 <div id="status" aria-hidden="true"><span class="dot"></span><span class="word">solo</span></div>
 
@@ -195,6 +213,8 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
 <div id="manifestError" role="alert"></div>
 <div id="blackout" aria-label="Blackout curtain"><span class="hintline">B, full stop, or ✖ Blackout brings the screen back</span></div>
 <div id="blackoutSaid" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap"></div>
+<div id="teleSaid" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap"></div>
+<div id="teleChip" aria-hidden="true">🖊 Draw — sim paused</div>
 <div id="toast" role="status" aria-live="polite"></div>
 
 <nav id="strip" class="" aria-label="Teaching controls">
@@ -226,6 +246,16 @@ body.reduce #strip.hidden { transform: none; visibility: visible; }
     <button id="btnHint" aria-pressed="false">💡 Hint</button>
     <button id="btnPoll" aria-pressed="false">🙋 Poll</button>
     <button id="btnClear">✖ Clear</button>
+  </div>
+  <div class="grp" aria-label="Telestrator">
+    <span class="lbl">Ink</span>
+    <button id="btnDraw" aria-pressed="false">🖊 Draw</button>
+    <button id="btnInkClear">🧽 Clear ink</button>
+    <button class="swatch" data-ink="amber" aria-pressed="true"><span class="dotc" style="background:#f2a24a"></span>Amber</button>
+    <button class="swatch" data-ink="mint" aria-pressed="false"><span class="dotc" style="background:#b9e6cd"></span>Mint</button>
+    <button class="swatch" data-ink="sky" aria-pressed="false"><span class="dotc" style="background:#7fb8ff"></span>Sky</button>
+    <button class="wid" data-wid="0.006" aria-pressed="true">Thin</button>
+    <button class="wid" data-wid="0.014" aria-pressed="false">Thick</button>
   </div>
   <div class="grp" aria-label="Display">
     <button id="btnLumen" aria-pressed="false">☀ High lumen</button>
@@ -721,6 +751,11 @@ LT.boot();
   /* ---------- sim controls (S2: Pause/Resume and Stop are different verbs) */
   var btnPause = document.getElementById('btnPause');
   function setRunning(on) {
+    /* An explicit run change while draw mode is on supersedes the state the
+       telestrator saved — leaving draw mode must never revert the teacher's
+       own Stop or pause (T5 "controlled"). teleAdjusting marks the
+       telestrator's OWN calls, which do not supersede. */
+    if (state.telestrator && !teleAdjusting) savedRun = null;
     state.running = !!on;
     btnPause.setAttribute('aria-pressed', String(!state.running));
     btnPause.textContent = state.running ? '⏸ Pause' : '▶ Resume';
@@ -817,14 +852,18 @@ LT.boot();
     btnLumen.setAttribute('aria-pressed', String(LT.highlumen()));
     btnCalm.setAttribute('aria-pressed', String(LT.calm()));
   }
-  btnLumen.addEventListener('click', function () { LT.setHighlumen(!LT.highlumen()); syncDisplayButtons(); draw(); });
+  btnLumen.addEventListener('click', function () { LT.setHighlumen(!LT.highlumen()); syncDisplayButtons(); draw(); teleReplay(); });
   btnCalm.addEventListener('click', function () { LT.setCalm(!LT.calm()); syncDisplayButtons(); });
   syncDisplayButtons();
 
   /* ---------- control strip auto-hide ---------- */
   var strip = document.getElementById('strip');
   var hideT = null;
-  function stripShow() {
+  function stripShow(e) {
+    /* While the teacher is drawing, ink-layer pointer traffic must not park
+       the strip over the board; keys and the strip's own controls still
+       wake it. */
+    if (state.telestrator && e && e.target === tele.canvas && e.type !== 'keydown') return;
     strip.classList.remove('hidden');
     clearTimeout(hideT);
     hideT = setTimeout(function () {
@@ -882,6 +921,190 @@ LT.boot();
     }
   });
 
+  /* ---------- telestrator (LT5: T1–T5) ----------
+     T2: local and remote strokes converge on ONE message type, TELE_STROKE.
+     T3: every coordinate is normalised 0–1 at capture and scaled at draw;
+         line width travels as a fraction of canvas height.
+     T4: strokes are vectors replayed on resize — never a getImageData backup,
+         which loses ink the moment the canvas grows. */
+  var tele = {
+    canvas: document.getElementById('teleCanvas'),
+    strokes: [],
+    STROKE_CAP: 200,           // oldest ink recycles — memory stays bounded
+    PT_CAP: 2000,              // capture cap == the validator's cap, by construction
+    color: 'amber',
+    width: 0.006,
+    drawing: null,
+    pointerId: null
+  };
+  var tctx = tele.canvas.getContext('2d');
+  /* Strokes carry a swatch NAME on the wire; each view resolves it to a hex
+     for ITS theme at draw time — the dark-theme inks measured under 2:1 on
+     the high-lumen page, so a fixed hex could never be honest on both. */
+  var INK = {
+    amber: { dark: '#f2a24a', light: '#8a5413' },
+    mint: { dark: '#b9e6cd', light: '#1e6e46' },
+    sky: { dark: '#7fb8ff', light: '#1d5ca8' }
+  };
+  function inkHex(name) {
+    var pair = INK[name] || INK.amber;
+    return LT.highlumen() ? pair.light : pair.dark;
+  }
+  function sizeTele() {
+    var dpr = Math.min(2, window.devicePixelRatio || 1);
+    tele.canvas.width = Math.round(innerWidth * dpr);
+    tele.canvas.height = Math.round(innerHeight * dpr);
+    tctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    teleReplay();
+  }
+  function drawStrokeOn(s) {
+    if (!s.pts.length) return;
+    if (s.pts.length < 2) {
+      tctx.fillStyle = inkHex(s.color);
+      tctx.beginPath();
+      tctx.arc(s.pts[0][0] * innerWidth, s.pts[0][1] * innerHeight, Math.max(1.5, s.width * innerHeight / 2), 0, Math.PI * 2);
+      tctx.fill();
+      return;
+    }
+    tctx.strokeStyle = inkHex(s.color);
+    tctx.lineWidth = Math.max(1.5, s.width * innerHeight);
+    tctx.lineCap = 'round';
+    tctx.lineJoin = 'round';
+    tctx.beginPath();
+    for (var i = 0; i < s.pts.length; i++) {
+      var x = s.pts[i][0] * innerWidth, y = s.pts[i][1] * innerHeight;
+      if (i === 0) tctx.moveTo(x, y); else tctx.lineTo(x, y);
+    }
+    tctx.stroke();
+  }
+  function teleReplay() {
+    tctx.clearRect(0, 0, innerWidth, innerHeight);
+    tele.strokes.forEach(drawStrokeOn);
+  }
+  function teleAdd(s) {
+    if (tele.strokes.length >= tele.STROKE_CAP) tele.strokes.shift();
+    tele.strokes.push(s);
+    teleReplay();
+  }
+  /* Incoming strokes are external data: validate shape, clamp coordinates,
+     ignore anything malformed silently (the bus contract's posture). */
+  function saneStroke(p) {
+    if (!p || !Array.isArray(p.pts) || !p.pts.length || p.pts.length > 2000) return null;
+    if (typeof p.color !== 'string' || !/^(amber|mint|sky)$/.test(p.color)) return null;
+    var w = Number(p.width);
+    if (!(w > 0.0005 && w < 0.06)) return null;
+    var pts = [];
+    for (var i = 0; i < p.pts.length; i++) {
+      var x = Number(p.pts[i][0]), y = Number(p.pts[i][1]);
+      if (!isFinite(x) || !isFinite(y)) return null;
+      pts.push([Math.min(1, Math.max(0, x)), Math.min(1, Math.max(0, y))]);
+    }
+    return { pts: pts, color: p.color, width: w };
+  }
+  var savedRun = null;
+  var teleAdjusting = false;
+  function setTele(on) {
+    on = !!on;
+    if (on === state.telestrator) { broadcast(); return; }
+    if (!on && tele.drawing) teleFinish();   // a stroke straddling toggle-off is committed, never orphaned
+    state.telestrator = on;
+    document.body.classList.toggle('teleActive', on);
+    document.getElementById('btnDraw').setAttribute('aria-pressed', String(on));
+    document.getElementById('teleSaid').textContent = on
+      ? 'Draw mode on — the sim is paused and the pointer now draws ink. D turns it off, C clears.'
+      : 'Draw mode off';
+    /* T5: draw mode freezes the sim so the ink annotates a still frame —
+       controlled, reversible (the previous running state comes back on
+       toggle-off), and synced. A run change the TEACHER makes mid-draw
+       supersedes the saved state: their explicit Stop must never be
+       silently reverted by leaving draw mode. */
+    teleAdjusting = true;
+    if (on) {
+      savedRun = state.running;
+      if (state.running) setRunning(false);
+    } else if (savedRun !== null) {
+      if (savedRun) setRunning(true);
+      savedRun = null;
+    }
+    teleAdjusting = false;
+    broadcast();
+  }
+  function teleClear(fromBus) {
+    tele.strokes = [];
+    teleReplay();
+    if (!fromBus) LT.send('TELE_CLEAR', {});
+  }
+  function clamp01(v) { return Math.min(1, Math.max(0, v)); }
+  tele.canvas.addEventListener('pointerdown', function (e) {
+    if (!state.telestrator) return;
+    if (tele.drawing) return;                // a palm or second finger never hijacks a stroke
+    tele.pointerId = e.pointerId;
+    /* Capture is an enhancement (keeps the stroke when the pointer leaves the
+       element); some synthetic/assistive pointers cannot be captured, and a
+       stroke must still draw without it. */
+    try { tele.canvas.setPointerCapture(e.pointerId); } catch (err) { /* degrade: no capture */ }
+    tele.drawing = { pts: [[clamp01(e.clientX / innerWidth), clamp01(e.clientY / innerHeight)]], color: tele.color, width: tele.width };
+  });
+  tele.canvas.addEventListener('pointermove', function (e) {
+    if (!tele.drawing || e.pointerId !== tele.pointerId) return;
+    var nx = clamp01(e.clientX / innerWidth), ny = clamp01(e.clientY / innerHeight);
+    var prev = tele.drawing.pts[tele.drawing.pts.length - 1];
+    tele.drawing.pts.push([nx, ny]);
+    /* Incremental segment only — a full replay per move measured 27 ms with a
+       full board. Round caps make segment-by-segment identical to the whole
+       path. */
+    tctx.strokeStyle = inkHex(tele.drawing.color);
+    tctx.lineWidth = Math.max(1.5, tele.drawing.width * innerHeight);
+    tctx.lineCap = 'round';
+    tctx.beginPath();
+    tctx.moveTo(prev[0] * innerWidth, prev[1] * innerHeight);
+    tctx.lineTo(nx * innerWidth, ny * innerHeight);
+    tctx.stroke();
+    /* Capture honours the validator's cap: at the limit the stroke commits
+       and a continuation starts from the same point — nothing a view sends
+       can ever be something its peer refuses. */
+    if (tele.drawing.pts.length >= tele.PT_CAP) {
+      var seed = tele.drawing.pts[tele.drawing.pts.length - 1];
+      var pid = tele.pointerId;               // survive teleFinish's reset —
+      teleFinish();                           // the same finger keeps drawing
+      tele.pointerId = pid;
+      tele.drawing = { pts: [seed.slice()], color: tele.color, width: tele.width };
+    }
+  });
+  function teleFinish() {
+    if (!tele.drawing) return;
+    teleAdd(tele.drawing);
+    LT.send('TELE_STROKE', tele.drawing);
+    tele.drawing = null;
+    tele.pointerId = null;
+  }
+  tele.canvas.addEventListener('pointerup', function (e) {
+    if (e.pointerId !== tele.pointerId) return;
+    teleFinish();
+  });
+  tele.canvas.addEventListener('pointercancel', function (e) {
+    if (e.pointerId !== tele.pointerId) return;
+    tele.drawing = null;
+    tele.pointerId = null;
+    teleReplay();
+  });
+  document.getElementById('btnDraw').addEventListener('click', function () { setTele(!state.telestrator); });
+  document.getElementById('btnInkClear').addEventListener('click', function () { teleClear(false); });
+  document.querySelectorAll('#strip .swatch').forEach(function (b) {
+    b.addEventListener('click', function () {
+      tele.color = b.dataset.ink;
+      document.querySelectorAll('#strip .swatch').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+    });
+  });
+  document.querySelectorAll('#strip .wid').forEach(function (b) {
+    b.addEventListener('click', function () {
+      tele.width = Number(b.dataset.wid);
+      document.querySelectorAll('#strip .wid').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+    });
+  });
+  window.addEventListener('resize', sizeTele);
+  sizeTele();
+
   function escTopmost() {
     /* topmost first, per the spec's Esc row: blackout, then the manifest
        error, then poll, hint, timer. Reached from this view's Escape AND
@@ -911,6 +1134,8 @@ LT.boot();
     e.preventDefault();
     toast('Use the ⛶ Fullscreen button on the strip below — or press F11.');
   }, 'Fullscreen help (clicker)');
+  LT.registerKey('KeyD', function () { setTele(!state.telestrator); }, 'Telestrator draw toggle');
+  LT.registerKey('KeyC', function () { teleClear(false); }, 'Telestrator clear');
 
   /* ---------- bus: resync kills the reload-desync bug class --------------
      The projector broadcasts PROJECTOR_STATE on load AND on every HUD_HELLO;
@@ -928,7 +1153,14 @@ LT.boot();
     }, 12000);
   }
   LT.on(function (type, payload) {
-    if (type === 'HUD_HELLO') { armLink(); broadcast(); }
+    if (type === 'HUD_HELLO') {
+      armLink();
+      broadcast();
+      /* The resync contract extended to ink — but only on a FRESH hello (a
+         boot or reload). The 3 s heartbeat hellos would otherwise clone and
+         repaint the full stroke list continuously. */
+      if (payload.fresh) LT.send('TELE_SYNC', { strokes: tele.strokes });
+    }
     else if (type === 'SIM_RUN') { armLink(); setRunning(!!payload.on); }
     else if (type === 'SIM_STOP') { armLink(); stopSim(); }
     else if (type === 'SIM_SPEED') { armLink(); setSpeed(Number(payload.value) || 1); }
@@ -948,6 +1180,16 @@ LT.boot();
     }
     else if (type === 'BLACKOUT_TOGGLE') { armLink(); setBlackout(!state.blackout); }
     else if (type === 'BLACKOUT_SET') { armLink(); setBlackout(!!payload.on); }
+    else if (type === 'TELE_STROKE') {
+      armLink();
+      /* Ink only lands while draw mode is on — the mode the HUD's own Draw
+         button governs. A stray pad touch with the mode off paints nothing. */
+      if (!state.telestrator) return;
+      var s = saneStroke(payload);
+      if (s) teleAdd(s);
+    }
+    else if (type === 'TELE_CLEAR') { armLink(); teleClear(true); }
+    else if (type === 'TELE_SET') { armLink(); setTele(!!payload.on); }
   });
   broadcast();
 
@@ -968,7 +1210,15 @@ LT.boot();
     wave: function () { return { f: wave.f, lambda: wave.lambda, A: wave.A, pxPerM: PX_PER_M, t: wave.t }; },
     manifestId: function () { return manifest ? manifest.id : null; },
     stageButtons: function () { return { prevDisabled: btnPrev.disabled, nextDisabled: btnNext.disabled, readout: readout.textContent }; },
-    spotlight: function () { return curStage && curStage.spotlight ? JSON.parse(JSON.stringify(curStage.spotlight)) : null; }
+    spotlight: function () { return curStage && curStage.spotlight ? JSON.parse(JSON.stringify(curStage.spotlight)) : null; },
+    tele: function () {
+      return { active: state.telestrator, strokes: tele.strokes.length };
+    },
+    inkAt: function (nx, ny) {
+      var dpr = tele.canvas.width / innerWidth;
+      var d = tctx.getImageData(Math.round(nx * innerWidth * dpr), Math.round(ny * innerHeight * dpr), 1, 1).data;
+      return d[3] > 0;
+    }
   };
 
   /* ---------- manifest loader (G7: lessons are external data) ------------ */

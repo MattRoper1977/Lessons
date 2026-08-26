@@ -181,8 +181,8 @@ order and marked as applied where a phase leans on them.
 
 ## LT4 — Clicker bridge (spec Phase 3: C1–C4)
 
-- **Branch/PR/merge:** `claude/new-session-43lyml` → PR → merge SHA recorded at
-  next append.
+- **Branch/PR/merge:** `claude/new-session-43lyml` → PR #154 → merge `b917eb8`
+  (6 checks green).
 - **Delivered:** the clicker keys registered in BOTH views (C4 — the remote
   survives focus loss): PageUp/PageDown and ←/→ for stages, B and full stop
   for the blackout, F5 answered with honest fullscreen advice; the blackout
@@ -220,3 +220,54 @@ order and marked as applied where a phase leans on them.
   toast hold time scales with message length. Clicker suite now 32 checks.
 - **Decisions applied:** D1 (every clicker action also works single-window),
   D4, D5.
+
+## LT5 — Telestrator (spec Phase 4: T1–T5)
+
+- **Branch/PR/merge:** `claude/new-session-43lyml` → PR → merge SHA recorded at
+  next append.
+- **Delivered:** an ink layer on the projector (above sim/banner/labels,
+  below status/blackout/strip; pointer-active only in draw mode) and a
+  mini-pad on the HUD, letterboxed to the projector's broadcast aspect (T3 —
+  the fragment's fixed 500×220 pad distorted onto 16:9). One stroke message
+  type both directions, `TELE_STROKE` (T2), all coordinates normalised 0–1 at
+  capture and scaled at draw, line width as a fraction of canvas height (T3).
+  Strokes are vectors replayed on resize — never a getImageData backup (T4) —
+  capped at 200 with oldest-recycles. Draw mode freezes the sim and restores
+  the previous running state on toggle-off, synced over PROJECTOR_STATE (T5).
+  D/C keys in both views; three named colour swatches + two widths riding
+  each stroke; `TELE_SYNC` hands a reloading HUD the full ink so the
+  reload-desync class stays dead; incoming strokes are validated and clamped,
+  malformed ones ignored silently per the bus contract. Single-window mode
+  draws directly on the projector (order D1); ink persists nowhere.
+- **Gates (lt-tele.test.js, 14 checks):** pixel-evidence both ways — a
+  projector stroke paints the mini-pad at the same normalised spot and a pad
+  stroke lands at its normalised position on the different-sized projector;
+  resize-preserves-strokes at the same normalised point; pad aspect equals
+  broadcast aspect; freeze/restore on frame evidence; C clears both screens;
+  malformed-stroke negative control; TELE_SYNC repopulation after HUD reload;
+  storage audit unchanged. Two suite defects found while building (both
+  environmental truths worth recording): the pad card sat below the fold so
+  the synthetic mouse never touched it (scrollIntoView first), and a
+  backgrounded page throttles rAF, so frame counting fronts the page first.
+- **Adversarial review round (three lenses, 16 confirmed findings, all
+  fixed):** three blocking — a stale `savedRun` let draw-off silently revert
+  the teacher's explicit mid-draw Stop (any non-telestrator run change now
+  supersedes the saved state, with a negative control); all three ink colours
+  measured under 2:1 on the high-lumen page (strokes now carry a swatch NAME
+  on the wire and each view resolves a per-theme hex at draw time, with a
+  pixel control proving the light variant is darker); the strip parked itself
+  over the board during drawing (ink-layer pointer traffic no longer wakes
+  it). Also fixed: the pad now draws only while draw mode is on and dims
+  otherwise (a stray phone touch cannot paint the class screen, and the
+  projector refuses off-mode strokes too); capture now honours the
+  validator's own caps — points clamp 0–1 at capture and a marathon stroke
+  auto-splits at 2000 points so nothing a view sends can be something its
+  peer refuses (the split initially orphaned its continuation by resetting
+  the pointer id — caught by the suite, fixed); a second finger or palm never
+  hijacks a stroke (pointer-id guard); draw-off commits an in-flight stroke;
+  per-move rendering is incremental, not a full replay; `TELE_SYNC` answers
+  only fresh hellos, not every heartbeat; draw mode gets a persistent chip
+  (touch boards have no cursor) and polite announcements in both views;
+  `setPointerCapture` degrades gracefully for synthetic/assistive pointers.
+  Tele suite now 22 checks.
+- **Decisions applied:** D1 (mini-pad dual-mode-only), D4, D5.

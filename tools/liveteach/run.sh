@@ -47,6 +47,7 @@ run_step "units check can go red"             node tools/liveteach/units_check.m
 run_step "lt-shell browser suite"             node tools/liveteach/lt-shell.test.js
 run_step "lt-stage browser suite"             node tools/liveteach/lt-stage.test.js
 run_step "lt-clicker browser suite"           node tools/liveteach/lt-clicker.test.js
+run_step "lt-tele browser suite"              node tools/liveteach/lt-tele.test.js
 
 if [ $failed -ne 0 ]; then echo "LIVETEACH SUITES FAILED"; exit 1; fi
 echo "LIVETEACH SUITES PASSED"

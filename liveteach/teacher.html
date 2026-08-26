@@ -53,6 +53,16 @@ body.highlumen input[type=text] { background: #fff; border-color: #8a7f5e; }
 .keys { font-size: 12px; opacity: .7; line-height: 1.7; }
 /* Splash skip-button floor — outside the pinned canonical region. */
 .mbm-skip { min-height: 44px; min-width: 44px; }
+#pad {
+  display: block; width: 100%; background: #0d1430;
+  border: 1px solid #43518c; border-radius: 10px;
+  /* The pad only captures touch while draw mode is on — a stray thumb on the
+     phone HUD must never paint the class screen, and with the mode off the
+     page scrolls normally. */
+  opacity: .45; cursor: default;
+}
+body.padActive #pad { opacity: 1; touch-action: none; cursor: crosshair; }
+body.highlumen #pad { background: #fff; border-color: #8a7f5e; }
 #toast {
   position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 72;
   background: #16204a; color: #e8e2d4; border: 1px solid #43518c; border-radius: 12px;
@@ -141,6 +151,21 @@ body.reduce *, body.reduce *::before, body.reduce *::after {
     <button id="btnBlackout" aria-pressed="false">✖ Blackout</button>
     <button id="btnFsHelp">⛶ Fullscreen…</button>
   </div>
+</section>
+
+<section class="card" aria-label="Telestrator mini-pad">
+  <h2>Ink · mini-pad → projector</h2>
+  <div class="row" style="margin-bottom:8px">
+    <button id="btnDraw" aria-pressed="false">🖊 Draw mode</button>
+    <button id="btnInkClear">🧽 Clear ink</button>
+    <button class="swatch" data-ink="amber" aria-pressed="true">Amber</button>
+    <button class="swatch" data-ink="mint" aria-pressed="false">Mint</button>
+    <button class="swatch" data-ink="sky" aria-pressed="false">Sky</button>
+    <button class="wid" data-wid="0.006" aria-pressed="true">Thin</button>
+    <button class="wid" data-wid="0.014" aria-pressed="false">Thick</button>
+  </div>
+  <canvas id="pad" aria-label="Drawing pad mirroring the projector"></canvas>
+  <div class="keys">Turn 🖊 Draw mode on first — it pauses the sim and wakes the pad. The pad keeps the projector's exact shape, so ink lands where you draw it; a stroke appears on both screens when the pen lifts. D toggles draw mode, C clears.</div>
 </section>
 
 <section class="card" aria-label="Keyboard map">
@@ -308,6 +333,7 @@ LT.boot();
   var seenAt = 0;
   var lastStageSaid = null;
   var lastBlackoutSaid = false;
+  var lastTeleSaid = false;
 
   var el = function (id) { return document.getElementById(id); };
   var linkState = el('linkState');
@@ -323,6 +349,12 @@ LT.boot();
     el('indPoll').textContent = seen.poll && seen.poll.on ? 'ON' : 'off';
     el('indBlackout').textContent = seen.blackout ? 'ON' : 'off';
     el('btnBlackout').setAttribute('aria-pressed', String(!!seen.blackout));
+    el('btnDraw').setAttribute('aria-pressed', String(!!seen.telestrator));
+    document.body.classList.toggle('padActive', !!seen.telestrator);
+    if (lastTeleSaid !== !!seen.telestrator) {
+      lastTeleSaid = !!seen.telestrator;
+      el('stageSaid').textContent = lastTeleSaid ? 'Draw mode on — the pad now inks the projector' : 'Draw mode off';
+    }
     if (lastBlackoutSaid !== !!seen.blackout) {
       lastBlackoutSaid = !!seen.blackout;
       if (lastBlackoutSaid !== null) el('stageSaid').textContent = lastBlackoutSaid ? 'Projector blacked out' : 'Projector restored';
@@ -357,17 +389,31 @@ LT.boot();
 
   LT.on(function (type, payload) {
     if (type === 'PROJECTOR_STATE') {
+      var newAspect = seen ? seen.aspect : null;
       seen = payload;
       seenAt = performance.now();
       render();
+      if (seen.aspect && seen.aspect !== newAspect) sizePad();
+    }
+    else if (type === 'TELE_STROKE') {
+      var s = saneStroke(payload);
+      if (s) padAdd(s);
+    }
+    else if (type === 'TELE_CLEAR') { padClear(true); }
+    else if (type === 'TELE_SYNC') {
+      padState.strokes = (Array.isArray(payload.strokes) ? payload.strokes : []).map(saneStroke).filter(Boolean);
+      padReplay();
     }
   });
   /* On load AND as a heartbeat: the projector answers every hello with
      PROJECTOR_STATE and re-arms its linked latch, so a healthy pair never
      false-alarms during quiet teaching — and a genuinely closed projector
      still goes quiet, because the hellos stop being answered. */
-  LT.send('HUD_HELLO', {});
-  setInterval(function () { LT.send('HUD_HELLO', {}); }, 3000);
+  /* fresh:true marks a boot/reload hello — the projector answers those with
+     the full ink sync; the 3 s heartbeat hellos carry fresh:false so the
+     stroke list is not cloned and repainted every beat. */
+  LT.send('HUD_HELLO', { fresh: true });
+  setInterval(function () { LT.send('HUD_HELLO', { fresh: false }); }, 3000);
 
   /* Controls: the HUD only ever SENDS; it never mutates its indicators
      directly. The projector's answering broadcast is what updates them. */
@@ -430,12 +476,173 @@ LT.boot();
   LT.registerKey('KeyB', function () { LT.send('BLACKOUT_TOGGLE', {}); }, 'Blackout toggle');
   LT.registerKey('Period', function () { LT.send('BLACKOUT_TOGGLE', {}); }, 'Blackout toggle (clicker)');
   LT.registerKey('F5', function (e) { e.preventDefault(); fsAdvice(); }, 'Fullscreen help (clicker)');
+  LT.registerKey('KeyD', function () { LT.send('TELE_SET', { on: !(seen && seen.telestrator) }); }, 'Telestrator draw toggle');
+  LT.registerKey('KeyC', function () { padClear(false); }, 'Telestrator clear');
+
+  /* ---------- mini-pad (LT5; dual-mode only per order D1) ----------------
+     T3: the pad letterboxes to the projector's broadcast aspect, so a stroke
+     drawn here lands at the same normalised position on a different-sized
+     canvas; the fragment's fixed 500×220 pad distorted onto 16:9.
+     T4: vectors, replayed on resize. T2: the one TELE_STROKE type both ways. */
+  var pad = document.getElementById('pad');
+  var pctx = pad.getContext('2d');
+  var padState = { strokes: [], color: 'amber', width: 0.006, drawing: null, aspect: 16 / 9, pointerId: null };
+  var INK = {
+    amber: { dark: '#f2a24a', light: '#8a5413' },
+    mint: { dark: '#b9e6cd', light: '#1e6e46' },
+    sky: { dark: '#7fb8ff', light: '#1d5ca8' }
+  };
+  function inkHex(name) {
+    var pair = INK[name] || INK.amber;
+    return LT.highlumen() ? pair.light : pair.dark;
+  }
+  function saneStroke(p) {
+    if (!p || !Array.isArray(p.pts) || !p.pts.length || p.pts.length > 2000) return null;
+    if (typeof p.color !== 'string' || !/^(amber|mint|sky)$/.test(p.color)) return null;
+    var w = Number(p.width);
+    if (!(w > 0.0005 && w < 0.06)) return null;
+    var pts = [];
+    for (var i = 0; i < p.pts.length; i++) {
+      var x = Number(p.pts[i][0]), y = Number(p.pts[i][1]);
+      if (!isFinite(x) || !isFinite(y)) return null;
+      pts.push([Math.min(1, Math.max(0, x)), Math.min(1, Math.max(0, y))]);
+    }
+    return { pts: pts, color: p.color, width: w };
+  }
+  function sizePad() {
+    if (seen && seen.aspect > 0.2 && seen.aspect < 6) padState.aspect = seen.aspect;
+    var w = pad.clientWidth || 300;
+    var h = Math.round(w / padState.aspect);
+    pad.style.height = h + 'px';
+    var dpr = Math.min(2, window.devicePixelRatio || 1);
+    pad.width = Math.round(w * dpr);
+    pad.height = Math.round(h * dpr);
+    pctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    padReplay();
+  }
+  function padDims() { return { w: pad.clientWidth || 300, h: Math.round((pad.clientWidth || 300) / padState.aspect) }; }
+  function padStroke(s) {
+    var d = padDims();
+    if (s.pts.length < 2) {
+      pctx.fillStyle = inkHex(s.color);
+      pctx.beginPath();
+      pctx.arc(s.pts[0][0] * d.w, s.pts[0][1] * d.h, Math.max(1, s.width * d.h / 2), 0, Math.PI * 2);
+      pctx.fill();
+      return;
+    }
+    pctx.strokeStyle = inkHex(s.color);
+    pctx.lineWidth = Math.max(1, s.width * d.h);
+    pctx.lineCap = 'round';
+    pctx.lineJoin = 'round';
+    pctx.beginPath();
+    for (var i = 0; i < s.pts.length; i++) {
+      var x = s.pts[i][0] * d.w, y = s.pts[i][1] * d.h;
+      if (i === 0) pctx.moveTo(x, y); else pctx.lineTo(x, y);
+    }
+    pctx.stroke();
+  }
+  function padReplay() {
+    var d = padDims();
+    pctx.clearRect(0, 0, d.w, d.h);
+    padState.strokes.forEach(padStroke);
+  }
+  function padAdd(s) {
+    if (padState.strokes.length >= 200) padState.strokes.shift();
+    padState.strokes.push(s);
+    padReplay();
+  }
+  function padClear(fromBus) {
+    padState.strokes = [];
+    padReplay();
+    if (!fromBus) LT.send('TELE_CLEAR', {});
+  }
+  function clamp01(v) { return Math.min(1, Math.max(0, v)); }
+  function padPoint(e) {
+    var r = pad.getBoundingClientRect();
+    return [clamp01((e.clientX - r.left) / r.width), clamp01((e.clientY - r.top) / r.height)];
+  }
+  function padFinish() {
+    if (!padState.drawing) return;
+    padAdd(padState.drawing);
+    LT.send('TELE_STROKE', padState.drawing);
+    padState.drawing = null;
+    padState.pointerId = null;
+  }
+  pad.addEventListener('pointerdown', function (e) {
+    /* The pad draws only while draw mode is ON — the mode the Draw button
+       governs. Off-mode, a touch scrolls the page instead of painting the
+       class screen. */
+    if (!(seen && seen.telestrator)) return;
+    if (padState.drawing) return;            // second finger never hijacks
+    padState.pointerId = e.pointerId;
+    /* Capture is an enhancement; synthetic/assistive pointers may refuse it
+       and the stroke must still draw. */
+    try { pad.setPointerCapture(e.pointerId); } catch (err) { /* degrade: no capture */ }
+    padState.drawing = { pts: [padPoint(e)], color: padState.color, width: padState.width };
+  });
+  pad.addEventListener('pointermove', function (e) {
+    if (!padState.drawing || e.pointerId !== padState.pointerId) return;
+    var d = padDims();
+    var prev = padState.drawing.pts[padState.drawing.pts.length - 1];
+    var pt = padPoint(e);
+    padState.drawing.pts.push(pt);
+    pctx.strokeStyle = inkHex(padState.drawing.color);
+    pctx.lineWidth = Math.max(1, padState.drawing.width * d.h);
+    pctx.lineCap = 'round';
+    pctx.beginPath();
+    pctx.moveTo(prev[0] * d.w, prev[1] * d.h);
+    pctx.lineTo(pt[0] * d.w, pt[1] * d.h);
+    pctx.stroke();
+    if (padState.drawing.pts.length >= 2000) {
+      var seed = padState.drawing.pts[padState.drawing.pts.length - 1];
+      var pid = padState.pointerId;           // survive padFinish's reset
+      padFinish();
+      padState.pointerId = pid;
+      padState.drawing = { pts: [seed.slice()], color: padState.color, width: padState.width };
+    }
+  });
+  pad.addEventListener('pointerup', function (e) {
+    if (e.pointerId !== padState.pointerId) return;
+    padFinish();
+  });
+  pad.addEventListener('pointercancel', function (e) {
+    if (e.pointerId !== padState.pointerId) return;
+    padState.drawing = null;
+    padState.pointerId = null;
+    padReplay();
+  });
+  el('btnDraw').addEventListener('click', function () { LT.send('TELE_SET', { on: !(seen && seen.telestrator) }); });
+  el('btnInkClear').addEventListener('click', function () { padClear(false); });
+  document.querySelectorAll('.swatch').forEach(function (b) {
+    b.addEventListener('click', function () {
+      padState.color = b.dataset.ink;
+      document.querySelectorAll('.swatch').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+    });
+  });
+  document.querySelectorAll('.wid').forEach(function (b) {
+    b.addEventListener('click', function () {
+      padState.width = Number(b.dataset.wid);
+      document.querySelectorAll('.wid').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+    });
+  });
+  window.addEventListener('resize', sizePad);
+  sizePad();
 
   /* Read-only harness seams. */
   window.__LT = {
     seen: function () { return seen ? JSON.parse(JSON.stringify(seen)) : null; },
     linked: function () { return linkState.classList.contains('linked'); },
-    keymap: LT.keymap
+    keymap: LT.keymap,
+    pad: function () {
+      var r = pad.getBoundingClientRect();
+      return { strokes: padState.strokes.length, aspect: r.width / r.height, cssW: r.width, cssH: r.height };
+    },
+    padInkAt: function (nx, ny) {
+      var d = padDims();
+      var dpr = pad.width / d.w;
+      var px = pctx.getImageData(Math.round(nx * d.w * dpr), Math.round(ny * d.h * dpr), 1, 1).data;
+      return px[3] > 0;
+    }
   };
 })();
 </script>
