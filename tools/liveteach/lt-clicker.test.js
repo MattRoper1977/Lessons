@@ -88,13 +88,19 @@ async function open(page, url, errors) {
   check('projector key: Esc clears blackout FIRST', await black() === false);
 
   /* B fires exactly one action per press: two presses must land on the same
-     state, never race an even number of toggles into an odd one. */
+     state, never race an even number of toggles into an odd one. The counter
+     counts blackout TRANSITIONS, not raw broadcasts — the HUD's 3 s
+     heartbeat re-broadcasts the same state and made a raw count flaky. */
   const bCount = await proj.evaluate(async () => {
     let flips = 0;
-    const before = window.__LT.state().blackout;
+    let lastSeen = window.__LT.state().blackout;
+    const before = lastSeen;
     const bus = new BroadcastChannel('mbm_liveteach_v1');
     bus.addEventListener('message', ev => {
-      if (ev.data && ev.data.type === 'PROJECTOR_STATE') flips++;
+      if (ev.data && ev.data.type === 'PROJECTOR_STATE' && ev.data.payload.blackout !== lastSeen) {
+        lastSeen = ev.data.payload.blackout;
+        flips++;
+      }
     });
     document.dispatchEvent(new KeyboardEvent('keydown', { code: 'KeyB', bubbles: true }));
     await new Promise(r => setTimeout(r, 250));
@@ -102,9 +108,24 @@ async function open(page, url, errors) {
     document.dispatchEvent(new KeyboardEvent('keydown', { code: 'KeyB', bubbles: true }));
     await new Promise(r => setTimeout(r, 250));
     bus.close();
-    return { before, mid, after: window.__LT.state().blackout, broadcasts: flips };
+    return { before, mid, after: window.__LT.state().blackout, transitions: flips };
   });
-  check('C1: B fires exactly one action per press (state + broadcast count)', bCount.before === false && bCount.mid === true && bCount.after === false && bCount.broadcasts === 2, JSON.stringify(bCount));
+  check('C1: B fires exactly one action per press (state + transition count)', bCount.before === false && bCount.mid === true && bCount.after === false && bCount.transitions === 2, JSON.stringify(bCount));
+
+  /* SEMH guard: key auto-repeat must never strobe the curtain. */
+  const strobe = await proj.evaluate(() => {
+    const before = window.__LT.state().blackout;
+    for (let i = 0; i < 20; i++) document.dispatchEvent(new KeyboardEvent('keydown', { code: 'KeyB', bubbles: true, repeat: true }));
+    return { before, after: window.__LT.state().blackout };
+  });
+  check('a11y: held-key auto-repeat cannot strobe the blackout', strobe.before === strobe.after, JSON.stringify(strobe));
+
+  /* Blackout is announced, not just shown. */
+  await proj.keyboard.press('KeyB');
+  const said = await proj.evaluate(() => document.getElementById('blackoutSaid').textContent);
+  await proj.keyboard.press('KeyB');
+  const saidOff = await proj.evaluate(() => document.getElementById('blackoutSaid').textContent);
+  check('a11y: blackout announces both states politely', said.includes('blacked out') && saidOff === 'Screen restored', JSON.stringify({ said, saidOff }));
 
   /* F5 on the projector: default prevented, honest toast, no fullscreen. */
   const f5p = await proj.evaluate(() => {
@@ -113,8 +134,25 @@ async function open(page, url, errors) {
     return { prevented: ev.defaultPrevented, fs: !!document.fullscreenElement };
   });
   await proj.waitForTimeout(100);
-  const f5toast = await proj.evaluate(() => ({ vis: getComputedStyle(document.getElementById('toast')).visibility, text: document.getElementById('toast').textContent }));
-  check('C2: F5 on the projector is prevented and answered with the button advice', f5p.prevented === true && f5p.fs === false && f5toast.vis === 'visible' && f5toast.text.includes('Fullscreen'), JSON.stringify(f5toast.text.slice(0, 40)));
+  const f5toast = await proj.evaluate(() => ({ op: getComputedStyle(document.getElementById('toast')).opacity, text: document.getElementById('toast').textContent }));
+  check('C2: F5 on the projector is prevented and answered with the button advice', f5p.prevented === true && f5p.fs === false && f5toast.op === '1' && f5toast.text.includes('Fullscreen'), JSON.stringify(f5toast.text.slice(0, 40)));
+
+  /* F5 must be dead even while typing a hint — an unprevented F5 there
+     reloads the projector mid-lesson (the review's live repro). */
+  const f5input = await proj.evaluate(() => {
+    document.getElementById('hintInput').focus();
+    const ev = new KeyboardEvent('keydown', { code: 'F5', bubbles: true, cancelable: true });
+    document.getElementById('hintInput').dispatchEvent(ev);
+    const prevented = ev.defaultPrevented;
+    document.getElementById('hintInput').blur();
+    return prevented;
+  });
+  check('C2: F5 is prevented even with focus in a text input', f5input === true);
+
+  /* The toast live region stays in the accessibility tree while unseen —
+     hidden by opacity, never visibility (the announced-from-hidden trap). */
+  const toastTree = await proj.evaluate(() => getComputedStyle(document.getElementById('toast')).visibility);
+  check('a11y: the toast region is never visibility-hidden', toastTree === 'visible');
 
   /* The projector's own fullscreen button IS a real gesture and works. */
   await proj.evaluate(() => new Promise(r => { document.getElementById('strip').classList.remove('hidden'); r(); }));
@@ -159,6 +197,15 @@ async function open(page, url, errors) {
   await hud.waitForTimeout(300);
   check('HUD key: full stop restores', await black() === false);
 
+  /* The HUD blackout BUTTON sends an idempotent SET from seen state: two fast
+     presses cannot cross a toggle in flight and land inverted. */
+  await hud.evaluate(() => { document.getElementById('btnBlackout').click(); document.getElementById('btnBlackout').click(); });
+  await hud.waitForTimeout(400);
+  check('C3-live: BLACKOUT_SET is real, exercised, and idempotent (two fast presses = ON)', await black() === true);
+  await hud.click('#btnBlackout');
+  await hud.waitForTimeout(300);
+  check('C3-live: the SET path also restores', await black() === false);
+
   /* F5 on the HUD: prevented, and the advice is HONEST — the projector does
      NOT go fullscreen, because a bus message is not a user gesture. */
   const f5h = await hud.evaluate(() => {
@@ -167,9 +214,9 @@ async function open(page, url, errors) {
     return ev.defaultPrevented;
   });
   await hud.waitForTimeout(200);
-  const f5hToast = await hud.evaluate(() => ({ vis: getComputedStyle(document.getElementById('toast')).visibility, text: document.getElementById('toast').textContent }));
+  const f5hToast = await hud.evaluate(() => ({ op: getComputedStyle(document.getElementById('toast')).opacity, text: document.getElementById('toast').textContent }));
   const projFs = await proj.evaluate(() => !!document.fullscreenElement);
-  check('C2: HUD F5 prevented + advice shown + projector NOT fullscreened', f5h === true && f5hToast.vis === 'visible' && f5hToast.text.includes('F11') && projFs === false, JSON.stringify({ projFs }));
+  check('C2: HUD F5 prevented + advice shown + projector NOT fullscreened', f5h === true && f5hToast.op === '1' && f5hToast.text.includes('F11') && projFs === false, JSON.stringify({ projFs }));
   const fsBtnHud = await hud.evaluate(() => { document.getElementById('btnFsHelp').click(); return true; });
   await hud.waitForTimeout(100);
   const projFs2 = await proj.evaluate(() => !!document.fullscreenElement);
@@ -184,6 +231,31 @@ async function open(page, url, errors) {
   const both = CLICKER.every(k => maps.proj.includes(k) && maps.hud.includes(k));
   const once = CLICKER.every(k => maps.proj.filter(x => x === k).length === 1 && maps.hud.filter(x => x === k).length === 1);
   check('C4: every clicker key registered in BOTH views, exactly once', both && once, JSON.stringify(maps.hud));
+
+  /* The splash gate: clicker presses during the boot splash do nothing. */
+  const serrs = [];
+  const sp = await ctx.newPage();
+  sp.on('pageerror', e => serrs.push(String(e).slice(0, 120)));
+  await sp.goto(base + 'projector.html', { waitUntil: 'load' });
+  await sp.locator('.mbm-splash').waitFor({ state: 'visible', timeout: 4000 });
+  await sp.keyboard.press('PageDown');
+  await sp.keyboard.press('KeyB');
+  try { await sp.locator('.mbm-skip').click({ timeout: 4000 }); } catch (e) {}
+  await sp.waitForFunction(() => !document.querySelector('.mbm-splash'), null, { timeout: 8000 });
+  await sp.waitForFunction(() => window.__LT.manifestId() !== null, null, { timeout: 5000 });
+  const afterSplash = await sp.evaluate(() => ({ stage: window.__LT.stage().index, blackout: window.__LT.state().blackout }));
+  check('splash gate: remote presses during the splash change nothing', afterSplash.stage === 0 && afterSplash.blackout === false && serrs.length === 0, JSON.stringify(afterSplash));
+
+  /* Honest failure when the platform refuses fullscreen. */
+  await sp.evaluate(() => {
+    Object.defineProperty(document.documentElement, 'requestFullscreen', { value: function () { return Promise.reject(new Error('policy')); } });
+  });
+  await sp.mouse.move(640, 700);
+  await sp.click('#fsBtn');
+  await sp.waitForTimeout(200);
+  const refused = await sp.evaluate(() => ({ op: getComputedStyle(document.getElementById('toast')).opacity, text: document.getElementById('toast').textContent, fs: !!document.fullscreenElement }));
+  check('C2: a refused fullscreen gets an honest toast, not silence', refused.op === '1' && refused.text.includes('refused') && refused.fs === false, JSON.stringify(refused.text.slice(0, 40)));
+  await sp.close();
 
   check('console: projector clean', perrs.length === 0, perrs.join(' | '));
   check('console: HUD clean', herrs.length === 0, herrs.join(' | '));

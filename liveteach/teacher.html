@@ -56,10 +56,11 @@ body.highlumen input[type=text] { background: #fff; border-color: #8a7f5e; }
 #toast {
   position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 72;
   background: #16204a; color: #e8e2d4; border: 1px solid #43518c; border-radius: 12px;
-  padding: 12px 18px; max-width: 86vw; visibility: hidden; text-align: center;
+  padding: 12px 18px; max-width: 86vw; text-align: center;
+  opacity: 0; pointer-events: none; /* in the a11y tree even while unseen */
 }
 body.highlumen #toast { background: #fffdf6; color: #1c2337; border-color: #8a7f5e; }
-#toast.show { visibility: visible; }
+#toast.show { opacity: 1; }
 @media print { body { display: none; } }
 body.reduce *, body.reduce *::before, body.reduce *::after {
   animation-duration: .01ms !important; animation-iteration-count: 1 !important;
@@ -206,12 +207,24 @@ body.reduce *, body.reduce *::before, body.reduce *::after {
     /* Browser/OS chords are never teaching actions: Ctrl+P must print, not
        toggle the poll in front of the class. */
     if (e.ctrlKey || e.metaKey || e.altKey) return;
+    /* Auto-repeat never drives a teaching action: a held B would strobe the
+       blackout curtain — a sensory hazard, not a feature. One press, one
+       action. */
+    if (e.repeat) return;
+    /* While the splash is up, the view is not on stage yet: a teacher
+       test-clicking the remote must not advance stages or drop the blackout
+       behind the splash. */
+    if (document.querySelector('.mbm-splash')) return;
     var t = e.target;
     if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) {
       /* Escape is the one hotkey that must still work here — its whole spec
          is "blur inputs, then close the top thing". Blur only; the next
          Escape reaches the registered handler. */
       if (e.code === 'Escape' && t.blur) t.blur();
+      /* F5 must never reload a live lesson, wherever focus sits — the
+         browser default is prevented even though the toast handler is
+         skipped while typing. */
+      if (e.code === 'F5') e.preventDefault();
       return;
     }
     /* A focused button or link keeps its NATIVE Space/Enter activation —
@@ -294,6 +307,7 @@ LT.boot();
   var seen = null;
   var seenAt = 0;
   var lastStageSaid = null;
+  var lastBlackoutSaid = false;
 
   var el = function (id) { return document.getElementById(id); };
   var linkState = el('linkState');
@@ -309,6 +323,10 @@ LT.boot();
     el('indPoll').textContent = seen.poll && seen.poll.on ? 'ON' : 'off';
     el('indBlackout').textContent = seen.blackout ? 'ON' : 'off';
     el('btnBlackout').setAttribute('aria-pressed', String(!!seen.blackout));
+    if (lastBlackoutSaid !== !!seen.blackout) {
+      lastBlackoutSaid = !!seen.blackout;
+      if (lastBlackoutSaid !== null) el('stageSaid').textContent = lastBlackoutSaid ? 'Projector blacked out' : 'Projector restored';
+    }
     el('indStage').textContent = seen.stageCount ? (seen.stage + 1) + '/' + seen.stageCount : '—';
     el('stageTitle').textContent = seen.stageTitle || '—';
     if (seen.stageCount && seen.stage !== lastStageSaid) {
@@ -374,9 +392,13 @@ LT.boot();
     el('toast').textContent = msg;
     el('toast').classList.add('show');
     clearTimeout(toastT);
-    toastT = setTimeout(function () { el('toast').classList.remove('show'); }, 6000);
+    var hold = Math.max(6000, msg.split(/\s+/).length * 400 + 2000);
+    toastT = setTimeout(function () { el('toast').classList.remove('show'); }, hold);
   }
-  el('btnBlackout').addEventListener('click', function () { LT.send('BLACKOUT_TOGGLE', {}); });
+  /* The button sends an idempotent SET from the last seen state — two fast
+     presses cannot cross a toggle in flight and end up inverted. The B and
+     full-stop keys keep TOGGLE (a keypress means "flip it now"). */
+  el('btnBlackout').addEventListener('click', function () { LT.send('BLACKOUT_SET', { on: !(seen && seen.blackout) }); });
   /* C2, stated honestly: a bus message is not a user gesture, so this window
      CANNOT make the projector fullscreen. Say what actually works. */
   function fsAdvice() {

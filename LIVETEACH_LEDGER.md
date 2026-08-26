@@ -202,5 +202,21 @@ order and marked as applied where a phase leans on them.
   genuinely entering fullscreen; curtain z-order measured between banner and
   strip; registry census — every clicker key present in both views exactly
   once. Full harness (12 steps) green.
+- **Adversarial review round (three lenses, 12 confirmed findings, all
+  fixed):** a held B key strobed the curtain via auto-repeat (blocking —
+  repeats are now dropped centrally, one press one action); F5 with focus in
+  the hint input reloaded the projector mid-lesson (carve-out beside the
+  Escape one; suite asserts `defaultPrevented` at a focused input); clicker
+  presses acted invisibly BEHIND the boot splash (the registry now sleeps
+  while `.mbm-splash` exists — suite proves a pre-skip PageDown changes
+  nothing); the C1 broadcast count raced the 3 s heartbeat about 1 run in 6
+  (it now counts blackout TRANSITIONS); `BLACKOUT_SET` was dead code (the C3
+  class) — the HUD button now sends it as an idempotent SET, killing the
+  crossed-toggle race, with live coverage; a refused `requestFullscreen`
+  (managed classroom Chrome) was a silent unhandled rejection — now an honest
+  toast, with a stubbed-refusal control; blackout is announced politely in
+  both views; the toast hid via `visibility` (out of the accessibility tree —
+  the same trap the file itself documents) — now opacity + pointer-events;
+  toast hold time scales with message length. Clicker suite now 32 checks.
 - **Decisions applied:** D1 (every clicker action also works single-window),
   D4, D5.
