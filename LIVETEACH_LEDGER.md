@@ -82,6 +82,11 @@ order and marked as applied where a phase leans on them.
     (onmessage assignment, one rAF loop per view, TDZ init rule) with a
     6-vector self-test (3 red vectors must red, 3 green must pass); the
     lt-shell browser suite (~30 checks).
+  - **S5 (a washed-out classroom projector)** is the high-lumen toggle: a full
+    light palette flagged on BOTH `<html>` and `<body>` — the estate's recorded
+    page-fill gotcha — with the sim's line and dot colours picked per theme
+    rather than low-alpha-on-dark, pinned by the persistence and figure/ground
+    checks below.
   - Named LT2 gates in lt-shell: resync after projector reload (HUD
     reconciles to the fresh broadcast); H/P toggle both directions by real
     keydown; single-window completeness (timer, hint, poll, pause/resume,
@@ -154,6 +159,14 @@ order and marked as applied where a phase leans on them.
     originally sent `STAGE_SET` from the projector's own page — a
     BroadcastChannel never hears its own messages, so the test proved
     nothing; it now travels the real HUD→projector path.
+  - **G5 (content accuracy) is a gate, not a promise.** `units_check.mjs`
+    reads the manifest and recomputes rather than trusting the prose:
+    `U-DOUBLE` requires a stage claiming doubled frequency to carry *exactly*
+    2f, `U-CLAIM` matches every stated value against the parameters on a digit
+    boundary, `U-VISIBLE` scans copy and labels for an f/λ/v that disagrees
+    with the numbers, and `U-COORD` keeps overlay coordinates normalised and
+    clear of the banner band. Its `--self-test` carries red vectors, among
+    them "12 m/s claimed for a value of 2" and a doubling stage set to 3f.
 - **Adversarial review round (four lenses, 26 confirmed findings, all fixed):**
   the sharpest were about honesty and about gates that could not fail. (1) The
   "one wavelength" label was pinned to viewport-relative coordinates while the

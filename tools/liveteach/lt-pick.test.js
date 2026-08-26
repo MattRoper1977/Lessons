@@ -411,6 +411,19 @@ const MARKUP_NAME = '<img src=x>Ophira';
     afterRedraw.pick === '' && afterRedraw.vis === false, JSON.stringify(afterRedraw));
   check('and the HUD says what is actually on the projector, from the broadcast',
     /Nothing is on the projector/.test(hudNow.wall) && hudNow.shown !== projected, JSON.stringify(hudNow));
+  /* The HUD's record of what it sent is reconciled to the broadcast, so a
+     name cleared on the PROJECTOR does not leave this side believing it is
+     still up. */
+  await hud.click('#btnPickProject');
+  await hud.waitForTimeout(400);
+  await proj.bringToFront();
+  await proj.evaluate(() => document.activeElement && document.activeElement.blur());
+  await proj.keyboard.press('Digit0');       // cleared at the projector end
+  await proj.waitForTimeout(500);
+  await hud.bringToFront();
+  const reconciled = await hud.evaluate(() => ({ projected: window.__LT.pick().projected, wall: document.getElementById('pickWall').textContent }));
+  check('a name cleared ON the projector is reflected back on the HUD (its record is not left stale)',
+    reconciled.projected === '' && /Nothing is on the projector/.test(reconciled.wall), JSON.stringify(reconciled));
 
   /* Attendance must not throw keyboard focus away, in either view. */
   const focusKept = await hud.evaluate(() => {

@@ -1135,6 +1135,12 @@ LT.boot();
     if (type === 'PROJECTOR_STATE') {
       var newAspect = seen ? seen.aspect : null;
       seen = payload;
+      /* What is on the wall is the projector's fact, so this window's memory
+         of what it sent is reconciled to the broadcast rather than trusted.
+         Otherwise a name cleared on the projector — by 0, Escape or the
+         blackout — leaves this side still believing it is up. state.pick
+         already travels in PROJECTOR_STATE, so nothing new reaches the bus. */
+      if (typeof seen.pick === 'string') pickShown = seen.pick;
       seenAt = performance.now();
       render();
       if (seen.aspect && seen.aspect !== newAspect) sizePad();
