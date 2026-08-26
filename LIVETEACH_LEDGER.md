@@ -367,8 +367,8 @@ order and marked as applied where a phase leans on them.
 
 ## LT7 — Cold-call picker (spec Phase 6: P1–P5; order LT-GO D2)
 
-- **Branch/PR/merge:** `claude/new-session-43lyml` → PR → merge SHA recorded at
-  next append.
+- **Branch/PR/merge:** `claude/new-session-43lyml` → PR #157 → merged as
+  `373ce52`.
 - **The roster rule, and the ruling behind it.** P1 asked the picker to read
   the estate's roster storage. Order LT-GO **D2 overrides it**: the class list
   is **session-only** — typed or pasted at the start of the lesson, held in one
@@ -479,8 +479,8 @@ order and marked as applied where a phase leans on them.
 
 ## LT8 — Classroom extras (spec Phase 7: X1–X4)
 
-- **Branch/PR/merge:** `claude/new-session-43lyml` → PR → merge SHA recorded at
-  next append.
+- **Branch/PR/merge:** `claude/new-session-43lyml` → PR #157 → merged as
+  `373ce52`.
 - **X1 RAG tally.** 7/8/9 count stuck / nearly / got it, from either window,
   into the projector's state. **Counts only** — and that is the whole
   safeguarding story: the panel is anonymous *by construction* rather than by
@@ -552,8 +552,8 @@ order and marked as applied where a phase leans on them.
 
 ## LT9 — Worksheet engine (spec Phase 8: W1–W5)
 
-- **Branch/PR/merge:** `claude/new-session-43lyml` → PR → merge SHA recorded at
-  next append.
+- **Branch/PR/merge:** `claude/new-session-43lyml` → PR #157 → merged as
+  `373ce52`.
 - **W1, the serious one.** The reviewed fragment's line-art conversion
   stripped the grid, leaving a figure the worksheet then asked pupils to
   *measure*. Here the threshold pass runs **first** and the calibrated grid is
@@ -621,7 +621,10 @@ order and marked as applied where a phase leans on them.
 ## LT10 — Close
 
 - **Branch/PR/merge:** `claude/new-session-43lyml` → PR #157 (LT7–LT10) →
-  merge SHA recorded in the final report.
+  merged as `373ce52`, all six checks green. The liveteach job's log was read
+  line by line before merging, per the estate's assert-on-evidence rule: all
+  24 steps genuinely ran, including both statistical simulations and all eight
+  browser suites.
 - **Delivered:** `LIVETEACH_README.md` (what the kit is, the same-device
   constraint stated plainly, clicker setup, the full key map, and a section on
   pupil names saying exactly what the kit does and does not do with them);
