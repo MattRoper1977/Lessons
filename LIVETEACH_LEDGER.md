@@ -414,3 +414,94 @@ order and marked as applied where a phase leans on them.
   min-weight floor and demands the drift gate notice. Harness now **23 steps**.
 - **Decisions applied:** D2 (session-only roster — the ruling this phase turns
   on), D1 (a picker on the projector too, since rosters do not travel), D4, D5.
+
+---
+
+## LT8 — Classroom extras (spec Phase 7: X1–X4)
+
+- **Branch/PR/merge:** `claude/new-session-43lyml` → PR → merge SHA recorded at
+  next append.
+- **X1 RAG tally.** 7/8/9 count stuck / nearly / got it, from either window,
+  into the projector's state. **Counts only** — and that is the whole
+  safeguarding story: the panel is anonymous *by construction* rather than by
+  policy, so there is no name to leak and nothing to reconstruct one from.
+  Each row carries a word, a shape glyph and a number, so it reads with the
+  colour ignored. The panel reveals itself on the first vote (a counter nobody
+  can see is a counter nobody trusts). Counts live for the lesson: memory, a
+  reset button, and the tab close.
+- **X2 silent bell.** A slow amber breath plus a banner, **button-only** — the
+  spec retired the pulse key so B stays blackout and nothing else. Under
+  `prefers-reduced-motion` **or Calm** the breath is replaced by a held tint
+  and the banner alone: the house rule's named substitution, so the cue
+  survives when the motion goes. Announced, so a screen-reader user gets the
+  same signal.
+- **X3 audio.** Off at every load, with **no stored preference to inherit** —
+  in an SEMH room a toggle that remembers "on" from last lesson is exactly the
+  surprise the rule exists to prevent, so the *absence* of persistence is the
+  feature. Earcons are single shaped tones under 300 ms at a peak gain of
+  0.06, always scheduled to stop; TTS speaks a projected cold-call name and the
+  end of a timer, cancelling before each so nothing stacks or loops.
+- **X4 sparkline.** A standalone SVG built from the recorded series —
+  cumulative lines per colour, its own text labels and an aria-label, so it
+  still reads pasted into a report. Clipboard first, with the download
+  fallback treated as the real path rather than a courtesy, because school
+  machines block clipboard writes; the toast says which actually happened.
+- **Gates (`lt-extras.test.js`, 33 checks).** The two the spec names for this
+  phase are both on evidence, not proxies. **Audio defaults:** a patched
+  `AudioContext` counts LIVE oscillators, so a wired-but-silent path is
+  distinguishable from a working one — zero starts with sound off across three
+  sound-capable actions, a real start with it on, peak gain in range, a
+  scheduled stop, and OFF again after a reload. **Reduced-motion bell:** a page
+  booted under the OS setting, reading the *computed* animation, then proving
+  the static banner and held tint carry the cue. Plus the SVG parsed back
+  through `DOMParser`, the clipboard-blocked download exercised, and the tally
+  proven to contain no name with a cold-called pupil live in the session.
+- **Decisions applied:** D1 (every extra reachable on the projector; the HUD
+  mirrors), D4, D5.
+
+---
+
+## LT9 — Worksheet engine (spec Phase 8: W1–W5)
+
+- **Branch/PR/merge:** `claude/new-session-43lyml` → PR → merge SHA recorded at
+  next append.
+- **W1, the serious one.** The reviewed fragment's line-art conversion
+  stripped the grid, leaving a figure the worksheet then asked pupils to
+  *measure*. Here the threshold pass runs **first** and the calibrated grid is
+  drawn after it, so nothing can strip it: half-metre rules both ways, a
+  heavier line every metre, and a scale bar labelled "1 metre" on a white
+  backing. The arithmetic is checkable — at λ = 2 m the figure draws one
+  wavelength as 320 px against a 160 px scale bar, so a pupil measuring off
+  the grid gets 2 m exactly.
+- **W2 honest units.** The model-to-real mapping is *stated* ("the grid squares
+  are 0.5 m across"), the printed f, λ and A are the stage's own, and
+  v = f × λ works out. Off a wave stage there are no honest numbers to print,
+  so the sheet says there is nothing to measure rather than inventing some.
+  Frequency is handed over in as many words, because a still drawing cannot
+  show it and implying otherwise would be the same dishonesty W2 exists to
+  stop. **W3:** plain text "v = f × λ" — the fragment printed the LaTeX
+  source. **W4:** answer lines are bordered divs, because most print engines
+  drop background gradients and a worksheet whose lines vanish at the printer
+  is worse than none. **W5:** the threshold is live — it *is* the cut that
+  makes the line art.
+- **The answer is deliberately not on the sheet.** A first pass printed a
+  worked-answer box and quoted the wavelength back in task 4, which between
+  them made two of the four tasks pointless. Both are gone; the teacher gets
+  the working on the HUD's stage card instead, where the pupils are not
+  looking. The header prints the stage title and the date and leaves a **ruled
+  space** for a name rather than printing one — nothing is stored, so nothing
+  can be printed, and a cold-called name showing on the wall is not carried
+  onto the page.
+- **Gates (`lt-sheet.test.js`, 37 checks).** The spec names this phase's gate
+  and both halves are here. The exported PNG is **decoded back to pixels** in
+  the page and searched for grey grid runs in both axes and for the scale
+  bar's longest contiguous black run with a tick at each end — with a **red
+  control** proving the same sampler finds neither in a blank image (the first
+  version of that sampler counted the "1 metre" label as bar, which the tick
+  check caught). The no-`$` half checks the printed text and the markup for
+  LaTeX escapes. Plus: bordered lines read under *print* media with their
+  computed border and no background image; the sheet proven to be the only
+  thing printed; the answer proven **absent** on both wave stages and present
+  on the HUD; and W5 proven live by rendering at two thresholds and showing
+  the pixels differ.
+- **Decisions applied:** D1, D4, D5.
