@@ -121,7 +121,7 @@ order and marked as applied where a phase leans on them.
   the canonical splash's skip button measured under 44 px (override added
   outside the pinned bytes — canonical untouched; site-repo note in the
   residue); the G-TDZ static gate was bypassable by any statement before the
-  wrapped init (regex hardened, new red vector). Suite now 44 checks.
+  wrapped init (regex hardened, new red vector). Suite now 45 checks.
 - **Decisions applied:** D1 (single-window first-class; the HUD is optional on
   identical bus code), D4, D5.
 
@@ -328,7 +328,7 @@ order and marked as applied where a phase leans on them.
   fails to decode, and the fragment's own single-block v4 is *rebuilt here*
   and shown undecodable — proving this gate would have caught the defect Q1
   documents.
-- **Gates (`lt-share.test.js`, 50 checks):** the tag round-trips raw → URL →
+- **Gates (`lt-share.test.js`, 55 checks):** the tag round-trips raw → URL →
   raw with the double-encode red control alongside; history discipline
   (walking a lesson adds nothing, Bookmark adds exactly one, back restores
   stage AND speed); the QR canvas compared **module for module** against
@@ -407,7 +407,7 @@ order and marked as applied where a phase leans on them.
   shown to produce back-to-back calls that this gate counts; a deliberately
   biased draw blows the balance tolerance, so a passing balance means
   something; an absent pupil is never drawn in 500 attempts.
-- **Gates (`lt-pick.test.js`, 36 checks):** a third page taps the bus and
+- **Gates (`lt-pick.test.js`, 62 checks — 36 at first write, the rest added by the review round below):** a third page taps the bus and
   records every message, then every roster name is searched for across the lot
   after 13 draws — with a check that the tap heard live traffic, so the
   no-names result cannot be vacuous. Also: no storage key, no name in storage,
@@ -471,7 +471,7 @@ order and marked as applied where a phase leans on them.
   bus; nothing had ever read the projector's ADDRESS or the string the QR
   encodes while a name was on the wall; 40 draws were asserted against a
   12-entry history window; and a `KeyQ` press documented as a check asserted
-  nothing. Suite now **60 checks**.
+  nothing. Suite now **62 checks**.
 - **Decisions applied:** D2 (session-only roster — the ruling this phase turns
   on), D1 (a picker on the projector too, since rosters do not travel), D4, D5.
 
@@ -506,7 +506,7 @@ order and marked as applied where a phase leans on them.
   still reads pasted into a report. Clipboard first, with the download
   fallback treated as the real path rather than a courtesy, because school
   machines block clipboard writes; the toast says which actually happened.
-- **Gates (`lt-extras.test.js`, 33 checks).** The two the spec names for this
+- **Gates (`lt-extras.test.js`, 48 checks — 33 at first write, the rest added by the review round below).** The two the spec names for this
   phase are both on evidence, not proxies. **Audio defaults:** a patched
   `AudioContext` counts LIVE oscillators, so a wired-but-silent path is
   distinguishable from a working one — zero starts with sound off across three
@@ -581,7 +581,7 @@ order and marked as applied where a phase leans on them.
   space** for a name rather than printing one — nothing is stored, so nothing
   can be printed, and a cold-called name showing on the wall is not carried
   onto the page.
-- **Gates (`lt-sheet.test.js`, 37 checks).** The spec names this phase's gate
+- **Gates (`lt-sheet.test.js`, 41 checks — 37 at first write, the rest added by the review round below).** The spec names this phase's gate
   and both halves are here. The exported PNG is **decoded back to pixels** in
   the page and searched for grey grid runs in both axes and for the scale
   bar's longest contiguous black run with a tick at each end — with a **red
