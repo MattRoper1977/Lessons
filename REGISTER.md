@@ -2991,3 +2991,102 @@ order's own quotations), and **none is in the new packs**. A third string,
 `PEQ Entry 3 (Level 1 · Level 2 routes)`, 18 occurrences across the 6 live LAUNCH PEQ decks,
 agrees with neither. Nobody has ruled on the record: `_passsl/`, the pass that ingested the
 LAUNCH SoW, carries **no level statement at all**.
+
+---
+
+## R-N6Z01 — Order N6-Z: the SoW matrix, the toggle applied, and a merge held on the order's own conflict
+
+**Last observed true at** `ddfadc53`.
+
+Finishes what N6-I left out. Full record in [`_next6/FINDINGS.md`](_next6/FINDINGS.md) under
+**ORDER N6-Z**; the matrix is [`_next6/SOW_MATRIX.md`](_next6/SOW_MATRIX.md).
+
+**The merge is HELD, and two of the three reasons are stop conditions this order names.**
+
+1. **A conflict between two of this order's own requirements.** §Z3 mandates
+   `localStorage mbm_guide_v1`; §Z7's gate list requires "no browser storage" and says merge
+   only if all hold. Applying §Z3 is what makes §Z7 fail. Measured: **252 `localStorage`
+   occurrences, all 252 inside the toggle's marked block, all one key, 0 outside** — the
+   packs had none before. Gate 4 fails in 8 of 9 packs. **Neither half was quietly chosen**:
+   the estate already named the fork in N7 — narrow gate 4 to that one key (**175 existing
+   carriers**, verified on `origin/main`: 175 files carry `data-mbm-guide`, all 175 use
+   `localStorage`, all 175 use `mbm_guide_v1`) or ship without persistence — and it is Matt's.
+   **"No browser storage" is a gate only the nine new packs were passing.** Mid-pass I doubted
+   the 175, re-probed on the string `localStorage` instead of on the mechanism, got 532/406,
+   and was about to rewrite the record around the newer reading — which is the tie-break this
+   order forbids. Two probes asked two different questions; the older number answered the
+   right one.
+2. **The §Z2 lane conflict.** The SoW grid is a **14-week autumn in all three workbooks**;
+   the repo calendar is **15**, from real dates. Rules 1 and 2 both fire in opposite
+   directions, so rule 3: record both, change nothing. **Nothing was relabelled.**
+3. **§Z1's Tier-2 count: 28 rows, none applied.** 22 dissolve or survive on the §Z2 ruling;
+   6 stand regardless — five BUILD_Humanities rows where the pack teaches the lower Tees, the
+   1825 railway and the ironstone chain against a `World About Me` half-term of festivals and
+   Remembrance, and `GROW_ASDAN/ENT_A2_W5`, where the deck reader found a Supported route on
+   which no enrichment challenge is attempted and the data reader could not see it.
+
+**The two verdict passes disagreed on 20 of 132 rows and every one is kept as UNRESOLVED.**
+Not a defect in the matrix — the matrix reporting honestly. The deck reader is better informed
+on several (it saw a "Staff Ready · SOW position" card in `LAUNCH_ASDAN/COMM_W10` rewriting
+the SoW cell, and a qualification-boundary note in `PEQ_W12` making the missing sign-off
+deliberate), and that is exactly the temptation the standing rule exists to refuse: better
+informed on the row is not the same as right about the class.
+
+**The transferable rule of this pass, and it is the order's own, earned twice over: no finding
+rests on one instrument, and a disagreement between two is a finding.**
+
+- **The second verdict pass caught a bug in my own join.** The first derived each lesson's SoW
+  cell by converting its week through the disputed calendar, shifting every ASDAN row by one:
+  `BUILD_ASDAN_A2_COMM_W1`, which claims `Aut2·W1`, was judged against *"Practise a vocational
+  skill"* — what the pack's own **W2** deck teaches. **42 of 132 verdicts rested on it.** Fixed
+  by joining on what the pack claims, and confirmed by a **third** instrument: BUILD_ASDAN
+  prints its own `Exact SOW outcome` and now matches the selected cell **24/24**, where the old
+  join scored 0/24.
+- **INSTRUMENT-SPLIT is 0 of 132, and that is earned.** A first comparator fired on only 54
+  rows — two packs state the half-term and week in separate manifest fields — and a comparator
+  that cannot fire is not agreement. Red-proved on all three deck shapes.
+- **And then two more instruments found that 60 of 132 rows turn on a ruling nobody has
+  made.** The §Z2 draft said the verdicts were unaffected by the calendar conflict, because
+  packs naming their own half-term select the same cell either way. True of the three ASDAN
+  packs; **false of the other six**, which state a bare estate week and nothing else, so the
+  calendar is the only thing that can place them. A content probe and a printed-outcome probe,
+  neither reading a week number, agree pack by pack with **zero row-level disagreements**:
+  GROW_Science is authored against the **SoW grid** and prints its cells verbatim, ten rows at
+  1.00; **LAUNCH_Science is authored against the repo calendar** and never once scores a SoW
+  win — which is why the data pass returned 16 MISALIGNED for it, a property of the unmade
+  ruling and not of the lessons. **BUILD_Science is split against itself**, 4 rows to 4, and
+  that one is a genuine pack defect either way.
+- **A margin floor I set by eye was wrong, and the noise run said so.** The printed-outcome
+  probe uses sequence similarity, which never returns exactly equal, so with no floor it
+  declared winners on randomised text. I set 0.15 — **below that noise run's own p90 of
+  0.191**. Both floors are now the noise p95 (0.34 and 0.23) against real medians of 0.600 and
+  0.484, and the bad floor is recorded in the source rather than quietly replaced.
+- **Both pack instruments were wrong before they were right**, each caught by printing what it
+  excluded rather than trusting a count: a bare `SOURCE` in the lesson classifier matched
+  "People, Steps and **Resources**" and dropped a real deck; a fixed list of week phrases read
+  **60 of 132 decks as stating no week**, because three packs state it only in a brandline.
+
+**§Z3 applied: 380 tags, 126 decks, print identical 198/198.** And the order's parenthetical is
+**false** — asserted, not reasoned about. GROW_ASDAN and LAUNCH_ASDAN both reveal `.slide` in
+`@media print` (LAUNCH_ASDAN's is N6-I's own N3 addendum), so slide-side tagging *does* reach
+paper there. A print exemption keeps the toggle a screen affordance; **red-proved by removing
+it, which deletes 462 characters of staff content from GROW_ASDAN's printed pages**, with
+Science as the negative control. `.hero p` plus a label test also reached the one paragraph
+GUIDE_TAG_MAP predicted would need an authored marker, so **no marker was authored at all** —
+25 sites estimated, 0 needed.
+
+**A gate was red for two commits and nothing said so.** Running `s23` for §Z7 produced a
+names-scan hit in `_next6/evidence/S24_EVIDENCE_SURFACES.txt` — a **file path**, naming no
+person, carrying the same lesson title Order N6 already allowlisted in four other files.
+**N6-I committed that file without running the gate.** Fixed by extending the per-file
+allowlist to the fifth carrier; the miss is recorded in the entry itself, because the useful
+fact is that a gate went quiet, not the string.
+
+**§Z4 HALTED on its own hard gate** — the three Art zips are not attached to this session and
+nothing was reconstructed. **§Z5 reconciled and proved**: 26 across the nine landed packs, and
+the 4 absent from Pass N6's twelve-pack 30 are nameable from the record — **Tate ×2, Tees
+Valley Museums ×1, Teesside University / MIMA ×1**, all art citations. Network
+**MEASUREMENT INVALID — venue**: citation hosts `000`, control `pypi.org` `200`, nothing
+removed. **§Z6 CLOSED — PREMISE REFUTED**: the LAUNCH column states a floor for 0 of its 13
+subjects, the ladder's own `A2` calls each cell a target, `D13` is byte-identical across all
+three workbooks, and 28 of 29 LAUNCH cells naming a PEQ level name Entry 3.

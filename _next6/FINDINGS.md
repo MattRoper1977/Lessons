@@ -1404,3 +1404,687 @@ New from this order:
 5. **`GROW_HUM_W13_Belonging_Briefing`** prints a page 3 of 28 characters at 0.795% ink —
    reported by the new gate, not failed, and out of this order's scope. It is one of the two
    decks the previous pass recorded as printing different text run to run.
+---
+
+# ORDER N6-Z — FINISH AND LAND
+
+`mbm-next-six-weeks-final-2026-08-28-N6Z` · worked 2026-08-28 · branch
+`claude/new-session-q7ztqq`, from N6-I's tip `3cdb4ee4`
+
+Supersedes N6-F and N6-I. **§Z4 halted on its own hard gate: the three Art zips are not
+attached to this session** — the uploads directory holds only the N6-I order file, and a
+filesystem search finds no zip. Nothing was reconstructed. N12 stays CLOSED — REFUTED.
+
+## §Z0 — State at intake
+
+| | |
+|---|---|
+| `origin/main` | `288f84543ccef2884de62e6002b4b814360249c1` |
+| branch tip | `3cdb4ee4` — as the order predicted; 24 commits ahead of `origin/main`; tree clean |
+| `_next6/FINDINGS.md` | two order sections (N6, N6-I), 56 headings |
+| `_next6/GUIDE_TAG_MAP.md` | present |
+| lessons carrying a SoW alignment verdict | **0** |
+| frozen `Science_Teesside/*/v3_40min` | untouched vs `origin/main` (0-line diff) |
+| Art pack trees in the repo | **none** |
+
+**A deviation from the order's prediction map, stated before anything rests on it.** The
+order says "one row per lesson across all 192". **192 is the count of HTML *files* across
+twelve packs.** Nine packs are in the repository — 159 files — of which **132 are lessons**
+and 27 are support surfaces (hubs, front doors, evidence windows, printable resource sheets,
+the assessor-side teacher planning SoW, the Science practicals matrix). The three Art packs'
+33 files are absent. **The matrix has 132 rows**, and every excluded file is named in the
+tool that excludes it.
+
+## §Z1 — The SoW alignment matrix
+
+Full matrix in [`_next6/SOW_MATRIX.md`](SOW_MATRIX.md).
+
+### The instruments
+
+| lane | workbook | sha256 |
+|---|---|---|
+| BUILD | `_passsb/inputs/Build SOW 2026-2027.xlsx` | `d757f2a5e5bc8b26…` |
+| GROW | `_passsg/inputs/GROW SOW 2026-27.xlsx` | `5b56e6a9a18f3d79…` |
+| LAUNCH | `_passsl/inputs/LAUNCH KS4 - 2026-27.xlsx` | `ede3f82a5660f7ba…` |
+
+BUILD is the **vB** instrument per `_passsb/inputs/README.md`. **`vC-PROPOSED` was not used;
+there is none in the repository.**
+
+> **A stale pointer, found on the way in.** All three workbooks were edited at `a946f1ce`
+> ("label Aut1 W1-W2 as baseline weeks in the three SoW workbooks"), which rewrote 8 science
+> rows in the Autumn 1 W1–W2 cells. The files above are the operative, post-edit ones — they
+> are what is on `main`. But `_passsb/inputs/README.md`, `_passsb/FINDINGS.md`,
+> `_passsb/SOW_MATRIX.md`, `_passsl/FINDINGS.md` and `BUILD_ASDAN/…/manifest.json` all still
+> cite the **pre-edit** shas (`730f9a86…`, `05f385ae…`). The edited rows are outside these
+> packs' range so no verdict below is affected, but a later pass reading those pointers will
+> audit against a workbook that is no longer there. **Reported, not fixed** — correcting five
+> records across three earlier passes is beyond this order.
+
+### The grid, measured rather than confirmed
+
+| lane | strands | Autumn | Spring | Summer |
+|---|---:|---|---|---|
+| BUILD | 14 | Aut1 W1–7 · Aut2 W1–7 | Spr1 W1–6 · Spr2 W1–6 | Sum1 W1–6 · Sum2 W1–7 |
+| GROW | 14 | Aut1 W1–7 · Aut2 W1–7 | Spr1 W1–6 · Spr2 W1–6 | Sum1 W1–6 · Sum2 W1–7 |
+| LAUNCH | **18** | Aut1 W1–7 · Aut2 W1–7 | Spr1 W1–6 · Spr2 W1–6 | Sum1 W1–6 · Sum2 W1–7 |
+
+The order's facts hold on strand counts — 14, 14, 18 — and on LAUNCH's non-uniform grid
+(7/7, 6/6, 6/7). **The deviation: BUILD and GROW have the *identical* non-uniform grid.**
+The order describes "14 strands × W1–W7 per half term" for BUILD/GROW as if uniform and
+LAUNCH as the exception; measured, all three lanes share one shape. That matters for §Z2,
+because it makes the one-week conflict estate-wide rather than a LAUNCH peculiarity.
+
+### Two instruments, no shared code path
+
+| | reads | never reads |
+|---|---|---|
+| **A** `z1_instrument_a.py` | the filename and the pack manifest | the deck |
+| **B** `z1_instrument_b.mjs` | the rendered deck, every slide activated in turn | the manifest or the filename |
+
+**INSTRUMENT-SPLIT: 0 of 132.** Earned, not assumed:
+
+- the comparator reaches **every** row. A first version fired on only 54 of 132, because two
+  packs state the half-term and the week in separate manifest fields and one states a bare
+  estate week — a comparator that cannot fire is not agreement.
+- it is **red-proved on all three deck shapes**: perturb a deck's week and it names exactly
+  that deck, whether the deck states its week as a term label, a brandline or "Week n of 14".
+
+**Both instruments were wrong before they were right**, and both were caught by printing what
+they excluded rather than by trusting a count:
+
+- A's lesson classifier carried a bare `SOURCE` in its exclusion list, which matched
+  "People, Steps and **Resources**" and silently dropped a real GROW_ASDAN deck from the
+  population.
+- B asked for a fixed list of week phrases and read **60 of 132 decks as stating no week at
+  all**. Three packs state it only in a brandline — `GROW ASDAN · PERSONAL EFFECTIVENESS ·
+  AUTUMN 2 · W1`, `BUILD · SCIENCE · WEEK 8A · EXPLORE` — and GROW_ASDAN writes its
+  objective as a heading with the text on the next line. Fixed: 132/132 on both.
+
+### The join, and the off-by-one the second instrument caught
+
+**The join is on what the pack claims, not on a derived week.** A pack naming `Aut2·W1` is
+already speaking the workbook's units; converting through the disputed calendar introduces an
+off-by-one the pack never had.
+
+A first version did exactly that, and **42 of 132 verdicts rested on it**.
+`BUILD_ASDAN_A2_COMM_W1`, which claims `Aut2·W1`, came out as `Aut2·W2` and was judged
+against *"Practise a vocational skill our project needs"* — which is what the pack's own **W2**
+deck teaches. GROW_ASDAN was worse: its bare week 1–6 was read as an estate week, landing
+every deck in Aut1 instead of Aut2. **The second, independent verdict pass caught it by
+quoting the outcome it had been handed.** That is what the two-instrument rule is for, and it
+is the clearest return this order got from it.
+
+Confirmed by a **third instrument**:
+
+| check | result |
+|---|---|
+| BUILD_ASDAN prints its own `Exact SOW outcome` — does it equal the selected cell? | **24/24 exact**. The old join would have scored 0/24. |
+| LAUNCH_ASDAN's manifest `sow_topic` — does it equal the selected cell? | **27/30 exact**; the 3 are paraphrases of the same outcome (*"Gather feedback from those we support"* vs *"Design and, where authorised, gather project feedback"*), not different weeks. Tier 3. |
+
+### The verdicts, from two passes that were not allowed to see each other
+
+Every lesson was classified **twice**: once from the extracted row alone, by a reader
+forbidden to open a deck; once by reading the deck itself, by a reader forbidden the
+manifest. Where the two returned different classes the row is **UNRESOLVED** and both
+readings are kept, because the standing rule makes a disagreement a finding.
+
+| pack | lessons | ALIGNED | PARTIAL | MISALIGNED | SURFACE-SPLIT | SOW-SILENT | DELIBERATE-DIVERGENCE | UNRESOLVED |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| `BUILD_ASDAN` | 24 | 23 | 0 | 0 | 0 | 0 | 0 | 1 |
+| `GROW_ASDAN` | 18 | 17 | 0 | 0 | 0 | 0 | 0 | 1 |
+| `LAUNCH_ASDAN` | 30 | 28 | 0 | 0 | 0 | 0 | 0 | 2 |
+| `BUILD_Science` | 12 | 2 | 4 | 0 | 0 | 0 | 0 | 6 |
+| `GROW_Science` | 12 | 8 | 2 | 0 | 0 | 0 | 0 | 2 |
+| `LAUNCH_Science` | 18 | 0 | 2 | 10 | 0 | 0 | 0 | 6 |
+| `BUILD_Humanities` | 6 | 0 | 0 | 6 | 0 | 0 | 0 | 0 |
+| `GROW_Humanities` | 6 | 5 | 0 | 0 | 0 | 0 | 0 | 1 |
+| `LAUNCH_Humanities` | 6 | 5 | 0 | 0 | 0 | 0 | 0 | 1 |
+| **total** | **132** | **88** | **8** | **16** | **0** | **0** | **0** | **20** |
+
+**The two passes agreed on 112 of 132 rows and disagreed on 20.**
+
+| pack | lesson | data pass | deck pass | |
+|---|---|---|---|---|
+| `BUILD_ASDAN` | `BUILD_A2_CON_W2` | ALIGNED | SURFACE-SPLIT |  |
+| `BUILD_Science` | `W11A` | SURFACE-SPLIT | MISALIGNED | ⚠ calendar |
+| `BUILD_Science` | `W11B` | SURFACE-SPLIT | MISALIGNED | ⚠ calendar |
+| `BUILD_Science` | `W12A` | SURFACE-SPLIT | MISALIGNED | ⚠ calendar |
+| `BUILD_Science` | `W12B` | SURFACE-SPLIT | MISALIGNED | ⚠ calendar |
+| `BUILD_Science` | `W8A` | SURFACE-SPLIT | DELIBERATE-DIVERGENCE | ⚠ calendar |
+| `BUILD_Science` | `W8B` | SURFACE-SPLIT | DELIBERATE-DIVERGENCE | ⚠ calendar |
+| `GROW_ASDAN` | `ENT_A2_W5` | ALIGNED | PARTIAL |  |
+| `GROW_Humanities` | `W14` | ALIGNED | DELIBERATE-DIVERGENCE | ⚠ calendar |
+| `GROW_Science` | `W10B` | PARTIAL | ALIGNED | ⚠ calendar |
+| `GROW_Science` | `W12B` | PARTIAL | ALIGNED | ⚠ calendar |
+| `LAUNCH_ASDAN` | `COMM_W10` | ALIGNED | DELIBERATE-DIVERGENCE |  |
+| `LAUNCH_ASDAN` | `PEQ_W12` | PARTIAL | DELIBERATE-DIVERGENCE |  |
+| `LAUNCH_Humanities` | `LAUNCH_HUM_W12_Fieldwork_Data_Graphs.htm` | PARTIAL | ALIGNED | ⚠ calendar |
+| `LAUNCH_Science` | `W10L2` | MISALIGNED | PARTIAL | ⚠ calendar |
+| `LAUNCH_Science` | `W11L1` | MISALIGNED | SURFACE-SPLIT | ⚠ calendar |
+| `LAUNCH_Science` | `W12L1` | MISALIGNED | SURFACE-SPLIT | ⚠ calendar |
+| `LAUNCH_Science` | `W12L2` | MISALIGNED | SURFACE-SPLIT |  |
+| `LAUNCH_Science` | `W13L1` | MISALIGNED | SURFACE-SPLIT | ⚠ calendar |
+| `LAUNCH_Science` | `W8L1` | MISALIGNED | DELIBERATE-DIVERGENCE | ⚠ calendar |
+
+**None of these was broken by picking one.** The deck reader is better informed on some of
+them — it saw a "Staff Ready · SOW position" card in `LAUNCH_ASDAN/COMM_W10` that rewrites
+the SoW cell, and a qualification-boundary note in `PEQ_W12` that makes the missing
+sign-off deliberate rather than absent — and that is exactly the temptation the rule
+exists to refuse. Better informed on the row is not the same as right about the class.
+
+### Tier 2: 28 rows, and not one applied
+
+§Z7 makes any Tier-2 item a hold, and Tier 2 is *any* change to an LO, a success criterion,
+or what a pupil actually does. **28 rows carry one from at least one pass. All are diffed
+and held; none is applied.**
+
+**And the Tier-2 count is itself contingent.** 22 of the 28 sit on rows whose SoW cell
+changes with the §Z2 ruling, so ruling the calendar the other way would dissolve most of
+them. **6 stand regardless of it**, and they are two different things:
+
+- **5 BUILD_Humanities rows.** Both passes call them MISALIGNED and the deck reader
+  tiers them Tier 2, because the pack teaches the lower Tees, the 1825 railway and the
+  ironstone chain against a `World About Me` half-term of festivals, Remembrance and
+  Human Rights Day. Neither calendar reading matches; closing the gap would mean
+  rewriting six lessons or re-owning the strand. **Held.**
+- **`GROW_ASDAN/ENT_A2_W5`.** The deck reader found the Young Duke enrichment challenge
+  repurposed as an instrument for the enterprise project — *"one practical project
+  improvement rather than a broad environmental or social-impact claim"* — and a
+  Supported route on which no challenge is attempted at all. The data pass, which could
+  not see the route ladder, called it ALIGNED. **Held**, and it is one of the 20
+  disagreements above, so it is doubly not mine to settle.
+
+Full per-row detail, both readings and both tiers, in `_next6/SOW_MATRIX.md`.
+
+## §Z2 — The calendar conflict: RULE 3, recorded, nothing changed
+
+| | Autumn shape | source |
+|---|---|---|
+| **SoW grid** | Aut1 W1–W7 + Aut2 W1–W7 = **14 weeks** | all three workbooks, read directly; the half-term rows agree (*"Aut 1 · Sep to Oct (7 wks)"*) |
+| **repo calendar** | Aut1 W1–W8 + Aut2 W9–W15 = **15 weeks** | `_passpq/tools/l2k_plan.py` `BLOCKS`; `Planning/*/README.txt` — *"Aut 1 = 8 weeks (W1 1 Sep → W8 19 Oct)"*, *"W8 = w/c 19 Oct ← LAST WEEK OF AUT 1"*, *"The LA calendar confirms the 8-week Aut 1"*; `_assert_calendar()` passes |
+
+They disagree by exactly one week. **§Z2's rule 1 (the SoW governs where its grid is
+explicit) and rule 2 (the repo calendar governs where the SoW is silent) both fire and point
+opposite ways — which is rule 3: record both, change nothing, put it to Matt.**
+
+**And each ASDAN pack is internally consistent under a *different* reading, in its own
+manifest:**
+
+| pack | states | consistent only under |
+|---|---|---|
+| BUILD_ASDAN | `"Autumn 2 · Week n"` **and** `continuationWeek` 9–14 | **CALENDAR** — Aut2·W1 = estate W9 |
+| LAUNCH_ASDAN | `pack_week` 7–12 **and** `source_week` Aut1·W7, Aut2·W1–W5 | **SoW** — pack W8 = Aut2·W1, so Aut1 ends at W7 |
+
+Neither pack is wrong on its own terms. **The estate has two conventions in use at once**,
+which is the finding N5 could not reach without this matrix.
+
+### The cost of each reading
+
+| reading | cost |
+|---|---|
+| **SoW governs** | every lesson lands on a real SoW cell, 132/132. BUILD_ASDAN and GROW_ASDAN re-seat to estate W8–W13; LAUNCH_ASDAN to W7–W12. BUILD_ASDAN's own `continuationWeek` then contradicts its own term label. |
+| **calendar governs** | **7 Science lessons land on `Aut1·W8`, a cell the SoW does not have** — the workbook supplies 14 autumn rows for a 15-week autumn. 125/132 map. LAUNCH_ASDAN re-seats to W7–W13. |
+
+**Packs that would move under each reading** are in `_next6/SOW_MATRIX.md`. **No week number,
+term tag, sequence chip, manifest, checksum or nav string was changed.** This is a named stop
+condition and the ruling is Matt's.
+
+### The verdicts are **not** unaffected by it — 60 of 132 rows turn on the ruling
+
+An earlier draft of this section said the alignment verdicts were unaffected, because the
+packs that name their own half-term week are joined on that claim and select the same cell
+either way. That is true of the three ASDAN packs. **It is false of the other six.**
+BUILD/GROW/LAUNCH Science and Humanities state a *bare estate week* (`W10`, `SCI_L_W10L1_…`)
+and nothing else, so the calendar is the only thing that can place them — and the two readings
+place them one cell apart.
+
+| pack | rows | select a **different** SoW cell under the two readings | land on a cell the SoW does not have |
+|---|---:|---:|---:|
+| BUILD_ASDAN | 24 | 0 | 0 |
+| GROW_ASDAN | 18 | 0 | 0 |
+| LAUNCH_ASDAN | 30 | 0 | 0 |
+| BUILD_Science | 12 | 12 | 2 |
+| GROW_Science | 12 | 12 | 2 |
+| LAUNCH_Science | 18 | 18 | 3 |
+| BUILD_Humanities | 6 | 6 | 0 |
+| GROW_Humanities | 6 | 6 | 0 |
+| LAUNCH_Humanities | 6 | 6 | 0 |
+| **total** | **132** | **60** | **7** |
+
+**60 of 132 lessons select a different SoW outcome depending on a ruling that has not been
+made, and on 54 of them the verdict genuinely turns on it.** The other 6 — the whole of
+BUILD_Humanities — score zero against *both* candidate cells, so their verdict stands either
+way; "the cells differ" and "the answer changes" are not the same claim and are counted
+separately here. The verdict pass was handed one of the two readings — the SoW grid, §Z2's own
+rule 1 — and had no way to know the other existed.
+
+### Two more instruments, keyed to content and to the deck's own printed outcome
+
+`_next6/tools/z1_join_probe.py`. Neither reads a week number, and both consume the two
+candidate cells the matrix already carries rather than re-deriving them, so neither shares
+reasoning with the join that produced them:
+
+| instrument | keyed to |
+|---|---|
+| **CONTENT** | content-word overlap between what the deck *teaches* — title, objective, success criteria — and each candidate outcome |
+| **PRINTED** | sequence similarity between the outcome the deck *prints for itself* (its sow-strip, or its manifest row) and each candidate outcome. This is the instrument that settled the ASDAN off-by-one 24/24. |
+
+```
+                     --------- CONTENT ---------        --------- PRINTED ---------
+pack                     SoW calendar  weak  tie@0   n/m      SoW calendar  weak  tie@0   n/m
+BUILD_Humanities           0        0     1      5     0        0        0     0      0     6
+BUILD_Science              4        4     2      0     2        4        4     2      0     2
+GROW_Humanities            4        0     2      0     0        6        0     0      0     0
+GROW_Science              10        0     0      0     2       10        0     0      0     2
+LAUNCH_Humanities          4        0     2      0     0        0        0     0      0     6
+LAUNCH_Science             0        6     8      1     3        0        1    14      0     3
+```
+
+*weak* = the two cells score within the margin floor of each other, so the row states no
+reading. *tie@0* = neither cell matches at all, so the calendar ruling cannot rescue the row.
+*n/m* = not measurable: the calendar reading supplies no cell, or the deck prints no outcome.
+
+**Both instruments point the same way in every pack, and there are zero row-level
+disagreements between them.**
+
+### The margin floors are measured from the noise, not chosen against the answer
+
+Sequence similarity never returns exactly equal for two different strings, so with no floor
+the PRINTED instrument declares a winner on pure noise — under the randomisation red-proof it
+returned GROW_Science 1 to 9 on text that means nothing. So each instrument carries a margin
+floor taken from the **95th percentile of its own margin distribution under that
+randomisation**:
+
+| instrument | noise median | noise p95 → floor | real median |
+|---|---:|---:|---:|
+| CONTENT | 0.000 | **0.34** | 0.600 |
+| PRINTED | 0.075 | **0.23** | 0.484 |
+
+**A first draft used 0.15 for PRINTED. That was wrong** — it sits below the noise *p90* of
+0.191, so 9 of 41 randomised rows would have cleared it. It is recorded here rather than
+quietly replaced, because a floor chosen for its effect on the real run is not a floor.
+
+**Red-proofed twice:**
+
+| perturbation | expected | got |
+|---|---|---|
+| the two candidate cells swapped in the input | every column mirrors | **exact mirror** |
+| the outcome text randomised across all rows | no reading survives | **none does** — every pack falls to *weak* or *tie@0* on both instruments bar two stray BUILD_Science rows |
+
+### What the four instruments together say
+
+**The estate does not have one convention; it has both, and the split runs inside the teaching
+packs as well as inside the ASDAN manifests.**
+
+- **GROW_Science is authored against the SoW grid**, decisively and on both instruments: its
+  decks print the SoW cell **verbatim** — `W9` prints *"Compare and group rocks…"*, `W11`
+  prints *"Describe causes and effects of global warming…"*, ten rows at similarity 1.00 to
+  the SoW cell and never once to the calendar cell. GROW_Humanities and LAUNCH_Humanities
+  likewise, 4–6 rows to nil.
+- **LAUNCH_Science is authored against the repo calendar.** It never once scores a SoW win on
+  either instrument. `W10L2` *Growth and Differentiation* scores 1.00 on content against the
+  calendar cell *"Explain growth & stem cells"* and 0.33 against the SoW cell *"Stem-cell
+  ethics discussion"*; `W12L1` prints *"Describe DNA, genes and chromosomes."* — the calendar
+  cell verbatim, 0.94 against it and 0.39 against the SoW one.
+- **BUILD_Science is split against itself**, 4 rows to 4 on both instruments, and this is the
+  one place the conflict is a genuine pack defect rather than an unmade ruling. `W9` prints
+  the SoW cell at 1.00; `W12` prints the *calendar* cell at 1.00. A single pack cannot be on
+  both readings at once, so whichever way §Z2 is ruled, half of BUILD_Science moves. Its own
+  sow-strip and its own week tag disagree — which is the estate's definition of
+  **SURFACE-SPLIT**, and the data verdict pass reached that label independently.
+
+### What this does to the verdicts, and what I did not do about it
+
+The data pass returned **22 MISALIGNED**, of which **16 are LAUNCH_Science** — and the agent
+reached that verdict honestly, writing *"the whole pack sits one week later than the SoW cells
+it is joined to"* and tiering them **Tier 1, a stale week anchor, not an LO edit**. On the
+repo-calendar reading those rows are largely ALIGNED. The verdict is not a property of the
+lesson; it is a property of the unmade ruling.
+
+**So those rows are reported under both readings and no verdict is asserted for them.** This is
+the order's own stop condition — *"a §Z2 lane conflict where SoW and repo calendar disagree"* —
+and the honest output is the pair, not a pick.
+
+**BUILD_Humanities survives both readings and is a real finding.** Its six decks teach the lower
+Tees, the 1825 Stockton & Darlington Railway, the ironstone chain and dated town growth; the
+`World About Me (Humanities)` strand's Aut2 cells ask for festivals of light, comparing
+celebrations, handling festival artefacts, Remembrance and Human Rights Day. **Five of six rows
+are tie@0 — neither reading matches at all** — so shifting the calendar by a week does not
+rescue it: the whole half-term of that strand is festival content and the whole pack is
+local-history content. That is a strand-ownership question for Matt, not a week number, and it
+is Tier 3: nothing in it is fixable by editing a lesson.
+
+I checked the obvious instrument defect first and it is not one: `World About Me (Humanities)`
+and `RE & World Views` are separate blocks in the workbook with separate outcomes, so the
+grid extractor has not carried a merged cell across the two, and `STRAND_MAP` points at the
+right one.
+
+## §Z3 — The guidance toggle, applied
+
+**380 tags across 126 lesson decks.** PH-3's mechanism, not a new one:
+`data-mbm-guide="staff|route"`, hidden unless `html.mbm-guide-on`, an **ⓘ Guidance** button
+in the controls, key **G**, `localStorage mbm_guide_v1`, default hidden, hidden not removed.
+The CSS, script and button are PH-3's own, taken from `_eca1/tools/guidepatch.js` rather than
+retyped. The **patcher** is new because PH-3's classifies by `.li-box`/`.task-box`/
+`.wit-panel`, which occur **0 times in all 159 files**.
+
+**Selection happens in a real DOM, application in the source**, because three tests that
+decide the hide-set cannot be done on markup:
+
+1. **is it visible at all?** Half the GROW_ASDAN candidates sit inside the TA briefing
+   overlay, which this order says to leave alone. Tagging them is churn at best and a second
+   hiding mechanism on top of the estate's TA layer at worst.
+2. **is it inside a Lundy zone box?** Those stay visible. A source-side proximity window
+   cannot answer it — a first attempt using a 2500-character window blocked **100% of
+   candidates in three packs**, because these decks carry `.lundy` containers throughout.
+   `closest()` answers it exactly.
+3. **who is the text talking to?** Needs rendered text, not markup.
+
+The hide-set is committed as `_next6/evidence/Z3_HIDE_SET.json` so it can be argued with.
+
+### What is hidden, and what is not
+
+| pack | selectors | decks | tags |
+|---|---|---:|---:|
+| BUILD_ASDAN | `.chips .chip:last-child` · `p.small` · `.hero p` (label-keyed) · `.box.objective`/`.box.good` (label-keyed) · `.box.rehearsal` (text-keyed) | 24 | 216 |
+| GROW_ASDAN | `.guard` · `.evidence-note` | 18 | 50 |
+| LAUNCH_ASDAN | `.box.screen` | 30 | 30 |
+| BUILD_Science | `p.sowline` | 12 | 12 |
+| GROW_Science | `p.sowline` | 12 | 12 |
+| LAUNCH_Science | `p.sowline` | 18 | 18 |
+| BUILD_Humanities | `.reportback` | 6 | 6 |
+| GROW_Humanities | `.lnote` | 6 | 36 |
+| LAUNCH_Humanities | — | 0 | 0 |
+| **total** | | **126** | **380** |
+
+*(An earlier draft of this table gave BUILD_ASDAN 192 and folded the three Science packs into
+one row of 42. The rows did not sum to the total. Re-counted from the tree: 216, and Science
+split out. The total was right; the breakdown was not.)*
+
+**No element was tagged `lundy`.** Counted in the tree: 266 `staff`, 114 `route`, **0
+`lundy`** across the nine packs — so the order's instruction to keep the Lundy zone boxes
+visible is satisfied by construction and not merely by intent. (The estate's 175 pre-existing
+PH-3 files do carry 280 `lundy` tags; none of those files is in these nine packs.)
+
+**`.hero p` reached the paragraph GUIDE_TAG_MAP predicted would need an authored marker.**
+The map said BUILD_ASDAN's unclassed `Exact SOW outcome` paragraph was the one family in the
+nine packs needing a new attribute. It is unclassed *and* inside an unclassed div, so
+`.hero > p` reaches nothing — but `.hero p` plus the leading-`<strong>` label reaches exactly
+those two paragraphs and no pupil-facing one. **No marker was authored anywhere.** The map's
+estimate of 25 sites is superseded by 0.
+
+**LAUNCH_Humanities received 0 tags**, and that is a correct outcome, not a failure: its
+`.lnote` all sit inside `.lundy` zone boxes, which stay visible.
+
+**Kept visible, verified:** the pupil's `Learning objective:`, the success criteria, the
+`.lundy` SPACE/VOICE/AUDIENCE/INFLUENCE zone strip, the route ladder, the task. GROW_ASDAN's
+`.soft` reads as staff to a keyword probe and is not — *"Standard: add a reason or example.
+Optional reach: name what evidence could change your first answer."* is addressed to the
+pupil, and it is untagged.
+
+### The order's parenthetical is false, and asserting it is what found that
+
+§Z3 says *"print CSS hides the slide container, so slide-side tagging must never reach it —
+assert it, do not reason about it."* **Asserted: false for two packs.** GROW_ASDAN and
+LAUNCH_ASDAN both carry an `@media print` rule that reveals `.slide` — LAUNCH_ASDAN's is
+N6-I's own N3 addendum, added so the deck would print at all. In those **48 decks a
+slide-side tag does reach paper**, and with the toggle defaulting to hidden it would delete
+staff content from a printed artefact that used to carry it.
+
+One addition to PH-3's CSS, and it is load-bearing:
+
+```css
+@media print{html:not(.mbm-guide-on) [data-mbm-guide]{display:revert!important}}
+```
+
+**Red-proved.** With it removed, GROW_ASDAN's printed characters drop **5019 → 4557**, deleting
+462 characters of staff content from paper. Science, whose slides do not print, is unchanged
+— the negative control. Without the exemption the order's own print gate cannot pass.
+
+### Gates
+
+| gate | result |
+|---|---|
+| strip → byte-identical to pre-patch | **126/126** |
+| idempotent on re-run | 126 skipped, 0 re-tagged |
+| **print output identical** (pages, ink to 1e-6, characters) | **198/198 renders** |
+| toggle-ON: lesson text identical to pre-patch | **126/126** |
+| toggle-ON: element count identical | **126/126** |
+| default OFF hides every tagged element | **126/126**, 0 tagged visible |
+| `s24-print-renders` | **PASS**, all nine packs |
+| estate battery G1, G2, G3, G5, G6, G12 | **PASS**, all nine packs |
+| checksums | 126 entries regenerated, **0 mismatches** across all nine packs |
+
+**Measured and reported rather than tuned away:** adding the ⓘ button wraps the control bar
+to two rows in **36 of 126 decks** (Humanities 1250×44 → 1250×96, LAUNCH_ASDAN 1256×58 →
+1256×96). Computed styles are identical in the other 90. The gate is **text and element
+count**, because hashing computed styles while deliberately adding a visible control measures
+the control, not the patch — and extending an exclusion list until the hash matched would be
+tuning a gate rather than running one.
+
+**5.2% of the on-screen text (11,346 characters of 219,436) is hidden by default.**
+
+### Three bugs this section's own gates caught
+
+1. **The markers bracketed the whole document.** A first version opened before `</head>` and
+   closed before `</body>`, so `strip()` removed everything between them — the entire body.
+   The reversibility gate caught it on the first run: **0 of 126** stripped back, every one
+   40 KB short. Markers must wrap what they own and nothing else.
+2. **Two rules selected the same element.** `p.small` and `.hero p` both reach the SoW
+   cell-reference paragraph; applying both edits to one span produced
+   `<p class="small">="route" class="small">`, a corrupted tag, in 24 files. Deduped by span,
+   first rule wins.
+3. **The applier refused to guess, and it was right to.** The signature for an unclassed
+   `<p>` found no candidates while it required a `class=""` match, so it reported a mismatch
+   and patched nothing rather than tagging the nearest paragraph.
+
+## §Z4 — HALTED on its own hard gate
+
+**The three Art zips are not attached to this session.** The uploads directory holds only the
+N6-I order file; a filesystem search for `*Art_Spring2*`, `*Teesworks*Reclaimed*` and
+`*6x40min*` returns nothing. **Nothing was reconstructed**, as the order requires. No
+destination collision check was needed because nothing was landed. **N12 stays CLOSED —
+REFUTED** and I3's ruling stands unchanged: the packs land at Spring 2, unaltered, in a
+session that has them.
+
+## §Z5 — External links: reconciled, and the count difference is proved
+
+**26 unique citation URLs across the nine landed packs**, reproduced by a second, independent
+derivation (a different script, same figure).
+
+**The reconciliation, proved from the committed record rather than assumed.** The order asks
+which instrument is wrong between chat's 34 and I4's 26. Neither, quite — there are three
+figures and each is right about a different population:
+
+| figure | population | status |
+|---|---|---|
+| **34** | chat's count across twelve packs | an over-count; Pass N6 corrected it by measurement |
+| **30** | Pass N6's measurement across twelve packs | correct for twelve packs |
+| **26** | this pass, nine landed packs | correct for nine |
+
+**30 − 26 = 4, and the four are nameable**: comparing N6's committed host list to mine, the
+absent ones are **Tate ×2, Tees Valley Museums ×1, and Teesside University / MIMA ×1** — all
+art-gallery and art-education citations, which is exactly what three Art packs on a Teesworks
+sculpture unit would carry. The hypothesis that 26 is "the nine landed packs only" is
+therefore **proved, not assumed**.
+
+**MEASUREMENT INVALID — venue.** `example.com` → `000`, `historicengland.org.uk` → `000`,
+**control `pypi.org` → `200`** in the same run. That is the venue's network allowlist, not
+link rot. **No reading was recorded and nothing is proposed for removal.** A second reading
+an hour later would be a second invalid measurement, so none was attempted.
+
+## §Z6 — I6 CLOSED — PREMISE REFUTED
+
+Recorded at the head of the I6 section above with its four measurements, so no later pass
+reopens it. In summary: the LAUNCH column states a floor for **0 of its 13 subjects**; the
+ladder's own `A2` says each cell shows the pathway's **target**, with a floor only "where
+relevant"; `D13` is **byte-identical across all three workbooks**, so it is shared
+front-matter; and **28 of the 29** LAUNCH-workbook cells that name a PEQ level name Entry 3,
+the one exception being the GROW column. "D13 contradicts the estate anchor" read a target
+cell as a floor.
+
+**One live item, as a question and not a defect:** `_passsl/` — the pass that ingested the
+LAUNCH SoW — carries **no level statement at all** across its five `.md` files, so nobody has
+ruled on this on the record. A one-line confirmation for Matt and Cheryl.
+
+## §Z7 — Merge: **HELD**, on three grounds, two of them the order's own stop conditions
+
+§Z7 says merge only if **all** of its conditions hold, and prints each. They do not all hold.
+
+### 1 · A conflict between two requirements of this order — **the decisive one**
+
+**§Z3 mandates `localStorage mbm_guide_v1`. §Z7's gate list requires "no browser storage".**
+Both cannot be true, and applying §Z3 is what makes §Z7 fail.
+
+Measured: **252 `localStorage` occurrences, all 252 inside the `n6z-guide` marked block, all
+for the single key `mbm_guide_v1`, 0 outside.** The packs carried none before. G4 offline
+integrity therefore fails in **8 of 9 packs** (the ninth, LAUNCH_Humanities, received no tags)
+and the battery is **OVERALL: RED**.
+
+**I have not narrowed gate 4 and I have not dropped persistence.** Either would be breaking a
+tie by picking one, which this order's own standing rule forbids. The estate already named
+the fork, in N7: **narrow gate 4 to that one key**, or **ship the toggle without persistence**.
+It is Matt's call, and the merge waits on it.
+
+**The fact that bears on the choice, and a round trip worth recording.** I doubted the "175
+existing carriers" figure mid-pass, re-measured with a differently-keyed probe — files
+containing the string `localStorage` — got 532 estate-wide and 406 outside these packs, and
+concluded the 175 was unreproducible. **It was not; my second probe was keyed to the wrong
+thing.** 175 is the count of files that already carry *this exact mechanism*, and it verifies
+exactly on `origin/main`:
+
+| measured on `origin/main` | count |
+|---|---|
+| HTML files carrying `data-mbm-guide` | **175** |
+| …of those, files using `localStorage` | **175** |
+| …of those, files using the key `mbm_guide_v1` | **175** |
+
+**The estate already ships this toggle, with this key, in 175 files that gate 4 has never been
+run against.** So "no browser storage" is not an invariant §Z3 broke; it is a gate that only
+the nine new packs were passing. (The wider `localStorage` figures are real too — 532
+estate-wide, 406 outside these packs, 267 with an `mbm_` key — but they are not what "narrow
+gate 4 to that one key" is measured against, and quoting them in its place was my error.)
+
+**And this is the standing rule catching me, not an instrument.** A second probe disagreed
+with a recorded number, and my first instinct was to treat the newer reading as the correct
+one and rewrite the record. That is precisely the tie-break the order forbids. The
+disagreement was the finding: two probes, two different questions, and the older number was
+answering the right one.
+
+### 2 · A §Z2 lane conflict — a named stop condition
+
+The SoW grid and the repo calendar disagree by one week, estate-wide, and §Z2's rules 1 and 2
+both fire in opposite directions. Recorded above; nothing relabelled.
+
+**And the conflict is not cosmetic: 60 of 132 lessons select a different SoW outcome
+depending on which reading is ruled correct — on 54 of them the verdict changes with it** —
+and 7 land on `Aut1·W8`, a cell the workbooks do not have. Two further instruments — content, and the deck's own printed outcome,
+neither reading a week number — say the estate uses **both** conventions: GROW_Science is
+authored against the SoW grid and prints its cells verbatim; LAUNCH_Science is authored
+against the repo calendar and never once scores a SoW win; BUILD_Science is split 4 to 4
+against itself. Ruling either way moves real packs, and the ruling is Matt's.
+
+### 3 · §Z1's Tier-2 count — **28 rows, none applied**
+
+Any Tier-2 item is a hold under §Z7 and there are 28 of them, so this ground stands on its
+own. 22 dissolve or survive on the §Z2 ruling; **6 stand regardless** — five BUILD_Humanities
+rows where the pack and the strand teach different subjects, and `GROW_ASDAN/ENT_A2_W5`, where
+one pass saw a Supported route on which no enrichment challenge is attempted and the other
+could not. Diffed in `_next6/SOW_MATRIX.md`; not one applied.
+
+**And §Z1 itself did not come out clean.** The two verdict passes returned different classes
+on **20 of 132 rows**, and every one is kept as UNRESOLVED with both readings shown. That is
+not a defect in the matrix; it is the matrix reporting honestly. But it means no row in that
+20 has a settled verdict, and §Z7 asks for a matrix "complete for all 192 lessons" — on 132
+of them it is complete and on 20 of those it is complete in the sense of *knowing that the
+answer is contested*, which is not the same thing.
+
+### The rest of §Z7's list, each printed
+
+Re-run in full at the merge-candidate tip, *after* §Z3 had patched 126 lesson files —
+`_next6/evidence/Z7_GATE_BATTERY.txt`. **55 PASS · 8 FAIL · 9 MEASUREMENT INVALID · OVERALL
+RED.** All 8 failures are gate 4 and all of them are the toggle: the per-pack violation count
+equals the per-pack `localStorage` count exactly, 48/36/60/24/24/36/12/12/0. All 9 INVALIDs
+are `s23-no-learner-names` correctly refusing to pass without its reference list, which is not
+in the repository and should not be.
+
+**`s24-print-renders` is green on all nine packs at this tip: 159 surfaces, 231 renders, 1113
+pages, near-blank pages 0, and learner-confirmation 26 + 19 + 30 = 75/75** — N6-I's I1 number,
+re-proved on paper after 126 files were rewritten underneath it.
+
+| condition | result |
+|---|---|
+| `node --check` + `json.loads` on every block | **PASS**, 9/9 packs |
+| tag balance and duplicate ids 0 | **PASS**, 9/9 |
+| `timings` sum to 40 | **PASS**, 9/9 |
+| offline integrity | **FAIL** — see 1 above; every violation is §Z3's own toggle |
+| reduced motion, no `@keyframes` reintroduced | **PASS**, 9/9 |
+| links and manifest ↔ disk, both ways | **PASS**, 9/9 |
+| additivity, strip → byte-identical | **PASS** — 126/126 for §Z3 |
+| sentinel `ll-g:loop-mark` SET-invariance (the constant 45 retired) | **PASS** — 72 at the branch point, 72 now |
+| `s23-no-learner-names` exits MEASUREMENT INVALID without its list | **PASS** — 9 packs, and the reference list is still absent from the repository, which is correct |
+| `s24-print-renders` | **PASS**, every landed pack |
+| every new gate proven red once | **PASS** — the print exemption (462 characters lost from paper without it), the instrument-split comparator (all three deck shapes), the names predicate (seeded fixture reds the real tree) |
+
+### A gate that was red for two commits, and nothing said so
+
+Running the `s23` predicate half for §Z7 produced a **names-scan hit** — a named stop
+condition — so it was investigated before anything else:
+
+```
+_next6/evidence/S24_EVIDENCE_SURFACES.txt:
+  CAREERS_W11_<the mock-interview lesson's filename>_LAUNCH
+```
+
+**The token is elided even here**, and that is not squeamishness: quoting it in this file
+would make *this file* an eighth carrier and force an eighth allowlist entry, which is the
+whole point being made below. The token itself is in
+`tools/verify_fixture_names.mjs`, where it is declared once with its reason.
+
+**It names no person.** It is a *file path* in the s24 coverage contract, and the string is
+the same real LAUNCH ASDAN W11 lesson title Order N6 already ruled on and allowlisted in four
+other carriers; it trips the predicate only because `MOCK` is a fixture marker and the
+neighbouring words are ordinary titlecase.
+
+**And then it happened a second time, in this order's own evidence.** Committing the battery
+log `_next6/evidence/Z7_GATE_BATTERY.txt` tripped the same predicate on the same string, for
+the same reason: the log names every surface each pack renders, so it carries the lesson's
+file path. A sixth per-file allowlist entry, red-proved the same way — seeding
+the checker's own red vector — a `CANARY_PUPIL_` prefix on a first name and a listed
+surname — into that very file still reds the gate, so the entry did not widen
+anything.
+
+**And a third time, an artefact later, in the same order.** `_next6/evidence/Z1_VERDICTS.json`
+keys every row on its file path, so it carries the string too. **Seventh carrier, second
+within N6-Z.**
+
+**The recurrence is the finding.** This string trips on *every* artefact that quotes a
+LAUNCH_ASDAN file list, and an allowlist that grows once per artefact is saying something
+about the predicate, not about the artefacts. Widening the predicate is a ruling on how the
+estate detects learner names, so **it is not made here** — it is on the list for Matt. Each
+entry stayed narrow and each was red-proved: seeding the checker's own red vector into the very
+file just allowlisted still reds the gate, both times.
+
+**The honest part: N6-I committed that file without running this gate**, so the estate's names
+gate has been red since `3c683d9f` and I did not notice. Fixed by extending the existing
+**per-file** allowlist to the fifth carrier with the same recorded reason — not by exempting
+the file, which the allowlist's own comment calls *"an excuse with a filename"*. The gate is
+now clean and its self-test passes both directions. The miss is recorded in the allowlist
+entry itself, because the useful fact is not the string; it is that a gate went red for two
+commits and stayed quiet.
+
+
+## §Open — what remains for Matt, one line each
+
+1. **The §Z2 calendar ruling.** SoW grid (14-week autumn, all three workbooks) or repo calendar (15 weeks, from real dates) — 60 rows change cell, 54 change verdict, 22 of 28 Tier-2 items dissolve or survive on it, and 7 Science lessons land on a cell the workbooks do not have.
+2. **`BUILD_Science` is split against itself, 4 rows to 4** — whichever way §Z2 is ruled, half that pack moves; that half is a pack defect, not a ruling artefact.
+3. **`BUILD_Humanities` strand ownership.** Six decks of local Teesside history against a `World About Me` half-term of festivals and Remembrance; both calendar readings score zero, so no ruling rescues it.
+4. **§Z3 vs §Z7 on browser storage.** Narrow gate 4 to `mbm_guide_v1` — 175 estate files already carry exactly that mechanism — or ship the toggle without persistence. The merge waits on this one.
+5. **28 Tier-2 items, diffed and held, none applied**, in `_next6/SOW_MATRIX.md`.
+6. **19 rows where the two verdict passes disagree**, both readings kept; no tie was broken.
+7. **§Z4: the three Art zips are not attached to this session** — nothing was reconstructed and nothing is claimed about them.
+8. **§Z5: link liveness is MEASUREMENT INVALID in this venue**, not a removal signal; 26 URLs across the nine landed packs, and the 4 that make up N6's 30 are named. Nothing removed.
+9. **§Z6 is closed as PREMISE REFUTED**, with one live item: `_passsl/` carries no level statement, so nobody has ruled on the record.
+10. **The names predicate.** Its allowlist now grows once per artefact that quotes a LAUNCH_ASDAN file list; widening the predicate is a ruling on how the estate detects learner names.
+11. **Five records across three earlier passes cite pre-edit workbook shas.** No verdict here depends on them; a later pass reading them will audit against a workbook that is gone.
+12. **Branch deletions remain yours.** Nothing was deleted.
