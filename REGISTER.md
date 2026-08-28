@@ -2958,8 +2958,19 @@ the lesson decks — while `.chip` is 24 of 96 and `Exact SOW outcome:` is in an
 `<p>`. So the hide-set is one-third mappable and two-thirds authoring: **66 marker sites
 across 40 files**. Route labels are pupil-facing and stay.
 
-**Open for Matt and Cheryl:** the LAUNCH accreditation contradiction, written up with both
-sources quoted and both readings costed. The framing is narrower than it looks — Pathway
-Ladder `D13` is not silent about Entry 3, it carries *"(E3–L1 only in 2026/27.)"*; what it
-lacks against `C13` is the word "Floor:". The estate anchor measures **126 occurrences across
-33 live files**, not 118, and **none of them is in the new packs**.
+**Open for Matt and Cheryl: the LAUNCH accreditation question — recorded, not resolved, and
+the premise does not survive measurement.** The order's framing is that `D13` gives LAUNCH
+"PEQ Level 1 Award" with no Entry 3 floor, so both sources cannot be right. Against that:
+the ladder's own `A2` says each cell shows the pathway's **TARGET** with a floor only "where
+relevant"; **no LAUNCH cell states a floor for any of the 13 subjects** (BUILD 10/13, GROW
+13/13, LAUNCH **0/13**); `D13` is **byte-identical in all three workbooks**, so it is shared
+front-matter rather than a statement about the LAUNCH cohort; **28 of the 29** cells in the
+LAUNCH workbook that give PEQ a level name Entry 3, the one exception being the GROW column;
+and `D13` is not silent about Entry 3 anyway — it carries *"(E3–L1 only in 2026/27.)"*, and
+what it lacks against `C13` is the word "Floor:". If the ladder is accepted as a target table
+the contradiction dissolves, but that acceptance is a ruling. The estate anchor measures
+**126 occurrences across 33 live-content files**, not 118 (139/38 raw at tip, 3 of them this
+order's own quotations), and **none is in the new packs**. A third string,
+`PEQ Entry 3 (Level 1 · Level 2 routes)`, 18 occurrences across the 6 live LAUNCH PEQ decks,
+agrees with neither. Nobody has ruled on the record: `_passsl/`, the pass that ingested the
+LAUNCH SoW, carries **no level statement at all**.
