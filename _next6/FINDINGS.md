@@ -1070,10 +1070,25 @@ machine matching proposes and reading disposes:
 | `.sowline` | Science ×3, 12/12/18 | *"Sequence outcome: Rocks: test hardness."* |
 | `.lesson-link` · `.small` | BUILD_ASDAN 24 each | the SoW cell reference and estate sequence |
 
-**The residue that needs a marker authored is two families in one pack**: BUILD_ASDAN's
-`Estate sequence` chip — `.chip` is 24 of 96, the other 72 being the lane, unit and week a
-pupil reads — and its `Exact SOW outcome` paragraph, which is unclassed inside `.hero`.
-**51 sites across 26 files.** So the job is mostly mappable, not mostly authoring.
+**Four more BUILD_ASDAN families are reachable by label- or position-keying**, which is the
+`STAFF_LABELS` mechanism `guidepatch.js` already implements — not by authoring anything:
+
+| selector | staff share | verified |
+|---|---|---|
+| `.chips .chip:last-child` | 24 of 96 chips | it is the `Estate sequence` chip in **24/24** decks |
+| `.box.objective` keyed on its `<strong>` label | 72 of 96 | exactly 24 each of `SPACE routine`, `Model aloud:`, `Connect:` — the fourth is the pupil's `Learning objective:` |
+| `.box.good` keyed on its label | 48 of 96 | `Authorship check:` and `Adult close` staff; `Success criteria` pupil; `Potential evidence: assessor review required` assessor |
+| `.box.rehearsal` keyed on its text | 24 of 120 | only *"Do not reveal the pupil's whole answer…"*; the other 96 are pupil-protective |
+
+**So exactly one family in one pack needs a marker authored**: BUILD_ASDAN's `Exact SOW
+outcome` paragraph, unclassed inside `.hero`, **25 files**. The job is almost entirely
+mappable.
+
+**And one selector that must NOT be tagged, measured rather than assumed.** `.model-step`,
+144 instances, reads exactly like step-by-step delivery instruction and any "Step" or "How
+it works" rule catches it — but it is **49–58% of its slide's text** on slides 4 and 6, so
+hiding it halves two slides per deck. That is the shape of the 140-of-175 incident the
+patcher's own comments record.
 
 **Route labels are pupil-facing and stay** — visible 19/19 in GROW_ASDAN and 30/30 in
 LAUNCH_ASDAN. Reading "route metadata" as a hide target, which the order's wording invites,
@@ -1090,7 +1105,8 @@ selector can target are different objects on this chassis.
 | work | scope | estimate |
 |---|---|---|
 | tag the ten clean selector families | the classes exist and are clean | a selector list plus the toggle |
-| author markers for the residue | 51 sites, 26 files, BUILD_ASDAN only | ~half a day with the checks |
+| label- and position-key four BUILD_ASDAN families | selectors that already exist | a selector list |
+| author markers for the residue | **25 sites, 25 files, BUILD_ASDAN only** | an hour or two with the checks |
 | render / visibility check per family per lane | already built and running | ~5 minutes per run |
 | the `localStorage` question | a ruling, not engineering | narrow gate 4 to `mbm_guide_v1`, or ship without persistence |
 | regression | ~40 of 159 files, additive and strip-reversible | low |

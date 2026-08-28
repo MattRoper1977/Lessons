@@ -35,9 +35,12 @@ Three things were measured that change what this job is:
    different thing from the briefing layer: delivery routines, authorship boundaries,
    named-adult actions, and SoW provenance.
 
-3. **Most of it already has a dedicated selector.** `.staff`, `.choose`, `.guard`,
-   `.evidence-note`, `.boundary`, `.screen`, `.reportback`, `.lnote`, `.sowline` are
-   purpose-built and clean. The unmappable residue is small and confined to BUILD_ASDAN.
+3. **Almost all of it is reachable with selectors that already exist.** `.staff`,
+   `.choose`, `.guard`, `.evidence-note`, `.boundary`, `.screen`, `.reportback`, `.lnote`,
+   `.sowline`, `.lesson-link`, `.small` are purpose-built and clean; four more BUILD_ASDAN
+   families need label- or position-keying rather than a new attribute. **Exactly one family
+   in one pack has to have a marker authored:** BUILD_ASDAN's `Exact SOW outcome` paragraph,
+   25 files.
 
 ---
 
@@ -158,14 +161,23 @@ because these are staff *labels* on prose blocks and the prose does not match th
 | Science ×3 | `.sowline` | 12, 12, 18 | **yes** | *"Sequence outcome: Rocks: test hardness."* | **clean — tag it** |
 | BUILD_ASDAN | `.lesson-link` | 24 | **yes** | *"…BUILD_A2_PFA_W1 · Estate sequence W9 · 'BUILD Weekly - Autumn'!C137"* | **clean — tag it** |
 | BUILD_ASDAN | `.small` | 24/24 in decks | **yes** | *"Source: 'BUILD Weekly - Autumn'!B181 · …!C181"* | **clean — tag it** |
-| BUILD_ASDAN | `.chip` | 24/96 | **yes** | *"Estate sequence W9"* — the other 72 are the lane, unit and week a pupil reads | **MIXED — needs a marker** |
-| BUILD_ASDAN | `.hero` | 24 | **yes** | holds `Exact SOW outcome:` **and** the lesson `<h1>` and objective | **MIXED — needs a marker** |
+| BUILD_ASDAN | **`.chips .chip:last-child`** | 24 | **yes** | *"Estate sequence W9"* — verified as the last chip in **24/24** decks, so a positional selector reaches it and the other three chips are untouched | **clean — tag it, no marker needed** |
+| BUILD_ASDAN | `.box.objective` **keyed on its `<strong>` label** | 72 of 96 | **yes** | `SPACE routine` · `Model aloud:` · `Connect:` are staff; the fourth, `Learning objective:`, is the pupil's. Exactly 24 of each, verified | **clean if label-keyed — class-wide would delete the objective from every deck** |
+| BUILD_ASDAN | `.box.good` **keyed on its label** | 48 of 96 | **yes** | `Authorship check:` and `Adult close` are staff; `Success criteria` is the pupil's and `Potential evidence: assessor review required` is the assessor's. 24 of each | **clean if label-keyed** |
+| BUILD_ASDAN | `.box.rehearsal` **keyed on its text** | 24 of 120 | **yes** | only *"Do not reveal the pupil's whole answer…"* is staff; the other 96 are pupil-protective (*"Screen rehearsal only…"* ×72, *"The sequence advances only when a person chooses"* ×24) | **clean if text-keyed** |
+| BUILD_ASDAN | `.hero` | 24 | **yes** | holds `Exact SOW outcome:` **and** the lesson `<h1>` and objective; the outcome paragraph is unclassed | **the one family that needs a marker authored — 25 files** |
+| BUILD_ASDAN | `.model-step` | 144 | **yes** | **KEEP VISIBLE.** Six per deck on slides 4 and 6, revealed one at a time by the teacher's button. They read as step-by-step instructions and any "Step"/"How it works" rule catches them — but measured, they are **49–58% of their slide's text**, so hiding them halves two slides per deck. This is the shape of the 140-of-175 incident. | **do not tag** |
 | all nine | `.prompt-ladder` / `.ladder` / `.adult-action` / `.mobile-teacher-tools` / `.print-note` | — | **no** | already inside a dialog, drawer or print-only block | **no action** |
 
-**So the hide-set is mostly mappable.** Ten selector families across the nine packs are
-clean and already exist. The residue that needs a marker authored is **two families in one
-pack**: BUILD_ASDAN's `Estate sequence` chip and its `Exact SOW outcome` paragraph, 51 sites
-across 26 files.
+**So the hide-set is almost entirely mappable.** Fourteen selector families across the nine
+packs are reachable with selectors that already exist — ten plain, and four in BUILD_ASDAN
+that need **label- or position-keying** rather than a new attribute (`.chips
+.chip:last-child`, and `.box.objective` / `.box.good` / `.box.rehearsal` keyed on their
+leading `<strong>` label, which is exactly the `STAFF_LABELS` mechanism `guidepatch.js`
+already implements).
+
+**The residue that genuinely needs a marker authored is one family in one pack**:
+BUILD_ASDAN's `Exact SOW outcome` paragraph, unclassed inside `.hero`, **25 files**.
 
 *(Two probe artefacts worth recording so a later pass does not chase them. `.enhanced` in
 the Science packs appears in the candidate list because its element is a `<style>` block and
@@ -194,8 +206,8 @@ Success criteria
 
 | text | carrier | can an existing selector reach it? |
 |---|---|---|
-| `Estate sequence W9` | `<span class="chip">`, the 4th of 4 | **no** — `.chip` also carries the three above it |
-| `Exact SOW outcome: Review progress and solve a problem as a team.` | unclassed `<p><strong>…</strong> …</p>` inside `.hero` | **no** — no class at all |
+| `Estate sequence W9` | `<span class="chip">`, the 4th of 4 | **yes** — `.chips .chip:last-child`, verified as this chip in 24/24 decks |
+| `Exact SOW outcome: Review progress and solve a problem as a team.` | unclassed `<p><strong>…</strong> …</p>` inside `.hero` | **no** — no class and no stable position. This is the one marker that has to be authored, in all nine packs |
 | `Source: 'BUILD Weekly - Autumn'!B181 · 'BUILD Weekly - Autumn'!C181` | `<p class="small">` | **yes** — `.small` is 24/24 clean in the lesson decks |
 
 **Would stay visible:**
@@ -222,10 +234,11 @@ staff text was written without a class of its own.
 | # | work | scope | estimate | what drives it |
 |---|---|---|---:|---|
 | 1 | **Tag the ten clean selector families** | `.choose` `.staff` `.guard` `.evidence-note` `.boundary` (GROW_ASDAN) · `.screen` (LAUNCH_ASDAN) · `.reportback` `.lnote` (Humanities) · `.sowline` (Science ×3) · `.lesson-link` `.small` (BUILD_ASDAN) | **a selector list, not an edit** — the classes exist and are clean | This is the part that really is patching. It is one CSS rule per family plus the toggle. |
-| 2 | **Author markers for the residue** | BUILD_ASDAN only: the `Estate sequence` chip (26 files) and the `Exact SOW outcome` paragraph (25 files) — **51 sites across 26 files** | **~51 marker insertions**, half a day with the checks | `.chip` is 24 of 96 (the other 72 are the lane, unit and week a pupil reads) and the outcome paragraph is unclassed inside `.hero`. Neither can be reached without adding something. |
-| 3 | **Render / visibility check per family per lane** | already built | **~5 minutes per run** | `s24-print-renders` renders all 159 to A4; `i5_guidance_visibility.mjs` walks every slide of all 159 and reports what reaches the screen. This was the expensive line item in the previous estimate and is not any more. |
-| 4 | **The `localStorage` question** | a straight fork, unchanged from N7 | **a ruling, not engineering** | PH-3 persists `mbm_guide_v1`; gate 4 requires 0 browser storage and every deck declares `storageKeys: []`. Narrow gate 4 to that one key (matching 175 estate carriers), or ship the toggle without persistence. |
-| 5 | **Regression** | 159 files, ~40 touched | **low** | Additive, markered, strip-reversible in the estate's usual pattern; `s24` and the existing battery both gate it. |
+| 2 | **Label- and position-key four BUILD_ASDAN families** | `.chips .chip:last-child` · `.box.objective` · `.box.good` · `.box.rehearsal`, keyed on the leading `<strong>` label | **a selector list** — `guidepatch.js` already implements `STAFF_LABELS` | Class-wide rules here are the dangerous ones: `.box.objective` class-wide deletes the pupil's `Learning objective:` from every deck. |
+| 3 | **Author markers for the residue** | BUILD_ASDAN only: the `Exact SOW outcome` paragraph, unclassed inside `.hero` | **25 marker insertions**, an hour or two with the checks | It is the only visible staff string in all nine packs with neither a class nor a stable position. |
+| 4 | **Render / visibility check per family per lane** | already built | **~5 minutes per run** | `s24-print-renders` renders all 159 to A4; `i5_guidance_visibility.mjs` walks every slide of all 159 and reports what reaches the screen. This was the expensive line item in the previous estimate and is not any more. |
+| 5 | **The `localStorage` question** | a straight fork, unchanged from N7 | **a ruling, not engineering** | PH-3 persists `mbm_guide_v1`; gate 4 requires 0 browser storage and every deck declares `storageKeys: []`. Narrow gate 4 to that one key (matching 175 estate carriers), or ship the toggle without persistence. |
+| 6 | **Regression** | 159 files, ~40 touched | **low** | Additive, markered, strip-reversible in the estate's usual pattern; `s24` and the existing battery both gate it. |
 
 ### What a toggle would and would not remove
 
