@@ -1129,7 +1129,31 @@ rather than extrapolated.
 
 ---
 
-## I6 — The accreditation contradiction, recorded and not resolved
+## I6 — **CLOSED — PREMISE REFUTED** (Order N6-Z · Z6, 2026-08-28)
+
+> **CLOSED — PREMISE REFUTED.** "D13 contradicts the estate anchor" was a misreading of a
+> **target** cell as a **floor**. Four measurements, each reproducible:
+>
+> 1. The LAUNCH column states a floor for **0 of its 13 subjects** — not English, not maths,
+>    not science. BUILD states one in 10 of 13, GROW in 13 of 13. The missing "Floor:" in
+>    `D13` is a column-wide layout convention, not a ruling about PEQ.
+> 2. The ladder says what it is. `A2`, verbatim: *"Each cell shows the pathway's **TARGET**
+>    and, **where relevant**, the FLOOR for the lowest learners so no one is stranded."*
+> 3. `D13` is **byte-identical** (sha256 `f9c416e890fdc52f…`) in all three committed
+>    workbooks, so it is shared front-matter, not a statement about the LAUNCH cohort.
+> 4. Of the **29** cells in the LAUNCH workbook that name PEQ with a level, **28 name Entry
+>    3**. The one exception, `Qualification Map!E15`, is the **GROW** column.
+>
+> The workbook does not claim LAUNCH excludes Entry 3. **No later pass should reopen this.**
+>
+> **One live item survives, as a question and not a defect:** `_passsl/` — the pass that
+> ingested the LAUNCH SoW — carries **no level statement at all** across its five `.md`
+> files, so nobody has ruled on this on the record. That is a one-line confirmation for
+> Matt and Cheryl, not work.
+
+The original write-up, left intact:
+
+## I6 — The accreditation contradiction, as first recorded
 
 **For Matt and Cheryl.** Nothing is edited for this. No pack, no deck, no string. It is a
 scheme-level question and the ruling is theirs.
@@ -1314,7 +1338,7 @@ Level 1 codes dominate — `ComSk1` 87 against `ComSkE3` 64, `TmWkSk1` 12 agains
 | **I3** close N12 | **CLOSED — REFUTED.** Ruling recorded, all seven signals re-verified. **The landing itself could not be performed here — the pack bytes are not in this repository** |
 | **I4** start the external-link clock | **CANNOT MEASURE HERE.** Stopped after one line, as instructed. Timestamped artifact committed; nothing proposed for removal |
 | **I5** guidance tag map | **DONE — map only, nothing applied.** `_next6/GUIDE_TAG_MAP.md`. Ten clean selector families already exist; the residue needing an authored marker is 51 sites in one pack. **Corrected once:** my first probe was keyed to string families and wrongly reported eight of nine packs as having no visible staff text |
-| **I6** record the accreditation contradiction | **DONE — recorded, not resolved.** Both sources quoted, both readings costed. **The premise does not survive measurement:** the ladder's own `A2` calls it a TARGET table, no LAUNCH cell states a floor for any of its 13 subjects, `D13` is byte-identical in all three workbooks, and 28 of the LAUNCH workbook's 29 PEQ-with-level cells name Entry 3 |
+| **I6** record the accreditation contradiction | **CLOSED — PREMISE REFUTED** (N6-Z · Z6). Originally: **recorded, not resolved.** Both sources quoted, both readings costed. **The premise does not survive measurement:** the ladder's own `A2` calls it a TARGET table, no LAUNCH cell states a floor for any of its 13 subjects, `D13` is byte-identical in all three workbooks, and 28 of the LAUNCH workbook's 29 PEQ-with-level cells name Entry 3 |
 
 ## What this order's instruments got wrong before they got it right
 
