@@ -28,3 +28,24 @@ Six standalone 40-minute lessons. Repository originals were not changed.
 This lesson can support selected Trinity Arts Award Silver evidence only when authentic practice, experience or leadership exists beyond the interface. A trained adviser must audit the full portfolio; planning or a simulated pitch does not prove delivery or complete a Unit.
 
 The labels describe potential evidence alignment, not award completion. Source rights, adult/collaborator support and pupil authorship stay separate. No organisation endorsement, site access or qualification outcome is implied.
+
+<!-- n6m-tier1-citations -->
+
+## SoW cross-reference (ORDER N6-M §M2, Tier 1 — citation only)
+
+Added so the relationship to the scheme of work is on the record rather than inferred. **No learning objective, success criterion, timing or task changed.**
+
+Instrument: `_passsl/inputs/LAUNCH KS4 - 2026-27.xlsx`
+
+As BUILD and GROW. The Arts Award rung (Silver) matches the Pathway Ladder row 11 for LAUNCH and is not affected by the divergence.
+
+| SoW cell | week | outcome as written in the workbook |
+|---|---|---|
+| `'LAUNCH Weekly - Spring'!C130` | Spr2·W1 | Deliver part of the arts project. |
+| `'LAUNCH Weekly - Spring'!C131` | Spr2·W2 | Lead/support a group or session. |
+| `'LAUNCH Weekly - Spring'!C132` | Spr2·W3 | Gather & respond to feedback. |
+| `'LAUNCH Weekly - Spring'!C133` | Spr2·W4 | Document leadership evidence. |
+| `'LAUNCH Weekly - Spring'!C134` | Spr2·W5 | Review progress against aims. |
+| `'LAUNCH Weekly - Spring'!C135` | Spr2·W6 | Leadership-project progress (Mar). |
+
+<!-- /n6m-tier1-citations -->

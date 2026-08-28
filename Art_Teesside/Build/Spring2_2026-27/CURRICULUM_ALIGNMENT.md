@@ -28,3 +28,24 @@ Six standalone 40-minute lessons. Repository originals were not changed.
 This lesson can support Trinity Arts Award Explore evidence. The page and finished object do not certify the award; a trained adviser must audit the pupil’s own decision, action and review in the full personal arts log.
 
 The labels describe potential evidence alignment, not award completion. Source rights, adult/collaborator support and pupil authorship stay separate. No organisation endorsement, site access or qualification outcome is implied.
+
+<!-- n6m-tier1-citations -->
+
+## SoW cross-reference (ORDER N6-M §M2, Tier 1 — citation only)
+
+Added so the relationship to the scheme of work is on the record rather than inferred. **No learning objective, success criterion, timing or task changed.**
+
+Instrument: `_passsb/inputs/Build SOW 2026-2027.xlsx`
+
+The pack delivers a sculpture unit built from the repo's own `Art_Teesside/Spring2_Scheme_of_Work.html`. The SoW's Creative Arts block for this half term is drama and performance. The divergence is deliberate and declared here rather than left to be rediscovered.
+
+| SoW cell | week | outcome as written in the workbook |
+|---|---|---|
+| `'BUILD Weekly - Spring'!C94` | Spr2·W1 | Use freeze-frame/role-play to tell a story. |
+| `'BUILD Weekly - Spring'!C95` | Spr2·W2 | Develop a character with voice and movement. |
+| `'BUILD Weekly - Spring'!C96` | Spr2·W3 | Sequence a short drama with a group. |
+| `'BUILD Weekly - Spring'!C97` | Spr2·W4 | Rehearse and refine our performance. |
+| `'BUILD Weekly - Spring'!C98` | Spr2·W5 | Perform our drama (World Book Day link). |
+| `'BUILD Weekly - Spring'!C99` | Spr2·W6 | Reflect on my drama skills; arts-log evidence. |
+
+<!-- /n6m-tier1-citations -->

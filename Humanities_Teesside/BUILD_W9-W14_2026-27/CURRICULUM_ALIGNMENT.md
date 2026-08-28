@@ -37,3 +37,25 @@ Curriculum and portfolio evidence preparation only. Any qualification or unit cl
 ## Planning authorities supplied with this pack
 
 - Existing BUILD Humanities scheme, lesson estate and Teesside Humanities acceptance rules
+
+<!-- n6m-tier1-citations -->
+
+## SoW cross-reference (ORDER N6-M §M2, Tier 1 — citation only)
+
+Added so the relationship to the scheme of work is on the record rather than inferred. **No learning objective, success criterion, timing or task changed.**
+
+Instrument: `_passsb/inputs/Build SOW 2026-2027.xlsx`
+
+Estate weeks 9-14 map to Aut2 W2-W7 on the workbook's own numbering. The pack teaches a Tees-valley local-history sequence where the SoW names festivals, beliefs and light; the departure is declared in each lesson's Sequence intent and is cross-referenced here.
+
+| SoW cell | week | outcome as written in the workbook |
+|---|---|---|
+| `'BUILD Weekly - Autumn'!C53` | Aut2·W1 | Explore a festival of light and why it matters. |
+| `'BUILD Weekly - Autumn'!C54` | Aut2·W2 | Compare how different communities celebrate. |
+| `'BUILD Weekly - Autumn'!C55` | Aut2·W3 | Handle and describe festival artefacts respectfully. |
+| `'BUILD Weekly - Autumn'!C56` | Aut2·W4 | Sequence the events of a celebration. |
+| `'BUILD Weekly - Autumn'!C57` | Aut2·W5 | Reflect on peace and remembrance (Remembrance Day). |
+| `'BUILD Weekly - Autumn'!C58` | Aut2·W6 | Talk about fairness and rights (Human Rights Day). |
+| `'BUILD Weekly - Autumn'!C59` | Aut2·W7 | Make a festivals display; evidence (UAS). |
+
+<!-- /n6m-tier1-citations -->

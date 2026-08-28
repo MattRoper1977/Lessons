@@ -28,3 +28,24 @@ Six standalone 40-minute lessons. Repository originals were not changed.
 This lesson can organise useful Trinity Arts Award Bronze evidence, but the interface and one artefact do not prove a Part. A trained adviser must audit sustained pupil-authored practice, source records, response and reflection.
 
 The labels describe potential evidence alignment, not award completion. Source rights, adult/collaborator support and pupil authorship stay separate. No organisation endorsement, site access or qualification outcome is implied.
+
+<!-- n6m-tier1-citations -->
+
+## SoW cross-reference (ORDER N6-M §M2, Tier 1 — citation only)
+
+Added so the relationship to the scheme of work is on the record rather than inferred. **No learning objective, success criterion, timing or task changed.**
+
+Instrument: `_passsg/inputs/GROW SOW 2026-27.xlsx`
+
+As BUILD: the sculpture unit follows the repo's committed Spring 2 scheme, not the SoW's drama block. Declared, not accidental.
+
+| SoW cell | week | outcome as written in the workbook |
+|---|---|---|
+| `'GROW Weekly - Spring'!C94` | Spr2·W1 | Share Explore/Bronze portfolio evidence so far. |
+| `'GROW Weekly - Spring'!C95` | Spr2·W2 | Develop drama or music skills for performance. |
+| `'GROW Weekly - Spring'!C96` | Spr2·W3 | Devise a short performance about overcoming change. |
+| `'GROW Weekly - Spring'!C97` | Spr2·W4 | Rehearse and refine the group performance. |
+| `'GROW Weekly - Spring'!C98` | Spr2·W5 | Perform for an audience. |
+| `'GROW Weekly - Spring'!C99` | Spr2·W6 | Review the performance; complete arts log + Bronze evidence. |
+
+<!-- /n6m-tier1-citations -->
