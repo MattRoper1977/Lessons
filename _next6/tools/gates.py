@@ -134,10 +134,53 @@ OFFLINE = [('data-URI', re.compile(r'\bdata:[a-z]+/[a-z0-9.+-]+;base64,', re.I))
            ('XMLHttpRequest', re.compile(r'\bXMLHttpRequest\b')),
            ('serviceWorker', re.compile(r'\bserviceWorker\b')),
            ('external src/href', re.compile(r'\b(?:src|href)\s*=\s*["\']https?://', re.I))]
+# ORDER N6-M §M3 — the one storage exemption in the estate, and its guard.
+#
+# The guidance toggle is specified to persist in `localStorage` under
+# `mbm_guide_v1`. Offline integrity otherwise forbids storage outright, and the
+# right answer to that conflict is a NARROW, AUDITED exemption rather than a
+# weakened gate.
+#
+# The exemption is the marked block and nothing else: the scanner removes
+# `<!--n6m-guide:v1-->...<!--/n6m-guide-->` before looking, so storage anywhere
+# else in the file is a violation exactly as before. And the block itself is
+# then checked: it may reference storage only through that one key. A second key,
+# or storage outside the markers, reds the gate.
+GUIDE_OPEN, GUIDE_CLOSE = '<!--n6m-guide:v1-->', '<!--/n6m-guide-->'
+GUIDE_KEY = 'mbm_guide_v1'
+GUIDE_STORAGE_OK = re.compile(
+    r'localStorage\.(?:getItem|setItem)\(\s*K\s*[,)]|var\s+K\s*=\s*"%s"' % GUIDE_KEY)
+
+
+def _split_guide(s):
+    """Return (rest-of-file, [guide blocks])."""
+    blocks = []
+    while GUIDE_OPEN in s and GUIDE_CLOSE in s:
+        i = s.index(GUIDE_OPEN)
+        j = s.index(GUIDE_CLOSE, i) + len(GUIDE_CLOSE)
+        blocks.append(s[i:j])
+        s = s[:i] + s[j:]
+    return s, blocks
+
+
 def g4_offline(files):
     rows=[]; hits=0
     for p in files:
         s=read(p)
+        s, guide_blocks = _split_guide(s)
+        for blk in guide_blocks:
+            # the exemption is not a free pass: the block must use the declared
+            # key and no other storage surface
+            if GUIDE_KEY not in blk:
+                hits += 1
+                rows.append((p, 'guide-block storage without the declared key', GUIDE_KEY))
+            if 'sessionStorage' in blk or 'indexedDB' in blk:
+                hits += 1
+                rows.append((p, 'guide-block uses a storage surface it may not', ''))
+            keys = set(re.findall(r'localStorage\.[a-zA-Z]+\(\s*"([^"]+)"', blk))
+            for k in keys - {GUIDE_KEY}:
+                hits += 1
+                rows.append((p, 'guide-block uses an undeclared storage key', k))
         for name,rx in OFFLINE:
             if name=='external src/href':
                 for m in rx.finditer(s):
