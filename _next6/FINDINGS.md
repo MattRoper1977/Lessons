@@ -2283,6 +2283,14 @@ It needs one line from Matt, and nothing else in this order depends on it.
 was found, diffed, held and presented rather than applied or quietly dropped.
 Everything else §M4 asks to be printed before a merge is printed below and holds.
 
+**A hold worth showing the working on.** A naive diff count says the TA briefing
+layer "changed" in 822 lines. It did not: the guidance patch inserts
+`data-mbm-guide` on the same physical line as a `data-ta1`/`data-ta2` string, so
+the whole line appears in the diff. Compared as attribute VALUES rather than
+lines: **2844 TA strings exist in files present on both main and this branch, 0
+removed and 0 altered in any of them.** The other 2700 are in files that do not
+exist on main at all — the packs arriving. The layer is untouched.
+
 | §M4 hold | state |
 |---|---|
 | §M0 reconciliation complete, no work lost | **MET** — 10 N6-I-only and 118 N6-F-only paths byte-identical to their branch; 29 shared paths reconciled, the 24 decks each proven to reduce to both parents |
