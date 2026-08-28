@@ -91,6 +91,16 @@ const ALLOW = [
   { file: 'LAUNCH_ASDAN/W7-W12_2026-27/SHA256SUMS.txt',
     text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
     why: 'real careers lesson title; MOCK is a fixture marker but this names no person' },
+  /* Order N6-Z, 2026-08-28. A FIFTH carrier of the same string, and a miss worth
+     recording rather than quietly adding: N6-I committed
+     _next6/evidence/S24_EVIDENCE_SURFACES.txt — the s24 coverage contract, a list of
+     75 lesson PATHS — without running this check, so the estate's names gate has been
+     red since that commit. The string is the same real lesson title already ruled on
+     above, in a list of file paths; no person is named. Found by running the gate,
+     which is the only reason it is not still red. */
+  { file: '_next6/evidence/S24_EVIDENCE_SURFACES.txt',
+    text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
+    why: 'real careers lesson title in a path list; MOCK is a fixture marker but this names no person' },
   /* This checker quotes that lesson title three times above, so it now trips its own
      predicate — the same recursion the red-vector entries above solve. Declared once:
      the matcher is (file, text), so one entry covers all occurrences in this file. */
