@@ -184,6 +184,20 @@ UNIT_SLACK = 0            # a unit may overflow onto extra sheets; it may never
 # can push a unit onto a second sheet, and holding those to the same number would
 # red a clean tree for being accessible.
 UNIT_OVER_SLACK = 0       # default variant: a deck prints the units it declares
+#
+# ...plus whatever the chassis appends OUTSIDE its unit container. The two
+# chassis differ and the ceiling has to know it, or it reds a clean tree:
+#
+#   BUILD_ASDAN   the learner-confirmation page is itself a `.print-page`
+#                 inside `.print-pack`, so `units` already counts it. Allowance 0.
+#   LAUNCH/GROW   there is no print pack; units are `.slide`, and the block is
+#                 appended as a `.n6-lc` section that is not a slide. It takes a
+#                 sheet of its own, so a 9-slide deck correctly prints 10.
+#
+# Measured, not assumed: with a flat allowance of 0 the first full run reported
+# every LAUNCH_ASDAN deck as "10 printed pages, expected 9-9" — a false red on a
+# correct tree, and exactly the kind a ceiling introduces if it is not derived
+# from the chassis it is judging.
 
 
 def band_for_record(rec, pages):
@@ -192,10 +206,14 @@ def band_for_record(rec, pages):
     units = d.get('units') or 0
     kind = d.get('unitKind', 'none')
     if units:
+        extra = int(d.get('lcBlocks') or 0) if kind == 'slide' else 0
         if rec.get('isDefault', True):
-            hi = units + UNIT_OVER_SLACK
-            why = ('%d visible %s unit(s) declared by the document; the default '
-                   'variant prints the units it declares' % (units, kind))
+            hi = units + UNIT_OVER_SLACK + extra
+            why = ('%d visible %s unit(s) declared by the document%s; the default '
+                   'variant prints the units it declares'
+                   % (units, kind,
+                      ' + %d appended learner-confirmation sheet(s)' % extra
+                      if extra else ''))
         else:
             hi = ABS_MAX
             why = ('%d visible %s unit(s) declared by the document; non-default '
