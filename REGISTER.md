@@ -2954,10 +2954,16 @@ per deck — is **already invisible**, 0 leaking to the room, so it needs no tog
 text that *is* on the slides exists in **all nine packs** and mostly already has a clean,
 purpose-built selector: `.choose` `.staff` `.guard` `.evidence-note` `.boundary`
 (GROW_ASDAN), `.screen` (LAUNCH_ASDAN), `.reportback` `.lnote` (Humanities), `.sowline`
-(Science ×3), `.lesson-link` `.small` (BUILD_ASDAN). The residue needing an authored marker
-is two families in one pack — BUILD_ASDAN's `Estate sequence` chip (`.chip` is 24 of 96) and
-its unclassed `Exact SOW outcome` paragraph — **51 sites across 26 files**. Route labels are
-pupil-facing and stay (19/19 and 30/30 visible).
+(Science ×3), `.lesson-link` `.small` (BUILD_ASDAN). Four more BUILD_ASDAN
+families are reachable by **label- or position-keying** rather than authoring — verified:
+`.chips .chip:last-child` is the `Estate sequence` chip in **24/24** decks, and
+`.box.objective` splits exactly 24 each into `SPACE routine` / `Model aloud:` / `Connect:`
+(staff) and `Learning objective:` (the pupil's), which is why a class-wide rule there would
+delete the objective from every deck. **Exactly one family in one pack needs a marker
+authored: BUILD_ASDAN's unclassed `Exact SOW outcome` paragraph, 25 files.** Route labels
+are pupil-facing and stay (19/19 and 30/30 visible), and `.model-step` must not be tagged —
+it reads like step-by-step instruction and is **49–58% of its slide's text**, so hiding it
+halves two slides per deck.
 
 **And a fifth wrong-then-right, the sharpest of them.** My first I5 probe was keyed to a
 chosen list of *string families* and concluded that eight of nine packs put no staff-facing
