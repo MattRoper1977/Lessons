@@ -1,0 +1,163 @@
+{
+ "_note": "ORDER N6-Z Z3 hide-set. Keyed to ADDRESSEE. Committed so it can be argued with rather than re-derived. 'sel' is a real CSS selector; 'label' keys on the element's leading <strong>/<b>; 'startsWith' keys on its text. Visibility, Lundy-ancestry and addressee are all tested in a real DOM by z3_select.mjs.",
+ "BUILD_ASDAN/Autumn2_W1-W6_2026-27": {
+  "staff": "\\b(Staff|Adult|Teacher|TA)\\b|\\b(staff|adult|teacher)\\b|assessor|moderat|scrib|co-regulate|least[- ]prompt|Do not reveal|before delivery|pre-stage|Authorship check|Adult close|Sequence outcome:|Exact SOW outcome|Estate sequence|continuity metadata|Weekly - (Autumn|Spring|Summer)",
+  "notGuidance": "^(This file stores|Screen-only:|This page stores|The page stores)",
+  "rules": [
+   {
+    "sel": ".chips .chip:last-child",
+    "role": "route",
+    "why": "the internal estate-sequence number; the three chips before it are the lane, unit and week a pupil reads"
+   },
+   {
+    "sel": "p.small",
+    "role": "route",
+    "why": "the SoW workbook cell reference"
+   },
+   {
+    "sel": ".lesson-link",
+    "role": "route",
+    "why": "estate sequence plus SoW cell on the index card (present only on START_HERE, which is never touched; 0 in the lesson decks)"
+   },
+   {
+    "sel": ".hero p",
+    "role": "route",
+    "label": [
+     "Exact SOW outcome:",
+     "Source:"
+    ],
+    "why": "the SoW cell text and its source. UNCLASSED <p> inside an unclassed div inside .hero, so `.hero > p` reaches nothing; `.hero p` plus the leading-<strong> label reaches exactly these two and no pupil-facing paragraph. This is the family GUIDE_TAG_MAP predicted would need an authored marker - it does not."
+   },
+   {
+    "sel": ".box.objective",
+    "role": "staff",
+    "label": [
+     "SPACE routine",
+     "Model aloud:",
+     "Connect:"
+    ],
+    "why": "room set-up, what to model aloud, what to connect - the fourth .box.objective is the pupil's Learning objective:"
+   },
+   {
+    "sel": ".box.good",
+    "role": "staff",
+    "label": [
+     "Adult close",
+     "Authorship check:"
+    ],
+    "why": "a script for the adult's closing turn, and a staff moderation rule"
+   },
+   {
+    "sel": ".box.rehearsal",
+    "role": "staff",
+    "startsWith": [
+     "Do not reveal the pupil"
+    ],
+    "why": "an instruction to whoever drives the model; the other 96 .box.rehearsal are pupil-protective"
+   }
+  ]
+ },
+ "GROW_ASDAN/Autumn2_W1-W6_2026-27": {
+  "staff": "\\b(Staff|Adult|Teacher|TA)\\b|\\b(staff|adult|teacher)\\b|assessor|Teaching / qualification|qualification boundary|Potential evidence only|Keep adult preparation",
+  "notGuidance": "^(This file stores|Screen-only:|This page stores|The page stores)",
+  "rules": [
+   {
+    "sel": ".guard",
+    "role": "staff",
+    "why": "teaching / qualification boundary, addressed to the adult"
+   },
+   {
+    "sel": ".evidence-note",
+    "role": "staff",
+    "why": "what does and does not count as evidence"
+   }
+  ]
+ },
+ "LAUNCH_ASDAN/W7-W12_2026-27": {
+  "staff": "Authorship check|\\bStaff\\b|\\bstaff\\b|assessor|moderat",
+  "notGuidance": "^(This file stores|Screen-only:|This page stores|The page stores)",
+  "rules": [
+   {
+    "sel": ".box.screen",
+    "role": "staff",
+    "why": "\"Authorship check: Staff may model the process and preserve access\""
+   }
+  ]
+ },
+ "Science_Teesside/Build/W8-W13_2026-27": {
+  "staff": "Sequence outcome:",
+  "notGuidance": "^(This file stores|Screen-only:)",
+  "rules": [
+   {
+    "sel": "p.sowline",
+    "role": "route",
+    "why": "the SoW sequence outcome line"
+   }
+  ]
+ },
+ "Science_Teesside/Grow/W8-W13_2026-27": {
+  "staff": "Sequence outcome:",
+  "notGuidance": "^(This file stores|Screen-only:)",
+  "rules": [
+   {
+    "sel": "p.sowline",
+    "role": "route",
+    "why": "the SoW sequence outcome line"
+   }
+  ]
+ },
+ "Science_Teesside/Launch/W8-W13_2026-27": {
+  "staff": "Sequence outcome:",
+  "notGuidance": "^(This file stores|Screen-only:)",
+  "rules": [
+   {
+    "sel": "p.sowline",
+    "role": "route",
+    "why": "the SoW sequence outcome line"
+   }
+  ]
+ },
+ "Humanities_Teesside/BUILD_W9-W14_2026-27": {
+  "staff": ".",
+  "notGuidance": "^(This file stores|Screen-only:)",
+  "rules": [
+   {
+    "sel": ".reportback",
+    "role": "staff",
+    "why": "\"Decision maker: Class teacher - replace with the adult's name before delivery\""
+   },
+   {
+    "sel": ".lnote",
+    "role": "staff",
+    "why": "delivery notes to the adult about the Lundy loop; the pupil-facing .lundy zone strip stays visible and is excluded by ancestry"
+   }
+  ]
+ },
+ "Humanities_Teesside/GROW_W9-W14_2026-27": {
+  "staff": ".",
+  "notGuidance": "^(This file stores|Screen-only:)",
+  "rules": [
+   {
+    "sel": ".lnote",
+    "role": "staff",
+    "why": "delivery notes to the adult; the .lundy zone strip stays"
+   }
+  ]
+ },
+ "Humanities_Teesside/LAUNCH_W9-W14_2026-27": {
+  "staff": ".",
+  "notGuidance": "^(This file stores|Screen-only:)",
+  "rules": [
+   {
+    "sel": ".lnote",
+    "role": "staff",
+    "why": "delivery notes to the adult; the .lundy zone strip stays"
+   },
+   {
+    "sel": ".mobile-teacher-tools",
+    "role": "staff",
+    "why": "\"Teacher tools\""
+   }
+  ]
+ }
+}
