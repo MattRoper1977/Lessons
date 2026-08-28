@@ -584,10 +584,11 @@ before placement.
    removes "Optional" and changes what a pupil is asked to do. Tier 2, diffed, not merged.
 4. **N7 — the guidance toggle.** The hide-set map the spec above asks for now exists:
    `_next6/GUIDE_TAG_MAP.md` (Order N6-I · I5), with counts, the overlap risk measured in
-   the DOM, a worked example and a price. It changes what is being asked for — the guidance
-   is **already invisible** (0 of 132 decks leak any to the room), so what a toggle would
-   remove from the wall is an audit trail on a title slide. Still needs the `localStorage`
-   ruling, and now also a ruling on whether a toggle is the right instrument at all.
+   the DOM, a worked example and a price. It changes what is being asked for: the **TA
+   briefing layer** (1188 strings, 132 decks) is already invisible and needs no toggle,
+   while the staff text that *is* on the slides mostly already has a clean selector — ten
+   families across the nine packs — with only two families in one pack needing a marker
+   authored (51 sites, 26 files). Still needs the `localStorage` ruling.
 5. **N2 — the dangling `5 ·`** in the ported learner-confirmation heading. One token.
 
 ---
@@ -1012,13 +1013,24 @@ invalid measurement is not a second measurement.
 ## I5 — Guidance toggle: mapped, priced, nothing applied
 
 Full map in [`_next6/GUIDE_TAG_MAP.md`](GUIDE_TAG_MAP.md). **Nothing was applied and nothing
-was patched**, as the order requires. Three measurements decide what this job actually is.
+was patched**, as the order requires.
 
-**1 · The guidance is already invisible to the room.** 132 of the 159 files carry
-staff-facing guidance strings; **zero** put any of it on the pupil-facing surface. Measured
-by activating every slide in turn and reading `innerText`, which excludes a closed
-`<dialog>`, a `[hidden]` element and any `display:none` subtree. Four container families,
-disjoint, exactly one per lesson deck, none visible at load:
+**A correction first, because an earlier version of this section said the opposite.** My
+first probe looked for a chosen list of *string families* — SoW cell references,
+`Exact SOW outcome`, `Estate sequence`, `AQA UAS` — and concluded that eight of the nine
+packs put no staff-facing text on screen at all. **That was wrong.** A string-family probe
+finds the families it was handed. Re-probing by **addressee** — who is the sentence talking
+to? — finds staff-facing content visible in **all nine packs**. The error surfaced from an
+adversarial pass over nine independently-produced per-pack maps, which is what that pass was
+for, and it is recorded rather than overwritten because the method that produced it is the
+method a future pass will reach for first.
+
+### What is true
+
+**1 · The TA briefing layer is already invisible, and it is the bulk of the guidance.** 132
+of the 159 files carry `data-ta1`/`data-ta2` briefing strings — **1188** of them — and
+**zero** reach the pupil-facing surface. Four container families, disjoint, exactly one per
+lesson deck, none visible at load:
 
 | container | packs | in the DOM |
 |---|---|---|
@@ -1027,62 +1039,74 @@ disjoint, exactly one per lesson deck, none visible at load:
 | `#taDialog` | LAUNCH_ASDAN 30, Science 12+12+18, BUILD_Humanities 6 | hidden/modal; in Science a `<dialog data-audience="staff">` |
 | `#tool-ta` | GROW_Humanities 6 | a `role="tabpanel"` in a tools drawer |
 
-24 + 24 + 78 + 6 = 132. **PH-3's purpose is already achieved by the chassis.** What a toggle
-would add is a *persisted preference*, not a capability — and it is the persistence that
-collides with gate 4.
+24 + 24 + 78 + 6 = 132. For that layer, PH-3's purpose is already achieved by the chassis,
+and the prompt ladders, adult-action notes and teacher-tool drawers are hidden too.
 
-**2 · What is on the wall is one pack and a 13-file tail of a second, not twelve packs.**
+**2 · But staff-facing text on the slides themselves exists in every pack**, and it is a
+different thing from the briefing layer. Files where the family is visible across all slides:
 
-| pack | family | in source | visible |
-|---|---|---:|---:|
-| BUILD_ASDAN | SoW cell reference `'BUILD Weekly - Autumn'!B181` | 28 | **28** |
-| BUILD_ASDAN | `Exact SOW outcome:` | 25 | **25** |
-| BUILD_ASDAN | `Estate sequence` | 26 | **26** |
-| BUILD_ASDAN | `Inherited mapping` / `Inherited evidence` | 25 | 1 |
-| BUILD_ASDAN | `AQA UAS` | 25 | 1 |
-| LAUNCH_ASDAN | `AQA UAS` | 13 | **13** |
-| the other seven packs | all of the above | 0 | **0** |
+| pack | visible staff-facing families |
+|---|---|
+| BUILD_ASDAN | SoW ref 28 · `Exact SOW outcome` 25 · `Estate sequence` 26 · staff addressed 24 · adult prompting 25 · delivery routine 24 |
+| GROW_ASDAN | staff addressed **19** · delivery routine **19** · adult prompting 7 |
+| LAUNCH_ASDAN | `AQA UAS` 13 · staff addressed **30** · delivery routine **30** |
+| BUILD / GROW / LAUNCH Science | `Sequence outcome:` **12 / 12 / 18** |
+| BUILD_Humanities | staff addressed **6** |
+| GROW_Humanities | SoW ref 2 · staff addressed 3 · delivery routine 1 |
+| LAUNCH_Humanities | adult prompting 1 |
 
-**Route labels are pupil-facing and stay** — `Supported route` / `Standard route` /
-`Stretch route`, visible 19/19 in GROW_ASDAN and 30/30 in LAUNCH_ASDAN. Reading "route
-metadata" as a hide target, which the order's wording invites, would take the pupil's own
-access route off the screen.
+**3 · Most of it already has a dedicated selector.** Ten families are clean, purpose-built
+and exist today — each read in a browser to confirm what the whole block says, because
+machine matching proposes and reading disposes:
 
-**3 · One existing selector isolates staff text, and only one.** `.small` is **24 of 24**
-clean in the BUILD_ASDAN lesson decks (56 of 58 across all 28 files; the two exceptions are
-ASDAN spec URLs in the assessor-side planning file). `.chip` is **24 of 96** — the other 72
-are the lane, unit and week a pupil reads, the same class on the same slide. And
-`Exact SOW outcome:` sits in an **unclassed** `<p><strong>` inside `.hero`, with no selector
-at all.
+| selector | packs | what it says |
+|---|---|---|
+| `.choose` | GROW_ASDAN 18 | *"Staff: select one route before giving this page to the learner. Change access, not authorship."* |
+| `.staff` | GROW_ASDAN 18 | *"Staff pre-stage before the 16-minute transfer…"* |
+| `.guard` · `.evidence-note` · `.boundary` | GROW_ASDAN 18 each | qualification boundary, evidence boundary, use-note |
+| `.screen` | LAUNCH_ASDAN 30 | *"Authorship check: Staff may model the process and preserve access…"* |
+| `.reportback` | BUILD_Humanities 6 | *"Named-adult report-back · Decision maker: Class teacher — replace with the adult's name before delivery."* |
+| `.lnote` | Humanities ×3 | the Lundy staff notes |
+| `.sowline` | Science ×3, 12/12/18 | *"Sequence outcome: Rocks: test hardness."* |
+| `.lesson-link` · `.small` | BUILD_ASDAN 24 each | the SoW cell reference and estate sequence |
 
-So the hide-set is **one-third mappable and two-thirds authoring: 66 marker sites across 40
-files.**
+**The residue that needs a marker authored is two families in one pack**: BUILD_ASDAN's
+`Estate sequence` chip — `.chip` is 24 of 96, the other 72 being the lane, unit and week a
+pupil reads — and its `Exact SOW outcome` paragraph, which is unclassed inside `.hero`.
+**51 sites across 26 files.** So the job is mostly mappable, not mostly authoring.
 
-**A correction from checking my own instrument, recorded because it changed the answer.**
-The first overlap run was case-sensitive and reported `.small` as mixed, carrying ten
-pupil-facing instances. Those ten were `"Secondary estate sequence metadata: Week 15"` and
-its neighbours — staff strings missed on a lower-case `e`. A probe that is case-sensitive
-about prose invents overlap. Fixed in `i5_overlap.mjs` with a comment saying why.
+**Route labels are pupil-facing and stay** — visible 19/19 in GROW_ASDAN and 30/30 in
+LAUNCH_ASDAN. Reading "route metadata" as a hide target, which the order's wording invites,
+would take the pupil's own access route off the screen. GROW_ASDAN's `.soft` looks
+staff-facing to a keyword probe and is not: *"Standard: add a reason or example. Optional
+reach: name what evidence could change your first answer."*
 
-**Also worth naming: `data-ta1`/`data-ta2` are attributes, not elements** — 1188 of them
-across the nine packs, on `<section class="slide">`. No CSS selector can hide an attribute;
-only the container that renders it. The guidance payload and the thing a selector can target
-are different objects on this chassis.
+**`data-ta1`/`data-ta2` are attributes, not elements.** No CSS selector can hide an
+attribute — only the container that renders it. The guidance payload and the thing a
+selector can target are different objects on this chassis.
 
 ### Cost
 
 | work | scope | estimate |
 |---|---|---|
-| author the hide-set markers | 66 sites, 40 files | one patcher, ~half a day with the checks |
+| tag the ten clean selector families | the classes exist and are clean | a selector list plus the toggle |
+| author markers for the residue | 51 sites, 26 files, BUILD_ASDAN only | ~half a day with the checks |
 | render / visibility check per family per lane | already built and running | ~5 minutes per run |
 | the `localStorage` question | a ruling, not engineering | narrow gate 4 to `mbm_guide_v1`, or ship without persistence |
-| regression | 40 of 159 files, additive and strip-reversible | low |
+| regression | ~40 of 159 files, additive and strip-reversible | low |
 
-**And the question the numbers raise.** What a toggle would remove from the wall is an audit
-trail on a title slide, not teacher instructions. Moving those three BUILD_ASDAN strings into
-the already-hidden `#teacherDialog` costs less, needs no storage, needs no change to gate 4,
-and delivers the same visible result. Recorded in the map as an option, **not** a
-recommendation — this order says map and price, not decide.
+**What a toggle would remove that is worth removing:** GROW_ASDAN's staff route-selection
+instruction, LAUNCH_ASDAN's authorship check, and BUILD_Humanities' *"Decision maker: Class
+teacher — replace with the adult's name before delivery"* — an unfinished instruction to the
+teacher, sitting on the wall. **What is more arguable:** the SoW audit trail, which a teacher
+can read without opening anything. **What needs no toggle at all:** the 1188-string briefing
+layer, which is already invisible.
+
+**Two probe artefacts recorded so a later pass does not chase them.** `.enhanced` in the
+Science packs appears in the candidate list because its element is a `<style>` block whose
+CSS text the probe read as content. And an earlier case-sensitive run of the overlap probe
+reported `.small` as mixed with ten pupil-facing instances; all ten were staff strings missed
+on a lower-case `e`. A probe case-sensitive about prose invents overlap.
 
 **Not priced: the three Art packs**, which are not in this repository. Labelled unpriced
 rather than extrapolated.
@@ -1273,7 +1297,7 @@ Level 1 codes dominate — `ComSk1` 87 against `ComSkE3` 64, `TmWkSk1` 12 agains
 | **I2** make the render gate permanent | **DONE.** `s24-print-renders` is G12, runs for every pack with a print surface, red-proved three ways, full battery GREEN |
 | **I3** close N12 | **CLOSED — REFUTED.** Ruling recorded, all seven signals re-verified. **The landing itself could not be performed here — the pack bytes are not in this repository** |
 | **I4** start the external-link clock | **CANNOT MEASURE HERE.** Stopped after one line, as instructed. Timestamped artifact committed; nothing proposed for removal |
-| **I5** guidance tag map | **DONE — map only, nothing applied.** `_next6/GUIDE_TAG_MAP.md` |
+| **I5** guidance tag map | **DONE — map only, nothing applied.** `_next6/GUIDE_TAG_MAP.md`. Ten clean selector families already exist; the residue needing an authored marker is 51 sites in one pack. **Corrected once:** my first probe was keyed to string families and wrongly reported eight of nine packs as having no visible staff text |
 | **I6** record the accreditation contradiction | **DONE — recorded, not resolved.** Both sources quoted, both readings costed. **The premise does not survive measurement:** the ladder's own `A2` calls it a TARGET table, no LAUNCH cell states a floor for any of its 13 subjects, `D13` is byte-identical in all three workbooks, and 28 of the LAUNCH workbook's 29 PEQ-with-level cells name Entry 3 |
 
 ## What this order's instruments got wrong before they got it right
@@ -1295,12 +1319,21 @@ own output rather than by luck.
    a tint-invariant edge measure.
 4. **A probe that is case-sensitive about prose invents overlap.** The I5 overlap run
    reported `.small` as a mixed class carrying ten pupil-facing instances; all ten were staff
-   strings missed on a lower-case `e`. `.small` is in fact the one existing selector in the
-   nine packs that isolates staff text, which is the opposite conclusion.
+   strings missed on a lower-case `e`. `.small` is in fact clean, which is the opposite
+   conclusion.
+5. **A probe keyed to string families finds the families it was handed, and nothing else.**
+   My first I5 measurement asked for SoW-provenance phrases and concluded that eight of the
+   nine packs put no staff-facing text on screen. Re-keying it to **addressee** — who is the
+   sentence talking to? — found staff-facing content visible in all nine, including
+   GROW_ASDAN's *"Staff: select one route before giving this page to the learner"* and
+   BUILD_Humanities' *"Decision maker: Class teacher — replace with the adult's name before
+   delivery"*. It surfaced from an adversarial pass over nine independently-produced per-pack
+   maps, seven of which were themselves PARTIAL on verification — the cross-check earned its
+   keep in both directions.
 
 And one about the artefact rather than the instrument:
 
-5. **Comparing the artefact is the broken assertion; comparing the measurement is the sound
+6. **Comparing the artefact is the broken assertion; comparing the measurement is the sound
    one.** Rendered twice from identical bytes: **0 of 147** PDFs byte-identical, because a
    PDF carries a creation timestamp — and **0** measurement differences across all 812 pages.
 
