@@ -22,8 +22,6 @@ async function prepareContext(context){
 const root=process.cwd();
 const kind=fs.existsSync(path.join(root,'resources.json'))?'lessons':fs.existsSync(path.join(root,'apps.json'))?'apps':null;
 if(!kind)throw new Error('Could not detect repository kind');
-const hubUrl=new URL(base);
-if(kind==='lessons')hubUrl.searchParams.set('splash','skip');
 const widths=[320,360,390,430,768,1024,1280,1440];
 const outDir=path.join(root,'audit-output');
 fs.mkdirSync(outDir,{recursive:true});
@@ -77,7 +75,7 @@ try{
     const record={width,pageErrors,consoleErrors,failed,badResponses};
     results.widths.push(record);
     try{
-      const response=await page.goto(hubUrl.href,{waitUntil:'domcontentloaded',timeout:60000});
+      const response=await page.goto(base,{waitUntil:'domcontentloaded',timeout:60000});
       record.httpStatus=response?.status()||0;
       check(response&&response.ok(),`${kind} ${width}: hub HTTP response was not successful (${record.httpStatus})`);
       await page.waitForTimeout(1200);
@@ -180,7 +178,7 @@ try{
   await prepareContext(reduced);
   try{
     const page=await reduced.newPage();
-    const response=await page.goto(hubUrl.href,{waitUntil:'domcontentloaded',timeout:60000});
+    const response=await page.goto(base,{waitUntil:'domcontentloaded',timeout:60000});
     await page.waitForTimeout(500);
     const hidden=await page.locator('.mbm-reveal').evaluateAll(elements=>elements.filter(element=>getComputedStyle(element).opacity==='0').length);
     results.reducedMotion={status:response?.status()||0,hidden};
