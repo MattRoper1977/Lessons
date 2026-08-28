@@ -2791,3 +2791,203 @@ on Lessons and branch protection returns 403; `Matt-s-Apps-` is out of scope; an
 never ran** — no `_Pack_Notes` in the repo or on any of the four mirror branches, and `REBRAND.md`
 records no pack base SHA; the full-mirror fallback is blocked twice, on the absent Progress logo and
 on the `MARK_SVG`/`gen_entry` M-mark precondition (12 entry docs) recorded at OPEN_ITEMS #23.
+
+---
+
+## R-N601 — Order N6: nine packs landed, two stops, and four gates that had to be argued with
+
+**Last observed true at** `bb69b2c8`.
+
+Twelve next-six-weeks packs, 246 files, 192 HTML. Intake re-derived and it matched the
+predicted table exactly, 12/12 packs. Nine landed; the three Art packs did not, on a stop.
+Full record in [`_next6/FINDINGS.md`](_next6/FINDINGS.md).
+
+**The transferable rule of this pass: a brief's measurements are a prediction map, and four
+of its instructions would have done damage if executed as written.** Each was caught by
+measuring the bytes before editing them, and each is recorded so the next pass does not
+re-derive it.
+
+- **N4 had no target.** `Banks:` occurs **0 times in all twelve packs** against 562 across
+  102 files on `origin/main`; these packs use inherited-SoW-cell strings instead. GROW's
+  level-silence is its own stated design rule, not an omission. LAUNCH's eight bare
+  "Level 1" are **SoW-correct** — Pathway Ladder `D13` gives LAUNCH "PEQ Level 1 Award /
+  Extended Award / Certificate" and names no Entry 3 floor for that lane — and the live
+  estate had already moved `LAUNCH_ASDAN/PEQ` off the standard string onto route
+  enumeration. `v3_tier_gate.py` runs green with the packs live.
+- **N6's tier table named the wrong words.** LAUNCH_ASDAN's ladder is
+  Supported / **Secure route** / **Reach route**, not Support/Secure/Challenge. Its
+  `Challenge` ×150 is **one prose sentence**, so the ruled Challenge→Stretch rename would
+  have corrupted 150 prose occurrences and zero labels. `Secure` in all three ASDAN packs
+  (90 + 74 + 54) is the responsive-teaching **next-move staff loop**, not a stray tier word;
+  clearing it as ruled would have broken that loop in every deck.
+- **N7's named patcher cannot see these files.** `_eca1/tools/guidepatch.js` classifies all
+  192 as chassis `doc` and skips every one. Its `localStorage` mechanism also contradicts
+  gate 4 and each deck's own `storageKeys: []`. Toggle held on Matt's ruling; way-home and
+  splash applied.
+- **N12's premise is refuted.** "Spring 2 is a placement error" fails against five committed
+  repo signals — `Art_Teesside/Spring2_Scheme_of_Work.html` already exists with the same six
+  week rows and **verbatim-matching enquiry questions**, and the evidence pack's 18 lane/part
+  cells match the packs 6/6. The packs were built *from* the repo's committed scheme.
+
+**Two stops, both as the order provides for.** N5 is genuinely ambiguous: the pack pairs
+`pack_week: 8` with `source_week: Aut2-W1`, which the repo calendar
+(`l2k_plan.py:146`, Aut1 = W1–W8) makes impossible. Root cause: the LAUNCH SoW workbook
+asserts a **14-week autumn** against the repo's 15, so it has no row for the extra week and
+its labels cannot be transposed without a ruling. It is wider than one pack — LAUNCH_Science
+and LAUNCH_Humanities already place different SoW rows at real week 9. N12 stops for the
+refuted premise above.
+
+**A grep can report success on a feature that does not work.** Two findings this pass turned
+on rendering rather than searching, and both would have shipped green otherwise.
+- The ported learner-confirmation block landed in all 24 BUILD_ASDAN decks and **printed in
+  none** of them: it sat outside `<section class="print-pack">`, which that chassis gates
+  with `body>*:not(.print-pack){display:none!important}`. Grep said 75/75; a headless print
+  render said 51/75.
+- The N3 print donor reveals LAUNCH_ASDAN's nine slides but leaves each at `height:91%`
+  inside a clipped body — nine mostly-blank pages, green to any `@media print` check.
+- Corollary, for anyone writing a visibility check: **`getComputedStyle(e).display` ignores
+  hidden ancestors.** It reported 24 false screen-leaks on elements inside a `display:none`
+  container. `checkVisibility()` is the one that accounts for ancestors.
+
+**My own gates were wrong three times before they were right**, and the estate already had
+the answer. A hand-rolled tag-balance parser invented failures on SVG foreign content, on
+HTML5 optional end tags, and on markup inside attribute values
+(`data-lab-feedback="<b>Bridge:</b>"`); `_passsci1/gates.py`'s paired open/close counting is
+immune to all three and is what every sibling pass measured. A duplicate-id check matching
+`\bid=` fired inside every hyphenated `data-*` attribute. **Prefer the estate's existing
+definition of a check to a fresh one.**
+
+**A pre-existing defect worth knowing.** Two GROW_Humanities decks print **different text run
+to run on their own intake bytes** — timer-driven DOM mutation, so what reaches paper depends
+on how long the deck has been open. Not caused by this pass; recorded because a printed
+evidence artefact that is not reproducible is a problem for a portfolio.
+
+**N11 could not be measured.** All 30 external citations return `000`; the session's egress
+proxy answers `403` to `CONNECT` for every host. A 30/30 uniform failure is an infrastructure
+signature, not thirty dead links. Order TS D3 needs two measurements an hour apart and this
+environment cannot produce one. **Nothing removed, no removal proposed.**
+
+**Deviations from the chat figures**, none consequential: checksum verification covered 147
+entries not 105; GROW_ASDAN carries **18 `@keyframes`**, not the claimed zero (properly
+guarded by both `prefers-reduced-motion` and `.calm`, so gate 5 is measured as a delta rather
+than an absolute); 30 external URLs, not 34.
+
+**Deferred, in `_next6/FINDINGS.md` §Open:** the N5 reading and its lane rule; the Art packs'
+placement; GROW_ASDAN's `★ Optional reach` → `Stretch` (Tier 2 — it removes "Optional" and
+changes what a pupil does); the PH-3 toggle; and one dangling `5 ·` in the ported heading.
+
+---
+
+## R-N6I01 — Order N6-I: the render gate that argued with itself three times
+
+**Last observed true at** `94681cf2`.
+
+Interim order alongside the §2 SoW alignment task. Six items, no week label, term tag, LO,
+success criterion or placement string touched. Full record in
+[`_next6/FINDINGS.md`](_next6/FINDINGS.md) under **ORDER N6-I**.
+
+**The answer to the order's question: both named print defects were already fixed in the
+seven commits, and a third was not.** 75 evidence surfaces rendered to A4 in Chromium under
+print emulation, 147 PDFs, 812 pages, ink coverage measured per page. Learner confirmation
+**75/75** in the printed text — N2's remediation confirmed from the artefact rather than the
+bytes. LAUNCH_ASDAN prints 9 slides plus signature at 10 pages, no blank sheet — N3's
+confirmed. The 51/75 the order quotes is the pre-remediation figure and no longer reproduces.
+
+**The transferable rule of this pass: an instrument is only as good as its last red, and
+three of mine were wrong before they were right.** Each is recorded so the next pass does
+not re-derive it.
+
+- **A grep-invisible defect the render found.** BUILD_ASDAN's printable pack defaults to
+  "All three routes"; in that state page 1 overflows one A4 sheet. Four decks spilled by a
+  single clause, leaving a sheet holding **10 to 38 characters** — `DUKE_W5` at 0.061% ink,
+  `COMM_W1` at 0.129% (*"and systems, not blame."*). Every element was present and the
+  element that spilled was *visible*, so element checks and `checkVisibility()` were both
+  green. Fixed with `orphans:4; widows:4` and `break-inside:avoid` on route blocks — chosen
+  by rendering three candidates over all 24 decks, not by reasoning. Minimum page-2 ink
+  0.061% → 0.976%; 812 pages before and 812 after, so the break moved and no paper was added.
+- **"Restore `height:91%`" does not reproduce the N3 defect.** The addendum's own
+  `.deck{height:auto!important}` makes that percentage resolve to `auto`, so the rule is
+  inert on its own. The three neutralisations are load-bearing **as a set**; only stripping
+  the whole addendum restores the nine-blank-pages state. Anyone re-running that red-proof
+  from the order's wording will get a green and should not conclude the gate is broken.
+- **A gate scoped by directory name goes quiet the moment a tree is copied.** The page-count
+  band was a table of per-pack path regexes. The perturbed copy sat at a different path,
+  matched none of them, fell through to a permissive default, and a deck that had
+  **collapsed from ten printed pages to two** passed as green. The band now comes from the
+  document's own declared print units — every visible `.print-page` inside `.print-pack`, or
+  every visible `.slide` — which cannot fall through.
+- **A threshold placed without looking at its own distribution hides what it was built to
+  catch.** Sorting all 812 pages by ink shows a continuum, not two clusters: two more
+  orphans at 0.379% and 0.498% sat above the floor, so the honest count of bad sheets is
+  **six, not four**. Neither ink nor character count separates them from the legitimate
+  signature page, which is sparse by design and carries **fewer** characters (76) than an
+  orphan it must not be confused with (86). The floor stays where a failure is unambiguous
+  and the grey band above it is now reported.
+- **A themed background can silence a pixel check entirely.** `body.calm{background:#F4F1E9}`
+  outranks the print block's `body{background:#fff}` on specificity and survives into print;
+  every pixel is then non-white and the ink floor can never fire. The new `--a11y` pass
+  returned a green on bytes the default pass had just failed. Closed by adding a
+  tint-invariant local-variation measure alongside ink. Both passes now agree the defect was
+  six sheets and both agree it is gone.
+- **Comparing the artefact is the broken assertion; comparing the measurement is the sound
+  one.** Rendered twice from identical bytes: **0 of 147** PDFs byte-identical — a PDF
+  carries a creation timestamp — and **0** measurement differences across all 812 pages.
+
+**`s24-print-renders` is a standing gate**, running automatically for every pack with a print
+surface, with an unmeasurable print surface escalated to **red** rather than INVALID. Proven
+red three ways (block outside `.print-pack`; naive donor-only port, 30/30 named; block
+deleted outright, caught by a committed 75-surface coverage contract). Full battery over all
+nine landed packs: **GREEN**, 1113 pages, 0 near-blank, 193 checksum entries and 0 mismatches.
+
+**N12 CLOSED — REFUTED.** All seven signals re-verified in this session; the Art packs stay
+at Spring 2, D9 withdrawn. **The three pack trees are not in this repository or this
+session**, so the ruling is recorded and the placement settled but the landing itself cannot
+be performed here.
+
+**N11/I4 still cannot be measured.** 26 citation URLs across the nine landed packs, all
+returning `000` while the allowlisted control hosts answer `200` in the same run. Timestamped
+artifact committed as evidence the clock has not started; nothing proposed for removal.
+
+**I5 mapped and priced, nothing applied.** `_next6/GUIDE_TAG_MAP.md`. The **TA briefing
+layer** — 1188 `data-ta1`/`data-ta2` strings across 132 decks in four container families, one
+per deck — is **already invisible**, 0 leaking to the room, so it needs no toggle. The staff
+text that *is* on the slides exists in **all nine packs** and mostly already has a clean,
+purpose-built selector: `.choose` `.staff` `.guard` `.evidence-note` `.boundary`
+(GROW_ASDAN), `.screen` (LAUNCH_ASDAN), `.reportback` `.lnote` (Humanities), `.sowline`
+(Science ×3), `.lesson-link` `.small` (BUILD_ASDAN). Four more BUILD_ASDAN
+families are reachable by **label- or position-keying** rather than authoring — verified:
+`.chips .chip:last-child` is the `Estate sequence` chip in **24/24** decks, and
+`.box.objective` splits exactly 24 each into `SPACE routine` / `Model aloud:` / `Connect:`
+(staff) and `Learning objective:` (the pupil's), which is why a class-wide rule there would
+delete the objective from every deck. **Exactly one family in one pack needs a marker
+authored: BUILD_ASDAN's unclassed `Exact SOW outcome` paragraph, 25 files.** Route labels
+are pupil-facing and stay (19/19 and 30/30 visible), and `.model-step` must not be tagged —
+it reads like step-by-step instruction and is **49–58% of its slide's text**, so hiding it
+halves two slides per deck.
+
+**And a fifth wrong-then-right, the sharpest of them.** My first I5 probe was keyed to a
+chosen list of *string families* and concluded that eight of nine packs put no staff-facing
+text on screen. **A probe keyed to string families finds the families it was handed.**
+Re-keying it to **addressee** found staff-facing content visible in all nine — GROW_ASDAN's
+*"Staff: select one route before giving this page to the learner"*, BUILD_Humanities'
+*"Decision maker: Class teacher — replace with the adult's name before delivery"*. It
+surfaced from an adversarial pass over nine independently-produced per-pack maps, seven of
+which were themselves PARTIAL on verification. The cross-check caught the agents' errors and
+mine.
+
+**Open for Matt and Cheryl: the LAUNCH accreditation question — recorded, not resolved, and
+the premise does not survive measurement.** The order's framing is that `D13` gives LAUNCH
+"PEQ Level 1 Award" with no Entry 3 floor, so both sources cannot be right. Against that:
+the ladder's own `A2` says each cell shows the pathway's **TARGET** with a floor only "where
+relevant"; **no LAUNCH cell states a floor for any of the 13 subjects** (BUILD 10/13, GROW
+13/13, LAUNCH **0/13**); `D13` is **byte-identical in all three workbooks**, so it is shared
+front-matter rather than a statement about the LAUNCH cohort; **28 of the 29** cells in the
+LAUNCH workbook that give PEQ a level name Entry 3, the one exception being the GROW column;
+and `D13` is not silent about Entry 3 anyway — it carries *"(E3–L1 only in 2026/27.)"*, and
+what it lacks against `C13` is the word "Floor:". If the ladder is accepted as a target table
+the contradiction dissolves, but that acceptance is a ruling. The estate anchor measures
+**126 occurrences across 33 live-content files**, not 118 (139/38 raw at tip, 3 of them this
+order's own quotations), and **none is in the new packs**. A third string,
+`PEQ Entry 3 (Level 1 · Level 2 routes)`, 18 occurrences across the 6 live LAUNCH PEQ decks,
+agrees with neither. Nobody has ruled on the record: `_passsl/`, the pass that ingested the
+LAUNCH SoW, carries **no level statement at all**.
