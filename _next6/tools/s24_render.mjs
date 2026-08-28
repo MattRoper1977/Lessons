@@ -14,8 +14,15 @@
  * option, and render each resulting state. A surface with no such control is
  * rendered once, bare. Anything less renders a state no teacher ever prints.
  *
+ * --a11y renders the same set under the estate's accessibility invariants —
+ * prefers-reduced-motion: reduce, dark scheme, and the deck's own Calm Mode and
+ * High Contrast classes applied. Those modes are authoritative on this estate, so
+ * a print gate that only measures the default appearance is half a gate: a theme
+ * or contrast rule that reflows the printable pack would be invisible to it.
+ *
  * Usage: node s24_render.mjs --out <dir> <file.html> [file.html ...]
  *        node s24_render.mjs --out <dir> --list <paths.txt>
+ *        node s24_render.mjs --out <dir> --a11y --list <paths.txt>
  */
 import { chromium } from 'playwright';
 import fs from 'node:fs';
@@ -23,12 +30,13 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 
 const argv = process.argv.slice(2);
-let out = null, listFile = null, settle = 400;
+let out = null, listFile = null, settle = 400, a11y = false;
 const files = [];
 for (let i = 0; i < argv.length; i++) {
   if (argv[i] === '--out') out = argv[++i];
   else if (argv[i] === '--list') listFile = argv[++i];
   else if (argv[i] === '--settle') settle = Number(argv[++i]);
+  else if (argv[i] === '--a11y') a11y = true;
   else files.push(argv[i]);
 }
 if (listFile) {
@@ -49,12 +57,22 @@ const index = [];
 let n = 0;
 for (const f of files) {
   const abs = path.resolve(f);
-  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  const page = await browser.newPage(a11y
+    ? { viewport: { width: 1280, height: 900 }, reducedMotion: 'reduce', colorScheme: 'dark' }
+    : { viewport: { width: 1280, height: 900 } });
   const consoleErrors = [];
   page.on('pageerror', (e) => consoleErrors.push(String(e && e.message || e)));
   try {
     await page.goto('file://' + abs, { waitUntil: 'load', timeout: 60000 });
     await page.waitForTimeout(settle);
+    if (a11y) {
+      // The deck's own switches, not a simulation of them.
+      await page.evaluate(() => {
+        document.body.classList.add('calm', 'hc');
+        document.documentElement.classList.add('hc');
+      });
+      await page.waitForTimeout(80);
+    }
     // Print media for anything the page's own JS asks about it.
     await page.emulateMedia({ media: 'print' });
 
@@ -125,7 +143,8 @@ for (const f of files) {
         return { printPages, slides, units: printPages > 0 ? printPages : slides };
       });
       index.push({
-        file: f, variant: v.id, route: v.route, isDefault: !!v.deflt,
+        file: f, variant: (a11y ? 'a11y-' : '') + v.id, route: v.route,
+        isDefault: !!v.deflt, a11y,
         declared: { ...declared, ...perVariant },
         pdf: name, bytes: buf.length,
         sha256: crypto.createHash('sha256').update(buf).digest('hex'),

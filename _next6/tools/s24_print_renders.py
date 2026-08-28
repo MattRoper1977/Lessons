@@ -123,8 +123,11 @@ def source_promises_lc(path):
 # Read the WARN list. Four pages failed this gate before the I1 fix; six were
 # sparse. The fix cleared all six.
 INK_FLOOR = 0.004       # 0.4% of the page's pixels carry any mark at all
+EDGE_FLOOR = 0.008      # 0.8% local variation — the tint-invariant half, which
+                        # keeps working when a themed background defeats INK_FLOOR
 CHAR_FLOOR = 40         # non-whitespace characters in the page's text layer
 INK_WARN = 0.010        # reported, not failed: the grey band above the floor
+EDGE_WARN = 0.016
 CHAR_WARN = 120
 RASTER_SCALE = 1.0      # 72 dpi — enough to see a rule; ~595x842 px for A4
 
@@ -193,9 +196,44 @@ def measure_pdf(path):
         bmp = pg.render(scale=RASTER_SCALE, grayscale=True)
         arr = np.asarray(bmp.to_pil().convert('L'), dtype=np.uint8)
         total = arr.size
+        # TWO measurements, because one of them has a blind spot.
+        #
+        # `ink` is coverage against white: the order's wording, and the right
+        # number for an ordinary sheet. It has a blind spot. Calm Mode sets
+        # `body.calm{background:#F4F1E9}`, which outranks the print block's
+        # `body{background:#fff}` on SPECIFICITY and so survives into print.
+        # Printed with background graphics on, every sheet carries a full-page
+        # cream wash: 84.3% of pixels are then "not white", and a sheet holding
+        # an orphaned twenty-character clause measures as densely inked. Under
+        # that mode the ink floor can never fire, and the --a11y pass would hand
+        # back a hollow green.
+        #
+        # `edge` is tint-invariant: the share of pixels where the image changes
+        # against its neighbour. A flat region contributes nothing WHATEVER ITS
+        # COLOUR — white sheet, cream sheet, dark-mode sheet — while text and
+        # rules contribute a lot. Measured over the corpus it separates the same
+        # way ink does and keeps separating when ink cannot:
+        #
+        #     orphan sheets   edge 0.085% · 0.182% · 0.527% · 0.700%
+        #     signature page  edge 1.258%   <- legitimate, 1.8x the worst orphan
+        #     content pages   edge 6.4% · 12.7%
+        #
+        # A modal-background version of `ink` was tried first and rejected: a
+        # BUILD_ASDAN sheet under Calm Mode has TWO large flat regions, the cream
+        # body and the white print-page, so "differs from the commonest value"
+        # counts the entire print-page as marks and reports 16-26%. Local
+        # variation has no such failure mode.
+        int16 = arr.astype(np.int16)
+        dx = np.abs(np.diff(int16, axis=1))
+        dy = np.abs(np.diff(int16, axis=0))
+        emask = np.zeros(arr.shape, dtype=bool)
+        emask[:, :-1] |= dx > 12
+        emask[:-1, :] |= dy > 12
+        edge = float(emask.sum()) / total
         flat_pg = re.sub(r'\s+', ' ', txt)
         pages.append({
             'page': i + 1,
+            'edge': edge,
             # A signature page is SUPPOSED to be mostly white — ruled boxes and
             # four labels. Marking it as the page that carries the learner
             # confirmation is what lets the sparse report distinguish "sparse on
@@ -214,7 +252,16 @@ def measure_pdf(path):
 
 
 def is_near_blank(pg):
-    return pg['ink'] < INK_FLOOR and pg['chars'] < CHAR_FLOOR
+    """Almost nothing on the sheet.
+
+    A page must be text-poor AND mark-poor. Mark-poor is satisfied by EITHER
+    measurement being under its floor: `ink` catches the ordinary case, `edge`
+    catches it when a themed background has made every pixel non-white. Neither
+    alone covers both, and requiring both would let Calm Mode veto the check.
+    """
+    if pg['chars'] >= CHAR_FLOOR:
+        return False
+    return pg['ink'] < INK_FLOOR or pg.get('edge', 1.0) < EDGE_FLOOR
 
 
 def is_sparse(pg):
@@ -228,7 +275,9 @@ def is_sparse(pg):
     """
     if pg.get('isLC'):
         return False
-    return (not is_near_blank(pg)) and pg['ink'] < INK_WARN and pg['chars'] < CHAR_WARN
+    if is_near_blank(pg) or pg['chars'] >= CHAR_WARN:
+        return False
+    return pg['ink'] < INK_WARN or pg.get('edge', 1.0) < EDGE_WARN
 
 
 # ------------------------------------------------------------------ the gate
@@ -293,8 +342,9 @@ def run(renders_dir, require_lc=True, verbose=True, band_check=True, expect=None
         if blanks:
             ok = False
             rows.append((rec['file'], rec['variant'],
-                         'near-blank pages %s (ink<%.3f, chars<%d)'
-                         % ([b['page'] for b in blanks], INK_FLOOR, CHAR_FLOOR)))
+                         'near-blank pages %s (ink<%.1f%% or edge<%.1f%%, chars<%d)'
+                         % ([b['page'] for b in blanks], INK_FLOOR * 100,
+                            EDGE_FLOOR * 100, CHAR_FLOOR)))
         if band_check and not in_band:
             ok = False
             rows.append((rec['file'], rec['variant'],
@@ -308,7 +358,8 @@ def run(renders_dir, require_lc=True, verbose=True, band_check=True, expect=None
             'pages': len(pages), 'band': [lo, hi], 'inBand': in_band,
             'lcApplies': lc_applies, 'lcInSource': promised, 'lcExpected': in_expect,
             'lcMissing': missing, 'nearBlank': [b['page'] for b in blanks],
-            'sparse': [{'page': p['page'], 'ink': p['ink'], 'chars': p['chars']}
+            'sparse': [{'page': p['page'], 'ink': p['ink'],
+                        'edge': p.get('edge'), 'chars': p['chars']}
                        for p in sparse],
             'minInk': min((p['ink'] for p in pages), default=0.0),
             'medInk': (sorted(p['ink'] for p in pages)[len(pages) // 2] if pages else 0.0),
@@ -372,13 +423,14 @@ def print_table(report):
     warn = [(r, p) for r in report for p in r.get('sparse', [])]
     if warn:
         print()
-        print('SPARSE PAGES — reported, not failed (ink < %.1f%% and < %d chars). '
-              'These are above the failing floor and below what a page of content '
-              'looks like; read them.' % (INK_WARN * 100, CHAR_WARN))
-        for r, p in sorted(warn, key=lambda w: w[1]['ink']):
-            print('   %7.3f%% %5d chars  %s [%s] p%d'
-                  % (p['ink'] * 100, p['chars'], os.path.basename(r['file']),
-                     r['variant'], p['page']))
+        print('SPARSE PAGES — reported, not failed (ink < %.1f%% or edge < %.1f%%, '
+              'and < %d chars). Above the failing floor, below what a page of '
+              'content looks like; read them.'
+              % (INK_WARN * 100, EDGE_WARN * 100, CHAR_WARN))
+        for r, p in sorted(warn, key=lambda w: w[1].get('edge', 0)):
+            print('   ink %6.3f%%  edge %6.3f%%  %5d chars  %s [%s] p%d'
+                  % (p['ink'] * 100, (p.get('edge') or 0) * 100, p['chars'],
+                     os.path.basename(r['file']), r['variant'], p['page']))
 
 
 # ------------------------------------------------------------------ rendering
