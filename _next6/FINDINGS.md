@@ -379,6 +379,11 @@ host.** That is an organisation policy denial, not a dead link, and the proxy do
 is explicit that such denials are to be reported rather than retried. A 30/30 uniform
 failure is an infrastructure signature, not thirty simultaneously dead citations.
 
+Corroborated by a **second, independent tool taking a different path**: `WebFetch` on the
+Historic England listing returns `EGRESS_BLOCKED — Access to historicengland.org.uk is
+blocked by the network egress proxy`. Two unrelated clients hitting the same wall is the
+network, not the web.
+
 Order TS D3 requires **two measurements at least an hour apart** before calling a link dead.
 This environment cannot produce even one valid measurement. **Nothing was removed and no
 removal is proposed.** The check needs re-running from a network that can reach these hosts.
