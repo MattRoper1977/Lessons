@@ -2875,3 +2875,91 @@ than an absolute); 30 external URLs, not 34.
 **Deferred, in `_next6/FINDINGS.md` §Open:** the N5 reading and its lane rule; the Art packs'
 placement; GROW_ASDAN's `★ Optional reach` → `Stretch` (Tier 2 — it removes "Optional" and
 changes what a pupil does); the PH-3 toggle; and one dangling `5 ·` in the ported heading.
+
+---
+
+## R-N6I01 — Order N6-I: the render gate that argued with itself three times
+
+**Last observed true at** `94681cf2`.
+
+Interim order alongside the §2 SoW alignment task. Six items, no week label, term tag, LO,
+success criterion or placement string touched. Full record in
+[`_next6/FINDINGS.md`](_next6/FINDINGS.md) under **ORDER N6-I**.
+
+**The answer to the order's question: both named print defects were already fixed in the
+seven commits, and a third was not.** 75 evidence surfaces rendered to A4 in Chromium under
+print emulation, 147 PDFs, 812 pages, ink coverage measured per page. Learner confirmation
+**75/75** in the printed text — N2's remediation confirmed from the artefact rather than the
+bytes. LAUNCH_ASDAN prints 9 slides plus signature at 10 pages, no blank sheet — N3's
+confirmed. The 51/75 the order quotes is the pre-remediation figure and no longer reproduces.
+
+**The transferable rule of this pass: an instrument is only as good as its last red, and
+three of mine were wrong before they were right.** Each is recorded so the next pass does
+not re-derive it.
+
+- **A grep-invisible defect the render found.** BUILD_ASDAN's printable pack defaults to
+  "All three routes"; in that state page 1 overflows one A4 sheet. Four decks spilled by a
+  single clause, leaving a sheet holding **10 to 38 characters** — `DUKE_W5` at 0.061% ink,
+  `COMM_W1` at 0.129% (*"and systems, not blame."*). Every element was present and the
+  element that spilled was *visible*, so element checks and `checkVisibility()` were both
+  green. Fixed with `orphans:4; widows:4` and `break-inside:avoid` on route blocks — chosen
+  by rendering three candidates over all 24 decks, not by reasoning. Minimum page-2 ink
+  0.061% → 0.976%; 812 pages before and 812 after, so the break moved and no paper was added.
+- **"Restore `height:91%`" does not reproduce the N3 defect.** The addendum's own
+  `.deck{height:auto!important}` makes that percentage resolve to `auto`, so the rule is
+  inert on its own. The three neutralisations are load-bearing **as a set**; only stripping
+  the whole addendum restores the nine-blank-pages state. Anyone re-running that red-proof
+  from the order's wording will get a green and should not conclude the gate is broken.
+- **A gate scoped by directory name goes quiet the moment a tree is copied.** The page-count
+  band was a table of per-pack path regexes. The perturbed copy sat at a different path,
+  matched none of them, fell through to a permissive default, and a deck that had
+  **collapsed from ten printed pages to two** passed as green. The band now comes from the
+  document's own declared print units — every visible `.print-page` inside `.print-pack`, or
+  every visible `.slide` — which cannot fall through.
+- **A threshold placed without looking at its own distribution hides what it was built to
+  catch.** Sorting all 812 pages by ink shows a continuum, not two clusters: two more
+  orphans at 0.379% and 0.498% sat above the floor, so the honest count of bad sheets is
+  **six, not four**. Neither ink nor character count separates them from the legitimate
+  signature page, which is sparse by design and carries **fewer** characters (76) than an
+  orphan it must not be confused with (86). The floor stays where a failure is unambiguous
+  and the grey band above it is now reported.
+- **A themed background can silence a pixel check entirely.** `body.calm{background:#F4F1E9}`
+  outranks the print block's `body{background:#fff}` on specificity and survives into print;
+  every pixel is then non-white and the ink floor can never fire. The new `--a11y` pass
+  returned a green on bytes the default pass had just failed. Closed by adding a
+  tint-invariant local-variation measure alongside ink. Both passes now agree the defect was
+  six sheets and both agree it is gone.
+- **Comparing the artefact is the broken assertion; comparing the measurement is the sound
+  one.** Rendered twice from identical bytes: **0 of 147** PDFs byte-identical — a PDF
+  carries a creation timestamp — and **0** measurement differences across all 812 pages.
+
+**`s24-print-renders` is a standing gate**, running automatically for every pack with a print
+surface, with an unmeasurable print surface escalated to **red** rather than INVALID. Proven
+red three ways (block outside `.print-pack`; naive donor-only port, 30/30 named; block
+deleted outright, caught by a committed 75-surface coverage contract). Full battery over all
+nine landed packs: **GREEN**, 1113 pages, 0 near-blank, 193 checksum entries and 0 mismatches.
+
+**N12 CLOSED — REFUTED.** All seven signals re-verified in this session; the Art packs stay
+at Spring 2, D9 withdrawn. **The three pack trees are not in this repository or this
+session**, so the ruling is recorded and the placement settled but the landing itself cannot
+be performed here.
+
+**N11/I4 still cannot be measured.** 26 citation URLs across the nine landed packs, all
+returning `000` while the allowlisted control hosts answer `200` in the same run. Timestamped
+artifact committed as evidence the clock has not started; nothing proposed for removal.
+
+**I5 mapped and priced, nothing applied.** `_next6/GUIDE_TAG_MAP.md`. The measurement
+changes the question: **132 of 159 files carry staff guidance and 0 put any of it on the
+pupil-facing surface** — four container families, one per lesson deck, none visible at load,
+so PH-3's purpose is already met by the chassis. What is actually on the wall is BUILD_ASDAN's
+SoW provenance (28/25/26 files) plus `AQA UAS` in 13 LAUNCH_ASDAN files, and nothing in the
+other seven packs. **One existing selector isolates staff text** — `.small`, 24/24 clean in
+the lesson decks — while `.chip` is 24 of 96 and `Exact SOW outcome:` is in an unclassed
+`<p>`. So the hide-set is one-third mappable and two-thirds authoring: **66 marker sites
+across 40 files**. Route labels are pupil-facing and stay.
+
+**Open for Matt and Cheryl:** the LAUNCH accreditation contradiction, written up with both
+sources quoted and both readings costed. The framing is narrower than it looks — Pathway
+Ladder `D13` is not silent about Entry 3, it carries *"(E3–L1 only in 2026/27.)"*; what it
+lacks against `C13` is the word "Floor:". The estate anchor measures **126 occurrences across
+33 live files**, not 118, and **none of them is in the new packs**.
