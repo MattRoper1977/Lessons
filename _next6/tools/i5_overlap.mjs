@@ -37,7 +37,14 @@ import path from 'node:path';
 // sequence metadata: Week 15", which made `.small` look like a mixed class
 // carrying ten pupil-facing instances. It carries none. A probe that is
 // case-sensitive about prose is a probe that invents overlap.
-const STAFF = /estate sequence|exact sow outcome|inherited (mapping|evidence)|AQA UAS|'[A-Za-z ]+ (Weekly - )?(Autumn|Spring|Summer)'![A-Z]\d|continuity metadata|adult support remains separate/i;
+// Keyed to ADDRESSEE as well as to provenance. The first version probed only
+// for SoW-provenance string families and concluded that eight of the nine packs
+// have no visible staff text at all. That was false, and false in the way a
+// string-family probe always is: it finds the families it was handed. Blocks
+// like GROW_ASDAN's "Staff: select one route before giving this page to the
+// learner" and BUILD_ASDAN's "SPACE routine · Show a predictable first/then
+// visual" are plainly staff-facing, plainly on the slide, and matched nothing.
+const STAFF = /estate sequence|exact sow outcome|sequence outcome:|inherited (mapping|evidence)|AQA UAS|'[A-Za-z ]+ (Weekly - )?(Autumn|Spring|Summer)'![A-Z]\d|Weekly [-\u2013] Autumn [A-Z]\d+:[A-Z]\d+|continuity metadata|adult support remains separate|\b(Staff:|STAFF ONLY|Staff may|Staff watch|Staff pre-stage|Staff before|Teacher models|Teacher tools|Teacher-prepare|the adult names|Adult close|Adult prep|Named-adult)|least[- ]prompt|self-prompt|co-regulate|do not reveal the pupil|fade (it|the first prompt)|exact-word scrib|SPACE routine|Authorship check|Evidence boundary|Teaching \/ qualification boundary|Protected evidence|PROTECTED OUTCOME/i;
 const files = fs.readFileSync(process.argv[2], 'utf8').split('\n').map((s) => s.trim()).filter(Boolean);
 const b = await chromium.launch();
 const per = {};

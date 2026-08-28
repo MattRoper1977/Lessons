@@ -32,11 +32,26 @@ const files = fs.readFileSync(process.argv[2], 'utf8').split('\n').map((s) => s.
 // could actually be on the wall. Each is a candidate for the hide set; a family
 // that is in the source but never on screen is not.
 const PROBES = [
-  ['SoW cell reference', /'[A-Za-z ]+ (Weekly - )?(Autumn|Spring|Summer)'![A-Z]\d{1,4}/],
-  ['Exact SOW outcome', /Exact SOW outcome/],
+  // --- provenance / audit trail: who the lesson came from ---
+  ['SoW cell reference', /'[A-Za-z ]+ (Weekly - )?(Autumn|Spring|Summer)'![A-Z]\d{1,4}|Weekly [-–] Autumn [A-Z]\d+:[A-Z]\d+/],
+  ['Exact SOW outcome', /Exact SOW outcome|Sequence outcome:/],
   ['Estate sequence', /Estate sequence/],
   ['Inherited mapping/evidence', /Inherited (mapping|evidence)/],
   ['AQA UAS unit title', /AQA UAS/],
+  // --- staff-ADDRESSED delivery instruction: who the sentence is talking to ---
+  //
+  // This second group exists because the first was too narrow and said so
+  // wrongly. Probing only for provenance strings produced "everything outside
+  // BUILD_ASDAN: nothing", and that is false — the adversarial pass over the
+  // per-pack maps surfaced blocks like GROW_ASDAN's "Staff: select one route
+  // before giving this page to the learner" and BUILD_ASDAN's "SPACE routine ·
+  // Show a predictable first/then visual", which are plainly staff-facing and
+  // plainly on the slide. A probe keyed to string families finds the families it
+  // was given; keying to ADDRESSEE finds the ones nobody thought of.
+  ['staff addressed directly', /\b(Staff:|STAFF ONLY|Staff may|Staff watch|Staff pre-stage|Staff before|Teacher models|Teacher tools|Teacher-prepare|the adult names|Adult close|Adult prep|Named-adult)/],
+  ['adult prompting instruction', /(Least[- ]prompt|self-prompt|Co-regulate|co-regulate|Do not reveal the pupil|fade (it|the first prompt)|exact-word scrib)/],
+  ['delivery routine label', /(SPACE routine|Authorship check|Evidence boundary|Teaching \/ qualification boundary|Protected evidence|PROTECTED OUTCOME)/],
+  // --- pupil-facing, must stay ---
   ['route label (pupil-facing)', /(Supported route|Standard route|Stretch route|Optional reach|Secure route|Reach route)/],
 ];
 const b = await chromium.launch();

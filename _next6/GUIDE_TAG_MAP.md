@@ -9,19 +9,35 @@ price, as the order requires.**
 
 ## The headline, before the tables
 
+> **A correction, at the top, because an earlier version of this document said the
+> opposite.** The first pass of this map probed for a chosen list of *string families* —
+> SoW cell references, `Exact SOW outcome`, `Estate sequence`, `AQA UAS` — and concluded
+> that eight of the nine packs put no staff-facing text on screen at all. **That was wrong.**
+> A string-family probe finds the families it was handed. Re-probing by **addressee** —
+> who is the sentence talking to? — finds staff-facing content visible in **all nine
+> packs**: GROW_ASDAN's *"Staff: select one route before giving this page to the learner"*,
+> LAUNCH_ASDAN's *"Authorship check: Staff may model the process…"*, Science's
+> *"Sequence outcome: Rocks: test hardness."*, BUILD_Humanities' *"Named-adult
+> report-back · Decision maker: Class teacher — replace with the adult's name before
+> delivery."* The corrected measurement is what follows. The error is recorded rather than
+> quietly overwritten, because the method that produced it is the method a future pass will
+> reach for first.
+
 Three things were measured that change what this job is:
 
-1. **Staff guidance is already invisible to the room.** 132 of the 159 files carry
-   staff-facing guidance strings. **Zero** of them put any of it on the pupil-facing
-   surface — measured by activating every slide in turn and reading `innerText`, which
-   excludes a closed `<dialog>`, a `[hidden]` element and any `display:none` subtree.
-   PH-3's purpose is already achieved by the chassis. What a toggle would add is a
-   *persisted preference*, not a capability.
+1. **The TA/teacher briefing layer is already invisible to the room, and it is the bulk of
+   the guidance.** 132 of the 159 files carry `data-ta1`/`data-ta2` briefing strings — 1188
+   of them — and **zero** reach the pupil-facing surface. They live in four container
+   families, one per lesson deck, none visible at load. PH-3's headline purpose is already
+   achieved by the chassis for that layer.
 
-2. **What IS on the wall is one pack and a 13-file tail of a second**, not twelve packs.
+2. **But staff-facing text on the slides themselves exists in all nine packs**, and it is a
+   different thing from the briefing layer: delivery routines, authorship boundaries,
+   named-adult actions, and SoW provenance.
 
-3. **No existing selector isolates it.** The hide-set cannot be mapped from what exists;
-   it has to be authored. That is the cost.
+3. **Most of it already has a dedicated selector.** `.staff`, `.choose`, `.guard`,
+   `.evidence-note`, `.boundary`, `.screen`, `.reportback`, `.lnote`, `.sowline` are
+   purpose-built and clean. The unmappable residue is small and confined to BUILD_ASDAN.
 
 ---
 
@@ -91,67 +107,71 @@ target are different objects.
 
 ## §4 · What is visible to the room — the real hide-set
 
-Measured by activating every slide in turn and reading the visible `innerText`. The
+Measured by activating every slide in turn and reading the visible `innerText`, which
+excludes a closed `<dialog>`, a `[hidden]` element and any `display:none` subtree. The
 all-slides walk is load-bearing: these decks hide non-active slides with
-`.slide{display:none}`, so reading `innerText` at load returns the title slide and nothing
-else. A first pass reported route labels as invisible in BUILD_ASDAN and LAUNCH_ASDAN
-purely because they sit on slide 4.
+`.slide{display:none}`, so reading at load returns the title slide and nothing else.
 
-| pack | string family | in source | **visible** |
-|---|---|---:|---:|
-| BUILD_ASDAN | SoW cell reference — `'BUILD Weekly - Autumn'!B181` | 28 | **28** |
-| BUILD_ASDAN | `Exact SOW outcome:` | 25 | **25** |
-| BUILD_ASDAN | `Estate sequence` | 26 | **26** |
-| BUILD_ASDAN | `Inherited mapping` / `Inherited evidence` | 25 | 1 |
-| BUILD_ASDAN | `AQA UAS` unit title | 25 | 1 |
-| LAUNCH_ASDAN | `AQA UAS` unit title | 13 | **13** |
-| GROW_ASDAN · Science ×3 · Humanities ×3 | all of the above | 0 | **0** |
+Files where the family is present in source / **visible across all slides**:
 
-**That is the entire visible staff-facing surface across 159 files.** One pack, four string
-families, plus a 13-file tail in a second pack.
+| pack | SoW ref | `Exact SOW outcome` / `Sequence outcome:` | `Estate sequence` | `AQA UAS` | staff addressed directly | adult prompting instruction | delivery routine label |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| BUILD_ASDAN | 28/**28** | 25/**25** | 26/**26** | 25/1 | 24/**24** | 25/**25** | 24/**24** |
+| GROW_ASDAN | 0/0 | 0/0 | 0/0 | 0/0 | 19/**19** | 19/7 | 19/**19** |
+| LAUNCH_ASDAN | 0/0 | 0/0 | 0/0 | 13/**13** | 30/**30** | 31/1 | 30/**30** |
+| BUILD_Science | 0/0 | 12/**12** | 0/0 | 0/0 | 12/0 | 12/0 | 0/0 |
+| GROW_Science | 0/0 | 12/**12** | 0/0 | 0/0 | 12/0 | 12/0 | 0/0 |
+| LAUNCH_Science | 0/0 | 18/**18** | 0/0 | 0/0 | 18/0 | 18/0 | 0/0 |
+| BUILD_Humanities | 0/0 | 0/0 | 0/0 | 0/0 | 6/**6** | 6/0 | 0/0 |
+| GROW_Humanities | 7/2 | 0/0 | 0/0 | 0/0 | 3/**3** | 7/1 | 1/1 |
+| LAUNCH_Humanities | 0/0 | 0/0 | 0/0 | 0/0 | 6/0 | 1/1 | 6/0 |
+
+**Every pack has something visible.** The Science packs' is a single clean provenance line;
+the ASDAN packs carry delivery routines and authorship boundaries as well; the Humanities
+packs carry named-adult actions and pedagogical notes.
 
 **Route labels are pupil-facing and stay.** `Supported route` / `Standard route` /
 `Stretch route` are visible in GROW_ASDAN 19/19 and LAUNCH_ASDAN 30/30, and a pupil chooses
-between them. `.route*` is a **keep-visible** selector, not a hide candidate, in every pack
-that has it (134 files, 786 occurrences). Treating "route metadata" as a hide target — the
-reading the order's wording invites — would remove the pupil's own access route from the
-screen.
+between them. Treating "route metadata" as a hide target — the reading the order's wording
+invites — would remove the pupil's own access route from the screen. GROW_ASDAN's `.soft`
+looks staff-facing to a keyword probe and is not: *"Standard: add a reason or example.
+Optional reach: name what evidence could change your first answer."* is addressed to the
+pupil.
 
-## §5 · The overlap risk, measured in the DOM
+## §5 · The candidate hide-set, per pack, read rather than pattern-matched
 
-For every class in every deck: how many of its instances carry a staff string in their
-**own** text — text not inside a nested classed child?
+Every candidate below is a class **all of whose instances** carry staff material, then read
+in a browser to confirm what the whole block says and whether it is on screen. Machine
+matching proposes; reading disposes — a literal-match-ratio test was tried and discarded,
+because these are staff *labels* on prose blocks and the prose does not match the label.
 
-| pack | classes ALWAYS staff-bearing | classes MIXED (hiding them takes pupil content) |
-|---|---|---|
-| BUILD_ASDAN | `.hero` 24, `.lesson-link` 24, `.table-wrap` 1 | `.chip` 24/96, `.small` 56/58, `.card` 28/404, `.print-page` 24/72, `.good` 1/98, `.safe` 1/29, `.stage` 1/10 |
-| LAUNCH_ASDAN | none | `.box` 13/420, `.guard` 13/60, `.drawer-card` 13/210 |
-| the other seven | none | none |
+| pack | selector | instances | on screen | what it says | verdict |
+|---|---|---:|---|---|---|
+| GROW_ASDAN | `.choose` | 18 | **yes** | *"Staff: select one route before giving this page to the learner. Change access, not authorship."* | **clean — tag it** |
+| GROW_ASDAN | `.staff` | 18 | **yes** | *"Staff pre-stage before the 16-minute transfer · Select two current, centre-approved job and route cards…"* | **clean — tag it** |
+| GROW_ASDAN | `.guard` | 18/74 | **yes** | *"Teaching / qualification boundary · Learners contribute to the project; they do not authorise external contact…"* | **clean — tag it** |
+| GROW_ASDAN | `.evidence-note` | 18/36 | **yes** | *"Potential evidence only. Keep adult preparation and support separate…"* | **clean — tag it** |
+| GROW_ASDAN | `.boundary` | 18/36 | **yes** | *"Use: preserve the learner's first prediction and explanation…"* | **clean — tag it** |
+| LAUNCH_ASDAN | `.screen` | 30/60 | **yes** | *"Authorship check: Staff may model the process and preserve access…"* | **clean — tag it** |
+| BUILD_Humanities | `.reportback` | 6 | **yes** | *"Named-adult report-back · Decision maker: Class teacher — replace with the adult's name before delivery."* | **clean — tag it** |
+| BUILD / GROW / LAUNCH Humanities | `.lnote` | 12/54, 6/90, 6/54 | **yes** | *"One Lundy loop only. Humanities adds disciplinary interpretation, not a second closure system."* | **clean — tag it** |
+| Science ×3 | `.sowline` | 12, 12, 18 | **yes** | *"Sequence outcome: Rocks: test hardness."* | **clean — tag it** |
+| BUILD_ASDAN | `.lesson-link` | 24 | **yes** | *"…BUILD_A2_PFA_W1 · Estate sequence W9 · 'BUILD Weekly - Autumn'!C137"* | **clean — tag it** |
+| BUILD_ASDAN | `.small` | 24/24 in decks | **yes** | *"Source: 'BUILD Weekly - Autumn'!B181 · …!C181"* | **clean — tag it** |
+| BUILD_ASDAN | `.chip` | 24/96 | **yes** | *"Estate sequence W9"* — the other 72 are the lane, unit and week a pupil reads | **MIXED — needs a marker** |
+| BUILD_ASDAN | `.hero` | 24 | **yes** | holds `Exact SOW outcome:` **and** the lesson `<h1>` and objective | **MIXED — needs a marker** |
+| all nine | `.prompt-ladder` / `.ladder` / `.adult-action` / `.mobile-teacher-tools` / `.print-note` | — | **no** | already inside a dialog, drawer or print-only block | **no action** |
 
-**"Always staff-bearing" is necessary and not sufficient.** `.hero` is 24/24 and still
-holds the lesson's own `<h1>`. Hiding it would take the lesson title with it.
+**So the hide-set is mostly mappable.** Ten selector families across the nine packs are
+clean and already exist. The residue that needs a marker authored is **two families in one
+pack**: BUILD_ASDAN's `Estate sequence` chip and its `Exact SOW outcome` paragraph, 51 sites
+across 26 files.
 
-**The decisive question — does any class isolate staff text, carrying nothing else?**
-
-| pack | answer |
-|---|---|
-| BUILD_ASDAN | **`.small` — yes, and it is the only one.** 24 of 24 instances in the 24 lesson decks are the `Source:` cell-reference line and nothing else; 56 of 58 across all 28 files, the two exceptions being external ASDAN spec URLs in the assessor-side planning file, which is outside the evidence-surface set anyway. **`.chip` — no.** 24 of 96 are clean (`"Estate sequence W9"`); the other 72 are the lane, unit and week a pupil reads. |
-| the other eight | **No class isolates staff text.** |
-
-*(A correction worth recording, because it changes the answer. The first run of this probe
-was case-sensitive and reported `.small` as mixed with ten pupil-facing instances. Those ten
-were `"Secondary estate sequence metadata: Week 15"` and its neighbours — staff strings the
-pattern missed on a lower-case `e`. A probe that is case-sensitive about prose invents
-overlap. `i5_overlap.mjs` carries the fix and a comment saying why.)*
-
-And the most obviously staff-facing string on the opening slide, `Exact SOW outcome:`, sits
-in an **unclassed** `<p><strong>` inside `.hero`. There is no selector for it at all.
-
-**So the hide-set is one-third mappable and two-thirds authoring.** One of the three visible
-BUILD_ASDAN items (`Source:` → `.small`) can be hidden with an existing selector today. The
-other two — `Estate sequence W9` and `Exact SOW outcome:` — need markers added to specific
-elements. That is what the previous pass meant by *"the mapping is the work"*, now shown at
-element level rather than asserted, and it is the main driver of the cost below.
+*(Two probe artefacts worth recording so a later pass does not chase them. `.enhanced` in
+the Science packs appears in the candidate list because its element is a `<style>` block and
+the probe read CSS text as content. And an earlier, case-sensitive run of the overlap probe
+reported `.small` as mixed with ten pupil-facing instances; all ten were staff strings missed
+on a lower-case `e`. A probe case-sensitive about prose invents overlap.)*
 
 ## §6 · Worked example — `BUILD_ASDAN_A2_COMM_W1_Review_Progress_and_Solve_a_Problem.html`
 
@@ -188,60 +208,54 @@ string — which is already invisible and needs no tagging.
 **What would break if the mapping were wrong for this file.** Hiding `.chip` removes the
 lane, unit and week — a pupil arriving mid-term loses the only on-screen statement of where
 they are. Hiding `.hero` removes the lesson title and the learning objective, which is the
-140-of-175 failure the patcher's own comments record. Hiding `.small` is the one safe move on
-this slide, and it removes one of the three items.
+140-of-175 failure the patcher's own comments record. `.small` and `.lesson-link` are the two
+safe moves on this deck and between them they remove one of the three items on this slide;
+the other two are what the 51 authored markers are for.
 
-## §7 · Cost, and the question it raises
+**And this deck is the hard case, not the typical one.** In GROW_ASDAN the same job is
+`.choose`, `.staff`, `.guard`, `.evidence-note` and `.boundary` — five clean, purpose-built
+classes. In the Science packs it is one: `.sowline`. BUILD_ASDAN is the only pack where the
+staff text was written without a class of its own.
 
-### The four line items
+## §7 · Cost
 
 | # | work | scope | estimate | what drives it |
 |---|---|---|---:|---|
-| 1 | **Author the hide-set markers** | Counted exactly: `Estate sequence` 26 files · `Exact SOW outcome` 25 · `AQA UAS` 14 (13 LAUNCH_ASDAN + 1 BUILD_ASDAN) · `Inherited mapping` 1. `Source:` needs none — `.small` already isolates it in all 28. | **66 marker sites across 40 files**; one patcher, half a day with the checks below | It is authoring, not patching. Each marker goes on a specific element and must be proven not to have taken a sibling with it. |
-| 2 | **Render-check per family per lane** | The gate already exists — `s24-print-renders` renders 159 files in ~2 minutes. A screen-side equivalent is `i5_guidance_visibility.mjs`, which already walks every slide of all 159. | **~0 new tooling**; ~5 minutes per run | This line item is already paid. It was the expensive part of the previous estimate and is not any more. |
-| 3 | **The `localStorage` question** | A straight fork, unchanged from N7 | **a ruling, not engineering** | PH-3 persists `mbm_guide_v1`; gate 4 requires 0 browser storage and every deck declares `storageKeys: []`. Either narrow gate 4 to that one key (matching 175 estate carriers) or ship the toggle without persistence. |
-| 4 | **Regression** | 159 files, but only 37 touched | **low** | Additive, markered, strip-reversible in the estate's usual pattern; `s24` and the existing battery both gate it. |
+| 1 | **Tag the ten clean selector families** | `.choose` `.staff` `.guard` `.evidence-note` `.boundary` (GROW_ASDAN) · `.screen` (LAUNCH_ASDAN) · `.reportback` `.lnote` (Humanities) · `.sowline` (Science ×3) · `.lesson-link` `.small` (BUILD_ASDAN) | **a selector list, not an edit** — the classes exist and are clean | This is the part that really is patching. It is one CSS rule per family plus the toggle. |
+| 2 | **Author markers for the residue** | BUILD_ASDAN only: the `Estate sequence` chip (26 files) and the `Exact SOW outcome` paragraph (25 files) — **51 sites across 26 files** | **~51 marker insertions**, half a day with the checks | `.chip` is 24 of 96 (the other 72 are the lane, unit and week a pupil reads) and the outcome paragraph is unclassed inside `.hero`. Neither can be reached without adding something. |
+| 3 | **Render / visibility check per family per lane** | already built | **~5 minutes per run** | `s24-print-renders` renders all 159 to A4; `i5_guidance_visibility.mjs` walks every slide of all 159 and reports what reaches the screen. This was the expensive line item in the previous estimate and is not any more. |
+| 4 | **The `localStorage` question** | a straight fork, unchanged from N7 | **a ruling, not engineering** | PH-3 persists `mbm_guide_v1`; gate 4 requires 0 browser storage and every deck declares `storageKeys: []`. Narrow gate 4 to that one key (matching 175 estate carriers), or ship the toggle without persistence. |
+| 5 | **Regression** | 159 files, ~40 touched | **low** | Additive, markered, strip-reversible in the estate's usual pattern; `s24` and the existing battery both gate it. |
 
-### The question the numbers raise
+### What a toggle would and would not remove
 
-**Line 1 buys very little.** Everything a toggle would hide, except those 61 sites, is
-already invisible: 132 decks, 1188 guidance strings, four container families, **0 leaking to
-the room**. What the toggle would actually remove from the wall is:
+**Would remove, and is worth removing from a projected screen:** GROW_ASDAN's *"Staff:
+select one route before giving this page to the learner"* and its staff pre-stage block;
+LAUNCH_ASDAN's authorship check; BUILD_Humanities' *"Decision maker: Class teacher —
+replace with the adult's name before delivery"*, which is an unfinished instruction to the
+teacher sitting on the wall; the Humanities Lundy notes.
 
-- `Estate sequence W9` — 26 BUILD_ASDAN files
-- `Exact SOW outcome: …` — 25 BUILD_ASDAN files
-- `Source: 'BUILD Weekly - Autumn'!B181 · …` — 28 BUILD_ASDAN files
-- `AQA UAS …` — 13 LAUNCH_ASDAN files + 1 BUILD_ASDAN
+**Would remove, and is more arguable:** the SoW audit trail — BUILD_ASDAN's `Estate
+sequence W9`, `Exact SOW outcome:` and `Source: …!B181`, and Science's `Sequence outcome:`.
+A teacher can see which SoW cell the lesson came from without opening anything, which is
+defensible as a feature.
 
-41 files in total carry a visible staff string; 40 of them need a marker authored, and 28
-of those are already covered for one of their three items by `.small`.
-
-That is an audit trail on a title slide, not teacher instructions. It is worth asking
-whether the right answer is a toggle at all, or one of:
-
-- **do nothing** — the provenance is defensible on screen and is arguably a feature: a
-  teacher can see which SoW cell the lesson came from without opening anything;
-- **move it** — relocate the three BUILD_ASDAN strings into the already-hidden
-  `#teacherDialog`, which is one edit per deck and needs no toggle, no storage, and no
-  change to gate 4;
-- **the full toggle** — line items 1–4 above.
-
-**The middle option costs less than the toggle and delivers the same visible result.** It is
-recorded here as an option, not a recommendation: choosing between them is a ruling, and
-this order says map and price, not decide.
+**Would not remove, because it is already invisible:** the whole TA briefing layer — 1188
+`data-ta1`/`data-ta2` strings across 132 decks, plus the prompt ladders, adult-action notes
+and teacher-tool drawers. This is the bulk of the guidance and needs no toggle at all.
 
 ### What is NOT priced
 
 The three Art packs. They are not in this repository, so their selectors were not counted
 and their cost is not estimated. On the pattern of the nine, an Art pack would be one more
-container family to identify and somewhere between zero and three visible string families —
-but that is an extrapolation, and it is labelled as one.
+container family and somewhere between one and three visible families — but that is an
+extrapolation, and it is labelled as one.
 
 ## §8 · The tools this map was measured with
 
 | tool | what it measures |
 |---|---|
-| `_next6/tools/i5_guidance_visibility.mjs` | walks every slide, reports which of a deck's own staff strings reach the visible surface, and which container family holds them |
-| `_next6/tools/i5_overlap.mjs` | for every class in every deck, how many instances carry a staff string in their own text — the overlap risk |
+| `_next6/tools/i5_guidance_visibility.mjs` | walks every slide; reports which of a deck's own TA strings reach the visible surface, which container family holds them, and which staff-facing string families are on screen — keyed by **addressee**, not only by a chosen list of phrases |
+| `_next6/tools/i5_overlap.mjs` | for every class in every deck, how many instances carry staff material in their own text — the overlap risk, measured in a real DOM |
 
 Both are read-only and take a file list. Neither applies anything.
