@@ -2948,15 +2948,26 @@ be performed here.
 returning `000` while the allowlisted control hosts answer `200` in the same run. Timestamped
 artifact committed as evidence the clock has not started; nothing proposed for removal.
 
-**I5 mapped and priced, nothing applied.** `_next6/GUIDE_TAG_MAP.md`. The measurement
-changes the question: **132 of 159 files carry staff guidance and 0 put any of it on the
-pupil-facing surface** — four container families, one per lesson deck, none visible at load,
-so PH-3's purpose is already met by the chassis. What is actually on the wall is BUILD_ASDAN's
-SoW provenance (28/25/26 files) plus `AQA UAS` in 13 LAUNCH_ASDAN files, and nothing in the
-other seven packs. **One existing selector isolates staff text** — `.small`, 24/24 clean in
-the lesson decks — while `.chip` is 24 of 96 and `Exact SOW outcome:` is in an unclassed
-`<p>`. So the hide-set is one-third mappable and two-thirds authoring: **66 marker sites
-across 40 files**. Route labels are pupil-facing and stay.
+**I5 mapped and priced, nothing applied.** `_next6/GUIDE_TAG_MAP.md`. The **TA briefing
+layer** — 1188 `data-ta1`/`data-ta2` strings across 132 decks in four container families, one
+per deck — is **already invisible**, 0 leaking to the room, so it needs no toggle. The staff
+text that *is* on the slides exists in **all nine packs** and mostly already has a clean,
+purpose-built selector: `.choose` `.staff` `.guard` `.evidence-note` `.boundary`
+(GROW_ASDAN), `.screen` (LAUNCH_ASDAN), `.reportback` `.lnote` (Humanities), `.sowline`
+(Science ×3), `.lesson-link` `.small` (BUILD_ASDAN). The residue needing an authored marker
+is two families in one pack — BUILD_ASDAN's `Estate sequence` chip (`.chip` is 24 of 96) and
+its unclassed `Exact SOW outcome` paragraph — **51 sites across 26 files**. Route labels are
+pupil-facing and stay (19/19 and 30/30 visible).
+
+**And a fifth wrong-then-right, the sharpest of them.** My first I5 probe was keyed to a
+chosen list of *string families* and concluded that eight of nine packs put no staff-facing
+text on screen. **A probe keyed to string families finds the families it was handed.**
+Re-keying it to **addressee** found staff-facing content visible in all nine — GROW_ASDAN's
+*"Staff: select one route before giving this page to the learner"*, BUILD_Humanities'
+*"Decision maker: Class teacher — replace with the adult's name before delivery"*. It
+surfaced from an adversarial pass over nine independently-produced per-pack maps, seven of
+which were themselves PARTIAL on verification. The cross-check caught the agents' errors and
+mine.
 
 **Open for Matt and Cheryl: the LAUNCH accreditation question — recorded, not resolved, and
 the premise does not survive measurement.** The order's framing is that `D13` gives LAUNCH
