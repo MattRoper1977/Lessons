@@ -113,11 +113,44 @@ def main(a_path, b_path, grid_path, out_path):
             if m:
                 b_within = ('%s%s' % (m.group(1).title(), m.group(2)), int(m.group(3)))
 
-        # --- the SoW row, under each reading ---
+        # --- the SoW row ---
+        #
+        # JOIN ON WHAT THE PACK ACTUALLY CLAIMS. A pack that names its half-term
+        # and week ("Autumn 2 · Week 1", source_week "Aut2·W1") is already
+        # speaking the workbook's units, so deriving an estate week and mapping
+        # it back through a disputed calendar introduces an off-by-one that the
+        # pack never had.
+        #
+        # A first version did exactly that and it was wrong for 42 of 132 rows.
+        # BUILD_ASDAN_A2_COMM_W1 claims Aut2·W1; via continuationWeek 9 and the
+        # SoW reading it came out as Aut2·W2, so the lesson was judged against
+        # "Practise a vocational skill our project needs" — which is what the
+        # pack's own W2 deck teaches. GROW_ASDAN was worse: its bare week 1-6 was
+        # read as an estate week, landing every deck in Aut1 instead of Aut2.
+        # The second, independent verdict pass caught it by quoting the outcome
+        # it had been handed; that is what the two-instrument rule is for.
+        #
+        # Only packs that state a BARE ESTATE WEEK (Science, Humanities) need the
+        # calendar to place them, and for those the two readings are both kept.
+        claim = None
+        if a['A_source_week']:
+            m = re.match(r'(Aut|Spr|Sum)(\d)\s*[·.]\s*W(\d+)', norm(a['A_source_week']), re.I)
+            if m:
+                claim = ('%s%s' % (m.group(1).title(), m.group(2)), int(m.group(3)))
+        if claim is None and a['A_term'] and a['A_week_manifest'] is not None:
+            t = norm(a['A_term'])
+            m = re.match(r'(Autumn|Spring|Summer)\s*([12])', t, re.I)
+            if m:
+                claim = ('%s%s' % (m.group(1)[:3].title(), m.group(2)), int(a['A_week_manifest']))
+
         got = {}
-        for reading in ('SOW', 'CALENDAR'):
-            ht, wk = estate_to_htwk(a_week, reading) if a_week else (None, None)
-            got[reading] = idx.get((lane, sow_strand, ht, wk))
+        if claim:
+            row = idx.get((lane, sow_strand, claim[0], claim[1]))
+            got['SOW'] = got['CALENDAR'] = row
+        else:
+            for reading in ('SOW', 'CALENDAR'):
+                ht, wk = estate_to_htwk(a_week, reading) if a_week else (None, None)
+                got[reading] = idx.get((lane, sow_strand, ht, wk))
 
         # --- the deck's OWN claim about its half-term, if it makes one ---
         deck_htwk = None
