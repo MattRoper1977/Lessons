@@ -1,0 +1,192 @@
+# SoW slice · GROW lane · Spring term
+
+Workbook: `_passsg/inputs/GROW SOW 2026-27.xlsx`
+sha256: `5b56e6a9a18f3d79816ac02cc66067d3af42ff06b71ee4c0b73d78eddea93c8a`
+
+Pack: `Art_Teesside/Grow/Spring2_2026-27`  (pack weeks: Spr2·W1-W6)
+
+## Weekly outcomes (156 rows)
+
+| cell | strand | week | weekly outcome | programme alignment | accreditation |
+|---|---|---|---|---|---|
+| GROW Weekly - Spring!C4 | English & Communication (FS Level 1 to 2; Entry 3 floor) | Spr1·W1 | Read the Spring text; infer how a character faces difficulty and cite evidence. | Pearson Functional Skills English Level 1 to Level 2 (reading, writing, SLC) · White Rose / NC KS3 English · Entry 3 / AQA Step Up to English kept as a FLOOR for the lowest Grow learners · That Readin | Pearson Functional Skills English Level 1 to Level 2; Entry 3 / Step Up to English floor where needed; AQA UAS 'Reading & analysis', 'Writing for purpose', 'Spoken presentation'. F: reading-age & writ |
+| GROW Weekly - Spring!C5 | English & Communication (FS Level 1 to 2; Entry 3 floor) | Spr1·W2 | Analyse how the writer shows resilience and change through language choices. |  |  |
+| GROW Weekly - Spring!C6 | English & Communication (FS Level 1 to 2; Entry 3 floor) | Spr1·W3 | Read and analyse 'Still I Rise'; explain the poet's methods and effect. |  |  |
+| GROW Weekly - Spring!C7 | English & Communication (FS Level 1 to 2; Entry 3 floor) | Spr1·W4 | Compare how two writers present overcoming hardship; use evidence from both. |  |  |
+| GROW Weekly - Spring!C8 | English & Communication (FS Level 1 to 2; Entry 3 floor) | Spr1·W5 | Plan a structured piece of writing to argue or persuade (a clear line of argument). |  |  |
+| GROW Weekly - Spring!C9 | English & Communication (FS Level 1 to 2; Entry 3 floor) | Spr1·W6 | Draft using rhetorical devices, connectives and accurate paragraphing (L1-2). |  |  |
+| GROW Weekly - Spring!C10 | English & Communication (FS Level 1 to 2; Entry 3 floor) | Spr2·W1 | Argument/persuasive writing assessment; bank FS/UAS evidence. |  |  |
+| GROW Weekly - Spring!C11 | English & Communication (FS Level 1 to 2; Entry 3 floor) | Spr2·W2 | Read an extract from a memoir of resilience (Long Walk to Freedom); analyse. |  |  |
+| GROW Weekly - Spring!C12 | English & Communication (FS Level 1 to 2; Entry 3 floor) | Spr2·W3 | Synthesise ideas across two texts and evaluate their effectiveness. |  |  |
+| GROW Weekly - Spring!C13 | English & Communication (FS Level 1 to 2; Entry 3 floor) | Spr2·W4 | Plan a biography/recount, selecting and organising relevant information. |  |  |
+| GROW Weekly - Spring!C14 | English & Communication (FS Level 1 to 2; Entry 3 floor) | Spr2·W5 | Draft and redraft, checking cohesion, register and accuracy to L1-2 standard. |  |  |
+| GROW Weekly - Spring!C15 | English & Communication (FS Level 1 to 2; Entry 3 floor) | Spr2·W6 | Final biography/recount + reading assessment; bank FS Level 1-2 evidence. |  |  |
+| GROW Weekly - Spring!C16 | Maths & Numeracy (White Rose Year 5/6; FS L1-2, Entry 3 floor) | Spr1·W1 | Solve multi-step problems using all four operations and order of operations. | White Rose Maths Year 5/6 mixed-age spine (upper-KS2 small-steps). Diagnostic-led: Year 3/4 for gap-filling, KS3 blocks for Level 2 stretch; presented age-appropriately. Functional Skills L1-2 mapped; | Pearson Functional Skills Maths Level 1 to Level 2 (Y5/6 spine); Entry 3 / Entry Level floor; AQA UAS 'Using number', 'Fractions/decimals/percentages', 'Measures & area', 'Handling data'. F: weekly ch |
+| GROW Weekly - Spring!C17 | Maths & Numeracy (White Rose Year 5/6; FS L1-2, Entry 3 floor) | Spr1·W2 | Add, subtract and multiply mixed numbers. |  |  |
+| GROW Weekly - Spring!C18 | Maths & Numeracy (White Rose Year 5/6; FS L1-2, Entry 3 floor) | Spr1·W3 | Divide fractions; solve fraction problems in context. |  |  |
+| GROW Weekly - Spring!C19 | Maths & Numeracy (White Rose Year 5/6; FS L1-2, Entry 3 floor) | Spr1·W4 | Understand decimal place value to thousandths; multiply/divide by 10, 100, 1000. |  |  |
+| GROW Weekly - Spring!C20 | Maths & Numeracy (White Rose Year 5/6; FS L1-2, Entry 3 floor) | Spr1·W5 | Add and subtract decimals in context (money, measures). |  |  |
+| GROW Weekly - Spring!C21 | Maths & Numeracy (White Rose Year 5/6; FS L1-2, Entry 3 floor) | Spr1·W6 | Calculate perimeter and area of rectangles and compound shapes. |  |  |
+| GROW Weekly - Spring!C22 | Maths & Numeracy (White Rose Year 5/6; FS L1-2, Entry 3 floor) | Spr2·W1 | Calculate area of triangles and parallelograms; solve problems. |  |  |
+| GROW Weekly - Spring!C23 | Maths & Numeracy (White Rose Year 5/6; FS L1-2, Entry 3 floor) | Spr2·W2 | Multiply and divide decimals by whole numbers. |  |  |
+| GROW Weekly - Spring!C24 | Maths & Numeracy (White Rose Year 5/6; FS L1-2, Entry 3 floor) | Spr2·W3 | Convert between fractions, decimals and percentages. |  |  |
+| GROW Weekly - Spring!C25 | Maths & Numeracy (White Rose Year 5/6; FS L1-2, Entry 3 floor) | Spr2·W4 | Find percentages of amounts; percentage increase and decrease (L2 stretch). |  |  |
+| GROW Weekly - Spring!C26 | Maths & Numeracy (White Rose Year 5/6; FS L1-2, Entry 3 floor) | Spr2·W5 | Solve real problems linking fractions, decimals and percentages. |  |  |
+| GROW Weekly - Spring!C27 | Maths & Numeracy (White Rose Year 5/6; FS L1-2, Entry 3 floor) | Spr2·W6 | Consolidate FDP; evidence spring maths (Functional Skills / UAS). |  |  |
+| GROW Weekly - Spring!C28 | Science (White Rose Science Year 5/6; Entry Level Science 8939) | Spr1·W1 | Compare and group materials by properties (hardness, conductivity, solubility). | White Rose Science Year 5/6 mixed-age spine (upper-KS2 working scientifically). Diagnostic-led: Year 3/4 for gap-filling, KS3 for stretch; presented age-appropriately. Entry Level Science 8939 mapped. | Pearson Edexcel Entry Level Certificate in Science 8939 (E1→E3); AQA UAS science units. F: working-scientifically observation & results tables. S: end-of-unit assessment + Entry Level / UAS evidence. |
+| GROW Weekly - Spring!C29 | Science (White Rose Science Year 5/6; Entry Level Science 8939) | Spr1·W2 | Investigate solubility and how to recover a substance from solution. |  |  |
+| GROW Weekly - Spring!C30 | Science (White Rose Science Year 5/6; Entry Level Science 8939) | Spr1·W3 | Investigate thermal and electrical conductors and insulators. |  |  |
+| GROW Weekly - Spring!C31 | Science (White Rose Science Year 5/6; Entry Level Science 8939) | Spr1·W4 | Plan a fair test to compare material properties; record results. |  |  |
+| GROW Weekly - Spring!C32 | Science (White Rose Science Year 5/6; Entry Level Science 8939) | Spr1·W5 | Describe the main human body systems (circulation, digestion). |  |  |
+| GROW Weekly - Spring!C33 | Science (White Rose Science Year 5/6; Entry Level Science 8939) | Spr1·W6 | Describe the human circulatory system and the job of the heart. |  |  |
+| GROW Weekly - Spring!C34 | Science (White Rose Science Year 5/6; Entry Level Science 8939) | Spr2·W1 | Explain the impact of diet, exercise, drugs and lifestyle on the body (links PSHE). |  |  |
+| GROW Weekly - Spring!C35 | Science (White Rose Science Year 5/6; Entry Level Science 8939) | Spr2·W2 | Describe how nutrients and water are transported in the body. |  |  |
+| GROW Weekly - Spring!C36 | Science (White Rose Science Year 5/6; Entry Level Science 8939) | Spr2·W3 | Research and present a healthy-body investigation. |  |  |
+| GROW Weekly - Spring!C37 | Science (White Rose Science Year 5/6; Entry Level Science 8939) | Spr2·W4 | Describe the life cycles of mammals, amphibians, insects and birds. |  |  |
+| GROW Weekly - Spring!C38 | Science (White Rose Science Year 5/6; Entry Level Science 8939) | Spr2·W5 | Compare the life cycles of different living things. |  |  |
+| GROW Weekly - Spring!C39 | Science (White Rose Science Year 5/6; Entry Level Science 8939) | Spr2·W6 | Consolidate life cycles; evidence spring science (Entry Level Science / UAS). |  |  |
+| GROW Weekly - Spring!C40 | Humanities: History & Geography (Kapow) | Spr1·W1 | Place key protest/rights events on a timeline (chronology). | Kapow Primary History & Geography schemes (enquiry-based, full NC coverage) · NC KS2/3 History & Geography · ladders toward AQA GCSE History 8145 / GCSE Geography in Launch. | NC KS2/3 History & Geography (Kapow). AQA UAS 'Historical enquiry', 'Map skills'. F: source and map tasks. S: structured account (Feb) + geography task (Mar). |
+| GROW Weekly - Spring!C41 | Humanities: History & Geography (Kapow) | Spr1·W2 | Use sources to investigate a campaign for rights and change. |  |  |
+| GROW Weekly - Spring!C42 | Humanities: History & Geography (Kapow) | Spr1·W3 | Explain causes and consequences of a protest movement. |  |  |
+| GROW Weekly - Spring!C43 | Humanities: History & Geography (Kapow) | Spr1·W4 | Evaluate the significance of a person who created change. |  |  |
+| GROW Weekly - Spring!C44 | Humanities: History & Geography (Kapow) | Spr1·W5 | Plan and write a structured historical account. |  |  |
+| GROW Weekly - Spring!C45 | Humanities: History & Geography (Kapow) | Spr1·W6 | Structured account + source evaluation; bank UAS. |  |  |
+| GROW Weekly - Spring!C46 | Humanities: History & Geography (Kapow) | Spr2·W1 | Use atlases and maps to locate climate zones and hazards. |  |  |
+| GROW Weekly - Spring!C47 | Humanities: History & Geography (Kapow) | Spr2·W2 | Describe how a natural hazard affects people and places. |  |  |
+| GROW Weekly - Spring!C48 | Humanities: History & Geography (Kapow) | Spr2·W3 | Investigate causes and effects of climate change. |  |  |
+| GROW Weekly - Spring!C49 | Humanities: History & Geography (Kapow) | Spr2·W4 | Compare how different communities respond to change (RE link). |  |  |
+| GROW Weekly - Spring!C50 | Humanities: History & Geography (Kapow) | Spr2·W5 | Present geographical findings with maps and data. |  |  |
+| GROW Weekly - Spring!C51 | Humanities: History & Geography (Kapow) | Spr2·W6 | Geography & worldviews assessment; map-skills check; bank UAS. |  |  |
+| GROW Weekly - Spring!C52 | RE & World Views (locally-agreed KS3) | Spr1·W1 | Explore how beliefs help people cope with change and hardship. | RE from the locally-agreed syllabus, used as the CONTEXT for ASDAN PEQ skills units (Communication / Thinking / Team working / Decision making) so the same work banks PEQ credit; AQA UAS RE units. (La | Locally-agreed RE (KS3). AQA UAS 'Beliefs & values', 'Ethics'. F: enquiry and discussion checks. S: belief-and-resilience assessment + UAS (Mar).  · RE is evidenced as the context for PEQ skills chall |
+| GROW Weekly - Spring!C53 | RE & World Views (locally-agreed KS3) | Spr1·W2 | Investigate ideas of suffering and hope in a faith. |  |  |
+| GROW Weekly - Spring!C54 | RE & World Views (locally-agreed KS3) | Spr1·W3 | Explore stories of resilience from sacred texts. |  |  |
+| GROW Weekly - Spring!C55 | RE & World Views (locally-agreed KS3) | Spr1·W4 | Compare how two worldviews respond to difficulty. |  |  |
+| GROW Weekly - Spring!C56 | RE & World Views (locally-agreed KS3) | Spr1·W5 | Investigate festivals of spring and renewal. |  |  |
+| GROW Weekly - Spring!C57 | RE & World Views (locally-agreed KS3) | Spr1·W6 | Discuss a 'big question' about change respectfully. |  |  |
+| GROW Weekly - Spring!C58 | RE & World Views (locally-agreed KS3) | Spr2·W1 | Reflect on care for the world as a belief. |  |  |
+| GROW Weekly - Spring!C59 | RE & World Views (locally-agreed KS3) | Spr2·W2 | Use subject vocabulary to describe a practice. |  |  |
+| GROW Weekly - Spring!C60 | RE & World Views (locally-agreed KS3) | Spr2·W3 | Investigate ethics of how we treat others and the planet. |  |  |
+| GROW Weekly - Spring!C61 | RE & World Views (locally-agreed KS3) | Spr2·W4 | Respond thoughtfully to a faith or belief visitor. |  |  |
+| GROW Weekly - Spring!C62 | RE & World Views (locally-agreed KS3) | Spr2·W5 | Reflect on personal values and resilience. |  |  |
+| GROW Weekly - Spring!C63 | RE & World Views (locally-agreed KS3) | Spr2·W6 | Belief-and-resilience assessment + UAS unit. |  |  |
+| GROW Weekly - Spring!C64 | PSHE & Citizenship (PSHE Association + ACT) | Spr1·W1 | Recognise emotions and healthy ways to manage stress. | PSHE Association programme of study (KS3) · Association for Citizenship Teaching (ACT) framework. | PSHE Association PoS + ACT Citizenship. AQA UAS 'Emotional wellbeing', 'Keeping safe online'. F: discussion/scenario checks. S: resilience + relationships tasks (Feb/Mar). |
+| GROW Weekly - Spring!C65 | PSHE & Citizenship (PSHE Association + ACT) | Spr1·W2 | Build personal resilience and a growth mindset. |  |  |
+| GROW Weekly - Spring!C66 | PSHE & Citizenship (PSHE Association + ACT) | Spr1·W3 | Understand mental health and where to get support. |  |  |
+| GROW Weekly - Spring!C67 | PSHE & Citizenship (PSHE Association + ACT) | Spr1·W4 | Stay safe online; recognise risks and my digital footprint (Safer Internet Day). |  |  |
+| GROW Weekly - Spring!C68 | PSHE & Citizenship (PSHE Association + ACT) | Spr1·W5 | Know how to report concerns and seek help. |  |  |
+| GROW Weekly - Spring!C69 | PSHE & Citizenship (PSHE Association + ACT) | Spr1·W6 | Resilience & online-safety task; bank UAS. |  |  |
+| GROW Weekly - Spring!C70 | PSHE & Citizenship (PSHE Association + ACT) | Spr2·W1 | Identify features of positive friendships and relationships. |  |  |
+| GROW Weekly - Spring!C71 | PSHE & Citizenship (PSHE Association + ACT) | Spr2·W2 | Manage conflict and disagreement respectfully. |  |  |
+| GROW Weekly - Spring!C72 | PSHE & Citizenship (PSHE Association + ACT) | Spr2·W3 | Understand peer pressure and assertiveness. |  |  |
+| GROW Weekly - Spring!C73 | PSHE & Citizenship (PSHE Association + ACT) | Spr2·W4 | Explore rights, responsibilities and getting on as citizens. |  |  |
+| GROW Weekly - Spring!C74 | PSHE & Citizenship (PSHE Association + ACT) | Spr2·W5 | Practise help-seeking and decision-making in scenarios. |  |  |
+| GROW Weekly - Spring!C75 | PSHE & Citizenship (PSHE Association + ACT) | Spr2·W6 | Relationships & citizenship task; bank evidence. |  |  |
+| GROW Weekly - Spring!C76 | RSHE (statutory, KS3-level) | Spr1·W1 | Understand the physical and emotional changes of growing up. | Statutory RSHE (DfE), KS3-level content, delivered through the PSHE Association framework. Parental agreement secured first. | Statutory RSHE (KS3-level). AQA UAS 'Healthy relationships', 'Growing and changing'. F: recognition and discussion. S: RSHE evidence (Mar). Opt-out respected. |
+| GROW Weekly - Spring!C77 | RSHE (statutory, KS3-level) | Spr1·W2 | Recognise and manage changing feelings. |  |  |
+| GROW Weekly - Spring!C78 | RSHE (statutory, KS3-level) | Spr1·W3 | Understand healthy, respectful relationships and consent. |  |  |
+| GROW Weekly - Spring!C79 | RSHE (statutory, KS3-level) | Spr1·W4 | Know about personal boundaries and privacy. |  |  |
+| GROW Weekly - Spring!C80 | RSHE (statutory, KS3-level) | Spr1·W5 | Know who and how to ask for help and support. |  |  |
+| GROW Weekly - Spring!C81 | RSHE (statutory, KS3-level) | Spr1·W6 | Changing-bodies & relationships evidence; review. |  |  |
+| GROW Weekly - Spring!C82 | Computing & ICT (NC – discrete + embedded in every subject) | Spr1·W1 | Enter, sort and use data in a spreadsheet. | National Curriculum Computing (KS2/3 level) · NCCE/Teach Computing · Functional digital skills · Scratch to Python intro · online-safety · AQA UAS ICT units. ICT is ALSO embedded weekly in every other | Functional Skills ICT readiness · AQA UAS 'Using a computer safely', 'Creating a program', 'Handling data'. F: skills checks. S: termly digital project. |
+| GROW Weekly - Spring!C83 | Computing & ICT (NC – discrete + embedded in every subject) | Spr1·W2 | Use formulae/charts to present information. |  |  |
+| GROW Weekly - Spring!C84 | Computing & ICT (NC – discrete + embedded in every subject) | Spr1·W3 | Create digital media for a real purpose. |  |  |
+| GROW Weekly - Spring!C85 | Computing & ICT (NC – discrete + embedded in every subject) | Spr1·W4 | Edit and improve a digital product. |  |  |
+| GROW Weekly - Spring!C86 | Computing & ICT (NC – discrete + embedded in every subject) | Spr1·W5 | Stay safe online and protect my data (Safer Internet Day). |  |  |
+| GROW Weekly - Spring!C87 | Computing & ICT (NC – discrete + embedded in every subject) | Spr1·W6 | 'Data & media' product/presentation; bank UAS. |  |  |
+| GROW Weekly - Spring!C88 | Creative Arts (Trinity Arts Award Explore/Bronze) | Spr1·W1 | Explore how artists express resilience and change. | Trinity Arts Award Explore/Bronze · develop skills, arts inspiration, sharing and performance. | Trinity Arts Award Explore/Bronze. AQA UAS 'Creating artwork', 'Performing'. F: arts-log review. S: portfolio + performance (Feb/Mar). |
+| GROW Weekly - Spring!C89 | Creative Arts (Trinity Arts Award Explore/Bronze) | Spr1·W2 | Develop a skill and record it in my arts log. |  |  |
+| GROW Weekly - Spring!C90 | Creative Arts (Trinity Arts Award Explore/Bronze) | Spr1·W3 | Plan an artwork on the theme of resilience. |  |  |
+| GROW Weekly - Spring!C91 | Creative Arts (Trinity Arts Award Explore/Bronze) | Spr1·W4 | Create my resilience-themed piece. |  |  |
+| GROW Weekly - Spring!C92 | Creative Arts (Trinity Arts Award Explore/Bronze) | Spr1·W5 | Review and improve my work. |  |  |
+| GROW Weekly - Spring!C93 | Creative Arts (Trinity Arts Award Explore/Bronze) | Spr1·W6 | Research an artist or performer who inspires me (Bronze). |  |  |
+| GROW Weekly - Spring!C94 | Creative Arts (Trinity Arts Award Explore/Bronze) | Spr2·W1 | Share Explore/Bronze portfolio evidence so far. |  |  |
+| GROW Weekly - Spring!C95 | Creative Arts (Trinity Arts Award Explore/Bronze) | Spr2·W2 | Develop drama or music skills for performance. |  |  |
+| GROW Weekly - Spring!C96 | Creative Arts (Trinity Arts Award Explore/Bronze) | Spr2·W3 | Devise a short performance about overcoming change. |  |  |
+| GROW Weekly - Spring!C97 | Creative Arts (Trinity Arts Award Explore/Bronze) | Spr2·W4 | Rehearse and refine the group performance. |  |  |
+| GROW Weekly - Spring!C98 | Creative Arts (Trinity Arts Award Explore/Bronze) | Spr2·W5 | Perform for an audience. |  |  |
+| GROW Weekly - Spring!C99 | Creative Arts (Trinity Arts Award Explore/Bronze) | Spr2·W6 | Review the performance; complete arts log + Bronze evidence. |  |  |
+| GROW Weekly - Spring!C100 | PE (PE Passport) | Spr1·W1 | Develop net/striking game skills (sending, receiving, striking). | PE Passport KS3 units · NC PE · physical and mental wellbeing. | PE & wellbeing (PE Passport). AQA UAS 'Taking part in sport', 'Personal fitness'. F: in-lesson assessment, fitness targets. S: skills profile + activity log (Mar). |
+| GROW Weekly - Spring!C101 | PE (PE Passport) | Spr1·W2 | Apply skills in a small-sided net/striking game. |  |  |
+| GROW Weekly - Spring!C102 | PE (PE Passport) | Spr1·W3 | Use simple attacking and defending tactics. |  |  |
+| GROW Weekly - Spring!C103 | PE (PE Passport) | Spr1·W4 | Show teamwork, resilience and fair play. |  |  |
+| GROW Weekly - Spring!C104 | PE (PE Passport) | Spr1·W5 | Develop an individual skill (athletics/gymnastics). |  |  |
+| GROW Weekly - Spring!C105 | PE (PE Passport) | Spr1·W6 | Skills check; record in PE Passport. |  |  |
+| GROW Weekly - Spring!C106 | PE (PE Passport) | Spr2·W1 | Take part in a fitness circuit; set a personal target. |  |  |
+| GROW Weekly - Spring!C107 | PE (PE Passport) | Spr2·W2 | Improve personal fitness and track progress. |  |  |
+| GROW Weekly - Spring!C108 | PE (PE Passport) | Spr2·W3 | Lead or support a warm-up safely. |  |  |
+| GROW Weekly - Spring!C109 | PE (PE Passport) | Spr2·W4 | Combine and apply skills in competition. |  |  |
+| GROW Weekly - Spring!C110 | PE (PE Passport) | Spr2·W5 | Reflect on resilience and personal best. |  |  |
+| GROW Weekly - Spring!C111 | PE (PE Passport) | Spr2·W6 | Skills profile + activity log; bank UAS. |  |  |
+| GROW Weekly - Spring!C112 | PfA: Independence, Careers & Vocational (ASDAN PEQ E3–L1 + Employability) | Spr1·W1 | Review my strengths, interests and goals. | ASDAN PEQ E3–L1 · ASDAN Careers & Experiencing Work · Employability · Gatsby Benchmarks. | ASDAN PEQ E3–L1 + Careers & Experiencing Work. AQA UAS 'Working with others', 'Employability skills'. F: task and routine tracking. S: profile + PEQ evidence (Feb/Mar). |
+| GROW Weekly - Spring!C113 | PfA: Independence, Careers & Vocational (ASDAN PEQ E3–L1 + Employability) | Spr1·W2 | Work on an ASDAN PEQ employability unit. |  |  |
+| GROW Weekly - Spring!C114 | PfA: Independence, Careers & Vocational (ASDAN PEQ E3–L1 + Employability) | Spr1·W3 | Practise teamwork and reliability on a task. |  |  |
+| GROW Weekly - Spring!C115 | PfA: Independence, Careers & Vocational (ASDAN PEQ E3–L1 + Employability) | Spr1·W4 | Develop a work-related skill (communication, problem-solving). |  |  |
+| GROW Weekly - Spring!C116 | PfA: Independence, Careers & Vocational (ASDAN PEQ E3–L1 + Employability) | Spr1·W5 | Prepare for a careers encounter or visit. |  |  |
+| GROW Weekly - Spring!C117 | PfA: Independence, Careers & Vocational (ASDAN PEQ E3–L1 + Employability) | Spr1·W6 | Meet an employer/visitor and reflect. |  |  |
+| GROW Weekly - Spring!C118 | PfA: Independence, Careers & Vocational (ASDAN PEQ E3–L1 + Employability) | Spr2·W1 | Explore career routes linked to my interests. |  |  |
+| GROW Weekly - Spring!C119 | PfA: Independence, Careers & Vocational (ASDAN PEQ E3–L1 + Employability) | Spr2·W2 | Try a Careers & Experiencing Work taster task. |  |  |
+| GROW Weekly - Spring!C120 | PfA: Independence, Careers & Vocational (ASDAN PEQ E3–L1 + Employability) | Spr2·W3 | Practise interview and self-presentation skills. |  |  |
+| GROW Weekly - Spring!C121 | PfA: Independence, Careers & Vocational (ASDAN PEQ E3–L1 + Employability) | Spr2·W4 | Manage a personal-organisation/independence routine. |  |  |
+| GROW Weekly - Spring!C122 | PfA: Independence, Careers & Vocational (ASDAN PEQ E3–L1 + Employability) | Spr2·W5 | Record evidence for a PEQ employability unit. |  |  |
+| GROW Weekly - Spring!C123 | PfA: Independence, Careers & Vocational (ASDAN PEQ E3–L1 + Employability) | Spr2·W6 | Review employability profile + PEQ/UAS evidence. |  |  |
+| GROW Weekly - Spring!C124 | Enrichment Award: Young Duke + Community & Social Enterprise | Spr1·W1 | Set a new Young Duke challenge goal. | Young Duke (Capable Kids) progressive challenges · Community Project & Social Enterprise. | Young Duke + Community/Social Enterprise. AQA UAS 'Personal challenge', 'Community contribution'. F: challenge logs. S: challenge + project evidence (Mar). |
+| GROW Weekly - Spring!C125 | Enrichment Award: Young Duke + Community & Social Enterprise | Spr1·W2 | Plan a community or social-enterprise project for the term. |  |  |
+| GROW Weekly - Spring!C126 | Enrichment Award: Young Duke + Community & Social Enterprise | Spr1·W3 | Try a skills challenge (first aid, cookery, eco). |  |  |
+| GROW Weekly - Spring!C127 | Enrichment Award: Young Duke + Community & Social Enterprise | Spr1·W4 | Take on a role in the team project. |  |  |
+| GROW Weekly - Spring!C128 | Enrichment Award: Young Duke + Community & Social Enterprise | Spr1·W5 | Contribute to a community activity. |  |  |
+| GROW Weekly - Spring!C129 | Enrichment Award: Young Duke + Community & Social Enterprise | Spr1·W6 | Record challenge evidence. |  |  |
+| GROW Weekly - Spring!C130 | Enrichment Award: Young Duke + Community & Social Enterprise | Spr2·W1 | Develop the social-enterprise idea. |  |  |
+| GROW Weekly - Spring!C131 | Enrichment Award: Young Duke + Community & Social Enterprise | Spr2·W2 | Plan roles, budget and resources. |  |  |
+| GROW Weekly - Spring!C132 | Enrichment Award: Young Duke + Community & Social Enterprise | Spr2·W3 | Run a small enterprise/community activity. |  |  |
+| GROW Weekly - Spring!C133 | Enrichment Award: Young Duke + Community & Social Enterprise | Spr2·W4 | Reflect on resilience and teamwork. |  |  |
+| GROW Weekly - Spring!C134 | Enrichment Award: Young Duke + Community & Social Enterprise | Spr2·W5 | Try a physical or volunteering challenge. |  |  |
+| GROW Weekly - Spring!C135 | Enrichment Award: Young Duke + Community & Social Enterprise | Spr2·W6 | Share achievements; bank Young Duke + community/UAS evidence. |  |  |
+| GROW Weekly - Spring!C137 | Design & Technology (ASDAN Foodwise, Textiles & Construction) | Spr1·W1 | FOODWISE: plan a balanced meal on a budget. | Design-make-evaluate cycle delivered through ASDAN short courses: Foodwise, Textiles and Construction/Making. Short-course units at Entry 3 / Level 1; growing independence. AQA UAS D&T units. | ASDAN Foodwise/Textiles/Construction short-course evidence · AQA UAS 'Designing a product', 'Making a product', 'Food & nutrition'. F: process observation. S: finished product + evaluation. |
+| GROW Weekly - Spring!C138 | Design & Technology (ASDAN Foodwise, Textiles & Construction) | Spr1·W2 | FOODWISE: prepare a 2-3 step dish safely. |  |  |
+| GROW Weekly - Spring!C139 | Design & Technology (ASDAN Foodwise, Textiles & Construction) | Spr1·W3 | FOODWISE: evaluate taste, cost and nutrition. |  |  |
+| GROW Weekly - Spring!C140 | Design & Technology (ASDAN Foodwise, Textiles & Construction) | Spr1·W4 | TEXTILES: choose fabric and technique for a purpose. |  |  |
+| GROW Weekly - Spring!C141 | Design & Technology (ASDAN Foodwise, Textiles & Construction) | Spr1·W5 | TEXTILES: measure, cut and join accurately. |  |  |
+| GROW Weekly - Spring!C142 | Design & Technology (ASDAN Foodwise, Textiles & Construction) | Spr1·W6 | TEXTILES: finish and evaluate a textile product. |  |  |
+| GROW Weekly - Spring!C143 | Design & Technology (ASDAN Foodwise, Textiles & Construction) | Spr2·W1 | CONSTRUCTION: design a product to solve a problem. |  |  |
+| GROW Weekly - Spring!C144 | Design & Technology (ASDAN Foodwise, Textiles & Construction) | Spr2·W2 | CONSTRUCTION: select materials and plan the build. |  |  |
+| GROW Weekly - Spring!C145 | Design & Technology (ASDAN Foodwise, Textiles & Construction) | Spr2·W3 | CONSTRUCTION: make, adjust and improve. |  |  |
+| GROW Weekly - Spring!C146 | Design & Technology (ASDAN Foodwise, Textiles & Construction) | Spr2·W4 | CONSTRUCTION: evaluate strength and finish. |  |  |
+| GROW Weekly - Spring!C147 | Design & Technology (ASDAN Foodwise, Textiles & Construction) | Spr2·W5 | Cost my product and present it (links Enterprise). |  |  |
+| GROW Weekly - Spring!C148 | Design & Technology (ASDAN Foodwise, Textiles & Construction) | Spr2·W6 | Review D&T progress and add ASDAN/UAS evidence. |  |  |
+| GROW Weekly - Spring!C150 | Community Project & Vocational (flexible – adapt to your local area) | Spr1·W1 | Review and refresh our community project focus. | School-designed community & vocational project. ADAPT the context to your school's local environment, partners and facilities (e.g. allotment, café, charity shop, recycling, care home, local employer) | ASDAN short-course & Employability evidence · AQA UAS 'Working as a team', 'Contributing to the community', 'Experiencing work'. F: project log. S: project outcome + reflection. |
+| GROW Weekly - Spring!C151 | Community Project & Vocational (flexible – adapt to your local area) | Spr1·W2 | Set new goals adapted to the season/local context. |  |  |
+| GROW Weekly - Spring!C152 | Community Project & Vocational (flexible – adapt to your local area) | Spr1·W3 | Plan a vocational task (garden, café, enterprise, etc.). |  |  |
+| GROW Weekly - Spring!C153 | Community Project & Vocational (flexible – adapt to your local area) | Spr1·W4 | Learn and practise the skills the task needs. |  |  |
+| GROW Weekly - Spring!C154 | Community Project & Vocational (flexible – adapt to your local area) | Spr1·W5 | Work safely using correct equipment and PPE. |  |  |
+| GROW Weekly - Spring!C155 | Community Project & Vocational (flexible – adapt to your local area) | Spr1·W6 | Deliver a service or product to the community. |  |  |
+| GROW Weekly - Spring!C156 | Community Project & Vocational (flexible – adapt to your local area) | Spr2·W1 | Handle money/orders or a real responsibility (links Maths). |  |  |
+| GROW Weekly - Spring!C157 | Community Project & Vocational (flexible – adapt to your local area) | Spr2·W2 | Get and respond to feedback from a partner. |  |  |
+| GROW Weekly - Spring!C158 | Community Project & Vocational (flexible – adapt to your local area) | Spr2·W3 | Link the project to a career or work role. |  |  |
+| GROW Weekly - Spring!C159 | Community Project & Vocational (flexible – adapt to your local area) | Spr2·W4 | Record vocational evidence for ASDAN. |  |  |
+| GROW Weekly - Spring!C160 | Community Project & Vocational (flexible – adapt to your local area) | Spr2·W5 | Present progress to an audience. |  |  |
+| GROW Weekly - Spring!C161 | Community Project & Vocational (flexible – adapt to your local area) | Spr2·W6 | Reflect on resilience and teamwork; add UAS evidence. |  |  |
+
+## Half-term grid (20 rows)
+
+| cell | strand | weeks | theme | unit/topic | learning outcomes | qualification |
+|---|---|---|---|---|---|---|
+| GROW - Spring!4 | English & Communication (FS Level 1 to 2; Entry 3 floor) | Spr 1 · Jan to Feb (6 wks) | Resilience & Change | Resilience: analysis & writing to argue | Analyse how writers present resilience and change; respond to poetry analytically; plan and write a structured argument/persuasive piece using rhetorical devices (L1-2). | Pearson Functional Skills English Level 1 to Level 2; Entry 3 / Step Up floor where needed; AQA UAS 'Writing to argue', 'Reading & analysis'. |
+| GROW - Spring!5 | English & Communication (FS Level 1 to 2; Entry 3 floor) | Spr 2 · Feb to Apr (6 wks) | Resilience & Change | Synthesis, biography & reading for meaning | Synthesise and evaluate ideas across texts; plan and write a biography/recount, selecting and organising information; redraft to L1-2 standard. | Pearson Functional Skills English Level 1 to Level 2; Entry 3 floor where needed; AQA UAS 'Reading for meaning', 'Writing a biography'. |
+| GROW - Spring!6 | Maths & Numeracy (White Rose Year 5/6; FS L1-2, Entry 3 floor) | Spr 1 · Jan to Feb (6 wks) | Resilience & Change | Fractions, decimals, area & perimeter (Y5/6) | Calculate with mixed numbers and divide fractions; understand decimal place value and calculate with decimals; calculate perimeter and area of rectangles, compound shapes, triangles and parallelograms. | Pearson Functional Skills Maths L1-2; Entry 3 floor; AQA UAS 'Fractions/decimals', 'Measures & area'. |
+| GROW - Spring!7 | Maths & Numeracy (White Rose Year 5/6; FS L1-2, Entry 3 floor) | Spr 2 · Feb to Apr (6 wks) | Resilience & Change | Decimals, fractions & percentages (Y5/6) | Multiply and divide decimals; convert fluently between fractions, decimals and percentages; find percentages of amounts and percentage change; solve real FDP problems. | Pearson Functional Skills Maths L1-2; Entry 3 floor; AQA UAS 'Fractions, decimals & percentages'. |
+| GROW - Spring!8 | Science (White Rose Science Year 5/6; Entry Level Science 8939) | Spr 1 · Jan to Feb (6 wks) | Resilience & Change | Properties of materials & the human body (Y5/6) | Compare and group materials by properties; investigate solubility, conductivity and insulation; describe the main body systems including circulation; explain the impact of lifestyle on health. | Pearson Entry Level Science 8939; AQA UAS 'Materials', 'The human body'. |
+| GROW - Spring!9 | Science (White Rose Science Year 5/6; Entry Level Science 8939) | Spr 2 · Feb to Apr (6 wks) | Resilience & Change | Animals including humans & life cycles (Y5/6) | Describe transport of nutrients and water in the body; research a healthy-body investigation; describe and compare the life cycles of mammals, amphibians, insects and birds. | Pearson Entry Level Science 8939; AQA UAS 'The human body', 'Life cycles'. |
+| GROW - Spring!10 | Humanities & RE (History & Geography, Kapow; locally-agreed RE KS3) | Spr 1 · Jan to Feb (6 wks) | Resilience & Change | Protest, rights & change (History, Kapow) | Investigate movements for rights and change; explain causes and consequences of reform; evaluate the significance of key individuals; use sources critically. | RE (locally-agreed syllabus) used as the context for ASDAN PEQ skills units (Communication / Thinking / Team working). PEQ certifies the skill, not RE. AQA UAS RE units. NC KS2/3 History (Kapow scheme); AQA UAS, 'Historical enquiry'. Ladders toward AQA GCSE History 8145 (power & the people). |
+| GROW - Spring!11 | Humanities & RE (History & Geography, Kapow; locally-agreed RE KS3) | Spr 2 · Feb to Apr (6 wks) | Resilience & Change | Climate, hazards & worldviews (Geography, Kapow + RE) | Describe weather, climate and climate change; explain natural hazards and how people respond; explore how worldviews respond to suffering, hope and change. | NC KS2/3 Geography (Kapow scheme); locally-agreed RE (KS3); AQA UAS, 'Data & fieldwork skills', 'Beliefs in action'. |
+| GROW - Spring!12 | PSHE & Citizenship (PSHE Association + ACT) | Spr 1 · Jan to Feb (6 wks) | Resilience & Change | Resilience, mental health & online safety | Understand and manage emotions and change; recognise mental-health and online risks and where to get help; build resilience and help-seeking strategies. | PSHE Association programme of study; AQA UAS, 'Managing change', 'Staying safe'. |
+| GROW - Spring!13 | PSHE & Citizenship (PSHE Association + ACT) | Spr 2 · Feb to Apr (6 wks) | Resilience & Change | Healthy relationships & getting on together | Understand healthy relationships, consent and boundaries (age-appropriate); manage conflict and friendship difficulties; value diversity and challenge prejudice. | PSHE Association programme of study; ACT Citizenship; AQA UAS, 'Healthy relationships', 'Resolving conflict'. |
+| GROW - Spring!14 | RSHE (statutory, KS3-level content) | Spring · Jan to Apr (whole term) | Resilience & Change | Changing bodies, feelings & relationships (statutory RSHE) | Describe the physical and emotional changes of growing up; understand healthy relationships and consent (age-appropriate); know how to keep safe and where to seek help. | Statutory RSHE (KS3-level content) via PSHE Association framework. |
+| GROW - Spring!15 | Computing & ICT (NC – discrete + embedded in every subject) | Spring · Jan to Apr (whole term) | Resilience & Change | Data, spreadsheets & creating digital media | Handle and present data using spreadsheets with simple formulae and charts; plan and create digital media for a purpose and audience; act safely and responsibly online. | Functional digital skills (toward FS ICT); AQA UAS, 'Handling data digitally', 'Creating digital media safely'. |
+| GROW - Spring!16 | Creative Arts (Art, Music, Drama) + Arts Award Explore/Bronze | Spr 1 · Jan to Feb (6 wks) | Resilience & Change | Expressing resilience through the arts (Arts Award Bronze) | Use an art form to express ideas about resilience and change; develop technique; review and refine work; build Arts Award Bronze portfolio evidence. | Trinity Arts Award Bronze (develop skills & arts inspiration); AQA UAS, 'Creating artwork'. |
+| GROW - Spring!17 | Creative Arts (Art, Music, Drama) + Arts Award Explore/Bronze | Spr 2 · Feb to Apr (6 wks) | Resilience & Change | Drama, performance & sharing | Develop a role and a short performance; rehearse, refine and give feedback; perform and review for an audience; complete Arts Award sharing evidence. | Trinity Arts Award Bronze (arts skills & sharing); AQA UAS, 'Taking part in a performance'. |
+| GROW - Spring!18 | Physical Wellbeing (PE Passport) | Spring · Jan to Apr (whole term) | Resilience & Change | Net/striking games, individual skills & personal fitness | Develop skills in net/striking and individual activities; plan and improve personal fitness; show resilience, fair play and the ability to lead a warm-up. | PE & wellbeing (PE Passport assessment); AQA UAS, 'Improving in sport', 'Healthy active lifestyle'. |
+| GROW - Spring!19 | Personal Effectiveness, Independence & Careers (ASDAN PEQ E3–L1 + Employability) | Spring · Jan to Apr (whole term) | Resilience & Change | Building employability & working with others | Explore career sectors and routes and link them to subjects; develop teamwork, problem-solving and communication; complete an enterprise or workplace encounter. | ASDAN PEQ Level 1 Award; ASDAN Careers & Experiencing Work / Employability; AQA UAS, 'Working with others', 'Improving my learning'. |
+| GROW - Spring!20 | Design & Technology (ASDAN Foodwise / Textiles / Construction) | Spr 1 · Jan to Feb (6 wks) | Resilience & Change | Foodwise on a budget & accurate Textiles | Work safely and hygienically; follow a design-make-evaluate cycle; prepare simple food and make a textile item; evaluate against a brief. | ASDAN Foodwise & Textiles short courses (Entry 3 / Level 1); AQA UAS 'Designing a product', 'Making a product', 'Food & nutrition'. |
+| GROW - Spring!21 | Design & Technology (ASDAN Foodwise / Textiles / Construction) | Spr 2 · Mar to Apr (6 wks) | Resilience & Change | Construction: design to solve a problem | Identify materials, tools and hazards; mark out, make and test a simple structure; evaluate strength and finish; suggest improvements. | ASDAN Construction/Making short course (Entry 3 / Level 1); AQA UAS 'Making a product', 'Using tools safely'. |
+| GROW - Spring!22 | Community Project & Vocational (flexible – adapt to your local area) | Spr 1 · Jan to Feb (6 wks) | Resilience & Change | Vocational skills in the community | Explore the local community and identify a need or opportunity; agree a goal and roles; plan steps and make first contact with a partner. | ASDAN Careers & Experiencing Work / Employability; AQA UAS 'Working as a team', 'Contributing to the community'. |
+| GROW - Spring!23 | Community Project & Vocational (flexible – adapt to your local area) | Spr 2 · Mar to Apr (6 wks) | Resilience & Change | Deliver a service & respond to feedback | Carry out a vocational/community task safely; record evidence; link the work to careers; reflect on teamwork and impact. | ASDAN Employability / short courses; AQA UAS 'Experiencing work', 'Community contribution'. |
