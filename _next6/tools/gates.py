@@ -287,3 +287,84 @@ def _css_block(s,start):
         elif s[j]=='}': depth-=1
         j+=1
     return j-start
+
+
+# ---------------------------------------------------------------- gate 12
+# ORDER N6-I · I2 — `s24-print-renders`, the estate's print RENDER gate.
+#
+# Every other gate here reads bytes. This one reads the artefact Chromium
+# actually produced, because the two defects that shipped green were both
+# invisible to bytes:
+#
+#   * a learner-confirmation block present in all 24 BUILD_ASDAN decks and
+#     printed in none of them — grep 75/75, render 51/75;
+#   * a print donor that revealed nine slides and left each at height:91%
+#     inside a clipped body — nine blank pages, and green to any
+#     "does the file contain @media print" check.
+#
+# It measures ink coverage on rasterised pages and the PDF's own text layer.
+# Element presence cannot distinguish a page with a signature table from a
+# page with a hidden 91%-tall slide. Pixels can.
+#
+# WIRED SO PRINT AND EVIDENCE WORK CANNOT SHIP UNMEASURED. `has_print_surface`
+# decides whether a pack is in scope; for a pack that IS in scope, an inability
+# to measure (no Chromium, no pypdfium2, no render set) is reported as a
+# FAILURE, not as INVALID-and-therefore-ignorable. A pack that prints must be
+# rendered or the battery goes red.
+def has_print_surface(files):
+    """A pack is in scope for s24 if any file can produce printed output."""
+    for p in files:
+        s = read(p)
+        if '@media print' in s or 'print-pack' in s or 'id="print-area"' in s:
+            return True
+    return False
+
+
+def g12_print_renders(root, files, renders_dir=None, keep=False):
+    """Render every HTML surface in `root` to A4 and measure the output.
+
+    renders_dir: reuse an existing render set instead of rendering again.
+    """
+    import shutil
+    import tempfile
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    try:
+        import s24_print_renders as S24
+    except Exception as e:                                    # pragma: no cover
+        return ('G12 s24-print-renders', False,
+                'CANNOT MEASURE — s24_print_renders.py unimportable (%s)' % e, [])
+
+    if not has_print_surface(files):
+        return ('G12 s24-print-renders', True,
+                'not in scope — no print surface in this pack', [])
+
+    tmp = None
+    if not renders_dir:
+        tmp = renders_dir = tempfile.mkdtemp(prefix='s24-')
+        if not S24.render(files, renders_dir):
+            if not keep:
+                shutil.rmtree(tmp, ignore_errors=True)
+            return ('G12 s24-print-renders', False,
+                    'CANNOT MEASURE — Chromium render failed; a pack that prints '
+                    'must be rendered, so this is red rather than skipped', [])
+    # The coverage contract, committed to the repo so a dropped or renamed
+    # evidence surface reds the gate instead of quietly leaving its population.
+    expect = None
+    exp_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                            '..', 'evidence', 'S24_EVIDENCE_SURFACES.txt')
+    if os.path.exists(exp_path):
+        want = [e for e in S24.surfaces_from_manifest(exp_path)]
+        here = {os.path.normpath(f) for f in files}
+        # Only the entries that belong to the pack under test.
+        expect = [e for e in want if os.path.normpath(e) in here]
+    try:
+        name, ok, detail, rows, _rep = S24.run(renders_dir, verbose=False, expect=expect)
+    finally:
+        if tmp and not keep:
+            shutil.rmtree(tmp, ignore_errors=True)
+
+    if ok is None:
+        # In scope and unmeasurable. Do not let that read as green.
+        return (name, False, 'CANNOT MEASURE — ' + detail +
+                ' (pack has a print surface, so unmeasured is red)', rows)
+    return (name, ok, detail, rows)

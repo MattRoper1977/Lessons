@@ -1,14 +1,46 @@
 #!/usr/bin/env python3
-"""Run the N6 gate battery over every pack. Usage: run_gates.py <packs_root> [intake_root]"""
+"""Run the N6 gate battery over every pack. Usage: run_gates.py <packs_root> [intake_root]
+
+Gate 12 (`s24-print-renders`) runs automatically for every pack that has a print
+surface, and it renders. That is deliberate and is the point of ORDER N6-I I2:
+print and evidence work must not be able to ship on a byte check alone, because
+the two defects that shipped green were both invisible to one. Set
+`N6_SKIP_RENDERS=1` only when you know the pack has no print surface — and note
+that a pack which HAS one and cannot be rendered goes RED rather than being
+skipped, so the skip switch cannot be used to buy a green.
+
+`N6_RENDERS=<dir>` reuses an existing render set instead of rendering again.
+"""
 import sys, os, glob, json
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import gates as G
 
-root = sys.argv[1]
-intake = sys.argv[2] if len(sys.argv) > 2 else None
+# Accept either a parent directory of pack dirs (the intake shape) or the pack
+# roots themselves (the landed shape — the nine packs live at nine destinations
+# across the estate and there is no single parent to point at).
+argv = [a for a in sys.argv[1:] if not a.startswith('--')]
+roots = [a for a in argv if os.path.isdir(a)]
+intake = None
+if len(roots) == 2 and os.path.isdir(os.path.join(roots[1], os.path.basename(roots[0]))):
+    roots, intake = roots[:1], roots[1]
+elif len(roots) == 2 and glob.glob(os.path.join(roots[1], '*', '*.html')):
+    roots, intake = roots[:1], roots[1]
 reflist = os.environ.get('S23_NAMES')
 
-packs = sorted(d for d in glob.glob(os.path.join(root,'*')) if os.path.isdir(d))
+def _is_pack(d):
+    return bool(glob.glob(os.path.join(d, '**', '*.html'), recursive=True)) and \
+        not all(os.path.isdir(os.path.join(d, x)) for x in os.listdir(d))
+
+packs = []
+for r in roots:
+    kids = sorted(d for d in glob.glob(os.path.join(r, '*')) if os.path.isdir(d))
+    if glob.glob(os.path.join(r, '*.html')) or not kids:
+        packs.append(r)
+    elif len(roots) > 1:
+        packs.append(r)
+    else:
+        packs += kids
+root = roots[0]
 overall = True
 report = []
 for pk in packs:
@@ -19,6 +51,8 @@ for pk in packs:
         ip = os.path.join(intake, os.path.basename(pk))
         if os.path.isdir(ip): res.append(G.g9_sentinel_set(ip, pk))
     res.append(G.g10_names(files, reflist))
+    if os.environ.get('N6_SKIP_RENDERS') != '1':
+        res.append(G.g12_print_renders(pk, files, os.environ.get('N6_RENDERS')))
     name = os.path.basename(pk)
     print('\n=== %s ===' % name)
     for gname, ok, detail, rows in res:
