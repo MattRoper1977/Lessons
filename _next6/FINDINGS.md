@@ -1626,8 +1626,11 @@ which is the finding N5 could not reach without this matrix.
 | **calendar governs** | **7 Science lessons land on `Aut1·W8`, a cell the SoW does not have** — the workbook supplies 14 autumn rows for a 15-week autumn. 125/132 map. LAUNCH_ASDAN re-seats to W7–W13. |
 
 **Packs that would move under each reading** are in `_next6/SOW_MATRIX.md`. **No week number,
-term tag, sequence chip, manifest, checksum or nav string was changed.** This is a named stop
-condition and the ruling is Matt's.
+term tag, sequence chip, manifest, checksum or nav string was changed** — and that is proved,
+not asserted. Re-run at the merge tip: of the **126 lesson files this order touched, 126 strip
+back byte-for-byte** to the tree §Z3 patched from, so the only change any lesson carries is the
+toggle and no placement string, LO or success criterion differs by a single byte. This is a
+named stop condition and the ruling is Matt's.
 
 ### The verdicts are **not** unaffected by it — 60 of 132 rows turn on the ruling
 
