@@ -32,7 +32,12 @@ import { chromium } from 'playwright';
 import fs from 'node:fs';
 import path from 'node:path';
 
-const STAFF = /Estate sequence|Exact SOW outcome|Inherited (mapping|evidence)|AQA UAS|'[A-Za-z ]+ (Weekly - )?(Autumn|Spring|Summer)'![A-Z]\d/;
+// Case-insensitive, and covering the wording variants actually present. The
+// first version of this pattern was case-sensitive and missed "Secondary estate
+// sequence metadata: Week 15", which made `.small` look like a mixed class
+// carrying ten pupil-facing instances. It carries none. A probe that is
+// case-sensitive about prose is a probe that invents overlap.
+const STAFF = /estate sequence|exact sow outcome|inherited (mapping|evidence)|AQA UAS|'[A-Za-z ]+ (Weekly - )?(Autumn|Spring|Summer)'![A-Z]\d|continuity metadata|adult support remains separate/i;
 const files = fs.readFileSync(process.argv[2], 'utf8').split('\n').map((s) => s.trim()).filter(Boolean);
 const b = await chromium.launch();
 const per = {};
@@ -42,7 +47,7 @@ for (const f of files) {
     await p.goto('file://' + path.resolve(f), { waitUntil: 'load' });
     await p.waitForTimeout(250);
     const rows = await p.evaluate((src) => {
-      const rx = new RegExp(src);
+      const rx = new RegExp(src, 'i');
       const out = [];
       for (const e of document.querySelectorAll('[class]')) {
         // Own text only — text in this element that is not inside a nested
