@@ -272,3 +272,83 @@ extrapolation, and it is labelled as one.
 | `_next6/tools/i5_overlap.mjs` | for every class in every deck, how many instances carry staff material in their own text — the overlap risk, measured in a real DOM |
 
 Both are read-only and take a file list. Neither applies anything.
+
+---
+
+# Addendum · the second, independent measurement (ORDER N6-F)
+
+**Two instruments ran over this question and they are kept side by side, because
+they disagree in scope and that disagreement is itself the finding.**
+
+Everything above is ORDER N6-I's map, measured over **the nine landed packs, 159
+files**, keyed by **addressee**. ORDER N6-F measured the same question
+independently, without knowledge of N6-I, over **twelve packs, 192 files** —
+including the three `Art_Teesside/*/Spring2_2026-27` packs, which N6-I could not
+see because they had not been landed on its branch. It keyed by **container
+class**, which is the cruder method and is the method N6-I's headline correction
+warns about.
+
+**Where they agree.** Both find PH-3 structurally blind here: `.li-box`,
+`.task-box` and `.wit-panel` occur in **0 of 192** files, so every file classifies
+as chassis doc and the patcher skips it. Both conclude the work needs selectors
+that already exist plus a small number of authored markers.
+
+**Where N6-I supersedes it.** A class-keyed census counts containers, not
+addressees, so it cannot separate the pupil's `Learning objective:` from the three
+staff labels sharing `.box.objective`, and it cannot see that `.model-step` is
+49–58% of its slide. N6-I's per-family reading is the operative map. **The hide-set
+in §5 above is the one to implement.**
+
+**What N6-F adds that N6-I could not.** The three Art packs, and three
+cross-cutting cautions that hold under either keying.
+
+## The three Art packs, measured (N6-F census, class-keyed)
+
+Counts are elements whose visible text matches a staff-facing marker; `.route` is
+counted in full.
+
+| pack | files | `.ta` | `.staff-card` | `.note` | `.scaffold` | `.model-step` | `.good` | `.evidence-note` | `.route` |
+|---|---|---|---|---|---|---|---|---|---|
+| BUILD_ASDAN/Autumn2_W1-W6_2026-27 | 28 | 0 | 0 | 0 | 0 | 35 | 63 | 0 | 288 |
+| GROW_ASDAN/Autumn2_W1-W6_2026-27 | 22 | 0 | 36 | 181 | 18 | 20 | 27 | 18 | 72 |
+| LAUNCH_ASDAN/W7-W12_2026-27 | 32 | 72 | 0 | 0 | 0 | 45 | 0 | 0 | 90 |
+| Science_Teesside/Build/W8-W13_2026-27 | 15 | 12 | 0 | 12 | 0 | 4 | 0 | 0 | 132 |
+| Science_Teesside/Grow/W8-W13_2026-27 | 16 | 12 | 0 | 7 | 2 | 3 | 0 | 0 | 145 |
+| Science_Teesside/Launch/W8-W13_2026-27 | 21 | 18 | 0 | 16 | 0 | 6 | 2 | 0 | 216 |
+| Humanities_Teesside/BUILD_W9-W14_2026-27 | 8 | 6 | 0 | 25 | 18 | 0 | 0 | 0 | 18 |
+| Humanities_Teesside/GROW_W9-W14_2026-27 | 8 | 18 | 0 | 0 | 1 | 0 | 0 | 0 | 16 |
+| Humanities_Teesside/LAUNCH_W9-W14_2026-27 | 9 | 0 | 0 | 22 | 17 | 2 | 0 | 0 | 18 |
+| Art_Teesside/Build/Spring2_2026-27 | 11 | 13 | 0 | 6 | 0 | 3 | 3 | 0 | 18 |
+| Art_Teesside/Grow/Spring2_2026-27 | 11 | 13 | 0 | 6 | 0 | 3 | 2 | 0 | 18 |
+| Art_Teesside/Launch/Spring2_2026-27 | 11 | 13 | 0 | 6 | 0 | 3 | 2 | 0 | 18 |
+| **total** | **192** | **177** | **36** | **281** | **56** | **124** | **99** | **18** | **1,049** |
+
+For the other nine packs this census is superseded by §3–§5 above.
+
+## Cautions that hold under either keying
+
+## What this implies for a hide-set
+
+1. **`.route` must not be in it.** 1,049 of the 1,840 elements are route boxes,
+   and they are pupil-facing navigation. Including them would look like a large
+   win on the counter and would gut the lessons. The remaining **791** elements
+   are the honest target.
+2. **`.scaffold` is nested inside `.route`.** Any rule that hides a route hides
+   a scaffold as a side effect. If scaffolds are wanted in the hidden set they
+   need to be addressed directly, and if they are not, a route-level rule must
+   not be used at all.
+3. **`.good` and `.evidence-note` are borderline.** They carry authorship and
+   evidence-integrity statements. Some of that is staff instruction; some is a
+   claim the pack makes to a reader about what the evidence is worth, which an
+   inspector or a parent has a reason to see. These 117 elements want a ruling
+   before they are tagged, not a regex.
+4. **A marker attribute beats a class rename.** Tagging in place —
+   `data-audience="staff"` on the existing element — keeps the additivity gate
+   satisfiable, because stripping the attribute returns the file byte-identical.
+   Renaming classes does not.
+
+**Note on caution 1's arithmetic.** The 1,840/791 split is the class-keyed count
+over twelve packs. It is not comparable to N6-I's per-family figures, which are
+addressee-keyed over nine. The caution stands regardless of which number is used:
+**a hide-set that includes `.route` scores well and guts the lesson**, because
+route boxes are how a pupil finds which version of the task is theirs.

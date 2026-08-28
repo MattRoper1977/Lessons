@@ -51,8 +51,18 @@ for pk in packs:
         ip = os.path.join(intake, os.path.basename(pk))
         if os.path.isdir(ip): res.append(G.g9_sentinel_set(ip, pk))
     res.append(G.g10_names(files, reflist))
+    # s24 — the print surfaces must be proven on paper, not in the DOM, and
+    # BOTH implementations run. N6-I's g12 is the broader gate; N6-F's g11 is a
+    # second, independent instrument over the same question. Two instruments
+    # answering one question is worth more than either alone, and if they ever
+    # disagree that is a finding rather than a tie to break by ordering.
     if os.environ.get('N6_SKIP_RENDERS') != '1':
         res.append(G.g12_print_renders(pk, files, os.environ.get('N6_RENDERS')))
+        # g11 is scoped to packs that promise a learner-confirmation block —
+        # the delivery question it was written for. Science and Humanities were
+        # never specified to carry one, so asking would invent a requirement.
+        if any('<!--n6-learner-confirm:v1-->' in G.read(f) for f in files):
+            res.append(G.g11_print_renders(files))
     name = os.path.basename(pk)
     print('\n=== %s ===' % name)
     for gname, ok, detail, rows in res:

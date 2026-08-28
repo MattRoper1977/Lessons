@@ -288,6 +288,28 @@ def _css_block(s,start):
         j+=1
     return j-start
 
+# =====================================================================
+# s24-print-renders — TWO independent implementations, both kept.
+#
+# ORDER N6-I and ORDER N6-F each built this gate, against different
+# defects, without knowing about the other. N6-I's g12 found the orphaned
+# fragment (a sheet carrying ten characters); N6-F's g11 found the page
+# overflow (24 decks emitting four sheets from three declared). Keeping
+# only one would drop the red-proof the other is the evidence for.
+#
+# They are also two instruments answering one question, which is worth
+# more than either alone: run_gates calls both, and a disagreement
+# between them is a finding to look at, not a tie to break by whichever
+# is listed second.
+#
+# g12 is the broader gate — declared-unit page bands, a committed
+# coverage contract, an accessibility render pass, two pixel measurements
+# so a themed background cannot silence it, and a self-test.
+# g11 is the narrower one — absolute-path resolution and an OR-form blank
+# test that needs no second pixel measurement to catch an empty bordered
+# box.
+# =====================================================================
+
 
 # ---------------------------------------------------------------- gate 12
 # ORDER N6-I · I2 — `s24-print-renders`, the estate's print RENDER gate.
@@ -368,3 +390,92 @@ def g12_print_renders(root, files, renders_dir=None, keep=False):
         return (name, False, 'CANNOT MEASURE — ' + detail +
                 ' (pack has a print surface, so unmeasured is red)', rows)
     return (name, ok, detail, rows)
+
+# ------------------------------------------------- s24 · print renders (N6-F §F1)
+# Why this gate exists. Two defects reached the branch that every check we had
+# called green:
+#   · the learner-confirmation block was appended before </body>, OUTSIDE the
+#     `.print-pack` container that BUILD_ASDAN gates with
+#     `body>*:not(.print-pack){display:none!important}`. A grep for the block
+#     found it in 75/75 files. It printed on 51.
+#   · the LAUNCH_ASDAN print donor revealed nine slides and left each at
+#     `height:91%`, so nine sheets per deck came out blank. Any check that asked
+#     "is there an @media print block, and does it reveal the slides" said yes.
+# Both are invisible to element presence. Both are obvious on the paper. So the
+# gate renders through real Chromium print pagination to A4 and measures the
+# raster: ink coverage per page, and the confirmation text as extracted from the
+# PDF rather than from the DOM. Thresholds live in n6_print_measure, which owns
+# the definition of an empty page.
+S24_SENTINELS   = ['I confirm this is my own work', 'Learner confirmation']
+
+
+def g11_print_renders(files, workdir=None, require_sentinel=True):
+    """Render every carrier surface to A4 and measure the paper.
+
+    Returns the standard (name, ok, detail, rows) tuple. `ok` is None —
+    MEASUREMENT INVALID, never a pass — when the renderer or the raster reader
+    is unavailable, because a gate that silently skips is worse than no gate.
+    """
+    carriers = [p for p in files if '<!--n6-learner-confirm:v1-->' in read(p)]
+    if not carriers:
+        return ('G11 s24-print-renders', None,
+                'MEASUREMENT INVALID — no print carriers found', [])
+    try:
+        import pypdfium2  # noqa: F401
+        import numpy      # noqa: F401
+    except Exception as e:
+        return ('G11 s24-print-renders', None,
+                'MEASUREMENT INVALID — raster reader unavailable (%s)' % e, [])
+
+    here = os.path.dirname(os.path.abspath(__file__))
+    renderer = os.path.join(here, 'n6_print_render.js')
+    if not os.path.exists(renderer):
+        return ('G11 s24-print-renders', None,
+                'MEASUREMENT INVALID — renderer absent (%s)' % renderer, [])
+
+    # Absolute paths, always. The renderer resolves each file against ITS OWN
+    # cwd, so handing it repo-relative paths silently renders the wrong thing:
+    # every surface comes back without the confirmation block and the gate
+    # reports 0/26 instead of 26/26. It passed for a while only because the
+    # first harness happened to feed it absolute paths.
+    tmp = workdir or tempfile.mkdtemp(prefix='s24-')
+    abscarriers = [os.path.abspath(c) for c in carriers]
+    r = subprocess.run(['node', renderer, tmp] + abscarriers,
+                       capture_output=True, text=True)
+    man_path = os.path.join(tmp, 'render_manifest.json')
+    if r.returncode != 0 or not os.path.exists(man_path):
+        return ('G11 s24-print-renders', None,
+                'MEASUREMENT INVALID — render failed: %s'
+                % (r.stderr or r.stdout or '')[-200:], [])
+
+    sys.path.insert(0, here)
+    import n6_print_measure as M
+    rows = []
+    nsent = 0
+    nblank = 0
+    for m in json.load(open(man_path)):
+        base = os.path.relpath(m['src'])
+        if m.get('error'):
+            rows.append((base, 'RENDER ERROR', m['error']))
+            continue
+        pages, text = M.measure(m['pdf'])
+        low = text.lower()
+        if any(s.lower() in low for s in S24_SENTINELS):
+            nsent += 1
+        elif require_sentinel:
+            rows.append((base, 'CONFIRMATION BLOCK NOT ON PAPER',
+                         '%d pages rendered, sentinel absent from PDF text' % len(pages)))
+        for p in pages:
+            if p['blank']:
+                nblank += 1
+                rows.append((base, 'BLANK PAGE',
+                             'p%d ink=%.4f%% chars=%d'
+                             % (p['page'], p['ink'] * 100, p['chars'])))
+        if m.get('external'):
+            rows.append((base, 'EXTERNAL REQUEST DURING RENDER',
+                         ', '.join(m['external'][:3])))
+    ok = not rows
+    return ('G11 s24-print-renders', ok,
+            '%d surfaces rendered · confirmation on paper %d/%d · %d blank pages'
+            % (len(carriers), nsent, len(carriers), nblank), rows)
+

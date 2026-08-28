@@ -166,6 +166,25 @@ ABS_MAX = 60
 UNIT_SLACK = 0            # a unit may overflow onto extra sheets; it may never
                           # occupy fewer than one
 
+# ORDER N6-M — the ceiling, and why the floor alone was not enough.
+#
+# The band was [units, ABS_MAX]: a floor and a runaway backstop, no ceiling. That
+# is exactly wide enough to miss the defect ORDER N6-F found. With N6-F's print-fit
+# reverted, BUILD_ASDAN_A2_CON_W1 prints FOUR sheets from THREE declared units and
+# sits inside [3, 60], so the gate passed a deck that had regained the overflow.
+#
+# It hid for a second reason worth recording: N6-I's orphans/widows control is
+# also in these decks now, and it keeps the spilled sheet carrying four lines
+# rather than a ten-character fragment. So the overflow no longer produces a
+# near-blank page either. Each fix conceals the other's defect class from the
+# check that found it. Neither gate reds without this ceiling.
+#
+# The ceiling applies to the DEFAULT variant only. Route filters and the
+# accessibility variants legitimately reflow — larger type and Calm Mode spacing
+# can push a unit onto a second sheet, and holding those to the same number would
+# red a clean tree for being accessible.
+UNIT_OVER_SLACK = 0       # default variant: a deck prints the units it declares
+
 
 def band_for_record(rec, pages):
     """Return (kind, low, high, why) for one rendered variant."""
@@ -173,8 +192,16 @@ def band_for_record(rec, pages):
     units = d.get('units') or 0
     kind = d.get('unitKind', 'none')
     if units:
-        return (kind, units - UNIT_SLACK, ABS_MAX,
-                '%d visible %s unit(s) declared by the document' % (units, kind))
+        if rec.get('isDefault', True):
+            hi = units + UNIT_OVER_SLACK
+            why = ('%d visible %s unit(s) declared by the document; the default '
+                   'variant prints the units it declares' % (units, kind))
+        else:
+            hi = ABS_MAX
+            why = ('%d visible %s unit(s) declared by the document; non-default '
+                   'variant, ceiling relaxed (route filters and the accessibility '
+                   'variants legitimately reflow)' % (units, kind))
+        return (kind, units - UNIT_SLACK, hi, why)
     return ('unbanded', 1, ABS_MAX, 'no print unit declared; sanity band only')
 
 
@@ -447,8 +474,24 @@ def print_table(report):
 
 # ------------------------------------------------------------------ rendering
 def render(files, out_dir):
-    cmd = ['node', os.path.join(HERE, 's24_render.mjs'), '--out', out_dir] + list(files)
-    r = subprocess.run(cmd, cwd=os.getcwd())
+    """Render the given surfaces. Paths are made ABSOLUTE first, deliberately.
+
+    ORDER N6-M: the sibling implementation of this gate (gates.g11) read 26/26
+    one way and 0/26 another on the same correct tree, because the renderer
+    resolves each path against ITS OWN working directory and was being handed
+    repo-relative paths from a process running elsewhere. Every surface came
+    back without its confirmation block and the gate reported a defect that was
+    not there. It had only ever passed because the first harness happened to
+    feed it absolute paths.
+
+    This implementation inherits the same hazard by a different route — it runs
+    node in the caller's cwd, so it is correct only while the caller happens to
+    be at the repo root. Resolving here removes the dependency entirely. The
+    failure it prevents is silent, total, and looks exactly like a real defect.
+    """
+    cmd = ['node', os.path.join(HERE, 's24_render.mjs'), '--out', out_dir] + \
+        [os.path.abspath(f) for f in files]
+    r = subprocess.run(cmd)
     return r.returncode == 0
 
 
