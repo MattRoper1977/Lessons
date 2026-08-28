@@ -1092,15 +1092,19 @@ rather than extrapolated.
 ## I6 — The accreditation contradiction, recorded and not resolved
 
 **For Matt and Cheryl.** Nothing is edited for this. No pack, no deck, no string. It is a
-scheme-level question about what the LAUNCH lane is accredited at, and the two committed
-sources disagree.
+scheme-level question and the ruling is theirs.
+
+**But the premise does not survive measurement, and saying so is part of the job.** The
+order states that `D13` gives LAUNCH *"PEQ Level 1 Award" with no Entry 3 floor* and that
+both sources cannot be right about LAUNCH. Measured against the workbooks, the disagreement
+is much narrower than that, and may not be a disagreement at all. The evidence is below;
+the ruling is still theirs to make.
 
 ### Source A — the SoW Curriculum Pathway Ladder
 
 `_passsl/inputs/LAUNCH KS4 - 2026-27.xlsx`, sheet **`Pathway Ladder`**, row 13
-(`A13` = *"Personal Effectiveness (ASDAN PEQ)"*), under the column header `D3` = *"LAUNCH
-(GCSE)"*. Quoted verbatim, with its two neighbours because the comparison is the whole
-point:
+(`A13` = *"Personal Effectiveness (ASDAN PEQ)"*), column header `D3` = *"LAUNCH (GCSE)"*.
+Verbatim, with its two row-mates, because the comparison is the whole point:
 
 > **`B13`** (BUILD) — *"PEQ Entry 3 units introduced. **Floor:** introductory/taster units."*
 > **`C13`** (GROW) — *"PEQ Level 1 Award. **Floor: Entry 3 units.** (E3–L1 only in 2026/27.)"*
@@ -1115,11 +1119,8 @@ point:
 
 and §2, family E1, recording what was done with it:
 
-> *"`PEQ Level 1 (E3 floor · L2 stretch)` → `PEQ Entry 3 (Level 1 stretch)`; dual unit
-> citations where a deck banks the skill; every L2 PEQ claim removed — 195 substitutions
-> over 20 files + an 8-file tail sweep"*
-
-with the re-anchored ladder in the same file:
+> *"`PEQ Level 1 (E3 floor · L2 stretch)` → `PEQ Entry 3 (Level 1 stretch)` … 195
+> substitutions over 20 files + an 8-file tail sweep"*
 
 | tier | evidences | was |
 |---|---|---|
@@ -1127,90 +1128,140 @@ with the re-anchored ladder in the same file:
 | Standard | **Entry 3** | Level 1 |
 | Stretch | **Level 1** | Level 2 |
 
+### Five measurements that narrow the question
+
+**1 · The missing "Floor:" is a column-wide layout convention, not a LAUNCH ruling.**
+Counted across the ladder's 13 subject rows:
+
+| column | cells containing "Floor" |
+|---|---:|
+| B — BUILD | **10 of 13** |
+| C — GROW | **13 of 13** |
+| D — LAUNCH | **0 of 13** |
+
+The LAUNCH column never states a floor for **any** subject — not English, not maths, not
+science, not RE. Reading `D13`'s silence as an accreditation ruling requires reading the
+same silence as a ruling in twelve other subjects too.
+
+**2 · The sheet says outright what it is.** `A2`, verbatim:
+
+> *"Each cell shows the pathway's **TARGET** and, **where relevant**, the FLOOR for the
+> lowest learners so no one is stranded."*
+
+So the ladder is a table of targets with an *optional* floor clause. That is the workbook's
+own description of itself, and it answers the question of whether the ladder is a target
+statement or a delivery statement without anyone having to infer it.
+
+**3 · `D13` is not a LAUNCH-authored statement.** The cell is **byte-identical**
+(sha256 `f9c416e890fdc52f…`) in all three committed workbooks —
+`_passsl/inputs/LAUNCH KS4 - 2026-27.xlsx`, `_passsb/inputs/Build SOW 2026-2027.xlsx` and
+`_passsg/inputs/GROW SOW 2026-27.xlsx`. The Pathway Ladder is shared front-matter carried in
+every workbook, so `D13` is not a statement made about the LAUNCH cohort in particular.
+
+**4 · The same workbook names Entry 3 for LAUNCH 28 times.** Of the **29** cells in the
+LAUNCH workbook that name PEQ with a level, **28 mention Entry 3 or E3**. The single
+exception is `Qualification Map!E15` — which is the **GROW** column. The LAUNCH cell in that
+same row, `F15`, reads *"PEQ Level 1 Award / Extended Award / Certificate (E3–L1 only in
+2026/27)"*, and the row's own summary `C15` is *"E3 to L1"*. `B15` states it plainly:
+
+> *"ASDAN Personal Effectiveness Qualification (PEQ), **Entry 3 and Level 1** (Award /
+> Extended Award / Certificate) – delivered at **E3–L1 only in 2026/27**; Levels 2–3 to be
+> introduced in future years."*
+
+**5 · `D13` is not silent about Entry 3 in the first place.** It carries
+**"(E3–L1 only in 2026/27.)"**. What it lacks against `C13` is the literal word "Floor:" —
+which, per measurement 1, no LAUNCH cell has for any subject.
+
+**Taken together: the workbook does not claim that LAUNCH excludes Entry 3.** It claims
+Level 1 is the LAUNCH *target* and states an E3–L1 range for the year. The estate anchor
+claims Entry 3 is what the room *evidences today*, with Level 1 as stretch. Those are
+answers to different questions, and the estate has already said so in terms —
+`_passpq/DECISIONS.md` §1: the earlier "L1 primary" framing *"is superseded **for delivery
+purposes**"*, its arithmetic *"still correct"*, the L1 routes *"re-labelled as the stretch
+route … not deleted"*.
+
 ### The anchor string, counted here
 
-The order gives ×118. **This pass measures 126 occurrences across 33 live-content files**
-(137 across 38 if the working documents and this file are included; `origin/main` is 136
-across 37). Command: `grep -ro "PEQ Entry 3 (Level 1 stretch)"`, excluding `.git`, the
-`_*` working directories and the root ledgers. The figure is offered as a correction to 118,
-not as a disagreement about substance.
+The order gives ×118. Measured at `db066603` with a clean tree:
 
-Where those 126 live:
+```
+grep -roF "PEQ Entry 3 (Level 1 stretch)" . --exclude-dir=.git --exclude-dir=node_modules  # 139
+grep -rlF "PEQ Entry 3 (Level 1 stretch)" . --exclude-dir=.git --exclude-dir=node_modules  # 38
+```
+
+**139 across 38 files**, of which **3 occurrences are this document's own quotations** — a
+write-up that cites a string inflates the count of it, so the estate figure to work from is
+**126 across 33 live-content files** (working directories and root ledgers excluded).
+`origin/main` is 136 across 37.
 
 | area | files | occurrences |
 |---|---:|---:|
 | `GROW_ASDAN/` (hub, PEQ W1–W6, START_HERE, resources) | 10 | 25 |
-| `GROW_Estate_v3/GROW_ASDAN/` (evidence window, PEQ W1–W6, index, manifest) | 9 | 44 |
+| `GROW_Estate_v3/GROW_ASDAN/` | 9 | 44 |
 | `LAUNCH_ASDAN/` (hub, PEQ START_HERE, resources, scheme) | 4 | 5 |
-| `LAUNCH_Estate_v3/LAUNCH_ASDAN/` (evidence window, PEQ W1–W6, index, manifest) | 9 | 31 |
-| `resources.json` (the estate registry) | 1 | 21 |
+| `LAUNCH_Estate_v3/LAUNCH_ASDAN/` | 9 | 31 |
+| `resources.json` — 13 LAUNCH records, 8 GROW, by record id | 1 | 21 |
 | **total** | **33** | **126** |
 
-**Note for whoever acts on this: none of the 126 is in the three new packs.** The staged
-`LAUNCH_ASDAN/W7-W12_2026-27/` and `GROW_ASDAN/Autumn2_W1-W6_2026-27/` trees carry the string
-**0 times**. This is a question about the pre-existing estate, not about the packs this
-order's other items touch — which is why nothing here is edited.
+**None of the 126 is in the three new packs.** `LAUNCH_ASDAN/W7-W12_2026-27/` and
+`GROW_ASDAN/Autumn2_W1-W6_2026-27/` carry the string **0 times**. This is a question about
+the pre-existing estate, which is why nothing here is edited.
 
 ### The arithmetic consequence of each reading
 
-**Reading 1 — `D13` governs. LAUNCH is a Level 1 lane.**
-The 36 LAUNCH-side occurrences (13 files across `LAUNCH_ASDAN/` and
-`LAUNCH_Estate_v3/LAUNCH_ASDAN/`) would have to change, plus whichever of the 21
-`resources.json` entries describe LAUNCH surfaces. The 90 GROW-side occurrences are
-untouched, because `C13` explicitly gives GROW an Entry 3 floor and the anchor agrees with
-it there. The cost is not the substitution — it is that the estate would then name Level 1
-as the level for a room in which, on the owner's own statement, **2–4 pupils are at Level 1
-and the rest are at Entry 3**. Every tier minimum, command verb and credit figure that
-`_passpq` moved down (E2: 34 substitutions over 4 decks; E3: 53 command stems over 11 decks;
-E6: 8 arithmetic panels) would be pointing above the room again.
+**Reading 1 — `D13` governs; LAUNCH is a Level 1 lane.** In scope is only what `D13`'s own
+column covers: **49 occurrences across 14 files** — 36 in the 13 LAUNCH-path files, plus the
+13 `resources.json` records whose ids begin `launch-asdan-`. The GROW side is untouched —
+**69 across 19 pack and estate files, plus the 8 GROW `resources.json` records, so 77 across
+20** — because `C13` gives GROW an explicit Entry 3 floor and the anchor agrees with it
+there. The cost is not the substitution. It is that the estate would then name Level 1 as
+the level for a room in which, on the owner's own statement, **2–4 pupils are at Level 1 and
+the rest are at Entry 3** — and everything `_passpq` moved down would be pointing above the
+room again: 34 tier-minimum substitutions over 4 decks, 53 command-verb stems over 11 decks,
+8 arithmetic panels.
 
-**Reading 2 — the estate anchor governs. LAUNCH delivers at Entry 3 with Level 1 stretch.**
-No file changes; the 126 stand. What is contradicted is the SoW's own headline for the lane,
-and specifically the asymmetry that `C13` states an Entry 3 floor for GROW while `D13`
-states none for LAUNCH — so on the workbook's face, GROW's floor is lower than LAUNCH's.
-Against that: the staged LAUNCH_ASDAN pack asserts a bare **"Level 1"** eight times (2 source
-citations, 2 banking-style assertions, 4 lesson-purpose prose), and the unit code `TmWkSk1`
-— Team Working Skills **Level 1** — appears 8 times. Those eight would sit inside an
-Entry-3-anchored lane.
+**Reading 2 — the estate anchor governs; LAUNCH delivers at Entry 3 with Level 1 stretch.**
+No file changes; the 126 stand. What is contradicted is the workbook's headline *target* for
+the lane. Against it: the staged LAUNCH pack asserts a bare **"Level 1"** 8 times and carries
+the unit code `TmWkSk1` (Team Working Skills Level 1) 8 times, and in `LAUNCH_ASDAN/` the
+Level 1 codes dominate — `ComSk1` 87 against `ComSkE3` 64, `TmWkSk1` 12 against `TmWkSkE3`
+**0**, while `GROW_ASDAN/` carries `TmWkSkE3` 77 times.
 
-### Counter-evidence, because a one-sided case is worse than useless
+### What genuinely cannot be settled from the repository
 
-**The two sources are closer than "both cannot be right" suggests, and the difference may be
-one missing word.** `D13` is *not* silent about Entry 3 — it carries the parenthetical
-**"(E3–L1 only in 2026/27.)"**, which names Entry 3 as the bottom of the LAUNCH range for
-this very year. What `D13` lacks, relative to `C13`, is the literal word **"Floor:"**. So
-both sources admit an E3–L1 range for LAUNCH in 2026/27. The real disagreement is about which
-end of that range is the **default**: `D13` leads with the Level 1 award, the estate anchor
-leads with Entry 3 and calls Level 1 the stretch.
-
-**The estate has already ruled that these are two different registers, and kept both.**
-`_passpq/DECISIONS.md` §1 says so in terms: the July audit's "L1 primary" framing *"is
-superseded for delivery purposes by the cohort fact above"*, its arithmetic *"was verified
-against spec v1.2 §5.1 p10 and is still correct"*, and the L1 routes are *"re-labelled as the
-stretch route … not deleted"*. On that reading the Pathway Ladder is a **target** table (what
-the lane is registered and aims for) and the anchor is a **delivery** statement (what a deck
-in front of this cohort says it evidences), and neither is wrong. This is offered as a named
-reading with its source, not as a resolution — the order says record, and it is Matt and
-Cheryl's to rule.
-
-**And one thing that weakens the "contradiction" framing from the other side.** The previous
-pass's N4 recorded that on `origin/main` the six `LAUNCH_ASDAN/PEQ` lesson files carry **zero**
-instances of the anchor string and use `PEQ Entry 3 (Level 1 · Level 2 routes)` instead
-(measured here: 23 occurrences across 10 files, of which **18 across the 6 live
-`LAUNCH_ASDAN/PEQ` lesson decks**; the rest are working documents and `_passpq` tooling). So the live estate is already carrying a
-**third** string for the same lane. Whichever way this is ruled, that third form needs ruling
-with it or the estate will name two things for the same weeks — which is precisely the
-failure `_passpq` P1 was opened to fix.
+1. **No one has ever chosen between them on the record.** `_passsl/` — the pass that ingested
+   the LAUNCH SoW — contains **no level statement at all**: its five `.md` files carry zero
+   occurrences of "Entry 3", "Level 1" or "E3–L1". The ladder entered the repository as raw
+   input evidence and was never adjudicated. `_passpq/DECISIONS.md` §1 supersedes an internal
+   audit "for delivery only"; the **workbook** is nowhere named as superseded.
+2. **The per-pupil split is not in the repository.** The cohort fact gives a range
+   ("2–4 pupils"), not a roll, and no file records which pupils were entered at which level
+   for which skill. So nobody working from these files can say how many pupils either reading
+   would move, or whether the entries already made match either one. That is a question for
+   the coordinator and the ASDAN account.
+3. **What `D13`'s parenthetical was for.** *"(E3–L1 only in 2026/27.)"* could be a floor
+   statement (Entry 3 is available in this lane this year) or a suite-availability note (the
+   centre offers only E3 and L1 school-wide this year, Levels 2–3 later — which is how
+   `Qualification Map` B15 and `Programmes & Frameworks` B23 both phrase it). It appears
+   identically in `C13`, *alongside* an explicit "Floor: Entry 3 units", which suggests it is
+   not itself a floor clause — but that is an inference, not a record.
+4. **A third string already disagrees with both.** The six live `LAUNCH_ASDAN/PEQ` decks
+   carry neither: they carry `PEQ Entry 3 (Level 1 · Level 2 routes)`, **18 occurrences
+   across those 6 files** (23 repo-wide including tooling). It arrived on a later owner
+   ruling — `_passpq/CREDIT_PATHWAYS.md:181`, 2026-08-21, adding an in-deck Level 2 route —
+   one day after the anchor was adopted. Whichever way this is ruled, that third form needs
+   ruling with it, or the estate will name two things for the same weeks, which is exactly
+   the failure `_passpq` P1 was opened to fix.
 
 ### What is actually being asked
 
-1. For LAUNCH in 2026/27, is the **default** Entry 3 with Level 1 as stretch, or Level 1 with
-   Entry 3 admitted?
-2. Is the Pathway Ladder a target table or a delivery statement? If it is a target table,
-   the contradiction dissolves and the answer should be written into the workbook so the next
-   pass does not re-derive it.
-3. Whichever is ruled, what happens to `PEQ Entry 3 (Level 1 · Level 2 routes)` — 18
-   occurrences across the 6 live `LAUNCH_ASDAN/PEQ` decks — which agrees with neither?
+1. Is the Pathway Ladder a **target** table? Its own `A2` says yes. If that is accepted, the
+   contradiction dissolves and the answer should be written into the workbook so no later
+   pass re-derives it.
+2. If it is not, for LAUNCH in 2026/27 is the **default** Entry 3 with Level 1 as stretch, or
+   Level 1 with Entry 3 admitted?
+3. Either way: what happens to `PEQ Entry 3 (Level 1 · Level 2 routes)`, 18 occurrences
+   across the 6 live LAUNCH PEQ decks, which agrees with neither?
 
 ---
 
@@ -1223,7 +1274,7 @@ failure `_passpq` P1 was opened to fix.
 | **I3** close N12 | **CLOSED — REFUTED.** Ruling recorded, all seven signals re-verified. **The landing itself could not be performed here — the pack bytes are not in this repository** |
 | **I4** start the external-link clock | **CANNOT MEASURE HERE.** Stopped after one line, as instructed. Timestamped artifact committed; nothing proposed for removal |
 | **I5** guidance tag map | **DONE — map only, nothing applied.** `_next6/GUIDE_TAG_MAP.md` |
-| **I6** record the accreditation contradiction | **DONE — recorded, not resolved.** Both sources quoted, both readings costed, counter-evidence given |
+| **I6** record the accreditation contradiction | **DONE — recorded, not resolved.** Both sources quoted, both readings costed. **The premise does not survive measurement:** the ladder's own `A2` calls it a TARGET table, no LAUNCH cell states a floor for any of its 13 subjects, `D13` is byte-identical in all three workbooks, and 28 of the LAUNCH workbook's 29 PEQ-with-level cells name Entry 3 |
 
 ## What this order's instruments got wrong before they got it right
 
@@ -1265,7 +1316,14 @@ New from this order:
    repository, so a session that has them must perform the copy.
 2. **I4's clock.** Not started. It needs a venue that can reach the citation hosts.
 3. **I6 — the LAUNCH accreditation question**, for Matt and Cheryl, with both readings
-   costed above.
+   costed above. The question is narrower than the order frames it: the Pathway Ladder says
+   of itself that it shows the **target** with an optional floor, the LAUNCH column states a
+   floor for **0 of its 13 subjects**, and the LAUNCH workbook names Entry 3 in **28 of the
+   29** cells where it gives PEQ a level. If the ladder is accepted as a target table the
+   contradiction dissolves — but that acceptance is a ruling, and it should be written into
+   the workbook so no later pass re-derives it. A **third** string,
+   `PEQ Entry 3 (Level 1 · Level 2 routes)` (18 occurrences across the 6 live LAUNCH PEQ
+   decks), agrees with neither and needs ruling alongside.
 4. **The Calm Mode print tint** — `body.calm{background:#F4F1E9}` outranks the print block's
    `body{background:#fff}` on specificity in the 24 BUILD_ASDAN decks. Invisible with
    background graphics off, which is the default. A specificity-convention ruling, not a
