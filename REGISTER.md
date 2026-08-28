@@ -2875,3 +2875,118 @@ than an absolute); 30 external URLs, not 34.
 **Deferred, in `_next6/FINDINGS.md` §Open:** the N5 reading and its lane rule; the Art packs'
 placement; GROW_ASDAN's `★ Optional reach` → `Stretch` (Tier 2 — it removes "Optional" and
 changes what a pupil does); the PH-3 toggle; and one dangling `5 ·` in the ported heading.
+
+---
+
+## R-N6F01 — Order N6-F: the print surfaces proven on paper, the SoW matrix built, six of the order's own figures wrong
+
+**Last observed true at** `d7638815`.
+
+Order N6-F finished what N6 left open and re-derived everything N6 reported, on the
+order's own instruction that its figures are a prediction map. Full record in
+[`_next6/FINDINGS.md`](_next6/FINDINGS.md) §F0–§F4, matrix in
+[`_next6/SOW_MATRIX.md`](_next6/SOW_MATRIX.md).
+
+**The transferable rule of this pass: element presence is not evidence about paper, and
+ink coverage alone is not evidence about emptiness.** The first is what N6 already
+learned. The second is new, and it cost a gate iteration here.
+
+- **A slide left at `height:91%` prints an empty bordered box: zero characters, ~0.7%
+  ink from the border.** An ink-only threshold calls that a working page. The blank test
+  in `s24-print-renders` is therefore an **OR** over ink and extracted text, not an AND.
+  The AND version passed the very perturbation the gate exists to catch, and also
+  undercounted the BUILD spill pages as 2 when there were 3. Against the clean estate the
+  OR is a wide margin: the thinnest real page carries 94 characters and 0.66% ink.
+- **An element-geometry probe under `emulateMedia('print')` still lays out at the 1280px
+  viewport.** Text wraps wider than A4, so every page looks like it fits. It cleared all
+  24 BUILD_ASDAN decks while the rendered PDF still spilled eight of them. **Only the
+  paginated PDF settles a print question.**
+- **Reversing a content edit to test additivity is unsound.** `Reach` and `Secure` occur
+  natively in packs that were never normalised, so a blind reverse-replace manufactured 24
+  differences that do not exist. Apply known edits **forward** to the intake instead — the
+  direction they were actually made in — and compare for equality.
+
+**Six figures in the order were wrong, and the measurement won each time.** Recorded so
+no later pass re-derives them: the branch was **8 commits ahead, not 7**; there are **30
+citation URLs, not 34** (agreeing with N6's own count); the PEQ estate anchor appears
+**137 times across 38 files, not 118**; Pathway Ladder **D13 does carry an Entry 3 bound**
+("(E3–L1 only in 2026/27.)") rather than none; the BUILD and GROW weekly grids are **not**
+uniform W1–W7 per half term — all three lanes share the same non-uniform shape
+(7/7/6/6/6/7); and **no SoW alignment output existed at all**, so §2 had not run and §F2
+started from zero rather than resuming.
+
+**The third print defect, which nothing had looked for.** All 24 BUILD_ASDAN lesson decks
+overflowed their first print page by 12.1–30.9mm and emitted four sheets against three
+declared, three of them carrying only the tail of a sentence. Cause: that pack's
+`@media print` block sets visibility and pagination and **no typography**, so headings
+printed at screen size — `h1` ~43pt, `h2` ~31pt on a 190mm page. Fixed by taking back
+heading size and block spacing only; no pupil-facing reading text changed size, because
+these are Entry 3 packs and buying paper by shrinking what a pupil reads is the wrong
+trade. 3 blank pages → 0; 24 over-length decks → 0.
+
+**`s24-print-renders` is a standing gate and has been seen red.** Wired so a pack carrying
+the learner-confirmation block cannot go green without it, and returning MEASUREMENT
+INVALID rather than a pass when the renderer or raster reader is absent. Proven red on
+both defects it exists for, each naming the file and the defect
+([`_next6/S24_REDPROOF.md`](_next6/S24_REDPROOF.md)).
+
+**Additivity, measured against a real intake for the first time.** Matt supplied the twelve
+source zips, so the "strip the insertion → byte-identical" claim could be tested rather
+than asserted: **138 identical, 54 content edits, 30 unmarked insertions, 0 unexplained.**
+The three classes matter. The 54 are the N10 UAS hedge and the N6 tier normalisation —
+decisions that *should* fail an additivity test. The 30 are the N3 print route, inserted as
+a bare `<style id="n6-print-route">` with no comment marker, so no generic stripper can see
+it; **it should be given one.**
+
+**`ll-g:loop-mark` lives in 50 HTML surfaces, all in the pre-existing `Art_Teesside`
+estate and none in the twelve new packs.** The per-pack SET-invariance result for the new
+packs is a vacuous `0 == 0`. Where the sentinel actually lives, none of the 50 changed.
+
+**N12 is CLOSED — REFUTED, and the three Art packs are landed at Spring 2** in
+`Art_Teesside/{Build,Grow,Launch}/Spring2_2026-27/`, byte-for-byte with their own
+checksums re-verified in place. All six week enquiry questions in
+`Art_Teesside/Spring2_Scheme_of_Work.html` appear **verbatim** in each pack; the packs were
+built from the committed scheme. No existing `Art_Teesside` file was modified, so W8 Silver
+is untouched by construction.
+
+**The SoW matrix exists for the first time: 192/192 files carry a verdict.** §F0 found
+zero — no matrix, no rows — so §2 had never run and §F2 started from nothing. 151 lesson
+surfaces and 41 support surfaces; 86 ALIGNED, 28 DELIBERATE-DIVERGENCE, 17 SURFACE-SPLIT,
+12 MISALIGNED, 8 PARTIAL, 41 SOW-SILENT. **SOW-SILENT lands on exactly the 41 support
+surfaces and no lesson is silent**, which is the consistency check on that distinction.
+Tiers 38/1/16/137. **Nothing was edited for §F2**: the single Tier 2 is diffed and held,
+and the Tier 1 fixes are proposed rather than applied because the largest cluster of them
+sits downstream of D-A.
+
+**Every group was adversarially re-derived, and it earned its place.** 30 disagreements —
+verifier right on 17, original right on the rest or left flagged unresolved rather than
+waved through. It caught a tier no mechanical fix could resolve, an evidence claim
+contradicted by the file it cited, an ALIGNED that was really SURFACE-SPLIT, and a PARTIAL
+resting on five occurrences of "ethic" that on reading all said the opposite. Two
+independent checks back the matrix: citation re-derivation straight from the workbooks
+**12/12**, and surface typing agreeing three ways — with the agents **correcting the record
+they were given on 10 files** that a loose "Objective" match had mistyped as lessons.
+
+**A pack can tell you which calendar it was built to, and one did.** The two readings put a
+lesson at estate week N against different SoW rows teaching different topics, so content
+decides what labels cannot. For `Science_Teesside/Launch/W8-W13_2026-27`: **14 lessons match
+Aut1 = 8 (the LA dates), zero match Aut1 = 7 (the workbook)** — W9 mitosis → C39, W10 growth
+and stem cells → C40, W11 stem-cell ethics → C41, W12 DNA → C42, W13 Punnett → C43, each one
+week later than the workbook's grid puts it. Its estate-week-8 lessons teach enzymes, Topic
+1, which has no Aut2 row either way: **the pack put lessons in the orphan week.**
+Consequence for anyone reading the matrix: **six of that pack's MISALIGNED and PARTIAL rows
+are correct against the workbook and dissolve under the LA calendar.** They are one calendar
+question surfacing as six apparent authoring errors, and must not be "fixed" before D-A is
+ruled.
+
+**D-A is the estate's calendar, not a labelling slip, and the repo already says so.**
+`_passpq/tools/l2k_plan.py` hard-allocates `Aut1 = W1–W8` and carries its own note
+**"OUTSTANDING FOR MATT: confirm term dates / teaching weeks"**; `Build/README.txt` grounds
+the 15-week autumn in the Redcar & Cleveland term dates and records that "every ASDAN week
+number has shifted by one". The SoW workbooks still carry a 7-week Aut1. Autumn is the only
+*evidenced* block in the year; spring and summer are declared assumptions. Left unruled, as
+the order provides.
+
+**F3.2 stopped: no network.** The egress proxy answers 403 to CONNECT for every host — an
+organisation policy denial its own README says not to route around. **No liveness reading
+taken, none simulated**, so the first of the two the rule needs is still outstanding.

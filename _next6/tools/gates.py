@@ -330,10 +330,15 @@ def g11_print_renders(files, workdir=None, require_sentinel=True):
         return ('G11 s24-print-renders', None,
                 'MEASUREMENT INVALID — renderer absent (%s)' % renderer, [])
 
+    # Absolute paths, always. The renderer resolves each file against ITS OWN
+    # cwd, so handing it repo-relative paths silently renders the wrong thing:
+    # every surface comes back without the confirmation block and the gate
+    # reports 0/26 instead of 26/26. It passed for a while only because the
+    # first harness happened to feed it absolute paths.
     tmp = workdir or tempfile.mkdtemp(prefix='s24-')
-    r = subprocess.run(['node', renderer, tmp] + carriers,
-                       capture_output=True, text=True,
-                       cwd=os.path.dirname(here) or '.')
+    abscarriers = [os.path.abspath(c) for c in carriers]
+    r = subprocess.run(['node', renderer, tmp] + abscarriers,
+                       capture_output=True, text=True)
     man_path = os.path.join(tmp, 'render_manifest.json')
     if r.returncode != 0 or not os.path.exists(man_path):
         return ('G11 s24-print-renders', None,
