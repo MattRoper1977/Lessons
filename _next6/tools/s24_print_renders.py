@@ -20,18 +20,30 @@ Both classes of defect are invisible to element-presence checks and to
 inspect the DOM at all. It reads the PDF Chromium actually produced and measures:
 
   A. the learner-confirmation block is in the PRINTED TEXT of every named surface
-  B. no page is blank or near-blank — measured as INK COVERAGE on a rasterised
-     page plus the page's own text length, never as element presence
-  C. every deck's page count sits inside a declared band, printed as a table
+  B. no page is blank or near-blank — measured on the RASTERISED page as ink
+     coverage and as tint-invariant local variation, plus the page's own text
+     length; never as element presence
+  C. every deck's page count is at least the number of print units THE DOCUMENT
+     ITSELF declares, printed as a table
 
-Ink coverage is the load-bearing measurement. A page carrying a hidden 91%-tall
-slide has a page box and no marks; a page carrying a signature table has marks.
+Pixels are the load-bearing measurement. A page carrying a hidden 91%-tall slide
+has a page box and no marks; a page carrying a signature table has marks.
 Counting elements cannot tell those apart. Counting pixels can.
+
+Two pixel measurements, because one has a blind spot — see `measure_pdf`. Ink is
+coverage against white and is the right number for an ordinary sheet; a themed
+background makes every pixel non-white and silences it, so `edge` measures local
+variation instead, which a flat region of any colour cannot fake.
+
+`s24_render.mjs --a11y` renders the same set under the estate's accessibility
+invariants (reduced motion, dark scheme, the decks' own Calm Mode and High
+Contrast). A print gate that only measures the default appearance is half a gate.
 
 Dependencies: `pypdfium2` (rasterise + text), `numpy` (pixel arithmetic). When
 either is missing the gate prints MEASUREMENT INVALID and never PASS — the same
 contract `s23-no-learner-names` uses when its reference list is absent. A gate
-that cannot measure must not report green.
+that cannot measure must not report green. For a pack that HAS a print surface
+`gates.py` escalates that to a failure: nothing withheld, so unmeasured is red.
 
 Usage
   python3 s24_print_renders.py --packs <root> [<root>...] # derive the surface set, render, measure
