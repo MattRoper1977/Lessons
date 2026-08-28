@@ -101,6 +101,17 @@ const ALLOW = [
   { file: '_next6/evidence/S24_EVIDENCE_SURFACES.txt',
     text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
     why: 'real careers lesson title in a path list; MOCK is a fixture marker but this names no person' },
+  /* Order N6-Z, §Z7. A SIXTH carrier, and the recurrence is the point. The gate battery
+     writes its own run into _next6/evidence/Z7_GATE_BATTERY.txt, and that log lists every
+     surface each pack rendered — so it carries the same real lesson title, in a path list,
+     for the same reason the s24 coverage contract does. Allowlisted per file as before.
+     Recorded rather than absorbed: this string will trip again on EVERY future artefact
+     that quotes a LAUNCH_ASDAN file list, and an allowlist that grows once per artefact is
+     telling us something about the predicate, not about the artefacts. Widening the
+     predicate is a ruling on how the estate detects learner names, so it is not made here. */
+  { file: '_next6/evidence/Z7_GATE_BATTERY.txt',
+    text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
+    why: 'real careers lesson title in a gate-run log; MOCK is a fixture marker but this names no person' },
   /* This checker quotes that lesson title three times above, so it now trips its own
      predicate — the same recursion the red-vector entries above solve. Declared once:
      the matcher is (file, text), so one entry covers all occurrences in this file. */
