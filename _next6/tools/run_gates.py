@@ -19,6 +19,11 @@ for pk in packs:
         ip = os.path.join(intake, os.path.basename(pk))
         if os.path.isdir(ip): res.append(G.g9_sentinel_set(ip, pk))
     res.append(G.g10_names(files, reflist))
+    # s24 — the print surfaces must be proven on paper, not in the DOM. A pack
+    # that carries the learner-confirmation block is print/evidence work by
+    # definition, so it cannot go green without this.
+    if any('<!--n6-learner-confirm:v1-->' in G.read(f) for f in files):
+        res.append(G.g11_print_renders(files))
     name = os.path.basename(pk)
     print('\n=== %s ===' % name)
     for gname, ok, detail, rows in res:

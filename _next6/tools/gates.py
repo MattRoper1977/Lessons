@@ -287,3 +287,86 @@ def _css_block(s,start):
         elif s[j]=='}': depth-=1
         j+=1
     return j-start
+
+# ------------------------------------------------- s24 · print renders (N6-F §F1)
+# Why this gate exists. Two defects reached the branch that every check we had
+# called green:
+#   · the learner-confirmation block was appended before </body>, OUTSIDE the
+#     `.print-pack` container that BUILD_ASDAN gates with
+#     `body>*:not(.print-pack){display:none!important}`. A grep for the block
+#     found it in 75/75 files. It printed on 51.
+#   · the LAUNCH_ASDAN print donor revealed nine slides and left each at
+#     `height:91%`, so nine sheets per deck came out blank. Any check that asked
+#     "is there an @media print block, and does it reveal the slides" said yes.
+# Both are invisible to element presence. Both are obvious on the paper. So the
+# gate renders through real Chromium print pagination to A4 and measures the
+# raster: ink coverage per page, and the confirmation text as extracted from the
+# PDF rather than from the DOM. Thresholds live in n6_print_measure, which owns
+# the definition of an empty page.
+S24_SENTINELS   = ['I confirm this is my own work', 'Learner confirmation']
+
+
+def g11_print_renders(files, workdir=None, require_sentinel=True):
+    """Render every carrier surface to A4 and measure the paper.
+
+    Returns the standard (name, ok, detail, rows) tuple. `ok` is None —
+    MEASUREMENT INVALID, never a pass — when the renderer or the raster reader
+    is unavailable, because a gate that silently skips is worse than no gate.
+    """
+    carriers = [p for p in files if '<!--n6-learner-confirm:v1-->' in read(p)]
+    if not carriers:
+        return ('G11 s24-print-renders', None,
+                'MEASUREMENT INVALID — no print carriers found', [])
+    try:
+        import pypdfium2  # noqa: F401
+        import numpy      # noqa: F401
+    except Exception as e:
+        return ('G11 s24-print-renders', None,
+                'MEASUREMENT INVALID — raster reader unavailable (%s)' % e, [])
+
+    here = os.path.dirname(os.path.abspath(__file__))
+    renderer = os.path.join(here, 'n6_print_render.js')
+    if not os.path.exists(renderer):
+        return ('G11 s24-print-renders', None,
+                'MEASUREMENT INVALID — renderer absent (%s)' % renderer, [])
+
+    tmp = workdir or tempfile.mkdtemp(prefix='s24-')
+    r = subprocess.run(['node', renderer, tmp] + carriers,
+                       capture_output=True, text=True,
+                       cwd=os.path.dirname(here) or '.')
+    man_path = os.path.join(tmp, 'render_manifest.json')
+    if r.returncode != 0 or not os.path.exists(man_path):
+        return ('G11 s24-print-renders', None,
+                'MEASUREMENT INVALID — render failed: %s'
+                % (r.stderr or r.stdout or '')[-200:], [])
+
+    sys.path.insert(0, here)
+    import n6_print_measure as M
+    rows = []
+    nsent = 0
+    nblank = 0
+    for m in json.load(open(man_path)):
+        base = os.path.relpath(m['src'])
+        if m.get('error'):
+            rows.append((base, 'RENDER ERROR', m['error']))
+            continue
+        pages, text = M.measure(m['pdf'])
+        low = text.lower()
+        if any(s.lower() in low for s in S24_SENTINELS):
+            nsent += 1
+        elif require_sentinel:
+            rows.append((base, 'CONFIRMATION BLOCK NOT ON PAPER',
+                         '%d pages rendered, sentinel absent from PDF text' % len(pages)))
+        for p in pages:
+            if p['blank']:
+                nblank += 1
+                rows.append((base, 'BLANK PAGE',
+                             'p%d ink=%.4f%% chars=%d'
+                             % (p['page'], p['ink'] * 100, p['chars'])))
+        if m.get('external'):
+            rows.append((base, 'EXTERNAL REQUEST DURING RENDER',
+                         ', '.join(m['external'][:3])))
+    ok = not rows
+    return ('G11 s24-print-renders', ok,
+            '%d surfaces rendered · confirmation on paper %d/%d · %d blank pages'
+            % (len(carriers), nsent, len(carriers), nblank), rows)
