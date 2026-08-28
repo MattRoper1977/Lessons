@@ -78,12 +78,12 @@ construction" claim is wrong. §4 gate 5 is therefore measured as a **delta** �
 | **N4** PEQ level anchor | **NO CHANGE REQUIRED** — premise does not hold; gate green |
 | **N5** week mapping | **STOP — AMBIGUOUS**, both readings below |
 | **N6** tier vocabulary | **PARTIALLY FIXED** — the labels that are labels |
-| **N7** chassis furniture | **PARTIAL** — way-home + splash; toggle HELD on Matt's ruling |
+| **N7** chassis furniture | **PARTIAL** — way-home + splash; toggle HELD, now **mapped and priced** in `_next6/GUIDE_TAG_MAP.md` (N6-I · I5) |
 | **N8** checksums | **FIXED** — 193 entries across 9 packs |
 | **N9** index.html twin | **FIXED** — KEEP-WITH-REASON |
 | **N10** UAS hedge | **FIXED** — 90 staff-facing sites |
 | **N11** link liveness | **CANNOT MEASURE HERE** — egress policy; nothing removed |
-| **N12** Art placement | **STOP — the premise is refuted** |
+| **N12** Art placement | **CLOSED — REFUTED** (N6-I · I3, 2026-08-28) — packs stay at Spring 2, D9 withdrawn |
 | **N13** spec code | **CONFIRMED as built** |
 
 ### N1 · BUILD_ASDAN manifest ghosts — FIXED
@@ -388,7 +388,15 @@ Order TS D3 requires **two measurements at least an hour apart** before calling 
 This environment cannot produce even one valid measurement. **Nothing was removed and no
 removal is proposed.** The check needs re-running from a network that can reach these hosts.
 
-### N12 · The three Art packs — **STOP, and the premise is refuted**
+### N12 · The three Art packs — **CLOSED — REFUTED** (Order N6-I · I3, 2026-08-28)
+
+> **CLOSED — REFUTED. Matt's ruling of 2026-08-28: land all three Art packs at Spring 2 with
+> no relabel, no renames, no manifest or checksum churn. D9 is withdrawn. No later pass
+> should reopen this.** All seven signals below were re-verified independently in the N6-I
+> session; the evidence and the one thing that could not be executed there (the pack trees
+> are not in this repository) are recorded under **ORDER N6-I · I3** at the end of this file.
+
+The original finding, left intact:
 
 D9(a) says stop on a collision. There is no collision — **the Spring 2 deck slot is empty in
 all three lanes**. The stop is for a stronger reason: *Spring 2 is not a placement error.*
@@ -558,7 +566,7 @@ before placement.
 | BUILD_Humanities_W9-W14 | `Humanities_Teesside/BUILD_W9-W14_2026-27/` |
 | GROW_Humanities_W9-W14 | `Humanities_Teesside/GROW_W9-W14_2026-27/` |
 | LAUNCH_Humanities_W9-W14_Next_6 | `Humanities_Teesside/LAUNCH_W9-W14_2026-27/` |
-| **the three Art packs** | **not landed — N12 STOP** |
+| **the three Art packs** | **ruled to Spring 2 (N6-I · I3); not yet landed — the pack trees are not in this repository** |
 
 ---
 
@@ -568,12 +576,700 @@ before placement.
    absorbed at the end of term). They are mutually exclusive. The decision also needs a
    **lane rule**, because LAUNCH_Science and LAUNCH_Humanities already disagree with each
    other at real week 9. Until it is ruled, LAUNCH_ASDAN's labels stand as shipped.
-2. **N12 — the Art packs.** Their "Spring 2" tag is the repo's own committed scheme, not a
-   placement error, and a relabel to Autumn 2 fails on arithmetic, occupancy and theme.
-   Recommendation: **land them at Spring 2 unchanged**, and treat "follow on from what we
-   already have" as a separate per-lane question about which unbuilt slot to build next.
+2. ~~**N12 — the Art packs.**~~ **RULED AND CLOSED 2026-08-28 (Order N6-I · I3):** land them
+   at Spring 2 unchanged, no relabel, no renames, no manifest or checksum churn. D9
+   withdrawn. The recommendation below was accepted in full. *"Follow on from what we already
+   have" remains a separate per-lane question about which unbuilt slot to build next.*
 3. **N6 — GROW_ASDAN's `★ Optional reach`.** Renaming it to `Stretch` for estate consistency
    removes "Optional" and changes what a pupil is asked to do. Tier 2, diffed, not merged.
-4. **N7 — the guidance toggle**, per the spec above: new-chassis hide-set map, and
-   `localStorage` narrow-exemption or a persistence-free toggle.
+4. **N7 — the guidance toggle.** The hide-set map the spec above asks for now exists:
+   `_next6/GUIDE_TAG_MAP.md` (Order N6-I · I5), with counts, the overlap risk measured in
+   the DOM, a worked example and a price. It changes what is being asked for — the guidance
+   is **already invisible** (0 of 132 decks leak any to the room), so what a toggle would
+   remove from the wall is an audit trail on a title slide. Still needs the `localStorage`
+   ruling, and now also a ruling on whether a toggle is the right instrument at all.
 5. **N2 — the dangling `5 ·`** in the ported learner-confirmation heading. One token.
+
+---
+---
+
+# ORDER N6-I — INTERIM FINDINGS
+
+`mbm-next-six-weeks-interim-2026-08-28-N6I` · worked 2026-08-28 · branch
+`claude/new-session-q7ztqq`, started from `origin/claude/new-session-llckrn` (`cb8dfaea`)
+
+**On the branch.** The order says continue on `claude/new-session-llckrn`. This session is
+issued `claude/new-session-q7ztqq` and may not push anywhere else, so the designated branch
+was created **from** `llckrn` and carries all eight of its commits. Nothing is lost and
+nothing is forked: `llckrn` is an ancestor of every commit here.
+
+**Coexistence.** `origin` was re-fetched before starting and before each push. The §2
+alignment task had not moved `llckrn` at intake, and no file this order touches is a week
+label, term tag, LO, success criterion or placement string. Nothing was rebased past and
+nothing of that task's was reverted.
+
+---
+
+## I1 — Rendered and counted. Both named defects were already fixed; a third was not.
+
+Not asserted, not grepped, not `checkVisibility()`. Chromium, print media emulation, A4,
+`page.pdf()`, then the PDF itself measured: page count, per-page ink coverage on a
+rasterised bitmap, and the page's own text layer.
+
+### The population, and why it is derived rather than collected
+
+75 evidence surfaces, derived the way the N2 patcher derives them — every HTML surface in
+the three ASDAN packs minus the assessor-side and front-door pages
+(`BUILD_ASDAN_AUT2_TEACHER_PLANNING_SOW.html`, `START_HERE*.html`, `STAFF_GUIDE.html`,
+`index.html`, `PRINTABLE_RESOURCES.html`). BUILD_ASDAN 26 · GROW_ASDAN 19 · LAUNCH_ASDAN
+30. That derivation and the set of files carrying the block agree exactly, symmetric
+difference **0** — which is the point: the set is not *defined* as "files that carry the
+block", because a file that lost it would then silently leave the population.
+
+The 30 LAUNCH_ASDAN decks the order names separately are 30 of those 75, so the render set
+is 75 surfaces, not 105.
+
+### The render set is larger than the surface count, and it has to be
+
+BUILD_ASDAN's 24 decks gate their printable pack on `body[data-print-route=…]`: with the
+attribute unset, all three `.print-route` blocks are `display:none`. The real pathway is the
+deck's own `printSelectedRoute()`, which reads `#printRoute` and calls `window.print()`. So
+`window.print` is stubbed, the deck's **own** function is called once per selectable option
+(`supported` / `standard` / `stretch` / `all`, with `all` the default), and each resulting
+state is rendered. Anything less renders a state no teacher ever prints.
+
+**147 PDFs from 75 surfaces. 812 pages.**
+
+### Assertion 1 — the learner-confirmation block in the rendered print output
+
+**75/75. Zero failures, nothing to name.**
+
+Measured as the four strings of the ported T2-4 block — `Learner confirmation`, `I confirm
+this is my own work.`, `Learner name`, `Signature` — appearing in the **text layer of the
+produced PDF**. Not the DOM. Not a computed style. The words on the paper.
+
+**N2's defect was already remediated in the seven commits.** The order asks which of the two
+were fixed and which were only found: this one was fixed. The previous pass moved the block
+inside `<section class="print-pack">` as a final `.print-page`, and this render is the first
+evidence that says so from the artefact rather than from the bytes. Its own evidence used
+`checkVisibility()`, which is a good proxy and is not the printed page.
+
+### Assertion 2 — blank and near-blank pages
+
+**4 near-blank before · 0 after. Plus 2 more in the reported grey band, also 0 after — so
+6 bad sheets, not 4.**
+
+A page is near-blank when it carries essentially no marks **and** essentially no text: ink
+coverage below **0.4%** of rasterised pixels *and* fewer than **40** non-whitespace
+characters. Both halves are required — a full-page background wash is not text but is not
+blank, and white-on-white text has characters but no ink.
+
+**The threshold is not in a clean gap, and saying otherwise would be dishonest.** Sorting all
+812 pages by ink shows a continuum at the bottom, not two clusters:
+
+| ink | chars | what it is |
+|---:|---:|---|
+| 0.061% | 10 | orphaned clause — **fails** |
+| 0.129% | 20 | *"and systems, not blame."* — **fails** |
+| 0.148% | 23 | orphaned clause — **fails** |
+| 0.244% | 38 | orphaned clause — **fails** |
+| 0.379% | 61 | orphaned sentence — same defect, **reported not failed** |
+| 0.498% | 86 | orphaned sentence — same defect, **reported not failed** |
+| *(largest gap in the bottom 40 pages: 0.259%)* | | |
+| 0.757% | 76 | **the learner signature page — legitimate**, sparse on purpose |
+
+Ink cannot separate "sparse on purpose" from "sparse by accident", and neither can character
+count: the legitimate signature page carries **fewer** characters (76) than an orphan sheet
+it must not be confused with (86). So the failing floor sits where a failure is unambiguous,
+with nearly a 2× margin to the sparsest legitimate page, and the grey band above it is
+**reported** rather than silently passed. Raising the floor to 0.6% would catch those two
+extra orphans and would sit 1.26× from the signature page — close enough that a font
+substitution on another machine could red a clean tree, and a standing gate that cries wolf
+gets switched off.
+
+The sparse report excludes the learner-confirmation page by identifying it from its own
+printed text. Without that it listed 101 pages, 99 of them legitimate signature sheets,
+which buried the two that mattered.
+
+**This correction came from checking my own threshold rather than from the gate.** The first
+version of this section said "4"; the honest number for the defect is 6, of which 4 breach
+the floor. The fix cleared all six.
+
+**N3's defect was already remediated too.** All 30 LAUNCH_ASDAN decks print 9 slides plus
+the signature page at 10 pages each, no page below 1.5% ink. The nine-blank-pages state does
+not exist in the shipped bytes.
+
+**The third defect, which nothing before this render could have found.**
+
+BUILD_ASDAN's print pack defaults to *"All three routes"*. In that state the first
+`.print-page` carries the header, the SoW source strings, the objective, three success
+criteria, all three route blocks, the independent task and the safety note — more than one
+A4 sheet holds. It spilled in all 24 decks. In four of them it spilled by a single clause,
+leaving a physical sheet holding ten to thirty-eight characters:
+
+| deck | page 2 ink | page 2 characters | what was on the sheet |
+|---|---:|---:|---|
+| `…A2_DUKE_W5_Gather_and_Present_Project_Evidence` | 0.061% | 10 | a clause |
+| `…A2_COMM_W1_Review_Progress_and_Solve_a_Problem` | 0.129% | 20 | *"and systems, not blame."* |
+| `…A2_CON_W5_Record_Process_and_Evaluation` | 0.148% | 23 | a clause |
+| `…A2_COMM_W5_Gather_and_Organise_Project_Evidence` | 0.244% | 38 | a clause |
+| `…A2_COMM_W4_Take_Responsibility_for_My_Project_Role` | 0.379% | 61 | a sentence — grey band |
+| `…A2_PFA_W3_Follow_a_Two_Step_Recipe` | 0.498% | 86 | a sentence — grey band |
+
+A near-blank sheet in the middle of a printed portfolio artefact, on the option a teacher
+gets by default. Every element was present, and the element that spilled was *visible*, so
+element-presence checks and `checkVisibility()` were both green on all six.
+
+**The fix, chosen by rendering three candidates over all 24 decks rather than by reasoning.**
+The smallest one that works, and the only one that changes nothing about what a page shows —
+only where the break falls:
+
+```css
+@media print{
+  .print-page { orphans:4; widows:4 }
+  .print-route{ break-inside:avoid; page-break-inside:avoid }
+}
+```
+
+`widows:4` forbids a break that would leave fewer than four lines of a paragraph at the top
+of the next sheet, so a paragraph that cannot satisfy it moves whole. `break-inside:avoid`
+on a route block says a route is a unit — a pupil should never meet half of their own route
+at a page turn, which is worth having on its own merits.
+
+Measured over all 24 decks in the `route-all` state: **minimum page-2 ink 0.061% → 0.976%**,
+sixteen times the gate's floor, and every page 2 now carries a whole paragraph of 159–373
+characters instead of an orphaned clause. Total page count is **812 before and 812 after** —
+the fix moved a break, it did not add paper.
+
+**A candidate that also worked and was rejected.** Shrinking `.print-pack` to `.92em` and
+its padding to 6mm fitted four decks onto three sheets. Reducing type size on an
+accessibility-led pupil artefact to win a pagination argument is the wrong trade, and it
+changes what a page looks like rather than where it breaks.
+
+**Additivity and screen parity, both proven rather than argued.** The block is confined to
+`@media print`, so screen rendering cannot change by construction — and does not: every
+element's computed display, visibility, position, colour, background, font-size, box metrics
+**and** `orphans`/`widows`/`break-inside`, plus the full `innerText`, hashed before and
+after, **24/24 identical**. Strip the marked block → byte-identical to the pre-fix state,
+**24/24**. `SHA256SUMS.txt` regenerated for exactly the 24 changed entries; the estate's nine
+packs verify **193 entries, 0 mismatches**.
+
+### Assertion 3 — page count per deck, as a table
+
+| pack | print variant | surfaces | units the file declares | pages/deck | lowest page ink, before | lowest page ink, after | near-blank before | near-blank after |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| BUILD_ASDAN | `bare` | 2 | 1 unbanded | 4-5 | 0.757% | 0.757% | 0 | 0 |
+| BUILD_ASDAN | `route-all` | 24 | 3 print-page | 4 | 0.061% | 0.764% | 4 | 0 |
+| BUILD_ASDAN | `route-standard` | 24 | 3 print-page | 3 | 0.764% | 0.764% | 0 | 0 |
+| BUILD_ASDAN | `route-stretch` | 24 | 3 print-page | 3 | 0.764% | 0.764% | 0 | 0 |
+| BUILD_ASDAN | `route-supported` | 24 | 3 print-page | 3 | 0.764% | 0.764% | 0 | 0 |
+| GROW_ASDAN | `bare` | 18 | 9 slide | 10 | 13.675% | 13.675% | 0 | 0 |
+| GROW_ASDAN | `bare` | 1 | 1 unbanded | 11 | 0.802% | 0.802% | 0 | 0 |
+| LAUNCH_ASDAN | `bare` | 30 | 9 slide | 10 | 1.513% | 1.513% | 0 | 0 |
+| **total** | | **75 surfaces / 147 renders** | | **812 pages** | | | **4** | **0** |
+
+The band each surface is held to is **the one the document declares about itself** — every
+`.print-page` inside `.print-pack` that is visible in print media, or, on the deck chassis
+that has no print pack, every visible `.slide`. A print stylesheet that puts each unit on
+its own sheet cannot honestly produce fewer pages than it has units.
+
+The lowest-ink page in every deck is the final signature page (76 characters, 0.76%–1.5%),
+which is what a signature table should look like: mostly white, by design, and two to four
+times the gate's floor.
+
+**The 51/75 the order quotes was the pre-remediation figure and is not reproducible now** —
+it belongs to the state before the seven commits. What this render reproduces is 75/75.
+
+---
+
+## I2 — `s24-print-renders` is a standing gate, and it has been seen red three times
+
+Registered as **G12** in `_next6/tools/gates.py`, run automatically by
+`_next6/tools/run_gates.py` for **every pack that has a print surface**, decided by the pack
+itself (`has_print_surface`: any `@media print`, `print-pack` or `#print-area`).
+
+**Wired so print and evidence work cannot ship unmeasured.** A pack that is in scope and
+cannot be rendered — no Chromium, no `pypdfium2`, no render set — is reported **FAILED**, not
+INVALID-and-ignorable. `N6_SKIP_RENDERS=1` exists for a pack with no print surface and
+cannot buy a green for one that has: the scope test runs first. This is deliberately
+stricter than the `s23-no-learner-names` contract, where MEASUREMENT INVALID is correct
+because the reference list is *withheld on purpose*; here nothing is withheld, so an
+unmeasurable print surface is a failure of the run.
+
+**Full battery, all nine landed packs: OVERALL GREEN**, 1113 pages rendered, 0 near-blank,
+0 non-G12 regressions. The nine `MEASUREMENT INVALID` lines are G10's, pre-existing and
+correct.
+
+**One thing the battery's sparse report surfaced across the wider estate, reported not
+failed and not touched by this order.** `Humanities_Teesside/GROW_W9-W14_2026-27/
+GROW_HUM_W13_Belonging_Briefing_OUTSTANDING_V3_1.html` prints a page 3 carrying 28
+characters at 0.795% ink. That is one of the **two decks the previous pass already recorded
+as printing different text run to run** — two `setInterval` timers and a `setTimeout` mutate
+DOM text, so what reaches paper depends on how long the deck has been open. The render gate
+found it independently, from a different direction, which is a useful corroboration of both
+findings. It is out of this order's scope and is left alone.
+
+### Proven red
+
+| # | perturbation | observed red |
+|---|---|---|
+| **P1** | the learner-confirmation block moved back **outside** `.print-pack` — the shipped N2 defect | `learner-confirmation 25/26`, FAIL, all four route variants of the named file |
+| **P2b** | the LAUNCH chassis addendum stripped — the naive donor-only port, the shipped N3 defect | `2 printed pages, expected 9-60 — 9 visible slide unit(s) declared by the document`, **30/30 named**, FAIL |
+| **P3** | the block **deleted outright** from one LAUNCH deck | coverage caught it: `ABSENT from print … (declared in the expectation list)`, FAIL |
+
+Plus a `--self-test` that proves the *measurement* in both directions on synthetic pages: a
+blank A4 reads 0.0000% ink and is flagged; an inked signature page reads 0.7848% and is not.
+
+### Two things the red-proof itself found, recorded rather than tidied away
+
+**1 · "Restore `height:91%`" does not reproduce the N3 defect, and the first attempt at P2
+was correctly GREEN.** The addendum's own `.deck{height:auto!important}` makes a percentage
+height resolve to `auto`, so `height:91%` alone is inert. The three neutralisations —
+`html,body{overflow:visible;height:auto}`, `.deck{height:auto;display:block}`,
+`.slide{height:auto;overflow:visible}` — are load-bearing **as a set**, and only stripping
+the whole addendum restores the nine-blank-pages state. Anyone re-running this red-proof from
+the order's wording will get a green and should not conclude the gate is broken.
+
+**2 · That green exposed a real gap in the gate and closed it.** The page-count band was
+originally a table of per-pack path regexes. The perturbed copy sat at a different path,
+matched none of them, fell through to a permissive default of 1–24, and a deck that had
+**collapsed from ten printed pages to two** passed as green. A gate whose scope depends on a
+directory name goes quiet the moment a tree is copied — which is exactly what a red-proof
+does. The band now comes from the document's own declared units and cannot fall through.
+This is the second time in two orders that a check was wrong before it was right; the
+transferable rule is that **a red-proof is not a formality, it is the test of the gate.**
+
+### Delivery and coverage are two questions and the gate keeps them apart
+
+Conflating them is how the original defect hid.
+
+- **Delivery** — a surface whose source carries `<!--n6-learner-confirm:v1-->` **must print
+  it**. Derived from the files, needs no list, and catches the shipped defect exactly.
+- **Coverage** — the block must be on every surface that is supposed to have one. This
+  *cannot* be derived from the files, because a surface that lost it would stop being asked
+  about. It is committed as `_next6/evidence/S24_EVIDENCE_SURFACES.txt`, 75 paths, with the
+  derivation rule written into the file. A dropped, renamed or moved evidence surface reds
+  the gate against that list instead of going quiet.
+
+The Science and Humanities packs were never specified to carry a learner signature. The gate
+does not invent that requirement for them — it reports `DELIVERY ONLY` and still checks them
+for blank pages and page count.
+
+### An accessibility render pass, and the hole it found in the gate
+
+Calm Mode and `prefers-reduced-motion` are authoritative on this estate, so a print gate
+that only measures the default appearance is half a gate. `s24_render.mjs --a11y` renders
+the same 75 surfaces under reduced motion, dark scheme, and the decks' own `.calm` and `.hc`
+classes.
+
+**Its first run returned a green on bytes the default pass had just failed.** That is how
+the hole was found rather than shipped.
+
+Isolated one mode at a time, the cause is `body.calm{background:#F4F1E9}`. It sits outside
+`@media print` and **outranks** the print block's `body{background:#fff}` on specificity, so
+the cream survives into print. With background graphics on, every sheet carries a full-page
+wash — 84.3% of pixels are then "not white", and a sheet holding an orphaned twenty-character
+clause measures as densely inked. The ink floor could never fire.
+
+**Fixed by measuring twice.** `ink` stays coverage-against-white — the order's own wording,
+and the right number for an ordinary sheet. `edge` is added: the share of pixels where the
+image changes against its neighbour, so a flat region contributes nothing *whatever its
+colour*. Over the corpus it separates the same way and keeps separating when ink cannot:
+
+| | edge |
+|---|---:|
+| the four orphan sheets | 0.085% · 0.182% · 0.527% · 0.700% |
+| the legitimate signature page | **1.258%** — 1.8× the worst orphan |
+| ordinary content pages | 6.4% · 12.7% |
+
+A page is near-blank when it is text-poor **and** *either* measurement is under its floor.
+Requiring both would let a themed background veto the check.
+
+A modal-background version of `ink` was tried first and rejected on measurement, not taste:
+a BUILD_ASDAN sheet under Calm Mode has **two** large flat regions — the cream body and the
+white print-page — so "differs from the commonest value" counts the entire print-page as
+marks and reports 16–26%.
+
+| | near-blank | sparse | verdict |
+|---|---:|---:|---|
+| a11y pass, pre-fix bytes, before this correction | 0 | 0 | **hollow green** |
+| a11y pass, pre-fix bytes, after it | 3 | 3 | FAIL |
+| a11y pass, post-fix bytes | 0 | 0 | PASS |
+| default pass, pre-fix / post-fix | 4 → 0 | 2 → 0 | FAIL → PASS |
+
+Both modes now agree the defect was **six** sheets, and both agree it is gone.
+
+### The Calm Mode print tint itself — reported, not fixed
+
+**With background graphics OFF, which is Chrome's default and what a teacher gets unless
+they tick the box, the Calm Mode output is identical to baseline** — ink
+10.7 / 1.1 / 4.7 / 0.8%, edge 12.70 / 1.50 / 6.43 / 1.26%, the same numbers to three
+decimal places. Nobody meets this by accident.
+
+It is confined to the 24 BUILD_ASDAN decks: 27 files estate-wide carry
+`body.calm{background:…}`, 24 of them also try `body{background:#fff}` inside `@media print`,
+and all 24 are these. It is a specificity-convention question of exactly the kind
+`CLAUDE.md` already rules on for themes under `.hc` — *"A theme stands down entirely under
+`.hc` rather than beating it on inline-style specificity"* — so it wants one estate-wide
+decision, not a patch to 24 files for a mode no default user reaches. **Left for a ruling.**
+
+What *was* fixed is the instrument: a hole in a gate I wrote is mine to close, and a green
+that only holds in one display mode is not a green.
+
+### Determinism, checked — because a gate that varies run to run is worse than none
+
+The whole 75-surface set was rendered twice from identical bytes and the two runs compared
+two ways:
+
+- **byte-identical PDFs: 0 of 147.** A PDF carries a creation timestamp and a document ID,
+  so hashing the file always differs. Anyone building a print gate on `sha256` of the PDF
+  gets a check that fails on every run and will end up disabling it.
+- **measurement differences: 0.** Every page count, every ink coverage to 1e-6, every
+  character count reproduced exactly across all 812 pages.
+
+That is the estate's own rule about proxies, met from the other side: the obvious artefact
+comparison is the broken one, and the derived measurement is the sound one.
+
+### The tools
+
+| file | what it is |
+|---|---|
+| `_next6/tools/s24_render.mjs` | the render half — Chromium, print emulation, A4, per-route variants, `--a11y`, records what each file declares it will print |
+| `_next6/tools/s24_print_renders.py` | the measure half — ink coverage, tint-invariant edge coverage, text layer, page counts, `--self-test`, `--packs`, `--expect` |
+| `_next6/tools/i1_print_pagination.py` | the pagination fix; idempotent, markered, strip-reversible |
+| `_next6/tools/i1_screen_parity.mjs` | the screen-parity witness for a print-only change |
+| `_next6/evidence/S24_EVIDENCE_SURFACES.txt` | the committed coverage contract, 75 surfaces |
+
+Dependencies: `pypdfium2` and `numpy` for rasterising and pixel arithmetic, `playwright` +
+the repo's Chromium for the render. Absent, the gate says MEASUREMENT INVALID and never
+PASS — and, for a pack with a print surface, that is escalated to a failure.
+
+---
+
+## I3 — N12 CLOSED — REFUTED. The Art packs stay at Spring 2.
+
+**Matt's ruling of 2026-08-28 is recorded: the three Art packs land at Spring 2 with no
+relabel, no renames, no manifest or checksum churn. D9 is withdrawn. This item is closed and
+no later pass should reopen it.**
+
+Every signal that carried the refutation is re-verified in this session, independently of
+the previous pass's report:
+
+| # | signal | verified now |
+|---|---|---|
+| 1 | `Art_Teesside/Spring2_Scheme_of_Work.html` exists | yes — `<title>` *"Art — Spring 2 Scheme of Work: Teesworks & Reclaimed Spaces"*, subtitle *"Spring 2 (6 weeks) · 3D sculpture · 2026–27"* |
+| 2 | six week rows, same as the packs | yes — Armature & Frame · Scale & Negative Space · Surface & Patination · Contextual Study (Kapoor, Whiteread, Barlow) · Site Integration · Proposal, Pitch & Review |
+| 3 | six enquiry questions, verbatim | yes — all six extracted, e.g. W1 *"What makes a structure stand up — and still let you change your mind?"*, W6 *"Why this, why there, and what does it ask people to notice?"* |
+| 4 | the evidence pack declares the same unit | yes — `Spring2_Printable_Weekly_Evidence_Pack.html` carries `const UNIT="BUILD/GROW/LAUNCH Art · Spring 2 · Teesworks & Reclaimed Spaces"` and a `WEEKS` array whose lane/part cells (`"Explore A · Bronze A · Silver 1A"`, …) are the packs' three-lane mapping |
+| 5 | all three lane hubs already link it | yes — `Art_Teesside/{Build,Grow,Launch}/START_HERE.html` |
+| 6 | the Spring 2 **deck** slot is empty in all three lanes | yes — no Spring 2 lesson deck exists anywhere in `Art_Teesside/` |
+| 7 | Autumn 2 is occupied, so a relabel had nowhere to go | yes — `Art_Teesside/Build/` holds `BUILD_ART_A2_W1…A2_W7` plus its own Autumn 2 scheme, evidence pack and run sheets |
+
+The Spring 2 tag was derived from the repo's own committed scheme. The ruling matches the
+evidence.
+
+### What could not be executed here, stated plainly
+
+**The three Art pack trees are not in this repository or this session.** They were an intake
+tree in the previous session and that tree is gone; `find` over the whole filesystem returns
+nothing for `*Art_Spring2*`, `BUILD_Art*`, `GROW_Art*` or `LAUNCH_Art*`, and no commit on any
+branch ever added them. So the **ruling is recorded and the placement is settled, but the
+landing itself cannot be performed in this venue** — there are no pack bytes to place.
+
+This is the one item of this order that is complete as a decision and incomplete as an
+action. It needs a session that has the three pack trees. Nothing else is blocking: the
+destination is empty, the ruling is unambiguous, and the instruction is "no relabel, no
+renames, no manifest or checksum churn", so it is a copy and a checksum generation, not
+authoring.
+
+---
+
+## I4 — CANNOT MEASURE HERE. One line, as instructed.
+
+**This venue still cannot reach the network: 26 unique citation URLs, all 26 return `000`,
+while the allowlisted control hosts answer `200` in the same run — an egress policy
+signature, not 26 simultaneously dead links. Item stopped, nothing simulated, nothing
+proposed for removal.**
+
+The reading is committed anyway, as a timestamped artifact, because the *attempt* is the
+evidence that the clock has not started:
+`_next6/evidence/I4_link_liveness_reading1.json` — taken `2026-08-28T14:16:54Z`, 26 URLs
+across 19 hosts, every carrier file recorded, `"valid": false`, controls `pypi.org` 200 and
+`registry.npmjs.org` 200. `_next6/tools/i4_link_liveness.py` refuses to record a liveness
+result when every citation host fails and a control answers; it is that discrimination, not
+the count, that makes a second reading meaningful when one is possible.
+
+**On the count.** The order says 34 unique URLs and the previous pass measured 30. This pass
+measures **26** across the nine landed packs — the difference is the three Art packs, which
+are not in this repository, so their citations are not in this inventory. The figure is not a
+correction of 30; it is a smaller population.
+
+Order TS D3's second reading, at least an hour later, has not been attempted: a second
+invalid measurement is not a second measurement.
+
+---
+
+## I5 — Guidance toggle: mapped, priced, nothing applied
+
+Full map in [`_next6/GUIDE_TAG_MAP.md`](GUIDE_TAG_MAP.md). **Nothing was applied and nothing
+was patched**, as the order requires. Three measurements decide what this job actually is.
+
+**1 · The guidance is already invisible to the room.** 132 of the 159 files carry
+staff-facing guidance strings; **zero** put any of it on the pupil-facing surface. Measured
+by activating every slide in turn and reading `innerText`, which excludes a closed
+`<dialog>`, a `[hidden]` element and any `display:none` subtree. Four container families,
+disjoint, exactly one per lesson deck, none visible at load:
+
+| container | packs | in the DOM |
+|---|---|---|
+| `#teacherDialog` | BUILD_ASDAN 24 | `<dialog role="dialog" aria-modal="true">` |
+| `#taOverlay` | GROW_ASDAN 18, LAUNCH_Humanities 6 | `<div class="overlay" aria-hidden="true">` |
+| `#taDialog` | LAUNCH_ASDAN 30, Science 12+12+18, BUILD_Humanities 6 | hidden/modal; in Science a `<dialog data-audience="staff">` |
+| `#tool-ta` | GROW_Humanities 6 | a `role="tabpanel"` in a tools drawer |
+
+24 + 24 + 78 + 6 = 132. **PH-3's purpose is already achieved by the chassis.** What a toggle
+would add is a *persisted preference*, not a capability — and it is the persistence that
+collides with gate 4.
+
+**2 · What is on the wall is one pack and a 13-file tail of a second, not twelve packs.**
+
+| pack | family | in source | visible |
+|---|---|---:|---:|
+| BUILD_ASDAN | SoW cell reference `'BUILD Weekly - Autumn'!B181` | 28 | **28** |
+| BUILD_ASDAN | `Exact SOW outcome:` | 25 | **25** |
+| BUILD_ASDAN | `Estate sequence` | 26 | **26** |
+| BUILD_ASDAN | `Inherited mapping` / `Inherited evidence` | 25 | 1 |
+| BUILD_ASDAN | `AQA UAS` | 25 | 1 |
+| LAUNCH_ASDAN | `AQA UAS` | 13 | **13** |
+| the other seven packs | all of the above | 0 | **0** |
+
+**Route labels are pupil-facing and stay** — `Supported route` / `Standard route` /
+`Stretch route`, visible 19/19 in GROW_ASDAN and 30/30 in LAUNCH_ASDAN. Reading "route
+metadata" as a hide target, which the order's wording invites, would take the pupil's own
+access route off the screen.
+
+**3 · One existing selector isolates staff text, and only one.** `.small` is **24 of 24**
+clean in the BUILD_ASDAN lesson decks (56 of 58 across all 28 files; the two exceptions are
+ASDAN spec URLs in the assessor-side planning file). `.chip` is **24 of 96** — the other 72
+are the lane, unit and week a pupil reads, the same class on the same slide. And
+`Exact SOW outcome:` sits in an **unclassed** `<p><strong>` inside `.hero`, with no selector
+at all.
+
+So the hide-set is **one-third mappable and two-thirds authoring: 66 marker sites across 40
+files.**
+
+**A correction from checking my own instrument, recorded because it changed the answer.**
+The first overlap run was case-sensitive and reported `.small` as mixed, carrying ten
+pupil-facing instances. Those ten were `"Secondary estate sequence metadata: Week 15"` and
+its neighbours — staff strings missed on a lower-case `e`. A probe that is case-sensitive
+about prose invents overlap. Fixed in `i5_overlap.mjs` with a comment saying why.
+
+**Also worth naming: `data-ta1`/`data-ta2` are attributes, not elements** — 1188 of them
+across the nine packs, on `<section class="slide">`. No CSS selector can hide an attribute;
+only the container that renders it. The guidance payload and the thing a selector can target
+are different objects on this chassis.
+
+### Cost
+
+| work | scope | estimate |
+|---|---|---|
+| author the hide-set markers | 66 sites, 40 files | one patcher, ~half a day with the checks |
+| render / visibility check per family per lane | already built and running | ~5 minutes per run |
+| the `localStorage` question | a ruling, not engineering | narrow gate 4 to `mbm_guide_v1`, or ship without persistence |
+| regression | 40 of 159 files, additive and strip-reversible | low |
+
+**And the question the numbers raise.** What a toggle would remove from the wall is an audit
+trail on a title slide, not teacher instructions. Moving those three BUILD_ASDAN strings into
+the already-hidden `#teacherDialog` costs less, needs no storage, needs no change to gate 4,
+and delivers the same visible result. Recorded in the map as an option, **not** a
+recommendation — this order says map and price, not decide.
+
+**Not priced: the three Art packs**, which are not in this repository. Labelled unpriced
+rather than extrapolated.
+
+---
+
+## I6 — The accreditation contradiction, recorded and not resolved
+
+**For Matt and Cheryl.** Nothing is edited for this. No pack, no deck, no string. It is a
+scheme-level question about what the LAUNCH lane is accredited at, and the two committed
+sources disagree.
+
+### Source A — the SoW Curriculum Pathway Ladder
+
+`_passsl/inputs/LAUNCH KS4 - 2026-27.xlsx`, sheet **`Pathway Ladder`**, row 13
+(`A13` = *"Personal Effectiveness (ASDAN PEQ)"*), under the column header `D3` = *"LAUNCH
+(GCSE)"*. Quoted verbatim, with its two neighbours because the comparison is the whole
+point:
+
+> **`B13`** (BUILD) — *"PEQ Entry 3 units introduced. **Floor:** introductory/taster units."*
+> **`C13`** (GROW) — *"PEQ Level 1 Award. **Floor: Entry 3 units.** (E3–L1 only in 2026/27.)"*
+> **`D13`** (LAUNCH) — *"PEQ Level 1 Award / Extended Award / Certificate. (E3–L1 only in 2026/27.)"*
+
+### Source B — the merged estate anchor
+
+`_passpq/DECISIONS.md` §0, quoting the owner:
+
+> *"The owner stated, 2026-08-20: pupils are mainly ENTRY LEVEL (Entry 3). Only 2–4 pupils
+> are at Level 1. Nobody is at Level 2."*
+
+and §2, family E1, recording what was done with it:
+
+> *"`PEQ Level 1 (E3 floor · L2 stretch)` → `PEQ Entry 3 (Level 1 stretch)`; dual unit
+> citations where a deck banks the skill; every L2 PEQ claim removed — 195 substitutions
+> over 20 files + an 8-file tail sweep"*
+
+with the re-anchored ladder in the same file:
+
+| tier | evidences | was |
+|---|---|---|
+| Supported | **Entry 3** | Level 1 |
+| Standard | **Entry 3** | Level 1 |
+| Stretch | **Level 1** | Level 2 |
+
+### The anchor string, counted here
+
+The order gives ×118. **This pass measures 126 occurrences across 33 live-content files**
+(137 across 38 if the working documents and this file are included; `origin/main` is 136
+across 37). Command: `grep -ro "PEQ Entry 3 (Level 1 stretch)"`, excluding `.git`, the
+`_*` working directories and the root ledgers. The figure is offered as a correction to 118,
+not as a disagreement about substance.
+
+Where those 126 live:
+
+| area | files | occurrences |
+|---|---:|---:|
+| `GROW_ASDAN/` (hub, PEQ W1–W6, START_HERE, resources) | 10 | 25 |
+| `GROW_Estate_v3/GROW_ASDAN/` (evidence window, PEQ W1–W6, index, manifest) | 9 | 44 |
+| `LAUNCH_ASDAN/` (hub, PEQ START_HERE, resources, scheme) | 4 | 5 |
+| `LAUNCH_Estate_v3/LAUNCH_ASDAN/` (evidence window, PEQ W1–W6, index, manifest) | 9 | 31 |
+| `resources.json` (the estate registry) | 1 | 21 |
+| **total** | **33** | **126** |
+
+**Note for whoever acts on this: none of the 126 is in the three new packs.** The staged
+`LAUNCH_ASDAN/W7-W12_2026-27/` and `GROW_ASDAN/Autumn2_W1-W6_2026-27/` trees carry the string
+**0 times**. This is a question about the pre-existing estate, not about the packs this
+order's other items touch — which is why nothing here is edited.
+
+### The arithmetic consequence of each reading
+
+**Reading 1 — `D13` governs. LAUNCH is a Level 1 lane.**
+The 36 LAUNCH-side occurrences (13 files across `LAUNCH_ASDAN/` and
+`LAUNCH_Estate_v3/LAUNCH_ASDAN/`) would have to change, plus whichever of the 21
+`resources.json` entries describe LAUNCH surfaces. The 90 GROW-side occurrences are
+untouched, because `C13` explicitly gives GROW an Entry 3 floor and the anchor agrees with
+it there. The cost is not the substitution — it is that the estate would then name Level 1
+as the level for a room in which, on the owner's own statement, **2–4 pupils are at Level 1
+and the rest are at Entry 3**. Every tier minimum, command verb and credit figure that
+`_passpq` moved down (E2: 34 substitutions over 4 decks; E3: 53 command stems over 11 decks;
+E6: 8 arithmetic panels) would be pointing above the room again.
+
+**Reading 2 — the estate anchor governs. LAUNCH delivers at Entry 3 with Level 1 stretch.**
+No file changes; the 126 stand. What is contradicted is the SoW's own headline for the lane,
+and specifically the asymmetry that `C13` states an Entry 3 floor for GROW while `D13`
+states none for LAUNCH — so on the workbook's face, GROW's floor is lower than LAUNCH's.
+Against that: the staged LAUNCH_ASDAN pack asserts a bare **"Level 1"** eight times (2 source
+citations, 2 banking-style assertions, 4 lesson-purpose prose), and the unit code `TmWkSk1`
+— Team Working Skills **Level 1** — appears 8 times. Those eight would sit inside an
+Entry-3-anchored lane.
+
+### Counter-evidence, because a one-sided case is worse than useless
+
+**The two sources are closer than "both cannot be right" suggests, and the difference may be
+one missing word.** `D13` is *not* silent about Entry 3 — it carries the parenthetical
+**"(E3–L1 only in 2026/27.)"**, which names Entry 3 as the bottom of the LAUNCH range for
+this very year. What `D13` lacks, relative to `C13`, is the literal word **"Floor:"**. So
+both sources admit an E3–L1 range for LAUNCH in 2026/27. The real disagreement is about which
+end of that range is the **default**: `D13` leads with the Level 1 award, the estate anchor
+leads with Entry 3 and calls Level 1 the stretch.
+
+**The estate has already ruled that these are two different registers, and kept both.**
+`_passpq/DECISIONS.md` §1 says so in terms: the July audit's "L1 primary" framing *"is
+superseded for delivery purposes by the cohort fact above"*, its arithmetic *"was verified
+against spec v1.2 §5.1 p10 and is still correct"*, and the L1 routes are *"re-labelled as the
+stretch route … not deleted"*. On that reading the Pathway Ladder is a **target** table (what
+the lane is registered and aims for) and the anchor is a **delivery** statement (what a deck
+in front of this cohort says it evidences), and neither is wrong. This is offered as a named
+reading with its source, not as a resolution — the order says record, and it is Matt and
+Cheryl's to rule.
+
+**And one thing that weakens the "contradiction" framing from the other side.** The previous
+pass's N4 recorded that on `origin/main` the six `LAUNCH_ASDAN/PEQ` lesson files carry **zero**
+instances of the anchor string and use `PEQ Entry 3 (Level 1 · Level 2 routes)` instead
+(measured here: 23 occurrences across 10 files, of which **18 across the 6 live
+`LAUNCH_ASDAN/PEQ` lesson decks**; the rest are working documents and `_passpq` tooling). So the live estate is already carrying a
+**third** string for the same lane. Whichever way this is ruled, that third form needs ruling
+with it or the estate will name two things for the same weeks — which is precisely the
+failure `_passpq` P1 was opened to fix.
+
+### What is actually being asked
+
+1. For LAUNCH in 2026/27, is the **default** Entry 3 with Level 1 as stretch, or Level 1 with
+   Entry 3 admitted?
+2. Is the Pathway Ladder a target table or a delivery statement? If it is a target table,
+   the contradiction dissolves and the answer should be written into the workbook so the next
+   pass does not re-derive it.
+3. Whichever is ruled, what happens to `PEQ Entry 3 (Level 1 · Level 2 routes)` — 18
+   occurrences across the 6 live `LAUNCH_ASDAN/PEQ` decks — which agrees with neither?
+
+---
+
+## Outcomes — I1 to I6
+
+| item | outcome |
+|---|---|
+| **I1** prove the two print defects | **DONE — both were already fixed; a third was found and fixed.** 75/75 learner confirmation in the printed text; near-blank pages 6 → 0; 812 pages tabulated |
+| **I2** make the render gate permanent | **DONE.** `s24-print-renders` is G12, runs for every pack with a print surface, red-proved three ways, full battery GREEN |
+| **I3** close N12 | **CLOSED — REFUTED.** Ruling recorded, all seven signals re-verified. **The landing itself could not be performed here — the pack bytes are not in this repository** |
+| **I4** start the external-link clock | **CANNOT MEASURE HERE.** Stopped after one line, as instructed. Timestamped artifact committed; nothing proposed for removal |
+| **I5** guidance tag map | **DONE — map only, nothing applied.** `_next6/GUIDE_TAG_MAP.md` |
+| **I6** record the accreditation contradiction | **DONE — recorded, not resolved.** Both sources quoted, both readings costed, counter-evidence given |
+
+## What this order's instruments got wrong before they got it right
+
+Three of my own checks were wrong first. Each is recorded so the next pass does not
+re-derive it, and each was caught by a red-proof or by checking the instrument against its
+own output rather than by luck.
+
+1. **A gate scoped by directory name goes quiet when a tree is copied.** The page-count band
+   was a table of per-pack path regexes; a perturbed copy at a different path fell through
+   to a permissive default and passed a deck that had collapsed from ten printed pages to
+   two. The band now comes from the document's own declared print units.
+2. **A threshold placed without looking at its own distribution hides what it was built to
+   catch.** The bottom of the ink distribution is a continuum. Two more orphan sheets sat
+   above the floor, so the honest count is six, not four.
+3. **A pixel check can be silenced by a background colour.** Calm Mode's cream survives into
+   print on specificity; every pixel is then non-white and the ink floor can never fire. The
+   accessibility pass returned a green on bytes the default pass had just failed. Closed with
+   a tint-invariant edge measure.
+4. **A probe that is case-sensitive about prose invents overlap.** The I5 overlap run
+   reported `.small` as a mixed class carrying ten pupil-facing instances; all ten were staff
+   strings missed on a lower-case `e`. `.small` is in fact the one existing selector in the
+   nine packs that isolates staff text, which is the opposite conclusion.
+
+And one about the artefact rather than the instrument:
+
+5. **Comparing the artefact is the broken assertion; comparing the measurement is the sound
+   one.** Rendered twice from identical bytes: **0 of 147** PDFs byte-identical, because a
+   PDF carries a creation timestamp — and **0** measurement differences across all 812 pages.
+
+## Still open
+
+Carried forward from N6 and untouched here: the **N5** reading and its lane rule; GROW_ASDAN's
+`★ Optional reach` → `Stretch` (Tier 2); the **N7** toggle, now mapped and priced by I5 but
+still unruled; and the dangling `5 ·` in the ported learner-confirmation heading.
+
+New from this order:
+
+1. **I3's landing.** The ruling is settled; the three Art pack trees are not in this
+   repository, so a session that has them must perform the copy.
+2. **I4's clock.** Not started. It needs a venue that can reach the citation hosts.
+3. **I6 — the LAUNCH accreditation question**, for Matt and Cheryl, with both readings
+   costed above.
+4. **The Calm Mode print tint** — `body.calm{background:#F4F1E9}` outranks the print block's
+   `body{background:#fff}` on specificity in the 24 BUILD_ASDAN decks. Invisible with
+   background graphics off, which is the default. A specificity-convention ruling, not a
+   patch to 24 files.
+5. **`GROW_HUM_W13_Belonging_Briefing`** prints a page 3 of 28 characters at 0.795% ink —
+   reported by the new gate, not failed, and out of this order's scope. It is one of the two
+   decks the previous pass recorded as printing different text run to run.
