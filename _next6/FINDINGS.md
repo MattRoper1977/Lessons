@@ -453,6 +453,50 @@ as ANSWERED**, having sat retired-unanswered since 28 July. No `4SS0` hunt was r
 
 ---
 
+## §3 — content accuracy
+
+### The named risk — checked hardest, and the packs already guard it
+
+The order names the failure mode this design invites: fixed representative data, with the
+"practice" sets liable to be conflated with the investigation sets. **They are not, and the
+packs say so themselves.**
+
+`SCI_G_W12A_Science_Connections_Explore.html` carries the practice set and states, verbatim:
+*"These practice data are not next week's investigation."* Its worked evidence is
+*"smooth 46, 44, 45 cm; fabric 18, 20, 19 cm. Every fabric result is lower."* — recomputed:
+every one of 18/19/20 is below every one of 44/45/46. **True.**
+
+`SCI_G_W13B_Rover_Rescue_Investigation_Do.html` carries the investigation set, labelled
+*"New investigation evidence"*. Every stated figure recomputed:
+
+| stated in the file | recomputed | verdict |
+|---|---|---|
+| "Range: 3 cm (48–51 cm interval) … 51 − 48 = 3 cm" | 51 − 48 = 3 | ✓ |
+| fabric range 29 − 27 = 2 cm | 29 − 27 = 2 | ✓ |
+| "Every smooth result is greater" | min(48,49,51)=48 > max(27,28,29)=29 | ✓ |
+| "Typical distance is about 49 cm on smooth and 28 cm" | medians 49 and 28; means 49.33 and 28.0 | ✓ |
+
+Every explicit subtraction across all three science packs was recomputed independently: **4
+checked, 4 correct, 0 wrong.**
+
+### Spot-checks confirmed, not re-litigated
+
+Mars 687 Earth days; Earth 365.25 days; Mars red = iron oxide; Saturn's rings ice and rock in
+ringlets; mitosis phase evidence (metaphase aligned near the equator, anaphase in groups at
+opposite poles); hardness as resistance to scratching with the explicit no-Mohs-number
+caveat; the per-100 g label basis; natural vs enhanced greenhouse effect with "greenhouse
+gases are not a solid lid"; the rover ranges above; Kapoor void/scale, Whiteread casting
+absent space, Barlow everyday materials and precarious scale. All present and correct.
+
+### Protected strings — preserved verbatim
+
+LAUNCH_Science's Foundation-tier discipline is intact and was never a candidate for edit:
+*"Do not introduce codominance, sex linkage or Higher-tier drift"*, *"No chi-squared test or
+Higher-tier genetics"*, *"Do not add Higher-tier protein synthesis"*. `Art_Teesside` W8's
+"Silver" language was not touched and is not re-flagged.
+
+---
+
 ## §4 — gates
 
 All eight measurable gates were **proven red once** on a deliberately perturbed tree before
