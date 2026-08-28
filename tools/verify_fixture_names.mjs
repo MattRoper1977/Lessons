@@ -112,6 +112,13 @@ const ALLOW = [
   { file: '_next6/evidence/Z7_GATE_BATTERY.txt',
     text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
     why: 'real careers lesson title in a gate-run log; MOCK is a fixture marker but this names no person' },
+  /* A SEVENTH carrier, one artefact later in the same order: the §Z1 verdict record, which
+     keys every row on its file path. That is twice in one pass, which is the evidence for
+     the note above rather than an exception to it. Still allowlisted per file, still
+     red-proved. */
+  { file: '_next6/evidence/Z1_VERDICTS.json',
+    text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
+    why: 'real careers lesson title as a row key in the verdict record; names no person' },
   /* This checker quotes that lesson title three times above, so it now trips its own
      predicate — the same recursion the red-vector entries above solve. Declared once:
      the matcher is (file, text), so one entry covers all occurrences in this file. */

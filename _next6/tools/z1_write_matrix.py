@@ -11,6 +11,10 @@ ORDER = ['BUILD_ASDAN', 'GROW_ASDAN', 'LAUNCH_ASDAN',
          'BUILD_Humanities', 'GROW_Humanities', 'LAUNCH_Humanities']
 VERDICTS = ['ALIGNED', 'PARTIAL', 'MISALIGNED', 'SURFACE-SPLIT',
             'SOW-SILENT', 'DELIBERATE-DIVERGENCE', 'UNRESOLVED']
+# UNRESOLVED is not one of the order's six. It is what a row is called when the
+# two verdict passes returned different classes, because the standing rule says a
+# disagreement between two instruments is a finding and not a tie to be broken by
+# whichever ran last.
 
 
 def esc(s):
@@ -20,8 +24,8 @@ def esc(s):
 def main(matrix_path, verdict_path, grid_path, out):
     M = json.load(open(matrix_path))
     G = json.load(open(grid_path))
-    V = json.load(open(verdict_path)) if os.path.exists(verdict_path) else {}
-    byid = {r['id'] or r['base']: r for r in M}
+    raw = json.load(open(verdict_path)) if os.path.exists(verdict_path) else []
+    V = {r['file']: r for r in raw} if isinstance(raw, list) else {}
 
     L = []
     W = L.append
@@ -110,28 +114,83 @@ def main(matrix_path, verdict_path, grid_path, out):
     W('**Nothing was relabelled.** No week number, term tag, sequence chip, manifest, checksum or')
     W('nav string was changed for this. It is a named stop condition and it is Matt\'s call.')
     W('')
-    W('*The SoW-alignment verdicts below are unaffected by it:* the packs that claim a half-term')
-    W('week are joined on that claim, so they select the same workbook cell under either reading.')
+    contingent = [r for r in M
+                  if (r.get('sow_SOW') or {}).get('outcome')
+                  != (r.get('sow_CALENDAR') or {}).get('outcome')]
+    # "the two cells differ" and "the answer changes" are not the same claim. Where the
+    # content probe scores zero against BOTH cells, neither reading delivers the outcome
+    # and the verdict stands whichever way §Z2 is ruled. Ask the probe; do not assume.
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import z1_join_probe as JP
+    live = []
+    for r in contingent:
+        dw = JP.words(' '.join(filter(None, [
+            r.get('A_title'), r.get('A_objective'), r.get('A_outcome'),
+            r.get('B_objective'), ' '.join(r.get('B_sc') or []), r.get('B_seqOutcome')])))
+        a = JP.content_score(dw, (r.get('sow_SOW') or {}).get('outcome'))
+        b = JP.content_score(dw, (r.get('sow_CALENDAR') or {}).get('outcome'))
+        if not (a == 0 and b == 0):
+            live.append(r)
+    W('### The verdicts below are **not** unaffected by it — %d of %d rows turn on the ruling'
+      % (len(contingent), len(M)))
+    W('')
+    W('')
+    W('**%d of those %d are rows where the verdict genuinely changes with the ruling.** The'
+      % (len(live), len(contingent)))
+    W('other %d — the whole of BUILD_Humanities — score zero against *both* candidate cells, so'
+      % (len(contingent) - len(live)))
+    W('their verdict stands either way. "The cells differ" and "the answer changes" are not the')
+    W('same claim and are counted separately.')
+    W('')
+    W('An earlier draft of this section said they were, on the grounds that a pack naming its own')
+    W('half-term week selects the same cell either way. That is true of the three ASDAN packs and')
+    W('**false of the other six**: BUILD/GROW/LAUNCH Science and Humanities state a *bare estate')
+    W('week* and nothing else, so the calendar is the only thing that can place them, and the two')
+    W('readings place them one cell apart. Every such row is marked **⚠ calendar-contingent**')
+    W('below and shows both candidate cells.')
+    W('')
+    W('Two further instruments, neither of which reads a week number, say which reading each pack')
+    W('is actually authored against — full run and both red-proofs in')
+    W('`_next6/evidence/Z1_JOIN_PROBE.txt`:')
+    W('')
+    W('| pack | CONTENT: SoW / calendar | PRINTED: SoW / calendar | reading |')
+    W('|---|---|---|---|')
+    for p, c, pr, verdict in [
+            ('BUILD_Science', '4 / 4', '4 / 4', '**split against itself** — a pack defect either way'),
+            ('GROW_Science', '10 / 0', '10 / 0', 'SoW grid, decisively; prints its cells verbatim'),
+            ('LAUNCH_Science', '0 / 6', '0 / 1', '**repo calendar** — never once a SoW win'),
+            ('BUILD_Humanities', '0 / 0 (5 tie@0)', 'no printed outcome', 'neither; a strand question, not a week'),
+            ('GROW_Humanities', '4 / 0', '6 / 0', 'SoW grid'),
+            ('LAUNCH_Humanities', '4 / 0', 'no printed outcome', 'SoW grid')]:
+        W('| `%s` | %s | %s | %s |' % (p, c, pr, verdict))
+    W('')
+    W('**The estate does not have one convention; it has both, and the split runs inside the')
+    W('teaching packs as well as inside the ASDAN manifests.**')
     W('')
 
     # per-pack summary
     W('## Per-pack summary')
     W('')
-    W('| pack | lessons | ' + ' | '.join(VERDICTS[:6]) + ' | INSTRUMENT-SPLIT |')
-    W('|---|---:|' + '---:|' * 6 + '---:|')
     grand = collections.Counter()
+    for r in M:
+        grand[V.get(r['file'], {}).get('final', 'UNRESOLVED')] += 1
+    cols = VERDICTS + (['PENDING'] if grand.get('PENDING') else [])
+    grand = collections.Counter()
+    W('| pack | lessons | ' + ' | '.join(cols) + ' | INSTRUMENT-SPLIT | ⚠ verdict turns on §Z2 |')
+    W('|---|---:|' + '---:|' * len(cols) + '---:|---:|')
     for p in ORDER:
         rs = [r for r in M if r['pack'] == p]
         c = collections.Counter()
         for r in rs:
-            v = V.get(r['id'] or r['base'], {}).get('verdict', 'UNRESOLVED')
+            v = V.get(r['file'], {}).get('final', 'UNRESOLVED')
             c[v] += 1
             grand[v] += 1
-        W('| `%s` | %d | %s | %d |' % (p, len(rs),
-          ' | '.join(str(c.get(v, 0)) for v in VERDICTS[:6]),
-          sum(1 for r in rs if r['instrumentSplit'])))
-    W('| **total** | **%d** | %s | **0** |' % (len(M),
-      ' | '.join('**%d**' % grand.get(v, 0) for v in VERDICTS[:6])))
+        W('| `%s` | %d | %s | %d | %d |' % (p, len(rs),
+          ' | '.join(str(c.get(v, 0)) for v in cols),
+          sum(1 for r in rs if r['instrumentSplit']),
+          sum(1 for r in rs if r in live)))
+    W('| **total** | **%d** | %s | **0** | **%d** |' % (len(M),
+      ' | '.join('**%d**' % grand.get(v, 0) for v in cols), len(live)))
     W('')
 
     # the rows
@@ -143,19 +202,32 @@ def main(matrix_path, verdict_path, grid_path, out):
         W('')
         W('| pack week | SoW week | SoW strand | SoW outcome | lesson LO / SC | verdict | tier |')
         W('|---|---|---|---|---|---|---|')
+        # rows marked with a warning carry the calendar-reading cell too
         for r in sorted(rs, key=lambda x: (str(x['sowStrand']), x['A_weekManifest'] or 0)):
             s = r['sow_SOW'] or {}
-            v = V.get(r['id'] or r['base'], {})
+            cal = r['sow_CALENDAR'] or {}
+            cont = r in contingent
+            v = V.get(r['file'], {})
             lo = esc(r['B_objective'] or r['A_objective'])
             sc = r['B_sc'] or []
             locell = lo + (('<br>· ' + '<br>· '.join(esc(x) for x in sc[:3])) if sc else '')
+            wk = esc('%s·W%s' % (s.get('ht'), s.get('week'))) if s else '—'
+            oc = esc((s.get('outcome') or '')[:110])
+            if cont:
+                wk += ' ⚠<br>cal: ' + (esc('%s·W%s' % (cal.get('ht'), cal.get('week')))
+                                       if cal else '*no cell*')
+                oc += '<br>**cal:** ' + (esc((cal.get('outcome') or '')[:110])
+                                         if cal else '*no cell*')
+            fin = v.get('final', 'UNRESOLVED')
+            if fin == 'UNRESOLVED' and v.get('data') and v.get('deck'):
+                fin += '<br><sub>data %s · deck %s</sub>' % (v['data'], v['deck'])
             W('| %s | %s | %s | %s | %s | **%s** | %s |' % (
                 esc(r['manifestHtwk'] or ('W%s' % r['A_weekManifest'])),
-                esc('%s·W%s' % (s.get('ht'), s.get('week'))) if s else '—',
+                wk,
                 esc((r['sowStrand'] or '')[:46]),
-                esc((s.get('outcome') or '')[:110]),
+                oc,
                 locell[:300],
-                v.get('verdict', 'UNRESOLVED'), v.get('tier', '—')))
+                fin, v.get('tier', '—')))
         W('')
     open(out, 'w', encoding='utf-8').write('\n'.join(L) + '\n')
     print('wrote %s — %d rows, verdicts %s' % (out, len(M), dict(grand)))
