@@ -3104,3 +3104,77 @@ the order provides.
 organisation policy denial its own README says not to route around. **No liveness reading
 taken, none simulated**, so the first of the two the rule needs is still outstanding.
 
+
+---
+
+## R-N6M01 — Order N6-M: two branches reconciled, D-A ruled and tested to its limit, the merge held on its own condition
+
+**Last observed true at** `5778a48e`.
+
+Two sessions ran different orders from the same base and each landed real work. N6-M merges
+both explicitly and keeps every behaviour. Full record in
+[`_next6/FINDINGS.md`](_next6/FINDINGS.md) §M0–§M5.
+
+**The transferable rule of this pass: when two fixes for different defects meet, each can
+hide the other's defect from the check that found it.** N6-I fixed orphaned fragments with
+`orphans/widows`; N6-F fixed page overflow with print typography. Together, reverting either
+one alone is invisible: with the typography in place there is no overflow to orphan, and with
+the orphan control in place the overflow spills a full four-line sheet instead of a
+near-blank one. **Neither original gate reds on the other's vector once both fixes are
+present.** The union needed a page-count CEILING it had never had — the band was
+`[declared units, 60]`, a floor and a runaway backstop — and only then did both classes go
+red. Red-prove a merged gate against *both* parents' vectors, never against your own.
+
+**And a new ceiling must learn the chassis before it is trusted.** A flat `units + 0`
+immediately reported every LAUNCH_ASDAN deck as *"10 printed pages, expected 9-9"* — a false
+red on a correct tree, because there the learner-confirmation block is a `.n6-lc` section
+outside `.slide` and legitimately takes a sheet, while on BUILD it *is* a `.print-page` and is
+already counted. Measured estate-wide before being believed.
+
+**Seven of the order's figures were wrong**, and each measurement is recorded so no later
+brief repeats them. The N6-I work is on `claude/new-session-q7ztqq`, **not** `llckrn`, which
+is still at `cb8dfaea`. **Eleven** matrix rows change under the D-A ruling, not six.
+**26 was never wrong** — it counted the nine packs; 30 counts twelve, and 26 + the Art packs'
+4 is exactly 30. `_passsl/` **does** carry a level statement, `"ASDAN PEQ – 6 units, E3 to
+L1"`. The `Exact SOW outcome` family is **24 paragraphs, not 25 files**. And BUILD/GROW are
+**not** uniform W1–W7 per half term — all three lanes share 7/7/6/6/6/7, totalling 39.
+
+**D-A is ruled and the extension test stops it at LAUNCH Science.** Control 13–3 for the LA
+calendar; LAUNCH_Humanities **5–0** and LAUNCH_ASDAN **19–0** the workbook's way, across four
+strands. The lane rule is not estate-wide. **The ruling costs zero lesson edits** — measured:
+that pack carries no `Aut1`/`Aut2` tag anywhere, only estate week numbers, which are already
+right. It costs **one inserted workbook row**, `Aut1·W8`, proposed and not applied.
+
+**A hyphen is a word boundary, and that nearly over-reached the guidance toggle.**
+`\bstaff\b` inside a class attribute also matches `staff-card`. Matching on the class TOKEN
+fixed it, after which every family reconciled with the map exactly. The two pupil-facing
+labels sharing tagged container classes — `Learning objective:` and `Success criteria` —
+are **verified 0 tagged**, and `.model-step` is deliberately untagged because it is 49–58% of
+its slide.
+
+**`cmp` on a PDF is the wrong instrument for "print unchanged".** Chromium writes a per-run
+identifier: two renders of the same unmodified file differ at byte 459 at identical size.
+Assert on the paper the PDF describes — page count, extracted text, and a raster hash. On
+that instrument the guidance patch is **159/159 page-for-page identical**.
+
+**One storage exemption exists in the estate and it is guarded.** The toggle needs
+`localStorage mbm_guide_v1`; offline integrity forbids storage. `g4` now removes the marked
+guidance block before scanning and then checks the block may use only the declared key —
+red-proven by a second key inside the block and by storage outside it.
+
+**The merge is HELD, on §M4's own condition**, because one Tier 2 remains unresolved:
+applying it would add participation as an assessed criterion, which changes what a pupil does.
+It is diffed at [`_next6/proposed/TIER2_HELD_ENT_A2_W5.md`](_next6/proposed/TIER2_HELD_ENT_A2_W5.md)
+and needs one line. Every other §M4 hold is met and printed.
+
+**`s23-no-learner-names` is installed and NOT ARMED, and was not weakened to pass.** Its
+reference list must itself contain no name, so a usable list is a declared-exemplar record
+held outside the repo with `S23_NAMES` pointing at it — a school-side act, not a repository
+edit. Inventing one here would arm the gate against a fiction. Note for whoever arms it:
+**invented worked-exemplar names in ASDAN paperwork are expected content, not a hit.**
+
+**External links: MEASUREMENT INVALID — venue, second reading.** Controls resolve at 200,
+all 30 citation hosts return 000, because this session's egress proxy answers 403 to CONNECT
+outside the organisation allowlist. A uniform 0/30 with controls green is an infrastructure
+signature, not link rot. Nothing removed. Recorded at
+[`_next6/evidence/M5_link_liveness_reading2.json`](_next6/evidence/M5_link_liveness_reading2.json).

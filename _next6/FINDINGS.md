@@ -1939,3 +1939,418 @@ pupil does is **held and diffed, not applied**.
 
 `mbm-next-six-weeks-finish-2026-08-28-N6F-BOTTOM`
 
+
+---
+---
+
+# ORDER N6-M — FINDINGS
+
+`mbm-next-six-weeks-merge-2026-08-28-N6M-TOP`
+
+Supersedes N6-Z, N6-F and N6-I as an order; none of their **work** is superseded,
+and §M0 is the record of keeping both. Every figure in the order was treated as a
+prediction. Seven came back different and each is flagged **⚠ order said** where
+it arises.
+
+---
+
+## §M0 — the divergence, mapped before anything moved
+
+**⚠ order said** the N6-I work sits on `claude/new-session-llckrn` at tip
+`3cdb4ee4`. It does not. `llckrn` is still at `cb8dfaea`; the 16 N6-I commits are
+on **`claude/new-session-q7ztqq`**. Derived rather than inferred:
+
+| | |
+|---|---|
+| merge base of the two branches | **`cb8dfaea`** — the old `llckrn` tip |
+| `q7ztqq` (N6-I) | 24 ahead of main = 8 shared + **16** |
+| `2trqdq` (N6-F) | 16 ahead of main = 8 shared + **8** |
+| ancestry | **neither is an ancestor of the other**, proven with `merge-base --is-ancestor`, not read off the counts |
+
+So the counts the order could not reconcile do reconcile, once the shared eight
+commits below `cb8dfaea` are counted once rather than twice.
+
+### The risk set: 29 paths touched by both
+
+24 BUILD_ASDAN decks · `REGISTER.md` · `_next6/FINDINGS.md` ·
+`_next6/GUIDE_TAG_MAP.md` · `_next6/tools/gates.py` · `_next6/tools/run_gates.py`
+
+**No work lost, by path rather than by assertion:** 10 N6-I-only paths and 118
+N6-F-only paths are present and byte-identical to their branch.
+
+### How each conflict was resolved by keeping both
+
+**The 24 decks.** N6-I adds `orphans:4;widows:4` and `break-inside:avoid`; N6-F
+adds print typography and block spacing. Complementary, and inserted at the same
+point. Each reconciled file is **proven to reduce byte-exactly to each parent**
+when the other side's fragment is removed — 24/24.
+
+**The two `s24-print-renders`.** Both kept, `g12` and `g11`, and `run_gates`
+calls both. Two instruments answering one question is worth more than either, and
+a disagreement between them is a finding rather than a tie broken by ordering.
+
+**The two guidance maps.** N6-I's addressee-keyed map is the operative one and
+says so; N6-F's independent class-keyed census is kept as a labelled addendum,
+because it covers the three Art packs N6-I could not see and carries three
+cautions that hold under either keying.
+
+### The union gate needed a ceiling — which is why red-proving comes before green
+
+The page-count band was `[declared units, 60]`: a floor and a runaway backstop,
+no ceiling. With N6-F's print-fit reverted a deck prints **four sheets from three
+declared units** and sits inside that band. It hid twice over, because N6-I's
+orphan control keeps the spilled sheet carrying four lines instead of a
+ten-character fragment — so the overflow no longer makes a near-blank page
+either. **Each fix conceals the other's defect class from the check that found
+it.**
+
+A ceiling was added, and then the ceiling itself had to learn the chassis: a flat
+`units + 0` reported every LAUNCH_ASDAN deck as *"10 printed pages, expected
+9-9"*, a false red on a correct tree, because on that chassis the
+learner-confirmation block is a `.n6-lc` section appended outside `.slide` and
+legitimately takes its own sheet, while on BUILD it **is** a `.print-page` and is
+already counted. **A new ceiling is measured estate-wide before it is trusted.**
+
+Both renderers now resolve paths to absolute. `g11` already did after N6-F found
+it reading 26/26 one way and 0/26 another on the same correct tree; `g12`
+inherited the same hazard by a different route — running node in the caller's cwd
+— and is fixed the same way.
+
+### Union proven red on every defect class
+
+| vector | result |
+|---|---|
+| **A′** both fixes reverted | **RED** — near-blank page 2, and 4 pages for 3 units |
+| **B** print-fit reverted only | **RED** — 4 printed pages, expected 3-3 |
+| **C** `.slide` back at `height:91%` | **RED** — near-blank page 10, and 10 pages for 9 units |
+| A pagination reverted only | **PASS**, and honestly so: with the fit in place page one fits, so there is nothing to orphan |
+
+### The four §M0 assertions, on the reconciled tree
+
+| assertion | result |
+|---|---|
+| learner confirmation on paper | **75/75** |
+| blank or near-blank pages | **0** (147 renders, 788 pages) |
+| decks printing more than 3 sheets | **0** |
+| no pupil-facing reading text smaller than before either branch | **`p` 14.1–16.0px, `li` 16.0px — identical in base, N6-I, N6-F and merged.** Only headings moved. |
+
+---
+
+## §M1 — D-A ruled, and the extension test says it stops at LAUNCH Science
+
+**The ruling is applied: the LA calendar is authoritative for LAUNCH Science.**
+
+**The extension test does not extend.** ⚠ The order provided for both outcomes and
+asked which came back; it is the second.
+
+| lane | result |
+|---|---|
+| control · LAUNCH **Science** | **13 – 3** for Aut1 = 8 (LA dates) |
+| LAUNCH **Humanities** | 0 – 5 — **5–0 the workbook's way** |
+| LAUNCH **ASDAN** | 0 – 19 — **19–0 the workbook's way**, across CAREERS, PEQ, COMM and LI |
+
+The control reproduces N6-F's hand-picked-marker result (14–0) by an independent
+generic route, so the method is not why the extensions come back the other way.
+**LAUNCH Science is the outlier; the lane rule is not estate-wide.** Lessons
+inside a stated margin are reported UNDECIDED rather than pushed to whichever
+candidate leads.
+
+### What the ruling costs in lesson edits: nothing
+
+Measured, not assumed. The LAUNCH Science pack carries **no `Aut1`/`Aut2`
+half-term tag anywhere**; its only week reference is the estate week number 8–13,
+which is correct under the LA calendar. The old→new table is 18 rows of *no
+change*. **0 of 18 lesson files need a placement edit**, so no manifest, checksum
+or nav churn either.
+
+### What it costs in the workbook is one row
+
+Granted a 15-week autumn, the workbook's Autumn 2 rows are **already right** —
+estate W9–W13 deliver C39–C43 in order. The strand runs C32–C38 for Aut1 W1–W7
+and stops at *"Topic 1 review"*. The pack's estate-week-8 lessons teach enzyme
+action, Core Practical 1.10 and Topic 1 consolidation, which follow a Topic 1
+review naturally and have nowhere to sit in a seven-week Autumn 1.
+
+So the proposal is **one inserted row for `Aut1·W8`**, not a renumbering:
+[`_next6/proposed/vC-PROPOSED_LAUNCH_Science.md`](proposed/vC-PROPOSED_LAUNCH_Science.md),
+wording derived only from the three lessons' own LO/SC and quoted there so the
+derivation can be checked. **Proposed only. No workbook modified; vA and vB
+untouched.** It also states the consequence: adopting it makes LAUNCH Science a
+40-week strand while every other strand stays at 39.
+
+### The matrix reads as one question resolved
+
+⚠ **order said six rows dissolve. Eleven change**, and they are named
+individually rather than counted. Eight dissolve to ALIGNED because they were
+judged against the adjacent week; three become **SOW-SILENT** because under the
+ruling they sit in Autumn 1 Week 8, which the workbook has no row for.
+
+Nothing is overwritten. The original verdict stays in its column — it was
+correctly derived against the workbook the auditor was given — and a new
+**`under §M1`** column records what the ruling makes of it. The auditor was not
+wrong; the calendar was.
+
+---
+
+## §M2 — tiers re-derived, citations applied, the Tier 2 held
+
+⚠ The order flagged 38/1/16/137 as a prediction and warned an exact match would
+be suspicious. **It matches exactly, and that is not suspicious here:** the
+prediction was taken from N6-F's own output, and N6-F is one of the two branches
+this order merged. It is the same count, not an independent one agreeing.
+
+| tier | before ruling | after ruling |
+|---|---|---|
+| 1 | 38 | **32** |
+| 2 | 1 | **1** |
+| 3 | 16 | **11** |
+| none | 137 | **148** |
+
+**Applied — 21 of 32, all documentation.** Five packs gain a SoW cross-reference
+section in `CURRICULUM_ALIGNMENT.md`, with the workbook rows quoted from the
+extract at run time so a citation cannot drift from the instrument. **0 HTML
+files changed**, which is why s24 is unaffected by construction rather than by
+assertion. The five `SHA256SUMS.txt` covering those docs are rehashed and verify.
+
+**Held, with the reason — 11 rows** propose editing a citation string *inside* a
+lesson: the `"sow"` field that renders as `.sowline`, and LAUNCH_ASDAN's "SOW
+position" line. Every one of those proposals is an example (*"e.g. …"*), not an
+exact replacement. Applying an example verbatim would be authoring
+lesson-visible prose under a Tier 1 label. They are listed with the workbook rows
+they would cite, so ruling them is a one-line job.
+
+**Tier 2 — STOPPED, as the order provides for.**
+`ENT_A2_W5_Eco_or_Sport_Purpose_Test` would gain *"Take part in the approved eco
+or sport challenge"* in SC1. That is **not claim-accuracy**: it adds
+participation as an assessed criterion, which changes what a pupil is asked to
+do. The existing SC is not false — it is narrower than the SoW row. The deriving
+auditor reached the same conclusion unprompted and wrote *"HOLD — do not apply"*.
+
+---
+
+## §M3 — the guidance toggle, keyed to addressee
+
+`data-mbm-guide="staff|route|lundy"`, hidden not removed, hidden unless
+`html.mbm-guide-on`, an **ⓘ Guidance** button and the **G** key,
+`localStorage mbm_guide_v1`, default hidden.
+
+**728 elements tagged across 137 files — 392 staff, 198 lundy, 138 route.**
+
+### What is not tagged matters more than what is
+
+| family | why not |
+|---|---|
+| `.model-step` (144) | reads exactly like staff step-by-step instruction, and is **49–58% of its slide's text**. Hiding it halves two slides per deck. |
+| `Learning objective:` (24) | shares `.box.objective` with three staff labels. Class-wide would delete the pupil's objective from every deck. **Verified 0 tagged.** |
+| `Success criteria` (24) | shares `.box.good`. **Verified 0 tagged.** |
+| `.box.rehearsal` | 96 of 120 are pupil-protective; only the one staff string is tagged. |
+| the TA layer (1188) | already reaches no screen. A toggle for it would be theatre. |
+
+### A matching bug caught before it shipped
+
+The first matcher used `\bstaff\b` inside the class attribute. **A hyphen is a
+word boundary**, so it also matched `staff-card` — the exact over-reach the map
+warns about. Matching is now on the class **token**, after which every family
+reconciled with the map: guard 74, evidence-note 36, boundary 36, screen 60,
+lnote 198, sowline 42, lesson-link 24, and the BUILD_ASDAN keyed families at 24
+each.
+
+⚠ One correction to the map: the `Exact SOW outcome` family is **24 paragraphs,
+not 25 files**. The 25th occurrence is prose *about* the outcomes inside the
+staff planning document.
+
+### Gates, asserted rather than argued
+
+| gate | result |
+|---|---|
+| print unchanged | **159/159 page-for-page identical** — page count, extracted text, and 96dpi raster hash |
+| toggle ON restores the pre-patch screen | **159/159 identical** — every element's tag, class, text length and layout box |
+| strip → byte-identical | **159/159** |
+| idempotent | re-run tags **0** |
+| `s24-print-renders` | **PASS** — 75 surfaces, 147 renders, 788 pages, learner-confirmation 75/75, 0 near-blank |
+| full battery | green on **all twelve packs** |
+
+**`cmp` on the PDF is the wrong instrument.** Chromium writes a per-run
+identifier, so two renders of the same unmodified file differ at byte 459 while
+being the same size and the same document. Measured, not assumed. The assertion
+is made on the paper the PDF describes.
+
+**Default state, measured:** 6608 element boxes leave the initial screen across
+107 surfaces. The other 30 tagged surfaces are all LAUNCH_ASDAN and their tagged
+elements are **unpainted at load** — verified 0 painted across all 30 — because
+they sit inside slides the deck has not advanced to. The initial-screen
+comparison cannot see them by construction; the guidance hides when the slide is
+reached.
+
+### The one storage exemption, and its guard
+
+Offline integrity forbids storage; the order specifies `localStorage`. The answer
+is a **narrow audited exemption, not a weakened gate**. `g4` removes the marked
+guidance block before scanning — so storage anywhere else is still a violation —
+and then checks the block may use only the declared key. **Red-proven both ways:**
+a second key inside the block reds it *naming the key*; storage outside the block
+reds it as before.
+
+**`Art_Teesside` is deliberately not tagged.** The operative hide-set covers the
+nine packs N6-I read by addressee. The three Art packs were surveyed only by the
+cruder class-keyed census, and tagging on that basis is precisely what the map's
+own headline correction warns against.
+
+---
+
+## §M5 — residue, honestly stated
+
+### External links — MEASUREMENT INVALID, venue
+
+⚠ **order said** its 34 and the earlier 26 "were both wrong". **26 was not
+wrong.** The two figures are the same measurement over different populations:
+
+> **26** across the nine 2026-27 packs **+ 4** unique to the three Art packs
+> **= 30** across the twelve. Exactly.
+
+Reading 2 recorded at `_next6/evidence/M5_link_liveness_reading2.json`:
+
+| | |
+|---|---|
+| unique citation URLs (twelve packs) | **30** — confirmed |
+| controls (`pypi.org`, `registry.npmjs.org`) | **200, 200** |
+| citation hosts | **000 × 30** |
+| verdict | **MEASUREMENT INVALID — venue** |
+
+Controls resolve, so the network and the probe both work. Every citation host
+returns 000 because this session's egress proxy answers 403 to CONNECT for hosts
+outside the organisation allowlist. **A uniform 0/30 with controls green is an
+infrastructure signature, not link rot. Nothing removed, no removal proposed.**
+
+**What venue could measure it:** any host without that allowlist — a staff laptop
+on the school network, or a CI runner with unrestricted outbound HTTPS — running
+`_next6/tools/i4_link_liveness.py` twice, at least an hour apart.
+
+### The LAUNCH PEQ level
+
+⚠ **order said** `_passsl/` carries no level statement. **It does.**
+`_passsl/sow_extract/sow_strands.json` records the strand as
+*"Personal Effectiveness (ASDAN PEQ – 6 units, **E3 to L1**)"*.
+
+Recorded together so the next pass inherits the corrected version:
+
+1. **I6 is CLOSED — PREMISE REFUTED**, and
+2. **the correction to that closure stands: D13's Entry 3 bound does exist.**
+   Verbatim: `PEQ Level 1 Award / Extended Award / Certificate. (E3–L1 only in
+   2026/27.)` What D13 lacks is the *phrase* C13 uses for GROW —
+   `Floor: Entry 3 units.` — which is a drafting inconsistency, not silence.
+3. And `_passsl` agrees with D13 at **E3 to L1**, so the workbook and the LAUNCH
+   pass are consistent with each other. The open question was never what the
+   workbook says; it is which of the workbook and the merged estate anchor
+   (`PEQ Entry 3 (Level 1 stretch)`, ×137 across 38 files) governs. **Still
+   unruled.**
+
+### The SoW structure facts, corrected on the record
+
+⚠ The belief that BUILD and GROW are *"14 strands × W1–W7 per half term"* came
+from Passes SB/SG and is refuted. The strand counts are right; the uniform W1–W7
+is not, and it is not a LAUNCH peculiarity either. **All three lanes carry the
+same shape:**
+
+| lane | strands | Aut1 | Aut2 | Spr1 | Spr2 | Sum1 | Sum2 | total |
+|---|---|---|---|---|---|---|---|---|
+| BUILD | 14 | 7 | 7 | 6 | 6 | 6 | 7 | 39 |
+| GROW | 14 | 7 | 7 | 6 | 6 | 6 | 7 | 39 |
+| LAUNCH | **18** | 7 | 7 | 6 | 6 | 6 | 7 | 39 |
+
+**No later brief should repeat the uniform-W1–W7 belief.** And note the standing
+tension it sits inside: the repo's own planner (`_passpq/tools/l2k_plan.py`)
+hard-allocates a **38**-week year with `Aut1 = 8`, and carries its own note
+*"OUTSTANDING FOR MATT: confirm term dates / teaching weeks."*
+
+---
+
+## §M4 — MERGE HELD, on the order's own condition
+
+§M4 permits a merge to main **only if** every hold is met, and names one that is
+not:
+
+> *"§M2 leaves zero unresolved Tier 2; if one remains, hold the merge and present
+> the diff."*
+
+**One remains.** `ENT_A2_W5_Eco_or_Sport_Purpose_Test` is diffed and held because
+applying it would change what a pupil is asked to do, which §M2's own stop
+condition forbids. So the merge is held, and the diff is presented:
+[`_next6/proposed/TIER2_HELD_ENT_A2_W5.md`](proposed/TIER2_HELD_ENT_A2_W5.md).
+It needs one line from Matt, and nothing else in this order depends on it.
+
+**This is not a failure state.** It is the order's provision working: the Tier 2
+was found, diffed, held and presented rather than applied or quietly dropped.
+Everything else §M4 asks to be printed before a merge is printed below and holds.
+
+| §M4 hold | state |
+|---|---|
+| §M0 reconciliation complete, no work lost | **MET** — 10 N6-I-only and 118 N6-F-only paths byte-identical to their branch; 29 shared paths reconciled, the 24 decks each proven to reduce to both parents |
+| both defect classes red-proven on the union gate | **MET** — vectors A′, B and C all red; clean tree green |
+| §M2 leaves zero unresolved Tier 2 | **NOT MET — one remains, held and diffed. This is what holds the merge.** |
+| `node --check` + `json.loads` | PASS, twelve packs |
+| tag balance and duplicate ids both 0 | PASS |
+| timings sum to 40 | PASS |
+| offline integrity | PASS, with the one narrow storage exemption, itself red-proven |
+| reduced motion present, no `@keyframes` reintroduced | PASS |
+| links and manifest ↔ disk both ways | PASS |
+| additivity by strip-to-byte-identical | PASS — 159/159 for the guidance patch |
+| sentinel SET-invariance via `ll-g:loop-mark` | PASS — 50 carrier surfaces, all in the pre-existing `Art_Teesside` estate, none changed |
+| `s24-print-renders` | PASS — 75 surfaces, 147 renders, 788 pages, 75/75, 0 near-blank |
+| `s23-no-learner-names` | **INSTALLED, NOT ARMED — see below** |
+
+### s23 — installed, not armed, and not weakened to make it pass
+
+`s23-no-learner-names` returns **MEASUREMENT INVALID** because its reference list
+is absent. That is the correct behaviour and it is the reason the gate is not yet
+load-bearing. The order offers two ways out and forbids a third.
+
+**The declared-exemplar record is not supplied here, and the reason is worth
+stating rather than skipping.** The record must itself contain no name. A list of
+real learner names cannot be committed to this repository under any framing —
+that is the very thing s23 exists to keep out — so a usable reference list has to
+be a list of *something else*: the cohort's declared exemplar names, held outside
+the repo, with the gate pointed at it through `S23_NAMES` at run time. Producing
+that is a school-side act, not a repository edit, and inventing one here would
+arm the gate against a fiction.
+
+**So it is recorded plainly: s23 is installed and not armed.** It runs, it
+refuses to pass without its list, and it will start catching things the moment
+`S23_NAMES` points at a real record. It has not been weakened, and its own file
+contains no name.
+
+Worth carrying forward: **invented worked-exemplar names in ASDAN paperwork are
+expected content, not a hit.** Whoever arms s23 needs that in the reference
+record's instructions, or the first run will flag the paperwork it is meant to
+protect.
+
+### What a merge would need
+
+One line on the Tier 2. With that ruled — applied or reclassified — every hold in
+the table above is met and the merge can proceed as specified: `--no-ff`, the
+rollback SHA recorded, the full battery re-proven at the merged tip, pushed, Pages
+build confirmed, and three lesson URLs read back from the merge SHA.
+
+The branch is ready for it. Nothing else is outstanding.
+
+---
+
+## What remains for Matt — one line each
+
+1. **The Tier 2** — apply the participation criterion, or reclassify the week as
+   DELIBERATE-DIVERGENCE because Young Duke challenges are logged elsewhere.
+   *This is the only thing holding the merge.*
+2. **The `Aut1·W8` workbook row** — adopt the proposed LAUNCH Science row, or
+   leave the pack teaching a week the SoW has no slot for.
+3. **The PEQ level** — the workbook and `_passsl` both say E3–L1; the merged
+   estate says `PEQ Entry 3 (Level 1 stretch)` ×137. Which governs LAUNCH?
+4. **The year length** — the LA dates give 15 autumn weeks, the workbook 14, and
+   `l2k_plan.py` allocates 38 against the scheme's 39. Confirm the term dates.
+5. **The eleven held Tier 1 citation lines** — approve the exact wording for the
+   in-lesson `sow` fields, or leave them as proposals.
+6. **`s23`** — supply a declared-exemplar record outside the repo and point
+   `S23_NAMES` at it, and the gate arms.
+7. **The link liveness** — one reading from a venue without the egress allowlist,
+   then a second an hour later, before anything is removed.
+
+`mbm-next-six-weeks-merge-2026-08-28-N6M-BOTTOM`
