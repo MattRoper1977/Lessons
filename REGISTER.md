@@ -2791,3 +2791,87 @@ on Lessons and branch protection returns 403; `Matt-s-Apps-` is out of scope; an
 never ran** — no `_Pack_Notes` in the repo or on any of the four mirror branches, and `REBRAND.md`
 records no pack base SHA; the full-mirror fallback is blocked twice, on the absent Progress logo and
 on the `MARK_SVG`/`gen_entry` M-mark precondition (12 entry docs) recorded at OPEN_ITEMS #23.
+
+---
+
+## R-N601 — Order N6: nine packs landed, two stops, and four gates that had to be argued with
+
+**Last observed true at** `bb69b2c8`.
+
+Twelve next-six-weeks packs, 246 files, 192 HTML. Intake re-derived and it matched the
+predicted table exactly, 12/12 packs. Nine landed; the three Art packs did not, on a stop.
+Full record in [`_next6/FINDINGS.md`](_next6/FINDINGS.md).
+
+**The transferable rule of this pass: a brief's measurements are a prediction map, and four
+of its instructions would have done damage if executed as written.** Each was caught by
+measuring the bytes before editing them, and each is recorded so the next pass does not
+re-derive it.
+
+- **N4 had no target.** `Banks:` occurs **0 times in all twelve packs** against 562 across
+  102 files on `origin/main`; these packs use inherited-SoW-cell strings instead. GROW's
+  level-silence is its own stated design rule, not an omission. LAUNCH's eight bare
+  "Level 1" are **SoW-correct** — Pathway Ladder `D13` gives LAUNCH "PEQ Level 1 Award /
+  Extended Award / Certificate" and names no Entry 3 floor for that lane — and the live
+  estate had already moved `LAUNCH_ASDAN/PEQ` off the standard string onto route
+  enumeration. `v3_tier_gate.py` runs green with the packs live.
+- **N6's tier table named the wrong words.** LAUNCH_ASDAN's ladder is
+  Supported / **Secure route** / **Reach route**, not Support/Secure/Challenge. Its
+  `Challenge` ×150 is **one prose sentence**, so the ruled Challenge→Stretch rename would
+  have corrupted 150 prose occurrences and zero labels. `Secure` in all three ASDAN packs
+  (90 + 74 + 54) is the responsive-teaching **next-move staff loop**, not a stray tier word;
+  clearing it as ruled would have broken that loop in every deck.
+- **N7's named patcher cannot see these files.** `_eca1/tools/guidepatch.js` classifies all
+  192 as chassis `doc` and skips every one. Its `localStorage` mechanism also contradicts
+  gate 4 and each deck's own `storageKeys: []`. Toggle held on Matt's ruling; way-home and
+  splash applied.
+- **N12's premise is refuted.** "Spring 2 is a placement error" fails against five committed
+  repo signals — `Art_Teesside/Spring2_Scheme_of_Work.html` already exists with the same six
+  week rows and **verbatim-matching enquiry questions**, and the evidence pack's 18 lane/part
+  cells match the packs 6/6. The packs were built *from* the repo's committed scheme.
+
+**Two stops, both as the order provides for.** N5 is genuinely ambiguous: the pack pairs
+`pack_week: 8` with `source_week: Aut2-W1`, which the repo calendar
+(`l2k_plan.py:146`, Aut1 = W1–W8) makes impossible. Root cause: the LAUNCH SoW workbook
+asserts a **14-week autumn** against the repo's 15, so it has no row for the extra week and
+its labels cannot be transposed without a ruling. It is wider than one pack — LAUNCH_Science
+and LAUNCH_Humanities already place different SoW rows at real week 9. N12 stops for the
+refuted premise above.
+
+**A grep can report success on a feature that does not work.** Two findings this pass turned
+on rendering rather than searching, and both would have shipped green otherwise.
+- The ported learner-confirmation block landed in all 24 BUILD_ASDAN decks and **printed in
+  none** of them: it sat outside `<section class="print-pack">`, which that chassis gates
+  with `body>*:not(.print-pack){display:none!important}`. Grep said 75/75; a headless print
+  render said 51/75.
+- The N3 print donor reveals LAUNCH_ASDAN's nine slides but leaves each at `height:91%`
+  inside a clipped body — nine mostly-blank pages, green to any `@media print` check.
+- Corollary, for anyone writing a visibility check: **`getComputedStyle(e).display` ignores
+  hidden ancestors.** It reported 24 false screen-leaks on elements inside a `display:none`
+  container. `checkVisibility()` is the one that accounts for ancestors.
+
+**My own gates were wrong three times before they were right**, and the estate already had
+the answer. A hand-rolled tag-balance parser invented failures on SVG foreign content, on
+HTML5 optional end tags, and on markup inside attribute values
+(`data-lab-feedback="<b>Bridge:</b>"`); `_passsci1/gates.py`'s paired open/close counting is
+immune to all three and is what every sibling pass measured. A duplicate-id check matching
+`\bid=` fired inside every hyphenated `data-*` attribute. **Prefer the estate's existing
+definition of a check to a fresh one.**
+
+**A pre-existing defect worth knowing.** Two GROW_Humanities decks print **different text run
+to run on their own intake bytes** — timer-driven DOM mutation, so what reaches paper depends
+on how long the deck has been open. Not caused by this pass; recorded because a printed
+evidence artefact that is not reproducible is a problem for a portfolio.
+
+**N11 could not be measured.** All 30 external citations return `000`; the session's egress
+proxy answers `403` to `CONNECT` for every host. A 30/30 uniform failure is an infrastructure
+signature, not thirty dead links. Order TS D3 needs two measurements an hour apart and this
+environment cannot produce one. **Nothing removed, no removal proposed.**
+
+**Deviations from the chat figures**, none consequential: checksum verification covered 147
+entries not 105; GROW_ASDAN carries **18 `@keyframes`**, not the claimed zero (properly
+guarded by both `prefers-reduced-motion` and `.calm`, so gate 5 is measured as a delta rather
+than an absolute); 30 external URLs, not 34.
+
+**Deferred, in `_next6/FINDINGS.md` §Open:** the N5 reading and its lane rule; the Art packs'
+placement; GROW_ASDAN's `★ Optional reach` → `Stretch` (Tier 2 — it removes "Optional" and
+changes what a pupil does); the PH-3 toggle; and one dangling `5 ·` in the ported heading.
