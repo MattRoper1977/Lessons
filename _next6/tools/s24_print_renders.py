@@ -93,8 +93,39 @@ def source_promises_lc(path):
 # A page is NEAR-BLANK when it carries essentially no marks AND essentially no
 # text. Both halves are required: a full-page background wash is not text but is
 # not blank either, and a page of white-on-white text has characters but no ink.
+#
+# WHERE THESE NUMBERS COME FROM, and what they cannot do.
+#
+# Measured over the 812-page corpus, the bottom of the ink distribution is a
+# CONTINUUM, not two clean clusters:
+#
+#     0.061% / 10 chars  orphaned clause      <- defect
+#     0.129% / 20 chars  "and systems, not blame."
+#     0.148% / 23 chars  orphaned clause
+#     0.244% / 38 chars  orphaned clause
+#     0.379% / 61 chars  orphaned sentence    <- still the same defect
+#     0.498% / 86 chars  orphaned sentence    <- still the same defect
+#     ----------------------------------------- largest gap in the bottom 40
+#     0.757% / 76 chars  THE SIGNATURE PAGE   <- legitimate, sparse ON PURPOSE
+#
+# The awkward fact is that ink cannot separate "sparse on purpose" from "sparse
+# by accident", and neither can character count: the legitimate signature page
+# carries FEWER characters (76) than an orphan sheet it must not be confused
+# with (86). A signature table is meant to be mostly white.
+#
+# So the floors are set where a failure is unambiguous and the margin to the
+# sparsest LEGITIMATE page is nearly 2x, and the grey band above them is
+# REPORTED rather than silently passed. Moving the hard floor up to 0.6% would
+# catch two more real orphans and would also sit 1.26x from the signature page —
+# close enough that a font substitution on another machine could red a clean
+# tree. A standing gate that cries wolf gets switched off.
+#
+# Read the WARN list. Four pages failed this gate before the I1 fix; six were
+# sparse. The fix cleared all six.
 INK_FLOOR = 0.004       # 0.4% of the page's pixels carry any mark at all
 CHAR_FLOOR = 40         # non-whitespace characters in the page's text layer
+INK_WARN = 0.010        # reported, not failed: the grey band above the floor
+CHAR_WARN = 120
 RASTER_SCALE = 1.0      # 72 dpi — enough to see a rule; ~595x842 px for A4
 
 # Assertion 3 — "page count per deck is within a sane band".
@@ -162,8 +193,16 @@ def measure_pdf(path):
         bmp = pg.render(scale=RASTER_SCALE, grayscale=True)
         arr = np.asarray(bmp.to_pil().convert('L'), dtype=np.uint8)
         total = arr.size
+        flat_pg = re.sub(r'\s+', ' ', txt)
         pages.append({
             'page': i + 1,
+            # A signature page is SUPPOSED to be mostly white — ruled boxes and
+            # four labels. Marking it as the page that carries the learner
+            # confirmation is what lets the sparse report distinguish "sparse on
+            # purpose" from "sparse by accident", which ink alone cannot do:
+            # the legitimate signature page carries FEWER characters (76) than
+            # an orphan sheet it must not be confused with (86).
+            'isLC': all(k in flat_pg for k in LC_REQUIRED),
             'ink': float((arr < 250).sum()) / total,
             'dark': float((arr < 128).sum()) / total,
             'chars': len(re.sub(r'\s+', '', txt)),
@@ -176,6 +215,20 @@ def measure_pdf(path):
 
 def is_near_blank(pg):
     return pg['ink'] < INK_FLOOR and pg['chars'] < CHAR_FLOOR
+
+
+def is_sparse(pg):
+    """Above the failing floor, below what a page of content looks like.
+
+    Not a failure. Printed so the grey band is visible to a human instead of
+    being hidden by wherever the hard threshold happens to sit. The learner
+    confirmation page is excluded: it is sparse by design, and leaving it in
+    buries the two or three pages that are sparse by accident under ninety-nine
+    that are not.
+    """
+    if pg.get('isLC'):
+        return False
+    return (not is_near_blank(pg)) and pg['ink'] < INK_WARN and pg['chars'] < CHAR_WARN
 
 
 # ------------------------------------------------------------------ the gate
@@ -226,6 +279,7 @@ def run(renders_dir, require_lc=True, verbose=True, band_check=True, expect=None
         if lc_applies and not missing:
             lc_seen.add(rec['file'])
         blanks = [p for p in pages if is_near_blank(p)]
+        sparse = [p for p in pages if is_sparse(p)]
         fam, lo, hi, why = band_for_record(rec, pages)
         in_band = lo <= len(pages) <= hi
 
@@ -254,6 +308,8 @@ def run(renders_dir, require_lc=True, verbose=True, band_check=True, expect=None
             'pages': len(pages), 'band': [lo, hi], 'inBand': in_band,
             'lcApplies': lc_applies, 'lcInSource': promised, 'lcExpected': in_expect,
             'lcMissing': missing, 'nearBlank': [b['page'] for b in blanks],
+            'sparse': [{'page': p['page'], 'ink': p['ink'], 'chars': p['chars']}
+                       for p in sparse],
             'minInk': min((p['ink'] for p in pages), default=0.0),
             'medInk': (sorted(p['ink'] for p in pages)[len(pages) // 2] if pages else 0.0),
             'minChars': min((p['chars'] for p in pages), default=0),
@@ -265,6 +321,7 @@ def run(renders_dir, require_lc=True, verbose=True, band_check=True, expect=None
     clean = sum(1 for v in per_file.values() if all(v))
     total_pages = sum(r.get('pages', 0) for r in report)
     total_blank = sum(len(r.get('nearBlank', [])) for r in report)
+    total_sparse = sum(len(r.get('sparse', [])) for r in report)
 
     # Coverage: every surface the expectation list names must have been rendered
     # AND must print the block. A named surface that never appeared in the render
@@ -279,8 +336,9 @@ def run(renders_dir, require_lc=True, verbose=True, band_check=True, expect=None
     cov = (' · coverage contract %d surfaces' % len(expect_set)) if expect_set is not None \
         else ' · DELIVERY ONLY (no --expect list; coverage unproven)'
     detail = ('%d surfaces / %d renders / %d pages · learner-confirmation %s · '
-              'near-blank pages %d%s' % (surfaces, len(report), total_pages,
-                                         lc_txt, total_blank, cov))
+              'near-blank pages %d · sparse (reported, not failed) %d%s'
+              % (surfaces, len(report), total_pages, lc_txt, total_blank,
+                 total_sparse, cov))
     ok = clean == surfaces and surfaces > 0 and not unrendered
     if verbose:
         print_table(report)
@@ -289,7 +347,8 @@ def run(renders_dir, require_lc=True, verbose=True, band_check=True, expect=None
              'lcOk': lc_ok, 'lcExpected': lc_n, 'lcCoverage': (
                  len(expect_set) if expect_set is not None else None),
              'unrendered': unrendered,
-             'nearBlank': total_blank, 'clean': clean,
+             'nearBlank': total_blank, 'sparse': total_sparse, 'clean': clean,
+             'inkWarn': INK_WARN, 'charWarn': CHAR_WARN,
              'inkFloor': INK_FLOOR, 'charFloor': CHAR_FLOOR, 'rows': report})
 
 
@@ -310,6 +369,16 @@ def print_table(report):
                      len(r['nearBlank']),
                      ('MISSING' if r['lcMissing'] else
                       ('ok' if r.get('lcApplies') else '-'))))
+    warn = [(r, p) for r in report for p in r.get('sparse', [])]
+    if warn:
+        print()
+        print('SPARSE PAGES — reported, not failed (ink < %.1f%% and < %d chars). '
+              'These are above the failing floor and below what a page of content '
+              'looks like; read them.' % (INK_WARN * 100, CHAR_WARN))
+        for r, p in sorted(warn, key=lambda w: w[1]['ink']):
+            print('   %7.3f%% %5d chars  %s [%s] p%d'
+                  % (p['ink'] * 100, p['chars'], os.path.basename(r['file']),
+                     r['variant'], p['page']))
 
 
 # ------------------------------------------------------------------ rendering
