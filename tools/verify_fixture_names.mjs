@@ -97,6 +97,27 @@ const ALLOW = [
   { file: 'tools/verify_fixture_names.mjs',
     text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
     why: "this file's own allowlist entries for that lesson title" },
+  /* Order OM3, 2026-08-29. The same real lesson title, in the five N6-M SoW and
+     evidence records that also carry it. The four entries above were written when the
+     title lived only in the LAUNCH_ASDAN pack; the reconcile puts it in the SoW data too,
+     and the matcher is (file, text), so each file needs saying. Same reasoning as above:
+     MOCK is a fixture marker, the neighbouring words are ordinary titlecase, and no person
+     is named. Per file, so any OTHER person-shaped string in these files is still caught. */
+  { file: '_next6/SOW_MATRIX.md',
+    text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
+    why: 'real careers lesson title; MOCK is a fixture marker but this names no person' },
+  { file: '_next6/evidence/S24_EVIDENCE_SURFACES.txt',
+    text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
+    why: 'real careers lesson title; MOCK is a fixture marker but this names no person' },
+  { file: '_next6/sow/groups/10_LAUNCH_ASDAN__W7-W12_2026-27.json',
+    text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
+    why: 'real careers lesson title; MOCK is a fixture marker but this names no person' },
+  { file: '_next6/sow/lessons.json',
+    text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
+    why: 'real careers lesson title; MOCK is a fixture marker but this names no person' },
+  { file: '_next6/sow/worklist.json',
+    text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
+    why: 'real careers lesson title; MOCK is a fixture marker but this names no person' },
 ];
 
 function titlecaseCount(tok) {
