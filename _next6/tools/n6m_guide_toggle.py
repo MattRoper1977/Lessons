@@ -93,7 +93,6 @@ PLAIN = [
     ('Humanities_Teesside/BUILD_W9-W14_2026-27', 'staff', ['reportback']),
     ('Humanities_Teesside/', 'lundy', ['lnote']),
     ('Science_Teesside/', 'route', ['sowline']),
-    ('BUILD_ASDAN/Autumn2_W1-W6_2026-27', 'route', ['lesson-link']),
 ]
 
 # BUILD_ASDAN label-keyed families: (kind, container-class, leading <strong> labels)
@@ -156,6 +155,19 @@ def patch(path, dry=False):
         total += n
         # the Estate sequence chip: the last of four, matched on its own text
         s, n = tag_open(s, r'<span class="chip">Estate sequence\b[^<]*</span>', 'route')
+        total += n
+        # The pack FRONT DOOR carries the same two route facts as bare <span>s
+        # inside each lesson-link card. They were previously reached by tagging
+        # the <a class="lesson-link"> itself — which hid the pupil's navigation,
+        # not the guidance: all 24 links rendered display:none and BFS from the
+        # front door reached 5 of 24 lesson files. `route` everywhere else in
+        # this estate means the SoW provenance line (Science_Teesside tags
+        # .sowline), never the link that carries the pupil onward. These two
+        # matchers are text-keyed like the chip above, and bare-<span> anchored
+        # so they cannot reach the classed spans in the decks.
+        s, n = tag_open(s, r'<span>Estate sequence\b[^<]*</span>', 'route')
+        total += n
+        s, n = tag_open(s, r'<span>&#39;[^<]*&#39;![A-Z]+\d+</span>', 'route')
         total += n
         # the authored marker: an unclassed <p> holding the SoW outcome
         s, n = tag_open(s, r'<p><strong>Exact SOW outcome:</strong>', 'route')
