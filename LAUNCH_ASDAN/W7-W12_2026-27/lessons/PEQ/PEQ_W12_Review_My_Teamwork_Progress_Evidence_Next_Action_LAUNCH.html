@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#8E4F82">
+  <title>LAUNCH ASDAN · Week 12 · Personal Effectiveness · Team Working · Review My Teamwork: Progress, Evidence &amp; Next Action</title>
+  <style>
+:root{--accent:#8E4F82;--accent-fg:#ffffff;--ink:#18233f;--navy:#18233f;--cream:#faf7ef;--line:#d7dee5;--muted:#536278;--teal:#238c80;--gold:#d19a3a;--purple:#7659a7;--rust:#9b5b3d;--good:#e8f5f2;--warn:#fff7dc;--danger:#8f3142}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font-family:"Segoe UI",Tahoma,Arial,sans-serif;background:linear-gradient(135deg,#f8f3f7,#edf3f5);color:var(--ink);overflow:hidden}
+button,a.btn{font:inherit;min-height:44px;border:0;border-radius:11px;padding:9px 14px;font-weight:850;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:7px}
+button{background:var(--accent);color:var(--accent-fg);box-shadow:0 4px 9px #18233f22}
+button.ghost,a.btn.ghost{background:#f2f5f8;color:var(--ink);border:2px solid #c7d0dc;box-shadow:none}
+button.gold{background:var(--gold);color:#332405}
+button.teal{background:var(--teal);color:#000}
+button:disabled{opacity:.5;cursor:not-allowed}
+button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:3px solid #0b132b;outline-offset:3px;box-shadow:0 0 0 6px #ffd45e}
+.skip{position:fixed;top:-80px;left:10px;z-index:9000;background:#fff;color:var(--ink);padding:10px 14px;border-radius:8px;font-weight:900}
+.skip:focus{top:10px}
+.deck{height:100%;display:flex;align-items:center;justify-content:center;padding:14px 14px 92px}
+.slide{display:none;width:min(1280px,94%);height:91%;background:#fff;border-radius:20px;box-shadow:0 20px 50px #18233f24;border-top:10px solid var(--accent);padding:26px 32px;overflow:auto;position:relative;flex-direction:column}
+.slide.active{display:flex}
+.slide[data-type="starter"],.slide[data-type="ido"]{border-top-color:var(--purple)}
+.slide[data-type="wedo"]{border-top-color:var(--rust)}
+.slide[data-type="independent"],.slide[data-type="exit"]{border-top-color:var(--teal)}
+h1{font-size:clamp(2rem,4.4vw,3.35rem);line-height:1.04;margin:6px 0 10px;border-bottom:3px solid var(--accent);display:inline-block}
+h2{font-size:clamp(1.45rem,2.7vw,2.15rem);margin:4px 0 12px;border-bottom:2px solid #e2e8f0;padding-bottom:8px}
+h3{margin:.35rem 0 .5rem}
+p,li{font-size:clamp(1rem,1.25vw,1.12rem);line-height:1.48}
+.tag{display:inline-block;border-radius:8px;padding:5px 11px;font-size:.78rem;font-weight:950;letter-spacing:.075em;text-transform:uppercase}
+.tag.title{background:var(--navy);color:#fff}.tag.arrival{background:#eceff4;color:#34485e}.tag.starter,.tag.ido{background:#eee8f7;color:#5c4385}.tag.wedo{background:#f3e5df;color:#75422b}.tag.ind,.tag.exit{background:#e4f0ed;color:#176f65}
+.time{position:absolute;right:24px;top:18px;background:var(--navy);color:#fff;border-radius:999px;padding:6px 10px;font-size:.82rem;font-weight:900}
+.box{border-radius:12px;padding:11px 14px;margin:8px 0}.lo{background:#f2edf3;border-left:6px solid var(--accent)}.task{background:var(--warn);border:2px solid var(--gold)}.ido{background:#eee8f7;border-left:6px solid var(--purple)}.wedo{background:#f3e5df;border-left:6px solid var(--rust)}.scaf{background:#eaf5ff;border-left:6px solid #4d82a0}.good{background:var(--good);border-left:6px solid var(--teal)}.guard{background:#f7eef3;border-left:6px solid var(--accent)}.screen{background:#eef3f7;border-left:6px solid #536278}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;align-items:center}
+.hero-visual{height:240px;border-radius:18px;background:linear-gradient(145deg,var(--navy),#40596c);position:relative;overflow:hidden;color:#fff}
+.orb{position:absolute;width:168px;height:168px;border-radius:50%;background:var(--accent);left:50%;top:50%;transform:translate(-50%,-50%);opacity:.8}
+.ring{position:absolute;width:214px;height:214px;border-radius:50%;border:7px solid var(--gold);left:50%;top:50%;transform:translate(-50%,-50%)}
+.hero-copy{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:2;text-align:center;text-shadow:0 2px 8px #000;padding:12px}
+.hero-copy .big{font-size:3.8rem}.hero-copy b{font-size:1.16rem}.hero-copy span{font-size:.9rem;margin-top:5px}
+.chips,.part,.branch,.prompt-ladder,.tool-row{display:flex;gap:7px;flex-wrap:wrap}
+.chip{background:#f1f5f9;border:1px solid #d7dfe6;border-radius:999px;padding:6px 9px;font-size:.8rem;font-weight:850}
+.spine{display:grid;grid-template-columns:1fr auto 1fr;gap:9px;align-items:center;background:var(--navy);color:#fff;border-radius:12px;padding:9px 12px;margin:8px 0}.spine div{font-size:.84rem}.spine b{color:#ffe39a}.spine .arrow{font-size:1.4rem}
+.ladder{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.lad{border:2px solid var(--line);border-radius:10px;padding:8px;background:#fff;font-size:.84rem}.lad.entry{border-left:6px solid var(--accent)}.lad.secure{border-left:6px solid var(--teal)}.lad.reach{border-left:6px solid var(--navy)}
+.microfilm{border:3px solid var(--navy);border-radius:16px;background:#101923;color:#fff;padding:12px;margin:9px 0}.film{min-height:114px;display:flex;align-items:center;justify-content:center;text-align:center}.frame{display:none}.frame.on{display:block}.frame b{font-size:clamp(1.25rem,3vw,2.05rem);display:block}.frame small{color:#d8e2e7}.filmctl{display:flex;gap:7px;justify-content:center;flex-wrap:wrap}.filmctl button{background:#fff;color:var(--navy);box-shadow:none}
+.participation{border:2px solid #cbd5e1;border-radius:12px;padding:9px 11px;background:#f8fafc;margin-top:9px}.part span{background:#fff;border:1px solid #cbd5e1;border-radius:8px;padding:5px 8px;font-size:.83rem;font-weight:850}.note{font-size:.83rem;color:var(--muted);margin-top:5px}
+.model-step{display:none;border:2px solid #d9cadf;border-left:6px solid var(--purple);border-radius:11px;padding:9px 11px;margin:7px 0;background:#fff}.model-step.show{display:block}
+.options{display:grid;gap:8px}.option{background:#fff;color:var(--ink);border:2px solid #cbd5e1;box-shadow:none;text-align:left;justify-content:flex-start}.option.correct{border-color:var(--teal);background:var(--good)}.option.retry{border-color:var(--gold);background:var(--warn)}.feedback{padding:9px;border-radius:9px;background:#f1f5f9;margin-top:8px;font-weight:800}
+.widget{border:2px solid #cbd5e1;border-radius:14px;padding:12px;background:#fbfdff}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.vcard{border:2px solid var(--line);border-radius:11px;padding:10px;background:#fff;min-height:105px}.vcard.active{border-color:var(--teal);background:var(--good)}.wf{margin-top:8px;background:#f1f5f9;border-radius:9px;padding:10px;min-height:44px;font-weight:750}
+.practical{background:var(--warn);border:2px solid var(--gold);border-radius:14px;padding:11px;margin:9px 0}.prgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.prcell{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px;font-size:.86rem}
+.route{border:2px solid var(--line);border-radius:13px;padding:12px;background:#fff}.route.s{border-left:7px solid var(--accent)}.route.m{border-left:7px solid var(--teal)}.route.h{border-left:7px solid var(--navy)}
+.scaffold{display:none;margin-top:8px;background:#eef8ff;border:1px solid #bae6fd;border-radius:9px;padding:9px}.scaffold.open{display:block}
+.evgate{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.ev{border:2px solid var(--line);background:#fff;border-radius:10px;padding:9px}.ev b{display:block;color:#176f65}
+.status-lane{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.status-lane button{background:#fff;color:var(--ink);border:2px solid #cbd5e1;box-shadow:none}.status-lane button.chosen{background:var(--good);border-color:var(--teal)}.status-read{margin-top:7px;font-weight:800;color:#34485e}
+.lundy{margin-top:auto;padding-top:8px}.lundy-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.ls{border:2px solid #d8e0e8;border-radius:9px;padding:6px;background:#fff;font-size:.75rem;font-weight:900;text-align:center}.ls.on{background:#f2edf3;border-color:var(--accent)}.lnote{font-size:.8rem;color:#475569;margin-top:5px}
+.controls{position:fixed;left:12px;right:12px;bottom:12px;z-index:1200;display:grid;grid-template-columns:minmax(360px,1fr) auto minmax(210px,1fr);align-items:center;gap:8px}.tools,.nav{display:flex;gap:7px}.nav{justify-content:flex-end}.status{background:#fffffff7;border:1px solid #d8e0e8;border-radius:999px;padding:7px 11px;font-size:.84rem;font-weight:900;text-align:center}.prog{position:fixed;left:0;right:0;bottom:0;height:8px;background:#dfe5eb;z-index:1300}.prog div{height:100%;background:var(--accent);width:0}
+.overlay[hidden]{display:none}.overlay{position:fixed;inset:0;background:#0f172aaa;z-index:4000;display:flex;align-items:center;justify-content:center;padding:13px}.modal{background:#fff;border-radius:18px;width:min(860px,96vw);max-height:92vh;overflow:auto;padding:19px;box-shadow:0 24px 70px #0006}.ta-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.ta-card{background:#f8fafc;border:1px solid #d8e0e8;border-left:6px solid var(--accent);border-radius:10px;padding:9px}
+.drawer{position:fixed;right:0;top:0;bottom:0;width:min(520px,96vw);background:#fff;z-index:5000;transform:translateX(105%);transition:transform .22s;padding:18px;overflow:auto;box-shadow:-18px 0 50px #18233f33;visibility:hidden;pointer-events:none}.drawer.open{transform:translateX(0);visibility:visible;pointer-events:auto}.drawer-card{border:1px solid #d7e0e8;border-left:6px solid var(--accent);border-radius:12px;padding:11px;background:#f8fbfc;margin:9px 0}
+.closebox{background:var(--good);border:2px solid var(--teal);border-radius:12px;padding:10px;margin-top:9px}
+body.calm *{animation:none!important;transition:none!important}
+@media(max-width:980px){.cards{grid-template-columns:1fr 1fr}.controls{grid-template-columns:1fr auto}.tools{grid-column:1/-1;overflow-x:auto;padding-bottom:2px}.status{justify-self:start}.deck{padding-bottom:142px}}
+@media(max-width:760px){.deck{padding:6px 6px 151px}.slide{width:98%;height:95%;padding:20px 15px}.hero,.grid2,.grid3,.ladder,.prgrid,.evgate,.ta-grid{grid-template-columns:1fr}.cards{grid-template-columns:1fr 1fr}.spine{grid-template-columns:1fr}.spine .arrow{transform:rotate(90deg);justify-self:center}.lundy-grid{grid-template-columns:1fr 1fr}.controls{left:6px;right:6px;bottom:8px}.tools button,.tools a.btn{min-width:44px;padding:8px 10px;white-space:nowrap}.status{font-size:.75rem}.nav button{padding:8px 11px}.time{position:static;align-self:flex-end;margin-bottom:4px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<style id="n6-print-route">@media print{body{background:#fff;color:#111;font-family:"Segoe UI",Arial,sans-serif}.deck{max-width:none;padding:0}.slide,.slide[hidden]{display:block!important;min-height:0;color:#111;background:#fff;border:2px solid #555;box-shadow:none;break-after:page;break-inside:avoid;border-top:8px solid var(--slot);padding:7mm}.slide h1{font-size:27pt;line-height:1}.slide h2{font-size:19pt;line-height:1;margin:2mm 0}.slide h3{font-size:11pt}.slide p,.slide li{font-size:9pt!important;line-height:1.18!important;margin:1.5mm 0}.tag,.time,.chip,.voice span{font-size:7.5pt;padding:1.3mm 2mm}.box,.spine,.lab,.practical,.route,.lad,.evidence-item,.staff-card{background:#fff;color:#111;margin:2mm 0;padding:2mm}.ladder,.routes,.evidence-gate,.lab-grid,.practical-grid{gap:2mm}.controls,.progress,.overlay,.drawer,.skip,.film-controls,.lundy,.modal-close,.drawer-close,[onclick^="MBM.reveal"],[onclick^="MBM.toggleScaffold"]{display:none!important}.option,.lab-card{display:block!important;color:#111!important;background:#fff!important;box-shadow:none!important;border:2px solid #555!important;min-height:0;padding:2mm}.scaffold[hidden]{display:block!important;background:#fff;color:#111;padding:1.5mm;margin-top:1mm;border:1px solid #777}.voice span,.chip{color:#111;border-color:#777}.model-steps{gap:1.5mm;margin:2mm 0}.model-step{opacity:1;transform:none;padding:2mm}.film{background:#fff;color:#111;padding:2mm;margin:2mm 0}.film-stage{min-height:0;padding:0;display:block;text-align:left}.film-frame{display:block;border-bottom:1px solid #aaa;padding:1.5mm}.film-frame b{font-size:10pt}.film-frame span{color:#333;font-size:8pt}.hero-visual{display:none}.hero{grid-template-columns:1fr}.evidence-note{color:#111;margin-top:1.5mm;padding:1.5mm}ul{margin:1mm 0;padding-left:5mm}}@media print{html,body{overflow:visible!important;height:auto!important}.deck{height:auto!important;display:block!important;padding:0!important}.slide{height:auto!important;min-height:0!important;overflow:visible!important;display:block!important;border-radius:0;box-shadow:none}.slide.active{display:block!important}.overlay,.drawer,.controls,.progress,.skip,.a11y-live{display:none!important}}</style><!--n6m-guide:v1--><style id="n6m-guide-css">@media screen{[data-mbm-guide]{display:none!important}html.mbm-guide-on [data-mbm-guide]{display:revert!important}.n6m-guide-btn{position:fixed;right:12px;bottom:12px;z-index:2147483000;font:600 .8rem/1.2 "Segoe UI",Arial,sans-serif;padding:7px 11px;border:2px solid currentColor;border-radius:8px;background:#fff;color:#1e3a8a;cursor:pointer}.n6m-guide-btn[aria-pressed="true"]{background:#1e3a8a;color:#fff}}@media print{.n6m-guide-btn{display:none!important}}</style><script id="n6m-guide-js">(function(){var K="mbm_guide_v1",R=document.documentElement;function get(){try{return localStorage.getItem(K)==="1"}catch(e){return false}}function set(v){try{localStorage.setItem(K,v?"1":"0")}catch(e){}}function apply(v){R.classList.toggle("mbm-guide-on",!!v);var b=document.querySelector(".n6m-guide-btn");if(b){b.setAttribute("aria-pressed",v?"true":"false");}}function toggle(){var v=!R.classList.contains("mbm-guide-on");set(v);apply(v);}function boot(){if(!document.querySelector("[data-mbm-guide]"))return;var b=document.createElement("button");b.type="button";b.className="n6m-guide-btn";b.setAttribute("aria-pressed","false");b.setAttribute("data-n6m-guide-control","1");b.title="Show or hide staff guidance (G)";b.textContent="\u24D8 Guidance";b.addEventListener("click",toggle);document.body.appendChild(b);apply(get());document.addEventListener("keydown",function(e){if(e.key!=="g"&&e.key!=="G")return;if(e.metaKey||e.ctrlKey||e.altKey)return;var t=e.target,n=t&&t.tagName;if(n==="INPUT"||n==="TEXTAREA"||n==="SELECT"||(t&&t.isContentEditable))return;toggle();});}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();})();</script><!--/n6m-guide--></head>
+<body data-lesson-id="PEQ_W12"><!--n6-nav1:v1--><style id="n6-nav1-css">@media print{.mbmhome,.n6-splash{display:none!important}}.mbmhome{display:inline-block;margin:6px 0 0 8px;font:600 .85rem/1.4 "Segoe UI",Arial,sans-serif;color:#1e3a8a;text-decoration:none}.mbmhome:hover,.mbmhome:focus{text-decoration:underline}</style><a class="mbmhome" href="../../../../index.html" aria-label="Back to the Lessons catalogue">← Lessons</a><!--/n6-nav1-->
+  <a class="skip" href="#lessonDeck">Skip to lesson</a>
+  <div id="a11yLive" class="skip" aria-live="polite" aria-atomic="true"></div>
+  <main class="deck" id="lessonDeck">
+    <section class="slide" data-type="title" data-title="Lesson overview" data-min="0" data-ta1="Help the learner navigate authentic records and express meaning through an agreed route; do not turn prompts into the reflective answers or invite self-assessment of qualification achievement." data-ta2="If secure and 10+ hours are evidenced, route the complete candidate set to the assessor without promising a result; if time or evidence is short, schedule the precise genuine activity or capture needed next." role="group" aria-roledescription="slide">
+      <span class="tag title">Lesson overview</span>
+      <div class="hero">
+        <div>
+          <span class="tag title">LAUNCH · ASDAN · W12 · PEQ</span>
+          <h1>Review My Teamwork: Progress, Evidence &amp; Next Action</h1>
+          <p><b>Convert genuine team activity records into an honest interim review and assessor-ready gap map while keeping every completion decision with the authorised assessment process.</b></p>
+          <div class="box lo"><b>🎯 Learning objective:</b> I can evaluate at least two positive outcomes and my role, explain how difficulty was managed or honestly note none, identify one changed way of working, two development areas and a future use, then locate evidence and unresolved gaps.</div>
+          <div class="box good"><b>✅ Success criteria</b>
+            <ul>
+              <li>I can locate the evidence and conditions relevant to this task.</li>
+              <li>I can compare an alternative and explain a limitation or trade-off.</li>
+              <li>I can revise, transfer or define an owned next action after feedback.</li>
+            </ul>
+          </div>
+          <div class="chips"><span class="chip">🧠 LAUNCH</span><span class="chip">⏱ 40 min</span><span class="chip">Aut2·W5</span><span class="chip">screen-only</span><span class="chip">positive outcome</span><span class="chip">difficulty</span><span class="chip">development area</span><span class="chip">transfer</span><span class="chip">evidence locator</span><span class="chip">assessor review</span></div>
+        </div>
+        <div class="hero-visual" aria-hidden="true"><div class="ring"></div><div class="orb"></div><div class="hero-copy"><div class="big">🧠</div><b>Review My Teamwork: Progress, Evidence &amp; Next Action</b><span>investigate → locate evidence → reason → act</span></div></div>
+      </div>
+      <div class="spine"><div><b>Inherited</b><br>Use only verified W8-W11 records of the collaborative plan, actual-time total, contributions, artefacts, support and any genuine barrier or adaptation. Record absent items as gaps; reconstruct nothing as if it happened.</div><div class="arrow">→</div><div><b>Feeds next</b><br>The next pack&#x27;s Aut2 W6 portfolio-organisation lesson uses today&#x27;s locator and gap plan; genuine activity continues until at least 10 actual plan-use hours and all other requirements are evidenced before any claim that criterion 1.4.1 or the complete unit is met.</div></div>
+      <div class="ladder"><div class="lad entry"><b>LAUNCH entry</b><br>Complete the core routine with agreed access.</div><div class="lad secure"><b>LAUNCH secure</b><br>Evidence + comparison + limitation/trade-off + owned action.</div><div class="lad reach"><b>Stretch</b><br>Lead, adapt or evaluate under unfamiliar conditions.</div></div>
+      <div class="box guard"><b>Qualification boundary:</b> Assessment gate: treat output as assessed evidence only where initial assessment selected the applicable route and level and registration occurred before the assessed attempt; otherwise this page is teaching/rehearsal only. This lesson interprets the SoW end-point as preparation for authorised assessor review, not unit completion. TmWkSk1 requires a team of at least three, a fully collaborative plan with two SMART goals and all specified elements, at least 10 actual hours using that plan, and sufficient learner-owned reflection. This lesson never awards credit; assessor judgement and centre quality-assurance processes control any claim.</div>
+      
+    <div class="lundy">
+      <div class="lundy-grid"><div class="ls on">SPACE</div><div class="ls">VOICE</div><div class="ls">AUDIENCE</div><div class="ls">INFLUENCE</div></div>
+      <div class="lnote">Stable Space → learner response → adult genuinely receives it → the next instruction, support or project action changes.</div>
+    </div>
+    
+    </section>
+
+    <section class="slide" data-type="arrival" data-title="🚪 Arrival · previous learning" data-min="3" data-ta1="Help the learner navigate authentic records and express meaning through an agreed route; do not turn prompts into the reflective answers or invite self-assessment of qualification achievement." data-ta2="If secure and 10+ hours are evidenced, route the complete candidate set to the assessor without promising a result; if time or evidence is short, schedule the precise genuine activity or capture needed next." role="group" aria-roledescription="slide">
+      <div class="time">⏱ 3 min</div><span class="tag arrival">🚪 Arrival · previous learning</span>
+      <div class="spine"><div><b>Retrieve</b><br>Use only verified W8-W11 records of the collaborative plan, actual-time total, contributions, artefacts, support and any genuine barrier or adaptation. Record absent items as gaps; reconstruct nothing as if it happened.</div><div class="arrow">→</div><div><b>Use today</b><br>Convert genuine team activity records into an honest interim review and assessor-ready gap map while keeping every completion decision with the authorised assessment process.</div></div>
+      <div class="box task"><b>Quiet retrieval</b><p>Locate or describe one genuine previous decision, action, draft, observation or feedback item that can help today. State what is known and what still needs checking.</p></div>
+      <div class="box scaf"><b>Access:</b> point, order cards, use a structured verbal response, annotate a supplied copy or ask for a source cue. Do not invent missing evidence.</div>
+      
+    <div class="participation">
+      <b>LAUNCH response routes</b>
+      <div class="part">
+        <span>📝 edit / sustained response</span><span>🗣 structured verbal</span>
+        <span>📊 compare / evaluate</span><span>🧭 plan / lead / delegate</span>
+        <span>🧰 practical / demonstrate</span><span>🔁 revise / transfer</span>
+      </div>
+      <div class="note">Access remains. Challenge rises through evidence, comparison, limitation, trade-off and unfamiliar transfer.</div>
+    </div>
+    
+      
+    <div class="lundy">
+      <div class="lundy-grid"><div class="ls on">SPACE</div><div class="ls">VOICE</div><div class="ls">AUDIENCE</div><div class="ls">INFLUENCE</div></div>
+      <div class="lnote">Stable Space → learner response → adult genuinely receives it → the next instruction, support or project action changes.</div>
+    </div>
+    
+    </section>
+
+    <section class="slide" data-type="starter" data-title="🌱 Starter · tension / prediction" data-min="3" data-ta1="Help the learner navigate authentic records and express meaning through an agreed route; do not turn prompts into the reflective answers or invite self-assessment of qualification achievement." data-ta2="If secure and 10+ hours are evidenced, route the complete candidate set to the assessor without promising a result; if time or evidence is short, schedule the precise genuine activity or capture needed next." role="group" aria-roledescription="slide">
+      <div class="time">⏱ 3 min</div><span class="tag starter">🌱 Starter · tension / prediction</span>
+      <div class="box task"><p style="font-size:1.2rem;font-weight:850">The team met both goals, but the log totals 6 hours 35 minutes and one claimed success has no evidence locator. Can an assessor yet make a defensible completion decision? What is the next action?</p></div>
+      <div class="microfilm" id="microfilm" data-index="0">
+        <div class="film"><div class="frame on"><b>NOTICE · Review My Teamwork: Progress, Evidence &amp; Next Action</b><small>Commit to a first judgement before the next frame.</small></div><div class="frame"><b>TEST · FIND THE EVIDENCE</b><small>Separate what is known, observed or agreed from what is assumed.</small></div><div class="frame"><b>QUALIFY · LIMIT OR TRADE-OFF</b><small>Name what could weaken, block or change the decision.</small></div><div class="frame"><b>ACT · OWNED NEXT STEP</b><small>Transfer the reasoning into the real task without adult takeover.</small></div></div>
+        <div class="filmctl">
+          <button id="filmStart" type="button">↺ Start</button><button id="filmNext" type="button">▶ Next</button>
+          <button id="filmPlay" type="button">⏵ Play</button><button id="filmPause" type="button">⏸ Pause</button>
+        </div>
+      </div>
+      
+    <div class="participation">
+      <b>LAUNCH response routes</b>
+      <div class="part">
+        <span>📝 edit / sustained response</span><span>🗣 structured verbal</span>
+        <span>📊 compare / evaluate</span><span>🧭 plan / lead / delegate</span>
+        <span>🧰 practical / demonstrate</span><span>🔁 revise / transfer</span>
+      </div>
+      <div class="note">Access remains. Challenge rises through evidence, comparison, limitation, trade-off and unfamiliar transfer.</div>
+    </div>
+    
+      
+    <div class="lundy">
+      <div class="lundy-grid"><div class="ls on">SPACE</div><div class="ls on">VOICE</div><div class="ls">AUDIENCE</div><div class="ls">INFLUENCE</div></div>
+      <div class="lnote">Stable Space → learner response → adult genuinely receives it → the next instruction, support or project action changes.</div>
+    </div>
+    
+    </section>
+
+    <section class="slide" data-type="ido" data-title="▣ I Do · model the reasoning" data-min="4" data-ta1="Help the learner navigate authentic records and express meaning through an agreed route; do not turn prompts into the reflective answers or invite self-assessment of qualification achievement." data-ta2="If secure and 10+ hours are evidenced, route the complete candidate set to the assessor without promising a result; if time or evidence is short, schedule the precise genuine activity or capture needed next." role="group" aria-roledescription="slide">
+      <div class="time">⏱ 4 min</div><span class="tag ido">▣ I Do · model the reasoning</span>
+      <div class="box ido"><b>Model the hidden process, not a completed learner answer.</b></div>
+      <div id="modelOne"><div class="model-step">Reconcile the plan-version and actual-time logs first; separate achieved outcomes from unsupported claims and flag any total below 10 hours.</div><div class="model-step">Evaluate two positive outcomes including the learner&#x27;s role, difficulty management or an honest no-difficulty statement, and one thing done differently during activity.</div><div class="model-step">Identify two specific development areas and a future teamwork situation, then build an assessor-facing locator and next-activity plan rather than self-awarding completion.</div></div>
+      <button type="button" data-reveal="modelOne" aria-controls="modelOne">▶ Reveal next step</button>
+      <div class="box screen" data-mbm-guide="staff"><b>Authorship check:</b> Staff may model the process and preserve access. The learner must make the assessed choices and supply their own response.</div>
+      
+    <div class="lundy">
+      <div class="lundy-grid"><div class="ls on">SPACE</div><div class="ls">VOICE</div><div class="ls">AUDIENCE</div><div class="ls">INFLUENCE</div></div>
+      <div class="lnote">Stable Space → learner response → adult genuinely receives it → the next instruction, support or project action changes.</div>
+    </div>
+    
+    </section>
+
+    <section class="slide" data-type="wedo" data-title="🤝 We Do · hinge" data-min="3" data-ta1="Help the learner navigate authentic records and express meaning through an agreed route; do not turn prompts into the reflective answers or invite self-assessment of qualification achievement." data-ta2="If secure and 10+ hours are evidenced, route the complete candidate set to the assessor without promising a result; if time or evidence is short, schedule the precise genuine activity or capture needed next." role="group" aria-roledescription="slide">
+      <div class="time">⏱ 3 min</div><span class="tag wedo">🤝 We Do · hinge</span>
+      <div class="hinge" data-explain="The first response covers the required reflective content, preserves authorship and reports gaps honestly for assessor judgement." data-retry="Use the seven-part check: two outcomes, own role, difficulty, changed practice, two development areas, future use, evidence/time status.">
+        <div class="box wedo"><b>Commit before reveal:</b> Which review is ready to be submitted as candidate evidence without claiming completion?</div>
+        <div class="options"><button class="option" type="button" data-correct="true">A review linked to real records that covers two outcomes, own role, difficulty response or none, changed practice, two development areas, future use and any time/evidence gaps.</button><button class="option" type="button" data-correct="false">We worked well, completed the unit and deserve a pass.</button><button class="option" type="button" data-correct="false">A polished review written by an adult because the learner found reflection difficult.</button></div>
+        <div class="feedback" aria-live="polite">Choose one. No public score.</div>
+      </div>
+      
+    <div class="participation">
+      <b>LAUNCH response routes</b>
+      <div class="part">
+        <span>📝 edit / sustained response</span><span>🗣 structured verbal</span>
+        <span>📊 compare / evaluate</span><span>🧭 plan / lead / delegate</span>
+        <span>🧰 practical / demonstrate</span><span>🔁 revise / transfer</span>
+      </div>
+      <div class="note">Access remains. Challenge rises through evidence, comparison, limitation, trade-off and unfamiliar transfer.</div>
+    </div>
+    
+      
+    <div class="lundy">
+      <div class="lundy-grid"><div class="ls">SPACE</div><div class="ls on">VOICE</div><div class="ls on">AUDIENCE</div><div class="ls on">INFLUENCE</div></div>
+      <div class="lnote">Stable Space → learner response → adult genuinely receives it → the next instruction, support or project action changes.</div>
+    </div>
+    
+    </section>
+
+    <section class="slide" data-type="ido" data-title="▣ I Do 2 · limitation / transfer" data-min="3" data-ta1="Help the learner navigate authentic records and express meaning through an agreed route; do not turn prompts into the reflective answers or invite self-assessment of qualification achievement." data-ta2="If secure and 10+ hours are evidenced, route the complete candidate set to the assessor without promising a result; if time or evidence is short, schedule the precise genuine activity or capture needed next." role="group" aria-roledescription="slide">
+      <div class="time">⏱ 3 min</div><span class="tag ido">▣ I Do 2 · limitation / transfer</span>
+      <div class="box ido"><b>Raise demand through counter-evidence, trade-off and transfer.</b></div>
+      <div id="modelTwo"><div class="model-step">Compare one credible alternative, counter-example or competing pressure before finalising the review my teamwork: progress, evidence &amp; next action decision.</div><div class="model-step">State one boundary, assumption or trade-off that could change the plan, and identify how it will be checked.</div><div class="model-step">Transfer the reasoning routine to an unfamiliar but related adult-life, workplace or community situation.</div></div>
+      <button type="button" data-reveal="modelTwo" aria-controls="modelTwo">▶ Reveal next step</button>
+      <div class="box guard"><b>Boundary:</b> Keep peer feedback proportionate, internal and non-blaming. Do not expose names, personal conflict or safeguarding information in the presentation layer. Support may enable recording but must not compose the learner&#x27;s assessed reflection; record the support used.</div>
+      
+    <div class="lundy">
+      <div class="lundy-grid"><div class="ls on">SPACE</div><div class="ls">VOICE</div><div class="ls">AUDIENCE</div><div class="ls">INFLUENCE</div></div>
+      <div class="lnote">Stable Space → learner response → adult genuinely receives it → the next instruction, support or project action changes.</div>
+    </div>
+    
+    </section>
+
+    <section class="slide" data-type="wedo" data-title="🤝 We Do 2 · evidence locator" data-min="4" data-ta1="Help the learner navigate authentic records and express meaning through an agreed route; do not turn prompts into the reflective answers or invite self-assessment of qualification achievement." data-ta2="If secure and 10+ hours are evidenced, route the complete candidate set to the assessor without promising a result; if time or evidence is short, schedule the precise genuine activity or capture needed next." role="group" aria-roledescription="slide">
+      <div class="time">⏱ 4 min</div><span class="tag wedo">🤝 We Do 2 · evidence locator</span>
+      <div class="box wedo"><b>Rehearsal only:</b> manipulate → freeze → point to evidence → explain → transfer.</div>
+      <div class="widget" id="decisionLab">
+        <h3>🧠 evidence locator</h3>
+        <div class="cards"><div class="vcard" data-message="State one precise progress or outcome claim and the learner&#x27;s role in it."><b>CLAIM</b><p>State one precise progress or outcome claim and the learner&#x27;s role in it.</p></div><div class="vcard" data-message="Locate the plan, time log, artefact, feedback or authenticated observation that supports it."><b>EVIDENCE</b><p>Locate the plan, time log, artefact, feedback or authenticated observation that supports it.</p></div><div class="vcard" data-message="Record a gap, team contribution, adult support, missing time or alternative explanation that limits the claim."><b>COUNTER/LIMIT</b><p>Record a gap, team contribution, adult support, missing time or alternative explanation that limits the claim.</p></div><div class="vcard" data-message="Choose further activity, missing capture, revision or submission for authorised assessor review."><b>ACTION</b><p>Choose further activity, missing capture, revision or submission for authorised assessor review.</p></div></div>
+        <div class="tool-row"><button class="ghost" type="button" data-lab-index="0">CLAIM</button><button class="ghost" type="button" data-lab-index="1">EVIDENCE</button><button class="ghost" type="button" data-lab-index="2">COUNTER/LIMIT</button><button class="ghost" type="button" data-lab-index="3">ACTION</button></div>
+        <div class="wf" id="labOutput" aria-live="polite">Choose a phase, explain its job, then transfer it to the real task.</div>
+      </div>
+      
+    <div class="participation">
+      <b>LAUNCH response routes</b>
+      <div class="part">
+        <span>📝 edit / sustained response</span><span>🗣 structured verbal</span>
+        <span>📊 compare / evaluate</span><span>🧭 plan / lead / delegate</span>
+        <span>🧰 practical / demonstrate</span><span>🔁 revise / transfer</span>
+      </div>
+      <div class="note">Access remains. Challenge rises through evidence, comparison, limitation, trade-off and unfamiliar transfer.</div>
+    </div>
+    
+      
+    <div class="lundy">
+      <div class="lundy-grid"><div class="ls">SPACE</div><div class="ls on">VOICE</div><div class="ls on">AUDIENCE</div><div class="ls on">INFLUENCE</div></div>
+      <div class="lnote">Stable Space → learner response → adult genuinely receives it → the next instruction, support or project action changes.</div>
+    </div>
+    
+    </section>
+
+    <section class="slide" data-type="independent" data-title="◆ Independent · sustained transfer" data-min="16" data-ta1="Help the learner navigate authentic records and express meaning through an agreed route; do not turn prompts into the reflective answers or invite self-assessment of qualification achievement." data-ta2="If secure and 10+ hours are evidenced, route the complete candidate set to the assessor without promising a result; if time or evidence is short, schedule the precise genuine activity or capture needed next." role="group" aria-roledescription="slide">
+      <div class="time">⏱ 16 min</div><span class="tag ind">◆ Independent · sustained transfer</span>
+      <div class="box task"><h3>Independent task</h3><p style="font-size:1.16rem;font-weight:800">Complete an interim teamwork review using only authentic records: at least two positive outcomes including the learner&#x27;s own role; how difficulties were managed or an honest statement that none occurred; one thing done differently; at least two areas for development; and a future teamwork context. Total actual plan-use time, create an evidence locator, mark every gap and write the next action. Do not self-sign or claim completion.</p></div>
+      <div class="practical"><b>🧰 AUTHENTIC TASK / POSSIBLE EVIDENCE CANDIDATE</b>
+        <div class="prgrid">
+          <div class="prcell"><b>Learner action</b><br>Complete an interim teamwork review using only authentic records: at least two positive outcomes including the learner&#x27;s own role; how difficulties were managed or an honest statement that none occurred; one thing done differently; at least two areas for development; and a future teamwork context. Total actual plan-use time, create an evidence locator, mark every gap and write the next action. Do not self-sign or claim completion.</div>
+          <div class="prcell"><b>Care / authority</b><br>Keep peer feedback proportionate, internal and non-blaming. Do not expose names, personal conflict or safeguarding information in the presentation layer. Support may enable recording but must not compose the learner&#x27;s assessed reflection; record the support used.</div>
+          <div class="prcell"><b>Evidence candidate</b><br>Candidate evidence only: learner-authored interim review, cumulative actual-time calculation, criterion/evidence locator, explicit gaps and forward plan, plus assessor-status field left for authorised staff.</div>
+        </div>
+      </div>
+      <div class="grid3">
+        <div class="route s"><b>◆ Supported route</b><p>Complete the core routine with agreed reading, sensory, motor or communication access.</p><button class="ghost" type="button" data-toggle="PEQ_W12Support" aria-expanded="false">🧰 Scaffold</button><div class="scaffold" id="PEQ_W12Support">Decision/action → evidence → reason → limitation → next step. Access remains; ownership stays with the learner.</div></div>
+        <div class="route m"><b>▲ Standard route</b><p>Complete the sustained task with comparison, a limitation/trade-off and an owned revision.</p><button class="ghost" type="button" data-toggle="PEQ_W12Secure" aria-expanded="false">🧰 Scaffold</button><div class="scaffold" id="PEQ_W12Secure">Plan/claim → evidence → counter/alternative → evaluation → next action.</div></div>
+        <div class="route h"><b>★ Stretch route</b><p>Lead, adapt or evaluate the routine under an unfamiliar constraint, audience or changed condition.</p><button class="ghost" type="button" data-toggle="PEQ_W12Reach" aria-expanded="false">🧰 Scaffold</button><div class="scaffold" id="PEQ_W12Reach">Unfamiliar transfer + validity/trade-off + independent adaptation.</div></div>
+      </div>
+      <div class="evgate"><div class="ev"><b>1 · learner contribution</b>decision, role, draft, action, calculation or evaluation</div><div class="ev"><b>2 · authentic source</b>real task, plan, practical, encounter, product or feedback</div><div class="ev"><b>3 · evaluation</b>counterpoint, limitation, feedback response or next action</div></div>
+      <div class="status-lane" aria-label="Teaching status rehearsal">
+        <button type="button" data-evidence-status data-message="Teaching: concept and process are still being introduced.">Teaching</button>
+        <button type="button" data-evidence-status data-message="Rehearsal: learner is practising; this is not assessed evidence.">Rehearsal</button>
+        <button type="button" data-evidence-status data-message="Evidence candidate: route through the centre’s current assessment plan and evidence locator.">Candidate</button>
+        <button type="button" data-evidence-status data-message="Needs addition: record the genuine gap and plan another authentic opportunity.">Needs addition</button>
+      </div>
+      <div class="status-read" id="statusRead">Choose a status to rehearse honest evidence handling.</div>
+      
+    <div class="lundy">
+      <div class="lundy-grid"><div class="ls on">SPACE</div><div class="ls on">VOICE</div><div class="ls on">AUDIENCE</div><div class="ls on">INFLUENCE</div></div>
+      <div class="lnote">Stable Space → learner response → adult genuinely receives it → the next instruction, support or project action changes.</div>
+    </div>
+    
+    </section>
+
+    <section class="slide" data-type="exit" data-title="🎫 Exit · evaluate and hand forward" data-min="4" data-ta1="Help the learner navigate authentic records and express meaning through an agreed route; do not turn prompts into the reflective answers or invite self-assessment of qualification achievement." data-ta2="If secure and 10+ hours are evidenced, route the complete candidate set to the assessor without promising a result; if time or evidence is short, schedule the precise genuine activity or capture needed next." role="group" aria-roledescription="slide">
+      <div class="time">⏱ 4 min</div><span class="tag exit">🎫 Exit · evaluate and hand forward</span>
+      <div class="closebox"><b>🔁 LAUNCH Voice → Audience → Influence</b><p><b>VOICE:</b> State or edit one decision/action, evidence item and limitation/trade-off.</p><p><b>AUDIENCE:</b> An adult genuinely engages with the response against the task or authorised criteria.</p><p><b>INFLUENCE:</b> Record how the next instruction, support, role, target or project plan changes.</p></div>
+      <div class="spine"><div><b>Today</b><br>Convert genuine team activity records into an honest interim review and assessor-ready gap map while keeping every completion decision with the authorised assessment process.</div><div class="arrow">→</div><div><b>Next</b><br>The next pack&#x27;s Aut2 W6 portfolio-organisation lesson uses today&#x27;s locator and gap plan; genuine activity continues until at least 10 actual plan-use hours and all other requirements are evidenced before any claim that criterion 1.4.1 or the complete unit is met.</div></div>
+      <div class="box screen" data-mbm-guide="staff"><b>Screen-only:</b> The page stores and uploads nothing. Use the setting’s current authorised portfolio, assessment and safeguarding systems.</div>
+      
+    <div class="participation">
+      <b>LAUNCH response routes</b>
+      <div class="part">
+        <span>📝 edit / sustained response</span><span>🗣 structured verbal</span>
+        <span>📊 compare / evaluate</span><span>🧭 plan / lead / delegate</span>
+        <span>🧰 practical / demonstrate</span><span>🔁 revise / transfer</span>
+      </div>
+      <div class="note">Access remains. Challenge rises through evidence, comparison, limitation, trade-off and unfamiliar transfer.</div>
+    </div>
+    
+      
+    <div class="lundy">
+      <div class="lundy-grid"><div class="ls">SPACE</div><div class="ls on">VOICE</div><div class="ls on">AUDIENCE</div><div class="ls on">INFLUENCE</div></div>
+      <div class="lnote">Stable Space → learner response → adult genuinely receives it → the next instruction, support or project action changes.</div>
+    </div>
+    
+    </section>
+  </main>
+
+  <div class="overlay" id="taDialog" role="dialog" aria-modal="true" aria-labelledby="taTitle" hidden>
+    <div class="modal">
+      <h2 id="taTitle">TA Brief · Review My Teamwork: Progress, Evidence &amp; Next Action</h2>
+      <div class="ta-grid">
+        <div class="ta-card"><b>Priority now</b><p>Help the learner navigate authentic records and express meaning through an agreed route; do not turn prompts into the reflective answers or invite self-assessment of qualification achievement.</p></div>
+        <div class="ta-card"><b>Move learning forward</b><p>If secure and 10+ hours are evidenced, route the complete candidate set to the assessor without promising a result; if time or evidence is short, schedule the precise genuine activity or capture needed next.</p></div>
+        <div class="ta-card"><b>Least prompt first</b><div class="prompt-ladder"><span>wait</span><span>self-prompt</span><span>visual/source cue</span><span>general verbal</span><span>specific verbal</span><span>model</span><span>direct support</span></div></div>
+        <div class="ta-card"><b>Authorship</b><p>Record adult, collaborator and participant support separately from the learner’s contribution and evaluation.</p></div>
+      </div>
+      <button class="ghost" type="button" data-close-dialog>Close</button>
+    </div>
+  </div>
+
+  <div class="overlay" id="loopDialog" role="dialog" aria-modal="true" aria-labelledby="loopTitle" hidden>
+    <div class="modal">
+      <h2 id="loopTitle">LAUNCH · read the response</h2>
+      <div class="branch"><button type="button" data-loop="secure">Secure</button><button type="button" data-loop="mixed">Mixed</button><button type="button" data-loop="access">Access</button><button type="button" data-loop="evidence">Evidence gap</button><button type="button" data-loop="boundary">Boundary</button></div>
+      <div id="loopResult" class="wf" aria-live="polite">Audience first: receive the learner response before choosing the next move.</div>
+      <button class="ghost" type="button" data-close-dialog>Close</button>
+    </div>
+  </div>
+
+  <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="staffTitle" inert>
+    <button class="ghost" id="closeDrawer" type="button">✕ Close</button>
+    <h2 id="staffTitle">🧠 Staff Ready</h2>
+    <div class="drawer-card"><b>Purpose</b><p>Produce a truthful, learner-owned progress review and evidence map that makes both strengths and insufficiency visible to the authorised assessor.</p></div>
+    <div class="drawer-card"><b>SOW position</b><p>Pack Week 12 · Aut2·W5 · Team working skills: interim progress review and preparation for assessor review.</p></div>
+    <div class="drawer-card"><b>Qualification boundary</b><p>Assessment gate: treat output as assessed evidence only where initial assessment selected the applicable route and level and registration occurred before the assessed attempt; otherwise this page is teaching/rehearsal only. This lesson interprets the SoW end-point as preparation for authorised assessor review, not unit completion. TmWkSk1 requires a team of at least three, a fully collaborative plan with two SMART goals and all specified elements, at least 10 actual hours using that plan, and sufficient learner-owned reflection. This lesson never awards credit; assessor judgement and centre quality-assurance processes control any claim.</p></div>
+    <div class="drawer-card"><b>Care / safety / data</b><p>Keep peer feedback proportionate, internal and non-blaming. Do not expose names, personal conflict or safeguarding information in the presentation layer. Support may enable recording but must not compose the learner&#x27;s assessed reflection; record the support used.</p></div>
+    <div class="drawer-card"><b>Evidence candidate</b><p>Candidate evidence only: learner-authored interim review, cumulative actual-time calculation, criterion/evidence locator, explicit gaps and forward plan, plus assessor-status field left for authorised staff.</p><p>Interactive rehearsal is never assessment evidence by itself.</p></div>
+    <div class="drawer-card"><b>Prepare</b><p>all team plan versions, cumulative actual-time log, artefact and observation locators, learner reflection frame, criterion-to-evidence gap map, assessor review cover sheet</p></div>
+    <div class="drawer-card"><b>Authenticity</b><p>The learner supplies their own assessed response. Valid reasonable adjustments may preserve access, but staff or generative AI must not create a response presented as the learner’s own work.</p></div>
+  </aside>
+
+  <nav class="controls" aria-label="Lesson controls">
+    <div class="tools">
+      <button id="openTA" type="button" aria-label="Open TA Brief"><span aria-hidden="true">🧑‍🏫</span> <span class="tool-label">TA Brief</span></button>
+      <button class="gold" id="openLoop" type="button" aria-label="Open Live Loop"><span aria-hidden="true">🔁</span> <span class="tool-label">Live Loop</span></button>
+      <button class="ghost" id="openDrawer" type="button" aria-label="Open Staff Ready"><span aria-hidden="true">🧰</span> <span class="tool-label">Staff Ready</span></button>
+      <button class="ghost" id="calmBtn" type="button" aria-label="Toggle Calm mode" aria-pressed="false"><span aria-hidden="true">◌</span> <span class="tool-label">Calm</span></button>
+      <a class="btn ghost" href="../../START_HERE.html" aria-label="Open Start Here"><span aria-hidden="true">⌂</span> <span class="tool-label">Start Here</span></a>
+    </div>
+    <div class="status" id="status"></div>
+    <div class="nav"><button class="ghost" id="prev" type="button">◀ Previous</button><button id="next" type="button">Next ▶</button></div>
+  </nav>
+  <div class="prog" aria-hidden="true"><div id="bar"></div></div>
+  <script>
+(() => {
+  "use strict";
+  const slides = Array.from(document.querySelectorAll(".slide"));
+  const status = document.getElementById("status");
+  const bar = document.getElementById("bar");
+  const prev = document.getElementById("prev");
+  const next = document.getElementById("next");
+  const drawer = document.getElementById("drawer");
+  const live = document.getElementById("a11yLive");
+  let current = 0;
+  let filmTimer = null;
+  let lastFocus = null;
+
+  function announce(message) {
+    if (live) live.textContent = message;
+  }
+  function show(index) {
+    filmStop();
+    current = Math.max(0, Math.min(slides.length - 1, index));
+    slides.forEach((slide, i) => {
+      const active = i === current;
+      slide.classList.toggle("active", active);
+      slide.setAttribute("aria-hidden", active ? "false" : "true");
+    });
+    const slide = slides[current];
+    const mins = Number(slide.dataset.min || 0);
+    status.textContent = (slide.dataset.title || "") + " · " + (current + 1) + "/" + slides.length + (mins ? " · " + mins + " min" : "");
+    bar.style.width = ((current + 1) / slides.length * 100) + "%";
+    prev.disabled = current === 0;
+    next.disabled = current === slides.length - 1;
+    history.replaceState(null, "", "#slide-" + (current + 1));
+    slide.scrollTop = 0;
+    announce("Slide " + (current + 1) + " of " + slides.length + ": " + (slide.dataset.title || ""));
+  }
+  function reveal(id, button) {
+    const steps = Array.from(document.querySelectorAll("#" + id + " .model-step"));
+    const nextStep = steps.find(step => !step.classList.contains("show"));
+    if (nextStep) {
+      nextStep.classList.add("show");
+      announce(nextStep.textContent.trim());
+    }
+    if (!steps.find(step => !step.classList.contains("show"))) {
+      button.disabled = true;
+      button.textContent = "✓ Model complete";
+    }
+  }
+  function answer(button) {
+    const wrap = button.closest(".hinge");
+    const feedback = wrap.querySelector(".feedback");
+    wrap.querySelectorAll(".option").forEach(option => option.classList.remove("correct", "retry"));
+    if (button.dataset.correct === "true") {
+      button.classList.add("correct");
+      feedback.textContent = "Secure: " + wrap.dataset.explain;
+    } else {
+      button.classList.add("retry");
+      feedback.textContent = "Recheck: " + wrap.dataset.retry;
+    }
+    announce(feedback.textContent);
+  }
+  function toggle(id, button) {
+    const panel = document.getElementById(id);
+    const open = panel.classList.toggle("open");
+    button.setAttribute("aria-expanded", open ? "true" : "false");
+  }
+  function filmShow(index) {
+    const frames = Array.from(document.querySelectorAll("#microfilm .frame"));
+    if (!frames.length) return;
+    const target = (index + frames.length) % frames.length;
+    document.getElementById("microfilm").dataset.index = String(target);
+    frames.forEach((frame, i) => frame.classList.toggle("on", i === target));
+    announce(frames[target].innerText);
+  }
+  function filmNext() {
+    const film = document.getElementById("microfilm");
+    filmShow(Number(film.dataset.index || 0) + 1);
+  }
+  function filmStop() {
+    if (filmTimer) {
+      clearInterval(filmTimer);
+      filmTimer = null;
+    }
+  }
+  function filmReset() {
+    filmStop();
+    filmShow(0);
+  }
+  function filmPlay() {
+    filmStop();
+    filmNext();
+    filmTimer = setInterval(filmNext, 1900);
+  }
+  function labPick(index) {
+    const cards = Array.from(document.querySelectorAll("#decisionLab .vcard"));
+    cards.forEach((card, i) => card.classList.toggle("active", i === index));
+    const chosen = cards[index];
+    document.getElementById("labOutput").textContent = chosen.dataset.message;
+    announce(chosen.dataset.message);
+  }
+  function evidenceStatus(button) {
+    document.querySelectorAll(".status-lane button").forEach(item => item.classList.remove("chosen"));
+    button.classList.add("chosen");
+    const text = button.dataset.message;
+    document.getElementById("statusRead").textContent = text;
+    announce(text);
+  }
+  function openDialog(id) {
+    filmStop();
+    lastFocus = document.activeElement;
+    const dialog = document.getElementById(id);
+    dialog.hidden = false;
+    const focusable = dialog.querySelector("button, a[href], [tabindex='0']");
+    if (focusable) focusable.focus();
+  }
+  function closeDialog(dialog) {
+    if (!dialog) return;
+    dialog.hidden = true;
+    if (lastFocus && typeof lastFocus.focus === "function") lastFocus.focus();
+  }
+  function openDrawer() {
+    filmStop();
+    lastFocus = document.activeElement;
+    drawer.inert = false;
+    drawer.classList.add("open");
+    drawer.setAttribute("aria-hidden", "false");
+    drawer.querySelector("button").focus();
+  }
+  function closeDrawer() {
+    if (lastFocus && typeof lastFocus.focus === "function") lastFocus.focus();
+    drawer.classList.remove("open");
+    drawer.setAttribute("aria-hidden", "true");
+    drawer.inert = true;
+  }
+  function calm() {
+    document.body.classList.toggle("calm");
+    filmStop();
+    const active = document.body.classList.contains("calm");
+    document.getElementById("calmBtn").setAttribute("aria-pressed", active ? "true" : "false");
+    document.getElementById("calmBtn").querySelector(".tool-label").textContent = active ? "Calm ✓" : "Calm";
+  }
+  function move(key) {
+    const messages = {
+      secure: "Secure → fade content prompts or transfer to an unfamiliar task, role or audience.",
+      mixed: "Mixed → compare evidence and counter-evidence, then recheck the decision.",
+      access: "Access/regulation → preserve LAUNCH demand; change modality, chunking or environment.",
+      evidence: "Evidence gap → record the gap and arrange one authentic next opportunity. Never fabricate.",
+      boundary: "Safety, consent, qualification or publication boundary → explain it and route authority to the responsible adult."
+    };
+    document.getElementById("loopResult").textContent = messages[key] + " This is a teaching read, not a learner label.";
+  }
+  function trapTab(event, container) {
+    const items = Array.from(container.querySelectorAll("button:not([disabled]),a[href],[tabindex='0']")).filter(item => item.offsetParent !== null);
+    if (!items.length) return;
+    const first = items[0];
+    const last = items[items.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
+
+  document.getElementById("filmStart").addEventListener("click", filmReset);
+  document.getElementById("filmNext").addEventListener("click", filmNext);
+  document.getElementById("filmPlay").addEventListener("click", filmPlay);
+  document.getElementById("filmPause").addEventListener("click", filmStop);
+  document.querySelectorAll("[data-reveal]").forEach(button => button.addEventListener("click", () => reveal(button.dataset.reveal, button)));
+  document.querySelectorAll(".option").forEach(button => button.addEventListener("click", () => answer(button)));
+  document.querySelectorAll("[data-toggle]").forEach(button => button.addEventListener("click", () => toggle(button.dataset.toggle, button)));
+  document.querySelectorAll("[data-lab-index]").forEach(button => button.addEventListener("click", () => labPick(Number(button.dataset.labIndex))));
+  document.querySelectorAll("[data-evidence-status]").forEach(button => button.addEventListener("click", () => evidenceStatus(button)));
+  document.getElementById("openTA").addEventListener("click", () => openDialog("taDialog"));
+  document.getElementById("openLoop").addEventListener("click", () => openDialog("loopDialog"));
+  document.getElementById("openDrawer").addEventListener("click", openDrawer);
+  document.getElementById("closeDrawer").addEventListener("click", closeDrawer);
+  document.getElementById("calmBtn").addEventListener("click", calm);
+  document.querySelectorAll("[data-close-dialog]").forEach(button => button.addEventListener("click", () => closeDialog(button.closest(".overlay"))));
+  document.querySelectorAll("[data-loop]").forEach(button => button.addEventListener("click", () => move(button.dataset.loop)));
+  document.querySelectorAll(".overlay").forEach(overlay => overlay.addEventListener("click", event => {
+    if (event.target === overlay) closeDialog(overlay);
+  }));
+  prev.addEventListener("click", () => show(current - 1));
+  next.addEventListener("click", () => show(current + 1));
+  document.addEventListener("keydown", event => {
+    const open = document.querySelector(".overlay:not([hidden])");
+    if (event.key === "Escape") {
+      if (open) closeDialog(open);
+      else if (drawer.classList.contains("open")) closeDrawer();
+      filmStop();
+      return;
+    }
+    if (open && event.key === "Tab") {
+      trapTab(event, open);
+      return;
+    }
+    if (drawer.classList.contains("open") && event.key === "Tab") {
+      trapTab(event, drawer);
+      return;
+    }
+    const target = event.target;
+    if (target && target.closest("button,a,input,textarea,select,[contenteditable='true']")) return;
+    if (event.key === "ArrowRight" || event.key === "PageDown") {
+      event.preventDefault();
+      show(current + 1);
+    }
+    if (event.key === "ArrowLeft" || event.key === "PageUp") {
+      event.preventDefault();
+      show(current - 1);
+    }
+  });
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) filmStop();
+  });
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    document.body.classList.add("calm");
+    document.getElementById("calmBtn").setAttribute("aria-pressed", "true");
+  }
+  const hash = location.hash.match(/slide-(\d+)/);
+  const timedMinutes = slides.reduce((total, slide) => total + Number(slide.dataset.min || 0), 0);
+  window.__LAUNCH_LESSON_QA__ = {
+    id: document.body.dataset.lessonId,
+    slideCount: slides.length,
+    timedMinutes,
+    externalRequestsExpected: 0,
+    storageKeys: []
+  };
+  show(hash ? Number(hash[1]) - 1 : 0);
+})();
+</script>
+<!--n6-learner-confirm:v1--><style id="n6-lc-css">.n6-lc{display:none}@media print{.n6-lc{display:block!important;break-before:page;page-break-before:always;background:#fff;color:#111;padding:7mm;font-family:"Segoe UI",Arial,sans-serif}}</style><section class="n6-lc"><p style="margin:14px 0 4px;font-weight:800;font-size:.95rem">5 &#183; Learner confirmation</p><p style="margin:0 0 8px;font-size:.88rem">I confirm this is my own work.</p><table style="width:100%;border-collapse:collapse;font-size:.9rem"><tr><td style="padding:10px 8px;border:1px solid #999;width:50%">Learner name (print)<br><br></td><td style="padding:10px 8px;border:1px solid #999">Signature<br><br></td></tr><tr><td style="padding:10px 8px;border:1px solid #999">Date<br><br></td><td style="padding:10px 8px;border:1px solid #999">&nbsp;</td></tr></table></section><!--/n6-learner-confirm--><!--n6-nav1:v1--><div class="n6-splash"><div style="text-align:center;margin-top:8px"><svg width="64" height="64" viewBox="0 0 100 100" aria-label="Made by Matt"><circle cx="50" cy="50" r="47" fill="none" stroke="#1e3a8a" stroke-width="3.4"/><g transform="translate(0 2)"><path d="M28 71 L28 37 L50 59 L72 37 L72 71" fill="none" stroke="#1e3a8a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M50 22.5 L51.48 28.52 L57.5 30 L51.48 31.48 L50 37.5 L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"/></g></svg></div></div><!--/n6-nav1--></body>
+</html>
