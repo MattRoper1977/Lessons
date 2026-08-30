@@ -364,6 +364,51 @@ every exit affordance. Same defect class as the Voxel Builder Zoom upload.
 
 ---
 
+## 5d. V6-PG §6/§7 — the graft each held build needs (C2)
+
+Recorded per §7.3: for every build that is HOLD rather than rejected, the one
+clause it fails and the graft that would clear it. **No graft is landed here.**
+§6.1's other half — the C1 fix — is not landable while C1 itself is in STOP: the
+deployed `apexkick` reds C1 as worded and greens the proposed C1′, so the clause
+has to be ruled before a build is changed to satisfy it.
+
+The C2 reference implementation, cited per §0.6:
+
+```
+Apex_Curl_AAA_V6.html:1663    (loadPassport begins at 1659)
+    catch(error){safeSet(PASSPORT_KEY+'_corrupt_backup',raw);return Runtime.defaultPassport();}
+```
+
+The graft is only byte-for-byte where the surrounding code already holds the
+**raw string**. It does not everywhere, and that is the whole difficulty — a
+build that parsed before it failed no longer has the thing C2 says to preserve.
+
+| build | its defaulting path | does it still hold the raw string? | graft |
+|---|---|---|---|
+| **Grapple** `:5170` | `function loadPassport(){try{var raw=JSON.parse(localStorage.getItem(PASSPORT_KEY)\|\|'null');return RT.normalizePassport(raw);}catch(e){return RT.defaultPassport();}}` | **No** — `raw` is the *parsed* value, and the throw can come from `JSON.parse` itself | hoist the string: read `localStorage.getItem(PASSPORT_KEY)` into a `rawText` first, then parse. The catch then matches Apex Curl's line with `raw` → `rawText` |
+| **Marble** `:5247` | identical to Grapple, character for character | **No** | identical graft |
+| **Apex Velodrome** `:1692` | `try{var raw=readJson(PASSPORT_KEY);…}catch(_){passport=R.defaultPassport(state.nodeId);}` | **No** — `readJson` returns a parsed object and swallows its own parse error | same hoist, using `localStorage.getItem` rather than `readJson` for the backup argument |
+| **Medevac Frontier** `:1719` | `…raw=localStorage.getItem(MV_RT.constants.PASSPORT_KEY);mvPassport=raw?MV_RT.normalizePassport(JSON.parse(raw)):MV_RT.defaultPassport(mvNode())}catch(e){mvPassport=MV_RT.defaultPassport(mvNode())}` | **Yes** — `raw` is already the string | Apex Curl's line grafts directly into the catch |
+| **Wrecking Crew** `:5195` | `try{let i=localStorage.getItem(hn.constants.PASSPORT_KEY);bn=i?hn.normalizePassport(JSON.parse(i)):hn.defaultPassport(Jd())}catch{bn=hn.defaultPassport(Jd())}` | **Yes** — `i` is the string (minified name) | grafts directly, `raw` → `i` |
+| **Neon Turf** | none — `grep -c -F 'PASSPORT_KEY'` returns 3, all of them a constant or a manifest entry | n/a | **no graft: C2 does not bind a build that never reads the passport** |
+
+Neon Turf's row is the reason the gate's C2 clause was corrected mid-run. It
+first failed Neon Turf for having no backup, when Neon Turf had discarded
+nothing — it leaves a corrupt record exactly where it lies. The clause now tests
+applicability first: if the corrupt record survives the boot, the build does not
+default and C2 does not bind.
+
+### Node id on a fresh install — C5's real surface
+
+`Grapple:5170` and `Marble:5247` call `RT.defaultPassport()` **with no
+argument**, which is what produces `mbm-default00000000`. That id is invisible to
+any arm that seeds a passport first, because `normalizePassport` then keeps the
+seed's node. It is only reachable on a fresh install, so the gate now carries a
+fourth arm that boots each candidate into an empty origin and reads the id it
+invents.
+
+---
+
 ## 6. CyberPulse #218 — a diagnosed product defect, unrepaired
 
 CyberPulse attempts WebGL2 without detecting software rasterisation, which hangs
