@@ -390,13 +390,26 @@ build that parsed before it failed no longer has the thing C2 says to preserve.
 | **Apex Velodrome** `:1692` | `try{var raw=readJson(PASSPORT_KEY);…}catch(_){passport=R.defaultPassport(state.nodeId);}` | **No** — `readJson` returns a parsed object and swallows its own parse error | same hoist, using `localStorage.getItem` rather than `readJson` for the backup argument |
 | **Medevac Frontier** `:1719` | `…raw=localStorage.getItem(MV_RT.constants.PASSPORT_KEY);mvPassport=raw?MV_RT.normalizePassport(JSON.parse(raw)):MV_RT.defaultPassport(mvNode())}catch(e){mvPassport=MV_RT.defaultPassport(mvNode())}` | **Yes** — `raw` is already the string | Apex Curl's line grafts directly into the catch |
 | **Wrecking Crew** `:5195` | `try{let i=localStorage.getItem(hn.constants.PASSPORT_KEY);bn=i?hn.normalizePassport(JSON.parse(i)):hn.defaultPassport(Jd())}catch{bn=hn.defaultPassport(Jd())}` | **Yes** — `i` is the string (minified name) | grafts directly, `raw` → `i` |
-| **Neon Turf** | none — `grep -c -F 'PASSPORT_KEY'` returns 3, all of them a constant or a manifest entry | n/a | **no graft: C2 does not bind a build that never reads the passport** |
+| **Neon Turf** `:2306` | `const rt=window.MadeByMattV4Runtime;try{const p=rt?.normalizePassport?.(safeJSON(safeStore.get(STORAGE.passport)\|\|'',null));…}catch{…'Sports Passport ready'}` | **No** — `safeJSON` parses and swallows | **no graft needed: it discards nothing.** It reads the passport to label a menu chip and falls back to a caption; the corrupt record is still in storage afterwards |
 
-Neon Turf's row is the reason the gate's C2 clause was corrected mid-run. It
-first failed Neon Turf for having no backup, when Neon Turf had discarded
-nothing — it leaves a corrupt record exactly where it lies. The clause now tests
-applicability first: if the corrupt record survives the boot, the build does not
-default and C2 does not bind.
+**A correction to this table's own first version.** It said Neon Turf "never
+reads the passport", on the strength of `grep -c -F 'PASSPORT_KEY'` returning 3,
+all constants. That was a grep standing in for a measurement, and it was wrong:
+Neon Turf reaches the key through `STORAGE.passport` and a `safeStore.get`
+accessor, and a stack-capturing read spy puts the call at `renderMenuStats`
+(`:2306`) via `:1482`. It does read it. What it does not do is discard it — the
+record is still `{not json` in storage after the boot, and the only consequence
+is a fallback caption on a menu chip.
+
+That is why C2 is now measured twice. The two readings of the clause disagree on
+exactly two builds, in opposite directions: **C2a** (did the build replace the
+child's record and keep no copy — the only reading under which data is actually
+lost) does not bind Neon Turf, and does not bind Apex Curl either, because Apex
+Curl defaults in memory without writing. **C2b** (did it read a corrupt record,
+proceed without it, and keep no copy) binds both, and Apex Curl passes it because
+it takes the backup the contract cites as its reference. Reporting one and hiding
+the other would be choosing for Matt, which is the same thing the C1/C1' split
+refuses to do.
 
 ### Node id on a fresh install — C5's real surface
 
