@@ -205,6 +205,67 @@ so nothing required amendment beyond this marker.
 
 ---
 
+## 5a-STRUCK. The passport-reset finding is WITHDRAWN — I made the same mistake twice
+
+**Status: WITHDRAWN. Do not cite.** Order V6-PG §3.3.
+
+§5a below reported that three of seven V6 builds — Marble, Apex Velodrome and
+Grapple — reset `mbm_sports_passport_v4` on boot, discarding a child's name,
+house, XP and badges. **That is not what was measured.**
+
+The §5a arms seeded the passport by booting the deployed Apex Kick, which was
+right, and then **marked it by hand**, which was not. One of those marks was
+malformed:
+
+```js
+seeded.sets.badges.adds = ['first-lap'];
+```
+
+`sets.badges.adds` is an OR-set of `[tag, {id, clock, node}]` pairs, not an array
+of strings. Measured directly against the runtime, mutating that record and
+handing it back to `normalizePassport`:
+
+```
+THROW   sets.badges.adds = ['first-lap']  (bare string, hand-shaped)
+        THREW: Invalid OR-set additions pair.
+ok      counters.xp = [['other-node',340]] (well-formed pair)      accepted
+ok      profile.name = {value,clock,node} (well-formed register)   accepted
+ok      seasonId = 'v4-s1'                (invalid season)         accepted
+ok      nodeId  = 'mbm-other-node-01'     (foreign node)           accepted
+```
+
+Only the hand-shaped badge array throws. Those three builds caught that throw and
+installed a default — which is a **rejection of my malformed mark**, not a
+clobber of a valid record. Every other hand mutation, including the foreign node
+id, is accepted.
+
+**This is the same failure the SUPERSEDED marker above already struck**, and the
+rule that marker established — *a passport arm may only be seeded from a record
+written by a deployed writer* — was necessary but not sufficient. It is now
+extended, and the extension is enforced in code rather than in a report:
+
+> **A passport arm may only be seeded from a record written by a deployed
+> writer, AND marked through the runtime's own mutation API. No CRDT register,
+> OR-set pair or counter may be hand-shaped by a probe.**
+
+`tools/verify_sports_passport_contract.mjs` marks exclusively through
+`MadeByMattV4Runtime.mutations.mutateProfile` and `.grantAward`, so the shape can
+only be one the runtime itself produces. Under that instrument **no candidate
+replaces a well-formed passport** — the C1′ column is green for all seven.
+
+That column is not vacuous: the gate's own firing control installs a build with
+an unconditional `defaultPassport()` write on boot, and C1′ reds it, naming every
+field lost. A genuine clobber is still caught; there simply was not one.
+
+What survives from §5a, re-derived under the corrected instrument, is in the
+V6-PG contract table: `C1` (three builds do write the passport on boot, which is
+a different and much smaller finding) and `C2` (six of seven default without
+keeping a backup). The `mbm-default00000000` node id observation also survives,
+but as a property of the *default* record those builds construct, not as
+something they impose on a child's existing passport.
+
+---
+
 ## 5a. The shared sports passport — three V6 builds reset it (CONFIRMED)
 
 **Consequence: a child who has played any sports game loses their name, house,
