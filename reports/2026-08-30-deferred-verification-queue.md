@@ -167,6 +167,44 @@ Velodrome, Medevac Frontier, Grapple, Marble, Wrecking Crew.
 
 ---
 
+## 5a-SUPERSEDED. A withdrawn reading, struck rather than left to be re-cited
+
+**Status: WITHDRAWN. Do not cite.** Order V6-PG §2.
+
+An early arm of the passport work printed the word `OVERWRITTEN` and reported
+that a V6 Apex Velodrome boot "replaced another game's passport". That reading
+is struck for three reasons:
+
+1. The record it seeded was **synthetic**, not written by any deployed writer.
+2. It was **under-populated** — it carried no real profile, counters or badge
+   sets, so "reset" and "rejected as unreadable" were indistinguishable.
+3. It carried an **invalid `seasonId`** (`v4-s1`), which is not a season the
+   estate issues, so the arm exercised the reader's error path rather than its
+   merge path.
+
+And it was wrong on its own terms: `lamport: 7` was in fact carried through that
+boot, which the word `OVERWRITTEN` denies.
+
+**What replaces it** is §5a below: the passport is seeded by booting the
+**deployed Apex Kick**, so the record under test carries the estate's own schema
+and node id; the seed is re-read intact at 2.5 s and again immediately before
+navigation, with the arm aborting MEASUREMENT INVALID otherwise; and each arm is
+run twice, with the build's own local record present and deleted.
+
+**The rule it establishes, now binding on every future passport arm:** *a
+passport arm may only be seeded from a record written by a deployed writer.* A
+synthetic seed cannot distinguish a clobber from a rejection, which is the whole
+question.
+
+**Citation census, per §2.3.** `grep -n -F 'OVERWRITTEN'` returns no match in
+`reports/` in this repository or in the Site estate, and no committed artefact
+carries the withdrawn reading: the queue's first passport entry (`d80d7d9`)
+already recorded the corrected arms. The reading existed only in a scratch probe
+and in the session report that accompanied it. Nothing downstream depends on it,
+so nothing required amendment beyond this marker.
+
+---
+
 ## 5a. The shared sports passport — three V6 builds reset it (CONFIRMED)
 
 **Consequence: a child who has played any sports game loses their name, house,
