@@ -167,6 +167,104 @@ Velodrome, Medevac Frontier, Grapple, Marble, Wrecking Crew.
 
 ---
 
+## 5a. The shared sports passport — three V6 builds reset it (CONFIRMED)
+
+**Consequence: a child who has played any sports game loses their name, house,
+XP and badges the moment one of these three boots. This is the most serious
+finding of the session.**
+
+`mbm_sports_passport_v4` is a live cross-game estate key. On the deployed tree
+its writers are four games — `apexkick`, `auroralinks`, `houseolympiad`,
+`olympics`. All seven V6 uploads reference it.
+
+Measured by value, not read from the code path. The passport is seeded by
+booting the **deployed Apex Kick**, so the record under test is the estate's own
+schema and node id, not a synthetic one; it is then marked
+(`name=Robin`, `xp=340`, `badges=['first-lap']`), re-read to prove the mark
+survived, and each V6 build is booted in that same origin:
+
+| V6 upload | shared passport after its boot |
+|---|---|
+| Neon Turf | preserved |
+| Medevac Frontier | preserved |
+| Wrecking Crew | preserved |
+| Apex Curl | preserved |
+| **Marble** | **RESET** — `name=Player`, `xp=[["mbm-default00000000",0]]`, `badges=[]` |
+| **Apex Velodrome** | **RESET** — `name=Player`, `xp=[["mbm-velo-…",0]]`, `badges=[]` |
+| **Grapple** | **RESET** — `name=Player`, `xp=[["mbm-default00000000",0]]`, `badges=[]` |
+
+Alternatives ruled out, each with its own arm:
+
+- *A deferred write from the first boot overwrote the seed.* No — the seed was
+  re-read intact 2.5 s after writing and immediately before navigation, and the
+  arm aborts as MEASUREMENT INVALID if it is not.
+- *The V6 build rebuilds the passport only when its own local record exists.*
+  No — the reset happens identically with `mbm_apex_velodrome_v4` present and
+  with it deleted.
+- *The V6 build rejected an unreadable synthetic record.* No — the decisive run
+  uses a passport written by a deployed estate game, in the estate's own schema.
+
+Secondary observation: Marble and Grapple write node id `mbm-default00000000`,
+a placeholder rather than a per-install identity. Every install sharing one node
+id defeats the per-node clocks the passport's counters are built on.
+
+- **Run:** the table above, per game, on any candidate build.
+- **Refuted by:** `name=Robin`, `xp` containing 340, and `badges` containing
+  `first-lap` all surviving the boot.
+
+**None of Marble, Apex Velodrome or Grapple may be deployed until this is
+resolved.**
+
+---
+
+## 5b. The Apex storage-key assertion does not measure what its label says
+
+**Consequence: the gate's green on one V6 build and red on another are both
+artefacts of a prefix, not measurements of the games.**
+
+`tools/apex_rc_gate.mjs:90` collects keys from the SOURCE by the regex
+`['"]((?:apex)_[a-z0-9_]+)['"]`, then asserts "touches exactly the declared
+storage keys". Two consequences, both observed:
+
+- **Blind.** Apex Curl V6 passed 17/17 including that assertion, yet a
+  fresh-context runtime census shows it writes `mbm_apex_curl_v4` and
+  `mbm_apex_curl_v6_data` at load, while the deployed build writes nothing at
+  all. Neither key begins `apex_`, so the regex cannot see them.
+- **Red on correct behaviour.** Apex Velodrome V6 failed that one assertion out
+  of 17 for three literals, none of which is an undeclared write:
+  `apex_velodrome_rc_v1` and `apex_velodrome_rc_stars_v1` are its
+  `LEGACY_STORAGE` / `LEGACY_STARSTORE` — old keys read for migration — and
+  `apex_velodrome_aaa_v4_` is an export filename prefix
+  (`…telemetry.csv`, `…replay_diff.csv`), the exact category the filter on the
+  next line exists to exclude and whose pattern `_v\d_\d_rc\d_$` does not match.
+
+**Not repaired.** Under §0.5 a gate is not adjusted to make something pass, even
+when the old value looks wrong. This is written up as a proposal for Matt: a
+runtime key census in a fresh context would measure what the label claims, where
+a source regex cannot.
+
+Positive control for the gate itself, so its greens are not vacuous: a
+one-character mutation inside Apex Curl's stamped exit region (`/games/` →
+`/gomes/`) takes it from 17/17 to 13/17, reddening the byte-identity assertion
+and all three rendered exit-control assertions.
+
+---
+
+## 5c. Neon Turf V6 drops hud.js (CONFIRMED)
+
+```
+[FAIL] /neonturf/ is declared wired and carries no hud.js script tag at all
+       …31 claim(s) hold, 1 do not
+```
+Positive control, same gate and tree with the deployed file restored: **32 hold,
+0 do not**. Provenance: `neonturf/index.html:1206` on main carries
+`<script defer src="/hud.js"></script>`; the upload has no match. The
+inline-exit gate passes with the upload in place (973 passed, 0 failed, all six
+of its own controls firing), so it is the wired HUD way out that is missing, not
+every exit affordance. Same defect class as the Voxel Builder Zoom upload.
+
+---
+
 ## 6. CyberPulse #218 — a diagnosed product defect, unrepaired
 
 CyberPulse attempts WebGL2 without detecting software rasterisation, which hangs
