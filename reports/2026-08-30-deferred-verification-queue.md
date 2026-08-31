@@ -413,7 +413,7 @@ and all three rendered exit-control assertions.
 Positive control, same gate and tree with the deployed file restored: **32 hold,
 0 do not**. Provenance: `neonturf/index.html:1206` on main carries
 `<script defer src="/hud.js"></script>`; the upload has no match. The
-The historical inline-exit run reported 973/0. The close remeasurement reports
+historical inline-exit run reported 973/0. The close remeasurement reports
 970/973: the three failures are unchanged Neon Meridian keyboard-reach findings
 and reproduce on clean main. The candidate's exit affordance remains green; the
 973/0 estate prediction is therefore CORRECTED rather than silently retained.
