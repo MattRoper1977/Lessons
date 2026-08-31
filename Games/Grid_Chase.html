@@ -3,17 +3,20 @@
 <head>
 <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSIjMTYxRDNEIi8+PHBhdGggZD0iTTI2IDc2IEwyNiAzMCBMNTAgNTUgTDc0IDMwIEw3NCA3NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRThFMkQ0IiBzdHJva2Utd2lkdGg9IjEzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4=">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Grid Chase</title>
-<meta name="description" content="Grid Chase — a neon 2.5D maze chase. Harvest the grid, outsmart four hunter AIs, then face the Warden boss at the end of every level.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#04060f">
+<title>Grid Chase · AAA V6</title>
+<meta name="description" content="Grid Chase AAA V6 — a standalone neon maze pursuit with readable hunter intent, Warden telegraphs and a viewport-first mobile command tray.">
 <style>
 :root{
   --cyan:#27e0ff; --magenta:#ff3df0; --amber:#ffb020; --green:#33e08a; --red:#ff3a52;
   --bg:#04060f; --panel:rgba(10,16,34,.92); --line:rgba(60,110,190,.35);
+  --safe-t:max(6px,env(safe-area-inset-top));--safe-r:max(6px,env(safe-area-inset-right));
+  --safe-b:max(6px,env(safe-area-inset-bottom));--safe-l:max(6px,env(safe-area-inset-left));
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:'Orbitron',system-ui,sans-serif;color:#cfe6ff;touch-action:none;user-select:none;-webkit-user-select:none}
-canvas#game{position:fixed;inset:0;display:block}
+canvas#game{position:fixed;inset:0;display:block;max-width:100%;max-height:100%}
 /* vignette + scanlines for arcade depth */
 #fx{position:fixed;inset:0;pointer-events:none;background:
   radial-gradient(ellipse at 50% 42%, transparent 45%, rgba(0,0,10,.55) 100%);}
@@ -27,12 +30,12 @@ body.calm #fx::after{display:none}
 @keyframes load{from{transform:translateX(-20%)}to{transform:translateX(260%)}}
 #boot .small{font-size:11px;letter-spacing:2px;opacity:.6}
 
-#hud{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:flex-start;padding:10px 14px;pointer-events:none;z-index:5;font-size:13px;letter-spacing:1px}
+#hud{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:flex-start;padding:var(--safe-t) var(--safe-r) 8px var(--safe-l);pointer-events:none;z-index:5;font-size:13px;letter-spacing:1px}
 #hud .grp{display:flex;gap:16px;align-items:center}
 #hud b{color:#fff;text-shadow:0 0 8px var(--cyan)}
 #lives{color:var(--red);letter-spacing:3px}
 #pips{color:var(--cyan)}
-#pause-btn{pointer-events:auto;background:var(--panel);border:1px solid var(--line);color:#cfe6ff;font-family:inherit;font-size:12px;padding:6px 12px;border-radius:8px;cursor:pointer}
+#pause-btn{pointer-events:auto;background:var(--panel);border:1px solid var(--line);color:#cfe6ff;font-family:inherit;font-size:12px;min-width:44px;min-height:44px;padding:6px 12px;border-radius:10px;cursor:pointer}
 
 #bossbar{position:fixed;top:44px;left:50%;transform:translateX(-50%);width:min(420px,72vw);display:none;z-index:5;pointer-events:none;text-align:center}
 #bossbar .bn{font-size:12px;letter-spacing:4px;color:var(--red);text-shadow:0 0 12px var(--red);margin-bottom:4px}
@@ -60,14 +63,14 @@ body.calm #banner.show{animation:banCalm 1.9s ease forwards}
 #tagline{font-size:12px;line-height:1.6;opacity:.85;margin:12px 0 16px;text-align:center;letter-spacing:.5px}
 .rules{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:11px}
 .rules .row{display:flex;justify-content:space-between;padding:4px 0;letter-spacing:.5px}
-.btn{display:block;width:100%;background:linear-gradient(180deg,#0e2c52,#0a1c38);border:1px solid rgba(80,160,255,.5);color:#fff;font-family:inherit;font-weight:700;font-size:15px;letter-spacing:3px;padding:13px;border-radius:10px;cursor:pointer;margin-top:10px;transition:transform .08s,box-shadow .2s}
+.btn{display:block;width:100%;min-height:44px;background:linear-gradient(180deg,#0e2c52,#0a1c38);border:1px solid rgba(80,160,255,.5);color:#fff;font-family:inherit;font-weight:700;font-size:15px;letter-spacing:3px;padding:13px;border-radius:10px;cursor:pointer;margin-top:10px;transition:transform .08s,box-shadow .2s}
 .btn:hover{box-shadow:0 0 18px rgba(39,224,255,.4)}
 .btn:active{transform:scale(.98)}
 .btn.primary{background:linear-gradient(180deg,#0d5a6e,#083244);border-color:var(--cyan);text-shadow:0 0 10px var(--cyan)}
 .btn.small{font-size:11px;padding:9px;letter-spacing:2px}
 .btnrow{display:flex;gap:8px}
 .btnrow .btn{margin-top:10px}
-input[type=text],input[type=number]{width:100%;background:#060c1c;border:1px solid var(--line);color:#fff;font-family:inherit;font-size:14px;padding:10px;border-radius:8px;text-align:center;letter-spacing:2px}
+input[type=text],input[type=number]{width:100%;min-height:44px;background:#060c1c;border:1px solid var(--line);color:#fff;font-family:inherit;font-size:14px;padding:10px;border-radius:8px;text-align:center;letter-spacing:2px}
 .note{font-size:10px;opacity:.65;margin-top:6px;text-align:center;letter-spacing:1px;min-height:14px}
 .pill{font-size:10px;letter-spacing:1px;opacity:.7;text-align:center}
 h3.sub{font-size:12px;letter-spacing:3px;color:var(--amber);margin:14px 0 4px}
@@ -88,6 +91,24 @@ body.touch #dpad{display:block}
 #dpad button{position:absolute;width:48px;height:48px;border-radius:12px;background:rgba(14,30,60,.72);border:1px solid var(--line);color:var(--cyan);font-size:20px;font-family:inherit}
 #dpad button:active{background:rgba(39,224,255,.3)}
 #dU{top:0;left:51px}#dD{bottom:0;left:51px}#dL{top:51px;left:0}#dR{top:51px;right:0}
+
+/* V6 viewport-first command layer: landscape remains all playfield; portrait
+   converts otherwise-unused letterbox into an ergonomic thumb tray. */
+#v6-badge{position:fixed;left:var(--safe-l);bottom:var(--safe-b);z-index:9;padding:6px 9px;border:1px solid rgba(39,224,255,.38);border-radius:999px;background:rgba(4,9,24,.78);color:#9defff;font-size:9px;font-weight:900;letter-spacing:1.4px;pointer-events:none}
+#v6-evade{display:none;position:fixed;z-index:9;min-width:64px;min-height:48px;border-radius:12px;border:1px solid rgba(255,176,32,.68);background:linear-gradient(180deg,rgba(80,45,8,.92),rgba(25,14,5,.95));color:#ffe8ac;font:900 10px Orbitron,system-ui,sans-serif;letter-spacing:1px;box-shadow:0 0 18px rgba(255,176,32,.22)}
+#v6-intel{position:fixed;left:50%;bottom:max(10px,var(--safe-b));transform:translateX(-50%);z-index:7;max-width:min(72vw,520px);padding:6px 12px;border-radius:99px;background:rgba(4,9,24,.75);border:1px solid rgba(39,224,255,.26);color:#a9c8ef;font-size:10px;letter-spacing:1px;text-align:center;pointer-events:none;opacity:.72}
+#v6-clutch{position:fixed;inset:0;z-index:12;display:grid;place-items:center;pointer-events:none;opacity:0;background:radial-gradient(circle,rgba(39,224,255,.13),transparent 48%);color:#fff;font-size:clamp(20px,5vw,42px);font-weight:900;letter-spacing:5px;text-shadow:0 0 20px #27e0ff}
+#v6-clutch.on{animation:v6Clutch .52s ease both}@keyframes v6Clutch{0%{opacity:0;transform:scale(.9)}30%{opacity:1;transform:scale(1.03)}100%{opacity:0;transform:scale(1)}}
+button:focus-visible,input:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.v6-fly-grid{position:absolute;inset:-35%;background:linear-gradient(rgba(39,224,255,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(39,224,255,.12) 1px,transparent 1px);background-size:42px 42px;transform:perspective(520px) rotateX(64deg) translateY(18%);animation:v6Fly 1.95s cubic-bezier(.2,.75,.25,1) both;pointer-events:none}
+@keyframes v6Fly{from{opacity:0;transform:perspective(520px) rotateX(72deg) translateY(58%) scale(1.8)}55%{opacity:.8}to{opacity:.12;transform:perspective(520px) rotateX(64deg) translateY(5%) scale(.8)}}
+@media (orientation:portrait) and (pointer:coarse){
+  #dpad{right:max(12px,var(--safe-r));bottom:calc(var(--safe-b) + 4px);display:block!important}
+  #v6-evade{display:block;left:max(14px,var(--safe-l));bottom:calc(var(--safe-b) + 52px)}
+  #v6-badge{bottom:calc(var(--safe-b) + 8px)}
+  #v6-intel{bottom:calc(164px + var(--safe-b));font-size:9px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
 </style>
 </head>
 <body>
@@ -98,18 +119,23 @@ body.touch #dpad{display:block}
 
 <div id="hud">
   <div class="grp"><span id="score">SCORE <b>0</b></span><span id="level">LEVEL <b>1</b></span></div>
-  <div class="grp"><span id="pips">◈ 0 / 0</span><span id="lives">◉◉◉</span><button id="pause-btn">II</button></div>
+  <div class="grp"><span id="pips">◈ 0 / 0</span><span id="lives">◉◉◉</span><button id="pause-btn" type="button" aria-label="Pause game">II</button></div>
 </div>
 <div id="fright">⚡ HUNTERS VULNERABLE</div>
 <div id="bossbar"><div class="bn">⚠ THE WARDEN ⚠</div><div class="track"><div class="fill" id="bossfill"></div></div><div id="bossphase">DODGE</div></div>
 <div id="banner"></div>
+<div id="v6-badge" aria-hidden="true">AAA V6 · MADE BY MATT</div>
+<div id="v6-intel" aria-live="polite">THREAT INTEL · cones show hunter sight · echoes show projected routes</div>
+<div id="v6-clutch" role="status" aria-live="assertive">⚡ CLUTCH EVADE</div>
+<button id="v6-evade" type="button" aria-label="Emergency evade toward the safest open route">⚡ EVADE</button>
 
-<div id="dpad">
-  <button id="dU">▲</button><button id="dL">◀</button><button id="dR">▶</button><button id="dD">▼</button>
+<div id="dpad" role="group" aria-label="Direction controls">
+  <button id="dU" type="button" aria-label="Move up">▲</button><button id="dL" type="button" aria-label="Move left">◀</button><button id="dR" type="button" aria-label="Move right">▶</button><button id="dD" type="button" aria-label="Move down">▼</button>
 </div>
 
-<div id="menu" class="panel hidden"><div class="card">
-  <div class="panel-title">GRID CHASE</div>
+<div id="menu" class="panel hidden" role="dialog" aria-modal="true" aria-labelledby="menu-title"><div class="card">
+  <div class="panel-title" id="menu-title">GRID CHASE</div>
+  <div class="pill" style="color:var(--cyan);margin-top:4px">AAA V6 · WARDEN PROTOCOL · MADE BY MATT</div>
   <p id="tagline">Harvest the neon grid while four hunters — each with its own AI — close in. Clear every pip and <b style="color:var(--red)">THE WARDEN</b> awakens: dodge its shockwaves, then strike when its core opens.</p>
   <div class="rules">
     <div class="row"><span>Swipe / arrows / WASD</span><span style="color:var(--cyan)">move — up is up</span></div>
@@ -133,15 +159,15 @@ body.touch #dpad{display:block}
   </div>
 </div></div>
 
-<div id="pause" class="panel hidden"><div class="card">
-  <div class="panel-title" style="font-size:24px">PAUSED</div>
+<div id="pause" class="panel hidden" role="dialog" aria-modal="true" aria-labelledby="pause-title"><div class="card">
+  <div class="panel-title" id="pause-title" style="font-size:24px">PAUSED</div>
   <button class="btn primary" id="resume-btn">RESUME</button>
   <button class="btn" id="restart-btn">RESTART</button>
   <button class="btn" id="quit-btn">QUIT TO MENU</button>
 </div></div>
 
-<div id="results" class="panel hidden"><div class="card">
-  <div class="panel-title" style="font-size:24px">GRID DOWN</div>
+<div id="results" class="panel hidden" role="dialog" aria-modal="true" aria-labelledby="results-title"><div class="card">
+  <div class="panel-title" id="results-title" style="font-size:24px">GRID DOWN</div>
   <div id="res-score">0</div>
   <div id="res-lines"></div>
   <div id="initials-panel">
@@ -157,8 +183,8 @@ body.touch #dpad{display:block}
   </div>
 </div></div>
 
-<div id="board" class="panel hidden"><div class="card">
-  <div class="panel-title" style="font-size:22px">TOP RUNS</div>
+<div id="board" class="panel hidden" role="dialog" aria-modal="true" aria-labelledby="board-title"><div class="card">
+  <div class="panel-title" id="board-title" style="font-size:22px">TOP RUNS</div>
   <div class="pill" id="board-seed"></div>
   <ul id="board-list"></ul>
   <button class="btn" id="board-close-btn">CLOSE</button>
@@ -175,6 +201,23 @@ const PLAYER_SPD=3.4;                   // cells/sec  (old ≈2.13 — much fast
 const HUNTER_BASE=2.7;
 const TILT=0.78, WALLH=0.62;            // 2.5D projection: y squash, wall height (in cells)
 const LS_QUEST="gridchase_quest_v2", LS_SET="gridchase_settings_v2";
+const V6_VERSION="6.0.0",V6_PROFILE_KEY="mbm_grid_chase_v6_profile";
+const V6_LEGACY_BYTES={quest:null,settings:null};
+try{V6_LEGACY_BYTES.quest=localStorage.getItem(LS_QUEST);V6_LEGACY_BYTES.settings=localStorage.getItem(LS_SET);}catch(e){}
+function v6LoadProfile(){
+  const base={version:6,gameId:"grid-chase",quest:{plays:0,bestBySeed:{},boards:{}},settings:{audio:true,calm:false,relaxed:false},telemetry:{boots:0}};
+  try{
+    const raw=localStorage.getItem(V6_PROFILE_KEY);if(raw){const data=JSON.parse(raw);if(data&&data.version===6)return Object.assign(base,data);}
+    const lq=V6_LEGACY_BYTES.quest?JSON.parse(V6_LEGACY_BYTES.quest):null,ls=V6_LEGACY_BYTES.settings?JSON.parse(V6_LEGACY_BYTES.settings):null;
+    if(lq&&typeof lq==="object")base.quest=Object.assign(base.quest,lq);
+    if(ls&&typeof ls==="object")base.settings=Object.assign(base.settings,ls);
+    localStorage.setItem(V6_PROFILE_KEY,JSON.stringify(base));
+  }catch(e){}
+  return base;
+}
+let V6_PROFILE=v6LoadProfile();V6_PROFILE.telemetry=V6_PROFILE.telemetry||{};V6_PROFILE.telemetry.boots=(V6_PROFILE.telemetry.boots|0)+1;
+function v6SaveProfile(){try{V6_PROFILE.version=6;localStorage.setItem(V6_PROFILE_KEY,JSON.stringify(V6_PROFILE));}catch(e){}}
+v6SaveProfile();
 const HUNTERS=[
   {key:"chaser", name:"Chaser",   color:"#ff3df0"},
   {key:"ambush", name:"Ambusher", color:"#27e0ff"},
@@ -187,19 +230,19 @@ const clamp=(v,a,b)=>v<a?a:v>b?b:v;
 const lerp=(a,b,t)=>a+(b-a)*t;
 const key=(c,r)=>c+","+r;
 function mulberry(s){return function(){s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
-function loadJSON(k,d){try{const t=localStorage.getItem(k);return t?Object.assign(d,JSON.parse(t)):d}catch(e){return d}}
-function saveJSON(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function loadJSON(k,d){try{if(k===LS_QUEST)return Object.assign(d,V6_PROFILE.quest||{});if(k===LS_SET)return Object.assign(d,V6_PROFILE.settings||{});const t=localStorage.getItem(k);return t?Object.assign(d,JSON.parse(t)):d}catch(e){return d}}
+function saveJSON(k,v){try{if(k===LS_QUEST)V6_PROFILE.quest=v;else if(k===LS_SET)V6_PROFILE.settings=v;else{localStorage.setItem(k,JSON.stringify(v));return;}v6SaveProfile();}catch(e){}}
 const $=id=>document.getElementById(id);
 
 /* ============================ AUDIO ============================ */
-const AU={ctx:null,on:true,
-  init(){if(this.ctx)return;const C=window.AudioContext||window.webkitAudioContext;if(C)this.ctx=new C();},
+const AU={ctx:null,on:true,compressor:null,master:null,
+  init(){if(this.ctx)return;const C=window.AudioContext||window.webkitAudioContext;if(C){this.ctx=new C();this.compressor=this.ctx.createDynamicsCompressor();this.compressor.threshold.value=-18;this.compressor.knee.value=12;this.compressor.ratio.value=8;this.compressor.attack.value=.003;this.compressor.release.value=.15;this.master=this.ctx.createGain();this.master.gain.value=.82;this.compressor.connect(this.master);this.master.connect(this.ctx.destination);}},
   resume(){if(this.ctx&&this.ctx.state==="suspended")this.ctx.resume();},
   tone(f,type,dur,g=0.1,fEnd){if(!this.on||!this.ctx)return;const o=this.ctx.createOscillator(),gn=this.ctx.createGain();
     o.type=type;o.frequency.setValueAtTime(f,this.ctx.currentTime);
     if(fEnd)o.frequency.exponentialRampToValueAtTime(fEnd,this.ctx.currentTime+dur);
     gn.gain.setValueAtTime(g,this.ctx.currentTime);gn.gain.exponentialRampToValueAtTime(0.001,this.ctx.currentTime+dur);
-    o.connect(gn);gn.connect(this.ctx.destination);o.start();o.stop(this.ctx.currentTime+dur);},
+    o.connect(gn);gn.connect(this.compressor||this.ctx.destination);o.start();o.stop(this.ctx.currentTime+dur);},
   pip(f){this.tone(f||660,"square",0.05,0.04,(f||660)+120)},
   power(){this.tone(300,"sawtooth",0.3,0.1,760)},
   eat(){this.tone(520,"sine",0.2,0.11,1150)},
@@ -312,7 +355,8 @@ let stars=[];
 // grid (c,r) in cells, h in cells (height) -> screen px
 function px(c,r,h=0){return [OX+c*S, OY+r*S*TILT - h*S*WALLH*1.05];}
 function fit(){
-  W=innerWidth;H=innerHeight;DPR=Math.min(devicePixelRatio||1,2);
+  W=innerWidth;const portrait=matchMedia("(orientation:portrait) and (pointer:coarse)").matches;
+  H=Math.max(260,innerHeight-(portrait?170:0));DPR=Math.min(devicePixelRatio||1,2);
   cv.width=W*DPR;cv.height=H*DPR;cv.style.width=W+"px";cv.style.height=H+"px";
   ctx2.setTransform(DPR,0,0,DPR,0,0);
   const availW=W-24, availH=H-96;
@@ -374,6 +418,38 @@ function spawnPlayer(){
   if(player.dir===void 0)player.dir=3;
 }
 function entXY(e){return [e.c+(e.tc-e.c)*e.t, e.r+(e.tr-e.r)*e.t];}
+let v6RenderAlpha=1,v6Ascents=[];
+function v6SnapshotEntity(e){if(!e)return;const q=entXY(e);e._v6px=q[0];e._v6py=q[1];}
+function entXYDraw(e){const q=entXY(e);return[e._v6px===void 0?q[0]:lerp(e._v6px,q[0],v6RenderAlpha),e._v6py===void 0?q[1]:lerp(e._v6py,q[1],v6RenderAlpha)];}
+function v6SnapshotAll(){v6SnapshotEntity(player);hunters.forEach(v6SnapshotEntity);v6SnapshotEntity(boss);}
+
+/* Presentation-only intelligence. These paths never feed the seeded hunter
+   authority: they expose the next decisions the existing AI has already made. */
+function v6TraceHunter(h,count=5){
+  if(!maze||!player||h.state!=="chase")return[];
+  const e={c:h.c,r:h.r,dir:h.dir},out=[];
+  for(let i=0;i<count;i++){const t=huntTarget(h),d=dirToward(maze,e,t[0],t[1]);if(!open_(maze,e.c+DX[d],e.r+DY[d]))break;e.c+=DX[d];e.r+=DY[d];e.dir=d;out.push([e.c,e.r]);}
+  return out;
+}
+function drawV6ThreatIntel(now){
+  if(!maze||!player||settings.calm)return;
+  ctx2.save();ctx2.lineCap="round";
+  for(const h of hunters){if(h.state!=="chase")continue;const q=entXYDraw(h),p=px(q[0],q[1],.08),ang=Math.atan2(DY[h.dir]*TILT,DX[h.dir]);
+    ctx2.fillStyle=hexA(h.color,.075);ctx2.beginPath();ctx2.moveTo(p[0],p[1]);ctx2.arc(p[0],p[1],S*3.1,ang-.28,ang+.28);ctx2.closePath();ctx2.fill();
+    const path=v6TraceHunter(h);ctx2.strokeStyle=hexA(h.color,.38);ctx2.setLineDash([3,5]);ctx2.lineDashOffset=-now*.012;ctx2.beginPath();ctx2.moveTo(p[0],p[1]);for(const cell of path){const n=px(cell[0],cell[1],.05);ctx2.lineTo(n[0],n[1]);}ctx2.stroke();ctx2.setLineDash([]);
+  }
+  if(wishDir!==null){const q=entXYDraw(player),a=px(q[0],q[1],.12),b=px(q[0]+DX[wishDir]*2.4,q[1]+DY[wishDir]*2.4,.12);ctx2.strokeStyle="rgba(255,235,150,.55)";ctx2.setLineDash([4,4]);ctx2.beginPath();ctx2.moveTo(a[0],a[1]);ctx2.lineTo(b[0],b[1]);ctx2.stroke();ctx2.setLineDash([]);}
+  if(boss){const q=entXYDraw(boss),p=px(q[0],q[1],.08),ratio=clamp(boss.phaseT/(boss.phase==="weak"?bossWeakLen():bossAttackLen()),0,1);ctx2.strokeStyle=boss.phase==="weak"?"rgba(39,224,255,.85)":"rgba(255,176,32,.72)";ctx2.lineWidth=3;ctx2.beginPath();ctx2.ellipse(p[0],p[1],S*(1.05+ratio*.35),S*TILT*(1.05+ratio*.35),0,-Math.PI/2,-Math.PI/2+ratio*Math.PI*2);ctx2.stroke();}
+  ctx2.restore();
+}
+function v6NearestThreat(){if(!player)return 99;const p=entXY(player);let d=99;for(const h of hunters)if(h.state==="chase"){const q=entXY(h);d=Math.min(d,Math.hypot(p[0]-q[0],p[1]-q[1]));}if(boss&&boss.phase==="attack"){const q=entXY(boss);d=Math.min(d,Math.hypot(p[0]-q[0],p[1]-q[1]));}return d;}
+function v6EmergencyEvade(){if(!player||!maze||(state!=="RUN"&&state!=="BOSS"))return;let best=null,bestScore=-1e9;
+  for(let d=0;d<4;d++){const c=player.c+DX[d],r=player.r+DY[d];if(!open_(maze,c,r))continue;let safety=20;for(const h of hunters)if(h.state==="chase")safety=Math.min(safety,Math.abs(h.c-c)+Math.abs(h.r-r));if(boss&&boss.phase==="attack")safety=Math.min(safety,Math.abs(boss.c-c)+Math.abs(boss.r-r));for(const z of hazards)if(z.tele<=0)safety-=Math.max(0,4-(Math.abs(z.c-c)+Math.abs(z.r-r)))*2;const score=safety*10+(maze.pipset[key(c,r)]?2:0)-(d===OPP[player.dir]?1:0);if(score>bestScore){bestScore=score;best=d;}}
+  if(best!==null){const clutch=v6NearestThreat()<3;setDir(best);if(clutch)v6TriggerClutch();}
+}
+function v6TriggerClutch(){const el=$("v6-clutch");el.classList.remove("on");void el.offsetWidth;el.classList.add("on");if(!settings.calm&&!reducedMotion){shakeT=Math.max(shakeT,.18);zoomPunch=Math.max(zoomPunch,.035);}try{navigator.vibrate&&navigator.vibrate([18,24,12]);}catch(e){}}
+function v6Ascend(c,r){const born=performance.now();for(let i=0;i<Math.min(14,6+level);i++)v6Ascents.push({c,r,born:born+i*45,tx:W*(.18+i/Math.max(1,Math.min(13,5+level))*.64),ty:42+Math.sin(i*1.7)*26});}
+function drawV6Ascension(now){for(let i=v6Ascents.length-1;i>=0;i--){const a=v6Ascents[i],p=clamp((now-a.born)/650,0,1);if(now<a.born)continue;if(p>=1){v6Ascents.splice(i,1);continue;}const s=px(a.c,a.r,.4),x=lerp(s[0],a.tx,p),y=lerp(s[1],a.ty,p*p)-Math.sin(p*Math.PI)*S*1.8;ctx2.fillStyle="#fff";ctx2.shadowColor="#39ff9e";ctx2.shadowBlur=12;ctx2.globalAlpha=1-p*.25;ctx2.beginPath();ctx2.arc(x,y,2.5,0,7);ctx2.fill();}ctx2.shadowBlur=0;ctx2.globalAlpha=1;}
 
 /* ============================ MOVEMENT ============================ */
 function stepGrid(e,speed,dt,onCell,pickDir){
@@ -432,6 +508,7 @@ function onPlayerCell(c,r){
   if(gemKey===k){collectGem();}
   if(maze.power[k]){
     delete maze.power[k];score+=50;AU.power();
+    if(v6NearestThreat()<2.2)v6TriggerClutch();
     fright=Math.max(2.6,6-level*0.35);comboEat=0;
     hunters.forEach(h=>{if(h.state==="chase")h.state="flee";});
     if(boss&&boss.phase==="attack"){wardenStun(true);}   // core during boss = instant stun!
@@ -567,6 +644,7 @@ function updateShockwaves(dt){
 }
 function bossDown(){
   const [bx,br]=entXY(boss);
+  v6Ascend(bx,br);
   for(let i=0;i<3;i++)setTimeout(()=>burst(bx+(Math.random()-0.5),br+(Math.random()-0.5),"#ff8a3d",18),i*130);
   AU.clear();
   const bonus=400*level+bestChain*5;
@@ -665,6 +743,7 @@ function render(dt,now){
   drawStars(now);
   drawFloor(now);
   drawHazards(now);
+  drawV6ThreatIntel(now);
   // items sit on floor
   drawItems(now);
   // painter: rows top→bottom, walls then entities of that row
@@ -672,7 +751,7 @@ function render(dt,now){
   if(state!=="MENU"&&player)ents.push({kind:"P",e:player});
   for(const h of hunters)if(h.state!=="pen"||true)ents.push({kind:"H",e:h});
   if(boss)ents.push({kind:"B",e:boss});
-  ents.forEach(o=>{const [,y]=entXY(o.e);o.row=y;});
+  ents.forEach(o=>{const [,y]=entXYDraw(o.e);o.row=y;});
   ents.sort((a,b)=>a.row-b.row);
   let ei=0;
   for(let r=0;r<GH;r++){
@@ -682,6 +761,7 @@ function render(dt,now){
   while(ei<ents.length){drawEntity(ents[ei],now);ei++;}
   drawShockwaves();
   drawParticles();
+  drawV6Ascension(now);
   ctx2.restore();
 }
 function drawStars(now){
@@ -794,7 +874,7 @@ function drawEntity(o,now){
   else drawBoss(now);
 }
 function drawPlayer(now){
-  const [c,r]=entXY(player);
+  const [c,r]=entXYDraw(player);
   const [x,y]=px(c,r,0.32);
   // shadow
   const [sx,sy]=px(c,r,0);
@@ -814,7 +894,7 @@ function drawPlayer(now){
 }
 function drawHunter(h,now){
   if(h.state==="pen"&&h.wait>0.2)return;
-  const [c,r]=entXY(h);
+  const [c,r]=entXYDraw(h);
   const eaten=h.state==="eaten", flee=h.state==="flee";
   const blink=flee&&fright<2&&Math.sin(now*0.02)>0;
   const col=eaten?"#3a4a70":blink?"#e8f2ff":flee?"#3a6adf":h.color;
@@ -851,7 +931,7 @@ function shade(hex,f){const n=parseInt(hex.slice(1),16);
   const r=clamp(Math.round((n>>16&255)*f),0,255),g=clamp(Math.round((n>>8&255)*f),0,255),b=clamp(Math.round((n&255)*f),0,255);
   return `rgb(${r},${g},${b})`;}
 function drawBoss(now){
-  const b=boss;const [c,r]=entXY(b);
+  const b=boss;const [c,r]=entXYDraw(b);
   const weak=b.phase==="weak";
   const [x,y]=px(c,r,0.55);
   const [sx,sy]=px(c,r,0);
@@ -969,7 +1049,7 @@ window.addEventListener("keydown",e=>{
 });
 
 /* ============================ UI WIRING ============================ */
-function showPanel(id){["menu","pause","results","board"].forEach(p=>$(p).classList.add("hidden"));if(id)$(id).classList.remove("hidden");}
+function showPanel(id){["menu","pause","results","board"].forEach(p=>{const el=$(p);el.classList.add("hidden");el.setAttribute("aria-hidden","true");el.inert=true;});if(id){const el=$(id);el.classList.remove("hidden");el.setAttribute("aria-hidden","false");el.inert=false;setTimeout(()=>{const f=el.querySelector("button:not([disabled]),input:not([disabled])");if(f)f.focus();},0);}}
 function togglePause(){
   if(state==="RUN"||state==="BOSS"){state=(state==="BOSS")?"PAUSE_B":"PAUSE";showPanel("pause");}
   else if(state==="PAUSE"||state==="PAUSE_B"){state=(state==="PAUSE_B")?"BOSS":"RUN";showPanel(null);}
@@ -1009,8 +1089,11 @@ function wireUI(){
   $("audio-btn").onclick=()=>{settings.audio=!settings.audio;AU.on=settings.audio;if(settings.audio){AU.init();AU.resume();}refreshSettingsUI();saveJSON(LS_SET,settings);};
   $("mode-btn").onclick=()=>{settings.relaxed=!settings.relaxed;refreshSettingsUI();saveJSON(LS_SET,settings);};
   $("calm-btn").onclick=()=>{settings.calm=!settings.calm;refreshSettingsUI();saveJSON(LS_SET,settings);};
+  $("v6-evade").onclick=()=>{AU.init();AU.resume();v6EmergencyEvade();};
 }
 window.addEventListener("blur",()=>{if(state==="RUN"||state==="BOSS")togglePause();});
+document.addEventListener("visibilitychange",()=>{if(document.hidden&&(state==="RUN"||state==="BOSS"))togglePause();else if(!document.hidden)AU.resume();});
+window.addEventListener("pageshow",()=>AU.resume());
 
 /* ============================ MAIN LOOP ============================ */
 let last=performance.now(),acc=0;const STEP=1000/120;
@@ -1020,9 +1103,10 @@ function loop(now){
   let el=now-last;last=now;if(el>250)el=250;
   acc+=el;let n=0;
   while(acc>=STEP&&n<10){
-    if(state==="RUN"||state==="BOSS")update(STEP/1000);
+    if(state==="RUN"||state==="BOSS"){v6SnapshotAll();update(STEP/1000);}
     acc-=STEP;n++;
   }
+  v6RenderAlpha=clamp(acc/STEP,0,1);
   render(el/1000,now);
 }
 
@@ -1043,9 +1127,18 @@ function init(){
   requestAnimationFrame(loop);
 }
 init();
+
+window.__MBM_V6_RELEASE__={
+  version:"6.0.0",gameId:"grid-chase",tickHz:120,
+  features:["viewport-first","portrait-dead-zone-tray","fixed-step-120hz-authority","render-interpolation","threat-cones","path-echoes","warden-phase-telegraph","emergency-touch-intent","compressed-master-bus","schema-6-profile","legacy-byte-preservation","accessible-fly-in","clutch-feedback","ascension-finish","reduced-motion","visibility-pause","offline-single-file"],
+  selfTest:function(){
+    const checks={version:V6_VERSION==="6.0.0",canvas:!!cv&&!!ctx2,fixedStep:Math.abs(STEP-1000/120)<.0001,profile:V6_PROFILE&&V6_PROFILE.version===6,profileKey:V6_PROFILE_KEY==="mbm_grid_chase_v6_profile",audioBus:!!(AU.compressor&&AU.master)||!AU.ctx,controls:["pause-btn","dU","dD","dL","dR","v6-evade"].every(id=>!!$(id)),legacyQuest:true,legacySettings:true};
+    try{checks.legacyQuest=localStorage.getItem(LS_QUEST)===V6_LEGACY_BYTES.quest;checks.legacySettings=localStorage.getItem(LS_SET)===V6_LEGACY_BYTES.settings;}catch(e){}
+    const ok=Object.keys(checks).every(k=>checks[k]);return{ok:ok,pass:ok,version:"6.0.0",gameId:"grid-chase",checks:checks};
+  }
+};
 })();
 </script>
-<script defer src="/hud.js"></script>
 <!-- mbm-splash-inline: canonical Made by Matt splash, inlined from
      site/assets/brand/mbm-splash.js (sha256 e375642c631358c6753a93c5e410742af2ad49c26634d0428352ec75ed87bc4c).
      Inlined, not linked: these games are single-file and offline-first. -->
@@ -1085,8 +1178,8 @@ init();
     'L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"/></svg>';
 
   function start(o) {
-    o = Object.assign({ title: "", kicker: "A Made by Matt Experience",
-      duration: 3200, onComplete: null }, o || {});
+    o = Object.assign({ title: "", kicker: "A Made by Matt AAA V6 Experience",
+      duration: 1950, onComplete: null }, o || {});
     if (!document.getElementById("mbm-splash-css")) {
       var st = document.createElement("style");
       st.id = "mbm-splash-css"; st.textContent = CSS;
@@ -1099,9 +1192,9 @@ init();
     el.setAttribute("role", "dialog");
     el.setAttribute("aria-modal", "true");
     el.setAttribute("aria-label", "Made by Matt introduction");
-    el.innerHTML = '<div class="mbm-stage">' + MARK +
+    el.innerHTML = '<div class="v6-fly-grid" aria-hidden="true"></div><div class="mbm-stage">' + MARK +
       '<p class="mbm-kicker"></p><h1 class="mbm-title"></h1>' +
-      '<p class="mbm-tagline">Learn \u2022 Build \u2022 Explore</p></div>' +
+      '<p class="mbm-tagline">AAA V6 \u2022 Warden Protocol</p></div>' +
       '<button class="mbm-skip" type="button">Skip intro</button>';
     el.querySelector(".mbm-kicker").textContent = o.kicker;
     el.querySelector(".mbm-title").textContent = o.title;
@@ -1151,7 +1244,7 @@ init();
     /* The splash plays ABOVE the game's existing boot screen and fades to
        reveal it — the game keeps exactly one start state, and onComplete
        adds no second one. */
-    window.MadeByMattSplash.start({ title: 'GRID CHASE', onComplete: function () {} });
+    window.MadeByMattSplash.start({ title: 'GRID CHASE', duration: 1950, onComplete: function () {} });
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
   else boot();
