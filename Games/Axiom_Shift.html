@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#161D3D">
 <meta name="color-scheme" content="dark light">
-<title>Axiom Shift — Made by Matt</title>
-<meta name="description" content="A one-button rhythm runner where the beat is something you see, not hear. Four forms, six Propositions, and the Axiom Rule for the purists. Offline, no accounts, no sound.">
+<title>AXIOM SHIFT · AAA V6 — Made by Matt</title>
+<meta name="description" content="Axiom Shift AAA V6 — a visual-rhythm one-button runner with predictive beat windows, cinematic Proposition construction and deterministic offline play.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23161D3D'/%3E%3Cpath d='M8 22 L13 10 L16 18 L19 10 L24 22' fill='none' stroke='%23B9E6CD' stroke-width='2.4' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
 :root{
@@ -49,6 +49,7 @@ h1,h2,h3{letter-spacing:.02em;line-height:1.15}
   border:2px solid var(--mint);background:transparent;color:var(--mint);
   border-radius:999px;padding:.7rem 1.3rem;cursor:pointer;transition:transform .12s ease,background .12s ease;
 }
+.btn,.pausebtn,.toggle,.seg button{min-width:44px;min-height:44px}
 .btn:hover{background:#1c294d}
 .btn:active{transform:translateY(1px)}
 .btn.primary{background:var(--mint);color:var(--navy);border-color:var(--mint)}
@@ -91,7 +92,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 .hud .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--mint),var(--amber-lt));width:0}
 .hud .lbl{font-size:.7rem;font-weight:800;letter-spacing:.1em;color:var(--mint);white-space:nowrap}
 .hud .form{font-size:.7rem;font-weight:800;letter-spacing:.08em;color:var(--cream);background:#1c294d;border:1px solid #3a4772;border-radius:999px;padding:.2rem .55rem}
-.hud .pausebtn{pointer-events:auto;font-family:inherit;font-weight:800;font-size:.8rem;color:var(--cream);background:#1c294d;border:1px solid #3a4772;border-radius:10px;padding:.28rem .55rem;cursor:pointer}
+.hud .pausebtn{order:5;pointer-events:auto;font-family:inherit;font-weight:800;font-size:.8rem;color:var(--cream);background:#1c294d;border:1px solid #3a4772;border-radius:10px;padding:.28rem .55rem;cursor:pointer}
 .beatdot{position:absolute;top:.55rem;left:50%;transform:translateX(-50%);width:16px;height:16px;border-radius:50%;border:2px solid var(--mint);pointer-events:none;opacity:.35}
 .beatdot.on{opacity:1;background:var(--mint)}
 .tele{position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);font-size:.74rem;font-weight:800;letter-spacing:.06em;color:var(--violet);background:#1c294d;border:1px solid var(--violet);border-radius:999px;padding:.3rem .8rem;pointer-events:none;opacity:0;transition:opacity .2s}
@@ -111,6 +112,38 @@ kbd{background:#1c294d;border:1px solid #3a4772;border-radius:5px;padding:.05rem
   .menu-anim{animation:none}
   html{scroll-behavior:auto}
 }
+/* ===== MADE BY MATT · AAA V6 ASCENSION SHELL ===== */
+#game{position:fixed;inset:0;overflow:hidden}
+.v6mark{position:absolute;right:calc(10px + env(safe-area-inset-right));top:calc(10px + env(safe-area-inset-top));z-index:8;
+  padding:5px 9px;border:1px solid rgba(185,230,205,.42);border-radius:999px;background:rgba(22,29,61,.72);
+  color:var(--mint);font-size:.58rem;font-weight:900;letter-spacing:.14em;pointer-events:none;backdrop-filter:blur(8px)}
+#v6Tray{position:absolute;right:calc(12px + env(safe-area-inset-right));bottom:calc(12px + env(safe-area-inset-bottom));z-index:9;
+  display:flex;align-items:center;gap:8px;padding:7px;border:1px solid rgba(185,230,205,.34);border-radius:18px;
+  background:rgba(13,20,45,.78);box-shadow:0 14px 32px rgba(0,0,0,.42);backdrop-filter:blur(10px)}
+.v6act,.v6mini{border:1px solid rgba(185,230,205,.48);color:var(--cream);background:#1c294d;border-radius:13px;
+  min-width:48px;min-height:48px;padding:6px 12px;font:800 .72rem var(--font);letter-spacing:.05em;cursor:pointer}
+.v6act{min-width:112px;color:var(--navy);background:linear-gradient(135deg,var(--mint),#e6fff0);box-shadow:0 0 18px rgba(185,230,205,.24)}
+.v6act:focus-visible,.v6mini:focus-visible,#v6Cinema:focus-visible{outline:3px solid var(--amber-lt);outline-offset:3px}
+#v6Window{min-width:76px;color:#d7dcef;font-size:.64rem;font-weight:800;line-height:1.18;text-align:left}
+#v6Cinema{position:absolute;left:50%;top:calc(64px + env(safe-area-inset-top));transform:translateX(-50%);z-index:12;
+  min-width:min(390px,86vw);padding:10px 16px;border:1px solid rgba(185,230,205,.55);border-radius:14px;
+  background:rgba(12,19,43,.88);color:var(--cream);font:800 .72rem var(--font);letter-spacing:.12em;cursor:pointer;
+  box-shadow:0 18px 55px rgba(0,0,0,.52);backdrop-filter:blur(10px)}
+#v6Cinema small{display:block;margin-top:3px;color:var(--mint);font-size:.58rem;letter-spacing:.08em}
+#v6Clutch{position:absolute;inset:0;z-index:7;display:grid;place-items:center;pointer-events:none;opacity:0;
+  background:radial-gradient(circle at 28% 55%,rgba(242,162,74,.18),transparent 26%);color:var(--amber-lt);
+  font:900 clamp(1.1rem,4vw,2rem) var(--font);letter-spacing:.18em;text-shadow:0 0 24px rgba(242,162,74,.8)}
+#v6Clutch.on{animation:v6clutch .46s ease both}
+@keyframes v6clutch{0%{opacity:0;transform:scale(.9)}25%{opacity:1}100%{opacity:0;transform:scale(1.06)}}
+body.v6-calm #v6Clutch{display:none}
+@media (orientation:portrait){
+  #game.show canvas{bottom:calc(86px + env(safe-area-inset-bottom));height:calc(100% - 86px - env(safe-area-inset-bottom))}
+  #v6Tray{left:0;right:0;bottom:0;min-height:calc(82px + env(safe-area-inset-bottom));padding:8px 12px max(10px,env(safe-area-inset-bottom));
+    justify-content:center;border-width:1px 0 0;border-radius:18px 18px 0 0;background:linear-gradient(180deg,rgba(20,30,60,.7),rgba(5,9,24,.98))}
+  .v6act{min-width:min(46vw,210px);min-height:58px}.v6mini{min-width:52px;min-height:52px}
+  .hud{right:0;padding-right:calc(.8rem + env(safe-area-inset-right))}
+}
+@media (prefers-reduced-motion:reduce){#v6Clutch.on{animation:none;opacity:0}#v6Cinema{transition:none}}
 </style>
 </head>
 <body>
@@ -123,6 +156,7 @@ kbd{background:#1c294d;border:1px solid #3a4772;border-radius:5px;padding:.05rem
         <svg viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="11" fill="#161D3D"/><path d="M11 34 L20 14 L24 27 L28 14 L37 34" fill="none" stroke="#B9E6CD" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/></svg>
         <div><b>MADE BY MATT</b><small>THE ARCADE</small></div>
       </div>
+      <div class="eyebrow">AAA V6 · Ascension release</div>
       <div class="eyebrow">A one-button rhythm runner</div>
       <h1>Axiom <span style="color:var(--amber-lt)">Shift</span></h1>
       <p class="lead">The world runs on rigid law. Then the law <em>shifts</em>. Read the visible pulse, ride four forms, and draw your line through six Propositions. No sound — the rhythm is something you watch.</p>
@@ -243,7 +277,7 @@ kbd{background:#1c294d;border:1px solid #3a4772;border-radius:5px;padding:.05rem
 
   <!-- GAME -->
   <div id="game">
-    <canvas id="cv" aria-label="Axiom Shift play area"></canvas>
+    <canvas id="cv" tabindex="0" role="application" aria-label="Axiom Shift V6 play area. Tap, click, Space or Arrow Up performs the current form action."></canvas>
     <div class="hud">
       <button class="pausebtn" id="hudPause" aria-label="Pause">II</button>
       <div class="bar"><i id="hudBar"></i></div>
@@ -252,6 +286,14 @@ kbd{background:#1c294d;border:1px solid #3a4772;border-radius:5px;padding:.05rem
     </div>
     <div class="beatdot" id="beatDot" aria-hidden="true"></div>
     <div class="tele" id="tele">Shift Gate ahead</div>
+    <div class="v6mark">MADE BY MATT · V6</div>
+    <button id="v6Cinema" type="button" hidden aria-label="Skip Proposition fly-in">CONSTRUCTING PROPOSITION<small>Tap to skip fly-in</small></button>
+    <div id="v6Clutch" aria-hidden="true">PRECISE SHIFT</div>
+    <div id="v6Tray" role="toolbar" aria-label="Axiom controls">
+      <button class="v6act" id="v6Action" type="button" aria-label="Jump">JUMP</button>
+      <div id="v6Window" aria-live="off">Read the<br>visible pulse</div>
+      <div class="v6mini" id="v6Silence" role="note" aria-label="Silent game. The visible pulse is authoritative.">VISUAL ONLY</div>
+    </div>
   </div>
 
   <div class="sr" id="live" aria-live="polite"></div>
@@ -620,6 +662,99 @@ if (typeof document !== 'undefined') {
   var A = window.AXIOM;
   var $ = function (id) { return document.getElementById(id); };
 
+  // ---- AAA V6 release/profile boundary ----------------------------------
+  // A V6 profile is written once under a new key. The original progression
+  // key remains owned exclusively by the original game code below.
+  var V6_PROFILE_KEY = 'mbm_v6_axiom_shift_profile';
+  var v6LegacyBefore = null, v6LegacyPreserved = true;
+  try { v6LegacyBefore = localStorage.getItem(A.SAVE_KEY); } catch (e) {}
+  function v6LoadProfile() {
+    var p = null;
+    try { p = JSON.parse(localStorage.getItem(V6_PROFILE_KEY) || 'null'); } catch (e) {}
+    if (!p || p.version !== 6) {
+      p = { version:6, gameId:'axiom-shift', settings:{sound:false}, telemetry:{launches:0}, migratedAt:new Date().toISOString() };
+      try { localStorage.setItem(V6_PROFILE_KEY, JSON.stringify(p)); } catch (e) {}
+    }
+    p.telemetry = p.telemetry || {launches:0}; p.telemetry.launches = (p.telemetry.launches|0) + 1;
+    // Do not persist the launch counter: profile creation stays a single,
+    // atomic write and boot never churns storage.
+    try { v6LegacyPreserved = localStorage.getItem(A.SAVE_KEY) === v6LegacyBefore; } catch (e) {}
+    return p;
+  }
+  var v6Profile = v6LoadProfile();
+  var V6_REDUCED = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var V6 = { director:null, clutchUntil:0, ascent:null, alpha:1, lastNow:0 };
+  function v6Intent(form) {
+    return {bastion:['JUMP','Jump'],ring:['FLIP','Invert gravity'],star:['LIFT','Hold to rise'],mform:['FLAP','Flap']}[form] || ['ACT','Act'];
+  }
+  function v6SyncIntent() {
+    if (!play) return; var intent=v6Intent(play.st.form),b=$('v6Action');
+    b.textContent=intent[0];b.setAttribute('aria-label',intent[1]);
+    var next=null;
+    for(var i=0;i<play.level.ev.length;i++){var e=play.level.ev[i];if(e.b>play.st.songBeat&&(!next||e.b<next.b))next=e;}
+    var w=$('v6Window');
+    if(next){var beats=Math.max(0,next.b-play.st.songBeat),kind=next.t==='gate'?'SHIFT':(next.t==='ceil'?'CEILING':'HAZARD');w.innerHTML=kind+'<br>'+beats.toFixed(1)+' beats';}
+    else w.innerHTML='FINAL LINE<br>ahead';
+  }
+  function v6Haptic(pattern){try{if(navigator.vibrate&&!save.calm)navigator.vibrate(pattern);}catch(e){}}
+  function v6TriggerClutch() {
+    if (V6_REDUCED || save.calm || perfNow()<V6.clutchUntil) return;
+    V6.clutchUntil=perfNow()+460;var el=$('v6Clutch');el.classList.remove('on');void el.offsetWidth;el.classList.add('on');
+    v6Haptic([18,28,12]);announce('Precise shift.');
+  }
+  function v6CheckClutch(st) {
+    for(var i=0;i<play.level.ev.length;i++){var e=play.level.ev[i],lead=e.b-st.songBeat;
+      if((e.t==='spike'||e.t==='ceil')&&lead>0&&lead<.28){v6TriggerClutch();break;}}
+  }
+  function v6BeginIntro(lvl, done) {
+    if (V6_REDUCED || save.calm) { done(); return; }
+    V6.director={start:perfNow(),duration:1650,done:done,label:lvl.name};
+    var c=$('v6Cinema'),label='CONSTRUCTING · '+lvl.name.replace(/^Proposition [IV]+ — /,'').toUpperCase();
+    if(c.firstChild)c.firstChild.nodeValue=label;else c.textContent=label;c.hidden=false;
+    announce(lvl.name+'. Proposition construction fly-in. Activate skip to begin immediately.');
+  }
+  function v6SkipIntro() {
+    if(!V6.director)return;var d=V6.director;V6.director=null;$('v6Cinema').hidden=true;if(d.done)d.done();
+  }
+  function v6UpdateDirector(now) {
+    if(!V6.director)return;
+    if(now-V6.director.start>=V6.director.duration)v6SkipIntro();
+  }
+  function v6Camera(now) {
+    var zoom=1,pan=0;
+    if(V6.director){var p=Math.min(1,(now-V6.director.start)/V6.director.duration),q=p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;zoom=1.16-(.16*q);pan=(1-q)*W*.12;}
+    if(now<V6.clutchUntil){var cp=(V6.clutchUntil-now)/460;zoom=Math.max(zoom,1+.08*Math.sin(cp*Math.PI));}
+    return {zoom:zoom,pan:pan};
+  }
+  function v6StartAscent(done) {
+    V6.ascent={start:perfNow(),duration:920,done:done,fired:false};
+  }
+  function v6DrawAscent(now) {
+    if(!V6.ascent)return;var p=Math.min(1,(now-V6.ascent.start)/V6.ascent.duration),rx=W*.28,base=worldToScreenY(play?play.st.y:0);
+    ctx.save();ctx.globalCompositeOperation='lighter';
+    for(var i=0;i<7;i++){var q=Math.max(0,Math.min(1,(p-i*.06)/.65));if(q<=0)continue;var x=rx+(i-3)*28*q,y=base-q*(H*.56+Math.sin(i)*34);ctx.fillStyle=i%2?COL.mint:COL.amberLt;ctx.globalAlpha=1-q*.35;ctx.beginPath();ctx.arc(x,y,3+q*2,0,7);ctx.fill();ctx.strokeStyle='rgba(185,230,205,.25)';ctx.beginPath();ctx.moveTo(rx,base);ctx.lineTo(x,y);ctx.stroke();}
+    ctx.restore();
+    if(p>=1){var a=V6.ascent;V6.ascent=null;if(a.done)a.done();}
+  }
+  function v6DrawTrajectory(st,rx,PXPB) {
+    if(!play)return;var s={y:st.y,vy:st.vy,grounded:st.grounded,holding:st.holding,gravDir:st.gravDir},form=st.form,beat=st.songBeat;
+    ctx.save();ctx.strokeStyle='rgba(185,230,205,.72)';ctx.lineWidth=1.5;ctx.setLineDash([4,5]);ctx.beginPath();ctx.moveTo(rx,worldToScreenY(s.y));
+    var steps=Math.round(A.SUB*1.75),nextGate=0;
+    for(var n=1;n<=steps;n++){beat+=A.DBEAT;while(nextGate<play.level.gates.length&&play.level.gates[nextGate].b<=beat){form=play.level.gates[nextGate].form;nextGate++;}
+      A.FORMS[form].step(s);if(n%12===0)ctx.lineTo(rx+(n/A.SUB)*PXPB,worldToScreenY(s.y));}
+    ctx.stroke();ctx.setLineDash([]);ctx.restore();
+  }
+
+  window.__MBM_V6_RELEASE__ = {
+    version:'6.0.0',gameId:'axiom-shift',title:'Axiom Shift AAA V6',
+    features:['viewport-first','portrait-dead-zone-tray','fixed-beat-authority','visual-interpolation','intent-aware-touch','beat-window-preview','next-gate-trajectory','proposition-fly-in','camera-clutch','finish-ascension','silent-visual-authority','schema-6-profile','visibility-pause','accessible-controls','offline-single-file'],
+    selfTest:function(){
+      var canonical=A.runTape(A.LEVELS[0]);
+      var ok=this.version==='6.0.0'&&this.gameId==='axiom-shift'&&canonical.cleared&&v6Profile.version===6&&v6LegacyPreserved;
+      return {ok:!!ok,pass:!!ok,version:this.version,gameId:this.gameId,authority:{substepsPerBeat:A.SUB,canonicalTrace:canonical.trace,cleared:canonical.cleared},legacyPreserved:v6LegacyPreserved,profileVersion:v6Profile.version};
+    }
+  };
+
   // ---- save (single versioned localStorage key) --------------------------
   var FRESH = { v: A.SAVE_VERSION, tier: 'standard', axiom: false, calm: false,
                 seen: {}, best: {}, stars: {} };
@@ -639,9 +774,14 @@ if (typeof document !== 'undefined') {
   // ---- screen routing -----------------------------------------------------
   var SCREENS = ['splash', 'menu', 'levels', 'settings', 'guide', 'howto', 'pause', 'clear'];
   function show(id) {
-    for (var i = 0; i < SCREENS.length; i++) $(SCREENS[i]).classList.toggle('show', SCREENS[i] === id);
+    for (var i = 0; i < SCREENS.length; i++) {
+      var screen=$(SCREENS[i]),active=SCREENS[i]===id;screen.classList.toggle('show',active);screen.setAttribute('aria-hidden',active?'false':'true');
+      if('inert' in screen)screen.inert=!active;
+    }
     $('game').classList.toggle('show', id === 'game');
+    $('game').setAttribute('aria-hidden',id==='game'?'false':'true');
     if (id === 'game') $('game').style.display = 'block'; else $('game').style.display = 'none';
+    if(id!=='game'){requestAnimationFrame(function(){var root=$(id),f=root&&typeof root.querySelector==='function'&&root.querySelector('button:not([disabled]),input:not([disabled])');if(f)f.focus({preventScroll:true});});}
   }
   function announce(msg) { $('live').textContent = msg; }
 
@@ -674,7 +814,8 @@ if (typeof document !== 'undefined') {
       running: true, last: 0, hw: st.songBeat, trail: [], blot: 0,
       wantTap: false, wantTapAt: 0, leftGroundAt: 0, wasGrounded: true,
       practiceAt: (opts.fromBeat != null ? opts.fromBeat : null),
-      beatFlash: 0, secsClearedMax: 0, gateWarned: -1
+      beatFlash: 0, secsClearedMax: 0, gateWarned: -1,
+      prevY:st.y, renderAlpha:1
     };
   }
 
@@ -685,7 +826,7 @@ if (typeof document !== 'undefined') {
   function liveInputDown() {
     if (!play || !play.running) return;
     var form = play.st.form;
-    if (form === 'star') { A.FORMS.star.down(play.st); return; }
+    if (form === 'star') { A.FORMS.star.down(play.st); v6CheckClutch(play.st); return; }
     play.wantTap = true; play.wantTapAt = perfNow();
   }
   function liveInputUp() {
@@ -700,9 +841,9 @@ if (typeof document !== 'undefined') {
     if (now - play.wantTapAt > bufMs(play.tier)) { play.wantTap = false; return; }
     if (form === 'bastion') {
       var coyoteOk = st.grounded || (now - play.leftGroundAt <= coyMs(play.tier));
-      if (coyoteOk) { A.FORMS.bastion.tap(st); play.wantTap = false; }
-    } else if (form === 'ring') { A.FORMS.ring.tap(st); play.wantTap = false; }
-    else if (form === 'mform') { A.FORMS.mform.tap(st); play.wantTap = false; }
+      if (coyoteOk) { A.FORMS.bastion.tap(st); play.wantTap = false; v6CheckClutch(st); }
+    } else if (form === 'ring') { A.FORMS.ring.tap(st); play.wantTap = false; v6CheckClutch(st); }
+    else if (form === 'mform') { A.FORMS.mform.tap(st); play.wantTap = false; v6CheckClutch(st); }
     else { play.wantTap = false; }
   }
 
@@ -729,11 +870,13 @@ if (typeof document !== 'undefined') {
     play.last = now;
     var st = play.st;
     var beforeSmudge = st.smudges, beforeBeat = st.songBeat;
+    play.prevY = st.y;
 
     consumeTap(now);
     var target = st.songBeat + play.bps * dtSec;
     var guard = A.SUB * (play.level.endBeat + 8) * 60;
     A.runToBeat(st, [], target, guard); // live: no scripted tape
+    play.renderAlpha = Math.max(0,Math.min(1,(target-beforeBeat)/Math.max(A.DBEAT,st.songBeat-beforeBeat)));
 
     // ground-edge tracking for coyote time
     if (play.wasGrounded && !st.grounded) play.leftGroundAt = now;
@@ -767,6 +910,7 @@ if (typeof document !== 'undefined') {
     } else tele.classList.remove('show');
 
     encounterScan(st);
+    v6SyncIntent();
 
     if (st.cleared && play.running) { play.running = false; onClear(); }
   }
@@ -787,6 +931,7 @@ if (typeof document !== 'undefined') {
 
   function render(now) {
     ctx.clearRect(0, 0, W, H);
+    var vcam=v6Camera(now);ctx.save();ctx.translate(W/2,H/2);ctx.scale(vcam.zoom,vcam.zoom);ctx.translate(-W/2+vcam.pan,-H/2);
     // background construction grid (Euclidean neon over navy)
     ctx.fillStyle = COL.navy; ctx.fillRect(0, 0, W, H);
     var beatPhase = play ? (play.st.songBeat - Math.floor(play.st.songBeat)) : 0;
@@ -812,6 +957,7 @@ if (typeof document !== 'undefined') {
 
     if (play) {
       var st = play.st, rx = W * 0.28, PXPB = 118;
+      v6DrawTrajectory(st,rx,PXPB);
       // ink trail behind the runner
       if (play.trail.length > 1) {
         ctx.strokeStyle = COL.amberLt; ctx.lineWidth = 3; ctx.lineJoin = 'round'; ctx.beginPath();
@@ -847,7 +993,8 @@ if (typeof document !== 'undefined') {
       ctx.beginPath(); ctx.moveTo(0, worldToScreenY(A.CEIL)); ctx.lineTo(W, worldToScreenY(A.CEIL)); ctx.stroke();
 
       // runner
-      var ry = worldToScreenY(st.y);
+      var drawY=play.prevY+(st.y-play.prevY)*play.renderAlpha;
+      var ry = worldToScreenY(drawY);
       if (play.blot > 0) { ctx.fillStyle = 'rgba(124,92,201,' + (0.5 * play.blot).toFixed(2) + ')'; ctx.beginPath(); ctx.arc(rx, ry, 30 + (1 - play.blot) * 30, 0, 7); ctx.fill(); play.blot = Math.max(0, play.blot - 0.06); }
       drawGlyph(A.FORMS[st.form].glyph, rx, ry, 15, COL.mint);
 
@@ -859,11 +1006,14 @@ if (typeof document !== 'undefined') {
       // calm-pulse corner indicator (small bounded dot)
       var dot = $('beatDot'); dot.classList.toggle('on', beatPhase < 0.12);
     }
+    v6DrawAscent(now);
+    ctx.restore();
   }
 
   var raf = 0;
   function loop(now) {
     raf = requestAnimationFrame(loop);
+    v6UpdateDirector(now);
     if (play && play.running) { update(now); }
     if ($('game').classList.contains('show')) render(now);
   }
@@ -899,8 +1049,8 @@ if (typeof document !== 'undefined') {
     $('clearProg').textContent = prog + '%';
     $('clearSecs').textContent = secs + ' / ' + secs;
     $('clearStars').textContent = '★'.repeat(stars) + '☆'.repeat(3 - stars) + (clean ? '  · clean' : '');
-    announce(lvl.name + ' complete. ' + secs + ' sections cleared.');
-    show('clear');
+    announce(lvl.name + ' complete. ' + secs + ' sections cleared. Constellation ascending.');
+    v6StartAscent(function(){show('clear');announce(lvl.name+' complete. '+secs+' sections cleared.');});
   }
 
   // ---- level select / guide rendering ------------------------------------
@@ -939,10 +1089,11 @@ if (typeof document !== 'undefined') {
   }
 
   function startLevel(lvl, opts) {
-    resize();
     play = newPlay(lvl, opts || {});
+    play.running=false;
     show('game');
-    announce(lvl.name + '. Tier ' + save.tier + '. Tap or press space.');
+    resize();
+    v6BeginIntro(lvl,function(){if(play){play.running=true;play.last=0;$('cv').focus({preventScroll:true});announce(lvl.name+'. Tier '+save.tier+'. '+v6Intent(play.st.form)[1]+'.');}});
   }
 
   // ---- settings wiring ----------------------------------------------------
@@ -1042,6 +1193,20 @@ if (typeof document !== 'undefined') {
   });
   $('clearMenu').addEventListener('click', function () { play = null; show('menu'); refreshTierUI(); });
 
+  // ---- V6 touch/cinematic/accessibility wiring --------------------------
+  $('v6Action').addEventListener('pointerdown',function(e){e.preventDefault();e.stopPropagation();liveInputDown();},{passive:false});
+  $('v6Action').addEventListener('pointerup',function(e){e.preventDefault();e.stopPropagation();liveInputUp();},{passive:false});
+  $('v6Action').addEventListener('pointercancel',function(){liveInputUp();});
+  $('v6Cinema').addEventListener('click',v6SkipIntro);
+  document.addEventListener('visibilitychange',function(){
+    if(document.hidden&&play&&play.running&&$('game').classList.contains('show')){openPause();announce('Paused while the page was hidden.');}
+  });
+  window.addEventListener('keydown',function(e){if(e.key==='Escape'&&$('pause').classList.contains('show')){e.preventDefault();resumePlay();}});
+
+  Array.prototype.forEach.call(document.querySelectorAll('.screen'),function(s){s.setAttribute('role','dialog');s.setAttribute('aria-modal','true');});
+  document.body.classList.toggle('v6-calm',save.calm||V6_REDUCED);
+  var oldRefreshTierUI=refreshTierUI;
+  refreshTierUI=function(){oldRefreshTierUI();document.body.classList.toggle('v6-calm',save.calm||V6_REDUCED);};
   // ---- boot ---------------------------------------------------------------
   bindSettings(); refreshTierUI(); resize();
   raf = requestAnimationFrame(loop);

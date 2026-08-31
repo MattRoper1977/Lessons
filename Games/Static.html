@@ -3,8 +3,10 @@
 <head>
 <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSIjMTYxRDNEIi8+PHBhdGggZD0iTTI2IDc2IEwyNiAzMCBMNTAgNTUgTDc0IDMwIEw3NCA3NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRThFMkQ0IiBzdHJva2Utd2lkdGg9IjEzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4=">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>STATIC — Signal Lost</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0c0d12">
+<meta name="description" content="STATIC: Signal Lost — AAA V6, a fully offline evidence-board deduction game by Made by Matt.">
+<title>STATIC — Signal Lost · AAA V6</title>
 <style>
 :root{
   --ink:#0c0d12; --ink2:#14161f; --panel:#181b26; --line:#2a2f40;
@@ -322,15 +324,69 @@ body.large-text .card{font-size:15px;line-height:1.55}body.large-text .card .cbo
   .modal-actions,.workbench-tabs{display:none!important}
 }
 
+/* ============================================================
+   AAA V6 ASCENSION — viewport-first investigation shell
+============================================================ */
+:root{--safe-t:max(0px,env(safe-area-inset-top));--safe-r:max(0px,env(safe-area-inset-right));--safe-b:max(0px,env(safe-area-inset-bottom));--safe-l:max(0px,env(safe-area-inset-left));--tray-h:0px}
+html,body{width:100%;height:100%;height:100dvh}
+body{padding:0;touch-action:manipulation}
+.skip-link{position:fixed;left:calc(10px + var(--safe-l));top:-70px;z-index:300;background:#fff;color:#10131b;padding:12px 16px;border-radius:0 0 10px 10px;font:700 13px var(--mono);transition:top .15s}
+.skip-link:focus{top:0}
+button,.card,[role="button"],input,select,textarea{font:inherit}
+button:focus-visible,.card:focus-visible,[role="button"]:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #fff;outline-offset:3px;box-shadow:0 0 0 6px rgba(74,137,184,.55)}
+.btn,.icon-btn,.zbtn,.linkbtn,.opt,.switch,.wbtab,.pick,.infer-slot,.labtest,.studio-card,.access-opt,.micro-clue,.ed-b{min-height:44px}
+.icon-btn{width:44px;height:44px;flex:0 0 44px}.linkbtn{padding:9px 8px}.switch{min-width:50px}
+#topbar{top:var(--safe-t);height:56px;padding-left:calc(10px + var(--safe-l));padding-right:calc(10px + var(--safe-r))}
+#viewport{top:calc(var(--safe-t) + 56px);bottom:var(--tray-h);height:auto}
+#zoomctl{right:calc(12px + var(--safe-r));bottom:calc(14px + var(--tray-h) + var(--safe-b))}
+#hintbar{bottom:calc(16px + var(--tray-h) + var(--safe-b))}
+#notes{top:calc(var(--safe-t) + 56px);bottom:var(--tray-h);padding-bottom:var(--safe-b)}
+#toast{top:calc(var(--safe-t) + 66px)}
+#modal{padding:max(14px,var(--safe-t)) max(14px,var(--safe-r)) max(14px,var(--safe-b)) max(14px,var(--safe-l))}
+.modal-card{max-height:calc(100dvh - var(--safe-t) - var(--safe-b) - 28px);overscroll-behavior:contain}
+#v6Brand{position:fixed;left:calc(10px + var(--safe-l));bottom:calc(8px + var(--safe-b) + var(--tray-h));z-index:29;pointer-events:none;padding:5px 8px;border:1px solid rgba(246,214,138,.3);border-radius:999px;background:rgba(10,11,16,.72);backdrop-filter:blur(6px);font:700 8px var(--mono);letter-spacing:.16em;color:#c8b77f}
+#v6Brand b{color:var(--lamp)}
+#evidenceTray{display:none;z-index:42;background:linear-gradient(180deg,rgba(22,24,34,.86),rgba(7,8,13,.98));border-top:1px solid var(--line);box-shadow:0 -14px 35px #0008}
+.tray-tools{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;max-width:760px;margin:auto}
+.tray-btn{min-width:0;min-height:54px;border:1px solid var(--line);border-radius:10px;background:#141826;color:#dfe3ee;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:18px}
+.tray-btn small{font:700 7px var(--mono);letter-spacing:.05em;color:#9aa0b2;white-space:nowrap}.tray-btn.truth{border-color:rgba(197,58,47,.75);color:#ffd9d4;background:#381715}
+#landTools{display:none;position:fixed;right:calc(10px + var(--safe-r));top:calc(var(--safe-t) + 66px);z-index:41;align-items:flex-end;flex-direction:column;gap:6px}
+#landToolsToggle{width:48px;height:48px;border:1px solid var(--line);border-radius:12px;background:#10131ddd;color:var(--lamp);backdrop-filter:blur(8px)}
+#landToolsPanel{display:none;grid-template-columns:repeat(2,52px);gap:6px;padding:8px;border:1px solid var(--line);border-radius:13px;background:#0c0f17e8;backdrop-filter:blur(10px);box-shadow:0 12px 35px #0009}
+#landTools.open #landToolsPanel{display:grid}
+.land-btn{width:52px;height:52px;border:1px solid var(--line);border-radius:10px;background:#151925;font-size:19px}.land-btn:hover{border-color:var(--lamp)}
+#directorHud{position:fixed;inset:0;z-index:75;display:none;pointer-events:none;background:linear-gradient(#000 0 8%,transparent 8% 92%,#000 92%);color:#fff}
+#directorHud.show{display:block}.director-copy{position:absolute;left:50%;top:10%;transform:translateX(-50%);text-align:center;font:700 11px var(--mono);letter-spacing:.22em;text-shadow:0 2px 8px #000}
+#directorHud button{position:absolute;right:calc(14px + var(--safe-r));top:calc(14px + var(--safe-t));pointer-events:auto;min-width:76px;min-height:44px;border:1px solid #fff6;border-radius:10px;background:#090b12dd;color:#fff;font:700 10px var(--mono)}
+#resolutionFx{position:fixed;inset:0;z-index:125;display:none;pointer-events:none;overflow:hidden;background:radial-gradient(circle at 50% 50%,rgba(230,179,74,.14),transparent 52%)}
+#resolutionFx.show{display:block}.resolution-title{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:900 clamp(22px,7vw,54px) var(--mono);letter-spacing:.18em;color:#fff;text-align:center;text-shadow:0 0 22px var(--gold),0 4px 22px #000;animation:v6Resolve 1.55s ease both}.resolution-node{position:absolute;width:8px;height:8px;border-radius:50%;background:#fff;box-shadow:0 0 15px var(--gold);animation:v6Node 1.35s ease both}.resolution-thread{position:absolute;height:2px;background:linear-gradient(90deg,transparent,var(--gold),#fff);transform-origin:left center;animation:v6Thread 1.2s ease both}
+@keyframes v6Resolve{0%{opacity:0;transform:translate(-50%,-50%) scale(.72)}28%,72%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.08)}}
+@keyframes v6Node{0%{opacity:0;transform:scale(0)}35%,78%{opacity:1;transform:scale(1.4)}100%{opacity:0;transform:scale(.4)}}
+@keyframes v6Thread{from{opacity:0;scale:0 1}35%,75%{opacity:.9;scale:1 1}to{opacity:0}}
+.card.v6-intent{outline:3px solid var(--gold);outline-offset:4px}.card.v6-contradiction{animation:v6Contradiction .68s ease-in-out infinite alternate}
+@keyframes v6Contradiction{to{box-shadow:0 0 34px var(--redGlow),0 18px 40px rgba(0,0,0,.55);outline-color:var(--red)}}
+#strings .v6-preview{stroke:var(--lamp);stroke-width:2.4;stroke-dasharray:8 7;opacity:.9;animation:v6Dash .6s linear infinite}#strings .v6-preview.bad{stroke:var(--red);filter:url(#glow)}
+@keyframes v6Dash{to{stroke-dashoffset:-30}}
+.v6-clutch #viewport{filter:brightness(1.08) saturate(1.12)}.v6-clutch .card{transition:filter .12s}.v6-clutch .card:not(.v6-clutch-card){filter:brightness(.62) blur(.35px)}
+.v6-clutch-card{outline:4px solid #fff!important;box-shadow:0 0 45px var(--redGlow)!important}
+.v6-hidden *{animation-play-state:paused!important}
+@media (orientation:portrait){:root{--tray-h:calc(70px + var(--safe-b))}#evidenceTray{position:fixed;display:block;left:0;right:0;bottom:0;height:var(--tray-h);padding:7px calc(7px + var(--safe-r)) max(7px,var(--safe-b)) calc(7px + var(--safe-l))}#topbar .icon-btn{display:none}#topbar{height:52px}.tb-title{font-size:13px}.accuse-btn{display:none}#viewport{top:calc(var(--safe-t) + 52px)}#notes{top:calc(var(--safe-t) + 52px)}#v6Brand{display:none}#zoomctl{bottom:calc(var(--tray-h) + 7px)}#hintbar{bottom:calc(var(--tray-h) + 8px);max-width:calc(100vw - 76px);font-size:10px;padding:8px 11px}.modal-card{padding:18px}.tray-tools{height:100%}}
+@media (orientation:landscape){#landTools{display:flex}.tb-title small{max-width:26vw;overflow:hidden;text-overflow:ellipsis}.progress-pill{display:none}}
+@media (orientation:landscape) and (max-height:520px){#topbar .icon-btn{display:none}.accuse-btn{display:none}#topbar{height:48px}#viewport{top:calc(var(--safe-t) + 48px)}#notes{top:calc(var(--safe-t) + 48px)}}
+@media (max-width:560px){.icon-btn{width:44px;height:44px;font-size:15px}.accuse-btn{min-height:44px}.progress-pill{display:none}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}#directorHud{background:rgba(0,0,0,.25)}.card.v6-contradiction{animation:none;outline:3px solid var(--red)}}
+body.calm #directorHud{background:rgba(0,0,0,.22)}body.calm .card.v6-contradiction{animation:none;outline:3px solid var(--red)}
+
 </style>
 </head>
 <body>
+<a class="skip-link" href="#viewport">Skip to evidence board</a>
 
 <!-- atmosphere -->
 <div id="vign"></div><div id="crt"></div><div id="flick"></div><div id="flash"></div>
 
 <!-- ===== MADE BY MATT SPLASH ===== -->
-<div id="msplash">
+<div id="msplash" role="button" tabindex="0" aria-label="Made by Matt presents STATIC. Activate to skip intro.">
   <div class="ms-word">MADE&nbsp;BY&nbsp;MATT</div>
   <div class="ms-sub">PRESENTS</div>
   <svg class="ms-pins" viewBox="0 0 300 56" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -345,7 +401,7 @@ body.large-text .card{font-size:15px;line-height:1.55}body.large-text .card .cbo
 </div>
 
 <!-- ===== SPLASH ===== -->
-<div id="splash">
+<div id="splash" role="button" tabindex="0" aria-label="STATIC Signal Lost title sequence. Activate to skip.">
   <div id="crtline"></div>
   <div id="snoise"></div>
   <div id="splogo">STATIC</div>
@@ -354,7 +410,7 @@ body.large-text .card{font-size:15px;line-height:1.55}body.large-text .card .cbo
 </div>
 
 <!-- ===== TITLE ===== -->
-<div class="screen" id="title">
+<div class="screen" id="title" role="main" aria-labelledby="logoTxt">
   <div class="logo" id="logoTxt">STATIC</div>
   <div class="tag">A COLD-CASE DEDUCTION</div>
   <div class="subtitle" id="titleSub">THREE CASE FILES ON THE DESK</div>
@@ -370,49 +426,109 @@ body.large-text .card{font-size:15px;line-height:1.55}body.large-text .card .cbo
 </div>
 
 <!-- ===== TOP BAR ===== -->
-<div id="topbar" class="hidden">
+<div id="topbar" class="hidden" role="banner" aria-label="Case controls">
   <div class="tb-title">STATIC<small id="caseLabel">SIGNAL LOST</small></div>
   <div class="tb-spacer"></div>
   <div class="progress-pill">Leads <b id="pLeads">0</b>/<span id="pTotal">0</span></div>
-  <button class="icon-btn" id="casesBtn" title="Case files">📁</button>
-  <button class="icon-btn" id="tlBtn" title="Timeline">🕑</button>
-  <button class="icon-btn" id="briefBtn" title="Case brief">📻</button><button class="icon-btn" id="workbenchBtn" title="Advanced workbench">🧠</button>
-  <button class="icon-btn" id="notesBtn" title="Case notes">🗒️</button>
-  <button class="icon-btn" id="studioBtn" title="Investigation studio">🧰</button><button class="icon-btn" id="setBtn2" title="Settings">⚙️</button>
+  <button class="icon-btn" id="casesBtn" title="Case files" aria-label="Open case files">📁</button>
+  <button class="icon-btn" id="tlBtn" title="Timeline" aria-label="Open evidence timeline">🕑</button>
+  <button class="icon-btn" id="briefBtn" title="Case brief" aria-label="Open case brief">📻</button><button class="icon-btn" id="workbenchBtn" title="Advanced workbench" aria-label="Open advanced workbench">🧠</button>
+  <button class="icon-btn" id="notesBtn" title="Case notes" aria-label="Toggle case notes" aria-expanded="false">🗒️</button>
+  <button class="icon-btn" id="studioBtn" title="Investigation studio" aria-label="Open investigation studio">🧰</button><button class="icon-btn" id="setBtn2" title="Settings" aria-label="Open settings">⚙️</button>
   <button class="accuse-btn" id="accuseBtn">Name the truth</button>
 </div>
 
 <!-- ===== BOARD ===== -->
-<div id="viewport">
+<main id="viewport" tabindex="-1" aria-label="Interactive evidence desk. Drag to pan, pinch to zoom, or use the evidence controls.">
   <div id="board">
-    <svg id="strings"></svg>
+    <svg id="strings" aria-hidden="true"></svg>
   </div>
-</div>
+</main>
 
 <!-- zoom -->
 <div id="zoomctl" class="hidden">
-  <button class="zbtn" id="zIn">+</button>
-  <button class="zbtn" id="zOut">−</button>
-  <button class="zbtn" id="zFit" title="Fit board">⤢</button>
+  <button class="zbtn" id="zIn" aria-label="Zoom in">+</button>
+  <button class="zbtn" id="zOut" aria-label="Zoom out">−</button>
+  <button class="zbtn" id="zFit" title="Fit board" aria-label="Fit evidence board to screen">⤢</button>
 </div>
 
 <!-- hint -->
 <div id="hintbar" class="hidden"></div>
 
 <!-- notes -->
-<div id="notes">
-  <div class="notes-head">🗒️ CASE NOTES <button class="icon-btn" style="margin-left:auto" id="notesClose">✕</button></div>
+<aside id="notes" aria-label="Case notes" aria-hidden="true">
+  <div class="notes-head">🗒️ CASE NOTES <button class="icon-btn" style="margin-left:auto" id="notesClose" aria-label="Close case notes">✕</button></div>
   <div class="notes-body" id="notesBody"><div class="notes-empty">No leads yet. Test a clue against an account.</div></div>
-</div>
+</aside>
 
 <!-- toast -->
-<div id="toast"></div><div id="achievementPop" class="achievement-pop"></div>
+<div id="toast" role="status" aria-live="polite"></div><div id="achievementPop" class="achievement-pop" role="status" aria-live="polite"></div>
 
 <!-- modal -->
-<div id="modal"><div class="modal-card" id="modalCard"></div></div>
+<div id="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Investigation dialog"><div class="modal-card" id="modalCard" tabindex="-1"></div></div>
+
+<!-- V6 dead-zone controls: dedicated portrait tray and collapsible landscape palette -->
+<nav id="evidenceTray" aria-label="Evidence desk controls"><div class="tray-tools">
+  <button class="tray-btn" data-v6-action="cases" aria-label="Case files">📁<small>FILES</small></button>
+  <button class="tray-btn" data-v6-action="timeline" aria-label="Timeline">🕑<small>TIME</small></button>
+  <button class="tray-btn" data-v6-action="notes" aria-label="Case notes">🗒️<small>NOTES</small></button>
+  <button class="tray-btn" data-v6-action="workbench" aria-label="Workbench">🧠<small>THINK</small></button>
+  <button class="tray-btn" data-v6-action="fit" aria-label="Fit board">⤢<small>FIT</small></button>
+  <button class="tray-btn truth" data-v6-action="verdict" aria-label="Name the truth">⚖<small>TRUTH</small></button>
+</div></nav>
+<div id="landTools"><button id="landToolsToggle" aria-label="Open investigation tools" aria-expanded="false">☰</button><div id="landToolsPanel" role="toolbar" aria-label="Investigation tools">
+  <button class="land-btn" data-v6-action="cases" aria-label="Case files">📁</button><button class="land-btn" data-v6-action="timeline" aria-label="Timeline">🕑</button>
+  <button class="land-btn" data-v6-action="notes" aria-label="Case notes">🗒️</button><button class="land-btn" data-v6-action="workbench" aria-label="Workbench">🧠</button>
+  <button class="land-btn" data-v6-action="studio" aria-label="Investigation studio">🧰</button><button class="land-btn" data-v6-action="settings" aria-label="Settings">⚙️</button>
+</div></div>
+<div id="v6Brand">MADE BY MATT · <b>AAA V6</b></div>
+<div id="directorHud" aria-hidden="true"><div class="director-copy">CASEBOARD ORBITAL SCAN · EVIDENCE ONLINE</div><button id="directorSkip" aria-label="Skip evidence-board fly-through">SKIP</button></div>
+<div id="resolutionFx" aria-hidden="true"><div class="resolution-title">CASE RESOLVED<br><small style="font-size:.25em;color:var(--lamp)">CONSTELLATION LOCKED</small></div></div>
+<div id="v6Live" role="status" aria-live="polite" style="position:fixed;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap"></div>
 
 <script>
 "use strict";
+/* ============================================================
+   MADE BY MATT · AAA V6 RELEASE CONTRACT
+   This presentation layer is deliberately separate from case and
+   verdict authority below. Legacy keys remain canonical and writable.
+============================================================ */
+const V6_SAVE_KEY="mbm_static_v6_profile";
+const V6_LEGACY_KEYS=["static_meta_v9","static_tone","static_calm","static_sound","static_tut_done"];
+let V6Profile={version:6,schema:6,gameId:"static-signal-lost",best:{},settings:{},legacyRaw:{},migratedAt:null};
+function saveV6Profile(){try{localStorage.setItem(V6_SAVE_KEY,JSON.stringify(V6Profile));}catch(e){}}
+function migrateV6Profile(){
+  try{
+    const raw=localStorage.getItem(V6_SAVE_KEY),parsed=raw&&JSON.parse(raw);
+    if(parsed&&parsed.version===6&&parsed.gameId==="static-signal-lost")V6Profile=Object.assign(V6Profile,parsed);
+    let changed=!raw;
+    V6_LEGACY_KEYS.forEach(k=>{const v=localStorage.getItem(k);if(v!==null&&V6Profile.legacyRaw[k]!==v){V6Profile.legacyRaw[k]=v;changed=true;}});
+    for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.indexOf("static_stars_")===0){const v=localStorage.getItem(k);if(V6Profile.legacyRaw[k]!==v){V6Profile.legacyRaw[k]=v;changed=true;}try{V6Profile.best[k.slice(13)]=JSON.parse(v);}catch(e){}}}
+    const settings={tone:localStorage.getItem("static_tone"),calm:localStorage.getItem("static_calm"),sound:localStorage.getItem("static_sound"),access:localStorage.getItem("static_meta_v9")};
+    if(JSON.stringify(V6Profile.settings)!==JSON.stringify(settings)){V6Profile.settings=settings;changed=true;}
+    if(!V6Profile.migratedAt){V6Profile.migratedAt=new Date().toISOString();changed=true;}
+    if(changed)saveV6Profile();
+  }catch(e){}
+  return V6Profile;
+}
+function v6MirrorLegacy(k,v){
+  if(!(V6_LEGACY_KEYS.includes(k)||k.indexOf("static_stars_")===0))return;
+  try{V6Profile.legacyRaw[k]=JSON.stringify(v);if(k.indexOf("static_stars_")===0)V6Profile.best[k.slice(13)]=v;else V6Profile.settings[k.replace("static_","")]=v;saveV6Profile();}catch(e){}
+}
+migrateV6Profile();
+window.__MBM_V6_RELEASE__={
+  version:"6.0.0",schema:6,gameId:"static-signal-lost",legacyUntouched:true,
+  features:["viewport-first-evidence-desk","portrait-dead-zone-tray","landscape-collapsible-tools","cinematic-caseboard-flythrough","intent-scored-evidence-selection","animated-thread-preview","contradiction-pulse","restrained-camera-shake","clutch-deduction","case-constellation-resolution","compressed-webaudio-master","schema-6-profile-migration","modal-focus-trap","visibility-safety","reduced-motion-calm","offline-single-file"],
+  authority:{cases:3,caseIds:["signal-lost","understudy","cold-storage"],legacyKeys:V6_LEGACY_KEYS.slice(),caseDataSha256:"3568db602d0b85cb7c3383b467e902b2a3259cbad2a686152ebbc6d94dcc0539",deductionRulesSha256:"2c0aebacc5bd595d0ee5bc20c03538113d990108a1553c6d220aeb2a3541b93e",verdictAuthoritySha256:"f858fd21c27bbd13a2d478febc6d064c4c1ffe9920df513843ce81bb5adbfcd9",progressDefaultsSha256:"32667b0c52b98ce3b6770ea78e1a560da731a904e44707d6a536f6e89493a618",accessibilityOptionsSha256:"08f5e0ff0627fd24777a41582c4b2a0a4e125661c8a30cc47d6e2c4d47809698"},
+  selfTest:function(){
+    const expected={"signal-lost":"marion|m_mast|mo_figures","understudy":"madge|m_flask|mo_letter","cold-storage":"dennis|m_took|mo_debt"};
+    const found=typeof CASES!=="undefined"&&CASES.length===3&&CASES.every(c=>expected[c.id]&&[c.solution.culprit,c.solution.method,c.solution.motive].join("|")===expected[c.id]);
+    const duplicateIds=[...document.querySelectorAll("[id]")].map(n=>n.id).filter((id,i,a)=>a.indexOf(id)!==i);
+    const external=[...document.scripts].filter(s=>s.src&&!s.src.startsWith("data:"));
+    const legacyOk=V6_LEGACY_KEYS.every(k=>typeof k==="string")&&V6Profile.version===6;
+    return {ok:!!(found&&!duplicateIds.length&&!external.length&&legacyOk),version:"6.0.0",schema:6,legacyUntouched:true,gameId:"static-signal-lost",cases:found?3:0,duplicateIds:duplicateIds,externalScripts:external.length,profileVersion:V6Profile.version};
+  }
+};
 /* ============================================================
    STATIC — data-driven deduction engine
    Case format is generic; add cases to CASES[] to grow the show.
@@ -421,7 +537,7 @@ body.large-text .card{font-size:15px;line-height:1.55}body.large-text .card .cbo
 /* ---------- safe storage (works on GitHub Pages; degrades in locked sandboxes) ---------- */
 const store={
   get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v);}catch(e){return d;}},
-  set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v));v6MirrorLegacy(k,v);}catch(e){}}
 };
 
 /* ---------- evidence art (SVG artifact generators) ---------- */
@@ -899,11 +1015,23 @@ function provenance(cl){if(cl.provenance)return cl.provenance;const map={hard:{p
 /* ============================================================
    AUDIO (procedural, resumed on first gesture)
 ============================================================ */
+const MasterBus={ctx:null,compressor:null,gain:null,input:null};
 let AC=null;
-function audio(){ if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}} if(AC&&AC.state==="suspended")AC.resume(); return AC; }
+function audio(){
+  try{
+    if(!MasterBus.ctx){
+      const AudioCtx=window.AudioContext||window.webkitAudioContext;if(!AudioCtx)return null;
+      const ac=MasterBus.ctx=new AudioCtx(),comp=MasterBus.compressor=ac.createDynamicsCompressor(),gain=MasterBus.gain=ac.createGain();
+      comp.threshold.setValueAtTime(-18,ac.currentTime);comp.knee.setValueAtTime(12,ac.currentTime);comp.ratio.setValueAtTime(8,ac.currentTime);comp.attack.setValueAtTime(.003,ac.currentTime);comp.release.setValueAtTime(.15,ac.currentTime);
+      gain.gain.setValueAtTime(.82,ac.currentTime);comp.connect(gain);gain.connect(ac.destination);MasterBus.input=comp;AC=ac;
+    }
+    if(MasterBus.ctx.state==="suspended")MasterBus.ctx.resume().catch(()=>{});
+    return MasterBus.ctx;
+  }catch(e){return null;}
+}
 function beep(type){
   if(!state.sound)return; const ac=audio(); if(!ac)return;
-  const now=ac.currentTime, g=ac.createGain(); g.connect(ac.destination);
+  const now=ac.currentTime, g=ac.createGain(); g.connect(MasterBus.input);
   const vol=state.calm?0.10:0.22;
   if(type==="crack"){
     const o=ac.createOscillator();o.type="sawtooth";
@@ -913,7 +1041,7 @@ function beep(type){
     o.start(now);o.stop(now+.3);
   }else if(type==="verify"){
     [523,784].forEach((f,i)=>{const o=ac.createOscillator();o.type="sine";o.frequency.value=f;
-      const gg=ac.createGain();gg.connect(ac.destination);o.connect(gg);
+      const gg=ac.createGain();gg.connect(MasterBus.input);o.connect(gg);
       gg.gain.setValueAtTime(0,now+i*.09);gg.gain.linearRampToValueAtTime(vol*.7,now+i*.09+.02);
       gg.gain.exponentialRampToValueAtTime(.001,now+i*.09+.25);o.start(now+i*.09);o.stop(now+i*.09+.26);});
   }else if(type==="fizzle"){
@@ -924,7 +1052,7 @@ function beep(type){
     g.gain.setValueAtTime(vol*.25,now);g.gain.exponentialRampToValueAtTime(.001,now+.05);o.start(now);o.stop(now+.06);
   }else if(type==="sting"){
     [330,415,494].forEach(f=>{const o=ac.createOscillator();o.type="sine";o.frequency.value=f;
-      const gg=ac.createGain();gg.connect(ac.destination);o.connect(gg);
+      const gg=ac.createGain();gg.connect(MasterBus.input);o.connect(gg);
       gg.gain.setValueAtTime(0,now);gg.gain.linearRampToValueAtTime(vol*.5,now+.03);
       gg.gain.exponentialRampToValueAtTime(.001,now+1.1);o.start(now);o.stop(now+1.2);});
   }
@@ -996,6 +1124,7 @@ function makeSuspect(s,x,y){
     <div class="role">${s.role}</div>
     <div class="meter"><i id="mtr_${s.id}"></i></div>
     <div class="susp-status" id="ss_${s.id}">Person of interest</div>`;
+  e.tabIndex=0;e.setAttribute("role","group");e.setAttribute("aria-label",`${s.name}, ${s.role}. ${s.profile}`);
   placeCard(s.id,x,y);
 }
 function makeStatement(st,x,y){
@@ -1004,6 +1133,7 @@ function makeStatement(st,x,y){
   e.innerHTML=`<div class="ctitle"><span class="pchip">${portrait(sus.look,20)}</span>${sus.name} says</div>
     <div class="quote">${st.quote}</div>
     <button class="linkbtn" data-link="statement" data-id="${st.id}">🔗 Check this</button>`;
+  e.tabIndex=0;e.setAttribute("role","button");e.setAttribute("aria-label",`${sus.name} account. Activate while linking to test this account.`);
   placeCard(st.id,x,y);
 }
 function makeClue(cl,x,y,newly){
@@ -1012,6 +1142,7 @@ function makeClue(cl,x,y,newly){
     <div class="cvisual">${cl.locked?ART.locked():renderVisual(cl)}</div>
     ${cl.locked?"":`<div class="tapnote">👁 tap to examine</div>`}
     <button class="linkbtn" data-link="clue" data-id="${cl.id}">🔗 Test</button>`;
+  e.tabIndex=0;e.setAttribute("role","button");e.setAttribute("aria-label",`${cl.title}. ${cl.rel} evidence. ${cl.locked?"Sealed.":"Activate to examine."}`);
   placeCard(cl.id,x,y);
   return e;
 }
@@ -1176,6 +1307,8 @@ function doCrack(st,clueId){
   (ob.unlocks||[]).forEach(unlockClue);
   addNote("crack", toneText(ob.note));
   toast("💥 Contradiction found!","crack");
+  if(typeof V6ContradictionPulse==="function")V6ContradictionPulse(card);
+  if(st.id===state.caseData.hardAnchor&&typeof V6Clutch!=="undefined")V6Clutch.trigger(card);
   if(state.tut===3&&st.id==="st_marion") tutFinish();
   updateProgress(); checkComplete();
 }
@@ -1303,8 +1436,20 @@ function shake(){ if(state.calm||isReduced())return; board.animate(
    BRIEF / HOW / SETTINGS / VERDICT modals
 ============================================================ */
 const modal=$("#modal"), modalCard=$("#modalCard");
-function openModal(html){ modalCard.innerHTML=html; modal.classList.add("show"); }
-function closeModal(){ modal.classList.remove("show"); }
+let modalReturnFocus=null;
+function v6SetBackgroundInert(on){
+  ["#title","#topbar","#viewport","#zoomctl","#hintbar","#notes","#evidenceTray","#landTools"].forEach(s=>{const n=$(s);if(!n)return;n.inert=!!on;if(on)n.setAttribute("aria-hidden","true");else if(s==="#notes")n.setAttribute("aria-hidden",n.classList.contains("open")?"false":"true");else n.removeAttribute("aria-hidden");});
+}
+function openModal(html){
+  if(!modal.classList.contains("show")){const active=document.activeElement;modalReturnFocus=active&&active.isConnected&&!modal.contains(active)?active:(state.caseData?viewport:$("#startBtn"));}
+  modalCard.innerHTML=html;modal.classList.add("show");modal.setAttribute("aria-hidden","false");v6SetBackgroundInert(true);
+  const heading=modalCard.querySelector("h1,h2,.verdict-head");if(heading){heading.id="v6ModalTitle";modal.setAttribute("aria-labelledby","v6ModalTitle");}else modal.removeAttribute("aria-labelledby");
+  requestAnimationFrame(()=>{const first=modalCard.querySelector("button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex='-1'])");(first||modalCard).focus({preventScroll:true});});
+}
+function closeModal(){
+  modal.classList.remove("show");modal.setAttribute("aria-hidden","true");v6SetBackgroundInert(false);
+  const back=modalReturnFocus;modalReturnFocus=null;if(back&&back.isConnected)requestAnimationFrame(()=>back.focus({preventScroll:true}));
+}
 modal.addEventListener("click",e=>{ if(e.target===modal)closeModal(); });
 
 function showBrief(){
@@ -1313,7 +1458,7 @@ function showBrief(){
     <div class="epilogue" style="margin-bottom:14px">${f.brief}</div>
     <div class="strength">${c.briefFoot}</div>
     <div class="modal-actions"><button class="btn primary small" id="mClose">Back to the board</button></div>`);
-  $("#mClose").onclick=()=>{ closeModal(); if(state.tut===0)tutStep(1); };
+  $("#mClose").onclick=()=>{ closeModal(); if(typeof V6Director!=="undefined")V6Director.play(()=>{if(state.tut===0)tutStep(1);}); else if(state.tut===0)tutStep(1); };
 }
 function showHow(){
   openModal(`<h2>How to play</h2>
@@ -1444,6 +1589,7 @@ function deliverVerdict(){
   const nx=$("#mNext"); if(nx)nx.onclick=()=>{ closeModal(); startCase(nextIdx); };
   const cf=$("#mCases"); if(cf)cf.onclick=()=>{ closeModal(); showCaseSelect(); };
   $("#mFile").onclick=()=>{ closeModal(); startCase(state.caseIndex); };
+  if(cls==="win"&&typeof V6Resolution!=="undefined")V6Resolution.play();
 }
 
 function showStudio(){openModal(`<h2>🧰 Investigation studio</h2><div class="sub">Creation, replay and evidence-review tools.</div><div class="studio-grid"><button class="studio-card" id="dailyCard"><b>☀ DAILY MICRO-CASE</b><small>A five-minute seeded contradiction puzzle for today.</small></button><button class="studio-card" id="makerCard"><b>✎ CASE MAKER</b><small>Draft and validate a shareable case outline.</small></button><button class="studio-card" id="shareCard"><b>🔗 EXPORT PROOF GRAPH</b><small>Share your links, notes and active theory without revealing the official answer.</small></button><button class="studio-card" id="importCard"><b>⇩ REVIEW A CASE</b><small>Load another investigator's exported proof graph.</small></button><button class="studio-card" id="teacherCard"><b>▤ INVESTIGATION REPORT</b><small>Generate a process summary for reflection or teaching.</small></button><button class="studio-card" id="masteryCard"><b>★ MASTERY FILE</b><small>Ranks, badges and campaign progress.</small></button></div><div class="modal-actions"><button class="btn small" id="studioClose">Close</button></div>`);$('#dailyCard').onclick=showDaily;$('#makerCard').onclick=showMaker;$('#shareCard').onclick=showExport;$('#importCard').onclick=showImport;$('#teacherCard').onclick=showReport;$('#masteryCard').onclick=showMastery;$('#studioClose').onclick=closeModal}
@@ -1643,8 +1789,9 @@ $("#setBtn").onclick=showSettings;
 $("#setBtn2").onclick=showSettings;$("#studioBtn").onclick=showStudio;
 $("#briefBtn").onclick=showBrief;$("#workbenchBtn").onclick=()=>showWorkbench("infer");
 $("#accuseBtn").onclick=showVerdict;
-$("#notesBtn").onclick=()=>$("#notes").classList.toggle("open");
-$("#notesClose").onclick=()=>$("#notes").classList.remove("open");
+function toggleNotes(force){const n=$("#notes"),open=force==null?!n.classList.contains("open"):!!force;n.classList.toggle("open",open);n.setAttribute("aria-hidden",open?"false":"true");$("#notesBtn").setAttribute("aria-expanded",open?"true":"false");if(open)$("#notesClose").focus();}
+$("#notesBtn").onclick=()=>toggleNotes();
+$("#notesClose").onclick=()=>{toggleNotes(false);$("#notesBtn").focus();};
 $("#zIn").onclick=()=>zoomAt(viewport.clientWidth/2,viewport.clientHeight/2,1.15);
 $("#zOut").onclick=()=>zoomAt(viewport.clientWidth/2,viewport.clientHeight/2,1/1.15);
 $("#zFit").onclick=fitBoard;
@@ -1696,5 +1843,132 @@ document.body.classList.toggle("calm",state.calm);
 applyTransform();
 window.addEventListener("resize",()=>{ if(!$("#topbar").classList.contains("hidden"))fitBoard(); });
 </script>
-<script defer src="/hud.js"></script></body>
+<script>
+/* ============================================================
+   AAA V6 PRESENTATION DIRECTOR
+   Case arrays, deduction rules, progress keys and verdict scoring
+   above remain the sole authority. This layer adds no solution hints.
+============================================================ */
+(function(){
+  "use strict";
+  const q=s=>document.querySelector(s),qa=s=>[...document.querySelectorAll(s)];
+  const reduce=()=>state.calm||isReduced();
+  const announce=msg=>{const n=q("#v6Live");if(n)n.textContent=msg;};
+
+  function normaliseInteractive(root){
+    (root||document).querySelectorAll("button").forEach(b=>{if(!b.getAttribute("aria-label")){const label=(b.textContent||"").replace(/\s+/g," ").trim()||b.title;if(label)b.setAttribute("aria-label",label);}});
+    (root||document).querySelectorAll(".switch").forEach(s=>{s.tabIndex=0;s.setAttribute("role","switch");s.setAttribute("aria-checked",s.classList.contains("on")?"true":"false");s.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();s.click();}};});
+    (root||document).querySelectorAll(".event-token").forEach(s=>{s.tabIndex=0;s.setAttribute("role","button");s.setAttribute("aria-label",`Timeline event ${s.textContent.trim()}`);s.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();s.click();}};});
+  }
+  normaliseInteractive(document);
+  new MutationObserver(()=>normaliseInteractive(q("#modalCard"))).observe(q("#modalCard"),{childList:true,subtree:true});
+
+  const Camera={
+    shakeIntensity:0,
+    toCard(id,zoom){const c=state.cards[id];if(!c)return;board.classList.add("glide");state.scale=clampScale(zoom||state.scale);state.panX=viewport.clientWidth/2-(c.x+(c.el.offsetWidth||200)/2)*state.scale;state.panY=viewport.clientHeight/2-(c.y+(c.el.offsetHeight||140)/2)*state.scale;applyTransform();},
+    shake(amount){if(reduce()||!board.animate)return;this.shakeIntensity=Math.min(4,Math.max(this.shakeIntensity,amount||2));const n=this.shakeIntensity;board.animate([{transform:board.style.transform},{transform:board.style.transform+` translate(${n}px,${-n*.55}px)`},{transform:board.style.transform+` translate(${-n*.7}px,${n*.35}px)`},{transform:board.style.transform}],{duration:180,easing:"ease-out"});this.shakeIntensity*=.45;}
+  };
+  window.V6Camera=Camera;
+  shake=function(){Camera.shake(2.6);};
+
+  function v6Chord(kind){
+    if(!state.sound)return;const ac=audio();if(!ac||!MasterBus.input)return;const now=ac.currentTime;
+    const notes=kind==="clutch"?[110,440,880]:[220,329.63,493.88,554.37];
+    notes.forEach((f,i)=>{const o=ac.createOscillator(),g=ac.createGain();o.type=i?"triangle":"sine";o.frequency.setValueAtTime(f,now);if(kind!=="clutch"&&i===0)o.frequency.exponentialRampToValueAtTime(55,now+.9);g.gain.setValueAtTime(.0001,now);g.gain.linearRampToValueAtTime(state.calm?.012:.025,now+.05+i*.025);g.gain.exponentialRampToValueAtTime(.0001,now+(kind==="clutch"?.48:1.15));o.connect(g);g.connect(MasterBus.input);o.start(now);o.stop(now+(kind==="clutch"?.5:1.2));});
+  }
+
+  const Director={
+    active:false,timers:[],done:null,key:null,
+    play(onDone){
+      if(!state.caseData){if(onDone)onDone();return;}this.stop(false);this.active=true;this.done=onDone||null;this.key=state.startTs;
+      const hud=q("#directorHud");hud.classList.add("show");hud.setAttribute("aria-hidden","false");board.classList.add("v6-cinematic");announce(`Case ${state.caseIndex+1}, ${state.caseData.title}. Evidence-board fly-through.`);v6Chord("intro");
+      const ids=[];const open=state.caseData.clues.filter(c=>!c.locked);if(open[0])ids.push(open[0].id);if(state.caseData.hardAnchor)ids.push(state.caseData.hardAnchor);if(state.caseData.suspects[0])ids.push(state.caseData.suspects[0].id);
+      const duration=reduce()?360:560;ids.forEach((id,i)=>this.timers.push(setTimeout(()=>{if(this.active)Camera.toCard(id,i===1?1.08:.9);},i*duration)));
+      this.timers.push(setTimeout(()=>this.stop(true),Math.max(420,ids.length*duration+120)));
+    },
+    stop(complete){if(!this.active&&complete!==false)return;this.timers.forEach(clearTimeout);this.timers=[];this.active=false;board.classList.remove("v6-cinematic","glide");const hud=q("#directorHud");hud.classList.remove("show");hud.setAttribute("aria-hidden","true");if(state.caseData)fitBoard();const cb=this.done;this.done=null;if(complete&&cb)cb();}
+  };
+  window.V6Director=Director;q("#directorSkip").onclick=()=>Director.stop(true);
+
+  const V6ClutchImpl={timer:0,trigger(card){clearTimeout(this.timer);document.body.classList.add("v6-clutch");card.classList.add("v6-clutch-card");Camera.shake(3.4);v6Chord("clutch");announce("Clutch deduction. The decisive hard-evidence link is secured.");toast("⚡ CLUTCH DEDUCTION · HARD LINK SECURED","crack");this.timer=setTimeout(()=>{document.body.classList.remove("v6-clutch");card.classList.remove("v6-clutch-card");},reduce()?120:520);}};
+  window.V6Clutch=V6ClutchImpl;
+  window.V6ContradictionPulse=card=>{card.classList.add("v6-contradiction");setTimeout(()=>card.classList.remove("v6-contradiction"),reduce()?100:760);};
+
+  const Resolution={
+    timer:0,play(){const fx=q("#resolutionFx");clearTimeout(this.timer);fx.querySelectorAll(".resolution-node,.resolution-thread").forEach(n=>n.remove());
+      const pts=[[16,68],[30,28],[48,55],[65,24],[84,62]];pts.forEach((p,i)=>{const n=document.createElement("i");n.className="resolution-node";n.style.left=p[0]+"%";n.style.top=p[1]+"%";n.style.animationDelay=(i*.09)+"s";fx.appendChild(n);if(i){const a=pts[i-1],dx=p[0]-a[0],dy=p[1]-a[1],len=Math.hypot(dx*innerWidth/100,dy*innerHeight/100),angle=Math.atan2(dy*innerHeight,dx*innerWidth)*180/Math.PI,l=document.createElement("i");l.className="resolution-thread";l.style.left=a[0]+"%";l.style.top=a[1]+"%";l.style.width=len+"px";l.style.transform=`rotate(${angle}deg)`;l.style.animationDelay=(i*.09)+"s";fx.appendChild(l);}});
+      fx.classList.add("show");announce("Case resolved. Evidence constellation locked.");v6Chord("resolve");Camera.shake(1.4);this.timer=setTimeout(()=>this.stop(),reduce()?180:1650);},
+    stop(){clearTimeout(this.timer);q("#resolutionFx").classList.remove("show");}
+  };
+  window.V6Resolution=Resolution;
+
+  function candidateInfo(clientX,clientY,wanted){
+    if(!state.caseData)return {best:null,list:[]};const max=Math.max(76,52/(state.scale||1)),list=[];
+    qa(".card."+wanted).forEach(card=>{if(card.classList.contains("locked"))return;const r=card.getBoundingClientRect(),cx=(r.left+r.right)/2,cy=(r.top+r.bottom)/2,d=Math.hypot(cx-clientX,cy-clientY);if(d>max&&!card.matches(":hover"))return;const id=card.dataset.id;let score=120-d*2;
+      if(wanted==="statement"){if(!state.cracked[id]&&!state.verified[id])score+=30;}
+      else{const cl=state.caseData.clues.find(c=>c.id===id);if(cl&&cl.rel==="hard")score+=24;}
+      if(clientX>=r.left&&clientX<=r.right&&clientY>=r.top&&clientY<=r.bottom)score+=38;list.push({card,id,score,d});});list.sort((a,b)=>b.score-a.score||a.d-b.d);return {best:list[0]||null,list};
+  }
+  window.pickEvidenceIntent=(x,y,t)=>candidateInfo(x,y,t).best&&candidateInfo(x,y,t).best.card;
+
+  function clearPreview(){const p=q("#strings .v6-preview");if(p)p.remove();qa(".v6-intent,.v6-contradiction").forEach(c=>c.classList.remove("v6-intent","v6-contradiction"));}
+  function previewAt(e){clearPreview();if(!state.linking||!state.cards[state.linking.id])return;const wanted=state.linking.type==="clue"?"statement":"clue",pick=candidateInfo(e.clientX,e.clientY,wanted).best,a=centre(state.linking.id),vr=viewport.getBoundingClientRect(),bx=(e.clientX-vr.left-state.panX)/state.scale,by=(e.clientY-vr.top-state.panY)/state.scale,b=pick?centre(pick.id):{x:bx,y:by};
+    const ln=document.createElementNS("http://www.w3.org/2000/svg","line");ln.classList.add("v6-preview");ln.setAttribute("x1",a.x);ln.setAttribute("y1",a.y);ln.setAttribute("x2",b.x);ln.setAttribute("y2",b.y);strings.appendChild(ln);if(pick)pick.card.classList.add("v6-intent");}
+  viewport.addEventListener("pointermove",previewAt,{passive:true});
+  const oldCancel=cancelLink;cancelLink=function(silent){clearPreview();return oldCancel(silent);};
+  board.addEventListener("click",e=>{if(!state.linking||e.target.closest("[data-link]"))return;const wanted=state.linking.type==="clue"?"statement":"clue",res=candidateInfo(e.clientX,e.clientY,wanted);if(res.list.length<2)return;const chosen=res.best;if(!chosen)return;e.preventDefault();e.stopImmediatePropagation();chosen.card.classList.add("v6-intent");announce(`Selected ${chosen.card.getAttribute("aria-label")||chosen.id} from an evidence cluster.`);resolveLink(state.linking,{type:wanted,id:chosen.id});},true);
+
+  board.addEventListener("keydown",e=>{if(e.key!=="Enter"&&e.key!==" ")return;const card=e.target.closest(".card");if(!card||e.target.closest("button"))return;e.preventDefault();if(state.linking&&card.classList.contains("targetable"))tryCompleteLink(card);else if(card.classList.contains("clue")&&!card.classList.contains("locked"))openExamine(card.dataset.id);else if(card.classList.contains("statement"))armLink("statement",card.dataset.id);});
+
+  const actions={cases:()=>showCaseSelect(),timeline:()=>showTimeline(),notes:()=>toggleNotes(),workbench:()=>showWorkbench("infer"),fit:()=>fitBoard(),verdict:()=>showVerdict(),studio:()=>showStudio(),settings:()=>showSettings()};
+  qa("[data-v6-action]").forEach(b=>b.onclick=()=>{const fn=actions[b.dataset.v6Action];if(fn)fn();});
+  const land=q("#landTools"),landToggle=q("#landToolsToggle");landToggle.onclick=()=>{const open=!land.classList.contains("open");land.classList.toggle("open",open);landToggle.setAttribute("aria-expanded",open?"true":"false");landToggle.setAttribute("aria-label",open?"Close investigation tools":"Open investigation tools");};
+
+  document.addEventListener("keydown",e=>{
+    if((e.key==="Enter"||e.key===" ")&&(e.target.id==="msplash"||e.target.id==="splash")){e.preventDefault();e.target.dispatchEvent(new PointerEvent("pointerdown",{bubbles:true}));return;}
+    if(e.key==="Escape"&&Director.active){e.preventDefault();Director.stop(true);return;}
+    if(e.key==="Escape"&&land.classList.contains("open")){land.classList.remove("open");landToggle.setAttribute("aria-expanded","false");landToggle.focus();return;}
+    if(e.key!=="Tab"||!q("#modal").classList.contains("show"))return;const items=qa("#modalCard button:not([disabled]),#modalCard input:not([disabled]),#modalCard select:not([disabled]),#modalCard textarea:not([disabled]),#modalCard [tabindex]:not([tabindex='-1'])").filter(n=>n.offsetParent!==null);if(!items.length){e.preventDefault();q("#modalCard").focus();return;}const first=items[0],last=items[items.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+  },true);
+
+  function resumeAudio(){if(state.sound)audio();}
+  document.addEventListener("pointerdown",resumeAudio,{passive:true,capture:true});document.addEventListener("keydown",resumeAudio,{passive:true,capture:true});
+  document.addEventListener("visibilitychange",()=>{const hidden=document.hidden;document.body.classList.toggle("v6-hidden",hidden);if(hidden){Director.stop(false);Resolution.stop();clearPreview();if(MasterBus.ctx&&MasterBus.ctx.state==="running")MasterBus.ctx.suspend().catch(()=>{});}announce(hidden?"Investigation safely paused while hidden.":"Investigation ready. Audio resumes with your next input.");});
+  window.addEventListener("pagehide",()=>{saveV6Profile();Director.stop(false);Resolution.stop();});
+
+  q("#sptag").textContent="A COLD-CASE DEDUCTION · AAA V6";q("#titleSub").textContent="THREE CASE FILES · ASCENSION DESK ONLINE";
+  const msSub=q(".ms-sub");if(msSub)msSub.textContent="PRESENTS · AAA V6";
+  announce("STATIC Signal Lost, AAA V6 by Made by Matt. Three original case files preserved.");
+})();
+</script>
+<!-- MBM-INLINE-EXIT:BEGIN generated by tools/render_inline_exit.py, do not edit by hand -->
+<script>(function(){"use strict";
+try{
+if(window.__mbmExit)return;window.__mbmExit=1;
+var HOMES={"pupils":{"r":"/for/pupils/","l":"Pupils & learners"},"teachers":{"r":"/for/teachers/","l":"Teachers & education staff"},"parents":{"r":"/for/parents-carers/","l":"Parents & carers"},"schools":{"r":"/for/schools-semh/","l":"Schools & specialist settings"},"trusts":{"r":"/for/trusts/","l":"Academy trusts & education groups"},"councils":{"r":"/for/councils-organisations/","l":"Local authorities & education partners"},"partners":{"r":"/for/partners/","l":"Education organisations & service providers"},"main":{"r":"/main/","l":"Main homepage"}};
+var KEY="mbm_audience_view";
+function lsGet(k){try{var v=localStorage.getItem(k);return v===null?"":v;}catch(e){return "";}}
+function el(t,a,h){var e=document.createElement(t);for(var k in a)e.setAttribute(k,a[k]);if(h!==undefined)e.innerHTML=h;return e;}
+function adultOff(){try{var d=document.documentElement,b=document.body;
+return (d&&d.getAttribute("data-mbm-adult-features")==="off")||(b&&b.getAttribute("data-mbm-adult-features")==="off");}catch(e){return false;}}
+function chosen(){var v=lsGet(KEY);
+if(!Object.prototype.hasOwnProperty.call(HOMES,v))return null;
+var h=HOMES[v];
+if(h.r==="/main/"&&adultOff())return null;
+return h;}
+function mount(){
+if(!document.body||document.getElementById("mbmexit-back"))return;
+var st=document.createElement("style");st.id="mbmexit-style";st.textContent="#mbmexit-back,#mbmexit-home{position:fixed;top:calc(8px + env(safe-area-inset-top,0px));z-index:2147483000;width:44px;height:44px;min-width:44px;min-height:44px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(22,29,61,.72);color:#B9E6CD;border:1.5px solid rgba(185,230,205,.45);font:700 16px/1 Poppins,'Segoe UI',system-ui,sans-serif;text-decoration:none;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);opacity:.55}#mbmexit-back{left:calc(8px + env(safe-area-inset-left,0px))}#mbmexit-home{left:calc(58px + env(safe-area-inset-left,0px))}#mbmexit-back:hover,#mbmexit-home:hover{opacity:1;border-color:#B9E6CD}#mbmexit-back:focus-visible,#mbmexit-home:focus-visible{opacity:1;outline:3px solid #F2A24A;outline-offset:2px;border-color:#B9E6CD}@media print{#mbmexit-back,#mbmexit-home{display:none!important}}";
+(document.head||document.documentElement).appendChild(st);
+var back=el("a",{id:"mbmexit-back",href:"/games/","aria-label":"Back: Arcade",title:"Back to the Arcade"},"\u2190");
+document.body.appendChild(back);
+var h=chosen();
+if(h){var home=el("a",{id:"mbmexit-home",href:h.r,"aria-label":"Your homepage: "+h.l,title:"Your homepage: "+h.l},"<svg viewBox=\"0 0 24 24\" width=\"15\" height=\"15\" aria-hidden=\"true\" focusable=\"false\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 10.6 12 4.2l8 6.4\"/><path d=\"M6.2 9.6V19.8h11.6V9.6\"/></svg>");
+document.body.appendChild(home);}
+}
+if(document.body)mount();else document.addEventListener("DOMContentLoaded",mount);
+}catch(e){}
+})();</script>
+<!-- MBM-INLINE-EXIT:END -->
+</body>
 </html>

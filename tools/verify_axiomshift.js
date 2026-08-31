@@ -77,8 +77,8 @@ function buildEnv(preSave) {
   const els = {};
   const doc = { getElementById(id) { return els[id] || (els[id] = El('div')); }, createElement(tag) { return El(tag); }, querySelectorAll() { return []; }, body: El('body'), addEventListener() {} };
   els.cv = El('canvas');
-  let rafCb = null; const store = new Map(); if (preSave) store.set('mbm_axiomshift', preSave);
-  const win = { devicePixelRatio: 1, innerWidth: 900, innerHeight: 520, addEventListener() {}, requestAnimationFrame(cb) { rafCb = cb; return 1; }, cancelAnimationFrame() {}, performance: { now: () => clock.t }, localStorage: { getItem: k => store.has(k) ? store.get(k) : null, setItem: (k, v) => store.set(k, v), removeItem: k => store.delete(k) }, setTimeout() { return 0; } };
+  let rafCbs = []; const store = new Map(); if (preSave) store.set('mbm_axiomshift', preSave);
+  const win = { devicePixelRatio: 1, innerWidth: 900, innerHeight: 520, addEventListener() {}, requestAnimationFrame(cb) { rafCbs.push(cb); return rafCbs.length; }, cancelAnimationFrame() {}, performance: { now: () => clock.t }, localStorage: { getItem: k => store.has(k) ? store.get(k) : null, setItem: (k, v) => store.set(k, v), removeItem: k => store.delete(k) }, setTimeout() { return 0; } };
   const sb = { window: win, document: doc, requestAnimationFrame: win.requestAnimationFrame, localStorage: win.localStorage, performance: win.performance, setTimeout: win.setTimeout, Math, Date, JSON, console: { log() {} }, encodeURIComponent };
   sb.globalThis = sb; win.AXIOM = A; sb.AXIOM = A; vm.createContext(sb);
   vm.runInContext(coreSrc, sb, { filename: 'core-shell' });
@@ -91,7 +91,7 @@ function buildEnv(preSave) {
   vm.runInContext(shellSrc, sb, { filename: 'shell' });
   return {
     els, win, doc, arcs, clock,
-    frame(t) { clock.t = t; if (rafCb) rafCb(t); },
+    frame(t) { clock.t = t; const pending = rafCbs; rafCbs = []; pending.forEach(cb => cb(t)); },
     save() { const r = win.localStorage.getItem('mbm_axiomshift'); return r ? JSON.parse(r) : null; },
     tapCv() { els.cv.dispatch('pointerdown'); els.cv.dispatch('pointerup'); },
     holdDown() { els.cv.dispatch('pointerdown'); }, holdUp() { els.cv.dispatch('pointerup'); }
@@ -102,6 +102,11 @@ function buildEnv(preSave) {
 function driveLive(env, lvlIndex, beforeRun) {
   env.els.splashStart.click(); env.els.mPlay.click();
   env.els.levelGrid.children[lvlIndex].click();
+  // V6 adds a skippable construction fly-in before authoritative play begins.
+  // Exercise that real control so live-path assertions do not measure an
+  // intentionally paused director state as a gameplay failure. On older builds
+  // the stub has no listener, so this remains a harmless no-op.
+  if (env.els.v6Cinema) env.els.v6Cinema.click();
   if (beforeRun) beforeRun();
   const lvl = A.LEVELS[lvlIndex]; const tape = lvl.tape.slice();
   const bps = A.TEMPOS.standard / 60, dt = 1 / 60, lead = 0.05;
@@ -331,6 +336,7 @@ head('Job B1 — Calm Pulse suppresses the background pulse (behavioural, from p
 {
   const env = buildEnv();
   env.els.splashStart.click(); env.els.mPlay.click(); env.els.levelGrid.children[0].click();
+  if (env.els.v6Cinema) env.els.v6Cinema.click();
   const cx = 450, cy = 0.42 * 520;
   for (let f = 0; f < 30; f++) env.frame(1000 + f * 16.7);
   const pulseOff = env.arcs.filter(a => Math.abs(a.x - cx) < 8 && Math.abs(a.y - cy) < 8).length;
@@ -389,6 +395,7 @@ head('Render smoke — drive the real loop/draw under a stub DOM (no crash)');
     const env = buildEnv();
     env.els.splashStart.click(); env.els.mPlay.click();
     if (env.els.levelGrid.children[0]) env.els.levelGrid.children[0].click();
+    if (env.els.v6Cinema) env.els.v6Cinema.click();
     for (let f = 0; f < 240; f++) env.frame(f * 16.7);   // p1: update()+render(), smudge blot
     env.els.mGuide.click();
     const env2 = buildEnv(); driveLive(env2, 5);          // finale: gates, glitch telegraph, all forms
