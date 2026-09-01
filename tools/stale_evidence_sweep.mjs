@@ -67,6 +67,20 @@ import { execFileSync } from 'node:child_process';
 import os from 'node:os';
 import { fileURLToPath } from 'node:url';
 
+/* console.log writes to stdout ASYNCHRONOUSLY when stdout is a pipe, and the
+   process.exit() calls below discard whatever is still queued. That is
+   invisible while this report is short and silently eats the tail once it is
+   long: two captures of the same run over the same tree returned 23,413 and
+   428,196 bytes of a 729,397-byte report. tools/fieldops/qa_record_control.mjs
+   plants its fixture repo last in the table, so the discarded tail is exactly
+   what it asserts on, and it reports "no row emitted" for rows this sweep did
+   emit -- a control going red because the output vanished, not because the
+   form stopped firing, which is the one thing it must never do.
+   Writing synchronously puts every line on the fd before any exit. It changes
+   nothing about what is written, only when. */
+console.log = (...parts) => fs.writeSync(1, parts.join(' ') + '\n');
+
+
 const ARGS = new Set(process.argv.slice(2));
 const APPLY = ARGS.has('--apply');
 const SELFTEST = ARGS.has('--self-test');

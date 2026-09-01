@@ -1,0 +1,40 @@
+{
+ "file": "tools/verify_fixture_names.mjs",
+ "finding": "the person-shaped-fixture check reds on one already-adjudicated lesson title that VB evidence quotes",
+ "status": "RESOLVED — split into its own PR under Order H7, 2026-09-01",
+ "whenItSurfaced": "Only now. This step sits after the qa-record control in the same CI job, so on every earlier run of this branch it never executed: the control failed first and the job stopped. Fixing the control did not create this; it revealed it.",
+ "measurement": {
+  "unallowedHits": 107,
+  "distinctTokens": 1,
+  "token": "CAREERS_W11_..._LAUNCH (the LAUNCH ASDAN W11 mock-interview careers lesson)",
+  "filesCarryingItUnallowed": [
+   "_sownb/vb/Q7ZTQQ_PATHS.txt",
+   "_sownb/vb/evidence/run2/va-launch-asdan-w13/g11.json",
+   "_sownb/vb/evidence/run2/va-launch-asdan-w14/g11.json",
+   "_sownb/vb/evidence/run4/RETRO_SWEEP_g18v2.json",
+   "_sownb/vb/evidence/run4/b2-lasdan-w16/g11.json",
+   "_sownb/vb/evidence/run4/b2-lasdan-w16/g18.json",
+   "_sownb/vb/evidence/run5/RETRO_RESCORE_v220.json",
+   "_sownb/vb/evidence/run6/D5_RESCORE_SINGLE_G18.json",
+   "_sownb/vb/evidence/run6/G24_VISUAL_DENSITY.json",
+   "_sownb/vb/evidence/run6/PHASE3_PRINT_MEASURE.json"
+  ],
+  "redControlFired": true,
+  "redControlDetail": "the seeded person-shaped fixture reds the real tree — 108 hits while seeded, 107 with the seed removed"
+ },
+ "noPupilNameIsInvolved": "The token names no person. It is a real LAUNCH ASDAN W11 careers lesson and it trips the predicate only because MOCK is a fixture marker and the surrounding words are ordinary titlecase, so Mock/Interview/Answer/Evidence/Improve reads as person-shaped. That exact string is ALREADY in the tool's own allowlist for three LAUNCH_ASDAN paths and for the checker itself, ruled by Order N6 on 2026-08-28: 'real careers lesson title; MOCK is a fixture marker but this names no person.' Across the whole 3,524-file tree the only other person-shaped strings are the checker's declared red vectors and the ledger's dated record of the canary, each allowlisted with its reason. S23_NAMES does not exist in the repository.",
+ "whyVBEvidenceQuotesIt": "g11 and g18 measure a candidate against its family's whole corpus, and that lesson is a member of the LAUNCH ASDAN corpus, so its filename appears in the corpus listings the evidence records. Renaming it in the evidence would falsify the evidence; the lesson itself is live and is not VB's to rename.",
+ "theFix": "Ten entries in the tool's ALLOW list, one per file, same token and same reason as the three that are already there. The allowlist is keyed on (file, text) by the tool's own design — its comment says an allowlist that covers a whole file is 'an excuse with a filename' — so ten per-file entries keep every OTHER person-shaped string in those same files catchable.",
+ "whyNotDone": "This is the estate's pupil-name safeguarding control. Widening its allowlist is a safeguarding decision, not a build fix, and it is Matt's to make even though the token is already adjudicated and no name is involved. The edit was also declined at the tool level here, which is the right default for this file. Not retried, not worked around.",
+ "doNotFixByOtherMeans": "Never by renaming the lesson in the evidence, never by exempting a directory, never by deleting the evidence that names it, and never by relaxing the predicate.",
+ "narrowedFirst": "My own commentary about this finding quoted the token verbatim and so added three more offending files -- VB_STATE.json, WRONG_BEFORE_RIGHT.md and this record. Prose that merely DISCUSSES a token does not need to reproduce it, so all three now name it as CAREERS_W11_..._LAUNCH, which is unambiguous and does not trip the predicate. That is not done to the ten files below: Q7ZTQQ_PATHS.txt is a real path inventory and the nine evidence files enumerate a real corpus, so eliding the token in them would falsify them. Ten files, not thirteen, is what the allowlist has to cover.",
+ "ruling": {
+  "order": "mbm-h7-fixture-allowlist-2026-09-01-CONTINUE",
+  "verdict": "KEEP 10 / DROP 0",
+  "why": "Ten entries, one token, and the token is not a name of any kind — not a historical figure, not staff, not a declared placeholder, not fictional. It is the filename of a live lesson that exists at 59,500 bytes. Criterion (a) provably not a pupil first name: met. (b) reason written beside the entries: met. (c) seeded negative control still trips: proven on the combined tree, 1 hit while seeded, 0 clean, all person-shaped red vectors still firing. (d) needed by fixtures that exist: all ten files exist and each names a live lesson.",
+  "hardRuleApplied": "The allowlist never lands in the same PR as content the gate judges, so it was split: PR #192 off main, one file, +48 lines, zero content.",
+  "provenWhere": "On main alone the ten files do not exist and the entries are inert, so the proof was run on main + the gate change + this branch's content, the only tree where they bite. 107 unallowed hits -> 0.",
+  "pr": 192
+ },
+ "deadlockRouteDoesNotApply": "Order H7 §2 offered two routes for a required-check deadlock: a ruleset PR repairing the comparison basis, or a dated single-PR admin override. NEITHER applies. There is no deadlock doc in the repository (grep -rli deadlock --include=*.md returns nothing) and this is not a required-check deadlock: it is a genuine content finding that reproduces offline in about a second and has a real fix. An admin override would push a red pupil-name safeguarding check through, which is the opposite of what that fallback exists for. The route is: merge PR #192, then PR #191 goes green."
+}
