@@ -4,7 +4,7 @@
 
 ## Easiest first
 
-**The eleven are built and green.** BUILD Humanities weeks 2–4, GROW Humanities weeks 1–4, LAUNCH Humanities weeks 1–4, each on its own family's landed chassis, each inside its reading band and its 1.5× load ceiling, two explanatory diagrams per deck, the we-do type declared and corroborated, rotation clean across the whole wave. Full battery per deck, evidence in `_sownb/vb/evidence/run9`.
+**The eleven are merged.** #195 (BUILD) 17dfca4f · #196 (GROW) fa4fac45 · #197 (LAUNCH) 19f5f809, each 5/5 on a level-with-main head, blobs equal on main afterwards. BUILD Humanities weeks 2–4, GROW Humanities weeks 1–4, LAUNCH Humanities weeks 1–4, each on its own family's landed chassis, each inside its reading band and its 1.5× load ceiling, two explanatory diagrams per deck, the we-do type declared and corroborated, rotation clean across the whole wave. Full battery per deck, evidence in `_sownb/vb/evidence/run9`.
 
 **One thing to look at on the phone, one per family:** BUILD W2 *People who help us* · GROW W1 *Migration on a Timeline* · LAUNCH W3 *Evaluating a digital archive source*. Stop-if-negative; run 10 repairs before it authors.
 
