@@ -1,0 +1,42 @@
+{
+ "gate": "g25",
+ "toolVersion": "g25-v3.0.0-declaration-checked-against-behaviour",
+ "why": "g25 v2 compared the declared we-do type only against the contract's six accepted types, so it could not fail on content: a deck declaring commit-and-reveal over a sorting activity was green. v3 joins the run-6 discovery vocabulary to the contract taxonomy and requires the declaration to be corroborated by the deck's own we-do text.",
+ "contractSha256": "cd5e87577a79c05ff4bf1df2257b4cd407b6505c3ec84199dfe85e3ca855442f",
+ "redControls": [
+  {
+   "control": "A_declare_wrong_type.html",
+   "exitCode": 1,
+   "fired": true,
+   "lines": [
+    "A_declare_wrong_type.html                      weDoStages=2 declared=spot-the-error observed=['rank-or-order', 'show-me'] RED  BINDING contract cd5e8757 [g25-v3.0.0-declaration-checked-against-behaviour]",
+    "    wedo.taxonomy: declared 'spot-the-error' but the we-do text evidences ['commit-and-reveal', 'sequence-or-rank'] (discovery labels ['rank-or-order', 'show-me'])"
+   ]
+  },
+  {
+   "control": "B_declare_absent_type.html",
+   "exitCode": 1,
+   "fired": true,
+   "lines": [
+    "B_declare_absent_type.html                     weDoStages=2 declared=role-play observed=['rank-or-order', 'show-me'] RED  BINDING contract cd5e8757 [g25-v3.0.0-declaration-checked-against-behaviour]",
+    "    wedo.taxonomy: 'role-play' is not one of ['commit-and-reveal', 'sort-or-match', 'label-or-annotate', 'sequence-or-rank', 'predict-then-check', 'spot-the-error']"
+   ]
+  },
+  {
+   "control": "C_undeclared.html",
+   "exitCode": 1,
+   "fired": true,
+   "lines": [
+    "C_undeclared.html                              weDoStages=2 declared=None observed=['rank-or-order', 'show-me'] RED  BINDING contract cd5e8757 [g25-v3.0.0-declaration-checked-against-behaviour]",
+    "    wedo.taxonomy: deck declares no we-do type"
+   ]
+  }
+ ],
+ "allControlsFired": true,
+ "subject": {
+  "exitCode": 0,
+  "lines": [
+   "BUILD_HUM_W1_People_Special_To_Me.html         weDoStages=2 declared=commit-and-reveal observed=['rank-or-order', 'show-me'] PASS BINDING contract cd5e8757 [g25-v3.0.0-declaration-checked-against-behaviour]"
+  ]
+ }
+}

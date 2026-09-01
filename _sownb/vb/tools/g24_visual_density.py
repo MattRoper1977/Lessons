@@ -20,7 +20,7 @@ import json, re, sys
 from pathlib import Path
 from lxml import html as lh
 
-VERSION = "g24-v1.0.0-visual-density-report-only"
+VERSION = "g24-v2.0.0-binding-on-scope-new"
 ROOT = Path(__file__).resolve().parents[3]
 MIN_TEXT_LABELS = 3
 MIN_VIEWBOX_AREA = 10000
@@ -91,6 +91,51 @@ def measure(path: Path) -> dict:
             "stagesWithExplanatory": len(with_vis),
             "stagesWithNone": max(0, len(stages) - len(with_vis))}
 
+CONTRACT = ROOT / "_sownb/STYLE_CONTRACT.json"
+
+def contract_rows() -> dict:
+    """The two rows this gate enforces, and their scope."""
+    rows = {r["id"]: r for r in json.loads(CONTRACT.read_text())["rows"]}
+    return {k: rows[k] for k in ("visuals.explanatory.min", "visuals.decorative.max")
+            if k in rows}
+
+
+def judge(m: dict, rows: dict) -> dict:
+    """Binding only where the row's scope is 'new'. Live work is never judged."""
+    exp = rows.get("visuals.explanatory.min")
+    dec = rows.get("visuals.decorative.max")
+    fails = []
+    if exp is not None:
+        need = exp["value"]["perLesson"]
+        if m["explanatory"] < need:
+            fails.append(f"visuals.explanatory.min: {m['explanatory']} < {need} per lesson")
+        if m["printDead"]:
+            fails.append(f"visuals.explanatory.min: {m['printDead']} print-dead")
+    if dec is not None and m["decorative"] > dec["value"]["perLesson"]:
+        fails.append(f"visuals.decorative.max: {m['decorative']} > {dec['value']['perLesson']}")
+    return {"fails": fails, "verdict": "PASS" if not fails else "RED"}
+
+
 if __name__ == "__main__":
-    out = [measure(ROOT / a) for a in sys.argv[1:]]
-    print(json.dumps(out, indent=1))
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    scope = "new" if "--scope=new" in sys.argv else "live"
+    rows = contract_rows()
+    binding = scope == "new" and all(r.get("scope") == "new" for r in rows.values())
+    out, red = [], 0
+    for a in args:
+        m = measure(ROOT / a)
+        j = judge(m, rows)
+        m["scope"] = scope
+        m["binding"] = binding
+        m["contractSha256"] = __import__("hashlib").sha256(CONTRACT.read_bytes()).hexdigest()
+        m.update(j)
+        if binding and j["verdict"] == "RED":
+            red += 1
+        out.append(m)
+        print(f"{Path(a).name[:46]:46s} explanatory={m['explanatory']} decorative={m['decorative']} "
+              f"printDead={m['printDead']} {j['verdict']:4s} "
+              f"{'BINDING' if binding else 'report-only'} contract {m['contractSha256'][:8]} [{VERSION}]")
+        for f in j["fails"]:
+            print(f"    {f}")
+    Path("/tmp/g24_last.json").write_text(json.dumps(out, indent=1))
+    sys.exit(1 if red else 0)

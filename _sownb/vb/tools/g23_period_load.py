@@ -31,7 +31,7 @@ import importlib.util
 import json
 from pathlib import Path
 
-VERSION = "g23-v1.0.0-period-load-report-only"
+VERSION = "g23-v2.0.0-binding-on-scope-new"
 ROOT = Path(__file__).resolve().parents[3]
 
 WPM_ASSUMED = 90
@@ -119,16 +119,33 @@ def main() -> int:
     ap.add_argument("--family", required=True)
     ap.add_argument("--candidate", required=True)
     ap.add_argument("--output")
+    ap.add_argument("--scope", default="live", choices=("live", "new"))
     a = ap.parse_args()
     r = score(a.candidate, a.family)
+    import hashlib
+    contract = ROOT / "_sownb/STYLE_CONTRACT.json"
+    rows = {x["id"]: x for x in json.loads(contract.read_text())["rows"]}
+    row = rows.get("load.period.ceiling")
+    r["contractSha256"] = hashlib.sha256(contract.read_bytes()).hexdigest()
+    r["scope"] = a.scope
+    r["binding"] = a.scope == "new" and row is not None and row.get("scope") == "new"
+    if row is not None:
+        cap = row["value"]["maxRatioToFamilyMedian"]
+        r["ceilingRatio"] = cap
+        r["ceilingVerdict"] = ("PASS" if r["ratioToFamilyMedian"] is not None
+                               and r["ratioToFamilyMedian"] <= cap else "RED")
+    else:
+        r["ceilingVerdict"] = "NO ROW"
     if a.output:
         out = ROOT / a.output; out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(json.dumps(r, indent=2) + "\n", encoding="utf-8")
     print(f"{Path(a.candidate).name[:44]:44s} {r['pupilWords']:5d}w "
           f"med {r['familyMedian']:.0f} x{r['ratioToFamilyMedian']} "
           f"~{r['impliedReadingMinutes']}min of {r['declaredPeriodMinutes']} "
-          f"({r['impliedPercentOfPeriod']}%) {r['verdict']}")
-    return 0
+          f"({r['impliedPercentOfPeriod']}%) {r['verdict']} "
+          f"ceiling<={r.get('ceilingRatio')} {r.get('ceilingVerdict')} "
+          f"{'BINDING' if r['binding'] else 'report-only'} contract {r['contractSha256'][:8]} [{VERSION}]")
+    return 1 if (r["binding"] and r.get("ceilingVerdict") == "RED") else 0
 
 
 if __name__ == "__main__":
