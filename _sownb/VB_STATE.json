@@ -1,15 +1,15 @@
 {
   "schema": "vb-state-v1",
   "order": "VB",
-  "run": 3,
+  "run": 4,
   "runDate": "2026-09-01",
   "mainHead": "20216304e1505292ac6d974408351895162b93ab",
   "anchor_run2": "dedbf06f546127d06091373dd777b943cc0b039e",
   "anchor_run2_note": "Anchored at fetch time. Main kept moving during the run: #187 (FEB catalogue append of ten packs to resources.json), #188 (catalogue chip tooling), then this order's own #189 merged as 28ee8d9b. No commit between 22f6470f and 28ee8d9b touches any of the twelve except #189 itself (this order's repair). Corpus freeze re-verified 54/54 OK at run start.",
   "phases": {
     "P0": "COMPLETE",
-    "P1": "COMPLETE for cohort A (twelve RSH-3 surfaces, run 2) and cohort B wave B1 (24 surfaces, run 3). Cohort B wave B2 (12 surfaces) remains — run 4.",
-    "P2": "NOT_STARTED",
+    "P1": "COMPLETE. Cohort A (12, run 2) + cohort B wave B1 (24, run 3) + wave B2 (12, run 4) = 48 surfaces verified.",
+    "P2": "NOT_STARTED — prep enumerations delivered by run 4 (collision map, spine inventory, cell cross-reference).",
     "P3": "NOT_STARTED",
     "P4": "NOT_STARTED",
     "P5": "NOT_STARTED",
@@ -39,6 +39,19 @@
       "pdfRoundTrip": "re-proven fresh on a landed deck: 3 pages, pypdf 1641 chars p0, pymupdf 15 page-local blocks, pdftotext 2609 chars",
       "drift": "none — engine and font set identical to run 2",
       "note": "Run-2 renders were deleted, so all four reference controls were re-rendered in this session per the order's 2e."
+    },
+    "run4": {
+      "chromium": "141.0.7390.37",
+      "fontFingerprint": "c555ca082ed285dbcd5c84b5e2687cf3",
+      "fonts": 59,
+      "drift": "none — identical to runs 2 and 3",
+      "a4PrintEmulation": {
+        "w": 794,
+        "h": 1123,
+        "printMedia": true,
+        "prefersDark": false
+      },
+      "pdfRoundTrip": "fresh: 3pp, pypdf 1641ch p0, pymupdf 15 page-local blocks, pdftotext 2609ch"
     }
   },
   "contractAuthority": {
@@ -81,6 +94,29 @@
         "verdict": "governing blob == live blob; no halt, no family affected"
       },
       "denominators": "G16_DENOMINATORS_FEB.json, contractSha256 matches the governing contract. All 7 wave-B1 families already carry recorded denominators (BUILD Science 74+10, BUILD Humanities 70+10, BUILD ASDAN 67+10, GROW Humanities 70+10, LAUNCH Humanities 71+10, GROW Science 76+8, LAUNCH Science 76+9). No NEW derivation required."
+    },
+    "run4_byLandingTime": {
+      "ruling": "Each wave-B2 file judged against the contract blob live when its own PR landed.",
+      "landingPRs": {
+        "#177": "64407766",
+        "#179": "77006232",
+        "#181": "e8ec4ce1",
+        "#182": "3418c649",
+        "#183": "b074d220",
+        "#185": "2c0a841e"
+      },
+      "governingContractSha256": "467a8df63e839ed8a0bfdc39fcbc6ed195e9e912ef3ea8e9400aee6c86ae09e2",
+      "governingContractRows": 457,
+      "distinctGoverningContracts": 1,
+      "identicalToLiveToday": true,
+      "g22": {
+        "extensionSafe": 457,
+        "redefinition": 0,
+        "regression": 0,
+        "liveOnly": 0,
+        "verdict": "identical blob; no halt"
+      },
+      "cohortBSummary": "Across runs 3 and 4, all fourteen cohort-B landing PRs resolve to the one contract 467a8df6/457. FEB has not moved STYLE_CONTRACT.json since #177, so no post-#186 contract-movement item arises."
     }
   },
   "cohortA_verdicts": {
@@ -153,7 +189,7 @@
     }
   },
   "landedThisRun": [
-    "NONE — no repair was required. The only gate red proved to be an instrument mis-scope, and this run authors nothing."
+    "NONE — wave B2 needed no repair; the retro sweep corrected the ledger only, and no lesson file was edited."
   ],
   "observations": [
     "The 'Watch main' workflow (watch-main.yml) concludes FAILURE on every recent main push, since before this order - a standing red predating VB, listed as a human item, untouched.",
@@ -172,9 +208,12 @@
     "Public 200 body-hash binding for all landed surfaces remains unmeasured from this venue (network policy); needs one run from a venue that can reach mattroper1977.github.io",
     "g18 content-floor mis-scope: confirm whether the floor should become per-family before Phase 4 authoring",
     "BUILD Humanities week 14 double-booking: which lesson teaches in week 14",
-    "Three wave-B1 lessons run 2.7x-3.7x their family's usual pupil-word load in a fixed 40-minute period (GROW Hum W15, LAUNCH Hum W15, BUILD ASDAN W15) — deliverable as written?"
+    "Three wave-B1 lessons run 2.7x-3.7x their family's usual pupil-word load in a fixed 40-minute period (GROW Hum W15, LAUNCH Hum W15, BUILD ASDAN W15) — deliverable as written?",
+    "g23 OVERLOADED: six lessons need a split-or-trim decision (deltas in state.g23.overloaded). Both options are authoring.",
+    "LAUNCH Science week 14 double-booking: two sequences, cells C45 and C44 — does the SoW want both, or is one misplaced?",
+    "Public-200 binding is now VENUE_BLOCKED; clearing it needs one run from a venue with egress to github.io."
   ],
-  "nextRun": "Run 4 = Phase 1 cohort B wave B2: the 12 surfaces in cohort_B.waveB2_remainder, identical battery, contract by landing time (expected 467a8df6/457 for all, re-confirm per file). Then Phase 2 — the calendar, timetable and SoW cross-check, which must resolve the BUILD Humanities week-14 double-booking and the SPINE-SPLIT question.",
+  "nextRun": "Run 5 = PHASE 2, the calendar/timetable/SoW cross-check. Its prep is already in state.phase2_prep: two true slot collisions to settle against the workbook (LAUNCH Science wk14 C45-vs-C44, BUILD Humanities wk14), two label-only collisions not to 'fix', two gaps, and the ruling that the three UNRESOLVED cells affect capacity not content. Phase 1 is closed: 48/48 verified.",
   "anchor_run3": "28ee8d9b73180d92041cb42e7af531367d199a29",
   "anchor_run3_note": "Main at fetch. Since run-2 anchor dedbf06f: #188 (Humanities catalogue chip), #187 (catalogue append of ten FEB packs to resources.json), #189 (this order's cohort-A repair, merged 14:37:49Z). No commit since the run-2 anchor touches any wave-B1 path. Corpus freeze re-verified 54/54 OK. The state branch was merged with main so verification ran on genuinely landed bytes (24/24 blobs equal origin/main).",
   "pr189": {
@@ -216,5 +255,214 @@
       "Humanities_Teesside/LAUNCH_W15-W20_2026-27": "2 VERIFIED",
       "BUILD_ASDAN/Spring1_W1-W6_2026-27": "1 VERIFIED"
     }
+  },
+  "anchor_run4": "28ee8d9b73180d92041cb42e7af531367d199a29",
+  "anchor_run4_note": "Main unchanged since run 3 closed. No commit since 28ee8d9b touches any wave-B2 path. Corpus freeze returned 53/54: the single mismatch is _sownb/feb/tools/build_resources_append.py, changed by FEB's PR #188 (commit 23852a19, catalogue subject chip) which landed BEFORE this anchor. Worktree blob equals origin/main's exactly and no VB commit touches the file, so the manifest was stale, not violated. Re-baselined as _sownb/vb/CORPUS_FREEZE_RUN4.txt.",
+  "venueBlocked": {
+    "publicTwoHundredBodyHashBinding": {
+      "status": "VENUE_BLOCKED",
+      "since": "2026-09-01 (runs 2, 3 and 4)",
+      "reason": "This venue's egress proxy answers 403 to CONNECT for mattroper1977.github.io. Not a repo or content fault.",
+      "rule": "Never reported as passed and never counted in a verdict.",
+      "bindingSubstitute": "Working-tree blob must equal origin/main's blob at the run anchor (git hash-object vs git rev-parse). Held 12/12 for wave B2 at anchor_run4.",
+      "toClear": "One run from a venue with egress to github.io."
+    }
+  },
+  "g18_v2": {
+    "tool": "_sownb/vb/tools/g18_v2_family_floor.py",
+    "version": "g18-v2.1.0-per-family-floor-lessons-only",
+    "rebindTool": "_sownb/vb/tools/g18_v2_rebind.py",
+    "problemFixed": "g18 v1 applied a single global p25 (1638, from GROW Science W8-W13) to all nine families while describing itself as destination-relative.",
+    "design": "BINDING = destination family's live-neighbour p25; LEGACY global p25 printed on every line; GLOBAL-FALLBACK printed when n<5. Counting logic imported unchanged from v1 so a flip can only be the baseline.",
+    "redProved": "in-session both ways: unmodified 1616w PASS vs floor 1555; pupil paragraphs gutted 361w RED.",
+    "bugFixedDuringBuild": "v2.0.0 neighbour globs included pack support surfaces with zero pupil slides (BUILD_ASDAN_AUT2_SAME_DAY_EVIDENCE / TEACHER_PLANNING_SOW / W7_PORTFOLIO_STUDIO), depressing BUILD ASDAN p25 to 1041. v2.1.0 counts lesson decks only: n=24, p25=1053.",
+    "perFamilyFloors": {
+      "BUILD Science": 1767,
+      "GROW Science": 1638,
+      "LAUNCH Science": 1583,
+      "BUILD Humanities": 1555,
+      "LAUNCH ASDAN": 1465,
+      "GROW Humanities": 1089,
+      "BUILD ASDAN": 1053,
+      "GROW ASDAN": 947,
+      "LAUNCH Humanities": 897,
+      "note": "Not uniformly softer — BUILD Science's floor is HIGHER than the global 1638."
+    },
+    "retroSweep": {
+      "scored": 25,
+      "flips": 1,
+      "newReds": 0,
+      "globalFallbacks": 0,
+      "flipTable": [
+        {
+          "path": "Humanities_Teesside/BUILD_W14-W20_2026-27/BUILD_HUM_W14_Festivals_Display_and_Reflection.html",
+          "old": "RED (g18 v1 global floor 1638; g11 RED inherited via floor binding)",
+          "new": "PASS (family p25 1555, 1616 words)",
+          "reason": "Global floor was imported from GROW Science. Candidate beats five of its six live BUILD Humanities neighbours (1517-1671). Ledger correction only; file untouched."
+        }
+      ],
+      "g11Rebound": "BUILD Hum W14 g11 now PASS with own similarity 0.0733 adjusted / 0.0778 raw vs ceiling 0.1839, all three red controls firing.",
+      "evidence": "_sownb/vb/evidence/run4/RETRO_SWEEP_g18v2.json"
+    }
+  },
+  "g23": {
+    "tool": "_sownb/vb/tools/g23_period_load.py",
+    "version": "g23-v1.0.0-period-load-report-only",
+    "binding": false,
+    "rateProvenance": "ASSUMED 90 wpm with a 60-120 sensitivity band. No words-per-minute figure exists in this repository or the workbooks (searched). Implied minutes are an UPPER BOUND: pupil-word counts include headings, options and table cells that are scanned, not read through.",
+    "thresholds": {
+      "WITHIN": "<=1.5x family median",
+      "HEAVY": "1.5-2.5x",
+      "OVERLOADED": ">2.5x"
+    },
+    "results": {
+      "scored": 32,
+      "WITHIN": 24,
+      "HEAVY": 2,
+      "OVERLOADED": 6
+    },
+    "overloaded": [
+      {
+        "file": "LAUNCH_HUM_W15_Conflict_Causes_and_Ethical_Decisions.html",
+        "words": 3460,
+        "familyMedian": 924,
+        "ratio": 3.75,
+        "impliedMin": 38.4,
+        "percentOfPeriod": 96.0,
+        "splitTo": 1730,
+        "trimTargetWords": 2309,
+        "trimDelta": 1151
+      },
+      {
+        "file": "GROW_HUM_W15_Rights_Timeline_and_Belief_Resilience.html",
+        "words": 3463,
+        "familyMedian": 1104,
+        "ratio": 3.14,
+        "impliedMin": 38.5,
+        "percentOfPeriod": 96.2,
+        "splitTo": 1732,
+        "trimTargetWords": 2760,
+        "trimDelta": 703
+      },
+      {
+        "file": "GROW_ASDAN_W16_Authorised_Task_Project_Plan_and_New_Goals.html",
+        "words": 2897,
+        "familyMedian": 954,
+        "ratio": 3.04,
+        "impliedMin": 32.2,
+        "percentOfPeriod": 80.5,
+        "splitTo": 1448,
+        "trimTargetWords": 2386,
+        "trimDelta": 511
+      },
+      {
+        "file": "GROW_ASDAN_W15_Strengths_Challenge_and_Project_Reset.html",
+        "words": 2881,
+        "familyMedian": 954,
+        "ratio": 3.02,
+        "impliedMin": 32.0,
+        "percentOfPeriod": 80.0,
+        "splitTo": 1440,
+        "trimTargetWords": 2386,
+        "trimDelta": 495
+      },
+      {
+        "file": "BUILD_ASDAN_W16_Partner_Challenge_and_Seasonal_Goals.html",
+        "words": 2927,
+        "familyMedian": 1082,
+        "ratio": 2.7,
+        "impliedMin": 32.5,
+        "percentOfPeriod": 81.2,
+        "splitTo": 1464,
+        "trimTargetWords": 2706,
+        "trimDelta": 221
+      },
+      {
+        "file": "BUILD_ASDAN_W15_Choice_Budget_and_Project_Reset.html",
+        "words": 2886,
+        "familyMedian": 1082,
+        "ratio": 2.67,
+        "impliedMin": 32.1,
+        "percentOfPeriod": 80.2,
+        "splitTo": 1443,
+        "trimTargetWords": 2706,
+        "trimDelta": 180
+      }
+    ],
+    "heavy": [
+      {
+        "file": "LAUNCH_ASDAN_W16_Decision_Tools_Banking_Plant_Care_and_Project_Plan.html",
+        "ratio": 2.19,
+        "impliedMin": 36.3,
+        "percentOfPeriod": 90.7
+      },
+      {
+        "file": "PEQ_A2_W7_Complete_Profile_and_Evidence_GROW_v3_40min.html",
+        "ratio": 1.77,
+        "impliedMin": 18.7,
+        "percentOfPeriod": 46.8
+      }
+    ],
+    "clustering": "All six OVERLOADED lessons are FEB Spring 1 ASDAN or Humanities W15 lessons. The pattern is a wave, not scattered files.",
+    "action": "NONE TAKEN. Split and trim are both authoring and belong to Matt. Options and word deltas printed above.",
+    "evidence": "_sownb/vb/evidence/run4/G23_PERIOD_LOAD.json"
+  },
+  "waveB2_verdicts": {
+    "summary": "12/12 VERIFIED. 0 REPAIRED, 0 UNREPAIRABLE-RECORDED, 0 UNVERIFIABLE. Nothing authored, nothing landed.",
+    "blobBinding": "12/12 worktree blobs equal origin/main at anchor_run4.",
+    "battery": "g16 (467a8df6, all firing controls fired), g18 v2 binding + g11 re-bound with similarity printed, g19, g10, g15, render-installation (5x3 hit-test + Tab cycle at 390/768/1365, red controls fired), s24, running heads by page-local MediaBox, g21 advisory, static pack + checksums, timing spine 9 stages summing to 40 bound to lesson-config, ladder labels, splash/revert/markers/keyframes/offline, confirmation-in-print by PDF, ligatures, front-door residual note with red control, link targets.",
+    "engineArtefactCount": 0,
+    "contentDefects": "NONE. No stated measurement, unit or tolerance is inconsistent or impossible; the only quantities in these decks are stage timings, which sum to 40 and bind to lesson-config.",
+    "surfaces": {
+      "BUILD_ASDAN/Spring1_W1-W6_2026-27/BUILD_ASDAN_W16_Partner_Challenge_and_Seasonal_Goals.html": "VERIFIED (g23 OVERLOADED x2.70, reported not cut)",
+      "BUILD_ASDAN/Spring1_W1-W6_2026-27/START_HERE.html": "VERIFIED",
+      "BUILD_ASDAN/Spring1_W1-W6_2026-27/START_HERE_BUILD_ASDAN_AUT2.html": "VERIFIED",
+      "GROW_ASDAN/Spring1_W1-W6_2026-27/GROW_ASDAN_W15_Strengths_Challenge_and_Project_Reset.html": "VERIFIED (g23 OVERLOADED x3.02)",
+      "GROW_ASDAN/Spring1_W1-W6_2026-27/GROW_ASDAN_W16_Authorised_Task_Project_Plan_and_New_Goals.html": "VERIFIED (g23 OVERLOADED x3.04)",
+      "GROW_ASDAN/Spring1_W1-W6_2026-27/START_HERE.html": "VERIFIED",
+      "LAUNCH_ASDAN/Spring1_W1-W6_2026-27/LAUNCH_ASDAN_W16_Decision_Tools_Banking_Plant_Care_and_Project_Plan.html": "VERIFIED (g23 HEAVY x2.19)",
+      "LAUNCH_ASDAN/Spring1_W1-W6_2026-27/START_HERE.html": "VERIFIED",
+      "Science_Teesside/Build/W14-W20_2026-27/SCI_B_W16A_Fossil_Clues_Explore.html": "VERIFIED",
+      "Science_Teesside/Build/W14-W20_2026-27/SCI_B_W16B_Fossil_Evidence_Do.html": "VERIFIED",
+      "Science_Teesside/Grow/W15-W20_2026-27/SCI_G_W16A_Solubility_And_Recovery_Explore.html": "VERIFIED",
+      "Humanities_Teesside/GROW_W15-W20_2026-27/START_HERE_GROW_HUMANITIES_W9-W14.html": "VERIFIED"
+    },
+    "nearCeiling": "Three lessons sit close to their g11 similarity ceilings (GROW Sci W16A 0.1486/0.1524; BUILD Sci W16B 0.1402/0.1435; BUILD Sci W16A 0.1399/0.1435). All under. Recorded because a future sibling could cross."
+  },
+  "phase2_prep": {
+    "indexed": "268 lesson surfaces across all 9 families.",
+    "method": "Collision key is (family, term, week, strand). Strand matters: parallel ASDAN strands are units taught alongside each other, not competing lessons.",
+    "trueSlotCollisions": [
+      {
+        "family": "LAUNCH Science",
+        "absoluteWeek": 14,
+        "lessons": 6,
+        "packs": 2,
+        "a": "Science_Teesside/Launch/Autumn2_W7_2026-27/SCI_L_A2_W7L1-L3 — declares week 14, workbook cell C45 'Topics 2 to 3 assessment (Dec)'",
+        "b": "Science_Teesside/Launch/W14-W15_2026-27/SCI_L_W14L1-L3 — workbook cell C44 'Research a genetic condition online; present'",
+        "note": "Two three-lesson sequences on one week, citing DIFFERENT cells. This is the term-relative vs continuous dialect resolving onto one slot — the SPINE-SPLIT the master order warned of, now concrete."
+      },
+      {
+        "family": "BUILD Humanities",
+        "absoluteWeek": 14,
+        "lessons": 2,
+        "packs": 2,
+        "a": "Humanities_Teesside/BUILD_W14-W20_2026-27/BUILD_HUM_W14_Festivals_Display_and_Reflection.html — week 14, cell C59",
+        "b": "Humanities_Teesside/BUILD_W9-W14_2026-27/BUILD_HUM_W14_Industry_and_Nature_The_Tees_Story_OUTSTANDING_V4.html — pre-FEB deck, no declared week or cell"
+      }
+    ],
+    "labelOnlyCollisions": [
+      "GROW Science W7: SCI_G_W7_The_Moon (Autumn1, absolute 7) vs Autumn2_W7 pack (absolute 14). Same number, different weeks.",
+      "GROW ASDAN W1-W6: strand packs (absolute 1-6) vs Autumn2_W1-W6 pack (absolute 8-13). Same numbers, different weeks."
+    ],
+    "gaps": [
+      "GROW Science: no week 14 lesson.",
+      "BUILD ASDAN main strand: empty weeks 7-14 (its five sub-strands cover weeks 1-6)."
+    ],
+    "threeUnresolvedCells": "Build Wed P6, Grow Thu P6, Launch Thu P5 decide NONE of the collisions or gaps above. They are disputed between Behaviour Intervention and DT/practical skills, neither of which is an in-scope subject, so they change each lane's teachable capacity, not which lesson wins a week. Left UNRESOLVED; nothing inferred.",
+    "evidence": [
+      "_sownb/vb/evidence/run4/PHASE2_COLLISION_MAP.txt",
+      "_sownb/vb/evidence/run4/PHASE2_SPINE_INVENTORY.txt"
+    ]
   }
 }
