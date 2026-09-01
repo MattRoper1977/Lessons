@@ -222,3 +222,25 @@ MY FIRST H7.4 REVERT MEASURED A CRASH, NOT A DEFECT. To prove the flush fix nece
 THE ORDER'S OWN RED CONTROL FOR g26 DOES NOT RED, AND SAYING SO WAS THE JOB. §3.1(d) specifies proving the gate by joining two sentences into one long one. It does not red, and it cannot: the deck has 264 pupil sentences and sits 0.47 below its ceiling, so one join moves the mean from 3.53 to 3.63. The temptation was to pick a heavier pair of sentences until it tipped, which would have been fitting the evidence to the instruction. Recorded as a spec mismatch instead, and the gate red-proved two ways that mean something — the same mutation applied throughout (7.74) and a real live BUILD lesson (11.63).
 
 THE PROOF LESSON'S READING LEVEL WAS NOT AN ADDRESSEE ARTEFACT, WHICH IS WHAT I HAD HOPED. §3.1(a) offered the possibility that FK 5.60 was staff text mixed into pupil text. Measured: whole-deck 5.65, pupil-only 5.60. Near-identical, so the staff writing is pitched at the same level as the pupil writing and there was no artefact to find. The repair was real work, not a re-measurement.
+
+## RUN 9
+
+I READ A PAGE OF CHECK RUNS AND CALLED IT A PLAN. The first coverage census gave BUILD ASDAN "week 29" and "week 30": my parser added the Spring 1 folder offset to filenames that already carried absolute weeks (W15, W16). Corrected before the headline was printed; the census was rebuilt from the whole tree (573 files under the nine search roots, 414 lessons) and cross-checked against CALENDAR_SPINE's own path readings — zero disagreements on unchanged blobs.
+
+THE CATALOGUE APPEND BROKE MY OWN SCRIPT, NOT THE CATALOGUE. The second append's g8 script inherited a placeholder from the first and raised NameError before writing. Rewritten standalone; g8 PASS, fabricated-subject control fires, 678 -> 680 prefix byte-identical.
+
+THE GENERATOR SPLIT AN F-STRING. Swapping the outcome line for FEB's guide-keyed sowline broke implicit string concatenation; ten regenerations failed with SyntaxError before I read the line. One `+`.
+
+THE PROOF LESSON'S PATTERN WAS TOO LONG FOR TWO OF THE THREE FAMILIES. The first GROW decks came out at 2,027-2,455 pupil words against a 1,656 ceiling and the first LAUNCH decks at 2,448-2,630 against 1,386 — I had written every family to the BUILD proof's density. Three compaction passes (stage set, one Lundy bridge per deck instead of nine, field-level trims) brought every deck inside its own family's 1.5x ceiling without dropping a diagram or a route.
+
+g10 CAUGHT EVERY PROPER-NOUN PAIR I HAD WRITTEN. Twenty-nine "Given Family" candidates across eight decks — Empire Windrush, Commonwealth Immigrants Act, National Health Service, Roman York, Good Friday Agreement and the rest — plus two Title Case titles. The registries are for real public figures and declared invented exemplars, neither of which these are, so the prose was rewritten around the pattern (the 1962 Act on Commonwealth immigration; York in Roman times; the 1998 Belfast agreement) and GROW/LAUNCH carry the verbatim outcome as FEB's guide-keyed sowline, exactly as their landed W15 decks do. Nothing was added to a registry.
+
+THE FRONT DOORS FAILED THEIR OWN SPLASH ROW BECAUSE I PRETTY-PRINTED IT. start.*.splash is a byte block on one line; my generator emitted it with newlines copied from a regex-split print. The blocks are now sliced byte-exact from the landed front door.
+
+FEB's v1 g18 RED ON SEVEN DECKS IS THE NT-7 ARTEFACT, NOT CONTENT. Its floor is a GROW Science denominator (1,638 words) that sits above the GROW ceiling (1,656 — one deck's headroom) and above the whole LAUNCH ceiling (1,386). The binding instrument for scope=new is g18 v2's family floor (run 4); g11 was run on the family-rebound g18 as run 4 did. Recorded, not smoothed.
+
+THE SWEEP WENT RED ON ALL THREE FAMILY PRs AND IT WAS THE INSTRUMENT'S BUFFER. The QA-record control spawns the sweep with execFileSync and no maxBuffer; main's output is 962 KB, a family branch's is 1.07 MB, the child is killed with ENOBUFS at 1,051,854 bytes and the planted rows never arrive. Red-proved three ways on the over-cap tree and repaired in its own gate-only PR first, as the H7 rule requires; the family PRs re-run afterwards on a real merge commit.
+
+"NO OPEN PR RUNS ZERO CHECKS" WENT RED ON #196 BECAUSE #197 WAS THIRTEEN SECONDS YOUNGER. The census saw #197 with zero check runs while its jobs were still being scheduled. A race in the census, not a finding; it re-runs on the next head.
+
+MAIN WENT RED ONCE ON MY OWN PUSHES. The FieldOps run on the #198 merge commit failed its open-PR census at 23:02:47 because #196 and #197 had zero check runs at that second — I had pushed their level-with-main heads at 23:02:2x and GitHub created their runs at 23:02:28-30. The run on the #195 merge was then cancelled by the workflow's concurrency group when the #196 merge arrived. Neither is a finding on main's tree, and the two main runs after them passed; but a red on main is a red on main, so it is written here and in MERGES_RUN9.json rather than left for Watch main to be the only witness.

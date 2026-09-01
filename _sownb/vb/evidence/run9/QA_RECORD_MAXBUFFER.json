@@ -1,0 +1,20 @@
+{
+ "file": "tools/fieldops/qa_record_control.mjs",
+ "subject": "QA-record control stdout cap (execFileSync default maxBuffer 1 MiB)",
+ "status": "RED-PROVED THEN REPAIRED",
+ "finding": "the control spawns the sweep with execFileSync and no maxBuffer; the sweep's output on any branch carrying one family's run-9 evidence exceeds 1 MiB, so the child is killed and the planted control rows never arrive",
+ "measurements": {
+  "sweepBytesOnMain": 962515,
+  "sweepBytesOnBuildBranch": 1072910,
+  "defaultBufferResult": "ENOBUFS, signal SIGTERM, 1051854 bytes captured",
+  "withMaxBuffer64MiB": "1072910 bytes captured, control PASS 4/4"
+ },
+ "redControls": {
+  "defaultCapOnBigTree": "FAIL 3/4 (no row emitted x3)",
+  "capMutatedTo100KiB": "FAIL 3/4",
+  "repairedOnMainTree": "PASS 4/4",
+  "repairedOnBigTree": "PASS 4/4"
+ },
+ "landing": "separate gate-only PR first (H7 hard rule: a gate change never lands with content it judges); family PRs re-run on a merge-of-main commit afterwards",
+ "precedent": "H7.4 flush fix (run 7/8): an output cap on the same sweep, KEEP ruled"
+}
