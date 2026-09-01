@@ -47,7 +47,7 @@ function fixture(records, extraFiles = {}) {
 
 function sweep(root) {
   try {
-    return execFileSync('node', [SWEEP], { encoding: 'utf8', env: { ...process.env, MBM_APPS_REPO: root } });
+    return execFileSync('node', [SWEEP], { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, env: { ...process.env, MBM_APPS_REPO: root } });
   } catch (e) { return (e.stdout || '') + (e.stderr || ''); }
 }
 
