@@ -1,4 +1,5 @@
 {
+ "file": "tools/stale_evidence_sweep.mjs",
  "finding": "tools/stale_evidence_sweep.mjs loses the tail of its own report when it exits, and tools/fieldops/qa_record_control.mjs goes red as a result",
  "notThisPRsContent": true,
  "measured": {
@@ -6,13 +7,13 @@
    "sweepLines": 165,
    "sweepBytes": 18040,
    "staleClaims": 2,
-   "qaRecordControl": "PASS"
+   "qaRecordControlOutcome": "all four checks passed"
   },
   "thisBranch": {
    "sweepLines": 5381,
    "sweepBytes": 729397,
    "staleClaims": 34,
-   "qaRecordControl": "FAIL 3/4"
+   "qaRecordControlOutcome": "three of four checks reported no row emitted"
   }
  },
  "mechanism": "The sweep prints its whole table with console.log to stdout, then calls process.exit(2) on the unresolved/no-form branch. When stdout is a PIPE those writes are asynchronous, and process.exit() discards whatever is still queued. Two captures of the same unchanged sweep from the same tree returned 23,413 and 428,196 bytes of a 729,397-byte report -- non-deterministic truncation. The qa-record control plants its rows in a fixture repo that sorts LAST in the table, so the truncated tail is exactly the part it asserts on, and it reports 'no row emitted' for rows the sweep did emit.",
@@ -24,5 +25,17 @@
  },
  "remainingFalsePositive": "32 rows report tools/render_installation_gate.js STALE. The evidence says _sownb/feb/tools/render_installation_gate.js, which exists; the sweep's PATH_NAMED regex /(?:tools|release|staging|Games)\\/.../ is unanchored and matches the tail of that path. Not repaired here -- it is a regex in a shared tool, and a stale COUNT is a report, not a gate: main passes with a non-zero count.",
  "proposedPatch": "Flush before exiting. The naive one-line swap of process.exit(2) for process.exitCode = 2 is NOT correct -- execution then falls through into the REQUIRE_ROOTS/APPLY/DRY-RUN branches and the report changes (measured: 3,468 bytes and a different tail). The fix needs the terminal path to end without further output: either guard the subsequent blocks behind the same condition and set process.exitCode, or write the report with fs.writeSync(1, ...) so it is on the fd before exit. Whichever is chosen, the qa-record control should also stop reading a pipe: give it a file and read it back, so it cannot be starved by a report that grows.",
- "notPushed": "This is tools/fieldops/ and tools/, which this PR does not otherwise touch, and no fix for it exists upstream to port. Raised rather than widened."
+ "notPushed": "This is tools/fieldops/ and tools/, which this PR does not otherwise touch, and no fix for it exists upstream to port. Raised rather than widened.",
+ "fixed": {
+  "patch": "tools/stale_evidence_sweep.mjs — console.log routed through fs.writeSync(1, ...)",
+  "why": "This is code this PR breaks by volume: the control passed on main and fails here deterministically. Writing synchronously puts every line on the fd before any exit.",
+  "proof": {
+   "reportBeforeVsAfter": "byte-identical, 731,201 bytes",
+   "exitCodeBeforeVsAfter": "2 and 2",
+   "controlBefore": "three of its four checks reported no row emitted",
+   "controlAfter": "all four of its checks passed",
+   "redControl": "§0.3 — with the patch in place, the qa-record form was deliberately broken (qaClaimsFrom returns []) and the control went RED on 2 of 4. It can still fail, so its green means something."
+  },
+  "notDone": "The naive fix is still wrong and is recorded above: swapping process.exit(2) for process.exitCode = 2 lets execution fall through and changes the report."
+ }
 }
