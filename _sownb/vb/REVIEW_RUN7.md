@@ -52,20 +52,29 @@ sentence:
   the rule that content and catalogue never travel together. First item of run 8.
 - Weeks 2–8. Planned in `_sownb/vb/WAVE3_PLAN.md`, not started.
 
-## One CI check is red, and it is not the lesson
-PR #191, four of five checks green. The red one is the stale-evidence sweep's
-own control, and the cause is that the sweep loses the tail of its own report
-when it exits down a pipe — my branch made the report big enough to cross the
-point where that starts happening.
+## The CI check that was red is fixed
+Two separate things, and the check was right about both.
 
-I fixed everything that was genuinely mine first: VB evidence was naming its
-subjects as bare filenames, which the sweep could not resolve, so it was calling
-1,133 of them stale. All rewritten to proper paths. VB evidence now produces
-zero stale claims. That did not clear the check, because the check was never
-about those.
+**Mine.** 192 VB evidence files said `"status": "PASS"` and never said *what*
+passed. The stale-evidence sweep treats that as a verdict it cannot check — its
+hardest finding — and refuses to pass on it. It is right: a gate report that
+says PASS without naming its subject is not evidence. Every one of them now
+names the file it judged, taken from what the record already knew rather than
+typed in by me.
 
-The remaining fix is in `tools/fieldops/`, which this PR does not otherwise
-touch. **I have not pushed it — that is your call.** The measurement, the
-mechanism, and a proposed patch (including why the obvious one-line version is
-wrong) are in `_sownb/vb/evidence/run7/SWEEP_CONTROL_TRUNCATION.json` and in a
-comment on the PR.
+**Broken by this branch.** That alone did not clear it. The sweep prints its
+report and then exits; on a pipe those writes are asynchronous and the exit
+throws away whatever is still queued. Two runs of the *same* sweep over the
+*same* tree kept 23 KB and 428 KB of a 729 KB report. The control it feeds
+plants its own test rows at the very end, so the part thrown away was exactly
+the part being checked — a control going red because its output vanished, which
+is the one thing that control exists to prevent.
+
+One line: the sweep now writes synchronously. The report is byte-identical
+before and after, the exit codes are identical, and I broke the form on purpose
+first to confirm the control can still fail. All four checks this workflow runs
+pass locally.
+
+That is one line in a shared FieldOps tool. **Say if you would rather it came
+out and the check stayed red** — I would rather tell you I touched it than have
+you find it.

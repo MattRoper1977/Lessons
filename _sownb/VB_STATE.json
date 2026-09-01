@@ -244,8 +244,8 @@
   },
   {
    "id": "H7.4",
-   "priority": "blocks a green PR #191",
-   "ask": "One CI check is red for a reason that is not this PR's content: the stale-evidence sweep truncates its own report when it exits down a pipe, and its qa-record control asserts on the truncated tail. The measurement and a proposed patch are written. Do you want me to fix the FieldOps tool, or land #191 with that check red and fix it separately?"
+   "priority": "for information",
+   "ask": "This run touched one shared tool: tools/stale_evidence_sweep.mjs, one line plus a comment, to stop it losing the tail of its own report when it exits down a pipe. Its report is byte-identical before and after and its control was proved still able to go red. Say if you would rather that came out and the check stayed red."
   }
  ],
  "nextRun": "Run 8 = wave 3 run 1, per _sownb/vb/WAVE3_PLAN.md. FIRST, alone and before any content: the catalogue / resources.json entry for BUILD_W1-W8_2026-27, its own PR with zero GLV3 trigger paths beside it, per §0.13. THEN weeks 2 and 3 only (C47 'Identify people who help us in the community.', C48 'Recognise places in my local community.'), we-do types sort-or-match and label-or-annotate. Two lessons, not more: the point of run 8 is to find out what the proof lesson got away with. Full battery each against contract cd5e8757, engine-artefact control rendered in the same session, front door relinked, checksums regenerated. Nothing else: no other family, no live lesson re-judged, no overload split, the three UNRESOLVED timetable cells untouched.",
@@ -1117,7 +1117,16 @@
    "bb53794b evidence subject paths"
   ],
   "branchHead": "bb53794be59dbf9a1fc36f0a0d612096b75cc5a7",
-  "reRunPolicy": "no re-run spent: the failure reproduces deterministically offline, so a re-run confirms nothing"
+  "reRunPolicy": "no re-run spent: the failure reproduces deterministically offline, so a re-run confirms nothing",
+  "resolution": "FIXED, both halves, and pushed",
+  "half1_mine": "192 VB evidence files stated a verdict and named no subject, which the sweep counts as an asserting row matching no claim form and exits 2 on. Each now names its subject, read from what the record already knew. Sweep exits 0, as on main.",
+  "half2_brokenByThisBranch": "tools/stale_evidence_sweep.mjs routed console.log through fs.writeSync(1,...). console.log to a pipe is async and the process.exit() calls discarded the tail: 23,413 and 428,196 bytes captured from the same 729,397-byte report. Report byte-identical after the change, exit codes identical, and the qa-record control proved RED on a deliberately broken form with the patch in place per §0.3. Verified necessary: with the evidence fixed and the sweep unpatched the control still failed 3 of 4.",
+  "checkedLocally": [
+   "sweep --self-test PASS",
+   "qa_record_control PASS 4/4",
+   "sweep rc=0",
+   "verify_ledger_tally PASS"
+  ]
  },
  "landed": {
   "pr": 191,
