@@ -51,3 +51,21 @@ sentence:
 - Catalogue / `resources.json` entry for the new pack. That lands **alone**, per
   the rule that content and catalogue never travel together. First item of run 8.
 - Weeks 2–8. Planned in `_sownb/vb/WAVE3_PLAN.md`, not started.
+
+## One CI check is red, and it is not the lesson
+PR #191, four of five checks green. The red one is the stale-evidence sweep's
+own control, and the cause is that the sweep loses the tail of its own report
+when it exits down a pipe — my branch made the report big enough to cross the
+point where that starts happening.
+
+I fixed everything that was genuinely mine first: VB evidence was naming its
+subjects as bare filenames, which the sweep could not resolve, so it was calling
+1,133 of them stale. All rewritten to proper paths. VB evidence now produces
+zero stale claims. That did not clear the check, because the check was never
+about those.
+
+The remaining fix is in `tools/fieldops/`, which this PR does not otherwise
+touch. **I have not pushed it — that is your call.** The measurement, the
+mechanism, and a proposed patch (including why the obvious one-line version is
+wrong) are in `_sownb/vb/evidence/run7/SWEEP_CONTROL_TRUNCATION.json` and in a
+comment on the PR.
