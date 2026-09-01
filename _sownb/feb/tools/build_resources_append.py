@@ -54,7 +54,7 @@ ADDED = [
     {
         "id": "catalogue-2026-27-humanities-build-w14-w15-feb-wave1",
         "title": "BUILD Humanities · Weeks 14–15 · festivals, time and caring",
-        "type": "teacher", "subject": "Humanities · Teesside", "year": "2026-27",
+        "type": "teacher", "subject": "Humanities", "year": "2026-27",
         "file": "Humanities_Teesside/BUILD_W14-W20_2026-27/START_HERE.html",
         "desc": "Start page for two BUILD Humanities lessons on festival evidence, timelines and caring stories.",
         "family": "BUILD Humanities",
@@ -64,7 +64,7 @@ ADDED = [
     {
         "id": "catalogue-2026-27-humanities-grow-w15-feb-wave1",
         "title": "GROW Humanities · Week 15 · rights and belief resilience",
-        "type": "teacher", "subject": "Humanities · Teesside", "year": "2026-27",
+        "type": "teacher", "subject": "Humanities", "year": "2026-27",
         "file": "Humanities_Teesside/GROW_W15-W20_2026-27/START_HERE.html",
         "desc": "Start page for the GROW Humanities lesson on a rights timeline and careful accounts of belief resilience.",
         "family": "GROW Humanities",
@@ -74,7 +74,7 @@ ADDED = [
     {
         "id": "catalogue-2026-27-humanities-launch-w15-feb-wave1",
         "title": "LAUNCH Humanities · Week 15 · conflict and ethical decisions",
-        "type": "teacher", "subject": "Humanities · Teesside", "year": "2026-27",
+        "type": "teacher", "subject": "Humanities", "year": "2026-27",
         "file": "Humanities_Teesside/LAUNCH_W15-W20_2026-27/START_HERE.html",
         "desc": "Start page for the LAUNCH Humanities lesson on conflict causes, evidence limits and ethical decisions.",
         "family": "LAUNCH Humanities",
