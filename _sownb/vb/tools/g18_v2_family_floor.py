@@ -35,7 +35,7 @@ import json
 import statistics
 from pathlib import Path
 
-VERSION = "g18-v2.1.0-per-family-floor-lessons-only"
+VERSION = "g18-v2.2.0-per-family-floor-feb-baselines"
 ROOT = Path(__file__).resolve().parents[3]
 
 _spec = importlib.util.spec_from_file_location(
@@ -54,19 +54,20 @@ MIN_NEIGHBOURS = 5
 # zero pupil words and pulled that family's p25 to 1041.
 MIN_LESSON_SLIDES = 5
 
-# Each family's live neighbour pack: the pack that was already teaching before
-# the candidate landed. Globs, not counts -- the tree wins (order 0.5).
-FAMILY_NEIGHBOURS = {
-    "GROW Science":      "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W*.html",
-    "LAUNCH Science":    "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W*.html",
-    "BUILD Science":     "Science_Teesside/Build/W8-W13_2026-27/SCI_B_*.html",
-    "GROW ASDAN":        "GROW_ASDAN/Autumn2_W1-W6_2026-27/PEQ_A2_W*.html",
-    "LAUNCH ASDAN":      "LAUNCH_ASDAN/W7-W12_2026-27/lessons/*/*.html",
-    "BUILD ASDAN":       "BUILD_ASDAN/Autumn2_W1-W6_2026-27/BUILD_ASDAN_*.html",
-    "BUILD Humanities":  "Humanities_Teesside/BUILD_W9-W14_2026-27/BUILD_HUM_*.html",
-    "GROW Humanities":   "Humanities_Teesside/GROW_W9-W14_2026-27/GROW_HUM_*.html",
-    "LAUNCH Humanities": "Humanities_Teesside/LAUNCH_W9-W14_2026-27/LAUNCH_HUM_*.html",
-}
+# Neighbour sets are NOT maintained here. _sownb/feb/tools/g18_measurement.py
+# already carries FEB's per-family BASELINES dict, and run 5 proved the two
+# derivations agree on eight of nine families. The one disagreement was this
+# file's fault: its GROW ASDAN glob captured only the PEQ strand (n=6, p25 947)
+# where the pack also teaches COMM and ENT (n=18, p25 958). A family floor built
+# from one strand of three is not a family floor. Importing FEB's dict removes
+# the second source of truth rather than re-syncing two copies by hand.
+_ms = importlib.util.spec_from_file_location(
+    "g18_measurement", ROOT / "_sownb/feb/tools/g18_measurement.py")
+_meas = importlib.util.module_from_spec(_ms)
+_ms.loader.exec_module(_meas)
+
+FAMILY_NEIGHBOURS = {fam: pats[0] if len(pats) == 1 else pats
+                     for fam, pats in _meas.BASELINES.items()}
 
 
 def words_of(path: Path) -> int:
@@ -84,7 +85,9 @@ def family_baseline(family: str, exclude: Path | None = None) -> dict:
     if pattern is None:
         return {"family": family, "pattern": None, "n": 0, "p25": None,
                 "median": None, "files": [], "error": "NO NEIGHBOUR PATTERN"}
-    files = [Path(p) for p in sorted(glob.glob(str(ROOT / pattern)))]
+    patterns = [pattern] if isinstance(pattern, str) else list(pattern)
+    files = [Path(p) for pat in patterns
+             for p in sorted(glob.glob(str(ROOT / pat), recursive=True))]
     if exclude is not None:
         files = [p for p in files if p.resolve() != exclude.resolve()]
     support = [p.name for p in files if not is_lesson_deck(p)]

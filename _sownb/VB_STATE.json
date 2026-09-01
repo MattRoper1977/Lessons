@@ -1,7 +1,7 @@
 {
   "schema": "vb-state-v1",
   "order": "VB",
-  "run": 4,
+  "run": 5,
   "runDate": "2026-09-01",
   "mainHead": "20216304e1505292ac6d974408351895162b93ab",
   "anchor_run2": "dedbf06f546127d06091373dd777b943cc0b039e",
@@ -9,8 +9,8 @@
   "phases": {
     "P0": "COMPLETE",
     "P1": "COMPLETE. Cohort A (12, run 2) + cohort B wave B1 (24, run 3) + wave B2 (12, run 4) = 48 surfaces verified.",
-    "P2": "NOT_STARTED — prep enumerations delivered by run 4 (collision map, spine inventory, cell cross-reference).",
-    "P3": "NOT_STARTED",
+    "P2": "COMPLETE (run 5). Week map built, both week-14 collisions resolved against the workbook, double-period test run, NO-TOUCH register created, gap briefs written, decision packet delivered.",
+    "P3": "NOT_STARTED — run 6.",
     "P4": "NOT_STARTED",
     "P5": "NOT_STARTED",
     "P6": "NOT_STARTED"
@@ -52,6 +52,19 @@
         "prefersDark": false
       },
       "pdfRoundTrip": "fresh: 3pp, pypdf 1641ch p0, pymupdf 15 page-local blocks, pdftotext 2609ch"
+    },
+    "run5": {
+      "chromium": "141.0.7390.37",
+      "fontFingerprint": "c555ca082ed285dbcd5c84b5e2687cf3",
+      "fonts": 59,
+      "drift": "none — identical to runs 2, 3 and 4",
+      "a4PrintEmulation": {
+        "w": 794,
+        "h": 1123,
+        "printMedia": true,
+        "prefersDark": false
+      },
+      "pdfRoundTrip": "fresh: 3pp, pypdf 1641ch, pymupdf 15 page-local blocks, pdftotext 2609ch"
     }
   },
   "contractAuthority": {
@@ -206,14 +219,14 @@
     "Three disputed timetable cells UNRESOLVED; cooking-slot staffing; spring/summer term dates",
     "Standing watch-main failure on every main push",
     "Public 200 body-hash binding for all landed surfaces remains unmeasured from this venue (network policy); needs one run from a venue that can reach mattroper1977.github.io",
-    "g18 content-floor mis-scope: confirm whether the floor should become per-family before Phase 4 authoring",
-    "BUILD Humanities week 14 double-booking: which lesson teaches in week 14",
     "Three wave-B1 lessons run 2.7x-3.7x their family's usual pupil-word load in a fixed 40-minute period (GROW Hum W15, LAUNCH Hum W15, BUILD ASDAN W15) — deliverable as written?",
     "g23 OVERLOADED: six lessons need a split-or-trim decision (deltas in state.g23.overloaded). Both options are authoring.",
-    "LAUNCH Science week 14 double-booking: two sequences, cells C45 and C44 — does the SoW want both, or is one misplaced?",
-    "Public-200 binding is now VENUE_BLOCKED; clearing it needs one run from a venue with egress to github.io."
+    "Public-200 binding is now VENUE_BLOCKED; clearing it needs one run from a venue with egress to github.io.",
+    "Build lane has zero explicitly-ASDAN slots in the real timetable while BUILD_ASDAN lessons are authored (new, run 5)",
+    "The estate carries two g18 implementations (global and per-family); decide whether to retire the global one",
+    "The untraced BUILD Humanities local-history pack W9-W14 — keep as enrichment, retire, or add workbook rows"
   ],
-  "nextRun": "Run 5 = PHASE 2, the calendar/timetable/SoW cross-check. Its prep is already in state.phase2_prep: two true slot collisions to settle against the workbook (LAUNCH Science wk14 C45-vs-C44, BUILD Humanities wk14), two label-only collisions not to 'fix', two gaps, and the ruling that the three UNRESOLVED cells affect capacity not content. Phase 1 is closed: 48/48 verified.",
+  "nextRun": "Run 6 = PHASE 3 (the fifty-one non-printing confirmation blocks). Phase 2 is closed: week map built, both week-14 collisions resolved against the workbook, double-period test run (zero doubles, no findings dissolved), NO-TOUCH register live with 7 entries, Phase 4 gap brief written, 6 decisions in decisionPacket awaiting Matt.",
   "anchor_run3": "28ee8d9b73180d92041cb42e7af531367d199a29",
   "anchor_run3_note": "Main at fetch. Since run-2 anchor dedbf06f: #188 (Humanities catalogue chip), #187 (catalogue append of ten FEB packs to resources.json), #189 (this order's cohort-A repair, merged 14:37:49Z). No commit since the run-2 anchor touches any wave-B1 path. Corpus freeze re-verified 54/54 OK. The state branch was merged with main so verification ran on genuinely landed bytes (24/24 blobs equal origin/main).",
   "pr189": {
@@ -464,5 +477,369 @@
       "_sownb/vb/evidence/run4/PHASE2_COLLISION_MAP.txt",
       "_sownb/vb/evidence/run4/PHASE2_SPINE_INVENTORY.txt"
     ]
-  }
+  },
+  "anchor_run5": "28ee8d9b73180d92041cb42e7af531367d199a29",
+  "anchor_run5_note": "Main unchanged since run 4. No commit touches a Phase-1 path or an instrument. CORPUS_FREEZE_RUN4.txt verified 54/54 — neither stale manifest nor violation. Live contract still 467a8df6/457.",
+  "globSweep_run5": {
+    "premise": "The order told me to assume run 4's contaminated glob was the shared helper's fault. It was not.",
+    "selectorsSwept": 6,
+    "findings": {
+      "g18_content_floor.py": "GLOBAL floor, no zero-slide exclusion, but its single glob admits no zero-slide file (12 clean). Never contaminated in practice.",
+      "g18_measurement.py": "PER-FAMILY floor that ALREADY existed in FEB's toolkit and ALREADY excluded zero-word files. My g18 v2 partly reinvented it.",
+      "g11_family_similarity.py": "Per-family similarity corpus; zero zero-slide files admitted across all nine globs.",
+      "static_pack_gate.py": "Pack integrity — must see support files; exclusion would be wrong.",
+      "g18_v2 / g23": "Exclusion present since v2.1.0."
+    },
+    "duplicateInstrumentFinding": "The estate carries TWO g18 implementations — a global floor (g18_content_floor.py) and a per-family one (g18_measurement.py). Recorded so the duplication is not carried forward silently.",
+    "theOneRealDivergence": {
+      "family": "GROW ASDAN",
+      "febValue": "p25 958 from n=18",
+      "myValue": "p25 947 from n=6",
+      "cause": "MY glob captured only the PEQ strand; the pack also teaches COMM and ENT. Under-inclusion — the mirror of run 4's over-inclusion.",
+      "fix": "g18 v2.2.0 imports FEB's BASELINES dict instead of maintaining a second copy, so the two cannot drift again.",
+      "otherEightFamilies": "agree exactly"
+    },
+    "impact": {
+      "GROW ASDAN p25": "947 -> 958",
+      "GROW ASDAN median": "954 -> 991",
+      "retroRescore": "25 lessons re-scored under v2.2.0: ZERO verdict flips, zero reds.",
+      "denominators": "NOT contaminable — 86/76/80/87 and the FEB family figures are counts of contract row IDs, verified len(lessonRowIds)==lessonCount, not file-set globs."
+    },
+    "g23Reissued": {
+      "ratiosMoved": 3,
+      "verdictsChanged": 0,
+      "decisionsWithdrawn": 0,
+      "detail": "PEQ_A2_W7 1.77->1.70 (HEAVY); GROW_ASDAN_W15 3.02->2.91; GROW_ASDAN_W16 3.04->2.92. None crossed 2.5.",
+      "counts": {
+        "WITHIN": 24,
+        "HEAVY": 2,
+        "OVERLOADED": 6
+      }
+    },
+    "evidence": [
+      "_sownb/vb/evidence/run5/RETRO_RESCORE_v220.json",
+      "_sownb/vb/evidence/run5/G23_REISSUED.json"
+    ]
+  },
+  "phase2": {
+    "precedence": "(1) real 2026-27 timetable, (2) SoW workbooks, (3) what is live in the repo. Higher wins; contradictions printed, never reconciled by editing.",
+    "weekMap": {
+      "MATCH": 54,
+      "GAP": 30,
+      "COLLISION": 0,
+      "ORPHAN": 0,
+      "note": "Counts are after resolving each deck's cited cell within its OWN family strand and Autumn sheet. Every GAP is early-term (Humanities abs 1-8, Science abs 1-2) and predates this work.",
+      "evidence": "_sownb/vb/evidence/run5/PHASE2_WEEK_MAP.txt"
+    },
+    "c44_c45": {
+      "answered": true,
+      "C44": "Aut2·W6 = absolute week 13 — 'Research a genetic condition online; present.'",
+      "C45": "Aut2·W7 = absolute week 14 — 'Topics 2 to 3 assessment (Dec).'",
+      "verdictA": "SCI_L_A2_W7L1-L3 cites C45, declares week 14 — CORRECT.",
+      "verdictB": "SCI_L_W14L1-L3 cites C44 (absolute 13) but is named and packed W14 — MISLABELLED by one week.",
+      "evidence": "_sownb/vb/evidence/run5/C44_C45_RESOLUTION.json"
+    },
+    "misfiledLaneVerdict": {
+      "LAUNCH Science": "REJECTED as misfiling. Both sequences are LAUNCH Science, citing LAUNCH Science cells. The real cause is a SYSTEMATIC +1 WEEK OFFSET in the pre-FEB run, confirmed topic-by-topic: C39 mitosis abs8->deck W9, C40 growth abs9->W10, C41 stem-cell ethics abs10->W11, C42 DNA abs11->W12, C43 Punnett abs12->W13, C44 genetic condition abs13->W14. Six of seven late; only C45->A2_W7 aligned, which is why the new pack collides. The master order's §3.3 hypothesis is CONFIRMED.",
+      "BUILD Humanities": "REJECTED as misfiling. BUILD_HUM_W14_Festivals cites C59 (and per TRACE C73), both absolute 14 — correct. BUILD_HUM_W14_Industry_and_Nature cites no cell and its local-history topic matches no BUILD workbook row in Autumn2; a search for Tees/industry/river/rail/iron/steel/town/map finds only 'Talk about how my local area has changed' at Spring1 W4, a single row. The BUILD_HUM_W9-W14 pack is a pre-workbook local-history sequence. Under precedence the Festivals lesson is week 14. RECORDED, NOT TOUCHED."
+    },
+    "doublePeriodTest": {
+      "doublesFound": 0,
+      "periodMinutes": 40,
+      "method": "Compared each lane-day's consecutive period labels in the real timetable; a double would show as the same label twice running.",
+      "verdict": "All six OVERLOADED lessons sit in single 40-minute slots. The overload finding STANDS; it is not a labelling gap. ZERO g23 findings dissolved.",
+      "declaredTimings": "All six declare nine stages summing to 40 — the plan matches the slot; the pupil-word load inside it does not.",
+      "evidence": "_sownb/vb/evidence/run5/DOUBLE_PERIOD_TEST.json"
+    },
+    "capacityRuling": "The three UNRESOLVED cells (Build Wed P6, Grow Thu P6, Launch Thu P5) are Behaviour Intervention vs DT, neither in scope. No week-map finding depends on them. DEMOTED to non-blocking; still a human item; nothing inferred.",
+    "newCapacityFinding": "The Build lane has ZERO explicitly-ASDAN (a) slots in the real timetable, while BUILD_ASDAN lessons are being authored. That work must ride carryable (b) slots: Community project Thu P4, PfA/independence Tue P4, PfA/cooking Wed P5, Careers Tue P3, Community/social enterprise Tue P5, Enrichment Mon P6, Vocational Fri P3."
+  },
+  "noTouchRegister": {
+    "purpose": "Findings already ruled benign. Any future run that re-flags one must cite this register and move on.",
+    "entries": [
+      {
+        "id": "NT-1",
+        "finding": "GROW Science week 7 appears twice (SCI_G_W7_The_Moon vs Autumn2_W7 pack)",
+        "rationale": "Term dialect, not a defect. The Moon lesson is Autumn1 W7 = absolute 7; the Autumn2_W7 pack is Aut2·W7 = absolute 14. Same week NUMBER, different weeks.",
+        "ruledBy": "run 4, re-confirmed run 5",
+        "status": "DO NOT FIX"
+      },
+      {
+        "id": "NT-2",
+        "finding": "GROW ASDAN weeks 1-6 appear twice (strand packs vs Autumn2_W1-W6 pack)",
+        "rationale": "Term dialect. Strand packs are absolute 1-6; the Autumn2 pack is absolute 8-13.",
+        "ruledBy": "run 4, re-confirmed run 5",
+        "status": "DO NOT FIX"
+      },
+      {
+        "id": "NT-3",
+        "finding": "Parallel ASDAN strands all teaching 'week 1' (Careers, Community, Duke, FoodWise, Living Independently)",
+        "rationale": "Units taught alongside each other, not competing lessons. Strand is part of the collision key.",
+        "ruledBy": "run 4",
+        "status": "DO NOT FIX"
+      },
+      {
+        "id": "NT-4",
+        "finding": "'GROW Science has no week 14 lesson'",
+        "rationale": "WITHDRAWN. Artefact of a run-4 index reading the filename label W7 instead of resolving Autumn2 W7 to absolute 14. Covered by the Autumn2_W7 pack citing C45.",
+        "ruledBy": "run 5",
+        "status": "DO NOT FIX"
+      },
+      {
+        "id": "NT-5",
+        "finding": "'BUILD ASDAN main strand empty weeks 7-14'",
+        "rationale": "WITHDRAWN. Artefact of the same index treating a Spring1 filename prefix as a strand. BUILD ASDAN teaching is carried by its five sub-strands.",
+        "ruledBy": "run 5",
+        "status": "DO NOT FIX"
+      },
+      {
+        "id": "NT-6",
+        "finding": "cohort A g16/static reds (localStorage, token regex, control-count, case-sensitive firing)",
+        "rationale": "All four proven instrument artefacts at the call site in run 2, none content.",
+        "ruledBy": "run 2",
+        "status": "DO NOT FIX"
+      },
+      {
+        "id": "NT-7",
+        "finding": "BUILD Humanities W14 'thin' at 1616 words",
+        "rationale": "g18 v1's global floor was imported from GROW Science. Against its own family the lesson is above p25 and beats five of six neighbours.",
+        "ruledBy": "run 4",
+        "status": "DO NOT FIX"
+      }
+    ]
+  },
+  "phase4Brief": {
+    "note": "Gaps SCOPED, not filled. Nothing authored. Every gap below is early-term and predates this order's work.",
+    "gaps": [
+      {
+        "family": "BUILD Science",
+        "absWeeks": [
+          1,
+          2
+        ],
+        "cells": [
+          "C32",
+          "C33"
+        ],
+        "requirement": "Baseline assessment weeks; the workbook itself says no new science content until W3.",
+        "neighbours": "sits before C34 (magnification / White Rose Y3 sequence).",
+        "priority": "low — the workbook does not require taught content here."
+      },
+      {
+        "family": "GROW Science",
+        "absWeeks": [
+          1,
+          2
+        ],
+        "cells": [
+          "C32",
+          "C33"
+        ],
+        "requirement": "Baseline weeks, same pattern.",
+        "neighbours": "before C34.",
+        "priority": "low"
+      },
+      {
+        "family": "LAUNCH Science",
+        "absWeeks": [
+          1,
+          2
+        ],
+        "cells": [
+          "C32",
+          "C33"
+        ],
+        "requirement": "Baseline assessment (PythonAnywhere) — workbook states no new science content; unit starts W3.",
+        "neighbours": "before C34 magnification.",
+        "priority": "low"
+      },
+      {
+        "family": "BUILD Humanities",
+        "absWeeks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "cells": [
+          "C46",
+          "C47",
+          "C48",
+          "C49",
+          "C50",
+          "C51",
+          "C52",
+          "C53"
+        ],
+        "requirement": "Autumn 1 World About Me sequence through to 'Explore a festival of light' at abs 8.",
+        "neighbours": "live pack starts at abs 9 (C54).",
+        "priority": "HIGH — eight consecutive taught weeks with no deck."
+      },
+      {
+        "family": "GROW Humanities",
+        "absWeeks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "cells": [
+          "C46",
+          "C47",
+          "C48",
+          "C49",
+          "C50",
+          "C51",
+          "C52",
+          "C53"
+        ],
+        "requirement": "Autumn 1 sequence; live pack starts abs 9.",
+        "neighbours": "before the live W9-W14 run.",
+        "priority": "HIGH"
+      },
+      {
+        "family": "LAUNCH Humanities",
+        "absWeeks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "cells": [
+          "C46",
+          "C47",
+          "C48",
+          "C49",
+          "C50",
+          "C51",
+          "C52",
+          "C53"
+        ],
+        "requirement": "Autumn 1 sequence; live pack starts abs 9.",
+        "neighbours": "before the live W9-W14 run.",
+        "priority": "HIGH"
+      }
+    ],
+    "totalGapWeeks": 30
+  },
+  "decisionPacket": [
+    {
+      "n": 1,
+      "question": "Relabel the LAUNCH Science run so its week numbers match its workbook cells?",
+      "evidence": "Six of seven rows are one week late, matched by topic; only the newest pack is aligned, which is why it collides at week 14.",
+      "options": [
+        {
+          "option": "Relabel — metadata only",
+          "cost": "Filenames/pack names/declared weeks on the W8-W13 and W14-W15 packs. No lesson prose changes. Before/after: SCI_L_W14L1-L3 (cell C44) currently W14 -> should read W13; W13 trio -> W12; W12 -> W11; W11 -> W10; W10 -> W9; W9 -> W8."
+        },
+        {
+          "option": "Leave as is",
+          "cost": "The week-14 slot keeps two sequences and every planner lookup stays one week out."
+        }
+      ],
+      "recommendation": "Relabel. It closes the collision with no new authoring, and the workbook is unambiguous.",
+      "ifNothingHappens": "Week 14 stays double-booked and the whole run keeps drifting a week from the SoW."
+    },
+    {
+      "n": 2,
+      "question": "The six OVERLOADED lessons: split across two periods, or trim into the family band?",
+      "evidence": "The real timetable is 40-minute singles throughout — zero doubles — so the load is genuinely more than the slot. Two Humanities lessons need ~96% of the period for reading alone.",
+      "options": [
+        {
+          "option": "Split",
+          "cost": "Each becomes two lessons; ratios fall to 1.3-1.9x. Needs a spare slot per lesson."
+        },
+        {
+          "option": "Trim",
+          "cost": "Word deltas: LAUNCH Hum W15 -1151, GROW Hum W15 -703, GROW ASDAN W16 -511, GROW ASDAN W15 -495, BUILD ASDAN W16 -221, BUILD ASDAN W15 -180."
+        }
+      ],
+      "recommendation": "Trim the four ASDAN lessons (small deltas); split the two Humanities lessons (deltas too large to cut without losing the task).",
+      "ifNothingHappens": "They teach as written and overrun, or get cut live in the room."
+    },
+    {
+      "n": 3,
+      "question": "What happens to the untraced BUILD Humanities local-history pack (W9-W14)?",
+      "evidence": "Six-lesson Teesside sequence citing no workbook cell; no BUILD Humanities row in the workbook matches its topics. The workbook's week 9-14 is the festivals/RE sequence, which the newer pack covers.",
+      "options": [
+        {
+          "option": "Keep as enrichment, drop its week labels",
+          "cost": "Metadata only; removes the apparent collision."
+        },
+        {
+          "option": "Retire it",
+          "cost": "Loses six finished lessons."
+        },
+        {
+          "option": "Add workbook rows for it",
+          "cost": "A workbook change, which is outside this repo."
+        }
+      ],
+      "recommendation": "Keep it and drop the week labels — it is finished work, it just is not the workbook's week 9-14.",
+      "ifNothingHappens": "BUILD Humanities week 14 keeps showing two lessons."
+    },
+    {
+      "n": 4,
+      "question": "The Build lane has no explicitly-ASDAN slot in the timetable — is that right?",
+      "evidence": "Measured from the real timetable: Build (a) slots = 0, while BUILD_ASDAN lessons are being authored. Grow has 2, Launch has 4.",
+      "options": [
+        {
+          "option": "It is correct — BUILD ASDAN rides carryable slots",
+          "cost": "None; but the authoring plan should say which slot each lesson targets."
+        },
+        {
+          "option": "It is a timetable labelling gap",
+          "cost": "A timetable correction outside this repo."
+        }
+      ],
+      "recommendation": "Confirm which reading is true before Phase 4 authors more BUILD ASDAN.",
+      "ifNothingHappens": "BUILD ASDAN lessons keep being written for slots that may not exist."
+    },
+    {
+      "n": 5,
+      "question": "Should the estate keep two g18 implementations?",
+      "evidence": "g18_content_floor.py (global floor) and g18_measurement.py (per-family, already correct) both live in _sownb/feb/tools/. My v2 partly reinvented the second.",
+      "options": [
+        {
+          "option": "Retire the global one",
+          "cost": "A tools change; every caller must move to the per-family floor."
+        },
+        {
+          "option": "Keep both",
+          "cost": "Two answers to the same question; run 3 already lost time to it."
+        }
+      ],
+      "recommendation": "Retire the global floor once Phase 3 is clear of it.",
+      "ifNothingHappens": "A future run reds a family against a floor imported from GROW Science again."
+    },
+    {
+      "n": 6,
+      "question": "The three UNRESOLVED timetable cells — still needed?",
+      "evidence": "Behaviour Intervention vs DT; neither in scope. No week-map finding depends on them.",
+      "options": [
+        {
+          "option": "Resolve with Cheryl",
+          "cost": "One conversation; settles lane capacity."
+        },
+        {
+          "option": "Leave",
+          " cost": "Capacity arithmetic stays approximate."
+        }
+      ],
+      "recommendation": "Leave for now — demoted to non-blocking this run.",
+      "ifNothingHappens": "Coverage percentages stay approximate; no content decision is blocked."
+    }
+  ]
 }
