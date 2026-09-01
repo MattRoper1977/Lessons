@@ -1,0 +1,34 @@
+{
+ "item": "H7.4",
+ "ruling": "KEEP",
+ "matt": "RED-PROOF-OR-REVERT",
+ "whatTheFixIs": {
+  "file": "tools/stale_evidence_sweep.mjs",
+  "lines": "1 executable line plus a 13-line comment, inserted after the imports",
+  "code": "console.log = (...parts) => fs.writeSync(1, parts.join(' ') + '\\n');",
+  "whatItFlushes": "stdout writes become synchronous, so every line is on the fd before any process.exit()"
+ },
+ "a_revertReproducesDefect": {
+  "instrument": "bytes captured from the pipe, and presence of the asserted tail row; 10 trials each",
+  "withFix": {
+   "bytes": "921154 on all 10 trials",
+   "tailPresent": "10/10"
+  },
+  "reverted": {
+   "bytes": "170310 to 471243, varying by ~300KB across trials",
+   "tailPresent": "0/10"
+  },
+  "revertMethod": "the exact pre-fix blob from 5d89522c, byte-identical, not a hand-edit",
+  "verdict": "DEFECT REPRODUCED"
+ },
+ "b_confinedToTheDefect": {
+  "applicableHalf": "report content byte-identical, 927779 bytes both ways when written to a file",
+  "notApplicableHalf": "screen render screenshot-identical / confined to print media. This is the §2 mismatch: the fix is a stdout-flushing change in a Node CLI with no DOM, no print media and no screen, so §3.4(b)'s render instruments cannot measure it. The general rule stated for the item -- 'a fix that fixes nothing measurable is drift' -- was applied instead, with the measurement in (a).",
+  "verdict": "PASS on the applicable half; mismatch recorded, specific question carried"
+ },
+ "c_familyWide": {
+  "isFamilyWide": false,
+  "note": "one tool, one file; not a scripted family patch, so (c) does not apply"
+ },
+ "conclusion": "KEEP — the defect is measured, the content is unchanged, the change is confined to what it fixes"
+}
