@@ -61,6 +61,54 @@ const SKIP_DIRS = new Set(['.git', 'node_modules', 'vendor', 'audit-output']);
    would rewrite rather than supersede. Entries are per-file so this cannot
    become a blanket excuse. */
 const ALLOW = [
+
+  /* Order H7, 2026-09-01. TEN FILES, ONE TOKEN, AND THE TOKEN IS NOT A NAME.
+     Every entry below is the same string: the filename of a live LAUNCH ASDAN W11
+     careers lesson that exists in this tree at
+     LAUNCH_ASDAN/W7-W12_2026-27/lessons/CAREERS/, 59,500 bytes. It trips the
+     predicate only because MOCK is a fixture marker and the words around it are
+     ordinary titlecase, so Mock/Interview/Answer/Evidence/Improve reads as >=2
+     titlecase words. The same string, for the same reason, is already allowed
+     above for three LAUNCH_ASDAN paths and for this checker, ruled by Order N6
+     on 2026-08-28.
+     These ten are VB gate evidence and a path inventory. They carry the token
+     because g11 and g18 measure a candidate against its family's WHOLE corpus and
+     that lesson is a member of the LAUNCH ASDAN corpus, so its path appears in the
+     corpus listings and as a QA subject. Eliding it there would falsify the
+     evidence; the lesson is live and is not VB's to rename.
+     This is a list of non-names the verifier would otherwise misread, not a list
+     of names to preserve. Listed per file, never by directory, so any OTHER
+     person-shaped string appearing in these same files is still caught. */
+  { file: '_sownb/vb/Q7ZTQQ_PATHS.txt',
+    text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
+    why: 'real careers lesson title; MOCK is a fixture marker but this names no person' },
+  { file: '_sownb/vb/evidence/run2/va-launch-asdan-w13/g11.json',
+    text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
+    why: 'real careers lesson title; MOCK is a fixture marker but this names no person' },
+  { file: '_sownb/vb/evidence/run2/va-launch-asdan-w14/g11.json',
+    text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
+    why: 'real careers lesson title; MOCK is a fixture marker but this names no person' },
+  { file: '_sownb/vb/evidence/run4/RETRO_SWEEP_g18v2.json',
+    text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
+    why: 'real careers lesson title; MOCK is a fixture marker but this names no person' },
+  { file: '_sownb/vb/evidence/run4/b2-lasdan-w16/g11.json',
+    text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
+    why: 'real careers lesson title; MOCK is a fixture marker but this names no person' },
+  { file: '_sownb/vb/evidence/run4/b2-lasdan-w16/g18.json',
+    text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
+    why: 'real careers lesson title; MOCK is a fixture marker but this names no person' },
+  { file: '_sownb/vb/evidence/run5/RETRO_RESCORE_v220.json',
+    text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
+    why: 'real careers lesson title; MOCK is a fixture marker but this names no person' },
+  { file: '_sownb/vb/evidence/run6/D5_RESCORE_SINGLE_G18.json',
+    text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
+    why: 'real careers lesson title; MOCK is a fixture marker but this names no person' },
+  { file: '_sownb/vb/evidence/run6/G24_VISUAL_DENSITY.json',
+    text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
+    why: 'real careers lesson title; MOCK is a fixture marker but this names no person' },
+  { file: '_sownb/vb/evidence/run6/PHASE3_PRINT_MEASURE.json',
+    text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
+    why: 'real careers lesson title; MOCK is a fixture marker but this names no person' },
   { file: 'RELEASE_LEDGER_2026-08-16.md', text: 'CANARY_PUPIL_Jamie_Roper',
     why: 'the dated record of what was planted, and the provenance the fixture-naming rule rests on' },
   /* This checker's own test vectors. A detector for person-shaped strings has
