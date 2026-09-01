@@ -1,0 +1,12 @@
+# FEB unproven contract-row addendum
+
+The protected `_sownb/UNPROVEN.md` baseline is unchanged. These FEB candidates had zero literal proof in the named same-family donor and were not asserted.
+
+- `family.build-science.confirmation.marker` — BUILD Science; literal `<!--n6-learner-confirm:v1-->`; donor `Science_Teesside/Build/W8-W13_2026-27/SCI_B_W13B_Method_Pilot_Test_The_Test_Do.html`; zero same-family literal hits; shared confirmation rows remain binding on new lessons.
+- `family.build-science.confirmation.text` — BUILD Science; literal `Learner confirmation`; donor `Science_Teesside/Build/W8-W13_2026-27/SCI_B_W13B_Method_Pilot_Test_The_Test_Do.html`; zero same-family literal hits; shared confirmation rows remain binding on new lessons.
+- `family.build-humanities.confirmation.marker` — BUILD Humanities; literal `<!--n6-learner-confirm:v1-->`; donor `Humanities_Teesside/BUILD_W9-W14_2026-27/BUILD_HUM_W14_Industry_and_Nature_The_Tees_Story_OUTSTANDING_V4.html`; zero same-family literal hits; shared confirmation rows remain binding on new lessons.
+- `family.build-humanities.confirmation.text` — BUILD Humanities; literal `Learner confirmation`; donor `Humanities_Teesside/BUILD_W9-W14_2026-27/BUILD_HUM_W14_Industry_and_Nature_The_Tees_Story_OUTSTANDING_V4.html`; zero same-family literal hits; shared confirmation rows remain binding on new lessons.
+- `family.grow-humanities.confirmation.marker` — GROW Humanities; literal `<!--n6-learner-confirm:v1-->`; donor `Humanities_Teesside/GROW_W9-W14_2026-27/GROW_HUM_W14_Map_and_Belonging_Challenge_OUTSTANDING_V3_1.html`; zero same-family literal hits; shared confirmation rows remain binding on new lessons.
+- `family.grow-humanities.confirmation.text` — GROW Humanities; literal `Learner confirmation`; donor `Humanities_Teesside/GROW_W9-W14_2026-27/GROW_HUM_W14_Map_and_Belonging_Challenge_OUTSTANDING_V3_1.html`; zero same-family literal hits; shared confirmation rows remain binding on new lessons.
+- `family.launch-humanities.confirmation.marker` — LAUNCH Humanities; literal `<!--n6-learner-confirm:v1-->`; donor `Humanities_Teesside/LAUNCH_W9-W14_2026-27/LAUNCH_HUM_W14_Fieldwork_Enquiry_Write_Up.html`; zero same-family literal hits; shared confirmation rows remain binding on new lessons.
+- `family.launch-humanities.confirmation.text` — LAUNCH Humanities; literal `Learner confirmation`; donor `Humanities_Teesside/LAUNCH_W9-W14_2026-27/LAUNCH_HUM_W14_Fieldwork_Enquiry_Write_Up.html`; zero same-family literal hits; shared confirmation rows remain binding on new lessons.
