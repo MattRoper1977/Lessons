@@ -1,0 +1,58 @@
+{
+  "gate": "g16-feb-frozen",
+  "family": "LAUNCH ASDAN",
+  "artifact": "lesson",
+  "frozenRowCount": 71,
+  "passed": 69,
+  "failed": 2,
+  "failedRows": [
+    {
+      "id": "shared.offline.boundary",
+      "kind": "metric",
+      "required": "==0 forbidden runtime calls",
+      "actual": [
+        "localStorage"
+      ],
+      "pass": false,
+      "measurement": "zero runtime-network, persistent browser storage, external URL or data-URI tokens"
+    },
+    {
+      "id": "family.launch-asdan.control-count",
+      "kind": "metric",
+      "required": "==reference",
+      "actual": 6,
+      "pass": false,
+      "measurement": "render-control DOM button count bound to the row reference"
+    }
+  ],
+  "firingControl": {
+    "applicable": true,
+    "fired": true,
+    "metricControls": [
+      {
+        "mutation": "delete one rendered control-bar button",
+        "row": "family.launch-asdan.control-count",
+        "fired": true,
+        "mutatedResult": {
+          "id": "family.launch-asdan.control-count",
+          "kind": "metric",
+          "required": "==reference",
+          "actual": 5,
+          "pass": false,
+          "measurement": "render-control DOM button count bound to the row reference"
+        }
+      }
+    ],
+    "mutation": "delete --accent declaration",
+    "row": "family.launch-asdan.token.accent",
+    "mutatedResult": {
+      "id": "family.launch-asdan.token.accent",
+      "kind": "token",
+      "required": "==reference",
+      "actual": [],
+      "pass": false,
+      "measurement": "unique declaration and measured value"
+    }
+  },
+  "status": "RED"
+}

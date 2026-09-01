@@ -1,13 +1,14 @@
 {
   "schema": "vb-state-v1",
   "order": "VB",
-  "run": 1,
+  "run": 2,
   "runDate": "2026-09-01",
   "mainHead": "20216304e1505292ac6d974408351895162b93ab",
-  "mainHeadNote": "Order expected 22f6470f (RSH-3 catalogue merge). Main moved 11 commits past it: PRs #177-#180 (FEB wave 1, inside this order's trees) and #176 (Games AAA V6, outside).",
+  "anchor_run2": "dedbf06f546127d06091373dd777b943cc0b039e",
+  "anchor_run2_note": "Anchored at fetch time. Main kept moving during the run: #187 (FEB catalogue append of ten packs to resources.json), #188 (catalogue chip tooling), then this order's own #189 merged as 28ee8d9b. No commit between 22f6470f and 28ee8d9b touches any of the twelve except #189 itself (this order's repair). Corpus freeze re-verified 54/54 OK at run start.",
   "phases": {
     "P0": "COMPLETE",
-    "P1": "NOT_STARTED",
+    "P1": "COMPLETE (cohort A - the twelve RSH-3 surfaces). Cohort B enumerated, unverified - run 3.",
     "P2": "NOT_STARTED",
     "P3": "NOT_STARTED",
     "P4": "NOT_STARTED",
@@ -15,82 +16,98 @@
     "P6": "NOT_STARTED"
   },
   "capability": {
-    "chromium": "141.0.7390.37 at /opt/pw-browsers/chromium (symlink to real chrome binary; rendered a real PDF, so not empty archive and not zero-byte)",
-    "a4PrintEmulation": {"w": 794, "h": 1123, "printMedia": true, "prefersLight": true, "prefersDark": false},
-    "pdfRoundTrip": {
-      "sourceDeck": "GROW_ASDAN/Autumn2_W7_2026-27/PEQ_A2_W7_Complete_Profile_and_Evidence_GROW_v3_40min.html",
-      "renderer": "_sownb/feb/tools/render_pdf_w2.js with CODEX_PRIMARY_RUNTIME_NODE_MODULES=/opt/node22/lib/node_modules RSH_CHROMIUM_PATH=/opt/pw-browsers/chromium",
-      "pages": 3,
-      "pageBoxPt": [595.92, 842.88],
-      "pypdf": "6.16.2, page0 text 1641 chars",
-      "pdftotext": "24.02.0, 2610 chars",
-      "pymupdfBlocks": "15 page-local text blocks with coordinates on page 0"
-    },
-    "fourFailureModes": {
-      "emptyPlaywrightArchive": "CLEAR - playwright 1.56.1 at /opt/node22/lib/node_modules loads and drives",
-      "zeroByteBinary": "CLEAR - binary rendered 33841-byte PDF",
-      "boxesForTextEmptyFontDir": "CLEAR - 59 fonts installed, real glyph text extracted by three independent readers",
-      "darkSchemeInkInflation": "CLEAR - render path forces light scheme; asserted prefers-color-scheme light=true dark=false under print emulation"
-    },
-    "sessionLocalInstalls": "pip: cffi (fixes broken system cryptography so pypdf imports), pymupdf; apt: poppler-utils (pdftotext). Container-local; a fresh container must reinstall before rendering measurements."
+    "chromium": "141.0.7390.37 at /opt/pw-browsers/chromium",
+    "engineNote": "The twelve were measured on Chromium 149.0.7827.0. 141 < 149, so every pagination-sensitive gate ran under the engine-artefact rule with same-session controls (the four reference decks in _sownb/feb/tools/render_measure.js). No pagination red survived its control.",
+    "a4PrintEmulation": {"w": 794, "h": 1123, "printMedia": true, "prefersDark": false},
+    "pdfToolchain": "pypdf 6.16.2, pymupdf 1.28.2, pdftotext 24.02.0 - round-trip re-proven on a landed deck",
+    "fontSet": "59 resolvable fonts; families include DejaVu, Liberation (Arial-metric), FreeSans, Noto Color Emoji. Decks request 'Segoe UI, Arial, sans-serif' and substitute Liberation Sans. No RSH-3-recorded font set exists on main to compare against - recorded, not guessed.",
+    "sessionLocalInstalls": "pip: cffi, pymupdf, lxml, pillow; apt: poppler-utils. Container-local; re-run in a fresh container."
   },
-  "instruments": {
-    "location": "ON MAIN under _sownb/ and _sownb/feb/tools/ - no zip rebuild needed",
-    "gateTools": "34 scripts in _sownb/feb/tools/ incl g10 g11 g15 g16 g18 g19 g21 c_gate running_heads_pdf s24 safeguarding static render",
-    "styleContractSha256": "467a8df63e839ed8a0bfdc39fcbc6ed195e9e912ef3ea8e9400aee6c86ae09e2",
-    "styleContractRows": 457,
-    "styleContractNote": "RSH-3's 225-row/e0f8f546 contract was extended to 457 rows by FEB wave 1 on main (PR #177, authorised append). The 225-row hash e0f8f546 remains pinned inside G16_DENOMINATORS_RSH3.json for RSH-3 provenance.",
-    "g16DenominatorsRsh3Sha256": "4ec68f96c81647e7933987179ff0707f081257469303ad3fde597968d062bd36",
-    "g16DenominatorsRsh3Match": "MATCHES order's expected prefix 4ec68f96",
-    "frozenProductionDenominators": {
-      "GROW Science": 86,
-      "GROW ASDAN": 76,
-      "LAUNCH ASDAN": 80,
-      "LAUNCH Science": 87,
-      "derivation": "lessonCount + supportCount per family in G16_DENOMINATORS_RSH3.json; all four match the order's figures",
-      "febRefreeze": "feb-denominator-refreeze-v2 excludes shared.guide.byte-block from the FEB production denominator (localStorage prohibition); RSH-3 rows untouched for provenance"
-    },
-    "corpusFreezeRun1": "_sownb/vb/CORPUS_FREEZE_RUN1.txt (54 files under _sownb/), digest ea9c17c7a56398878a4b8d49a87e078980e772fc96928e95e723575a06b7af8d"
+  "contractAuthority": {
+    "cohortA": "Pinned 225-row contract resolved BY HASH e0f8f546... from history (commit e5ee4bef), committed as _sownb/vb/STYLE_CONTRACT_RSH3_PINNED.json; g16 run through _sownb/vb/tools/g16_rsh3_pinned.py (FEB gate re-pointed, semantics unchanged) with G16_DENOMINATORS_RSH3.json (86/76/80/87 re-derived).",
+    "live": "457 rows, sha 467a8df6... - the authority for cohort B and later authoring (human item: confirm before P4).",
+    "g22ContractDelta": {"extensionSafe": 225, "redefinition": 0, "regression": 0, "liveOnly": 232, "liveOnlyByPrefix": {"family": 182, "pack": 15, "start": 35}, "verdict": "No halt. Every pinned row survives verbatim in live; live-only rows are FEB's new-family extensions."}
   },
-  "inflight": {
-    "openPRs": 14,
-    "openPRsNote": "Order expected 13. The 14th is #181 'FEB wave 1: BUILD ASDAN Spring 1 W15-W16' (head 257ad6a4) - an ANOMALY: its head is already an ancestor of main with zero diff, i.e. an empty open PR. Treat BUILD ASDAN Spring 1 W15-W16 as reserved by in-flight FEB work; do not author into that slot without checking #181 first.",
-    "openPRNumbers": [181, 166, 118, 117, 116, 94, 93, 45, 43, 35, 31, 30, 26, 17],
-    "branchesStrictlyAheadOfMain": 92,
-    "branchesAheadList": "_sownb/vb/BRANCHES_AHEAD.txt",
-    "q7ztqq": {
-      "head": "18c395da96c8641d2c173e51f3692f9b1616bd1d",
-      "filesChanged": 154,
-      "byTree": {"Science_Teesside": 45, "LAUNCH_ASDAN": 31, "BUILD_ASDAN": 25, "GROW_ASDAN": 19, "_next6": 18, "Humanities_Teesside": 14, "tools": 1, "REGISTER.md": 1},
-      "pathList": "_sownb/vb/Q7ZTQQ_PATHS.txt",
-      "status": "read-only for this order; mutation-blocked per path; land-or-abandon is Matt's decision (section 12)"
-    },
-    "twelveSurfacesContention": "UNCONTENDED. The only branches touching the twelve RSH-3 surfaces are the four stale rsh3/* delivery branches whose blobs are byte-identical to main (squash-merge residue), so Phase 1 repairs are not mutation-blocked.",
-    "interpretationFlag": "A strict section 0.11 reading would also count the old HELD/PARKED/DO-NOT-MERGE PR branches (#116 #118 #45 #43 #35 etc, 600-1200 files each, heavy Art_Teesside overlap) as mutation-blocking. They are parked/ruled reference diffs, not active work. Recorded for Matt; this order proceeds treating q7ztqq plus genuinely active branches as blocking, and will re-check per file before any mutation outside the twelve."
+  "cohortA_verdicts": {
+    "note": "Full battery on landed bytes: g16 pinned, g18, g19, g10, g11, g15, render-installation (incl occlusion hit-test), s24, running heads (page-local MediaBox), g21 advisory, static pack, safeguarding (LAUNCH Science), front-door gate, confirmation-in-print by PDF, ladder labels, TRACE, reading level, ligatures, residual-note with red control. Public 200 + body-hash: MEASUREMENT INVALID (network policy denies mattroper1977.github.io); verified on landed git bytes, links verified on disk.",
+    "GROW_ASDAN/Autumn2_W7_2026-27/PEQ_A2_W7_Complete_Profile_and_Evidence_GROW_v3_40min.html": "VERIFIED",
+    "GROW_ASDAN/Autumn2_W7_2026-27/START_HERE.html": "VERIFIED",
+    "Science_Teesside/Grow/Autumn2_W7_2026-27/SCI_G_A2_W7A_Autumn_Science_Review_Explore.html": "VERIFIED",
+    "Science_Teesside/Grow/Autumn2_W7_2026-27/SCI_G_A2_W7B_Autumn_Science_Evidence_Do.html": "VERIFIED",
+    "Science_Teesside/Grow/Autumn2_W7_2026-27/START_HERE.html": "VERIFIED",
+    "LAUNCH_ASDAN/W13-W14_2026-27/lessons/COMM/COMM_W13_Record_And_Organise_Project_Evidence_LAUNCH.html": "VERIFIED",
+    "LAUNCH_ASDAN/W13-W14_2026-27/lessons/COMM/COMM_W14_Autumn_Community_Project_Review_Outcome_LAUNCH.html": "VERIFIED",
+    "LAUNCH_ASDAN/W13-W14_2026-27/START_HERE.html": "VERIFIED",
+    "Science_Teesside/Launch/W14-W15_2026-27/SCI_L_W14L1_Genetic_Condition_Research_Introduce.html": "VERIFIED",
+    "Science_Teesside/Launch/W14-W15_2026-27/SCI_L_W14L2_Genetic_Condition_Source_Evidence_Explore.html": "VERIFIED",
+    "Science_Teesside/Launch/W14-W15_2026-27/SCI_L_W14L3_Genetic_Condition_Presentation_Do.html": "VERIFIED",
+    "Science_Teesside/Launch/W14-W15_2026-27/START_HERE.html": "REPAIRED - stale 'Held local candidate' hold notice removed, SHA256SUMS regenerated. PR #189, merged 28ee8d9b, all 5 checks green.",
+    "instrumentArtefacts": "Four g16/static red classes proven instrument artefacts at the call site (offline-metric localStorage hard-code beyond the pinned row; token regex swallowed by RSH provenance comments; control-count references irreproducible on their own donors - row MEASUREMENT INVALID; case-sensitive firing mutation vs case-normalised contract value). Three g10 reds were capitalised headings, not names. Full mechanics in _sownb/vb/WRONG_BEFORE_RIGHT.md; gate reports in _sownb/vb/evidence/run2/.",
+    "engineArtefactCount": 0,
+    "readingLevel": "6 of 8 lessons >1 IQR easier than pack median (FK approx) - deviation printed per order, no action."
   },
-  "twelveSurfaces": [
-    "GROW_ASDAN/Autumn2_W7_2026-27/PEQ_A2_W7_Complete_Profile_and_Evidence_GROW_v3_40min.html",
-    "GROW_ASDAN/Autumn2_W7_2026-27/START_HERE.html",
-    "Science_Teesside/Grow/Autumn2_W7_2026-27/SCI_G_A2_W7A_Autumn_Science_Review_Explore.html",
-    "Science_Teesside/Grow/Autumn2_W7_2026-27/SCI_G_A2_W7B_Autumn_Science_Evidence_Do.html",
-    "Science_Teesside/Grow/Autumn2_W7_2026-27/START_HERE.html",
-    "LAUNCH_ASDAN/W13-W14_2026-27/lessons/COMM/COMM_W13_Record_And_Organise_Project_Evidence_LAUNCH.html",
-    "LAUNCH_ASDAN/W13-W14_2026-27/lessons/COMM/COMM_W14_Autumn_Community_Project_Review_Outcome_LAUNCH.html",
-    "LAUNCH_ASDAN/W13-W14_2026-27/START_HERE.html",
-    "Science_Teesside/Launch/W14-W15_2026-27/SCI_L_W14L1_Genetic_Condition_Research_Introduce.html",
-    "Science_Teesside/Launch/W14-W15_2026-27/SCI_L_W14L2_Genetic_Condition_Source_Evidence_Explore.html",
-    "Science_Teesside/Launch/W14-W15_2026-27/SCI_L_W14L3_Genetic_Condition_Presentation_Do.html",
-    "Science_Teesside/Launch/W14-W15_2026-27/START_HERE.html"
+  "cohort_B": {
+    "diffBase": "22f6470f7660bcf77975be0d2157e011cf19a5d9",
+    "diffHead": "dedbf06f546127d06091373dd777b943cc0b039e",
+    "note": "All HTML surfaces added on main since the RSH-3 head - PRs #177-#186 (the order said #177-#180; six more FEB packs landed in flight). 36 surfaces: 24 lessons + 12 front doors/variants across 10 packs. #187 later appended their ten catalogue entries to resources.json. Verify under the LIVE 457 contract with FEB denominators. 36 > 24 ceiling, so week-major split below; front doors verify with their pack's wave.",
+    "waveB1_weeks14_15": [
+      "Science_Teesside/Build/W14-W20_2026-27/SCI_B_W14A_Autumn_Science_Review_Explore.html",
+      "Science_Teesside/Build/W14-W20_2026-27/SCI_B_W14B_Autumn_Science_Evidence_Do.html",
+      "Science_Teesside/Build/W14-W20_2026-27/SCI_B_W15A_Fossil_Formation_Story_Explore.html",
+      "Science_Teesside/Build/W14-W20_2026-27/SCI_B_W15B_Fossil_Formation_Evidence_Do.html",
+      "Science_Teesside/Build/W14-W20_2026-27/START_HERE.html",
+      "Science_Teesside/Launch/Autumn2_W7_2026-27/SCI_L_A2_W7L1_Topics_2_3_Assessment_Introduce.html",
+      "Science_Teesside/Launch/Autumn2_W7_2026-27/SCI_L_A2_W7L2_Topics_2_3_Assessment_Explore.html",
+      "Science_Teesside/Launch/Autumn2_W7_2026-27/SCI_L_A2_W7L3_Topics_2_3_Assessment_Do.html",
+      "Science_Teesside/Launch/Autumn2_W7_2026-27/START_HERE.html",
+      "Humanities_Teesside/BUILD_W14-W20_2026-27/BUILD_HUM_W14_Festivals_Display_and_Reflection.html",
+      "Humanities_Teesside/BUILD_W14-W20_2026-27/BUILD_HUM_W15_My_Week_Timeline_and_Caring_Stories.html",
+      "Humanities_Teesside/BUILD_W14-W20_2026-27/START_HERE.html",
+      "Science_Teesside/Grow/W15-W20_2026-27/SCI_G_W15A_Materials_Properties_Explore.html",
+      "Science_Teesside/Grow/W15-W20_2026-27/SCI_G_W15B_Materials_Properties_Evidence_Do.html",
+      "Science_Teesside/Grow/W15-W20_2026-27/START_HERE.html",
+      "Science_Teesside/Launch/W15-W20_2026-27/SCI_L_W15L1_Variation_and_Natural_Selection_Introduce.html",
+      "Science_Teesside/Launch/W15-W20_2026-27/SCI_L_W15L2_Natural_Selection_Evidence_Explore.html",
+      "Science_Teesside/Launch/W15-W20_2026-27/SCI_L_W15L3_Natural_Selection_Explanation_Do.html",
+      "Science_Teesside/Launch/W15-W20_2026-27/START_HERE.html",
+      "Humanities_Teesside/GROW_W15-W20_2026-27/GROW_HUM_W15_Rights_Timeline_and_Belief_Resilience.html",
+      "Humanities_Teesside/GROW_W15-W20_2026-27/START_HERE.html",
+      "Humanities_Teesside/LAUNCH_W15-W20_2026-27/LAUNCH_HUM_W15_Conflict_Causes_and_Ethical_Decisions.html",
+      "Humanities_Teesside/LAUNCH_W15-W20_2026-27/START_HERE.html",
+      "BUILD_ASDAN/Spring1_W1-W6_2026-27/BUILD_ASDAN_W15_Choice_Budget_and_Project_Reset.html"
+    ],
+    "waveB2_remainder": [
+      "BUILD_ASDAN/Spring1_W1-W6_2026-27/BUILD_ASDAN_W16_Partner_Challenge_and_Seasonal_Goals.html",
+      "BUILD_ASDAN/Spring1_W1-W6_2026-27/START_HERE.html",
+      "BUILD_ASDAN/Spring1_W1-W6_2026-27/START_HERE_BUILD_ASDAN_AUT2.html",
+      "GROW_ASDAN/Spring1_W1-W6_2026-27/GROW_ASDAN_W15_Strengths_Challenge_and_Project_Reset.html",
+      "GROW_ASDAN/Spring1_W1-W6_2026-27/GROW_ASDAN_W16_Authorised_Task_Project_Plan_and_New_Goals.html",
+      "GROW_ASDAN/Spring1_W1-W6_2026-27/START_HERE.html",
+      "LAUNCH_ASDAN/Spring1_W1-W6_2026-27/LAUNCH_ASDAN_W16_Decision_Tools_Banking_Plant_Care_and_Project_Plan.html",
+      "LAUNCH_ASDAN/Spring1_W1-W6_2026-27/START_HERE.html",
+      "Science_Teesside/Build/W14-W20_2026-27/SCI_B_W16A_Fossil_Clues_Explore.html",
+      "Science_Teesside/Build/W14-W20_2026-27/SCI_B_W16B_Fossil_Evidence_Do.html",
+      "Science_Teesside/Grow/W15-W20_2026-27/SCI_G_W16A_Solubility_And_Recovery_Explore.html",
+      "Humanities_Teesside/GROW_W15-W20_2026-27/START_HERE_GROW_HUMANITIES_W9-W14.html"
+    ],
+    "waveB2_note": "GROW/BUILD ASDAN W15 lessons sit in Spring1 packs; the split keeps each pack's lessons contiguous where possible - BUILD_ASDAN W15 leads B1 as the earliest uncovered ASDAN row, its W16 sibling and both Spring1 ASDAN packs' remainder follow in B2."
+  },
+  "landedThisRun": [
+    "PR #189 (merge 28ee8d9b): LAUNCH Science W14 front door stale hold notice removed + SHA256SUMS regenerated. 5/5 checks green; dormancy matcher 0 findings with controls fired both ways before opening."
   ],
-  "landedSinceRsh3": {
-    "note": "FEB wave 1 landed 14 further lesson files and 4 further front doors after RSH-3's twelve (PRs #177-#180): BUILD Science W14-W16 (6), GROW Science W15-W16 (3), LAUNCH Science W15 (3), LAUNCH Science Autumn2 W7 (3, sic - 3 lessons), each pack with START_HERE + manifest + SHA256SUMS. Phase 1 scope stays the RSH-3 twelve per the order; these FEB surfaces passed FEB's own battery and are candidates for the same verification later - recorded, not assumed."
-  },
+  "observations": [
+    "The 'Watch main' workflow (watch-main.yml) concludes FAILURE on every recent main push, since before this order - a standing red predating VB, listed as a human item, untouched.",
+    "TRACE.md dispositions for the twelve still read pre-landing ('GATED READY - local review only', 'RSH2 HELD/RESHELLED - nothing landed'); trace-to-cell content is intact and correct. Not rewritten - a ledger update is Matt's call.",
+    "FEB wave 1 completed its own landing during this run: content PRs #177-#186 then catalogue append #187 last and alone, matching the C-1 sequence."
+  ],
   "humanItems": [
-    "LAUNCH PEQ E3-L1 vs live Level 2 route - C100 stays STOP (Matt + Cheryl)",
-    "q7ztqq: land or abandon",
-    "PR #181 is open but empty (head already in main lineage) - close or push the missing commits",
-    "Whether parked/ruled PR branches (#116 #118 #45 #43 #35 #17 etc) count as mutation-blocking under 0.11, or only active work",
-    "Three disputed timetable cells stay UNRESOLVED; cooking-slot staffing; spring/summer term dates"
+    "C100 stays STOP: LAUNCH PEQ E3-L1 vs live Level 2 route (Matt + Cheryl)",
+    "q7ztqq: land or abandon (154 paths in _sownb/vb/Q7ZTQQ_PATHS.txt remain mutation-blocked)",
+    "Parked/ruled PR branches vs section 0.11 mutation-blocking - which reading",
+    "Three disputed timetable cells UNRESOLVED; cooking-slot staffing; spring/summer term dates",
+    "Confirm the contract-authority split (cohort A pinned 225 / new work live 457) before P4 authors against 457",
+    "Standing watch-main failure on every main push",
+    "Public 200 body-hash binding for all landed surfaces remains unmeasured from this venue (network policy); needs one run from a venue that can reach mattroper1977.github.io"
   ],
-  "nextRun": "Phase 1: verify the twelve landed surfaces. Start with 2.1 (public 200 + body hash vs landed blob) and 2.2 (inherited battery on landed bytes). Capability recipe in this file's capability.sessionLocalInstalls must be re-run in a fresh container first."
+  "nextRun": "Run 3 = Phase 1 cohort B, wave B1 (24 surfaces listed above) under the identical battery against the LIVE 457 contract with FEB denominators (G16_DENOMINATORS_FEB.json - note its refreeze excludes shared.guide.byte-block and FEB decks must not use localStorage, unlike cohort A). Engine-artefact rule applies as in run 2 unless Chromium >= 149. Then wave B2, then Phase 2."
 }

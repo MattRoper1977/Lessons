@@ -1,0 +1,58 @@
+{
+  "gate": "g16-feb-frozen",
+  "family": "GROW ASDAN",
+  "artifact": "lesson",
+  "frozenRowCount": 67,
+  "passed": 65,
+  "failed": 2,
+  "failedRows": [
+    {
+      "id": "shared.offline.boundary",
+      "kind": "metric",
+      "required": "==0 forbidden runtime calls",
+      "actual": [
+        "localStorage"
+      ],
+      "pass": false,
+      "measurement": "zero runtime-network, persistent browser storage, external URL or data-URI tokens"
+    },
+    {
+      "id": "family.grow-asdan.control-count",
+      "kind": "metric",
+      "required": "==reference",
+      "actual": 7,
+      "pass": false,
+      "measurement": "render-control DOM button count bound to the row reference"
+    }
+  ],
+  "firingControl": {
+    "applicable": true,
+    "fired": true,
+    "metricControls": [
+      {
+        "mutation": "delete one rendered control-bar button",
+        "row": "family.grow-asdan.control-count",
+        "fired": true,
+        "mutatedResult": {
+          "id": "family.grow-asdan.control-count",
+          "kind": "metric",
+          "required": "==reference",
+          "actual": 6,
+          "pass": false,
+          "measurement": "render-control DOM button count bound to the row reference"
+        }
+      }
+    ],
+    "mutation": "delete --bg declaration",
+    "row": "family.grow-asdan.token.bg",
+    "mutatedResult": {
+      "id": "family.grow-asdan.token.bg",
+      "kind": "token",
+      "required": "==reference",
+      "actual": [],
+      "pass": false,
+      "measurement": "unique declaration and measured value"
+    }
+  },
+  "status": "RED"
+}
