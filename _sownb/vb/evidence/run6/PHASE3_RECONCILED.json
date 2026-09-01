@@ -1,0 +1,37 @@
+{
+ "phase": "Phase 3 \u2014 the non-printing confirmation blocks",
+ "originalFigure": 51,
+ "originalMethod": "measured against the CSS page (~1043.15 px) \u2014 MEASUREMENT INVALID",
+ "reconciledMethod": "every candidate rendered to PDF in this session (Chromium 141.0.7390.37) and the confirmation text sought in the PDF text layer",
+ "decksWithConfirmationBlockInDOM": 183,
+ "confirmationPrints": 104,
+ "confirmationMissing": 79,
+ "ofWhichWholePdfIsBlank": 79,
+ "ofWhichPdfHasContentButNoConfirmation": 0,
+ "crossTab": {
+  "insidePrintPack_and_prints": 56,
+  "insidePrintPack_and_missing": 0,
+  "outsidePrintPack_and_prints": 48,
+  "outsidePrintPack_and_missing": 79
+ },
+ "PLACEMENT_FIXABLE": 0,
+ "verdict": "ZERO. Not one deck fails because its confirmation block is placed outside .print-pack. Every deck with the block inside .print-pack prints it (56/56, no counter-example), and 48 decks print it from outside the pack too. Phase 3 as specified CLOSES HERE.",
+ "theRealDefectFound": {
+  "count": 79,
+  "symptom": "the ENTIRE PDF is blank \u2014 zero characters, one page",
+  "byTree": {
+   "LAUNCH_ASDAN": 30,
+   "BUILD_ASDAN": 31,
+   "GROW_ASDAN": 18
+  },
+  "diagnosis": "These decks build print output into a #print-area div. That div IS populated (15,819 characters of innerHTML measured on PEQ_W3, present before any beforeprint event) and computes display:block under print media. Its children do not: every .print-section inside it computes to display:none under print. The print stylesheet turns #print-area on but never turns .print-section back on.",
+  "ruledOut": [
+   "JS population \u2014 #print-area is already full before beforeprint fires, and dispatching beforeprint changes nothing",
+   "hidden ancestor \u2014 #print-area is a direct child of body, display:block, visibility:visible"
+  ],
+  "likelyFix": "a single print rule per deck, e.g. @media print{.print-section{display:block}} \u2014 ONE LINE, but it is a CSS addition, not a placement move",
+  "whyNotAppliedThisRun": "\u00a71.2 permits PLACEMENT ONLY inside .print-pack. A CSS rule addition is a different class of change, and 79 files exceeds the run ceiling. Proposed, not applied.",
+  "severity": "Higher than the original finding. These decks print nothing at all \u2014 not merely a missing signature line."
+ },
+ "pilotPackNote": "The designated pilot, LAUNCH Humanities W9-W14, contains NO confirmation blocks at all: none of its six lessons matched the confirmation marker search. There was nothing to pilot there."
+}

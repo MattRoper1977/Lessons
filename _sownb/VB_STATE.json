@@ -1,7 +1,7 @@
 {
   "schema": "vb-state-v1",
   "order": "VB",
-  "run": 5,
+  "run": 6,
   "runDate": "2026-09-01",
   "mainHead": "20216304e1505292ac6d974408351895162b93ab",
   "anchor_run2": "dedbf06f546127d06091373dd777b943cc0b039e",
@@ -10,7 +10,7 @@
     "P0": "COMPLETE",
     "P1": "COMPLETE. Cohort A (12, run 2) + cohort B wave B1 (24, run 3) + wave B2 (12, run 4) = 48 surfaces verified.",
     "P2": "COMPLETE (run 5). Week map built, both week-14 collisions resolved against the workbook, double-period test run, NO-TOUCH register created, gap briefs written, decision packet delivered.",
-    "P3": "NOT_STARTED — run 6.",
+    "P3": "CLOSED AT RECONCILIATION (run 6). The placement-fixable count is ZERO; the original 51 was measured against the CSS page and is invalid. A larger, different defect was found and diagnosed instead — see phase3.",
     "P4": "NOT_STARTED",
     "P5": "NOT_STARTED",
     "P6": "NOT_STARTED"
@@ -58,6 +58,19 @@
       "fontFingerprint": "c555ca082ed285dbcd5c84b5e2687cf3",
       "fonts": 59,
       "drift": "none — identical to runs 2, 3 and 4",
+      "a4PrintEmulation": {
+        "w": 794,
+        "h": 1123,
+        "printMedia": true,
+        "prefersDark": false
+      },
+      "pdfRoundTrip": "fresh: 3pp, pypdf 1641ch, pymupdf 15 page-local blocks, pdftotext 2609ch"
+    },
+    "run6": {
+      "chromium": "141.0.7390.37",
+      "fontFingerprint": "c555ca082ed285dbcd5c84b5e2687cf3",
+      "fonts": 59,
+      "drift": "none — identical to runs 2, 3, 4 and 5",
       "a4PrintEmulation": {
         "w": 794,
         "h": 1123,
@@ -224,9 +237,13 @@
     "Public-200 binding is now VENUE_BLOCKED; clearing it needs one run from a venue with egress to github.io.",
     "Build lane has zero explicitly-ASDAN slots in the real timetable while BUILD_ASDAN lessons are authored (new, run 5)",
     "The estate carries two g18 implementations (global and per-family); decide whether to retire the global one",
-    "The untraced BUILD Humanities local-history pack W9-W14 — keep as enrichment, retire, or add workbook rows"
+    "The untraced BUILD Humanities local-history pack W9-W14 — keep as enrichment, retire, or add workbook rows",
+    "D1 is blocked on ONE question: is the LAUNCH Science enzyme/amylase week extra enrichment, part of C38's Topic 1 review week, or a missing workbook row?",
+    "79 decks print an entirely blank PDF (.print-section hidden under print) — approve the one-line CSS fix and its scheduling",
+    "Confirm the six-type 'we do' taxonomy (blocks the next authoring wave)",
+    "Approve the six proposed contract rows"
   ],
-  "nextRun": "Run 6 = PHASE 3 (the fifty-one non-printing confirmation blocks). Phase 2 is closed: week map built, both week-14 collisions resolved against the workbook, double-period test run (zero doubles, no findings dissolved), NO-TOUCH register live with 7 entries, Phase 4 gap brief written, 6 decisions in decisionPacket awaiting Matt.",
+  "nextRun": "Run 7 = Phase 4 wave 3, Humanities BUILD/GROW/LAUNCH abs 1-8 (C46-C53), CONTINGENT on two confirmations: the six-type 'we do' taxonomy and the proposed contract rows. Also carried: the six overload SPLITS (deferred from run 6 so the halves are built to the new standard), D1 once its one question is answered, and the 79-deck blank-print CSS fix.",
   "anchor_run3": "28ee8d9b73180d92041cb42e7af531367d199a29",
   "anchor_run3_note": "Main at fetch. Since run-2 anchor dedbf06f: #188 (Humanities catalogue chip), #187 (catalogue append of ten FEB packs to resources.json), #189 (this order's cohort-A repair, merged 14:37:49Z). No commit since the run-2 anchor touches any wave-B1 path. Corpus freeze re-verified 54/54 OK. The state branch was merged with main so verification ran on genuinely landed bytes (24/24 blobs equal origin/main).",
   "pr189": {
@@ -605,6 +622,13 @@
         "rationale": "g18 v1's global floor was imported from GROW Science. Against its own family the lesson is above p25 and beats five of six neighbours.",
         "ruledBy": "run 4",
         "status": "DO NOT FIX"
+      },
+      {
+        "id": "NT-8",
+        "finding": "'51 confirmation blocks fail to print'",
+        "rationale": "WITHDRAWN. Re-measured by rendered PDF: the placement-fixable count is ZERO. 56/56 decks with the block inside .print-pack print it and 48 print it from outside. The real defect is 79 decks whose whole PDF is blank — a different defect, separately recorded.",
+        "ruledBy": "run 6",
+        "status": "DO NOT FIX AS A PLACEMENT ISSUE"
       }
     ]
   },
@@ -841,5 +865,159 @@
       "recommendation": "Leave for now — demoted to non-blocking this run.",
       "ifNothingHappens": "Coverage percentages stay approximate; no content decision is blocked."
     }
-  ]
+  ],
+  "anchor_run6": "28ee8d9b73180d92041cb42e7af531367d199a29",
+  "anchor_run6_note": "Main unchanged since run 4. CORPUS_FREEZE_RUN4 54/54 — neither stale manifest nor violation. Capability identical to runs 2-5. Contract 467a8df6/457.",
+  "phase3": {
+    "originalFigure": 51,
+    "originalMethodInvalid": "measured against the CSS page (~1043.15 px)",
+    "reconciledMethod": "all 183 candidates rendered to PDF this session; confirmation text sought in the PDF text layer",
+    "decksWithBlockInDOM": 183,
+    "confirmationPrints": 104,
+    "confirmationMissing": 79,
+    "ofWhichWholePdfBlank": 79,
+    "ofWhichContentButNoConfirmation": 0,
+    "crossTab": {
+      "inPack_prints": 56,
+      "inPack_missing": 0,
+      "outOfPack_prints": 48,
+      "outOfPack_missing": 79
+    },
+    "PLACEMENT_FIXABLE": 0,
+    "verdict": "Phase 3 as specified CLOSES. No deck fails because of placement. 56/56 decks with the block inside .print-pack print it, and 48 print it from outside the pack.",
+    "pilotPackEmpty": "LAUNCH Humanities W9-W14, the designated pilot, has no confirmation blocks in any of its six lessons.",
+    "realDefect": {
+      "count": 79,
+      "symptom": "entire PDF blank, zero characters",
+      "byTree": {
+        "LAUNCH_ASDAN": 30,
+        "BUILD_ASDAN": 31,
+        "GROW_ASDAN": 18
+      },
+      "diagnosis": "#print-area is populated (15,819 chars measured) and computes display:block under print, but every .print-section inside it computes display:none. The print stylesheet turns the container on and never turns the sections back on.",
+      "ruledOut": [
+        "JS population — the div is full before beforeprint and dispatching it changes nothing",
+        "hidden ancestor — #print-area is a direct child of body, display:block, visible"
+      ],
+      "proposedFix": "one rule per deck, e.g. @media print{.print-section{display:block}}",
+      "notAppliedBecause": "§1.2 permits placement only; a CSS rule addition is a different class of change, and 79 files exceeds the ceiling.",
+      "severity": "higher than the original finding — these decks print nothing at all"
+    },
+    "evidence": [
+      "_sownb/vb/evidence/run6/PHASE3_RECONCILED.json",
+      "_sownb/vb/evidence/run6/PHASE3_PRINT_MEASURE.json"
+    ]
+  },
+  "decisionD1": {
+    "status": "BLOCKED — not applied",
+    "orderDefault": "YES",
+    "blastRadius": {
+      "lessonFiles": 21,
+      "referringFiles": 62,
+      "totalIfRenamed": 83,
+      "readOnlyGroundTruth": 7
+    },
+    "branchChosen": "§2.2 label+citation (83 > 20 rules out the rename); the per-deck edit is fully specified and staged",
+    "blocker": "The relabel is a chain ending at W9->8, and week 8 is held by the SCI_L_W8 enzyme/amylase trio. No enzyme/amylase/catalyst/digest row exists anywhere in the LAUNCH workbook. Week 7 is not free either — the v3_40min W7 trio aligns to C38 and sits in a protected production tree.",
+    "whyNotApplied": "Six of the seven weeks would knowingly create a collision at week 8; assigning or stripping the enzyme week's number is a curriculum decision with no workbook warrant.",
+    "theOneQuestion": "Is the enzyme/amylase week (a) extra enrichment outside the numbered sequence, (b) part of C38's Topic 1 review week, or (c) a missing workbook row?",
+    "evidence": "_sownb/vb/evidence/run6/D1_RELABEL_BLOCKED.json"
+  },
+  "decisionD5": {
+    "status": "DONE",
+    "action": "_sownb/vb/tools/g18_v2_family_floor.py is now g18-v3.0.0-feb-measurement-delegated — it computes no floor of its own and delegates to FEB's g18_measurement.derive_floor.",
+    "keptFromVB": "the printing discipline: family, n, per-family p25, legacy global p25, candidate words, binding verdict, tool version on every line; g11 still prints its own similarity and ceiling.",
+    "floorsBeforeAfter": "identical for all nine families",
+    "rescore": {
+      "lessons": 32,
+      "flips": 0,
+      "reds": 0
+    },
+    "evidence": "_sownb/vb/evidence/run6/D5_RESCORE_SINGLE_G18.json"
+  },
+  "baselines": {
+    "g24_visualDensity": {
+      "tool": "_sownb/vb/tools/g24_visual_density.py",
+      "version": "g24-v1.0.0-visual-density-report-only",
+      "binding": false,
+      "definition": "explanatory = >=3 <text> labels AND viewBox area >=10000 AND inside a teaching stage AND referred to in that stage's prose",
+      "lessons": 350,
+      "zeroExplanatory": 180,
+      "zeroPercent": 51,
+      "estateMedian": 0,
+      "maxAnyLesson": 2,
+      "printDead": 0,
+      "perFamilyMedian": {
+        "GROW Science": 1.0,
+        "Art": 1.0,
+        "BUILD ASDAN": 1.0,
+        "BUILD Science": 0.0,
+        "GROW ASDAN": 0.0,
+        "LAUNCH ASDAN": 0.0,
+        "LAUNCH Science": 0.0,
+        "BUILD Humanities": 0.0,
+        "GROW Humanities": 0.0,
+        "LAUNCH Humanities": 0.0
+      },
+      "headline": "All three Humanities families have zero explanatory visuals across every lesson.",
+      "bestFive": "Science_Teesside/Grow/v3_40min SCI_G_W3A/W3B Friction, W4A/W4B Mechanisms, W5A Fair Test — 2 each",
+      "evidence": "_sownb/vb/evidence/run6/G24_VISUAL_DENSITY.json"
+    },
+    "g25_weDoVariety": {
+      "tool": "_sownb/vb/tools/g25_wedo_variety.py",
+      "version": "g25-v1.0.0-wedo-variety-report-only",
+      "binding": false,
+      "lessonsWithWeDoStage": 56,
+      "ofLessons": 350,
+      "observedTypes": {
+        "label-the-diagram": 63,
+        "sort-or-match": 56,
+        "decision-lab": 48,
+        "UNCLASSIFIED": 18,
+        "rank-or-order": 15,
+        "show-me": 6,
+        "predict-then-check": 3,
+        "spot-the-error": 1,
+        "paired-talk": 1
+      },
+      "concentration": "three types carry roughly 85%",
+      "longestSameTypeRun": {
+        "BUILD ASDAN": 12,
+        "LAUNCH Science": 2,
+        "GROW ASDAN": 2,
+        "LAUNCH ASDAN": 2,
+        "others": 1
+      },
+      "unclassifiedNote": "18 stages, chiefly the 'everyone commits' and 'choose, then justify' patterns — real types the tool had not been told about",
+      "proposedSix": [
+        "commit-and-reveal",
+        "sort-or-match",
+        "label-or-annotate",
+        "sequence-or-rank",
+        "predict-then-check",
+        "spot-the-error"
+      ],
+      "decisionLabExcluded": "deliberately — it already dominates and the rotation exists to break its grip; it remains the default shape for the independent stage",
+      "wordBandNote": "type does not predict load: the heaviest example of four different types is the same pair of overloaded Humanities lessons",
+      "evidence": [
+        "_sownb/vb/evidence/run6/G25_WEDO_VARIETY.json",
+        "_sownb/vb/evidence/run6/G25_TYPE_WORD_BANDS.json"
+      ]
+    },
+    "document": "_sownb/vb/BASELINE_VISUALS_WEDO.md"
+  },
+  "proposedContractRows": {
+    "file": "_sownb/vb/PROPOSED_CONTRACT_ROWS_RUN6.md",
+    "applied": false,
+    "rows": [
+      "visuals.explanatory.min",
+      "visuals.decorative.max",
+      "wedo.rotation",
+      "wedo.taxonomy",
+      "load.period.ceiling",
+      "period.declared"
+    ],
+    "allBindOnNewWorkOnly": "No row is proposed as binding on live work; each would red a large part of the estate on the day it landed.",
+    "blocksNextWave": "wedo.taxonomy only — wedo.rotation is defined in terms of it and an author must know the six before drafting."
+  }
 }

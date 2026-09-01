@@ -1,5 +1,18 @@
 #!/usr/bin/env python3
-"""g18 v2 — per-family pupil-word floor.
+"""g18 v3 — FEB's per-family floor, with VB's printing discipline.
+
+DECISION D5 (run 6): the estate keeps ONE g18 computation. FEB's
+g18_measurement.py already derives a per-family nearest-rank p25 from each
+family's own donor pack and already excludes zero-word files, so this module no
+longer computes a floor of its own -- it DELEGATES to FEB's derive_floor and
+adds only what FEB's does not print: family, n, the per-family p25, the legacy
+global p25 for comparability with runs 2-4, the candidate count, the binding
+verdict and a tool version on every line.
+
+Retiring the second computation is the point. Two implementations of one
+measurement is how run 3 spent a day proving a lesson thin against a floor
+imported from another family.
+
 
 Order VB run 4, section 2.
 
@@ -35,7 +48,7 @@ import json
 import statistics
 from pathlib import Path
 
-VERSION = "g18-v2.2.0-per-family-floor-feb-baselines"
+VERSION = "g18-v3.0.0-feb-measurement-delegated"
 ROOT = Path(__file__).resolve().parents[3]
 
 _spec = importlib.util.spec_from_file_location(
@@ -81,28 +94,35 @@ def is_lesson_deck(path: Path) -> bool:
 
 
 def family_baseline(family: str, exclude: Path | None = None) -> dict:
-    pattern = FAMILY_NEIGHBOURS.get(family)
-    if pattern is None:
-        return {"family": family, "pattern": None, "n": 0, "p25": None,
-                "median": None, "files": [], "error": "NO NEIGHBOUR PATTERN"}
-    patterns = [pattern] if isinstance(pattern, str) else list(pattern)
-    files = [Path(p) for pat in patterns
-             for p in sorted(glob.glob(str(ROOT / pat), recursive=True))]
+    """Delegate to FEB's derive_floor; add the fields VB's reports print.
+
+    exclude drops the candidate from its own baseline where it already sits in
+    the donor pack, which FEB's derive_floor does not do because it is called
+    on a family, not on a candidate.
+    """
+    try:
+        feb = _meas.derive_floor(family)
+    except SystemExit as exc:
+        return {"family": family, "pattern": FAMILY_NEIGHBOURS.get(family),
+                "n": 0, "p25": None, "median": None, "files": [],
+                "excludedSupportSurfaces": [], "error": str(exc)}
+    sample = feb["sample"]
     if exclude is not None:
-        files = [p for p in files if p.resolve() != exclude.resolve()]
-    support = [p.name for p in files if not is_lesson_deck(p)]
-    files = [p for p in files if is_lesson_deck(p)]
-    totals = [words_of(p) for p in files]
+        keep = str(exclude.resolve())
+        sample = [r for r in sample
+                  if str((ROOT / r["path"]).resolve()) != keep]
+    totals = [r["words"] for r in sample]
     return {
         "family": family,
-        "pattern": pattern,
+        "pattern": feb["patterns"],
         "n": len(totals),
         "p25": v1.nearest_rank(totals, 0.25) if totals else None,
         "median": statistics.median(totals) if totals else None,
         "min": min(totals) if totals else None,
         "max": max(totals) if totals else None,
-        "files": [{"file": p.name, "words": w} for p, w in zip(files, totals)],
-        "excludedSupportSurfaces": support,
+        "files": [{"file": Path(r["path"]).name, "words": r["words"]} for r in sample],
+        "excludedSupportSurfaces": [],
+        "derivation": "FEB g18_measurement.derive_floor (single implementation, D5)",
     }
 
 
