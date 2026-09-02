@@ -3,7 +3,8 @@
 <head>
 <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSIjMTYxRDNEIi8+PHBhdGggZD0iTTI2IDc2IEwyNiAzMCBMNTAgNTUgTDc0IDMwIEw3NCA3NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRThFMkQ0IiBzdHJva2Utd2lkdGg9IjEzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4=">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="canonical" href="https://madebymatt.uk/Lessons/Games/Lumins.html">>
 <meta name="theme-color" content="#060a18">
 <title>LUMINS</title>
 <style>
@@ -49,8 +50,8 @@ canvas{display:block;border-radius:12px;border:1px solid var(--line);
 .ov.show{display:flex}
 .card{max-width:420px;width:100%;background:linear-gradient(180deg,#0e1730,#0a1122);border:1px solid var(--line);
   border-radius:18px;padding:22px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5)}
-.card h1{font-family:'Orbitron',sans-serif;margin:0 0 4px;font-size:26px;letter-spacing:2px}
-.card h1.win{color:var(--green)} .card h1.lose{color:var(--amber)}
+.card h1,.card h2{font-family:'Orbitron',sans-serif;margin:0 0 4px;font-size:26px;letter-spacing:2px}
+.card h2.win{color:var(--green)} .card h2.lose{color:var(--amber)}
 .card .sub{color:var(--mut);font-size:13px;margin-bottom:14px}
 .card .hint{background:rgba(39,224,255,.08);border:1px solid rgba(39,224,255,.25);border-radius:12px;
   padding:10px 12px;font-size:13px;color:#cfeeff;margin:12px 0;text-align:left;line-height:1.45}
@@ -1310,7 +1311,7 @@ function tip(msg){ var el=document.getElementById("tip"); el.textContent=msg; el
 function showIntro(){G.state="intro";var L=G.def,daily=!!L.daily,custom=(G.lvl<0&&!daily),inv=SKILLDEF.filter(function(q){return(L.skills[q.id]|0)>0}).map(function(q){return'<span>'+q.ic+' '+q.nm+' ×'+L.skills[q.id]+'</span>'}).join("");var bs=(custom||daily)?0:bestSeal(G.lvl),seals='<div class="seals"><span class="seal-t'+(bs>=1?' have':'')+'">🥉 '+L.target+'</span><span class="seal-t'+(bs>=2?' have':'')+'">🥈 '+silverOf(L)+'</span><span class="seal-t'+(bs>=3?' have':'')+'">🥇 '+goldOf(L)+'</span></div>';var card=document.getElementById("card");card.className="card mission";card.innerHTML='<div class="mission-head"><div class="mission-k">GUARDIAN MISSION</div><h1>'+L.name+'</h1><div class="sub">Guide '+L.target+' of '+L.total+' lights home</div></div><div class="mission-body">'+seals+'<div class="mission-tip">'+L.hint+'</div><div class="mission-controls"><b>HOLD</b> to open tools · <b>SLIDE</b> to choose · <b>RELEASE</b> to shape the world</div><div class="inv">'+inv+'</div><button class="cbtn" id="go">BEGIN RESCUE ▸</button>'+(custom?'<button class="cbtn alt" id="edit-lvl">✏️ EDIT</button>':'')+'</div>';document.getElementById("ov").classList.add("show");document.getElementById("go").onclick=function(){uiSound("start");document.getElementById("ov").classList.remove("show");card.className="card";G.state="play"};var eb=document.getElementById("edit-lvl");if(eb)eb.onclick=function(){document.getElementById("ov").classList.remove("show");card.className="card";defToED(G.def);enterEditor()};buildTools()}
 function showResult(win){
   var L=G.def, daily=!!L.daily, custom=(G.lvl<0&&!daily), last=(G.lvl>=LEVELS.length-1);
-  var h=win?'<h1 class="win">RESCUED</h1>':'<h1 class="lose">SO CLOSE</h1>';
+  var h=win?'<h2 class="win">RESCUED</h2>':'<h2 class="lose">SO CLOSE</h2>';
   var sub=win?('You saved '+G.saved+' of '+L.total+' — target was '+L.target+'.')
              :('Saved '+G.saved+', needed '+L.target+'. Give it another go.');
   var chalLine='';
@@ -1387,7 +1388,7 @@ function showLevelSelect(){
     '</div>';
   }
   document.getElementById("card").innerHTML=
-    '<h1>LEVELS</h1>'+
+    '<h2>LEVELS</h2>'+
     '<div class="seal-tally">🥇×'+t[3]+'&nbsp;&nbsp;🥈×'+t[2]+'&nbsp;&nbsp;🥉×'+t[1]+'</div>'+
     '<div class="seal-tally">✦ '+lanternTotal()+' lumins guided home</div>'+
     '<div class="lvl-grid">'+tiles+'</div>'+
@@ -1599,7 +1600,7 @@ function showBoard(offerSubmit){
     '<div class="lb-form"><input id="lb-name" maxlength="12" placeholder="Name or nickname" autocomplete="off">'+
     '<button id="lb-send">ADD</button></div><div class="lb-msg" id="lb-msg"></div>' : '';
   document.getElementById("card").innerHTML=
-    '<h1>🏆 TOP 10</h1><div class="sub">Total lumins saved (best per level)</div>'+
+    '<h2>🏆 TOP 10</h2><div class="sub">Total lumins saved (best per level)</div>'+
     '<ol id="lb-rows"><li style="color:var(--mut)">'+(LB_URL?'loading…':'Board not set up yet.')+'</li></ol>'+
     form+'<button class="cbtn alt" id="lb-close" style="margin:12px 0 0">CLOSE</button>';
   document.getElementById("ov").classList.add("show");
