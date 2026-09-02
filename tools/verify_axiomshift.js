@@ -223,7 +223,39 @@ ok('no-elimination-vocab', bannedHit.length === 0, bannedHit.length ? 'hit: ' + 
 
 ok('no-audio', !/new\s+Audio\b|AudioContext|webkitAudioContext/.test(html), '(no Audio/AudioContext)');
 ok('no-network', !/\bfetch\s*\(|XMLHttpRequest|WebSocket|\bimport\s*\(/.test(html), '(no fetch/XHR/WS/dynamic import)');
-ok('no-offorigin-src', !/(?:src|href)\s*=\s*["']https?:\/\//i.test(html), '(no off-origin src/href)');
+// A <link rel="canonical"> pointing at this estate's own origin is METADATA: the
+// browser never fetches it, so it is not a runtime dependency and cannot make
+// this file non-single-file. The estate has ruled this twice — the site repo's
+// data/hud-coverage.json (_why for /neonmeridian/: "Its only off-origin string
+// is <link rel=canonical>, which is metadata and never fetched") and order
+// EW-V6 §8 V10 ("metadata, not subresources. Do not 'fix' them"). Added
+// 2026-09-02 after Lessons #213 gave this file the estate-standard canonical
+// and this assertion, which tested every href rather than every SUBRESOURCE
+// href, went red on it.
+//
+// The exemption is deliberately the narrowest that states the ruling: rel must
+// be canonical AND the href must be https://madebymatt.uk/. A canonical to any
+// other host still reds, and every off-origin src of any kind still reds — the
+// self-test below proves all four cases rather than asserting it in prose.
+const SELF_CANONICAL = /<link\b[^>]*\brel\s*=\s*["']canonical["'][^>]*\bhref\s*=\s*["']https:\/\/madebymatt\.uk\/[^"']*["'][^>]*>/gi;
+const offOrigin = (src) => /(?:src|href)\s*=\s*["']https?:\/\//i.test(src.replace(SELF_CANONICAL, ''));
+ok('no-offorigin-src', !offOrigin(html), '(no off-origin subresource; a madebymatt.uk canonical link is metadata and exempt)');
+
+// prove the exemption did not blunt the check: every real off-origin reference,
+// and a canonical pointing anywhere else, must still be caught.
+{
+  const probes = [
+    ['script src', '<script src="https://cdn.example.com/three.min.js"></script>'],
+    ['stylesheet link', '<link rel="stylesheet" href="https://cdn.example.com/x.css">'],
+    ['image src', '<img src="https://cdn.example.com/x.png">'],
+    ['iframe src', '<iframe src="http://cdn.example.com/x.html"></iframe>'],
+    ['canonical to another host', '<link rel="canonical" href="https://example.com/x">'],
+  ];
+  const missed = probes.filter(([, tag]) => !offOrigin(html + tag)).map(([name]) => name);
+  ok('offorigin-check-self-test', missed.length === 0,
+     missed.length ? 'MISSED: ' + missed.join(', ')
+                   : '(' + probes.length + '/' + probes.length + ' off-origin probes still caught)');
+}
 
 // exactly one localStorage key literal, and no other literal-keyed calls
 const keyLiteralCount = (html.match(/mbm_axiomshift/g) || []).length;
