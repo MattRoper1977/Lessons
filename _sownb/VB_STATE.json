@@ -941,20 +941,13 @@
   ]
  },
  "decisionD1": {
-  "status": "BLOCKED — not applied",
-  "orderDefault": "YES",
-  "blastRadius": {
-   "lessonFiles": 21,
-   "referringFiles": 62,
-   "totalIfRenamed": 83,
-   "readOnlyGroundTruth": 7
-  },
-  "branchChosen": "§2.2 label+citation (83 > 20 rules out the rename); the per-deck edit is fully specified and staged",
-  "blocker": "The relabel is a chain ending at W9->8, and week 8 is held by the SCI_L_W8 enzyme/amylase trio. No enzyme/amylase/catalyst/digest row exists anywhere in the LAUNCH workbook. Week 7 is not free either — the v3_40min W7 trio aligns to C38 and sits in a protected production tree.",
-  "whyNotApplied": "Six of the seven weeks would knowingly create a collision at week 8; assigning or stripping the enzyme week's number is a curriculum decision with no workbook warrant.",
-  "theOneQuestion": "Is the enzyme/amylase week (a) extra enrichment outside the numbered sequence, (b) part of C38's Topic 1 review week, or (c) a missing workbook row?",
-  "evidence": "_sownb/vb/evidence/run6/D1_RELABEL_BLOCKED.json",
-  "run7": "PARKED. D1_ANSWER came back blank, so nothing was relabelled. Still open, unchanged."
+  "status": "RESOLVED and VERIFIED",
+  "ruledBy": "Matt, 2026-09-02 (D-C)",
+  "appliedBy": "run 8, commit 672f6ed9 - the previous record in this key said \"BLOCKED - not applied\", which was stale from run 6",
+  "verifiedThisRun": "24 of 24 LAUNCH Science decks conform: W9->wk8 C39, W10->9 C40, W11->10 C41, W12->11 C42, W13->12 C43, W14->13 C44, A2_W7 wk14 C45. The enzyme trio reads \"Enrichment\", config week null, placement string carried, folder and content unchanged, still live.",
+  "bytesChangedThisRun": 0,
+  "evidence": "_sownb/vb/evidence/run10/DC_SPINE_SPLIT_VERIFY.json",
+  "spineSplitNow": "the 22 decks are counted; SPINE-SPLIT is no longer an exclusion in the horizon"
  },
  "decisionD5": {
   "status": "DONE",
@@ -1844,7 +1837,7 @@
  "decisions_run10": {
   "D-A q7ztqq": {
    "ruling": "RETIRED FROM CONTENTION; branch NOT deleted",
-   "evidence": "_sownb/vb/Q7ZTQQ_RETIRED.md",
+   "evidence": "_sownb/vb/Q7ZTQQ_RETIRED.md (lands in the PR after the allowlist, per H7)",
    "paths": 154,
    "tipIsAncestorOfMain": false,
    "pathsWhoseBranchBlobIsOnMain": 0,
@@ -1852,7 +1845,8 @@
    "tip": "18c395da96c8641d2c173e51f3692f9b1616bd1d",
    "mergeBase": "3cdb4ee4f9969b3a043cf2ba8320e57a6d25b6c5",
    "verdict": "never landed; live bytes verified 48/48 under the battery; retired 2026-09-02",
-   "effect": "mutation of those 154 paths now follows the ordinary rules; Q7ZTQQ_PATHS.txt kept as history"
+   "effect": "mutation of those 154 paths now follows the ordinary rules; Q7ZTQQ_PATHS.txt kept as history",
+   "h7Split": "the record names all 154 retired paths, and one of them is the careers W11 mock-interview lesson title. tools/verify_fixture_names.mjs reads that filename as person-shaped unless the file is allowlisted, and twenty other files carrying the same title already are. The allowlist entry lands in this PR; the record it allows lands in the next one. Red-proved after the entry: the gate's own self-test still passes, and a planted canary name in the very file allowlisted still reds, because the allowlist is exact-string and exact-file scoped. Neither the title nor any canary string is quoted in this record, which is why this key reads as it does."
   },
   "D-B #166": {
    "status": "ADVISORY contention",
@@ -1930,5 +1924,43 @@
    "phonecheck": "pass"
   }
  },
- "spring2Dates": "absent"
+ "spring2Dates": "absent",
+ "horizon_run10": {
+  "boundary": 26,
+  "basis": "content reading; the path reading is printed beside it because they still disagree on one row",
+  "headline": "Horizon to Easter (week 26): required 416 · excluded 1 (C100) · effective 415 · covered 246 · remaining 169 · 8 waves at ceiling 24 (path reading: covered 243 · remaining 172 · 8 waves)",
+  "content": {
+   "required": 416,
+   "excluded": 1,
+   "effective": 415,
+   "covered": 246,
+   "remaining": 169,
+   "wavesAt24": 8
+  },
+  "path": {
+   "required": 416,
+   "excluded": 1,
+   "effective": 415,
+   "covered": 243,
+   "remaining": 172,
+   "wavesAt24": 8
+  },
+  "readingsAgree": false,
+  "disagreeingRows": [
+   "LAUNCH Science week 8 - path 0/3, content covered. The three decks that teach week 8 are still named SCI_L_W9L*, because D-C ruled labels and citations only and declined the 83-file rename. The path reading reads filenames; the content reading reads the citation. The content reading is right."
+  ],
+  "attribution": {
+   "baselineBothOff": {
+    "covered": 140,
+    "remaining": 275,
+    "waves": 12
+   },
+   "D-C credited": "+22 slot-units (the 22 LAUNCH Science decks leaving SPINE-SPLIT; the order estimated 19)",
+   "D-H credited": "+84 slot-units across 75 slots that carry a deck on the path but no workbook citation",
+   "D-F": "-1 required (LAUNCH ASDAN week 15, C100, excluded not a gap)"
+  },
+  "run9Correction": "run 9 reported content covered 147 and projected 158 after the eleven. Its own coverage artefact, written the same evening, says 140 - and already contained the eleven. Both figures are corrected here; the artefact is kept at _sownb/vb/evidence/run10/RUN9_COVERAGE_ARTEFACT.json.",
+  "censusChange": "the census now also reads the screen-chip citation form (\"📍 C44 only\") that the W8-W13 and W14-W15 chassis use, but only where (lane, subject, cell number) resolves to exactly one absolute week in the spine - 253 of 558 such keys are ambiguous across terms. 19 decks carry a chip, 7 resolved, 12 left ambiguous and unresolved.",
+  "evidence": "_sownb/vb/evidence/run10/HORIZON_W26_AFTER_DC.json"
+ }
 }
