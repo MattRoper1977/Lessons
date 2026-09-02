@@ -598,3 +598,22 @@ RIGHT: apps.json lives in the apps estate and is not measurable from a Lessons
 checkout, so nothing is claimed about it. resources.json IS in this repository
 and its digest does match the pin, which is the item the order actually asked
 about.
+
+WRONG: the five wave-4 modules authored in run 12 were held as duplicates, and
+the re-score under H12-2 was expected to be about which cells were already
+served.
+RIGHT: five of the cell references those modules claim are not workbook cells at
+all -- C171, C172, C138 twice, C89 and C198 appear nowhere in the spine. The
+modules were written against a target list carrying references nobody could ever
+serve. With those removed, two of the five candidates have no unserved cell left
+and are dropped outright. A lesson cannot be traced to a cell that does not
+exist, and nothing checked the cited cells against the workbook when the modules
+were written. That check now runs before a build, not after.
+
+WRONG: the order asked for one cross-strand surface at GROW ASDAN week 15 for
+"the three unserved cells".
+RIGHT: GROW ASDAN has three cells at ruled week 15 in total -- C143, C157 and
+C187 -- and C143 is already served, so the unserved set is TWO. The count of
+three came from the run-12 module's own cell list, which included C172, and C172
+is not a workbook cell. The surface is traced to C157 and C187, and to nothing
+else.

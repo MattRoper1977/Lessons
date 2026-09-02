@@ -2870,5 +2870,86 @@
   ],
   "authoredButHeldNote": "all five are also unfinished as content: an adversarial review found dropped workbook outcomes, a consent contradiction between two exit lines, and a stretch route cancelled by its own early-finisher filler. They need rework as well as a coverage ruling, so none should be revived as written.",
   "atResume": "anchor = origin/main, and the branch must be level with it before anything is cherry-picked."
+ },
+ "run13": {
+  "order": "mbm-sow-verify-and-build-2026-09-02-VB-RUN13",
+  "supersedes": "RUN12-A in full; RUN11F otherwise unchanged",
+  "resumedAt": "ffb30114",
+  "r0_g27": {
+   "gate": "_sownb/vb/tools/g27_no_filename_weeks.py",
+   "landed": "#245, first and alone",
+   "controls": "reads a week from a path must fire; from a workbook cell must not; from a deck's own text must not — all three correct, else MEASUREMENT INVALID",
+   "verdictAtLanding": "RED, 5 hits, all in census_spine.py",
+   "verdictNow": "PASS, 125 tools, 0 hits"
+  },
+  "r1_theNumber": {
+   "tool": "_sownb/vb/tools/cell_coverage.py",
+   "cellsInScope": 895,
+   "lessonSurfaces": 445,
+   "decksCarryingAClaim": 164,
+   "path_cellsClaimed": 134,
+   "CONTENT_cellsCovered": 126,
+   "accounting": "134 claimed = 126 covered + 5 claimed-but-unserved + 3 unscorable, exactly",
+   "oldNumbersRetired": "231 and 236 were both products of filename inference and neither survives R0",
+   "traceCorrections": 16,
+   "duplicates": 8,
+   "ambiguousSpineReadings": 20,
+   "proxyOnlyGapCandidates": 48,
+   "proxyRefutationRate": "7 of a 9-row adversarial sample refuted by two independent reviewers each; not acted on"
+  },
+  "r2_rulings": {
+   "H12-1": "DEMONYMS.md derived from PLACES, 13 forms; g10 wired; two decks move RED->PASS and 605 of 607 unchanged. Register hygiene added after finding HOUSE_LABELS registered the words it declared unregistered.",
+   "H12-2": "the five run-12 candidates re-scored by cell: 3 admissible, 2 DROPPED. Five cited cells are not workbook cells at all.",
+   "H12-3": "FILENAME_LABELS.md; 67 of 445 names drift and every drift is exactly one week; no rename, builder kept out of the repo",
+   "H12-4": "g15 and g16 v2 attribute their own records at source, with a control that took three tries to make fire for the right reason"
+  },
+  "r3_housekeeping": {
+   "3.1": "verifier registered (tools/verify_v6_selftest.mjs) and all eight exclusions now cite a path that resolves; 11 of 15 games pass their own self-test and the four failures are reported",
+   "3.2": "CLEARED, resources.json matches the pin; apps.json is not in this repo and nothing is claimed about it",
+   "3.3": "NOT MEASURABLE here — Trekkers gets its way out from /hud.js, which is served from the site, and the order scopes this run to Lessons"
+  },
+  "reshellBacklog": {
+   "measuredFromTheTree": 253,
+   "classic": 193,
+   "note": "253 counts every n6-shaped surface in the estate, which is a wider set than the curated reshell programme (52 at the run-11 close, less the eight landed in run 12 = 44). Both numbers are real and they answer different questions; the curated 44 is the one the ceiling is spent against."
+  },
+  "landed": "#245 g27 · #246 allowlist alone · #247 R1 + H12-1 + H12-4 · #248 H12-3 + R3 · #249 allowlist alone again · #250 the close",
+  "notDoneThisRun": [
+   "R4.1 the next eight reshells",
+   "R4.2 the GROW ASDAN week 15 surface",
+   "R4.3 wave 4 run 3",
+   "R4.4 catalogue"
+  ]
+ },
+ "resume_run13": {
+  "token": "VB_P4W4R4_PARTIAL",
+  "anchorAtClose": "the merge of the close PR; at resume the anchor is origin/main and the branch must be level with it",
+  "openPRs": 0,
+  "catalogue": "682, unchanged. No lesson was added this run, so no catalogue PR and no pin move.",
+  "nextRunFirstItem": "R4.1, the next eight reshells by teaching date. The pipeline is proven and unchanged.",
+  "thenBuild": "R4.2. GROW ASDAN week 15 is ONE cross-strand surface traced to C157 and C187 and to nothing else. Not three cells: GROW ASDAN has three cells at that week in total and C143 is already served. BUILD ASDAN W14 and BUILD ASDAN W17 are admissible for their unserved cells, and GROW ASDAN W17 and LAUNCH ASDAN W17 are DROPPED. Do not revive any run-12 module as written.",
+  "beforeAnyBuild": "check every cited cell exists in CALENDAR_SPINE workbookCells. Five of the run-12 citations did not.",
+  "humanItems": [
+   {
+    "id": "H13-1",
+    "ask": "Four games fail their own V6 self-test on a check requiring zero external elements, tripped by their own canonical link tag, and three of them also carry the /hud.js line the coverage ledger requires. Two estate rules that no one file can satisfy. Which gives?",
+    "evidence": "_sownb/vb/evidence/run13/R3_HOUSEKEEPING.json"
+   },
+   {
+    "id": "H13-2",
+    "ask": "The fixture-name allowlist has needed a new per-file entry in each of three runs for one real lesson title. The mechanism works; needing a new entry every run is the part to rule on.",
+    "evidence": "tools/verify_fixture_names.mjs"
+   },
+   {
+    "id": "H13-3",
+    "ask": "Trekkers home control cannot be measured from a Lessons-only checkout because hud.js is served from the site. Widen the order to include the site checkout, or accept it as out of scope?",
+    "evidence": "_sownb/vb/evidence/run13/R3_HOUSEKEEPING.json"
+   },
+   {
+    "id": "H13-4",
+    "ask": "Subject terminology still reads UNRESOLVED to g10 across 153 decks (\"Fair Test\", \"Solar System\", \"Stem Cells\"). RUN12-A sent it to a separate ruling and it is still waiting.",
+    "evidence": "_sownb/vb/evidence/run13/G10_DEMONYM_SWEEP.json"
+   }
+  ]
  }
 }
