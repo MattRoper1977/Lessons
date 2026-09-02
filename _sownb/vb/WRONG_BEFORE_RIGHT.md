@@ -357,3 +357,9 @@ RIGHT: a second (and in ASDAN a third) :root block overrides the base per
 subject and strand, and the last declaration is what renders. Both instruments
 are now recorded (PALETTE_V2.json); the base binds as shared rows, the
 effective values bind only where a family is unanimous.
+
+WRONG: the stale-evidence sweep ran green locally, then the non-vacuity batch
+was re-run after the dispatch fix and its 45 gate outputs were committed
+without a `file` key; CI reddened the contract PR on exactly the run-10 lesson.
+RIGHT: the sweep is the last thing before `git commit`, never before the last
+write, and every gate output names its subject in `file`.
