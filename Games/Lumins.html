@@ -222,6 +222,8 @@ canvas#cv{border-color:rgba(91,217,255,.42);box-shadow:0 20px 70px #000b,0 0 45p
 </style>
 </head>
 <body>
+<div id="a11y-live" role="status" aria-live="polite" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden"></div>
+<script>window.__mbmAnnounce=function(t){var n=document.getElementById("a11y-live");if(!n||!t)return;n.textContent=String(t);};</script>
 <div id="ma-splash" aria-hidden="true">
   <canvas id="splash-canvas"></canvas><div class="ma-nebula n1"></div><div class="ma-nebula n2"></div>
   <div class="ma-ring mr1"></div><div class="ma-ring mr2"></div><div class="ma-ring mr3"></div>
@@ -1314,6 +1316,12 @@ function showResult(win){
   var h=win?'<h2 class="win">RESCUED</h2>':'<h2 class="lose">SO CLOSE</h2>';
   var sub=win?('You saved '+G.saved+' of '+L.total+' — target was '+L.target+'.')
              :('Saved '+G.saved+', needed '+L.target+'. Give it another go.');
+  // GS1 r2 §3.3: the result is state a blind player must hear. Derived from the
+  // same values the panel is built from — win, saved, target — so the utterance
+  // cannot drift from what happened. One utterance per result, at the single
+  // call site that ends a level.
+  if(window.__mbmAnnounce) window.__mbmAnnounce(
+    (win?'Rescued. ':'So close. ')+'You saved '+G.saved+' of '+L.total+'. The target was '+L.target+'.');
   var chalLine='';
   if(G.challenge){
     chalLine=(G.saved>G.challenge.sc)
