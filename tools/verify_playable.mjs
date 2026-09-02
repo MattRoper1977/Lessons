@@ -142,7 +142,7 @@ const PLANS = {
       'focus control held through a round; progress is the save gaining a star entry, read ' +
       'from localStorage — the game\'s own record, not a label.',
     approaches: [
-      { name: 'play, start the wave, then work the focus control', steps: [['click', '#btnPlay'], ['settle', 1500], ['click', '#waveBtn'], ['mash', '#focusBtn', 60]] },
+      { name: 'play, start the wave, then work the focus control', steps: [['click', '#btnPlay'], ['settle', 1500], ['click', '#tipSkip'], ['click', '#waveBtn'], ['mash', '#focusBtn:not([disabled])', 90]] },
       { name: 'keyboard only - Enter to play, then the focus control', steps: [['key', 'Enter'], ['settle', 1500], ['key', 'Enter'], ['mash', '#focusBtn', 60]] },
     ],
     gate: () => {
@@ -162,8 +162,11 @@ const PLANS = {
       'control and the battle\'s own action buttons; progress is save.cleared gaining an id or ' +
       'save.wins advancing, read through the game\'s exported read seam __GCsave.',
     approaches: [
-      { name: 'first stage on the map, then the Strike action each turn', steps: [['click', '.stagebtn'], ['settle', 6000], ['mash', '#actions button', 60]] },
-      { name: 'daily clash, start the run, then Strike each turn', steps: [['click', '#dailybtn'], ['settle', 1500], ['click', '#modgo'], ['settle', 6000], ['mash', '#actions button', 60]] },
+      // The stage's intro cutscene sits in front of the action row until the
+      // player presses its own Continue control; a harness that mashes through
+      // it is testing an overlay, not a battle.
+      { name: 'first stage on the map, past the cutscene, then act each turn', steps: [['click', '.stagebtn'], ['settle', 3000], ['click', '#clashok'], ['settle', 3000], ['mash', '#actions button.act:not([disabled])', 90]] },
+      { name: 'daily clash, start the run, past the cutscene, then act each turn', steps: [['click', '#dailybtn'], ['settle', 1500], ['click', '#modgo'], ['settle', 3000], ['click', '#clashok'], ['settle', 3000], ['mash', '#actions button.act:not([disabled])', 90]] },
     ],
     gate: () => {
       const read = window.__GCsave;
@@ -190,9 +193,14 @@ const PLANS = {
     gate: () => {
       const api = window.__SLIP;
       if (!api || !api.state) return { reached: false, note: 'no __SLIP state' };
-      const m = api.state.mode;
-      return { reached: m !== 'LOBBY', completed: m === 'FINISH', mode: m,
-               laps: api.state.player && api.state.player.lap };
+      // 'left LOBBY' looked like a first gate and is not one: the no-input
+      // control reached it, because the lobby advances into the race on its own
+      // clock. A gate a player never has to touch measures nothing. The first
+      // gate is therefore the first lap the player actually completes, and the
+      // win is the classified finish.
+      const m = api.state.mode, p = api.state.player;
+      return { reached: !!p && (p.lap || 0) >= 2, completed: m === 'FINISH', mode: m,
+               laps: p && p.lap };
     },
     blockedBy: null,
   },
@@ -209,8 +217,12 @@ const PLANS = {
     gate: () => {
       const api = window.__WC;
       if (!api || !api.state) return { reached: false, note: 'no __WC state' };
+      // 'left TITLE' is not a first gate either: the blocked-route control
+      // reached it with the BEGIN control removed, because the title screen
+      // hands over to the contract board by itself. The first gate is the charge
+      // actually being fired (BOOM), which only a player can cause.
       const m = api.state.mode;
-      return { reached: m !== 'TITLE', completed: m === 'SCORE', mode: m };
+      return { reached: m === 'BOOM' || m === 'SCORE', completed: m === 'SCORE', mode: m };
     },
     blockedBy: '#b-begin',
   },
