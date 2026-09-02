@@ -190,6 +190,14 @@ const ALLOW = [
   { file: '_sownb/vb/evidence/run13/G10_DEMONYM_SWEEP.json',
     text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
     why: 'real careers lesson title; MOCK is a fixture marker but this names no person' },
+  /* ORDER VB-RUN13, 2026-09-02. The reshell backlog, which lists every deck still on
+     the N6 chassis and so quotes this title too. FOURTH run, fourth entry. The
+     alternative was to trim a file list out of the evidence to suit the checker, which
+     is the wrong direction: evidence is not shaped to fit a gate. Raised as H13-2 for a
+     ruling on the mechanism rather than solved by widening the predicate. */
+  { file: '_sownb/vb/evidence/run13/RESHELL_BACKLOG.json',
+    text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
+    why: 'real careers lesson title; MOCK is a fixture marker but this names no person' },
 ];
 
 function titlecaseCount(tok) {
