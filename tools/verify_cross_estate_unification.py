@@ -101,7 +101,7 @@ MANIFEST_PINS = {
     # Ruled onto the pin 2026-08-12 (Ruling 3): the deck install is a
     # resources.json edit, and the blanket rule forbade it the same way it
     # once forbade studio adds. Same pattern, same tool, same commit rule.
-    "resources.json": "35399e8c1635030d1dcf7e6af2174c7e48ca91ebd4c05be5f3ba30531c096b53",
+    "resources.json": "69b94dfe83af076296bc9a69e0fda03e031a9eea8d44d5246ac62e2c19f58785",
 }
 PIN_COMMAND = "python3 tools/pin_manifests.py   (from either checkout — it writes both gate copies or neither)"
 

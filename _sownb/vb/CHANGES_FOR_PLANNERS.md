@@ -33,47 +33,26 @@ unnamed — which makes an external verifier's question ("when is this taught?")
 harder to answer than it should be.
 
 
-## 3 · LAUNCH Science weeks 9–15: labels back to their filename numbers
+## 3 · LAUNCH Science weeks 8–13 are labelled one week earlier than their filenames
 
-**Superseded 2026-09-02 by ORDER VB-RUN11F (SPINE).** The one-week offset that
-run 8 applied was the old spine's error, not the lessons'. On the confirmed
-2026–27 calendar (`_sownb/CALENDAR_2026_27.json`: Autumn 1 = 8 weeks, half term
-26–30 Oct, Autumn 2 = 7 weeks) the deck called W9 teaches the week commencing
-2 November, which is absolute week 9 and workbook cell C39. Every label and
-config week in the W8–W13, W14 and Autumn 2 packs has been returned to its
-filename number: W9 → week 9 … W13 → week 13, the W14 trio → week 14, the
-Autumn 2 W7 trio → week 15 (C45). The cell citations were already right and
-did not move. Nothing was renamed.
+Ruled 2026-09-02 (D-C), applied in run 8. Six weeks of LAUNCH Science lessons
+now carry the workbook's own week numbers and cite the cell they teach: what the
+files call W9 teaches week 8, and so on to W14 teaching week 13. **The filenames
+were deliberately not changed** — renaming them would have touched 83 files
+including read-only ground truth.
 
-**For anyone reading a timetable or a folder:** the filename, the label and the
-cited cell now agree. If a printed planner still shows the run-8 labels, the
-lesson file is the authority.
+**For anyone reading a timetable or a folder:** trust the label on the lesson and
+the cell it cites, not the filename. They disagree by one for these six weeks
+only, and the label is right.
 
-## 4 · The enzyme and amylase trio is Week 8, enrichment
+## 4 · The enzyme and amylase trio has no week, on purpose
 
-Updated 2026-09-02 (SPINE). Absolute week 8 (w/c 19 October, the last week of
-Autumn 1) is an enrichment week with no workbook row. The three LAUNCH Science
-enzyme and amylase lessons sit there: they are labelled **Week 8 Enrichment**,
-carry `week: 8` with the placement "enrichment — week 8, no workbook row", and
-stay live in their folder. They are still never counted as covering a workbook
-cell.
+Same ruling. Three LAUNCH Science lessons on enzymes and amylase have no row
+anywhere in the workbook. Rather than invent a week for them or delete them,
+they are labelled **Enrichment**, cite "no workbook row — enrichment", and stay
+live in their folder.
 
-**For the curriculum lead:** the trio now has a week. If a workbook row is
-ever written for week 8, the lessons are already in place for it.
-
-## 5 · Planner drift after the spine change (2026-09-02)
-
-The 2026–27 calendar moved every absolute week number from Autumn 2 onward up
-by one against the old spine: Autumn 2 week 1 is now absolute week 9 (not 8),
-Spring 1 week 1 is week 16 (not 15), Spring 2 week 1 is week 22 (not 21), and
-Spring 2 has five timetabled weeks, so its sixth column is not timetabled.
-Autumn 1 is unchanged.
-
-- **BUILD:** the SharePoint planners for weeks 1–8 and the science rows of the
-  Autumn Year Plan were corrected by hand on 2026-09-02. Do not re-flag them.
-- **GROW and LAUNCH:** the planners for those pathways have **not** been
-  checked for the same drift in their support and evaluation columns. That is
-  a Cowork job for the pathway leads, not something the lesson build can do.
-- **Any week whose absolute number moved** (every week from Autumn 2 onward)
-  should be read from the calendar file, not from a planner printed before
-  2 September 2026.
+**For the curriculum lead:** these three are good lessons with nowhere to sit.
+Either they belong somewhere in the sequence and want a workbook row, or they
+are genuinely optional enrichment and the label is already correct. If nobody
+acts, they stay as enrichment and are never counted as covering a week.
