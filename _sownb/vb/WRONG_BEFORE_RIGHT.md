@@ -577,3 +577,14 @@ registers, and called all 607 decks unreadable. It read as 237 decks moving.
 RIGHT: run from the same depth inside the repo, exactly two decks move, both RED
 to PASS, both clearing "Diverse British" and gaining nothing. A comparison whose
 control arm was misconfigured measures the misconfiguration.
+
+WRONG: the H12-4 firing control planted a scratch record, ran the sweep, saw the
+filename in the output and called that "fired". The sweep names every evidence
+file it reads, so that test was true whether the fix worked or not. It reported a
+healthy attributed record as a failure.
+RIGHT: only the [INCONCLUSIVE] block counts, and the control reads the sweep's own
+sentence back into the evidence. Two earlier versions of the same control were
+also silently inert: the first wrote its scratch record to a dot-prefixed name,
+and the second left it untracked -- and the sweep enumerates with git ls-files, so
+neither was ever read. A control that cannot see its own subject proves nothing,
+and it took three attempts to get one that fires for the right reason.

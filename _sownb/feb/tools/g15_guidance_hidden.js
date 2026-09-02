@@ -27,7 +27,15 @@ const visibleRows = selector => [...document.querySelectorAll(selector)].map((no
       return [...document.querySelectorAll(selector)].map((candidate, index) => { const s = getComputedStyle(candidate), r = candidate.getBoundingClientRect(); return { number: index + 1, painted: s.display !== "none" && s.visibility !== "hidden" && +s.opacity > 0 && r.width > 0 && r.height > 0 }; });
     }, selector);
     const green = initial.length > 0 && initial.every(row => !row.painted), red = mutation.some(row => row.painted);
-    const report = { gate: "g15-rendered-guidance-hidden", candidate: rel, candidateSha256: crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex"), chromiumVersion: await browser.version(), selector, measurement: { keyedCount: initial.length, rows: initial, nonVacuous: initial.length > 0 }, firingControl: { mutation: "unhide the first keyed guidance node and its hidden ancestors in memory", paintedRows: mutation.filter(row => row.painted), fired: red }, status: green && red ? "PASS" : "RED" };
+    const report = { gate: "g15-rendered-guidance-hidden", candidate: rel, candidateSha256: crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex"), chromiumVersion: await browser.version(), selector, measurement: { keyedCount: initial.length, rows: initial, nonVacuous: initial.length > 0 }, firingControl: { mutation: "unhide the first keyed guidance node and its hidden ancestors in memory", paintedRows: mutation.filter(row => row.painted), fired: red }, status: green && red ? "PASS" : "RED",
+      // ATTRIBUTION (ORDER VB-RUN13 H12-4). The stale-evidence sweep keys a verdict
+      // to its subject on these two fields. Without them a record states "PASS" with
+      // nothing naming what passed, the sweep reports the row as unparseable rather
+      // than guessing, and the job fails. That was hand-patched three runs running
+      // -- run 11 on 45 records, run 12 on the R4 rollout, run 12 again on six more
+      // -- so it is fixed here, at the source, and never in the sweep.
+      file: rel,
+      subject: `g15 rendered-guidance-hidden on ${rel}` };
     const out = path.resolve(ROOT, outRel); fs.mkdirSync(path.dirname(out), { recursive: true }); fs.writeFileSync(out, JSON.stringify(report, null, 2) + "\n");
     console.log(JSON.stringify({ status: report.status, keyed: initial.length, initiallyPainted: initial.filter(row => row.painted).length, redControlFired: red }, null, 2));
     if (report.status !== "PASS") process.exitCode = 1; await page.close();
