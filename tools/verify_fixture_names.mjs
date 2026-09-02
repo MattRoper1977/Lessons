@@ -172,6 +172,16 @@ const ALLOW = [
   { file: '_next6/sow/worklist.json',
     text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
     why: 'real careers lesson title; MOCK is a fixture marker but this names no person' },
+  /* ORDER VB-RUN12A, 2026-09-02. The same real lesson title again, this time in the g10
+     house-register sweep, which reports its result per deck and so quotes every deck path
+     it read. Same reasoning as the eleven entries above: MOCK is a fixture marker, the
+     neighbouring words are ordinary titlecase, and no person is named. Per file, so any
+     OTHER person-shaped string in that evidence is still caught. This entry lands alone,
+     before the evidence it covers, because a gate change never ships in the same PR as
+     the content that gate judges. */
+  { file: '_sownb/vb/evidence/run12/G10_HOUSE_SWEEP.json',
+    text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
+    why: 'real careers lesson title; MOCK is a fixture marker but this names no person' },
 ];
 
 function titlecaseCount(tok) {
