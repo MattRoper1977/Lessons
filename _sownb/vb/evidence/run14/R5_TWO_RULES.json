@@ -1,0 +1,34 @@
+{
+ "file": "data/hud-coverage.json",
+ "subject": "ORDER VB-RUN14 R5: the two estate rules no single game file can satisfy, verbatim with file and line",
+ "ruleA": {
+  "name": "the game self-test: single-file, zero external elements",
+  "where": [
+   "Games/Vortex.html:4171",
+   "Games/Prism.html:4066"
+  ],
+  "verbatim": [
+   "offline:external.length===0",
+   "standalone:external.length===0"
+  ],
+  "external_is": "every script[src], link[href], img[src], audio[src], video[src], source[src] in the document, counted at Games/Vortex.html near line 4165",
+  "protects": "the pupil: a game that runs from one file with no request, on a locked-down school device, offline"
+ },
+ "ruleB": {
+  "name": "the HUD requirement: every inventory game carries /hud.js unless declared excluded",
+  "where": [
+   "tools/verify_hud_on_lessons_games.mjs:112",
+   "data/hud-coverage.json:9"
+  ],
+  "verbatim": [
+   "return hasTag ? null : `${route} carries no HUD script and is not declared in data/hud-coverage.json`;",
+   "\"scriptLine\": \"<script defer src=\\\"/hud.js\\\"></script>\","
+  ],
+  "protects": "the pupil: a way out of the game and back to a chosen homepage on a device where the browser chrome may be hidden (accessibility, exit)"
+ },
+ "theConflict": "Rule B puts <script defer src=\"/hud.js\"></script> into a wired game. Rule A counts that script tag as an external element and fails. Three games carry both and fail their own self-test on it; Vortex is excluded from B and still fails A on its own <link rel=\"canonical\">, which the browser never fetches -- so A also counts a metadata tag as a network request.",
+ "tieBreak": "the order says the rule that protects the pupil wins. BOTH protect the pupil: A is offline/served-bytes safety, B is accessibility/exit. The order says in that case STOP at this section only, print both, and leave one line for Matt.",
+ "RULE_CHOICE": "<a|b>   a = single-file offline self-test wins, HUD requirement re-scoped to route level; b = HUD exit wins, self-test re-scoped to route level",
+ "proposedReScopeEitherWay": "the losing rule moves from file level to ROUTE level as an explicit contract-row change landed alone: a route is either HUD-wired or single-file, declared in data/hud-coverage.json, and each rule applies only to the routes declared under it. Precedent: Titan Forge V5.1 core + vendor split. In addition, Rule A should stop counting <link rel=\"canonical\"> as external whichever way the choice goes; that is a metadata tag, not a request, and it is what fails Vortex.",
+ "status": "STOP — RULE_CHOICE pending; the rest of the run proceeds"
+}
