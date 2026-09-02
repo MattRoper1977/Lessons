@@ -136,6 +136,177 @@ const PLANS = {
     blockedBy: '#go',
   },
 
+  /* ---- SC3 §5 batch A: the games that keep their own record ----------
+   * Each plan below reads a value the GAME writes for itself — its save, or a
+   * store it exposes for reading. None reads a rendered string, and none calls
+   * a game internal to make progress happen. Where a game's only durable
+   * record is written when a run ENDS, the first gate is a banked run and the
+   * plan says so; that is the earliest thing the product itself remembers.
+   * ------------------------------------------------------------------ */
+
+  'Charcoal.html': {
+    rule:
+      'Charcoal banks a finished round into its own mbm_charcoal save (rounds, wins, xp, ' +
+      'drops). The route is the shipped Play control, past its own tutorial, then strokes ' +
+      'on the drawing surface; progress is that save gaining a round.',
+    approaches: [
+      { name: 'play, skip the tutorial, then draw', surface: '#cv',
+        steps: [['click', '#btnPlay'], ['settle', 1500], ['click', '#tutSkip'], ['settle', 800],
+                ['drag', 90, 40], ['drag', -80, 60], ['drag', 40, -90], ['settle', 6000], ['drag', 70, 70], ['settle', 12000]] },
+      { name: 'counter mode, then draw', surface: '#cv',
+        steps: [['click', '#btnCounter'], ['settle', 1500], ['click', '#tutSkip'],
+                ['drag', 80, 50], ['drag', -60, -60], ['settle', 15000]] },
+    ],
+    gate: () => {
+      let save = null;
+      try { save = JSON.parse(localStorage.getItem('mbm_charcoal') || 'null'); } catch (_) { /* corrupt save is not progress */ }
+      if (!save) return { reached: false, note: 'no mbm_charcoal record yet' };
+      const rounds = save.rounds || 0, wins = save.wins || 0, xp = save.xp || 0, drops = save.drops || 0;
+      return { reached: rounds > 0 || xp > 0 || drops > 0, completed: wins > 0, rounds, wins, xp, drops };
+    },
+    blockedBy: '#btnPlay',
+  },
+
+  'Globe_Snake (1).html': {
+    rule:
+      'Globe Snake banks a run into mbm_globe_snake_v6_profile at its own game over: plays, ' +
+      'totalOrbs and bestLen all move there, and the conquer badge is set only when all six ' +
+      'planets are cleared. The route is the shipped START control and the shipped turn and ' +
+      'sprint controls; nothing here touches the simulation.',
+    approaches: [
+      { name: 'start, then hold one turn until the snake meets its own trail',
+        steps: [['click', '#start-btn'], ['settle', 4500],
+                ['hold', 'ArrowLeft', 30000], ['settle', 6000], ['hold', 'ArrowLeft', 20000], ['settle', 8000]] },
+      { name: 'start, then the shipped turn pad by touch',
+        steps: [['click', '#start-btn'], ['settle', 4500],
+                ['tap', '#t-left', 600], ['tap', '#t-left', 600], ['tap', '#t-left', 600], ['tap', '#t-left', 600],
+                ['tap', '#t-sprint', 600], ['tap', '#t-left', 600], ['tap', '#t-left', 600],
+                ['hold', 'ArrowLeft', 25000], ['settle', 10000]] },
+    ],
+    gate: () => {
+      let p = null;
+      try { p = JSON.parse(localStorage.getItem('mbm_globe_snake_v6_profile') || 'null'); } catch (_) { /* corrupt profile is not progress */ }
+      const q = p && p.quest;
+      if (!q) return { reached: false, note: 'no quest record' };
+      const plays = q.plays || 0, orbs = q.totalOrbs || 0, best = q.bestLen || 0;
+      const conquered = !!(q.badges && q.badges.conquer);
+      return { reached: plays > 0 || orbs > 0 || best > 0, completed: conquered, plays, orbs, best };
+    },
+    blockedBy: '#start-btn',
+  },
+
+  'Grapple.html': {
+    rule:
+      'Grapple keeps its record in mbm_grapple_v6_data: totalFinishes for stages finished, ' +
+      'bestBySeed for a timed run banked on a seed. The route is the shipped SWING control ' +
+      'and the shipped hold-to-grapple gesture on the play surface.',
+    approaches: [
+      { name: 'swing, then hold and release on the surface', surface: 'canvas:not([aria-hidden="true"])',
+        steps: [['click', '#start-btn'], ['settle', 3000],
+                ['presshold', 'canvas:not([aria-hidden="true"])', 1200], ['presshold', 'canvas:not([aria-hidden="true"])', 900], ['presshold', 'canvas:not([aria-hidden="true"])', 1500],
+                ['presshold', 'canvas:not([aria-hidden="true"])', 900], ['presshold', 'canvas:not([aria-hidden="true"])', 1400], ['settle', 25000]] },
+      { name: "today's seed, then hold and release", surface: 'canvas:not([aria-hidden="true"])',
+        steps: [['click', '#daily-btn'], ['click', '#start-btn'], ['settle', 3000],
+                ['presshold', 'canvas:not([aria-hidden="true"])', 1400], ['presshold', 'canvas:not([aria-hidden="true"])', 1100], ['presshold', 'canvas:not([aria-hidden="true"])', 1600],
+                ['settle', 25000]] },
+    ],
+    gate: () => {
+      let d = null;
+      try { d = JSON.parse(localStorage.getItem('mbm_grapple_v6_data') || 'null'); } catch (_) { /* corrupt record is not progress */ }
+      if (!d) return { reached: false, note: 'no mbm_grapple_v6_data record' };
+      const finishes = d.totalFinishes || 0, sparks = d.totalSparks || 0;
+      const seeds = d.bestBySeed ? Object.keys(d.bestBySeed).length : 0;
+      const points = (d.mastery && d.mastery.points) || 0;
+      return { reached: finishes > 0 || sparks > 0 || seeds > 0 || points > 0,
+               completed: finishes > 0, finishes, sparks, seeds, points };
+    },
+    blockedBy: '#start-btn',
+  },
+
+  'Marble.html': {
+    rule:
+      'Marble keeps no durable record of a course in progress. __mLevel LOOKED like the run ' +
+      "and is not: Marble.html:4189 assigns it inside the tilt-calibration control's own " +
+      'handler, guarded by Ge.tilt, so it records a calibration stroke and never a course. ' +
+      'The earliest thing this game itself remembers is the finished circuit its awardFinish ' +
+      'banks into mbm_marble_v6_data.progress.finishes — so here the first gate and the win ' +
+      'are the same event, and this plan says so rather than inventing an earlier one.',
+    approaches: [
+      { name: 'roll, then tilt the course', surface: 'canvas:not([aria-hidden="true"])',
+        steps: [['click', '#start-btn'], ['settle', 3000],
+                ['drag', 110, 0], ['drag', -110, 60], ['drag', 0, 120], ['drag', 90, -80],
+                ['settle', 8000], ['drag', -100, 40], ['settle', 15000]] },
+      { name: 'roll, then keyboard tilt only',
+        steps: [['click', '#start-btn'], ['settle', 3000],
+                ['hold', 'ArrowRight', 1800], ['hold', 'ArrowDown', 1800], ['hold', 'ArrowLeft', 1200],
+                ['settle', 20000]] },
+    ],
+    gate: () => {
+      let d = null;
+      try { d = JSON.parse(localStorage.getItem('mbm_marble_v6_data') || 'null'); } catch (_) { /* corrupt record is not progress */ }
+      const finishes = (d && d.progress && d.progress.finishes) || 0;
+      const credits = (d && d.progress && d.progress.credits) || 0;
+      let ghosts = 0;
+      try { ghosts = Object.keys(JSON.parse(localStorage.getItem('mbm_marble_ghosts_v4') || '{}').seeds || {}).length; } catch (_) { /* no ghosts is not progress */ }
+      return { reached: finishes > 0 || credits > 0 || ghosts > 0, completed: finishes > 0,
+               finishes, credits, ghosts };
+    },
+    blockedBy: '#start-btn',
+  },
+
+  'Neon_Garden.html': {
+    rule:
+      'Neon Garden exposes its own store on __MBM_NEON_V6_BRIDGE__, and the garden itself — ' +
+      'the plants the player has actually put in the ground — lives inside it. A garden with ' +
+      'a plant in it is progress read by value; the codex filling up is the long game.',
+    approaches: [
+      { name: 'enter the garden, then plant on the bed', surface: 'canvas:not([aria-hidden="true"])',
+        steps: [['click', '#enter-btn'], ['settle', 3000],
+                ['drag', 0, 0], ['drag', 60, 40], ['drag', -70, 30], ['drag', 40, -60],
+                ['settle', 6000], ['drag', 0, 80], ['settle', 10000]] },
+      { name: 'enter, water, then plant',
+        steps: [['click', '#enter-btn'], ['settle', 2500], ['click', '#water-btn'],
+                ['drag', 30, 30], ['drag', -50, 20], ['settle', 15000]] },
+    ],
+    gate: () => {
+      const b = window.__MBM_NEON_V6_BRIDGE__;
+      const raw = b && b.profile && b.profile.legacy && b.profile.legacy.neon_garden_v1;
+      if (!raw) return { reached: false, note: 'no garden record yet' };
+      let g = null;
+      try { g = JSON.parse(raw); } catch (_) { return { reached: false, note: 'garden record unreadable' }; }
+      const plants = (g && g.G && Array.isArray(g.G.plants)) ? g.G.plants.length : 0;
+      const codex = (g && g.G && g.G.codex) ? Object.keys(g.G.codex).length : 0;
+      return { reached: plants > 0, completed: codex >= 20, plants, codex };
+    },
+    blockedBy: '#enter-btn',
+  },
+
+  'OneGuy.html': {
+    rule:
+      'One Guy banks a finished run into og_stats_v1 — runs, totalM, bestM, bossesSlain — ' +
+      'by its own stats.runs++ at the end of a run. The route is the shipped RUN control and ' +
+      'the shipped jump; the first thing the game itself remembers is a run that ended.',
+    approaches: [
+      { name: 'run, then jump the obstacles',
+        steps: [['click', '#btnRun'], ['settle', 2500],
+                ['key', 'Space'], ['key', 'Space'], ['key', 'Space'], ['key', 'Space'],
+                ['settle', 8000], ['key', 'Space'], ['key', 'Space'], ['settle', 20000]] },
+      { name: 'run, then the shipped jump control', surface: '#cv',
+        steps: [['click', '#btnRun'], ['settle', 2500],
+                ['presshold', '#v6Jump', 400], ['presshold', '#v6Jump', 600], ['presshold', '#v6Jump', 300],
+                ['settle', 25000]] },
+    ],
+    gate: () => {
+      let s = null;
+      try { s = JSON.parse(localStorage.getItem('og_stats_v1') || 'null'); } catch (_) { /* corrupt stats are not progress */ }
+      if (!s) return { reached: false, note: 'no og_stats_v1 record yet' };
+      const runs = s.runs || 0, best = s.bestM || 0, total = s.totalM || 0;
+      return { reached: runs > 0 || total > 0, completed: (s.bossesSlain || 0) > 0 || best >= 250,
+               runs, best, total, bosses: s.bossesSlain || 0 };
+    },
+    blockedBy: '#btnRun',
+  },
+
   'Hold_the_Mark.html': {
     rule:
       'Hold the Mark banks progress into its own htm_save record. The route is the shipped ' +
@@ -268,6 +439,70 @@ function allocationSweep(src) {
 }
 
 /* ------------------------------------------------------------------ *
+ * §4.4 — WHAT EACH GAME LETS A GATE READ.
+ *
+ * SC3 §5. Running the plans turned up something the plans themselves cannot
+ * say: for most of this shelf there IS no first gate of progress readable by
+ * value, because the game persists an OUTCOME and never a position. Grapple
+ * banks totalFinishes when a stage finishes; Marble banks progress.finishes
+ * when a circuit finishes; One Guy banks runs when a run ends. Before that
+ * moment the run exists only inside a closure, and the only thing changing on
+ * the page is rendered text — which rule 3 forbids a gate from believing.
+ *
+ * So this record classifies, per game, what a gate is ALLOWED to read:
+ *   live-seam      the game exposes its own state for reading while playing
+ *                  (window.__LUMINS, __GCsave, __SLIP, __WC). A first gate can
+ *                  be earlier than the win.
+ *   banked-at-end  the only durable value appears when a run or stage ENDS.
+ *                  First gate and win collapse onto the same event, and the
+ *                  harness has to finish the game to see anything at all.
+ *   none           the game exposes no state and writes no progress record.
+ *                  A by-value gate is impossible by construction; the remedy
+ *                  is one exported read seam, which is the product owner's
+ *                  call and not this harness's to add.
+ *
+ * seams/keys below are DERIVED from each file at run time, not typed here;
+ * the class is the judgement, and the derivation is printed beside it so the
+ * judgement can be checked.
+ * ------------------------------------------------------------------ */
+const EVIDENCE_CLASS = {
+  'Lumins.html': 'live-seam',
+  'Glitch_Clash.html': 'live-seam',
+  'Slipstream_GP.html': 'live-seam',
+  'Wrecking_Crew.html': 'live-seam',
+  'Hold_the_Mark.html': 'live-seam',
+  'Charcoal.html': 'banked-at-end',
+  'Globe_Snake (1).html': 'banked-at-end',
+  'Grapple.html': 'banked-at-end',
+  'Marble.html': 'banked-at-end',
+  'Neon_Garden.html': 'live-seam',
+  'OneGuy.html': 'banked-at-end',
+  'Static.html': 'banked-at-end',
+  'The_Last_Lighthouse_v1_1_The_Archipelago_Update_FINAL.html': 'banked-at-end',
+  'Vortex.html': 'banked-at-end',
+  'voxelcraft.html': 'banked-at-end',
+  // Trekkers reads three legacy keys on boot and writes none of them until a
+  // trek ends; a probe that played it for a minute left localStorage empty.
+  'Trekkers_Trail_Runner_Tees_Coast.html': 'banked-at-end',
+  // Kids vs Staff persists exactly one key, ps_showdown_calm, and that is an
+  // accessibility SETTING. A settings key is not a progress record, so for the
+  // purpose of this gate the game exposes nothing.
+  'KidsVsStaff_Showdown (3).html': 'none',
+};
+
+// The seams a gate could actually read, derived from the file. Release stamps,
+// audio buses, viewport helpers and the THREE handle are not game state and
+// are excluded by name — a gate that read __THREE__ would be measuring the
+// renderer, not the product.
+const NOT_STATE = /^__(MBM_V6_RELEASE__|MBM_RELEASE__|THREE__|MBM_V6_AUDIO__|MBM_V6_VIEWPORT__|mbmExit|mbmAnnounce|bloomPass)$/;
+function readableSurface(src) {
+  const seams = [...new Set([...src.matchAll(/window\.(__[A-Za-z0-9_]+)/g)].map((m) => m[1]))]
+    .filter((n) => !NOT_STATE.test(n));
+  const keys = [...new Set([...src.matchAll(/localStorage\.(?:get|set|remove)Item\(\s*['"]([^'"]+)['"]/g)].map((m) => m[1]))];
+  return { seams, keys };
+}
+
+/* ------------------------------------------------------------------ *
  * driving
  * ------------------------------------------------------------------ */
 function serve() {
@@ -322,6 +557,27 @@ async function runApproach(browser, origin, game, approach, opts = {}) {
             const done = await page.evaluate(opts.gateSrc).catch(() => ({ reached: false }));
             if (done && done.reached) break;
           }
+        } else if (kind === 'tap') {
+          // a real touch. Games that bind touchstart/touchend and nothing else
+          // (Globe Snake's turn pad is one) never see a mouse press at all.
+          await page.tap(a).catch(() => {}); steps += 1; await page.waitForTimeout(b || 250);
+        } else if (kind === 'drag') {
+          // a real pointer stroke across the play surface: press, move, release
+          const box = await page.locator(approach.surface || 'canvas').first().boundingBox().catch(() => null);
+          if (box) {
+            const cx = box.x + box.width / 2, cy = box.y + box.height / 2;
+            await page.mouse.move(cx, cy); await page.mouse.down();
+            await page.mouse.move(cx + a, cy + b, { steps: 10 }); await page.mouse.up();
+            steps += 1; await page.waitForTimeout(400);
+          }
+        } else if (kind === 'presshold') {
+          // hold a control down, the way "HOLD to grapple" asks the player to
+          const box = await page.locator(a).first().boundingBox().catch(() => null);
+          if (box) {
+            await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+            await page.mouse.down(); steps += 1;
+            await page.waitForTimeout(b); await page.mouse.up(); await page.waitForTimeout(400);
+          }
         } else if (kind === 'settle') { await page.waitForTimeout(a); }
       }
     }
@@ -368,6 +624,27 @@ async function main() {
   }
   console.log(`  ${collisionTotal} declared-flag collision(s) across the swept games` +
               (collisionTotal === 0 ? ' — no game in this estate declares a numbered flag registry, so there is nothing to collide; recorded, not claimed as clean.\n' : '\n'));
+
+  console.log('§4.4 readable surface — what a by-value gate is allowed to read, per game:');
+  const surfaceOf = {};
+  for (const g of Object.keys(CENSUS)) {
+    if (filter && !g.toLowerCase().includes(filter.toLowerCase())) continue;
+    const f = path.join(GAMES, g);
+    if (!fs.existsSync(f)) { console.log(`  ${g}: file not present`); continue; }
+    const surface = readableSurface(fs.readFileSync(f, 'utf8'));
+    const derivedNone = surface.seams.length === 0 && surface.keys.length === 0;
+    const cls = EVIDENCE_CLASS[g] || (derivedNone ? 'none' : 'unclassified');
+    surfaceOf[g] = { ...surface, cls };
+    const cite = [surface.seams.length ? `seams ${surface.seams.join(' ')}` : null,
+                  surface.keys.length ? `keys ${surface.keys.slice(0, 4).join(' ')}${surface.keys.length > 4 ? ` (+${surface.keys.length - 4})` : ''}` : null]
+      .filter(Boolean).join(' · ') || 'nothing exposed, nothing persisted';
+    console.log(`  ${cls.padEnd(14)} ${g}`);
+    console.log(`      ${cite}`);
+  }
+  const byClass = Object.values(surfaceOf).reduce((a, v) => { a[v.cls] = (a[v.cls] || 0) + 1; return a; }, {});
+  console.log(`  ${Object.entries(byClass).map(([k, v]) => `${v} ${k}`).join(' · ')}`);
+  console.log('  A game classed `none` is a HOLD by construction, not an untried one: this harness');
+  console.log('  may not assert progression from a rendered string, and there is nothing else to read.\n');
 
   if (censusOnly) { console.log('census only — no browser run requested'); return; }
 
