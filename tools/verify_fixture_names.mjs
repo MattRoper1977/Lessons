@@ -82,6 +82,12 @@ const ALLOW = [
   { file: '_sownb/vb/Q7ZTQQ_PATHS.txt',
     text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
     why: 'real careers lesson title; MOCK is a fixture marker but this names no person' },
+  // Same lesson title, same reason, in the retirement record that lists the same
+  // 154 paths. The record has to name the paths to be a record, so the title
+  // arrives with them. Landed BEFORE the file it allows, per H7.
+  { file: '_sownb/vb/Q7ZTQQ_RETIRED.md',
+    text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
+    why: 'real careers lesson title; MOCK is a fixture marker but this names no person' },
   { file: '_sownb/vb/evidence/run2/va-launch-asdan-w13/g11.json',
     text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
     why: 'real careers lesson title; MOCK is a fixture marker but this names no person' },

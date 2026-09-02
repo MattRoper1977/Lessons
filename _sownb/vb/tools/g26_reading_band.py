@@ -8,13 +8,20 @@ from the tree rather than pinned to a name that does not exist here.
 
 Whole-deck FK is printed beside pupil FK on every row, because the difference
 between them is itself the finding when a deck mixes addressees.
+
+Matt's ruling of 2026-09-02 (VB-RUN10 D-J) made LAUNCH CEILING-ONLY: a LAUNCH
+lesson that reads more simply than the live pack is not a defect, so only the
+upper bound binds there. The floor is still measured and still printed - it is
+withdrawn as a failure condition, not as a number. Which bound binds is read
+from the contract row's bindingMode, so changing the ruling is a contract edit,
+not a code edit.
 """
 from __future__ import annotations
 import copy, json, re, sys, hashlib
 from pathlib import Path
 import lxml.html as LH
 
-VERSION = "g26-v1.0.0-pathway-reading-band"
+VERSION = "g26-v1.1.0-pathway-reading-band-launch-ceiling-only"
 ROOT = Path(__file__).resolve().parents[3]
 CONTRACT = ROOT / "_sownb/STYLE_CONTRACT.json"
 VOWELS = "aeiouy"
@@ -71,7 +78,7 @@ def bands():
     row = rows.get("reading.pathway.band")
     if row is None:
         return None, False
-    return row["value"]["bands"], row.get("scope") == "new"
+    return row["value"]["bands"], row.get("scope") == "new", row["value"].get("bindingMode", {})
 
 
 def pathway_of(rel: str) -> str | None:
@@ -82,23 +89,30 @@ def pathway_of(rel: str) -> str | None:
     return None
 
 
-def judge(m: dict, bnds: dict, pathway: str) -> dict:
+def judge(m: dict, bnds: dict, pathway: str, modes: dict | None = None) -> dict:
     fails = []
     if pathway is None or pathway not in bnds:
         return {"fails": ["g26: pathway not derivable from the path"], "verdict": "NOT-APPLICABLE"}
     lo, hi = bnds[pathway]
+    mode = (modes or {}).get(pathway, "band")
     v = m.get("pupilFK")
     if v is None:
         fails.append("g26: no pupil-addressee text to measure")
+    elif mode == "ceiling":
+        # D-J: the floor is measured and printed, never failed.
+        if v > hi:
+            fails.append(f"g26: pupil FK {v} above the {pathway} ceiling {hi}")
     elif not (lo <= v <= hi):
         fails.append(f"g26: pupil FK {v} outside the {pathway} band {lo}-{hi}")
-    return {"fails": fails, "verdict": "PASS" if not fails else "RED"}
+    return {"fails": fails, "verdict": "PASS" if not fails else "RED",
+            "bindingMode": mode,
+            "belowWithdrawnFloor": bool(v is not None and mode == "ceiling" and v < lo)}
 
 
 if __name__ == "__main__":
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     scope = "new" if "--scope=new" in sys.argv else "live"
-    bnds, scoped_new = bands()
+    bnds, scoped_new, modes = bands()
     binding = scope == "new" and scoped_new
     sha = hashlib.sha256(CONTRACT.read_bytes()).hexdigest()
     red = 0
@@ -107,12 +121,16 @@ if __name__ == "__main__":
         p = Path(a) if Path(a).is_absolute() else ROOT / a
         m = measure(p)
         pw = pathway_of(str(p.relative_to(ROOT)) if str(p).startswith(str(ROOT)) else a)
-        j = judge(m, bnds or {}, pw)
+        j = judge(m, bnds or {}, pw, modes)
         m.update({"pathway": pw, "scope": scope, "binding": binding, "contractSha256": sha, **j})
         if binding and j["verdict"] == "RED":
             red += 1
         out.append(m)
-        band = f"{bnds[pw][0]}-{bnds[pw][1]}" if bnds and pw in bnds else "n/a"
+        if bnds and pw in bnds:
+            band = (f"<={bnds[pw][1]}" if modes.get(pw) == "ceiling"
+                    else f"{bnds[pw][0]}-{bnds[pw][1]}")
+        else:
+            band = "n/a"
         print(f"{p.name[:46]:46s} pathway={pw or '?':6s} whole={m.get('wholeDeckFK')} "
               f"pupil={m.get('pupilFK')} band={band} {j['verdict']:4s} "
               f"{'BINDING' if binding else 'report-only'} contract {sha[:8]} [{VERSION}]")

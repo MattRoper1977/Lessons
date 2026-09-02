@@ -1,9 +1,9 @@
 {
  "schema": "vb-state-v1",
- "order": "VB",
- "run": 9,
- "runDate": "2026-09-01",
- "mainHead": "1b330b08b5a1e571db6ccea46fa22df838990c53",
+ "order": "mbm-sow-verify-and-build-2026-09-01-VB-RUN10",
+ "run": 10,
+ "runDate": "2026-09-02",
+ "mainHead": "727268e0bb9b52b2a6718237efe2317a628c2c65",
  "anchor_run2": "dedbf06f546127d06091373dd777b943cc0b039e",
  "anchor_run2_note": "Anchored at fetch time. Main kept moving during the run: #187 (FEB catalogue append of ten packs to resources.json), #188 (catalogue chip tooling), then this order's own #189 merged as 28ee8d9b. No commit between 22f6470f and 28ee8d9b touches any of the twelve except #189 itself (this order's repair). Corpus freeze re-verified 54/54 OK at run start.",
  "phases": {
@@ -654,6 +654,13 @@
     "rationale": "WITHDRAWN. Re-measured by rendered PDF: the placement-fixable count is ZERO. 56/56 decks with the block inside .print-pack print it and 48 print it from outside. The real defect is 79 decks whose whole PDF is blank — a different defect, separately recorded.",
     "ruledBy": "run 6",
     "status": "DO NOT FIX AS A PLACEMENT ISSUE"
+   },
+   {
+    "id": "NT-9",
+    "finding": "untraced-but-present packs read as gaps: BUILD Humanities W9-W14 local history, ASDAN weeks 1-7, Science weeks 3-7, Art weeks 1-8",
+    "rationale": "Matt's ruling D-H, 2026-09-02: a deck stands on the path, so the slot HAS a deck. Untraced is a tracing question, not a coverage gap. These are covered for counting and are never build targets; rebuilding beside them would collide inside the same tree.",
+    "ruledBy": "run 10 (D-H)",
+    "status": "DO NOT FIX"
    }
   ]
  },
@@ -934,20 +941,13 @@
   ]
  },
  "decisionD1": {
-  "status": "BLOCKED — not applied",
-  "orderDefault": "YES",
-  "blastRadius": {
-   "lessonFiles": 21,
-   "referringFiles": 62,
-   "totalIfRenamed": 83,
-   "readOnlyGroundTruth": 7
-  },
-  "branchChosen": "§2.2 label+citation (83 > 20 rules out the rename); the per-deck edit is fully specified and staged",
-  "blocker": "The relabel is a chain ending at W9->8, and week 8 is held by the SCI_L_W8 enzyme/amylase trio. No enzyme/amylase/catalyst/digest row exists anywhere in the LAUNCH workbook. Week 7 is not free either — the v3_40min W7 trio aligns to C38 and sits in a protected production tree.",
-  "whyNotApplied": "Six of the seven weeks would knowingly create a collision at week 8; assigning or stripping the enzyme week's number is a curriculum decision with no workbook warrant.",
-  "theOneQuestion": "Is the enzyme/amylase week (a) extra enrichment outside the numbered sequence, (b) part of C38's Topic 1 review week, or (c) a missing workbook row?",
-  "evidence": "_sownb/vb/evidence/run6/D1_RELABEL_BLOCKED.json",
-  "run7": "PARKED. D1_ANSWER came back blank, so nothing was relabelled. Still open, unchanged."
+  "status": "RESOLVED and VERIFIED",
+  "ruledBy": "Matt, 2026-09-02 (D-C)",
+  "appliedBy": "run 8, commit 672f6ed9 - the previous record in this key said \"BLOCKED - not applied\", which was stale from run 6",
+  "verifiedThisRun": "24 of 24 LAUNCH Science decks conform: W9->wk8 C39, W10->9 C40, W11->10 C41, W12->11 C42, W13->12 C43, W14->13 C44, A2_W7 wk14 C45. The enzyme trio reads \"Enrichment\", config week null, placement string carried, folder and content unchanged, still live.",
+  "bytesChangedThisRun": 0,
+  "evidence": "_sownb/vb/evidence/run10/DC_SPINE_SPLIT_VERIFY.json",
+  "spineSplitNow": "the 22 decks are counted; SPINE-SPLIT is no longer an exclusion in the horizon"
  },
  "decisionD5": {
   "status": "DONE",
@@ -1798,5 +1798,169 @@
    "199": "1b330b08"
   },
   "mainAtClose": "1b330b08b5a1e571db6ccea46fa22df838990c53"
+ },
+ "anchor_run10": "727268e0bb9b52b2a6718237efe2317a628c2c65",
+ "anchor_run10_note": "origin/main was exactly 727268e0 at the pre-gate, zero commits since the run-9 close, so no commit touches any of the 59 verified paths. The branch was brought level by fast-forward.",
+ "pregate_run10": {
+  "chromium": "141.0.7390.37 at /opt/pw-browsers/chromium",
+  "fontFiles": 59,
+  "fontFamiliesUnique": 24,
+  "fontFingerprint": "c555ca082ed285dbcd5c84b5e2687cf3 (fc-list --format='%{family}\\n' | sort -u | md5sum) - identical to run 9",
+  "references": "RSH-3 reference decks re-rendered this session: grow-science 2pp, launch-science 2pp, grow-asdan 10pp, launch-asdan 10pp - identical to run 9, so the engine has not moved",
+  "contract": {
+   "sha256": "8c2cd4ac (at the pre-gate)",
+   "rows": 464,
+   "rowCountField": 463,
+   "rowCountFieldStale": "the run-8 commit 53d16b3a appended reading.pathway.band (463 -> 464 rows) without bumping rowCount. The order expected 463 because that is what the stale field says. Corrected to 464 in this run; no row added or removed to do it.",
+   "g22": {
+    "vsFEBgoverning457": "457 EXTENSION-SAFE / 0 REDEFINITION / 0 REGRESSION / 7 LIVE-ONLY",
+    "vsRun7blob463": "463 / 0 / 0 / 1 LIVE-ONLY (reading.pathway.band)",
+    "vsRun9anchor464": "464 / 0 / 0 / 0",
+    "verdict": "no REDEFINITION and no REGRESSION against any governing blob; no halt"
+   }
+  },
+  "openPRs": {
+   "count": 13,
+   "ofThisOrder": 0,
+   "strictlyAheadOfMain": 13,
+   "note": "every open PR is strictly ahead of main; none is empty and none belongs to this order"
+  },
+  "catalogue": {
+   "objects": 680,
+   "blob": "a0fbfdc9",
+   "sha256": "8b9ad5bf...",
+   "chips": "28/28 limbs, zero console errors",
+   "humanities": 68
+  },
+  "phonecheck": "pass"
+ },
+ "decisions_run10": {
+  "D-A q7ztqq": {
+   "ruling": "RETIRED FROM CONTENTION; branch NOT deleted",
+   "evidence": "_sownb/vb/Q7ZTQQ_RETIRED.md (lands in the PR after the allowlist, per H7)",
+   "paths": 154,
+   "tipIsAncestorOfMain": false,
+   "pathsWhoseBranchBlobIsOnMain": 0,
+   "pathsAbsentFromMain": 16,
+   "tip": "18c395da96c8641d2c173e51f3692f9b1616bd1d",
+   "mergeBase": "3cdb4ee4f9969b3a043cf2ba8320e57a6d25b6c5",
+   "verdict": "never landed; live bytes verified 48/48 under the battery; retired 2026-09-02",
+   "effect": "mutation of those 154 paths now follows the ordinary rules; Q7ZTQQ_PATHS.txt kept as history",
+   "h7Split": "the record names all 154 retired paths, and one of them is the careers W11 mock-interview lesson title. tools/verify_fixture_names.mjs reads that filename as person-shaped unless the file is allowlisted, and twenty other files carrying the same title already are. The allowlist entry lands in this PR; the record it allows lands in the next one. Red-proved after the entry: the gate's own self-test still passes, and a planted canary name in the very file allowlisted still reds, because the allowlist is exact-string and exact-file scoped. Neither the title nor any canary string is quoted in this record, which is why this key reads as it does."
+  },
+  "D-B #166": {
+   "status": "ADVISORY contention",
+   "branch": "origin/codex/catalogue-discoverability-2026-08-29",
+   "headAheadOfMain": 1,
+   "action": "not touched; if a run mutates either of its two ASDAN packs the path is printed so the rebase is known",
+   "mutatedThisRun": "see landed_run10.pathsOverlapping166"
+  },
+  "D-C SPINE-SPLIT": {
+   "status": "RESOLVED by Matt; executed this run - see decisionD1_run10"
+  },
+  "D-D blank-print 79": {
+   "status": "see blankPrint79_run10"
+  },
+  "D-E six overloads": {
+   "status": "TRIM-TO-DRAWER, RUN 11, own PR",
+   "rule": "pupil-facing load <= family median x1.25 (g23 WITHIN); every cut passage moves whole into the staff drawer under \"If time / extension\"; trace preserved; nothing deleted; nine stages still sum to 40",
+   "ratios": "see overloadRatios_run10"
+  },
+  "D-F C100": {
+   "status": "STOP - qualification conflict, E3-L1 vs live Level 2, Matt + Cheryl",
+   "counting": "EXCLUDED, not a gap; the headline prints \"excluded 1 (C100)\""
+  },
+  "D-G three UNRESOLVED cells": {
+   "status": "EXCLUDED under either reading",
+   "why": "Behaviour Intervention is not a lesson; DT is out of scope",
+   "capacityNote": "_sownb/vb/CHANGES_FOR_PLANNERS.md"
+  },
+  "D-H untraced-but-present": {
+   "status": "HAS DECK (untraced) - covered, never a build target, entered in the NO-TOUCH register as NT-9",
+   "sets": [
+    "BUILD Humanities W9-W14 local history (PRE-WORKBOOK: untraced)",
+    "ASDAN weeks 1-7",
+    "Science weeks 3-7",
+    "Art weeks 1-8"
+   ],
+   "week14BuildHumanities": "the Festivals lesson (C59/C73) is the SoW-credited one; the local-history deck stays live; nothing deleted or unpublished"
+  },
+  "D-I BUILD ASDAN slots": {
+   "status": "TIMETABLED-BY-PRACTICE - BUILD ASDAN is taught inside the BUILD lane’s existing periods",
+   "action": "keep authoring BUILD ASDAN rows; one CHANGES_FOR_PLANNERS line asks the planner to name the slot"
+  },
+  "D-J LAUNCH reading band": {
+   "status": "CEILING-ONLY BINDING at the live p75 14.21; floor 11.64 WITHDRAWN",
+   "contractRow": "reading.pathway.band -> value.bindingMode {BUILD:band, GROW:band, LAUNCH:ceiling}, bandVersion 2026-09-02 / live-LAUNCH p75, n=82",
+   "tool": "_sownb/vb/tools/g26_reading_band.py v1.1.0 reads bindingMode from the contract, so the ruling lives in the contract and not in the code",
+   "redProof": "_sownb/vb/evidence/run10/G26_DJ_REDPROOF.json - LAUNCH 8.09 RED->PASS, LAUNCH 14.70 RED->RED, BUILD 14.70 RED, live 13.83 PASS->PASS",
+   "advisory": "the live band 11.64-14.21 is high for Foundation GCSE pupils; a fact about the live pack, not a target. New LAUNCH work aims lower where the content allows. Advisory, not gated."
+  },
+  "D-K Spring 2 dates": {
+   "status": "ABSENT and blocking nothing",
+   "indexing": "absolute week number; Spring 2 = weeks 21-26, Easter at the end of 26"
+  },
+  "D-L Art": {
+   "status": "\"NO DONOR\" was WRONG for at least BUILD Art",
+   "donors": [
+    "BUILD_Estate_v3/Art_Teesside/BUILD_ART_W8_Share_Reflect_and_Close_the_Loop.html",
+    "Art_Teesside/Build/BUILD_ART_A2_W7_Bank_It_and_Plan_the_Teach.html",
+    "the live GROW/LAUNCH Art trees (find by content)"
+   ],
+   "contractExtension": "RUN 11, proof rule absolute, per family, live donor beats *_Estate_v3",
+   "decksThisRun": 0
+  },
+  "D-M resources.json pin": {
+   "assertion": "the 677 pre-#194 objects are byte-identical in canonical form, the id prefix is identical, and the only change since is three appends",
+   "see": "catalogue_run10.pin"
+  },
+  "D-N PR #181": {
+   "finding": "the premise does not hold at HEAD",
+   "fact": "#181 was MERGED on 2026-09-01 at 13:36:07Z by MattRoper1977 - 6 files, 1126 insertions, head 257ad6a4, merge commit e8ec4ce1 \"FEB wave 1: BUILD ASDAN Spring 1 W15-W16 (#181)\". It is neither open nor empty, so there is nothing to close.",
+   "action": "nothing touched; no comment posted"
+  },
+  "D-O public-200": {
+   "status": "VENUE_BLOCKED, substituted by merge-commit blob equality; PHONECHECK is the human 200",
+   "phonecheck": "pass"
+  }
+ },
+ "spring2Dates": "absent",
+ "horizon_run10": {
+  "boundary": 26,
+  "basis": "content reading; the path reading is printed beside it because they still disagree on one row",
+  "headline": "Horizon to Easter (week 26): required 416 · excluded 1 (C100) · effective 415 · covered 246 · remaining 169 · 8 waves at ceiling 24 (path reading: covered 243 · remaining 172 · 8 waves)",
+  "content": {
+   "required": 416,
+   "excluded": 1,
+   "effective": 415,
+   "covered": 246,
+   "remaining": 169,
+   "wavesAt24": 8
+  },
+  "path": {
+   "required": 416,
+   "excluded": 1,
+   "effective": 415,
+   "covered": 243,
+   "remaining": 172,
+   "wavesAt24": 8
+  },
+  "readingsAgree": false,
+  "disagreeingRows": [
+   "LAUNCH Science week 8 - path 0/3, content covered. The three decks that teach week 8 are still named SCI_L_W9L*, because D-C ruled labels and citations only and declined the 83-file rename. The path reading reads filenames; the content reading reads the citation. The content reading is right."
+  ],
+  "attribution": {
+   "baselineBothOff": {
+    "covered": 140,
+    "remaining": 275,
+    "waves": 12
+   },
+   "D-C credited": "+22 slot-units (the 22 LAUNCH Science decks leaving SPINE-SPLIT; the order estimated 19)",
+   "D-H credited": "+84 slot-units across 75 slots that carry a deck on the path but no workbook citation",
+   "D-F": "-1 required (LAUNCH ASDAN week 15, C100, excluded not a gap)"
+  },
+  "run9Correction": "run 9 reported content covered 147 and projected 158 after the eleven. Its own coverage artefact, written the same evening, says 140 - and already contained the eleven. Both figures are corrected here; the artefact is kept at _sownb/vb/evidence/run10/RUN9_COVERAGE_ARTEFACT.json.",
+  "censusChange": "the census now also reads the screen-chip citation form (\"📍 C44 only\") that the W8-W13 and W14-W15 chassis use, but only where (lane, subject, cell number) resolves to exactly one absolute week in the spine - 253 of 558 such keys are ambiguous across terms. 19 decks carry a chip, 7 resolved, 12 left ambiguous and unresolved.",
+  "evidence": "_sownb/vb/evidence/run10/HORIZON_W26_AFTER_DC.json"
  }
 }

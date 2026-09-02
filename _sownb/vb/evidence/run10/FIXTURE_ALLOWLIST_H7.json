@@ -1,0 +1,22 @@
+{
+ "file": "tools/verify_fixture_names.mjs",
+ "subject": "H7 split: one fixture-name allowlist entry, and the proof it did not blunt the gate",
+ "why": "Q7ZTQQ_RETIRED.md must name all 154 retired paths to be a record, and one of those paths is the careers W11 mock-interview lesson title, which the gate reads as person-shaped. Twenty other files carrying the same title are already allowlisted with the same reason. No name string is quoted in this record - that is the same rule the gate exists to keep.",
+ "ordering": "the allowlist entry lands in this PR; the file it allows lands in the next one, so the allowlist never lands with the content it judges",
+ "redProof": [
+  {
+   "probe": "the gate's own --self-test over its three planted red vectors",
+   "result": "PASS, 0 checks failed"
+  },
+  {
+   "probe": "a canary pupil name appended to the paths file that the same allowlist covers",
+   "result": "exit 1, reported under person-shaped fixtures - the allowlist is exact-string and exact-file scoped"
+  },
+  {
+   "probe": "that file restored",
+   "result": "exit 0"
+  }
+ ],
+ "firstRunRed": "PR #201 first head df76d6e4: this job was red for exactly this reason, and it was my miss - I read the tool output tail rather than its exit code.",
+ "secondMiss": "the first draft of this very record quoted the offending strings verbatim, and the gate caught that too. Fixed by describing them."
+}
