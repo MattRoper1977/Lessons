@@ -313,3 +313,33 @@ the eighteen are not here, and the reason is measured rather than asserted.
 WRONG: the generator wrote "GROW Humanities" into the running head of a GROW
 Science deck, because the subject was hardcoded in three places.
 RIGHT: the running-heads gate caught it on the rendered PDF, not in the source.
+
+## Run 11 (2026-09-02, ORDER VB-RUN11F)
+
+WRONG: I carried the resources.json digest measured before the games PRs
+(#212–#223) into the re-pin plan.
+RIGHT: main moved twelve merges since that measurement and the catalogue with
+it. The pin is taken from `sha256sum resources.json` at the moment of the edit,
+never from a number remembered from an earlier turn.
+
+WRONG (caught in the dry run, nothing written): the START_HERE relabel replaced
+"Week 8" with "Week 9" and then counted the freshly written "Week 9" as a
+"Week 9" to move to 10, so every count after the first was wrong.
+RIGHT: replacements that shift a number run from the highest number down, and
+every replacement asserts its expected count against the file before any write.
+The script refused; the order of edits was fixed; the second dry run matched.
+
+WRONG: the housekeeping order says "re-pin in the cross-estate daily check"
+and the repo's pin tool is the documented way to do it.
+RIGHT: the tool refuses with one checkout, by design, and the Apps checkout is
+not here. The Lessons copy is moved by the same anchored regex the tool uses,
+and the Apps copy is recorded as divergent until someone with both checkouts
+runs the tool. Working round the refusal by editing the tool would have been a
+gate edit; it was not made.
+
+WRONG: the housekeeping PR bundled the gate-file pin with 31 lesson files and
+five records, because the order lists them under one heading.
+RIGHT: the cross-estate gate reds any PR that touches it while changing files
+outside its own allowed set, which is H7 in another coat. The pin landed alone
+(#224); the content follows in its own PR, which does not trigger that
+workflow. The branch shows the step-back as two reverts, not a rewrite.
