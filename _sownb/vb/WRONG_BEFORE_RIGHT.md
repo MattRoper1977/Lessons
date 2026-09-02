@@ -343,3 +343,23 @@ RIGHT: the cross-estate gate reds any PR that touches it while changing files
 outside its own allowed set, which is H7 in another coat. The pin landed alone
 (#224); the content follows in its own PR, which does not trigger that
 workflow. The branch shows the step-back as two reverts, not a rewrite.
+
+WRONG: the contract-v2 builder proved two metric rows with its own patched
+copy of the gate's metric dispatch, so they "passed" at build time and failed
+the moment the real gate ran on the same references.
+RIGHT: the non-vacuity run is the gate itself on every reference, and it was
+red on 15/15 until the dispatch was fixed in the gate, not in the builder. A
+builder never gets its own instrument.
+
+WRONG: I first measured the palette from the first :root block only and
+reported it unanimous across pathways.
+RIGHT: a second (and in ASDAN a third) :root block overrides the base per
+subject and strand, and the last declaration is what renders. Both instruments
+are now recorded (PALETTE_V2.json); the base binds as shared rows, the
+effective values bind only where a family is unanimous.
+
+WRONG: the stale-evidence sweep ran green locally, then the non-vacuity batch
+was re-run after the dispatch fix and its 45 gate outputs were committed
+without a `file` key; CI reddened the contract PR on exactly the run-10 lesson.
+RIGHT: the sweep is the last thing before `git commit`, never before the last
+write, and every gate output names its subject in `file`.
