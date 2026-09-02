@@ -413,3 +413,53 @@ classifier over the census and showed BUILD Humanities W9 uncovered when the
 W9-W14 packs are live.
 RIGHT: the run-10 census and coverage tools, re-keyed with the new term
 offsets, are the only instrument; the home-made list was discarded.
+
+## Run 12-A (2026-09-02, ORDER VB-RUN12A)
+
+WRONG: the :root migration proof compared the deck in the repository against
+an unmigrated copy under /tmp, and reported the screen changed on two of three
+proof decks.
+RIGHT: a deck's own scripts resolve relative paths against the deck's location,
+so a copy under /tmp is not the same page. The instrument's own noise floor was
+measured first (copy vs copy: identical), then the comparison was redone with
+the unmigrated copy written into the SAME directory: zero element differences,
+zero pixel shift, all three clauses PASS. Every rollout check now writes its
+before-copy beside the file it checks.
+
+WRONG: cleaning up the superseded proof artefacts, I matched `*_roots*.json`,
+which also matched the valid `*_rootscope.json` I had just written.
+RIGHT: the proofs were re-run rather than reconstructed from memory, and the
+glob was written to the exact name. A measurement that is deleted is re-taken,
+never retyped.
+
+WRONG: the migration's per-deck rollout check called a deck RED when its cold
+print produced no text, and 61 decks came back red.
+RIGHT: not one of them had changed: tokens and print text were identical on all
+138. The check was conflating its own claim ("the migration changed nothing")
+with a different, pre-existing property ("this deck prints something cold").
+The two are now separate fields, and the blank-cold finding became this run's
+R4 work instead of a false red.
+
+WRONG: the new HOUSE_LABELS register listed "Role", so the pair "Role
+Evaluation" resolved as a house label and the g10 gate's own structural control
+stopped firing.
+RIGHT: the house check now runs AFTER the role check, so every word the gate
+already owns keeps its label and the register only adds what was missing. No
+control was weakened to make the register fit.
+
+WRONG: the population for the R4 print fix was taken from the 138 decks the
+:root migration had touched, which is not the same set as "classic decks that
+print blank cold".
+RIGHT: all 175 classic decks were scanned in Chromium for a blank cold print.
+That found 24 more, and ten whose printPack is not an arm-then-print and which
+are held by name rather than guessed at.
+
+WRONG: g19 v2 reddened 67 decks for a "wrong value" because the config measured
+each family's values from a single named donor, so every other strand palette
+in that family looked foreign.
+RIGHT: the ruling binds every family, so the family value set is measured from
+the family. The config now separates the estate BASE (a token's value inside
+:root, unanimous across all 175 classic decks) from the per-family SCOPED
+values, and the gate judges each against its own rule. 175 of 175 pass, the
+planted-duplicate control fires on every run, and a planted base-value change
+reds.
