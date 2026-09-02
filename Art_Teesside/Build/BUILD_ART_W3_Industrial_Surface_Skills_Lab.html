@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!DOCTYPE html><html lang="en" class="pathway-build"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BUILD Art W3 · Industrial Surface Skills Lab</title>
 <style>
     :root{--bg:#fff;--slide-bg:#fff;--text:#1f2937;--lo-bg:#e6d4e8;--lo-border:#9c27b0;--lo-text:#000;--task-bg:#fef9c3;--task-border:#eab308;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;--aspire-bg:#dcfce7;--aspire-border:#22c55e;--aspire-text:#166534;--sc-bg:#ffedd5;--sc-border:#f97316;--ido-bg:#ede9fe;--ido-border:#7c3aed;--wedo-bg:#fce7f3;--wedo-border:#db2777;--btn-bg:#3b82f6;--btn-hover:#1e3a8a;--success:#16a34a;--error:#dc2626;--muted:#64748b}
@@ -288,7 +288,7 @@
 .sc-v4 ul{margin:0;padding-left:1.2rem}.sc-v4 li{margin:3px 0}
 .asp-v4{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);border-radius:12px;padding:8px 14px;margin:6px auto;max-width:660px;text-align:left;color:var(--aspire-text)}
 @media print{.lundy-grid{display:block}}
-:root{--lo-bg:#e8eef1;--lo-border:#4F869C;--ido-bg:#f3e4dc;--ido-border:#D06438;--wedo-bg:#e2efec;--wedo-border:#16877A;--task-bg:#faf0d7;--task-border:#E1AB32;--btn-bg:#4F869C;--btn-hover:#3a6a7d}
+html.pathway-build{--lo-bg:#e8eef1;--lo-border:#4F869C;--ido-bg:#f3e4dc;--ido-border:#D06438;--wedo-bg:#e2efec;--wedo-border:#16877A;--task-bg:#faf0d7;--task-border:#E1AB32;--btn-bg:#4F869C;--btn-hover:#3a6a7d;}/* RUN12-A pathway scope */
 /* ===== I-Do Illuminator (LI) ===== */
 .ilm{background:#FBF3E6;border:2px solid #C97F2E;border-radius:14px;padding:10px 12px 6px;margin:10px 0}
 .ilm svg{width:100%;height:auto;display:block}
@@ -472,7 +472,7 @@ function pauseTimer(){clearInterval(timerInterval);timerRunning=false;}
 function resetTimer(){clearInterval(timerInterval);timerRunning=false;timerLeft=timerTotal;midpointFired=false;updateTimerDisplay();}
 function fireMidpoint(){pauseTimer();window._atWasRun=(typeof _atRunning!=='undefined'&&_atRunning);_atPause();try{playDing();setTimeout(()=>{try{playDing()}catch(e){}},250);}catch(e){}const ov=document.getElementById('mp-overlay');if(ov)ov.classList.add('visible');}
 function resumeFromMidpoint(){const ov=document.getElementById('mp-overlay');if(ov)ov.classList.remove('visible');startTimer();if(window._atWasRun)_atStart();}
-function printPack(level){document.body.classList.remove('print-supported','print-standard','print-stretch');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.body.classList.add('print-'+level);['ko','intro','arrival','starter','wedo','exit','lundy','feedback'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});const sc=document.getElementById('print-scaffold-'+level);if(sc)sc.classList.add('visible');const ws=document.getElementById('print-worksheet-'+level);if(ws)ws.classList.add('visible');_stampAndMark();window.print()}
+function printArm(level){document.body.classList.remove('print-supported','print-standard','print-stretch');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.body.classList.add('print-'+level);['ko','intro','arrival','starter','wedo','exit','lundy','feedback'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});const sc=document.getElementById('print-scaffold-'+level);if(sc)sc.classList.add('visible');const ws=document.getElementById('print-worksheet-'+level);if(ws)ws.classList.add('visible');_stampAndMark();}function printPack(level){printArm(level);window.print()}(function(){function armed(){return /\bprint-(supported|standard|stretch)\b/.test(document.body.className)}function r4(){if(!armed())printArm('standard')}window.addEventListener('beforeprint',r4);if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',r4);else r4();})();/* R4 default-Standard */
 function _stampAndMark(){var pd=document.getElementById('print-date');if(pd)pd.textContent=new Date().toLocaleDateString('en-GB');var vis=document.querySelectorAll('.print-section.visible');vis.forEach(function(e){e.classList.remove('print-last')});if(vis.length)vis[vis.length-1].classList.add('print-last')}
 function printSection(id,level){document.body.classList.remove('print-supported','print-standard','print-stretch');if(level)document.body.classList.add('print-'+level);document.querySelectorAll('.print-section').forEach(function(el){el.classList.remove('visible')});var el=document.getElementById('print-'+id);if(el)el.classList.add('visible');_stampAndMark();window.print()}
 </script>
