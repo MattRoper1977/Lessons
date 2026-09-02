@@ -336,3 +336,10 @@ not here. The Lessons copy is moved by the same anchored regex the tool uses,
 and the Apps copy is recorded as divergent until someone with both checkouts
 runs the tool. Working round the refusal by editing the tool would have been a
 gate edit; it was not made.
+
+WRONG: the housekeeping PR bundled the gate-file pin with 31 lesson files and
+five records, because the order lists them under one heading.
+RIGHT: the cross-estate gate reds any PR that touches it while changing files
+outside its own allowed set, which is H7 in another coat. The pin landed alone
+(#224); the content follows in its own PR, which does not trigger that
+workflow. The branch shows the step-back as two reverts, not a rewrite.
