@@ -505,3 +505,24 @@ carries `#print-area` sections and `data-title="We Do 1"` slides instead. The
 deck has two we-do slides and a print-wedo section. That is an instrument
 pointed at the wrong chassis, not a hole in the lesson, and the classic
 instruments (tier print proof, g16 v2 frozen rows) are the ones that bind here.
+
+WRONG: three more lessons were authored, built, reshelled and passed every
+binding gate — g16 v2, g10, g15, rig, g19 v2, g23, g24, g26, containment and the
+tier print proof, all green on all three — before anyone asked what cells they
+claimed.
+RIGHT: all three claim cells an existing deck already serves. The Spring 1 deck
+named W16 cites C113, C125 and C151, which are ruled week 17, because the D-C
+spine correction was "text only, zero renames" and every filename still carries
+the old keying. Green gates say a deck is well made. They say nothing about
+whether it should exist. The cell-claim check now runs BEFORE the build, not
+after, and it is keying-free: a cell is a cell.
+
+WRONG: the census reads three keyings at once, and only one of them was found on
+the first pass.
+RIGHT: the term table is ruled and right; the _A2_ filename rule is old; and the
+content reading takes CALENDAR_SPINE's absoluteWeek — a column derived from the
+old offsets — as though it were already ruled. That third one is why 30 of the
+55 decks carrying both a declared week and a cited cell disagree, every one of
+them by exactly one week. Corrected, the two readings move to 231 and 236 and
+still differ by five, so the coverage number is not settled and no wave-4 lesson
+is built this run.

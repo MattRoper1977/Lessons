@@ -1,0 +1,247 @@
+{
+ "file": "_sownb/CALENDAR_SPINE.json",
+ "subject": "RUN12-A: the wave-4 coverage instrument reads three keyings at once, so its uncovered list cannot be built from. All five authored candidates cite cells an existing deck already serves.",
+ "theInstrumentMixesKeyings": [
+  {
+   "where": "census term table (directory-derived week)",
+   "keying": "RULED (Autumn2 +8)",
+   "correct": true
+  },
+  {
+   "where": "census _A([12])_ filename rule",
+   "keying": "OLD (Autumn2 +7)",
+   "correct": false,
+   "effect": "55 decks read one week earlier from their filename than from their directory"
+  },
+  {
+   "where": "census content reading, which takes CALENDAR_SPINE absoluteWeek as the deck's week",
+   "keying": "OLD, used without conversion",
+   "correct": false,
+   "effect": "every Autumn2, Spring and Summer2 deck that cites a cell reads one week early; 30 of the 55 decks carrying both a declared week and a cited cell disagree, and the disagreement is exactly one week in all 30"
+  },
+  {
+   "where": "census termLabelAbs",
+   "keying": "RULED",
+   "correct": true
+  }
+ ],
+ "whyFilenamesCannotCarryTheWeek": "the D-C spine correction (run 11) was explicitly text only, zero renames. Deck filenames were written before the re-key and still carry old-keying week numbers, so a coverage tool that reads a filename reports a slot open when a deck already serves its cells. BUILD_ASDAN_W16_Partner_Challenge_and_Seasonal_Goals.html cites C113/C125/C151, which are ruled week 17.",
+ "duplicateTest": {
+  "method": "compare the workbook cells a candidate claims against the cells every existing deck claims in its pack manifest. This test does not depend on any week keying at all -- a cell is a cell.",
+  "candidates": [
+   {
+    "candidate": "BUILD ASDAN \"W14\"",
+    "cellsClaimed": [
+     "C142",
+     "C156",
+     "C171",
+     "C186"
+    ],
+    "ruledWeekOfThoseCells": [
+     14
+    ],
+    "cellsAlreadyServedBy": [],
+    "verdict": "DUPLICATE by outcome — held unbuilt",
+    "detail": "all four outcomes it was authored for are the titles of four separate decks already standing in BUILD_ASDAN/Autumn2_W1-W6_2026-27 (PFA_W6 Prepare a Seasonal Item, DUKE_W6 Celebrate Community Impact, CON_W6 Present My Product and Improve, COMM_W6 Share Our Impact)"
+   },
+   {
+    "candidate": "GROW ASDAN \"W15\"",
+    "cellsClaimed": [
+     "C143",
+     "C157",
+     "C172",
+     "C187"
+    ],
+    "ruledWeekOfThoseCells": [
+     15
+    ],
+    "cellsAlreadyServedBy": [],
+    "verdict": "PARTLY COVERED — held unbuilt, needs a ruling",
+    "detail": "one deck stands in GROW_ASDAN/Autumn2_W7_2026-27 and it serves the first outcome (complete profile and PEQ/UAS evidence, word overlap 0.80). The other three outcomes -- bank the Duke challenge, review D&T skills, reflect on teamwork -- have no deck (overlap 0.33, 0.25, 0.29 against that same one deck). Building the lesson as authored would duplicate a quarter of it. Whether a second GROW ASDAN deck may stand at week 15 for the remaining three outcomes is a human call, not a tool call."
+   },
+   {
+    "candidate": "BUILD ASDAN \"W17\"",
+    "cellsClaimed": [
+     "C113",
+     "C125",
+     "C138",
+     "C151"
+    ],
+    "ruledWeekOfThoseCells": [
+     17
+    ],
+    "cellsAlreadyServedBy": [
+     {
+      "cell": "C113",
+      "deck": "BUILD_ASDAN_W16_Partner_Challenge_and_Seasonal_Goals.html"
+     },
+     {
+      "cell": "C125",
+      "deck": "BUILD_ASDAN_W16_Partner_Challenge_and_Seasonal_Goals.html"
+     },
+     {
+      "cell": "C151",
+      "deck": "BUILD_ASDAN_W16_Partner_Challenge_and_Seasonal_Goals.html"
+     }
+    ],
+    "verdict": "DUPLICATE — held unbuilt"
+   },
+   {
+    "candidate": "GROW ASDAN \"W17\"",
+    "cellsClaimed": [
+     "C113",
+     "C125",
+     "C138",
+     "C151"
+    ],
+    "ruledWeekOfThoseCells": [
+     17
+    ],
+    "cellsAlreadyServedBy": [
+     {
+      "cell": "C113",
+      "deck": "GROW_ASDAN_W16_Authorised_Task_Project_Plan_and_New_Goals.html"
+     },
+     {
+      "cell": "C125",
+      "deck": "GROW_ASDAN_W16_Authorised_Task_Project_Plan_and_New_Goals.html"
+     },
+     {
+      "cell": "C151",
+      "deck": "GROW_ASDAN_W16_Authorised_Task_Project_Plan_and_New_Goals.html"
+     }
+    ],
+    "verdict": "DUPLICATE — held unbuilt"
+   },
+   {
+    "candidate": "LAUNCH ASDAN \"W17\"",
+    "cellsClaimed": [
+     "C77",
+     "C89",
+     "C101",
+     "C113",
+     "C137",
+     "C185",
+     "C198"
+    ],
+    "ruledWeekOfThoseCells": [
+     17
+    ],
+    "cellsAlreadyServedBy": [
+     {
+      "cell": "C101",
+      "deck": "LAUNCH_ASDAN_W16_Decision_Tools_Banking_Plant_Care_and_Project_Plan.html"
+     },
+     {
+      "cell": "C113",
+      "deck": "LAUNCH_ASDAN_W16_Decision_Tools_Banking_Plant_Care_and_Project_Plan.html"
+     },
+     {
+      "cell": "C137",
+      "deck": "LAUNCH_ASDAN_W16_Decision_Tools_Banking_Plant_Care_and_Project_Plan.html"
+     },
+     {
+      "cell": "C185",
+      "deck": "LAUNCH_ASDAN_W16_Decision_Tools_Banking_Plant_Care_and_Project_Plan.html"
+     },
+     {
+      "cell": "C77",
+      "deck": "LAUNCH_ASDAN_W16_Decision_Tools_Banking_Plant_Care_and_Project_Plan.html"
+     }
+    ],
+    "verdict": "DUPLICATE — held unbuilt"
+   }
+  ],
+  "untracedDecksTest": {
+   "why": "the two Autumn candidates cite cells no existing deck cites, because the decks already standing in those weeks carry no cell reference at all. For those, the test is the lesson OUTCOME each deck was built for.",
+   "result": {
+    "BUILD ASDAN \"W14\"": {
+     "directory": "BUILD_ASDAN/Autumn2_W1-W6_2026-27",
+     "existingDecks": [
+      "BUILD_ASDAN_A2_COMM_W1_Review_Progress_and_Solve_a_Problem.html",
+      "BUILD_ASDAN_A2_COMM_W2_Practise_a_Vocational_Skill.html",
+      "BUILD_ASDAN_A2_COMM_W3_Jobs_Involved_in_Our_Project.html",
+      "BUILD_ASDAN_A2_COMM_W4_Take_Responsibility_for_My_Project_Role.html",
+      "BUILD_ASDAN_A2_COMM_W5_Gather_and_Organise_Project_Evidence.html",
+      "BUILD_ASDAN_A2_COMM_W6_Share_Our_Impact.html",
+      "BUILD_ASDAN_A2_CON_W1_Materials_Tools_and_Safety.html",
+      "BUILD_ASDAN_A2_CON_W2_Plan_and_Mark_Out_a_Structure.html",
+      "BUILD_ASDAN_A2_CON_W3_Build_a_Simple_Structure.html",
+      "BUILD_ASDAN_A2_CON_W4_Test_and_Evaluate_My_Structure.html",
+      "BUILD_ASDAN_A2_CON_W5_Record_Process_and_Evaluation.html",
+      "BUILD_ASDAN_A2_CON_W6_Present_My_Product_and_Improve.html",
+      "BUILD_ASDAN_A2_DUKE_W1_Plan_a_Community_Social_Action_Project.html",
+      "BUILD_ASDAN_A2_DUKE_W2_Decide_Our_Project_Goal_and_Roles.html",
+      "BUILD_ASDAN_A2_DUKE_W3_Carry_Out_a_Community_Kindness_Action.html",
+      "BUILD_ASDAN_A2_DUKE_W4_Complete_a_Creative_Skills_Challenge.html",
+      "BUILD_ASDAN_A2_DUKE_W5_Gather_and_Present_Project_Evidence.html",
+      "BUILD_ASDAN_A2_DUKE_W6_Celebrate_Community_Impact.html",
+      "BUILD_ASDAN_A2_PFA_W1_Plan_a_Simple_Healthy_Snack.html",
+      "BUILD_ASDAN_A2_PFA_W2_Wash_Up_and_Clean_Up.html",
+      "BUILD_ASDAN_A2_PFA_W3_Follow_a_Two_Step_Recipe.html",
+      "BUILD_ASDAN_A2_PFA_W4_Recognise_Jobs_People_Do.html",
+      "BUILD_ASDAN_A2_PFA_W5_Take_Responsibility_for_a_Class_Job.html",
+      "BUILD_ASDAN_A2_PFA_W6_Prepare_a_Seasonal_Item.html",
+      "BUILD_ASDAN_AUT2_SAME_DAY_EVIDENCE.html",
+      "BUILD_ASDAN_AUT2_TEACHER_PLANNING_SOW.html",
+      "BUILD_ASDAN_AUT2_W7_PORTFOLIO_STUDIO.html"
+     ],
+     "outcomeMatch": [
+      {
+       "candidateOutcome": "Prepare a seasonal food/craft item.",
+       "closestExistingDeck": "BUILD_ASDAN_A2_PFA_W6_Prepare_a_Seasonal_Item.html",
+       "wordOverlap": 0.8
+      },
+      {
+       "candidateOutcome": "Celebrate community impact with others.",
+       "closestExistingDeck": "BUILD_ASDAN_A2_DUKE_W6_Celebrate_Community_Impact.html",
+       "wordOverlap": 1.0
+      },
+      {
+       "candidateOutcome": "Present my product and say what I would improve.",
+       "closestExistingDeck": "BUILD_ASDAN_A2_CON_W6_Present_My_Product_and_Improve.html",
+       "wordOverlap": 1.25
+      },
+      {
+       "candidateOutcome": "Share our impact with others (assembly/display).",
+       "closestExistingDeck": "BUILD_ASDAN_A2_COMM_W6_Share_Our_Impact.html",
+       "wordOverlap": 0.75
+      }
+     ]
+    },
+    "GROW ASDAN \"W15\"": {
+     "directory": "GROW_ASDAN/Autumn2_W7_2026-27",
+     "existingDecks": [
+      "PEQ_A2_W7_Complete_Profile_and_Evidence_GROW_v3_40min.html"
+     ],
+     "outcomeMatch": [
+      {
+       "candidateOutcome": "Complete profile + PEQ/UAS evidence.",
+       "closestExistingDeck": "PEQ_A2_W7_Complete_Profile_and_Evidence_GROW_v3_40min.html",
+       "wordOverlap": 0.8
+      },
+      {
+       "candidateOutcome": "Bank the Duke challenge and community evidence (UAS).",
+       "closestExistingDeck": "PEQ_A2_W7_Complete_Profile_and_Evidence_GROW_v3_40min.html",
+       "wordOverlap": 0.33
+      },
+      {
+       "candidateOutcome": "Review my D&T skills and add ASDAN/UAS evidence.",
+       "closestExistingDeck": "PEQ_A2_W7_Complete_Profile_and_Evidence_GROW_v3_40min.html",
+       "wordOverlap": 0.25
+      },
+      {
+       "candidateOutcome": "Reflect on teamwork and add ASDAN/UAS evidence.",
+       "closestExistingDeck": "PEQ_A2_W7_Complete_Profile_and_Evidence_GROW_v3_40min.html",
+       "wordOverlap": 0.29
+      }
+     ]
+    }
+   },
+   "reading": "BUILD ASDAN W14 is a clean duplicate: every one of its four outcomes is already a deck title in the directory for that week. GROW ASDAN W15 is not clean either way: one of its four outcomes is served and three are not. Both are held unbuilt, the first because it is a duplicate and the second because the split needs a ruling."
+  }
+ },
+ "coverageNumberNotSettledThisRun": "with both defects corrected the path reading gives 231 covered and the content reading 236, and the two still differ by five slots. Reconciling them means re-deriving the Science trio rule and the D-H path fallback on the ruled keying, and that is a run's work rather than a tail-end patch. No wave-4 lesson is built this run.",
+ "whatIsSafeToRelyOn": "the duplicate test above, which is keying-free and which held five authored lessons back from being shipped as duplicates.",
+ "status": "MEASURED"
+}
