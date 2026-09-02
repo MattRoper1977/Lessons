@@ -182,6 +182,14 @@ const ALLOW = [
   { file: '_sownb/vb/evidence/run12/G10_HOUSE_SWEEP.json',
     text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
     why: 'real careers lesson title; MOCK is a fixture marker but this names no person' },
+  /* ORDER VB-RUN13, 2026-09-02. The g10 sweep again, run after the demonym register
+     landed. This is the THIRD run that has had to add a per-file entry for one real
+     lesson title, because every per-deck sweep quotes every deck it read. The entry
+     is correct and the mechanism is working; the treadmill is the finding, and it is
+     recorded for a ruling rather than solved by widening the predicate here. */
+  { file: '_sownb/vb/evidence/run13/G10_DEMONYM_SWEEP.json',
+    text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
+    why: 'real careers lesson title; MOCK is a fixture marker but this names no person' },
 ];
 
 function titlecaseCount(tok) {
