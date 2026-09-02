@@ -324,6 +324,16 @@ def main() -> int:
         "decksCarryingAClaim": len([d for d in claims if claims[d]]),
         "pathReading_cellsClaimed": len(claimed_by),
         "contentReading_cellsCovered": len(covered),
+        # Named, not just counted: anything downstream that asks "is this cell
+        # served?" must be able to answer from the record rather than re-deriving
+        # it, and a count alone cannot be checked by eye.
+        "coveredCells": sorted(covered),
+        "coveredCellsByRuledWeek": {
+            str(w): sorted(c for c in covered if ruled_week(cells[c]) == w)
+            for w in sorted({ruled_week(cells[c]) for c in covered}, key=lambda x: (isinstance(x, str), x))
+        },
+        "claimedCells": sorted(claimed_by),
+        "openCellsInScope": sorted(r for r in in_scope if r not in covered),
         "ambiguousSpineReadings": ambiguous,
         "unscorableClaims": unscorable,
         "traceCorrections": trace_corrections,
