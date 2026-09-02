@@ -83,7 +83,8 @@ rest_title = ''.join(render_block(c) for c in kids(t) if not (c.tag == 'div' and
 weeks = 8 if week <= 8 else 7
 term = 'Aut 1' if week <= 8 else 'Aut 2' if week <= 15 else 'Spr 1' if week <= 21 else 'Spr 2'
 wk_in = week if week <= 8 else week - 8 if week <= 15 else week - 15 if week <= 21 else week - 21
-LOGO = re.search(r'<div style="text-align:center;margin-top:10px"><svg.*?</svg></div>', D, re.S).group(0)
+_logo = re.search(r'<svg[^>]*aria-label="Made by Matt".*?</svg>', D, re.S)
+LOGO = '<div style="text-align:center;margin-top:10px">' + (_logo.group(0) if _logo else '') + '</div>'
 tagcol = {'BUILD': '#E08A2E', 'GROW': '#3F7D6E', 'LAUNCH': '#7A5C9E'}[lane]
 btns = ('<div class="scaffold-box" style="display:inline-block;margin-top:8px;text-align:left"><h3 style="margin-top:0">Teacher Print Tools — Week %d</h3><div style="display:flex;gap:14px;flex-wrap:wrap">'
         '<button onclick="printPack(\'supported\')" style="background:#22c55e;color:#fff;border:none;border-radius:8px;padding:8px 16px;font-weight:800;cursor:pointer">🖨 Supported pack</button>'
@@ -102,15 +103,24 @@ title_slide = f'''<div class="slide active" data-title="Title"> {LOGO} <div styl
 </div></div>{lundy_strip(t)}</div>'''
 T('Title: Today at a Glance', 'the n6 title hero ladder and chips, verbatim')
 # ---- middle slides ---------------------------------------------------------
+ASDAN = ('id="print-witness"' in D)
 PREFIX = {'Arrival Task': 'Arrival Task – ', 'Starter': 'Starter: ', 'I Do': 'I Do: ', 'We Do': 'We Do: ', 'Exit Ticket': 'Exit Ticket — '}
+if ASDAN: PREFIX = {'Arrival Task': 'Arrival Task – ', 'Starter': '', 'I Do': 'The Model — ', 'We Do': '', 'Exit Ticket': 'Exit Ticket — '}
 def classic_slide(sec, tag, tagcls, label, extra='', sid=''):
     return f'<div class="slide" data-title="{label}"{" id=%s" % json.dumps(sid) if sid else ""}> <span class="slide-tag {tagcls}">{tag}</span> <h2>{PREFIX.get(tag, "")}{esc(h2(sec))}</h2> {extra}{body_of(sec)} {lundy_strip(sec)}</div>'
 reveal_btns = ('<div style="text-align:right;margin:2px 0"><button class="ghost small" onclick="wedoReset(this)">🔄 Reset</button> <button class="ghost small" onclick="wedoReveal(this)">👁️ Reveal</button></div>')
 arrival = classic_slide(slides['arrival'], 'Arrival Task', 'tag-arrival', 'Arrival', extra=rest_title, sid='arrival-slide')
 starter = classic_slide(slides['starter'], 'Starter', 'tag-starter', 'Starter')
+if ASDAN:
+    st_ = slides['starter']
+    starter = f'<div class="slide" data-title="Starter"> <span class="slide-tag tag-starter">Starter</span> <h2>Today at a Glance</h2> <div class="li-box"><strong>Key Question:</strong> {esc(h2(st_))}</div> {body_of(st_)} {lundy_strip(st_)}</div>'
+    T('Starter: Today at a Glance', 'the ASDAN house starter heading; the deck\'s own starter question becomes the Key Question line, verbatim')
 ido = classic_slide(slides['ido'], 'I Do', 'tag-ido', 'I Do 1')
 wedo = classic_slide(slides['wedo'], 'We Do', 'tag-wedo', 'We Do 1', extra=reveal_btns if slides['wedo'].xpath('.//div[contains(@class,"evidence-gate")]') else '')
 ido2 = classic_slide(slides['ido2'], 'I Do', 'tag-ido', 'I Do 2') if 'ido2' in slides else ''
+if ASDAN and 'ido2' in slides:
+    s2 = slides['ido2']
+    ido2 = f'<div class="slide" data-title="I Do 2"> <span class="slide-tag tag-ido">I Do</span> <h2>Proving It — {esc(h2(s2))}</h2> {body_of(s2)} {lundy_strip(s2)}</div>'
 wedo2 = classic_slide(slides['wedo2'], 'We Do', 'tag-wedo', 'We Do 2', extra=reveal_btns if slides['wedo2'].xpath('.//div[contains(@class,"evidence-gate")]') else '') if 'wedo2' in slides else ''
 # Independent: timer with the n6 timing, WAGOLL from the deck's own finished example, Pens-down partner check
 ind = slides['independent']; mins = int(ind.get('data-min') or 15)
@@ -182,7 +192,7 @@ confirm = ''.join(outer(x) for x in (pp_pages[1] if len(pp_pages) > 1 else []) i
 ws = ''
 icons_t = {'supported': '🔢', 'standard': '📐', 'stretch': '🔗'}
 for tier, label in (('supported', 'Supported'), ('standard', 'Standard'), ('stretch', 'Stretch')):
-    ws += f'<div id="print-worksheet-{tier}" class="print-section"><h2>{icons_t[tier]} Independent Work – {label}</h2><div class="prevent-break"><p><strong>{esc(pr.get(tier, ""))}</strong></p><p>{esc(routes.get(tier, ""))}</p>' + (outer(table) if table is not None else lines(6)) + confirm + '</div></div>'
+    ws += f'<div id="print-worksheet-{tier}" class="print-section"><h2>{icons_t[tier]} Independent Work – {label}</h2><div class="prevent-break"><p><strong>{esc(pr.get(tier, ""))}</strong></p><p>{esc(routes.get(tier, ""))}</p>' + (outer(table) if table is not None else '<table class="ko-table"><tr><th>What I did</th><th>Evidence I kept (photo / note / recording)</th><th>Witness initials</th></tr>' + '<tr><td style="height:40px">&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>' * 4 + '</table>') + confirm + '</div></div>'
 T('Independent Work ×3 print sheets', 'the n6 print pack\'s route line, record table and learner confirmation for each tier plus that tier\'s Independent route text, verbatim; differentiation is the route text itself')
 ex_ps = [p for p in exit_sec.xpath('./p|./div/p') if not is_staff(p)]
 exit_print = ''.join(f'<div class="{tier}-content"><h2>Exit Ticket – {label}</h2>' + ''.join(f'<p>{i+1}) {ptxt(p)}</p>{lines(1)}' for i, p in enumerate(ex_ps[:3])) + '</div>' for tier, label in (('supported', 'Supported'), ('standard', 'Standard'), ('stretch', 'Stretch')))
@@ -193,7 +203,13 @@ fi = D.find('<div id="print-feedback"'); fj = D.find('<script', fi)
 feedback = re.sub(r'<h2 style="text-align:center">.*?</h2>', f'<h2 style="text-align:center">{esc(title)} &mdash; Feedback Sheet</h2>', D[fi:fj], count=1)  # feedback sheet, print-area close, cold-call modal
 T('Feedback sheet', 'the classic donor\'s blank feedback template, retitled; no lesson words')
 PH = f'<div class="print-head" style="font-size:.8rem;color:#555;border-bottom:1px solid #999;margin-bottom:8px">{esc(family)} · Week {week} · {esc(title)}</div>'
-print_area = f'<div id="print-area">{ko}{arrival_print}{starter_print}{wedo_print}{scaff}{reference}{ws}{exit_print}{lundy_print}{feedback}'
+intro = witness = ''
+if ASDAN:
+    spark = txt(slides['starter'].xpath('./h2')[0]) if slides['starter'].xpath('./h2') else ''
+    intro = f'<div id="print-intro" class="print-section"><h2>{esc(title)}</h2><p><strong>Name:</strong> ____________________ &nbsp; <strong>Class:</strong> __________ &nbsp; <strong>Date:</strong> <span id="print-date"></span></p><div class="rev-block"><h3>This week\'s spark</h3><p>{esc(spark)}</p><h3>ASDAN evidence</h3><p>{esc(cfg["outcomes"][0])}</p><p>{esc(" · ".join(cfg["outcomes"][1:]))}</p></div></div>'
+    witness = f'<div id="print-witness" class="print-section"><h1 style="text-align:center;font-size:1.5rem;margin-bottom:2px">Assessor Witness Statement</h1><p style="text-align:center;margin:0 0 10px;font-size:.88rem"><strong>{esc(family)} W{week} &#183; {esc(title)}</strong><br>{esc(cfg["cells"][0])} &mdash; {esc(cfg["outcomes"][0])}</p><table style="width:100%;border-collapse:collapse;font-size:.93rem;margin-bottom:10px"><tr><td style="padding:7px 8px;border:1px solid #999;width:34%"><strong>Candidate name</strong></td><td style="padding:7px 8px;border:1px solid #999">&nbsp;</td></tr><tr><td style="padding:7px 8px;border:1px solid #999"><strong>Route taken</strong></td><td style="padding:7px 8px;border:1px solid #999">◆ Supported &nbsp; ▲ Standard &nbsp; ★ Stretch</td></tr><tr><td style="padding:7px 8px;border:1px solid #999"><strong>What I saw the candidate do</strong></td><td style="padding:7px 8px;border:1px solid #999;height:70px">&nbsp;</td></tr><tr><td style="padding:7px 8px;border:1px solid #999"><strong>Evidence kept (photo / note / recording)</strong></td><td style="padding:7px 8px;border:1px solid #999;height:44px">&nbsp;</td></tr><tr><td style="padding:7px 8px;border:1px solid #999"><strong>Assessor signature and date</strong></td><td style="padding:7px 8px;border:1px solid #999;height:44px">&nbsp;</td></tr></table></div>'
+    T('Print: intro sheet and Assessor Witness Statement', 'the ASDAN house sheets; the spark is the deck\'s own starter question and the evidence lines are the traced cells\' outcomes verbatim; the witness table is blank furniture')
+print_area = f'<div id="print-area">{ko}{intro}{arrival_print}{starter_print}{wedo_print}{scaff}{reference if not ASDAN else ""}{ws}{exit_print}{witness}{lundy_print}{feedback}'
 print_area = re.sub(r'(<div (?:id="print-[a-z-]+" class="print-section[^"]*"|class="print-section" id="print-[a-z-]+")[^>]*>)', lambda m: m.group(1) + PH, print_area)
 # ---- assemble --------------------------------------------------------------
 head = D[:D.find('<body')]
@@ -219,14 +235,14 @@ scripts = D[D.find('<script', D.find('<div id="print-area"')):]
 body_end = ctrl + '%%PRINT%%' + scripts
 # R4: fix the STATE. printPack = arm + print; on load and on beforeprint, if no tier is armed, arm the default (Standard),
 # so a cold Ctrl+P prints the Standard pack instead of a blank page. Screen is untouched: #print-area stays display:none on screen.
-m = re.search(r'function printPack\(level\)\{(.*?)window\.print\(\)\}', body_end, re.S)
-assert m and 'window.print()' not in m.group(1), 'donor printPack shape changed'
-r4 = ("function printArm(level){" + m.group(1) + "}"
+m = None if '/* R4 default-Standard */' in body_end else re.search(r'function printPack\(level\)\{(.*?)window\.print\(\)\}', body_end, re.S)  # a donor already carrying R4 keeps it
+assert (m is None) or 'window.print()' not in m.group(1), 'donor printPack shape changed'
+r4 = m and ("function printArm(level){" + m.group(1) + "}"
       "function printPack(level){printArm(level);window.print()}"
       "(function(){function armed(){return /\\bprint-(supported|standard|stretch)\\b/.test(document.body.className)}"
       "function r4(){if(!armed())printArm('standard')}window.addEventListener('beforeprint',r4);"
       "if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',r4);else r4();})();/* R4 default-Standard */")
-body_end = body_end[:m.start()] + r4 + body_end[m.end():]
+body_end = (body_end[:m.start()] + r4 + body_end[m.end():]) if m else body_end
 # swap the donor's sort/match reveal for a generic reveal of the evidence box
 body_end = body_end.replace('</body>', '''<script>function wedoReveal(b){var s=b.closest('.slide');s.querySelectorAll('.wedo-reveal').forEach(function(e){e.style.display='block'});}
 function wedoReset(b){var s=b.closest('.slide');s.querySelectorAll('.wedo-reveal').forEach(function(e){e.style.display='none'});}</script>

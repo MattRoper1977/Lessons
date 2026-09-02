@@ -32,7 +32,7 @@ B = norm(pupil_text(before, ['//main[contains(@class,"deck")]', '//section[conta
 A = norm(pupil_text(after, ['//*[contains(@class,"slide-container")]', '//*[@id="print-area"]']))
 sents = sentences(B); AA = ' '.join(A.split()); missing = [s for s in sents if s not in AA]
 # red control: delete one mid-deck sentence from the candidate text and re-check
-victim = sents[len(sents)//2]; A_red = AA.replace(victim, '', 1); red_missing = [s for s in sents if s not in A_red]
+victim = sents[len(sents)//2]; A_red = AA.replace(victim, ''); red_missing = [s for s in sents if s not in A_red]  # every occurrence: the print pack re-prints the slide text
 red_fired = victim in red_missing
 rec = {'file': after, 'subject': 'containment: every pupil-facing sentence of the n6 deck is verbatim in the reshelled deck (shell chrome excluded on both sides: the minute badge, the stage tag, the running head; scripts, styles, SVG, buttons and keyed staff guidance)', 'before': before, 'sentencesBefore': len(sents), 'charsBefore': len(B), 'charsAfter': len(A), 'missing': missing, 'redControl': {'deleted': victim[:80], 'fired': red_fired}, 'status': 'PASS' if not missing and red_fired else 'RED'}
 json.dump(rec, open(out, 'w'), indent=1, ensure_ascii=False)

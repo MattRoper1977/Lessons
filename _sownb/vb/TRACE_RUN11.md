@@ -145,3 +145,45 @@ donor shell: `Grow/Slideshows/GROW_HUM_W8_Where_In_The_World.html` · words 1956
 | Independent Work ×3 print sheets | the n6 print pack's route line, record table and learner confirmation for each tier plus that tier's Independent route text, verbatim; differentiation is the route text itself |
 | Lundy Loop print section | the deck's own strip sentence and word-bridge lines, verbatim |
 | Feedback sheet | the classic donor's blank feedback template, retitled; no lesson words |
+
+## New lessons (wave 4 run 2)
+
+## GAW7 · `GROW_ASDAN/Autumn1_W7_2026-27/GROW_ASDAN_W7_A_Visitor_And_The_Evidence_We_Keep.html`
+authored from cells 'GROW Weekly - Autumn'!C136, 'GROW Weekly - Autumn'!C150, 'GROW Weekly - Autumn'!C180 via an n6 intermediate (run-10 generator, content module in the run record), then the same reshell recipe; donor shell `GROW_ASDAN/PEQ/PEQ_W6_Present_My_Progress.html`
+
+| authored block | built from |
+|---|---|
+| Title: Today at a Glance | the n6 title hero ladder and chips, verbatim |
+| Starter: Today at a Glance | the ASDAN house starter heading; the deck's own starter question becomes the Key Question line, verbatim |
+| Independent: WAGOLL | the deck's own "Here is a finished one" box, moved under a WAGOLL heading; no words changed |
+| Independent: Pens-down partner check | the classic mid-point check, worded from the deck's own "Check yourself" list; adult wording, not the learner's voice |
+| Lundy Loop slide | the deck's own participation strip sentence and word-bridge, one box per word; the heading is the classic house heading |
+| Exit: Complete close marker | the classic house sequence ends with a Complete marker; adult wording, not the learner's voice |
+| Knowledge Organiser key words | the emphasised terms of the I Do slides, each defined by the sentence that carries it, verbatim |
+| Key Facts | the Arrival slide boxes, verbatim |
+| Scaffolding ×3 | word bank = the key words and the four Lundy words; route text = the Independent slide route for that tier, verbatim; the sentence frames are the deck's own connectives |
+| Reference Zone | the I Do model boxes and the Independent "Check yourself" list, verbatim |
+| Independent Work ×3 print sheets | the n6 print pack's route line, record table and learner confirmation for each tier plus that tier's Independent route text, verbatim; differentiation is the route text itself |
+| Lundy Loop print section | the deck's own strip sentence and word-bridge lines, verbatim |
+| Feedback sheet | the classic donor's blank feedback template, retitled; no lesson words |
+| Print: intro sheet and Assessor Witness Statement | the ASDAN house sheets; the spark is the deck's own starter question and the evidence lines are the traced cells' outcomes verbatim; the witness table is blank furniture |
+
+## BAW15 · `BUILD_ASDAN/Autumn2_W7_2026-27/BUILD_ASDAN_W15_Sign_It_Off_My_Evidence_Folder.html`
+authored from cells 'BUILD Weekly - Autumn'!C143, 'BUILD Weekly - Autumn'!C157, 'BUILD Weekly - Autumn'!C187 via an n6 intermediate (run-10 generator, content module in the run record), then the same reshell recipe; donor shell `BUILD_ASDAN/Living_Independently/LI_W6_Shopping_and_Change.html`
+
+| authored block | built from |
+|---|---|
+| Title: Today at a Glance | the n6 title hero ladder and chips, verbatim |
+| Starter: Today at a Glance | the ASDAN house starter heading; the deck's own starter question becomes the Key Question line, verbatim |
+| Independent: WAGOLL | the deck's own "Here is a finished one" box, moved under a WAGOLL heading; no words changed |
+| Independent: Pens-down partner check | the classic mid-point check, worded from the deck's own "Check yourself" list; adult wording, not the learner's voice |
+| Lundy Loop slide | the deck's own participation strip sentence and word-bridge, one box per word; the heading is the classic house heading |
+| Exit: Complete close marker | the classic house sequence ends with a Complete marker; adult wording, not the learner's voice |
+| Knowledge Organiser key words | the emphasised terms of the I Do slides, each defined by the sentence that carries it, verbatim |
+| Key Facts | the Arrival slide boxes, verbatim |
+| Scaffolding ×3 | word bank = the key words and the four Lundy words; route text = the Independent slide route for that tier, verbatim; the sentence frames are the deck's own connectives |
+| Reference Zone | the I Do model boxes and the Independent "Check yourself" list, verbatim |
+| Independent Work ×3 print sheets | the n6 print pack's route line, record table and learner confirmation for each tier plus that tier's Independent route text, verbatim; differentiation is the route text itself |
+| Lundy Loop print section | the deck's own strip sentence and word-bridge lines, verbatim |
+| Feedback sheet | the classic donor's blank feedback template, retitled; no lesson words |
+| Print: intro sheet and Assessor Witness Statement | the ASDAN house sheets; the spark is the deck's own starter question and the evidence lines are the traced cells' outcomes verbatim; the witness table is blank furniture |
