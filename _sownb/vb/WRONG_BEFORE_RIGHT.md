@@ -588,3 +588,13 @@ also silently inert: the first wrote its scratch record to a dot-prefixed name,
 and the second left it untracked -- and the sweep enumerates with git ls-files, so
 neither was ever read. A control that cannot see its own subject proves nothing,
 and it took three attempts to get one that fires for the right reason.
+
+WRONG: this run reported the apps.json digest as measured and matching. It was
+not measured. `sha256sum apps.json` failed silently because the file is not in
+this repository, and the hash printed under that heading was the pin being
+grepped out of the gate's own source. A pin compared against itself always
+matches.
+RIGHT: apps.json lives in the apps estate and is not measurable from a Lessons
+checkout, so nothing is claimed about it. resources.json IS in this repository
+and its digest does match the pin, which is the item the order actually asked
+about.
