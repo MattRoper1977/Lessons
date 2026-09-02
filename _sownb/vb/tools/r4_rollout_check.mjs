@@ -16,4 +16,9 @@ for (const f of files) {
   } catch (e) { r.status = 'ERR'; r.err = String(e).slice(0, 120); }
   out[f] = r; console.log(r.status, f, r.coldBefore, '->', r.coldAfter, r.coldEqualsStandard, r.routesIdentical);
 }
-await browser.close(); fs.writeFileSync(process.argv[3], JSON.stringify(out, null, 1));
+await browser.close()
+// A gate output names its own subject: the stale-evidence sweep reads the
+// `file` key to know what a verdict is about, and a bare map of decks reads
+// to it as a verdict about nothing.
+const pass = Object.values(out).filter((r) => r.status === 'PASS').length
+fs.writeFileSync(process.argv[3], JSON.stringify({ file: '_sownb/vb/tools/r4_default_standard.py', subject: 'R4 rollout check: per deck, the cold print equals the Standard pack and each route print text is identical to the unpatched copy', decks: out, count: Object.keys(out).length, pass, status: pass === Object.keys(out).length ? 'PASS' : 'RED' }, null, 1));
