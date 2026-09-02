@@ -255,6 +255,11 @@ def main() -> int:
         "frozenRowCount": len(rows), "nonVacuous": len(rows) > 0,
         "passed": len(results) - len(failed), "failed": len(failed), "failedRows": failed,
         "rows": results, "firingControl": firing, "status": status,
+        # ATTRIBUTION (ORDER VB-RUN13 H12-4). The stale-evidence sweep keys a verdict
+        # to its subject on these two fields. Without them a record states "PASS" with
+        # nothing naming what passed, so the sweep reports the row as unparseable and
+        # the job fails. Hand-patched three runs running; fixed at the source here.
+        "file": args.file, "subject": f"g16 v2 frozen contract rows for {args.family} on {args.file}",
     }
     if args.output:
         out = ROOT / args.output

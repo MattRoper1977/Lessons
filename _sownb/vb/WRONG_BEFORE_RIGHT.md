@@ -535,3 +535,56 @@ file turned up in git status.
 RIGHT: the copy landed in this repo writes to /tmp. A measurement tool reports;
 it does not edit history. Putting a result into the evidence tree is a
 deliberate act with a dated filename, not a side effect of asking a question.
+
+WRONG: the new DEMONYMS register was written with its explanation in bullets, and
+every word of every bullet becomes a register token. It registered "a", "an",
+"the", "from", "occurrences" and every count in its own table, so any capitalised
+pair containing a function word would have resolved as a PLACE and masked a real
+name.
+RIGHT: a register file carries exactly one bulleted list and nothing else, and
+every explanation is prose without a leading dash. The same defect was already
+live in HOUSE_LABELS from run 12: the paragraph declaring subject terminology NOT
+registered was a bullet, so it registered "Carbon", "Dioxide", "Natural",
+"Selection", "Active" and "Transport" -- the exact opposite of what it said. Both
+fixed, and g10 now asserts register hygiene with a planted-stopword control, so
+the next one fails loudly instead of quietly widening the gate.
+
+WRONG: the first register-hygiene stoplist flagged "word" in HOUSE_LABELS and
+would have had the register drop "Key Word".
+RIGHT: the list is function words and numerals only. "Key Word" is a real
+slide-role label, so "word" is house vocabulary. A hygiene check that costs the
+gate a true entry is worse than the prose it was added to catch.
+
+WRONG: the per-cell coverage tool asserted 64 AUTHORING GAPs from word overlap
+alone -- a deck whose text scores above threshold against a cell no trace claims.
+RIGHT: nine of them were put to two independent adversarial reviewers each, and
+SEVEN were refuted. Word overlap is sound as a test of a claim that already
+exists, because it was calibrated against claims the estate asserts. It is not
+sound as an assertion that a claim SHOULD exist. The class is now reported as
+proxy-only candidates carrying that refutation rate, and the real claim source is
+the spine's own audited contentCellReferences, which the reviewers surfaced.
+
+WRONG: the audited spine readings were first taken wholesale, including the ones
+whose own spineStatus says MULTI -- the audit could not choose between several
+cells -- and MEASUREMENT INVALID.
+RIGHT: only ALIGNED and SPINE-SPLIT resolved to a cell and count as claims. The
+other 20 are recorded as ambiguous. Counting an audit's honesty about its own
+limits as coverage is how a number becomes fiction.
+
+WRONG: the first g10 before-and-after comparison ran the old gate from a copy in
+/tmp, where it resolved the repository root from its own location, found no
+registers, and called all 607 decks unreadable. It read as 237 decks moving.
+RIGHT: run from the same depth inside the repo, exactly two decks move, both RED
+to PASS, both clearing "Diverse British" and gaining nothing. A comparison whose
+control arm was misconfigured measures the misconfiguration.
+
+WRONG: the H12-4 firing control planted a scratch record, ran the sweep, saw the
+filename in the output and called that "fired". The sweep names every evidence
+file it reads, so that test was true whether the fix worked or not. It reported a
+healthy attributed record as a failure.
+RIGHT: only the [INCONCLUSIVE] block counts, and the control reads the sweep's own
+sentence back into the evidence. Two earlier versions of the same control were
+also silently inert: the first wrote its scratch record to a dot-prefixed name,
+and the second left it untracked -- and the sweep enumerates with git ls-files, so
+neither was ever read. A control that cannot see its own subject proves nothing,
+and it took three attempts to get one that fires for the right reason.

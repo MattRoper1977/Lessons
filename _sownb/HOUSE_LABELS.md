@@ -191,10 +191,16 @@ would mask one:
   phrases ("White Rose", "Art Award") but each is also a given name. "White
   Rose" and "Creative Arts" are registered as whole phrases above; the bare
   words are not.
-- Subject terminology such as "Carbon Dioxide", "Natural Selection", "Active
+  Subject terminology such as "Carbon Dioxide", "Natural Selection", "Active
   Transport" is NOT house vocabulary and is not registered. It is measured
   residue: the RUN12-A ruling names tier, slide-role, loop, pathway and event
   vocabulary, and this register covers exactly those. A pair of subject terms
   still reads as UNRESOLVED to the gate, and the residue is reported per deck
   rather than silently resolved here. A ruling on subject terminology would be
   a separate register, not an extension of this one.
+
+  (Written without a leading bullet on purpose. Every word of every BULLET
+  becomes a register token, so a prose bullet in a register file registers its
+  own prose -- this paragraph once registered "Subject", "terminology",
+  "Carbon", "Dioxide", "Natural", "Selection", "Active" and "Transport", which
+  is the exact opposite of what it says.)
