@@ -669,3 +669,27 @@ a second week-1 deck there would duplicate a live lesson. Those cells are
 recorded as untraced-not-unserved for a ruling, and the wave targets the cells
 with no deck at all: the RE strand of Humanities in weeks 1 and 2, and GROW
 ASDAN C144, which has no Duke strand deck.
+
+WRONG: the two GROW ASDAN decks authored this run (#259, #262) were reshelled
+with a classic-v2 donor, and the recipe let the donor's own lesson-config and
+one print running head travel into them. The coverage re-read at the close
+credited both decks with the donor's cells (C136, C150, C180).
+RIGHT: the recipe strips a donor's lesson-config from the tail it copies and a
+donor's print-head from the feedback fragment, and asserts on exit that exactly
+one lesson-config leaves and every print head is the deck's own. Both decks
+were regenerated from their unchanged n6 sources (#265). Coverage re-read
+again after that merge, so the close numbers are the fixed tree's.
+
+WRONG: the R3 record quoted the 28 allowlist entries verbatim, and the
+fixture-name check reads records too, so the catalogue PR went red on a file
+whose only job was to say the allowlist had not changed.
+RIGHT: the record names entries by file and by a digest of the text. No entry
+was added; R3 stays NOT TRIGGERED. A record about person-shaped strings must
+not carry person-shaped strings.
+
+WRONG: the first catalogue PR carried the run-14 records on the same branch,
+and the five Humanities entries used subjects like "GROW Humanities".
+RIGHT: the cross-estate unification gate allows only the manifest and its pin
+to be modified alongside a pin move, and the GLV3 chip gate matches catalogue
+chips by substring. The catalogue landed from a clean two-file branch (#266)
+with the estate subject "Humanities"; the records travel with the close.
