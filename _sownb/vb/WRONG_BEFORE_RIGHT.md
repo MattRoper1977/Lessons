@@ -617,3 +617,55 @@ C187 -- and C143 is already served, so the unserved set is TWO. The count of
 three came from the run-12 module's own cell list, which included C172, and C172
 is not a workbook cell. The surface is traced to C157 and C187, and to nothing
 else.
+
+## Run 14 (2026-09-02, ORDER VB-RUN14)
+
+WRONG: pointing CALENDAR_SPINE.json at TERM_DATES.md was first done by loading
+the spine and re-serialising it with json.dumps.
+RIGHT: that moved 120,797 lines and un-escaped the excluded careers title, which
+tripped the fixture-name check on a file whose content had not changed. The
+pointer is a six-line text splice after the `calendar` block; every other byte
+of the spine is untouched and the fixture check stays clean.
+
+WRONG: levelling the branch with `git stash -u`, `reset --hard` and `stash pop`
+in one line, with new record files sitting untracked in the tree.
+RIGHT: the pop lost TERM_DATES.md, FILENAME_DRIFT.md, the corpus freeze, the
+P0 pre-gate and the four engine g21 records, and the commit then failed on a
+pathspec that no longer existed. They were regenerated from the transcript and
+from the tree, and the freeze was re-baselined from the committed blobs on main
+so it describes the anchor, not a working tree. Untracked records are committed
+before any branch surgery.
+
+WRONG: the subject-term case patcher first walked the DOM to count and spliced
+the raw source to write.
+RIGHT: two mechanisms disagreed (four counted, zero changed). One pass over the
+raw bytes now produces both the count and the output, so they cannot differ,
+and the containment check reads the same bytes it wrote. A byte-position proof
+on three decks replaced a quadratic text diff that hung on a 360 KB deck.
+
+WRONG: the reshell battery was first run against the worktree copies of the
+eight decks.
+RIGHT: g15, g18, g23, g24, g25 and g26 resolve their inputs relative to the
+repository root, so a path under the scratchpad measured nothing (g23 read
+x0.0, g24 and g26 printed no verdict, g15 threw). The path-sensitive gates run
+on an in-tree copy at the deck's real path, and the copy is removed before any
+commit. The Chromium path was also missing from that first run; g15 needs it.
+
+WRONG: the new GROW ASDAN week-15 deck read g19 v2 RED straight out of the
+reshell, and the first thought was that the recipe had regressed.
+RIGHT: the live GROW ASDAN donor itself carries fifteen duplicate :root
+definitions; it was not in the run-12 migration set. The new deck gets the
+:root scope migration in its own pipeline (fifteen tokens scoped under
+html.pathway-grow, g19 v2 PASS) and the donor's state is recorded as a finding
+rather than fixed inside a content PR.
+
+WRONG: the first wave-4 target list took the earliest open cells by week, which
+put six week-1 ASDAN cells at the top.
+RIGHT: each of those cells has a live strand deck at week 1 whose name says it
+teaches the cell (COMM_W1_Choose_Our_Asset, PEQ_W1_Intro_and_Choosing_My_Level,
+GCOMM_W1_Our_Patch_Our_Say) and whose spine reading is MEASUREMENT INVALID, so
+the SERVES proxy scores them at 0.25 to 0.67 and calls the cell open. Building
+a second week-1 deck there would duplicate a live lesson. Those cells are
+recorded as untraced-not-unserved for a ruling, and the wave targets the cells
+with no deck at all: the RE strand of Humanities in weeks 1 and 2, and GROW
+ASDAN C144, which has no Duke strand deck.
