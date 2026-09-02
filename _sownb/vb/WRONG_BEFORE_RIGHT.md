@@ -463,3 +463,45 @@ the family. The config now separates the estate BASE (a token's value inside
 values, and the gate judges each against its own rule. 175 of 175 pass, the
 planted-duplicate control fires on every run, and a planted base-value change
 reds.
+
+WRONG: the person-shaped-fixture check went red on the g10 house sweep, and the
+fix — one allowlist entry — was sitting in the same commit as the evidence that
+gate judges.
+RIGHT: split, and the gate change landed first and alone (#237). The entry was
+proved in both directions on one tree before it was committed: with the entry,
+the check reports clean; with the entry removed, it names the evidence file.
+
+WRONG: the census tool was read as carrying the wrong term table, on the
+evidence of CALENDAR_SPINE.json's calendar block and the absoluteWeek it gives
+each workbook cell.
+RIGHT: that yardstick is circular. All 897 cells with an absoluteWeek fit the
+OLD offsets exactly, because absoluteWeek is a column derived from them — a
+derived column is not a second instrument. The authority is
+CALENDAR_2026_27.json, "Matt's confirmed dates, ORDER VB-RUN11F", which maps
+Aut2 Wn -> 8+n and files 7+n under oldSpine. The term table is right. The defect
+is the line below it: the _A2_ filename rule still adds 7, so 55 decks read one
+week earlier from their filename than from their directory.
+
+WRONG: the wave-4 targets were taken from that tool's uncovered list, and the
+first authored lesson was built for W14 BUILD ASDAN.
+RIGHT: once the filename rule matches the term table, W14 BUILD ASDAN and W15
+GROW ASDAN are both COVERED — the four Autumn 2 W6 decks move onto week 14, and
+the Autumn 2 W7 trio onto 15. Both modules are held unbuilt. The order's own
+words caught this: build nothing twice.
+
+WRONG: the authoring modules carried a `chassis` key, which re-shapes a
+generated deck into its family's N6 vocabulary — renaming .lundy to
+.lundy-strip among other things — while the target here is the classic chassis.
+RIGHT: the key is for N6 targets only. Stripped from all five modules, which is
+what the run-11 module that built the shipped W15 lesson does. The reshell then
+found its Lundy strips and completed.
+
+WRONG: s24 and g25 went red on the new classic lesson and were nearly read as
+lesson defects.
+RIGHT: both red identically on the run-11 lesson shipped in August and on the
+donor that has been live for months. s24 looks for the N6 `.print-pack`
+learner-confirmation page and g25 counts N6 we-do stages; the classic chassis
+carries `#print-area` sections and `data-title="We Do 1"` slides instead. The
+deck has two we-do slides and a print-wedo section. That is an instrument
+pointed at the wrong chassis, not a hole in the lesson, and the classic
+instruments (tier print proof, g16 v2 frozen rows) are the ones that bind here.

@@ -158,6 +158,29 @@ are programme levels and assessment furniture, both classes the ruling names.
 - Eid
 - Hanukkah
 
+## Named by the ruling, not found in the corpus
+
+Two bullets above are here because the RUN12-A ruling names them, not because
+the grep found them. Measured on the tree at the time of writing, excluding
+`.git` and `node_modules`:
+
+| token | occurrences in the repository | live decks containing it |
+|---|---|---|
+| Learning Loop | 1 (this file) | 0 |
+| Bonfire Night | 6 (all in `_sownb` prose) | 0 |
+
+The estate's actual loop vocabulary is **Lundy Loop** (443 occurrences across
+189 files), **Live Loop** (280 files, in the control bar and so outside
+`main.deck`, which is why it produces no gate red today), **Live Lundy** (53
+decks — the single largest unresolved pair in the estate) and **Art Lundy** (17
+decks). Those resolve through this register already: every word of every bullet
+is a token, so "Lundy" and "Loop" come from the "Lundy Loop" and "Live Loop"
+bullets and carry the rest.
+
+Registering an absent token resolves nothing and costs nothing, so both stay as
+the ruling wrote them. They are listed here so no reader takes this file to be
+wholly grep-derived when two of its bullets are not.
+
 ## Deliberately NOT registered
 
 These were measured in the corpus and left out on purpose, because every word
