@@ -32,3 +32,27 @@ nobody acts, authoring continues against the workbook rows and the slot stays
 unnamed — which makes an external verifier's question ("when is this taught?")
 harder to answer than it should be.
 
+
+## 3 · LAUNCH Science weeks 8–13 are labelled one week earlier than their filenames
+
+Ruled 2026-09-02 (D-C), applied in run 8. Six weeks of LAUNCH Science lessons
+now carry the workbook's own week numbers and cite the cell they teach: what the
+files call W9 teaches week 8, and so on to W14 teaching week 13. **The filenames
+were deliberately not changed** — renaming them would have touched 83 files
+including read-only ground truth.
+
+**For anyone reading a timetable or a folder:** trust the label on the lesson and
+the cell it cites, not the filename. They disagree by one for these six weeks
+only, and the label is right.
+
+## 4 · The enzyme and amylase trio has no week, on purpose
+
+Same ruling. Three LAUNCH Science lessons on enzymes and amylase have no row
+anywhere in the workbook. Rather than invent a week for them or delete them,
+they are labelled **Enrichment**, cite "no workbook row — enrichment", and stay
+live in their folder.
+
+**For the curriculum lead:** these three are good lessons with nowhere to sit.
+Either they belong somewhere in the sequence and want a workbook row, or they
+are genuinely optional enrichment and the label is already correct. If nobody
+acts, they stay as enrichment and are never counted as covering a week.

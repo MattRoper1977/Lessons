@@ -244,3 +244,72 @@ THE SWEEP WENT RED ON ALL THREE FAMILY PRs AND IT WAS THE INSTRUMENT'S BUFFER. T
 "NO OPEN PR RUNS ZERO CHECKS" WENT RED ON #196 BECAUSE #197 WAS THIRTEEN SECONDS YOUNGER. The census saw #197 with zero check runs while its jobs were still being scheduled. A race in the census, not a finding; it re-runs on the next head.
 
 MAIN WENT RED ONCE ON MY OWN PUSHES. The FieldOps run on the #198 merge commit failed its open-PR census at 23:02:47 because #196 and #197 had zero check runs at that second — I had pushed their level-with-main heads at 23:02:2x and GitHub created their runs at 23:02:28-30. The run on the #195 merge was then cancelled by the workflow's concurrency group when the #196 merge arrived. Neither is a finding on main's tree, and the two main runs after them passed; but a red on main is a red on main, so it is written here and in MERGES_RUN9.json rather than left for Watch main to be the only witness.
+
+## RUN 10
+
+WRONG: I ran `verify_fixture_names.mjs` locally, read the tail of its output, saw
+prose rather than a failure banner, and pushed. The sweep job went red on my
+first head.
+RIGHT: read the exit code. The tool had already found `Q7ZTQQ_RETIRED.md` naming
+a real careers lesson title that its predicate reads as person-shaped, and it
+said so in a section I never scrolled to. This is the estate's own "assert on
+evidence, not on proxies" rule, and I broke it on the very check that exists to
+catch that class of mistake.
+
+WRONG, immediately afterwards: the record I wrote about the fix quoted the
+offending strings verbatim, and so did the state key. The gate reddened on those
+too.
+RIGHT: describe the strings instead of reproducing them. The gate was right
+twice in five minutes.
+
+WRONG: run 9 reported the horizon as content covered 147, then projected 158
+after its eleven lessons landed.
+RIGHT: run 9's own coverage artefact, written at 21:55 that evening by the
+scripts it ran itself, says 140 — and its slot lists already contained the
+eleven, which were in the working tree at the time. So the base was 7 above the
+instrument and the +11 was already inside it. Re-running the same two scripts
+today reproduces 140 exactly. The artefact is kept at
+`_sownb/vb/evidence/run10/RUN9_COVERAGE_ARTEFACT.json` so the correction can be
+checked rather than taken on trust.
+
+WRONG: `VB_STATE.decisionD1` said "BLOCKED — not applied" and the run-9 horizon
+excluded 22 decks as SPINE-SPLIT.
+RIGHT: run 8 applied it, in commit 672f6ed9, and nobody updated the key. All 24
+LAUNCH Science decks conform. D-C cost zero bytes this run; what it cost was the
+half hour I spent preparing to redo work that was already done. Verify before
+executing an order that says "execute".
+
+WRONG: the contract's `rowCount` said 463 while its rows numbered 464, and the
+order expected 463 because that is what the stale field says.
+RIGHT: run 8's `53d16b3a` appended `reading.pathway.band` without bumping the
+field. Corrected without adding or removing a row.
+
+WRONG: my first GROW Humanities W5 draft put the second diagram in a stage whose
+prose never mentioned it, and g24 counted it decorative.
+RIGHT: g24 asks whether the stage's own words point at the figure. A figure
+nobody is told to look at is decoration, and the gate is right about that.
+
+WRONG: LAUNCH Humanities W8 came in at 874 words against a family floor of 897,
+and my first instinct was that 23 words is nothing.
+RIGHT: the lesson was missing the scale. A grid square is a kilometre across on
+that sheet, which is exactly what makes the sixth figure worth a hundred metres
+and what decides whether four figures are enough. Adding the thing the lesson
+needed took it to 946. Padding would have cleared the same floor and taught
+nobody anything.
+
+WRONG: LAUNCH Humanities W7 declared `spot-the-error` while its we-do text never
+asked anyone to spot an error.
+RIGHT: g25 checks the declaration against the behaviour. The fix is to rewrite
+the stage, not the label.
+
+WRONG (planned, not committed): I was ready to author into GROW ASDAN and BUILD
+ASDAN by slicing their donors, as I had for four other families.
+RIGHT: g16 against every live deck in both families returns zero passes — 54
+failing rows on all ten BUILD ASDAN decks, and 1, 12 or 53 on the fourteen GROW
+ASDAN ones, while a run-9 Humanities deck through the same instrument passes
+with zero. Those families' rows do not describe their own decks. Two lessons of
+the eighteen are not here, and the reason is measured rather than asserted.
+
+WRONG: the generator wrote "GROW Humanities" into the running head of a GROW
+Science deck, because the subject was hardcoded in three places.
+RIGHT: the running-heads gate caught it on the rendered PDF, not in the source.
