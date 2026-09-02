@@ -383,3 +383,14 @@ WRONG: two Lundy boxes read "Spacemeans" and "stays available." because the
 generator dropped a space and the subject word; no gate saw it.
 RIGHT: the screenshots at 390 and 1365 are read, not just taken. Both fixed;
 the strip sentence is carried whole.
+
+WRONG: the R4 screen clause compared pixel positions and failed on 1 px of
+animation jitter (title dots, animate-enter list items) on all three proofs.
+RIGHT: the screen fingerprint is the visible element identity list with
+reduced motion emulated, plus a 3 px positional tolerance; the three proofs
+then pass with zero shift and the same element counts.
+
+WRONG: I fast-forwarded the branch with a stash while the 79-deck check was
+reading the working tree; two decks were read mid-swap and came back ERR/RED.
+RIGHT: both re-ran clean (79/79 PASS). A background measurement owns the
+working tree until it finishes; nothing touches the tree in between.
