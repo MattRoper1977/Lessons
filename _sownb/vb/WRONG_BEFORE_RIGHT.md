@@ -363,3 +363,23 @@ was re-run after the dispatch fix and its 45 gate outputs were committed
 without a `file` key; CI reddened the contract PR on exactly the run-10 lesson.
 RIGHT: the sweep is the last thing before `git commit`, never before the last
 write, and every gate output names its subject in `file`.
+
+WRONG: the first reshell rendered a blank page under the render gate, exactly
+the D-D arm-A blank the ASDAN decks show, because the donor's print pack only
+exists after a tier button is pressed.
+RIGHT: R4 is part of the reshell recipe, not a later fix: printPack is split
+into printArm + print, and load/beforeprint arm Standard when nothing is armed.
+The tier proof reads the cold PDF and the three tier PDFs from Chromium, and
+cold now equals Standard on all eight.
+
+WRONG: I ran the run-10 battery on a classic deck and read eight reds and
+errors before asking what each gate parses.
+RIGHT: g18, g11, s24, running heads, g21, rig, g23 and g25 read n6 markup
+(main.deck stages, the two-page print pack, nav.controls). They are recorded
+as measured-not-applicable with each error, and the v2 set (containment,
+g16 v2, g10, g15, g19 v2, g24, g26, tier proof) is what binds a classic deck.
+
+WRONG: two Lundy boxes read "Spacemeans" and "stays available." because the
+generator dropped a space and the subject word; no gate saw it.
+RIGHT: the screenshots at 390 and 1365 are read, not just taken. Both fixed;
+the strip sentence is carried whole.
