@@ -92,4 +92,3 @@ will notice one of them at the printer.
 - **Palette tokens.** An internal CSS change only: each colour token is now
   defined once, with the pathway values in their own rule. Every deck was
   measured before and after and not one pixel or printed character moved.
-
