@@ -233,6 +233,7 @@ function wedoReset(b){var s=b.closest('.slide');s.querySelectorAll('.wedo-reveal
 <script id="lesson-config" type="application/json">''' + json.dumps({**cfg, 'chassis': 'classic-v2', 'reshelledFrom': src_path, 'contractScope': 'v2'}, ensure_ascii=False) + '</script>\n</body>', 1)
 slides_html = ''.join([title_slide, arrival, starter, ido, wedo, ido2, wedo2, independent, lundy_slide, exit_slide])
 out = head + '<body> <main id="lessonDeck" class="deck"><div class="slide-container">' + slides_html + '</div></main>' + body_end.replace('%%PRINT%%', print_area, 1)
+out = '\n'.join(l.rstrip() for l in out.split('\n'))  # the donor carries trailing spaces; the shell copy does not
 (ROOT/out_path).write_text(out, encoding='utf-8')
 if '--json' in sys.argv:
     json.dump({'file': out_path, 'from': src_path, 'donor': donor_path, 'family': family, 'trace': TRACE}, open(sys.argv[sys.argv.index('--json') + 1], 'w'), indent=1, ensure_ascii=False)

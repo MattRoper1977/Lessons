@@ -145,4 +145,3 @@ donor shell: `Grow/Slideshows/GROW_HUM_W8_Where_In_The_World.html` · words 1956
 | Independent Work ×3 print sheets | the n6 print pack's route line, record table and learner confirmation for each tier plus that tier's Independent route text, verbatim; differentiation is the route text itself |
 | Lundy Loop print section | the deck's own strip sentence and word-bridge lines, verbatim |
 | Feedback sheet | the classic donor's blank feedback template, retitled; no lesson words |
-

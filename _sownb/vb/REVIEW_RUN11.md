@@ -97,4 +97,3 @@ Each screen below is the title slide at 390 px wide, taken by the proof script; 
 - No trims: none of the six D-E overload decks is among these eight.
 - g10 reds on the house heading labels of the classic chassis ("Arrival Task", "Independent Work") and on title fragments; every candidate was inspected and none is a person (`evidence/run11/G10_CLASSIC_HOUSE_LABELS.json`). Ruling wanted: a HOUSE_LABELS register like PLACES.md.
 - The n6-shaped FEB gates (g18, g11, s24, running heads, g21, rig, g23, g25) cannot parse a classic deck; recorded as measured, not applicable (`evidence/run11/FEB_GATES_ON_CLASSIC.json`).
-
