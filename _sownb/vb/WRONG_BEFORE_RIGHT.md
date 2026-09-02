@@ -394,3 +394,22 @@ WRONG: I fast-forwarded the branch with a stash while the 79-deck check was
 reading the working tree; two decks were read mid-swap and came back ERR/RED.
 RIGHT: both re-ran clean (79/79 PASS). A background measurement owns the
 working tree until it finishes; nothing touches the tree in between.
+
+WRONG: the BUILD ASDAN W15 module named an invented adult witness ("Mrs
+Khan") and an invented first name in pupil text.
+RIGHT: g10 went red on the pair before the lesson was committed, which is the
+gate doing its job. Both became role labels ("my teacher", "an adult"); the
+rule is role labels for every adult in pupil text, never a name.
+
+WRONG: the pre-work horizon (252 covered on the new spine) and the census tool
+re-keyed to the new spine (242 at the same anchor) disagree by ten, and the
+pre-work number was carried into the order's readback as if it were the tool's.
+RIGHT: both numbers are in HORIZON_RUN11_END.json with their provenance; the
+end-of-run figures (path 244/171, content 243/172) come from the tool, and the
+gap is a human item, not a rounding.
+
+WRONG: a first attempt at listing uncovered slots used a home-made subject
+classifier over the census and showed BUILD Humanities W9 uncovered when the
+W9-W14 packs are live.
+RIGHT: the run-10 census and coverage tools, re-keyed with the new term
+offsets, are the only instrument; the home-made list was discarded.

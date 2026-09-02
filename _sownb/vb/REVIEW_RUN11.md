@@ -97,3 +97,25 @@ Each screen below is the title slide at 390 px wide, taken by the proof script; 
 - No trims: none of the six D-E overload decks is among these eight.
 - g10 reds on the house heading labels of the classic chassis ("Arrival Task", "Independent Work") and on title fragments; every candidate was inspected and none is a person (`evidence/run11/G10_CLASSIC_HOUSE_LABELS.json`). Ruling wanted: a HOUSE_LABELS register like PLACES.md.
 - The n6-shaped FEB gates (g18, g11, s24, running heads, g21, rig, g23, g25) cannot parse a classic deck; recorded as measured, not applicable (`evidence/run11/FEB_GATES_ON_CLASSIC.json`).
+
+## Two new lessons — first of their family on v2 (STOP-AND-PRINT)
+
+### GAW7 — A visitor, and the evidence we keep (GROW ASDAN · week 7)
+
+`GROW_ASDAN/Autumn1_W7_2026-27/GROW_ASDAN_W7_A_Visitor_And_The_Evidence_We_Keep.html`
+
+![GAW7 at 390px](evidence/run11/tiers/GAW7_after_390.png)
+
+- **Cells:** C136, C150, C180 — three workbook cells in one 40-minute lesson, on the classic ASDAN shell (Today at a Glance, The Model, Proving It, Independent Work, Lundy Loop, Exit Ticket; intro sheet and Assessor Witness Statement in the print pack).
+- **Gates:** g16 v2 96/96 PASS; reading None (None, PASS); g24 PASS; g15 PASS; tier print proof PASS (cold = Standard, 3959 chars).
+- **Check on the phone:** the title, the outcome box with the three cells, Today at a Glance, then the route cards. If this is the wrong look for ASDAN, say so before any more ASDAN lessons are built.
+
+### BAW15 — Sign it off: my evidence folder (BUILD ASDAN · week 15)
+
+`BUILD_ASDAN/Autumn2_W7_2026-27/BUILD_ASDAN_W15_Sign_It_Off_My_Evidence_Folder.html`
+
+![BAW15 at 390px](evidence/run11/tiers/BAW15_after_390.png)
+
+- **Cells:** C143, C157, C187 — three workbook cells in one 40-minute lesson, on the classic ASDAN shell (Today at a Glance, The Model, Proving It, Independent Work, Lundy Loop, Exit Ticket; intro sheet and Assessor Witness Statement in the print pack).
+- **Gates:** g16 v2 96/96 PASS; reading None (None, PASS); g24 PASS; g15 PASS; tier print proof PASS (cold = Standard, 4444 chars).
+- **Check on the phone:** the title, the outcome box with the three cells, Today at a Glance, then the route cards. If this is the wrong look for ASDAN, say so before any more ASDAN lessons are built.
