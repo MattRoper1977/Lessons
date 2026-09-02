@@ -526,3 +526,12 @@ old offsets — as though it were already ruled. That third one is why 30 of the
 them by exactly one week. Corrected, the two readings move to 231 and 236 and
 still differ by five, so the coverage number is not settled and no wave-4 lesson
 is built this run.
+
+WRONG: running the coverage tool rewrote a closed run's evidence file. It wrote
+its result straight into _sownb/vb/evidence/run11/HORIZON_TOOL_RUN11.json every
+time, so simply measuring something silently replaced run 11's recorded numbers
+and its subject line with run 12's. Caught twice, both times only because the
+file turned up in git status.
+RIGHT: the copy landed in this repo writes to /tmp. A measurement tool reports;
+it does not edit history. Putting a result into the evidence tree is a
+deliberate act with a dated filename, not a side effect of asking a question.
