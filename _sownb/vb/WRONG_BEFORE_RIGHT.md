@@ -413,3 +413,116 @@ classifier over the census and showed BUILD Humanities W9 uncovered when the
 W9-W14 packs are live.
 RIGHT: the run-10 census and coverage tools, re-keyed with the new term
 offsets, are the only instrument; the home-made list was discarded.
+
+## Run 12-A (2026-09-02, ORDER VB-RUN12A)
+
+WRONG: the :root migration proof compared the deck in the repository against
+an unmigrated copy under /tmp, and reported the screen changed on two of three
+proof decks.
+RIGHT: a deck's own scripts resolve relative paths against the deck's location,
+so a copy under /tmp is not the same page. The instrument's own noise floor was
+measured first (copy vs copy: identical), then the comparison was redone with
+the unmigrated copy written into the SAME directory: zero element differences,
+zero pixel shift, all three clauses PASS. Every rollout check now writes its
+before-copy beside the file it checks.
+
+WRONG: cleaning up the superseded proof artefacts, I matched `*_roots*.json`,
+which also matched the valid `*_rootscope.json` I had just written.
+RIGHT: the proofs were re-run rather than reconstructed from memory, and the
+glob was written to the exact name. A measurement that is deleted is re-taken,
+never retyped.
+
+WRONG: the migration's per-deck rollout check called a deck RED when its cold
+print produced no text, and 61 decks came back red.
+RIGHT: not one of them had changed: tokens and print text were identical on all
+138. The check was conflating its own claim ("the migration changed nothing")
+with a different, pre-existing property ("this deck prints something cold").
+The two are now separate fields, and the blank-cold finding became this run's
+R4 work instead of a false red.
+
+WRONG: the new HOUSE_LABELS register listed "Role", so the pair "Role
+Evaluation" resolved as a house label and the g10 gate's own structural control
+stopped firing.
+RIGHT: the house check now runs AFTER the role check, so every word the gate
+already owns keeps its label and the register only adds what was missing. No
+control was weakened to make the register fit.
+
+WRONG: the population for the R4 print fix was taken from the 138 decks the
+:root migration had touched, which is not the same set as "classic decks that
+print blank cold".
+RIGHT: all 175 classic decks were scanned in Chromium for a blank cold print.
+That found 24 more, and ten whose printPack is not an arm-then-print and which
+are held by name rather than guessed at.
+
+WRONG: g19 v2 reddened 67 decks for a "wrong value" because the config measured
+each family's values from a single named donor, so every other strand palette
+in that family looked foreign.
+RIGHT: the ruling binds every family, so the family value set is measured from
+the family. The config now separates the estate BASE (a token's value inside
+:root, unanimous across all 175 classic decks) from the per-family SCOPED
+values, and the gate judges each against its own rule. 175 of 175 pass, the
+planted-duplicate control fires on every run, and a planted base-value change
+reds.
+
+WRONG: the person-shaped-fixture check went red on the g10 house sweep, and the
+fix — one allowlist entry — was sitting in the same commit as the evidence that
+gate judges.
+RIGHT: split, and the gate change landed first and alone (#237). The entry was
+proved in both directions on one tree before it was committed: with the entry,
+the check reports clean; with the entry removed, it names the evidence file.
+
+WRONG: the census tool was read as carrying the wrong term table, on the
+evidence of CALENDAR_SPINE.json's calendar block and the absoluteWeek it gives
+each workbook cell.
+RIGHT: that yardstick is circular. All 897 cells with an absoluteWeek fit the
+OLD offsets exactly, because absoluteWeek is a column derived from them — a
+derived column is not a second instrument. The authority is
+CALENDAR_2026_27.json, "Matt's confirmed dates, ORDER VB-RUN11F", which maps
+Aut2 Wn -> 8+n and files 7+n under oldSpine. The term table is right. The defect
+is the line below it: the _A2_ filename rule still adds 7, so 55 decks read one
+week earlier from their filename than from their directory.
+
+WRONG: the wave-4 targets were taken from that tool's uncovered list, and the
+first authored lesson was built for W14 BUILD ASDAN.
+RIGHT: once the filename rule matches the term table, W14 BUILD ASDAN and W15
+GROW ASDAN are both COVERED — the four Autumn 2 W6 decks move onto week 14, and
+the Autumn 2 W7 trio onto 15. Both modules are held unbuilt. The order's own
+words caught this: build nothing twice.
+
+WRONG: the authoring modules carried a `chassis` key, which re-shapes a
+generated deck into its family's N6 vocabulary — renaming .lundy to
+.lundy-strip among other things — while the target here is the classic chassis.
+RIGHT: the key is for N6 targets only. Stripped from all five modules, which is
+what the run-11 module that built the shipped W15 lesson does. The reshell then
+found its Lundy strips and completed.
+
+WRONG: s24 and g25 went red on the new classic lesson and were nearly read as
+lesson defects.
+RIGHT: both red identically on the run-11 lesson shipped in August and on the
+donor that has been live for months. s24 looks for the N6 `.print-pack`
+learner-confirmation page and g25 counts N6 we-do stages; the classic chassis
+carries `#print-area` sections and `data-title="We Do 1"` slides instead. The
+deck has two we-do slides and a print-wedo section. That is an instrument
+pointed at the wrong chassis, not a hole in the lesson, and the classic
+instruments (tier print proof, g16 v2 frozen rows) are the ones that bind here.
+
+WRONG: three more lessons were authored, built, reshelled and passed every
+binding gate — g16 v2, g10, g15, rig, g19 v2, g23, g24, g26, containment and the
+tier print proof, all green on all three — before anyone asked what cells they
+claimed.
+RIGHT: all three claim cells an existing deck already serves. The Spring 1 deck
+named W16 cites C113, C125 and C151, which are ruled week 17, because the D-C
+spine correction was "text only, zero renames" and every filename still carries
+the old keying. Green gates say a deck is well made. They say nothing about
+whether it should exist. The cell-claim check now runs BEFORE the build, not
+after, and it is keying-free: a cell is a cell.
+
+WRONG: the census reads three keyings at once, and only one of them was found on
+the first pass.
+RIGHT: the term table is ruled and right; the _A2_ filename rule is old; and the
+content reading takes CALENDAR_SPINE's absoluteWeek — a column derived from the
+old offsets — as though it were already ruled. That third one is why 30 of the
+55 decks carrying both a declared week and a cited cell disagree, every one of
+them by exactly one week. Corrected, the two readings move to 231 and 236 and
+still differ by five, so the coverage number is not settled and no wave-4 lesson
+is built this run.

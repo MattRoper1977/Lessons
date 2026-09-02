@@ -77,3 +77,18 @@ Autumn 1 is unchanged.
 - **Any week whose absolute number moved** (every week from Autumn 2 onward)
   should be read from the calendar file, not from a planner printed before
   2 September 2026.
+
+## 6 · Two shell fixes across the classic decks (2026-09-02)
+
+Nothing a planner reads has changed. Both are recorded here because a teacher
+will notice one of them at the printer.
+
+- **A cold print now gives you the Standard pack.** Ctrl+P or ⌘P on a lesson
+  used to produce a blank page unless somebody had first clicked one of the
+  three print buttons. On every live classic deck except ten, the Standard pack
+  is now armed on load, so a cold print gives you ten usable sheets. The ten
+  exceptions are the GROW Science v3 40-minute decks, whose print button works
+  differently; they still print blank cold and are named in the run record.
+- **Palette tokens.** An internal CSS change only: each colour token is now
+  defined once, with the pathway values in their own rule. Every deck was
+  measured before and after and not one pixel or printed character moved.

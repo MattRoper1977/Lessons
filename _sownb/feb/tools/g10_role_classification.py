@@ -17,6 +17,7 @@ def places_registry(path):
  if not path.exists():return set()
  return {tok.casefold() for line in path.read_text().splitlines() if line.startswith('- ') and not line[2:].startswith('"') for tok in line[2:].split()}
 PLACES=PLACES_BUILTIN|places_registry(ROOT/'_sownb/PLACES.md')
+HOUSE=places_registry(ROOT/'_sownb/HOUSE_LABELS.md')  # VB-RUN12A: the estate's own furniture, same bullet-token rule as PLACES
 def registry(path):
  if not path.exists():return set()
  return {line[2:].strip().casefold() for line in path.read_text().splitlines() if line.startswith('- ') and len(line[2:].split())>=2}
@@ -36,6 +37,7 @@ def classify(value,public,examples):
  if low in examples:return 'DECLARED-EXEMPLAR'
  if tokens & PLACES:return 'PLACE'
  if tokens & ROLE:return 'ROLE-LABEL'
+ if tokens & HOUSE:return 'HOUSE-LABEL'
  return 'UNRESOLVED'
 def candidates(text,public,examples):
  seen=[]
@@ -47,6 +49,6 @@ def main():
  p=argparse.ArgumentParser();p.add_argument('--file',required=True);p.add_argument('--output',required=True);a=p.parse_args();path=ROOT/a.file;public_path=ROOT/'_sownb/feb/PUBLIC_FIGURES.md';public=registry(public_path);examples=registry(ROOT/'_sownb/DECLARED_EXEMPLARS.md')
  if not public: raise SystemExit('MEASUREMENT INVALID: reviewed public-figure register absent or empty')
  text=pupil_text(path);rows=candidates(text,public,examples);unresolved=[r for r in rows if r['classification']=='UNRESOLVED']
- synthetic=''.join(('Test','given'))+' '+''.join(('Test','family'));red=candidates(text+' '+synthetic,public,examples);red_fired=any(r['candidate']==synthetic and r['classification']=='UNRESOLVED' for r in red);role=' '.join(('Learner','Name'));role_green=classify(role,public,examples)=='ROLE-LABEL';place=' '.join(('Newport','Bridge'));place_green=classify(place,public,examples)=='PLACE';structural=["Week Timeline","Now Record","Role Evaluation"];structural_green=all(classify(value,public,examples)=='ROLE-LABEL' for value in structural);nonvacuous=bool(text) and red_fired and role_green and structural_green and place_green
- report={'gate':'g10-role-classification','file':a.file,'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'searchSpace':'pupil-facing main.deck after scripts, styles, SVG and keyed staff guidance are removed','corpusChars':len(text),'candidates':rows,'unresolved':unresolved,'controls':{'unresolvedRedFired':red_fired,'roleGreen':role_green,'placeGreen':place_green,'placeRegisterTokens':len(PLACES),'structuralRoleLabels':structural,'structuralRoleGreen':structural_green,'nonVacuous':nonvacuous},'s23':'MEASUREMENT INVALID by design; S23_NAMES is prohibited','status':'PASS' if nonvacuous and not unresolved else 'RED'};out=ROOT/a.output;out.parent.mkdir(parents=True,exist_ok=True);out.write_text(json.dumps(report,indent=2)+'\n');print(json.dumps({'status':report['status'],'candidates':rows,'unresolved':unresolved,'controls':report['controls']},indent=2));return 0 if report['status']=='PASS' else 1
+ synthetic=''.join(('Test','given'))+' '+''.join(('Test','family'));red=candidates(text+' '+synthetic,public,examples);red_fired=any(r['candidate']==synthetic and r['classification']=='UNRESOLVED' for r in red);role=' '.join(('Learner','Name'));role_green=classify(role,public,examples)=='ROLE-LABEL';place=' '.join(('Newport','Bridge'));place_green=classify(place,public,examples)=='PLACE';house=' '.join(('Exit','Ticket'));house_green=classify(house,public,examples)=='HOUSE-LABEL';structural=["Week Timeline","Now Record","Role Evaluation"];structural_green=all(classify(value,public,examples)=='ROLE-LABEL' for value in structural);nonvacuous=bool(text) and red_fired and role_green and structural_green and place_green and house_green
+ report={'gate':'g10-role-classification','file':a.file,'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'searchSpace':'pupil-facing main.deck after scripts, styles, SVG and keyed staff guidance are removed','corpusChars':len(text),'candidates':rows,'unresolved':unresolved,'controls':{'unresolvedRedFired':red_fired,'roleGreen':role_green,'placeGreen':place_green,'placeRegisterTokens':len(PLACES),'houseGreen':house_green,'houseRegisterTokens':len(HOUSE),'structuralRoleLabels':structural,'structuralRoleGreen':structural_green,'nonVacuous':nonvacuous},'s23':'MEASUREMENT INVALID by design; S23_NAMES is prohibited','status':'PASS' if nonvacuous and not unresolved else 'RED'};out=ROOT/a.output;out.parent.mkdir(parents=True,exist_ok=True);out.write_text(json.dumps(report,indent=2)+'\n');print(json.dumps({'status':report['status'],'candidates':rows,'unresolved':unresolved,'controls':report['controls']},indent=2));return 0 if report['status']=='PASS' else 1
 if __name__=='__main__':raise SystemExit(main())
