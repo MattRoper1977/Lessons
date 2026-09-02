@@ -114,6 +114,8 @@
 </style>
 </head>
 <body>
+<div id="a11y-live" role="status" aria-live="polite" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden"></div>
+<script>window.__mbmAnnounce=function(t){var n=document.getElementById("a11y-live");if(!n||!t)return;n.textContent=String(t);};</script>
 
 <div id="canvas-container"></div>
 <div id="flash"></div>
@@ -553,6 +555,7 @@ function endGame(reason) {
   const isBest = score > 0 && score >= best;
   document.getElementById('over-score').innerText = score;
   document.getElementById('over-reason').innerText = reason;
+  window.__mbmAnnounce('Game over: ' + reason + '. Score ' + score + (isBest ? ', a new best.' : '.'));
   document.getElementById('new-best').classList.toggle('hidden', !isBest);
   document.getElementById('initials-block').style.display = score > 0 ? 'flex' : 'none';
   document.getElementById('initials').value = '';
