@@ -1762,9 +1762,11 @@ var predict=document.getElementById("v6predict"),pctx=predict.getContext("2d"),a
 function fitPredict(){var r=predict.getBoundingClientRect(),d=Math.min(2,window.devicePixelRatio||1);predict.width=Math.max(1,Math.round(r.width*d));predict.height=Math.max(1,Math.round(r.height*d));pctx.setTransform(d,0,0,d,0,0);}
 function worldMap(){var r=predict.getBoundingClientRect(),sc=Math.min(r.width/960,r.height/640);return {r:r,s:sc,ox:(r.width-960*sc)/2,oy:(r.height-640*sc)/2};}
 function nearestIntent(s,p){var best=null,score=-1e9;if(!s||!p)return null;for(var i=0;i<s.chars.length;i++){var c=s.chars[i];if(c===p||c.smudged)continue;var dx=c.x-p.x,dy=c.y-p.y,d=Math.sqrt(dx*dx+dy*dy),v=100-d;if(p.role==="smudge"&&c.role!=="smudge")v+=80;if(c.role==="fixer")v+=24;if(c.nearHits>0)v+=18;if(v>score){score=v;best=c;}}return best;}
+/* Grafted from Town Life's event-driven advisory (c4c27fce): the prediction overlay only clears a frame it drew, so the menu costs no paints or layout reads. */
+var predictDrawn=false;function clearPredict(){if(!predictDrawn)return;var r=predict.getBoundingClientRect();pctx.clearRect(0,0,r.width,r.height);predictDrawn=false;}
 function drawPredict(){
-  var r=predict.getBoundingClientRect();pctx.clearRect(0,0,r.width,r.height);var api=window.CH,s=api&&api.S;if(!s||s.over||!document.getElementById("scrGame").classList.contains("on")){requestAnimationFrame(drawPredict);return;}
-  var m=worldMap(),p=s.player;if(!p){requestAnimationFrame(drawPredict);return;}var sx=m.ox+p.x*m.s,sy=m.oy+p.y*m.s;
+  var api=window.CH,s=api&&api.S;if(!s||s.over||!document.getElementById("scrGame").classList.contains("on")){clearPredict();requestAnimationFrame(drawPredict);return;}
+  var m=worldMap(),p=s.player;if(!p){clearPredict();requestAnimationFrame(drawPredict);return;}var r=predict.getBoundingClientRect();pctx.clearRect(0,0,r.width,r.height);predictDrawn=true;var sx=m.ox+p.x*m.s,sy=m.oy+p.y*m.s;
   pctx.save();pctx.lineWidth=1.6;pctx.setLineDash([5,5]);pctx.strokeStyle="rgba(185,230,205,.88)";
   if(aim.on){var ax=m.ox+aim.x*m.s,ay=m.oy+aim.y*m.s;pctx.beginPath();pctx.moveTo(sx,sy);pctx.lineTo(ax,ay);pctx.stroke();pctx.setLineDash([]);pctx.strokeRect(ax-10,ay-10,20,20);}
   var n=nearestIntent(s,p);if(n&&((p.role==="smudge"&&!n.smudged)||p.role==="fixer")){var nx=m.ox+n.x*m.s,ny=m.oy+n.y*m.s;pctx.setLineDash([3,4]);pctx.strokeStyle=p.role==="fixer"?"rgba(217,180,74,.9)":"rgba(242,162,74,.9)";pctx.beginPath();pctx.arc(nx,ny,18,0,Math.PI*2);pctx.stroke();}

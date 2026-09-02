@@ -5512,12 +5512,12 @@ body.wc-v6-high-contrast{--wc-v6-outline:#fff}body.wc-v6-high-contrast #hud butt
   var begin=document.getElementById('b-begin');if(begin)begin.addEventListener('click',function(){setTimeout(playSiteFlyover,0)});
   if(reduced){var reducedChanged=function(){if(reduced.matches&&Camera.active)finishCamera()};reduced.addEventListener?reduced.addEventListener('change',reducedChanged):reduced.addListener(reducedChanged)}
 
-  var lastFrame=performance.now(),lastImpactSample=0;
+  var lastFrame=performance.now(),lastImpactSample=0,fxDrawn=false; /* Grafted from Town Life's event-driven advisory (c4c27fce): the fx overlay only clears a frame it drew, so an idle title costs no paints. */
   function frame(now){
-    var dt=Math.min(.05,(now-lastFrame)/1000);lastFrame=now;fxCtx.clearRect(0,0,innerWidth,innerHeight);arrangeTray();
-    updateCamera(now);monitorClutch(now);if(hoverTarget&&state.mode==='PLACE')drawStructuralPreview(fxCtx,hoverTarget);
+    var dt=Math.min(.05,(now-lastFrame)/1000);lastFrame=now;if(fxDrawn){fxCtx.clearRect(0,0,innerWidth,innerHeight);fxDrawn=false;}arrangeTray();
+    updateCamera(now);monitorClutch(now);if(hoverTarget&&state.mode==='PLACE'){fxDrawn=true;drawStructuralPreview(fxCtx,hoverTarget);}
     if(state.mode==='BOOM'&&now-lastImpactSample>48){lastImpactSample=now;var ke=Number(w.worldKE())||0;if(ke>700&&ke>lastKE*1.22&&now-Camera.lastShake>180){controlledShake(Math.min(1.25,.28+ke/9000));Camera.lastShake=now}lastKE=ke}else if(state.mode!=='BOOM')lastKE=0;
-    if(Camera.active&&Camera.active.kind==='completion'){var p=Math.min(1,(now-Camera.active.start)/Camera.active.duration);fxCtx.save();fxCtx.globalCompositeOperation='lighter';for(var i=0;i<12;i++){var delay=i*.045,q=Math.max(0,Math.min(1,(p-delay)/(1-delay))),x=innerWidth*(.18+i/11*.64),y=innerHeight*(.7-q*.55)-Math.sin(q*Math.PI)*(28+i%3*9);fxCtx.globalAlpha=(1-q)*.75;fxCtx.fillStyle=i%2?'#65efff':'#ffd36a';fxCtx.beginPath();fxCtx.arc(x,y,2.5+q*2,0,Math.PI*2);fxCtx.fill()}fxCtx.restore()}
+    if(Camera.active&&Camera.active.kind==='completion'){fxDrawn=true;var p=Math.min(1,(now-Camera.active.start)/Camera.active.duration);fxCtx.save();fxCtx.globalCompositeOperation='lighter';for(var i=0;i<12;i++){var delay=i*.045,q=Math.max(0,Math.min(1,(p-delay)/(1-delay))),x=innerWidth*(.18+i/11*.64),y=innerHeight*(.7-q*.55)-Math.sin(q*Math.PI)*(28+i%3*9);fxCtx.globalAlpha=(1-q)*.75;fxCtx.fillStyle=i%2?'#65efff':'#ffd36a';fxCtx.beginPath();fxCtx.arc(x,y,2.5+q*2,0,Math.PI*2);fxCtx.fill()}fxCtx.restore()}
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);

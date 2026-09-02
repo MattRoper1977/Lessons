@@ -4189,9 +4189,9 @@ function obstacleIntent(frame){
   var mag=Math.hypot(x,y)||1;return{risk:Math.max(0,1-dd/115),x:x/mag,y:y/mag,distance:dd};
 }
 function projectPoint(x,y,depth,rect){var z=Math.max(.18,1-depth/180),cx=rect.left+rect.width/2,cy=rect.top+rect.height/2;return{x:cx+x*(rect.width/13)*z,y:cy-y*(rect.height/12)*z};}
-window.__VORTEX_V6_FRAME__=function(frame){
+/* Grafted from Town Life's event-driven advisory (c4c27fce): the guidance overlay only clears a frame it drew, so the menu costs no paints. */var guidanceDrawn=false;window.__VORTEX_V6_FRAME__=function(frame){
   latestFrame=frame;latestIntent=obstacleIntent(frame);camera.shake*=.86;if(camera.shake<.012)camera.shake=0;
-  var rect=worldRect();gctx.clearRect(0,0,innerWidth,innerHeight);if(frame.state!=="RACING")return;
+  if(frame.state!=="RACING"){if(guidanceDrawn){gctx.clearRect(0,0,innerWidth,innerHeight);guidanceDrawn=false;}return;}var rect=worldRect();gctx.clearRect(0,0,innerWidth,innerHeight);guidanceDrawn=true;
   var start=projectPoint(frame.x,frame.y,0,rect),target,gate=frame.gate,depth=gate?Math.max(20,Math.min(160,gate.d-frame.d)):150;
   if(gate)target=projectPoint(gate.x,gate.y,depth,rect);else target={x:rect.left+rect.width/2,y:rect.top+rect.height*.26};
   gctx.save();gctx.lineWidth=1.5;gctx.strokeStyle=frame.boosting?"rgba(255,176,32,.9)":"rgba(39,224,255,.72)";gctx.setLineDash([4,7]);gctx.lineDashOffset=-(performance.now()/45)%11;gctx.beginPath();gctx.moveTo(start.x,start.y);var bendX=start.x+(target.x-start.x)*.56,bendY=Math.min(start.y,target.y)-rect.height*.12;gctx.quadraticCurveTo(bendX,bendY,target.x,target.y);gctx.stroke();
