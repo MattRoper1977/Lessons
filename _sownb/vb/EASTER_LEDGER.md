@@ -282,3 +282,73 @@ change between runs with nothing in Lessons changing. It stalled twice on #278
 earlier today, passed on #279 and #280, and is stalled again on #281 —
 intermittent, not deterministic. One cancel-and-rerun was already spent on it.
 
+## A3-H6 — the duplication backlog, cleared. PR #283
+
+Matt's ruling, 2026-09-03: **before batch 1, as its own order.** Nineteen decks,
+nineteen lesson units; three were already spent, so the A2R ceiling of 24 now
+stands at **22 spent, 2 remaining**. That is stated plainly because batch 1
+alone needs 24 plans: the ceiling must be raised or re-scoped before the build
+campaign can start. Nothing here assumes it will be.
+
+**What changed.** Nineteen decks across seven packs and three subjects, all in
+one stage each. Every count below comes from a tool in this PR.
+
+    words removed        7,593        bytes removed        50,817
+    decks edited            19        packs touched             7
+    containment          19/19 PASS, 0 missing sentences, red control fired on each
+    distinct sentences   identical before and after on every deck
+    structure            element counts, script and style bodies, print packs and
+                         staff drawers byte-identical on all 19
+
+**g23, before → after.** The projection published in #282 said ten ceiling reds
+would become five. Measured on the landed files, it is exactly that:
+
+| group | decks | before | after | outcome |
+|---|---|---|---|---|
+| Science — Build/Grow/Launch, W7 and W14–W20 | 14 | ×1.28–1.78 | ×1.09–1.49 | **14/14 PASS**, 5 reds cleared |
+| ASDAN Spring1 W15/W16 | 5 | ×2.40–3.08 | ×1.97–2.57 | 5 still RED → A3-H2 |
+
+Ceiling reds across the nineteen: **10 → 5**. Seven decks now sit at or under
+the 1.25 operative target.
+
+**No denominator moved.** All nine family medians are byte-identical between the
+before and after runs (`med` compared row-by-row, 0 moved), because no affected
+deck is in any family baseline set. The correction cannot loosen g18 by lowering
+a floor.
+
+**The estate is clean of it.** Re-sweeping after the edit: total removable **0w**,
+and the ×4 entry is gone from the repeat-factor histogram entirely — 170
+sentences at ×4 before, none after. What remains is 76 words at ×2, refused
+rather than missed: the `<p class='truth'>` safeguarding pair ("No diagnosis or
+medical advice." / "No personal or family disclosure.") printed twice on eleven
+title slides. It carries inline `<b>` markup, so string surgery would destroy
+it, and 76 words across the estate moves no verdict. Reported, not chased.
+
+**One deck to watch.** `SCI_G_W16A_Solubility_And_Recovery_Explore` lands at
+×1.49 against a ceiling of 1.50 — roughly seven words of headroom. It passes,
+and it is the deck a future edit is most likely to push back over.
+
+**A trap the pre-flight caught, and the tool that closes it.** Twenty-eight packs
+name their checksum file `SHA256SUMS.txt`; three name it `CHECKSUMS.sha256`.
+Same format, both live on main. `GROW_ASDAN/Spring1_W1-W6_2026-27` is one of the
+three and holds two of the nineteen decks, so a refresher knowing only the
+common name would have left two edited decks with stale digests **and no error**.
+It was found by asking every affected pack for its file before writing anything.
+
+`tools/easter/refresh_pack_checksums.py` — new, 8 controls, all fired. It
+refreshes rows the file ALREADY has, asserts the count did not move, never adds
+a row, never drops one naming a missing file, and verifies afterwards. The
+existing `_sownb/feb/tools/update_pack_checksums.py` was not reused: it
+regenerates the entry set from a glob, so it would enrol files nobody reviewed,
+and its three packs are literals so it cannot follow an edit. Result across the
+seven packs: 19 rows refreshed, **0 added, 0 removed**, verify OK on all seven.
+
+One control in it was rewritten before landing. The first version tried to prove
+the row-count assertion fires by monkeypatching `len`, which tests the
+monkeypatch rather than the guard — the assertion cannot be reached through the
+public API, since `out` gains exactly one entry per input line. It is replaced by
+a control on the risk the assertion exists for: a comment header and a blank line
+survive verbatim, so the count cannot drift under a legal file.
+
+**Battery: 14 tools, 123 controls**, derived, `--prove-red` PASS.
+

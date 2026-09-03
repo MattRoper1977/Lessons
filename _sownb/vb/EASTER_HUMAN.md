@@ -210,3 +210,81 @@ cheap to re-run against anything batch 1 produces.
 
 **Evidence:** `_sownb/vb/evidence/a3/dedupe_sweep_live.json` — every row carries
 the file, the removable words, the stage, and the repeat-factor histogram.
+
+---
+
+## A3-H6 — CLOSED, 2026-09-03, PR #283
+
+Your ruling was "before batch 1, own order". Done: nineteen decks, 7,593 words
+of duplicated instruction removed, containment PASS on every one with zero
+missing sentences, no family median moved, and the estate re-sweeps to **zero**
+removable duplication. Ceiling reds across those decks went 10 → 5.
+
+**Two things you need from this, not one.**
+
+*First, the ceiling.* Nineteen units spent here plus three earlier leaves **2 of
+24**. Batch 1 needs 24 plans. The build campaign cannot start against the
+current ceiling — it needs raising or re-scoping, and that is a decision only
+you can make. I have not assumed either way.
+
+*Second, the five ASDAN decks now belong to A3-H2 below.* Their overload
+survived de-duplication, which is exactly what makes them yours.
+
+---
+
+## A3-H2 — split candidates, now seven not two
+
+`GROW_HUM_W15` (×3.02) and `LAUNCH_HUM_W15` (×3.30) are joined by five ASDAN
+Spring1 decks whose overload is real teaching content:
+
+| deck | post-dedupe | ratio | family median |
+|---|---|---|---|
+| `GROW_ASDAN_W16_Authorised_Task_Project_Plan_and_New_Goals` | 2421w | ×2.57 | 940 |
+| `GROW_ASDAN_W15_Strengths_Challenge_and_Project_Reset` | 2387w | ×2.54 | 940 |
+| `BUILD_ASDAN_W16_Partner_Challenge_and_Seasonal_Goals` | 2441w | ×2.49 | 980 |
+| `BUILD_ASDAN_W15_Choice_Budget_and_Project_Reset` | 2394w | ×2.44 | 980 |
+| `LAUNCH_ASDAN_W16_Decision_Tools_Banking_Plant_Care_and_Project_Plan` | 2686w | ×1.97 | 1365 |
+
+**Where the overload actually sits, which changes the question.** All five have
+the identical profile — nine stages, forty declared minutes — and the words are
+distributed against the clock almost exactly backwards:
+
+| stage | words | declared | rate |
+|---|---|---|---|
+| Lesson overview (title slide) | 327–384 | **0 min** | not timetabled |
+| I Do · model | 436–526 | 4 min | 109–132 w/min |
+| **I Do 2 · connect** | 491–568 | **3 min** | **164–189 w/min** |
+| Independent · evidence | 276–313 | **16 min** | 17–20 w/min |
+
+Two stages carrying about 40% of the words hold 7 of the 40 minutes, while the
+stage with 16 minutes carries about 12%. At a 90 w/min supported-reading rate,
+"I Do 2 · connect" alone needs roughly 5.5 minutes against its declared 3.
+
+**So this may not be a split at all.** A split assumes there is too much lesson
+for one period. What the numbers actually show is a period whose minutes are
+allocated against the reverse of its content. Three routes, and the choice is
+pedagogic, so it is yours:
+
+1. **Re-declare the minutes** so they match where the teaching is. Cheapest, no
+   content lost, and it changes the deck's own data rather than any threshold.
+   It would not move the g23 ratio, which is words against the family median —
+   but it would make the deck honest about its own shape.
+2. **Move content out of the two I Do stages into the drawer.** This is the R5.5
+   trim, and here it is defensible in a way it was not for the Humanities decks,
+   because the overload is concentrated rather than spread.
+3. **Split into two lessons.** Only if the content genuinely needs two periods.
+
+My reading is (2) then (1): trim the concentrated overload, then re-declare what
+remains. I have done neither — you said hand them back, and the ratios above are
+the measurement, not a proposal I have acted on.
+
+**One observation, recorded rather than acted on, because it is A3-H5's question
+in a second form.** The "Lesson overview" stage is the title slide —
+`data-type="title"`, `data-min="0"` — and carries 327–384 words of objective,
+success evidence and the Lundy banner in every deck in the estate. g23 counts it
+as pupil teaching content. Whether a title slide with zero declared minutes
+should count is the same question as whether a banner repeated on every stage
+should count once or once per stage, and answering either one loosens g23 for
+every deck. §5 forbids me deciding it. It is noted here because it is roughly
+14% of every deck's word count and it explains part of why the whole estate
+reads heavy — not as an argument for any particular answer.

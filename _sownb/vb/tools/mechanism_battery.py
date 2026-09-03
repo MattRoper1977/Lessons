@@ -69,6 +69,7 @@ SELFTEST_TOOLS = [
     "classic_v2_contract_selftest.py",
     "tools/easter/dedupe_stage_text.py",
     "tools/easter/dedupe_sweep.py",
+    "tools/easter/refresh_pack_checksums.py",
 ]
 LIST_ONLY_TOOLS = [
     "g19_v2.py",
