@@ -98,15 +98,21 @@ tool, inverts one control's expectation, and requires the battery to go red.
 9 PRs audited, 3 regressions. Full working in `_sownb/vb/LANDED_AUDIT_A2.md`.
 
   R1  the shell blindness above
-  R2  the reshell dropped nine stage timings that summed to exactly 40, and
-      nothing noticed, because R1 hid it: the only reader of data-min was the
-      same n6-shaped XPath that already returned nothing on a classic deck
+  R2  the reshell has never carried stage timings. #271 dropped nine values
+      that summed to exactly 40 and nothing noticed, because R1 hid it - the
+      only reader of data-min was the same n6-shaped XPath that already
+      returned nothing on a classic deck. Running the new contract across all
+      54 decks the recipe made: 54/54 have no timings at all, 24/54 have no
+      lesson-config of their own, 24/54 miss Lundy in one of its three places.
+      #271 did not introduce this. It made it visible, by reshelling a deck
+      that had forty declared minutes into one that had none.
   R3  every screen diagram on a classic deck is print-dead, because the chassis
       hides the whole slide container under @media print
 
-R1 is repaired here. R2 is repaired in the recipe and the contract, but the
-landed deck still needs its nine values put back — that is a lesson PR. R3 needs
-print-safe figures authored, also a lesson PR. Both are in the resume block.
+R1 is repaired here. R2 is repaired in the recipe and the contract, but 54
+landed decks still need their timings — a lesson-PR backlog. R3 needs print-safe
+figures authored, also a lesson PR. Both are in the resume block, and CI prints
+the clause backlog on every run so it can be worked down rather than forgotten.
 
 No workbook, NO-TOUCH deck or allowlist entry was touched. No gate's binding
 number moved. g27 is armed and its 19 controls fire.

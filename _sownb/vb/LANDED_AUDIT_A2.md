@@ -181,7 +181,7 @@ x1.53, HEAVY, ceiling RED**.
 **Repair: this order's own gate PR.** Not a revert — the deck is fine, the
 instrument was not.
 
-### R2 — the reshell drops declared stage timings
+### R2 — the reshell has never carried declared stage timings
 
 `BUILD_HUM_W16` before #271 carried nine `data-min` values summing to exactly 40:
 
@@ -192,12 +192,26 @@ reader of `data-min` was the same n6-shaped XPath that already returned nothing
 on a classic deck — R1 hid R2. A lesson that does not say how its forty minutes
 are spent cannot be picked up by a cover teacher, which is what the pack is for.
 
+**The scale is larger than one deck.** Running the classic-v2 contract across
+every deck the recipe produced — identified by the two things only it emits, the
+target TA modal and a print area — gives 54 decks, all Humanities:
+
+    54 recipe-shaped decks
+      54/54  stage-timings-carried   RED
+      24/54  own-lesson-config-only  RED
+      24/54  lundy-in-three-places   RED
+
+So the recipe never carried stage minutes. #271 did not introduce the defect; it
+made it visible, by reshelling a deck that *had* forty declared minutes into one
+that had none. Every other recipe-produced deck was authored without them from
+the start, and no instrument in the estate could see it.
+
 **Repair:** the recipe now carries the minutes forward and asserts the sum
 survives (`reshell_classic_v2.py`, control
 `stage-timings-carried-and-sum-preserved`), and the contract clause
-`stage-timings-carried` reds any deck that lacks them. **The landed deck still
-needs its nine values restored — that is a lesson PR, not this one, and it is in
-the resume block.**
+`stage-timings-carried` reds any deck that lacks them. **54 landed decks still
+need their timings — a lesson-PR backlog, not this PR. It is in the resume
+block, and CI prints the distribution on every run so it can be worked down.**
 
 ### R3 — the reshelled deck's screen visuals are print-dead
 

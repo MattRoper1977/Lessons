@@ -415,21 +415,43 @@ jobs:
       - name: No tool derives a teaching week from a path
         run: python _sownb/vb/tools/g27_no_filename_weeks.py | tee "$RUNNER_TEMP/vb-g27.txt"
 
-      # The recipe's output contract, run against every classic-shell deck the
-      # estate actually ships. Report-only for now: the clause set is new and a
-      # deck that predates it is a finding for a lesson PR, not a reason to
-      # block an unrelated change. Flip to blocking once the backlog is clear.
-      - name: The classic-v2 output contract, across the shipped classic decks
+      # THE CONTRACT'S POPULATION IS RECIPE OUTPUT, NOT EVERY CLASSIC DECK.
+      # First cut of this step judged all 264 files carrying a .slide-container
+      # and every single one red'd, because most of them are Art, Physics and
+      # ASDAN strand decks that predate the reshell entirely and were never
+      # meant to satisfy a recipe-output contract. 1,399 red lines on every PR
+      # is not a gate, it is a thing people learn to scroll past.
+      #
+      # The population is decks the recipe produced, identified by the two
+      # things it emits and nothing else does: the target TA modal and a print
+      # area. 54 decks, all Humanities, ~25s.
+      #
+      # Report-only. Every one of the 54 fails at least one clause today, and
+      # that is a backlog for lesson PRs, not a reason to block an unrelated
+      # change. The distribution is printed so the backlog is visible and can
+      # be worked down; flip to blocking when it reaches zero.
+      - name: The classic-v2 output contract, across the decks the recipe made
         continue-on-error: true
         run: |
           python - <<'PY' | tee "$RUNNER_TEMP/vb-contract.txt"
-          import subprocess, sys
+          import re, subprocess, sys
+          from collections import Counter
           from pathlib import Path
-          decks = [str(p) for p in sorted(Path('.').rglob('*.html'))
-                   if 'node_modules' not in p.parts and '_sownb' not in p.parts
-                   and 'slide-container' in p.read_text(encoding='utf-8', errors='replace')]
-          print(f"{len(decks)} classic-shell decks found")
-          subprocess.run([sys.executable, '_sownb/vb/tools/reshell_classic_v2_contract.py', *decks])
+          decks = []
+          for p in sorted(Path('.').rglob('*.html')):
+              if 'node_modules' in p.parts or '_sownb' in p.parts:
+                  continue
+              raw = p.read_text(encoding='utf-8', errors='replace')
+              if 'slide-container' in raw and 'id="mbmTA"' in raw and 'id="print-area"' in raw:
+                  decks.append(str(p))
+          print(f"{len(decks)} recipe-shaped decks (target TA modal + print area)")
+          r = subprocess.run([sys.executable, '_sownb/vb/tools/reshell_classic_v2_contract.py',
+                              *decks], capture_output=True, text=True)
+          print(r.stdout)
+          counts = Counter(re.findall(r'RED\s+([a-z][a-z0-9-]{4,})\s', r.stdout))
+          print("clause backlog, most common first:")
+          for clause, n in counts.most_common():
+              print(f"  {n:3d}/{len(decks)}  {clause}")
           PY
 
       - name: Result block
