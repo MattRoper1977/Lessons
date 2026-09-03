@@ -887,3 +887,34 @@ This is the second vacuous control in this campaign — the first asserted
 unrelated to the thing being tested. Planting the mutation is what catches it,
 and a control that has never been shown to red has not been shown to be a
 control.
+
+---
+
+WRONG: every handoff this campaign wrote recorded `AUTHORITATIVE_REMOTE_MAIN` as
+a literal SHA, and every one of them was stale the instant it landed. A file
+cannot name the commit that lands the file. #282's handoff said main was
+`727c3162` and it merged as `4c7715d1`; #283's said `4c7715d1` and it merged as
+`0d54ddca`; #284's said `0d54ddca` and it merged as `c83eb7dd`. Three for three,
+by construction rather than by accident.
+
+That is not harmless bookkeeping. A resuming session reads a SHA, fetches main,
+finds a different one, and has to decide whether another writer has been in the
+repository — which in a single-writer order is exactly the alarming case. The
+record was manufacturing a false signal of the one thing it exists to rule out.
+
+RIGHT: the field is split. `LAST_CONTENT_COMMIT` names the last commit that
+changed a lesson, a tool or a workflow, which is a fact that does not go stale
+when records land on top of it. `AUTHORITATIVE_REMOTE_MAIN` no longer holds a
+value at all — it holds the command that reads one, plus the test that tells a
+resuming session which kind of drift it is looking at: ahead only by commits
+touching the records files means nothing a gate would measure has moved; ahead
+by anything else means read the log before acting.
+
+This is the third instance of one mistake in this session, and naming the
+pattern is the point. A status endpoint reporting a finished job as running; a
+merge status trusted instead of the blobs; a handoff naming a head it cannot
+know. Each time the error was treating a RECORD OF a thing as the thing, and
+each time the fix was the same: read the primary source, and where a copy must
+exist, make it say what kind of copy it is. The campaign spent its whole length
+applying that scepticism to g23 and g24 while not applying it to its own
+instruments.

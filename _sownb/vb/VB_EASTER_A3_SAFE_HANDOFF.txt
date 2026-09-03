@@ -5,9 +5,25 @@ SUPERSEDES=the 2026-09-03T23:05:00Z revision of this file, which recorded main a
   727c3162 and #281 as NOT MERGED. Both were true when written and are false now.
   See EASTER_LEDGER.md, "CORRECTION — the sixth check on #281 was never stalled".
 
-AUTHORITATIVE_REMOTE_MAIN=0d54ddca1c893fbb9e818c0b08675535a021e86c
-  Blob-verified: all 75 paths changed by #283 hash identically between the
-  merge commit and the branch head. Not taken from the merge status.
+LAST_CONTENT_COMMIT=0d54ddca1c893fbb9e818c0b08675535a021e86c  (#283)
+  The last commit that changed any lesson, tool or workflow. Blob-verified:
+  all 75 paths hash identically between the merge commit and the branch head.
+  Not taken from the merge status.
+
+AUTHORITATIVE_REMOTE_MAIN=read it, do not trust this file for it.
+  Run: git fetch origin main && git rev-parse origin/main
+  A handoff can never name the commit that lands the handoff, so any SHA
+  written here is stale by at least its own merge the moment it is pushed.
+  Recording one anyway invites a resuming session to find main "wrong" and go
+  looking for a problem that does not exist. Expect origin/main to be at or
+  ahead of LAST_CONTENT_COMMIT above; if it is AHEAD only by records commits
+  touching _sownb/vb/*.md, VB_STATE.json or this file, nothing has changed
+  that a gate would measure. If it is ahead by anything else, read the log
+  before acting - another writer has been in the repository.
+
+  This is the same lesson as the stalled-check misreading recorded in
+  WRONG_BEFORE_RIGHT: a recorded status is not the thing it describes, and the
+  fix is to re-read the primary source rather than to keep the copy fresher.
 LOCAL_REPOSITORY=/home/user/Lessons
 LOCAL_BRANCH=codex/vb-easter-a3-record-a3h6
 WORKTREE_CLEAN=YES at the point of writing
