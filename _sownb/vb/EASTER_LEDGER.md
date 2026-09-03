@@ -102,3 +102,21 @@ promoted ahead of everything. Batch 1 is 24 of 24 cover-taught plans.
 
 Targets: `tools/easter/EASTER_TARGETS.json`, rebuilt by
 `tools/easter/build_targets.py` — re-runnable, so no number here has to be trusted.
+
+---
+
+## §0c — BUILD Humanities, PR #280
+
+`BUILD_HUM_W15` 2036 → 1715 words, ×1.44 → **×1.21 WITHIN**. One lesson unit.
+
+Not a trim. The excess was one `<p>` in stage 6 carrying the same instruction
+block four times, verbatim. Duplicates deleted; 67 distinct pupil sentences
+before and after; containment PASS on 194 sentences, 0 missing.
+`tools/easter/dedupe_stage_text.py`, 7 controls, all fired.
+
+**BUILD_HUM_W16 not trimmed — see A3-H5.** Its 394-word excess is 383 words of
+Lundy banner printed on all ten stages. Same for GROW W16 (116 over, 112 banner)
+and LAUNCH W16 (26 over, 144 banner). Trimming real teaching to offset a banner
+the contract requires would damage three lessons; changing g23 to discount a
+refrain would loosen a threshold, which §5 forbids. Held for a ruling.
+

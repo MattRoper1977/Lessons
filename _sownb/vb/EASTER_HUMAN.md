@@ -87,3 +87,52 @@ n6 deck can be reshelled.
 - **The 54-deck classic-v2 contract backlog** — 54/54 lack stage timings, 24/54
   lack their own lesson-config, 24/54 miss Lundy in one of its three places. CI
   prints the distribution every run, report-only, until the backlog is zero.
+
+---
+
+## A3-H5 — the Lundy banner is counted once per stage, and it is what puts three decks over
+
+**Cells held: none.** Three standing decks are affected; none of their cells is
+blocked. This is a ruling about a measurement, not about a lesson.
+
+The three W16 Humanities decks read over the 1.25 operative target. Their excess
+is almost entirely one thing: the pupil-facing Lundy banner, printed identically
+on every stage.
+
+> "Space means you get room to join in." · "Voice means you get to say it." ·
+> "Audience means someone really listens." · "Influence means something changes
+> because of what you said."
+
+| deck | ratio | words over target | Lundy banner words | ratio counting banner once |
+|---|---|---|---|---|
+| `BUILD_HUM_W16_Then_And_Now_And_What_Is_Fair.html` | 1.53 | 394 | **383** | 1.26 |
+| `GROW_HUM_W16_Sources_Campaigns_And_Hope.html` | 1.38 | 116 | **112** | 1.25 |
+| `LAUNCH_HUM_W16_Steps_In_Law_And_What_Comes_After.html` | 1.28 | 26 | **144** | 1.11 |
+
+**The question, Matt:** should g23 count a banner repeated verbatim on every
+stage once, or once per stage?
+
+**Why I have not just done it.** Both readings are defensible. A pupil reads the
+banner once and thereafter recognises it, which argues for counting it once. It
+also occupies the slide on every stage and a pupil with a reading difficulty may
+re-read it, which argues for counting it as it appears. What is not defensible is
+me choosing: discounting a cross-stage refrain makes **every deck in the estate**
+pass g23 more easily, and §5 of this order forbids loosening a threshold. A
+measurement may be corrected when a planted control proves the old one wrong —
+but here the old measurement is not wrong, it is answering a different question
+from the one we want asked.
+
+**What happens if it stands as is.** The three decks need ~394, ~116 and ~26
+words of real teaching moved into the staff drawer, to compensate for a banner
+the estate's own contract requires them to carry (`lundy-in-three-places`). That
+is a lesson made worse to satisfy a counting artefact, so I have not done it.
+
+**What happens if the banner is counted once.** All three land at or under the
+threshold with no edit at all, and the correction is recorded in
+WRONG_BEFORE_RIGHT with a planted control — a deck whose only excess is a refrain
+passes, and a deck with genuinely repeated *teaching* still reds.
+
+**Evidence:** re-derivable at any time; the per-deck figures above come from
+`_sownb/vb/tools/g23_period_load.py` plus a cross-stage repeat count over
+`lesson_stages.stages()`.
+
