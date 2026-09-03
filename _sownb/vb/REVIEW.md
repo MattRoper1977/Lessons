@@ -93,6 +93,12 @@ scanned count from 130 to 131, which is the whole argument.
 The battery has its own control: `mechanism_battery.py --prove-red` copies a
 tool, inverts one control's expectation, and requires the battery to go red.
 
+*Superseded by A3.* The table above was true when A2R landed. The Easter
+campaign's two tools were outside the battery and CI ran neither, so
+`dedupe_stage_text.py` shipped two bugs in #280 that only its own controls
+caught. Both are in the battery now: 13 tools, 115 controls, still derived,
+still nothing pinned. Ask the battery, not this page.
+
 ## The audit of what landed
 
 9 PRs audited, 3 regressions. Full working in `_sownb/vb/LANDED_AUDIT_A2.md`.

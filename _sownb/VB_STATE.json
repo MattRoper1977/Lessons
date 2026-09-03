@@ -3,7 +3,7 @@
  "order": "mbm-sow-verify-and-build-2026-09-02-VB-RUN14",
  "run": 14,
  "runDate": "2026-09-02",
- "mainHead": "de7e5f88",
+ "mainHead": "e09005a8b1a8f820e8462017b5964ceefa02a7e8",
  "anchor_run2": "dedbf06f546127d06091373dd777b943cc0b039e",
  "anchor_run2_note": "Anchored at fetch time. Main kept moving during the run: #187 (FEB catalogue append of ten packs to resources.json), #188 (catalogue chip tooling), then this order's own #189 merged as 28ee8d9b. No commit between 22f6470f and 28ee8d9b touches any of the twelve except #189 itself (this order's repair). Corpus freeze re-verified 54/54 OK at run start.",
  "phases": {
@@ -3245,39 +3245,80 @@
   }
  },
  "resume_easter_a3": {
-  "order": "mbm-vb-easter-a3-2026-09-03",
-  "campaign": "VB_EASTER_A3",
-  "ledger": "_sownb/vb/EASTER_LEDGER.md — the record; this block is a mirror and may be the stale copy",
-  "humanItems": "_sownb/vb/EASTER_HUMAN.md",
-  "targets": "tools/easter/EASTER_TARGETS.json (rebuild: tools/easter/build_targets.py)",
-  "baseMain": "949e15f52e35c39fbbe0d204bc0acc3e06cce555",
-  "headlineWeek26": {
+  "order": "VB-EASTER-A3",
+  "status": "IN_PROGRESS",
+  "mainHead": "e09005a8b1a8f820e8462017b5964ceefa02a7e8",
+  "mainHeadVerification": "blob-verified: all ten paths changed by #281 hash identically between the merge commit and branch head b35588b; not taken from the merge status",
+  "correction": "the previous revision of this key recorded main at 727c3162 and #281 as NOT MERGED on a stalled sixth check. The sixth check completed successfully at 22:50:33; the API served a stale job record. See EASTER_LEDGER.md 'CORRECTION' and WRONG_BEFORE_RIGHT.",
+  "landed": [
+   {
+    "pr": 279,
+    "what": "§1 target list",
+    "merge": "3f859ec66043d8172f2d403f8d2064d165d4bce8",
+    "units": 0
+   },
+   {
+    "pr": 280,
+    "what": "§0c BUILD Humanities",
+    "merge": "727c31623070acb08684d1bc788ef4741c02c230",
+    "units": 1
+   },
+   {
+    "pr": 281,
+    "what": "§0c GROW Humanities",
+    "merge": "e09005a8b1a8f820e8462017b5964ceefa02a7e8",
+    "units": 1
+   }
+  ],
+  "open": [
+   {
+    "pr": 282,
+    "what": "§0c LAUNCH Humanities + estate-wide duplication sweep",
+    "branch": "codex/vb-easter-a3-trim-launch-humanities",
+    "units": 1
+   }
+  ],
+  "ceiling": {
+   "total": 24,
+   "spent": 3,
+   "remaining": 21,
+   "note": "batch 1 alone needs 24 plans; the ceiling is the binding constraint"
+  },
+  "headline": {
    "inScope": 573,
    "covered": 134,
    "open": 439,
    "reading": "content",
-   "pathSecondary": 142
+   "weekTo": 26,
+   "batchesRun": 0
   },
-  "planCount": 262,
-  "cellsInPlans": 439,
-  "planSizes": {
-   "1-cell": 146,
-   "2-cell": 55,
-   "3-cell": 61
+  "a3h6": {
+   "finding": "the W15 duplication is a generator defect, estate-wide: 377 decks scanned, 24 affected, 19 with removable duplication, 7593 words, 170 sentences at exactly x4, every one in the stage 'I Do 2 · connect'",
+   "liveCeilingReds": 10,
+   "redsClearedByDedupeAlone": 5,
+   "reachOperativeTarget": 7,
+   "stillRedAfterDedupe": "5 ASDAN Spring1 W15/W16 decks at x1.97-2.57 -- real teaching content, belongs with A3-H2",
+   "denominatorNeutral": "zero affected decks sit in any of the nine family baseline sets, so no median and no p25 floor moves",
+   "notMissingTiering": "the clean sibling SCI_B_W14A has the identical stage structure with three distinct h3 tier headings; only the task paragraph differs, 108w vs 597w",
+   "applied": false,
+   "why": "19 decks is 19 of the 21 remaining lesson units and would starve batch 1; scheduling is Matt's call",
+   "tool": "tools/easter/dedupe_sweep.py",
+   "controls": 10,
+   "evidence": "_sownb/vb/evidence/a3/dedupe_sweep_live.json"
   },
-  "reshellPlans": 5,
-  "heldCells": 3,
-  "forecast": "at BATCH_CEILING 24: ~40 cells per batch, 11 batches to DONE",
-  "batchesRun": 0,
-  "nextAction": "1) merge #281 when its sixth check reports  2) LAUNCH Humanities de-dupe (pre-measured 3526->2710, x3.30)  3) batch 1 (24 cover-taught plans)",
-  "outOfScopeExcluded": "GROW Spring C116 (wk20) and C117 (wk21): scopeStatus OUT_OF_SCOPE, Careers outside ORDER FEB scope",
-  "token": "VB_EASTER_A3_PAUSED",
-  "handoff": "_sownb/vb/VB_EASTER_A3_SAFE_HANDOFF.txt",
-  "mainAtPause": "727c31623070acb08684d1bc788ef4741c02c230",
-  "landed": [
-   "#279 §1 target list -> 3f859ec6 (0 units)",
-   "#280 §0c BUILD Humanities -> 727c3162 (1 unit)"
+  "nextActions": [
+   "merge #282 and blob-verify it against main",
+   "read Matt's ruling on A3-H6 (recommendation: before batch 1)",
+   "batch 1: first 24 plans in tools/easter/EASTER_TARGETS.json, all ruled week <= 8; run dedupe_sweep.py against whatever it produces"
   ],
-  "open": "#281 §0c GROW Humanities, head 807f154e, 5 of 6 checks green, sixth stalled; NOT merged"
+  "humanItems": [
+   "A3-H1",
+   "A3-H2",
+   "A3-H3",
+   "A3-H4",
+   "A3-H5",
+   "A3-H6"
+  ],
+  "resumePointer": "_sownb/vb/EASTER_LEDGER.md"
  }
 }
