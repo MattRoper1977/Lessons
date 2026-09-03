@@ -32,12 +32,14 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import sys
 import hashlib
 import importlib.util
 import json
 import re
 from pathlib import Path
 
+VERSION = "g19-v2.1.0-controls-published"
 ROOT = Path(__file__).resolve().parents[3]
 FEB = ROOT / "_sownb/feb/tools/g19_token_ownership.py"
 CONFIG = ROOT / "_sownb/vb/G19_TOKEN_OWNERSHIP_v2.json"
@@ -82,6 +84,19 @@ def declarations(css: str) -> tuple[list[dict], list[dict]]:
             }
             (in_root if is_root else scoped).append(row)
     return in_root, scoped
+
+
+def root_block_count(path: Path) -> int:
+    """How many :root declaration blocks this deck defines.
+
+    The RUN12-A ruling is that a token is DEFINED once, in :root; more than one
+    :root block is a red. Exposed as a helper so the reshell recipe can refuse a
+    donor BEFORE generating from it (order 0.8), rather than the estate learning
+    about it from a gate run afterwards.
+    """
+    css = css_of(Path(path))
+    return sum(1 for sel, _ in ((m.group(1), m.group(2)) for m in RULE.finditer(css))
+               for part in sel.split(",") if part.strip() == ":root")
 
 
 def measure(path: Path, family: str, config: dict) -> dict:
@@ -143,8 +158,25 @@ def plant_duplicate(css_source: str, token: str, value: str) -> str:
     return css_source[: match.end()] + f"{token}:{value};" + css_source[match.end() :]
 
 
+# The two controls this gate runs on EVERY invocation, published so a caller
+# can assert "all listed controls fired" without pinning a number (A2R 3.4/3.5).
+CONTROL_IDS = [
+    "duplicate-token-in-root-reds",
+    "second-root-block-reds",
+]
+
+
+def list_controls() -> list[str]:
+    return list(CONTROL_IDS)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
+    if "--list-controls" in sys.argv:
+        for c in list_controls():
+            print(c)
+        return 0
+    parser.add_argument("--list-controls", action="store_true")
     parser.add_argument("--family", required=True)
     parser.add_argument("--file", required=True)
     parser.add_argument("--config", default=str(CONFIG))
@@ -201,9 +233,16 @@ def main() -> int:
             "fired": mutated_report["rootBlocks"] == report["rootBlocks"] + 1 and mutated_report["status"] == "RED",
             "withdrawn": not scratch.exists(),
         })
+    report["toolVersion"] = VERSION
     report["firingControl"] = control
     report["rootBlockControl"] = block_control
-    report["nonVacuous"] = bool(control.get("fired")) and bool(block_control.get("fired"))
+    report["controlsDeclared"] = len(CONTROL_IDS)
+    report["controlResults"] = {
+        "duplicate-token-in-root-reds": bool(control.get("fired")),
+        "second-root-block-reds": bool(block_control.get("fired")),
+    }
+    report["allListedControlsFired"] = all(report["controlResults"].values())
+    report["nonVacuous"] = report["allListedControlsFired"]
     report["rule"] = (
         "RUN12-A: a token is DEFINED once, in :root; pathway values live under a scope selector only; "
         "a second definition in :root is a red. Scoped declarations are recorded, not counted for uniqueness. "

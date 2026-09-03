@@ -48,7 +48,7 @@ import json
 import statistics
 from pathlib import Path
 
-VERSION = "g18-v3.0.0-feb-measurement-delegated"
+VERSION = "g18-v4.0.0-shell-aware-counter-same-floor-rule"
 ROOT = Path(__file__).resolve().parents[3]
 
 _spec = importlib.util.spec_from_file_location(
@@ -83,64 +83,123 @@ FAMILY_NEIGHBOURS = {fam: pats[0] if len(pats) == 1 else pats
                      for fam, pats in _meas.BASELINES.items()}
 
 
+# THE COUNTER MOVED, THE RULE DID NOT (VB-EASTER-A2R §3.3).
+#
+# v1.lesson_counts selects `main.deck > section.slide`, which is the n6 shell
+# and only the n6 shell. 264 of this estate's 607 deck-shaped files are the
+# classic chassis, whose stages are `main.deck .slide-container .slide`, and on
+# every one of them that selector returned nothing:
+#
+#   BUILD_HUM_W16_Then_And_Now_And_What_Is_Fair.html   0 words   x0.0   PASS
+#
+# on a deck carrying ten stages and 2,159 pupil words, landed on main in #271.
+# v1 also joined block elements with no separator, so every `</p><p>` boundary
+# merged two words into one and every figure it ever printed was short.
+#
+# The FLOOR RULE is untouched: still nearest-rank p25 of the family's own live
+# neighbours, still MIN_NEIGHBOURS=5 before the global fallback, still the
+# 40-word thin-slide rule. Only the instrument changed, and it changed because
+# a planted control proved the old one wrong -- see lesson_stages.py
+# --self-test, controls `classic-shell-is-seen` and
+# `one-pupil-paragraph-raises-the-count`.
+#
+# Family MEMBERSHIP still comes from FEB's BASELINES dict, so there is still one
+# answer to "which files are in this family". Only the counting of them moved.
+_ls_spec = importlib.util.spec_from_file_location(
+    "lesson_stages", ROOT / "_sownb/vb/tools/lesson_stages.py")
+stages_mod = importlib.util.module_from_spec(_ls_spec)
+_ls_spec.loader.exec_module(stages_mod)
+
+
 def words_of(path: Path) -> int:
-    return v1.lesson_counts(path)["totalWords"]
+    return stages_mod.measure(Path(path))["totalWords"]
+
+
+def legacy_words_of(path: Path) -> int:
+    """The pre-A2R n6-only counter, retained so every line can print
+    before -> after and no correction is invisible."""
+    try:
+        return v1.lesson_counts(path)["totalWords"]
+    except Exception:
+        return 0
 
 
 def is_lesson_deck(path: Path) -> bool:
     """True when the file is a taught lesson, not pack support furniture."""
-    counts = v1.lesson_counts(path)
-    return len(counts["slides"]) >= MIN_LESSON_SLIDES and counts["totalWords"] > 0
+    m = stages_mod.measure(Path(path))
+    return m["stageCount"] >= MIN_LESSON_SLIDES and m["totalWords"] > 0
 
 
 def family_baseline(family: str, exclude: Path | None = None) -> dict:
-    """Delegate to FEB's derive_floor; add the fields VB's reports print.
+    """FEB's family membership, counted with the shell-aware instrument.
 
     exclude drops the candidate from its own baseline where it already sits in
     the donor pack, which FEB's derive_floor does not do because it is called
     on a family, not on a candidate.
     """
-    try:
-        feb = _meas.derive_floor(family)
-    except SystemExit as exc:
-        return {"family": family, "pattern": FAMILY_NEIGHBOURS.get(family),
-                "n": 0, "p25": None, "median": None, "files": [],
-                "excludedSupportSurfaces": [], "error": str(exc)}
-    sample = feb["sample"]
-    if exclude is not None:
-        keep = str(exclude.resolve())
-        sample = [r for r in sample
-                  if str((ROOT / r["path"]).resolve()) != keep]
+    patterns = _meas.BASELINES.get(family)
+    if patterns is None:
+        return {"family": family, "pattern": None, "n": 0, "p25": None,
+                "median": None, "files": [], "excludedSupportSurfaces": [],
+                "error": f"MEASUREMENT INVALID: {family} is not a known family"}
+    keep = str(exclude.resolve()) if exclude is not None else None
+    sample = []
+    for pattern in patterns:
+        for path in sorted(ROOT.glob(pattern)):
+            if keep is not None and str(path.resolve()) == keep:
+                continue
+            try:
+                m = stages_mod.measure(path)
+            except Exception:
+                continue
+            if m["totalWords"]:
+                sample.append({"path": str(path.relative_to(ROOT)),
+                               "words": m["totalWords"],
+                               "legacyWords": legacy_words_of(path),
+                               "shell": m["shell"]})
     totals = [r["words"] for r in sample]
+    legacy_totals = [r["legacyWords"] for r in sample if r["legacyWords"]]
+    if len(totals) < 2:
+        return {"family": family, "pattern": patterns, "n": len(totals),
+                "p25": None, "median": None, "files": [],
+                "excludedSupportSurfaces": [],
+                "error": f"MEASUREMENT INVALID: {family} p25 has {len(totals)} qualifying donor lessons"}
     return {
         "family": family,
-        "pattern": feb["patterns"],
+        "pattern": patterns,
         "n": len(totals),
-        "p25": v1.nearest_rank(totals, 0.25) if totals else None,
-        "median": statistics.median(totals) if totals else None,
-        "min": min(totals) if totals else None,
-        "max": max(totals) if totals else None,
-        "files": [{"file": Path(r["path"]).name, "words": r["words"]} for r in sample],
+        "p25": v1.nearest_rank(totals, 0.25),
+        "median": statistics.median(totals),
+        "min": min(totals),
+        "max": max(totals),
+        "legacyP25": v1.nearest_rank(legacy_totals, 0.25) if len(legacy_totals) >= 2 else None,
+        "legacyMedian": statistics.median(legacy_totals) if legacy_totals else None,
+        "legacyN": len(legacy_totals),
+        "shells": sorted({r["shell"] for r in sample}),
+        "files": [{"file": Path(r["path"]).name, "words": r["words"],
+                   "legacyWords": r["legacyWords"], "shell": r["shell"]} for r in sample],
         "excludedSupportSurfaces": [],
-        "derivation": "FEB g18_measurement.derive_floor (single implementation, D5)",
+        "derivation": ("FEB g18_measurement.BASELINES for membership; "
+                       "lesson_stages (shell-aware, screen-scoped) for the count"),
     }
 
 
 def score(candidate: str, family: str) -> dict:
     path = (ROOT / candidate).resolve()
-    counts = v1.lesson_counts(path)
-    total = counts["totalWords"]
+    measured = stages_mod.measure(path)
+    total = measured["totalWords"]
+    legacy_total = legacy_words_of(path)
 
     fam = family_baseline(family, exclude=path)
     legacy = v1.baseline()
     global_p25 = legacy["p25"]
 
-    fallback = fam["n"] < MIN_NEIGHBOURS
+    fallback = fam["n"] < MIN_NEIGHBOURS or fam.get("p25") is None
     binding_floor = global_p25 if fallback else fam["p25"]
     binding_source = (f"GLOBAL-FALLBACK n={fam['n']}" if fallback
                       else f"family p25 of {fam['n']} live neighbours")
 
-    thin = [r for r in counts["slides"]
+    thin = [r for r in measured["stages"]
             if r["wordCount"] < 40 and not r["deliberatePause"]]
 
     binding_pass = total >= binding_floor and not thin
@@ -151,35 +210,161 @@ def score(candidate: str, family: str) -> dict:
         "toolVersion": VERSION,
         "candidate": candidate,
         "family": family,
+        "shell": measured["shell"],
+        "stageCount": measured["stageCount"],
         "candidateWords": total,
+        "candidateWordsLegacyCounter": legacy_total,
+        "counterCorrectionDelta": total - legacy_total,
         "thinSlides": thin,
         "familyBaseline": fam,
         "bindingFloor": binding_floor,
         "bindingFloorSource": binding_source,
-        "globalFloorLegacy": global_p25,
+        "familyP25Legacy": fam.get("legacyP25"),
+        "familyMedianLegacy": fam.get("legacyMedian"),
+        "globalFloorInformational": global_p25,
         "globalFloorSource": legacy["directory"] + " nearest-rank p25 (v1 baseline)",
         "bindingVerdict": "PASS" if binding_pass else "RED",
-        "legacyVerdict": "PASS" if legacy_pass else "RED",
+        "globalInformationalVerdict": "PASS" if legacy_pass else "RED",
         "flipped": binding_pass != legacy_pass,
         "ratioToFamilyMedian": (round(total / fam["median"], 2)
-                                if fam["median"] else None),
+                                if fam.get("median") else None),
     }
 
 
 def line(r: dict) -> str:
-    return (f"{Path(r['candidate']).name[:44]:44s} fam={r['family']:17s} "
-            f"n={r['familyBaseline']['n']:2d} famP25={str(r['bindingFloor']):>5s} "
-            f"globalP25={r['globalFloorLegacy']} words={r['candidateWords']:5d} "
-            f"BINDING={r['bindingVerdict']:4s} LEGACY={r['legacyVerdict']:4s}"
+    """Per-family BINDING and global INFORMATIONAL on every line (A2R §3.5),
+    with the counter correction printed so before -> after is never invisible."""
+    fam = r["familyBaseline"]
+    return (f"{Path(r['candidate']).name[:40]:40s} fam={r['family']:17s} shell={r['shell']:7s} "
+            f"n={fam['n']:2d} BINDING famP25={str(r['bindingFloor']):>5s} "
+            f"(was {str(r['familyP25Legacy']):>5s}) "
+            f"INFORMATIONAL globalP25={r['globalFloorInformational']} "
+            f"words={r['candidateWords']:5d} (was {r['candidateWordsLegacyCounter']:5d}) "
+            f"BINDING={r['bindingVerdict']:4s} GLOBAL={r['globalInformationalVerdict']:4s}"
             f"{'  <-- FLIP' if r['flipped'] else ''}  [{r['toolVersion']}]")
+
+
+CONTROL_IDS = [
+    "classic-shell-candidate-is-not-zero",
+    "thin-slide-still-reds",
+    "deliberate-pause-still-exempt",
+    "below-family-floor-still-reds",
+    "family-membership-comes-from-feb-baselines",
+]
+
+
+def controls() -> list[dict]:
+    """Planted, fired, withdrawn. The floor RULE must still bite after the
+    counter change; that is the whole risk of changing an instrument."""
+    out = []
+
+    def rec(cid, description, expected, observed):
+        out.append({"id": cid, "description": description, "expected": expected,
+                    "observed": observed, "fired": expected == observed})
+
+    classic = stages_mod._CLASSIC
+    rec("classic-shell-candidate-is-not-zero",
+        "a classic-shell deck counts its stages instead of returning zero",
+        True, stages_mod._words_of_html(classic) > 0)
+
+    # A fixture whose stages are ABOVE the 40-word rule, so that planting one
+    # thin stage is the only thing that can make the rule fire. Reusing the
+    # 5-word demo deck would have found three thin stages before anything was
+    # planted, and a control that is already firing measures nothing.
+    from lxml import html as _lh
+    fat = " ".join(f"word{n}" for n in range(50))
+    fixture = ("<!doctype html><html><head><style>.slide{display:none}"
+               ".slide.active{display:flex}</style></head><body>"
+               '<main class="deck"><div class="slide-container">'
+               f'<div class="slide active" data-title="one"><p>{fat}</p></div>'
+               f'<div class="slide" data-title="two"><p>{fat}</p></div>'
+               "</div></main></body></html>")
+
+    def thin_rows(source, pause=None, cut=None):
+        tree = _lh.fromstring(source)
+        view = stages_mod.ScreenView(tree)
+        rows = []
+        for idx, st in enumerate(stages_mod.stages(tree, view)):
+            wc = stages_mod.words(stages_mod.stage_text(st, view))
+            dp = (st.get("data-deliberate-pause") or "").strip() or None
+            if cut is not None and idx == 0:
+                wc = cut
+                dp = pause
+            rows.append({"wordCount": wc, "deliberatePause": dp})
+        return [r for r in rows if r["wordCount"] < 40 and not r["deliberatePause"]]
+
+    rec("thin-slide-still-reds",
+        "with both stages at 50 words, cutting stage 1 to 20 makes exactly one thin stage",
+        (0, 1), (len(thin_rows(fixture)), len(thin_rows(fixture, cut=20))))
+
+    rec("deliberate-pause-still-exempt",
+        "the same 20-word stage carrying a deliberate-pause reason is not thin",
+        0, len(thin_rows(fixture, cut=20, pause="silent reading")))
+
+    # A REAL deck, not an arithmetic assertion. A control that evaluates
+    # `10 >= 999` proves the comparison operator works and nothing else.
+    thin_deck = classic.replace("<p>alpha beta gamma delta epsilon</p>", "<p>alpha</p>") \
+                       .replace("<p>zeta eta theta iota kappa</p>", "<p>zeta</p>") \
+                       .replace("<p>lambda mu nu xi omicron</p>", "<p>lambda</p>")
+    planted_total = stages_mod._words_of_html(thin_deck)
+    fat_total = stages_mod._words_of_html(classic)
+    floor = 10
+    rec("below-family-floor-still-reds",
+        "a real 3-word deck reds against a floor of 10 that a 15-word deck passes",
+        ("RED", "PASS"),
+        ("PASS" if planted_total >= floor else "RED",
+         "PASS" if fat_total >= floor else "RED"))
+
+    rec("family-membership-comes-from-feb-baselines",
+        "the family file set is FEB's BASELINES dict, not a second list here",
+        True, set(_meas.BASELINES) == set(FAMILY_NEIGHBOURS))
+
+    return out
+
+
+def self_test() -> dict:
+    results = controls()
+    ids = [r["id"] for r in results]
+    missing = [c for c in CONTROL_IDS if c not in ids]
+    extra = [c for c in ids if c not in CONTROL_IDS]
+    return {"tool": "g18_v2_family_floor", "toolVersion": VERSION,
+            "file": "_sownb/vb/tools/g18_v2_family_floor.py",
+            "controlsDeclared": len(CONTROL_IDS), "controlsRun": len(results),
+            "controlsFired": sum(1 for r in results if r["fired"]),
+            "missingControls": missing, "undeclaredControls": extra,
+            "allListedControlsFired": not missing and not extra and all(r["fired"] for r in results),
+            "controls": results}
 
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--family", required=True)
-    ap.add_argument("--candidate", required=True)
+    ap.add_argument("--family")
+    ap.add_argument("--candidate")
     ap.add_argument("--output")
+    ap.add_argument("--list-controls", action="store_true")
+    ap.add_argument("--self-test", action="store_true")
     a = ap.parse_args()
+
+    if a.list_controls:
+        for c in CONTROL_IDS:
+            print(c)
+        return 0
+    if a.self_test:
+        report = self_test()
+        if a.output:
+            out = ROOT / a.output
+            out.parent.mkdir(parents=True, exist_ok=True)
+            out.write_text(json.dumps(report, indent=1) + "\n", encoding="utf-8")
+        print(f"g18 self-test  [{VERSION}]")
+        for r in report["controls"]:
+            print(f"  {'ok  ' if r['fired'] else 'FAIL'} {r['id']:44s} "
+                  f"expected={r['expected']} observed={r['observed']}")
+        print(f"{report['controlsFired']}/{report['controlsRun']} controls fired")
+        print("PASS" if report["allListedControlsFired"] else "MEASUREMENT INVALID")
+        return 0 if report["allListedControlsFired"] else 1
+
+    if not a.family or not a.candidate:
+        ap.error("--family and --candidate are required unless --list-controls/--self-test")
     r = score(a.candidate, a.family)
     if a.output:
         out = ROOT / a.output

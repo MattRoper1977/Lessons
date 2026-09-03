@@ -25,8 +25,17 @@ offsets, so consuming it is another way of reading a stale week.
 Every hit prints the file, the line, the pattern and the subject, so the finding
 can be checked by eye rather than trusted.
 
+DERIVE, DO NOT RE-PIN (A2R 3.4). Earlier callers asserted "18 controls" and
+"133 tools" as literals in a workflow. Both are facts about the repository on
+the day somebody looked, and a literal that has to be re-typed when the estate
+grows is a gate that goes red for the wrong reason -- or, worse, one that
+somebody quietly edits to match. The apexpool hardcoded-count precedent is the
+same lesson. The tool now publishes its control list through --list-controls,
+and the workflow asserts that EVERY LISTED CONTROL FIRED without ever naming a
+number. The scanned-tool count is reported, never asserted.
+
 Usage:
-  g27_no_filename_weeks.py [--output <report.json>] [--self-test]
+  g27_no_filename_weeks.py [--output <report.json>] [--self-test] [--list-controls]
 """
 from __future__ import annotations
 
@@ -37,6 +46,7 @@ import sys
 import tempfile
 from pathlib import Path
 
+VERSION = "g27-v2.0.0-controls-derived-not-pinned"
 ROOT = Path(__file__).resolve().parents[3]
 SCAN_DIRS = ("_sownb", "tools")
 SUFFIXES = (".py", ".js", ".mjs")
@@ -111,11 +121,21 @@ def compiled_week_vars(source: str) -> set[str]:
 
 
 def subject_is_path(subject: str, names: set[str]) -> bool:
+    """Is the thing being matched against derived from a path?
+
+    Reading only the HEAD identifier missed every wrapped form -- str(d),
+    f"{d}", "/".join(parts) -- so a week could be read from a folder name by
+    putting the path inside a call. A path name ANYWHERE in the subject
+    expression counts, matched on word boundaries so `deck_text` is not `deck`.
+    Found by the control py-term-folder-regex-on-a-path, which failed to fire.
+    """
     subject = subject.strip()
     if PATH_EXPR.search(subject):
         return True
-    head = re.match(r"([A-Za-z_$]\w*)", subject)
-    return bool(head and head.group(1) in names)
+    for name in names:
+        if re.search(r"\b" + re.escape(name) + r"\b", subject):
+            return True
+    return False
 
 
 def scan(path: Path) -> list[dict]:
@@ -179,30 +199,103 @@ def measure() -> dict:
             "hitCount": sum(len(r["hits"]) for r in rows), "rows": rows}
 
 
+# Each control is a tiny source file that either MUST or MUST NOT be flagged.
+# Positives prove the detector fires; negatives prove it is not a rubber stamp
+# that flags every week-shaped regex in the estate.
+#
+# THE BODIES ARE ASSEMBLED, NOT WRITTEN OUT. This file scans _sownb/ and tools/,
+# so it scans itself. A control written as a plain literal would make the gate
+# flag its own control list, and the tempting fix -- an allowlist naming this
+# file -- is an excuse with a filename. The same reasoning already governs
+# _COL above. So the scannable fragments are built from pieces and no form this
+# tool looks for appears in it verbatim.
+_BS = chr(92)
+_NL = chr(10)
+_WD = "W(" + _BS + "d+)"           # W(\d+)
+_WKD = "wk" + _BS + "d+"           # wk\d+
+_A12 = "_A(" + "[12])_"            # the run-11 _A([12])_ filename rule
+_SPRING = "Spring" + "[12]_W"
+_AUT = "Autumn2" + "_W(" + _BS + "d+)"
+
+CONTROLS = [
+    # ---- positives: a week derived from a path -------------------------------
+    ("py-week-regex-on-filename-var", True,
+     f"import re{_NL}fn = 'BUILD_HUM_W16.html'{_NL}m = re.search(r'_{_WD}_', fn){_NL}"),
+    ("py-week-regex-on-path-name", True,
+     f"import re{_NL}from pathlib import Path{_NL}m = re.search(r'_{_WD}_', Path(x).name){_NL}"),
+    ("py-week-regex-on-path-stem", True,
+     f"import re{_NL}from pathlib import Path{_NL}m = re.search(r'{_WD}', Path(x).stem){_NL}"),
+    ("py-week-regex-on-basename", True,
+     f"import re, os{_NL}m = re.match(r'.*_{_WD}_', os.path.basename(p)){_NL}"),
+    ("py-week-regex-on-dirname", True,
+     f"import re, os{_NL}rows = re.findall(r'{_AUT}', os.path.dirname(p)){_NL}"),
+    ("py-week-regex-on-parts-minus-one", True,
+     f"import re{_NL}seg = parts[-1]{_NL}m = re.search(r'{_WKD}', seg){_NL}"),
+    ("py-compiled-week-regex-on-a-path", True,
+     f"import re{_NL}WEEK = re.compile(r'_{_WD}_'){_NL}"
+     f"from pathlib import Path{_NL}name = Path(p).name{_NL}m = WEEK.search(name){_NL}"),
+    ("py-run11-underscore-A-filename-rule", True,
+     f"import re{_NL}fn = candidate{_NL}m = re.search(r'{_A12}', fn){_NL}"),
+    ("py-term-folder-regex-on-a-path-wrapped-in-str", True,
+     f"import re{_NL}from pathlib import Path{_NL}d = Path(p).parent{_NL}"
+     f"m = re.search(r'{_SPRING}', str(d)){_NL}"),
+    ("js-week-regex-on-path-var", True,
+     f"const filename = 'GROW_HUM_W15.html';{_NL}const m = filename.match(/_{_WD}_/);{_NL}"),
+    ("js-week-regex-on-derived-path-var", True,
+     f"const base = path.basename(f);{_NL}const m = base.match(/{_WD}/);{_NL}"),
+    # ---- positives: a week read from the superseded spine column -------------
+    ("spine-absolute-week-subscript-read", True,
+     f"import json{_NL}d = json.load(open('CALENDAR_" + "SPINE.json'))" + f"{_NL}"
+     f"w = d['rows'][0]['{_COL}']{_NL}"),
+    ("spine-absolute-week-get-read", True,
+     f"import json{_NL}d = json.load(open('CALENDAR_" + "SPINE.json'))" + f"{_NL}"
+     f"w = d.get('{_COL}'){_NL}"),
+    ("spine-absolute-week-attribute-read", True,
+     "spine = load('CALENDAR_" + "SPINE.json')" + f"{_NL}w = spine.{_COL}{_NL}"),
+    # ---- negatives: legal ways to know a week --------------------------------
+    ("week-from-a-workbook-cell-via-the-spine", False,
+     f"import re{_NL}def week_of(cell_reference, spine):{_NL}"
+     f"    m = re.search(r'C({_BS}{_BS}d+)', cell_reference){_NL}"
+     f"    return spine.ruled_week(m.group(1)) if m else None{_NL}"),
+    ("week-from-the-decks-own-text", False,
+     f"import re{_NL}def week_from_markup(raw):{_NL}"
+     f"    m = re.search(r'Week ({_BS}{_BS}d+) ', raw){_NL}"
+     f"    return int(m.group(1)) if m else None{_NL}"),
+    ("spine-absolute-week-named-only-in-a-comment", False,
+     f"import json{_NL}# the {_COL} column is superseded and is not read here{_NL}"
+     "d = json.load(open('CALENDAR_" + "SPINE.json'))" + f"{_NL}w = d['rows'][0]['ruledWeek']{_NL}"),
+    ("spine-read-for-a-column-that-is-not-absolute-week", False,
+     "import json" + f"{_NL}d = json.load(open('CALENDAR_" + "SPINE.json'))"
+     + f"{_NL}w = d['rows'][0]['termLabel']{_NL}"),
+    ("non-week-regex-on-a-path", False,
+     f"import re{_NL}from pathlib import Path{_NL}m = re.search(r'START_HERE', Path(p).name){_NL}"),
+]
+
+
+def list_controls() -> list[str]:
+    return [cid for cid, _, _ in CONTROLS]
+
+
 def controls() -> dict:
-    """A gate that cannot be made to fire has measured nothing."""
-    red = ("import re\n"
-           "def week_of(path):\n"
-           "    m = re.search(r'_W(\\d+)_', path)\n"
-           "    return int(m.group(1)) if m else None\n")
-    green = ("import re\n"
-             "def week_of(cell_reference, spine):\n"
-             "    m = re.search(r'C(\\d+)', cell_reference)\n"
-             "    return spine.ruled_week(m.group(1)) if m else None\n")
-    green2 = ("import re\n"
-              "def week_from_the_decks_own_text(html):\n"
-              "    m = re.search(r'Week (\\d+) ', html)\n"
-              "    return int(m.group(1)) if m else None\n")
+    """A gate that cannot be made to fire has measured nothing. Every control is
+    planted in a temporary file, scanned, and withdrawn when the directory goes."""
     out = {}
     with tempfile.TemporaryDirectory() as tmp:
-        for label, body, must_fire in (("readsWeekFromPath", red, True),
-                                       ("readsWeekFromCell", green, False),
-                                       ("readsWeekFromDeckText", green2, False)):
-            p = Path(tmp) / f"{label}.py"
+        for label, must_fire, body in CONTROLS:
+            p = Path(tmp) / f"{label.replace('-', '_')}.py"
+            if label.startswith("js-"):
+                p = p.with_suffix(".js")
             p.write_text(body, encoding="utf-8")
-            fired = bool(scan(p))
-            out[label] = {"mustFire": must_fire, "fired": fired, "ok": fired == must_fire}
+            hits = scan(p)
+            fired = bool(hits)
+            out[label] = {"mustFire": must_fire, "fired": fired, "ok": fired == must_fire,
+                          "hits": hits}
     out["nonVacuous"] = all(v["ok"] for v in out.values() if isinstance(v, dict))
+    out["controlsDeclared"] = len(CONTROLS)
+    out["controlsFiredAsDeclared"] = sum(
+        1 for v in out.values() if isinstance(v, dict) and v.get("ok"))
+    out["allListedControlsFired"] = (
+        out["controlsFiredAsDeclared"] == out["controlsDeclared"])
     return out
 
 
@@ -210,12 +303,19 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--output")
     ap.add_argument("--self-test", action="store_true")
+    ap.add_argument("--list-controls", action="store_true")
     args = ap.parse_args()
+
+    if args.list_controls:
+        for c in list_controls():
+            print(c)
+        return 0
 
     ctl = controls()
     report = measure()
     report["firingControls"] = ctl
     report["file"] = "_sownb/vb/tools/g27_no_filename_weeks.py"
+    report["toolVersion"] = VERSION
     report["subject"] = ("g27: no tool under _sownb/ or tools/ derives a teaching week from a filename, a "
                          "folder name or CALENDAR_SPINE absoluteWeek (ORDER VB-RUN13 R0)")
     report["rule"] = ("a week is a property of a workbook cell via the ruled spine; a deck's week is the "
@@ -227,10 +327,14 @@ def main() -> int:
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(json.dumps(report, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
 
-    print(f"g27  scanned {report['toolsScanned']} tools  ·  {report['hitCount']} hit(s) in {report['toolsWithHits']} file(s)")
+    print(f"g27  scanned {report['toolsScanned']} tools  ·  {report['hitCount']} hit(s) in "
+          f"{report['toolsWithHits']} file(s)  [{VERSION}]")
     for k, v in ctl.items():
         if isinstance(v, dict):
-            print(f"  control {k:24s} mustFire={v['mustFire']!s:5s} fired={v['fired']!s:5s} {'ok' if v['ok'] else 'FAILED'}")
+            print(f"  control {k:46s} mustFire={v['mustFire']!s:5s} fired={v['fired']!s:5s} "
+                  f"{'ok' if v['ok'] else 'FAILED'}")
+    print(f"  {ctl['controlsFiredAsDeclared']}/{ctl['controlsDeclared']} listed controls behaved as declared "
+          f"(count DERIVED from --list-controls, never pinned)")
     for row in report["rows"]:
         print(f"\n  {row['file']}")
         for h in row["hits"]:

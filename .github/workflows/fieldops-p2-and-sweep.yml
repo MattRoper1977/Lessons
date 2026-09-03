@@ -373,3 +373,102 @@ jobs:
           name: inline-exit
           path: ${{ runner.temp }}/inline-exit.txt
           if-no-files-found: error
+
+  vb-mechanism:
+    name: The VB gate mechanism can still fire - every listed control, no pinned count
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # Pinned so a gate never reds because a dependency moved under it. The
+      # measurement these tools make is a property of the decks, not of lxml.
+      - name: The libraries the measurement needs
+        run: python -m pip install --quiet lxml==6.1.3 cssselect==1.5.0 pymupdf==1.28.2 pypdf cffi
+
+      # NO NUMBER APPEARS IN THIS STEP, DELIBERATELY.
+      #
+      # This workflow used to assert literals - "18 controls", "133 tools". Both
+      # were facts about the repository on the day they were typed, and both go
+      # stale the moment the estate grows: adding one tool moved the scanned
+      # count from 130 to 131. A literal like that reds for the wrong reason,
+      # and the repair everyone reaches for is to edit the number until it goes
+      # green, which is how a gate stops gating. Same lesson as the apexpool
+      # hardcoded count.
+      #
+      # So the battery asks each tool for its control list through
+      # --list-controls, runs its self-test, and requires that EVERY LISTED
+      # CONTROL FIRED. Counts are printed as facts and asserted nowhere. A tool
+      # that gains a control needs no edit here; a tool that loses one still
+      # reds, because each tool reports what it declared against what it ran.
+      - name: Every listed control fired, and the battery is proven able to red
+        run: |
+          python _sownb/vb/tools/mechanism_battery.py --prove-red \
+            --output _sownb/vb/evidence/a2r/mechanism_battery_ci.json \
+            | tee "$RUNNER_TEMP/vb-mechanism.txt"
+
+      # g27 is armed on the repository itself, not only on its own controls.
+      - name: No tool derives a teaching week from a path
+        run: python _sownb/vb/tools/g27_no_filename_weeks.py | tee "$RUNNER_TEMP/vb-g27.txt"
+
+      # THE CONTRACT'S POPULATION IS RECIPE OUTPUT, NOT EVERY CLASSIC DECK.
+      # First cut of this step judged all 264 files carrying a .slide-container
+      # and every single one red'd, because most of them are Art, Physics and
+      # ASDAN strand decks that predate the reshell entirely and were never
+      # meant to satisfy a recipe-output contract. 1,399 red lines on every PR
+      # is not a gate, it is a thing people learn to scroll past.
+      #
+      # The population is decks the recipe produced, identified by the two
+      # things it emits and nothing else does: the target TA modal and a print
+      # area. 54 decks, all Humanities, ~25s.
+      #
+      # Report-only. Every one of the 54 fails at least one clause today, and
+      # that is a backlog for lesson PRs, not a reason to block an unrelated
+      # change. The distribution is printed so the backlog is visible and can
+      # be worked down; flip to blocking when it reaches zero.
+      - name: The classic-v2 output contract, across the decks the recipe made
+        continue-on-error: true
+        run: |
+          python - <<'PY' | tee "$RUNNER_TEMP/vb-contract.txt"
+          import re, subprocess, sys
+          from collections import Counter
+          from pathlib import Path
+          decks = []
+          for p in sorted(Path('.').rglob('*.html')):
+              if 'node_modules' in p.parts or '_sownb' in p.parts:
+                  continue
+              raw = p.read_text(encoding='utf-8', errors='replace')
+              if 'slide-container' in raw and 'id="mbmTA"' in raw and 'id="print-area"' in raw:
+                  decks.append(str(p))
+          print(f"{len(decks)} recipe-shaped decks (target TA modal + print area)")
+          r = subprocess.run([sys.executable, '_sownb/vb/tools/reshell_classic_v2_contract.py',
+                              *decks], capture_output=True, text=True)
+          print(r.stdout)
+          counts = Counter(re.findall(r'RED\s+([a-z][a-z0-9-]{4,})\s', r.stdout))
+          print("clause backlog, most common first:")
+          for clause, n in counts.most_common():
+              print(f"  {n:3d}/{len(decks)}  {clause}")
+          PY
+
+      - name: Result block
+        if: always()
+        run: |
+          { echo '## VB gate mechanism'; echo '```';
+            cat "$RUNNER_TEMP/vb-mechanism.txt" 2>/dev/null || echo '(did not run)';
+            echo '```'; echo '### g27'; echo '```';
+            tail -5 "$RUNNER_TEMP/vb-g27.txt" 2>/dev/null || echo '(did not run)';
+            echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vb-mechanism
+          path: |
+            ${{ runner.temp }}/vb-*.txt
+            _sownb/vb/evidence/a2r/mechanism_battery_ci.json
+          if-no-files-found: error
