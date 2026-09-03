@@ -1,0 +1,156 @@
+{
+ "tool": "lesson_stages",
+ "toolVersion": "lesson-stages-v1.0.0-shell-aware-screen-scoped",
+ "controlsDeclared": 18,
+ "controlsRun": 18,
+ "controlsFired": 18,
+ "missingControls": [],
+ "undeclaredControls": [],
+ "allListedControlsFired": true,
+ "controls": [
+  {
+   "id": "every-stage-counted-not-just-active",
+   "description": "the carousel hides 2 of 3 stages with display:none; all 3 must count",
+   "planted": "nothing - this is the base measurement",
+   "expected": 3,
+   "observed": 3,
+   "fired": true
+  },
+  {
+   "id": "classic-shell-is-seen",
+   "description": "main.deck > .slide-container > div.slide is a stage",
+   "planted": "a classic-shell deck",
+   "expected": 15,
+   "observed": 15,
+   "fired": true
+  },
+  {
+   "id": "n6-shell-is-seen",
+   "description": "main.deck > section.slide is a stage",
+   "planted": "an n6-shell deck",
+   "expected": 10,
+   "observed": 10,
+   "fired": true
+  },
+  {
+   "id": "print-pack-duplication-is-neutral",
+   "description": "every stage's text duplicated into the print pack must not change the count",
+   "planted": "all three stages re-printed into #print-area",
+   "expected": 15,
+   "observed": 15,
+   "fired": true
+  },
+  {
+   "id": "one-pupil-paragraph-raises-the-count",
+   "description": "adding one pupil paragraph of 5 words must raise the count by 5",
+   "planted": "a 5-word pupil paragraph in stage 1",
+   "expected": 20,
+   "observed": 20,
+   "fired": true
+  },
+  {
+   "id": "staff-audience-drawer-excluded",
+   "description": "data-audience=\"staff\" inside a stage is not pupil teaching text",
+   "planted": "<div data-audience=\"staff\"><p>staff only words here now</p><",
+   "expected": 15,
+   "observed": 15,
+   "fired": true
+  },
+  {
+   "id": "mbm-guide-drawer-excluded",
+   "description": "data-mbm-guide inside a stage is not pupil teaching text",
+   "planted": "<div data-mbm-guide=\"1\"><p>guide only words here now</p></di",
+   "expected": 15,
+   "observed": 15,
+   "fired": true
+  },
+  {
+   "id": "running-head-excluded",
+   "description": "class=running-head inside a stage is not pupil teaching text",
+   "planted": "<div class=\"running-head\"><p>running head words here now</p>",
+   "expected": 15,
+   "observed": 15,
+   "fired": true
+  },
+  {
+   "id": "inline-display-none-excluded",
+   "description": "inline display:none inside a stage is not pupil teaching text",
+   "planted": "<div style=\"display:none\"><p>inline hidden words here now</p",
+   "expected": 15,
+   "observed": 15,
+   "fired": true
+  },
+  {
+   "id": "aria-hidden-excluded",
+   "description": "aria-hidden=\"true\" inside a stage is not pupil teaching text",
+   "planted": "<div aria-hidden=\"true\"><p>aria hidden words here now</p></d",
+   "expected": 15,
+   "observed": 15,
+   "fired": true
+  },
+  {
+   "id": "hidden-attribute-excluded",
+   "description": "the hidden attribute inside a stage is not pupil teaching text",
+   "planted": "<div hidden><p>attribute hidden words here now</p></div>",
+   "expected": 15,
+   "observed": 15,
+   "fired": true
+  },
+  {
+   "id": "script-and-style-excluded",
+   "description": "script and style inside a stage is not pupil teaching text",
+   "planted": "<script>var a = \"script words here now\";</script><style>.x{c",
+   "expected": 15,
+   "observed": 15,
+   "fired": true
+  },
+  {
+   "id": "svg-text-not-counted-as-prose",
+   "description": "svg text inside a stage is not pupil teaching text",
+   "planted": "<svg viewBox=\"0 0 200 200\"><text>svg words here now</text></",
+   "expected": 15,
+   "observed": 15,
+   "fired": true
+  },
+  {
+   "id": "css-display-none-excluded",
+   "description": "a stylesheet display:none inside a stage is not pupil teaching text",
+   "planted": "class=\"drawer\" with .drawer{display:none}",
+   "expected": 15,
+   "observed": 15,
+   "fired": true
+  },
+  {
+   "id": "visibility-hidden-excluded",
+   "description": "visibility:hidden inside a stage is not pupil teaching text",
+   "planted": "class=\"vis\" with visibility:hidden",
+   "expected": 15,
+   "observed": 15,
+   "fired": true
+  },
+  {
+   "id": "media-print-only-block-excluded",
+   "description": "a block hidden on screen and shown under @media print is not in the pupil view",
+   "planted": "class=\"ponly\", display:none on screen, display:block under @media print",
+   "expected": 15,
+   "observed": 15,
+   "fired": true
+  },
+  {
+   "id": "narrow-breakpoint-does-not-delete-text",
+   "description": "a max-width breakpoint must NOT remove pupil text from the projector measurement",
+   "planted": "class=\"tight\", hidden only under @media screen and (max-width:600px)",
+   "expected": 15,
+   "observed": 15,
+   "fired": true
+  },
+  {
+   "id": "unreadable-hiding-selector-is-reported",
+   "description": "a selector the parser cannot read, that would have hidden something, is reported not dropped",
+   "planted": "p:nth-child(2n of .ghost){display:none}",
+   "expected": true,
+   "observed": true,
+   "fired": true
+  }
+ ]
+}
