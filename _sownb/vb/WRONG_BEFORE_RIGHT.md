@@ -817,4 +817,3 @@ RECOVERY: path 1.2(d). The Codex preservation folder, its 548 KB archive and its
 and the size manifest were attached. A2_PRESERVATION_MISSING. The mechanism was
 rebuilt from the gate definitions in §3, which the order authorises, and drift is
 prevented by 98 controls rather than by the old code.
-
