@@ -51,6 +51,7 @@ jobs:
       - name: Check out the exact Lessons head
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
 
       - name: Check out the pinned canonical splash owner
@@ -93,6 +94,8 @@ jobs:
     steps:
       - name: Check out the exact Lessons head
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: Check out the pinned canonical browser harness
         uses: actions/checkout@v4

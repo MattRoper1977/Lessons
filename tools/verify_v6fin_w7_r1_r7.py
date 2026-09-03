@@ -38,6 +38,11 @@ SUPPORT_PATHS = {
     ".github/workflows/watch-main.yml",
 }
 
+# Actions checks out the pinned Site instrumentation as a nested repository.
+# Git reports that exact repository root as one untracked entry; it is evidence,
+# not part of the Lessons change boundary.
+PINNED_REFERENCE_CHECKOUT = "_reference/site/"
+
 
 def sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
@@ -224,6 +229,7 @@ def main() -> int:
 
     expected_changed = {rel for _, rel in TARGETS} | SUPPORT_PATHS
     actual_changed = changed_paths(root, args.base)
+    actual_changed.discard(PINNED_REFERENCE_CHECKOUT)
     if actual_changed != expected_changed:
         raise ValueError(
             "changed-path fence mismatch: "
