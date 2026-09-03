@@ -87,6 +87,10 @@ def declarations(css: str) -> tuple[list[dict], list[dict]]:
 def measure(path: Path, family: str, config: dict) -> dict:
     css = css_of(path)
     in_root, scoped = declarations(css)
+    # ORDER VB-RUN15 H14-3(c): a deck carries ONE :root block. A second block is a red
+    # even when no token repeats, because the cascade then depends on source order
+    # and the run-12 migration put every pathway value under html.pathway-<lane>.
+    root_blocks = len([m for m in RULE.finditer(css) if any(part.strip() == ':root' for part in ' '.join(m.group(1).split()).split('}')[-1].split('{')[-1].split(','))])
     counts: dict[str, int] = {}
     for row in in_root:
         counts[row["name"]] = counts.get(row["name"], 0) + 1
@@ -112,12 +116,14 @@ def measure(path: Path, family: str, config: dict) -> dict:
         allowed = family_values.get(row["name"])
         if allowed is not None and row["normalisedValue"] not in allowed:
             wrong.append({"name": row["name"], "actual": row["normalisedValue"], "expected": allowed, "selector": row["selector"], "rule": "family scoped value"})
-    status = "PASS" if rows and not duplicates and not foreign and not unknown and not wrong else "RED"
+    status = "PASS" if rows and not duplicates and not foreign and not unknown and not wrong and root_blocks <= 1 else "RED"
     return {
         "file": str(path.relative_to(ROOT)) if str(path).startswith(str(ROOT)) else str(path),
         "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
         "family": family,
         "rootDeclarations": len(in_root),
+        "rootBlocks": root_blocks,
+        "rootBlocksRule": "one :root block per deck (ORDER VB-RUN15 H14-3c); a second block is RED",
         "scopedDeclarations": len(scoped),
         "scopeSelectors": sorted({r["selector"] for r in scoped})[:12],
         "duplicateDefinitionsInRoot": duplicates,
@@ -171,11 +177,37 @@ def main() -> int:
                 "fired": mutated_report["status"] == "RED" and token in mutated_report["duplicateDefinitionsInRoot"],
             }
         )
+    # Second firing control (ORDER VB-RUN15 H14-3c): plant a SECOND :root block carrying
+    # a token no other block declares, so the duplicate rule cannot be what fires, and
+    # re-measure a temporary copy. The gate must go RED on rootBlocks alone; the scratch
+    # copy is deleted afterwards, so the control is fired then withdrawn.
+    block_control = {"applicable": True, "fired": None}
+    idx = source.find("</style>")
+    if idx < 0:
+        block_control["applicable"] = False
+    else:
+        mutated = source[:idx] + ":root{--g19-planted-second-block:1}" + source[idx:]
+        scratch = path.parent / f".g19v2_blockcontrol_{path.name}"
+        scratch.write_text(mutated, encoding="utf-8")
+        try:
+            mutated_report = measure(scratch, args.family, config)
+        finally:
+            scratch.unlink(missing_ok=True)
+        block_control.update({
+            "mutation": "a second :root block declaring one token no other block declares",
+            "mutatedRootBlocks": mutated_report["rootBlocks"],
+            "mutatedStatus": mutated_report["status"],
+            "mutatedDuplicates": mutated_report["duplicateDefinitionsInRoot"],
+            "fired": mutated_report["rootBlocks"] == report["rootBlocks"] + 1 and mutated_report["status"] == "RED",
+            "withdrawn": not scratch.exists(),
+        })
     report["firingControl"] = control
-    report["nonVacuous"] = bool(control.get("fired"))
+    report["rootBlockControl"] = block_control
+    report["nonVacuous"] = bool(control.get("fired")) and bool(block_control.get("fired"))
     report["rule"] = (
         "RUN12-A: a token is DEFINED once, in :root; pathway values live under a scope selector only; "
-        "a second definition in :root is a red. Scoped declarations are recorded, not counted for uniqueness."
+        "a second definition in :root is a red. Scoped declarations are recorded, not counted for uniqueness. "
+        "RUN15 H14-3c: one :root block per deck; a second block is a red."
     )
     report["subject"] = f"g19 v2 token ownership and :root uniqueness for {args.family}"
     if not report["nonVacuous"]:
