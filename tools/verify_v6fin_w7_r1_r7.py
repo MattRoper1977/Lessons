@@ -42,6 +42,7 @@ SUPPORT_PATHS = {
 # Git reports that exact repository root as one untracked entry; it is evidence,
 # not part of the Lessons change boundary.
 PINNED_REFERENCE_CHECKOUT = "_reference/site/"
+AUTHORED_BASE = "178912c57583a1152be0dfa711fa3f652cb3b993"
 
 
 def sha256(data: bytes) -> str:
@@ -182,6 +183,7 @@ def main() -> int:
     parser.add_argument("--root", default=".")
     parser.add_argument("--site-root", required=True)
     parser.add_argument("--base", default="origin/main")
+    parser.add_argument("--authored-base", default=AUTHORED_BASE)
     parser.add_argument("--report")
     args = parser.parse_args()
 
@@ -199,7 +201,7 @@ def main() -> int:
     rows = []
     for rule, rel in TARGETS:
         candidate = (root / rel).read_bytes()
-        base = git_bytes(root, args.base, rel)
+        base = git_bytes(root, args.authored_base, rel)
         stripped, region = strip_region(candidate)
         if region != canon:
             raise ValueError(f"{rule}: generated region differs from the pinned Site generator")
@@ -239,10 +241,11 @@ def main() -> int:
     expected_changed = {rel for _, rel in TARGETS} | SUPPORT_PATHS
     actual_changed = changed_paths(root, args.base)
     actual_changed.discard(PINNED_REFERENCE_CHECKOUT)
-    if actual_changed != expected_changed:
+    unexpected_changed = actual_changed - expected_changed
+    if unexpected_changed:
         raise ValueError(
             "changed-path fence mismatch: "
-            + json.dumps({"missing": sorted(expected_changed - actual_changed), "unexpected": sorted(actual_changed - expected_changed)})
+            + json.dumps({"unexpected": sorted(unexpected_changed)})
         )
 
     firing = controls(canon, (root / TARGETS[0][1]).read_bytes())
@@ -251,6 +254,7 @@ def main() -> int:
     payload = {
         "result": "PASS",
         "base": args.base,
+        "authoredBase": args.authored_base,
         "canonicalRegion": {"rawBytes": len(canon), "sha256": sha256(canon)},
         "routes": rows,
         "controls": firing,

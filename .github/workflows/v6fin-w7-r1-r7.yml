@@ -63,17 +63,23 @@ jobs:
           fetch-depth: 1
 
       - name: Reproduce the generated regions and the exact repair boundary
+        env:
+          EVENT_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: |
-          git fetch --no-tags origin main
+          base="$EVENT_BASE"
+          if [[ -z "$base" || "$base" =~ ^0+$ ]]; then
+            base="HEAD^"
+          fi
+          git cat-file -e "$base^{commit}"
           python3 _reference/site/tools/render_maker_splash.py --root "$GITHUB_WORKSPACE" --check \
             | tee "$RUNNER_TEMP/generator-check.txt"
           python3 tools/verify_v6fin_w7_r1_r7.py \
             --root "$GITHUB_WORKSPACE" \
             --site-root "$GITHUB_WORKSPACE/_reference/site" \
-            --base origin/main \
+            --base "$base" \
             --report "$RUNNER_TEMP/static-report.json" \
             | tee "$RUNNER_TEMP/static-check.txt"
-          git diff --check origin/main...HEAD
+          git diff --check "$base"...HEAD
 
       - name: Upload static evidence
         if: always()
