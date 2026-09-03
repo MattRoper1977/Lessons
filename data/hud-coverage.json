@@ -7,6 +7,30 @@
  "_scope": "THIS LEDGER GOVERNS 39 OF 58, AND NO CHECK IN THIS REPOSITORY CAN SEE THE OTHER 19. The canonical inventory - the site repository's data/mbm-search-index.json - holds 58 game routes: 39 under /Lessons/ served from here, and 19 single-segment routes served from MattRoper1977/mattroper1977.github.io. The split is exact, with no route in neither group. verify_hud_on_lessons_games.mjs asserts that every inventory game is wired or declared and nothing in between; read without this note, that reads estate-wide, and it is not - it is true of the 39. The site 19, and the 8 exclusions among them, are governed by that repository's own data/hud-coverage.json. Neither repository contains the other's files. The only place a single check could see all 58 is the cross-estate job, which checks out both estates and assembles them onto one origin; no such check exists today, and this note is here so the absence is stated rather than inferred from a number that looks complete.",
  "_scopeCurrent": "Re-derived 2026-08-31 from the current site search index and this checkout: 37 indexed /Lessons/ game files exist here; 30 carry /hud.js and seven carry the generated inline exit (Axiom Shift, Charcoal, Grid Chase, Globe Snake, One Guy, Static and Vortex). Off-Brand remains declared because the route/file still exists even though it is outside the current search index. Counts are evidence at this commit, never hand-typed gate expectations; the verifiers derive membership from the inventory and ledger.",
  "scriptLine": "<script defer src=\"/hud.js\"></script>",
+ "routeScope": {
+  "_ruling": "ORDER VB-RUN15 H14-1. Two estate rules were written at different scopes: the V6 self-test (offline/standalone = zero external elements) is a FILE rule inside each game; the HUD requirement is a ROUTE rule kept in this ledger. Derived by the tier ladder: the HUD is accessibility at the moment of use (T2, a keyboard way out on a device whose browser chrome may be hidden); the self-test is a packaging and artefact contract (T4, single-file, egress). T2 outranks T4, so RULE_CHOICE=b: the HUD rule wins and the self-test is re-scoped from FILE to ROUTE here, as its own contract row. Precedent: the Titan Forge V5.1 core + vendor split, where a rule that had been written per file was re-stated per route.",
+  "classes": {
+   "hud-wired": {
+    "_what": "every inventory game not declared under excluded",
+    "permittedExternal": [
+     "<script defer src=\"/hud.js\"></script>"
+    ],
+    "rule": "the only external element a hud-wired route may carry is the HUD script line; any other external element is a real request and fails the route"
+   },
+   "single-file": {
+    "_what": "every route declared under excluded",
+    "permittedExternal": [],
+    "rule": "zero external elements; the inline exit region is the way out"
+   }
+  },
+  "metadataNotRequests": [
+   "link[rel=\"canonical\"]"
+  ],
+  "_metadataWhy": "a canonical link is metadata the browser never fetches; the file-level self-test counted it as an external element, which is what failed Vortex on its own. At route scope it is neither a request nor a dependency.",
+  "verifier": "tools/verify_v6_selftest.mjs",
+  "_verifierRule": "each declaring game still runs its own selfTest and the file-level result is recorded unchanged; the route-scope verdict re-judges only the offline/standalone check against this row, and it is the route-scope verdict that reds the run. A control plants a non-permitted external script on a real page and requires the route-scope verdict to go RED.",
+  "fileLevelRuleUntouched": "the games' own self-tests are not edited; a game that reports offline:false on its permitted HUD line or its canonical link is recorded FILE-SCOPE FAIL and ROUTE-SCOPE PASS, never rewritten"
+ },
  "excluded": [
   {
    "route": "/Lessons/Games/Axiom_Shift.html",

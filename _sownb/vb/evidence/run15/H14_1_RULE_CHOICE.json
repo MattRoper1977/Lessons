@@ -1,0 +1,55 @@
+{
+ "file": "data/hud-coverage.json",
+ "subject": "ORDER VB-RUN15 H14-1: RULE_CHOICE derived by the tier ladder, both rules verbatim, the loser re-scoped from FILE to ROUTE as a contract row and its verifier re-run against the route",
+ "ruleA": {
+  "name": "the game self-test: single-file, zero external elements",
+  "where": [
+   "Games/Vortex.html:4171",
+   "Games/Prism.html:4066"
+  ],
+  "verbatim": [
+   "offline:external.length===0",
+   "standalone:external.length===0"
+  ],
+  "external_is": "every script[src], link[href], img[src], audio[src], video[src], source[src] in the document, counted at Games/Vortex.html near line 4165",
+  "protects": "the pupil: a game that runs from one file with no request, on a locked-down school device, offline",
+  "tier": "T4 packaging and artefact contracts (single-file, egress allowlist)",
+  "tierWhy": "the check counts external elements in the file: a packaging promise (one file, no request) rather than a safeguarding, accessibility or performance property; the ladder names single-file and egress allowlist under T4"
+ },
+ "ruleB": {
+  "name": "the HUD requirement: every inventory game carries /hud.js unless declared excluded",
+  "where": [
+   "tools/verify_hud_on_lessons_games.mjs:112",
+   "data/hud-coverage.json:9"
+  ],
+  "verbatim": [
+   "return hasTag ? null : `${route} carries no HUD script and is not declared in data/hud-coverage.json`;",
+   "\"scriptLine\": \"<script defer src=\\\"/hud.js\\\"></script>\","
+  ],
+  "protects": "the pupil: a way out of the game and back to a chosen homepage on a device where the browser chrome may be hidden (accessibility, exit)",
+  "tier": "T2 accessibility at the moment of use (keyboard way-out, exit)",
+  "tierWhy": "the HUD is the way out of a game and back to a chosen homepage on a device whose browser chrome may be hidden; the ladder names keyboard way-out and exit under T2"
+ },
+ "derivation": "T2 outranks T4, so rule B wins without reaching the measured-beats-asserted or older-rule tie-breaks",
+ "RULE_CHOICE": "b",
+ "loserReScope": {
+  "from": "FILE (the offline/standalone check inside each game)",
+  "to": "ROUTE (data/hud-coverage.json routeScope: hud-wired routes may carry exactly the HUD script line; single-file routes carry nothing; link[rel=canonical] is metadata, not a request)",
+  "precedent": "Titan Forge V5.1 core + vendor split",
+  "contractRow": "data/hud-coverage.json routeScope",
+  "verifier": "tools/verify_v6_selftest.mjs judges at route scope and records the file-level result unchanged; a planted non-permitted external and a planted failing release object both red it (--self-test PASS)"
+ },
+ "verifierAgainstTheRoute": {
+  "passedRouteScope": 15,
+  "passedFileScope": 11,
+  "total": 15,
+  "fileScopeFailuresRecordedNotRewritten": [
+   "Games/Neon_Garden.html",
+   "Games/Prism.html",
+   "Games/The_Last_Lighthouse_v1_1_The_Archipelago_Update_FINAL.html",
+   "Games/Vortex.html"
+  ]
+ },
+ "gamesNotEdited": true,
+ "status": "DERIVED"
+}

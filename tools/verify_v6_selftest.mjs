@@ -17,6 +17,7 @@
  *   tools/verify_games_rendered.mjs  the rendered regression
  *
  * WHAT IT MEASURES. Each declaring game is served and loaded, selfTest() is
+ * called and recorded; the verdict is then taken at ROUTE scope (see below). Originally:
  * called, and its own per-check map is read. A game that reports ok:false fails
  * with the failing check named. A game that declares the object but whose
  * selfTest throws, returns nothing, or reports ok as anything but a boolean is a
@@ -45,6 +46,18 @@ const SELFTEST = argv.includes('--self-test')
 const NAV_MS = 30000
 const CALL_MS = 15000
 
+/* ROUTE SCOPE (ORDER VB-RUN15 H14-1, RULE_CHOICE=b). The offline/standalone check inside
+ * each game is a FILE rule; data/hud-coverage.json now carries the same rule at ROUTE
+ * scope (routeScope): a hud-wired route may carry exactly the HUD script line, a
+ * single-file route may carry nothing, and link[rel=canonical] is metadata, not a
+ * request. Each game's own selfTest still runs and its file-level result is recorded
+ * unchanged; what reds this run is the route-scope verdict. A control plants a
+ * non-permitted external on a real page and requires the route-scope verdict to fail. */
+const LEDGER = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'hud-coverage.json'), 'utf8'))
+const ROUTE_SCOPE = LEDGER.routeScope
+const EXCLUDED = new Set((LEDGER.excluded || []).map((e) => e.route))
+const SCOPE_CHECKS = new Set(['offline', 'standalone'])
+const routeClass = (file) => (EXCLUDED.has(`/Lessons/Games/${file}`) ? 'single-file' : 'hud-wired')
 const games = fs.readdirSync(path.join(ROOT, 'Games'))
   .filter((f) => f.endsWith('.html') || !f.includes('.'))
   .filter((f) => {
@@ -68,7 +81,7 @@ const serve = () => new Promise((resolve) => {
   server.listen(0, () => resolve({ server, port: server.address().port }))
 })
 
-const run = async (browser, port, file, stub) => {
+const run = async (browser, port, file, stub, plantExternal) => {
   const page = await browser.newPage({ viewport: { width: 1280, height: 800 } })
   const row = { game: `Games/${file}` }
   try {
@@ -77,6 +90,13 @@ const run = async (browser, port, file, stub) => {
         Object.defineProperty(window, '__MBM_V6_RELEASE__', {
           configurable: true,
           get: () => ({ selfTest: () => ({ ok: false, pass: false, checks: { planted: false } }) }),
+        })
+      })
+    }
+    if (plantExternal) {
+      await page.addInitScript(() => {
+        document.addEventListener('DOMContentLoaded', () => {
+          const s = document.createElement('script'); s.src = '/planted-not-permitted.js'; document.head.appendChild(s)
         })
       })
     }
@@ -96,6 +116,25 @@ const run = async (browser, port, file, stub) => {
       ? Object.entries(res.checks).filter(([, v]) => !v).map(([k]) => k) : []
     row.gameId = res && res.gameId
     row.version = res && res.version
+    // route scope: the page's real external elements, judged against the route's class
+    const ext = await page.evaluate(() => Array.from(document.querySelectorAll('script[src],link[href],img[src],audio[src],video[src],source[src]')).map((el) => ({
+      tag: el.tagName.toLowerCase(), rel: el.getAttribute('rel') || '', src: el.getAttribute('src') || el.getAttribute('href') || '', outer: el.outerHTML.slice(0, 120) })))
+    const cls = routeClass(file)
+    const permitted = new Set((ROUTE_SCOPE.classes[cls].permittedExternal || []))
+    const metadata = (e) => e.tag === 'link' && e.rel.split(/\s+/).includes('canonical')
+    const permittedLine = (e) => e.tag === 'script' && permitted.has(`<script defer src="${e.src}"></script>`)
+    // a data: URI, a fragment or a javascript: href is not a request; a root-relative or
+    // network URL is. (The games' own filter counts only network URLs, which is why the
+    // canonical link and nothing else fails them at file scope.)
+    const isRequest = (e) => !/^(data:|#|javascript:|$)/i.test(e.src.trim())
+    const real = ext.filter((e) => isRequest(e) && !metadata(e) && !permittedLine(e))
+    row.routeClass = cls
+    row.externals = ext.map((e) => e.outer)
+    row.realExternals = real.map((e) => e.outer)
+    row.fileScopeOk = row.ok
+    const nonScopeFailing = row.failingChecks.filter((k) => !SCOPE_CHECKS.has(k))
+    row.routeScopeOk = r.callable && res && typeof res.ok === 'boolean' && nonScopeFailing.length === 0 && real.length === 0
+    row.routeScopeFailing = [...nonScopeFailing, ...(real.length ? ['route-scope: non-permitted external'] : [])]
   } catch (e) {
     row.ok = false
     row.error = String(e).slice(0, 200)
@@ -111,24 +150,27 @@ if (SELFTEST) {
   const probe = games[0]
   const real = await run(browser, port, probe, false)
   const planted = await run(browser, port, probe, true)
-  const ok = real.ok === true && planted.ok === false
-  console.log(`  real page        ok=${real.ok}`)
-  console.log(`  planted failure  ok=${planted.ok}  failing=${JSON.stringify(planted.failingChecks)}`)
+  const plantedExt = await run(browser, port, probe, false, true)
+  const ok = real.routeScopeOk === true && planted.routeScopeOk === false && plantedExt.routeScopeOk === false && plantedExt.realExternals.length === 1
+  console.log(`  real page        file=${real.fileScopeOk} route=${real.routeScopeOk} class=${real.routeClass}`)
+  console.log(`  planted failure  route=${planted.routeScopeOk}  failing=${JSON.stringify(planted.routeScopeFailing)}`)
+  console.log(`  planted external route=${plantedExt.routeScopeOk}  real=${JSON.stringify(plantedExt.realExternals)}`)
   console.log(ok ? '[SELF-TEST] PASS — this checker can fail' : '[SELF-TEST] FAIL — it cannot be made to fail')
   exit = ok ? 0 : 1
 } else {
   const rows = []
   for (const g of games) rows.push(await run(browser, port, g, false))
   for (const r of rows) {
-    console.log(`  ${r.ok ? 'PASS' : 'FAIL'}  ${r.game}` +
-      (r.ok ? ` (${r.gameId || '?'} ${r.version || ''})` : `  ${r.error || JSON.stringify(r.failingChecks)}`))
+    console.log(`  ${r.routeScopeOk ? 'PASS' : 'FAIL'}  ${r.game}  [${r.routeClass}] file-scope=${r.fileScopeOk ? 'pass' : 'FAIL ' + JSON.stringify(r.failingChecks)}` +
+      (r.routeScopeOk ? '' : `  ${r.error || JSON.stringify(r.routeScopeFailing)}`))
   }
-  const failed = rows.filter((r) => !r.ok)
-  console.log(`\n${rows.length - failed.length}/${rows.length} games pass their own V6 self-test`)
+  const failed = rows.filter((r) => !r.routeScopeOk)
+  const fileFailed = rows.filter((r) => !r.fileScopeOk)
+  console.log(`\n${rows.length - failed.length}/${rows.length} games pass at route scope; ${rows.length - fileFailed.length}/${rows.length} pass their own file-level self-test`)
   if (OUT) fs.writeFileSync(path.join(ROOT, OUT), JSON.stringify({
     file: 'tools/verify_v6_selftest.mjs',
     subject: 'the V6 release self-test run in a browser on every game that declares one',
-    games: rows, passed: rows.length - failed.length, total: rows.length,
+    games: rows, passed: rows.length - failed.length, total: rows.length, passedFileScope: rows.length - fileFailed.length, scope: 'route (data/hud-coverage.json routeScope); file-level results recorded per game',
     status: failed.length ? 'RED' : 'PASS',
   }, null, 1) + '\n')
   exit = failed.length ? 1 : 0
