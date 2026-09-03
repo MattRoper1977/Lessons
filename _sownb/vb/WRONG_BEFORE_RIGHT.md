@@ -841,3 +841,49 @@ The temptation worth naming: the quick fix was to move the evidence out of
 `evidence/` so the sweep would stop looking at it. That would have hidden the
 artefacts from the one instrument whose job is to notice when evidence outlives
 its subject.
+
+---
+
+WRONG: twice in one session I read GitHub API lag as a stalled CI job. The first
+time it cost a cancelled healthy run on #278 and a re-run spent on nothing. The
+second time I wrote it into a handoff file — "5 of 6 checks GREEN … the sixth has
+been stalled … NOT MERGED. Do not merge on five of six" — and pushed it, when the
+sixth check had in fact **completed successfully at 22:50:33**, seven minutes
+before I wrote that. The status endpoint was serving a stale job record.
+
+RIGHT: a status endpoint is an instrument too, and I was reading it without a
+control. This whole order exists because four gates reported a pass on decks they
+were not measuring; a job status that reports "in progress" on a job that
+finished is the identical failure, and I applied to CI none of the scepticism I
+was applying to g23. The control now used has two parts, both cheap: re-read the
+job's own conclusion and completion timestamp before acting on a status summary,
+and blob-verify a merge — compare every changed path's blob hash between the
+merge commit and the branch head — rather than trusting the merge's reported
+state. #281 was verified that way: ten of ten blobs identical.
+
+The correction is recorded in EASTER_LEDGER.md above the PAUSE it invalidates,
+rather than by editing the PAUSE. The ledger is append-only, and a record that
+silently repairs itself teaches nothing.
+
+---
+
+WRONG: the first version of the sweep's `projection-leaves-the-source-file-byte-
+unchanged` control was vacuous. It planted a duplicated deck at `live/dup.html`,
+a path `family_of()` does not recognise, so `project()` appended a note and
+returned **before ever calling `apply()`**. I then planted a mutation that made
+the projection dedupe the real file instead of the copy, ran the self-test, and
+it came back 9/9 PASS. The control was asserting that a file nothing had touched
+was unchanged.
+
+RIGHT: the deck is planted under `Science_Teesside/Build/…`, a path the family
+map resolves, so the apply actually executes — and a second control,
+`the-projection-reaches-a-family-mapped-deck`, pins that precondition so the
+first cannot quietly go vacuous again. Re-planted, the mutation now reds:
+digest `7b39fd55…` expected, `8453cc3d…` observed, 9/10 fired, MEASUREMENT
+INVALID, exit 1. Withdrawn, 10/10 PASS.
+
+This is the second vacuous control in this campaign — the first asserted
+`10 >= 999`. Both had the same shape: the assertion was true for a reason
+unrelated to the thing being tested. Planting the mutation is what catches it,
+and a control that has never been shown to red has not been shown to be a
+control.

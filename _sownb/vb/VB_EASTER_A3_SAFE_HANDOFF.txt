@@ -1,84 +1,97 @@
 VB_EASTER_A3_SAFE_HANDOFF
-TIMESTAMP_UTC=2026-09-03T23:05:00Z
-CAMPAIGN_STATUS=PAUSED
-STOP_BOUNDARY=After PR #281 was pushed and its sixth check stalled; before the LAUNCH Humanities PR and before batch 1
+TIMESTAMP_UTC=2026-09-03T23:59:00Z
+CAMPAIGN_STATUS=IN_PROGRESS
+SUPERSEDES=the 2026-09-03T23:05:00Z revision of this file, which recorded main at
+  727c3162 and #281 as NOT MERGED. Both were true when written and are false now.
+  See EASTER_LEDGER.md, "CORRECTION — the sixth check on #281 was never stalled".
 
-AUTHORITATIVE_REMOTE_MAIN=727c31623070acb08684d1bc788ef4741c02c230
+AUTHORITATIVE_REMOTE_MAIN=e09005a8b1a8f820e8462017b5964ceefa02a7e8
+  Blob-verified: all ten paths changed by #281 hash identically between the
+  merge commit and the branch head b35588b. Not taken from the merge status.
 LOCAL_REPOSITORY=/home/user/Lessons
-LOCAL_BRANCH=codex/vb-easter-a3-trim-grow-humanities
-LOCAL_HEAD=807f154ea760ed0f41355032245c3dbb1ca70755 (plus this handoff commit)
+LOCAL_BRANCH=codex/vb-easter-a3-trim-launch-humanities
 WORKTREE_CLEAN=YES at the point of writing
 
 LANDED_THIS_SESSION:
-- #279 VB-EASTER-A3 §1 target list, merged 3f859ec66043d8172f2d403f8d2064d165d4bce8, register only, 0 units
-- #280 VB-EASTER-A3 §0c BUILD Humanities, merged 727c31623070acb08684d1bc788ef4741c02c230, 1 unit
-OPEN:
-- #281 VB-EASTER-A3 §0c GROW Humanities, head 807f154e, 5 of 6 checks GREEN.
-  The sixth ("The way out of a game is keyboard-reachable - both estates") has
-  been stalled at its Playwright tab-walk step since 22:43:02 with no
-  conclusion. NOT MERGED. Do not merge on five of six.
-
-THE STALLED CHECK IS NOT THIS CAMPAIGN'S:
-- No PR in this campaign touches any Games/ file.
-- The instrument lives in the SITE estate and is cloned fresh at job start:
-  git clone --depth 1 mattroper1977.github.io "$RUNNER_TEMP/site"
-  cd "$RUNNER_TEMP/site" && node tools/verify_inline_exit.mjs --lessons "$GITHUB_WORKSPACE"
-  so its behaviour can change between two runs with nothing in Lessons changing.
-- It stalled twice on #278 earlier today, then PASSED on #279 and #280, and is
-  now stalled on #281. Intermittent, not deterministic.
-- One cancel-and-rerun was already spent on it during #278. Do not spend another
-  without reading the site estate's instrument first; this session's repository
-  scope is MattRoper1977/Lessons only and could not read it.
+- #279 §1 target list, merged 3f859ec66043d8172f2d403f8d2064d165d4bce8, 0 units
+- #280 §0c BUILD Humanities, merged 727c31623070acb08684d1bc788ef4741c02c230, 1 unit
+- #281 §0c GROW Humanities, merged e09005a8b1a8f820e8462017b5964ceefa02a7e8, 1 unit
+- #282 §0c LAUNCH Humanities + the estate sweep, THIS BRANCH, 1 unit
 
 CEILING:
-- A3 has no stated lesson-file ceiling of its own; the A2R ceiling of 24 is
-  spent 2 (BUILD_HUM_W15 in #280, GROW_HUM_W15 in #281). 22 remain if it carries.
+- A2R ceiling of 24 lesson files, spent 3: BUILD_HUM_W15 (#280),
+  GROW_HUM_W15 (#281), LAUNCH_HUM_W15 (#282). 21 remain.
+- Batch 1 alone needs 24 plans, so the ceiling is the binding constraint on
+  what can be absorbed before it is raised or re-scoped.
+
+ON THE SIXTH CHECK, WHICH IS NOT STALLED AND NEVER WAS:
+- "The way out of a game is keyboard-reachable - both estates" completed
+  SUCCESSFULLY on #281 at 22:50:33. The API served a stale job record and I
+  read it as a stall. It had already passed on #279 and #280.
+- No PR in this campaign touches any Games/ file. The instrument lives in the
+  SITE estate and is cloned fresh at job start, so it can change between runs
+  with nothing in Lessons changing.
+- Before treating it as stalled again: re-read the job's own conclusion and
+  completion timestamp, not the run summary. One cancel-and-rerun was already
+  spent on nothing during #278.
 
 WHAT §0 ESTABLISHED (all re-run on main, none recalled; digests in EASTER_LEDGER.md):
-- g23, g24, g27, g28 armed; workflow counts derived; 11 tools / 98 controls all fired.
+- g23, g24, g27, g28 armed; workflow counts derived; 11 tools / 98 controls all
+  fired; mechanism_battery.py --prove-red PASS. Re-run on this branch: PASS.
 - The historical W16 negative artefacts remain UNRECOVERABLE; A2R's four named
   substitutes stand in, all RED.
 
 WHAT §1 ESTABLISHED:
 - Headline through week 26, content reading: 573 in scope / 134 covered / 439 open.
-  Identical to the run-14 figure. Two spine cells are scopeStatus OUT_OF_SCOPE
-  (Careers) and are correctly excluded; a naive spine enumeration gives 575.
+  Two spine cells are scopeStatus OUT_OF_SCOPE (Careers); a naive enumeration
+  gives 575 and is wrong.
 - 262 deck plans cover all 439 open cells: 1-cell x146, 2-cell x55, 3-cell x61.
 - FORECAST at BATCH_CEILING 24: ~40 cells per batch, 11 batches to DONE.
-- 5 cells are RESHELL plans; 3 cells are HELD as human item A3-H1.
+- 5 cells are RESHELL plans; 3 cells are HELD as A3-H1.
 
 WHAT §0c FOUND, AND WHY IT IS NOT WHAT THE ORDER EXPECTED:
-The order expected six overloaded lessons needing TRIM-TO-DRAWER. Measured:
-- BUILD_HUM_W15  43.3% verbatim duplication. De-duplicated: x1.44 -> x1.21 WITHIN. DONE (#280).
-- GROW_HUM_W15   50.9% duplication. De-duplicated: x3.90 -> x3.02. STILL a split candidate (#281).
-- LAUNCH_HUM_W15 50.9% duplication. Measured on a scratch copy: 3526 -> 2710,
-  x4.29 -> x3.30, 85 distinct sentences both sides. NOT YET APPLIED TO THE REPO.
-- BUILD/GROW/LAUNCH_HUM_W16: their entire excess is the Lundy banner printed on
-  every stage (383 of 394 words, 112 of 116, 144 of 26). NOT TRIMMED. Held as
-  A3-H5, because cutting real teaching to offset a banner the contract requires
-  would damage three lessons, and discounting a cross-stage refrain would loosen
-  g23 for every deck in the estate, which §5 forbids.
+The order expected six overloaded lessons needing TRIM-TO-DRAWER. None of them
+needed one. All three W15 decks were carrying verbatim duplication:
+- BUILD_HUM_W15   x1.44 -> x1.21 WITHIN. DONE (#280).
+- GROW_HUM_W15    x3.90 -> x3.02. DONE (#281). Still an A3-H2 split candidate.
+- LAUNCH_HUM_W15  x4.29 -> x3.30. DONE (#282). Still an A3-H2 split candidate.
+- BUILD/GROW/LAUNCH_HUM_W16: excess is the Lundy banner printed on every stage.
+  NOT TRIMMED. Held as A3-H5.
+
+THE FINDING THAT CHANGES THE NEXT DECISION — A3-H6:
+- The duplication is estate-wide, not three decks. dedupe_sweep.py (new, 10
+  controls, read-only): 377 decks scanned, 24 affected, 19 with removable
+  duplication, 7,593 words, 170 sentences at exactly x4.
+- TEN of the 19 are live g23 ceiling reds on main. Nobody reported them because
+  §0c was scoped to Humanities.
+- Deduping clears 5 of the 10 and brings 7 decks to the 1.25 operative target.
+  Measured by --project, which dedupes a COPY and re-runs g23.
+- The 5 that stay red are ASDAN Spring1 W15/W16 at x1.97-2.57 after dedupe.
+  That overload is real teaching content and belongs with A3-H2.
+- Zero affected decks sit in any of the nine family baseline sets, so the
+  remediation moves no median and no p25 floor. Checked, not assumed.
+- NOT APPLIED. 19 decks is 19 of the 21 remaining units and would starve batch 1.
+  Matt's scheduling call. See EASTER_HUMAN.md A3-H6.
 
 NEXT_INCOMPLETE_ACTION, IN ORDER:
-1. Merge #281 once its sixth check reports (or after reading the site instrument).
-2. LAUNCH Humanities PR: apply tools/easter/dedupe_stage_text.py --apply to
-   LAUNCH_HUM_W15_Conflict_Causes_and_Ethical_Decisions.html, refresh that pack's
-   SHA256SUMS.txt for existing rows only, run g23 + cgate, append the ledger.
-   Expected 3526 -> 2710 words, x3.30, 85 sentences both sides.
-3. Then batch 1: the first 24 plans in tools/easter/EASTER_TARGETS.json, all of
-   which are cover-taught weeks (ruled week <= 8).
+1. Merge #282 once its checks report. Blob-verify against main before recording it.
+2. Read Matt's ruling on A3-H6 (before batch 1, or after). My recommendation is
+   recorded there: before, because batch 1 draws on the same estate.
+3. Batch 1: the first 24 plans in tools/easter/EASTER_TARGETS.json, all
+   cover-taught weeks (ruled week <= 8). Run dedupe_sweep.py against whatever
+   batch 1 produces — the sweep is cheap and would catch the generator if it
+   still runs anywhere.
 
 RESUME_POINTER=_sownb/vb/EASTER_LEDGER.md, then VB_STATE.json resume_easter_a3
 HUMAN_ITEMS=_sownb/vb/EASTER_HUMAN.md — A3-H1 (3 unscorable cells), A3-H2 (two
-split candidates), A3-H3 (19 stale lesson-config week labels blocking the
-recipe), A3-H4 (carried), A3-H5 (the Lundy banner ruling)
+split candidates, now joined by 5 ASDAN decks), A3-H3 (19 stale lesson-config
+week labels blocking the recipe), A3-H4 (carried), A3-H5 (the Lundy banner
+ruling), A3-H6 (the 19-deck duplication backlog)
 
 SESSION_LOCAL_INSTALLS=pip: lxml 6.1.3, cssselect 1.5.0, pymupdf 1.28.2, pypdf,
 cffi. Container-local; re-install in a fresh container or every gate errors on
 import.
 
 DATA_PRESERVED=YES — everything is committed and pushed to
-codex/vb-easter-a3-trim-grow-humanities; nothing of value is uncommitted.
+codex/vb-easter-a3-trim-launch-humanities.
 REPOSITORY_MUTATIONS_AFTER_THIS_STOP=NONE
-
-VB_EASTER_A3_PAUSED

@@ -46,6 +46,18 @@ VERSION = "mechanism-battery-v1.0.0"
 # and runs --self-test. g19 is here for its control list only: its controls fire
 # per-invocation against a real deck rather than in a standalone self-test, so
 # the battery checks that it publishes them and the deck gates exercise them.
+# The mechanism is not all in one directory. The Easter campaign tools live in
+# tools/easter/ and were, until now, exercised by nobody: dedupe_stage_text.py
+# landed in #280 carrying two bugs that only its OWN controls caught, and
+# nothing in CI ran them. A tool whose controls are never run is a tool whose
+# controls are decoration.
+#
+# An entry containing "/" is repo-relative and always resolves against ROOT; a
+# bare name resolves against the tools directory the battery was handed. That
+# distinction matters to --prove-red, which stages a COPY of the VB tools
+# directory: a bare name follows the copy, which is the point, and a
+# repo-relative one keeps pointing at the real file rather than at a path that
+# happens not to exist beside the copy.
 SELFTEST_TOOLS = [
     "lesson_stages.py",
     "g18_v2_family_floor.py",
@@ -55,6 +67,8 @@ SELFTEST_TOOLS = [
     "g27_no_filename_weeks.py",
     "cgate_containment.py",
     "classic_v2_contract_selftest.py",
+    "tools/easter/dedupe_stage_text.py",
+    "tools/easter/dedupe_sweep.py",
 ]
 LIST_ONLY_TOOLS = [
     "g19_v2.py",
@@ -84,10 +98,14 @@ def _selftest(tool: Path) -> tuple[int, str]:
     return p.returncode, (p.stdout + p.stderr)
 
 
+def _resolve(name: str, tools_dir: Path) -> Path:
+    return (ROOT / name) if "/" in name else (tools_dir / name)
+
+
 def battery(tools_dir: Path = TOOLS_DIR) -> dict:
     rows = []
     for name in SELFTEST_TOOLS:
-        tool = tools_dir / name
+        tool = _resolve(name, tools_dir)
         declared = _controls(tool)
         code, output = _selftest(tool)
         # the tool's own report is the authority on how many it ran
@@ -95,7 +113,8 @@ def battery(tools_dir: Path = TOOLS_DIR) -> dict:
         ran = int(m.group(2)) if m else None
         fired = int(m.group(1)) if m else None
         rows.append({
-            "tool": name,
+            "tool": Path(name).name,
+            "toolPath": str(tool.relative_to(ROOT)) if tool.is_relative_to(ROOT) else str(tool),
             "controlsDeclared": len(declared),
             "controlsRun": ran,
             "controlsFired": fired,
@@ -106,9 +125,9 @@ def battery(tools_dir: Path = TOOLS_DIR) -> dict:
             "controls": declared,
         })
     for name in LIST_ONLY_TOOLS:
-        declared = _controls(tools_dir / name)
+        declared = _controls(_resolve(name, tools_dir))
         rows.append({
-            "tool": name, "controlsDeclared": len(declared),
+            "tool": Path(name).name, "controlsDeclared": len(declared),
             "controlsRun": None, "controlsFired": None, "exitCode": 0,
             "allListedControlsFired": bool(declared),
             "note": "publishes its controls; they fire per-invocation against a real deck",

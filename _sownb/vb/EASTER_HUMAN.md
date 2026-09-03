@@ -136,3 +136,77 @@ passes, and a deck with genuinely repeated *teaching* still reds.
 `_sownb/vb/tools/g23_period_load.py` plus a cross-stage repeat count over
 `lesson_stages.stages()`.
 
+
+---
+
+## A3-H6 — 7,593 words of duplicated instruction, 19 decks, one generator
+
+**Found:** 2026-09-03, while trimming the third of three W15 Humanities decks.
+**Status:** measured, projected, not applied. Needs your scheduling decision.
+
+Three Humanities decks were de-duplicated one at a time (#280, #281, #282) and
+all three carried the same defect in the same stage. That is not three authoring
+accidents — a uniform ×4 repeat inside one named stage is a generator emitting
+its task paragraph more than once. So the whole estate was asked the same
+question with the same read-only instrument.
+
+    377 decks scanned · 24 affected · 19 with removable duplication
+    7,593 removable words · 170 sentences at exactly ×4, 17 at ×2
+
+**What a pupil currently reads.** In `SCI_B_W16B` the eight-sentence task block
+("Place two approved fossil images side by side. Describe each before
+comparing…") appears **four times running** inside one flat paragraph. There is
+no tier label, no heading, nothing that would make the repetition read as three
+differentiated versions. The same eight instructions, four times.
+
+**It is not missing differentiation.** I checked, because if the loop had been
+meant to emit three tiers then dedupe would leave the deck short of content.
+The clean sibling `SCI_B_W14A` has the identical stage structure — three
+distinct `<h3>` tier headings, each with its own `<p>` — and differs only in the
+task paragraph, 108 words against 597. Nothing is missing. Dedupe restores the
+authored shape.
+
+**Ten of the nineteen are live g23 ceiling reds on main right now**, and nobody
+has reported them, because §0c was scoped to Humanities. De-duplication alone
+clears five of the ten:
+
+| group | decks | ratio now | after dedupe | outcome |
+|---|---|---|---|---|
+| Science — Build/Grow/Launch, W7 and W14–W20 | 14 | ×1.28–1.78 | ×1.09–1.49 | every one PASSES; 5 reds cleared, 7 reach the 1.25 target |
+| ASDAN Spring1 W15/W16 — BUILD ×2, GROW ×2, LAUNCH ×1 | 5 | ×2.40–3.08 | ×1.97–2.57 | **still red** |
+
+Those ratios are measured, not calculated: `dedupe_sweep.py --project` copies
+each deck, dedupes the copy and re-runs g23. The repository is never written to,
+and a planted mutation that made it write the source reds its own control.
+
+**The five ASDAN decks are the useful negative.** Their overload survives
+de-duplication, so it is real teaching content at two-and-a-half times an ASDAN
+lesson. They belong with A3-H2's split question, not with this one — and they
+are worse than either Humanities split candidate was before its trim.
+
+**The remediation is denominator-neutral.** Not one affected file sits in any of
+the nine family baseline sets, so no family median and no p25 floor moves. The
+backlog cannot loosen g18 by lowering a floor, and no ratio anywhere else in the
+estate changes. That is checked, not assumed.
+
+**Why I stopped rather than fixed it.** Nineteen decks is nineteen lesson units
+against a ceiling of 24 with three already spent, and batch 1 alone needs 24
+plans. Doing this now would spend the campaign's ceiling on de-duplication and
+starve the build the order actually asks for. Scaling the order down is your
+call, not mine.
+
+**The question, Matt:** do you want this as its own order before batch 1, or
+after the build campaign? My reading is *before*, for one reason — every deck
+batch 1 produces comes from the same estate, and if the generator still runs
+anywhere, the batch inherits the defect and the ceiling pays for it twice. I
+could find no generator script in this repository, so the defect may already be
+historical; but "I could not find it" is not "it is not there", and the sweep is
+cheap to re-run against anything batch 1 produces.
+
+**Re-run any of this:**
+
+    python3 tools/easter/dedupe_sweep.py --project --output <out>.json
+    python3 tools/easter/dedupe_sweep.py --self-test        # 10 controls
+
+**Evidence:** `_sownb/vb/evidence/a3/dedupe_sweep_live.json` — every row carries
+the file, the removable words, the stage, and the repeat-factor histogram.

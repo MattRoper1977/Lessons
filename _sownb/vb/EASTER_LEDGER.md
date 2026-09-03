@@ -156,6 +156,113 @@ Regression: re-running the tool on the already-deduped BUILD_HUM_W15 is a no-op.
 
 ---
 
+## §0c — LAUNCH Humanities, PR #282
+
+`LAUNCH_HUM_W15` 3526 → 2710 words (−816), ×4.29 → **×3.30**. One lesson unit;
+three of 24 spent. 85 distinct pupil sentences before and after; containment
+PASS on 258 sentences, 0 missing, red control fired. g18 BINDING PASS
+(famP25 797, deck 2710) and GLOBAL PASS. Pack `SHA256SUMS.txt` refreshed for its
+four existing rows; none added, none removed; `sha256sum -c` verifies.
+
+Every non-text property of the file is byte-identical: 12 `<section>`, 82 `<div>`,
+66 `<p>`, and all three `<script>` and all three `<style>` bodies hash the same
+before and after. The print pack is unchanged at 1,812 characters. The whole
+delta sits in one stage — **I Do 2 · connect, 1469 → 653 words** — and the other
+eight stages are word-for-word identical.
+
+**A3-H2 stands.** At ×3.30 this is still three times a LAUNCH Humanities lesson
+and still a split candidate. What has changed is the basis: the excess is now
+known to be teaching, not repetition.
+
+---
+
+## §2 precondition — the duplication is a generator defect, not three decks
+
+Three W15 Humanities decks were trimmed one at a time and all three carried the
+same defect in the same stage. Three independent authoring accidents do not
+produce a uniform ×4 in one named stage, so before batch 1 builds anything on
+top of this estate, the estate was asked the same question with the same
+instrument.
+
+`tools/easter/dedupe_sweep.py` — new, 10 controls, all fired, read-only.
+`--project` copies each affected deck, dedupes **the copy** and re-runs g23, so
+every ratio below is a number the gate printed and not arithmetic on a word
+count. A planted mutation that made the projection write the source file reds
+`projection-leaves-the-source-file-byte-unchanged`; withdrawn, it greens.
+
+    377 decks scanned · 24 affected · 19 with removable duplication
+    7,593 removable words · repeat factors: 170 sentences ×4, 17 ×2
+
+**The shape.** Not a paragraph printed four times. In `SCI_B_W16B` the task
+block — sentences 0–7 — appears four times inside one flat `<p>`, wrapped by
+connective knowledge (8–14) and a procedural walkthrough (15–20) that each
+appear once. The pattern of first-appearance indices is
+`0..14, 0..7, 0..7, 0..7, 15..20`.
+
+**What it is not.** The first reading was that a per-tier loop emitted
+undifferentiated text, and that the decks are therefore *missing* their tiering.
+That reading is wrong, and the clean sibling proves it:
+`SCI_B_W14A` (unaffected) and `SCI_B_W14B` (affected) have the identical stage
+structure — three distinct `<h3>` tier headings each with its own `<p>` — and
+differ only in the long task paragraph, 108w against 597w. Nothing is missing.
+One paragraph is repeated, and dedupe restores the authored shape rather than
+inventing one.
+
+**Ten of the nineteen are live g23 ceiling reds on main**, none previously
+reported, because §0c looked only at Humanities. De-duplication alone clears
+five of the ten and brings seven decks to the 1.25 operative target:
+
+| group | decks | before | after | verdict |
+|---|---|---|---|---|
+| Science (Build/Grow/Launch, W7 + W14–W20) | 14 | ×1.28–1.78 | ×1.09–1.49 | all PASS; 5 reds cleared |
+| ASDAN Spring1 W15/W16 (BUILD ×2, GROW ×2, LAUNCH ×1) | 5 | ×2.40–3.08 | ×1.97–2.57 | **all STILL RED** |
+
+The five ASDAN decks are the useful negative result: their overload survives
+de-duplication, so it is real teaching content and belongs with A3-H2's split
+question, not with this one.
+
+**The remediation moves no denominator.** Not one of the 24 affected files sits
+in any of the nine family baseline sets (BASELINES membership, checked against
+`_sownb/feb/tools/g18_measurement.py`; overlap 0 in every family). So deduping
+them changes no family median and no p25 floor — the backlog cannot loosen g18
+by lowering a floor, and no ratio elsewhere in the estate moves.
+
+**Not done here, and why.** Nineteen decks is nineteen lesson units of a ceiling
+of 24 with three already spent, and batch 1 alone needs 24 plans. Spending the
+campaign's ceiling on de-duplication would starve the build the order actually
+asks for. Recorded as **A3-H6** with its evidence and its projection, to be
+scheduled as its own order. Nothing in the 19 was edited: `git status` shows one
+lesson file changed in this PR.
+
+Evidence: `_sownb/vb/evidence/a3/dedupe_sweep_live.json` (sweep + projection),
+`dedupe_launch_humanities.json`, `g23_L15_before.json`, `g23_L15_after.json`,
+`cgate_L15.json`, `g18_L15_after.json`, `battery_launch_hum.json`
+(11 tools / 98 controls, `--prove-red` PASS).
+
+---
+
+## CORRECTION — the sixth check on #281 was never stalled
+
+The PAUSE below was written on a false reading and is left in place because the
+record is append-only. What it says was true when written and is false now:
+
+- `AUTHORITATIVE_REMOTE_MAIN` was `727c3162…`. Main is now
+  `e09005a8b1a8f820e8462017b5964ceefa02a7e8`.
+- #281 was "5 of 6 checks GREEN … NOT MERGED. Do not merge on five of six."
+  The sixth check **completed successfully at 22:50:33** on head `b35588b`, seven
+  minutes before the handoff was written. The GitHub API was serving a stale job
+  status; I read the stale status as a stall. #281 merged as `e09005a8` and all
+  ten of its blobs are byte-identical between the merge commit and the branch
+  head.
+
+This was the second time in one session that API lag was read as a stalled job —
+the first cost a cancelled healthy run on #278. Recorded in WRONG_BEFORE_RIGHT:
+**a status endpoint is an instrument, and it was read without a control.** The
+control now used is the one applied above: re-read the job's own conclusion and
+timestamp before acting, and blob-verify a merge rather than trusting its status.
+
+---
+
 ## PAUSE — VB_EASTER_A3_PAUSED, 2026-09-03
 
 Stopped under §6 S2 at a clean transaction boundary: #279 and #280 merged and
