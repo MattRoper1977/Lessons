@@ -154,3 +154,24 @@ back-to-front by offset, so every entity outside the removed sentences survives.
 
 Regression: re-running the tool on the already-deduped BUILD_HUM_W15 is a no-op.
 
+---
+
+## PAUSE — VB_EASTER_A3_PAUSED, 2026-09-03
+
+Stopped under §6 S2 at a clean transaction boundary: #279 and #280 merged and
+blob-verified, #281 pushed with five of six checks green and the sixth stalled.
+No half-merged batch; batch 1 not started.
+
+Handoff: `_sownb/vb/VB_EASTER_A3_SAFE_HANDOFF.txt`.
+
+**Resume at §0a from this file.** The next three actions, in order: merge #281
+when its sixth check reports; LAUNCH Humanities de-duplication (pre-measured on
+a scratch copy: 3526 → 2710 words, ×4.29 → ×3.30, 85 distinct sentences both
+sides); then batch 1, whose 24 plans are all cover-taught weeks.
+
+**The stalled check is not this campaign's.** No PR here touches a `Games/` file,
+and the instrument lives in the site estate, cloned fresh at job start, so it can
+change between runs with nothing in Lessons changing. It stalled twice on #278
+earlier today, passed on #279 and #280, and is stalled again on #281 —
+intermittent, not deterministic. One cancel-and-rerun was already spent on it.
+
