@@ -117,6 +117,7 @@ def battery(tools_dir: Path = TOOLS_DIR) -> dict:
     ok = all(r["allListedControlsFired"] for r in rows)
     return {
         "battery": VERSION,
+        "file": "_sownb/vb/tools/mechanism_battery.py",
         "toolsRun": len(rows),
         "controlsDeclaredTotal": sum(r["controlsDeclared"] for r in rows),
         "allListedControlsFired": ok,

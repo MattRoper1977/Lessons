@@ -328,6 +328,7 @@ def self_test() -> dict:
     missing = [c for c in CONTROL_IDS if c not in ids]
     extra = [c for c in ids if c not in CONTROL_IDS]
     return {"tool": "g18_v2_family_floor", "toolVersion": VERSION,
+            "file": "_sownb/vb/tools/g18_v2_family_floor.py",
             "controlsDeclared": len(CONTROL_IDS), "controlsRun": len(results),
             "controlsFired": sum(1 for r in results if r["fired"]),
             "missingControls": missing, "undeclaredControls": extra,

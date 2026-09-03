@@ -122,6 +122,7 @@ def score(candidate: str, family: str) -> dict:
     row = {
         "gate": "g23-period-load", "toolVersion": VERSION,
         "candidate": candidate, "family": family,
+        "file": candidate,
         "shell": timings["shell"],
         "pupilWords": words,
         "pupilWordsLegacyCounter": legacy_words,
@@ -226,6 +227,7 @@ def self_test() -> dict:
     missing = [c for c in CONTROL_IDS if c not in ids]
     extra = [c for c in ids if c not in CONTROL_IDS]
     return {"tool": "g23_period_load", "toolVersion": VERSION,
+            "file": "_sownb/vb/tools/g23_period_load.py",
             "controlsDeclared": len(CONTROL_IDS), "controlsRun": len(results),
             "controlsFired": sum(1 for r in results if r["fired"]),
             "missingControls": missing, "undeclaredControls": extra,

@@ -166,6 +166,15 @@ def survives_print(svg, tree) -> bool:
     return True
 
 
+def _rel(path) -> str:
+    """Repo-relative, so the stale-evidence sweep's qa-subject resolver can find
+    the deck this report is about. An absolute container path resolves nowhere
+    once the evidence is committed."""
+    try:
+        return str(Path(path).resolve().relative_to(ROOT))
+    except ValueError:
+        return str(path)
+
 def measure(path: Path) -> dict:
     tree = lh.fromstring(Path(path).read_text(encoding="utf-8"))
     screen = stages_mod.ScreenView(tree)
@@ -213,7 +222,7 @@ def measure(path: Path) -> dict:
 
     with_vis = {e["stage"] for e in explanatory if e["stage"]}
     return {
-        "file": str(path), "toolVersion": VERSION,
+        "file": _rel(path), "toolVersion": VERSION,
         "shell": stages_mod.shell_of(tree),
         "explanatory": len(explanatory), "decorative": len(decorative),
         "printDead": len(printdead), "excluded": len(excluded),
@@ -363,6 +372,7 @@ def self_test() -> dict:
     missing = [c for c in CONTROL_IDS if c not in ids]
     extra = [c for c in ids if c not in CONTROL_IDS]
     return {"tool": "g24_visual_density", "toolVersion": VERSION,
+            "file": "_sownb/vb/tools/g24_visual_density.py",
             "controlsDeclared": len(CONTROL_IDS), "controlsRun": len(results),
             "controlsFired": sum(1 for r in results if r["fired"]),
             "missingControls": missing, "undeclaredControls": extra,

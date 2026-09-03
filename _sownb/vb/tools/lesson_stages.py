@@ -459,6 +459,15 @@ def parse(path: Path):
     return lh.fromstring(Path(path).read_text(encoding="utf-8"))
 
 
+def _rel(path) -> str:
+    """Repo-relative, so the stale-evidence sweep's qa-subject resolver can find
+    the deck this report is about. An absolute container path resolves nowhere
+    once the evidence is committed."""
+    try:
+        return str(Path(path).resolve().relative_to(ROOT))
+    except ValueError:
+        return str(path)
+
 def measure(path: Path) -> dict:
     """The one measurement. Every gate that counts pupil content calls this."""
     tree = parse(path)
@@ -476,7 +485,7 @@ def measure(path: Path) -> dict:
             "deliberatePause": (s.get("data-deliberate-pause") or "").strip() or None,
         })
     return {
-        "file": str(path),
+        "file": _rel(path),
         "toolVersion": VERSION,
         "shell": shell_of(tree),
         "stages": rows,
@@ -677,6 +686,7 @@ def self_test() -> dict:
     extra = [c for c in ids if c not in declared]
     return {
         "tool": "lesson_stages", "toolVersion": VERSION,
+        "file": "_sownb/vb/tools/lesson_stages.py",
         "controlsDeclared": len(declared), "controlsRun": len(results),
         "controlsFired": sum(1 for r in results if r["fired"]),
         "missingControls": missing, "undeclaredControls": extra,

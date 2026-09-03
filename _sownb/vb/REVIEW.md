@@ -152,7 +152,7 @@ breakage.
 
 ## Where the mechanism was proved
 
-  _sownb/vb/evidence/a2r/MECHANISM_PROOF_MATRIX.txt
+  _sownb/vb/evidence/a2r/MECHANISM_PROOF_MATRIX.json
 
   Four RSH-3 references     PASS, all four: 9 stages, 40 minutes, non-zero
   Seven-candidate set       reported above

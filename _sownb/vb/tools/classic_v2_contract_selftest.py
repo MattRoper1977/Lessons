@@ -191,6 +191,7 @@ def run() -> dict:
 
     return {
         "tool": "classic_v2_contract_selftest", "toolVersion": VERSION,
+        "file": "_sownb/vb/tools/classic_v2_contract_selftest.py",
         "contractVersion": contract.VERSION,
         "baseDeck": str(BASE_DECK.relative_to(ROOT)),
         "baseDeckNote": ("the landed deck with the nine stage timings #271 dropped "

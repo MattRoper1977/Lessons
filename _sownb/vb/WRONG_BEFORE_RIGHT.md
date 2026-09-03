@@ -817,3 +817,27 @@ RECOVERY: path 1.2(d). The Codex preservation folder, its 548 KB archive and its
 and the size manifest were attached. A2_PRESERVATION_MISSING. The mechanism was
 rebuilt from the gate definitions in §3, which the order authorises, and drift is
 prevented by 98 controls rather than by the old code.
+
+WRONG: my first push turned the stale-evidence sweep red, and the failure was
+entirely mine. Nineteen rows across six new evidence files came back "this row
+states a verdict and matched none of the claim forms", and the sweep refuses to
+pass with one outstanding — correctly, because the alternative is calling an
+unreadable subject stale. The sweep takes the structural JSON route only when
+some node carries a `file` key naming a subject; without one it falls to the
+line grammar, where every bare `"ceilingVerdict": "PASS"` is an assertion about
+nothing it can resolve.
+
+RIGHT: every evidence artefact this order writes now names the subject it
+reports on — a self-test names its tool, a per-deck report names its deck, all
+repo-relative so the sweep's qa-subject resolver finds them at the root. That
+READS MORE, not less: the sweep can now tell us if a tool or a deck an evidence
+file reports on is ever deleted, which it could not do before. The proof matrix
+moved from .txt to .json for the same reason, since a text file always falls to
+the line grammar. Sweep exit 2 -> 0, unparseable rows 19 -> 0, files matching no
+form 17 -> 11, and all eleven that remain are pre-existing run4/run5/run6
+artefacts this order did not write.
+
+The temptation worth naming: the quick fix was to move the evidence out of
+`evidence/` so the sweep would stop looking at it. That would have hidden the
+artefacts from the one instrument whose job is to notice when evidence outlives
+its subject.
