@@ -120,3 +120,58 @@ and LAUNCH W16 (26 over, 144 banner). Trimming real teaching to offset a banner
 the contract requires would damage three lessons; changing g23 to discount a
 refrain would loosen a threshold, which §5 forbids. Held for a ruling.
 
+---
+
+## §0c — GROW Humanities, PR #281
+
+`GROW_HUM_W15` 3529 → 2734 words (−795), ×3.90 → **×3.02**. One lesson unit.
+86 distinct pupil sentences before and after; containment PASS on 261 sentences,
+0 missing. Still OVERLOADED, and now on a defensible basis: **A3-H2 split
+candidate stands.** After removing 795 words of verbatim within-paragraph
+repetition it still carries three times a GROW Humanities lesson.
+
+`GROW_HUM_W16` unchanged — see A3-H5 (116 over target, 112 of it Lundy banner).
+
+**Two bugs in the de-duplication tool, both caught by its own controls, both
+fixed in this PR.** The tool landed in #280 with them.
+
+1. It located the edit on `stage_pupil_node()`, a pruned copy with the staff
+   drawer and hidden nodes removed, so an element's `.text` there is a
+   concatenation of fragments that were never contiguous in the file. On
+   GROW_HUM_W15 that text matched the raw bytes **zero** times and the anchor
+   guard refused the edit rather than applying it to the wrong span. Now
+   located on the original tree.
+2. It tested `is_staff()` on the element, but the drawer marker sits on the
+   containing `<div data-audience="staff">`, so drawer text was not skipped.
+   The `staff-drawer-text-is-untouched` control caught it. Now walks ancestors.
+
+A third change follows from the first: an element with no children can still
+fail to appear in the raw file, because the file writes HTML entities and the
+parser hands back decoded characters — GROW_HUM_W15's stage-6 paragraph is 8,832
+decoded characters matching zero raw bytes. The edit is now anchored to a raw
+span located by decoding candidates and requiring exactly one match, and applied
+back-to-front by offset, so every entity outside the removed sentences survives.
+
+Regression: re-running the tool on the already-deduped BUILD_HUM_W15 is a no-op.
+
+---
+
+## PAUSE — VB_EASTER_A3_PAUSED, 2026-09-03
+
+Stopped under §6 S2 at a clean transaction boundary: #279 and #280 merged and
+blob-verified, #281 pushed with five of six checks green and the sixth stalled.
+No half-merged batch; batch 1 not started.
+
+Handoff: `_sownb/vb/VB_EASTER_A3_SAFE_HANDOFF.txt`.
+
+**Resume at §0a from this file.** The next three actions, in order: merge #281
+when its sixth check reports; LAUNCH Humanities de-duplication (pre-measured on
+a scratch copy: 3526 → 2710 words, ×4.29 → ×3.30, 85 distinct sentences both
+sides); then batch 1, whose 24 plans are all cover-taught weeks.
+
+**The stalled check is not this campaign's.** No PR here touches a `Games/` file,
+and the instrument lives in the site estate, cloned fresh at job start, so it can
+change between runs with nothing in Lessons changing. It stalled twice on #278
+earlier today, passed on #279 and #280, and is stalled again on #281 —
+intermittent, not deterministic. One cancel-and-rerun was already spent on it.
+

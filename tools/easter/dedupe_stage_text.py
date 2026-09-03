@@ -55,6 +55,7 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
+import html as _html
 import re
 import sys
 from collections import Counter
@@ -99,15 +100,62 @@ def dedupe_text(text: str) -> tuple[str, int]:
     return "".join(out).strip(), removed
 
 
+
+def raw_span(raw: str, tag: str, text: str) -> tuple[int, int] | None:
+    """Locate the element's RAW inner span by decoding candidates and comparing.
+
+    An element with no children still may not have its decoded .text appear in
+    the file: the file writes HTML entities and the parser hands back the
+    decoded characters. GROW_HUM_W15's stage-6 paragraph is 8,832 decoded
+    characters and matches the raw bytes zero times for exactly that reason.
+    Editing on the decoded text would have to re-encode, and guessing which
+    characters were entities in the original is how a file gets rewritten in
+    ways nobody asked for.
+
+    So the span is found by scanning the raw text for elements of this tag that
+    contain no nested element, decoding each candidate, and requiring exactly one
+    to equal the text we mean. The edit then happens inside the raw substring and
+    every entity outside the removed sentences survives untouched.
+    """
+    hits = []
+    for m in re.finditer(rf"<{tag}\b[^>]*>(.*?)</{tag}>", raw, re.S | re.I):
+        inner = m.group(1)
+        if "<" in inner:
+            continue
+        if _html.unescape(inner) == text:
+            hits.append((m.start(1), m.end(1)))
+    return hits[0] if len(hits) == 1 else None
+
+
 def analyse(path: Path) -> dict:
     raw = Path(path).read_text(encoding="utf-8")
     tree = ls.parse(Path(path))
     screen = ls.ScreenView(tree)
     targets, refused = [], []
     for index, stage in enumerate(ls.stages(tree, screen), 1):
-        node = ls.stage_pupil_node(stage, screen)
-        for el in node.iter():
+        # ITERATE THE ORIGINAL STAGE, NOT THE PRUNED COPY.
+        # stage_pupil_node() returns a deep copy with the staff drawer, hidden
+        # nodes and chrome REMOVED, so an element's .text there is a
+        # concatenation of fragments that were never contiguous in the file. The
+        # anchor guard below caught exactly that: on GROW_HUM_W15 the pruned
+        # text matched the raw bytes 0 times and the edit was refused rather
+        # than applied to the wrong span. Locating on the original tree and
+        # requiring no element children makes .text the exact raw text.
+        for el in stage.iter():
             if not isinstance(el.tag, str) or el.tag.lower() not in BLOCK:
+                continue
+            # Walk the ANCESTORS up to the stage, not just the element. The
+            # drawer marker sits on the containing <div data-audience="staff">,
+            # so testing the <p> alone let drawer text through -- which is what
+            # the staff-drawer control caught.
+            anc, skip = el, False
+            while anc is not None and anc is not stage:
+                if (ls.is_staff(anc) or ls.is_chrome(anc)
+                        or screen.declared_hidden(anc) or screen.marked_hidden(anc)):
+                    skip = True
+                    break
+                anc = anc.getparent()
+            if skip:
                 continue
             text = " ".join(el.text_content().split())
             counts = Counter(sentences(text))
@@ -124,15 +172,18 @@ def analyse(path: Path) -> dict:
                                   "; string surgery would destroy it")
                 refused.append(row)
                 continue
-            new, removed = dedupe_text(el.text or text)
-            if raw.count(el.text or "") != 1:
-                row["refused"] = ("its text does not appear exactly once in the file, "
-                                  f"so the edit could not be anchored ({raw.count(el.text or '')} matches)")
+            span = raw_span(raw, el.tag, el.text or "")
+            if span is None:
+                row["refused"] = ("its raw span could not be located uniquely in the file, "
+                                  "so the edit could not be anchored")
                 refused.append(row)
                 continue
+            old_raw = raw[span[0]:span[1]]
+            new_raw, removed = dedupe_text(old_raw)
             row["removedWords"] = removed
-            row["oldText"] = el.text
-            row["newText"] = new
+            row["oldText"] = old_raw
+            row["newText"] = new_raw
+            row["span"] = list(span)
             targets.append(row)
     return {"file": str(Path(path)), "toolVersion": VERSION,
             "targets": targets, "refused": refused,
@@ -155,10 +206,13 @@ def apply(path: Path) -> dict:
     for stage in ls.stages(tree, screen):
         sent_before |= set(sentences(ls.stage_text(stage, screen)))
 
+    # Replace by SPAN, back to front, so earlier offsets stay valid and an
+    # identical raw string elsewhere in the file is never touched by accident.
     raw = path.read_text(encoding="utf-8")
-    for t in plan["targets"]:
-        assert raw.count(t["oldText"]) == 1, "anchor lost between analyse and apply"
-        raw = raw.replace(t["oldText"], t["newText"], 1)
+    for t in sorted(plan["targets"], key=lambda r: -r["span"][0]):
+        a, b = t["span"]
+        assert raw[a:b] == t["oldText"], "anchor moved between analyse and apply"
+        raw = raw[:a] + t["newText"] + raw[b:]
     path.write_text(raw, encoding="utf-8")
 
     after = ls.measure(path)
@@ -281,10 +335,12 @@ def controls() -> list[dict]:
                  extra=f'<div data-audience="staff"><p>{(_BLOCK + " ") * 3}</p></div>',
                  b="A single unrepeated pupil sentence here.")
     rep5, before5, after5 = _run(drawer)
+    def drawer_of(src):
+        m = re.search(r'<div data-audience="staff">.*?</div>', src, re.S)
+        return m.group(0) if m else None
     rec("staff-drawer-text-is-untouched",
-        "repeats inside the staff drawer are not this tool's business",
-        True, (_BLOCK + " ") * 3 in after5.replace("\n", " ") or
-              after5.count("Order three fictional school-week cards") >= 4)
+        "the staff drawer region is byte-identical before and after",
+        True, drawer_of(before5) is not None and drawer_of(before5) == drawer_of(after5))
 
     pp = _mk(a="A single unrepeated pupil sentence here.", p=(_BLOCK + " ") * 3,
              b="Another single unrepeated sentence here.")
