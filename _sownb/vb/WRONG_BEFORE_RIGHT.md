@@ -693,3 +693,128 @@ RIGHT: the cross-estate unification gate allows only the manifest and its pin
 to be modified alongside a pin move, and the GLV3 chip gate matches catalogue
 chips by substring. The catalogue landed from a clean two-file branch (#266)
 with the estate subject "Humanities"; the records travel with the close.
+
+---
+
+## VB-EASTER-A2R (2026-09-03)
+
+WRONG: four gates measured nothing on 264 decks and called it a pass. g18, g23,
+g24 and g25 each carried the same stage selector, `main.deck > section.slide`.
+That is the n6 shell. 264 of the estate's 607 deck-shaped files are the classic
+chassis, whose stages are `main.deck .slide-container .slide`. On every one of
+them the selector returned an empty list, the word count came out zero, the ratio
+came out 0.0, and g23 printed WITHIN / ceiling PASS. A gate that finds nothing
+and reports a pass is not lenient, it is broken, and this one was broken on main:
+BUILD_HUM_W16 landed in #271 with ten stages and 2,159 pupil words reading
+`0w x0.0 WITHIN PASS`.
+
+RIGHT: one module, lesson_stages.py, decides what pupil teaching content is, and
+every gate imports it. CONTROL: `classic-shell-is-seen` measures a classic-shell
+fixture and requires 15, not 0. WITHDRAWN with the fixture.
+
+THE TRAP INSIDE THE FIX. The obvious implementation — "count what is visible on
+screen" — is wrong, and wrong in a way that looks right. Both shells run
+`.slide{display:none}` with `.slide.active{display:flex}`, so at any instant nine
+stages in ten are display:none. A visibility-based counter would have counted ONE
+stage per deck and called every lesson thin, and it would have looked like a
+principled improvement. The rule that works has two levels: stage ELIGIBILITY is
+decided by the ancestor chain above the stage, and content VISIBILITY is resolved
+inside a stage with the stage itself taken as visible. Slide toggling is
+navigation, not hiding. CONTROL: `every-stage-counted-not-just-active` requires 3
+stages from a fixture that has two of them display:none.
+
+WRONG: every family median in the estate was overstated, and had been for every
+run that ever printed one. The v1 counter took `text_content()` over a slide,
+which concatenates block elements with no separator, so `</p><p>` glued the last
+word of one paragraph to the first of the next. My own control caught it, not a
+review: `one-pupil-paragraph-raises-the-count` expected +5 words from a five-word
+paragraph and observed +4, because "epsilon" and "one" had become "epsilonone".
+
+RIGHT: block elements get a tail before extraction, the way c-gate has always
+done it, so the two instruments now agree on where a word ends. All nine family
+medians re-derived and printed before -> after on every g18 and g23 line. All
+nine fell between 5% and 19%, so every ratio rose. The correction is strictly
+stricter and no threshold moved.
+
+WRONG: I wrote a g27 control set as plain string literals. g27 scans _sownb/ and
+tools/, so it scans itself, and it immediately flagged four hits in its own
+control list. The tempting repair is an allowlist naming the checker — which this
+very file already argues against, in a comment I had read: "an allowlist that
+covers the checker is an excuse with a filename."
+
+RIGHT: the control bodies are assembled from fragments, exactly as `_COL =
+"absolute" + "Week"` already was, so the file contains no form it looks for.
+Repository hits went 4 -> 0 with no exemption anywhere.
+
+AND THE CONTROL THAT FOUND A REAL HOLE. `py-term-folder-regex-on-a-path` would
+not fire. The subject was `str(d)` where `d = Path(p).parent`, and
+`subject_is_path` only read the HEAD identifier of the expression — so wrapping a
+path in `str()`, or an f-string, or a join, defeated the whole gate. A week could
+be read from a folder name by putting the path inside a call. Fixed by matching
+any path name anywhere in the subject expression, on word boundaries so
+`deck_text` is not `deck`. The control is now named
+`py-term-folder-regex-on-a-path-wrapped-in-str` so the hole it found stays
+visible.
+
+WRONG: my first classic-v2 contract red a known-good deck on three clauses. It
+forbade any lesson-config, any running head, and required the literal word
+"Lundy" in a working stage. All three were my clauses, not the deck's faults. A
+finished deck NEEDS its own lesson-config, because coverage is counted per cell
+and a deck declaring no cells is uncountable; it NEEDS a running head on every
+printed page so a loose sheet can be returned to the right lesson. Order 0.8 says
+the DONOR's must not travel — identity, not absence. And the Lundy Loop reaches a
+working stage as its four dimensions, space / voice / audience / influence, not
+as the framework's name, which is not language a pupil needs.
+
+RIGHT: the clauses test identity, and the Lundy clause accepts the four
+dimensions. The landed deck goes to 9/10 with one honest red. The rule this
+leaves behind: a contract clause that reds a known-good artefact is a defect in
+the clause until proved otherwise.
+
+WRONG: my selftest reported two mutations as PASS -> PASS and I nearly read that
+as "the clause is not specific". It was worse — the mutations had not applied.
+`_break_surfaces` anchored on `</div></body>`, a closing pair that deck does not
+have, and `_break_print_inside_main` used a regex to find the end of a
+40-kilobyte nested block. Both silently returned the input unchanged, so the
+selftest was measuring the unmutated deck twice and calling it a clean pass. A
+selftest whose mutation does nothing does not fail loudly; it goes green.
+
+RIGHT: anchor on `</body>`, which every deck has, and move the print pack with
+lxml on the tree rather than with a regex over the text. 10/10 clauses now fire.
+
+WRONG: I audited "every gate tool changed in the window" with
+`git diff c2a9c725..HEAD` while sitting on a working branch, so the diff folded
+this order's own eleven-file mechanism rewrite into the audit of what other
+people had landed and I briefly had eleven changed files instead of six.
+
+RIGHT: the audit range is `c2a9c725..3e5671cf`, the landed window, and it is
+written into LANDED_AUDIT_A2.md as a range rather than as "HEAD" so the next
+reader cannot repeat it.
+
+NOT A FINDING, RECORDED SO IT IS NOT RE-DISCOVERED: the order states g23 as
+"<= family median x1.25" and the contract row `load.period.ceiling` says 1.5.
+They do not conflict. 1.5 is the contract's binding ceiling; 1.25 is the
+operative trim target carried from the run-10/11 R5.5 rule, and it is stricter,
+so honouring it relaxes nothing. Neither number moved. Both print on every g23
+line.
+
+ALSO NOT A FINDING: VB_STATE describes the live contract as "457 rows, sha
+467a8df6". It is 464 rows, ed671277, and has been since #225 — long before this
+window. The VB_STATE line is stale; the contract did not move. g22 against the
+pinned cohort-A blob: extensionSafe 225, redefinition 0, regression 0, liveOnly
+239. No halt.
+
+ENGINE: Chromium 141.0.7390.37, 59 fonts, fingerprint c555ca08 — identical to
+runs 2-14, zero drift. The four RSH-3 references all measure 9 stages / 40
+minutes / non-zero words under the corrected instrument. One of them honestly
+reports two selectors its CSS parser cannot translate,
+`.calm .hero-visual::before` and `::after`, which is the transparency limb
+working: a parser that silently drops a display:none rule is a fail-open with a
+tidy report.
+
+RECOVERY: path 1.2(d). The Codex preservation folder, its 548 KB archive and its
+268 MB bundle live in a container this venue cannot reach; only the handoff text
+and the size manifest were attached. A2_PRESERVATION_MISSING. The mechanism was
+rebuilt from the gate definitions in §3, which the order authorises, and drift is
+prevented by 98 controls rather than by the old code.
+

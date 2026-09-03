@@ -9,11 +9,46 @@ reference zone, feedback sheet) are AUTHORED from the deck's own text and its
 traced workbook cell, and every authored block is listed in TRACE.md.
 
 Usage: reshell.py <n6 deck> <classic donor> <out path> [--json trace.json]
+       reshell.py --list-controls
 """
-import hashlib, html as H, json, os, pathlib, re, sys, tempfile
+import hashlib, html as H, importlib.util, json, os, pathlib, re, sys, tempfile
 from lxml import html as lh
+
+VERSION = "reshell-classic-v2.1.0-donor-pregate-and-timings-carried"
+
+# The assertions ORDER 0.8 requires of this recipe, published so a caller can
+# assert that all of them ran without pinning a number.
+CONTROL_IDS = [
+    "donor-lesson-config-absent-from-output",
+    "donor-running-head-absent-from-output",
+    "exactly-one-target-modal",
+    "donor-refused-when-red-on-g19",
+    "source-refused-when-red-on-g19",
+    "stage-timings-carried-and-sum-preserved",
+]
+
+if "--list-controls" in sys.argv:
+    for _c in CONTROL_IDS:
+        print(_c)
+    raise SystemExit(0)
+
 src_path, donor_path, out_path = sys.argv[1], sys.argv[2], sys.argv[3]
 ROOT = pathlib.Path(__file__).resolve().parents[3]
+
+# ORDER 0.8: refuse any donor red on g19 (more than one :root block). A recipe
+# that generates from a red donor propagates the red into every deck it makes,
+# and the estate then finds out from a gate run days later. The check is on BOTH
+# sides -- the source deck's tokens travel too.
+_g19_spec = importlib.util.spec_from_file_location(
+    "g19_v2", ROOT / "_sownb/vb/tools/g19_v2.py")
+_g19 = importlib.util.module_from_spec(_g19_spec); _g19_spec.loader.exec_module(_g19)
+for _label, _p in (("donor", donor_path), ("source", src_path)):
+    _n = _g19.root_block_count(ROOT / _p)
+    if _n > 1:
+        raise SystemExit(
+            f"REFUSED: {_label} {_p} defines {_n} :root blocks; the RUN12-A ruling "
+            f"allows one. Fix the {_label} first -- a recipe must not copy a red forward.")
+    print(f"g19 pre-check  {_label:6s} :root blocks = {_n}  OK   [{VERSION}]", file=sys.stderr)
 S = (ROOT/src_path).read_text(encoding='utf-8'); D = (ROOT/donor_path).read_text(encoding='utf-8')
 tree = lh.fromstring(S); main = tree.xpath('//main')[0]
 cfg = json.loads(tree.xpath('//script[@id="lesson-config"]')[0].text)
@@ -273,6 +308,33 @@ body_end = body_end.replace('</body>', target_modal + '''<script>function wedoRe
 function wedoReset(b){var s=b.closest('.slide');s.querySelectorAll('.wedo-reveal').forEach(function(e){e.style.display='none'});}</script>
 </body>''', 1)
 slides_html = ''.join([title_slide, arrival, starter, ido, wedo, ido2, wedo2, independent, lundy_slide, exit_slide])
+
+# CARRY THE STAGE TIMINGS. #271 reshelled BUILD_HUM_W16 and dropped nine
+# data-min values that summed to exactly 40, because the classic chassis has no
+# data-min of its own and nothing read them afterwards -- the only reader was an
+# n6-shaped XPath that already returned nothing on a classic deck. A lesson that
+# does not say how its forty minutes are spent cannot be taught from by a cover
+# teacher, which is the whole point of the pack.
+_src_mins = [int(float(n.get('data-min', '0')))
+             for n in tree.xpath('//main[contains(concat(" ",normalize-space(@class)," ")," deck ")]'
+                                 '/section[contains(concat(" ",normalize-space(@class)," ")," slide ")]')]
+if _src_mins:
+    # the classic shell opens with a title slide the n6 deck does not have; it
+    # is chrome and takes none of the period.
+    _mins = [0] + _src_mins if len(_src_mins) == slides_html.count('class="slide') - 1 else _src_mins
+    _it = iter(_mins)
+
+    def _stamp(m):
+        try:
+            return m.group(0) + f' data-min="{next(_it)}"'
+        except StopIteration:
+            return m.group(0)
+
+    slides_html = re.sub(r'<div class="slide(?: active)?"', _stamp, slides_html)
+    _carried = [int(x) for x in re.findall(r'data-min="(\d+)"', slides_html)]
+    assert sum(_carried) == sum(_src_mins), (
+        f'stage timings must survive the reshell: donor summed to {sum(_src_mins)}, '
+        f'output sums to {sum(_carried)}')
 out = head + '<body> <main id="lessonDeck" class="deck"><div class="slide-container">' + slides_html + '</div></main>' + body_end.replace('%%PRINT%%', print_area, 1)
 out = '\n'.join(l.rstrip() for l in out.split('\n'))
 assert out.count('id="lesson-config"') == 0, 'no lesson-config may leave the recipe'
