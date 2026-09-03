@@ -1557,7 +1557,7 @@ function netBadge(on){
   ['pointerup','pointerleave'].forEach(function(ev){lk.addEventListener(ev,function(){clearTimeout(lt);});});
   /* lock survives refresh (so pupils can't escape it by reloading) */
   applyLock();
-  startNet(); /* classroom mode if a teacher server is found; silent standalone otherwise */
+  setTimeout(startNet,2000); /* defer optional classroom discovery until the standalone start screen is interactive */
   /* Enter key submits the unlock code */
   document.getElementById('lockcode').addEventListener('keydown',function(e){if(e.key==='Enter')tryUnlock();});
   injectClock(); tickClock(); setInterval(tickClock,1000);

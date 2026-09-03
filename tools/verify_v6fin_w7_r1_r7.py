@@ -65,6 +65,14 @@ def expected_authored(base: bytes, rule: str) -> bytes:
             1,
             f"{rule} viewport repair",
         )
+    if rule == "R7":
+        text = replace_exact(
+            text,
+            "  startNet(); /* classroom mode if a teacher server is found; silent standalone otherwise */",
+            "  setTimeout(startNet,2000); /* defer optional classroom discovery until the standalone start screen is interactive */",
+            1,
+            "R7 optional classroom discovery defer",
+        )
     if rule == "R2":
         font_links = (
             '<link rel="preconnect" href="https://fonts.googleapis.com">\n'
@@ -222,7 +230,8 @@ def main() -> int:
                 "canonicalRegionBytes": len(region),
                 "canonicalRegionSha256": sha256(region),
                 "authoredDelta": "splash only" if rule not in {"R2", "R7"} else (
-                    "splash + viewport + external-font removal/fallback" if rule == "R2" else "splash + viewport"
+                    "splash + viewport + external-font removal/fallback" if rule == "R2" else
+                    "splash + viewport + deferred optional classroom discovery"
                 ),
             }
         )
