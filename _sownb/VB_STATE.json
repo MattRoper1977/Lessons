@@ -3,7 +3,7 @@
  "order": "mbm-sow-verify-and-build-2026-09-02-VB-RUN14",
  "run": 14,
  "runDate": "2026-09-02",
- "mainHead": "e09005a8b1a8f820e8462017b5964ceefa02a7e8",
+ "mainHead": "4c7715d1b86984cbdbd91008c672e8e67fc7c6ab",
  "anchor_run2": "dedbf06f546127d06091373dd777b943cc0b039e",
  "anchor_run2_note": "Anchored at fetch time. Main kept moving during the run: #187 (FEB catalogue append of ten packs to resources.json), #188 (catalogue chip tooling), then this order's own #189 merged as 28ee8d9b. No commit between 22f6470f and 28ee8d9b touches any of the twelve except #189 itself (this order's repair). Corpus freeze re-verified 54/54 OK at run start.",
  "phases": {
@@ -3247,7 +3247,7 @@
  "resume_easter_a3": {
   "order": "VB-EASTER-A3",
   "status": "IN_PROGRESS",
-  "mainHead": "e09005a8b1a8f820e8462017b5964ceefa02a7e8",
+  "mainHead": "4c7715d1b86984cbdbd91008c672e8e67fc7c6ab",
   "mainHeadVerification": "blob-verified: all ten paths changed by #281 hash identically between the merge commit and branch head b35588b; not taken from the merge status",
   "correction": "the previous revision of this key recorded main at 727c3162 and #281 as NOT MERGED on a stalled sixth check. The sixth check completed successfully at 22:50:33; the API served a stale job record. See EASTER_LEDGER.md 'CORRECTION' and WRONG_BEFORE_RIGHT.",
   "landed": [
@@ -3268,21 +3268,28 @@
     "what": "§0c GROW Humanities",
     "merge": "e09005a8b1a8f820e8462017b5964ceefa02a7e8",
     "units": 1
+   },
+   {
+    "pr": 282,
+    "what": "§0c LAUNCH Humanities + estate-wide duplication sweep",
+    "merge": "4c7715d1b86984cbdbd91008c672e8e67fc7c6ab",
+    "units": 1,
+    "verified": "17 of 17 paths blob-identical against main"
    }
   ],
   "open": [
    {
-    "pr": 282,
-    "what": "§0c LAUNCH Humanities + estate-wide duplication sweep",
-    "branch": "codex/vb-easter-a3-trim-launch-humanities",
-    "units": 1
+    "pr": 283,
+    "what": "A3-H6 the duplication backlog, 19 decks",
+    "branch": "codex/vb-easter-a3h6-duplication-backlog",
+    "units": 19
    }
   ],
   "ceiling": {
    "total": 24,
-   "spent": 3,
-   "remaining": 21,
-   "note": "batch 1 alone needs 24 plans; the ceiling is the binding constraint"
+   "spent": 22,
+   "remaining": 2,
+   "blocker": "batch 1 needs 24 plans and 2 units remain; the ceiling must be raised or re-scoped before the build campaign can start. Not assumed either way."
   },
   "headline": {
    "inScope": 573,
@@ -3293,23 +3300,34 @@
    "batchesRun": 0
   },
   "a3h6": {
-   "finding": "the W15 duplication is a generator defect, estate-wide: 377 decks scanned, 24 affected, 19 with removable duplication, 7593 words, 170 sentences at exactly x4, every one in the stage 'I Do 2 · connect'",
-   "liveCeilingReds": 10,
-   "redsClearedByDedupeAlone": 5,
+   "status": "CLEARED in PR #283, on Matt's ruling 'before batch 1, own order'",
+   "decks": 19,
+   "packs": 7,
+   "wordsRemoved": 7593,
+   "bytesRemoved": 50817,
+   "containment": "19/19 PASS, 0 missing sentences, red control fired on each",
+   "structure": "element counts, script/style bodies, print packs and staff drawers byte-identical on all 19",
+   "g23CeilingReds": {
+    "before": 10,
+    "after": 5
+   },
    "reachOperativeTarget": 7,
-   "stillRedAfterDedupe": "5 ASDAN Spring1 W15/W16 decks at x1.97-2.57 -- real teaching content, belongs with A3-H2",
-   "denominatorNeutral": "zero affected decks sit in any of the nine family baseline sets, so no median and no p25 floor moves",
-   "notMissingTiering": "the clean sibling SCI_B_W14A has the identical stage structure with three distinct h3 tier headings; only the task paragraph differs, 108w vs 597w",
-   "applied": false,
-   "why": "19 decks is 19 of the 21 remaining lesson units and would starve batch 1; scheduling is Matt's call",
-   "tool": "tools/easter/dedupe_sweep.py",
-   "controls": 10,
-   "evidence": "_sownb/vb/evidence/a3/dedupe_sweep_live.json"
+   "familyMediansMoved": 0,
+   "estateAfter": {
+    "removableWords": 0,
+    "x4Sentences": 0,
+    "residue": "76 words at x2, the <p class='truth'> safeguarding pair on 11 title slides, refused because it carries inline <b>; moves no verdict"
+   },
+   "watch": "SCI_G_W16A_Solubility_And_Recovery_Explore lands x1.49 against ceiling 1.50, ~7 words of headroom",
+   "trapFound": "28 packs name the checksum file SHA256SUMS.txt and 3 name it CHECKSUMS.sha256; GROW_ASDAN/Spring1_W1-W6_2026-27 is one of the three and holds 2 of the 19, so a refresher knowing only the common name would have left them stale with no error",
+   "newTool": "tools/easter/refresh_pack_checksums.py, 8 controls, existing rows only",
+   "evidence": "_sownb/vb/evidence/a3h6/"
   },
   "nextActions": [
-   "merge #282 and blob-verify it against main",
-   "read Matt's ruling on A3-H6 (recommendation: before batch 1)",
-   "batch 1: first 24 plans in tools/easter/EASTER_TARGETS.json, all ruled week <= 8; run dedupe_sweep.py against whatever it produces"
+   "merge #283 and blob-verify every changed path against main",
+   "Matt: the ceiling. 2 of 24 units remain and batch 1 needs 24 plans",
+   "Matt: A3-H2, now seven candidates; A3-H5 and the title-slide question",
+   "batch 1 once the ceiling is settled: first 24 plans in tools/easter/EASTER_TARGETS.json, all ruled week <= 8; run dedupe_sweep.py over whatever it produces"
   ],
   "humanItems": [
    "A3-H1",
@@ -3319,6 +3337,23 @@
    "A3-H5",
    "A3-H6"
   ],
-  "resumePointer": "_sownb/vb/EASTER_LEDGER.md"
+  "resumePointer": "_sownb/vb/EASTER_LEDGER.md",
+  "a3h2": {
+   "status": "OPEN, handed back on Matt's ruling 'fold into A3-H2, hand back'",
+   "candidates": 7,
+   "humanities": [
+    "GROW_HUM_W15 x3.02",
+    "LAUNCH_HUM_W15 x3.30"
+   ],
+   "asdan": [
+    "GROW_ASDAN_W16 x2.57",
+    "GROW_ASDAN_W15 x2.54",
+    "BUILD_ASDAN_W16 x2.49",
+    "BUILD_ASDAN_W15 x2.44",
+    "LAUNCH_ASDAN_W16 x1.97"
+   ],
+   "diagnosis": "all five ASDAN decks share one profile: 9 stages, 40 declared minutes, with 'I Do 2 · connect' at 491-568w against 3 minutes (164-189 w/min) and 'Independent · evidence' at 276-313w against 16 minutes. The minutes are allocated against the reverse of the content, so this may be a timing question rather than a split",
+   "observationHeldNotActed": "the 'Lesson overview' stage is the title slide, data-type=title data-min=0, carrying 327-384 words in every deck in the estate. Whether g23 should count it is A3-H5's question in a second form and answering it loosens g23 estate-wide; §5 forbids deciding it"
+  }
  }
 }

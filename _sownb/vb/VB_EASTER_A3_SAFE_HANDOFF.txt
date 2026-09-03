@@ -1,28 +1,31 @@
 VB_EASTER_A3_SAFE_HANDOFF
-TIMESTAMP_UTC=2026-09-03T23:59:00Z
+TIMESTAMP_UTC=2026-09-04T00:35:00Z
 CAMPAIGN_STATUS=IN_PROGRESS
 SUPERSEDES=the 2026-09-03T23:05:00Z revision of this file, which recorded main at
   727c3162 and #281 as NOT MERGED. Both were true when written and are false now.
   See EASTER_LEDGER.md, "CORRECTION — the sixth check on #281 was never stalled".
 
-AUTHORITATIVE_REMOTE_MAIN=e09005a8b1a8f820e8462017b5964ceefa02a7e8
-  Blob-verified: all ten paths changed by #281 hash identically between the
-  merge commit and the branch head b35588b. Not taken from the merge status.
+AUTHORITATIVE_REMOTE_MAIN=4c7715d1b86984cbdbd91008c672e8e67fc7c6ab
+  Blob-verified: all 17 paths changed by #282 hash identically between the
+  merge commit and the branch head. Not taken from the merge status.
 LOCAL_REPOSITORY=/home/user/Lessons
-LOCAL_BRANCH=codex/vb-easter-a3-trim-launch-humanities
+LOCAL_BRANCH=codex/vb-easter-a3h6-duplication-backlog
 WORKTREE_CLEAN=YES at the point of writing
 
 LANDED_THIS_SESSION:
 - #279 §1 target list, merged 3f859ec66043d8172f2d403f8d2064d165d4bce8, 0 units
 - #280 §0c BUILD Humanities, merged 727c31623070acb08684d1bc788ef4741c02c230, 1 unit
 - #281 §0c GROW Humanities, merged e09005a8b1a8f820e8462017b5964ceefa02a7e8, 1 unit
-- #282 §0c LAUNCH Humanities + the estate sweep, THIS BRANCH, 1 unit
+- #282 §0c LAUNCH Humanities + the estate sweep, merged
+  4c7715d1b86984cbdbd91008c672e8e67fc7c6ab, 1 unit, 17/17 paths blob-verified
+- #283 A3-H6 the duplication backlog, 19 decks, THIS BRANCH, 19 units
 
-CEILING:
-- A2R ceiling of 24 lesson files, spent 3: BUILD_HUM_W15 (#280),
-  GROW_HUM_W15 (#281), LAUNCH_HUM_W15 (#282). 21 remain.
-- Batch 1 alone needs 24 plans, so the ceiling is the binding constraint on
-  what can be absorbed before it is raised or re-scoped.
+CEILING - THIS IS THE BLOCKER:
+- A2R ceiling of 24 lesson files. SPENT 22, REMAINING 2.
+  3 in the Humanities trims (#280, #281, #282) + 19 in A3-H6 (#283).
+- BATCH 1 ALONE NEEDS 24 PLANS. The build campaign CANNOT START against the
+  current ceiling. It must be raised or re-scoped, and that is Matt's decision.
+  Nothing in this handoff assumes either way. Do not start batch 1 without it.
 
 ON THE SIXTH CHECK, WHICH IS NOT STALLED AND NEVER WAS:
 - "The way out of a game is keyboard-reachable - both estates" completed
@@ -58,7 +61,37 @@ needed one. All three W15 decks were carrying verbatim duplication:
 - BUILD/GROW/LAUNCH_HUM_W16: excess is the Lundy banner printed on every stage.
   NOT TRIMMED. Held as A3-H5.
 
-THE FINDING THAT CHANGES THE NEXT DECISION — A3-H6:
+A3-H6 - CLEARED IN #283 on Matt's ruling "before batch 1, own order":
+- 19 decks, 7 packs, 7,593 words and 50,817 bytes of duplicated instruction out.
+- Containment 19/19 PASS, 0 missing sentences, red control fired on each.
+- Element counts, script and style bodies, print packs and staff drawers
+  byte-identical on all 19. Distinct sentence counts identical on all 19.
+- g23 ceiling reds across those decks 10 -> 5. All 14 Science decks now PASS;
+  7 decks reach the 1.25 operative target.
+- No family median moved (compared row-by-row, 0 of 9).
+- Estate re-sweeps to 0 removable words; the x4 histogram entry is gone.
+  Residue: 76 words at x2, the <p class='truth'> safeguarding pair on 11 title
+  slides, refused because it carries inline <b>. Moves no verdict.
+- WATCH: SCI_G_W16A lands x1.49 against ceiling 1.50, ~7 words of headroom.
+- TRAP CLOSED: 28 packs name the checksum file SHA256SUMS.txt, 3 name it
+  CHECKSUMS.sha256. GROW_ASDAN/Spring1_W1-W6_2026-27 is one of the 3 and holds
+  2 of the 19 decks. A refresher knowing only the common name would have left
+  them stale WITH NO ERROR. tools/easter/refresh_pack_checksums.py handles both,
+  refreshes existing rows only, 8 controls.
+
+A3-H2 IS NOW SEVEN CANDIDATES, NOT TWO, and handed back on Matt's ruling:
+- GROW_HUM_W15 x3.02, LAUNCH_HUM_W15 x3.30, plus the five ASDAN Spring1 decks
+  at x1.97-2.57 whose overload survived de-duplication.
+- All five ASDAN share one profile: "I Do 2 - connect" carries 491-568w against
+  3 declared minutes (164-189 w/min) while "Independent - evidence" carries
+  276-313w against 16. The minutes are allocated against the reverse of the
+  content, so this may be a timing question rather than a split.
+- HELD, NOT ACTED ON: the "Lesson overview" stage is the title slide
+  (data-type=title, data-min=0) carrying 327-384 words in EVERY deck in the
+  estate. Whether g23 should count it is A3-H5's question in a second form.
+  Answering it loosens g23 estate-wide; §5 forbids deciding it.
+
+THE ORIGINAL A3-H6 FINDING, FOR CONTEXT:
 - The duplication is estate-wide, not three decks. dedupe_sweep.py (new, 10
   controls, read-only): 377 decks scanned, 24 affected, 19 with removable
   duplication, 7,593 words, 170 sentences at exactly x4.
@@ -74,24 +107,25 @@ THE FINDING THAT CHANGES THE NEXT DECISION — A3-H6:
   Matt's scheduling call. See EASTER_HUMAN.md A3-H6.
 
 NEXT_INCOMPLETE_ACTION, IN ORDER:
-1. Merge #282 once its checks report. Blob-verify against main before recording it.
-2. Read Matt's ruling on A3-H6 (before batch 1, or after). My recommendation is
-   recorded there: before, because batch 1 draws on the same estate.
-3. Batch 1: the first 24 plans in tools/easter/EASTER_TARGETS.json, all
-   cover-taught weeks (ruled week <= 8). Run dedupe_sweep.py against whatever
-   batch 1 produces — the sweep is cheap and would catch the generator if it
-   still runs anywhere.
+1. Merge #283. Blob-verify every changed path against main before recording it.
+2. MATT: the ceiling. 2 of 24 units remain, batch 1 needs 24 plans. Blocking.
+3. MATT: A3-H2, now seven candidates; and A3-H5 plus the title-slide question,
+   which are the same question in two forms.
+4. Batch 1 ONLY once the ceiling is settled: the first 24 plans in
+   tools/easter/EASTER_TARGETS.json, all cover-taught weeks (ruled week <= 8).
+   Run dedupe_sweep.py over whatever batch 1 produces - the sweep is cheap and
+   would catch the generator if it still runs anywhere.
 
 RESUME_POINTER=_sownb/vb/EASTER_LEDGER.md, then VB_STATE.json resume_easter_a3
 HUMAN_ITEMS=_sownb/vb/EASTER_HUMAN.md — A3-H1 (3 unscorable cells), A3-H2 (two
 split candidates, now joined by 5 ASDAN decks), A3-H3 (19 stale lesson-config
 week labels blocking the recipe), A3-H4 (carried), A3-H5 (the Lundy banner
-ruling), A3-H6 (the 19-deck duplication backlog)
+ruling), A3-H6 (CLEARED in #283)
 
 SESSION_LOCAL_INSTALLS=pip: lxml 6.1.3, cssselect 1.5.0, pymupdf 1.28.2, pypdf,
 cffi. Container-local; re-install in a fresh container or every gate errors on
 import.
 
 DATA_PRESERVED=YES — everything is committed and pushed to
-codex/vb-easter-a3-trim-launch-humanities.
+codex/vb-easter-a3h6-duplication-backlog.
 REPOSITORY_MUTATIONS_AFTER_THIS_STOP=NONE
