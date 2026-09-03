@@ -352,3 +352,45 @@ survive verbatim, so the count cannot drift under a legal file.
 
 **Battery: 14 tools, 123 controls**, derived, `--prove-red` PASS.
 
+
+**Merged** `0d54ddca1c893fbb9e818c0b08675535a021e86c`, six of six checks green,
+**75 of 75 paths blob-verified** against main. The sixth check — the site-estate
+keyboard-reachability walk that this session twice misread as stalled — completed
+successfully at 23:32:39, four minutes into the run.
+
+---
+
+## CAMPAIGN STATE at main `0d54ddca` — the ceiling is the blocker
+
+    PRs landed   #279 #280 #281 #282 #283, all blob-verified
+    ceiling      22 of 24 lesson units SPENT, 2 remaining
+    batch 1      needs 24 plans. CANNOT START.
+    headline     573 in scope / 134 covered / 439 open, unchanged; 0 batches run
+
+Nothing here is a reason to start batch 1 on 2 units and stop halfway. The
+ceiling is Matt's to raise or re-scope, and until he does, the campaign's open
+work is the three human items below, not the build.
+
+**Open, and all human:**
+
+- **The ceiling.** Blocking everything.
+- **A3-H2** — seven split candidates now, not two. Two Humanities decks
+  (×3.02, ×3.30) and five ASDAN Spring1 decks (×1.97–2.57) whose overload
+  survived de-duplication. The ASDAN five may be a timing question rather than
+  a split: their minutes run against the reverse of their content.
+- **A3-H5, and the same question in a second form.** Whether g23 counts a
+  banner repeated on every stage once or once per stage; and whether it counts
+  the title slide, `data-min="0"`, carrying 327–384 words in every deck in the
+  estate. Answering either loosens g23 estate-wide, so §5 forbids me deciding
+  it. Together they are roughly 14% of every deck's word count and they explain
+  a large part of why the whole estate reads heavy.
+- **A3-H1** (3 unscorable cells), **A3-H3** (19 stale lesson-config week labels
+  blocking the reshell recipe), **A3-H4** (carried).
+
+**What the estate gained across these five PRs.** Four gates that were measuring
+nothing on 264 of 607 decks now measure both shells; a word-boundary undercount
+that overstated all nine family medians is corrected; 8,388 words of duplicated
+instruction are out of 22 decks; the ×4 defect is gone from the estate; and the
+mechanism went from 11 tools / 98 controls to **14 tools / 123 controls**, all
+derived, with the two Easter tools now exercised by CI that previously ran
+neither.
