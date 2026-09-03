@@ -10,14 +10,35 @@ traced workbook cell, and every authored block is listed in TRACE.md.
 
 Usage: reshell.py <n6 deck> <classic donor> <out path> [--json trace.json]
 """
-import html as H, json, pathlib, re, sys
+import hashlib, html as H, json, os, pathlib, re, sys, tempfile
 from lxml import html as lh
 src_path, donor_path, out_path = sys.argv[1], sys.argv[2], sys.argv[3]
-ROOT = pathlib.Path('/home/user/Lessons')
+ROOT = pathlib.Path(__file__).resolve().parents[3]
 S = (ROOT/src_path).read_text(encoding='utf-8'); D = (ROOT/donor_path).read_text(encoding='utf-8')
 tree = lh.fromstring(S); main = tree.xpath('//main')[0]
 cfg = json.loads(tree.xpath('//script[@id="lesson-config"]')[0].text)
-family = cfg['family']; lane, subject = family.split(' ', 1); week = cfg['week']; title = cfg['title']
+family = cfg['family']; lane, subject = family.split(' ', 1); title = cfg['title']
+
+# Week authority is the cited workbook row, never a filename or a deck config.
+# The config remains a useful red control: if it disagrees, generation stops.
+spine = json.loads((ROOT / '_sownb/CALENDAR_SPINE.json').read_text(encoding='utf-8'))
+spine_cells = {c['reference']: c for c in spine['workbookCells']}
+offsets = {'Aut1': 0, 'Aut2': 8, 'Spr1': 15, 'Spr2': 21, 'Sum1': 26, 'Sum2': 33}
+def ruled_week(cell):
+    tw = cell.get('termWeek', '')
+    m = re.fullmatch(r'(Aut[12]|Spr[12]|Sum[12])\D+(\d+)', tw)
+    if not m or tw == 'Spr2·W6':
+        raise ValueError(f'cell has no ruled teaching week: {cell["reference"]} ({tw})')
+    return offsets[m.group(1)] + int(m.group(2))
+refs = cfg.get('cells') or []
+if not refs or any(ref not in spine_cells for ref in refs):
+    raise ValueError(f'lesson-config cells do not all exist in the spine: {refs!r}')
+weeks_from_cells = {ruled_week(spine_cells[ref]) for ref in refs}
+if len(weeks_from_cells) != 1:
+    raise ValueError(f'cited cells disagree on ruled teaching week: {sorted(weeks_from_cells)}')
+week = weeks_from_cells.pop()
+if cfg.get('week') != week:
+    raise ValueError(f'lesson-config week {cfg.get("week")!r} disagrees with ruled cell week {week}')
 TRACE = []
 def T(block, source): TRACE.append({'block': block, 'authoredFrom': source})
 def inner(el):  # serialised inner html of an element
@@ -199,11 +220,11 @@ exit_print = ''.join(f'<div class="{tier}-content"><h2>Exit Ticket – {label}</
 exit_print = f'<div id="print-exit" class="print-section">{exit_print}</div>'
 lundy_print = f'<div class="print-section" id="print-lundy"><h2>Lundy Loop &mdash; this lesson</h2><p style="font-size:.95rem;color:#444">{esc(strip_p)}</p><table class="ko-table">' + ''.join(f'<tr><td style="width:22%;vertical-align:top"><strong>{k}</strong></td><td>{esc(H.unescape(re.sub("<[^>]+>", "", v)).strip()) or esc(strip_sent.get(k.upper(), ""))}</td></tr>' for k, v in parts) + '</table></div>'
 T('Lundy Loop print section', 'the deck\'s own strip sentence and word-bridge lines, verbatim')
-fi = D.find('<div id="print-feedback"'); fj = D.find('<script', fi)
-feedback = re.sub(r'<h2 style="text-align:center">.*?</h2>', f'<h2 style="text-align:center">{esc(title)} &mdash; Feedback Sheet</h2>', D[fi:fj], count=1)  # feedback sheet, print-area close, cold-call modal
+fi = D.find('<div id="print-feedback"'); fj = D.find('<div class="mbm-modal"', fi)
+assert fi >= 0 and fj > fi, 'classic donor feedback/modal boundary not found'
+feedback = re.sub(r'<h2 style="text-align:center">.*?</h2>', f'<h2 style="text-align:center">{esc(title)} &mdash; Feedback Sheet</h2>', D[fi:fj], count=1)
 feedback = re.sub(r'<div class="print-head"[^>]*>.*?</div>', '', feedback, flags=re.S)  # a classic-v2 donor's own running head must not travel either
 T('Feedback sheet', 'the classic donor\'s blank feedback template, retitled; no lesson words')
-PH = f'<div class="print-head" style="font-size:.8rem;color:#555;border-bottom:1px solid #999;margin-bottom:8px">{esc(family)} · Week {week} · {esc(title)}</div>'
 intro = witness = ''
 if ASDAN:
     spark = txt(slides['starter'].xpath('./h2')[0]) if slides['starter'].xpath('./h2') else ''
@@ -211,7 +232,6 @@ if ASDAN:
     witness = f'<div id="print-witness" class="print-section"><h1 style="text-align:center;font-size:1.5rem;margin-bottom:2px">Assessor Witness Statement</h1><p style="text-align:center;margin:0 0 10px;font-size:.88rem"><strong>{esc(family)} W{week} &#183; {esc(title)}</strong><br>{esc(cfg["cells"][0])} &mdash; {esc(cfg["outcomes"][0])}</p><table style="width:100%;border-collapse:collapse;font-size:.93rem;margin-bottom:10px"><tr><td style="padding:7px 8px;border:1px solid #999;width:34%"><strong>Candidate name</strong></td><td style="padding:7px 8px;border:1px solid #999">&nbsp;</td></tr><tr><td style="padding:7px 8px;border:1px solid #999"><strong>Route taken</strong></td><td style="padding:7px 8px;border:1px solid #999">◆ Supported &nbsp; ▲ Standard &nbsp; ★ Stretch</td></tr><tr><td style="padding:7px 8px;border:1px solid #999"><strong>What I saw the candidate do</strong></td><td style="padding:7px 8px;border:1px solid #999;height:70px">&nbsp;</td></tr><tr><td style="padding:7px 8px;border:1px solid #999"><strong>Evidence kept (photo / note / recording)</strong></td><td style="padding:7px 8px;border:1px solid #999;height:44px">&nbsp;</td></tr><tr><td style="padding:7px 8px;border:1px solid #999"><strong>Assessor signature and date</strong></td><td style="padding:7px 8px;border:1px solid #999;height:44px">&nbsp;</td></tr></table></div>'
     T('Print: intro sheet and Assessor Witness Statement', 'the ASDAN house sheets; the spark is the deck\'s own starter question and the evidence lines are the traced cells\' outcomes verbatim; the witness table is blank furniture')
 print_area = f'<div id="print-area">{ko}{intro}{arrival_print}{starter_print}{wedo_print}{scaff}{reference if not ASDAN else ""}{ws}{exit_print}{witness}{lundy_print}{feedback}'
-print_area = re.sub(r'(<div (?:id="print-[a-z-]+" class="print-section[^"]*"|class="print-section" id="print-[a-z-]+")[^>]*>)', lambda m: m.group(1) + PH, print_area)
 # ---- assemble --------------------------------------------------------------
 head = D[:D.find('<body')]
 head = re.sub(r'<title>.*?</title>', f'<title>{esc(title)} · {esc(family)}</title>', head, count=1)
@@ -248,15 +268,36 @@ r4 = m and ("function printArm(level){" + m.group(1) + "}"
       "if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',r4);else r4();})();/* R4 default-Standard */")
 body_end = (body_end[:m.start()] + r4 + body_end[m.end():]) if m else body_end
 # swap the donor's sort/match reveal for a generic reveal of the evidence box
-body_end = body_end.replace('</body>', '''<script>function wedoReveal(b){var s=b.closest('.slide');s.querySelectorAll('.wedo-reveal').forEach(function(e){e.style.display='block'});}
+target_modal = f'''<div class="mbm-modal" id="mbmTA" onclick="if(event.target===this)this.classList.remove('open')"><div class="mbm-card"><h2>TA Focus — {esc(title)}</h2><p><strong>{esc(family)} · Week {week}</strong></p><p>{esc(cfg['outcomes'][0])}</p><p>Use the Supported route first. Pass is always allowed.</p><button class="mbm-close" onclick="document.getElementById('mbmTA').classList.remove('open')">Close</button></div></div>'''
+body_end = body_end.replace('</body>', target_modal + '''<script>function wedoReveal(b){var s=b.closest('.slide');s.querySelectorAll('.wedo-reveal').forEach(function(e){e.style.display='block'});}
 function wedoReset(b){var s=b.closest('.slide');s.querySelectorAll('.wedo-reveal').forEach(function(e){e.style.display='none'});}</script>
-<script id="lesson-config" type="application/json">''' + json.dumps({**cfg, 'chassis': 'classic-v2', 'reshelledFrom': src_path, 'contractScope': 'v2'}, ensure_ascii=False) + '</script>\n</body>', 1)
+</body>''', 1)
 slides_html = ''.join([title_slide, arrival, starter, ido, wedo, ido2, wedo2, independent, lundy_slide, exit_slide])
 out = head + '<body> <main id="lessonDeck" class="deck"><div class="slide-container">' + slides_html + '</div></main>' + body_end.replace('%%PRINT%%', print_area, 1)
 out = '\n'.join(l.rstrip() for l in out.split('\n'))
-assert out.count('id="lesson-config"') == 1, 'exactly one lesson-config must leave the recipe'
-assert out.count('class="print-head"') == out.count(f'· Week {week} · {esc(title)}</div>'), 'every print head must be this deck\'s own'  # the donor carries trailing spaces; the shell copy does not
-(ROOT/out_path).write_text(out, encoding='utf-8')
+assert out.count('id="lesson-config"') == 0, 'no lesson-config may leave the recipe'
+assert out.count('id="mbmTA"') == 1, 'exactly one target TA modal must leave the recipe'
+assert out.count('class="print-head"') == 0, 'no donor or generated running head may leave the recipe'
+target = ROOT / out_path
+target.parent.mkdir(parents=True, exist_ok=True)
+with tempfile.NamedTemporaryFile('w', encoding='utf-8', dir=target.parent, delete=False) as tf:
+    tf.write(out)
+    tmp_name = tf.name
+os.replace(tmp_name, target)
+
+# If this pack has a checksum manifest, hash the final bytes and update only the
+# existing row. Refuse to invent a row or silently leave a stale digest.
+manifests = list(target.parent.glob('SHA256SUMS.txt'))
+if manifests:
+    manifest = manifests[0]
+    lines = manifest.read_text(encoding='utf-8').splitlines(keepends=True)
+    matches = [i for i, line in enumerate(lines) if line.rstrip('\r\n').endswith('  ' + target.name)]
+    if len(matches) != 1:
+        raise ValueError(f'expected one existing checksum row for {target.name}, found {len(matches)}')
+    digest = hashlib.sha256(target.read_bytes()).hexdigest()
+    i = matches[0]; ending = '\r\n' if lines[i].endswith('\r\n') else '\n' if lines[i].endswith('\n') else ''
+    lines[i] = f'{digest}  {target.name}{ending}'
+    manifest.write_text(''.join(lines), encoding='utf-8', newline='')
 if '--json' in sys.argv:
     json.dump({'file': out_path, 'from': src_path, 'donor': donor_path, 'family': family, 'trace': TRACE}, open(sys.argv[sys.argv.index('--json') + 1], 'w'), indent=1, ensure_ascii=False)
 print('wrote', out_path, len(out), 'bytes;', len(TRACE), 'authored blocks')
