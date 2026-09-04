@@ -1,148 +1,90 @@
-VB_EASTER_A3_SAFE_HANDOFF
-TIMESTAMP_UTC=2026-09-03T23:40:00Z
-CAMPAIGN_STATUS=BLOCKED ON THE CEILING - all five PRs landed, batch 1 cannot start
-SUPERSEDES=the 2026-09-03T23:05:00Z revision of this file, which recorded main at
-  727c3162 and #281 as NOT MERGED. Both were true when written and are false now.
-  See EASTER_LEDGER.md, "CORRECTION — the sixth check on #281 was never stalled".
+VB_EASTER_A3N_SAFE_HANDOFF
+TIMESTAMP_UTC=2026-09-04T06:30:00Z
+CAMPAIGN_STATUS=PAUSED (VB_EASTER_A3_PAUSED) at a clean transaction boundary
 
-LAST_CONTENT_COMMIT=0d54ddca1c893fbb9e818c0b08675535a021e86c  (#283)
-  The last commit that changed any lesson, tool or workflow. Blob-verified:
-  all 75 paths hash identically between the merge commit and the branch head.
-  Not taken from the merge status.
-
+LAST_CONTENT_COMMIT=d4d7c914add19cc92a176479f8788734545b02a2  (#287)
+  The last commit that changed a lesson, tool or workflow, blob-verified 25/25.
 AUTHORITATIVE_REMOTE_MAIN=read it, do not trust this file for it.
   Run: git fetch origin main && git rev-parse origin/main
-  A handoff can never name the commit that lands the handoff, so any SHA
-  written here is stale by at least its own merge the moment it is pushed.
-  Recording one anyway invites a resuming session to find main "wrong" and go
-  looking for a problem that does not exist. Expect origin/main to be at or
-  ahead of LAST_CONTENT_COMMIT above; if it is AHEAD only by records commits
-  touching _sownb/vb/*.md, VB_STATE.json or this file, nothing has changed
-  that a gate would measure. If it is ahead by anything else, read the log
-  before acting - another writer has been in the repository.
+  A handoff cannot name the commit that lands the handoff. Expect origin/main at
+  or ahead of LAST_CONTENT_COMMIT; ahead only by commits touching _sownb/vb/*.md,
+  VB_STATE.json or this file means nothing a gate measures has moved.
+LOCAL_BRANCH=codex/vb-easter-a3n-b1
+WORKTREE_CLEAN=YES
 
-  This is the same lesson as the stalled-check misreading recorded in
-  WRONG_BEFORE_RIGHT: a recorded status is not the thing it describes, and the
-  fix is to re-read the primary source rather than to keep the copy fresher.
-LOCAL_REPOSITORY=/home/user/Lessons
-LOCAL_BRANCH=codex/vb-easter-a3-record-a3h6
-WORKTREE_CLEAN=YES at the point of writing
+LANDED THIS RUN (all blob-verified, none taken from a merge status):
+- #286 A3N R3 chrome        merged 6773a1b35c788d3db78cea3dfcfbc63e81bc11c8  11/11  0 units
+- #287 A3N R2 timing        merged d4d7c914add19cc92a176479f8788734545b02a2  25/25  0 units
+- #288 BATCH 1              OPEN at time of writing, 2 units
 
-LANDED_THIS_SESSION:
-- #279 §1 target list, merged 3f859ec66043d8172f2d403f8d2064d165d4bce8, 0 units
-- #280 §0c BUILD Humanities, merged 727c31623070acb08684d1bc788ef4741c02c230, 1 unit
-- #281 §0c GROW Humanities, merged e09005a8b1a8f820e8462017b5964ceefa02a7e8, 1 unit
-- #282 §0c LAUNCH Humanities + the estate sweep, merged
-  4c7715d1b86984cbdbd91008c672e8e67fc7c6ab, 1 unit, 17/17 paths blob-verified
-- #283 A3-H6 the duplication backlog, 19 decks, merged
-  0d54ddca1c893fbb9e818c0b08675535a021e86c, 19 units, 75/75 paths blob-verified
+CEILING (R1): per batch, lesson units only. Batch 1 spent 2 of 24.
 
-CEILING - THIS IS THE BLOCKER:
-- A2R ceiling of 24 lesson files. SPENT 22, REMAINING 2.
-  3 in the Humanities trims (#280, #281, #282) + 19 in A3-H6 (#283).
-- BATCH 1 ALONE NEEDS 24 PLANS. The build campaign CANNOT START against the
-  current ceiling. It must be raised or re-scoped, and that is Matt's decision.
-  Nothing in this handoff assumes either way. Do not start batch 1 without it.
+THE THREE RULINGS, AS EXECUTED:
+R1 done. The 22 units previously counted against A3-H6 were misattributed and are
+   noted in EASTER_LEDGER.md; nothing reversed. Every PR before #288 is 0 units.
+R2 done for the timing half. Five ASDAN decks re-timed from content: under-timed
+   stages 2 -> 0 on every deck, session 40 preserved, content untouched,
+   containment 5/5 PASS. THEN: a timing fix CANNOT move the g23 ratio, because
+   the ratio is words over family median and minutes do not enter it. All five
+   re-measure >1.6, so R2's band sends all five to SPLIT.
+R3 done. Contract refrain + title slide count zero on BOTH sides. The three W16
+   decks clear with no content edit (x1.53->1.37 RED->PASS, x1.38->1.22,
+   x1.28->1.14). Estate flip list: 20 decks move, 5 cleared, 7 regressed, net
+   +2 RED -- marginally STRICTER, not a loosening. Nothing parked.
 
-ON THE SIXTH CHECK, WHICH IS NOT STALLED AND NEVER WAS:
-- "The way out of a game is keyboard-reachable - both estates" completed
-  SUCCESSFULLY on #281 at 22:50:33. The API served a stale job record and I
-  read it as a stall. It had already passed on #279 and #280.
-- No PR in this campaign touches any Games/ file. The instrument lives in the
-  SITE estate and is cloned fresh at job start, so it can change between runs
-  with nothing in Lessons changing.
-- Before treating it as stalled again: re-read the job's own conclusion and
-  completion timestamp, not the run summary. One cancel-and-rerun was already
-  spent on nothing during #278.
-
-WHAT §0 ESTABLISHED (all re-run on main, none recalled; digests in EASTER_LEDGER.md):
-- g23, g24, g27, g28 armed; workflow counts derived; 11 tools / 98 controls all
-  fired; mechanism_battery.py --prove-red PASS. Re-run on this branch: PASS.
-- The historical W16 negative artefacts remain UNRECOVERABLE; A2R's four named
-  substitutes stand in, all RED.
-
-WHAT §1 ESTABLISHED:
-- Headline through week 26, content reading: 573 in scope / 134 covered / 439 open.
-  Two spine cells are scopeStatus OUT_OF_SCOPE (Careers); a naive enumeration
-  gives 575 and is wrong.
-- 262 deck plans cover all 439 open cells: 1-cell x146, 2-cell x55, 3-cell x61.
-- FORECAST at BATCH_CEILING 24: ~40 cells per batch, 11 batches to DONE.
-- 5 cells are RESHELL plans; 3 cells are HELD as A3-H1.
-
-WHAT §0c FOUND, AND WHY IT IS NOT WHAT THE ORDER EXPECTED:
-The order expected six overloaded lessons needing TRIM-TO-DRAWER. None of them
-needed one. All three W15 decks were carrying verbatim duplication:
-- BUILD_HUM_W15   x1.44 -> x1.21 WITHIN. DONE (#280).
-- GROW_HUM_W15    x3.90 -> x3.02. DONE (#281). Still an A3-H2 split candidate.
-- LAUNCH_HUM_W15  x4.29 -> x3.30. DONE (#282). Still an A3-H2 split candidate.
-- BUILD/GROW/LAUNCH_HUM_W16: excess is the Lundy banner printed on every stage.
-  NOT TRIMMED. Held as A3-H5.
-
-A3-H6 - CLEARED IN #283 on Matt's ruling "before batch 1, own order":
-- 19 decks, 7 packs, 7,593 words and 50,817 bytes of duplicated instruction out.
-- Containment 19/19 PASS, 0 missing sentences, red control fired on each.
-- Element counts, script and style bodies, print packs and staff drawers
-  byte-identical on all 19. Distinct sentence counts identical on all 19.
-- g23 ceiling reds across those decks 10 -> 5. All 14 Science decks now PASS;
-  7 decks reach the 1.25 operative target.
-- No family median moved (compared row-by-row, 0 of 9).
-- Estate re-sweeps to 0 removable words; the x4 histogram entry is gone.
-  Residue: 76 words at x2, the <p class='truth'> safeguarding pair on 11 title
-  slides, refused because it carries inline <b>. Moves no verdict.
-- WATCH: SCI_G_W16A lands x1.49 against ceiling 1.50, ~7 words of headroom.
-- TRAP CLOSED: 28 packs name the checksum file SHA256SUMS.txt, 3 name it
-  CHECKSUMS.sha256. GROW_ASDAN/Spring1_W1-W6_2026-27 is one of the 3 and holds
-  2 of the 19 decks. A refresher knowing only the common name would have left
-  them stale WITH NO ERROR. tools/easter/refresh_pack_checksums.py handles both,
-  refreshes existing rows only, 8 controls.
-
-A3-H2 IS NOW SEVEN CANDIDATES, NOT TWO, and handed back on Matt's ruling:
-- GROW_HUM_W15 x3.02, LAUNCH_HUM_W15 x3.30, plus the five ASDAN Spring1 decks
-  at x1.97-2.57 whose overload survived de-duplication.
-- All five ASDAN share one profile: "I Do 2 - connect" carries 491-568w against
-  3 declared minutes (164-189 w/min) while "Independent - evidence" carries
-  276-313w against 16. The minutes are allocated against the reverse of the
-  content, so this may be a timing question rather than a split.
-- HELD, NOT ACTED ON: the "Lesson overview" stage is the title slide
-  (data-type=title, data-min=0) carrying 327-384 words in EVERY deck in the
-  estate. Whether g23 should count it is A3-H5's question in a second form.
-  Answering it loosens g23 estate-wide; §5 forbids deciding it.
-
-THE ORIGINAL A3-H6 FINDING, FOR CONTEXT:
-- The duplication is estate-wide, not three decks. dedupe_sweep.py (new, 10
-  controls, read-only): 377 decks scanned, 24 affected, 19 with removable
-  duplication, 7,593 words, 170 sentences at exactly x4.
-- TEN of the 19 are live g23 ceiling reds on main. Nobody reported them because
-  §0c was scoped to Humanities.
-- Deduping clears 5 of the 10 and brings 7 decks to the 1.25 operative target.
-  Measured by --project, which dedupes a COPY and re-runs g23.
-- The 5 that stay red are ASDAN Spring1 W15/W16 at x1.97-2.57 after dedupe.
-  That overload is real teaching content and belongs with A3-H2.
-- Zero affected decks sit in any of the nine family baseline sets, so the
-  remediation moves no median and no p25 floor. Checked, not assumed.
-- NOT APPLIED. 19 decks is 19 of the 21 remaining units and would starve batch 1.
-  Matt's scheduling call. See EASTER_HUMAN.md A3-H6.
+SPLITS ARE REFUSED AS SPECIFIED -- READ THIS BEFORE RE-ISSUING THE ORDER:
+R2 defines a split as happening "at a stage boundary". Neither Humanities
+candidate has one. Measured, EVERY teaching stage of both decks serves BOTH of
+its outcomes; both are slot HUM+RE (Integrated Humanities and RE) and their
+objectives tie the two outcomes in one sentence. Cutting anywhere yields two
+incomplete lessons. DEFAULTED: not split, not trimmed, not edited; both cells
+stay covered by a working integrated lesson. Logged A3-H8.
+The five ASDAN decks carry the same SPLIT verdict and are QUEUED, untested.
 
 NEXT_INCOMPLETE_ACTION, IN ORDER:
-1. MATT: the ceiling. 2 of 24 units remain, batch 1 needs 24 plans. BLOCKING.
-   Do not start batch 1 on 2 units and stop halfway.
-2. MATT: A3-H2, now seven candidates; and A3-H5 plus the title-slide question,
-   which are the same question in two forms.
-3. Batch 1 ONLY once the ceiling is settled: the first 24 plans in
-   tools/easter/EASTER_TARGETS.json, all cover-taught weeks (ruled week <= 8).
-   Run dedupe_sweep.py over whatever batch 1 produces - the sweep is cheap and
-   would catch the generator if it still runs anywhere.
+1. Merge #288, blob-verify every path against main.
+2. Batch 2: the remaining cover-taught plans (weeks 1-7) in the NINE families
+   that have a gate-readable donor. 68 cover-taught plans exist; 2 are done.
+3. ART IS BLOCKED AND NEEDS A HUMAN OR A DONOR. No Art family has a
+   gate-readable 9-stage donor, so all 19 Art cover-taught plans are unbuildable.
+   55 of 81 measured decks declare minutes as `data-minutes`, which no gate
+   reads; only 26 use `data-min`. This is A2R's R2 regression seen from the
+   other side and it is the binding constraint on donor choice.
 
-RESUME_POINTER=_sownb/vb/EASTER_LEDGER.md, then VB_STATE.json resume_easter_a3
-HUMAN_ITEMS=_sownb/vb/EASTER_HUMAN.md — A3-H1 (3 unscorable cells), A3-H2 (two
-split candidates, now joined by 5 ASDAN decks), A3-H3 (19 stale lesson-config
-week labels blocking the recipe), A3-H4 (carried), A3-H5 (the Lundy banner
-ruling), A3-H6 (CLEARED in #283)
+THE AUTHORING PIPELINE IS THE MAIN ASSET THIS RUN LEAVES:
+  tools/easter/author_deck.py     8 controls. Empties every teaching block from a
+                                  donor's stages AND print pack, inserts authored
+                                  content, refuses to write a deck carrying donor
+                                  text. It refused four times and each refusal was
+                                  a real defect -- see the ledger.
+  tools/easter/build_batch.py     driver: author + g23/g18/g24/g25/g28 in one call.
+  tools/easter/content/*.json     the authored teaching content, one file per deck.
+Chassis text is DERIVED, not judged: pass a third deck of the family as
+--reference and anything donor+output share that the reference also has is
+furniture. Use a donor and reference FROM THE SAME PACK, or the reference will
+not cover the donor's chassis generation and the gate will flag 20 false leaks.
+
+KNOWN RED, NOT A REGRESSION: g24 print-dead on every deck in the estate. The
+chassis hides the slide container under @media print. A2R logged it as R3 and it
+needs print-safe figures authored -- a lesson PR, not a tool PR.
+
+HUMAN ITEMS: A3-H1 (3 unscorable cells), A3-H2 (7 split candidates), A3-H3 (19
+stale lesson-config week labels), A3-H4 (carried), A3-H5 (ANSWERED by R3),
+A3-H6 (CLOSED), A3-H7 (LAUNCH_HUM_W8 carries 0.9% chrome where its family
+carries 24% -- likely missing the contract refrain), A3-H8 (splits refused).
+
+DEFAULTED DECISIONS (N1b), all with measurements in the ledger:
+- R3 clause (b), repeat-counts-once: ships OFF as a flag, because it reverses
+  R3's own control and its target was already removed in #280-#283.
+- R2 strict monotonicity: not enforced, because it cuts independent work from 16
+  minutes to 3 and independent work is doing time, not reading time.
+- Splits: refused as specified (A3-H8).
+- Pack-level manifest timings: removed where decks disagree, because a value true
+  of no deck is worse than no value.
 
 SESSION_LOCAL_INSTALLS=pip: lxml 6.1.3, cssselect 1.5.0, pymupdf 1.28.2, pypdf,
-cffi. Container-local; re-install in a fresh container or every gate errors on
-import.
+cffi. Container-local; re-install in a fresh container or every gate errors.
 
-DATA_PRESERVED=YES — everything is committed and pushed; all five PRs are
-merged and blob-verified.
-REPOSITORY_MUTATIONS_AFTER_THIS_STOP=NONE
+RESUME_POINTER=_sownb/vb/EASTER_LEDGER.md, then VB_STATE.json resume_easter_a3
+DATA_PRESERVED=YES. REPOSITORY_MUTATIONS_AFTER_THIS_STOP=NONE
+VB_EASTER_A3_PAUSED

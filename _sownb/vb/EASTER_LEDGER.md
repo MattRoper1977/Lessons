@@ -510,3 +510,117 @@ carry a SPLIT verdict**, which is where R2's other clause sends them.
 
 Checksums refreshed across three packs, 5 rows, 0 added, 0 removed, verify OK.
 Mechanism **16 tools, 142 controls**, derived, `--prove-red` PASS.
+
+---
+
+## A3N splits — REFUSED AS SPECIFIED, DEFAULTED under N1b
+
+R2 authorises a split for `GROW_HUM_W15` (×3.13) and `LAUNCH_HUM_W15` (×3.22),
+and defines it: *"A split happens at a stage boundary into two decks."*
+
+**Neither deck has a stage boundary to split at.** Measured, every teaching stage
+of both decks serves BOTH of its outcomes:
+
+    GROW_HUM_W15    s1..s9  all serve outcome1 AND outcome2
+    LAUNCH_HUM_W15  s1..s8  all serve both; only s9 (Exit) serves one
+
+Both decks are slot `HUM+RE · Integrated Humanities and RE`, and their objectives
+tie the two outcomes together in a single sentence — "Place supplied rights and
+protest events in chronological order **and** explore how beliefs can support
+resilience"; "Explain causes of a supplied 20th-century conflict **and** compare
+reasons in an ethical decision". The integration is the design of the slot, not
+an accident of drafting. Their stages are titled *"Rights chronology and belief
+resilience"* throughout.
+
+Cutting at any boundary yields two incomplete lessons — one with no Independent
+or Exit, one with no Arrival or Starter. Producing two complete lessons instead
+is not a split but a rewrite that discards the integration the slot exists for.
+
+**DEFAULTED: not split, not trimmed, not edited.** Both cells stay covered by a
+working integrated lesson. Trim-to-drawer is not the alternative either: at ×3.13
+reaching 1.25 means moving ~1,350 of 2,245 words into the drawer, which REVIEW.md
+already ruled "not a trim by any reading of R5.5". Logged as **A3-H8**.
+
+The five ASDAN decks carry the same SPLIT verdict from R2's band (×1.94–2.06)
+and are queued rather than attempted, because their split line has not been
+tested and they are Spring decks with no cover-teaching urgency.
+
+---
+
+## BATCH 1 — opened at main `d4d7c914`, ceiling 0/24 (R1)
+
+**R1 correction recorded, nothing reversed.** The 22 units previously counted
+against A3-H6 were misattributed: under R1 a dedupe PR counts ZERO. #280–#283
+and #286–#287 are all 0-unit PRs. Batch 1 opens at **0/24**.
+
+**Composition.** 68 of the 262 plans are cover-taught (ruled week ≤ 7, all of
+weeks 1–7). 65 AUTHOR, 3 RESHELL.
+
+**Donor survey, and a boundary it exposes.** N3d requires one g19-green donor per
+family. Nine of twelve families have a gate-readable 9-stage donor. **The three
+Art families have none**, so all 19 Art cover-taught plans are unbuildable in
+this batch and are PARKED with their cells, not attempted.
+
+**Why "gate-readable" is the binding property.** 55 of 81 measured ASDAN and
+Humanities decks declare their stage minutes as `data-minutes`; only 26 use
+`data-min`, which is what `lesson_stages` and therefore every gate reads. This is
+A2R's known R2 regression seen from the other side, and it decides donor
+selection: a deck authored from a `data-minutes` donor would be born with no
+timings any gate can see.
+
+## BATCH 1 — closed. PR #288
+
+**BATCH 1: +2 units, cells 134→139, open 439→434, parked 19, PR #288, main d4d7c914.**
+
+Two decks authored, gated and landed; both cover-taught weeks a cover teacher
+reaches before Matt returns.
+
+| deck | cells | words | g23 | g18 | g25 | g28 |
+|---|---|---|---|---|---|---|
+| `BUILD_ASDAN_W1_My_Routine_My_Challenges_My_Area` | C130 · C144 · C174 | 989 | ×1.02 PASS | BINDING PASS | PASS | PASS |
+| `GROW_ASDAN_W1_What_I_Am_Good_At_And_What_Our_Area_Needs` | C130 · C174 | 948 | ×1.02 PASS | BINDING PASS | PASS | PASS |
+
+Both sit at **×1.02**, inside the 1.25 operative target, not merely under the
+1.5 ceiling. g24 is RED on both for the estate-wide print-dead condition (A2R
+R3): the chassis hides the slide container under `@media print`, so every
+screen diagram in this estate is absent from the printed sheet. Both decks carry
+**2 explanatory visuals where their donors carry 0**, and both figures are also
+placed in the print pack so the printed sheet has them.
+
+**The pipeline, and the five defects it caught before anything shipped.**
+`author_deck.py` (8 controls) empties every teaching block from a donor's stages
+and print pack and inserts authored content, then refuses to write a deck that
+carries any donor text. It refused four times, and each refusal was a real
+defect:
+
+1. **The donor's whole print pack survived** the first build — 282 words carrying
+   the wrong week, the wrong title and **the donor's workbook cells**, which is a
+   coverage lie printed on the sheet a pupil is handed. The leak gate had only
+   read `main.deck` stages; the print pack sits outside it.
+2. **Nine Lundy elements per deck were stripped**, because only `lundy-strip` was
+   in the keep list and this chassis also ships `lundy`, `lundy-grid` and
+   `lundy-status`. That would have broken `lundy-in-three-places`.
+3. **The leak gate flagged seven blocks that were all chassis** — the banner, its
+   four dimension definitions, the guide-toggle text, the nav bar. Chassis text
+   is now DERIVED rather than judged: a block that also appears in a third,
+   unrelated deck of the family is furniture; a block only donor and output share
+   is a leak.
+4. **A print heading the author had not named kept its donor text** — "Every
+   profile statement bound to genuine evidence or MISSING:" on a lesson about
+   strengths. Surplus headings now fall back to the deck title.
+5. **A success-criteria list in the print pack** kept two donor criteria.
+   Unauthored items are now removed rather than left.
+
+**A fourth record of the stage timings, and R2 shipped without it.** Pack
+manifests carry a pack-level `timings` array. After R2, `GROW_ASDAN/Spring1` held
+two decks with `[0,3,3,8,3,7,4,9,3]` and `[0,3,3,7,3,7,4,10,3]` under a manifest
+still claiming `[0,3,3,4,3,3,4,16,4]` — a value true of neither. Repaired here:
+per-lesson timings written into every `lessons[]` entry, and the pack-level field
+kept only where every deck agrees. Where they differ it is **removed**, because a
+false record is worse than a missing one. DEFAULTED under N1b.
+
+**19 Art plans PARKED, not attempted.** No Art family has a gate-readable
+9-stage donor, and N3d requires one donor per family per batch.
+
+Mechanism **17 tools, 158 controls**, derived, `--prove-red` PASS. g27 PASS.
+Both packs verify with `sha256sum -c`.
