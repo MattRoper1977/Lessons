@@ -1,0 +1,26 @@
+name: Arts Award slot reader
+on:
+  pull_request:
+    paths:
+      - 'tools/artsaward/slot_reader*'
+      - 'tools/easter/author_deck.py'
+      - '.github/workflows/arts-award-reader.yml'
+permissions:
+  contents: read
+jobs:
+  reader:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Exercise the shipped source reader
+        run: python tools/artsaward/slot_reader_selftest.py --self-test
+      - name: Install the browser driver
+        run: npm install --prefix "$RUNNER_TEMP/award-browser" --no-save --ignore-scripts playwright@1.62.1
+      - name: Drive hosted and file selection paths in installed Chrome
+        env:
+          NODE_PATH: ${{ runner.temp }}/award-browser/node_modules
+        run: node tools/artsaward/slot_reader_browser.cjs

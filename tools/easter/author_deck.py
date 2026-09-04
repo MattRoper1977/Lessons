@@ -40,6 +40,7 @@ import copy
 import hashlib
 import importlib.util
 import json
+import os
 import re
 import sys
 import tempfile
@@ -76,24 +77,10 @@ KEEP_CLASSES = ("slide-head", "phase-tag", "time-chip", "lundy-strip", "lundy",
 KEEP_TAGS = ("script", "style", "button", "h2")
 
 
-def _plan_id(plan: dict) -> str:
-    # A CELL-LESS PLAN STILL NEEDS A UNIQUE KEY, AND POSITION WILL NOT DO.
-    # The Bronze strand claims no workbook cell (AAE-H7: none of the seventeen
-    # uncovered BUILD Art cells states a Bronze Part A-D outcome, so claiming
-    # one would be a coverage lie). With cells empty, family+week is the key --
-    # and family+week is exactly the non-unique key g29 exists to catch, since
-    # Bronze runs two decks a week. So a cell-less plan keys on its own Arts
-    # Award declaration and title instead: content of the plan, like the cells
-    # are, and therefore stable when the plan file is reordered.
-    if plan.get("cells"):
-        tail = "|".join(sorted(plan["cells"]))
-    else:
-        aa = plan.get("artsAward") or {}
-        tail = "|".join(["award", str(aa.get("level", "")),
-                         ",".join(sorted(aa.get("parts", []))),
-                         str(plan.get("title", ""))])
-    key = "|".join([str(plan.get("family", "")), str(plan.get("ruledWeek", "")), tail])
-    return hashlib.sha256(key.encode("utf-8")).hexdigest()[:12]
+_pi_spec = importlib.util.spec_from_file_location("plan_identity", ROOT / "tools/easter/plan_identity.py")
+_pi = importlib.util.module_from_spec(_pi_spec)
+_pi_spec.loader.exec_module(_pi)
+_plan_id = _pi.plan_id
 
 
 def workbook_trace(plan: dict) -> str:
@@ -529,6 +516,15 @@ def author(donor: Path, plan: dict, content: dict, out: Path) -> dict:
         cfg["tierLadder"] = content["tierLadder"]
     m = CONFIG_RE.search(html)
     html = html[:m.start(2)] + json.dumps(cfg, ensure_ascii=False) + html[m.end(2):]
+
+    if (plan.get("artsAward") or {}).get("slots"):
+        reader = (ROOT / "tools/artsaward/slot_reader.js").read_text(encoding="utf-8")
+        slot_url = os.path.relpath(ROOT / "tools/artsaward/SLOTS.json", Path(out).parent).replace(os.sep, "/")
+        slot_cfg = json.dumps({"required": plan["artsAward"]["slots"], "url": slot_url})
+        script = ('<script data-award-slot-reader>\n' + reader + '\n'
+                  + 'document.addEventListener("DOMContentLoaded",function(){MBMArtsSlots.mount('
+                  + slot_cfg + ');});\n</script>')
+        html = html.replace("</body>", script + "</body>")
 
     Path(out).parent.mkdir(parents=True, exist_ok=True)
     Path(out).write_text(html, encoding="utf-8")

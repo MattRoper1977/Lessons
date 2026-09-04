@@ -185,6 +185,11 @@ def prove(chassis: Path, plan_index: int, content_path: Path, reference: Path,
                              "plan_source file behind it. Every input must be "
                              "traceable to a digest.")
         required.append(("plan", plan_source))
+        if plan.get("artsAward"):
+            required.extend([("awardRegister", ROOT / "tools/artsaward/SPEC.json"),
+                             ("awardSlots", ROOT / "tools/artsaward/SLOTS.json")])
+            if plan["artsAward"].get("slots"):
+                required.append(("slotReader", ROOT / "tools/artsaward/slot_reader.js"))
     for label, path in required:
         if not Path(path).is_file():
             raise SystemExit(f"PROVENANCE REFUSAL: {label} input {str(path)!r} is not a "
