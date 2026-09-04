@@ -1053,3 +1053,118 @@ by half is a choice worth recording as stable.
 
 The tell: `rm` in the middle of a repair, with the regeneration left to the end
 of a long run. The blob verification is what found it, which is what it is for.
+
+---
+
+## AAE §1 §3 §4 — the Arts Award register, the slots file, and six gates
+
+**Ceiling: 0 lesson units.** Registers and gates count zero. Queued behind the
+19 Art plans per the order; branch cut and built while batch 4 authors.
+
+### The register is the spec until a PDF replaces it
+
+`tools/artsaward/SPEC.json` is written once from §1 and is the only source any
+deck, staff block or gate may cite. It carries, per level: title, RQF level,
+qualification number, guided and independent hours, who it is open to and who it
+is designed for, the standard, UCAS where there is one, every part with what it
+requires, the marking scheme, the Attempted rule, the file cap and the
+assessment areas — three for Explore and Bronze, **four** for Silver and Gold.
+
+Gold's **Attempted rule and file cap are recorded as UNKNOWN**, toolkit-only,
+with "never inferred from Silver" written into the file. A gate reds a deck that
+states either.
+
+    Explore  600/3894/9  Entry 3   35h  4 parts  cap 10  3 areas
+    Bronze   501/0081/6  Level 1   60h  4 parts  cap 10  3 areas
+    Silver   500/9914/0  Level 2   95h  9 parts  cap 20  4 areas
+    Gold     500/9666/7  Level 3  150h  9 parts  cap UNKNOWN  4 areas  16 UCAS
+
+The z-fold leaflet is recorded in the file as **not a source**; the 44 exemplar
+decks are recorded as exemplars only.
+
+### The slots file is one edit, not a rewrite
+
+`tools/artsaward/SLOTS.json` holds EVENT, ORG, PRACTITIONER and SHOWING, each
+naming which level and part it serves, with three routes — pupils visit, they
+come in, live remote exchange. Five candidates are seeded and **every one is
+UNCONFIRMED**; no slot has a booked entry. Decks are authored route-agnostic, so
+a slot changing is a one-file edit.
+
+### Six gates, one file, fourteen controls
+
+They all divide by the same register and all need the same answer to "what is
+pupil-facing text on this deck". Six files would be six copies of that answer
+kept in step by hand — and this campaign has just shipped a defect of exactly
+that shape, a control-surface predicate written in one tool and missing from the
+next, which deleted the navigation bar from fifteen decks. One file, six gates,
+each reporting its own verdict; `--gate g31` runs one.
+
+    g30-an-explore-deck-calling-itself-level-1-reds
+    g30-ucas-outside-gold-reds
+    g30-a-file-cap-stated-for-gold-reds
+    g31-a-unit-1c-called-organisation-research-reds
+    g31-leadership-in-an-explore-deck-reds
+    g31-leadership-in-an-arts-challenge-deck-reds
+    g32-a-hardcoded-venue-reds
+    g32-a-dated-event-reds
+    g33-a-silver-list-missing-parts-reds
+    g34-a-share-part-with-no-sharing-step-reds
+    g35-a-mandatory-gantt-chart-reds
+    g35-a-gold-attempted-rule-reds
+    a-deck-that-names-the-award-and-declares-nothing-reds
+    a-correct-deck-of-each-level-passes
+
+**Scope is declared, and a deck cannot hide from it.** A deck is judged when its
+lesson-config carries an `artsAward` block naming level and parts. A deck that
+names the award and declares nothing is RED under `--scope new` — otherwise the
+cheapest way past every gate would be to say nothing where the gates read.
+
+**Binding on new work, report-only on live**, like g23's ceiling and g26's band.
+The estate holds **76 deck-shaped files** that name the Arts Award and predate
+the register. Reddening them all on the day it lands would manufacture a backlog
+nobody asked for.
+
+### The last control is the one that matters
+
+`a-correct-deck-of-each-level-passes` exists because five of the other thirteen
+prove a gate can go red, and none of them proves it can go green. Its first
+version had a Gold fixture that reddened on g32 — Gold 1B needs ORG_SLOT and the
+fixture declared none. **The gate was right and the fixture was wrong**, which is
+the outcome you want from that control.
+
+### g31 had to learn what the exemplar actually got wrong
+
+The first version checked that a named Part exists at that level. The exemplar's
+mistake was subtler and worse: it named a part that **does exist** and gave it
+the wrong meaning — "Unit 1C = organisation research", when Silver 1C is
+reviewing arts events. Filed that way, the work goes into the portfolio under a
+part that wanted something else, and the adviser marks it there. g31 now
+compares the words after a part token against the register's name for it, and
+reds when they share no content word. Sharing one is a paraphrase; sharing none
+is a mislabel.
+
+### The contamination list, and the 191 findings that were not findings
+
+`docs/ARTS_AWARD_BSG_CHECK.md` is generated, not written: per level, requirement
+→ served by → evidence route → verdict, then every contradiction with deck and
+line. Every requirement row reads **OPEN**, because nothing declares yet.
+
+Its first run returned **49 files with 191 contradictions, every one of them the
+word "ticket"** — because every deck in this estate ends on a stage called *Exit
+Ticket*, and §4's g32 lists "ticket" among the things that red. Worse, §6b
+explicitly **keeps a ticket as primary evidence**, so flagging the word argued
+against the order that asked for it. The two clauses are reconciled by reading
+g32 as it is meant: a ticket kept as evidence is fine; a ticket **booked or
+brought for an attendance the deck asserts** is not.
+
+Narrowed, the list went to zero — and a zero from a pattern that has just been
+narrowed is the number to distrust, so the survey now carries its own must-fire:
+a planted deck asserting a visit, a date, a venue and an invented requirement is
+reported on all four, and a deck keeping a ticket as evidence is reported on
+none. Both fire.
+
+**What it then found is real: three live Art decks name MIMA in their own text,
+eleven times between them** — the thing §3 exists to prevent, in decks that
+predate it. Reported, not gated, because they are live.
+
+Mechanism **26 tools, 237 controls**, derived, `--prove-red` PASS.
