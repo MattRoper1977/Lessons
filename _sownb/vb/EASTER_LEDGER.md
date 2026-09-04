@@ -1965,3 +1965,17 @@ Exact head `3e72fff7f8e2eed9f17f7aaba22eae187946b0f9` merged as `b1ce5052d571ecc
 ## Verified companion Apps pin #22
 
 Exact head `7ed907cda33e7fbcdde4f13511e882f5109fdf81` merged as `b17e67fb9b0073c93c076f528f4b69cc901634a0`. Against its actual fork `51b8afc7be8cc1f816b062ea19f423055838c2d1`, the one intended shared pin file is blob-identical (1/1); no Apps product file changed. Runs: 33924556210,33924556237,33924556202. Evidence: `_sownb/vb/evidence/aae/apps_merge22.json`. Zero lesson units and cells.
+
+## Verified merge #313
+
+Exact head `174338c0bb7944031032a1a506dc9d7e53f23f46` merged as `0a2892362beb8ac8c649d28a2ddf00119ae0682d`. Against actual fork `b1ce5052d571ecca58a269fa913768a9b5d45375`, all 2/2 changed blobs match. Evidence: `_sownb/vb/evidence/aae/merge313.json`. Required head runs: 33925102115,33925102120,33925102134. This record does not itself claim served-byte equality.
+
+## Verified companion Apps pin #23
+
+Exact head `fd7054cf3ec3cd446a1e9c02df4d6a68de9f3172` merged as `e1e4b8f6d2d1c919f81f9a2023d5fdf1ad027ed6`. Against its actual fork `b17e67fb9b0073c93c076f528f4b69cc901634a0`, the one intended shared pin file is blob-identical (1/1); no Apps product file changed. Runs: 33925104812,33925104820,33925104831. Evidence: `_sownb/vb/evidence/aae/apps_merge23.json`. Zero lesson units and cells.
+
+## AAE scoped publication close — 2026-09-04T22:35:56Z
+
+The authorised 14 + 14 + 14 lessons and their ordered catalogue pairs are merged. Published product `0a2892362beb8ac8c649d28a2ddf00119ae0682d` passed Pages run 33925705680; the final payload check is 57/57 exact, with the six initial network timeouts and their successful retries retained. Live BUILD/GROW filtering and the Silver pack link work; the earlier live GROW/LAUNCH placement walk is retained. Catalogue row counts are 689 → 704 → 719 → 734; 45 rows cost zero units. Gold remains shelf-only, zero new decks/cells. Required R2 eleven-mention classification, historical 82-file measured census, all 42 part-to-deck rows, bands, slots, caps and gate controls are printed in docs/AAE_R1B_READBACK.md.
+
+This is NOT a whole-Easter DONE claim. The original 59 lessons remain alongside the 42 award units. The next action is the wider Science/Humanities/ASDAN/Art programme: retain the canonical 262-plan source and its bindings, compare week-9 onward candidates with current teaching, use the recovered source timetable and ruled week-26 boundary, and author only genuine gaps in governed batches. Readback PR314 itself still requires its final head checks and merge/blob proof.

@@ -1,28 +1,30 @@
-# AAE-R1B readback — draft awaiting ordered merges and closeout
+# AAE-R1B — delivered award lessons and verified publication
 
 **Bronze workbook cells: 0 → 0 (AAE-H7). Gold new cells: 0, printed separately.**
 
-All **42 authorised new decks are authored and built**: Bronze 14, Explore 14, Silver 14. Each level is a separate 14-unit batch, below the 24-unit ceiling. At the checkpoint supplied for this draft, Bronze is merged; Explore and Silver are awaiting their ordered merges. Do not convert the 42 built count into a 42 shipped count until the merge records below are completed. Registers, gates, the R2 repair, census, placement, Gold documentation and catalogue changes count zero lesson units.
+All **42 authorised new decks are authored and built**: Bronze 14, Explore 14, Silver 14. Each level is a separate 14-unit batch, below the 24-unit ceiling. The supplied repository now contains valid recorded merge/blob proofs for **42 of 42 content units** (Bronze, Explore, Silver). All content, placement, shelf and catalogue merges listed below have been verified against their actual fork bases. The final published product tree is `0a2892362beb8ac8c649d28a2ddf00119ae0682d`; all 57 checked live payloads match it exactly. Current-head CI was checked before each merge. Registers, gates, the R2 repair, census, placement, Gold documentation and catalogue changes count zero lesson units.
 
-This draft reads current local source and evidence without changing Lessons. Paths below are repository-relative. It distinguishes historical reports, fresh checks and pending publication. The controlling register is `tools/artsaward/SPEC.json`, SHA-256 `e57b5bfbdd48a4b9973131cbcb544e0abc2c87aa2a2e6dd0f9a60cf8fa791d49`.
+This readback distinguishes the historical census from the new award delivery and its publication checks. Paths below are repository-relative. The controlling register is `tools/artsaward/SPEC.json`, SHA-256 `e57b5bfbdd48a4b9973131cbcb544e0abc2c87aa2a2e6dd0f9a60cf8fa791d49`.
 
-## Merge and delivery checkpoint — root must update before final publication
+## Merge and delivery checkpoint — refreshed from recorded evidence
 
-| Work | Status at this draft | Exact evidence / outstanding field |
+| Work | Recorded status | Exact evidence / outstanding field |
 |---|---|---|
 | Register and original g30–g35, PR #299 | Merged historical prerequisite | `202cee92e0dcbefb9686cf2e0626f2fee413e765` |
 | Original R2 classification and R3(i) census, PR #300 | Merged historical prerequisite | `9fd27b1bf95ab3822ff27bc4862d53368e55f518` |
-| Plan binding and presentation mechanism, PR #303 | Merged | `4f36647151a525911e3dfd15b7d502b3c198ac9a`; 18/18 changed blobs verified |
-| Bronze 14, PR #304 | Merged | Head `856d2a88ddc37bfbc829f144e7b465d1ee92ae7d`; actual fork `4f36647151a525911e3dfd15b7d502b3c198ac9a`; merge `2f7eda8e62096cd23fef8128b92c3563ed170bc3`; 58/58 changed blobs verified |
-| Assertion/multipart gates, PR #305 | Root to refresh | **PENDING: merge SHA, exact head, actual fork, blob count and current-head checks** |
-| R2 functioning slot-reader/prose follow-up, PR #306 | Root to refresh | **PENDING: merge SHA, exact head, actual fork, blob count and current-head checks** |
-| Explore 14, PR #307 | Built; merge pending | **PENDING: merge SHA, exact head, actual fork, blob count and current-head checks** |
-| Silver 14, PR #308 | Built; merge pending | **PENDING: merge SHA, exact head, actual fork, blob count and current-head checks** |
-| Bronze→GROW and Silver→LAUNCH placement | Pending separate zero-unit PR | **PENDING: actual rows, destinations, PR and merge proof** |
-| Gold shelf OPEN record | Pending zero-unit documentation closeout | **PENDING: final document PR and merge proof** |
-| Catalogue | Pending; last, alone, per batch | **PENDING: each batch’s catalogue PR, count and merge proof** |
+| Plan binding and presentation mechanism, PR #303 | Merged — recorded blob proof | head `0214f45448b0b03854385cee2c6d0e0aac48c8a0`; actual fork `ea2e4f696712d226838a0b2f51ffcb307224e9eb`; merge `4f36647151a525911e3dfd15b7d502b3c198ac9a`; 18/18 matching blobs; recorded workflow runs 33915347238, 33915347234; proof explicitly records all seven jobs succeeded; source `_sownb/vb/evidence/aae/merge303.json` |
+| Bronze 14, PR #304 | Merged — recorded blob proof | head `856d2a88ddc37bfbc829f144e7b465d1ee92ae7d`; actual fork `4f36647151a525911e3dfd15b7d502b3c198ac9a`; merge `2f7eda8e62096cd23fef8128b92c3563ed170bc3`; 58/58 matching blobs; recorded workflow runs 33917362837, 33917362798; source `_sownb/vb/evidence/aae/merge304.json` |
+| Assertion/multipart gates, PR #305 | Merged — recorded blob proof | head `99b8c114c4443f96da92151edc5fb7c991ef15df`; actual fork `2f7eda8e62096cd23fef8128b92c3563ed170bc3`; merge `fb96752c63077c41774673dcf3628c6f39cdb2d8`; 12/12 matching blobs; recorded workflow runs 33920574791; source `_sownb/vb/evidence/aae/merge305.json` |
+| R2 functioning slot-reader/prose follow-up, PR #306 | Merged — recorded blob proof | head `0f47b3de44b0b6680ea921362fd3959c5c20960f`; actual fork `fb96752c63077c41774673dcf3628c6f39cdb2d8`; merge `e808f0aa1367925a8b88098c134c38d44a4fa384`; 9/9 matching blobs; recorded workflow runs 33921327174, 33921327049; source `_sownb/vb/evidence/aae/merge306.json` |
+| Explore 14, PR #307 | Merged — recorded blob proof | head `b93a2b04cca83faaae67a547801e46233c02f0c8`; actual fork `e808f0aa1367925a8b88098c134c38d44a4fa384`; merge `3fc694f0a47d20f566d1dd6ad1dae5bda9973fb6`; 60/60 matching blobs; recorded workflow runs 33921766873, 33921766875; source `_sownb/vb/evidence/aae/merge307.json` |
+| Silver 14, PR #308 | Merged — recorded blob proof | head `0ef914e35cae00dd06bd075de10fcc94a23a3097`; actual fork `3fc694f0a47d20f566d1dd6ad1dae5bda9973fb6`; merge `a740b1b20fb65d9e25ffdf6fc2140ccf61659259`; 58/58 matching blobs; recorded workflow runs 33922350360, 33922350365; source `_sownb/vb/evidence/aae/merge308.json` |
+| Bronze→GROW and Silver→LAUNCH placement, PR #309 | Merged — recorded blob proof | head `c361c977f2ccfd0ce09e06065b1d6797afd68158`; actual fork `a740b1b20fb65d9e25ffdf6fc2140ccf61659259`; merge `72413ab65cccd10483936e8dc4b3c431e6404400`; 6/6 matching blobs; recorded workflow runs 33922850267; source `_sownb/vb/evidence/aae/merge309.json` |
+| Gold shelf OPEN record, PR #310 | Merged — recorded blob proof | head `df0c49f220b20b42877ff8a13c53094ea3ff768f`; actual fork `72413ab65cccd10483936e8dc4b3c431e6404400`; merge `023741d3b2815b55b6802bfb1f1822c647e9e7df`; 4/4 matching blobs; recorded workflow runs 33923406849; source `_sownb/vb/evidence/aae/merge310.json` |
+| Bronze catalogue, PR #311 | Merged — recorded blob proof | head `f329d3677f835fcdc13d86f39f77052b330d9183`; actual fork `023741d3b2815b55b6802bfb1f1822c647e9e7df`; merge `fef71f7b2378cab30c6a55f22ad8e8e85341d658`; 3/3 matching blobs; recorded workflow runs 33923846740, 33923846321, 33923846447, 33923846350; source `_sownb/vb/evidence/aae/merge311.json` |
+| Explore catalogue, PR #312 | Merged — recorded blob proof | head `3e72fff7f8e2eed9f17f7aaba22eae187946b0f9`; actual fork `fef71f7b2378cab30c6a55f22ad8e8e85341d658`; merge `b1ce5052d571ecca58a269fa913768a9b5d45375`; 2/2 matching blobs; recorded workflow runs 33924552826, 33924552796, 33924552798; source `_sownb/vb/evidence/aae/merge312.json` |
+| Silver catalogue, PR #313 | Merged — recorded blob proof | head `174338c0bb7944031032a1a506dc9d7e53f23f46`; actual fork `b1ce5052d571ecca58a269fa913768a9b5d45375`; merge `0a2892362beb8ac8c649d28a2ddf00119ae0682d`; 2/2 matching blobs; recorded workflow runs 33925102115, 33925102120, 33925102134; source `_sownb/vb/evidence/aae/merge313.json` |
 
-Every merge must be compared with its own actual fork base. Later changes already on main are not branch reversions. No terminal campaign token is claimed in this draft.
+Every merge must be compared with its own actual fork base. Later changes already on main are not branch reversions. The award work is delivered. The wider Easter curriculum programme remains active; this record does not claim `VB_EASTER_A3_DONE` for it.
 
 ## R2: the required eleven MIMA mentions
 
@@ -46,7 +48,7 @@ The wider search counted **20 mentions before: 19 EXAMPLE, 1 ASSERTED**. The ext
 
 The original PR #300 removed MIMA from the ticket but did not actually wire that legacy deck to a live slot reader. A subsequent prose review also found assertions the regex census missed: “Tonight”, “this week’s visit”, promised audience attendance, a venue asking for reviews, and an unsupported claim that a prior cohort changed a label height. The R2 follow-up corrects these statements and installs a real `ORG_SLOT` reference alongside the applicable `EVENT_SLOT` readiness check. An organisation being named does not establish that a pupil attended an event. Empty or invalid slots leave preparation labelled as preparation; an actually undertaken online exhibition remains a legitimate audience experience.
 
-The follow-up preserves all ten legacy stages, their metadata, styles, SVGs and cell tokens. Its embedded reader matches `tools/artsaward/slot_reader.js`, reads `../../tools/artsaward/SLOTS.json`, supports a local file picker offline, renders values as text, and rejects stale async responses. Local adapter evidence records 12/12 controls. Root’s checked browser checkpoint is run **33919123514**, job **101173117156**, successful. Its merge status remains the pending PR #306 row above until refreshed.
+The follow-up preserves all ten legacy stages, their metadata, styles, SVGs and cell tokens. Its embedded reader matches `tools/artsaward/slot_reader.js`, reads `../../tools/artsaward/SLOTS.json`, supports a local file picker offline, renders values as text, and rejects stale async responses. Local adapter evidence records 12/12 controls. The checked browser checkpoint is run **33919123514**, job **101173117156**, successful. PR #306 now has the recorded merge/blob proof shown above.
 
 Sources: `_sownb/vb/evidence/aae/venue_classification_{before,after}.json`, `r2-adapter-checks.json`, `r2-structural-checks.json`, and the actual GROW W4 file.
 
@@ -62,9 +64,9 @@ Word bands come from `tools/easter/BATCH4_WORD_TARGETS.json`. Teaching-word coun
 
 | Level | Built | Teaching words | Required Art word band | Pupil FK | Required FK | New workbook cells | Placement |
 |---|---:|---:|---:|---:|---:|---|---|
-| Bronze | 14 | 1092–1333 | 888–1523 | 2.08–3.60 | 1–4 | 0 → 0 (AAE-H7) | BUILD canonical; GROW row pending |
+| Bronze | 14 | 1092–1333 | 888–1523 | 2.08–3.60 | 1–4 | 0 → 0 (AAE-H7) | BUILD canonical; GROW placement merge recorded |
 | Explore | 14 | 1091–1308 | 888–1523 | 2.52–4.00 | 1–4 | 0 → 0 (independent review) | BUILD only |
-| Silver | 14 | 1073–1287 | 902–1378 | 5.34–6.28 | 3–7 | 0 → 0 (independent review) | GROW canonical; LAUNCH row pending |
+| Silver | 14 | 1073–1287 | 902–1378 | 5.34–6.28 | 3–7 | 0 → 0 (independent review) | GROW canonical; LAUNCH placement merge recorded |
 
 Each level is a **560-minute / 9-hour-20-minute teaching spine**, not the whole award programme. SPEC totals are Bronze 60 hours, Explore 35 hours and Silver 95 hours. Additional actual practice, experiences, practitioner contact and delivery must be arranged and recorded; preparation pages do not establish completed participation.
 
@@ -164,13 +166,13 @@ Bronze’s **0 → 0** follows AAE-H7. It has fourteen award-plan identities, wi
 
 Explore compared all 24 BUILD Art targets: seven already claimed and 17 unclaimed. One narrow full-action overlap was found (Spring C93, adding a review to the arts log), but it is ruled week 21 rather than proposed week 2 and remains the existing Discover workbook strand. No cell was reassigned. Silver compared all 39 GROW Art workbook/spine values with zero mismatches and the 23 Easter targets. Six target cells have claims and 17 are unclaimed. All ruled W1–7 Art cells already have claimants. Autumn C103 has a plausible same-week skill/record action but is already owned; unclaimed Spring C89 repeats that action at week 17 rather than Silver week 2. **Zero new claims result from either independent review.**
 
-The proposed secondary placements point to the same canonical decks and retain the measured band, plan and cell set. They add zero units and no duplicated copy. Actual placement rows and merge proofs remain pending above. Sources: `_sownb/vb/AAE_EXPLORE_CELL_REVIEW.md`, `_sownb/vb/AAE_SILVER_CELL_REVIEW.md`, and the three canonical plan/target registers.
+The merged secondary placements point to the same canonical decks and retain the measured band, plan and cell set. They add zero units and no duplicated copy. Live browser checks opened Bronze from the GROW hub and Silver from the LAUNCH hub; each destination contained its fourteen canonical lesson links. The source hubs and destinations also passed the final served-byte check. Sources: `_sownb/vb/AAE_EXPLORE_CELL_REVIEW.md`, `_sownb/vb/AAE_SILVER_CELL_REVIEW.md`, and the three canonical plan/target registers.
 
 ## g30–g35 and mechanism controls
 
 A fresh read-only call to the current `g30_arts_award.judge()` from `Lessons-Award-Gates` against all 42 built files in `Lessons-Silver` returned **Bronze 14 PASS / Explore 14 PASS / Silver 14 PASS**, zero RED and zero SKIP. This differs from the archived per-level report versions: Bronze records v1.0.0, Explore v1.1.0 and Silver v1.1.1. The fresh check uses the current v1.1.1 attendance-reference logic for all three.
 
-The latest `Lessons-Award-Gates/_sownb/vb/evidence/aae/battery_assertion_scope.json` records **28 tools, 347 declared controls, all fired**, including **67 g30–g35 controls**. `--prove-red` planted an incorrect expected value in a stage control: the broken tool exited 1 and the battery turned red. The older inherited report in the content worktrees records 323 controls and must not be mislabelled as the latest result.
+The repository’s `_sownb/vb/evidence/aae/battery_assertion_scope.json` records **28 tools, 347 declared controls, all fired**, including **67 g30–g35 controls**. `--prove-red` planted an incorrect expected value in a stage control: the broken tool exited 1 and the battery turned red. The final repository contains the current 347-control report; the earlier inherited 323-control snapshot is superseded.
 
 | Gate | Scope of protection | Current result |
 |---|---|---|
@@ -183,7 +185,7 @@ The latest `Lessons-Award-Gates/_sownb/vb/evidence/aae/battery_assertion_scope.j
 
 The comparative nine-gate build result is 14/14 for each level, with zero detected donor-language leaks. It is **not** nine fresh green gates on every deck: g16, g19 and g24 are explicitly `PRE-EXISTING` donor outcomes; g18, g23, g25, g26, g28 and g29 pass.
 
-Root’s independently checked browser checkpoint is run **33920405525**, job **101177167095**, covering all 42 source/print packs. It verifies navigation, toolbar/focus behaviour, shared-slot reading and actual print invocation. **This is not PDF pagination or physical print-fit proof.** Retain the tested head and final ordered-merge CI references in the final closeout.
+The independently checked browser checkpoint is run **33920405525**, job **101177167095**, covering all 42 source/print packs. It verifies navigation, toolbar/focus behaviour, shared-slot reading and actual print invocation. **This is not PDF pagination or physical print-fit proof.** The final ordered content-merge heads and their CI run IDs are retained in the merge table above; later catalogue changes did not change those lesson files.
 
 ## Gold shelf — separate from new authoring
 
@@ -198,7 +200,7 @@ The required OPEN record is against `SPEC.json`, not absent decks:
 | 1C: reviews of events attended | `levels.Gold.parts.1C` | Actually attended arts experiences and reviews, alongside registered practitioner/organisation research |
 | 2D: a PUBLIC showing | `levels.Gold.parts.2D` | Actual public showing arrangements/delivery/responsibilities, participant and audience feedback |
 
-Gold’s Attempted rule and file cap remain **UNKNOWN/null**; Silver’s rules are not copied across. AAE-H1–H5 remain recorded conditions/defaults, not asserted completion. The final Gold documentation merge remains pending above.
+Gold’s Attempted rule and file cap remain **UNKNOWN/null**; Silver’s rules are not copied across. AAE-H1–H5 remain recorded conditions/defaults, not asserted completion. The Gold documentation merge proof is recorded above.
 
 ## Complete historical R3(i) measured census list: 82 files
 
@@ -289,12 +291,16 @@ This reproduces `contamination.json` at the post-batch-4 historical snapshot. �
 | 81 | `GROW_Estate_v3/Art_Teesside/GROW_ART_W7_Deliver_the_Skill_Share_Curate.html` | Bronze | None in tested patterns |
 | 82 | `GROW_Estate_v3/Art_Teesside/GROW_ART_W8_Reflect_Audit_Close_the_Loop.html` | Bronze | None in tested patterns |
 
-## Final closeout fields
+## Publication and continuation
 
-- Exact current Lessons main after last authorised merge: **PENDING**.
-- All 42 merged lesson units and exact per-level merge/blob proofs: **PENDING for Explore/Silver**.
-- Bronze→GROW / Silver→LAUNCH placement rows: **PENDING**.
-- Gold shelf documentation merge: **PENDING**.
-- Catalogue last, alone, per batch: **PENDING**.
-- Post-merge ledger and VB_STATE reconciled, including 76/82 and cells distinctions: **PENDING**.
-- Terminal token: **NOT EMITTED BY THIS DRAFT**. Root selects the order’s token only after its condition is actually met.
+- Published product commit: `0a2892362beb8ac8c649d28a2ddf00119ae0682d`. Pages run **33925705680** completed build, report and deployment successfully.
+- Live payload proof: **57/57 exact matches** in `_sownb/vb/evidence/aae/live_final.json`. Six initial request timeouts were retried individually; their original failed attempts are retained. No differing payload was accepted.
+- Live catalogue: BUILD exposes the new Bronze and Explore packs; GROW exposes Silver. Opening Silver from its visible result reached the canonical fourteen-link pack. Evidence: `live_catalogue_navigation.json`.
+- Secondary placement: GROW → canonical BUILD Bronze; LAUNCH → canonical GROW Silver. Both links were opened in the live browser; evidence: `live_placement.json`.
+- Catalogue order and isolation: Bronze #311 (three paths), Explore #312 (two), Silver #313 (two). Rows **689 → 704 → 719 → 734**; the existing 689 row values/order are retained. Those PRs changed only the catalogue, the Bronze index callout and their derived pin. They add **45 rows, zero lesson units and zero cells**.
+- Matching Apps pin PRs **#21, #22, #23** each have one-of-one actual-fork blob proofs; final Apps main is `e1e4b8f6d2d1c919f81f9a2023d5fdf1ad027ed6`. No Apps product content changed.
+- Ledger and VB_STATE contain each catalogue merge and its companion pin proof in this separate closeout transaction, preserving catalogue-only PRs.
+
+**The wider Easter programme continues.** Its four original content batches delivered **59 lessons**, preserved separately from these **42 award lessons**. The current authored-plan check records **101 PASS, zero RED, three nonlesson chassis SKIP**. The three immutable schemes of work, the ruled calendar through absolute week **26 / 25 March 2027**, and the source timetable have been recovered. Remaining original plans are being checked for genuine teaching gaps and timetable fit before further authoring. Award-only plans are not substituted for unrelated workbook outcomes.
+
+Gold remains on the authorised shelf: **zero new Gold decks; zero new Gold cells**. Slots, adviser/centre information and actual pupil evidence remain unconfirmed as documented above. No whole-programme completion token is emitted by this scoped award closeout.
