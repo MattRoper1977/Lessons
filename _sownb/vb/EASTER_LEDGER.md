@@ -1925,3 +1925,7 @@ Exact head `b93a2b04cca83faaae67a547801e46233c02f0c8` merged as `3fc694f0a47d20f
 ## Award placement preparation — zero units
 
 Two secondary rows link the canonical Bronze BUILD pack from the GROW Art hub and the canonical Silver GROW pack from the LAUNCH Art hub. Both links and all fourteen lessons behind each were checked. No deck was copied, moved or relabelled; no cell claim or qualification change. Explore remains BUILD only and its catalogue row follows later. Merge follows the Silver content merge.
+
+## Gold shelf preparation — zero units, zero new Gold cells
+
+The BSG_CHECK records the R1B OPEN focus areas 1A new practice with an experienced practitioner, 1B actual career opportunity with leading practitioners’ comments, 1C reviews of attended experiences, and 2D a PUBLIC showing. All nine Gold parts remain open against SPEC, not exemplar decks. Gold file cap and Attempted rule stay unknown. Historical census rows are labelled as historical. AAE-H6 remains the authoring hold; no Gold content was authored.
