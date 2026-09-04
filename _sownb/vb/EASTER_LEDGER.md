@@ -808,3 +808,121 @@ the eight `*_Estate_v3` Art lessons measure **zero** content words under the
 shell-aware instrument while their twins measure ~900–1100. Same titles, two
 routes, one invisible to every gate. Excluded from the baseline automatically by
 the `contentWords` filter, so it moves no number here.
+
+---
+
+## A3N-2 §1, second half — ART_DONOR_v1. PR #293
+
+**Ceiling: 0 lesson units** (R1: the chassis are not lessons and no lesson is
+committed here). One PR, alone.
+
+### THREE chassis, and the reason is a gate, not a preference
+
+§1a says the donor comes from the SAME pathway. g26 derives the pathway from the
+ROUTE and reds a deck whose pupil Flesch-Kincaid sits outside its pathway's band
+— BUILD 1.0–4.0, GROW 3.0–7.0, LAUNCH a ceiling of 14.21. A single
+pathway-neutral chassis makes g26 return **NOT-APPLICABLE**, which exits zero: a
+fail-open on the one gate that reads how a lesson speaks to a child. So the
+route of each file carries its pathway token, and `prove_chassis.py` treats
+NOT-APPLICABLE and NO FAMILY MEDIAN as failures rather than passes.
+
+### The choice, and the first version of the tool that made it
+
+    BUILD   0.135  BUILD_ASDAN_W3_Cook_One_Snack_as_a_Team_from_a_Picture_Card
+    GROW    0.431  GROW_Humanities_W3_Match_the_Lamp_to_Its_Meaning
+    LAUNCH  0.194  LAUNCH_ASDAN_W1_Choose_Our_Community_Need_and_Launch_My_Challenge
+
+The margin is the WORST of the measured margins, not the mean, because a deck is
+only as green as its nearest red — and an unmeasurable margin disqualifies a
+row rather than counting as headroom.
+
+The first revision of `pick_art_donor.py` carried a hand-written list of what a
+chassis must have. It was wrong in four places at once: it looked for `hud.js`
+(in 524 files in this estate and in **not one** deck that has passed the stack
+this campaign), for `tier-1..3` (this estate names its print tiers
+supported/standard/stretch), for a `running-head` class only some decks carry,
+and it applied g26 as a hard filter when g26 is `scope:new` and does not bind a
+live deck at all. It returned **zero candidates from a corpus of 136** and the
+zero looked like a finding. The signature is now INTERSECTED from the sixteen
+decks this campaign has taken through the stack green — 26 markers — with the
+reference set in a file whose sha256 is recorded.
+
+### Four defects the strip found, all of them live
+
+1. **`empty_stage` kept a bare `<svg>`.** Right for icons, wrong for figures:
+   the donor's two explanatory diagrams are direct children of their stages and
+   carried "A routine in order / Step 1 needs nothing first" straight through.
+   No shipped deck was affected — all sixteen carry their own two figures — but
+   a chassis that kept them would have put one donor's diagram on every Art
+   lesson.
+2. **`render_figure` could never draw its columns shape.** It reads
+   `spec["kind"]` to choose between chain and columns, and a block's own `kind`
+   is already `"figure"`, so every figure authored through that path came out a
+   chain. Batch 2 never hit it because both its decks passed raw `<svg>`. Now
+   keyed on `shape`, with a control that renders both and compares them.
+3. **`build_batch.py` still keyed on `family+week`.** That is the exact
+   non-unique key g29 was written to catch after the fact; two cover-taught
+   LAUNCH ASDAN plans share week 1. It now takes `--plan-index` and refuses an
+   ambiguous family+week rather than silently taking the first match.
+4. **A sweep that mutated the tree under `tree.iter()`.** lxml's walk is live;
+   `_clear` removes children, the walk lost its place, and **seventeen donor
+   blocks survived** — the running head, the workbook cells and every success
+   criterion — with no error at all. `list()` before touching the tree.
+
+### How a chassis is proved, given it teaches nothing
+
+§1c says "gate as a FIXTURE deck, full stack green". Taken literally that cannot
+be done honestly: a chassis has no pupil words, so g18's floor and g23's load are
+not green on it, they are **meaningless** on it. So each chassis is EXERCISED as
+a fixture — a real planned Art lesson is authored onto it and the whole stack
+runs on that — and every gate is run on the DONOR too, with identical arguments.
+
+    green on the probe                       -> PASS
+    red on the probe, red on the donor       -> PRE-EXISTING, named
+    red on the probe, GREEN on the donor     -> REGRESSION, and the run fails
+
+That is stricter than matching the campaign's own flag choices, because nothing
+can hide behind a scope setting. It caught a real one: LAUNCH's first draft came
+in at 802 pupil words against its family floor of 885 and was reported as a
+regression, not as a pass.
+
+    BUILD   PASS  1013w  floor 888   x1.00  FK 1.95 in 1.0-4.0
+    GROW    PASS   940w  floor 902   x1.02  FK 3.96 in 3.0-7.0
+    LAUNCH  PASS  1025w  floor 885   x1.15  FK 5.07 under 14.21
+
+**Three gates are red on the donors too and are named rather than dropped:**
+g16 (the frozen v2 contract is RED on everything measured, including the live
+Art decks it was written for, 86–88 of 108 rows), g19 (ten `:root` declarations,
+zero scoped), and g24 at `--scope new` (one explanatory visual where the row
+wants two, and print-dead — A2R R3's finding about the shell hiding the slide
+container under `@media print`). A tool that failed the chassis on those would
+be reporting the estate's backlog as this work's defect.
+
+### Digests, per §1c
+
+    BUILD_chassis.html   d394897a427883d8…  from BUILD_ASDAN_W3
+    GROW_chassis.html    93ece5826cb52c3a…  from GROW_Humanities_W3
+    LAUNCH_chassis.html  ea4f0a7e1145cb26…  from LAUNCH_ASDAN_W1
+
+Each records its own donor and that donor's sha256 in its `lesson-config`, and
+`prove_chassis.py` reads the comparison baseline from there rather than being
+told — comparing against the chassis instead of the donor made every content
+gate read PRE-EXISTING and reported PASS on a deck below its family floor.
+
+Three Art content specs are committed (`BUILD_ART_W1`, `GROW_ART_W2`,
+`LAUNCH_ART_W1`). They are inputs, not lessons; the decks they proved are not
+committed. Batch 3 authors them to their routes.
+
+**A fifth defect, found by CI within a minute of the push.** The new evidence
+files carried `"verdict": "PASS"` with the subject under `out`, and the estate's
+stale-evidence sweep reads a JSON evidence record structurally only when some
+record names its subject under `file`. It fell back to reading the text, found a
+bare verdict line with no path on it, and reported exactly what it exists to
+report — a verdict whose subject cannot be seen. Both tools now name the subject
+under `file`, and `prove_chassis` names the chassis rather than the probe,
+because the probe is deleted at the end of the run and an evidence record
+pointing at a file that is gone is the definition of stale. The sweep is now run
+locally before a push; it takes seconds.
+
+Mechanism **23 tools, 201 controls**, derived, `--prove-red` PASS.
+Stale-evidence sweep: 0 inconclusive rows.
