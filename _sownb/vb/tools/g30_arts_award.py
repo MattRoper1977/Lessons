@@ -61,7 +61,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-VERSION = "g30-g35-arts-award-v1.1.0-assertion-scope"
+VERSION = "g30-g35-arts-award-v1.1.1-attendance-reference-scope"
 ROOT = Path(__file__).resolve().parents[3]
 SPEC_PATH = ROOT / "tools/artsaward/SPEC.json"
 SLOTS_PATH = ROOT / "tools/artsaward/SLOTS.json"
@@ -344,6 +344,44 @@ RECORDING_PROMPT = re.compile(
     r"(?:\s+that)?\s+$", re.I)
 
 
+# Denials and evidence-check questions can refer to attendance without claiming
+# it happened. Anchor the grammatical prefix at EACH attendance occurrence; a
+# later positive clause receives its own check. These rules do not exempt a
+# booking, incoming practitioner, travel or venue/date assertion.
+ATTENDANCE_DENIAL_PREFIX = re.compile(
+    r"\b(?:does|do|did)\s+not\s+(?:show|prove|confirm|establish|mean)\s+that\s+$",
+    re.I)
+ATTENDANCE_SAMPLE_PREFIX = re.compile(
+    r"\b(?:these|those)\s+are\s+(?:sample|example|model)\s+"
+    r"(?:notes|responses|reviews),?\s+not\s+claims?\s+about\s+"
+    r"(?:an?|the|any)\s+(?:arts\s+)?"
+    r"(?:event|experience|workshop|exhibition|meeting)\s+(?:that\s+)?$", re.I)
+ATTENDANCE_RECORD_QUESTION_PREFIX = re.compile(
+    r"\b(?:"
+    r"(?:can|could)\s+(?:a|the|another)\s+reader\s+"
+    r"(?:tell|see|identify|check)\s+(?:which|what)\s+(?:arts\s+)?"
+    r"(?:event|experience|workshop|exhibition|meeting)"
+    r"|does\s+(?:it|(?:the|your|this)\s+(?:record|evidence|review))\s+"
+    r"(?:identify|show|record|name)\s+(?:who|which\s+(?:artist|practitioner))"
+    r")\s+$", re.I)
+PAST_ATTENDANCE_REFERENCE = re.compile(
+    rf"{CLASS_SUBJECT}\s+(?:(?:already\s+)?(?:attended|visited|met|went\s+to)|"
+    r"(?:have|has|had)\s+(?:already\s+)?(?:attended|visited|met|been\s+to))", re.I)
+
+
+def _is_nonassertive_attendance_reference(statement: str, match: re.Match) -> bool:
+    before = statement[:match.start()]
+    if ATTENDANCE_DENIAL_PREFIX.search(before) or ATTENDANCE_SAMPLE_PREFIX.search(before):
+        return True
+    # Only a past-experience record question qualifies. A question about who
+    # pupils WILL meet must not turn an unconfirmed promise into a safe prompt.
+    # deck_text can join adjacent HTML paragraphs with no space after "?";
+    # bound this reference at its own punctuation, not the flattened paragraph.
+    return bool(re.match(r"[^.!?;]*\?", statement[match.end():])
+                and PAST_ATTENDANCE_REFERENCE.fullmatch(match.group(0))
+                and ATTENDANCE_RECORD_QUESTION_PREFIX.search(before))
+
+
 def _is_preparation_reference(statement: str, start: int) -> bool:
     before = statement[:start]
     return bool(CONDITIONAL_PREFIX.search(before) or RECORDING_PROMPT.search(before))
@@ -353,8 +391,9 @@ def slot_assertions(text: str, candidate_names: set[str]) -> list[str]:
     """Return the matched assertion and reason, never bare venue/date hits.
 
     A teaching example prefix is not a global escape: "For example, our class
-    is booked" still asserts a booking. Only a real conditional/recording
-    reference exempts the new attendance matcher. Existing 'your visit' and
+    is booked" still asserts a booking. Conditional/recording references and
+    narrowly matched denials or record questions exempt only their attendance
+    occurrence, never a later assertion. Existing 'your visit' and
     'when we visit' hints remain strict under the explicit R1 ruling.
     """
     findings = []
@@ -366,7 +405,10 @@ def slot_assertions(text: str, candidate_names: set[str]) -> list[str]:
                 (ATTENDANCE_ASSERTION, "asserts attendance"),
                 (INCOMING_ASSERTION, "asserts a practitioner meeting")):
             for match in pattern.finditer(statement):
-                if not _is_preparation_reference(statement, match.start()):
+                nonassertive_reference = (pattern is ATTENDANCE_ASSERTION
+                    and _is_nonassertive_attendance_reference(statement, match))
+                if not (_is_preparation_reference(statement, match.start())
+                        or nonassertive_reference):
                     findings.append(f"{match.group(0)!r} {reason}")
         for match in TRAVEL_PREFIX.finditer(statement):
             destination = statement[match.end():]
@@ -582,6 +624,30 @@ CONTROL_IDS = [
     'g34-read-review-aloud-to-person-passes',
     'g34-final-share-without-record-still-reds',
     'g34-peer-draft-swap-still-reds',
+    'g32-attendance-denial-is-not-completion',
+    'g32-sample-notes-do-not-assert-attendance',
+    'g32-reader-question-checks-attendance-record',
+    'g32-record-question-checks-practitioner-evidence',
+    'g32-denial-followed-by-attendance-still-reds',
+    'g32-denial-positive-second-clause-still-reds',
+    'g32-sample-followed-by-attendance-still-reds',
+    'g32-sample-positive-second-clause-still-reds',
+    'g32-reader-question-followed-by-attendance-still-reds',
+    'g32-reader-question-positive-second-clause-still-reds',
+    'g32-record-question-followed-by-meeting-still-reds',
+    'g32-record-question-positive-second-clause-still-reds',
+    'g32-denial-does-not-mask-booking',
+    'g32-sample-does-not-mask-dated-venue',
+    'g32-record-question-does-not-mask-future-promise',
+    'g32-future-promise-is-not-a-record-question',
+    'g32-positive-proof-is-not-denial',
+    'g32-sample-label-is-not-denial',
+    'g32-positive-reader-statement-is-not-record-question',
+    'g32-positive-record-statement-is-not-record-question',
+    'g32-reader-question-at-html-boundary-passes',
+    'g32-record-question-at-html-boundary-passes',
+    'g32-reader-question-at-html-boundary-does-not-mask-attendance',
+    'g32-record-question-at-html-boundary-does-not-mask-promise',
 ]
 
 
@@ -786,6 +852,81 @@ def controls() -> list[dict]:
     rec("g34-peer-draft-swap-still-reds",
         "a recorded draft swap is not the final review share", True,
         reds(SE, '<p>Swap drafts with your partner and record your edits.</p>', "g34"))
+
+    # Silver rendered-text regressions: each safe reference has a positive
+    # neighbour that must still fire, in a later sentence and the same sentence.
+    rec('g32-attendance-denial-is-not-completion',
+        'a practice record explicitly does not prove attendance', False,
+        reds(SE, '<p>A practice review does not show that you attended an experience.</p>', "g32"))
+    rec('g32-sample-notes-do-not-assert-attendance',
+        'a labelled sample disclaims any pupil attendance', False,
+        reds(SE, '<p>These are sample notes, not claims about an event you attended.</p>', "g32"))
+    rec('g32-reader-question-checks-attendance-record',
+        'a question checks an experience record rather than asserting completion', False,
+        reds(SE, '<p>Can a reader tell which arts experience you attended and what you communicated about it?</p>', "g32"))
+    rec('g32-record-question-checks-practitioner-evidence',
+        'a question checks the recorded encounter and individual involvement', False,
+        reds(SD, '<p>Does it identify who you met, what the activity was and what you personally explored?</p>', "g32"))
+    rec('g32-denial-followed-by-attendance-still-reds',
+        'a denial cannot exempt a positive next sentence', True,
+        reds(SE, '<p>A practice review does not show that you attended an experience. You attended the exhibition yesterday.</p>', "g32"))
+    rec('g32-denial-positive-second-clause-still-reds',
+        'a denial exempts only its subordinate reference', True,
+        reds(SE, '<p>A practice review does not show that you attended an experience, but you attended the exhibition yesterday.</p>', "g32"))
+    rec('g32-sample-followed-by-attendance-still-reds',
+        'a sample disclaimer cannot exempt a positive next sentence', True,
+        reds(SE, '<p>These are sample notes, not claims about an event you attended. You attended the exhibition yesterday.</p>', "g32"))
+    rec('g32-sample-positive-second-clause-still-reds',
+        'a sample disclaimer cannot exempt another attendance clause', True,
+        reds(SE, '<p>These are sample notes, not claims about an event you attended, but our class visited the exhibition yesterday.</p>', "g32"))
+    rec('g32-reader-question-followed-by-attendance-still-reds',
+        'a record question cannot exempt a positive next sentence', True,
+        reds(SE, '<p>Can a reader tell which arts experience you attended and what you communicated about it? You attended the exhibition yesterday.</p>', "g32"))
+    rec('g32-reader-question-positive-second-clause-still-reds',
+        'a question mark cannot exempt a second independent attendance clause', True,
+        reds(SE, '<p>Can a reader tell which arts experience you attended, given that our class visited the exhibition yesterday?</p>', "g32"))
+    rec('g32-record-question-followed-by-meeting-still-reds',
+        'a record question cannot exempt a later meeting assertion', True,
+        reds(SD, '<p>Does it identify who you met, what the activity was and what you personally explored? You met the artist yesterday.</p>', "g32"))
+    rec('g32-record-question-positive-second-clause-still-reds',
+        'a record question exempts only the interrogative encounter reference', True,
+        reds(SD, '<p>Does it identify who you met, given that you met the artist yesterday?</p>', "g32"))
+    rec('g32-denial-does-not-mask-booking',
+        'denial matching cannot alter booking checks', True,
+        reds(SE, '<p>A practice review does not show that you attended an experience, but our class is booked to attend the exhibition.</p>', "g32"))
+    rec('g32-sample-does-not-mask-dated-venue',
+        'sample matching cannot alter venue and event date checks', True,
+        reds(SE, '<p>These are sample notes, not claims about an event you attended; your class event at MIMA is on 14 November.</p>', "g32"))
+    rec('g32-record-question-does-not-mask-future-promise',
+        'a completed-record check cannot hide the next promised encounter', True,
+        reds(SD, '<p>Does it identify who you met, what the activity was and what you personally explored? You will meet arts practitioners in this session.</p>', "g32"))
+    rec('g32-future-promise-is-not-a-record-question',
+        'a future meeting in a question is not a past-experience evidence check', True,
+        reds(SD, '<p>Does it identify who you will meet in this session?</p>', "g32"))
+    rec('g32-positive-proof-is-not-denial',
+        'showing attendance is the positive counterpart of the denied proof', True,
+        reds(SE, '<p>A practice review shows that you attended an experience.</p>', "g32"))
+    rec('g32-sample-label-is-not-denial',
+        'labelling notes as samples does not cancel an actual attendance claim', True,
+        reds(SE, '<p>These are sample notes which prove that you attended the exhibition.</p>', "g32"))
+    rec('g32-positive-reader-statement-is-not-record-question',
+        'an affirmative reader statement is not an evidence check question', True,
+        reds(SE, '<p>A reader can tell which arts experience you attended.</p>', "g32"))
+    rec('g32-positive-record-statement-is-not-record-question',
+        'an affirmative encounter statement is not an evidence check question', True,
+        reds(SD, '<p>It identifies who you met.</p>', "g32"))
+    rec('g32-reader-question-at-html-boundary-passes',
+        'adjacent rendered paragraphs need not have whitespace after the question', False,
+        reds(SE, '<p>Can a reader tell which arts experience you attended and what you communicated about it?</p><p>Save the record in the portfolio.</p>', "g32"))
+    rec('g32-record-question-at-html-boundary-passes',
+        'a record question remains a prompt when the next paragraph is joined', False,
+        reds(SD, '<p>Does it identify who you met, what the activity was and what you personally explored?</p><p>Now check the organisation and pathway sources.</p>', "g32"))
+    rec('g32-reader-question-at-html-boundary-does-not-mask-attendance',
+        'a joined HTML paragraph does not hide an attendance assertion', True,
+        reds(SE, '<p>Can a reader tell which arts experience you attended?</p><p>You attended the exhibition yesterday.</p>', "g32"))
+    rec('g32-record-question-at-html-boundary-does-not-mask-promise',
+        'a joined HTML paragraph does not hide the future practitioner promise', True,
+        reds(SD, '<p>Does it identify who you met?</p><p>You will meet arts practitioners in this session.</p>', "g32"))
     return out
 
 
