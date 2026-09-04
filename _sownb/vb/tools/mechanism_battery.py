@@ -71,6 +71,7 @@ SELFTEST_TOOLS = [
     "tools/easter/dedupe_sweep.py",
     "tools/easter/refresh_pack_checksums.py",
     "tools/easter/chrome_flip_list.py",
+    "tools/easter/derive_stage_timings.py",
 ]
 LIST_ONLY_TOOLS = [
     "g19_v2.py",

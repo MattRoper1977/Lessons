@@ -444,3 +444,69 @@ deleted code, so Matt's ruling is one line.
 
 Mechanism: **15 tools, 134 controls**, derived, `--prove-red` PASS. g27 PASS.
 Evidence `_sownb/vb/evidence/a3n/`.
+
+---
+
+## A3N R2 — the five ASDAN decks get their clock fixed. PR #287
+
+**Ceiling: 0 lesson units** (R1: a timing PR counts zero).
+
+**What was wrong.** All five shared one profile: `I Do 2 · connect` carrying
+471–548 content words against **3 declared minutes** — 157–183 words a minute —
+while `Independent · evidence` carried 256–293 against **16**, about 17 a minute.
+The minutes ran against the reverse of the content. Total reading need is 25–28
+minutes of the 40, so **the lesson fits; only its clock was wrong.**
+
+**The derivation.** Each stage first takes the minutes its reading needs,
+`ceil(contentWords / 90)` at g23's own assumed rate — a floor that is monotonic
+in content by construction. The surplus is then distributed in proportion to
+what the author already wrote.
+
+    minutes  [0,3,3,4,3,3,4,16,4]  ->  [0,3,3,7,3,7,5,9,3]   BUILD_ASDAN_W15
+                                       [0,3,3,7,3,7,5,9,3]   BUILD_ASDAN_W16
+                                       [0,3,3,8,3,7,4,9,3]   GROW_ASDAN_W15
+                                       [0,3,3,7,3,7,4,10,3]  GROW_ASDAN_W16
+                                       [0,3,3,7,3,8,4,9,3]   LAUNCH_ASDAN_W16
+
+    under-timed stages   2 -> 0 on every deck · session 40 preserved exactly
+    content words        unchanged on every deck · containment 5/5 PASS, 0 missing
+
+**Strict global monotonicity is NOT enforced, and that is DEFAULTED under N1b.**
+Allocating the whole session by word count cuts `Independent · evidence` from 16
+minutes to 3, because independent work is pupils DOING and its minutes were never
+a reading figure. `--strict` measures exactly that and a control pins it. A tool
+that compresses independent work to satisfy an arithmetic about words has
+repaired the number and broken the lesson.
+
+**THE SAME FACT WAS RECORDED IN THREE PLACES AND THE TOOL WAS WRITING TWO.**
+`data-min` is what the gates read; `lesson-config.timings` is what the estate
+reads; and `<div class="time">N min</div>` is **what a teacher reads off the
+board** — static text, computed from nothing, no `updateTimerDisplay` on these
+decks. The first application left five decks showing "4 min" on a stage now
+allocated seven. Caught before anything shipped, by looking rather than
+assuming; the decks were reverted and re-done. All three records now move
+together and a control (`the-visible-minute-badge-moves-with-the-attribute`)
+pins it. The reshell dropped one of three records once already and nothing
+noticed for a year.
+
+**The band decision, and a structural fact R2 could not have known.** A timing
+fix **cannot move the g23 ratio** — the ratio is contentWords ÷ family median and
+minutes do not enter it. So the re-measure gives the same answer either side of
+the fix, and the fix stands on its own merits (2 under-timed stages → 0 on every
+deck) rather than as a route to a ratio.
+
+Measured under exact projection at R3's counting, all five are **>1.6 → SPLIT**:
+
+| deck | ratio | band |
+|---|---|---|
+| BUILD_ASDAN_W15 | ×1.94 | SPLIT |
+| BUILD_ASDAN_W16 | ×2.00 | SPLIT |
+| GROW_ASDAN_W15 | ×2.04 | SPLIT |
+| GROW_ASDAN_W16 | ×2.06 | SPLIT |
+| LAUNCH_ASDAN_W16 | ×2.00 | SPLIT |
+
+With `GROW_HUM_W15` (×3.13) and `LAUNCH_HUM_W15` (×3.22), **seven decks now
+carry a SPLIT verdict**, which is where R2's other clause sends them.
+
+Checksums refreshed across three packs, 5 rows, 0 added, 0 removed, verify OK.
+Mechanism **16 tools, 142 controls**, derived, `--prove-red` PASS.
