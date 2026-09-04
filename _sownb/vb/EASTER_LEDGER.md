@@ -1723,3 +1723,19 @@ The PR303 browser fixture passed after correcting its missingUTF-8 declaration.
 The actual fourteen generated decks still require their content-branch browser
 run before merge. This checkpoint preserves the output; it is not a claim
 that the content has landed or been served.
+
+
+## PR303 merged and verified; Bronze browser proof
+
+PR303 merged as4f36647151a525911e3dfd15b7d502b3c198ac9a after allseven
+current-headjobs succeeded. All18changedblobs match the head, compared from
+actualforkea2e4f696712d226838a0b2f51ffcb307224e9eb. Ledger andstate updated
+beforecontinuing. The local/APIcommitgraphs differ, so mergingmain produced
+record-onlyconflicts. Resolved by keeping the laterBronzecheckpoint plus the
+identicalmechanismrecords, ratherthan restoringmain'sold g29-skipstatement.
+
+PR304 browserrun33915719252/job101162293053 passed bothgeneratedfixtureand
+allfourteenactualBronzedecks: toolbar,nav,focus/modal,livefileinputandthe
+source-matchedprintcontent. TheseHTMLbytes have not changed since that run.
+Retargetingto main now enables the remainingestatechecks; no contentmerge
+is claimed yet.
