@@ -274,6 +274,7 @@ def controls() -> list[dict]:
     for f in (steal, subset, d1, d2, nopid):
         f.unlink(missing_ok=True)
     _award_source_controls(rec)
+    _award_multipart_controls(rec)
     return out
 
 
@@ -557,12 +558,244 @@ def _award_source_controls(rec):
         finally:
             _pi.ROOT = original_root
 
+# Add these declarations and the function to g29_plan_binding.py. Invoke the
+# function once from controls(), after _award_source_controls(rec).
+MULTIPART_CONTROL_IDS = [
+    'all-single-part-award-identities-remain-unchanged',
+    'an-explicit-single-part-list-preserves-the-legacy-plan',
+    'silver-multipart-rows-retain-every-declared-part',
+    'award-slots-are-the-sorted-union-of-all-declared-parts',
+    'multipart-identities-survive-part-ordering',
+    'an-explicit-empty-part-list-is-refused',
+    'an-explicit-null-part-list-is-refused',
+    'a-scalar-part-list-is-refused',
+    'a-non-string-part-list-member-is-refused',
+    'duplicate-award-parts-are-refused',
+    'an-unregistered-secondary-part-is-refused',
+    'an-invalid-primary-part-is-refused',
+    'a-part-list-omitting-the-primary-is-refused',
+    'correct-multipart-award-declarations-bind',
+    'a-stale-id-cannot-hide-a-dropped-secondary-part',
+    'a-stale-id-cannot-hide-a-secondary-part-slot',
+    'multipart-targets-round-trip-and-dropped-parts-are-refused',
+]
+
+
+def _award_multipart_controls(rec):
+    # Independently reconstruct the frozen single-part award identity. Do not
+    # compare the new reader with itself or use a hard-coded population count.
+    registry = json.loads((ROOT / 'tools/easter/PLAN_SOURCES.json').read_text(
+        encoding='utf-8'))
+    checked, changed = 0, []
+    for entry in registry['sources']:
+        if entry['kind'] != 'award-rows':
+            continue
+        source_path = ROOT / entry['path']
+        source_doc = json.loads(source_path.read_text(encoding='utf-8'))
+        actual_plans = _pi.read_source(source_path, 'award-rows')
+        for row, plan in zip(source_doc['rows'], actual_plans):
+            if row.get('parts', [row['part']]) != [row['part']]:
+                continue  # Genuine multipart rows did not have a correct old ID.
+            checked += 1
+            key = '|'.join([str(source_doc['family']), str(row['week']),
+                            'award', str(source_doc['derivedFrom']['level']),
+                            row['part'], str(row['title'])])
+            expected = hashlib.sha256(key.encode('utf-8')).hexdigest()[:12]
+            if plan_id(plan) != expected:
+                changed.append((entry['path'], row['spec'], expected, plan_id(plan)))
+    rec('all-single-part-award-identities-remain-unchanged',
+        'Every registered single-part award row retains the frozen pre-multipart '
+        'ID; an empty population does not prove compatibility.',
+        (True, []), (checked > 0, changed))
+
+    def clone(value):
+        return json.loads(json.dumps(value))
+
+    def refused(call, fragment):
+        try:
+            call()
+        except ValueError as exc:
+            return fragment in str(exc)
+        return False
+
+    with tempfile.TemporaryDirectory(prefix='g29-award-multipart-') as temp_dir:
+        fixture = Path(temp_dir)
+        original_root = _pi.ROOT
+
+        def put(rel, doc):
+            path = fixture / rel
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(json.dumps(doc, ensure_ascii=False, indent=1) + '\n',
+                            encoding='utf-8')
+            return path
+
+        spec_rel = 'tools/artsaward/SPEC.json'
+        source_rel = 'tools/artsaward/SILVER_PLAN.json'
+        spec_path = put(spec_rel, {'levels': {'Silver': {'parts': {
+            '1C': {}, '1D': {}, '2B': {}, '2C': {}, '2D': {}}}}})
+        # Shared fixture slot verifies de-duplication when two declared parts
+        # require the same slot; it is not a new real award requirement.
+        put('tools/artsaward/SLOTS.json', {'slots': {
+            'PRACTITIONER_SLOT': {'serves': {'Silver': ['1D']}},
+            'SHARED_SLOT': {'serves': {'Silver': ['1C', '1D']}},
+            'ORG_SLOT': {'serves': {'Silver': ['1D']}},
+            'EVENT_SLOT': {'serves': {'Silver': ['1C']}},
+        }})
+        source_doc = {
+            'family': 'GROW Art', 'count': 3,
+            'derivedFrom': {'path': spec_rel, 'sha256': _pi.digest(spec_path),
+                            'level': 'Silver'},
+            'rows': [
+                {'seq': 1, 'week': 5, 'part': '2B', 'parts': ['2B', '2D'],
+                 'title': 'Test a plan with others', 'outcome': 'Test and agree.',
+                 'spec': '2B.json'},
+                {'seq': 2, 'week': 5, 'part': '2C', 'parts': ['2C', '2D'],
+                 'title': 'Lead with others', 'outcome': 'Lead and respond.',
+                 'spec': '2C.json'},
+                {'seq': 3, 'week': 3, 'part': '1C', 'parts': ['1C', '1D'],
+                 'title': 'Combined fixture only', 'outcome': 'Exercise slot union.',
+                 'spec': 'slots.json'},
+            ],
+        }
+        source_path = put(source_rel, source_doc)
+
+        def read(doc):
+            put(source_rel, doc)
+            return _pi.read_source(source_path, 'award-rows')
+
+        try:
+            _pi.ROOT = fixture
+            canonical = read(source_doc)
+            rec('silver-multipart-rows-retain-every-declared-part',
+                'Both practical planning and delivery can truthfully evidence '
+                'working with others; neither secondary part may disappear.',
+                [['2B', '2D'], ['2C', '2D']],
+                [p['artsAward']['parts'] for p in canonical[:2]])
+            rec('award-slots-are-the-sorted-union-of-all-declared-parts',
+                'A secondary part contributes both of its slots; a shared slot '
+                'appears once, in a deterministic sorted union.',
+                ['EVENT_SLOT', 'ORG_SLOT', 'PRACTITIONER_SLOT', 'SHARED_SLOT'],
+                canonical[2]['artsAward'].get('slots'))
+
+            legacy_doc = clone(source_doc)
+            legacy_doc['count'] = 1
+            legacy_doc['rows'] = [clone(source_doc['rows'][0])]
+            del legacy_doc['rows'][0]['parts']
+            legacy = read(legacy_doc)[0]
+            explicit_doc = clone(legacy_doc)
+            explicit_doc['rows'][0]['parts'] = ['2B']
+            explicit = read(explicit_doc)[0]
+            rec('an-explicit-single-part-list-preserves-the-legacy-plan',
+                'A source may add an explicit one-item list without changing '
+                'its declaration, output fields or identity.',
+                (legacy, plan_id(legacy)), (explicit, plan_id(explicit)))
+
+            reordered_doc = clone(source_doc)
+            for row in reordered_doc['rows']:
+                row['parts'].reverse()
+            reordered = read(reordered_doc)
+            rec('multipart-identities-survive-part-ordering',
+                'Part-list ordering cannot create a new plan identity for the '
+                'same declared set; all declared parts remain present.',
+                [(plan_id(p), sorted(p['artsAward']['parts'])) for p in canonical],
+                [(plan_id(p), sorted(p['artsAward']['parts'])) for p in reordered])
+
+            for cid, replacement, fragment in [
+                ('an-explicit-empty-part-list-is-refused', [], 'nonempty list'),
+                ('an-explicit-null-part-list-is-refused', None, 'nonempty list'),
+                ('a-scalar-part-list-is-refused', '2B', 'nonempty list'),
+                ('a-non-string-part-list-member-is-refused', ['2B', ['2D']],
+                 'nonempty list'),
+                ('duplicate-award-parts-are-refused', ['2B', '2D', '2D'], 'unique'),
+                ('an-unregistered-secondary-part-is-refused', ['2B', 'A'],
+                 'Invalid Silver parts'),
+                ('a-part-list-omitting-the-primary-is-refused', ['2D'],
+                 'must be included'),
+            ]:
+                altered = clone(source_doc)
+                altered['rows'][0]['parts'] = replacement
+                rec(cid, 'An explicit malformed or contradictory parts '
+                    'declaration must fail before a target or deck is written.',
+                    True, refused(lambda: read(altered), fragment))
+            altered = clone(source_doc)
+            altered['rows'][0]['part'] = 'A'
+            altered['rows'][0]['parts'] = ['A', '2D']
+            rec('an-invalid-primary-part-is-refused',
+                'An explicit parts list cannot legitimise a primary part '
+                'that is absent from this level of SPEC.',
+                True, refused(lambda: read(altered), 'Invalid Silver'))
+            read(source_doc)
+
+            by_id = _pi.index_plans(canonical)
+            deck_number = 0
+
+            def judged(plan, award=None):
+                nonlocal deck_number
+                deck_number += 1
+                cfg = {'id': 'MULTIPART_TEST', 'family': plan['family'],
+                       'week': plan['ruledWeek'], 'title': plan['title'],
+                       'cells': clone(plan['cells']),
+                       'outcomes': clone(plan['outcomes']),
+                       'artsAward': clone(plan['artsAward']) if award is None else award,
+                       'planId': plan_id(plan)}
+                path = fixture / f'multipart-{deck_number}.html'
+                path.write_text('<!doctype html><script id="lesson-config" '
+                                'type="application/json">' + json.dumps(cfg) +
+                                '</script>', encoding='utf-8')
+                return judge(path, by_id)
+
+            rec('correct-multipart-award-declarations-bind',
+                'All correctly projected multipart declarations bind through '
+                'the same public judge used for real decks.',
+                ['PASS'] * 3, [judged(p)['status'] for p in canonical])
+            dropped = clone(canonical[0]['artsAward'])
+            dropped['parts'] = ['2B']
+            result = judged(canonical[0], dropped)
+            rec('a-stale-id-cannot-hide-a-dropped-secondary-part',
+                'Keep the valid ID and outcomes but drop the genuine secondary '
+                'part; the declaration must be refused.',
+                ('RED', False), (result['status'], result.get('awardMatches')))
+            missing_slot = clone(canonical[2]['artsAward'])
+            missing_slot['slots'] = [s for s in missing_slot['slots']
+                                     if s != 'ORG_SLOT']
+            result = judged(canonical[2], missing_slot)
+            rec('a-stale-id-cannot-hide-a-secondary-part-slot',
+                'Keep the ID and all parts but drop a slot required only by '
+                'the secondary part; the declaration must be refused.',
+                ('RED', False), (result['status'], result.get('awardMatches')))
+
+            target_doc = {'count': len(canonical), 'batch': [],
+                          'derivedFrom': {'path': source_rel,
+                                          'sha256': _pi.digest(source_path)}}
+            for index, (row, plan) in enumerate(zip(source_doc['rows'], canonical)):
+                target_doc['batch'].append({
+                    'planIndex': 2001 + index, 'family': plan['family'],
+                    'week': plan['ruledWeek'], 'cells': clone(plan['cells']),
+                    'title': plan['title'], 'subject': plan['subject'],
+                    'outcomes': clone(plan['outcomes']),
+                    'artsAward': clone(plan['artsAward']),
+                    'route': f'Art/multipart-fixture-{index}.html', 'spec': row['spec'],
+                })
+            accepted = sorted(_pi.validate_award_targets(target_doc))
+            tampered = clone(target_doc)
+            tampered['batch'][0]['artsAward']['parts'] = ['2B']
+            rejected = refused(lambda: _pi.validate_award_targets(tampered),
+                               'differs from its canonical plan')
+            rec('multipart-targets-round-trip-and-dropped-parts-are-refused',
+                'The target boundary must accept the complete projection and '
+                'refuse a hand-edited dropped part despite a valid source digest.',
+                (['2B.json', '2C.json', 'slots.json'], True), (accepted, rejected))
+        finally:
+            _pi.ROOT = original_root
+
+
 # Additional controls to add alongside the reported fixes (not included above
 # until their intended contract is implemented): duplicate canonical spec names,
 # duplicate target routes and planIndex values, non-empty count agreement, and a
 # --only selector that matches zero rows. All should refuse before a deck is written.
 
 CONTROL_IDS += ADDED_CONTROL_IDS
+CONTROL_IDS += MULTIPART_CONTROL_IDS
 
 
 def self_test() -> dict:

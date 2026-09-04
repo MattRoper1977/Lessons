@@ -1622,6 +1622,35 @@ batch-4 deck rebuilds **byte-identical** through the changed pipeline.
     mechanism 26 tools, 243 controls, derived, --prove-red PASS
 
 
+## AAE-R1B continuation — Bronze batch opening, 2026-09-04
+
+Matt supplied the governing AAE-R1B order again. Bronze AUTHOR 14 comes first,
+then Explore 14, then Silver 14; each batch stays within 24 lesson units.
+Questions are not a gate. The Lessons repository has one writer. Reviewers and
+draft authors may work outside it; only the root writer integrates changes.
+
+Remote main is `ea2e4f696712d226838a0b2f51ffcb307224e9eb`. #302's five changed
+blobs were independently compared from its actual fork base `9fd27b1b` and all
+five match the landed merge. The pushed continuation `94ede65e` has NINE specs,
+A1–A6 and B1–B3, rather than the eight named in the handoff. No open PR overlaps
+those paths or the planned Bronze routes. The inherited work is retained.
+
+**Batch opening:** 14 planned / 24 allowed; 0 landed this run. Bronze workbook
+cells **0 → 0**, deliberately unclaimed under AAE-H7. Gold new cells **0**;
+Gold remains shelf-only. These are strand claims, not an estate coverage count.
+
+Reading the saved plan against R3(ii) found B running into week 6 and D starting
+only in week 7. The plan's prose also called the fourth B deck its third.
+The corrected fourteen-slot sequence keeps all nine drafts: B3 teaches the
+actual experience, review and evidenced share in week 5; C1/C2 remain weeks 5/6;
+D is plan in week 6, delivery and review in week 7. No extra lesson unit is added.
+
+Content review found the wrong tier labels, an A3 one-file-per-session direction,
+incomplete file-plus-page locators, B directions treating handwritten initials
+as mandatory, and missing EVENT_SLOT declarations. These are draft defects to
+fix before the batch is built, not evidence that a shipped deck passed.
+
+
 ## The award identity reached the writer but not its gate — zero units
 
 Resuming AAE-R1B from #302 reproduced a g29 RED on the first Bronze deck.
@@ -1674,6 +1703,57 @@ modal, source-matched print and file-reader behaviour. These are checks of
 behaviour and print content, not a claim about PDF pagination.
 
 
+## Bronze fourteen-deck build checkpoint — 14 of 24 units
+
+All fourteen authored specs are now built in week-major order. Each completed
+its own sixty-second-ceiling shell, taking 8.36–9.11 seconds. All passed the
+comparative stack; g16, g19 and g24 remain explicitly pre-existing on the
+donor, not newly green. The independent g30–g35 pass is 14 of 14. Reading
+values remain inside BUILD; content words range1092–1333 against888–1523.
+The pack contains14 lessons,560 teaching minutes and an ordered start page.
+It does not claim to deliver the entire60-hour award programme.
+
+PartA: W1A1/A2,W2A3/A4,W3A5/A6. PartB: W4B1/B2,W5B3. PartC: W5C1,W6C2.
+PartD: W6D1,W7D2/D3. EVENT_SLOT is read by the threeB decks. Suggested
+evidence uses four cumulative part files within the10-file cap; no completed
+pupil evidence is asserted. Bronze workbook cells0→0 underH7; Gold newcells0.
+GROW placement remains a separate later transaction.
+
+The PR303 browser fixture passed after correcting its missingUTF-8 declaration.
+The actual fourteen generated decks still require their content-branch browser
+run before merge. This checkpoint preserves the output; it is not a claim
+that the content has landed or been served.
+
+
+## PR303 merged and verified; Bronze browser proof
+
+PR303 merged as4f36647151a525911e3dfd15b7d502b3c198ac9a after allseven
+current-headjobs succeeded. All18changedblobs match the head, compared from
+actualforkea2e4f696712d226838a0b2f51ffcb307224e9eb. Ledger andstate updated
+beforecontinuing. The local/APIcommitgraphs differ, so mergingmain produced
+record-onlyconflicts. Resolved by keeping the laterBronzecheckpoint plus the
+identicalmechanismrecords, ratherthan restoringmain'sold g29-skipstatement.
+
+PR304 browserrun33915719252/job101162293053 passed bothgeneratedfixtureand
+allfourteenactualBronzedecks: toolbar,nav,focus/modal,livefileinputandthe
+source-matchedprintcontent. TheseHTMLbytes have not changed since that run.
+Retargetingto main now enables the remainingestatechecks; no contentmerge
+is claimed yet.
+
+PR304 now targets main at 4f366471. The byte-identical lesson outputs retain
+the completed browser proof; the current head must also pass every estate job.
+The source-figure control rebuilt114figures, with zero differences.
+
+
+## Bronze front-door identity correction
+
+Current-head browser run 33916590384 passed. Estate run 33916590307 found
+a genuine metadata mistake: START_HERE used lesson-config, so the donor
+control treated this pack index as a lesson missing its planId. The index
+now uses pack-config. No lesson or gate is changed, and the checksum is
+refreshed. The original control is retained. Full CI must pass on the new head.
+
+
 ## AAE assertion-scope correction — zero lesson units
 
 R1 requires asserted attendance and booking to fire, while ticket examples,
@@ -1690,3 +1770,31 @@ decks. The full battery passes: 27 tools, 303 controls, planted difference caugh
 
 This is a separate zero-unit mechanism change. Bronze PR304 is not merged by
 this record; merge order and current-head CI remain required.
+
+
+
+
+## Bronze PR304 merged and blob-verified
+
+Bronze merged as 2f7eda8e62096cd23fef8128b92c3563ed170bc3 after all seven
+current-head jobs passed (runs 33917362837 and 33917362798). All 58 changed
+blobs match, compared from the actual fork at 4f366471. merge304.json records
+the full path list. Fourteen lesson units landed against the 24-unit ceiling.
+Bronze cells remain 0 → 0 under AAE-H7. Gold new cells remain 0. Placement
+is still pending. Ledger and state are updated before further batches.
+
+
+
+
+## Silver multipart plan projection — same zero-unit mechanism PR
+
+The canonical Silver plan truthfully assigns working with others alongside
+practical planning and delivery. The old reader silently discarded secondary
+parts. The source reader now retains each declared part and derives the union
+of its slots, while rejecting empty, duplicate or contradictory declarations.
+The existing single-part projection and IDs are unchanged. Seventeen permanent
+controls expose the old loss and check the full source-to-target-to-deck binding.
+
+The reconciled mechanism battery passes with 28 tools and 323 derived controls,
+including 44 g29 controls and 43 award-claim controls. Its planted battery
+failure is caught. Current-head CI remains required before PR305 merge.
