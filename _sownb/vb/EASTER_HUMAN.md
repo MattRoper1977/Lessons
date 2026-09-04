@@ -551,11 +551,14 @@ So the Bronze decks claim **no workbook cell**, and the binding is left open
 rather than fabricated.
 
 **The consequence, stated rather than left to be found.** A deck with no plan
-cells carries no `planId`, and **g29 SKIPs it** rather than judging it. That is
-a fail-open on fourteen decks. Their coverage claim is instead the `artsAward`
-block that g30–g35 read and bind — a gate reading a declaration, rather than no
-gate at all — but g29 is the gate that stops two decks claiming the same cell,
-and it is not watching these fourteen.
+cells carries no `planId`, so **g29 skips it** rather than judging it. The skip
+is not silent — one of g29's own controls is
+`a-deck-with-no-planId-is-skipped-not-silently-passed`, and the three chassis
+already appear in every run as named skips. But *reported* is not *judged*: g29
+is the gate that stops two decks claiming the same cell, and for these fourteen
+it will report rather than check. Their coverage claim is instead the
+`artsAward` block that g30–g35 read and bind, which is a gate reading a
+declaration rather than no gate at all.
 
 Three ways this could be answered, in the order they cost:
 
