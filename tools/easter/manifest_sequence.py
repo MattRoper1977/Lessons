@@ -260,6 +260,46 @@ def apply(pack: Path, only: set | None = None) -> dict:
 
 
 # --------------------------------------------------------------------------
+def resolvable(rec: dict) -> dict:
+    """The record written to disk names every deck by a path, not a filename.
+
+    A manifest row names its deck by BARE FILENAME, and that is correct inside
+    the manifest: the manifest lives in the pack folder beside the deck. Copied
+    unchanged into an evidence file under `_sownb/vb/evidence/`, the same string
+    stops resolving -- the estate's stale-evidence sweep reads a `file` key as
+    the subject of a QA record and looks for it beside the evidence, in the
+    evidence directory, or at the repository root. Six batch-4 decks that exist
+    were reported STALE -- SUBJECT ABSENT for exactly that reason.
+
+    This walks the WHOLE record rather than the two lists I first thought of.
+    `added`, `refused` and `changes` all carry a `file`, and a fix applied to
+    the keys you happen to remember is half a fix: the first version of this
+    function covered `added` and `refused`, and the six stale rows stayed
+    exactly where they were, in `changes`. The manifest itself is untouched.
+    """
+    pack = rec.get("pack", "")
+
+    def fix(node):
+        if isinstance(node, list):
+            return [fix(v) for v in node]
+        if isinstance(node, dict):
+            out = {}
+            for k, v in node.items():
+                if k == "file" and isinstance(v, str) and "/" not in v:
+                    out[k] = f"{pack}/{v}"
+                else:
+                    out[k] = fix(v)
+            return out
+        return node
+
+    out = fix(rec)
+    if rec.get("unlistedNotAdded"):
+        out["unlistedNotAdded"] = [f if "/" in f else f"{pack}/{f}"
+                                   for f in rec["unlistedNotAdded"]]
+    return out
+
+
+# --------------------------------------------------------------------------
 def controls() -> list[dict]:
     out = []
 
@@ -344,6 +384,42 @@ def controls() -> list[dict]:
         "a deck whose week is 1, like the template's, is not reported as unfilled",
         True, "week" in f0 and "weDoType" in f0)
 
+    # THE EVIDENCE MUST NAME SOMETHING THAT EXISTS. A manifest row's bare
+    # filename resolves inside the pack and nowhere else; the sweep reads it
+    # from the evidence file and calls a deck that exists STALE. Both halves
+    # asserted: the row goes in with a filename and comes out with a path, and
+    # the path is one that resolves from the repository root.
+    probe = {"pack": "Humanities_Teesside/BUILD_W1-W8_2026-27",
+             "added": [{"file": "BUILD_Humanities_W1_Pick_a_card_and_say_why_you_picked_it.html"}],
+             "refused": [{"file": "BUILD_HUM_W2_A_Special_Book_A_Special_Place.html",
+                          "why": "probe"}],
+             "changes": [{"file": "BUILD_Humanities_W3_Listen_to_Ruth_Then_Point_at_the_Line.html"}],
+             "unlistedNotAdded": ["BUILD_HUM_W4_Then_And_Now.html"]}
+    got = resolvable(probe)
+    bare, unresolved = [], []
+
+    def _scan(node):
+        if isinstance(node, list):
+            for v in node:
+                _scan(v)
+        elif isinstance(node, dict):
+            for k, v in node.items():
+                if k == "file" and isinstance(v, str):
+                    (bare if "/" not in v else unresolved).append(v)
+                    if "/" in v and not (ROOT / v).exists():
+                        unresolved.append(v)
+                else:
+                    _scan(v)
+
+    _scan(got)
+    missing = [f for f in got["unlistedNotAdded"] if not (ROOT / f).exists()]
+    rec("every-file-named-in-the-record-resolves-from-the-repository-root",
+        "no bare filename survives anywhere in the written record -- not in "
+        "added, not in refused, not in changes, not in unlistedNotAdded -- and "
+        "every path it does carry exists",
+        ([], [], []),
+        (bare, [f for f in unresolved if not (ROOT / f).exists()], missing))
+
     rec("only-a-key-constant-across-every-row-may-be-copied",
         "kind is constant and title is not",
         (True, False),
@@ -394,7 +470,8 @@ def main() -> int:
             print(f"    {rec['why']}")
     if a.output:
         Path(a.output).parent.mkdir(parents=True, exist_ok=True)
-        Path(a.output).write_text(json.dumps({"tool": VERSION, "packs": recs},
+        Path(a.output).write_text(json.dumps({"tool": VERSION,
+                                              "packs": [resolvable(r) for r in recs]},
                                              indent=1, ensure_ascii=False) + "\n",
                                   encoding="utf-8")
     return 0 if all(r["verdict"] in ("WRITTEN", "READY", "NOTHING TO ADD",

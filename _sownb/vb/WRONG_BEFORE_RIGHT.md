@@ -1073,3 +1073,157 @@ lesson-config and reports on that set. Provenance, not equality.
 
 Same shape as the campaign's recurring mistake, one step in: I asked whether two
 values LOOKED the same instead of asking where each came from.
+
+---
+
+## The same guard in one tool and not the other, and a deck that lost its buttons
+
+WRONG: `strip_to_chassis` learned that a control surface is not donor text — I
+wrote `is_control_surface` there while building the chassis, because the sweep
+was eating the navigation bar. `author_deck.sweep_donor_text` does the same job
+on the shipping deck and never got it. It deleted the navigation from **fifteen
+of batch 3's twenty-four decks**: Previous, Next, Teacher tools, Evidence &
+print, Calm mode. A cover teacher could not change stage with the mouse or reach
+the print pack, and nothing errored.
+
+Batches 1 and 2 survived by ACCIDENT. `all_text_blocks` only reports blocks of
+eight words or more. BUILD and GROW button rows put spaces between the labels —
+thirteen words, over the floor, swept. LAUNCH rows run them together — under the
+floor, never offered to the sweep. **Whether a deck kept its navigation depended
+on whether somebody had put a space between two button labels.**
+
+RIGHT: the predicate is defined ONCE, in `author_deck`, and `strip_to_chassis`
+imports it. And both halves of the pipeline had to learn it together: with the
+sweep fixed and the leak gate left alone, twenty-two decks then reported a leak
+of exactly one block — the button row — because the gate reads text and those
+labels are legitimately in both donor and deck.
+
+The tell, for next time: I fixed a bug in the tool I was working in, and the same
+bug was in the tool one step downstream. A predicate needed in two places and
+written in one is not a fix, it is half of one. Ask, every time: **what else
+makes this same decision?**
+
+---
+
+## Three selectors, and the one I did not count
+
+WRONG: the campaign already had three instances of one shape — family+week
+keying picking the wrong plan, a typed task list deciding which plans existed,
+and a donor filter deciding no Art deck could be a donor. All three were
+recorded. None of them made me look at the fourth: a SWEEP is a selector too. It
+decides what stays in the document, and it was deciding in silence.
+
+RIGHT: the rule is now written down and checked rather than remembered —
+*every selector that narrows a candidate set must print its exclusions with
+reasons before the set is used* — as one control in g29, run against all four
+selectors this campaign ships, with a planted silent selector that must be
+caught.
+
+The tell: I had a pattern with three named instances and treated it as a lesson
+about the three. A pattern with three instances is a reason to go looking for the
+fourth.
+
+---
+
+## A control that proved the figures, and told me nothing about the record
+
+WRONG: three batch-4 specs had to be authored by hand after the fleet died on an
+account limit. To keep the print-sheet SVGs from drifting from the shipped
+geometry I wrote a generator and gave it a control that rebuilds **every figure
+in the committed specs** and refuses on a single differing byte — 66 figures,
+66 identical. That control passed, the specs built, and all nine gates went
+green on all three decks.
+
+All three were missing `"type": "title"` on stage 0. Every other spec in the
+estate carries it; `author_deck` turns it into `data-type="title"` on the
+opening `<section>`. Three decks would have shipped with an opening slide the
+markup does not identify as one, and **no gate reads that attribute**, so
+nothing would have said so.
+
+RIGHT: the missing key was found by diffing the *key sets* of the new specs
+against the shipped corpus — three lines of Python, and the answer was
+immediate and total: `stage-0 type != "title": BUILD_ART_W7, LAUNCH_ART_W7,
+LAUNCH_HUMANITIES_W7`. Fixed in the generator rather than in the three files, so
+the record still reproduces what shipped, and re-run: 43 of 43 specs carry it.
+
+The tell, for next time: **a control that proves one field family is silent
+about every other one, and reads as confidence about the whole record.** The
+figure control was measuring the part I had thought hardest about, which is
+exactly the part least likely to be wrong. When a new artefact joins a corpus of
+forty, the cheap check is not "is my clever part right" but "does its shape
+match the forty" — compare key sets, not just the values you worried about.
+
+---
+
+## The same decision, made in four tools and repaired in two
+
+WRONG: batch 4's evidence added **nine stale claims to the estate for files
+that exist**. `manifest_sequence` copied a manifest row's bare filename into an
+evidence record three directories away, where it resolves against nothing;
+`refresh_pack_checksums` wrote `/home/user/Lessons/…` into the same kind of
+record. Six decks and three checksum files, all present on disk, read as
+STALE — SUBJECT ABSENT.
+
+A bare filename is *correct* inside a manifest: the manifest sits in the pack
+folder beside the deck. What changed was not the string but where it was being
+read from. That is the trap — the value was never wrong, the copy was.
+
+RIGHT: the record is written with repo-relative paths, the manifests untouched,
+and each tool carries a control red-proved by reverting its own fix. Measured
+against `origin/main` as the control rather than trusted: **1172 stale on main,
+1172 on this branch**, 16 files matching no form on both, with five more
+evidence files read.
+
+**And the first fix was itself a half-fix.** `manifest_sequence` carries `file`
+in three lists — `added`, `refused` and `changes` — and version one covered the
+two I thought of. The six stale rows did not move an inch. It now walks the
+whole record. Then the audit found the pattern twice more: `pack_furniture`
+writes a bare `sumsFile`, `run_batch` an absolute `spec`, neither of them
+currently producing a stale row **only because the sweep happens not to read
+those keys**. Both fixed too.
+
+The tell: this repository has now recorded "a predicate needed in two places
+and written in one is not a fix" — and I then fixed two of four. Counting the
+instances is not the same as fixing them. **The question is not "did I fix it",
+it is "how many places make this decision, and have I been to all of them?"**
+
+A second thing, worth its own line. The control that measures
+`pack_furniture`'s paths has to run against a real pack, because a temp-dir
+probe lives outside the repository root and would prove the opposite of what
+matters. But `update()` **writes**. The first version pointed it at the live
+pack; it was a no-op there by luck, and on a pack missing a row it would have
+edited the estate every time the self-test ran, CI included. **A control with a
+side effect is a worse defect than the one it is checking for.** It now works
+on a copy.
+
+---
+
+## I checked the sweep, and then built more things
+
+WRONG: batch 4's per-deck gating driver wrote a plain-text timings log and kept
+each deck's stdout beside the JSON record — twenty files whose rows read
+`plan 49  rc=0  4s  PASS  idx 49`. That states a verdict in a shape matching
+none of the estate's claim forms, and the stale-evidence sweep exits 2 on a
+single `NO FORM MATCHED` row: *the run does not pass with one outstanding,
+because the alternative is calling it stale.* CI went red.
+
+The part worth writing down is not the format. It is the **order I did things
+in**. I had already caught this class of defect once in this same run — four
+tools naming a file in a record unresolvably — measured the sweep against
+`origin/main` in a second worktree, got 1172 against 1172, and satisfied myself.
+Then the review finished, I re-gated all nineteen decks, and the driver wrote
+twenty new files into the evidence directory. **I never re-ran the sweep after
+the last artefacts existed.** The green I was carrying was a green about a tree
+that no longer existed.
+
+RIGHT: shell output goes to a scratch directory and stays out of the repository;
+the timings live inside `batch4_build.json`, per row, where the sweep reads
+them. Sweep exits 0, self-test exits 0, 16 files matching no claim form — the
+same 16 as `origin/main`.
+
+The tell, for next time: a verification is a statement about a **tree**, not
+about a branch or an intention. The question is not "did I run the check" but
+**"has anything been written since the check ran?"** Any step that creates files
+invalidates every check that ran before it, and the cheapest habit is to re-run
+the estate-wide checks as the last thing before the commit, not the first thing
+after the fix.

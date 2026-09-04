@@ -447,6 +447,36 @@ same refusal path.
 
 ---
 
+## A3-H14 — the older Art packs are a chassis generation behind
+
+Measured while acting on A3N-3 §2. **Not actioned.**
+
+Forty-two Art decks pre-date this campaign — the eight `*_Estate_v3` W1–W8 decks
+per pathway and the six Spring2 `OUTSTANDING_V3` decks per pathway. They are
+good decks: n6 shell, nine stages, per-stage `data-min`, the Lundy strip in
+eleven places, 875–1107 pupil words.
+
+They carry **no guide toggle, no print pack and no splash**:
+
+    #n6m-guide-css   #n6m-guide-js   data-mbm-guide      the staff drawer
+    .print-pack      .print-page     .n6-lc-page         the printable pack
+    .n6-splash       .mbmhome        .skip               the entry furniture
+
+So a cover teacher taking one of those lessons has **nothing to print and no
+adult guidance drawer** — the two things the cover window most needs — and the
+decks cannot serve as chassis donors, because `strip_to_chassis` preserves that
+furniture and cannot invent it.
+
+**The question, which is yours:** bring those forty-two up to the current
+chassis? It is a reshell, not authoring — the teaching content stays and the
+furniture is added — and it would give the Art estate a printable pack and a
+staff drawer for Spring 2 and the v3 packs, and make every one of them a
+possible donor.
+
+It is a large, mechanical, well-defined job and it is not in any batch's scope.
+Recorded rather than started.
+
+Re-run the measurement: `python3 tools/easter/pick_art_donor.py --show-excluded 0`
 ## AAE-H1 · H2 · H3 · H5 · H6 — the Arts Award items, each holding only what it names
 
 **AAE-H1 — Gold Adviser Toolkit.** The register records Gold's Attempted rule and

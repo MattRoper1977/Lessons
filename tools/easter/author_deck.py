@@ -293,6 +293,57 @@ def author_print_pack(tree, plan: dict, content: dict) -> None:
                         para.remove(k)
 
 
+# Interactive labels, and this is a repair, not a refinement.
+#
+# sweep_donor_text removes any text block present in the donor and absent from
+# the family reference. A deck's NAVIGATION is exactly that: every chassis
+# generation in this estate words its buttons differently, so the button row is
+# never shared text between two families and the sweep read it as donor leak.
+#
+# It deleted the navigation bar from FIFTEEN of batch 3's twenty-four decks --
+# Previous, Next, Teacher tools, Evidence & print, Calm mode, all of it -- and
+# nothing errored. A cover teacher opening one of those decks could not move
+# between stages with the mouse, reach the print pack, or turn calm mode on.
+#
+# Batches 1 and 2 survived by ACCIDENT, and the accident is worth writing down.
+# all_text_blocks only reports blocks of eight words or more. The BUILD and GROW
+# button rows separate their labels with spaces -- "Previous Teacher tools
+# Evidence & print Calm mode ..." is thirteen words -- so they crossed the floor
+# and were swept. The LAUNCH rows run their labels together with no space
+# ("Live Loop Staff Ready" arrives as one token per button), so they counted
+# under eight and were never offered to the sweep at all. Whether a deck kept
+# its navigation depended on whether somebody had put a space between two button
+# labels.
+#
+# strip_to_chassis already had this guard. This is the same predicate, in the
+# tool that actually ships the deck.
+INTERACTIVE = ("button", "a", "label", "summary", "option", "select", "input")
+
+
+def is_control_surface(el) -> bool:
+    """True when every word the element shows comes from an interactive child.
+
+    Structural, not by name or class: a <div> of buttons qualifies, and a <nav>
+    with a paragraph of teaching in it does not. Compared as CHARACTERS, because
+    <button>Previous</button><button>Next</button> has text_content
+    "PreviousNext" -- one word to any splitter, two to a reader.
+    """
+    text = " ".join((el.text_content() or "").split())
+    if not text:
+        return False
+    if " ".join((el.text or "").split()):
+        return False
+    from_controls = []
+    for kid in el.iter():
+        if kid is el:
+            continue
+        if isinstance(kid.tag, str) and kid.tag.lower() in INTERACTIVE:
+            from_controls.append(" ".join((kid.text_content() or "").split()))
+            from_controls.append(" ".join((kid.tail or "").split()))
+    squash = lambda t: re.sub(r"\s+", "", t)
+    return bool(from_controls) and squash("".join(from_controls)) == squash(text)
+
+
 def sweep_donor_text(tree, donor: Path, plan: dict, content: dict) -> None:
     """The belt. Role-based rewriting knows the roles it was told about, and this
     estate has more print-pack variants than roles.
@@ -309,12 +360,13 @@ def sweep_donor_text(tree, donor: Path, plan: dict, content: dict) -> None:
     truth about THIS lesson; anything else is removed, because an unauthored
     block is the donor's block.
     """
+    swept = []
     ref = content.get("_reference")
     if not ref:
-        return
+        return swept
     donor_only = set(all_text_blocks(donor)) - set(all_text_blocks(Path(ref)))
     if not donor_only:
-        return
+        return swept
     rewrite = {
         "learning objective": f'Learning objective: {content["objective"]}',
         "objective": f'Objective: {content["objective"]}',
@@ -328,6 +380,13 @@ def sweep_donor_text(tree, donor: Path, plan: dict, content: dict) -> None:
         if any(isinstance(k.tag, str) and k.tag.lower() in BLOCK_TAGS_LOCAL
                for k in el.iterdescendants()):
             continue
+        if is_control_surface(el):
+            swept.append({"text": " ".join((el.text_content() or "").split())[:120],
+                          "action": "kept",
+                          "why": "a control surface: every word it shows comes from an "
+                                 "interactive child, so it is the deck's UI and not "
+                                 "the donor's teaching"})
+            continue
         text = " ".join((el.text_content() or "").split())
         if text not in donor_only:
             continue
@@ -337,10 +396,18 @@ def sweep_donor_text(tree, donor: Path, plan: dict, content: dict) -> None:
             for k in list(el):
                 el.remove(k)
             el.text = new
+            swept.append({"text": text[:120], "action": "rewritten",
+                          "why": f"a labelled line the donor filled in; rewritten to "
+                                 f"the truth about this lesson"})
         else:
             parent = el.getparent()
             if parent is not None:
                 parent.remove(el)
+                swept.append({"text": text[:120], "action": "removed",
+                              "why": "present in the donor and absent from the family "
+                                     "reference, and not a control surface, so it is "
+                                     "the donor's own teaching"})
+    return swept
 
 
 BLOCK_TAGS_LOCAL = ls.BLOCK_TAGS
@@ -394,7 +461,7 @@ def author(donor: Path, plan: dict, content: dict, out: Path) -> dict:
                 st.append(el)
 
     author_print_pack(tree, plan, content)
-    sweep_donor_text(tree, donor, plan, content)
+    swept = sweep_donor_text(tree, donor, plan, content)
     html = lh.tostring(tree, encoding="unicode", doctype="<!doctype html>")
 
     # lesson-config replaced wholesale: no donor field may survive
@@ -421,8 +488,15 @@ def author(donor: Path, plan: dict, content: dict, out: Path) -> dict:
 
     Path(out).parent.mkdir(parents=True, exist_ok=True)
     Path(out).write_text(html, encoding="utf-8")
-    return verify(donor, Path(out), plan, content, old_id, new_id,
-                  reference=content.get("_reference"))
+    rep = verify(donor, Path(out), plan, content, old_id, new_id,
+                 reference=content.get("_reference"))
+    # EVERY DROP CARRIES A REASON. A selector that narrows a set without saying
+    # what it dropped is how the navigation bar left fifteen decks in silence.
+    rep["sweptBlocks"] = swept
+    rep["swept"] = {"removed": sum(1 for x in swept if x["action"] == "removed"),
+                    "rewritten": sum(1 for x in swept if x["action"] == "rewritten"),
+                    "keptAsControlSurface": sum(1 for x in swept if x["action"] == "kept")}
+    return rep
 
 
 def _sentences(text: str) -> list[str]:
@@ -493,7 +567,18 @@ def chassis_blocks(donor: Path, reference: Path | None) -> set:
 def verify(donor, out, plan, content, old_id, new_id, reference=None) -> dict:
     o_raw = Path(out).read_text(encoding="utf-8")
     chassis = chassis_blocks(donor, reference)
-    donor_sents = set(all_text_blocks(donor)) - chassis
+    # A CONTROL SURFACE IS NOT A LEAK, and this is the other half of the same
+    # repair. The donor-text sweep now keeps the navigation, so its labels are
+    # present in both donor and deck -- and the leak gate, reading only text,
+    # called that a leak. Both halves have to know the same thing about buttons,
+    # or fixing one breaks the other: with the sweep fixed and this left alone,
+    # twenty-two of twenty-four decks reported a leak of exactly one block, and
+    # that block was the button row.
+    out_tree = lh.fromstring(o_raw)
+    control_text = {" ".join((el.text_content() or "").split())
+                    for el in out_tree.iter()
+                    if isinstance(el.tag, str) and is_control_surface(el)}
+    donor_sents = set(all_text_blocks(donor)) - chassis - control_text
     out_blocks = set(all_text_blocks(out))
     leaked = sorted(donor_sents & out_blocks)
     meas = ls.measure(Path(out))
@@ -531,6 +616,8 @@ CONTROL_IDS = [
     "the-lesson-config-carries-the-plans-cells-not-the-donors",
     "the-two-figure-shapes-are-different-drawings",
     "a-content-spec-can-actually-ask-for-columns",
+    "the-navigation-survives-authoring",
+    "a-control-surface-is-recognised-by-structure-not-by-name",
 ]
 
 _DONOR = """<!doctype html><html><head><style>.slide{display:none}
@@ -579,6 +666,45 @@ def ad_all(p):
     return all_text_blocks(p)
 
 
+def _nav_controls(rec):
+    """The navigation must survive authoring, on a REAL deck pair.
+
+    Planted on the exact shape that failed: a donor whose button row separates
+    its labels with spaces, and a family reference whose row words them
+    differently, so the row is donor-only text of more than eight words. Before
+    the fix this deleted the row; the control counts buttons rather than looking
+    for a class, because a class can survive an emptied element.
+    """
+    ref = json.loads((ROOT / "tools/easter/GREEN_REFERENCE_DECKS.json").read_text())
+    picks = [ROOT / d for d in ref["decks"]]
+    donor = next((p for p in picks if "BUILD_ASDAN" in p.name), picks[0])
+    reference = next((p for p in picks if "Humanities" in p.name), picks[-1])
+    before = len(lh.fromstring(donor.read_text(encoding="utf-8")).xpath("//button"))
+
+    plan = dict(_PLAN)
+    content = dict(_CONTENT)
+    content["_reference"] = reference
+    content["stages"] = [dict(s) for s in _CONTENT["stages"]]
+    tree = lh.fromstring(donor.read_text(encoding="utf-8"))
+    sweep_donor_text(tree, donor, plan, content)
+    after = len(tree.xpath("//button"))
+    rec("the-navigation-survives-authoring",
+        "the donor's button row is still there after the donor-text sweep; it was "
+        "deleted from fifteen of batch 3's twenty-four decks and nothing errored",
+        before, after)
+
+    rec("a-control-surface-is-recognised-by-structure-not-by-name",
+        "a div of buttons is a control surface, the same div with a sentence in it is not, "
+        "and PreviousNext with no space between them still reads as two labels",
+        (True, False, True),
+        (is_control_surface(lh.fromstring(
+            "<div><button>Previous</button><button>Next</button></div>")),
+         is_control_surface(lh.fromstring(
+             "<div>Read the card and say what you can see.<button>Next</button></div>")),
+         is_control_surface(lh.fromstring(
+             "<nav><button>Previous</button><button>Next</button></nav>"))))
+
+
 def _figure_controls(rec):
     """The two figure shapes must both be reachable through a content spec."""
     chain = render_figure({"kind": "chain", "boxes": [{"head": "A"}, {"head": "B"}],
@@ -610,6 +736,7 @@ def controls() -> list[dict]:
                     "observed": observed, "fired": expected == observed})
 
     _figure_controls(rec)
+    _nav_controls(rec)
     d = _tmp(_DONOR)
     o = Path(tempfile.mkdtemp()) / "new.html"
     r = author(d, _PLAN, _CONTENT, o)

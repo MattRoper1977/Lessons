@@ -28,7 +28,7 @@ the cells stay visibly open rather than quietly missing.
                 teacher does need a session sheet for these, and what it should
                 contain is Matt's call, not a gate's.
 
-    python3 tools/easter/build_batch3_targets.py --output <file>
+    python3 tools/easter/build_batch_targets.py --output <file>
 """
 from __future__ import annotations
 
@@ -38,7 +38,7 @@ import json
 import re
 from pathlib import Path
 
-VERSION = "build-batch3-targets-v1.0.0"
+VERSION = "build-batch-targets-v1.0.0"
 ROOT = Path(__file__).resolve().parents[2]
 TARGETS = ROOT / "tools/easter/EASTER_TARGETS.json"
 CEILING = 24
