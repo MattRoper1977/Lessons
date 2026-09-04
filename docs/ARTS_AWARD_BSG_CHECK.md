@@ -15,6 +15,14 @@ this survey guesses on purpose so the list has something in it.
 - declaring an `artsAward` block: **0**
 - carrying at least one contradiction: **3**
 
+**A venue line in the list below is a place to classify, not a verdict.**
+This survey reports *every* mention so the classification has a complete
+list; it does not apply g32's narrowing. AAE-R1B R2 classified the estate's
+twenty venue mentions and found **one ASSERTED and nineteen EXAMPLE** — a
+Teesside Art deck may name Teesside's gallery, and most of them do exactly
+that. The classifier that produced that verdict, and the line-by-line list,
+land with R2.
+
 ## Requirement → served by → evidence route → verdict
 
 ### Explore — Entry Level Award in the Arts (600/3894/9)

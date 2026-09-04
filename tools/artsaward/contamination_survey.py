@@ -202,6 +202,22 @@ def markdown(doc: dict) -> str:
     a(f"- declaring an `artsAward` block: **{doc['inScope'] - doc['undeclared']}**")
     a(f"- carrying at least one contradiction: **{doc['withContradictions']}**")
     a("")
+    # A VENUE MENTION IS A PLACE TO CLASSIFY, NOT A VERDICT. AAE-R1B R1
+    # ratified g32 as the narrowed shape: an ASSERTED attendance, booking,
+    # venue-plus-date or "your visit" -- never an organisation named as
+    # teaching content, and never a ticket named as an evidence example. This
+    # survey deliberately does NOT narrow: it reports every venue mention so
+    # the classification has a complete list to work from. Reading its venue
+    # count as a count of asserted attendances overstates it, and R2 measured
+    # the real ratio on this estate at one in twenty.
+    a("**A venue line in the list below is a place to classify, not a verdict.**")
+    a("This survey reports *every* mention so the classification has a complete")
+    a("list; it does not apply g32's narrowing. AAE-R1B R2 classified the estate's")
+    a("twenty venue mentions and found **one ASSERTED and nineteen EXAMPLE** — a")
+    a("Teesside Art deck may name Teesside's gallery, and most of them do exactly")
+    a("that. The classifier that produced that verdict, and the line-by-line list,")
+    a("land with R2.")
+    a("")
     a("## Requirement → served by → evidence route → verdict")
     a("")
     for lvl, ref in sp["levels"].items():
