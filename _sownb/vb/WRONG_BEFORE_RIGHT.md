@@ -918,3 +918,51 @@ each time the fix was the same: read the primary source, and where a copy must
 exist, make it say what kind of copy it is. The campaign spent its whole length
 applying that scepticism to g23 and g24 while not applying it to its own
 instruments.
+
+---
+
+WRONG: implementing A3N R3, I reached past what the style contract names three
+times, and each generalisation was withdrawn by its own control.
+
+1. **"Any other block repeated with an identical digest counts ONCE"**, applied
+   to numerator and median alike, as R3 states it. Measured, it REVERSES R3's
+   own control: the three W16 decks go 1.53→1.64, 1.38→1.53 and 1.28→1.29
+   instead of clearing. The cause is measured — the W9–W14 baselines are an
+   older, richer chassis carrying a colour key, tier key, response-mode key and
+   timing badge on every stage, so the rule strips 38% from the denominator and
+   31% from the numerator and every candidate's ratio rises. That is a
+   chassis-generation gap between a deck and its own baseline, not the counting
+   artefact R3 identified. It also has nothing left to do: its target, teaching
+   printed more than once, was removed from the estate in #280–#283 and the
+   sweep now reports 0 removable words.
+2. **"Present on every teaching stage" as the test for "required on every
+   stage".** A control deck whose teaching legitimately repeats on all six
+   stages measured **zero** content words. The rule cannot tell a contract
+   requirement from an author repeating themselves, and zeroing real teaching
+   is the one error a floor gate must never make.
+3. **A sibling-group rule**, marking a parent's children chrome when they
+   between them carry all four dimensions. It matched real teaching:
+   *"Teacher reports which W9 map-support improvement was adopted, declined or
+   adapted"* and *"Use the key: choose whether the sample line shows goods,
+   people or messages"* were both classed as banner.
+
+RIGHT: chrome is what the contract NAMES and nothing more — its `.lundy`
+selector, its four visible strings, and the title slide the chassis marks with
+`data-type="title"`. Every step beyond that removed teaching.
+
+One further correction inside the fix. Matching the four dimensions
+case-insensitively swallowed the prose sentence *"Space in this room is limited,
+so give your partner voice when the audience is listening and your influence
+will be felt"*. Matching them case-sensitively — the contract's own proof method,
+`grep -n -F -o -- SPACE` — then MISSED a live rendering, the title-case gloss
+*"Space means you get room to join in. Voice means you get to say it. …"*, which
+A3-H5's own evidence quotes as the banner. Case is not the discriminator.
+**Presentation is**: in all three live renderings each dimension OPENS a
+statement; in prose only the first does. Both failures are now controls
+(`teaching-words-are-never-reclassified-as-chrome`,
+`the-contract-refrain-counts-zero-wherever-it-appears`) and both fire.
+
+The pattern, again: I was tuning a measurement instead of deriving one, and
+noticed only because each attempt moved the same three decks in a different
+direction. A rule that has to be tried three times to get the answer you wanted
+is a rule being fitted to the answer.

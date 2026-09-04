@@ -80,6 +80,8 @@ from __future__ import annotations
 
 import argparse
 import copy
+import tempfile
+import hashlib
 import json
 import re
 import sys
@@ -90,7 +92,7 @@ from lxml import html as lh
 from lxml.cssselect import CSSSelector
 from cssselect import SelectorError, parse as css_parse
 
-VERSION = "lesson-stages-v1.0.0-shell-aware-screen-scoped"
+VERSION = "lesson-stages-v2.0.0-chrome-excluded"
 ROOT = Path(__file__).resolve().parents[3]
 
 WORD = re.compile(r"[A-Za-z0-9]+(?:['’-][A-Za-z0-9]+)*")
@@ -439,6 +441,208 @@ def stage_text(stage, screen: ScreenView) -> str:
     return " ".join(node.text_content().split())
 
 
+# --------------------------------------------------------------------------
+# CHROME (VB-EASTER-A3N R3)
+# --------------------------------------------------------------------------
+# A pupil reads the Lundy banner once and thereafter recognises it. Counting it
+# ten times, once per stage, does not measure ten times the reading; it measures
+# the chassis. Same for the title slide, which declares data-min="0" because it
+# is not timetabled teaching -- it is the lesson's identity card.
+#
+# THIS IS NOT A THRESHOLD CHANGE. 1.25 is untouched. The numerator and EVERY
+# deck in the family-median denominator are counted under the same rule, so a
+# deck's ratio moves only if its chrome share differs from its family's. That
+# difference is precisely the counting artefact being removed: a deck was being
+# punished for carrying more of the chassis than its neighbours, which is not a
+# fact about its teaching.
+#
+# DETECTION IS BY CONTRACT IDENTITY AND DIGEST EQUALITY, NEVER BY ELEMENT NAME.
+# Naming elements is how a gate acquires a private opinion about the estate. The
+# selectors and the visible strings below are READ FROM the pinned style
+# contract -- the same rows reshell_classic_v2_contract.py enforces -- so a
+# refrain the contract stops requiring stops being chrome without anyone editing
+# this file, and one it starts requiring becomes chrome the same way.
+CONTRACT_PATH = ROOT / "_sownb/vb/STYLE_CONTRACT_RSH3_PINNED.json"
+
+
+def contract_chrome_spec(path: Path | None = None) -> dict:
+    """Chrome, derived from the pinned contract rather than typed here."""
+    src = Path(path) if path else CONTRACT_PATH
+    try:
+        rows = json.loads(src.read_text(encoding="utf-8"))["rows"]
+    except Exception as e:
+        return {"selectors": [], "refrainTokens": [], "readable": False,
+                "error": repr(e)[:160], "source": str(src)}
+    selectors = sorted({r["value"].lstrip(".") for r in rows
+                        if r.get("kind") == "selector"
+                        and str(r.get("id", "")).endswith(".lundy")
+                        and isinstance(r.get("value"), str)
+                        and r["value"].startswith(".")})
+    refrain = sorted({r["value"] for r in rows
+                      if r.get("kind") == "visible-string"
+                      and str(r.get("id", "")).startswith("shared.lundy.")})
+    return {"selectors": selectors, "refrainTokens": refrain,
+            "readable": bool(selectors or refrain), "source": _rel(src)}
+
+
+# The contract requires the refrain to reach a working stage as its FOUR
+# DIMENSIONS, which is how reshell_classic_v2_contract.py detects it too. One
+# dimension in a sentence about space is not the banner; all four in one block
+# is nothing else.
+def is_contract_chrome(el, spec: dict) -> bool:
+    classes = set((el.get("class") or "").split())
+    if any(c in classes for c in spec.get("selectors", ())):
+        return True
+    toks = spec.get("refrainTokens") or ()
+    if not toks:
+        return False
+    # THE DISCRIMINATOR IS PRESENTATION, NOT CASE, AND TWO CONTROLS SETTLED IT.
+    #
+    # The contract's four dimensions reach a deck as FOUR PARALLEL STATEMENTS,
+    # each opening with its own dimension. Three renderings are live on main and
+    # all three are the same contract requirement:
+    #
+    #   SPACE stays available. VOICE is received. AUDIENCE names back exactly. ...
+    #   Space means you get room to join in. Voice means you get to say it. ...
+    #   SPACEVOICEAUDIENCEINFLUENCE            (the grid label, no sentences)
+    #
+    # Case cannot separate them from teaching: the second is title case, and a
+    # case-insensitive test swallowed the prose sentence "Space in this room is
+    # limited, so give your partner voice when the audience is listening and
+    # your influence will be felt", which is teaching. Position can: in every
+    # banner each dimension OPENS a statement; in prose only the first does.
+    text = " ".join((el.text_content() or "").split())
+    if not text:
+        return False
+    if all(t in text for t in toks) and words(text) <= len(toks):
+        return True                      # the concatenated grid label
+    opens = 0
+    for t in toks:
+        for m in re.finditer(re.escape(t), text, re.IGNORECASE):
+            before = text[:m.start()].rstrip()
+            if not before or before[-1] in ".!?:;\u00b7":
+                opens += 1
+                break
+    return opens == len(toks)
+
+
+def is_title_stage(stage) -> bool:
+    """The identity card, marked by the chassis, not guessed from its title."""
+    return (stage.get("data-type") or "").strip().lower() == "title"
+
+
+# TWO GENERALISATIONS WERE TRIED HERE AND BOTH WERE WITHDRAWN BY THEIR OWN
+# MEASUREMENTS. See WRONG_BEFORE_RIGHT.md. Chrome is what the CONTRACT NAMES and
+# nothing else: its .lundy selector, its four visible strings in one block, and
+# the title/identity slide the chassis marks. Every attempt to generalise beyond
+# the contract removed real teaching, which is the one error a floor gate must
+# never make.
+def _leaf_blocks(node):
+    """Blocks carrying their own text and no block children -- the unit a
+    repeat is judged on. A container would make every repeat nest inside a
+    bigger repeat and the accounting would double."""
+    for el in node.iter():
+        if not isinstance(el.tag, str) or el.tag.lower() not in BLOCK_TAGS:
+            continue
+        if any(isinstance(k.tag, str) and k.tag.lower() in BLOCK_TAGS
+               for k in el.iterdescendants()):
+            continue
+        yield el
+
+
+def _digest(text: str) -> str:
+    return hashlib.sha256(" ".join(text.split()).lower().encode()).hexdigest()[:16]
+
+
+# CLAUSE (b) IS OFF, AND THIS IS A DEFAULTED DECISION UNDER A3N N1b.
+#
+# R3 also says "any other block repeated within a deck with an identical digest
+# counts ONCE". Implemented and measured, it REVERSES R3's own control: the
+# three W16 decks go 1.53->1.64, 1.38->1.53 and 1.28->1.29 instead of clearing.
+#
+# The cause is measured, not guessed. The W9-W14 baseline decks are an older,
+# richer chassis (OUTSTANDING V3_1/V4) carrying a colour key, a tier key, a
+# response-mode key and a timing badge on every stage; the W15/W16 candidates
+# are a leaner later chassis that carries almost none of it. So the rule strips
+# 38% from the denominator and 31% from the numerator, and every candidate's
+# ratio RISES. That is a chassis-generation gap between a deck and its own
+# baseline, not the counting artefact R3 identified.
+#
+# And the clause has nothing left to do. Its target -- teaching content printed
+# more than once -- was removed from the estate in #280-#283; dedupe_sweep now
+# reports 0 removable words. What it catches TODAY is furniture.
+#
+# So it ships OFF, with the switch left in place and a control that prints what
+# it would do, because a decision recorded as a flag someone can flip is
+# inspectable and a decision recorded as deleted code is not. Matt's ruling in
+# EASTER_HUMAN.md turns it on.
+REPEAT_COUNTS_ONCE = False
+
+
+def _stage_digests(st, screen, spec):
+    """(digests present, [(element-text, words, is_contract_chrome)])"""
+    node = stage_pupil_node(st, screen)
+    for el in node.iter():
+        if isinstance(el.tag, str) and el.tag.lower() in BLOCK_TAGS:
+            el.tail = " " + (el.tail or "")
+            if el.text:
+                el.text = " " + el.text
+    raw = words(" ".join(node.text_content().split()))
+    blocks = []
+    for el in _leaf_blocks(node):
+        t = " ".join((el.text_content() or "").split())
+        if not t:
+            continue
+        blocks.append((_digest(t), words(t), is_contract_chrome(el, spec)))
+    return raw, blocks
+
+
+def measure_content(tree, screen, spec) -> dict:
+    """Two passes, because "the contract requires it on EVERY stage" cannot be
+    decided from one stage. Pass 1 asks which digests appear on every teaching
+    stage; pass 2 charges each block to chrome, repeat or content."""
+    st = stages(tree, screen)
+    teaching = [s for s in st if not is_title_stage(s)]
+    scanned = [(s, *_stage_digests(s, screen, spec)) for s in st]
+
+    # THE EVERY-STAGE RULE IS WITHDRAWN, AND ITS OWN CONTROL WITHDREW IT.
+    # "Present on every teaching stage" was tried as the operational test for
+    # "an element the contract requires on every stage". A control deck whose
+    # teaching paragraph legitimately repeats on all six stages measured ZERO
+    # content words: the rule cannot tell a contract requirement from an author
+    # repeating themselves, and zeroing real teaching is the one error a floor
+    # gate must never make. Chrome is now only what the contract NAMES -- its
+    # .lundy selector, its four visible strings in one block, or those four
+    # rendered as a sibling group -- plus the title slide.
+    everywhere: set = set()
+
+    rows, seen = [], set()
+    for index, (s, raw, blocks) in enumerate(scanned, 1):
+        if is_title_stage(s):
+            rows.append({"stage": index, "raw": raw, "chrome": raw, "repeat": 0,
+                         "content": 0, "chromeReason": "title/identity slide (data-type=title)",
+                         "el": s})
+            continue
+        chrome = repeat = 0
+        why = []
+        for d, w, contract in blocks:
+            if contract:
+                chrome += w; why.append("contract refrain")
+            elif d in everywhere:
+                chrome += w; why.append("present on every teaching stage")
+            elif d in seen:
+                if REPEAT_COUNTS_ONCE:
+                    repeat += w
+                seen.add(d)
+            else:
+                seen.add(d)
+        rows.append({"stage": index, "raw": raw, "chrome": chrome, "repeat": repeat,
+                     "content": max(0, raw - chrome - repeat),
+                     "chromeReason": "; ".join(sorted(set(why))) or None, "el": s})
+    return {"rows": rows, "everyStageDigests": len(everywhere),
+            "teachingStages": len(teaching), "repeatRuleActive": REPEAT_COUNTS_ONCE}
+
+
 def words(text: str) -> int:
     return len(WORD.findall(unicodedata.normalize("NFKC", text)))
 
@@ -472,16 +676,22 @@ def measure(path: Path) -> dict:
     """The one measurement. Every gate that counts pupil content calls this."""
     tree = parse(path)
     screen = ScreenView(tree)
+    spec = contract_chrome_spec()
+    mc = measure_content(tree, screen, spec)
     st = stages(tree, screen)
     rows = []
-    for index, s in enumerate(st, 1):
-        text = stage_text(s, screen)
+    for c in mc["rows"]:
+        s = c["el"]
         rows.append({
-            "stage": index,
+            "stage": c["stage"],
             "title": s.get("data-title") or "",
             "type": s.get("data-type") or "",
             "minutes": s.get("data-min"),
-            "wordCount": words(text),
+            "wordCount": c["raw"],
+            "chromeWords": c["chrome"],
+            "repeatWords": c["repeat"],
+            "contentWords": c["content"],
+            "chromeReason": c["chromeReason"],
             "deliberatePause": (s.get("data-deliberate-pause") or "").strip() or None,
         })
     return {
@@ -491,6 +701,16 @@ def measure(path: Path) -> dict:
         "stages": rows,
         "stageCount": len(rows),
         "totalWords": sum(r["wordCount"] for r in rows),
+        "chromeWords": sum(r["chromeWords"] for r in rows),
+        "repeatWords": sum(r["repeatWords"] for r in rows),
+        "contentWords": sum(r["contentWords"] for r in rows),
+        "chromeSpec": spec,
+        "everyStageDigests": mc["everyStageDigests"],
+        "repeatRuleActive": mc["repeatRuleActive"],
+        "chromeRule": ("A3N R3: the contract-mandated refrain and the title/identity slide "
+                       "count zero; any other block repeated in the deck with an identical "
+                       "digest counts once. Applied identically to the numerator and to "
+                       "every deck of the family median, so the threshold is unmoved."),
         "declaredMinutes": [r["minutes"] for r in rows],
         "declaredTotalMinutes": sum(int(float(r["minutes"])) for r in rows if r["minutes"]),
         "skippedMediaBlocks": screen.skippedMediaBlocks,
@@ -544,6 +764,11 @@ def _stagecount_of_html(source: str) -> int:
 
 
 CONTROL_IDS = [
+    "the-title-slide-counts-zero",
+    "the-contract-refrain-counts-zero-wherever-it-appears",
+    "chrome-is-read-from-the-contract-not-typed-here",
+    "an-unnamed-block-repeated-on-every-stage-still-counts",
+    "teaching-words-are-never-reclassified-as-chrome",
     "every-stage-counted-not-just-active",
     "classic-shell-is-seen",
     "n6-shell-is-seen",
@@ -670,6 +895,75 @@ def controls() -> list[dict]:
            "a selector the parser cannot read, that would have hidden something, is reported not dropped",
            "p:nth-child(2n of .ghost){display:none}", True,
            len(view.unreadableHidingSelectors) > 0)
+
+
+    # ---- A3N R3 chrome ----
+    _TEACH = "<p>" + " ".join(f"t{i}" for i in range(30)) + ".</p>"
+    _BAN = ('<p>SPACE stays available. VOICE is received. AUDIENCE names back '
+            'exactly. INFLUENCE changes one real next action.</p>')
+
+    def _deck(body):
+        return ('<!doctype html><html><head><style>.slide{display:none}'
+                '.slide.active{display:flex}</style></head><body><main class="deck">'
+                + body + "</main></body></html>")
+
+    def _st(t, mins, body, active=False, typ=""):
+        ty = f' data-type="{typ}"' if typ else ""
+        return (f'<section class="slide{" active" if active else ""}" data-title="{t}"'
+                f' data-min="{mins}"{ty}>{body}</section>')
+
+    def _m(src):
+        tr = lh.fromstring(src)
+        sc = ScreenView(tr)
+        return measure_content(tr, sc, contract_chrome_spec())
+
+    plain = _m(_deck(_st("A", 5, _TEACH, True) + _st("B", 5, _TEACH)))
+    plain_words = sum(r["content"] for r in plain["rows"])
+
+    titled = _m(_deck(_st("T", 0, _TEACH, True, "title") + _st("A", 5, _TEACH)
+                      + _st("B", 5, _TEACH)))
+    record("the-title-slide-counts-zero",  "a stage the chassis marks data-type=title contributes no content words, "
+           "however much it carries -- it is the identity card, not a taught stage",
+           "a deck with an extra data-type=title stage",
+           plain_words, sum(r["content"] for r in titled["rows"]))
+
+    banner = _m(_deck(_st("A", 5, _TEACH + _BAN, True) + _st("B", 5, _TEACH + _BAN)))
+    record("the-contract-refrain-counts-zero-wherever-it-appears",
+           "the contract banner added to both stages",
+           "the banner on two stages adds no content words on either",
+           plain_words, sum(r["content"] for r in banner["rows"]))
+
+    spec_default = contract_chrome_spec()
+    with tempfile.TemporaryDirectory() as _t:
+        empty = Path(_t) / "c.json"
+        empty.write_text('{"rows": []}', encoding="utf-8")
+        spec_empty = contract_chrome_spec(empty)
+    record("chrome-is-read-from-the-contract-not-typed-here",
+           "a contract file with no rows",
+           "a contract naming nothing makes nothing chrome -- the rule follows the "
+           "contract rather than a list somebody typed into this file",
+           (True, True, False),
+           (bool(spec_default["selectors"]), bool(spec_default["refrainTokens"]),
+            bool(spec_empty["selectors"] or spec_empty["refrainTokens"])))
+
+    rep = _m(_deck(_st("A", 5, _TEACH, True) + _st("B", 5, _TEACH) + _st("C", 5, _TEACH)))
+    record("an-unnamed-block-repeated-on-every-stage-still-counts",
+           "a third identical teaching stage",
+           "presence on every stage is NOT proof the contract requires it. A control "
+           "deck whose teaching repeats on every stage measured zero content words "
+           "when that rule was tried, so the rule was withdrawn -- see "
+           "WRONG_BEFORE_RIGHT. Three identical teaching stages count three times.",
+           plain_words + (plain_words // 2), sum(r["content"] for r in rep["rows"]))
+
+    near = ('<p>Space in this room is limited, so give your partner voice when the '
+            'audience is listening and your influence will be felt.</p>')
+    nearm = _m(_deck(_st("A", 5, near, True) + _st("B", 5, _TEACH)))
+    record("teaching-words-are-never-reclassified-as-chrome",
+           "prose using all four Lundy words",
+           "a teaching sentence using all four words in prose is NOT the banner; only "
+           "the contract's own element is. A group rule that matched prose like this "
+           "was measured and withdrawn -- see WRONG_BEFORE_RIGHT.",
+           0, sum(r["chrome"] for r in nearm["rows"]))
 
     return out
 

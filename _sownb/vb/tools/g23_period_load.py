@@ -57,7 +57,7 @@ import importlib.util
 import json
 from pathlib import Path
 
-VERSION = "g23-v3.0.0-teaching-content-counted-once"
+VERSION = "g23-v4.0.0-chrome-excluded"
 ROOT = Path(__file__).resolve().parents[3]
 
 WPM_ASSUMED = 90

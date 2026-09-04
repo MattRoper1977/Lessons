@@ -394,3 +394,53 @@ instruction are out of 22 decks; the ×4 defect is gone from the estate; and the
 mechanism went from 11 tools / 98 controls to **14 tools / 123 controls**, all
 derived, with the two Easter tools now exercised by CI that previously ran
 neither.
+
+---
+
+## A3N R3 — chrome stops being counted. PR #286
+
+**Ceiling: 0 lesson units.** No deck is edited by this PR.
+
+**The rule.** The contract-mandated refrain and the title/identity slide count
+ZERO, in the g23 numerator and in every deck of the family-median derivation.
+Threshold 1.25 and ceiling 1.5 are untouched. Detected by contract identity —
+the pinned contract's own `.lundy` selector row and its four `shared.lundy.*`
+visible-string rows, read from the file, not typed into the tool — plus the
+chassis's `data-type="title"`.
+
+**R3's control fires.** The three W16 decks clear with no content edit:
+
+| deck | before | after | verdict |
+|---|---|---|---|
+| BUILD_HUM_W16 | ×1.53 RED | **×1.37** | RED → PASS |
+| GROW_HUM_W16 | ×1.38 | **×1.22** | now under the 1.25 target |
+| LAUNCH_HUM_W16 | ×1.28 | **×1.14** | now under the 1.25 target |
+
+**The estate-wide flip list says it is not a loosening — it is marginally
+stricter.** `tools/easter/chrome_flip_list.py`, 6 controls, re-measures every
+deck in all nine families both ways in one pass with the median recomputed under
+each rule:
+
+    20 decks move · 5 CLEARED (RED→PASS) · 7 REGRESSED (PASS→RED) · 8 target-only
+    net verdict change: +2 RED
+
+Every regressed deck carries LESS chrome than its family (0.9%–16.2% against
+family shares of 20–38%), so each moves for the stated reason. **None flips for
+a reason other than chrome exclusion, so nothing is parked.** The 7 new reds
+join the normal trim queue.
+
+**An anomaly the flip list surfaced, worth more than the flip.**
+`LAUNCH_HUM_W8_Maps_Symbols_And_Grid_References` measures **0.9% chrome** where
+its five LAUNCH Humanities siblings measure ~24%. A deck that barely carries the
+refrain its family carries is a candidate `lundy-in-three-places` violation, not
+a g23 problem. Logged as **A3-H7**; no edit here.
+
+**Three generalisations were tried and all three were withdrawn by their own
+controls** — the repeat-counts-once clause, an every-stage rule, and a
+sibling-group rule. Each removed real teaching. Full working, with the measured
+numbers, in `WRONG_BEFORE_RIGHT.md`. R3's repeat clause ships **OFF** as a
+**DEFAULTED** decision under N1b, as a flag (`REPEAT_COUNTS_ONCE`) rather than
+deleted code, so Matt's ruling is one line.
+
+Mechanism: **15 tools, 134 controls**, derived, `--prove-red` PASS. g27 PASS.
+Evidence `_sownb/vb/evidence/a3n/`.

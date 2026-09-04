@@ -48,7 +48,7 @@ import json
 import statistics
 from pathlib import Path
 
-VERSION = "g18-v4.0.0-shell-aware-counter-same-floor-rule"
+VERSION = "g18-v5.0.0-chrome-excluded-same-floor-rule"
 ROOT = Path(__file__).resolve().parents[3]
 
 _spec = importlib.util.spec_from_file_location(
@@ -112,7 +112,7 @@ _ls_spec.loader.exec_module(stages_mod)
 
 
 def words_of(path: Path) -> int:
-    return stages_mod.measure(Path(path))["totalWords"]
+    return stages_mod.measure(Path(path))["contentWords"]
 
 
 def legacy_words_of(path: Path) -> int:
@@ -127,7 +127,7 @@ def legacy_words_of(path: Path) -> int:
 def is_lesson_deck(path: Path) -> bool:
     """True when the file is a taught lesson, not pack support furniture."""
     m = stages_mod.measure(Path(path))
-    return m["stageCount"] >= MIN_LESSON_SLIDES and m["totalWords"] > 0
+    return m["stageCount"] >= MIN_LESSON_SLIDES and m["contentWords"] > 0
 
 
 def family_baseline(family: str, exclude: Path | None = None) -> dict:
@@ -152,9 +152,9 @@ def family_baseline(family: str, exclude: Path | None = None) -> dict:
                 m = stages_mod.measure(path)
             except Exception:
                 continue
-            if m["totalWords"]:
+            if m["contentWords"]:
                 sample.append({"path": str(path.relative_to(ROOT)),
-                               "words": m["totalWords"],
+                               "words": m["contentWords"],
                                "legacyWords": legacy_words_of(path),
                                "shell": m["shell"]})
     totals = [r["words"] for r in sample]
@@ -187,7 +187,7 @@ def family_baseline(family: str, exclude: Path | None = None) -> dict:
 def score(candidate: str, family: str) -> dict:
     path = (ROOT / candidate).resolve()
     measured = stages_mod.measure(path)
-    total = measured["totalWords"]
+    total = measured["contentWords"]
     legacy_total = legacy_words_of(path)
 
     fam = family_baseline(family, exclude=path)
