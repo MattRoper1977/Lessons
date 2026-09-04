@@ -1979,3 +1979,16 @@ Exact head `fd7054cf3ec3cd446a1e9c02df4d6a68de9f3172` merged as `e1e4b8f6d2d1c91
 The authorised 14 + 14 + 14 lessons and their ordered catalogue pairs are merged. Published product `0a2892362beb8ac8c649d28a2ddf00119ae0682d` passed Pages run 33925705680; the final payload check is 57/57 exact, with the six initial network timeouts and their successful retries retained. Live BUILD/GROW filtering and the Silver pack link work; the earlier live GROW/LAUNCH placement walk is retained. Catalogue row counts are 689 → 704 → 719 → 734; 45 rows cost zero units. Gold remains shelf-only, zero new decks/cells. Required R2 eleven-mention classification, historical 82-file measured census, all 42 part-to-deck rows, bands, slots, caps and gate controls are printed in docs/AAE_R1B_READBACK.md.
 
 This is NOT a whole-Easter DONE claim. The original 59 lessons remain alongside the 42 award units. The next action is the wider Science/Humanities/ASDAN/Art programme: retain the canonical 262-plan source and its bindings, compare week-9 onward candidates with current teaching, use the recovered source timetable and ruled week-26 boundary, and author only genuine gaps in governed batches. Readback PR314 itself still requires its final head checks and merge/blob proof.
+
+## Verified merge #314
+
+Exact head `897dcbcd26ea54d87424a7c28699ef12138d36fd` merged as `e81ffd6e55126b92442c55382f6fb02f75f560f8`. Against actual fork `0a2892362beb8ac8c649d28a2ddf00119ae0682d`, all 15/15 changed blobs match. Evidence: `_sownb/vb/evidence/aae/merge314.json`. Required head runs: 33926289385. This record does not itself claim served-byte equality.
+
+
+## Easter continuation preflight — 2026-09-04 (zero units)
+
+After the verified AAE close in #314, the original Easter programme resumes at absolute week 9. Source workbooks, ruled calendar and timetable have been recovered. The original 262 plans and 101 shipped lesson bindings remain unchanged.
+
+The raw coverage reader missed HTML-escaped apostrophes in existing BUILD ASDAN source references. Decode once and retain scoped-cell filtering; nine controls include the shipped snack lesson and exclusions. The mechanism battery derives 29 tools / 356 controls and catches its planted defect. Recognition rises 203 → 221 within the 573-cell Easter scope; this is corrected recording, zero new teaching. The lexical proxy does not resolve every semantic coverage question.
+
+User steering also requires the BUILD Art Bank It and Plan the Teach chassis across the new lessons, with related GROW/LAUNCH variants, integrated Lundy participation, meaningful media and varied on-screen We Do. Subject navigation must expose term and pathway. The saved 42 award lessons and 59 earlier units are retained while presentation and genuine remaining content gaps are corrected. No whole-Easter completion claimed.
