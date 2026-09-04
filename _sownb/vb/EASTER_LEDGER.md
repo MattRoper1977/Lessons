@@ -1743,3 +1743,12 @@ is claimed yet.
 PR304 now targets main at 4f366471. The byte-identical lesson outputs retain
 the completed browser proof; the current head must also pass every estate job.
 The source-figure control rebuilt114figures, with zero differences.
+
+
+## Bronze front-door identity correction
+
+Current-head browser run 33916590384 passed. Estate run 33916590307 found
+a genuine metadata mistake: START_HERE used lesson-config, so the donor
+control treated this pack index as a lesson missing its planId. The index
+now uses pack-config. No lesson or gate is changed, and the checksum is
+refreshed. The original control is retained. Full CI must pass on the new head.
