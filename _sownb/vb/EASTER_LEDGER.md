@@ -567,3 +567,60 @@ Humanities decks declare their stage minutes as `data-minutes`; only 26 use
 A2R's known R2 regression seen from the other side, and it decides donor
 selection: a deck authored from a `data-minutes` donor would be born with no
 timings any gate can see.
+
+## BATCH 1 — closed. PR #288
+
+**BATCH 1: +2 units, cells 134→139, open 439→434, parked 19, PR #288, main d4d7c914.**
+
+Two decks authored, gated and landed; both cover-taught weeks a cover teacher
+reaches before Matt returns.
+
+| deck | cells | words | g23 | g18 | g25 | g28 |
+|---|---|---|---|---|---|---|
+| `BUILD_ASDAN_W1_My_Routine_My_Challenges_My_Area` | C130 · C144 · C174 | 989 | ×1.02 PASS | BINDING PASS | PASS | PASS |
+| `GROW_ASDAN_W1_What_I_Am_Good_At_And_What_Our_Area_Needs` | C130 · C174 | 948 | ×1.02 PASS | BINDING PASS | PASS | PASS |
+
+Both sit at **×1.02**, inside the 1.25 operative target, not merely under the
+1.5 ceiling. g24 is RED on both for the estate-wide print-dead condition (A2R
+R3): the chassis hides the slide container under `@media print`, so every
+screen diagram in this estate is absent from the printed sheet. Both decks carry
+**2 explanatory visuals where their donors carry 0**, and both figures are also
+placed in the print pack so the printed sheet has them.
+
+**The pipeline, and the five defects it caught before anything shipped.**
+`author_deck.py` (8 controls) empties every teaching block from a donor's stages
+and print pack and inserts authored content, then refuses to write a deck that
+carries any donor text. It refused four times, and each refusal was a real
+defect:
+
+1. **The donor's whole print pack survived** the first build — 282 words carrying
+   the wrong week, the wrong title and **the donor's workbook cells**, which is a
+   coverage lie printed on the sheet a pupil is handed. The leak gate had only
+   read `main.deck` stages; the print pack sits outside it.
+2. **Nine Lundy elements per deck were stripped**, because only `lundy-strip` was
+   in the keep list and this chassis also ships `lundy`, `lundy-grid` and
+   `lundy-status`. That would have broken `lundy-in-three-places`.
+3. **The leak gate flagged seven blocks that were all chassis** — the banner, its
+   four dimension definitions, the guide-toggle text, the nav bar. Chassis text
+   is now DERIVED rather than judged: a block that also appears in a third,
+   unrelated deck of the family is furniture; a block only donor and output share
+   is a leak.
+4. **A print heading the author had not named kept its donor text** — "Every
+   profile statement bound to genuine evidence or MISSING:" on a lesson about
+   strengths. Surplus headings now fall back to the deck title.
+5. **A success-criteria list in the print pack** kept two donor criteria.
+   Unauthored items are now removed rather than left.
+
+**A fourth record of the stage timings, and R2 shipped without it.** Pack
+manifests carry a pack-level `timings` array. After R2, `GROW_ASDAN/Spring1` held
+two decks with `[0,3,3,8,3,7,4,9,3]` and `[0,3,3,7,3,7,4,10,3]` under a manifest
+still claiming `[0,3,3,4,3,3,4,16,4]` — a value true of neither. Repaired here:
+per-lesson timings written into every `lessons[]` entry, and the pack-level field
+kept only where every deck agrees. Where they differ it is **removed**, because a
+false record is worse than a missing one. DEFAULTED under N1b.
+
+**19 Art plans PARKED, not attempted.** No Art family has a gate-readable
+9-stage donor, and N3d requires one donor per family per batch.
+
+Mechanism **17 tools, 158 controls**, derived, `--prove-red` PASS. g27 PASS.
+Both packs verify with `sha256sum -c`.

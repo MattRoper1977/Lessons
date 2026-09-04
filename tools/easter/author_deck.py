@@ -156,12 +156,16 @@ def author_print_pack(tree, plan: dict, content: dict) -> None:
                     para.remove(k)
             para.text = None
             b.tail = " " + value
-        h2s = pack.xpath(".//h2")
-        for i, h2 in enumerate(h2s):
-            if i < len(pk.get("sections", [])):
-                h2.text = pk["sections"][i]
-                for k in list(h2):
-                    h2.remove(k)
+        # EVERY heading, not just the ones the author remembered. Supplying two
+        # section names for a pack with four headings left two donor headings in
+        # place -- "Every profile statement bound to genuine evidence or MISSING:"
+        # on a lesson about strengths. A surplus heading falls back to the deck
+        # title, which is always true of the deck and never true of the donor.
+        sections = pk.get("sections", [])
+        for i, h2 in enumerate(pack.xpath(".//h2")):
+            h2.text = sections[i] if i < len(sections) else content["title"]
+            for k in list(h2):
+                h2.remove(k)
         # THE SCREEN DIAGRAM IS PRINT-DEAD BY DEFAULT, AND THAT IS A CHASSIS FACT.
         # A2R R3 measured it: the shell hides the slide container under @media
         # print, so every explanatory visual a deck draws on the board is absent
@@ -174,6 +178,22 @@ def author_print_pack(tree, plan: dict, content: dict) -> None:
             target = page[0] if page else pack
             for svg in figs:
                 target.append(lh.fromstring(svg))
+
+        # The success-criteria list. Two donor items survived here on the first
+        # GROW build -- "Every profile statement bound to genuine evidence or
+        # MISSING:" printed on a lesson about strengths. Surplus items are
+        # removed rather than left, because an unauthored criterion is the
+        # donor's criterion.
+        checks = pk.get("checks", [])
+        for lst in pack.xpath(".//ol|.//ul"):
+            items = [li for li in lst if isinstance(li.tag, str) and li.tag.lower() == "li"]
+            for i, li in enumerate(items):
+                if i < len(checks):
+                    li.text = checks[i]
+                    for k in list(li):
+                        li.remove(k)
+                else:
+                    lst.remove(li)
 
         rows = pk.get("focusRows", [])
         cells = pack.xpath(".//table//tr/td[1]")
@@ -370,6 +390,7 @@ def verify(donor, out, plan, content, old_id, new_id, reference=None) -> dict:
 CONTROL_IDS = [
     "not-one-donor-sentence-survives",
     "the-donors-print-pack-does-not-survive-either",
+    "a-print-heading-the-author-did-not-name-still-loses-its-donor-text",
     "the-donor-id-namespace-is-gone",
     "a-planted-leak-is-caught",
     "stage-count-and-chassis-furniture-survive",
@@ -446,6 +467,11 @@ def controls() -> list[dict]:
         (0, True),
         (sum(1 for b in ad_all(o) if b in set(ad_all(d))),
          "'Y'!C9" in Path(o).read_text(encoding="utf-8")))
+
+    rec("a-print-heading-the-author-did-not-name-still-loses-its-donor-text",
+        "supplying two section names for a pack with more headings left donor "
+        "headings standing; a surplus heading falls back to the deck title",
+        True, all("Donor" not in b for b in ad_all(o)))
 
     rec("the-donor-id-namespace-is-gone",
         "ids and their onclick handlers move together or the reveal widget breaks",
