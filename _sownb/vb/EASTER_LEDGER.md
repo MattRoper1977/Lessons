@@ -1926,6 +1926,18 @@ Exact head `b93a2b04cca83faaae67a547801e46233c02f0c8` merged as `3fc694f0a47d20f
 
 Two secondary rows link the canonical Bronze BUILD pack from the GROW Art hub and the canonical Silver GROW pack from the LAUNCH Art hub. Both links and all fourteen lessons behind each were checked. No deck was copied, moved or relabelled; no cell claim or qualification change. Explore remains BUILD only and its catalogue row follows later. Merge follows the Silver content merge.
 
+## Verified merge #308
+
+Exact head `0ef914e35cae00dd06bd075de10fcc94a23a3097` merged as `a740b1b20fb65d9e25ffdf6fc2140ccf61659259`. Against actual fork `3fc694f0a47d20f566d1dd6ad1dae5bda9973fb6`, all 58/58 changed blobs match. Evidence: `_sownb/vb/evidence/aae/merge308.json`. Required head runs: 33922350360,33922350365. This record does not itself claim served-byte equality.
+
 ## Gold shelf preparation — zero units, zero new Gold cells
 
 The BSG_CHECK records the R1B OPEN focus areas 1A new practice with an experienced practitioner, 1B actual career opportunity with leading practitioners’ comments, 1C reviews of attended experiences, and 2D a PUBLIC showing. All nine Gold parts remain open against SPEC, not exemplar decks. Gold file cap and Attempted rule stay unknown. Historical census rows are labelled as historical. AAE-H6 remains the authoring hold; no Gold content was authored.
+
+## Verified merge #309
+
+Exact head `c361c977f2ccfd0ce09e06065b1d6797afd68158` merged as `72413ab65cccd10483936e8dc4b3c431e6404400`. Against actual fork `a740b1b20fb65d9e25ffdf6fc2140ccf61659259`, all 6/6 changed blobs match. Evidence: `_sownb/vb/evidence/aae/merge309.json`. Required head runs: 33922850267. This record does not itself claim served-byte equality.
+
+## AAE catalogue continuation — prepared before publication
+
+All 42 content units and the two secondary placement rows are merged and recorded. Bronze catalogue #311, Explore #312 and Silver #313 are preserved as separate draft transactions, each paired with the required one-line Apps pin (#21/#22/#23). Gold shelf #310 must merge first. Before each catalogue transaction, reconcile main and preserve this ledger/state checkpoint here, leaving the catalogue diff within its established product/index/pin boundary. Each catalogue counts zero lesson units and zero cells. Planned row counts are 689 → 704 → 719 → 734; 42 lesson rows and three teacher pack starts. No pupil evidence count is inferred from these rows.
