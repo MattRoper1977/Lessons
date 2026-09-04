@@ -2018,3 +2018,13 @@ The five new attachments preserve all teaching allocation: Science BUILD/GROW/LA
 ## Presentation control correction
 
 Current-head browser checks passed the lighter framing. The strip-to-chassis control failed because it still equated every visible reminder with intact labels. Replacing that proxy with a direct comparison exposed a second real defect: the subtractive stripper recognised the whole Lundy grid but erased its individual span labels. Preserve only the four named dimensions inside an actual grid; keep the donor-teaching leak controls. The revised controls compare all nine label sets, preserve the donor's visible stage selection, and catch a planted empty grid. Fifteen strip controls and the full 29-tool, 358-control battery (derived count, --prove-red) pass locally. This does not reinstate repeated on-screen banners.
+
+
+## Navigation preparation — zero units
+
+The main classroom route preference is the earlier Science style, while preserving the 35 expanded V3 alternatives and all existing deep links. An explicit 123-route inventory classifies terms from current lesson/manifest declarations and resolved workbook cells, never filenames or prior-learning prose. The curated hub and downloadable pack links will ship after the bounded lesson repairs, with their own current-head checks. No catalogue resource is deleted and no term coverage is implied by a menu.
+
+
+## User requested fresh-chat transfer
+
+Stop new authoring in this thread. Bronze candidate is preserved on codex/vb-bronze-activities at41ce085d4b3ce29f4a980568dfa6f1c479030789; it is not ready for PR. Navigation draft and177hash-verified recovery files are preserved here, with exact remaining work in tools/recovery/README_CLASSROOM_20260905.md. Science candidates remain unapplied; original Science browser acceptance is a deliberately failing skeleton except for schema-only checks. Pack and activity browser gates are drafted but unrun. Preserve this distinction on resume. No new PR or merge requested for either checkpoint.
