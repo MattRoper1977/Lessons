@@ -11,7 +11,7 @@ is **inferred from the deck's own words**, not read from a declaration. An
 inference is a place to look, not a verdict. g30–g35 refuse to guess a level;
 this survey guesses on purpose so the list has something in it.
 
-- deck-shaped files naming the Arts Award: **76**
+- deck-shaped files naming the Arts Award: **82**
 - declaring an `artsAward` block: **0**
 - carrying at least one contradiction: **3**
 
