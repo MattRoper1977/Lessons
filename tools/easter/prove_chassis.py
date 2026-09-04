@@ -178,7 +178,14 @@ def prove(chassis: Path, plan_index: int, content_path: Path, reference: Path,
     if probe is None:
         probe = chassis.parent / "_probe" / f"{pathway}_probe.html"
 
-    rec = {"tool": VERSION, "inputs": inputs, "planIndex": plan_index,
+    # `file` names the subject this record reports on, in the form the estate's
+    # stale-evidence sweep reads structurally; without it the sweep falls back to
+    # text and reports every bare verdict row as INCONCLUSIVE. It names the
+    # CHASSIS and not the probe, because the probe is deleted at the end of the
+    # run and an evidence record pointing at a file that is gone is exactly what
+    # "stale" means.
+    rec = {"tool": VERSION, "file": ad._rel(chassis),
+           "inputs": inputs, "planIndex": plan_index,
            "family": family, "ruledWeek": plan["ruledWeek"], "cells": plan["cells"],
            "chassis": ad._rel(chassis), "probe": ad._rel(probe)}
     rec["author"] = ad.author(Path(chassis), plan, content, Path(probe))

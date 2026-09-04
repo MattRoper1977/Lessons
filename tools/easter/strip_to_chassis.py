@@ -357,6 +357,13 @@ def build(donor: Path, out: Path, chassis_id: str, shared: set | None = None) ->
     Path(out).write_text(html, encoding="utf-8")
     rep = verify(Path(donor), Path(out), chassis_id, shared)
     rep.update(meta)
+    # "file", and it has to be that key. The estate's stale-evidence sweep reads
+    # an evidence JSON structurally only when some record NAMES the file it
+    # reports on, under `file`; otherwise it falls back to reading the text, and
+    # a bare `"verdict": "PASS"` line with no path on it is reported
+    # INCONCLUSIVE and reds CI. That is the sweep working: a verdict with no
+    # visible subject is exactly what it exists to catch.
+    rep["file"] = ad._rel(out)
     rep["out"] = ad._rel(out)
     rep["outSha256"] = digest(out)
     rep["tool"] = VERSION

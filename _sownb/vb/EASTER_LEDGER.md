@@ -913,4 +913,16 @@ Three Art content specs are committed (`BUILD_ART_W1`, `GROW_ART_W2`,
 `LAUNCH_ART_W1`). They are inputs, not lessons; the decks they proved are not
 committed. Batch 3 authors them to their routes.
 
+**A fifth defect, found by CI within a minute of the push.** The new evidence
+files carried `"verdict": "PASS"` with the subject under `out`, and the estate's
+stale-evidence sweep reads a JSON evidence record structurally only when some
+record names its subject under `file`. It fell back to reading the text, found a
+bare verdict line with no path on it, and reported exactly what it exists to
+report — a verdict whose subject cannot be seen. Both tools now name the subject
+under `file`, and `prove_chassis` names the chassis rather than the probe,
+because the probe is deleted at the end of the run and an evidence record
+pointing at a file that is gone is the definition of stale. The sweep is now run
+locally before a push; it takes seconds.
+
 Mechanism **23 tools, 201 controls**, derived, `--prove-red` PASS.
+Stale-evidence sweep: 0 inconclusive rows.

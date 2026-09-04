@@ -1006,3 +1006,32 @@ else's instrument.
 The tell, for next time: I typed data into a tool call. Data that exists in a
 file should be read from the file by a script, even when it is only twelve rows
 and it is on the screen in front of me.
+
+---
+
+## A new evidence file that the estate's own sweep could not read
+
+WRONG: `strip_to_chassis.py` wrote its report as `{... "verdict": "PASS", "out":
+"tools/donors/..." }`. It looked fine, it carried the path, and CI reddened on
+it within a minute of the push:
+
+    [INCONCLUSIVE] 3 row(s) it could not parse.
+      _sownb/vb/evidence/a3n/chassis_build.json:17 "verdict": "PASS", —
+      this row states a verdict and matched none of the claim forms
+
+The stale-evidence sweep reads a JSON evidence file STRUCTURALLY only when some
+record in it names its subject under the key `file`. Mine named it under `out`,
+so the sweep fell back to reading the text, found a bare verdict line with no
+path on it, and reported exactly what it exists to report: **a verdict whose
+subject cannot be seen.**
+
+RIGHT: the record names its subject under `file`, which is the estate's own
+convention. `prove_chassis.py` does the same, and names the CHASSIS rather than
+the probe — the probe is deleted at the end of the run, and an evidence record
+pointing at a file that is gone is the definition of stale.
+
+The tell, for next time: I invented an output format for a new tool without
+reading the contract the estate already has for that kind of file. The gate was
+right and I was the one out of step with it. Two minutes with
+`node tools/stale_evidence_sweep.mjs` before the push would have found it —
+it runs locally, and now it is run locally.
