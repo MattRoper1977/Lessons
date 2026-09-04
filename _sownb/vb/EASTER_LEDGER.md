@@ -1798,3 +1798,17 @@ controls expose the old loss and check the full source-to-target-to-deck binding
 The reconciled mechanism battery passes with 28 tools and 323 derived controls,
 including 44 g29 controls and 43 award-claim controls. Its planted battery
 failure is caught. Current-head CI remains required before PR305 merge.
+
+
+## Mechanism evidence subject correction
+
+CI run 33918746857 passed all functional checks but could not parse two
+expected PASS labels in the historical negative-control report: the report
+had omitted the file it measured. It now names the pre-fix reader and commit.
+Merge blob rows also use the established file subject key, so JSON suffixes
+are not truncated by the fallback text-path scanner. No result is altered,
+no evidence is removed and no sweep rule is relaxed.
+
+## Assertion follow-up — attendance references, zero units
+
+Four truthful Silver denial or record-question references were false positives. Each exemption now matches the immediate grammar of that attendance occurrence only, including joined HTML paragraphs. All 43 prior controls remain unchanged; 24 new must-fire and benign controls bring g30–g35 to 67. The genuinely unconfirmed practitioner promise still reds and was corrected in the Silver source before rebuilding. No content batch or gate floor changes.
