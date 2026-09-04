@@ -73,6 +73,7 @@ SELFTEST_TOOLS = [
     "tools/easter/chrome_flip_list.py",
     "tools/easter/derive_stage_timings.py",
     "tools/easter/author_deck.py",
+    "tools/easter/pack_furniture.py",
 ]
 LIST_ONLY_TOOLS = [
     "g19_v2.py",

@@ -636,3 +636,66 @@ them by a 24-unit ceiling is wrong by more than an order of magnitude.
 **N3e's catalogue PR did not run** for this batch — hud-coverage rows were not
 added for the two new decks. CI is green without them, so it is a gap in the
 batch procedure rather than a broken gate. Batch 2 runs it.
+
+---
+
+## BATCH 2 — 14 authored lessons. PR #290
+
+**BATCH 2: +14 units, cells 139→170, open 434→403, parked 0, main `221df575`.**
+
+Fourteen lessons authored, gated and landed, all cover-taught weeks 1–3 — the
+weeks a cover teacher reaches first.
+
+    g23   14/14 PASS      g18   14/14 BINDING PASS
+    g25   14/14 PASS      g28   14/14 PASS
+    g24   14/14 RED       estate-wide print-dead (A2R R3), unchanged
+    donor leakage 0 across all 14 · 31 cells claimed, 31 unique, no collision
+    words 738–1373, every deck inside its family's floor and 1.25× ceiling
+
+**How they were written.** A workflow: one writer per plan against the workbook
+outcomes, then an adversarial reviewer per draft on safeguarding, outcome
+coverage, SEN fit and word budget, then a rewrite of everything rejected.
+**The reviewers rejected all fourteen first drafts**, and their findings were
+substantive rather than stylistic — an outcome carried by a single sentence in a
+staff note, success criteria offered only on the Stretch row so most of the class
+could not meet the outcome, a starter that named two photographs the pack does
+not contain, and a class decision the objective promised but no stage made.
+
+**Five defects the pipeline caught before anything shipped**, on top of batch 1's
+five:
+
+1. **`data-ta1` / `data-ta2` are read by NOTHING in this chassis** — zero
+   references in its CSS or its JS. Nine prep instructions and a safeguarding
+   deflection script would have been invisible to the cover teacher who needs
+   them. A reviewer caught it. Adult guidance now also renders as a
+   `data-mbm-guide="staff"` block, which the guide toggle actually shows.
+2. **Three donor blocks survived every role handler** on the LAUNCH ASDAN print
+   pack, including `SoW: 'LAUNCH Weekly - Autumn'!C171` — **the donor's own
+   workbook cell**, printed on the sheet a pupil is handed. Role-based rewriting
+   knows only the roles it was told about, and this estate has more print
+   variants than roles. A final sweep now neutralises any donor-specific block
+   left standing, whatever element it lives in.
+3. **The build driver keyed decks on `family+week`**, and two LAUNCH ASDAN plans
+   share week 1. The second deck would have carried the first one's cells, and
+   every gate would have passed it: g28 checks a cell EXISTS, not that this deck
+   teaches it. Now keyed on plan index, with an assertion.
+4. **Three decks measured under their family floor** (by 6, 26 and 107 words).
+   Extended with real teaching — a second worked example, what to do when stuck,
+   a named common mistake — not padding.
+5. **Two decks declared a we-do type their text did not evidence.** Rather than
+   relabel to whatever the classifier saw, the We Do stages were rewritten so the
+   task verb dominates the reveal mechanic: spotting the planted mistake, and
+   ordering five pictures. Both now corroborate.
+
+**A manifest this run refused to rewrite.** The Humanities packs carry a
+different schema — no `lessons` array at all, but `sequence`, `notAuthoredYet`
+and `weekSpine`, written by another hand. Rewriting one added an eleven-entry
+`lessons` list and pushed `lessonCount` from 8 to 11 while `plannedLessonCount`
+still said 8, leaving it internally inconsistent and `notAuthoredYet` still
+naming decks that now exist. **Reverted.** `pack_furniture.py` now writes the
+checksum rows and leaves an unrecognised manifest alone, reporting it. Their
+`sequence` / `notAuthoredYet` / `weekSpine` fields still need a deliberate
+update for the three new Humanities decks — logged as **A3-H9**.
+
+Mechanism **19 tools, 176 controls**, derived, `--prove-red` PASS. g27 PASS.
+Every pack verifies with `sha256sum -c`.

@@ -273,6 +273,59 @@ def author_print_pack(tree, plan: dict, content: dict) -> None:
                         para.remove(k)
 
 
+def sweep_donor_text(tree, donor: Path, plan: dict, content: dict) -> None:
+    """The belt. Role-based rewriting knows the roles it was told about, and this
+    estate has more print-pack variants than roles.
+
+    On the LAUNCH ASDAN chassis three donor blocks survived every role handler:
+    a plain <p> "Learning objective: ..." with no <b> to match on, a <p> "SoW:
+    'LAUNCH Weekly - Autumn'!C171" carrying THE DONOR'S OWN WORKBOOK CELL, and a
+    <div class="print-note">. Chasing each variant's markup is a losing game; the
+    reliable move is to sweep for donor text at the end and neutralise whatever
+    is left, whatever element it happens to live in.
+
+    Donor-specific means: present in the donor and NOT in the family reference,
+    so chassis furniture is never touched. A labelled line is rewritten to the
+    truth about THIS lesson; anything else is removed, because an unauthored
+    block is the donor's block.
+    """
+    ref = content.get("_reference")
+    if not ref:
+        return
+    donor_only = set(all_text_blocks(donor)) - set(all_text_blocks(Path(ref)))
+    if not donor_only:
+        return
+    rewrite = {
+        "learning objective": f'Learning objective: {content["objective"]}',
+        "objective": f'Objective: {content["objective"]}',
+        "sow": f'SoW: {" · ".join(plan["cells"])} — "{plan["outcomes"][0]}"',
+        "workbook trace": f'Workbook trace: {" · ".join(plan["cells"])}',
+        "verbatim outcome": f'Verbatim outcome: {" · ".join(plan["outcomes"])}',
+    }
+    for el in list(tree.iter()):
+        if not isinstance(el.tag, str) or el.tag.lower() not in BLOCK_TAGS_LOCAL:
+            continue
+        if any(isinstance(k.tag, str) and k.tag.lower() in BLOCK_TAGS_LOCAL
+               for k in el.iterdescendants()):
+            continue
+        text = " ".join((el.text_content() or "").split())
+        if text not in donor_only:
+            continue
+        low = text.lower()
+        new = next((v for k, v in rewrite.items() if low.startswith(k)), None)
+        if new is not None:
+            for k in list(el):
+                el.remove(k)
+            el.text = new
+        else:
+            parent = el.getparent()
+            if parent is not None:
+                parent.remove(el)
+
+
+BLOCK_TAGS_LOCAL = ls.BLOCK_TAGS
+
+
 def author(donor: Path, plan: dict, content: dict, out: Path) -> dict:
     raw = Path(donor).read_text(encoding="utf-8")
     old_id = donor_id(raw)
@@ -321,6 +374,7 @@ def author(donor: Path, plan: dict, content: dict, out: Path) -> dict:
                 st.append(el)
 
     author_print_pack(tree, plan, content)
+    sweep_donor_text(tree, donor, plan, content)
     html = lh.tostring(tree, encoding="unicode", doctype="<!doctype html>")
 
     # lesson-config replaced wholesale: no donor field may survive
@@ -444,6 +498,7 @@ CONTROL_IDS = [
     "not-one-donor-sentence-survives",
     "the-donors-print-pack-does-not-survive-either",
     "a-print-heading-the-author-did-not-name-still-loses-its-donor-text",
+    "an-unroled-donor-block-is-swept-not-shipped",
     "the-donor-id-namespace-is-gone",
     "a-planted-leak-is-caught",
     "stage-count-and-chassis-furniture-survive",
@@ -554,6 +609,38 @@ def controls() -> list[dict]:
         "a deck claiming the donor's cell is a coverage lie",
         (["'Y'!C9"], 1), (r["configCells"], r["configOutcomes"]))
 
+    # An unroled donor block, and a labelled line carrying the DONOR'S OWN CELL.
+    # Both survived every role handler on the real LAUNCH ASDAN chassis.
+    donor_sweep = _DONOR.replace(
+        "</main>",
+        '</main><section class="print-pack"><div class="print-page">'
+        '<p>Learning objective: I can review the donor community project outcome '
+        'using genuine evidence and bounded claims.</p>'
+        '<p>SoW: LAUNCH Weekly - Autumn!C171 - "Autumn community-project review."</p>'
+        '<div class="print-note">Teaching and potential evidence only, a donor '
+        'sentence in an element no role handler covers at all.</div>'
+        "</div></section>")
+    ds = _tmp(donor_sweep)
+    ref = _tmp(_DONOR)                     # reference lacks the pack, so it is donor-specific
+    c3 = json.loads(json.dumps(_CONTENT)); c3["id"] = "SWEPT_W3"
+    c3["_reference"] = ref
+    o3 = Path(tempfile.mkdtemp()) / "swept.html"
+    r3 = author(ds, _PLAN, c3, o3)
+    # read the RAW file: the rewritten SoW line is shorter than the 8-word floor
+    # all_text_blocks applies, so asserting on that view would miss it
+    body3 = o3.read_text(encoding="utf-8")
+    rec("an-unroled-donor-block-is-swept-not-shipped",
+        "role handlers know only the roles they were told about, and this estate "
+        "has more print variants than roles; an unroled donor block is removed and "
+        "a labelled line is rewritten to this lesson's truth -- the donor's own "
+        "workbook cell must not survive on the printed sheet",
+        (0, False, True),
+        (r3["donorSentencesLeaked"],
+         "C171" in body3,
+         "'Y'!C9" in body3))
+
+    for f in (ds, ref):
+        f.unlink(missing_ok=True)
     d.unlink(missing_ok=True)
     return out
 

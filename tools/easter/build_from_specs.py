@@ -30,9 +30,20 @@ def normalise(content: dict) -> tuple[dict, list]:
               "blocks": src.get("blocks", [])}
         if i == 0:
             st["type"] = "title"
+        # ADULT GUIDANCE MOVES INTO A RENDERED BLOCK, NOT AN INERT ATTRIBUTE.
+        # A reviewer caught this: data-ta1 and data-ta2 are read by NOTHING in
+        # this chassis -- zero references in its CSS or its JS -- so nine prep
+        # instructions and a safeguarding deflection script would have been
+        # invisible to the cover teacher who needs them. The attribute is kept
+        # because the estate's decks carry it, and the text is ALSO emitted as a
+        # data-mbm-guide="staff" block, which the guide toggle actually shows.
+        guide = [src[k] for k in ("ta1", "ta2") if src.get(k)]
         for k in ("ta1", "ta2"):
             if src.get(k):
                 st[f"data-{k}"] = src[k]
+        if guide:
+            st["blocks"] = ([{"kind": "staff", "text": " ".join(guide)}]
+                            + st["blocks"])
         out.append(st)
     content["stages"] = out
     for st in content["stages"]:
@@ -102,6 +113,8 @@ def build_one(spec, donors, plans, outdir_map):
         rec["shipped"] = False
         out.unlink(missing_ok=True)
     rec["out"] = str(out.relative_to(ROOT))
+    rec["family"] = fam
+    rec["week"] = week
     return rec
 
 
