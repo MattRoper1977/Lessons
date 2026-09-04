@@ -1941,3 +1941,7 @@ Exact head `c361c977f2ccfd0ce09e06065b1d6797afd68158` merged as `72413ab65cccd10
 ## AAE catalogue continuation — prepared before publication
 
 All 42 content units and the two secondary placement rows are merged and recorded. Bronze catalogue #311, Explore #312 and Silver #313 are preserved as separate draft transactions, each paired with the required one-line Apps pin (#21/#22/#23). Gold shelf #310 must merge first. Before each catalogue transaction, reconcile main and preserve this ledger/state checkpoint here, leaving the catalogue diff within its established product/index/pin boundary. Each catalogue counts zero lesson units and zero cells. Planned row counts are 689 → 704 → 719 → 734; 42 lesson rows and three teacher pack starts. No pupil evidence count is inferred from these rows.
+
+## Verified merge #310
+
+Exact head `df0c49f220b20b42877ff8a13c53094ea3ff768f` merged as `023741d3b2815b55b6802bfb1f1822c647e9e7df`. Against actual fork `72413ab65cccd10483936e8dc4b3c431e6404400`, all 4/4 changed blobs match. Evidence: `_sownb/vb/evidence/aae/merge310.json`. Required head runs: 33923406849. This record does not itself claim served-byte equality.
