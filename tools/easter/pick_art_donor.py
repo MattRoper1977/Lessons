@@ -433,6 +433,11 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--reference", default=str(DEFAULT_REFERENCE))
     ap.add_argument("--output")
+    ap.add_argument("--output-full", dest="output_full",
+                    help="write every row, including the whole excluded corpus. Not "
+                         "for committing: a full-corpus report names a live lesson "
+                         "whose filename trips the fixture-name check, and that "
+                         "allowlist is frozen.")
     ap.add_argument("--self-test", action="store_true")
     ap.add_argument("--list-controls", action="store_true")
     ap.add_argument("--show-excluded", type=int, default=0)
@@ -496,9 +501,46 @@ def main() -> int:
         for w in r["excludedBecause"]:
             print(f"        -> {w}")
     if a.output:
+        # WHAT IS COMMITTED, AND WHY IT IS NOT EVERY ROW.
+        #
+        # This estate runs a check that reds on any fixture-marker token followed
+        # by two titlecase words, because a person-shaped canary string once
+        # shipped in a public repository. One live LAUNCH ASDAN careers lesson has
+        # a filename that trips it innocently -- the marker is a real word in the
+        # lesson's title -- and ten files already carry a per-file allowlist entry
+        # saying exactly that.
+        #
+        # A full-corpus report names that path, so committing one would need an
+        # eleventh entry, and the allowlist is FROZEN at 28 (N4). Naming the
+        # string in this comment would trip the check too, which is why it is
+        # described rather than quoted.
+        #
+        # The printed report above is complete and re-runnable, which is what the
+        # selector ruling asks for. What gets COMMITTED is every row carrying a
+        # judgement somebody might want to argue with -- every candidate, every
+        # Art deck, and the tallied reasons with counts -- plus the totals.
+        # `--output-full` writes everything, for reading, not for committing.
+        import collections
+        tally = collections.Counter()
+        for r in res["rows"]:
+            for w in r.get("excludedBecause", []):
+                tally[w] += 1
+        keep = [r for r in res["rows"]
+                if r.get("candidate") or "/Art" in r["file"] or "_ART" in r["file"]
+                or "_Art" in r["file"]]
+        scoped = {k: v for k, v in res.items() if k != "rows"}
+        scoped["rowsScope"] = ("every candidate and every Art deck; the full corpus "
+                               "is printed by the tool and written by --output-full")
+        scoped["rows"] = keep
+        scoped["exclusionTally"] = dict(tally.most_common())
         Path(a.output).parent.mkdir(parents=True, exist_ok=True)
-        Path(a.output).write_text(json.dumps(res, indent=1), encoding="utf-8")
-        print(f"\nwrote {a.output}")
+        Path(a.output).write_text(json.dumps(scoped, indent=1), encoding="utf-8")
+        print(f"\nwrote {a.output}  ({len(keep)} rows of {len(res['rows'])}, "
+              f"{len(tally)} distinct exclusion reasons)")
+    if a.output_full:
+        Path(a.output_full).parent.mkdir(parents=True, exist_ok=True)
+        Path(a.output_full).write_text(json.dumps(res, indent=1), encoding="utf-8")
+        print(f"wrote {a.output_full}  (every row)")
     return 0
 
 
