@@ -1957,3 +1957,11 @@ Exact head `6914bff4e3159be122ed7c42e09b5de138f765aa` merged as `51b8afc7be8cc1f
 ## Wider Easter programme explicitly resumed — 2026-09-04
 
 Matt reaffirmed Science, Humanities, ASDAN and Art across BUILD/GROW/LAUNCH using the SoW, weekly timetable and school year. This preserves the AAE close in progress and resumes the wider programme after it. Four content batches (#288/#290/#294/#297) total 59 lessons; 42 award lessons are a separate strand. Fresh g29 reads 101 PASS, 0 RED, 3 nonlesson chassis SKIP. Direct read-only OOXML inspection agrees with all 897 spine identities; one verbatim-outcome difference is a trailing space on BUILD Autumn C104. The 575 rows at or before week26 retain the two existing GROW Careers scope exclusions, giving 573. The calendar boundary is Thursday25 March2027; no Spring2 sixth week or summer authoring. Raw lexical coverage is a diagnostic, not a licence to replace a working lesson or infer pupil evidence. Full A3N source text was not recovered from personal context; the visible AAE night rules, committed rulings and existing instruments remain in force.
+
+## Verified merge #312
+
+Exact head `3e72fff7f8e2eed9f17f7aaba22eae187946b0f9` merged as `b1ce5052d571ecca58a269fa913768a9b5d45375`. Against actual fork `fef71f7b2378cab30c6a55f22ad8e8e85341d658`, all 2/2 changed blobs match. Evidence: `_sownb/vb/evidence/aae/merge312.json`. Required head runs: 33924552826,33924552796,33924552798. This record does not itself claim served-byte equality.
+
+## Verified companion Apps pin #22
+
+Exact head `7ed907cda33e7fbcdde4f13511e882f5109fdf81` merged as `b17e67fb9b0073c93c076f528f4b69cc901634a0`. Against its actual fork `51b8afc7be8cc1f816b062ea19f423055838c2d1`, the one intended shared pin file is blob-identical (1/1); no Apps product file changed. Runs: 33924556210,33924556237,33924556202. Evidence: `_sownb/vb/evidence/aae/apps_merge22.json`. Zero lesson units and cells.
