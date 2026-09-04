@@ -1035,3 +1035,21 @@ Mechanism **25 tools, 217 controls**, derived, `--prove-red` PASS.
 g29 across every authored deck: **43 decks, 40 PASS, 0 RED, 3 SKIP** — the three
 skips are the chassis, which carry no `planId` and are correctly not treated as
 lessons. g27 PASS. Stale-evidence sweep: 0 inconclusive rows.
+
+---
+
+## A file #294 deleted that #293's record cites
+
+Blob-verifying #294 turned up one path that did not match: 90 of 91. The odd one
+was `_sownb/vb/evidence/a3n/art_donor_pick.json`, the §1a margin measurement —
+removed during the batch-3 run while its tool's controls were being repaired, and
+never regenerated, so the batch commit deleted it. #293's ledger entry quotes its
+numbers and tells the reader to re-run the tool.
+
+Regenerated. **The pick is unchanged**: the same three donors at the same margins,
+now measured against a corpus of 25 signature-complete decks rather than 16,
+because batch 3's own decks joined it. A choice that survives its corpus growing
+by half is a choice worth recording as stable.
+
+The tell: `rm` in the middle of a repair, with the regeneration left to the end
+of a long run. The blob verification is what found it, which is what it is for.
