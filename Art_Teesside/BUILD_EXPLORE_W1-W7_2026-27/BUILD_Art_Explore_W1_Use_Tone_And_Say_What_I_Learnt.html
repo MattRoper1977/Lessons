@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Use Tone And Say What I Learnt</title>
+<style>
+:root{--ink:#17223B;--paper:#FFFCF5;--soft:#F3F6F8;--line:#CAD5DF;--muted:#526274;--gold:#B57918;--green:#246B55;--slot:#346B7B;--slot-pale:#EAF6F8;--danger:#8A3C2D}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:"Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--soft)}
+body{overflow:hidden}a,button{font:inherit}button,a.mbmhome{min-height:44px;min-width:44px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:8px;top:8px;z-index:50;background:#fff;padding:10px}
+.deck{height:100vh;padding:18px 18px 112px;overflow:auto}.slide{display:none;max-width:1120px;min-height:calc(100vh - 145px);margin:auto;background:var(--paper);border:2px solid var(--line);border-top:10px solid var(--slot);border-radius:18px;padding:22px;box-shadow:0 8px 30px #10233f18}.slide.active{display:block}
+h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-size:clamp(1.5rem,3vw,2.3rem);margin:.4rem 0 1rem}h3{margin:.2rem 0 .45rem}p,li{line-height:1.5}.tag,.time,.chips span{display:inline-block;border-radius:999px;padding:6px 10px;font-weight:800}.tag{background:var(--slot-pale)}.time{float:right;background:var(--ink);color:#fff}.chips{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.chips span{background:#FFF3D4}
+.hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,.7fr);gap:18px}.hero-visual{display:grid;gap:10px;align-content:center;background:var(--ink);color:#fff;border-radius:16px;padding:18px;min-height:150px;text-align:center}.hero-visual span{color:var(--slot)}
+.box,.route,.route-card,.evidence-gate,.lundy,.lundy-strip,.ladder,.prompt-ladder,.ta-card,.modal,.drawer,dialog{border:2px solid var(--line);border-radius:13px;padding:13px;margin:12px 0;background:#fff}.lo{border-left:8px solid var(--slot)}.truth{border-left:8px solid var(--gold);background:#FFF3D4;padding:12px}.access{background:var(--slot-pale);padding:12px;border-radius:12px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.routes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.route.s,.route.supported,.route-card.supported{border-top:7px solid var(--green)}.route.m,.route.standard,.route-card.standard{border-top:7px solid var(--slot)}.route.h,.route.stretch,.route-card.stretch{border-top:7px solid var(--gold)}.options{display:grid;gap:9px}.options button{text-align:left;padding:12px;border:2px solid var(--line);border-radius:10px;background:#fff}.vocabrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.vterm{border:2px solid var(--line);padding:12px;border-radius:12px}.vterm span{display:block;margin-top:5px}.lundy-grid,.lundy-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center;font-weight:900}.ladder,.prompt-ladder{font-weight:700}.ta-card,.modal,.drawer{background:#FFF3D4}
+.controls{position:fixed;left:8px;right:8px;bottom:58px;z-index:20;display:flex;gap:7px;overflow-x:auto;padding:8px;background:var(--ink);border-radius:14px}.controls button,.controls a{flex:0 0 auto;border:2px solid #fff;border-radius:9px;padding:7px 10px;background:#fff;color:var(--ink);font-weight:800;text-decoration:none}.prog{position:fixed;left:12px;right:12px;bottom:46px;height:6px;background:#fff;border:1px solid var(--line);z-index:19}.prog>span{display:block;height:100%;width:11.11%;background:var(--slot)}
+.overlay{display:none;position:fixed;inset:0;z-index:40;background:#10233fdd;align-items:center;justify-content:center;padding:18px}.overlay.on{display:flex}.overlay-card{max-width:700px;background:#fff;border-radius:15px;padding:20px}.overlay-card button{padding:8px 12px}
+.print-pack{display:none}.printpack{display:none}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(max-width:720px){.deck{padding:10px 10px 118px}.slide{padding:15px}.hero,.routes,.vocabrow{grid-template-columns:1fr}.lundy-grid{grid-template-columns:1fr 1fr}}
+@media print{html,body{color-scheme:light!important;background:#fff;color:#111;overflow:visible}body>*:not(.print-pack){display:none!important}.print-pack{display:block!important}.printpack{display:block!important}.print-page{break-after:page;page-break-after:always;padding:8mm;min-height:255mm}.print-page:last-child{break-after:auto;page-break-after:auto}.print-pack h1{font-size:20pt;line-height:1.15;margin:0 0 3mm}.print-pack h2{font-size:13pt;line-height:1.2;margin:3mm 0 1.5mm}.print-pack p,.print-pack li{font-size:10.5pt;line-height:1.35}.running-head{font-size:9pt;border-bottom:1px solid #666;margin-bottom:4mm;padding-bottom:2mm}.proute,.print-route{display:block;border:1px solid #777;padding:3mm;margin:3mm 0;break-inside:avoid}@page{size:A4;margin:10mm}}
+</style><style id="award-print-layout">
+      @media screen {
+        [data-mbm-guide]{display:none!important}
+        #taOverlay [data-mbm-guide]{display:block!important}
+        #taOverlay .overlay-card{max-height:calc(100vh - 36px);overflow:auto;width:min(700px,100%)}
+        body.calm .slide{box-shadow:none}
+        body.calm *,body.calm *::before,body.calm *::after{animation:none!important;transition:none!important}
+        body.teacher-freeze *,body.teacher-freeze *::before,body.teacher-freeze *::after{animation-play-state:paused!important;transition:none!important}
+      }
+      @media print {
+        .award-print .print-page{box-sizing:border-box;padding:4mm;min-height:0}
+        .award-print table{width:100%;border-collapse:collapse;table-layout:fixed}
+        .award-print th,.award-print td{border:1px solid #777;padding:2mm;vertical-align:top;font-size:9pt}
+        .award-print th:first-child{width:34%}.award-print th:last-child{width:23%}
+        .award-print td.award-response{height:18mm}
+        .award-print-figures svg{display:block;width:100%;max-height:34mm;margin:2mm 0}
+        .award-print .print-route{padding:2mm;margin:2mm 0}
+        .award-print h3{font-size:11pt;margin:0}
+        .award-print .award-review-space{height:35mm;border:1px solid #777}
+      }
+    </style></head>
+<body>
+<!--mbm_guide_v1 retained as a contract marker; guidance state is memory-only-->
+<!--n6-nav1:v1-->
+<style id="n6-nav1-css">@media print{.mbmhome,.n6-splash{display:none!important}}.mbmhome{display:inline-block;margin:6px 0 0 8px;font:600 .85rem/1.4 "Segoe UI",Arial,sans-serif;color:#1e3a8a;text-decoration:none}.mbmhome:hover,.mbmhome:focus{text-decoration:underline}</style>
+<a class="mbmhome" href="../../index.html" aria-label="Back to the Lessons catalogue">← Lessons</a>
+<!--/n6-nav1-->
+<a class="skip" href="#lessonDeck">Skip to lesson</a>
+<main id="lessonDeck" class="deck">
+<section class="slide active" data-type="title" data-title="Lesson overview" data-min="0">
+<div class="time">0 min</div>
+<span class="tag"></span>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<p>BUILD · Art · Week 1. Trinity Arts Award Explore. Use Tone And Say What I Learnt.</p><p>Objective: Continue the drawing activity, try ways to make light and dark tones, and explain what you learnt.</p><p>Success evidence: a selected tone drawing, a record of taking part, and your own learning from the drawing activity.</p><p>Theme: Making and Sharing. Make choices about the art. You may keep your private life private.</p><p>40 minutes. Use the materials prepared on your table.</p><div class="box rehearsal" data-mbm-guide="staff">This deck contributes to Explore Part A, Take part: at least two arts activities and identification of what the pupil learnt. In this strand, drawing is activity one and paper sculpture is activity two. Two lessons in drawing are still one arts activity. Do not claim Part A complete until both activities and learning are evidenced. Award requirements come only from tools/artsaward/SPEC.json, Explore. Overall Pass allows ONE Attempted. Any Not Attempted = Below Pass. The whole Explore portfolio has a 10-file cap. Its three assessment areas are art form knowledge and understanding, creativity, and communication. Only an adviser trained at Explore may assess; delivery must be through a validated centre. Confirm both locally; neither is asserted as already confirmed. Core, Extend and Challenge are support options within Explore, not different awards. They retain participation and the pupil’s own learning. Scribe exact pupil words when needed, read them back and accept correction; do not compose or upgrade their account. Keep evidence in the cumulative Explore-A file with its actual file name plus page, slide or timecode. The proposed four part-files are a filing option, not a mandatory award format. Suggested sample counts are teaching scaffolds, not extra award quotas. This is secondary SEMH teaching in the BUILD reading band. Discuss artistic choices; do not require private-life disclosure. These sessions support the wider programme; they do not claim to supply all 25 guided and 10 independent hours.</div><div class="box rehearsal" data-mbm-guide="staff">Prepare plain paper, drawing pencils, optional grips and the pupil’s line drawing where available. A missing drawing does not stop new participation: supply fresh paper and let the pupil make a simple shape. On the board draw three labelled equal boxes: A left white, B shaded lightly, C made darker with further gentle layers. Provide a separate pair of equal shapes, one with a dark edge against a pale area and one with similar tones together. Make these models live; no external artwork is needed. Put the four sorting statements from We Do on the board. Every learner needs a practice area and a final drawing area. Check comfortable tools and keep a spare sheet to protect the table. Do not introduce numerical improvement targets or call tone a second arts activity.</div></section>
+<section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="3" data-ta1="Retrieve existing work without making its absence a punishment. Check grip and reach; offer fresh paper rather than suggesting a pupil has already completed a missing task.">
+<div class="time">3 min</div>
+<span class="tag"></span>
+<h2>Arrival · retrieve</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<p>Bring back your line drawing if it is here. Find a line choice you tried. If the drawing is elsewhere, you can start a simple shape on fresh paper today. The new work will still show how you take part.</p><p>Today you use tone. Tone means how light or dark an area looks. With one pencil, you can make pale grey, dark grey and shades between them. The white paper can be a light area too.</p><p>This continues the same arts activity: drawing. You are adding another way to use the tool. You will keep a result and explain what you learnt from making it.</p><p>Put your paper on a firm surface. Test the pencil in the practice space. Ask for a different grip or tool if you cannot use it with comfort.</p></section>
+<section class="slide" data-type="starter" data-title="Starter · create the need" data-min="3" data-ta1="Create A, B and C as described and check visibility. Offer the examples close up if projection washes out the pale tone. Accept pointing or ordered letter cards.">
+<div class="time">3 min</div>
+<span class="tag"></span>
+<h2>Starter · create the need</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<p>Look at the three boxes marked A, B and C. A is white paper. B is pale grey. C is darker grey. The boxes are the same size, so look at the tone rather than their shape.</p><p>Point to the darkest box. Now find the lightest. Where would you put B between them? You can show the order with the letters instead of saying it aloud.</p><p>Tone can help separate one area from another. When a dark shape sits beside a light area, its edge may be easier to see. When their tones are close, the edge may blend in.</p><p>Neither effect is always best. A maker might want a clear sign or a soft shape. Think about which effect could help the small drawing you want to make.</p></section>
+<section class="slide" data-type="ido" data-title="I Do · model" data-min="6" data-ta1="Model the strokes and pauses live. Avoid equating a darker result with superior work. Keep a visible white area so tone comparison is based on the actual marks.">
+<div class="time">6 min</div>
+<span class="tag"></span>
+<h2>I Do · model</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<p>I make a small tone patch with light strokes. I hold the pencil at a comfortable angle. I move back and forth across the patch without digging the point into the page.</p><p>After the first layer, I lift the pencil and look. Some paper shows between the marks. I add another light layer where I want a darker tone. A darker area does not need a painful grip or a torn page.</p><p>I leave a small area white beside the patch. That gives me a light tone to compare it with. Now I add more layers to the other side. I can see a change from white through grey to dark.</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Four linked boxes: start lightly, look beside white paper, layer to darken an area, and choose the tone to keep."><title>Build tone in gentle layers</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">LIGHT</text><text x="73" y="88" text-anchor="middle" font-size="11">start with a layer</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">LOOK</text><text x="231" y="88" text-anchor="middle" font-size="11">leave some white</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">LAYER</text><text x="389" y="88" text-anchor="middle" font-size="11">darken one area</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">CHOOSE</text><text x="547" y="88" text-anchor="middle" font-size="11">keep the tone</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">Pause between layers to see what the pencil does.</text></svg><p>I stop when the tone suits my purpose. More layers are not always better. If I want a pale cloud, making it very dark may change the effect I wanted.</p><p>My model learning note says: light layers let me choose when to stop. I point at the pale and dark ends to show what I mean.</p></section>
+<section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="4" data-ta1="Keep all four statements on view and collect every pupil’s response before giving the key. Read or point through the model without supplying the pupil’s reason.">
+<div class="time">4 min</div>
+<span class="tag"></span>
+<h2>We Do · everyone commits</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<p>Sort these visible cards under two headings: a tone choice, and something else. Use the letters to show your answers.</p><ul><li>A: Leave part of the paper white.</li><li>B: Make the sheet twice as wide.</li><li>C: Add another gentle pencil layer.</li><li>D: Turn the paper so your arm has room.</li></ul><p>A and C change a tone choice. B changes the size of the paper. D changes how you can reach it. Size and reach can matter, but they are not the same as light and dark.</p><p>Choose A or C and say when you might use it. You could keep white for a light area or add a layer for a dark one. There may be more than one good reason.</p><p>Now point to the part of the model that shows your choice. Linking the action to its result will help your learning note later.</p></section>
+<section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="5" data-ta1="Make wider-gap and closer-gap patches with the same pencil. Demonstrate the second crossing set accurately if naming cross-hatching. Keep all models visible for the lab.">
+<div class="time">5 min</div>
+<span class="tag"></span>
+<h2>I Do 2 · connect</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<p>There is another way to make tone. I draw a set of short lines that run alongside each other. This is hatching. I leave gaps so the light paper shows through.</p><p>When I put similar lines closer together, less white shows between them. The area often looks darker. I try it on a spare patch before using it in the drawing.</p><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Two columns compare wider gaps showing more paper with closer lines showing less paper."><title>Line spacing changes the tone</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">WIDER GAPS</text><text x="151" y="74" text-anchor="middle" font-size="11">more paper shows</text><text x="151" y="94" text-anchor="middle" font-size="11">the patch can look lighter</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">CLOSER LINES</text><text x="469" y="74" text-anchor="middle" font-size="11">less paper shows</text><text x="469" y="94" text-anchor="middle" font-size="11">the patch can look darker</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Compare the real patches before choosing a spacing.</text></svg><p>I can add a second set across the first. That is cross-hatching. Both sets remain visible and cross each other. It is a different action from tracing one line again and again.</p><p>I do not need to use every method in one drawing. I choose layers or hatching for the effect I want. My learning can name the method and what I noticed it did.</p><p>A neat patch is not the only useful result. A rough patch can show a rough surface. Describe what the marks suggest instead of calling all rough marks wrong.</p></section>
+<section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="5" data-ta1="Give time for actual patches before checking them. Prompt a description of the pupil’s action and observation; do not insist that every trial must show a successful difference.">
+<div class="time">5 min</div>
+<span class="tag"></span>
+<h2>We Do 2 · lab</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<p>Create your own practice patches now. Make a pale patch and a darker one. Use gentle layers, or try changing the gaps between hatch lines. Keep your hand comfortable.</p><p>Pause and compare the patches you have just made. Which action gave you a tone you can use? Point to that action’s result while you explain it to a partner or an adult.</p><p>The checker asks: what did you do here? You might say that you added a layer or left wider gaps. If the patches look alike, check what actually changed before you claim a difference.</p><p>Keep the practice on your sheet. Add a short note about something you found. You may speak your note for a scribe. They read it back so you can check the meaning.</p></section>
+<section class="slide" data-type="independent" data-title="Independent · evidence" data-min="11" data-ta1="A supplied outline may support access, but pupils must make their own tone choices and marks. Keep time for making and a short located learning account; never write a pupil’s conclusion for them.">
+<div class="time">11 min</div>
+<span class="tag"></span>
+<h2>Independent · evidence</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<p>Make a small drawing that uses tone. You can redraw a simple shape from last time or choose a fresh shape. Decide where you want a light area and where a darker area could help.</p><p>Use layers or hatch lines to build the tone. Look up from the page between stages. If two areas merge when you wanted a clear edge, try a different tone on spare paper first.</p><p>Choose a result to keep. Point to an area where the technique did something you noticed. Say what you tried and what you learnt. Include a line choice from the earlier lesson if it helps explain the drawing activity.</p><ul><li>Core: use a large simple outline and the pale/dark prompts. Make your own tone marks. Point and explain a learning point for a verbatim scribe.</li><li>Extend: choose and apply a tone method, keep the drawing and record your own learning about the action and result.</li><li>Challenge: keep the same participation and learning evidence, then compare layers with hatching in two small areas.</li></ul><p>Your account need not say you improved by a set amount. Explore asks what you learnt through taking part. A note about what you would try differently can be honest and useful.</p></section>
+<section class="slide" data-type="exit" data-title="Exit · name the activity" data-min="3" data-ta1="Check the activity label and file-plus-location. Do not count line and tone as the two required arts activities, and do not record a second activity before it has happened.">
+<div class="time">3 min</div>
+<span class="tag"></span>
+<h2>Exit · name the activity</h2>
+<div class="lundy-status">
+<p>
+<b>SPACE:</b> the learner may pause or choose a private response.</p>
+<p>
+<b>VOICE:</b> the evidence statement remains in the learner’s chosen communication mode.</p>
+<p>
+<b>AUDIENCE:</b> a familiar adult receives and names back exactly what was heard or seen.</p>
+<p>
+<b>INFLUENCE:</b> one real next action is recorded: retain, add method detail, or leave open.</p>
+</div>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<p>Find your chosen drawing and learning note. Does the note describe something you really tried? Can you point to the part that helped you learn it?</p><p>Put the line and tone records together under drawing, activity one. They are two lessons within one arts activity. The next activity will use folded paper to make forms that stand.</p><p>Append the work to the Explore-A file. Give its actual name plus page or slide. For spoken learning, give the sound file and timecode. Ask the adult to check that the work and your words can both be found.</p><p>Keep one idea you want to remember from drawing. You may also leave a question about a mark that did not behave as you expected.</p></section>
+</main>
+<nav class="controls" aria-label="Lesson controls">
+<button type="button" data-nav="previous">◀ Previous</button>
+<button type="button" data-tool="1">Teacher tools</button>
+<button type="button" data-tool="2">Evidence &amp; print</button>
+<button type="button" data-tool="3">Calm mode</button>
+<button type="button" data-tool="4">Static diagrams</button>
+<button type="button" data-tool="5">Previous</button>
+<button type="button" data-tool="6">Next</button>
+<button type="button" data-nav="next">Next ▶</button>
+</nav>
+<div class="prog" aria-hidden="true">
+<span>
+</span>
+</div>
+<div id="taOverlay" class="overlay" aria-hidden="true">
+<div class="overlay-card">
+<h2></h2>
+<p>Use the least prompt needed. Keep adult preparation and exact-word scribing separate from pupil authorship. Guidance is hidden from the learner surface by default.</p>
+<button type="button" data-close-overlay>Close</button>
+</div>
+</div>
+<section class="print-pack printpack award-print" aria-label="Printable lesson pack">
+      <section class="print-page">
+        <div class="running-head">BUILD Art · Week 1 · Art · Trinity Arts Award Explore</div><h1>Use Tone And Say What I Learnt</h1>
+        <p><b>Award evidence:</b> Explore Arts Award, Part A; no workbook cell (AAE-H7)</p>
+        <p><b>Objective:</b> Continue the drawing activity, try ways to make light and dark tones, and explain what you learnt.</p>
+        <h2>My evidence record</h2><p>Try a tone method, make your own drawing and keep a learning point about the action and result. Line and tone belong to the same drawing activity.</p><p>Light, dark and line spacing · Choose your support · My tone drawing and learning · Drawing is activity one</p>
+        <table><thead><tr><th>Evidence focus</th><th>My words or response</th><th>File and page, slide or time</th></tr></thead>
+        <tbody><tr><th scope="row">Practice tone patches and a selected drawing showing my own participation</th><td class="award-response"></td><td class="award-locator"></td></tr><tr><th scope="row">My own explanation of a tone method I tried and what I learnt</th><td class="award-response"></td><td class="award-locator"></td></tr><tr><th scope="row">Drawing records together in the actual Explore-A file with page, slide or timecode</th><td class="award-response"></td><td class="award-locator"></td></tr></tbody></table>
+        <div class="award-print-figures"><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Four linked boxes: start lightly, look beside white paper, layer to darken an area, and choose the tone to keep."><title>Build tone in gentle layers</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">LIGHT</text><text x="73" y="88" text-anchor="middle" font-size="11">start with a layer</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">LOOK</text><text x="231" y="88" text-anchor="middle" font-size="11">leave some white</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">LAYER</text><text x="389" y="88" text-anchor="middle" font-size="11">darken one area</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">CHOOSE</text><text x="547" y="88" text-anchor="middle" font-size="11">keep the tone</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">Pause between layers to see what the pencil does.</text></svg><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Two columns compare wider gaps showing more paper with closer lines showing less paper."><title>Line spacing changes the tone</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">WIDER GAPS</text><text x="151" y="74" text-anchor="middle" font-size="11">more paper shows</text><text x="151" y="94" text-anchor="middle" font-size="11">the patch can look lighter</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">CLOSER LINES</text><text x="469" y="74" text-anchor="middle" font-size="11">less paper shows</text><text x="469" y="94" text-anchor="middle" font-size="11">the patch can look darker</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Compare the real patches before choosing a spacing.</text></svg></div>
+        <p>Name or learner code: ____________________ Date: ____________________</p>
+      </section>
+      <section class="print-page">
+        <div class="running-head">BUILD Art · Week 1 · Art · Trinity Arts Award Explore</div><h1>Use Tone And Say What I Learnt</h1>
+        <h2>Choose the support you need</h2><div class="print-route"><h3>Core</h3><p>Core: use a large outline and pale/dark prompts. Make your own marks and explain a learning point for a verbatim scribe.</p></div><div class="print-route"><h3>Extend</h3><p>Extend: apply a chosen tone method, keep the drawing and record learning about the action and result.</p></div><div class="print-route"><h3>Challenge</h3><p>Challenge: retain participation and learning, then compare layers with hatching in two small areas.</p></div>
+        <h2>Check the evidence</h2><ol><li>I made tone marks myself using an accessible tool.</li><li>The selected result shows a method I actually tried.</li><li>My learning account is in my own words and relates to the work.</li><li>Line and tone are recorded as drawing, activity one; a second activity is still needed.</li><li>The actual file name plus page, slide or timecode locates the work and learning.</li></ol>
+        <h2>My review or next step</h2><div class="award-review-space"></div>
+        <p>For a recorded response, write the actual file name and page, slide or timecode.</p>
+      </section>
+    </section><!--n6-nav1:v1--><div class="n6-splash"><div style="text-align:center;margin-top:8px"><svg width="64" height="64" viewbox="0 0 100 100" aria-label="Made by Matt"><circle cx="50" cy="50" r="47" fill="none" stroke="#1e3a8a" stroke-width="3.4"></circle><g transform="translate(0 2)"><path d="M28 71 L28 37 L50 59 L72 37 L72 71" fill="none" stroke="#1e3a8a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 22.5 L51.48 28.52 L57.5 30 L51.48 31.48 L50 37.5 L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"></path></g></svg></div></div><!--/n6-nav1--><script id="lesson-config" type="application/json">{"id": "EXPLORE_ART_W1_A2", "family": "BUILD Art", "week": 1, "slot": "Art · Trinity Arts Award Explore", "title": "Use Tone And Say What I Learnt", "outcomes": ["Continue the drawing activity with taught tone techniques. Preserve a selected result and the pupil’s account of learning. Identify this as the same activity, not a second one."], "cells": [], "objective": "Continue the drawing activity, try ways to make light and dark tones, and explain what you learnt.", "timings": [0, 3, 3, 6, 4, 5, 5, 11, 3], "artsAward": {"level": "Explore", "parts": ["A"]}, "planId": "63432d3d11d5", "weDoType": "sort-or-match", "tierLadder": ["Core", "Extend", "Challenge"]}</script>
+<script data-award-chassis="">/* Runtime for newly authored award decks; no persistence or external dependencies. */
+(function () {
+  'use strict';
+
+  function boot() {
+    const deck = document.querySelector('main.deck');
+    const slides = Array.from(document.querySelectorAll('main.deck > .slide'));
+    if (!deck || !slides.length) return;
+    const progress = document.querySelector('.prog');
+    const bar = document.querySelector('.prog > span');
+    const overlay = document.getElementById('taOverlay');
+    const card = overlay && overlay.querySelector('.overlay-card');
+    const closeButton = overlay && overlay.querySelector('[data-close-overlay]');
+    const teacherButtons = document.querySelectorAll('[data-tool="1"]');
+    let index = Math.max(0, slides.findIndex(slide => slide.classList.contains('active')));
+    let returnFocus = null;
+    let notes = null;
+    let slotHost = null;
+
+    function show(next) {
+      index = (next + slides.length) % slides.length;
+      slides.forEach(function (slide, i) {
+        slide.classList.toggle('active', i === index);
+        slide.setAttribute('aria-hidden', i === index ? 'false' : 'true');
+      });
+      if (bar) bar.style.width = ((index + 1) / slides.length * 100) + '%';
+      if (progress) {
+        progress.removeAttribute('aria-hidden');
+        progress.setAttribute('role', 'progressbar');
+        progress.setAttribute('aria-label', 'Lesson progress');
+        progress.setAttribute('aria-valuemin', '1');
+        progress.setAttribute('aria-valuemax', String(slides.length));
+        progress.setAttribute('aria-valuenow', String(index + 1));
+        progress.setAttribute('aria-valuetext', 'Stage ' + (index + 1) + ' of ' + slides.length);
+      }
+      deck.scrollTop = 0;
+    }
+
+    function isOpen() {
+      return Boolean(overlay && overlay.classList.contains('on'));
+    }
+
+    function fillNotes() {
+      notes.replaceChildren();
+      const heading = document.createElement('h3');
+      heading.textContent = slides[index].dataset.title || 'Current stage';
+      notes.appendChild(heading);
+      ['ta1', 'ta2'].forEach(function (key) {
+        const text = slides[index].dataset[key];
+        if (!text) return;
+        const paragraph = document.createElement('p');
+        paragraph.textContent = text;
+        notes.appendChild(paragraph);
+      });
+      const sources = index === 0 ? [slides[0]] : [slides[index], slides[0]];
+      sources.forEach(function (source) {
+        source.querySelectorAll('[data-mbm-guide]').forEach(function (note) {
+          // The slot reader has its own live state and file listener: never clone it.
+          if (note.id === 'award-slot-panel' || note.closest('#award-slot-panel')) return;
+          const copy = note.cloneNode(true);
+          copy.removeAttribute('id');
+          copy.querySelectorAll('[id]').forEach(node => node.removeAttribute('id'));
+          notes.appendChild(copy);
+        });
+      });
+      // mount() runs on DOMContentLoaded. A real click comes after that event,
+      // regardless of the order in which the two embedded scripts were loaded.
+      const panel = document.getElementById('award-slot-panel');
+      if (panel && !slotHost.contains(panel)) slotHost.appendChild(panel);
+    }
+
+    function openTeacher(button) {
+      if (!card || isOpen()) return;
+      returnFocus = button || document.activeElement;
+      fillNotes();
+      overlay.classList.add('on');
+      overlay.setAttribute('aria-hidden', 'false');
+      teacherButtons.forEach(node => node.setAttribute('aria-expanded', 'true'));
+      (closeButton || card).focus();
+    }
+
+    function closeTeacher() {
+      if (!isOpen()) return;
+      overlay.classList.remove('on');
+      overlay.setAttribute('aria-hidden', 'true');
+      teacherButtons.forEach(node => node.setAttribute('aria-expanded', 'false'));
+      if (returnFocus && returnFocus.isConnected) returnFocus.focus();
+    }
+
+    function focusable() {
+      return Array.from(card.querySelectorAll('a[href], button, input, select, textarea, [tabindex]'))
+        .filter(node => !node.disabled && node.tabIndex >= 0 && node.getClientRects().length);
+    }
+
+    if (card) {
+      overlay.setAttribute('role', 'dialog');
+      overlay.setAttribute('aria-modal', 'true');
+      overlay.setAttribute('aria-hidden', 'true');
+      overlay.classList.remove('on');
+      card.tabIndex = -1;
+      let title = card.querySelector('h2');
+      if (!title) {
+        title = document.createElement('h2');
+        card.prepend(title);
+      }
+      title.id = 'award-teacher-title';
+      title.textContent = 'Teacher tools';
+      overlay.setAttribute('aria-labelledby', title.id);
+      notes = document.createElement('div');
+      notes.id = 'award-teacher-notes';
+      slotHost = document.createElement('div');
+      slotHost.id = 'award-teacher-slots';
+      card.insertBefore(notes, closeButton);
+      card.insertBefore(slotHost, closeButton);
+      if (closeButton) closeButton.addEventListener('click', closeTeacher);
+      teacherButtons.forEach(function (button) {
+        button.setAttribute('aria-controls', overlay.id);
+        button.setAttribute('aria-expanded', 'false');
+        button.addEventListener('click', () => openTeacher(button));
+      });
+      // Keep focus in the open dialog, including when scripts attempt to move it.
+      document.addEventListener('focusin', function (event) {
+        if (isOpen() && !overlay.contains(event.target)) (closeButton || card).focus();
+      });
+    }
+
+    document.querySelectorAll('[data-nav="previous"], [data-tool="5"]')
+      .forEach(button => button.addEventListener('click', () => { if (!isOpen()) show(index - 1); }));
+    document.querySelectorAll('[data-nav="next"], [data-tool="6"]')
+      .forEach(button => button.addEventListener('click', () => { if (!isOpen()) show(index + 1); }));
+    document.querySelectorAll('[data-tool="2"]')
+      .forEach(button => button.addEventListener('click', () => window.print()));
+    [['3', 'calm'], ['4', 'teacher-freeze']].forEach(function (item) {
+      const buttons = document.querySelectorAll('[data-tool="' + item[0] + '"]');
+      function sync() {
+        const active = document.body.classList.contains(item[1]);
+        buttons.forEach(button => button.setAttribute('aria-pressed', String(active)));
+      }
+      buttons.forEach(button => button.addEventListener('click', function () {
+        document.body.classList.toggle(item[1]);
+        sync();
+      }));
+      sync();
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (isOpen()) {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          closeTeacher();
+        } else if (event.key === 'Tab') {
+          const items = focusable();
+          const first = items[0] || card;
+          const last = items[items.length - 1] || card;
+          if (!items.length || !items.includes(document.activeElement)
+              || (event.shiftKey && document.activeElement === first)
+              || (!event.shiftKey && document.activeElement === last)) {
+            event.preventDefault();
+            (event.shiftKey ? last : first).focus();
+          }
+        }
+        return;
+      }
+      const target = event.target;
+      if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey
+          || (target && (target.isContentEditable
+              || (typeof target.closest === 'function' && target.closest('input, textarea, select'))))
+          || document.querySelector('dialog[open], .overlay.on, [role="dialog"][aria-hidden="false"]')) return;
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        event.preventDefault();
+        show(index + (event.key === 'ArrowRight' ? 1 : -1));
+      }
+    });
+    show(index);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once: true});
+  else boot();
+}());
+</script></body>
+</html>

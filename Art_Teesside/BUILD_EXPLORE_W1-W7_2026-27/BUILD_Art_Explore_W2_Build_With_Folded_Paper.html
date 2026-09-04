@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Build With Folded Paper</title>
+<style>
+:root{--ink:#17223B;--paper:#FFFCF5;--soft:#F3F6F8;--line:#CAD5DF;--muted:#526274;--gold:#B57918;--green:#246B55;--slot:#346B7B;--slot-pale:#EAF6F8;--danger:#8A3C2D}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:"Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--soft)}
+body{overflow:hidden}a,button{font:inherit}button,a.mbmhome{min-height:44px;min-width:44px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:8px;top:8px;z-index:50;background:#fff;padding:10px}
+.deck{height:100vh;padding:18px 18px 112px;overflow:auto}.slide{display:none;max-width:1120px;min-height:calc(100vh - 145px);margin:auto;background:var(--paper);border:2px solid var(--line);border-top:10px solid var(--slot);border-radius:18px;padding:22px;box-shadow:0 8px 30px #10233f18}.slide.active{display:block}
+h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-size:clamp(1.5rem,3vw,2.3rem);margin:.4rem 0 1rem}h3{margin:.2rem 0 .45rem}p,li{line-height:1.5}.tag,.time,.chips span{display:inline-block;border-radius:999px;padding:6px 10px;font-weight:800}.tag{background:var(--slot-pale)}.time{float:right;background:var(--ink);color:#fff}.chips{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.chips span{background:#FFF3D4}
+.hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,.7fr);gap:18px}.hero-visual{display:grid;gap:10px;align-content:center;background:var(--ink);color:#fff;border-radius:16px;padding:18px;min-height:150px;text-align:center}.hero-visual span{color:var(--slot)}
+.box,.route,.route-card,.evidence-gate,.lundy,.lundy-strip,.ladder,.prompt-ladder,.ta-card,.modal,.drawer,dialog{border:2px solid var(--line);border-radius:13px;padding:13px;margin:12px 0;background:#fff}.lo{border-left:8px solid var(--slot)}.truth{border-left:8px solid var(--gold);background:#FFF3D4;padding:12px}.access{background:var(--slot-pale);padding:12px;border-radius:12px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.routes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.route.s,.route.supported,.route-card.supported{border-top:7px solid var(--green)}.route.m,.route.standard,.route-card.standard{border-top:7px solid var(--slot)}.route.h,.route.stretch,.route-card.stretch{border-top:7px solid var(--gold)}.options{display:grid;gap:9px}.options button{text-align:left;padding:12px;border:2px solid var(--line);border-radius:10px;background:#fff}.vocabrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.vterm{border:2px solid var(--line);padding:12px;border-radius:12px}.vterm span{display:block;margin-top:5px}.lundy-grid,.lundy-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center;font-weight:900}.ladder,.prompt-ladder{font-weight:700}.ta-card,.modal,.drawer{background:#FFF3D4}
+.controls{position:fixed;left:8px;right:8px;bottom:58px;z-index:20;display:flex;gap:7px;overflow-x:auto;padding:8px;background:var(--ink);border-radius:14px}.controls button,.controls a{flex:0 0 auto;border:2px solid #fff;border-radius:9px;padding:7px 10px;background:#fff;color:var(--ink);font-weight:800;text-decoration:none}.prog{position:fixed;left:12px;right:12px;bottom:46px;height:6px;background:#fff;border:1px solid var(--line);z-index:19}.prog>span{display:block;height:100%;width:11.11%;background:var(--slot)}
+.overlay{display:none;position:fixed;inset:0;z-index:40;background:#10233fdd;align-items:center;justify-content:center;padding:18px}.overlay.on{display:flex}.overlay-card{max-width:700px;background:#fff;border-radius:15px;padding:20px}.overlay-card button{padding:8px 12px}
+.print-pack{display:none}.printpack{display:none}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(max-width:720px){.deck{padding:10px 10px 118px}.slide{padding:15px}.hero,.routes,.vocabrow{grid-template-columns:1fr}.lundy-grid{grid-template-columns:1fr 1fr}}
+@media print{html,body{color-scheme:light!important;background:#fff;color:#111;overflow:visible}body>*:not(.print-pack){display:none!important}.print-pack{display:block!important}.printpack{display:block!important}.print-page{break-after:page;page-break-after:always;padding:8mm;min-height:255mm}.print-page:last-child{break-after:auto;page-break-after:auto}.print-pack h1{font-size:20pt;line-height:1.15;margin:0 0 3mm}.print-pack h2{font-size:13pt;line-height:1.2;margin:3mm 0 1.5mm}.print-pack p,.print-pack li{font-size:10.5pt;line-height:1.35}.running-head{font-size:9pt;border-bottom:1px solid #666;margin-bottom:4mm;padding-bottom:2mm}.proute,.print-route{display:block;border:1px solid #777;padding:3mm;margin:3mm 0;break-inside:avoid}@page{size:A4;margin:10mm}}
+</style><style id="award-print-layout">
+      @media screen {
+        [data-mbm-guide]{display:none!important}
+        #taOverlay [data-mbm-guide]{display:block!important}
+        #taOverlay .overlay-card{max-height:calc(100vh - 36px);overflow:auto;width:min(700px,100%)}
+        body.calm .slide{box-shadow:none}
+        body.calm *,body.calm *::before,body.calm *::after{animation:none!important;transition:none!important}
+        body.teacher-freeze *,body.teacher-freeze *::before,body.teacher-freeze *::after{animation-play-state:paused!important;transition:none!important}
+      }
+      @media print {
+        .award-print .print-page{box-sizing:border-box;padding:4mm;min-height:0}
+        .award-print table{width:100%;border-collapse:collapse;table-layout:fixed}
+        .award-print th,.award-print td{border:1px solid #777;padding:2mm;vertical-align:top;font-size:9pt}
+        .award-print th:first-child{width:34%}.award-print th:last-child{width:23%}
+        .award-print td.award-response{height:18mm}
+        .award-print-figures svg{display:block;width:100%;max-height:34mm;margin:2mm 0}
+        .award-print .print-route{padding:2mm;margin:2mm 0}
+        .award-print h3{font-size:11pt;margin:0}
+        .award-print .award-review-space{height:35mm;border:1px solid #777}
+      }
+    </style></head>
+<body>
+<!--mbm_guide_v1 retained as a contract marker; guidance state is memory-only-->
+<!--n6-nav1:v1-->
+<style id="n6-nav1-css">@media print{.mbmhome,.n6-splash{display:none!important}}.mbmhome{display:inline-block;margin:6px 0 0 8px;font:600 .85rem/1.4 "Segoe UI",Arial,sans-serif;color:#1e3a8a;text-decoration:none}.mbmhome:hover,.mbmhome:focus{text-decoration:underline}</style>
+<a class="mbmhome" href="../../index.html" aria-label="Back to the Lessons catalogue">← Lessons</a>
+<!--/n6-nav1-->
+<a class="skip" href="#lessonDeck">Skip to lesson</a>
+<main id="lessonDeck" class="deck">
+<section class="slide active" data-type="title" data-title="Lesson overview" data-min="0">
+<div class="time">0 min</div>
+<span class="tag"></span>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<p>BUILD · Art · Week 2. Trinity Arts Award Explore. Build With Folded Paper.</p><p>Objective: Take part in paper sculpture, learn safe folds and ways to make paper stand, and record what you learnt.</p><p>Success evidence: your own folded paper form, a record of taking part in activity two, and a learning point about a fold or base.</p><p>Theme: Making and Sharing. Make choices about the art. You may keep your private life private.</p><p>40 minutes. Use the materials prepared on your table.</p><div class="box rehearsal" data-mbm-guide="staff">This deck contributes to Explore Part A, Take part: at least two arts activities and identification of what the pupil learnt. In this strand, drawing is activity one and paper sculpture is activity two. Two lessons in drawing are still one arts activity. Do not claim Part A complete until both activities and learning are evidenced. Award requirements come only from tools/artsaward/SPEC.json, Explore. Overall Pass allows ONE Attempted. Any Not Attempted = Below Pass. The whole Explore portfolio has a 10-file cap. Its three assessment areas are art form knowledge and understanding, creativity, and communication. Only an adviser trained at Explore may assess; delivery must be through a validated centre. Confirm both locally; neither is asserted as already confirmed. Core, Extend and Challenge are support options within Explore, not different awards. They retain participation and the pupil’s own learning. Scribe exact pupil words when needed, read them back and accept correction; do not compose or upgrade their account. Keep evidence in the cumulative Explore-A file with its actual file name plus page, slide or timecode. The proposed four part-files are a filing option, not a mandatory award format. Suggested sample counts are teaching scaffolds, not extra award quotas. This is secondary SEMH teaching in the BUILD reading band. Discuss artistic choices; do not require private-life disclosure. These sessions support the wider programme; they do not claim to supply all 25 guided and 10 independent hours.</div><div class="box rehearsal" data-mbm-guide="staff">Prepare plain rectangles and wide paper strips cut by staff before the lesson, flat base sheets, pencils and an optional broad grip for marking. No scissors, craft knives, staplers or hot glue are needed. Provide two teacher-made demonstration pieces: an unfolded rectangle and a simple tent made by folding a matching rectangle in half and opening it. Keep a spare strip for a live back-and-forth folding model. Show the full sorting cards from We Do on the board so no separate card pack is needed. Use a cleared flat table; do not test paper forms with weights. Offer large paper and a lightly scored fold line prepared by staff if needed. Support holding the sheet steady when asked while preserving the pupil’s active folding/positioning choices. Record any missing drawing activity for follow-up; do not claim it occurred.</div></section>
+<section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="3" data-ta1="Give each learner a clear reachable work area. Provide larger paper or a prepared fold guide as needed. Introduce the different activity without assuming all pupils completed drawing.">
+<div class="time">3 min</div>
+<span class="tag"></span>
+<h2>Arrival · retrieve</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<p>You have been exploring drawing with lines and tone. Today you begin a different arts activity: paper sculpture. You will fold a flat sheet into a form that rises from the table.</p><p>A sculpture has depth as well as height and width. You can look at it from more than one side. A simple paper form can be a sculpture even when it fits in your hand.</p><p>Clear a space for the paper to stand. Keep drinks and heavy objects away from it. Check that the table is flat and the sheet is dry. There is no need for a sharp tool today.</p><p>Choose a rectangle or a wide strip from the materials. Feel how it bends gently. Keep it flat for now while we look at what a fold can do.</p></section>
+<section class="slide" data-type="starter" data-title="Starter · create the need" data-min="3" data-ta1="Use actual matching paper pieces and show side and end views. Describe the space clearly for pupils who need closer viewing; do not rely only on a projected picture.">
+<div class="time">3 min</div>
+<span class="tag"></span>
+<h2>Starter · create the need</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<p>Look at the flat rectangle and the folded tent beside it. Both began as the same kind of paper. One lies across the table. The other has raised panels with a fold along the top.</p><p>Move your eyes around the tent. From the end, you can see the open space beneath it. From the side, you can see a broad paper panel. The form changes as your view changes.</p><p>What helped the paper rise? Point to the fold, then the lower edges touching the table. The fold joins the panels. The lower edges support them.</p><p>A drawing can suggest a raised form on a flat page. Here we make a form that really rises. You can explore the shape without drawing a picture on it. Colour and decoration can wait while you learn how it stands.</p></section>
+<section class="slide" data-type="ido" data-title="I Do · model" data-min="6" data-ta1="Model with a large sheet, narrating the edge match and crease. Demonstrate a hands-off standing test. Avoid promising every paper type behaves identically.">
+<div class="time">6 min</div>
+<span class="tag"></span>
+<h2>I Do · model</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<p>I put a rectangle flat on the table. I bring one short edge towards the other short edge. I line them up as well as I can, without pulling the paper hard.</p><p>I hold the edges still with one hand. With the other, I press along the bend to make a crease. I use the flat pad of a finger and move away from my body. A crease is a fold line that the paper tends to keep.</p><p>Now I open the sheet part way. I turn it so the crease is at the top and the two open edges rest on the table. I have made a tent form.</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Four linked boxes: bring edges together, crease the fold, open a space, and set the lower edges down."><title>Turn a sheet into a standing fold</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">MATCH</text><text x="73" y="88" text-anchor="middle" font-size="11">bring edges close</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">CREASE</text><text x="231" y="88" text-anchor="middle" font-size="11">press the fold</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">OPEN</text><text x="389" y="88" text-anchor="middle" font-size="11">leave a space</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">STAND</text><text x="547" y="88" text-anchor="middle" font-size="11">set down edges</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">The fold and the base work together to hold the form.</text></svg><p>I move the lower edges a little farther apart. The form gets lower and its base gets wider. I let go to see what happens. I do not say it stands until it can stand without my hand.</p><p>If it falls, I set it up again and check the base. Falling is a clue to explore, not a reason to hide the work.</p></section>
+<section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="4" data-ta1="Keep cards visible and collect responses before the key. Change the actual tent’s spread after pupils predict; describe the observed result rather than requiring a fixed answer.">
+<div class="time">4 min</div>
+<span class="tag"></span>
+<h2>We Do · everyone commits</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<p>Sort the four visible cards under two headings: changes the form, and adds a drawn mark. Use each letter once.</p><ul><li>A: Fold the paper back along a crease.</li><li>B: Draw a dark stripe down the side.</li><li>C: Open the two panels farther apart.</li><li>D: Shade a corner with a pencil.</li></ul><p>A and C change how the paper sits in space. B and D add drawn marks. A sculpture can include both, but a drawn stripe alone does not make the sheet stand.</p><p>Point to the part of the tent that would change with card C. Say or show what you think would happen to its height. Then watch the teacher try it with the actual form.</p><p>We can make a prediction and test it. The test may surprise us. Use what the paper really does when you explain your learning.</p></section>
+<section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="5" data-ta1="Make the back-and-forth pattern live. Use the paper type provided to pupils and acknowledge its actual limits. Keep both forms visible for selection.">
+<div class="time">5 min</div>
+<span class="tag"></span>
+<h2>I Do 2 · connect</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<p>A fold is also like a hinge between two panels. I can open or close it. The panels stay joined along the crease while their angle changes.</p><p>Watch a second method with a strip. I fold a short part over and press. Then I turn the strip and fold the next part back the other way. I keep changing the direction to make a zigzag.</p><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Two columns compare the panels and bases of a tent fold and a back-and-forth zigzag form."><title>Two folded forms to explore</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">TENT FOLD</text><text x="151" y="74" text-anchor="middle" font-size="11">two panels meet at the top</text><text x="151" y="94" text-anchor="middle" font-size="11">open edges form a base</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">ZIGZAG FOLDS</text><text x="469" y="74" text-anchor="middle" font-size="11">folds turn back and forth</text><text x="469" y="94" text-anchor="middle" font-size="11">several panels can rise</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Both forms need a base that rests on the table.</text></svg><p>I stand the zigzag on its long lower edge. If I spread it too far, it may lie flat. If I squeeze it tight, it may lean. I try a middle position and let go.</p><p>There is no single shape everyone must make. A long low form and a short tall form can both be choices. I look at the base, the folds and the spaces to decide what I want to keep.</p><p>My note could say: opening the folds changed the spaces I could see. I point to those spaces as I speak.</p></section>
+<section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="5" data-ta1="Allow each learner to make the form before any checking conversation. Support holding or positioning only as agreed; do not replace the learner’s action with an adult-made result.">
+<div class="time">5 min</div>
+<span class="tag"></span>
+<h2>We Do 2 · lab</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<p>Now make a practice fold with your own paper. You may begin with the tent or try a zigzag. Bring edges together, press the crease gently and open the form.</p><p>Set it on the table and let go. Look at where it touches the surface. If it leans, try spreading the base or opening one fold a little. Change one position at a time so you can see its effect.</p><p>Tell a partner or an adult what you tried. They can point to a place they want to see more clearly. Turn the form so both of you can look from that side.</p><p>Keep a short note about what the fold or base did. A scribe can write your own words. The form you have just made gives you something real to point at.</p></section>
+<section class="slide" data-type="independent" data-title="Independent · evidence" data-min="11" data-ta1="Give time to fold, explore and record. A form that falls still records genuine participation; preserve the pupil’s honest explanation. Arrange a labelled storage place or work-only photograph.">
+<div class="time">11 min</div>
+<span class="tag"></span>
+<h2>Independent · evidence</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<p>Choose a form to explore on your own. Use fresh paper if you want to keep the practice form as well. Make the folds and arrange the panels in a way you find interesting.</p><p>Look at it from the front, side and end. You can move around the table or turn a base sheet under the form. Notice a shape or space that appears from one view.</p><p>Test whether it stands when you let go. You may choose a wider base or a lower form. You can also keep a form that needs support and explain what happened. Do not pretend it stood by itself if a hand was holding it.</p><ul><li>Core: use a large rectangle and one guided fold. Make and position your own form, then point and say what you learnt for a verbatim scribe.</li><li>Extend: choose a tent or zigzag, explore how it stands and record your own learning about a fold, base or space.</li><li>Challenge: retain participation and learning, then compare two positions of the same folded form and explain their different effects.</li></ul><p>Keep the form or a clear record of it with your learning note. A photo may show the artwork without showing anyone’s face. Label the record paper sculpture, activity two.</p></section>
+<section class="slide" data-type="exit" data-title="Exit · keep the real record" data-min="3" data-ta1="Check the activity labels, safe storage and precise locator. Leave missing participation or learning open for follow-up; never infer both arts activities from the presence of two paper objects.">
+<div class="time">3 min</div>
+<span class="tag"></span>
+<h2>Exit · keep the real record</h2>
+<div class="lundy-status">
+<p>
+<b>SPACE:</b> the learner may pause or choose a private response.</p>
+<p>
+<b>VOICE:</b> the evidence statement remains in the learner’s chosen communication mode.</p>
+<p>
+<b>AUDIENCE:</b> a familiar adult receives and names back exactly what was heard or seen.</p>
+<p>
+<b>INFLUENCE:</b> one real next action is recorded: retain, add method detail, or leave open.</p>
+</div>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<p>Point to one fold or part of the base. Say what you tried and what you found out. Check that the learning note matches the form and uses your words.</p><p>Add the record to the Explore-A file under paper sculpture, activity two. Keep it separate from the drawing record so both activities can be found. Write the actual file name plus page, slide or timecode.</p><p>Next lesson you will try a join and look back at what both activities taught you. Keep the paper form safely if it can be stored. If it cannot, keep a clear record and start a fresh form next time.</p><p>If an activity or its learning is missing, tell the adult which one. A missing record is a job to complete, not a space to fill with a guess.</p></section>
+</main>
+<nav class="controls" aria-label="Lesson controls">
+<button type="button" data-nav="previous">◀ Previous</button>
+<button type="button" data-tool="1">Teacher tools</button>
+<button type="button" data-tool="2">Evidence &amp; print</button>
+<button type="button" data-tool="3">Calm mode</button>
+<button type="button" data-tool="4">Static diagrams</button>
+<button type="button" data-tool="5">Previous</button>
+<button type="button" data-tool="6">Next</button>
+<button type="button" data-nav="next">Next ▶</button>
+</nav>
+<div class="prog" aria-hidden="true">
+<span>
+</span>
+</div>
+<div id="taOverlay" class="overlay" aria-hidden="true">
+<div class="overlay-card">
+<h2></h2>
+<p>Use the least prompt needed. Keep adult preparation and exact-word scribing separate from pupil authorship. Guidance is hidden from the learner surface by default.</p>
+<button type="button" data-close-overlay>Close</button>
+</div>
+</div>
+<section class="print-pack printpack award-print" aria-label="Printable lesson pack">
+      <section class="print-page">
+        <div class="running-head">BUILD Art · Week 2 · Art · Trinity Arts Award Explore</div><h1>Build With Folded Paper</h1>
+        <p><b>Award evidence:</b> Explore Arts Award, Part A; no workbook cell (AAE-H7)</p>
+        <p><b>Objective:</b> Take part in paper sculpture, learn safe folds and ways to make paper stand, and record what you learnt.</p>
+        <h2>My evidence record</h2><p>Make and explore a folded paper form. Record how you took part and what you learnt about a fold, base or space.</p><p>Fold, open and stand · Choose your support · My paper form and learning · Activity two and its evidence</p>
+        <table><thead><tr><th>Evidence focus</th><th>My words or response</th><th>File and page, slide or time</th></tr></thead>
+        <tbody><tr><th scope="row">My own folded paper form, or an accurate record of its real state</th><td class="award-response"></td><td class="award-locator"></td></tr><tr><th scope="row">My words about an action I tried and what the paper did</th><td class="award-response"></td><td class="award-locator"></td></tr><tr><th scope="row">Paper sculpture labelled activity two, in the actual Explore-A file with a precise location</th><td class="award-response"></td><td class="award-locator"></td></tr></tbody></table>
+        <div class="award-print-figures"><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Four linked boxes: bring edges together, crease the fold, open a space, and set the lower edges down."><title>Turn a sheet into a standing fold</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">MATCH</text><text x="73" y="88" text-anchor="middle" font-size="11">bring edges close</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">CREASE</text><text x="231" y="88" text-anchor="middle" font-size="11">press the fold</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">OPEN</text><text x="389" y="88" text-anchor="middle" font-size="11">leave a space</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">STAND</text><text x="547" y="88" text-anchor="middle" font-size="11">set down edges</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">The fold and the base work together to hold the form.</text></svg><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Two columns compare the panels and bases of a tent fold and a back-and-forth zigzag form."><title>Two folded forms to explore</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">TENT FOLD</text><text x="151" y="74" text-anchor="middle" font-size="11">two panels meet at the top</text><text x="151" y="94" text-anchor="middle" font-size="11">open edges form a base</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">ZIGZAG FOLDS</text><text x="469" y="74" text-anchor="middle" font-size="11">folds turn back and forth</text><text x="469" y="94" text-anchor="middle" font-size="11">several panels can rise</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Both forms need a base that rests on the table.</text></svg></div>
+        <p>Name or learner code: ____________________ Date: ____________________</p>
+      </section>
+      <section class="print-page">
+        <div class="running-head">BUILD Art · Week 2 · Art · Trinity Arts Award Explore</div><h1>Build With Folded Paper</h1>
+        <h2>Choose the support you need</h2><div class="print-route"><h3>Core</h3><p>Core: use a large rectangle and one guided fold. Make and position your form; point and say what you learnt for a verbatim scribe.</p></div><div class="print-route"><h3>Extend</h3><p>Extend: choose a tent or zigzag, test how it stands and record learning about a fold, base or space.</p></div><div class="print-route"><h3>Challenge</h3><p>Challenge: retain participation and learning, then compare two positions of the same form and their effects.</p></div>
+        <h2>Check the evidence</h2><ol><li>I actively took part in folding and positioning paper.</li><li>The record accurately shows the form, including any support it needed.</li><li>My learning point describes a fold, base or space I actually explored.</li><li>The paper-sculpture record is distinct from drawing, and missing activity evidence is not claimed as complete.</li><li>The actual file name plus page, slide or timecode locates my work and words.</li></ol>
+        <h2>My review or next step</h2><div class="award-review-space"></div>
+        <p>For a recorded response, write the actual file name and page, slide or timecode.</p>
+      </section>
+    </section><!--n6-nav1:v1--><div class="n6-splash"><div style="text-align:center;margin-top:8px"><svg width="64" height="64" viewbox="0 0 100 100" aria-label="Made by Matt"><circle cx="50" cy="50" r="47" fill="none" stroke="#1e3a8a" stroke-width="3.4"></circle><g transform="translate(0 2)"><path d="M28 71 L28 37 L50 59 L72 37 L72 71" fill="none" stroke="#1e3a8a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 22.5 L51.48 28.52 L57.5 30 L51.48 31.48 L50 37.5 L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"></path></g></svg></div></div><!--/n6-nav1--><script id="lesson-config" type="application/json">{"id": "EXPLORE_ART_W2_A3", "family": "BUILD Art", "week": 2, "slot": "Art · Trinity Arts Award Explore", "title": "Build With Folded Paper", "outcomes": ["Take part in a distinct paper-sculpture activity: learn safe folds and ways to make paper stand. Keep a record of participation. This is activity two."], "cells": [], "objective": "Take part in paper sculpture, learn safe folds and ways to make paper stand, and record what you learnt.", "timings": [0, 3, 3, 6, 4, 5, 5, 11, 3], "artsAward": {"level": "Explore", "parts": ["A"]}, "planId": "f51b3fee9b27", "weDoType": "sort-or-match", "tierLadder": ["Core", "Extend", "Challenge"]}</script>
+<script data-award-chassis="">/* Runtime for newly authored award decks; no persistence or external dependencies. */
+(function () {
+  'use strict';
+
+  function boot() {
+    const deck = document.querySelector('main.deck');
+    const slides = Array.from(document.querySelectorAll('main.deck > .slide'));
+    if (!deck || !slides.length) return;
+    const progress = document.querySelector('.prog');
+    const bar = document.querySelector('.prog > span');
+    const overlay = document.getElementById('taOverlay');
+    const card = overlay && overlay.querySelector('.overlay-card');
+    const closeButton = overlay && overlay.querySelector('[data-close-overlay]');
+    const teacherButtons = document.querySelectorAll('[data-tool="1"]');
+    let index = Math.max(0, slides.findIndex(slide => slide.classList.contains('active')));
+    let returnFocus = null;
+    let notes = null;
+    let slotHost = null;
+
+    function show(next) {
+      index = (next + slides.length) % slides.length;
+      slides.forEach(function (slide, i) {
+        slide.classList.toggle('active', i === index);
+        slide.setAttribute('aria-hidden', i === index ? 'false' : 'true');
+      });
+      if (bar) bar.style.width = ((index + 1) / slides.length * 100) + '%';
+      if (progress) {
+        progress.removeAttribute('aria-hidden');
+        progress.setAttribute('role', 'progressbar');
+        progress.setAttribute('aria-label', 'Lesson progress');
+        progress.setAttribute('aria-valuemin', '1');
+        progress.setAttribute('aria-valuemax', String(slides.length));
+        progress.setAttribute('aria-valuenow', String(index + 1));
+        progress.setAttribute('aria-valuetext', 'Stage ' + (index + 1) + ' of ' + slides.length);
+      }
+      deck.scrollTop = 0;
+    }
+
+    function isOpen() {
+      return Boolean(overlay && overlay.classList.contains('on'));
+    }
+
+    function fillNotes() {
+      notes.replaceChildren();
+      const heading = document.createElement('h3');
+      heading.textContent = slides[index].dataset.title || 'Current stage';
+      notes.appendChild(heading);
+      ['ta1', 'ta2'].forEach(function (key) {
+        const text = slides[index].dataset[key];
+        if (!text) return;
+        const paragraph = document.createElement('p');
+        paragraph.textContent = text;
+        notes.appendChild(paragraph);
+      });
+      const sources = index === 0 ? [slides[0]] : [slides[index], slides[0]];
+      sources.forEach(function (source) {
+        source.querySelectorAll('[data-mbm-guide]').forEach(function (note) {
+          // The slot reader has its own live state and file listener: never clone it.
+          if (note.id === 'award-slot-panel' || note.closest('#award-slot-panel')) return;
+          const copy = note.cloneNode(true);
+          copy.removeAttribute('id');
+          copy.querySelectorAll('[id]').forEach(node => node.removeAttribute('id'));
+          notes.appendChild(copy);
+        });
+      });
+      // mount() runs on DOMContentLoaded. A real click comes after that event,
+      // regardless of the order in which the two embedded scripts were loaded.
+      const panel = document.getElementById('award-slot-panel');
+      if (panel && !slotHost.contains(panel)) slotHost.appendChild(panel);
+    }
+
+    function openTeacher(button) {
+      if (!card || isOpen()) return;
+      returnFocus = button || document.activeElement;
+      fillNotes();
+      overlay.classList.add('on');
+      overlay.setAttribute('aria-hidden', 'false');
+      teacherButtons.forEach(node => node.setAttribute('aria-expanded', 'true'));
+      (closeButton || card).focus();
+    }
+
+    function closeTeacher() {
+      if (!isOpen()) return;
+      overlay.classList.remove('on');
+      overlay.setAttribute('aria-hidden', 'true');
+      teacherButtons.forEach(node => node.setAttribute('aria-expanded', 'false'));
+      if (returnFocus && returnFocus.isConnected) returnFocus.focus();
+    }
+
+    function focusable() {
+      return Array.from(card.querySelectorAll('a[href], button, input, select, textarea, [tabindex]'))
+        .filter(node => !node.disabled && node.tabIndex >= 0 && node.getClientRects().length);
+    }
+
+    if (card) {
+      overlay.setAttribute('role', 'dialog');
+      overlay.setAttribute('aria-modal', 'true');
+      overlay.setAttribute('aria-hidden', 'true');
+      overlay.classList.remove('on');
+      card.tabIndex = -1;
+      let title = card.querySelector('h2');
+      if (!title) {
+        title = document.createElement('h2');
+        card.prepend(title);
+      }
+      title.id = 'award-teacher-title';
+      title.textContent = 'Teacher tools';
+      overlay.setAttribute('aria-labelledby', title.id);
+      notes = document.createElement('div');
+      notes.id = 'award-teacher-notes';
+      slotHost = document.createElement('div');
+      slotHost.id = 'award-teacher-slots';
+      card.insertBefore(notes, closeButton);
+      card.insertBefore(slotHost, closeButton);
+      if (closeButton) closeButton.addEventListener('click', closeTeacher);
+      teacherButtons.forEach(function (button) {
+        button.setAttribute('aria-controls', overlay.id);
+        button.setAttribute('aria-expanded', 'false');
+        button.addEventListener('click', () => openTeacher(button));
+      });
+      // Keep focus in the open dialog, including when scripts attempt to move it.
+      document.addEventListener('focusin', function (event) {
+        if (isOpen() && !overlay.contains(event.target)) (closeButton || card).focus();
+      });
+    }
+
+    document.querySelectorAll('[data-nav="previous"], [data-tool="5"]')
+      .forEach(button => button.addEventListener('click', () => { if (!isOpen()) show(index - 1); }));
+    document.querySelectorAll('[data-nav="next"], [data-tool="6"]')
+      .forEach(button => button.addEventListener('click', () => { if (!isOpen()) show(index + 1); }));
+    document.querySelectorAll('[data-tool="2"]')
+      .forEach(button => button.addEventListener('click', () => window.print()));
+    [['3', 'calm'], ['4', 'teacher-freeze']].forEach(function (item) {
+      const buttons = document.querySelectorAll('[data-tool="' + item[0] + '"]');
+      function sync() {
+        const active = document.body.classList.contains(item[1]);
+        buttons.forEach(button => button.setAttribute('aria-pressed', String(active)));
+      }
+      buttons.forEach(button => button.addEventListener('click', function () {
+        document.body.classList.toggle(item[1]);
+        sync();
+      }));
+      sync();
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (isOpen()) {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          closeTeacher();
+        } else if (event.key === 'Tab') {
+          const items = focusable();
+          const first = items[0] || card;
+          const last = items[items.length - 1] || card;
+          if (!items.length || !items.includes(document.activeElement)
+              || (event.shiftKey && document.activeElement === first)
+              || (!event.shiftKey && document.activeElement === last)) {
+            event.preventDefault();
+            (event.shiftKey ? last : first).focus();
+          }
+        }
+        return;
+      }
+      const target = event.target;
+      if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey
+          || (target && (target.isContentEditable
+              || (typeof target.closest === 'function' && target.closest('input, textarea, select'))))
+          || document.querySelector('dialog[open], .overlay.on, [role="dialog"][aria-hidden="false"]')) return;
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        event.preventDefault();
+        show(index + (event.key === 'ArrowRight' ? 1 : -1));
+      }
+    });
+    show(index);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once: true});
+  else boot();
+}());
+</script></body>
+</html>

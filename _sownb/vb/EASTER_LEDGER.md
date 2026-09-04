@@ -1814,3 +1814,37 @@ preparation only. Screen/print duplicate claims are corrected together; all
 ten stage timings, existing cells, styles and SVGs remain. All allowed MIMA
 examples in the other decks and card pack remain unchanged. Twelve adapter
 checks pass; actual rendered browser checks are required before merge.
+
+
+## Explore next-batch plan checkpoint — 0 of 14 authored
+
+Bronze has fourteen authored, built and award-gated decks, and its actual
+fourteen-deck Chromium check passed on PR304. While the merge sequence
+finishes, the next branch records fourteen Explore plans before authoring.
+Ceiling24; next planned units14. No Explore deck has yet been written.
+The registered requirements govern; original AAEsection5 has not been
+recovered, so chosen media and weekly distribution are implementation
+choices, not invented order text. An independent24-cell scan finds no
+complete claim ready for this strand/week. No cell is invented or reassigned.
+Explore stays BUILD-only and distinct from Bronze.
+
+
+
+
+
+
+## Explore fourteen-deck pack checkpoint
+
+All fourteen Explore decks are authored and built, with zero donor leakage.
+Each passes the comparative nine-gate stack; g16/g19/g24 remain PRE-EXISTING
+on the same donor. The separate binding g30–g35 scan passes all fourteen.
+Measured teaching words span 1091–1308 in the BUILD Art 888–1523 band; pupil
+FK spans 2.52–4.00 inside BUILD 1–4. Core retains all required evidence.
+
+The sixteen checksum rows cover fourteen lessons, the start page and manifest.
+A1–A4 serve two arts activities; B1–B4 require artist and organisation experience
+through live or active work; C1–C4 retain a distinct artwork, its process and
+final work; D1–D2 support choice and actual sharing of enjoyment/achievement.
+Both Part B slot keys are read from the current source. The suggested four-file
+layout is within the ten-file cap. Independent workbook review supports zero
+new cells, without inheriting Bronze's H7 ruling. Browser proof is pending.
