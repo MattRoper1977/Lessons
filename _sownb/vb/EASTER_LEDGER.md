@@ -926,3 +926,112 @@ locally before a push; it takes seconds.
 
 Mechanism **23 tools, 201 controls**, derived, `--prove-red` PASS.
 Stale-evidence sweep: 0 inconclusive rows.
+
+---
+
+## BATCH 3 — twenty-four lessons, Art among them for the first time. PR #294
+
+**Ceiling: 24 of 24 lesson units.** Batch full.
+
+    W1  Art      BUILD, LAUNCH
+    W2  Art      BUILD, GROW, LAUNCH
+    W3  Art      BUILD, GROW, LAUNCH
+    W4  ASDAN    BUILD, GROW, LAUNCH   Humanities BUILD, GROW, LAUNCH   Art BUILD, GROW, LAUNCH
+    W5  ASDAN    BUILD, GROW, LAUNCH ×2   Humanities BUILD, GROW, LAUNCH
+
+Week-major, ASDAN → Science → Humanities → Art, per §5. Every deck 24/24 PASS.
+
+### Nine plans held back, each with the reason on the page
+
+Six Science plans read *"Baseline assessment (PythonAnywhere) — no new science
+content; unit starts W3"*. Authoring a teaching deck against an outcome that
+says there is nothing to teach would be shipping something doubtful, and BUILD
+Science's family floor is **1229** pupil words, which a baseline-assessment
+session cannot honestly carry. The cover teacher does need a session sheet for
+these; what it should contain is a ruling, not a gate's decision. **A3-H11.**
+
+Three plans are RESHELL — they name a standing deck to reshell rather than a
+lesson to author, which is a different pipeline. **A3-H12.**
+
+Both are recorded in the target list itself, so the cells stay visibly open
+rather than quietly missing.
+
+### The target list is generated, and it carries the spec name
+
+`build_batch3_targets.py` writes the batch from `EASTER_TARGETS.json` with that
+file's sha256 recorded in what it writes. It also writes the **content spec
+filename into each row**, and that is not tidiness: `LANE_SUBJECT_Wn` is not
+unique. Two cover-taught LAUNCH ASDAN plans share week 5, and two shared week 1
+in batch 2. A driver computing the name at use would have handed the second
+plan the first plan's content, and every gate but g29 would have passed it.
+Colliding names are disambiguated by the plan's own derived id.
+
+### Every gate run twice, on the deck and on its donor
+
+`prove_chassis` judges comparatively: green is a pass, red where the donor is
+also red is PRE-EXISTING and named, red where the donor is green is a
+REGRESSION and fails the deck. It caught four real ones during the run —
+LAUNCH Art W1 at 802 words against a floor of 885, LAUNCH ASDAN W4 at 989
+against 1058, LAUNCH ASDAN W5B at 1001 against 1058, and BUILD ASDAN W4 at
+**FK 4.16 against the BUILD ceiling of 4.0**.
+
+**That last one is worth keeping.** Almost all of the 4.16 came from the tier
+ladder: a list whose items carry no terminal punctuation reads as ONE sentence
+to any Flesch-Kincaid measure, so a three-item ladder counted as a forty-word
+sentence. Punctuating the items took the deck to **3.20** with no change to a
+word of teaching. It is a real reading-load fact, not a scoring trick — a
+ladder read aloud has sentence boundaries in it — and it is now applied to
+every spec this campaign writes. The two batch-1 specs were deliberately left
+alone, because their decks are already shipped and a spec must stay in step
+with the deck built from it.
+
+### A3-H9 CLOSED — the Humanities manifests, in their own hand
+
+§3 ruled: never rewrite a schema somebody else wrote; derive the grammar from
+the rows already there; prove the round trip; any delta beyond the intended rows
+is a revert.
+
+`manifest_sequence.py` does exactly that, and the round trip is **measured, not
+assumed** — the file is re-serialised with no changes at all and the bytes must
+come back identical, with the serialisation derived per file. One manifest in
+the estate does not round-trip: `Science_Teesside/Launch/W14-W15_2026-27` keeps
+its `cadence` array on one hand-formatted line, which no `json.dumps` with
+indentation reproduces. It is **REFUSED** rather than reflowed, and a control
+pins that refusal.
+
+The `lessonCount` / `plannedLessonCount` question that caused the earlier revert
+is settled by measurement: every manifest in this estate carrying both has them
+**equal**, and equal to `len(sequence)`. So they move together, and a control
+checks that invariant across the estate before the tool writes anything.
+
+    BUILD/GROW/LAUNCH Humanities   8 -> 10 lessons, 320 -> 400 minutes
+
+The diff is the two rows and the three derived counts. Nothing else.
+
+**A finding, logged not fixed.** Those folders hold *more* unlisted decks than
+this batch added — batch 2's three Humanities decks and three older `*_HUM_W2`
+files. This run added only what it authored and printed the rest; folding
+somebody else's decks into a manifest inside a lesson PR would hide the drift
+rather than record it. **A3-H13.**
+
+### Two defects the batch found in the pipeline
+
+1. **`deck_row` compared values, not provenance.** A deck whose week really was
+   the template row's week read as "unfilled" and was refused, and the message
+   blamed the deck. Two of this campaign's own decks were rejected that way.
+   It now tracks which keys were filled from the deck.
+2. **A new evidence format the estate's own sweep could not read** — see
+   WRONG_BEFORE_RIGHT. CI caught it within a minute of the push.
+
+### Furniture
+
+Nine packs re-verified with `sha256sum -c`: three new Art packs created with
+manifests and checksums, three ASDAN packs extended, three Humanities packs
+given checksum rows with their manifests left to `manifest_sequence`. Existing
+checksum rows are untouched in every case; only new rows and `manifest.json`'s
+own digest moved.
+
+Mechanism **25 tools, 217 controls**, derived, `--prove-red` PASS.
+g29 across every authored deck: **43 decks, 40 PASS, 0 RED, 3 SKIP** — the three
+skips are the chassis, which carry no `planId` and are correctly not treated as
+lessons. g27 PASS. Stale-evidence sweep: 0 inconclusive rows.

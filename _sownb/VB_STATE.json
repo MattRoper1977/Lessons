@@ -3246,7 +3246,7 @@
  },
  "resume_easter_a3": {
   "order": "VB-EASTER-A3N-2",
-  "status": "RUNNING (#292 merged and blob-verified; ART_DONOR_v1 open as #293)",
+  "status": "RUNNING (#293 merged and blob-verified; batch 3 open as #294)",
   "mainHeadVerification": "blob-verified: all ten paths changed by #281 hash identically between the merge commit and branch head b35588b; not taken from the merge status",
   "correction": "the previous revision of this key recorded main at 727c3162 and #281 as NOT MERGED on a stalled sixth check. The sixth check completed successfully at 22:50:33; the API served a stale job record. See EASTER_LEDGER.md 'CORRECTION' and WRONG_BEFORE_RIGHT.",
   "landed": [
@@ -3316,13 +3316,21 @@
     "merge": "db650065",
     "units": 0,
     "verified": "7 of 7 paths blob-identical between origin/main and the branch head"
+   },
+   {
+    "pr": 293,
+    "what": "A3N-2 §1 ART_DONOR_v1, three chassis",
+    "merge": "7dbe4c74",
+    "units": 0,
+    "verified": "27 of 27 paths blob-identical between origin/main and the branch head"
    }
   ],
   "open": [],
   "ceiling": {
    "rule": "per batch, lesson units only (R1)",
-   "batch1": "0/24",
-   "spent": 0
+   "batch1": "2/24",
+   "batch2": "14/24",
+   "batch3": "24/24 FULL"
   },
   "headline": {
    "inScope": 573,
@@ -3357,10 +3365,10 @@
    "evidence": "_sownb/vb/evidence/a3h6/"
   },
   "nextActions": [
-   "merge #293 and blob-verify",
-   "batch 3 with Art plans included, week-major ASDAN → Science → Humanities → Art",
-   "§3 A3-H9 inside the batch that ships the three Humanities decks",
-   "§4 data-ta1/ta2 estate-wide tail PR once its preconditions are met"
+   "merge #294 and blob-verify",
+   "batch 4: the 19 overflow plans, week-major from W5",
+   "§4 data-ta1/ta2 estate-wide tail PR once its preconditions are met",
+   "A3-H11 needs a ruling before the six Science baseline cells can be closed"
   ],
   "humanItems": [
    "A3-H1",
@@ -3372,7 +3380,10 @@
    "A3-H7",
    "A3-H8",
    "A3-H9 (Humanities manifest sequence/notAuthoredYet needs updating for 3 new decks)",
-   "A3-H10"
+   "A3-H10",
+   "A3-H11",
+   "A3-H12",
+   "A3-H13"
   ],
   "resumePointer": "_sownb/vb/EASTER_LEDGER.md",
   "a3h2": {
@@ -3683,6 +3694,39 @@
     "build_batch.py still keyed on family+week, the non-unique key g29 exists to catch",
     "a whole-document sweep mutated the tree under a live lxml tree.iter(), silently skipping seventeen donor blocks"
    ]
+  },
+  "batch3": {
+   "units": 24,
+   "passed": 24,
+   "shape": "week-major W1-W5; ASDAN -> Science -> Humanities -> Art; BUILD -> GROW -> LAUNCH",
+   "art": "11 of the 24 are Art, the first Art lessons this estate has had that any gate can read",
+   "held": {
+    "count": 9,
+    "A3-H11": "six Science baseline plans whose own outcome says there is no new content to teach",
+    "A3-H12": "three RESHELL plans that name a standing deck, a different pipeline"
+   },
+   "targetList": {
+    "file": "tools/easter/BATCH3_TARGETS.json",
+    "derivedFrom": "tools/easter/EASTER_TARGETS.json with its sha256 recorded",
+    "specNameInRow": "LANE_SUBJECT_Wn is NOT unique - two cover-taught LAUNCH ASDAN plans share week 5 - so the spec filename is derived once, with collisions disambiguated by the plan's own id"
+   },
+   "regressionsCaught": [
+    "LAUNCH Art W1 at 802 pupil words against a floor of 885",
+    "LAUNCH ASDAN W4 at 989 against 1058",
+    "LAUNCH ASDAN W5B at 1001 against 1058",
+    "BUILD ASDAN W4 at FK 4.16 against the BUILD ceiling of 4.0"
+   ],
+   "readingLoadFinding": "an unpunctuated list reads as ONE sentence to any Flesch-Kincaid measure, so a three-item tier ladder counted as a forty-word sentence. Punctuating the items took BUILD ASDAN W4 from 4.16 to 3.20 with no change to a word of teaching. Applied to every spec this campaign writes; the two batch-1 specs were left alone because their decks are already shipped and a spec must stay in step with its deck.",
+   "g29": "43 decks: 40 PASS, 0 RED, 3 SKIP (the three chassis, which carry no planId)",
+   "furniture": "nine packs verify with sha256sum -c; three new Art packs created"
+  },
+  "a3h9": {
+   "status": "CLOSED for batch 3's six decks",
+   "how": "manifest_sequence.py: grammar derived from the existing rows, round trip measured byte-for-byte per file, only the intended rows and the three derived counts change",
+   "countsInvariant": "every manifest in this estate carrying both has lessonCount == plannedLessonCount == len(sequence); a control checks it before the tool writes",
+   "refused": "Science_Teesside/Launch/W14-W15_2026-27 keeps its cadence array on one hand-formatted line that no json.dumps reproduces; REFUSED rather than reflowed",
+   "moved": "BUILD/GROW/LAUNCH Humanities 8 -> 10 lessons, 320 -> 400 minutes",
+   "openTail": "A3-H13, nine further unlisted decks in those folders, six of them pre-dating this campaign"
   }
  }
 }
