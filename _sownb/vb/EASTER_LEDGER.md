@@ -1458,3 +1458,29 @@ eleven times between them** — the thing §3 exists to prevent, in decks that
 predate it. Reported, not gated, because they are live.
 
 Mechanism **26 tools, 237 controls**, derived, `--prove-red` PASS.
+
+### The census the register makes possible, measured after batch 4
+
+`g30 --scope live` over every HTML file naming the Arts Award, run the way CI
+runs it:
+
+    82 decks name the Arts Award   0 declare a level to the gates
+    Art_Teesside 66 · GROW_Estate_v3 8 · BUILD_Estate_v3 8
+    authored by this campaign (carry a planId) 17 — 7 BUILD, 6 LAUNCH, 4 GROW
+    predate the register 65
+    inferred level: Bronze 29 · Explore 26 · Silver 20 · undetermined 7
+    3 with contradictions — the three MIMA decks, the same three R2 found
+
+**Two things in that worth reading twice.**
+
+R3(i) scopes the census to the 76 live Art decks. **Sixteen of the 82 are not in
+`Art_Teesside`** — eight in each of the two `Estate_v3` folders. A census scoped
+by folder misses them, so it is scoped by what a deck *claims*, not by where it
+sits.
+
+And **seventeen of the undeclared decks are this campaign's own.** They name
+Trinity Arts Award Discover, Explore or Silver Unit 1 in their slot line and
+declare nothing a gate can read. Report-only under `--scope live`, which is
+right for work that predates the register — but they are new work, and the
+register is what makes `--scope new` mean something for the Bronze, Explore and
+Silver decks still to be authored.
