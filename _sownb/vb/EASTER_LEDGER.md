@@ -1493,3 +1493,55 @@ declare nothing a gate can read. Report-only under `--scope live`, which is
 right for work that predates the register — but they are new work, and the
 register is what makes `--scope new` mean something for the Bronze, Explore and
 Silver decks still to be authored.
+
+## AAE-R1B R2 — the venue mentions, classified line by line
+
+R2: classify every line EXAMPLE (an organisation named as teaching content or
+"e.g." — keep) or ASSERTED (the pupil's visit, attendance or booking — convert
+to an `ORG_SLOT`/`EVENT_SLOT` read). *Do not strip MIMA as an example: a
+Teesside Art deck may name Teesside's gallery.*
+
+`tools/artsaward/venue_classify.py`, 5 controls, all firing. It searches for
+all five candidate organisations in `SLOTS.json`, not only the one the order
+names.
+
+    20 mentions   1 ASSERTED   19 EXAMPLE
+    every one of them MIMA — The Auxiliary, Sawdust, Navigator North and
+    Platform A appear nowhere in the estate
+
+    4  Art_Teesside/Build/BUILD_ART_A2_W2_Arts_Inspiration.html
+    6  Art_Teesside/Build/BUILD_ART_W2_Artists_Makers_and_Teesside_Connections.html
+    1  Art_Teesside/Grow/GROW_ART_W4_Arts_Event_Attend_Capture_and_Review.html   ASSERTED
+    3  Art_Teesside/Build/Spring2_2026-27/SPRING2_SOURCE_AND_ORGANISATION_CARDS.html
+    3  Art_Teesside/Grow/Spring2_2026-27/SPRING2_SOURCE_AND_ORGANISATION_CARDS.html
+    3  Art_Teesside/Launch/Spring2_2026-27/SPRING2_SOURCE_AND_ORGANISATION_CARDS.html
+
+**The order's number reconciles exactly, and the extra nine are worth having.**
+Eleven of the twenty are in the three *teaching decks* R2 names — 4 + 6 + 1 —
+which is the eleven. The other nine are in three copies of one *card pack*, one
+per pathway, where an organisation card reads *"Organisation card · MIMA.
+Middlesbrough Institute of Modern Art describes itself as an art museum and
+gallery…"*. That is the textbook EXAMPLE: content about an organisation, making
+no claim that anybody went. A classification scoped to decks would have left
+them unexamined, and the estate would still not know what they said.
+
+### The one ASSERTED line, and why the drawing survives it
+
+`GROW_ART_W4_Arts_Event_Attend_Capture_and_Review.html`, line 359:
+
+    <text …>ADMIT ONE</text> … <text …>MIMA · GALLERY · SHOW</text>
+
+A decorative SVG ticket, lettered with a venue, in a deck about attending an
+arts event. **A ticket depicts an attendance whatever the words around it say** —
+it tells a pupil they are going to a named place, and nothing in this estate is
+booked. The conversion is one string:
+
+    '>MIMA · GALLERY · SHOW<'  ->  '>GALLERY · SHOW<'
+
+The ticket graphic stays. The venue comes from `EVENT_SLOT`, which is
+`UNCONFIRMED`, which is the truth.
+
+Nineteen EXAMPLE lines are untouched, by design and by the order. A control
+holds that default open: *a bare fact defaults to EXAMPLE, because a Teesside
+Art deck may name Teesside's gallery.* Another refuses to apply a conversion
+whose string no longer matches its file, rather than editing blind.
