@@ -1831,3 +1831,7 @@ checks pass; actual rendered browser checks are required before merge.
 ## Verified merge #305
 
 Exact head `99b8c114c4443f96da92151edc5fb7c991ef15df` merged as `fb96752c63077c41774673dcf3628c6f39cdb2d8`. Against actual fork `2f7eda8e62096cd23fef8128b92c3563ed170bc3`, all 12/12 changed blobs match. Evidence: `_sownb/vb/evidence/aae/merge305.json`. Required head runs: 33920574791. This record does not itself claim served-byte equality.
+
+## R2 evidence subject correction — zero units
+
+Current-head browser passed, but the estate sweep rejected the adapter report because its PASS rows lacked a subject file. The generator and regenerated report now name the actual deck. The structural snapshot uses repository-relative paths. No control, reported result, gate or game was changed to clear this failure.
