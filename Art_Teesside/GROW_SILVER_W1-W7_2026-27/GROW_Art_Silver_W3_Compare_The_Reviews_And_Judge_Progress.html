@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Compare The Reviews And Judge Progress</title><style>
+:root{--bg:#141C24;--panel:#202D37;--panel2:#283743;--text:#F2EFE5;--muted:#C8CECA;--steel:#5B91A5;--oxide:#D1673D;--teal:#2BA193;--gold:#DFAD3E;--violet:#8B6CC7;--line:#42515d;--paper:#fff;--ink:#172334;--danger:#b93f4b}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:"Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--bg)}
+body{overflow:hidden}a,button{font:inherit}button,a.mbmhome{min-height:44px;min-width:44px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:8px;top:8px;z-index:50;background:#fff;padding:10px}
+.deck{height:100vh;padding:18px 18px 112px;overflow:auto}.slide{display:none;max-width:1120px;min-height:calc(100vh - 145px);margin:auto;background:var(--paper);border:2px solid var(--line);border-top:10px solid var(--teal);border-radius:18px;padding:22px;box-shadow:0 8px 30px #10233f18}.slide.active{display:block}
+h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-size:clamp(1.5rem,3vw,2.3rem);margin:.4rem 0 1rem}h3{margin:.2rem 0 .45rem}p,li{line-height:1.5}.tag,.time,.chips span{display:inline-block;border-radius:999px;padding:6px 10px;font-weight:800}.tag{background:#EEF5F4}.time{float:right;background:var(--ink);color:#fff}.chips{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.chips span{background:#FFF4D6}
+.hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,.7fr);gap:18px}.hero-visual{display:grid;gap:10px;align-content:center;background:var(--ink);color:#fff;border-radius:16px;padding:18px;min-height:150px;text-align:center}.hero-visual span{color:var(--teal)}
+.box,.route,.route-card,.evidence-gate,.lundy,.lundy-strip,.ladder,.prompt-ladder,.ta-card,.modal,.drawer,dialog{border:2px solid var(--line);border-radius:13px;padding:13px;margin:12px 0;background:#fff}.lo{border-left:8px solid var(--teal)}.truth{border-left:8px solid var(--oxide);background:#FFF4D6;padding:12px}.access{background:#EEF5F4;padding:12px;border-radius:12px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.routes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.route.s,.route.supported,.route-card.supported{border-top:7px solid var(--teal)}.route.m,.route.standard,.route-card.standard{border-top:7px solid var(--steel)}.route.h,.route.stretch,.route-card.stretch{border-top:7px solid var(--oxide)}.options{display:grid;gap:9px}.options button{text-align:left;padding:12px;border:2px solid var(--line);border-radius:10px;background:#fff}.vocabrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.vterm{border:2px solid var(--line);padding:12px;border-radius:12px}.vterm span{display:block;margin-top:5px}.lundy-grid,.lundy-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center;font-weight:900}.ladder,.prompt-ladder{font-weight:700}.ta-card,.modal,.drawer{background:#FFF4D6}
+.controls{position:fixed;left:8px;right:8px;bottom:58px;z-index:20;display:flex;gap:7px;overflow-x:auto;padding:8px;background:var(--ink);border-radius:14px}.controls button,.controls a{flex:0 0 auto;border:2px solid #fff;border-radius:9px;padding:7px 10px;background:#fff;color:var(--ink);font-weight:800;text-decoration:none}.prog{position:fixed;left:12px;right:12px;bottom:46px;height:6px;background:#fff;border:1px solid var(--line);z-index:19}.prog>span{display:block;height:100%;width:11.11%;background:var(--teal)}
+.overlay{display:none;position:fixed;inset:0;z-index:40;background:#10233fdd;align-items:center;justify-content:center;padding:18px}.overlay.on{display:flex}.overlay-card{max-width:700px;background:#fff;border-radius:15px;padding:20px}.overlay-card button{padding:8px 12px}
+.print-pack{display:none}.printpack{display:none}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(max-width:720px){.deck{padding:10px 10px 118px}.slide{padding:15px}.hero,.routes,.vocabrow{grid-template-columns:1fr}.lundy-grid{grid-template-columns:1fr 1fr}}
+@media print{html,body{color-scheme:light!important;background:#fff;color:#111;overflow:visible}body>*:not(.print-pack){display:none!important}.print-pack{display:block!important}.printpack{display:block!important}.print-page{break-after:page;page-break-after:always;padding:8mm;min-height:255mm}.print-page:last-child{break-after:auto;page-break-after:auto}.print-pack h1{font-size:20pt;line-height:1.15;margin:0 0 3mm}.print-pack h2{font-size:13pt;line-height:1.2;margin:3mm 0 1.5mm}.print-pack p,.print-pack li{font-size:10.5pt;line-height:1.35}.running-head{font-size:9pt;border-bottom:1px solid #666;margin-bottom:4mm;padding-bottom:2mm}.proute,.print-route{display:block;border:1px solid #777;padding:3mm;margin:3mm 0;break-inside:avoid}@page{size:A4;margin:10mm}}
+</style><style id="award-print-layout">
+      @media screen {
+        [data-mbm-guide]{display:none!important}
+        #taOverlay [data-mbm-guide]{display:block!important}
+        #taOverlay .overlay-card{max-height:calc(100vh - 36px);overflow:auto;width:min(700px,100%)}
+        body.calm .slide{box-shadow:none}
+        body.calm *,body.calm *::before,body.calm *::after{animation:none!important;transition:none!important}
+        body.teacher-freeze *,body.teacher-freeze *::before,body.teacher-freeze *::after{animation-play-state:paused!important;transition:none!important}
+      }
+      @media print {
+        .award-print .print-page{box-sizing:border-box;padding:4mm;min-height:0}
+        .award-print table{width:100%;border-collapse:collapse;table-layout:fixed}
+        .award-print th,.award-print td{border:1px solid #777;padding:2mm;vertical-align:top;font-size:9pt}
+        .award-print th:first-child{width:34%}.award-print th:last-child{width:23%}
+        .award-print td.award-response{height:18mm}
+        .award-print-figures svg{display:block;width:100%;max-height:34mm;margin:2mm 0}
+        .award-print .print-route{padding:2mm;margin:2mm 0}
+        .award-print h3{font-size:11pt;margin:0}
+        .award-print .award-review-space{height:35mm;border:1px solid #777}
+      }
+    </style></head><body><!--n6-nav1:v1--><style id="n6-nav1-css">@media print{.mbmhome,.n6-splash{display:none!important}}.mbmhome{display:inline-block;margin:6px 0 0 8px;font:600 .85rem/1.4 "Segoe UI",Arial,sans-serif;color:#1e3a8a;text-decoration:none}.mbmhome:hover,.mbmhome:focus{text-decoration:underline}</style><a class="mbmhome" href="../../index.html" aria-label="Back to the Lessons catalogue">← Lessons</a><!--/n6-nav1--><a class="skip" href="#lessonDeck">Skip to lesson</a><main id="lessonDeck" class="deck"><section class="slide active" data-type="title" data-title="Lesson overview" data-min="0"><div class="time">0 min</div><span class="tag"></span><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><p>GROW · Art · Trinity Arts Award Silver. Compare The Reviews And Judge Progress.</p><p>Objective: Use actual challenge work and another person’s review to make your own final judgement of progress.</p><p>Success evidence: Ongoing practice evidence, a real review of the challenge by someone else, the pupil’s own final review and separate exact locations for both reviews.</p><p>Use your own artwork, interests and practical choices. You can choose an abstract subject; you do not need to disclose private experiences.</p><p>40 minutes. Keep original work before making changes. Ask staff about safe tools and access.</p><div class="box rehearsal" data-mbm-guide="staff">This deck directly serves Silver Unit 1, Part 1B, Implement and review the arts challenge. Silver has TWO units, evidenced separately. This lesson belongs to Unit 1, Arts practice and pathways; keep its evidence labelled by unit and part. ONE Attempted allowed PER UNIT. Any Not Attempted = Below Pass. The whole Silver portfolio has a 20-file cap, not twenty per unit or one new file per lesson. The four assessment areas are art form knowledge and understanding, creativity, planning and review, and communication. Results are Pass or Below Pass only. Only an adviser trained at Silver may assess; delivery is through a validated centre. Staff must confirm those conditions; neither is asserted as completed here. The arts challenge must not focus on leadership. Advisers must not write pupil plans, reviews or evidence. Prompt, read or scribe the pupil’s exact words and check them back unchanged. Core, Extend and Challenge vary support within Silver, retaining the same evidence expectation and the pupil’s own choices. Digital evidence is organised by unit and part, with every locator naming the actual filename plus page, slide or timecode. A portfolio structure is an option, not an extra award rule. Samples, trial counts and prompts here are teaching scaffolds, not qualification quotas. Use accessible tools and communication without forced personal disclosure, compulsory filming or public posting. This forty-minute lesson supports a longer programme of real guided and independent practice; it does not claim all award hours are complete. Source: tools/artsaward/SPEC.json, Silver and universal rules. Part 1B requires ongoing evidence, someone ELSE’s review of the challenge, and the pupil’s own final review. Preserve all three; one cannot substitute for another. The outside reviewer may be a peer, staff member or another appropriate person who can examine the actual challenge evidence; they are not automatically acting as the assessing adviser. Record their identity or role and the location of their genuine review. The pupil makes their own judgement rather than copying or improving that review. A final review may honestly report an unmet artistic aim. If actual practice or a required review is absent, record the gap and arrange completion; a teacher model or generic checklist tick does not fill it. Allow sufficient programme time to complete meaningful practice before the final review.</div></section><section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="3" data-ta1="Check actual process evidence and whether either required review is missing. Arrange a willing reviewer who can examine the work; never supply an invented outside response."><div class="time">3 min</div><span class="tag"></span><h2>Arrival · retrieve</h2><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><h3>Bring the whole challenge into view</h3><p>Open your aim, action plan and process record. Put the starting work beside a later state that helps show what happened.</p><p>Check that the practice actually took place. A plan and a final picture alone may hide the decisions made between them.</p><p>Find the trials, changes and reasons you kept. You will use them to review the challenge rather than rely on memory.</p><p>You need two distinct reviews: another person's review of the challenge and your own final review.</p><p>A comment about one mark may help. It may not review the whole challenge.</p><p>Show the reviewer your aim and work. Listen to their view. Then decide what your own evidence supports.</p></section><section class="slide" data-type="starter" data-title="Starter · create the need" data-min="3" data-ta1="Model consistent viewing with actual samples. Do not treat camera exposure, neatness or detail as automatic evidence of artistic improvement."><div class="time">3 min</div><span class="tag"></span><h2>Starter · create the need</h2><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><h3>Progress depends on the intention</h3><p>Place two versions of a piece where you can view them in the same light. Look from a similar distance and angle.</p><p>These simple choices make comparison fairer. A darker photograph does not necessarily mean the artwork gained stronger tone.</p><p>For a paper form, view the base and the side, not only the front. If the plan concerned stability, test it on the same flat surface. If it concerned shape, compare the silhouette from the intended view.</p><p>Read the original intention before judging the result. A rough texture may serve one purpose, while a smooth transition suits another.</p><p>Ask which features changed and whether those changes helped the intended effect. Improvement does not always mean adding detail or making the surface neater.</p><p>You may find a strength that grew and a difficulty that remains. Both belong in an honest review.</p></section><section class="slide" data-type="ido" data-title="I Do · model" data-min="7" data-ta1="Use real adult-made samples and visibly label the demonstration. Do not distribute the adult’s judgement as a pupil review. Invite evidence-based differences about artistic effect."><div class="time">7 min</div><span class="tag"></span><h2>I Do · model</h2><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><h3>Adult model: connect a judgement to work</h3><p>The adult places their own hatching trials in order. They remind the class of the intended effect before judging the result.</p><p>First they look at line spacing. Then they look at where the second layer crosses the first. They point to the actual patches, rather than saying every later patch is better.</p><p>They test the view from a little distance. A dark area may draw attention while still keeping a visible line texture.</p><p>The adult explains what the work shows and what it cannot show. A preserved sample supports a claim about line quality. It does not prove how long the adult practised unless that time was recorded.</p><p>This demonstration models a method of looking and judging. It is not a review written for your portfolio.</p><p>Use the same questions with your own art. What was the aim? What actions took place? What effect can be seen?</p><p>An outcome may be partly successful. You can explain what worked, what remains uncertain and what you would change next.</p><p>Keep the judgement specific to your work. Another maker may prefer a different effect without making your own intention wrong.</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Four linked boxes connect the original aim, actual process and visible outcome with a reasoned personal review."><title>A judgement grows from the challenge evidence</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">AIM</text><text x="73" y="88" text-anchor="middle" font-size="11">what I intended</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">PROCESS</text><text x="231" y="88" text-anchor="middle" font-size="11">what I actually did</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">OUTCOME</text><text x="389" y="88" text-anchor="middle" font-size="11">what the work shows</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">REVIEW</text><text x="547" y="88" text-anchor="middle" font-size="11">my reasoned view</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">Use the aim, process and outcome to review.</text></svg></section><section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="3" data-ta1="A is too general to show a challenge review by itself. B can support the outside review if genuine and located. C is not the pupil’s own review. D can support the pupil’s review if based on real evidence."><div class="time">3 min</div><span class="tag"></span><h2>We Do · everyone commits</h2><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><h3>Visible review cards: what is still needed?</h3><p>Choose a card and keep your first answer ready. Point, write or hold its letter. Reveal your choice together, then explain your reason before hearing the adult’s model.</p><p>Read these example record types. Decide which could support a real review and which leave something important missing.</p><p>The cards are teaching examples, not statements about your own challenge. Explain what you would need to see or hear before accepting the record.</p><p>A review need not be long. It must concern the real challenge and give a clear view.</p><ul><li>A · A general “looks great” comment with no link to the challenge.</li><li>B · Another person’s own view of the aim, changes and result, linked to the work.</li><li>C · An adult’s completed review copied into the pupil’s section.</li><li>D · The pupil’s own judgement of the actual process and outcome, with reasons.</li></ul></section><section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="7" data-ta1="Distinguish an outside review from adviser assessment and from the pupil’s own reflection. Scribe accurately if needed and allow the reviewer to check the record. No compulsory signature or witness-statement format."><div class="time">7 min</div><span class="tag"></span><h2>I Do 2 · connect</h2><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><h3>Keep two voices distinct</h3><p>Give the other reviewer enough context to form a fair view. Show your aim, a starting point and useful evidence of the changes.</p><p>Ask what progress they notice, what supports their view and what could develop further. Let them reach their own judgement.</p><p>Let the reviewer see the work before showing them your preferred judgement. Ask them to point to a detail that supports their view. If they judge a feature you did not intend to change, discuss that difference. It may reveal another possibility without replacing the aim you chose.</p><p>They may speak, write or use another agreed format. Keep their actual words or an accurate record they can check. Note who they are or their role.</p><p>Now consider your own view. You may agree with part of their review and question another part. Explain your reason through the work.</p><p>Do not rewrite their response to make it more positive. Do not copy it and call it your own final review.</p><p>Explain the whole challenge. What did you intend? What did you do? What happened? What did you learn from the process?</p><p>Keep a separate location for each review, even if they sit in the same part file.</p><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Two panels show the outside reviewer’s own view with attribution and the pupil’s separate final review with their own reasons."><title>Two reviews have different authors</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">THEIR REVIEW</text><text x="151" y="74" text-anchor="middle" font-size="11">another person’s view of my challenge</text><text x="151" y="94" text-anchor="middle" font-size="11">identity or role and exact location</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">MY FINAL REVIEW</text><text x="469" y="74" text-anchor="middle" font-size="11">my judgement from the actual evidence</text><text x="469" y="94" text-anchor="middle" font-size="11">my reasons and a separate location</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Keep both voices and locate each review clearly.</text></svg></section><section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="5" data-ta1="Provide time and access to the real work. Help capture an authentic review; no adult model or checklist tick substitutes for the other person’s view of the challenge."><div class="time">5 min</div><span class="tag"></span><h2>We Do 2 · lab</h2><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><h3>Ask for the real outside review</h3><p>Show the challenge evidence to your agreed reviewer. Give a short account of the aim without telling them what they should think.</p><p>Let them examine the work and explain their view. Ask a clear follow-up if you need to understand a comment.</p><p>Record their review in the agreed way. Read back any notes to check that they represent the review fairly.</p><p>If the person cannot review it yet, record that as a next action. A reply you imagine they might give is not evidence.</p><p>Keep the reviewer's identity or role with the record. Add the filename and page, slide or timecode so you can return to their actual words.</p></section><section class="slide" data-type="independent" data-title="Independent · evidence" data-min="9" data-ta1="Preserve the pupil’s independent judgement. Prompts may organise their response but must not supply their conclusions. All tiers retain actual process evidence and both distinct reviews."><div class="time">9 min</div><span class="tag"></span><h2>Independent · evidence</h2><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><h3>Make your own final review</h3><p>Return to the original aim and the evidence of your practice. Describe what you actually did, including a choice that changed the work.</p><p>Judge the outcome against that aim. Point to what supports your view and acknowledge anything the evidence cannot settle.</p><p>Consider the outside review. Explain where it helps you see the work differently, or why your own judgement differs.</p><p>Say what you learnt from the process and choose a useful next step. An aim that was not fully met can still teach you something worth explaining.</p><p>Use your own words or chosen communication format. If a required element is missing, identify it honestly and arrange completion.</p><p>Save your final review under Unit 1, Part 1B. Locate the process evidence, outside review and your own review separately.</p><ul><li>Core · use prompts and communication support to show the actual challenge work. Gather another person’s real review and make your own final review. Keep the aim, process, outcome, outside view and your judgement clear. Give each review its own exact location.</li><li>Extend · make the same complete evidence-based final review in your own format. Compare your view with the other person’s review. Explain agreement or difference. Choose a reasoned next step.</li><li>Challenge · keep both real reviews and the full practice record. Look for evidence that suggests different views. Explain any limits in your judgement. Say what another trial could clarify.</li></ul></section><section class="slide" data-type="exit" data-title="Exit · Audience and Influence" data-min="3" data-ta1="Check distinct locators for ongoing evidence and both reviews. Only the trained adviser assesses; the lesson checklist does not award a Pass."><div class="time">3 min</div><span class="tag"></span><h2>Exit · Audience and Influence</h2><div class="lundy-status"></div><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><h3>Check the evidence behind your judgement</h3><p>Choose a sentence or spoken point from your own review. Follow its location note back to the work that supports it.</p><p>Now find the other person's review. Check that the two voices are clear and that neither record has been changed to sound better.</p><p>Tell staff if a real review or piece of practice evidence still needs completing. Keep that action visible.</p><p>Your review explains what this challenge taught you. It is evidence for the adviser to assess. It does not promise an award result.</p></section></main><nav class="controls" aria-label="Lesson controls"><button type="button" data-nav="previous">◀ Previous</button><button type="button" data-tool="1">TA brief</button><button type="button" data-tool="2">Read response</button><button type="button" data-tool="3">Sources</button><button type="button" data-tool="4">Display / print</button><button type="button" data-tool="5">Calm mode</button><button type="button" data-tool="6">Previous</button><button type="button" data-tool="7">Next</button><button type="button" data-nav="next">Next ▶</button></nav><div class="prog" aria-hidden="true"><span></span></div><div id="taOverlay" class="overlay" aria-hidden="true"><div class="overlay-card"><h2></h2><p>Use the least prompt needed. Keep adult preparation and exact-word scribing separate from pupil authorship. Guidance is hidden from the learner surface by default.</p><button type="button" data-close-overlay>Close</button></div></div><section class="print-pack printpack award-print" aria-label="Printable lesson pack">
+      <section class="print-page">
+        <div class="running-head">GROW Art · Week 3 · Art · Trinity Arts Award Silver</div><h1>Compare The Reviews And Judge Progress</h1>
+        <p><b>Award evidence:</b> Silver Arts Award, Part 1B; no workbook cell (AAE-H7)</p>
+        <p><b>Objective:</b> Use actual challenge work and another person’s review to make your own final judgement of progress.</p>
+        <h2>My evidence record</h2><p>Gather a real review of the challenge from another person. Use the aim, actual process, outcome and that outside view to make your own final review. Keep both voices separate.</p><p>Aim, real practice and outcome · Another person’s genuine review · My own final review and next step · Distinct review and process locations</p>
+        <table><thead><tr><th>Evidence focus</th><th>My words or response</th><th>File and page, slide or time</th></tr></thead>
+        <tbody><tr><th scope="row">What did I intend, what did I do, and what does the work show?</th><td class="award-response"></td><td class="award-locator"></td></tr><tr><th scope="row">What is the other person’s actual review, and who or what role gave it?</th><td class="award-response"></td><td class="award-locator"></td></tr><tr><th scope="row">What is my own judgement, including agreement, difference and learning?</th><td class="award-response"></td><td class="award-locator"></td></tr><tr><th scope="row">Where are the process evidence and both separate reviews?</th><td class="award-response"></td><td class="award-locator"></td></tr></tbody></table>
+        <div class="award-print-figures"><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Four linked boxes connect the original aim, actual process and visible outcome with a reasoned personal review."><title>A judgement grows from the challenge evidence</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">AIM</text><text x="73" y="88" text-anchor="middle" font-size="11">what I intended</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">PROCESS</text><text x="231" y="88" text-anchor="middle" font-size="11">what I actually did</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">OUTCOME</text><text x="389" y="88" text-anchor="middle" font-size="11">what the work shows</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">REVIEW</text><text x="547" y="88" text-anchor="middle" font-size="11">my reasoned view</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">Use the aim, process and outcome to review.</text></svg><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Two panels show the outside reviewer’s own view with attribution and the pupil’s separate final review with their own reasons."><title>Two reviews have different authors</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">THEIR REVIEW</text><text x="151" y="74" text-anchor="middle" font-size="11">another person’s view of my challenge</text><text x="151" y="94" text-anchor="middle" font-size="11">identity or role and exact location</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">MY FINAL REVIEW</text><text x="469" y="74" text-anchor="middle" font-size="11">my judgement from the actual evidence</text><text x="469" y="94" text-anchor="middle" font-size="11">my reasons and a separate location</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Keep both voices and locate each review clearly.</text></svg></div>
+        <p>Name or learner code: ____________________ Date: ____________________</p>
+      </section>
+      <section class="print-page">
+        <div class="running-head">GROW Art · Week 3 · Art · Trinity Arts Award Silver</div><h1>Compare The Reviews And Judge Progress</h1>
+        <h2>Choose the support you need</h2><div class="print-route"><h3>Core</h3><p>Core · use prompts and communication support to show the actual challenge work. Gather another person’s real review and make your own final review. Keep the aim, process, outcome, outside view and your judgement clear. Give each review its own exact location.</p></div><div class="print-route"><h3>Extend</h3><p>Extend · make the same complete evidence-based final review in your own format. Compare your view with the other person’s review. Explain agreement or difference. Choose a reasoned next step.</p></div><div class="print-route"><h3>Challenge</h3><p>Challenge · keep both real reviews and the full practice record. Look for evidence that suggests different views. Explain any limits in your judgement. Say what another trial could clarify.</p></div>
+        <h2>Check the evidence</h2><ol><li>The review uses actual ongoing practice evidence and the original aim.</li><li>Someone else has genuinely reviewed the challenge, with identity or role recorded.</li><li>My final review is my own and gives a reasoned judgement of the process and outcome.</li><li>The outside review, my judgement and any remaining gaps are distinguished honestly.</li><li>Process evidence and both reviews are separately located by filename plus page, slide or timecode under Unit 1, Part 1B.</li></ol>
+        <h2>My review or next step</h2><div class="award-review-space"></div>
+        <p>For a recorded response, write the actual file name and page, slide or timecode.</p>
+      </section>
+    </section><!--n6-nav1:v1--><div class="n6-splash"><div style="text-align:center;margin-top:8px"><svg width="64" height="64" viewbox="0 0 100 100" aria-label="Made by Matt"><circle cx="50" cy="50" r="47" fill="none" stroke="#1e3a8a" stroke-width="3.4"></circle><g transform="translate(0 2)"><path d="M28 71 L28 37 L50 59 L72 37 L72 71" fill="none" stroke="#1e3a8a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 22.5 L51.48 28.52 L57.5 30 L51.48 31.48 L50 37.5 L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"></path></g></svg></div></div><!--/n6-nav1--><script id="lesson-config" type="application/json">{"id": "SILVER_ART_W3_1B2", "family": "GROW Art", "week": 3, "slot": "Art · Trinity Arts Award Silver", "title": "Compare The Reviews And Judge Progress", "outcomes": ["Complete a meaningful phase of real arts-challenge practice. Gather someone ELSE’s review of the challenge and the pupil’s own FINAL review, using the aim, actual process, outcomes and outside view. Record the identity or role of the other reviewer and the location of their real review. An adult model or generic checklist tick is not either required review."], "cells": [], "objective": "Use actual challenge work and another person’s review to make your own final judgement of progress.", "timings": [0, 3, 3, 7, 3, 7, 5, 9, 3], "artsAward": {"level": "Silver", "parts": ["1B"]}, "planId": "f9d2e8086c4f", "weDoType": "commit-and-reveal", "tierLadder": ["Core", "Extend", "Challenge"]}</script><script data-award-chassis="">/* Runtime for newly authored award decks; no persistence or external dependencies. */
+(function () {
+  'use strict';
+
+  function boot() {
+    const deck = document.querySelector('main.deck');
+    const slides = Array.from(document.querySelectorAll('main.deck > .slide'));
+    if (!deck || !slides.length) return;
+    const progress = document.querySelector('.prog');
+    const bar = document.querySelector('.prog > span');
+    const overlay = document.getElementById('taOverlay');
+    const card = overlay && overlay.querySelector('.overlay-card');
+    const closeButton = overlay && overlay.querySelector('[data-close-overlay]');
+    const teacherButtons = document.querySelectorAll('[data-tool="1"]');
+    let index = Math.max(0, slides.findIndex(slide => slide.classList.contains('active')));
+    let returnFocus = null;
+    let notes = null;
+    let slotHost = null;
+
+    function show(next) {
+      index = (next + slides.length) % slides.length;
+      slides.forEach(function (slide, i) {
+        slide.classList.toggle('active', i === index);
+        slide.setAttribute('aria-hidden', i === index ? 'false' : 'true');
+      });
+      if (bar) bar.style.width = ((index + 1) / slides.length * 100) + '%';
+      if (progress) {
+        progress.removeAttribute('aria-hidden');
+        progress.setAttribute('role', 'progressbar');
+        progress.setAttribute('aria-label', 'Lesson progress');
+        progress.setAttribute('aria-valuemin', '1');
+        progress.setAttribute('aria-valuemax', String(slides.length));
+        progress.setAttribute('aria-valuenow', String(index + 1));
+        progress.setAttribute('aria-valuetext', 'Stage ' + (index + 1) + ' of ' + slides.length);
+      }
+      deck.scrollTop = 0;
+    }
+
+    function isOpen() {
+      return Boolean(overlay && overlay.classList.contains('on'));
+    }
+
+    function fillNotes() {
+      notes.replaceChildren();
+      const heading = document.createElement('h3');
+      heading.textContent = slides[index].dataset.title || 'Current stage';
+      notes.appendChild(heading);
+      ['ta1', 'ta2'].forEach(function (key) {
+        const text = slides[index].dataset[key];
+        if (!text) return;
+        const paragraph = document.createElement('p');
+        paragraph.textContent = text;
+        notes.appendChild(paragraph);
+      });
+      const sources = index === 0 ? [slides[0]] : [slides[index], slides[0]];
+      sources.forEach(function (source) {
+        source.querySelectorAll('[data-mbm-guide]').forEach(function (note) {
+          // The slot reader has its own live state and file listener: never clone it.
+          if (note.id === 'award-slot-panel' || note.closest('#award-slot-panel')) return;
+          const copy = note.cloneNode(true);
+          copy.removeAttribute('id');
+          copy.querySelectorAll('[id]').forEach(node => node.removeAttribute('id'));
+          notes.appendChild(copy);
+        });
+      });
+      // mount() runs on DOMContentLoaded. A real click comes after that event,
+      // regardless of the order in which the two embedded scripts were loaded.
+      const panel = document.getElementById('award-slot-panel');
+      if (panel && !slotHost.contains(panel)) slotHost.appendChild(panel);
+    }
+
+    function openTeacher(button) {
+      if (!card || isOpen()) return;
+      returnFocus = button || document.activeElement;
+      fillNotes();
+      overlay.classList.add('on');
+      overlay.setAttribute('aria-hidden', 'false');
+      teacherButtons.forEach(node => node.setAttribute('aria-expanded', 'true'));
+      (closeButton || card).focus();
+    }
+
+    function closeTeacher() {
+      if (!isOpen()) return;
+      overlay.classList.remove('on');
+      overlay.setAttribute('aria-hidden', 'true');
+      teacherButtons.forEach(node => node.setAttribute('aria-expanded', 'false'));
+      if (returnFocus && returnFocus.isConnected) returnFocus.focus();
+    }
+
+    function focusable() {
+      return Array.from(card.querySelectorAll('a[href], button, input, select, textarea, [tabindex]'))
+        .filter(node => !node.disabled && node.tabIndex >= 0 && node.getClientRects().length);
+    }
+
+    if (card) {
+      overlay.setAttribute('role', 'dialog');
+      overlay.setAttribute('aria-modal', 'true');
+      overlay.setAttribute('aria-hidden', 'true');
+      overlay.classList.remove('on');
+      card.tabIndex = -1;
+      let title = card.querySelector('h2');
+      if (!title) {
+        title = document.createElement('h2');
+        card.prepend(title);
+      }
+      title.id = 'award-teacher-title';
+      title.textContent = 'Teacher tools';
+      overlay.setAttribute('aria-labelledby', title.id);
+      notes = document.createElement('div');
+      notes.id = 'award-teacher-notes';
+      slotHost = document.createElement('div');
+      slotHost.id = 'award-teacher-slots';
+      card.insertBefore(notes, closeButton);
+      card.insertBefore(slotHost, closeButton);
+      if (closeButton) closeButton.addEventListener('click', closeTeacher);
+      teacherButtons.forEach(function (button) {
+        button.setAttribute('aria-controls', overlay.id);
+        button.setAttribute('aria-expanded', 'false');
+        button.addEventListener('click', () => openTeacher(button));
+      });
+      // Keep focus in the open dialog, including when scripts attempt to move it.
+      document.addEventListener('focusin', function (event) {
+        if (isOpen() && !overlay.contains(event.target)) (closeButton || card).focus();
+      });
+    }
+
+    document.querySelectorAll('[data-nav="previous"], [data-tool="5"]')
+      .forEach(button => button.addEventListener('click', () => { if (!isOpen()) show(index - 1); }));
+    document.querySelectorAll('[data-nav="next"], [data-tool="6"]')
+      .forEach(button => button.addEventListener('click', () => { if (!isOpen()) show(index + 1); }));
+    document.querySelectorAll('[data-tool="2"]')
+      .forEach(button => button.addEventListener('click', () => window.print()));
+    [['3', 'calm'], ['4', 'teacher-freeze']].forEach(function (item) {
+      const buttons = document.querySelectorAll('[data-tool="' + item[0] + '"]');
+      function sync() {
+        const active = document.body.classList.contains(item[1]);
+        buttons.forEach(button => button.setAttribute('aria-pressed', String(active)));
+      }
+      buttons.forEach(button => button.addEventListener('click', function () {
+        document.body.classList.toggle(item[1]);
+        sync();
+      }));
+      sync();
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (isOpen()) {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          closeTeacher();
+        } else if (event.key === 'Tab') {
+          const items = focusable();
+          const first = items[0] || card;
+          const last = items[items.length - 1] || card;
+          if (!items.length || !items.includes(document.activeElement)
+              || (event.shiftKey && document.activeElement === first)
+              || (!event.shiftKey && document.activeElement === last)) {
+            event.preventDefault();
+            (event.shiftKey ? last : first).focus();
+          }
+        }
+        return;
+      }
+      const target = event.target;
+      if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey
+          || (target && (target.isContentEditable
+              || (typeof target.closest === 'function' && target.closest('input, textarea, select'))))
+          || document.querySelector('dialog[open], .overlay.on, [role="dialog"][aria-hidden="false"]')) return;
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        event.preventDefault();
+        show(index + (event.key === 'ArrowRight' ? 1 : -1));
+      }
+    });
+    show(index);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once: true});
+  else boot();
+}());
+</script></body></html>

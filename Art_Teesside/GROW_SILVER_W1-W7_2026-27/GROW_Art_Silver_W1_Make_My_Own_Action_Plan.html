@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Make My Own Action Plan</title><style>
+:root{--bg:#141C24;--panel:#202D37;--panel2:#283743;--text:#F2EFE5;--muted:#C8CECA;--steel:#5B91A5;--oxide:#D1673D;--teal:#2BA193;--gold:#DFAD3E;--violet:#8B6CC7;--line:#42515d;--paper:#fff;--ink:#172334;--danger:#b93f4b}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:"Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--bg)}
+body{overflow:hidden}a,button{font:inherit}button,a.mbmhome{min-height:44px;min-width:44px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:8px;top:8px;z-index:50;background:#fff;padding:10px}
+.deck{height:100vh;padding:18px 18px 112px;overflow:auto}.slide{display:none;max-width:1120px;min-height:calc(100vh - 145px);margin:auto;background:var(--paper);border:2px solid var(--line);border-top:10px solid var(--teal);border-radius:18px;padding:22px;box-shadow:0 8px 30px #10233f18}.slide.active{display:block}
+h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-size:clamp(1.5rem,3vw,2.3rem);margin:.4rem 0 1rem}h3{margin:.2rem 0 .45rem}p,li{line-height:1.5}.tag,.time,.chips span{display:inline-block;border-radius:999px;padding:6px 10px;font-weight:800}.tag{background:#EEF5F4}.time{float:right;background:var(--ink);color:#fff}.chips{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.chips span{background:#FFF4D6}
+.hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,.7fr);gap:18px}.hero-visual{display:grid;gap:10px;align-content:center;background:var(--ink);color:#fff;border-radius:16px;padding:18px;min-height:150px;text-align:center}.hero-visual span{color:var(--teal)}
+.box,.route,.route-card,.evidence-gate,.lundy,.lundy-strip,.ladder,.prompt-ladder,.ta-card,.modal,.drawer,dialog{border:2px solid var(--line);border-radius:13px;padding:13px;margin:12px 0;background:#fff}.lo{border-left:8px solid var(--teal)}.truth{border-left:8px solid var(--oxide);background:#FFF4D6;padding:12px}.access{background:#EEF5F4;padding:12px;border-radius:12px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.routes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.route.s,.route.supported,.route-card.supported{border-top:7px solid var(--teal)}.route.m,.route.standard,.route-card.standard{border-top:7px solid var(--steel)}.route.h,.route.stretch,.route-card.stretch{border-top:7px solid var(--oxide)}.options{display:grid;gap:9px}.options button{text-align:left;padding:12px;border:2px solid var(--line);border-radius:10px;background:#fff}.vocabrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.vterm{border:2px solid var(--line);padding:12px;border-radius:12px}.vterm span{display:block;margin-top:5px}.lundy-grid,.lundy-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center;font-weight:900}.ladder,.prompt-ladder{font-weight:700}.ta-card,.modal,.drawer{background:#FFF4D6}
+.controls{position:fixed;left:8px;right:8px;bottom:58px;z-index:20;display:flex;gap:7px;overflow-x:auto;padding:8px;background:var(--ink);border-radius:14px}.controls button,.controls a{flex:0 0 auto;border:2px solid #fff;border-radius:9px;padding:7px 10px;background:#fff;color:var(--ink);font-weight:800;text-decoration:none}.prog{position:fixed;left:12px;right:12px;bottom:46px;height:6px;background:#fff;border:1px solid var(--line);z-index:19}.prog>span{display:block;height:100%;width:11.11%;background:var(--teal)}
+.overlay{display:none;position:fixed;inset:0;z-index:40;background:#10233fdd;align-items:center;justify-content:center;padding:18px}.overlay.on{display:flex}.overlay-card{max-width:700px;background:#fff;border-radius:15px;padding:20px}.overlay-card button{padding:8px 12px}
+.print-pack{display:none}.printpack{display:none}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(max-width:720px){.deck{padding:10px 10px 118px}.slide{padding:15px}.hero,.routes,.vocabrow{grid-template-columns:1fr}.lundy-grid{grid-template-columns:1fr 1fr}}
+@media print{html,body{color-scheme:light!important;background:#fff;color:#111;overflow:visible}body>*:not(.print-pack){display:none!important}.print-pack{display:block!important}.printpack{display:block!important}.print-page{break-after:page;page-break-after:always;padding:8mm;min-height:255mm}.print-page:last-child{break-after:auto;page-break-after:auto}.print-pack h1{font-size:20pt;line-height:1.15;margin:0 0 3mm}.print-pack h2{font-size:13pt;line-height:1.2;margin:3mm 0 1.5mm}.print-pack p,.print-pack li{font-size:10.5pt;line-height:1.35}.running-head{font-size:9pt;border-bottom:1px solid #666;margin-bottom:4mm;padding-bottom:2mm}.proute,.print-route{display:block;border:1px solid #777;padding:3mm;margin:3mm 0;break-inside:avoid}@page{size:A4;margin:10mm}}
+</style><style id="award-print-layout">
+      @media screen {
+        [data-mbm-guide]{display:none!important}
+        #taOverlay [data-mbm-guide]{display:block!important}
+        #taOverlay .overlay-card{max-height:calc(100vh - 36px);overflow:auto;width:min(700px,100%)}
+        body.calm .slide{box-shadow:none}
+        body.calm *,body.calm *::before,body.calm *::after{animation:none!important;transition:none!important}
+        body.teacher-freeze *,body.teacher-freeze *::before,body.teacher-freeze *::after{animation-play-state:paused!important;transition:none!important}
+      }
+      @media print {
+        .award-print .print-page{box-sizing:border-box;padding:4mm;min-height:0}
+        .award-print table{width:100%;border-collapse:collapse;table-layout:fixed}
+        .award-print th,.award-print td{border:1px solid #777;padding:2mm;vertical-align:top;font-size:9pt}
+        .award-print th:first-child{width:34%}.award-print th:last-child{width:23%}
+        .award-print td.award-response{height:18mm}
+        .award-print-figures svg{display:block;width:100%;max-height:34mm;margin:2mm 0}
+        .award-print .print-route{padding:2mm;margin:2mm 0}
+        .award-print h3{font-size:11pt;margin:0}
+        .award-print .award-review-space{height:35mm;border:1px solid #777}
+      }
+    </style></head><body><!--n6-nav1:v1--><style id="n6-nav1-css">@media print{.mbmhome,.n6-splash{display:none!important}}.mbmhome{display:inline-block;margin:6px 0 0 8px;font:600 .85rem/1.4 "Segoe UI",Arial,sans-serif;color:#1e3a8a;text-decoration:none}.mbmhome:hover,.mbmhome:focus{text-decoration:underline}</style><a class="mbmhome" href="../../index.html" aria-label="Back to the Lessons catalogue">← Lessons</a><!--/n6-nav1--><a class="skip" href="#lessonDeck">Skip to lesson</a><main id="lessonDeck" class="deck"><section class="slide active" data-type="title" data-title="Lesson overview" data-min="0"><div class="time">0 min</div><span class="tag"></span><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><p>GROW · Art · Trinity Arts Award Silver. Make My Own Action Plan.</p><p>Objective: Turn your chosen arts challenge into your own practical action plan and test whether a step will work.</p><p>Success evidence: A pupil-owned plan linking the aim to steps, resources, support, time and progress checks, plus a real test and any resulting adjustment.</p><p>Use your own artwork, interests and practical choices. You can choose an abstract subject; you do not need to disclose private experiences.</p><p>40 minutes. Keep original work before making changes. Ask staff about safe tools and access.</p><div class="box rehearsal" data-mbm-guide="staff">This deck directly serves Silver Unit 1, Part 1A, Plan an arts challenge. Silver has TWO units, evidenced separately. This lesson belongs to Unit 1, Arts practice and pathways; keep its evidence labelled by unit and part. ONE Attempted allowed PER UNIT. Any Not Attempted = Below Pass. The whole Silver portfolio has a 20-file cap, not twenty per unit or one new file per lesson. The four assessment areas are art form knowledge and understanding, creativity, planning and review, and communication. Results are Pass or Below Pass only. Only an adviser trained at Silver may assess; delivery is through a validated centre. Staff must confirm those conditions; neither is asserted as completed here. The arts challenge must not focus on leadership. Advisers must not write pupil plans, reviews or evidence. Prompt, read or scribe the pupil’s exact words and check them back unchanged. Core, Extend and Challenge vary support within Silver, retaining the same evidence expectation and the pupil’s own choices. Digital evidence is organised by unit and part, with every locator naming the actual filename plus page, slide or timecode. A portfolio structure is an option, not an extra award rule. Samples, trial counts and prompts here are teaching scaffolds, not qualification quotas. Use accessible tools and communication without forced personal disclosure, compulsory filming or public posting. This forty-minute lesson supports a longer programme of real guided and independent practice; it does not claim all award hours are complete. Source: tools/artsaward/SPEC.json, Silver and universal rules. This deck completes the planning work for 1A; it does not claim implementation or either 1B review is complete. Use the pupil’s chosen challenge and actual baseline from the preceding lesson. The adult’s live arrangement study models a planning method only; do not distribute a completed plan for pupils to copy. Offer open prompts and communication support. A suitable plan must be workable for the individual pupil, including resources and actual programme time. Help arrange support and review opportunities without promising a particular person’s availability or writing their eventual review.</div></section><section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="3" data-ta1="Retrieve the actual challenge and baseline. Support clarification rather than filling in missing decisions on the pupil’s behalf."><div class="time">3 min</div><span class="tag"></span><h2>Arrival · retrieve</h2><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><h3>Keep the aim in view</h3><p>Find your chosen challenge and the work that helped you choose it. Read or explain the artistic effect you want to explore.</p><p>Look at your starting evidence. Which skill needs practice before that effect is likely to work?</p><p>Today you will decide what to do, in what order, and how to check your progress. Those decisions belong to you.</p><p>A plan is useful when it helps you take the next action. A long list of impressive words is less useful than a clear step you can begin.</p><p>Keep your baseline nearby. It will remind you where you started when the work changes.</p><p>If your challenge is still uncertain, use the trial to clarify it before filling a plan with unrelated tasks.</p></section><section class="slide" data-type="starter" data-title="Starter · create the need" data-min="3" data-ta1="Discuss the difference between an action and its purpose. Keep the example separate from the pupil’s actual chosen challenge."><div class="time">3 min</div><span class="tag"></span><h2>Starter · create the need</h2><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><h3>An action and its purpose</h3><p>Compare two kinds of note: a note that names an activity and a note that explains what the activity will test.</p><p>Drawing some shapes is an action. Trying different sizes to see which shape attracts attention gives that action a purpose.</p><p>The second note tells you what to look for afterwards. It also helps you decide whether another trial is needed.</p><p>Your action steps should connect to your own aim in the same way. A neat plan can still miss the point if the tasks do not develop the chosen skill.</p><p>You can use words, sketches or a short recording to make that connection clear.</p></section><section class="slide" data-type="ido" data-title="I Do · model" data-min="7" data-ta1="Make the thumbnail sketches live and retain both. Explain the link between purpose, practical action and evidence. Do not supply a completed pupil plan."><div class="time">7 min</div><span class="tag"></span><h2>I Do · model</h2><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><h3>Adult model: plan through small layout studies</h3><p>Watch the adult draw a large shape and two smaller shapes on scrap paper. They move the large shape towards one edge in a second quick sketch.</p><p>These small layout studies are called thumbnails. They let a maker test an arrangement before spending time on detail.</p><p>Use arrows on a thumbnail to show the order in which you want the eye to move. Then cover the arrows and look again. If the route is unclear in the shapes themselves, try a change in size or spacing. The arrows explain a plan; they do not fix the artwork.</p><p>The adult looks at each sketch from a little distance. They ask where the eye goes first and whether the smaller shapes support that focus.</p><p>They do not improve every detail at once. Their first practical step is a layout test, because that is what their own example needs.</p><p>Next they decide what evidence would help: the two sketches kept side by side and a note of what they notice.</p><p>They name the paper and pencil needed, choose a realistic time for the test, and leave time to compare before moving on.</p><p>This is the adult's demonstration of a planning method. Your plan may need tone trials, joining tests or a different arts process.</p><p>Start with the skill your challenge actually needs. Decide what action will test it, what you need to do that action, and what result you will inspect.</p><p>Then choose the next step from what you find. Planning includes room to respond, not just a promise that every trial will succeed.</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Four linked boxes show a personal aim leading to a practical action, a result check and a decision about the next step."><title>A useful step connects to the aim</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">AIM</text><text x="73" y="88" text-anchor="middle" font-size="11">my intended effect</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">ACTION</text><text x="231" y="88" text-anchor="middle" font-size="11">a practical step</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">CHECK</text><text x="389" y="88" text-anchor="middle" font-size="11">look at the result</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">NEXT</text><text x="547" y="88" text-anchor="middle" font-size="11">keep or adjust</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">Aim, action, check and a reasoned next step.</text></svg></section><section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="3" data-ta1="Suggested matches: A to 3, B to 1, C to 2. Accept another check if the pupil clearly changes the intended effect and explains the connection."><div class="time">3 min</div><span class="tag"></span><h2>We Do · everyone commits</h2><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><h3>Visible cards: find the useful check</h3><p>Match each trial to a check that fits its purpose. Explain what you would look at rather than simply calling the work good.</p><p>Use these examples to practise the method. They are not a list of tasks everyone must place in their plan.</p><p>If a different check would better fit the artist's intention, explain your reason.</p><ul><li>A · Try light pencil layers for a gradual tone change.</li><li>B · Test a folded foot on a paper form.</li><li>C · Compare two small arrangements of the same shapes.</li><li>1 · View from the side and see whether the form stands.</li><li>2 · Notice where the eye goes first in each arrangement.</li><li>3 · Look for sudden stripes between light and dark areas.</li></ul></section><section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="7" data-ta1="Check feasibility, safe resources and programme time. Arrange opportunities for a real outside review later; no planned review is claimed as completed."><div class="time">7 min</div><span class="tag"></span><h2>I Do 2 · connect</h2><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><h3>Make the plan workable</h3><p>Choose an order that lets you learn before you commit to a larger piece. A small material test may need to come before a final join or detailed surface.</p><p>Name the resources you will actually use. Include the support you need to work safely and access the task.</p><p>Decide when and where the practice can happen. Check the real timetable with staff instead of assuming unlimited time or tools.</p><p>Leave space to pause, look back at the result and decide what comes next. Drying, clearing tools or setting up again may affect the order.</p><p>Plan how to keep changing states before you revise them. Separate samples, a permitted photo or a short recording can preserve a useful comparison.</p><p>Include a chance for another person to review the challenge and time for your own final review later. These are two distinct views, not a tick in the plan today.</p><p>If something is unavailable, choose an alternative that still develops the intended arts skill.</p><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Two panels connect planned actions and practical resources with the evidence and checkpoints needed to review progress."><title>Actions and checks belong together</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">WHAT I WILL DO</text><text x="151" y="74" text-anchor="middle" font-size="11">steps, resources, time and support</text><text x="151" y="94" text-anchor="middle" font-size="11">linked to my chosen arts aim</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">HOW I WILL CHECK</text><text x="469" y="74" text-anchor="middle" font-size="11">work and changes I can examine</text><text x="469" y="94" text-anchor="middle" font-size="11">a point to decide what comes next</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">A workable plan tells me what to do and examine.</text></svg></section><section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="5" data-ta1="Help the pupil test their own wording and method. Preserve the test and any earlier plan version; do not silently rewrite the plan into an adult answer."><div class="time">5 min</div><span class="tag"></span><h2>We Do 2 · lab</h2><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><h3>Test one of your own steps</h3><p>Choose a step from your emerging plan and try a small version now. Use the actual tool or an agreed safe equivalent.</p><p>If you are testing a layout, make quick thumbnails without detailed decoration. If you are testing a join, use scrap pieces before attaching your main work.</p><p>Follow your own instructions. Notice any missing resource, unclear order or step that takes longer than expected.</p><p>Ask someone to read or hear the step. Can they understand what you intend to do and check?</p><p>Keep the test result. Decide whether to change the step, add a reminder or keep it as it is. Explain that choice from what happened, not from a guess.</p></section><section class="slide" data-type="independent" data-title="Independent · evidence" data-min="9" data-ta1="Use the same complete evidence expectation across tiers. Scribe exact words or support an audio plan, preserving the pupil’s aim, actions and choices."><div class="time">9 min</div><span class="tag"></span><h2>Independent · evidence</h2><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><h3>Make the action plan you will use</h3><p>Set out your aim and practical steps in a form you can return to while working. A clear sketch sequence may suit you better than a large table.</p><p>For each step, make its purpose clear. Add the resources, time or support needed and how you will check the result.</p><p>Include your decision from the test. If you changed the order or method, keep a brief reason with the plan.</p><p>Check the whole sequence against the challenge. Remove a task that does not help, or explain why it is needed.</p><p>Keep the baseline and plan in Unit 1, Part 1A. Record the filename and page, slide or timecode. Later practice evidence belongs in the separately labelled 1B section.</p><ul><li>Core · use open prompts to speak, point or write your own plan. Keep your chosen aim, practical steps, resources, time, support and progress checks. Test a step and record your own adjustment. Save the plan with an exact location.</li><li>Extend · organise the same complete plan in a layout you can use. Explain why the steps fit your challenge and use the test to improve their order or detail. Keep the same evidence and your own decisions.</li><li>Challenge · keep the same complete plan. Compare two workable ways to tackle a difficult step, then choose one with a reason. Add a sensible alternative for a resource or access problem.</li></ul></section><section class="slide" data-type="exit" data-title="Exit · Audience and Influence" data-min="3" data-ta1="Confirm that the pupil can use the plan and identify unresolved arrangements. Do not claim that writing the plan completes the challenge itself."><div class="time">3 min</div><span class="tag"></span><h2>Exit · Audience and Influence</h2><div class="lundy-status"></div><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><h3>Show the next action</h3><p>Use your plan to point out the first action you will take. Show what you need and what you will check afterwards.</p><p>Tell staff about any resource or support still to arrange. Keep that as a real next action rather than pretending it is settled.</p><p>Save the tested plan where you can find it at the next practice session. It should guide your work and allow sensible changes as you learn.</p></section></main><nav class="controls" aria-label="Lesson controls"><button type="button" data-nav="previous">◀ Previous</button><button type="button" data-tool="1">TA brief</button><button type="button" data-tool="2">Read response</button><button type="button" data-tool="3">Sources</button><button type="button" data-tool="4">Display / print</button><button type="button" data-tool="5">Calm mode</button><button type="button" data-tool="6">Previous</button><button type="button" data-tool="7">Next</button><button type="button" data-nav="next">Next ▶</button></nav><div class="prog" aria-hidden="true"><span></span></div><div id="taOverlay" class="overlay" aria-hidden="true"><div class="overlay-card"><h2></h2><p>Use the least prompt needed. Keep adult preparation and exact-word scribing separate from pupil authorship. Guidance is hidden from the learner surface by default.</p><button type="button" data-close-overlay>Close</button></div></div><section class="print-pack printpack award-print" aria-label="Printable lesson pack">
+      <section class="print-page">
+        <div class="running-head">GROW Art · Week 1 · Art · Trinity Arts Award Silver</div><h1>Make My Own Action Plan</h1>
+        <p><b>Award evidence:</b> Silver Arts Award, Part 1A; no workbook cell (AAE-H7)</p>
+        <p><b>Objective:</b> Turn your chosen arts challenge into your own practical action plan and test whether a step will work.</p>
+        <h2>My evidence record</h2><p>Make your own action plan from your chosen challenge. Link the steps to the intended effect, test a step, and keep the decisions yours.</p><p>My aim and practical sequence · Resources, support and time · Progress checks and test adjustment · Unit 1 plan and evidence location</p>
+        <table><thead><tr><th>Evidence focus</th><th>My words or response</th><th>File and page, slide or time</th></tr></thead>
+        <tbody><tr><th scope="row">How does each planned action develop the skill I chose?</th><td class="award-response"></td><td class="award-locator"></td></tr><tr><th scope="row">What resources, time and support make the action possible?</th><td class="award-response"></td><td class="award-locator"></td></tr><tr><th scope="row">What will I examine, and when will I decide whether to adjust?</th><td class="award-response"></td><td class="award-locator"></td></tr><tr><th scope="row">What did my test show, and where is the plan saved?</th><td class="award-response"></td><td class="award-locator"></td></tr></tbody></table>
+        <div class="award-print-figures"><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Four linked boxes show a personal aim leading to a practical action, a result check and a decision about the next step."><title>A useful step connects to the aim</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">AIM</text><text x="73" y="88" text-anchor="middle" font-size="11">my intended effect</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">ACTION</text><text x="231" y="88" text-anchor="middle" font-size="11">a practical step</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">CHECK</text><text x="389" y="88" text-anchor="middle" font-size="11">look at the result</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">NEXT</text><text x="547" y="88" text-anchor="middle" font-size="11">keep or adjust</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">Aim, action, check and a reasoned next step.</text></svg><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Two panels connect planned actions and practical resources with the evidence and checkpoints needed to review progress."><title>Actions and checks belong together</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">WHAT I WILL DO</text><text x="151" y="74" text-anchor="middle" font-size="11">steps, resources, time and support</text><text x="151" y="94" text-anchor="middle" font-size="11">linked to my chosen arts aim</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">HOW I WILL CHECK</text><text x="469" y="74" text-anchor="middle" font-size="11">work and changes I can examine</text><text x="469" y="94" text-anchor="middle" font-size="11">a point to decide what comes next</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">A workable plan tells me what to do and examine.</text></svg></div>
+        <p>Name or learner code: ____________________ Date: ____________________</p>
+      </section>
+      <section class="print-page">
+        <div class="running-head">GROW Art · Week 1 · Art · Trinity Arts Award Silver</div><h1>Make My Own Action Plan</h1>
+        <h2>Choose the support you need</h2><div class="print-route"><h3>Core</h3><p>Core · use open prompts to speak, point or write your own plan. Keep your chosen aim, practical steps, resources, time, support and progress checks. Test a step and record your own adjustment. Save the plan with an exact location.</p></div><div class="print-route"><h3>Extend</h3><p>Extend · organise the same complete plan in a layout you can use. Explain why the steps fit your challenge and use the test to improve their order or detail. Keep the same evidence and your own decisions.</p></div><div class="print-route"><h3>Challenge</h3><p>Challenge · keep the same complete plan. Compare two workable ways to tackle a difficult step, then choose one with a reason. Add a sensible alternative for a resource or access problem.</p></div>
+        <h2>Check the evidence</h2><ol><li>The aim and plan are in my own words or chosen communication format.</li><li>Practical steps connect to my actual arts challenge.</li><li>Resources, support, time and progress checks are included.</li><li>A real test informed an adjustment or a reason to keep the step.</li><li>The plan is labelled Unit 1, Part 1A with filename plus page, slide or timecode.</li></ol>
+        <h2>My review or next step</h2><div class="award-review-space"></div>
+        <p>For a recorded response, write the actual file name and page, slide or timecode.</p>
+      </section>
+    </section><!--n6-nav1:v1--><div class="n6-splash"><div style="text-align:center;margin-top:8px"><svg width="64" height="64" viewbox="0 0 100 100" aria-label="Made by Matt"><circle cx="50" cy="50" r="47" fill="none" stroke="#1e3a8a" stroke-width="3.4"></circle><g transform="translate(0 2)"><path d="M28 71 L28 37 L50 59 L72 37 L72 71" fill="none" stroke="#1e3a8a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 22.5 L51.48 28.52 L57.5 30 L51.48 31.48 L50 37.5 L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"></path></g></svg></div></div><!--/n6-nav1--><script id="lesson-config" type="application/json">{"id": "SILVER_ART_W1_1A2", "family": "GROW Art", "week": 1, "slot": "Art · Trinity Arts Award Silver", "title": "Make My Own Action Plan", "outcomes": ["Teach how to connect an arts aim to practical steps, resources, support, times and progress checks. The pupil writes, records or dictates their own action plan and tests whether its steps meet their chosen challenge. Staff may prompt or scribe exactly; they must not write the plan."], "cells": [], "objective": "Turn your chosen arts challenge into your own practical action plan and test whether a step will work.", "timings": [0, 3, 3, 7, 3, 7, 5, 9, 3], "artsAward": {"level": "Silver", "parts": ["1A"]}, "planId": "035b251cdca8", "weDoType": "sort-or-match", "tierLadder": ["Core", "Extend", "Challenge"]}</script><script data-award-chassis="">/* Runtime for newly authored award decks; no persistence or external dependencies. */
+(function () {
+  'use strict';
+
+  function boot() {
+    const deck = document.querySelector('main.deck');
+    const slides = Array.from(document.querySelectorAll('main.deck > .slide'));
+    if (!deck || !slides.length) return;
+    const progress = document.querySelector('.prog');
+    const bar = document.querySelector('.prog > span');
+    const overlay = document.getElementById('taOverlay');
+    const card = overlay && overlay.querySelector('.overlay-card');
+    const closeButton = overlay && overlay.querySelector('[data-close-overlay]');
+    const teacherButtons = document.querySelectorAll('[data-tool="1"]');
+    let index = Math.max(0, slides.findIndex(slide => slide.classList.contains('active')));
+    let returnFocus = null;
+    let notes = null;
+    let slotHost = null;
+
+    function show(next) {
+      index = (next + slides.length) % slides.length;
+      slides.forEach(function (slide, i) {
+        slide.classList.toggle('active', i === index);
+        slide.setAttribute('aria-hidden', i === index ? 'false' : 'true');
+      });
+      if (bar) bar.style.width = ((index + 1) / slides.length * 100) + '%';
+      if (progress) {
+        progress.removeAttribute('aria-hidden');
+        progress.setAttribute('role', 'progressbar');
+        progress.setAttribute('aria-label', 'Lesson progress');
+        progress.setAttribute('aria-valuemin', '1');
+        progress.setAttribute('aria-valuemax', String(slides.length));
+        progress.setAttribute('aria-valuenow', String(index + 1));
+        progress.setAttribute('aria-valuetext', 'Stage ' + (index + 1) + ' of ' + slides.length);
+      }
+      deck.scrollTop = 0;
+    }
+
+    function isOpen() {
+      return Boolean(overlay && overlay.classList.contains('on'));
+    }
+
+    function fillNotes() {
+      notes.replaceChildren();
+      const heading = document.createElement('h3');
+      heading.textContent = slides[index].dataset.title || 'Current stage';
+      notes.appendChild(heading);
+      ['ta1', 'ta2'].forEach(function (key) {
+        const text = slides[index].dataset[key];
+        if (!text) return;
+        const paragraph = document.createElement('p');
+        paragraph.textContent = text;
+        notes.appendChild(paragraph);
+      });
+      const sources = index === 0 ? [slides[0]] : [slides[index], slides[0]];
+      sources.forEach(function (source) {
+        source.querySelectorAll('[data-mbm-guide]').forEach(function (note) {
+          // The slot reader has its own live state and file listener: never clone it.
+          if (note.id === 'award-slot-panel' || note.closest('#award-slot-panel')) return;
+          const copy = note.cloneNode(true);
+          copy.removeAttribute('id');
+          copy.querySelectorAll('[id]').forEach(node => node.removeAttribute('id'));
+          notes.appendChild(copy);
+        });
+      });
+      // mount() runs on DOMContentLoaded. A real click comes after that event,
+      // regardless of the order in which the two embedded scripts were loaded.
+      const panel = document.getElementById('award-slot-panel');
+      if (panel && !slotHost.contains(panel)) slotHost.appendChild(panel);
+    }
+
+    function openTeacher(button) {
+      if (!card || isOpen()) return;
+      returnFocus = button || document.activeElement;
+      fillNotes();
+      overlay.classList.add('on');
+      overlay.setAttribute('aria-hidden', 'false');
+      teacherButtons.forEach(node => node.setAttribute('aria-expanded', 'true'));
+      (closeButton || card).focus();
+    }
+
+    function closeTeacher() {
+      if (!isOpen()) return;
+      overlay.classList.remove('on');
+      overlay.setAttribute('aria-hidden', 'true');
+      teacherButtons.forEach(node => node.setAttribute('aria-expanded', 'false'));
+      if (returnFocus && returnFocus.isConnected) returnFocus.focus();
+    }
+
+    function focusable() {
+      return Array.from(card.querySelectorAll('a[href], button, input, select, textarea, [tabindex]'))
+        .filter(node => !node.disabled && node.tabIndex >= 0 && node.getClientRects().length);
+    }
+
+    if (card) {
+      overlay.setAttribute('role', 'dialog');
+      overlay.setAttribute('aria-modal', 'true');
+      overlay.setAttribute('aria-hidden', 'true');
+      overlay.classList.remove('on');
+      card.tabIndex = -1;
+      let title = card.querySelector('h2');
+      if (!title) {
+        title = document.createElement('h2');
+        card.prepend(title);
+      }
+      title.id = 'award-teacher-title';
+      title.textContent = 'Teacher tools';
+      overlay.setAttribute('aria-labelledby', title.id);
+      notes = document.createElement('div');
+      notes.id = 'award-teacher-notes';
+      slotHost = document.createElement('div');
+      slotHost.id = 'award-teacher-slots';
+      card.insertBefore(notes, closeButton);
+      card.insertBefore(slotHost, closeButton);
+      if (closeButton) closeButton.addEventListener('click', closeTeacher);
+      teacherButtons.forEach(function (button) {
+        button.setAttribute('aria-controls', overlay.id);
+        button.setAttribute('aria-expanded', 'false');
+        button.addEventListener('click', () => openTeacher(button));
+      });
+      // Keep focus in the open dialog, including when scripts attempt to move it.
+      document.addEventListener('focusin', function (event) {
+        if (isOpen() && !overlay.contains(event.target)) (closeButton || card).focus();
+      });
+    }
+
+    document.querySelectorAll('[data-nav="previous"], [data-tool="5"]')
+      .forEach(button => button.addEventListener('click', () => { if (!isOpen()) show(index - 1); }));
+    document.querySelectorAll('[data-nav="next"], [data-tool="6"]')
+      .forEach(button => button.addEventListener('click', () => { if (!isOpen()) show(index + 1); }));
+    document.querySelectorAll('[data-tool="2"]')
+      .forEach(button => button.addEventListener('click', () => window.print()));
+    [['3', 'calm'], ['4', 'teacher-freeze']].forEach(function (item) {
+      const buttons = document.querySelectorAll('[data-tool="' + item[0] + '"]');
+      function sync() {
+        const active = document.body.classList.contains(item[1]);
+        buttons.forEach(button => button.setAttribute('aria-pressed', String(active)));
+      }
+      buttons.forEach(button => button.addEventListener('click', function () {
+        document.body.classList.toggle(item[1]);
+        sync();
+      }));
+      sync();
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (isOpen()) {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          closeTeacher();
+        } else if (event.key === 'Tab') {
+          const items = focusable();
+          const first = items[0] || card;
+          const last = items[items.length - 1] || card;
+          if (!items.length || !items.includes(document.activeElement)
+              || (event.shiftKey && document.activeElement === first)
+              || (!event.shiftKey && document.activeElement === last)) {
+            event.preventDefault();
+            (event.shiftKey ? last : first).focus();
+          }
+        }
+        return;
+      }
+      const target = event.target;
+      if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey
+          || (target && (target.isContentEditable
+              || (typeof target.closest === 'function' && target.closest('input, textarea, select'))))
+          || document.querySelector('dialog[open], .overlay.on, [role="dialog"][aria-hidden="false"]')) return;
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        event.preventDefault();
+        show(index + (event.key === 'ArrowRight' ? 1 : -1));
+      }
+    });
+    show(index);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once: true});
+  else boot();
+}());
+</script></body></html>

@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Test The Plan With The Team</title><style>
+:root{--bg:#141C24;--panel:#202D37;--panel2:#283743;--text:#F2EFE5;--muted:#C8CECA;--steel:#5B91A5;--oxide:#D1673D;--teal:#2BA193;--gold:#DFAD3E;--violet:#8B6CC7;--line:#42515d;--paper:#fff;--ink:#172334;--danger:#b93f4b}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:"Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--bg)}
+body{overflow:hidden}a,button{font:inherit}button,a.mbmhome{min-height:44px;min-width:44px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:8px;top:8px;z-index:50;background:#fff;padding:10px}
+.deck{height:100vh;padding:18px 18px 112px;overflow:auto}.slide{display:none;max-width:1120px;min-height:calc(100vh - 145px);margin:auto;background:var(--paper);border:2px solid var(--line);border-top:10px solid var(--teal);border-radius:18px;padding:22px;box-shadow:0 8px 30px #10233f18}.slide.active{display:block}
+h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-size:clamp(1.5rem,3vw,2.3rem);margin:.4rem 0 1rem}h3{margin:.2rem 0 .45rem}p,li{line-height:1.5}.tag,.time,.chips span{display:inline-block;border-radius:999px;padding:6px 10px;font-weight:800}.tag{background:#EEF5F4}.time{float:right;background:var(--ink);color:#fff}.chips{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.chips span{background:#FFF4D6}
+.hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,.7fr);gap:18px}.hero-visual{display:grid;gap:10px;align-content:center;background:var(--ink);color:#fff;border-radius:16px;padding:18px;min-height:150px;text-align:center}.hero-visual span{color:var(--teal)}
+.box,.route,.route-card,.evidence-gate,.lundy,.lundy-strip,.ladder,.prompt-ladder,.ta-card,.modal,.drawer,dialog{border:2px solid var(--line);border-radius:13px;padding:13px;margin:12px 0;background:#fff}.lo{border-left:8px solid var(--teal)}.truth{border-left:8px solid var(--oxide);background:#FFF4D6;padding:12px}.access{background:#EEF5F4;padding:12px;border-radius:12px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.routes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.route.s,.route.supported,.route-card.supported{border-top:7px solid var(--teal)}.route.m,.route.standard,.route-card.standard{border-top:7px solid var(--steel)}.route.h,.route.stretch,.route-card.stretch{border-top:7px solid var(--oxide)}.options{display:grid;gap:9px}.options button{text-align:left;padding:12px;border:2px solid var(--line);border-radius:10px;background:#fff}.vocabrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.vterm{border:2px solid var(--line);padding:12px;border-radius:12px}.vterm span{display:block;margin-top:5px}.lundy-grid,.lundy-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center;font-weight:900}.ladder,.prompt-ladder{font-weight:700}.ta-card,.modal,.drawer{background:#FFF4D6}
+.controls{position:fixed;left:8px;right:8px;bottom:58px;z-index:20;display:flex;gap:7px;overflow-x:auto;padding:8px;background:var(--ink);border-radius:14px}.controls button,.controls a{flex:0 0 auto;border:2px solid #fff;border-radius:9px;padding:7px 10px;background:#fff;color:var(--ink);font-weight:800;text-decoration:none}.prog{position:fixed;left:12px;right:12px;bottom:46px;height:6px;background:#fff;border:1px solid var(--line);z-index:19}.prog>span{display:block;height:100%;width:11.11%;background:var(--teal)}
+.overlay{display:none;position:fixed;inset:0;z-index:40;background:#10233fdd;align-items:center;justify-content:center;padding:18px}.overlay.on{display:flex}.overlay-card{max-width:700px;background:#fff;border-radius:15px;padding:20px}.overlay-card button{padding:8px 12px}
+.print-pack{display:none}.printpack{display:none}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(max-width:720px){.deck{padding:10px 10px 118px}.slide{padding:15px}.hero,.routes,.vocabrow{grid-template-columns:1fr}.lundy-grid{grid-template-columns:1fr 1fr}}
+@media print{html,body{color-scheme:light!important;background:#fff;color:#111;overflow:visible}body>*:not(.print-pack){display:none!important}.print-pack{display:block!important}.printpack{display:block!important}.print-page{break-after:page;page-break-after:always;padding:8mm;min-height:255mm}.print-page:last-child{break-after:auto;page-break-after:auto}.print-pack h1{font-size:20pt;line-height:1.15;margin:0 0 3mm}.print-pack h2{font-size:13pt;line-height:1.2;margin:3mm 0 1.5mm}.print-pack p,.print-pack li{font-size:10.5pt;line-height:1.35}.running-head{font-size:9pt;border-bottom:1px solid #666;margin-bottom:4mm;padding-bottom:2mm}.proute,.print-route{display:block;border:1px solid #777;padding:3mm;margin:3mm 0;break-inside:avoid}@page{size:A4;margin:10mm}}
+</style><style id="award-print-layout">
+      @media screen {
+        [data-mbm-guide]{display:none!important}
+        #taOverlay [data-mbm-guide]{display:block!important}
+        #taOverlay .overlay-card{max-height:calc(100vh - 36px);overflow:auto;width:min(700px,100%)}
+        body.calm .slide{box-shadow:none}
+        body.calm *,body.calm *::before,body.calm *::after{animation:none!important;transition:none!important}
+        body.teacher-freeze *,body.teacher-freeze *::before,body.teacher-freeze *::after{animation-play-state:paused!important;transition:none!important}
+      }
+      @media print {
+        .award-print .print-page{box-sizing:border-box;padding:4mm;min-height:0}
+        .award-print table{width:100%;border-collapse:collapse;table-layout:fixed}
+        .award-print th,.award-print td{border:1px solid #777;padding:2mm;vertical-align:top;font-size:9pt}
+        .award-print th:first-child{width:34%}.award-print th:last-child{width:23%}
+        .award-print td.award-response{height:18mm}
+        .award-print-figures svg{display:block;width:100%;max-height:34mm;margin:2mm 0}
+        .award-print .print-route{padding:2mm;margin:2mm 0}
+        .award-print h3{font-size:11pt;margin:0}
+        .award-print .award-review-space{height:35mm;border:1px solid #777}
+      }
+    </style></head><body><!--n6-nav1:v1--><style id="n6-nav1-css">@media print{.mbmhome,.n6-splash{display:none!important}}.mbmhome{display:inline-block;margin:6px 0 0 8px;font:600 .85rem/1.4 "Segoe UI",Arial,sans-serif;color:#1e3a8a;text-decoration:none}.mbmhome:hover,.mbmhome:focus{text-decoration:underline}</style><a class="mbmhome" href="../../index.html" aria-label="Back to the Lessons catalogue">← Lessons</a><!--/n6-nav1--><a class="skip" href="#lessonDeck">Skip to lesson</a><main id="lessonDeck" class="deck"><section class="slide active" data-type="title" data-title="Lesson overview" data-min="0"><div class="time">0 min</div><span class="tag"></span><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><p>GROW · Art · Week 5. Trinity Arts Award Silver. Test The Plan With The Team.</p><p>Objective: Test a real project step with collaborators, agree a practical change and record your own part in that decision.</p><p>Success evidence: the actual team test, other people’s responses, your contribution and an updated practical plan with exact evidence locations.</p><p>Unit 2 is your arts leadership project. Keep it distinct from your personal arts challenge in Unit 1. These lessons support your real project at its planned scale.</p><p>40-minute lesson frame. Real activity may continue in recorded programme time. No event, attendance or booking is asserted here.</p><div class="box rehearsal" data-mbm-guide="staff">This deck directly serves Silver Unit 2, Arts leadership, Parts 2B and 2D. Part 2B requires planning promotion, recruitment, resources, risk and feedback. This session tests and updates the existing practical plan. Part 2D requires working effectively with others. Preserve the pupil’s own contribution, actual exchanges and response to collaborators. Source: tools/artsaward/SPEC.json, Silver and universal rules. Silver has TWO units, evidenced separately: Unit 1 Arts practice and pathways; Unit 2 Arts leadership. Mark P / A / N per part. ONE Attempted is allowed PER UNIT. Any Not Attempted = Below Pass. Results are Pass / Below Pass only. The whole Silver portfolio has a 20-file cap across both units, not twenty per unit. Organise evidence by unit and part. Nine cumulative part files or two clearly sectioned unit files are optional layouts. Name the actual file plus page, slide or timecode for each item. One real record may support two parts with clear locators; do not count duplicate copies as extra evidence. The four assessment areas are art form knowledge and understanding, creativity, planning and review, and communication. Only an adviser trained at Silver may assess; delivery is through a validated centre. Confirm these locally, not as an accomplished fact in this deck. Adults may scribe exact pupil words or confirmed signs and check them back, but must not write the pupil’s plan, review or evidence. Staff may separately record factual observations. Core, Extend and Challenge are support choices within Silver and retain the actual role, contribution and evidence. No public showing is imposed as a Silver requirement. Fourteen forty-minute sessions do not supply all 95 programme hours; record actual further guided and independent time.</div><div class="box rehearsal" data-mbm-guide="staff">Retrieve each pupil’s 2A role and 2B practical plan. Arrange available collaborators, including staff where appropriate. Prepare actual project materials or safe substitutes for the rehearsal, plus blank paper. For the teacher model use a pencil, paper and a clear instruction card made on the board. Check permission, access, materials and local risk arrangements before any trial. The practical test and collaboration can evidence 2B and 2D, but must not be relabelled as completed project delivery. If real collaborators or materials are unavailable, retain preparation honestly and arrange the missing practical test. Do not supply a ready-written pupil plan.</div></section><section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="3" data-ta1="Check actual plans and roles; help retrieve missing work without filling its choices for the pupil."><div class="time">3 min</div><span class="tag"></span><h2>Arrival · retrieve</h2><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><p>Open your project purpose, your own role and the practical plan. Put a finger beside one step you are responsible for. Say what other people need from you to carry it out.</p><p>Your plan covers promotion, recruitment, resources, risk and feedback. These words describe real jobs: how people hear about the activity, who joins, what is needed, what could cause harm, and how you hear responses.</p><p>Today you test a part of that plan with other people. You are finding out whether it works before calling it ready. A test can reveal a useful problem.</p><p>Choose a safe step that can be tried with the time and people available. Keep an untouched copy of the current plan so your later change can be seen.</p></section><section class="slide" data-type="starter" data-title="Starter · create the need" data-min="3" data-ta1="Write the full example on the board. It is a teaching case, not a claim about the pupil’s project."><div class="time">3 min</div><span class="tag"></span><h2>Starter · create the need</h2><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><p>Read this teacher example: the instruction says, Make a pattern with three types of mark. The pencil and paper are ready, but the group cannot see an example of a mark.</p><p>What would you check before deciding the group needs more pencils? The missing help may be a clear explanation, not another resource.</p><p>A plan can look complete on paper yet leave a person unsure what to do. Testing lets a real person try the step and describe what happened. Guessing what they might think does not do that job.</p><p>Each collaborator may notice something different. One may need the instruction closer. Another may need more time. A useful test makes room for their actual response rather than asking them to agree that your plan is good.</p></section><section class="slide" data-type="ido" data-title="I Do · model" data-min="6" data-ta1="Run the short demonstration with a real willing colleague or pupil. Preserve their actual response; if it differs from the example, model that difference honestly."><div class="time">6 min</div><span class="tag"></span><h2>I Do · model</h2><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><p>Watch the adult model a small test with a willing partner. They show paper and a pencil and ask the partner to make a pattern using three types of mark.</p><p>The partner says what is clear and what needs explaining. The adult listens without finishing the reply. They repeat the point back: You want to see what counts as a type of mark. Is that right?</p><p>The adult then draws a dot, a short line and a curve on scrap paper. They name the actions while making them. They ask whether this makes the instruction clearer, rather than claiming it must help.</p><p>They agree a change together: keep a large mark example beside the task. The adult records the real response and the change to this model test. Your test may need a different change.</p><p>Notice the sequence. We tried the instruction first, heard a response, checked its meaning, then agreed what to change. The adult did not invent a complaint or write the partner’s answer before asking.</p><p>If the test reveals a safety issue, stop that part and involve the responsible adult. Agreement between pupils does not make unsafe equipment safe.</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Test a plan with real people. TRY a safe project step. LISTEN hear the real response. AGREE choose an action. UPDATE record what changed. A practical change grows from a real test."><title>Test a plan with real people</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">TRY</text><text x="73" y="88" text-anchor="middle" font-size="11">a safe project step</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">LISTEN</text><text x="231" y="88" text-anchor="middle" font-size="11">hear the real response</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">AGREE</text><text x="389" y="88" text-anchor="middle" font-size="11">choose an action</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">UPDATE</text><text x="547" y="88" text-anchor="middle" font-size="11">record what changed</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">A practical change grows from a real test.</text></svg></section><section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="4" data-ta1="Collect all sorts before giving the key. Accept speech, pointing or a marked letter; ask pupils to explain an action rather than judge a person."><div class="time">4 min</div><span class="tag"></span><h2>We Do · everyone commits</h2><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><p>Sort these visible cards into USEFUL TEST or NEEDS A CHANGE. Use the letter to show your choice before checking the key.</p><p>A: I ask a partner to try reading the task from the place they will sit.</p><p>B: I write that everyone understood before anyone tries it.</p><p>C: I ask what the partner found difficult and check I understood the reply.</p><p>D: I keep testing a damaged tool because the group voted to continue.</p><p>The key is useful test: A and C. B invents a result. D ignores a safety concern; stop and ask the responsible adult.</p><p>Choose B or D and explain a better next action. Keep the action specific. Saying communicate better does not tell someone whether to ask, listen, change the instruction or stop using a tool.</p></section><section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="6" data-ta1="Point to the actual model test and its update. Identify 2B and 2D separately without requiring duplicate evidence files."><div class="time">6 min</div><span class="tag"></span><h2>I Do 2 · connect</h2><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><p>A group decision does not show everyone’s contribution by itself. Compare these two teacher-example notes. We sorted it is too broad. I showed the instruction; my partner tested it; I checked their reply and enlarged the example identifies roles.</p><p>The second note also needs to be true. A detailed invented note is not better evidence than a short honest one. Name what you actually did and what came from someone else.</p><p>An updated plan shows the practical change for 2B. A note of the exchange shows how you worked with others for 2D. They may be kept together if both parts can be found.</p><p>Recheck the wider plan after a change. A larger display may need a different space. A new material may change resources or risk. A different group size may affect recruitment and the way you gather feedback.</p><p>For example, a shorter art task may suit people who can join only briefly. That affects the invitation and the time you offer. Check the change with those people; do not write that they accepted it before asking.</p><p>Keep the first plan as well as the update. Label what is still untested. One successful trial does not prove that every practical issue has been resolved.</p><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="A plan change and a team contribution. PRACTICAL PLAN what we changed why the test led to it. WORKING TOGETHER what I contributed how I responded to others. Keep both meanings clear in the same real record."><title>A plan change and a team contribution</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">PRACTICAL PLAN</text><text x="151" y="74" text-anchor="middle" font-size="11">what we changed</text><text x="151" y="94" text-anchor="middle" font-size="11">why the test led to it</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">WORKING TOGETHER</text><text x="469" y="74" text-anchor="middle" font-size="11">what I contributed</text><text x="469" y="94" text-anchor="middle" font-size="11">how I responded to others</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Keep both meanings clear in the same real record.</text></svg></section><section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="5" data-ta1="Facilitate a real exchange; do not substitute a fictional partner or claim rehearsal as delivery. Allow more programme time if the chosen test needs it."><div class="time">5 min</div><span class="tag"></span><h2>We Do 2 · lab</h2><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><p>Now choose one step from your own plan to test with a real collaborator. Tell them what you want to find out and invite them to try it. Use agreed safe materials.</p><p>Watch what happens before offering an answer. Ask what helped or got in the way. Check their meaning by repeating or showing the point back.</p><p>Agree one action to keep, change or check further. You may disagree at first. Give a reason tied to the task, and ask for the other person’s reason before deciding.</p><p>Record the trial while the details are fresh. Label it preparation or rehearsal. This actual team test supports planning and working together; it is not a claim that your whole project has been delivered.</p></section><section class="slide" data-type="independent" data-title="Independent · evidence" data-min="10" data-ta1="Every tier retains an actual practical test, collaboration and pupil-authored update. Scribe exact words and confirm them; do not write the decision."><div class="time">10 min</div><span class="tag"></span><h2>Independent · evidence</h2><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><p>Use the test result to update your practical plan. Show what changed and why, or explain why you kept a step. Check promotion, recruitment, resources, risk and feedback for any linked change.</p><p>Agree who will carry out the next action. State your own part clearly, alongside any part another person has accepted. Do not assign a job to someone who has not agreed to it.</p><p>Keep the other person’s response accurately, then record your own contribution and how you responded. Ask them to check a shared factual detail if needed; your explanation remains yours.</p><p>Core: use the five practical headings and help with materials. Take your own part in the real test, listen and agree an action. Dictate or show your update and contribution for an accurate record.</p><p>Extend: conduct the test, agree the practical action and update your plan. Link your own contribution and the response from others to the decision you made.</p><p>Challenge: retain the same real test and records. Check a consequence of the change elsewhere in the plan and agree how the team will handle it.</p><p>Save the records under Unit 2, Parts 2B and 2D. Name the actual file and page, slide or timecode for each. If a test could not happen, name what remains to be done rather than reporting an imagined outcome.</p></section><section class="slide" data-type="exit" data-title="Exit · check the next action" data-min="3" data-ta1="Check the saved locators and actual readiness. Keep unresolved practical tasks open; do not infer delivery from preparation."><div class="time">3 min</div><span class="tag"></span><h2>Exit · check the next action</h2><div class="lundy-status"></div><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><p>Show your collaborator the updated step and your own next job. Ask whether the record matches the action you agreed. Correct a factual error without changing someone’s words to make them sound more helpful.</p><p>Use the file location to find the first plan, the trial and the update. Can a reader tell what you did, what another person contributed and why the decision changed?</p><p>The next session supports real delivery when the project is ready. Keep any missing permission, resource or agreement visible. A plan being saved does not mean those jobs are complete.</p></section></main><nav class="controls" aria-label="Lesson controls"><button type="button" data-nav="previous">◀ Previous</button><button type="button" data-tool="1">TA brief</button><button type="button" data-tool="2">Read response</button><button type="button" data-tool="3">Sources</button><button type="button" data-tool="4">Display / print</button><button type="button" data-tool="5">Calm mode</button><button type="button" data-tool="6">Previous</button><button type="button" data-tool="7">Next</button><button type="button" data-nav="next">Next ▶</button></nav><div class="prog" aria-hidden="true"><span></span></div><div id="taOverlay" class="overlay" aria-hidden="true"><div class="overlay-card"><h2></h2><p>Use the least prompt needed. Keep adult preparation and exact-word scribing separate from pupil authorship. Guidance is hidden from the learner surface by default.</p><button type="button" data-close-overlay>Close</button></div></div><section class="print-pack printpack award-print" aria-label="Printable lesson pack">
+      <section class="print-page">
+        <div class="running-head">GROW Art · Week 5 · Art · Trinity Arts Award Silver</div><h1>Test The Plan With The Team</h1>
+        <p><b>Award evidence:</b> Silver Arts Award, Part 2B, 2D; no workbook cell (AAE-H7)</p>
+        <p><b>Objective:</b> Test a real project step with collaborators, agree a practical change and record your own part in that decision.</p>
+        <h2>My evidence record</h2><p>Test a real step with collaborators. Keep the true response, your agreed practical update and your own part in the exchange.</p><p>The practical step and test · What others found · My contribution and plan update · Next action and evidence location</p>
+        <table><thead><tr><th>Evidence focus</th><th>My words or response</th><th>File and page, slide or time</th></tr></thead>
+        <tbody><tr><th scope="row">Which step did we actually test, and with whom?</th><td class="award-response"></td><td class="award-locator"></td></tr><tr><th scope="row">What response did I hear, and how did I check it?</th><td class="award-response"></td><td class="award-locator"></td></tr><tr><th scope="row">What did I contribute, what changed, and who agreed the next action?</th><td class="award-response"></td><td class="award-locator"></td></tr></tbody></table>
+        <div class="award-print-figures"><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Test a plan with real people. TRY a safe project step. LISTEN hear the real response. AGREE choose an action. UPDATE record what changed. A practical change grows from a real test."><title>Test a plan with real people</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">TRY</text><text x="73" y="88" text-anchor="middle" font-size="11">a safe project step</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">LISTEN</text><text x="231" y="88" text-anchor="middle" font-size="11">hear the real response</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">AGREE</text><text x="389" y="88" text-anchor="middle" font-size="11">choose an action</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">UPDATE</text><text x="547" y="88" text-anchor="middle" font-size="11">record what changed</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">A practical change grows from a real test.</text></svg><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="A plan change and a team contribution. PRACTICAL PLAN what we changed why the test led to it. WORKING TOGETHER what I contributed how I responded to others. Keep both meanings clear in the same real record."><title>A plan change and a team contribution</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">PRACTICAL PLAN</text><text x="151" y="74" text-anchor="middle" font-size="11">what we changed</text><text x="151" y="94" text-anchor="middle" font-size="11">why the test led to it</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">WORKING TOGETHER</text><text x="469" y="74" text-anchor="middle" font-size="11">what I contributed</text><text x="469" y="94" text-anchor="middle" font-size="11">how I responded to others</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Keep both meanings clear in the same real record.</text></svg></div>
+        <p>Name or learner code: ____________________ Date: ____________________</p>
+      </section>
+      <section class="print-page">
+        <div class="running-head">GROW Art · Week 5 · Art · Trinity Arts Award Silver</div><h1>Test The Plan With The Team</h1>
+        <h2>Choose the support you need</h2><div class="print-route"><h3>Core</h3><p>Core: use the five practical headings and help with materials. Take your own part in the real test, listen and agree an action. Dictate or show your update and contribution for an accurate record.</p></div><div class="print-route"><h3>Extend</h3><p>Extend: conduct the test, agree the practical action and update your plan. Link your own contribution and the response from others to the decision you made.</p></div><div class="print-route"><h3>Challenge</h3><p>Challenge: retain the same real test and records. Check a consequence of the change elsewhere in the plan and agree how the team will handle it.</p></div>
+        <h2>Check the evidence</h2><ol><li>A real safe test occurred, or the missing test is honestly named.</li><li>The update checks promotion, recruitment, resources, risk and feedback as relevant.</li><li>My own contribution and response to collaborators are identifiable.</li><li>Preparation is not falsely claimed as project delivery.</li><li>Unit 2 Parts 2B and 2D have actual file-plus-page, slide or timecode locators.</li></ol>
+        <h2>My review or next step</h2><div class="award-review-space"></div>
+        <p>For a recorded response, write the actual file name and page, slide or timecode.</p>
+      </section>
+    </section><!--n6-nav1:v1--><div class="n6-splash"><div style="text-align:center;margin-top:8px"><svg width="64" height="64" viewbox="0 0 100 100" aria-label="Made by Matt"><circle cx="50" cy="50" r="47" fill="none" stroke="#1e3a8a" stroke-width="3.4"></circle><g transform="translate(0 2)"><path d="M28 71 L28 37 L50 59 L72 37 L72 71" fill="none" stroke="#1e3a8a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 22.5 L51.48 28.52 L57.5 30 L51.48 31.48 L50 37.5 L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"></path></g></svg></div></div><!--/n6-nav1--><script id="lesson-config" type="application/json">{"id": "SILVER_W5_2B2", "family": "GROW Art", "week": 5, "slot": "Art · Trinity Arts Award Silver", "title": "Test The Plan With The Team", "outcomes": ["Work with actual collaborators to test a project step or resource, listen to responses, agree roles and resolve a practical issue. Update the pupil’s practical plan and record their own contribution and response to others. This is actual preparation and working with others; rehearsal is labelled rehearsal and is not claimed as project delivery."], "cells": [], "objective": "Test a real project step with collaborators, agree a practical change and record your own part in that decision.", "timings": [0, 3, 3, 6, 4, 6, 5, 10, 3], "artsAward": {"level": "Silver", "parts": ["2B", "2D"]}, "planId": "974a27e98d46", "weDoType": "sort-or-match", "tierLadder": ["Core", "Extend", "Challenge"]}</script><script data-award-chassis="">/* Runtime for newly authored award decks; no persistence or external dependencies. */
+(function () {
+  'use strict';
+
+  function boot() {
+    const deck = document.querySelector('main.deck');
+    const slides = Array.from(document.querySelectorAll('main.deck > .slide'));
+    if (!deck || !slides.length) return;
+    const progress = document.querySelector('.prog');
+    const bar = document.querySelector('.prog > span');
+    const overlay = document.getElementById('taOverlay');
+    const card = overlay && overlay.querySelector('.overlay-card');
+    const closeButton = overlay && overlay.querySelector('[data-close-overlay]');
+    const teacherButtons = document.querySelectorAll('[data-tool="1"]');
+    let index = Math.max(0, slides.findIndex(slide => slide.classList.contains('active')));
+    let returnFocus = null;
+    let notes = null;
+    let slotHost = null;
+
+    function show(next) {
+      index = (next + slides.length) % slides.length;
+      slides.forEach(function (slide, i) {
+        slide.classList.toggle('active', i === index);
+        slide.setAttribute('aria-hidden', i === index ? 'false' : 'true');
+      });
+      if (bar) bar.style.width = ((index + 1) / slides.length * 100) + '%';
+      if (progress) {
+        progress.removeAttribute('aria-hidden');
+        progress.setAttribute('role', 'progressbar');
+        progress.setAttribute('aria-label', 'Lesson progress');
+        progress.setAttribute('aria-valuemin', '1');
+        progress.setAttribute('aria-valuemax', String(slides.length));
+        progress.setAttribute('aria-valuenow', String(index + 1));
+        progress.setAttribute('aria-valuetext', 'Stage ' + (index + 1) + ' of ' + slides.length);
+      }
+      deck.scrollTop = 0;
+    }
+
+    function isOpen() {
+      return Boolean(overlay && overlay.classList.contains('on'));
+    }
+
+    function fillNotes() {
+      notes.replaceChildren();
+      const heading = document.createElement('h3');
+      heading.textContent = slides[index].dataset.title || 'Current stage';
+      notes.appendChild(heading);
+      ['ta1', 'ta2'].forEach(function (key) {
+        const text = slides[index].dataset[key];
+        if (!text) return;
+        const paragraph = document.createElement('p');
+        paragraph.textContent = text;
+        notes.appendChild(paragraph);
+      });
+      const sources = index === 0 ? [slides[0]] : [slides[index], slides[0]];
+      sources.forEach(function (source) {
+        source.querySelectorAll('[data-mbm-guide]').forEach(function (note) {
+          // The slot reader has its own live state and file listener: never clone it.
+          if (note.id === 'award-slot-panel' || note.closest('#award-slot-panel')) return;
+          const copy = note.cloneNode(true);
+          copy.removeAttribute('id');
+          copy.querySelectorAll('[id]').forEach(node => node.removeAttribute('id'));
+          notes.appendChild(copy);
+        });
+      });
+      // mount() runs on DOMContentLoaded. A real click comes after that event,
+      // regardless of the order in which the two embedded scripts were loaded.
+      const panel = document.getElementById('award-slot-panel');
+      if (panel && !slotHost.contains(panel)) slotHost.appendChild(panel);
+    }
+
+    function openTeacher(button) {
+      if (!card || isOpen()) return;
+      returnFocus = button || document.activeElement;
+      fillNotes();
+      overlay.classList.add('on');
+      overlay.setAttribute('aria-hidden', 'false');
+      teacherButtons.forEach(node => node.setAttribute('aria-expanded', 'true'));
+      (closeButton || card).focus();
+    }
+
+    function closeTeacher() {
+      if (!isOpen()) return;
+      overlay.classList.remove('on');
+      overlay.setAttribute('aria-hidden', 'true');
+      teacherButtons.forEach(node => node.setAttribute('aria-expanded', 'false'));
+      if (returnFocus && returnFocus.isConnected) returnFocus.focus();
+    }
+
+    function focusable() {
+      return Array.from(card.querySelectorAll('a[href], button, input, select, textarea, [tabindex]'))
+        .filter(node => !node.disabled && node.tabIndex >= 0 && node.getClientRects().length);
+    }
+
+    if (card) {
+      overlay.setAttribute('role', 'dialog');
+      overlay.setAttribute('aria-modal', 'true');
+      overlay.setAttribute('aria-hidden', 'true');
+      overlay.classList.remove('on');
+      card.tabIndex = -1;
+      let title = card.querySelector('h2');
+      if (!title) {
+        title = document.createElement('h2');
+        card.prepend(title);
+      }
+      title.id = 'award-teacher-title';
+      title.textContent = 'Teacher tools';
+      overlay.setAttribute('aria-labelledby', title.id);
+      notes = document.createElement('div');
+      notes.id = 'award-teacher-notes';
+      slotHost = document.createElement('div');
+      slotHost.id = 'award-teacher-slots';
+      card.insertBefore(notes, closeButton);
+      card.insertBefore(slotHost, closeButton);
+      if (closeButton) closeButton.addEventListener('click', closeTeacher);
+      teacherButtons.forEach(function (button) {
+        button.setAttribute('aria-controls', overlay.id);
+        button.setAttribute('aria-expanded', 'false');
+        button.addEventListener('click', () => openTeacher(button));
+      });
+      // Keep focus in the open dialog, including when scripts attempt to move it.
+      document.addEventListener('focusin', function (event) {
+        if (isOpen() && !overlay.contains(event.target)) (closeButton || card).focus();
+      });
+    }
+
+    document.querySelectorAll('[data-nav="previous"], [data-tool="5"]')
+      .forEach(button => button.addEventListener('click', () => { if (!isOpen()) show(index - 1); }));
+    document.querySelectorAll('[data-nav="next"], [data-tool="6"]')
+      .forEach(button => button.addEventListener('click', () => { if (!isOpen()) show(index + 1); }));
+    document.querySelectorAll('[data-tool="2"]')
+      .forEach(button => button.addEventListener('click', () => window.print()));
+    [['3', 'calm'], ['4', 'teacher-freeze']].forEach(function (item) {
+      const buttons = document.querySelectorAll('[data-tool="' + item[0] + '"]');
+      function sync() {
+        const active = document.body.classList.contains(item[1]);
+        buttons.forEach(button => button.setAttribute('aria-pressed', String(active)));
+      }
+      buttons.forEach(button => button.addEventListener('click', function () {
+        document.body.classList.toggle(item[1]);
+        sync();
+      }));
+      sync();
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (isOpen()) {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          closeTeacher();
+        } else if (event.key === 'Tab') {
+          const items = focusable();
+          const first = items[0] || card;
+          const last = items[items.length - 1] || card;
+          if (!items.length || !items.includes(document.activeElement)
+              || (event.shiftKey && document.activeElement === first)
+              || (!event.shiftKey && document.activeElement === last)) {
+            event.preventDefault();
+            (event.shiftKey ? last : first).focus();
+          }
+        }
+        return;
+      }
+      const target = event.target;
+      if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey
+          || (target && (target.isContentEditable
+              || (typeof target.closest === 'function' && target.closest('input, textarea, select'))))
+          || document.querySelector('dialog[open], .overlay.on, [role="dialog"][aria-hidden="false"]')) return;
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        event.preventDefault();
+        show(index + (event.key === 'ArrowRight' ? 1 : -1));
+      }
+    });
+    show(index);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once: true});
+  else boot();
+}());
+</script></body></html>

@@ -1848,3 +1848,40 @@ final work; D1–D2 support choice and actual sharing of enjoyment/achievement.
 Both Part B slot keys are read from the current source. The suggested four-file
 layout is within the ten-file cap. Independent workbook review supports zero
 new cells, without inheriting Bronze's H7 ruling. Browser proof is pending.
+
+## Silver batch opening — 14 planned / 24 ceiling
+
+Bronze's fourteen decks have merged; Explore's fourteen are now authored and
+built with binding award gates passed. Silver drafting begins on a separate
+branch while Explore completes pack/browser checks. Merges remain level-ordered.
+The root remains the single Lessons writer.
+
+The canonical Silver plan has six Unit 1 decks and eight Unit 2 decks, with
+full 1C and 1D teaching and all nine parts served. It retains all required
+evidence in Core, Extend and Challenge, one Attempted per unit, twenty files
+across Silver and all four assessment areas. No GROW cell is invented.
+Fourteen forty-minute lessons do not themselves deliver the 95-hour programme.
+
+
+
+## Silver fourteen-deck source checkpoint
+
+All fourteen specs and generated decks are preserved. Comparative builds
+pass after two We Do activities were correctly declared commit-and-reveal
+and given an explicit reveal routine. The initial sort-or-match declaration
+did not describe their actual activity. No gate was weakened to accept it.
+
+The separate award scan has two slot-deck findings under review. A genuine
+“You will meet” promise is corrected to an arranged-route condition. Truthful
+denials and questions checking the actual record also triggered the assertion
+matcher; those require narrowly controlled mechanism correction, not hiding
+the words in the teaching. This checkpoint does not claim a complete Silver
+award gate or browser result.
+
+Independent GROW Art cell review checks all 39 spine cells against the workbook,
+including 23 planned cells. Existing week 1–7 outcomes already have owners;
+unclaimed overlap belongs to other ruled weeks. No new Silver cell is claimed.
+
+## Silver final source and pack checkpoint — 14 units
+
+All fourteen source-authored decks now pass comparative builds and the separate g30–g35 scan. Reader v1.1.1 preserves the 43 prior controls and adds 24 reference-scope controls in prerequisite PR305. A genuine practitioner promise was corrected before rebuilding. Independent review also corrected an early baseline-model sequence, a two-variable comparison and a caption-writing omission; two We Do declarations now name their actual commit-and-reveal activities. Words 1073–1287, pupil FK 5.34–6.28, sixteen pack checksums. Nine parts remain separately locatable across two units; twenty files maximum across Silver. Cells remain zero before and after independent ruled-week review. Browser verification and ordered merging remain pending.
