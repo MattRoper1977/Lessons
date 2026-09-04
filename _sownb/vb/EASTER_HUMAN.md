@@ -525,3 +525,51 @@ numbers from a set this tree cannot see.
 
 If the 44 exemplar decks are meant to be repaired in place, they need to be in
 the repository first. **Holds §6–§8's deck-numbered repairs; holds nothing else.**
+
+---
+
+**AAE-H7 — what the Bronze decks claim in the workbook.** *Holds nothing; the
+fourteen Bronze decks ship without a cell claim until this is answered.*
+
+R3(ii) says the Bronze cells sit **under BUILD Art**. Measured before assuming
+what that means:
+
+    EASTER_TARGETS.json holds 24 BUILD Art plans
+    batches 3 and 4 covered C102-C108
+    17 remain uncovered:
+      C110-C115  keep a beat · festival art · rehearse · perform · review · log
+      C88-C93    colour and sound for feeling · emotion · an artist · technique
+                 · review and improve · log a review
+      C94-C98    freeze-frame · character · sequence a drama · rehearse · perform
+
+**Not one of the seventeen states a Bronze Part A–D outcome.** Binding a Bronze
+deck to "Keep a steady beat" or "Sequence a short drama" would be a deck
+claiming to teach an outcome it does not teach, which is the coverage lie the
+review's first lens exists to catch. Inventing a cell reference is worse.
+
+So the Bronze decks claim **no workbook cell**, and the binding is left open
+rather than fabricated.
+
+**The consequence, stated rather than left to be found.** A deck with no plan
+cells carries no `planId`, so **g29 skips it** rather than judging it. The skip
+is not silent — one of g29's own controls is
+`a-deck-with-no-planId-is-skipped-not-silently-passed`, and the three chassis
+already appear in every run as named skips. But *reported* is not *judged*: g29
+is the gate that stops two decks claiming the same cell, and for these fourteen
+it will report rather than check. Their coverage claim is instead the
+`artsAward` block that g30–g35 read and bind, which is a gate reading a
+declaration rather than no gate at all.
+
+Three ways this could be answered, in the order they cost:
+
+1. **The Bronze strand gets its own column in the workbook**, and the fourteen
+   decks bind to it exactly as every other authored deck does. Cleanest; needs a
+   workbook change.
+2. **The Bronze strand is placed by catalogue row only** (which R3(ii) already
+   schedules for GROW) and the g29 skip is accepted and recorded permanently.
+   Cheapest; leaves the fail-open standing.
+3. **Bronze re-themes the seventeen uncovered BUILD Art cells** so the outcomes
+   and the parts agree. Most work, and it changes what the scheme promises.
+
+Nothing is guessed in the meantime: the decks are authored, gated on everything
+that does apply, and the cell column stays empty.
