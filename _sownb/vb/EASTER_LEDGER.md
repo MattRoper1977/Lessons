@@ -1739,3 +1739,7 @@ allfourteenactualBronzedecks: toolbar,nav,focus/modal,livefileinputandthe
 source-matchedprintcontent. TheseHTMLbytes have not changed since that run.
 Retargetingto main now enables the remainingestatechecks; no contentmerge
 is claimed yet.
+
+PR304 now targets main at 4f366471. The byte-identical lesson outputs retain
+the completed browser proof; the current head must also pass every estate job.
+The source-figure control rebuilt114figures, with zero differences.
