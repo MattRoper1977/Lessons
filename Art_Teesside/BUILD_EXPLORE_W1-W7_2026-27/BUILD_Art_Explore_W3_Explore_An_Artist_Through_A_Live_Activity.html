@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Explore An Artist Through A Live Activity</title>
+<style>
+:root{--ink:#17223B;--paper:#FFFCF5;--soft:#F3F6F8;--line:#CAD5DF;--muted:#526274;--gold:#B57918;--green:#246B55;--slot:#346B7B;--slot-pale:#EAF6F8;--danger:#8A3C2D}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:"Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--soft)}
+body{overflow:hidden}a,button{font:inherit}button,a.mbmhome{min-height:44px;min-width:44px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:8px;top:8px;z-index:50;background:#fff;padding:10px}
+.deck{height:100vh;padding:18px 18px 112px;overflow:auto}.slide{display:none;max-width:1120px;min-height:calc(100vh - 145px);margin:auto;background:var(--paper);border:2px solid var(--line);border-top:10px solid var(--slot);border-radius:18px;padding:22px;box-shadow:0 8px 30px #10233f18}.slide.active{display:block}
+h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-size:clamp(1.5rem,3vw,2.3rem);margin:.4rem 0 1rem}h3{margin:.2rem 0 .45rem}p,li{line-height:1.5}.tag,.time,.chips span{display:inline-block;border-radius:999px;padding:6px 10px;font-weight:800}.tag{background:var(--slot-pale)}.time{float:right;background:var(--ink);color:#fff}.chips{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.chips span{background:#FFF3D4}
+.hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,.7fr);gap:18px}.hero-visual{display:grid;gap:10px;align-content:center;background:var(--ink);color:#fff;border-radius:16px;padding:18px;min-height:150px;text-align:center}.hero-visual span{color:var(--slot)}
+.box,.route,.route-card,.evidence-gate,.lundy,.lundy-strip,.ladder,.prompt-ladder,.ta-card,.modal,.drawer,dialog{border:2px solid var(--line);border-radius:13px;padding:13px;margin:12px 0;background:#fff}.lo{border-left:8px solid var(--slot)}.truth{border-left:8px solid var(--gold);background:#FFF3D4;padding:12px}.access{background:var(--slot-pale);padding:12px;border-radius:12px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.routes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.route.s,.route.supported,.route-card.supported{border-top:7px solid var(--green)}.route.m,.route.standard,.route-card.standard{border-top:7px solid var(--slot)}.route.h,.route.stretch,.route-card.stretch{border-top:7px solid var(--gold)}.options{display:grid;gap:9px}.options button{text-align:left;padding:12px;border:2px solid var(--line);border-radius:10px;background:#fff}.vocabrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.vterm{border:2px solid var(--line);padding:12px;border-radius:12px}.vterm span{display:block;margin-top:5px}.lundy-grid,.lundy-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center;font-weight:900}.ladder,.prompt-ladder{font-weight:700}.ta-card,.modal,.drawer{background:#FFF3D4}
+.controls{position:fixed;left:8px;right:8px;bottom:58px;z-index:20;display:flex;gap:7px;overflow-x:auto;padding:8px;background:var(--ink);border-radius:14px}.controls button,.controls a{flex:0 0 auto;border:2px solid #fff;border-radius:9px;padding:7px 10px;background:#fff;color:var(--ink);font-weight:800;text-decoration:none}.prog{position:fixed;left:12px;right:12px;bottom:46px;height:6px;background:#fff;border:1px solid var(--line);z-index:19}.prog>span{display:block;height:100%;width:11.11%;background:var(--slot)}
+.overlay{display:none;position:fixed;inset:0;z-index:40;background:#10233fdd;align-items:center;justify-content:center;padding:18px}.overlay.on{display:flex}.overlay-card{max-width:700px;background:#fff;border-radius:15px;padding:20px}.overlay-card button{padding:8px 12px}
+.print-pack{display:none}.printpack{display:none}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(max-width:720px){.deck{padding:10px 10px 118px}.slide{padding:15px}.hero,.routes,.vocabrow{grid-template-columns:1fr}.lundy-grid{grid-template-columns:1fr 1fr}}
+@media print{html,body{color-scheme:light!important;background:#fff;color:#111;overflow:visible}body>*:not(.print-pack){display:none!important}.print-pack{display:block!important}.printpack{display:block!important}.print-page{break-after:page;page-break-after:always;padding:8mm;min-height:255mm}.print-page:last-child{break-after:auto;page-break-after:auto}.print-pack h1{font-size:20pt;line-height:1.15;margin:0 0 3mm}.print-pack h2{font-size:13pt;line-height:1.2;margin:3mm 0 1.5mm}.print-pack p,.print-pack li{font-size:10.5pt;line-height:1.35}.running-head{font-size:9pt;border-bottom:1px solid #666;margin-bottom:4mm;padding-bottom:2mm}.proute,.print-route{display:block;border:1px solid #777;padding:3mm;margin:3mm 0;break-inside:avoid}@page{size:A4;margin:10mm}}
+</style><style id="award-print-layout">
+      @media screen {
+        [data-mbm-guide]{display:none!important}
+        #taOverlay [data-mbm-guide]{display:block!important}
+        #taOverlay .overlay-card{max-height:calc(100vh - 36px);overflow:auto;width:min(700px,100%)}
+        body.calm .slide{box-shadow:none}
+        body.calm *,body.calm *::before,body.calm *::after{animation:none!important;transition:none!important}
+        body.teacher-freeze *,body.teacher-freeze *::before,body.teacher-freeze *::after{animation-play-state:paused!important;transition:none!important}
+      }
+      @media print {
+        .award-print .print-page{box-sizing:border-box;padding:4mm;min-height:0}
+        .award-print table{width:100%;border-collapse:collapse;table-layout:fixed}
+        .award-print th,.award-print td{border:1px solid #777;padding:2mm;vertical-align:top;font-size:9pt}
+        .award-print th:first-child{width:34%}.award-print th:last-child{width:23%}
+        .award-print td.award-response{height:18mm}
+        .award-print-figures svg{display:block;width:100%;max-height:34mm;margin:2mm 0}
+        .award-print .print-route{padding:2mm;margin:2mm 0}
+        .award-print h3{font-size:11pt;margin:0}
+        .award-print .award-review-space{height:35mm;border:1px solid #777}
+      }
+    </style></head>
+<body>
+<!--mbm_guide_v1 retained as a contract marker; guidance state is memory-only-->
+<!--n6-nav1:v1-->
+<style id="n6-nav1-css">@media print{.mbmhome,.n6-splash{display:none!important}}.mbmhome{display:inline-block;margin:6px 0 0 8px;font:600 .85rem/1.4 "Segoe UI",Arial,sans-serif;color:#1e3a8a;text-decoration:none}.mbmhome:hover,.mbmhome:focus{text-decoration:underline}</style>
+<a class="mbmhome" href="../../index.html" aria-label="Back to the Lessons catalogue">← Lessons</a>
+<!--/n6-nav1-->
+<a class="skip" href="#lessonDeck">Skip to lesson</a>
+<main id="lessonDeck" class="deck">
+<section class="slide active" data-type="title" data-title="Lesson overview" data-min="0">
+<div class="time">0 min</div>
+<span class="tag"></span>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<p>BUILD · Art · Trinity Arts Award Explore. Explore An Artist Through A Live Activity.</p><p>Objective: Take part in a real artist session and keep a clear record of what you explored.</p><p>Success evidence: After the real session: the real artist’s identity, the pupil’s own action and finding, and an exact evidence location. Rehearsal stays labelled preparation.</p><p>You can explore through looking, listening, asking and trying. Choose a way to take part that works for you. You do not need to share private facts about your life.</p><p>We may go to them, they may come in, or we may meet live on screen. The route comes from the current slot card. No meeting is promised by this deck.</p><p>40-minute lesson frame. Staff may extend or split the real experience across sessions.</p><div class="box rehearsal" data-mbm-guide="staff">This deck serves Explore Part B, Explore. Part B requires at least one artist AND at least one arts organisation, through live or active experience. Desk research alone fails; archives and prerecorded video are preparation only. Explore has four parts, each a distinct activity. Overall Pass allows ONE Attempted. Any Not Attempted = Below Pass. The whole Explore portfolio has a 10-file cap, organised digitally by part. The three assessment areas are art form knowledge and understanding, creativity, and communication. Results are Pass or Below Pass only. Only an adviser trained at Explore may assess; delivery is through a validated centre. Neither local training nor validation is asserted as confirmed here. Advisers must not write plans, reviews or evidence for pupils. Scribe or record the pupil's own words and check them back unchanged. Core, Extend and Challenge are support routes within Explore and retain the live or active requirement. An evidence locator names the filename plus page, slide or timecode. Read the current PRACTITIONER_SLOT and ORG_SLOT from tools/artsaward/SLOTS.json; no candidate name or date is embedded here. R1 pupils visit, R2 the artist or arts organisation comes in, R3 live remote exchange: all remain unconfirmed until actually arranged. Do not treat a recorded video as a live exchange. Source: tools/artsaward/SPEC.json, Explore and universal rules. This is the artist-focused Part B deck. It does not remove the separate arts organisation element, which may be evidenced in the same genuine encounter or in the next focused lesson. Read both current slots. Use the classroom models only for rehearsal, never as invented contact with the named artist. When an activity is confirmed, use the lab and independent stages for real participation and accurate capture; extend or split the experience as needed. If none is ready, teach observation and question skills, keep the record as preparation, and arrange the missing real activity. No filming or public posting is required; obtain any needed consent for the chosen evidence format.</div></section>
+<section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="3" data-ta1="Check PRACTITIONER_SLOT and ORG_SLOT, actual readiness and access before selecting the experience or rehearsal route. Keep unconfirmed details blank.">
+<div class="time">3 min</div>
+<span class="tag"></span>
+<h2>Arrival · retrieve</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<h3>Get ready to notice a choice</h3><p>Find the question you prepared for an artist. Point to the detail that made you choose it.</p><p>Read the current artist card with staff. It tells us which real person and session, if any, are arranged. A blank card means we still need that step.</p><p>Keep a place to note the real name later. Do not fill it with a guess or the name of someone from a film.</p><p>Think about how you can take part. You might ask or show a detail. You could try a step. Use a way the real session allows.</p><p>The arts group also needs to be explored. Today we focus on the artist. We keep that other job in view.</p></section>
+<section class="slide" data-type="starter" data-title="Starter · create the need" data-min="3" data-ta1="Draw the two loops live and leave them visible. Accept a gesture locating the gap. Do not attach an invented artist identity to this demo.">
+<div class="time">3 min</div>
+<span class="tag"></span>
+<h2>Starter · create the need</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<h3>Rehearsal: a closer look</h3><p>Watch the adult make a loop on scrap paper. Look at where it starts and where it ends.</p><p>Now they make a second loop, with a small gap left open. What changed in the line? Point to the place.</p><p>A closer look helps you find something worth asking about. It may be a tool, a shape, a sound or a way to move.</p><p>You do not need to decide whether the work is best or worst. Start with what you can notice.</p><p>This is a classroom practice. It helps you look closely; it is not a record of contact with the artist in the slot.</p></section>
+<section class="slide" data-type="ido" data-title="I Do · model" data-min="7" data-ta1="Keep the model explicitly labelled rehearsal. During a real exchange, facilitate the pupil’s question and response without answering for the artist or completing the pupil’s task.">
+<div class="time">7 min</div>
+<span class="tag"></span>
+<h2>I Do · model</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<h3>Rehearsal model: look, ask and respond</h3><p>The adult models how a question can grow from what is there. They point to the open loop and ask why a maker might leave a gap.</p><p>Next they try a loop of their own. They leave a gap in a new place. They look at what it does to the shape.</p><p>The adult names that try as their own response. They do not claim it tells them what an absent artist thinks.</p><p>In a real session, use the artist's work or actions as your starting point. Look or listen for a choice you want to explore.</p><p>Ask your question in an agreed way. An adult can read your own words. Or you can point to the part you mean.</p><p>Give the artist time to respond. Notice a word, a gesture or a step they show. If a try is offered, take part with the safe tools provided.</p><p>Keep what you learnt close to that moment. It may differ from what you expected.</p><p>If a reply is not clear, ask for a closer view or a simpler step. Finding out can take more than one look.</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Four linked boxes show noticing a choice, asking a question, responding and keeping a record of what was found."><title>Explore a real artist through action</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">NOTICE</text><text x="73" y="88" text-anchor="middle" font-size="11">find a choice</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">ASK</text><text x="231" y="88" text-anchor="middle" font-size="11">use your question</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">RESPOND</text><text x="389" y="88" text-anchor="middle" font-size="11">try, point or show</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">KEEP</text><text x="547" y="88" text-anchor="middle" font-size="11">record what you found</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">Notice, ask, respond and keep the finding.</text></svg></section>
+<section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="3" data-ta1="Answer key: A/C preparation; B/D can evidence real exploration after they actually happen. A live screen is a route, not proof by itself; check the actual exchange.">
+<div class="time">3 min</div>
+<span class="tag"></span>
+<h2>We Do · everyone commits</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<h3>Visible cards: preparation or real work?</h3><p>Sort the cards into prepares me or can be real work. The second group only counts when the action actually happens.</p><p>Point to a card and say what lets someone take part. A screen can carry a live exchange or a recorded film. Those are different.</p><p>Keep the useful preparation cards. They can help you choose what to ask when a real session is ready.</p><ul><li>A · Watch a film of an artist made last year.</li><li>B · Try a process with an artist during a live workshop.</li><li>C · Read a page about tools an artist uses.</li><li>D · Ask the artist a question in a live exchange and respond to the reply.</li></ul></section>
+<section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="7" data-ta1="Capture the pupil’s actual action and finding. Staff observations may describe what occurred but must not invent the pupil’s thoughts. Keep permissions proportionate to the chosen format.">
+<div class="time">7 min</div>
+<span class="tag"></span>
+<h2>I Do 2 · connect</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<h3>A clear record shows your part</h3><p>A picture of some tools does not show what you explored. Add the action that belongs to you.</p><p>After the real session, record who the artist was and what they did. Then say what you asked, tried, noticed or found out.</p><p>Keep those two roles clear. You may have tried a process the artist showed. That does not make their work your own.</p><p>Use the real name from the confirmed card or source. Staff can help check spelling. Do not guess that the artist belongs to a group just because both names appear nearby.</p><p>Choose evidence that shows the moment. A work sample with a note may help. So may a short clip or a staff note.</p><p>Your own finding can be spoken, shown or written. Ask an adult to read back any words they write for you.</p><p>Label a practice as practice. An unanswered question stays a question.</p><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Two panels contrast a prepared question with a record made after the real artist session, naming the artist, pupil action and finding."><title>A question and an experience record differ</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">BEFORE</text><text x="151" y="74" text-anchor="middle" font-size="11">the question I want to ask</text><text x="151" y="94" text-anchor="middle" font-size="11">preparation, not an answer</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">AFTER IT HAPPENS</text><text x="469" y="74" text-anchor="middle" font-size="11">the artist, my action and finding</text><text x="469" y="94" text-anchor="middle" font-size="11">a record of the real experience</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Record what happened; keep an open question open.</text></svg></section>
+<section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="5" data-ta1="Select the correct branch explicitly. Give the live/active element sufficient time, including across sessions. Absence of an arrangement is not evidence of participation.">
+<div class="time">5 min</div>
+<span class="tag"></span>
+<h2>We Do 2 · lab</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<h3>Take part when the real session is ready</h3><p>Staff will say whether the real session is ready or this is practice time. Use the right label.</p><p>If it is ready, join in through the agreed route. Keep your question where you can use it. Look, listen and take your part in what the artist offers.</p><p>Ask for a pause or a clearer view if needed. Let staff help with tools, sound or space.</p><p>If no real session is ready, practise the loop exercise and improve your question. Try saying or pointing it with an adult.</p><p>Keep that practice as preparation. Save the place for the real answer until there is one.</p></section>
+<section class="slide" data-type="independent" data-title="Independent · evidence" data-min="9" data-ta1="Support the same real-experience requirement across tiers. Record the actual date only after the activity; keep organisation claims separate and source-checked.">
+<div class="time">9 min</div>
+<span class="tag"></span>
+<h2>Independent · evidence</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<h3>Keep what you actually found</h3><p>After a real session, make a record. The details are still fresh. Name the artist and the session accurately.</p><p>Show your own action and one thing you found out. Point to a sample or moment that helps explain it.</p><p>If only preparation took place, keep that label. Improve your question or note about a detail. Label it clearly and leave the experience record open.</p><p>Find the arts group part of your sheet too. Was that group actively explored in this same experience? Check with staff. A name alone does not show that.</p><p>Save the record in Part B. Write the filename and page, slide or timecode. Keep preparation and real experience easy to tell apart.</p><ul><li>Core · keep your question and prompt strip close. Use them to take part in the real artist session. Point, ask through an adult or try with support. Keep who the artist was, what you explored and the file location. If only rehearsed, label it preparation.</li><li>Extend · take part in the same real session and make your own record. Link a detail in the artist’s work to your question, try or response. Keep the artist element separate from the arts group element.</li><li>Challenge · keep the same real experience and record. Use the artist’s reply to form a follow-up, or try a change they suggest. Explain what that helped you find out. Do not invent an answer.</li></ul></section>
+<section class="slide" data-type="exit" data-title="Exit · Audience and Influence" data-min="3" data-ta1="Confirm the activity status and locator. Do not complete the full Part B check solely because the artist-focused lesson has ended.">
+<div class="time">3 min</div>
+<span class="tag"></span>
+<h2>Exit · Audience and Influence</h2>
+<div class="lundy-status">
+<p>
+<b>SPACE:</b> the learner may pause or choose a private response.</p>
+<p>
+<b>VOICE:</b> the evidence statement remains in the learner’s chosen communication mode.</p>
+<p>
+<b>AUDIENCE:</b> a familiar adult receives and names back exactly what was heard or seen.</p>
+<p>
+<b>INFLUENCE:</b> one real next action is recorded: retain, add method detail, or leave open.</p>
+</div>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<h3>Tell what is known and what is still open</h3><p>Show staff the detail you chose to keep. Explain or point to what it helped you find out.</p><p>Check the label: real artist session, or preparation. If part is still to do, say which part.</p><p>Make sure someone can find the evidence from your location note. Fix a page or timecode if it points to the wrong place.</p><p>Keep any new question. It may help when you explore the arts group and the way it supports art.</p></section>
+</main>
+<nav class="controls" aria-label="Lesson controls">
+<button type="button" data-nav="previous">◀ Previous</button>
+<button type="button" data-tool="1">Teacher tools</button>
+<button type="button" data-tool="2">Evidence &amp; print</button>
+<button type="button" data-tool="3">Calm mode</button>
+<button type="button" data-tool="4">Static diagrams</button>
+<button type="button" data-tool="5">Previous</button>
+<button type="button" data-tool="6">Next</button>
+<button type="button" data-nav="next">Next ▶</button>
+</nav>
+<div class="prog" aria-hidden="true">
+<span>
+</span>
+</div>
+<div id="taOverlay" class="overlay" aria-hidden="true">
+<div class="overlay-card">
+<h2></h2>
+<p>Use the least prompt needed. Keep adult preparation and exact-word scribing separate from pupil authorship. Guidance is hidden from the learner surface by default.</p>
+<button type="button" data-close-overlay>Close</button>
+</div>
+</div>
+<section class="print-pack printpack award-print" aria-label="Printable lesson pack">
+      <section class="print-page">
+        <div class="running-head">BUILD Art · Week 3 · Art · Trinity Arts Award Explore</div><h1>Explore An Artist Through A Live Activity</h1>
+        <p><b>Award evidence:</b> Explore Arts Award, Part B; no workbook cell (AAE-H7)</p>
+        <p><b>Objective:</b> Take part in a real artist activity and keep a clear record of what you explored.</p>
+        <h2>My evidence record</h2><p>Use your question in a real artist session when arranged. Keep the artist’s identity, your own action and what you found. Rehearsal remains preparation.</p><p>Real artist and session, or preparation · My question, action and finding · The arts group element still to check · Evidence label and exact location</p>
+        <table><thead><tr><th>Evidence focus</th><th>My words or response</th><th>File and page, slide or time</th></tr></thead>
+        <tbody><tr><th scope="row">What real artist session is ready, if any?</th><td class="award-response"></td><td class="award-locator"></td></tr><tr><th scope="row">What did I ask, try, notice or find out in it?</th><td class="award-response"></td><td class="award-locator"></td></tr><tr><th scope="row">Which sample or moment supports my finding?</th><td class="award-response"></td><td class="award-locator"></td></tr><tr><th scope="row">Is the arts group also actively evidenced, or still to explore?</th><td class="award-response"></td><td class="award-locator"></td></tr></tbody></table>
+        <div class="award-print-figures"><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Four linked boxes show noticing a choice, asking a question, responding and keeping a record of what was found."><title>Explore a real artist through action</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">NOTICE</text><text x="73" y="88" text-anchor="middle" font-size="11">find a choice</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">ASK</text><text x="231" y="88" text-anchor="middle" font-size="11">use your question</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">RESPOND</text><text x="389" y="88" text-anchor="middle" font-size="11">try, point or show</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">KEEP</text><text x="547" y="88" text-anchor="middle" font-size="11">record what you found</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">Notice, ask, respond and keep the finding.</text></svg><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Two panels contrast a prepared question with a record made after the real artist session, naming the artist, pupil action and finding."><title>A question and an experience record differ</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">BEFORE</text><text x="151" y="74" text-anchor="middle" font-size="11">the question I want to ask</text><text x="151" y="94" text-anchor="middle" font-size="11">preparation, not an answer</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">AFTER IT HAPPENS</text><text x="469" y="74" text-anchor="middle" font-size="11">the artist, my action and finding</text><text x="469" y="94" text-anchor="middle" font-size="11">a record of the real experience</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Record what happened; keep an open question open.</text></svg></div>
+        <p>Name or learner code: ____________________ Date: ____________________</p>
+      </section>
+      <section class="print-page">
+        <div class="running-head">BUILD Art · Week 3 · Art · Trinity Arts Award Explore</div><h1>Explore An Artist Through A Live Activity</h1>
+        <h2>Choose the support you need</h2><div class="print-route"><h3>Core</h3><p>Core · keep your question and prompt strip close. Use them to take part in the real artist session. Point, ask through an adult or try with support. Keep who the artist was, what you explored and the file location. If only rehearsed, label it preparation.</p></div><div class="print-route"><h3>Extend</h3><p>Extend · take part in the same real session and make your own record. Link a detail in the artist’s work to your question, try or response. Keep the artist element separate from the arts group element.</p></div><div class="print-route"><h3>Challenge</h3><p>Challenge · keep the same real experience and record. Use the artist’s reply to form a follow-up, or try a change they suggest. Explain what that helped you find out. Do not invent an answer.</p></div>
+        <h2>Check the evidence</h2><ol><li>A real artist is identified from the real source, without a guessed name.</li><li>The record distinguishes real live or active work from practice.</li><li>My own action and finding are visible, spoken or written.</li><li>The artist and organisation elements are checked separately.</li><li>The record names a filename plus page, slide or timecode.</li></ol>
+        <h2>My review or next step</h2><div class="award-review-space"></div>
+        <p>For a recorded response, write the actual file name and page, slide or timecode.</p>
+      </section>
+    </section><!--n6-nav1:v1--><div class="n6-splash"><div style="text-align:center;margin-top:8px"><svg width="64" height="64" viewbox="0 0 100 100" aria-label="Made by Matt"><circle cx="50" cy="50" r="47" fill="none" stroke="#1e3a8a" stroke-width="3.4"></circle><g transform="translate(0 2)"><path d="M28 71 L28 37 L50 59 L72 37 L72 71" fill="none" stroke="#1e3a8a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 22.5 L51.48 28.52 L57.5 30 L51.48 31.48 L50 37.5 L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"></path></g></svg></div></div><!--/n6-nav1--><script id="lesson-config" type="application/json">{"id": "EXPLORE_ART_W3_B2", "family": "BUILD Art", "week": 3, "slot": "Art · Trinity Arts Award Explore", "title": "Explore An Artist Through A Live Activity", "outcomes": ["Undertake first-hand live/active exploration through the actual route. Record the real artist, activity, what the pupil explored and the evidence location after it happened."], "cells": [], "objective": "Take part in a real artist activity and keep a clear record of what you explored.", "timings": [0, 3, 3, 7, 3, 7, 5, 9, 3], "artsAward": {"level": "Explore", "parts": ["B"], "slots": ["ORG_SLOT", "PRACTITIONER_SLOT"]}, "planId": "049d29387c89", "weDoType": "sort-or-match", "tierLadder": ["Core", "Extend", "Challenge"]}</script>
+<script data-award-chassis="">/* Runtime for newly authored award decks; no persistence or external dependencies. */
+(function () {
+  'use strict';
+
+  function boot() {
+    const deck = document.querySelector('main.deck');
+    const slides = Array.from(document.querySelectorAll('main.deck > .slide'));
+    if (!deck || !slides.length) return;
+    const progress = document.querySelector('.prog');
+    const bar = document.querySelector('.prog > span');
+    const overlay = document.getElementById('taOverlay');
+    const card = overlay && overlay.querySelector('.overlay-card');
+    const closeButton = overlay && overlay.querySelector('[data-close-overlay]');
+    const teacherButtons = document.querySelectorAll('[data-tool="1"]');
+    let index = Math.max(0, slides.findIndex(slide => slide.classList.contains('active')));
+    let returnFocus = null;
+    let notes = null;
+    let slotHost = null;
+
+    function show(next) {
+      index = (next + slides.length) % slides.length;
+      slides.forEach(function (slide, i) {
+        slide.classList.toggle('active', i === index);
+        slide.setAttribute('aria-hidden', i === index ? 'false' : 'true');
+      });
+      if (bar) bar.style.width = ((index + 1) / slides.length * 100) + '%';
+      if (progress) {
+        progress.removeAttribute('aria-hidden');
+        progress.setAttribute('role', 'progressbar');
+        progress.setAttribute('aria-label', 'Lesson progress');
+        progress.setAttribute('aria-valuemin', '1');
+        progress.setAttribute('aria-valuemax', String(slides.length));
+        progress.setAttribute('aria-valuenow', String(index + 1));
+        progress.setAttribute('aria-valuetext', 'Stage ' + (index + 1) + ' of ' + slides.length);
+      }
+      deck.scrollTop = 0;
+    }
+
+    function isOpen() {
+      return Boolean(overlay && overlay.classList.contains('on'));
+    }
+
+    function fillNotes() {
+      notes.replaceChildren();
+      const heading = document.createElement('h3');
+      heading.textContent = slides[index].dataset.title || 'Current stage';
+      notes.appendChild(heading);
+      ['ta1', 'ta2'].forEach(function (key) {
+        const text = slides[index].dataset[key];
+        if (!text) return;
+        const paragraph = document.createElement('p');
+        paragraph.textContent = text;
+        notes.appendChild(paragraph);
+      });
+      const sources = index === 0 ? [slides[0]] : [slides[index], slides[0]];
+      sources.forEach(function (source) {
+        source.querySelectorAll('[data-mbm-guide]').forEach(function (note) {
+          // The slot reader has its own live state and file listener: never clone it.
+          if (note.id === 'award-slot-panel' || note.closest('#award-slot-panel')) return;
+          const copy = note.cloneNode(true);
+          copy.removeAttribute('id');
+          copy.querySelectorAll('[id]').forEach(node => node.removeAttribute('id'));
+          notes.appendChild(copy);
+        });
+      });
+      // mount() runs on DOMContentLoaded. A real click comes after that event,
+      // regardless of the order in which the two embedded scripts were loaded.
+      const panel = document.getElementById('award-slot-panel');
+      if (panel && !slotHost.contains(panel)) slotHost.appendChild(panel);
+    }
+
+    function openTeacher(button) {
+      if (!card || isOpen()) return;
+      returnFocus = button || document.activeElement;
+      fillNotes();
+      overlay.classList.add('on');
+      overlay.setAttribute('aria-hidden', 'false');
+      teacherButtons.forEach(node => node.setAttribute('aria-expanded', 'true'));
+      (closeButton || card).focus();
+    }
+
+    function closeTeacher() {
+      if (!isOpen()) return;
+      overlay.classList.remove('on');
+      overlay.setAttribute('aria-hidden', 'true');
+      teacherButtons.forEach(node => node.setAttribute('aria-expanded', 'false'));
+      if (returnFocus && returnFocus.isConnected) returnFocus.focus();
+    }
+
+    function focusable() {
+      return Array.from(card.querySelectorAll('a[href], button, input, select, textarea, [tabindex]'))
+        .filter(node => !node.disabled && node.tabIndex >= 0 && node.getClientRects().length);
+    }
+
+    if (card) {
+      overlay.setAttribute('role', 'dialog');
+      overlay.setAttribute('aria-modal', 'true');
+      overlay.setAttribute('aria-hidden', 'true');
+      overlay.classList.remove('on');
+      card.tabIndex = -1;
+      let title = card.querySelector('h2');
+      if (!title) {
+        title = document.createElement('h2');
+        card.prepend(title);
+      }
+      title.id = 'award-teacher-title';
+      title.textContent = 'Teacher tools';
+      overlay.setAttribute('aria-labelledby', title.id);
+      notes = document.createElement('div');
+      notes.id = 'award-teacher-notes';
+      slotHost = document.createElement('div');
+      slotHost.id = 'award-teacher-slots';
+      card.insertBefore(notes, closeButton);
+      card.insertBefore(slotHost, closeButton);
+      if (closeButton) closeButton.addEventListener('click', closeTeacher);
+      teacherButtons.forEach(function (button) {
+        button.setAttribute('aria-controls', overlay.id);
+        button.setAttribute('aria-expanded', 'false');
+        button.addEventListener('click', () => openTeacher(button));
+      });
+      // Keep focus in the open dialog, including when scripts attempt to move it.
+      document.addEventListener('focusin', function (event) {
+        if (isOpen() && !overlay.contains(event.target)) (closeButton || card).focus();
+      });
+    }
+
+    document.querySelectorAll('[data-nav="previous"], [data-tool="5"]')
+      .forEach(button => button.addEventListener('click', () => { if (!isOpen()) show(index - 1); }));
+    document.querySelectorAll('[data-nav="next"], [data-tool="6"]')
+      .forEach(button => button.addEventListener('click', () => { if (!isOpen()) show(index + 1); }));
+    document.querySelectorAll('[data-tool="2"]')
+      .forEach(button => button.addEventListener('click', () => window.print()));
+    [['3', 'calm'], ['4', 'teacher-freeze']].forEach(function (item) {
+      const buttons = document.querySelectorAll('[data-tool="' + item[0] + '"]');
+      function sync() {
+        const active = document.body.classList.contains(item[1]);
+        buttons.forEach(button => button.setAttribute('aria-pressed', String(active)));
+      }
+      buttons.forEach(button => button.addEventListener('click', function () {
+        document.body.classList.toggle(item[1]);
+        sync();
+      }));
+      sync();
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (isOpen()) {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          closeTeacher();
+        } else if (event.key === 'Tab') {
+          const items = focusable();
+          const first = items[0] || card;
+          const last = items[items.length - 1] || card;
+          if (!items.length || !items.includes(document.activeElement)
+              || (event.shiftKey && document.activeElement === first)
+              || (!event.shiftKey && document.activeElement === last)) {
+            event.preventDefault();
+            (event.shiftKey ? last : first).focus();
+          }
+        }
+        return;
+      }
+      const target = event.target;
+      if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey
+          || (target && (target.isContentEditable
+              || (typeof target.closest === 'function' && target.closest('input, textarea, select'))))
+          || document.querySelector('dialog[open], .overlay.on, [role="dialog"][aria-hidden="false"]')) return;
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        event.preventDefault();
+        show(index + (event.key === 'ArrowRight' ? 1 : -1));
+      }
+    });
+    show(index);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once: true});
+  else boot();
+}());
+</script><script data-award-slot-reader>
+/* One current slot source. Embedded only in slot-dependent award decks. */
+(function (root, factory) {
+  const api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else root.MBMArtsSlots = api;
+}(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  'use strict';
+  function readSlots(doc, required) {
+    if (!doc || doc.schema !== 'arts-award-slots-v1' || !doc.slots || !Array.isArray(required)) {
+      throw new Error('Choose the current Arts Award slots file.');
+    }
+    return required.map(function (key) {
+      const slot = doc.slots[key];
+      if (!slot || !Array.isArray(slot.entries)) throw new Error('A required slot is missing.');
+      const entries = slot.entries.map(function (entry) {
+        if (!entry || typeof entry !== 'object' || Array.isArray(entry)) throw new Error('Invalid slot entry.');
+        const status = String(entry.status || 'UNCONFIRMED').toUpperCase();
+        const confirmed = status === 'CONFIRMED' || status === 'BOOKED';
+        const name = String(entry.name || entry.title || '').trim();
+        const route = String(entry.route || '').trim();
+        return {name: name, route: route, date: String(entry.date || ''),
+          confirmed: confirmed && Boolean(name) && ['R1', 'R2', 'R3'].includes(route)};
+      });
+      return {key: key, entries: entries, ready: entries.some(e => e.confirmed)};
+    });
+  }
+  async function loadHosted(url, required, fetcher) {
+    const response = await fetcher(url, {cache: 'no-store', credentials: 'same-origin'});
+    if (!response.ok) throw new Error('Current slots could not be loaded.');
+    return readSlots(await response.json(), required);
+  }
+  async function loadFile(file, required) {
+    if (!file || file.size > 1048576) throw new Error('Choose a slots JSON file smaller than 1 MB.');
+    return readSlots(JSON.parse(await file.text()), required);
+  }
+  function mount(config) {
+    const host = document.querySelector('section[data-min]');
+    if (!host || document.getElementById('award-slot-panel')) return;
+    const panel = document.createElement('div');
+    panel.id = 'award-slot-panel';
+    panel.className = 'box rehearsal';
+    panel.dataset.mbmGuide = 'staff';
+    panel.dataset.audience = 'staff';
+    const heading = document.createElement('h3');
+    heading.textContent = 'Current session details';
+    const status = document.createElement('p');
+    status.setAttribute('role', 'status');
+    const list = document.createElement('ul');
+    const label = document.createElement('label');
+    label.textContent = 'Open the current SLOTS.json file: ';
+    const input = document.createElement('input');
+    input.type = 'file'; input.accept = '.json,application/json';
+    label.appendChild(input);
+    panel.append(heading, status, list, label); host.appendChild(panel);
+    let generation = 0;
+    function fallback(message) {
+      list.replaceChildren();
+      status.textContent = 'Unconfirmed — preparation only. ' + message;
+    }
+    function show(rows) {
+      list.replaceChildren();
+      const allReady = rows.length > 0 && rows.every(row => row.ready);
+      status.textContent = allReady
+        ? 'A confirmed route is recorded. Staff must check arrangements before delivery.'
+        : 'Unconfirmed — preparation only. Complete the actual experience when a route is ready.';
+      rows.forEach(function (row) {
+        const item = document.createElement('li');
+        const ready = row.entries.filter(entry => entry.confirmed);
+        item.textContent = row.key + ': ' + (ready.length
+          ? ready.map(e => [e.name, e.route, e.date].filter(Boolean).join(' · ')).join('; ')
+          : 'no confirmed entry');
+        list.appendChild(item);
+      });
+    }
+    input.addEventListener('change', async function () {
+      const ticket = ++generation;
+      fallback('Reading the selected file.');
+      try { const rows = await loadFile(input.files[0], config.required); if (ticket === generation) show(rows); }
+      catch (_) { if (ticket === generation) fallback('The selected file could not be read.'); }
+    });
+    fallback('Load the shared slots file to check the current route.');
+    if (location.protocol === 'http:' || location.protocol === 'https:') {
+      const ticket = ++generation;
+      loadHosted(config.url, config.required, window.fetch.bind(window))
+        .then(rows => { if (ticket === generation) show(rows); })
+        .catch(() => { if (ticket === generation) fallback('Open the local slots file if you are offline.'); });
+    }
+  }
+  return {readSlots: readSlots, loadHosted: loadHosted, loadFile: loadFile, mount: mount};
+}));
+
+document.addEventListener("DOMContentLoaded",function(){MBMArtsSlots.mount({"required": ["ORG_SLOT", "PRACTITIONER_SLOT"], "url": "../../tools/artsaward/SLOTS.json"});});
+</script></body>
+</html>

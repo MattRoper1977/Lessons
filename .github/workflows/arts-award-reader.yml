@@ -6,9 +6,11 @@ on:
       - 'tools/easter/author_deck.py'
       - 'tools/easter/award_*'
       - 'tools/artsaward/award_chassis_browser.cjs'
-      - 'tools/artsaward/BRONZE_TARGETS.json'
+      - 'tools/artsaward/*_TARGETS.json'
       - 'tools/artsaward/content/**'
       - 'Art_Teesside/*BRONZE*/**'
+      - 'Art_Teesside/*EXPLORE*/**'
+      - 'Art_Teesside/*SILVER*/**'
       - '.github/workflows/arts-award-reader.yml'
 permissions:
   contents: read
@@ -37,6 +39,9 @@ jobs:
         run: |
           fixture_manifest=$(python tools/easter/award_browser_fixture.py)
           node tools/artsaward/award_chassis_browser.cjs --targets "$fixture_manifest" --content-dir "$(dirname "$fixture_manifest")"
-          if [ -f tools/artsaward/BRONZE_TARGETS.json ]; then
-            node tools/artsaward/award_chassis_browser.cjs
-          fi
+          for level in BRONZE EXPLORE SILVER; do
+            targets="tools/artsaward/${level}_TARGETS.json"
+            if [ -f "$targets" ]; then
+              node tools/artsaward/award_chassis_browser.cjs --targets "$targets"
+            fi
+          done

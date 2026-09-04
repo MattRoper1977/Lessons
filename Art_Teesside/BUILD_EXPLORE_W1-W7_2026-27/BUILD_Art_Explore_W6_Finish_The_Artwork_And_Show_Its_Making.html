@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Finish The Artwork And Show Its Making</title>
+<style>
+:root{--ink:#17223B;--paper:#FFFCF5;--soft:#F3F6F8;--line:#CAD5DF;--muted:#526274;--gold:#B57918;--green:#246B55;--slot:#346B7B;--slot-pale:#EAF6F8;--danger:#8A3C2D}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:"Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--soft)}
+body{overflow:hidden}a,button{font:inherit}button,a.mbmhome{min-height:44px;min-width:44px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:8px;top:8px;z-index:50;background:#fff;padding:10px}
+.deck{height:100vh;padding:18px 18px 112px;overflow:auto}.slide{display:none;max-width:1120px;min-height:calc(100vh - 145px);margin:auto;background:var(--paper);border:2px solid var(--line);border-top:10px solid var(--slot);border-radius:18px;padding:22px;box-shadow:0 8px 30px #10233f18}.slide.active{display:block}
+h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-size:clamp(1.5rem,3vw,2.3rem);margin:.4rem 0 1rem}h3{margin:.2rem 0 .45rem}p,li{line-height:1.5}.tag,.time,.chips span{display:inline-block;border-radius:999px;padding:6px 10px;font-weight:800}.tag{background:var(--slot-pale)}.time{float:right;background:var(--ink);color:#fff}.chips{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.chips span{background:#FFF3D4}
+.hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,.7fr);gap:18px}.hero-visual{display:grid;gap:10px;align-content:center;background:var(--ink);color:#fff;border-radius:16px;padding:18px;min-height:150px;text-align:center}.hero-visual span{color:var(--slot)}
+.box,.route,.route-card,.evidence-gate,.lundy,.lundy-strip,.ladder,.prompt-ladder,.ta-card,.modal,.drawer,dialog{border:2px solid var(--line);border-radius:13px;padding:13px;margin:12px 0;background:#fff}.lo{border-left:8px solid var(--slot)}.truth{border-left:8px solid var(--gold);background:#FFF3D4;padding:12px}.access{background:var(--slot-pale);padding:12px;border-radius:12px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.routes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.route.s,.route.supported,.route-card.supported{border-top:7px solid var(--green)}.route.m,.route.standard,.route-card.standard{border-top:7px solid var(--slot)}.route.h,.route.stretch,.route-card.stretch{border-top:7px solid var(--gold)}.options{display:grid;gap:9px}.options button{text-align:left;padding:12px;border:2px solid var(--line);border-radius:10px;background:#fff}.vocabrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.vterm{border:2px solid var(--line);padding:12px;border-radius:12px}.vterm span{display:block;margin-top:5px}.lundy-grid,.lundy-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center;font-weight:900}.ladder,.prompt-ladder{font-weight:700}.ta-card,.modal,.drawer{background:#FFF3D4}
+.controls{position:fixed;left:8px;right:8px;bottom:58px;z-index:20;display:flex;gap:7px;overflow-x:auto;padding:8px;background:var(--ink);border-radius:14px}.controls button,.controls a{flex:0 0 auto;border:2px solid #fff;border-radius:9px;padding:7px 10px;background:#fff;color:var(--ink);font-weight:800;text-decoration:none}.prog{position:fixed;left:12px;right:12px;bottom:46px;height:6px;background:#fff;border:1px solid var(--line);z-index:19}.prog>span{display:block;height:100%;width:11.11%;background:var(--slot)}
+.overlay{display:none;position:fixed;inset:0;z-index:40;background:#10233fdd;align-items:center;justify-content:center;padding:18px}.overlay.on{display:flex}.overlay-card{max-width:700px;background:#fff;border-radius:15px;padding:20px}.overlay-card button{padding:8px 12px}
+.print-pack{display:none}.printpack{display:none}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(max-width:720px){.deck{padding:10px 10px 118px}.slide{padding:15px}.hero,.routes,.vocabrow{grid-template-columns:1fr}.lundy-grid{grid-template-columns:1fr 1fr}}
+@media print{html,body{color-scheme:light!important;background:#fff;color:#111;overflow:visible}body>*:not(.print-pack){display:none!important}.print-pack{display:block!important}.printpack{display:block!important}.print-page{break-after:page;page-break-after:always;padding:8mm;min-height:255mm}.print-page:last-child{break-after:auto;page-break-after:auto}.print-pack h1{font-size:20pt;line-height:1.15;margin:0 0 3mm}.print-pack h2{font-size:13pt;line-height:1.2;margin:3mm 0 1.5mm}.print-pack p,.print-pack li{font-size:10.5pt;line-height:1.35}.running-head{font-size:9pt;border-bottom:1px solid #666;margin-bottom:4mm;padding-bottom:2mm}.proute,.print-route{display:block;border:1px solid #777;padding:3mm;margin:3mm 0;break-inside:avoid}@page{size:A4;margin:10mm}}
+</style><style id="award-print-layout">
+      @media screen {
+        [data-mbm-guide]{display:none!important}
+        #taOverlay [data-mbm-guide]{display:block!important}
+        #taOverlay .overlay-card{max-height:calc(100vh - 36px);overflow:auto;width:min(700px,100%)}
+        body.calm .slide{box-shadow:none}
+        body.calm *,body.calm *::before,body.calm *::after{animation:none!important;transition:none!important}
+        body.teacher-freeze *,body.teacher-freeze *::before,body.teacher-freeze *::after{animation-play-state:paused!important;transition:none!important}
+      }
+      @media print {
+        .award-print .print-page{box-sizing:border-box;padding:4mm;min-height:0}
+        .award-print table{width:100%;border-collapse:collapse;table-layout:fixed}
+        .award-print th,.award-print td{border:1px solid #777;padding:2mm;vertical-align:top;font-size:9pt}
+        .award-print th:first-child{width:34%}.award-print th:last-child{width:23%}
+        .award-print td.award-response{height:18mm}
+        .award-print-figures svg{display:block;width:100%;max-height:34mm;margin:2mm 0}
+        .award-print .print-route{padding:2mm;margin:2mm 0}
+        .award-print h3{font-size:11pt;margin:0}
+        .award-print .award-review-space{height:35mm;border:1px solid #777}
+      }
+    </style></head>
+<body>
+<!--mbm_guide_v1 retained as a contract marker; guidance state is memory-only-->
+<!--n6-nav1:v1-->
+<style id="n6-nav1-css">@media print{.mbmhome,.n6-splash{display:none!important}}.mbmhome{display:inline-block;margin:6px 0 0 8px;font:600 .85rem/1.4 "Segoe UI",Arial,sans-serif;color:#1e3a8a;text-decoration:none}.mbmhome:hover,.mbmhome:focus{text-decoration:underline}</style>
+<a class="mbmhome" href="../../index.html" aria-label="Back to the Lessons catalogue">← Lessons</a>
+<!--/n6-nav1-->
+<a class="skip" href="#lessonDeck">Skip to lesson</a>
+<main id="lessonDeck" class="deck">
+<section class="slide active" data-type="title" data-title="Lesson overview" data-min="0">
+<div class="time">0 min</div>
+<span class="tag"></span>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<p>Explore · Part C · Create. Finish the artwork and show its making.</p><p>Today you will finish your new collage and show how you made it. You will keep the final work with real records of the steps that led to it.</p><p>We are making a new print and collage. A print is a mark pressed from one surface to another. A collage joins pieces to make one image.</p><p>Part C needs an artwork, its making process and the final work. A plan alone does not show the making. A final image alone does not show the steps you took.</p><p>You can point, speak, type or write to show your choices. You may make a pattern or a made-up place. Your art does not have to tell a story about your life.</p><div class="box rehearsal" data-mbm-guide="staff">This deck supports Explore Part C, Create. Part C requires an artwork, a record of the PROCESS, and the final work. The new print-and-collage activity is distinct from the drawing and paper sculpture in Part A and the live or active exploration in Part B. Do not relabel a finished A or B work as C. Source: tools/artsaward/SPEC.json, Explore and universal rules. Mark each part P / A / N. Overall Pass allows ONE Attempted. Any Not Attempted = Below Pass. Results are Pass or Below Pass only. The whole Explore digital portfolio has a 10-file cap. Organise it by part; four cumulative files, Explore-A, Explore-B, Explore-C and Explore-D, are a suggested arrangement, not one new file per lesson. Every evidence locator must name the actual file plus page, slide or timecode. The three assessment areas are art form knowledge and understanding, creativity, and communication. Core, Extend and Challenge vary support within Explore; each retains the pupil’s own artwork, process record and final work across C1–C4. Only an adviser trained at Explore may assess. Delivery is through a validated centre; staff must confirm these conditions, which this deck does not assert are met. Adults may scribe the pupil’s exact words and check them back. They must not write plans, reviews or evidence for the pupil. Staff may record factual observations of access support separately. No visit, booking, meeting or date is asserted. Keep the theme on art choices; no private life account is required.</div><div class="box rehearsal" data-mbm-guide="staff">Explore Part C C4 completes and records the distinct print-and-collage artwork developed in C1–C3. Retrieve actual current work, earlier samples and saved states. Prepare glue sticks, dry spare paper, mats and access tools for finishing. Provide a safe drying place and a way to capture the whole final artwork as a clear image or scan; retain the actual work. Record who made each image and follow local consent rules without requiring faces or public posting. Model finishing and capture on adult work before independent pupil work. Check process and final evidence separately. If work is unfinished or a process record is absent, name the gap and arrange actual completion or a genuinely new recorded making step; do not recreate a false past account. The 40-minute session does not certify completion of the whole programme.</div></section>
+<section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="3" data-ta1="Retrieve only actual records. Prompts are scaffolds rather than required numbers of samples. Help pupils find existing evidence without adding a missing account in the pupil’s voice.">
+<div class="time">3 min</div>
+<span class="tag"></span>
+<h2>Arrival · retrieve</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<p>Set out your current artwork and the records you kept while making it. Find the start idea, a test, and a later state. You may have a sample, sketch, photo or short account.</p><p>Look back at the effect you wanted. Does your work now show it? Point to a part that is ready and a part that still needs care.</p><p>Choose a useful last step. You may need to fix a loose edge, finish a planned section, or clear spare scraps from the backing. You do not have to fill every space.</p></section>
+<section class="slide" data-type="starter" data-title="Starter · create the need" data-min="4" data-ta1="Keep both example cases hypothetical. Do not present the examples as pupil evidence. Check that pupils can identify why both process and final work are required.">
+<div class="time">4 min</div>
+<span class="tag"></span>
+<h2>Starter · create the need</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<p>Imagine two records of an artwork. The first has only a finished image. The second has only a sketch of what the maker hoped to do. What can each record show? What is missing?</p><p>The finished image shows what was made, but not how it grew. The sketch shows a start idea, but not that the maker went on to make the work.</p><p>Our record will join real making steps to the final piece. It helps someone follow your choices from the first test to the artwork you have now.</p><p>You can keep a short, clear trail. You do not need a long story. Each part should show or name something you actually did with your own work.</p></section>
+<section class="slide" data-type="ido" data-title="I Do · model" data-min="7" data-ta1="Model a real finishing action and clear capture of the whole dry artwork. Use a scan or approved image route. No pupil must appear in an image. Do not flatten wet paint on a scanner.">
+<div class="time">7 min</div>
+<span class="tag"></span>
+<h2>I Do · model</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<p>Watch me finish my model. I look at the whole work before I touch it. The path is clear, but one paper edge lifts from the backing.</p><p>I keep a view of this state. Then I raise only the loose corner, add a little glue underneath, and press it flat with a clean scrap over the top. I check it again when it is ready.</p><p>I stop adding pieces because the open space is part of my idea. More paper would cover the gaps I chose. Finishing can mean knowing when to stop.</p><p>To keep the final view, I lay the dry work flat in even light. I include all four edges and keep my hand out of the frame. I check the image is sharp enough to see the prints and joins.</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="CHECK: look at the full piece. FINISH: complete a real last step. CAPTURE: show every edge. LINK: join process and final. Keep the final work as well as the steps that led to it."><title>Finish and keep the whole work</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">CHECK</text><text x="73" y="88" text-anchor="middle" font-size="11">look at the full piece</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">FINISH</text><text x="231" y="88" text-anchor="middle" font-size="11">complete a real last step</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">CAPTURE</text><text x="389" y="88" text-anchor="middle" font-size="11">show every edge</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">LINK</text><text x="547" y="88" text-anchor="middle" font-size="11">join process and final</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">Keep the final work as well as the steps that led to it.</text></svg><p>I keep the actual artwork too. If a scan gives a clearer view of this flat piece, I can use that. I name who captured the image so the record is clear.</p></section>
+<section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="5" data-ta1="Use the visible cards and key without an extra sheet. Gather all responses before revealing the key. Distinguish pending work from actual evidence without judging a pupil’s speed.">
+<div class="time">5 min</div>
+<span class="tag"></span>
+<h2>We Do · everyone commits</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<p>Sort these record cards into PROCESS, FINAL WORK, or NEXT ACTION. Say or point to the group for each number before we check the key.</p><ul><li>1. A test strip shows the marks made with two paint coats.</li><li>2. A clear scan shows the whole finished collage.</li><li>3. A saved image shows the loose layout before its pieces were fixed.</li><li>4. I need to finish the last section before I record it as done.</li><li>5. My note says why I chose a small pale strip during making.</li></ul><p>The key is PROCESS: 1, 3 and 5; FINAL WORK: 2; NEXT ACTION: 4. A next action is useful, but it is not proof that the action has happened.</p><p>Which two groups must be present for the complete Part C record? We need process and final work. Keep any next action honest until it is done.</p></section>
+<section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="5" data-ta1="Model opening a real file and finding an exact location. Do not give a fictional locator as if already saved. Keep original process records when adding the final image.">
+<div class="time">5 min</div>
+<span class="tag"></span>
+<h2>I Do 2 · connect</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<p>I put my first test and loose layout before the later state. I place the final image after them. I check that these records all belong to the same new artwork.</p><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="PROCESS: tests, stages and choices, show how the work grew. FINAL WORK: whole finished artwork, show what was made. Both belong together in the Part C record."><title>Two parts of one making record</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">PROCESS</text><text x="151" y="74" text-anchor="middle" font-size="11">tests, stages and choices</text><text x="151" y="94" text-anchor="middle" font-size="11">show how the work grew</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">FINAL WORK</text><text x="469" y="74" text-anchor="middle" font-size="11">whole finished artwork</text><text x="469" y="94" text-anchor="middle" font-size="11">show what was made</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Both belong together in the Part C record.</text></svg><p>Under the layout I write: I moved the strip to leave a wider gap. Under the final image I write: This is my finished path collage. My words fit what the records show.</p><p>I open the saved file and note the page for each record. The words in my arts log do not tell a reader where to look. I need the real file name and a page, slide or timecode.</p><p>I do not remove an early test just because it looks less neat. It shows a part of the process that the final work cannot show by itself.</p></section>
+<section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="4" data-ta1="This is a practice check; label work final only after actual completion. Help locate records or arrange further genuine making if process evidence is absent. Never fabricate an earlier state.">
+<div class="time">4 min</div>
+<span class="tag"></span>
+<h2>We Do 2 · lab</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<p>With a partner or adult, check your work from edge to edge. Look for loose pieces and any last step that belongs to your idea. Ask before touching someone else’s artwork.</p><p>Try a view of the whole work. Can you see the corners and the print marks? Move the camera or scan setting if an edge is cut off. Credit the person who helps capture it.</p><p>Now find a process record that matches part of the work. Point to the link between them. If you cannot find one, tell an adult what is missing so the gap can be checked.</p></section>
+<section class="slide" data-type="independent" data-title="Independent · evidence" data-min="9" data-ta1="All routes must retain both process and final work. Scribe exact words only and check back. Staff may organise technical capture but may not supply the pupil’s choices or review. Allow actual completion time where needed.">
+<div class="time">9 min</div>
+<span class="tag"></span>
+<h2>Independent · evidence</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<p>Carry out your last chosen making step. Preserve a state before a change. When the work is ready, keep a clear view of the whole final piece and store the artwork safely.</p><p>Add the final record beside your real tests, stages and choice notes. Put them in an order that helps a reader follow the making. Check that your own words match your work.</p><ul><li>Core: use access tools and a helper to steady or capture the work. Make your own final choice. Point or speak to link your kept process records to the whole final artwork.</li><li>Extend: complete your last step, then order and label your real process records and final artwork. Explain a choice in your own words.</li><li>Challenge: complete the same process and final record. Trace how an early trial shaped a later choice, using your actual work to show the link.</li></ul><p>If the work needs more time, say which step is left. Keep the part you have made and arrange time to finish. Do not label an unfinished image as the final piece.</p></section>
+<section class="slide" data-type="exit" data-title="Exit · check the trail" data-min="3" data-ta1="Check actual evidence, locators and any completion gap. Append to the existing Part C file within the whole-portfolio cap. Do not claim Part D sharing has happened during this record check.">
+<div class="time">3 min</div>
+<span class="tag"></span>
+<h2>Exit · check the trail</h2>
+<div class="lundy-status">
+<p>
+<b>SPACE:</b> the learner may pause or choose a private response.</p>
+<p>
+<b>VOICE:</b> the evidence statement remains in the learner’s chosen communication mode.</p>
+<p>
+<b>AUDIENCE:</b> a familiar adult receives and names back exactly what was heard or seen.</p>
+<p>
+<b>INFLUENCE:</b> one real next action is recorded: retain, add method detail, or leave open.</p>
+</div>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<p>Open your Explore-C file and point to the final artwork. Then find a record of how you made it. Check both can be seen or heard clearly.</p><p>Write the actual file name and page or slide for each. If you used a recording, add the file name and timecode. Keep the image credit with each captured view.</p><p>Is your work finished, or is a next step still needed? Record that truthfully. In Part D you will look across A, B and C to choose an enjoyment or achievement to share.</p></section>
+</main>
+<nav class="controls" aria-label="Lesson controls">
+<button type="button" data-nav="previous">◀ Previous</button>
+<button type="button" data-tool="1">Teacher tools</button>
+<button type="button" data-tool="2">Evidence &amp; print</button>
+<button type="button" data-tool="3">Calm mode</button>
+<button type="button" data-tool="4">Static diagrams</button>
+<button type="button" data-tool="5">Previous</button>
+<button type="button" data-tool="6">Next</button>
+<button type="button" data-nav="next">Next ▶</button>
+</nav>
+<div class="prog" aria-hidden="true">
+<span>
+</span>
+</div>
+<div id="taOverlay" class="overlay" aria-hidden="true">
+<div class="overlay-card">
+<h2></h2>
+<p>Use the least prompt needed. Keep adult preparation and exact-word scribing separate from pupil authorship. Guidance is hidden from the learner surface by default.</p>
+<button type="button" data-close-overlay>Close</button>
+</div>
+</div>
+<section class="print-pack printpack award-print" aria-label="Printable lesson pack">
+      <section class="print-page">
+        <div class="running-head">BUILD Art · Week 6 · Art · Trinity Arts Award Explore</div><h1>Finish The Artwork And Show Its Making</h1>
+        <p><b>Award evidence:</b> Explore Arts Award, Part C; no workbook cell (AAE-H7)</p>
+        <p><b>Objective:</b> Complete the pupil’s new print-and-collage artwork and assemble a trace of its actual making that includes both process evidence and the final work.</p>
+        <h2>My evidence record</h2><p>Finish your own new artwork and keep a clear view of the whole piece. Join it to records of the real steps you took.</p><p>Finish, capture and link · Choose your support · My process and final artwork · Check the complete record</p>
+        <table><thead><tr><th>Evidence focus</th><th>My words or response</th><th>File and page, slide or time</th></tr></thead>
+        <tbody><tr><th scope="row">My last making step and whether the artwork is complete</th><td class="award-response"></td><td class="award-locator"></td></tr><tr><th scope="row">Real process records that show my tests, stages or choices</th><td class="award-response"></td><td class="award-locator"></td></tr><tr><th scope="row">The whole final artwork, with my own label and image credit</th><td class="award-response"></td><td class="award-locator"></td></tr><tr><th scope="row">Actual Explore-C file name plus page, slide or timecode for process and final work</th><td class="award-response"></td><td class="award-locator"></td></tr></tbody></table>
+        <div class="award-print-figures"><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="CHECK: look at the full piece. FINISH: complete a real last step. CAPTURE: show every edge. LINK: join process and final. Keep the final work as well as the steps that led to it."><title>Finish and keep the whole work</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">CHECK</text><text x="73" y="88" text-anchor="middle" font-size="11">look at the full piece</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">FINISH</text><text x="231" y="88" text-anchor="middle" font-size="11">complete a real last step</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">CAPTURE</text><text x="389" y="88" text-anchor="middle" font-size="11">show every edge</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">LINK</text><text x="547" y="88" text-anchor="middle" font-size="11">join process and final</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">Keep the final work as well as the steps that led to it.</text></svg><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="PROCESS: tests, stages and choices, show how the work grew. FINAL WORK: whole finished artwork, show what was made. Both belong together in the Part C record."><title>Two parts of one making record</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">PROCESS</text><text x="151" y="74" text-anchor="middle" font-size="11">tests, stages and choices</text><text x="151" y="94" text-anchor="middle" font-size="11">show how the work grew</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">FINAL WORK</text><text x="469" y="74" text-anchor="middle" font-size="11">whole finished artwork</text><text x="469" y="94" text-anchor="middle" font-size="11">show what was made</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Both belong together in the Part C record.</text></svg></div>
+        <p>Name or learner code: ____________________ Date: ____________________</p>
+      </section>
+      <section class="print-page">
+        <div class="running-head">BUILD Art · Week 6 · Art · Trinity Arts Award Explore</div><h1>Finish The Artwork And Show Its Making</h1>
+        <h2>Choose the support you need</h2><div class="print-route"><h3>Core</h3><p>Core: use access help to finish and capture your own work. Point or speak to link kept process records with the final artwork.</p></div><div class="print-route"><h3>Extend</h3><p>Extend: finish, order and label your own process records and final artwork. Explain a real choice.</p></div><div class="print-route"><h3>Challenge</h3><p>Challenge: retain the same process and final artwork; trace how an early trial shaped a later choice.</p></div>
+        <h2>Check the evidence</h2><ol><li>The new artwork is my own distinct Part C creation.</li><li>Real records show the process of making it.</li><li>The final work is complete and its whole image is clear, or I have named a real completion gap.</li><li>My words and image credits match what actually happened.</li><li>Both process and final work have actual file names and page, slide or timecode locators.</li></ol>
+        <h2>My review or next step</h2><div class="award-review-space"></div>
+        <p>For a recorded response, write the actual file name and page, slide or timecode.</p>
+      </section>
+    </section><!--n6-nav1:v1--><div class="n6-splash"><div style="text-align:center;margin-top:8px"><svg width="64" height="64" viewbox="0 0 100 100" aria-label="Made by Matt"><circle cx="50" cy="50" r="47" fill="none" stroke="#1e3a8a" stroke-width="3.4"></circle><g transform="translate(0 2)"><path d="M28 71 L28 37 L50 59 L72 37 L72 71" fill="none" stroke="#1e3a8a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 22.5 L51.48 28.52 L57.5 30 L51.48 31.48 L50 37.5 L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"></path></g></svg></div></div><!--/n6-nav1--><script id="lesson-config" type="application/json">{"id": "EXPLORE_ART_W6_C4", "family": "BUILD Art", "week": 6, "slot": "Art · Trinity Arts Award Explore", "title": "Finish The Artwork And Show Its Making", "outcomes": ["Complete the artwork and assemble a trace of its real process. Evidence must contain both process and final work, not only a final image or only a plan."], "cells": [], "objective": "Complete the pupil’s new print-and-collage artwork and assemble a trace of its actual making that includes both process evidence and the final work.", "timings": [0, 3, 4, 7, 5, 5, 4, 9, 3], "artsAward": {"level": "Explore", "parts": ["C"]}, "planId": "898799aa1f98", "weDoType": "sort-or-match", "tierLadder": ["Core", "Extend", "Challenge"]}</script>
+<script data-award-chassis="">/* Runtime for newly authored award decks; no persistence or external dependencies. */
+(function () {
+  'use strict';
+
+  function boot() {
+    const deck = document.querySelector('main.deck');
+    const slides = Array.from(document.querySelectorAll('main.deck > .slide'));
+    if (!deck || !slides.length) return;
+    const progress = document.querySelector('.prog');
+    const bar = document.querySelector('.prog > span');
+    const overlay = document.getElementById('taOverlay');
+    const card = overlay && overlay.querySelector('.overlay-card');
+    const closeButton = overlay && overlay.querySelector('[data-close-overlay]');
+    const teacherButtons = document.querySelectorAll('[data-tool="1"]');
+    let index = Math.max(0, slides.findIndex(slide => slide.classList.contains('active')));
+    let returnFocus = null;
+    let notes = null;
+    let slotHost = null;
+
+    function show(next) {
+      index = (next + slides.length) % slides.length;
+      slides.forEach(function (slide, i) {
+        slide.classList.toggle('active', i === index);
+        slide.setAttribute('aria-hidden', i === index ? 'false' : 'true');
+      });
+      if (bar) bar.style.width = ((index + 1) / slides.length * 100) + '%';
+      if (progress) {
+        progress.removeAttribute('aria-hidden');
+        progress.setAttribute('role', 'progressbar');
+        progress.setAttribute('aria-label', 'Lesson progress');
+        progress.setAttribute('aria-valuemin', '1');
+        progress.setAttribute('aria-valuemax', String(slides.length));
+        progress.setAttribute('aria-valuenow', String(index + 1));
+        progress.setAttribute('aria-valuetext', 'Stage ' + (index + 1) + ' of ' + slides.length);
+      }
+      deck.scrollTop = 0;
+    }
+
+    function isOpen() {
+      return Boolean(overlay && overlay.classList.contains('on'));
+    }
+
+    function fillNotes() {
+      notes.replaceChildren();
+      const heading = document.createElement('h3');
+      heading.textContent = slides[index].dataset.title || 'Current stage';
+      notes.appendChild(heading);
+      ['ta1', 'ta2'].forEach(function (key) {
+        const text = slides[index].dataset[key];
+        if (!text) return;
+        const paragraph = document.createElement('p');
+        paragraph.textContent = text;
+        notes.appendChild(paragraph);
+      });
+      const sources = index === 0 ? [slides[0]] : [slides[index], slides[0]];
+      sources.forEach(function (source) {
+        source.querySelectorAll('[data-mbm-guide]').forEach(function (note) {
+          // The slot reader has its own live state and file listener: never clone it.
+          if (note.id === 'award-slot-panel' || note.closest('#award-slot-panel')) return;
+          const copy = note.cloneNode(true);
+          copy.removeAttribute('id');
+          copy.querySelectorAll('[id]').forEach(node => node.removeAttribute('id'));
+          notes.appendChild(copy);
+        });
+      });
+      // mount() runs on DOMContentLoaded. A real click comes after that event,
+      // regardless of the order in which the two embedded scripts were loaded.
+      const panel = document.getElementById('award-slot-panel');
+      if (panel && !slotHost.contains(panel)) slotHost.appendChild(panel);
+    }
+
+    function openTeacher(button) {
+      if (!card || isOpen()) return;
+      returnFocus = button || document.activeElement;
+      fillNotes();
+      overlay.classList.add('on');
+      overlay.setAttribute('aria-hidden', 'false');
+      teacherButtons.forEach(node => node.setAttribute('aria-expanded', 'true'));
+      (closeButton || card).focus();
+    }
+
+    function closeTeacher() {
+      if (!isOpen()) return;
+      overlay.classList.remove('on');
+      overlay.setAttribute('aria-hidden', 'true');
+      teacherButtons.forEach(node => node.setAttribute('aria-expanded', 'false'));
+      if (returnFocus && returnFocus.isConnected) returnFocus.focus();
+    }
+
+    function focusable() {
+      return Array.from(card.querySelectorAll('a[href], button, input, select, textarea, [tabindex]'))
+        .filter(node => !node.disabled && node.tabIndex >= 0 && node.getClientRects().length);
+    }
+
+    if (card) {
+      overlay.setAttribute('role', 'dialog');
+      overlay.setAttribute('aria-modal', 'true');
+      overlay.setAttribute('aria-hidden', 'true');
+      overlay.classList.remove('on');
+      card.tabIndex = -1;
+      let title = card.querySelector('h2');
+      if (!title) {
+        title = document.createElement('h2');
+        card.prepend(title);
+      }
+      title.id = 'award-teacher-title';
+      title.textContent = 'Teacher tools';
+      overlay.setAttribute('aria-labelledby', title.id);
+      notes = document.createElement('div');
+      notes.id = 'award-teacher-notes';
+      slotHost = document.createElement('div');
+      slotHost.id = 'award-teacher-slots';
+      card.insertBefore(notes, closeButton);
+      card.insertBefore(slotHost, closeButton);
+      if (closeButton) closeButton.addEventListener('click', closeTeacher);
+      teacherButtons.forEach(function (button) {
+        button.setAttribute('aria-controls', overlay.id);
+        button.setAttribute('aria-expanded', 'false');
+        button.addEventListener('click', () => openTeacher(button));
+      });
+      // Keep focus in the open dialog, including when scripts attempt to move it.
+      document.addEventListener('focusin', function (event) {
+        if (isOpen() && !overlay.contains(event.target)) (closeButton || card).focus();
+      });
+    }
+
+    document.querySelectorAll('[data-nav="previous"], [data-tool="5"]')
+      .forEach(button => button.addEventListener('click', () => { if (!isOpen()) show(index - 1); }));
+    document.querySelectorAll('[data-nav="next"], [data-tool="6"]')
+      .forEach(button => button.addEventListener('click', () => { if (!isOpen()) show(index + 1); }));
+    document.querySelectorAll('[data-tool="2"]')
+      .forEach(button => button.addEventListener('click', () => window.print()));
+    [['3', 'calm'], ['4', 'teacher-freeze']].forEach(function (item) {
+      const buttons = document.querySelectorAll('[data-tool="' + item[0] + '"]');
+      function sync() {
+        const active = document.body.classList.contains(item[1]);
+        buttons.forEach(button => button.setAttribute('aria-pressed', String(active)));
+      }
+      buttons.forEach(button => button.addEventListener('click', function () {
+        document.body.classList.toggle(item[1]);
+        sync();
+      }));
+      sync();
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (isOpen()) {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          closeTeacher();
+        } else if (event.key === 'Tab') {
+          const items = focusable();
+          const first = items[0] || card;
+          const last = items[items.length - 1] || card;
+          if (!items.length || !items.includes(document.activeElement)
+              || (event.shiftKey && document.activeElement === first)
+              || (!event.shiftKey && document.activeElement === last)) {
+            event.preventDefault();
+            (event.shiftKey ? last : first).focus();
+          }
+        }
+        return;
+      }
+      const target = event.target;
+      if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey
+          || (target && (target.isContentEditable
+              || (typeof target.closest === 'function' && target.closest('input, textarea, select'))))
+          || document.querySelector('dialog[open], .overlay.on, [role="dialog"][aria-hidden="false"]')) return;
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        event.preventDefault();
+        show(index + (event.key === 'ArrowRight' ? 1 : -1));
+      }
+    });
+    show(index);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once: true});
+  else boot();
+}());
+</script></body>
+</html>

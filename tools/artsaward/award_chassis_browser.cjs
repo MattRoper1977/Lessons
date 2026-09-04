@@ -1,6 +1,7 @@
-/* Real generated Bronze pages in Chromium; route data is test-only, never a booking.
+/* Real generated award pages in Chromium; route data is test-only, never a booking.
  * Usage: node tools/artsaward/award_chassis_browser.cjs [repository root]
  * Optional: --root REPO --targets TARGETS.json --content-dir SPEC_DIRECTORY
+ * Optional: --print-fit-report REPORT.json (A4 DOM estimate; not PDF pagination proof)
  * When this draft lives outside the repo, supply the repository root explicitly.
  */
 const assert = require('node:assert/strict');
@@ -10,7 +11,7 @@ const {chromium} = require('playwright');
 const options = {};
 for (let index = 2; index < process.argv.length; index += 1) {
   const arg = process.argv[index];
-  if (['--root', '--targets', '--content-dir'].includes(arg)) {
+  if (['--root', '--targets', '--content-dir', '--print-fit-report'].includes(arg)) {
     assert.ok(process.argv[index + 1], 'Missing value for ' + arg);
     options[arg.slice(2)] = process.argv[++index];
   } else {
@@ -27,7 +28,14 @@ const specs = new Map(targets.map(target => [target.spec,
   JSON.parse(fs.readFileSync(path.resolve(contentDir, target.spec), 'utf8'))]));
 const routePaths = new Map(targets.map((target, index) => [target,
   path.isAbsolute(target.route) ? '/fixtures/deck-' + index + '.html' : '/' + target.route]));
-const fixtureSlots = {schema:'arts-award-slots-v1', slots:{EVENT_SLOT:{entries:[]}}};
+function requiredSlots(target) {
+  const keys = (target.artsAward && target.artsAward.slots) || target.slots || [];
+  assert.ok(Array.isArray(keys) && keys.every(key => typeof key === 'string' && key.trim()),
+    target.route + ': slot requirements must be an array of names.');
+  return Array.from(new Set(keys));
+}
+const fixtureSlots = {schema:'arts-award-slots-v1', slots:Object.fromEntries(
+  Array.from(new Set(targets.flatMap(requiredSlots)), key => [key, {entries:[]}]))};
 const normalize = text => text.replace(/\s+/g, ' ').trim();
 assert.ok(targets.length > 0, 'The gate needs at least one generated target.');
 if (!options.targets) assert.equal(targets.length, 14, 'The default Bronze gate covers all fourteen targets.');
@@ -35,6 +43,7 @@ if (!options.targets) assert.equal(targets.length, 14, 'The default Bronze gate 
 (async () => {
   const browser = await chromium.launch({headless:true, channel:process.env.CI ? 'chrome' : undefined});
   const errors = [];
+  const printMeasurements = [];
   try {
     const page = await browser.newPage({viewport:{width:1280, height:800}});
     page.on('pageerror', error => errors.push(error.message));
@@ -49,7 +58,7 @@ if (!options.targets) assert.equal(targets.length, 14, 'The default Bronze gate 
       if (pathname.endsWith('/SLOTS.json')) {
         return route.fulfill({contentType:'application/json', body:JSON.stringify(fixtureSlots)});
       }
-      if (pages.has(pathname)) return route.fulfill({contentType:'text/html', body:pages.get(pathname)});
+      if (pages.has(pathname)) return route.fulfill({contentType:'text/html; charset=utf-8', body:pages.get(pathname)});
       return route.fulfill({status:404, contentType:'text/plain', body:'No test fixture for this path.'});
     });
 
@@ -198,9 +207,12 @@ if (!options.targets) assert.equal(targets.length, 14, 'The default Bronze gate 
     await page.locator('[data-close-overlay]').click();
     await assertTeacherClosed();
 
-    const slotTarget = targets.find(target =>
-      ((target.artsAward && target.artsAward.slots) || target.slots || []).includes('EVENT_SLOT'));
-    assert.ok(slotTarget, 'A generated EVENT_SLOT deck must be present for the live slot integration.');
+    // Prefer a deck with several requirements, so confirmation must satisfy all of them.
+    const slotTarget = targets.reduce((best, target) => requiredSlots(target).length
+      > (best ? requiredSlots(best).length : 0) ? target : best, null);
+    assert.ok(slotTarget, 'A generated deck with declared slots is required for the live reader integration.');
+    const slotKeys = requiredSlots(slotTarget);
+    const chosenKey = slotKeys[0];
     await go(slotTarget);
     const slotInput = page.locator('#award-slot-panel input[type="file"]');
     await slotInput.waitFor({state:'attached'});
@@ -211,11 +223,19 @@ if (!options.targets) assert.equal(targets.length, 14, 'The default Bronze gate 
     assert.equal(await slotInput.isVisible(), true, 'Teacher tools expose the actual slot reader.');
     assert.equal(await page.locator('#taOverlay #award-slot-panel').count(), 1);
     const localSlots = structuredClone(fixtureSlots);
-    localSlots.slots.EVENT_SLOT.entries.push({name:'<b>Local test event</b>', route:'R3', status:'CONFIRMED'});
+    slotKeys.forEach(key => localSlots.slots[key].entries.push({
+      name:key === chosenKey ? '<b>Local test session</b>' : 'Local test ' + key,
+      route:'R3', status:'CONFIRMED'}));
+    async function assertLocalSlotRows() {
+      assert.equal(await page.locator('#award-slot-panel li').count(), slotKeys.length);
+      for (const key of slotKeys) {
+        await page.getByText(key + ': ' + localSlots.slots[key].entries[0].name + ' · R3', {exact:true}).waitFor();
+      }
+    }
     await slotInput.setInputFiles({name:'SLOTS.json', mimeType:'application/json',
       buffer:Buffer.from(JSON.stringify(localSlots))});
     await page.getByRole('status').filter({hasText:'A confirmed route'}).waitFor();
-    await page.getByText('EVENT_SLOT: <b>Local test event</b> · R3', {exact:true}).waitFor();
+    await assertLocalSlotRows();
     assert.equal(await page.locator('#award-slot-panel li b').count(), 0, 'File data stays literal text.');
     await slotInput.focus();
     await page.keyboard.press('ArrowRight');
@@ -225,12 +245,13 @@ if (!options.targets) assert.equal(targets.length, 14, 'The default Bronze gate 
     await checkTeacherOpen(0);
     assert.equal(await originalInput.evaluate(node => node === document.querySelector('#award-slot-panel input')), true,
       'The same input node survives the second opening.');
-    assert.match(await page.locator('#award-slot-panel li').innerText(), /Local test event/);
+    await assertLocalSlotRows();
     assert.equal(await slotInput.evaluate(node => node.files[0].name), 'SLOTS.json');
-    localSlots.slots.EVENT_SLOT.entries[0].name = 'Second local test event';
+    localSlots.slots[chosenKey].entries[0].name = 'Second local test session';
     await slotInput.setInputFiles({name:'SLOTS-updated.json', mimeType:'application/json',
       buffer:Buffer.from(JSON.stringify(localSlots))});
-    await page.getByText('EVENT_SLOT: Second local test event · R3', {exact:true}).waitFor();
+    await page.getByRole('status').filter({hasText:'A confirmed route'}).waitFor();
+    await assertLocalSlotRows();
     await page.locator('[data-close-overlay]').click();
     await assertTeacherClosed();
     await originalInput.dispose();
@@ -275,8 +296,40 @@ if (!options.targets) assert.equal(targets.length, 14, 'The default Bronze gate 
       assert.equal(await page.locator('main.deck').isVisible(), false, target.route + ': slides stay outside the print pack.');
       assert.equal(await page.locator('.controls').isVisible(), false, target.route + ': toolbar is not printed.');
       assert.equal(await page.locator('#taOverlay').isVisible(), false, target.route + ': teacher dialog is not printed.');
+      if (options['print-fit-report']) {
+        const pages = await print.evaluate(pack => {
+          const previousWidth = pack.style.width;
+          // A4 minus the donor's 10 mm margins. Print media alone retains viewport width.
+          pack.style.width = '190mm';
+          try {
+            const mmPerPixel = 25.4 / 96;
+            const round = value => Math.round(value * 10) / 10;
+            return Array.from(pack.querySelectorAll('.print-page'), (sheet, index) => {
+              const box = sheet.getBoundingClientRect();
+              const style = getComputedStyle(sheet);
+              const borders = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
+              const height = Math.max(box.height, sheet.scrollHeight + borders) * mmPerPixel;
+              const horizontalOverflow = Math.max(0, sheet.scrollWidth - sheet.clientWidth) * mmPerPixel;
+              return {page:index + 1, heightMm:round(height),
+                excessHeightMm:round(Math.max(0, height - 277)),
+                horizontalOverflowMm:round(horizontalOverflow),
+                withinMeasuredBox:height <= 277.5 && horizontalOverflow <= 0.5};
+            });
+          } finally {
+            pack.style.width = previousWidth;
+          }
+        });
+        printMeasurements.push({route:target.route, pages});
+      }
     }
     assert.deepEqual(errors, [], 'No page runtime errors.');
+    if (options['print-fit-report']) {
+      fs.writeFileSync(path.resolve(options['print-fit-report']), JSON.stringify({
+        method:'Print-media DOM layout at 190 mm width; compared with the 277 mm A4 content height after 10 mm margins.',
+        limitation:'Informational estimate only. This does not test PDF pagination, browser print headers, printer scaling or physical output.',
+        decks:printMeasurements}, null, 2) + '\n');
+      console.log('INFO: wrote A4 DOM fit estimates for ' + printMeasurements.length + ' decks.');
+    }
     console.log('PASS: award toolbar, 9-stage navigation/progress, modal keyboard/focus, live slot input across two cycles, print invocation and ' + targets.length + ' source-matched print packs in Chromium.');
   } finally {
     await browser.close();
