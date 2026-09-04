@@ -1798,3 +1798,19 @@ controls expose the old loss and check the full source-to-target-to-deck binding
 The reconciled mechanism battery passes with 28 tools and 323 derived controls,
 including 44 g29 controls and 43 award-claim controls. Its planted battery
 failure is caught. Current-head CI remains required before PR305 merge.
+
+
+## R2 current-slot read follow-up — zero lesson units
+
+The earlier MIMA edit removed the asserted ticket venue but did not actually
+read ORG_SLOT. Reviewing the live GROW W4 prose also found remaining promises
+of this week's event, onward sending and an unverified prior-cohort outcome.
+The historical census's regex zero did not establish a full prose review.
+
+This factual correction adds a working current-source reader to the actual
+div.slide chassis. ORG_SLOT is an organisation reference, while EVENT_SLOT
+independently supplies the applicable Bronze Part B route. Empty slots stay
+preparation only. Screen/print duplicate claims are corrected together; all
+ten stage timings, existing cells, styles and SVGs remain. All allowed MIMA
+examples in the other decks and card pack remain unchanged. Twelve adapter
+checks pass; actual rendered browser checks are required before merge.

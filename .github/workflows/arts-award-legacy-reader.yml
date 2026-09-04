@@ -1,0 +1,31 @@
+name: Arts Award legacy reader
+on:
+  pull_request:
+    paths:
+      - 'Art_Teesside/Grow/GROW_ART_W4_Arts_Event_Attend_Capture_and_Review.html'
+      - 'tools/artsaward/legacy_slot*'
+      - 'tools/artsaward/slot_reader.js'
+      - '.github/workflows/arts-award-legacy-reader.yml'
+permissions:
+  contents: read
+jobs:
+  legacy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Exercise the actual embedded reader and legacy adapter
+        run: node tools/artsaward/legacy_slot_adapter_selftest.cjs
+      - name: Install the browser driver
+        run: npm install --prefix "$RUNNER_TEMP/award-browser" --no-save --ignore-scripts playwright@1.62.1
+      - name: Retain the pre-correction baseline
+        run: |
+          git fetch --no-tags --depth=1 origin 2f7eda8e62096cd23fef8128b92c3563ed170bc3
+          git show 2f7eda8e62096cd23fef8128b92c3563ed170bc3:Art_Teesside/Grow/GROW_ART_W4_Arts_Event_Attend_Capture_and_Review.html > "$RUNNER_TEMP/legacy-before.html"
+      - name: Exercise the real legacy deck in installed Chrome
+        env:
+          NODE_PATH: ${{ runner.temp }}/award-browser/node_modules
+        run: node tools/artsaward/legacy_slot_browser.cjs Art_Teesside/Grow/GROW_ART_W4_Arts_Event_Attend_Capture_and_Review.html "$RUNNER_TEMP/legacy-before.html"
