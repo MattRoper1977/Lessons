@@ -2,8 +2,8 @@ VB_EASTER_A3N_SAFE_HANDOFF
 TIMESTAMP_UTC=2026-09-04T06:30:00Z
 CAMPAIGN_STATUS=PAUSED (VB_EASTER_A3_PAUSED) at a clean transaction boundary
 
-LAST_CONTENT_COMMIT=d4d7c914add19cc92a176479f8788734545b02a2  (#287)
-  The last commit that changed a lesson, tool or workflow, blob-verified 25/25.
+LAST_CONTENT_COMMIT=840e7dbb52933ee1aaea646b9129a0e79af71273  (#288)
+  The last commit that changed a lesson, tool or workflow, blob-verified 23/23.
 AUTHORITATIVE_REMOTE_MAIN=read it, do not trust this file for it.
   Run: git fetch origin main && git rev-parse origin/main
   A handoff cannot name the commit that lands the handoff. Expect origin/main at
@@ -15,7 +15,7 @@ WORKTREE_CLEAN=YES
 LANDED THIS RUN (all blob-verified, none taken from a merge status):
 - #286 A3N R3 chrome        merged 6773a1b35c788d3db78cea3dfcfbc63e81bc11c8  11/11  0 units
 - #287 A3N R2 timing        merged d4d7c914add19cc92a176479f8788734545b02a2  25/25  0 units
-- #288 BATCH 1              OPEN at time of writing, 2 units
+- #288 BATCH 1              merged 840e7dbb52933ee1aaea646b9129a0e79af71273  23/23  2 units
 
 CEILING (R1): per batch, lesson units only. Batch 1 spent 2 of 24.
 
@@ -42,10 +42,9 @@ stay covered by a working integrated lesson. Logged A3-H8.
 The five ASDAN decks carry the same SPLIT verdict and are QUEUED, untested.
 
 NEXT_INCOMPLETE_ACTION, IN ORDER:
-1. Merge #288, blob-verify every path against main.
-2. Batch 2: the remaining cover-taught plans (weeks 1-7) in the NINE families
+1. Batch 2: the remaining cover-taught plans (weeks 1-7) in the NINE families
    that have a gate-readable donor. 68 cover-taught plans exist; 2 are done.
-3. ART IS BLOCKED AND NEEDS A HUMAN OR A DONOR. No Art family has a
+2. ART IS BLOCKED AND NEEDS A HUMAN OR A DONOR. No Art family has a
    gate-readable 9-stage donor, so all 19 Art cover-taught plans are unbuildable.
    55 of 81 measured decks declare minutes as `data-minutes`, which no gate
    reads; only 26 use `data-min`. This is A2R's R2 regression seen from the
@@ -67,6 +66,16 @@ not cover the donor's chassis generation and the gate will flag 20 false leaks.
 KNOWN RED, NOT A REGRESSION: g24 print-dead on every deck in the estate. The
 chassis hides the slide container under @media print. A2R logged it as R3 and it
 needs print-safe figures authored -- a lesson PR, not a tool PR.
+
+3. N3e's CATALOGUE PR DID NOT RUN for batch 1. hud-coverage rows were not added
+   for the two new decks. CI is green without them, so it is a gap in the batch
+   procedure rather than a broken gate, and batch 2 should run it.
+
+MEASURED RATE, STATED PLAINLY: batch 1 delivered 2 units and 5 cells across one
+full session. The ceiling of 24 was never the constraint -- AUTHORING was. 434
+cells remain open. Any forecast that divides 434 by a 24-unit ceiling will be
+wrong by more than an order of magnitude; divide by the measured 5 cells per
+session instead, and say so.
 
 HUMAN ITEMS: A3-H1 (3 unscorable cells), A3-H2 (7 split candidates), A3-H3 (19
 stale lesson-config week labels), A3-H4 (carried), A3-H5 (ANSWERED by R3),
