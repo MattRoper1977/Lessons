@@ -37,6 +37,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+import hashlib
 import importlib.util
 import json
 import re
@@ -66,6 +67,12 @@ KEEP_CLASSES = ("slide-head", "phase-tag", "time-chip", "lundy-strip", "lundy",
                 "lundy-grid", "lundy-status", "running-head", "progress-wrap",
                 "time", "tag", "slide-tag")
 KEEP_TAGS = ("script", "style", "svg", "button", "h2")
+
+
+def _plan_id(plan: dict) -> str:
+    key = "|".join([str(plan.get("family", "")), str(plan.get("ruledWeek", "")),
+                    "|".join(sorted(plan.get("cells", [])))])
+    return hashlib.sha256(key.encode("utf-8")).hexdigest()[:12]
 
 
 def _rel(p) -> str:
@@ -387,6 +394,11 @@ def author(donor: Path, plan: dict, content: dict, out: Path) -> dict:
                    "cell": plan["cells"][0]},
         "timings": [s["minutes"] for s in content["stages"]],
     }
+    # THE BINDING (A3N-2 §2a). Derived from the plan's own content so it cannot
+    # drift when the targets file is regenerated, and so two plans sharing a
+    # family and a week still have different ids -- which is exactly the case
+    # family+week keying got wrong.
+    cfg["planId"] = _plan_id(plan)
     if content.get("weDoType"):
         cfg["weDoType"] = content["weDoType"]
     if content.get("tierLadder"):

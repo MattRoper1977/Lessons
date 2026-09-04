@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build and gate a batch of authored lesson specs. A3N batch driver."""
 from __future__ import annotations
-import argparse, hashlib, importlib.util, json, re, subprocess, sys
+import argparse, hashlib, hashlib, importlib.util, json, re, subprocess, sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -118,14 +118,41 @@ def build_one(spec, donors, plans, outdir_map):
     return rec
 
 
+def digest_of(path: Path) -> str:
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--specs", required=True)
     ap.add_argument("--donors", required=True)
+    ap.add_argument("--plans", default=str(ROOT / "tools/easter/EASTER_TARGETS.json"))
     ap.add_argument("--output")
     a = ap.parse_args()
+
+    # PROVENANCE (A3N-2 §2c). Every input this run consumes is read from a file
+    # and its sha256 recorded. A run whose inputs cannot be traced to a digest
+    # REFUSES TO START.
+    #
+    # This exists because an authoring run was once launched from a task list
+    # typed out of a truncated console print: five of twelve cell sets and eight
+    # of twelve OUTCOMES were wrong, and fourteen lessons began being written to
+    # teach things the workbook does not ask for. Nothing about that run was
+    # traceable to a file, so nothing could have caught it but a person noticing.
+    # Remembering not to do it again is not a control; refusing to start is.
+    inputs = {}
+    for label, path in (("specs", a.specs), ("donors", a.donors), ("plans", a.plans)):
+        f = Path(path)
+        if not f.is_file():
+            raise SystemExit(f"PROVENANCE REFUSAL: {label} input {path!r} is not a "
+                             f"readable file. Every input must be traceable to a digest.")
+        inputs[label] = {"path": str(f), "sha256": digest_of(f)}
+    print("  provenance:")
+    for k, v in inputs.items():
+        print(f"    {k:7s} {v['sha256'][:16]}  {v['path']}")
+
     donors = json.loads(Path(a.donors).read_text())
-    plans = json.loads((ROOT / "tools/easter/EASTER_TARGETS.json").read_text())["plans"]
+    plans = json.loads(Path(a.plans).read_text())["plans"]
     outdir = {"BUILD ASDAN": "BUILD_ASDAN/Autumn1_W1-W7_2026-27",
               "GROW ASDAN": "GROW_ASDAN/Autumn1_W1-W7_2026-27",
               "LAUNCH ASDAN": "LAUNCH_ASDAN/Autumn1_W1-W7_2026-27",
@@ -153,7 +180,10 @@ def main():
     print(f"\n{sum(1 for r in recs if r.get('shipped'))} of {len(recs)} shipped")
     if a.output:
         Path(a.output).parent.mkdir(parents=True, exist_ok=True)
-        Path(a.output).write_text(json.dumps(recs, indent=1, default=str) + "\n", encoding="utf-8")
+        Path(a.output).write_text(json.dumps(
+            {"tool": "build_from_specs", "file": "tools/easter/build_from_specs.py",
+             "provenance": inputs, "decks": recs}, indent=1, default=str) + "\n",
+            encoding="utf-8")
 
 
 if __name__ == "__main__":

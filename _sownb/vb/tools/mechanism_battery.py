@@ -65,6 +65,7 @@ SELFTEST_TOOLS = [
     "g24_visual_density.py",
     "g25_wedo_variety.py",
     "g27_no_filename_weeks.py",
+    "g29_plan_binding.py",
     "cgate_containment.py",
     "classic_v2_contract_selftest.py",
     "tools/easter/dedupe_stage_text.py",
@@ -74,6 +75,7 @@ SELFTEST_TOOLS = [
     "tools/easter/derive_stage_timings.py",
     "tools/easter/author_deck.py",
     "tools/easter/pack_furniture.py",
+    "tools/easter/bind_plan_ids.py",
 ]
 LIST_ONLY_TOOLS = [
     "g19_v2.py",
