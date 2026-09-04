@@ -102,6 +102,57 @@ def empty_stage(stage):
         stage.remove(child)
 
 
+def render_figure(spec: dict) -> str:
+    """Build the explanatory SVG from LABELS, not from author-written markup.
+
+    g24 requires two explanatory visuals with real geometry, and a deck authored
+    without them is red. Asking a writer for raw SVG invites malformed markup in
+    a lesson file; asking for four labels and a caption cannot. Two shapes cover
+    what these lessons need: a left-to-right chain of steps, and two columns
+    resting on a shared condition.
+    """
+    kind = spec.get("kind", "chain")
+    boxes = spec.get("boxes", [])[:4]
+    cap = spec.get("caption", "")
+    title = spec.get("title", "Diagram")
+    esc = lambda t: (t or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    if kind == "columns" and len(boxes) >= 2:
+        parts = [f'<svg viewBox="0 0 620 190" role="img" width="100%" '
+                 f'aria-label="{esc(spec.get("alt", title))}"><title>{esc(title)}</title>']
+        for i, b in enumerate(boxes[:2]):
+            x = 16 + i * 318
+            dash = ' stroke-dasharray="7 4"' if i else ""
+            parts.append(f'<rect x="{x}" y="16" width="270" height="104" rx="8" fill="none" '
+                         f'stroke="#333" stroke-width="2"{dash}/>')
+            parts.append(f'<circle cx="{x+24}" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"/>')
+            parts.append(f'<text x="{x+135}" y="48" text-anchor="middle" font-size="14">{esc(b.get("head",""))}</text>')
+            parts.append(f'<text x="{x+135}" y="74" text-anchor="middle" font-size="11">{esc(b.get("line1",""))}</text>')
+            parts.append(f'<text x="{x+135}" y="94" text-anchor="middle" font-size="11">{esc(b.get("line2",""))}</text>')
+            parts.append(f'<line x1="{x+135}" y1="120" x2="{x+135}" y2="140" stroke="#333" stroke-width="2"/>')
+            parts.append(f'<path d="M{x+129} 132 L{x+135} 142 L{x+141} 132 Z" fill="#333"/>')
+        parts.append('<rect x="16" y="140" width="588" height="40" rx="8" fill="none" '
+                     'stroke="#333" stroke-width="2" stroke-dasharray="6 4"/>')
+        parts.append(f'<text x="310" y="165" text-anchor="middle" font-size="12">{esc(cap)}</text>')
+        parts.append("</svg>")
+        return "".join(parts)
+    n = max(2, len(boxes))
+    w = int((604 - 28 * (n - 1)) / n)
+    parts = [f'<svg viewBox="0 0 620 150" role="img" width="100%" '
+             f'aria-label="{esc(spec.get("alt", title))}"><title>{esc(title)}</title>']
+    for i, b in enumerate(boxes):
+        x = 8 + i * (w + 28)
+        parts.append(f'<rect x="{x}" y="42" width="{w}" height="60" rx="8" fill="none" '
+                     f'stroke="#333" stroke-width="2"/>')
+        parts.append(f'<text x="{x+w//2}" y="70" text-anchor="middle" font-size="13">{esc(b.get("head",""))}</text>')
+        parts.append(f'<text x="{x+w//2}" y="88" text-anchor="middle" font-size="11">{esc(b.get("line1",""))}</text>')
+        if i:
+            parts.append(f'<line x1="{x-28}" y1="72" x2="{x-4}" y2="72" stroke="#333" stroke-width="2"/>')
+            parts.append(f'<path d="M{x-12} 66 L{x} 72 L{x-12} 78 Z" fill="#333"/>')
+    parts.append(f'<text x="306" y="126" text-anchor="middle" font-size="12">{esc(cap)}</text>')
+    parts.append("</svg>")
+    return "".join(parts)
+
+
 def render_blocks(spec: list[dict]) -> list:
     """Authored content -> elements. Only shapes the chassis already uses."""
     out = []
@@ -115,6 +166,8 @@ def render_blocks(spec: list[dict]) -> list:
                 li = lh.Element("li"); li.text = item; e.append(li)
         elif kind == "svg":
             e = lh.fromstring(b["svg"])
+        elif kind == "figure":
+            e = lh.fromstring(render_figure(b))
         elif kind == "staff":
             e = lh.Element("div")
             e.set("class", "box rehearsal"); e.set("data-mbm-guide", "staff")
