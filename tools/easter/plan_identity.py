@@ -51,11 +51,28 @@ def read_source(path: Path, kind: str):
         raise ValueError(f'PROVENANCE REFUSAL: count or sequence collision in {path}')
     plans = []
     for row in rows:
-        if row['part'] not in ref['parts']:
-            raise ValueError(f'Invalid {level} part in {path}: {row["part"]}')
-        aa = {'level': level, 'parts': [row['part']]}
+        primary = row['part']
+        if not isinstance(primary, str) or primary not in ref['parts']:
+            raise ValueError(f'Invalid {level} primary part in {path}: {primary!r}')
+        # Omission retains the shipped single-part projection and identity.
+        # An explicit list is a declaration, so never silently repair it.
+        parts = row.get('parts', [primary])
+        if (not isinstance(parts, list) or not parts
+                or any(not isinstance(part, str) for part in parts)):
+            raise ValueError(f'Invalid {level} parts in {path}: '
+                             'expected a nonempty list of part names')
+        if len(parts) != len(set(parts)):
+            raise ValueError(f'Invalid {level} parts in {path}: part names must be unique')
+        invalid = [part for part in parts if part not in ref['parts']]
+        if invalid:
+            raise ValueError(f'Invalid {level} parts in {path}: {invalid!r}')
+        if primary not in parts:
+            raise ValueError(f'Invalid {level} parts in {path}: '
+                             f'primary part {primary!r} must be included')
+        aa = {'level': level, 'parts': list(parts)}
         needed = sorted(k for k,v in slots['slots'].items()
-                        if row['part'] in v.get('serves',{}).get(level,[]))
+                        if any(part in v.get('serves',{}).get(level,[])
+                               for part in parts))
         if needed:
             aa['slots'] = needed
         if row.get('listsPortfolio'):

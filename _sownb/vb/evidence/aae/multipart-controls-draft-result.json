@@ -1,0 +1,621 @@
+{
+ "tool": "g29_plan_binding",
+ "toolVersion": "g29-v1.0.0-plan-binding",
+ "file": "_sownb/vb/tools/g29_plan_binding.py",
+ "controlsDeclared": 44,
+ "controlsRun": 44,
+ "controlsFired": 44,
+ "missingControls": [],
+ "undeclaredControls": [],
+ "allListedControlsFired": true,
+ "controls": [
+  {
+   "id": "every-selector-prints-its-exclusions-with-reasons",
+   "description": "every selector this campaign ships names what it dropped and why, on a planted input that forces it to drop something",
+   "expected": [],
+   "observed": [],
+   "fired": true
+  },
+  {
+   "id": "a-selector-that-drops-in-silence-reds",
+   "description": "a planted selector that drops three items and explains one is caught",
+   "expected": 1,
+   "observed": 1,
+   "fired": true
+  },
+  {
+   "id": "a-deck-claiming-another-plans-cells-reds",
+   "description": "a cell claimed by the wrong deck is a coverage lie: the census counts it taught and nobody teaches it",
+   "expected": [
+    "RED",
+    [
+     "'S'!C9"
+    ]
+   ],
+   "observed": [
+    "RED",
+    [
+     "'S'!C9"
+    ]
+   ],
+   "fired": true
+  },
+  {
+   "id": "a-deck-claiming-a-subset-reds",
+   "description": "an under-claim leaves a cell open while the deck looks covered, which is the same lie told quietly",
+   "expected": [
+    "RED",
+    [
+     "'S'!C2"
+    ]
+   ],
+   "observed": [
+    "RED",
+    [
+     "'S'!C2"
+    ]
+   ],
+   "fired": true
+  },
+  {
+   "id": "two-correctly-bound-decks-in-one-family-week-both-pass",
+   "description": "two plans sharing a family and a week are the case family+week keying got wrong; correctly bound, both must pass",
+   "expected": [
+    "PASS",
+    "PASS"
+   ],
+   "observed": [
+    "PASS",
+    "PASS"
+   ],
+   "fired": true
+  },
+  {
+   "id": "the-plan-id-survives-the-targets-file-being-reordered",
+   "description": "the id is derived from the plan's content, so regenerating or reordering the targets file cannot rebind a deck",
+   "expected": "ede5e393c91e",
+   "observed": "ede5e393c91e",
+   "fired": true
+  },
+  {
+   "id": "a-deck-with-no-planId-is-skipped-not-silently-passed",
+   "description": "the estate's older decks predate this binding; they are SKIP, never PASS, so the tally cannot flatter itself",
+   "expected": "SKIP",
+   "observed": "SKIP",
+   "fired": true
+  },
+  {
+   "id": "all-workbook-plan-identities-remain-unchanged",
+   "description": "Every current workbook plan retains the identity written before the award repair; an empty population cannot prove compatibility.",
+   "expected": [
+    true,
+    []
+   ],
+   "observed": [
+    true,
+    []
+   ],
+   "fired": true
+  },
+  {
+   "id": "two-award-plans-in-one-family-week-have-distinct-identities",
+   "description": "Two plans have the same family and week, and no cells; the old family/week key collapses them.",
+   "expected": [
+    2,
+    2
+   ],
+   "observed": [
+    2,
+    2
+   ],
+   "fired": true
+  },
+  {
+   "id": "award-identities-survive-row-reordering",
+   "description": "Reordering the canonical source does not rebind either deck.",
+   "expected": {
+    "A witnessed view": "5d07e9126932",
+    "A planned skill": "78435bcd9a50"
+   },
+   "observed": {
+    "A planned skill": "78435bcd9a50",
+    "A witnessed view": "5d07e9126932"
+   },
+   "fired": true
+  },
+  {
+   "id": "correct-award-declarations-bind-to-canonical-plans",
+   "description": "Both the slot-dependent Part B and independent Part D bind.",
+   "expected": [
+    "PASS",
+    "PASS"
+   ],
+   "observed": [
+    "PASS",
+    "PASS"
+   ],
+   "fired": true
+  },
+  {
+   "id": "a-stale-id-cannot-hide-a-changed-award-level",
+   "description": "Keep the valid planId but change the declaration: empty matching cells must not hide the change.",
+   "expected": [
+    "RED",
+    false
+   ],
+   "observed": [
+    "RED",
+    false
+   ],
+   "fired": true
+  },
+  {
+   "id": "a-stale-id-cannot-hide-a-changed-award-part",
+   "description": "Keep the valid planId but change the declaration: empty matching cells must not hide the change.",
+   "expected": [
+    "RED",
+    false
+   ],
+   "observed": [
+    "RED",
+    false
+   ],
+   "fired": true
+  },
+  {
+   "id": "a-stale-id-cannot-hide-a-missing-award-slot",
+   "description": "Keep the valid planId but change the declaration: empty matching cells must not hide the change.",
+   "expected": [
+    "RED",
+    false
+   ],
+   "observed": [
+    "RED",
+    false
+   ],
+   "fired": true
+  },
+  {
+   "id": "an-award-deck-with-wrong-outcomes-reds",
+   "description": "A valid ID cannot bind a changed teaching outcome.",
+   "expected": [
+    "RED",
+    false
+   ],
+   "observed": [
+    "RED",
+    false
+   ],
+   "fired": true
+  },
+  {
+   "id": "a-cell-less-award-deck-claiming-a-cell-reds",
+   "description": "Award binding must never fabricate workbook coverage.",
+   "expected": [
+    "RED",
+    [
+     "'S'!C99"
+    ]
+   ],
+   "observed": [
+    "RED",
+    [
+     "'S'!C99"
+    ]
+   ],
+   "fired": true
+  },
+  {
+   "id": "an-unknown-award-plan-id-reds",
+   "description": "A declared award does not excuse an ID absent from registered sources.",
+   "expected": "RED",
+   "observed": "RED",
+   "fired": true
+  },
+  {
+   "id": "changed-award-identity-fields-are-refused",
+   "description": "A stale ID cannot hide a changed family, week or title.",
+   "expected": [
+    "RED",
+    "RED",
+    "RED"
+   ],
+   "observed": [
+    "RED",
+    "RED",
+    "RED"
+   ],
+   "fired": true
+  },
+  {
+   "id": "registry-provenance-records-the-bytes-actually-read",
+   "description": "Both sources and the registry itself carry measured SHA-256 values.",
+   "expected": [
+    {
+     "tools/easter/EASTER_TARGETS.json": "a44ed53ef09e3e17525f8baa2f3a66639bb26a50bac50d57bf1c6e50d2c2756d",
+     "tools/artsaward/BRONZE_PLAN.json": "9b8735360e56c8af9fba1c834a193b4d794990f9e3e028c64ab98672629bc1bf"
+    },
+    "af253d277fc07d2d6fc4af74b85c115a98008ecc366b83d7c26ca79332c23f9b"
+   ],
+   "observed": [
+    {
+     "tools/easter/EASTER_TARGETS.json": "a44ed53ef09e3e17525f8baa2f3a66639bb26a50bac50d57bf1c6e50d2c2756d",
+     "tools/artsaward/BRONZE_PLAN.json": "9b8735360e56c8af9fba1c834a193b4d794990f9e3e028c64ab98672629bc1bf"
+    },
+    "af253d277fc07d2d6fc4af74b85c115a98008ecc366b83d7c26ca79332c23f9b"
+   ],
+   "fired": true
+  },
+  {
+   "id": "a-missing-plan-registry-is-refused",
+   "description": "No registry is an error, not a zero-plan success.",
+   "expected": true,
+   "observed": true,
+   "fired": true
+  },
+  {
+   "id": "a-missing-registered-source-is-refused",
+   "description": "A named missing source cannot be silently excluded.",
+   "expected": true,
+   "observed": true,
+   "fired": true
+  },
+  {
+   "id": "a-stale-award-spec-origin-is-refused",
+   "description": "Even a valid-shaped source is refused when SPEC bytes changed without the canonical plan digest following them.",
+   "expected": true,
+   "observed": true,
+   "fired": true
+  },
+  {
+   "id": "duplicate-plan-identities-within-a-source-are-refused",
+   "description": "A dict overwrite must not hide two rows with the same plan identity.",
+   "expected": true,
+   "observed": true,
+   "fired": true
+  },
+  {
+   "id": "duplicate-plan-identities-across-sources-are-refused",
+   "description": "A later registered source cannot overwrite an earlier plan.",
+   "expected": true,
+   "observed": true,
+   "fired": true
+  },
+  {
+   "id": "canonical-award-targets-are-accepted",
+   "description": "A true projection of the canonical source is accepted.",
+   "expected": [
+    "B.json",
+    "D.json"
+   ],
+   "observed": [
+    "B.json",
+    "D.json"
+   ],
+   "fired": true
+  },
+  {
+   "id": "changed-award-target-fields-are-refused",
+   "description": "A matching source-file digest does not excuse hand-edited target outcomes, week, title, cells or award declaration.",
+   "expected": [
+    [
+     "outcomes",
+     true
+    ],
+    [
+     "week",
+     true
+    ],
+    [
+     "title",
+     true
+    ],
+    [
+     "cells",
+     true
+    ],
+    [
+     "artsAward",
+     true
+    ]
+   ],
+   "observed": [
+    [
+     "outcomes",
+     true
+    ],
+    [
+     "week",
+     true
+    ],
+    [
+     "title",
+     true
+    ],
+    [
+     "cells",
+     true
+    ],
+    [
+     "artsAward",
+     true
+    ]
+   ],
+   "fired": true
+  },
+  {
+   "id": "a-stale-target-source-digest-is-refused",
+   "description": "Target rows do not make an obsolete source digest acceptable.",
+   "expected": true,
+   "observed": true,
+   "fired": true
+  },
+  {
+   "id": "all-single-part-award-identities-remain-unchanged",
+   "description": "Every registered single-part award row retains the frozen pre-multipart ID; an empty population does not prove compatibility.",
+   "expected": [
+    true,
+    []
+   ],
+   "observed": [
+    true,
+    []
+   ],
+   "fired": true
+  },
+  {
+   "id": "silver-multipart-rows-retain-every-declared-part",
+   "description": "Both practical planning and delivery can truthfully evidence working with others; neither secondary part may disappear.",
+   "expected": [
+    [
+     "2B",
+     "2D"
+    ],
+    [
+     "2C",
+     "2D"
+    ]
+   ],
+   "observed": [
+    [
+     "2B",
+     "2D"
+    ],
+    [
+     "2C",
+     "2D"
+    ]
+   ],
+   "fired": true
+  },
+  {
+   "id": "award-slots-are-the-sorted-union-of-all-declared-parts",
+   "description": "A secondary part contributes both of its slots; a shared slot appears once, in a deterministic sorted union.",
+   "expected": [
+    "EVENT_SLOT",
+    "ORG_SLOT",
+    "PRACTITIONER_SLOT",
+    "SHARED_SLOT"
+   ],
+   "observed": [
+    "EVENT_SLOT",
+    "ORG_SLOT",
+    "PRACTITIONER_SLOT",
+    "SHARED_SLOT"
+   ],
+   "fired": true
+  },
+  {
+   "id": "an-explicit-single-part-list-preserves-the-legacy-plan",
+   "description": "A source may add an explicit one-item list without changing its declaration, output fields or identity.",
+   "expected": [
+    {
+     "family": "GROW Art",
+     "ruledWeek": 5,
+     "cells": [],
+     "title": "Test a plan with others",
+     "subject": "Art",
+     "outcomes": [
+      "Test and agree."
+     ],
+     "artsAward": {
+      "level": "Silver",
+      "parts": [
+       "2B"
+      ]
+     }
+    },
+    "d0d0abc64321"
+   ],
+   "observed": [
+    {
+     "family": "GROW Art",
+     "ruledWeek": 5,
+     "cells": [],
+     "title": "Test a plan with others",
+     "subject": "Art",
+     "outcomes": [
+      "Test and agree."
+     ],
+     "artsAward": {
+      "level": "Silver",
+      "parts": [
+       "2B"
+      ]
+     }
+    },
+    "d0d0abc64321"
+   ],
+   "fired": true
+  },
+  {
+   "id": "multipart-identities-survive-part-ordering",
+   "description": "Part-list ordering cannot create a new plan identity for the same declared set; all declared parts remain present.",
+   "expected": [
+    [
+     "27b1e10d8852",
+     [
+      "2B",
+      "2D"
+     ]
+    ],
+    [
+     "f0d2ee309cf0",
+     [
+      "2C",
+      "2D"
+     ]
+    ],
+    [
+     "92ee6659859c",
+     [
+      "1C",
+      "1D"
+     ]
+    ]
+   ],
+   "observed": [
+    [
+     "27b1e10d8852",
+     [
+      "2B",
+      "2D"
+     ]
+    ],
+    [
+     "f0d2ee309cf0",
+     [
+      "2C",
+      "2D"
+     ]
+    ],
+    [
+     "92ee6659859c",
+     [
+      "1C",
+      "1D"
+     ]
+    ]
+   ],
+   "fired": true
+  },
+  {
+   "id": "an-explicit-empty-part-list-is-refused",
+   "description": "An explicit malformed or contradictory parts declaration must fail before a target or deck is written.",
+   "expected": true,
+   "observed": true,
+   "fired": true
+  },
+  {
+   "id": "an-explicit-null-part-list-is-refused",
+   "description": "An explicit malformed or contradictory parts declaration must fail before a target or deck is written.",
+   "expected": true,
+   "observed": true,
+   "fired": true
+  },
+  {
+   "id": "a-scalar-part-list-is-refused",
+   "description": "An explicit malformed or contradictory parts declaration must fail before a target or deck is written.",
+   "expected": true,
+   "observed": true,
+   "fired": true
+  },
+  {
+   "id": "a-non-string-part-list-member-is-refused",
+   "description": "An explicit malformed or contradictory parts declaration must fail before a target or deck is written.",
+   "expected": true,
+   "observed": true,
+   "fired": true
+  },
+  {
+   "id": "duplicate-award-parts-are-refused",
+   "description": "An explicit malformed or contradictory parts declaration must fail before a target or deck is written.",
+   "expected": true,
+   "observed": true,
+   "fired": true
+  },
+  {
+   "id": "an-unregistered-secondary-part-is-refused",
+   "description": "An explicit malformed or contradictory parts declaration must fail before a target or deck is written.",
+   "expected": true,
+   "observed": true,
+   "fired": true
+  },
+  {
+   "id": "a-part-list-omitting-the-primary-is-refused",
+   "description": "An explicit malformed or contradictory parts declaration must fail before a target or deck is written.",
+   "expected": true,
+   "observed": true,
+   "fired": true
+  },
+  {
+   "id": "an-invalid-primary-part-is-refused",
+   "description": "An explicit parts list cannot legitimise a primary part that is absent from this level of SPEC.",
+   "expected": true,
+   "observed": true,
+   "fired": true
+  },
+  {
+   "id": "correct-multipart-award-declarations-bind",
+   "description": "All correctly projected multipart declarations bind through the same public judge used for real decks.",
+   "expected": [
+    "PASS",
+    "PASS",
+    "PASS"
+   ],
+   "observed": [
+    "PASS",
+    "PASS",
+    "PASS"
+   ],
+   "fired": true
+  },
+  {
+   "id": "a-stale-id-cannot-hide-a-dropped-secondary-part",
+   "description": "Keep the valid ID and outcomes but drop the genuine secondary part; the declaration must be refused.",
+   "expected": [
+    "RED",
+    false
+   ],
+   "observed": [
+    "RED",
+    false
+   ],
+   "fired": true
+  },
+  {
+   "id": "a-stale-id-cannot-hide-a-secondary-part-slot",
+   "description": "Keep the ID and all parts but drop a slot required only by the secondary part; the declaration must be refused.",
+   "expected": [
+    "RED",
+    false
+   ],
+   "observed": [
+    "RED",
+    false
+   ],
+   "fired": true
+  },
+  {
+   "id": "multipart-targets-round-trip-and-dropped-parts-are-refused",
+   "description": "The target boundary must accept the complete projection and refuse a hand-edited dropped part despite a valid source digest.",
+   "expected": [
+    [
+     "2B.json",
+     "2C.json",
+     "slots.json"
+    ],
+    true
+   ],
+   "observed": [
+    [
+     "2B.json",
+     "2C.json",
+     "slots.json"
+    ],
+    true
+   ],
+   "fired": true
+  }
+ ]
+}

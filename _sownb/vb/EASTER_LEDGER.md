@@ -1752,3 +1752,63 @@ a genuine metadata mistake: START_HERE used lesson-config, so the donor
 control treated this pack index as a lesson missing its planId. The index
 now uses pack-config. No lesson or gate is changed, and the checksum is
 refreshed. The original control is retained. Full CI must pass on the new head.
+
+
+## AAE assertion-scope correction — zero lesson units
+
+R1 requires asserted attendance and booking to fire, while ticket examples,
+Exit Ticket headings and organisations used as teaching examples must remain
+allowed. Direct controls found missed asserted bookings and false positives
+on examples, historical dates, observed file counts and Silver's truthful
+restriction that its arts challenge must not focus on leadership.
+
+The focused correction keeps all fourteen original controls and adds twenty-nine
+positive and negative controls. g33 and g35 are unchanged. Natural explicit
+sharing instructions are accepted; a draft swap without a final evidenced share
+continues to fail. Both the old and corrected gate pass all fourteen Bronze
+decks. The full battery passes: 27 tools, 303 controls, planted difference caught.
+
+This is a separate zero-unit mechanism change. Bronze PR304 is not merged by
+this record; merge order and current-head CI remain required.
+
+
+
+
+## Bronze PR304 merged and blob-verified
+
+Bronze merged as 2f7eda8e62096cd23fef8128b92c3563ed170bc3 after all seven
+current-head jobs passed (runs 33917362837 and 33917362798). All 58 changed
+blobs match, compared from the actual fork at 4f366471. merge304.json records
+the full path list. Fourteen lesson units landed against the 24-unit ceiling.
+Bronze cells remain 0 → 0 under AAE-H7. Gold new cells remain 0. Placement
+is still pending. Ledger and state are updated before further batches.
+
+
+
+
+## Silver multipart plan projection — same zero-unit mechanism PR
+
+The canonical Silver plan truthfully assigns working with others alongside
+practical planning and delivery. The old reader silently discarded secondary
+parts. The source reader now retains each declared part and derives the union
+of its slots, while rejecting empty, duplicate or contradictory declarations.
+The existing single-part projection and IDs are unchanged. Seventeen permanent
+controls expose the old loss and check the full source-to-target-to-deck binding.
+
+The reconciled mechanism battery passes with 28 tools and 323 derived controls,
+including 44 g29 controls and 43 award-claim controls. Its planted battery
+failure is caught. Current-head CI remains required before PR305 merge.
+
+
+## Mechanism evidence subject correction
+
+CI run 33918746857 passed all functional checks but could not parse two
+expected PASS labels in the historical negative-control report: the report
+had omitted the file it measured. It now names the pre-fix reader and commit.
+Merge blob rows also use the established file subject key, so JSON suffixes
+are not truncated by the fallback text-path scanner. No result is altered,
+no evidence is removed and no sweep rule is relaxed.
+
+## Assertion follow-up — attendance references, zero units
+
+Four truthful Silver denial or record-question references were false positives. Each exemption now matches the immediate grammar of that attendance occurrence only, including joined HTML paragraphs. All 43 prior controls remain unchanged; 24 new must-fire and benign controls bring g30–g35 to 67. The genuinely unconfirmed practitioner promise still reds and was corrected in the Silver source before rebuilding. No content batch or gate floor changes.

@@ -1,0 +1,268 @@
+{
+ "reader": "current repository reader",
+ "controlsRun": 17,
+ "controlsFired": 5,
+ "controls": [
+  {
+   "id": "all-single-part-award-identities-remain-unchanged",
+   "description": "Every registered single-part award row retains the frozen pre-multipart ID; an empty population does not prove compatibility.",
+   "expected": [
+    true,
+    []
+   ],
+   "observed": [
+    true,
+    []
+   ],
+   "fired": true
+  },
+  {
+   "id": "silver-multipart-rows-retain-every-declared-part",
+   "description": "Both practical planning and delivery can truthfully evidence working with others; neither secondary part may disappear.",
+   "expected": [
+    [
+     "2B",
+     "2D"
+    ],
+    [
+     "2C",
+     "2D"
+    ]
+   ],
+   "observed": [
+    [
+     "2B"
+    ],
+    [
+     "2C"
+    ]
+   ],
+   "fired": false
+  },
+  {
+   "id": "award-slots-are-the-sorted-union-of-all-declared-parts",
+   "description": "A secondary part contributes both of its slots; a shared slot appears once, in a deterministic sorted union.",
+   "expected": [
+    "EVENT_SLOT",
+    "ORG_SLOT",
+    "PRACTITIONER_SLOT",
+    "SHARED_SLOT"
+   ],
+   "observed": [
+    "EVENT_SLOT",
+    "SHARED_SLOT"
+   ],
+   "fired": false
+  },
+  {
+   "id": "an-explicit-single-part-list-preserves-the-legacy-plan",
+   "description": "A source may add an explicit one-item list without changing its declaration, output fields or identity.",
+   "expected": [
+    {
+     "family": "GROW Art",
+     "ruledWeek": 5,
+     "cells": [],
+     "title": "Test a plan with others",
+     "subject": "Art",
+     "outcomes": [
+      "Test and agree."
+     ],
+     "artsAward": {
+      "level": "Silver",
+      "parts": [
+       "2B"
+      ]
+     }
+    },
+    "d0d0abc64321"
+   ],
+   "observed": [
+    {
+     "family": "GROW Art",
+     "ruledWeek": 5,
+     "cells": [],
+     "title": "Test a plan with others",
+     "subject": "Art",
+     "outcomes": [
+      "Test and agree."
+     ],
+     "artsAward": {
+      "level": "Silver",
+      "parts": [
+       "2B"
+      ]
+     }
+    },
+    "d0d0abc64321"
+   ],
+   "fired": true
+  },
+  {
+   "id": "multipart-identities-survive-part-ordering",
+   "description": "Part-list ordering cannot create a new plan identity for the same declared set; all declared parts remain present.",
+   "expected": [
+    [
+     "d0d0abc64321",
+     [
+      "2B"
+     ]
+    ],
+    [
+     "2748369ec49e",
+     [
+      "2C"
+     ]
+    ],
+    [
+     "263c34b04a26",
+     [
+      "1C"
+     ]
+    ]
+   ],
+   "observed": [
+    [
+     "d0d0abc64321",
+     [
+      "2B"
+     ]
+    ],
+    [
+     "2748369ec49e",
+     [
+      "2C"
+     ]
+    ],
+    [
+     "263c34b04a26",
+     [
+      "1C"
+     ]
+    ]
+   ],
+   "fired": true
+  },
+  {
+   "id": "an-explicit-empty-part-list-is-refused",
+   "description": "An explicit malformed or contradictory parts declaration must fail before a target or deck is written.",
+   "expected": true,
+   "observed": false,
+   "fired": false
+  },
+  {
+   "id": "an-explicit-null-part-list-is-refused",
+   "description": "An explicit malformed or contradictory parts declaration must fail before a target or deck is written.",
+   "expected": true,
+   "observed": false,
+   "fired": false
+  },
+  {
+   "id": "a-scalar-part-list-is-refused",
+   "description": "An explicit malformed or contradictory parts declaration must fail before a target or deck is written.",
+   "expected": true,
+   "observed": false,
+   "fired": false
+  },
+  {
+   "id": "a-non-string-part-list-member-is-refused",
+   "description": "An explicit malformed or contradictory parts declaration must fail before a target or deck is written.",
+   "expected": true,
+   "observed": false,
+   "fired": false
+  },
+  {
+   "id": "duplicate-award-parts-are-refused",
+   "description": "An explicit malformed or contradictory parts declaration must fail before a target or deck is written.",
+   "expected": true,
+   "observed": false,
+   "fired": false
+  },
+  {
+   "id": "an-unregistered-secondary-part-is-refused",
+   "description": "An explicit malformed or contradictory parts declaration must fail before a target or deck is written.",
+   "expected": true,
+   "observed": false,
+   "fired": false
+  },
+  {
+   "id": "a-part-list-omitting-the-primary-is-refused",
+   "description": "An explicit malformed or contradictory parts declaration must fail before a target or deck is written.",
+   "expected": true,
+   "observed": false,
+   "fired": false
+  },
+  {
+   "id": "an-invalid-primary-part-is-refused",
+   "description": "An explicit parts list cannot legitimise a primary part that is absent from this level of SPEC.",
+   "expected": true,
+   "observed": true,
+   "fired": true
+  },
+  {
+   "id": "correct-multipart-award-declarations-bind",
+   "description": "All correctly projected multipart declarations bind through the same public judge used for real decks.",
+   "expected": [
+    "PASS",
+    "PASS",
+    "PASS"
+   ],
+   "observed": [
+    "PASS",
+    "PASS",
+    "PASS"
+   ],
+   "fired": true
+  },
+  {
+   "id": "a-stale-id-cannot-hide-a-dropped-secondary-part",
+   "description": "Keep the valid ID and outcomes but drop the genuine secondary part; the declaration must be refused.",
+   "expected": [
+    "RED",
+    false
+   ],
+   "observed": [
+    "PASS",
+    true
+   ],
+   "fired": false
+  },
+  {
+   "id": "a-stale-id-cannot-hide-a-secondary-part-slot",
+   "description": "Keep the ID and all parts but drop a slot required only by the secondary part; the declaration must be refused.",
+   "expected": [
+    "RED",
+    false
+   ],
+   "observed": [
+    "PASS",
+    true
+   ],
+   "fired": false
+  },
+  {
+   "id": "multipart-targets-round-trip-and-dropped-parts-are-refused",
+   "description": "The target boundary must accept the complete projection and refuse a hand-edited dropped part despite a valid source digest.",
+   "expected": [
+    [
+     "2B.json",
+     "2C.json",
+     "slots.json"
+    ],
+    true
+   ],
+   "observed": [
+    [
+     "2B.json",
+     "2C.json",
+     "slots.json"
+    ],
+    false
+   ],
+   "fired": false
+  }
+ ],
+ "file": "tools/easter/plan_identity.py",
+ "measuredReaderCommit": "2f7eda8e62096cd23fef8128b92c3563ed170bc3",
+ "measuredReaderSha256": "222f7263aaf53481e8413d31867b7a2b5d88a140d0659c4022bdbb63b39866ca",
+ "scope": "Historical negative control results against the unpatched reader; expected/observed labels below are test data, not current lesson verdicts."
+}
