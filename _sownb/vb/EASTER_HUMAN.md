@@ -477,3 +477,51 @@ It is a large, mechanical, well-defined job and it is not in any batch's scope.
 Recorded rather than started.
 
 Re-run the measurement: `python3 tools/easter/pick_art_donor.py --show-excluded 0`
+## AAE-H1 · H2 · H3 · H5 · H6 — the Arts Award items, each holding only what it names
+
+**AAE-H1 — Gold Adviser Toolkit.** The register records Gold's Attempted rule and
+file cap as UNKNOWN, toolkit-only. A gate reds any deck that states either, and
+the staff block says "confirm with the Gold Adviser Toolkit". Never inferred
+from Silver. **Holds nothing.**
+
+**AAE-H2 — the slots are unconfirmed.** `tools/artsaward/SLOTS.json` seeds five
+candidates — MIMA, The Auxiliary, Sawdust, Navigator North, Platform A — and
+every one is UNCONFIRMED with no booked entry. The colleague running the
+programme names the organisation, practitioner, event and showing routes.
+**Holds nothing:** every deck is authored route-agnostic across pupils-visit,
+they-come-in and live-remote, and a slot changing is a one-file edit.
+
+**AAE-H3 — centre validation and the trained adviser per level.** Recorded as
+unknown. Decks state it as staff information and never assert it as done.
+**Holds nothing.**
+
+**AAE-H5 — confirm Explore stays BUILD-only**, and whether any pupil sits Explore
+AND Bronze in one year, which decides whether the two BUILD Art strands may share
+weeks. **Holds nothing** — default taken: separate strands.
+
+**AAE-H6 — name any pupil entered at Gold.** **Holds Gold authoring only.** Gold
+is a spec-verified shelf: repairs, no new authoring, and excluded from the Easter
+headline and from batch targeting.
+
+---
+
+## AAE — the decks §6, §7 and §8 name for repair are not in this repository
+
+Measured before starting the repairs, so the work is not invented.
+
+    "Arts Leadership" as a deck title        0 files
+    "Leadership Portfolio Audit"             0 files
+
+The 44 exemplar decks were **uploaded**, not committed, and the order is explicit
+that they are exemplars only — never a donor, never a spec source, never copied.
+So §6's "retitle deck 5", §7's "split deck 8" and §8's "relabel deck 7" have no
+target in this tree.
+
+What this repository **does** hold is **76 deck-shaped files that name the Arts
+Award**, and they are surveyed in `docs/ARTS_AWARD_BSG_CHECK.md` — inferred level
+by level, with every contradiction carrying a deck and a line. The repairs §6–§8
+describe will be done against **that** measured list rather than against deck
+numbers from a set this tree cannot see.
+
+If the 44 exemplar decks are meant to be repaired in place, they need to be in
+the repository first. **Holds §6–§8's deck-numbered repairs; holds nothing else.**

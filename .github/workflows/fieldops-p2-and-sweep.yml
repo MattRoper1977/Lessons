@@ -417,6 +417,21 @@ jobs:
       - name: Every authored deck claims exactly its own plan's cells
         run: python _sownb/vb/tools/g29_plan_binding.py --scope authored | tee "$RUNNER_TEMP/vb-g29.txt"
 
+      # The Arts Award gates. --scope live REPORTS: this estate holds ~76
+      # deck-shaped files that name the award and predate the register, and
+      # reddening them the day it lands would manufacture a backlog nobody
+      # asked for. New and repaired Arts Award decks are run with --scope new
+      # by their own PR, where the binding belongs.
+      - name: The Arts Award register still divides the decks that cite it
+        run: |
+          python _sownb/vb/tools/g30_arts_award.py --self-test \
+            | tee "$RUNNER_TEMP/vb-g30-selftest.txt"
+          FILES=$(grep -rl "Arts Award" --include=*.html . | grep -v node_modules || true)
+          if [ -n "$FILES" ]; then
+            python _sownb/vb/tools/g30_arts_award.py $FILES --scope live \
+              | tail -1 | tee "$RUNNER_TEMP/vb-g30.txt"
+          fi
+
       # g27 is armed on the repository itself, not only on its own controls.
       - name: No tool derives a teaching week from a path
         run: python _sownb/vb/tools/g27_no_filename_weeks.py | tee "$RUNNER_TEMP/vb-g27.txt"

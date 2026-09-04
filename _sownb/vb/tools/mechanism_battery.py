@@ -66,6 +66,7 @@ SELFTEST_TOOLS = [
     "g25_wedo_variety.py",
     "g27_no_filename_weeks.py",
     "g29_plan_binding.py",
+    "g30_arts_award.py",
     "cgate_containment.py",
     "classic_v2_contract_selftest.py",
     "tools/easter/dedupe_stage_text.py",

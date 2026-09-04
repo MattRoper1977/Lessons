@@ -1228,6 +1228,17 @@ invalidates every check that ran before it, and the cheapest habit is to re-run
 the estate-wide checks as the last thing before the commit, not the first thing
 after the fix.
 
+**It happened again an hour later, and this time the habit caught it.** The
+Arts Award contamination survey was run to look at its numbers, and its
+`--json` and `--out` were not passed, so the committed record kept describing
+the estate *before* batch 4: 76 files where the same tree gives 82. Nothing
+failed — a stale record is silent, which is exactly why it had to be looked
+for. Found by reconciling two tools against each other rather than reading
+either alone: g30 said 82 in scope, the survey's record said 76, and the six in
+the difference were precisely batch 4's six new Art decks. **Two records of the
+same estate disagreeing is a fact about the records, and it is cheaper to
+notice than either error alone.**
+
 ---
 
 ## The SHA I typed instead of read
