@@ -1152,3 +1152,46 @@ figure control was measuring the part I had thought hardest about, which is
 exactly the part least likely to be wrong. When a new artefact joins a corpus of
 forty, the cheap check is not "is my clever part right" but "does its shape
 match the forty" — compare key sets, not just the values you worried about.
+
+---
+
+## The same decision, made in four tools and repaired in two
+
+WRONG: batch 4's evidence added **nine stale claims to the estate for files
+that exist**. `manifest_sequence` copied a manifest row's bare filename into an
+evidence record three directories away, where it resolves against nothing;
+`refresh_pack_checksums` wrote `/home/user/Lessons/…` into the same kind of
+record. Six decks and three checksum files, all present on disk, read as
+STALE — SUBJECT ABSENT.
+
+A bare filename is *correct* inside a manifest: the manifest sits in the pack
+folder beside the deck. What changed was not the string but where it was being
+read from. That is the trap — the value was never wrong, the copy was.
+
+RIGHT: the record is written with repo-relative paths, the manifests untouched,
+and each tool carries a control red-proved by reverting its own fix. Measured
+against `origin/main` as the control rather than trusted: **1172 stale on main,
+1172 on this branch**, 16 files matching no form on both, with five more
+evidence files read.
+
+**And the first fix was itself a half-fix.** `manifest_sequence` carries `file`
+in three lists — `added`, `refused` and `changes` — and version one covered the
+two I thought of. The six stale rows did not move an inch. It now walks the
+whole record. Then the audit found the pattern twice more: `pack_furniture`
+writes a bare `sumsFile`, `run_batch` an absolute `spec`, neither of them
+currently producing a stale row **only because the sweep happens not to read
+those keys**. Both fixed too.
+
+The tell: this repository has now recorded "a predicate needed in two places
+and written in one is not a fix" — and I then fixed two of four. Counting the
+instances is not the same as fixing them. **The question is not "did I fix it",
+it is "how many places make this decision, and have I been to all of them?"**
+
+A second thing, worth its own line. The control that measures
+`pack_furniture`'s paths has to run against a real pack, because a temp-dir
+probe lives outside the repository root and would prove the opposite of what
+matters. But `update()` **writes**. The first version pointed it at the live
+pack; it was a no-op there by luck, and on a pack missing a row it would have
+edited the estate every time the self-test ran, CI included. **A control with a
+side effect is a worse defect than the one it is checking for.** It now works
+on a copy.
