@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-GB">
+<html lang="en-GB" class="mbm-classroom pathway-build">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -38,7 +38,80 @@ h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-siz
         .award-print h3{font-size:11pt;margin:0}
         .award-print .award-review-space{height:35mm;border:1px solid #777}
       }
-    </style></head>
+    </style><style id="mbm-classroom-chassis">/* Shared classroom presentation. Palette authority: the user's Art Studio reference. */
+html.mbm-classroom {
+  --lo-bg:#e8eef1;--lo-border:#4F869C;--ido-bg:#f3e4dc;--ido-border:#D06438;
+  --wedo-bg:#e2efec;--wedo-border:#16877A;--task-bg:#faf0d7;--task-border:#E1AB32;
+  --btn-bg:#4F869C;--btn-hover:#3a6a7d;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;
+  --sc-bg:#ffedd5;--sc-border:#f97316;--aspire-bg:#dcfce7;--aspire-border:#22c55e;
+}
+html.mbm-classroom.pathway-grow {
+  --lo-bg:#e6ebf0;--lo-border:#5B91A5;--ido-bg:#f2e6df;--ido-border:#D1673D;
+  --wedo-bg:#e2efed;--wedo-border:#2BA193;--task-bg:#f8efd8;--task-border:#DFAD3E;
+  --btn-bg:#5B91A5;--btn-hover:#436f80;--sc-border:#DFAD3E;--sc-bg:#faf3dd;
+}
+html.mbm-classroom.pathway-launch {
+  --lo-bg:#e4ebee;--lo-border:#356F83;--ido-bg:#efe3db;--ido-border:#9B5B3D;
+  --wedo-bg:#e1edeb;--wedo-border:#238C80;--task-bg:#f6eed9;--task-border:#C18B2D;
+  --btn-bg:#356F83;--btn-hover:#28576a;--sc-border:#C18B2D;--sc-bg:#f8f1de;
+}
+@media screen {
+  html.mbm-classroom, .mbm-classroom body {background:#fff;color:#1f2937;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+  .mbm-classroom main.deck {height:100vh;height:100dvh;padding:clamp(14px,3vh,36px) 4vw 110px;overflow:auto;scroll-padding-bottom:110px}
+  .mbm-classroom main.deck>.slide {width:100%;max-width:1600px;min-height:calc(100vh - 160px);margin:auto;padding:clamp(20px,3vw,40px);background:#fff;color:#1f2937;border:0;border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px #00000018}
+  .mbm-classroom .slide[data-classroom-phase="ido"] {border-top-color:var(--ido-border)}
+  .mbm-classroom .slide[data-classroom-phase="wedo"] {border-top-color:var(--wedo-border)}
+  .mbm-classroom .slide[data-classroom-phase="independent"] {border-top-color:var(--task-border)}
+  .mbm-classroom .slide[data-classroom-phase="exit"] {border-top-color:var(--sc-border)}
+  .mbm-classroom .slide h1 {display:block;color:#101820;font-size:clamp(1.8rem,3.2vw,2.8rem);line-height:1.14;margin:20px 0 24px;padding-bottom:12px;border-bottom:3px solid var(--lo-border)}
+  .mbm-classroom .slide h2 {color:#101820;font-size:clamp(1.5rem,2.5vw,2rem);line-height:1.22;margin:16px 0 22px;padding-bottom:12px;border-bottom:2px solid #e2e8f0}
+  .mbm-classroom .slide h3 {color:#182c3c;font-size:1.2rem;line-height:1.3;margin:18px 0 10px}
+  .mbm-classroom .slide p,.mbm-classroom .slide li {font-size:1.15rem;line-height:1.6;color:#334155;max-width:85ch}
+  .mbm-classroom .slide p {margin:.5em 0}
+  .mbm-classroom .slide>svg {max-width:900px;margin:18px auto;display:block;overflow:visible}
+  .mbm-classroom .slide>.tag {display:inline-block;background:var(--lo-bg);color:#183b4b;border-radius:8px;padding:6px 14px;font-size:.9rem;font-weight:800;letter-spacing:.04em}
+  .mbm-classroom .slide[data-classroom-phase="ido"]>.tag {background:var(--ido-bg);color:#68321f}
+  .mbm-classroom .slide[data-classroom-phase="wedo"]>.tag {background:var(--wedo-bg);color:#115c52}
+  .mbm-classroom .slide[data-classroom-phase="independent"]>.tag {background:var(--task-bg);color:#684811}
+  .mbm-classroom .slide>.time {float:right;border-radius:999px;background:#f5f7f8;color:#334155;border:1px solid #cbd5e1;font-size:.9rem}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.time {display:none}
+  .mbm-classroom .mbm-lesson-objective {background:var(--lo-bg);border-left:6px solid var(--lo-border);border-radius:12px;padding:14px 18px;margin:16px 0}
+  .mbm-classroom .mbm-lesson-success {background:var(--sc-bg);border-left:6px solid var(--sc-border);border-radius:12px;padding:14px 18px;margin:14px 0}
+  .mbm-classroom .box,.mbm-classroom .route,.mbm-classroom .route-card {background:#f8fafc;color:#1f2937;border:1px solid #cbd5e1;border-radius:12px;padding:16px}
+  .mbm-classroom .box.objective {background:var(--lo-bg);border-left:6px solid var(--lo-border)}
+  .mbm-classroom .lundy,.mbm-classroom .lundy-strip {background:#f8fafc;color:#334155;border:1px solid #dce3e8;border-radius:12px;padding:10px 14px;margin:22px 0 0}
+  .mbm-classroom .lundy-grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+  .mbm-classroom .lundy-grid>span {display:block;color:#213544;background:var(--lo-bg);border-radius:8px;padding:7px;text-align:center;font-size:.8rem;font-weight:800}
+  .mbm-classroom .lundy-grid>span:nth-child(2) {background:var(--ido-bg)}
+  .mbm-classroom .lundy-grid>span:nth-child(3) {background:var(--wedo-bg)}
+  .mbm-classroom .lundy-grid>span:nth-child(4) {background:var(--task-bg)}
+  .mbm-classroom .lundy p,.mbm-classroom .lundy-strip p {font-size:.85rem;margin:8px 0 0;max-width:none}
+  .mbm-classroom button {min-width:44px;min-height:44px;border-radius:10px;font-weight:700;background:var(--btn-hover);color:#fff;border:1px solid transparent;padding:10px 16px}
+  .mbm-classroom button:hover {background:#203f4c;color:#fff}
+  .mbm-classroom button:focus-visible,.mbm-classroom a:focus-visible,.mbm-classroom select:focus-visible,.mbm-classroom summary:focus-visible {outline:3px solid #ab5800;outline-offset:3px}
+  .mbm-classroom .controls {background:#fffffff5;backdrop-filter:blur(8px);border:1px solid #dbe3e8;box-shadow:0 4px 20px #182c3c18;border-radius:14px;padding:8px;gap:7px;flex-wrap:wrap;max-width:calc(100vw - 32px)}
+  .mbm-classroom .prog {background:#e7ecef}
+  .mbm-classroom .prog>span {background:var(--lo-border)}
+  .mbm-classroom .overlay-card {background:#fff;color:#1f2937;border-color:var(--lo-border)}
+  .mbm-classroom .slide[data-classroom-phase="title"] {text-align:center}
+  .mbm-classroom .slide[data-classroom-phase="title"]>p {max-width:760px;margin:14px auto;text-align:left}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.tag {background:#d98128;color:#172334}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.lundy {max-width:760px;margin:24px auto 0;text-align:left}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.box {text-align:left}
+  .mbm-classroom body.calm .slide {box-shadow:none}
+  @media(max-width:700px) {
+    .mbm-classroom main.deck {padding:14px 14px 180px}
+    .mbm-classroom main.deck>.slide {min-height:calc(100dvh - 205px);padding:20px 16px}
+    .mbm-classroom .slide p,.mbm-classroom .slide li {font-size:1.05rem}
+    .mbm-classroom .controls {left:14px;right:14px;bottom:14px;justify-content:center;max-width:none}
+    .mbm-classroom .controls button {font-size:.85rem;padding:8px 10px}
+    .mbm-classroom .lundy-grid {grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+  @media(prefers-reduced-motion:reduce) {
+    .mbm-classroom *, .mbm-classroom *::before, .mbm-classroom *::after {animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  }
+}
+</style></head>
 <body>
 <!--mbm_guide_v1 retained as a contract marker; guidance state is memory-only-->
 <!--n6-nav1:v1-->
@@ -47,120 +120,120 @@ h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-siz
 <!--/n6-nav1-->
 <a class="skip" href="#lessonDeck">Skip to lesson</a>
 <main id="lessonDeck" class="deck">
-<section class="slide active" data-type="title" data-title="Lesson overview" data-min="0">
+<section class="slide active" data-type="title" data-title="Lesson overview" data-min="0" data-classroom-phase="title">
 <div class="time">0 min</div>
-<span class="tag"></span>
-<div class="lundy" aria-label="Lundy participation strip">
+<span class="tag">BUILD Art</span>
+<h1>Build With Folded Paper</h1><p>BUILD · Art · Week 2. Trinity Arts Award Explore. Build With Folded Paper.</p><p class="mbm-lesson-objective">Objective: Take part in paper sculpture, learn safe folds and ways to make paper stand, and record what you learnt.</p><p class="mbm-lesson-success">Success evidence: your own folded paper form, a record of taking part in activity two, and a learning point about a fold or base.</p><p>Theme: Making and Sharing. Make choices about the art. You may keep your private life private.</p><p>40 minutes. Use the materials prepared on your table.</p><div class="box rehearsal" data-mbm-guide="staff">This deck contributes to Explore Part A, Take part: at least two arts activities and identification of what the pupil learnt. In this strand, drawing is activity one and paper sculpture is activity two. Two lessons in drawing are still one arts activity. Do not claim Part A complete until both activities and learning are evidenced. Award requirements come only from tools/artsaward/SPEC.json, Explore. Overall Pass allows ONE Attempted. Any Not Attempted = Below Pass. The whole Explore portfolio has a 10-file cap. Its three assessment areas are art form knowledge and understanding, creativity, and communication. Only an adviser trained at Explore may assess; delivery must be through a validated centre. Confirm both locally; neither is asserted as already confirmed. Core, Extend and Challenge are support options within Explore, not different awards. They retain participation and the pupil’s own learning. Scribe exact pupil words when needed, read them back and accept correction; do not compose or upgrade their account. Keep evidence in the cumulative Explore-A file with its actual file name plus page, slide or timecode. The proposed four part-files are a filing option, not a mandatory award format. Suggested sample counts are teaching scaffolds, not extra award quotas. This is secondary SEMH teaching in the BUILD reading band. Discuss artistic choices; do not require private-life disclosure. These sessions support the wider programme; they do not claim to supply all 25 guided and 10 independent hours.</div><div class="box rehearsal" data-mbm-guide="staff">Prepare plain rectangles and wide paper strips cut by staff before the lesson, flat base sheets, pencils and an optional broad grip for marking. No scissors, craft knives, staplers or hot glue are needed. Provide two teacher-made demonstration pieces: an unfolded rectangle and a simple tent made by folding a matching rectangle in half and opening it. Keep a spare strip for a live back-and-forth folding model. Show the full sorting cards from We Do on the board so no separate card pack is needed. Use a cleared flat table; do not test paper forms with weights. Offer large paper and a lightly scored fold line prepared by staff if needed. Support holding the sheet steady when asked while preserving the pupil’s active folding/positioning choices. Record any missing drawing activity for follow-up; do not claim it occurred.</div><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<p>BUILD · Art · Week 2. Trinity Arts Award Explore. Build With Folded Paper.</p><p>Objective: Take part in paper sculpture, learn safe folds and ways to make paper stand, and record what you learnt.</p><p>Success evidence: your own folded paper form, a record of taking part in activity two, and a learning point about a fold or base.</p><p>Theme: Making and Sharing. Make choices about the art. You may keep your private life private.</p><p>40 minutes. Use the materials prepared on your table.</p><div class="box rehearsal" data-mbm-guide="staff">This deck contributes to Explore Part A, Take part: at least two arts activities and identification of what the pupil learnt. In this strand, drawing is activity one and paper sculpture is activity two. Two lessons in drawing are still one arts activity. Do not claim Part A complete until both activities and learning are evidenced. Award requirements come only from tools/artsaward/SPEC.json, Explore. Overall Pass allows ONE Attempted. Any Not Attempted = Below Pass. The whole Explore portfolio has a 10-file cap. Its three assessment areas are art form knowledge and understanding, creativity, and communication. Only an adviser trained at Explore may assess; delivery must be through a validated centre. Confirm both locally; neither is asserted as already confirmed. Core, Extend and Challenge are support options within Explore, not different awards. They retain participation and the pupil’s own learning. Scribe exact pupil words when needed, read them back and accept correction; do not compose or upgrade their account. Keep evidence in the cumulative Explore-A file with its actual file name plus page, slide or timecode. The proposed four part-files are a filing option, not a mandatory award format. Suggested sample counts are teaching scaffolds, not extra award quotas. This is secondary SEMH teaching in the BUILD reading band. Discuss artistic choices; do not require private-life disclosure. These sessions support the wider programme; they do not claim to supply all 25 guided and 10 independent hours.</div><div class="box rehearsal" data-mbm-guide="staff">Prepare plain rectangles and wide paper strips cut by staff before the lesson, flat base sheets, pencils and an optional broad grip for marking. No scissors, craft knives, staplers or hot glue are needed. Provide two teacher-made demonstration pieces: an unfolded rectangle and a simple tent made by folding a matching rectangle in half and opening it. Keep a spare strip for a live back-and-forth folding model. Show the full sorting cards from We Do on the board so no separate card pack is needed. Use a cleared flat table; do not test paper forms with weights. Offer large paper and a lightly scored fold line prepared by staff if needed. Support holding the sheet steady when asked while preserving the pupil’s active folding/positioning choices. Record any missing drawing activity for follow-up; do not claim it occurred.</div></section>
-<section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="3" data-ta1="Give each learner a clear reachable work area. Provide larger paper or a prepared fold guide as needed. Introduce the different activity without assuming all pupils completed drawing.">
+</section>
+<section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="3" data-ta1="Give each learner a clear reachable work area. Provide larger paper or a prepared fold guide as needed. Introduce the different activity without assuming all pupils completed drawing." data-classroom-phase="arrival">
 <div class="time">3 min</div>
-<span class="tag"></span>
+<span class="tag">Retrieval</span>
 <h2>Arrival · retrieve</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<p>You have been exploring drawing with lines and tone. Today you begin a different arts activity: paper sculpture. You will fold a flat sheet into a form that rises from the table.</p><p>A sculpture has depth as well as height and width. You can look at it from more than one side. A simple paper form can be a sculpture even when it fits in your hand.</p><p>Clear a space for the paper to stand. Keep drinks and heavy objects away from it. Check that the table is flat and the sheet is dry. There is no need for a sharp tool today.</p><p>Choose a rectangle or a wide strip from the materials. Feel how it bends gently. Keep it flat for now while we look at what a fold can do.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<p>You have been exploring drawing with lines and tone. Today you begin a different arts activity: paper sculpture. You will fold a flat sheet into a form that rises from the table.</p><p>A sculpture has depth as well as height and width. You can look at it from more than one side. A simple paper form can be a sculpture even when it fits in your hand.</p><p>Clear a space for the paper to stand. Keep drinks and heavy objects away from it. Check that the table is flat and the sheet is dry. There is no need for a sharp tool today.</p><p>Choose a rectangle or a wide strip from the materials. Feel how it bends gently. Keep it flat for now while we look at what a fold can do.</p></section>
-<section class="slide" data-type="starter" data-title="Starter · create the need" data-min="3" data-ta1="Use actual matching paper pieces and show side and end views. Describe the space clearly for pupils who need closer viewing; do not rely only on a projected picture.">
+</section>
+<section class="slide" data-type="starter" data-title="Starter · create the need" data-min="3" data-ta1="Use actual matching paper pieces and show side and end views. Describe the space clearly for pupils who need closer viewing; do not rely only on a projected picture." data-classroom-phase="starter">
 <div class="time">3 min</div>
-<span class="tag"></span>
+<span class="tag">Starter</span>
 <h2>Starter · create the need</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<p>Look at the flat rectangle and the folded tent beside it. Both began as the same kind of paper. One lies across the table. The other has raised panels with a fold along the top.</p><p>Move your eyes around the tent. From the end, you can see the open space beneath it. From the side, you can see a broad paper panel. The form changes as your view changes.</p><p>What helped the paper rise? Point to the fold, then the lower edges touching the table. The fold joins the panels. The lower edges support them.</p><p>A drawing can suggest a raised form on a flat page. Here we make a form that really rises. You can explore the shape without drawing a picture on it. Colour and decoration can wait while you learn how it stands.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<p>Look at the flat rectangle and the folded tent beside it. Both began as the same kind of paper. One lies across the table. The other has raised panels with a fold along the top.</p><p>Move your eyes around the tent. From the end, you can see the open space beneath it. From the side, you can see a broad paper panel. The form changes as your view changes.</p><p>What helped the paper rise? Point to the fold, then the lower edges touching the table. The fold joins the panels. The lower edges support them.</p><p>A drawing can suggest a raised form on a flat page. Here we make a form that really rises. You can explore the shape without drawing a picture on it. Colour and decoration can wait while you learn how it stands.</p></section>
-<section class="slide" data-type="ido" data-title="I Do · model" data-min="6" data-ta1="Model with a large sheet, narrating the edge match and crease. Demonstrate a hands-off standing test. Avoid promising every paper type behaves identically.">
+</section>
+<section class="slide" data-type="ido" data-title="I Do · model" data-min="6" data-ta1="Model with a large sheet, narrating the edge match and crease. Demonstrate a hands-off standing test. Avoid promising every paper type behaves identically." data-classroom-phase="ido">
 <div class="time">6 min</div>
-<span class="tag"></span>
+<span class="tag">I Do</span>
 <h2>I Do · model</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<p>I put a rectangle flat on the table. I bring one short edge towards the other short edge. I line them up as well as I can, without pulling the paper hard.</p><p>I hold the edges still with one hand. With the other, I press along the bend to make a crease. I use the flat pad of a finger and move away from my body. A crease is a fold line that the paper tends to keep.</p><p>Now I open the sheet part way. I turn it so the crease is at the top and the two open edges rest on the table. I have made a tent form.</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Four linked boxes: bring edges together, crease the fold, open a space, and set the lower edges down."><title>Turn a sheet into a standing fold</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">MATCH</text><text x="73" y="88" text-anchor="middle" font-size="11">bring edges close</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">CREASE</text><text x="231" y="88" text-anchor="middle" font-size="11">press the fold</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">OPEN</text><text x="389" y="88" text-anchor="middle" font-size="11">leave a space</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">STAND</text><text x="547" y="88" text-anchor="middle" font-size="11">set down edges</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">The fold and the base work together to hold the form.</text></svg><p>I move the lower edges a little farther apart. The form gets lower and its base gets wider. I let go to see what happens. I do not say it stands until it can stand without my hand.</p><p>If it falls, I set it up again and check the base. Falling is a clue to explore, not a reason to hide the work.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<p>I put a rectangle flat on the table. I bring one short edge towards the other short edge. I line them up as well as I can, without pulling the paper hard.</p><p>I hold the edges still with one hand. With the other, I press along the bend to make a crease. I use the flat pad of a finger and move away from my body. A crease is a fold line that the paper tends to keep.</p><p>Now I open the sheet part way. I turn it so the crease is at the top and the two open edges rest on the table. I have made a tent form.</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Four linked boxes: bring edges together, crease the fold, open a space, and set the lower edges down."><title>Turn a sheet into a standing fold</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">MATCH</text><text x="73" y="88" text-anchor="middle" font-size="11">bring edges close</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">CREASE</text><text x="231" y="88" text-anchor="middle" font-size="11">press the fold</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">OPEN</text><text x="389" y="88" text-anchor="middle" font-size="11">leave a space</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">STAND</text><text x="547" y="88" text-anchor="middle" font-size="11">set down edges</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">The fold and the base work together to hold the form.</text></svg><p>I move the lower edges a little farther apart. The form gets lower and its base gets wider. I let go to see what happens. I do not say it stands until it can stand without my hand.</p><p>If it falls, I set it up again and check the base. Falling is a clue to explore, not a reason to hide the work.</p></section>
-<section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="4" data-ta1="Keep cards visible and collect responses before the key. Change the actual tent’s spread after pupils predict; describe the observed result rather than requiring a fixed answer.">
+</section>
+<section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="4" data-ta1="Keep cards visible and collect responses before the key. Change the actual tent’s spread after pupils predict; describe the observed result rather than requiring a fixed answer." data-classroom-phase="wedo">
 <div class="time">4 min</div>
-<span class="tag"></span>
+<span class="tag">We Do</span>
 <h2>We Do · everyone commits</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<p>Sort the four visible cards under two headings: changes the form, and adds a drawn mark. Use each letter once.</p><ul><li>A: Fold the paper back along a crease.</li><li>B: Draw a dark stripe down the side.</li><li>C: Open the two panels farther apart.</li><li>D: Shade a corner with a pencil.</li></ul><p>A and C change how the paper sits in space. B and D add drawn marks. A sculpture can include both, but a drawn stripe alone does not make the sheet stand.</p><p>Point to the part of the tent that would change with card C. Say or show what you think would happen to its height. Then watch the teacher try it with the actual form.</p><p>We can make a prediction and test it. The test may surprise us. Use what the paper really does when you explain your learning.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<p>Sort the four visible cards under two headings: changes the form, and adds a drawn mark. Use each letter once.</p><ul><li>A: Fold the paper back along a crease.</li><li>B: Draw a dark stripe down the side.</li><li>C: Open the two panels farther apart.</li><li>D: Shade a corner with a pencil.</li></ul><p>A and C change how the paper sits in space. B and D add drawn marks. A sculpture can include both, but a drawn stripe alone does not make the sheet stand.</p><p>Point to the part of the tent that would change with card C. Say or show what you think would happen to its height. Then watch the teacher try it with the actual form.</p><p>We can make a prediction and test it. The test may surprise us. Use what the paper really does when you explain your learning.</p></section>
-<section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="5" data-ta1="Make the back-and-forth pattern live. Use the paper type provided to pupils and acknowledge its actual limits. Keep both forms visible for selection.">
+</section>
+<section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="5" data-ta1="Make the back-and-forth pattern live. Use the paper type provided to pupils and acknowledge its actual limits. Keep both forms visible for selection." data-classroom-phase="ido">
 <div class="time">5 min</div>
-<span class="tag"></span>
+<span class="tag">I Do</span>
 <h2>I Do 2 · connect</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<p>A fold is also like a hinge between two panels. I can open or close it. The panels stay joined along the crease while their angle changes.</p><p>Watch a second method with a strip. I fold a short part over and press. Then I turn the strip and fold the next part back the other way. I keep changing the direction to make a zigzag.</p><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Two columns compare the panels and bases of a tent fold and a back-and-forth zigzag form."><title>Two folded forms to explore</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">TENT FOLD</text><text x="151" y="74" text-anchor="middle" font-size="11">two panels meet at the top</text><text x="151" y="94" text-anchor="middle" font-size="11">open edges form a base</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">ZIGZAG FOLDS</text><text x="469" y="74" text-anchor="middle" font-size="11">folds turn back and forth</text><text x="469" y="94" text-anchor="middle" font-size="11">several panels can rise</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Both forms need a base that rests on the table.</text></svg><p>I stand the zigzag on its long lower edge. If I spread it too far, it may lie flat. If I squeeze it tight, it may lean. I try a middle position and let go.</p><p>There is no single shape everyone must make. A long low form and a short tall form can both be choices. I look at the base, the folds and the spaces to decide what I want to keep.</p><p>My note could say: opening the folds changed the spaces I could see. I point to those spaces as I speak.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<p>A fold is also like a hinge between two panels. I can open or close it. The panels stay joined along the crease while their angle changes.</p><p>Watch a second method with a strip. I fold a short part over and press. Then I turn the strip and fold the next part back the other way. I keep changing the direction to make a zigzag.</p><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Two columns compare the panels and bases of a tent fold and a back-and-forth zigzag form."><title>Two folded forms to explore</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">TENT FOLD</text><text x="151" y="74" text-anchor="middle" font-size="11">two panels meet at the top</text><text x="151" y="94" text-anchor="middle" font-size="11">open edges form a base</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">ZIGZAG FOLDS</text><text x="469" y="74" text-anchor="middle" font-size="11">folds turn back and forth</text><text x="469" y="94" text-anchor="middle" font-size="11">several panels can rise</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Both forms need a base that rests on the table.</text></svg><p>I stand the zigzag on its long lower edge. If I spread it too far, it may lie flat. If I squeeze it tight, it may lean. I try a middle position and let go.</p><p>There is no single shape everyone must make. A long low form and a short tall form can both be choices. I look at the base, the folds and the spaces to decide what I want to keep.</p><p>My note could say: opening the folds changed the spaces I could see. I point to those spaces as I speak.</p></section>
-<section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="5" data-ta1="Allow each learner to make the form before any checking conversation. Support holding or positioning only as agreed; do not replace the learner’s action with an adult-made result.">
+</section>
+<section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="5" data-ta1="Allow each learner to make the form before any checking conversation. Support holding or positioning only as agreed; do not replace the learner’s action with an adult-made result." data-classroom-phase="wedo">
 <div class="time">5 min</div>
-<span class="tag"></span>
+<span class="tag">We Do</span>
 <h2>We Do 2 · lab</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<p>Now make a practice fold with your own paper. You may begin with the tent or try a zigzag. Bring edges together, press the crease gently and open the form.</p><p>Set it on the table and let go. Look at where it touches the surface. If it leans, try spreading the base or opening one fold a little. Change one position at a time so you can see its effect.</p><p>Tell a partner or an adult what you tried. They can point to a place they want to see more clearly. Turn the form so both of you can look from that side.</p><p>Keep a short note about what the fold or base did. A scribe can write your own words. The form you have just made gives you something real to point at.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<p>Now make a practice fold with your own paper. You may begin with the tent or try a zigzag. Bring edges together, press the crease gently and open the form.</p><p>Set it on the table and let go. Look at where it touches the surface. If it leans, try spreading the base or opening one fold a little. Change one position at a time so you can see its effect.</p><p>Tell a partner or an adult what you tried. They can point to a place they want to see more clearly. Turn the form so both of you can look from that side.</p><p>Keep a short note about what the fold or base did. A scribe can write your own words. The form you have just made gives you something real to point at.</p></section>
-<section class="slide" data-type="independent" data-title="Independent · evidence" data-min="11" data-ta1="Give time to fold, explore and record. A form that falls still records genuine participation; preserve the pupil’s honest explanation. Arrange a labelled storage place or work-only photograph.">
+</section>
+<section class="slide" data-type="independent" data-title="Independent · evidence" data-min="11" data-ta1="Give time to fold, explore and record. A form that falls still records genuine participation; preserve the pupil’s honest explanation. Arrange a labelled storage place or work-only photograph." data-classroom-phase="independent">
 <div class="time">11 min</div>
-<span class="tag"></span>
+<span class="tag">Independent work</span>
 <h2>Independent · evidence</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<p>Choose a form to explore on your own. Use fresh paper if you want to keep the practice form as well. Make the folds and arrange the panels in a way you find interesting.</p><p>Look at it from the front, side and end. You can move around the table or turn a base sheet under the form. Notice a shape or space that appears from one view.</p><p>Test whether it stands when you let go. You may choose a wider base or a lower form. You can also keep a form that needs support and explain what happened. Do not pretend it stood by itself if a hand was holding it.</p><ul><li>Core: use a large rectangle and one guided fold. Make and position your own form, then point and say what you learnt for a verbatim scribe.</li><li>Extend: choose a tent or zigzag, explore how it stands and record your own learning about a fold, base or space.</li><li>Challenge: retain participation and learning, then compare two positions of the same folded form and explain their different effects.</li></ul><p>Keep the form or a clear record of it with your learning note. A photo may show the artwork without showing anyone’s face. Label the record paper sculpture, activity two.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<p>Choose a form to explore on your own. Use fresh paper if you want to keep the practice form as well. Make the folds and arrange the panels in a way you find interesting.</p><p>Look at it from the front, side and end. You can move around the table or turn a base sheet under the form. Notice a shape or space that appears from one view.</p><p>Test whether it stands when you let go. You may choose a wider base or a lower form. You can also keep a form that needs support and explain what happened. Do not pretend it stood by itself if a hand was holding it.</p><ul><li>Core: use a large rectangle and one guided fold. Make and position your own form, then point and say what you learnt for a verbatim scribe.</li><li>Extend: choose a tent or zigzag, explore how it stands and record your own learning about a fold, base or space.</li><li>Challenge: retain participation and learning, then compare two positions of the same folded form and explain their different effects.</li></ul><p>Keep the form or a clear record of it with your learning note. A photo may show the artwork without showing anyone’s face. Label the record paper sculpture, activity two.</p></section>
-<section class="slide" data-type="exit" data-title="Exit · keep the real record" data-min="3" data-ta1="Check the activity labels, safe storage and precise locator. Leave missing participation or learning open for follow-up; never infer both arts activities from the presence of two paper objects.">
+</section>
+<section class="slide" data-type="exit" data-title="Exit · keep the real record" data-min="3" data-ta1="Check the activity labels, safe storage and precise locator. Leave missing participation or learning open for follow-up; never infer both arts activities from the presence of two paper objects." data-classroom-phase="exit">
 <div class="time">3 min</div>
-<span class="tag"></span>
+<span class="tag">Exit ticket</span>
 <h2>Exit · keep the real record</h2>
 <div class="lundy-status">
 <p>
@@ -172,27 +245,19 @@ h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-siz
 <p>
 <b>INFLUENCE:</b> one real next action is recorded: retain, add method detail, or leave open.</p>
 </div>
-<div class="lundy" aria-label="Lundy participation strip">
+<p>Point to one fold or part of the base. Say what you tried and what you found out. Check that the learning note matches the form and uses your words.</p><p>Add the record to the Explore-A file under paper sculpture, activity two. Keep it separate from the drawing record so both activities can be found. Write the actual file name plus page, slide or timecode.</p><p>Next lesson you will try a join and look back at what both activities taught you. Keep the paper form safely if it can be stored. If it cannot, keep a clear record and start a fresh form next time.</p><p>If an activity or its learning is missing, tell the adult which one. A missing record is a job to complete, not a space to fill with a guess.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<p>Point to one fold or part of the base. Say what you tried and what you found out. Check that the learning note matches the form and uses your words.</p><p>Add the record to the Explore-A file under paper sculpture, activity two. Keep it separate from the drawing record so both activities can be found. Write the actual file name plus page, slide or timecode.</p><p>Next lesson you will try a join and look back at what both activities taught you. Keep the paper form safely if it can be stored. If it cannot, keep a clear record and start a fresh form next time.</p><p>If an activity or its learning is missing, tell the adult which one. A missing record is a job to complete, not a space to fill with a guess.</p></section>
+</section>
 </main>
 <nav class="controls" aria-label="Lesson controls">
-<button type="button" data-nav="previous">◀ Previous</button>
-<button type="button" data-tool="1">Teacher tools</button>
-<button type="button" data-tool="2">Evidence &amp; print</button>
-<button type="button" data-tool="3">Calm mode</button>
-<button type="button" data-tool="4">Static diagrams</button>
-<button type="button" data-tool="5">Previous</button>
-<button type="button" data-tool="6">Next</button>
-<button type="button" data-nav="next">Next ▶</button>
-</nav>
+<button type="button" data-nav="previous">◀ Previous</button><button type="button" data-tool="1">Teacher tools</button><button type="button" data-tool="2">Evidence &amp; print</button><button type="button" data-tool="3">Calm mode</button><button type="button" data-tool="4">Static diagrams</button><button type="button" data-nav="next">Next ▶</button></nav>
 <div class="prog" aria-hidden="true">
 <span>
 </span>

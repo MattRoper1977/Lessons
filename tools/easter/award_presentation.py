@@ -73,10 +73,23 @@ def replace_runtime(tree, content, runtime):
     if not titles:
         tree.xpath('//head')[0].append(title)
     title.text = content['title']
+    # Donors use different numbered tool meanings. The award runtime must ship
+    # controls matching its own actions, not the donor's labels or spare keys.
+    for controls in tree.xpath('//nav[contains(concat(" ",normalize-space(@class)," ")," controls ")]'):
+        for child in list(controls): controls.remove(child)
+        for attrs, label in [({'data-nav':'previous'}, '◀ Previous'),
+                             ({'data-tool':'1'}, 'Teacher tools'),
+                             ({'data-tool':'2'}, 'Evidence & print'),
+                             ({'data-tool':'3'}, 'Calm mode'),
+                             ({'data-tool':'4'}, 'Static diagrams'),
+                             ({'data-nav':'next'}, 'Next ▶')]:
+            button = lh.Element('button', type='button', **attrs)
+            button.text = label
+            controls.append(button)
     for node in tree.xpath('//script|//style|//button'):
         legacy_guide = node.get('id') in ('n6m-guide-js', 'n6m-guide-css')
         legacy_runtime = node.tag == 'script' and 'querySelectorAll("main.deck>.slide")' in (node.text or '')
-        if legacy_guide or legacy_runtime or node.get('data-n6m-guide-control') or 'n6m-guide-btn' in (node.get('class') or '').split():
+        if legacy_guide or legacy_runtime or 'data-award-chassis' in node.attrib or node.get('data-n6m-guide-control') or 'n6m-guide-btn' in (node.get('class') or '').split():
             node.getparent().remove(node)
     for node in tree.xpath('//comment()'):
         if 'n6m-guide' in (node.text or ''):

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-GB">
+<html lang="en-GB" class="mbm-classroom pathway-build">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -38,7 +38,80 @@ h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-siz
         .award-print h3{font-size:11pt;margin:0}
         .award-print .award-review-space{height:35mm;border:1px solid #777}
       }
-    </style></head>
+    </style><style id="mbm-classroom-chassis">/* Shared classroom presentation. Palette authority: the user's Art Studio reference. */
+html.mbm-classroom {
+  --lo-bg:#e8eef1;--lo-border:#4F869C;--ido-bg:#f3e4dc;--ido-border:#D06438;
+  --wedo-bg:#e2efec;--wedo-border:#16877A;--task-bg:#faf0d7;--task-border:#E1AB32;
+  --btn-bg:#4F869C;--btn-hover:#3a6a7d;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;
+  --sc-bg:#ffedd5;--sc-border:#f97316;--aspire-bg:#dcfce7;--aspire-border:#22c55e;
+}
+html.mbm-classroom.pathway-grow {
+  --lo-bg:#e6ebf0;--lo-border:#5B91A5;--ido-bg:#f2e6df;--ido-border:#D1673D;
+  --wedo-bg:#e2efed;--wedo-border:#2BA193;--task-bg:#f8efd8;--task-border:#DFAD3E;
+  --btn-bg:#5B91A5;--btn-hover:#436f80;--sc-border:#DFAD3E;--sc-bg:#faf3dd;
+}
+html.mbm-classroom.pathway-launch {
+  --lo-bg:#e4ebee;--lo-border:#356F83;--ido-bg:#efe3db;--ido-border:#9B5B3D;
+  --wedo-bg:#e1edeb;--wedo-border:#238C80;--task-bg:#f6eed9;--task-border:#C18B2D;
+  --btn-bg:#356F83;--btn-hover:#28576a;--sc-border:#C18B2D;--sc-bg:#f8f1de;
+}
+@media screen {
+  html.mbm-classroom, .mbm-classroom body {background:#fff;color:#1f2937;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+  .mbm-classroom main.deck {height:100vh;height:100dvh;padding:clamp(14px,3vh,36px) 4vw 110px;overflow:auto;scroll-padding-bottom:110px}
+  .mbm-classroom main.deck>.slide {width:100%;max-width:1600px;min-height:calc(100vh - 160px);margin:auto;padding:clamp(20px,3vw,40px);background:#fff;color:#1f2937;border:0;border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px #00000018}
+  .mbm-classroom .slide[data-classroom-phase="ido"] {border-top-color:var(--ido-border)}
+  .mbm-classroom .slide[data-classroom-phase="wedo"] {border-top-color:var(--wedo-border)}
+  .mbm-classroom .slide[data-classroom-phase="independent"] {border-top-color:var(--task-border)}
+  .mbm-classroom .slide[data-classroom-phase="exit"] {border-top-color:var(--sc-border)}
+  .mbm-classroom .slide h1 {display:block;color:#101820;font-size:clamp(1.8rem,3.2vw,2.8rem);line-height:1.14;margin:20px 0 24px;padding-bottom:12px;border-bottom:3px solid var(--lo-border)}
+  .mbm-classroom .slide h2 {color:#101820;font-size:clamp(1.5rem,2.5vw,2rem);line-height:1.22;margin:16px 0 22px;padding-bottom:12px;border-bottom:2px solid #e2e8f0}
+  .mbm-classroom .slide h3 {color:#182c3c;font-size:1.2rem;line-height:1.3;margin:18px 0 10px}
+  .mbm-classroom .slide p,.mbm-classroom .slide li {font-size:1.15rem;line-height:1.6;color:#334155;max-width:85ch}
+  .mbm-classroom .slide p {margin:.5em 0}
+  .mbm-classroom .slide>svg {max-width:900px;margin:18px auto;display:block;overflow:visible}
+  .mbm-classroom .slide>.tag {display:inline-block;background:var(--lo-bg);color:#183b4b;border-radius:8px;padding:6px 14px;font-size:.9rem;font-weight:800;letter-spacing:.04em}
+  .mbm-classroom .slide[data-classroom-phase="ido"]>.tag {background:var(--ido-bg);color:#68321f}
+  .mbm-classroom .slide[data-classroom-phase="wedo"]>.tag {background:var(--wedo-bg);color:#115c52}
+  .mbm-classroom .slide[data-classroom-phase="independent"]>.tag {background:var(--task-bg);color:#684811}
+  .mbm-classroom .slide>.time {float:right;border-radius:999px;background:#f5f7f8;color:#334155;border:1px solid #cbd5e1;font-size:.9rem}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.time {display:none}
+  .mbm-classroom .mbm-lesson-objective {background:var(--lo-bg);border-left:6px solid var(--lo-border);border-radius:12px;padding:14px 18px;margin:16px 0}
+  .mbm-classroom .mbm-lesson-success {background:var(--sc-bg);border-left:6px solid var(--sc-border);border-radius:12px;padding:14px 18px;margin:14px 0}
+  .mbm-classroom .box,.mbm-classroom .route,.mbm-classroom .route-card {background:#f8fafc;color:#1f2937;border:1px solid #cbd5e1;border-radius:12px;padding:16px}
+  .mbm-classroom .box.objective {background:var(--lo-bg);border-left:6px solid var(--lo-border)}
+  .mbm-classroom .lundy,.mbm-classroom .lundy-strip {background:#f8fafc;color:#334155;border:1px solid #dce3e8;border-radius:12px;padding:10px 14px;margin:22px 0 0}
+  .mbm-classroom .lundy-grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+  .mbm-classroom .lundy-grid>span {display:block;color:#213544;background:var(--lo-bg);border-radius:8px;padding:7px;text-align:center;font-size:.8rem;font-weight:800}
+  .mbm-classroom .lundy-grid>span:nth-child(2) {background:var(--ido-bg)}
+  .mbm-classroom .lundy-grid>span:nth-child(3) {background:var(--wedo-bg)}
+  .mbm-classroom .lundy-grid>span:nth-child(4) {background:var(--task-bg)}
+  .mbm-classroom .lundy p,.mbm-classroom .lundy-strip p {font-size:.85rem;margin:8px 0 0;max-width:none}
+  .mbm-classroom button {min-width:44px;min-height:44px;border-radius:10px;font-weight:700;background:var(--btn-hover);color:#fff;border:1px solid transparent;padding:10px 16px}
+  .mbm-classroom button:hover {background:#203f4c;color:#fff}
+  .mbm-classroom button:focus-visible,.mbm-classroom a:focus-visible,.mbm-classroom select:focus-visible,.mbm-classroom summary:focus-visible {outline:3px solid #ab5800;outline-offset:3px}
+  .mbm-classroom .controls {background:#fffffff5;backdrop-filter:blur(8px);border:1px solid #dbe3e8;box-shadow:0 4px 20px #182c3c18;border-radius:14px;padding:8px;gap:7px;flex-wrap:wrap;max-width:calc(100vw - 32px)}
+  .mbm-classroom .prog {background:#e7ecef}
+  .mbm-classroom .prog>span {background:var(--lo-border)}
+  .mbm-classroom .overlay-card {background:#fff;color:#1f2937;border-color:var(--lo-border)}
+  .mbm-classroom .slide[data-classroom-phase="title"] {text-align:center}
+  .mbm-classroom .slide[data-classroom-phase="title"]>p {max-width:760px;margin:14px auto;text-align:left}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.tag {background:#d98128;color:#172334}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.lundy {max-width:760px;margin:24px auto 0;text-align:left}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.box {text-align:left}
+  .mbm-classroom body.calm .slide {box-shadow:none}
+  @media(max-width:700px) {
+    .mbm-classroom main.deck {padding:14px 14px 180px}
+    .mbm-classroom main.deck>.slide {min-height:calc(100dvh - 205px);padding:20px 16px}
+    .mbm-classroom .slide p,.mbm-classroom .slide li {font-size:1.05rem}
+    .mbm-classroom .controls {left:14px;right:14px;bottom:14px;justify-content:center;max-width:none}
+    .mbm-classroom .controls button {font-size:.85rem;padding:8px 10px}
+    .mbm-classroom .lundy-grid {grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+  @media(prefers-reduced-motion:reduce) {
+    .mbm-classroom *, .mbm-classroom *::before, .mbm-classroom *::after {animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  }
+}
+</style></head>
 <body>
 <!--mbm_guide_v1 retained as a contract marker; guidance state is memory-only-->
 <!--n6-nav1:v1-->
@@ -47,120 +120,120 @@ h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-siz
 <!--/n6-nav1-->
 <a class="skip" href="#lessonDeck">Skip to lesson</a>
 <main id="lessonDeck" class="deck">
-<section class="slide active" data-type="title" data-title="Lesson overview" data-min="0">
+<section class="slide active" data-type="title" data-title="Lesson overview" data-min="0" data-classroom-phase="title">
 <div class="time">0 min</div>
-<span class="tag"></span>
-<div class="lundy" aria-label="Lundy participation strip">
+<span class="tag">BUILD Art</span>
+<h1>Look Back And Choose What To Share</h1><p>This is Part D: Share. Look back at Part A: Take part, Part B: Explore and Part C: Create. Choose one thing you enjoyed or one thing you achieved. Then find a way to tell someone about it.</p><p>Your choice can be small and clear. You might value a line you learnt to make or a choice in your own art. You do not have to call the whole course fun.</p><p>Today you will try your message with a listener. Keep this short practice as a rehearsal. Next time you will use your chosen way to share.</p><div class="box rehearsal" data-mbm-guide="staff">Staff · Explore Part D: Share. Source: tools/artsaward/SPEC.json, Explore and universal rules. Explore has four distinct activities: Part A: Take part; Part B: Explore; Part C: Create; Part D: Share. Part D requires the pupil to communicate personal enjoyment or achievement chosen by looking back at A–C. A display, a folder audit or a workshop teaching an arts skill alone does not meet this requirement. Mark P / A / N per part. Overall Pass allows one Attempted; any Not Attempted means Below Pass. Results are Pass / Below Pass only. The three assessment areas are art form knowledge and understanding, creativity, and communication. Only an adviser trained at Explore level may assess. Delivery must be through a validated centre; this deck does not assert either requirement is fulfilled. Moderators check the consistency of the adviser’s marking; they do not reassess the work. The digital portfolio is organised by part, with a maximum of 10 files. Four cumulative part files are suggested, not a new file for every lesson. Every locator must name the actual file plus page, slide or timecode; “in arts log” is not a locator. External evidence links must be public. An adult may record only the pupil’s exact words or confirmed signs, selections and gestures, and must read or show them back for the pupil to check. Advisers must not write pupils’ plans, reviews or evidence. Core, Extend and Challenge are choices within Explore. Fourteen 40-minute sessions support the 35-hour programme; record the real additional guided and independent time separately.</div><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<p>This is Part D: Share. Look back at Part A: Take part, Part B: Explore and Part C: Create. Choose one thing you enjoyed or one thing you achieved. Then find a way to tell someone about it.</p><p>Your choice can be small and clear. You might value a line you learnt to make or a choice in your own art. You do not have to call the whole course fun.</p><p>Today you will try your message with a listener. Keep this short practice as a rehearsal. Next time you will use your chosen way to share.</p><div class="box rehearsal" data-mbm-guide="staff">Staff · Explore Part D: Share. Source: tools/artsaward/SPEC.json, Explore and universal rules. Explore has four distinct activities: Part A: Take part; Part B: Explore; Part C: Create; Part D: Share. Part D requires the pupil to communicate personal enjoyment or achievement chosen by looking back at A–C. A display, a folder audit or a workshop teaching an arts skill alone does not meet this requirement. Mark P / A / N per part. Overall Pass allows one Attempted; any Not Attempted means Below Pass. Results are Pass / Below Pass only. The three assessment areas are art form knowledge and understanding, creativity, and communication. Only an adviser trained at Explore level may assess. Delivery must be through a validated centre; this deck does not assert either requirement is fulfilled. Moderators check the consistency of the adviser’s marking; they do not reassess the work. The digital portfolio is organised by part, with a maximum of 10 files. Four cumulative part files are suggested, not a new file for every lesson. Every locator must name the actual file plus page, slide or timecode; “in arts log” is not a locator. External evidence links must be public. An adult may record only the pupil’s exact words or confirmed signs, selections and gestures, and must read or show them back for the pupil to check. Advisers must not write pupils’ plans, reviews or evidence. Core, Extend and Challenge are choices within Explore. Fourteen 40-minute sessions support the 35-hour programme; record the real additional guided and independent time separately.</div></section>
-<section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="3" data-ta1="Have actual A–C records ready, plus plain paper and a pen. Offer an accessible screen or communication aid already used by the pupil. Do not assume every part is complete.">
+</section>
+<section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="3" data-ta1="Have actual A–C records ready, plus plain paper and a pen. Offer an accessible screen or communication aid already used by the pupil. Do not assume every part is complete." data-classroom-phase="arrival">
 <div class="time">3 min</div>
-<span class="tag"></span>
+<span class="tag">Retrieval</span>
 <h2>Arrival · retrieve</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Bring your own work into view</h3><p>Open your real work from A, B and C. Lay it out in three groups, or open the three part files. Keep the labels beside the work so you can tell where each piece came from.</p><p>In A, find the two arts tasks and your learning. In B, find your real artist and arts group experience. In C, find your own art and the steps you took to make it.</p><p>Touch, point to or name one thing that draws your eye. You can use a photo or a sound note if the work is too large to bring.</p><p>If a record is missing, mark that gap. Ask for help to find it. A blank space must stay honest.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Bring your own work into view</h3><p>Open your real work from A, B and C. Lay it out in three groups, or open the three part files. Keep the labels beside the work so you can tell where each piece came from.</p><p>In A, find the two arts tasks and your learning. In B, find your real artist and arts group experience. In C, find your own art and the steps you took to make it.</p><p>Touch, point to or name one thing that draws your eye. You can use a photo or a sound note if the work is too large to bring.</p><p>If a record is missing, mark that gap. Ask for help to find it. A blank space must stay honest.</p></section>
-<section class="slide" data-type="starter" data-title="Starter · create the need" data-min="3" data-ta1="The two complete example messages are on the page. Read them aloud if needed. They are teaching examples, not accounts of any pupil’s completed work.">
+</section>
+<section class="slide" data-type="starter" data-title="Starter · create the need" data-min="3" data-ta1="The two complete example messages are on the page. Read them aloud if needed. They are teaching examples, not accounts of any pupil’s completed work." data-classroom-phase="starter">
 <div class="time">3 min</div>
-<span class="tag"></span>
+<span class="tag">Starter</span>
 <h2>Starter · create the need</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>What would you want a listener to know?</h3><p>An image can show your work, but it may not show what it means to you. Your words, signs or chosen labels can help a listener hear your view.</p><p>Read this example message: “I liked making soft and dark lines. The dark line helped my shape stand out.” It names a personal enjoyment and gives a reason tied to art.</p><p>Now read: “This is a sheet of lines.” That tells us what we can see. It does not yet say what the maker enjoyed or achieved.</p><p>Point to the words that give a personal view in the first example. Keep the idea, but do not copy its claim into your record. Your message must fit your own work.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>What would you want a listener to know?</h3><p>An image can show your work, but it may not show what it means to you. Your words, signs or chosen labels can help a listener hear your view.</p><p>Read this example message: “I liked making soft and dark lines. The dark line helped my shape stand out.” It names a personal enjoyment and gives a reason tied to art.</p><p>Now read: “This is a sheet of lines.” That tells us what we can see. It does not yet say what the maker enjoyed or achieved.</p><p>Point to the words that give a personal view in the first example. Keep the idea, but do not copy its claim into your record. Your message must fit your own work.</p></section>
-<section class="slide" data-type="ido" data-title="I Do · model" data-min="6" data-ta1="Model the sentence frames as examples. Use no invented pupil experience. If demonstrating a filled message, identify it as authored example wording only.">
+</section>
+<section class="slide" data-type="ido" data-title="I Do · model" data-min="6" data-ta1="Model the sentence frames as examples. Use no invented pupil experience. If demonstrating a filled message, identify it as authored example wording only." data-classroom-phase="ido">
 <div class="time">6 min</div>
-<span class="tag"></span>
+<span class="tag">I Do</span>
 <h2>I Do · model</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Look back, choose, show, tell</h3><p>Look at the four steps below. First, scan all three parts. You can choose from any of them, but take time to look across the whole set.</p><p>Next, choose a true point. Enjoyment means something you liked in the arts work. Achievement means something you managed or made. You may choose either one.</p><p>Here is an example sentence frame: “I chose this from Part __. I enjoyed __ because __.” A second frame is: “I chose this from Part __. I achieved __. This part shows it.”</p><p>A blank frame is only a prompt. Use your own words to fill it. You can point while you speak, sign, or ask for your exact words to be written.</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Look back at A to C, choose one true point, show the work, then tell your view."><title>Build a personal sharing message</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">LOOK BACK</text><text x="73" y="88" text-anchor="middle" font-size="11">A, B and C</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">CHOOSE</text><text x="231" y="88" text-anchor="middle" font-size="11">one true point</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">SHOW</text><text x="389" y="88" text-anchor="middle" font-size="11">the work or record</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">TELL</text><text x="547" y="88" text-anchor="middle" font-size="11">your own view</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">Your chosen work and your own view stay together.</text></svg><p>Last, let a listener hear or read the message. A short message with a clear link is enough to start. It need not be a speech to the whole room.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Look back, choose, show, tell</h3><p>Look at the four steps below. First, scan all three parts. You can choose from any of them, but take time to look across the whole set.</p><p>Next, choose a true point. Enjoyment means something you liked in the arts work. Achievement means something you managed or made. You may choose either one.</p><p>Here is an example sentence frame: “I chose this from Part __. I enjoyed __ because __.” A second frame is: “I chose this from Part __. I achieved __. This part shows it.”</p><p>A blank frame is only a prompt. Use your own words to fill it. You can point while you speak, sign, or ask for your exact words to be written.</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Look back at A to C, choose one true point, show the work, then tell your view."><title>Build a personal sharing message</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">LOOK BACK</text><text x="73" y="88" text-anchor="middle" font-size="11">A, B and C</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">CHOOSE</text><text x="231" y="88" text-anchor="middle" font-size="11">one true point</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">SHOW</text><text x="389" y="88" text-anchor="middle" font-size="11">the work or record</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">TELL</text><text x="547" y="88" text-anchor="middle" font-size="11">your own view</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">Your chosen work and your own view stay together.</text></svg><p>Last, let a listener hear or read the message. A short message with a clear link is enough to start. It need not be a speech to the whole room.</p></section>
-<section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="4" data-ta1="Project the complete cards or copy their exact text onto paper. No separate card pack is needed. Accept pointing and read choices back.">
+</section>
+<section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="4" data-ta1="Project the complete cards or copy their exact text onto paper. No separate card pack is needed. Accept pointing and read choices back." data-classroom-phase="wedo">
 <div class="time">4 min</div>
-<span class="tag"></span>
+<span class="tag">We Do</span>
 <h2>We Do · everyone commits</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Sort the four example cards</h3><p>Use three headings: Enjoyment, Achievement, and Needs a personal view. Point to a heading or write the card numbers beneath it. All four cards are here.</p><ul><li>Card 1: “I liked the sound of the paper as I folded it.”</li><li>Card 2: “I made a base that held my shape up.”</li><li>Card 3: “There is a shape on this page.”</li><li>Card 4: “I enjoyed choosing where the pale patch went.”</li></ul><p>Make your own sort first. Then compare one choice with a partner or adult. Which words helped you decide?</p><p>Check key: Enjoyment has 1 and 4. Achievement has 2. Needs a personal view has 3. Card 3 could gain a true personal view, but we cannot choose that view for its maker.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Sort the four example cards</h3><p>Use three headings: Enjoyment, Achievement, and Needs a personal view. Point to a heading or write the card numbers beneath it. All four cards are here.</p><ul><li>Card 1: “I liked the sound of the paper as I folded it.”</li><li>Card 2: “I made a base that held my shape up.”</li><li>Card 3: “There is a shape on this page.”</li><li>Card 4: “I enjoyed choosing where the pale patch went.”</li></ul><p>Make your own sort first. Then compare one choice with a partner or adult. Which words helped you decide?</p><p>Check key: Enjoyment has 1 and 4. Achievement has 2. Needs a personal view has 3. Card 3 could gain a true personal view, but we cannot choose that view for its maker.</p></section>
-<section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="5" data-ta1="Offer paper as a full route. A device is optional. Arrange an available listener in class, and support the pupil’s preferred communication method.">
+</section>
+<section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="5" data-ta1="Offer paper as a full route. A device is optional. Arrange an available listener in class, and support the pupil’s preferred communication method." data-classroom-phase="ido">
 <div class="time">5 min</div>
-<span class="tag"></span>
+<span class="tag">I Do</span>
 <h2>I Do 2 · connect</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Choose a way that lets your view through</h3><p>You can speak with your work beside you. You can make a page with an image and your own words. You can sign, point to chosen words, or make a short sound clip.</p><p>Choose a way you can use with a real listener. A page needs someone to read it. A clip needs someone to hear it. The person must receive your personal view.</p><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Speak or sign beside the work, or give a page or clip to a listener. Both carry your chosen personal view."><title>Two ways to share the same personal view</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">SPEAK OR SIGN</text><text x="151" y="74" text-anchor="middle" font-size="11">show the chosen work</text><text x="151" y="94" text-anchor="middle" font-size="11">tell your view</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">PAGE OR CLIP</text><text x="469" y="74" text-anchor="middle" font-size="11">link the work and words</text><text x="469" y="94" text-anchor="middle" font-size="11">let someone receive it</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Choose the way that helps you get your meaning across.</text></svg><p>For example, a page could have the chosen image at the top. Under it, place “I enjoyed…” and your own reason. A listener can read that while you point to the part you mean.</p><p>You may keep your art choice private from the whole class and share with one agreed person. You only need to talk about the arts work.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Choose a way that lets your view through</h3><p>You can speak with your work beside you. You can make a page with an image and your own words. You can sign, point to chosen words, or make a short sound clip.</p><p>Choose a way you can use with a real listener. A page needs someone to read it. A clip needs someone to hear it. The person must receive your personal view.</p><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Speak or sign beside the work, or give a page or clip to a listener. Both carry your chosen personal view."><title>Two ways to share the same personal view</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">SPEAK OR SIGN</text><text x="151" y="74" text-anchor="middle" font-size="11">show the chosen work</text><text x="151" y="94" text-anchor="middle" font-size="11">tell your view</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">PAGE OR CLIP</text><text x="469" y="74" text-anchor="middle" font-size="11">link the work and words</text><text x="469" y="94" text-anchor="middle" font-size="11">let someone receive it</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Choose the way that helps you get your meaning across.</text></svg><p>For example, a page could have the chosen image at the top. Under it, place “I enjoyed…” and your own reason. A listener can read that while you point to the part you mean.</p><p>You may keep your art choice private from the whole class and share with one agreed person. You only need to talk about the arts work.</p></section>
-<section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="5" data-ta1="Treat this exchange as rehearsal. When actual evidence is absent, preserve the pupil’s honest gap note and arrange retrieval or completion; no one invents an account.">
+</section>
+<section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="5" data-ta1="Treat this exchange as rehearsal. When actual evidence is absent, preserve the pupil’s honest gap note and arrange retrieval or completion; no one invents an account." data-classroom-phase="wedo">
 <div class="time">5 min</div>
-<span class="tag"></span>
+<span class="tag">We Do</span>
 <h2>We Do 2 · lab</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Try the message with one person</h3><p>Choose one real item after your look back. Tell your partner or adult what you enjoyed or achieved. Point to the item as you share, or let them read your chosen words.</p><p>The listener says what they heard: “You chose __. Your view was __.” They use your words as far as they can. They do not add praise that changes your meaning.</p><p>Check that reply. Did your view reach them? If not, try one small change. Move the image beside the words, point to a clear part, or leave a longer pause.</p><p>If you have no real record yet, use a labelled example to test a format. Mark this as practice and name the missing work. Do not claim the example as your own.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Try the message with one person</h3><p>Choose one real item after your look back. Tell your partner or adult what you enjoyed or achieved. Point to the item as you share, or let them read your chosen words.</p><p>The listener says what they heard: “You chose __. Your view was __.” They use your words as far as they can. They do not add praise that changes your meaning.</p><p>Check that reply. Did your view reach them? If not, try one small change. Move the image beside the words, point to a clear part, or leave a longer pause.</p><p>If you have no real record yet, use a labelled example to test a format. Mark this as practice and name the missing work. Do not claim the example as your own.</p></section>
-<section class="slide" data-type="independent" data-title="Independent · evidence" data-min="11" data-ta1="All routes preserve pupil choice and communication. A scribe records only the pupil’s words, signs or confirmed selections and asks the pupil to check. Do not improve the account for them.">
+</section>
+<section class="slide" data-type="independent" data-title="Independent · evidence" data-min="11" data-ta1="All routes preserve pupil choice and communication. A scribe records only the pupil’s words, signs or confirmed selections and asks the pupil to check. Do not improve the account for them." data-classroom-phase="independent">
 <div class="time">11 min</div>
-<span class="tag"></span>
+<span class="tag">Independent work</span>
 <h2>Independent · evidence</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Make your own sharing plan</h3><p>Set out your chosen item and a small plan. Name its part, your enjoyment or achievement, your way to share, and the person who can receive it. Keep your words short if that suits you.</p><p>Use most of this time to try the message. Your listener checks the meaning with you. You can change the format while keeping the choice your own.</p><ul><li>Core · Look across A–C and choose a true enjoyment or achievement. Point, sign or speak it to a listener in rehearsal. Ask an adult to record your exact message and chosen way to share.</li><li>Extend · Look across A–C, choose your own enjoyment or achievement, and make a page or short spoken message. Rehearse it with a listener, using the real work to show what you mean.</li><li>Challenge · Make the same personal choice after looking across A–C. Share it in rehearsal, check what the listener understood, and change one feature so your meaning is clearer.</li></ul><p>Save the plan and rehearsal note in your Part D file. Label them as preparation. Give the actual file name and page, slide or timecode so you can find them next time.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Make your own sharing plan</h3><p>Set out your chosen item and a small plan. Name its part, your enjoyment or achievement, your way to share, and the person who can receive it. Keep your words short if that suits you.</p><p>Use most of this time to try the message. Your listener checks the meaning with you. You can change the format while keeping the choice your own.</p><ul><li>Core · Look across A–C and choose a true enjoyment or achievement. Point, sign or speak it to a listener in rehearsal. Ask an adult to record your exact message and chosen way to share.</li><li>Extend · Look across A–C, choose your own enjoyment or achievement, and make a page or short spoken message. Rehearse it with a listener, using the real work to show what you mean.</li><li>Challenge · Make the same personal choice after looking across A–C. Share it in rehearsal, check what the listener understood, and change one feature so your meaning is clearer.</li></ul><p>Save the plan and rehearsal note in your Part D file. Label them as preparation. Give the actual file name and page, slide or timecode so you can find them next time.</p></section>
-<section class="slide" data-type="exit" data-title="Exit · Audience and Influence" data-min="3" data-ta1="Record the actual listener and the pupil’s confirmed rehearsal message. Keep incomplete work visibly incomplete. Part D remains a distinct sharing activity, not a portfolio check alone.">
+</section>
+<section class="slide" data-type="exit" data-title="Exit · Audience and Influence" data-min="3" data-ta1="Record the actual listener and the pupil’s confirmed rehearsal message. Keep incomplete work visibly incomplete. Part D remains a distinct sharing activity, not a portfolio check alone." data-classroom-phase="exit">
 <div class="time">3 min</div>
-<span class="tag"></span>
+<span class="tag">Exit ticket</span>
 <h2>Exit · Audience and Influence</h2>
 <div class="lundy-status">
 <p>
@@ -172,27 +245,19 @@ h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-siz
 <p>
 <b>INFLUENCE:</b> one real next action is recorded: retain, add method detail, or leave open.</p>
 </div>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Leave with a choice you can use</h3><p>Show your listener the plan. Confirm what you want them to know and how you will share it. Ask them to say what they understood from your rehearsal.</p><p>You decide whether to keep the message or change it. Note the choice in your own words. A listener can help you make it clear, but they cannot choose your enjoyment for you.</p><p>Check that your chosen work is saved with its part label. If something is missing, keep that gap on your plan. Next time starts from this real point, even if you still need help to find a record.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Leave with a choice you can use</h3><p>Show your listener the plan. Confirm what you want them to know and how you will share it. Ask them to say what they understood from your rehearsal.</p><p>You decide whether to keep the message or change it. Note the choice in your own words. A listener can help you make it clear, but they cannot choose your enjoyment for you.</p><p>Check that your chosen work is saved with its part label. If something is missing, keep that gap on your plan. Next time starts from this real point, even if you still need help to find a record.</p></section>
+</section>
 </main>
 <nav class="controls" aria-label="Lesson controls">
-<button type="button" data-nav="previous">◀ Previous</button>
-<button type="button" data-tool="1">Teacher tools</button>
-<button type="button" data-tool="2">Evidence &amp; print</button>
-<button type="button" data-tool="3">Calm mode</button>
-<button type="button" data-tool="4">Static diagrams</button>
-<button type="button" data-tool="5">Previous</button>
-<button type="button" data-tool="6">Next</button>
-<button type="button" data-nav="next">Next ▶</button>
-</nav>
+<button type="button" data-nav="previous">◀ Previous</button><button type="button" data-tool="1">Teacher tools</button><button type="button" data-tool="2">Evidence &amp; print</button><button type="button" data-tool="3">Calm mode</button><button type="button" data-tool="4">Static diagrams</button><button type="button" data-nav="next">Next ▶</button></nav>
 <div class="prog" aria-hidden="true">
 <span>
 </span>

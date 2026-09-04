@@ -5,6 +5,9 @@ on:
       - 'tools/artsaward/slot_reader*'
       - 'tools/easter/author_deck.py'
       - 'tools/easter/award_*'
+      - 'tools/easter/classroom_*'
+      - 'tools/easter/CLASSROOM_TARGETS.json'
+      - 'tools/easter/refresh_classroom_presentation.py'
       - 'tools/artsaward/award_chassis_browser.cjs'
       - 'tools/artsaward/*_TARGETS.json'
       - 'tools/artsaward/content/**'
@@ -45,3 +48,7 @@ jobs:
               node tools/artsaward/award_chassis_browser.cjs --targets "$targets"
             fi
           done
+      - name: Check the shared classroom appearance and responsive pathways
+        env:
+          NODE_PATH: ${{ runner.temp }}/award-browser/node_modules
+        run: node tools/easter/classroom_browser.cjs

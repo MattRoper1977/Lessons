@@ -487,6 +487,13 @@ def author(donor: Path, plan: dict, content: dict, out: Path) -> dict:
         pres_spec.loader.exec_module(presentation)
         presentation.rebuild_print(tree, plan, content, workbook_trace(plan))
         presentation.replace_runtime(tree, content, (ROOT / "tools/easter/award_chassis.js").read_text(encoding="utf-8"))
+    # The user-selected classroom appearance is shared across subjects. Apply
+    # after sweeping donor words so the real title and Lundy labels survive.
+    shared_spec = importlib.util.spec_from_file_location("classroom_presentation", ROOT / "tools/easter/classroom_presentation.py")
+    shared = importlib.util.module_from_spec(shared_spec)
+    shared_spec.loader.exec_module(shared)
+    if plan["family"].split()[0] in ("BUILD", "GROW", "LAUNCH"):
+        shared.apply(tree, plan["family"], content["title"])
     html = lh.tostring(tree, encoding="unicode", doctype="<!doctype html>")
 
     # lesson-config replaced wholesale: no donor field may survive

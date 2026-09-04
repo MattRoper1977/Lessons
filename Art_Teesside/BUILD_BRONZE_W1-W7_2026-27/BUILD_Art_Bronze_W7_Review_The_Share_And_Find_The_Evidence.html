@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-GB">
+<html lang="en-GB" class="mbm-classroom pathway-build">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -38,7 +38,80 @@ h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-siz
         .award-print h3{font-size:11pt;margin:0}
         .award-print .award-review-space{height:35mm;border:1px solid #777}
       }
-    </style></head>
+    </style><style id="mbm-classroom-chassis">/* Shared classroom presentation. Palette authority: the user's Art Studio reference. */
+html.mbm-classroom {
+  --lo-bg:#e8eef1;--lo-border:#4F869C;--ido-bg:#f3e4dc;--ido-border:#D06438;
+  --wedo-bg:#e2efec;--wedo-border:#16877A;--task-bg:#faf0d7;--task-border:#E1AB32;
+  --btn-bg:#4F869C;--btn-hover:#3a6a7d;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;
+  --sc-bg:#ffedd5;--sc-border:#f97316;--aspire-bg:#dcfce7;--aspire-border:#22c55e;
+}
+html.mbm-classroom.pathway-grow {
+  --lo-bg:#e6ebf0;--lo-border:#5B91A5;--ido-bg:#f2e6df;--ido-border:#D1673D;
+  --wedo-bg:#e2efed;--wedo-border:#2BA193;--task-bg:#f8efd8;--task-border:#DFAD3E;
+  --btn-bg:#5B91A5;--btn-hover:#436f80;--sc-border:#DFAD3E;--sc-bg:#faf3dd;
+}
+html.mbm-classroom.pathway-launch {
+  --lo-bg:#e4ebee;--lo-border:#356F83;--ido-bg:#efe3db;--ido-border:#9B5B3D;
+  --wedo-bg:#e1edeb;--wedo-border:#238C80;--task-bg:#f6eed9;--task-border:#C18B2D;
+  --btn-bg:#356F83;--btn-hover:#28576a;--sc-border:#C18B2D;--sc-bg:#f8f1de;
+}
+@media screen {
+  html.mbm-classroom, .mbm-classroom body {background:#fff;color:#1f2937;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+  .mbm-classroom main.deck {height:100vh;height:100dvh;padding:clamp(14px,3vh,36px) 4vw 110px;overflow:auto;scroll-padding-bottom:110px}
+  .mbm-classroom main.deck>.slide {width:100%;max-width:1600px;min-height:calc(100vh - 160px);margin:auto;padding:clamp(20px,3vw,40px);background:#fff;color:#1f2937;border:0;border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px #00000018}
+  .mbm-classroom .slide[data-classroom-phase="ido"] {border-top-color:var(--ido-border)}
+  .mbm-classroom .slide[data-classroom-phase="wedo"] {border-top-color:var(--wedo-border)}
+  .mbm-classroom .slide[data-classroom-phase="independent"] {border-top-color:var(--task-border)}
+  .mbm-classroom .slide[data-classroom-phase="exit"] {border-top-color:var(--sc-border)}
+  .mbm-classroom .slide h1 {display:block;color:#101820;font-size:clamp(1.8rem,3.2vw,2.8rem);line-height:1.14;margin:20px 0 24px;padding-bottom:12px;border-bottom:3px solid var(--lo-border)}
+  .mbm-classroom .slide h2 {color:#101820;font-size:clamp(1.5rem,2.5vw,2rem);line-height:1.22;margin:16px 0 22px;padding-bottom:12px;border-bottom:2px solid #e2e8f0}
+  .mbm-classroom .slide h3 {color:#182c3c;font-size:1.2rem;line-height:1.3;margin:18px 0 10px}
+  .mbm-classroom .slide p,.mbm-classroom .slide li {font-size:1.15rem;line-height:1.6;color:#334155;max-width:85ch}
+  .mbm-classroom .slide p {margin:.5em 0}
+  .mbm-classroom .slide>svg {max-width:900px;margin:18px auto;display:block;overflow:visible}
+  .mbm-classroom .slide>.tag {display:inline-block;background:var(--lo-bg);color:#183b4b;border-radius:8px;padding:6px 14px;font-size:.9rem;font-weight:800;letter-spacing:.04em}
+  .mbm-classroom .slide[data-classroom-phase="ido"]>.tag {background:var(--ido-bg);color:#68321f}
+  .mbm-classroom .slide[data-classroom-phase="wedo"]>.tag {background:var(--wedo-bg);color:#115c52}
+  .mbm-classroom .slide[data-classroom-phase="independent"]>.tag {background:var(--task-bg);color:#684811}
+  .mbm-classroom .slide>.time {float:right;border-radius:999px;background:#f5f7f8;color:#334155;border:1px solid #cbd5e1;font-size:.9rem}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.time {display:none}
+  .mbm-classroom .mbm-lesson-objective {background:var(--lo-bg);border-left:6px solid var(--lo-border);border-radius:12px;padding:14px 18px;margin:16px 0}
+  .mbm-classroom .mbm-lesson-success {background:var(--sc-bg);border-left:6px solid var(--sc-border);border-radius:12px;padding:14px 18px;margin:14px 0}
+  .mbm-classroom .box,.mbm-classroom .route,.mbm-classroom .route-card {background:#f8fafc;color:#1f2937;border:1px solid #cbd5e1;border-radius:12px;padding:16px}
+  .mbm-classroom .box.objective {background:var(--lo-bg);border-left:6px solid var(--lo-border)}
+  .mbm-classroom .lundy,.mbm-classroom .lundy-strip {background:#f8fafc;color:#334155;border:1px solid #dce3e8;border-radius:12px;padding:10px 14px;margin:22px 0 0}
+  .mbm-classroom .lundy-grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+  .mbm-classroom .lundy-grid>span {display:block;color:#213544;background:var(--lo-bg);border-radius:8px;padding:7px;text-align:center;font-size:.8rem;font-weight:800}
+  .mbm-classroom .lundy-grid>span:nth-child(2) {background:var(--ido-bg)}
+  .mbm-classroom .lundy-grid>span:nth-child(3) {background:var(--wedo-bg)}
+  .mbm-classroom .lundy-grid>span:nth-child(4) {background:var(--task-bg)}
+  .mbm-classroom .lundy p,.mbm-classroom .lundy-strip p {font-size:.85rem;margin:8px 0 0;max-width:none}
+  .mbm-classroom button {min-width:44px;min-height:44px;border-radius:10px;font-weight:700;background:var(--btn-hover);color:#fff;border:1px solid transparent;padding:10px 16px}
+  .mbm-classroom button:hover {background:#203f4c;color:#fff}
+  .mbm-classroom button:focus-visible,.mbm-classroom a:focus-visible,.mbm-classroom select:focus-visible,.mbm-classroom summary:focus-visible {outline:3px solid #ab5800;outline-offset:3px}
+  .mbm-classroom .controls {background:#fffffff5;backdrop-filter:blur(8px);border:1px solid #dbe3e8;box-shadow:0 4px 20px #182c3c18;border-radius:14px;padding:8px;gap:7px;flex-wrap:wrap;max-width:calc(100vw - 32px)}
+  .mbm-classroom .prog {background:#e7ecef}
+  .mbm-classroom .prog>span {background:var(--lo-border)}
+  .mbm-classroom .overlay-card {background:#fff;color:#1f2937;border-color:var(--lo-border)}
+  .mbm-classroom .slide[data-classroom-phase="title"] {text-align:center}
+  .mbm-classroom .slide[data-classroom-phase="title"]>p {max-width:760px;margin:14px auto;text-align:left}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.tag {background:#d98128;color:#172334}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.lundy {max-width:760px;margin:24px auto 0;text-align:left}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.box {text-align:left}
+  .mbm-classroom body.calm .slide {box-shadow:none}
+  @media(max-width:700px) {
+    .mbm-classroom main.deck {padding:14px 14px 180px}
+    .mbm-classroom main.deck>.slide {min-height:calc(100dvh - 205px);padding:20px 16px}
+    .mbm-classroom .slide p,.mbm-classroom .slide li {font-size:1.05rem}
+    .mbm-classroom .controls {left:14px;right:14px;bottom:14px;justify-content:center;max-width:none}
+    .mbm-classroom .controls button {font-size:.85rem;padding:8px 10px}
+    .mbm-classroom .lundy-grid {grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+  @media(prefers-reduced-motion:reduce) {
+    .mbm-classroom *, .mbm-classroom *::before, .mbm-classroom *::after {animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  }
+}
+</style></head>
 <body>
 <!--mbm_guide_v1 retained as a contract marker; guidance state is memory-only-->
 <!--n6-nav1:v1-->
@@ -47,120 +120,120 @@ h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-siz
 <!--/n6-nav1-->
 <a class="skip" href="#lessonDeck">Skip to lesson</a>
 <main id="lessonDeck" class="deck">
-<section class="slide active" data-type="title" data-title="Lesson overview" data-min="0">
+<section class="slide active" data-type="title" data-title="Lesson overview" data-min="0" data-classroom-phase="title">
 <div class="time">0 min</div>
-<span class="tag"></span>
-<div class="lundy" aria-label="Lundy participation strip">
+<span class="tag">BUILD Art</span>
+<h1>Review The Share And Find The Evidence</h1><p>BUILD · Art · Trinity Arts Award Bronze. Review The Share And Find The Evidence.</p><p class="mbm-lesson-objective">Objective: Review how well your skills share went, then find the evidence for all four Bronze parts.</p><p class="mbm-lesson-success">Success evidence: Your own Part D review linked to your plan and real delivery, a next step, and a four-part evidence map that names any gaps.</p><p>Theme: My Creative Identity. Choose what your art does with line, shape, colour or form. You do not need to share private facts about your life.</p><p>40 minutes. Use the work and tools that staff have ready in the room.</p><div class="box rehearsal" data-mbm-guide="staff">This deck evidences Bronze Part D, Arts skills share: plan, then deliver a short workshop or presentation passing on an arts skill, then review how well it went. ONE Attempted allowed overall. Any Not Attempted = Below Pass. The whole Bronze evidence portfolio has a 10-file cap. The three assessment areas are art form knowledge and understanding, creativity, and communication. Results are Pass or Below Pass only. Core, Extend and Challenge are support choices within Bronze, not award levels. Advisers must not write plans, reviews or evidence for pupils. Scribe or record the pupil's own words without improving them. The digital portfolio is organised by part. Every locator names the file plus page, slide or timecode. Only an adviser trained at Bronze may assess, and delivery is through a validated centre; this deck does not assert that either condition is confirmed. Source: tools/artsaward/SPEC.json, Bronze and universal rules. Today evidences the review step of Part D. It also checks existing A, B and C evidence; it does not teach or fabricate those parts anew. D review must refer to real delivery, not rehearsal alone. If a share or other required activity is missing, record the gap and arrange completion; never replace participation with a written claim. Four cumulative files called Bronze-A, Bronze-B, Bronze-C and Bronze-D are an optional organisation suggestion, not an award requirement. Other digital layouts are acceptable within the 10-file cap and part organisation rule. Count actual evidence files, not pages; preserve originals and locators if staff help consolidate. The taught review and short portfolio check are not a promise that the qualification is complete or passed.</div><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<p>BUILD · Art · Trinity Arts Award Bronze. Review The Share And Find The Evidence.</p><p>Objective: Review how well your skills share went, then find the evidence for all four Bronze parts.</p><p>Success evidence: Your own Part D review linked to your plan and real delivery, a next step, and a four-part evidence map that names any gaps.</p><p>Theme: My Creative Identity. Choose what your art does with line, shape, colour or form. You do not need to share private facts about your life.</p><p>40 minutes. Use the work and tools that staff have ready in the room.</p><div class="box rehearsal" data-mbm-guide="staff">This deck evidences Bronze Part D, Arts skills share: plan, then deliver a short workshop or presentation passing on an arts skill, then review how well it went. ONE Attempted allowed overall. Any Not Attempted = Below Pass. The whole Bronze evidence portfolio has a 10-file cap. The three assessment areas are art form knowledge and understanding, creativity, and communication. Results are Pass or Below Pass only. Core, Extend and Challenge are support choices within Bronze, not award levels. Advisers must not write plans, reviews or evidence for pupils. Scribe or record the pupil's own words without improving them. The digital portfolio is organised by part. Every locator names the file plus page, slide or timecode. Only an adviser trained at Bronze may assess, and delivery is through a validated centre; this deck does not assert that either condition is confirmed. Source: tools/artsaward/SPEC.json, Bronze and universal rules. Today evidences the review step of Part D. It also checks existing A, B and C evidence; it does not teach or fabricate those parts anew. D review must refer to real delivery, not rehearsal alone. If a share or other required activity is missing, record the gap and arrange completion; never replace participation with a written claim. Four cumulative files called Bronze-A, Bronze-B, Bronze-C and Bronze-D are an optional organisation suggestion, not an award requirement. Other digital layouts are acceptable within the 10-file cap and part organisation rule. Count actual evidence files, not pages; preserve originals and locators if staff help consolidate. The taught review and short portfolio check are not a promise that the qualification is complete or passed.</div></section>
-<section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="3" data-ta1="Confirm whether real delivery occurred. Support an honest practice review and completion plan if it has not; do not claim Part D complete.">
+</section>
+<section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="3" data-ta1="Confirm whether real delivery occurred. Support an honest practice review and completion plan if it has not; do not claim Part D complete." data-classroom-phase="arrival">
 <div class="time">3 min</div>
-<span class="tag"></span>
+<span class="tag">Retrieval</span>
 <h2>Arrival · retrieve</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Look at what took place</h3><p>Put your skills share plan beside the delivery record. Add the learner feedback.</p><p>Check what the record says. Did you pass on the skill, complete part of the share, or rehearse? Use the right words.</p><p>If delivery is still to do, tell staff. You can review the practice, but keep it labelled as practice. It does not stand in for the real share.</p><p>If you delivered, find the goal on your plan. What did you want the learner to be able to do?</p><p>Now find a moment that helps you judge that goal. It may be a sample, a reply or a staff note about what happened.</p><p>Keep both in view.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Look at what took place</h3><p>Put your skills share plan beside the delivery record. Add the learner feedback.</p><p>Check what the record says. Did you pass on the skill, complete part of the share, or rehearse? Use the right words.</p><p>If delivery is still to do, tell staff. You can review the practice, but keep it labelled as practice. It does not stand in for the real share.</p><p>If you delivered, find the goal on your plan. What did you want the learner to be able to do?</p><p>Now find a moment that helps you judge that goal. It may be a sample, a reply or a staff note about what happened.</p><p>Keep both in view.</p></section>
-<section class="slide" data-type="starter" data-title="Starter · create the need" data-min="3" data-ta1="Read both examples neutrally. Do not supply the second review as a sentence for pupils to copy as their own.">
+</section>
+<section class="slide" data-type="starter" data-title="Starter · create the need" data-min="3" data-ta1="Read both examples neutrally. Do not supply the second review as a sentence for pupils to copy as their own." data-classroom-phase="starter">
 <div class="time">3 min</div>
-<span class="tag"></span>
+<span class="tag">Starter</span>
 <h2>Starter · create the need</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>A view needs a reason</h3><p>Listen to two sample reviews of a made-up fold lesson. These are teaching examples, not anyone's evidence.</p><p>The first says, 'It went well because it was fun.'</p><p>The second says, 'I wanted the edges to meet. The learner's last fold shows that they did. My slow demo helped.'</p><p>Which review links to a goal and something we could check? Point to those words.</p><p>Enjoyment can matter too. But it does not tell the whole story of how well a skill was passed on.</p><p>Your review will use your own goal, your learner's response and your own view.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>A view needs a reason</h3><p>Listen to two sample reviews of a made-up fold lesson. These are teaching examples, not anyone's evidence.</p><p>The first says, 'It went well because it was fun.'</p><p>The second says, 'I wanted the edges to meet. The learner's last fold shows that they did. My slow demo helped.'</p><p>Which review links to a goal and something we could check? Point to those words.</p><p>Enjoyment can matter too. But it does not tell the whole story of how well a skill was passed on.</p><p>Your review will use your own goal, your learner's response and your own view.</p></section>
-<section class="slide" data-type="ido" data-title="I Do · model" data-min="7" data-ta1="Model a balanced judgement from the stated example. Support pupils to use their own records, including mixed or incomplete outcomes.">
+</section>
+<section class="slide" data-type="ido" data-title="I Do · model" data-min="7" data-ta1="Model a balanced judgement from the stated example. Support pupils to use their own records, including mixed or incomplete outcomes." data-classroom-phase="ido">
 <div class="time">7 min</div>
-<span class="tag"></span>
+<span class="tag">I Do</span>
 <h2>I Do · model</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Read the evidence, then judge</h3><p>Watch the adult review the fold lesson. They start with the plan, not with a claim that all went well.</p><p>The plan says the learner will line up two edges. The record shows a first try with a gap and a later try with the edges together.</p><p>The adult reads the learner feedback. It says the close view helped, but the first steps were too quick.</p><p>They can now say what helped and what needs work. Both can be true in the same share.</p><p>They point to the later fold when they explain the outcome. They point to the feedback when they choose a slower start next time.</p><p>They keep the learner's words apart from their own view. A reply from someone else is useful evidence, not the whole review.</p><p>Your learner may have made partial progress. Say what the work shows. A clear review need not claim a perfect result.</p><p>Look at your own plan and record. What did you mean to teach? What really happened? What does that tell you about your teaching?</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Boxes labelled PLAN, EVIDENCE, REVIEW, NEXT STEP. The plan sets an aim. Evidence supports a review and a useful next step."><title>A review links back to the plan</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">PLAN</text><text x="73" y="88" text-anchor="middle" font-size="11">What was my aim?</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">EVIDENCE</text><text x="231" y="88" text-anchor="middle" font-size="11">What took place?</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">REVIEW</text><text x="389" y="88" text-anchor="middle" font-size="11">How well did it go?</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">NEXT STEP</text><text x="547" y="88" text-anchor="middle" font-size="11">What would I change?</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">The plan sets an aim. Evidence supports a review and a useful next step.</text></svg><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Read the evidence, then judge</h3><p>Watch the adult review the fold lesson. They start with the plan, not with a claim that all went well.</p><p>The plan says the learner will line up two edges. The record shows a first try with a gap and a later try with the edges together.</p><p>The adult reads the learner feedback. It says the close view helped, but the first steps were too quick.</p><p>They can now say what helped and what needs work. Both can be true in the same share.</p><p>They point to the later fold when they explain the outcome. They point to the feedback when they choose a slower start next time.</p><p>They keep the learner's words apart from their own view. A reply from someone else is useful evidence, not the whole review.</p><p>Your learner may have made partial progress. Say what the work shows. A clear review need not claim a perfect result.</p><p>Look at your own plan and record. What did you mean to teach? What really happened? What does that tell you about your teaching?</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Boxes labelled PLAN, EVIDENCE, REVIEW, NEXT STEP. The plan sets an aim. Evidence supports a review and a useful next step."><title>A review links back to the plan</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">PLAN</text><text x="73" y="88" text-anchor="middle" font-size="11">What was my aim?</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">EVIDENCE</text><text x="231" y="88" text-anchor="middle" font-size="11">What took place?</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">REVIEW</text><text x="389" y="88" text-anchor="middle" font-size="11">How well did it go?</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">NEXT STEP</text><text x="547" y="88" text-anchor="middle" font-size="11">What would I change?</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">The plan sets an aim. Evidence supports a review and a useful next step.</text></svg></section>
-<section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="3" data-ta1="Match view to closer-view reply; skill to sample; timing to step record. Accept that a sample needs context showing the pupil's teaching role. The exact sorting lines are on this slide: project them and let pupils sort by number, or copy these lines onto cards. No separate pack is required for this sort.">
+</section>
+<section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="3" data-ta1="Match view to closer-view reply; skill to sample; timing to step record. Accept that a sample needs context showing the pupil's teaching role. The exact sorting lines are on this slide: project them and let pupils sort by number, or copy these lines onto cards. No separate pack is required for this sort." data-classroom-phase="wedo">
 <div class="time">3 min</div>
-<span class="tag"></span>
+<span class="tag">We Do</span>
 <h2>We Do · everyone commits</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Match a view to its support</h3><p>Match each review point to the record that could support it.</p><p>'It was hard to see my hand.' 'The learner used the skill.' 'My last step took longer than planned.'</p><p>The records are a reply asking for a closer view, a sample made by the learner, and a note of when each step ended.</p><p>Explain one match to a partner or staff member. You may point to both lines.</p><p>Would a photo of the tools alone show that someone learnt the skill? Say what else you would need.</p><p>Evidence helps you make a fair judgement. It cannot make an event happen after the fact.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Match a view to its support</h3><p>Match each review point to the record that could support it.</p><p>'It was hard to see my hand.' 'The learner used the skill.' 'My last step took longer than planned.'</p><p>The records are a reply asking for a closer view, a sample made by the learner, and a note of when each step ended.</p><p>Explain one match to a partner or staff member. You may point to both lines.</p><p>Would a photo of the tools alone show that someone learnt the skill? Say what else you would need.</p><p>Evidence helps you make a fair judgement. It cannot make an event happen after the fact.</p></section>
-<section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="7" data-ta1="This is a check of existing parts, not a replacement for missing activities. A Part B share of views and a Part D skills share serve different requirements.">
+</section>
+<section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="7" data-ta1="This is a check of existing parts, not a replacement for missing activities. A Part B share of views and a Part D skills share serve different requirements." data-classroom-phase="ido">
 <div class="time">7 min</div>
-<span class="tag"></span>
+<span class="tag">I Do</span>
 <h2>I Do 2 · connect</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Four parts, four different jobs</h3><p>After the review, you will check the work you have already kept for Bronze. There are four parts.</p><p>Part A is arts participation. Find your making, the improvement and your own summary of what you learnt.</p><p>Part B is being an audience member. Find the real arts event or experience, your view of its quality and creative impact, and evidence that you shared your views with someone.</p><p>Part C is arts inspiration. Find research into a real artist or craftsperson's practice, career, life and work. Find why you chose them.</p><p>Part D is the skills share. Find your plan, your delivery and your own review of how well it went.</p><p>A heading alone is not evidence. Open the work and check what it shows. A plan for an experience does not show that it took place.</p><p>Mark a gap as a job to do. Do not fill it with a claim you cannot support.</p><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Boxes labelled A · PARTICIPANT, C · INSPIRATION. A is participation. B is audience experience. C is inspiration research. D is plan, deliver and review a skills share."><title>The four Bronze parts</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">A · PARTICIPANT</text><text x="151" y="74" text-anchor="middle" font-size="11">B · AUDIENCE</text><text x="151" y="94" text-anchor="middle" font-size="11">Making and a real arts experience</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">C · INSPIRATION</text><text x="469" y="74" text-anchor="middle" font-size="11">D · SKILLS SHARE</text><text x="469" y="94" text-anchor="middle" font-size="11">Research and teaching a skill</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">A is participation. B is audience experience. C is inspiration research. D is plan, deliver and review a skills share.</text></svg><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Four parts, four different jobs</h3><p>After the review, you will check the work you have already kept for Bronze. There are four parts.</p><p>Part A is arts participation. Find your making, the improvement and your own summary of what you learnt.</p><p>Part B is being an audience member. Find the real arts event or experience, your view of its quality and creative impact, and evidence that you shared your views with someone.</p><p>Part C is arts inspiration. Find research into a real artist or craftsperson's practice, career, life and work. Find why you chose them.</p><p>Part D is the skills share. Find your plan, your delivery and your own review of how well it went.</p><p>A heading alone is not evidence. Open the work and check what it shows. A plan for an experience does not show that it took place.</p><p>Mark a gap as a job to do. Do not fill it with a claim you cannot support.</p><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Boxes labelled A · PARTICIPANT, C · INSPIRATION. A is participation. B is audience experience. C is inspiration research. D is plan, deliver and review a skills share."><title>The four Bronze parts</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">A · PARTICIPANT</text><text x="151" y="74" text-anchor="middle" font-size="11">B · AUDIENCE</text><text x="151" y="94" text-anchor="middle" font-size="11">Making and a real arts experience</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">C · INSPIRATION</text><text x="469" y="74" text-anchor="middle" font-size="11">D · SKILLS SHARE</text><text x="469" y="94" text-anchor="middle" font-size="11">Research and teaching a skill</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">A is participation. B is audience experience. C is inspiration research. D is plan, deliver and review a skills share.</text></svg></section>
-<section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="5" data-ta1="Help navigate and count real files. Never delete originals simply to reduce a count; consolidate safely and update locators where needed.">
+</section>
+<section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="5" data-ta1="Help navigate and count real files. Never delete originals simply to reduce a count; consolidate safely and update locators where needed." data-classroom-phase="wedo">
 <div class="time">5 min</div>
-<span class="tag"></span>
+<span class="tag">We Do</span>
 <h2>We Do 2 · lab</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Can someone find the work?</h3><p>Try a short evidence hunt with a willing partner or staff member. Name one file and the page, slide or timecode to open.</p><p>Can they reach the work you meant? If not, fix the location note and try again.</p><p>Use the same method for each of the four parts. Write a gap if the work is not there. Do not guess a page.</p><p>The whole Bronze portfolio can have up to ten evidence files. A file may hold several pages or slides.</p><p>One option is four growing files: Bronze-A, Bronze-B, Bronze-C and Bronze-D. You can use a different layout that keeps the parts clear.</p><p>Ask staff before you move files so the evidence and location notes stay linked.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Can someone find the work?</h3><p>Try a short evidence hunt with a willing partner or staff member. Name one file and the page, slide or timecode to open.</p><p>Can they reach the work you meant? If not, fix the location note and try again.</p><p>Use the same method for each of the four parts. Write a gap if the work is not there. Do not guess a page.</p><p>The whole Bronze portfolio can have up to ten evidence files. A file may hold several pages or slides.</p><p>One option is four growing files: Bronze-A, Bronze-B, Bronze-C and Bronze-D. You can use a different layout that keeps the parts clear.</p><p>Ask staff before you move files so the evidence and location notes stay linked.</p></section>
-<section class="slide" data-type="independent" data-title="Independent · evidence" data-min="9" data-ta1="All tiers retain the pupil's own judgement, plan comparison, delivery evidence and next step. Do not turn a portfolio gap into a model answer.">
+</section>
+<section class="slide" data-type="independent" data-title="Independent · evidence" data-min="9" data-ta1="All tiers retain the pupil's own judgement, plan comparison, delivery evidence and next step. Do not turn a portfolio gap into a model answer." data-classroom-phase="independent">
 <div class="time">9 min</div>
-<span class="tag"></span>
+<span class="tag">Independent work</span>
 <h2>Independent · evidence</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Write the review that your work supports</h3><p>Now make your own Part D review. Use speech, writing or a recording that you can check.</p><p>Start with what you meant to teach. Compare that plan with the actual share. Say how well it went and what helped you judge.</p><p>Use the learner response and your record. Explain what you would keep and what you would change next time.</p><p>Point to the evidence with a file plus page, slide or timecode. An adult may write your words down, then read them back for you to check.</p><p>Finish the four-part map. List the evidence you can find and the gaps that still need work. Count the files with staff if you need help.</p><p>Save the review in Part D. Keep its location on your map.</p><ul><li>Core · use prompts to say, point or write your review. Keep your own view, a link to the plan, evidence of the learner response and a next step. With support, check all four parts and name the file plus page, slide or timecode.</li><li>Extend · write or record the same full review in your own layout. Compare the plan with what took place. Explain a change you would make and check all four parts with exact evidence locations.</li><li>Challenge · keep the same full review and four-part check. Weigh two pieces of evidence that suggest different things. Explain which next step they support and why.</li></ul><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Write the review that your work supports</h3><p>Now make your own Part D review. Use speech, writing or a recording that you can check.</p><p>Start with what you meant to teach. Compare that plan with the actual share. Say how well it went and what helped you judge.</p><p>Use the learner response and your record. Explain what you would keep and what you would change next time.</p><p>Point to the evidence with a file plus page, slide or timecode. An adult may write your words down, then read them back for you to check.</p><p>Finish the four-part map. List the evidence you can find and the gaps that still need work. Count the files with staff if you need help.</p><p>Save the review in Part D. Keep its location on your map.</p><ul><li>Core · use prompts to say, point or write your review. Keep your own view, a link to the plan, evidence of the learner response and a next step. With support, check all four parts and name the file plus page, slide or timecode.</li><li>Extend · write or record the same full review in your own layout. Compare the plan with what took place. Explain a change you would make and check all four parts with exact evidence locations.</li><li>Challenge · keep the same full review and four-part check. Weigh two pieces of evidence that suggest different things. Explain which next step they support and why.</li></ul></section>
-<section class="slide" data-type="exit" data-title="Exit · Audience and Influence" data-min="3" data-ta1="Record remaining actions and evidence locations. Only a trained adviser assesses against the register; do not announce a pass from this lesson checklist.">
+</section>
+<section class="slide" data-type="exit" data-title="Exit · Audience and Influence" data-min="3" data-ta1="Record remaining actions and evidence locations. Only a trained adviser assesses against the register; do not announce a pass from this lesson checklist." data-classroom-phase="exit">
 <div class="time">3 min</div>
-<span class="tag"></span>
+<span class="tag">Exit ticket</span>
 <h2>Exit · Audience and Influence</h2>
 <div class="lundy-status">
 <p>
@@ -172,27 +245,19 @@ h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-siz
 <p>
 <b>INFLUENCE:</b> one real next action is recorded: retain, add method detail, or leave open.</p>
 </div>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Say what is ready and what is next</h3><p>Show your review to someone who can find the share record. Ask them to follow a location note as you explain your view.</p><p>Check that your words still say what you mean. Change them yourself if they do not.</p><p>Tell staff which parts have evidence ready to check and which have a gap. Agree the next action for any work still to do.</p><p>Your map helps the adviser find your work. It does not decide the result.</p><p>Keep the art you made and the skills you learnt in mind. Which choice would you like to try in your next piece?</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Say what is ready and what is next</h3><p>Show your review to someone who can find the share record. Ask them to follow a location note as you explain your view.</p><p>Check that your words still say what you mean. Change them yourself if they do not.</p><p>Tell staff which parts have evidence ready to check and which have a gap. Agree the next action for any work still to do.</p><p>Your map helps the adviser find your work. It does not decide the result.</p><p>Keep the art you made and the skills you learnt in mind. Which choice would you like to try in your next piece?</p></section>
+</section>
 </main>
 <nav class="controls" aria-label="Lesson controls">
-<button type="button" data-nav="previous">◀ Previous</button>
-<button type="button" data-tool="1">Teacher tools</button>
-<button type="button" data-tool="2">Evidence &amp; print</button>
-<button type="button" data-tool="3">Calm mode</button>
-<button type="button" data-tool="4">Static diagrams</button>
-<button type="button" data-tool="5">Previous</button>
-<button type="button" data-tool="6">Next</button>
-<button type="button" data-nav="next">Next ▶</button>
-</nav>
+<button type="button" data-nav="previous">◀ Previous</button><button type="button" data-tool="1">Teacher tools</button><button type="button" data-tool="2">Evidence &amp; print</button><button type="button" data-tool="3">Calm mode</button><button type="button" data-tool="4">Static diagrams</button><button type="button" data-nav="next">Next ▶</button></nav>
 <div class="prog" aria-hidden="true">
 <span>
 </span>

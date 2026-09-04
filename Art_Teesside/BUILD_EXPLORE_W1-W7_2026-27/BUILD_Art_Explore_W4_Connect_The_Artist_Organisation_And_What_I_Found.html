@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-GB">
+<html lang="en-GB" class="mbm-classroom pathway-build">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -38,7 +38,80 @@ h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-siz
         .award-print h3{font-size:11pt;margin:0}
         .award-print .award-review-space{height:35mm;border:1px solid #777}
       }
-    </style></head>
+    </style><style id="mbm-classroom-chassis">/* Shared classroom presentation. Palette authority: the user's Art Studio reference. */
+html.mbm-classroom {
+  --lo-bg:#e8eef1;--lo-border:#4F869C;--ido-bg:#f3e4dc;--ido-border:#D06438;
+  --wedo-bg:#e2efec;--wedo-border:#16877A;--task-bg:#faf0d7;--task-border:#E1AB32;
+  --btn-bg:#4F869C;--btn-hover:#3a6a7d;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;
+  --sc-bg:#ffedd5;--sc-border:#f97316;--aspire-bg:#dcfce7;--aspire-border:#22c55e;
+}
+html.mbm-classroom.pathway-grow {
+  --lo-bg:#e6ebf0;--lo-border:#5B91A5;--ido-bg:#f2e6df;--ido-border:#D1673D;
+  --wedo-bg:#e2efed;--wedo-border:#2BA193;--task-bg:#f8efd8;--task-border:#DFAD3E;
+  --btn-bg:#5B91A5;--btn-hover:#436f80;--sc-border:#DFAD3E;--sc-bg:#faf3dd;
+}
+html.mbm-classroom.pathway-launch {
+  --lo-bg:#e4ebee;--lo-border:#356F83;--ido-bg:#efe3db;--ido-border:#9B5B3D;
+  --wedo-bg:#e1edeb;--wedo-border:#238C80;--task-bg:#f6eed9;--task-border:#C18B2D;
+  --btn-bg:#356F83;--btn-hover:#28576a;--sc-border:#C18B2D;--sc-bg:#f8f1de;
+}
+@media screen {
+  html.mbm-classroom, .mbm-classroom body {background:#fff;color:#1f2937;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+  .mbm-classroom main.deck {height:100vh;height:100dvh;padding:clamp(14px,3vh,36px) 4vw 110px;overflow:auto;scroll-padding-bottom:110px}
+  .mbm-classroom main.deck>.slide {width:100%;max-width:1600px;min-height:calc(100vh - 160px);margin:auto;padding:clamp(20px,3vw,40px);background:#fff;color:#1f2937;border:0;border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px #00000018}
+  .mbm-classroom .slide[data-classroom-phase="ido"] {border-top-color:var(--ido-border)}
+  .mbm-classroom .slide[data-classroom-phase="wedo"] {border-top-color:var(--wedo-border)}
+  .mbm-classroom .slide[data-classroom-phase="independent"] {border-top-color:var(--task-border)}
+  .mbm-classroom .slide[data-classroom-phase="exit"] {border-top-color:var(--sc-border)}
+  .mbm-classroom .slide h1 {display:block;color:#101820;font-size:clamp(1.8rem,3.2vw,2.8rem);line-height:1.14;margin:20px 0 24px;padding-bottom:12px;border-bottom:3px solid var(--lo-border)}
+  .mbm-classroom .slide h2 {color:#101820;font-size:clamp(1.5rem,2.5vw,2rem);line-height:1.22;margin:16px 0 22px;padding-bottom:12px;border-bottom:2px solid #e2e8f0}
+  .mbm-classroom .slide h3 {color:#182c3c;font-size:1.2rem;line-height:1.3;margin:18px 0 10px}
+  .mbm-classroom .slide p,.mbm-classroom .slide li {font-size:1.15rem;line-height:1.6;color:#334155;max-width:85ch}
+  .mbm-classroom .slide p {margin:.5em 0}
+  .mbm-classroom .slide>svg {max-width:900px;margin:18px auto;display:block;overflow:visible}
+  .mbm-classroom .slide>.tag {display:inline-block;background:var(--lo-bg);color:#183b4b;border-radius:8px;padding:6px 14px;font-size:.9rem;font-weight:800;letter-spacing:.04em}
+  .mbm-classroom .slide[data-classroom-phase="ido"]>.tag {background:var(--ido-bg);color:#68321f}
+  .mbm-classroom .slide[data-classroom-phase="wedo"]>.tag {background:var(--wedo-bg);color:#115c52}
+  .mbm-classroom .slide[data-classroom-phase="independent"]>.tag {background:var(--task-bg);color:#684811}
+  .mbm-classroom .slide>.time {float:right;border-radius:999px;background:#f5f7f8;color:#334155;border:1px solid #cbd5e1;font-size:.9rem}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.time {display:none}
+  .mbm-classroom .mbm-lesson-objective {background:var(--lo-bg);border-left:6px solid var(--lo-border);border-radius:12px;padding:14px 18px;margin:16px 0}
+  .mbm-classroom .mbm-lesson-success {background:var(--sc-bg);border-left:6px solid var(--sc-border);border-radius:12px;padding:14px 18px;margin:14px 0}
+  .mbm-classroom .box,.mbm-classroom .route,.mbm-classroom .route-card {background:#f8fafc;color:#1f2937;border:1px solid #cbd5e1;border-radius:12px;padding:16px}
+  .mbm-classroom .box.objective {background:var(--lo-bg);border-left:6px solid var(--lo-border)}
+  .mbm-classroom .lundy,.mbm-classroom .lundy-strip {background:#f8fafc;color:#334155;border:1px solid #dce3e8;border-radius:12px;padding:10px 14px;margin:22px 0 0}
+  .mbm-classroom .lundy-grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+  .mbm-classroom .lundy-grid>span {display:block;color:#213544;background:var(--lo-bg);border-radius:8px;padding:7px;text-align:center;font-size:.8rem;font-weight:800}
+  .mbm-classroom .lundy-grid>span:nth-child(2) {background:var(--ido-bg)}
+  .mbm-classroom .lundy-grid>span:nth-child(3) {background:var(--wedo-bg)}
+  .mbm-classroom .lundy-grid>span:nth-child(4) {background:var(--task-bg)}
+  .mbm-classroom .lundy p,.mbm-classroom .lundy-strip p {font-size:.85rem;margin:8px 0 0;max-width:none}
+  .mbm-classroom button {min-width:44px;min-height:44px;border-radius:10px;font-weight:700;background:var(--btn-hover);color:#fff;border:1px solid transparent;padding:10px 16px}
+  .mbm-classroom button:hover {background:#203f4c;color:#fff}
+  .mbm-classroom button:focus-visible,.mbm-classroom a:focus-visible,.mbm-classroom select:focus-visible,.mbm-classroom summary:focus-visible {outline:3px solid #ab5800;outline-offset:3px}
+  .mbm-classroom .controls {background:#fffffff5;backdrop-filter:blur(8px);border:1px solid #dbe3e8;box-shadow:0 4px 20px #182c3c18;border-radius:14px;padding:8px;gap:7px;flex-wrap:wrap;max-width:calc(100vw - 32px)}
+  .mbm-classroom .prog {background:#e7ecef}
+  .mbm-classroom .prog>span {background:var(--lo-border)}
+  .mbm-classroom .overlay-card {background:#fff;color:#1f2937;border-color:var(--lo-border)}
+  .mbm-classroom .slide[data-classroom-phase="title"] {text-align:center}
+  .mbm-classroom .slide[data-classroom-phase="title"]>p {max-width:760px;margin:14px auto;text-align:left}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.tag {background:#d98128;color:#172334}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.lundy {max-width:760px;margin:24px auto 0;text-align:left}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.box {text-align:left}
+  .mbm-classroom body.calm .slide {box-shadow:none}
+  @media(max-width:700px) {
+    .mbm-classroom main.deck {padding:14px 14px 180px}
+    .mbm-classroom main.deck>.slide {min-height:calc(100dvh - 205px);padding:20px 16px}
+    .mbm-classroom .slide p,.mbm-classroom .slide li {font-size:1.05rem}
+    .mbm-classroom .controls {left:14px;right:14px;bottom:14px;justify-content:center;max-width:none}
+    .mbm-classroom .controls button {font-size:.85rem;padding:8px 10px}
+    .mbm-classroom .lundy-grid {grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+  @media(prefers-reduced-motion:reduce) {
+    .mbm-classroom *, .mbm-classroom *::before, .mbm-classroom *::after {animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  }
+}
+</style></head>
 <body>
 <!--mbm_guide_v1 retained as a contract marker; guidance state is memory-only-->
 <!--n6-nav1:v1-->
@@ -47,120 +120,120 @@ h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-siz
 <!--/n6-nav1-->
 <a class="skip" href="#lessonDeck">Skip to lesson</a>
 <main id="lessonDeck" class="deck">
-<section class="slide active" data-type="title" data-title="Lesson overview" data-min="0">
+<section class="slide active" data-type="title" data-title="Lesson overview" data-min="0" data-classroom-phase="title">
 <div class="time">0 min</div>
-<span class="tag"></span>
-<div class="lundy" aria-label="Lundy participation strip">
+<span class="tag">BUILD Art</span>
+<h1>Connect The Artist, Organisation And What I Found</h1><p>BUILD · Art · Trinity Arts Award Explore. Connect The Artist, Organisation And What I Found.</p><p class="mbm-lesson-objective">Objective: Use real experience records to explain what you found about an artist and an arts organisation, and check both are evidenced.</p><p class="mbm-lesson-success">Success evidence: Own findings about both real roles, a supported connection or labelled comparison, exact record locations and an honest next action for any gap.</p><p>You can explore through looking, listening, asking and trying. Choose a way to take part that works for you. You do not need to share private facts about your life.</p><p>We may go to them, they may come in, or we may meet live on screen. The route comes from the current slot card. No meeting is promised by this deck.</p><p>40-minute lesson frame. Staff may extend or split the real experience across sessions.</p><div class="box rehearsal" data-mbm-guide="staff">This deck serves Explore Part B, Explore. Part B requires at least one artist AND at least one arts organisation, through live or active experience. Desk research alone fails; archives and prerecorded video are preparation only. Explore has four parts, each a distinct activity. Overall Pass allows ONE Attempted. Any Not Attempted = Below Pass. The whole Explore portfolio has a 10-file cap, organised digitally by part. The three assessment areas are art form knowledge and understanding, creativity, and communication. Results are Pass or Below Pass only. Only an adviser trained at Explore may assess; delivery is through a validated centre. Neither local training nor validation is asserted as confirmed here. Advisers must not write plans, reviews or evidence for pupils. Scribe or record the pupil's own words and check them back unchanged. Core, Extend and Challenge are support routes within Explore and retain the live or active requirement. An evidence locator names the filename plus page, slide or timecode. Read the current PRACTITIONER_SLOT and ORG_SLOT from tools/artsaward/SLOTS.json; no candidate name or date is embedded here. R1 pupils visit, R2 the artist or arts organisation comes in, R3 live remote exchange: all remain unconfirmed until actually arranged. Do not treat a recorded video as a live exchange. Source: tools/artsaward/SPEC.json, Explore and universal rules. This deck consolidates Explore Part B only. It does not replace either required live/active element with a folder check or a classroom model. Use the actual artist and organisation records and check identities against the current slots. A single genuine experience can serve both if the pupil’s exploration of each is clear. If two experiences involved unrelated people and groups, allow a comparison of their arts roles without inventing a working relationship. Missing actual participation must be completed when arranged, with time beyond this lesson if needed. The pupil’s explanation is theirs; do not author it for them. Explaining Part B findings here is a formative learning check, not a claim that the distinct Explore Part D enjoyment/achievement share is complete.</div><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<p>BUILD · Art · Trinity Arts Award Explore. Connect The Artist, Organisation And What I Found.</p><p>Objective: Use real experience records to explain what you found about an artist and an arts organisation, and check both are evidenced.</p><p>Success evidence: Own findings about both real roles, a supported connection or labelled comparison, exact record locations and an honest next action for any gap.</p><p>You can explore through looking, listening, asking and trying. Choose a way to take part that works for you. You do not need to share private facts about your life.</p><p>We may go to them, they may come in, or we may meet live on screen. The route comes from the current slot card. No meeting is promised by this deck.</p><p>40-minute lesson frame. Staff may extend or split the real experience across sessions.</p><div class="box rehearsal" data-mbm-guide="staff">This deck serves Explore Part B, Explore. Part B requires at least one artist AND at least one arts organisation, through live or active experience. Desk research alone fails; archives and prerecorded video are preparation only. Explore has four parts, each a distinct activity. Overall Pass allows ONE Attempted. Any Not Attempted = Below Pass. The whole Explore portfolio has a 10-file cap, organised digitally by part. The three assessment areas are art form knowledge and understanding, creativity, and communication. Results are Pass or Below Pass only. Only an adviser trained at Explore may assess; delivery is through a validated centre. Neither local training nor validation is asserted as confirmed here. Advisers must not write plans, reviews or evidence for pupils. Scribe or record the pupil's own words and check them back unchanged. Core, Extend and Challenge are support routes within Explore and retain the live or active requirement. An evidence locator names the filename plus page, slide or timecode. Read the current PRACTITIONER_SLOT and ORG_SLOT from tools/artsaward/SLOTS.json; no candidate name or date is embedded here. R1 pupils visit, R2 the artist or arts organisation comes in, R3 live remote exchange: all remain unconfirmed until actually arranged. Do not treat a recorded video as a live exchange. Source: tools/artsaward/SPEC.json, Explore and universal rules. This deck consolidates Explore Part B only. It does not replace either required live/active element with a folder check or a classroom model. Use the actual artist and organisation records and check identities against the current slots. A single genuine experience can serve both if the pupil’s exploration of each is clear. If two experiences involved unrelated people and groups, allow a comparison of their arts roles without inventing a working relationship. Missing actual participation must be completed when arranged, with time beyond this lesson if needed. The pupil’s explanation is theirs; do not author it for them. Explaining Part B findings here is a formative learning check, not a claim that the distinct Explore Part D enjoyment/achievement share is complete.</div></section>
-<section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="3" data-ta1="Check the actual records before beginning. Do not infer completion from a filename, a finished worksheet or attendance at the lesson.">
+</section>
+<section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="3" data-ta1="Check the actual records before beginning. Do not infer completion from a filename, a finished worksheet or attendance at the lesson." data-classroom-phase="arrival">
 <div class="time">3 min</div>
-<span class="tag"></span>
+<span class="tag">Retrieval</span>
 <h2>Arrival · retrieve</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Bring the real records together</h3><p>Find your artist record and arts group record. Put them where you can see both.</p><p>Look at each label. Does it show a real session, preparation or a job still to do?</p><p>A prepared question is useful, but it is not the reply. A group name is useful, but it does not show how you took part.</p><p>If a real element is missing, tell staff. Keep its space open on your sheet. You will need a real way to explore it when arranged.</p><p>If both records are ready, find something you learnt from each. Choose a detail you can show or explain in your own words.</p><p>Today you will connect those findings with care.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Bring the real records together</h3><p>Find your artist record and arts group record. Put them where you can see both.</p><p>Look at each label. Does it show a real session, preparation or a job still to do?</p><p>A prepared question is useful, but it is not the reply. A group name is useful, but it does not show how you took part.</p><p>If a real element is missing, tell staff. Keep its space open on your sheet. You will need a real way to explore it when arranged.</p><p>If both records are ready, find something you learnt from each. Choose a detail you can show or explain in your own words.</p><p>Today you will connect those findings with care.</p></section>
-<section class="slide" data-type="starter" data-title="Starter · create the need" data-min="3" data-ta1="Make and place the paper form live. State that this is a classroom model, with no claimed organisation or outside artist contact.">
+</section>
+<section class="slide" data-type="starter" data-title="Starter · create the need" data-min="3" data-ta1="Make and place the paper form live. State that this is a classroom model, with no claimed organisation or outside artist contact." data-classroom-phase="starter">
 <div class="time">3 min</div>
-<span class="tag"></span>
+<span class="tag">Starter</span>
 <h2>Starter · create the need</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Rehearsal: two roles in one small scene</h3><p>Watch the adult fold a piece of paper so it stands. Then they place it where it can be seen from two seats.</p><p>Point to the making choice. Then point to the choice that helps someone see the work.</p><p>The fold and the display have different jobs. In this classroom model one adult did both.</p><p>A real artist and arts group may work together. They may also be quite separate. We need a record to tell us which is true.</p><p>Keep this model labelled rehearsal. It helps us talk about roles. It cannot take the place of exploring the real artist and group.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Rehearsal: two roles in one small scene</h3><p>Watch the adult fold a piece of paper so it stands. Then they place it where it can be seen from two seats.</p><p>Point to the making choice. Then point to the choice that helps someone see the work.</p><p>The fold and the display have different jobs. In this classroom model one adult did both.</p><p>A real artist and arts group may work together. They may also be quite separate. We need a record to tell us which is true.</p><p>Keep this model labelled rehearsal. It helps us talk about roles. It cannot take the place of exploring the real artist and group.</p></section>
-<section class="slide" data-type="ido" data-title="I Do · model" data-min="7" data-ta1="Model the method on visible classroom actions only, then guide the pupil to their own real records. An apparent shared theme does not establish employment, membership or collaboration.">
+</section>
+<section class="slide" data-type="ido" data-title="I Do · model" data-min="7" data-ta1="Model the method on visible classroom actions only, then guide the pupil to their own real records. An apparent shared theme does not establish employment, membership or collaboration." data-classroom-phase="ido">
 <div class="time">7 min</div>
-<span class="tag"></span>
+<span class="tag">I Do</span>
 <h2>I Do · model</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Use the record before you make a link</h3><p>Start with the artist record. Find the real name and the action you took part in. Look at the detail you chose to keep.</p><p>What did you find out about the person's art or way of working? Point to the part that supports your answer.</p><p>Now do the same for the arts group. Find its real name. Look for your action and what you found about its work.</p><p>Do the records show that the person and group worked together? Perhaps the source names a workshop the group ran with that artist. Check the source before you say so.</p><p>If the records do not show a working link, do not make one up. You can still compare what you explored.</p><p>The artist may have helped you notice a making choice. The group may have helped you notice how people can use or see art. Use only the details in your own records.</p><p>A link should help explain the work. It should not add a new fact just to make a neat story.</p><p>Keep a question mark where you need to find out more.</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Four boxes lead from opening both records to finding a detail from each, explaining the findings and checking whether a proposed link is a fact or a comparison."><title>Build the connection from real records</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">OPEN</text><text x="73" y="88" text-anchor="middle" font-size="11">both real records</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">FIND</text><text x="231" y="88" text-anchor="middle" font-size="11">a detail from each</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">EXPLAIN</text><text x="389" y="88" text-anchor="middle" font-size="11">what I found out</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">CHECK</text><text x="547" y="88" text-anchor="middle" font-size="11">fact or comparison?</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">Open, find, explain and check the link.</text></svg><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Use the record before you make a link</h3><p>Start with the artist record. Find the real name and the action you took part in. Look at the detail you chose to keep.</p><p>What did you find out about the person's art or way of working? Point to the part that supports your answer.</p><p>Now do the same for the arts group. Find its real name. Look for your action and what you found about its work.</p><p>Do the records show that the person and group worked together? Perhaps the source names a workshop the group ran with that artist. Check the source before you say so.</p><p>If the records do not show a working link, do not make one up. You can still compare what you explored.</p><p>The artist may have helped you notice a making choice. The group may have helped you notice how people can use or see art. Use only the details in your own records.</p><p>A link should help explain the work. It should not add a new fact just to make a neat story.</p><p>Keep a question mark where you need to find out more.</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Four boxes lead from opening both records to finding a detail from each, explaining the findings and checking whether a proposed link is a fact or a comparison."><title>Build the connection from real records</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">OPEN</text><text x="73" y="88" text-anchor="middle" font-size="11">both real records</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">FIND</text><text x="231" y="88" text-anchor="middle" font-size="11">a detail from each</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">EXPLAIN</text><text x="389" y="88" text-anchor="middle" font-size="11">what I found out</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">CHECK</text><text x="547" y="88" text-anchor="middle" font-size="11">fact or comparison?</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">Open, find, explain and check the link.</text></svg></section>
-<section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="3" data-ta1="Suggested sort: A/C preparation; B/D can evidence real exploration if accurate and located. All examples are visible below. Check quality and context rather than automatically accepting a record type.">
+</section>
+<section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="3" data-ta1="Suggested sort: A/C preparation; B/D can evidence real exploration if accurate and located. All examples are visible below. Check quality and context rather than automatically accepting a record type." data-classroom-phase="wedo">
 <div class="time">3 min</div>
-<span class="tag"></span>
+<span class="tag">We Do</span>
 <h2>We Do · everyone commits</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Visible cards: what does this record show?</h3><p>Sort these record types into preparation or a record of real exploration. They are example types, not claims that your activity took place.</p><p>Point to what would help you identify the person or group and your own action.</p><p>A record may need more context. A sample may have no label. What would help you find its source?</p><p>Use the sort to check your work. Keep a missing record marked as a gap.</p><ul><li>A · A logo copied from a website before an activity.</li><li>B · A true note from a real artist session. It records the pupil’s question and reply.</li><li>C · Notes made only from an old film of a workshop.</li><li>D · A true arts group record. It shows the pupil’s action and finding.</li></ul><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Visible cards: what does this record show?</h3><p>Sort these record types into preparation or a record of real exploration. They are example types, not claims that your activity took place.</p><p>Point to what would help you identify the person or group and your own action.</p><p>A record may need more context. A sample may have no label. What would help you find its source?</p><p>Use the sort to check your work. Keep a missing record marked as a gap.</p><ul><li>A · A logo copied from a website before an activity.</li><li>B · A true note from a real artist session. It records the pupil’s question and reply.</li><li>C · Notes made only from an old film of a workshop.</li><li>D · A true arts group record. It shows the pupil’s action and finding.</li></ul></section>
-<section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="7" data-ta1="Accept a comparison when no organisational relationship is evidenced. Do not supply facts to make the pupil’s connection more impressive.">
+</section>
+<section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="7" data-ta1="Accept a comparison when no organisational relationship is evidenced. Do not supply facts to make the pupil’s connection more impressive." data-classroom-phase="ido">
 <div class="time">7 min</div>
-<span class="tag"></span>
+<span class="tag">I Do</span>
 <h2>I Do 2 · connect</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>A working link or your comparison?</h3><p>There are two clear ways to connect the findings. Choose the one your records support.</p><p>A working link means the real artist and group did some work together. The source must show that link. Name where it can be found.</p><p>A comparison means you have noticed a shared idea or a difference. It is your thought about the two experiences.</p><p>You might compare the tools or the space. Or look at how people take part. That does not mean the artist belongs to the group.</p><p>Use words that keep the difference clear. Does the record show a real link? Or did you notice a shared idea?</p><p>Make a small sketch, use arrows or explain aloud. Keep a detail from each real record beside the link.</p><p>If you are unsure, keep it as a question. You do not need to force a connection that the work does not support.</p><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="The left panel needs source evidence for a working link. The right panel is the pupil’s comparison and does not claim the artist and group worked together."><title>Two different kinds of connection</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">WORKING LINK</text><text x="151" y="74" text-anchor="middle" font-size="11">the source shows work together</text><text x="151" y="94" text-anchor="middle" font-size="11">name the record that supports it</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">MY COMPARISON</text><text x="469" y="74" text-anchor="middle" font-size="11">I notice a shared idea or change</text><text x="469" y="94" text-anchor="middle" font-size="11">no claim that they work together</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Say whether it is a real link or your comparison.</text></svg><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>A working link or your comparison?</h3><p>There are two clear ways to connect the findings. Choose the one your records support.</p><p>A working link means the real artist and group did some work together. The source must show that link. Name where it can be found.</p><p>A comparison means you have noticed a shared idea or a difference. It is your thought about the two experiences.</p><p>You might compare the tools or the space. Or look at how people take part. That does not mean the artist belongs to the group.</p><p>Use words that keep the difference clear. Does the record show a real link? Or did you notice a shared idea?</p><p>Make a small sketch, use arrows or explain aloud. Keep a detail from each real record beside the link.</p><p>If you are unsure, keep it as a question. You do not need to force a connection that the work does not support.</p><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="The left panel needs source evidence for a working link. The right panel is the pupil’s comparison and does not claim the artist and group worked together."><title>Two different kinds of connection</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">WORKING LINK</text><text x="151" y="74" text-anchor="middle" font-size="11">the source shows work together</text><text x="151" y="94" text-anchor="middle" font-size="11">name the record that supports it</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">MY COMPARISON</text><text x="469" y="74" text-anchor="middle" font-size="11">I notice a shared idea or change</text><text x="469" y="94" text-anchor="middle" font-size="11">no claim that they work together</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Say whether it is a real link or your comparison.</text></svg></section>
-<section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="5" data-ta1="Use a willing partner or staff support. Check locators and meaning. Where an actual element is ready to complete, support it with sufficient time and accurate capture; otherwise retain the next action.">
+</section>
+<section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="5" data-ta1="Use a willing partner or staff support. Check locators and meaning. Where an actual element is ready to complete, support it with sufficient time and accurate capture; otherwise retain the next action." data-classroom-phase="wedo">
 <div class="time">5 min</div>
-<span class="tag"></span>
+<span class="tag">We Do</span>
 <h2>We Do 2 · lab</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Check the finding with someone</h3><p>Show your chosen detail to a partner or staff member. Tell them which record it comes from.</p><p>Name the filename and page, slide or timecode. Ask them to find the detail. A quick point can help if reading is hard.</p><p>Now show the second record. Can they find that one too?</p><p>Explain your link or comparison. Ask if it is clear which parts are facts and which are your own thoughts.</p><p>If a real session is missing, tell staff. Choose the next real action together. A live activity can take place when it is properly arranged. A new invented note cannot fill that gap.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Check the finding with someone</h3><p>Show your chosen detail to a partner or staff member. Tell them which record it comes from.</p><p>Name the filename and page, slide or timecode. Ask them to find the detail. A quick point can help if reading is hard.</p><p>Now show the second record. Can they find that one too?</p><p>Explain your link or comparison. Ask if it is clear which parts are facts and which are your own thoughts.</p><p>If a real session is missing, tell staff. Choose the next real action together. A live activity can take place when it is properly arranged. A new invented note cannot fill that gap.</p></section>
-<section class="slide" data-type="independent" data-title="Independent · evidence" data-min="9" data-ta1="Scribe or record the pupil’s own meaning without improving it. All tiers retain both live/active elements; a supported explanation is not permission to omit one.">
+</section>
+<section class="slide" data-type="independent" data-title="Independent · evidence" data-min="9" data-ta1="Scribe or record the pupil’s own meaning without improving it. All tiers retain both live/active elements; a supported explanation is not permission to omit one." data-classroom-phase="independent">
 <div class="time">9 min</div>
-<span class="tag"></span>
+<span class="tag">Independent work</span>
 <h2>Independent · evidence</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Make your own account of what you found</h3><p>Use your real records to show what you found about both roles. You may write, draw, speak or use a short recording.</p><p>Name the artist and arts group accurately. Keep your own action in each experience clear.</p><p>Explain a detail from each. Then add your supported link, your comparison or the question you still have.</p><p>Keep each filename and page, slide or timecode beside the finding. The reader should be able to follow it back to the real moment.</p><p>If preparation is all you have for one element, say so. Keep that gap as a next action. Complete the real session when arranged.</p><p>Save this account with Part B. Keep the original records too.</p><ul><li>Core · use prompts to find both real experience records. Point, speak or draw what you found about the artist and arts group. Keep the two findings and their file locations. If a live or active element is missing, name it as a next action.</li><li>Extend · explain both findings in your own layout. Use the records to show a true working link or make a clearly labelled comparison. Keep both live or active elements and exact locations.</li><li>Challenge · keep both real findings and records. Check a possible link in more than one piece of evidence. Explain what is known and what remains only a question. Do not turn a guess into a fact.</li></ul><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Make your own account of what you found</h3><p>Use your real records to show what you found about both roles. You may write, draw, speak or use a short recording.</p><p>Name the artist and arts group accurately. Keep your own action in each experience clear.</p><p>Explain a detail from each. Then add your supported link, your comparison or the question you still have.</p><p>Keep each filename and page, slide or timecode beside the finding. The reader should be able to follow it back to the real moment.</p><p>If preparation is all you have for one element, say so. Keep that gap as a next action. Complete the real session when arranged.</p><p>Save this account with Part B. Keep the original records too.</p><ul><li>Core · use prompts to find both real experience records. Point, speak or draw what you found about the artist and arts group. Keep the two findings and their file locations. If a live or active element is missing, name it as a next action.</li><li>Extend · explain both findings in your own layout. Use the records to show a true working link or make a clearly labelled comparison. Keep both live or active elements and exact locations.</li><li>Challenge · keep both real findings and records. Check a possible link in more than one piece of evidence. Explain what is known and what remains only a question. Do not turn a guess into a fact.</li></ul></section>
-<section class="slide" data-type="exit" data-title="Exit · Audience and Influence" data-min="3" data-ta1="Record the true status of both elements and any next arrangement. Completion is checked against the requirement, not declared because this fourth Part B lesson has ended.">
+</section>
+<section class="slide" data-type="exit" data-title="Exit · Audience and Influence" data-min="3" data-ta1="Record the true status of both elements and any next arrangement. Completion is checked against the requirement, not declared because this fourth Part B lesson has ended." data-classroom-phase="exit">
 <div class="time">3 min</div>
-<span class="tag"></span>
+<span class="tag">Exit ticket</span>
 <h2>Exit · Audience and Influence</h2>
 <div class="lundy-status">
 <p>
@@ -172,27 +245,19 @@ h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-siz
 <p>
 <b>INFLUENCE:</b> one real next action is recorded: retain, add method detail, or leave open.</p>
 </div>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>What is ready, and what is next?</h3><p>Point to a finding you can now explain. Say which real record supports it.</p><p>Check both roles one last time. Is the artist explored through a real session? Is the arts group explored through a real session too?</p><p>Tell staff about any work still to do. Leave that status honest.</p><p>Keep the ideas you found interesting. They can help you choose new art to make later. These records stay a clear account of what happened in Part B.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>What is ready, and what is next?</h3><p>Point to a finding you can now explain. Say which real record supports it.</p><p>Check both roles one last time. Is the artist explored through a real session? Is the arts group explored through a real session too?</p><p>Tell staff about any work still to do. Leave that status honest.</p><p>Keep the ideas you found interesting. They can help you choose new art to make later. These records stay a clear account of what happened in Part B.</p></section>
+</section>
 </main>
 <nav class="controls" aria-label="Lesson controls">
-<button type="button" data-nav="previous">◀ Previous</button>
-<button type="button" data-tool="1">Teacher tools</button>
-<button type="button" data-tool="2">Evidence &amp; print</button>
-<button type="button" data-tool="3">Calm mode</button>
-<button type="button" data-tool="4">Static diagrams</button>
-<button type="button" data-tool="5">Previous</button>
-<button type="button" data-tool="6">Next</button>
-<button type="button" data-nav="next">Next ▶</button>
-</nav>
+<button type="button" data-nav="previous">◀ Previous</button><button type="button" data-tool="1">Teacher tools</button><button type="button" data-tool="2">Evidence &amp; print</button><button type="button" data-tool="3">Calm mode</button><button type="button" data-tool="4">Static diagrams</button><button type="button" data-nav="next">Next ▶</button></nav>
 <div class="prog" aria-hidden="true">
 <span>
 </span>
@@ -223,7 +288,100 @@ h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-siz
         <p>For a recorded response, write the actual file name and page, slide or timecode.</p>
       </section>
     </section><!--n6-nav1:v1--><div class="n6-splash"><div style="text-align:center;margin-top:8px"><svg width="64" height="64" viewbox="0 0 100 100" aria-label="Made by Matt"><circle cx="50" cy="50" r="47" fill="none" stroke="#1e3a8a" stroke-width="3.4"></circle><g transform="translate(0 2)"><path d="M28 71 L28 37 L50 59 L72 37 L72 71" fill="none" stroke="#1e3a8a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 22.5 L51.48 28.52 L57.5 30 L51.48 31.48 L50 37.5 L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"></path></g></svg></div></div><!--/n6-nav1--><script id="lesson-config" type="application/json">{"id": "EXPLORE_ART_W4_B4", "family": "BUILD Art", "week": 4, "slot": "Art · Trinity Arts Award Explore", "title": "Connect The Artist, Organisation And What I Found", "outcomes": ["Work from actual experience records. Explain or demonstrate what was found about the artist and the organisation and how their roles connect. Check that both are evidenced. Complete a missing live/active element when arranged; do not fill it with an invented account."], "cells": [], "objective": "Use real experience records to explain what you found about an artist and an arts organisation, and check both are evidenced.", "timings": [0, 3, 3, 7, 3, 7, 5, 9, 3], "artsAward": {"level": "Explore", "parts": ["B"], "slots": ["ORG_SLOT", "PRACTITIONER_SLOT"]}, "planId": "f0b86fd5d518", "weDoType": "sort-or-match", "tierLadder": ["Core", "Extend", "Challenge"]}</script>
-<script data-award-chassis="">/* Runtime for newly authored award decks; no persistence or external dependencies. */
+<script data-award-slot-reader>
+/* One current slot source. Embedded only in slot-dependent award decks. */
+(function (root, factory) {
+  const api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else root.MBMArtsSlots = api;
+}(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  'use strict';
+  function readSlots(doc, required) {
+    if (!doc || doc.schema !== 'arts-award-slots-v1' || !doc.slots || !Array.isArray(required)) {
+      throw new Error('Choose the current Arts Award slots file.');
+    }
+    return required.map(function (key) {
+      const slot = doc.slots[key];
+      if (!slot || !Array.isArray(slot.entries)) throw new Error('A required slot is missing.');
+      const entries = slot.entries.map(function (entry) {
+        if (!entry || typeof entry !== 'object' || Array.isArray(entry)) throw new Error('Invalid slot entry.');
+        const status = String(entry.status || 'UNCONFIRMED').toUpperCase();
+        const confirmed = status === 'CONFIRMED' || status === 'BOOKED';
+        const name = String(entry.name || entry.title || '').trim();
+        const route = String(entry.route || '').trim();
+        return {name: name, route: route, date: String(entry.date || ''),
+          confirmed: confirmed && Boolean(name) && ['R1', 'R2', 'R3'].includes(route)};
+      });
+      return {key: key, entries: entries, ready: entries.some(e => e.confirmed)};
+    });
+  }
+  async function loadHosted(url, required, fetcher) {
+    const response = await fetcher(url, {cache: 'no-store', credentials: 'same-origin'});
+    if (!response.ok) throw new Error('Current slots could not be loaded.');
+    return readSlots(await response.json(), required);
+  }
+  async function loadFile(file, required) {
+    if (!file || file.size > 1048576) throw new Error('Choose a slots JSON file smaller than 1 MB.');
+    return readSlots(JSON.parse(await file.text()), required);
+  }
+  function mount(config) {
+    const host = document.querySelector('section[data-min]');
+    if (!host || document.getElementById('award-slot-panel')) return;
+    const panel = document.createElement('div');
+    panel.id = 'award-slot-panel';
+    panel.className = 'box rehearsal';
+    panel.dataset.mbmGuide = 'staff';
+    panel.dataset.audience = 'staff';
+    const heading = document.createElement('h3');
+    heading.textContent = 'Current session details';
+    const status = document.createElement('p');
+    status.setAttribute('role', 'status');
+    const list = document.createElement('ul');
+    const label = document.createElement('label');
+    label.textContent = 'Open the current SLOTS.json file: ';
+    const input = document.createElement('input');
+    input.type = 'file'; input.accept = '.json,application/json';
+    label.appendChild(input);
+    panel.append(heading, status, list, label); host.appendChild(panel);
+    let generation = 0;
+    function fallback(message) {
+      list.replaceChildren();
+      status.textContent = 'Unconfirmed — preparation only. ' + message;
+    }
+    function show(rows) {
+      list.replaceChildren();
+      const allReady = rows.length > 0 && rows.every(row => row.ready);
+      status.textContent = allReady
+        ? 'A confirmed route is recorded. Staff must check arrangements before delivery.'
+        : 'Unconfirmed — preparation only. Complete the actual experience when a route is ready.';
+      rows.forEach(function (row) {
+        const item = document.createElement('li');
+        const ready = row.entries.filter(entry => entry.confirmed);
+        item.textContent = row.key + ': ' + (ready.length
+          ? ready.map(e => [e.name, e.route, e.date].filter(Boolean).join(' · ')).join('; ')
+          : 'no confirmed entry');
+        list.appendChild(item);
+      });
+    }
+    input.addEventListener('change', async function () {
+      const ticket = ++generation;
+      fallback('Reading the selected file.');
+      try { const rows = await loadFile(input.files[0], config.required); if (ticket === generation) show(rows); }
+      catch (_) { if (ticket === generation) fallback('The selected file could not be read.'); }
+    });
+    fallback('Load the shared slots file to check the current route.');
+    if (location.protocol === 'http:' || location.protocol === 'https:') {
+      const ticket = ++generation;
+      loadHosted(config.url, config.required, window.fetch.bind(window))
+        .then(rows => { if (ticket === generation) show(rows); })
+        .catch(() => { if (ticket === generation) fallback('Open the local slots file if you are offline.'); });
+    }
+  }
+  return {readSlots: readSlots, loadHosted: loadHosted, loadFile: loadFile, mount: mount};
+}));
+
+document.addEventListener("DOMContentLoaded",function(){MBMArtsSlots.mount({"required": ["ORG_SLOT", "PRACTITIONER_SLOT"], "url": "../../tools/artsaward/SLOTS.json"});});
+</script><script data-award-chassis="">/* Runtime for newly authored award decks; no persistence or external dependencies. */
 (function () {
   'use strict';
 
@@ -402,98 +560,5 @@ h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-siz
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once: true});
   else boot();
 }());
-</script><script data-award-slot-reader>
-/* One current slot source. Embedded only in slot-dependent award decks. */
-(function (root, factory) {
-  const api = factory();
-  if (typeof module === 'object' && module.exports) module.exports = api;
-  else root.MBMArtsSlots = api;
-}(typeof globalThis !== 'undefined' ? globalThis : this, function () {
-  'use strict';
-  function readSlots(doc, required) {
-    if (!doc || doc.schema !== 'arts-award-slots-v1' || !doc.slots || !Array.isArray(required)) {
-      throw new Error('Choose the current Arts Award slots file.');
-    }
-    return required.map(function (key) {
-      const slot = doc.slots[key];
-      if (!slot || !Array.isArray(slot.entries)) throw new Error('A required slot is missing.');
-      const entries = slot.entries.map(function (entry) {
-        if (!entry || typeof entry !== 'object' || Array.isArray(entry)) throw new Error('Invalid slot entry.');
-        const status = String(entry.status || 'UNCONFIRMED').toUpperCase();
-        const confirmed = status === 'CONFIRMED' || status === 'BOOKED';
-        const name = String(entry.name || entry.title || '').trim();
-        const route = String(entry.route || '').trim();
-        return {name: name, route: route, date: String(entry.date || ''),
-          confirmed: confirmed && Boolean(name) && ['R1', 'R2', 'R3'].includes(route)};
-      });
-      return {key: key, entries: entries, ready: entries.some(e => e.confirmed)};
-    });
-  }
-  async function loadHosted(url, required, fetcher) {
-    const response = await fetcher(url, {cache: 'no-store', credentials: 'same-origin'});
-    if (!response.ok) throw new Error('Current slots could not be loaded.');
-    return readSlots(await response.json(), required);
-  }
-  async function loadFile(file, required) {
-    if (!file || file.size > 1048576) throw new Error('Choose a slots JSON file smaller than 1 MB.');
-    return readSlots(JSON.parse(await file.text()), required);
-  }
-  function mount(config) {
-    const host = document.querySelector('section[data-min]');
-    if (!host || document.getElementById('award-slot-panel')) return;
-    const panel = document.createElement('div');
-    panel.id = 'award-slot-panel';
-    panel.className = 'box rehearsal';
-    panel.dataset.mbmGuide = 'staff';
-    panel.dataset.audience = 'staff';
-    const heading = document.createElement('h3');
-    heading.textContent = 'Current session details';
-    const status = document.createElement('p');
-    status.setAttribute('role', 'status');
-    const list = document.createElement('ul');
-    const label = document.createElement('label');
-    label.textContent = 'Open the current SLOTS.json file: ';
-    const input = document.createElement('input');
-    input.type = 'file'; input.accept = '.json,application/json';
-    label.appendChild(input);
-    panel.append(heading, status, list, label); host.appendChild(panel);
-    let generation = 0;
-    function fallback(message) {
-      list.replaceChildren();
-      status.textContent = 'Unconfirmed — preparation only. ' + message;
-    }
-    function show(rows) {
-      list.replaceChildren();
-      const allReady = rows.length > 0 && rows.every(row => row.ready);
-      status.textContent = allReady
-        ? 'A confirmed route is recorded. Staff must check arrangements before delivery.'
-        : 'Unconfirmed — preparation only. Complete the actual experience when a route is ready.';
-      rows.forEach(function (row) {
-        const item = document.createElement('li');
-        const ready = row.entries.filter(entry => entry.confirmed);
-        item.textContent = row.key + ': ' + (ready.length
-          ? ready.map(e => [e.name, e.route, e.date].filter(Boolean).join(' · ')).join('; ')
-          : 'no confirmed entry');
-        list.appendChild(item);
-      });
-    }
-    input.addEventListener('change', async function () {
-      const ticket = ++generation;
-      fallback('Reading the selected file.');
-      try { const rows = await loadFile(input.files[0], config.required); if (ticket === generation) show(rows); }
-      catch (_) { if (ticket === generation) fallback('The selected file could not be read.'); }
-    });
-    fallback('Load the shared slots file to check the current route.');
-    if (location.protocol === 'http:' || location.protocol === 'https:') {
-      const ticket = ++generation;
-      loadHosted(config.url, config.required, window.fetch.bind(window))
-        .then(rows => { if (ticket === generation) show(rows); })
-        .catch(() => { if (ticket === generation) fallback('Open the local slots file if you are offline.'); });
-    }
-  }
-  return {readSlots: readSlots, loadHosted: loadHosted, loadFile: loadFile, mount: mount};
-}));
-
-document.addEventListener("DOMContentLoaded",function(){MBMArtsSlots.mount({"required": ["ORG_SLOT", "PRACTITIONER_SLOT"], "url": "../../tools/artsaward/SLOTS.json"});});
 </script></body>
 </html>
