@@ -411,6 +411,12 @@ jobs:
             --output _sownb/vb/evidence/a2r/mechanism_battery_ci.json \
             | tee "$RUNNER_TEMP/vb-mechanism.txt"
 
+      # g29 is armed on every authored deck, not only on its own controls. A
+      # deck claiming another plan's cells passes every other gate in the stack:
+      # g28 checks a cell EXISTS, never that this deck is the one that teaches it.
+      - name: Every authored deck claims exactly its own plan's cells
+        run: python _sownb/vb/tools/g29_plan_binding.py --scope authored | tee "$RUNNER_TEMP/vb-g29.txt"
+
       # g27 is armed on the repository itself, not only on its own controls.
       - name: No tool derives a teaching week from a path
         run: python _sownb/vb/tools/g27_no_filename_weeks.py | tee "$RUNNER_TEMP/vb-g27.txt"

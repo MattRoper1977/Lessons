@@ -699,3 +699,52 @@ update for the three new Humanities decks — logged as **A3-H9**.
 
 Mechanism **19 tools, 176 controls**, derived, `--prove-red` PASS. g27 PASS.
 Every pack verifies with `sha256sum -c`.
+
+---
+
+## A3N-2 §2 — g29 plan binding, and provenance made structural. PR #291
+
+**Ceiling: 0 lesson units** (R1: a mechanism PR counts zero).
+
+**Why g28 was not enough.** g28 asks whether a cited cell EXISTS. It cannot ask
+whether THIS deck is the one that teaches it. Twice in this campaign a deck would
+have shipped carrying another plan's cells and passed the whole stack:
+
+- the batch-2 driver keyed on `family+week`, and two LAUNCH ASDAN plans share
+  week 1, so the second deck would silently have taken the first's cells;
+- an authoring run was launched from a task list typed out of a console print, in
+  which five of twelve cell sets and **eight of twelve outcomes** were wrong.
+
+Both are one failure — a rendering of the plan treated as the plan — and a cell
+claimed by the wrong deck is a coverage lie: the census counts it taught and
+nobody teaches it.
+
+**The binding is derived, not named.**
+
+    planId = sha256(family | ruledWeek | sorted(cells))[:12]
+
+so it survives the targets file being regenerated or reordered, and two plans
+sharing a family and a week still differ. A control pins that.
+
+**g29's three must-fire controls all fire**, plus two more:
+
+    a-deck-claiming-another-plans-cells-reds            RED, extra ["'S'!C9"]
+    a-deck-claiming-a-subset-reds                       RED, missing ["'S'!C2"]
+    two-correctly-bound-decks-in-one-family-week-pass   PASS, PASS
+    the-plan-id-survives-the-targets-file-reordered     same id
+    a-deck-with-no-planId-is-skipped-not-passed         SKIP
+
+**§2d, batch 2 re-verified: 16 of 16 PASS, 0 RED, 0 SKIP.** The binding was
+backfilled by DERIVATION rather than from a list of which deck I believed matched
+which plan: a deck is bound only where exactly one plan has exactly its cells.
+Zero or two matches writes nothing and reports, because an ambiguous binding is
+worse than none. All 16 bound, 0 unmatched, 0 with outcomes differing from plan.
+
+**§2c PROVENANCE — a run whose inputs cannot be traced REFUSES TO START.**
+`build_from_specs.py` now requires specs, donors and plans as files, records each
+sha256 in the run record, and exits with `PROVENANCE REFUSAL` otherwise. This is
+the fifth instance of the same mistake in this campaign; remembering not to do it
+is not a control, and refusing to start is.
+
+g29 is armed in CI on every authored deck, not only on its own controls.
+Mechanism **21 tools, 184 controls**, derived, `--prove-red` PASS.
