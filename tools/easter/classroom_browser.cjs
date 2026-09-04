@@ -41,6 +41,11 @@ const palettes = {BUILD:'rgb(79, 134, 156)', GROW:'rgb(91, 145, 165)', LAUNCH:'r
       assert.ok(state.titleSize>=28,row.file+': readable title');
       if(state.labels.length) assert.deepEqual(state.labels,['SPACE','VOICE','AUDIENCE','INFLUENCE']);
       assert.equal(await page.locator('main.deck>.slide').count(),9);
+      const reminders=await page.locator('main.deck>.slide>.lundy, main.deck>.slide>.lundy-strip').evaluateAll(nodes=>nodes.map(n=>({phase:n.parentElement.dataset.classroomPhase,display:getComputedStyle(n).display})));
+      for (const reminder of reminders) {
+        if (['title','exit'].includes(reminder.phase)) assert.notEqual(reminder.display,'none',row.file+': participation frame retained');
+        else assert.equal(reminder.display,'none',row.file+': repeated process banner suppressed');
+      }
       checked++;
     }
     for(const row of targets) await inspect(row);
@@ -58,6 +63,6 @@ const palettes = {BUILD:'rgb(79, 134, 156)', GROW:'rgb(91, 145, 165)', LAUNCH:'r
     await assert.rejects(()=>checkTitle('a title'),/missing title/);
     assert.ok(!failures.length,JSON.stringify(failures));
     console.log(JSON.stringify({classroomSurfaces:targets.length,viewportChecks:checked,
-      responsiveFamilies:representatives.length,titleAndPalette:true,reducedMotion:true,missingTitleControl:true}));
+      responsiveFamilies:representatives.length,titleAndPalette:true,lighterParticipationFraming:true,reducedMotion:true,missingTitleControl:true}));
   } finally {await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});

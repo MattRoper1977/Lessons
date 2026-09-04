@@ -2006,3 +2006,10 @@ User-selected BUILD Art reference colours and related GROW/LAUNCH palettes are a
 A separate toolbar defect was found in GROW award output: donor labels meant different actions from the award runtime's numbered handlers. All 42 award toolbars now expose the same six correctly named actions, without duplicate navigation. Runtime script logic is unchanged; this is a UI correction. Thirteen pack checksum files refreshed without adding or removing rows.
 
 Local checks: 19 author controls and 101 current plan bindings pass; no new workbook cells. CI will check the actual title/palette and responsive surfaces across all nine subject/pathway families, and re-run the 42 award interfaces. Curriculum content and activity enrichment remain pending and will count against batch ceilings where materially rewritten.
+
+
+## Latest classroom preference and source reconciliation — 2026-09-04
+
+Matt now prefers the earlier Science presentation, prominent downloadable packs, and lighter Lundy integration across subjects. This supersedes the earlier preference for repeated integration: the shared screen presentation frames participation at the opening and exit while leaving the actual choice, feedback and practical teaching intact. The 101 existing campaign files keep their exact teaching, config, timings, scripts, figures and print packs; the second digest-bound presentation pass records its own source snapshot. Zero lesson units.
+
+The five new attachments preserve all teaching allocation: Science BUILD/GROW/LAUNCH 2/2/3 periods of 40 minutes; Art 2/2/1. The new SoWs differ in eight Week 1–2 Science outcome cells, replacing the earlier explicitly ruled baseline wording. Record that version divergence without silently overwriting canonical bindings or manufacturing extra lessons. Other populated SoW cells and merged ranges agree. A pack week does not add a second LAUNCH Art period. The source comparison is saved beside the Easter preflight evidence.
