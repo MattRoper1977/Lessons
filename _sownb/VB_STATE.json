@@ -3245,8 +3245,8 @@
   }
  },
  "resume_easter_a3": {
-  "order": "VB-EASTER-A3",
-  "status": "BLOCKED ON THE CEILING",
+  "order": "VB-EASTER-A3N",
+  "status": "RUNNING (night build)",
   "mainHeadVerification": "blob-verified: all ten paths changed by #281 hash identically between the merge commit and branch head b35588b; not taken from the merge status",
   "correction": "the previous revision of this key recorded main at 727c3162 and #281 as NOT MERGED on a stalled sixth check. The sixth check completed successfully at 22:50:33; the API served a stale job record. See EASTER_LEDGER.md 'CORRECTION' and WRONG_BEFORE_RIGHT.",
   "landed": [
@@ -3285,10 +3285,9 @@
   ],
   "open": [],
   "ceiling": {
-   "total": 24,
-   "spent": 22,
-   "remaining": 2,
-   "blocker": "batch 1 needs 24 plans and 2 units remain; the ceiling must be raised or re-scoped before the build campaign can start. Not assumed either way."
+   "rule": "per batch, lesson units only (R1)",
+   "batch1": "0/24",
+   "spent": 0
   },
   "headline": {
    "inScope": 573,
@@ -3323,18 +3322,18 @@
    "evidence": "_sownb/vb/evidence/a3h6/"
   },
   "nextActions": [
-   "MATT: the ceiling. BLOCKING — 2 of 24 units remain, batch 1 needs 24 plans",
-   "MATT: A3-H2, now seven candidates (2 Humanities + 5 ASDAN)",
-   "MATT: A3-H5 and the title-slide question — the same question in two forms, together ~14% of every deck's word count",
-   "batch 1 only once the ceiling is settled: first 24 plans in tools/easter/EASTER_TARGETS.json, all ruled week <= 8; run dedupe_sweep.py over the output"
+   "R2 timing PR (five ASDAN decks)",
+   "splits as batch-1 units",
+   "batch 1: the 24 cover-taught plans"
   ],
   "humanItems": [
    "A3-H1",
    "A3-H2",
    "A3-H3",
    "A3-H4",
-   "A3-H5",
-   "A3-H6"
+   "A3-H5 (answered by R3)",
+   "A3-H6 (closed)",
+   "A3-H7"
   ],
   "resumePointer": "_sownb/vb/EASTER_LEDGER.md",
   "a3h2": {
@@ -3362,6 +3361,50 @@
    "note": "was 11/98 at A2R close; the two Easter tools were exercised by no workflow until #282 brought them into the battery"
   },
   "lastContentCommit": "0d54ddca1c893fbb9e818c0b08675535a021e86c",
-  "mainHeadNote": "read origin/main directly; a record can never name the commit that lands it, so any SHA here is stale by its own merge. Expect origin/main at or ahead of lastContentCommit; ahead only by records commits means nothing a gate measures has moved."
+  "mainHeadNote": "read origin/main directly; a record can never name the commit that lands it, so any SHA here is stale by its own merge. Expect origin/main at or ahead of lastContentCommit; ahead only by records commits means nothing a gate measures has moved.",
+  "rulings": {
+   "R1_ceiling": "per BATCH, lesson units only (authored deck / reshell / split child); mechanism, register, harness, dedupe, trim, timing, label and catalogue PRs count ZERO. The 22 units recorded against A3-H6 were misattributed - noted, nothing reversed. Batch 1 begins at 0/24; batches unbounded.",
+   "R2_a3h2": "five ASDAN decks: TIMING FIX FIRST then re-measure; other two: SPLIT AUTHORISED",
+   "R3_chrome": "contract refrain + title slide count ZERO both sides; landed in #286"
+  },
+  "a3n_r3": {
+   "status": "LANDED (pending merge)",
+   "units": 0,
+   "w16Control": {
+    "BUILD_HUM_W16": [
+     1.53,
+     1.37,
+     "RED->PASS"
+    ],
+    "GROW_HUM_W16": [
+     1.38,
+     1.22,
+     "now under 1.25"
+    ],
+    "LAUNCH_HUM_W16": [
+     1.28,
+     1.14,
+     "now under 1.25"
+    ]
+   },
+   "flipList": {
+    "moved": 20,
+    "cleared": 5,
+    "regressed": 7,
+    "targetOnly": 8,
+    "netVerdictChange": "+2 RED - marginally stricter, not a loosening",
+    "parked": 0,
+    "tool": "tools/easter/chrome_flip_list.py"
+   },
+   "withdrawn": [
+    "repeat-counts-once (DEFAULTED off, flag REPEAT_COUNTS_ONCE)",
+    "every-stage rule (zeroed real teaching)",
+    "sibling-group rule (matched real teaching)"
+   ],
+   "mechanism": {
+    "tools": 15,
+    "controls": 134
+   }
+  }
  }
 }

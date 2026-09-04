@@ -288,3 +288,39 @@ should count once or once per stage, and answering either one loosens g23 for
 every deck. §5 forbids me deciding it. It is noted here because it is roughly
 14% of every deck's word count and it explains part of why the whole estate
 reads heavy — not as an argument for any particular answer.
+
+---
+
+## A3-H7 — a deck that does not carry the refrain its family carries
+
+Found by the R3 flip list, 2026-09-04. Not edited.
+
+`LAUNCH_HUM_W8_Maps_Symbols_And_Grid_References.html` measures **0.9% chrome**
+where its five LAUNCH Humanities siblings measure ~24%. Under R3 it is the one
+deck that flips PASS→RED almost entirely because its family's median fell and
+its own did not.
+
+That is not a g23 finding. It says the deck is probably missing the
+contract-mandated Lundy refrain — the `lundy-in-three-places` clause the reshell
+contract enforces. **The question: is that deck non-compliant, or is its family
+over-carrying?** Either answer is a small content PR; neither is mine to pick,
+and the g23 red is a symptom, not the thing to fix.
+
+Re-run: `python3 tools/easter/chrome_flip_list.py`
+
+---
+
+## A3N R3 clause (b) — shipped OFF as a DEFAULTED decision
+
+R3 says "any other block repeated within a deck with an identical digest counts
+ONCE". Implemented and measured, it reverses R3's own control: the three W16
+decks get worse, not better, because the W9–W14 baselines are a richer chassis
+generation than the W15/W16 candidates and the rule strips 38% from the
+denominator against 31% from the numerator.
+
+It also has nothing left to do — the duplicated teaching it targets was removed
+from the estate in #280–#283 and the sweep reports 0 removable words.
+
+So it ships **off**, as a flag (`lesson_stages.REPEAT_COUNTS_ONCE`) rather than
+deleted code. **Flipping it to True turns it on and no other edit is needed.**
+Full measurements in `WRONG_BEFORE_RIGHT.md`.
