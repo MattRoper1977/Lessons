@@ -18,7 +18,7 @@ Usage:
   pack_furniture.py --list-controls | --self-test
 """
 from __future__ import annotations
-import argparse, hashlib, json, re, sys, tempfile
+import argparse, hashlib, json, re, shutil, sys, tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -121,8 +121,16 @@ def _write_sums(pack: Path) -> dict:
     def _rel(x):
         try: return str(Path(x).resolve().relative_to(ROOT))
         except ValueError: return str(x)
-    return {"file": _rel(pack) + "/manifest.json", "pack": _rel(pack),
-            "sumsFile": sums.name, "rowsAdded": added, "rowCount": len(rows),
+    # EVERY PATH IN THE RECORD IS REPO-RELATIVE. `sumsFile` was the bare name
+    # and `rowsAdded` bare filenames -- true inside the pack, unresolvable from
+    # an evidence file under _sownb/vb/evidence. The sweep does not currently
+    # read either key, so neither has produced a stale row; that is luck, not
+    # design, and the same decision made wrongly in manifest_sequence and
+    # refresh_pack_checksums did produce nine.
+    rel = _rel(pack)
+    return {"file": rel + "/manifest.json", "pack": rel,
+            "sumsFile": f"{rel}/{sums.name}",
+            "rowsAdded": [f"{rel}/{n}" for n in added], "rowCount": len(rows),
             "manifestSkipped": False,
             "verify": "OK" if not bad else f"MISMATCH {bad}"}
 
@@ -133,6 +141,7 @@ CONTROL_IDS = [
     "an-existing-manifest-field-is-preserved",
     "a-pack-level-spine-is-dropped-when-decks-disagree",
     "an-unrecognised-manifest-schema-is-left-untouched",
+    "every-path-in-the-record-resolves-from-the-repository-root",
 ]
 
 _D = ('<!doctype html><html><head><script id="lesson-config" type="application/json">'
@@ -157,7 +166,7 @@ def controls():
         rec("a-new-deck-gains-a-checksum-row",
             "refresh_pack_checksums refuses to add rows because that is right for an "
             "EDIT; adding a deck is the opposite case and the row must appear",
-            True, "a.html" in r1["rowsAdded"])
+            True, any(x.endswith("/a.html") for x in r1["rowsAdded"]))
         m1 = json.loads((pk / "manifest.json").read_text(encoding="utf-8"))
         rec("the-manifest-lists-every-deck-present-and-no-others",
             "a pack cannot list a deck it does not have or miss one it does",
@@ -179,13 +188,48 @@ def controls():
         (pk2 / "manifest.json").write_text(json.dumps(foreign), encoding="utf-8")
         r5 = update(pk2)
         after = json.loads((pk2 / "manifest.json").read_text(encoding="utf-8"))
+        # THE THIRD TOOL THAT NAMES A FILE IN A RECORD. manifest_sequence wrote
+        # bare filenames and refresh_pack_checksums wrote absolute container
+        # paths; between them that was nine decks and three checksum files
+        # reported STALE -- SUBJECT ABSENT for files that exist. This one was
+        # not producing a stale row only because the sweep does not read its
+        # keys, which is luck rather than design.
+        #
+        # Measured on a COPY of a real pack, staged at a nested path inside the
+        # repository so the record's paths are shaped exactly like the real
+        # ones. Never on the pack itself: update() writes, and a self-test that
+        # edits the estate would be a worse defect than the one it checks for.
+        live = next((q.parent for q in sorted(ROOT.rglob("SHA256SUMS.txt"))
+                     if ".git" not in str(q)), None)
+        absolute_or_bare, missing = ["control did not run"], ["control did not run"]
+        if live:
+            staged = ROOT / "_pack_furniture_control" / "copy"
+            if staged.parent.exists():
+                shutil.rmtree(staged.parent)
+            shutil.copytree(live, staged)
+            try:
+                probe = update(staged)
+                paths = [probe.get("file", ""), probe.get("pack", ""),
+                         probe.get("sumsFile", "")] + list(probe.get("rowsAdded", []))
+                paths = [x for x in paths if x]
+                absolute_or_bare = [x for x in paths
+                                    if x.startswith("/") or "/" not in x]
+                missing = [x for x in paths if not (ROOT / x).exists()]
+            finally:
+                shutil.rmtree(staged.parent, ignore_errors=True)
+        rec("every-path-in-the-record-resolves-from-the-repository-root",
+            "for a real pack, no path in the record is absolute or a bare "
+            "filename, and every one of them exists",
+            ([], []), (absolute_or_bare, missing))
+
         rec("an-unrecognised-manifest-schema-is-left-untouched",
             "the Humanities packs use sequence/notAuthoredYet/weekSpine and no "
             "lessons array; rewriting one left lessonCount 11 against a "
             "plannedLessonCount of 8. Rows still go in; the manifest is reported, "
             "not guessed at",
             (True, foreign, True),
-            (r5.get("manifestSkipped"), after, "a.html" in r5["rowsAdded"]))
+            (r5.get("manifestSkipped"), after,
+             any(x.endswith("/a.html") for x in r5["rowsAdded"])))
     return out
 
 
@@ -226,7 +270,8 @@ if __name__ == "__main__":
                   f"+{len(r['rowsAdded'])} rows  verify {r['verify']}")
         else:
             print(f"  {r['pack']}  lessons {r['lessonsBefore']}->{r['lessonsAfter']}  "
-                  f"+{len(r['rowsAdded'])} rows  {r['sumsFile']}  verify {r['verify']}")
+                  f"+{len(r['rowsAdded'])} rows  {Path(r['sumsFile']).name}  "
+                  f"verify {r['verify']}")
     if a.output:
         Path(a.output).parent.mkdir(parents=True, exist_ok=True)
         Path(a.output).write_text(json.dumps(recs, indent=1) + "\n", encoding="utf-8")

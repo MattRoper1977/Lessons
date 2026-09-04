@@ -35,6 +35,14 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+
+
+def _rel(p: Path) -> str:
+    """A path as this repository names it, so an evidence reader can find it."""
+    try:
+        return str(Path(p).resolve().relative_to(ROOT))
+    except ValueError:
+        return str(p)
 VERSION = "refresh-pack-checksums-v1.0.0"
 
 # Both names seen on main. Order is preference when a pack somehow has both.
@@ -76,7 +84,7 @@ def refresh(sums: Path, write: bool = True) -> dict:
     if write and changed:
         sums.write_text("\n".join(out) + "\n", encoding="utf-8")
     return {
-        "file": str(sums.relative_to(ROOT)) if sums.is_relative_to(ROOT) else str(sums),
+        "file": _rel(sums),
         "toolVersion": VERSION,
         "rowsBefore": len(old), "rowsAfter": len(out),
         "rowsAdded": 0, "rowsRemoved": 0,
@@ -99,7 +107,14 @@ def verify(sums: Path) -> dict:
             continue
         if hashlib.sha256(target.read_bytes()).hexdigest() != digest:
             bad.append(name)
-    return {"file": str(sums), "mismatched": bad, "status": "OK" if not bad else "MISMATCH"}
+    # REPO-RELATIVE, NOT ABSOLUTE. `file` is read as the subject of a QA record
+    # by the estate's stale-evidence sweep, which resolves it beside the
+    # evidence, in the evidence directory, or at the repository root. An
+    # absolute container path resolves at none of those, so three SHA256SUMS
+    # files that exist were reported STALE -- SUBJECT ABSENT. The same mistake
+    # in a different shape to the bare filenames manifest_sequence was writing.
+    return {"file": _rel(sums), "mismatched": bad,
+            "status": "OK" if not bad else "MISMATCH"}
 
 
 def packs_for(decks) -> dict:
@@ -124,6 +139,7 @@ CONTROL_IDS = [
     "a-blank-or-non-digest-line-survives-unchanged",
     "check-mode-writes-nothing",
     "verify-catches-a-stale-digest",
+    "every-path-in-the-record-resolves-from-the-repository-root",
 ]
 
 _A = "alpha\n"
@@ -215,6 +231,22 @@ def controls() -> list[dict]:
 
         p7 = _mkpack(d / "p7", "SHA256SUMS.txt")
         (d / "p7/a.html").write_text("alpha changed\n", encoding="utf-8")
+        # EVERY PATH THIS TOOL WRITES RESOLVES FROM THE REPOSITORY ROOT.
+        # Not just the one I remembered: the report's own `file` was already
+        # relative and the nested verify record's was absolute, which is how
+        # three SHA256SUMS files that exist were reported stale.
+        # Measured on a REAL pack in this repository, because that is the case
+        # the evidence is written about; a temp-dir probe lives outside ROOT and
+        # would prove the opposite of what matters.
+        live = next((q for q in sorted(ROOT.rglob("SHA256SUMS.txt"))
+                     if ".git" not in str(q)), None)
+        vr = verify(live) if live else {"file": "/absent"}
+        rec("every-path-in-the-record-resolves-from-the-repository-root",
+            "for a pack inside this repository the record names a repo-relative "
+            "path, not an absolute container path, and that path exists",
+            (False, True),
+            (vr["file"].startswith("/"), (ROOT / vr["file"]).exists()))
+
         rec("verify-catches-a-stale-digest",
             "verification must fail on a digest that no longer matches its file",
             ("MISMATCH", ["a.html"]),
