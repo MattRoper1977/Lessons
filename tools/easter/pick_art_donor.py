@@ -301,14 +301,24 @@ def controls(reference_paths: list[str] | None = None) -> list[dict]:
         "the contract scopes the reading band to new work",
         True, g26.bands()[1])
 
-    # The premise s1 rests on, asserted by measurement.
+    # THE PREMISE s1 RESTS ON, restated once it stopped being true.
+    #
+    # This control used to read "zero Art decks carry a lesson-config". That was
+    # measured and correct when the donor was chosen, and batch 3 then authored
+    # gate-readable Art decks and turned it red -- correctly. A control that
+    # goes red because the work succeeded is not a control, it is a countdown.
+    # The durable claim is the one underneath it: every gate-readable Art deck
+    # in this estate is one THIS campaign authored, and so still no PRE-EXISTING
+    # Art deck could have served as the donor.
     art = sorted(ROOT.glob("Art_Teesside/**/*.html")) + \
         sorted(ROOT.glob("*_Estate_v3/Art_Teesside/*.html"))
     readable = [p for p in art if 'id="lesson-config"'
                 in p.read_text(encoding="utf-8", errors="replace")]
-    rec("no-art-deck-in-the-estate-is-gate-readable",
-        "zero Art decks carry a lesson-config, so none can be a donor",
-        0, len(readable))
+    inherited = [_rel(p) for p in readable
+                 if '"planId"' not in p.read_text(encoding="utf-8", errors="replace")]
+    rec("no-art-deck-this-campaign-did-not-write-is-gate-readable",
+        "every gate-readable Art deck carries a planId, so none pre-dates this work",
+        [], inherited)
 
     # Route-derived family must agree with FEB wherever FEB has an opinion.
     disagree = []

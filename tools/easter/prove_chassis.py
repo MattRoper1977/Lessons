@@ -86,6 +86,8 @@ def _load(name, rel):
 
 ad = _load("author_deck", "tools/easter/author_deck.py")
 g26 = _load("g26_reading_band", "_sownb/vb/tools/g26_reading_band.py")
+_ls = _load("lesson_stages", "_sownb/vb/tools/lesson_stages.py")
+ls_measure = _ls.measure
 
 
 def digest(path) -> str:
@@ -110,6 +112,15 @@ def _ok(line: str, code: int) -> bool:
     Neither is a pass, and neither is an error either, which is why they have to
     be named here rather than left to the exit code."""
     return code == 0 and "NOT-APPLICABLE" not in line and "NO FAMILY MEDIAN" not in line
+
+
+def _is_chassis(path: Path) -> bool:
+    """A chassis teaches nothing. That is the definition, and it is measured
+    rather than read off the filename."""
+    try:
+        return ls_measure(path)["contentWords"] < 100
+    except Exception:
+        return False
 
 
 def _chassis_donor(chassis: Path) -> str | None:
@@ -196,12 +207,16 @@ def prove(chassis: Path, plan_index: int, content_path: Path, reference: Path,
     # nothing. strip_to_chassis records the real donor and its digest inside the
     # chassis lesson-config for exactly this; read it from there rather than
     # passing it in, so the two cannot drift apart.
-    donor_rel = _chassis_donor(chassis)
-    if donor_rel is None:
+    # A stripped chassis records the deck it came from; a live deck used directly
+    # as a donor IS that deck. Both are handled, and neither is guessed: the
+    # field is present or it is not.
+    donor_rel = _chassis_donor(chassis) or ad._rel(chassis)
+    if _is_chassis(chassis) and _chassis_donor(chassis) is None:
         raise SystemExit(
-            f"NO RECORDED DONOR: {ad._rel(chassis)} carries no chassis.donor field. "
-            f"Without it the comparative verdict has no baseline and every content "
-            f"gate would read as pre-existing.")
+            f"NO RECORDED DONOR: {ad._rel(chassis)} looks like a stripped chassis "
+            f"but carries no chassis.donor field. Without it the comparative "
+            f"verdict has no baseline and every content gate would read as "
+            f"pre-existing.")
     rec["donor"] = donor_rel
     donor_family = _family_of_donor(donor_rel) or family
 

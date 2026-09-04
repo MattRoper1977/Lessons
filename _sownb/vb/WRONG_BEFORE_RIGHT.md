@@ -1035,3 +1035,41 @@ reading the contract the estate already has for that kind of file. The gate was
 right and I was the one out of step with it. Two minutes with
 `node tools/stale_evidence_sweep.mjs` before the push would have found it —
 it runs locally, and now it is run locally.
+
+---
+
+## A control that went red because the work succeeded
+
+WRONG: `pick_art_donor.py` carried a control reading *"zero Art decks carry a
+lesson-config, so none can be a donor"*. It was measured, it was correct, and it
+was the premise the whole of §1 rested on. Batch 3 then authored eleven
+gate-readable Art decks and the control went red.
+
+That red was accurate and useless. A control that fails the moment the thing it
+describes gets fixed is not a control — it is a countdown, and the only way to
+answer it is to delete it, which loses the claim entirely.
+
+RIGHT: the durable claim was one layer down. *Every gate-readable Art deck in
+this estate is one this campaign authored*, tested by asking whether it carries
+a `planId`. That is still true, still says no pre-existing Art deck could have
+served as the donor, and it now fires if somebody points the tool at an Art deck
+this campaign did not write.
+
+The tell, for next time: a control phrased as a count of what does not yet exist
+will go red on success. Phrase it as a property of whatever does exist instead.
+
+---
+
+## Comparing values where I meant to ask where a value came from
+
+WRONG: `manifest_sequence.deck_row` decided a key was "unfilled" by comparing
+the new row's value to the template row's — `row[k] == template[k]`. A deck whose
+week really is 1, the same as the template row's week, therefore read as
+unfilled, and two of this campaign's own decks were refused with a message
+blaming the deck for a missing field it had.
+
+RIGHT: the function now records which keys it actually filled from the deck's
+lesson-config and reports on that set. Provenance, not equality.
+
+Same shape as the campaign's recurring mistake, one step in: I asked whether two
+values LOOKED the same instead of asking where each came from.

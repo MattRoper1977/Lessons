@@ -381,3 +381,66 @@ content words under the shell-aware instrument while the `*_Estate_v3` copies
 measure ~900–1100. Same lesson titles, two routes, one of them invisible to
 every gate in the estate. Logged as **A3-H10**; excluded from the baseline
 automatically by the `contentWords` filter, so it moves no number here.
+
+---
+
+## A3-H11 — six Science plans that say there is nothing to teach
+
+Found while building batch 3. **Held back, not authored.**
+
+Six cover-taught Science plans (BUILD, GROW and LAUNCH, weeks 1 and 2) carry the
+outcome:
+
+> Baseline assessment (PythonAnywhere) — no new science content; unit starts W3
+
+Two things follow, and they point the same way. Authoring a teaching deck against
+an outcome that says there is nothing to teach would be shipping something
+doubtful. And BUILD Science's family floor is **1229 pupil words**, which a
+baseline-assessment session cannot honestly carry — it would have to be padded
+to pass, which is the failure mode the floor exists to prevent.
+
+**The cover teacher still needs something for those six sessions.** A session
+sheet — how to run the baseline, what pupils do, what evidence is kept, what to
+do when the platform is down — is real and useful and is *not* a lesson deck.
+Whether that is what you want, and whether it should sit outside the gate stack
+because it teaches nothing new, is a ruling rather than a gate's decision.
+
+The six plans are in `tools/easter/BATCH3_TARGETS.json` under `held`, each with
+this reason on the row, so the cells stay visibly open.
+
+---
+
+## A3-H12 — three RESHELL plans in the cover window
+
+`LAUNCH Science W5`, `GROW Art W6` and `GROW Art W7` name a **standing deck to
+reshell** rather than a lesson to author. That is a different pipeline
+(`reshell_classic_v2`), not the authoring one, and batch 3 held them rather than
+authoring over the top of work that already exists. Also listed under `held`.
+
+---
+
+## A3-H13 — the Humanities packs hold more unlisted decks than this batch added
+
+`manifest_sequence.py` added batch 3's six Humanities decks to the three pack
+manifests and printed everything else it found unlisted:
+
+    BUILD   BUILD_HUM_W2_A_Special_Book_A_Special_Place.html
+            BUILD_Humanities_W1_Pick_a_card_and_say_why_you_picked_it.html
+            BUILD_Humanities_W3_Listen_to_Ruth_Then_Point_at_the_Line.html
+    GROW    GROW_HUM_W1_Beliefs_And_Worldviews_Around_Us.html
+            GROW_HUM_W2_How_Beliefs_Shape_Who_We_Are.html
+            GROW_Humanities_W3_Match_the_Lamp_to_Its_Meaning.html
+    LAUNCH  LAUNCH_HUM_W1_Belief_Identity_And_Belonging.html
+            LAUNCH_HUM_W2_Two_Worldviews_Side_By_Side.html
+            LAUNCH_Humanities_W3_Name_the_Guide_Say_the_Meaning.html
+
+Three of those are batch 2's, and six pre-date this campaign entirely. This run
+added only what it authored: folding somebody else's decks into a manifest
+inside a lesson PR would hide the drift rather than record it.
+
+The tool will add them in one pass when you want it to:
+
+    python3 tools/easter/manifest_sequence.py --pack <dir> --apply
+
+with no `--only`. It is the same round trip, the same derived counts and the
+same refusal path.
