@@ -51,6 +51,7 @@ import collections
 import json
 import re
 import subprocess
+from html import unescape
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -139,6 +140,42 @@ def lane_of(path: str) -> str | None:
     return None
 
 
+def body_claims(raw: str, known_cells) -> tuple[set[str], list[dict]]:
+    """Read the same reference whether its apostrophes are literal or escaped.
+
+    BUILD's Autumn 2 source paragraphs use &#x27;. Reading the HTML bytes as
+    plain text hid their current-outcome references and sent existing lessons
+    back to the authoring queue. Decode once, as HTML does; a printed entity
+    example encoded twice must not become a claim. This changes reference
+    recognition only, not the content threshold or the ruled calendar.
+    """
+    found = set(REF.findall(unescape(raw)))
+    excluded = [{'reference': ref, 'reason': 'reference absent from the scoped workbook-cell inventory'}
+                for ref in sorted(found) if ref not in known_cells]
+    return found.intersection(known_cells), excluded
+
+
+def controls() -> list[dict]:
+    ref = "'BUILD Weekly - Autumn'!C137"
+    rows = []
+    def check(cid, expected, actual):
+        rows.append({'id': cid, 'expected': expected, 'actual': actual, 'fired': expected == actual})
+    for name, quote in [('literal', "'"), ('hex', '&#x27;'), ('decimal', '&#39;'), ('named', '&apos;')]:
+        raw = '<p>Source: '+ref.replace("'", quote)+'</p>'
+        check(name+'-apostrophes-read-the-same-cell', [ref], sorted(body_claims(raw, {ref})[0]))
+    check('double-escaped-example-is-not-a-reference', [],
+          sorted(body_claims(ref.replace("'", '&amp;#x27;'), {ref})[0]))
+    check('screen-and-print-copy-claim-once', [ref], sorted(body_claims(ref+ref, {ref})[0]))
+    kept, excluded = body_claims(ref, set())
+    check('unknown-cell-is-excluded-with-a-reason', ([], 1, True),
+          (sorted(kept), len(excluded), all(bool(e['reason']) for e in excluded)))
+    check('neighbour-outcome-text-is-not-a-cell-claim', [],
+          sorted(body_claims('<p>Feeds next: Wash up / clean up after an activity.</p>', {ref})[0]))
+    actual = ROOT/'BUILD_ASDAN/Autumn2_W1-W6_2026-27/BUILD_ASDAN_A2_PFA_W1_Plan_a_Simple_Healthy_Snack.html'
+    check('shipped-snack-plan-keeps-its-current-cell', [ref], sorted(body_claims(actual.read_text(), {ref})[0]))
+    return rows
+
+
 def load() -> tuple[dict, list[str], dict, dict]:
     spine = json.loads(SPINE.read_text())
     cells = {c["reference"]: c for c in spine["workbookCells"]}
@@ -190,6 +227,7 @@ def load() -> tuple[dict, list[str], dict, dict]:
                                          "references are recorded and not counted as claims")})
 
     text: dict[str, str] = {}
+    excluded_body_claims = []
     lessons: set[str] = set()
     for f in listing:
         raw = (ROOT / f).read_text(encoding="utf-8", errors="ignore")
@@ -197,10 +235,11 @@ def load() -> tuple[dict, list[str], dict, dict]:
             text[f] = TAG.sub(" ", SCRIPT.sub(" ", raw))
             continue
         lessons.add(f)
-        for m in REF.finditer(raw):
-            if m.group(0) in cells:
-                claims[f].add(m.group(0))
-                source[(f, m.group(0))].add("body")
+        body_refs, excluded = body_claims(raw, cells)
+        excluded_body_claims.extend({'deck': f, **row} for row in excluded)
+        for ref in body_refs:
+            claims[f].add(ref)
+            source[(f, ref)].add("body")
         cfg = CONFIG.search(raw)
         if cfg:
             try:
@@ -212,14 +251,33 @@ def load() -> tuple[dict, list[str], dict, dict]:
             except Exception:
                 pass
         text[f] = TAG.sub(" ", SCRIPT.sub(" ", raw))
-    return cells, listing, claims, {"source": source, "text": text, "lessons": lessons, "ambiguous": ambiguous}
+    return cells, listing, claims, {"source": source, "text": text, "lessons": lessons,
+                                   "ambiguous": ambiguous, "excludedBodyClaims": excluded_body_claims}
 
 
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--output")
     ap.add_argument("--threshold", type=float, default=0.85)
+    ap.add_argument("--list-controls", action="store_true")
+    ap.add_argument("--self-test", action="store_true")
     args = ap.parse_args()
+
+    if args.list_controls or args.self_test:
+        rows = controls()
+        if args.list_controls:
+            print('\n'.join(r['id'] for r in rows))
+            return 0
+        fired = sum(r['fired'] for r in rows)
+        report = {'file': '_sownb/vb/tools/cell_coverage.py', 'controls': rows,
+                  'controlsRun': len(rows), 'controlsFired': fired,
+                  'allListedControlsFired': fired == len(rows)}
+        if args.output:
+            out = Path(args.output)
+            out.parent.mkdir(parents=True, exist_ok=True)
+            out.write_text(json.dumps(report, indent=1)+'\n')
+        print(f'{fired}/{len(rows)} controls fired')
+        return 0 if fired == len(rows) else 1
 
     cells, listing, claims, extra = load()
     text, source, lessons = extra["text"], extra["source"], extra["lessons"]
@@ -335,6 +393,7 @@ def main() -> int:
         "claimedCells": sorted(claimed_by),
         "openCellsInScope": sorted(r for r in in_scope if r not in covered),
         "ambiguousSpineReadings": ambiguous,
+        "excludedBodyClaims": extra["excludedBodyClaims"],
         "unscorableClaims": unscorable,
         "traceCorrections": trace_corrections,
         "authoringGapCandidates_proxyOnly": gaps,

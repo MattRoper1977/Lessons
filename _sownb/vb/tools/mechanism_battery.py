@@ -66,6 +66,7 @@ SELFTEST_TOOLS = [
     "g25_wedo_variety.py",
     "g27_no_filename_weeks.py",
     "g29_plan_binding.py",
+    "cell_coverage.py",
     "g30_arts_award.py",
     "tools/artsaward/slot_reader_selftest.py",
     "cgate_containment.py",
