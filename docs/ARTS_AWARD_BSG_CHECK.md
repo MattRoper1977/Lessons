@@ -13,7 +13,7 @@ this survey guesses on purpose so the list has something in it.
 
 - deck-shaped files naming the Arts Award: **82**
 - declaring an `artsAward` block: **0**
-- carrying at least one contradiction: **3**
+- carrying at least one contradiction: **2**
 
 **A venue line in the list below is a place to classify, not a verdict.**
 This survey reports *every* mention so the classification has a complete
@@ -91,10 +91,6 @@ the register yet. The rows fill in as decks are authored or repaired with an
 - line 341: a venue named in the deck rather than in SLOTS.json — `</div></div></div><div class="slide" data-title="Arrival Task" data-timer="3" id="arrival-slide"> <span class="slide-tag`
 - line 342: a venue named in the deck rather than in SLOTS.json — `<div id="print-area"><div id="print-ko" class="print-section"><h2>Knowledge Organiser</h2><div class="prevent-break"><ta`
 - line 407: a venue named in the deck rather than in SLOTS.json — `const _ccQuestions={"Title": {"F": "What are we finding out about artists today?", "M": "What makes research count as ev`
-
-**Art_Teesside/Grow/GROW_ART_W4_Arts_Event_Attend_Capture_and_Review.html** — inferred Bronze (1)
-
-- line 359: a venue named in the deck rather than in SLOTS.json — `<div class="ilm" role="img" aria-label="A ticket, a camera capture and a review card from a real arts event"><svg viewBo`
 
 
 ## What this survey does not do
