@@ -1346,3 +1346,12 @@ minutes, and were reproduced byte-identically on a second run from restored
 originals. Mechanism **25 tools, 226 controls**, derived, `--prove-red` PASS —
 223 at batch 3 plus the three controls this run added. It reads 26 tools once
 the Arts Award register PR lands, which adds g30.
+
+### Batch 4 landed
+
+    #297 merged 5966015b41379c158533069bea4be0d99ff37f5a
+    89 of 89 paths blob-identical between origin/main and branch head dfe99f54
+    six checks green, run 33901872775
+
+Ceiling **19/24** for batch 4. Estate cells covered by this batch: **27, all
+unique**.
