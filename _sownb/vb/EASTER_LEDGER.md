@@ -1992,3 +1992,29 @@ After the verified AAE close in #314, the original Easter programme resumes at a
 The raw coverage reader missed HTML-escaped apostrophes in existing BUILD ASDAN source references. Decode once and retain scoped-cell filtering; nine controls include the shipped snack lesson and exclusions. The mechanism battery derives 29 tools / 356 controls and catches its planted defect. Recognition rises 203 → 221 within the 573-cell Easter scope; this is corrected recording, zero new teaching. The lexical proxy does not resolve every semantic coverage question.
 
 User steering also requires the BUILD Art Bank It and Plan the Teach chassis across the new lessons, with related GROW/LAUNCH variants, integrated Lundy participation, meaningful media and varied on-screen We Do. Subject navigation must expose term and pathway. The saved 42 award lessons and 59 earlier units are retained while presentation and genuine remaining content gaps are corrected. No whole-Easter completion claimed.
+
+
+## Preflight merged — #315
+
+Merge `31160c444bfded641a3b170a68b599d052defa8b`. All 11/11 changed blobs match reviewed head `9994d4217c51e8d91cecc1440c4393d17bc91c07` against the branch fork `e81ffd6e55126b92442c55382f6fb02f75f560f8`. Current-head run 33927660903: all six jobs succeeded. Next presentation transaction is zero units; 101 campaign decks retain teaching, timings, source data, diagrams, print and runtime. New interactive teaching remains a separately counted content batch.
+
+
+## Shared classroom presentation — zero units
+
+User-selected BUILD Art reference colours and related GROW/LAUNCH palettes are applied inline to the 101 campaign lesson files. All 101 retain lesson-config, timings, explanatory SVGs, print packs and teaching. Each appearance transform is idempotent. Empty title-stage headings and empty Lundy labels are restored from the lesson's own metadata. The authoring pipeline now applies that presentation after donor-text sweeping.
+
+A separate toolbar defect was found in GROW award output: donor labels meant different actions from the award runtime's numbered handlers. All 42 award toolbars now expose the same six correctly named actions, without duplicate navigation. Runtime script logic is unchanged; this is a UI correction. Thirteen pack checksum files refreshed without adding or removing rows.
+
+Local checks: 19 author controls and 101 current plan bindings pass; no new workbook cells. CI will check the actual title/palette and responsive surfaces across all nine subject/pathway families, and re-run the 42 award interfaces. Curriculum content and activity enrichment remain pending and will count against batch ceilings where materially rewritten.
+
+
+## Latest classroom preference and source reconciliation — 2026-09-04
+
+Matt now prefers the earlier Science presentation, prominent downloadable packs, and lighter Lundy integration across subjects. This supersedes the earlier preference for repeated integration: the shared screen presentation frames participation at the opening and exit while leaving the actual choice, feedback and practical teaching intact. The 101 existing campaign files keep their exact teaching, config, timings, scripts, figures and print packs; the second digest-bound presentation pass records its own source snapshot. Zero lesson units.
+
+The five new attachments preserve all teaching allocation: Science BUILD/GROW/LAUNCH 2/2/3 periods of 40 minutes; Art 2/2/1. The new SoWs differ in eight Week 1–2 Science outcome cells, replacing the earlier explicitly ruled baseline wording. Record that version divergence without silently overwriting canonical bindings or manufacturing extra lessons. Other populated SoW cells and merged ranges agree. A pack week does not add a second LAUNCH Art period. The source comparison is saved beside the Easter preflight evidence.
+
+
+## Presentation control correction
+
+Current-head browser checks passed the lighter framing. The strip-to-chassis control failed because it still equated every visible reminder with intact labels. Replacing that proxy with a direct comparison exposed a second real defect: the subtractive stripper recognised the whole Lundy grid but erased its individual span labels. Preserve only the four named dimensions inside an actual grid; keep the donor-teaching leak controls. The revised controls compare all nine label sets, preserve the donor's visible stage selection, and catch a planted empty grid. Fifteen strip controls and the full 29-tool, 358-control battery (derived count, --prove-red) pass locally. This does not reinstate repeated on-screen banners.

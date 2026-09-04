@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-GB">
+<html lang="en-GB" class="mbm-classroom pathway-build">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -38,7 +38,84 @@ h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-siz
         .award-print h3{font-size:11pt;margin:0}
         .award-print .award-review-space{height:35mm;border:1px solid #777}
       }
-    </style></head>
+    </style><style id="mbm-classroom-chassis">/* Shared classroom presentation. Palette authority: the user's Art Studio reference. */
+html.mbm-classroom {
+  --lo-bg:#e8eef1;--lo-border:#4F869C;--ido-bg:#f3e4dc;--ido-border:#D06438;
+  --wedo-bg:#e2efec;--wedo-border:#16877A;--task-bg:#faf0d7;--task-border:#E1AB32;
+  --btn-bg:#4F869C;--btn-hover:#3a6a7d;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;
+  --sc-bg:#ffedd5;--sc-border:#f97316;--aspire-bg:#dcfce7;--aspire-border:#22c55e;
+}
+html.mbm-classroom.pathway-grow {
+  --lo-bg:#e6ebf0;--lo-border:#5B91A5;--ido-bg:#f2e6df;--ido-border:#D1673D;
+  --wedo-bg:#e2efed;--wedo-border:#2BA193;--task-bg:#f8efd8;--task-border:#DFAD3E;
+  --btn-bg:#5B91A5;--btn-hover:#436f80;--sc-border:#DFAD3E;--sc-bg:#faf3dd;
+}
+html.mbm-classroom.pathway-launch {
+  --lo-bg:#e4ebee;--lo-border:#356F83;--ido-bg:#efe3db;--ido-border:#9B5B3D;
+  --wedo-bg:#e1edeb;--wedo-border:#238C80;--task-bg:#f6eed9;--task-border:#C18B2D;
+  --btn-bg:#356F83;--btn-hover:#28576a;--sc-border:#C18B2D;--sc-bg:#f8f1de;
+}
+@media screen {
+  html.mbm-classroom, .mbm-classroom body {background:#fff;color:#1f2937;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+  .mbm-classroom main.deck {height:100vh;height:100dvh;padding:clamp(14px,3vh,36px) 4vw 110px;overflow:auto;scroll-padding-bottom:110px}
+  .mbm-classroom main.deck>.slide {width:100%;max-width:1600px;min-height:calc(100vh - 160px);margin:auto;padding:clamp(20px,3vw,40px);background:#fff;color:#1f2937;border:0;border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px #00000018}
+  .mbm-classroom .slide[data-classroom-phase="ido"] {border-top-color:var(--ido-border)}
+  .mbm-classroom .slide[data-classroom-phase="wedo"] {border-top-color:var(--wedo-border)}
+  .mbm-classroom .slide[data-classroom-phase="independent"] {border-top-color:var(--task-border)}
+  .mbm-classroom .slide[data-classroom-phase="exit"] {border-top-color:var(--sc-border)}
+  .mbm-classroom .slide h1 {display:block;color:#101820;font-size:clamp(1.8rem,3.2vw,2.8rem);line-height:1.14;margin:20px 0 24px;padding-bottom:12px;border-bottom:3px solid var(--lo-border)}
+  .mbm-classroom .slide h2 {color:#101820;font-size:clamp(1.5rem,2.5vw,2rem);line-height:1.22;margin:16px 0 22px;padding-bottom:12px;border-bottom:2px solid #e2e8f0}
+  .mbm-classroom .slide h3 {color:#182c3c;font-size:1.2rem;line-height:1.3;margin:18px 0 10px}
+  .mbm-classroom .slide p,.mbm-classroom .slide li {font-size:1.15rem;line-height:1.6;color:#334155;max-width:85ch}
+  .mbm-classroom .slide p {margin:.5em 0}
+  .mbm-classroom .slide>svg {max-width:900px;margin:18px auto;display:block;overflow:visible}
+  .mbm-classroom .slide>.tag {display:inline-block;background:var(--lo-bg);color:#183b4b;border-radius:8px;padding:6px 14px;font-size:.9rem;font-weight:800;letter-spacing:.04em}
+  .mbm-classroom .slide[data-classroom-phase="ido"]>.tag {background:var(--ido-bg);color:#68321f}
+  .mbm-classroom .slide[data-classroom-phase="wedo"]>.tag {background:var(--wedo-bg);color:#115c52}
+  .mbm-classroom .slide[data-classroom-phase="independent"]>.tag {background:var(--task-bg);color:#684811}
+  .mbm-classroom .slide>.time {float:right;border-radius:999px;background:#f5f7f8;color:#334155;border:1px solid #cbd5e1;font-size:.9rem}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.time {display:none}
+  .mbm-classroom .mbm-lesson-objective {background:var(--lo-bg);border-left:6px solid var(--lo-border);border-radius:12px;padding:14px 18px;margin:16px 0}
+  .mbm-classroom .mbm-lesson-success {background:var(--sc-bg);border-left:6px solid var(--sc-border);border-radius:12px;padding:14px 18px;margin:14px 0}
+  .mbm-classroom .box,.mbm-classroom .route,.mbm-classroom .route-card {background:#f8fafc;color:#1f2937;border:1px solid #cbd5e1;border-radius:12px;padding:16px}
+  .mbm-classroom .box.objective {background:var(--lo-bg);border-left:6px solid var(--lo-border)}
+  .mbm-classroom .lundy,.mbm-classroom .lundy-strip {background:#f8fafc;color:#334155;border:1px solid #dce3e8;border-radius:12px;padding:10px 14px;margin:22px 0 0}
+  /* Pupil voice is framed at arrival and revisited at the exit, without a
+     repeated process banner competing with each model and practical task. */
+  .mbm-classroom .slide[data-classroom-phase]:not([data-classroom-phase="title"]):not([data-classroom-phase="exit"])>.lundy,
+  .mbm-classroom .slide[data-classroom-phase]:not([data-classroom-phase="title"]):not([data-classroom-phase="exit"])>.lundy-strip {display:none}
+  .mbm-classroom .lundy-grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+  .mbm-classroom .lundy-grid>span {display:block;color:#213544;background:var(--lo-bg);border-radius:8px;padding:7px;text-align:center;font-size:.8rem;font-weight:800}
+  .mbm-classroom .lundy-grid>span:nth-child(2) {background:var(--ido-bg)}
+  .mbm-classroom .lundy-grid>span:nth-child(3) {background:var(--wedo-bg)}
+  .mbm-classroom .lundy-grid>span:nth-child(4) {background:var(--task-bg)}
+  .mbm-classroom .lundy p,.mbm-classroom .lundy-strip p {font-size:.85rem;margin:8px 0 0;max-width:none}
+  .mbm-classroom button {min-width:44px;min-height:44px;border-radius:10px;font-weight:700;background:var(--btn-hover);color:#fff;border:1px solid transparent;padding:10px 16px}
+  .mbm-classroom button:hover {background:#203f4c;color:#fff}
+  .mbm-classroom button:focus-visible,.mbm-classroom a:focus-visible,.mbm-classroom select:focus-visible,.mbm-classroom summary:focus-visible {outline:3px solid #ab5800;outline-offset:3px}
+  .mbm-classroom .controls {background:#fffffff5;backdrop-filter:blur(8px);border:1px solid #dbe3e8;box-shadow:0 4px 20px #182c3c18;border-radius:14px;padding:8px;gap:7px;flex-wrap:wrap;max-width:calc(100vw - 32px)}
+  .mbm-classroom .prog {background:#e7ecef}
+  .mbm-classroom .prog>span {background:var(--lo-border)}
+  .mbm-classroom .overlay-card {background:#fff;color:#1f2937;border-color:var(--lo-border)}
+  .mbm-classroom .slide[data-classroom-phase="title"] {text-align:center}
+  .mbm-classroom .slide[data-classroom-phase="title"]>p {max-width:760px;margin:14px auto;text-align:left}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.tag {background:#d98128;color:#172334}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.lundy {max-width:760px;margin:24px auto 0;text-align:left}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.box {text-align:left}
+  .mbm-classroom body.calm .slide {box-shadow:none}
+  @media(max-width:700px) {
+    .mbm-classroom main.deck {padding:14px 14px 180px}
+    .mbm-classroom main.deck>.slide {min-height:calc(100dvh - 205px);padding:20px 16px}
+    .mbm-classroom .slide p,.mbm-classroom .slide li {font-size:1.05rem}
+    .mbm-classroom .controls {left:14px;right:14px;bottom:14px;justify-content:center;max-width:none}
+    .mbm-classroom .controls button {font-size:.85rem;padding:8px 10px}
+    .mbm-classroom .lundy-grid {grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+  @media(prefers-reduced-motion:reduce) {
+    .mbm-classroom *, .mbm-classroom *::before, .mbm-classroom *::after {animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  }
+}
+</style></head>
 <body>
 <!--mbm_guide_v1 retained as a contract marker; guidance state is memory-only-->
 <!--n6-nav1:v1-->
@@ -47,120 +124,120 @@ h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-siz
 <!--/n6-nav1-->
 <a class="skip" href="#lessonDeck">Skip to lesson</a>
 <main id="lessonDeck" class="deck">
-<section class="slide active" data-type="title" data-title="Lesson overview" data-min="0">
+<section class="slide active" data-type="title" data-title="Lesson overview" data-min="0" data-classroom-phase="title">
 <div class="time">0 min</div>
-<span class="tag"></span>
-<div class="lundy" aria-label="Lundy participation strip">
+<span class="tag">BUILD Art</span>
+<h1>Test A Join And Compare My Learning</h1><p>BUILD · Art · Week 2. Trinity Arts Award Explore. Test A Join And Compare My Learning.</p><p class="mbm-lesson-objective">Objective: Continue paper sculpture by testing a join, then identify what you learnt in drawing and paper sculpture.</p><p class="mbm-lesson-success">Success evidence: your own joining trial, an accurate paper-sculpture record, and learning from both distinct arts activities with locations for the evidence.</p><p>Theme: Making and Sharing. Make choices about the art. You may keep your private life private.</p><p>40 minutes. Use the materials prepared on your table.</p><div class="box rehearsal" data-mbm-guide="staff">This deck contributes to Explore Part A, Take part: at least two arts activities and identification of what the pupil learnt. In this strand, drawing is activity one and paper sculpture is activity two. Two lessons in drawing are still one arts activity. Do not claim Part A complete until both activities and learning are evidenced. Award requirements come only from tools/artsaward/SPEC.json, Explore. Overall Pass allows ONE Attempted. Any Not Attempted = Below Pass. The whole Explore portfolio has a 10-file cap. Its three assessment areas are art form knowledge and understanding, creativity, and communication. Only an adviser trained at Explore may assess; delivery must be through a validated centre. Confirm both locally; neither is asserted as already confirmed. Core, Extend and Challenge are support options within Explore, not different awards. They retain participation and the pupil’s own learning. Scribe exact pupil words when needed, read them back and accept correction; do not compose or upgrade their account. Keep evidence in the cumulative Explore-A file with its actual file name plus page, slide or timecode. The proposed four part-files are a filing option, not a mandatory award format. Suggested sample counts are teaching scaffolds, not extra award quotas. This is secondary SEMH teaching in the BUILD reading band. Discuss artistic choices; do not require private-life disclosure. These sessions support the wider programme; they do not claim to supply all 25 guided and 10 independent hours.</div><div class="box rehearsal" data-mbm-guide="staff">Prepare the pupil’s paper form if available, flat card bases, wide precut paper strips for tabs, and small pieces of low-tack tape on an accessible backing. No sharp tools or hot glue are needed. Provide plain rectangles so a pupil without a stored form can make a fresh tent fold. Prepare a large demonstration tab, folded at a right angle: one section lies on the base and one rests against the paper form. Make the join live with tape bridging each tab section to the surface it touches. Keep the full four-card sorting set visible. Retrieve each pupil’s own drawing and learning record where possible. Do not replace missing pupil evidence with a teacher example; record the gap and arrange real participation/learning follow-up. Supply a simple review area headed Drawing and Paper sculpture; it can be ruled on the pupil’s evidence page. Keep the drawing and paper-sculpture activities separate from the later Part C creation and Part D share.</div><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<p>BUILD · Art · Week 2. Trinity Arts Award Explore. Test A Join And Compare My Learning.</p><p>Objective: Continue paper sculpture by testing a join, then identify what you learnt in drawing and paper sculpture.</p><p>Success evidence: your own joining trial, an accurate paper-sculpture record, and learning from both distinct arts activities with locations for the evidence.</p><p>Theme: Making and Sharing. Make choices about the art. You may keep your private life private.</p><p>40 minutes. Use the materials prepared on your table.</p><div class="box rehearsal" data-mbm-guide="staff">This deck contributes to Explore Part A, Take part: at least two arts activities and identification of what the pupil learnt. In this strand, drawing is activity one and paper sculpture is activity two. Two lessons in drawing are still one arts activity. Do not claim Part A complete until both activities and learning are evidenced. Award requirements come only from tools/artsaward/SPEC.json, Explore. Overall Pass allows ONE Attempted. Any Not Attempted = Below Pass. The whole Explore portfolio has a 10-file cap. Its three assessment areas are art form knowledge and understanding, creativity, and communication. Only an adviser trained at Explore may assess; delivery must be through a validated centre. Confirm both locally; neither is asserted as already confirmed. Core, Extend and Challenge are support options within Explore, not different awards. They retain participation and the pupil’s own learning. Scribe exact pupil words when needed, read them back and accept correction; do not compose or upgrade their account. Keep evidence in the cumulative Explore-A file with its actual file name plus page, slide or timecode. The proposed four part-files are a filing option, not a mandatory award format. Suggested sample counts are teaching scaffolds, not extra award quotas. This is secondary SEMH teaching in the BUILD reading band. Discuss artistic choices; do not require private-life disclosure. These sessions support the wider programme; they do not claim to supply all 25 guided and 10 independent hours.</div><div class="box rehearsal" data-mbm-guide="staff">Prepare the pupil’s paper form if available, flat card bases, wide precut paper strips for tabs, and small pieces of low-tack tape on an accessible backing. No sharp tools or hot glue are needed. Provide plain rectangles so a pupil without a stored form can make a fresh tent fold. Prepare a large demonstration tab, folded at a right angle: one section lies on the base and one rests against the paper form. Make the join live with tape bridging each tab section to the surface it touches. Keep the full four-card sorting set visible. Retrieve each pupil’s own drawing and learning record where possible. Do not replace missing pupil evidence with a teacher example; record the gap and arrange real participation/learning follow-up. Supply a simple review area headed Drawing and Paper sculpture; it can be ruled on the pupil’s evidence page. Keep the drawing and paper-sculpture activities separate from the later Part C creation and Part D share.</div></section>
-<section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="3" data-ta1="Help retrieve real work or provide materials for a fresh pupil-made fold. Keep any missing activity record visible as a follow-up task, without implying it already happened.">
+</section>
+<section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="3" data-ta1="Help retrieve real work or provide materials for a fresh pupil-made fold. Keep any missing activity record visible as a follow-up task, without implying it already happened." data-classroom-phase="arrival">
 <div class="time">3 min</div>
-<span class="tag"></span>
+<span class="tag">Retrieval</span>
 <h2>Arrival · retrieve</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<p>Bring your paper form to the clear space on the table. If it could not be stored, make a fresh tent from a plain rectangle. Fold it in half, open it part way and rest the open edges on the table.</p><p>Today you try a join. A join connects one part to another. You will use a folded tab and tape to connect a paper form to a flat base.</p><p>You will also look back at drawing and paper sculpture. Explore Part A asks you to take part in at least two arts activities and say what you learnt. These are our two different activities.</p><p>Keep the drawing record nearby, but leave it clear of the tape. There is no need to stick the work into a new folder for each lesson.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<p>Bring your paper form to the clear space on the table. If it could not be stored, make a fresh tent from a plain rectangle. Fold it in half, open it part way and rest the open edges on the table.</p><p>Today you try a join. A join connects one part to another. You will use a folded tab and tape to connect a paper form to a flat base.</p><p>You will also look back at drawing and paper sculpture. Explore Part A asks you to take part in at least two arts activities and say what you learnt. These are our two different activities.</p><p>Keep the drawing record nearby, but leave it clear of the tape. There is no need to stick the work into a new folder for each lesson.</p></section>
-<section class="slide" data-type="starter" data-title="Starter · create the need" data-min="3" data-ta1="Show loose and joined versions using matching materials. Move the base gently at table level; do not shake, drop or load the forms. Describe the actual result if it differs from the expected model.">
+</section>
+<section class="slide" data-type="starter" data-title="Starter · create the need" data-min="3" data-ta1="Show loose and joined versions using matching materials. Move the base gently at table level; do not shake, drop or load the forms. Describe the actual result if it differs from the expected model." data-classroom-phase="starter">
 <div class="time">3 min</div>
-<span class="tag"></span>
+<span class="tag">Starter</span>
 <h2>Starter · create the need</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<p>Look at a loose paper form on a base. When the teacher gently moves the base a little, the form may slide. Now watch the form connected by a tab. Try the same small movement.</p><p>The join can help the parts move together. It does not make the whole form impossible to knock over. A tall narrow shape may still lean, even when its join stays attached.</p><p>We need to check two things: whether the parts stay joined, and whether the whole form stands. Those are different questions. Adding more tape to a sound join may not fix a base that is too narrow.</p><p>Point to the join and then the base. Say which one you would inspect if a tab peeled away. Then say which one you would inspect if the joined form tipped as a whole.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<p>Look at a loose paper form on a base. When the teacher gently moves the base a little, the form may slide. Now watch the form connected by a tab. Try the same small movement.</p><p>The join can help the parts move together. It does not make the whole form impossible to knock over. A tall narrow shape may still lean, even when its join stays attached.</p><p>We need to check two things: whether the parts stay joined, and whether the whole form stands. Those are different questions. Adding more tape to a sound join may not fix a base that is too narrow.</p><p>Point to the join and then the base. Say which one you would inspect if a tab peeled away. Then say which one you would inspect if the joined form tipped as a whole.</p></section>
-<section class="slide" data-type="ido" data-title="I Do · model" data-min="6" data-ta1="Model the tape bridging each tab edge visibly. Use wide tabs and pre-peeled tape where needed. An adult may steady a base, while the pupil chooses and places their own join.">
+</section>
+<section class="slide" data-type="ido" data-title="I Do · model" data-min="6" data-ta1="Model the tape bridging each tab edge visibly. Use wide tabs and pre-peeled tape where needed. An adult may steady a base, while the pupil chooses and places their own join." data-classroom-phase="ido">
 <div class="time">6 min</div>
-<span class="tag"></span>
+<span class="tag">I Do</span>
 <h2>I Do · model</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<p>I start with a wide paper strip. I fold it near one end and press a crease. I open it to make a corner, like a small letter L. This is my tab.</p><p>The short part lies flat on the base. The other part rests against the lower side of my paper form. I hold the tab in place while I check that both sections touch their surfaces.</p><p>Next I put a small tape piece across the foot of the tab and onto the base. It bridges the edge, so it touches both. I use another piece to bridge the upright tab section onto the form.</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Four linked boxes: fold an L tab, place it against both parts, bridge the edges with tape, and test by moving the base gently."><title>Make a tab join</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">FOLD</text><text x="73" y="88" text-anchor="middle" font-size="11">make an L tab</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">PLACE</text><text x="231" y="88" text-anchor="middle" font-size="11">touch both parts</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">BRIDGE</text><text x="389" y="88" text-anchor="middle" font-size="11">tape across edges</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">TEST</text><text x="547" y="88" text-anchor="middle" font-size="11">move the base</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">A join works where the tab and tape meet both surfaces.</text></svg><p>I press the tape down gently. I let go and move the base a little. If the tape lifts, I check whether it reached both surfaces. Tape stuck only to the tab will not attach it to the base.</p><p>I can try another tab on a different side if needed. I first look for the cause, rather than wrapping the whole form in tape.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<p>I start with a wide paper strip. I fold it near one end and press a crease. I open it to make a corner, like a small letter L. This is my tab.</p><p>The short part lies flat on the base. The other part rests against the lower side of my paper form. I hold the tab in place while I check that both sections touch their surfaces.</p><p>Next I put a small tape piece across the foot of the tab and onto the base. It bridges the edge, so it touches both. I use another piece to bridge the upright tab section onto the form.</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Four linked boxes: fold an L tab, place it against both parts, bridge the edges with tape, and test by moving the base gently."><title>Make a tab join</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">FOLD</text><text x="73" y="88" text-anchor="middle" font-size="11">make an L tab</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">PLACE</text><text x="231" y="88" text-anchor="middle" font-size="11">touch both parts</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">BRIDGE</text><text x="389" y="88" text-anchor="middle" font-size="11">tape across edges</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">TEST</text><text x="547" y="88" text-anchor="middle" font-size="11">move the base</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">A join works where the tab and tape meet both surfaces.</text></svg><p>I press the tape down gently. I let go and move the base a little. If the tape lifts, I check whether it reached both surfaces. Tape stuck only to the tab will not attach it to the base.</p><p>I can try another tab on a different side if needed. I first look for the cause, rather than wrapping the whole form in tape.</p></section>
-<section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="4" data-ta1="Keep the full card set and both headings visible. Collect all pupils’ matches before reading the key, and accept a justified observation of interacting causes.">
+</section>
+<section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="4" data-ta1="Keep the full card set and both headings visible. Collect all pupils’ matches before reading the key, and accept a justified observation of interacting causes." data-classroom-phase="wedo">
 <div class="time">4 min</div>
-<span class="tag"></span>
+<span class="tag">We Do</span>
 <h2>We Do · everyone commits</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<p>Sort these cards under two headings: check the join, and check the whole form. Match each letter to the problem it names.</p><ul><li>A: The tape has peeled off the base.</li><li>B: The tab stayed attached, but the whole form tipped.</li><li>C: The tape touches the tab but not the form.</li><li>D: The base is narrow and the tall form leans.</li></ul><p>A and C ask us to check the join. B and D ask us to check the whole form and its support. More tape is not the answer to every problem.</p><p>Choose a card and say a useful next check. For C, we could look for tape that bridges the two surfaces. For D, we could try a wider base position. The paper may behave differently, so test the idea before calling it a fix.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<p>Sort these cards under two headings: check the join, and check the whole form. Match each letter to the problem it names.</p><ul><li>A: The tape has peeled off the base.</li><li>B: The tab stayed attached, but the whole form tipped.</li><li>C: The tape touches the tab but not the form.</li><li>D: The base is narrow and the tall form leans.</li></ul><p>A and C ask us to check the join. B and D ask us to check the whole form and its support. More tape is not the answer to every problem.</p><p>Choose a card and say a useful next check. For C, we could look for tape that bridges the two surfaces. For D, we could try a wider base position. The paper may behave differently, so test the idea before calling it a fix.</p></section>
-<section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="5" data-ta1="Label both learning notes as teacher examples. Point to actual demonstration work. Do not require a numerical improvement measure or confuse two paper techniques with two arts activities.">
+</section>
+<section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="5" data-ta1="Label both learning notes as teacher examples. Point to actual demonstration work. Do not require a numerical improvement measure or confuse two paper techniques with two arts activities." data-classroom-phase="ido">
 <div class="time">5 min</div>
-<span class="tag"></span>
+<span class="tag">I Do</span>
 <h2>I Do 2 · connect</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<p>I test the tab join, then look back at what I learnt. My note names an action and something I found out. It does not need a score or a claim that everything improved.</p><p>Here are two model learning notes. For drawing: leaving white gaps between lines gave me a pale tone. For paper sculpture: the tape needed to touch both the tab and the base.</p><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Two columns distinguish drawing learning from paper-sculpture learning, each linked to an action in that activity."><title>Learning from two arts activities</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">DRAWING</text><text x="151" y="74" text-anchor="middle" font-size="11">an action with marks</text><text x="151" y="94" text-anchor="middle" font-size="11">what I learnt from it</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">PAPER SCULPTURE</text><text x="469" y="74" text-anchor="middle" font-size="11">an action with paper</text><text x="469" y="94" text-anchor="middle" font-size="11">what I learnt from it</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Keep each learning point beside its own activity record.</text></svg><p>These are teacher examples, not words to copy as your own experience. You may have learnt a different lesson. Your paper might show that a wider base helped, or that a fold made a new space.</p><p>I can compare the activities without saying one is better. Drawing makes marks on a surface. Folding changes a sheet’s form in space. Both let me make choices, but the actions are different.</p><p>If I have no record of an art task, I leave that gap clear. A model cannot prove that I took part.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<p>I test the tab join, then look back at what I learnt. My note names an action and something I found out. It does not need a score or a claim that everything improved.</p><p>Here are two model learning notes. For drawing: leaving white gaps between lines gave me a pale tone. For paper sculpture: the tape needed to touch both the tab and the base.</p><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Two columns distinguish drawing learning from paper-sculpture learning, each linked to an action in that activity."><title>Learning from two arts activities</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">DRAWING</text><text x="151" y="74" text-anchor="middle" font-size="11">an action with marks</text><text x="151" y="94" text-anchor="middle" font-size="11">what I learnt from it</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">PAPER SCULPTURE</text><text x="469" y="74" text-anchor="middle" font-size="11">an action with paper</text><text x="469" y="94" text-anchor="middle" font-size="11">what I learnt from it</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Keep each learning point beside its own activity record.</text></svg><p>These are teacher examples, not words to copy as your own experience. You may have learnt a different lesson. Your paper might show that a wider base helped, or that a fold made a new space.</p><p>I can compare the activities without saying one is better. Drawing makes marks on a surface. Folding changes a sheet’s form in space. Both let me make choices, but the actions are different.</p><p>If I have no record of an art task, I leave that gap clear. A model cannot prove that I took part.</p></section>
-<section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="5" data-ta1="Create the trial before asking pupils to review it. Support tape handling without replacing pupil choices. Accept an honest failed join and preserve the learner’s explanation.">
+</section>
+<section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="5" data-ta1="Create the trial before asking pupils to review it. Support tape handling without replacing pupil choices. Accept an honest failed join and preserve the learner’s explanation." data-classroom-phase="wedo">
 <div class="time">5 min</div>
-<span class="tag"></span>
+<span class="tag">We Do</span>
 <h2>We Do 2 · lab</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<p>Make one trial join with your own folded paper and base. Place the tab, bridge its edges with tape and let go. Move the base gently, then stop and look.</p><p>Tell a partner or an adult what stayed attached and what moved. Point to the part you mean. A checker can help hold the base still when you ask, but what you saw stays yours.</p><p>If the join fails, look at where it came apart. Choose a small change to try. You may use a fresh tab or reposition a tape piece. Keep a note of the trial before taking it apart.</p><p>Say a learning point from this test. It can explain a problem as well as a working join. Have your words recorded if writing would stop you from taking part.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<p>Make one trial join with your own folded paper and base. Place the tab, bridge its edges with tape and let go. Move the base gently, then stop and look.</p><p>Tell a partner or an adult what stayed attached and what moved. Point to the part you mean. A checker can help hold the base still when you ask, but what you saw stays yours.</p><p>If the join fails, look at where it came apart. Choose a small change to try. You may use a fresh tab or reposition a tape piece. Keep a note of the trial before taking it apart.</p><p>Say a learning point from this test. It can explain a problem as well as a working join. Have your words recorded if writing would stop you from taking part.</p></section>
-<section class="slide" data-type="independent" data-title="Independent · evidence" data-min="11" data-ta1="A prepared tab is access support; the learner still places/tests the join and contributes their own account. Check drawing and paper-sculpture evidence separately. Do not mark missing activity work complete.">
+</section>
+<section class="slide" data-type="independent" data-title="Independent · evidence" data-min="11" data-ta1="A prepared tab is access support; the learner still places/tests the join and contributes their own account. Check drawing and paper-sculpture evidence separately. Do not mark missing activity work complete." data-classroom-phase="independent">
 <div class="time">11 min</div>
-<span class="tag"></span>
+<span class="tag">Independent work</span>
 <h2>Independent · evidence</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<p>Now use the join in your paper sculpture. Decide where a tab could connect the form to the base. Make and test the join. You can change the position if the real test gives you a reason.</p><p>Keep an clear, true record of what you did. It may be the form itself, a clear work-only photo with a note, or a located recording of your action and explanation.</p><p>Then look at your drawing record. Under Drawing, say what you tried and what you learnt from it. Under Paper sculpture, do the same for folding, standing or joining. Point to your own evidence for each.</p><ul><li>Core: use a prepared wide tab and help with the tape backing. Place and test your join. Use the two activity prompts to say your own learning from both art tasks for a verbatim scribe.</li><li>Extend: make and test the join, then record learning from drawing and paper sculpture and say where the work is saved.</li><li>Challenge: retain both art tasks and their learning, then explain a useful difference between making a mark and building a form.</li></ul><p>If an art task or learning point is missing, label it to do. Arrange a real chance to complete it with the adult. Do not write that an activity happened just to fill the box.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<p>Now use the join in your paper sculpture. Decide where a tab could connect the form to the base. Make and test the join. You can change the position if the real test gives you a reason.</p><p>Keep an clear, true record of what you did. It may be the form itself, a clear work-only photo with a note, or a located recording of your action and explanation.</p><p>Then look at your drawing record. Under Drawing, say what you tried and what you learnt from it. Under Paper sculpture, do the same for folding, standing or joining. Point to your own evidence for each.</p><ul><li>Core: use a prepared wide tab and help with the tape backing. Place and test your join. Use the two activity prompts to say your own learning from both art tasks for a verbatim scribe.</li><li>Extend: make and test the join, then record learning from drawing and paper sculpture and say where the work is saved.</li><li>Challenge: retain both art tasks and their learning, then explain a useful difference between making a mark and building a form.</li></ul><p>If an art task or learning point is missing, label it to do. Arrange a real chance to complete it with the adult. Do not write that an activity happened just to fill the box.</p></section>
-<section class="slide" data-type="exit" data-title="Exit · find both activities" data-min="3" data-ta1="Verify two distinct activity records and the pupil’s learning from both before recording completion. Check actual locators and carry any gap forward honestly; never substitute staff testimony for an unperformed task.">
+</section>
+<section class="slide" data-type="exit" data-title="Exit · find both activities" data-min="3" data-ta1="Verify two distinct activity records and the pupil’s learning from both before recording completion. Check actual locators and carry any gap forward honestly; never substitute staff testimony for an unperformed task." data-classroom-phase="exit">
 <div class="time">3 min</div>
-<span class="tag"></span>
+<span class="tag">Exit ticket</span>
 <h2>Exit · find both activities</h2>
 <div class="lundy-status">
 <p>
@@ -172,27 +249,19 @@ h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-siz
 <p>
 <b>INFLUENCE:</b> one real next action is recorded: retain, add method detail, or leave open.</p>
 </div>
-<div class="lundy" aria-label="Lundy participation strip">
+<p>Check that another person can find the drawing record and the paper-sculpture record. Read the learning point beside each. Does it describe your own action and what you found out?</p><p>Append today’s work to the Explore-A file. Write its real file name and page or slide. For speech, give the clip file and its start time. A note saying “in my log” does not show where to look.</p><p>These two art tasks and what you learnt can support Part A. They do not complete the other award parts. Keep the evidence ready as you move on to exploring an artist and an arts organisation.</p><p>Choose a learning point you want to remember. Keep unfinished tasks clearly named so they can be completed through real work.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<p>Check that another person can find the drawing record and the paper-sculpture record. Read the learning point beside each. Does it describe your own action and what you found out?</p><p>Append today’s work to the Explore-A file. Write its real file name and page or slide. For speech, give the clip file and its start time. A note saying “in my log” does not show where to look.</p><p>These two art tasks and what you learnt can support Part A. They do not complete the other award parts. Keep the evidence ready as you move on to exploring an artist and an arts organisation.</p><p>Choose a learning point you want to remember. Keep unfinished tasks clearly named so they can be completed through real work.</p></section>
+</section>
 </main>
 <nav class="controls" aria-label="Lesson controls">
-<button type="button" data-nav="previous">◀ Previous</button>
-<button type="button" data-tool="1">Teacher tools</button>
-<button type="button" data-tool="2">Evidence &amp; print</button>
-<button type="button" data-tool="3">Calm mode</button>
-<button type="button" data-tool="4">Static diagrams</button>
-<button type="button" data-tool="5">Previous</button>
-<button type="button" data-tool="6">Next</button>
-<button type="button" data-nav="next">Next ▶</button>
-</nav>
+<button type="button" data-nav="previous">◀ Previous</button><button type="button" data-tool="1">Teacher tools</button><button type="button" data-tool="2">Evidence &amp; print</button><button type="button" data-tool="3">Calm mode</button><button type="button" data-tool="4">Static diagrams</button><button type="button" data-nav="next">Next ▶</button></nav>
 <div class="prog" aria-hidden="true">
 <span>
 </span>

@@ -154,7 +154,15 @@ def is_chrome(el, spec) -> bool:
     that, rather than inferring the contract from a sample of decks.
     """
     try:
-        return ls.is_contract_chrome(el, spec)
+        if ls.is_contract_chrome(el, spec):
+            return True
+        # A grid's four individual <span> labels do not each contain the whole
+        # refrain. Preserve only a named dimension inside that actual grid;
+        # ordinary teaching about space or voice remains subject to stripping.
+        text = ' '.join((el.text_content() or '').split()).casefold()
+        tokens = {t.casefold() for t in spec.get('refrainTokens', ())}
+        return text in tokens and any('lundy-grid' in (a.get('class') or '').split()
+                                      for a in el.iterancestors())
     except Exception:
         return False
 
@@ -385,9 +393,28 @@ def controls() -> list[dict]:
         "the stripped chassis still carries a lundy-grid element on every stage",
         9, len(lh.fromstring(tmp.read_text(encoding="utf-8")).xpath(
             '//*[contains(@class,"lundy-grid")]')))
+    # The latest user ruling shows reminders at opening/exit only. Hidden
+    # reminders legitimately measure zero screen words; do not mistake that
+    # presentation choice for the historical empty-label defect.
+    def refrain_texts(tree):
+        return [' '.join(n.text_content().split()) for n in
+                tree.xpath('//*[contains(@class,"lundy-grid")]')]
+    donor_refrains = refrain_texts(lh.fromstring(donor.read_text(encoding="utf-8")))
     rec("the-refrain-still-has-its-words",
-        "every stage still measures chrome words; an empty grid is not a refrain",
-        9, sum(1 for st in ls.measure(tmp)["stages"] if st["chromeWords"] > 0))
+        "all nine retained grids keep their donor's nonempty labels, whether shown or hidden",
+        (9, True, donor_refrains),
+        (len(refrain_texts(chassis_tree)), all(refrain_texts(chassis_tree)), refrain_texts(chassis_tree)))
+    rec("the-visible-participation-framing-is-preserved",
+        "stripping respects the donor's chosen visible reminder stages",
+        [i for i,st in enumerate(ls.measure(donor)["stages"]) if st["chromeWords"] > 0],
+        [i for i,st in enumerate(ls.measure(tmp)["stages"]) if st["chromeWords"] > 0])
+    blank_grid = lh.fromstring(lh.tostring(chassis_tree))
+    for leaf in blank_grid.xpath('//*[contains(@class,"lundy-grid")]')[0].iter():
+        leaf.text = None
+        leaf.tail = None
+    rec("an-empty-participation-grid-is-still-caught",
+        "hiding a reminder does not excuse stripping its labels",
+        False, refrain_texts(blank_grid) == donor_refrains)
     rec("shared-furniture-is-kept-not-swept",
         "the chassis still carries the furniture blocks two families share",
         True, rep["furnitureKept"] > 0)

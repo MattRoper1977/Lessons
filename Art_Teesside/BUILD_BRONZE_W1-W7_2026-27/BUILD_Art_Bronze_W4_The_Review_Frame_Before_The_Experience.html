@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-GB">
+<html lang="en-GB" class="mbm-classroom pathway-build">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -38,7 +38,84 @@ h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-siz
         .award-print h3{font-size:11pt;margin:0}
         .award-print .award-review-space{height:35mm;border:1px solid #777}
       }
-    </style></head>
+    </style><style id="mbm-classroom-chassis">/* Shared classroom presentation. Palette authority: the user's Art Studio reference. */
+html.mbm-classroom {
+  --lo-bg:#e8eef1;--lo-border:#4F869C;--ido-bg:#f3e4dc;--ido-border:#D06438;
+  --wedo-bg:#e2efec;--wedo-border:#16877A;--task-bg:#faf0d7;--task-border:#E1AB32;
+  --btn-bg:#4F869C;--btn-hover:#3a6a7d;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;
+  --sc-bg:#ffedd5;--sc-border:#f97316;--aspire-bg:#dcfce7;--aspire-border:#22c55e;
+}
+html.mbm-classroom.pathway-grow {
+  --lo-bg:#e6ebf0;--lo-border:#5B91A5;--ido-bg:#f2e6df;--ido-border:#D1673D;
+  --wedo-bg:#e2efed;--wedo-border:#2BA193;--task-bg:#f8efd8;--task-border:#DFAD3E;
+  --btn-bg:#5B91A5;--btn-hover:#436f80;--sc-border:#DFAD3E;--sc-bg:#faf3dd;
+}
+html.mbm-classroom.pathway-launch {
+  --lo-bg:#e4ebee;--lo-border:#356F83;--ido-bg:#efe3db;--ido-border:#9B5B3D;
+  --wedo-bg:#e1edeb;--wedo-border:#238C80;--task-bg:#f6eed9;--task-border:#C18B2D;
+  --btn-bg:#356F83;--btn-hover:#28576a;--sc-border:#C18B2D;--sc-bg:#f8f1de;
+}
+@media screen {
+  html.mbm-classroom, .mbm-classroom body {background:#fff;color:#1f2937;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+  .mbm-classroom main.deck {height:100vh;height:100dvh;padding:clamp(14px,3vh,36px) 4vw 110px;overflow:auto;scroll-padding-bottom:110px}
+  .mbm-classroom main.deck>.slide {width:100%;max-width:1600px;min-height:calc(100vh - 160px);margin:auto;padding:clamp(20px,3vw,40px);background:#fff;color:#1f2937;border:0;border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px #00000018}
+  .mbm-classroom .slide[data-classroom-phase="ido"] {border-top-color:var(--ido-border)}
+  .mbm-classroom .slide[data-classroom-phase="wedo"] {border-top-color:var(--wedo-border)}
+  .mbm-classroom .slide[data-classroom-phase="independent"] {border-top-color:var(--task-border)}
+  .mbm-classroom .slide[data-classroom-phase="exit"] {border-top-color:var(--sc-border)}
+  .mbm-classroom .slide h1 {display:block;color:#101820;font-size:clamp(1.8rem,3.2vw,2.8rem);line-height:1.14;margin:20px 0 24px;padding-bottom:12px;border-bottom:3px solid var(--lo-border)}
+  .mbm-classroom .slide h2 {color:#101820;font-size:clamp(1.5rem,2.5vw,2rem);line-height:1.22;margin:16px 0 22px;padding-bottom:12px;border-bottom:2px solid #e2e8f0}
+  .mbm-classroom .slide h3 {color:#182c3c;font-size:1.2rem;line-height:1.3;margin:18px 0 10px}
+  .mbm-classroom .slide p,.mbm-classroom .slide li {font-size:1.15rem;line-height:1.6;color:#334155;max-width:85ch}
+  .mbm-classroom .slide p {margin:.5em 0}
+  .mbm-classroom .slide>svg {max-width:900px;margin:18px auto;display:block;overflow:visible}
+  .mbm-classroom .slide>.tag {display:inline-block;background:var(--lo-bg);color:#183b4b;border-radius:8px;padding:6px 14px;font-size:.9rem;font-weight:800;letter-spacing:.04em}
+  .mbm-classroom .slide[data-classroom-phase="ido"]>.tag {background:var(--ido-bg);color:#68321f}
+  .mbm-classroom .slide[data-classroom-phase="wedo"]>.tag {background:var(--wedo-bg);color:#115c52}
+  .mbm-classroom .slide[data-classroom-phase="independent"]>.tag {background:var(--task-bg);color:#684811}
+  .mbm-classroom .slide>.time {float:right;border-radius:999px;background:#f5f7f8;color:#334155;border:1px solid #cbd5e1;font-size:.9rem}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.time {display:none}
+  .mbm-classroom .mbm-lesson-objective {background:var(--lo-bg);border-left:6px solid var(--lo-border);border-radius:12px;padding:14px 18px;margin:16px 0}
+  .mbm-classroom .mbm-lesson-success {background:var(--sc-bg);border-left:6px solid var(--sc-border);border-radius:12px;padding:14px 18px;margin:14px 0}
+  .mbm-classroom .box,.mbm-classroom .route,.mbm-classroom .route-card {background:#f8fafc;color:#1f2937;border:1px solid #cbd5e1;border-radius:12px;padding:16px}
+  .mbm-classroom .box.objective {background:var(--lo-bg);border-left:6px solid var(--lo-border)}
+  .mbm-classroom .lundy,.mbm-classroom .lundy-strip {background:#f8fafc;color:#334155;border:1px solid #dce3e8;border-radius:12px;padding:10px 14px;margin:22px 0 0}
+  /* Pupil voice is framed at arrival and revisited at the exit, without a
+     repeated process banner competing with each model and practical task. */
+  .mbm-classroom .slide[data-classroom-phase]:not([data-classroom-phase="title"]):not([data-classroom-phase="exit"])>.lundy,
+  .mbm-classroom .slide[data-classroom-phase]:not([data-classroom-phase="title"]):not([data-classroom-phase="exit"])>.lundy-strip {display:none}
+  .mbm-classroom .lundy-grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+  .mbm-classroom .lundy-grid>span {display:block;color:#213544;background:var(--lo-bg);border-radius:8px;padding:7px;text-align:center;font-size:.8rem;font-weight:800}
+  .mbm-classroom .lundy-grid>span:nth-child(2) {background:var(--ido-bg)}
+  .mbm-classroom .lundy-grid>span:nth-child(3) {background:var(--wedo-bg)}
+  .mbm-classroom .lundy-grid>span:nth-child(4) {background:var(--task-bg)}
+  .mbm-classroom .lundy p,.mbm-classroom .lundy-strip p {font-size:.85rem;margin:8px 0 0;max-width:none}
+  .mbm-classroom button {min-width:44px;min-height:44px;border-radius:10px;font-weight:700;background:var(--btn-hover);color:#fff;border:1px solid transparent;padding:10px 16px}
+  .mbm-classroom button:hover {background:#203f4c;color:#fff}
+  .mbm-classroom button:focus-visible,.mbm-classroom a:focus-visible,.mbm-classroom select:focus-visible,.mbm-classroom summary:focus-visible {outline:3px solid #ab5800;outline-offset:3px}
+  .mbm-classroom .controls {background:#fffffff5;backdrop-filter:blur(8px);border:1px solid #dbe3e8;box-shadow:0 4px 20px #182c3c18;border-radius:14px;padding:8px;gap:7px;flex-wrap:wrap;max-width:calc(100vw - 32px)}
+  .mbm-classroom .prog {background:#e7ecef}
+  .mbm-classroom .prog>span {background:var(--lo-border)}
+  .mbm-classroom .overlay-card {background:#fff;color:#1f2937;border-color:var(--lo-border)}
+  .mbm-classroom .slide[data-classroom-phase="title"] {text-align:center}
+  .mbm-classroom .slide[data-classroom-phase="title"]>p {max-width:760px;margin:14px auto;text-align:left}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.tag {background:#d98128;color:#172334}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.lundy {max-width:760px;margin:24px auto 0;text-align:left}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.box {text-align:left}
+  .mbm-classroom body.calm .slide {box-shadow:none}
+  @media(max-width:700px) {
+    .mbm-classroom main.deck {padding:14px 14px 180px}
+    .mbm-classroom main.deck>.slide {min-height:calc(100dvh - 205px);padding:20px 16px}
+    .mbm-classroom .slide p,.mbm-classroom .slide li {font-size:1.05rem}
+    .mbm-classroom .controls {left:14px;right:14px;bottom:14px;justify-content:center;max-width:none}
+    .mbm-classroom .controls button {font-size:.85rem;padding:8px 10px}
+    .mbm-classroom .lundy-grid {grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+  @media(prefers-reduced-motion:reduce) {
+    .mbm-classroom *, .mbm-classroom *::before, .mbm-classroom *::after {animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  }
+}
+</style></head>
 <body>
 <!--mbm_guide_v1 retained as a contract marker; guidance state is memory-only-->
 <!--n6-nav1:v1-->
@@ -47,120 +124,120 @@ h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-siz
 <!--/n6-nav1-->
 <a class="skip" href="#lessonDeck">Skip to lesson</a>
 <main id="lessonDeck" class="deck">
-<section class="slide active" data-type="title" data-title="Lesson overview" data-min="0">
+<section class="slide active" data-type="title" data-title="Lesson overview" data-min="0" data-classroom-phase="title">
 <div class="time">0 min</div>
-<span class="tag"></span>
-<div class="lundy" aria-label="Lundy participation strip">
+<span class="tag">BUILD Art</span>
+<h1>The Review Frame, Before The Experience</h1><p>BUILD · Art · Week 4. Trinity Arts Award Bronze. The Review Frame, Before The Experience.</p><p class="mbm-lesson-objective">Objective: prepare your review frame before the experience, so every row holds the moment, the craft choice, the effect, and who it was for.</p><p class="mbm-lesson-success">Success evidence: one ruled frame sheet with four columns and four rows, row one filled from the approved pack, and a record of who received it and how and today's date beside it.</p><p>Everything you write comes from the approved pack or from work put in front of you. You write about the work: the moment, the choice, the effect. You are never asked about your home, your family, your body, how you look or what you believe. Nobody in this room is asked what they believe. Identity here means what you as a maker keep choosing, read off artwork and never off a life.</p><p>Nothing is booked. No event, venue or date is named in this deck. The experience may be a visit. It may be a visitor coming in to us. It may be a live link on screen. An online exhibition counts too. Your frame is the same for all of them.</p><p>40 minutes. Offline.</p><div class="box rehearsal" data-mbm-guide="staff">This deck evidences Bronze Part B, Explore the arts as an audience member. The register says Part B requires attending at least one arts event or experience, reflecting on quality and creative impact, and views shared with at least one other person, evidenced. The register also notes that an online exhibition is legitimate. This deck builds the instrument for that part and asserts no attendance: nothing is booked, no event, venue or date appears, and it runs word for word the same whether we go to them, they come in to us, or we meet live on screen. Bronze attempted rule, in the register's words: ONE Attempted allowed overall. Any Not Attempted = Below Pass. The evidence file cap is 10 evidence files for the whole Bronze level, so this frame sheet joins the Part B file rather than opening a new one. The three assessment areas are art form knowledge and understanding, creativity, and communication.</div><div class="box rehearsal" data-mbm-guide="staff">Delivery is through a validated centre; confirm local validation and an adviser trained at Bronze before assessment. Neither is asserted as completed here. Core, Extend and Challenge are support routes inside Bronze, not different awards. The prompts and sample quantities are teaching scaffolds, not extra assessment requirements. Scribe only the pupil’s own words. Store evidence by part; one cumulative file per part is a suggested four-file plan within the ten-file cap.</div><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<p>BUILD · Art · Week 4. Trinity Arts Award Bronze. The Review Frame, Before The Experience.</p><p>Objective: prepare your review frame before the experience, so every row holds the moment, the craft choice, the effect, and who it was for.</p><p>Success evidence: one ruled frame sheet with four columns and four rows, row one filled from the approved pack, and a record of who received it and how and today's date beside it.</p><p>Everything you write comes from the approved pack or from work put in front of you. You write about the work: the moment, the choice, the effect. You are never asked about your home, your family, your body, how you look or what you believe. Nobody in this room is asked what they believe. Identity here means what you as a maker keep choosing, read off artwork and never off a life.</p><p>Nothing is booked. No event, venue or date is named in this deck. The experience may be a visit. It may be a visitor coming in to us. It may be a live link on screen. An online exhibition counts too. Your frame is the same for all of them.</p><p>40 minutes. Offline.</p><div class="box rehearsal" data-mbm-guide="staff">This deck evidences Bronze Part B, Explore the arts as an audience member. The register says Part B requires attending at least one arts event or experience, reflecting on quality and creative impact, and views shared with at least one other person, evidenced. The register also notes that an online exhibition is legitimate. This deck builds the instrument for that part and asserts no attendance: nothing is booked, no event, venue or date appears, and it runs word for word the same whether we go to them, they come in to us, or we meet live on screen. Bronze attempted rule, in the register's words: ONE Attempted allowed overall. Any Not Attempted = Below Pass. The evidence file cap is 10 evidence files for the whole Bronze level, so this frame sheet joins the Part B file rather than opening a new one. The three assessment areas are art form knowledge and understanding, creativity, and communication.</div><div class="box rehearsal" data-mbm-guide="staff">Delivery is through a validated centre; confirm local validation and an adviser trained at Bronze before assessment. Neither is asserted as completed here. Core, Extend and Challenge are support routes inside Bronze, not different awards. The prompts and sample quantities are teaching scaffolds, not extra assessment requirements. Scribe only the pupil’s own words. Store evidence by part; one cumulative file per part is a suggested four-file plan within the ten-file cap.</div></section>
-<section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="3" data-ta1="Frame sheets, rulers and pencils out before pupils sit down. Nobody rules a line yet." data-ta2="If a pupil turns a row towards home, family or what people believe, say: give me the work and the choice instead. Then scribe that as the row and move on.">
+</section>
+<section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="3" data-ta1="Frame sheets, rulers and pencils out before pupils sit down. Nobody rules a line yet." data-ta2="If a pupil turns a row towards home, family or what people believe, say: give me the work and the choice instead. Then scribe that as the row and move on." data-classroom-phase="arrival">
 <div class="time">3 min</div>
-<span class="tag"></span>
+<span class="tag">Retrieval</span>
 <h2>Arrival · retrieve</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>From a notice to a row</h3><p>Last lesson you wrote notices.</p><p>A notice names a choice you can point at.</p><p>Today each notice gets a home.</p><p>That home is a row on a review frame.</p><p>A frame is a sheet with four columns.</p><p>The columns are the moment, the craft choice, the effect, and who it was for.</p><p>You rule the frame first, before the experience.</p><p>Then all you have to do is fill it in.</p><p>You need three things today. Your frame sheet, a ruler and a pencil.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>From a notice to a row</h3><p>Last lesson you wrote notices.</p><p>A notice names a choice you can point at.</p><p>Today each notice gets a home.</p><p>That home is a row on a review frame.</p><p>A frame is a sheet with four columns.</p><p>The columns are the moment, the craft choice, the effect, and who it was for.</p><p>You rule the frame first, before the experience.</p><p>Then all you have to do is fill it in.</p><p>You need three things today. Your frame sheet, a ruler and a pencil.</p></section>
-<section class="slide" data-type="starter" data-title="Starter · create the need" data-min="3" data-ta1="Read both reviews out yourself. Do not ask a pupil to read the weak one.">
+</section>
+<section class="slide" data-type="starter" data-title="Starter · create the need" data-min="3" data-ta1="Read both reviews out yourself. Do not ask a pupil to read the weak one." data-classroom-phase="starter">
 <div class="time">3 min</div>
-<span class="tag"></span>
+<span class="tag">Starter</span>
 <h2>Starter · create the need</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Two reviews of one work</h3><p>Here are two reviews of the same work.</p><p>The first was written from memory, a week late.</p><p>It says the work was good and the room was big.</p><p>You cannot tell what the maker did.</p><p>The second was written on a frame.</p><p>It names a moment, a choice, an effect and who for.</p><p>You can picture the work from it.</p><p>The work did not change. One writer had rows ready.</p><ul><li>1 · rule the frame first.</li><li>2 · fill one row at each moment.</li><li>3 · check the row before you move on.</li></ul><p>Memory fades fast. A blank row waits.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Two reviews of one work</h3><p>Here are two reviews of the same work.</p><p>The first was written from memory, a week late.</p><p>It says the work was good and the room was big.</p><p>You cannot tell what the maker did.</p><p>The second was written on a frame.</p><p>It names a moment, a choice, an effect and who for.</p><p>You can picture the work from it.</p><p>The work did not change. One writer had rows ready.</p><ul><li>1 · rule the frame first.</li><li>2 · fill one row at each moment.</li><li>3 · check the row before you move on.</li></ul><p>Memory fades fast. A blank row waits.</p></section>
-<section class="slide" data-type="ido" data-title="I Do · model" data-min="7" data-ta1="Model on one print only. Keep the other prints face down until the lab. For preparation, draw or project the exact simple example described here, and label it a made-up practice work. Do not attribute its features to an unrelated artwork." data-ta2="Say the column name out loud before you write in it. The column names are the thing being taught, not the print.">
+</section>
+<section class="slide" data-type="ido" data-title="I Do · model" data-min="7" data-ta1="Model on one print only. Keep the other prints face down until the lab. For preparation, draw or project the exact simple example described here, and label it a made-up practice work. Do not attribute its features to an unrelated artwork." data-ta2="Say the column name out loud before you write in it. The column names are the thing being taught, not the print." data-classroom-phase="ido">
 <div class="time">7 min</div>
-<span class="tag"></span>
+<span class="tag">I Do</span>
 <h2>I Do · model</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>I fill one row</h3><p>A print from the approved pack is on my desk.</p><p>I will fill one row in front of you.</p><p>Column one is the moment.</p><p>The moment is the bit I stopped at.</p><p>I write it so you could find it too.</p><p>I write: the dark strip along the bottom.</p><p>Column two is the craft choice.</p><p>That is what the maker did in that spot.</p><p>I write: black ink, laid on thick.</p><p>Column three is the effect.</p><p>The effect is what that choice did.</p><p>I write: my eye drops to the bottom first.</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Boxes labelled MOMENT, CRAFT CHOICE, EFFECT, WHO FOR. Four columns, filled left to right, and one row is done"><title>The four columns of one row</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">MOMENT</text><text x="73" y="88" text-anchor="middle" font-size="11">one moment</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">CRAFT CHOICE</text><text x="231" y="88" text-anchor="middle" font-size="11">the maker’s choice</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">EFFECT</text><text x="389" y="88" text-anchor="middle" font-size="11">its effect on you</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">WHO FOR</text><text x="547" y="88" text-anchor="middle" font-size="11">check, do not guess</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">Four columns, filled left to right, and one row is done</text></svg><p>Column four is who it was for.</p><p>I read that off the label and the pack.</p><p>I write: made for a school hall wall.</p><p>Watch my order. The moment goes first, every time.</p><p>A choice makes no sense without a moment.</p><div class="box rehearsal" data-mbm-guide="staff">Fill the row on the board in this order, left to right. Do not fill a second row; the second row is the pupil's. If a pupil offers a strong line, park it on the board for their own sheet rather than writing it into yours.</div><p>There is one rule for column four.</p><p>You never guess about a person.</p><p>You read who it was for off the work.</p><p>The label, the size and the pack all tell you.</p><p>A checked label can name who a work was made for. Low labels alone do not tell us that.</p><p>If a source does not name the audience, write not stated. You may offer a guess, but label it as a guess and say why. Do not turn a low label or a large shape into a fact about the maker’s aim.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>I fill one row</h3><p>A print from the approved pack is on my desk.</p><p>I will fill one row in front of you.</p><p>Column one is the moment.</p><p>The moment is the bit I stopped at.</p><p>I write it so you could find it too.</p><p>I write: the dark strip along the bottom.</p><p>Column two is the craft choice.</p><p>That is what the maker did in that spot.</p><p>I write: black ink, laid on thick.</p><p>Column three is the effect.</p><p>The effect is what that choice did.</p><p>I write: my eye drops to the bottom first.</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Boxes labelled MOMENT, CRAFT CHOICE, EFFECT, WHO FOR. Four columns, filled left to right, and one row is done"><title>The four columns of one row</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">MOMENT</text><text x="73" y="88" text-anchor="middle" font-size="11">one moment</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">CRAFT CHOICE</text><text x="231" y="88" text-anchor="middle" font-size="11">the maker’s choice</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">EFFECT</text><text x="389" y="88" text-anchor="middle" font-size="11">its effect on you</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">WHO FOR</text><text x="547" y="88" text-anchor="middle" font-size="11">check, do not guess</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">Four columns, filled left to right, and one row is done</text></svg><p>Column four is who it was for.</p><p>I read that off the label and the pack.</p><p>I write: made for a school hall wall.</p><p>Watch my order. The moment goes first, every time.</p><p>A choice makes no sense without a moment.</p><div class="box rehearsal" data-mbm-guide="staff">Fill the row on the board in this order, left to right. Do not fill a second row; the second row is the pupil's. If a pupil offers a strong line, park it on the board for their own sheet rather than writing it into yours.</div><p>There is one rule for column four.</p><p>You never guess about a person.</p><p>You read who it was for off the work.</p><p>The label, the size and the pack all tell you.</p><p>A checked label can name who a work was made for. Low labels alone do not tell us that.</p><p>If a source does not name the audience, write not stated. You may offer a guess, but label it as a guess and say why. Do not turn a low label or a large shape into a fact about the maker’s aim.</p></section>
-<section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="3" data-ta1="Cards stay face down until the table is quiet. Turn them over together, then start the clock. The exact sorting lines are on this slide: project them and let pupils sort by number, or copy these lines onto cards. No separate pack is required for this sort.">
+</section>
+<section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="3" data-ta1="Cards stay face down until the table is quiet. Turn them over together, then start the clock. The exact sorting lines are on this slide: project them and let pupils sort by number, or copy these lines onto cards. No separate pack is required for this sort." data-classroom-phase="wedo">
 <div class="time">3 min</div>
-<span class="tag"></span>
+<span class="tag">We Do</span>
 <h2>We Do · everyone commits</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Sort the cards, then match the column</h3><p>Six cards are on your table. Each card holds one line.</p><ul><li>The room goes dark for ten seconds.</li><li>It was a really good hour.</li><li>The maker left the joins showing.</li><li>Your eye goes to the red first.</li><li>The practice label says this work was made for young children.</li><li>I liked all of it.</li></ul><p>Sort them into two piles: frame lines and empty lines.</p><p>A frame line names something in the work.</p><p>An empty line only names how you felt.</p><p>Now take the frame pile on its own.</p><p>Match each card to the column it belongs in.</p><p>The four columns are moment, craft choice, effect, and who it was for.</p><p>Every card gets a match, even when you are not sure.</p><p>A guess I can see beats a blank card.</p><div class="box rehearsal" data-mbm-guide="staff">Adjudication key. Frame lines: the dark room line, the joins line, the red line, the audience label line. Empty lines: it was a really good hour, and I liked all of it. Matches: dark room is the moment, joins are the craft choice, red is the effect, the audience label states who it was for.</div><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Sort the cards, then match the column</h3><p>Six cards are on your table. Each card holds one line.</p><ul><li>The room goes dark for ten seconds.</li><li>It was a really good hour.</li><li>The maker left the joins showing.</li><li>Your eye goes to the red first.</li><li>The practice label says this work was made for young children.</li><li>I liked all of it.</li></ul><p>Sort them into two piles: frame lines and empty lines.</p><p>A frame line names something in the work.</p><p>An empty line only names how you felt.</p><p>Now take the frame pile on its own.</p><p>Match each card to the column it belongs in.</p><p>The four columns are moment, craft choice, effect, and who it was for.</p><p>Every card gets a match, even when you are not sure.</p><p>A guess I can see beats a blank card.</p><div class="box rehearsal" data-mbm-guide="staff">Adjudication key. Frame lines: the dark room line, the joins line, the red line, the audience label line. Empty lines: it was a really good hour, and I liked all of it. Matches: dark room is the moment, joins are the craft choice, red is the effect, the audience label states who it was for.</div></section>
-<section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="7" data-ta1="Act the empty-handed version once, so the fault is seen and not only heard." data-ta2="A pupil who cannot write at speed may sketch the moment in the box. Scribe the choice in their words next to it.">
+</section>
+<section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="7" data-ta1="Act the empty-handed version once, so the fault is seen and not only heard." data-ta2="A pupil who cannot write at speed may sketch the moment in the box. Scribe the choice in their words next to it." data-classroom-phase="ido">
 <div class="time">7 min</div>
-<span class="tag"></span>
+<span class="tag">I Do</span>
 <h2>I Do 2 · connect</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Frame first, or three words later</h3><p>Now watch the same job done the wrong way.</p><p>I take no frame with me at all.</p><p>I tell myself that I will remember it.</p><p>A week later I write three words: it was good.</p><p>Three words is not a review.</p><p>It shows no craft choice, so it shows no quality.</p><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Boxes labelled FRAME FIRST, MEMORY LATER. Same experience, and only one way leaves a row worth reading"><title>Ruled before against remembered later</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">FRAME FIRST</text><text x="151" y="74" text-anchor="middle" font-size="11">four columns ruled before</text><text x="151" y="94" text-anchor="middle" font-size="11">one row filled at each moment</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">MEMORY LATER</text><text x="469" y="74" text-anchor="middle" font-size="11">nothing ruled, nothing written</text><text x="469" y="94" text-anchor="middle" font-size="11">three words left a week after</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Same experience, and only one way leaves a row worth reading</text></svg><p>The frame does two jobs for you.</p><p>It tells you what to look for.</p><p>It gives you a place to put it.</p><p>Now here is the test for a finished row.</p><p>Read the effect, then read the choice.</p><p>Ask if that choice caused that effect.</p><p>If any choice would give the same effect, the row is weak.</p><p>So change the effect until it follows the choice.</p><p>My eye drops down passes the test.</p><p>It was lovely fails it. Thick black ink did not make it lovely.</p><ul><li>1 · rule four columns and four rows.</li><li>2 · fill the moment before you move on.</li><li>3 · name one choice, not three.</li><li>4 · make the effect follow the choice.</li></ul><p>One moment per row. Two moments in a row is really two rows.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Frame first, or three words later</h3><p>Now watch the same job done the wrong way.</p><p>I take no frame with me at all.</p><p>I tell myself that I will remember it.</p><p>A week later I write three words: it was good.</p><p>Three words is not a review.</p><p>It shows no craft choice, so it shows no quality.</p><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Boxes labelled FRAME FIRST, MEMORY LATER. Same experience, and only one way leaves a row worth reading"><title>Ruled before against remembered later</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">FRAME FIRST</text><text x="151" y="74" text-anchor="middle" font-size="11">four columns ruled before</text><text x="151" y="94" text-anchor="middle" font-size="11">one row filled at each moment</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">MEMORY LATER</text><text x="469" y="74" text-anchor="middle" font-size="11">nothing ruled, nothing written</text><text x="469" y="94" text-anchor="middle" font-size="11">three words left a week after</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Same experience, and only one way leaves a row worth reading</text></svg><p>The frame does two jobs for you.</p><p>It tells you what to look for.</p><p>It gives you a place to put it.</p><p>Now here is the test for a finished row.</p><p>Read the effect, then read the choice.</p><p>Ask if that choice caused that effect.</p><p>If any choice would give the same effect, the row is weak.</p><p>So change the effect until it follows the choice.</p><p>My eye drops down passes the test.</p><p>It was lovely fails it. Thick black ink did not make it lovely.</p><ul><li>1 · rule four columns and four rows.</li><li>2 · fill the moment before you move on.</li><li>3 · name one choice, not three.</li><li>4 · make the effect follow the choice.</li></ul><p>One moment per row. Two moments in a row is really two rows.</p></section>
-<section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="5" data-ta1="Keep the earlier model visible for this paired check. Pupils have not made their independent work yet; do not ask for a sheet that does not exist.">
+</section>
+<section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="5" data-ta1="Keep the earlier model visible for this paired check. Pupils have not made their independent work yet; do not ask for a sheet that does not exist." data-classroom-phase="wedo">
 <div class="time">5 min</div>
-<span class="tag"></span>
+<span class="tag">We Do</span>
 <h2>We Do 2 · lab</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Test a row with a partner</h3><p>Use the model row shown earlier. Your own piece comes next.</p><p>Work in twos with your frame sheets.</p><p>Partner one reads the model row out loud.</p><p>Partner two asks the two test questions.</p><p>Question one: could I find that moment?</p><p>Question two: does the effect come from the choice?</p><p>If either answer is no, the row gets changed.</p><p>Change it now, in pencil, not later.</p><p>Then swap over, with two minutes each way.</p><p>You may not tell your partner the row is nice.</p><p>Nice gives the writer nothing to fix.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Test a row with a partner</h3><p>Use the model row shown earlier. Your own piece comes next.</p><p>Work in twos with your frame sheets.</p><p>Partner one reads the model row out loud.</p><p>Partner two asks the two test questions.</p><p>Question one: could I find that moment?</p><p>Question two: does the effect come from the choice?</p><p>If either answer is no, the row gets changed.</p><p>Change it now, in pencil, not later.</p><p>Then swap over, with two minutes each way.</p><p>You may not tell your partner the row is nice.</p><p>Nice gives the writer nothing to fix.</p></section>
-<section class="slide" data-type="independent" data-title="Independent · evidence" data-min="9" data-ta1="Check the column heads before anyone writes a row. A mis-ruled frame is far easier to fix while it is empty." data-ta2="Scribe in the pupil's own words. Do not tidy a row into a better sentence than the one they said.">
+</section>
+<section class="slide" data-type="independent" data-title="Independent · evidence" data-min="9" data-ta1="Check the column heads before anyone writes a row. A mis-ruled frame is far easier to fix while it is empty." data-ta2="Scribe in the pupil's own words. Do not tidy a row into a better sentence than the one they said." data-classroom-phase="independent">
 <div class="time">9 min</div>
-<span class="tag"></span>
+<span class="tag">Independent work</span>
 <h2>Independent · evidence</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Rule the frame, fill row one</h3><p>Now build your own frame sheet.</p><p>Rule four columns down the page.</p><p>Head them moment, craft choice, effect, and who it was for.</p><p>Rule four rows under the heads.</p><p>One work from the approved pack is on your desk.</p><p>Fill row one from that work now.</p><p>Leave rows two, three and four blank.</p><p>Those three rows wait for the experience.</p><p>Label your choice: colour, scale, material or sound.</p><p>Then ring the one word in the effect box that does the work.</p><p>Write your name and today's date at the top.</p><p>Write the file name this sheet will be saved as.</p><div class="box rehearsal" data-mbm-guide="staff">The register refuses "in arts log" as an evidence locator: the locator names the file plus the page, slide or timecode. Get the file name onto the sheet today, while the sheet is in front of them. Advisers must not write plans, reviews or evidence for pupils; scribing a pupil's own words is not the same thing as writing the row.</div><ul><li>Core · Use four prompt cards to say the moment, craft choice, effect and audience. Have your own words recorded in all four boxes.</li><li>Extend · rule the frame and fill row one in all four columns.</li><li>Challenge · as Extend, and write why that effect comes from that choice.</li></ul><p>A frame with three blank rows is finished work today.</p><p>The blank rows are the point of it.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Rule the frame, fill row one</h3><p>Now build your own frame sheet.</p><p>Rule four columns down the page.</p><p>Head them moment, craft choice, effect, and who it was for.</p><p>Rule four rows under the heads.</p><p>One work from the approved pack is on your desk.</p><p>Fill row one from that work now.</p><p>Leave rows two, three and four blank.</p><p>Those three rows wait for the experience.</p><p>Label your choice: colour, scale, material or sound.</p><p>Then ring the one word in the effect box that does the work.</p><p>Write your name and today's date at the top.</p><p>Write the file name this sheet will be saved as.</p><div class="box rehearsal" data-mbm-guide="staff">The register refuses "in arts log" as an evidence locator: the locator names the file plus the page, slide or timecode. Get the file name onto the sheet today, while the sheet is in front of them. Advisers must not write plans, reviews or evidence for pupils; scribing a pupil's own words is not the same thing as writing the row.</div><ul><li>Core · Use four prompt cards to say the moment, craft choice, effect and audience. Have your own words recorded in all four boxes.</li><li>Extend · rule the frame and fill row one in all four columns.</li><li>Challenge · as Extend, and write why that effect comes from that choice.</li></ul><p>A frame with three blank rows is finished work today.</p><p>The blank rows are the point of it.</p></section>
-<section class="slide" data-type="exit" data-title="Exit · Audience and Influence" data-min="3" data-ta1="Initial the sheet yourself, beside row one, with today's date. Initials go on the sheet, never on a separate list.">
+</section>
+<section class="slide" data-type="exit" data-title="Exit · Audience and Influence" data-min="3" data-ta1="Initial the sheet yourself, beside row one, with today's date. Initials go on the sheet, never on a separate list." data-classroom-phase="exit">
 <div class="time">3 min</div>
-<span class="tag"></span>
+<span class="tag">Exit ticket</span>
 <h2>Exit · Audience and Influence</h2>
 <div class="lundy-status">
 <p>
@@ -172,27 +249,19 @@ h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-siz
 <p>
 <b>INFLUENCE:</b> one real next action is recorded: retain, add method detail, or leave open.</p>
 </div>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Read one row to an adult</h3><p>Read row one to the adult at your table.</p><p>They will ask you the two test questions.</p><p>Answer them, then fix the row if you need to.</p><p>Record who checked your work and today's date.</p><p>They write them next to row one, on your sheet.</p><p>That is the record that the row was checked.</p><p>Your sheet then goes into the Part B file.</p><p>It does not go in your bag.</p><p>You are the audience member here.</p><p>Your frame decides what you will notice.</p><p>Pick one craft choice you want to look for, whatever the route is.</p><p>Write that pick at the foot of the sheet.</p><p>Add this work to your Part B file. Write the file name and page number. For a sound or video clip, give the file name and the time where your evidence starts.</p><p>This is a practice share from the pack. Label it preparation. Part B is completed after the real arts experience, its review and its share.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Read one row to an adult</h3><p>Read row one to the adult at your table.</p><p>They will ask you the two test questions.</p><p>Answer them, then fix the row if you need to.</p><p>Record who checked your work and today's date.</p><p>They write them next to row one, on your sheet.</p><p>That is the record that the row was checked.</p><p>Your sheet then goes into the Part B file.</p><p>It does not go in your bag.</p><p>You are the audience member here.</p><p>Your frame decides what you will notice.</p><p>Pick one craft choice you want to look for, whatever the route is.</p><p>Write that pick at the foot of the sheet.</p><p>Add this work to your Part B file. Write the file name and page number. For a sound or video clip, give the file name and the time where your evidence starts.</p><p>This is a practice share from the pack. Label it preparation. Part B is completed after the real arts experience, its review and its share.</p></section>
+</section>
 </main>
 <nav class="controls" aria-label="Lesson controls">
-<button type="button" data-nav="previous">◀ Previous</button>
-<button type="button" data-tool="1">Teacher tools</button>
-<button type="button" data-tool="2">Evidence &amp; print</button>
-<button type="button" data-tool="3">Calm mode</button>
-<button type="button" data-tool="4">Static diagrams</button>
-<button type="button" data-tool="5">Previous</button>
-<button type="button" data-tool="6">Next</button>
-<button type="button" data-nav="next">Next ▶</button>
-</nav>
+<button type="button" data-nav="previous">◀ Previous</button><button type="button" data-tool="1">Teacher tools</button><button type="button" data-tool="2">Evidence &amp; print</button><button type="button" data-tool="3">Calm mode</button><button type="button" data-tool="4">Static diagrams</button><button type="button" data-nav="next">Next ▶</button></nav>
 <div class="prog" aria-hidden="true">
 <span>
 </span>
@@ -223,7 +292,100 @@ h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-siz
         <p>For a recorded response, write the actual file name and page, slide or timecode.</p>
       </section>
     </section><!--n6-nav1:v1--><div class="n6-splash"><div style="text-align:center;margin-top:8px"><svg width="64" height="64" viewbox="0 0 100 100" aria-label="Made by Matt"><circle cx="50" cy="50" r="47" fill="none" stroke="#1e3a8a" stroke-width="3.4"></circle><g transform="translate(0 2)"><path d="M28 71 L28 37 L50 59 L72 37 L72 71" fill="none" stroke="#1e3a8a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 22.5 L51.48 28.52 L57.5 30 L51.48 31.48 L50 37.5 L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"></path></g></svg></div></div><!--/n6-nav1--><script id="lesson-config" type="application/json">{"id": "BRONZE_ART_W4_B2", "family": "BUILD Art", "week": 4, "slot": "Art · Trinity Arts Award Bronze", "title": "The Review Frame, Before The Experience", "outcomes": ["Prepare the review frame: the moment, the craft choice, the effect, and who it was for."], "cells": [], "objective": "Prepare your review frame before the experience, so every row holds the moment, the craft choice, the effect, and who it was for.", "timings": [0, 3, 3, 7, 3, 7, 5, 9, 3], "artsAward": {"level": "Bronze", "parts": ["B"], "slots": ["EVENT_SLOT"]}, "planId": "03b9ead7f884", "weDoType": "sort-or-match", "tierLadder": ["Core", "Extend", "Challenge"]}</script>
-<script data-award-chassis="">/* Runtime for newly authored award decks; no persistence or external dependencies. */
+<script data-award-slot-reader>
+/* One current slot source. Embedded only in slot-dependent award decks. */
+(function (root, factory) {
+  const api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else root.MBMArtsSlots = api;
+}(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  'use strict';
+  function readSlots(doc, required) {
+    if (!doc || doc.schema !== 'arts-award-slots-v1' || !doc.slots || !Array.isArray(required)) {
+      throw new Error('Choose the current Arts Award slots file.');
+    }
+    return required.map(function (key) {
+      const slot = doc.slots[key];
+      if (!slot || !Array.isArray(slot.entries)) throw new Error('A required slot is missing.');
+      const entries = slot.entries.map(function (entry) {
+        if (!entry || typeof entry !== 'object' || Array.isArray(entry)) throw new Error('Invalid slot entry.');
+        const status = String(entry.status || 'UNCONFIRMED').toUpperCase();
+        const confirmed = status === 'CONFIRMED' || status === 'BOOKED';
+        const name = String(entry.name || entry.title || '').trim();
+        const route = String(entry.route || '').trim();
+        return {name: name, route: route, date: String(entry.date || ''),
+          confirmed: confirmed && Boolean(name) && ['R1', 'R2', 'R3'].includes(route)};
+      });
+      return {key: key, entries: entries, ready: entries.some(e => e.confirmed)};
+    });
+  }
+  async function loadHosted(url, required, fetcher) {
+    const response = await fetcher(url, {cache: 'no-store', credentials: 'same-origin'});
+    if (!response.ok) throw new Error('Current slots could not be loaded.');
+    return readSlots(await response.json(), required);
+  }
+  async function loadFile(file, required) {
+    if (!file || file.size > 1048576) throw new Error('Choose a slots JSON file smaller than 1 MB.');
+    return readSlots(JSON.parse(await file.text()), required);
+  }
+  function mount(config) {
+    const host = document.querySelector('section[data-min]');
+    if (!host || document.getElementById('award-slot-panel')) return;
+    const panel = document.createElement('div');
+    panel.id = 'award-slot-panel';
+    panel.className = 'box rehearsal';
+    panel.dataset.mbmGuide = 'staff';
+    panel.dataset.audience = 'staff';
+    const heading = document.createElement('h3');
+    heading.textContent = 'Current session details';
+    const status = document.createElement('p');
+    status.setAttribute('role', 'status');
+    const list = document.createElement('ul');
+    const label = document.createElement('label');
+    label.textContent = 'Open the current SLOTS.json file: ';
+    const input = document.createElement('input');
+    input.type = 'file'; input.accept = '.json,application/json';
+    label.appendChild(input);
+    panel.append(heading, status, list, label); host.appendChild(panel);
+    let generation = 0;
+    function fallback(message) {
+      list.replaceChildren();
+      status.textContent = 'Unconfirmed — preparation only. ' + message;
+    }
+    function show(rows) {
+      list.replaceChildren();
+      const allReady = rows.length > 0 && rows.every(row => row.ready);
+      status.textContent = allReady
+        ? 'A confirmed route is recorded. Staff must check arrangements before delivery.'
+        : 'Unconfirmed — preparation only. Complete the actual experience when a route is ready.';
+      rows.forEach(function (row) {
+        const item = document.createElement('li');
+        const ready = row.entries.filter(entry => entry.confirmed);
+        item.textContent = row.key + ': ' + (ready.length
+          ? ready.map(e => [e.name, e.route, e.date].filter(Boolean).join(' · ')).join('; ')
+          : 'no confirmed entry');
+        list.appendChild(item);
+      });
+    }
+    input.addEventListener('change', async function () {
+      const ticket = ++generation;
+      fallback('Reading the selected file.');
+      try { const rows = await loadFile(input.files[0], config.required); if (ticket === generation) show(rows); }
+      catch (_) { if (ticket === generation) fallback('The selected file could not be read.'); }
+    });
+    fallback('Load the shared slots file to check the current route.');
+    if (location.protocol === 'http:' || location.protocol === 'https:') {
+      const ticket = ++generation;
+      loadHosted(config.url, config.required, window.fetch.bind(window))
+        .then(rows => { if (ticket === generation) show(rows); })
+        .catch(() => { if (ticket === generation) fallback('Open the local slots file if you are offline.'); });
+    }
+  }
+  return {readSlots: readSlots, loadHosted: loadHosted, loadFile: loadFile, mount: mount};
+}));
+
+document.addEventListener("DOMContentLoaded",function(){MBMArtsSlots.mount({"required": ["EVENT_SLOT"], "url": "../../tools/artsaward/SLOTS.json"});});
+</script><script data-award-chassis="">/* Runtime for newly authored award decks; no persistence or external dependencies. */
 (function () {
   'use strict';
 
@@ -402,98 +564,5 @@ h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-siz
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once: true});
   else boot();
 }());
-</script><script data-award-slot-reader>
-/* One current slot source. Embedded only in slot-dependent award decks. */
-(function (root, factory) {
-  const api = factory();
-  if (typeof module === 'object' && module.exports) module.exports = api;
-  else root.MBMArtsSlots = api;
-}(typeof globalThis !== 'undefined' ? globalThis : this, function () {
-  'use strict';
-  function readSlots(doc, required) {
-    if (!doc || doc.schema !== 'arts-award-slots-v1' || !doc.slots || !Array.isArray(required)) {
-      throw new Error('Choose the current Arts Award slots file.');
-    }
-    return required.map(function (key) {
-      const slot = doc.slots[key];
-      if (!slot || !Array.isArray(slot.entries)) throw new Error('A required slot is missing.');
-      const entries = slot.entries.map(function (entry) {
-        if (!entry || typeof entry !== 'object' || Array.isArray(entry)) throw new Error('Invalid slot entry.');
-        const status = String(entry.status || 'UNCONFIRMED').toUpperCase();
-        const confirmed = status === 'CONFIRMED' || status === 'BOOKED';
-        const name = String(entry.name || entry.title || '').trim();
-        const route = String(entry.route || '').trim();
-        return {name: name, route: route, date: String(entry.date || ''),
-          confirmed: confirmed && Boolean(name) && ['R1', 'R2', 'R3'].includes(route)};
-      });
-      return {key: key, entries: entries, ready: entries.some(e => e.confirmed)};
-    });
-  }
-  async function loadHosted(url, required, fetcher) {
-    const response = await fetcher(url, {cache: 'no-store', credentials: 'same-origin'});
-    if (!response.ok) throw new Error('Current slots could not be loaded.');
-    return readSlots(await response.json(), required);
-  }
-  async function loadFile(file, required) {
-    if (!file || file.size > 1048576) throw new Error('Choose a slots JSON file smaller than 1 MB.');
-    return readSlots(JSON.parse(await file.text()), required);
-  }
-  function mount(config) {
-    const host = document.querySelector('section[data-min]');
-    if (!host || document.getElementById('award-slot-panel')) return;
-    const panel = document.createElement('div');
-    panel.id = 'award-slot-panel';
-    panel.className = 'box rehearsal';
-    panel.dataset.mbmGuide = 'staff';
-    panel.dataset.audience = 'staff';
-    const heading = document.createElement('h3');
-    heading.textContent = 'Current session details';
-    const status = document.createElement('p');
-    status.setAttribute('role', 'status');
-    const list = document.createElement('ul');
-    const label = document.createElement('label');
-    label.textContent = 'Open the current SLOTS.json file: ';
-    const input = document.createElement('input');
-    input.type = 'file'; input.accept = '.json,application/json';
-    label.appendChild(input);
-    panel.append(heading, status, list, label); host.appendChild(panel);
-    let generation = 0;
-    function fallback(message) {
-      list.replaceChildren();
-      status.textContent = 'Unconfirmed — preparation only. ' + message;
-    }
-    function show(rows) {
-      list.replaceChildren();
-      const allReady = rows.length > 0 && rows.every(row => row.ready);
-      status.textContent = allReady
-        ? 'A confirmed route is recorded. Staff must check arrangements before delivery.'
-        : 'Unconfirmed — preparation only. Complete the actual experience when a route is ready.';
-      rows.forEach(function (row) {
-        const item = document.createElement('li');
-        const ready = row.entries.filter(entry => entry.confirmed);
-        item.textContent = row.key + ': ' + (ready.length
-          ? ready.map(e => [e.name, e.route, e.date].filter(Boolean).join(' · ')).join('; ')
-          : 'no confirmed entry');
-        list.appendChild(item);
-      });
-    }
-    input.addEventListener('change', async function () {
-      const ticket = ++generation;
-      fallback('Reading the selected file.');
-      try { const rows = await loadFile(input.files[0], config.required); if (ticket === generation) show(rows); }
-      catch (_) { if (ticket === generation) fallback('The selected file could not be read.'); }
-    });
-    fallback('Load the shared slots file to check the current route.');
-    if (location.protocol === 'http:' || location.protocol === 'https:') {
-      const ticket = ++generation;
-      loadHosted(config.url, config.required, window.fetch.bind(window))
-        .then(rows => { if (ticket === generation) show(rows); })
-        .catch(() => { if (ticket === generation) fallback('Open the local slots file if you are offline.'); });
-    }
-  }
-  return {readSlots: readSlots, loadHosted: loadHosted, loadFile: loadFile, mount: mount};
-}));
-
-document.addEventListener("DOMContentLoaded",function(){MBMArtsSlots.mount({"required": ["EVENT_SLOT"], "url": "../../tools/artsaward/SLOTS.json"});});
 </script></body>
 </html>

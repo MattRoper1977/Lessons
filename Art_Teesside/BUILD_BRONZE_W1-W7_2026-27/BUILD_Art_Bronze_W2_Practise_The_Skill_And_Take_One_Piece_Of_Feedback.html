@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-GB">
+<html lang="en-GB" class="mbm-classroom pathway-build">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -38,7 +38,84 @@ h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-siz
         .award-print h3{font-size:11pt;margin:0}
         .award-print .award-review-space{height:35mm;border:1px solid #777}
       }
-    </style></head>
+    </style><style id="mbm-classroom-chassis">/* Shared classroom presentation. Palette authority: the user's Art Studio reference. */
+html.mbm-classroom {
+  --lo-bg:#e8eef1;--lo-border:#4F869C;--ido-bg:#f3e4dc;--ido-border:#D06438;
+  --wedo-bg:#e2efec;--wedo-border:#16877A;--task-bg:#faf0d7;--task-border:#E1AB32;
+  --btn-bg:#4F869C;--btn-hover:#3a6a7d;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;
+  --sc-bg:#ffedd5;--sc-border:#f97316;--aspire-bg:#dcfce7;--aspire-border:#22c55e;
+}
+html.mbm-classroom.pathway-grow {
+  --lo-bg:#e6ebf0;--lo-border:#5B91A5;--ido-bg:#f2e6df;--ido-border:#D1673D;
+  --wedo-bg:#e2efed;--wedo-border:#2BA193;--task-bg:#f8efd8;--task-border:#DFAD3E;
+  --btn-bg:#5B91A5;--btn-hover:#436f80;--sc-border:#DFAD3E;--sc-bg:#faf3dd;
+}
+html.mbm-classroom.pathway-launch {
+  --lo-bg:#e4ebee;--lo-border:#356F83;--ido-bg:#efe3db;--ido-border:#9B5B3D;
+  --wedo-bg:#e1edeb;--wedo-border:#238C80;--task-bg:#f6eed9;--task-border:#C18B2D;
+  --btn-bg:#356F83;--btn-hover:#28576a;--sc-border:#C18B2D;--sc-bg:#f8f1de;
+}
+@media screen {
+  html.mbm-classroom, .mbm-classroom body {background:#fff;color:#1f2937;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+  .mbm-classroom main.deck {height:100vh;height:100dvh;padding:clamp(14px,3vh,36px) 4vw 110px;overflow:auto;scroll-padding-bottom:110px}
+  .mbm-classroom main.deck>.slide {width:100%;max-width:1600px;min-height:calc(100vh - 160px);margin:auto;padding:clamp(20px,3vw,40px);background:#fff;color:#1f2937;border:0;border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px #00000018}
+  .mbm-classroom .slide[data-classroom-phase="ido"] {border-top-color:var(--ido-border)}
+  .mbm-classroom .slide[data-classroom-phase="wedo"] {border-top-color:var(--wedo-border)}
+  .mbm-classroom .slide[data-classroom-phase="independent"] {border-top-color:var(--task-border)}
+  .mbm-classroom .slide[data-classroom-phase="exit"] {border-top-color:var(--sc-border)}
+  .mbm-classroom .slide h1 {display:block;color:#101820;font-size:clamp(1.8rem,3.2vw,2.8rem);line-height:1.14;margin:20px 0 24px;padding-bottom:12px;border-bottom:3px solid var(--lo-border)}
+  .mbm-classroom .slide h2 {color:#101820;font-size:clamp(1.5rem,2.5vw,2rem);line-height:1.22;margin:16px 0 22px;padding-bottom:12px;border-bottom:2px solid #e2e8f0}
+  .mbm-classroom .slide h3 {color:#182c3c;font-size:1.2rem;line-height:1.3;margin:18px 0 10px}
+  .mbm-classroom .slide p,.mbm-classroom .slide li {font-size:1.15rem;line-height:1.6;color:#334155;max-width:85ch}
+  .mbm-classroom .slide p {margin:.5em 0}
+  .mbm-classroom .slide>svg {max-width:900px;margin:18px auto;display:block;overflow:visible}
+  .mbm-classroom .slide>.tag {display:inline-block;background:var(--lo-bg);color:#183b4b;border-radius:8px;padding:6px 14px;font-size:.9rem;font-weight:800;letter-spacing:.04em}
+  .mbm-classroom .slide[data-classroom-phase="ido"]>.tag {background:var(--ido-bg);color:#68321f}
+  .mbm-classroom .slide[data-classroom-phase="wedo"]>.tag {background:var(--wedo-bg);color:#115c52}
+  .mbm-classroom .slide[data-classroom-phase="independent"]>.tag {background:var(--task-bg);color:#684811}
+  .mbm-classroom .slide>.time {float:right;border-radius:999px;background:#f5f7f8;color:#334155;border:1px solid #cbd5e1;font-size:.9rem}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.time {display:none}
+  .mbm-classroom .mbm-lesson-objective {background:var(--lo-bg);border-left:6px solid var(--lo-border);border-radius:12px;padding:14px 18px;margin:16px 0}
+  .mbm-classroom .mbm-lesson-success {background:var(--sc-bg);border-left:6px solid var(--sc-border);border-radius:12px;padding:14px 18px;margin:14px 0}
+  .mbm-classroom .box,.mbm-classroom .route,.mbm-classroom .route-card {background:#f8fafc;color:#1f2937;border:1px solid #cbd5e1;border-radius:12px;padding:16px}
+  .mbm-classroom .box.objective {background:var(--lo-bg);border-left:6px solid var(--lo-border)}
+  .mbm-classroom .lundy,.mbm-classroom .lundy-strip {background:#f8fafc;color:#334155;border:1px solid #dce3e8;border-radius:12px;padding:10px 14px;margin:22px 0 0}
+  /* Pupil voice is framed at arrival and revisited at the exit, without a
+     repeated process banner competing with each model and practical task. */
+  .mbm-classroom .slide[data-classroom-phase]:not([data-classroom-phase="title"]):not([data-classroom-phase="exit"])>.lundy,
+  .mbm-classroom .slide[data-classroom-phase]:not([data-classroom-phase="title"]):not([data-classroom-phase="exit"])>.lundy-strip {display:none}
+  .mbm-classroom .lundy-grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+  .mbm-classroom .lundy-grid>span {display:block;color:#213544;background:var(--lo-bg);border-radius:8px;padding:7px;text-align:center;font-size:.8rem;font-weight:800}
+  .mbm-classroom .lundy-grid>span:nth-child(2) {background:var(--ido-bg)}
+  .mbm-classroom .lundy-grid>span:nth-child(3) {background:var(--wedo-bg)}
+  .mbm-classroom .lundy-grid>span:nth-child(4) {background:var(--task-bg)}
+  .mbm-classroom .lundy p,.mbm-classroom .lundy-strip p {font-size:.85rem;margin:8px 0 0;max-width:none}
+  .mbm-classroom button {min-width:44px;min-height:44px;border-radius:10px;font-weight:700;background:var(--btn-hover);color:#fff;border:1px solid transparent;padding:10px 16px}
+  .mbm-classroom button:hover {background:#203f4c;color:#fff}
+  .mbm-classroom button:focus-visible,.mbm-classroom a:focus-visible,.mbm-classroom select:focus-visible,.mbm-classroom summary:focus-visible {outline:3px solid #ab5800;outline-offset:3px}
+  .mbm-classroom .controls {background:#fffffff5;backdrop-filter:blur(8px);border:1px solid #dbe3e8;box-shadow:0 4px 20px #182c3c18;border-radius:14px;padding:8px;gap:7px;flex-wrap:wrap;max-width:calc(100vw - 32px)}
+  .mbm-classroom .prog {background:#e7ecef}
+  .mbm-classroom .prog>span {background:var(--lo-border)}
+  .mbm-classroom .overlay-card {background:#fff;color:#1f2937;border-color:var(--lo-border)}
+  .mbm-classroom .slide[data-classroom-phase="title"] {text-align:center}
+  .mbm-classroom .slide[data-classroom-phase="title"]>p {max-width:760px;margin:14px auto;text-align:left}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.tag {background:#d98128;color:#172334}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.lundy {max-width:760px;margin:24px auto 0;text-align:left}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.box {text-align:left}
+  .mbm-classroom body.calm .slide {box-shadow:none}
+  @media(max-width:700px) {
+    .mbm-classroom main.deck {padding:14px 14px 180px}
+    .mbm-classroom main.deck>.slide {min-height:calc(100dvh - 205px);padding:20px 16px}
+    .mbm-classroom .slide p,.mbm-classroom .slide li {font-size:1.05rem}
+    .mbm-classroom .controls {left:14px;right:14px;bottom:14px;justify-content:center;max-width:none}
+    .mbm-classroom .controls button {font-size:.85rem;padding:8px 10px}
+    .mbm-classroom .lundy-grid {grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+  @media(prefers-reduced-motion:reduce) {
+    .mbm-classroom *, .mbm-classroom *::before, .mbm-classroom *::after {animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  }
+}
+</style></head>
 <body>
 <!--mbm_guide_v1 retained as a contract marker; guidance state is memory-only-->
 <!--n6-nav1:v1-->
@@ -47,120 +124,120 @@ h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-siz
 <!--/n6-nav1-->
 <a class="skip" href="#lessonDeck">Skip to lesson</a>
 <main id="lessonDeck" class="deck">
-<section class="slide active" data-type="title" data-title="Lesson overview" data-min="0">
+<section class="slide active" data-type="title" data-title="Lesson overview" data-min="0" data-classroom-phase="title">
 <div class="time">0 min</div>
-<span class="tag"></span>
-<div class="lundy" aria-label="Lundy participation strip">
+<span class="tag">BUILD Art</span>
+<h1>Practise The Skill, And Take One Piece Of Feedback</h1><p>BUILD · Art · Week 2. Trinity Arts Award Bronze. Practise The Skill, And Take One Piece Of Feedback.</p><p class="mbm-lesson-objective">Objective: work on your chosen skill again, take one piece of feedback from a named person, and write that feedback down in their own words.</p><p class="mbm-lesson-success">Success evidence: four more boxes on your skill strip, one line of feedback in quote marks, and the name of the person who said it.</p><p>The feedback is about your artwork. You ask about a mark, a gap, a line or a colour. You never ask about a person's home, family, beliefs, body or looks. Nobody in this room is asked about theirs.</p><p>40 minutes. Offline.</p><div class="box rehearsal" data-mbm-guide="staff">This deck evidences Bronze Part A, Explore the arts as a participant. The register says Part A requires active participation in any art form, improvement, and a summary of what they learnt. Today's strip is the participation and the improvement; the quoted line feeds the summary later in the part. Bronze is the Level 1 Award in the Arts, qualification number 501/0081/6. Attempted rule, quoted from the register: ONE Attempted allowed overall. Any Not Attempted = Below Pass. The evidence file cap for the whole Bronze level is 10 files, so today's strip and quote belong on an existing Part A file, not a new one. The three assessment areas are art form knowledge and understanding, creativity, and communication. Results are Pass or Below Pass only; no grades and no marks language anywhere.</div><div class="box rehearsal" data-mbm-guide="staff">Delivery is through a validated centre; confirm local validation and an adviser trained at Bronze before assessment. Neither is asserted as completed here. Core, Extend and Challenge are support routes inside Bronze, not different awards. The prompts and sample quantities are teaching scaffolds, not extra assessment requirements. Scribe only the pupil’s own words. Store evidence by part; one cumulative file per part is a suggested four-file plan within the ten-file cap.</div><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<p>BUILD · Art · Week 2. Trinity Arts Award Bronze. Practise The Skill, And Take One Piece Of Feedback.</p><p>Objective: work on your chosen skill again, take one piece of feedback from a named person, and write that feedback down in their own words.</p><p>Success evidence: four more boxes on your skill strip, one line of feedback in quote marks, and the name of the person who said it.</p><p>The feedback is about your artwork. You ask about a mark, a gap, a line or a colour. You never ask about a person's home, family, beliefs, body or looks. Nobody in this room is asked about theirs.</p><p>40 minutes. Offline.</p><div class="box rehearsal" data-mbm-guide="staff">This deck evidences Bronze Part A, Explore the arts as a participant. The register says Part A requires active participation in any art form, improvement, and a summary of what they learnt. Today's strip is the participation and the improvement; the quoted line feeds the summary later in the part. Bronze is the Level 1 Award in the Arts, qualification number 501/0081/6. Attempted rule, quoted from the register: ONE Attempted allowed overall. Any Not Attempted = Below Pass. The evidence file cap for the whole Bronze level is 10 files, so today's strip and quote belong on an existing Part A file, not a new one. The three assessment areas are art form knowledge and understanding, creativity, and communication. Results are Pass or Below Pass only; no grades and no marks language anywhere.</div><div class="box rehearsal" data-mbm-guide="staff">Delivery is through a validated centre; confirm local validation and an adviser trained at Bronze before assessment. Neither is asserted as completed here. Core, Extend and Challenge are support routes inside Bronze, not different awards. The prompts and sample quantities are teaching scaffolds, not extra assessment requirements. Scribe only the pupil’s own words. Store evidence by part; one cumulative file per part is a suggested four-file plan within the ten-file cap.</div></section>
-<section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="3" data-ta1="Last session's skill strips and the week one measures out on desks before pupils sit. A pupil hunting for the strip will not start the practice." data-ta2="If a strip is missing, give a fresh one and start the numbering at one. Do not send anyone to look for the old one.">
+</section>
+<section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="3" data-ta1="Last session's skill strips and the week one measures out on desks before pupils sit. A pupil hunting for the strip will not start the practice." data-ta2="If a strip is missing, give a fresh one and start the numbering at one. Do not send anyone to look for the old one." data-classroom-phase="arrival">
 <div class="time">3 min</div>
-<span class="tag"></span>
+<span class="tag">Retrieval</span>
 <h2>Arrival · retrieve</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Feedback is one thing you can use</h3><p>Last session you worked your skill six times.</p><p>You wrote what changed from box one to box six.</p><p>Find that strip and that sentence now.</p><p>Today you work the same skill again.</p><p>Then you take one piece of feedback.</p><p>Feedback is what one other person tells you about your work.</p><p>It is not praise. Specific praise can show what to keep. A clear next step shows what to try.</p><p>Feedback you can use names one part and one change.</p><p>You take one piece only, from one named person.</p><p>A named person is somebody in this room today.</p><p>It can be your partner or the adult at your table.</p><div class="box rehearsal" data-mbm-guide="staff">Say the one-piece rule out loud and leave it on the board. Choosing one next step helps pupils use feedback without having to act on every comment at once, and the record then shows a heap of talk rather than a change.</div><p>You need your strip, your measure and one pencil.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Feedback is one thing you can use</h3><p>Last session you worked your skill six times.</p><p>You wrote what changed from box one to box six.</p><p>Find that strip and that sentence now.</p><p>Today you work the same skill again.</p><p>Then you take one piece of feedback.</p><p>Feedback is what one other person tells you about your work.</p><p>It is not praise. Specific praise can show what to keep. A clear next step shows what to try.</p><p>Feedback you can use names one part and one change.</p><p>You take one piece only, from one named person.</p><p>A named person is somebody in this room today.</p><p>It can be your partner or the adult at your table.</p><div class="box rehearsal" data-mbm-guide="staff">Say the one-piece rule out loud and leave it on the board. Choosing one next step helps pupils use feedback without having to act on every comment at once, and the record then shows a heap of talk rather than a change.</div><p>You need your strip, your measure and one pencil.</p></section>
-<section class="slide" data-type="starter" data-title="Starter · create the need" data-min="3" data-ta1="Do both asks yourself, with your own strip. Never use a pupil's work as the weak example.">
+</section>
+<section class="slide" data-type="starter" data-title="Starter · create the need" data-min="3" data-ta1="Do both asks yourself, with your own strip. Never use a pupil's work as the weak example." data-classroom-phase="starter">
 <div class="time">3 min</div>
-<span class="tag"></span>
+<span class="tag">Starter</span>
 <h2>Starter · create the need</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Two asks, one strip</h3><p>Watch me ask for feedback twice.</p><p>Both times I hold up the same strip.</p><p>First I ask if my strip is good.</p><p>The answer comes back: yes, it is good.</p><p>It does not tell me what to change.</p><p>Then I point at box four and ask again.</p><p>This time I ask which gap in it is too wide.</p><p>The answer comes back: the ones at the top.</p><p>Now I have one part and one job.</p><p>The strip did not change. The ask did.</p><ul><li>1 · name the part you want looked at.</li><li>2 · ask for one change, not a yes.</li><li>3 · write the answer in their words.</li></ul><p>A sharp ask gets you something to do.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Two asks, one strip</h3><p>Watch me ask for feedback twice.</p><p>Both times I hold up the same strip.</p><p>First I ask if my strip is good.</p><p>The answer comes back: yes, it is good.</p><p>It does not tell me what to change.</p><p>Then I point at box four and ask again.</p><p>This time I ask which gap in it is too wide.</p><p>The answer comes back: the ones at the top.</p><p>Now I have one part and one job.</p><p>The strip did not change. The ask did.</p><ul><li>1 · name the part you want looked at.</li><li>2 · ask for one change, not a yes.</li><li>3 · write the answer in their words.</li></ul><p>A sharp ask gets you something to do.</p></section>
-<section class="slide" data-type="ido" data-title="I Do · model" data-min="7" data-ta1="Draw the four boxes live, and leave a real fault in one of them. A perfect model gives pupils nothing to ask about." data-ta2="Write the quote on the board as it is said, in front of the class. Pupils copy the speed of your hand more than the words.">
+</section>
+<section class="slide" data-type="ido" data-title="I Do · model" data-min="7" data-ta1="Draw the four boxes live, and leave a real fault in one of them. A perfect model gives pupils nothing to ask about." data-ta2="Write the quote on the board as it is said, in front of the class. Pupils copy the speed of your hand more than the words." data-classroom-phase="ido">
 <div class="time">7 min</div>
-<span class="tag"></span>
+<span class="tag">I Do</span>
 <h2>I Do · model</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>I practise, then I take one piece of feedback</h3><p>My skill is cross hatching in pencil.</p><p>Today I do four more boxes first.</p><p>One minute in each box, same pencil all the way.</p><p>That is step one, and it is the work.</p><p>Now I pick one box to ask about.</p><p>I pick box four, because the gaps look wide.</p><p>I ring that box so my partner can see it.</p><p>Then I ask him one sharp question about it.</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Boxes labelled PRACTISE, ASK, WRITE, NAME. Four steps, and the last two are what make it evidence"><title>Taking one piece of feedback</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">PRACTISE</text><text x="73" y="88" text-anchor="middle" font-size="11">four short trials</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">ASK</text><text x="231" y="88" text-anchor="middle" font-size="11">one clear question</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">WRITE</text><text x="389" y="88" text-anchor="middle" font-size="11">their exact words</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">NAME</text><text x="547" y="88" text-anchor="middle" font-size="11">who and when</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">Four steps, and the last two are what make it evidence</text></svg><p>He says my gaps at the top are too wide.</p><p>I write that line down word for word.</p><p>I put quote marks round it, so it stays his.</p><p>Then I write his name and today's date under it.</p><p>The name matters. Feedback with no name cannot be checked.</p><div class="box rehearsal" data-mbm-guide="staff">Model the ring before the ask. Without a ringed part the responder answers about the whole strip, and the reply comes back too broad to act on.</div><p>I do not write down what I wish he had said.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>I practise, then I take one piece of feedback</h3><p>My skill is cross hatching in pencil.</p><p>Today I do four more boxes first.</p><p>One minute in each box, same pencil all the way.</p><p>That is step one, and it is the work.</p><p>Now I pick one box to ask about.</p><p>I pick box four, because the gaps look wide.</p><p>I ring that box so my partner can see it.</p><p>Then I ask him one sharp question about it.</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Boxes labelled PRACTISE, ASK, WRITE, NAME. Four steps, and the last two are what make it evidence"><title>Taking one piece of feedback</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">PRACTISE</text><text x="73" y="88" text-anchor="middle" font-size="11">four short trials</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">ASK</text><text x="231" y="88" text-anchor="middle" font-size="11">one clear question</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">WRITE</text><text x="389" y="88" text-anchor="middle" font-size="11">their exact words</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">NAME</text><text x="547" y="88" text-anchor="middle" font-size="11">who and when</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">Four steps, and the last two are what make it evidence</text></svg><p>He says my gaps at the top are too wide.</p><p>I write that line down word for word.</p><p>I put quote marks round it, so it stays his.</p><p>Then I write his name and today's date under it.</p><p>The name matters. Feedback with no name cannot be checked.</p><div class="box rehearsal" data-mbm-guide="staff">Model the ring before the ask. Without a ringed part the responder answers about the whole strip, and the reply comes back too broad to act on.</div><p>I do not write down what I wish he had said.</p></section>
-<section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="3" data-ta1="Cards face down until every table is quiet. Then turn them over together. The exact sorting lines are on this slide: project them and let pupils sort by number, or copy these lines onto cards. No separate pack is required for this sort.">
+</section>
+<section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="3" data-ta1="Cards face down until every table is quiet. Then turn them over together. The exact sorting lines are on this slide: project them and let pupils sort by number, or copy these lines onto cards. No separate pack is required for this sort." data-classroom-phase="wedo">
 <div class="time">3 min</div>
-<span class="tag"></span>
+<span class="tag">We Do</span>
 <h2>We Do · everyone commits</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Sort the asks, then match the fix</h3><p>Six ask cards are on your table.</p><p>Sort them into two piles, sharp and blunt.</p><p>A sharp ask names one part and asks for one change.</p><ul><li>Card one says which gap in box four is too wide.</li><li>Card two says is my shading better.</li><li>Card three says what one thing would you change about my blending.</li><li>Card four says tell me about my whole strip.</li><li>Card five says where do my lines go wrong in box six.</li><li>Card six says what one thing would you change.</li></ul><p>Now take the blunt pile on its own.</p><p>Match each blunt card to the fix it needs.</p><p>The three fix cards say: name the part, ask for one change, ask for a word and not a yes.</p><p>Every card gets a match, even when you are not sure.</p><p>A guess I can see beats a blank card.</p><p>Then hold up the card your table argued about most.</p><div class="box rehearsal" data-mbm-guide="staff">Adjudication for the cover teacher. Sharp pile: cards one, three and five. Blunt pile: card two is a yes or no, so it needs ask for a word and not a yes; card four asks about everything, so it needs ask for one change; card six names no part, so it needs name the part. Accept any match a pupil can give a reason for, then read the key out.</div><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Sort the asks, then match the fix</h3><p>Six ask cards are on your table.</p><p>Sort them into two piles, sharp and blunt.</p><p>A sharp ask names one part and asks for one change.</p><ul><li>Card one says which gap in box four is too wide.</li><li>Card two says is my shading better.</li><li>Card three says what one thing would you change about my blending.</li><li>Card four says tell me about my whole strip.</li><li>Card five says where do my lines go wrong in box six.</li><li>Card six says what one thing would you change.</li></ul><p>Now take the blunt pile on its own.</p><p>Match each blunt card to the fix it needs.</p><p>The three fix cards say: name the part, ask for one change, ask for a word and not a yes.</p><p>Every card gets a match, even when you are not sure.</p><p>A guess I can see beats a blank card.</p><p>Then hold up the card your table argued about most.</p><div class="box rehearsal" data-mbm-guide="staff">Adjudication for the cover teacher. Sharp pile: cards one, three and five. Blunt pile: card two is a yes or no, so it needs ask for a word and not a yes; card four asks about everything, so it needs ask for one change; card six names no part, so it needs name the part. Accept any match a pupil can give a reason for, then read the key out.</div></section>
-<section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="7" data-ta1="Both written lines up on the board at once. Let the group say which one still tells the maker what to do.">
+</section>
+<section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="7" data-ta1="Both written lines up on the board at once. Let the group say which one still tells the maker what to do." data-classroom-phase="ido">
 <div class="time">7 min</div>
-<span class="tag"></span>
+<span class="tag">I Do</span>
 <h2>I Do 2 · connect</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Their words, not your tidy version</h3><p>You have the answer, and there are two ways to write it.</p><p>The first way keeps their words.</p><p>I write that my gaps at the top are too wide.</p><p>The second way tidies it up.</p><p>I write that he said it was quite good.</p><p>That second line has lost the job.</p><p>It holds no part and no change.</p><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Boxes labelled THEIR WORDS, MY TIDY VERSION. The same answer, and only one of them still tells you what to do"><title>Quoting against tidying</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">THEIR WORDS</text><text x="151" y="74" text-anchor="middle" font-size="11">the gaps at the top are too wide</text><text x="151" y="94" text-anchor="middle" font-size="11">you know the part and the change</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">MY TIDY VERSION</text><text x="469" y="74" text-anchor="middle" font-size="11">he said it was quite good</text><text x="469" y="94" text-anchor="middle" font-size="11">nothing is left to act on</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">The same answer, and only one of them still tells you what to do</text></svg><p>So write while they talk, not after.</p><p>Write it fast, even if the words come out rough.</p><p>Rough words you can use beat neat words you cannot.</p><p>If you miss a word, ask them to say it again.</p><p>You may ask twice. You may not guess.</p><ul><li>1 · write the answer as they say it.</li><li>2 · put quote marks at both ends.</li><li>3 · write the name of the person.</li><li>4 · write today's date under the line.</li></ul><p>That line can now be checked, so it counts.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Their words, not your tidy version</h3><p>You have the answer, and there are two ways to write it.</p><p>The first way keeps their words.</p><p>I write that my gaps at the top are too wide.</p><p>The second way tidies it up.</p><p>I write that he said it was quite good.</p><p>That second line has lost the job.</p><p>It holds no part and no change.</p><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Boxes labelled THEIR WORDS, MY TIDY VERSION. The same answer, and only one of them still tells you what to do"><title>Quoting against tidying</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">THEIR WORDS</text><text x="151" y="74" text-anchor="middle" font-size="11">the gaps at the top are too wide</text><text x="151" y="94" text-anchor="middle" font-size="11">you know the part and the change</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">MY TIDY VERSION</text><text x="469" y="74" text-anchor="middle" font-size="11">he said it was quite good</text><text x="469" y="94" text-anchor="middle" font-size="11">nothing is left to act on</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">The same answer, and only one of them still tells you what to do</text></svg><p>So write while they talk, not after.</p><p>Write it fast, even if the words come out rough.</p><p>Rough words you can use beat neat words you cannot.</p><p>If you miss a word, ask them to say it again.</p><p>You may ask twice. You may not guess.</p><ul><li>1 · write the answer as they say it.</li><li>2 · put quote marks at both ends.</li><li>3 · write the name of the person.</li><li>4 · write today's date under the line.</li></ul><p>That line can now be checked, so it counts.</p></section>
-<section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="5" data-ta1="Pair by table, not by choice. Call the swap out loud at two minutes." data-ta2="Give any pupil who will not speak a written ask to hand over. The reply still gets written down and still counts.">
+</section>
+<section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="5" data-ta1="Pair by table, not by choice. Call the swap out loud at two minutes." data-ta2="Give any pupil who will not speak a written ask to hand over. The reply still gets written down and still counts." data-classroom-phase="wedo">
 <div class="time">5 min</div>
-<span class="tag"></span>
+<span class="tag">We Do</span>
 <h2>We Do 2 · lab</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Ask, write, then let them check it</h3><p>Work in twos with your own strip.</p><p>Partner one rings one box and asks one sharp question.</p><p>Partner two answers with one thing to change.</p><p>You may not answer with good, nice or fine.</p><p>Those words give the maker no job to do.</p><p>Partner one writes the answer word for word.</p><p>Then partner two reads that written line back.</p><p>They tick it if those are their words.</p><p>They cross it out if they are not.</p><p>A crossed line gets fixed now, not later.</p><p>Then swap over, with two minutes each way.</p><p>The person who said it is the one who checks it.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Ask, write, then let them check it</h3><p>Work in twos with your own strip.</p><p>Partner one rings one box and asks one sharp question.</p><p>Partner two answers with one thing to change.</p><p>You may not answer with good, nice or fine.</p><p>Those words give the maker no job to do.</p><p>Partner one writes the answer word for word.</p><p>Then partner two reads that written line back.</p><p>They tick it if those are their words.</p><p>They cross it out if they are not.</p><p>A crossed line gets fixed now, not later.</p><p>Then swap over, with two minutes each way.</p><p>The person who said it is the one who checks it.</p></section>
-<section class="slide" data-type="independent" data-title="Independent · evidence" data-min="9" data-ta1="Scribe at speed for any pupil who cannot write fast enough. Take down their exact words, and do not smooth the line out for them." data-ta2="If an ask turns to a person's home, body or looks, say: give me one thing about the mark on the page instead. Then write that down and move on.">
+</section>
+<section class="slide" data-type="independent" data-title="Independent · evidence" data-min="9" data-ta1="Scribe at speed for any pupil who cannot write fast enough. Take down their exact words, and do not smooth the line out for them." data-ta2="If an ask turns to a person's home, body or looks, say: give me one thing about the mark on the page instead. Then write that down and move on." data-classroom-phase="independent">
 <div class="time">9 min</div>
-<span class="tag"></span>
+<span class="tag">Independent work</span>
 <h2>Independent · evidence</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Four more boxes, then one piece of feedback</h3><p>Work on your own now.</p><p>Use the skill you chose in week one.</p><p>Number four new boxes on your strip first.</p><p>Work one minute in each box, then stop.</p><p>Keep the same chosen tool and size to the last trial.</p><p>Then pick one box to ask about.</p><p>Ring it, so the person can see the part.</p><p>Now ask one named person one sharp question.</p><p>Write their answer down in their own words.</p><p>Put quote marks at both ends of it.</p><p>Write their name and today's date under the line.</p><p>Then write one line back: what you will change first.</p><ul><li>Core · Make the practice boxes. Use a question stem to ask about one part. Record the reply in their words, with whom and when.</li><li>Extend · four boxes worked, one sharp ask, and the answer in quote marks with a name and a date.</li><li>Challenge · as Extend, and one line saying what you will change first.</li></ul><p>If you finish early, ring the part you will change.</p><div class="box rehearsal" data-mbm-guide="staff">The register is firm here: advisers must not write plans, reviews or evidence for pupils. Scribing a pupil's own words is access. Supplying the sentence, or improving it, is not, and it makes the line unusable as evidence.</div><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Four more boxes, then one piece of feedback</h3><p>Work on your own now.</p><p>Use the skill you chose in week one.</p><p>Number four new boxes on your strip first.</p><p>Work one minute in each box, then stop.</p><p>Keep the same chosen tool and size to the last trial.</p><p>Then pick one box to ask about.</p><p>Ring it, so the person can see the part.</p><p>Now ask one named person one sharp question.</p><p>Write their answer down in their own words.</p><p>Put quote marks at both ends of it.</p><p>Write their name and today's date under the line.</p><p>Then write one line back: what you will change first.</p><ul><li>Core · Make the practice boxes. Use a question stem to ask about one part. Record the reply in their words, with whom and when.</li><li>Extend · four boxes worked, one sharp ask, and the answer in quote marks with a name and a date.</li><li>Challenge · as Extend, and one line saying what you will change first.</li></ul><p>If you finish early, ring the part you will change.</p><div class="box rehearsal" data-mbm-guide="staff">The register is firm here: advisers must not write plans, reviews or evidence for pupils. Scribing a pupil's own words is access. Supplying the sentence, or improving it, is not, and it makes the line unusable as evidence.</div></section>
-<section class="slide" data-type="exit" data-title="Exit · Audience and Influence" data-min="3" data-ta1="The named adult checks the quote marks, the name and the date, and nothing else. No praise, no rewrite, no better wording offered.">
+</section>
+<section class="slide" data-type="exit" data-title="Exit · Audience and Influence" data-min="3" data-ta1="The named adult checks the quote marks, the name and the date, and nothing else. No praise, no rewrite, no better wording offered." data-classroom-phase="exit">
 <div class="time">3 min</div>
-<span class="tag"></span>
+<span class="tag">Exit ticket</span>
 <h2>Exit · Audience and Influence</h2>
 <div class="lundy-status">
 <p>
@@ -172,27 +249,19 @@ h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-siz
 <p>
 <b>INFLUENCE:</b> one real next action is recorded: retain, add method detail, or leave open.</p>
 </div>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Read it back to the person</h3><p>Find the person who gave you the feedback.</p><p>Read their line back to them out loud.</p><p>Then ask them one thing: are those your words?</p><p>If they say no, change it there and then.</p><p>They were your audience for one minute today.</p><p>Their words are about to change what you do next.</p><p>Now show the line to the adult at your table.</p><p>They check three things: the quote marks, the name and the date.</p><p>Then write the sheet name and the page number.</p><p>Now pick one thing that happens next. Keep this feedback, ask the same person again, or ask a different named person.</p><p>Write your pick under the line.</p><p>Your strip goes in the arts log folder, under Part A.</p><div class="box rehearsal" data-mbm-guide="staff">Evidence locator, from the register: a locator names the file plus the page, slide or timecode, and "in arts log" is refused as a locator. The portfolio is digital and organised by part, so the quoted line files under Part A with the strip it came from.</div><p>Add this work to your Part A file. Write the file name and page number. For a sound or video clip, give the file name and the time where your evidence starts.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Read it back to the person</h3><p>Find the person who gave you the feedback.</p><p>Read their line back to them out loud.</p><p>Then ask them one thing: are those your words?</p><p>If they say no, change it there and then.</p><p>They were your audience for one minute today.</p><p>Their words are about to change what you do next.</p><p>Now show the line to the adult at your table.</p><p>They check three things: the quote marks, the name and the date.</p><p>Then write the sheet name and the page number.</p><p>Now pick one thing that happens next. Keep this feedback, ask the same person again, or ask a different named person.</p><p>Write your pick under the line.</p><p>Your strip goes in the arts log folder, under Part A.</p><div class="box rehearsal" data-mbm-guide="staff">Evidence locator, from the register: a locator names the file plus the page, slide or timecode, and "in arts log" is refused as a locator. The portfolio is digital and organised by part, so the quoted line files under Part A with the strip it came from.</div><p>Add this work to your Part A file. Write the file name and page number. For a sound or video clip, give the file name and the time where your evidence starts.</p></section>
+</section>
 </main>
 <nav class="controls" aria-label="Lesson controls">
-<button type="button" data-nav="previous">◀ Previous</button>
-<button type="button" data-tool="1">Teacher tools</button>
-<button type="button" data-tool="2">Evidence &amp; print</button>
-<button type="button" data-tool="3">Calm mode</button>
-<button type="button" data-tool="4">Static diagrams</button>
-<button type="button" data-tool="5">Previous</button>
-<button type="button" data-tool="6">Next</button>
-<button type="button" data-nav="next">Next ▶</button>
-</nav>
+<button type="button" data-nav="previous">◀ Previous</button><button type="button" data-tool="1">Teacher tools</button><button type="button" data-tool="2">Evidence &amp; print</button><button type="button" data-tool="3">Calm mode</button><button type="button" data-tool="4">Static diagrams</button><button type="button" data-nav="next">Next ▶</button></nav>
 <div class="prog" aria-hidden="true">
 <span>
 </span>

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-GB">
+<html lang="en-GB" class="mbm-classroom pathway-build">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -38,7 +38,84 @@ h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-siz
         .award-print h3{font-size:11pt;margin:0}
         .award-print .award-review-space{height:35mm;border:1px solid #777}
       }
-    </style></head>
+    </style><style id="mbm-classroom-chassis">/* Shared classroom presentation. Palette authority: the user's Art Studio reference. */
+html.mbm-classroom {
+  --lo-bg:#e8eef1;--lo-border:#4F869C;--ido-bg:#f3e4dc;--ido-border:#D06438;
+  --wedo-bg:#e2efec;--wedo-border:#16877A;--task-bg:#faf0d7;--task-border:#E1AB32;
+  --btn-bg:#4F869C;--btn-hover:#3a6a7d;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;
+  --sc-bg:#ffedd5;--sc-border:#f97316;--aspire-bg:#dcfce7;--aspire-border:#22c55e;
+}
+html.mbm-classroom.pathway-grow {
+  --lo-bg:#e6ebf0;--lo-border:#5B91A5;--ido-bg:#f2e6df;--ido-border:#D1673D;
+  --wedo-bg:#e2efed;--wedo-border:#2BA193;--task-bg:#f8efd8;--task-border:#DFAD3E;
+  --btn-bg:#5B91A5;--btn-hover:#436f80;--sc-border:#DFAD3E;--sc-bg:#faf3dd;
+}
+html.mbm-classroom.pathway-launch {
+  --lo-bg:#e4ebee;--lo-border:#356F83;--ido-bg:#efe3db;--ido-border:#9B5B3D;
+  --wedo-bg:#e1edeb;--wedo-border:#238C80;--task-bg:#f6eed9;--task-border:#C18B2D;
+  --btn-bg:#356F83;--btn-hover:#28576a;--sc-border:#C18B2D;--sc-bg:#f8f1de;
+}
+@media screen {
+  html.mbm-classroom, .mbm-classroom body {background:#fff;color:#1f2937;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+  .mbm-classroom main.deck {height:100vh;height:100dvh;padding:clamp(14px,3vh,36px) 4vw 110px;overflow:auto;scroll-padding-bottom:110px}
+  .mbm-classroom main.deck>.slide {width:100%;max-width:1600px;min-height:calc(100vh - 160px);margin:auto;padding:clamp(20px,3vw,40px);background:#fff;color:#1f2937;border:0;border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px #00000018}
+  .mbm-classroom .slide[data-classroom-phase="ido"] {border-top-color:var(--ido-border)}
+  .mbm-classroom .slide[data-classroom-phase="wedo"] {border-top-color:var(--wedo-border)}
+  .mbm-classroom .slide[data-classroom-phase="independent"] {border-top-color:var(--task-border)}
+  .mbm-classroom .slide[data-classroom-phase="exit"] {border-top-color:var(--sc-border)}
+  .mbm-classroom .slide h1 {display:block;color:#101820;font-size:clamp(1.8rem,3.2vw,2.8rem);line-height:1.14;margin:20px 0 24px;padding-bottom:12px;border-bottom:3px solid var(--lo-border)}
+  .mbm-classroom .slide h2 {color:#101820;font-size:clamp(1.5rem,2.5vw,2rem);line-height:1.22;margin:16px 0 22px;padding-bottom:12px;border-bottom:2px solid #e2e8f0}
+  .mbm-classroom .slide h3 {color:#182c3c;font-size:1.2rem;line-height:1.3;margin:18px 0 10px}
+  .mbm-classroom .slide p,.mbm-classroom .slide li {font-size:1.15rem;line-height:1.6;color:#334155;max-width:85ch}
+  .mbm-classroom .slide p {margin:.5em 0}
+  .mbm-classroom .slide>svg {max-width:900px;margin:18px auto;display:block;overflow:visible}
+  .mbm-classroom .slide>.tag {display:inline-block;background:var(--lo-bg);color:#183b4b;border-radius:8px;padding:6px 14px;font-size:.9rem;font-weight:800;letter-spacing:.04em}
+  .mbm-classroom .slide[data-classroom-phase="ido"]>.tag {background:var(--ido-bg);color:#68321f}
+  .mbm-classroom .slide[data-classroom-phase="wedo"]>.tag {background:var(--wedo-bg);color:#115c52}
+  .mbm-classroom .slide[data-classroom-phase="independent"]>.tag {background:var(--task-bg);color:#684811}
+  .mbm-classroom .slide>.time {float:right;border-radius:999px;background:#f5f7f8;color:#334155;border:1px solid #cbd5e1;font-size:.9rem}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.time {display:none}
+  .mbm-classroom .mbm-lesson-objective {background:var(--lo-bg);border-left:6px solid var(--lo-border);border-radius:12px;padding:14px 18px;margin:16px 0}
+  .mbm-classroom .mbm-lesson-success {background:var(--sc-bg);border-left:6px solid var(--sc-border);border-radius:12px;padding:14px 18px;margin:14px 0}
+  .mbm-classroom .box,.mbm-classroom .route,.mbm-classroom .route-card {background:#f8fafc;color:#1f2937;border:1px solid #cbd5e1;border-radius:12px;padding:16px}
+  .mbm-classroom .box.objective {background:var(--lo-bg);border-left:6px solid var(--lo-border)}
+  .mbm-classroom .lundy,.mbm-classroom .lundy-strip {background:#f8fafc;color:#334155;border:1px solid #dce3e8;border-radius:12px;padding:10px 14px;margin:22px 0 0}
+  /* Pupil voice is framed at arrival and revisited at the exit, without a
+     repeated process banner competing with each model and practical task. */
+  .mbm-classroom .slide[data-classroom-phase]:not([data-classroom-phase="title"]):not([data-classroom-phase="exit"])>.lundy,
+  .mbm-classroom .slide[data-classroom-phase]:not([data-classroom-phase="title"]):not([data-classroom-phase="exit"])>.lundy-strip {display:none}
+  .mbm-classroom .lundy-grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+  .mbm-classroom .lundy-grid>span {display:block;color:#213544;background:var(--lo-bg);border-radius:8px;padding:7px;text-align:center;font-size:.8rem;font-weight:800}
+  .mbm-classroom .lundy-grid>span:nth-child(2) {background:var(--ido-bg)}
+  .mbm-classroom .lundy-grid>span:nth-child(3) {background:var(--wedo-bg)}
+  .mbm-classroom .lundy-grid>span:nth-child(4) {background:var(--task-bg)}
+  .mbm-classroom .lundy p,.mbm-classroom .lundy-strip p {font-size:.85rem;margin:8px 0 0;max-width:none}
+  .mbm-classroom button {min-width:44px;min-height:44px;border-radius:10px;font-weight:700;background:var(--btn-hover);color:#fff;border:1px solid transparent;padding:10px 16px}
+  .mbm-classroom button:hover {background:#203f4c;color:#fff}
+  .mbm-classroom button:focus-visible,.mbm-classroom a:focus-visible,.mbm-classroom select:focus-visible,.mbm-classroom summary:focus-visible {outline:3px solid #ab5800;outline-offset:3px}
+  .mbm-classroom .controls {background:#fffffff5;backdrop-filter:blur(8px);border:1px solid #dbe3e8;box-shadow:0 4px 20px #182c3c18;border-radius:14px;padding:8px;gap:7px;flex-wrap:wrap;max-width:calc(100vw - 32px)}
+  .mbm-classroom .prog {background:#e7ecef}
+  .mbm-classroom .prog>span {background:var(--lo-border)}
+  .mbm-classroom .overlay-card {background:#fff;color:#1f2937;border-color:var(--lo-border)}
+  .mbm-classroom .slide[data-classroom-phase="title"] {text-align:center}
+  .mbm-classroom .slide[data-classroom-phase="title"]>p {max-width:760px;margin:14px auto;text-align:left}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.tag {background:#d98128;color:#172334}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.lundy {max-width:760px;margin:24px auto 0;text-align:left}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.box {text-align:left}
+  .mbm-classroom body.calm .slide {box-shadow:none}
+  @media(max-width:700px) {
+    .mbm-classroom main.deck {padding:14px 14px 180px}
+    .mbm-classroom main.deck>.slide {min-height:calc(100dvh - 205px);padding:20px 16px}
+    .mbm-classroom .slide p,.mbm-classroom .slide li {font-size:1.05rem}
+    .mbm-classroom .controls {left:14px;right:14px;bottom:14px;justify-content:center;max-width:none}
+    .mbm-classroom .controls button {font-size:.85rem;padding:8px 10px}
+    .mbm-classroom .lundy-grid {grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+  @media(prefers-reduced-motion:reduce) {
+    .mbm-classroom *, .mbm-classroom *::before, .mbm-classroom *::after {animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  }
+}
+</style></head>
 <body>
 <!--mbm_guide_v1 retained as a contract marker; guidance state is memory-only-->
 <!--n6-nav1:v1-->
@@ -47,120 +124,120 @@ h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-siz
 <!--/n6-nav1-->
 <a class="skip" href="#lessonDeck">Skip to lesson</a>
 <main id="lessonDeck" class="deck">
-<section class="slide active" data-type="title" data-title="Lesson overview" data-min="0">
+<section class="slide active" data-type="title" data-title="Lesson overview" data-min="0" data-classroom-phase="title">
 <div class="time">0 min</div>
-<span class="tag"></span>
-<div class="lundy" aria-label="Lundy participation strip">
+<span class="tag">BUILD Art</span>
+<h1>Make The Change The Feedback Asked For</h1><p>BUILD · Art · Week 3. Trinity Arts Award Bronze. Make The Change The Feedback Asked For.</p><p class="mbm-lesson-objective">Objective: apply the feedback you took, once, on one named part of your piece, and record what the change did.</p><p class="mbm-lesson-success">Success evidence: a before state kept, one change made on one named part, and one sentence saying what it did.</p><p>Your feedback line came off an approved feedback sheet, in the words of a named person. You talk about the part, the mark and the tool. You are never asked about your home, your family, your body, how you look or what you believe. Nobody in this room is asked what they believe. Identity here means what your own artwork keeps choosing, and today you read it off the piece in front of you.</p><p>40 minutes. Offline.</p><div class="box rehearsal" data-mbm-guide="staff">This deck evidences Bronze Part A, Explore the arts as a participant. The register says Part A requires active participation in any art form, improvement, and a summary of what they learnt. Today's change and the record of what it did are the improvement evidence; the summary of what was learnt is the next Part A deck, not this one. Bronze attempted rule, in the register's words: ONE Attempted allowed overall. Any Not Attempted = Below Pass. The evidence file cap is 10 files for the whole Bronze level, so put the before state and the after state on one photo sheet rather than opening a second file. The three assessment areas are art form knowledge and understanding, creativity, and communication.</div><div class="box rehearsal" data-mbm-guide="staff">Delivery is through a validated centre; confirm local validation and an adviser trained at Bronze before assessment. Neither is asserted as completed here. Core, Extend and Challenge are support routes inside Bronze, not different awards. The prompts and sample quantities are teaching scaffolds, not extra assessment requirements. Scribe only the pupil’s own words. Store evidence by part; one cumulative file per part is a suggested four-file plan within the ten-file cap.</div><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<p>BUILD · Art · Week 3. Trinity Arts Award Bronze. Make The Change The Feedback Asked For.</p><p>Objective: apply the feedback you took, once, on one named part of your piece, and record what the change did.</p><p>Success evidence: a before state kept, one change made on one named part, and one sentence saying what it did.</p><p>Your feedback line came off an approved feedback sheet, in the words of a named person. You talk about the part, the mark and the tool. You are never asked about your home, your family, your body, how you look or what you believe. Nobody in this room is asked what they believe. Identity here means what your own artwork keeps choosing, and today you read it off the piece in front of you.</p><p>40 minutes. Offline.</p><div class="box rehearsal" data-mbm-guide="staff">This deck evidences Bronze Part A, Explore the arts as a participant. The register says Part A requires active participation in any art form, improvement, and a summary of what they learnt. Today's change and the record of what it did are the improvement evidence; the summary of what was learnt is the next Part A deck, not this one. Bronze attempted rule, in the register's words: ONE Attempted allowed overall. Any Not Attempted = Below Pass. The evidence file cap is 10 files for the whole Bronze level, so put the before state and the after state on one photo sheet rather than opening a second file. The three assessment areas are art form knowledge and understanding, creativity, and communication.</div><div class="box rehearsal" data-mbm-guide="staff">Delivery is through a validated centre; confirm local validation and an adviser trained at Bronze before assessment. Neither is asserted as completed here. Core, Extend and Challenge are support routes inside Bronze, not different awards. The prompts and sample quantities are teaching scaffolds, not extra assessment requirements. Scribe only the pupil’s own words. Store evidence by part; one cumulative file per part is a suggested four-file plan within the ten-file cap.</div></section>
-<section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="3" data-ta1="Feedback sheets out and face up before pupils sit down. Pieces flat, with the tool used last week next to each one." data-ta2="If a pupil starts on home, family or how they look, say: today we work on the part, the tool and the line the person said. Then point at their piece and move on.">
+</section>
+<section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="3" data-ta1="Feedback sheets out and face up before pupils sit down. Pieces flat, with the tool used last week next to each one." data-ta2="If a pupil starts on home, family or how they look, say: today we work on the part, the tool and the line the person said. Then point at their piece and move on." data-classroom-phase="arrival">
 <div class="time">3 min</div>
-<span class="tag"></span>
+<span class="tag">Retrieval</span>
 <h2>Arrival · retrieve</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>The line you wrote down last week</h3><p>Last week you took one piece of feedback.</p><p>You wrote it in quote marks, in their words.</p><p>You wrote their name next to the line.</p><p>Feedback is not a score and not a mood.</p><p>Feedback is one thing to try on the piece.</p><p>A line you never act on stays a note.</p><p>Today the note turns into a change.</p><p>You need four things: your piece, your feedback line, the tool you used and a pencil.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>The line you wrote down last week</h3><p>Last week you took one piece of feedback.</p><p>You wrote it in quote marks, in their words.</p><p>You wrote their name next to the line.</p><p>Feedback is not a score and not a mood.</p><p>Feedback is one thing to try on the piece.</p><p>A line you never act on stays a note.</p><p>Today the note turns into a change.</p><p>You need four things: your piece, your feedback line, the tool you used and a pencil.</p></section>
-<section class="slide" data-type="starter" data-title="Starter · create the need" data-min="3" data-ta1="Show both makers yourself, on your own piece. Do not use a pupil's work as the poor example.">
+</section>
+<section class="slide" data-type="starter" data-title="Starter · create the need" data-min="3" data-ta1="Show both makers yourself, on your own piece. Do not use a pupil's work as the poor example." data-classroom-phase="starter">
 <div class="time">3 min</div>
-<span class="tag"></span>
+<span class="tag">Starter</span>
 <h2>Starter · create the need</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Two makers, one line of feedback</h3><p>Two makers got the same feedback line.</p><p>The line said: the sky is too flat.</p><p>Maker one went back over the whole sheet.</p><p>They changed the sky, the hill and the tree.</p><p>The piece did look different at the end.</p><p>But nobody could say which change did it.</p><p>Maker two changed the sky and nothing else.</p><p>They pressed harder in one corner of it.</p><p>The dark corner was the only new thing.</p><p>One change can be proved. Ten changes cannot.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Two makers, one line of feedback</h3><p>Two makers got the same feedback line.</p><p>The line said: the sky is too flat.</p><p>Maker one went back over the whole sheet.</p><p>They changed the sky, the hill and the tree.</p><p>The piece did look different at the end.</p><p>But nobody could say which change did it.</p><p>Maker two changed the sky and nothing else.</p><p>They pressed harder in one corner of it.</p><p>The dark corner was the only new thing.</p><p>One change can be proved. Ten changes cannot.</p></section>
-<section class="slide" data-type="ido" data-title="I Do · model" data-min="7" data-ta1="Model the whole thing on one piece at the front. Keep the before state where the room can see it." data-ta2="Point at the name on your own sheet as you read the line. It shows a name belongs on every line of feedback.">
+</section>
+<section class="slide" data-type="ido" data-title="I Do · model" data-min="7" data-ta1="Model the whole thing on one piece at the front. Keep the before state where the room can see it." data-ta2="Point at the name on your own sheet as you read the line. It shows a name belongs on every line of feedback." data-classroom-phase="ido">
 <div class="time">7 min</div>
-<span class="tag"></span>
+<span class="tag">I Do</span>
 <h2>I Do · model</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>I turn my feedback into one change</h3><p>My feedback line says: the leaf edge is lost.</p><p>The name of the person who said it is on my sheet.</p><p>First I read the line out loud.</p><p>Reading it out stops me guessing at it.</p><p>Then I turn the line into one change.</p><p>A change needs a verb, a place and an amount.</p><p>My verb is press. My place is the leaf edge.</p><p>My amount is one pass with a 4B pencil.</p><p>Before I touch the piece I keep the before.</p><p>With no before, what it did cannot be shown.</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Boxes labelled READ, TURN, DO, RECORD. Four steps, and the piece is only touched at step three"><title>From a feedback line to a recorded change</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">READ</text><text x="73" y="88" text-anchor="middle" font-size="11">the feedback</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">TURN</text><text x="231" y="88" text-anchor="middle" font-size="11">a clear action</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">DO</text><text x="389" y="88" text-anchor="middle" font-size="11">once, then stop</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">RECORD</text><text x="547" y="88" text-anchor="middle" font-size="11">what it changed</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">Four steps, and the piece is only touched at step three</text></svg><p>Then I make the change once and stop.</p><p>Last I record what the change did.</p><p>My before word was lost. My after word is sharp.</p><p>My sentence says: the dark edge pushed the leaf forward.</p><div class="box rehearsal" data-mbm-guide="staff">Model the stop. Put the pencil down flat on the desk after one pass and let the pause be seen before you speak again.</div><p>The record is not a last job you rush.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>I turn my feedback into one change</h3><p>My feedback line says: the leaf edge is lost.</p><p>The name of the person who said it is on my sheet.</p><p>First I read the line out loud.</p><p>Reading it out stops me guessing at it.</p><p>Then I turn the line into one change.</p><p>A change needs a verb, a place and an amount.</p><p>My verb is press. My place is the leaf edge.</p><p>My amount is one pass with a 4B pencil.</p><p>Before I touch the piece I keep the before.</p><p>With no before, what it did cannot be shown.</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Boxes labelled READ, TURN, DO, RECORD. Four steps, and the piece is only touched at step three"><title>From a feedback line to a recorded change</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">READ</text><text x="73" y="88" text-anchor="middle" font-size="11">the feedback</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">TURN</text><text x="231" y="88" text-anchor="middle" font-size="11">a clear action</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">DO</text><text x="389" y="88" text-anchor="middle" font-size="11">once, then stop</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">RECORD</text><text x="547" y="88" text-anchor="middle" font-size="11">what it changed</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">Four steps, and the piece is only touched at step three</text></svg><p>Then I make the change once and stop.</p><p>Last I record what the change did.</p><p>My before word was lost. My after word is sharp.</p><p>My sentence says: the dark edge pushed the leaf forward.</p><div class="box rehearsal" data-mbm-guide="staff">Model the stop. Put the pencil down flat on the desk after one pass and let the pause be seen before you speak again.</div><p>The record is not a last job you rush.</p></section>
-<section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="3" data-ta1="Cards face down until every table is quiet, then turn them over together. The exact sorting lines are on this slide: project them and let pupils sort by number, or copy these lines onto cards. No separate pack is required for this sort." data-ta2="Answer key, read out at the end: press harder goes with the 4B pencil, add one line goes with the ruler and the fineliner, mix a darker green goes with the two paints.">
+</section>
+<section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="3" data-ta1="Cards face down until every table is quiet, then turn them over together. The exact sorting lines are on this slide: project them and let pupils sort by number, or copy these lines onto cards. No separate pack is required for this sort." data-ta2="Answer key, read out at the end: press harder goes with the 4B pencil, add one line goes with the ruler and the fineliner, mix a darker green goes with the two paints." data-classroom-phase="wedo">
 <div class="time">3 min</div>
-<span class="tag"></span>
+<span class="tag">We Do</span>
 <h2>We Do · everyone commits</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Sort the lines, then match the tool</h3><p>Six feedback cards are on your table.</p><p>Each card holds a line a person said.</p><p>Sort them into two piles: a change I can make, and not a change yet.</p><p>Three cards say: press harder in the dark corner. Add one line along the top edge. Mix one darker green for the leaf.</p><p>Three cards say: make it better. It needs more. I like it.</p><p>A change card has a verb, a place and an amount.</p><p>Now take the change pile and the three tool cards.</p><p>Match each change to the tool it needs.</p><p>The tool cards say: the 4B pencil. The ruler and the fineliner. The green paint and the black paint.</p><p>Every card gets a match, even when you are not sure.</p><p>A guess I can see beats a blank card.</p><p>Then hold up the card your table argued about most.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Sort the lines, then match the tool</h3><p>Six feedback cards are on your table.</p><p>Each card holds a line a person said.</p><p>Sort them into two piles: a change I can make, and not a change yet.</p><p>Three cards say: press harder in the dark corner. Add one line along the top edge. Mix one darker green for the leaf.</p><p>Three cards say: make it better. It needs more. I like it.</p><p>A change card has a verb, a place and an amount.</p><p>Now take the change pile and the three tool cards.</p><p>Match each change to the tool it needs.</p><p>The tool cards say: the 4B pencil. The ruler and the fineliner. The green paint and the black paint.</p><p>Every card gets a match, even when you are not sure.</p><p>A guess I can see beats a blank card.</p><p>Then hold up the card your table argued about most.</p></section>
-<section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="7" data-ta1="Hold a printed before state next to the live piece so the pair is seen, not described." data-ta2="Give a ring-and-date option to any pupil with no photo. They ring the part on the log page first and write the week number in the ring.">
+</section>
+<section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="7" data-ta1="Hold a printed before state next to the live piece so the pair is seen, not described." data-ta2="Give a ring-and-date option to any pupil with no photo. They ring the part on the log page first and write the week number in the ring." data-classroom-phase="ido">
 <div class="time">7 min</div>
-<span class="tag"></span>
+<span class="tag">I Do</span>
 <h2>I Do 2 · connect</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>What it did needs a before</h3><p>Now watch one change recorded two ways.</p><p>In the first I keep the before, then press the line.</p><p>I hold the before next to the piece.</p><p>The leaf edge is pale in one and dark in the other.</p><p>So what it did can be seen by anybody.</p><p>In the second I press the line first.</p><p>Then I write: it got better.</p><p>Better is my word, and nobody can check it.</p><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Boxes labelled BEFORE KEPT, NO BEFORE. Same change, and only one record can be checked by somebody else"><title>Keeping the before against losing it</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">BEFORE KEPT</text><text x="151" y="74" text-anchor="middle" font-size="11">photo or ring made first</text><text x="151" y="94" text-anchor="middle" font-size="11">the change can be pointed at</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">NO BEFORE</text><text x="469" y="74" text-anchor="middle" font-size="11">the piece is changed first</text><text x="469" y="94" text-anchor="middle" font-size="11">only the word better is left</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Same change, and only one record can be checked by somebody else</text></svg><p>So your record needs the before word from last week.</p><p>It needs the after word you use today.</p><p>It needs one sentence saying what the change did.</p><p>A change can also fail, and that is still evidence.</p><p>If the edge went muddy, write muddy.</p><p>You write what it did, not what you hoped.</p><ul><li>1 · keep the before as a photo, copy or unchanged sample.</li><li>2 · make the one change.</li><li>3 · write the before word and the after word.</li><li>4 · write one sentence saying what it did.</li></ul><p>A ring only shows where you worked. It does not keep a mark that you rub out. Keep a photo or copy first, or make the change on a new test piece beside the unchanged one.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>What it did needs a before</h3><p>Now watch one change recorded two ways.</p><p>In the first I keep the before, then press the line.</p><p>I hold the before next to the piece.</p><p>The leaf edge is pale in one and dark in the other.</p><p>So what it did can be seen by anybody.</p><p>In the second I press the line first.</p><p>Then I write: it got better.</p><p>Better is my word, and nobody can check it.</p><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Boxes labelled BEFORE KEPT, NO BEFORE. Same change, and only one record can be checked by somebody else"><title>Keeping the before against losing it</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">BEFORE KEPT</text><text x="151" y="74" text-anchor="middle" font-size="11">photo or ring made first</text><text x="151" y="94" text-anchor="middle" font-size="11">the change can be pointed at</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">NO BEFORE</text><text x="469" y="74" text-anchor="middle" font-size="11">the piece is changed first</text><text x="469" y="94" text-anchor="middle" font-size="11">only the word better is left</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Same change, and only one record can be checked by somebody else</text></svg><p>So your record needs the before word from last week.</p><p>It needs the after word you use today.</p><p>It needs one sentence saying what the change did.</p><p>A change can also fail, and that is still evidence.</p><p>If the edge went muddy, write muddy.</p><p>You write what it did, not what you hoped.</p><ul><li>1 · keep the before as a photo, copy or unchanged sample.</li><li>2 · make the one change.</li><li>3 · write the before word and the after word.</li><li>4 · write one sentence saying what it did.</li></ul><p>A ring only shows where you worked. It does not keep a mark that you rub out. Keep a photo or copy first, or make the change on a new test piece beside the unchanged one.</p></section>
-<section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="5" data-ta1="Pair by table, not by choice. Time each way out loud." data-ta2="A pupil who will not speak may point at the place while the adult reads the change back to the pair.">
+</section>
+<section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="5" data-ta1="Pair by table, not by choice. Time each way out loud." data-ta2="A pupil who will not speak may point at the place while the adult reads the change back to the pair." data-classroom-phase="wedo">
 <div class="time">5 min</div>
-<span class="tag"></span>
+<span class="tag">We Do</span>
 <h2>We Do 2 · lab</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Say your change out loud first</h3><p>Work in twos, with your own piece and your own line.</p><p>Partner one reads their feedback line out.</p><p>Then they say their change in one sentence.</p><p>The sentence needs a verb, a place and an amount.</p><p>Partner two counts the three parts on their fingers.</p><p>If one part is missing, they ask for it.</p><p>They ask which part, or how much, or which tool.</p><p>They do not say if the change is a good idea.</p><p>Then swap over, with two minutes each way.</p><p>Say it out loud before you touch the piece.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Say your change out loud first</h3><p>Work in twos, with your own piece and your own line.</p><p>Partner one reads their feedback line out.</p><p>Then they say their change in one sentence.</p><p>The sentence needs a verb, a place and an amount.</p><p>Partner two counts the three parts on their fingers.</p><p>If one part is missing, they ask for it.</p><p>They ask which part, or how much, or which tool.</p><p>They do not say if the change is a good idea.</p><p>Then swap over, with two minutes each way.</p><p>Say it out loud before you touch the piece.</p></section>
-<section class="slide" data-type="independent" data-title="Independent · evidence" data-min="9" data-ta1="Scribe the exact words. Do not tidy a pupil's sentence into a better one, and do not make the change for them." data-ta2="Watch for the second change. If a hand goes back to the piece, say: that one is done, write what it did now.">
+</section>
+<section class="slide" data-type="independent" data-title="Independent · evidence" data-min="9" data-ta1="Scribe the exact words. Do not tidy a pupil's sentence into a better one, and do not make the change for them." data-ta2="Watch for the second change. If a hand goes back to the piece, say: that one is done, write what it did now." data-classroom-phase="independent">
 <div class="time">9 min</div>
-<span class="tag"></span>
+<span class="tag">Independent work</span>
 <h2>Independent · evidence</h2>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Make the change, then record what it did</h3><p>Now do it on your own piece.</p><p>Keep the before first, as a photo, a copy or an unchanged test piece.</p><p>Then make your one change, once.</p><p>Put the tool down when the change is done.</p><p>Do not tidy the rest of the piece today.</p><p>Now write the record on your sheet.</p><p>Write the before word, then the after word.</p><p>Then write one sentence starting: the change made it.</p><p>Name the part in that sentence, not the whole piece.</p><p>Then write if you keep the change or undo it.</p><p>Both answers are allowed, and both are evidence.</p><p>Last write the name of the person who gave the line.</p><ul><li>Core · Make the change. Point at before and after. Say what it did and have both words and your reason recorded.</li><li>Extend · make the change, write the before and after words, and one sentence naming the part.</li><li>Challenge · as Extend, and write what you would change next if you had one more line.</li></ul><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Make the change, then record what it did</h3><p>Now do it on your own piece.</p><p>Keep the before first, as a photo, a copy or an unchanged test piece.</p><p>Then make your one change, once.</p><p>Put the tool down when the change is done.</p><p>Do not tidy the rest of the piece today.</p><p>Now write the record on your sheet.</p><p>Write the before word, then the after word.</p><p>Then write one sentence starting: the change made it.</p><p>Name the part in that sentence, not the whole piece.</p><p>Then write if you keep the change or undo it.</p><p>Both answers are allowed, and both are evidence.</p><p>Last write the name of the person who gave the line.</p><ul><li>Core · Make the change. Point at before and after. Say what it did and have both words and your reason recorded.</li><li>Extend · make the change, write the before and after words, and one sentence naming the part.</li><li>Challenge · as Extend, and write what you would change next if you had one more line.</li></ul></section>
-<section class="slide" data-type="exit" data-title="Exit · Audience and Influence" data-min="3" data-ta1="Read the pupil's sentence back word for word before anybody writes on the sheet." data-ta2="Write the giver's name yourself if the pupil cannot recall it. It must be a real named person, never a blank.">
+</section>
+<section class="slide" data-type="exit" data-title="Exit · Audience and Influence" data-min="3" data-ta1="Read the pupil's sentence back word for word before anybody writes on the sheet." data-ta2="Write the giver's name yourself if the pupil cannot recall it. It must be a real named person, never a blank." data-classroom-phase="exit">
 <div class="time">3 min</div>
-<span class="tag"></span>
+<span class="tag">Exit ticket</span>
 <h2>Exit · Audience and Influence</h2>
 <div class="lundy-status">
 <p>
@@ -172,27 +249,19 @@ h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-siz
 <p>
 <b>INFLUENCE:</b> one real next action is recorded: retain, add method detail, or leave open.</p>
 </div>
-<div class="lundy" aria-label="Lundy participation strip">
+<h3>Read it back to the person who said it</h3><p>Find the adult who gave you the feedback line.</p><p>If they are not here, read it to the adult at your table.</p><p>Read out your sentence about what the change did.</p><p>They write one word back on your sheet.</p><p>Their word sits next to their name and today's date.</p><p>That is your proof that the line was used.</p><p>Then pick one thing that happens next.</p><p>Keep the change, undo it, or try it on another part.</p><p>Write your pick on the sheet.</p><p>Your sheet and your before go in the arts log.</p><p>Name the page they sit on, not the folder.</p><p>Add this work to your Part A file. Write the file name and page number. For a sound or video clip, give the file name and the time where your evidence starts.</p><div class="lundy" aria-label="Lundy participation strip">
 <div class="lundy-grid">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
 </div>
 <p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
 </div>
-<h3>Read it back to the person who said it</h3><p>Find the adult who gave you the feedback line.</p><p>If they are not here, read it to the adult at your table.</p><p>Read out your sentence about what the change did.</p><p>They write one word back on your sheet.</p><p>Their word sits next to their name and today's date.</p><p>That is your proof that the line was used.</p><p>Then pick one thing that happens next.</p><p>Keep the change, undo it, or try it on another part.</p><p>Write your pick on the sheet.</p><p>Your sheet and your before go in the arts log.</p><p>Name the page they sit on, not the folder.</p><p>Add this work to your Part A file. Write the file name and page number. For a sound or video clip, give the file name and the time where your evidence starts.</p></section>
+</section>
 </main>
 <nav class="controls" aria-label="Lesson controls">
-<button type="button" data-nav="previous">◀ Previous</button>
-<button type="button" data-tool="1">Teacher tools</button>
-<button type="button" data-tool="2">Evidence &amp; print</button>
-<button type="button" data-tool="3">Calm mode</button>
-<button type="button" data-tool="4">Static diagrams</button>
-<button type="button" data-tool="5">Previous</button>
-<button type="button" data-tool="6">Next</button>
-<button type="button" data-nav="next">Next ▶</button>
-</nav>
+<button type="button" data-nav="previous">◀ Previous</button><button type="button" data-tool="1">Teacher tools</button><button type="button" data-tool="2">Evidence &amp; print</button><button type="button" data-tool="3">Calm mode</button><button type="button" data-tool="4">Static diagrams</button><button type="button" data-nav="next">Next ▶</button></nav>
 <div class="prog" aria-hidden="true">
 <span>
 </span>
