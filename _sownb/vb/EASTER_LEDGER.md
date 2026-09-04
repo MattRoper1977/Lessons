@@ -1800,6 +1800,19 @@ including 44 g29 controls and 43 award-claim controls. Its planted battery
 failure is caught. Current-head CI remains required before PR305 merge.
 
 
+## Mechanism evidence subject correction
+
+CI run 33918746857 passed all functional checks but could not parse two
+expected PASS labels in the historical negative-control report: the report
+had omitted the file it measured. It now names the pre-fix reader and commit.
+Merge blob rows also use the established file subject key, so JSON suffixes
+are not truncated by the fallback text-path scanner. No result is altered,
+no evidence is removed and no sweep rule is relaxed.
+
+## Assertion follow-up — attendance references, zero units
+
+Four truthful Silver denial or record-question references were false positives. Each exemption now matches the immediate grammar of that attendance occurrence only, including joined HTML paragraphs. All 43 prior controls remain unchanged; 24 new must-fire and benign controls bring g30–g35 to 67. The genuinely unconfirmed practitioner promise still reds and was corrected in the Silver source before rebuilding. No content batch or gate floor changes.
+
 ## R2 current-slot read follow-up — zero lesson units
 
 The earlier MIMA edit removed the asserted ticket venue but did not actually
@@ -1815,6 +1828,13 @@ ten stage timings, existing cells, styles and SVGs remain. All allowed MIMA
 examples in the other decks and card pack remain unchanged. Twelve adapter
 checks pass; actual rendered browser checks are required before merge.
 
+## Verified merge #305
+
+Exact head `99b8c114c4443f96da92151edc5fb7c991ef15df` merged as `fb96752c63077c41774673dcf3628c6f39cdb2d8`. Against actual fork `2f7eda8e62096cd23fef8128b92c3563ed170bc3`, all 12/12 changed blobs match. Evidence: `_sownb/vb/evidence/aae/merge305.json`. Required head runs: 33920574791. This record does not itself claim served-byte equality.
+
+## R2 evidence subject correction — zero units
+
+Current-head browser passed, but the estate sweep rejected the adapter report because its PASS rows lacked a subject file. The generator and regenerated report now name the actual deck. The structural snapshot uses repository-relative paths. No control, reported result, gate or game was changed to clear this failure.
 
 ## Explore next-batch plan checkpoint — 0 of 14 authored
 
@@ -1827,6 +1847,8 @@ recovered, so chosen media and weekly distribution are implementation
 choices, not invented order text. An independent24-cell scan finds no
 complete claim ready for this strand/week. No cell is invented or reassigned.
 Explore stays BUILD-only and distinct from Bronze.
+
+
 
 
 
@@ -1848,3 +1870,7 @@ final work; D1–D2 support choice and actual sharing of enjoyment/achievement.
 Both Part B slot keys are read from the current source. The suggested four-file
 layout is within the ten-file cap. Independent workbook review supports zero
 new cells, without inheriting Bronze's H7 ruling. Browser proof is pending.
+
+## Verified merge #306
+
+Exact head `0f47b3de44b0b6680ea921362fd3959c5c20960f` merged as `e808f0aa1367925a8b88098c134c38d44a4fa384`. Against actual fork `fb96752c63077c41774673dcf3628c6f39cdb2d8`, all 9/9 changed blobs match. Evidence: `_sownb/vb/evidence/aae/merge306.json`. Required head runs: 33921327174,33921327049. This record does not itself claim served-byte equality.
