@@ -82,6 +82,7 @@ SELFTEST_TOOLS = [
     "tools/easter/prove_chassis.py",
     "tools/easter/build_batch_targets.py",
     "tools/easter/manifest_sequence.py",
+    "tools/easter/spec_figures.py",
 ]
 LIST_ONLY_TOOLS = [
     "g19_v2.py",
