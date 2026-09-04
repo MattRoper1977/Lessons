@@ -1122,3 +1122,33 @@ caught.
 The tell: I had a pattern with three named instances and treated it as a lesson
 about the three. A pattern with three instances is a reason to go looking for the
 fourth.
+
+---
+
+## A control that proved the figures, and told me nothing about the record
+
+WRONG: three batch-4 specs had to be authored by hand after the fleet died on an
+account limit. To keep the print-sheet SVGs from drifting from the shipped
+geometry I wrote a generator and gave it a control that rebuilds **every figure
+in the committed specs** and refuses on a single differing byte — 66 figures,
+66 identical. That control passed, the specs built, and all nine gates went
+green on all three decks.
+
+All three were missing `"type": "title"` on stage 0. Every other spec in the
+estate carries it; `author_deck` turns it into `data-type="title"` on the
+opening `<section>`. Three decks would have shipped with an opening slide the
+markup does not identify as one, and **no gate reads that attribute**, so
+nothing would have said so.
+
+RIGHT: the missing key was found by diffing the *key sets* of the new specs
+against the shipped corpus — three lines of Python, and the answer was
+immediate and total: `stage-0 type != "title": BUILD_ART_W7, LAUNCH_ART_W7,
+LAUNCH_HUMANITIES_W7`. Fixed in the generator rather than in the three files, so
+the record still reproduces what shipped, and re-run: 43 of 43 specs carry it.
+
+The tell, for next time: **a control that proves one field family is silent
+about every other one, and reads as confidence about the whole record.** The
+figure control was measuring the part I had thought hardest about, which is
+exactly the part least likely to be wrong. When a new artefact joins a corpus of
+forty, the cheap check is not "is my clever part right" but "does its shape
+match the forty" — compare key sets, not just the values you worried about.
