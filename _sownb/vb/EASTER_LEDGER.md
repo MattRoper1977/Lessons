@@ -748,3 +748,63 @@ is not a control, and refusing to start is.
 
 g29 is armed in CI on every authored deck, not only on its own controls.
 Mechanism **21 tools, 184 controls**, derived, `--prove-red` PASS.
+
+---
+
+## A3N-2 §1, first half — the Art measurement family. PR #292
+
+**Ceiling: 0 lesson units** (R1: a mechanism PR counts zero).
+
+§1 says "no Art family has a gate-readable donor" is a solvable authoring task.
+Picking the donor turned up something underneath it: **Art had no measurement
+family at all, and no Art lesson could have passed the gate stack however it was
+written.**
+
+The style contract has treated Art as first-class since g16 v2 was frozen —
+`G16_DENOMINATORS_v2.json` names twelve families and gives each Art pathway 108
+contract rows, more than any other. Only FEB's `BASELINES` named nine. The two
+gates that divide by a family then disagreed with each other:
+
+    g18   no Art family  ->  GLOBAL p25 fallback           floor 1638 words
+    g23   no Art median  ->  ratio is None, and the clause
+                             passes only a ratio that is
+                             not None                       RED, always, binding
+
+No live Art lesson in this estate exceeds **1107** words. The floor was 1638 and
+the ceiling was unreachable. This was not a strict gate but an **undefined**
+one, and undefined was being read as failure — while the line that would have
+said so crashed on `f"{None:.0f}"` before it could print.
+
+**The rule was already written; it had just never been applied to Art.**
+Nearest-rank p25 of the family's own live neighbours, global fallback only below
+`MIN_NEIGHBOURS=5`. Each Art pathway has fourteen measurable live lessons.
+
+    VB extra  BUILD Art    n=14  p25= 888  median=1015.5  g23 ceiling <=1523w
+    VB extra  GROW Art     n=14  p25= 902  median= 918.5  g23 ceiling <=1378w
+    VB extra  LAUNCH Art   n=14  p25= 885  median= 894.5  g23 ceiling <=1342w
+
+**No threshold moved.** The ceiling is still 1.5× the family median; the floor is
+still the family p25. Leaving Art out was applying a *different* rule to one
+subject, not a stricter one. A control derives all nine FEB families under the
+merged map and every n, p25 and median is identical; a second worktree at
+`origin/main` was measured against this tree to prove it rather than assert it.
+
+**Four controls added, all firing:**
+
+    the-nine-feb-families-still-derive                   9 of 9
+    art-now-has-a-measured-family-not-a-global-fallback  n=14 >= 5
+    the-art-floor-now-sits-below-the-art-ceiling         888 <= 1523
+    an-unknown-family-still-errors                       MEASUREMENT INVALID
+
+g23 keeps the same verdict for a missing denominator — still RED, because a
+ceiling with no yardstick cannot pass anything — and now carries the REASON, and
+prints instead of raising.
+
+Mechanism **20 tools, 169 controls**, derived, `--prove-red` PASS.
+Re-run: `python3 _sownb/vb/tools/g18_v2_family_floor.py --families`
+
+**A3-H10 opened, not actioned.** The `Art_Teesside/<pathway>/W1-W8` copies of
+the eight `*_Estate_v3` Art lessons measure **zero** content words under the
+shell-aware instrument while their twins measure ~900–1100. Same titles, two
+routes, one invisible to every gate. Excluded from the baseline automatically by
+the `contentWords` filter, so it moves no number here.
