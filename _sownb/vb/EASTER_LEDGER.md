@@ -1294,8 +1294,18 @@ already true before any of this: nineteen greens.
 
 R5: never one monolithic shell that can be stopped 53 seconds in and lose its
 place. Each deck was built and gated in its own shell under its own wall
-ceiling, sized as the order specifies — the first green deck measured **5s**, so
-the ceiling is **15s**, floored at 60s for headroom. No deck came close.
+ceiling, sized as the order specifies — the first green deck measured **4s**, so
+the ceiling is 4×3 floored at **60s**. The slowest deck took **6s**.
+
+The shell output is deliberately **not** committed. The first version of the
+driver wrote a plain-text timings log and kept each deck's stdout beside the
+JSON record, and rows reading `plan 49  rc=0  4s  PASS  idx 49` state a verdict
+in a shape matching none of the estate's claim forms. The stale-evidence sweep
+exits 2 on a single `NO FORM MATCHED` row — *"the run does not pass with one
+outstanding, because the alternative is calling it stale"* — and nineteen logs
+plus a timings file failed CI. Every fact those rows carried is in
+`batch4_build.json`, per row, in a form the sweep reads; the logs are
+reproducible by re-running the driver.
 
     19 of 19 built · 19 of 19 PASS · 0 regressions · 0 donor leakage
     g18 19 PASS   g23 19 PASS   g25 19 PASS   g26 19 PASS

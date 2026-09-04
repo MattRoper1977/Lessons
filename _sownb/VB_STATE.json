@@ -3841,13 +3841,15 @@
   "gating": {
    "method": "one deck per shell, own wall ceiling (A3N-RESUME-B4 R5)",
    "ceilingSeconds": 60,
-   "ceilingDerivedFrom": "first green deck 5s x3 = 15s, floored at 60s",
+   "ceilingDerivedFrom": "first green deck 4s x3 = 12s, floored at 60s",
    "result": "19 of 19 built, 19 of 19 PASS, 0 regressions, 0 donor leakage",
    "preExistingOnDonorsToo": [
     "g16",
     "g19",
     "g24"
-   ]
+   ],
+   "slowestDeckSeconds": 6,
+   "shellOutputNotCommitted": "the first driver committed a plain-text timings log and nineteen stdout captures; rows reading 'plan 49 rc=0 4s PASS idx 49' state a verdict matching none of the estate's claim forms and the sweep exits 2 on a single NO FORM MATCHED row. CI went red. The timings now live per row inside batch4_build.json"
   },
   "evidencePathDefect": {
    "found": "measured against origin/main in a second worktree: main 1172 stale claims, this branch 1181",
@@ -3869,6 +3871,7 @@
    "tools": 25,
    "controls": 226,
    "note": "223 at batch 3 plus the three controls this run added; 26 tools once the Arts Award register PR lands"
-  }
+  },
+  "sweepOrderingMiss": "the four-tool path repair was verified against origin/main and passed 1172 to 1172 -- and then the review finished, nineteen decks were re-gated, and the driver wrote twenty new evidence files. The sweep was never re-run after the last artefacts existed. A verification is a statement about a tree, not about a branch"
  }
 }

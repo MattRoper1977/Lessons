@@ -1195,3 +1195,35 @@ pack; it was a no-op there by luck, and on a pack missing a row it would have
 edited the estate every time the self-test ran, CI included. **A control with a
 side effect is a worse defect than the one it is checking for.** It now works
 on a copy.
+
+---
+
+## I checked the sweep, and then built more things
+
+WRONG: batch 4's per-deck gating driver wrote a plain-text timings log and kept
+each deck's stdout beside the JSON record — twenty files whose rows read
+`plan 49  rc=0  4s  PASS  idx 49`. That states a verdict in a shape matching
+none of the estate's claim forms, and the stale-evidence sweep exits 2 on a
+single `NO FORM MATCHED` row: *the run does not pass with one outstanding,
+because the alternative is calling it stale.* CI went red.
+
+The part worth writing down is not the format. It is the **order I did things
+in**. I had already caught this class of defect once in this same run — four
+tools naming a file in a record unresolvably — measured the sweep against
+`origin/main` in a second worktree, got 1172 against 1172, and satisfied myself.
+Then the review finished, I re-gated all nineteen decks, and the driver wrote
+twenty new files into the evidence directory. **I never re-ran the sweep after
+the last artefacts existed.** The green I was carrying was a green about a tree
+that no longer existed.
+
+RIGHT: shell output goes to a scratch directory and stays out of the repository;
+the timings live inside `batch4_build.json`, per row, where the sweep reads
+them. Sweep exits 0, self-test exits 0, 16 files matching no claim form — the
+same 16 as `origin/main`.
+
+The tell, for next time: a verification is a statement about a **tree**, not
+about a branch or an intention. The question is not "did I run the check" but
+**"has anything been written since the check ran?"** Any step that creates files
+invalidates every check that ran before it, and the cheapest habit is to re-run
+the estate-wide checks as the last thing before the commit, not the first thing
+after the fix.
