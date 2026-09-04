@@ -17,7 +17,8 @@ const html = '<!doctype html><html><body><section data-min="0"></section><script
   let current=base;
   await page.route('http://award.test/**',route => {
     if (route.request().url().endsWith('/SLOTS.json')) {
-      assert.equal(route.request().headers()['cache-control'], 'no-cache');
+      // Playwright-intercepted fetches need not expose a Cache-Control header.
+      // The source-reader control checks cache:'no-store'; this checks fresh UI data.
       return route.fulfill({contentType:'application/json',body:JSON.stringify(current)});
     }
     return route.fulfill({contentType:'text/html',body:html});

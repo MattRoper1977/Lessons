@@ -187,7 +187,9 @@ def prove(chassis: Path, plan_index: int, content_path: Path, reference: Path,
         required.append(("plan", plan_source))
         if plan.get("artsAward"):
             required.extend([("awardRegister", ROOT / "tools/artsaward/SPEC.json"),
-                             ("awardSlots", ROOT / "tools/artsaward/SLOTS.json")])
+                             ("awardSlots", ROOT / "tools/artsaward/SLOTS.json"),
+                             ("awardPresentation", ROOT / "tools/easter/award_presentation.py"),
+                             ("awardRuntime", ROOT / "tools/easter/award_chassis.js")])
             if plan["artsAward"].get("slots"):
                 required.append(("slotReader", ROOT / "tools/artsaward/slot_reader.js"))
     for label, path in required:

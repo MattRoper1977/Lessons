@@ -96,7 +96,7 @@ def workbook_trace(plan: dict) -> str:
     aa = plan.get("artsAward") or {}
     if aa.get("level"):
         parts = ", ".join(aa.get("parts", [])) or "unstated"
-        return (f'{aa["level"]} Arts Award, Part {parts} — no workbook cell '
+        return (f'{aa["level"]} Arts Award, Part {parts}; no workbook cell '
                 f'(AAE-H7)')
     return "no workbook cell"
 
@@ -481,6 +481,12 @@ def author(donor: Path, plan: dict, content: dict, out: Path) -> dict:
 
     author_print_pack(tree, plan, content)
     swept = sweep_donor_text(tree, donor, plan, content)
+    if plan.get("artsAward"):
+        pres_spec = importlib.util.spec_from_file_location("award_presentation", ROOT / "tools/easter/award_presentation.py")
+        presentation = importlib.util.module_from_spec(pres_spec)
+        pres_spec.loader.exec_module(presentation)
+        presentation.rebuild_print(tree, plan, content, workbook_trace(plan))
+        presentation.replace_runtime(tree, content, (ROOT / "tools/easter/award_chassis.js").read_text(encoding="utf-8"))
     html = lh.tostring(tree, encoding="unicode", doctype="<!doctype html>")
 
     # lesson-config replaced wholesale: no donor field may survive
@@ -645,6 +651,9 @@ def verify(donor, out, plan, content, old_id, new_id, reference=None) -> dict:
 # --------------------------------------------------------------------------
 
 CONTROL_IDS = [
+    "award-print-retains-every-check-and-only-its-own-figures",
+    "award-browser-title-and-runtime-replace-the-donor",
+    "an-award-trace-is-not-misread-as-a-part-name",
     "not-one-donor-sentence-survives",
     "the-donors-print-pack-does-not-survive-either",
     "a-print-heading-the-author-did-not-name-still-loses-its-donor-text",
@@ -910,6 +919,36 @@ def controls() -> list[dict]:
         "plan without a declaration must not gain one",
         ({"level": "Bronze", "parts": ["B"]}, False),
         (cfg4.get("artsAward"), "artsAward" in cfg5))
+    gate_spec = importlib.util.spec_from_file_location("award_gates", ROOT / "_sownb/vb/tools/g30_arts_award.py")
+    award_gates = importlib.util.module_from_spec(gate_spec)
+    gate_spec.loader.exec_module(award_gates)
+    rec("an-award-trace-is-not-misread-as-a-part-name",
+        "The real g31 must accept the generated trace; no-workbook-cell is a "
+        "coverage note, not the name of Bronze Part B.",
+        [], award_gates.g31(raw4, bronze["artsAward"], award_gates.spec()))
+    print_donor = _tmp(_DONOR.replace('</head>', '<title>Donor browser title</title><script id="n6m-guide-js">/* legacy guide */</script></head>').replace('</body>', '<section class="print-pack"><svg><text>Unrelated donor figure</text></svg></section><script>const obsolete = document.querySelectorAll("main.deck>.slide");</script></body>'))
+    print_content = json.loads(json.dumps(c4))
+    print_content['tierLadder'] = ['Core', 'Extend', 'Challenge']
+    print_content['print'] = {'intro': 'Record the actual evidence.', 'focusRows': ['My review'],
+        'tiers': ['Speak your review.', 'Write your review.', 'Explain your review.'],
+        'checks': ['Check ' + str(n) for n in range(1, 6)],
+        'figures': ['<svg><text>Source figure one</text></svg>', '<svg><text>Source figure two</text></svg>']}
+    print_out = o4.parent / 'print-control.html'
+    author(print_donor, bronze, print_content, print_out)
+    print_tree = lh.fromstring(print_out.read_text(encoding='utf-8'))
+    pack = print_tree.cssselect('.award-print')[0]
+    rec('award-print-retains-every-check-and-only-its-own-figures',
+        'A donor diagram and a fifth check expose the real print regressions: the learner sheet must match the spec.',
+        (2, ['Source figure one', 'Source figure two'], print_content['print']['checks'], True),
+        (len(pack.cssselect('.print-page')), [n.text_content() for n in pack.cssselect('svg')],
+         [n.text_content() for n in pack.cssselect('ol li')],
+         all(n.text_content().strip() for n in pack.cssselect('h1,h2,h3,th'))))
+    rec('award-browser-title-and-runtime-replace-the-donor',
+        'Two active navigation runtimes double each click, while the inherited guide exposes staff notes outside the dialog.',
+        (print_content['title'], 1, 0, False),
+        (print_tree.cssselect('title')[0].text, len(print_tree.cssselect('script[data-award-chassis]')),
+         len(print_tree.cssselect('#n6m-guide-js')), 'const obsolete' in print_out.read_text(encoding='utf-8')))
+    print_donor.unlink(missing_ok=True)
     d4.unlink(missing_ok=True)
 
     for f in (ds, ref):

@@ -1652,3 +1652,23 @@ wrapper now reports its measured count and the unchanged battery passes.
 The early sparse-checkout probe also errored in g18 because its legacy Science
 baseline was absent. That is an incomplete environment, not a pre-existing
 lesson defect. The complete checkout is now used for all batch gates.
+
+
+## Award presentation checkpoint — zero units, PR 303
+
+The first fourteen Bronze builds passed the comparative nine-gate stack; a
+separate award run rejected the generated coverage note as a part name. The
+trace now uses a semicolon and a direct g31 control proves that distinction.
+Reading the HTML found unrelated donor print figures, blank headings, a
+dropped fifth checklist item and toolbar labels calling different actions.
+New award decks now generate their complete print sheets from their specs,
+replace the legacy runtime, retain the live slot reader inside Teacher tools,
+and use their own browser title. Existing non-award output is unchanged.
+
+The author has 19/19 controls; the complete 27-tool battery has 274 controls
+and its planted failure fired. Chromium UI proof remains pending on this
+updated head; the previous CI failure was an intercepted-header assertion,
+not a reader failure. The no-store source control stays. A disposable generated
+fixture and the actual fourteen-deck browser gate now cover toolbar, keyboard,
+modal, source-matched print and file-reader behaviour. These are checks of
+behaviour and print content, not a claim about PDF pagination.
