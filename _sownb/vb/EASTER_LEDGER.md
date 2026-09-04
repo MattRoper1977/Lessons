@@ -1620,3 +1620,55 @@ batch-4 deck rebuilds **byte-identical** through the changed pipeline.
 
     author_deck 16 controls, all fired (13 + 3)
     mechanism 26 tools, 243 controls, derived, --prove-red PASS
+
+
+## The award identity reached the writer but not its gate — zero units
+
+Resuming AAE-R1B from #302 reproduced a g29 RED on the first Bronze deck.
+The writer used the award-aware identity introduced by #302; the gate still
+loaded only workbook plans and still calculated the old empty-cell key.
+Measured: all 262 workbook identities are unchanged; the fourteen Bronze
+identities are distinct, while the old formula produced only seven.
+
+A shared identity helper and explicit PLAN_SOURCES registry now bind g29 to
+canonical workbook and award plans. Missing sources, duplicate identities,
+stale source digests, changed target rows and changed award declarations fail.
+The batch driver preserves per-deck input hashes and refuses missing specs or
+an empty selection. Existing workbook semantics and bytes are preserved: a
+landed BUILD Art W5 deck rebuilt byte-identically.
+
+Slot-dependent decks now read the current SLOTS.json. Hosted reads bypass the
+cache; offline staff can select that same file. Invalid or unconfirmed data is
+visibly preparation-only. Candidate names are never copied into deck HTML.
+The six reader controls exercise the actual JavaScript file/fetch code. A
+Chromium UI check runs separately in CI; it has not been claimed from a local
+browser, whose executable download was unavailable.
+
+Mechanism: 27 tools, 271 declared controls, all fired; --prove-red caught its
+planted failure. The first reader wrapper emitted JSON but not the battery's
+required `n/n controls` line; the battery rejected that missing report. The
+wrapper now reports its measured count and the unchanged battery passes.
+
+The early sparse-checkout probe also errored in g18 because its legacy Science
+baseline was absent. That is an incomplete environment, not a pre-existing
+lesson defect. The complete checkout is now used for all batch gates.
+
+
+## Award presentation checkpoint — zero units, PR 303
+
+The first fourteen Bronze builds passed the comparative nine-gate stack; a
+separate award run rejected the generated coverage note as a part name. The
+trace now uses a semicolon and a direct g31 control proves that distinction.
+Reading the HTML found unrelated donor print figures, blank headings, a
+dropped fifth checklist item and toolbar labels calling different actions.
+New award decks now generate their complete print sheets from their specs,
+replace the legacy runtime, retain the live slot reader inside Teacher tools,
+and use their own browser title. Existing non-award output is unchanged.
+
+The author has 19/19 controls; the complete 27-tool battery has 274 controls
+and its planted failure fired. Chromium UI proof remains pending on this
+updated head; the previous CI failure was an intercepted-header assertion,
+not a reader failure. The no-store source control stays. A disposable generated
+fixture and the actual fourteen-deck browser gate now cover toolbar, keyboard,
+modal, source-matched print and file-reader behaviour. These are checks of
+behaviour and print content, not a claim about PDF pagination.

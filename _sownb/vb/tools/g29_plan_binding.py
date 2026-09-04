@@ -37,6 +37,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import re
 import sys
@@ -49,18 +50,15 @@ TARGETS = ROOT / "tools/easter/EASTER_TARGETS.json"
 CFG = re.compile(r'id=["\']lesson-config["\'][^>]*>(.*?)</script>', re.S)
 
 
-def plan_id(plan: dict) -> str:
-    """Derived from the plan's own content, so it cannot drift with the file."""
-    key = "|".join([str(plan.get("family", "")), str(plan.get("ruledWeek", "")),
-                    "|".join(sorted(plan.get("cells", [])))])
-    return hashlib.sha256(key.encode("utf-8")).hexdigest()[:12]
+_pi_spec = importlib.util.spec_from_file_location("plan_identity", ROOT / "tools/easter/plan_identity.py")
+_pi = importlib.util.module_from_spec(_pi_spec)
+_pi_spec.loader.exec_module(_pi)
+plan_id = _pi.plan_id
 
 
 def load_plans(path: Path = TARGETS) -> tuple[dict, str]:
     raw = path.read_bytes()
-    plans = json.loads(raw.decode("utf-8"))["plans"]
-    return ({plan_id(p): p for p in plans},
-            hashlib.sha256(raw).hexdigest())
+    return _pi.index_plans(json.loads(raw.decode("utf-8"))["plans"]), hashlib.sha256(raw).hexdigest()
 
 
 def deck_config(path: Path) -> dict | None:
@@ -103,6 +101,16 @@ def judge(path: Path, by_id: dict) -> dict:
         rec["reason"] = f"under-claims {len(missing)} cell(s) its plan requires"
     elif not rec["outcomesMatch"]:
         rec["reason"] = "outcomes do not match the plan's"
+    if plan.get("artsAward"):
+        rec["planSource"] = plan.get("_planSource")
+        rec["awardMatches"] = cfg.get("artsAward") == plan["artsAward"]
+        rec["identityFieldsMatch"] = (cfg.get("family") == plan["family"]
+                                      and cfg.get("week") == plan["ruledWeek"]
+                                      and cfg.get("title") == plan["title"])
+        if not rec["identityFieldsMatch"]:
+            rec.update(status="RED", reason="award family/week/title differs from its canonical plan")
+        if not rec["awardMatches"]:
+            rec.update(status="RED", reason="award declaration differs from the canonical plan")
     return rec
 
 
@@ -265,6 +273,7 @@ def controls() -> list[dict]:
 
     for f in (steal, subset, d1, d2, nopid):
         f.unlink(missing_ok=True)
+    _award_source_controls(rec)
     return out
 
 
@@ -301,6 +310,261 @@ def _selector_controls(rec):
         1, len(bad))
 
 
+ADDED_CONTROL_IDS = [
+    'all-workbook-plan-identities-remain-unchanged',
+    'two-award-plans-in-one-family-week-have-distinct-identities',
+    'award-identities-survive-row-reordering',
+    'correct-award-declarations-bind-to-canonical-plans',
+    'changed-award-identity-fields-are-refused',
+    'a-stale-id-cannot-hide-a-changed-award-level',
+    'a-stale-id-cannot-hide-a-changed-award-part',
+    'a-stale-id-cannot-hide-a-missing-award-slot',
+    'an-award-deck-with-wrong-outcomes-reds',
+    'a-cell-less-award-deck-claiming-a-cell-reds',
+    'an-unknown-award-plan-id-reds',
+    'registry-provenance-records-the-bytes-actually-read',
+    'a-missing-plan-registry-is-refused',
+    'a-missing-registered-source-is-refused',
+    'a-stale-award-spec-origin-is-refused',
+    'duplicate-plan-identities-within-a-source-are-refused',
+    'duplicate-plan-identities-across-sources-are-refused',
+    'canonical-award-targets-are-accepted',
+    'changed-award-target-fields-are-refused',
+    'a-stale-target-source-digest-is-refused',
+]
+
+
+def _award_source_controls(rec):
+    # Compatibility is measured independently against the frozen pre-#302
+    # workbook formula, not by comparing the shared helper to itself.
+    workbook = json.loads(TARGETS.read_text(encoding='utf-8'))['plans']
+
+    def legacy_workbook_id(plan):
+        key = '|'.join([str(plan.get('family', '')),
+                        str(plan.get('ruledWeek', '')),
+                        '|'.join(sorted(plan.get('cells', [])))])
+        return hashlib.sha256(key.encode('utf-8')).hexdigest()[:12]
+
+    changed = [i for i, plan in enumerate(workbook)
+               if plan_id(plan) != legacy_workbook_id(plan)]
+    rec('all-workbook-plan-identities-remain-unchanged',
+        'Every current workbook plan retains the identity written before the '
+        'award repair; an empty population cannot prove compatibility.',
+        (True, []), (bool(workbook), changed))
+
+    def clone(value):
+        return json.loads(json.dumps(value))
+
+    def refused(call, fragment=None):
+        try:
+            call()
+        except (ValueError, OSError, KeyError) as exc:
+            return fragment is None or fragment in str(exc)
+        return False
+
+    with tempfile.TemporaryDirectory(prefix='g29-award-sources-') as temp_dir:
+        fixture = Path(temp_dir)
+        original_root = _pi.ROOT
+
+        def put(rel, doc):
+            path = fixture / rel
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(json.dumps(doc, ensure_ascii=False, indent=1) + '\n',
+                            encoding='utf-8')
+            return path
+
+        # Deliberately small fixtures, so each planted difference has one cause.
+        spec_rel = 'tools/artsaward/SPEC.json'
+        source_rel = 'tools/artsaward/BRONZE_PLAN.json'
+        workbook_rel = 'tools/easter/EASTER_TARGETS.json'
+        registry_rel = 'tools/easter/PLAN_SOURCES.json'
+        spec_doc = {'levels': {'Bronze': {'parts': {'B': {}, 'D': {}}}}}
+        spec_path = put(spec_rel, spec_doc)
+        put('tools/artsaward/SLOTS.json', {
+            'schema': 'arts-award-slots-v1',
+            'slots': {'EVENT_SLOT': {'serves': {'Bronze': ['B']}, 'entries': []}}})
+        source_doc = {
+            'schema': 'aae-bronze-plan-v1', 'family': 'BUILD Art', 'count': 2,
+            'derivedFrom': {'path': spec_rel, 'sha256': _pi.digest(spec_path),
+                            'level': 'Bronze'},
+            'rows': [
+                {'seq': 1, 'week': 5, 'part': 'B', 'title': 'A witnessed view',
+                 'outcome': 'Review and share a view.', 'spec': 'B.json'},
+                {'seq': 2, 'week': 5, 'part': 'D', 'title': 'A planned skill',
+                 'outcome': 'Plan an arts skill share.', 'spec': 'D.json'},
+            ],
+        }
+        source_path = put(source_rel, source_doc)
+        put(workbook_rel, {'plans': [clone(_P1)]})
+        registry_doc = {'schema': 'easter-plan-sources-v1', 'sources': [
+            {'path': workbook_rel, 'kind': 'workbook'},
+            {'path': source_rel, 'kind': 'award-rows'},
+        ]}
+        registry_path = put(registry_rel, registry_doc)
+
+        try:
+            _pi.ROOT = fixture
+            canonical = _pi.read_source(source_path, 'award-rows')
+            ids = [plan_id(plan) for plan in canonical]
+            rec('two-award-plans-in-one-family-week-have-distinct-identities',
+                'Two plans have the same family and week, and no cells; the '
+                'old family/week key collapses them.',
+                (2, 2), (len(ids), len(set(ids))))
+
+            reordered = clone(source_doc)
+            reordered['rows'].reverse()
+            put(source_rel, reordered)
+            after = _pi.read_source(source_path, 'award-rows')
+            before_by_title = {p['title']: plan_id(p) for p in canonical}
+            after_by_title = {p['title']: plan_id(p) for p in after}
+            rec('award-identities-survive-row-reordering',
+                'Reordering the canonical source does not rebind either deck.',
+                before_by_title, after_by_title)
+            put(source_rel, source_doc)
+
+            indexed, provenance = _pi.load_registry(registry_path)
+            deck_number = 0
+
+            def judged(plan, changes=None):
+                nonlocal deck_number
+                deck_number += 1
+                cfg = {'id': 'TEST', 'family': plan['family'],
+                       'week': plan['ruledWeek'], 'title': plan['title'],
+                       'cells': clone(plan['cells']),
+                       'outcomes': clone(plan['outcomes']),
+                       'artsAward': clone(plan['artsAward']),
+                       'planId': plan_id(plan)}
+                cfg.update(changes or {})
+                deck = fixture / f'award-{deck_number}.html'
+                deck.write_text('<!doctype html><html><head><script '
+                                'id="lesson-config" type="application/json">' +
+                                json.dumps(cfg) + '</script></head><body></body></html>',
+                                encoding='utf-8')
+                return judge(deck, indexed)
+
+            rec('correct-award-declarations-bind-to-canonical-plans',
+                'Both the slot-dependent Part B and independent Part D bind.',
+                ['PASS', 'PASS'], [judged(p)['status'] for p in canonical])
+            plan = canonical[0]
+            for cid, field, value in [
+                ('a-stale-id-cannot-hide-a-changed-award-level', 'level', 'Silver'),
+                ('a-stale-id-cannot-hide-a-changed-award-part', 'parts', ['D']),
+                ('a-stale-id-cannot-hide-a-missing-award-slot', 'slots', []),
+            ]:
+                award = clone(plan['artsAward'])
+                award[field] = value
+                result = judged(plan, {'artsAward': award})
+                rec(cid, 'Keep the valid planId but change the declaration: '
+                    'empty matching cells must not hide the change.',
+                    ('RED', False), (result['status'], result.get('awardMatches')))
+
+            result = judged(plan, {'outcomes': ['An unrelated outcome.']})
+            rec('an-award-deck-with-wrong-outcomes-reds',
+                'A valid ID cannot bind a changed teaching outcome.',
+                ('RED', False), (result['status'], result['outcomesMatch']))
+            result = judged(plan, {'cells': ["'S'!C99"]})
+            rec('a-cell-less-award-deck-claiming-a-cell-reds',
+                'Award binding must never fabricate workbook coverage.',
+                ('RED', ["'S'!C99"]), (result['status'], result['extraCells']))
+            rec('an-unknown-award-plan-id-reds',
+                'A declared award does not excuse an ID absent from registered sources.',
+                'RED', judged(plan, {'planId': 'unknown-plan-id'})['status'])
+
+            rec('changed-award-identity-fields-are-refused',
+                'A stale ID cannot hide a changed family, week or title.',
+                ['RED', 'RED', 'RED'],
+                [judged(plan, {key:value})['status'] for key,value in
+                 [('family','GROW Art'), ('week',99), ('title','Another title')]])
+
+            actual_hashes = {row['path']: row['sha256'] for row in provenance['sources']}
+            expected_hashes = {rel: _pi.digest(fixture / rel)
+                               for rel in [workbook_rel, source_rel]}
+            rec('registry-provenance-records-the-bytes-actually-read',
+                'Both sources and the registry itself carry measured SHA-256 values.',
+                (expected_hashes, _pi.digest(registry_path)),
+                (actual_hashes, provenance['registrySha256']))
+            rec('a-missing-plan-registry-is-refused',
+                'No registry is an error, not a zero-plan success.',
+                True, refused(lambda: _pi.load_registry(fixture / 'absent.json')))
+            missing_doc = clone(registry_doc)
+            missing_doc['sources'].append({'path': 'missing.json', 'kind': 'workbook'})
+            missing_registry = put('missing-source-registry.json', missing_doc)
+            rec('a-missing-registered-source-is-refused',
+                'A named missing source cannot be silently excluded.',
+                True, refused(lambda: _pi.load_registry(missing_registry),
+                              'registered source absent'))
+
+            altered_spec = clone(spec_doc)
+            altered_spec['planted_change'] = True
+            put(spec_rel, altered_spec)
+            rec('a-stale-award-spec-origin-is-refused',
+                'Even a valid-shaped source is refused when SPEC bytes changed '
+                'without the canonical plan digest following them.',
+                True, refused(lambda: _pi.load_registry(registry_path), 'stale source digest'))
+            put(spec_rel, spec_doc)
+
+            rec('duplicate-plan-identities-within-a-source-are-refused',
+                'A dict overwrite must not hide two rows with the same plan identity.',
+                True, refused(lambda: _pi.index_plans([canonical[0], canonical[0]]),
+                              'duplicate plan identity'))
+            put('duplicate-workbook.json', {'plans': [clone(_P1)]})
+            duplicate_registry_doc = clone(registry_doc)
+            duplicate_registry_doc['sources'].append({
+                'path': 'duplicate-workbook.json', 'kind': 'workbook'})
+            duplicate_registry = put('duplicate-registry.json', duplicate_registry_doc)
+            rec('duplicate-plan-identities-across-sources-are-refused',
+                'A later registered source cannot overwrite an earlier plan.',
+                True, refused(lambda: _pi.load_registry(duplicate_registry),
+                              'duplicate IDs across sources'))
+
+            target_doc = {
+                'plansFrom': 'row', 'count': len(canonical),
+                'derivedFrom': {'path': source_rel, 'sha256': _pi.digest(source_path)},
+                'batch': [],
+            }
+            for index, (source_row, p) in enumerate(zip(source_doc['rows'], canonical)):
+                target_doc['batch'].append({
+                    'planIndex': 1001 + index, 'family': p['family'],
+                    'week': p['ruledWeek'], 'cells': clone(p['cells']),
+                    'title': p['title'], 'subject': p['subject'],
+                    'outcomes': clone(p['outcomes']), 'artsAward': clone(p['artsAward']),
+                    'route': f'Art/fixture-{index}.html', 'spec': source_row['spec'],
+                })
+            rec('canonical-award-targets-are-accepted',
+                'A true projection of the canonical source is accepted.',
+                ['B.json', 'D.json'], sorted(_pi.validate_award_targets(target_doc)))
+            tampering = []
+            for field, replacement in [
+                ('outcomes', ['A substituted outcome.']), ('week', 6),
+                ('title', 'A substituted title'), ('cells', ["'S'!C99"]),
+                ('artsAward', {'level': 'Bronze', 'parts': ['D']}),
+            ]:
+                changed = clone(target_doc)
+                changed['batch'][0][field] = replacement
+                tampering.append((field, refused(
+                    lambda: _pi.validate_award_targets(changed),
+                    'differs from its canonical plan')))
+            rec('changed-award-target-fields-are-refused',
+                'A matching source-file digest does not excuse hand-edited '
+                'target outcomes, week, title, cells or award declaration.',
+                [(field, True) for field, _ in tampering], tampering)
+            stale_target = clone(target_doc)
+            stale_target['derivedFrom']['sha256'] = '0' * 64
+            rec('a-stale-target-source-digest-is-refused',
+                'Target rows do not make an obsolete source digest acceptable.',
+                True, refused(lambda: _pi.validate_award_targets(stale_target),
+                              'target source digest is stale'))
+        finally:
+            _pi.ROOT = original_root
+
+# Additional controls to add alongside the reported fixes (not included above
+# until their intended contract is implemented): duplicate canonical spec names,
+# duplicate target routes and planIndex values, non-empty count agreement, and a
+# --only selector that matches zero rows. All should refuse before a deck is written.
+
+CONTROL_IDS += ADDED_CONTROL_IDS
+
+
 def self_test() -> dict:
     res = controls()
     ids = [r["id"] for r in res]
@@ -319,7 +583,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("decks", nargs="*")
     ap.add_argument("--scope", choices=("authored",))
-    ap.add_argument("--targets", default=str(TARGETS))
+    ap.add_argument("--targets", help="Explicit single workbook source; default reads PLAN_SOURCES.json")
     ap.add_argument("--output")
     ap.add_argument("--list-controls", action="store_true")
     ap.add_argument("--self-test", action="store_true")
@@ -336,7 +600,18 @@ def main() -> int:
         print("PASS" if rep["allListedControlsFired"] else "MEASUREMENT INVALID")
         return 0 if rep["allListedControlsFired"] else 1
 
-    by_id, digest = load_plans(Path(a.targets))
+    provenance = {}
+    try:
+        if a.targets:
+            by_id, digest = load_plans(Path(a.targets))
+        else:
+            by_id, provenance = _pi.load_registry()
+            digest = _pi.digest(TARGETS)
+            for source in provenance["sources"]:
+                print(f"SOURCE {source['path']}: {source['plans']} plans; sha256 {source['sha256']}")
+    except (ValueError, OSError, KeyError) as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
     paths = [Path(d) for d in a.decks]
     if a.scope == "authored":
         paths = []
@@ -362,7 +637,7 @@ def main() -> int:
         o.parent.mkdir(parents=True, exist_ok=True)
         o.write_text(json.dumps({"gate": "g29-plan-binding", "toolVersion": VERSION,
                                  "file": "_sownb/vb/tools/g29_plan_binding.py",
-                                 "targetsSha256": digest, "decks": len(recs),
+                                 "targetsSha256": digest, **provenance, "decks": len(recs),
                                  "red": len(reds), "rows": recs}, indent=1) + "\n",
                      encoding="utf-8")
     return 0 if not reds else 1

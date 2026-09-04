@@ -67,6 +67,7 @@ SELFTEST_TOOLS = [
     "g27_no_filename_weeks.py",
     "g29_plan_binding.py",
     "g30_arts_award.py",
+    "tools/artsaward/slot_reader_selftest.py",
     "cgate_containment.py",
     "classic_v2_contract_selftest.py",
     "tools/easter/dedupe_stage_text.py",

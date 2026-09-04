@@ -40,6 +40,7 @@ import copy
 import hashlib
 import importlib.util
 import json
+import os
 import re
 import sys
 import tempfile
@@ -76,24 +77,10 @@ KEEP_CLASSES = ("slide-head", "phase-tag", "time-chip", "lundy-strip", "lundy",
 KEEP_TAGS = ("script", "style", "button", "h2")
 
 
-def _plan_id(plan: dict) -> str:
-    # A CELL-LESS PLAN STILL NEEDS A UNIQUE KEY, AND POSITION WILL NOT DO.
-    # The Bronze strand claims no workbook cell (AAE-H7: none of the seventeen
-    # uncovered BUILD Art cells states a Bronze Part A-D outcome, so claiming
-    # one would be a coverage lie). With cells empty, family+week is the key --
-    # and family+week is exactly the non-unique key g29 exists to catch, since
-    # Bronze runs two decks a week. So a cell-less plan keys on its own Arts
-    # Award declaration and title instead: content of the plan, like the cells
-    # are, and therefore stable when the plan file is reordered.
-    if plan.get("cells"):
-        tail = "|".join(sorted(plan["cells"]))
-    else:
-        aa = plan.get("artsAward") or {}
-        tail = "|".join(["award", str(aa.get("level", "")),
-                         ",".join(sorted(aa.get("parts", []))),
-                         str(plan.get("title", ""))])
-    key = "|".join([str(plan.get("family", "")), str(plan.get("ruledWeek", "")), tail])
-    return hashlib.sha256(key.encode("utf-8")).hexdigest()[:12]
+_pi_spec = importlib.util.spec_from_file_location("plan_identity", ROOT / "tools/easter/plan_identity.py")
+_pi = importlib.util.module_from_spec(_pi_spec)
+_pi_spec.loader.exec_module(_pi)
+_plan_id = _pi.plan_id
 
 
 def workbook_trace(plan: dict) -> str:
@@ -109,7 +96,7 @@ def workbook_trace(plan: dict) -> str:
     aa = plan.get("artsAward") or {}
     if aa.get("level"):
         parts = ", ".join(aa.get("parts", [])) or "unstated"
-        return (f'{aa["level"]} Arts Award, Part {parts} — no workbook cell '
+        return (f'{aa["level"]} Arts Award, Part {parts}; no workbook cell '
                 f'(AAE-H7)')
     return "no workbook cell"
 
@@ -494,6 +481,12 @@ def author(donor: Path, plan: dict, content: dict, out: Path) -> dict:
 
     author_print_pack(tree, plan, content)
     swept = sweep_donor_text(tree, donor, plan, content)
+    if plan.get("artsAward"):
+        pres_spec = importlib.util.spec_from_file_location("award_presentation", ROOT / "tools/easter/award_presentation.py")
+        presentation = importlib.util.module_from_spec(pres_spec)
+        pres_spec.loader.exec_module(presentation)
+        presentation.rebuild_print(tree, plan, content, workbook_trace(plan))
+        presentation.replace_runtime(tree, content, (ROOT / "tools/easter/award_chassis.js").read_text(encoding="utf-8"))
     html = lh.tostring(tree, encoding="unicode", doctype="<!doctype html>")
 
     # lesson-config replaced wholesale: no donor field may survive
@@ -529,6 +522,15 @@ def author(donor: Path, plan: dict, content: dict, out: Path) -> dict:
         cfg["tierLadder"] = content["tierLadder"]
     m = CONFIG_RE.search(html)
     html = html[:m.start(2)] + json.dumps(cfg, ensure_ascii=False) + html[m.end(2):]
+
+    if (plan.get("artsAward") or {}).get("slots"):
+        reader = (ROOT / "tools/artsaward/slot_reader.js").read_text(encoding="utf-8")
+        slot_url = os.path.relpath(ROOT / "tools/artsaward/SLOTS.json", Path(out).parent).replace(os.sep, "/")
+        slot_cfg = json.dumps({"required": plan["artsAward"]["slots"], "url": slot_url})
+        script = ('<script data-award-slot-reader>\n' + reader + '\n'
+                  + 'document.addEventListener("DOMContentLoaded",function(){MBMArtsSlots.mount('
+                  + slot_cfg + ');});\n</script>')
+        html = html.replace("</body>", script + "</body>")
 
     Path(out).parent.mkdir(parents=True, exist_ok=True)
     Path(out).write_text(html, encoding="utf-8")
@@ -649,6 +651,9 @@ def verify(donor, out, plan, content, old_id, new_id, reference=None) -> dict:
 # --------------------------------------------------------------------------
 
 CONTROL_IDS = [
+    "award-print-retains-every-check-and-only-its-own-figures",
+    "award-browser-title-and-runtime-replace-the-donor",
+    "an-award-trace-is-not-misread-as-a-part-name",
     "not-one-donor-sentence-survives",
     "the-donors-print-pack-does-not-survive-either",
     "a-print-heading-the-author-did-not-name-still-loses-its-donor-text",
@@ -914,6 +919,36 @@ def controls() -> list[dict]:
         "plan without a declaration must not gain one",
         ({"level": "Bronze", "parts": ["B"]}, False),
         (cfg4.get("artsAward"), "artsAward" in cfg5))
+    gate_spec = importlib.util.spec_from_file_location("award_gates", ROOT / "_sownb/vb/tools/g30_arts_award.py")
+    award_gates = importlib.util.module_from_spec(gate_spec)
+    gate_spec.loader.exec_module(award_gates)
+    rec("an-award-trace-is-not-misread-as-a-part-name",
+        "The real g31 must accept the generated trace; no-workbook-cell is a "
+        "coverage note, not the name of Bronze Part B.",
+        [], award_gates.g31(raw4, bronze["artsAward"], award_gates.spec()))
+    print_donor = _tmp(_DONOR.replace('</head>', '<title>Donor browser title</title><script id="n6m-guide-js">/* legacy guide */</script></head>').replace('</body>', '<section class="print-pack"><svg><text>Unrelated donor figure</text></svg></section><script>const obsolete = document.querySelectorAll("main.deck>.slide");</script></body>'))
+    print_content = json.loads(json.dumps(c4))
+    print_content['tierLadder'] = ['Core', 'Extend', 'Challenge']
+    print_content['print'] = {'intro': 'Record the actual evidence.', 'focusRows': ['My review'],
+        'tiers': ['Speak your review.', 'Write your review.', 'Explain your review.'],
+        'checks': ['Check ' + str(n) for n in range(1, 6)],
+        'figures': ['<svg><text>Source figure one</text></svg>', '<svg><text>Source figure two</text></svg>']}
+    print_out = o4.parent / 'print-control.html'
+    author(print_donor, bronze, print_content, print_out)
+    print_tree = lh.fromstring(print_out.read_text(encoding='utf-8'))
+    pack = print_tree.cssselect('.award-print')[0]
+    rec('award-print-retains-every-check-and-only-its-own-figures',
+        'A donor diagram and a fifth check expose the real print regressions: the learner sheet must match the spec.',
+        (2, ['Source figure one', 'Source figure two'], print_content['print']['checks'], True),
+        (len(pack.cssselect('.print-page')), [n.text_content() for n in pack.cssselect('svg')],
+         [n.text_content() for n in pack.cssselect('ol li')],
+         all(n.text_content().strip() for n in pack.cssselect('h1,h2,h3,th'))))
+    rec('award-browser-title-and-runtime-replace-the-donor',
+        'Two active navigation runtimes double each click, while the inherited guide exposes staff notes outside the dialog.',
+        (print_content['title'], 1, 0, False),
+        (print_tree.cssselect('title')[0].text, len(print_tree.cssselect('script[data-award-chassis]')),
+         len(print_tree.cssselect('#n6m-guide-js')), 'const obsolete' in print_out.read_text(encoding='utf-8')))
+    print_donor.unlink(missing_ok=True)
     d4.unlink(missing_ok=True)
 
     for f in (ds, ref):

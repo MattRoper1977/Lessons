@@ -85,6 +85,11 @@ def run(targets: Path, donors: Path, content_dir: Path, only: set | None) -> dic
     tdoc = json.loads(Path(targets).read_text())
     ddoc = json.loads(Path(donors).read_text())["families"]
 
+    if tdoc.get("plansFrom") == "row":
+        try:
+            pc.ad._pi.validate_award_targets(tdoc)
+        except (ValueError, OSError, KeyError) as exc:
+            raise SystemExit(str(exc))
     rows, results = tdoc["batch"], []
     for row in rows:
         if only is not None and row["planIndex"] not in only:
@@ -126,11 +131,14 @@ def run(targets: Path, donors: Path, content_dir: Path, only: set | None) -> dic
         results.append({**row, "file": row["route"],
                         "spec": _rel(spec), "donor": fam["donor"],
                         "verdict": rec["verdict"],
+                        "inputs": rec["inputs"],
                         "regressions": rec["regressions"],
                         "preExisting": rec["preExisting"],
                         "words": rec["author"].get("contentWords"),
                         "leaked": rec["author"].get("donorSentencesLeaked"),
                         "gates": {k: v["verdict"] for k, v in rec["gates"].items()}})
+    if not results:
+        raise SystemExit("PROVENANCE REFUSAL: no target rows selected")
     built = [r for r in results if r["verdict"] in ("PASS", "RED")]
     return {"tool": VERSION, "inputs": inputs,
             "attempted": len(results),
@@ -162,7 +170,7 @@ def main() -> int:
         Path(a.output).parent.mkdir(parents=True, exist_ok=True)
         Path(a.output).write_text(json.dumps(doc, indent=1, default=str) + "\n",
                                   encoding="utf-8")
-    return 0 if doc["passed"] == doc["built"] else 1
+    return 0 if doc["passed"] == doc["built"] == doc["attempted"] else 1
 
 
 if __name__ == "__main__":
