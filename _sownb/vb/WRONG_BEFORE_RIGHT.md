@@ -1073,3 +1073,52 @@ lesson-config and reports on that set. Provenance, not equality.
 
 Same shape as the campaign's recurring mistake, one step in: I asked whether two
 values LOOKED the same instead of asking where each came from.
+
+---
+
+## The same guard in one tool and not the other, and a deck that lost its buttons
+
+WRONG: `strip_to_chassis` learned that a control surface is not donor text — I
+wrote `is_control_surface` there while building the chassis, because the sweep
+was eating the navigation bar. `author_deck.sweep_donor_text` does the same job
+on the shipping deck and never got it. It deleted the navigation from **fifteen
+of batch 3's twenty-four decks**: Previous, Next, Teacher tools, Evidence &
+print, Calm mode. A cover teacher could not change stage with the mouse or reach
+the print pack, and nothing errored.
+
+Batches 1 and 2 survived by ACCIDENT. `all_text_blocks` only reports blocks of
+eight words or more. BUILD and GROW button rows put spaces between the labels —
+thirteen words, over the floor, swept. LAUNCH rows run them together — under the
+floor, never offered to the sweep. **Whether a deck kept its navigation depended
+on whether somebody had put a space between two button labels.**
+
+RIGHT: the predicate is defined ONCE, in `author_deck`, and `strip_to_chassis`
+imports it. And both halves of the pipeline had to learn it together: with the
+sweep fixed and the leak gate left alone, twenty-two decks then reported a leak
+of exactly one block — the button row — because the gate reads text and those
+labels are legitimately in both donor and deck.
+
+The tell, for next time: I fixed a bug in the tool I was working in, and the same
+bug was in the tool one step downstream. A predicate needed in two places and
+written in one is not a fix, it is half of one. Ask, every time: **what else
+makes this same decision?**
+
+---
+
+## Three selectors, and the one I did not count
+
+WRONG: the campaign already had three instances of one shape — family+week
+keying picking the wrong plan, a typed task list deciding which plans existed,
+and a donor filter deciding no Art deck could be a donor. All three were
+recorded. None of them made me look at the fourth: a SWEEP is a selector too. It
+decides what stays in the document, and it was deciding in silence.
+
+RIGHT: the rule is now written down and checked rather than remembered —
+*every selector that narrows a candidate set must print its exclusions with
+reasons before the set is used* — as one control in g29, run against all four
+selectors this campaign ships, with a planted silent selector that must be
+caught.
+
+The tell: I had a pattern with three named instances and treated it as a lesson
+about the three. A pattern with three instances is a reason to go looking for the
+fourth.

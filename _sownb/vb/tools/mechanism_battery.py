@@ -79,7 +79,7 @@ SELFTEST_TOOLS = [
     "tools/easter/pick_art_donor.py",
     "tools/easter/strip_to_chassis.py",
     "tools/easter/prove_chassis.py",
-    "tools/easter/build_batch3_targets.py",
+    "tools/easter/build_batch_targets.py",
     "tools/easter/manifest_sequence.py",
 ]
 LIST_ONLY_TOOLS = [

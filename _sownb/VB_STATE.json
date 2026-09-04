@@ -3245,8 +3245,8 @@
   }
  },
  "resume_easter_a3": {
-  "order": "VB-EASTER-A3N-2",
-  "status": "RUNNING (#293 merged and blob-verified; batch 3 open as #294)",
+  "order": "VB-EASTER-A3N-3",
+  "status": "RUNNING (#295 merged and blob-verified; A3N-3 §2 open as #296)",
   "mainHeadVerification": "blob-verified: all ten paths changed by #281 hash identically between the merge commit and branch head b35588b; not taken from the merge status",
   "correction": "the previous revision of this key recorded main at 727c3162 and #281 as NOT MERGED on a stalled sixth check. The sixth check completed successfully at 22:50:33; the API served a stale job record. See EASTER_LEDGER.md 'CORRECTION' and WRONG_BEFORE_RIGHT.",
   "landed": [
@@ -3323,6 +3323,20 @@
     "merge": "7dbe4c74",
     "units": 0,
     "verified": "27 of 27 paths blob-identical between origin/main and the branch head"
+   },
+   {
+    "pr": 294,
+    "what": "BATCH 3, twenty-four lessons",
+    "merge": "8b6e465a",
+    "units": 24,
+    "verified": "90 of 91 paths blob-identical; the one mismatch was a file the batch deleted, restored in #295"
+   },
+   {
+    "pr": 295,
+    "what": "restore the §1a evidence file #294 deleted",
+    "merge": "a862e622",
+    "units": 0,
+    "verified": "2 of 2"
    }
   ],
   "open": [],
@@ -3330,7 +3344,8 @@
    "rule": "per batch, lesson units only (R1)",
    "batch1": "2/24",
    "batch2": "14/24",
-   "batch3": "24/24 FULL"
+   "batch3": "24/24 FULL",
+   "batch4": "0/24, 19 plans targeted"
   },
   "headline": {
    "inScope": 573,
@@ -3365,10 +3380,11 @@
    "evidence": "_sownb/vb/evidence/a3h6/"
   },
   "nextActions": [
-   "merge #294 and blob-verify",
-   "batch 4: the 19 overflow plans, week-major from W5",
+   "merge #296 and blob-verify",
+   "batch 4: 19 plans, W5-W7, Art donated by Art",
    "§4 data-ta1/ta2 estate-wide tail PR once its preconditions are met",
-   "A3-H11 needs a ruling before the six Science baseline cells can be closed"
+   "A3-H11 needs a ruling before the six Science baseline cells can close",
+   "A3-H14: whether to reshell the 42 older Art decks onto the current chassis"
   ],
   "humanItems": [
    "A3-H1",
@@ -3383,7 +3399,8 @@
    "A3-H10",
    "A3-H11",
    "A3-H12",
-   "A3-H13"
+   "A3-H13",
+   "A3-H14"
   ],
   "resumePointer": "_sownb/vb/EASTER_LEDGER.md",
   "a3h2": {
@@ -3727,6 +3744,49 @@
    "refused": "Science_Teesside/Launch/W14-W15_2026-27 keeps its cadence array on one hand-formatted line that no json.dumps reproduces; REFUSED rather than reflowed",
    "moved": "BUILD/GROW/LAUNCH Humanities 8 -> 10 lessons, 320 -> 400 minutes",
    "openTail": "A3-H13, nine further unlisted decks in those folders, six of them pre-dating this campaign"
+  },
+  "a3n3": {
+   "correction1": "no sleep-waiting: CI is read at most three times per job-ceiling interval, and the next branch is cut while checks run",
+   "correction2": "the donor filter decided what existed; ART_DONOR_v1 retired as a donor",
+   "defectFound": {
+    "what": "author_deck.sweep_donor_text deleted the navigation bar from 15 of batch 3's 24 decks",
+    "impact": "no Previous/Next, no Teacher tools, no Evidence & print, no Calm mode; nothing errored",
+    "whyBatches1And2Survived": "all_text_blocks has an eight-word floor. BUILD and GROW button rows put spaces between labels (13 words, swept); LAUNCH rows run them together (under the floor, never offered to the sweep). Whether a deck kept its navigation depended on whether somebody had put a space between two button labels.",
+    "fix": "is_control_surface defined once in author_deck and imported by strip_to_chassis; the leak gate excludes control surfaces too",
+    "repair": "all 24 batch-3 decks rebuilt, 24/24 PASS, 9-11 buttons each"
+   },
+   "selectorRule": {
+    "statement": "every selector that narrows a candidate set must print its exclusions with reasons before the set is used",
+    "where": "one control in g29, run against pick_art_donor.is_candidate, build_batch_targets.build, author_deck.sweep_donor_text and manifest_sequence.plan",
+    "mustFire": "a planted selector that drops three items and explains one is caught",
+    "instances": [
+     "family+week keying",
+     "a typed task list",
+     "the donor filter",
+     "the donor-text sweep"
+    ]
+   },
+   "filterFixed": {
+    "wrongPredicate": "a donor had to already carry a lesson-config; strip_to_chassis writes one",
+    "scan": "699 deck-shaped files, 40 signature-complete, 659 excluded each with reasons (was: 136 reported, exclusions invisible)",
+    "mustNotExclude": "the 18 Spring2 OUTSTANDING_V3 Art decks named by path; each dropped only for furniture it genuinely lacks"
+   },
+   "artDonors": {
+    "BUILD": [
+     "Art_Teesside/BUILD_W1-W8_2026-27/BUILD_Art_W3_Find_Out_About_An_Artist_Whose_Work.html",
+     0.153
+    ],
+    "GROW": [
+     "Art_Teesside/GROW_W1-W8_2026-27/GROW_Art_W3_Plan_An_Identity_Portrait_Or_Piece.html",
+     0.098
+    ],
+    "LAUNCH": [
+     "Art_Teesside/LAUNCH_W1-W8_2026-27/LAUNCH_Art_W1_Set_Arts_Development_Goals_Silver_Gold_Unit.html",
+     0.158
+    ],
+    "note": "an Art deck is now the best-margin candidate in BUILD, ahead of the ASDAN deck the first filter picked"
+   },
+   "notSupported": "the 42 pre-existing Art decks still cannot be donors: no guide toggle, no print pack, no splash. After a strip removes all content a donor contributes only furniture, and theirs is a strict subset. Logged as A3-H14."
   }
  }
 }
