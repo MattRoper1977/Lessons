@@ -11,9 +11,17 @@ is **inferred from the deck's own words**, not read from a declaration. An
 inference is a place to look, not a verdict. g30–g35 refuse to guess a level;
 this survey guesses on purpose so the list has something in it.
 
-- deck-shaped files naming the Arts Award: **76**
+- deck-shaped files naming the Arts Award: **82**
 - declaring an `artsAward` block: **0**
-- carrying at least one contradiction: **3**
+- carrying at least one contradiction: **2**
+
+**A venue line in the list below is a place to classify, not a verdict.**
+This survey reports *every* mention so the classification has a complete
+list; it does not apply g32's narrowing. AAE-R1B R2 classified the estate's
+twenty venue mentions and found **one ASSERTED and nineteen EXAMPLE** — a
+Teesside Art deck may name Teesside's gallery, and most of them do exactly
+that. The classifier that produced that verdict, and the line-by-line list,
+land with R2.
 
 ## Requirement → served by → evidence route → verdict
 
@@ -83,10 +91,6 @@ the register yet. The rows fill in as decks are authored or repaired with an
 - line 341: a venue named in the deck rather than in SLOTS.json — `</div></div></div><div class="slide" data-title="Arrival Task" data-timer="3" id="arrival-slide"> <span class="slide-tag`
 - line 342: a venue named in the deck rather than in SLOTS.json — `<div id="print-area"><div id="print-ko" class="print-section"><h2>Knowledge Organiser</h2><div class="prevent-break"><ta`
 - line 407: a venue named in the deck rather than in SLOTS.json — `const _ccQuestions={"Title": {"F": "What are we finding out about artists today?", "M": "What makes research count as ev`
-
-**Art_Teesside/Grow/GROW_ART_W4_Arts_Event_Attend_Capture_and_Review.html** — inferred Bronze (1)
-
-- line 359: a venue named in the deck rather than in SLOTS.json — `<div class="ilm" role="img" aria-label="A ticket, a camera capture and a review card from a real arts event"><svg viewBo`
 
 
 ## What this survey does not do

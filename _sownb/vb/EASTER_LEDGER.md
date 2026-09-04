@@ -1494,6 +1494,7 @@ right for work that predates the register — but they are new work, and the
 register is what makes `--scope new` mean something for the Bronze, Explore and
 Silver decks still to be authored.
 
+
 ## AAE-R1B R2 — the venue mentions, classified line by line
 
 R2: classify every line EXAMPLE (an organisation named as teaching content or
@@ -1545,3 +1546,36 @@ Nineteen EXAMPLE lines are untouched, by design and by the order. A control
 holds that default open: *a bare fact defaults to EXAMPLE, because a Teesside
 Art deck may name Teesside's gallery.* Another refuses to apply a conversion
 whose string no longer matches its file, rather than editing blind.
+
+### R3(i) — the census answer, measured rather than promised
+
+The survey checks **eight** kinds of contradiction against the register. Across
+all **82** decks that name the Arts Award, seven of them return zero:
+
+    a level name that is not this deck's level          0
+    a qualification number that is not this deck's      0
+    UCAS outside Gold                                   0
+    'leadership' in an Explore deck                     0
+    a dated event inside the deck                       0
+    a visit asserted in the deck                        0
+    a requirement the register does not carry           0
+    a venue named in the deck rather than in SLOTS.json 10 → 9
+
+**Not one deck in this estate makes a false factual claim about the Arts
+Award.** Every finding was a venue mention, and R2 classified those: one
+ASSERTED, nineteen EXAMPLE. So R3(i) repairs nothing — and that is the census's
+answer, not its failure to look. *"Zero units unless a deck is materially
+rewritten"* resolves to zero, with the seven zeros printed above as the reason.
+
+**Ten against eleven, and both right.** The survey counts *lines*; the
+classifier counts *mentions*. In the same three decks that is 10 against 11,
+because line 341 of `BUILD_ART_A2_W2` carries two — a pres-card `🖼️ MIMA` and
+the answer line `MIMA or own answer`. A record that reported one of those
+numbers without the other would look like a discrepancy for the rest of the
+campaign.
+
+**One caveat stated rather than buried.** g32 judges only decks that declare an
+`artsAward` block, and every live deck is UNDECLARED, so g32 itself never
+judged the converted line. The classifier is the measurement here. g32 binds
+the Bronze, Explore and Silver decks still to be authored, which is where a
+binding gate can do its work.
