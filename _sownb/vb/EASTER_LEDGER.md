@@ -1945,3 +1945,15 @@ All 42 content units and the two secondary placement rows are merged and recorde
 ## Verified merge #310
 
 Exact head `df0c49f220b20b42877ff8a13c53094ea3ff768f` merged as `023741d3b2815b55b6802bfb1f1822c647e9e7df`. Against actual fork `72413ab65cccd10483936e8dc4b3c431e6404400`, all 4/4 changed blobs match. Evidence: `_sownb/vb/evidence/aae/merge310.json`. Required head runs: 33923406849. This record does not itself claim served-byte equality.
+
+## Verified merge #311
+
+Exact head `f329d3677f835fcdc13d86f39f77052b330d9183` merged as `fef71f7b2378cab30c6a55f22ad8e8e85341d658`. Against actual fork `023741d3b2815b55b6802bfb1f1822c647e9e7df`, all 3/3 changed blobs match. Evidence: `_sownb/vb/evidence/aae/merge311.json`. Required head runs: 33923846740,33923846321,33923846447,33923846350. This record does not itself claim served-byte equality.
+
+## Verified companion Apps pin #21
+
+Exact head `6914bff4e3159be122ed7c42e09b5de138f765aa` merged as `51b8afc7be8cc1f816b062ea19f423055838c2d1`. Against its actual fork `650bd37aba5c6d57e9cbb876092897796b00a32e`, the one intended shared pin file is blob-identical (1/1); no Apps product file changed. Runs: 33921813766,33921813836,33921813773. Evidence: `_sownb/vb/evidence/aae/apps_merge21.json`. Zero lesson units and cells.
+
+## Wider Easter programme explicitly resumed — 2026-09-04
+
+Matt reaffirmed Science, Humanities, ASDAN and Art across BUILD/GROW/LAUNCH using the SoW, weekly timetable and school year. This preserves the AAE close in progress and resumes the wider programme after it. Four content batches (#288/#290/#294/#297) total 59 lessons; 42 award lessons are a separate strand. Fresh g29 reads 101 PASS, 0 RED, 3 nonlesson chassis SKIP. Direct read-only OOXML inspection agrees with all 897 spine identities; one verbatim-outcome difference is a trailing space on BUILD Autumn C104. The 575 rows at or before week26 retain the two existing GROW Careers scope exclusions, giving 573. The calendar boundary is Thursday25 March2027; no Spring2 sixth week or summer authoring. Raw lexical coverage is a diagnostic, not a licence to replace a working lesson or infer pupil evidence. Full A3N source text was not recovered from personal context; the visible AAE night rules, committed rulings and existing instruments remain in force.
