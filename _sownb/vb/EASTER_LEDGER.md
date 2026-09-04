@@ -1579,3 +1579,44 @@ campaign.
 judged the converted line. The classifier is the measurement here. g32 binds
 the Bronze, Explore and Silver decks still to be authored, which is where a
 binding gate can do its work.
+
+## The two things that stopped a Bronze deck being authorable
+
+Found by trying to build one, not by reading the code. `author_deck` has
+authored 59 decks and every one of them claims a workbook cell.
+
+**1. There was nowhere to put the declaration.** The lesson-config is assembled
+from the plan, and it had no `artsAward` key. All fourteen Bronze decks would
+have landed UNDECLARED — the exact condition the register was built to end, and
+RED under `--scope new`. The declaration is now carried from the plan, because
+it belongs to the plan and not to the prose: *a deck cannot be in the scheme for
+a reader and out of it for the gates.*
+
+**2. A cell-less plan raised on its own source block.**
+`cfg["source"]["cell"] = plan["cells"][0]` is an `IndexError` on an empty list,
+and AAE-H7 rules that the Bronze decks have one. A plan with no workbook cell
+now gets no `source` key rather than a `source` with an empty cell in it.
+
+### The part that needed thinking about rather than patching
+
+`_plan_id` keys on `family | ruledWeek | sorted(cells)`. With cells empty that
+collapses to **family and week** — precisely the non-unique key g29 exists to
+catch, and Bronze runs **two decks a week**. Every Bronze pair would have shared
+an id.
+
+A cell-less plan now keys on its own **Arts Award declaration and title**:
+content of the plan, exactly as the cells are, so the id still survives the plan
+file being reordered. Both halves are pinned — a must-fire twin proves the two
+week-5 Bronze plans get different ids, and the reorder control proves the id
+does not move.
+
+### Key order is part of what shipped
+
+`source` sits between `objective` and `timings` in every deck this campaign has
+authored. The first version of this change appended it instead, which is
+invisible in review and would have made every rebuilt deck differ from the deck
+that shipped. Written back into its own position, and **proved**: a landed
+batch-4 deck rebuilds **byte-identical** through the changed pipeline.
+
+    author_deck 16 controls, all fired (13 + 3)
+    mechanism 26 tools, 243 controls, derived, --prove-red PASS
