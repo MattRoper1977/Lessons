@@ -966,3 +966,43 @@ The pattern, again: I was tuning a measurement instead of deriving one, and
 noticed only because each attempt moved the same three decks in a different
 direction. A rule that has to be tried three times to get the answer you wanted
 is a rule being fitted to the answer.
+
+---
+
+WRONG: I launched the batch-2 authoring workflow with its task list TYPED OUT BY
+HAND from a truncated console print, instead of generated from
+`EASTER_TARGETS.json`. Twelve lessons began being written. Checking afterwards
+against the plans file:
+
+- **five of twelve had the wrong workbook cells** — `'BUILD Weekly - Autumn'!C41`
+  where the plan says `C60`, `!C43` where it says `C62`, `'LAUNCH Weekly -
+  Autumn'!C43` where it says `C202`;
+- **eight of twelve had the wrong OUTCOMES** — BUILD ASDAN week 2 really teaches
+  *"Complete a first-aid/safety challenge"* and *"Agree our project goal and
+  success criteria"*, and I had sent *"Junior/Young Duke: begin a skill
+  challenge"* and *"Community project: agree a class focus"*;
+- **two LAUNCH ASDAN plans share family+week**, so the build driver's
+  `family+week` lookup would have silently given the second deck the first
+  one's cells. Every gate would have passed it: g28 checks that a cell EXISTS,
+  not that this deck is the one that teaches it.
+
+The outcomes are the whole specification of a lesson. Eight lessons were being
+written to teach things the workbook does not ask for, in the week a cover
+teacher would deliver them.
+
+RIGHT: the run was stopped and relaunched with the task list GENERATED from the
+plans file and carrying `planIndex`, so the build driver addresses the exact
+plan rather than a non-unique key — with an assertion that the indexed plan's
+family and week match the spec. Cells are no longer passed into the prompt at
+all: they come from the plan at build time, so a prompt cannot get them wrong.
+
+This is the fourth instance of one mistake in this campaign, and by now it has a
+name: **I keep treating a rendering of a thing as the thing.** A status endpoint
+for a job. A merge status for the blobs. A handoff for the head. Now a console
+print for the plans file. Every time, the fix was the same — read the source —
+and every time I had just finished applying exactly that scepticism to someone
+else's instrument.
+
+The tell, for next time: I typed data into a tool call. Data that exists in a
+file should be read from the file by a script, even when it is only twelve rows
+and it is on the screen in front of me.

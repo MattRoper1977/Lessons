@@ -3246,7 +3246,7 @@
  },
  "resume_easter_a3": {
   "order": "VB-EASTER-A3N",
-  "status": "PAUSED (VB_EASTER_A3_PAUSED)",
+  "status": "RUNNING (batch 2 landed)",
   "mainHeadVerification": "blob-verified: all ten paths changed by #281 hash identically between the merge commit and branch head b35588b; not taken from the merge status",
   "correction": "the previous revision of this key recorded main at 727c3162 and #281 as NOT MERGED on a stalled sixth check. The sixth check completed successfully at 22:50:33; the API served a stale job record. See EASTER_LEDGER.md 'CORRECTION' and WRONG_BEFORE_RIGHT.",
   "landed": [
@@ -3322,9 +3322,9 @@
    "evidence": "_sownb/vb/evidence/a3h6/"
   },
   "nextActions": [
-   "merge #288 and blob-verify",
-   "batch 2: remaining week-1..7 cover-taught plans in the 9 families with donors",
-   "Art needs a donor before any Art plan can be built"
+   "merge #290 and blob-verify",
+   "batch 3: remaining cover-taught weeks 4-7",
+   "Art still blocked: no gate-readable donor in any Art family"
   ],
   "humanItems": [
    "A3-H1",
@@ -3333,7 +3333,9 @@
    "A3-H4",
    "A3-H5 (answered by R3)",
    "A3-H6 (closed)",
-   "A3-H7"
+   "A3-H7",
+   "A3-H8",
+   "A3-H9 (Humanities manifest sequence/notAuthoredYet needs updating for 3 new decks)"
   ],
   "resumePointer": "_sownb/vb/EASTER_LEDGER.md",
   "a3h2": {
@@ -3494,6 +3496,33 @@
    "cellsPerSession": 5,
    "note": "the 24-unit ceiling was never the constraint; authoring was"
   },
-  "catalogueGap": "N3e catalogue PR did not run for batch 1; hud-coverage rows not added; CI green without them"
+  "catalogueGap": "N3e catalogue PR did not run for batch 1; hud-coverage rows not added; CI green without them",
+  "batch2": {
+   "units": 14,
+   "cellsCovered": 31,
+   "headline": {
+    "inScope": 573,
+    "covered": 170,
+    "open": 403
+   },
+   "gates": {
+    "g23": "14/14 PASS",
+    "g18": "14/14 BINDING PASS",
+    "g25": "14/14 PASS",
+    "g28": "14/14 PASS",
+    "g24": "14/14 RED - estate-wide print-dead, A2R R3"
+   },
+   "donorLeakage": 0,
+   "cellsUnique": "31 of 31, no collision",
+   "method": "workflow: author per plan, adversarial review per draft, rewrite all rejects; all 14 first drafts were rejected",
+   "defectsCaught": [
+    "data-ta1/ta2 render nowhere in this chassis",
+    "three donor print blocks survived every role handler incl. the donor's own SoW cell",
+    "driver keyed on family+week where two plans share week 1",
+    "three decks under the family floor",
+    "two decks declared an uncorroborated we-do type"
+   ],
+   "manifestRefused": "Humanities packs use a foreign schema (sequence/notAuthoredYet/weekSpine); rewriting one made it inconsistent; reverted and the tool now leaves unknown schemas alone"
+  }
  }
 }
