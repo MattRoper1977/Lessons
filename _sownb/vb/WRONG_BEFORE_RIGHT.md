@@ -1227,3 +1227,27 @@ about a branch or an intention. The question is not "did I run the check" but
 invalidates every check that ran before it, and the cheapest habit is to re-run
 the estate-wide checks as the last thing before the commit, not the first thing
 after the fix.
+
+---
+
+## The SHA I typed instead of read
+
+WRONG: merging #297 needs `expectedHeadSha`, the guard that stops a merge racing
+a push. I supplied `dfe99f5c8e0eb4a58fa0e8e9d5c25e56b0dbfe4c` — extended out of
+the short `dfe99f5` I had in front of me. GitHub answered **"Head branch was
+modified. Review and try the merge again."**
+
+That message is wrong about the cause, and believing it would have sent me
+looking for a phantom push. The branch had not moved. The head was
+`dfe99f545b1e2ecba658a5bef9700279558a96e4`, and every character after the
+seventh in what I sent was invented.
+
+RIGHT: `git rev-parse origin/codex/vb-easter-a3n3-batch4`, then merge. 89 of 89
+paths blob-identical.
+
+The tell, for next time: **A3N §2c is not only about task lists.** *No data
+typed into a tool call from a console print, a summary, or memory — ever* covers
+a commit SHA as squarely as it covers a target list, and an abbreviated SHA is a
+summary. The guard did its job; what it could not do was name the real fault,
+and a mismatch guard never can. Any parameter that identifies a specific object
+gets read from the object.
