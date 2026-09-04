@@ -1672,3 +1672,21 @@ not a reader failure. The no-store source control stays. A disposable generated
 fixture and the actual fourteen-deck browser gate now cover toolbar, keyboard,
 modal, source-matched print and file-reader behaviour. These are checks of
 behaviour and print content, not a claim about PDF pagination.
+
+
+## AAE assertion-scope correction — zero lesson units
+
+R1 requires asserted attendance and booking to fire, while ticket examples,
+Exit Ticket headings and organisations used as teaching examples must remain
+allowed. Direct controls found missed asserted bookings and false positives
+on examples, historical dates, observed file counts and Silver's truthful
+restriction that its arts challenge must not focus on leadership.
+
+The focused correction keeps all fourteen original controls and adds twenty-nine
+positive and negative controls. g33 and g35 are unchanged. Natural explicit
+sharing instructions are accepted; a draft swap without a final evidenced share
+continues to fail. Both the old and corrected gate pass all fourteen Bronze
+decks. The full battery passes: 27 tools, 303 controls, planted difference caught.
+
+This is a separate zero-unit mechanism change. Bronze PR304 is not merged by
+this record; merge order and current-head CI remain required.
