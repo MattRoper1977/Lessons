@@ -1031,7 +1031,7 @@ given checksum rows with their manifests left to `manifest_sequence`. Existing
 checksum rows are untouched in every case; only new rows and `manifest.json`'s
 own digest moved.
 
-Mechanism **25 tools, 217 controls**, derived, `--prove-red` PASS.
+Mechanism **25 tools, 223 controls**, derived, `--prove-red` PASS.
 g29 across every authored deck: **43 decks, 40 PASS, 0 RED, 3 SKIP** — the three
 skips are the chassis, which carry no `planId` and are correctly not treated as
 lessons. g27 PASS. Stale-evidence sweep: 0 inconclusive rows.
@@ -1053,3 +1053,129 @@ by half is a choice worth recording as stable.
 
 The tell: `rm` in the middle of a repair, with the regeneration left to the end
 of a long run. The blob verification is what found it, which is what it is for.
+
+---
+
+## A3N-3 §2 — the selector ruling, and the defect it uncovered. PR #296
+
+**Ceiling: 0 lesson units.** No new lesson. Twenty-four existing ones repaired.
+
+### What the ruling asked for, and what looking for it found
+
+§2 ruled that the donor filter had decided what existed: it dropped every
+nine-stage Art deck, and "no Art family has a gate-readable donor" was a filter
+artifact rather than a finding. Print the exclusions with reasons, fix the
+filter, add a must-not-exclude control naming the eighteen, and register the
+pattern — family+week keying, the typed task list, the donor filter — as three
+instances of **a selector deciding what exists**.
+
+Doing that turned up a fourth instance, and it had shipped.
+
+### `sweep_donor_text` deleted the navigation bar from fifteen of batch 3's decks
+
+The sweep removes any text block present in the donor and absent from the family
+reference. A deck's **navigation is exactly that**: every chassis generation
+words its buttons differently, so the button row is never shared text between two
+families. It read the row as donor leak and deleted it — Previous, Next, Teacher
+tools, Evidence & print, Calm mode, all of it. Nothing errored, because a sweep
+that drops in silence has nothing to error about.
+
+**A cover teacher opening one of those decks could not move between stages with
+the mouse, reach the print pack, or turn calm mode on.**
+
+Batches 1 and 2 survived **by accident**, and the accident is the part worth
+keeping. `all_text_blocks` only reports blocks of eight words or more. The BUILD
+and GROW button rows separate their labels with spaces — *"Previous Teacher tools
+Evidence & print Calm mode …"* is thirteen words — so they crossed the floor and
+were swept. The LAUNCH rows run their labels together with no space, so they
+counted under eight and were never offered to the sweep at all. **Whether a deck
+kept its navigation depended on whether somebody had put a space between two
+button labels.**
+
+`strip_to_chassis` already had the guard — I wrote it there while building the
+chassis and never carried it into the tool that ships the deck. The predicate is
+now defined once, in `author_deck`, and imported by the strip.
+
+**Both halves had to move together.** With the sweep fixed and the leak gate left
+alone, twenty-two of twenty-four decks then reported a leak of exactly one block,
+and that block was the button row: the gate reads text, and the donor's button
+labels are legitimately present in both. The leak gate now excludes control
+surfaces too.
+
+**All twenty-four batch-3 decks rebuilt, 24/24 PASS, navigation restored,
+9–11 buttons each.**
+
+    the-navigation-survives-authoring          9 buttons -> 1 without the guard
+                                               9 buttons -> 9 with it
+
+### The selector rule, stated once and checked in g29
+
+> Every selector that narrows a candidate set must print its exclusions with
+> reasons before the set is used.
+
+It lives in g29 because g29 exists for the same shape one level down — a deck
+carrying the wrong plan's cells that every other gate passes. The control runs
+each selector this campaign ships on a planted input that forces it to drop
+something, and asserts every dropped item comes back with a reason:
+
+    pick_art_donor.is_candidate
+    build_batch_targets.build
+    author_deck.sweep_donor_text
+    manifest_sequence.plan
+
+with a must-fire twin: a planted selector that drops three items and explains one
+is caught. Red-proved — blanking one reason in the sweep names the offending
+tool and function by name.
+
+### The filter, fixed
+
+The requirement that a donor already carry a `lesson-config` was wrong, and it
+was the single predicate that dropped all forty-two nine-stage Art decks.
+`strip_to_chassis` **writes** a fresh lesson-config into the chassis, so the
+filter was demanding something the pipeline supplies for itself. Markers are now
+split into what the strip supplies and what the donor must already have — derived
+from the strip, not listed — and the scan covers **699 deck-shaped files** with
+every exclusion printed, where the first version reported only the 136 that
+survived it.
+
+    signature 26 markers, 1 of them supplied by the strip
+    deck-shaped scanned 699   signature-complete 40   excluded 659, each with reasons
+
+**The must-not-exclude control names the eighteen** Spring2 `OUTSTANDING_V3` Art
+decks by path and asserts that each is dropped only for furniture it genuinely
+lacks and the strip cannot invent — never for a marker the strip supplies, never
+for one the file actually has.
+
+### ART NOW DONATES TO ART
+
+With the filter fixed, an Art deck is the **best-margin candidate in BUILD**:
+
+    BUILD   +0.153  BUILD_Art_W3_Find_Out_About_An_Artist_Whose_Work   (Art)
+            +0.135  BUILD_ASDAN_W3_Cook_One_Snack…                     (the old pick)
+    GROW    +0.098  GROW_Art_W3_Plan_An_Identity_Portrait_Or_Piece     (Art)
+    LAUNCH  +0.158  LAUNCH_Art_W1_Set_Arts_Development_Goals           (Art)
+
+`BATCH4_DONORS.json` uses those three. **ART_DONOR_v1 is retired as a donor** and
+kept as the record of how the Art packs were bootstrapped.
+
+### The part of §2 the measurement does not support, stated plainly
+
+The forty-two Art decks that pre-date this campaign are still not donors, and the
+reason is now a fact about each file rather than an artifact. They carry **no
+guide toggle, no print pack and no splash** — `#n6m-guide-css`, `#n6m-guide-js`,
+`data-mbm-guide`, `.print-pack`, `.print-page`, `.n6-lc-page`, `.n6-splash` — all
+furniture the strip preserves and cannot invent. A chassis stripped from one
+would produce Art lessons with nothing to print and no adult guidance drawer:
+the two things the cover window most needs.
+
+And after a strip that removes every word of content, a donor contributes only
+furniture. Those decks' furniture is a strict subset of the campaign
+generation's, so an Art source of that vintage would give an Art lesson less,
+not more. **The three Art decks now used as donors are Art decks that carry the
+whole chassis**, which is the version of "use an Art source" the measurement
+supports. Logged as **A3-H14** if you want the older Art packs brought up to the
+current chassis instead.
+
+Mechanism **25 tools, 223 controls**, derived, `--prove-red` PASS.
+g29 across every authored deck: **43 decks, 40 PASS, 0 RED, 3 SKIP.**
+Stale-evidence sweep: 0 inconclusive rows. Nine packs verify with `sha256sum -c`.

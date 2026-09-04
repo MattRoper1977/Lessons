@@ -116,6 +116,8 @@ CONTROL_IDS = [
     "two-correctly-bound-decks-in-one-family-week-both-pass",
     "the-plan-id-survives-the-targets-file-being-reordered",
     "a-deck-with-no-planId-is-skipped-not-silently-passed",
+    "every-selector-prints-its-exclusions-with-reasons",
+    "a-selector-that-drops-in-silence-reds",
 ]
 
 _P1 = {"family": "F ASDAN", "ruledWeek": 1, "cells": ["'S'!C1", "'S'!C2"],
@@ -135,6 +137,87 @@ def _tmp(src: str) -> Path:
     return Path(fh.name)
 
 
+# THE SELECTOR RULE (Order A3N-3 §2), and why it lives in g29.
+#
+# g29 exists because a deck can carry the wrong plan's cells and every other
+# gate passes it. Three times in this campaign the same shape has appeared one
+# level up, in a SELECTOR -- something that decides what is in a set:
+#
+#   family+week keying     picked the first of two plans sharing a week, and the
+#                          second deck would have shipped the first's cells.
+#   a typed task list      decided which twelve plans existed; five cell sets and
+#                          eight outcomes were wrong.
+#   the donor filter       decided no Art deck could be a donor, from a predicate
+#                          list written from memory, and returned zero from 136.
+#
+#   and, found while acting on that third one:
+#   the donor-text sweep   decided the navigation bar was donor teaching and
+#                          deleted it from fifteen of twenty-four decks. Nothing
+#                          errored, because a sweep that drops in silence has
+#                          nothing to error about.
+#
+# The rule: EVERY SELECTOR THAT NARROWS A CANDIDATE SET MUST PRINT ITS
+# EXCLUSIONS WITH REASONS BEFORE THE SET IS USED. Stated once, checked here,
+# against every selector this campaign ships -- not as a style note, because a
+# style note would not have caught the sweep.
+def _selector_probes():
+    """(name, callable) -> (droppedCount, [reason per dropped item]).
+
+    Each probe plants an input that MUST drop something. A probe that drops
+    nothing is itself a failure: it would let a silent selector pass by never
+    exercising it.
+    """
+    import importlib.util as iu
+
+    def load(name, rel):
+        spec = iu.spec_from_file_location(name, ROOT / rel)
+        mod = iu.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        return mod
+
+    probes = []
+
+    def donor_filter():
+        pad = load("pick_art_donor", "tools/easter/pick_art_donor.py")
+        row = {"stageCount": 11, "dataMin": 0, "rootBlocks": 2, "pathway": None,
+               "g18": {"verdict": "RED", "words": 10, "floor": 900},
+               "marginFloor": None, "marginBand": None}
+        ok, why = pad.is_candidate(row)
+        return (0 if ok else 1), why
+    probes.append(("pick_art_donor.is_candidate", donor_filter))
+
+    def batch_targets():
+        bt = load("build_batch_targets", "tools/easter/build_batch_targets.py")
+        doc = bt.build(set())
+        return len(doc["held"]), [r.get("heldBecause") for r in doc["held"]]
+    probes.append(("build_batch_targets.build", batch_targets))
+
+    def donor_sweep():
+        ad = load("author_deck", "tools/easter/author_deck.py")
+        import lxml.html as lh
+        ref = json.loads((ROOT / "tools/easter/GREEN_REFERENCE_DECKS.json").read_text())
+        picks = [ROOT / d for d in ref["decks"]]
+        donor = next((q for q in picks if "BUILD_ASDAN" in q.name), picks[0])
+        reference = next((q for q in picks if "Humanities" in q.name), picks[-1])
+        tree = lh.fromstring(donor.read_text(encoding="utf-8"))
+        content = {"_reference": reference, "objective": "o"}
+        plan = {"cells": ["'S'!C1"], "outcomes": ["o"]}
+        swept = ad.sweep_donor_text(tree, donor, plan, content)
+        acted = [x for x in swept if x["action"] != "kept"]
+        return len(acted), [x.get("why") for x in acted]
+    probes.append(("author_deck.sweep_donor_text", donor_sweep))
+
+    def manifest_rows():
+        ms = load("manifest_sequence", "tools/easter/manifest_sequence.py")
+        pack = ROOT / "Humanities_Teesside/BUILD_W1-W8_2026-27"
+        rep = ms.plan(pack, only=set())
+        dropped = rep.get("refused", []) + [{"why": "unlisted, not added by this run"}
+                                            for _ in rep.get("unlistedNotAdded", [])]
+        return len(dropped), [x.get("why") for x in dropped]
+    probes.append(("manifest_sequence.plan", manifest_rows))
+    return probes
+
+
 def controls() -> list[dict]:
     out = []
 
@@ -142,6 +225,7 @@ def controls() -> list[dict]:
         out.append({"id": cid, "description": description, "expected": expected,
                     "observed": observed, "fired": expected == observed})
 
+    _selector_controls(rec)
     by_id = {plan_id(_P1): _P1, plan_id(_P2): _P2}
 
     steal = _tmp(_deck(["'S'!C1", "'S'!C2", "'S'!C9"], ["o1", "o2"], plan_id(_P1)))
@@ -182,6 +266,39 @@ def controls() -> list[dict]:
     for f in (steal, subset, d1, d2, nopid):
         f.unlink(missing_ok=True)
     return out
+
+
+def _selector_controls(rec):
+    results = []
+    for name, run in _selector_probes():
+        try:
+            dropped, reasons = run()
+        except Exception as exc:
+            results.append((name, "RAISED", str(exc)[:80]))
+            continue
+        if dropped == 0:
+            results.append((name, "DROPPED NOTHING",
+                            "the probe did not exercise the selector"))
+        elif not all(isinstance(r, str) and r.strip() for r in reasons):
+            results.append((name, "SILENT DROP",
+                            f"{sum(1 for r in reasons if not r)} of {dropped} carried no reason"))
+    rec("every-selector-prints-its-exclusions-with-reasons",
+        "every selector this campaign ships names what it dropped and why, on a "
+        "planted input that forces it to drop something",
+        [], results)
+
+    # MUST FIRE. A selector that drops without a reason has to be caught, or the
+    # control above is measuring nothing.
+    def silent():
+        return 3, [None, "", "a reason"]
+    bad = []
+    dropped, reasons = silent()
+    if not all(isinstance(r, str) and r.strip() for r in reasons):
+        bad.append(("planted-silent-selector", "SILENT DROP",
+                    f"{sum(1 for r in reasons if not r)} of {dropped} carried no reason"))
+    rec("a-selector-that-drops-in-silence-reds",
+        "a planted selector that drops three items and explains one is caught",
+        1, len(bad))
 
 
 def self_test() -> dict:

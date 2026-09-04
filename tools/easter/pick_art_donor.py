@@ -107,6 +107,23 @@ def markers_of(raw: str) -> set:
     return out
 
 
+# WHAT THE STRIP SUPPLIES, AND WHAT THE DONOR MUST ALREADY HAVE.
+#
+# Order A3N-3 §2. The first filter required a lesson-config of every candidate,
+# and that dropped every one of the estate's forty-two nine-stage Art decks --
+# the whole reason "no Art family has a gate-readable donor" was ever written
+# down. It was the wrong requirement: strip_to_chassis WRITES a fresh
+# lesson-config into the chassis, so needing one in the donor asked for
+# something the pipeline supplies for itself.
+#
+# The distinction is derivable rather than listed: a marker belongs here when
+# strip_to_chassis puts it into the chassis regardless of the donor. Everything
+# else is furniture the strip preserves and cannot invent, so the donor must
+# carry it -- and a deck lacking THOSE is excluded for a reason that is true of
+# the deck, not an artifact of how the filter was written.
+SUPPLIED_BY_STRIP = {"#lesson-config"}
+
+
 def signature(reference_paths: list[str]) -> set:
     common = None
     for rel in reference_paths:
@@ -118,9 +135,16 @@ def signature(reference_paths: list[str]) -> set:
 
 
 def has_signature(raw: str, sig: set) -> tuple[bool, list]:
+    """Missing markers, split into what matters and what the strip supplies."""
     have = markers_of(raw)
-    missing = sorted(sig - have)
+    missing = sorted((sig - have) - SUPPLIED_BY_STRIP)
     return (not missing), missing
+
+
+def missing_all(raw: str, sig: set) -> list:
+    """Every marker absent, including the ones the strip supplies, so the report
+    can show the whole picture rather than only the part that counts."""
+    return sorted(sig - markers_of(raw))
 
 
 # --------------------------------------------------------------------------
@@ -150,9 +174,24 @@ def feb_family_of(rel: str) -> str | None:
 
 
 # --------------------------------------------------------------------------
-def corpus(sig: set) -> list[str]:
-    """Cheap text pre-filter first. stages.measure() costs ~2s a deck; running
-    it over 600 deck-shaped files to find 48 candidates is an hour of nothing."""
+DECK_SHAPED = ('class="deck"', 'class="deck ', 'id="lessonDeck"', "slide-container")
+
+
+def corpus(sig: set) -> list[dict]:
+    """EVERY deck-shaped file, with the reason it was dropped if it was.
+
+    A3N-3 §2: a selector that narrows a candidate set must print its exclusions
+    with reasons BEFORE the set is used. The first version returned only the
+    files that survived, so the forty-two nine-stage Art decks it dropped were
+    invisible and "no Art family has a gate-readable donor" read as a finding
+    rather than as a filter artifact.
+
+    Measurement still stops at the first disqualifying marker, because
+    stages.measure costs about two seconds a deck and there are six hundred of
+    them. That is a stated bound, not a silent one: every row says how far it
+    got, so a row with `measured: false` is a row nobody has weighed rather than
+    a row that failed.
+    """
     out = []
     for path in sorted(ROOT.rglob("*.html")):
         rel = _rel(path)
@@ -162,9 +201,13 @@ def corpus(sig: set) -> list[str]:
             raw = path.read_text(encoding="utf-8", errors="replace")
         except Exception:
             continue
-        ok, _missing = has_signature(raw, sig)
-        if ok:
-            out.append(rel)
+        if not any(t in raw for t in DECK_SHAPED):
+            continue
+        ok, missing = has_signature(raw, sig)
+        out.append({"file": rel, "signatureComplete": ok,
+                    "signatureMissing": missing,
+                    "missingIncludingSuppliedByStrip": missing_all(raw, sig),
+                    "measured": ok})
     return out
 
 
@@ -211,7 +254,11 @@ def margin(row: dict):
 
 
 def is_candidate(row: dict) -> tuple[bool, list]:
+    """Every exclusion carries a reason, and the reasons are facts about the
+    file. A3N-3 §2: a selector that narrows a set must print what it dropped."""
     why = []
+    for m in row.get("signatureMissing", []):
+        why.append(f"no {m} (furniture the strip preserves and cannot invent)")
     if row["stageCount"] != 9:
         why.append(f"{row['stageCount']} stages, not 9")
     if row["dataMin"] < row["stageCount"]:
@@ -229,14 +276,23 @@ def is_candidate(row: dict) -> tuple[bool, list]:
 
 def pick(reference_paths: list[str]) -> dict:
     sig = signature(reference_paths)
-    pool_rels = corpus(sig)
-    rows = [measure_candidate(rel) for rel in pool_rels]
-    for r in rows:
+    scanned = corpus(sig)
+    rows = []
+    for entry in scanned:
+        if not entry["measured"]:
+            rows.append({**entry, "candidate": False,
+                         "excludedBecause": [
+                             f"no {m} (furniture the strip preserves and cannot invent)"
+                             for m in entry["signatureMissing"]]})
+            continue
+        r = measure_candidate(entry["file"])
+        r.update(entry)
         ok, why = is_candidate(r)
         r["candidate"], r["excludedBecause"], r["margin"] = ok, why, margin(r)
+        rows.append(r)
     chosen = {}
     for pw in PATHWAYS:
-        pool = [r for r in rows if r["candidate"] and r["pathway"] == pw]
+        pool = [r for r in rows if r.get("candidate") and r.get("pathway") == pw]
         pool.sort(key=lambda r: (-r["margin"], r["file"]))
         chosen[pw] = {
             "pick": pool[0] if pool else None,
@@ -244,11 +300,15 @@ def pick(reference_paths: list[str]) -> dict:
             "runnersUp": [{"file": r["file"], "family": r["family"],
                            "margin": r["margin"], "marginFloor": r["marginFloor"],
                            "marginBand": r["marginBand"]} for r in pool[1:4]]}
+    excluded = [r for r in rows if not r.get("candidate")]
     return {"tool": VERSION, "signature": sorted(sig),
             "signatureSize": len(sig),
+            "suppliedByStrip": sorted(SUPPLIED_BY_STRIP),
             "reference": reference_paths,
-            "signatureCorpus": len(pool_rels),
-            "candidates": sum(1 for r in rows if r["candidate"]),
+            "deckShapedScanned": len(scanned),
+            "signatureComplete": sum(1 for r in scanned if r["signatureComplete"]),
+            "candidates": sum(1 for r in rows if r.get("candidate")),
+            "excludedCount": len(excluded),
             "chosen": chosen, "rows": rows}
 
 
@@ -287,10 +347,19 @@ def controls(reference_paths: list[str] | None = None) -> list[dict]:
     rec("a-reference-deck-matches-the-signature-it-helped-derive",
         f"{Path(ref[0]).name} carries every marker in the intersection",
         True, has_signature(raw, sig)[0])
-    broken = raw.replace('id="lesson-config"', 'id="lesson-conf1g"')
+    # Seeded on a marker the STRIP DOES NOT SUPPLY, because #lesson-config is
+    # now excused -- and excusing it is the whole repair, so the control has to
+    # test the part that still bites.
+    broken = raw.replace('id="n6m-guide-js"', 'id="n6m-guide-j5"')
     rec("the-signature-fires-when-a-marker-is-removed",
-        "the same deck with its lesson-config id altered fails the signature",
-        (False, ["#lesson-config"]), has_signature(broken, sig))
+        "a deck missing the guide toggle fails the signature; the guide toggle is "
+        "furniture the strip preserves and cannot invent",
+        (False, ["#n6m-guide-js"]), has_signature(broken, sig))
+    rec("the-marker-the-strip-supplies-is-not-required-of-a-donor",
+        "a deck with no lesson-config is NOT excluded for that alone; "
+        "strip_to_chassis writes one",
+        True, "#lesson-config" not in has_signature(
+            raw.replace('id="lesson-config"', 'id="lesson-conf1g"'), sig)[1])
 
     # The four things v1 got wrong, pinned so they cannot come back.
     rec("hud-js-is-not-part-of-this-chassis",
@@ -329,6 +398,31 @@ def controls(reference_paths: list[str] | None = None) -> list[dict]:
                 mine = family_of(rel)
                 if mine is not None and mine != family:
                     disagree.append((rel, mine, family))
+    # THE MUST-NOT-EXCLUDE CONTROL, Order A3N-3 §2, naming the eighteen.
+    #
+    # The Spring2 OUTSTANDING_V3 Art decks -- six per pathway -- are the decks
+    # the first filter dropped, and dropping them is what made "no Art family
+    # has a gate-readable donor" look true. They are named here by path so that
+    # no future edit can exclude them again without this control saying so, and
+    # so that whatever reason IS given for them has to be a fact about the file.
+    eighteen = sorted(_rel(q) for q in ROOT.glob(
+        "Art_Teesside/*/Spring2_2026-27/*_OUTSTANDING_V3.html"))
+    bad = []
+    for relp in eighteen:
+        raw = (ROOT / relp).read_text(encoding="utf-8", errors="replace")
+        _ok, miss = has_signature(raw, sig)
+        # Not an artifact: every reason given must be a marker the file really
+        # lacks, and must not be one the strip supplies for itself.
+        for m in miss:
+            if m in SUPPLIED_BY_STRIP:
+                bad.append((relp, f"excluded for {m}, which the strip supplies"))
+            elif m in markers_of(raw):
+                bad.append((relp, f"excluded for {m}, which the file has"))
+    rec("the-eighteen-spring2-art-decks-are-never-excluded-by-an-artifact",
+        f"each of the {len(eighteen)} OUTSTANDING_V3 Art decks is dropped only for "
+        f"furniture it genuinely lacks and the strip cannot invent",
+        (18, []), (len(eighteen), bad[:4]))
+
     rec("route-derived-family-agrees-with-feb-where-feb-has-an-opinion",
         "no deck in a FEB baseline pattern is given a different family here",
         [], disagree[:5])
@@ -339,6 +433,11 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--reference", default=str(DEFAULT_REFERENCE))
     ap.add_argument("--output")
+    ap.add_argument("--output-full", dest="output_full",
+                    help="write every row, including the whole excluded corpus. Not "
+                         "for committing: a full-corpus report names a live lesson "
+                         "whose filename trips the fixture-name check, and that "
+                         "allowlist is frozen.")
     ap.add_argument("--self-test", action="store_true")
     ap.add_argument("--list-controls", action="store_true")
     ap.add_argument("--show-excluded", type=int, default=0)
@@ -368,10 +467,13 @@ def main() -> int:
     res = pick(ref)
     res["referenceFile"] = {"path": str(ref_file), "sha256": digest(ref_file)}
     print(f"{res['tool']}  signature {res['signatureSize']} markers from "
-          f"{len(ref)} green reference decks")
+          f"{len(ref)} green reference decks "
+          f"({len(res['suppliedByStrip'])} of them supplied by the strip and so "
+          f"not required of a donor: {', '.join(res['suppliedByStrip'])})")
     print(f"reference {ref_file}  sha256 {res['referenceFile']['sha256'][:16]}")
-    print(f"corpus {res['signatureCorpus']} signature-complete decks, "
-          f"{res['candidates']} candidates\n")
+    print(f"deck-shaped files scanned {res['deckShapedScanned']}, "
+          f"signature-complete {res['signatureComplete']}, "
+          f"candidates {res['candidates']}, excluded {res['excludedCount']}\n")
     for pw in PATHWAYS:
         c = res["chosen"][pw]
         print(f"--- {pw} ({c['poolSize']} candidates) ---")
@@ -390,15 +492,55 @@ def main() -> int:
         for r in c["runnersUp"]:
             print(f"    next  {r['margin']:.3f}  {r['file']}")
         print()
-    if a.show_excluded:
-        ex = [x for x in res["rows"] if not x["candidate"]]
-        print(f"--- excluded, {len(ex)} of {res['signatureCorpus']}, first {a.show_excluded} ---")
-        for r in ex[:a.show_excluded]:
-            print(f"    {r['file']}: {'; '.join(r['excludedBecause'])}")
+    # EVERY EXCLUSION, WITH ITS REASON, BEFORE THE SET IS USED (A3N-3 §2).
+    ex = [x for x in res["rows"] if not x.get("candidate")]
+    shown = ex if a.show_excluded in (0, None) else ex[:a.show_excluded]
+    print(f"--- excluded, {len(ex)} of {res['deckShapedScanned']} deck-shaped files ---")
+    for r in shown:
+        print(f"    {r['file']}")
+        for w in r["excludedBecause"]:
+            print(f"        -> {w}")
     if a.output:
+        # WHAT IS COMMITTED, AND WHY IT IS NOT EVERY ROW.
+        #
+        # This estate runs a check that reds on any fixture-marker token followed
+        # by two titlecase words, because a person-shaped canary string once
+        # shipped in a public repository. One live LAUNCH ASDAN careers lesson has
+        # a filename that trips it innocently -- the marker is a real word in the
+        # lesson's title -- and ten files already carry a per-file allowlist entry
+        # saying exactly that.
+        #
+        # A full-corpus report names that path, so committing one would need an
+        # eleventh entry, and the allowlist is FROZEN at 28 (N4). Naming the
+        # string in this comment would trip the check too, which is why it is
+        # described rather than quoted.
+        #
+        # The printed report above is complete and re-runnable, which is what the
+        # selector ruling asks for. What gets COMMITTED is every row carrying a
+        # judgement somebody might want to argue with -- every candidate, every
+        # Art deck, and the tallied reasons with counts -- plus the totals.
+        # `--output-full` writes everything, for reading, not for committing.
+        import collections
+        tally = collections.Counter()
+        for r in res["rows"]:
+            for w in r.get("excludedBecause", []):
+                tally[w] += 1
+        keep = [r for r in res["rows"]
+                if r.get("candidate") or "/Art" in r["file"] or "_ART" in r["file"]
+                or "_Art" in r["file"]]
+        scoped = {k: v for k, v in res.items() if k != "rows"}
+        scoped["rowsScope"] = ("every candidate and every Art deck; the full corpus "
+                               "is printed by the tool and written by --output-full")
+        scoped["rows"] = keep
+        scoped["exclusionTally"] = dict(tally.most_common())
         Path(a.output).parent.mkdir(parents=True, exist_ok=True)
-        Path(a.output).write_text(json.dumps(res, indent=1), encoding="utf-8")
-        print(f"\nwrote {a.output}")
+        Path(a.output).write_text(json.dumps(scoped, indent=1), encoding="utf-8")
+        print(f"\nwrote {a.output}  ({len(keep)} rows of {len(res['rows'])}, "
+              f"{len(tally)} distinct exclusion reasons)")
+    if a.output_full:
+        Path(a.output_full).parent.mkdir(parents=True, exist_ok=True)
+        Path(a.output_full).write_text(json.dumps(res, indent=1), encoding="utf-8")
+        print(f"wrote {a.output_full}  (every row)")
     return 0
 
 

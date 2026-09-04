@@ -112,42 +112,14 @@ def _clear(el) -> None:
 # already uses instead.
 TEXT_TAGS = tuple(sorted(ls.BLOCK_TAGS | {"span"}))
 
-# Interactive labels. A control surface reads as prose to any word counter --
-# the deck's own navigation is fifteen words of "Previous / Teacher tools /
-# Evidence & print / Calm mode / Static diagrams / Next" -- and every chassis
-# generation in this estate names those buttons differently, so it is never
-# shared text between two families and a shared-text rule alone calls it a
-# donor leak. It is not: it is the UI, s1b keeps navigation, and stripping the
-# labels leaves a row of blank buttons.
+# ONE definition of a control surface, in author_deck, used by both tools.
 #
-# Discriminated by STRUCTURE, not by element name or class: an element is a
-# control surface when every word it shows comes from an interactive child.
-# A <div> of buttons qualifies; a <nav> with a paragraph of teaching in it
-# does not, and would still be swept and still be flagged.
-INTERACTIVE = ("button", "a", "label", "summary", "option", "select", "input")
-
-
-def is_control_surface(el) -> bool:
-    text = " ".join((el.text_content() or "").split())
-    if not text:
-        return False
-    own = " ".join((el.text or "").split())
-    from_controls = []
-    for kid in el.iter():
-        if kid is el:
-            continue
-        if isinstance(kid.tag, str) and kid.tag.lower() in INTERACTIVE:
-            from_controls.append(" ".join((kid.text_content() or "").split()))
-            from_controls.append(" ".join((kid.tail or "").split()))
-    if own:
-        return False
-    # Compare CHARACTERS, not words. <div><button>Previous</button><button>Next
-    # </button></div> has text_content "PreviousNext" -- one word to any
-    # splitter, two to a reader -- so a word-count comparison called the
-    # clearest possible control surface prose and swept the navigation labels.
-    squash = lambda t: re.sub(r"\s+", "", t)
-    return bool(from_controls) and \
-        squash("".join(from_controls)) == squash(text)
+# It lived here first and author_deck did not have it, which is precisely how
+# the navigation bar survived the strip and was then deleted by the authoring
+# sweep -- the same predicate was needed in two places and existed in one. The
+# duplicate is gone rather than kept in step by hand.
+is_control_surface = ad.is_control_surface
+INTERACTIVE = ad.INTERACTIVE
 
 
 def furniture(reference_file: Path = REFERENCE) -> set:
