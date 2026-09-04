@@ -624,3 +624,15 @@ false record is worse than a missing one. DEFAULTED under N1b.
 
 Mechanism **17 tools, 158 controls**, derived, `--prove-red` PASS. g27 PASS.
 Both packs verify with `sha256sum -c`.
+
+**Merged** `840e7dbb52933ee1aaea646b9129a0e79af71273`, six of six checks green,
+23 of 23 paths blob-verified.
+
+**BATCH 1 CLOSE — the measured rate, stated plainly.** Batch 1 delivered **2
+units and 5 cells** across one full session. The ceiling of 24 was never the
+constraint; authoring was. 434 cells remain open, and a forecast that divides
+them by a 24-unit ceiling is wrong by more than an order of magnitude.
+
+**N3e's catalogue PR did not run** for this batch — hud-coverage rows were not
+added for the two new decks. CI is green without them, so it is a gap in the
+batch procedure rather than a broken gate. Batch 2 runs it.
