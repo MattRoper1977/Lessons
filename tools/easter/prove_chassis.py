@@ -163,18 +163,37 @@ GATES = (
 
 
 def prove(chassis: Path, plan_index: int, content_path: Path, reference: Path,
-          probe: Path | None = None) -> dict:
-    for label, path in (("chassis", chassis), ("content", content_path),
-                        ("reference", reference), ("targets", TARGETS)):
+          probe: Path | None = None, plan: dict | None = None,
+          plan_source: Path | None = None) -> dict:
+    """Author one deck against a chassis and gate it beside its donor.
+
+    THE PLAN COMES FROM THE WORKBOOK, OR FROM A STRAND THAT HAS ONE OF ITS OWN.
+    Every plan this campaign had authored until Bronze is a row of
+    EASTER_TARGETS.json, addressed by index. The Bronze strand's plan set is
+    BRONZE_PLAN.json instead: AAE-H7 ruled it claims no workbook cell, so there
+    is no row to index. Passing `plan` supplies it directly, and `plan_source`
+    is then REQUIRED -- a plan handed in without a file behind it is exactly
+    the untraceable input A3N-2 s2c refuses to start on.
+    """
+    required = [("chassis", chassis), ("content", content_path),
+                ("reference", reference)]
+    if plan is None:
+        required.append(("targets", TARGETS))
+    else:
+        if plan_source is None:
+            raise SystemExit("PROVENANCE REFUSAL: a plan was passed in with no "
+                             "plan_source file behind it. Every input must be "
+                             "traceable to a digest.")
+        required.append(("plan", plan_source))
+    for label, path in required:
         if not Path(path).is_file():
             raise SystemExit(f"PROVENANCE REFUSAL: {label} input {str(path)!r} is not a "
                              f"readable file. Every input must be traceable to a digest.")
-    inputs = {label: {"path": ad._rel(p), "sha256": digest(p)}
-              for label, p in (("chassis", chassis), ("content", content_path),
-                               ("reference", reference), ("targets", TARGETS))}
+    inputs = {label: {"path": ad._rel(p), "sha256": digest(p)} for label, p in required}
 
-    plans = json.loads(TARGETS.read_text())["plans"]
-    plan = plans[plan_index]
+    if plan is None:
+        plans = json.loads(TARGETS.read_text())["plans"]
+        plan = plans[plan_index]
     family = plan["family"]
     pathway = family.split()[0]
 
@@ -305,6 +324,35 @@ def controls() -> list[dict]:
     rec("provenance-refuses-an-input-that-is-not-a-file",
         "a content path that does not exist stops the run before authoring",
         True, not Path("tools/easter/content/__does_not_exist__.json").is_file())
+
+    # ---- A STRAND THAT BRINGS ITS OWN PLAN ---------------------------------
+    # The Bronze strand's plans are BRONZE_PLAN.json, not rows of the workbook
+    # target list. Two things must hold: the workbook stops being required, and
+    # a plan handed in without a file behind it is refused rather than trusted.
+    missing = Path("tools/easter/content/__does_not_exist__.json")
+    def _refusal(**kw):
+        try:
+            prove(Path("tools/donors/ART_DONOR_v1/BUILD_chassis.html"), 0, missing,
+                  Path("tools/donors/ART_DONOR_v1/BUILD_chassis.html"), **kw)
+        except SystemExit as e:
+            return str(e)
+        return ""
+    with_plan = _refusal(plan={"family": "BUILD Art", "ruledWeek": 1, "cells": [],
+                               "outcomes": ["x"]},
+                         plan_source=Path("tools/easter/EASTER_TARGETS.json"))
+    rec("a-strand-plan-drops-the-workbook-from-the-required-inputs",
+        "with a plan supplied the run no longer demands EASTER_TARGETS.json, and "
+        "the first thing it complains about is the input that is genuinely missing",
+        (True, False),
+        ("content" in with_plan, "targets" in with_plan))
+
+    no_source = _refusal(plan={"family": "BUILD Art", "ruledWeek": 1, "cells": [],
+                               "outcomes": ["x"]})
+    rec("a-plan-with-no-source-file-is-refused",
+        "MUST FIRE. A plan passed in with no file behind it is the untraceable "
+        "input A3N-2 §2c refuses to start on, and passing a dict is the easiest "
+        "way in the world to lose the digest",
+        True, "no plan_source file behind it" in no_source)
     return out
 
 

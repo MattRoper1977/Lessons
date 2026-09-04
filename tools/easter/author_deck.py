@@ -77,9 +77,41 @@ KEEP_TAGS = ("script", "style", "button", "h2")
 
 
 def _plan_id(plan: dict) -> str:
-    key = "|".join([str(plan.get("family", "")), str(plan.get("ruledWeek", "")),
-                    "|".join(sorted(plan.get("cells", [])))])
+    # A CELL-LESS PLAN STILL NEEDS A UNIQUE KEY, AND POSITION WILL NOT DO.
+    # The Bronze strand claims no workbook cell (AAE-H7: none of the seventeen
+    # uncovered BUILD Art cells states a Bronze Part A-D outcome, so claiming
+    # one would be a coverage lie). With cells empty, family+week is the key --
+    # and family+week is exactly the non-unique key g29 exists to catch, since
+    # Bronze runs two decks a week. So a cell-less plan keys on its own Arts
+    # Award declaration and title instead: content of the plan, like the cells
+    # are, and therefore stable when the plan file is reordered.
+    if plan.get("cells"):
+        tail = "|".join(sorted(plan["cells"]))
+    else:
+        aa = plan.get("artsAward") or {}
+        tail = "|".join(["award", str(aa.get("level", "")),
+                         ",".join(sorted(aa.get("parts", []))),
+                         str(plan.get("title", ""))])
+    key = "|".join([str(plan.get("family", "")), str(plan.get("ruledWeek", "")), tail])
     return hashlib.sha256(key.encode("utf-8")).hexdigest()[:12]
+
+
+def workbook_trace(plan: dict) -> str:
+    """What this deck traces back to, for the staff sheet and the print pack.
+
+    Every deck this campaign had authored before Bronze traced to workbook
+    cells. A Bronze deck traces to an Arts Award part instead. Joining an empty
+    cell list would print "Workbook trace:" followed by nothing, which tells a
+    cover teacher strictly less than saying where the deck actually comes from.
+    """
+    if plan.get("cells"):
+        return " · ".join(plan["cells"])
+    aa = plan.get("artsAward") or {}
+    if aa.get("level"):
+        parts = ", ".join(aa.get("parts", [])) or "unstated"
+        return (f'{aa["level"]} Arts Award, Part {parts} — no workbook cell '
+                f'(AAE-H7)')
+    return "no workbook cell"
 
 
 def _rel(p) -> str:
@@ -218,7 +250,7 @@ def author_print_pack(tree, plan: dict, content: dict) -> None:
                 h1.remove(k)
         for para in pack.xpath(".//p[b]"):
             label = (para.xpath("./b")[0].text or "").strip().rstrip(":")
-            value = {"Workbook trace": " · ".join(plan["cells"]),
+            value = {"Workbook trace": workbook_trace(plan),
                      "Verbatim outcome": " · ".join(plan["outcomes"]),
                      "Objective": content["objective"]}.get(label)
             if value is None:
@@ -370,8 +402,8 @@ def sweep_donor_text(tree, donor: Path, plan: dict, content: dict) -> None:
     rewrite = {
         "learning objective": f'Learning objective: {content["objective"]}',
         "objective": f'Objective: {content["objective"]}',
-        "sow": f'SoW: {" · ".join(plan["cells"])} — "{plan["outcomes"][0]}"',
-        "workbook trace": f'Workbook trace: {" · ".join(plan["cells"])}',
+        "sow": f'SoW: {workbook_trace(plan)} — "{plan["outcomes"][0]}"',
+        "workbook trace": f'Workbook trace: {workbook_trace(plan)}',
         "verbatim outcome": f'Verbatim outcome: {" · ".join(plan["outcomes"])}',
     }
     for el in list(tree.iter()):
@@ -469,11 +501,23 @@ def author(donor: Path, plan: dict, content: dict, out: Path) -> dict:
         "id": new_id, "family": plan["family"], "week": plan["ruledWeek"],
         "slot": content.get("slot", plan.get("subject", "")),
         "title": content["title"], "outcomes": plan["outcomes"],
-        "cells": plan["cells"], "objective": content["objective"],
-        "source": {"workbook": plan["workbook"], "sheet": plan["sheet"],
-                   "cell": plan["cells"][0]},
-        "timings": [s["minutes"] for s in content["stages"]],
+        "cells": plan.get("cells", []), "objective": content["objective"],
     }
+    # KEY ORDER IS PART OF WHAT SHIPPED. `source` sat between `objective` and
+    # `timings` in every deck this campaign has authored, so it is written back
+    # in that position rather than appended -- otherwise a rebuild of a landed
+    # deck differs from the deck, and reproducibility is one of the things the
+    # estate checks. A plan with no workbook cell simply skips the key.
+    if plan.get("cells"):
+        cfg["source"] = {"workbook": plan["workbook"], "sheet": plan["sheet"],
+                         "cell": plan["cells"][0]}
+    cfg["timings"] = [s["minutes"] for s in content["stages"]]
+    # THE DECLARATION g30-g35 READ. A deck that names the Arts Award and
+    # declares nothing is RED under --scope new, and rightly: otherwise the
+    # cheapest way past an Arts Award gate is to stop mentioning the Arts
+    # Award. The declaration belongs to the plan, not to the prose.
+    if plan.get("artsAward"):
+        cfg["artsAward"] = plan["artsAward"]
     # THE BINDING (A3N-2 §2a). Derived from the plan's own content so it cannot
     # drift when the targets file is regenerated, and so two plans sharing a
     # family and a week still have different ids -- which is exactly the case
@@ -618,6 +662,9 @@ CONTROL_IDS = [
     "a-content-spec-can-actually-ask-for-columns",
     "the-navigation-survives-authoring",
     "a-control-surface-is-recognised-by-structure-not-by-name",
+    "a-cell-less-plan-authors-and-traces-to-its-award-part",
+    "two-cell-less-plans-in-one-week-get-different-plan-ids",
+    "an-arts-award-declaration-reaches-the-lesson-config",
 ]
 
 _DONOR = """<!doctype html><html><head><style>.slide{display:none}
@@ -816,6 +863,58 @@ def controls() -> list[dict]:
         (r3["donorSentencesLeaked"],
          "C171" in body3,
          "'Y'!C9" in body3))
+
+    # ---- THE BRONZE STRAND: A PLAN WITH NO WORKBOOK CELL --------------------
+    # AAE-H7 ruled the Bronze decks claim no cell, because not one of the
+    # seventeen uncovered BUILD Art cells states a Bronze Part A-D outcome and
+    # claiming one would be a coverage lie. Three things have to hold for that
+    # to be safe, and each is measured here rather than assumed.
+    d4 = _tmp(_DONOR)
+    bronze = {"family": "BUILD Art", "ruledWeek": 5, "title": "The Experience, Captured",
+              "outcomes": ["Experience the arts event through the route in use."],
+              "cells": [], "subject": "Art",
+              "artsAward": {"level": "Bronze", "parts": ["B"]}}
+    c4 = json.loads(json.dumps(_CONTENT)); c4["id"] = "BRONZE_W5_B3"
+    o4 = Path(tempfile.mkdtemp()) / "bronze.html"
+    author(d4, bronze, c4, o4)
+    raw4 = o4.read_text(encoding="utf-8")
+    cfg4 = json.loads(CONFIG_RE.search(raw4).group(2))
+    rec("a-cell-less-plan-authors-and-traces-to-its-award-part",
+        "a Bronze plan claims no workbook cell, so the config carries no source "
+        "block with an empty cell in it, and the staff sheet's trace names the "
+        "Arts Award part rather than printing a label with nothing after it",
+        (False, [], True, False),
+        ("source" in cfg4, cfg4["cells"],
+         "Bronze Arts Award, Part B" in workbook_trace(bronze),
+         workbook_trace(bronze).strip() == ""))
+
+    # THE MUST-FIRE TWIN. family+week is precisely the non-unique key g29 was
+    # built to catch, and Bronze runs TWO decks a week. If the cell-less key
+    # fell back to family+week these two would collide silently.
+    twin = json.loads(json.dumps(bronze))
+    twin["title"] = "Choosing A Practitioner, And Saying Why"
+    twin["artsAward"] = {"level": "Bronze", "parts": ["C"]}
+    reordered = json.loads(json.dumps(bronze))
+    reordered["cells"] = []                       # same plan, read from a reordered file
+    rec("two-cell-less-plans-in-one-week-get-different-plan-ids",
+        "two Bronze plans share a family and a week and differ only in their "
+        "part and title; keying on family+week alone would give them one id, "
+        "and the id must still survive the plan file being reordered",
+        (False, True),
+        (_plan_id(bronze) == _plan_id(twin),
+         _plan_id(bronze) == _plan_id(reordered)))
+
+    plain = json.loads(json.dumps(_PLAN))
+    o5 = Path(tempfile.mkdtemp()) / "plain.html"
+    author(d4, plain, json.loads(json.dumps(_CONTENT)), o5)
+    cfg5 = json.loads(CONFIG_RE.search(o5.read_text(encoding="utf-8")).group(2))
+    rec("an-arts-award-declaration-reaches-the-lesson-config",
+        "g30-g35 read the artsAward block out of the lesson-config, and a deck "
+        "that names the award and declares nothing is RED under --scope new; a "
+        "plan without a declaration must not gain one",
+        ({"level": "Bronze", "parts": ["B"]}, False),
+        (cfg4.get("artsAward"), "artsAward" in cfg5))
+    d4.unlink(missing_ok=True)
 
     for f in (ds, ref):
         f.unlink(missing_ok=True)

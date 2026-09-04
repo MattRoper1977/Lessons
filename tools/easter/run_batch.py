@@ -101,8 +101,24 @@ def run(targets: Path, donors: Path, content_dir: Path, only: set | None) -> dic
                             "why": "no content spec has been written for this plan yet"})
             continue
         out = ROOT / row["route"]
-        rec = pc.prove(ROOT / fam["donor"], row["planIndex"], spec,
-                       ROOT / fam["reference"], probe=out)
+        # WHERE THE PLAN COMES FROM. By default a plan is a row of
+        # EASTER_TARGETS.json addressed by index, which is every plan this
+        # campaign had authored until Bronze. A target list may instead declare
+        # `plansFrom: "row"` -- the Bronze strand does, because AAE-H7 ruled it
+        # claims no workbook cell and so has no row to index. The row IS the
+        # plan then, and the file it was derived from is what gets digested.
+        if tdoc.get("plansFrom") == "row":
+            plan = {"family": row["family"], "ruledWeek": row["week"],
+                    "cells": row.get("cells", []), "outcomes": row["outcomes"],
+                    "title": row.get("title", ""), "subject": row.get("subject", "")}
+            if row.get("artsAward"):
+                plan["artsAward"] = row["artsAward"]
+            rec = pc.prove(ROOT / fam["donor"], row["planIndex"], spec,
+                           ROOT / fam["reference"], probe=out, plan=plan,
+                           plan_source=ROOT / tdoc["derivedFrom"]["path"])
+        else:
+            rec = pc.prove(ROOT / fam["donor"], row["planIndex"], spec,
+                           ROOT / fam["reference"], probe=out)
         # `file` names the subject each row reports on, in the form the estate's
         # stale-evidence sweep reads structurally. Without it the sweep falls
         # back to reading the text and reports every bare "verdict": "PASS" row
