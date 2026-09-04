@@ -1921,3 +1921,11 @@ All fourteen source-authored decks now pass comparative builds and the separate 
 ## Verified merge #307
 
 Exact head `b93a2b04cca83faaae67a547801e46233c02f0c8` merged as `3fc694f0a47d20f566d1dd6ad1dae5bda9973fb6`. Against actual fork `e808f0aa1367925a8b88098c134c38d44a4fa384`, all 60/60 changed blobs match. Evidence: `_sownb/vb/evidence/aae/merge307.json`. Required head runs: 33921766873,33921766875. This record does not itself claim served-byte equality.
+
+## Award placement preparation — zero units
+
+Two secondary rows link the canonical Bronze BUILD pack from the GROW Art hub and the canonical Silver GROW pack from the LAUNCH Art hub. Both links and all fourteen lessons behind each were checked. No deck was copied, moved or relabelled; no cell claim or qualification change. Explore remains BUILD only and its catalogue row follows later. Merge follows the Silver content merge.
+
+## Verified merge #308
+
+Exact head `0ef914e35cae00dd06bd075de10fcc94a23a3097` merged as `a740b1b20fb65d9e25ffdf6fc2140ccf61659259`. Against actual fork `3fc694f0a47d20f566d1dd6ad1dae5bda9973fb6`, all 58/58 changed blobs match. Evidence: `_sownb/vb/evidence/aae/merge308.json`. Required head runs: 33922350360,33922350365. This record does not itself claim served-byte equality.
