@@ -1937,3 +1937,45 @@ The BSG_CHECK records the R1B OPEN focus areas 1A new practice with an experienc
 ## Verified merge #309
 
 Exact head `c361c977f2ccfd0ce09e06065b1d6797afd68158` merged as `72413ab65cccd10483936e8dc4b3c431e6404400`. Against actual fork `a740b1b20fb65d9e25ffdf6fc2140ccf61659259`, all 6/6 changed blobs match. Evidence: `_sownb/vb/evidence/aae/merge309.json`. Required head runs: 33922850267. This record does not itself claim served-byte equality.
+
+## AAE catalogue continuation — prepared before publication
+
+All 42 content units and the two secondary placement rows are merged and recorded. Bronze catalogue #311, Explore #312 and Silver #313 are preserved as separate draft transactions, each paired with the required one-line Apps pin (#21/#22/#23). Gold shelf #310 must merge first. Before each catalogue transaction, reconcile main and preserve this ledger/state checkpoint here, leaving the catalogue diff within its established product/index/pin boundary. Each catalogue counts zero lesson units and zero cells. Planned row counts are 689 → 704 → 719 → 734; 42 lesson rows and three teacher pack starts. No pupil evidence count is inferred from these rows.
+
+## Verified merge #310
+
+Exact head `df0c49f220b20b42877ff8a13c53094ea3ff768f` merged as `023741d3b2815b55b6802bfb1f1822c647e9e7df`. Against actual fork `72413ab65cccd10483936e8dc4b3c431e6404400`, all 4/4 changed blobs match. Evidence: `_sownb/vb/evidence/aae/merge310.json`. Required head runs: 33923406849. This record does not itself claim served-byte equality.
+
+## Verified merge #311
+
+Exact head `f329d3677f835fcdc13d86f39f77052b330d9183` merged as `fef71f7b2378cab30c6a55f22ad8e8e85341d658`. Against actual fork `023741d3b2815b55b6802bfb1f1822c647e9e7df`, all 3/3 changed blobs match. Evidence: `_sownb/vb/evidence/aae/merge311.json`. Required head runs: 33923846740,33923846321,33923846447,33923846350. This record does not itself claim served-byte equality.
+
+## Verified companion Apps pin #21
+
+Exact head `6914bff4e3159be122ed7c42e09b5de138f765aa` merged as `51b8afc7be8cc1f816b062ea19f423055838c2d1`. Against its actual fork `650bd37aba5c6d57e9cbb876092897796b00a32e`, the one intended shared pin file is blob-identical (1/1); no Apps product file changed. Runs: 33921813766,33921813836,33921813773. Evidence: `_sownb/vb/evidence/aae/apps_merge21.json`. Zero lesson units and cells.
+
+## Wider Easter programme explicitly resumed — 2026-09-04
+
+Matt reaffirmed Science, Humanities, ASDAN and Art across BUILD/GROW/LAUNCH using the SoW, weekly timetable and school year. This preserves the AAE close in progress and resumes the wider programme after it. Four content batches (#288/#290/#294/#297) total 59 lessons; 42 award lessons are a separate strand. Fresh g29 reads 101 PASS, 0 RED, 3 nonlesson chassis SKIP. Direct read-only OOXML inspection agrees with all 897 spine identities; one verbatim-outcome difference is a trailing space on BUILD Autumn C104. The 575 rows at or before week26 retain the two existing GROW Careers scope exclusions, giving 573. The calendar boundary is Thursday25 March2027; no Spring2 sixth week or summer authoring. Raw lexical coverage is a diagnostic, not a licence to replace a working lesson or infer pupil evidence. Full A3N source text was not recovered from personal context; the visible AAE night rules, committed rulings and existing instruments remain in force.
+
+## Verified merge #312
+
+Exact head `3e72fff7f8e2eed9f17f7aaba22eae187946b0f9` merged as `b1ce5052d571ecca58a269fa913768a9b5d45375`. Against actual fork `fef71f7b2378cab30c6a55f22ad8e8e85341d658`, all 2/2 changed blobs match. Evidence: `_sownb/vb/evidence/aae/merge312.json`. Required head runs: 33924552826,33924552796,33924552798. This record does not itself claim served-byte equality.
+
+## Verified companion Apps pin #22
+
+Exact head `7ed907cda33e7fbcdde4f13511e882f5109fdf81` merged as `b17e67fb9b0073c93c076f528f4b69cc901634a0`. Against its actual fork `51b8afc7be8cc1f816b062ea19f423055838c2d1`, the one intended shared pin file is blob-identical (1/1); no Apps product file changed. Runs: 33924556210,33924556237,33924556202. Evidence: `_sownb/vb/evidence/aae/apps_merge22.json`. Zero lesson units and cells.
+
+## Verified merge #313
+
+Exact head `174338c0bb7944031032a1a506dc9d7e53f23f46` merged as `0a2892362beb8ac8c649d28a2ddf00119ae0682d`. Against actual fork `b1ce5052d571ecca58a269fa913768a9b5d45375`, all 2/2 changed blobs match. Evidence: `_sownb/vb/evidence/aae/merge313.json`. Required head runs: 33925102115,33925102120,33925102134. This record does not itself claim served-byte equality.
+
+## Verified companion Apps pin #23
+
+Exact head `fd7054cf3ec3cd446a1e9c02df4d6a68de9f3172` merged as `e1e4b8f6d2d1c919f81f9a2023d5fdf1ad027ed6`. Against its actual fork `b17e67fb9b0073c93c076f528f4b69cc901634a0`, the one intended shared pin file is blob-identical (1/1); no Apps product file changed. Runs: 33925104812,33925104820,33925104831. Evidence: `_sownb/vb/evidence/aae/apps_merge23.json`. Zero lesson units and cells.
+
+## AAE scoped publication close — 2026-09-04T22:35:56Z
+
+The authorised 14 + 14 + 14 lessons and their ordered catalogue pairs are merged. Published product `0a2892362beb8ac8c649d28a2ddf00119ae0682d` passed Pages run 33925705680; the final payload check is 57/57 exact, with the six initial network timeouts and their successful retries retained. Live BUILD/GROW filtering and the Silver pack link work; the earlier live GROW/LAUNCH placement walk is retained. Catalogue row counts are 689 → 704 → 719 → 734; 45 rows cost zero units. Gold remains shelf-only, zero new decks/cells. Required R2 eleven-mention classification, historical 82-file measured census, all 42 part-to-deck rows, bands, slots, caps and gate controls are printed in docs/AAE_R1B_READBACK.md.
+
+This is NOT a whole-Easter DONE claim. The original 59 lessons remain alongside the 42 award units. The next action is the wider Science/Humanities/ASDAN/Art programme: retain the canonical 262-plan source and its bindings, compare week-9 onward candidates with current teaching, use the recovered source timetable and ruled week-26 boundary, and author only genuine gaps in governed batches. Readback PR314 itself still requires its final head checks and merge/blob proof.

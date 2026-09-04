@@ -573,3 +573,9 @@ Three ways this could be answered, in the order they cost:
 
 Nothing is guessed in the meantime: the decks are authored, gated on everything
 that does apply, and the cell column stays empty.
+
+## AAE-R1B closeout clarification — 4 September 2026
+
+The earlier entries above are retained as history. R1B voided the exemplar deck repairs: do not import those binaries or wait for them. Gold is a SPEC-based shelf record, not repairs to absent decks. PR303 introduced bound award-plan identities, so all 42 new award decks are judged by g29; they are no longer the predicted no-planId skips described in the earlier AAE-H7 entry. Their workbook cell sets remain empty following the documented independent reviews. The three named nonlesson chassis are still legitimate skips.
+
+All 42 new award lessons, both secondary placement links and the three catalogue pairs are delivered. The unconfirmed slots, centre/adviser information and possible Gold entrant do not hold the wider Easter Science/Humanities/ASDAN/Art continuation. The whole Easter programme is still active.
