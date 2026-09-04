@@ -510,3 +510,60 @@ carry a SPLIT verdict**, which is where R2's other clause sends them.
 
 Checksums refreshed across three packs, 5 rows, 0 added, 0 removed, verify OK.
 Mechanism **16 tools, 142 controls**, derived, `--prove-red` PASS.
+
+---
+
+## A3N splits — REFUSED AS SPECIFIED, DEFAULTED under N1b
+
+R2 authorises a split for `GROW_HUM_W15` (×3.13) and `LAUNCH_HUM_W15` (×3.22),
+and defines it: *"A split happens at a stage boundary into two decks."*
+
+**Neither deck has a stage boundary to split at.** Measured, every teaching stage
+of both decks serves BOTH of its outcomes:
+
+    GROW_HUM_W15    s1..s9  all serve outcome1 AND outcome2
+    LAUNCH_HUM_W15  s1..s8  all serve both; only s9 (Exit) serves one
+
+Both decks are slot `HUM+RE · Integrated Humanities and RE`, and their objectives
+tie the two outcomes together in a single sentence — "Place supplied rights and
+protest events in chronological order **and** explore how beliefs can support
+resilience"; "Explain causes of a supplied 20th-century conflict **and** compare
+reasons in an ethical decision". The integration is the design of the slot, not
+an accident of drafting. Their stages are titled *"Rights chronology and belief
+resilience"* throughout.
+
+Cutting at any boundary yields two incomplete lessons — one with no Independent
+or Exit, one with no Arrival or Starter. Producing two complete lessons instead
+is not a split but a rewrite that discards the integration the slot exists for.
+
+**DEFAULTED: not split, not trimmed, not edited.** Both cells stay covered by a
+working integrated lesson. Trim-to-drawer is not the alternative either: at ×3.13
+reaching 1.25 means moving ~1,350 of 2,245 words into the drawer, which REVIEW.md
+already ruled "not a trim by any reading of R5.5". Logged as **A3-H8**.
+
+The five ASDAN decks carry the same SPLIT verdict from R2's band (×1.94–2.06)
+and are queued rather than attempted, because their split line has not been
+tested and they are Spring decks with no cover-teaching urgency.
+
+---
+
+## BATCH 1 — opened at main `d4d7c914`, ceiling 0/24 (R1)
+
+**R1 correction recorded, nothing reversed.** The 22 units previously counted
+against A3-H6 were misattributed: under R1 a dedupe PR counts ZERO. #280–#283
+and #286–#287 are all 0-unit PRs. Batch 1 opens at **0/24**.
+
+**Composition.** 68 of the 262 plans are cover-taught (ruled week ≤ 7, all of
+weeks 1–7). 65 AUTHOR, 3 RESHELL.
+
+**Donor survey, and a boundary it exposes.** N3d requires one g19-green donor per
+family. Nine of twelve families have a gate-readable 9-stage donor. **The three
+Art families have none**, so all 19 Art cover-taught plans are unbuildable in
+this batch and are PARKED with their cells, not attempted.
+
+**Why "gate-readable" is the binding property.** 55 of 81 measured ASDAN and
+Humanities decks declare their stage minutes as `data-minutes`; only 26 use
+`data-min`, which is what `lesson_stages` and therefore every gate reads. This is
+A2R's known R2 regression seen from the other side, and it decides donor
+selection: a deck authored from a `data-minutes` donor would be born with no
+timings any gate can see.

@@ -161,6 +161,47 @@ def _is_monotonic(content, minutes) -> bool:
     return all(pairs[i][1] <= pairs[i + 1][1] for i in range(len(pairs) - 1))
 
 
+def sync_manifest(deck: Path) -> dict | None:
+    """A FOURTH record of the same fact, and R2 shipped without it.
+
+    Some pack manifests carry a pack-level `timings` array. It was true only
+    while every deck in the pack shared one spine -- which is exactly what
+    deriving per-deck timings ends. After R2, GROW_ASDAN/Spring1 held two decks
+    with [0,3,3,8,3,7,4,9,3] and [0,3,3,7,3,7,4,10,3] under a manifest still
+    claiming [0,3,3,4,3,3,4,16,4], a value true of neither.
+
+    So: per-lesson timings are written into each lessons[] entry, and the
+    pack-level field is kept only where every deck agrees. Where they differ it
+    is REMOVED rather than left holding a number true of nothing -- a false
+    record is worse than a missing one. DEFAULTED under A3N N1b.
+    """
+    mf = deck.parent / "manifest.json"
+    if not mf.exists():
+        return None
+    data = json.loads(mf.read_text(encoding="utf-8"))
+    per = {}
+    for html in sorted(deck.parent.glob("*.html")):
+        raw = html.read_text(encoding="utf-8")
+        cfg, _ = read_config(raw)
+        if cfg and "timings" in cfg:
+            per[html.name] = cfg["timings"]
+    if not per:
+        return None
+    for entry in data.get("lessons", []):
+        if entry.get("file") in per:
+            entry["timings"] = per[entry["file"]]
+    values = list(per.values())
+    uniform = all(v == values[0] for v in values)
+    had = "timings" in data
+    if uniform:
+        data["timings"] = values[0]
+    elif had:
+        del data["timings"]
+    mf.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    return {"file": str(mf), "perLesson": per, "packLevelUniform": uniform,
+            "packLevelRemoved": had and not uniform}
+
+
 def apply(path: Path, strict: bool = False) -> dict:
     p = Path(path)
     rec = plan(p, strict)
@@ -197,8 +238,9 @@ def apply(path: Path, strict: bool = False) -> dict:
     raw2 = "".join(badges)
     p.write_text(raw2, encoding="utf-8")
     shown = [int(g[1]) for g in BADGE_RE.findall(p.read_text(encoding="utf-8"))]
+    manifest = sync_manifest(p)
     after = plan(p, strict)
-    rec.update({"applied": True, "dataMinReplaced": replaced,
+    rec.update({"applied": True, "dataMinReplaced": replaced, "manifest": manifest,
                 "badgesReplaced": j, "badgesShown": shown,
                 "badgesAgree": shown == rec["after"][:len(shown)],
                 "configTimingsWritten": cfg_written,
@@ -221,6 +263,7 @@ CONTROL_IDS = [
     "a-deck-whose-reading-exceeds-the-session-is-refused-not-squeezed",
     "applying-writes-both-records-and-they-agree",
     "the-visible-minute-badge-moves-with-the-attribute",
+    "a-pack-manifest-never-keeps-a-timing-true-of-no-deck",
 ]
 
 
@@ -316,6 +359,23 @@ def controls() -> list[dict]:
         "the badge is static text a teacher reads off the board; leaving it behind "
         "would show '4 min' on a stage now allocated seven",
         (True, True), (ap3.get("badgesReplaced", 0) > 0, ap3.get("badgesAgree")))
+
+    # the manifest is the fourth record and R2 shipped without it
+    import tempfile as _tf, os as _os
+    d4 = Path(_tf.mkdtemp())
+    (d4 / "a.html").write_text(_deck([3, 4, 3, 16], [120, 450, 130, 260]), encoding="utf-8")
+    (d4 / "b.html").write_text(_deck([4, 3, 4, 15], [200, 300, 150, 240]), encoding="utf-8")
+    (d4 / "manifest.json").write_text(json.dumps(
+        {"schema": "feb-pack-v1", "timings": [0, 9, 9, 9],
+         "lessons": [{"file": "a.html"}, {"file": "b.html"}]}), encoding="utf-8")
+    sync_manifest(d4 / "a.html")
+    m4 = json.loads((d4 / "manifest.json").read_text(encoding="utf-8"))
+    rec("a-pack-manifest-never-keeps-a-timing-true-of-no-deck",
+        "two decks with different spines cannot share one pack-level array; the "
+        "per-lesson values are written and the false pack-level value is removed",
+        (True, False, True),
+        ("timings" in m4["lessons"][0], "timings" in m4,
+         m4["lessons"][0]["timings"] != m4["lessons"][1]["timings"]))
 
     for f in (p, tight, p2, p3):
         f.unlink(missing_ok=True)
