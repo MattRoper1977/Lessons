@@ -76,6 +76,9 @@ SELFTEST_TOOLS = [
     "tools/easter/author_deck.py",
     "tools/easter/pack_furniture.py",
     "tools/easter/bind_plan_ids.py",
+    "tools/easter/pick_art_donor.py",
+    "tools/easter/strip_to_chassis.py",
+    "tools/easter/prove_chassis.py",
 ]
 LIST_ONLY_TOOLS = [
     "g19_v2.py",

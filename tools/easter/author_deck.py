@@ -66,7 +66,14 @@ CONFIG_RE = re.compile(
 KEEP_CLASSES = ("slide-head", "phase-tag", "time-chip", "lundy-strip", "lundy",
                 "lundy-grid", "lundy-status", "running-head", "progress-wrap",
                 "time", "tag", "slide-tag")
-KEEP_TAGS = ("script", "style", "svg", "button", "h2")
+# svg was here and should not have been. A bare <svg> child of a stage is the
+# donor's explanatory DIAGRAM, not an icon: keeping it carried "A routine in
+# order / Step 1 needs nothing first" through the strip. Icons live inside the
+# kept classes above and are untouched, because empty_stage only removes DIRECT
+# children. No shipped deck was affected -- all sixteen carry their own two
+# figures -- but a chassis that kept one would have put a single donor's
+# diagram on every deck built from it. Found by A3N-2 s1b.
+KEEP_TAGS = ("script", "style", "button", "h2")
 
 
 def _plan_id(plan: dict) -> str:
@@ -174,7 +181,13 @@ def render_blocks(spec: list[dict]) -> list:
         elif kind == "svg":
             e = lh.fromstring(b["svg"])
         elif kind == "figure":
-            e = lh.fromstring(render_figure(b))
+            # SHAPE, not kind. render_figure reads spec["kind"] to choose between
+            # the chain and the columns drawing, but a block's own "kind" is
+            # already "figure" -- so every figure authored through this path came
+            # out a chain and the columns shape was unreachable. Batch 2 never hit
+            # it because both its decks passed raw <svg>; the first content spec
+            # to ask for columns got a chain and no error.
+            e = lh.fromstring(render_figure({**b, "kind": b.get("shape", "chain")}))
         elif kind == "staff":
             e = lh.Element("div")
             e.set("class", "box rehearsal"); e.set("data-mbm-guide", "staff")
@@ -516,6 +529,8 @@ CONTROL_IDS = [
     "stage-count-and-chassis-furniture-survive",
     "timings-are-gate-readable-and-sum-to-the-session",
     "the-lesson-config-carries-the-plans-cells-not-the-donors",
+    "the-two-figure-shapes-are-different-drawings",
+    "a-content-spec-can-actually-ask-for-columns",
 ]
 
 _DONOR = """<!doctype html><html><head><style>.slide{display:none}
@@ -564,6 +579,29 @@ def ad_all(p):
     return all_text_blocks(p)
 
 
+def _figure_controls(rec):
+    """The two figure shapes must both be reachable through a content spec."""
+    chain = render_figure({"kind": "chain", "boxes": [{"head": "A"}, {"head": "B"}],
+                           "caption": "c", "title": "t"})
+    cols = render_figure({"kind": "columns",
+                          "boxes": [{"head": "A"}, {"head": "B"}],
+                          "caption": "c", "title": "t"})
+    rec("the-two-figure-shapes-are-different-drawings",
+        "chain and columns do not render the same SVG", True, chain != cols)
+    block = [{"kind": "figure", "shape": "columns",
+              "boxes": [{"head": "A"}, {"head": "B"}], "caption": "c", "title": "t"}]
+    # Both sides through the same parser: lxml normalises self-closing tags and
+    # attribute order, so comparing a rendered element to a raw string compares
+    # the serialiser, not the drawing.
+    norm = lambda x: lh.tostring(x if not isinstance(x, str) else lh.fromstring(x),
+                                 encoding="unicode")
+    rec("a-content-spec-can-actually-ask-for-columns",
+        "a figure block with shape=columns renders the columns drawing, not a chain",
+        (True, False),
+        (norm(render_blocks(block)[0]) == norm(cols),
+         norm(render_blocks(block)[0]) == norm(chain)))
+
+
 def controls() -> list[dict]:
     out = []
 
@@ -571,6 +609,7 @@ def controls() -> list[dict]:
         out.append({"id": cid, "description": description, "expected": expected,
                     "observed": observed, "fired": expected == observed})
 
+    _figure_controls(rec)
     d = _tmp(_DONOR)
     o = Path(tempfile.mkdtemp()) / "new.html"
     r = author(d, _PLAN, _CONTENT, o)

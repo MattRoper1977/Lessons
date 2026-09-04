@@ -3246,7 +3246,7 @@
  },
  "resume_easter_a3": {
   "order": "VB-EASTER-A3N-2",
-  "status": "RUNNING (#291 merged and blob-verified; §1 in progress)",
+  "status": "RUNNING (#292 merged and blob-verified; ART_DONOR_v1 open as #293)",
   "mainHeadVerification": "blob-verified: all ten paths changed by #281 hash identically between the merge commit and branch head b35588b; not taken from the merge status",
   "correction": "the previous revision of this key recorded main at 727c3162 and #281 as NOT MERGED on a stalled sixth check. The sixth check completed successfully at 22:50:33; the API served a stale job record. See EASTER_LEDGER.md 'CORRECTION' and WRONG_BEFORE_RIGHT.",
   "landed": [
@@ -3309,6 +3309,13 @@
     "merge": "be4b329",
     "units": 0,
     "verified": "blob-verified before the §1 branch was cut"
+   },
+   {
+    "pr": 292,
+    "what": "A3N-2 §1 the Art measurement family",
+    "merge": "db650065",
+    "units": 0,
+    "verified": "7 of 7 paths blob-identical between origin/main and the branch head"
    }
   ],
   "open": [],
@@ -3350,8 +3357,7 @@
    "evidence": "_sownb/vb/evidence/a3h6/"
   },
   "nextActions": [
-   "PR A: the Art measurement family (0 units)",
-   "PR B: ART_DONOR_v1, three chassis, alone (0 units)",
+   "merge #293 and blob-verify",
    "batch 3 with Art plans included, week-major ASDAN → Science → Humanities → Art",
    "§3 A3-H9 inside the batch that ships the three Humanities decks",
    "§4 data-ta1/ta2 estate-wide tail PR once its preconditions are met"
@@ -3620,7 +3626,63 @@
     }
    },
    "attempt": 1,
-   "attemptsAllowed": 2
+   "attemptsAllowed": 2,
+   "status": "PROVED on attempt 1",
+   "chassis": {
+    "BUILD_chassis.html": {
+     "sha256": "d394897a427883d8c05e3086eb19c8ba9e79c83c6de9235021aba97aaa402c85",
+     "donor": "BUILD_ASDAN/Autumn1_W1-W7_2026-27/BUILD_ASDAN_W3_Cook_One_Snack_as_a_Team_from_a_Picture_Card.html"
+    },
+    "GROW_chassis.html": {
+     "sha256": "93ece5826cb52c3a9276246560061a2d20789aa22c26ace30cbe84703aa54cb0",
+     "donor": "Humanities_Teesside/GROW_W1-W8_2026-27/GROW_Humanities_W3_Match_the_Lamp_to_Its_Meaning.html"
+    },
+    "LAUNCH_chassis.html": {
+     "sha256": "ea4f0a7e1145cb2662c8fb87583f0d0ed023575b4730faa361bc7fbc03c3d4a7",
+     "donor": "LAUNCH_ASDAN/Autumn1_W1-W7_2026-27/LAUNCH_ASDAN_W1_Choose_Our_Community_Need_and_Launch_My_Challenge.html"
+    }
+   },
+   "proof": {
+    "rule": "every gate run on the donor too; a red the donor also carries is PRE-EXISTING, a red the donor does not carry is a REGRESSION and fails",
+    "BUILD": {
+     "words": 1013,
+     "floor": 888,
+     "g23": 1.0,
+     "pupilFK": 1.95,
+     "band": [
+      1.0,
+      4.0
+     ]
+    },
+    "GROW": {
+     "words": 940,
+     "floor": 902,
+     "g23": 1.02,
+     "pupilFK": 3.96,
+     "band": [
+      3.0,
+      7.0
+     ]
+    },
+    "LAUNCH": {
+     "words": 1025,
+     "floor": 885,
+     "g23": 1.15,
+     "pupilFK": 5.07,
+     "ceiling": 14.21
+    },
+    "preExistingOnTheDonorsToo": [
+     "g16",
+     "g19",
+     "g24"
+    ]
+   },
+   "defectsFound": [
+    "author_deck.empty_stage kept a bare <svg>, so a donor's explanatory diagrams survived the strip",
+    "render_figure could never draw its columns shape: it reads spec['kind'] and a figure block's kind is always 'figure'",
+    "build_batch.py still keyed on family+week, the non-unique key g29 exists to catch",
+    "a whole-document sweep mutated the tree under a live lxml tree.iter(), silently skipping seventeen donor blocks"
+   ]
   }
  }
 }

@@ -16,10 +16,33 @@ def gate(script, args):
     return (line[0] if line else "(no output)"), r.returncode
 
 
-def build(family, week, donor, reference, content_path, out, evidence=None):
+def build(family, week, donor, reference, content_path, out, evidence=None,
+          plan_index=None):
+    """Address the plan by INDEX, never by family+week.
+
+    This driver used to pick with `next(p for p in plans if p["family"] == family
+    and p["ruledWeek"] == week)`. Two cover-taught LAUNCH ASDAN plans share week
+    1, so that expression silently returns the FIRST of them and the second deck
+    is authored carrying the first's cells -- a coverage lie the census reads as
+    taught and nobody teaches. g29 now catches it after the fact; this stops it
+    happening. The index is asserted against the family and week it was asked
+    for, so a stale index is an error rather than a different lesson.
+    """
     plans = json.loads((ROOT / "tools/easter/EASTER_TARGETS.json").read_text())["plans"]
-    plan = next(p for p in plans if p["family"] == family and p["ruledWeek"] == week
-                and p.get("coverBeforeMattReturns"))
+    if plan_index is None:
+        matches = [i for i, p in enumerate(plans)
+                   if p["family"] == family and p["ruledWeek"] == week
+                   and p.get("coverBeforeMattReturns")]
+        if len(matches) != 1:
+            raise SystemExit(
+                f"AMBIGUOUS PLAN: {family} week {week} names {len(matches)} cover-taught "
+                f"plans {matches}. Pass --plan-index; family+week is not a unique key.")
+        plan_index = matches[0]
+    plan = plans[plan_index]
+    if plan["family"] != family or plan["ruledWeek"] != week:
+        raise SystemExit(f"PLAN INDEX MISMATCH: index {plan_index} is "
+                         f"{plan['family']} week {plan['ruledWeek']}, "
+                         f"not {family} week {week}.")
     content = json.loads(Path(content_path).read_text(encoding="utf-8"))
     content["_reference"] = Path(reference)
     rec = ad.author(Path(donor), plan, content, Path(out))
@@ -43,8 +66,10 @@ if __name__ == "__main__":
     for f in ("family", "donor", "reference", "content", "out", "evidence"):
         ap.add_argument(f"--{f}")
     ap.add_argument("--week", type=int)
+    ap.add_argument("--plan-index", type=int)
     a = ap.parse_args()
-    r = build(a.family, a.week, a.donor, a.reference, a.content, a.out, a.evidence)
+    r = build(a.family, a.week, a.donor, a.reference, a.content, a.out, a.evidence,
+              a.plan_index)
     print(f"{Path(a.out).name}")
     print(f"  leaked={r['donorSentencesLeaked']} words={r['contentWords']} "
           f"timings={r['timingsSum']} status={r['status']}")
