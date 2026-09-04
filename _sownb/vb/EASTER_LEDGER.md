@@ -2018,3 +2018,20 @@ The five new attachments preserve all teaching allocation: Science BUILD/GROW/LA
 ## Presentation control correction
 
 Current-head browser checks passed the lighter framing. The strip-to-chassis control failed because it still equated every visible reminder with intact labels. Replacing that proxy with a direct comparison exposed a second real defect: the subtractive stripper recognised the whole Lundy grid but erased its individual span labels. Preserve only the four named dimensions inside an actual grid; keep the donor-teaching leak controls. The revised controls compare all nine label sets, preserve the donor's visible stage selection, and catch a planted empty grid. Fifteen strip controls and the full 29-tool, 358-control battery (derived count, --prove-red) pass locally. This does not reinstate repeated on-screen banners.
+
+
+## Bronze classroom enrichment batch — 14 revision units, ceiling24
+
+Revise the existing fourteen Bronze lessons in week-major order. No new lessons or workbook cells. Replace one We Do task in each deck with native keyboard/touch sorting, matching, ordering or choice and matching pupil paper tasks; retain the other practical stage. Correct reviewed misleading feedback/evidence statements and stale print, figure-alt and staff-key text. Current award plan IDs, Part A–D coverage, unconfirmed slots, nine stages and40-minute timing remain. Practice answers are models for discussion, not assessed pupil evidence. First local build and exact-head browser/award/band gates are pending.
+
+
+## Verified merge #316
+
+Reviewed head `d13f12418715d2644f378689f3e7ff8a39d28291` merged as `fa082255b170fc392e9a1d05b72d39e6d83072b8`. All136/136 changed blobs match against actual fork `31160c444bfded641a3b170a68b599d052defa8b`. FieldOps run33930019517: six jobs succeeded. Reader run33930019350: award interfaces, 101title/palette reads and119responsive viewport reads succeeded. Proof: `_sownb/vb/evidence/classroom/merge316.json`. This verifies the merged artifact; the live served-byte check remains separate.
+
+
+## Chat-transfer checkpoint — candidate, not release approval
+
+Matt requested a fresh chat. Stop new authoring and preserve the current work. Bronze candidate:13/14 comparative passes; B3 remains FK4.05 above the4.0 BUILD ceiling. Its other red was a real scanner false positive: SVG cubic commands C210 etc were read as workbook cells. g28 now masks only actual path geometry, preserving visible/accessible SVG citations; four controls pass. Full batch/mechanism/browser integration and checksum refresh remain before any PR/merge. The current activity browser draft is retained but not yet wired to actual target data or CI.
+
+Presentation merge316 Pages33930434176 and postmerge FieldOps33930434872 succeeded. A live served-byte check has not yet been made for316. All original262plans and earlier101lessonbindings are preserved.
