@@ -7,7 +7,7 @@ const reader = fs.readFileSync(path.join(__dirname, 'slot_reader.js'), 'utf8');
 const base = {schema:'arts-award-slots-v1',slots:{EVENT_SLOT:{entries:[]}}};
 const confirmed = structuredClone(base);
 confirmed.slots.EVENT_SLOT.entries.push({name:'Fixture event',route:'R3',status:'CONFIRMED'});
-const html = '<!doctype html><html><body><section data-min="0"></section><script>' + reader
+const html = '<!doctype html><html><head><meta charset="utf-8"></head><body><section data-min="0"></section><script>' + reader
   + '</script><script>MBMArtsSlots.mount({required:["EVENT_SLOT"],url:"/SLOTS.json"});</script></body></html>';
 
 (async () => {
@@ -21,7 +21,7 @@ const html = '<!doctype html><html><body><section data-min="0"></section><script
       // The source-reader control checks cache:'no-store'; this checks fresh UI data.
       return route.fulfill({contentType:'application/json',body:JSON.stringify(current)});
     }
-    return route.fulfill({contentType:'text/html',body:html});
+    return route.fulfill({contentType:'text/html; charset=utf-8',body:html});
   });
   await page.goto('http://award.test/fixture');
   await page.getByRole('status').filter({hasText:'Unconfirmed'}).waitFor();
