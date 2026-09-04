@@ -324,3 +324,60 @@ from the estate in #280–#283 and the sweep reports 0 removable words.
 So it ships **off**, as a flag (`lesson_stages.REPEAT_COUNTS_ONCE`) rather than
 deleted code. **Flipping it to True turns it on and no other edit is needed.**
 Full measurements in `WRONG_BEFORE_RIGHT.md`.
+
+---
+
+## A3N-2 §1 — Art had no measurement family, and no Art lesson could be written
+
+Found 2026-09-04 while picking the Art chassis donor. **Acted on** — this is
+recorded for a ruling, not left open, because Art authoring stops without it.
+
+The style contract has treated Art as a first-class family all along:
+`_sownb/G16_DENOMINATORS_v2.json` names **twelve** families and gives each Art
+pathway **108** contract rows, more than any other family in the estate. Only
+the word-count baseline, FEB's `g18_measurement.BASELINES`, named **nine**. With
+no Art entry the two gates that divide by a family contradicted each other:
+
+| gate | with no Art family | number |
+|---|---|---|
+| g18 floor | falls back to the GLOBAL p25 | **1638** content words |
+| g23 ceiling | `ratioToFamilyMedian` is `None`, and the clause reads *PASS if ratio is not None and ratio <= cap* | **RED, always**, and binding on new work |
+
+So an Art lesson was red on g23 however it was written; and had that been fixed
+it would then have had to clear a 1638-word floor that **no live Art lesson in
+this estate comes near** — the whole live corpus runs 875–1107 words. The gate
+was not strict. It was undefined, and undefined was being read as failure. The
+line that would have said so crashed on `f"{None:.0f}"` before it printed.
+
+**What was done.** The rule already written was applied to a family that
+qualifies for it: nearest-rank p25 of the family's own live neighbours, with the
+global fallback only below `MIN_NEIGHBOURS=5`. Each Art pathway has **14**
+measurable live lessons, so it qualifies twice over.
+
+    VB extra  BUILD Art    n=14  p25= 888  median=1015.5  g23 ceiling <=1523w
+    VB extra  GROW Art     n=14  p25= 902  median= 918.5  g23 ceiling <=1378w
+    VB extra  LAUNCH Art   n=14  p25= 885  median= 894.5  g23 ceiling <=1342w
+
+**Nothing was loosened.** The ceiling is still 1.5× the family median and the
+floor is still the family p25, exactly as for the nine. Leaving Art out was
+applying a *different* rule to one subject. A control derives all nine FEB
+families before and after and they are identical — n, p25 and median, every one.
+
+**The judgement that is yours, not mine.** This defines what "green" means for a
+whole subject, so it is written down rather than absorbed: the Art window is
+**~885–1350 pupil words**, narrower than Science's (1229–1942) and close to
+GROW ASDAN's. If you want Art's ceiling derived from a different corpus — the
+eight `*_Estate_v3` W1–W8 decks alone, say, rather than those plus the six
+Spring2 `OUTSTANDING_V3` decks — that is a one-line change to `EXTRA_BASELINES`
+in `g18_v2_family_floor.py` and a re-run. The corpus is bimodal across two
+chassis generations and the median sits between the clusters; that is recorded
+rather than smoothed.
+
+Re-run: `python3 _sownb/vb/tools/g18_v2_family_floor.py --families`
+
+**A duplication question falls out of it, not actioned.** The
+`Art_Teesside/<pathway>/W1-W8` copies of these same eight lessons measure **zero**
+content words under the shell-aware instrument while the `*_Estate_v3` copies
+measure ~900–1100. Same lesson titles, two routes, one of them invisible to
+every gate in the estate. Logged as **A3-H10**; excluded from the baseline
+automatically by the `contentWords` filter, so it moves no number here.

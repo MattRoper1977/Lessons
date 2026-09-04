@@ -278,6 +278,17 @@ def main() -> int:
         r["ceilingRatio"] = cap
         r["ceilingVerdict"] = ("PASS" if r["ratioToFamilyMedian"] is not None
                                and r["ratioToFamilyMedian"] <= cap else "RED")
+        # The verdict is unchanged -- a missing denominator is still RED, and
+        # deliberately so: a ceiling with no yardstick cannot pass anything.
+        # What was missing was the REASON. Art had no family in the measurement
+        # baseline, so every Art lesson read as "over the ceiling" when the
+        # truth was "there is no ceiling to be over", and the line that would
+        # have said so crashed on `f"{None:.0f}"` before it could print.
+        r["ceilingReason"] = ("no family median -- this family is absent from "
+                              "the measurement baseline, so the ratio is "
+                              "undefined rather than exceeded"
+                              if r["ratioToFamilyMedian"] is None else
+                              f"ratio {r['ratioToFamilyMedian']} against cap {cap}")
     else:
         r["ceilingVerdict"] = "NO ROW"
     if a.output:
@@ -285,7 +296,8 @@ def main() -> int:
         out.write_text(json.dumps(r, indent=2) + "\n", encoding="utf-8")
     print(f"{Path(a.candidate).name[:40]:40s} {r['shell']:7s} {r['pupilWords']:5d}w "
           f"(was {r['pupilWordsLegacyCounter']:5d}) "
-          f"med {r['familyMedian']:.0f} (was {r['familyMedianLegacyCounter']}) "
+          f"med {('%.0f' % r['familyMedian']) if r['familyMedian'] else 'none'} "
+          f"(was {r['familyMedianLegacyCounter']}) "
           f"x{r['ratioToFamilyMedian']} (was x{r['ratioToFamilyMedianLegacyCounter']}) "
           f"~{r['impliedReadingMinutes']}min of {r['declaredPeriodMinutes']} "
           f"({r['impliedPercentOfPeriod']}%) {r['verdict']} "

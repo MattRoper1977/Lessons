@@ -3246,7 +3246,7 @@
  },
  "resume_easter_a3": {
   "order": "VB-EASTER-A3N-2",
-  "status": "RUNNING (batch 2 landed)",
+  "status": "RUNNING (#291 merged and blob-verified; §1 in progress)",
   "mainHeadVerification": "blob-verified: all ten paths changed by #281 hash identically between the merge commit and branch head b35588b; not taken from the merge status",
   "correction": "the previous revision of this key recorded main at 727c3162 and #281 as NOT MERGED on a stalled sixth check. The sixth check completed successfully at 22:50:33; the API served a stale job record. See EASTER_LEDGER.md 'CORRECTION' and WRONG_BEFORE_RIGHT.",
   "landed": [
@@ -3281,6 +3281,34 @@
     "merge": "0d54ddca1c893fbb9e818c0b08675535a021e86c",
     "units": 19,
     "verified": "75 of 75 paths blob-identical against main"
+   },
+   {
+    "pr": 290,
+    "what": "BATCH 2, fourteen authored lessons",
+    "merge": "57c3ee56",
+    "units": 14,
+    "verified": "40 of 40 paths blob-identical against main"
+   },
+   {
+    "pr": 291,
+    "what": "A3N-2 §2 g29 plan binding + provenance refusal",
+    "merge": "be4b329",
+    "units": 0,
+    "verified": "blob-verified before the §1 branch was cut"
+   },
+   {
+    "pr": 290,
+    "what": "BATCH 2, fourteen authored lessons",
+    "merge": "57c3ee56",
+    "units": 14,
+    "verified": "40 of 40 paths blob-identical against main"
+   },
+   {
+    "pr": 291,
+    "what": "A3N-2 §2 g29 plan binding + provenance refusal",
+    "merge": "be4b329",
+    "units": 0,
+    "verified": "blob-verified before the §1 branch was cut"
    }
   ],
   "open": [],
@@ -3322,9 +3350,11 @@
    "evidence": "_sownb/vb/evidence/a3h6/"
   },
   "nextActions": [
-   "merge #291",
-   "§1 ART_DONOR_v1 (alone, 0 units)",
-   "batch 3 with Art included"
+   "PR A: the Art measurement family (0 units)",
+   "PR B: ART_DONOR_v1, three chassis, alone (0 units)",
+   "batch 3 with Art plans included, week-major ASDAN → Science → Humanities → Art",
+   "§3 A3-H9 inside the batch that ships the three Humanities decks",
+   "§4 data-ta1/ta2 estate-wide tail PR once its preconditions are met"
   ],
   "humanItems": [
    "A3-H1",
@@ -3335,7 +3365,8 @@
    "A3-H6 (closed)",
    "A3-H7",
    "A3-H8",
-   "A3-H9 (Humanities manifest sequence/notAuthoredYet needs updating for 3 new decks)"
+   "A3-H9 (Humanities manifest sequence/notAuthoredYet needs updating for 3 new decks)",
+   "A3-H10"
   ],
   "resumePointer": "_sownb/vb/EASTER_LEDGER.md",
   "a3h2": {
@@ -3538,6 +3569,58 @@
    "backfill": "derived - bound only where exactly one plan has exactly the deck's cells; 16 bound, 0 ambiguous, 0 outcome mismatches",
    "provenance": "build_from_specs requires specs/donors/plans as files, records sha256 of each, PROVENANCE REFUSAL otherwise",
    "armedInCI": true
+  },
+  "artUnblock": {
+   "finding": "Art had no entry in FEB's measurement BASELINES, so g18 fell back to the GLOBAL p25 of 1638 content words while g23's ceiling clause read a missing family median as RED. No live Art lesson in the estate exceeds 1107 words. No Art deck could have passed the stack however it was written.",
+   "contradiction": {
+    "g18FloorWithNoFamily": 1638,
+    "liveArtCorpusMax": 1107,
+    "g23WithNoMedian": "RED, binding on new work"
+   },
+   "fix": "the rule already written, applied to a family that qualifies: family p25 with the global fallback only below MIN_NEIGHBOURS=5. Each Art pathway has 14 measurable live lessons.",
+   "families": {
+    "BUILD Art": {
+     "n": 14,
+     "p25": 888,
+     "median": 1015.5,
+     "g23CeilingWords": 1523
+    },
+    "GROW Art": {
+     "n": 14,
+     "p25": 902,
+     "median": 918.5,
+     "g23CeilingWords": 1378
+    },
+    "LAUNCH Art": {
+     "n": 14,
+     "p25": 885,
+     "median": 894.5,
+     "g23CeilingWords": 1342
+    }
+   },
+   "nineFebFamilies": "n, p25 and median identical to origin/main, proved in a second worktree",
+   "reRun": "python3 _sownb/vb/tools/g18_v2_family_floor.py --families"
+  },
+  "artDonor": {
+   "rule": "A3N-2 §1a: nearest-green deck in the SAME pathway from any family, by measured gate margin",
+   "whyThreeChassis": "g26 derives the pathway from the ROUTE and reds a deck outside its pathway's FK band. One pathway-neutral chassis would make g26 return NOT-APPLICABLE — a fail-open on the one gate that reads pupil register.",
+   "signature": "26 markers INTERSECTED from the 16 decks this campaign has taken through the gate stack green, not a hand-written list. The hand-written list was wrong in four places at once and returned zero candidates from a corpus of 136.",
+   "picks": {
+    "BUILD": {
+     "donor": "BUILD_ASDAN/Autumn1_W1-W7_2026-27/BUILD_ASDAN_W3_Cook_One_Snack_as_a_Team_from_a_Picture_Card.html",
+     "margin": 0.135
+    },
+    "GROW": {
+     "donor": "Humanities_Teesside/GROW_W1-W8_2026-27/GROW_Humanities_W3_Match_the_Lamp_to_Its_Meaning.html",
+     "margin": 0.431
+    },
+    "LAUNCH": {
+     "donor": "LAUNCH_ASDAN/Autumn1_W1-W7_2026-27/LAUNCH_ASDAN_W1_Choose_Our_Community_Need_and_Launch_My_Challenge.html",
+     "margin": 0.194
+    }
+   },
+   "attempt": 1,
+   "attemptsAllowed": 2
   }
  }
 }

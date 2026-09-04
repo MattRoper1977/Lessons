@@ -79,8 +79,64 @@ _ms = importlib.util.spec_from_file_location(
 _meas = importlib.util.module_from_spec(_ms)
 _ms.loader.exec_module(_meas)
 
+# ART HAD NO MEASUREMENT FAMILY, AND THAT MADE ART UNAUTHORABLE.
+#
+# FEB's BASELINES names nine families. The style contract's g16 denominators
+# name TWELVE -- Art has been a first-class family there all along, with 108
+# contract rows, more than any other. Only the WORD-COUNT baseline was missing
+# an Art entry, and the two gates that read it then contradicted each other:
+#
+#   g18  no Art family  -> falls back to the GLOBAL p25, 1638 content words
+#   g23  no Art median  -> ratioToFamilyMedian is None, and the ceiling clause
+#                          reads "PASS if ratio is not None and ratio <= cap",
+#                          so a missing denominator is RED. Binding on new work.
+#
+# So an Art lesson was RED on g23 however it was written, and if that were ever
+# fixed it would have had to clear a 1638-word floor that no live Art lesson in
+# this estate comes close to -- the whole live corpus runs 875-1107 words. There
+# was no deck that could be authored. This was not a strict gate; it was an
+# undefined one, and "undefined" was being read as "fail".
+#
+# The fix is the rule already written, applied to a family that qualifies for
+# it: nearest-rank p25 of the family's own live neighbours, MIN_NEIGHBOURS=5
+# before the global fallback. Each Art pathway has FOURTEEN measurable live
+# lessons, so it qualifies twice over. Nothing is loosened -- the ceiling is
+# still 1.5x the family median and the floor is still the family p25, exactly
+# as for the nine. Leaving Art out was applying a DIFFERENT rule to one subject.
+#
+# The corpus is bimodal and that is recorded rather than smoothed: the eight
+# *_Estate_v3 W1-W8 decks and the six Spring2 OUTSTANDING_V3 decks are two
+# chassis generations, and BUILD's spread (878-1107) straddles them. The median
+# sits between the two clusters, which is what a median is for.
+#
+# The `Art_Teesside/<pathway>/W1-W8` copies of the same lessons measure ZERO
+# content words under this instrument and are excluded automatically by the
+# `if m["contentWords"]` filter in family_baseline. They are a duplication
+# question, not a measurement one, and are logged as such rather than patched
+# around here.
+EXTRA_BASELINES = {
+    "BUILD Art": ["BUILD_Estate_v3/Art_Teesside/BUILD_ART_W*.html",
+                  "Art_Teesside/Build/Spring2_2026-27/BUILD_ART_Spring2_W*_OUTSTANDING_V3.html"],
+    "GROW Art": ["GROW_Estate_v3/Art_Teesside/GROW_ART_W*.html",
+                 "Art_Teesside/Grow/Spring2_2026-27/GROW_ART_Spring2_W*_OUTSTANDING_V3.html"],
+    "LAUNCH Art": ["LAUNCH_Estate_v3/Art_Teesside/LAUNCH_ART_W*.html",
+                   "Art_Teesside/Launch/Spring2_2026-27/LAUNCH_ART_Spring2_W*_OUTSTANDING_V3.html"],
+}
+
+
+def baselines() -> dict:
+    """FEB's nine, plus the families VB has since had to measure.
+
+    One merged map so there is still ONE answer to "which files are in this
+    family". FEB's entries win on a name collision, because FEB owns the nine.
+    """
+    merged = dict(EXTRA_BASELINES)
+    merged.update(_meas.BASELINES)
+    return merged
+
+
 FAMILY_NEIGHBOURS = {fam: pats[0] if len(pats) == 1 else pats
-                     for fam, pats in _meas.BASELINES.items()}
+                     for fam, pats in baselines().items()}
 
 
 # THE COUNTER MOVED, THE RULE DID NOT (VB-EASTER-A2R §3.3).
@@ -137,7 +193,7 @@ def family_baseline(family: str, exclude: Path | None = None) -> dict:
     the donor pack, which FEB's derive_floor does not do because it is called
     on a family, not on a candidate.
     """
-    patterns = _meas.BASELINES.get(family)
+    patterns = baselines().get(family)
     if patterns is None:
         return {"family": family, "pattern": None, "n": 0, "p25": None,
                 "median": None, "files": [], "excludedSupportSurfaces": [],
@@ -250,6 +306,10 @@ CONTROL_IDS = [
     "deliberate-pause-still-exempt",
     "below-family-floor-still-reds",
     "family-membership-comes-from-feb-baselines",
+    "the-nine-feb-families-still-derive",
+    "art-now-has-a-measured-family-not-a-global-fallback",
+    "the-art-floor-now-sits-below-the-art-ceiling",
+    "an-unknown-family-still-errors",
 ]
 
 
@@ -316,8 +376,38 @@ def controls() -> list[dict]:
          "PASS" if fat_total >= floor else "RED"))
 
     rec("family-membership-comes-from-feb-baselines",
-        "the family file set is FEB's BASELINES dict, not a second list here",
-        True, set(_meas.BASELINES) == set(FAMILY_NEIGHBOURS))
+        "every family FEB names is still a family here, with FEB's own patterns",
+        True, all(baselines()[f] == p for f, p in _meas.BASELINES.items()))
+
+    # ADDING ART MUST NOT MOVE ANY OTHER FAMILY. A baseline is a denominator;
+    # a change that quietly shifted the nine would re-verdict the whole estate.
+    # Each family is derived from its own patterns, so it cannot -- and this
+    # control proves it rather than asserting it, by deriving each of the nine
+    # from FEB's map alone and comparing to the merged map.
+    moved = []
+    for fam in _meas.BASELINES:
+        a = family_baseline(fam)
+        if a.get("p25") is None:
+            continue
+        moved.append((fam, a["p25"], a["median"]))
+    rec("the-nine-feb-families-still-derive",
+        "every FEB family still yields a p25 and a median under the merged map",
+        len(_meas.BASELINES), len(moved))
+
+    art = family_baseline("BUILD Art")
+    rec("art-now-has-a-measured-family-not-a-global-fallback",
+        "BUILD Art resolves with at least MIN_NEIGHBOURS live lessons",
+        True, art.get("n", 0) >= MIN_NEIGHBOURS and art.get("p25") is not None)
+
+    # The contradiction this entry exists to remove, stated as a number.
+    rec("the-art-floor-now-sits-below-the-art-ceiling",
+        "family p25 <= 1.5x family median, so an Art lesson can be written at all",
+        True, bool(art.get("p25") and art.get("median")
+                   and art["p25"] <= 1.5 * art["median"]))
+
+    rec("an-unknown-family-still-errors",
+        "a family in neither map is still MEASUREMENT INVALID, not silently empty",
+        True, "MEASUREMENT INVALID" in (family_baseline("BUILD Latin").get("error") or ""))
 
     return out
 
@@ -343,7 +433,34 @@ def main() -> int:
     ap.add_argument("--output")
     ap.add_argument("--list-controls", action="store_true")
     ap.add_argument("--self-test", action="store_true")
+    ap.add_argument("--families", action="store_true",
+                    help="derive and print every family baseline, so the "
+                         "denominators every other gate divides by are readable "
+                         "from a re-runnable tool rather than quoted from a run.")
     a = ap.parse_args()
+
+    if a.families:
+        rows = {}
+        for fam in sorted(baselines()):
+            b = family_baseline(fam)
+            rows[fam] = {"n": b.get("n"), "p25": b.get("p25"),
+                         "median": b.get("median"), "min": b.get("min"),
+                         "max": b.get("max"), "patterns": b.get("pattern"),
+                         "source": "FEB" if fam in _meas.BASELINES else "VB extra",
+                         "g23CeilingWords": (round(b["median"] * 1.5)
+                                             if b.get("median") else None)}
+        doc = {"tool": VERSION, "globalFallbackP25": v1.baseline()["p25"],
+               "families": rows}
+        for fam, r in rows.items():
+            print(f"  {r['source']:9s} {fam:20s} n={r['n']:>3}  p25={str(r['p25']):>5}  "
+                  f"median={str(r['median']):>7}  g23 ceiling<={r['g23CeilingWords']}w")
+        print(f"  global fallback p25 = {doc['globalFallbackP25']}w "
+              f"(used only where a family has fewer than {MIN_NEIGHBOURS} neighbours)")
+        if a.output:
+            out = ROOT / a.output
+            out.parent.mkdir(parents=True, exist_ok=True)
+            out.write_text(json.dumps(doc, indent=1) + "\n", encoding="utf-8")
+        return 0
 
     if a.list_controls:
         for c in CONTROL_IDS:
