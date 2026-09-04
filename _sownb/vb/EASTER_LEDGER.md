@@ -1179,3 +1179,170 @@ current chassis instead.
 Mechanism **25 tools, 223 controls**, derived, `--prove-red` PASS.
 g29 across every authored deck: **43 decks, 40 PASS, 0 RED, 3 SKIP.**
 Stale-evidence sweep: 0 inconclusive rows. Nine packs verify with `sha256sum -c`.
+
+---
+
+## BATCH 4 — the run that died on an account limit, and what it cost
+
+A3N-RESUME-B4 asked for state before resumption, from the thing and not the
+record. Here is what the thing said.
+
+### The workflow record, read from its own file
+
+`~/.claude/projects/…/workflows/wf_26809076-34b.json`, 33 agents, 2 881 593 ms,
+1 596 743 tokens, status `completed`. "Completed" is the harness's word for
+*finished running*, not for *did the work*:
+
+    Author  19 agents   14 returned   5 failed
+    Review  14 agents    0 returned  14 failed
+
+Every one of the nineteen failures carries the **same** error string, verbatim:
+
+    You've hit your monthly spend limit · raise it at
+    claude.ai/settings/usage?from=cc_cli_limit_message ·
+    your session limit resets 4pm (UTC)
+
+The five red author plans, with the tokens each had spent when it died:
+
+    plan-62  BUILD Humanities W7   117 494 tokens — file WAS written before it died
+    plan-63  GROW Humanities W7     80 958 tokens — file WAS written before it died
+    plan-64  LAUNCH Humanities W7        0 tokens — never ran
+    plan-65  BUILD Art W7               0 tokens — never ran
+    plan-67  LAUNCH Art W7              0 tokens — never ran
+
+**Why Review shows 0 of 14 is the question worth asking, and the record answers
+it exactly.** All fourteen review agents were *scheduled* — they exist in the
+run's agent list with labels and a model — and every one recorded **0 tokens**
+against a spend-limit error. So it is neither "never started" nor "fourteen
+review failures": the phase started and every agent died at its first request.
+The review MECHANISM was never exercised and is therefore neither proved nor
+disproved by this run. That distinction decides what to do: not a mechanism-fix
+PR, but a re-run.
+
+Fourteen decks were authored by an agent and **reviewed by nobody**. The review
+is the step that made batch 2 work — all fourteen of batch 2's first drafts were
+rejected by it. Gating fourteen unreviewed drafts because the gates went green
+would be trusting the gates to do a job they have never done: gates measure
+words, bands, shape and provenance. They do not read a lesson.
+
+### The stash, emptied
+
+One entry, `stash@{0}`, a three-parent WIP on this branch. Its untracked parent
+`6c3a9ac` held exactly two files — `GROW_HUMANITIES_W7.json` and
+`LAUNCH_ASDAN_W7.json`, 1007 lines — and its tracked parent held nothing. Both
+are batch-4 authoring, so both were popped onto the batch-4 branch and are
+committed here with their plan rows. `git stash list` is now empty, and nothing
+in this campaign is left in a stash.
+
+### The five red plans, recovered
+
+- **62 and 63** were written to disk by their own agents before the limit killed
+  them. The files are complete and valid; the agents died after the write. They
+  are recovered from disk, not re-authored, and they go through the same review
+  as everything else.
+- **64, 65 and 67** never ran, and were authored in this session, one attempt
+  each, from `BATCH4_TARGETS.json` read as a **file** —
+  `sha256 2a535e7e75069afe6886edf12cf05c84ec1657505cb84b8c701c759a4c085920`,
+  recorded by `run_batch` in its own evidence — and never from a console print.
+
+Nothing was parked. The ceiling was not touched.
+
+### The review, re-run — and it was not a formality
+
+Thirty-eight agents, two lenses per spec, pipelined: a conformance pass (shape,
+stage titles and minutes, pupil word count against the family floor, list
+punctuation, figure pairing, JSON) and then a teaching-and-safeguarding pass on
+what the conformance reviewer had already been through.
+
+    38 agents · 0 errors · 30 FIXED · 7 PASS
+    98 changes recorded against the seven lenses:
+      A teaches the plan's outcome                11
+      B the safeguard is real                     25
+      C no asserted attendance, venue or booking  12
+      D the teaching is actually taught           26
+      E TA notes are actions an adult performs    18
+      F the tier ladder is a ladder                4
+      G voice                                      2
+
+**Every one of those decks had already passed all nine gates green.** The gates
+measure words, bands, shape, leakage and provenance. They do not read a lesson.
+Three of the findings say what that difference is worth:
+
+- **A stage that could not be taught.** BUILD Art W5's "We Do 2 · lab" had
+  pupils check a partner's photograph and swap sheets — but no stage before it
+  had told anybody to take a photograph, and the photo does not reach the sheet
+  until the Independent stage. A cover teacher arrives at minute 23 with nothing
+  to check. The shot is now taken in that stage.
+- **A safeguard resting on words the deck never supplied.** GROW Art W5's sort
+  named "six review cards" and never said what one said, so its guarantee that
+  every comment comes from an approved list rested on text that did not exist —
+  and the stage's own claim that "two cards are close, so tables will disagree"
+  could not be true of cards nobody had written. The six card texts are now
+  printed.
+- **Twelve asserted attendances, in an estate where nothing is booked.**
+  "Next week an employer visits our class community project." "You get about ten
+  minutes with them." "An arts event is a public arts offer you attended." Two
+  questions "asked at last term's visit", with what the visitor said and for how
+  long. All twelve now read from the approved pack instead. This is precisely
+  what AAE-R1B's g32 exists to catch, found on decks g32 has not yet been
+  pointed at — and found by reading, not by measuring.
+
+The one number a batch-3-style run would have reported is the one that was
+already true before any of this: nineteen greens.
+
+### Gated one deck at a time
+
+R5: never one monolithic shell that can be stopped 53 seconds in and lose its
+place. Each deck was built and gated in its own shell under its own wall
+ceiling, sized as the order specifies — the first green deck measured **4s**, so
+the ceiling is 4×3 floored at **60s**. The slowest deck took **6s**.
+
+The shell output is deliberately **not** committed. The first version of the
+driver wrote a plain-text timings log and kept each deck's stdout beside the
+JSON record, and rows reading `plan 49  rc=0  4s  PASS  idx 49` state a verdict
+in a shape matching none of the estate's claim forms. The stale-evidence sweep
+exits 2 on a single `NO FORM MATCHED` row — *"the run does not pass with one
+outstanding, because the alternative is calling it stale"* — and nineteen logs
+plus a timings file failed CI. Every fact those rows carried is in
+`batch4_build.json`, per row, in a form the sweep reads; the logs are
+reproducible by re-running the driver.
+
+    19 of 19 built · 19 of 19 PASS · 0 regressions · 0 donor leakage
+    g18 19 PASS   g23 19 PASS   g25 19 PASS   g26 19 PASS
+    g28 19 PASS   g29 19 PASS
+    g16 · g19 · g24 PRE-EXISTING on all 19 — the donors carry them too
+
+    family              wk  words   floor  ceiling   cells
+    BUILD Art            5   1025     888     1523   C106
+    GROW Art             5   1014     902     1378   C106
+    BUILD ASDAN          6   1099     950     1457   C135 C149 C179
+    GROW ASDAN           6   1020     906     1397   C135 C149 C179
+    LAUNCH ASDAN         6   1293    1058     1610   C93 C121 C163
+    LAUNCH ASDAN         6   1281    1058     1610   C219
+    BUILD Humanities     6   1342    1209     1837   C65
+    GROW Humanities      6    834     700     1076   C65
+    LAUNCH Humanities    6    832     668     1038   C205
+    BUILD Art            6    989     888     1523   C107
+    LAUNCH Art           6   1032     885     1342   C149
+    BUILD ASDAN          7   1200     950     1457   C136 C150 C180
+    GROW ASDAN           7   1059     906     1397   C150
+    LAUNCH ASDAN         7   1218    1058     1610   C220
+    BUILD Humanities     7   1493    1209     1837   C66
+    GROW Humanities      7    987     700     1076   C66
+    LAUNCH Humanities    7    775     668     1038   C206
+    BUILD Art            7   1017     888     1523   C108
+    LAUNCH Art           7    998     885     1342   C150
+
+**27 cells, 27 unique.** R6 asked that GROW ASDAN W7 be allowed to be thin
+rather than padded: it came out of the review at **1059** against a floor of
+906, because the review added teaching rather than words. LAUNCH Humanities W7,
+the thinnest deck in the batch, went 684 → **775** against 668 the same way.
+
+### Furniture and mechanism
+
+Nine packs, **104 checksum rows, all OK** under `sha256sum -c` after the
+rebuild. The three Humanities manifests moved 10 → 12 lessons, 400 → 480
+minutes, and were reproduced byte-identically on a second run from restored
+originals. Mechanism **25 tools, 226 controls**, derived, `--prove-red` PASS —
+223 at batch 3 plus the three controls this run added. It reads 26 tools once
+the Arts Award register PR lands, which adds g30.

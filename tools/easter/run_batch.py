@@ -26,6 +26,22 @@ VERSION = "run-batch-v1.0.0"
 ROOT = Path(__file__).resolve().parents[2]
 
 
+def _rel(p) -> str:
+    """A path as this repository names it.
+
+    `spec` is a subject in the record, and the estate's stale-evidence sweep
+    resolves subjects beside the evidence, in the evidence directory, or at the
+    repository root -- never against an absolute container path. `file` was
+    fixed for exactly this reason during batch 3; `spec` is the same decision
+    made in the same file and missed. Fourth tool in this campaign to make it.
+    """
+    from pathlib import Path as _P
+    try:
+        return str(_P(p).resolve().relative_to(ROOT))
+    except ValueError:
+        return str(p)
+
+
 def _load(name, rel):
     spec = importlib.util.spec_from_file_location(name, ROOT / rel)
     mod = importlib.util.module_from_spec(spec)
@@ -81,7 +97,7 @@ def run(targets: Path, donors: Path, content_dir: Path, only: set | None) -> dic
             continue
         if not spec.is_file():
             results.append({**row, "file": row["route"], "verdict": "NO SPEC",
-                            "spec": str(spec),
+                            "spec": _rel(spec),
                             "why": "no content spec has been written for this plan yet"})
             continue
         out = ROOT / row["route"]
@@ -92,7 +108,7 @@ def run(targets: Path, donors: Path, content_dir: Path, only: set | None) -> dic
         # back to reading the text and reports every bare "verdict": "PASS" row
         # as INCONCLUSIVE, which is exactly what it exists to do.
         results.append({**row, "file": row["route"],
-                        "spec": str(spec), "donor": fam["donor"],
+                        "spec": _rel(spec), "donor": fam["donor"],
                         "verdict": rec["verdict"],
                         "regressions": rec["regressions"],
                         "preExisting": rec["preExisting"],

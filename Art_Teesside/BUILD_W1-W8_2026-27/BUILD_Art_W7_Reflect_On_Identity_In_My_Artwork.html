@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Choice, budget and project reset · BUILD ASDAN</title>
+<style>
+:root{--ink:#17223B;--paper:#FFFCF5;--soft:#F3F6F8;--line:#CAD5DF;--muted:#526274;--gold:#B57918;--green:#246B55;--slot:#346B7B;--slot-pale:#EAF6F8;--danger:#8A3C2D}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:"Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--soft)}
+body{overflow:hidden}a,button{font:inherit}button,a.mbmhome{min-height:44px;min-width:44px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:8px;top:8px;z-index:50;background:#fff;padding:10px}
+.deck{height:100vh;padding:18px 18px 112px;overflow:auto}.slide{display:none;max-width:1120px;min-height:calc(100vh - 145px);margin:auto;background:var(--paper);border:2px solid var(--line);border-top:10px solid var(--slot);border-radius:18px;padding:22px;box-shadow:0 8px 30px #10233f18}.slide.active{display:block}
+h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-size:clamp(1.5rem,3vw,2.3rem);margin:.4rem 0 1rem}h3{margin:.2rem 0 .45rem}p,li{line-height:1.5}.tag,.time,.chips span{display:inline-block;border-radius:999px;padding:6px 10px;font-weight:800}.tag{background:var(--slot-pale)}.time{float:right;background:var(--ink);color:#fff}.chips{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.chips span{background:#FFF3D4}
+.hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,.7fr);gap:18px}.hero-visual{display:grid;gap:10px;align-content:center;background:var(--ink);color:#fff;border-radius:16px;padding:18px;min-height:150px;text-align:center}.hero-visual span{color:var(--slot)}
+.box,.route,.route-card,.evidence-gate,.lundy,.lundy-strip,.ladder,.prompt-ladder,.ta-card,.modal,.drawer,dialog{border:2px solid var(--line);border-radius:13px;padding:13px;margin:12px 0;background:#fff}.lo{border-left:8px solid var(--slot)}.truth{border-left:8px solid var(--gold);background:#FFF3D4;padding:12px}.access{background:var(--slot-pale);padding:12px;border-radius:12px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.routes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.route.s,.route.supported,.route-card.supported{border-top:7px solid var(--green)}.route.m,.route.standard,.route-card.standard{border-top:7px solid var(--slot)}.route.h,.route.stretch,.route-card.stretch{border-top:7px solid var(--gold)}.options{display:grid;gap:9px}.options button{text-align:left;padding:12px;border:2px solid var(--line);border-radius:10px;background:#fff}.vocabrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.vterm{border:2px solid var(--line);padding:12px;border-radius:12px}.vterm span{display:block;margin-top:5px}.lundy-grid,.lundy-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center;font-weight:900}.ladder,.prompt-ladder{font-weight:700}.ta-card,.modal,.drawer{background:#FFF3D4}
+.controls{position:fixed;left:8px;right:8px;bottom:58px;z-index:20;display:flex;gap:7px;overflow-x:auto;padding:8px;background:var(--ink);border-radius:14px}.controls button,.controls a{flex:0 0 auto;border:2px solid #fff;border-radius:9px;padding:7px 10px;background:#fff;color:var(--ink);font-weight:800;text-decoration:none}.prog{position:fixed;left:12px;right:12px;bottom:46px;height:6px;background:#fff;border:1px solid var(--line);z-index:19}.prog>span{display:block;height:100%;width:11.11%;background:var(--slot)}
+.overlay{display:none;position:fixed;inset:0;z-index:40;background:#10233fdd;align-items:center;justify-content:center;padding:18px}.overlay.on{display:flex}.overlay-card{max-width:700px;background:#fff;border-radius:15px;padding:20px}.overlay-card button{padding:8px 12px}
+.print-pack{display:none}.printpack{display:none}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(max-width:720px){.deck{padding:10px 10px 118px}.slide{padding:15px}.hero,.routes,.vocabrow{grid-template-columns:1fr}.lundy-grid{grid-template-columns:1fr 1fr}}
+@media print{html,body{color-scheme:light!important;background:#fff;color:#111;overflow:visible}body>*:not(.print-pack){display:none!important}.print-pack{display:block!important}.printpack{display:block!important}.print-page{break-after:page;page-break-after:always;padding:8mm;min-height:255mm}.print-page:last-child{break-after:auto;page-break-after:auto}.print-pack h1{font-size:20pt;line-height:1.15;margin:0 0 3mm}.print-pack h2{font-size:13pt;line-height:1.2;margin:3mm 0 1.5mm}.print-pack p,.print-pack li{font-size:10.5pt;line-height:1.35}.running-head{font-size:9pt;border-bottom:1px solid #666;margin-bottom:4mm;padding-bottom:2mm}.proute,.print-route{display:block;border:1px solid #777;padding:3mm;margin:3mm 0;break-inside:avoid}@page{size:A4;margin:10mm}}
+</style><!--n6m-guide:v1--><style id="n6m-guide-css">@media screen{[data-mbm-guide]{display:none!important}html.mbm-guide-on [data-mbm-guide]{display:revert!important}.n6m-guide-btn{position:fixed;right:12px;bottom:12px;z-index:2147483000;font:600 .8rem/1.2 "Segoe UI",Arial,sans-serif;padding:7px 11px;border:2px solid currentColor;border-radius:8px;background:#fff;color:#1e3a8a;cursor:pointer}.n6m-guide-btn[aria-pressed="true"]{background:#1e3a8a;color:#fff}}@media print{.n6m-guide-btn{display:none!important}}</style><script id="n6m-guide-js">(function(){var R=document.documentElement;function apply(v){R.classList.toggle("mbm-guide-on",!!v);var b=document.querySelector(".n6m-guide-btn");if(b){b.setAttribute("aria-pressed",v?"true":"false");}}function toggle(){apply(!R.classList.contains("mbm-guide-on"));}function boot(){if(!document.querySelector("[data-mbm-guide]"))return;var b=document.createElement("button");b.type="button";b.className="n6m-guide-btn";b.setAttribute("aria-pressed","false");b.setAttribute("data-n6m-guide-control","1");b.title="Show or hide staff guidance (G)";b.textContent="\u24D8 Guidance";b.addEventListener("click",toggle);document.body.appendChild(b);apply(false);document.addEventListener("keydown",function(e){if(e.key!=="g"&&e.key!=="G")return;if(e.metaKey||e.ctrlKey||e.altKey)return;var t=e.target,n=t&&t.tagName;if(n==="INPUT"||n==="TEXTAREA"||n==="SELECT"||(t&&t.isContentEditable))return;toggle();});}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();})();</script><!--/n6m-guide--></head>
+<body>
+<!--mbm_guide_v1 retained as a contract marker; guidance state is memory-only-->
+<!--n6-nav1:v1-->
+<style id="n6-nav1-css">@media print{.mbmhome,.n6-splash{display:none!important}}.mbmhome{display:inline-block;margin:6px 0 0 8px;font:600 .85rem/1.4 "Segoe UI",Arial,sans-serif;color:#1e3a8a;text-decoration:none}.mbmhome:hover,.mbmhome:focus{text-decoration:underline}</style>
+<a class="mbmhome" href="../../index.html" aria-label="Back to the Lessons catalogue">← Lessons</a>
+<!--/n6-nav1-->
+<a class="skip" href="#lessonDeck">Skip to lesson</a>
+<main id="lessonDeck" class="deck">
+<section class="slide active" data-type="title" data-title="Lesson overview" data-min="0">
+<div class="time">0 min</div>
+<span class="tag"></span>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<p>BUILD · Art · Week 7. Trinity Arts Award Discover. The Marks You Chose More Than Once.</p><p>Objective: look back at your log pages, find one mark and one colour you chose more than once, and write one sentence saying what those repeats show about your identity in your artwork.</p><p>Success evidence: two rings on your own log pages, both week numbers written, and one sentence in your own words.</p><p>You look at your own pages only. You talk about marks and colours. You do not talk about your home, your family or what you believe.</p><p>40 minutes. Offline.</p></section>
+<section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="3" data-ta1="Log pages out in week order before pupils sit. A pupil hunting for a page will not look at the marks." data-ta2="If a pupil has weeks missing, count the pages they do have out loud and start there. Do not send anyone to look for more.">
+<div class="time">3 min</div>
+<span class="tag"></span>
+<h2>Arrival · retrieve</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<h3>A repeat is a choice you made twice</h3><p>Last week you said why you chose one part.</p><p>Today you need every page you have made.</p><p>Today you look at all your pages at once.</p><p>Put them in week order, left to right.</p><p>A repeat is a mark or a colour you used more than once.</p><p>One use can be an accident. Two is a choice.</p><p>Your repeats are your identity in your artwork.</p><p>Identity here means what your own work keeps choosing.</p><div class="box rehearsal" data-mbm-guide="staff">Say the one-is-an-accident line once and leave it on the board. Without it pupils ring every mark on the page.</div><p>You need your log pages in week order, one pencil and two rings to draw.</p></section>
+<section class="slide" data-type="starter" data-title="Starter · create the need" data-min="3" data-ta1="Show both sets yourself. Do not use a pupil's pages as the weak example.">
+<div class="time">3 min</div>
+<span class="tag"></span>
+<h2>Starter · create the need</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<h3>Two sets of pages</h3><p>Here are two sets of log pages.</p><p>In set A every page uses a new mark.</p><p>You cannot say what that maker likes.</p><p>In set B a thick black line comes back three times.</p><p>Now you can say one true thing about that maker.</p><p>Set B is not better art. It is easier to read.</p><p>Look across the row, not down at one page.</p><ul><li>1 · lay your pages out in week order.</li><li>2 · look for a mark that comes back.</li><li>3 · look for a colour that comes back.</li><li>4 · ring one of each.</li></ul><p>You are looking for the same thing twice, not for your best page.</p></section>
+<section class="slide" data-type="ido" data-title="I Do · model" data-min="7" data-ta1="Model on your own pages, not on a pupil's. Draw the ring in front of them so the ring is seen being made." data-ta2="If a pupil answers with home, family or what they believe, say: today the sentence is about the mark on the page. Then point at their ring and move on. Do not comment.">
+<div class="time">7 min</div>
+<span class="tag"></span>
+<h2>I Do · model</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<h3>I read my own pages</h3><p>I put my pages in week order on the desk.</p><p>I look across them, not down at one.</p><p>The same short line shows up in week two and in week five.</p><p>That is a repeat, so I ring it on both pages.</p><p>One mark can change size and still be a repeat.</p><p>My short line is small in week two and long in week five.</p><p>It is the same kind of mark, so it counts.</p><p>I write the week numbers next to each ring.</p><p>Now the colour. Grey comes back three times.</p><p>I ring the grey once, on the page where it is clearest.</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Four boxes joined by arrows: lay the pages out, look across them, ring the repeat, say what it shows"><title>Reading your own pages</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">LAY OUT</text><text x="73" y="88" text-anchor="middle" font-size="11">pages in week order</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">LOOK ACROSS</text><text x="231" y="88" text-anchor="middle" font-size="11">not down at one page</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">RING</text><text x="389" y="88" text-anchor="middle" font-size="11">the mark that came back</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">SAY</text><text x="547" y="88" text-anchor="middle" font-size="11">what the repeat shows</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">Four steps, and the last one is your sentence</text></svg><p>Last comes the sentence, and it is one line.</p><p>I write: I keep choosing hard grey lines.</p><p>Then I add the why in the same line, because I like edges that show.</p><div class="box rehearsal" data-mbm-guide="staff">Write the sentence where the group can see both halves. What I keep choosing, then why. The halves are the thing being taught, not the art.</div><p>That sentence is about my art. It is not about my week.</p></section>
+<section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="3" data-ta1="Cards face down until every table is quiet. Then turn them over together.">
+<div class="time">3 min</div>
+<span class="tag"></span>
+<h2>We Do · everyone commits</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<h3>Sort the cards, then match the repeat</h3><p>Six log cards are on your table.</p><p>Each card shows two small pages by one maker.</p><p>Sort them into two piles: a repeat, and no repeat.</p><p>A repeat card shows the same mark or colour twice.</p><p>Now take the repeat pile.</p><p>Match each card to the word for its repeat. It is a line, a shape or a colour.</p><p>Every card gets a match, even when you are not sure.</p><p>A guess I can see beats a blank card.</p><p>Then hold up the card your table argued about most.</p></section>
+<section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="7" data-ta1="Both sentences up at once. Let the group find the one that points at a page.">
+<div class="time">7 min</div>
+<span class="tag"></span>
+<h2>I Do 2 · connect</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<h3>A sentence that points at a page</h3><p>Here are two sentences about the same pages.</p><p>The first one says my art is good.</p><p>Nobody can pick up a page and check that.</p><p>The second one says I keep choosing thick lines.</p><p>You can look at week two and week five and check it.</p><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Two boxes compared: a sentence that names a repeat, and a sentence that only says good"><title>Checkable against not checkable</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">POINTS AT A PAGE</text><text x="151" y="74" text-anchor="middle" font-size="11">I keep choosing thick lines</text><text x="151" y="94" text-anchor="middle" font-size="11">you can go and check it</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">POINTS AT NOTHING</text><text x="469" y="74" text-anchor="middle" font-size="11">my art is good</text><text x="469" y="94" text-anchor="middle" font-size="11">there is nothing to check</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Same pages, and only one sentence can be checked</text></svg><p>So your sentence names the mark or the colour first.</p><p>Then it says one thing that repeat shows.</p><p>A colour works the same way. I keep using grey.</p><p>That names a colour, so it can be checked too.</p><p>Good, nice and bad are not repeats, so they stay out.</p><ul><li>1 · name the mark or the colour.</li><li>2 · say which weeks it is on.</li><li>3 · say what it shows about your art.</li><li>4 · keep it to one line.</li></ul></section>
+<section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="5" data-ta1="Pair by table, not by choice. Time each way out loud.">
+<div class="time">5 min</div>
+<span class="tag"></span>
+<h2>We Do 2 · lab</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<h3>Check the ring, then check the words</h3><p>Work in twos and swap pages.</p><p>Find the ring your partner drew.</p><p>Then find the second page that mark is on.</p><p>If you can find it, put a tick by the ring.</p><p>A tick means the ring is a real repeat.</p><p>If you cannot, write the word once by the ring.</p><p>Once means it is not a repeat yet, so they ring a different mark.</p><p>Now your partner reads their sentence out to you.</p><p>It has to name the mark or the colour you ticked.</p><p>If it only says good or nice, ask them to name the mark instead.</p><p>Then swap back, with two minutes each way.</p><p>You are not marking the art. You are checking the ring and the words.</p></section>
+<section class="slide" data-type="independent" data-title="Independent · evidence" data-min="9" data-ta1="Scribe the exact words. Do not turn a pupil's short sentence into a longer one." data-ta2="A pupil who cannot find a repeat may ring the mark they like most and write once beside it. Record that as the choice.">
+<div class="time">9 min</div>
+<span class="tag"></span>
+<h2>Independent · evidence</h2>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<h3>Two rings and one sentence</h3><p>Work on your own now.</p><p>Use a pencil, so a ring can be moved.</p><p>Ring the mark first, then the colour.</p><p>Ring one mark that comes back on two pages.</p><p>Ring one colour that comes back on two pages.</p><p>Write the week numbers next to each ring.</p><p>Then write one sentence under your last page.</p><p>Start it with the words I keep choosing.</p><ul><li>Supported · ring one repeat and write the two week numbers.</li><li>Standard · ring a mark and a colour, and write one sentence starting I keep choosing.</li><li>Stretch · as Standard, and say what you would keep doing next time.</li></ul><p>If you finish early, ring a third page where the same mark shows.</p></section>
+<section class="slide" data-type="exit" data-title="Exit · Audience and Influence" data-min="3" data-ta1="The named adult reads the sentence back word for word, then points. No praise, no paraphrase.">
+<div class="time">3 min</div>
+<span class="tag"></span>
+<h2>Exit · Audience and Influence</h2>
+<div class="lundy-status">
+<p>
+<b>SPACE:</b> the learner may pause or choose a private response.</p>
+<p>
+<b>VOICE:</b> the evidence statement remains in the learner’s chosen communication mode.</p>
+<p>
+<b>AUDIENCE:</b> a familiar adult receives and names back exactly what was heard or seen.</p>
+<p>
+<b>INFLUENCE:</b> one real next action is recorded: retain, add method detail, or leave open.</p>
+</div>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+<h3>Say it once to an adult</h3><p>Read your sentence to the adult at your table.</p><p>They read it back to you word for word.</p><p>Then they point at one page that shows it.</p><p>If they cannot find one, change the mark you named.</p><p>One sentence is enough. Do not write more.</p><p>Now pick one thing that happens next. Keep the sentence, use the mark again next week, or try a new mark.</p><p>Write your pick on the page with today's date.</p><p>Your pages go in the arts log folder, not in your bag.</p></section>
+</main>
+<nav class="controls" aria-label="Lesson controls">
+<button type="button" data-nav="previous">◀ Previous</button>
+<button type="button" data-tool="1">Teacher tools</button>
+<button type="button" data-tool="2">Evidence &amp; print</button>
+<button type="button" data-tool="3">Calm mode</button>
+<button type="button" data-tool="4">Static diagrams</button>
+<button type="button" data-tool="5">Previous</button>
+<button type="button" data-tool="6">Next</button>
+<button type="button" data-nav="next">Next ▶</button>
+</nav>
+<div class="prog" aria-hidden="true">
+<span>
+</span>
+</div>
+<div id="taOverlay" class="overlay" aria-hidden="true">
+<div class="overlay-card">
+<h2></h2>
+<p>Use the least prompt needed. Keep adult preparation and exact-word scribing separate from pupil authorship. Guidance is hidden from the learner surface by default.</p>
+<button type="button" data-close-overlay>Close</button>
+</div>
+</div>
+<section class="print-pack printpack" aria-label="Printable lesson pack">
+<section class="print-page">
+<div class="running-head">BUILD Art · Week 7 · Art · Trinity Arts Award Discover · The Marks You Chose More Than Once</div>
+<h1>The Marks You Chose More Than Once</h1>
+<p><b>Workbook trace:</b> 'BUILD Weekly - Autumn'!C108</p>
+<p><b>Verbatim outcome:</b> Reflect on identity in my artwork.</p>
+<p><b>Objective:</b> Look back at your log pages, find one mark and one colour you chose more than once, and write one sentence saying what those repeats show about your identity in your artwork.</p>
+<h2>Two rings, one sentence</h2>
+<p></p>
+<table style="width:100%;border-collapse:collapse">
+<tr>
+<th style="border:1px solid #777;padding:6px"></th>
+<th style="border:1px solid #777;padding:6px"></th>
+<th style="border:1px solid #777;padding:6px"></th>
+</tr>
+<tr>
+<td style="border:1px solid #777;padding:8px">One mark ringed on two pages, with both week numbers written</td>
+<td style="border:1px solid #777;padding:8px;height:38mm">
+</td>
+<td style="border:1px solid #777;padding:8px">
+</td>
+</tr>
+<tr>
+<td style="border:1px solid #777;padding:8px">One colour ringed on two pages, with both week numbers written</td>
+<td style="border:1px solid #777;padding:8px;height:38mm">
+</td>
+<td style="border:1px solid #777;padding:8px">
+</td>
+</tr>
+<tr>
+<td style="border:1px solid #777;padding:8px">One sentence that starts with the words I keep choosing</td>
+<td style="border:1px solid #777;padding:8px;height:38mm">
+</td>
+<td style="border:1px solid #777;padding:8px">
+</td>
+</tr>
+</table>
+<svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Four boxes in order: read the picture, say the step, do it, then tick it."><title>How to work one step</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">Read it</text><text x="73" y="88" text-anchor="middle" font-size="11">look at the picture</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">Say it</text><text x="231" y="88" text-anchor="middle" font-size="11">say the step out loud</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">Do it</text><text x="389" y="88" text-anchor="middle" font-size="11">that one step only</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">Tick it</text><text x="547" y="88" text-anchor="middle" font-size="11">tick it on the card</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">You read a step, say it, do it, then tick it.</text></svg><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Two columns. Left: a named step gets ticked. Right: an unnamed step is left undone."><title>A step with a name</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">Named step</text><text x="151" y="74" text-anchor="middle" font-size="11">one person owns it</text><text x="151" y="94" text-anchor="middle" font-size="11">it gets done and ticked</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">No name</text><text x="469" y="74" text-anchor="middle" font-size="11">everyone waits for it</text><text x="469" y="94" text-anchor="middle" font-size="11">the plate is not finished</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">The step with nobody's name on it is the step that gets missed.</text></svg><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Four boxes joined by arrows: look at a part, say what is there, ring it, write the fact"><title>From looking to a checkable fact</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">LOOK</text><text x="73" y="88" text-anchor="middle" font-size="11">one part at a time</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">SAY</text><text x="231" y="88" text-anchor="middle" font-size="11">what is there</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">RING</text><text x="389" y="88" text-anchor="middle" font-size="11">the part you mean</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">WRITE</text><text x="547" y="88" text-anchor="middle" font-size="11">the fact next to it</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">Ring first, write second; the ring is what makes it checkable</text></svg><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Two boxes compared: three facts from different parts, against three that repeat one idea"><title>Spreading the three facts</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">THREE DIFFERENT PARTS</text><text x="151" y="74" text-anchor="middle" font-size="11">colour, shape, gaps</text><text x="151" y="94" text-anchor="middle" font-size="11">three real facts</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">THREE ABOUT COLOUR</text><text x="469" y="74" text-anchor="middle" font-size="11">bright, colourful, lots of colour</text><text x="469" y="94" text-anchor="middle" font-size="11">one fact, said three times</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Both sheets have three lines on them</text></svg><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Four boxes joined by arrows: lay the pages out, look across them, ring the repeat, say what it shows"><title>Reading your own pages</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">LAY OUT</text><text x="73" y="88" text-anchor="middle" font-size="11">pages in week order</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">LOOK ACROSS</text><text x="231" y="88" text-anchor="middle" font-size="11">not down at one page</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">RING</text><text x="389" y="88" text-anchor="middle" font-size="11">the mark that came back</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">SAY</text><text x="547" y="88" text-anchor="middle" font-size="11">what the repeat shows</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">Four steps, and the last one is your sentence</text></svg><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Two boxes compared: a sentence that names a repeat, and a sentence that only says good"><title>Checkable against not checkable</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">POINTS AT A PAGE</text><text x="151" y="74" text-anchor="middle" font-size="11">I keep choosing thick lines</text><text x="151" y="94" text-anchor="middle" font-size="11">you can go and check it</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">POINTS AT NOTHING</text><text x="469" y="74" text-anchor="middle" font-size="11">my art is good</text><text x="469" y="94" text-anchor="middle" font-size="11">there is nothing to check</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Same pages, and only one sentence can be checked</text></svg></section>
+<section class="print-page n6-lc-page">
+<div class="running-head">BUILD Art · Week 7 · Art · Trinity Arts Award Discover · The Marks You Chose More Than Once</div>
+<h2>Choose a route</h2>
+<div class="print-route supported">
+<h3></h3>
+<p>Ring one repeat on your pages and write the two week numbers.</p>
+</div>
+<div class="print-route standard">
+<h3></h3>
+<p>Ring a mark and a colour that come back, and write one sentence starting I keep choosing.</p>
+</div>
+<div class="print-route stretch">
+<h3></h3>
+<p>As Standard, and write what you would keep doing next time.</p>
+</div>
+<h2>What the repeat shows</h2>
+<ol>
+<li>Each ring is drawn on the log page, not on this sheet.</li><li>Both week numbers are written next to each ring.</li><li>The sentence names the mark or the colour, not a word like good.</li><li>The sentence is in the pupil's own words and carries today's date.</li></ol>
+<div style="height:42mm;border-bottom:1px solid #777">
+</div>
+<!--n6-learner-confirm:v1--><p style="margin:14px 0 4px;font-weight:800;font-size:.95rem"></p>
+<p style="margin:0 0 8px;font-size:.88rem"></p>
+<table style="width:100%;border-collapse:collapse;font-size:.9rem">
+<tr><td style="padding:10px 8px;border:1px solid #999;width:50%">Learner name (print)<br><br></td><td style="padding:10px 8px;border:1px solid #999">Signature<br><br></td></tr>
+<tr><td style="padding:10px 8px;border:1px solid #999">Date<br><br></td><td style="padding:10px 8px;border:1px solid #999"> </td></tr></table><!--/n6-learner-confirm-->
+</section>
+</section><!--n6-nav1:v1--><div class="n6-splash"><div style="text-align:center;margin-top:8px"><svg width="64" height="64" viewbox="0 0 100 100" aria-label="Made by Matt"><circle cx="50" cy="50" r="47" fill="none" stroke="#1e3a8a" stroke-width="3.4"></circle><g transform="translate(0 2)"><path d="M28 71 L28 37 L50 59 L72 37 L72 71" fill="none" stroke="#1e3a8a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 22.5 L51.48 28.52 L57.5 30 L51.48 31.48 L50 37.5 L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"></path></g></svg></div></div><!--/n6-nav1--><script id="lesson-config" type="application/json">{"id": "BUILD_ART_AUT1_W7", "family": "BUILD Art", "week": 7, "slot": "Art · Trinity Arts Award Discover", "title": "The Marks You Chose More Than Once", "outcomes": ["Reflect on identity in my artwork."], "cells": ["'BUILD Weekly - Autumn'!C108"], "objective": "Look back at your log pages, find one mark and one colour you chose more than once, and write one sentence saying what those repeats show about your identity in your artwork.", "source": {"workbook": "_passsb/inputs/Build SOW 2026-2027.xlsx", "sheet": "BUILD Weekly - Autumn", "cell": "'BUILD Weekly - Autumn'!C108"}, "timings": [0, 3, 3, 7, 3, 7, 5, 9, 3], "planId": "9e3be0dc1b5e", "weDoType": "sort-or-match", "tierLadder": ["Supported", "Standard", "Stretch"]}</script>
+<script>(function(){const slides=[...document.querySelectorAll("main.deck>.slide")],bar=document.querySelector(".prog>span");let index=0;function show(next){index=(next+slides.length)%slides.length;slides.forEach((s,i)=>s.classList.toggle("active",i===index));bar.style.width=((index+1)/slides.length*100)+"%";}document.querySelector("[data-nav=previous]").addEventListener("click",()=>show(index-1));document.querySelector("[data-nav=next]").addEventListener("click",()=>show(index+1));document.querySelectorAll("[data-tool]").forEach((button,i)=>button.addEventListener("click",()=>{if(i===0){const o=document.getElementById("taOverlay");o.classList.add("on");o.setAttribute("aria-hidden","false");}else if(i===1)document.body.classList.toggle("loop-on");else if(i===2)document.querySelector(".n6m-guide-btn")?.click();else if(i===3)document.body.classList.toggle("word-help");else if(i===4)document.body.classList.toggle("calm");else document.body.classList.toggle("teacher-freeze");}));document.querySelector("[data-close-overlay]").addEventListener("click",()=>{const o=document.getElementById("taOverlay");o.classList.remove("on");o.setAttribute("aria-hidden","true");});document.addEventListener("keydown",e=>{if(e.key==="ArrowRight")show(index+1);if(e.key==="ArrowLeft")show(index-1);});show(0);})();</script>
+</body>
+</html>
