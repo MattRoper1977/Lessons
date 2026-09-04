@@ -1874,3 +1874,50 @@ new cells, without inheriting Bronze's H7 ruling. Browser proof is pending.
 ## Verified merge #306
 
 Exact head `0f47b3de44b0b6680ea921362fd3959c5c20960f` merged as `e808f0aa1367925a8b88098c134c38d44a4fa384`. Against actual fork `fb96752c63077c41774673dcf3628c6f39cdb2d8`, all 9/9 changed blobs match. Evidence: `_sownb/vb/evidence/aae/merge306.json`. Required head runs: 33921327174,33921327049. This record does not itself claim served-byte equality.
+
+## Silver batch opening — 14 planned / 24 ceiling
+
+Bronze's fourteen decks have merged; Explore's fourteen are now authored and
+built with binding award gates passed. Silver drafting begins on a separate
+branch while Explore completes pack/browser checks. Merges remain level-ordered.
+The root remains the single Lessons writer.
+
+The canonical Silver plan has six Unit 1 decks and eight Unit 2 decks, with
+full 1C and 1D teaching and all nine parts served. It retains all required
+evidence in Core, Extend and Challenge, one Attempted per unit, twenty files
+across Silver and all four assessment areas. No GROW cell is invented.
+Fourteen forty-minute lessons do not themselves deliver the 95-hour programme.
+
+
+
+
+
+
+## Silver fourteen-deck source checkpoint
+
+All fourteen specs and generated decks are preserved. Comparative builds
+pass after two We Do activities were correctly declared commit-and-reveal
+and given an explicit reveal routine. The initial sort-or-match declaration
+did not describe their actual activity. No gate was weakened to accept it.
+
+The separate award scan has two slot-deck findings under review. A genuine
+“You will meet” promise is corrected to an arranged-route condition. Truthful
+denials and questions checking the actual record also triggered the assertion
+matcher; those require narrowly controlled mechanism correction, not hiding
+the words in the teaching. This checkpoint does not claim a complete Silver
+award gate or browser result.
+
+Independent GROW Art cell review checks all 39 spine cells against the workbook,
+including 23 planned cells. Existing week 1–7 outcomes already have owners;
+unclaimed overlap belongs to other ruled weeks. No new Silver cell is claimed.
+
+
+
+
+## Silver final source and pack checkpoint — 14 units
+
+All fourteen source-authored decks now pass comparative builds and the separate g30–g35 scan. Reader v1.1.1 preserves the 43 prior controls and adds 24 reference-scope controls in prerequisite PR305. A genuine practitioner promise was corrected before rebuilding. Independent review also corrected an early baseline-model sequence, a two-variable comparison and a caption-writing omission; two We Do declarations now name their actual commit-and-reveal activities. Words 1073–1287, pupil FK 5.34–6.28, sixteen pack checksums. Nine parts remain separately locatable across two units; twenty files maximum across Silver. Cells remain zero before and after independent ruled-week review. Browser verification and ordered merging remain pending.
+
+## Verified merge #307
+
+Exact head `b93a2b04cca83faaae67a547801e46233c02f0c8` merged as `3fc694f0a47d20f566d1dd6ad1dae5bda9973fb6`. Against actual fork `e808f0aa1367925a8b88098c134c38d44a4fa384`, all 60/60 changed blobs match. Evidence: `_sownb/vb/evidence/aae/merge307.json`. Required head runs: 33921766873,33921766875. This record does not itself claim served-byte equality.

@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lead The Project In Action</title><style>
+:root{--bg:#141C24;--panel:#202D37;--panel2:#283743;--text:#F2EFE5;--muted:#C8CECA;--steel:#5B91A5;--oxide:#D1673D;--teal:#2BA193;--gold:#DFAD3E;--violet:#8B6CC7;--line:#42515d;--paper:#fff;--ink:#172334;--danger:#b93f4b}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:"Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--bg)}
+body{overflow:hidden}a,button{font:inherit}button,a.mbmhome{min-height:44px;min-width:44px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:8px;top:8px;z-index:50;background:#fff;padding:10px}
+.deck{height:100vh;padding:18px 18px 112px;overflow:auto}.slide{display:none;max-width:1120px;min-height:calc(100vh - 145px);margin:auto;background:var(--paper);border:2px solid var(--line);border-top:10px solid var(--teal);border-radius:18px;padding:22px;box-shadow:0 8px 30px #10233f18}.slide.active{display:block}
+h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-size:clamp(1.5rem,3vw,2.3rem);margin:.4rem 0 1rem}h3{margin:.2rem 0 .45rem}p,li{line-height:1.5}.tag,.time,.chips span{display:inline-block;border-radius:999px;padding:6px 10px;font-weight:800}.tag{background:#EEF5F4}.time{float:right;background:var(--ink);color:#fff}.chips{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.chips span{background:#FFF4D6}
+.hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,.7fr);gap:18px}.hero-visual{display:grid;gap:10px;align-content:center;background:var(--ink);color:#fff;border-radius:16px;padding:18px;min-height:150px;text-align:center}.hero-visual span{color:var(--teal)}
+.box,.route,.route-card,.evidence-gate,.lundy,.lundy-strip,.ladder,.prompt-ladder,.ta-card,.modal,.drawer,dialog{border:2px solid var(--line);border-radius:13px;padding:13px;margin:12px 0;background:#fff}.lo{border-left:8px solid var(--teal)}.truth{border-left:8px solid var(--oxide);background:#FFF4D6;padding:12px}.access{background:#EEF5F4;padding:12px;border-radius:12px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.routes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.route.s,.route.supported,.route-card.supported{border-top:7px solid var(--teal)}.route.m,.route.standard,.route-card.standard{border-top:7px solid var(--steel)}.route.h,.route.stretch,.route-card.stretch{border-top:7px solid var(--oxide)}.options{display:grid;gap:9px}.options button{text-align:left;padding:12px;border:2px solid var(--line);border-radius:10px;background:#fff}.vocabrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.vterm{border:2px solid var(--line);padding:12px;border-radius:12px}.vterm span{display:block;margin-top:5px}.lundy-grid,.lundy-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center;font-weight:900}.ladder,.prompt-ladder{font-weight:700}.ta-card,.modal,.drawer{background:#FFF4D6}
+.controls{position:fixed;left:8px;right:8px;bottom:58px;z-index:20;display:flex;gap:7px;overflow-x:auto;padding:8px;background:var(--ink);border-radius:14px}.controls button,.controls a{flex:0 0 auto;border:2px solid #fff;border-radius:9px;padding:7px 10px;background:#fff;color:var(--ink);font-weight:800;text-decoration:none}.prog{position:fixed;left:12px;right:12px;bottom:46px;height:6px;background:#fff;border:1px solid var(--line);z-index:19}.prog>span{display:block;height:100%;width:11.11%;background:var(--teal)}
+.overlay{display:none;position:fixed;inset:0;z-index:40;background:#10233fdd;align-items:center;justify-content:center;padding:18px}.overlay.on{display:flex}.overlay-card{max-width:700px;background:#fff;border-radius:15px;padding:20px}.overlay-card button{padding:8px 12px}
+.print-pack{display:none}.printpack{display:none}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(max-width:720px){.deck{padding:10px 10px 118px}.slide{padding:15px}.hero,.routes,.vocabrow{grid-template-columns:1fr}.lundy-grid{grid-template-columns:1fr 1fr}}
+@media print{html,body{color-scheme:light!important;background:#fff;color:#111;overflow:visible}body>*:not(.print-pack){display:none!important}.print-pack{display:block!important}.printpack{display:block!important}.print-page{break-after:page;page-break-after:always;padding:8mm;min-height:255mm}.print-page:last-child{break-after:auto;page-break-after:auto}.print-pack h1{font-size:20pt;line-height:1.15;margin:0 0 3mm}.print-pack h2{font-size:13pt;line-height:1.2;margin:3mm 0 1.5mm}.print-pack p,.print-pack li{font-size:10.5pt;line-height:1.35}.running-head{font-size:9pt;border-bottom:1px solid #666;margin-bottom:4mm;padding-bottom:2mm}.proute,.print-route{display:block;border:1px solid #777;padding:3mm;margin:3mm 0;break-inside:avoid}@page{size:A4;margin:10mm}}
+</style><style id="award-print-layout">
+      @media screen {
+        [data-mbm-guide]{display:none!important}
+        #taOverlay [data-mbm-guide]{display:block!important}
+        #taOverlay .overlay-card{max-height:calc(100vh - 36px);overflow:auto;width:min(700px,100%)}
+        body.calm .slide{box-shadow:none}
+        body.calm *,body.calm *::before,body.calm *::after{animation:none!important;transition:none!important}
+        body.teacher-freeze *,body.teacher-freeze *::before,body.teacher-freeze *::after{animation-play-state:paused!important;transition:none!important}
+      }
+      @media print {
+        .award-print .print-page{box-sizing:border-box;padding:4mm;min-height:0}
+        .award-print table{width:100%;border-collapse:collapse;table-layout:fixed}
+        .award-print th,.award-print td{border:1px solid #777;padding:2mm;vertical-align:top;font-size:9pt}
+        .award-print th:first-child{width:34%}.award-print th:last-child{width:23%}
+        .award-print td.award-response{height:18mm}
+        .award-print-figures svg{display:block;width:100%;max-height:34mm;margin:2mm 0}
+        .award-print .print-route{padding:2mm;margin:2mm 0}
+        .award-print h3{font-size:11pt;margin:0}
+        .award-print .award-review-space{height:35mm;border:1px solid #777}
+      }
+    </style></head><body><!--n6-nav1:v1--><style id="n6-nav1-css">@media print{.mbmhome,.n6-splash{display:none!important}}.mbmhome{display:inline-block;margin:6px 0 0 8px;font:600 .85rem/1.4 "Segoe UI",Arial,sans-serif;color:#1e3a8a;text-decoration:none}.mbmhome:hover,.mbmhome:focus{text-decoration:underline}</style><a class="mbmhome" href="../../index.html" aria-label="Back to the Lessons catalogue">← Lessons</a><!--/n6-nav1--><a class="skip" href="#lessonDeck">Skip to lesson</a><main id="lessonDeck" class="deck"><section class="slide active" data-type="title" data-title="Lesson overview" data-min="0"><div class="time">0 min</div><span class="tag"></span><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><p>GROW · Art · Week 5. Trinity Arts Award Silver. Lead The Project In Action.</p><p>Objective: Lead a real phase of your arts project, work with its participants and keep evidence of your own decisions and contribution.</p><p>Success evidence: actual project delivery, the pupil’s own leadership actions, real responses from others and precise Unit 2 evidence locations.</p><p>Unit 2 is your arts leadership project. Keep it distinct from your personal arts challenge in Unit 1. These lessons support your real project at its planned scale.</p><p>40-minute lesson frame. Real activity may continue in recorded programme time. No event, attendance or booking is asserted here.</p><div class="box rehearsal" data-mbm-guide="staff">This deck directly serves Silver Unit 2, Arts leadership, Parts 2C and 2D. Part 2C requires effective arts leadership in actual delivery. Two delivery lessons may support phases of one project; they do not create a two-event minimum. Part 2D requires working effectively with others. Preserve the pupil’s own contribution, actual exchanges and response to collaborators. Source: tools/artsaward/SPEC.json, Silver and universal rules. Silver has TWO units, evidenced separately: Unit 1 Arts practice and pathways; Unit 2 Arts leadership. Mark P / A / N per part. ONE Attempted is allowed PER UNIT. Any Not Attempted = Below Pass. Results are Pass / Below Pass only. The whole Silver portfolio has a 20-file cap across both units, not twenty per unit. Organise evidence by unit and part. Nine cumulative part files or two clearly sectioned unit files are optional layouts. Name the actual file plus page, slide or timecode for each item. One real record may support two parts with clear locators; do not count duplicate copies as extra evidence. The four assessment areas are art form knowledge and understanding, creativity, planning and review, and communication. Only an adviser trained at Silver may assess; delivery is through a validated centre. Confirm these locally, not as an accomplished fact in this deck. Adults may scribe exact pupil words or confirmed signs and check them back, but must not write the pupil’s plan, review or evidence. Staff may separately record factual observations. Core, Extend and Challenge are support choices within Silver and retain the actual role, contribution and evidence. No public showing is imposed as a Silver requirement. Fourteen forty-minute sessions do not supply all 95 programme hours; record actual further guided and independent time.</div><div class="box rehearsal" data-mbm-guide="staff">Retrieve the agreed 2A role, current 2B plan and actual readiness checks. Arrange the real participants and resources required for the pupil’s project; no attendance is assumed. Use a pencil and scrap paper for the live teaching model. Have pupils prepare a safe art-making step suited to their project for the lab. This may be a visual-art task, a short rehearsal task or another agreed arts process. Support technical instruction if needed before the pupil leads it. Use independent time for genuine delivery, with extra programme time where required. Do not replace delivery with a role-play, finished group product or an adult account of a task that never happened. Evidence capture must not obstruct supervision; no image of a pupil’s face or public posting is required.</div></section><section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="3" data-ta1="Verify actual readiness and roles before delivery. Never infer attendance, permission or safe resources from a completed plan."><div class="time">3 min</div><span class="tag"></span><h2>Arrival · retrieve</h2><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><p>Open your agreed role and current practical plan. Which part of the real project will you lead today? Name the people who need to understand what you are doing.</p><p>Check that the materials, space and responsible adult are ready. Look again at the risks and the agreed way to pause. A missing safety check is a reason to stop and resolve it, not to hurry past it.</p><p>If the real project is not ready, say what is missing. You can rehearse a method, but label that as preparation. Today’s date on a worksheet does not prove that delivery happened.</p><p>Keep your own role visible. Leading does not mean doing every job. It means taking responsibility for your agreed part and helping other people work towards the arts purpose.</p></section><section class="slide" data-type="starter" data-title="Starter · create the need" data-min="3" data-ta1="Use the complete written examples. Invite responses without naming a pupil as the unhelpful leader."><div class="time">3 min</div><span class="tag"></span><h2>Starter · create the need</h2><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><p>Compare two short teaching examples. In the first, a leader takes the pencil and finishes another person’s pattern. In the second, the leader shows a mark on spare paper and gives the pencil back.</p><p>Which example helps the other person take part? Explain what the leader did, rather than simply calling them good or bad.</p><p>A leader may need to demonstrate, arrange resources, explain a choice or invite a response. These actions support the project. Taking over every task can hide what participants wanted to make.</p><p>A photograph of the finished group work will not show all these actions. Today you will keep a record of your own leadership as well as what the project produced. Both can matter, but they tell different parts of the story.</p></section><section class="slide" data-type="ido" data-title="I Do · model" data-min="6" data-ta1="Model an actual brief exchange and art action. Use the partner’s genuine response. Show any relevant project-specific technique before pupils practise leading it."><div class="time">6 min</div><span class="tag"></span><h2>I Do · model</h2><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><p>Watch the adult lead a tiny mark-making task with a willing partner. They explain the purpose: try how a repeated mark can make a pattern. They place paper and a pencil within reach.</p><p>The adult shows a dot, a short line and a curve on a separate scrap. They name each action while making it. Then they invite the partner to choose a mark and repeat it in their own way.</p><p>They ask the partner to show where they will start. That checks the explanation without demanding a long spoken reply. The adult gives time to try before offering more help.</p><p>If the partner is unsure, the adult asks which step needs showing again. They repeat that step slowly. They do not draw the partner’s pattern or decide which mark the partner must choose.</p><p>The adult checks the result of the help: can the person now begin, or is a different tool or explanation needed? They use the real response rather than assuming their support worked.</p><p>This small model teaches a leadership method. Your project may use different art and a different role. Keep its purpose, participants and agreed limits at the centre of your decisions.</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Lead an arts step without taking over. EXPLAIN make the purpose clear. SHOW model the needed step. INVITE let others take part. CHECK respond to what happens. Support someone’s action while keeping their choice."><title>Lead an arts step without taking over</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">EXPLAIN</text><text x="73" y="88" text-anchor="middle" font-size="11">make the purpose clear</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">SHOW</text><text x="231" y="88" text-anchor="middle" font-size="11">model the needed step</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">INVITE</text><text x="389" y="88" text-anchor="middle" font-size="11">let others take part</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">CHECK</text><text x="547" y="88" text-anchor="middle" font-size="11">respond to what happens</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">Support someone’s action while keeping their choice.</text></svg></section><section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="4" data-ta1="Read the cards aloud and collect each response. Separate helpful support from taking control of another person’s creative work."><div class="time">4 min</div><span class="tag"></span><h2>We Do · everyone commits</h2><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><p>Sort these visible cards into LEADERSHIP ACTION or NEEDS A CHANGE. Point to a letter and give a reason before checking the key.</p><p>A: I show the process on scrap paper, then let the participant try.</p><p>B: I say everyone joined in because their names were on my plan.</p><p>C: I ask what was unclear and change my explanation.</p><p>D: I finish their work without asking because time is short.</p><p>The leadership actions are A and C. B confuses planned participation with real participation. D takes away the other person’s action and choice.</p><p>Choose a useful replacement for B or D. You could record who actually took part, offer a smaller safe task, or explain which part needs more time. Keep the record honest when plans change.</p></section><section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="6" data-ta1="Use evidence from the real classroom demonstration. Keep factual observation, participant response and pupil reflection distinct."><div class="time">6 min</div><span class="tag"></span><h2>I Do 2 · connect</h2><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><p>Look back at the live model. A finished pattern shows the participant’s marks. It does not, by itself, show how the adult explained the task or responded to a question.</p><p>A short factual note can fill that gap: the adult showed a curve on spare paper, then repeated the first step when asked. The note must describe what really happened in the model.</p><p>For your project, identify your own actions and decisions. Keep another person’s response separate from your thoughts about it. They may have found a step hard even when you felt your explanation was clear.</p><p>An observer can record what they saw or heard. They cannot know your reason unless you explain it. Add your own words or confirmed signs, and check any scribed account before saving it.</p><p>This delivery record supports 2C. Your actual exchanges and response to others also support 2D. Mark both parts clearly without copying the same image into several new files.</p><p>A quiet, useful intervention can show leadership. You do not need a loud speech, a public audience or a dramatic problem to make your contribution count.</p><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="A product and a leadership record. WHAT WAS MADE the arts outcome what participants produced. WHAT I LED my action and decision how I worked with others. A group result alone does not identify your role."><title>A product and a leadership record</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">WHAT WAS MADE</text><text x="151" y="74" text-anchor="middle" font-size="11">the arts outcome</text><text x="151" y="94" text-anchor="middle" font-size="11">what participants produced</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">WHAT I LED</text><text x="469" y="74" text-anchor="middle" font-size="11">my action and decision</text><text x="469" y="94" text-anchor="middle" font-size="11">how I worked with others</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">A group result alone does not identify your role.</text></svg></section><section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="5" data-ta1="Prepare the actual art step first. Label the lab as rehearsal by default; do not use role-play as a substitute for the real delivery requirement."><div class="time">5 min</div><span class="tag"></span><h2>We Do 2 · lab</h2><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><p>Practise explaining one safe art step from your own project to a willing collaborator. Agree that this is rehearsal. Show the action using suitable materials before asking them to try.</p><p>Ask them to show or say what comes next. Listen for one thing that needs a clearer explanation, a closer view or more time. Change that support and check whether it helps.</p><p>Let the collaborator do their own part. Ask before handling their materials or moving their work. Respect a request to pause, and involve the responsible adult for any safety concern.</p><p>Keep a brief rehearsal note if it will help you deliver. Do not label this practice as the project itself unless it genuinely is an agreed delivery phase with real participants and a real arts purpose.</p></section><section class="slide" data-type="independent" data-title="Independent · evidence" data-min="10" data-ta1="Give actual delivery priority and allow extended programme time. Support access and supervision without taking over the pupil’s role or writing their account."><div class="time">10 min</div><span class="tag"></span><h2>Independent · evidence</h2><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><p>Lead the agreed part of your real arts project now, if it is ready. Make the purpose and next step clear. Use the art method, resources and access support you prepared.</p><p>Work with the other people in their real roles. Give them space to make choices. Check what they understand, notice what actually happens and respond within the limits you agreed.</p><p>Core: use a short cue card and access help. Carry out your own real leadership role, communicate with participants and respond to them. Point, speak or dictate an accurate record of your actions and contribution.</p><p>Extend: lead your agreed phase and record decisions, participant responses and how you worked with others. Link a real example to your own role.</p><p>Challenge: keep the same actual delivery and role evidence. Notice how a leadership choice affects participation, make a safe adjustment if needed and check its effect with the people involved.</p><p>Use the evidence method agreed in your plan. A factual observer note, work sample, short clip or annotated image may help. Add your own account; do not let the evidence task prevent you leading safely.</p><p>Save the actual file name and page, slide or timecode under Unit 2, Parts 2C and 2D. If delivery could not occur, name the gap and arrange a genuine opportunity. Keep rehearsal labelled as rehearsal.</p></section><section class="slide" data-type="exit" data-title="Exit · identify your contribution" data-min="3" data-ta1="Confirm actual role and delivery evidence. Carry real remaining tasks forward; a session ending is not proof that the whole project is finished."><div class="time">3 min</div><span class="tag"></span><h2>Exit · identify your contribution</h2><div class="lundy-status"></div><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span></span><span></span><span></span><span></span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div><p>Pause with the team when the project phase allows. Name one action you actually led and one response you received. Check a factual detail with a collaborator if you are unsure.</p><p>Find the saved evidence for that moment. Can a reader tell which action was yours, which came from another person and what happened next? Add a clear label if the roles are hard to follow.</p><p>Record what is finished and what still needs attention. The next delivery lesson can support the same project. It does not mean you must invent a second event or claim that this phase completed every aim.</p></section></main><nav class="controls" aria-label="Lesson controls"><button type="button" data-nav="previous">◀ Previous</button><button type="button" data-tool="1">TA brief</button><button type="button" data-tool="2">Read response</button><button type="button" data-tool="3">Sources</button><button type="button" data-tool="4">Display / print</button><button type="button" data-tool="5">Calm mode</button><button type="button" data-tool="6">Previous</button><button type="button" data-tool="7">Next</button><button type="button" data-nav="next">Next ▶</button></nav><div class="prog" aria-hidden="true"><span></span></div><div id="taOverlay" class="overlay" aria-hidden="true"><div class="overlay-card"><h2></h2><p>Use the least prompt needed. Keep adult preparation and exact-word scribing separate from pupil authorship. Guidance is hidden from the learner surface by default.</p><button type="button" data-close-overlay>Close</button></div></div><section class="print-pack printpack award-print" aria-label="Printable lesson pack">
+      <section class="print-page">
+        <div class="running-head">GROW Art · Week 5 · Art · Trinity Arts Award Silver</div><h1>Lead The Project In Action</h1>
+        <p><b>Award evidence:</b> Silver Arts Award, Part 2C, 2D; no workbook cell (AAE-H7)</p>
+        <p><b>Objective:</b> Lead a real phase of your arts project, work with its participants and keep evidence of your own decisions and contribution.</p>
+        <h2>My evidence record</h2><p>Lead your agreed arts-project role with real participants. Keep your own action, decision and response to others distinct from the group product.</p><p>My real delivery phase · Leadership action and participant response · Working with others · Evidence location and remaining work</p>
+        <table><thead><tr><th>Evidence focus</th><th>My words or response</th><th>File and page, slide or time</th></tr></thead>
+        <tbody><tr><th scope="row">Which real phase did I lead, and what was my role?</th><td class="award-response"></td><td class="award-locator"></td></tr><tr><th scope="row">What did I do, what response did I receive, and how did I respond?</th><td class="award-response"></td><td class="award-locator"></td></tr><tr><th scope="row">Which actual record identifies my contribution and what remains?</th><td class="award-response"></td><td class="award-locator"></td></tr></tbody></table>
+        <div class="award-print-figures"><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Lead an arts step without taking over. EXPLAIN make the purpose clear. SHOW model the needed step. INVITE let others take part. CHECK respond to what happens. Support someone’s action while keeping their choice."><title>Lead an arts step without taking over</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">EXPLAIN</text><text x="73" y="88" text-anchor="middle" font-size="11">make the purpose clear</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">SHOW</text><text x="231" y="88" text-anchor="middle" font-size="11">model the needed step</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">INVITE</text><text x="389" y="88" text-anchor="middle" font-size="11">let others take part</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">CHECK</text><text x="547" y="88" text-anchor="middle" font-size="11">respond to what happens</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">Support someone’s action while keeping their choice.</text></svg><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="A product and a leadership record. WHAT WAS MADE the arts outcome what participants produced. WHAT I LED my action and decision how I worked with others. A group result alone does not identify your role."><title>A product and a leadership record</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">WHAT WAS MADE</text><text x="151" y="74" text-anchor="middle" font-size="11">the arts outcome</text><text x="151" y="94" text-anchor="middle" font-size="11">what participants produced</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">WHAT I LED</text><text x="469" y="74" text-anchor="middle" font-size="11">my action and decision</text><text x="469" y="94" text-anchor="middle" font-size="11">how I worked with others</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">A group result alone does not identify your role.</text></svg></div>
+        <p>Name or learner code: ____________________ Date: ____________________</p>
+      </section>
+      <section class="print-page">
+        <div class="running-head">GROW Art · Week 5 · Art · Trinity Arts Award Silver</div><h1>Lead The Project In Action</h1>
+        <h2>Choose the support you need</h2><div class="print-route"><h3>Core</h3><p>Core: use a short cue card and access help. Carry out your own real leadership role, communicate with participants and respond to them. Point, speak or dictate an accurate record of your actions and contribution.</p></div><div class="print-route"><h3>Extend</h3><p>Extend: lead your agreed phase and record decisions, participant responses and how you worked with others. Link a real example to your own role.</p></div><div class="print-route"><h3>Challenge</h3><p>Challenge: keep the same actual delivery and role evidence. Notice how a leadership choice affects participation, make a safe adjustment if needed and check its effect with the people involved.</p></div>
+        <h2>Check the evidence</h2><ol><li>The record identifies actual project delivery, or states honestly why it has not occurred.</li><li>My own leadership role, actions and decisions are identifiable.</li><li>Actual work with others and responses are retained for Part 2D.</li><li>Group products and rehearsal are not substituted for personal delivery evidence.</li><li>Unit 2 Parts 2C and 2D have actual file-plus-page, slide or timecode locators.</li></ol>
+        <h2>My review or next step</h2><div class="award-review-space"></div>
+        <p>For a recorded response, write the actual file name and page, slide or timecode.</p>
+      </section>
+    </section><!--n6-nav1:v1--><div class="n6-splash"><div style="text-align:center;margin-top:8px"><svg width="64" height="64" viewbox="0 0 100 100" aria-label="Made by Matt"><circle cx="50" cy="50" r="47" fill="none" stroke="#1e3a8a" stroke-width="3.4"></circle><g transform="translate(0 2)"><path d="M28 71 L28 37 L50 59 L72 37 L72 71" fill="none" stroke="#1e3a8a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 22.5 L51.48 28.52 L57.5 30 L51.48 31.48 L50 37.5 L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"></path></g></svg></div></div><!--/n6-nav1--><script id="lesson-config" type="application/json">{"id": "SILVER_W5_2C1", "family": "GROW Art", "week": 5, "slot": "Art · Trinity Arts Award Silver", "title": "Lead The Project In Action", "outcomes": ["Deliver the planned arts project or a genuine phase with real participants. Show the pupil’s own leadership, communication, role and decisions, and how they work with others. Preserve actual responses and any safe changes made. A finished group product alone cannot identify the pupil’s contribution."], "cells": [], "objective": "Lead a real phase of your arts project, work with its participants and keep evidence of your own decisions and contribution.", "timings": [0, 3, 3, 6, 4, 6, 5, 10, 3], "artsAward": {"level": "Silver", "parts": ["2C", "2D"]}, "planId": "f2d670be77b7", "weDoType": "sort-or-match", "tierLadder": ["Core", "Extend", "Challenge"]}</script><script data-award-chassis="">/* Runtime for newly authored award decks; no persistence or external dependencies. */
+(function () {
+  'use strict';
+
+  function boot() {
+    const deck = document.querySelector('main.deck');
+    const slides = Array.from(document.querySelectorAll('main.deck > .slide'));
+    if (!deck || !slides.length) return;
+    const progress = document.querySelector('.prog');
+    const bar = document.querySelector('.prog > span');
+    const overlay = document.getElementById('taOverlay');
+    const card = overlay && overlay.querySelector('.overlay-card');
+    const closeButton = overlay && overlay.querySelector('[data-close-overlay]');
+    const teacherButtons = document.querySelectorAll('[data-tool="1"]');
+    let index = Math.max(0, slides.findIndex(slide => slide.classList.contains('active')));
+    let returnFocus = null;
+    let notes = null;
+    let slotHost = null;
+
+    function show(next) {
+      index = (next + slides.length) % slides.length;
+      slides.forEach(function (slide, i) {
+        slide.classList.toggle('active', i === index);
+        slide.setAttribute('aria-hidden', i === index ? 'false' : 'true');
+      });
+      if (bar) bar.style.width = ((index + 1) / slides.length * 100) + '%';
+      if (progress) {
+        progress.removeAttribute('aria-hidden');
+        progress.setAttribute('role', 'progressbar');
+        progress.setAttribute('aria-label', 'Lesson progress');
+        progress.setAttribute('aria-valuemin', '1');
+        progress.setAttribute('aria-valuemax', String(slides.length));
+        progress.setAttribute('aria-valuenow', String(index + 1));
+        progress.setAttribute('aria-valuetext', 'Stage ' + (index + 1) + ' of ' + slides.length);
+      }
+      deck.scrollTop = 0;
+    }
+
+    function isOpen() {
+      return Boolean(overlay && overlay.classList.contains('on'));
+    }
+
+    function fillNotes() {
+      notes.replaceChildren();
+      const heading = document.createElement('h3');
+      heading.textContent = slides[index].dataset.title || 'Current stage';
+      notes.appendChild(heading);
+      ['ta1', 'ta2'].forEach(function (key) {
+        const text = slides[index].dataset[key];
+        if (!text) return;
+        const paragraph = document.createElement('p');
+        paragraph.textContent = text;
+        notes.appendChild(paragraph);
+      });
+      const sources = index === 0 ? [slides[0]] : [slides[index], slides[0]];
+      sources.forEach(function (source) {
+        source.querySelectorAll('[data-mbm-guide]').forEach(function (note) {
+          // The slot reader has its own live state and file listener: never clone it.
+          if (note.id === 'award-slot-panel' || note.closest('#award-slot-panel')) return;
+          const copy = note.cloneNode(true);
+          copy.removeAttribute('id');
+          copy.querySelectorAll('[id]').forEach(node => node.removeAttribute('id'));
+          notes.appendChild(copy);
+        });
+      });
+      // mount() runs on DOMContentLoaded. A real click comes after that event,
+      // regardless of the order in which the two embedded scripts were loaded.
+      const panel = document.getElementById('award-slot-panel');
+      if (panel && !slotHost.contains(panel)) slotHost.appendChild(panel);
+    }
+
+    function openTeacher(button) {
+      if (!card || isOpen()) return;
+      returnFocus = button || document.activeElement;
+      fillNotes();
+      overlay.classList.add('on');
+      overlay.setAttribute('aria-hidden', 'false');
+      teacherButtons.forEach(node => node.setAttribute('aria-expanded', 'true'));
+      (closeButton || card).focus();
+    }
+
+    function closeTeacher() {
+      if (!isOpen()) return;
+      overlay.classList.remove('on');
+      overlay.setAttribute('aria-hidden', 'true');
+      teacherButtons.forEach(node => node.setAttribute('aria-expanded', 'false'));
+      if (returnFocus && returnFocus.isConnected) returnFocus.focus();
+    }
+
+    function focusable() {
+      return Array.from(card.querySelectorAll('a[href], button, input, select, textarea, [tabindex]'))
+        .filter(node => !node.disabled && node.tabIndex >= 0 && node.getClientRects().length);
+    }
+
+    if (card) {
+      overlay.setAttribute('role', 'dialog');
+      overlay.setAttribute('aria-modal', 'true');
+      overlay.setAttribute('aria-hidden', 'true');
+      overlay.classList.remove('on');
+      card.tabIndex = -1;
+      let title = card.querySelector('h2');
+      if (!title) {
+        title = document.createElement('h2');
+        card.prepend(title);
+      }
+      title.id = 'award-teacher-title';
+      title.textContent = 'Teacher tools';
+      overlay.setAttribute('aria-labelledby', title.id);
+      notes = document.createElement('div');
+      notes.id = 'award-teacher-notes';
+      slotHost = document.createElement('div');
+      slotHost.id = 'award-teacher-slots';
+      card.insertBefore(notes, closeButton);
+      card.insertBefore(slotHost, closeButton);
+      if (closeButton) closeButton.addEventListener('click', closeTeacher);
+      teacherButtons.forEach(function (button) {
+        button.setAttribute('aria-controls', overlay.id);
+        button.setAttribute('aria-expanded', 'false');
+        button.addEventListener('click', () => openTeacher(button));
+      });
+      // Keep focus in the open dialog, including when scripts attempt to move it.
+      document.addEventListener('focusin', function (event) {
+        if (isOpen() && !overlay.contains(event.target)) (closeButton || card).focus();
+      });
+    }
+
+    document.querySelectorAll('[data-nav="previous"], [data-tool="5"]')
+      .forEach(button => button.addEventListener('click', () => { if (!isOpen()) show(index - 1); }));
+    document.querySelectorAll('[data-nav="next"], [data-tool="6"]')
+      .forEach(button => button.addEventListener('click', () => { if (!isOpen()) show(index + 1); }));
+    document.querySelectorAll('[data-tool="2"]')
+      .forEach(button => button.addEventListener('click', () => window.print()));
+    [['3', 'calm'], ['4', 'teacher-freeze']].forEach(function (item) {
+      const buttons = document.querySelectorAll('[data-tool="' + item[0] + '"]');
+      function sync() {
+        const active = document.body.classList.contains(item[1]);
+        buttons.forEach(button => button.setAttribute('aria-pressed', String(active)));
+      }
+      buttons.forEach(button => button.addEventListener('click', function () {
+        document.body.classList.toggle(item[1]);
+        sync();
+      }));
+      sync();
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (isOpen()) {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          closeTeacher();
+        } else if (event.key === 'Tab') {
+          const items = focusable();
+          const first = items[0] || card;
+          const last = items[items.length - 1] || card;
+          if (!items.length || !items.includes(document.activeElement)
+              || (event.shiftKey && document.activeElement === first)
+              || (!event.shiftKey && document.activeElement === last)) {
+            event.preventDefault();
+            (event.shiftKey ? last : first).focus();
+          }
+        }
+        return;
+      }
+      const target = event.target;
+      if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey
+          || (target && (target.isContentEditable
+              || (typeof target.closest === 'function' && target.closest('input, textarea, select'))))
+          || document.querySelector('dialog[open], .overlay.on, [role="dialog"][aria-hidden="false"]')) return;
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        event.preventDefault();
+        show(index + (event.key === 'ArrowRight' ? 1 : -1));
+      }
+    });
+    show(index);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once: true});
+  else boot();
+}());
+</script></body></html>
