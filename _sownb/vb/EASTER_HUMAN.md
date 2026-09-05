@@ -579,3 +579,13 @@ that does apply, and the cell column stays empty.
 The earlier entries above are retained as history. R1B voided the exemplar deck repairs: do not import those binaries or wait for them. Gold is a SPEC-based shelf record, not repairs to absent decks. PR303 introduced bound award-plan identities, so all 42 new award decks are judged by g29; they are no longer the predicted no-planId skips described in the earlier AAE-H7 entry. Their workbook cell sets remain empty following the documented independent reviews. The three named nonlesson chassis are still legitimate skips.
 
 All 42 new award lessons, both secondary placement links and the three catalogue pairs are delivered. The unconfirmed slots, centre/adviser information and possible Gold entrant do not hold the wider Easter Science/Humanities/ASDAN/Art continuation. The whole Easter programme is still active.
+
+## AAV-H3 — the mechanism battery derives its counts over a hand-typed roster
+
+Found while repairing g28 (AAV-NIGHT, 2026-09-05). `mechanism_battery.py` states that nothing in it is pinned. Its control COUNTS are genuinely derived; its TOOL LIST is two hand-typed Python literals. A gate is therefore invisible to the battery until a human types its filename, and `g28_cell_existence.py` — which has had a working `--self-test` all along — was never typed, so its controls ran nowhere, in CI or out of it, until this order added it.
+
+g28 is fixed. The class is not. Any gate added since, or added next, is silent by default rather than caught by default, and the battery's own docstring reads as though that cannot happen.
+
+The fix is auto-discovery: enumerate `_sownb/vb/tools/g*.py` plus the declared `tools/easter` and `tools/artsaward` members, require each to answer `--list-controls`, and red on any tool that cannot. That inverts the default from opt-in to opt-out. It is a real mechanism change and §8c closes that door without a control failing, so it is NOT done here and is put to Matt instead.
+
+Counter-consideration, so the decision is a real one: auto-discovery would red the battery on every helper script that happens to sit in those directories and has no controls to declare, so it needs an explicit "declares no controls" opt-out — which is itself a list, just an inverted one. The gain is that the inverted list fails loudly (a new gate reds until classified) instead of silently (a new gate is skipped until noticed).
