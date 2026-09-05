@@ -95,13 +95,17 @@ async function run({browser,root,out,configure,measured,report}){
             if(c.week===7)assert.equal(await fallback.getAttribute('src'),'assets/Moon_rotation_fallback.png');
             if(c.video.local_file){
               const video=page.locator('video');assert.equal(await video.getAttribute('preload'),'none');assert.equal(await video.getAttribute('autoplay'),null);assert.notEqual(await video.getAttribute('controls'),null);
-              const videoUrl=new URL(c.video.local_file,url).href;let blocked=0;
+              const fixtureUrl=new URL(c.video.local_file,url);
+              fixtureUrl.searchParams.set('mbm-outage',String(viewport.width));
+              const videoUrl=fixtureUrl.href;let blocked=0;
               await page.route(videoUrl,async route=>{blocked++;await route.abort('failed');});
               // A failed child <source> emits a request/source error without
               // consistently setting HTMLMediaElement.error. Measure the
               // actual blocked request instead of that optional video state.
               const failedRequest=page.waitForEvent('requestfailed',{predicate:request=>request.url()===videoUrl});
-              await video.evaluate(v=>{v.preload='auto';v.load();});
+              // Isolate the deliberately failed load from a pending media
+              // request that load() may cancel itself on a phone viewport.
+              await video.evaluate((v,src)=>{v.querySelector('source').src=src;v.preload='auto';v.load();},videoUrl);
               const failed=await failedRequest;
               assert.ok(failed.failure()?.errorText,'The browser reports the failed media request');
               assert.ok(blocked>0,'The local-media failure fixture actually ran');
