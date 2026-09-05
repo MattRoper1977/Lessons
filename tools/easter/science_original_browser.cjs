@@ -124,8 +124,8 @@ async function exercise(t,viewport={width:1280,height:800},responsive=false){
       const began=Date.now();await start.click();await start.click();await page.waitForTimeout(2200);
       const elapsed=(Date.now()-began)/1000,used=t.independentMinutes*60-seconds(await value(page));
       assert.ok(used>=1&&used<=Math.ceil(elapsed)+1,'Two Start clicks must not create duplicate intervals');await clock(page);
-      await next(page).click();const paused=await value(page);await page.waitForTimeout(1150);assert.equal(await value(page),paused);
-      await previous(page).click();await page.waitForTimeout(1150);assert.equal(await value(page),paused);await clock(page);
+      await advanceStage(page,independent+1);const paused=await value(page);await page.waitForTimeout(1150);assert.equal(await value(page),paused);
+      await previous(page).click();assert.equal(await current(page),independent);await page.waitForTimeout(1150);assert.equal(await value(page),paused);await clock(page);
       await page.locator('.timer-widget button[onclick="resetTimer()"]').click();assert.equal(await value(page),t.independentMinutes+':00');
     });
     await measured(id+'/independent-visible-layout',async()=>{
