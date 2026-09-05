@@ -16,9 +16,9 @@ node tools/downloads/offline_pack_browser.cjs --manifest /tmp/download-browser-m
 ```
 
 Use a fresh extraction directory. The browser driver is Playwright 1.62.1 with
-installed Chrome. The dedicated CI workflow records exact archive hashes,
+installed Chrome. The download job in the monitored FieldOps workflow records exact archive hashes,
 current source placement, structural controls, extracted-file interactions and
-pack-start screenshots. It is registered with Watch main.
+pack-start screenshots. FieldOps is already registered with Watch main.
 
 The package builder copies explicitly selected public files and their local
 runtime dependencies. It refuses private paths, workbooks, symlinks, missing
@@ -28,8 +28,8 @@ existing file picker; downloading a pack never confirms a booking or experience.
 
 The exact reviewed Site HUD is pinned in `vendor/HUD_SOURCE.json`. Science packs
 that need it use a `Lessons/` wrapper to preserve its own lesson-mode predicate.
-Only the recognised script loader is adapted in packaged copies. Source lessons
-and the Site repository remain unchanged. A small adapter keeps Back inside the
+Only the recognised script loader is adapted in packaged copies. The packer leaves source lessons and the Site repository unchanged. The separate
+Guidance toolbar repair in this PR also fixes live Science navigation. A small adapter keeps Back inside the
 download and labels a previously chosen online homepage as needing internet.
 
 Home links receive local pack menus. The Solar System source-card page and its
@@ -44,7 +44,9 @@ twelve starts and 130 lesson members: 88
 Science and 42 award lessons, with fifteen interactive representatives. It checks
 actual navigation, teacher tools, timers, calm controls, print invocation and
 print-media content with the network disabled. It does not claim to test every
-activity, physical printing, microphone capture or online video playback.
+activity, physical printing, microphone capture or online video playback. All 47
+repaired Guidance routes also require actual toolbar and Next/Previous clicks at
+1280px and 390px, giving 94 focused regression cases.
 
 The archive files become public downloads only after the exact reviewed ZIPs are
 included in the final catalogue/navigation transaction.

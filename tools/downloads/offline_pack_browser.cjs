@@ -30,7 +30,7 @@ function inside(root,member){
 const report={schema:'lesson-offline-browser-acceptance-v1',status:'RUNNING',
   browser:'Chromium via Playwright; file:// with offline network context',
   scope:manifest.scope,packagedLessonFiles:manifest.packagedLessonFiles,
-  packs:[],representatives:[],negativeControls:[],failures:[],
+  packs:[],representatives:[],guidanceNavigation:[],negativeControls:[],failures:[],
   limitations:['Representative interactions only; not every lesson activity tested.',
     'Print invocation and print-media contents checked; no physical printer or page-pagination claim.',
     'Microphone permission/capture and external video sites are not exercised.']};
@@ -182,6 +182,31 @@ async function inspectAward(page,row,root,slotsRequired){
           assert.ok(clean(await page.locator('h1').first().innerText()).length>5);
           row.lessonToPackHomeClick=true;report.representatives.push(row);
         }
+        // The first real run found Guidance covering Next. Exercise every
+        // repaired source at desktop and touch width, using real pointer clicks.
+        for(const member of pack.guidanceNavigationMembers){
+          for(const viewport of [{width:1280,height:800},{width:390,height:844}]){
+            await page.setViewportSize(viewport);
+            await page.goto(pathToFileURL(inside(root,member)).href);
+            const initial=await stage(page);
+            const guidance=page.locator('.controls .left .n6m-guide-btn');
+            assert.equal(await guidance.count(),1,'Guidance shares the actual toolbar');
+            assert.ok((await guidance.boundingBox()).height>=44,'Guidance has a 44px target');
+            const before=await guidance.getAttribute('aria-pressed');
+            await guidance.click();
+            assert.notEqual(await guidance.getAttribute('aria-pressed'),before,'Guidance opens with an actual click');
+            await guidance.click();
+            assert.equal(await guidance.getAttribute('aria-pressed'),before,'Guidance returns to its prior state');
+            await (await findVisible(page,nextSelector)).click();
+            assert.notEqual((await stage(page)).index,initial.index,'Guidance must not obstruct Next');
+            await (await findVisible(page,prevSelector)).click();
+            assert.equal((await stage(page)).index,initial.index,'Previous remains reachable');
+            report.guidanceNavigation.push({packId:pack.id,member,viewport,actualClicks:true});
+            if(args.artifacts&&member===pack.guidanceNavigationMembers[0])
+              await page.screenshot({path:path.join(args.artifacts,pack.id+'-guidance-'+viewport.width+'.png'),fullPage:true});
+          }
+        }
+        await page.setViewportSize({width:1280,height:800});
         assert.deepEqual(observations.pageErrors,[],'No unhandled page errors');
         assert.deepEqual(observations.failedRequests,[],'No failed local runtime request');
         assert.deepEqual(observations.httpErrors,[],'No HTTP error response');
@@ -205,6 +230,8 @@ async function inspectAward(page,row,root,slotsRequired){
     assert.deepEqual(report.failures,[],'No representative or negative-control failure may be hidden');
     assert.equal(report.representatives.length,manifest.interactiveRepresentativeCount);
     assert.equal(report.representatives.length,15,'Explicit representative coverage');
+    assert.equal(manifest.guidanceNavigationRoutes,47);
+    assert.equal(report.guidanceNavigation.length,94,'All repaired Guidance routes at both viewports');
     assert.equal(report.negativeControls.length,1);
     report.status='PASS';
   }catch(error){report.status='FAIL';report.failures.push({message:error.message});}

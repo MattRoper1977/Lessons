@@ -76,15 +76,20 @@ def prepare(definitions, archives, extracted, manifest):
                 if 'tools/artsaward/SLOTS.json' not in names:raise ValueError('Missing offline slot register')
             destination.mkdir()
             z.extractall(destination)
+            guide_members=[m for m in members if b'n6m-guide-docked' in z.read(m)]
             result['packs'].append({'id':ident,'root':ident,'kind':kind,'pathway':lane,'term':term,
                 'archive':source.name,'zipSha256':hashlib.sha256(source.read_bytes()).hexdigest(),
                 'title':definition['title'],'entry':'START_HERE.html',
                 'packStart':prefix+definition['entry'],'lessons':members,'firstLesson':members[0],
                 'laterSample':later,'expectHud':prefix=='Lessons/' and term=='aut1',
+                'guidanceNavigationMembers':guide_members,
                 'memberCount':len(names),'declaredLessonCount':len(members),'validatedSourceHashes':len(metadata['sources'])})
     result['packCount']=len(result['packs'])
     result['packagedLessonFiles']=sum(p['declaredLessonCount'] for p in result['packs'])
     result['interactiveRepresentativeCount']=sum(1+bool(p['laterSample']) for p in result['packs'])
+    result['guidanceNavigationRoutes']=sum(len(p['guidanceNavigationMembers']) for p in result['packs'])
+    if result['guidanceNavigationRoutes'] != 47:
+        raise ValueError('All 47 repaired Guidance routes must receive actual navigation checks')
     manifest.parent.mkdir(parents=True,exist_ok=True)
     manifest.write_text(json.dumps(result,indent=2)+'\n')
     return result
