@@ -36,6 +36,8 @@ SUPPORT_PATHS = {
     "tools/verify_v6fin_w7_r1_r7.py",
     ".github/workflows/v6fin-w7-r1-r7.yml",
     ".github/workflows/watch-main.yml",
+    # Authorized domain publication; source R1-R7 payload checks remain exact.
+    ".github/workflows/education-pages.yml",
 }
 
 # Actions checks out the pinned Site instrumentation as a nested repository.
