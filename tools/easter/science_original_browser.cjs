@@ -152,6 +152,7 @@ async function exercise(t,viewport={width:1280,height:800},responsive=false){
         await page.emulateMedia({media:'screen'});
       }
     });
+    if(t.pathway==='LAUNCH') await require('../science_pack/browser_checks.cjs').exercise({page,root,out,measured,move,current,id,viewport,responsive,report,t});
     await measured(id+'/no-runtime-or-unreviewed-resource-errors',async()=>{
       assert.equal(report.errors.length,before.errors);assert.equal(report.missingLocal.length,before.missing);assert.equal(report.external.length,before.external);
     });
@@ -185,5 +186,5 @@ async function negativeControls(){
     await require('../grow_resources/browser_checks.cjs').run({browser,root,out,configure,measured,report});
     assert.ok(report.routes.every(r=>r.result==='PASS'),'One or more authored routes failed');report.result='PASS';
   }catch(e){report.result='FAIL';report.error=e.stack;process.exitCode=1;}
-  finally{if(browser)await browser.close();report.finishedAt=new Date().toISOString();fs.writeFileSync(path.join(out,'science-browser.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({result:report.result,cases:report.cases.length,passed:report.cases.filter(c=>c.passed).length,routes:report.routes.length,pdfs:report.pdfs.length,error:report.error}));}
+  finally{if(browser)await browser.close();report.finishedAt=new Date().toISOString();fs.writeFileSync(path.join(out,'science-browser.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({result:report.result,cases:report.cases.length,passed:report.cases.filter(c=>c.passed).length,routes:report.routes.length,pdfs:report.pdfs.length,error:report.error,failedCases:report.cases.filter(c=>!c.passed),failedRoutes:report.routes.filter(r=>r.result!=='PASS')}));}
 })();

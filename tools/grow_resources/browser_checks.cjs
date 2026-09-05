@@ -21,6 +21,18 @@ async function run({browser,root,out,configure,measured,report}){
   const noOverflow=async(page)=>{const size=await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth}));assert.ok(size.scroll<=size.width+2,'No document horizontal overflow');};
   const loadedImage=async(locator)=>{await locator.scrollIntoViewIfNeeded();await locator.waitFor({state:'visible'});await locator.evaluate(image=>image.decode());assert.equal(await locator.evaluate(image=>image.complete&&image.naturalWidth>0),true);};
   const targetSize=async(locator,viewport)=>{await locator.scrollIntoViewIfNeeded();const box=await locator.boundingBox();assert.ok(box&&box.width>=43.5&&box.height>=43.5&&box.x>=0&&box.x+box.width<=viewport.width+1,'Touch target is at least44px and stays on screen');};
+  const navigationClear=async(page)=>{
+    await page.locator('#mbmhud-pill').waitFor({state:'visible'});
+    const overlaps=await page.evaluate(()=>{
+      const visible=n=>{const r=n.getBoundingClientRect();return r.width&&r.height&&getComputedStyle(n).visibility!=='hidden';};
+      const hud=[...document.querySelectorAll('#mbmhud-back,#mbmhud-home,#mbmhud-pill')].filter(visible);
+      return [...document.querySelectorAll('.controls button')].filter(visible).flatMap(button=>hud.flatMap(item=>{
+        const a=button.getBoundingClientRect(),b=item.getBoundingClientRect();
+        return Math.min(a.right,b.right)>Math.max(a.left,b.left)&&Math.min(a.bottom,b.bottom)>Math.max(a.top,b.top)?[{button:button.textContent.trim(),hud:item.id}]:[];
+      }));
+    });
+    assert.deepEqual(overlaps,[],'Native lesson controls must not overlap the shared HUD');
+  };
   const verifyInputs=()=>{
     assert.equal(targets.schema,'grow-resource-browser-targets-v1');
     assert.equal(targets.pages.length,10);assert.equal(targets.lessons.length,5);
@@ -44,6 +56,7 @@ async function run({browser,root,out,configure,measured,report}){
               await page.goto(url,{waitUntil:'domcontentloaded'});
               const expected=content.find(c=>c.online_path===target.path&&c.period===period);assert.ok(expected);
               const link=page.locator('.slide.active a[href="resources/'+expected.id+'.html"]');assert.equal(await link.count(),1);
+              await navigationClear(page);
               if(mobile)await targetSize(link,viewport);
               else{await link.focus();assert.equal(await link.evaluate(n=>document.activeElement===n),true);}
               await snapshot(page,id+'-'+period);
@@ -150,6 +163,23 @@ async function run({browser,root,out,configure,measured,report}){
         finally{await context.close();}
       }
     }
+    for(const target of targets.lessons){
+      const context=await browser.newContext({viewport:{width:840,height:720},hasTouch:true,reducedMotion:'reduce'});await configure(context);const page=await context.newPage();
+      try{await check(path.basename(target.path,'.html')+'/tablet-hud-clearance',async()=>{
+        await page.goto(origin+'/Lessons/'+target.path,{waitUntil:'domcontentloaded'});
+        await navigationClear(page);
+        await page.locator('.controls button[onclick="nextSlide()"]').click();
+        await navigationClear(page);
+        await snapshot(page,path.basename(target.path,'.html')+'-grow-navigation-840');
+      });}finally{await context.close();}
+    }
+    const collisionContext=await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce'});await configure(collisionContext);const collisionPage=await collisionContext.newPage();
+    try{
+      await collisionPage.goto(origin+'/Lessons/'+targets.lessons[0].path,{waitUntil:'domcontentloaded'});
+      await navigationClear(collisionPage);
+      await collisionPage.addStyleTag({content:'.controls{bottom:10px!important}'});
+      await check('negative-controls/hud-overlap',()=>reject(()=>navigationClear(collisionPage)));
+    }finally{await collisionContext.close();}
     const controlContext=await browser.newContext();await configure(controlContext);const page=await controlContext.newPage();
     try{
       await check('negative-controls/wrong-source-hash',()=>reject(async()=>assert.equal(digest(fs.readFileSync(path.join(root,targets.pages[0].path))),'0'.repeat(64))));
