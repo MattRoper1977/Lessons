@@ -17,14 +17,19 @@ from the contract row's bindingMode, so changing the ruling is a contract edit,
 not a code edit.
 """
 from __future__ import annotations
-import copy, json, re, sys, hashlib
+import copy, json, re, sys, hashlib, importlib.util
 from pathlib import Path
 import lxml.html as LH
 
-VERSION = "g26-v1.2.0-block-boundary-aware-extraction"
+VERSION = "g26-v1.3.0-original-container"
 ROOT = Path(__file__).resolve().parents[3]
 CONTRACT = ROOT / "_sownb/STYLE_CONTRACT.json"
 VOWELS = "aeiouy"
+
+_ls = importlib.util.spec_from_file_location(
+    "lesson_stages", ROOT / "_sownb/vb/tools/lesson_stages.py")
+stages_mod = importlib.util.module_from_spec(_ls)
+_ls.loader.exec_module(stages_mod)
 
 
 def syllables(w: str) -> int:
@@ -86,12 +91,29 @@ def visible_text(node) -> str:
     return " ".join("".join(parts).split())
 
 
-def measure(path: Path) -> dict:
-    tree = LH.fromstring(path.read_text(encoding="utf-8"))
+def deck_root(tree):
+    """Keep the existing main-root precedence; recognise original Science too.
+
+    Only the body-child container is an additional layout. A nested print
+    lookalike is not a deck. Its screen eligibility uses the shared reader,
+    while reading-band text extraction and chrome treatment remain unchanged.
+    """
     main = tree.xpath('//main[@id="lessonDeck"]') or tree.xpath(
         '//main[contains(concat(" ",normalize-space(@class)," ")," deck ")]')
-    if not main:
-        return {"file": str(path), "error": "no deck"}
+    if main:
+        return main[0]
+    screen = stages_mod.ScreenView(tree)
+    for node in tree.xpath('//body/div[contains(concat(" ",normalize-space(@class)," ")," slide-container ")]'):
+        chain = [node, *node.iterancestors()]
+        if not any(screen.marked_hidden(n) or screen.declared_hidden(n) for n in chain):
+            return node
+    return None
+
+
+def measure_tree(tree) -> dict:
+    root = deck_root(tree)
+    if root is None:
+        return {"error": "no deck"}
     def strip(node, staff_too):
         n = copy.deepcopy(node)
         sel = './/script|.//style|.//svg'
@@ -100,12 +122,20 @@ def measure(path: Path) -> dict:
         for bad in n.xpath(sel):
             bad.getparent().remove(bad)
         return visible_text(n)
-    whole, pupil = strip(main[0], False), strip(main[0], True)
+    whole, pupil = strip(root, False), strip(root, True)
     fw, ww, sw = fk(whole)
     fu, wu, su = fk(pupil)
-    return {"file": str(path.relative_to(ROOT)), "toolVersion": VERSION,
-            "wholeDeckFK": None if fw is None else round(fw, 2), "wholeWords": ww,
+    return {"wholeDeckFK": None if fw is None else round(fw, 2), "wholeWords": ww,
             "pupilFK": None if fu is None else round(fu, 2), "pupilWords": wu, "pupilSentences": su}
+
+
+def measure(path: Path) -> dict:
+    tree = LH.fromstring(path.read_text(encoding="utf-8"))
+    try:
+        rel = str(path.relative_to(ROOT))
+    except ValueError:
+        rel = str(path)
+    return {"file": rel, "toolVersion": VERSION, **measure_tree(tree)}
 
 
 def bands():
@@ -179,6 +209,27 @@ def controls() -> list[dict]:
     hard = fk("Consequently, the extraordinary categorisation demonstrated "
               "considerable methodological inconsistency.")[0]
     row("harderProseScoresHigher", True, bool(hard is not None and easy is not None and hard > easy))
+
+    sample = '<p>The cat sat. The dog ran.</p><p data-audience="staff">Adult guidance.</p>'
+    main_sample = LH.fromstring('<html><body><main class="deck">' + sample + '</main></body></html>')
+    original = LH.fromstring('<html><body><div class="slide-container">' + sample + '</div></body></html>')
+    row("originalContainerMatchesMainReading", measure_tree(main_sample), measure_tree(original))
+    row("originalContainerStaffExclusion", 6, measure_tree(original)["pupilWords"])
+    carousel = LH.fromstring('<html><head><style>.slide{display:none}.active{display:block}</style></head>'
+                            '<body><div class="slide-container"><div class="slide active">The cat sat.</div>'
+                            '<div class="slide">The dog ran.</div></div></body></html>')
+    row("originalInactiveCarouselTextCounts", 6, measure_tree(carousel)["pupilWords"])
+    nested = LH.fromstring('<html><body><div id="print-area"><div class="slide-container">'
+                          + sample + '</div></div></body></html>')
+    row("nestedPrintLookalikeIsNotDeck", "no deck", measure_tree(nested).get("error"))
+    for name, attr, css in (("HiddenAttribute", ' hidden', ''),
+                            ("HiddenCss", '', '.slide-container{display:none}')):
+        hidden = LH.fromstring('<html><head><style>' + css + '</style></head><body>'
+                               '<div class="slide-container"' + attr + '>' + sample + '</div></body></html>')
+        row("original" + name + "IsNotDeck", "no deck", measure_tree(hidden).get("error"))
+    preferred = LH.fromstring('<html><body><main class="deck">The cat sat.</main>'
+                             '<div class="slide-container">Extra words must not count.</div></body></html>')
+    row("existingMainRootPrecedenceUnchanged", 3, measure_tree(preferred)["pupilWords"])
 
     return rows
 
