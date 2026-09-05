@@ -64,6 +64,9 @@ async function exercise({page,root,out,measured,move,current,id,viewport,respons
     assert.equal(await play.isVisible(),false);
     await dialog.locator('form[method="dialog"] button').click();
     assert.equal(await dialog.isVisible(),false);
+    // HTML dispatches the dialog close event as a queued task. Wait for that
+    // event's media cleanup, then assert the actual final DOM state.
+    await frame.waitFor({state:'detached'});
     assert.equal(await dialog.locator('iframe').count(),0,'Close removes media');
     assert.equal(await play.getAttribute('hidden'),null);
     await page.unroute('https://www.youtube-nocookie.com/**',handler);
