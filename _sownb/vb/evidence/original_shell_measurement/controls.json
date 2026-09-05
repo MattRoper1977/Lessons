@@ -1,0 +1,261 @@
+{
+  "file": "_sownb/vb/tools/lesson_stages.py",
+  "controls": [
+    {
+      "id": "standalone-original-container-is-measured",
+      "description": "the actual body > div.slide-container layout teaches real words",
+      "planted": "remove only the main wrapper from the classic fixture",
+      "expected": 15,
+      "observed": 15,
+      "fired": true
+    },
+    {
+      "id": "standalone-carousel-inactive-stages-still-count",
+      "description": "inactive carousel stages remain eligible in the original layout",
+      "planted": "two of three stages carry display:none",
+      "expected": 3,
+      "observed": 3,
+      "fired": true
+    },
+    {
+      "id": "nested-container-is-not-a-second-deck",
+      "description": "a main-owned slide container must not be counted twice",
+      "planted": "the original main > slide-container fixture",
+      "expected": 3,
+      "observed": 3,
+      "fired": true
+    },
+    {
+      "id": "print-container-lookalike-is-excluded",
+      "description": "a print-area container is not a standalone teaching deck",
+      "planted": "a hidden print container with a slide-shaped child",
+      "expected": 15,
+      "observed": 15,
+      "fired": true
+    },
+    {
+      "id": "hidden-standalone-container-is-excluded",
+      "description": "root visibility still governs original-layout eligibility",
+      "planted": "hide the standalone deck root",
+      "expected": 0,
+      "observed": 0,
+      "fired": true
+    },
+    {
+      "id": "original-clock-minutes-are-read",
+      "description": "data-timer is the attribute used by the original live stage clock",
+      "planted": "the three original stage timers",
+      "expected": [
+        "10",
+        "10",
+        "20"
+      ],
+      "observed": [
+        "10",
+        "10",
+        "20"
+      ],
+      "fired": true
+    },
+    {
+      "id": "canonical-zero-minutes-remains-zero",
+      "description": "an explicitly untimed canonical title does not inherit a fallback",
+      "planted": "data-min zero alongside a legacy timer",
+      "expected": "0",
+      "observed": "0",
+      "fired": true
+    },
+    {
+      "id": "every-stage-counted-not-just-active",
+      "description": "the carousel hides 2 of 3 stages with display:none; all 3 must count",
+      "planted": "nothing - this is the base measurement",
+      "expected": 3,
+      "observed": 3,
+      "fired": true
+    },
+    {
+      "id": "classic-shell-is-seen",
+      "description": "main.deck > .slide-container > div.slide is a stage",
+      "planted": "a classic-shell deck",
+      "expected": 15,
+      "observed": 15,
+      "fired": true
+    },
+    {
+      "id": "n6-shell-is-seen",
+      "description": "main.deck > section.slide is a stage",
+      "planted": "an n6-shell deck",
+      "expected": 10,
+      "observed": 10,
+      "fired": true
+    },
+    {
+      "id": "print-pack-duplication-is-neutral",
+      "description": "every stage's text duplicated into the print pack must not change the count",
+      "planted": "all three stages re-printed into #print-area",
+      "expected": 15,
+      "observed": 15,
+      "fired": true
+    },
+    {
+      "id": "one-pupil-paragraph-raises-the-count",
+      "description": "adding one pupil paragraph of 5 words must raise the count by 5",
+      "planted": "a 5-word pupil paragraph in stage 1",
+      "expected": 20,
+      "observed": 20,
+      "fired": true
+    },
+    {
+      "id": "staff-audience-drawer-excluded",
+      "description": "data-audience=\"staff\" inside a stage is not pupil teaching text",
+      "planted": "<div data-audience=\"staff\"><p>staff only words here now</p><",
+      "expected": 15,
+      "observed": 15,
+      "fired": true
+    },
+    {
+      "id": "mbm-guide-drawer-excluded",
+      "description": "data-mbm-guide inside a stage is not pupil teaching text",
+      "planted": "<div data-mbm-guide=\"1\"><p>guide only words here now</p></di",
+      "expected": 15,
+      "observed": 15,
+      "fired": true
+    },
+    {
+      "id": "running-head-excluded",
+      "description": "class=running-head inside a stage is not pupil teaching text",
+      "planted": "<div class=\"running-head\"><p>running head words here now</p>",
+      "expected": 15,
+      "observed": 15,
+      "fired": true
+    },
+    {
+      "id": "inline-display-none-excluded",
+      "description": "inline display:none inside a stage is not pupil teaching text",
+      "planted": "<div style=\"display:none\"><p>inline hidden words here now</p",
+      "expected": 15,
+      "observed": 15,
+      "fired": true
+    },
+    {
+      "id": "aria-hidden-excluded",
+      "description": "aria-hidden=\"true\" inside a stage is not pupil teaching text",
+      "planted": "<div aria-hidden=\"true\"><p>aria hidden words here now</p></d",
+      "expected": 15,
+      "observed": 15,
+      "fired": true
+    },
+    {
+      "id": "hidden-attribute-excluded",
+      "description": "the hidden attribute inside a stage is not pupil teaching text",
+      "planted": "<div hidden><p>attribute hidden words here now</p></div>",
+      "expected": 15,
+      "observed": 15,
+      "fired": true
+    },
+    {
+      "id": "script-and-style-excluded",
+      "description": "script and style inside a stage is not pupil teaching text",
+      "planted": "<script>var a = \"script words here now\";</script><style>.x{c",
+      "expected": 15,
+      "observed": 15,
+      "fired": true
+    },
+    {
+      "id": "svg-text-not-counted-as-prose",
+      "description": "svg text inside a stage is not pupil teaching text",
+      "planted": "<svg viewBox=\"0 0 200 200\"><text>svg words here now</text></",
+      "expected": 15,
+      "observed": 15,
+      "fired": true
+    },
+    {
+      "id": "css-display-none-excluded",
+      "description": "a stylesheet display:none inside a stage is not pupil teaching text",
+      "planted": "class=\"drawer\" with .drawer{display:none}",
+      "expected": 15,
+      "observed": 15,
+      "fired": true
+    },
+    {
+      "id": "visibility-hidden-excluded",
+      "description": "visibility:hidden inside a stage is not pupil teaching text",
+      "planted": "class=\"vis\" with visibility:hidden",
+      "expected": 15,
+      "observed": 15,
+      "fired": true
+    },
+    {
+      "id": "media-print-only-block-excluded",
+      "description": "a block hidden on screen and shown under @media print is not in the pupil view",
+      "planted": "class=\"ponly\", display:none on screen, display:block under @media print",
+      "expected": 15,
+      "observed": 15,
+      "fired": true
+    },
+    {
+      "id": "narrow-breakpoint-does-not-delete-text",
+      "description": "a max-width breakpoint must NOT remove pupil text from the projector measurement",
+      "planted": "class=\"tight\", hidden only under @media screen and (max-width:600px)",
+      "expected": 15,
+      "observed": 15,
+      "fired": true
+    },
+    {
+      "id": "unreadable-hiding-selector-is-reported",
+      "description": "a selector the parser cannot read, that would have hidden something, is reported not dropped",
+      "planted": "p:nth-child(2n of .ghost){display:none}",
+      "expected": true,
+      "observed": true,
+      "fired": true
+    },
+    {
+      "id": "the-title-slide-counts-zero",
+      "description": "a stage the chassis marks data-type=title contributes no content words, however much it carries -- it is the identity card, not a taught stage",
+      "planted": "a deck with an extra data-type=title stage",
+      "expected": 60,
+      "observed": 60,
+      "fired": true
+    },
+    {
+      "id": "the-contract-refrain-counts-zero-wherever-it-appears",
+      "description": "the contract banner added to both stages",
+      "planted": "the banner on two stages adds no content words on either",
+      "expected": 60,
+      "observed": 60,
+      "fired": true
+    },
+    {
+      "id": "chrome-is-read-from-the-contract-not-typed-here",
+      "description": "a contract file with no rows",
+      "planted": "a contract naming nothing makes nothing chrome -- the rule follows the contract rather than a list somebody typed into this file",
+      "expected": [
+        true,
+        true,
+        false
+      ],
+      "observed": [
+        true,
+        true,
+        false
+      ],
+      "fired": true
+    },
+    {
+      "id": "an-unnamed-block-repeated-on-every-stage-still-counts",
+      "description": "a third identical teaching stage",
+      "planted": "presence on every stage is NOT proof the contract requires it. A control deck whose teaching repeats on every stage measured zero content words when that rule was tried, so the rule was withdrawn -- see WRONG_BEFORE_RIGHT. Three identical teaching stages count three times.",
+      "expected": 90,
+      "observed": 90,
+      "fired": true
+    },
+    {
+      "id": "teaching-words-are-never-reclassified-as-chrome",
+      "description": "prose using all four Lundy words",
+      "planted": "a teaching sentence using all four words in prose is NOT the banner; only the contract's own element is. A group rule that matched prose like this was measured and withdrawn -- see WRONG_BEFORE_RIGHT.",
+      "expected": 0,
+      "observed": 0,
+      "fired": true
+    }
+  ]
+}

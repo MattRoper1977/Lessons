@@ -92,7 +92,7 @@ from lxml import html as lh
 from lxml.cssselect import CSSSelector
 from cssselect import SelectorError, parse as css_parse
 
-VERSION = "lesson-stages-v2.0.0-chrome-excluded"
+VERSION = "lesson-stages-v2.1.0-original-container"
 ROOT = Path(__file__).resolve().parents[3]
 
 WORD = re.compile(r"[A-Za-z0-9]+(?:['’-][A-Za-z0-9]+)*")
@@ -334,8 +334,9 @@ def is_chrome(el) -> bool:
 # Stages
 # --------------------------------------------------------------------------
 
-DECK = ('//main[contains(concat(" ",normalize-space(@class)," ")," deck ")]'
-        '|//main[@id="lessonDeck"]')
+DECK = ('(//main[contains(concat(" ",normalize-space(@class)," ")," deck ")]'
+        '|//main[@id="lessonDeck"]'
+        '|//body/div[contains(concat(" ",normalize-space(@class)," ")," slide-container ")])')
 
 
 def _has_class(el, name: str) -> bool:
@@ -345,7 +346,10 @@ def _has_class(el, name: str) -> bool:
 def stages(tree, screen: ScreenView | None = None) -> list:
     """Every pupil TEACHING stage, in document order, in either shell.
 
-    A stage is an element carrying class ``slide`` inside the deck's ``main``.
+    A stage carries class ``slide`` inside a recognised deck root. The original
+    Science layout has a body-level ``div.slide-container`` without ``main``.
+    Restrict that additional root to the observed body-child form: a print
+    lookalike or a container already inside main must not become another deck.
     It is eligible when nothing ABOVE it (up to and including ``main``) is
     hidden in the screen view -- which is what excludes the print pack, since
     the classic shell hides ``#print-area`` with an unmedia'd rule and re-shows
@@ -652,7 +656,7 @@ def shell_of(tree) -> str:
     if not mains:
         return "none"
     for main in mains:
-        if main.xpath('.//*[contains(concat(" ",normalize-space(@class)," ")," slide-container ")]'):
+        if _has_class(main, "slide-container") or main.xpath('.//*[contains(concat(" ",normalize-space(@class)," ")," slide-container ")]'):
             return "classic"
     if tree.xpath(DECK + '/section[contains(concat(" ",normalize-space(@class)," ")," slide ")]'):
         return "n6"
@@ -672,6 +676,14 @@ def _rel(path) -> str:
     except ValueError:
         return str(path)
 
+def stage_minutes(stage):
+    """Canonical authoring minutes, or the original live clock's attribute.
+
+    A declared zero is meaningful and must not fall through to another clock.
+    """
+    return stage.get("data-min") if stage.get("data-min") is not None else stage.get("data-timer")
+
+
 def measure(path: Path) -> dict:
     """The one measurement. Every gate that counts pupil content calls this."""
     tree = parse(path)
@@ -686,7 +698,7 @@ def measure(path: Path) -> dict:
             "stage": c["stage"],
             "title": s.get("data-title") or "",
             "type": s.get("data-type") or "",
-            "minutes": s.get("data-min"),
+            "minutes": stage_minutes(s),
             "wordCount": c["raw"],
             "chromeWords": c["chrome"],
             "repeatWords": c["repeat"],
@@ -764,6 +776,13 @@ def _stagecount_of_html(source: str) -> int:
 
 
 CONTROL_IDS = [
+    "standalone-original-container-is-measured",
+    "standalone-carousel-inactive-stages-still-count",
+    "nested-container-is-not-a-second-deck",
+    "print-container-lookalike-is-excluded",
+    "hidden-standalone-container-is-excluded",
+    "original-clock-minutes-are-read",
+    "canonical-zero-minutes-remains-zero",
     "the-title-slide-counts-zero",
     "the-contract-refrain-counts-zero-wherever-it-appears",
     "chrome-is-read-from-the-contract-not-typed-here",
@@ -804,6 +823,34 @@ def controls() -> list[dict]:
 
     base_classic = _words_of_html(_CLASSIC)      # 15 words over 3 stages
     base_n6 = _words_of_html(_N6)                # 10 words over 2 stages
+
+    standalone = _CLASSIC.replace('<main class="deck">', '').replace('</main>', '')
+    record("standalone-original-container-is-measured",
+           "the actual body > div.slide-container layout teaches real words",
+           "remove only the main wrapper from the classic fixture", 15, _words_of_html(standalone))
+    record("standalone-carousel-inactive-stages-still-count",
+           "inactive carousel stages remain eligible in the original layout",
+           "two of three stages carry display:none", 3, _stagecount_of_html(standalone))
+    record("nested-container-is-not-a-second-deck",
+           "a main-owned slide container must not be counted twice",
+           "the original main > slide-container fixture", 3, _stagecount_of_html(_CLASSIC))
+    lookalike = standalone.replace('</body>', '<div id="print-extra" style="display:none"><div class="slide-container"><div class="slide"><p>unrelated print words must never count</p></div></div></div></body>')
+    record("print-container-lookalike-is-excluded",
+           "a print-area container is not a standalone teaching deck",
+           "a hidden print container with a slide-shaped child", 15, _words_of_html(lookalike))
+    hidden = standalone.replace('<div class="slide-container">', '<div class="slide-container" hidden>')
+    record("hidden-standalone-container-is-excluded",
+           "root visibility still governs original-layout eligibility",
+           "hide the standalone deck root", 0, _words_of_html(hidden))
+    timer_tree = lh.fromstring(standalone.replace('data-min=', 'data-timer='))
+    record("original-clock-minutes-are-read",
+           "data-timer is the attribute used by the original live stage clock",
+           "the three original stage timers", ['10', '10', '20'],
+           [stage_minutes(s) for s in stages(timer_tree)])
+    record("canonical-zero-minutes-remains-zero",
+           "an explicitly untimed canonical title does not inherit a fallback",
+           "data-min zero alongside a legacy timer", '0',
+           stage_minutes(lh.fromstring('<div data-min="0" data-timer="5"></div>')))
 
     record("every-stage-counted-not-just-active",
            "the carousel hides 2 of 3 stages with display:none; all 3 must count",
