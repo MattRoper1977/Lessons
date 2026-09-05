@@ -185,5 +185,5 @@ async function negativeControls(){
     for(const t of doc.targets.filter(t=>t.responsiveRepresentative))for(const viewport of [{width:390,height:844},{width:840,height:720}])await exercise(t,viewport,true);
     assert.ok(report.routes.every(r=>r.result==='PASS'),'One or more authored routes failed');report.result='PASS';
   }catch(e){report.result='FAIL';report.error=e.stack;process.exitCode=1;}
-  finally{if(browser)await browser.close();report.finishedAt=new Date().toISOString();fs.writeFileSync(path.join(out,'science-browser.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({result:report.result,cases:report.cases.length,passed:report.cases.filter(c=>c.passed).length,routes:report.routes.length,pdfs:report.pdfs.length,error:report.error}));}
+  finally{if(browser)await browser.close();report.finishedAt=new Date().toISOString();fs.writeFileSync(path.join(out,'science-browser.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({result:report.result,cases:report.cases.length,passed:report.cases.filter(c=>c.passed).length,routes:report.routes.length,pdfs:report.pdfs.length,error:report.error,failedCases:report.cases.filter(c=>!c.passed),failedRoutes:report.routes.filter(r=>r.result!=='PASS')}));}
 })();
