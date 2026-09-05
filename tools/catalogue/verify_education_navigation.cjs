@@ -26,6 +26,19 @@ fs.mkdirSync(out, { recursive: true });
 const targetURL = p => new URL(p, origin).href;
 const message = e => e?.stack || e?.message || String(e);
 
+function assertSameRoute(actual, expected, label) {
+  // Query order and space serialization do not change a route's state. Compare
+  // every decoded entry, preserving duplicate keys, plus the exact destination.
+  assert.equal(typeof actual, 'string', `${label}: route context is missing`);
+  assert(actual.length > 0, `${label}: route context is empty`);
+  const parts = value => {
+    const url = new URL(value, origin);
+    const query = [...url.searchParams.entries()].sort(([ak, av], [bk, bv]) => ak.localeCompare(bk) || av.localeCompare(bv));
+    return { origin: url.origin, pathname: url.pathname, hash: url.hash, query };
+  };
+  assert.deepEqual(parts(actual), parts(expected), `${label}: destination or filter state changed`);
+}
+
 async function shot(page, name, fullPage = false) {
   const file = name.replace(/[^a-zA-Z0-9._-]/g, '-') + '.png';
   await page.screenshot({ path: path.join(out, file), fullPage, animations: 'disabled' });
@@ -39,6 +52,42 @@ async function checkCase(name, page, action) {
   console.log(`${record.ok ? 'PASS' : 'FAIL'} ${name}${record.error ? ': ' + record.error.split('\n')[0] : ''}`);
 }
 async function settle(page) { await page.evaluate(() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))); }
+async function assertHeroContrast(page) {
+  const evidence = await page.evaluate(() => {
+    const hero = document.querySelector('.hero');
+    if (!hero) throw new Error('Rendered lesson-finder hero is missing');
+    if (!hero.querySelector('.lead') || hero.querySelectorAll('.lesson-breadcrumb a').length < 3 || !hero.querySelector('h1 span')) throw new Error('Required hero text targets are missing');
+    const rgb = value => {
+      const m = value.match(/^rgba?\(\s*([\d.]+)[, ]+([\d.]+)[, ]+([\d.]+)(?:\s*[,/]\s*([\d.]+))?\s*\)$/);
+      if (!m) throw new Error('Unsupported computed hero color: ' + value);
+      return [+m[1], +m[2], +m[3], m[4] === undefined ? 1 : +m[4]];
+    };
+    const over = (fg, bg) => fg.slice(0, 3).map((v, i) => v * fg[3] + bg[i] * (1 - fg[3]));
+    const luminance = c => c.map(v => { v /= 255; return v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; }).reduce((n, v, i) => n + v * [.2126, .7152, .0722][i], 0);
+    const contrast = (a, b) => { const x = luminance(a), y = luminance(b); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); };
+    let underlay = [255, 255, 255];
+    const ancestors = []; for (let e = hero; e; e = e.parentElement) ancestors.unshift(e);
+    for (const e of ancestors) underlay = over(rgb(getComputedStyle(e).backgroundColor), underlay);
+    const image = getComputedStyle(hero).backgroundImage;
+    if (image !== 'none' && !/^linear-gradient\(/.test(image)) throw new Error('Unsupported rendered hero background: ' + image);
+    const stops = image === 'none' ? [] : [...image.matchAll(/rgba?\([^)]*\)/g)].map(m => rgb(m[0]));
+    if (image !== 'none' && stops.length < 2) throw new Error('Hero gradient endpoints could not be measured');
+    const backgrounds = stops.length ? stops.map(c => over(c, underlay)) : [underlay];
+    const measurements = [...hero.querySelectorAll('.lead, .lesson-breadcrumb a, .lesson-breadcrumb span, h1, h1 span')].map(e => {
+      const style = getComputedStyle(e), color = rgb(style.color);
+      let opacity = 1; for (let node = e; node; node = node.parentElement) opacity *= Number(getComputedStyle(node).opacity);
+      color[3] *= opacity;
+      const heading = !!e.closest('h1');
+      const large = parseFloat(style.fontSize) >= 24 || (parseFloat(style.fontSize) >= 18.66 && Number(style.fontWeight) >= 700);
+      return { text: e.textContent.trim(), selector: e.tagName.toLowerCase() + (e.className ? '.' + String(e.className).trim().replace(/\s+/g, '.') : ''), color: style.color,
+        required: heading && large ? 3 : 4.5, minimum: Math.min(...backgrounds.map(bg => contrast(over(color, bg), bg))) };
+    });
+    return { image, backgrounds, measurements };
+  });
+  assert(evidence.measurements.length >= 6, 'Hero text contrast assertions are missing their rendered targets');
+  for (const item of evidence.measurements) assert(item.minimum >= item.required, `${item.selector} "${item.text}" has contrast ${item.minimum.toFixed(2)}:1, below ${item.required}:1 against rendered hero ${evidence.image}`);
+  return evidence;
+}
 async function goto(page, route, hub = false) {
   const response = await page.goto(targetURL(route), { waitUntil: 'domcontentloaded' });
   assert(response && response.ok(), `Route ${route} returned ${response?.status()}`);
@@ -92,6 +141,7 @@ async function hubTests(browser) {
   const { context, page } = await newPage(browser);
   await checkCase('subject-pathway-filter-and-url-reload', page, async () => {
     await goto(page, '/Lessons/?subject=Science&pathway=LAUNCH&term=Aut1', true);
+    const heroContrast = await assertHeroContrast(page);
     assert.equal(await page.locator('#subject-group').inputValue(), 'Science');
     assert.equal(await page.locator('#pathway').inputValue(), 'LAUNCH');
     assert.equal(await page.locator('#term').inputValue(), 'Aut1');
@@ -105,7 +155,7 @@ async function hubTests(browser) {
     assert.equal(new URL(page.url()).searchParams.get('pathway'), 'GROW');
     await page.reload({ waitUntil: 'domcontentloaded' });
     await page.waitForFunction(() => document.querySelector('#pathway').value === 'GROW' && document.querySelectorAll('#cards .card').length > 0);
-    return { cards: cards.length, screenshot: await shot(page, 'hub-science-grow-390') };
+    return { cards: cards.length, heroContrast, screenshot: await shot(page, 'hub-science-grow-390') };
   });
   await checkCase('browser-history-restores-root-selection', page, async () => {
     await goto(page, '/Lessons/?subject=Art&pathway=BUILD&term=Aut2', true);
@@ -140,14 +190,18 @@ async function hubTests(browser) {
     const selected = '/Lessons/?subject=Art&pathway=BUILD&term=Aut2&q=Surface%20Hunt';
     await goto(page, selected, true);
     const expected = new URL(page.url()).pathname + new URL(page.url()).search;
+    assertSameRoute(expected, selected, 'Selected lesson finder');
     await page.locator('#cards a.go[href*="BUILD_ART_A2_W1_Surface_Hunt.html"]').click();
     await page.waitForURL(targetURL(SURFACE));
     await page.waitForSelector('#mbm-lesson-tools #mbmhud-back');
-    assert.equal(new URL(await page.locator('#mbmhud-back').getAttribute('href'), origin).href, targetURL(expected));
+    const back = await page.locator('#mbmhud-back').getAttribute('href');
+    assertSameRoute(back, selected, 'Lessons return link');
     const stored = await page.evaluate(({ key, route }) => JSON.parse(sessionStorage.getItem(key) || '{}')[route], { key: RETURN_KEY, route: SURFACE });
-    assert.equal(stored, expected);
+    assertSameRoute(stored, selected, 'Stored lesson finder context');
     await page.locator('#mbmhud-back').click();
     await page.waitForFunction(() => document.querySelector('#subject-group')?.value === 'Art' && document.querySelector('#pathway')?.value === 'BUILD');
+    assertSameRoute(page.url(), selected, 'Returned lesson finder');
+    assert.equal(await page.locator('#term').inputValue(), 'Aut2');
     assert.equal(await page.locator('#search').inputValue(), 'Surface Hunt');
     assert(await page.locator('#lesson-recent a[href*="BUILD_ART_A2_W1_Surface_Hunt.html"]').count() > 0, 'Opened lesson is missing from Recently opened');
     return { returnedTo: page.url() };
