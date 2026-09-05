@@ -674,3 +674,9 @@ a contiguous run of `- ` lines. A YAML comment between two entries is legal, ord
 The control still fires, which is why this is a fragility and not an outage — the estate goes red rather than quiet. But the diagnosis points the wrong way, and the obvious next move for whoever reads it ("these two are missing, add them again") does not work.
 
 Not changed, because the control did not fail — it reddened correctly on both the real drift and on my truncation, and §8c keeps the mechanism shut unless something fails. The fix when you want it is one line: strip comment and blank lines before matching, or match `-` entries individually within the `workflows:` block rather than as one run. I left a warning above the key in `watch-main.yml` so the next editor sees it before they do what I did.
+
+## AAV-H4 / AAV-H6 — resolved for the 42 award lessons, 2026-09-05
+
+PRs #321, #324 and #325 implement and review genuine primary activity variety across all three fourteens. Each has six shapes, no adjacent repeat, at most three of any shape, and at least four shapes in every six-lesson window. Browser and pupil-print checks cover every lesson. This is the authoring route; declarations alone were not relabelled.
+
+All 42 now pass g26 with the current chrome treatment and unchanged bands, so no chrome ruling is needed for these award lessons. The later strict g23 audit was repaired through concise teaching prose; all 42 raw ratios are at or below 1.25 with identical family medians. This closes the award findings only, not other historical Humanities or ASDAN load questions.

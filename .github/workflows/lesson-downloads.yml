@@ -1,0 +1,81 @@
+name: Lesson downloads
+on:
+  pull_request:
+    paths:
+      - 'tools/downloads/**'
+      - 'downloads/**'
+      - 'Science_Teesside/**'
+      - 'Art_Teesside/*BRONZE*/**'
+      - 'Art_Teesside/*EXPLORE*/**'
+      - 'Art_Teesside/*SILVER*/**'
+      - 'tools/artsaward/SLOTS.json'
+      - 'tools/artsaward/slot_reader*'
+      - 'tools/easter/classroom_activity*'
+      - '_sownb/CALENDAR_SPINE.json'
+      - '_sownb/TERM_DATES.md'
+      - '.github/workflows/lesson-downloads.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'tools/downloads/**'
+      - 'downloads/**'
+      - 'Science_Teesside/**'
+      - 'Art_Teesside/*BRONZE*/**'
+      - 'Art_Teesside/*EXPLORE*/**'
+      - 'Art_Teesside/*SILVER*/**'
+      - 'tools/artsaward/SLOTS.json'
+      - 'tools/artsaward/slot_reader*'
+      - 'tools/easter/classroom_activity*'
+      - '_sownb/CALENDAR_SPINE.json'
+      - '_sownb/TERM_DATES.md'
+      - '.github/workflows/lesson-downloads.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline:
+    name: Extracted lesson packs work offline
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install the source parser and pinned browser driver
+        run: |
+          python -m pip install lxml cssselect
+          npm install --prefix "$RUNNER_TEMP/download-browser" --no-save --ignore-scripts playwright@1.62.1
+      - name: Verify the current term sources and exact lesson selection
+        run: python tools/downloads/verify_definitions.py > "$RUNNER_TEMP/download-source-review.json"
+      - name: Exercise packaging and exact HUD controls
+        run: |
+          python - <<'PY'
+          import json, os, sys
+          from pathlib import Path
+          sys.path.insert(0, 'tools/downloads')
+          import test_download_pack, test_science_offline_pack
+          for name, module in [('packaging', test_download_pack), ('hud', test_science_offline_pack)]:
+              rows = module.controls()
+              Path(os.environ['RUNNER_TEMP'], 'download-'+name+'-controls.json').write_text(json.dumps({'controls':rows,'passed':len(rows)},indent=2)+'\n')
+              print(name, len(rows), 'controls passed')
+          PY
+      - name: Build twice and extract the actual release archives
+        run: |
+          python tools/downloads/build_all.py --output "$RUNNER_TEMP/lesson-pack-zips"
+          python tools/downloads/prepare_pack_browser.py --definitions tools/downloads/definitions --archives-dir "$RUNNER_TEMP/lesson-pack-zips" --extracted-dir "$RUNNER_TEMP/lesson-pack-extracted" --manifest "$RUNNER_TEMP/download-browser-manifest.json"
+      - name: Use the extracted files with the network disabled
+        env:
+          NODE_PATH: ${{ runner.temp }}/download-browser/node_modules
+        run: node tools/downloads/offline_pack_browser.cjs --manifest "$RUNNER_TEMP/download-browser-manifest.json" --packs-dir "$RUNNER_TEMP/lesson-pack-extracted" --report "$RUNNER_TEMP/download-browser-acceptance.json" --artifacts "$RUNNER_TEMP/download-previews" --channel chrome
+      - name: Preserve exact archives and acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lesson-download-review-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/lesson-pack-zips
+            ${{ runner.temp }}/download-*.json
+            ${{ runner.temp }}/download-previews
+          if-no-files-found: error
+          retention-days: 14
