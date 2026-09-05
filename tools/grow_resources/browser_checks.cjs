@@ -22,10 +22,10 @@ async function run({browser,root,out,configure,measured,report}){
   const loadedImage=async(locator)=>{await locator.scrollIntoViewIfNeeded();await locator.waitFor({state:'visible'});await locator.evaluate(image=>image.decode());assert.equal(await locator.evaluate(image=>image.complete&&image.naturalWidth>0),true);};
   const targetSize=async(locator,viewport)=>{await locator.scrollIntoViewIfNeeded();const box=await locator.boundingBox();assert.ok(box&&box.width>=43.5&&box.height>=43.5&&box.x>=0&&box.x+box.width<=viewport.width+1,'Touch target is at least44px and stays on screen');};
   const navigationClear=async(page)=>{
-    await page.locator('#mbm-hud-pill').waitFor({state:'visible'});
+    await page.locator('#mbmhud-pill').waitFor({state:'visible'});
     const overlaps=await page.evaluate(()=>{
       const visible=n=>{const r=n.getBoundingClientRect();return r.width&&r.height&&getComputedStyle(n).visibility!=='hidden';};
-      const hud=[...document.querySelectorAll('#mbm-hud-back,#mbm-hud-home,#mbm-hud-pill')].filter(visible);
+      const hud=[...document.querySelectorAll('#mbmhud-back,#mbmhud-home,#mbmhud-pill')].filter(visible);
       return [...document.querySelectorAll('.controls button')].filter(visible).flatMap(button=>hud.flatMap(item=>{
         const a=button.getBoundingClientRect(),b=item.getBoundingClientRect();
         return Math.min(a.right,b.right)>Math.max(a.left,b.left)&&Math.min(a.bottom,b.bottom)>Math.max(a.top,b.top)?[{button:button.textContent.trim(),hud:item.id}]:[];
