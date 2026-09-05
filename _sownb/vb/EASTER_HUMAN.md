@@ -589,3 +589,19 @@ g28 is fixed. The class is not. Any gate added since, or added next, is silent b
 The fix is auto-discovery: enumerate `_sownb/vb/tools/g*.py` plus the declared `tools/easter` and `tools/artsaward` members, require each to answer `--list-controls`, and red on any tool that cannot. That inverts the default from opt-in to opt-out. It is a real mechanism change and §8c closes that door without a control failing, so it is NOT done here and is put to Matt instead.
 
 Counter-consideration, so the decision is a real one: auto-discovery would red the battery on every helper script that happens to sit in those directories and has no controls to declare, so it needs an explicit "declares no controls" opt-out — which is itself a list, just an inverted one. The gain is that the inverted list fails loudly (a new gate reds until classified) instead of silently (a new gate is skipped until noticed).
+
+## AAV-H2 — the Art chassis authority is contested, and the numbers are here
+
+The order §3 names `Art_Teesside/Build/BUILD_ART_A2_W7_Bank_It_and_Plan_the_Teach.html` (sha256 `2eb0f84c…`) as the chassis every Art lesson must match. #316, merged 33 minutes before the order was issued, moved 101 campaign decks — 59 Easter units and all 42 award units — onto the CLASSROOM chassis at your request. These are two different design systems, sharing exactly one token (`--muted`).
+
+Measured, 1280×820, all 42 against the reference: **0 of 42 match on all ten surfaces**, in only two delta signatures. h1 40px→40.96px · h1 colour #000→#101820 · slide padding 40px→38.4px · Lundy purple #f3e8ff→slate #f8fafc · button terracotta-on-transparent→white-on-teal. Stage-0 screenshots show the same styling family, differing in title-slide furniture and nav treatment.
+
+Not actioned, because two of those deltas reverse your own later preference: the ledger of 2026-09-04 records that you now prefer lighter Lundy integration, and slate is lighter than purple. Restyling 101 live decks toward a reference that predates that choice is not a build decision.
+
+**The part that needs deciding either way:** the frozen g16/g19 contract for BUILD/GROW/LAUNCH Art still describes the pre-#316 chassis, so it reds every restyled deck AND would red every future Art deck. It only looks quiet because g16 and g19 are not run per-deck in CI. Two coherent resolutions, and no third:
+1. **Classroom chassis is canonical** → re-freeze the Art contract rows against a restyled deck, put g16/g19 into CI, and the estate is consistent. This ratifies what shipped.
+2. **The named reference is canonical** → regenerate the 101 through the classroom presentation with the reference's palette and metrics, one token patch (the divergence is systematic, so this is feasible), and keep the contract as it stands.
+
+Option 1 is cheaper and matches your latest stated preference. Option 2 matches the order as written. I did not pick between your two instructions.
+
+Separately: the reference itself fails one of its own contract rows, `sequence.key-facts.build-art` (107/108). §3c says fix the reference before copying it, so that is worth doing under either option.
