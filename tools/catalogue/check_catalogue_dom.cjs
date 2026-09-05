@@ -34,7 +34,7 @@ function visibleScience(env){return [...env.document.querySelectorAll('[data-les
  await new Promise(resolve=>setImmediate(resolve));
  check('Root initial catalogue load preserves current-year resource count',()=>assert.equal(env.document.querySelectorAll('#cards article.card').length,rows.filter(r=>r.year==='2026-27').length));
  const allYears=env.document.querySelector('.ytab[data-year=""]');event(env,allYears,'click');
- check('All-years browse includes each of 734 resource rows once',()=>assert.equal(env.document.querySelectorAll('#cards article.card').length,rows.length));
+ check('All-years browse includes each declared resource row once',()=>assert.equal(env.document.querySelectorAll('#cards article.card').length,rows.length));
  check('All existing catalogue links remain usable, including space-containing paths',()=>{
   const links=[...env.document.querySelectorAll('#cards article.card a.go')];assert.equal(links.length,rows.length);assert(links.every(a=>a.getAttribute('href')!=='#'));
   const expected=rows.map(r=>encodeURI(r.file||r.url)).sort();assert.deepEqual(links.map(a=>a.getAttribute('href')).sort(),expected);
@@ -49,7 +49,7 @@ function visibleScience(env){return [...env.document.querySelectorAll('[data-les
  env.document.querySelector('#term').value='Aut1';env.document.querySelector('#style').value='recommended';event(env,env.document.querySelector('#style'),'change');
  check('Recommended filter exposes exactly the 15 integrated LAUNCH Science lessons',()=>assert.equal(env.document.querySelectorAll('#cards article.card').length,15));
  event(env,env.document.querySelector('[data-clear-filters]'),'click');
- check('Clear filters restores all 734 rows and resets both new controls',()=>{assert.equal(env.document.querySelectorAll('#cards article.card').length,734);assert.equal(env.document.querySelector('#term').value,'');assert.equal(env.document.querySelector('#style').value,'');});
+ check('Clear filters restores all declared rows and resets both new controls',()=>{assert.equal(env.document.querySelectorAll('#cards article.card').length,rows.length);assert.equal(env.document.querySelector('#term').value,'');assert.equal(env.document.querySelector('#style').value,'');});
  env.document.querySelector('#subject').value='Science · Teesside';event(env,env.document.querySelector('#subject'),'change');
  check('Existing subject filter still operates with new organisation',()=>assert.equal(env.document.querySelectorAll('#cards article.card').length,rows.filter(r=>r.subject==='Science · Teesside').length));
  env.document.querySelector('#subject').value='';env.document.querySelector('#search').value='osmosis';event(env,env.document.querySelector('#search'),'input');

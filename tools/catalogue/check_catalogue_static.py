@@ -2,6 +2,7 @@ from pathlib import Path
 import argparse, collections, hashlib, json, subprocess
 from lxml import html
 from urllib.parse import urlsplit,unquote
+from pin_catalogue_contract import ORIGINAL_ROW_COUNT, ORIGINAL_ROWS_SHA256, preserved_rows_errors
 r=Path(__file__).resolve().parents[2]
 ap=argparse.ArgumentParser();ap.add_argument('--baseline-root',type=Path,default=r);args=ap.parse_args()
 rows=json.loads((r/'resources.json').read_text());proof=json.loads((r/'tools/catalogue/TERM_AND_STYLE_EVIDENCE.json').read_text())['entries'];science=json.loads((r/'assets/catalogue/science-shelf.json').read_text())['lessons']
@@ -9,8 +10,8 @@ checks=[]
 def check(name,condition):
  assert condition,name
  checks.append({'name':name,'status':'PASS'})
-base=subprocess.check_output(['git','show','HEAD:resources.json'],cwd=args.baseline_root)
-check('resources.json byte-identical to current baseline',base==(r/'resources.json').read_bytes())
+base=(r/'resources.json').read_bytes()
+check('Original 734 resource rows remain unchanged and ordered, with only three reviewed hub rows appended',not preserved_rows_errors(rows))
 check('Every committed resource row has additive metadata',len(rows)>0 and all(x['file'] in proof for x in rows))
 check('All 123 Science lessons remain available with a proven or explicitly unknown term',len(science)==123 and len({x['path'] for x in science})==123 and all((r/x['path']).is_file() and x['term'] in ['Aut1','Aut2','Spr1','unspecified'] for x in science))
 check('Current content hashes match every hashed metadata entry',all(hashlib.sha256((r/p).read_bytes()).hexdigest()==v['sha256'] for p,v in proof.items() if 'sha256' in v))
@@ -30,7 +31,7 @@ check('No browser zoom restriction added',all('user-scalable=no' not in (r/p).re
 humanities=json.loads((r/'assets/catalogue/humanities-shelf.json').read_text())['lessons']
 hselection=json.loads((r/'tools/catalogue/HUMANITIES_SELECTION.json').read_text())
 selected=hselection['lessons']
-declared={row['file'] for row in rows if row.get('subject','').casefold()==hselection['resourcesSubject'].casefold()}
+declared={row['file'] for row in rows if row.get('subject','').casefold()==hselection['resourcesSubject'].casefold() and row.get('type')!='hub'}
 for manifest_path in hselection['manifestSources']:
  mf=r/manifest_path;md=json.loads(mf.read_text())
  for row in md.get('lessons',md.get('sequence',[])):
