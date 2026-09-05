@@ -333,7 +333,10 @@ def build(repo: Path, definition: dict, destination: Path | None = None) -> dict
         elif scope == "local":
             row["resolution"] = "included"
         nav.append(row)
-    entries = [entry] + [p for p in explicit if p != entry and Path(p).suffix.lower() in {".html", ".htm"}]
+    menu = definition.get("lessons", explicit)
+    if not isinstance(menu, list) or any(p not in explicit for p in menu):
+        raise ValueError("Menu lessons must be explicit pack members")
+    entries = [entry] + [p for p in menu if p != entry and Path(p).suffix.lower() in {".html", ".htm"}]
     labels = {p: lesson_label(members[p]) for p in entries if p in members}
     slots_file = "tools/artsaward/SLOTS.json" if "tools/artsaward/SLOTS.json" in members else None
     for name in sorted(aliases | {"index.html", "START_HERE.html"}):
