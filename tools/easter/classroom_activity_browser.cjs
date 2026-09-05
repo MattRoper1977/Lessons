@@ -22,7 +22,7 @@ const manifestPath = path.resolve(args.targets);
 const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 assert.equal(manifest.schema, 'classroom-activity-browser-targets-v1');
 assert.ok(['authored-decks', 'standalone-fixtures'].includes(manifest.kind));
-assert.ok(Array.isArray(manifest.targets) && manifest.targets.length === 14, 'This gate must name all fourteen Bronze decks.');
+assert.ok(Array.isArray(manifest.targets) && manifest.targets.length === 14, 'This gate must name all fourteen decks in the selected award strand.');
 const modes = new Set(['sort', 'match', 'choice', 'order']);
 const origin = 'http://classroom-activity.test';
 const artifacts = args.artifacts && path.resolve(args.artifacts);
