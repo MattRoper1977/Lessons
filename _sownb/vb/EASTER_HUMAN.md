@@ -605,3 +605,21 @@ Not actioned, because two of those deltas reverse your own later preference: the
 Option 1 is cheaper and matches your latest stated preference. Option 2 matches the order as written. I did not pick between your two instructions.
 
 Separately: the reference itself fails one of its own contract rows, `sequence.key-facts.build-art` (107/108). §3c says fix the reference before copying it, so that is worth doing under either option.
+
+## AAV-H4 — is the Lundy refrain pupil prose, or chrome?
+
+§9 of the night order says contract refrains — Lundy banner, title slide, running head — are chrome, counted zero in g23. g26 counts them as pupil prose when it measures reading level. The same sentence is therefore chrome to one gate and pupil text to another.
+
+It decides two live verdicts. With the block-boundary bug fixed (landed), the two remaining reds are:
+
+| deck | pupil FK now | with chrome excluded | BUILD band |
+|---|---|---|---|
+| BUILD_Art_Explore_W2_Test_A_Join_And_Compare_My_Learning | 4.04 RED | 3.97 PASS | 1.0–4.0 |
+| BUILD_Art_Explore_W4_Connect_The_Artist_Organisation_And_What_I_Found | 4.15 RED | 3.82 PASS | 1.0–4.0 |
+
+Both overshoot **solely** on chrome — the highest-FK sentence in each is the Lundy refrain "VOICE: the evidence statement remains in the learner's chosen communication mode." That refrain is identical in all 42 decks, so it drags every Art deck's score by the same amount and will do so for every deck the campaign writes next.
+
+I did not decide it, because extending a g23 ruling to g26 moves two decks from RED to PASS and can fairly be read as loosening a threshold, which §9 forbids. Neither deck was reworded either: rewriting real teaching to offset a refrain the pupil is not asked to decode would have bought a green tick and cost a lesson.
+
+**If chrome is chrome:** g26 excludes `.lundy`, the title slide and the running head, the two decks pass on their own prose, and the gate finally measures the same text §9 says to measure.
+**If it is not:** the refrain's own wording is the thing to simplify — once, in the donor, which fixes all 42 and every future Art deck at a stroke. That is the better outcome if you want the number to stay honest, and it is a content change, so it needs you.

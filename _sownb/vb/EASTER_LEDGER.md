@@ -2114,3 +2114,31 @@ Term spine read from `_sownb/TERM_DATES.md` and `_sownb/CALENDAR_SPINE.json` (89
 The three reds are one defect in three files. `SCI_L_A2_W7L1/L2/L3_Topics_2_3_Assessment_*` each print `"week": 15` while their cell `LAUNCH Weekly - Autumn!C45` rules **week 14** (Aut2·W7). Their FILENAMES say `A2_W7`, which agrees with TRACE — so the label was wrong and the filename was right, and H12-3 settles the direction: the label is fixed from TRACE and no file is renamed.
 
 Patched by script, one value per file. The patch asserts, per file, that the parsed config differs from the original in the `week` key ALONE before it writes, so a stray edit cannot ride along. Diff is three lines. Re-census: **16 Science decks, 0 label≠TRACE.** g27 PASS, g29 101 PASS / 0 RED / 3 SKIP (targets sha256 `e3415a8bad6ae6bd`), battery 30 tools / 362 controls PASS. Zero units, no content edits.
+
+
+## g26 counted the chrome and glued the headings together — repaired, alone
+
+§2's three reading-band reds were marginal — 4.05 and 4.21 against a BUILD ceiling of 4.0, and 7.01 against a GROW ceiling of 7.00, that last one over by a hundredth. A hundredth is a reason to look at the instrument before rewriting a lesson, so the instrument was looked at first.
+
+Ranking every pupil sentence by its own FK found that not one of the top contributors on any of the three decks was pupil teaching prose. They were of two kinds:
+
+- **Chrome.** `VOICE: the evidence statement remains in the learner's chosen communication mode.` is the Lundy refrain. The title-slide running head is the other repeat offender. §9 of this very order rules that contract refrains — Lundy banner, title slide, running head — are chrome, counted **zero** in g23. g26 was counting the same sentences as though a pupil had to read them as prose.
+- **Words that do not exist.** `SPACEVOICEAUDIENCEINFLUENCESPACE stays available.` and `0 minGROW ArtFind The Evidence…` and `what you foundUse your real records…`. lxml's `text_content()` concatenates across element boundaries; a browser does not, and neither does a screen reader. `.lundy-grid` is `display:grid`, so its four spans are blockified and render in separate cells — checked in Chromium rather than assumed. The markup is identical in Explore and Silver; the Silver file is simply MINIFIED, so the pretty-printed Explore decks escaped the artefact and the minified Silver deck did not. `minGROW` was being scored as one long word, and syllables-per-word is 11.8× weighted in Flesch-Kincaid.
+
+Separating the two causes settles what is real:
+
+| deck | g26 as-is | + block boundaries | + chrome excluded | band |
+|---|---|---|---|---|
+| Explore W2 Test A Join | 4.05 OVER | 4.04 OVER | **3.97 IN** | 1.0–4.0 |
+| Explore W4 Connect The Artist | 4.21 OVER | 4.15 OVER | **3.82 IN** | 1.0–4.0 |
+| Silver W7 Find The Evidence | 7.01 OVER | **6.19 IN** | 6.59 IN | 3.0–7.0 |
+
+**Only the first cause is repaired here, and deliberately only the first.** Joining text at a rendered box boundary is not a relaxation — it is measuring the text the reader actually meets, and `minGROW` is not a word by anyone's account. That alone takes Silver W7 from 7.01 to 6.19, comfortably inside band, and the estate's reds fall 3 → 2.
+
+**The chrome question is NOT decided here.** Excluding the Lundy refrain and the running head from g26 would change what the gate governs, and although §9 already calls those things chrome for g23, extending that ruling to a different gate is Matt's call, not a build decision — it would move two decks from RED to PASS and could fairly be read as loosening. So Explore W2 and W4 stay RED at 4.04 and 4.15 and remain open §2 work. Put to Matt as **AAV-H4** with the numbers above.
+
+What was NOT done, and why: neither Explore deck was reworded. Both overshoot solely on chrome, so rewriting their pupil sentences would have degraded real teaching to chase an artefact and would have shown up as a green tick that meant nothing.
+
+g26 gained six controls of its own and now sits in the battery — it had `--self-test` in neither form before, so nothing ever exercised it. They pin the bug so it cannot return (`concatenatedPseudoWordIsNotProduced`), assert the boundary is inserted (`blockBoundaryIsAWordBoundary`), and guard the two ways a whitespace fix goes wrong: inline tails must survive, and a boundary must not be invented inside plain prose. One control deliberately proves `visible_text` does NOT itself drop staff text — excluding the adult voice is `measure()`'s job, and conflating the two would hide an addressee bug inside a whitespace fix. Battery **30 tools / 362 controls → 31 tools / 368**, all fired, PASS.
+
+Correction to the AAV-H3 note, made after counting rather than assuming: g26 and g16_v2 were never "silent gates" in g28's sense, because they declared no controls at all. Enumerating every tool in `_sownb/vb/tools`, g28 was the ONLY one that published controls the battery could not see. After that repair and this one, the only unlisted control-publisher is the battery itself, which is correct — it cannot run itself. The hand-typed roster remains a latent hazard for the NEXT gate added; it currently has no other instance.
