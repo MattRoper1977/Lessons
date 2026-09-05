@@ -17,11 +17,23 @@
       e.stopPropagation();
       if(e.key!=='Tab')return;
       const focusable=[...dialog.querySelectorAll('a[href],button,textarea,input,select,summary,iframe,[tabindex]')]
-        .filter(el=>!el.disabled&&el.tabIndex>=0&&el.getClientRects().length>0);
+        .filter(el=>{
+          if(el.disabled||el.tabIndex<0||el.getClientRects().length===0)return false;
+          for(let parent=el.parentElement;parent&&parent!==dialog;parent=parent.parentElement){
+            if(parent.hidden)return false;
+            if(parent.tagName==='DETAILS'&&!parent.open){
+              const summary=parent.querySelector(':scope > summary');
+              if(!summary?.contains(el))return false;
+            }
+          }
+          return true;
+        });
       const first=focusable[0],last=focusable[focusable.length-1];
       if(!first){e.preventDefault();dialog.focus();return;}
-      if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
-      else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+      e.preventDefault();
+      const at=focusable.indexOf(document.activeElement);
+      const next=at<0?(e.shiftKey?focusable.length-1:0):(at+(e.shiftKey?-1:1)+focusable.length)%focusable.length;
+      focusable[next].focus();
     });
     dialog.addEventListener('close',()=>{
       for(const frame of dialog.querySelectorAll('iframe'))frame.remove();
