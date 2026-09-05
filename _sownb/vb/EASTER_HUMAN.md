@@ -633,3 +633,32 @@ Of 540 catalogue rows typed `lesson`, **51** carry a lesson-config and **9** hav
 The tempting shortcut is the one g27 exists to stop: most decks say "W7" in their filename or their card title, and reading it from there would populate the tier instantly and wrongly — a filename is a label, and this estate has already been bitten by a label disagreeing with TRACE (three LAUNCH Science decks this same night, fixed in #318).
 
 The honest route, when you want it: add a TRACE-derived `week` and `term` to each catalogue row at the point the catalogue is built, sourced from the deck's own `cells` through CALENDAR_SPINE.json — the same derivation #318 used. Rows whose deck has no resolvable cell get no week and simply do not appear under a week heading, which is truthful rather than tidy. That is catalogue work and lands alone.
+
+## AAV-H6 — every Art fourteen declares one We-Do shape
+
+g25 reads each deck's declared We-Do type. Measured across all 42:
+
+| set | declared | rule ≤4 of 14 | no two consecutive |
+|---|---|---|---|
+| Bronze | `sort-or-match` ×14 | BREACH | BREACH ×13 |
+| Explore | `sort-or-match` ×14 | BREACH | BREACH ×13 |
+| Silver | `sort-or-match` ×12, `commit-and-reveal` ×2 | BREACH | BREACH ×11 |
+
+The decks are not actually monotonous — `show-me`, `label-the-diagram`, `decision-lab`, `paired-talk`, `rank-or-order`, `predict-then-check` and `spot-the-error` all appear inside them. It is the declaration that is uniform. So there are two repairs and they are worth very different amounts:
+
+1. **Relabel** — correct 42 declarations to match what each deck already does. Zero teaching change, zero units, one scripted pass. It makes g25 truthful. It does not make the lessons more varied, and if the real shapes still cluster it will simply reveal a smaller breach honestly.
+2. **Author** — give each deck a genuinely different We-Do. Real variety, and 42 authoring units, which is two batches over the ceiling with adversarial review on each.
+
+I did neither tonight, because the evidence says speed is the risk here. `codex/vb-bronze-activities` attempted route 2 on the Bronze fourteen and its own review found five real defects in the draft — a print prompt still demanding a number the revised model dropped, two figure `alt` strings left contradicting their redrawn figures (and `spec_figures.py` copies `alt` into `aria-label`, so regenerating the figure does not fix them), a stale staff answer key beside a replaced activity, a staff access route pointing the opposite way to the new task, and an ordering key marking a safe alternative order wrong. That branch is unmerged and self-declared not release-ready. Cover staff teach from these decks from w/c 19 Oct.
+
+Recommendation: do route 1 first as a zero-unit pass — it costs almost nothing and tells you the true size of the variety problem — then decide whether route 2 is worth two batches.
+
+## AAV-H7 — the cross-estate boundary should test a property, not a list
+
+`tools/verify_cross_estate_unification.py` guards the standalone/offline payload with `ALLOWED_DIFF`, an explicit list of paths a PR may change. It has been extended by ruling at least three times, and I extended it again tonight (seven entries) because it reds on this campaign's ledger — the identical failure Ruling 6 fixed for `_teachgreen/DECISIONS.md` before the ledger was renamed.
+
+Every addition was a file that cannot change a studio's served bytes. But that sentence is the actual rule, and the list is only a hand-maintained proxy for it. Each new gate tool, record file or CI job will red the same way and be added the same way, and one day somebody in a hurry will add a served asset to the list to get a PR green.
+
+The fix is to test the property directly: a change is permitted when it cannot alter the standalone/offline payload — nothing in `CANONICAL_HASHES`, nothing served, manifests still matching their digests. `resources.json` and `apps.json` already work exactly this way (guarded by digest, not by prohibition), so the pattern is in the file already; it just is not applied to everything else.
+
+Not built here — §8c closes the mechanism without a control failing, and this control did not fail, it fired correctly on a list that had fallen behind.

@@ -2171,3 +2171,49 @@ Lanes are coloured from the pathway tokens the hub already defines — `--b-buil
 Unchanged as required: "Latest additions", the estate back-button, search, the year selector, subject filter and type filter. No deck moved, no deck renamed, zero units.
 
 **§6c control shipped.** `tools/verify_hub_catalogue.py` reds any hub entry with no catalogue row, and carries six controls of its own so a green means something: a link with a row passes, a link without one reds, the orphan is NAMED, navigation anchors (`#top`, `index.html`, `404.html`, off-site) do not manufacture reds, a leading `./` is recognised as the same link, and an empty hub is visibly vacuous rather than quietly green. Wired into the VB gate job with its self-test running FIRST, so a green cannot be a gate that has stopped being able to fire. Live: 3 hub links against 734 catalogue rows, PASS.
+
+
+## §4 media and variety, and the cross-estate boundary that reds on the record
+
+**§4a/§4b — floors met, measured in Chromium at 1280×900 on all 42, not counted in source.**
+
+| floor | required | measured |
+|---|---|---|
+| Lundy present and rendered | all 42 | **42/42** (19 strip instances per deck, one per stage) |
+| rendered visuals | ≥3 per deck | **42/42**, exactly 3 SVGs each (126 total) |
+| interactive or hands-on | ≥1 per deck | **42/42**, 4–5 each (177 total) |
+| video: public link + written alternative, no autoplay, no login embed | — | **0 videos, 0 iframes, 0 autoplay** across all 42 — the floor is met vacuously, and that is worth saying plainly rather than reporting as a pass |
+| photographs | — | **0** |
+
+Zero floor failures. Every deck sits at exactly the minimum on visuals, which meets §4b and is worth Matt knowing: the floor is a floor, and 3-of-3 everywhere means nothing has headroom.
+
+**§4c — BREACH, in all three fourteens.** The declared We-Do shape, read from each deck's own lesson-config:
+
+| set | declared shapes | ≤4 of 14 | no two consecutive |
+|---|---|---|---|
+| Bronze | `sort-or-match` ×14 | **BREACH (14)** | **BREACH at 13 of 13 adjacencies** |
+| Explore | `sort-or-match` ×14 | **BREACH (14)** | **BREACH at 13 of 13** |
+| Silver | `sort-or-match` ×12, `commit-and-reveal` ×2 | **BREACH (12)** | **BREACH at 11** |
+
+The nuance that decides what to do about it: the OBSERVED activities inside the decks are genuinely varied — `show-me`, `label-the-diagram`, `decision-lab`, `paired-talk`, `rank-or-order`, `predict-then-check`, `spot-the-error` all appear. It is the *declaration* that is monotonous, and g25 reads the declaration. So there are two very different repairs and they are not interchangeable: correcting 42 declarations to match what each deck already does is a labelling fix; giving each deck a genuinely different We-Do is authoring.
+
+**Not done tonight, and the reason is evidence rather than caution.** The unmerged Codex branch `codex/vb-bronze-activities` attempted exactly this — "replace one We Do task in each deck" across the Bronze fourteen — and its own adversarial review found FIVE real defects in the draft (BR-1 a print prompt still demanding a number the revised model no longer requires; BR-2 two figure `alt` strings left contradicting their redrawn figures, which `spec_figures.py` copies into `aria-label` so regenerating the figure does not fix them; BR-3 a stale staff answer key left beside a replaced activity; BR-4 a staff access route that sends a pupil down the path the new activity says does not work; BR-5 an ordering key marking a safe alternative order wrong). That branch is also self-declared "candidate, not release approval" with gates outstanding. Rewriting 42 activities unattended, at speed, against that evidence, is how those five become fifty. Cover staff teach from these decks from w/c 19 Oct.
+
+Recorded as **AAV-H6** with the full table and both repair routes priced. The measurement stands as the finding; the fix needs a batch with review, not a night sweep.
+
+## The boundary that reds on the record, not the work
+
+The §6 hub PR failed `static-contract` — and the failure named the ledger:
+
+    [FAIL] standalone/offline boundary violated by changed files:
+    ['.github/workflows/fieldops-p2-and-sweep.yml', '_sownb/vb/EASTER_HUMAN.md',
+     '_sownb/vb/EASTER_LEDGER.md', '_sownb/vb/tools/g26_reading_band.py',
+     '_sownb/vb/tools/mechanism_battery.py']
+
+`mbm-cross-estate-unification.yml` triggers only on the shared surface, so #317 and #318 never ran it; the moment a PR touched `index.html` it checked every file changed since main and caught this order's own record-keeping.
+
+This is not a new permission, it is Ruling 6 recurring under a renamed file. That ruling put `_teachgreen/DECISIONS.md` on the list with the reason written into the source: *"It exists to change on every pass — a boundary that reds on the ledger guarantees false failures on exactly the well-behaved passes that record their work."* NIGHT MODE requires a ledger write on every stage, so under the old list every well-behaved pass touching the hub reds on its own record.
+
+**DEFAULTED, with the test applied rather than asserted:** seven entries added, each a file that cannot change a studio's served bytes — two Markdown records, three gate tools that run in CI and ship nothing, the CI job definition, and the §6c hub control. None is a served asset, none appears in `CANONICAL_HASHES`, none can alter the standalone/offline payload the boundary exists to protect. `resources.json` remains digest-pinned and unchanged at `90b7a70a…`; that pin is what makes a catalogue edit deliberate-or-red, and it is untouched.
+
+This is NOT one of §9's frozen thresholds — those are the fixture allowlist at 28, g23's 1.25, the run-13 TRACE threshold, the reading bands and the size ceilings, and every one of them is where it was. Recorded as a DEFAULTED decision anyway, because extending any allowlist to make one's own PR pass deserves to be visible rather than quiet. The better long-term fix is a predicate — "may not change served bytes" — instead of a growing list of exact paths, and that is put to Matt as **AAV-H7** rather than built unasked.
