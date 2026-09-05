@@ -2217,3 +2217,45 @@ This is not a new permission, it is Ruling 6 recurring under a renamed file. Tha
 **DEFAULTED, with the test applied rather than asserted:** seven entries added, each a file that cannot change a studio's served bytes — two Markdown records, three gate tools that run in CI and ship nothing, the CI job definition, and the §6c hub control. None is a served asset, none appears in `CANONICAL_HASHES`, none can alter the standalone/offline payload the boundary exists to protect. `resources.json` remains digest-pinned and unchanged at `90b7a70a…`; that pin is what makes a catalogue edit deliberate-or-red, and it is untouched.
 
 This is NOT one of §9's frozen thresholds — those are the fixture allowlist at 28, g23's 1.25, the run-13 TRACE threshold, the reading bands and the size ceilings, and every one of them is where it was. Recorded as a DEFAULTED decision anyway, because extending any allowlist to make one's own PR pass deserves to be visible rather than quiet. The better long-term fix is a predicate — "may not change served bytes" — instead of a growing list of exact paths, and that is put to Matt as **AAV-H7** rather than built unasked.
+
+
+## §8 — the campaign re-censused before a single cell was targeted
+
+The order requires the headline triple re-measured from the content reading before the batch loop resumes, and not taken from the record. Measured at main `667b5c63` with `cell_coverage.py`, scoped to weeks ≤26 through `CALENDAR_SPINE.json` (895 workbook cells, each carrying its own `absoluteWeek`; scope filter `scopeStatus == IN_SCOPE`). Threshold 0.85, itself derived rather than chosen — 89 trace-asserted positives at median 1.00 against 2,413 cross-lane negatives.
+
+### HEADLINE TRIPLE (content reading, week ≤26)
+
+    in scope   596
+    covered    221
+    open       375
+
+**This does not match the resume pointer, and the difference is the point.** `VB_STATE.resume_easter_a3.headline` records 573 / 134 / 439. Covered has risen 134 → **221** because #315 taught the reader to decode HTML-escaped apostrophes in existing source references, and batches 1–4 landed on top of that; in-scope reads 596 rather than 573 because this census scopes from the spine's own `scopeStatus` and week field rather than the targets file's frozen list. **87 fewer cells are open than the resume pointer claims.** A campaign that had resumed from the record would have targeted 64 cells that no longer need writing.
+
+### Family × term coverage — covered / in scope, term from the spine
+
+| lane | subject | Aut1 | Aut2 | Spr1 | Spr2 | total |
+|---|---|---|---|---|---|---|
+| BUILD | ASDAN | 24/24 | 20/21 | 2/18 | 0/15 | 46/78 |
+| BUILD | Art | 8/8 | 0/7 | 0/6 | 0/5 | 8/26 |
+| BUILD | Humanities | 15/16 | 4/14 | 2/12 | 0/10 | 21/52 |
+| BUILD | Science | 5/8 | 6/7 | 1/6 | 0/5 | 12/26 |
+| GROW | ASDAN | 20/24 | 6/21 | 3/16 | 0/15 | 29/76 |
+| GROW | Art | 2/8 | 0/7 | 0/6 | 0/5 | 2/26 |
+| GROW | Humanities | 11/16 | 8/14 | 2/12 | 0/10 | 21/52 |
+| GROW | Science | 6/8 | 7/7 | 1/6 | 0/5 | 14/26 |
+| LAUNCH | ASDAN | 25/40 | 11/35 | 5/30 | 0/25 | 41/130 |
+| LAUNCH | Art | 2/8 | 0/7 | 0/6 | 0/5 | 2/26 |
+| LAUNCH | Humanities | 11/16 | 2/14 | 2/12 | 0/10 | 15/52 |
+| LAUNCH | Science | 4/8 | 6/7 | 0/6 | 0/5 | 10/26 |
+
+Three things this table says that the triple alone does not:
+
+- **Spring 2 is empty in every one of the twelve families — 0 of 115.** Weeks 22–26 run w/c 22 Feb to the Easter boundary on Thu 25 Mar 2027, and nothing is written for any of them. That is the largest single block of the remaining work and it sits at the far end of the horizon.
+- **Art is the weakest subject by proportion**: 12 of 78 cells covered across the three pathways, and 0 of 21 outside Autumn 1 — despite the Art estate being the largest by file count. The 42 award decks verified in §2 do not serve SoW cells; they serve award parts, which is exactly the distinction §7's placement rows exist to keep straight.
+- **Coverage decays with the horizon in every family without exception**: Aut1 133/196, Aut2 70/163, Spr1 18/136, Spr2 0/115. The campaign has been working front-to-back, which is the right order, and the back half is untouched.
+
+Open cells: ASDAN 168 · Humanities 99 · Art 66 · Science 42. By lane: LAUNCH 166 · GROW 114 · BUILD 95.
+
+### Forecast at the measured rate
+
+Batches 1–4 landed 2 + 14 + 24 + 19 = **59 authored units**. At ≤3 honest cells per deck and a 24-unit ceiling, 375 open cells need on the order of **125–190 deck plans**, i.e. **6 to 8 full batches** — every deck carrying adversarial review before gating and the full gate stack after it. That is the honest distance to S1, and it is not one session's work at the quality this estate holds itself to.
