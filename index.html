@@ -304,6 +304,7 @@ html[data-theme="highlumen"] .header a,html[data-theme="highlumen"] .header stro
 @media(max-width:350px){.mbm-site-header .mbm-primary-links,.mbm-site-header .mbm-nav-panel{grid-template-columns:1fr}}
 </style></noscript>
 <script>try{var t=localStorage.getItem('mbm_reading_theme');if(t&&t!=='cream')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="stylesheet" href="assets/catalogue/catalogue.css">
 </head><body class="mbm-hub mbm-hub-lessons" data-mbm-estate="lessons">
 <a class="skip" href="#main">Skip to content</a>
 <header class="header mbm-site-header" data-mbm-platform="mbm-cross-estate-unification-lessons-apps-2026-08-08"><div class="bar">
@@ -366,8 +367,11 @@ html[data-theme="highlumen"] .header a,html[data-theme="highlumen"] .header stro
 <label>Search<input id="search" type="search" placeholder="Try: bonding, trekkers, pH…" autocomplete="off"></label>
 <label>Subject<select id="subject"><option value="">All subjects</option></select></label>
 <label>Type<select id="type"><option value="">All types</option></select></label>
+<label>Term<select id="term" disabled><option value="">All terms</option></select></label>
+<label>Teaching style<select id="style" disabled><option value="">All teaching styles</option></select></label>
 
 </div>
+<section class="catalogue-intro" aria-label="Find a teaching version"><p>Choose a pathway, then browse by term and teaching batch. Recommended lessons appear first in each term; fuller Lundy Loop and earlier versions stay available below.</p><div class="catalogue-links"><a href="Science_Teesside/index.html?pathway=LAUNCH&amp;term=Aut1&amp;style=recommended">Recommended LAUNCH Science · Weeks 3–7</a><a href="Science_Teesside/index.html">Science by pathway, term and version →</a><a href="Humanities_Teesside/index.html">Humanities by pathway, term and version →</a></div><p class="catalogue-feedback" id="catalogue-feedback" role="status"></p></section>
 <div class="chiprow rail" id="quicknav" aria-label="Browse by subject"></div>
 <p class="status" id="status" aria-live="polite" aria-atomic="true"></p>
 <p class="legend"><span><b>Formats:</b></span><span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M12 16v3M8.5 21h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg> slides</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8V4h10v4M7 16h10v5H7z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><rect x="4" y="8" width="16" height="8" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg> print pack inside</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 16h5v4H5zM9.5 10h5v10h-5zM14 4h5v16h-5z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg> 3 tiers</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7.5" width="19" height="10" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 10.2v4.6M5.7 12.5h4.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="15.6" cy="11" r="1.1" fill="currentColor"/><circle cx="18.2" cy="13.6" r="1.1" fill="currentColor"/></svg> game</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.9"/><circle cx="12" cy="18" r="1.1" fill="currentColor"/></svg> interactive</span></p>
@@ -380,19 +384,30 @@ html[data-theme="highlumen"] .header a,html[data-theme="highlumen"] .header stro
 </div><p class="mbm-kofi" style="text-align:center;margin:14px auto 4px"><a href="https://ko-fi.com/madebymattuk" style="display:inline-flex;align-items:center;gap:8px;background:#F2A24A;color:#161D3D;font-weight:700;font-size:.9rem;padding:10px 18px;border-radius:8px;text-decoration:none;box-shadow:0 2px 0 #C97F2E">☕ Buy me a coffee</a></p>
 <p class="mbm-contact" style="text-align:center;font-size:.85rem;opacity:.85;margin:16px auto 10px;max-width:90%">Questions, ideas or bug reports — <a href="mailto:contactmadebymatt@gmail.com" style="color:inherit;font-weight:600">contactmadebymatt@gmail.com</a></p>
 </footer>
+<script src="assets/catalogue/catalogue.js"></script>
 <script>const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function safeHref(value){
   const s=String(value??"").trim();
   if(!s||/^(?:javascript|data|vbscript):/i.test(s))return"#";
-  if(/^https?:\/\//i.test(s)||/^[A-Za-z0-9][A-Za-z0-9._~!$&'()*+,;=:@%/?#-]*$/.test(s))return encodeURI(s);
+  if(/^https?:\/\//i.test(s))return encodeURI(s);
+  if(!/^[a-z][a-z0-9+.-]*:/i.test(s)&&!/^\/\//.test(s)&&!/[\\\u0000-\u001f]/.test(s))return encodeURI(s);
   return"#";
 }
 const scrollBehavior=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth";
 function fillSelect(id,vals){const el=$("#"+id);[...new Set(vals)].sort().forEach(v=>{
 const o=document.createElement("option");o.textContent=v;el.appendChild(o)})}
 const NICE={pupil:"Pupil app",lesson:"Lesson",revision:"Revision",game:"Game",teacher:"Teacher",support:"Support"};
-let ALL=[],TIER="",YEAR="2026-27",BROWSING=true;
+let ALL=[],TIER="",YEAR="2026-27",BROWSING=true,CATALOGUE={entries:{},terms:{},styles:{}};
+const catalogueMeta=r=>MBM_CATALOGUE.metadata(r,CATALOGUE);
+let cataloguePrintClosed=[];
+window.addEventListener("beforeprint",()=>{cataloguePrintClosed=[...document.querySelectorAll("#cards details:not([open])")];cataloguePrintClosed.forEach(section=>{section.open=true;});});
+window.addEventListener("afterprint",()=>{cataloguePrintClosed.forEach(section=>{section.open=false;});cataloguePrintClosed=[];});
+function catalogueMatches(r){return MBM_CATALOGUE.matches(r,CATALOGUE,$("#term").value,$("#style").value)}
+function catalogueSections(rows){
+  if(!Object.keys(CATALOGUE.entries).length)return `<div class="grid">${rows.map(card).join("")}</div>`;
+  return MBM_CATALOGUE.groups(rows,CATALOGUE).map(group=>`<section class="catalogue-term" data-term="${esc(group.term)}"><h3>${esc(group.label)} <span>· ${group.batches.reduce((n,b)=>n+b.rows.length,0)} resources</span></h3>${group.batches.map(batch=>`<section class="catalogue-batch" data-style="${esc(batch.style)}"><h4>${esc(batch.label)} <span>· ${batch.rows.length}</span></h4><div class="grid">${batch.rows.map(card).join("")}</div></section>`).join("")}</section>`).join("");
+}
 function tierOf(r){const f=r.file||r.url||"";
 if(/(?:^|\/)Build\//.test(f))return"BUILD";
 if(/(?:^|\/)Grow\//.test(f))return"GROW";
@@ -428,22 +443,22 @@ if(r.type==="game")o.push([IC.pad,"game"]);
 if(r.type==="teacher"||r.type==="pupil")o.push([IC.tab,"interactive"]);
 return o.length?`<div class="fmt">${o.map(x=>`<span title="${x[1]}" aria-label="${x[1]}" role="img">${x[0]}</span>`).join("")}</div>`:""}
 function actLabel(r){return {lesson:"LAUNCH SLIDES →",revision:"LAUNCH SLIDES →",game:"PLAY →",hub:"OPEN HUB →",teacher:"OPEN TOOL →",pupil:"OPEN APP →",support:"OPEN PACK →"}[r.type]||"OPEN →"}
-function card(r){const t=r._tier,_s=r.file||r.url||"",href=esc(safeHref(_s));
+function card(r){const t=r._tier,_s=r.file||r.url||"",href=esc(safeHref(_s)),m=catalogueMeta(r);
 // §6b: the pathway tag is on EVERY card, in every view. It used to vanish in the
 // browsing view, which is exactly the view somebody browsing by pathway is in.
 const pills=`<div class="chips">${t?`<span class="pill tier ${t}">${t}</span>`:`<span class="pill tier OTHER">RESOURCE</span>`}${BROWSING?"":`<span class="pill${r.year==="2026-27"?" yr-new":""}">${r.year==="2026-27"?"2026–27":"2025–26"}</span>`}</div>`;
 let _dt=r.title||"";if(!BROWSING&&t&&_dt.indexOf(t+" · ")===0)_dt=_dt.slice((t+" · ").length);
 return `<article class="card${t?" t-"+t:""}"><div class="kind">${t&&BROWSING?esc(t):esc(r.subject)+" · "+esc(NICE[r.type]||r.type)}</div>
-<h3><a href="${href}">${esc(_dt)}</a></h3><p>${esc(r.desc||r.description||"")}</p>${pills}
+<h3><a href="${href}">${esc(_dt)}</a></h3><p>${esc(r.desc||r.description||"")}</p>${pills}${Object.keys(CATALOGUE.entries).length?`<div class="chips"><span class="pill">${esc(CATALOGUE.terms[m.term]||"Term not specified")}</span><span class="pill ${m.style==="recommended"?"recommended":""}">${esc(CATALOGUE.styles[m.style]||"Earlier retained versions")}</span></div>`:""}
 <div class="actrow">${fmtIcons(r)}<a class="go" href="${href}">${actLabel(r)}</a></div></article>`}
 function setFilterStatus(shown){
   const el=$("#status");el.replaceChildren();
-  if(!($("#search").value||$("#subject").value||$("#type").value||TIER))return;
+  if(!($("#search").value||$("#subject").value||$("#type").value||$("#term").value||$("#style").value||TIER))return;
   el.append(document.createTextNode(`Showing ${shown} matching resources.`));
   const b=document.createElement("button");b.type="button";b.className="mbm-clear";b.dataset.clearFilters="";b.textContent="Clear filters";el.appendChild(b);
 }
 function clearFilters(){
-  $("#search").value="";$("#subject").value="";$("#type").value="";TIER="";
+  $("#search").value="";$("#subject").value="";$("#type").value="";$("#term").value="";$("#style").value="";TIER="";
   document.querySelectorAll(".j-tier").forEach(x=>x.setAttribute("aria-pressed","false"));
   buildQuicknav();buildLaneCounts();render();
 }
@@ -454,8 +469,8 @@ function suiteCallout(n){return `<div class="callout"><span class="stamp">ARTS A
 <figure class="lx-vid"><button class="lx-vidbtn" type="button" data-yt="vhuk-K_wWas" aria-label="Play video: a full year of art — and it runs itself, 60-second tour"><img src="assets/video/poster-art.webp" alt="" loading="lazy" width="1280" height="720"></button><figcaption>▶ Watch: a full year of art — and it runs itself (60-second tour)</figcaption></figure></div>`}
 function render(){const q=$("#search").value.toLowerCase(),s=$("#subject").value,t=$("#type").value,y=YEAR;
 const a=ALL.filter(r=>(!q||[r.title,r.desc||r.description||"",r.subject,r.family,r._tier,...(r.keywords||[])].join(" ").toLowerCase().includes(q))
-&&(!s||r.subject===s)&&(!t||(NICE[r.type]||r.type)===t)&&(!y||r.year===y)&&(!TIER||r._tier===TIER));
-const browsing=!q&&!s&&!t&&!TIER;BROWSING=browsing;
+&&(!s||r.subject===s)&&(!t||(NICE[r.type]||r.type)===t)&&(!y||r.year===y)&&(!TIER||r._tier===TIER)&&catalogueMatches(r));
+const browsing=!q&&!s&&!t&&!TIER&&!$("#term").value&&!$("#style").value;BROWSING=browsing;
 if(browsing){ // pathway-first: BUILD / GROW / LAUNCH are the lanes, subject sits inside one
   const inYear=ALL.filter(r=>!YEAR||r.year===YEAR).length;
   const byTier={BUILD:[],GROW:[],LAUNCH:[],OTHER:[]};
@@ -467,7 +482,7 @@ if(browsing){ // pathway-first: BUILD / GROW / LAUNCH are the lanes, subject sit
     const subs=Object.keys(bySub).sort(subjOrder);
     const body=subs.map(subj=>{
       const rows=bySub[subj];
-      const grid=`<div class="grid">${rows.map(card).join("")}</div>`;
+      const grid=catalogueSections(rows);
       if(LEGACY[subj])return `<details class="legacy"><summary>${esc(subj)} · ${rows.length} <span class="note">${LEGACY[subj]} Tap to show.</span></summary>${grid}</details>`;
       const kinds={};rows.forEach(r=>{const k=(r.type||"resource").toLowerCase();kinds[k]=(kinds[k]||0)+1});
       const mix=Object.entries(kinds).sort((a,b)=>b[1]-a[1]).slice(0,2).map(([k,n])=>`<span class="apill">${n} ${esc(k)}${n>1&&!k.endsWith("s")?"s":""}</span>`).join("");
@@ -478,10 +493,10 @@ if(browsing){ // pathway-first: BUILD / GROW / LAUNCH are the lanes, subject sit
 }else{
   let empty='<p class="status">No matches — try fewer words.</p>';
   if(!a.length&&YEAR){
-    const anywhere=ALL.filter(r=>(!q||[r.title,r.desc||r.description||"",r.subject,r.family,r._tier,...(r.keywords||[])].join(" ").toLowerCase().includes(q))&&(!s||r.subject===s)&&(!t||(NICE[r.type]||r.type)===t)&&(!TIER||r._tier===TIER)).length;
+    const anywhere=ALL.filter(r=>(!q||[r.title,r.desc||r.description||"",r.subject,r.family,r._tier,...(r.keywords||[])].join(" ").toLowerCase().includes(q))&&(!s||r.subject===s)&&(!t||(NICE[r.type]||r.type)===t)&&(!TIER||r._tier===TIER)&&catalogueMatches(r)).length;
     if(anywhere)empty=`<p class="status">Nothing in the ${YEAR==="2026-27"?"2026–27 collection":"2025–26 library"} — but ${anywhere} match${anywhere===1?"":"es"} across all years. <button type="button" id="widenYear" class="widen">Search all years →</button></p>`;
   }
-  $("#cards").innerHTML=(s===SUITE&&!q&&!t?suiteCallout(a.length):"")+(a.length?`<div class="grid" style="padding-top:1.2rem">${a.map(card).join("")}</div>`:empty);
+  $("#cards").innerHTML=(s===SUITE&&!q&&!t?suiteCallout(a.length):"")+(a.length?catalogueSections(a):empty);
 }
 const bits=[];if(TIER)bits.push(TIER+" stage");if(YEAR)bits.push(YEAR==="2026-27"?"2026–27 collection":"2025–26 library");
 $("#count").textContent=`${a.length} of ${ALL.length} resources${bits.length?" · "+bits.join(" · "):""}`;
@@ -575,11 +590,12 @@ function renderLatest(){
   const fmt=iso=>{const [y,m,d]=iso.split("-");const M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][Number(m)-1]||m;return `${Number(d)} ${M} ${y}`};
   el.innerHTML=dated.slice(0,12).map(r=>`<li><a href="${esc(safeHref(r.file||r.url))}">${esc(r.title)}</a><span class="mbml-meta"><b>Added ${esc(fmt(r.added))}</b> · ${esc(r.subject)}</span></li>`).join("")||'<li><span class="mbml-meta">Nothing dated yet.</span></li>';
 }
-fetch("resources.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error(`resources.json ${r.status}`);return r.json()}).then(d=>{if(!Array.isArray(d))throw new Error("Invalid resources.json");ALL=d;
+Promise.all([fetch("resources.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error(`resources.json ${r.status}`);return r.json()}),fetch("assets/catalogue/terms-and-styles.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error("Version labels unavailable");return r.json()}).catch(()=>null)]).then(([d,metadata])=>{if(!Array.isArray(d))throw new Error("Invalid resources.json");ALL=d;
+if(metadata&&metadata.schema===1&&metadata.entries&&metadata.terms&&metadata.styles){CATALOGUE=metadata;for(const [id,labels] of [["term",CATALOGUE.terms],["style",CATALOGUE.styles]]){const select=$("#"+id);for(const [value,label] of Object.entries(labels)){const option=document.createElement("option");option.value=value;option.textContent=label;select.appendChild(option)}select.disabled=false;}}else{$("#catalogue-feedback").textContent="Term and version labels are temporarily unavailable. You can still search and open all resources.";}
 ALL.forEach(r=>{r._tier=tierOf(r)});
 fillSelect("subject",d.map(r=>r.subject));fillSelect("type",d.map(r=>NICE[r.type]||r.type));buildQuicknav();buildLaneCounts();fillTabCounts();render();renderLatest()})
 .catch(()=>{$("#count").textContent="Couldn't load resources.json"});
-["search","subject","type"].forEach(id=>$("#"+id).addEventListener(id==="search"?"input":"change",()=>{if(id==="subject")buildQuicknav();buildLaneCounts();fillTabCounts();render()}));document.addEventListener("click",e=>{const b=e.target.closest("[data-suite]");if(!b)return;
+["search","subject","type","term","style"].forEach(id=>$("#"+id).addEventListener(id==="search"?"input":"change",()=>{if(id==="subject")buildQuicknav();buildLaneCounts();fillTabCounts();render()}));document.addEventListener("click",e=>{const b=e.target.closest("[data-suite]");if(!b)return;
 $("#subject").value=SUITE;TIER=b.getAttribute("data-suite")||"";$("#search").value="";render();
 const top=document.querySelector(".callout");if(top&&top.scrollIntoView)top.scrollIntoView({behavior:scrollBehavior,block:"start"});});
 (function(){document.addEventListener("click",function(e){
