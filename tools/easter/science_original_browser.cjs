@@ -44,9 +44,26 @@ async function minutes(page,t){
 }
 async function move(page,index){
   for(let n=0;n<15&&await current(page)!==index;n++) {
-    const button=await current(page)<index?next(page):previous(page); await button.click();
+    const at=await current(page);
+    if(at<index) await advanceStage(page,at+1);
+    else await previous(page).click();
   }
   assert.equal(await current(page),index);
+}
+async function advanceStage(page,index){
+  // The original reveal framework deliberately uses Next for each diagram
+  // step before it leaves that stage. Exercise those real clicks too.
+  const from=await current(page);assert.equal(index,from+1);
+  let clicks=0;
+  for(;clicks<80&&await current(page)===from;clicks++) await next(page).click();
+  assert.equal(await current(page),index,'Next must finish the reveals and reach the next stage');
+  report.navigationSteps ||= [];
+  report.navigationSteps.push({case:active,from,to:index,clicks});
+}
+async function periodBoundary(page,t,index){
+  const boundary=page.locator('.slide').nth(index-1).locator('.period-break');
+  assert.equal(await boundary.count(),1,'Period 1 has its own visible stop instruction');
+  const text=await boundary.innerText();assert.match(text,/STOP for today/);assert.ok(text.includes(t.periodDays[1]));
 }
 async function clock(page){
   assert.equal(await slide(page).getAttribute('data-title'),'Independent Work');
@@ -77,7 +94,10 @@ async function configure(context){
   });
 }
 async function load(page,t){await page.emulateMedia({media:'screen'});await page.goto(origin+'/Lessons/'+t.path,{waitUntil:'domcontentloaded'});await slide(page).waitFor();}
-async function snap(page,name){await page.screenshot({path:path.join(out,name+'.png'),fullPage:true});}
+async function snap(page,name){
+  await slide(page).evaluate(el=>Promise.all(el.getAnimations().filter(a=>Number.isFinite(a.effect.getComputedTiming().endTime)).map(a=>a.finished.catch(()=>{}))));
+  await page.screenshot({path:path.join(out,name+'.png'),fullPage:true});
+}
 const value=async page=>(await page.locator('#timerDisplay').innerText()).trim();
 const seconds=v=>v.split(':').reduce((a,b)=>a*60+Number(b),0);
 async function exercise(t,viewport={width:1280,height:800},responsive=false){
@@ -88,14 +108,14 @@ async function exercise(t,viewport={width:1280,height:800},responsive=false){
   try{
     await measured(id+'/load-title-periods',async()=>{await load(page,t);await title(page);independent=await minutes(page,t);await snap(page,id+'-title');});
     if(!responsive)await measured(id+'/all-stages-through-real-navigation',async()=>{
-      for(let i=1;i<t.expectedStageCount;i++){await next(page).click();assert.equal(await current(page),i);assert.equal(await page.locator('.slide.active').count(),1);assert.ok((await slide(page).locator('h1,h2').first().innerText()).trim());}
+      for(let i=1;i<t.expectedStageCount;i++){await advanceStage(page,i);assert.equal(await page.locator('.slide.active').count(),1);assert.ok((await slide(page).locator('h1,h2').first().innerText()).trim());}
       await move(page,0);
     });
     await measured(id+'/independent-restart',async()=>{
       if(t.sessionCount===2){
         await slide(page).getByRole('button',{name:/Resume period 2/i}).click();assert.equal(await current(page),independent);
         const text=await slide(page).innerText();assert.ok(text.includes(t.periodDays[1]));
-        assert.match(await page.locator('.slide').nth(independent-1).innerText(),/End of Period 1/);
+        await periodBoundary(page,t,independent);
       }else await move(page,independent);
       await clock(page);assert.equal(await value(page),t.independentMinutes+':00');
     });
@@ -115,6 +135,10 @@ async function exercise(t,viewport={width:1280,height:800},responsive=false){
         for(const model of await slide(page).locator('svg,img,canvas').all())if(await model.isVisible()){const r=await model.boundingBox();assert.ok(r.width>0&&r.height>0,'Visible model has real dimensions');}
       }
       await snap(page,id+'-independent');
+      await slide(page).evaluate(el=>{el.scrollTop=el.scrollHeight;});
+      const bounds=await slide(page).boundingBox(),bar=await page.locator('.controls').boundingBox();
+      assert.ok(bounds.y+bounds.height<=bar.y+1,'Lesson scroll area ends above the fixed navigation');
+      await snap(page,id+'-independent-end');
     });
     if(!responsive)await measured(id+'/three-real-print-selections',async()=>{
       await move(page,0);
@@ -147,6 +171,9 @@ async function negativeControls(){
     await measured('negative-controls/two-visible-clocks',()=>rejects('Competing clocks',()=>clock(page)));
     await load(page,t);await slide(page).locator('button[onclick="printPack(\'standard\')"]').click();await page.emulateMedia({media:'print'});
     await measured('negative-controls/wrong-print-tier',()=>rejects('Wrong print selection',()=>selectedPrint(page,'supported')));
+    const two=doc.targets.find(t=>t.sessionCount===2);await load(page,two);const index=await minutes(page,two);
+    await page.locator('.slide').nth(index-1).locator('.period-break').evaluate(n=>n.remove());
+    await measured('negative-controls/missing-period-stop',()=>rejects('Missing period stop',()=>periodBoundary(page,two,index)));
   }finally{await context.close();}
 }
 (async()=>{
