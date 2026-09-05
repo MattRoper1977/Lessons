@@ -30,3 +30,20 @@
 .mbm-sp-body :focus-visible,.mbm-sp-closebar :focus-visible,.mbm-sp-entry:focus-visible{outline:4px solid #d39b2c;outline-offset:3px}
 @media(max-width:600px){.mbm-sp-body{padding:14px;font-size:1.05rem}.mbm-sp-body .mbm-sp-section{padding:10px}.mbm-sp-closebar{padding:10px}.mbm-sp-files{flex-direction:column}.mbm-sp-body td,.mbm-sp-body th{padding:8px}.mbm-sp-page main{margin:8px}}
 @media print{.mbm-sp-dialog,.mbm-sp-entry{display:none!important}.mbm-sp-page{background:#fff}.mbm-sp-page main{margin:0;border:0;padding:0}.mbm-sp-page nav,.mbm-sp-video,.mbm-sp-files{display:none}.mbm-sp-body figure,.mbm-sp-body table{break-inside:avoid}.mbm-sp-body textarea{min-height:24mm}}
+
+/* Keep native stage controls clear of the reviewed site Back button on touch screens. */
+@media screen and (max-width:600px){
+ body:has(#mbm-science-pack) .controls{bottom:76px}
+ body:has(#mbm-science-pack) .progress-label{bottom:124px}
+ body:has(#mbm-science-pack) .slide-container{padding-bottom:156px}
+}
+/* Print the opened pupil task with writable space, without collapsed resource headings. */
+@media print{
+ .mbm-sp-page .mbm-sp-body{max-width:none;font-size:11pt;line-height:1.35}
+ .mbm-sp-page .mbm-sp-body>.mbm-sp-section:not([open]),.mbm-sp-page .mbm-sp-answer,.mbm-sp-page .mbm-sp-small{display:none!important}
+ .mbm-sp-page .mbm-sp-body .mbm-sp-section{margin:8px 0;padding:10px}
+ .mbm-sp-page .mbm-sp-body summary{min-height:0;padding:4px 0}
+ .mbm-sp-page .mbm-sp-body li{margin:.25em 0}
+ .mbm-sp-page .mbm-sp-body td,.mbm-sp-page .mbm-sp-body th{padding:5px 7px;font-size:11pt}
+ .mbm-sp-page .mbm-sp-body textarea{height:24mm;min-height:24mm;resize:none}
+}
