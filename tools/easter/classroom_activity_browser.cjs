@@ -264,7 +264,18 @@ async function exercise(page, target, touch, prefix) {
     assert.deepEqual(result, {duplicateIds:[], missing:[]});
   });
   if (touch) await measured(prefix + '/touch-size-and-horizontal-fit', async () => { await layout(page, host); });
-  if (artifacts) await page.screenshot({path:path.join(artifacts, prefix.replaceAll('/', '--') + '.png'), fullPage:true});
+  await measured(prefix + '/last-activity-line-clears-toolbar', async () => {
+    await page.locator('main.deck').evaluate(deck => { deck.scrollTop = deck.scrollHeight; });
+    const last = await host.locator('p').last().boundingBox();
+    const toolbar = await page.locator('.controls:visible').first().boundingBox();
+    assert.ok(last && toolbar && last.y + last.height <= toolbar.y - 4,
+      'The final activity response must be readable above the fixed toolbar after scrolling to the end.');
+  });
+  if (artifacts) {
+    await page.screenshot({path:path.join(artifacts, prefix.replaceAll('/', '--') + '-end.png'), fullPage:true});
+    await page.locator('main.deck').evaluate(deck => { deck.scrollTop = 0; });
+    await page.screenshot({path:path.join(artifacts, prefix.replaceAll('/', '--') + '.png'), fullPage:true});
+  }
   await measured(prefix + '/no-page-errors', async () => { assert.equal(report.pageErrors.length, beforeErrors); });
 }
 async function configure(context) {
