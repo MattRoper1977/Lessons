@@ -592,7 +592,22 @@ html.mbm-classroom.pathway-launch {
       }
     });
   }
-  function boot() { document.querySelectorAll('[data-mbm-activity]').forEach(mount); }
+  function boot() {
+    document.querySelectorAll('[data-mbm-activity]').forEach(mount);
+    const deck = document.querySelector('main.deck');
+    const toolbar = document.querySelector('.controls');
+    if (!deck || !toolbar || !deck.querySelector('[data-mbm-activity]')) return;
+    // Wrapped toolbar rows can be taller than the donor's fixed allowance.
+    // Reserve their actual height so the last response can scroll clear.
+    const reserve = function () {
+      const space = Math.max(0, window.innerHeight - toolbar.getBoundingClientRect().top) + 18;
+      deck.style.paddingBottom = space + 'px';
+      deck.style.scrollPaddingBottom = space + 'px';
+    };
+    reserve();
+    window.addEventListener('resize', reserve);
+    if (window.ResizeObserver) new ResizeObserver(reserve).observe(toolbar);
+  }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once: true});
   else boot();
 }());

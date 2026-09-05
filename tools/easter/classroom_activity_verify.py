@@ -116,5 +116,5 @@ check('print-css-hides-screen-and-staff-key', '@media print{' in css and '.mbm-a
 result = subprocess.run(['node', '--check', str(HERE / 'classroom_activity.js')], capture_output=True, text=True)
 check('runtime-javascript-parses', result.returncode == 0)
 
-report = {'schema': 'activity-renderer-dom-source-controls-v1', 'scope': 'DOM structure, source constraints, schema rejection and JavaScript syntax; browser and print pagination are tested separately.', 'sourceSpecs': [str(p.relative_to(ROOT)) for p in files], 'count': len(checks), 'passed': sum(x['passed'] for x in checks), 'checks': checks}
+report = {'schema': 'activity-renderer-dom-source-controls-v1', 'scope': 'DOM structure, source constraints, schema rejection and JavaScript syntax; browser and print pagination are tested separately.', 'sourceSpecs': [{'file': str(p.relative_to(ROOT))} for p in files], 'count': len(checks), 'passed': sum(x['passed'] for x in checks), 'checks': checks}
 print(json.dumps(report, indent=2))
