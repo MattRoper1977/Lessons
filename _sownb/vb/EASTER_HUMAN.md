@@ -662,3 +662,15 @@ Every addition was a file that cannot change a studio's served bytes. But that s
 The fix is to test the property directly: a change is permitted when it cannot alter the standalone/offline payload — nothing in `CANONICAL_HASHES`, nothing served, manifests still matching their digests. `resources.json` and `apps.json` already work exactly this way (guarded by digest, not by prohibition), so the pattern is in the file already; it just is not applied to everything else.
 
 Not built here — §8c closes the mechanism without a control failing, and this control did not fail, it fired correctly on a list that had fallen behind.
+
+## AAV-H8 — a comment inside the watch's trigger list silently un-watches everything below it
+
+`tools/watch_main_runs.mjs` reads the watch's own trigger list with
+
+    /workflows:\s*\n((?:\s*-\s*.+\n)+)/
+
+a contiguous run of `- ` lines. A YAML comment between two entries is legal, ordinary, and ends the run — so every workflow listed after it is read as unlisted. I hit this while fixing the list tonight: adding the two Arts Award workflows with a comment between them left the control still red at 13 listed, and the message blamed the workflows rather than the comment.
+
+The control still fires, which is why this is a fragility and not an outage — the estate goes red rather than quiet. But the diagnosis points the wrong way, and the obvious next move for whoever reads it ("these two are missing, add them again") does not work.
+
+Not changed, because the control did not fail — it reddened correctly on both the real drift and on my truncation, and §8c keeps the mechanism shut unless something fails. The fix when you want it is one line: strip comment and blank lines before matching, or match `-` entries individually within the `workflows:` block rather than as one run. I left a warning above the key in `watch-main.yml` so the next editor sees it before they do what I did.
