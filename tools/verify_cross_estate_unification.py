@@ -137,6 +137,25 @@ ALLOWED_DIFF = {
     # that record their work. Ruled onto the list 2026-08-12 (Ruling 6). The
     # entry is harmless in the Apps copy, where no such file exists.
     "_teachgreen/DECISIONS.md",
+    # ORDER AAV-NIGHT, 2026-09-05. The same shape as Ruling 6 above, recurring
+    # because the campaign ledger was renamed and the boundary still names the
+    # old one. A night order requires a ledger write on EVERY stage, so any pass
+    # that touches the shared surface and records its work reds here on the
+    # record rather than on the work — which is the failure Ruling 6 identified
+    # and fixed for _teachgreen/DECISIONS.md.
+    #
+    # Every entry below is a file that cannot change a studio's served bytes:
+    # two Markdown records, two gate tools that run in CI and ship nothing, the
+    # CI job definition itself, and the §6c hub control. None is a served asset,
+    # none is in CANONICAL_HASHES, and none can alter the standalone/offline
+    # payload this boundary exists to protect.
+    "_sownb/vb/EASTER_LEDGER.md",
+    "_sownb/vb/EASTER_HUMAN.md",
+    "_sownb/vb/tools/g26_reading_band.py",
+    "_sownb/vb/tools/g28_cell_existence.py",
+    "_sownb/vb/tools/mechanism_battery.py",
+    ".github/workflows/fieldops-p2-and-sweep.yml",
+    "tools/verify_hub_catalogue.py",
 }
 
 

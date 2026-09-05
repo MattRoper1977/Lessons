@@ -21,7 +21,7 @@ import copy, json, re, sys, hashlib
 from pathlib import Path
 import lxml.html as LH
 
-VERSION = "g26-v1.1.0-pathway-reading-band-launch-ceiling-only"
+VERSION = "g26-v1.2.0-block-boundary-aware-extraction"
 ROOT = Path(__file__).resolve().parents[3]
 CONTRACT = ROOT / "_sownb/STYLE_CONTRACT.json"
 VOWELS = "aeiouy"
@@ -51,6 +51,41 @@ def fk(text: str):
     return 0.39 * len(words) / len(sents) + 11.8 * syl / len(words) - 15.59, len(words), len(sents)
 
 
+# A browser puts a box boundary between two block-level elements, and every
+# screen reader reads them as separate runs. lxml's text_content() does not: it
+# concatenates, so `<h3>0 min</h3><span>GROW Art</span>` becomes "0 minGROW Art"
+# and Flesch-Kincaid then scores "minGROW" as one long word. On a minified deck
+# that inflates syllables-per-word enough to move the verdict - it is what put
+# Silver W7 at 7.01 against a ceiling of 7.0, where the same deck pretty-printed
+# measures 6.19. Joining at the boundary is not a relaxation; it is measuring the
+# text the reader actually meets.
+BLOCKISH = {"p", "div", "section", "article", "h1", "h2", "h3", "h4", "h5", "h6",
+            "li", "ul", "ol", "td", "th", "tr", "table", "main", "header", "footer",
+            "span", "figcaption", "figure", "button", "summary", "details", "br", "label"}
+
+
+def visible_text(node) -> str:
+    """text_content(), but with a space wherever the rendered box would break."""
+    parts = []
+
+    def walk(n):
+        if not isinstance(n.tag, str) or n.tag.lower() in ("script", "style", "svg"):
+            if n.tail:
+                parts.append(n.tail)
+            return
+        if n.text:
+            parts.append(n.text)
+        for child in n:
+            walk(child)
+            if child.tail:
+                parts.append(child.tail)
+        if n.tag.lower() in BLOCKISH:
+            parts.append(" ")
+
+    walk(node)
+    return " ".join("".join(parts).split())
+
+
 def measure(path: Path) -> dict:
     tree = LH.fromstring(path.read_text(encoding="utf-8"))
     main = tree.xpath('//main[@id="lessonDeck"]') or tree.xpath(
@@ -64,7 +99,7 @@ def measure(path: Path) -> dict:
             sel += '|.//*[@data-mbm-guide]|.//*[@data-audience="staff"]'
         for bad in n.xpath(sel):
             bad.getparent().remove(bad)
-        return " ".join(n.text_content().split())
+        return visible_text(n)
     whole, pupil = strip(main[0], False), strip(main[0], True)
     fw, ww, sw = fk(whole)
     fu, wu, su = fk(pupil)
@@ -109,9 +144,60 @@ def judge(m: dict, bnds: dict, pathway: str, modes: dict | None = None) -> dict:
             "belowWithdrawnFloor": bool(v is not None and mode == "ceiling" and v < lo)}
 
 
+def controls() -> list[dict]:
+    """g26's own controls. Each states what it expects and what it observed, so a
+    control that stops discriminating is visible rather than quietly green."""
+    rows = []
+
+    def row(cid, expected, actual):
+        rows.append({"id": cid, "expected": expected, "actual": actual,
+                     "fired": expected == actual})
+
+    frag = LH.fromstring('<main class="deck"><h3>0 min</h3><span>GROW Art</span></main>')
+    row("blockBoundaryIsAWordBoundary", "0 min GROW Art", visible_text(frag))
+
+    # The bug this gate shipped with, pinned so it cannot come back.
+    row("concatenatedPseudoWordIsNotProduced", False, "minGROW" in visible_text(frag))
+
+    # Inline tails must survive the boundary insertion - dropping them would
+    # lower the word count and flatter every deck.
+    tail = LH.fromstring('<main class="deck"><p>keep <b>this</b> tail</p></main>')
+    row("inlineTailTextSurvives", "keep this tail", visible_text(tail))
+
+    # A boundary must not be invented inside a run of plain prose.
+    plain = LH.fromstring('<main class="deck"><p>one two three</p></main>')
+    row("plainProseIsUnchanged", "one two three", visible_text(plain))
+
+    # NEGATIVE control: the extraction must not silently swallow staff text -
+    # excluding it is measure()'s job, not visible_text()'s, and conflating the
+    # two would hide an addressee bug inside a whitespace fix.
+    staff = LH.fromstring('<main class="deck"><p data-mbm-guide="1">adult</p></main>')
+    row("visibleTextDoesNotItselfDropStaffText", "adult", visible_text(staff))
+
+    # The arithmetic still discriminates: a harder sentence must score higher.
+    easy = fk("The cat sat. The dog ran.")[0]
+    hard = fk("Consequently, the extraordinary categorisation demonstrated "
+              "considerable methodological inconsistency.")[0]
+    row("harderProseScoresHigher", True, bool(hard is not None and easy is not None and hard > easy))
+
+    return rows
+
+
 if __name__ == "__main__":
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     scope = "new" if "--scope=new" in sys.argv else "live"
+    if "--list-controls" in sys.argv:
+        print("\n".join(c["id"] for c in controls()))
+        sys.exit(0)
+    if "--self-test" in sys.argv:
+        rows = controls()
+        for c in rows:
+            print(f"  {'ok  ' if c['fired'] else 'FAIL'} {c['id']:44s} "
+                  f"expected={c['expected']!r} observed={c['actual']!r}")
+        fired = sum(1 for c in rows if c["fired"])
+        print(f"{fired}/{len(rows)} controls fired")
+        print("PASS" if fired == len(rows) else "MEASUREMENT INVALID")
+        sys.exit(0 if fired == len(rows) else 1)
     bnds, scoped_new, modes = bands()
     binding = scope == "new" and scoped_new
     sha = hashlib.sha256(CONTRACT.read_bytes()).hexdigest()

@@ -436,6 +436,16 @@ jobs:
       - name: No tool derives a teaching week from a path
         run: python _sownb/vb/tools/g27_no_filename_weeks.py | tee "$RUNNER_TEMP/vb-g27.txt"
 
+      # §6c: the hub is catalogue-driven, and this is the one thing that design
+      # cannot check about itself - a link typed into index.html with no
+      # catalogue row behind it. Its own controls run first, so a green here
+      # cannot be a gate that has stopped being able to red.
+      - name: Every hub entry resolves to a catalogue row
+        run: |
+          python tools/verify_hub_catalogue.py --self-test \
+            | tee "$RUNNER_TEMP/hub-catalogue-selftest.txt"
+          python tools/verify_hub_catalogue.py | tee "$RUNNER_TEMP/hub-catalogue.txt"
+
       # THE CONTRACT'S POPULATION IS RECIPE OUTPUT, NOT EVERY CLASSIC DECK.
       # First cut of this step judged all 264 files carrying a .slide-container
       # and every single one red'd, because most of them are Art, Physics and

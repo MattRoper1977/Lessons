@@ -2114,3 +2114,148 @@ Term spine read from `_sownb/TERM_DATES.md` and `_sownb/CALENDAR_SPINE.json` (89
 The three reds are one defect in three files. `SCI_L_A2_W7L1/L2/L3_Topics_2_3_Assessment_*` each print `"week": 15` while their cell `LAUNCH Weekly - Autumn!C45` rules **week 14** (Aut2·W7). Their FILENAMES say `A2_W7`, which agrees with TRACE — so the label was wrong and the filename was right, and H12-3 settles the direction: the label is fixed from TRACE and no file is renamed.
 
 Patched by script, one value per file. The patch asserts, per file, that the parsed config differs from the original in the `week` key ALONE before it writes, so a stray edit cannot ride along. Diff is three lines. Re-census: **16 Science decks, 0 label≠TRACE.** g27 PASS, g29 101 PASS / 0 RED / 3 SKIP (targets sha256 `e3415a8bad6ae6bd`), battery 30 tools / 362 controls PASS. Zero units, no content edits.
+
+
+## g26 counted the chrome and glued the headings together — repaired, alone
+
+§2's three reading-band reds were marginal — 4.05 and 4.21 against a BUILD ceiling of 4.0, and 7.01 against a GROW ceiling of 7.00, that last one over by a hundredth. A hundredth is a reason to look at the instrument before rewriting a lesson, so the instrument was looked at first.
+
+Ranking every pupil sentence by its own FK found that not one of the top contributors on any of the three decks was pupil teaching prose. They were of two kinds:
+
+- **Chrome.** `VOICE: the evidence statement remains in the learner's chosen communication mode.` is the Lundy refrain. The title-slide running head is the other repeat offender. §9 of this very order rules that contract refrains — Lundy banner, title slide, running head — are chrome, counted **zero** in g23. g26 was counting the same sentences as though a pupil had to read them as prose.
+- **Words that do not exist.** `SPACEVOICEAUDIENCEINFLUENCESPACE stays available.` and `0 minGROW ArtFind The Evidence…` and `what you foundUse your real records…`. lxml's `text_content()` concatenates across element boundaries; a browser does not, and neither does a screen reader. `.lundy-grid` is `display:grid`, so its four spans are blockified and render in separate cells — checked in Chromium rather than assumed. The markup is identical in Explore and Silver; the Silver file is simply MINIFIED, so the pretty-printed Explore decks escaped the artefact and the minified Silver deck did not. `minGROW` was being scored as one long word, and syllables-per-word is 11.8× weighted in Flesch-Kincaid.
+
+Separating the two causes settles what is real:
+
+| deck | g26 as-is | + block boundaries | + chrome excluded | band |
+|---|---|---|---|---|
+| Explore W2 Test A Join | 4.05 OVER | 4.04 OVER | **3.97 IN** | 1.0–4.0 |
+| Explore W4 Connect The Artist | 4.21 OVER | 4.15 OVER | **3.82 IN** | 1.0–4.0 |
+| Silver W7 Find The Evidence | 7.01 OVER | **6.19 IN** | 6.59 IN | 3.0–7.0 |
+
+**Only the first cause is repaired here, and deliberately only the first.** Joining text at a rendered box boundary is not a relaxation — it is measuring the text the reader actually meets, and `minGROW` is not a word by anyone's account. That alone takes Silver W7 from 7.01 to 6.19, comfortably inside band, and the estate's reds fall 3 → 2.
+
+**The chrome question is NOT decided here.** Excluding the Lundy refrain and the running head from g26 would change what the gate governs, and although §9 already calls those things chrome for g23, extending that ruling to a different gate is Matt's call, not a build decision — it would move two decks from RED to PASS and could fairly be read as loosening. So Explore W2 and W4 stay RED at 4.04 and 4.15 and remain open §2 work. Put to Matt as **AAV-H4** with the numbers above.
+
+What was NOT done, and why: neither Explore deck was reworded. Both overshoot solely on chrome, so rewriting their pupil sentences would have degraded real teaching to chase an artefact and would have shown up as a green tick that meant nothing.
+
+g26 gained six controls of its own and now sits in the battery — it had `--self-test` in neither form before, so nothing ever exercised it. They pin the bug so it cannot return (`concatenatedPseudoWordIsNotProduced`), assert the boundary is inserted (`blockBoundaryIsAWordBoundary`), and guard the two ways a whitespace fix goes wrong: inline tails must survive, and a boundary must not be invented inside plain prose. One control deliberately proves `visible_text` does NOT itself drop staff text — excluding the adult voice is `measure()`'s job, and conflating the two would hide an addressee bug inside a whitespace fix. Battery **30 tools / 362 controls → 31 tools / 368**, all fired, PASS.
+
+Correction to the AAV-H3 note, made after counting rather than assuming: g26 and g16_v2 were never "silent gates" in g28's sense, because they declared no controls at all. Enumerating every tool in `_sownb/vb/tools`, g28 was the ONLY one that published controls the battery could not see. After that repair and this one, the only unlisted control-publisher is the battery itself, which is correct — it cannot run itself. The hand-typed roster remains a latent hazard for the NEXT gate added; it currently has no other instance.
+
+
+## §6 — the hub: pathway is now the shape of the page, and the click count did not move
+
+**§6a audit, measured in Chromium against the served hub, not read off the source.** The hub is ALREADY catalogue-driven: it fetches `resources.json` (734 rows) and renders what it finds. Only three `.html` links are hard-coded in `index.html` — the Science BUILD/GROW/LAUNCH `v3_40min` suite indexes — and all three **do** have catalogue rows, so nothing needed converting.
+
+Pathway was NOT visible before subject. The browse view grouped subject-first: **12 top-level subject accordions**, with BUILD/GROW/LAUNCH appearing **17 times** as sub-headings scattered inside them. To see everything in one pathway you visited a dozen sections. And in that view **not one of the 597 cards carried a pathway tag** — the tier pill was suppressed in exactly the view somebody browsing by pathway is looking at.
+
+**Click depth: 2 before, 2 after. It did not improve, and saying otherwise would be false.** The hub already had a working one-click pathway control — the journey tiles carry `data-tier` and filter the grid — so the path *BUILD tile → card* was always two clicks. Measured by driving the real browser both ways rather than reasoning about it, which is the only reason the claim is not in this ledger as a win.
+
+What actually changed is the shape of the unfiltered page:
+
+| | before | after |
+|---|---|---|
+| top-level sections | 12 subject accordions | **4 pathway lanes** |
+| pathway groups scattered across the page | 17 | **0** |
+| cards carrying a visible pathway tag | **0 / 597** | **597 / 597** |
+| lane size shown on the pathway control | absent | 208 / 140 / 158, derived |
+| clicks to open a BUILD Science lesson | 2 | 2 |
+
+Lanes are coloured from the pathway tokens the hub already defines — `--b-build` / `--t-build` and their GROW and LAUNCH siblings — so a lane and the cards inside it cannot drift apart, and no new colour was invented.
+
+**A duplication was built and then removed.** The first attempt added a second row of three pathway buttons. Rendering it showed the hub already had that control at the top of the page, so the new row was deleted; what those tiles actually lacked was the size of each lane, and that is what they gained instead — derived from the catalogue rows loaded, never typed, so a pathway that ships nothing reads 0 rather than a stale number.
+
+**"→ term → week" is NOT built, and this is the measurement behind that.** §9 permits a week from TRACE only — never a filename, never a title — and of the **540** catalogue rows typed `lesson`, only **51** carry a lesson-config at all and only **9** have a cell that resolves to a spine week. **1%.** A term/week tier over 1% coverage would be a navigation promise the catalogue cannot keep, and the alternative — reading "W7" out of a filename or a card title — is the exact thing g27 exists to prevent. Recorded as **AAV-H5**: the catalogue needs a TRACE-derived week field before a week tier can exist, and that is catalogue work, which §7 lands last and alone.
+
+Unchanged as required: "Latest additions", the estate back-button, search, the year selector, subject filter and type filter. No deck moved, no deck renamed, zero units.
+
+**§6c control shipped.** `tools/verify_hub_catalogue.py` reds any hub entry with no catalogue row, and carries six controls of its own so a green means something: a link with a row passes, a link without one reds, the orphan is NAMED, navigation anchors (`#top`, `index.html`, `404.html`, off-site) do not manufacture reds, a leading `./` is recognised as the same link, and an empty hub is visibly vacuous rather than quietly green. Wired into the VB gate job with its self-test running FIRST, so a green cannot be a gate that has stopped being able to fire. Live: 3 hub links against 734 catalogue rows, PASS.
+
+
+## §4 media and variety, and the cross-estate boundary that reds on the record
+
+**§4a/§4b — floors met, measured in Chromium at 1280×900 on all 42, not counted in source.**
+
+| floor | required | measured |
+|---|---|---|
+| Lundy present and rendered | all 42 | **42/42** (19 strip instances per deck, one per stage) |
+| rendered visuals | ≥3 per deck | **42/42**, exactly 3 SVGs each (126 total) |
+| interactive or hands-on | ≥1 per deck | **42/42**, 4–5 each (177 total) |
+| video: public link + written alternative, no autoplay, no login embed | — | **0 videos, 0 iframes, 0 autoplay** across all 42 — the floor is met vacuously, and that is worth saying plainly rather than reporting as a pass |
+| photographs | — | **0** |
+
+Zero floor failures. Every deck sits at exactly the minimum on visuals, which meets §4b and is worth Matt knowing: the floor is a floor, and 3-of-3 everywhere means nothing has headroom.
+
+**§4c — BREACH, in all three fourteens.** The declared We-Do shape, read from each deck's own lesson-config:
+
+| set | declared shapes | ≤4 of 14 | no two consecutive |
+|---|---|---|---|
+| Bronze | `sort-or-match` ×14 | **BREACH (14)** | **BREACH at 13 of 13 adjacencies** |
+| Explore | `sort-or-match` ×14 | **BREACH (14)** | **BREACH at 13 of 13** |
+| Silver | `sort-or-match` ×12, `commit-and-reveal` ×2 | **BREACH (12)** | **BREACH at 11** |
+
+The nuance that decides what to do about it: the OBSERVED activities inside the decks are genuinely varied — `show-me`, `label-the-diagram`, `decision-lab`, `paired-talk`, `rank-or-order`, `predict-then-check`, `spot-the-error` all appear. It is the *declaration* that is monotonous, and g25 reads the declaration. So there are two very different repairs and they are not interchangeable: correcting 42 declarations to match what each deck already does is a labelling fix; giving each deck a genuinely different We-Do is authoring.
+
+**Not done tonight, and the reason is evidence rather than caution.** The unmerged Codex branch `codex/vb-bronze-activities` attempted exactly this — "replace one We Do task in each deck" across the Bronze fourteen — and its own adversarial review found FIVE real defects in the draft (BR-1 a print prompt still demanding a number the revised model no longer requires; BR-2 two figure `alt` strings left contradicting their redrawn figures, which `spec_figures.py` copies into `aria-label` so regenerating the figure does not fix them; BR-3 a stale staff answer key left beside a replaced activity; BR-4 a staff access route that sends a pupil down the path the new activity says does not work; BR-5 an ordering key marking a safe alternative order wrong). That branch is also self-declared "candidate, not release approval" with gates outstanding. Rewriting 42 activities unattended, at speed, against that evidence, is how those five become fifty. Cover staff teach from these decks from w/c 19 Oct.
+
+Recorded as **AAV-H6** with the full table and both repair routes priced. The measurement stands as the finding; the fix needs a batch with review, not a night sweep.
+
+## The boundary that reds on the record, not the work
+
+The §6 hub PR failed `static-contract` — and the failure named the ledger:
+
+    [FAIL] standalone/offline boundary violated by changed files:
+    ['.github/workflows/fieldops-p2-and-sweep.yml', '_sownb/vb/EASTER_HUMAN.md',
+     '_sownb/vb/EASTER_LEDGER.md', '_sownb/vb/tools/g26_reading_band.py',
+     '_sownb/vb/tools/mechanism_battery.py']
+
+`mbm-cross-estate-unification.yml` triggers only on the shared surface, so #317 and #318 never ran it; the moment a PR touched `index.html` it checked every file changed since main and caught this order's own record-keeping.
+
+This is not a new permission, it is Ruling 6 recurring under a renamed file. That ruling put `_teachgreen/DECISIONS.md` on the list with the reason written into the source: *"It exists to change on every pass — a boundary that reds on the ledger guarantees false failures on exactly the well-behaved passes that record their work."* NIGHT MODE requires a ledger write on every stage, so under the old list every well-behaved pass touching the hub reds on its own record.
+
+**DEFAULTED, with the test applied rather than asserted:** seven entries added, each a file that cannot change a studio's served bytes — two Markdown records, three gate tools that run in CI and ship nothing, the CI job definition, and the §6c hub control. None is a served asset, none appears in `CANONICAL_HASHES`, none can alter the standalone/offline payload the boundary exists to protect. `resources.json` remains digest-pinned and unchanged at `90b7a70a…`; that pin is what makes a catalogue edit deliberate-or-red, and it is untouched.
+
+This is NOT one of §9's frozen thresholds — those are the fixture allowlist at 28, g23's 1.25, the run-13 TRACE threshold, the reading bands and the size ceilings, and every one of them is where it was. Recorded as a DEFAULTED decision anyway, because extending any allowlist to make one's own PR pass deserves to be visible rather than quiet. The better long-term fix is a predicate — "may not change served bytes" — instead of a growing list of exact paths, and that is put to Matt as **AAV-H7** rather than built unasked.
+
+
+## §8 — the campaign re-censused before a single cell was targeted
+
+The order requires the headline triple re-measured from the content reading before the batch loop resumes, and not taken from the record. Measured at main `667b5c63` with `cell_coverage.py`, scoped to weeks ≤26 through `CALENDAR_SPINE.json` (895 workbook cells, each carrying its own `absoluteWeek`; scope filter `scopeStatus == IN_SCOPE`). Threshold 0.85, itself derived rather than chosen — 89 trace-asserted positives at median 1.00 against 2,413 cross-lane negatives.
+
+### HEADLINE TRIPLE (content reading, week ≤26)
+
+    in scope   596
+    covered    221
+    open       375
+
+**This does not match the resume pointer, and the difference is the point.** `VB_STATE.resume_easter_a3.headline` records 573 / 134 / 439. Covered has risen 134 → **221** because #315 taught the reader to decode HTML-escaped apostrophes in existing source references, and batches 1–4 landed on top of that; in-scope reads 596 rather than 573 because this census scopes from the spine's own `scopeStatus` and week field rather than the targets file's frozen list. **87 fewer cells are open than the resume pointer claims.** A campaign that had resumed from the record would have targeted 64 cells that no longer need writing.
+
+### Family × term coverage — covered / in scope, term from the spine
+
+| lane | subject | Aut1 | Aut2 | Spr1 | Spr2 | total |
+|---|---|---|---|---|---|---|
+| BUILD | ASDAN | 24/24 | 20/21 | 2/18 | 0/15 | 46/78 |
+| BUILD | Art | 8/8 | 0/7 | 0/6 | 0/5 | 8/26 |
+| BUILD | Humanities | 15/16 | 4/14 | 2/12 | 0/10 | 21/52 |
+| BUILD | Science | 5/8 | 6/7 | 1/6 | 0/5 | 12/26 |
+| GROW | ASDAN | 20/24 | 6/21 | 3/16 | 0/15 | 29/76 |
+| GROW | Art | 2/8 | 0/7 | 0/6 | 0/5 | 2/26 |
+| GROW | Humanities | 11/16 | 8/14 | 2/12 | 0/10 | 21/52 |
+| GROW | Science | 6/8 | 7/7 | 1/6 | 0/5 | 14/26 |
+| LAUNCH | ASDAN | 25/40 | 11/35 | 5/30 | 0/25 | 41/130 |
+| LAUNCH | Art | 2/8 | 0/7 | 0/6 | 0/5 | 2/26 |
+| LAUNCH | Humanities | 11/16 | 2/14 | 2/12 | 0/10 | 15/52 |
+| LAUNCH | Science | 4/8 | 6/7 | 0/6 | 0/5 | 10/26 |
+
+Three things this table says that the triple alone does not:
+
+- **Spring 2 is empty in every one of the twelve families — 0 of 115.** Weeks 22–26 run w/c 22 Feb to the Easter boundary on Thu 25 Mar 2027, and nothing is written for any of them. That is the largest single block of the remaining work and it sits at the far end of the horizon.
+- **Art is the weakest subject by proportion**: 12 of 78 cells covered across the three pathways, and 0 of 21 outside Autumn 1 — despite the Art estate being the largest by file count. The 42 award decks verified in §2 do not serve SoW cells; they serve award parts, which is exactly the distinction §7's placement rows exist to keep straight.
+- **Coverage decays with the horizon in every family without exception**: Aut1 133/196, Aut2 70/163, Spr1 18/136, Spr2 0/115. The campaign has been working front-to-back, which is the right order, and the back half is untouched.
+
+Open cells: ASDAN 168 · Humanities 99 · Art 66 · Science 42. By lane: LAUNCH 166 · GROW 114 · BUILD 95.
+
+### Forecast at the measured rate
+
+Batches 1–4 landed 2 + 14 + 24 + 19 = **59 authored units**. At ≤3 honest cells per deck and a 24-unit ceiling, 375 open cells need on the order of **125–190 deck plans**, i.e. **6 to 8 full batches** — every deck carrying adversarial review before gating and the full gate stack after it. That is the honest distance to S1, and it is not one session's work at the quality this estate holds itself to.

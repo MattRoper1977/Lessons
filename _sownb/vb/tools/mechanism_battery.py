@@ -64,6 +64,7 @@ SELFTEST_TOOLS = [
     "g23_period_load.py",
     "g24_visual_density.py",
     "g25_wedo_variety.py",
+    "g26_reading_band.py",
     "g27_no_filename_weeks.py",
     "g28_cell_existence.py",
     "g29_plan_binding.py",

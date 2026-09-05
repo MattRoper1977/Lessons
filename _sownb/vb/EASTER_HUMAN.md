@@ -605,3 +605,60 @@ Not actioned, because two of those deltas reverse your own later preference: the
 Option 1 is cheaper and matches your latest stated preference. Option 2 matches the order as written. I did not pick between your two instructions.
 
 Separately: the reference itself fails one of its own contract rows, `sequence.key-facts.build-art` (107/108). §3c says fix the reference before copying it, so that is worth doing under either option.
+
+## AAV-H4 — is the Lundy refrain pupil prose, or chrome?
+
+§9 of the night order says contract refrains — Lundy banner, title slide, running head — are chrome, counted zero in g23. g26 counts them as pupil prose when it measures reading level. The same sentence is therefore chrome to one gate and pupil text to another.
+
+It decides two live verdicts. With the block-boundary bug fixed (landed), the two remaining reds are:
+
+| deck | pupil FK now | with chrome excluded | BUILD band |
+|---|---|---|---|
+| BUILD_Art_Explore_W2_Test_A_Join_And_Compare_My_Learning | 4.04 RED | 3.97 PASS | 1.0–4.0 |
+| BUILD_Art_Explore_W4_Connect_The_Artist_Organisation_And_What_I_Found | 4.15 RED | 3.82 PASS | 1.0–4.0 |
+
+Both overshoot **solely** on chrome — the highest-FK sentence in each is the Lundy refrain "VOICE: the evidence statement remains in the learner's chosen communication mode." That refrain is identical in all 42 decks, so it drags every Art deck's score by the same amount and will do so for every deck the campaign writes next.
+
+I did not decide it, because extending a g23 ruling to g26 moves two decks from RED to PASS and can fairly be read as loosening a threshold, which §9 forbids. Neither deck was reworded either: rewriting real teaching to offset a refrain the pupil is not asked to decode would have bought a green tick and cost a lesson.
+
+**If chrome is chrome:** g26 excludes `.lundy`, the title slide and the running head, the two decks pass on their own prose, and the gate finally measures the same text §9 says to measure.
+**If it is not:** the refrain's own wording is the thing to simplify — once, in the donor, which fixes all 42 and every future Art deck at a stroke. That is the better outcome if you want the number to stay honest, and it is a content change, so it needs you.
+
+## AAV-H5 — a week tier in the hub needs a week in the catalogue
+
+§6b asks for pathway → subject → term → week. The first two are built and shipped. The last two are not, because the data does not exist and §9 forbids inventing it.
+
+Of 540 catalogue rows typed `lesson`, **51** carry a lesson-config and **9** have a workbook cell that resolves to a spine week. That is 1% coverage. A term/week tier built on it would be a navigation promise the catalogue cannot keep.
+
+The tempting shortcut is the one g27 exists to stop: most decks say "W7" in their filename or their card title, and reading it from there would populate the tier instantly and wrongly — a filename is a label, and this estate has already been bitten by a label disagreeing with TRACE (three LAUNCH Science decks this same night, fixed in #318).
+
+The honest route, when you want it: add a TRACE-derived `week` and `term` to each catalogue row at the point the catalogue is built, sourced from the deck's own `cells` through CALENDAR_SPINE.json — the same derivation #318 used. Rows whose deck has no resolvable cell get no week and simply do not appear under a week heading, which is truthful rather than tidy. That is catalogue work and lands alone.
+
+## AAV-H6 — every Art fourteen declares one We-Do shape
+
+g25 reads each deck's declared We-Do type. Measured across all 42:
+
+| set | declared | rule ≤4 of 14 | no two consecutive |
+|---|---|---|---|
+| Bronze | `sort-or-match` ×14 | BREACH | BREACH ×13 |
+| Explore | `sort-or-match` ×14 | BREACH | BREACH ×13 |
+| Silver | `sort-or-match` ×12, `commit-and-reveal` ×2 | BREACH | BREACH ×11 |
+
+The decks are not actually monotonous — `show-me`, `label-the-diagram`, `decision-lab`, `paired-talk`, `rank-or-order`, `predict-then-check` and `spot-the-error` all appear inside them. It is the declaration that is uniform. So there are two repairs and they are worth very different amounts:
+
+1. **Relabel** — correct 42 declarations to match what each deck already does. Zero teaching change, zero units, one scripted pass. It makes g25 truthful. It does not make the lessons more varied, and if the real shapes still cluster it will simply reveal a smaller breach honestly.
+2. **Author** — give each deck a genuinely different We-Do. Real variety, and 42 authoring units, which is two batches over the ceiling with adversarial review on each.
+
+I did neither tonight, because the evidence says speed is the risk here. `codex/vb-bronze-activities` attempted route 2 on the Bronze fourteen and its own review found five real defects in the draft — a print prompt still demanding a number the revised model dropped, two figure `alt` strings left contradicting their redrawn figures (and `spec_figures.py` copies `alt` into `aria-label`, so regenerating the figure does not fix them), a stale staff answer key beside a replaced activity, a staff access route pointing the opposite way to the new task, and an ordering key marking a safe alternative order wrong. That branch is unmerged and self-declared not release-ready. Cover staff teach from these decks from w/c 19 Oct.
+
+Recommendation: do route 1 first as a zero-unit pass — it costs almost nothing and tells you the true size of the variety problem — then decide whether route 2 is worth two batches.
+
+## AAV-H7 — the cross-estate boundary should test a property, not a list
+
+`tools/verify_cross_estate_unification.py` guards the standalone/offline payload with `ALLOWED_DIFF`, an explicit list of paths a PR may change. It has been extended by ruling at least three times, and I extended it again tonight (seven entries) because it reds on this campaign's ledger — the identical failure Ruling 6 fixed for `_teachgreen/DECISIONS.md` before the ledger was renamed.
+
+Every addition was a file that cannot change a studio's served bytes. But that sentence is the actual rule, and the list is only a hand-maintained proxy for it. Each new gate tool, record file or CI job will red the same way and be added the same way, and one day somebody in a hurry will add a served asset to the list to get a PR green.
+
+The fix is to test the property directly: a change is permitted when it cannot alter the standalone/offline payload — nothing in `CANONICAL_HASHES`, nothing served, manifests still matching their digests. `resources.json` and `apps.json` already work exactly this way (guarded by digest, not by prohibition), so the pattern is in the file already; it just is not applied to everything else.
+
+Not built here — §8c closes the mechanism without a control failing, and this control did not fail, it fired correctly on a list that had fallen behind.
