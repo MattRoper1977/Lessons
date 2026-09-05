@@ -1,9 +1,9 @@
-/* MERGED IS NOT SERVED.  R0.4, for the whole estate.
+/* MERGED IS NOT SERVED. Source-bound split-publication proof.
  *
  * Four sweeps have now ended in a container proxy 403 for the public origins,
  * so this is written to run in CI where the egress is, and to be honest here
  * rather than optimistic. It asserts BYTE-IDENTITY of the served response to
- * the committed blob. 200 is a precondition, never the verdict: 200 proves a
+ * the successful publication artifact. 200 is a precondition, never the verdict: 200 proves a
  * server answered, not that it answered with this build, and every serve
  * failure this estate has actually had — the parked shelf entry, the 42 hidden
  * games, the stale route list — would have passed a 200-only check.
@@ -31,9 +31,9 @@
  * Pages publishes asynchronously. A byte mismatch is retried on a bounded
  * schedule, and the verdict distinguishes:
  *   RETRY -> RESOLVED  the bytes caught up within the bound
- *   RED                the bytes did not, and the deployment reports current
- *   INCONCLUSIVE       the bytes did not, and the deployment SHA is unknown, so
- *                      "stale deploy" and "wrong bytes" cannot be told apart
+ *   RED                the successful exact-source publication still differs
+ *   INCONCLUSIVE       source-bound deployment/artifact evidence is absent,
+ *                      or a request/overall time bound prevents assessment
  *
  * A REDIRECT IS FOLLOWED, AND ITS DESTINATION IS ASSERTED
  * Permitting a chain is not the same as saying where it may end. The permitted
@@ -41,7 +41,7 @@
  * chain ending anywhere else is RED naming both origins — checked BEFORE the
  * bytes, because a mirror is precisely where the bytes would match.
  *
- *   node tools/verify_served.mjs                    assert
+ *   node tools/verify_served.mjs --publications <record>  assert
  *   node tools/verify_served.mjs --self-test        controls (c)(d)(e), no network
  *   node tools/verify_served.mjs --controls-only    all five controls, no verdict —
  *                                                   safe on a PR, whose branch is
@@ -49,7 +49,9 @@
  *
  * Exit 0 every route served and byte-identical · 1 a route is missing,
  * redirected to something else, or stale · 2 INCONCLUSIVE (no egress, an empty
- * derivation, or a mismatch that cannot be distinguished from a live deploy).
+ * derivation, or assessment prevented by a request/deadline bound).
+ * Expected bytes belong to the checked-out source's successful deployment,
+ * never a rebuilt current tree or the legacy /pages/builds/latest endpoint.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -58,14 +60,16 @@ import crypto from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
-const HERE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const TOOL_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ARGS = process.argv.slice(2);
 const SELFTEST = ARGS.includes('--self-test');
 const arg = (n, d) => { const i = ARGS.indexOf(n); return i >= 0 ? ARGS[i + 1] : d; };
+const HERE = path.resolve(arg('--lessons', TOOL_ROOT));
 
 const SITE = arg('--site', process.env.MBM_SITE_REPO || '/workspace/mattroper1977.github.io');
 const APPS = arg('--apps', process.env.MBM_APPS_REPO || '/workspace/matt-s-apps-');
 const SHELF = arg('--shelf', process.env.MBM_SHELF_REPO || '');
+const PUBLICATIONS = arg('--publications', '');
 
 /* The origins a request STARTS at are declared, and overridable so a staging
    origin can be pointed at.
@@ -82,10 +86,72 @@ const APPS_ORIGIN = process.env.APPS_ORIGIN || 'https://mattroper1977.github.io/
 /* §2.4 — the bound, stated. */
 const RETRY_MAX = Number(process.env.SERVE_RETRIES || 4);
 const RETRY_MS = Number(process.env.SERVE_RETRY_MS || 20000);
+const REQUEST_MS = Number(process.env.SERVE_REQUEST_MS || 12000);
+const DEADLINE_MS = Number(process.env.SERVE_DEADLINE_MS || 240000);
+const CONCURRENCY = Number(process.env.SERVE_CONCURRENCY || 8);
+let deadline = Infinity;
+let publicationProof = null;
+
+for (const [label, value, min, max] of [
+  ['retries', RETRY_MAX, 0, 4], ['retry interval', RETRY_MS, 0, 20000],
+  ['request timeout', REQUEST_MS, 1, 30000], ['overall deadline', DEADLINE_MS, 1, 300000],
+  ['concurrency', CONCURRENCY, 1, 12]]) {
+  if (!Number.isInteger(value) || value < min || value > max)
+    throw new Error(`Invalid ${label}: ${value}; expected ${min}–${max}`);
+}
 
 const sha = b => crypto.createHash('sha256').update(b).digest('hex');
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 class Inconclusive extends Error {}
+
+function revision(root) {
+  return execFileSync('git', ['-C', root, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+}
+
+function publicationSubjects(original, record = PUBLICATIONS, sourceRoots = null) {
+  if (!record) throw new Inconclusive('live proof requires --publications from prepare_served_publications.py; raw source is not the split publication');
+  const proof = JSON.parse(fs.readFileSync(record, 'utf8'));
+  if (proof.version !== 1 || !proof.publications || !Array.isArray(proof.canonical_game_routes) || !proof.canonical_game_routes.length)
+    throw new Inconclusive('empty or unrecognised publication evidence');
+  const roots = sourceRoots || { site: SITE, lessons: HERE, apps: APPS, games: SHELF };
+  for (const [kind, root] of Object.entries(roots)) {
+    const p = proof.publications[kind];
+    if (!p || p.source_sha !== revision(root) || p.deployment !== 'success' ||
+        !Number.isSafeInteger(p.run_id) || p.run_id <= 0 ||
+        !Number.isSafeInteger(p.artifact_id) || p.artifact_id <= 0 ||
+        !/^[a-f0-9]{40}$/.test(p.publication_sha) || !/^sha256:[a-f0-9]{64}$/.test(p.artifact_sha256))
+      throw new Inconclusive(`${kind}: publication evidence does not match the checked-out source and successful deployment`);
+  }
+  const play = JSON.parse(fs.readFileSync(path.join(roots.games, 'play-publication.json'), 'utf8'));
+  if (proof.games_origin !== `https://${play.domain}`)
+    throw new Inconclusive('games publication origin differs from the committed Games declaration');
+  const normal = r => decodeURIComponent(new URL(r, 'https://routes.invalid').pathname).replace(/index\.html$/, '').replace(/\/$/, '') || '/';
+  const games = JSON.parse(fs.readFileSync(path.join(roots.games, 'games.json'), 'utf8')).games.map(g => normal(g.href));
+  const recorded = proof.canonical_game_routes;
+  if (new Set(recorded).size !== recorded.length || games.length !== recorded.length || games.some(g => !recorded.includes(g)))
+    throw new Inconclusive('publication membership differs from the canonical Games shelf');
+  const list = original.list.map(subj => {
+    let kind = subj.group;
+    let relative = path.relative(roots[kind], subj.blob);
+    let url = subj.url;
+    // Keep every original P0 game and infrastructure subject. The Games hub
+    // follows the independent publication; education / and site.json stay on
+    // their own domain. No game source or baseline is modified.
+    if (kind === 'site' && (games.includes(normal(subj.name)) || normal(subj.name) === '/games')) {
+      kind = 'games';
+      url = proof.games_origin + subj.name;
+    }
+    const root = path.resolve(proof.publications[kind].root);
+    const blob = path.resolve(root, relative);
+    if (!blob.startsWith(root + path.sep)) throw new Inconclusive(`escaping publication path: ${relative}`);
+    if (!fs.existsSync(blob)) throw new Inconclusive(`${kind}: deployed artifact omits ${relative}`);
+    return { ...subj, group: kind, url, blob, source_group: subj.group,
+      publication_run: proof.publications[kind].run_id };
+  });
+  verdictFor(original.list, list.length);
+  publicationProof = proof;
+  return { ...original, list, missing: [] };
+}
 
 /* ------------------------------------------------------- the derivations */
 function fieldopsDecls() {
@@ -185,11 +251,14 @@ function subjects() {
 }
 
 /* --------------------------------------------------------------- fetching */
-async function get(url) {
+async function get(url, requestMs = REQUEST_MS, requestDeadline = deadline) {
   const chain = [];
   let cur = url;
+  const budget = Math.min(requestMs, requestDeadline - Date.now());
+  if (budget <= 0) throw new Inconclusive('overall serve deadline reached');
+  const signal = AbortSignal.timeout(Math.max(1, Math.ceil(budget)));
   for (let hop = 0; hop < 5; hop++) {
-    const res = await fetch(cur, { redirect: 'manual', headers: { 'Cache-Control': 'no-cache' } });
+    const res = await fetch(cur, { redirect: 'manual', signal, headers: { 'Cache-Control': 'no-cache' } });
     if (res.status >= 300 && res.status < 400 && res.headers.get('location')) {
       chain.push(`${cur} -> ${res.status} -> ${res.headers.get('location')}`);
       cur = new URL(res.headers.get('location'), cur).toString();
@@ -240,32 +309,28 @@ function expectedHosts() {
 
 /* The verdict on one terminus. Returns what was reached and what was permitted,
    so a red can name both rather than saying "unexpected". */
-function destinationVerdict(finalUrl, hosts) {
+function destinationVerdict(finalUrl, hosts, requestedUrl = null) {
   let got;
-  try { got = new URL(finalUrl).host.toLowerCase(); }
+  let parsed;
+  try { parsed = new URL(finalUrl); got = parsed.host.toLowerCase(); }
   catch (e) { return { ok: false, got: `(unparseable: ${finalUrl})`, want: hosts }; }
-  return { ok: hosts.includes(got), got, want: hosts };
+  const requested = requestedUrl ? new URL(requestedUrl) : null;
+  return { ok: hosts.includes(got) && parsed.protocol === 'https:' && !parsed.username && !parsed.password &&
+    (!requested || (parsed.pathname === requested.pathname && parsed.search === requested.search && parsed.hash === requested.hash)), got, want: hosts };
+}
+
+function subjectHosts(subj, fallback) {
+  if (!publicationProof) return fallback;
+  const origin = new URL(subj.url);
+  if (subj.group === 'games') return [origin.host, `www.${origin.host}`];
+  // Project Pages redirects may move from the owner.github.io host to the
+  // declared education domain, but must retain the exact resource path.
+  return fallback;
 }
 
 async function reachable(origin) {
   try { const r = await get(origin + '/'); return r.status; }
   catch (e) { return `ERR ${e.message}`; }
-}
-
-/* Pages deployment SHA, where the token allows it. Unknown is reported as
-   unknown; it changes a mismatch from RED to INCONCLUSIVE, because "stale
-   deploy" and "wrong bytes" are different findings. */
-async function pagesSha(repo) {
-  const tok = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
-  if (!tok) return { sha: null, why: 'no token' };
-  try {
-    const r = await fetch(`https://api.github.com/repos/${repo}/pages/builds/latest`,
-      { headers: { Authorization: `Bearer ${tok}`, Accept: 'application/vnd.github+json',
-                   'User-Agent': 'mbm-verify-served' } });
-    if (!r.ok) return { sha: null, why: `HTTP ${r.status}` };
-    const j = await r.json();
-    return { sha: j.commit || null, status: j.status, why: null };
-  } catch (e) { return { sha: null, why: e.message }; }
 }
 
 /* --------------------------------------------------------------- controls */
@@ -285,10 +350,14 @@ async function controls(list) {
          still 200 — so a status-only check would pass and this must not. */
   try {
     const r = await get(anchor.url);
-    const local = fs.readFileSync(anchor.blob);
-    const mutated = Buffer.concat([local, Buffer.from('\n<!-- authored control -->')]);
+    // Production is a fixture on PRs, not the unpublished branch. Require the
+    // same predicate to accept genuine bytes and reject one appended byte.
+    const local = Buffer.from(r.body);
+    const mutated = Buffer.concat([local, Buffer.from([0])]);
+    const hosts = subjectHosts(anchor, expectedHosts().hosts);
     out.push({ id: 'b', what: 'a one-byte mutation of the expected hash goes red',
-      fired: r.status === 200 && sha(r.body) !== sha(mutated),
+      fired: responseVerdict(r, sha(local), anchor, hosts).verdict === 'SERVED' &&
+             responseVerdict(r, sha(mutated), anchor, hosts).verdict === 'MISMATCH',
       detail: `HTTP ${r.status}; served ${sha(r.body).slice(0, 12)} vs mutated ${sha(mutated).slice(0, 12)}` });
   } catch (e) { out.push({ id: 'b', what: 'a one-byte mutation of the expected hash goes red', fired: false, detail: e.message }); }
 
@@ -402,144 +471,128 @@ async function controlsOnly() {
   return 0;
 }
 
+/* -------------------------------------- byte and resource predicates */
+function responseVerdict(response, expectedHash, subject, hosts) {
+  if (response.status !== 200)
+    return { verdict: 'RED', detail: `HTTP ${response.status}` };
+  const dest = destinationVerdict(response.final, hosts, subject.url);
+  if (!dest.ok)
+    return { verdict: 'RED', detail: `unexpected HTTPS resource: ${response.final}; requested ${subject.url}; permitted hosts ${hosts.join(' or ')}` };
+  const actual = sha(response.body);
+  if (actual !== expectedHash)
+    return { verdict: 'MISMATCH', detail: `HTTP 200: expected ${expectedHash} vs served ${actual} (${response.body.length} B)` };
+  const type = response.type.split(';')[0].trim().toLowerCase();
+  if (type !== subject.type)
+    return { verdict: 'RED', detail: `byte-identical but content-type ${type || '(none)'}; expected ${subject.type}` };
+  return { verdict: 'SERVED', detail: `200 · ${actual} · ${response.body.length} B · ${type}` };
+}
+
+async function mapLimit(items, limit, action) {
+  const results = new Array(items.length);
+  let next = 0;
+  await Promise.all(Array.from({ length: Math.min(items.length, limit) }, async () => {
+    while (next < items.length) {
+      const i = next++;
+      results[i] = await action(items[i], i);
+    }
+  }));
+  return results;
+}
+
+async function assess(subject, hosts, deadGroups, roots) {
+  const expected = sha(fs.readFileSync(subject.blob));
+  let result = { verdict: 'INCONCLUSIVE', detail: 'not reached before the overall serve deadline', attempts: 0 };
+  if (deadGroups.has(subject.group))
+    return { ...subject, ...result, detail: `the ${subject.group} origin answered ${roots[subject.group]}; no route verdict is claimed` };
+  for (let attempt = 0; attempt <= RETRY_MAX; attempt++) {
+    if (Date.now() >= deadline) break;
+    try {
+      const response = await get(subject.url);
+      result = { ...responseVerdict(response, expected, subject, subjectHosts(subject, hosts)), attempts: attempt + 1 };
+      if (result.verdict !== 'MISMATCH') break;
+      console.log(`RETRY ${subject.group} ${subject.name} attempt ${attempt + 1}: ${result.detail}`);
+      if (attempt === RETRY_MAX) {
+        result.verdict = 'RED';
+        result.detail += `; successful source-bound publication ${subject.publication_run} still differs after ${attempt + 1} attempts`;
+        break;
+      }
+      const remaining = deadline - Date.now();
+      if (remaining <= RETRY_MS) {
+        result.verdict = 'INCONCLUSIVE';
+        result.detail += '; overall serve deadline leaves no complete retry interval';
+        break;
+      }
+      await sleep(RETRY_MS);
+    } catch (error) {
+      result = { verdict: 'INCONCLUSIVE', attempts: attempt + 1, detail: `request failed within its time bound: ${error.message}` };
+      break;
+    }
+  }
+  if (result.verdict === 'MISMATCH') {
+    result.verdict = 'INCONCLUSIVE';
+    result.detail += '; overall serve deadline reached before completing retries';
+  }
+  return { ...subject, ...result };
+}
+
 /* ------------------------------------------------------------------ main */
 async function main() {
   if (SELFTEST) return selfTest();
+  deadline = Date.now() + DEADLINE_MS;
   if (ARGS.includes('--controls-only')) return controlsOnly();
 
   let s;
-  try { s = subjects(); }
-  catch (e) { if (e instanceof Inconclusive) { console.log(`[INCONCLUSIVE] ${e.message}`); return 2; } throw e; }
-
-  console.log(`serve proof — ${s.list.length} route(s) derived`);
-  console.log(`  predicate: every game the site's own P0 deriver emits from the canonical shelf,`);
-  console.log(`             plus every lab tools/fieldops/build.mjs names and the hub their NAV-1 link`);
-  console.log(`             resolves to, plus that builder's Studio. No hand list.`);
-  for (const r of s.residue) console.log(`  RESIDUE  ${r.group}: ${r.why}`);
-  console.log();
-
-  /* Reachability first: a blocked proxy answering 403 for every host looks
-     exactly like a fleet of dead routes, and reporting it as one would be a
-     lie with a number attached. R0.9. */
-  const roots = { site: await reachable(SITE_ORIGIN), lessons: await reachable(LESSONS_ORIGIN), apps: await reachable(APPS_ORIGIN) };
-  const dead = Object.entries(roots).filter(([, v]) => v !== 200);
-  /* PER GROUP, NOT JUST ALL-OR-NOTHING. The first cut only bailed when EVERY
-     origin was dead; with one origin blocked and two reachable it would have
-     marched on and reported that whole estate's routes as RED. A proxy refusing
-     one host is a fact about the runner, and reporting it as a deployment
-     failure is the exact defect this order predicted for this gate — a runner
-     fact wearing a deployment verdict. Unreachable groups are INCONCLUSIVE. */
-  const deadGroups = new Set(dead.map(([k]) => k));
-  if (dead.length === Object.keys(roots).length) {
-    console.log('[UNVERIFIED] no origin answered 200 from this runner:');
-    for (const [k, v] of dead) console.log(`  ${k}: ${k === 'site' ? SITE_ORIGIN : k === 'lessons' ? LESSONS_ORIGIN : APPS_ORIGIN} -> ${v}`);
-    console.log('\nThis is a fact about the runner, not about the deployment. It is UNVERIFIED,');
-    console.log('never green and never "assumed served". Run where the egress is.');
+  try {
+    const original = subjects();
+    if (original.residue.length)
+      throw new Inconclusive(original.residue.map(r => `${r.group}: ${r.why}`).join('; '));
+    s = publicationSubjects(original);
+  } catch (error) {
+    console.log(`[INCONCLUSIVE] ${error.message}`);
     return 2;
   }
+  console.log(`serve proof — ${s.list.length} original subjects retained; exact successful publication bytes`);
+  console.log(`bounds: ${REQUEST_MS} ms per request, ${CONCURRENCY} concurrent, ${DEADLINE_MS} ms overall, up to ${RETRY_MAX + 1} attempts`);
+  for (const [kind, evidence] of Object.entries(publicationProof.publications))
+    console.log(`PUBLICATION ${kind}: checked source ${evidence.source_sha}; deployed source ${evidence.publication_sha}; run ${evidence.run_id}; artifact ${evidence.artifact_id} ${evidence.artifact_sha256}`);
 
-  const pages = { site: await pagesSha('MattRoper1977/mattroper1977.github.io'),
-                  lessons: await pagesSha('MattRoper1977/Lessons'),
-                  apps: await pagesSha('MattRoper1977/Matt-s-Apps-') };
-  for (const [k, v] of Object.entries(pages))
-    console.log(`  pages(${k}): ${v.sha ? `${v.sha.slice(0, 7)} status=${v.status}` : `UNKNOWN (${v.why})`}`);
-  console.log();
-
-  /* Derived once, and named in the output — a permitted set nobody can read is
-     not much better than a hand-list. */
   let hosts;
-  try {
-    const e = expectedHosts();
-    hosts = e.hosts;
-    console.log(`  permitted terminus: ${hosts.join(' or ')}  (derived — ${e.from})\n`);
-  } catch (e) {
-    if (e instanceof Inconclusive) {
-      console.log(`[INCONCLUSIVE] ${e.message}`);
-      console.log('Without a permitted destination set, a redirect could land anywhere and');
-      console.log('still be compared byte-for-byte. No serve verdict is reported.');
-      return 2;
-    }
-    throw e;
-  }
+  try { hosts = expectedHosts().hosts; }
+  catch (error) { console.log(`[INCONCLUSIVE] ${error.message}`); return 2; }
+  const origins = { site: SITE_ORIGIN, lessons: LESSONS_ORIGIN, apps: APPS_ORIGIN, games: publicationProof.games_origin };
+  const roots = Object.fromEntries(await Promise.all(Object.entries(origins).map(async ([kind, origin]) => [kind, await reachable(origin)])));
+  const deadGroups = new Set(Object.entries(roots).filter(([, status]) => status !== 200).map(([kind]) => kind));
+  for (const [kind, status] of Object.entries(roots)) console.log(`ORIGIN ${kind}: ${origins[kind]} -> ${status}`);
 
-  const rows = [];
-  for (const subj of s.list) {
-    const expect = sha(fs.readFileSync(subj.blob));
-    let verdict = null, detail = '', attempts = 0, ctype = null;
-    if (deadGroups.has(subj.group)) {
-      rows.push({ ...subj, verdict: 'INCONCLUSIVE', attempts: 0, ctype: null,
-        detail: `the ${subj.group} origin answered ${roots[subj.group]} from this runner, not 200 — ` +
-                'this route was never reached, so nothing is claimed about it' });
-      continue;
-    }
-    for (let i = 0; i <= RETRY_MAX; i++) {
-      attempts = i + 1;
-      let r;
-      try { r = await get(subj.url); }
-      catch (e) { verdict = 'INCONCLUSIVE'; detail = `fetch failed: ${e.message}`; break; }
-      if (r.status !== 200) {
-        verdict = 'RED'; detail = `HTTP ${r.status}${r.chain.length ? ` · chain: ${r.chain.join(' | ')}` : ' · no redirect chain'}`;
-        break;
-      }
-      /* BEFORE the bytes, not after. If the chain ended somewhere nobody
-         asserted, a byte match there is the worst possible outcome to report as
-         SERVED — a mirror is exactly the case where the bytes DO match. */
-      const dest = destinationVerdict(r.final, hosts);
-      if (!dest.ok) {
-        verdict = 'RED';
-        detail = `HTTP 200, but the chain ended on an origin nobody asserted — reached ${dest.got}, ` +
-                 `permitted ${dest.want.join(' or ')}` +
-                 (r.chain.length ? ` · chain: ${r.chain.join(' | ')}` : ' · no redirect chain');
-        break;
-      }
-      const got = sha(r.body);
-      if (got === expect) {
-        ctype = { got: r.type.split(';')[0] || '(none)', want: subj.type,
-                  ok: !!subj.type && r.type.includes(subj.type) };
-        verdict = i === 0 ? 'SERVED' : 'SERVED (after retry)';
-        detail = `200 · ${expect.slice(0, 12)} · ${r.body.length} B` +
-                 (r.chain.length ? ` · chain: ${r.chain.join(' | ')}` : ' · no redirect chain');
-        break;
-      }
-      if (i < RETRY_MAX) { await sleep(RETRY_MS); continue; }
-      /* Out of retries: RED only if a deployment SHA says the deploy is settled;
-         otherwise the two explanations cannot be told apart. */
-      const p = pages[subj.group];
-      verdict = p && p.sha ? 'RED' : 'INCONCLUSIVE';
-      detail = `200 but STALE after ${attempts} attempt(s) — repo ${expect.slice(0, 12)} vs served ${got.slice(0, 12)}` +
-               (p && p.sha ? ` · pages at ${p.sha.slice(0, 7)} status=${p.status}, so the deploy is settled and this is a real mismatch`
-                           : ` · pages SHA unknown (${p ? p.why : 'n/a'}), so a live deploy and wrong bytes cannot be distinguished`);
-    }
-    rows.push({ ...subj, verdict, detail, attempts, ctype });
-  }
-
+  // Fire the controls before retries consume the verdict budget. An exhausted
+  // gate must still record why its controls could not be assessed.
   const ctl = [...await controls(s.list), ...structuralControls()];
+  for (const c of ctl) console.log(`CONTROL (${c.id}) ${c.fired ? 'FIRED' : 'DID NOT FIRE'} ${c.what} — ${c.detail}`);
 
-  console.log(`${'group'.padEnd(8)} ${'route'.padEnd(46)} verdict`);
-  console.log('-'.repeat(110));
-  for (const r of rows) {
-    console.log(`${r.group.padEnd(8)} ${String(r.name).slice(0, 46).padEnd(46)} ${r.verdict}`);
-    console.log(`${' '.repeat(9)}${r.detail}`);
-    if (r.ctype) console.log(`${' '.repeat(9)}content-type: ${r.ctype.got} ` +
-      `${r.ctype.ok ? 'as expected' : `— EXPECTED ${r.ctype.want}, and this is reported as its own result rather than buried in the line above`}`);
-  }
-  console.log(`\nCONTROLS (all five must fire)`);
-  for (const c of ctl) console.log(`  (${c.id}) ${c.fired ? 'FIRED' : 'DID NOT FIRE'}  ${c.what} — ${c.detail}`);
-
-  const ctypeBad = rows.filter(r => r.ctype && !r.ctype.ok);
-  const served = rows.filter(r => /^SERVED/.test(r.verdict));
+  const rows = await mapLimit(s.list, CONCURRENCY, async subject => {
+    const row = await assess(subject, hosts, deadGroups, roots);
+    // Emit each outcome immediately; even an externally cancelled workflow
+    // retains the offending route instead of a ten-minute silent interval.
+    console.log(`${row.verdict} ${row.group} ${row.name} — ${row.detail}`);
+    return row;
+  });
+  const served = rows.filter(r => r.verdict === 'SERVED');
   const red = rows.filter(r => r.verdict === 'RED');
   const inc = rows.filter(r => r.verdict === 'INCONCLUSIVE');
   console.log(`\n${served.length} served byte-identical · ${red.length} red · ${inc.length} inconclusive, of ${rows.length} derived`);
-  console.log(`content-type: ${rows.filter(r => r.ctype).length - ctypeBad.length} as expected, ${ctypeBad.length} not`);
-  if (deadGroups.size) console.log(`groups never reached from this runner: ${[...deadGroups].join(', ')} — INCONCLUSIVE, not red`);
-
+  console.log(`${ctl.filter(c => c.fired).length}/5 controls fired`);
+  const output = arg('--output', '');
+  if (output) fs.writeFileSync(output, JSON.stringify({ version: 1, publications: publicationProof.publications,
+    controls: ctl, rows, counts: { derived: s.list.length, served: served.length, red: red.length, inconclusive: inc.length } }, null, 2) + '\n');
   if (ctl.some(c => !c.fired)) {
-    console.log('\n[STOP] a control did not fire. This gate is not a gate, so no serve result is reported.');
+    console.log('[INCONCLUSIVE] a control did not fire; no successful serve result is reported');
     return 2;
   }
-  try { verdictFor(s.list, rows.length); } catch (e) { console.log(`\n[INCONCLUSIVE] ${e.message}`); return 2; }
-  return (red.length || ctypeBad.length) ? 1 : inc.length ? 2 : 0;
+  try { verdictFor(s.list, rows.length); }
+  catch (error) { console.log(`[INCONCLUSIVE] ${error.message}`); return 2; }
+  return red.length ? 1 : inc.length ? 2 : 0;
 }
 
-main().then(c => process.exit(c), e => { console.error(e); process.exit(1); });
+export { Inconclusive, get, mapLimit, responseVerdict, destinationVerdict, verdictFor, publicationSubjects };
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url))
+  main().then(code => process.exit(code), error => { console.error(error); process.exit(error instanceof Inconclusive ? 2 : 1); });
