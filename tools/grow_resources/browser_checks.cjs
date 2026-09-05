@@ -97,9 +97,15 @@ async function run({browser,root,out,configure,measured,report}){
               const video=page.locator('video');assert.equal(await video.getAttribute('preload'),'none');assert.equal(await video.getAttribute('autoplay'),null);assert.notEqual(await video.getAttribute('controls'),null);
               const videoUrl=new URL(c.video.local_file,url).href;let blocked=0;
               await page.route(videoUrl,async route=>{blocked++;await route.abort('failed');});
+              // A failed child <source> emits a request/source error without
+              // consistently setting HTMLMediaElement.error. Measure the
+              // actual blocked request instead of that optional video state.
+              const failedRequest=page.waitForEvent('requestfailed',{predicate:request=>request.url()===videoUrl});
               await video.evaluate(v=>{v.preload='auto';v.load();});
-              await page.waitForFunction(()=>Boolean(document.querySelector('video').error));
+              const failed=await failedRequest;
+              assert.ok(failed.failure()?.errorText,'The browser reports the failed media request');
               assert.ok(blocked>0,'The local-media failure fixture actually ran');
+              assert.equal(await video.evaluate(v=>v.readyState),0,'The blocked clip supplies no playable media');
               assert.equal(await fallback.isVisible(),true);assert.ok((await page.locator('.media').innerText()).includes(c.video.fallback_text));
             }else{
               const link=page.locator('.media a[target="_blank"]');assert.equal(await link.getAttribute('href'),c.video.url);assert.ok((await link.getAttribute('rel')).includes('noopener'));
