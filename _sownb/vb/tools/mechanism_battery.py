@@ -65,6 +65,7 @@ SELFTEST_TOOLS = [
     "g24_visual_density.py",
     "g25_wedo_variety.py",
     "g27_no_filename_weeks.py",
+    "g28_cell_existence.py",
     "g29_plan_binding.py",
     "cell_coverage.py",
     "g30_arts_award.py",

@@ -36,6 +36,7 @@ import argparse
 import json
 import re
 import tempfile
+from html.parser import HTMLParser
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -44,6 +45,32 @@ SPINE = ROOT / "_sownb/CALENDAR_SPINE.json"
 QUALIFIED = re.compile(r"'(BUILD|GROW|LAUNCH) Weekly - (Autumn|Spring|Summer)'!C(\d+)")
 SHEET = re.compile(r"'?(BUILD|GROW|LAUNCH) Weekly - (Autumn|Spring|Summer)'?")
 BARE = re.compile(r"(?<![A-Za-z0-9_])C(\d{2,3})(?![0-9A-Za-z_])")
+
+
+def without_svg_path_coordinates(text: str) -> str:
+    """Mask only actual SVG path geometry, preserving all citation offsets.
+
+    `C210 50 ...` is a cubic-curve command, not workbook cell C210. Visible
+    SVG text and accessible labels remain checked, as do JSON/config traces.
+    """
+    lines = [0]
+    for match in re.finditer('\n', text): lines.append(match.end())
+    spans = []
+    class Paths(HTMLParser):
+        def handle_starttag(self, tag, attrs):
+            if tag != 'path': return
+            raw = self.get_starttag_text()
+            for match in re.finditer(r'''(?:\s)d\s*=\s*(["'])(.*?)\1''', raw, re.S):
+                value = match.group(2)
+                if re.fullmatch(r'[MmZzLlHhVvCcSsQqTtAa0-9+.,eE\s-]+', value):
+                    line, col = self.getpos();start = lines[line - 1] + col
+                    spans.append((start + match.start(2), start + match.end(2)))
+        handle_startendtag = handle_starttag
+    parser = Paths(convert_charrefs=False)
+    parser.feed(text)
+    for start, end in reversed(spans):
+        text = text[:start] + ' ' * (end - start) + text[end:]
+    return text
 
 
 def spine_cells() -> set[str]:
@@ -66,6 +93,7 @@ def lane_of(text: str) -> str | None:
 
 def citations(text: str, cells: set[str] | None = None) -> list[dict]:
     """Every cell citation in the text, qualified where the text lets it be."""
+    text = without_svg_path_coordinates(text)
     out = []
     lane = lane_of(text)
     for m in QUALIFIED.finditer(text):
@@ -122,6 +150,15 @@ def controls(cells: set[str]) -> dict:
         "citesC999OnARealSheet": {"mustFire": True, "fired": r["status"] == "RED", "ok": r["status"] == "RED"},
         "citesARealAddress": {"mustFire": False, "fired": g["status"] == "RED", "ok": g["status"] == "PASS"},
     }
+    path = '<svg><path d="M0 0 C210 10 30 40 50 60"/><text>C999</text></svg>'
+    rows = citations('BUILD ' + path, cells)
+    out['svgGeometryIsNotACellButSvgTextStillIs'] = {'mustFire':True,
+        'fired':len(rows) == 1 and rows[0]['reference'].endswith('C999'),
+        'ok':len(rows) == 1 and rows[0]['reference'].endswith('C999')}
+    labelled = citations('BUILD <svg><path d="M0 0 C210 10 30 40 50 60" aria-label="C999"/></svg>', cells)
+    out['accessibleSvgCitationStillFires'] = {'mustFire':True,
+        'fired':len(labelled) == 1 and labelled[0]['reference'].endswith('C999'),
+        'ok':len(labelled) == 1 and labelled[0]['reference'].endswith('C999')}
     out["nonVacuous"] = all(v["ok"] for v in out.values() if isinstance(v, dict))
     return out
 
@@ -131,9 +168,15 @@ def main() -> int:
     ap.add_argument("files", nargs="*")
     ap.add_argument("--output")
     ap.add_argument("--self-test", action="store_true")
+    ap.add_argument("--list-controls", action="store_true")
     args = ap.parse_args()
     cells = spine_cells()
     ctl = controls(cells)
+    named = [k for k, v in ctl.items() if isinstance(v, dict)]
+    if args.list_controls:
+        # The battery reads this list and requires every entry to fire.
+        print("\n".join(named))
+        return 0
     rows = [judge(Path(f) if Path(f).is_absolute() else ROOT / f, cells) for f in args.files]
     red = [r for r in rows if r["status"] == "RED"]
     report = {
@@ -152,6 +195,12 @@ def main() -> int:
     for k, v in ctl.items():
         if isinstance(v, dict):
             print(f"  control {k:26s} mustFire={v['mustFire']!s:5s} fired={v['fired']!s:5s} {'ok' if v['ok'] else 'FAILED'}")
+    # The battery is the authority on how many controls a tool RAN; say it
+    # in the shape every other tool says it in, or the battery reads None.
+    # "fired" here means the control BEHAVED AS DECLARED, which is the estate's
+    # convention (g30 counts the same way): a negative control earns its place by
+    # staying silent, and counting it only when it trips would punish it for working.
+    print(f"{sum(1 for k in named if ctl[k]['ok'])}/{len(named)} controls fired")
     for r in rows:
         print(f"  {r['status']:13s} {r['file'][-58:]:58s} cites {r['distinct']:3d}"
               + (f"  NOT IN SPINE {r['notInSpine']}" if r["notInSpine"] else "")
