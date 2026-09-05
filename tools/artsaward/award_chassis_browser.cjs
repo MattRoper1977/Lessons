@@ -274,15 +274,33 @@ if (!options.targets) assert.equal(targets.length, 14, 'The default Bronze gate 
         }
         const parser = new DOMParser();
         const expected = source.figures.map(svg => canonical(parser.parseFromString(svg, 'text/html').querySelector('svg')));
-        const actual = Array.from(pack.querySelectorAll('svg'), canonical);
+        const actual = Array.from(pack.querySelectorAll('svg')).filter(svg => !svg.closest('[data-activity-print]')).map(canonical);
+        const activityExpected = source.activities.filter(row => row.diagram).map(row => {
+          const svg = parser.parseFromString(row.diagram.svg, 'text/html').querySelector('svg');
+          const ids = new Map(Array.from(svg.querySelectorAll('[id]'), node => [node.id, row.id + '-print-' + node.id]));
+          if (svg.id) ids.set(svg.id, row.id + '-print-' + svg.id);
+          for (const node of [svg, ...svg.querySelectorAll('*')]) {
+            for (const attr of Array.from(node.attributes)) {
+              if (attr.name === 'id') node.setAttribute('id', ids.get(attr.value));
+              else if (['aria-labelledby', 'aria-describedby'].includes(attr.name)) node.setAttribute(attr.name, attr.value.split(/\s+/).map(id => ids.get(id)).join(' '));
+              else if (attr.value.startsWith('url(#')) node.setAttribute(attr.name, 'url(#' + ids.get(attr.value.slice(5, -1)) + ')');
+            }
+          }
+          svg.setAttribute('role', 'img');
+          if (!svg.hasAttribute('aria-labelledby')) svg.setAttribute('aria-label', row.diagram.alt);
+          return canonical(svg);
+        });
+        const activityActual = Array.from(pack.querySelectorAll('[data-activity-print] svg'), canonical);
         const pages = Array.from(pack.querySelectorAll('.print-page'));
-        return {actual, expected,
+        return {actual, expected, activityActual, activityExpected,
           pageHeadings:pages.map(page => Array.from(page.querySelectorAll('h1,h2'), node => normalize(node.textContent))),
           headings:Array.from(pack.querySelectorAll('h1,h2,h3'), node => normalize(node.textContent)),
           headers:Array.from(pack.querySelectorAll('th'), node => normalize(node.textContent)),
           text:normalize(pack.textContent)};
-      }, spec.print);
+      }, {...spec.print, activities:spec.stages.flatMap((stage, si) => stage.blocks.flatMap((block, bi) => block.kind === 'activity'
+        ? [{id:spec.id + '-stage' + si + '-' + (bi + 1), diagram:block.data.diagram}] : []))});
       assert.deepEqual(result.actual, result.expected, target.route + ': printed figures must match the two source figures.');
+      assert.deepEqual(result.activityActual, result.activityExpected, target.route + ': printed activity diagrams must match their authored sources.');
       assert.ok(result.pageHeadings.length > 0, target.route + ': print pages exist.');
       assert.ok(result.pageHeadings.every(headings => headings.length && headings.every(Boolean)), target.route + ': nonblank page headings.');
       assert.ok(result.headings.every(Boolean), target.route + ': no empty print heading.');
