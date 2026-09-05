@@ -123,7 +123,11 @@ jobs:
           test -z "$stray" || { echo "stray markdown in the generated tree:"; printf '%s\n' "$stray"; exit 1; }
           git diff --check
           if [[ "${GITHUB_REF_NAME}" != main ]]; then
-            test -z "$(git diff --name-only origin/main...HEAD -- Art_Teesside GROW_ASDAN LAUNCH_ASDAN Grow/Slideshows Launch/Slideshows Science_Teesside Humanities_Teesside Baseline_Weeks BUILD_Estate_v3)"
+            # Retain the original protected prefixes. The only admitted changes
+            # are reviewed shelf bytes and manifest-bound additive cover files;
+            # their existing Humanities validator also checks all 30 old routes.
+            python -m pip install --disable-pip-version-check --no-cache-dir lxml==6.0.1
+            python -B _glv3/tools/verify_change_boundary.py --root . --base origin/main --self-test
           fi
 
       - name: Run disposable tamper controls

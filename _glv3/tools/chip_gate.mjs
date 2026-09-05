@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import { chromium } from 'playwright';
 
-const BASE = process.env.GLV3_BASE_URL || 'http://127.0.0.1:8123';
+const BASE = process.env.GLV3_BASE_URL || process.argv[2] || 'http://127.0.0.1:8123';
 const resources = JSON.parse(fs.readFileSync('resources.json', 'utf8'));
 const newResources = resources.filter(x => String(x.id || '').startsWith('glv3-'));
 if (newResources.length !== 88) {
@@ -42,7 +42,7 @@ try {
     }
 
     await page.waitForSelector('#quicknav .chip');
-    const button = page.locator('#quicknav .chip').filter({ hasText: chip });
+    const button = page.locator('#quicknav .chip[data-sub=' + JSON.stringify(chip) + ']');
     if (await button.count() !== 1) {
       throw new Error(`${chip}: current chip count=${await button.count()}`);
     }

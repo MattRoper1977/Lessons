@@ -7,15 +7,23 @@ import time
 import unittest
 import zipfile
 from prepare_served_publications import (Inconclusive, validate_artifact, publication_run_matches,
-                                         extract_archive, prepare_one, digest)
+                                         extract_archive, prepare_one, digest, select_artifact)
 
 
 class ProvenanceControls(unittest.TestCase):
     def setUp(self):
         self.run = {'id': 123, 'head_branch': 'main', 'event': 'push', 'head_sha': 'a'*40,
-                    'status': 'completed', 'conclusion': 'success', 'html_url': 'https://github.com/example/run/123'}
+                    'status': 'completed', 'conclusion': 'success', 'run_attempt': 4,
+                    'html_url': 'https://github.com/example/run/123'}
         self.artifact = {'id': 456, 'name': 'education-lessons-review', 'expired': False,
+                         'created_at': '2026-09-05T18:43:29Z',
                          'workflow_run': {'id': 123, 'head_sha': 'a'*40}, 'digest': 'sha256:'+'b'*64}
+        self.jobs = [
+            {'id': 100, 'name': 'publish / build', 'run_attempt': 4, 'conclusion': 'success', 'steps': [
+                {'name': 'Save the reviewed education output', 'conclusion': 'success',
+                 'started_at': '2026-09-05T18:43:28Z', 'completed_at': '2026-09-05T18:43:29Z'}]},
+            {'id': 101, 'name': 'publish / deploy', 'run_attempt': 4, 'conclusion': 'success',
+             'started_at': '2026-09-05T18:43:38Z'}]
 
     def test_exact_source_accepts_and_other_source_rejects(self):
         self.assertTrue(publication_run_matches('lessons', self.run, 'a'*40, None))
@@ -40,6 +48,27 @@ class ProvenanceControls(unittest.TestCase):
                          {'workflow_run': {'id': 124, 'head_sha': 'a'*40}},
                          {'workflow_run': {'id': 123, 'head_sha': 'b'*40}}]:
             with self.assertRaises(Inconclusive): validate_artifact({**self.artifact, **mutation}, self.run, 'lessons')
+
+    def test_four_reruns_select_only_successful_attempts_upload(self):
+        old = [{**self.artifact, 'id': number, 'created_at': created} for number, created in enumerate([
+            '2026-09-05T17:27:53Z', '2026-09-05T18:25:18Z', '2026-09-05T18:33:15Z'])]
+        artifact, binding = select_artifact(old+[self.artifact], self.run, self.jobs, 'lessons')
+        self.assertEqual(artifact['id'], 456)
+        self.assertEqual(binding['run_attempt'], 4)
+        self.assertEqual(binding['upload_job_id'], 100)
+        self.assertEqual(binding['deploy_job_id'], 101)
+
+    def test_duplicate_or_out_of_attempt_artifact_is_rejected(self):
+        for artifacts in [[self.artifact, {**self.artifact, 'id': 457}],
+                          [{**self.artifact, 'created_at': '2026-09-05T18:33:15Z'}],
+                          [{**self.artifact, 'created_at': '2026-09-05T18:43:40Z'}]]:
+            with self.assertRaises(Inconclusive): select_artifact(artifacts, self.run, self.jobs, 'lessons')
+        stale_jobs = copy.deepcopy(self.jobs)
+        stale_jobs[1]['run_attempt'] = 3
+        with self.assertRaises(Inconclusive): select_artifact([self.artifact], self.run, stale_jobs, 'lessons')
+        stale_jobs = copy.deepcopy(self.jobs)
+        stale_jobs[0]['run_attempt'] = 3
+        with self.assertRaises(Inconclusive): select_artifact([self.artifact], self.run, stale_jobs, 'lessons')
 
     def archive(self, name='index.html', data=b'approved'):
         stream = io.BytesIO()
@@ -77,7 +106,7 @@ class ProvenanceControls(unittest.TestCase):
             mutate = False
             def read(self, route, raw=False):
                 if '/workflows/' in route: return {'workflow_runs': [outer.run]}
-                if '/jobs?' in route: return {'jobs': [{'name': 'publish / deploy', 'conclusion': 'success'}]}
+                if '/jobs?' in route: return {'jobs': outer.jobs}
                 if '/artifacts?' in route: return {'artifacts': [{**outer.artifact, 'digest': digest(archive)}]}
                 if route.endswith('/zip'): return archive + (b'x' if self.mutate else b'')
                 raise AssertionError(route)

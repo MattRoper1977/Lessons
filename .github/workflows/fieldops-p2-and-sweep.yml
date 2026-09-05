@@ -105,8 +105,12 @@ jobs:
       - name: Install the existing browser driver and PDF reader
         run: |
           npm install --prefix "$RUNNER_TEMP/science-browser" --no-save --ignore-scripts playwright@1.62.1
-          python -m pip install PyMuPDF==1.26.6
-      - name: Drive all twenty-five original Science pages
+          python -m pip install PyMuPDF==1.26.6 lxml
+      - name: Verify Humanities cover sources, native downloads and existing routes
+        run: |
+          mkdir -p "$RUNNER_TEMP/science-review"
+          python tools/humanities_resources/check_resources.py --root . --report "$RUNNER_TEMP/science-review/humanities-cover-static.json"
+      - name: Drive original Science and Humanities cover pages
         env:
           NODE_PATH: ${{ runner.temp }}/science-browser/node_modules
         run: node tools/easter/science_original_browser.cjs --root . --targets tools/easter/SCIENCE_ORIGINAL_TARGETS.json --site-root _reference/science-site --out "$RUNNER_TEMP/science-review"
@@ -116,6 +120,9 @@ jobs:
       - name: Check GROW pupil print excludes answers and explicit keys include them
         if: ${{ !cancelled() }}
         run: python tools/grow_resources/check_print_content.py --artifacts "$RUNNER_TEMP/science-review"
+      - name: Check Humanities pupil prints exclude the teacher key
+        if: ${{ !cancelled() }}
+        run: python tools/humanities_resources/check_print_content.py --artifacts "$RUNNER_TEMP/science-review"
       - name: Preserve Science interaction and print evidence
         if: always()
         uses: actions/upload-artifact@v4

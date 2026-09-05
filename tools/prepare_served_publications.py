@@ -7,6 +7,7 @@ workflow run. A missing/expired artifact or an uncompleted exact-source deploy
 is INCONCLUSIVE, never permission to use a different source revision.
 """
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
 import argparse
 import hashlib
 import io
@@ -31,6 +32,10 @@ WORKFLOWS = {'site': 'education-publication.yml', 'lessons': 'education-pages.ym
              'apps': 'education-pages.yml', 'games': 'play-domain-publication.yml'}
 ARTIFACTS = {'site': 'education-site-review', 'lessons': 'education-lessons-review',
              'apps': 'education-apps-review', 'games': 'standalone-games-review'}
+UPLOAD_STEPS = {'site': 'Save the reviewed education output',
+                'lessons': 'Save the reviewed education output',
+                'apps': 'Save the reviewed education output',
+                'games': 'Run actions/upload-artifact@v4'}
 
 
 class Inconclusive(Exception):
@@ -126,6 +131,47 @@ def validate_artifact(artifact, run, kind):
             f'{kind}: GitHub did not supply an archive digest')
 
 
+def timestamp(value):
+    try:
+        parsed = datetime.fromisoformat(value.replace('Z', '+00:00'))
+        require(parsed.tzinfo is not None, 'Publication timestamp lacks a timezone')
+        return parsed
+    except (AttributeError, TypeError, ValueError) as exc:
+        raise Inconclusive(f'Invalid publication timestamp: {value!r}') from exc
+
+
+def select_artifact(artifacts, run, jobs, kind):
+    """A run ID survives reruns; bind the review to this successful attempt.
+
+    Apps' activation took four attempts, each retaining a same-named review.
+    Neither the first match nor merely the newest artifact proves which bytes
+    were deployed. The successful attempt's actual upload step supplies the
+    creation window, and its deploy job must be from that same attempt.
+    """
+    attempt = run.get('run_attempt')
+    require(isinstance(attempt, int) and attempt > 0, f'{kind}: publication attempt missing')
+    deploys = [job for job in jobs if re.search(r'(^| / )deploy$', job.get('name', ''))
+               and job.get('run_attempt') == attempt and job.get('conclusion') == 'success']
+    require(len(deploys) == 1, f'{kind}: successful deploy is not bound to this attempt')
+    windows = [(job, step) for job in jobs if job.get('run_attempt') == attempt
+               and job.get('conclusion') == 'success' for step in job.get('steps', [])
+               if step.get('name') == UPLOAD_STEPS[kind] and step.get('conclusion') == 'success']
+    require(len(windows) == 1, f'{kind}: expected one successful review upload in attempt {attempt}')
+    job, step = windows[0]
+    start, end = timestamp(step.get('started_at')), timestamp(step.get('completed_at'))
+    require(start <= end <= timestamp(deploys[0].get('started_at')),
+            f'{kind}: review upload does not precede this deployment')
+    matches = [artifact for artifact in artifacts if artifact.get('name') == ARTIFACTS[kind]
+               and start <= timestamp(artifact.get('created_at')) <= end]
+    require(len(matches) == 1,
+            f'{kind}: expected one review artifact within attempt {attempt} upload window, found {len(matches)}')
+    artifact = matches[0]
+    validate_artifact(artifact, run, kind)
+    return artifact, {'run_attempt': attempt, 'upload_job_id': job['id'],
+                      'deploy_job_id': deploys[0]['id'], 'upload_started_at': step['started_at'],
+                      'upload_completed_at': step['completed_at']}
+
+
 def extract_archive(data, destination):
     require(not destination.exists(), f'Refusing to overwrite publication directory {destination}')
     with zipfile.ZipFile(io.BytesIO(data)) as archive:
@@ -169,10 +215,7 @@ def prepare_one(kind, wanted, output, github):
             time.sleep(min(10, max(0, github.deadline-time.monotonic())))
             continue
         artifacts = github.read(f'/repos/{repo}/actions/runs/{selected["id"]}/artifacts?per_page=100')['artifacts']
-        matches = [a for a in artifacts if a['name'] == ARTIFACTS[kind]]
-        require(len(matches) == 1, f'{kind}: expected one review artifact, found {len(matches)}')
-        artifact = matches[0]
-        validate_artifact(artifact, selected, kind)
+        artifact, attempt_evidence = select_artifact(artifacts, selected, jobs, kind)
         print(f'FETCH {kind}: source {selected["head_sha"]}, deployment {selected["id"]}, artifact {artifact["id"]}', flush=True)
         data = github.read(f'/repos/{repo}/actions/artifacts/{artifact["id"]}/zip', raw=True)
         require(digest(data) == artifact['digest'], f'{kind}: downloaded artifact digest differs')
@@ -180,7 +223,7 @@ def prepare_one(kind, wanted, output, github):
         extract_archive(data, root)
         return {'root': str(root.resolve()), 'source_sha': wanted, 'publication_sha': selected['head_sha'],
                 'run_id': selected['id'], 'run_url': selected['html_url'], 'artifact_id': artifact['id'],
-                'artifact_sha256': artifact['digest'], 'deployment': 'success'}
+                'artifact_sha256': artifact['digest'], 'deployment': 'success', **attempt_evidence}
     raise Inconclusive(f'{kind}: exact-source publication did not become available within the retrieval bound')
 
 
