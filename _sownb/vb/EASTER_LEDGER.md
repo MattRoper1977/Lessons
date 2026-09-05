@@ -2053,3 +2053,64 @@ Repaired minimally, and no further: `g28_cell_existence.py` added to `SELFTEST_T
 Battery before this order: 29 tools / 358 controls. After: **30 tools / 362 controls, all declared controls fired, PASS**, and `--prove-red` still reds it (a planted `lesson_stages` expectation of 9999 makes the broken copy exit 1). CI needs no edit — it already invokes the battery, so g28's four controls now run on every push for the first time. Evidence: `_sownb/vb/evidence/aav/mechanism_battery_aav.json`.
 
 The design observation — a derived-count battery over a pinned roster — is recorded, NOT redesigned. Auto-discovery is a mechanism change nobody asked for and §8c closes that door; the defect was one absent gate and that is what was fixed. Logged for Matt as AAV-H3.
+
+
+## §2 — the 42 verified at main, and what the gates actually say
+
+Re-run at `189b4827`, trusting no handover text. Deck set confirmed from disk: Bronze 14, Explore 14, Silver 14 (each directory holds 15 HTML files; `START_HERE.html` is not a deck).
+
+**The award gates are green and BINDING.** `g30_arts_award.py --scope new` over all 42: **42 PASS, 0 RED**, register digest `e57b5bfbdd48a4b9`. That covers g30 level-fact, g31 part-map, g32 slot, g33 consolidation, g34 share-evidence, g35 invented-requirement. Explore carries no "leadership"; no deck asserts a booking. **g29 plan-binding: 42/42 PASS** — every deck claims exactly its own plan's cells. **g28: PASS. g27: PASS** repo-wide, 19/19 controls. **g23 period load: 42/42 PASS**, every deck inside its family ceiling (Bronze W1 measured 1155w against a 1523w ceiling, ×1.14, ~12.8 of 40 minutes).
+
+Silver's **conditional practitioner promise is present verbatim and IS a SLOTS read**, checked rather than taken on trust: the deck states it reads PRACTITIONER_SLOT and ORG_SLOT "through the shared SLOTS.json reader", that "all current entries are empty; no person, organisation, date or booking is asserted", and carries the conditional — *"If not arranged, practise methods only and label all rehearsal; arrange actual contact and experience later. Research does not fabricate a meeting."* Route-agnostic across R1/R2/R3, as AAE-H2 requires.
+
+**§2b reading bands — 3 REDS, and they are real.** Measured pupil-text FK against the pathway band, not whole-document:
+
+| deck | pupil FK | band | over by |
+|---|---|---|---|
+| BUILD_Art_Explore_W2_Test_A_Join_And_Compare_My_Learning | 4.05 | BUILD 1.0–4.0 | 0.05 |
+| BUILD_Art_Explore_W4_Connect_The_Artist_Organisation_And_What | 4.21 | BUILD 1.0–4.0 | 0.21 |
+| GROW_Art_Silver_W7_Find_The_Evidence_Across_Both_Units | 7.01 | GROW 3.0–7.0 | 0.01 |
+
+The other 39 sit inside band. g26 reports these rather than binding, but §2d says a red is repaired before landing and §9 forbids moving the band, so the repair is to the pupil sentences and not to the threshold. Carried as open §2 work.
+
+## §3 — measured, and it found a conflict the order could not have known about
+
+**§3a reference recorded:** `Art_Teesside/Build/BUILD_ART_A2_W7_Bank_It_and_Plan_the_Teach.html`, sha256 `2eb0f84ccfcf9c4100dfa22eb00a8edaa2d3381b77294efeb31904b10add0a00`. It PASSES g19 cleanly (24 root tokens, 0 foreign, 0 unknown) and carries **one** g16 defect of its own: 107/108 rows pass, `sequence.key-facts.build-art` fails at 0.
+
+**All 42 fail g16 and g19 — and so do the other 59.** g19 on the award decks: 1 foreign token (`--line`) and 8 unknown (`--danger --gold --green --ink --paper --slot --slot-pale --soft`). g16: 27–29 of 108 rows pass. The first reading — that Lundy, print packs and tiers were missing — is WRONG, and checking rather than reporting it is what caught it: the Bronze deck carries 32 Lundy hits and **three `print-pack` sections**, while the reference carries **zero** print-pack sections and does tiers by body-class instead. The rows fail on VOCABULARY, not absence. `lundy.box` looks for the reference's `lundy-box`; the award decks render `lundy` / `lundy-grid` / `lundy-status`.
+
+The cause is that **#316 moved 101 campaign decks onto the classroom chassis** — CLASSROOM_TARGETS.json is explicit that its 101 are "59 Easter units and 42 award units" — while the frozen g16/g19 family contract for BUILD/GROW/LAUNCH Art still describes the PRE-#316 classic chassis. Verified by measuring 14 non-award decks from the same target list: every one reds g19 with the identical 1 foreign / 8–10 unknown signature. This landed green because **g16 and g19 are not run per-deck in CI** — the workflow runs the battery, g29, g30, g27 and the classic-v2 contract, and nothing else.
+
+**§3b delta table, measured in Chromium at 1280×820** against the reference, 10 computed surfaces, all 42 decks. Result: **0 of 42 match on all ten**, and only TWO distinct delta signatures exist — 30 decks differ on 7 surfaces, 12 on 6. The divergence is perfectly systematic, which is the one genuinely good piece of news here, because §3c's "patch the generator once" is therefore possible in principle.
+
+| surface | reference | all 42 award decks |
+|---|---|---|
+| h1 size | 40px | 40.96px |
+| h1 colour | rgb(0,0,0) | rgb(16,24,32) |
+| slide padding | 40px | 38.4px |
+| Lundy background | rgb(243,232,255) purple | rgb(248,250,252) slate |
+| button | transparent bg, terracotta rgb(208,100,56) | teal rgb(58,106,125), white text |
+
+Screenshots of stage 0 confirm the same styling FAMILY — teal rule, orange pill, peach success box, slate objective box on both — differing in title-slide furniture (the reference carries a timer, a logo mark and three coloured print-pack tier buttons on the title slide; the award decks carry a plain pathway pill and an "Evidence & print" control) and in nav treatment.
+
+**DEFAULTED — the 101 decks are NOT restyled, and this is the reasoning.** The order names as its chassis authority a deck that is on the pre-#316 classic chassis. #316 merged 33 minutes before this order was issued and moved the campaign onto the classroom chassis at Matt's explicit request. Two of the measured deltas would directly reverse his most recently recorded preferences — the ledger of 2026-09-04 records that he "now prefers the earlier Science presentation… and lighter Lundy integration", and slate `#f8fafc` is lighter than the reference's purple `#f3e8ff`. Restyling 101 live decks that cover staff teach from, to match a reference that predates the choice, on a conflict the order itself did not know existed, is not the conservative default; it is the expensive one. Reported as **AAV-H2** with the full measured table so the decision is Matt's and is made on numbers.
+
+What is NOT in doubt and is recorded for whoever resolves it: the frozen Art contract no longer describes the Art estate, so g16/g19 would red every FUTURE Art deck too — including every Art deck §8 authors. That is a live hazard whichever chassis wins.
+
+## §5 — Science within terms: three labels disagreed with TRACE, and TRACE won
+
+Term spine read from `_sownb/TERM_DATES.md` and `_sownb/CALENDAR_SPINE.json` (897 workbook cells, each carrying its own `termWeek` and `absoluteWeek`). Mapping, which is the only way a week is derived here: Aut1 Wn→n, Aut2 Wn→8+n, Spr1 Wn→15+n, Spr2 Wn→21+n; boundary 26.
+
+16 Science decks carry a lesson-config. Each deck's ruled week was taken from its workbook cell through the spine — never from its filename, never from its label — and compared with the label it prints.
+
+| pathway | decks | ruled weeks | terms | verdict |
+|---|---|---|---|---|
+| BUILD Science | 6 | 14, 15, 16 | Aut2·W7, Spr1·W1, Spr1·W2 | 6 OK |
+| GROW Science | 4 | 15, 16 | Spr1·W1, Spr1·W2 | 4 OK |
+| LAUNCH Science | 6 | 14, 15 | Aut2·W7, Spr1·W1 | 3 OK, **3 RED** |
+
+**No Science deck is ruled outside a term or onto a closure day** — every ruled week lands in 14–16, inside Autumn 2 and Spring 1, and the absolute numbering skips the half-term weeks by construction.
+
+The three reds are one defect in three files. `SCI_L_A2_W7L1/L2/L3_Topics_2_3_Assessment_*` each print `"week": 15` while their cell `LAUNCH Weekly - Autumn!C45` rules **week 14** (Aut2·W7). Their FILENAMES say `A2_W7`, which agrees with TRACE — so the label was wrong and the filename was right, and H12-3 settles the direction: the label is fixed from TRACE and no file is renamed.
+
+Patched by script, one value per file. The patch asserts, per file, that the parsed config differs from the original in the `week` key ALONE before it writes, so a stray edit cannot ride along. Diff is three lines. Re-census: **16 Science decks, 0 label≠TRACE.** g27 PASS, g29 101 PASS / 0 RED / 3 SKIP (targets sha256 `e3415a8bad6ae6bd`), battery 30 tools / 362 controls PASS. Zero units, no content edits.
