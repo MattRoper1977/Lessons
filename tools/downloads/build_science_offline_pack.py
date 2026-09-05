@@ -78,7 +78,7 @@ def build_offline(repo: Path, definition: dict, site_hud: Path, expected_hud_sha
             changes.append({'source':path,'member':'Lessons/'+path,'sourceSha256':digest(data),'packagedSha256':digest(transformed),'adaptations':kinds})
         (stage / 'hud.js').write_bytes(raw_hud)
         (stage / 'offline-hud-navigation.js').write_bytes(adapter)
-        lesson_entries = ['Lessons/'+p for p in definition['files'] if p.endswith('.html')]
+        lesson_entries = ['Lessons/'+p for p in definition.get('lessons',definition['files']) if p.endswith('.html')]
         labels = {p: lesson_label((stage / p).read_bytes()) for p in lesson_entries}
         (stage / 'Lessons/index.html').write_bytes(portal(definition['title'], lesson_entries, 'Lessons/index.html', labels))
         adaptation = {'schema':'science-offline-hud-adaptation-v1','required':True,
@@ -92,6 +92,7 @@ def build_offline(repo: Path, definition: dict, site_hud: Path, expected_hud_sha
         adapted = dict(definition)
         adapted['continuations'] = {'Lessons/'+p:r for p,r in definition.get('continuations',{}).items()}
         adapted['entry'] = 'Lessons/index.html'
+        adapted['lessons'] = lesson_entries
         adapted['files'] = ['Lessons/'+p for p in definition['files']] + ['Lessons/index.html','hud.js','offline-hud-navigation.js','OFFLINE_ADAPTATION.json']
         report = build(stage, adapted, output)
         report['offlineAdaptation'] = adaptation

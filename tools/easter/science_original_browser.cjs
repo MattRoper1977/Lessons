@@ -152,6 +152,7 @@ async function exercise(t,viewport={width:1280,height:800},responsive=false){
         await page.emulateMedia({media:'screen'});
       }
     });
+    if(t.pathway==='LAUNCH') await require('../science_pack/browser_checks.cjs').exercise({page,root,out,measured,move,current,id,viewport,responsive,report,t});
     await measured(id+'/no-runtime-or-unreviewed-resource-errors',async()=>{
       assert.equal(report.errors.length,before.errors);assert.equal(report.missingLocal.length,before.missing);assert.equal(report.external.length,before.external);
     });
