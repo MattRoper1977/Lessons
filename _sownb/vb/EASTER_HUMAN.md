@@ -623,3 +623,13 @@ I did not decide it, because extending a g23 ruling to g26 moves two decks from 
 
 **If chrome is chrome:** g26 excludes `.lundy`, the title slide and the running head, the two decks pass on their own prose, and the gate finally measures the same text §9 says to measure.
 **If it is not:** the refrain's own wording is the thing to simplify — once, in the donor, which fixes all 42 and every future Art deck at a stroke. That is the better outcome if you want the number to stay honest, and it is a content change, so it needs you.
+
+## AAV-H5 — a week tier in the hub needs a week in the catalogue
+
+§6b asks for pathway → subject → term → week. The first two are built and shipped. The last two are not, because the data does not exist and §9 forbids inventing it.
+
+Of 540 catalogue rows typed `lesson`, **51** carry a lesson-config and **9** have a workbook cell that resolves to a spine week. That is 1% coverage. A term/week tier built on it would be a navigation promise the catalogue cannot keep.
+
+The tempting shortcut is the one g27 exists to stop: most decks say "W7" in their filename or their card title, and reading it from there would populate the tier instantly and wrongly — a filename is a label, and this estate has already been bitten by a label disagreeing with TRACE (three LAUNCH Science decks this same night, fixed in #318).
+
+The honest route, when you want it: add a TRACE-derived `week` and `term` to each catalogue row at the point the catalogue is built, sourced from the deck's own `cells` through CALENDAR_SPINE.json — the same derivation #318 used. Rows whose deck has no resolvable cell get no week and simply do not appear under a week heading, which is truthful rather than tidy. That is catalogue work and lands alone.

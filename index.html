@@ -160,6 +160,30 @@ border-radius:99px;padding:.18rem .55rem;text-transform:uppercase}
 .pathhead{display:flex;align-items:center;gap:.55rem;margin:1.15rem 0 .55rem;padding:.4rem .8rem;
 border-left:5px solid;border-radius:8px;background:var(--card)}
 .pathhead svg{width:26px;height:26px;flex:none}
+/* §6b — pathway lanes. BUILD / GROW / LAUNCH are the top level of the browse
+   view; subject sits inside a lane. Colours come from the pathway tokens the
+   estate already defines (--b-* border, --t-* text), so the lanes and the
+   cards inside them cannot drift apart. */
+.lane{border:1px solid var(--line,#dcdcd2);border-left:6px solid var(--mut,#888);border-radius:14px;margin:1.1rem 0;background:#fff;overflow:hidden}
+.lane>summary{list-style:none;cursor:pointer;padding:.85rem 1rem;display:flex;align-items:center;gap:.7rem;flex-wrap:wrap}
+.lane>summary::-webkit-details-marker{display:none}
+.lane>summary:focus-visible{outline:3px solid var(--navy,#12305c);outline-offset:-3px}
+.lanehead .lh-mark svg{width:30px;height:30px;flex:none;display:block}
+.lanehead .lh-text{display:flex;flex-direction:column;line-height:1.25;min-width:0}
+.lanehead .ph-name{font-weight:800;letter-spacing:.06em;font-size:1rem}
+.lanehead .ph-sub{color:var(--mut,#666);font-size:.78rem;font-weight:400}
+.lane.l-BUILD{border-left-color:var(--b-build)}
+.lane.l-BUILD .lanehead .ph-name{color:var(--t-build)}
+.lane.l-GROW{border-left-color:var(--b-grow)}
+.lane.l-GROW .lanehead .ph-name{color:var(--t-grow)}
+.lane.l-LAUNCH{border-left-color:var(--b-launch)}
+.lane.l-LAUNCH .lanehead .ph-name{color:var(--t-launch)}
+.lane>.acc,.lane>.legacy{margin:0 .75rem .75rem}
+.acc.subacc>summary{font-size:.95rem}
+.pill.tier.OTHER{background:var(--mut,#8a8a80);color:#fff}
+/* the lane size, shown on the journey tile that already selects it */
+.j-count{display:block;font-size:clamp(.68rem,2.4vw,.8rem);font-weight:700;color:var(--mut);margin-top:.15rem;letter-spacing:.01em}
+@media (prefers-reduced-motion:reduce){.lane{transition:none}}
 .pathhead .ph-name{font-weight:800;letter-spacing:.06em;font-size:.9rem}
 .pathhead .ph-sub{color:var(--mut);font-size:.78rem}
 .pathhead.BUILD{border-color:var(--b-build)}.pathhead.BUILD .ph-name{color:var(--t-build)}
@@ -387,6 +411,8 @@ svg:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 52 V30" stroke="#2
 LAUNCH:{name:"LAUNCH PATHWAY",sub:"Mastery in action — independent, critical application.",
 svg:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 8 Q42 18 42 32 L42 42 H22 L22 32 Q22 18 32 8 Z" fill="#DDE3EA"/><circle cx="32" cy="27" r="5" fill="#232C55"/><path d="M27 42 Q32 54 37 42 Q32 47 27 42 Z" fill="#F2A24A"/></svg>'},
 OTHER:{name:"RESOURCES",sub:"Hubs, teacher guides and cross-pathway material.",svg:''}};
+function lanehead(t,n,subs){const p=PATH[t]||{name:t,sub:"",svg:""};
+return `<span class="lh-mark">${p.svg}</span><span class="lh-text"><span class="ph-name">${p.name}</span><span class="ph-sub">${esc(p.sub||"")}</span></span><span class="apill main">${n}</span><span class="apill">${subs} subject${subs===1?"":"s"}</span>`}
 function pathhead(t,n){const p=PATH[t];return `<div class="pathhead ${t}">${p.svg}<div><span class="ph-name">${p.name}</span> · <span class="ph-sub">${p.sub}</span> <span class="ph-sub">(${n})</span></div></div>`}
 const SUITE="Art · Teesside Studio Suite";
 const PRIORITY=[SUITE,"Science · Teesside","Humanities","BUILD Vocational & PfA","GROW Vocational & PfA","LAUNCH Vocational & PfA","Primary Science","Tutor Time · BV · BF · KCSIE"];
@@ -403,7 +429,9 @@ if(r.type==="teacher"||r.type==="pupil")o.push([IC.tab,"interactive"]);
 return o.length?`<div class="fmt">${o.map(x=>`<span title="${x[1]}" aria-label="${x[1]}" role="img">${x[0]}</span>`).join("")}</div>`:""}
 function actLabel(r){return {lesson:"LAUNCH SLIDES →",revision:"LAUNCH SLIDES →",game:"PLAY →",hub:"OPEN HUB →",teacher:"OPEN TOOL →",pupil:"OPEN APP →",support:"OPEN PACK →"}[r.type]||"OPEN →"}
 function card(r){const t=r._tier,_s=r.file||r.url||"",href=esc(safeHref(_s));
-const pills=BROWSING?"":`<div class="chips">${t?`<span class="pill tier ${t}">${t}</span>`:""}<span class="pill${r.year==="2026-27"?" yr-new":""}">${r.year==="2026-27"?"2026–27":"2025–26"}</span></div>`;
+// §6b: the pathway tag is on EVERY card, in every view. It used to vanish in the
+// browsing view, which is exactly the view somebody browsing by pathway is in.
+const pills=`<div class="chips">${t?`<span class="pill tier ${t}">${t}</span>`:`<span class="pill tier OTHER">RESOURCE</span>`}${BROWSING?"":`<span class="pill${r.year==="2026-27"?" yr-new":""}">${r.year==="2026-27"?"2026–27":"2025–26"}</span>`}</div>`;
 let _dt=r.title||"";if(!BROWSING&&t&&_dt.indexOf(t+" · ")===0)_dt=_dt.slice((t+" · ").length);
 return `<article class="card${t?" t-"+t:""}"><div class="kind">${t&&BROWSING?esc(t):esc(r.subject)+" · "+esc(NICE[r.type]||r.type)}</div>
 <h3><a href="${href}">${esc(_dt)}</a></h3><p>${esc(r.desc||r.description||"")}</p>${pills}
@@ -417,7 +445,7 @@ function setFilterStatus(shown){
 function clearFilters(){
   $("#search").value="";$("#subject").value="";$("#type").value="";TIER="";
   document.querySelectorAll(".j-tier").forEach(x=>x.setAttribute("aria-pressed","false"));
-  buildQuicknav();render();
+  buildQuicknav();buildLaneCounts();render();
 }
 function suiteCallout(n){return `<div class="callout"><span class="stamp">ARTS AWARD · TEESSIDE ART</span>
 <h3>Teesside Art Studio Suite</h3>
@@ -428,21 +456,24 @@ function render(){const q=$("#search").value.toLowerCase(),s=$("#subject").value
 const a=ALL.filter(r=>(!q||[r.title,r.desc||r.description||"",r.subject,r.family,r._tier,...(r.keywords||[])].join(" ").toLowerCase().includes(q))
 &&(!s||r.subject===s)&&(!t||(NICE[r.type]||r.type)===t)&&(!y||r.year===y)&&(!TIER||r._tier===TIER));
 const browsing=!q&&!s&&!t&&!TIER;BROWSING=browsing;
-if(browsing){ // organised view: one section per subject, A→Z
-  const bySub={};a.forEach(r=>{(bySub[r.subject]=bySub[r.subject]||[]).push(r)});
-  const subs=Object.keys(bySub).sort(subjOrder);
+if(browsing){ // pathway-first: BUILD / GROW / LAUNCH are the lanes, subject sits inside one
   const inYear=ALL.filter(r=>!YEAR||r.year===YEAR).length;
-  $("#cards").innerHTML=subs.map((subj,i)=>{
-    const rows=bySub[subj],byT={BUILD:[],GROW:[],LAUNCH:[],OTHER:[]};
-    rows.forEach(r=>{(byT[r._tier&&byT[r._tier]?r._tier:"OTHER"]).push(r)});
-    const tiers=["BUILD","GROW","LAUNCH","OTHER"].filter(t=>byT[t].length);
-    const oneGroup=tiers.length===1;
-    const body=tiers.map(t=>
-      (oneGroup&&t==="OTHER"?"":pathhead(t,byT[t].length))+`<div class="grid">${byT[t].map(card).join("")}</div>`).join("");
-    if(LEGACY[subj])return `<details class="legacy"><summary>${esc(subj)} · ${rows.length} <span class="note">${LEGACY[subj]} Tap to show.</span></summary>${body}</details>`;
-    const kinds={};rows.forEach(r=>{const k=(r.type||"resource").toLowerCase();kinds[k]=(kinds[k]||0)+1});
-    const mix=Object.entries(kinds).sort((a,b)=>b[1]-a[1]).slice(0,2).map(([k,n])=>`<span class="apill">${n} ${esc(k)}${n>1&&!k.endsWith("s")?"s":""}</span>`).join("");
-    return `<details class="acc"${i===0?" open":""}><summary><span class="aname">${esc(subj)}</span><span class="apill main">${rows.length}</span>${mix}${i===0?`<span class="tot2">${inYear} in this collection</span>`:`<span class="chev" aria-hidden="true">▾</span>`}${i===0?`<span class="chev" aria-hidden="true">▾</span>`:""}</summary>${subj===SUITE?suiteCallout(rows.length):""}${body}</details>`;
+  const byTier={BUILD:[],GROW:[],LAUNCH:[],OTHER:[]};
+  a.forEach(r=>{(byTier[r._tier&&byTier[r._tier]?r._tier:"OTHER"]).push(r)});
+  const lanes=["BUILD","GROW","LAUNCH","OTHER"].filter(t=>byTier[t].length);
+  $("#cards").innerHTML=lanes.map((t,li)=>{
+    const lrows=byTier[t];
+    const bySub={};lrows.forEach(r=>{(bySub[r.subject]=bySub[r.subject]||[]).push(r)});
+    const subs=Object.keys(bySub).sort(subjOrder);
+    const body=subs.map(subj=>{
+      const rows=bySub[subj];
+      const grid=`<div class="grid">${rows.map(card).join("")}</div>`;
+      if(LEGACY[subj])return `<details class="legacy"><summary>${esc(subj)} · ${rows.length} <span class="note">${LEGACY[subj]} Tap to show.</span></summary>${grid}</details>`;
+      const kinds={};rows.forEach(r=>{const k=(r.type||"resource").toLowerCase();kinds[k]=(kinds[k]||0)+1});
+      const mix=Object.entries(kinds).sort((a,b)=>b[1]-a[1]).slice(0,2).map(([k,n])=>`<span class="apill">${n} ${esc(k)}${n>1&&!k.endsWith("s")?"s":""}</span>`).join("");
+      return `<details class="acc subacc" open><summary><span class="aname">${esc(subj)}</span><span class="apill main">${rows.length}</span>${mix}<span class="chev" aria-hidden="true">▾</span></summary>${subj===SUITE?suiteCallout(rows.length):""}${grid}</details>`;
+    }).join("");
+    return `<details class="lane l-${t}"${li===0?" open":""}><summary class="lanehead">${lanehead(t,lrows.length,subs.length)}${li===0?`<span class="tot2">${inYear} in this collection</span>`:""}<span class="chev" aria-hidden="true">▾</span></summary>${body}</details>`;
   }).join("");
 }else{
   let empty='<p class="status">No matches — try fewer words.</p>';
@@ -455,6 +486,20 @@ if(browsing){ // organised view: one section per subject, A→Z
 const bits=[];if(TIER)bits.push(TIER+" stage");if(YEAR)bits.push(YEAR==="2026-27"?"2026–27 collection":"2025–26 library");
 $("#count").textContent=`${a.length} of ${ALL.length} resources${bits.length?" · "+bits.join(" · "):""}`;
 setFilterStatus(a.length);}
+function buildLaneCounts(){
+  // §6b: the pathway control already existed as the journey tiles - adding a
+  // second row of the same three buttons would have been duplication, not
+  // navigation. What they lacked was the size of each lane, so that is what
+  // is added, DERIVED from the catalogue rows actually loaded rather than typed.
+  const n={BUILD:0,GROW:0,LAUNCH:0};
+  ALL.forEach(r=>{if((!YEAR||r.year===YEAR)&&n[r._tier]!==undefined)n[r._tier]++});
+  document.querySelectorAll(".j-tier[data-tier]").forEach(b=>{
+    const t=b.dataset.tier;let c=b.querySelector(".j-count");
+    if(!c){c=document.createElement("span");c.className="j-count";b.querySelector(".j-name").after(c);}
+    c.textContent=`${n[t]} lesson${n[t]===1?"":"s"} in this collection`;
+    b.setAttribute("aria-pressed",TIER===t?"true":"false");
+  });
+}
 function buildQuicknav(){
   const inCol={},total={};
   ALL.forEach(r=>{total[r.subject]=(total[r.subject]||0)+1;if(!YEAR||r.year===YEAR)inCol[r.subject]=(inCol[r.subject]||0)+1});
@@ -469,7 +514,7 @@ function buildQuicknav(){
 $("#cards").addEventListener("click",e=>{
   if(!e.target.closest("#widenYear"))return;
   YEAR="";document.querySelectorAll(".ytab").forEach(x=>x.setAttribute("aria-pressed",x.dataset.year===""?"true":"false"));
-  buildQuicknav();render();
+  buildQuicknav();buildLaneCounts();render();
 });
 $("#quicknav").addEventListener("click",e=>{
   const b=e.target.closest("button[data-sub]");if(!b)return;
@@ -485,7 +530,7 @@ $("#quicknav").addEventListener("click",e=>{
 document.querySelectorAll(".ytab").forEach(b=>b.addEventListener("click",()=>{
   YEAR=b.dataset.year;
   document.querySelectorAll(".ytab").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));
-  buildQuicknav();render();
+  buildQuicknav();buildLaneCounts();render();
 }));
 function fillTabCounts(){const c={"2026-27":0,"2025-26":0,"":ALL.length};
   ALL.forEach(r=>{if(c[r.year]!==undefined)c[r.year]++});
@@ -532,9 +577,9 @@ function renderLatest(){
 }
 fetch("resources.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error(`resources.json ${r.status}`);return r.json()}).then(d=>{if(!Array.isArray(d))throw new Error("Invalid resources.json");ALL=d;
 ALL.forEach(r=>{r._tier=tierOf(r)});
-fillSelect("subject",d.map(r=>r.subject));fillSelect("type",d.map(r=>NICE[r.type]||r.type));buildQuicknav();fillTabCounts();render();renderLatest()})
+fillSelect("subject",d.map(r=>r.subject));fillSelect("type",d.map(r=>NICE[r.type]||r.type));buildQuicknav();buildLaneCounts();fillTabCounts();render();renderLatest()})
 .catch(()=>{$("#count").textContent="Couldn't load resources.json"});
-["search","subject","type"].forEach(id=>$("#"+id).addEventListener(id==="search"?"input":"change",()=>{if(id==="subject")buildQuicknav();fillTabCounts();render()}));document.addEventListener("click",e=>{const b=e.target.closest("[data-suite]");if(!b)return;
+["search","subject","type"].forEach(id=>$("#"+id).addEventListener(id==="search"?"input":"change",()=>{if(id==="subject")buildQuicknav();buildLaneCounts();fillTabCounts();render()}));document.addEventListener("click",e=>{const b=e.target.closest("[data-suite]");if(!b)return;
 $("#subject").value=SUITE;TIER=b.getAttribute("data-suite")||"";$("#search").value="";render();
 const top=document.querySelector(".callout");if(top&&top.scrollIntoView)top.scrollIntoView({behavior:scrollBehavior,block:"start"});});
 (function(){document.addEventListener("click",function(e){

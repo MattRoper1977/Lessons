@@ -2142,3 +2142,32 @@ What was NOT done, and why: neither Explore deck was reworded. Both overshoot so
 g26 gained six controls of its own and now sits in the battery — it had `--self-test` in neither form before, so nothing ever exercised it. They pin the bug so it cannot return (`concatenatedPseudoWordIsNotProduced`), assert the boundary is inserted (`blockBoundaryIsAWordBoundary`), and guard the two ways a whitespace fix goes wrong: inline tails must survive, and a boundary must not be invented inside plain prose. One control deliberately proves `visible_text` does NOT itself drop staff text — excluding the adult voice is `measure()`'s job, and conflating the two would hide an addressee bug inside a whitespace fix. Battery **30 tools / 362 controls → 31 tools / 368**, all fired, PASS.
 
 Correction to the AAV-H3 note, made after counting rather than assuming: g26 and g16_v2 were never "silent gates" in g28's sense, because they declared no controls at all. Enumerating every tool in `_sownb/vb/tools`, g28 was the ONLY one that published controls the battery could not see. After that repair and this one, the only unlisted control-publisher is the battery itself, which is correct — it cannot run itself. The hand-typed roster remains a latent hazard for the NEXT gate added; it currently has no other instance.
+
+
+## §6 — the hub: pathway is now the shape of the page, and the click count did not move
+
+**§6a audit, measured in Chromium against the served hub, not read off the source.** The hub is ALREADY catalogue-driven: it fetches `resources.json` (734 rows) and renders what it finds. Only three `.html` links are hard-coded in `index.html` — the Science BUILD/GROW/LAUNCH `v3_40min` suite indexes — and all three **do** have catalogue rows, so nothing needed converting.
+
+Pathway was NOT visible before subject. The browse view grouped subject-first: **12 top-level subject accordions**, with BUILD/GROW/LAUNCH appearing **17 times** as sub-headings scattered inside them. To see everything in one pathway you visited a dozen sections. And in that view **not one of the 597 cards carried a pathway tag** — the tier pill was suppressed in exactly the view somebody browsing by pathway is looking at.
+
+**Click depth: 2 before, 2 after. It did not improve, and saying otherwise would be false.** The hub already had a working one-click pathway control — the journey tiles carry `data-tier` and filter the grid — so the path *BUILD tile → card* was always two clicks. Measured by driving the real browser both ways rather than reasoning about it, which is the only reason the claim is not in this ledger as a win.
+
+What actually changed is the shape of the unfiltered page:
+
+| | before | after |
+|---|---|---|
+| top-level sections | 12 subject accordions | **4 pathway lanes** |
+| pathway groups scattered across the page | 17 | **0** |
+| cards carrying a visible pathway tag | **0 / 597** | **597 / 597** |
+| lane size shown on the pathway control | absent | 208 / 140 / 158, derived |
+| clicks to open a BUILD Science lesson | 2 | 2 |
+
+Lanes are coloured from the pathway tokens the hub already defines — `--b-build` / `--t-build` and their GROW and LAUNCH siblings — so a lane and the cards inside it cannot drift apart, and no new colour was invented.
+
+**A duplication was built and then removed.** The first attempt added a second row of three pathway buttons. Rendering it showed the hub already had that control at the top of the page, so the new row was deleted; what those tiles actually lacked was the size of each lane, and that is what they gained instead — derived from the catalogue rows loaded, never typed, so a pathway that ships nothing reads 0 rather than a stale number.
+
+**"→ term → week" is NOT built, and this is the measurement behind that.** §9 permits a week from TRACE only — never a filename, never a title — and of the **540** catalogue rows typed `lesson`, only **51** carry a lesson-config at all and only **9** have a cell that resolves to a spine week. **1%.** A term/week tier over 1% coverage would be a navigation promise the catalogue cannot keep, and the alternative — reading "W7" out of a filename or a card title — is the exact thing g27 exists to prevent. Recorded as **AAV-H5**: the catalogue needs a TRACE-derived week field before a week tier can exist, and that is catalogue work, which §7 lands last and alone.
+
+Unchanged as required: "Latest additions", the estate back-button, search, the year selector, subject filter and type filter. No deck moved, no deck renamed, zero units.
+
+**§6c control shipped.** `tools/verify_hub_catalogue.py` reds any hub entry with no catalogue row, and carries six controls of its own so a green means something: a link with a row passes, a link without one reds, the orphan is NAMED, navigation anchors (`#top`, `index.html`, `404.html`, off-site) do not manufacture reds, a leading `./` is recognised as the same link, and an empty hub is visibly vacuous rather than quietly green. Wired into the VB gate job with its self-test running FIRST, so a green cannot be a gate that has stopped being able to fire. Live: 3 hub links against 734 catalogue rows, PASS.
