@@ -10,9 +10,19 @@
     for(const host of [title,shared])if(host&&!host.querySelector('[data-open-science-pack]'))host.append(entry.content.cloneNode(true));
   }
   if(dialog){
-    // Native dialog supplies focus containment, Escape and focus return.
-    // Keep the deck's global arrow/space shortcuts out of this resource surface.
-    dialog.addEventListener('keydown',e=>e.stopPropagation());
+    // Keep Tab within the teaching panel, including the last-to-first boundary.
+    // Native modal navigation may otherwise hand focus to browser chrome.
+    // Escape and focus return remain the native dialog behaviour.
+    dialog.addEventListener('keydown',e=>{
+      e.stopPropagation();
+      if(e.key!=='Tab')return;
+      const focusable=[...dialog.querySelectorAll('a[href],button,textarea,input,select,summary,iframe,[tabindex]')]
+        .filter(el=>!el.disabled&&el.tabIndex>=0&&el.getClientRects().length>0);
+      const first=focusable[0],last=focusable[focusable.length-1];
+      if(!first){e.preventDefault();dialog.focus();return;}
+      if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+      else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+    });
     dialog.addEventListener('close',()=>{
       for(const frame of dialog.querySelectorAll('iframe'))frame.remove();
       for(const button of dialog.querySelectorAll('[data-play-video]'))button.hidden=false;
