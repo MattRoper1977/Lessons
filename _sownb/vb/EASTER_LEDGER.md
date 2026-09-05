@@ -2349,3 +2349,5 @@ Local preflight: twelve reproducible ZIPs, 130 declared lessons, three support p
 First run 33965689595 accepted nine packs and found the existing fixed Guidance button intercepting Next in BUILD, GROW and LAUNCH Autumn 2. The exact shared source mechanism occurs in 47 selected lessons. It is docked inside their existing toolbar with a 44px minimum target; reverse application reproduces every prior byte. No teaching or unit coverage changes. All 47 routes now require real desktop and touch navigation checks.
 
 The first PR also woke W7 because it edited Watch main, whose frozen fence permits only that maintenance scope. Download acceptance is now a job in the already monitored, unfiltered FieldOps workflow. The new workflow and redundant watch registration are removed. No boundary rule, trigger-list control or W7 byte is changed.
+
+The first docking attempt passed all fifteen broader representatives, but the new focused check found toolbar content overflowing beneath Next on desktop. Run 33967202484 correctly rejected it. Constrain and horizontally scroll the existing left control group at every width; retain all 94 focused cases.

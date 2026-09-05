@@ -223,7 +223,16 @@ async function inspectAward(page,row,root,slotsRequired){
           // quietly erase the evidence or count it as a product failure.
           packRow.runtime={...observations,failedRequests:observations.failedRequests.slice(0,before)};
         }
-      }catch(error){report.failures.push({packId:pack.id,message:error.message,runtime:observations});}
+      }catch(error){
+        let geometry=null;
+        try{
+          geometry=await page.locator('.controls,.controls .left,.controls .right,.n6m-guide-btn,#next,#prev').evaluateAll(nodes=>nodes.map(n=>({
+            tag:n.tagName,id:n.id,class:n.className,box:n.getBoundingClientRect().toJSON(),
+            overflowX:getComputedStyle(n).overflowX,scrollWidth:n.scrollWidth,clientWidth:n.clientWidth})));
+          if(args.artifacts)await page.screenshot({path:path.join(args.artifacts,pack.id+'-failure.png'),fullPage:true});
+        }catch(_){}
+        report.failures.push({packId:pack.id,message:error.message,pageUrl:page.url(),geometry,runtime:observations});
+      }
       finally{await context.close();}
     }
     assert.equal(report.packs.length,12,'All twelve packs must pass');
