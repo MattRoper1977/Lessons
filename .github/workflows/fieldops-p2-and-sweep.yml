@@ -274,8 +274,14 @@ jobs:
     name: Merged is not served - the placed labs and the Studio
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
 
       # The offline controls run on EVERY event, including a PR. The instrument
       # has to be provable somewhere its network legs cannot run, or the only
@@ -292,6 +298,8 @@ jobs:
 
       - name: The instrument's offline controls
         run: |
+          python tools/test_served_publications.py | tee "$RUNNER_TEMP/served-publication-controls.txt"
+          node tools/test_verify_served.mjs | tee -a "$RUNNER_TEMP/served-publication-controls.txt"
           node tools/verify_fieldops_served.mjs --self-test | tee "$RUNNER_TEMP/served-selftest.txt"
           node tools/verify_served.mjs --self-test \
             --site "$RUNNER_TEMP/site" --apps "$RUNNER_TEMP/apps" --shelf "$RUNNER_TEMP/shelf" \
@@ -318,21 +326,28 @@ jobs:
       # deployed, so fetching production from one compares the live estate
       # against a tree that is not live - it would go red for being a PR.
       #
-      # A push-time run can race the Pages deploy. The comparison names both
-      # hashes and both sizes, so a lag read is recognisable rather than
-      # mysterious; re-dispatch settles it.
-      # R0.4. 200 is a precondition; byte-identity to the committed blob is the
-      # verdict. The retry bound is stated in the tool (4 attempts, 20s apart)
-      # and a mismatch that cannot be told apart from a live deploy is
-      # INCONCLUSIVE, never a red.
-      - name: Every subject serves, unredirected, byte-identical
+      # The split deliberately transforms source bytes and sends games to
+      # their own domain. Recover the exact output of a successful deployment
+      # for each checked-out source; do not rebuild with a newer Site builder
+      # or consult stale legacy Pages build metadata. Missing proof fails closed.
+      - name: Recover successful source-bound publication artifacts
         if: github.event_name != 'pull_request'
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          sleep 60
+          python tools/prepare_served_publications.py \
+            --site "$RUNNER_TEMP/site" --lessons "$GITHUB_WORKSPACE" \
+            --apps "$RUNNER_TEMP/apps" --shelf "$RUNNER_TEMP/shelf" \
+            --output "$RUNNER_TEMP/served-publications" --wait-seconds 240 \
+            | tee "$RUNNER_TEMP/served-publications.txt"
+
+      - name: Every original subject serves the exact successful publication
+        if: github.event_name != 'pull_request'
+        run: |
           node tools/verify_served.mjs \
             --site "$RUNNER_TEMP/site" --apps "$RUNNER_TEMP/apps" --shelf "$RUNNER_TEMP/shelf" \
+            --publications "$RUNNER_TEMP/served-publications/publications.json" \
+            --output "$RUNNER_TEMP/served-result.json" \
             | tee "$RUNNER_TEMP/served.txt"
 
       - name: Result block
@@ -344,6 +359,8 @@ jobs:
             cat "$RUNNER_TEMP/served-selftest.txt" 2>/dev/null || echo '(did not run)';
             echo '```'; echo '### All five controls'; echo '```';
             cat "$RUNNER_TEMP/served-controls.txt" 2>/dev/null || echo '(did not run)';
+            echo '```'; echo '### Publication provenance and regression controls'; echo '```';
+            cat "$RUNNER_TEMP/served-publications.txt" "$RUNNER_TEMP/served-publication-controls.txt" 2>/dev/null || echo '(did not run)';
             echo '```'; } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload
@@ -351,7 +368,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: serve-proof
-          path: ${{ runner.temp }}/served*.txt
+          path: |
+            ${{ runner.temp }}/served*.txt
+            ${{ runner.temp }}/served-result.json
+            ${{ runner.temp }}/served-publications/publications.json
           if-no-files-found: error
 
   pr-census:
