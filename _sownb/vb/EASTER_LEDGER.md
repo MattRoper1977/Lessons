@@ -2259,3 +2259,36 @@ Open cells: ASDAN 168 · Humanities 99 · Art 66 · Science 42. By lane: LAUNCH 
 ### Forecast at the measured rate
 
 Batches 1–4 landed 2 + 14 + 24 + 19 = **59 authored units**. At ≤3 honest cells per deck and a 24-unit ceiling, 375 open cells need on the order of **125–190 deck plans**, i.e. **6 to 8 full batches** — every deck carrying adversarial review before gating and the full gate stack after it. That is the honest distance to S1, and it is not one session's work at the quality this estate holds itself to.
+
+
+## The watch could not be woken by two of the workflows it judges
+
+`Watch main — a red nobody is told about is a red nobody has` has been RED on **every main commit since #313** — through #314, #315, #316, and through this order's own #317, #318 and #319. Not once caused by the commit it ran on. Its own trigger-list control was the thing failing:
+
+    [FAIL] derived but NOT listed — this workflow's completion would never wake the watch: Arts Award legacy reader
+    [FAIL] derived but NOT listed — this workflow's completion would never wake the watch: Arts Award slot reader
+
+`workflow_run` has no wildcard — GitHub requires workflows to be named — so the watch keeps a hand-written list and, knowing exactly how that fails, ships a control that derives the real set from `.github/workflows/` and reds on any drift. The file says so in its own header: *"the list cannot drift silently; that is the only condition on which naming it is acceptable."*
+
+The AAE chain added `arts-award-reader.yml` and `arts-award-legacy-reader.yml` in #299 and never registered them. From #299 until now, **if either Arts Award workflow had gone red on main, nothing would have told anyone** — which is the precise failure the watch is named after. A must-fire control silent on main is §12-S3, so this is repaired alone, zero units.
+
+**The repair found a second defect, and the first attempt triggered it.** Adding the two names WITH an explanatory comment between them left the control still red at 13 listed. The parser matches `workflows:\s*\n((?:\s*-\s*.+\n)+)` — a CONTIGUOUS run of `- ` lines — so the first comment inside the block ends the run and every entry after it reads as unlisted. A future editor adding a routine comment mid-list would silently un-watch every workflow below it, and the diagnosis would read "derived but NOT listed", pointing at the workflows rather than at the comment.
+
+Fixed by keeping the block unbroken and putting the note ABOVE the key, where it now warns the next editor explicitly. The parser itself is NOT changed: the control did not fail here — it reddened correctly, on my truncation as well as on the original drift — and §8c keeps the mechanism closed unless a control fails. Recorded as **AAV-H8**.
+
+After: `--verify-trigger-list` PASS, *"the trigger list is exactly the derived set (15 workflow(s))"*, and the watch's own 15-control self-test still PASS at 0 failed. YAML re-parsed.
+
+
+## Codex continuation — 5 September 2026
+
+PR #320 merged at `cb8dd8c836c305ba112f5167919a1f8a41416bf1` after 8/8 applicable checks passed on `ab3503d4213ef118209f39575488b5de190d088f`. The full merge tree equals the reviewed tree. The original candidate failed the W7 boundary solely because these two campaign notes accompanied the watch workflow. The repair was narrowed to that workflow; its notes are restored above in the campaign transaction. No W7 fence or served game bytes changed. Pages, FieldOps, W7 and Watch subsequently passed.
+
+### Correction to the interim census
+
+The 596/221/375 readback used the spine's stale absolute-week field. Twenty-three Spring 2 week-six cells are explicitly NOT-TIMETABLED under the existing ruled-week function. The correct boundary is **573 scoped, 221 lexically recognised, 352 open for semantic review**. The original 262-plan file and all coverage thresholds remain unchanged. These open candidates must be checked against actual existing teaching; they are not an instruction to manufacture 352 missing lessons. Exact excluded references and the source warning are in `evidence/bronze_activities/scope_correction.json`.
+
+### Bronze activity revision batch — fourteen units
+
+Recovered the source draft and checked the five known review findings against it. Repaired two further stale cues, then replaced seven primary tasks with genuine labelling, prediction and error-finding work. The final sequence contains six teaching shapes; maximum count is three, no consecutive shape repeats, and every six-deck window contains at least four shapes. Interactive implementation uses native select, radio and ordering controls with the same pupil questions/options in print and a separate teacher key.
+
+All fourteen rebuilds pass comparative content checks, including g18/g23/g25/g26/g28/g29, with zero donor sentence leaks. g16/g19/g24 remain explicitly PRE-EXISTING; this batch does not claim those historical chassis-contract conflicts resolved. All 136 actual-spec DOM/schema controls pass. Browser interactions and visual PDF review are release gates and are still pending at this checkpoint. The fourteen existing canonical lesson URLs, award parts, source plans, 40-minute allocations and nine-stage structure remain bound. This is fourteen revised units, zero new workbook-cell coverage.

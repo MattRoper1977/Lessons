@@ -4,6 +4,7 @@ on:
     paths:
       - 'tools/artsaward/slot_reader*'
       - 'tools/easter/author_deck.py'
+      - 'tools/easter/build_activity_targets.py'
       - 'tools/easter/award_*'
       - 'tools/easter/classroom_*'
       - 'tools/easter/CLASSROOM_TARGETS.json'
@@ -49,6 +50,29 @@ jobs:
             fi
           done
       - name: Check the shared classroom appearance and responsive pathways
+        if: ${{ !cancelled() }}
         env:
           NODE_PATH: ${{ runner.temp }}/award-browser/node_modules
         run: node tools/easter/classroom_browser.cjs
+      - name: Check authored activity schemas and screen-print agreement
+        if: ${{ !cancelled() }}
+        run: |
+          python tools/easter/classroom_activity_verify.py > "$RUNNER_TEMP/activity-dom.json"
+          python tools/easter/build_activity_targets.py --targets tools/artsaward/BRONZE_TARGETS.json --output "$RUNNER_TEMP/activity-targets.json"
+          cmp tools/artsaward/BRONZE_ACTIVITY_TARGETS.json "$RUNNER_TEMP/activity-targets.json"
+      - name: Exercise all fourteen activities with keyboard, touch and pupil print
+        if: ${{ !cancelled() }}
+        env:
+          NODE_PATH: ${{ runner.temp }}/award-browser/node_modules
+        run: node tools/easter/classroom_activity_browser.cjs --root . --targets "$RUNNER_TEMP/activity-targets.json" --report "$RUNNER_TEMP/activity-browser.json" --artifacts "$RUNNER_TEMP/activity-previews"
+      - name: Preserve activity verification and printable previews
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bronze-activity-review-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/activity-dom.json
+            ${{ runner.temp }}/activity-browser.json
+            ${{ runner.temp }}/activity-previews
+          if-no-files-found: warn
+          retention-days: 14

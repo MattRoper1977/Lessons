@@ -82,6 +82,10 @@ _pi = importlib.util.module_from_spec(_pi_spec)
 _pi_spec.loader.exec_module(_pi)
 _plan_id = _pi.plan_id
 
+_activity_spec = importlib.util.spec_from_file_location('classroom_activity', ROOT/'tools/easter/classroom_activity.py')
+classroom_activity = importlib.util.module_from_spec(_activity_spec)
+_activity_spec.loader.exec_module(classroom_activity)
+
 
 def workbook_trace(plan: dict) -> str:
     """What this deck traces back to, for the staff sheet and the print pack.
@@ -186,12 +190,16 @@ def render_figure(spec: dict) -> str:
     return "".join(parts)
 
 
-def render_blocks(spec: list[dict]) -> list:
+def render_blocks(spec: list[dict], uid_prefix="activity") -> list:
     """Authored content -> elements. Only shapes the chassis already uses."""
     out = []
-    for b in spec:
+    for bi, b in enumerate(spec):
         kind = b.get("kind", "p")
-        if kind == "h3":
+        if kind == "activity":
+            bundle = classroom_activity.render_bundle(b['data'], f'{uid_prefix}-{bi + 1}')
+            out.extend(lh.fragments_fromstring(bundle['screen'] + bundle['staff']))
+            continue
+        elif kind == "h3":
             e = lh.Element("h3"); e.text = b["text"]
         elif kind == "list":
             e = lh.Element("ul")
@@ -207,6 +215,21 @@ def render_blocks(spec: list[dict]) -> list:
             # it because both its decks passed raw <svg>; the first content spec
             # to ask for columns got a chain and no error.
             e = lh.fromstring(render_figure({**b, "kind": b.get("shape", "chain")}))
+        elif kind == 'image':
+            if not b['src'].startswith('data:image/jpeg;base64,'):
+                raise ValueError('Lesson image must be a reviewed embedded JPEG')
+            e = lh.Element('figure', {'class':'mbm-source-picture'})
+            e.append(lh.Element('img', src=b['src'], alt=b['alt'], style='display:block;max-width:100%;width:480px;height:auto'))
+            caption = lh.Element('figcaption');caption.text = b['caption'];e.append(caption)
+            if not b['sourceUrl'].startswith('https://'):
+                raise ValueError('Picture source needs an HTTPS record')
+            source = lh.Element('a', href=b['sourceUrl'], target='_blank', rel='noopener');source.text='Picture and source record';e.append(source)
+        elif kind == 'resource':
+            if not b['url'].startswith('https://'):
+                raise ValueError('Optional resource needs an HTTPS source')
+            e = lh.Element('div', {'class':'box optional-resource'})
+            anchor = lh.Element('a', href=b['url'], target='_blank', rel='noopener');anchor.text=b['label'];e.append(anchor)
+            note = lh.Element('p');note.text=b['text'];e.append(note)
         elif kind == "staff":
             e = lh.Element("div")
             e.set("class", "box rehearsal"); e.set("data-mbm-guide", "staff")
@@ -448,7 +471,7 @@ def author(donor: Path, plan: dict, content: dict, out: Path) -> dict:
         raise SystemExit(f"donor has {len(stages)} stages, content supplies "
                          f"{len(content['stages'])}")
 
-    for st, spec in zip(stages, content["stages"]):
+    for si, (st, spec) in enumerate(zip(stages, content["stages"])):
         empty_stage(st)
         st.set("data-title", spec["title"])
         st.set("data-min", str(spec["minutes"]))
@@ -473,7 +496,7 @@ def author(donor: Path, plan: dict, content: dict, out: Path) -> dict:
             if isinstance(kid.tag, str) and "lundy-strip" in (kid.get("class") or ""):
                 anchor = kid
                 break
-        for el in render_blocks(spec["blocks"]):
+        for el in render_blocks(spec["blocks"], f'{new_id}-stage{si}'):
             if anchor is not None:
                 anchor.addprevious(el)
             else:
@@ -494,6 +517,30 @@ def author(donor: Path, plan: dict, content: dict, out: Path) -> dict:
     shared_spec.loader.exec_module(shared)
     if plan["family"].split()[0] in ("BUILD", "GROW", "LAUNCH"):
         shared.apply(tree, plan["family"], content["title"])
+    # Append the exact activity pupil task after both print rewriters. The
+    # screen, paper task and staff model all come from the same authored data.
+    activity_print = []
+    for si, stage in enumerate(content['stages']):
+        for bi, block in enumerate(stage['blocks']):
+            if block.get('kind') == 'activity':
+                bundle = classroom_activity.render_bundle(block['data'], f'{new_id}-stage{si}-{bi + 1}')
+                activity_print.append(bundle['pupilPrint'])
+    if activity_print:
+        packs = tree.xpath('//section[contains(concat(" ",normalize-space(@class)," ")," print-pack ")]')
+        if not packs:
+            raise ValueError('Interactive lesson needs an explicit pupil print pack')
+        for fragment in activity_print:
+            packs[0].append(lh.fragment_fromstring(fragment))
+        for stage in content['stages']:
+            for block in stage['blocks']:
+                if block.get('kind') == 'image':
+                    image = render_blocks([block])[0]
+                    image.set('class','mbm-source-picture mbm-source-picture-print')
+                    packs[0][-1].insert(2, image)
+        for tag, name in [('style','classroom_activity.css'),('script','classroom_activity.js')]:
+            node = lh.Element(tag, id='mbm-' + name.replace('.', '-'))
+            node.text = (ROOT/'tools/easter'/name).read_text(encoding='utf-8')
+            tree.xpath('//head' if tag == 'style' else '//body')[0].append(node)
     html = lh.tostring(tree, encoding="unicode", doctype="<!doctype html>")
 
     # lesson-config replaced wholesale: no donor field may survive
