@@ -8,3 +8,5 @@ The offline lessons retain each source name and full URL as visible text. These 
 - Science_Teesside/Grow/SCI_G_W6_Earth_And_Planets.html: [NASA: about the planets](https://science.nasa.gov/solar-system/planets/)
 - Science_Teesside/Grow/SCI_G_W7_The_Moon.html: [NASA: Moon phases](https://science.nasa.gov/moon/moon-phases/)
 - Science_Teesside/Grow/SCI_G_W7_The_Moon.html: [NASA Space Place: Moon phases and orbital periods](https://spaceplace.nasa.gov/moon-phases/)
+
+Nutrition model follow-through: [NHS — Starchy foods and carbohydrates](https://www.nhs.uk/live-well/eat-well/food-types/starchy-foods-and-carbohydrates/). Starchy foods provide energy and other nutrients; the classroom columns are examples, not exclusive food/job categories.
