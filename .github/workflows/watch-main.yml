@@ -20,6 +20,14 @@ name: Watch main — a red nobody is told about is a red nobody has
 # and a missing run and a failed run are different findings. The daily sweep is
 # what catches silence.
 
+# A comment INSIDE the list below would silently truncate it: the control
+# matches a contiguous run of "- " lines, so the first comment ends the run
+# and every entry after it reads as unlisted. Keep the block unbroken.
+#
+# "Arts Award legacy reader" and "Arts Award slot reader" arrived with the
+# AAE chain (#299) and were never registered here, so from #299 onward
+# neither could wake the watch. The trigger-list control caught it and had
+# been red on every main commit since.
 on:
   workflow_run:
     workflows:
@@ -36,6 +44,8 @@ on:
       - "WAVE & OHM deck served-bytes + origin drive"
       - "liveteach-verify"
       - "V6FIN W7 R1-R7 Lessons contract"
+      - "Arts Award legacy reader"
+      - "Arts Award slot reader"
     types: [completed]
     branches: [main]
   schedule:
