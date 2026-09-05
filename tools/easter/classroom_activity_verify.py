@@ -1,5 +1,6 @@
 """DOM/source checks only. This does not claim a browser interaction test."""
 from copy import deepcopy
+import argparse
 import json
 from pathlib import Path
 import subprocess
@@ -10,7 +11,10 @@ from classroom_activity import normalize_activity, render_bundle
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 DRAFTS = ROOT / 'tools/artsaward/content'
-files = sorted(DRAFTS.glob('BRONZE_*.json'))
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--strand', choices=('BRONZE', 'EXPLORE', 'SILVER'), default='BRONZE')
+args = parser.parse_args()
+files = sorted(DRAFTS.glob(args.strand + '_*.json'))
 checks = []
 
 
