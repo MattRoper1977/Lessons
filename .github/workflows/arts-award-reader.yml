@@ -57,7 +57,7 @@ jobs:
       - name: Check authored activity schemas and screen-print agreement
         if: ${{ !cancelled() }}
         run: |
-          for level in BRONZE EXPLORE; do
+          for level in BRONZE EXPLORE SILVER; do
             python tools/easter/classroom_activity_verify.py --strand "$level" > "$RUNNER_TEMP/activity-dom-$level.json"
             python tools/easter/build_activity_targets.py --targets "tools/artsaward/${level}_TARGETS.json" --output "$RUNNER_TEMP/activity-targets-$level.json"
             cmp "tools/artsaward/${level}_ACTIVITY_TARGETS.json" "$RUNNER_TEMP/activity-targets-$level.json"
@@ -67,7 +67,7 @@ jobs:
         env:
           NODE_PATH: ${{ runner.temp }}/award-browser/node_modules
         run: |
-          for level in BRONZE EXPLORE; do
+          for level in BRONZE EXPLORE SILVER; do
             node tools/easter/classroom_activity_browser.cjs --root . --targets "$RUNNER_TEMP/activity-targets-$level.json" --report "$RUNNER_TEMP/activity-browser-$level.json" --artifacts "$RUNNER_TEMP/activity-previews/$level"
           done
       - name: Preserve activity verification and printable previews
