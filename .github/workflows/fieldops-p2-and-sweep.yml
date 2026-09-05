@@ -113,6 +113,9 @@ jobs:
       - name: Render and inspect every exported print page
         if: ${{ !cancelled() }}
         run: python tools/easter/science_print_review.py --artifacts "$RUNNER_TEMP/science-review"
+      - name: Check GROW pupil print excludes answers and explicit keys include them
+        if: ${{ !cancelled() }}
+        run: python tools/grow_resources/check_print_content.py --artifacts "$RUNNER_TEMP/science-review"
       - name: Preserve Science interaction and print evidence
         if: always()
         uses: actions/upload-artifact@v4
