@@ -13,6 +13,19 @@ async function exercise({page,root,out,measured,move,current,id,viewport,respons
   assert.ok(lesson,'Every original LAUNCH route has a declared resource lesson');
   const dialog=page.locator('#mbm-science-pack');
   let opener,resourceUrl;
+  const navigationClear=async()=>{
+    await page.locator('#mbmhud-pill').waitFor({state:'visible'});
+    const overlaps=await page.evaluate(()=>{
+      const visible=n=>{const r=n.getBoundingClientRect();return r.width&&r.height&&getComputedStyle(n).visibility!=='hidden';};
+      const hud=[...document.querySelectorAll('#mbmhud-back,#mbmhud-home,#mbmhud-pill')].filter(visible);
+      return [...document.querySelectorAll('.controls button')].filter(visible).flatMap(button=>hud.flatMap(item=>{
+        const a=button.getBoundingClientRect(),b=item.getBoundingClientRect();
+        return Math.min(a.right,b.right)>Math.max(a.left,b.left)&&Math.min(a.bottom,b.bottom)>Math.max(a.top,b.top)?[{button:button.textContent.trim(),hud:item.id}]:[];
+      }));
+    });
+    assert.deepEqual(overlaps,[],'Native stage controls must remain separate from shared tools');
+  };
+  await measured(id+'/native-navigation-hud-clearance',navigationClear);
   await measured(id+'/resources-open-focus-and-reason',async()=>{
     await move(page,0);
     opener=page.locator('.slide.active [data-open-science-pack]').first();
@@ -76,6 +89,10 @@ async function exercise({page,root,out,measured,move,current,id,viewport,respons
   await measured(id+'/resources-layout-print-and-file-fallback',async()=>{
     await page.goto(resourceUrl,{waitUntil:'domcontentloaded'});
     assert.equal(await page.locator('.mbm-sp-page').count(),1);
+    await page.locator('#mbmhud-pill').waitFor({state:'visible'});
+    for(const tool of await page.locator('#mbmhud-back,#mbmhud-home,#mbmhud-pill').all())
+      assert.equal(await tool.evaluate(n=>getComputedStyle(n).position),'static','Standalone shared tools stay after the teaching content');
+    assert.equal(await page.getByRole('link',{name:'Return to the lesson',exact:true}).count(),1);
     assert.equal(await page.locator('.mbm-sp-answer').getAttribute('open'),null,'A fresh print route does not expose the answer');
     const size=await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth}));
     assert.ok(size.scroll<=size.width+2,'Resource page stays within the viewport');

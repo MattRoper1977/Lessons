@@ -27,6 +27,11 @@ for record in browser['pdfs']:
             row['problems'].append(f'Page {index+1}: empty or near-empty')
         if outside:
             row['problems'].append(f'Page {index+1}: out-of-page text '+repr(outside))
+        if record['level'] == 'resource-task':
+            printable = fitz.Rect(page.rect.x0 + 24, page.rect.y0, page.rect.x1 - 24, page.rect.y1)
+            at_edge = [word[4] for word in words if not printable.contains(fitz.Rect(word[:4]))]
+            if at_edge:
+                row['problems'].append(f'Page {index+1}: resource text outside print-safe side margins '+repr(at_edge))
         image = f'{Path(record["file"]).stem}-p{index+1:02d}.png'
         page.get_pixmap(matrix=fitz.Matrix(1, 1)).save(root/image)
         row['pages'].append({'page': index+1, 'words': len(words), 'image': image})
