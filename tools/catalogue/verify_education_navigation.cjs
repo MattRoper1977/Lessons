@@ -265,11 +265,11 @@ async function educationJourneyTests(browser) {
       }
       await page.locator('.learning-shortcuts').scrollIntoViewIfNeeded();
       const shortcutImage = await shot(page, name + '-home-teaching-shortcuts');
-      const cover = page.locator('.learning-shortcuts a').filter({ hasText: 'David’s cover packs' });
-      assert.equal(await cover.count(), 1, 'David’s finished packs are absent from the homepage shortcuts');
+      const cover = page.locator('.learning-shortcuts a').filter({ hasText: 'Cover teaching packs' });
+      assert.equal(await cover.count(), 1, 'Finished cover teaching packs are absent from the homepage shortcuts');
       const coverURL = new URL(await cover.getAttribute('href'), page.url());
       assert.equal(coverURL.origin, origin);
-      assert((await page.request.get(coverURL.href)).ok(), 'David’s cover-packs shortcut is broken');
+      assert((await page.request.get(coverURL.href)).ok(), 'Cover teaching-packs shortcut is broken');
       for (const view of ['saved', 'recommended']) {
         await page.locator(`.learning-shortcuts a[href="/Lessons/?view=${view}"]`).click();
         await page.waitForFunction(() => /\d+ of \d+ resources/.test(document.querySelector('#count')?.textContent || ''));

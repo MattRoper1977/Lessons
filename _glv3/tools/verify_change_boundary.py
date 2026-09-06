@@ -24,9 +24,11 @@ PROTECTED = ('Art_Teesside', 'GROW_ASDAN', 'LAUNCH_ASDAN', 'Grow/Slideshows',
              'Baseline_Weeks', 'BUILD_Estate_v3')
 SHELVES = ('Science_Teesside/index.html', 'Humanities_Teesside/index.html')
 COVER = 'Humanities_Teesside/David_Cover_Autumn1_W3-W7'
+SCIENCE_PACKS = 'Science_Teesside/Teaching_Packs/'
 SOURCE = 'tools/humanities_resources/SOURCE_MANIFEST.json'
 DOWNLOADS = 'tools/humanities_resources/DOWNLOAD_MANIFEST.json'
-BOUND_INPUTS = (SOURCE, DOWNLOADS, 'tools/humanities_resources/CONTENT.json',
+LABEL_EDITS = 'tools/humanities_resources/PUBLIC_LABEL_CHANGES.json'
+BOUND_INPUTS = (SOURCE, DOWNLOADS, LABEL_EDITS, 'tools/humanities_resources/CONTENT.json',
                 'tools/humanities_resources/ORIGINAL_MEMBER_MANIFEST.json',
                 'tools/humanities_resources/build_resources.py',
                 'tools/humanities_resources/check_resources.py',
@@ -85,6 +87,32 @@ def verify_humanities(root):
         if saved is not None: sys.modules['build_resources'] = saved
 
 
+def public_label_paths(root, pins):
+    manifest = root / LABEL_EDITS
+    if not manifest.is_file() or pins.get(LABEL_EDITS) != sha(manifest):
+        raise ValueError('Public label amendment is not reviewed')
+    changes = json.loads(manifest.read_text())['files']
+    source = json.loads((root / SOURCE).read_text())['records']
+    expected = {COVER+'/'+r['id']+'.html' for r in source} | {COVER+'/index.html'}
+    if {r['path'] for r in changes} != expected or len(changes) != len(expected):
+        raise ValueError('Public label changes must name exactly the existing cover HTML pages')
+    for row in changes:
+        path = root / row['path']
+        text = path.read_text()
+        if sha(path) != row['afterSha256'] or pins.get(row['path']) != row['afterSha256']:
+            raise ValueError('Unreviewed public cover bytes: '+row['path'])
+        for edit in reversed(row['edits']):
+            start, before, after = edit['start'], edit['before'], edit['after']
+            if any(c in before+after for c in '<>') or 'David' not in before or 'David' in after:
+                raise ValueError('Label amendment must be visible naming only')
+            if text[start:start+len(after)] != after:
+                raise ValueError('Public label edit position changed')
+            text = text[:start]+before+text[start+len(after):]
+        if hashlib.sha256(text.encode()).hexdigest() != row['beforeSha256']:
+            raise ValueError('Content changed beyond approved public labels: '+row['path'])
+    return expected
+
+
 def judge(root, changes):
     relevant = [(status, path) for status, path in changes if protected(path)]
     if not relevant:
@@ -93,15 +121,22 @@ def judge(root, changes):
     try:
         pins = pin_map(root)
         cover_paths = explicit_cover_paths(root)
+        label_paths = public_label_paths(root, pins)
         for status, rel in relevant:
             if rel in SHELVES:
                 if status not in ('A', 'M') or not (root / rel).is_file() or pins.get(rel) != sha(root / rel):
                     errors.append('reviewed shelf bytes or change type differ: ' + rel)
+            elif rel.startswith(SCIENCE_PACKS) and rel in pins:
+                # Owner-requested 6 September additive BUILD/GROW downloads.
+                # Every individual file has an explicit reviewed digest; the
+                # prefix alone never admits a file or an existing-file edit.
+                if status != 'A' or not (root / rel).is_file() or pins[rel] != sha(root / rel):
+                    errors.append('Science teaching pack must be an exact reviewed addition: ' + rel)
             elif rel in cover_paths:
                 # This ruling installs new cover resources. It does not permit
                 # edits, deletions or renames of existing lesson payloads.
-                if status != 'A':
-                    errors.append('cover release must be additive: ' + rel)
+                if status != 'A' and not (status == 'M' and rel in label_paths):
+                    errors.append('cover change is neither additive nor an exact approved public-label edit: ' + rel)
             else:
                 errors.append('original GLV3 protected-path fence rejected: ' + rel)
         if errors:
@@ -148,22 +183,34 @@ def controls(root):
     for prefix in PROTECTED:
         check('Original protected prefix remains fenced: ' + prefix, bool(judge(root, [('A', prefix + '/unreviewed.html')])))
     check('An undeclared cover file is rejected', bool(judge(root, [('A', COVER + '/unreviewed.html')])))
-    check('A modification of an existing cover file is not an additive installation', bool(judge(root, [('M', additions[0][1])])))
+    check('A modification of an existing cover file is not an additive installation', bool(judge(root, [('M', COVER+'/resource.css')])))
     check('A deleted shelf is rejected', bool(judge(root, [('D', SHELVES[0])])))
     check('Rename-as-delete/add cannot move a retained lesson into the cover exception', bool(judge(root, [('D', sorted(retained)[0]), additions[0]])))
+    science_additions = [('A', rel) for rel in pin_map(root) if rel.startswith(SCIENCE_PACKS)]
+    if science_additions:
+        check('Exact individually pinned Science teaching files pass as additions', not judge(root, science_additions))
+        first = science_additions[0][1]
+        check('An existing Science teaching download remains protected from replacement', bool(judge(root, [('M', first)])))
+        check('A Science teaching download cannot be deleted', bool(judge(root, [('D', first)])))
+        check('An unlisted Science teaching file is rejected', bool(judge(root, [('A', SCIENCE_PACKS+'unreviewed.pptx')])))
     with tempfile.TemporaryDirectory(prefix='glv3-reviewed-boundary-') as temp:
         fixture = Path(temp)
-        files = {*explicit_cover_paths(root), *SHELVES, *retained, *BOUND_INPUTS,
+        files = {*explicit_cover_paths(root), *SHELVES, *retained, *BOUND_INPUTS, *(rel for _, rel in science_additions),
                  'tools/verify_cross_estate_unification.py', 'index.html'}
         for rel in files:
             target = fixture / rel; target.parent.mkdir(parents=True, exist_ok=True); shutil.copy2(root / rel, target)
         check('Disposable fixture is initially accepted by the real validators', not judge(fixture, reviewed))
-        def mutate(rel, replacement, message):
+        if science_additions:
+            check('Disposable Science fixture is initially accepted', not judge(fixture, science_additions))
+        def mutate(rel, replacement, message, changes=reviewed):
             path = fixture / rel; original = path.read_bytes()
             try:
                 changed = replacement(original); check(message + ' sabotage changes bytes', changed != original); path.write_bytes(changed)
-                check(message, bool(judge(fixture, reviewed)))
+                check(message, bool(judge(fixture, changes)))
             finally: path.write_bytes(original)
+        if science_additions:
+            native = next(rel for _, rel in science_additions if rel.endswith('.pptx'))
+            mutate(native, lambda b: b + b'changed', 'Changed native Science bytes fail without re-pinning', science_additions)
         mutate(SHELVES[0], lambda b: b + b'<!-- unreviewed -->', 'Shelf byte drift is rejected')
         mutate(SOURCE, lambda b: b + b'\n', 'A changed source manifest cannot redefine retained lessons')
         mutate(DOWNLOADS, lambda b: b + b'\n', 'A changed download manifest cannot enlarge the allowed set')
