@@ -7,7 +7,7 @@
   const HUBS=new Set([ROOT,ROOT+'index.html',ROOT+'Science_Teesside/index.html',ROOT+'Science_Teesside/',ROOT+'Humanities_Teesside/index.html',ROOT+'Humanities_Teesside/']);
   function safeHub(value) {
     try { const u=new URL(value,location.origin);if(u.origin!==location.origin||!HUBS.has(u.pathname)||/[\\\u0000-\u001f]/.test(value))return null;
-      const clean=new URL(u.pathname,location.origin);for(const key of ['q','subject','collection','type','pathway','term','style','year','view'])if(u.searchParams.has(key))clean.searchParams.set(key,u.searchParams.get(key).slice(0,200));return clean.pathname+clean.search;
+      const clean=new URL(u.pathname,location.origin);for(const key of ['q','subject','collection','type','pathway','term','week','style','year','view'])if(u.searchParams.has(key))clean.searchParams.set(key,u.searchParams.get(key).slice(0,200));return clean.pathname+clean.search;
     } catch (_) { return null; }
   }
   const isHub=HUBS.has(location.pathname);

@@ -206,13 +206,14 @@ async function hubTests(browser) {
     assert(await page.locator('#lesson-recent a[href*="BUILD_ART_A2_W1_Surface_Hunt.html"]').count() > 0, 'Opened lesson is missing from Recently opened');
     return { returnedTo: page.url() };
   });
-  await checkCase('science-shelf-preserves-term-and-version-context', page, async () => {
-    const route = '/Lessons/Science_Teesside/index.html?pathway=LAUNCH&term=Aut1&style=recommended';
+  await checkCase('science-shelf-preserves-term-week-and-version-context', page, async () => {
+    const route = '/Lessons/Science_Teesside/index.html?pathway=LAUNCH&term=Aut1&week=3&style=recommended';
     const response = await page.goto(targetURL(route), { waitUntil: 'domcontentloaded' });
     assert(response?.ok());
     await page.waitForFunction(() => window.__mbmLessonNavigation === true);
     assert.equal(await page.locator('#science-pathway').inputValue(), 'LAUNCH');
     assert.equal(await page.locator('#science-term').inputValue(), 'Aut1');
+    assert.equal(await page.locator('#science-week').inputValue(), '3');
     assert.equal(await page.locator('#science-style').inputValue(), 'recommended');
     const link = page.locator('[data-lesson-path]:visible a[href$=".html"]').filter({ hasText: /Open|Teach|Start/ }).first();
     assert(await link.count(), 'No visible recommended lesson opening link');

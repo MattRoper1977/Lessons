@@ -1,6 +1,8 @@
 (function () {
   'use strict';
   const controls = {q:document.getElementById('science-search'),pathway:document.getElementById('science-pathway'),term:document.getElementById('science-term'),style:document.getElementById('science-style')};
+  const weekControl=document.getElementById('science-week');
+  if (weekControl) controls.week=weekControl;
   const cards = [...document.querySelectorAll('[data-lesson-path]')];
   const batches = [...document.querySelectorAll('.catalogue-batch')];
   const terms = [...document.querySelectorAll('.catalogue-term')];
@@ -18,7 +20,7 @@
     const q = controls.q.value.trim().toLowerCase();
     let shown = 0;
     cards.forEach(card => {
-      const show = (!q || card.textContent.toLowerCase().includes(q)) && ['pathway','term','style'].every(key => !controls[key].value || card.dataset[key] === controls[key].value);
+      const show = (!q || card.textContent.toLowerCase().includes(q)) && ['pathway','term','style'].every(key => !controls[key].value || card.dataset[key] === controls[key].value) && (!weekControl || !weekControl.value || (card.dataset.week || 'unspecified').split(' ').includes(weekControl.value));
       card.hidden = !show;
       if (show) shown++;
     });

@@ -64,6 +64,11 @@ REVIEWED_PATHS = (
     "tools/humanities_resources/build_resources.py", "tools/humanities_resources/check_resources.py",
     "tools/humanities_resources/resource.css", "tools/humanities_resources/resource.js",
     "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json", "tools/catalogue/TERM_REVIEW.json",
+    "tools/catalogue/SCIENCE_WEEK_BINDINGS.json",
+    # Recovered reviewed Education correction: gravity statements explicitly
+    # condition equal free-fall on negligible air resistance in both formats.
+    "primary/year5/science/autumn/forces/Lesson8_ExploreGravity.html",
+    "primary/year5/science/autumn/forces/Y5_Forces_SoW_and_Plans.docx",
 )
 
 
