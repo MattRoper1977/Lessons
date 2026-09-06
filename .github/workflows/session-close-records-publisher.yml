@@ -1,0 +1,67 @@
+name: Session close records publisher
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/session-close-records.patch.b64'
+      - '.github/workflows/session-close-records-publisher.yml'
+
+permissions:
+  contents: write
+
+env:
+  EXPECTED_MAIN: 10936b7f780f2fb18a8b3de9cd534b9e679cc305
+  EXPECTED_BLOB: 367dc25bccc94f0130f3c9247edf0301bf71fa6c
+  EXPECTED_PATCH_SHA256: fa4c9842e801c2da014b8897b1392acde0742135933dcba5d05720d9d72c8510
+
+jobs:
+  publish-record:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the records branch with history
+        uses: actions/checkout@v4
+        with:
+          ref: agent/session-close-records-20260803
+          fetch-depth: 0
+
+      - name: Decode and verify the exact one-file records patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp .github/session-close-records.patch.b64 "$RUNNER_TEMP/session-close.patch.b64"
+          base64 --decode "$RUNNER_TEMP/session-close.patch.b64" > "$RUNNER_TEMP/session-close.patch"
+          printf '%s  %s\n' "$EXPECTED_PATCH_SHA256" "$RUNNER_TEMP/session-close.patch" | sha256sum --check --strict
+          grep -E '^\+\+\+ b/LundyLoop/tools/INSTRUMENTS\.md([[:space:]]|$)' "$RUNNER_TEMP/session-close.patch"
+          test "$(grep -Ec '^\+\+\+ b/' "$RUNNER_TEMP/session-close.patch")" -eq 1
+
+      - name: Lock current main and apply the exact docs-only patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          actual=$(git rev-parse origin/main)
+          printf 'current main: %s\n' "$actual"
+          test "$actual" = "$EXPECTED_MAIN"
+          git checkout --force -B main origin/main
+          git apply --check "$RUNNER_TEMP/session-close.patch"
+          git apply "$RUNNER_TEMP/session-close.patch"
+          git diff --check
+          test "$(git diff --name-only | wc -l)" -eq 1
+          git diff --name-only | grep -Fx 'LundyLoop/tools/INSTRUMENTS.md'
+          actual_blob=$(git hash-object LundyLoop/tools/INSTRUMENTS.md)
+          printf 'final blob: %s\n' "$actual_blob"
+          test "$actual_blob" = "$EXPECTED_BLOB"
+
+      - name: Commit and push the one-file record to main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add -- LundyLoop/tools/INSTRUMENTS.md
+          git diff --cached --check
+          test "$(git diff --cached --name-only | wc -l)" -eq 1
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'docs: record browser evidence limits and Art diagnosis'
+          git push origin HEAD:main
