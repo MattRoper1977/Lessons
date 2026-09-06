@@ -67,6 +67,14 @@ function visibleScience(env){return [...env.document.querySelectorAll('[data-les
  check('Science clear filters restores all alternatives',()=>assert.equal(visibleScience(sc).length,123));
  const rec=environment('Science_Teesside/index.html','?pathway=LAUNCH&term=Aut1&style=recommended');runFile(rec,'assets/catalogue/science-shelf.js');
  check('Recommended deep link selects correct pathway, term and all 15 lessons',()=>{assert.equal(visibleScience(rec).length,15);assert(visibleScience(rec).every(c=>c.dataset.style==='recommended'));});
+ const launch=environment('Science_Teesside/index.html','?pathway=LAUNCH');runFile(launch,'assets/catalogue/science-shelf.js');
+ check('All LAUNCH deep link exposes all 57 preserved teaching versions across three terms',()=>{assert.equal(visibleScience(launch).length,57);assert.deepEqual([...new Set(visibleScience(launch).map(c=>c.dataset.term))].sort(),['Aut1','Aut2','Spr1']);});
+ const launchWeek=environment('Science_Teesside/index.html','?pathway=LAUNCH&term=Aut2&week=1');runFile(launchWeek,'assets/catalogue/science-shelf.js');
+ check('Week filter follows accepted term-local week, not obsolete filename numbering',()=>{const cards=visibleScience(launchWeek);assert.equal(cards.length,3);assert(cards.every(c=>c.dataset.lessonPath.includes('W9')));assert(cards.every(c=>c.querySelector('.science-week').textContent.includes('Autumn 2')));});
+ check('All LAUNCH shortcut clears term/week/style and retains every version',()=>{event(launchWeek,launchWeek.document.querySelector('[data-shortcut="all-launch"]'),'click');assert.equal(visibleScience(launchWeek).length,57);assert.equal(launchWeek.document.querySelector('#science-week').value,'');assert.equal(launchWeek.location.search,'?pathway=LAUNCH');});
+ const unbound=environment('Science_Teesside/index.html','?week=unspecified');runFile(unbound,'assets/catalogue/science-shelf.js');
+ check('Unproven weeks stay discoverable with an honest unknown label',()=>{assert.equal(visibleScience(unbound).length,4);assert(visibleScience(unbound).every(c=>c.querySelector('.science-week').textContent==='Week not specified'));});
+ check('Science clear removes the week filter and restores all routes',()=>{event(unbound,unbound.document.querySelector('#science-clear'),'click');assert.equal(visibleScience(unbound).length,123);assert.equal(unbound.location.search,'');});
  const full=environment('Science_Teesside/index.html','?style=full-lundy');runFile(full,'assets/catalogue/science-shelf.js');
  check('Full Lundy shortcut preserves access to all 88 alternatives',()=>assert.equal(visibleScience(full).length,88));
  check('Native keyboard/touch semantics and live status are declared',()=>{
