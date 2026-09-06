@@ -4,7 +4,7 @@
   if (window.__mbmLessonNavigation || !location.pathname.startsWith('/Lessons/') || location.pathname.startsWith('/Lessons/Games/')) return;
   window.__mbmLessonNavigation = true;
   const ROOT='/Lessons/', KEY='mbm.lesson.return.v1';
-  const HUBS=new Set([ROOT,ROOT+'index.html',ROOT+'Science_Teesside/index.html',ROOT+'Science_Teesside/',ROOT+'Humanities_Teesside/index.html',ROOT+'Humanities_Teesside/']);
+  const HUBS=new Set([ROOT+'Science_Teesside/Teaching_Packs/index.html',ROOT+'Science_Teesside/Teaching_Packs/',ROOT,ROOT+'index.html',ROOT+'Science_Teesside/index.html',ROOT+'Science_Teesside/',ROOT+'Humanities_Teesside/index.html',ROOT+'Humanities_Teesside/']);
   function safeHub(value) {
     try { const u=new URL(value,location.origin);if(u.origin!==location.origin||!HUBS.has(u.pathname)||/[\\\u0000-\u001f]/.test(value))return null;
       const clean=new URL(u.pathname,location.origin);for(const key of ['q','subject','collection','type','pathway','term','week','style','year','view'])if(u.searchParams.has(key))clean.searchParams.set(key,u.searchParams.get(key).slice(0,200));return clean.pathname+clean.search;

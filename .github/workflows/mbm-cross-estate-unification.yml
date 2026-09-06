@@ -90,12 +90,16 @@ jobs:
           path: _reference/site
           fetch-depth: 1
 
+      - name: Install the teaching pack HTML parser
+        run: python -m pip install lxml==6.0.1
+
       - name: Verify preservation, local shell and positive control
         shell: bash
         run: |
           set -euo pipefail
           git fetch origin main
           python tools/verify_cross_estate_unification.py --base origin/main --canonical _reference/site --self-test
+          if [ -f resources.json ]; then python tools/science_teaching_packs/check_packs.py; fi
           python -m json.tool "$([ -f resources.json ] && echo resources.json || echo apps.json)" >/dev/null
           node --check assets/mbm-platform.js
           node --check assets/mbm-theme.js
