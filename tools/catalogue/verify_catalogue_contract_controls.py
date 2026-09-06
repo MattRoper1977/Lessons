@@ -10,6 +10,7 @@ import argparse
 import copy
 import importlib.util
 import json
+import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -55,7 +56,7 @@ def run(lessons: Path, apps: Path, canonical: Path) -> list[dict]:
     with tempfile.TemporaryDirectory(prefix="catalogue-contract-controls-") as temp:
         base = Path(temp); lroot = base / "Lessons"; aroot = base / "Apps"
         for src, dst, kind in ((lessons, lroot, "lessons"), (apps, aroot, "apps")):
-            paths = {"index.html", "resources.json" if kind == "lessons" else "apps.json", GATE, "tools/pin_manifests.py", *gate.CANONICAL_HASHES}
+            paths = {"index.html", "resources.json" if kind == "lessons" else "apps.json", GATE, "tools/pin_manifests.py", gate.PUBLICATION_CALLER_PATH, gate.PUBLICATION_GATE_WORKFLOW_PATH, *gate.CANONICAL_HASHES}
             if kind == "lessons": paths.update(gate.CATALOGUE_PINS["files"])
             for rel in paths:
                 output = dst / rel; output.parent.mkdir(parents=True, exist_ok=True); shutil.copy2(src / rel, output)
@@ -81,6 +82,21 @@ def run(lessons: Path, apps: Path, canonical: Path) -> list[dict]:
             path = lroot / hub["file"]; original = path.read_bytes(); path.unlink()
             try: check("A missing reviewed hub file is rejected: " + hub["id"], bool(gate.run_checks(lroot, kind="lessons", canonical=canonical)))
             finally: path.write_bytes(original)
+
+        for owner, kind in ((lroot, "lessons"), (aroot, "apps")):
+            check(kind + " admits the exact reviewed caller through its named boundary", not gate.boundary_errors({gate.PUBLICATION_CALLER_PATH}, kind))
+            caller_trigger = ("      - " + gate.PUBLICATION_CALLER_PATH + "\n").encode()
+            mutate(gate.PUBLICATION_GATE_WORKFLOW_PATH, lambda b: b.replace(caller_trigger, b"", 1), kind + " rejects missing pull-request caller trigger", root=owner, kind=kind)
+            mutate(gate.PUBLICATION_GATE_WORKFLOW_PATH, lambda b: b"".join(b.rsplit(caller_trigger, 1)), kind + " rejects missing push caller trigger", root=owner, kind=kind)
+            mutate(gate.PUBLICATION_GATE_WORKFLOW_PATH, lambda b: b.replace(caller_trigger, b"      # " + caller_trigger.strip() + b"\n", 1), kind + " rejects a comment masquerading as a caller trigger", root=owner, kind=kind)
+            mutate(gate.PUBLICATION_CALLER_PATH, lambda b: b.replace(b"contents: read", b"contents: write", 1), kind + " rejects broader publication permissions", root=owner, kind=kind)
+            mutate(gate.PUBLICATION_CALLER_PATH, lambda b: b + b"\n  unreviewed-job:\n    runs-on: ubuntu-latest\n", kind + " rejects an extra publication job", root=owner, kind=kind)
+            mutate(gate.PUBLICATION_CALLER_PATH, lambda b: re.sub(rb"builder_ref: [0-9a-f]{40}", b"builder_ref: main", b, count=1), kind + " rejects a floating or mismatched builder", root=owner, kind=kind)
+            mutate(gate.PUBLICATION_CALLER_PATH, lambda b: re.sub(rb"education-publication.yml@[0-9a-f]{40}", b"education-publication.yml@main", b, count=1), kind + " rejects a floating reusable workflow", root=owner, kind=kind)
+            caller_path = owner / gate.PUBLICATION_CALLER_PATH; original_caller = caller_path.read_bytes(); caller_path.unlink()
+            try: check(kind + " rejects a missing education publisher", bool(gate.run_checks(owner, kind=kind, canonical=canonical)))
+            finally: caller_path.write_bytes(original_caller)
+            check(kind + " still rejects an unrelated modified workflow", bool(gate.boundary_errors({".github/workflows/unreviewed.yml"}, kind)))
 
         # Execute the real Git diff boundary; an independently edited lesson
         # cannot be smuggled through a green catalogue digest.
