@@ -46,7 +46,7 @@ function accepted(result){return JSON.stringify(result.stored?.owned)===JSON.str
  const failed=await run('planted dropped persistence',{candidate:planted});
  assert(!accepted(failed));assert.equal(failed.stored,null);assert(failed.text.includes('could not keep the imported campaign'));
  assert(accepted(await run('restored')));
- for(const [name,value] of [['null',null],['array',[]],['wrong version',{...seed,v:4}],['unknown card',{...seed,owned:['toString'],team:['toString']}],['invalid optional statistic',{...seed,stats:{...seed.stats,bestCombo:'not-a-number'}}],['prototype',JSON.parse(JSON.stringify(seed).replace('"dups":{}','"dups":{"__proto__":{"x":1}}'))],['oversized',{...seed,extra:'x'.repeat(32768)}],['malformed','{']]){
+ for(const [name,value] of [['null',null],['array',[]],['wrong version',{...seed,v:4}],['unknown card',{...seed,owned:['toString'],team:['toString']}],['invalid optional statistic',{...seed,stats:{...seed.stats,bestCombo:'not-a-number'}}],['prototype',{...seed,dups:JSON.parse('{"__proto__":{"x":1}}')}],['oversized',{...seed,extra:'x'.repeat(32768)}],['malformed','{']]){
   const result=await run(name,{hash:fragment(value)});assert.equal(result.stored,null);assert(!result.hash.includes('mbm_import'));assert.equal(result.memoryXP,0);
  }
  const conflict=await run('existing campaign',{existing:JSON.stringify({...seed,xp:9})});assert.equal(conflict.stored.xp,9);assert.equal(conflict.memoryXP,9);assert(!conflict.hash.includes('mbm_import'));
