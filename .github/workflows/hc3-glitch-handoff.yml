@@ -1,0 +1,55 @@
+name: HC3 native Glitch campaign receiver
+on:
+  pull_request:
+    paths:
+      - 'Games/Glitch_Clash.html'
+      - 'tools/glitchclash/**'
+      - '.github/workflows/hc3-glitch-handoff.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'Games/Glitch_Clash.html'
+      - 'tools/glitchclash/**'
+      - '.github/workflows/hc3-glitch-handoff.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  receiver:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Native data and persistence firing controls
+        run: node tools/glitchclash/gc-handoff.test.cjs
+      - uses: actions/checkout@v4
+        with:
+          repository: MattRoper1977/mattroper1977.github.io
+          # Reviewed source of the published Games #62 asset tree, 2026-09-06.
+          ref: bdba841163349181ca8713be8c865567f02c429a
+          path: _reference/site
+      - name: Prepare baseline publication assets for isolated receiver fixtures
+        run: |
+          # This is the unchanged parent game source, not candidate acceptance.
+          git worktree add --detach "$RUNNER_TEMP/hc3-lessons-baseline" d2a4a1cf3fd5840123e047a5c7dd86700a781526
+          python3 -m pip install lxml==6.0.1
+          python3 _reference/site/domain-split/build_publications.py \
+            --lessons "$RUNNER_TEMP/hc3-lessons-baseline" --output "$RUNNER_TEMP/hc3-play-baseline"
+      - name: Install existing browser test dependency
+        run: |
+          npm install --no-save --no-package-lock playwright@1.54.2
+          npx playwright install --with-deps chromium
+      - name: Phone and desktop native receiver fixtures
+        run: node tools/glitchclash/gc-handoff-browser.cjs Games/Glitch_Clash.html "$RUNNER_TEMP/hc3-play-baseline/games" audit-output/hc3-glitch
+      - name: Every existing Glitch Clash suite
+        run: tools/glitchclash/run.sh "$GITHUB_WORKSPACE/Games/Glitch_Clash.html"
+      - name: Save receiver evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hc3-glitch-receiver-${{ github.run_id }}
+          path: audit-output/hc3-glitch/
+          if-no-files-found: error

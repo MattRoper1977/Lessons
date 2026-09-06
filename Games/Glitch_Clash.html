@@ -980,6 +980,97 @@ function loadSave(){
 }
 function save(){ try{ store().setItem("glitchclash_save", JSON.stringify(SV)); }catch(e){} }
 
+/* HC3: route-specific transport through the existing native campaign importer.
+   The file picker retains its historical sanitizer/fallback behavior. A URL
+   handoff additionally requires a valid current save and durable empty storage. */
+const CampaignImport = (()=>{
+  const KEY="glitchclash_save", ROUTE="/Lessons/Games/Glitch_Clash.html";
+  const plain=value=>!!value && typeof value==="object" && !Array.isArray(value);
+  function prepare(text, strict=false){
+    const data=JSON.parse(text);
+    if(strict){
+      const malformed=()=>{throw Error("That link does not contain a supported Glitch Clash campaign save.");};
+      if(!plain(data) || data.v!==SAVE_VERSION || !Number.isFinite(data.xp) || data.xp<0) malformed();
+      for(const key of ["owned","team","cleared"])
+        if(!Array.isArray(data[key]) || data[key].some(value=>typeof value!=="string")) malformed();
+      for(const key of ["dups","stickers","settings","stats","seen"])
+        if(!plain(data[key])) malformed();
+      for(const key of ["owned","team"])
+        if(data[key].some(id=>!Object.prototype.hasOwnProperty.call(CARD_BY_ID,id))) malformed();
+      for(const [id,count] of Object.entries(data.dups))
+        if(!Object.prototype.hasOwnProperty.call(CARD_BY_ID,id) || !Number.isFinite(count) || count<0) malformed();
+      for(const key of ["wins","clashWins"])
+        if(!Object.prototype.hasOwnProperty.call(data.stats,key)) malformed();
+      // Every campaign statistic is numeric; several render directly in result
+      // markup. Reject non-numeric optional fields as well as the required ones.
+      for(const value of Object.values(data.stats))
+        if(!Number.isFinite(value) || value<0) malformed();
+      for(const key of ["calm","hc","cb"])
+        if(typeof data.settings[key]!=="boolean") malformed();
+      if(!["auto","on","off"].includes(data.settings.motion)) malformed();
+      const pending=[[data,0]];
+      while(pending.length){
+        const [value,depth]=pending.pop();
+        if(depth>24) malformed();
+        if(value && typeof value==="object") for(const [key,item] of Object.entries(value)){
+          if(["__proto__","constructor","prototype"].includes(key)) malformed();
+          if(item && typeof item==="object") pending.push([item,depth+1]);
+        }
+      }
+    }
+    return Engine.sanitizeSave(data, DEFAULT_SAVE());
+  }
+  function cleanURL(href){
+    const url=new URL(href), params=new URLSearchParams(url.hash.slice(1));
+    if(!params.has("mbm_import")) return null;
+    params.delete("mbm_import"); url.hash=params.toString();
+    return url.href;
+  }
+  function decode(href){
+    const url=new URL(href), params=new URLSearchParams(url.hash.slice(1));
+    if(!params.has("mbm_import")) return null;
+    if(url.origin!=="https://www.madebymatt-play.uk" || url.pathname!==ROUTE)
+      throw Error("Open the campaign transfer on the Glitch Clash page on the games website.");
+    if(new TextEncoder().encode(url.hash).length>32768 || params.getAll("mbm_import").length!==1)
+      throw Error("This transfer link is too large or repeated. Use the game's save-file import instead.");
+    const encoded=params.get("mbm_import");
+    if(!encoded || !/^[A-Za-z0-9_-]+$/.test(encoded)) throw Error("This campaign transfer link could not be read.");
+    const binary=atob(encoded.replace(/-/g,"+").replace(/_/g,"/"));
+    const canonical=btoa(binary).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+    if(canonical!==encoded) throw Error("This campaign transfer link could not be read.");
+    const bytes=Uint8Array.from(binary,ch=>ch.charCodeAt(0));
+    return new TextDecoder("utf-8",{fatal:true}).decode(bytes);
+  }
+  function receive(href, storage){
+    const text=decode(href);
+    if(text===null) return null;
+    const candidate=prepare(text,true), value=JSON.stringify(candidate);
+    let previous;
+    try{ previous=storage.getItem(KEY); }
+    catch(error){ throw Error("This browser could not read saved progress. Keep the original copy and try again."); }
+    if(previous!==null) throw Error("Your existing campaign has been kept. Use the save-file import in Settings if you want to replace it.");
+    try{
+      if(storage.getItem(KEY)!==null) throw Error("Another campaign appeared before import");
+      storage.setItem(KEY,value);
+      if(storage.getItem(KEY)!==value) throw Error("Save readback did not match");
+    }catch(error){
+      try{
+        // A different tab may have saved since our first read. Never erase its
+        // different value while undoing this operation's failed write.
+        const current=storage.getItem(KEY);
+        if(current===value) storage.removeItem(KEY);
+        else if(current!==null) throw Error("A different campaign was saved during import");
+        if(storage.getItem(KEY)!==null) throw Error("Restore readback did not match");
+      }catch(rollbackError){
+        throw Error("Saved progress could not be checked. Keep your original copy and reload before playing.");
+      }
+      throw Error("This browser could not keep the imported campaign. Your original copy is unchanged.");
+    }
+    return candidate;
+  }
+  return {prepare,cleanURL,decode,receive};
+})();
+
 /* ---------- UI (browser only) ---------- */
 if (typeof document !== "undefined") (function(){
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
@@ -1093,7 +1184,7 @@ $("#importfile").addEventListener("change",e=>{
   const r=new FileReader();
   r.onload=()=>{
     try{
-      SV=Engine.sanitizeSave(JSON.parse(r.result), DEFAULT_SAVE());
+      SV=CampaignImport.prepare(r.result);
       save(); applySettings(); closeSheets(); go("home");
       toast("Save imported — welcome back, Keeper.");
     }catch(err){ toast("That file didn't look like a Glitch Clash save."); }
@@ -3338,6 +3429,19 @@ function renderStickers(){
     });
     el.insertBefore(wrap, el.firstChild);
   }
+}
+// All browser modules above are initialized before imported state updates UI.
+// Remove the transport fragment before any later game layer can read the URL.
+const campaignImportURL=location.href;
+if(CampaignImport.cleanURL(campaignImportURL)!==null){
+  try{
+    history.replaceState(history.state,"",CampaignImport.cleanURL(campaignImportURL));
+    const imported=CampaignImport.receive(campaignImportURL,localStorage);
+    if(imported){
+      SV=imported; applySettings(); closeSheets(); go("home");
+      toast("Campaign imported — welcome back, Keeper.");
+    }
+  }catch(error){ toast(error.name==="Error" ? error.message : "This campaign transfer could not be read. Your original copy is unchanged."); }
 }
 })();
 /* ---------- node export for sim harness ---------- */
