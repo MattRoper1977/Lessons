@@ -6,7 +6,7 @@ const source=path.resolve(process.argv[2]),publication=path.resolve(process.argv
 const routePath='/Lessons/Games/Glitch_Clash.html',origin='https://www.madebymatt-play.uk',key='glitchclash_save';
 const sourceHTML=fs.readFileSync(source,'utf8');
 const html=sourceHTML.replaceAll('https://madebymatt.uk','https://madebymatt-play.uk');
-const seed={v:3,owned:['c01','c02','c03'],dups:{},team:['c01','c02','c03'],cleared:[],xp:123,stickers:{},settings:{calm:false,motion:'auto',hc:false,cb:false},dailyDone:'',weeklyDone:'',tutorialDone:false,seen:{},stats:{wins:0,clashWins:0}};
+const seed={v:3,owned:['stryke','halo','brik'],dups:{stryke:2},team:['stryke','halo','brik'],cleared:[],xp:123,stickers:{},settings:{calm:false,motion:'auto',hc:false,cb:false},dailyDone:'',weeklyDone:'',tutorialDone:false,seen:{},stats:{wins:0,clashWins:0}};
 const fragment=value=>'mbm_import='+Buffer.from(typeof value==='string'?value:JSON.stringify(value)).toString('base64url');
 const results=[];let browser;
 const types={'.js':'text/javascript','.css':'text/css','.json':'application/json','.svg':'image/svg+xml','.html':'text/html','.png':'image/png','.jpg':'image/jpeg','.woff2':'font/woff2'};
@@ -38,7 +38,7 @@ async function run(name,{width=390,hash=fragment(seed),existing=null,quota=false
  const result={name,width,stored:state.stored===null?null:JSON.parse(state.stored),memoryXP:state.memory.xp,hash:state.hash,home:state.home,errors,requests,text:state.text};
  results.push({...result,text:undefined});await context.close();return result;
 }
-function accepted(result){return result.stored?.xp===123&&result.memoryXP===123&&result.home&&!result.hash.includes('mbm_import')&&result.hash.includes('keep=one');}
+function accepted(result){return JSON.stringify(result.stored?.owned)===JSON.stringify(seed.owned)&&JSON.stringify(result.stored?.team)===JSON.stringify(seed.team)&&result.stored?.dups.stryke===2&&result.stored?.xp===123&&result.memoryXP===123&&result.home&&!result.hash.includes('mbm_import')&&result.hash.includes('keep=one');}
 (async()=>{
  fs.mkdirSync(out,{recursive:true});browser=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader']});
  for(const width of [390,1280])assert(accepted(await run('accepted',{width})));
@@ -46,7 +46,7 @@ function accepted(result){return result.stored?.xp===123&&result.memoryXP===123&
  const failed=await run('planted dropped persistence',{candidate:planted});
  assert(!accepted(failed));assert.equal(failed.stored,null);assert(failed.text.includes('could not keep the imported campaign'));
  assert(accepted(await run('restored')));
- for(const [name,value] of [['null',null],['array',[]],['wrong version',{...seed,v:4}],['prototype',JSON.parse(JSON.stringify(seed).replace('"dups":{}','"dups":{"__proto__":{"x":1}}'))],['oversized',{...seed,extra:'x'.repeat(32768)}],['malformed','{']]){
+ for(const [name,value] of [['null',null],['array',[]],['wrong version',{...seed,v:4}],['unknown card',{...seed,owned:['toString'],team:['toString']}],['invalid optional statistic',{...seed,stats:{...seed.stats,bestCombo:'not-a-number'}}],['prototype',JSON.parse(JSON.stringify(seed).replace('"dups":{}','"dups":{"__proto__":{"x":1}}'))],['oversized',{...seed,extra:'x'.repeat(32768)}],['malformed','{']]){
   const result=await run(name,{hash:fragment(value)});assert.equal(result.stored,null);assert(!result.hash.includes('mbm_import'));assert.equal(result.memoryXP,0);
  }
  const conflict=await run('existing campaign',{existing:JSON.stringify({...seed,xp:9})});assert.equal(conflict.stored.xp,9);assert.equal(conflict.memoryXP,9);assert(!conflict.hash.includes('mbm_import'));

@@ -995,8 +995,16 @@ const CampaignImport = (()=>{
         if(!Array.isArray(data[key]) || data[key].some(value=>typeof value!=="string")) malformed();
       for(const key of ["dups","stickers","settings","stats","seen"])
         if(!plain(data[key])) malformed();
+      for(const key of ["owned","team"])
+        if(data[key].some(id=>!Object.prototype.hasOwnProperty.call(CARD_BY_ID,id))) malformed();
+      for(const [id,count] of Object.entries(data.dups))
+        if(!Object.prototype.hasOwnProperty.call(CARD_BY_ID,id) || !Number.isFinite(count) || count<0) malformed();
       for(const key of ["wins","clashWins"])
-        if(!Number.isFinite(data.stats[key]) || data.stats[key]<0) malformed();
+        if(!Object.prototype.hasOwnProperty.call(data.stats,key)) malformed();
+      // Every campaign statistic is numeric; several render directly in result
+      // markup. Reject non-numeric optional fields as well as the required ones.
+      for(const value of Object.values(data.stats))
+        if(!Number.isFinite(value) || value<0) malformed();
       for(const key of ["calm","hc","cb"])
         if(typeof data.settings[key]!=="boolean") malformed();
       if(!["auto","on","off"].includes(data.settings.motion)) malformed();
@@ -1042,11 +1050,16 @@ const CampaignImport = (()=>{
     catch(error){ throw Error("This browser could not read saved progress. Keep the original copy and try again."); }
     if(previous!==null) throw Error("Your existing campaign has been kept. Use the save-file import in Settings if you want to replace it.");
     try{
+      if(storage.getItem(KEY)!==null) throw Error("Another campaign appeared before import");
       storage.setItem(KEY,value);
       if(storage.getItem(KEY)!==value) throw Error("Save readback did not match");
     }catch(error){
       try{
-        storage.removeItem(KEY);
+        // A different tab may have saved since our first read. Never erase its
+        // different value while undoing this operation's failed write.
+        const current=storage.getItem(KEY);
+        if(current===value) storage.removeItem(KEY);
+        else if(current!==null) throw Error("A different campaign was saved during import");
         if(storage.getItem(KEY)!==null) throw Error("Restore readback did not match");
       }catch(rollbackError){
         throw Error("Saved progress could not be checked. Keep your original copy and reload before playing.");
