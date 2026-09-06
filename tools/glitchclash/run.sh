@@ -28,12 +28,28 @@ fi
 fail=0
 for t in gc gc-endless gc-mods gc-clock gc-weekly gc-fx gc-music gc-cb gc-hc gc-a11y gc-league; do
   printf '%-22s ' "$t"
-  out=$(node "$t.test.js" $TARGET 2>&1)
+  rc=0
+  out=$(node "$t.test.js" $TARGET 2>&1) || rc=$?
   last=$(printf '%s\n' "$out" | tail -1)
-  if printf '%s\n' "$out" | grep -qE 'FAILED|Error'; then
+  # A suite that was KILLED - OOM, a timeout, a runner losing the process -
+  # prints nothing, matches neither FAILED nor Error, and would take the else
+  # branch below and be read as passing. The exit status is the only thing that
+  # knows, so it is read.
+  if [ "$rc" -ne 0 ] && ! grep -qE 'FAILED|Error' <<<"$out"; then
+    fail=1
+    echo "DIED (exit $rc, no verdict printed)"
+    continue
+  fi
+  # `printf … | grep -q` under pipefail goes non-zero when printf dies of a
+  # broken pipe - and non-zero here takes the ELSE branch, so a suite that
+  # FAILED prints its last line and reads as passing. This runner is the gate
+  # CLAUDE.md tells everyone to run before saying a change works; a false green
+  # in it is the expensive kind. Herestrings: a file, never a live pipe.
+  if grep -qE 'FAILED|Error' <<<"$out"; then
     fail=1
     echo "FAIL"
-    printf '%s\n' "$out" | grep -E '  FAIL|Error' | head -5 | sed 's/^/    /'
+    hits="$(grep -E '  FAIL|Error' <<<"$out" || true)"
+    sed 's/^/    /' <<<"$(head -5 <<<"$hits")"
   else
     echo "$last"
   fi

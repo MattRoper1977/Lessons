@@ -1,0 +1,1840 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live-Teach Projector Kit · Teacher HUD</title>
+<style>
+/* The HUD is the teacher's private window. It renders ONLY what
+   PROJECTOR_STATE reports — no independent counters, no state of its own
+   beyond the hint draft (spec G2's authoritative-free rule). Phone-width
+   first: Matt checks this on his phone even when it runs on the PC. */
+html { background: #0b0f1d; }
+html.highlumen { background: #f6f4ec; }
+body {
+  margin: 0; background: #0b0f1d; color: #e8e2d4;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  min-height: 100vh; padding: 12px; box-sizing: border-box;
+}
+body.highlumen { background: #f6f4ec; color: #1c2337; }
+header { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+h1 { font-size: 18px; margin: 0; letter-spacing: .04em; }
+a.navback {
+  min-width: 44px; min-height: 44px; display: inline-flex; align-items: center;
+  padding: 6px 12px; box-sizing: border-box; border-radius: 10px;
+  border: 1px solid #43518c; background: #16204a; color: inherit;
+  text-decoration: none; font-weight: 600;
+}
+body.highlumen a.navback { background: #fffdf6; border-color: #8a7f5e; }
+#linkState { margin-left: auto; font-size: 13px; }
+#linkState .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #843c3c; margin-right: 6px; }
+#linkState.linked .dot { background: #2e7d4f; }
+.card {
+  background: rgba(22, 30, 66, .55); border: 1px solid #2c3763; border-radius: 14px;
+  padding: 12px; margin-bottom: 12px;
+}
+body.highlumen .card { background: #fffdf6; border-color: #c9c2ae; }
+.card h2 { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; opacity: .7; margin: 0 0 10px; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+button {
+  min-width: 44px; min-height: 44px; border-radius: 10px; border: 1px solid #43518c;
+  background: #16204a; color: #e8e2d4; font: inherit; font-size: 14px; font-weight: 600;
+  padding: 6px 12px; cursor: pointer; box-sizing: border-box;
+}
+body.highlumen button { background: #fffdf6; color: #1c2337; border-color: #8a7f5e; }
+button[aria-pressed="true"] { background: #f2a24a; color: #131313; border-color: #f2a24a; }
+button:disabled { opacity: .4; cursor: default; }
+button:focus-visible, a.navback:focus-visible, input:focus-visible { outline: 3px solid #b9e6cd; outline-offset: 2px; }
+input[type=text] { min-height: 44px; border-radius: 10px; border: 1px solid #43518c; background: #0d1430; color: inherit; font: inherit; padding: 6px 10px; flex: 1; min-width: 140px; box-sizing: border-box; }
+body.highlumen input[type=text] { background: #fff; border-color: #8a7f5e; }
+.big { font-size: 34px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.ind { display: inline-flex; align-items: center; gap: 6px; border: 1px solid #2c3763; border-radius: 999px; padding: 6px 12px; font-size: 13px; }
+.ind .st { font-weight: 800; }
+.keys { font-size: 12px; opacity: .7; line-height: 1.7; }
+/* Splash skip-button floor — outside the pinned canonical region. */
+.mbm-skip { min-height: 44px; min-width: 44px; }
+#pad {
+  display: block; width: 100%; background: #0d1430;
+  border: 1px solid #43518c; border-radius: 10px;
+  /* The pad only captures touch while draw mode is on — a stray thumb on the
+     phone HUD must never paint the class screen, and with the mode off the
+     page scrolls normally. */
+  opacity: .45; cursor: default;
+}
+body.padActive #pad { opacity: 1; touch-action: none; cursor: crosshair; }
+body.highlumen #pad { background: #fff; border-color: #8a7f5e; }
+#toast {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 72;
+  background: #16204a; color: #e8e2d4; border: 1px solid #43518c; border-radius: 12px;
+  padding: 12px 18px; max-width: 86vw; text-align: center;
+  opacity: 0; pointer-events: none; /* in the a11y tree even while unseen */
+}
+body.highlumen #toast { background: #fffdf6; color: #1c2337; border-color: #8a7f5e; }
+#toast.show { opacity: 1; }
+/* Share modal (LT6): same rules as the projector's — the QR always paints
+   black on white inside its white quiet-zone box, whatever the page theme.
+   Sits under the toast (72) so "Address copied" stays visible over it. */
+#shareOverlay {
+  position: fixed; inset: 0; z-index: 70; background: rgba(5, 8, 18, .72);
+  display: flex; align-items: center; justify-content: center; visibility: hidden;
+}
+#shareOverlay.show { visibility: visible; }
+#shareCard {
+  background: #10173a; border: 3px solid #f2a24a; border-radius: 18px;
+  padding: 18px 20px; width: min(94vw, 440px); box-sizing: border-box;
+  text-align: center; max-height: 92vh; overflow: auto;
+}
+body.highlumen #shareCard { background: #fffdf6; border-color: #b0731f; }
+#shareCard h2 { font-size: 18px; margin: 0 0 6px; }
+#shareCard .sub { font-size: 13px; opacity: .88; margin: 0 0 10px; line-height: 1.5; }
+#shareQRBox { background: #fff; border-radius: 10px; padding: 12px; display: inline-block; line-height: 0; }
+#shareQR { width: min(60vw, 240px); height: auto; image-rendering: pixelated; }
+#shareTooLong, #shareNoProj { font-weight: 700; font-size: 13px; }
+#shareTooLong { color: #ffb3a0; }
+body.highlumen #shareTooLong { color: #8a2b12; }
+#shareNoProj { color: #f2a24a; }
+body.highlumen #shareNoProj { color: #8a5413; }
+#shareURLBox { width: 100%; margin: 10px 0 8px; font-size: 12px; }
+#shareCard .row { justify-content: center; margin-bottom: 8px; }
+#shareTagRow { font-size: 13px; display: block; }
+#shareTagInput { width: 14ch; flex: none; min-width: 0; margin-left: 6px; }
+/* Cold-call picker (LT7). The roster lives in this tab's memory only, so
+   there is nothing here to style as "saved". */
+#pickRoster {
+  width: 100%; box-sizing: border-box; border-radius: 10px; border: 1px solid #43518c;
+  background: #0d1430; color: inherit; font: inherit; font-size: 14px; padding: 8px 10px;
+  resize: vertical; min-height: 88px;
+}
+body.highlumen #pickRoster { background: #fff; border-color: #8a7f5e; }
+#pickName { font-size: 30px; line-height: 1.2; word-break: break-word; }
+/* The wall indicator states its meaning in words; the tint only reinforces. */
+#pickWall { font-size: 13px; }
+#pickWall.live { border-color: #f2a24a; font-weight: 700; }
+.subh { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; opacity: .7; margin: 12px 0 6px; }
+.pickrows { display: flex; flex-direction: column; gap: 4px; }
+.pickrow {
+  /* wrap, and give the NAME a floor: four rigid children used to squeeze it
+     to a couple of characters at phone width, with a decorative bar keeping
+     its 60px. The name is the content; the bar yields first. */
+  display: flex; align-items: center; gap: 8px; min-height: 44px; flex-wrap: wrap;
+  border: 1px solid #2c3763; border-radius: 10px; padding: 4px 10px; font-size: 14px;
+}
+body.highlumen .pickrow { border-color: #c9c2ae; }
+.pickrow .nm { flex: 1 1 8ch; min-width: 8ch; overflow-wrap: anywhere; }
+/* Status is stated in TEXT, never by tint alone (the estate's colour rule):
+   every row carries "here"/"away" and, when it applies, "just asked". */
+.pickrow .status { font-size: 12px; opacity: .95; white-space: nowrap; }
+.pickrow .odds { font-variant-numeric: tabular-nums; font-size: 12px; opacity: .95; min-width: 4.5ch; text-align: right; }
+/* Dimmed, but never below the contrast floor: the old .55 multiplied with
+   the .8 on .status/.odds to an effective .44, which measured 2.66:1 in
+   high-lumen — a pupil's own name, unreadable. The row is distinguished by
+   the strike-through and the word "away", so the fade only has to be
+   perceptible, not heavy. */
+.pickrow.away { opacity: .82; }
+.pickrow.away .nm { text-decoration: line-through; }
+/* 44px, not 36: the touch floor is not negotiable for compactness, and the
+   rows wrap now so nothing is squeezed by it. */
+.pickrow button.att { min-width: 44px; min-height: 44px; padding: 4px 10px; font-size: 12px; }
+/* The odds bar is decoration on top of the number, never instead of it. */
+.pickrow .bar { width: 60px; max-width: 22vw; height: 8px; border-radius: 999px; background: #2c3763; overflow: hidden; flex: 0 1 auto; }
+body.highlumen .pickrow .bar { background: #ded7c4; }
+.pickrow .bar i { display: block; height: 100%; background: #f2a24a; }
+@media print { body { display: none; } }
+body.reduce *, body.reduce *::before, body.reduce *::after {
+  animation-duration: .01ms !important; animation-iteration-count: 1 !important;
+  transition-duration: .01ms !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important; animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+<header>
+  <a class="navback mbmhome" href="../index.html" aria-label="Back to the Lessons catalogue">← Lessons</a>
+  <h1>Live-Teach · Teacher HUD</h1>
+  <div id="linkState"><span class="dot"></span><span class="word">no projector heard yet</span></div>
+</header>
+<div id="stageSaid" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap"></div>
+
+<section class="card" aria-label="Projector state">
+  <h2>Projector</h2>
+  <div class="row">
+    <span class="ind">Sim <span class="st" id="indRun">—</span></span>
+    <span class="ind">Speed <span class="st" id="indSpeed">—</span></span>
+    <span class="ind">Timer <span class="st" id="indTimer">off</span></span>
+    <span class="ind">💡 Hint <span class="st" id="indHint">off</span></span>
+    <span class="ind">🙋 Poll <span class="st" id="indPoll">off</span></span>
+    <span class="ind">✖ Blackout <span class="st" id="indBlackout">off</span></span>
+    <span class="ind">Stage <span class="st" id="indStage">—</span></span>
+  </div>
+</section>
+
+<section class="card" aria-label="Lesson stages">
+  <h2>Stage</h2>
+  <div class="row">
+    <button id="btnPrev" aria-label="Previous stage">◀ Back</button>
+    <span id="stageTitle" style="font-weight:700; flex:1; min-width:120px">—</span>
+    <button id="btnNext" aria-label="Next stage">Next ▶</button>
+  </div>
+  <!-- The worked answer lives HERE, not on the pupils' worksheet: the sheet
+       asks them to measure λ and compute v, so printing the result on it
+       would make the task pointless. -->
+  <div class="keys" id="stageMaths"></div>
+</section>
+
+<section class="card" aria-label="Simulation controls">
+  <h2>Sim</h2>
+  <div class="row">
+    <button id="btnPause" aria-pressed="false">⏸ Pause</button>
+    <button id="btnStop">⏹ Stop</button>
+    <button class="spd" data-spd="0.5" aria-pressed="false">½×</button>
+    <button class="spd" data-spd="1" aria-pressed="false">1×</button>
+    <button class="spd" data-spd="2" aria-pressed="false">2×</button>
+  </div>
+</section>
+
+<section class="card" aria-label="Timers">
+  <h2>Timer</h2>
+  <div class="row">
+    <button class="tmr" data-min="1">1 min</button>
+    <button class="tmr" data-min="3">3 min</button>
+    <button class="tmr" data-min="5">5 min</button>
+    <span class="big" id="timerBig">–:––</span>
+  </div>
+</section>
+
+<section class="card" aria-label="Overlays">
+  <h2>Hint &amp; poll</h2>
+  <div class="row">
+    <input id="hintInput" type="text" placeholder="Hint text for the projector…" aria-label="Hint text">
+    <button id="btnHint" aria-pressed="false">💡 Hint</button>
+    <button id="btnPoll" aria-pressed="false">🙋 Poll</button>
+    <button id="btnClear">✖ Clear all</button>
+  </div>
+</section>
+
+<section class="card" aria-label="Projector display">
+  <h2>Projector display</h2>
+  <div class="row">
+    <button id="btnBlackout" aria-pressed="false">✖ Blackout</button>
+    <button id="btnFsHelp">⛶ Fullscreen…</button>
+  </div>
+</section>
+
+<section class="card" aria-label="Telestrator mini-pad">
+  <h2>Ink · mini-pad → projector</h2>
+  <div class="row" style="margin-bottom:8px">
+    <button id="btnDraw" aria-pressed="false">🖊 Draw mode</button>
+    <button id="btnInkClear">🧽 Clear ink</button>
+    <button class="swatch" data-ink="amber" aria-pressed="true">Amber</button>
+    <button class="swatch" data-ink="mint" aria-pressed="false">Mint</button>
+    <button class="swatch" data-ink="sky" aria-pressed="false">Sky</button>
+    <button class="wid" data-wid="0.006" aria-pressed="true">Thin</button>
+    <button class="wid" data-wid="0.014" aria-pressed="false">Thick</button>
+  </div>
+  <canvas id="pad" aria-label="Drawing pad mirroring the projector"></canvas>
+  <div class="keys">Turn 🖊 Draw mode on first — it pauses the sim and wakes the pad. The pad keeps the projector's exact shape, so ink lands where you draw it; a stroke appears on both screens when the pen lifts. D toggles draw mode, C clears.</div>
+</section>
+
+<section class="card" aria-label="Cold-call picker">
+  <h2>Cold call</h2>
+  <div id="pickEmpty">
+    <p class="keys" style="margin-top:0">Paste your class list — one name per line, or separated by commas.
+    <strong>The list stays in this tab&rsquo;s memory for this lesson only.</strong> It is never saved to this
+    device and never put in the address, and it disappears when you close the tab. The list itself never
+    leaves this window: the only thing that can reach the projector is a single picked name, and only when
+    you press <strong>Show on projector</strong>.</p>
+    <textarea id="pickRoster" rows="4" autocomplete="off" autocorrect="off" spellcheck="false" aria-label="Class list, one name per line" placeholder="Ana&#10;Ben&#10;Charlie"></textarea>
+    <div class="row" style="margin-top:8px">
+      <button id="btnPickLoad">Load class list</button>
+    </div>
+  </div>
+  <!-- OUTSIDE #pickLive on purpose: after a HUD reload there is no roster in
+       memory, but a name may still be on the wall, and the control that takes
+       it down must not be hidden behind the empty state. -->
+  <div class="row" style="margin-bottom:8px">
+    <span id="pickWall" class="ind">Nothing is on the projector.</span>
+    <button id="btnPickHide">🙈 Clear projector</button>
+  </div>
+  <div id="pickLive" hidden>
+    <div class="row" style="margin-bottom:8px">
+      <button id="btnPickNext">🎲 Pick (N)</button>
+      <button id="btnPickPass">↩ Pass / bounce (M)</button>
+      <button id="btnPickProject">📢 Show on projector</button>
+    </div>
+    <div class="big" id="pickName">—</div>
+    <div class="keys" id="pickNote">Picked names stay on this screen until you press <strong>Show on projector</strong>.</div>
+    <h3 class="subh">Who&rsquo;s here, and who&rsquo;s next</h3>
+    <div id="pickRows" class="pickrows"></div>
+    <div class="row" style="margin-top:8px">
+      <button id="btnPickClear">🗑 Clear class list</button>
+    </div>
+  </div>
+</section>
+<div id="pickSaid" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap"></div>
+<div id="extrasSaid" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap"></div>
+
+<section class="card" aria-label="Class check and extras">
+  <h2>Class check</h2>
+  <div class="row" style="margin-bottom:8px">
+    <button id="btnRagR">7 · Stuck</button>
+    <button id="btnRagA">8 · Nearly</button>
+    <button id="btnRagG">9 · Got it</button>
+    <button id="btnRagShow" aria-pressed="false">📊 Show tally</button>
+    <button id="btnRagReset">↺ Reset</button>
+  </div>
+  <div class="row" id="ragCounts">
+    <span class="ind">■ Stuck <span class="st" id="indRagR">0</span></span>
+    <span class="ind">▲ Nearly <span class="st" id="indRagA">0</span></span>
+    <span class="ind">● Got it <span class="st" id="indRagG">0</span></span>
+  </div>
+  <div class="keys">The tally counts responses only — never who said what. It lives for this lesson
+  and resets when you say so. 7, 8 and 9 work from either window.</div>
+  <div class="row" style="margin-top:8px">
+    <button id="btnBell">🔔 Silent bell</button>
+    <button id="btnAudio" aria-pressed="false">🔇 Sound off</button>
+  </div>
+  <div class="keys">The bell draws eyes with a slow amber glow on the projector — a still banner instead
+  if reduced motion or Calm is on. Sound is off every time the kit opens, on purpose, and turning it on
+  applies to the projector’s speakers for this session only.</div>
+</section>
+
+<section class="card" aria-label="Share">
+  <h2>Share / QR</h2>
+  <div class="row">
+    <button id="btnShare">🔗 Share…</button>
+  </div>
+  <div class="keys">Builds the projector address for the state shown above — scan the code or copy the
+  address to reopen the lesson at the same stage, speed and display. Hints, timers and ink are
+  not carried. Q opens it too.</div>
+</section>
+
+<section class="card" aria-label="Keyboard map">
+  <h2>Keys</h2>
+  <div class="keys">Space sim · 1/2/3 timers (1/3/5 min) · 0 clear · H hint · P poll · B or . blackout ·
+  D draw · C clear ink · Q share/QR ·
+  PageUp/PageDown or ←/→ stages (that's the USB clicker) · Esc close top overlay.
+  The same keys work on the projector window, so everything here is optional — the HUD is an extra pair of hands, never the only pair (order LT-GO D1).</div>
+</section>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<!-- role=dialog without aria-modal: the HUD's own cards stay reachable behind
+     this panel and the toast lives outside it, so no modal boundary is
+     claimed that the code does not enforce. -->
+<div id="shareOverlay" role="dialog" aria-labelledby="shareTitle" aria-describedby="shareSub">
+  <div id="shareCard">
+    <h2 id="shareTitle">🔗 Share this lesson state</h2>
+    <p class="sub" id="shareSub">A projector address carrying the lesson, stage, speed, display and tag — nothing
+      else travels, so keep pupils&rsquo; names out of the tag.</p>
+    <p id="shareNoProj" hidden>No projector has been heard yet — this address opens the lesson fresh, from stage 1.</p>
+    <div id="shareQRBox"><canvas id="shareQR" width="1" height="1" aria-label="QR code of the address below"></canvas></div>
+    <p id="shareTooLong" hidden>This address is too long for a QR code — shorten the tag, or copy it below instead.</p>
+    <input id="shareURLBox" type="text" readonly spellcheck="false" aria-label="Projector address for this lesson state">
+    <div class="row">
+      <button id="btnCopyURL">📋 Copy</button>
+      <button id="btnShareClose">Close</button>
+    </div>
+    <label id="shareTagRow">Tag this address (optional):
+      <input id="shareTagInput" type="text" maxlength="24" spellcheck="false" placeholder="e.g. period 3"
+             aria-describedby="shareTagHelp">
+    </label>
+    <span id="shareTagHelp" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap">Never put a pupil&rsquo;s name in the tag — the tag travels in the address and in the QR code.</span>
+  </div>
+</div>
+<div id="shareSaid" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap"></div>
+
+<!-- MBM-LIVETEACH-QR:BEGIN generated by tools/liveteach/stamp_qr.mjs from tools/liveteach/qr_source.js — do not edit by hand -->
+<script>
+/* Live-Teach QR encoder — byte mode, ECC level M, versions 1–6 ONLY.
+   ONE SOURCE, MANY COPIES: stamped into the views by stamp_qr.mjs (the
+   pinned-region pattern) and require()d by the node gate.
+
+   WHY THIS EXISTS AT ALL (spec Q1): the reviewed fragment's QR engine had a
+   WRONG block structure for versions 4 and 6 — ECC-M v4/v6 need multiple
+   interleaved Reed–Solomon blocks and it computed one, so codes above ~44
+   bytes could not scan. This implementation carries the standard per-version
+   block table WITH interleaving, evaluates all eight masks by the four
+   penalty rules, and is allowed to ship only while tools/liveteach/qr_gate.mjs
+   proves an INDEPENDENT decoder (vendored jsQR) round-trips every allowed
+   version. A QR that has not been machine-decoded in CI does not ship.
+   Payloads longer than version 6's 106 bytes throw an honest Error — the
+   serializer's default-omission keeps share URLs short instead. */
+(function (root, factory) {
+  if (typeof module === 'object' && module.exports) module.exports = factory();
+  else root.LTQR = factory();
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+
+  /* Version geometry + ECC-M block structure (ISO/IEC 18004 table 9):
+     [totalSize, ecPerBlock, blockCount, dataPerBlock] */
+  var VER = {
+    1: { size: 21, ec: 10, blocks: 1, dataPer: 16 },
+    2: { size: 25, ec: 16, blocks: 1, dataPer: 28 },
+    3: { size: 29, ec: 26, blocks: 1, dataPer: 44 },
+    4: { size: 33, ec: 18, blocks: 2, dataPer: 32 },
+    5: { size: 37, ec: 24, blocks: 2, dataPer: 43 },
+    6: { size: 41, ec: 16, blocks: 4, dataPer: 27 }
+  };
+
+  /* --- GF(256), polynomial 0x11d --- */
+  var EXP = new Uint8Array(512), LOG = new Uint8Array(256);
+  (function () {
+    var x = 1;
+    for (var i = 0; i < 255; i++) {
+      EXP[i] = x; LOG[x] = i;
+      x <<= 1;
+      if (x & 0x100) x ^= 0x11d;
+    }
+    for (var j = 255; j < 512; j++) EXP[j] = EXP[j - 255];
+  })();
+  function gmul(a, b) { return (a === 0 || b === 0) ? 0 : EXP[LOG[a] + LOG[b]]; }
+
+  function rsGenerator(degree) {
+    var g = [1];
+    for (var d = 0; d < degree; d++) {
+      var next = new Array(g.length + 1).fill(0);
+      for (var i = 0; i < g.length; i++) {
+        next[i] ^= gmul(g[i], EXP[d]);
+        next[i + 1] ^= g[i];
+      }
+      g = next;
+    }
+    return g.reverse(); // highest-degree first
+  }
+
+  function rsEncode(data, ecLen) {
+    var gen = rsGenerator(ecLen);
+    var rem = new Uint8Array(ecLen);
+    for (var i = 0; i < data.length; i++) {
+      var factor = data[i] ^ rem[0];
+      rem.copyWithin(0, 1);
+      rem[ecLen - 1] = 0;
+      if (factor !== 0) {
+        for (var j = 0; j < ecLen; j++) rem[j] ^= gmul(gen[j + 1], factor);
+      }
+    }
+    return rem;
+  }
+
+  function utf8Bytes(str) {
+    var out = [];
+    for (var i = 0; i < str.length; i++) {
+      var c = str.codePointAt(i);
+      if (c > 0xffff) i++;
+      if (c < 0x80) out.push(c);
+      else if (c < 0x800) out.push(0xc0 | (c >> 6), 0x80 | (c & 63));
+      else if (c < 0x10000) out.push(0xe0 | (c >> 12), 0x80 | ((c >> 6) & 63), 0x80 | (c & 63));
+      else out.push(0xf0 | (c >> 18), 0x80 | ((c >> 12) & 63), 0x80 | ((c >> 6) & 63), 0x80 | (c & 63));
+    }
+    return out;
+  }
+
+  function pickVersion(byteLen) {
+    for (var v = 1; v <= 6; v++) {
+      var cap = VER[v].blocks * VER[v].dataPer - 2; // mode nibble + 8-bit count + terminator fit in the 2 spare bytes
+      if (byteLen <= cap) return v;
+    }
+    throw new Error('LTQR: payload of ' + byteLen + ' bytes exceeds version 6 (106) — shorten the URL');
+  }
+
+  function buildCodewords(bytes, v) {
+    var info = VER[v];
+    var totalData = info.blocks * info.dataPer;
+    // bit stream: mode 0100, count (8 bits for v1-9 byte mode), data, terminator
+    var bits = [];
+    function push(val, n) { for (var i = n - 1; i >= 0; i--) bits.push((val >> i) & 1); }
+    push(4, 4);
+    push(bytes.length, 8);
+    for (var i = 0; i < bytes.length; i++) push(bytes[i], 8);
+    var capBits = totalData * 8;
+    push(0, Math.min(4, capBits - bits.length)); // terminator
+    while (bits.length % 8 !== 0) bits.push(0);
+    var data = [];
+    for (var b = 0; b < bits.length; b += 8) {
+      var byte = 0;
+      for (var k = 0; k < 8; k++) byte = (byte << 1) | bits[b + k];
+      data.push(byte);
+    }
+    var pads = [0xec, 0x11], p = 0;
+    while (data.length < totalData) data.push(pads[p++ % 2]);
+
+    /* Split into the version's RS blocks, then INTERLEAVE — the exact step
+       the broken fragment skipped. */
+    var blocks = [], ecs = [];
+    for (var bi = 0; bi < info.blocks; bi++) {
+      var chunk = data.slice(bi * info.dataPer, (bi + 1) * info.dataPer);
+      blocks.push(chunk);
+      ecs.push(rsEncode(chunk, info.ec));
+    }
+    var out = [];
+    for (var di = 0; di < info.dataPer; di++) {
+      for (var bj = 0; bj < info.blocks; bj++) out.push(blocks[bj][di]);
+    }
+    for (var ei = 0; ei < info.ec; ei++) {
+      for (var bk = 0; bk < info.blocks; bk++) out.push(ecs[bk][ei]);
+    }
+    return out;
+  }
+
+  /* --- matrix construction --- */
+  function newMatrix(size) {
+    return { size: size, m: new Int8Array(size * size).fill(-1) }; // -1 unset, 0 light, 1 dark
+  }
+  function set(mx, x, y, v) { mx.m[y * mx.size + x] = v; }
+  function get(mx, x, y) { return mx.m[y * mx.size + x]; }
+
+  function placeFinder(mx, x0, y0) {
+    for (var y = -1; y <= 7; y++) {
+      for (var x = -1; x <= 7; x++) {
+        var xx = x0 + x, yy = y0 + y;
+        if (xx < 0 || yy < 0 || xx >= mx.size || yy >= mx.size) continue;
+        var dark = (x >= 0 && x <= 6 && (y === 0 || y === 6)) ||
+          (y >= 0 && y <= 6 && (x === 0 || x === 6)) ||
+          (x >= 2 && x <= 4 && y >= 2 && y <= 4);
+        set(mx, xx, yy, dark ? 1 : 0);
+      }
+    }
+  }
+
+  function placeFixed(mx, v) {
+    var size = mx.size;
+    placeFinder(mx, 0, 0);
+    placeFinder(mx, size - 7, 0);
+    placeFinder(mx, 0, size - 7);
+    // timing
+    for (var i = 8; i < size - 8; i++) {
+      if (get(mx, i, 6) === -1) set(mx, i, 6, i % 2 === 0 ? 1 : 0);
+      if (get(mx, 6, i) === -1) set(mx, 6, i, i % 2 === 0 ? 1 : 0);
+    }
+    // one alignment pattern for v2-6 at (size-7, size-7)
+    if (v >= 2) {
+      var cx = size - 7, cy = size - 7;
+      for (var ay = -2; ay <= 2; ay++) {
+        for (var ax = -2; ax <= 2; ax++) {
+          var dark = Math.max(Math.abs(ax), Math.abs(ay)) !== 1;
+          set(mx, cx + ax, cy + ay, dark ? 1 : 0);
+        }
+      }
+    }
+    // format info areas reserved (filled later); dark module
+    for (var f = 0; f <= 8; f++) {
+      if (get(mx, f, 8) === -1) set(mx, f, 8, 0);
+      if (get(mx, 8, f) === -1) set(mx, 8, f, 0);
+      if (f < 8 && get(mx, size - 1 - f, 8) === -1) set(mx, size - 1 - f, 8, 0);
+      if (f < 7 && get(mx, 8, size - 1 - f) === -1) set(mx, 8, size - 1 - f, 0);
+    }
+    set(mx, 8, size - 8, 1); // the always-dark module
+  }
+
+  function functionMask(v) {
+    // a matrix marking which modules are functional (true) vs data (false)
+    var size = VER[v].size;
+    var mx = newMatrix(size);
+    placeFixed(mx, v);
+    var fn = new Uint8Array(size * size);
+    for (var i = 0; i < size * size; i++) fn[i] = mx.m[i] === -1 ? 0 : 1;
+    return fn;
+  }
+
+  function placeData(mx, fn, codewords) {
+    var size = mx.size;
+    var bitIdx = 0;
+    var total = codewords.length * 8;
+    var upward = true;
+    for (var col = size - 1; col > 0; col -= 2) {
+      if (col === 6) col--; // skip the timing column
+      for (var i = 0; i < size; i++) {
+        var y = upward ? size - 1 - i : i;
+        for (var c = 0; c < 2; c++) {
+          var x = col - c;
+          if (fn[y * size + x]) continue;
+          var bit = 0;
+          if (bitIdx < total) {
+            bit = (codewords[bitIdx >> 3] >> (7 - (bitIdx & 7))) & 1;
+          }
+          set(mx, x, y, bit);
+          bitIdx++;
+        }
+      }
+      upward = !upward;
+    }
+  }
+
+  var MASKS = [
+    function (x, y) { return (x + y) % 2 === 0; },
+    function (x, y) { return y % 2 === 0; },
+    function (x, y) { return x % 3 === 0; },
+    function (x, y) { return (x + y) % 3 === 0; },
+    function (x, y) { return (Math.floor(y / 2) + Math.floor(x / 3)) % 2 === 0; },
+    function (x, y) { return (x * y) % 2 + (x * y) % 3 === 0; },
+    function (x, y) { return ((x * y) % 2 + (x * y) % 3) % 2 === 0; },
+    function (x, y) { return ((x + y) % 2 + (x * y) % 3) % 2 === 0; }
+  ];
+
+  function applyMask(mx, fn, mask) {
+    var size = mx.size;
+    for (var y = 0; y < size; y++) {
+      for (var x = 0; x < size; x++) {
+        if (fn[y * size + x]) continue;
+        if (MASKS[mask](x, y)) mx.m[y * size + x] ^= 1;
+      }
+    }
+  }
+
+  function placeFormat(mx, mask) {
+    var size = mx.size;
+    var fmt = (0 /* ECC M = 00 */ << 3) | mask;
+    var rem = fmt << 10;
+    for (var i = 14; i >= 10; i--) {
+      if ((rem >> i) & 1) rem ^= 0x537 << (i - 10);
+    }
+    var bits = ((fmt << 10) | rem) ^ 0x5412;
+    for (var b = 0; b <= 5; b++) set(mx, 8, b, (bits >> b) & 1);
+    set(mx, 8, 7, (bits >> 6) & 1);
+    set(mx, 8, 8, (bits >> 7) & 1);
+    set(mx, 7, 8, (bits >> 8) & 1);
+    for (var b2 = 9; b2 <= 14; b2++) set(mx, 14 - b2, 8, (bits >> b2) & 1);
+    for (var c = 0; c <= 7; c++) set(mx, size - 1 - c, 8, (bits >> c) & 1);
+    for (var c2 = 8; c2 <= 14; c2++) set(mx, 8, size - 15 + c2, (bits >> c2) & 1);
+  }
+
+  /* The four penalty rules (N1=3, N2=3, N3=40, N4=10-step). */
+  function penalty(mx) {
+    var size = mx.size, score = 0, x, y;
+    // N1: runs of same colour >= 5, rows and columns
+    for (y = 0; y < size; y++) {
+      var run = 1;
+      for (x = 1; x <= size; x++) {
+        if (x < size && get(mx, x, y) === get(mx, x - 1, y)) run++;
+        else { if (run >= 5) score += 3 + (run - 5); run = 1; }
+      }
+    }
+    for (x = 0; x < size; x++) {
+      var runc = 1;
+      for (y = 1; y <= size; y++) {
+        if (y < size && get(mx, x, y) === get(mx, x, y - 1)) runc++;
+        else { if (runc >= 5) score += 3 + (runc - 5); runc = 1; }
+      }
+    }
+    // N2: 2x2 blocks of one colour
+    for (y = 0; y < size - 1; y++) {
+      for (x = 0; x < size - 1; x++) {
+        var v = get(mx, x, y);
+        if (v === get(mx, x + 1, y) && v === get(mx, x, y + 1) && v === get(mx, x + 1, y + 1)) score += 3;
+      }
+    }
+    // N3: 1011101 with 0000 on either side, rows and columns
+    var pat1 = [1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0], pat2 = [0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1];
+    function scan(getter, major) {
+      for (var a = 0; a < size; a++) {
+        for (var b = 0; b <= size - 11; b++) {
+          var hit1 = true, hit2 = true;
+          for (var k = 0; k < 11; k++) {
+            var cell = getter(a, b + k);
+            if (cell !== pat1[k]) hit1 = false;
+            if (cell !== pat2[k]) hit2 = false;
+          }
+          if (hit1) score += 40;
+          if (hit2) score += 40;
+        }
+      }
+    }
+    scan(function (a, i) { return get(mx, i, a); });
+    scan(function (a, i) { return get(mx, a, i); });
+    // N4: dark proportion
+    var dark = 0;
+    for (var i = 0; i < size * size; i++) if (mx.m[i] === 1) dark++;
+    var pct = (dark * 100) / (size * size);
+    score += Math.floor(Math.abs(pct - 50) / 5) * 10;
+    return score;
+  }
+
+  function build(text, forceMask) {
+    var bytes = utf8Bytes(String(text));
+    var v = pickVersion(bytes.length);
+    var codewords = buildCodewords(bytes, v);
+    var fn = functionMask(v);
+    var best = null, bestScore = Infinity, bestMask = 0;
+    for (var mask = 0; mask < 8; mask++) {
+      if (forceMask != null && mask !== forceMask) continue;
+      var mx = newMatrix(VER[v].size);
+      placeFixed(mx, v);
+      placeData(mx, fn, codewords);
+      applyMask(mx, fn, mask);
+      placeFormat(mx, mask);
+      var s = penalty(mx);
+      if (s < bestScore) { bestScore = s; best = mx; bestMask = mask; }
+    }
+    return { version: v, size: best.size, mask: bestMask, penalty: bestScore, modules: Uint8Array.from(best.m) };
+  }
+  function encode(text) { return build(text, null); }
+  /* Harness seam only: the spec's Q1 asks for proof that output at a GIVEN
+     mask still decodes, not just at whichever mask the penalty rules pick. */
+  function encodeWithMask(text, mask) { return build(text, mask); }
+
+  return { encode: encode, encodeWithMask: encodeWithMask, MAX_BYTES: 106 };
+});
+</script>
+<!-- MBM-LIVETEACH-QR:END -->
+<!-- MBM-LIVETEACH-PICKER:BEGIN generated by tools/liveteach/stamp_picker.mjs from tools/liveteach/picker_source.js — do not edit by hand -->
+<script>
+/* Live-Teach cold-call picker engine — the rules only, no DOM, no storage.
+   ONE SOURCE, MANY COPIES: stamped into the views by stamp_picker.mjs (the
+   pinned-region pattern) and require()d by tools/liveteach/picker_gate.mjs,
+   so the 10,000-draw simulation exercises the exact bytes that ship.
+
+   THE ROSTER NEVER LEAVES MEMORY (order LT-GO D2). Nothing in this file
+   touches localStorage, the bus, the URL or the console; names live in a
+   plain array for the length of one lesson and die with the tab. The view
+   code renders them with textContent only.
+
+   P2 — THE NO-IMMEDIATE-REPEAT GUARANTEE, AND WHY IT IS ABSOLUTE.
+   The reviewed fragment gave every pupil a minimum weight, so the pupil who
+   had just answered could come straight back up — about a 1% chance per
+   draw. In a mainstream room that reads as keeping people on their toes. In
+   an SEMH alternative provision it does not: being asked twice in a row
+   reads as being singled out, and the escalation that follows costs the rest
+   of the lesson. So the guard here is structural rather than statistical.
+   Weight is "draws since you were last called", which is exactly 0 for the
+   pupil who just answered — they cannot be drawn at all on the next draw,
+   not merely rarely. One draw later their weight is 1 and they are back in
+   the pool, and it keeps climbing while they are not called, so the same
+   counter that guarantees the gap also does the decay-recovery that keeps
+   the room balanced. There is no floor to tune and no dice roll to lose. */
+(function (root, factory) {
+  if (typeof module === 'object' && module.exports) module.exports = factory();
+  else root.LTPick = factory();
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+
+  var MAX_NAMES = 40;      // a class, not a database
+  var MAX_LEN = 32;        // one name, not a paragraph
+  var HISTORY_CAP = 60;
+
+  /* Roster text → names. Splits on newlines OR commas so a paste from a
+     register works either way; trims, drops blanks, de-duplicates
+     case-insensitively (two "Sam"s would be indistinguishable on screen,
+     which is its own safeguarding problem — the view tells the teacher to
+     add an initial). */
+  function clampName(n) {
+    /* slice() counts UTF-16 code units, so a cut can land between the halves
+       of a surrogate pair and leave a lone high surrogate — which renders as
+       the replacement diamond in a name on the class screen. Cut by
+       CHARACTERS instead. */
+    var chars = Array.from(n);
+    return chars.length > MAX_LEN ? chars.slice(0, MAX_LEN).join('') : n;
+  }
+  function parseRoster(text) {
+    var seen = Object.create(null);
+    var out = [];
+    var dropped = 0;
+    String(text == null ? '' : text).split(/[\n,]/).forEach(function (raw) {
+      var n = clampName(String(raw).replace(/\s+/g, ' ').trim());
+      if (!n) return;
+      /* Normalise before comparing: a register pasted from two sources can
+         carry the same name in NFC and NFD, which are byte-different and
+         pixel-identical — exactly the indistinguishable-duplicate the dedupe
+         exists to prevent. */
+      var key = (n.normalize ? n.normalize('NFC') : n).toLowerCase();
+      if (seen[key]) return;
+      seen[key] = 1;
+      if (out.length < MAX_NAMES) out.push(n); else dropped++;
+    });
+    /* The caller is told what was lost, so a 45-name paste cannot be
+       confirmed as "40 names loaded" with no mention of the five. */
+    out.dropped = dropped;
+    return out;
+  }
+
+  /* since: draws since this pupil was last called. Everyone starts equal, so
+     the first draw is uniform over the room. */
+  function create(names) {
+    var list = Array.isArray(names) ? names : parseRoster(names);
+    return {
+      names: list.slice(),
+      present: list.map(function () { return true; }),
+      since: list.map(function () { return 1; }),
+      justPassed: -1,     // excluded for exactly one draw (see pass())
+      last: -1,
+      lastPriorSince: 0,
+      history: []         // {name, passed} — MEMORY ONLY, never broadcast (P5)
+    };
+  }
+
+  function setPresent(st, i, on) {
+    if (i < 0 || i >= st.names.length) return;
+    var was = st.present[i];
+    st.present[i] = !!on;
+    /* st.last is deliberately NOT cleared when that pupil is marked away. It
+       records who answered most recently, which is the single fact P2 rests
+       on; forgetting it meant a pupil could be called, marked away, marked
+       back, and called again immediately — a repeat, by the shipped buttons.
+       An away pupil is already excluded by `present`, so keeping `last`
+       costs the room nothing and keeps the guarantee true across attendance
+       changes. */
+    /* Coming BACK is the subtle one. since only advances for pupils who are
+       here, so a pupil marked away moments after being called keeps since=0
+       — and a frozen zero never expires. Returning with that zero made them
+       weightless, which in a small room emptied the pool into the uniform
+       fallback and let the pupil who had just answered be drawn again: the
+       exact repeat P2 exists to forbid. So a returning pupil re-enters at
+       least at 1 — in the pool, ordinary priority. Not higher: someone who
+       has just walked back in is the last person who should be cold-called
+       on the spot. */
+    if (st.present[i] && !was && st.since[i] < 1) st.since[i] = 1;
+  }
+
+  function weights(st) {
+    return st.names.map(function (_, i) {
+      if (!st.present[i]) return 0;        // P4: absent pupils are not in the draw
+      if (i === st.justPassed) return 0;   // a pass does not put you straight back up
+      return st.since[i];                  // P2: exactly 0 for the pupil just called
+    });
+  }
+
+  /* P3/P4 support: the numbers the view renders. Absent pupils are reported
+     with p = 0 so the view can show them greyed and stated as absent rather
+     than silently dropping them (a pupil who cannot see themselves listed
+     assumes they were forgotten). */
+  function probabilities(st) {
+    var w = weights(st);
+    var total = w.reduce(function (a, b) { return a + b; }, 0);
+    var fallback = total <= 0;
+    return st.names.map(function (name, i) {
+      var eligible = st.present[i] && (!fallback ? w[i] > 0 : true);
+      var p;
+      if (!st.present[i]) p = 0;
+      else if (fallback) p = 1 / Math.max(1, st.present.filter(Boolean).length);
+      else p = w[i] / total;
+      return {
+        name: name,
+        present: !!st.present[i],
+        cooldown: st.present[i] && w[i] === 0,
+        eligible: eligible,
+        p: p
+      };
+    });
+  }
+
+  /* rng is injectable so the harness can drive a deterministic sequence;
+     the views pass nothing and get Math.random. */
+  function pick(st, rng) {
+    var r = typeof rng === 'function' ? rng : Math.random;
+    var w = weights(st);
+    var total = w.reduce(function (a, b) { return a + b; }, 0);
+    var fellBack = false;
+    if (total <= 0) {
+      /* Nobody has any weight left. Falling back to "everyone present,
+         equally" is right — but it must NOT quietly re-admit the pupil who
+         just answered: P2 is the phase's one absolute, so the fallback drops
+         them too whenever anyone else is available, and only concedes when
+         there is literally nobody else to ask. */
+      var present = [];
+      for (var j = 0; j < st.names.length; j++) if (st.present[j]) present.push(j);
+      if (!present.length) return null;
+      var eligible = present.filter(function (i) { return i !== st.last && i !== st.justPassed; });
+      var pool = eligible.length ? eligible : present;
+      /* fellBack means precisely "this draw could not honour the no-repeat
+         guarantee" — not "the room is small". Both views word their notice
+         from that, so the notice is true whichever way the room got here. */
+      fellBack = !eligible.length;
+      w = st.names.map(function (_, i) { return pool.indexOf(i) === -1 ? 0 : 1; });
+      total = pool.length;
+    }
+    var t = r() * total, idx = -1;
+    for (var i = 0; i < w.length; i++) {
+      t -= w[i];
+      if (t < 0) { idx = i; break; }
+    }
+    if (idx === -1) for (var k = w.length - 1; k >= 0; k--) { if (w[k] > 0) { idx = k; break; } }
+    if (idx === -1) return null;
+
+    for (var m = 0; m < st.since.length; m++) if (st.present[m]) st.since[m]++;
+    st.lastPriorSince = st.since[idx];
+    st.since[idx] = 0;
+    st.last = idx;
+    st.justPassed = -1;
+    st.history.unshift({ name: st.names[idx], passed: false });
+    if (st.history.length > HISTORY_CAP) st.history.pop();
+    return { index: idx, name: st.names[idx], fellBack: fellBack };
+  }
+
+  /* M — pass / bounce. The question moves on, but passing is a scaffold, not
+     an exit: the pupil's place in the queue is handed back (their since is
+     restored to what it was before they were drawn) so they come round again
+     soon, while a one-draw exclusion stops the bounce landing straight back
+     on them. Their turn is recorded as a pass, so the history shows who was
+     asked and who answered. */
+  function pass(st, rng) {
+    if (st.last < 0) return null;
+    var passer = st.last;
+    st.since[passer] = st.lastPriorSince;
+    if (st.history.length && !st.history[0].passed) st.history[0].passed = true;
+    st.justPassed = passer;
+    var out = pick(st, rng);
+    st.justPassed = -1;
+    return out;
+  }
+
+  function clear(st) {
+    st.names.length = 0;
+    st.present.length = 0;
+    st.since.length = 0;
+    st.history.length = 0;
+    st.last = -1;
+    st.justPassed = -1;
+  }
+
+  return {
+    parseRoster: parseRoster,
+    create: create,
+    setPresent: setPresent,
+    probabilities: probabilities,
+    pick: pick,
+    pass: pass,
+    clear: clear,
+    MAX_NAMES: MAX_NAMES,
+    MAX_LEN: MAX_LEN
+  };
+});
+</script>
+<!-- MBM-LIVETEACH-PICKER:END -->
+<!-- MBM-LIVETEACH-CORE:BEGIN generated by tools/liveteach/stamp_core.mjs from tools/liveteach/core_source.js — do not edit by hand -->
+<script>
+/* Live-Teach core — bus contract, keyboard registry, motion + theme state.
+   ONE SOURCE, MANY COPIES: this file is stamped byte-identically into every
+   liveteach view by tools/liveteach/stamp_core.mjs (between the
+   MBM-LIVETEACH-CORE markers). Edit HERE, run the stamper, never edit a
+   stamped copy — tools/liveteach/static_gates.mjs reds on drift. The views
+   stay single self-contained files (the estate's offline-first promise); the
+   pinned-region pattern is the same one the inline exit region uses. */
+(function () {
+  'use strict';
+  var LT = window.LT = window.LT || {};
+  LT.CHANNEL = 'mbm_liveteach_v1';
+  LT.VERSION = 1;
+
+  /* --- message bus -------------------------------------------------------
+     Contract (order LT-GO / governing spec): every message is
+     { v: 1, type, payload }. Unknown type or missing v is ignored silently.
+     Listeners use addEventListener ONLY — assigning bus.onmessage anywhere in
+     liveteach is a static-gate failure: two of the reviewed fragments each
+     overwrote onmessage and silently killed the other's handlers. */
+  var bus = null;
+  LT.bus = function () {
+    if (!bus) bus = new BroadcastChannel(LT.CHANNEL);
+    return bus;
+  };
+  LT.send = function (type, payload) {
+    try { LT.bus().postMessage({ v: 1, type: type, payload: payload || {} }); } catch (e) {}
+  };
+  LT.on = function (handler) {
+    LT.bus().addEventListener('message', function (ev) {
+      var m = ev.data;
+      if (!m || m.v !== 1 || typeof m.type !== 'string') return;
+      handler(m.type, m.payload || {});
+    });
+  };
+
+  /* --- keyboard registry -------------------------------------------------
+     One keydown listener per view, total. Registering a code twice throws at
+     boot — the guard against the KeyB-class double-fire collision. Hotkeys
+     are skipped while focus is in INPUT / TEXTAREA / SELECT / contenteditable
+     (the fragments missed the last two). */
+  var keys = new Map();
+  LT.registerKey = function (code, handler, description) {
+    if (keys.has(code)) throw new Error('Live-Teach key registered twice: ' + code);
+    keys.set(code, { handler: handler, description: description || '' });
+  };
+  LT.keymap = function () {
+    var out = [];
+    keys.forEach(function (v, k) { out.push([k, v.description]); });
+    return out;
+  };
+  document.addEventListener('keydown', function (e) {
+    /* Browser/OS chords are never teaching actions: Ctrl+P must print, not
+       toggle the poll in front of the class. */
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    /* Auto-repeat never drives a teaching action: a held B would strobe the
+       blackout curtain — a sensory hazard, not a feature. One press, one
+       action. */
+    if (e.repeat) return;
+    /* While the splash is up, the view is not on stage yet: a teacher
+       test-clicking the remote must not advance stages or drop the blackout
+       behind the splash. */
+    if (document.querySelector('.mbm-splash')) return;
+    var t = e.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) {
+      /* Escape is the one hotkey that must still work here — its whole spec
+         is "blur inputs, then close the top thing". Blur only; the next
+         Escape reaches the registered handler. */
+      if (e.code === 'Escape' && t.blur) t.blur();
+      /* F5 must never reload a live lesson, wherever focus sits — the
+         browser default is prevented even though the toast handler is
+         skipped while typing. */
+      if (e.code === 'F5') e.preventDefault();
+      return;
+    }
+    /* A focused button or link keeps its NATIVE Space/Enter activation —
+       stealing it broke the Calm button for keyboard users. */
+    if ((e.code === 'Space' || e.code === 'Enter') && t && t.closest && t.closest('button, a, [role="button"], summary')) return;
+    var entry = keys.get(e.code);
+    if (entry) entry.handler(e);
+  });
+
+  /* --- reduced motion ----------------------------------------------------
+     Both halves of the house rule: each view carries a CSS
+     @media (prefers-reduced-motion: reduce) blanket, and this JS half mirrors
+     the query onto body.reduce with a LIVE change subscription (a boot-only
+     read was a recorded estate defect). Calm is the pupil-facing stillness
+     choice, independent of the OS setting; either source reduces. */
+  var mq = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  var calmChoice = false;
+  LT.onMotion = [];
+  function applyMotion() {
+    var reduce = calmChoice || !!(mq && mq.matches);
+    document.body.classList.toggle('reduce', reduce);
+    for (var i = 0; i < LT.onMotion.length; i++) {
+      try { LT.onMotion[i](reduce); } catch (e) {}
+    }
+  }
+  LT.reduced = function () { return document.body.classList.contains('reduce'); };
+  LT.calm = function () { return calmChoice; };
+  LT.setCalm = function (on) { calmChoice = !!on; applyMotion(); saveSettings(); };
+  if (mq) {
+    if (mq.addEventListener) mq.addEventListener('change', applyMotion);
+    else if (mq.addListener) mq.addListener(applyMotion);
+  }
+
+  /* --- settings ----------------------------------------------------------
+     One key, JSON, display preferences only. Pupil data NEVER enters storage
+     from liveteach (order LT-GO D2: rosters live in memory for the lesson and
+     die with the tab). Registered in REGISTER.md §B via R-LT2xx. */
+  var SKEY = 'mbm_liveteach_v1_settings';
+  function loadSettings() {
+    try { return JSON.parse(localStorage.getItem(SKEY)) || {}; } catch (e) { return {}; }
+  }
+  function saveSettings() {
+    try { localStorage.setItem(SKEY, JSON.stringify({ highlumen: LT.highlumen(), calm: calmChoice })); } catch (e) {}
+  }
+  LT.saveSettings = saveSettings;
+
+  /* --- high-lumen (correction S5) ---------------------------------------
+     A washed-out classroom projector loses dark themes; highlumen swaps to a
+     light palette. Flags BOTH html and body — the page fill lives on <html>
+     (the estate's recorded CSS gotcha). Vocabulary follows the hub's
+     "High lumen — projector / IWB" mode. */
+  LT.highlumen = function () { return document.body.classList.contains('highlumen'); };
+  /* transient=true applies the display WITHOUT persisting it: a shared link
+     or a back-button hop reproduces the display it was made on for this
+     session, but must never silently rewrite the teacher's own saved
+     preference (LT6). Only a real button press persists. */
+  LT.setHighlumen = function (on, transient) {
+    document.body.classList.toggle('highlumen', !!on);
+    document.documentElement.classList.toggle('highlumen', !!on);
+    if (!transient) saveSettings();
+  };
+
+  LT.boot = function () {
+    var s = loadSettings();
+    if (s.highlumen) {
+      document.body.classList.add('highlumen');
+      document.documentElement.classList.add('highlumen');
+    }
+    if (s.calm) calmChoice = true;
+    applyMotion();
+  };
+})();
+</script>
+<!-- MBM-LIVETEACH-CORE:END -->
+<script>
+/* Init immediately after the module — the estate's TDZ rule. */
+LT.boot();
+
+(function () {
+  'use strict';
+
+  /* Last state heard from the projector. Every indicator below renders from
+     THIS object and nothing else. */
+  var seen = null;
+  var seenAt = 0;
+  var lastStageSaid = null;
+  var lastBlackoutSaid = false;
+  var lastTeleSaid = false;
+
+  var el = function (id) { return document.getElementById(id); };
+  var linkState = el('linkState');
+
+  function hudLive() { return !!(seen && (performance.now() - seenAt) < 5000); }
+  function render() {
+    var live = hudLive();
+    linkState.classList.toggle('linked', live);
+    linkState.querySelector('.word').textContent = live ? 'projector linked' : (seen ? 'projector quiet — reopen it or check it is on this PC' : 'no projector heard yet');
+    /* An open share modal tracks the projector live — the address and QR
+       follow every stage/speed/display change as it happens. */
+    if (shareOverlayEl.classList.contains('show')) shareRender();
+    if (!seen) return;
+    extrasRender();
+    el('indRun').textContent = seen.running ? 'running' : 'paused';
+    el('indSpeed').textContent = seen.speed + '×';
+    el('indHint').textContent = seen.hint && seen.hint.on ? 'ON' : 'off';
+    el('indPoll').textContent = seen.poll && seen.poll.on ? 'ON' : 'off';
+    el('indBlackout').textContent = seen.blackout ? 'ON' : 'off';
+    el('btnBlackout').setAttribute('aria-pressed', String(!!seen.blackout));
+    el('btnDraw').setAttribute('aria-pressed', String(!!seen.telestrator));
+    document.body.classList.toggle('padActive', !!seen.telestrator);
+    if (lastTeleSaid !== !!seen.telestrator) {
+      lastTeleSaid = !!seen.telestrator;
+      el('stageSaid').textContent = lastTeleSaid ? 'Draw mode on — the pad now inks the projector' : 'Draw mode off';
+    }
+    if (lastBlackoutSaid !== !!seen.blackout) {
+      lastBlackoutSaid = !!seen.blackout;
+      if (lastBlackoutSaid !== null) el('stageSaid').textContent = lastBlackoutSaid ? 'Projector blacked out' : 'Projector restored';
+    }
+    el('indStage').textContent = seen.stageCount ? (seen.stage + 1) + '/' + seen.stageCount : '—';
+    el('stageTitle').textContent = seen.stageTitle || '—';
+    /* What is on the wall is a fact about the projector, so it is rendered
+       from the broadcast, never from this window's memory of what it sent. */
+    var onWall = seen.pick || '';
+    el('pickWall').textContent = onWall ? 'On the projector now: ' + onWall : 'Nothing is on the projector.';
+    el('pickWall').classList.toggle('live', !!onWall);
+    el('btnPickHide').disabled = !onWall;
+    var wv = seen.wave;
+    el('stageMaths').textContent = wv
+      ? 'Worked answer for the worksheet: v = f × λ = ' + wv.f + ' × ' + wv.lambda + ' = ' + (Math.round(wv.f * wv.lambda * 1000) / 1000) + ' m/s'
+      : '';
+    if (seen.stageCount && seen.stage !== lastStageSaid) {
+      lastStageSaid = seen.stage;
+      el('stageSaid').textContent = 'Stage ' + (seen.stage + 1) + ' of ' + seen.stageCount + ': ' + (seen.stageTitle || '');
+    }
+    /* G2: the ends are dead immediately, driven by broadcast state — the HUD
+       holds no counter of its own. */
+    el('btnPrev').disabled = !seen.stageCount || seen.stage <= 0;
+    el('btnNext').disabled = !seen.stageCount || seen.stage >= seen.stageCount - 1;
+    el('btnPause').setAttribute('aria-pressed', String(!seen.running));
+    el('btnPause').textContent = seen.running ? '⏸ Pause' : '▶ Resume';
+    el('btnHint').setAttribute('aria-pressed', String(!!(seen.hint && seen.hint.on)));
+    el('btnPoll').setAttribute('aria-pressed', String(!!(seen.poll && seen.poll.on)));
+    document.querySelectorAll('.spd').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(Number(b.dataset.spd) === seen.speed));
+    });
+    if (seen.timer) {
+      var s = Math.max(0, seen.timer.remaining);
+      el('indTimer').textContent = 'on';
+      el('timerBig').textContent = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+    } else {
+      el('indTimer').textContent = 'off';
+      el('timerBig').textContent = '–:––';
+    }
+  }
+  setInterval(render, 1000);
+
+  LT.on(function (type, payload) {
+    if (type === 'PROJECTOR_STATE') {
+      var newAspect = seen ? seen.aspect : null;
+      seen = payload;
+      /* What is on the wall is the projector's fact, so this window's memory
+         of what it sent is reconciled to the broadcast rather than trusted.
+         Otherwise a name cleared on the projector — by 0, Escape or the
+         blackout — leaves this side still believing it is up. state.pick
+         already travels in PROJECTOR_STATE, so nothing new reaches the bus. */
+      if (typeof seen.pick === 'string') pickShown = seen.pick;
+      seenAt = performance.now();
+      render();
+      if (seen.aspect && seen.aspect !== newAspect) sizePad();
+    }
+    else if (type === 'TELE_STROKE') {
+      var s = saneStroke(payload);
+      if (s) padAdd(s);
+    }
+    else if (type === 'PICK_REFUSED') {
+      /* The projector declined to show a name (it is blacked out). Say so
+         rather than leaving this window claiming the name is up. */
+      pickShown = '';
+      toast('The projector is blacked out, so the name was not shown. Lift the blackout and try again.');
+      el('pickSaid').textContent = 'Not shown — the projector is blacked out.';
+    }
+    else if (type === 'TELE_CLEAR') { padClear(true); }
+    else if (type === 'TELE_SYNC') {
+      padState.strokes = (Array.isArray(payload.strokes) ? payload.strokes : []).map(saneStroke).filter(Boolean);
+      padReplay();
+    }
+  });
+  /* On load AND as a heartbeat: the projector answers every hello with
+     PROJECTOR_STATE and re-arms its linked latch, so a healthy pair never
+     false-alarms during quiet teaching — and a genuinely closed projector
+     still goes quiet, because the hellos stop being answered. */
+  /* fresh:true marks a boot/reload hello — the projector answers those with
+     the full ink sync; the 3 s heartbeat hellos carry fresh:false so the
+     stroke list is not cloned and repainted every beat. */
+  LT.send('HUD_HELLO', { fresh: true });
+  setInterval(function () { LT.send('HUD_HELLO', { fresh: false }); }, 3000);
+
+  /* Controls: the HUD only ever SENDS; it never mutates its indicators
+     directly. The projector's answering broadcast is what updates them. */
+  function hintDraft() { return el('hintInput').value; }
+  el('btnPause').addEventListener('click', function () { LT.send('SIM_RUN', { on: !(seen && seen.running) }); });
+  el('btnStop').addEventListener('click', function () { LT.send('SIM_STOP', {}); });
+  document.querySelectorAll('.spd').forEach(function (b) {
+    b.addEventListener('click', function () { LT.send('SIM_SPEED', { value: Number(b.dataset.spd) }); });
+  });
+  document.querySelectorAll('.tmr').forEach(function (b) {
+    b.addEventListener('click', function () { LT.send('TIMER_START', { mins: Number(b.dataset.min) }); });
+  });
+  el('btnHint').addEventListener('click', function () {
+    LT.send('HINT_SET', { on: !(seen && seen.hint && seen.hint.on), text: hintDraft() });
+  });
+  el('btnPoll').addEventListener('click', function () { LT.send('POLL_SET', { on: !(seen && seen.poll && seen.poll.on) }); });
+  el('btnClear').addEventListener('click', function () { LT.send('OVERLAYS_CLEAR', {}); });
+  el('btnPrev').addEventListener('click', function () { LT.send('STAGE_PREV', {}); });
+  el('btnNext').addEventListener('click', function () { LT.send('STAGE_NEXT', {}); });
+  var toastT = null;
+  function toast(msg) {
+    el('toast').textContent = msg;
+    el('toast').classList.add('show');
+    clearTimeout(toastT);
+    var hold = Math.max(6000, msg.split(/\s+/).length * 400 + 2000);
+    toastT = setTimeout(function () { el('toast').classList.remove('show'); }, hold);
+  }
+  /* The button sends an idempotent SET from the last seen state — two fast
+     presses cannot cross a toggle in flight and end up inverted. The B and
+     full-stop keys keep TOGGLE (a keypress means "flip it now"). */
+  el('btnBlackout').addEventListener('click', function () { LT.send('BLACKOUT_SET', { on: !(seen && seen.blackout) }); });
+  /* C2, stated honestly: a bus message is not a user gesture, so this window
+     CANNOT make the projector fullscreen. Say what actually works. */
+  function fsAdvice() {
+    toast('Fullscreen can\'t be switched from here: click the projector window once, then press F11 or its ⛶ Fullscreen button.');
+  }
+  el('btnFsHelp').addEventListener('click', fsAdvice);
+
+  /* --- cold-call picker (LT7: P1–P5) -------------------------------------
+     ORDER LT-GO D2 overrides P1's "read the estate's roster storage": the
+     roster is SESSION-ONLY. It is typed or pasted at the start of the lesson,
+     lives in this one variable, and is never written to storage, never put in
+     the address, never logged, and never broadcast. Closing the tab is the
+     delete button. Nothing here creates a storage key, so the LT2 storage
+     audit still finds exactly one.
+
+     P5: history stays in the engine's memory object and is not broadcast.
+     Q2 (Matt's answer): a picked name shows HERE only. The ONE sanctioned
+     way a name reaches the projector is the explicit "Show on projector"
+     press below — the opt-in the non-negotiables carve out. */
+  var pick = null;                 // LTPick state, or null before a list is loaded
+  var pickShown = '';              // the name currently ON the projector, if any
+  /* A paste longer than a class silently lost the overflow while the
+     confirmation counted only the survivors. Say what was dropped. */
+  function loadReport(names) {
+    var msg = names.length + ' names loaded for this lesson only.';
+    if (names.dropped) msg += ' ' + names.dropped + ' more were not loaded — the list is capped at ' + window.LTPick.MAX_NAMES + ' names.';
+    return msg;
+  }
+  function pctText(r) {
+    /* An eligible pupil must never read as 0% — that is what an excluded one
+       shows, and in a full class the least-overdue pupil rounds below half a
+       percent. */
+    if (!r.present || r.cooldown) return '0%';
+    var pc = Math.round(r.p * 100);
+    return pc < 1 ? '<1%' : pc + '%';
+  }
+  function fallbackNote(st) {
+    var here = st.present.filter(Boolean).length;
+    return here <= 1
+      ? 'Only one pupil is marked here, so the no-repeat guard cannot apply — everyone else is away.'
+      : 'Everyone marked here has just been asked, so this draw could not avoid a repeat.';
+  }
+  function pickRender(refocus) {
+    el('pickEmpty').hidden = !!pick;
+    el('pickLive').hidden = !pick;
+    if (!pick) return;
+    var rows = window.LTPick.probabilities(pick);
+    var box = el('pickRows');
+    while (box.firstChild) box.removeChild(box.firstChild);
+    /* P3: every row is built with createElement + textContent. A name is
+       external text and must never reach innerHTML — with a real class list
+       loaded that is both a privacy and an injection question. */
+    rows.forEach(function (r, i) {
+      var row = document.createElement('div');
+      row.className = 'pickrow' + (r.present ? '' : ' away');
+      var nm = document.createElement('span');
+      nm.className = 'nm';
+      nm.textContent = r.name;
+      row.appendChild(nm);
+      var st = document.createElement('span');
+      st.className = 'status';
+      /* Text, not tint: "here"/"away" and the cooldown are stated. */
+      st.textContent = !r.present ? 'away' : (r.cooldown ? 'just asked' : 'here');
+      row.appendChild(st);
+      var bar = document.createElement('span');
+      bar.className = 'bar';
+      var fill = document.createElement('i');
+      fill.style.width = Math.round(r.p * 100) + '%';
+      bar.appendChild(fill);
+      row.appendChild(bar);
+      var odds = document.createElement('span');
+      odds.className = 'odds';
+      odds.textContent = pctText(r);
+      row.appendChild(odds);
+      var att = document.createElement('button');
+      att.className = 'att';
+      att.type = 'button';
+      att.textContent = r.present ? 'Mark away' : 'Mark here';
+      att.setAttribute('aria-label', (r.present ? 'Mark away: ' : 'Mark here: ') + r.name);
+      att.addEventListener('click', function () {
+        window.LTPick.setPresent(pick, i, !pick.present[i]);
+        /* Rebuilding the list deletes the button that was just pressed, so
+           focus has to be put back on the same row or a keyboard user is
+           dropped to the top of the class every time. */
+        pickRender(i);
+        el('pickSaid').textContent = r.name + (pick.present[i] ? ' marked here' : ' marked away');
+      });
+      row.appendChild(att);
+      box.appendChild(row);
+    });
+    if (typeof refocus === 'number') {
+      var back = box.children[refocus] && box.children[refocus].querySelector('button.att');
+      if (back) back.focus();
+    }
+  }
+  function pickAnnounce(got, passed) {
+    if (!got) { el('pickName').textContent = '—'; el('pickSaid').textContent = 'Nobody is marked here.'; return; }
+    el('pickName').textContent = got.name;
+    el('pickSaid').textContent = (passed ? 'Passed to ' : 'Picked ') + got.name;
+    /* Honest about the one case the guarantee cannot cover. */
+    el('pickNote').textContent = got.fellBack
+      ? fallbackNote(pick)
+      : 'Picked names stay on this screen until you press Show on projector.';
+  }
+  el('btnPickLoad').addEventListener('click', function () {
+    var names = window.LTPick.parseRoster(el('pickRoster').value);
+    if (!names.length) { toast('Type or paste at least one name first.'); return; }
+    pick = window.LTPick.create(names);
+    /* The textarea is emptied the moment the list is loaded: nothing should
+       sit in a form field where a browser might offer to remember it. */
+    el('pickRoster').value = '';
+    el('pickName').textContent = '—';
+    pickRender();
+    el('pickSaid').textContent = loadReport(names);
+  });
+  /* Drawing again while a name is on the wall used to leave the PREVIOUS
+     pupil named to the room while this screen showed the new one — the class
+     looking at Ben, the teacher reading Ana. Show-on-projector is a
+     one-shot, so a new draw RETRACTS what is up: the wall never carries a
+     name the teacher has moved on from, and they press Show again when they
+     mean to. */
+  function retractIfProjected() {
+    if (!pickShown) return;
+    pickShown = '';
+    LT.send('PICK_CLEAR', {});
+  }
+  el('btnPickNext').addEventListener('click', function () {
+    if (!pick) return;
+    retractIfProjected();
+    pickAnnounce(window.LTPick.pick(pick), false);
+    pickRender();
+  });
+  el('btnPickPass').addEventListener('click', function () {
+    if (!pick || pick.last < 0) { toast('Pick someone first, then Pass bounces the question on.'); return; }
+    retractIfProjected();
+    pickAnnounce(window.LTPick.pass(pick), true);
+    pickRender();
+  });
+  /* The Q2 opt-in, and the only line in this file that puts a name on the
+     bus. It sends ONE name, on an explicit press, and only the name — never
+     the list, the history or the odds. */
+  el('btnPickProject').addEventListener('click', function () {
+    var name = el('pickName').textContent;
+    if (!pick || !name || name === '—') { toast('Pick someone first.'); return; }
+    if (seen && seen.blackout) {
+      toast('The projector is blacked out, so nothing would be seen — lift the blackout first.');
+      return;
+    }
+    pickShown = name;
+    LT.send('PICK_SHOW', { name: name });
+    el('pickSaid').textContent = name + ' is now on the projector.';
+  });
+  el('btnPickHide').addEventListener('click', function () {
+    pickShown = '';
+    LT.send('PICK_CLEAR', {});
+    el('pickSaid').textContent = 'Projector name cleared.';
+  });
+  el('btnPickClear').addEventListener('click', function () {
+    if (pick) window.LTPick.clear(pick);
+    pick = null;
+    pickShown = '';
+    LT.send('PICK_CLEAR', {});
+    el('pickName').textContent = '—';
+    pickRender();
+    el('pickSaid').textContent = 'Class list cleared from memory.';
+  });
+  pickRender();
+
+  /* --- classroom extras (LT8) --------------------------------------------
+     The HUD renders the projector's counts and sends presses; it holds no
+     tally of its own, exactly like every other indicator here (G2). */
+  var lastRagSaid = null;
+  function extrasRender() {
+    if (!seen) return;
+    var rag = seen.rag || { r: 0, a: 0, g: 0 };
+    el('indRagR').textContent = String(rag.r);
+    el('indRagA').textContent = String(rag.a);
+    el('indRagG').textContent = String(rag.g);
+    /* Announced, like every other state change here. The counts were shown
+       in plain spans with no live region, so a screen-reader user pressing
+       7/8/9 got no confirmation the vote had landed at all. */
+    var stamp = rag.r + '/' + rag.a + '/' + rag.g;
+    if (lastRagSaid !== null && lastRagSaid !== stamp) {
+      el('extrasSaid').textContent = 'Tally: ' + rag.r + ' stuck, ' + rag.a + ' nearly, ' + rag.g + ' got it';
+    }
+    lastRagSaid = stamp;
+    el('btnRagShow').setAttribute('aria-pressed', String(!!seen.ragShow));
+    el('btnAudio').setAttribute('aria-pressed', String(!!seen.audio));
+    el('btnAudio').textContent = seen.audio ? '\uD83D\uDD0A Sound on' : '\uD83D\uDD07 Sound off';
+  }
+  el('btnRagR').addEventListener('click', function () { LT.send('RAG_BUMP', { level: 'r' }); });
+  el('btnRagA').addEventListener('click', function () { LT.send('RAG_BUMP', { level: 'a' }); });
+  el('btnRagG').addEventListener('click', function () { LT.send('RAG_BUMP', { level: 'g' }); });
+  el('btnRagShow').addEventListener('click', function () { LT.send('RAG_SHOW', { on: !(seen && seen.ragShow) }); });
+  el('btnRagReset').addEventListener('click', function () { LT.send('RAG_RESET', {}); });
+  el('btnBell').addEventListener('click', function () {
+    LT.send('BELL', {});
+    el('extrasSaid').textContent = 'Silent bell sent to the projector';
+  });
+  el('btnAudio').addEventListener('click', function () { LT.send('AUDIO_SET', { on: !(seen && seen.audio) }); });
+  LT.registerKey('Digit7', function () { LT.send('RAG_BUMP', { level: 'r' }); }, 'Tally: stuck');
+  LT.registerKey('Digit8', function () { LT.send('RAG_BUMP', { level: 'a' }); }, 'Tally: nearly there');
+  LT.registerKey('Digit9', function () { LT.send('RAG_BUMP', { level: 'g' }); }, 'Tally: got it');
+
+  /* --- share / QR (LT6) --------------------------------------------------
+     The HUD builds the PROJECTOR's address from the last broadcast state —
+     the same five-key whitelist as the projector's own serializer (lesson,
+     stage, speed, hl, tag; defaults omitted; nothing else ever travels), and
+     the same always-black-on-white QR. No pushState here: this window's
+     address bar must never claim to be projector.html. */
+  var shareOverlayEl = el('shareOverlay');
+  var shareReturnFocus = null;
+  var hudTag = '';   // RAW text (U1): encoded exactly once, by URLSearchParams
+  function hudShareURL() {
+    var base = location.href.split(/[?#]/)[0].replace(/teacher\.html$/, 'projector.html');
+    var p = new URLSearchParams();
+    if (seen && seen.lesson && seen.lesson !== 'waves_v1') p.set('lesson', seen.lesson);
+    if (seen && seen.stageCount && seen.stage > 0) p.set('stage', String(seen.stage + 1));
+    if (seen && seen.speed !== 1) p.set('speed', String(seen.speed));
+    if (seen && seen.hl) p.set('hl', '1');
+    if (hudTag) p.set('tag', hudTag);
+    var qs = p.toString();
+    return base + (qs ? '?' + qs : '');
+  }
+  var lastTooLong = null;
+  function shareRender() {
+    var live = hudLive();
+    el('shareNoProj').hidden = live;
+    /* Honest in both quiet cases: a remembered-but-silent projector still
+       serializes its last state (the recovery path — reopen where it was);
+       a never-heard one genuinely shares a fresh lesson. */
+    if (!live) el('shareNoProj').textContent = seen
+      ? 'No projector is answering right now — this address reopens the lesson where it was last seen.'
+      : 'No projector has been heard yet — this address opens the lesson fresh, from stage 1.';
+    var url = hudShareURL();
+    el('shareURLBox').value = url;
+    var code = null;
+    try { code = window.LTQR.encode(url); }
+    catch (err) { code = null; }   // over version 6's capacity — handled honestly below
+    el('shareTooLong').hidden = !!code;
+    el('shareQRBox').style.display = code ? '' : 'none';
+    /* Announced, not just shown: focus sits in the tag field while typing. */
+    if (lastTooLong !== !code) {
+      lastTooLong = !code;
+      if (shareOverlayEl.classList.contains('show')) {
+        el('shareSaid').textContent = lastTooLong
+          ? 'This address is now too long for a QR code — shorten the tag, or copy the address instead.'
+          : 'QR code ready.';
+      }
+    }
+    if (!code) return;             // Q2: the address stays selectable either way
+    var cv = el('shareQR');
+    cv.width = code.size;
+    cv.height = code.size;
+    var qc = cv.getContext('2d');
+    qc.fillStyle = '#fff'; qc.fillRect(0, 0, code.size, code.size);
+    qc.fillStyle = '#000';
+    for (var qy = 0; qy < code.size; qy++)
+      for (var qx = 0; qx < code.size; qx++)
+        if (code.modules[qy * code.size + qx] === 1) qc.fillRect(qx, qy, 1, 1);
+  }
+  function shareOpen() {
+    shareReturnFocus = document.activeElement;
+    shareRender();
+    shareOverlayEl.classList.add('show');
+    el('shareURLBox').focus();
+    el('shareURLBox').select();   // Q2: ready to copy by hand from the first keystroke
+  }
+  function shareClose() {
+    shareOverlayEl.classList.remove('show');
+    if (shareReturnFocus && shareReturnFocus.focus) shareReturnFocus.focus();
+    shareReturnFocus = null;
+  }
+  function shareEscape() {
+    if (!shareOverlayEl.classList.contains('show')) return false;
+    shareClose();
+    return true;
+  }
+  function shareToggle() { if (shareOverlayEl.classList.contains('show')) shareClose(); else shareOpen(); }
+  el('btnShare').addEventListener('click', shareToggle);
+  el('btnShareClose').addEventListener('click', shareClose);
+  shareOverlayEl.addEventListener('click', function (e) { if (e.target === shareOverlayEl) shareClose(); });
+  el('shareTagInput').addEventListener('input', function () {
+    hudTag = String(el('shareTagInput').value || '').slice(0, 24);
+    if (shareOverlayEl.classList.contains('show')) shareRender();
+  });
+  el('btnCopyURL').addEventListener('click', function () {
+    var url = el('shareURLBox').value;
+    /* School machines can block the clipboard entirely — the fallback selects
+       the address and SAYS copy was blocked, never pretends it worked. */
+    var fallback = function () {
+      el('shareURLBox').focus(); el('shareURLBox').select();
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (err) { ok = false; }
+      toast(ok ? 'Address copied.' : 'Copy is blocked here — the address is selected, press Ctrl+C.');
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function () { toast('Address copied.'); }, fallback);
+    } else fallback();
+  });
+
+  /* Same teaching keys as the projector view (the clicker set joins in LT4,
+     registered in BOTH views so the remote survives focus loss). */
+  LT.registerKey('Space', function (e) { e.preventDefault(); LT.send('SIM_RUN', { on: !(seen && seen.running) }); }, 'Sim pause / resume');
+  LT.registerKey('Digit1', function () { LT.send('TIMER_START', { mins: 1 }); }, 'Timer 1 min');
+  LT.registerKey('Digit2', function () { LT.send('TIMER_START', { mins: 3 }); }, 'Timer 3 min');
+  LT.registerKey('Digit3', function () { LT.send('TIMER_START', { mins: 5 }); }, 'Timer 5 min');
+  LT.registerKey('Digit0', function () { LT.send('OVERLAYS_CLEAR', {}); }, 'Clear all overlays');
+  LT.registerKey('KeyH', function () { LT.send('HINT_SET', { on: !(seen && seen.hint && seen.hint.on), text: hintDraft() }); }, 'Hint toggle');
+  LT.registerKey('KeyP', function () { LT.send('POLL_SET', { on: !(seen && seen.poll && seen.poll.on) }); }, 'Poll toggle');
+  LT.registerKey('Escape', function () {
+    /* The key card promises "close whatever is on top" from both windows.
+       The HUD's own topmost is its share modal; everything else lives on the
+       projector, so send it the topmost-close. (An Escape typed inside an
+       input blurs it instead, handled in the core guard.) */
+    if (shareEscape()) return;
+    LT.send('ESC_TOPMOST', {});
+  }, 'Close topmost overlay on the projector');
+  /* Clicker keys (C4): registered in BOTH views so the remote survives focus
+     loss — whichever window the click landed in last, the remote still works. */
+  LT.registerKey('PageDown', function (e) { e.preventDefault(); LT.send('STAGE_NEXT', {}); }, 'Stage next (clicker)');
+  LT.registerKey('PageUp', function (e) { e.preventDefault(); LT.send('STAGE_PREV', {}); }, 'Stage previous (clicker)');
+  LT.registerKey('ArrowRight', function (e) { e.preventDefault(); LT.send('STAGE_NEXT', {}); }, 'Stage next');
+  LT.registerKey('ArrowLeft', function (e) { e.preventDefault(); LT.send('STAGE_PREV', {}); }, 'Stage previous');
+  LT.registerKey('KeyB', function () { LT.send('BLACKOUT_TOGGLE', {}); }, 'Blackout toggle');
+  LT.registerKey('Period', function () { LT.send('BLACKOUT_TOGGLE', {}); }, 'Blackout toggle (clicker)');
+  LT.registerKey('F5', function (e) { e.preventDefault(); fsAdvice(); }, 'Fullscreen help (clicker)');
+  LT.registerKey('KeyD', function () { LT.send('TELE_SET', { on: !(seen && seen.telestrator) }); }, 'Telestrator draw toggle');
+  LT.registerKey('KeyC', function () { padClear(false); }, 'Telestrator clear');
+  LT.registerKey('KeyQ', function () { shareToggle(); }, 'Share / QR');
+  LT.registerKey('KeyN', function () { if (pick) { retractIfProjected(); pickAnnounce(window.LTPick.pick(pick), false); pickRender(); } }, 'Cold call: pick next');
+  LT.registerKey('KeyM', function () {
+    if (pick && pick.last >= 0) { retractIfProjected(); pickAnnounce(window.LTPick.pass(pick), true); pickRender(); }
+  }, 'Cold call: pass / bounce');
+
+  /* ---------- mini-pad (LT5; dual-mode only per order D1) ----------------
+     T3: the pad letterboxes to the projector's broadcast aspect, so a stroke
+     drawn here lands at the same normalised position on a different-sized
+     canvas; the fragment's fixed 500×220 pad distorted onto 16:9.
+     T4: vectors, replayed on resize. T2: the one TELE_STROKE type both ways. */
+  var pad = document.getElementById('pad');
+  var pctx = pad.getContext('2d');
+  var padState = { strokes: [], color: 'amber', width: 0.006, drawing: null, aspect: 16 / 9, pointerId: null };
+  var INK = {
+    amber: { dark: '#f2a24a', light: '#8a5413' },
+    mint: { dark: '#b9e6cd', light: '#1e6e46' },
+    sky: { dark: '#7fb8ff', light: '#1d5ca8' }
+  };
+  function inkHex(name) {
+    var pair = INK[name] || INK.amber;
+    return LT.highlumen() ? pair.light : pair.dark;
+  }
+  function saneStroke(p) {
+    if (!p || !Array.isArray(p.pts) || !p.pts.length || p.pts.length > 2000) return null;
+    if (typeof p.color !== 'string' || !/^(amber|mint|sky)$/.test(p.color)) return null;
+    var w = Number(p.width);
+    if (!(w > 0.0005 && w < 0.06)) return null;
+    var pts = [];
+    for (var i = 0; i < p.pts.length; i++) {
+      var x = Number(p.pts[i][0]), y = Number(p.pts[i][1]);
+      if (!isFinite(x) || !isFinite(y)) return null;
+      pts.push([Math.min(1, Math.max(0, x)), Math.min(1, Math.max(0, y))]);
+    }
+    return { pts: pts, color: p.color, width: w };
+  }
+  function sizePad() {
+    if (seen && seen.aspect > 0.2 && seen.aspect < 6) padState.aspect = seen.aspect;
+    var w = pad.clientWidth || 300;
+    var h = Math.round(w / padState.aspect);
+    pad.style.height = h + 'px';
+    var dpr = Math.min(2, window.devicePixelRatio || 1);
+    pad.width = Math.round(w * dpr);
+    pad.height = Math.round(h * dpr);
+    pctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    padReplay();
+  }
+  function padDims() { return { w: pad.clientWidth || 300, h: Math.round((pad.clientWidth || 300) / padState.aspect) }; }
+  function padStroke(s) {
+    var d = padDims();
+    if (s.pts.length < 2) {
+      pctx.fillStyle = inkHex(s.color);
+      pctx.beginPath();
+      pctx.arc(s.pts[0][0] * d.w, s.pts[0][1] * d.h, Math.max(1, s.width * d.h / 2), 0, Math.PI * 2);
+      pctx.fill();
+      return;
+    }
+    pctx.strokeStyle = inkHex(s.color);
+    pctx.lineWidth = Math.max(1, s.width * d.h);
+    pctx.lineCap = 'round';
+    pctx.lineJoin = 'round';
+    pctx.beginPath();
+    for (var i = 0; i < s.pts.length; i++) {
+      var x = s.pts[i][0] * d.w, y = s.pts[i][1] * d.h;
+      if (i === 0) pctx.moveTo(x, y); else pctx.lineTo(x, y);
+    }
+    pctx.stroke();
+  }
+  function padReplay() {
+    var d = padDims();
+    pctx.clearRect(0, 0, d.w, d.h);
+    padState.strokes.forEach(padStroke);
+  }
+  function padAdd(s) {
+    if (padState.strokes.length >= 200) padState.strokes.shift();
+    padState.strokes.push(s);
+    padReplay();
+  }
+  function padClear(fromBus) {
+    padState.strokes = [];
+    padReplay();
+    if (!fromBus) LT.send('TELE_CLEAR', {});
+  }
+  function clamp01(v) { return Math.min(1, Math.max(0, v)); }
+  function padPoint(e) {
+    var r = pad.getBoundingClientRect();
+    return [clamp01((e.clientX - r.left) / r.width), clamp01((e.clientY - r.top) / r.height)];
+  }
+  function padFinish() {
+    if (!padState.drawing) return;
+    padAdd(padState.drawing);
+    LT.send('TELE_STROKE', padState.drawing);
+    padState.drawing = null;
+    padState.pointerId = null;
+  }
+  pad.addEventListener('pointerdown', function (e) {
+    /* The pad draws only while draw mode is ON — the mode the Draw button
+       governs. Off-mode, a touch scrolls the page instead of painting the
+       class screen. */
+    if (!(seen && seen.telestrator)) return;
+    if (padState.drawing) return;            // second finger never hijacks
+    padState.pointerId = e.pointerId;
+    /* Capture is an enhancement; synthetic/assistive pointers may refuse it
+       and the stroke must still draw. */
+    try { pad.setPointerCapture(e.pointerId); } catch (err) { /* degrade: no capture */ }
+    padState.drawing = { pts: [padPoint(e)], color: padState.color, width: padState.width };
+  });
+  pad.addEventListener('pointermove', function (e) {
+    if (!padState.drawing || e.pointerId !== padState.pointerId) return;
+    var d = padDims();
+    var prev = padState.drawing.pts[padState.drawing.pts.length - 1];
+    var pt = padPoint(e);
+    padState.drawing.pts.push(pt);
+    pctx.strokeStyle = inkHex(padState.drawing.color);
+    pctx.lineWidth = Math.max(1, padState.drawing.width * d.h);
+    pctx.lineCap = 'round';
+    pctx.beginPath();
+    pctx.moveTo(prev[0] * d.w, prev[1] * d.h);
+    pctx.lineTo(pt[0] * d.w, pt[1] * d.h);
+    pctx.stroke();
+    if (padState.drawing.pts.length >= 2000) {
+      var seed = padState.drawing.pts[padState.drawing.pts.length - 1];
+      var pid = padState.pointerId;           // survive padFinish's reset
+      padFinish();
+      padState.pointerId = pid;
+      padState.drawing = { pts: [seed.slice()], color: padState.color, width: padState.width };
+    }
+  });
+  pad.addEventListener('pointerup', function (e) {
+    if (e.pointerId !== padState.pointerId) return;
+    padFinish();
+  });
+  pad.addEventListener('pointercancel', function (e) {
+    if (e.pointerId !== padState.pointerId) return;
+    padState.drawing = null;
+    padState.pointerId = null;
+    padReplay();
+  });
+  el('btnDraw').addEventListener('click', function () { LT.send('TELE_SET', { on: !(seen && seen.telestrator) }); });
+  el('btnInkClear').addEventListener('click', function () { padClear(false); });
+  document.querySelectorAll('.swatch').forEach(function (b) {
+    b.addEventListener('click', function () {
+      padState.color = b.dataset.ink;
+      document.querySelectorAll('.swatch').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+    });
+  });
+  document.querySelectorAll('.wid').forEach(function (b) {
+    b.addEventListener('click', function () {
+      padState.width = Number(b.dataset.wid);
+      document.querySelectorAll('.wid').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+    });
+  });
+  window.addEventListener('resize', sizePad);
+  sizePad();
+
+  /* Read-only harness seams. */
+  window.__LT = {
+    seen: function () { return seen ? JSON.parse(JSON.stringify(seen)) : null; },
+    linked: function () { return linkState.classList.contains('linked'); },
+    keymap: LT.keymap,
+    pad: function () {
+      var r = pad.getBoundingClientRect();
+      return { strokes: padState.strokes.length, aspect: r.width / r.height, cssW: r.width, cssH: r.height };
+    },
+    padInkAt: function (nx, ny) {
+      var d = padDims();
+      var dpr = pad.width / d.w;
+      var px = pctx.getImageData(Math.round(nx * d.w * dpr), Math.round(ny * d.h * dpr), 1, 1).data;
+      return px[3] > 0;
+    },
+    share: function () {
+      return { open: shareOverlayEl.classList.contains('show'), url: hudShareURL(), tag: hudTag };
+    },
+    extras: function () {
+      return seen ? { rag: seen.rag, ragShow: seen.ragShow, audio: seen.audio } : null;
+    },
+    pick: function () {
+      if (!pick) return null;
+      return {
+        names: pick.names.slice(),
+        present: pick.present.slice(),
+        shown: el('pickName').textContent,
+        projected: pickShown,
+        rows: window.LTPick.probabilities(pick),
+        history: pick.history.slice(0, 12)
+      };
+    }
+  };
+})();
+</script>
+<!-- MBM-LIVETEACH-SPLASH:BEGIN generated by tools/liveteach/stamp_splash.mjs — canonical splash + per-view caller; do not edit by hand -->
+<!-- mbm-splash-inline: canonical Made by Matt splash, inlined from
+     site/assets/brand/mbm-splash.js (sha256 e375642c631358c6753a93c5e410742af2ad49c26634d0428352ec75ed87bc4c).
+     Inlined, not linked: these games are single-file and offline-first. -->
+<script>
+/* Made by Matt splash v2 — single file, no dependencies, self-styling.
+   Usage: MadeByMattSplash.start({title:"BOSS BATTLE", kicker:"A Made by Matt Simulation",
+          duration:3200, onComplete:function(){}});                                      */
+(function (g) {
+  var CSS = ".mbm-splash{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;" +
+    "background:radial-gradient(circle at 50% 38%,#222B55,#161D3D 68%);color:#E8E2D4;" +
+    "font-family:Poppins,'Segoe UI',system-ui,sans-serif;transition:opacity .55s ease,visibility .55s}" +
+    ".mbm-splash.is-leaving{opacity:0;visibility:hidden}" +
+    ".mbm-stage{text-align:center;padding:24px;max-width:860px}" +
+    ".mbm-mark{width:min(34vmin,200px);height:auto;filter:drop-shadow(0 18px 32px #0008)}" +
+    ".mbm-mark .mpath{stroke-dasharray:1;stroke-dashoffset:1;animation:mbmDraw 1s cubic-bezier(.6,0,.3,1) .2s forwards}" +
+    ".mbm-mark .mstar{transform-origin:50px 30px;transform:scale(0);opacity:0;" +
+    "animation:mbmPop .45s cubic-bezier(.34,1.56,.64,1) 1.1s forwards}" +
+    ".mbm-kicker,.mbm-title,.mbm-tagline{opacity:0;transform:translateY(12px);animation:mbmRise .6s ease forwards}" +
+    ".mbm-kicker{animation-delay:1.3s;margin-top:20px;color:#F2A24A;font-size:.78rem;" +
+    "letter-spacing:.32em;text-transform:uppercase}" +
+    ".mbm-title{animation-delay:1.45s;margin:.35rem 0 .2rem;font-size:clamp(2rem,7vw,5rem);" +
+    "line-height:.95;letter-spacing:.04em;text-transform:uppercase;font-weight:700}" +
+    ".mbm-tagline{animation-delay:1.65s;color:#B9E6CD;letter-spacing:.18em;text-transform:uppercase;font-weight:700}" +
+    ".mbm-skip{position:absolute;right:22px;bottom:20px;border:1px solid #b9e6cd70;border-radius:99px;" +
+    "background:#0a1026aa;color:#E8E2D4;padding:.65rem 1rem;cursor:pointer;font:inherit}" +
+    ".mbm-skip:focus-visible{outline:3px solid #F2A24A;outline-offset:3px}" +
+    "@keyframes mbmDraw{to{stroke-dashoffset:0}}@keyframes mbmPop{to{transform:scale(1);opacity:1}}" +
+    "@keyframes mbmRise{to{opacity:1;transform:translateY(0)}}" +
+    "@media(prefers-reduced-motion:reduce){.mbm-splash{transition:none}" +
+    ".mbm-mark .mpath{animation:none;stroke-dashoffset:0}.mbm-mark .mstar{animation:none;transform:scale(1);opacity:1}" +
+    ".mbm-kicker,.mbm-title,.mbm-tagline{animation:none;opacity:1;transform:none}}";
+  var MARK = '<svg class="mbm-mark" viewBox="0 0 100 100" role="img" aria-label="Made by Matt">' +
+    '<circle cx="50" cy="50" r="47" fill="none" stroke="#B9E6CD" stroke-width="3.4"/>' +
+    '<path class="mpath" pathLength="1" d="M28 71 L28 37 L50 59 L72 37 L72 71" fill="none" ' +
+    'stroke="#E8E2D4" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>' +
+    '<path class="mstar" d="M50 22.5 L51.48 28.52 L57.5 30 L51.48 31.48 L50 37.5 ' +
+    'L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"/></svg>';
+
+  function start(o) {
+    o = Object.assign({ title: "", kicker: "A Made by Matt Experience",
+      duration: 3200, onComplete: null }, o || {});
+    if (!document.getElementById("mbm-splash-css")) {
+      var st = document.createElement("style");
+      st.id = "mbm-splash-css"; st.textContent = CSS;
+      document.head.appendChild(st);
+    }
+    var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var prevFocus = document.activeElement;
+    var el = document.createElement("section");
+    el.className = "mbm-splash";
+    el.setAttribute("role", "dialog");
+    el.setAttribute("aria-modal", "true");
+    el.setAttribute("aria-label", "Made by Matt introduction");
+    el.innerHTML = '<div class="mbm-stage">' + MARK +
+      '<p class="mbm-kicker"></p><h1 class="mbm-title"></h1>' +
+      '<p class="mbm-tagline">Learn \u2022 Build \u2022 Explore</p></div>' +
+      '<button class="mbm-skip" type="button">Skip intro</button>';
+    el.querySelector(".mbm-kicker").textContent = o.kicker;
+    el.querySelector(".mbm-title").textContent = o.title;
+    document.body.appendChild(el);
+    var done = false, timer;
+    function close() {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      el.classList.add("is-leaving");
+      window.removeEventListener("keydown", onKey, true);
+      setTimeout(function () {
+        el.remove();
+        if (prevFocus && prevFocus.focus) prevFocus.focus();
+        if (typeof o.onComplete === "function") o.onComplete();
+      }, reduced ? 0 : 600);
+    }
+    el.querySelector(".mbm-skip").addEventListener("click", function (e) {
+      e.stopPropagation(); close();
+    });
+    /* the overlay swallows stray pointer input so a skip tap can never
+       reach the game underneath */
+    el.addEventListener("click", function (e) { e.stopPropagation(); });
+    /* capture on window: these games install their own window keydown
+       handlers, and preventDefault alone does not stop the skip key ALSO
+       firing a gameplay action. Capture + stopPropagation does. */
+    function onKey(e) {
+      if (done) return;
+      if (e.key === "Escape" || e.key === "Enter" || e.key === " ") {
+        e.preventDefault(); e.stopPropagation();
+        if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+        close();
+      }
+    }
+    window.addEventListener("keydown", onKey, true);
+    el.addEventListener("keydown", onKey);
+    el.tabIndex = -1;
+    el.focus();
+    timer = setTimeout(close, reduced ? Math.min(o.duration, 1200) : o.duration);
+    return { close: close, element: el };
+  }
+  g.MadeByMattSplash = { start: start };
+})(window);
+</script>
+<script>
+(function () {
+  function boot() {
+    /* One start state: the splash plays above the view and fades to reveal
+       it; onComplete adds nothing. */
+    window.MadeByMattSplash.start({ title: 'TEACHER HUD', onComplete: function () {} });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+  else boot();
+})();
+</script>
+<!-- MBM-LIVETEACH-SPLASH:END -->
+</body>
+</html>

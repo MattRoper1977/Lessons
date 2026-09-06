@@ -95,7 +95,7 @@ Derived, per **R25**: a non-zero count is published as an **inventory**, never a
 | ASDAN Short Course status | ASDAN coordinator (Cheryl) | recording documents + internal moderation record | 1 Sep 2026 review |
 | ASDAN PEQ unit/credit/level | ASDAN coordinator + IQA | `_passpq/SPEC_FACTS.md` (spec v1.2 Oct 2025) — already in hand, two-source agreement total (**R-K03**) | on next spec revision |
 | Arts Award part mapping | trained adviser (Explore/Bronze/Silver) | Trinity toolkit edition actually held | 1 Sep 2026 review |
-| AQA UAS unit codes | UAS coordinator (Cheryl) | the 25 `TBC` files — SEMH-2 | blocking |
+| AQA UAS unit codes | UAS coordinator (Cheryl) | 60 tracked `*.html` carry the `TBC` literal (25 held byte-pristine per OPEN_ITEMS item 17; 35 `v3_40min` variants outside that set). Registration and unit entry are settled; **the code itself is an unverified centre record awaiting confirmation** and no surface may present it as a compliance claim. | blocking |
 | JCQ access arrangements | SENCo + exams officer | centre evidence process; never a toolkit | annually, per JCQ cycle |
 | Safety / first-aid wording | H&S lead + first-aid lead | `SAFETY_CONTENT_GATE.md` | 1 Sep 2026 review |
 

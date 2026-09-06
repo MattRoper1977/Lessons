@@ -3,7 +3,8 @@
 <head>
 <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSIjMTYxRDNEIi8+PHBhdGggZD0iTTI2IDc2IEwyNiAzMCBMNTAgNTUgTDc0IDMwIEw3NCA3NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRThFMkQ0IiBzdHJva2Utd2lkdGg9IjEzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4=">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="canonical" href="https://madebymatt.uk/Lessons/Games/Neon_Snake_Overdrive.html">>
 <title>Neon Snake: Overdrive</title>
 <script src="vendor/three-0.128.0/three.min.js"></script>
 <style>
@@ -108,9 +109,13 @@
   .save-btn{ padding:9px 14px; background:#059669; border:none; border-radius:8px; font-size:14px; font-weight:700; color:#fff; cursor:pointer; }
   .save-btn:disabled{ opacity:.4; cursor:default; }
   .hidden{ display:none !important; }
+/* Tier 1 §2.5: 44px minimum touch targets (measured 42px options, 34px save at 390x844) */
+.skin-opt,.btn,.save-btn{min-height:44px}
 </style>
 </head>
 <body>
+<div id="a11y-live" role="status" aria-live="polite" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden"></div>
+<script>window.__mbmAnnounce=function(t){var n=document.getElementById("a11y-live");if(!n||!t)return;n.textContent=String(t);};</script>
 
 <div id="canvas-container"></div>
 <div id="flash"></div>
@@ -550,6 +555,7 @@ function endGame(reason) {
   const isBest = score > 0 && score >= best;
   document.getElementById('over-score').innerText = score;
   document.getElementById('over-reason').innerText = reason;
+  window.__mbmAnnounce('Game over: ' + reason + '. Score ' + score + (isBest ? ', a new best.' : '.'));
   document.getElementById('new-best').classList.toggle('hidden', !isBest);
   document.getElementById('initials-block').style.display = score > 0 ? 'flex' : 'none';
   document.getElementById('initials').value = '';

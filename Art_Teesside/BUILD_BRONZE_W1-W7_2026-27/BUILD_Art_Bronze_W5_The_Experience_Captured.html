@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="en-GB" class="mbm-classroom pathway-build">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Experience, Captured</title>
+<style>
+:root{--ink:#17223B;--paper:#FFFCF5;--soft:#F3F6F8;--line:#CAD5DF;--muted:#526274;--gold:#B57918;--green:#246B55;--slot:#346B7B;--slot-pale:#EAF6F8;--danger:#8A3C2D}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:"Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--soft)}
+body{overflow:hidden}a,button{font:inherit}button,a.mbmhome{min-height:44px;min-width:44px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:8px;top:8px;z-index:50;background:#fff;padding:10px}
+.deck{height:100vh;padding:18px 18px 112px;overflow:auto}.slide{display:none;max-width:1120px;min-height:calc(100vh - 145px);margin:auto;background:var(--paper);border:2px solid var(--line);border-top:10px solid var(--slot);border-radius:18px;padding:22px;box-shadow:0 8px 30px #10233f18}.slide.active{display:block}
+h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-size:clamp(1.5rem,3vw,2.3rem);margin:.4rem 0 1rem}h3{margin:.2rem 0 .45rem}p,li{line-height:1.5}.tag,.time,.chips span{display:inline-block;border-radius:999px;padding:6px 10px;font-weight:800}.tag{background:var(--slot-pale)}.time{float:right;background:var(--ink);color:#fff}.chips{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.chips span{background:#FFF3D4}
+.hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,.7fr);gap:18px}.hero-visual{display:grid;gap:10px;align-content:center;background:var(--ink);color:#fff;border-radius:16px;padding:18px;min-height:150px;text-align:center}.hero-visual span{color:var(--slot)}
+.box,.route,.route-card,.evidence-gate,.lundy,.lundy-strip,.ladder,.prompt-ladder,.ta-card,.modal,.drawer,dialog{border:2px solid var(--line);border-radius:13px;padding:13px;margin:12px 0;background:#fff}.lo{border-left:8px solid var(--slot)}.truth{border-left:8px solid var(--gold);background:#FFF3D4;padding:12px}.access{background:var(--slot-pale);padding:12px;border-radius:12px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.routes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.route.s,.route.supported,.route-card.supported{border-top:7px solid var(--green)}.route.m,.route.standard,.route-card.standard{border-top:7px solid var(--slot)}.route.h,.route.stretch,.route-card.stretch{border-top:7px solid var(--gold)}.options{display:grid;gap:9px}.options button{text-align:left;padding:12px;border:2px solid var(--line);border-radius:10px;background:#fff}.vocabrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.vterm{border:2px solid var(--line);padding:12px;border-radius:12px}.vterm span{display:block;margin-top:5px}.lundy-grid,.lundy-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center;font-weight:900}.ladder,.prompt-ladder{font-weight:700}.ta-card,.modal,.drawer{background:#FFF3D4}
+.controls{position:fixed;left:8px;right:8px;bottom:58px;z-index:20;display:flex;gap:7px;overflow-x:auto;padding:8px;background:var(--ink);border-radius:14px}.controls button,.controls a{flex:0 0 auto;border:2px solid #fff;border-radius:9px;padding:7px 10px;background:#fff;color:var(--ink);font-weight:800;text-decoration:none}.prog{position:fixed;left:12px;right:12px;bottom:46px;height:6px;background:#fff;border:1px solid var(--line);z-index:19}.prog>span{display:block;height:100%;width:11.11%;background:var(--slot)}
+.overlay{display:none;position:fixed;inset:0;z-index:40;background:#10233fdd;align-items:center;justify-content:center;padding:18px}.overlay.on{display:flex}.overlay-card{max-width:700px;background:#fff;border-radius:15px;padding:20px}.overlay-card button{padding:8px 12px}
+.print-pack{display:none}.printpack{display:none}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(max-width:720px){.deck{padding:10px 10px 118px}.slide{padding:15px}.hero,.routes,.vocabrow{grid-template-columns:1fr}.lundy-grid{grid-template-columns:1fr 1fr}}
+@media print{html,body{color-scheme:light!important;background:#fff;color:#111;overflow:visible}body>*:not(.print-pack){display:none!important}.print-pack{display:block!important}.printpack{display:block!important}.print-page{break-after:page;page-break-after:always;padding:8mm;min-height:255mm}.print-page:last-child{break-after:auto;page-break-after:auto}.print-pack h1{font-size:20pt;line-height:1.15;margin:0 0 3mm}.print-pack h2{font-size:13pt;line-height:1.2;margin:3mm 0 1.5mm}.print-pack p,.print-pack li{font-size:10.5pt;line-height:1.35}.running-head{font-size:9pt;border-bottom:1px solid #666;margin-bottom:4mm;padding-bottom:2mm}.proute,.print-route{display:block;border:1px solid #777;padding:3mm;margin:3mm 0;break-inside:avoid}@page{size:A4;margin:10mm}}
+</style><style id="award-print-layout">
+      @media screen {
+        [data-mbm-guide]{display:none!important}
+        #taOverlay [data-mbm-guide]{display:block!important}
+        #taOverlay .overlay-card{max-height:calc(100vh - 36px);overflow:auto;width:min(700px,100%)}
+        body.calm .slide{box-shadow:none}
+        body.calm *,body.calm *::before,body.calm *::after{animation:none!important;transition:none!important}
+        body.teacher-freeze *,body.teacher-freeze *::before,body.teacher-freeze *::after{animation-play-state:paused!important;transition:none!important}
+      }
+      @media print {
+        .award-print .print-page{box-sizing:border-box;padding:4mm;min-height:0}
+        .award-print table{width:100%;border-collapse:collapse;table-layout:fixed}
+        .award-print th,.award-print td{border:1px solid #777;padding:2mm;vertical-align:top;font-size:9pt}
+        .award-print th:first-child{width:34%}.award-print th:last-child{width:23%}
+        .award-print td.award-response{height:18mm}
+        .award-print-figures svg{display:block;width:100%;max-height:34mm;margin:2mm 0}
+        .award-print .print-route{padding:2mm;margin:2mm 0}
+        .award-print h3{font-size:11pt;margin:0}
+        .award-print .award-review-space{height:35mm;border:1px solid #777}
+      }
+    </style><style id="mbm-classroom-chassis">/* Shared classroom presentation. Palette authority: the user's Art Studio reference. */
+html.mbm-classroom {
+  --lo-bg:#e8eef1;--lo-border:#4F869C;--ido-bg:#f3e4dc;--ido-border:#D06438;
+  --wedo-bg:#e2efec;--wedo-border:#16877A;--task-bg:#faf0d7;--task-border:#E1AB32;
+  --btn-bg:#4F869C;--btn-hover:#3a6a7d;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;
+  --sc-bg:#ffedd5;--sc-border:#f97316;--aspire-bg:#dcfce7;--aspire-border:#22c55e;
+}
+html.mbm-classroom.pathway-grow {
+  --lo-bg:#e6ebf0;--lo-border:#5B91A5;--ido-bg:#f2e6df;--ido-border:#D1673D;
+  --wedo-bg:#e2efed;--wedo-border:#2BA193;--task-bg:#f8efd8;--task-border:#DFAD3E;
+  --btn-bg:#5B91A5;--btn-hover:#436f80;--sc-border:#DFAD3E;--sc-bg:#faf3dd;
+}
+html.mbm-classroom.pathway-launch {
+  --lo-bg:#e4ebee;--lo-border:#356F83;--ido-bg:#efe3db;--ido-border:#9B5B3D;
+  --wedo-bg:#e1edeb;--wedo-border:#238C80;--task-bg:#f6eed9;--task-border:#C18B2D;
+  --btn-bg:#356F83;--btn-hover:#28576a;--sc-border:#C18B2D;--sc-bg:#f8f1de;
+}
+@media screen {
+  html.mbm-classroom, .mbm-classroom body {background:#fff;color:#1f2937;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+  .mbm-classroom main.deck {height:100vh;height:100dvh;padding:clamp(14px,3vh,36px) 4vw 110px;overflow:auto;scroll-padding-bottom:110px}
+  .mbm-classroom main.deck>.slide {width:100%;max-width:1600px;min-height:calc(100vh - 160px);margin:auto;padding:clamp(20px,3vw,40px);background:#fff;color:#1f2937;border:0;border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px #00000018}
+  .mbm-classroom .slide[data-classroom-phase="ido"] {border-top-color:var(--ido-border)}
+  .mbm-classroom .slide[data-classroom-phase="wedo"] {border-top-color:var(--wedo-border)}
+  .mbm-classroom .slide[data-classroom-phase="independent"] {border-top-color:var(--task-border)}
+  .mbm-classroom .slide[data-classroom-phase="exit"] {border-top-color:var(--sc-border)}
+  .mbm-classroom .slide h1 {display:block;color:#101820;font-size:clamp(1.8rem,3.2vw,2.8rem);line-height:1.14;margin:20px 0 24px;padding-bottom:12px;border-bottom:3px solid var(--lo-border)}
+  .mbm-classroom .slide h2 {color:#101820;font-size:clamp(1.5rem,2.5vw,2rem);line-height:1.22;margin:16px 0 22px;padding-bottom:12px;border-bottom:2px solid #e2e8f0}
+  .mbm-classroom .slide h3 {color:#182c3c;font-size:1.2rem;line-height:1.3;margin:18px 0 10px}
+  .mbm-classroom .slide p,.mbm-classroom .slide li {font-size:1.15rem;line-height:1.6;color:#334155;max-width:85ch}
+  .mbm-classroom .slide p {margin:.5em 0}
+  .mbm-classroom .slide>svg {max-width:900px;margin:18px auto;display:block;overflow:visible}
+  .mbm-classroom .slide>.tag {display:inline-block;background:var(--lo-bg);color:#183b4b;border-radius:8px;padding:6px 14px;font-size:.9rem;font-weight:800;letter-spacing:.04em}
+  .mbm-classroom .slide[data-classroom-phase="ido"]>.tag {background:var(--ido-bg);color:#68321f}
+  .mbm-classroom .slide[data-classroom-phase="wedo"]>.tag {background:var(--wedo-bg);color:#115c52}
+  .mbm-classroom .slide[data-classroom-phase="independent"]>.tag {background:var(--task-bg);color:#684811}
+  .mbm-classroom .slide>.time {float:right;border-radius:999px;background:#f5f7f8;color:#334155;border:1px solid #cbd5e1;font-size:.9rem}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.time {display:none}
+  .mbm-classroom .mbm-lesson-objective {background:var(--lo-bg);border-left:6px solid var(--lo-border);border-radius:12px;padding:14px 18px;margin:16px 0}
+  .mbm-classroom .mbm-lesson-success {background:var(--sc-bg);border-left:6px solid var(--sc-border);border-radius:12px;padding:14px 18px;margin:14px 0}
+  .mbm-classroom .box,.mbm-classroom .route,.mbm-classroom .route-card {background:#f8fafc;color:#1f2937;border:1px solid #cbd5e1;border-radius:12px;padding:16px}
+  .mbm-classroom .box.objective {background:var(--lo-bg);border-left:6px solid var(--lo-border)}
+  .mbm-classroom .lundy,.mbm-classroom .lundy-strip {background:#f8fafc;color:#334155;border:1px solid #dce3e8;border-radius:12px;padding:10px 14px;margin:22px 0 0}
+  /* Pupil voice is framed at arrival and revisited at the exit, without a
+     repeated process banner competing with each model and practical task. */
+  .mbm-classroom .slide[data-classroom-phase]:not([data-classroom-phase="title"]):not([data-classroom-phase="exit"])>.lundy,
+  .mbm-classroom .slide[data-classroom-phase]:not([data-classroom-phase="title"]):not([data-classroom-phase="exit"])>.lundy-strip {display:none}
+  .mbm-classroom .lundy-grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+  .mbm-classroom .lundy-grid>span {display:block;color:#213544;background:var(--lo-bg);border-radius:8px;padding:7px;text-align:center;font-size:.8rem;font-weight:800}
+  .mbm-classroom .lundy-grid>span:nth-child(2) {background:var(--ido-bg)}
+  .mbm-classroom .lundy-grid>span:nth-child(3) {background:var(--wedo-bg)}
+  .mbm-classroom .lundy-grid>span:nth-child(4) {background:var(--task-bg)}
+  .mbm-classroom .lundy p,.mbm-classroom .lundy-strip p {font-size:.85rem;margin:8px 0 0;max-width:none}
+  .mbm-classroom button {min-width:44px;min-height:44px;border-radius:10px;font-weight:700;background:var(--btn-hover);color:#fff;border:1px solid transparent;padding:10px 16px}
+  .mbm-classroom button:hover {background:#203f4c;color:#fff}
+  .mbm-classroom button:focus-visible,.mbm-classroom a:focus-visible,.mbm-classroom select:focus-visible,.mbm-classroom summary:focus-visible {outline:3px solid #ab5800;outline-offset:3px}
+  .mbm-classroom .controls {background:#fffffff5;backdrop-filter:blur(8px);border:1px solid #dbe3e8;box-shadow:0 4px 20px #182c3c18;border-radius:14px;padding:8px;gap:7px;flex-wrap:wrap;max-width:calc(100vw - 32px)}
+  .mbm-classroom .prog {background:#e7ecef}
+  .mbm-classroom .prog>span {background:var(--lo-border)}
+  .mbm-classroom .overlay-card {background:#fff;color:#1f2937;border-color:var(--lo-border)}
+  .mbm-classroom .slide[data-classroom-phase="title"] {text-align:center}
+  .mbm-classroom .slide[data-classroom-phase="title"]>p {max-width:760px;margin:14px auto;text-align:left}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.tag {background:#d98128;color:#172334}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.lundy {max-width:760px;margin:24px auto 0;text-align:left}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.box {text-align:left}
+  .mbm-classroom body.calm .slide {box-shadow:none}
+  @media(max-width:700px) {
+    .mbm-classroom main.deck {padding:14px 14px 180px}
+    .mbm-classroom main.deck>.slide {min-height:calc(100dvh - 205px);padding:20px 16px}
+    .mbm-classroom .slide p,.mbm-classroom .slide li {font-size:1.05rem}
+    .mbm-classroom .controls {left:14px;right:14px;bottom:14px;justify-content:center;max-width:none}
+    .mbm-classroom .controls button {font-size:.85rem;padding:8px 10px}
+    .mbm-classroom .lundy-grid {grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+  @media(prefers-reduced-motion:reduce) {
+    .mbm-classroom *, .mbm-classroom *::before, .mbm-classroom *::after {animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  }
+}
+</style><style id="mbm-classroom_activity-css">.mbm-activity{margin:1rem 0;padding:clamp(.8rem,2vw,1.25rem);border:2px solid currentColor;border-radius:16px;max-width:100%;box-sizing:border-box}
+.mbm-act-items{display:grid;gap:.65rem;margin:1rem 0}
+.mbm-act-row{padding:.65rem;border:1px solid currentColor;border-radius:10px;min-width:0}
+.mbm-act-row>label,.mbm-act-row legend{display:block;font-weight:700;margin-bottom:.4rem}
+.mbm-act-row fieldset{border:0;min-width:0;margin:0;padding:0}
+.mbm-act-row select{width:100%;max-width:100%;min-height:44px;padding:.45rem;font:inherit;color:#13212f;background:#fff;border:2px solid #506474;border-radius:6px}
+.mbm-act-choice{display:flex;align-items:center;gap:.5rem;min-height:44px;line-height:1.4;cursor:pointer}
+.mbm-act-choice input{flex:0 0 auto;width:1.25rem;height:1.25rem;margin:.25rem}
+.mbm-act-actions{display:flex;flex-wrap:wrap;gap:.5rem}
+.mbm-act-actions button{min-height:44px;padding:.6rem .9rem;font:inherit;font-weight:700;border:2px solid currentColor;border-radius:8px;cursor:pointer}
+.mbm-activity :is(button,input,select):focus-visible{outline:3px solid currentColor;outline-offset:3px}
+.mbm-act-row-feedback{margin:.45rem 0 0;font-size:.95em}
+.mbm-act-status{min-height:1.5em;font-weight:700}
+.mbm-act-explanations{padding:.5rem 1rem;border-left:4px solid currentColor}
+.mbm-act-explanations li{margin:.65rem 0}
+.mbm-act-explanations[hidden]{display:none!important}
+.mbm-act-figure{margin:.5rem auto;max-width:620px}
+.mbm-act-figure svg{display:block;width:100%;height:auto;max-height:300px}
+.mbm-act-figure figcaption{font-size:.9em;margin:.4rem 0}
+.mbm-activity-print,.mbm-activity-staff{display:none!important}
+#award-teacher-notes .mbm-activity-staff{display:block!important}
+@media print{
+ .mbm-activity,.mbm-activity-staff,#award-teacher-notes .mbm-activity-staff{display:none!important}
+ .mbm-activity-print{display:block!important;break-before:page;color:#111;background:#fff;font-size:11pt}
+ .mbm-activity-print li{break-inside:avoid;margin-bottom:.9rem}
+ .mbm-print-task{font-weight:700;margin:.3rem 0}
+ .mbm-print-options{font-size:10pt;margin:.3rem 0}
+ .mbm-print-response{margin:.7rem 0}
+ .mbm-activity-print .mbm-act-figure{max-width:110mm}
+}
+</style></head>
+<body>
+<!--mbm_guide_v1 retained as a contract marker; guidance state is memory-only-->
+<!--n6-nav1:v1-->
+<style id="n6-nav1-css">@media print{.mbmhome,.n6-splash{display:none!important}}.mbmhome{display:inline-block;margin:6px 0 0 8px;font:600 .85rem/1.4 "Segoe UI",Arial,sans-serif;color:#1e3a8a;text-decoration:none}.mbmhome:hover,.mbmhome:focus{text-decoration:underline}</style>
+<a class="mbmhome" href="../../index.html" aria-label="Back to the Lessons catalogue">← Lessons</a>
+<!--/n6-nav1-->
+<a class="skip" href="#lessonDeck">Skip to lesson</a>
+<main id="lessonDeck" class="deck">
+<section class="slide active" data-type="title" data-title="Lesson overview" data-min="0" data-classroom-phase="title">
+<div class="time">0 min</div>
+<span class="tag">BUILD Art</span>
+<h1>The Experience, Captured</h1><p>BUILD · Art · Week 5. Trinity Arts Award Bronze. The Experience, Captured.</p><p class="mbm-lesson-objective">Objective: Experience the arts, review a craft choice and its effect, then share your view and record whom, how and where the evidence is saved.</p><p class="mbm-lesson-success">Success evidence: a record of the experience, your view of its quality and effect, and a located record of sharing that view with another person.</p><p>Everything you capture comes from the work in front of you, or from a card in the approved pack. You write about the work: colour, scale, material, sound. You are never asked about your home, your family, your body, how you look or what you believe. Nobody in this room is asked what they believe. Identity here means what you as a maker keep choosing, read off artwork and never off a life.</p><p>Nothing is booked. No event and no place is named in this deck. We may go to them. They may come to us. We may meet live on a screen. An online exhibition counts as well. The frame works the same under all three.</p><p>40 minutes. Paper and a pencil are all you need to capture.</p><div class="box rehearsal" data-mbm-guide="staff">This deck evidences Bronze Part B, Explore the arts as an audience member. The register says Part B requires attending at least one arts event or experience, reflecting on quality and creative impact, and views shared with at least one other person, evidenced. The register also notes that an online exhibition is legitimate. Nothing is booked: the event comes from EVENT_SLOT, which is UNCONFIRMED, and no venue, organisation, practitioner or date is named anywhere in this deck. It runs unchanged under R1 pupils visit, R2 they come in, and R3 a live remote exchange. Where the experience has not yet run, a card from the approved pack stands in and the rows are labelled preparation, because the slots file counts desk research, archive and video as preparation only. Bronze attempted rule, in the register's words: ONE Attempted allowed overall. Any Not Attempted = Below Pass. The evidence file cap is 10 evidence files for the whole Bronze level, so today's frame sheet joins the Part B file rather than opening a new one. The three assessment areas are art form knowledge and understanding, creativity, and communication.</div><div class="box rehearsal" data-mbm-guide="staff">Delivery is through a validated centre; confirm local validation and an adviser trained at Bronze before assessment. Neither is asserted as completed here. Core, Extend and Challenge are support routes inside Bronze, not different awards. The prompts and sample quantities are teaching scaffolds, not extra assessment requirements. Scribe only the pupil’s own words. Store evidence by part; one cumulative file per part is a suggested four-file plan within the ten-file cap.</div><div class="box rehearsal" data-mbm-guide="staff">Read the current EVENT_SLOT from tools/artsaward/SLOTS.json before delivery. Reserve a genuine audience experience, including an online exhibition, then review and share in this sequence. Allow the event its real running time; this forty-minute lesson does not limit a longer event or claim all sixty Bronze hours. If the slot is still empty, use only the labelled preparation route and return to the actual experience and share later. An archive clip or desk card is preparation, not proof of attendance. The pupil must reflect on quality and creative impact, not just list details. Add pages to Part B; record the actual event, recipient, method and file plus page/slide/timecode after it happens.</div><div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+</section>
+<section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="2" data-ta1="Check EVENT_SLOT before the lesson. Announce whether this is the actual experience or preparation. Keep the route label visible; do not imply a booking." data-classroom-phase="arrival">
+<div class="time">2 min</div>
+<span class="tag">Retrieval</span>
+<h2>Arrival · retrieve</h2>
+<h3>Bring the frame back</h3><p>Your frame has four boxes in each row.</p><p>They hold a moment, a craft choice, its effect and its audience.</p><p>Read the row you tried in the last lesson.</p><p>That row came from the pack. It is preparation.</p><p>Today an adult will tell you which route is ready.</p><p>We may go out, guests may come in, or we may meet live on screen.</p><p>An online exhibition can be the real arts experience too.</p><p>If no experience is ready, keep the word preparation on your work.</p><p>Never change that label to make a folder look full.</p><p>Put your blank frame and a pencil where you can reach them.</p><div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+</section>
+<section class="slide" data-type="starter" data-title="Starter · create the need" data-min="3" data-classroom-phase="starter" data-ta1="Draw six thin lines with a white gap as the practice example. Read both views yourself; do not cast a pupil as the weak reviewer.">
+<div class="time">3 min</div>
+<span class="tag">Starter</span>
+<h2>Starter · create the need</h2>
+<h3>A list is not yet a review</h3><p>Listen to two practice views of a made-up line drawing.</p><p>The first says: there are six lines and a white space.</p><p>The second says: the thin lines leave a clear space, so my eye rests there.</p><p>Both views name things in the work.</p><p>Only the second links a choice to what it does.</p><p>A review gives your view, with a reason from the work.</p><p>You can like a work and still spot a weak choice.</p><p>You can dislike it and still explain a strong choice.</p><p>There is no right feeling to copy from the adult.</p><p>Which view gives a reader a reason they can check?</p><p>Point at first or second, then name the useful words.</p><div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+</section>
+<section class="slide" data-type="ido" data-title="I Do · model" data-min="5" data-ta1="Model with the drawing made in the starter. Point as you speak. Keep fact, judgement and effect separate; accept a different reason supported by the work." data-classroom-phase="ido">
+<div class="time">5 min</div>
+<span class="tag">I Do</span>
+<h2>I Do · model</h2>
+<h3>Choice, quality, effect</h3><p>Watch how I build a review of the practice drawing.</p><p>First I point at the narrow gap between two lines.</p><p>Next I name the choice: the lines are close together.</p><p>Then I judge its quality: the gap is clear all the way down.</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Boxes labelled NOTICE, JUDGE, EXPLAIN, SHARE. A reason connects your view to the work"><title>From a moment to a shared review</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">NOTICE</text><text x="73" y="88" text-anchor="middle" font-size="11">point at one part</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">JUDGE</text><text x="231" y="88" text-anchor="middle" font-size="11">how well it works</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">EXPLAIN</text><text x="389" y="88" text-anchor="middle" font-size="11">its effect on you</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">SHARE</text><text x="547" y="88" text-anchor="middle" font-size="11">let someone hear</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">A reason connects your view to the work</text></svg><p>That tells you how well the choice works.</p><p>Last I say its effect: my eye follows the gap down the page.</p><p>That tells you what the choice did for me.</p><p>I join those ideas with because.</p><p>The close lines guide my eye because the gap stays clear.</p><p>Quality does not mean that every mark must be neat.</p><p>A rough sound or torn edge can work well for its purpose.</p><p>I would judge that choice by what it helps the work do.</p><p>My view is an example. Do not copy it into your own review.</p><p>Your reason comes from the real work you see or hear.</p><div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+</section>
+<section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="3" data-ta1="Offer the on-screen controls, the matching paper task, speech or pointing. Model one response, then ask for a reason. Keep the practical work in the next stage." data-classroom-phase="wedo" data-ta2="Use the activity model key in Teacher tools. Discuss a justified different connection; this practice is not an award grade or proof of completed evidence.">
+<div class="time">3 min</div>
+<span class="tag">We Do</span>
+<h2>We Do · everyone commits</h2>
+<section class="mbm-activity" data-mbm-activity="BRONZE_ART_W5_B3-stage4-1" aria-labelledby="BRONZE_ART_W5_B3-stage4-1-heading" data-mode="order"><h3 id="BRONZE_ART_W5_B3-stage4-1-heading">Build the practice review</h3><p id="BRONZE_ART_W5_B3-stage4-1-instruction">Use the drawing. Put these notes in the model order: name a choice, judge how it works, then explain its effect. Choose a different position for each note.</p><figure class="mbm-act-figure"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 420 190" role="img" aria-labelledby="BRONZE_ART_W5_B3-stage4-1-screen-review-practice-title BRONZE_ART_W5_B3-stage4-1-screen-review-practice-desc"><title id="BRONZE_ART_W5_B3-stage4-1-screen-review-practice-title">Made-up practice drawing: six lines and a gap</title><desc id="BRONZE_ART_W5_B3-stage4-1-screen-review-practice-desc">Six dark lines run down the page, three on each side of a narrow clear gap in the centre. The lines bend slightly. This original teaching drawing is not an artist's work or an event record.</desc><rect x="1" y="1" width="418" height="188" rx="12" fill="#fffdf7" stroke="#202b3a"></rect><g fill="none" stroke="#202b3a" stroke-width="3"><path d="M149 20 C137 70 159 120 145 170"></path><path d="M172 20 C160 70 182 120 168 170"></path><path d="M194 20 C182 70 204 120 190 170"></path><path d="M222 20 C210 70 232 120 218 170"></path><path d="M245 20 C233 70 255 120 241 170"></path><path d="M268 20 C256 70 278 120 264 170"></path></g></svg><figcaption>Original practice drawing. It is not attributed to a real artist.</figcaption></figure><div class="mbm-act-items"><div class="mbm-act-row" data-activity-row="0"><label for="BRONZE_ART_W5_B3-stage4-1-row-1-select">My eye follows the gap down the page.</label><select id="BRONZE_ART_W5_B3-stage4-1-row-1-select" aria-describedby="BRONZE_ART_W5_B3-stage4-1-row-1-feedback"><option value="">Choose…</option><option value="1">1 · Choice</option><option value="2">2 · Quality</option><option value="3">3 · Effect</option></select><p class="mbm-act-row-feedback" id="BRONZE_ART_W5_B3-stage4-1-row-1-feedback"></p></div><div class="mbm-act-row" data-activity-row="1"><label for="BRONZE_ART_W5_B3-stage4-1-row-2-select">The lines are close together.</label><select id="BRONZE_ART_W5_B3-stage4-1-row-2-select" aria-describedby="BRONZE_ART_W5_B3-stage4-1-row-2-feedback"><option value="">Choose…</option><option value="1">1 · Choice</option><option value="2">2 · Quality</option><option value="3">3 · Effect</option></select><p class="mbm-act-row-feedback" id="BRONZE_ART_W5_B3-stage4-1-row-2-feedback"></p></div><div class="mbm-act-row" data-activity-row="2"><label for="BRONZE_ART_W5_B3-stage4-1-row-3-select">The gap stays clear from top to bottom.</label><select id="BRONZE_ART_W5_B3-stage4-1-row-3-select" aria-describedby="BRONZE_ART_W5_B3-stage4-1-row-3-feedback"><option value="">Choose…</option><option value="1">1 · Choice</option><option value="2">2 · Quality</option><option value="3">3 · Effect</option></select><p class="mbm-act-row-feedback" id="BRONZE_ART_W5_B3-stage4-1-row-3-feedback"></p></div></div><div class="mbm-act-actions"><button type="button" data-activity-action="check">Check choices</button><button type="button" data-activity-action="retry">Retry</button><button type="button" data-activity-action="explain" aria-expanded="false" aria-controls="BRONZE_ART_W5_B3-stage4-1-explanations">Show explanations</button></div><p class="mbm-act-status" role="status" aria-live="polite" aria-atomic="true"></p><div id="BRONZE_ART_W5_B3-stage4-1-explanations" class="mbm-act-explanations" hidden><h4>Model explanations</h4><ol><li><b>My eye follows the gap down the page.</b> — 3 · Effect. The last note gives the effect on this viewer.</li><li><b>The lines are close together.</b> — 1 · Choice. Start with the choice you can point to in the drawing.</li><li><b>The gap stays clear from top to bottom.</b> — 2 · Quality. Then judge how the choice works, using a detail we can check.</li></ol><p>This model supports discussion. A well-explained different connection can be useful too.</p></div><p class="mbm-act-discussion">Read the three notes as one review. Point to what supports the view. You may respond differently: give your own reason. This is practice, not evidence of an arts experience.</p><script type="application/json" data-activity-data>{"mode":"order","items":[{"answer":"3"},{"answer":"1"},{"answer":"2"}]}</script></section><div class="box rehearsal mbm-activity-staff" data-mbm-guide="staff"><h4>Activity model: Build the practice review</h4><ol><li><b>My eye follows the gap down the page.</b> — 3 · Effect. The last note gives the effect on this viewer.</li><li><b>The lines are close together.</b> — 1 · Choice. Start with the choice you can point to in the drawing.</li><li><b>The gap stays clear from top to bottom.</b> — 2 · Quality. Then judge how the choice works, using a detail we can check.</li></ol><p>This classroom check is not an award grade or proof of completed pupil evidence.</p><p>Accept other spoken review orders once pupils can distinguish the three jobs. This order is a scaffold, not an award rule. Do not grade a pupil’s personal response to the drawing.</p></div><div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+</section>
+<section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="4" data-ta1="Demonstrate a short share and its locator. A staff note may record what happened; staff must not compose the pupil’s view." data-classroom-phase="ido">
+<div class="time">4 min</div>
+<span class="tag">I Do</span>
+<h2>I Do 2 · connect</h2>
+<h3>Share the view, keep the proof</h3><p>Writing a review and sharing it are two different steps.</p><p>A page in a closed folder has not reached an audience.</p><p>I can read my view to a member of staff.</p><p>I can show a peer my review and talk it through.</p><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Boxes labelled REVIEW, SHARE RECORD. Keep the review and its share together"><title>Two parts of the evidence</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">REVIEW</text><text x="151" y="74" text-anchor="middle" font-size="11">your view and reason</text><text x="151" y="94" text-anchor="middle" font-size="11">quality and effect</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">SHARE RECORD</text><text x="469" y="74" text-anchor="middle" font-size="11">whom and how</text><text x="469" y="94" text-anchor="middle" font-size="11">file plus page or time</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Keep the review and its share together</text></svg><p>I can play my spoken review to a small group.</p><p>The person needs to receive my view, not just hold the paper.</p><p>Then I keep a record of who received it and how.</p><p>A short note or a sound clip can show that step.</p><p>Initials are one option, not a special rule of the award.</p><p>The file name alone may leave a reader searching.</p><p>Give the page, slide or time in the file as well.</p><p>For example: Bronze-B, page three, review shared with class staff.</p><p>Use the real file name and page for your own work.</p><div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+</section>
+<section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="5" data-ta1="Pair by agreed support needs and allow a staff audience. Do not insist on public performance. Keep this rehearsal separate from the actual Part B evidence." data-classroom-phase="wedo">
+<div class="time">5 min</div>
+<span class="tag">We Do</span>
+<h2>We Do 2 · lab</h2>
+<h3>Try the link before the experience</h3><p>Look once more at the practice drawing.</p><p>Choose a line or a gap and point at it.</p><p>Say what works well or could work better.</p><p>Say what that choice does for your eye.</p><p>Use because to link your view to the part you chose.</p><p>An adult can write your exact words if you want.</p><p>Read the view to someone at your table.</p><p>Ask which part they pictured from your words.</p><p>If they pictured a different part, make your clue more clear.</p><p>Record whom you told and how you told them.</p><p>Label this practice. It is not the event review.</p><p>Keep the frame ready for the experience that comes next.</p><div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+</section>
+<section class="slide" data-type="independent" data-title="Independent · evidence" data-min="14" data-ta1="Give at least the first eight minutes to uninterrupted viewing/listening, extending beyond the lesson if the event needs it. Then support the pupil’s own review. Record only an experience that happened; do not fill absent evidence." data-classroom-phase="independent">
+<div class="time">14 min</div>
+<span class="tag">Independent work</span>
+<h2>Independent · evidence</h2>
+<h3>Experience, then give your view</h3><p>Now take part as an audience member in the experience in use.</p><p>Look or listen first. Give the work time to unfold.</p><p>An adult will give you a quiet cue to make a note.</p><p>Choose one moment or one part that stayed with you.</p><p>Name a craft choice you saw or heard there.</p><p>It might be a colour, a shape, a beat or a material.</p><p>Describe how well that choice worked, with a reason.</p><p>Then say what effect it had on you as an audience member.</p><p>You may record a second moment if it helps you compare.</p><p>Build your short review from those notes, in your own words.</p><p>Check that your view points back to the actual work.</p><p>Do not use the made-up line drawing as event evidence.</p><p>If this lesson is preparation, keep that label and return to this step after the real experience.</p><p>Keep a note of the event or exhibition you actually experienced.</p><p>It can be added to your Part B file with your review.</p><ul><li>Core · Use the prompt boxes and an adult scribe to record your own view of quality and effect. Share it and locate the evidence.</li><li>Extend · Write or record your review with a reason from the work. Share it, and record whom, how and its locator.</li><li>Challenge · As Extend, compare two craft choices and explain which affected your own ideas more.</li></ul><div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+</section>
+<section class="slide" data-type="exit" data-title="Exit · Audience and Influence" data-min="4" data-ta1="Confirm the recipient actually received the review. Accept writing, faithful scribing or located audio/video. If the experience was only rehearsal, record a practice share and leave the genuine Part B evidence open." data-classroom-phase="exit">
+<div class="time">4 min</div>
+<span class="tag">Exit ticket</span>
+<h2>Exit · Audience and Influence</h2>
+<div class="lundy-status">
+<p>
+<b>SPACE:</b> the learner may pause or choose a private response.</p>
+<p>
+<b>VOICE:</b> the evidence statement remains in the learner’s chosen communication mode.</p>
+<p>
+<b>AUDIENCE:</b> a familiar adult receives and names back exactly what was heard or seen.</p>
+<p>
+<b>INFLUENCE:</b> one real next action is recorded: retain, add method detail, or leave open.</p>
+</div>
+<h3>Let your review reach someone</h3><p>Choose a peer, a small group or a staff member.</p><p>Read your review to them, show it to them or play your clip.</p><p>Share what you thought of the quality and what effect it had.</p><p>Let the person ask which part led to your view.</p><p>You can keep your view when someone disagrees with it.</p><p>Record whom you shared with and how you shared it.</p><p>Keep the note or clip beside your review in the Part B file.</p><p>Write the actual file name and page, slide or timecode.</p><p>Check that someone else can find both the review and the share.</p><p>Choose one craft choice from the experience to test in your own art.</p><p>Say why that choice caught your interest.</p><div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+</section>
+</main>
+<nav class="controls" aria-label="Lesson controls">
+<button type="button" data-nav="previous">◀ Previous</button><button type="button" data-tool="1">Teacher tools</button><button type="button" data-tool="2">Evidence &amp; print</button><button type="button" data-tool="3">Calm mode</button><button type="button" data-tool="4">Static diagrams</button><button type="button" data-nav="next">Next ▶</button></nav>
+<div class="prog" aria-hidden="true">
+<span>
+</span>
+</div>
+<div id="taOverlay" class="overlay" aria-hidden="true">
+<div class="overlay-card">
+<h2></h2>
+<p>Use the least prompt needed. Keep adult preparation and exact-word scribing separate from pupil authorship. Guidance is hidden from the learner surface by default.</p>
+<button type="button" data-close-overlay>Close</button>
+</div>
+</div>
+<section class="print-pack printpack award-print" aria-label="Printable lesson pack">
+      <section class="print-page">
+        <div class="running-head">BUILD Art · Week 5 · Art · Trinity Arts Award Bronze</div><h1>The Experience, Captured</h1>
+        <p><b>Award evidence:</b> Bronze Arts Award, Part B; no workbook cell (AAE-H7)</p>
+        <p><b>Objective:</b> Experience the arts, review a craft choice and its effect, then share your view and record whom, how and where the evidence is saved.</p>
+        <h2>My evidence record</h2><p>Keep your own view. Label rehearsal as preparation. After the real experience, record the review and the share.</p><p>The real experience · Choice, quality and effect · My review · Whom, how and where</p>
+        <table><thead><tr><th>Evidence focus</th><th>My words or response</th><th>File and page, slide or time</th></tr></thead>
+        <tbody><tr><th scope="row">The experience actually seen or heard, through the route in use.</th><td class="award-response"></td><td class="award-locator"></td></tr><tr><th scope="row">Your view of quality and creative impact, grounded in the work.</th><td class="award-response"></td><td class="award-locator"></td></tr><tr><th scope="row">Who received the review, how, and the evidence locator.</th><td class="award-response"></td><td class="award-locator"></td></tr></tbody></table>
+        <div class="award-print-figures"><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Boxes labelled NOTICE, JUDGE, EXPLAIN, SHARE. A reason connects your view to the work"><title>From a moment to a shared review</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">NOTICE</text><text x="73" y="88" text-anchor="middle" font-size="11">point at one part</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">JUDGE</text><text x="231" y="88" text-anchor="middle" font-size="11">how well it works</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">EXPLAIN</text><text x="389" y="88" text-anchor="middle" font-size="11">its effect on you</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">SHARE</text><text x="547" y="88" text-anchor="middle" font-size="11">let someone hear</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">A reason connects your view to the work</text></svg><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Boxes labelled REVIEW, SHARE RECORD. Keep the review and its share together"><title>Two parts of the evidence</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">REVIEW</text><text x="151" y="74" text-anchor="middle" font-size="11">your view and reason</text><text x="151" y="94" text-anchor="middle" font-size="11">quality and effect</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">SHARE RECORD</text><text x="469" y="74" text-anchor="middle" font-size="11">whom and how</text><text x="469" y="94" text-anchor="middle" font-size="11">file plus page or time</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Keep the review and its share together</text></svg></div>
+        <p>Name or learner code: ____________________ Date: ____________________</p>
+      </section>
+      <section class="print-page">
+        <div class="running-head">BUILD Art · Week 5 · Art · Trinity Arts Award Bronze</div><h1>The Experience, Captured</h1>
+        <h2>Choose the support you need</h2><div class="print-route"><h3>Core</h3><p>Use the prompt boxes and an adult scribe to record your own view of quality and effect. Share it and locate the evidence.</p></div><div class="print-route"><h3>Extend</h3><p>Write or record your review with a reason from the work. Share it, and record whom, how and its locator.</p></div><div class="print-route"><h3>Challenge</h3><p>As Extend, compare two craft choices and explain which affected your own ideas more.</p></div>
+        <h2>Check the evidence</h2><ol><li>The record identifies an actual arts experience; rehearsal is clearly labelled preparation.</li><li>The pupil’s own review explains quality and creative impact with a reason from the work.</li><li>At least one other person received the review; whom and how are recorded.</li><li>The actual file name plus page, slide or timecode locates both the review and the sharing record.</li></ol>
+        <h2>My review or next step</h2><div class="award-review-space"></div>
+        <p>For a recorded response, write the actual file name and page, slide or timecode.</p>
+      </section>
+    <section class="mbm-activity-print" data-activity-print="BRONZE_ART_W5_B3-stage4-1-print" aria-labelledby="BRONZE_ART_W5_B3-stage4-1-print-heading"><h3 id="BRONZE_ART_W5_B3-stage4-1-print-heading">Build the practice review</h3><p>Use the drawing. Put these notes in the model order: name a choice, judge how it works, then explain its effect. Choose a different position for each note.</p><figure class="mbm-act-figure"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 420 190" role="img" aria-labelledby="BRONZE_ART_W5_B3-stage4-1-print-review-practice-title BRONZE_ART_W5_B3-stage4-1-print-review-practice-desc"><title id="BRONZE_ART_W5_B3-stage4-1-print-review-practice-title">Made-up practice drawing: six lines and a gap</title><desc id="BRONZE_ART_W5_B3-stage4-1-print-review-practice-desc">Six dark lines run down the page, three on each side of a narrow clear gap in the centre. The lines bend slightly. This original teaching drawing is not an artist's work or an event record.</desc><rect x="1" y="1" width="418" height="188" rx="12" fill="#fffdf7" stroke="#202b3a"></rect><g fill="none" stroke="#202b3a" stroke-width="3"><path d="M149 20 C137 70 159 120 145 170"></path><path d="M172 20 C160 70 182 120 168 170"></path><path d="M194 20 C182 70 204 120 190 170"></path><path d="M222 20 C210 70 232 120 218 170"></path><path d="M245 20 C233 70 255 120 241 170"></path><path d="M268 20 C256 70 278 120 264 170"></path></g></svg><figcaption>Original practice drawing. It is not attributed to a real artist.</figcaption></figure><ol><li><p class="mbm-print-task">My eye follows the gap down the page.</p><p class="mbm-print-options">1 · Choice · 2 · Quality · 3 · Effect</p><p class="mbm-print-response">My choice / reason: <span>____________________________</span></p></li><li><p class="mbm-print-task">The lines are close together.</p><p class="mbm-print-options">1 · Choice · 2 · Quality · 3 · Effect</p><p class="mbm-print-response">My choice / reason: <span>____________________________</span></p></li><li><p class="mbm-print-task">The gap stays clear from top to bottom.</p><p class="mbm-print-options">1 · Choice · 2 · Quality · 3 · Effect</p><p class="mbm-print-response">My choice / reason: <span>____________________________</span></p></li></ol><p>Read the three notes as one review. Point to what supports the view. You may respond differently: give your own reason. This is practice, not evidence of an arts experience.</p></section></section><!--n6-nav1:v1--><div class="n6-splash"><div style="text-align:center;margin-top:8px"><svg width="64" height="64" viewbox="0 0 100 100" aria-label="Made by Matt"><circle cx="50" cy="50" r="47" fill="none" stroke="#1e3a8a" stroke-width="3.4"></circle><g transform="translate(0 2)"><path d="M28 71 L28 37 L50 59 L72 37 L72 71" fill="none" stroke="#1e3a8a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 22.5 L51.48 28.52 L57.5 30 L51.48 31.48 L50 37.5 L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"></path></g></svg></div></div><!--/n6-nav1--><script id="lesson-config" type="application/json">{"id": "BRONZE_ART_W5_B3", "family": "BUILD Art", "week": 5, "slot": "Art · Trinity Arts Award Bronze", "title": "The Experience, Captured", "outcomes": ["Experience the arts event or exhibition through EVENT_SLOT, review its quality and creative impact, then share that review with another person and record whom, how and the evidence locator."], "cells": [], "objective": "Experience the arts, review a craft choice and its effect, then share your view and record whom, how and where the evidence is saved.", "timings": [0, 2, 3, 5, 3, 4, 5, 14, 4], "artsAward": {"level": "Bronze", "parts": ["B"], "slots": ["EVENT_SLOT"]}, "planId": "a08e3b9b8369", "weDoType": "sequence-or-rank", "tierLadder": ["Core", "Extend", "Challenge"]}</script>
+<script data-award-chassis="">/* Runtime for newly authored award decks; no persistence or external dependencies. */
+(function () {
+  'use strict';
+
+  function boot() {
+    const deck = document.querySelector('main.deck');
+    const slides = Array.from(document.querySelectorAll('main.deck > .slide'));
+    if (!deck || !slides.length) return;
+    const progress = document.querySelector('.prog');
+    const bar = document.querySelector('.prog > span');
+    const overlay = document.getElementById('taOverlay');
+    const card = overlay && overlay.querySelector('.overlay-card');
+    const closeButton = overlay && overlay.querySelector('[data-close-overlay]');
+    const teacherButtons = document.querySelectorAll('[data-tool="1"]');
+    let index = Math.max(0, slides.findIndex(slide => slide.classList.contains('active')));
+    let returnFocus = null;
+    let notes = null;
+    let slotHost = null;
+
+    function show(next) {
+      index = (next + slides.length) % slides.length;
+      slides.forEach(function (slide, i) {
+        slide.classList.toggle('active', i === index);
+        slide.setAttribute('aria-hidden', i === index ? 'false' : 'true');
+      });
+      if (bar) bar.style.width = ((index + 1) / slides.length * 100) + '%';
+      if (progress) {
+        progress.removeAttribute('aria-hidden');
+        progress.setAttribute('role', 'progressbar');
+        progress.setAttribute('aria-label', 'Lesson progress');
+        progress.setAttribute('aria-valuemin', '1');
+        progress.setAttribute('aria-valuemax', String(slides.length));
+        progress.setAttribute('aria-valuenow', String(index + 1));
+        progress.setAttribute('aria-valuetext', 'Stage ' + (index + 1) + ' of ' + slides.length);
+      }
+      deck.scrollTop = 0;
+    }
+
+    function isOpen() {
+      return Boolean(overlay && overlay.classList.contains('on'));
+    }
+
+    function fillNotes() {
+      notes.replaceChildren();
+      const heading = document.createElement('h3');
+      heading.textContent = slides[index].dataset.title || 'Current stage';
+      notes.appendChild(heading);
+      ['ta1', 'ta2'].forEach(function (key) {
+        const text = slides[index].dataset[key];
+        if (!text) return;
+        const paragraph = document.createElement('p');
+        paragraph.textContent = text;
+        notes.appendChild(paragraph);
+      });
+      const sources = index === 0 ? [slides[0]] : [slides[index], slides[0]];
+      sources.forEach(function (source) {
+        source.querySelectorAll('[data-mbm-guide]').forEach(function (note) {
+          // The slot reader has its own live state and file listener: never clone it.
+          if (note.id === 'award-slot-panel' || note.closest('#award-slot-panel')) return;
+          const copy = note.cloneNode(true);
+          copy.removeAttribute('id');
+          copy.querySelectorAll('[id]').forEach(node => node.removeAttribute('id'));
+          notes.appendChild(copy);
+        });
+      });
+      // mount() runs on DOMContentLoaded. A real click comes after that event,
+      // regardless of the order in which the two embedded scripts were loaded.
+      const panel = document.getElementById('award-slot-panel');
+      if (panel && !slotHost.contains(panel)) slotHost.appendChild(panel);
+    }
+
+    function openTeacher(button) {
+      if (!card || isOpen()) return;
+      returnFocus = button || document.activeElement;
+      fillNotes();
+      overlay.classList.add('on');
+      overlay.setAttribute('aria-hidden', 'false');
+      teacherButtons.forEach(node => node.setAttribute('aria-expanded', 'true'));
+      (closeButton || card).focus();
+    }
+
+    function closeTeacher() {
+      if (!isOpen()) return;
+      overlay.classList.remove('on');
+      overlay.setAttribute('aria-hidden', 'true');
+      teacherButtons.forEach(node => node.setAttribute('aria-expanded', 'false'));
+      if (returnFocus && returnFocus.isConnected) returnFocus.focus();
+    }
+
+    function focusable() {
+      return Array.from(card.querySelectorAll('a[href], button, input, select, textarea, [tabindex]'))
+        .filter(node => !node.disabled && node.tabIndex >= 0 && node.getClientRects().length);
+    }
+
+    if (card) {
+      overlay.setAttribute('role', 'dialog');
+      overlay.setAttribute('aria-modal', 'true');
+      overlay.setAttribute('aria-hidden', 'true');
+      overlay.classList.remove('on');
+      card.tabIndex = -1;
+      let title = card.querySelector('h2');
+      if (!title) {
+        title = document.createElement('h2');
+        card.prepend(title);
+      }
+      title.id = 'award-teacher-title';
+      title.textContent = 'Teacher tools';
+      overlay.setAttribute('aria-labelledby', title.id);
+      notes = document.createElement('div');
+      notes.id = 'award-teacher-notes';
+      slotHost = document.createElement('div');
+      slotHost.id = 'award-teacher-slots';
+      card.insertBefore(notes, closeButton);
+      card.insertBefore(slotHost, closeButton);
+      if (closeButton) closeButton.addEventListener('click', closeTeacher);
+      teacherButtons.forEach(function (button) {
+        button.setAttribute('aria-controls', overlay.id);
+        button.setAttribute('aria-expanded', 'false');
+        button.addEventListener('click', () => openTeacher(button));
+      });
+      // Keep focus in the open dialog, including when scripts attempt to move it.
+      document.addEventListener('focusin', function (event) {
+        if (isOpen() && !overlay.contains(event.target)) (closeButton || card).focus();
+      });
+    }
+
+    document.querySelectorAll('[data-nav="previous"], [data-tool="5"]')
+      .forEach(button => button.addEventListener('click', () => { if (!isOpen()) show(index - 1); }));
+    document.querySelectorAll('[data-nav="next"], [data-tool="6"]')
+      .forEach(button => button.addEventListener('click', () => { if (!isOpen()) show(index + 1); }));
+    document.querySelectorAll('[data-tool="2"]')
+      .forEach(button => button.addEventListener('click', () => window.print()));
+    [['3', 'calm'], ['4', 'teacher-freeze']].forEach(function (item) {
+      const buttons = document.querySelectorAll('[data-tool="' + item[0] + '"]');
+      function sync() {
+        const active = document.body.classList.contains(item[1]);
+        buttons.forEach(button => button.setAttribute('aria-pressed', String(active)));
+      }
+      buttons.forEach(button => button.addEventListener('click', function () {
+        document.body.classList.toggle(item[1]);
+        sync();
+      }));
+      sync();
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (isOpen()) {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          closeTeacher();
+        } else if (event.key === 'Tab') {
+          const items = focusable();
+          const first = items[0] || card;
+          const last = items[items.length - 1] || card;
+          if (!items.length || !items.includes(document.activeElement)
+              || (event.shiftKey && document.activeElement === first)
+              || (!event.shiftKey && document.activeElement === last)) {
+            event.preventDefault();
+            (event.shiftKey ? last : first).focus();
+          }
+        }
+        return;
+      }
+      const target = event.target;
+      if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey
+          || (target && (target.isContentEditable
+              || (typeof target.closest === 'function' && target.closest('input, textarea, select'))))
+          || document.querySelector('dialog[open], .overlay.on, [role="dialog"][aria-hidden="false"]')) return;
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        event.preventDefault();
+        show(index + (event.key === 'ArrowRight' ? 1 : -1));
+      }
+    });
+    show(index);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once: true});
+  else boot();
+}());
+</script><script id="mbm-classroom_activity-js">/* Native controls only; no network, persistence, timers or focus trap. */
+(function () {
+  'use strict';
+  function mount(root) {
+    if (root.dataset.activityReady) return;
+    const status = root.querySelector('.mbm-act-status');
+    const rows = Array.from(root.querySelectorAll('[data-activity-row]'));
+    const actions = root.querySelectorAll('[data-activity-action]');
+    const explanations = root.querySelector('.mbm-act-explanations');
+    const explainButton = root.querySelector('[data-activity-action="explain"]');
+    let data;
+    try {
+      data = JSON.parse(root.querySelector('[data-activity-data]').textContent);
+      if (!['sort', 'match', 'choice', 'order'].includes(data.mode)
+          || data.items.length !== rows.length || !rows.length) throw new Error('shape');
+      data.items.forEach(function (item, i) {
+        const controls = Array.from(rows[i].querySelectorAll('option, input[type="radio"]'));
+        if (typeof item.answer !== 'string' || !controls.some(node => node.value === item.answer)) throw new Error('answer');
+      });
+    } catch (_) {
+      status.textContent = 'This activity could not load. Use the printed task or discuss the questions with your teacher.';
+      actions.forEach(button => { button.disabled = true; });
+      root.dataset.activityReady = 'error';
+      return;
+    }
+    root.dataset.activityReady = 'true';
+    function selected(row) {
+      const select = row.querySelector('select');
+      const radio = row.querySelector('input[type="radio"]:checked');
+      return select ? select.value : (radio ? radio.value : '');
+    }
+    function clearFeedback() {
+      rows.forEach(function (row) {
+        row.querySelector('.mbm-act-row-feedback').textContent = '';
+        row.removeAttribute('data-check');
+      });
+    }
+    root.addEventListener('change', function (event) {
+      if (!event.target.matches('select, input[type="radio"]')) return;
+      clearFeedback();
+      status.textContent = 'Choice changed. Use Check choices when you are ready.';
+    });
+    root.addEventListener('click', function (event) {
+      const button = event.target.closest('[data-activity-action]');
+      if (!button || !root.contains(button)) return;
+      const action = button.dataset.activityAction;
+      if (action === 'retry') {
+        root.querySelectorAll('select').forEach(select => { select.value = ''; });
+        root.querySelectorAll('input[type="radio"]').forEach(input => { input.checked = false; });
+        clearFeedback();
+        explanations.hidden = true;
+        explainButton.setAttribute('aria-expanded', 'false');
+        explainButton.textContent = 'Show explanations';
+        status.textContent = 'Choices cleared. Try again, or discuss a question with a partner.';
+        const first = rows[0].querySelector('select, input[type="radio"]');
+        if (first) first.focus();
+      } else if (action === 'explain') {
+        explanations.hidden = !explanations.hidden;
+        explainButton.setAttribute('aria-expanded', String(!explanations.hidden));
+        explainButton.textContent = explanations.hidden ? 'Show explanations' : 'Hide explanations';
+        status.textContent = explanations.hidden ? 'Model explanations hidden.' : 'Model explanations shown below. Compare the reasons with your own.';
+      } else if (action === 'check') {
+        const values = rows.map(selected);
+        const duplicates = data.mode === 'order'
+          ? values.filter((v, i) => v && values.indexOf(v) !== i) : [];
+        let missing = false, revisit = false;
+        rows.forEach(function (row, i) {
+          let text, result;
+          if (!values[i]) {
+            text = 'Choose a response, or point to your choice with a partner.';
+            result = 'missing'; missing = true;
+          } else if (duplicates.includes(values[i])) {
+            text = 'This position is used more than once. Give each note a different position.';
+            result = 'review'; revisit = true;
+          } else if (values[i] === data.items[i].answer) {
+            text = 'Matches the model. Can you explain your choice?'; result = 'match';
+          } else {
+            text = 'Compare your reason with the model explanation, then keep or change your choice.';
+            result = 'review'; revisit = true;
+          }
+          row.querySelector('.mbm-act-row-feedback').textContent = text;
+          row.dataset.check = result;
+        });
+        status.textContent = missing
+          ? 'Some choices are still blank. Choose, point or discuss; then check again.'
+          : revisit
+            ? 'Some choices differ from the model. Read the explanations and discuss your reasons.'
+            : 'Your choices match the model. Explain one, then use the idea in your own work.';
+      }
+    });
+  }
+  function boot() {
+    document.querySelectorAll('[data-mbm-activity]').forEach(mount);
+    const deck = document.querySelector('main.deck');
+    const toolbar = document.querySelector('.controls');
+    if (!deck || !toolbar || !deck.querySelector('[data-mbm-activity]')) return;
+    // Wrapped toolbar rows can be taller than the donor's fixed allowance.
+    // Reserve their actual height so the last response can scroll clear.
+    const reserve = function () {
+      const space = Math.max(0, window.innerHeight - toolbar.getBoundingClientRect().top) + 18;
+      deck.style.paddingBottom = space + 'px';
+      deck.style.scrollPaddingBottom = space + 'px';
+    };
+    reserve();
+    window.addEventListener('resize', reserve);
+    if (window.ResizeObserver) new ResizeObserver(reserve).observe(toolbar);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once: true});
+  else boot();
+}());
+</script><script data-award-slot-reader>
+/* One current slot source. Embedded only in slot-dependent award decks. */
+(function (root, factory) {
+  const api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else root.MBMArtsSlots = api;
+}(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  'use strict';
+  function readSlots(doc, required) {
+    if (!doc || doc.schema !== 'arts-award-slots-v1' || !doc.slots || !Array.isArray(required)) {
+      throw new Error('Choose the current Arts Award slots file.');
+    }
+    return required.map(function (key) {
+      const slot = doc.slots[key];
+      if (!slot || !Array.isArray(slot.entries)) throw new Error('A required slot is missing.');
+      const entries = slot.entries.map(function (entry) {
+        if (!entry || typeof entry !== 'object' || Array.isArray(entry)) throw new Error('Invalid slot entry.');
+        const status = String(entry.status || 'UNCONFIRMED').toUpperCase();
+        const confirmed = status === 'CONFIRMED' || status === 'BOOKED';
+        const name = String(entry.name || entry.title || '').trim();
+        const route = String(entry.route || '').trim();
+        return {name: name, route: route, date: String(entry.date || ''),
+          confirmed: confirmed && Boolean(name) && ['R1', 'R2', 'R3'].includes(route)};
+      });
+      return {key: key, entries: entries, ready: entries.some(e => e.confirmed)};
+    });
+  }
+  async function loadHosted(url, required, fetcher) {
+    const response = await fetcher(url, {cache: 'no-store', credentials: 'same-origin'});
+    if (!response.ok) throw new Error('Current slots could not be loaded.');
+    return readSlots(await response.json(), required);
+  }
+  async function loadFile(file, required) {
+    if (!file || file.size > 1048576) throw new Error('Choose a slots JSON file smaller than 1 MB.');
+    return readSlots(JSON.parse(await file.text()), required);
+  }
+  function mount(config) {
+    const host = document.querySelector('section[data-min]');
+    if (!host || document.getElementById('award-slot-panel')) return;
+    const panel = document.createElement('div');
+    panel.id = 'award-slot-panel';
+    panel.className = 'box rehearsal';
+    panel.dataset.mbmGuide = 'staff';
+    panel.dataset.audience = 'staff';
+    const heading = document.createElement('h3');
+    heading.textContent = 'Current session details';
+    const status = document.createElement('p');
+    status.setAttribute('role', 'status');
+    const list = document.createElement('ul');
+    const label = document.createElement('label');
+    label.textContent = 'Open the current SLOTS.json file: ';
+    const input = document.createElement('input');
+    input.type = 'file'; input.accept = '.json,application/json';
+    label.appendChild(input);
+    panel.append(heading, status, list, label); host.appendChild(panel);
+    let generation = 0;
+    function fallback(message) {
+      list.replaceChildren();
+      status.textContent = 'Unconfirmed — preparation only. ' + message;
+    }
+    function show(rows) {
+      list.replaceChildren();
+      const allReady = rows.length > 0 && rows.every(row => row.ready);
+      status.textContent = allReady
+        ? 'A confirmed route is recorded. Staff must check arrangements before delivery.'
+        : 'Unconfirmed — preparation only. Complete the actual experience when a route is ready.';
+      rows.forEach(function (row) {
+        const item = document.createElement('li');
+        const ready = row.entries.filter(entry => entry.confirmed);
+        item.textContent = row.key + ': ' + (ready.length
+          ? ready.map(e => [e.name, e.route, e.date].filter(Boolean).join(' · ')).join('; ')
+          : 'no confirmed entry');
+        list.appendChild(item);
+      });
+    }
+    input.addEventListener('change', async function () {
+      const ticket = ++generation;
+      fallback('Reading the selected file.');
+      try { const rows = await loadFile(input.files[0], config.required); if (ticket === generation) show(rows); }
+      catch (_) { if (ticket === generation) fallback('The selected file could not be read.'); }
+    });
+    fallback('Load the shared slots file to check the current route.');
+    if (location.protocol === 'http:' || location.protocol === 'https:') {
+      const ticket = ++generation;
+      loadHosted(config.url, config.required, window.fetch.bind(window))
+        .then(rows => { if (ticket === generation) show(rows); })
+        .catch(() => { if (ticket === generation) fallback('Open the local slots file if you are offline.'); });
+    }
+  }
+  return {readSlots: readSlots, loadHosted: loadHosted, loadFile: loadFile, mount: mount};
+}));
+
+document.addEventListener("DOMContentLoaded",function(){MBMArtsSlots.mount({"required": ["EVENT_SLOT"], "url": "../../tools/artsaward/SLOTS.json"});});
+</script></body>
+</html>

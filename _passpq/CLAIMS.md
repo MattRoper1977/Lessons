@@ -109,7 +109,9 @@ Verbatim:
   names the **Award** size. The "L2 stretch" is the deliberate design brief §4 protects.
 - `PEQ Level 1 per the 2026/27 Qualification Map (E3–L1 only)` (GROW Scheme) — **VALID.**
 - `registration via UAS coordinator` / `PEQ cohort registration via the UAS/ASDAN
-  coordinator` — VALID as process note (see §2a caveat).
+  coordinator` — **STALE from 2026-08-21**: no longer a forward-looking process note —
+  learners are registered and their units are entered. VALID as a record of the route that
+  was used (see §2a caveat).
 
 ### 3b · Unit-name banking claims — the drift
 

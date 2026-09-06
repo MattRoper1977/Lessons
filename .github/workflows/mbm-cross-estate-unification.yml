@@ -12,6 +12,7 @@ on:
       - tools/verify_cross_estate_unification.py
       - tools/verify_cross_estate_browser.mjs
       - docs/MBM_CROSS_ESTATE_UNIFICATION.md
+      - .github/workflows/education-pages.yml
       - .github/workflows/mbm-cross-estate-unification.yml
   push:
     branches: [main]
@@ -24,6 +25,7 @@ on:
       - tools/verify_cross_estate_unification.py
       - tools/verify_cross_estate_browser.mjs
       - docs/MBM_CROSS_ESTATE_UNIFICATION.md
+      - .github/workflows/education-pages.yml
       - .github/workflows/mbm-cross-estate-unification.yml
   # Every trigger above is a path filter over files THIS repository owns. The
   # thing this workflow exists to catch is divergence from the canonical site
@@ -88,12 +90,16 @@ jobs:
           path: _reference/site
           fetch-depth: 1
 
+      - name: Install the teaching pack HTML parser
+        run: python -m pip install lxml==6.0.1
+
       - name: Verify preservation, local shell and positive control
         shell: bash
         run: |
           set -euo pipefail
           git fetch origin main
           python tools/verify_cross_estate_unification.py --base origin/main --canonical _reference/site --self-test
+          if [ -f resources.json ]; then python tools/science_teaching_packs/check_packs.py; fi
           python -m json.tool "$([ -f resources.json ] && echo resources.json || echo apps.json)" >/dev/null
           node --check assets/mbm-platform.js
           node --check assets/mbm-theme.js
@@ -175,6 +181,12 @@ jobs:
           node tools/verify_hud_on_lessons_games.mjs --self-test
           MBM_BASE_URL="http://127.0.0.1:4176/" node tools/verify_hud_on_lessons_games.mjs
 
+      - name: Verify the published Education menu and unchanged standalone pages
+        shell: bash
+        run: |
+          if [ -f resources.json ]; then prefix=Lessons; else prefix=Matt-s-Apps-; fi
+          MBM_NAVIGATION_MODE=education MBM_BASE_URL="https://madebymatt.uk/$prefix/" MBM_BROWSER_OUTPUT=audit-output/published-navigation node tools/verify_cross_estate_browser.mjs
+
       - name: Print browser evidence
         if: always()
         shell: bash
@@ -243,7 +255,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          MBM_BASE_URL="$(cat /tmp/mbm-live-base)" MBM_CACHE_BUST="$GITHUB_SHA" node tools/verify_cross_estate_browser.mjs
+          MBM_NAVIGATION_MODE=education MBM_BASE_URL="$(cat /tmp/mbm-live-base)" MBM_CACHE_BUST="$GITHUB_SHA" node tools/verify_cross_estate_browser.mjs
 
       - name: Record production proof on the release PR
         env:

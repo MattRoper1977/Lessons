@@ -50,7 +50,7 @@ and **names to ASDAN roughly four weeks before sampling**. Those are centre acti
 | field | value |
 |---|---|
 | Regulated? | **Yes — regulated qualifications.** Operational 1 January 2026. E3 / L1 / L2 / L3. |
-| Registration | centre registered, suite approved — DONE. **Learner registration must precede assessment.** |
+| Registration | centre registered, suite approved, learners registered and units entered — DONE. |
 | Signatures | assessor **and** learner — live estate-wide since `bc215d1` (**R-E20/R-E21**), present on all 79 ASDAN witness surfaces |
 | QA | **IQA before EQA.** First-year centres **must book an EQA sampling activity in year one** — open, `_close/OPEN_ITEMS.md` #11 |
 | Units delivered | **ComSk1** (Communication skills, L1) — Ofqual `T/651/6412`, **3 credits**, **27 GLH** |
@@ -80,7 +80,7 @@ Being withdrawn: purchases and registrations to 31 December 2026, final certific
 | **May NOT claim** | "predicted UAS grade" · a UAS **level** · that UAS is a qualification |
 | Approved wording | *"Evidence status reviewed; remaining unit outcomes identified."* |
 | Status at HEAD | **Q-002, `verified`. R-SEMH06: the claim that estate surfaces misdescribe UAS is FALSE and RETIRED.** Re-measured by TK-1 at `74e6fee` and confirmed. **Not re-raised.** |
-| Open | **25 files carry `AQA UAS unit code: TBC (Cheryl)`** — `_close/OPEN_ITEMS.md` #8, Q-003 `awaiting-centre-confirmation`, commissioned as SEMH-2. Not TK-1's. |
+| Open | **60 tracked `*.html` carry `AQA UAS unit code: TBC (Cheryl)`** (re-measured PEQ-YEAR-2; 25 held byte-pristine by OPEN_ITEMS item 17, 35 `v3_40min` variants outside that set) — `_close/OPEN_ITEMS.md` #8, Q-003 `awaiting-centre-confirmation`, commissioned as SEMH-2. Not TK-1's. |
 
 ### 6 · Trinity Arts Award — Explore, Bronze, Silver
 

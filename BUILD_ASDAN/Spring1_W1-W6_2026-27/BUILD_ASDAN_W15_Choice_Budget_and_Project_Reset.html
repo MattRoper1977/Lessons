@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Choice, budget and project reset · BUILD ASDAN</title>
+<style>
+:root{--ink:#17223B;--paper:#FFFCF5;--soft:#F3F6F8;--line:#CAD5DF;--muted:#526274;--gold:#B57918;--green:#246B55;--slot:#346B7B;--slot-pale:#EAF6F8;--danger:#8A3C2D}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:"Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--soft)}
+body{overflow:hidden}a,button{font:inherit}button,a.mbmhome{min-height:44px;min-width:44px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:8px;top:8px;z-index:50;background:#fff;padding:10px}
+.deck{height:100vh;padding:18px 18px 112px;overflow:auto}.slide{display:none;max-width:1120px;min-height:calc(100vh - 145px);margin:auto;background:var(--paper);border:2px solid var(--line);border-top:10px solid var(--slot);border-radius:18px;padding:22px;box-shadow:0 8px 30px #10233f18}.slide.active{display:block}
+h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-size:clamp(1.5rem,3vw,2.3rem);margin:.4rem 0 1rem}h3{margin:.2rem 0 .45rem}p,li{line-height:1.5}.tag,.time,.chips span{display:inline-block;border-radius:999px;padding:6px 10px;font-weight:800}.tag{background:var(--slot-pale)}.time{float:right;background:var(--ink);color:#fff}.chips{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.chips span{background:#FFF3D4}
+.hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,.7fr);gap:18px}.hero-visual{display:grid;gap:10px;align-content:center;background:var(--ink);color:#fff;border-radius:16px;padding:18px;min-height:150px;text-align:center}.hero-visual span{color:var(--slot)}
+.box,.route,.route-card,.evidence-gate,.lundy,.lundy-strip,.ladder,.prompt-ladder,.ta-card,.modal,.drawer,dialog{border:2px solid var(--line);border-radius:13px;padding:13px;margin:12px 0;background:#fff}.lo{border-left:8px solid var(--slot)}.truth{border-left:8px solid var(--gold);background:#FFF3D4;padding:12px}.access{background:var(--slot-pale);padding:12px;border-radius:12px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.routes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.route.s,.route.supported,.route-card.supported{border-top:7px solid var(--green)}.route.m,.route.standard,.route-card.standard{border-top:7px solid var(--slot)}.route.h,.route.stretch,.route-card.stretch{border-top:7px solid var(--gold)}.options{display:grid;gap:9px}.options button{text-align:left;padding:12px;border:2px solid var(--line);border-radius:10px;background:#fff}.vocabrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.vterm{border:2px solid var(--line);padding:12px;border-radius:12px}.vterm span{display:block;margin-top:5px}.lundy-grid,.lundy-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center;font-weight:900}.ladder,.prompt-ladder{font-weight:700}.ta-card,.modal,.drawer{background:#FFF3D4}
+.controls{position:fixed;left:8px;right:8px;bottom:58px;z-index:20;display:flex;gap:7px;overflow-x:auto;padding:8px;background:var(--ink);border-radius:14px}.controls button,.controls a{flex:0 0 auto;border:2px solid #fff;border-radius:9px;padding:7px 10px;background:#fff;color:var(--ink);font-weight:800;text-decoration:none}.prog{position:fixed;left:12px;right:12px;bottom:46px;height:6px;background:#fff;border:1px solid var(--line);z-index:19}.prog>span{display:block;height:100%;width:11.11%;background:var(--slot)}
+.overlay{display:none;position:fixed;inset:0;z-index:40;background:#10233fdd;align-items:center;justify-content:center;padding:18px}.overlay.on{display:flex}.overlay-card{max-width:700px;background:#fff;border-radius:15px;padding:20px}.overlay-card button{padding:8px 12px}
+.print-pack{display:none}.printpack{display:none}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(max-width:720px){.deck{padding:10px 10px 118px}.slide{padding:15px}.hero,.routes,.vocabrow{grid-template-columns:1fr}.lundy-grid{grid-template-columns:1fr 1fr}}
+@media print{html,body{color-scheme:light!important;background:#fff;color:#111;overflow:visible}body>*:not(.print-pack){display:none!important}.print-pack{display:block!important}.printpack{display:block!important}.print-page{break-after:page;page-break-after:always;padding:8mm;min-height:255mm}.print-page:last-child{break-after:auto;page-break-after:auto}.print-pack h1{font-size:20pt;line-height:1.15;margin:0 0 3mm}.print-pack h2{font-size:13pt;line-height:1.2;margin:3mm 0 1.5mm}.print-pack p,.print-pack li{font-size:10.5pt;line-height:1.35}.running-head{font-size:9pt;border-bottom:1px solid #666;margin-bottom:4mm;padding-bottom:2mm}.proute,.print-route{display:block;border:1px solid #777;padding:3mm;margin:3mm 0;break-inside:avoid}@page{size:A4;margin:10mm}}
+</style><!--n6m-guide:v1--><style id="n6m-guide-css">@media screen{[data-mbm-guide]{display:none!important}html.mbm-guide-on [data-mbm-guide]{display:revert!important}.n6m-guide-btn{position:fixed;right:12px;bottom:12px;z-index:2147483000;font:600 .8rem/1.2 "Segoe UI",Arial,sans-serif;padding:7px 11px;border:2px solid currentColor;border-radius:8px;background:#fff;color:#1e3a8a;cursor:pointer}.n6m-guide-btn[aria-pressed="true"]{background:#1e3a8a;color:#fff}}@media print{.n6m-guide-btn{display:none!important}}</style><script id="n6m-guide-js">(function(){var R=document.documentElement;function apply(v){R.classList.toggle("mbm-guide-on",!!v);var b=document.querySelector(".n6m-guide-btn");if(b){b.setAttribute("aria-pressed",v?"true":"false");}}function toggle(){apply(!R.classList.contains("mbm-guide-on"));}function boot(){if(!document.querySelector("[data-mbm-guide]"))return;var b=document.createElement("button");b.type="button";b.className="n6m-guide-btn";b.setAttribute("aria-pressed","false");b.setAttribute("data-n6m-guide-control","1");b.title="Show or hide staff guidance (G)";b.textContent="\u24D8 Guidance";b.addEventListener("click",toggle);document.body.appendChild(b);apply(false);document.addEventListener("keydown",function(e){if(e.key!=="g"&&e.key!=="G")return;if(e.metaKey||e.ctrlKey||e.altKey)return;var t=e.target,n=t&&t.tagName;if(n==="INPUT"||n==="TEXTAREA"||n==="SELECT"||(t&&t.isContentEditable))return;toggle();});}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();})();</script><!--/n6m-guide--></head>
+<body>
+<!--mbm_guide_v1 retained as a contract marker; guidance state is memory-only-->
+<!--n6-nav1:v1-->
+<style id="n6-nav1-css">@media print{.mbmhome,.n6-splash{display:none!important}}.mbmhome{display:inline-block;margin:6px 0 0 8px;font:600 .85rem/1.4 "Segoe UI",Arial,sans-serif;color:#1e3a8a;text-decoration:none}.mbmhome:hover,.mbmhome:focus{text-decoration:underline}</style>
+<a class="mbmhome" href="../../index.html" aria-label="Back to the Lessons catalogue">← Lessons</a>
+<!--/n6-nav1-->
+<a class="skip" href="#lessonDeck">Skip to lesson</a>
+<main id="lessonDeck" class="deck">
+<section class="slide active" data-type="title" data-title="Lesson overview" data-min="0" data-ta1="Wait, receive and use the least prompt needed." data-ta2="Keep adult action separate from pupil authorship.">
+<div class="time">0 min</div>
+<span class="tag">Lesson overview</span>
+<div class="hero">
+<div>
+<p class="brandline">BUILD · ASDAN · Week 15ASDAN cross-strand · Cross-strand teaching surface</p>
+<h1>Choice, budget and project reset</h1>
+<p class="sowline" data-mbm-guide="route">
+<b>Verbatim workbook outcome:</b> Make a choice and say why. · Complete a budgeting/money Duke challenge (links Maths). · Review and refresh our community project focus. · <b>Trace:</b> &#x27;BUILD Weekly - Spring&#x27;!C112 · &#x27;BUILD Weekly - Spring&#x27;!C124 · &#x27;BUILD Weekly - Spring&#x27;!C150</p>
+<div class="box lo">
+<b>Objective:</b> Make and justify one choice, check a simple fictional budget, and use the completed checks to refresh one realistic class-project focus.</div>
+<div class="box">
+<b>Success evidence:</b>
+<ul>
+<li>Make and justify one choice, check a simple fictional budget, and use the completed checks to refresh one realistic class-project focus.</li>
+<li>A useful choice names the available options, the stated need and a reason that another person can check.</li>
+<li>A completed calculation does not prove that an item was bought, an approval was given or a project outcome happened.</li>
+</ul>
+</div>
+<div class="chips">
+<span>BUILD ASDAN</span>
+<span>40 minutes</span>
+<span>offline</span>
+</div>
+<div class="lundy-strip">
+<b>SPACE</b>
+<b>VOICE</b>
+<b>AUDIENCE</b>
+<b>INFLUENCE</b>
+</div>
+<div class="prompt-ladder">wait · self-prompt · point / visual · general verbal · specific verbal · model · direct support · fade</div>
+<div class="evidence-gate">Evidence gate: genuine action, pupil meaning, adult support recorded separately, honest status.</div>
+<dialog>
+<p>Teacher tools and approved evidence route.</p>
+</dialog>
+</div>
+</div>
+<div class="routes">
+<article class="route-card supported">
+<h3>◆ Supported</h3>
+<p>Match two option cards to the brief, total prepared cost cards with a calculator or coin line, choose one reason frame and sort project-status cards into PRESENT, MISSING and NEXT.</p>
+</article>
+<article class="route-card standard">
+<h3>▲ Standard</h3>
+<p>Compare two fictional options, calculate total and difference, justify the choice from the brief, and write one feasible project-reset action with the unchecked approval named.</p>
+</article>
+<article class="route-card stretch">
+<h3>★ Stretch</h3>
+<p>Evaluate trade-offs between cost, stated need and feasibility, test how one changed cost affects the decision, and defend a revised project focus that separates completed planning from unverified outcomes.</p>
+</article>
+</div>
+<p class="truth">
+<b>Truth boundary:</b> never backdate, never reconstruct a quotation, never stage an event, and never convert adult wording into the learner’s voice. Use only school-approved local materials. No diagnosis or medical advice. No personal or family disclosure. Learning does not depend on a runtime connection. No open runtime link. Never invent a result, date, quotation, event, audience response or learner wording. Use fictional classroom amounts and approved local project records only. No learner must disclose family finances, purchases, debt, home circumstances or personal preferences. A learner may pause, use a private route, observe, or direct an adult without losing the learning entitlement.</p>
+<p class="access" data-mbm-guide="staff">Choice, budgeting and an honest project reset · entry map: A budget record keeps the fictional amount, each supplied cost and the remaining or short amount visible. Link that anchor only when this second detail is relevant: The project review separates PRESENT planning evidence from MISSING information and the NEXT authorised check. For this choice, budgeting and an honest project reset decision, use a quiet card sort, a spoken response, a communication aid or adult handling directed by the learner; the learner still chooses the evidence, order, comparison or action. Staff supporting choice, budgeting and an honest project reset may steady the named materials and read the displayed source exactly. They do not upgrade the choice, budgeting and an honest project reset response, fill its missing result or convert its plan into completion. If access to choice, budgeting and an honest project reset stalls, pause, lower visual density or move to the printed route while keeping the same reasoning demand.</p>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+</section>
+<section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="3" data-ta1="Wait, receive and use the least prompt needed." data-ta2="Keep adult action separate from pupil authorship.">
+<div class="time">3 min</div>
+<span class="tag">Arrival · retrieve</span>
+<h2>Retrieve without guessing</h2>
+<div class="grid">
+<div class="box">
+<p>A useful choice names the available options, the stated need and a reason that another person can check.</p>
+</div>
+<div class="box">
+<p>A budget record keeps the fictional amount, each supplied cost and the remaining or short amount visible.</p>
+</div>
+<div class="box">
+<p>The project review separates PRESENT planning evidence from MISSING information and the NEXT authorised check.</p>
+</div>
+<div class="box">
+<p>A completed calculation does not prove that an item was bought, an approval was given or a project outcome happened.</p>
+</div>
+</div>
+<p>
+<b>Arrival decision:</b> A useful choice names the available options, the stated need and a reason that another person can check. A completed calculation does not prove that an item was bought, an approval was given or a project outcome happened.</p>
+<p class="access" data-mbm-guide="staff">Choice, budgeting and an honest project reset · first source: The project review separates PRESENT planning evidence from MISSING information and the NEXT authorised check. Link that anchor only when this second detail is relevant: A completed calculation does not prove that an item was bought, an approval was given or a project outcome happened. For this choice, budgeting and an honest project reset decision, use a printed choice, object placement, short phrase, symbol response or learner-directed mark; the learner still chooses the evidence, order, comparison or action. Staff supporting choice, budgeting and an honest project reset may steady the named materials and read the displayed source exactly. They do not upgrade the choice, budgeting and an honest project reset response, fill its missing result or convert its plan into completion. If access to choice, budgeting and an honest project reset stalls, pause, lower visual density or move to the printed route while keeping the same reasoning demand.</p>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+</section>
+<section class="slide" data-type="starter" data-title="Starter · create the need" data-min="3" data-ta1="Wait, receive and use the least prompt needed." data-ta2="Keep adult action separate from pupil authorship.">
+<div class="time">3 min</div>
+<span class="tag">Starter · create the need</span>
+<h2>Which choice fits the stated brief and budget, and what should the completed checks change in the class-project focus?</h2>
+<div class="hero-visual">
+<div>1 · notice</div>
+<div>2 · choose</div>
+<div>3 · explain</div>
+</div>
+<p>Which choice fits the stated brief and budget, and what should the completed checks change in the class-project focus? A budget record keeps the fictional amount, each supplied cost and the remaining or short amount visible.</p>
+<div class="box">
+<b>Checking questions:</b>
+<ul>
+<li>A useful choice names the available options, the stated need and a reason that another person can check.</li>
+<li>A budget record keeps the fictional amount, each supplied cost and the remaining or short amount visible.</li>
+<li>The project review separates PRESENT planning evidence from MISSING information and the NEXT authorised check.</li>
+<li>A completed calculation does not prove that an item was bought, an approval was given or a project outcome happened.</li>
+</ul>
+</div>
+<p class="access" data-mbm-guide="staff">Choice, budgeting and an honest project reset · initial comparison: A completed calculation does not prove that an item was bought, an approval was given or a project outcome happened. Link that anchor only when this second detail is relevant: A useful choice names the available options, the stated need and a reason that another person can check. For this choice, budgeting and an honest project reset decision, use pointing, selecting, signing, speaking, typing or exact-word scribing; the learner still chooses the evidence, order, comparison or action. Staff supporting choice, budgeting and an honest project reset may steady the named materials and read the displayed source exactly. They do not upgrade the choice, budgeting and an honest project reset response, fill its missing result or convert its plan into completion. If access to choice, budgeting and an honest project reset stalls, pause, lower visual density or move to the printed route while keeping the same reasoning demand.</p>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+</section>
+<section class="slide" data-type="ido" data-title="I Do · model" data-min="7" data-ta1="Wait, receive and use the least prompt needed." data-ta2="Keep adult action separate from pupil authorship.">
+<div class="time">7 min</div>
+<span class="tag">I Do · model</span>
+<h2>Choice, budgeting and an honest project reset</h2>
+<div class="vocabrow">
+<div class="vterm">
+<strong>CHOICE</strong>
+<span>one selected option with a reason tied to the brief</span>
+</div>
+<div class="vterm">
+<strong>BUDGET</strong>
+<span>the amount available and the costs checked against it</span>
+</div>
+<div class="vterm">
+<strong>PROJECT FOCUS</strong>
+<span>the current purpose and next planning action for the class project</span>
+</div>
+</div>
+<div class="box">
+<h3>Vocabulary in use</h3>
+<ul>
+<li>CHOICE in choice, budgeting and an honest project reset: one selected option with a reason tied to the brief. Apply CHOICE when this anchor matters—A useful choice names the available options, the stated need and a reason that another person can check.—and check it beside this second anchor: A budget record keeps the fictional amount, each supplied cost and the remaining or short amount visible.</li>
+<li>BUDGET in choice, budgeting and an honest project reset: the amount available and the costs checked against it. Apply BUDGET when this anchor matters—A budget record keeps the fictional amount, each supplied cost and the remaining or short amount visible.—and check it beside this second anchor: The project review separates PRESENT planning evidence from MISSING information and the NEXT authorised check.</li>
+<li>PROJECT FOCUS in choice, budgeting and an honest project reset: the current purpose and next planning action for the class project. Apply PROJECT FOCUS when this anchor matters—The project review separates PRESENT planning evidence from MISSING information and the NEXT authorised check.—and check it beside this second anchor: A completed calculation does not prove that an item was bought, an approval was given or a project outcome happened.</li>
+</ul>
+</div>
+<div class="box model">
+<p>Use a supplied fictional class brief with two options and listed costs. Copy the available amount and each cost exactly, calculate the total and difference, then choose one option for a reason tied to the brief. Transfer only supported facts into the project review: the calculation can be PRESENT, while price confirmation, approval, purchase and outcome stay MISSING or AWAITING AUTHORISED CHECK. Finish by naming one feasible planning action rather than staging a completed project event.</p>
+</div>
+<ol>
+<li>A useful choice names the available options, the stated need and a reason that another person can check.</li>
+<li>A budget record keeps the fictional amount, each supplied cost and the remaining or short amount visible.</li>
+<li>The project review separates PRESENT planning evidence from MISSING information and the NEXT authorised check.</li>
+<li>A completed calculation does not prove that an item was bought, an approval was given or a project outcome happened.</li>
+<li>Make and justify one choice, check a simple fictional budget, and use the completed checks to refresh one realistic class-project focus.</li>
+</ol>
+<p data-mbm-guide="staff">Staff-only guidance: model one complete route, remove the model, and receive a fresh learner decision.</p>
+<p class="access" data-mbm-guide="staff">Choice, budgeting and an honest project reset · worked reasoning: A useful choice names the available options, the stated need and a reason that another person can check. Link that anchor only when this second detail is relevant: A budget record keeps the fictional amount, each supplied cost and the remaining or short amount visible. For this choice, budgeting and an honest project reset decision, use a quiet card sort, a spoken response, a communication aid or adult handling directed by the learner; the learner still chooses the evidence, order, comparison or action. Staff supporting choice, budgeting and an honest project reset may steady the named materials and read the displayed source exactly. They do not upgrade the choice, budgeting and an honest project reset response, fill its missing result or convert its plan into completion. If access to choice, budgeting and an honest project reset stalls, pause, lower visual density or move to the printed route while keeping the same reasoning demand.</p>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+</section>
+<section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="3" data-ta1="Wait, receive and use the least prompt needed." data-ta2="Keep adult action separate from pupil authorship.">
+<div class="time">3 min</div>
+<span class="tag">We Do · everyone commits</span>
+<h2>Which choice fits the stated brief and budget, and what should the completed checks change in the class-project focus?</h2>
+<div class="options">
+<button type="button">A useful choice names the available options, the stated need and a reason that another person can check.</button>
+<button type="button">A budget record keeps the fictional amount, each supplied cost and the remaining or short amount visible.</button>
+<button type="button">A completed calculation does not prove that an item was bought, an approval was given or a project outcome happened.</button>
+</div>
+<p>The project review separates PRESENT planning evidence from MISSING information and the NEXT authorised check. A completed calculation does not prove that an item was bought, an approval was given or a project outcome happened.</p>
+<div class="evidence-gate">
+<b>Audience check:</b> the adult names back exactly what was received. The learner confirms or corrects before the class moves on.</div>
+<p class="access" data-mbm-guide="staff">Choice, budgeting and an honest project reset · hinge decision: A budget record keeps the fictional amount, each supplied cost and the remaining or short amount visible. Link that anchor only when this second detail is relevant: The project review separates PRESENT planning evidence from MISSING information and the NEXT authorised check. For this choice, budgeting and an honest project reset decision, use a printed choice, object placement, short phrase, symbol response or learner-directed mark; the learner still chooses the evidence, order, comparison or action. Staff supporting choice, budgeting and an honest project reset may steady the named materials and read the displayed source exactly. They do not upgrade the choice, budgeting and an honest project reset response, fill its missing result or convert its plan into completion. If access to choice, budgeting and an honest project reset stalls, pause, lower visual density or move to the printed route while keeping the same reasoning demand.</p>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+</section>
+<section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="7" data-ta1="Wait, receive and use the least prompt needed." data-ta2="Keep adult action separate from pupil authorship.">
+<div class="time">7 min</div>
+<span class="tag">I Do 2 · connect</span>
+<h2>Choice, budgeting and an honest project reset</h2>
+<div class="grid">
+<div class="box">
+<h3>Available evidence</h3>
+<p>A useful choice names the available options, the stated need and a reason that another person can check.</p>
+</div>
+<div class="box">
+<h3>Reasoning move</h3>
+<p>A budget record keeps the fictional amount, each supplied cost and the remaining or short amount visible.</p>
+</div>
+<div class="box">
+<h3>Boundary or next check</h3>
+<p>A completed calculation does not prove that an item was bought, an approval was given or a project outcome happened.</p>
+</div>
+</div>
+<p>A useful choice names the available options, the stated need and a reason that another person can check. A completed calculation does not prove that an item was bought, an approval was given or a project outcome happened.</p>
+<div class="box">
+<p>Use a supplied fictional class brief with two options and listed costs. Copy the available amount and each cost exactly, calculate the total and difference, then choose one option for a reason tied to the brief. Transfer only supported facts into the project review: the calculation can be PRESENT, while price confirmation, approval, purchase and outcome stay MISSING or AWAITING AUTHORISED CHECK. Finish by naming one feasible planning action rather than staging a completed project event. Complete a three-part record from the supplied fictional brief. First, compare at least two options and state a reason linked to the stated need. Second, show every supplied cost once, calculate the total and difference, and check the arithmetic through a second route. Third, review the current class-project focus under PRESENT, MISSING and NEXT. Record only genuine classroom evidence. If a price, approval or result is absent, write AWAITING AUTHORISED CHECK and name the responsible next check. Do not invent a purchase, event, date, quotation, audience response or learner wording. A useful choice names the available options, the stated need and a reason that another person can check. A budget record keeps the fictional amount, each supplied cost and the remaining or short amount visible. The project review separates PRESENT planning evidence from MISSING information and the NEXT authorised check. A completed calculation does not prove that an item was bought, an approval was given or a project outcome happened. Match two option cards to the brief, total prepared cost cards with a calculator or coin line, choose one reason frame and sort project-status cards into PRESENT, MISSING and NEXT. Compare two fictional options, calculate total and difference, justify the choice from the brief, and write one feasible project-reset action with the unchecked approval named. Evaluate trade-offs between cost, stated need and feasibility, test how one changed cost affects the decision, and defend a revised project focus that separates completed planning from unverified outcomes. Check the total by a second route: regroup costs, reverse the operation or use an approved calculator. A difference of zero means the plan uses the full fictional amount; it does not mean approval has been granted. Compare the project focus with the named brief and remove any action that depends on unavailable permission or information.</p>
+</div>
+<p class="access" data-mbm-guide="staff">Choice, budgeting and an honest project reset · second connection: The project review separates PRESENT planning evidence from MISSING information and the NEXT authorised check. Link that anchor only when this second detail is relevant: A completed calculation does not prove that an item was bought, an approval was given or a project outcome happened. For this choice, budgeting and an honest project reset decision, use pointing, selecting, signing, speaking, typing or exact-word scribing; the learner still chooses the evidence, order, comparison or action. Staff supporting choice, budgeting and an honest project reset may steady the named materials and read the displayed source exactly. They do not upgrade the choice, budgeting and an honest project reset response, fill its missing result or convert its plan into completion. If access to choice, budgeting and an honest project reset stalls, pause, lower visual density or move to the printed route while keeping the same reasoning demand.</p>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+</section>
+<section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="5" data-ta1="Wait, receive and use the least prompt needed." data-ta2="Keep adult action separate from pupil authorship.">
+<div class="time">5 min</div>
+<span class="tag">We Do 2 · lab</span>
+<h2>Choice, budgeting and an honest project reset decision lab</h2>
+<div class="routes">
+<article class="route-card supported">
+<h3>◆ Supported</h3>
+<p>Match two option cards to the brief, total prepared cost cards with a calculator or coin line, choose one reason frame and sort project-status cards into PRESENT, MISSING and NEXT.</p>
+</article>
+<article class="route-card standard">
+<h3>▲ Standard</h3>
+<p>Compare two fictional options, calculate total and difference, justify the choice from the brief, and write one feasible project-reset action with the unchecked approval named.</p>
+</article>
+<article class="route-card stretch">
+<h3>★ Stretch</h3>
+<p>Evaluate trade-offs between cost, stated need and feasibility, test how one changed cost affects the decision, and defend a revised project focus that separates completed planning from unverified outcomes.</p>
+</article>
+</div>
+<div class="box">
+<p>Complete a three-part record from the supplied fictional brief. First, compare at least two options and state a reason linked to the stated need. Second, show every supplied cost once, calculate the total and difference, and check the arithmetic through a second route. Third, review the current class-project focus under PRESENT, MISSING and NEXT. Record only genuine classroom evidence. If a price, approval or result is absent, write AWAITING AUTHORISED CHECK and name the responsible next check. Do not invent a purchase, event, date, quotation, audience response or learner wording.</p>
+</div>
+<p class="access" data-mbm-guide="staff">Choice, budgeting and an honest project reset · guided audit: A completed calculation does not prove that an item was bought, an approval was given or a project outcome happened. Link that anchor only when this second detail is relevant: A useful choice names the available options, the stated need and a reason that another person can check. For this choice, budgeting and an honest project reset decision, use a quiet card sort, a spoken response, a communication aid or adult handling directed by the learner; the learner still chooses the evidence, order, comparison or action. Staff supporting choice, budgeting and an honest project reset may steady the named materials and read the displayed source exactly. They do not upgrade the choice, budgeting and an honest project reset response, fill its missing result or convert its plan into completion. If access to choice, budgeting and an honest project reset stalls, pause, lower visual density or move to the printed route while keeping the same reasoning demand.</p>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+</section>
+<section class="slide" data-type="independent" data-title="Independent · evidence" data-min="9" data-ta1="Wait, receive and use the least prompt needed." data-ta2="Keep adult action separate from pupil authorship.">
+<div class="time">9 min</div>
+<span class="tag">Independent · evidence</span>
+<h2>Independent record · Choice, budgeting and an honest project reset</h2>
+<div class="box task">
+<p>Complete a three-part record from the supplied fictional brief. First, compare at least two options and state a reason linked to the stated need. Second, show every supplied cost once, calculate the total and difference, and check the arithmetic through a second route. Third, review the current class-project focus under PRESENT, MISSING and NEXT. Record only genuine classroom evidence. If a price, approval or result is absent, write AWAITING AUTHORISED CHECK and name the responsible next check. Do not invent a purchase, event, date, quotation, audience response or learner wording.</p>
+</div>
+<div class="routes">
+<article class="route-card supported">
+<h3>◆ Supported</h3>
+<p>Match two option cards to the brief, total prepared cost cards with a calculator or coin line, choose one reason frame and sort project-status cards into PRESENT, MISSING and NEXT.</p>
+</article>
+<article class="route-card standard">
+<h3>▲ Standard</h3>
+<p>Compare two fictional options, calculate total and difference, justify the choice from the brief, and write one feasible project-reset action with the unchecked approval named.</p>
+</article>
+<article class="route-card stretch">
+<h3>★ Stretch</h3>
+<p>Evaluate trade-offs between cost, stated need and feasibility, test how one changed cost affects the decision, and defend a revised project focus that separates completed planning from unverified outcomes.</p>
+</article>
+</div>
+<div class="grid">
+<div class="box">
+<h3>Trace</h3>
+<p>A useful choice names the available options, the stated need and a reason that another person can check.</p>
+</div>
+<div class="box">
+<h3>Task demand</h3>
+<p>the project review separates PRESENT planning evidence from MISSING information and the NEXT authorised check.</p>
+</div>
+<div class="box">
+<h3>Truth</h3>
+<p>A completed calculation does not prove that an item was bought, an approval was given or a project outcome happened.</p>
+</div>
+</div>
+<p>
+<b>Exit route remains available:</b> pause, use the print pack, reduce visual density or direct an adult. The named learning demand remains available.</p>
+<p class="access" data-mbm-guide="staff">Choice, budgeting and an honest project reset · independent record: A useful choice names the available options, the stated need and a reason that another person can check. Link that anchor only when this second detail is relevant: A budget record keeps the fictional amount, each supplied cost and the remaining or short amount visible. For this choice, budgeting and an honest project reset decision, use a printed choice, object placement, short phrase, symbol response or learner-directed mark; the learner still chooses the evidence, order, comparison or action. Staff supporting choice, budgeting and an honest project reset may steady the named materials and read the displayed source exactly. They do not upgrade the choice, budgeting and an honest project reset response, fill its missing result or convert its plan into completion. If access to choice, budgeting and an honest project reset stalls, pause, lower visual density or move to the printed route while keeping the same reasoning demand.</p>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+</section>
+<section class="slide" data-type="exit" data-title="Exit · Audience and Influence" data-min="3" data-ta1="Wait, receive and use the least prompt needed." data-ta2="Keep adult action separate from pupil authorship.">
+<div class="time">3 min</div>
+<span class="tag">Exit · Audience and Influence</span>
+<h2>Audience receives; Influence changes one next action</h2>
+<div class="box">
+<p>Show the chosen option, the checked total and one project-status statement. The adult repeats the evidence exactly without turning planning into a completed event. Confirm or correct it, then retain the focus, revise the budget, request the named authorised check or pause.</p>
+</div>
+<div class="lundy-status">
+<p>
+<b>SPACE:</b> the learner may pause or choose a private response.</p>
+<p>
+<b>VOICE:</b> the evidence statement remains in the learner’s chosen communication mode.</p>
+<p>
+<b>AUDIENCE:</b> a familiar adult receives and names back exactly what was heard or seen.</p>
+<p>
+<b>INFLUENCE:</b> one real next action is recorded: retain, add method detail, or leave open.</p>
+</div>
+<p>
+<b>Final check:</b> no result, quote, date, event or pupil wording has been created to make the map look complete. The HTML stores no learner response.</p>
+<p class="access" data-mbm-guide="staff">Choice, budgeting and an honest project reset · receiving point: A budget record keeps the fictional amount, each supplied cost and the remaining or short amount visible. Link that anchor only when this second detail is relevant: The project review separates PRESENT planning evidence from MISSING information and the NEXT authorised check. For this choice, budgeting and an honest project reset decision, use pointing, selecting, signing, speaking, typing or exact-word scribing; the learner still chooses the evidence, order, comparison or action. Staff supporting choice, budgeting and an honest project reset may steady the named materials and read the displayed source exactly. They do not upgrade the choice, budgeting and an honest project reset response, fill its missing result or convert its plan into completion. If access to choice, budgeting and an honest project reset stalls, pause, lower visual density or move to the printed route while keeping the same reasoning demand.</p>
+<div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+</section>
+</main>
+<nav class="controls" aria-label="Lesson controls">
+<button type="button" data-nav="previous">◀ Previous</button>
+<button type="button" data-tool="1">Teacher tools</button>
+<button type="button" data-tool="2">Evidence & print</button>
+<button type="button" data-tool="3">Calm mode</button>
+<button type="button" data-tool="4">Static diagrams</button>
+<button type="button" data-tool="5">Previous</button>
+<button type="button" data-tool="6">Next</button>
+<button type="button" data-nav="next">Next ▶</button>
+</nav>
+<div class="prog" aria-hidden="true">
+<span>
+</span>
+</div>
+<div id="taOverlay" class="overlay" aria-hidden="true">
+<div class="overlay-card">
+<h2>TA Brief</h2>
+<p>Use the least prompt needed. Keep adult preparation and exact-word scribing separate from pupil authorship. Guidance is hidden from the learner surface by default.</p>
+<button type="button" data-close-overlay>Close</button>
+</div>
+</div>
+<section class="print-pack printpack" aria-label="Printable lesson pack">
+<section class="print-page">
+<div class="running-head">BUILD ASDAN · Week 15ASDAN cross-strand · Choice, budget and project reset</div>
+<h1>Choice, budget and project reset</h1>
+<p>
+<b>Workbook trace:</b> &#x27;BUILD Weekly - Spring&#x27;!C112 · &#x27;BUILD Weekly - Spring&#x27;!C124 · &#x27;BUILD Weekly - Spring&#x27;!C150</p>
+<p>
+<b>Verbatim outcome:</b> Make a choice and say why. · Complete a budgeting/money Duke challenge (links Maths). · Review and refresh our community project focus.</p>
+<p>
+<b>Objective:</b> Make and justify one choice, check a simple fictional budget, and use the completed checks to refresh one realistic class-project focus.</p>
+<h2>Choice, budgeting and an honest project reset working record</h2>
+<p>Use each row to show the supplied evidence or genuine action, the response about choice, budgeting and an honest project reset, and one explanation, boundary or authorised next check.</p>
+<table style="width:100%;border-collapse:collapse">
+<tr>
+<th style="border:1px solid #777;padding:6px">Focus</th>
+<th style="border:1px solid #777;padding:6px">Record or action</th>
+<th style="border:1px solid #777;padding:6px">Explanation, response or limit</th>
+</tr>
+<tr>
+<td style="border:1px solid #777;padding:8px">Choice and stated reason</td>
+<td style="border:1px solid #777;padding:8px;height:38mm">
+</td>
+<td style="border:1px solid #777;padding:8px">
+</td>
+</tr>
+<tr>
+<td style="border:1px solid #777;padding:8px">Budget total and difference</td>
+<td style="border:1px solid #777;padding:8px;height:38mm">
+</td>
+<td style="border:1px solid #777;padding:8px">
+</td>
+</tr>
+<tr>
+<td style="border:1px solid #777;padding:8px">Project PRESENT / MISSING / NEXT</td>
+<td style="border:1px solid #777;padding:8px;height:38mm">
+</td>
+<td style="border:1px solid #777;padding:8px">
+</td>
+</tr>
+</table>
+</section>
+<section class="print-page n6-lc-page">
+<div class="running-head">BUILD ASDAN · route, audit and learner confirmation</div>
+<h2>Choose a route</h2>
+<div class="print-route supported">
+<h3>◆ Supported</h3>
+<p>Match two option cards to the brief, total prepared cost cards with a calculator or coin line, choose one reason frame and sort project-status cards into PRESENT, MISSING and NEXT.</p>
+</div>
+<div class="print-route standard">
+<h3>▲ Standard</h3>
+<p>Compare two fictional options, calculate total and difference, justify the choice from the brief, and write one feasible project-reset action with the unchecked approval named.</p>
+</div>
+<div class="print-route stretch">
+<h3>★ Stretch</h3>
+<p>Evaluate trade-offs between cost, stated need and feasibility, test how one changed cost affects the decision, and defend a revised project focus that separates completed planning from unverified outcomes.</p>
+</div>
+<h2>Evidence audit</h2>
+<ol>
+<li>All supplied amounts recorded exactly once:</li>
+<li>Choice reason linked to the stated brief:</li>
+<li>Planning separated from approval, purchase and outcome:</li>
+<li>Learner next action received exactly:</li>
+</ol>
+<div style="height:42mm;border-bottom:1px solid #777">
+</div>
+<!--n6-learner-confirm:v1--><p style="margin:14px 0 4px;font-weight:800;font-size:.95rem">5 &#183; Learner confirmation</p>
+<p style="margin:0 0 8px;font-size:.88rem">I confirm this is my own work.</p>
+<table style="width:100%;border-collapse:collapse;font-size:.9rem">
+<tr><td style="padding:10px 8px;border:1px solid #999;width:50%">Learner name (print)<br><br></td><td style="padding:10px 8px;border:1px solid #999">Signature<br><br></td></tr>
+<tr><td style="padding:10px 8px;border:1px solid #999">Date<br><br></td><td style="padding:10px 8px;border:1px solid #999">&nbsp;</td></tr></table><!--/n6-learner-confirm-->
+</section>
+</section><!--n6-nav1:v1--><div class="n6-splash"><div style="text-align:center;margin-top:8px"><svg width="64" height="64" viewBox="0 0 100 100" aria-label="Made by Matt"><circle cx="50" cy="50" r="47" fill="none" stroke="#1e3a8a" stroke-width="3.4"/><g transform="translate(0 2)"><path d="M28 71 L28 37 L50 59 L72 37 L72 71" fill="none" stroke="#1e3a8a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M50 22.5 L51.48 28.52 L57.5 30 L51.48 31.48 L50 37.5 L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"/></g></svg></div></div><!--/n6-nav1--><script id="lesson-config" type="application/json">{"id": "BUILD_ASDAN_W15_Choice_Budget_and_Project_Reset", "family": "BUILD ASDAN", "week": 15, "slot": "ASDAN cross-strand", "title": "Choice, Budget and Project Reset", "outcomes": ["Make a choice and say why.", "Complete a budgeting/money Duke challenge (links Maths).", "Review and refresh our community project focus."], "cells": ["'BUILD Weekly - Spring'!C112", "'BUILD Weekly - Spring'!C124", "'BUILD Weekly - Spring'!C150"], "objective": "Make and justify one choice, check a simple fictional budget, and use the completed checks to refresh one realistic class-project focus.", "source": {"workbook": "_passsb/inputs/Build SOW 2026-2027.xlsx", "sheet": "BUILD Weekly - Spring", "cell": "C112", "outcome": "Make a choice and say why."}, "timings": [0, 3, 3, 7, 3, 7, 5, 9, 3], "tierLadder": "Supported / Standard / Stretch", "nextFile": "BUILD_ASDAN_W16_Partner_Challenge_and_Seasonal_Goals.html", "previousFile": "START_HERE.html"}</script>
+<script>(function(){const slides=[...document.querySelectorAll("main.deck>.slide")],bar=document.querySelector(".prog>span");let index=0;function show(next){index=(next+slides.length)%slides.length;slides.forEach((s,i)=>s.classList.toggle("active",i===index));bar.style.width=((index+1)/slides.length*100)+"%";}document.querySelector("[data-nav=previous]").addEventListener("click",()=>show(index-1));document.querySelector("[data-nav=next]").addEventListener("click",()=>show(index+1));document.querySelectorAll("[data-tool]").forEach((button,i)=>button.addEventListener("click",()=>{if(i===0){const o=document.getElementById("taOverlay");o.classList.add("on");o.setAttribute("aria-hidden","false");}else if(i===1)document.body.classList.toggle("loop-on");else if(i===2)document.querySelector(".n6m-guide-btn")?.click();else if(i===3)document.body.classList.toggle("word-help");else if(i===4)document.body.classList.toggle("calm");else document.body.classList.toggle("teacher-freeze");}));document.querySelector("[data-close-overlay]").addEventListener("click",()=>{const o=document.getElementById("taOverlay");o.classList.remove("on");o.setAttribute("aria-hidden","true");});document.addEventListener("keydown",e=>{if(e.key==="ArrowRight")show(index+1);if(e.key==="ArrowLeft")show(index-1);});show(0);})();</script>
+</body>
+</html>

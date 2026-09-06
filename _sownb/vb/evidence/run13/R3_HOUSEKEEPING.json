@@ -1,0 +1,63 @@
+{
+ "file": "data/hud-coverage.json",
+ "subject": "ORDER VB-RUN13 R3: the three SC2 housekeeping items in Lessons, each measured or declared unmeasurable with its reason",
+ "r3_1_hudCoverageVerifierNames": {
+  "was": "window.__MBM_V6_RELEASE__.selfTest plus Games rendered regression, on five excluded rows",
+  "whyItRedded": "a cited verifier is resolved with fs.existsSync at tools/verify_hud_on_lessons_games.mjs:188, so a sentence names no check",
+  "ruleApplied": "never delete a coverage row: the half with no runner was REGISTERED rather than the citation narrowed to the half that already existed",
+  "registered": "tools/verify_v6_selftest.mjs — runs window.__MBM_V6_RELEASE__.selfTest in a browser on every game that declares one, with a --self-test that plants a failing release object and requires the run to go red",
+  "now": {
+   "verifier": "tools/verify_v6_selftest.mjs",
+   "alsoVerifiedBy": "tools/verify_games_rendered.mjs"
+  },
+  "everyCitedVerifierResolves": true,
+  "control": "_sownb/vb/evidence/run13/R3_1_VERIFIER_CITATION.json"
+ },
+ "r3_1_whatTheNewVerifierFound": {
+  "passed": 11,
+  "total": 15,
+  "failing": [
+   {
+    "game": "Games/Neon_Garden.html",
+    "failingChecks": [
+     "offline"
+    ]
+   },
+   {
+    "game": "Games/Prism.html",
+    "failingChecks": [
+     "standalone"
+    ]
+   },
+   {
+    "game": "Games/The_Last_Lighthouse_v1_1_The_Archipelago_Update_FINAL.html",
+    "failingChecks": [
+     "offline"
+    ]
+   },
+   {
+    "game": "Games/Vortex.html",
+    "failingChecks": [
+     "offline"
+    ]
+   }
+  ],
+  "reading": "four games fail their OWN self-test, on a check each calls offline or standalone that requires zero external script, link, img, audio, video or source elements. All four are tripped by their own link rel=canonical tag, which the browser never fetches, and three of them additionally carry the script src=/hud.js line the coverage ledger requires of a wired game. So the estate holds two rules that cannot both be satisfied by one file, and one of them counts a metadata tag as a network request. Reported, not worked around: the new verifier was not weakened to improve the number, and no game was touched."
+ },
+ "r3_2_resourcesDigest": {
+  "pinnedInGate": "a6f48bfd97b107a38b2816d950186b59febfa133b4113b8f57a1eda36d20c2f6",
+  "measuredNow": "a6f48bfd97b107a38b2816d950186b59febfa133b4113b8f57a1eda36d20c2f6",
+  "verdict": "CLEARED by run 11's re-pin: the digests match exactly, so there is nothing to STOP on.",
+  "appsJson": "not present in this repository. The gate pins it for the cross-estate check and the file lives in the apps estate, so its digest is not measurable from here and is not claimed. An earlier reading of \"a4a06b99...\" in this session was the pin being grepped out of the gate, not a file being hashed; that is corrected here.",
+  "appsJsonExistsInLessons": false
+ },
+ "r3_3_trekkersHomeControl": {
+  "asked": "measure once at exact head with the 5 s wait; if it reds it is a page defect for a human, not a harness widening",
+  "measured": "served and loaded at 390x844 and 1440x900 with the full 5 s allowed. No exit or home control appeared at either viewport.",
+  "butThatIsNotTheAnswer": "Trekkers_Trail_Runner_Tees_Coast.html carries script defer src=/hud.js, so its way out is the HUD, and hud.js is not in this repository — it is served from /hud.js on the site. It carries no stamped MBM-INLINE-EXIT region either, correctly, because that region belongs to the eight games excluded from the HUD and this is not one of them.",
+  "verdict": "NOT MEASURABLE in this session, recorded as such rather than reported as a red.",
+  "reason": "the order scopes this run to the Lessons repository; the site checkout that serves /hud.js is out of scope and adding it would widen the order.",
+  "whatWasNotDone": "no wait lengthened, no selector loosened, no harness widened."
+ },
+ "status": "MEASURED"
+}

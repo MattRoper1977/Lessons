@@ -183,7 +183,7 @@ for (const chip of chipNames) {
   if (activeYear !== '2026-27') throw new Error(`year tab did not activate 2026-27 for ${chip}: active=${activeYear}`);
 
   await page.waitForSelector('#quicknav .chip');
-  const cb = page.locator('#quicknav .chip').filter({hasText:chip});
+  const cb = page.locator('#quicknav .chip[data-sub=' + JSON.stringify(chip) + ']');
   if (await cb.count() !== 1) throw new Error(`current catalogue chip not uniquely found: ${chip}`);
   const chipClass = await cb.getAttribute('class') || '';
   if (chipClass.split(/\s+/).includes('lib')) throw new Error(`${chip}: current chip is marked lib/outside active collection`);

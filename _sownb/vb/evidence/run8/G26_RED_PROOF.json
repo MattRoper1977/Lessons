@@ -1,0 +1,61 @@
+{
+ "file": "Humanities_Teesside/BUILD_W1-W8_2026-27/BUILD_HUM_W1_People_Special_To_Me.html",
+ "gate": "g26-reading-band",
+ "toolVersion": "g26-v1.0.0-pathway-reading-band",
+ "contractSha256": "8c2cd4ac962c345c6d2832e4d9cfac863b79fef85f273bb8095faf07c652cf07",
+ "orderSpecMismatch": "§3.1(d) specifies the red control as 'a copy of the proof lesson with two sentences joined into one long one - must red'. It does not red, and that is arithmetic rather than a gate fault: the deck has 264 pupil sentences and sits 0.47 below the band ceiling, so one join moves the mean from 3.53 to 3.63. A control that cannot move the measure past its own margin cannot prove anything. Recorded, not fudged; the gate is red-proved two other ways instead.",
+ "redControls": [
+  {
+   "control": "A_two_joined — the order's literal §3.1(d) spec",
+   "expected": "RED",
+   "exitCode": 0,
+   "fired": false,
+   "lines": [
+    "A_two_joined.html                              pathway=BUILD  whole=3.83 pupil=3.63 band=1.0-4.0 PASS BINDING contract 8c2cd4ac [g26-v1.0.0-pathway-reading-band]"
+   ]
+  },
+  {
+   "control": "B_all_joined — the same mutation applied throughout",
+   "expected": "RED",
+   "exitCode": 1,
+   "fired": true,
+   "lines": [
+    "B_all_joined.html                              pathway=BUILD  whole=8.05 pupil=7.74 band=1.0-4.0 RED  BINDING contract 8c2cd4ac [g26-v1.0.0-pathway-reading-band]",
+    "    g26: pupil FK 7.74 outside the BUILD band 1.0-4.0"
+   ]
+  },
+  {
+   "control": "C_live_build — a real live BUILD lesson, unfabricated",
+   "expected": "RED",
+   "exitCode": 1,
+   "fired": true,
+   "lines": [
+    "BUILD_HUM_W9_Meet_the_Lower_Tees_OUTSTANDING_V pathway=BUILD  whole=11.47 pupil=11.63 band=1.0-4.0 RED  BINDING contract 8c2cd4ac [g26-v1.0.0-pathway-reading-band]",
+    "    g26: pupil FK 11.63 outside the BUILD band 1.0-4.0"
+   ]
+  }
+ ],
+ "firesOnGenuineOutOfBand": true,
+ "subject": {
+  "exitCode": 0,
+  "lines": [
+   "BUILD_HUM_W1_People_Special_To_Me.html         pathway=BUILD  whole=3.73 pupil=3.53 band=1.0-4.0 PASS BINDING contract 8c2cd4ac [g26-v1.0.0-pathway-reading-band]"
+  ]
+ },
+ "bands": {
+  "BUILD": [
+   1.0,
+   4.0
+  ],
+  "GROW": [
+   3.0,
+   7.0
+  ],
+  "LAUNCH": [
+   11.64,
+   14.21
+  ]
+ },
+ "launchBandProvisional": "p25-p75 of live LAUNCH pupil-text FK, n=82; one line from Matt replaces it",
+ "transcriptNote": "The 'lines' arrays are captured stdout from the gate, quoted so the run can be reproduced. They are a transcript, not verdicts this file asserts; the verdict this file asserts is its own, about the subject named above."
+}

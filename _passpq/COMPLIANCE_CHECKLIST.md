@@ -12,8 +12,8 @@ the ASDAN account can do it) · **UNKNOWN** (needs an ASDAN-account or member-ga
 
 | # | Requirement | Spec | Who / how | Status |
 |---|---|---|---|---|
-| 1 | **Centre approval for the Personal Effectiveness suite** — ASDAN Qualifications membership approval, plus (where appropriate) request approval for the PEQ suite, **before delivering**. | §8 p16 (`SPEC_FACTS §6`) | Coordinator via ASDAN centre account. Note: the "CoPE/AoPE approval auto-transfers to PEQ" idea is **not in the spec** — verify against the PEQ transition guidance. | **CENTRE-ACTION / UNKNOWN** (Q5) |
-| 2 | **Learner registration** — create a cohort, **assign a course coordinator**, and register learners **before any assessment takes place**. | §14 p20 (`SPEC_FACTS §11`) | Coordinator, on the ASDAN account. Registration is with **ASDAN** (not the AQA UAS route — see Q4). | **CENTRE-ACTION** (Q2, Q4) |
+| 1 | **Centre approval for the Personal Effectiveness suite** — ASDAN Qualifications membership approval, plus (where appropriate) request approval for the PEQ suite, **before delivering**. | §8 p16 (`SPEC_FACTS §6`) | Coordinator via ASDAN centre account. Note: the "CoPE/AoPE approval auto-transfers to PEQ" idea is **not in the spec** — verify against the PEQ transition guidance. | **DONE — Matt, 30 Jul 2026** (school registration/approval complete; never frame as pending. Closes Q5.) |
+| 2 | **Learner registration** — create a cohort, **assign a course coordinator**, and register learners **before any assessment takes place**. | §14 p20 (`SPEC_FACTS §11`) | Coordinator, on the ASDAN account. Registration is with **ASDAN** (not the AQA UAS route — see Q4). | **DONE 2026-08-21** — cohort created, coordinator assigned, learners registered and units entered. |
 | 3 | **Assessor training engaged** — assessors must engage in appropriate ASDAN training incl. **"Assessment for ASDAN Qualifications"** + relevant qualification training (no formal assessing qualification required). | §15.1 p20 (`SPEC_FACTS §12`) | Named assessor(s) book ASDAN training. This is Matt's substitute-for-training primer's real-world counterpart. | **CENTRE-ACTION** |
 | 4 | **IQA arrangements** — a named IQA who has engaged in qualification training + "Assessment for ASDAN Qualifications" + **"IQA for ASDAN qualifications"** training **before** any IQA activity; IQA of a sample **before** EQA (ASDAN cannot award without IQA). | §11 p18; §15.2 p20 (`SPEC_FACTS §9/§12`) | Name an IQA, book their training, plan the IQA sample. | **CENTRE-ACTION** (Q6, Q8) |
 | 5 | **IQA standardisation** — IQA staff attend an ASDAN PEQ **standardisation event at least once every 3 years**. | §12 p19; §15.2 p20 (`SPEC_FACTS §10/§12`) | IQA books a standardisation event. | **CENTRE-ACTION** |
@@ -47,3 +47,61 @@ The **unit assessment booklets**, **PEQ delivery guide**, **Assessment Planning 
 were **not** among the three files provided. The per-criterion record design, the exact
 safeguarding wording, and per-pupil achieved-minimum confirmation all wait on these
 (`RECONCILIATION.md` STILL-UNDETERMINED 1–3). See `inputs/README.md` for the list.
+
+
+## PH-3 addendum (2026-08-18) — status refresh + two dated actions
+
+- **Item 1 is DONE:** the school's ASDAN registration/approval was completed by **Matt on
+  30 Jul 2026**. Registration is never to be framed as pending, and no "Cheryl decision
+  meeting" is awaited for it.
+- **Item 6 stays open as written** — confirm the first-year EQA sampling activity is booked
+  (mandatory in the first delivery year; names to ASDAN ≈4 weeks pre-sampling).
+- **NEW dated action — e-portfolio export before 31 AUGUST 2026:** the ASDAN e-portfolio is
+  closed to new registrations and access for existing registrations ends 31/08/2026. Any
+  BUILD/LAUNCH short-course evidence living in it must be exported first. **CENTRE-ACTION.**
+- **NEW dated action — Hospitality Vocational Taster clock:** ASDAN is withdrawing all
+  Vocational Taster titles (and RoadWise). Register learners / buy student books by
+  **31 December 2026**; final certification **31 August 2027**. LAUNCH Vocational's
+  "Hospitality" is this product; Gardening is an ordinary Short Course and unaffected.
+  **CENTRE-ACTION.**
+
+
+---
+
+## PEQ-E3 addendum (2026-08-20) — the cohort anchor, and one requirement the decks cannot close
+
+**Cohort fact, stated by the owner 2026-08-20: pupils are mainly ENTRY LEVEL (Entry 3).
+Only 2–4 are at Level 1. Nobody is at Level 2.** Supported and Standard tiers evidence
+**Entry 3**; the Stretch tier evidences **Level 1**. No Level 2 is registered, taught or
+claimed. The per-level minima the decks are now written to are in `PEQ_PRIMER.md`
+§"PEQ-E3 addendum" and were checked against `SPEC_FACTS.md` §15 before anything moved.
+
+| # | Requirement | Spec | Who / how | Status |
+|---|---|---|---|---|
+| 14 | **One level per skill per learner (barred combinations)** — a learner's evidence for a skill counts toward one level only; the credit from the highest-level unit counts. Each pupil is entered at one level per skill. | §6.5 p15 (`SPEC_FACTS §4`) | Assessor rings the level on the witness statement; coordinator has registered accordingly. | **REPO-DONE for the record-keeping half** — every PEQ witness sheet now carries a `Level this evidence banks at — tick ONE: ☐ Entry 3 ☐ Level 1` row beside the assessor signature (PEQ-E3 E4). The registration decision itself stays **CENTRE-ACTION**. |
+| 15 | **Safeguarding routing on Decision making and Wellbeing in learning** — the spec's own "Please note" on **DecMkSkE3/DecMkSk1 (pp27/41)** and **WellbLeE3/WellbLe1 (pp35/50)**: the learner's choice of situation must not negatively impact their wellbeing, any disclosure must be managed through the centre's safeguarding processes, and **this must be communicated to learners as part of the session**. | §17 (`SPEC_FACTS §17`) | Staff brief on any deck that runs the DecMk situation choice or the WellbLe improvement discussion, `data-mbm-guide="staff"` so it is route-hidden from pupils. | **NOT YET DUE — measured, not skipped.** Across all 14 PEQ files: **0** decks run either activity. Autumn 1 delivers Communication (LAUNCH) and a GROW mix on team working, thinking and learning. GROW W1 runs a strengths audit and W4 a personal routine strip; neither is the spec's box. **This line becomes REQUIRED the moment a DecMk or WellbLe deck is authored** — it is recorded here so it is not rediscovered then. |
+
+**Why item 15 is on this list rather than in a deck.** PEQ-E3 §3 E5 asked for the
+safeguarding staff line on "DecMk/WellbLe-touching decks only". The condition its own §2c
+sets is that a deck **runs** those choices. None does yet, so writing the line into a deck
+that does not run the activity would have been applying something the pass does not
+authorise, and would have put a safeguarding instruction next to an activity it does not
+describe. It is carried here instead, where it is due.
+
+## PEQ-L2K addendum (2026-08-22) — item 15 discharged for the kitchen year; item 14 tick now three-way
+
+- **Item 15 (safeguarding routing on DecMk + WellbLe): DISCHARGED for the planned
+  programme.** The condition ("the moment a DecMk or WellbLe activity is planned") is now
+  true: the Kitchen Programme year map schedules the DecMk situation choice (plans open
+  W9) and the WellbLe improvement planning (plans open W27). Both spec "Please note"
+  boxes now exist verbatim-in-substance on the staff surface —
+  `GROW_ASDAN/PEQ_L2_Kitchen/Staff_Kitchen_Guide.html` — each ending with the spec's own
+  requirement that the routing **is communicated to learners as part of the session**,
+  with the named week it is read aloud. The L2 spec pages carry the same two boxes
+  (DecMkSk2 p57 · WellbLe2 p66 — `SPEC_FACTS_L2.md`). Pupil lesson decks for the kitchen
+  year do not exist yet (out of scope, built later FROM the SoW); when authored, each
+  DecMk/WellbLe deck inherits this line as REQUIRED with the `data-mbm-guide="staff"`
+  mechanism recorded above.
+- **Item 14 record-keeping:** the witness Level tick on the six LAUNCH PEQ decks is now
+  `☐ Entry 3 ☐ Level 1 ☐ Level 2` (PEQ-L2K B; the ruled exception to PEQ-E3 E1). The
+  registration decision itself stays CENTRE-ACTION.

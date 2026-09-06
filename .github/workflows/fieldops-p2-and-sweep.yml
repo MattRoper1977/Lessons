@@ -1,0 +1,614 @@
+name: FieldOps P2, the sweep, and the serve proof
+
+# NO `paths:` FILTER, DELIBERATELY.
+#
+# PR #114 in this repository ran ZERO checks, because a new tool matched no path
+# filter on any workflow. PR #120 was about to do the same: it carried the four
+# patched FieldOps labs, the Teacher Studio transforms, the sweep and the
+# release ledger, and not one of those paths appeared in a filter anywhere in
+# .github/workflows. A gate nobody runs is not evidence, and a filter that has
+# to be remembered is a filter that will be forgotten.
+#
+# If this job becomes slow enough to be worth filtering, filter it by naming the
+# paths AND adding a control that the filter matches the files the branch adds -
+# not by trusting the list.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  schedule:
+    # Serving drifts without anyone pushing. Weekly, off the hour other estate
+    # jobs use.
+    - cron: '41 5 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# EVERY GATE HERE PIPES ITS OUTPUT THROUGH `tee`, AND THE DEFAULT SHELL IS
+# `bash -e`, WHICH TAKES THE EXIT CODE OF THE LAST COMMAND IN A PIPELINE.
+# The first run of this workflow proved it: the census printed nine findings and
+# the job went green, because tee succeeded. A gate defeated by a pipe, inside
+# the gate written to catch gates that cannot fire. pipefail is set for every
+# run step rather than per step, so the next one added inherits it.
+defaults:
+  run:
+    shell: bash -Eeo pipefail {0}
+
+concurrency:
+  group: fieldops-p2-sweep-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lesson-downloads:
+    name: Extracted lesson packs work offline
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install the source parser and pinned browser driver
+        run: |
+          python -m pip install lxml cssselect
+          npm install --prefix "$RUNNER_TEMP/download-browser" --no-save --ignore-scripts playwright@1.62.1
+      - name: Verify the current term sources and exact lesson selection
+        run: python tools/downloads/verify_definitions.py > "$RUNNER_TEMP/download-source-review.json"
+      - name: Exercise packaging and exact HUD controls
+        run: |
+          python - <<'PY'
+          import json, os, sys
+          from pathlib import Path
+          sys.path.insert(0, 'tools/downloads')
+          import test_download_pack, test_science_offline_pack
+          for name, module in [('packaging', test_download_pack), ('hud', test_science_offline_pack)]:
+              rows = module.controls()
+              Path(os.environ['RUNNER_TEMP'], 'download-'+name+'-controls.json').write_text(json.dumps({'controls':rows,'passed':len(rows)},indent=2)+'\n')
+              print(name, len(rows), 'controls passed')
+          PY
+      - name: Build twice and extract the actual release archives
+        run: |
+          python tools/downloads/build_all.py --output "$RUNNER_TEMP/lesson-pack-zips"
+          python tools/downloads/prepare_pack_browser.py --definitions tools/downloads/definitions --archives-dir "$RUNNER_TEMP/lesson-pack-zips" --extracted-dir "$RUNNER_TEMP/lesson-pack-extracted" --manifest "$RUNNER_TEMP/download-browser-manifest.json"
+      - name: Use the extracted files with the network disabled
+        env:
+          NODE_PATH: ${{ runner.temp }}/download-browser/node_modules
+        run: node tools/downloads/offline_pack_browser.cjs --manifest "$RUNNER_TEMP/download-browser-manifest.json" --packs-dir "$RUNNER_TEMP/lesson-pack-extracted" --report "$RUNNER_TEMP/download-browser-acceptance.json" --artifacts "$RUNNER_TEMP/download-previews" --channel chrome
+      - name: Preserve exact archives and acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lesson-download-review-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/lesson-pack-zips
+            ${{ runner.temp }}/download-*.json
+            ${{ runner.temp }}/download-previews
+          if-no-files-found: error
+          retention-days: 14
+  original-science:
+    name: Original Science navigation, one clock and pupil print
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: MattRoper1977/mattroper1977.github.io
+          ref: bb5f97a2f185aa603cc394d0a3ddbd16ceab72ad
+          path: _reference/science-site
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install the existing browser driver and PDF reader
+        run: |
+          npm install --prefix "$RUNNER_TEMP/science-browser" --no-save --ignore-scripts playwright@1.62.1
+          python -m pip install PyMuPDF==1.26.6 lxml
+      - name: Verify Humanities cover sources, native downloads and existing routes
+        run: |
+          mkdir -p "$RUNNER_TEMP/science-review"
+          python tools/humanities_resources/check_resources.py --root . --report "$RUNNER_TEMP/science-review/humanities-cover-static.json"
+      - name: Drive original Science and Humanities cover pages
+        env:
+          NODE_PATH: ${{ runner.temp }}/science-browser/node_modules
+        run: node tools/easter/science_original_browser.cjs --root . --targets tools/easter/SCIENCE_ORIGINAL_TARGETS.json --site-root _reference/science-site --out "$RUNNER_TEMP/science-review"
+      - name: Render and inspect every exported print page
+        if: ${{ !cancelled() }}
+        run: python tools/easter/science_print_review.py --artifacts "$RUNNER_TEMP/science-review"
+      - name: Check GROW pupil print excludes answers and explicit keys include them
+        if: ${{ !cancelled() }}
+        run: python tools/grow_resources/check_print_content.py --artifacts "$RUNNER_TEMP/science-review"
+      - name: Check Humanities pupil prints exclude the teacher key
+        if: ${{ !cancelled() }}
+        run: python tools/humanities_resources/check_print_content.py --artifacts "$RUNNER_TEMP/science-review"
+      - name: Preserve Science interaction and print evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: original-science-review-${{ github.run_id }}
+          path: ${{ runner.temp }}/science-review
+          if-no-files-found: error
+          retention-days: 14
+  sweep:
+    name: The stale-evidence sweep can still find something
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      # THREE ROOTS, NOT ONE. The sweep's first CI run reported "0 stale" over
+      # three repositories it could not see. Roots are derived now and an absent
+      # one reports NOT ASSESSED - honest, and not yet sufficient, because an
+      # INCONCLUSIVE nothing ever resolves is a check that cannot fire dressed
+      # politely. Here the count is knowable, so it is asserted.
+      #
+      # Anonymous clones: these are public repositories and the job's token is
+      # scoped to this one. A private sibling would fail to clone and the
+      # --require-roots assertion below would report it by name rather than
+      # quietly sweeping two out of three.
+      - name: Check out the two sibling estates
+        run: |
+          set -uo pipefail
+          git clone --depth 1 -q https://github.com/MattRoper1977/mattroper1977.github.io.git "$RUNNER_TEMP/site" \
+            || echo "site clone failed - --require-roots will name it"
+          git clone --depth 1 -q https://github.com/MattRoper1977/Matt-s-Apps-.git "$RUNNER_TEMP/apps" \
+            || echo "apps clone failed - --require-roots will name it"
+
+      # R0.15. The sweep's headline is "0 stale", and that is worth printing
+      # only if the sweep can be shown to catch a stale subject - version 2 of
+      # this tool reported 0 stale because it could no longer fire at all.
+      - name: The authored positive controls, the regressions, and the seventh form
+        run: node tools/stale_evidence_sweep.mjs --self-test | tee "$RUNNER_TEMP/sweep-selftest.txt"
+
+      # R0.1 limb (b) for the qa-record form. The widening below closed a red
+      # (20 unparsed QA rows in Matt-s-Apps-), so it is exactly the change that
+      # has to be able to go red itself: this plants a QA record naming a file
+      # that is not there and requires STALE back. Proven by mutation - stubbing
+      # the resolver to a rubber-stamp fails two of its four checks.
+      - name: The qa-record form can still call a planted subject stale
+        run: node tools/fieldops/qa_record_control.mjs | tee "$RUNNER_TEMP/sweep-qarecord.txt"
+
+      - name: The sweep over all three estates, and all three must be assessed
+        env:
+          MBM_SITE_REPO: ${{ runner.temp }}/site
+          MBM_APPS_REPO: ${{ runner.temp }}/apps
+        run: node tools/stale_evidence_sweep.mjs --require-roots=3 | tee "$RUNNER_TEMP/sweep.txt"
+
+      # R0.1 limb 3 for the tally check. This workflow carries NO `paths:` filter,
+      # which is stated at the top and is why the ledger path matches without
+      # anyone maintaining a list: every path matches when there is no filter.
+      # The ledger has now stated a wrong count twice, so the count is derived
+      # from its own table on every run rather than written down.
+      - name: The ledger's tally is derived from its own table
+        run: node tools/verify_ledger_tally.mjs | tee "$RUNNER_TEMP/tally.txt"
+
+      # A test fixture in a public repository is published data. The estate
+      # shipped a canary that read as a real child and carried the owner's
+      # surname, inside the file about not leaving pupil names where they do not
+      # belong. Self-found; this is the mechanism so the next one is not.
+      # Same `paths:` story as above — this workflow carries NO filter, so every
+      # changed path matches and this runs on every PR without a list to keep.
+      - name: A fixture that reads as a person is caught, both directions
+        run: |
+          node tools/verify_fixture_names.mjs --self-test | tee "$RUNNER_TEMP/fixture-selftest.txt"
+          node tools/verify_fixture_names.mjs | tee "$RUNNER_TEMP/fixture-names.txt"
+
+      - name: ...and that check is proven able to go red three separate ways
+        run: node tools/verify_ledger_tally.mjs --self-test | tee "$RUNNER_TEMP/tally-selftest.txt"
+
+      - name: A default run is a dry run
+        run: |
+          set -euo pipefail
+          before=$(git status --porcelain)
+          node tools/stale_evidence_sweep.mjs > /dev/null
+          after=$(git status --porcelain)
+          if [ "$before" != "$after" ]; then
+            echo "the default run modified the tree - --apply is not the only destructive path"
+            diff <(printf '%s\n' "$before") <(printf '%s\n' "$after") || true
+            exit 1
+          fi
+          echo "default run changed nothing, as R0.14 requires"
+
+      # §9. Job-level success was accepted once because only the tail of an
+      # 861-line log could be fetched. Fix the cause, not the retrieval: the
+      # numbers go where they can be read without scraping.
+      - name: Result block
+        if: always()
+        run: |
+          {
+            echo '## Stale-evidence sweep'
+            echo '```'
+            tail -20 "$RUNNER_TEMP/sweep.txt" 2>/dev/null || echo '(the sweep did not run)'
+            echo '```'
+            echo '### Ledger tally'
+            echo '```'
+            cat "$RUNNER_TEMP/tally.txt" "$RUNNER_TEMP/tally-selftest.txt" 2>/dev/null || echo '(the tally check did not run)'
+            echo '```'
+            echo '### Controls'
+            echo '```'
+            cat "$RUNNER_TEMP/sweep-selftest.txt" 2>/dev/null || echo '(the self-test did not run)'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the sweep evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sweep-evidence
+          path: |
+            ${{ runner.temp }}/sweep*.txt
+            ${{ runner.temp }}/tally*.txt
+          if-no-files-found: error
+
+  fieldops:
+    name: FieldOps P2 - the build is reproducible and the labs still boot
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install the browser the harness drives
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+
+      # U1 is the load-bearing one: drop every transform and the builder must
+      # reproduce release/ byte for byte. A builder whose drop-all output differs
+      # from release is editing something it has not declared.
+      - name: Every transform applies exactly once, and drop-all reproduces release
+        env:
+          P2_PLAYWRIGHT: playwright
+        run: node tools/fieldops/assert_unchanged.mjs | tee "$RUNNER_TEMP/assert-unchanged.txt"
+
+      - name: Result block
+        if: always()
+        run: |
+          { echo '## assert_unchanged'; echo '```';
+            cat "$RUNNER_TEMP/assert-unchanged.txt" 2>/dev/null || echo '(did not run)';
+            echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: assert-unchanged
+          path: ${{ runner.temp }}/assert-unchanged.txt
+          if-no-files-found: error
+
+  served:
+    name: Merged is not served - the placed labs and the Studio
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # The offline controls run on EVERY event, including a PR. The instrument
+      # has to be provable somewhere its network legs cannot run, or the only
+      # thing standing behind it is a job that skipped.
+      # Three estates and the canonical shelf. The shelf is its own repository:
+      # the site's P0 deriver reads it, so this gate must supply it rather than
+      # reimplement what it produces.
+      - name: Check out the other estates and the canonical shelf
+        run: |
+          set -uo pipefail
+          git clone --depth 1 -q https://github.com/MattRoper1977/mattroper1977.github.io.git "$RUNNER_TEMP/site" || echo "site clone failed"
+          git clone --depth 1 -q https://github.com/MattRoper1977/Matt-s-Apps-.git "$RUNNER_TEMP/apps" || echo "apps clone failed"
+          git clone --depth 1 -q https://github.com/MattRoper1977/Games.git "$RUNNER_TEMP/shelf" || echo "shelf clone failed"
+
+      - name: The instrument's offline controls
+        run: |
+          python tools/test_served_publications.py | tee "$RUNNER_TEMP/served-publication-controls.txt"
+          node tools/test_verify_served.mjs | tee -a "$RUNNER_TEMP/served-publication-controls.txt"
+          node tools/verify_fieldops_served.mjs --self-test | tee "$RUNNER_TEMP/served-selftest.txt"
+          node tools/verify_served.mjs --self-test \
+            --site "$RUNNER_TEMP/site" --apps "$RUNNER_TEMP/apps" --shelf "$RUNNER_TEMP/shelf" \
+            | tee -a "$RUNNER_TEMP/served-selftest.txt"
+
+      # ALL FIVE CONTROLS, ON EVERY EVENT INCLUDING A PULL REQUEST.
+      # The live VERDICT needs the branch deployed, and a PR branch is not - that
+      # is why the leg below is skipped there. The CONTROLS do not: (a) asks a
+      # known-absent route for a 404 and (b) asks a real route for bytes and
+      # asserts they differ from a deliberately mutated hash. Both use production
+      # as a fixture, and neither claim changes with the branch.
+      #
+      # Without this step the only controls a pull request could fire were the
+      # offline three, and this workflow exists because of gates that never ran
+      # where they were needed. An unreachable origin here is INCONCLUSIVE (exit
+      # 2), never a failed control - a runner fact must not wear a gate's verdict.
+      - name: All five controls fire — including on a pull request
+        run: |
+          node tools/verify_served.mjs --controls-only \
+            --site "$RUNNER_TEMP/site" --apps "$RUNNER_TEMP/apps" --shelf "$RUNNER_TEMP/shelf" \
+            | tee "$RUNNER_TEMP/served-controls.txt"
+
+      # The live legs only where the answer can be true. A PR branch is not
+      # deployed, so fetching production from one compares the live estate
+      # against a tree that is not live - it would go red for being a PR.
+      #
+      # The split deliberately transforms source bytes and sends games to
+      # their own domain. Recover the exact output of a successful deployment
+      # for each checked-out source; do not rebuild with a newer Site builder
+      # or consult stale legacy Pages build metadata. Missing proof fails closed.
+      - name: Recover successful source-bound publication artifacts
+        if: github.event_name != 'pull_request'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python tools/prepare_served_publications.py \
+            --site "$RUNNER_TEMP/site" --lessons "$GITHUB_WORKSPACE" \
+            --apps "$RUNNER_TEMP/apps" --shelf "$RUNNER_TEMP/shelf" \
+            --output "$RUNNER_TEMP/served-publications" --wait-seconds 240 \
+            | tee "$RUNNER_TEMP/served-publications.txt"
+
+      - name: Every original subject serves the exact successful publication
+        if: github.event_name != 'pull_request'
+        run: |
+          node tools/verify_served.mjs \
+            --site "$RUNNER_TEMP/site" --apps "$RUNNER_TEMP/apps" --shelf "$RUNNER_TEMP/shelf" \
+            --publications "$RUNNER_TEMP/served-publications/publications.json" \
+            --output "$RUNNER_TEMP/served-result.json" \
+            | tee "$RUNNER_TEMP/served.txt"
+
+      - name: Result block
+        if: always()
+        run: |
+          { echo '## Serve proof'; echo '```';
+            cat "$RUNNER_TEMP/served.txt" 2>/dev/null || echo '(the live legs do not run on a pull request - a PR branch is not deployed)';
+            echo '```'; echo '### Offline controls'; echo '```';
+            cat "$RUNNER_TEMP/served-selftest.txt" 2>/dev/null || echo '(did not run)';
+            echo '```'; echo '### All five controls'; echo '```';
+            cat "$RUNNER_TEMP/served-controls.txt" 2>/dev/null || echo '(did not run)';
+            echo '```'; echo '### Publication provenance and regression controls'; echo '```';
+            cat "$RUNNER_TEMP/served-publications.txt" "$RUNNER_TEMP/served-publication-controls.txt" 2>/dev/null || echo '(did not run)';
+            echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: serve-proof
+          path: |
+            ${{ runner.temp }}/served*.txt
+            ${{ runner.temp }}/served-result.json
+            ${{ runner.temp }}/served-publications/publications.json
+          if-no-files-found: error
+
+  pr-census:
+    name: No open PR runs zero checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      # The generalisation of the #120 finding. A green tick on a PR nobody
+      # checked is indistinguishable from a green tick on a PR that passed.
+      # R0.15 for the REPORT, not just the gate. The census printed "12 draft,
+      # 0 not" over rows showing three drafts: the baseline subtraction had been
+      # folded into the label, so nine declared non-draft findings were counted
+      # as an expected state. The gate was right the whole time; the sentence
+      # describing it was not. This control needs no token and no network, so it
+      # fires on every event including a pull request.
+      - name: CONTROL - the draft/non-draft split is read from the rows
+        run: node tools/pr_check_census.mjs --self-test | tee "$RUNNER_TEMP/pr-census-selftest.txt"
+
+      - name: Census across the three estates
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node tools/pr_check_census.mjs --gate --baseline tools/zero_check_baseline.json | tee "$RUNNER_TEMP/pr-census.txt"
+
+      # R0.15. A ratchet with a baseline in it passes by declaring rather than by
+      # checking, unless it is shown able to red on something undeclared. Empty
+      # the baseline and the nine real zero-check PRs must fail the gate; if they
+      # do not, the ratchet is a permanent green with extra steps.
+      - name: CONTROL - with the baseline emptied, the gate must go red
+        run: |
+          echo '{"known":[]}' > "$RUNNER_TEMP/empty-baseline.json"
+          if node tools/pr_check_census.mjs --gate --baseline "$RUNNER_TEMP/empty-baseline.json" > /dev/null; then
+            echo "the gate passed with an EMPTY baseline while zero-check PRs exist - it cannot fire"
+            exit 1
+          fi
+          echo "control fired: an undeclared zero-check PR reds the gate"
+
+      - name: Result block
+        if: always()
+        run: |
+          { echo '## Open-PR check census'; echo '```';
+            cat "$RUNNER_TEMP/pr-census.txt" 2>/dev/null || echo '(did not run)';
+            echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-census
+          path: ${{ runner.temp }}/pr-census*.txt
+          if-no-files-found: error
+
+  inline-exit:
+    name: The way out of a game is keyboard-reachable - both estates
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      # THE GATE LIVES IN THE SITE REPO AND JUDGES THREE GAMES THAT LIVE HERE.
+      # It was hand-run only: the site's workflows fire on site paths, so a change
+      # to Games/Off_Brand.html, Games/Charcoal.html or Games/Axiom_Shift.html in
+      # THIS repository could break a child's way out of a game and no gate would
+      # notice. The tool already accepts --lessons; what it never had was a caller
+      # on this side. This is that caller.
+      #
+      # It is a separate job so a red here is attributable to this gate rather
+      # than folded into the FieldOps build.
+      #
+      # /emberwild/ is judged, not excluded: issue #149 is RESOLVED and was fixed
+      # in the game (Tab is no longer a game key), not by declaring an exemption.
+      # The region-only routes are held to carrying the region markers AND to
+      # carrying no hud.js tag, so the exemption is audited rather than free.
+      - name: Check out the site estate, which holds the instrument
+        run: git clone --depth 1 -q https://github.com/MattRoper1977/mattroper1977.github.io.git "$RUNNER_TEMP/site"
+
+      - name: Install the browser the tab walk needs
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+
+      - name: Every exit is reachable, named, and 44x44 - across both estates
+        run: |
+          cd "$RUNNER_TEMP/site"
+          npm install --no-save playwright
+          node tools/verify_inline_exit.mjs --lessons "$GITHUB_WORKSPACE" \
+            | tee "$RUNNER_TEMP/inline-exit.txt"
+
+      - name: Result block
+        if: always()
+        run: |
+          { echo '## Inline exit, both estates'; echo '```';
+            tail -25 "$RUNNER_TEMP/inline-exit.txt" 2>/dev/null || echo '(did not run)';
+            echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: inline-exit
+          path: ${{ runner.temp }}/inline-exit.txt
+          if-no-files-found: error
+
+  vb-mechanism:
+    name: The VB gate mechanism can still fire - every listed control, no pinned count
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # Pinned so a gate never reds because a dependency moved under it. The
+      # measurement these tools make is a property of the decks, not of lxml.
+      - name: The libraries the measurement needs
+        run: python -m pip install --quiet lxml==6.1.3 cssselect==1.5.0 pymupdf==1.28.2 pypdf cffi
+
+      # NO NUMBER APPEARS IN THIS STEP, DELIBERATELY.
+      #
+      # This workflow used to assert literals - "18 controls", "133 tools". Both
+      # were facts about the repository on the day they were typed, and both go
+      # stale the moment the estate grows: adding one tool moved the scanned
+      # count from 130 to 131. A literal like that reds for the wrong reason,
+      # and the repair everyone reaches for is to edit the number until it goes
+      # green, which is how a gate stops gating. Same lesson as the apexpool
+      # hardcoded count.
+      #
+      # So the battery asks each tool for its control list through
+      # --list-controls, runs its self-test, and requires that EVERY LISTED
+      # CONTROL FIRED. Counts are printed as facts and asserted nowhere. A tool
+      # that gains a control needs no edit here; a tool that loses one still
+      # reds, because each tool reports what it declared against what it ran.
+      - name: Every listed control fired, and the battery is proven able to red
+        run: |
+          python _sownb/vb/tools/mechanism_battery.py --prove-red \
+            --output _sownb/vb/evidence/a2r/mechanism_battery_ci.json \
+            | tee "$RUNNER_TEMP/vb-mechanism.txt"
+
+      # g29 is armed on every authored deck, not only on its own controls. A
+      # deck claiming another plan's cells passes every other gate in the stack:
+      # g28 checks a cell EXISTS, never that this deck is the one that teaches it.
+      - name: Every authored deck claims exactly its own plan's cells
+        run: python _sownb/vb/tools/g29_plan_binding.py --scope authored | tee "$RUNNER_TEMP/vb-g29.txt"
+
+      # The Arts Award gates. --scope live REPORTS: this estate holds ~76
+      # deck-shaped files that name the award and predate the register, and
+      # reddening them the day it lands would manufacture a backlog nobody
+      # asked for. New and repaired Arts Award decks are run with --scope new
+      # by their own PR, where the binding belongs.
+      - name: The Arts Award register still divides the decks that cite it
+        run: |
+          python _sownb/vb/tools/g30_arts_award.py --self-test \
+            | tee "$RUNNER_TEMP/vb-g30-selftest.txt"
+          FILES=$(grep -rl "Arts Award" --include=*.html . | grep -v node_modules || true)
+          if [ -n "$FILES" ]; then
+            python _sownb/vb/tools/g30_arts_award.py $FILES --scope live \
+              | tail -1 | tee "$RUNNER_TEMP/vb-g30.txt"
+          fi
+
+      # g27 is armed on the repository itself, not only on its own controls.
+      - name: No tool derives a teaching week from a path
+        run: python _sownb/vb/tools/g27_no_filename_weeks.py | tee "$RUNNER_TEMP/vb-g27.txt"
+
+      # §6c: the hub is catalogue-driven, and this is the one thing that design
+      # cannot check about itself - a link typed into index.html with no
+      # catalogue row behind it. Its own controls run first, so a green here
+      # cannot be a gate that has stopped being able to red.
+      - name: Every hub entry resolves to a catalogue row
+        run: |
+          python tools/verify_hub_catalogue.py --self-test \
+            | tee "$RUNNER_TEMP/hub-catalogue-selftest.txt"
+          python tools/verify_hub_catalogue.py | tee "$RUNNER_TEMP/hub-catalogue.txt"
+
+      # THE CONTRACT'S POPULATION IS RECIPE OUTPUT, NOT EVERY CLASSIC DECK.
+      # First cut of this step judged all 264 files carrying a .slide-container
+      # and every single one red'd, because most of them are Art, Physics and
+      # ASDAN strand decks that predate the reshell entirely and were never
+      # meant to satisfy a recipe-output contract. 1,399 red lines on every PR
+      # is not a gate, it is a thing people learn to scroll past.
+      #
+      # The population is decks the recipe produced, identified by the two
+      # things it emits and nothing else does: the target TA modal and a print
+      # area. 54 decks, all Humanities, ~25s.
+      #
+      # Report-only. Every one of the 54 fails at least one clause today, and
+      # that is a backlog for lesson PRs, not a reason to block an unrelated
+      # change. The distribution is printed so the backlog is visible and can
+      # be worked down; flip to blocking when it reaches zero.
+      - name: The classic-v2 output contract, across the decks the recipe made
+        continue-on-error: true
+        run: |
+          python - <<'PY' | tee "$RUNNER_TEMP/vb-contract.txt"
+          import re, subprocess, sys
+          from collections import Counter
+          from pathlib import Path
+          decks = []
+          for p in sorted(Path('.').rglob('*.html')):
+              if 'node_modules' in p.parts or '_sownb' in p.parts:
+                  continue
+              raw = p.read_text(encoding='utf-8', errors='replace')
+              if 'slide-container' in raw and 'id="mbmTA"' in raw and 'id="print-area"' in raw:
+                  decks.append(str(p))
+          print(f"{len(decks)} recipe-shaped decks (target TA modal + print area)")
+          r = subprocess.run([sys.executable, '_sownb/vb/tools/reshell_classic_v2_contract.py',
+                              *decks], capture_output=True, text=True)
+          print(r.stdout)
+          counts = Counter(re.findall(r'RED\s+([a-z][a-z0-9-]{4,})\s', r.stdout))
+          print("clause backlog, most common first:")
+          for clause, n in counts.most_common():
+              print(f"  {n:3d}/{len(decks)}  {clause}")
+          PY
+
+      - name: Result block
+        if: always()
+        run: |
+          { echo '## VB gate mechanism'; echo '```';
+            cat "$RUNNER_TEMP/vb-mechanism.txt" 2>/dev/null || echo '(did not run)';
+            echo '```'; echo '### g27'; echo '```';
+            tail -5 "$RUNNER_TEMP/vb-g27.txt" 2>/dev/null || echo '(did not run)';
+            echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vb-mechanism
+          path: |
+            ${{ runner.temp }}/vb-*.txt
+            _sownb/vb/evidence/a2r/mechanism_battery_ci.json
+          if-no-files-found: error

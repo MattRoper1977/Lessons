@@ -1,0 +1,27 @@
+name: Verify Off-Brand
+
+# Runs the deploy gates + safeguarding contract whenever the game file changes.
+on:
+  push:
+    paths:
+      - 'Games/Off_Brand.html'
+      - 'tools/verify_offbrand.sh'
+      - '.github/workflows/verify-offbrand.yml'
+  pull_request:
+    paths:
+      - 'Games/Off_Brand.html'
+      - 'tools/verify_offbrand.sh'
+      - '.github/workflows/verify-offbrand.yml'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Run Off-Brand verification
+        run: |
+          chmod +x tools/verify_offbrand.sh
+          tools/verify_offbrand.sh

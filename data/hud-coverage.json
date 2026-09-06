@@ -1,48 +1,153 @@
 {
-  "_why": "Which Lessons games can carry /hud.js is not derivable from the games. Twenty-six of the thirty-nine in the canonical search index already load it, Games/Glitch_Clash.html among them, so the estate's practice is that the HUD is the one permitted external script. Three games are stricter: their own verifiers forbid any <script src> at all, or extract their JavaScript by slicing to the file's last </script> and break when another one appears after it. Adding the tag to one of those is not a mechanical edit that happens to trip a check - it retracts a promise that game makes, or silently changes what its verifier reads. So the exclusions are declared here rather than left as a quiet gap.",
-  "_measured": "2026-08-10. Each entry was measured, not assumed: the verifier was run on the unmodified file (green), the script line was inserted, and the verifier was run again. Only checks that turned from green to red are recorded.",
-  "_reconciliation": "The stranded figure is 13 FILES, and an earlier census made it 12. Nothing was reclassified and no file changed: the two numbers were taken from different evidence. The earlier census read the source of Trekkers_Trail_Runner (2).html, found `evLink.setAttribute('href', TREKKERS_URL)` wiring an exit to Trekkers_AQA_Evidence_L1.html, and counted it as having a way out. Driven in a browser the rendered href is still \"#\" - on load, and after pressing Start - with no page errors and no other control in that same setup function wired either, so the function simply never runs. The source promises an exit the runtime never delivers. Reading code is a proxy for behaviour exactly as a character count is a proxy for a byte count; the rendered attribute is the evidence. Measured across all 39: zero outward anchors, zero working scripted navigation, zero form actions, zero history.back - the partition is binary, 26 carrying the HUD and 13 not, with no third category.",
-  "_units": "Counts here are FILES. 39 index entries resolve to 39 distinct files; the 13 stranded are 10 wired by this change plus the 3 excluded below. Trekkers_Trail_Runner (2).html is one file whose name contains a bracketed 2, not two files - checked by inode.",
-  "_consequence": "A pupil playing one of these three has the browser Back button and the game's own navigation, and no HUD back control or chosen-homepage control. That is the status quo for all three, not a regression introduced here.",
-  "_scope": "THIS LEDGER GOVERNS 39 OF 58, AND NO CHECK IN THIS REPOSITORY CAN SEE THE OTHER 19. The canonical inventory - the site repository's data/mbm-search-index.json - holds 58 game routes: 39 under /Lessons/ served from here, and 19 single-segment routes served from MattRoper1977/mattroper1977.github.io. The split is exact, with no route in neither group. verify_hud_on_lessons_games.mjs asserts that every inventory game is wired or declared and nothing in between; read without this note, that reads estate-wide, and it is not - it is true of the 39. The site 19, and the 8 exclusions among them, are governed by that repository's own data/hud-coverage.json. Neither repository contains the other's files. The only place a single check could see all 58 is the cross-estate job, which checks out both estates and assembles them onto one origin; no such check exists today, and this note is here so the absence is stated rather than inferred from a number that looks complete.",
-  "scriptLine": "<script defer src=\"/hud.js\"></script>",
-  "excluded": [
-    {
-      "route": "/Lessons/Games/Axiom_Shift.html",
-      "verifier": "tools/verify_axiomshift.sh",
-      "gates": [
-        "extracted-script syntax check"
-      ],
-      "note": "verify_axiomshift.js slices the shell source with html.lastIndexOf('</script>'). A later script element moves that index, so the extracted slice ends up containing a closing tag and fails node --check with SyntaxError: Unexpected token '<'. The game is not at fault and neither is the tag; the extraction is anchored on a position the tag moves."
-    },
-    {
-      "route": "/Lessons/Games/Charcoal.html",
-      "verifier": "tools/verify_charcoal.sh",
-      "gates": [
-        "house: external <script src> present"
-      ]
-    },
-    {
-      "route": "/Lessons/Games/Off_Brand.html",
-      "verifier": "tools/verify_offbrand.sh",
-      "gates": [
-        "house: external <script src> present"
-      ]
-    }
+ "_why": "Which Lessons games can carry /hud.js is not derivable from the games. Most in the canonical search index load it, so the estate's practice is that the HUD is the one permitted external script. Eight declared files are stricter: their own verifier or release contract forbids any <script src>, or their source extraction requires the platform region to be stripped before the game is judged. Adding the tag to one of those is not a mechanical edit - it retracts a promise the game makes. So the exclusions are declared here rather than left as a quiet gap.",
+ "_measured": "2026-08-10 and 2026-08-31. Each entry was measured, not assumed. The five AAA V6 additions were proved offline single-file in static and browser gates, then the rendered estate gate proved their missing platform exit red before this declaration and generated stamp.",
+ "_reconciliation": "The stranded figure is 13 FILES, and an earlier census made it 12. Nothing was reclassified and no file changed: the two numbers were taken from different evidence. The earlier census read the source of Trekkers_Trail_Runner (2).html, found `evLink.setAttribute('href', TREKKERS_URL)` wiring an exit to Trekkers_AQA_Evidence_L1.html, and counted it as having a way out. Driven in a browser the rendered href is still \"#\" - on load, and after pressing Start - with no page errors and no other control in that same setup function wired either, so the function simply never runs. The source promises an exit the runtime never delivers. Reading code is a proxy for behaviour exactly as a character count is a proxy for a byte count; the rendered attribute is the evidence. Measured across all 39: zero outward anchors, zero working scripted navigation, zero form actions, zero history.back - the partition is binary, 26 carrying the HUD and 13 not, with no third category.",
+ "_units": "Counts here are FILES. 39 index entries resolve to 39 distinct files; the 13 stranded are 10 wired by this change plus the 3 excluded below. Trekkers_Trail_Runner (2).html is one file whose name contains a bracketed 2, not two files - checked by inode.",
+ "_consequence": "A pupil playing one of these three has the browser Back button and the game's own navigation, and no HUD back control or chosen-homepage control. That is the status quo for all three, not a regression introduced here.",
+ "_scope": "THIS LEDGER GOVERNS 39 OF 58, AND NO CHECK IN THIS REPOSITORY CAN SEE THE OTHER 19. The canonical inventory - the site repository's data/mbm-search-index.json - holds 58 game routes: 39 under /Lessons/ served from here, and 19 single-segment routes served from MattRoper1977/mattroper1977.github.io. The split is exact, with no route in neither group. verify_hud_on_lessons_games.mjs asserts that every inventory game is wired or declared and nothing in between; read without this note, that reads estate-wide, and it is not - it is true of the 39. The site 19, and the 8 exclusions among them, are governed by that repository's own data/hud-coverage.json. Neither repository contains the other's files. The only place a single check could see all 58 is the cross-estate job, which checks out both estates and assembles them onto one origin; no such check exists today, and this note is here so the absence is stated rather than inferred from a number that looks complete.",
+ "_scopeCurrent": "Re-derived 2026-08-31 from the current site search index and this checkout: 37 indexed /Lessons/ game files exist here; 30 carry /hud.js and seven carry the generated inline exit (Axiom Shift, Charcoal, Grid Chase, Globe Snake, One Guy, Static and Vortex). Off-Brand remains declared because the route/file still exists even though it is outside the current search index. Counts are evidence at this commit, never hand-typed gate expectations; the verifiers derive membership from the inventory and ledger.",
+ "scriptLine": "<script defer src=\"/hud.js\"></script>",
+ "makerSplash": {
+  "_what": "The canonical Made by Matt introduction and rolling 24-hour suppression for the seven V6FIN-CX2 W7 additional routes. The Site repository's tools/render_maker_splash.py remains the only writer, matching the existing cross-estate inline-exit ownership model.",
+  "_scope": "Exactly R1-R7 from the V6FIN-CX2 69-route definition. No canonical Games shelf route, lesson companion, duplicate, or excluded route is added by this declaration.",
+  "_verifier": "Site tools/verify_maker_splash.mjs --mode=verify --scope=lessons, run by .github/workflows/v6fin-w7-r1-r7.yml against the pinned canonical Site generator",
+  "applied": [
+   {
+    "route": "/Lessons/5 Intervention 10/InterventionA_Battle_Arena (1).html"
+   },
+   {
+    "route": "/Lessons/2 Physics 10/current_rush.html"
+   },
+   {
+    "route": "/Lessons/5 Intervention 10/InterventionB_Escape_Room.html"
+   },
+   {
+    "route": "/Lessons/LundyLoop/5_staff_training/R_Gate_Calibration_Game.html"
+   },
+   {
+    "route": "/Lessons/Summer Term Fun/Kids_vs_Staff_Studio_Game_Show_v8_Autopilot.html"
+   },
+   {
+    "route": "/Lessons/5 Intervention 10/L8a_Powerhouse_Arena_TeamQuiz.html"
+   },
+   {
+    "route": "/Lessons/5 Intervention 10/Lesson_VIR_Pupil_App.html"
+   }
   ],
-  "inlineExitRegion": {
-    "_what": "An inline exit control, stamped byte-identically into every game declared here. No src, no dependency, no request: the single-file promise these games make is intact. Generated by the site repository's tools/render_inline_exit.py, never hand-written - eleven hand-copies of one control is one literal repeated eleven times.",
-    "_why": "The consequence recorded above - browser Back and nothing else - is not survivable on a locked-down school device, where the browser chrome may not be there at all. A child finishing echovault or relicforge had no way out of the page. Amending eight more verifiers to admit <script src=\"/hud.js\"> was the alternative, and the precedent cited for it is /neonbreach/, whose amendment let in a script that then rendered nothing for months and nobody looked. Inline costs bytes and moves ledgers; it retracts no promise.",
-    "_rendered": "Proven in a browser, not in source, by the site repository's tools/verify_inline_exit.mjs: present in the DOM, at least 44x44 px as rendered, resolving a real href, on top where a finger lands and keyboard-reachable, for all eleven at 390, 768 and 1440 px. R-HUC01 - a text search over source is evidence about the text, never about the runtime.",
-    "_markers": "<!-- MBM-INLINE-EXIT:BEGIN ... --> ... <!-- MBM-INLINE-EXIT:END -->",
-    "_generator": "tools/render_inline_exit.py (site repository); --check asserts every stamped region is byte-identical to a freshly generated one",
-    "_stripper": "tools/mbm_exit_region.js, emitted into both repositories by the same generator, so the gates that judge a game's own contract remove the platform's region first",
-    "_bytes": 3222,
-    "_sha256": "c87aaf664f86b83c871a898f0e56cd6540cbedd45a44fad0f223ec28013608d9",
-    "_gatesMoved": {
-      "/Lessons/Games/Axiom_Shift.html": "verify_axiomshift.sh extracted 'the script' by slicing from the first <script> to the last </script> - not an extraction but a guess that the file holds exactly one block, and anchored on a position any tag moves. It now walks every inline block, as verify_charcoal.sh and verify_offbrand.sh already did. verify_axiomshift.js had the same slice a second time when building its VM shell, plus an id-resolution scan that read the region's runtime getElementById calls as ids the game never defines; both are scoped to the game.",
-      "/Lessons/Games/Charcoal.html": "none - its house rule forbids <script src>, and an inline region has none",
-      "/Lessons/Games/Off_Brand.html": "none - same house rule, same result"
-    }
+  "declined-with-reason": [],
+  "variant-retained-with-reason": []
+ },
+ "routeScope": {
+  "_ruling": "ORDER VB-RUN15 H14-1. Two estate rules were written at different scopes: the V6 self-test (offline/standalone = zero external elements) is a FILE rule inside each game; the HUD requirement is a ROUTE rule kept in this ledger. Derived by the tier ladder: the HUD is accessibility at the moment of use (T2, a keyboard way out on a device whose browser chrome may be hidden); the self-test is a packaging and artefact contract (T4, single-file, egress). T2 outranks T4, so RULE_CHOICE=b: the HUD rule wins and the self-test is re-scoped from FILE to ROUTE here, as its own contract row. Precedent: the Titan Forge V5.1 core + vendor split, where a rule that had been written per file was re-stated per route.",
+  "classes": {
+   "hud-wired": {
+    "_what": "every inventory game not declared under excluded",
+    "permittedExternal": [
+     "<script defer src=\"/hud.js\"></script>"
+    ],
+    "rule": "the only external element a hud-wired route may carry is the HUD script line; any other external element is a real request and fails the route"
+   },
+   "single-file": {
+    "_what": "every route declared under excluded",
+    "permittedExternal": [],
+    "rule": "zero external elements; the inline exit region is the way out"
+   }
+  },
+  "metadataNotRequests": [
+   "link[rel=\"canonical\"]"
+  ],
+  "_metadataWhy": "a canonical link is metadata the browser never fetches; the file-level self-test counted it as an external element, which is what failed Vortex on its own. At route scope it is neither a request nor a dependency.",
+  "verifier": "tools/verify_v6_selftest.mjs",
+  "_verifierRule": "each declaring game still runs its own selfTest and the file-level result is recorded unchanged; the route-scope verdict re-judges only the offline/standalone check against this row, and it is the route-scope verdict that reds the run. A control plants a non-permitted external script on a real page and requires the route-scope verdict to go RED.",
+  "fileLevelRuleUntouched": "the games' own self-tests are not edited; a game that reports offline:false on its permitted HUD line or its canonical link is recorded FILE-SCOPE FAIL and ROUTE-SCOPE PASS, never rewritten"
+ },
+ "excluded": [
+  {
+   "route": "/Lessons/Games/Axiom_Shift.html",
+   "verifier": "tools/verify_axiomshift.sh",
+   "gates": [
+    "extracted-script syntax check"
+   ],
+   "note": "verify_axiomshift.js slices the shell source with html.lastIndexOf('</script>'). A later script element moves that index, so the extracted slice ends up containing a closing tag and fails node --check with SyntaxError: Unexpected token '<'. The game is not at fault and neither is the tag; the extraction is anchored on a position the tag moves."
+  },
+  {
+   "route": "/Lessons/Games/Grid_Chase.html",
+   "verifier": "tools/verify_v6_selftest.mjs",
+   "gates": [
+    "offline-single-file",
+    "zero external runtime requests"
+   ],
+   "alsoVerifiedBy": "tools/verify_games_rendered.mjs",
+   "verifierNote": "was the prose string \"window.__MBM_V6_RELEASE__.selfTest plus Games rendered regression\". A cited verifier is resolved with fs.existsSync, so a sentence names no check and the daily cross-estate run went red on it. The self-test half genuinely had no runner, so under \"never delete a coverage row\" it was REGISTERED (ORDER VB-RUN13 R3.1) rather than the citation being quietly narrowed to the half that already existed."
+  },
+  {
+   "route": "/Lessons/Games/Globe_Snake (1).html",
+   "verifier": "tools/verify_v6_selftest.mjs",
+   "gates": [
+    "offline-single-file",
+    "zero external runtime requests"
+   ],
+   "alsoVerifiedBy": "tools/verify_games_rendered.mjs",
+   "verifierNote": "was the prose string \"window.__MBM_V6_RELEASE__.selfTest plus Games rendered regression\". A cited verifier is resolved with fs.existsSync, so a sentence names no check and the daily cross-estate run went red on it. The self-test half genuinely had no runner, so under \"never delete a coverage row\" it was REGISTERED (ORDER VB-RUN13 R3.1) rather than the citation being quietly narrowed to the half that already existed."
+  },
+  {
+   "route": "/Lessons/Games/OneGuy.html",
+   "verifier": "tools/verify_v6_selftest.mjs",
+   "gates": [
+    "offline-single-file",
+    "zero external runtime requests"
+   ],
+   "alsoVerifiedBy": "tools/verify_games_rendered.mjs",
+   "verifierNote": "was the prose string \"window.__MBM_V6_RELEASE__.selfTest plus Games rendered regression\". A cited verifier is resolved with fs.existsSync, so a sentence names no check and the daily cross-estate run went red on it. The self-test half genuinely had no runner, so under \"never delete a coverage row\" it was REGISTERED (ORDER VB-RUN13 R3.1) rather than the citation being quietly narrowed to the half that already existed."
+  },
+  {
+   "route": "/Lessons/Games/Static.html",
+   "verifier": "tools/verify_v6_selftest.mjs",
+   "gates": [
+    "offline-single-file",
+    "zero external runtime requests"
+   ],
+   "alsoVerifiedBy": "tools/verify_games_rendered.mjs",
+   "verifierNote": "was the prose string \"window.__MBM_V6_RELEASE__.selfTest plus Games rendered regression\". A cited verifier is resolved with fs.existsSync, so a sentence names no check and the daily cross-estate run went red on it. The self-test half genuinely had no runner, so under \"never delete a coverage row\" it was REGISTERED (ORDER VB-RUN13 R3.1) rather than the citation being quietly narrowed to the half that already existed."
+  },
+  {
+   "route": "/Lessons/Games/Vortex.html",
+   "verifier": "tools/verify_v6_selftest.mjs",
+   "gates": [
+    "offline-single-file",
+    "zero external runtime requests"
+   ],
+   "alsoVerifiedBy": "tools/verify_games_rendered.mjs",
+   "verifierNote": "was the prose string \"window.__MBM_V6_RELEASE__.selfTest plus Games rendered regression\". A cited verifier is resolved with fs.existsSync, so a sentence names no check and the daily cross-estate run went red on it. The self-test half genuinely had no runner, so under \"never delete a coverage row\" it was REGISTERED (ORDER VB-RUN13 R3.1) rather than the citation being quietly narrowed to the half that already existed."
+  },
+  {
+   "route": "/Lessons/Games/Charcoal.html",
+   "verifier": "tools/verify_charcoal.sh",
+   "gates": [
+    "house: external <script src> present"
+   ]
+  },
+  {
+   "route": "/Lessons/Games/Off_Brand.html",
+   "verifier": "tools/verify_offbrand.sh",
+   "gates": [
+    "house: external <script src> present"
+   ]
   }
+ ],
+ "inlineExitRegion": {
+  "_what": "An inline exit control, stamped byte-identically into every game declared here. No src, no dependency, no request: the single-file promise these games make is intact. Generated by the site repository's tools/render_inline_exit.py, never hand-written - eleven hand-copies of one control is one literal repeated eleven times.",
+  "_why": "The consequence recorded above - browser Back and nothing else - is not survivable on a locked-down school device, where the browser chrome may not be there at all. A child finishing echovault or relicforge had no way out of the page. Amending eight more verifiers to admit <script src=\"/hud.js\"> was the alternative, and the precedent cited for it is /neonbreach/, whose amendment let in a script that then rendered nothing for months and nobody looked. Inline costs bytes and moves ledgers; it retracts no promise.",
+  "_rendered": "Proven in a browser, not in source, by the site repository's tools/verify_inline_exit.mjs: present in the DOM, at least 44x44 px as rendered, resolving a real href, on top where a finger lands and keyboard-reachable, for all eleven at 390, 768 and 1440 px. R-HUC01 - a text search over source is evidence about the text, never about the runtime.",
+  "_markers": "<!-- MBM-INLINE-EXIT:BEGIN ... --> ... <!-- MBM-INLINE-EXIT:END -->",
+  "_generator": "tools/render_inline_exit.py (site repository); --check asserts every stamped region is byte-identical to a freshly generated one",
+  "_stripper": "tools/mbm_exit_region.js, emitted into both repositories by the same generator, so the gates that judge a game's own contract remove the platform's region first",
+  "_bytes": 3222,
+  "_sha256": "c87aaf664f86b83c871a898f0e56cd6540cbedd45a44fad0f223ec28013608d9",
+  "_gatesMoved": {
+   "/Lessons/Games/Axiom_Shift.html": "verify_axiomshift.sh extracted 'the script' by slicing from the first <script> to the last </script> - not an extraction but a guess that the file holds exactly one block, and anchored on a position any tag moves. It now walks every inline block, as verify_charcoal.sh and verify_offbrand.sh already did. verify_axiomshift.js had the same slice a second time when building its VM shell, plus an id-resolution scan that read the region's runtime getElementById calls as ids the game never defines; both are scoped to the game.",
+   "/Lessons/Games/Charcoal.html": "none - its house rule forbids <script src>, and an inline region has none",
+   "/Lessons/Games/Off_Brand.html": "none - same house rule, same result"
+  }
+ }
 }

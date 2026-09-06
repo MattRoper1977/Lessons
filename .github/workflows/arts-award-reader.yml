@@ -1,0 +1,83 @@
+name: Arts Award slot reader
+on:
+  pull_request:
+    paths:
+      - 'tools/artsaward/slot_reader*'
+      - 'tools/easter/author_deck.py'
+      - 'tools/easter/build_activity_targets.py'
+      - 'tools/easter/award_*'
+      - 'tools/easter/classroom_*'
+      - 'tools/easter/CLASSROOM_TARGETS.json'
+      - 'tools/easter/refresh_classroom_presentation.py'
+      - 'tools/artsaward/award_chassis_browser.cjs'
+      - 'tools/artsaward/*_TARGETS.json'
+      - 'tools/artsaward/content/**'
+      - 'Art_Teesside/*BRONZE*/**'
+      - 'Art_Teesside/*EXPLORE*/**'
+      - 'Art_Teesside/*SILVER*/**'
+      - '.github/workflows/arts-award-reader.yml'
+permissions:
+  contents: read
+jobs:
+  reader:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Exercise the shipped source reader
+        run: python tools/artsaward/slot_reader_selftest.py --self-test
+      - name: Install the authoring parser
+        run: python -m pip install lxml cssselect
+      - name: Install the browser driver
+        run: npm install --prefix "$RUNNER_TEMP/award-browser" --no-save --ignore-scripts playwright@1.62.1
+      - name: Drive hosted and file selection paths in installed Chrome
+        env:
+          NODE_PATH: ${{ runner.temp }}/award-browser/node_modules
+        run: node tools/artsaward/slot_reader_browser.cjs
+      - name: Exercise the authored award interface in installed Chrome
+        env:
+          NODE_PATH: ${{ runner.temp }}/award-browser/node_modules
+        run: |
+          fixture_manifest=$(python tools/easter/award_browser_fixture.py)
+          node tools/artsaward/award_chassis_browser.cjs --targets "$fixture_manifest" --content-dir "$(dirname "$fixture_manifest")"
+          for level in BRONZE EXPLORE SILVER; do
+            targets="tools/artsaward/${level}_TARGETS.json"
+            if [ -f "$targets" ]; then
+              node tools/artsaward/award_chassis_browser.cjs --targets "$targets"
+            fi
+          done
+      - name: Check the shared classroom appearance and responsive pathways
+        if: ${{ !cancelled() }}
+        env:
+          NODE_PATH: ${{ runner.temp }}/award-browser/node_modules
+        run: node tools/easter/classroom_browser.cjs
+      - name: Check authored activity schemas and screen-print agreement
+        if: ${{ !cancelled() }}
+        run: |
+          for level in BRONZE EXPLORE SILVER; do
+            python tools/easter/classroom_activity_verify.py --strand "$level" > "$RUNNER_TEMP/activity-dom-$level.json"
+            python tools/easter/build_activity_targets.py --targets "tools/artsaward/${level}_TARGETS.json" --output "$RUNNER_TEMP/activity-targets-$level.json"
+            cmp "tools/artsaward/${level}_ACTIVITY_TARGETS.json" "$RUNNER_TEMP/activity-targets-$level.json"
+          done
+      - name: Exercise every authored activity with keyboard, touch and pupil print
+        if: ${{ !cancelled() }}
+        env:
+          NODE_PATH: ${{ runner.temp }}/award-browser/node_modules
+        run: |
+          for level in BRONZE EXPLORE SILVER; do
+            node tools/easter/classroom_activity_browser.cjs --root . --targets "$RUNNER_TEMP/activity-targets-$level.json" --report "$RUNNER_TEMP/activity-browser-$level.json" --artifacts "$RUNNER_TEMP/activity-previews/$level"
+          done
+      - name: Preserve activity verification and printable previews
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: award-activity-review-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/activity-dom-*.json
+            ${{ runner.temp }}/activity-browser-*.json
+            ${{ runner.temp }}/activity-previews
+          if-no-files-found: warn
+          retention-days: 14

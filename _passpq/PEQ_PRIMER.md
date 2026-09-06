@@ -154,3 +154,102 @@ booklets and one ASDAN-account membership fact.)*
 
 *(All estate observations above are from this pass; the qualification facts are §2/Binder
 and remain UNVERIFIED-AGAINST-SPEC until the PDF lands.)*
+
+
+## 10 · PH-3 addendum (2026-08-18)
+
+- **Partial achievement certificates at unit level** [SPEC §5.1]: a learner who misses the
+  qualification size is still certificated for each unit achieved.
+- **Only one adjacent-level unit can ever count** toward an Extended Award or Certificate —
+  the adjacent cap is 3 credits and the smallest unit is 2, so a second adjacent unit always
+  busts the cap. (This is why "one level above or below" needs no further resolving.)
+- **Sept-2025 booklet direction:** L1 command verbs got *easier* (ThSk1 1.1.3/1.1.4 →
+  "Give examples of", 1.2.1 → "Identify"; only 1.7.1 rose to Describe); L2/L3 got harder.
+  Never "top up" L1 demand.
+
+
+---
+
+## PEQ-E3 addendum (2026-08-20) — the cohort anchor
+
+**Everything above is level-neutral and stays true. This section says which level the
+estate is actually delivering, because that decides which minima and which command verbs
+every deck should be stating.**
+
+**Cohort fact, stated by the owner 2026-08-20: pupils are mainly ENTRY LEVEL (Entry 3).
+Only 2–4 pupils are at Level 1. Nobody is at Level 2.**
+
+So the estate delivers:
+
+| tier | level it evidences | example unit citation |
+|---|---|---|
+| **Supported** | **Entry 3** | ComSkE3 |
+| **Standard** | **Entry 3** | ComSkE3 |
+| **Stretch** | **Level 1** (the 2–4 pupils above E3) | ComSk1 |
+
+**Level 2 is out.** Nobody is at level, nothing is registered at L2, and "L2 standard" is
+no longer used as stretch language anywhere in the estate.
+
+### The ComSk tier split — the table every Communication deck is written to
+
+Transcribed from the official unit sheets and cross-checked line-for-line against
+`SPEC_FACTS.md` §15 (ComSkE3 pp24–25 · ComSk1 pp38–39). The two agree; nothing here is
+inferred.
+
+| requirement | **Supported / Standard = E3** | **Stretch = L1** |
+|---|---|---|
+| command verbs | State / List / Identify | Outline / Describe / Give examples |
+| ways of communicating | ≥3 | ≥3 |
+| components of effective communication | **≥3** | **≥4** |
+| difficulties | **≥2** | **≥3** |
+| plan: audience questions | **≥2** | **≥4** |
+| activity (ONE of) | presentation ≥2 min · discussion ≥5 min · text ≥100 words | presentation ≥3 min · discussion ≥8 min · text ≥250 words |
+| review: positive outcomes | **a positive outcome (one)** | **≥2** |
+| review: areas of further development | **an area (one)** | **≥2** |
+| group size | ≥3 | ≥3 |
+| 10-hour plan-use window | **NOT on Communication** (either level) | same |
+| no-difficulties rule | a learner may state they had none | same |
+
+### Two rules that are easy to get backwards
+
+- **Never top Level 1 demand up.** The Sept-2025 booklets moved L1 command verbs *down*
+  (ThSk1 1.1.3/1.1.4 Outline → "Give examples of"; 1.2.1 Outline → "Identify"). A Stretch
+  stem may sit easier than Outline; it must never sit above Describe. [SPEC §19]
+- **SMART is introduced but NOT assessed at E3 team working.** The SMART minimum sits only
+  at TmWkSk1 (1.3.1a). No task may gate the E3 unit on producing SMART targets. [SPEC §15]
+
+### Barred combinations decide where a pupil's credit lands
+
+A learner's evidence for a skill banks at **one level only** — Entry 3 *or* Level 1, never
+both; the higher counts (spec §6.5). Every PEQ witness statement now carries a
+`Level this evidence banks at — tick ONE: ☐ Entry 3 ☐ Level 1` row beside the assessor
+signature, so the decision is recorded per pupil, per session, on the paper that banks it.
+
+## PEQ-L2K addendum (2026-08-22) — the Level 2 route, and the year the GLH demanded
+
+**Owner ruling 2026-08-21 (PEQ-L2K v2 + Addendum B).** "Level 2 is out" narrows to
+"Level 2 *registration* is out unless the coordinator decides otherwise": the six live
+LAUNCH PEQ decks now carry a staff-directed **Level 2 route** — one hidden panel per task
+behind the ⓘ Guidance toggle, carrying the L2 verb form (Describe · Explain · Compare ·
+Assess · Evaluate) and the ComSk2 minima — and the Kitchen Programme
+(`GROW_ASDAN/PEQ_L2_Kitchen/`) plans the full 38-week year in three lanes (E3 cohort ·
+L1 group · L2 route). The GROW PEQ suite is untouched and stays E3/L1.
+
+- **Facts source:** `SPEC_FACTS_L2.md` — the verified L2 extraction (units pp12–13, quals
+  p4/p10, unit content pp52–66). Headlines: L2 verbs Describe/Explain/Compare/Assess/
+  Evaluate · ComSk2 needs **TWO plans over two DIFFERENT ways** (presentation ≥4 min ·
+  discussion ≥10 min · text ≥500 words) · L2 plans carry **review points** (except
+  Communication) · the 10-hour window sits on five of six units (never Communication) ·
+  at L2 Thinking becomes **Critical thinking, CrThSk2** (credibility/accuracy/bias, ≥2
+  sources, primary vs secondary).
+- **The witness Level tick is now three-way:** `☐ Entry 3 ☐ Level 1 ☐ Level 2` — one
+  level per skill per pupil (§6.5); Supported/Standard evidence E3, Stretch evidences L1,
+  the staff-directed L2 route evidences L2.
+- **Safeguarding boxes now exist** on the Kitchen staff surface
+  (`Staff_Kitchen_Guide.html`): the DecMk box is read before the decision plans open
+  (year-map W9), the WellbLe box before the wellbeing plans open (W27) — discharging
+  COMPLIANCE item 15 for the planned kitchen year (pupil decks, when authored from this
+  SoW, inherit the requirement).
+- **The hours, honestly:** the live 12 decks measure 8.0 GLH; the year plan supplies the
+  rest (133 physical GLH at the default 3.5 h/wk), with the 2/3/4 h/wk sensitivity table
+  on the SoW page. The E3 Certificate needs the whole year at ≈3.5 h/wk with zero slack.

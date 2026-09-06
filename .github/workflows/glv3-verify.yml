@@ -112,10 +112,22 @@ jobs:
           assert len(contacts)>=83, len(contacts)
           print(json.dumps({'html':len(html),'resources':len(gl),'lessons':len(lessons),'contacts':len(contacts)}))
           PY
-          ! find GROW_Estate_v3 LAUNCH_Estate_v3 -type f \( -name '*.md' -o -name '*.markdown' \) -print -quit | grep -q .
+          # `! find … | grep -q .` certifies an absence it may never have looked
+          # for. Under pipefail a non-zero pipeline - find erroring on a renamed
+          # estate directory, or find dying of a broken pipe when grep -q exits
+          # first - inverts through the `!` to a PASS. The assertion is "no stray
+          # markdown here", and it would have reported that without walking
+          # anything. Capture instead, and make an unwalkable tree LOUD.
+          stray=$(find GROW_Estate_v3 LAUNCH_Estate_v3 -type f \( -name '*.md' -o -name '*.markdown' \) -print) \
+            || { echo "MEASUREMENT INVALID: could not walk the generated estate trees"; exit 1; }
+          test -z "$stray" || { echo "stray markdown in the generated tree:"; printf '%s\n' "$stray"; exit 1; }
           git diff --check
           if [[ "${GITHUB_REF_NAME}" != main ]]; then
-            test -z "$(git diff --name-only origin/main...HEAD -- Art_Teesside GROW_ASDAN LAUNCH_ASDAN Grow/Slideshows Launch/Slideshows Science_Teesside Humanities_Teesside Baseline_Weeks BUILD_Estate_v3)"
+            # Retain the original protected prefixes. The only admitted changes
+            # are reviewed shelf bytes and manifest-bound additive cover files;
+            # their existing Humanities validator also checks all 30 old routes.
+            python -m pip install --disable-pip-version-check --no-cache-dir lxml==6.0.1
+            python -B _glv3/tools/verify_change_boundary.py --root . --base origin/main --self-test
           fi
 
       - name: Run disposable tamper controls

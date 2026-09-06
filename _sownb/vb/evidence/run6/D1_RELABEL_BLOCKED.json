@@ -1,0 +1,39 @@
+{
+ "decision": "D1 \u2014 relabel the LAUNCH Science run",
+ "orderDefault": "YES, six lessons move back one week (C39-C44)",
+ "verdict": "BLOCKED \u2014 not applied. The order's premise is falsified by measurement.",
+ "blastRadius": {
+  "lessonFilesInScope": 21,
+  "distinctReferringFiles": 62,
+  "totalFilesARenameWouldTouch": 83,
+  "readOnlyGroundTruth": [
+   "_next6/SOW_MATRIX.md",
+   "_next6/sow/lessons.json",
+   "_next6/sow/worklist.json",
+   "_next6/sow/groups/22-25"
+  ],
+  "ceilingRule": "83 > 20, so \u00a72.2 selects the label+citation branch, not a rename."
+ },
+ "whyBlocked": {
+  "chain": "W14->13 needs 13 free, which needs W13->12, ... down to W9->8, which needs week 8 free.",
+  "blocker": "Week 8 is held by the SCI_L_W8 enzyme trio.",
+  "evidence": "Searching every LAUNCH workbook row for enzyme/amylase/catalyst/digest returns ZERO matches, in any strand or term.",
+  "counting": "Workbook Biology C34-C45 = 12 taught weeks (abs 3-14). Live decks W3-W14 = 12 labels plus the Autumn2_W7 pack at abs 14. W3-W7 (v3_40min) align to C34-C38 and are CORRECT; W9-W14 are +1. The enzyme week is the extra one that pushed them.",
+  "week7NotFree": "Moving the enzyme week to 7 collides with the v3_40min W7 trio, aligned to C38 and inside a protected production tree (_glv3/PROTECTED_TREES.json).",
+  "whyNotApplied": "Six of seven would knowingly manufacture a collision at week 8. Assigning or stripping the enzyme week's number is a curriculum decision with no workbook warrant."
+ },
+ "theOneQuestion": "The enzyme/amylase week (SCI_L_W8L1-L3) has no row in the LAUNCH workbook. Is it (a) extra enrichment outside the numbered sequence, (b) part of C38's Topic 1 review week alongside the v3_40min W7 trio, or (c) a missing workbook row? Answering this unblocks the relabel; nothing else does.",
+ "readyOnceAnswered": {
+  "mapping": {
+   "SCI_L_W9L1-L3": "week 8, C39 mitosis & cell cycle",
+   "SCI_L_W10L1-L3": "week 9, C40 growth & stem cells",
+   "SCI_L_W11L1-L3": "week 10, C41 stem-cell ethics",
+   "SCI_L_W12L1-L3": "week 11, C42 DNA genes chromosomes",
+   "SCI_L_W13L1-L3": "week 12, C43 genetic cross",
+   "SCI_L_W14L1-L3": "week 13, C44 research a genetic condition"
+  },
+  "editPerDeck": "lesson-config \"week\":N -> N-1; add \"cells\":[\"LAUNCH Weekly - Autumn!C<row>\"] plus a source block in the FEB shape; visible 'Week N \u00b7' -> 'Week N-1 \u00b7'.",
+  "filesTouched": "18 lessons + 2 front doors = 20, inside the ceiling.",
+  "untouched": "Filenames, pack dir names and title id tokens stay; the path/label mismatch goes to noTouchRegister. The Autumn2_W7 pack (C45) is untouched either way."
+ }
+}

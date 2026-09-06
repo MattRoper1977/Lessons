@@ -343,3 +343,50 @@ be generated through a challenge that also leads to another PEQ unit** (e.g. Thi
 working, Decision making). Where the activity is not tied to another PEQ unit, there must be
 evidence of **preparing for communication, including research of the topic**. (§17, pp25/39)
 This underwrites the GROW/LAUNCH cross-strand banking model.
+
+
+---
+
+## 19 · 2026-08 booklet addendum (PH-3, 2026-08-18 — FACTS MODE)
+
+Appended by PH-3 from the §2.3 verified fact block of the PH-3 master prompt (facts verified
+2026-08 against the Sept-2025 assessment booklets, the PEQ units-and-credit-values sheet
+(Sept 2025), the PEQ002 challenge sheet, ASDAN's worked assessment-plan example, and ASDAN's
+live key-dates pages — the source documents are © ASDAN, not committed; the repo ran without
+`_asdan_private/` so each fact cites its source *type*). Nothing above this section is
+rewritten.
+
+- **Command-verb direction, Sept-2025 booklets vs spec v1.2: L1 got EASIER** — ThSk1 1.1.3/
+  1.1.4 Outline → "Give examples of"; ThSk1 1.2.1 Outline → "Identify"; only ThSk1 1.7.1
+  rose (Outline → Describe). L2/L3 got harder. **Never "top up" L1 demand** to match older
+  wording. *(Source: Thinking E3/L1 + Critical Thinking L2/L3 assessment booklets, Sept 2025.)*
+- **ASDAN's worked assessment plan** runs a **mixed E3 + L1 cohort on ONE planning record**,
+  co-assesses Communication and Thinking in the same weekly activities, carries a **"Date
+  submitted for pre-delivery IQA"** field, and points at ASDAN's IQA pre-delivery check
+  template. *(Source: ASDAN assessment-plan worked example.)*
+- **PEQ002 "Extended study" is a challenge, not a unit** — it carries **no credits**. Its
+  durations (1 skill 10 h · 2 skills 15–20 h · 3 skills 15–30 h) mean the per-skill 10-hour
+  windows **overlap**; they do not stack serially. *(Source: PEQ002 challenge sheet.)*
+- **The ASDAN e-portfolio is closed to new registrations, and access for existing
+  registrations ENDS 31 AUGUST 2026** — any short-course evidence living in it must be
+  exported first. *(Source: ASDAN live page, verified 2026-08.)*
+- **All Vocational Taster titles and RoadWise are being WITHDRAWN** — registrations/student
+  books purchasable until **31 December 2026**, final certification **31 August 2027**.
+  **"Hospitality" as banked by LAUNCH Vocational is the *Hospitality Vocational Taster* —
+  on that clock. Gardening is an ordinary Short Course — not withdrawn.** *(Source: ASDAN
+  live withdrawal notice, verified 2026-08.)*
+- **Level 3 is 16+ only** — barred for the KS4 cohort. *(Source: spec v1.2 §3.)*
+- **Only ONE adjacent-level unit can ever contribute** to an Extended Award or Certificate:
+  the smallest unit is 2 credits and the adjacent cap is 3, so two adjacent units (2 + 2)
+  break the cap. The "level above or level below" wording therefore never needs resolving;
+  the 17-Aug third-party audit's "either above OR below, not both" was a **phantom rule** —
+  never write it. *(Source: arithmetic on spec v1.2 §5.1 credit values.)*
+- **Spec §6.5 barred-combinations table has a typo** — it prints ThSk2/ThSk3; the real L2/L3
+  codes are **CrThSk2 (3 cr) / CrThSk3 (4 cr)** ("Critical thinking"). *(Source: spec v1.2
+  §6.5 vs unit pages; units-and-credit-values sheet Sept 2025.)*
+- **Partial achievement certificates at unit level** (spec §5.1): a learner short of a
+  qualification is certificated for the **units achieved**. Too many credits *above* the
+  intended level may change the qualification outcome — a question for info@asdan.org.uk.
+  *(Source: spec v1.2 §5.1.)*
+- **The school's ASDAN registration/approval is DONE (Matt, 30 Jul 2026)** — registration
+  and the PEQ approval are never to be framed as pending. *(Source: Matt, 30 Jul 2026.)*

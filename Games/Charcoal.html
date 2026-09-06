@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Charcoal — a Made by Matt studio round</title>
+<link rel="canonical" href="https://madebymatt.uk/Lessons/Games/Charcoal.html">
+<meta name="description" content="Charcoal AAA V6 — a tactile, accessible Made by Matt studio mystery, preserved offline in one file.">
+<meta name="theme-color" content="#161D3D">
+<title>Charcoal AAA V6 — Made by Matt</title>
 <style>
 :root{
   --navy:#161D3D; --navy2:#0F1430; --cream:#E8E2D4; --paper:#EDE6D4; --paper2:#DED3BC;
@@ -178,9 +181,40 @@ canvas{display:block}
  .spRing,.spM,.spStar,.spWord,.spTag{animation:none;opacity:1;stroke-dashoffset:0;transform:none}
  #cine .cnEyebrow,#cine .cnTitle,#cine .cnRole,#cine .cnLine,#cine .cnMap,#cine .cnBegin{animation:none;opacity:1;transform:none}}
 @media (max-width:520px){.mode{flex-basis:100%}.ctCard{flex-basis:100%}}
+
+/* ================= AAA V6 VIEWPORT + PRESENTATION LAYER =================
+   Simulation, scoring, roles, collisions, rewards and legacy saves remain in
+   the original engine below. This layer only reserves safe touch space and
+   paints previews/cinematics over that authority. */
+html,body{width:100%;height:100%;height:100dvh;overscroll-behavior:none}
+button,[role="button"],canvas[tabindex]{min-width:44px;min-height:44px}
+#scrGame{padding:max(0px,env(safe-area-inset-top)) max(0px,env(safe-area-inset-right)) max(0px,env(safe-area-inset-bottom)) max(0px,env(safe-area-inset-left))}
+#v6badge{position:fixed;right:calc(8px + env(safe-area-inset-right));top:calc(8px + env(safe-area-inset-top));z-index:71;padding:5px 9px;border:1px solid rgba(185,230,205,.5);border-radius:999px;background:rgba(15,20,48,.82);color:var(--mint);font-size:10px;font-weight:800;letter-spacing:.14em;pointer-events:none}
+#v6predict{position:absolute;inset:0;width:100%;height:100%;z-index:4;pointer-events:none}
+#v6status{position:absolute;left:50%;bottom:82px;transform:translateX(-50%);z-index:9;max-width:min(520px,90%);padding:6px 11px;border:1px solid rgba(185,230,205,.45);border-radius:999px;background:rgba(15,20,48,.88);color:var(--mint);font-size:11px;letter-spacing:.04em;opacity:0;transition:opacity .15s;pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#v6status.on{opacity:1}
+#v6clutch{position:fixed;inset:0;z-index:69;display:grid;place-items:center;pointer-events:none;opacity:0;background:radial-gradient(circle,rgba(217,180,74,.18),transparent 48%);color:#fff;font-weight:900;font-size:clamp(26px,8vw,58px);letter-spacing:.12em;text-shadow:0 0 25px var(--gold)}
+#v6clutch.on{animation:v6Clutch .58s ease-out both}
+#v6ascent{position:fixed;inset:0;z-index:68;pointer-events:none;overflow:hidden}
+.v6spark{position:absolute;left:50%;bottom:18%;width:7px;height:7px;border-radius:50%;background:#fff;box-shadow:0 0 12px var(--gold),0 0 28px var(--mint);animation:v6Asc 1.1s cubic-bezier(.2,.7,.2,1) both;animation-delay:var(--d)}
+@keyframes v6Clutch{0%{opacity:0;transform:scale(.84)}18%{opacity:1;transform:scale(1.03)}100%{opacity:0;transform:scale(1.13)}}
+@keyframes v6Asc{0%{transform:translate(0,0) scale(.4);opacity:0}16%{opacity:1}100%{transform:translate(var(--x),-72vh) scale(1.25);opacity:0}}
+#scrGame.v6-fly #cvwrap{animation:v6Fly 1.6s cubic-bezier(.22,.7,.22,1) both;transform-origin:50% 50%}
+@keyframes v6Fly{0%{transform:scale(1.28) translate3d(8%,-4%,0);filter:saturate(.65)}100%{transform:none;filter:none}}
+@media (orientation:landscape){
+  #botbar{position:absolute;left:50%;bottom:calc(6px + env(safe-area-inset-bottom));transform:translateX(-50%);width:min(720px,74vw);padding:5px 7px;background:rgba(15,20,48,.78);border:1px solid var(--line);border-radius:16px;backdrop-filter:blur(8px)}
+  .bbtn{min-height:46px;padding:5px 4px}#v6status{bottom:64px}
+}
+@media (orientation:portrait){
+  #botbar{position:static;transform:none;width:100%;padding:8px max(10px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));background:linear-gradient(180deg,rgba(15,20,48,.7),rgba(15,20,48,.99))}
+}
+@media (prefers-reduced-motion:reduce){#scrGame.v6-fly #cvwrap,.v6spark,#v6clutch.on{animation:none!important}#v6clutch.on{opacity:1}}
+.rm #scrGame.v6-fly #cvwrap,.rm .v6spark,.rm #v6clutch.on{animation:none!important}
 </style>
 </head>
 <body>
+<div id="v6badge" aria-hidden="true">AAA V6 · MADE BY MATT</div>
+<div id="v6clutch" aria-live="polite">CLUTCH INK</div><div id="v6ascent" aria-hidden="true"></div>
 <!-- ============ SPLASH ============ -->
 <div class="scr on" id="scrSplash" role="button" aria-label="Made by Matt. Tap to continue.">
   <div class="spWrap">
@@ -252,7 +286,9 @@ canvas{display:block}
       <span id="timeChip">2:15</span>
     </div>
     <div id="cvwrap">
-      <canvas id="cv"></canvas>
+      <canvas id="cv" tabindex="0" role="application" aria-label="Charcoal studio floor. Use arrow keys to move the aiming point, Enter to walk, and Space to use the current role action."></canvas>
+      <canvas id="v6predict" aria-hidden="true"></canvas>
+      <div id="v6status" role="status" aria-live="polite"></div>
       <div id="alert" role="status" aria-live="assertive"></div>
       <div id="toast" role="status" aria-live="polite"></div>
       <div id="tut" role="status" aria-live="polite"><span id="tutStep"></span><span id="tutTx"></span><button id="tutSkip">SKIP</button></div>
@@ -1710,5 +1746,47 @@ if(document.body)mount();else document.addEventListener("DOMContentLoaded",mount
 }catch(e){}
 })();</script>
 <!-- MBM-INLINE-EXIT:END -->
+<script>
+/* ================= CHARCOAL AAA V6 — ISOLATED RELEASE SHELL =================
+   This shell never writes mbm_charcoal. The original engine remains the sole
+   authority for movement, sightlines, roles, scoring, rewards and progression. */
+(function(){
+"use strict";
+var VERSION="6.0.0",GAME_ID="charcoal",PROFILE_KEY="mbm_v6_charcoal_profile";
+var legacyRaw="";try{legacyRaw=localStorage.getItem("mbm_charcoal")||"";}catch(e){}
+var Profile={version:6,gameId:GAME_ID,settings:{},migratedAt:new Date().toISOString(),legacySource:"mbm_charcoal"};
+try{var prior=JSON.parse(localStorage.getItem(PROFILE_KEY)||"null");if(prior&&prior.version===6)Profile=Object.assign(Profile,prior);localStorage.setItem(PROFILE_KEY,JSON.stringify(Profile));}catch(e){}
+var legacyPreserved=false;try{legacyPreserved=(localStorage.getItem("mbm_charcoal")||"")===legacyRaw;}catch(e){legacyPreserved=true;}
+
+var predict=document.getElementById("v6predict"),pctx=predict.getContext("2d"),aim={x:480,y:320,on:false};
+function fitPredict(){var r=predict.getBoundingClientRect(),d=Math.min(2,window.devicePixelRatio||1);predict.width=Math.max(1,Math.round(r.width*d));predict.height=Math.max(1,Math.round(r.height*d));pctx.setTransform(d,0,0,d,0,0);}
+function worldMap(){var r=predict.getBoundingClientRect(),sc=Math.min(r.width/960,r.height/640);return {r:r,s:sc,ox:(r.width-960*sc)/2,oy:(r.height-640*sc)/2};}
+function nearestIntent(s,p){var best=null,score=-1e9;if(!s||!p)return null;for(var i=0;i<s.chars.length;i++){var c=s.chars[i];if(c===p||c.smudged)continue;var dx=c.x-p.x,dy=c.y-p.y,d=Math.sqrt(dx*dx+dy*dy),v=100-d;if(p.role==="smudge"&&c.role!=="smudge")v+=80;if(c.role==="fixer")v+=24;if(c.nearHits>0)v+=18;if(v>score){score=v;best=c;}}return best;}
+/* Grafted from Town Life's event-driven advisory (c4c27fce): the prediction overlay only clears a frame it drew, so the menu costs no paints or layout reads. */
+var predictDrawn=false;function clearPredict(){if(!predictDrawn)return;var r=predict.getBoundingClientRect();pctx.clearRect(0,0,r.width,r.height);predictDrawn=false;}
+function drawPredict(){
+  var api=window.CH,s=api&&api.S;if(!s||s.over||!document.getElementById("scrGame").classList.contains("on")){clearPredict();requestAnimationFrame(drawPredict);return;}
+  var m=worldMap(),p=s.player;if(!p){clearPredict();requestAnimationFrame(drawPredict);return;}var r=predict.getBoundingClientRect();pctx.clearRect(0,0,r.width,r.height);predictDrawn=true;var sx=m.ox+p.x*m.s,sy=m.oy+p.y*m.s;
+  pctx.save();pctx.lineWidth=1.6;pctx.setLineDash([5,5]);pctx.strokeStyle="rgba(185,230,205,.88)";
+  if(aim.on){var ax=m.ox+aim.x*m.s,ay=m.oy+aim.y*m.s;pctx.beginPath();pctx.moveTo(sx,sy);pctx.lineTo(ax,ay);pctx.stroke();pctx.setLineDash([]);pctx.strokeRect(ax-10,ay-10,20,20);}
+  var n=nearestIntent(s,p);if(n&&((p.role==="smudge"&&!n.smudged)||p.role==="fixer")){var nx=m.ox+n.x*m.s,ny=m.oy+n.y*m.s;pctx.setLineDash([3,4]);pctx.strokeStyle=p.role==="fixer"?"rgba(217,180,74,.9)":"rgba(242,162,74,.9)";pctx.beginPath();pctx.arc(nx,ny,18,0,Math.PI*2);pctx.stroke();}
+  pctx.restore();requestAnimationFrame(drawPredict);
+}
+window.addEventListener("resize",fitPredict);fitPredict();requestAnimationFrame(drawPredict);
+var cv=document.getElementById("cv");cv.addEventListener("pointermove",function(e){var m=worldMap();aim.x=Math.max(0,Math.min(960,(e.clientX-m.r.left-m.ox)/m.s));aim.y=Math.max(0,Math.min(640,(e.clientY-m.r.top-m.oy)/m.s));aim.on=true;},{passive:true});
+cv.addEventListener("keydown",function(e){if(!window.CH||!window.CH.S)return;var used=true,step=e.shiftKey?48:24;if(e.key==="ArrowLeft")aim.x-=step;else if(e.key==="ArrowRight")aim.x+=step;else if(e.key==="ArrowUp")aim.y-=step;else if(e.key==="ArrowDown")aim.y+=step;else if(e.key==="Enter"){var m=worldMap();cv.dispatchEvent(new PointerEvent("pointerdown",{bubbles:true,clientX:m.r.left+m.ox+aim.x*m.s,clientY:m.r.top+m.oy+aim.y*m.s,pointerId:7}));}else used=false;if(used){e.preventDefault();aim.on=true;aim.x=Math.max(0,Math.min(960,aim.x));aim.y=Math.max(0,Math.min(640,aim.y));}});
+
+var hiddenResume=false;document.addEventListener("visibilitychange",function(){var s=window.CH&&window.CH.S;if(!s)return;if(document.hidden){hiddenResume=!s.paused;s.paused=true;}else if(hiddenResume&&!document.querySelector(".ovl.on")&&!document.getElementById("cine").classList.contains("on")){s.paused=false;hiddenResume=false;}});
+function updateA11y(){var splash=document.getElementById("scrSplash"),priority=splash.classList.contains("on")?splash:null;document.querySelectorAll(".scr").forEach(function(el){var active=(priority?el===priority:el.classList.contains("on"));el.setAttribute("aria-hidden",String(!active));el.inert=!active;});document.querySelectorAll(".ovl").forEach(function(el){el.setAttribute("role","dialog");el.setAttribute("aria-modal","true");});}
+new MutationObserver(updateA11y).observe(document.body,{attributes:true,subtree:true,attributeFilter:["class"]});updateA11y();
+
+var lastCine=false,lastEnd=false,lastRound=-1,clutched=false;
+function ascent(){var host=document.getElementById("v6ascent");host.innerHTML="";for(var i=0;i<9;i++){var q=document.createElement("i");q.className="v6spark";q.style.setProperty("--d",(i*.07)+"s");q.style.setProperty("--x",((-160+i*40)+(i%2?22:-12))+"px");host.appendChild(q);}setTimeout(function(){host.innerHTML="";},1800);}
+function clutch(){var el=document.getElementById("v6clutch");el.classList.remove("on");void el.offsetWidth;el.classList.add("on");}
+function watch(){var cine=document.getElementById("cine"),cin=cine.classList.contains("on"),end=document.getElementById("ovlEnd").classList.contains("on"),s=window.CH&&window.CH.S;if(cin&&!lastCine){document.getElementById("scrGame").classList.add("v6-fly");setTimeout(function(){document.getElementById("scrGame").classList.remove("v6-fly");},1700);}lastCine=cin;if(s&&s.round!==lastRound){lastRound=s.round;clutched=false;}if(s&&s.over&&!clutched&&(s.endKind==="sealed"||s.endKind==="held")&&(window.CH.TUNE.playTime-s.t)<9){clutched=true;clutch();}if(end&&!lastEnd)ascent();lastEnd=end;requestAnimationFrame(watch);}requestAnimationFrame(watch);
+function selfTest(){var ok=!!(window.CH&&window.CH.TUNE&&window.CH.TUNE.playTime===138&&window.CH.MAP_ORDER.join(",")==="gallery,bench,chest");var now="";try{now=localStorage.getItem("mbm_charcoal")||"";}catch(e){now=legacyRaw;}return {ok:ok&&legacyPreserved,pass:ok&&legacyPreserved,version:VERSION,gameId:GAME_ID,authority:{playTime:138,maps:3,legacyEngine:window.CH&&window.CH.ver},legacyPreserved:legacyPreserved,profileVersion:Profile.version};}
+window.__MBM_V6_RELEASE__={version:VERSION,gameId:GAME_ID,features:["standalone-offline","portrait-control-tray","landscape-overlay-controls","keyboard-intent-cursor","role-aware-prediction","visibility-pause","skippable-studio-fly-in","clutch-ink","finish-ascension","schema-6-profile"],selfTest:selfTest};
+})();
+</script>
 </body>
 </html>

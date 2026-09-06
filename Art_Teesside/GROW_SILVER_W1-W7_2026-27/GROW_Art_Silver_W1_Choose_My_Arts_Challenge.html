@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en-GB" class="mbm-classroom pathway-grow"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Choose My Arts Challenge</title><style>
+:root{--bg:#141C24;--panel:#202D37;--panel2:#283743;--text:#F2EFE5;--muted:#C8CECA;--steel:#5B91A5;--oxide:#D1673D;--teal:#2BA193;--gold:#DFAD3E;--violet:#8B6CC7;--line:#42515d;--paper:#fff;--ink:#172334;--danger:#b93f4b}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:"Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--bg)}
+body{overflow:hidden}a,button{font:inherit}button,a.mbmhome{min-height:44px;min-width:44px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:8px;top:8px;z-index:50;background:#fff;padding:10px}
+.deck{height:100vh;padding:18px 18px 112px;overflow:auto}.slide{display:none;max-width:1120px;min-height:calc(100vh - 145px);margin:auto;background:var(--paper);border:2px solid var(--line);border-top:10px solid var(--teal);border-radius:18px;padding:22px;box-shadow:0 8px 30px #10233f18}.slide.active{display:block}
+h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-size:clamp(1.5rem,3vw,2.3rem);margin:.4rem 0 1rem}h3{margin:.2rem 0 .45rem}p,li{line-height:1.5}.tag,.time,.chips span{display:inline-block;border-radius:999px;padding:6px 10px;font-weight:800}.tag{background:#EEF5F4}.time{float:right;background:var(--ink);color:#fff}.chips{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.chips span{background:#FFF4D6}
+.hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,.7fr);gap:18px}.hero-visual{display:grid;gap:10px;align-content:center;background:var(--ink);color:#fff;border-radius:16px;padding:18px;min-height:150px;text-align:center}.hero-visual span{color:var(--teal)}
+.box,.route,.route-card,.evidence-gate,.lundy,.lundy-strip,.ladder,.prompt-ladder,.ta-card,.modal,.drawer,dialog{border:2px solid var(--line);border-radius:13px;padding:13px;margin:12px 0;background:#fff}.lo{border-left:8px solid var(--teal)}.truth{border-left:8px solid var(--oxide);background:#FFF4D6;padding:12px}.access{background:#EEF5F4;padding:12px;border-radius:12px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.routes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.route.s,.route.supported,.route-card.supported{border-top:7px solid var(--teal)}.route.m,.route.standard,.route-card.standard{border-top:7px solid var(--steel)}.route.h,.route.stretch,.route-card.stretch{border-top:7px solid var(--oxide)}.options{display:grid;gap:9px}.options button{text-align:left;padding:12px;border:2px solid var(--line);border-radius:10px;background:#fff}.vocabrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.vterm{border:2px solid var(--line);padding:12px;border-radius:12px}.vterm span{display:block;margin-top:5px}.lundy-grid,.lundy-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center;font-weight:900}.ladder,.prompt-ladder{font-weight:700}.ta-card,.modal,.drawer{background:#FFF4D6}
+.controls{position:fixed;left:8px;right:8px;bottom:58px;z-index:20;display:flex;gap:7px;overflow-x:auto;padding:8px;background:var(--ink);border-radius:14px}.controls button,.controls a{flex:0 0 auto;border:2px solid #fff;border-radius:9px;padding:7px 10px;background:#fff;color:var(--ink);font-weight:800;text-decoration:none}.prog{position:fixed;left:12px;right:12px;bottom:46px;height:6px;background:#fff;border:1px solid var(--line);z-index:19}.prog>span{display:block;height:100%;width:11.11%;background:var(--teal)}
+.overlay{display:none;position:fixed;inset:0;z-index:40;background:#10233fdd;align-items:center;justify-content:center;padding:18px}.overlay.on{display:flex}.overlay-card{max-width:700px;background:#fff;border-radius:15px;padding:20px}.overlay-card button{padding:8px 12px}
+.print-pack{display:none}.printpack{display:none}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(max-width:720px){.deck{padding:10px 10px 118px}.slide{padding:15px}.hero,.routes,.vocabrow{grid-template-columns:1fr}.lundy-grid{grid-template-columns:1fr 1fr}}
+@media print{html,body{color-scheme:light!important;background:#fff;color:#111;overflow:visible}body>*:not(.print-pack){display:none!important}.print-pack{display:block!important}.printpack{display:block!important}.print-page{break-after:page;page-break-after:always;padding:8mm;min-height:255mm}.print-page:last-child{break-after:auto;page-break-after:auto}.print-pack h1{font-size:20pt;line-height:1.15;margin:0 0 3mm}.print-pack h2{font-size:13pt;line-height:1.2;margin:3mm 0 1.5mm}.print-pack p,.print-pack li{font-size:10.5pt;line-height:1.35}.running-head{font-size:9pt;border-bottom:1px solid #666;margin-bottom:4mm;padding-bottom:2mm}.proute,.print-route{display:block;border:1px solid #777;padding:3mm;margin:3mm 0;break-inside:avoid}@page{size:A4;margin:10mm}}
+</style><style id="award-print-layout">
+      @media screen {
+        [data-mbm-guide]{display:none!important}
+        #taOverlay [data-mbm-guide]{display:block!important}
+        #taOverlay .overlay-card{max-height:calc(100vh - 36px);overflow:auto;width:min(700px,100%)}
+        body.calm .slide{box-shadow:none}
+        body.calm *,body.calm *::before,body.calm *::after{animation:none!important;transition:none!important}
+        body.teacher-freeze *,body.teacher-freeze *::before,body.teacher-freeze *::after{animation-play-state:paused!important;transition:none!important}
+      }
+      @media print {
+        .award-print .print-page{box-sizing:border-box;padding:4mm;min-height:0}
+        .award-print table{width:100%;border-collapse:collapse;table-layout:fixed}
+        .award-print th,.award-print td{border:1px solid #777;padding:2mm;vertical-align:top;font-size:9pt}
+        .award-print th:first-child{width:34%}.award-print th:last-child{width:23%}
+        .award-print td.award-response{height:18mm}
+        .award-print-figures svg{display:block;width:100%;max-height:34mm;margin:2mm 0}
+        .award-print .print-route{padding:2mm;margin:2mm 0}
+        .award-print h3{font-size:11pt;margin:0}
+        .award-print .award-review-space{height:35mm;border:1px solid #777}
+      }
+    </style><style id="mbm-classroom-chassis">/* Shared classroom presentation. Palette authority: the user's Art Studio reference. */
+html.mbm-classroom {
+  --lo-bg:#e8eef1;--lo-border:#4F869C;--ido-bg:#f3e4dc;--ido-border:#D06438;
+  --wedo-bg:#e2efec;--wedo-border:#16877A;--task-bg:#faf0d7;--task-border:#E1AB32;
+  --btn-bg:#4F869C;--btn-hover:#3a6a7d;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;
+  --sc-bg:#ffedd5;--sc-border:#f97316;--aspire-bg:#dcfce7;--aspire-border:#22c55e;
+}
+html.mbm-classroom.pathway-grow {
+  --lo-bg:#e6ebf0;--lo-border:#5B91A5;--ido-bg:#f2e6df;--ido-border:#D1673D;
+  --wedo-bg:#e2efed;--wedo-border:#2BA193;--task-bg:#f8efd8;--task-border:#DFAD3E;
+  --btn-bg:#5B91A5;--btn-hover:#436f80;--sc-border:#DFAD3E;--sc-bg:#faf3dd;
+}
+html.mbm-classroom.pathway-launch {
+  --lo-bg:#e4ebee;--lo-border:#356F83;--ido-bg:#efe3db;--ido-border:#9B5B3D;
+  --wedo-bg:#e1edeb;--wedo-border:#238C80;--task-bg:#f6eed9;--task-border:#C18B2D;
+  --btn-bg:#356F83;--btn-hover:#28576a;--sc-border:#C18B2D;--sc-bg:#f8f1de;
+}
+@media screen {
+  html.mbm-classroom, .mbm-classroom body {background:#fff;color:#1f2937;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+  .mbm-classroom main.deck {height:100vh;height:100dvh;padding:clamp(14px,3vh,36px) 4vw 110px;overflow:auto;scroll-padding-bottom:110px}
+  .mbm-classroom main.deck>.slide {width:100%;max-width:1600px;min-height:calc(100vh - 160px);margin:auto;padding:clamp(20px,3vw,40px);background:#fff;color:#1f2937;border:0;border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px #00000018}
+  .mbm-classroom .slide[data-classroom-phase="ido"] {border-top-color:var(--ido-border)}
+  .mbm-classroom .slide[data-classroom-phase="wedo"] {border-top-color:var(--wedo-border)}
+  .mbm-classroom .slide[data-classroom-phase="independent"] {border-top-color:var(--task-border)}
+  .mbm-classroom .slide[data-classroom-phase="exit"] {border-top-color:var(--sc-border)}
+  .mbm-classroom .slide h1 {display:block;color:#101820;font-size:clamp(1.8rem,3.2vw,2.8rem);line-height:1.14;margin:20px 0 24px;padding-bottom:12px;border-bottom:3px solid var(--lo-border)}
+  .mbm-classroom .slide h2 {color:#101820;font-size:clamp(1.5rem,2.5vw,2rem);line-height:1.22;margin:16px 0 22px;padding-bottom:12px;border-bottom:2px solid #e2e8f0}
+  .mbm-classroom .slide h3 {color:#182c3c;font-size:1.2rem;line-height:1.3;margin:18px 0 10px}
+  .mbm-classroom .slide p,.mbm-classroom .slide li {font-size:1.15rem;line-height:1.6;color:#334155;max-width:85ch}
+  .mbm-classroom .slide p {margin:.5em 0}
+  .mbm-classroom .slide>svg {max-width:900px;margin:18px auto;display:block;overflow:visible}
+  .mbm-classroom .slide>.tag {display:inline-block;background:var(--lo-bg);color:#183b4b;border-radius:8px;padding:6px 14px;font-size:.9rem;font-weight:800;letter-spacing:.04em}
+  .mbm-classroom .slide[data-classroom-phase="ido"]>.tag {background:var(--ido-bg);color:#68321f}
+  .mbm-classroom .slide[data-classroom-phase="wedo"]>.tag {background:var(--wedo-bg);color:#115c52}
+  .mbm-classroom .slide[data-classroom-phase="independent"]>.tag {background:var(--task-bg);color:#684811}
+  .mbm-classroom .slide>.time {float:right;border-radius:999px;background:#f5f7f8;color:#334155;border:1px solid #cbd5e1;font-size:.9rem}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.time {display:none}
+  .mbm-classroom .mbm-lesson-objective {background:var(--lo-bg);border-left:6px solid var(--lo-border);border-radius:12px;padding:14px 18px;margin:16px 0}
+  .mbm-classroom .mbm-lesson-success {background:var(--sc-bg);border-left:6px solid var(--sc-border);border-radius:12px;padding:14px 18px;margin:14px 0}
+  .mbm-classroom .box,.mbm-classroom .route,.mbm-classroom .route-card {background:#f8fafc;color:#1f2937;border:1px solid #cbd5e1;border-radius:12px;padding:16px}
+  .mbm-classroom .box.objective {background:var(--lo-bg);border-left:6px solid var(--lo-border)}
+  .mbm-classroom .lundy,.mbm-classroom .lundy-strip {background:#f8fafc;color:#334155;border:1px solid #dce3e8;border-radius:12px;padding:10px 14px;margin:22px 0 0}
+  /* Pupil voice is framed at arrival and revisited at the exit, without a
+     repeated process banner competing with each model and practical task. */
+  .mbm-classroom .slide[data-classroom-phase]:not([data-classroom-phase="title"]):not([data-classroom-phase="exit"])>.lundy,
+  .mbm-classroom .slide[data-classroom-phase]:not([data-classroom-phase="title"]):not([data-classroom-phase="exit"])>.lundy-strip {display:none}
+  .mbm-classroom .lundy-grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+  .mbm-classroom .lundy-grid>span {display:block;color:#213544;background:var(--lo-bg);border-radius:8px;padding:7px;text-align:center;font-size:.8rem;font-weight:800}
+  .mbm-classroom .lundy-grid>span:nth-child(2) {background:var(--ido-bg)}
+  .mbm-classroom .lundy-grid>span:nth-child(3) {background:var(--wedo-bg)}
+  .mbm-classroom .lundy-grid>span:nth-child(4) {background:var(--task-bg)}
+  .mbm-classroom .lundy p,.mbm-classroom .lundy-strip p {font-size:.85rem;margin:8px 0 0;max-width:none}
+  .mbm-classroom button {min-width:44px;min-height:44px;border-radius:10px;font-weight:700;background:var(--btn-hover);color:#fff;border:1px solid transparent;padding:10px 16px}
+  .mbm-classroom button:hover {background:#203f4c;color:#fff}
+  .mbm-classroom button:focus-visible,.mbm-classroom a:focus-visible,.mbm-classroom select:focus-visible,.mbm-classroom summary:focus-visible {outline:3px solid #ab5800;outline-offset:3px}
+  .mbm-classroom .controls {background:#fffffff5;backdrop-filter:blur(8px);border:1px solid #dbe3e8;box-shadow:0 4px 20px #182c3c18;border-radius:14px;padding:8px;gap:7px;flex-wrap:wrap;max-width:calc(100vw - 32px)}
+  .mbm-classroom .prog {background:#e7ecef}
+  .mbm-classroom .prog>span {background:var(--lo-border)}
+  .mbm-classroom .overlay-card {background:#fff;color:#1f2937;border-color:var(--lo-border)}
+  .mbm-classroom .slide[data-classroom-phase="title"] {text-align:center}
+  .mbm-classroom .slide[data-classroom-phase="title"]>p {max-width:760px;margin:14px auto;text-align:left}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.tag {background:#d98128;color:#172334}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.lundy {max-width:760px;margin:24px auto 0;text-align:left}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.box {text-align:left}
+  .mbm-classroom body.calm .slide {box-shadow:none}
+  @media(max-width:700px) {
+    .mbm-classroom main.deck {padding:14px 14px 180px}
+    .mbm-classroom main.deck>.slide {min-height:calc(100dvh - 205px);padding:20px 16px}
+    .mbm-classroom .slide p,.mbm-classroom .slide li {font-size:1.05rem}
+    .mbm-classroom .controls {left:14px;right:14px;bottom:14px;justify-content:center;max-width:none}
+    .mbm-classroom .controls button {font-size:.85rem;padding:8px 10px}
+    .mbm-classroom .lundy-grid {grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+  @media(prefers-reduced-motion:reduce) {
+    .mbm-classroom *, .mbm-classroom *::before, .mbm-classroom *::after {animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  }
+}
+</style><style id="mbm-classroom_activity-css">.mbm-activity{margin:1rem 0;padding:clamp(.8rem,2vw,1.25rem);border:2px solid currentColor;border-radius:16px;max-width:100%;box-sizing:border-box}
+.mbm-act-items{display:grid;gap:.65rem;margin:1rem 0}
+.mbm-act-row{padding:.65rem;border:1px solid currentColor;border-radius:10px;min-width:0}
+.mbm-act-row>label,.mbm-act-row legend{display:block;font-weight:700;margin-bottom:.4rem}
+.mbm-act-row fieldset{border:0;min-width:0;margin:0;padding:0}
+.mbm-act-row select{width:100%;max-width:100%;min-height:44px;padding:.45rem;font:inherit;color:#13212f;background:#fff;border:2px solid #506474;border-radius:6px}
+.mbm-act-choice{display:flex;align-items:center;gap:.5rem;min-height:44px;line-height:1.4;cursor:pointer}
+.mbm-act-choice input{flex:0 0 auto;width:1.25rem;height:1.25rem;margin:.25rem}
+.mbm-act-actions{display:flex;flex-wrap:wrap;gap:.5rem}
+.mbm-act-actions button{min-height:44px;padding:.6rem .9rem;font:inherit;font-weight:700;border:2px solid currentColor;border-radius:8px;cursor:pointer}
+.mbm-activity :is(button,input,select):focus-visible{outline:3px solid currentColor;outline-offset:3px}
+.mbm-act-row-feedback{margin:.45rem 0 0;font-size:.95em}
+.mbm-act-status{min-height:1.5em;font-weight:700}
+.mbm-act-explanations{padding:.5rem 1rem;border-left:4px solid currentColor}
+.mbm-act-explanations li{margin:.65rem 0}
+.mbm-act-explanations[hidden]{display:none!important}
+.mbm-act-figure{margin:.5rem auto;max-width:620px}
+.mbm-act-figure svg{display:block;width:100%;height:auto;max-height:300px}
+.mbm-act-figure figcaption{font-size:.9em;margin:.4rem 0}
+.mbm-activity-print,.mbm-activity-staff{display:none!important}
+#award-teacher-notes .mbm-activity-staff{display:block!important}
+@media print{
+ .mbm-activity,.mbm-activity-staff,#award-teacher-notes .mbm-activity-staff{display:none!important}
+ .mbm-activity-print{display:block!important;break-before:page;color:#111;background:#fff;font-size:11pt}
+ .mbm-activity-print li{break-inside:avoid;margin-bottom:.9rem}
+ .mbm-print-task{font-weight:700;margin:.3rem 0}
+ .mbm-print-options{font-size:10pt;margin:.3rem 0}
+ .mbm-print-response{margin:.7rem 0}
+ .mbm-activity-print .mbm-act-figure{max-width:110mm}
+}
+</style></head><body><!--n6-nav1:v1--><style id="n6-nav1-css">@media print{.mbmhome,.n6-splash{display:none!important}}.mbmhome{display:inline-block;margin:6px 0 0 8px;font:600 .85rem/1.4 "Segoe UI",Arial,sans-serif;color:#1e3a8a;text-decoration:none}.mbmhome:hover,.mbmhome:focus{text-decoration:underline}</style><a class="mbmhome" href="../../index.html" aria-label="Back to the Lessons catalogue">← Lessons</a><!--/n6-nav1--><a class="skip" href="#lessonDeck">Skip to lesson</a><main id="lessonDeck" class="deck"><section class="slide active" data-type="title" data-title="Lesson overview" data-min="0" data-classroom-phase="title"><div class="time">0 min</div><span class="tag">GROW Art</span><h1>Choose My Arts Challenge</h1><p>GROW · Art · Trinity Arts Award Silver. Choose My Arts Challenge.</p><p class="mbm-lesson-objective">Objective: Use your own work and practical trials to choose a worthwhile arts-development challenge.</p><p class="mbm-lesson-success">Success evidence: Actual baseline work, an identified strength and development need, useful trial work and your own reasoned challenge choice.</p><p>Use your own artwork, interests and practical choices. You can choose an abstract subject; you do not need to disclose private experiences.</p><p>40 minutes. Keep original work before making changes. Ask staff about safe tools and access.</p><div class="box rehearsal" data-mbm-guide="staff">This deck directly serves Silver Unit 1, Part 1A, Plan an arts challenge. Silver has TWO units, evidenced separately. This lesson belongs to Unit 1, Arts practice and pathways; keep its evidence labelled by unit and part. ONE Attempted allowed PER UNIT. Any Not Attempted = Below Pass. The whole Silver portfolio has a 20-file cap, not twenty per unit or one new file per lesson. The four assessment areas are art form knowledge and understanding, creativity, planning and review, and communication. Results are Pass or Below Pass only. Only an adviser trained at Silver may assess; delivery is through a validated centre. Staff must confirm those conditions; neither is asserted as completed here. The arts challenge must not focus on leadership. Advisers must not write pupil plans, reviews or evidence. Prompt, read or scribe the pupil’s exact words and check them back unchanged. Core, Extend and Challenge vary support within Silver, retaining the same evidence expectation and the pupil’s own choices. Digital evidence is organised by unit and part, with every locator naming the actual filename plus page, slide or timecode. A portfolio structure is an option, not an extra award rule. Samples, trial counts and prompts here are teaching scaffolds, not qualification quotas. Use accessible tools and communication without forced personal disclosure, compulsory filming or public posting. This forty-minute lesson supports a longer programme of real guided and independent practice; it does not claim all award hours are complete. Source: tools/artsaward/SPEC.json, Silver and universal rules. This is the choice and self-assessment stage of 1A. The next deck supports the pupil’s own action plan. Prepare pencils, scrap paper, safe joining materials and examples the adult can make live; use the pupil’s actual work rather than an invented achievement profile. If no earlier work is available, a short piece made today becomes the honestly dated starting sample. The technique options are not pre-written challenges and do not require every pupil to make the same product. Staff demonstrate a feasible method, help the pupil examine evidence and arrange access; the pupil chooses the focus and intention.</div><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span>SPACE</span><span>VOICE</span><span>AUDIENCE</span><span>INFLUENCE</span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div></section><section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="3" data-ta1="Support a factual starting sample and a balanced view. Offer a close-up, spoken description or hands-on access; do not supply the pupil’s self-assessment." data-classroom-phase="arrival"><div class="time">3 min</div><span class="tag">Retrieval</span><h2>Arrival · retrieve</h2><h3>Start with something you have made</h3><p>Examine your own drawing, paper form or other artwork. If none is available, make a short sample and label it as today’s starting work.</p><p>Point to a choice and its effect. What strength does the work show? Which skill is not secure yet?</p><p>A weakness describes a skill, not your worth. Another person’s different style is not evidence of your weakness.</p><p>Choose a direction from what you want your art to do next.</p><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span>SPACE</span><span>VOICE</span><span>AUDIENCE</span><span>INFLUENCE</span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div></section><section class="slide" data-type="starter" data-title="Starter · create the need" data-min="3" data-classroom-phase="starter" data-ta1="Invite discussion of artistic intention. Do not turn neatness, realism or a numerical score into a universal quality rule."><div class="time">3 min</div><span class="tag">Starter</span><h2>Starter · create the need</h2><h3>An interest needs a practical direction</h3><p>You may know the kind of art you enjoy, yet still be unsure what to develop.</p><p>Saying that you like drawing does not identify a skill. Look more closely: are you interested in the weight of a line, a change of tone or the way shapes fill a space?</p><p>Paper work gives different questions. Do folds hold their shape? Does a join stay secure? How does the form change from another viewpoint?</p><p>Choose questions that matter to your own work. A bold, rough surface may be intentional; making everything neat is not the only useful direction.</p><p>Today you will test possibilities before choosing your challenge.</p><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span>SPACE</span><span>VOICE</span><span>AUDIENCE</span><span>INFLUENCE</span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div></section><section class="slide" data-type="ido" data-title="I Do · model" data-min="7" data-ta1="Make the tone patches live and leave the earlier patch visible. Narrate the evidence-to-choice method, without dictating a completed challenge for pupils." data-classroom-phase="ido"><div class="time">7 min</div><span class="tag">I Do</span><h2>I Do · model</h2><h3>Adult model: use a trial to discover a need</h3><p>Watch the adult make a small tone study on scrap paper. This is their own demonstration, not a challenge you must copy.</p><p>They shade a light patch with the side of the pencil. They keep the hand relaxed and use overlapping strokes.</p><p>Next they build a darker patch with another light layer. They compare the two patches before pressing harder.</p><p>A sudden dark stripe appears where they stopped and restarted. The adult points to it and explains why it interrupts the gradual change they wanted.</p><p>They try overlapping the restart on a fresh patch. Now they can see whether that method better suits their intention.</p><p>The adult has evidence for a strength and a need: they can make different tones, while the transition needs more control.</p><p>Their next question comes from the work. They still have to decide whether this is the direction they want to pursue.</p><p>Your trial may reveal a different need. Perhaps a fold holds well but the join twists, or a repeated shape loses its rhythm.</p><p>Keep what the sample actually shows. Do not borrow the adult's judgement as your own.</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Four linked boxes move from examining actual work to testing a technique, comparing its effect and choosing a personal direction."><title>Choose from work and practical evidence</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">LOOK</text><text x="73" y="88" text-anchor="middle" font-size="11">use my actual work</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">TRY</text><text x="231" y="88" text-anchor="middle" font-size="11">test a technique</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">COMPARE</text><text x="389" y="88" text-anchor="middle" font-size="11">notice its effect</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">CHOOSE</text><text x="547" y="88" text-anchor="middle" font-size="11">my next direction</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">Look, try, compare and choose your direction.</text></svg><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span>SPACE</span><span>VOICE</span><span>AUDIENCE</span><span>INFLUENCE</span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div></section><section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="3" data-ta1="Read the actual prompt and choices; support the pupil to commit before checking. Use the item feedback as a model reason, not a judgement on personal taste. Keep real trials, meetings, views and project actions separate from these teaching examples." data-classroom-phase="wedo"><div class="time">3 min</div><span class="tag">We Do</span><h2>We Do · everyone commits</h2><section class="mbm-activity" data-mbm-activity="SILVER_ART_W1_1A1-stage4-1" aria-labelledby="SILVER_ART_W1_1A1-stage4-1-heading" data-mode="match"><h3 id="SILVER_ART_W1_1A1-stage4-1-heading">Read the marks before choosing a challenge</h3><p id="SILVER_ART_W1_1A1-stage4-1-instruction">Label A, B and C. Match each study to the line structure you can see. A technique is an option to try, not your assigned challenge.</p><figure class="mbm-act-figure"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 600 210" role="img" aria-label="Three original line studies. A has widely spaced parallel lines. B has closer parallel lines. C has two crossing sets of lines."><rect x="20" y="35" width="170" height="130" rx="5" fill="#fff" stroke="#334155"></rect><text x="25" y="23" font-size="18" fill="#334155">A</text><line x1="32" y1="52" x2="175" y2="52" stroke="#334155" stroke-width="2"></line><line x1="32" y1="74" x2="175" y2="74" stroke="#334155" stroke-width="2"></line><line x1="32" y1="96" x2="175" y2="96" stroke="#334155" stroke-width="2"></line><line x1="32" y1="118" x2="175" y2="118" stroke="#334155" stroke-width="2"></line><line x1="32" y1="140" x2="175" y2="140" stroke="#334155" stroke-width="2"></line><rect x="215" y="35" width="170" height="130" rx="5" fill="#fff" stroke="#334155"></rect><text x="220" y="23" font-size="18" fill="#334155">B</text><line x1="227" y1="52" x2="370" y2="52" stroke="#334155" stroke-width="2"></line><line x1="227" y1="61" x2="370" y2="61" stroke="#334155" stroke-width="2"></line><line x1="227" y1="70" x2="370" y2="70" stroke="#334155" stroke-width="2"></line><line x1="227" y1="79" x2="370" y2="79" stroke="#334155" stroke-width="2"></line><line x1="227" y1="88" x2="370" y2="88" stroke="#334155" stroke-width="2"></line><line x1="227" y1="97" x2="370" y2="97" stroke="#334155" stroke-width="2"></line><line x1="227" y1="106" x2="370" y2="106" stroke="#334155" stroke-width="2"></line><line x1="227" y1="115" x2="370" y2="115" stroke="#334155" stroke-width="2"></line><line x1="227" y1="124" x2="370" y2="124" stroke="#334155" stroke-width="2"></line><line x1="227" y1="133" x2="370" y2="133" stroke="#334155" stroke-width="2"></line><line x1="227" y1="142" x2="370" y2="142" stroke="#334155" stroke-width="2"></line><line x1="227" y1="151" x2="370" y2="151" stroke="#334155" stroke-width="2"></line><rect x="410" y="35" width="170" height="130" rx="5" fill="#fff" stroke="#334155"></rect><text x="415" y="23" font-size="18" fill="#334155">C</text><line x1="422" y1="52" x2="565" y2="52" stroke="#334155" stroke-width="2"></line><line x1="422" y1="70" x2="565" y2="70" stroke="#334155" stroke-width="2"></line><line x1="422" y1="88" x2="565" y2="88" stroke="#334155" stroke-width="2"></line><line x1="422" y1="106" x2="565" y2="106" stroke="#334155" stroke-width="2"></line><line x1="422" y1="124" x2="565" y2="124" stroke="#334155" stroke-width="2"></line><line x1="422" y1="142" x2="565" y2="142" stroke="#334155" stroke-width="2"></line><line x1="435" y1="45" x2="420" y2="154" stroke="#334155" stroke-width="2"></line><line x1="455" y1="45" x2="440" y2="154" stroke="#334155" stroke-width="2"></line><line x1="475" y1="45" x2="460" y2="154" stroke="#334155" stroke-width="2"></line><line x1="495" y1="45" x2="480" y2="154" stroke="#334155" stroke-width="2"></line><line x1="515" y1="45" x2="500" y2="154" stroke="#334155" stroke-width="2"></line><line x1="535" y1="45" x2="520" y2="154" stroke="#334155" stroke-width="2"></line><line x1="555" y1="45" x2="540" y2="154" stroke="#334155" stroke-width="2"></line></svg><figcaption>Original classroom studies. Label what is visible; choose your own artistic intention in the practical trial.</figcaption></figure><div class="mbm-act-items"><div class="mbm-act-row" data-activity-row="0"><label for="SILVER_ART_W1_1A1-stage4-1-row-1-select">A</label><select id="SILVER_ART_W1_1A1-stage4-1-row-1-select" aria-describedby="SILVER_ART_W1_1A1-stage4-1-row-1-feedback"><option value="">Choose…</option><option value="1">Widely spaced parallel lines</option><option value="2">Closer parallel lines</option><option value="3">Cross-hatching</option></select><p class="mbm-act-row-feedback" id="SILVER_ART_W1_1A1-stage4-1-row-1-feedback"></p></div><div class="mbm-act-row" data-activity-row="1"><label for="SILVER_ART_W1_1A1-stage4-1-row-2-select">B</label><select id="SILVER_ART_W1_1A1-stage4-1-row-2-select" aria-describedby="SILVER_ART_W1_1A1-stage4-1-row-2-feedback"><option value="">Choose…</option><option value="1">Widely spaced parallel lines</option><option value="2">Closer parallel lines</option><option value="3">Cross-hatching</option></select><p class="mbm-act-row-feedback" id="SILVER_ART_W1_1A1-stage4-1-row-2-feedback"></p></div><div class="mbm-act-row" data-activity-row="2"><label for="SILVER_ART_W1_1A1-stage4-1-row-3-select">C</label><select id="SILVER_ART_W1_1A1-stage4-1-row-3-select" aria-describedby="SILVER_ART_W1_1A1-stage4-1-row-3-feedback"><option value="">Choose…</option><option value="1">Widely spaced parallel lines</option><option value="2">Closer parallel lines</option><option value="3">Cross-hatching</option></select><p class="mbm-act-row-feedback" id="SILVER_ART_W1_1A1-stage4-1-row-3-feedback"></p></div></div><div class="mbm-act-actions"><button type="button" data-activity-action="check">Check choices</button><button type="button" data-activity-action="retry">Retry</button><button type="button" data-activity-action="explain" aria-expanded="false" aria-controls="SILVER_ART_W1_1A1-stage4-1-explanations">Show explanations</button></div><p class="mbm-act-status" role="status" aria-live="polite" aria-atomic="true"></p><div id="SILVER_ART_W1_1A1-stage4-1-explanations" class="mbm-act-explanations" hidden><h4>Model explanations</h4><ol><li><b>A</b> — Widely spaced parallel lines. The parallel lines have wider gaps, so more of the white paper remains visible.</li><li><b>B</b> — Closer parallel lines. The parallel lines are closer together. Their spacing differs from A.</li><li><b>C</b> — Cross-hatching. Two sets of lines cross. This is cross-hatching, rather than a single set of parallel strokes.</li></ol><p>This model supports discussion. A well-explained different connection can be useful too.</p></div><p class="mbm-act-discussion">Try a relevant technique beside your own baseline. Point to its actual effect, then choose a skill that serves your own artistic intention.</p><script type="application/json" data-activity-data>{"mode":"match","items":[{"answer":"1"},{"answer":"2"},{"answer":"3"}]}</script></section><div class="box rehearsal mbm-activity-staff" data-mbm-guide="staff"><h4>Activity model: Read the marks before choosing a challenge</h4><ol><li><b>A</b> — Widely spaced parallel lines. The parallel lines have wider gaps, so more of the white paper remains visible.</li><li><b>B</b> — Closer parallel lines. The parallel lines are closer together. Their spacing differs from A.</li><li><b>C</b> — Cross-hatching. Two sets of lines cross. This is cross-hatching, rather than a single set of parallel strokes.</li></ol><p>This classroom check is not an award grade or proof of completed pupil evidence.</p></div><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span>SPACE</span><span>VOICE</span><span>AUDIENCE</span><span>INFLUENCE</span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div></section><section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="7" data-ta1="Check feasibility and access without replacing the pupil’s intention. Distinguish a supported method from an adult-selected goal." data-classroom-phase="ido"><div class="time">7 min</div><span class="tag">I Do</span><h2>I Do 2 · connect</h2><h3>Choose a challenge with room to learn</h3><p>Choose an arts skill that gives you room to learn, with a reason connected to your intended effect.</p><p>Check the available time, tools and support. A small technique study can test an ambitious idea before a larger piece.</p><p>Compare the adult’s trial with their baseline. What changed? What remains difficult? Would that skill help your own artwork?</p><p>Keep an honest starting point and alternatives worth exploring. A friend’s preference may help you think; the challenge remains your choice.</p><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Two panels place an evidenced strength beside a skill worth developing, supporting a personal challenge choice."><title>Build from a strength towards a need</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">ALREADY SECURE</text><text x="151" y="74" text-anchor="middle" font-size="11">a strength visible in my work</text><text x="151" y="94" text-anchor="middle" font-size="11">something I can explain or repeat</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">WORTH DEVELOPING</text><text x="469" y="74" text-anchor="middle" font-size="11">a skill linked to my intention</text><text x="469" y="94" text-anchor="middle" font-size="11">something I can practise and check</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Use both sides to choose a worthwhile challenge.</text></svg><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span>SPACE</span><span>VOICE</span><span>AUDIENCE</span><span>INFLUENCE</span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div></section><section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="5" data-ta1="Teach the chosen safe technique before independent trials. Preserve separate samples rather than overwriting the only baseline. Capture an actual observation, not invented praise." data-classroom-phase="wedo"><div class="time">5 min</div><span class="tag">We Do</span><h2>We Do 2 · lab</h2><h3>Try an option before you commit</h3><p>Choose a suitable technique and make a small trial. You may compare another option if that will help your decision.</p><p>For tone, keep the first patch and try a different overlap beside it. For paper form, try a folded foot on scrap before joining a larger piece.</p><p>For a paper foot, fold a narrow strip at the base towards you. Press the crease, open the foot to a right angle and rest it on the table. Test whether the form stands before adding more weight.</p><p>For a repeated-mark trial, use one simple shape. Keep its size similar and change the spaces between marks across a short strip. Look at where the pattern feels steady and where it speeds up or pauses. Decide whether that rhythm suits the effect you want.</p><p>Look at the effect from the viewpoint that matters. A form should be checked from the side as well as from above.</p><p>Note what helped and what still needs work. A sketch, a spoken note or an arrow to the sample can record the finding.</p><p>Ask a partner or adult what they notice. Use their observation as another view, then make your own decision.</p><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span>SPACE</span><span>VOICE</span><span>AUDIENCE</span><span>INFLUENCE</span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div></section><section class="slide" data-type="independent" data-title="Independent · evidence" data-min="9" data-ta1="Scribe exactly or support an audio choice. Every tier retains the pupil’s own strength, development need, challenge, reason and actual starting evidence." data-classroom-phase="independent"><div class="time">9 min</div><span class="tag">Independent work</span><h2>Independent · evidence</h2><h3>Choose your own challenge</h3><p>Return to the baseline and the trial. Identify a strength and a skill you want to develop.</p><p>Now describe your chosen challenge in your own words. Explain what you want to explore or achieve in your art, and why this matters to you as a maker.</p><p>Use a detail from the work to support your reason. Avoid a target that just copies the adult model or a friend's idea.</p><p>Check that the materials and support are realistic. If they are not, adjust the scale or discuss another method while keeping your artistic intention.</p><p>Keep the baseline, trial and choice together under Unit 1, Part 1A. Add the actual filename and page, slide or timecode.</p><ul><li>Core · use prompts to point, speak or write about your actual work. Identify your own strength and a skill to develop, try a suitable technique, then choose your challenge and reason. Keep the baseline and choice with an exact evidence location.</li><li>Extend · compare suitable techniques and choose the challenge in your own words. Explain how your trials and baseline support the choice. Keep the same strength, development need, reason and evidence.</li><li>Challenge · keep the same evidence and own choice. Compare the likely effect of two feasible directions, then explain which is more worthwhile for your arts practice and why.</li></ul><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span>SPACE</span><span>VOICE</span><span>AUDIENCE</span><span>INFLUENCE</span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div></section><section class="slide" data-type="exit" data-title="Exit · Audience and Influence" data-min="3" data-ta1="Check that the choice is genuinely pupil-owned and feasible. Record a practical next step rather than awarding completion from a persuasive explanation alone." data-classroom-phase="exit"><div class="time">3 min</div><span class="tag">Exit ticket</span><h2>Exit · Audience and Influence</h2><div class="lundy-status"></div><h3>Explain why this direction is yours</h3><p>Show your chosen direction to someone who can see the work. Point to the detail that helped you decide.</p><p>Say what remains uncertain. You may need to test a material or find a manageable way to practise.</p><p>Keep that question with the challenge. Next time you will use it to build your own action plan.</p><p>The decision belongs to you. The work beside it helps another person understand how you reached it.</p><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span>SPACE</span><span>VOICE</span><span>AUDIENCE</span><span>INFLUENCE</span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div></section></main><nav class="controls" aria-label="Lesson controls"><button type="button" data-nav="previous">◀ Previous</button><button type="button" data-tool="1">Teacher tools</button><button type="button" data-tool="2">Evidence &amp; print</button><button type="button" data-tool="3">Calm mode</button><button type="button" data-tool="4">Static diagrams</button><button type="button" data-nav="next">Next ▶</button></nav><div class="prog" aria-hidden="true"><span></span></div><div id="taOverlay" class="overlay" aria-hidden="true"><div class="overlay-card"><h2></h2><p>Use the least prompt needed. Keep adult preparation and exact-word scribing separate from pupil authorship. Guidance is hidden from the learner surface by default.</p><button type="button" data-close-overlay>Close</button></div></div><section class="print-pack printpack award-print" aria-label="Printable lesson pack">
+      <section class="print-page">
+        <div class="running-head">GROW Art · Week 1 · Art · Trinity Arts Award Silver</div><h1>Choose My Arts Challenge</h1>
+        <p><b>Award evidence:</b> Silver Arts Award, Part 1A; no workbook cell (AAE-H7)</p>
+        <p><b>Objective:</b> Use your own work and practical trials to choose a worthwhile arts-development challenge.</p>
+        <h2>My evidence record</h2><p>Use your own work and a practical trial to choose an arts-development challenge. Keep the strength, development need and reason in your own words.</p><p>My actual starting work · Strength and development need · Technique trial and chosen challenge · My reason and evidence location</p>
+        <table><thead><tr><th>Evidence focus</th><th>My words or response</th><th>File and page, slide or time</th></tr></thead>
+        <tbody><tr><th scope="row">What does my baseline show I can do, and what is not secure yet?</th><td class="award-response"></td><td class="award-locator"></td></tr><tr><th scope="row">Which technique did I try, and what effect did it have?</th><td class="award-response"></td><td class="award-locator"></td></tr><tr><th scope="row">What challenge do I choose, and why does it fit my artistic intention?</th><td class="award-response"></td><td class="award-locator"></td></tr><tr><th scope="row">Is it feasible, and where are the baseline, trial and choice saved?</th><td class="award-response"></td><td class="award-locator"></td></tr></tbody></table>
+        <div class="award-print-figures"><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Four linked boxes move from examining actual work to testing a technique, comparing its effect and choosing a personal direction."><title>Choose from work and practical evidence</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">LOOK</text><text x="73" y="88" text-anchor="middle" font-size="11">use my actual work</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">TRY</text><text x="231" y="88" text-anchor="middle" font-size="11">test a technique</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">COMPARE</text><text x="389" y="88" text-anchor="middle" font-size="11">notice its effect</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">CHOOSE</text><text x="547" y="88" text-anchor="middle" font-size="11">my next direction</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">Look, try, compare and choose your direction.</text></svg><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Two panels place an evidenced strength beside a skill worth developing, supporting a personal challenge choice."><title>Build from a strength towards a need</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">ALREADY SECURE</text><text x="151" y="74" text-anchor="middle" font-size="11">a strength visible in my work</text><text x="151" y="94" text-anchor="middle" font-size="11">something I can explain or repeat</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">WORTH DEVELOPING</text><text x="469" y="74" text-anchor="middle" font-size="11">a skill linked to my intention</text><text x="469" y="94" text-anchor="middle" font-size="11">something I can practise and check</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Use both sides to choose a worthwhile challenge.</text></svg></div>
+        <p>Name or learner code: ____________________ Date: ____________________</p>
+      </section>
+      <section class="print-page">
+        <div class="running-head">GROW Art · Week 1 · Art · Trinity Arts Award Silver</div><h1>Choose My Arts Challenge</h1>
+        <h2>Choose the support you need</h2><div class="print-route"><h3>Core</h3><p>Core · use prompts to point, speak or write about your actual work. Identify your own strength and a skill to develop, try a suitable technique, then choose your challenge and reason. Keep the baseline and choice with an exact evidence location.</p></div><div class="print-route"><h3>Extend</h3><p>Extend · compare suitable techniques and choose the challenge in your own words. Explain how your trials and baseline support the choice. Keep the same strength, development need, reason and evidence.</p></div><div class="print-route"><h3>Challenge</h3><p>Challenge · keep the same evidence and own choice. Compare the likely effect of two feasible directions, then explain which is more worthwhile for your arts practice and why.</p></div>
+        <h2>Check the evidence</h2><ol><li>The starting work is real and its origin or date is recorded honestly.</li><li>My strength and development need are supported by details in the work.</li><li>A practical technique trial helped inform the choice.</li><li>The challenge and reason are my own and concern my arts development.</li><li>The work is labelled Unit 1, Part 1A with filename plus page, slide or timecode.</li></ol>
+        <h2>My review or next step</h2><div class="award-review-space"></div>
+        <p>For a recorded response, write the actual file name and page, slide or timecode.</p>
+      </section>
+    <section class="mbm-activity-print" data-activity-print="SILVER_ART_W1_1A1-stage4-1-print" aria-labelledby="SILVER_ART_W1_1A1-stage4-1-print-heading"><h3 id="SILVER_ART_W1_1A1-stage4-1-print-heading">Read the marks before choosing a challenge</h3><p>Label A, B and C. Match each study to the line structure you can see. A technique is an option to try, not your assigned challenge.</p><figure class="mbm-act-figure"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 600 210" role="img" aria-label="Three original line studies. A has widely spaced parallel lines. B has closer parallel lines. C has two crossing sets of lines."><rect x="20" y="35" width="170" height="130" rx="5" fill="#fff" stroke="#334155"></rect><text x="25" y="23" font-size="18" fill="#334155">A</text><line x1="32" y1="52" x2="175" y2="52" stroke="#334155" stroke-width="2"></line><line x1="32" y1="74" x2="175" y2="74" stroke="#334155" stroke-width="2"></line><line x1="32" y1="96" x2="175" y2="96" stroke="#334155" stroke-width="2"></line><line x1="32" y1="118" x2="175" y2="118" stroke="#334155" stroke-width="2"></line><line x1="32" y1="140" x2="175" y2="140" stroke="#334155" stroke-width="2"></line><rect x="215" y="35" width="170" height="130" rx="5" fill="#fff" stroke="#334155"></rect><text x="220" y="23" font-size="18" fill="#334155">B</text><line x1="227" y1="52" x2="370" y2="52" stroke="#334155" stroke-width="2"></line><line x1="227" y1="61" x2="370" y2="61" stroke="#334155" stroke-width="2"></line><line x1="227" y1="70" x2="370" y2="70" stroke="#334155" stroke-width="2"></line><line x1="227" y1="79" x2="370" y2="79" stroke="#334155" stroke-width="2"></line><line x1="227" y1="88" x2="370" y2="88" stroke="#334155" stroke-width="2"></line><line x1="227" y1="97" x2="370" y2="97" stroke="#334155" stroke-width="2"></line><line x1="227" y1="106" x2="370" y2="106" stroke="#334155" stroke-width="2"></line><line x1="227" y1="115" x2="370" y2="115" stroke="#334155" stroke-width="2"></line><line x1="227" y1="124" x2="370" y2="124" stroke="#334155" stroke-width="2"></line><line x1="227" y1="133" x2="370" y2="133" stroke="#334155" stroke-width="2"></line><line x1="227" y1="142" x2="370" y2="142" stroke="#334155" stroke-width="2"></line><line x1="227" y1="151" x2="370" y2="151" stroke="#334155" stroke-width="2"></line><rect x="410" y="35" width="170" height="130" rx="5" fill="#fff" stroke="#334155"></rect><text x="415" y="23" font-size="18" fill="#334155">C</text><line x1="422" y1="52" x2="565" y2="52" stroke="#334155" stroke-width="2"></line><line x1="422" y1="70" x2="565" y2="70" stroke="#334155" stroke-width="2"></line><line x1="422" y1="88" x2="565" y2="88" stroke="#334155" stroke-width="2"></line><line x1="422" y1="106" x2="565" y2="106" stroke="#334155" stroke-width="2"></line><line x1="422" y1="124" x2="565" y2="124" stroke="#334155" stroke-width="2"></line><line x1="422" y1="142" x2="565" y2="142" stroke="#334155" stroke-width="2"></line><line x1="435" y1="45" x2="420" y2="154" stroke="#334155" stroke-width="2"></line><line x1="455" y1="45" x2="440" y2="154" stroke="#334155" stroke-width="2"></line><line x1="475" y1="45" x2="460" y2="154" stroke="#334155" stroke-width="2"></line><line x1="495" y1="45" x2="480" y2="154" stroke="#334155" stroke-width="2"></line><line x1="515" y1="45" x2="500" y2="154" stroke="#334155" stroke-width="2"></line><line x1="535" y1="45" x2="520" y2="154" stroke="#334155" stroke-width="2"></line><line x1="555" y1="45" x2="540" y2="154" stroke="#334155" stroke-width="2"></line></svg><figcaption>Original classroom studies. Label what is visible; choose your own artistic intention in the practical trial.</figcaption></figure><ol><li><p class="mbm-print-task">A</p><p class="mbm-print-options">Widely spaced parallel lines · Closer parallel lines · Cross-hatching</p><p class="mbm-print-response">My choice / reason: <span>____________________________</span></p></li><li><p class="mbm-print-task">B</p><p class="mbm-print-options">Widely spaced parallel lines · Closer parallel lines · Cross-hatching</p><p class="mbm-print-response">My choice / reason: <span>____________________________</span></p></li><li><p class="mbm-print-task">C</p><p class="mbm-print-options">Widely spaced parallel lines · Closer parallel lines · Cross-hatching</p><p class="mbm-print-response">My choice / reason: <span>____________________________</span></p></li></ol><p>Try a relevant technique beside your own baseline. Point to its actual effect, then choose a skill that serves your own artistic intention.</p></section></section><!--n6-nav1:v1--><div class="n6-splash"><div style="text-align:center;margin-top:8px"><svg width="64" height="64" viewbox="0 0 100 100" aria-label="Made by Matt"><circle cx="50" cy="50" r="47" fill="none" stroke="#1e3a8a" stroke-width="3.4"></circle><g transform="translate(0 2)"><path d="M28 71 L28 37 L50 59 L72 37 L72 71" fill="none" stroke="#1e3a8a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 22.5 L51.48 28.52 L57.5 30 L51.48 31.48 L50 37.5 L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"></path></g></svg></div></div><!--/n6-nav1--><script id="lesson-config" type="application/json">{"id": "SILVER_ART_W1_1A1", "family": "GROW Art", "week": 1, "slot": "Art · Trinity Arts Award Silver", "title": "Choose My Arts Challenge", "outcomes": ["Use the pupil’s actual work to identify their own strengths and weaknesses. Try or compare feasible arts skills and choose a personal arts-development challenge with a reason. Keep the baseline and pupil’s choice. The challenge must not focus on leadership."], "cells": [], "objective": "Use your own work and practical trials to choose a worthwhile arts-development challenge.", "timings": [0, 3, 3, 7, 3, 7, 5, 9, 3], "artsAward": {"level": "Silver", "parts": ["1A"]}, "planId": "76889aeb3adf", "weDoType": "label-or-annotate", "tierLadder": ["Core", "Extend", "Challenge"]}</script><script data-award-chassis="">/* Runtime for newly authored award decks; no persistence or external dependencies. */
+(function () {
+  'use strict';
+
+  function boot() {
+    const deck = document.querySelector('main.deck');
+    const slides = Array.from(document.querySelectorAll('main.deck > .slide'));
+    if (!deck || !slides.length) return;
+    const progress = document.querySelector('.prog');
+    const bar = document.querySelector('.prog > span');
+    const overlay = document.getElementById('taOverlay');
+    const card = overlay && overlay.querySelector('.overlay-card');
+    const closeButton = overlay && overlay.querySelector('[data-close-overlay]');
+    const teacherButtons = document.querySelectorAll('[data-tool="1"]');
+    let index = Math.max(0, slides.findIndex(slide => slide.classList.contains('active')));
+    let returnFocus = null;
+    let notes = null;
+    let slotHost = null;
+
+    function show(next) {
+      index = (next + slides.length) % slides.length;
+      slides.forEach(function (slide, i) {
+        slide.classList.toggle('active', i === index);
+        slide.setAttribute('aria-hidden', i === index ? 'false' : 'true');
+      });
+      if (bar) bar.style.width = ((index + 1) / slides.length * 100) + '%';
+      if (progress) {
+        progress.removeAttribute('aria-hidden');
+        progress.setAttribute('role', 'progressbar');
+        progress.setAttribute('aria-label', 'Lesson progress');
+        progress.setAttribute('aria-valuemin', '1');
+        progress.setAttribute('aria-valuemax', String(slides.length));
+        progress.setAttribute('aria-valuenow', String(index + 1));
+        progress.setAttribute('aria-valuetext', 'Stage ' + (index + 1) + ' of ' + slides.length);
+      }
+      deck.scrollTop = 0;
+    }
+
+    function isOpen() {
+      return Boolean(overlay && overlay.classList.contains('on'));
+    }
+
+    function fillNotes() {
+      notes.replaceChildren();
+      const heading = document.createElement('h3');
+      heading.textContent = slides[index].dataset.title || 'Current stage';
+      notes.appendChild(heading);
+      ['ta1', 'ta2'].forEach(function (key) {
+        const text = slides[index].dataset[key];
+        if (!text) return;
+        const paragraph = document.createElement('p');
+        paragraph.textContent = text;
+        notes.appendChild(paragraph);
+      });
+      const sources = index === 0 ? [slides[0]] : [slides[index], slides[0]];
+      sources.forEach(function (source) {
+        source.querySelectorAll('[data-mbm-guide]').forEach(function (note) {
+          // The slot reader has its own live state and file listener: never clone it.
+          if (note.id === 'award-slot-panel' || note.closest('#award-slot-panel')) return;
+          const copy = note.cloneNode(true);
+          copy.removeAttribute('id');
+          copy.querySelectorAll('[id]').forEach(node => node.removeAttribute('id'));
+          notes.appendChild(copy);
+        });
+      });
+      // mount() runs on DOMContentLoaded. A real click comes after that event,
+      // regardless of the order in which the two embedded scripts were loaded.
+      const panel = document.getElementById('award-slot-panel');
+      if (panel && !slotHost.contains(panel)) slotHost.appendChild(panel);
+    }
+
+    function openTeacher(button) {
+      if (!card || isOpen()) return;
+      returnFocus = button || document.activeElement;
+      fillNotes();
+      overlay.classList.add('on');
+      overlay.setAttribute('aria-hidden', 'false');
+      teacherButtons.forEach(node => node.setAttribute('aria-expanded', 'true'));
+      (closeButton || card).focus();
+    }
+
+    function closeTeacher() {
+      if (!isOpen()) return;
+      overlay.classList.remove('on');
+      overlay.setAttribute('aria-hidden', 'true');
+      teacherButtons.forEach(node => node.setAttribute('aria-expanded', 'false'));
+      if (returnFocus && returnFocus.isConnected) returnFocus.focus();
+    }
+
+    function focusable() {
+      return Array.from(card.querySelectorAll('a[href], button, input, select, textarea, [tabindex]'))
+        .filter(node => !node.disabled && node.tabIndex >= 0 && node.getClientRects().length);
+    }
+
+    if (card) {
+      overlay.setAttribute('role', 'dialog');
+      overlay.setAttribute('aria-modal', 'true');
+      overlay.setAttribute('aria-hidden', 'true');
+      overlay.classList.remove('on');
+      card.tabIndex = -1;
+      let title = card.querySelector('h2');
+      if (!title) {
+        title = document.createElement('h2');
+        card.prepend(title);
+      }
+      title.id = 'award-teacher-title';
+      title.textContent = 'Teacher tools';
+      overlay.setAttribute('aria-labelledby', title.id);
+      notes = document.createElement('div');
+      notes.id = 'award-teacher-notes';
+      slotHost = document.createElement('div');
+      slotHost.id = 'award-teacher-slots';
+      card.insertBefore(notes, closeButton);
+      card.insertBefore(slotHost, closeButton);
+      if (closeButton) closeButton.addEventListener('click', closeTeacher);
+      teacherButtons.forEach(function (button) {
+        button.setAttribute('aria-controls', overlay.id);
+        button.setAttribute('aria-expanded', 'false');
+        button.addEventListener('click', () => openTeacher(button));
+      });
+      // Keep focus in the open dialog, including when scripts attempt to move it.
+      document.addEventListener('focusin', function (event) {
+        if (isOpen() && !overlay.contains(event.target)) (closeButton || card).focus();
+      });
+    }
+
+    document.querySelectorAll('[data-nav="previous"], [data-tool="5"]')
+      .forEach(button => button.addEventListener('click', () => { if (!isOpen()) show(index - 1); }));
+    document.querySelectorAll('[data-nav="next"], [data-tool="6"]')
+      .forEach(button => button.addEventListener('click', () => { if (!isOpen()) show(index + 1); }));
+    document.querySelectorAll('[data-tool="2"]')
+      .forEach(button => button.addEventListener('click', () => window.print()));
+    [['3', 'calm'], ['4', 'teacher-freeze']].forEach(function (item) {
+      const buttons = document.querySelectorAll('[data-tool="' + item[0] + '"]');
+      function sync() {
+        const active = document.body.classList.contains(item[1]);
+        buttons.forEach(button => button.setAttribute('aria-pressed', String(active)));
+      }
+      buttons.forEach(button => button.addEventListener('click', function () {
+        document.body.classList.toggle(item[1]);
+        sync();
+      }));
+      sync();
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (isOpen()) {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          closeTeacher();
+        } else if (event.key === 'Tab') {
+          const items = focusable();
+          const first = items[0] || card;
+          const last = items[items.length - 1] || card;
+          if (!items.length || !items.includes(document.activeElement)
+              || (event.shiftKey && document.activeElement === first)
+              || (!event.shiftKey && document.activeElement === last)) {
+            event.preventDefault();
+            (event.shiftKey ? last : first).focus();
+          }
+        }
+        return;
+      }
+      const target = event.target;
+      if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey
+          || (target && (target.isContentEditable
+              || (typeof target.closest === 'function' && target.closest('input, textarea, select'))))
+          || document.querySelector('dialog[open], .overlay.on, [role="dialog"][aria-hidden="false"]')) return;
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        event.preventDefault();
+        show(index + (event.key === 'ArrowRight' ? 1 : -1));
+      }
+    });
+    show(index);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once: true});
+  else boot();
+}());
+</script><script id="mbm-classroom_activity-js">/* Native controls only; no network, persistence, timers or focus trap. */
+(function () {
+  'use strict';
+  function mount(root) {
+    if (root.dataset.activityReady) return;
+    const status = root.querySelector('.mbm-act-status');
+    const rows = Array.from(root.querySelectorAll('[data-activity-row]'));
+    const actions = root.querySelectorAll('[data-activity-action]');
+    const explanations = root.querySelector('.mbm-act-explanations');
+    const explainButton = root.querySelector('[data-activity-action="explain"]');
+    let data;
+    try {
+      data = JSON.parse(root.querySelector('[data-activity-data]').textContent);
+      if (!['sort', 'match', 'choice', 'order'].includes(data.mode)
+          || data.items.length !== rows.length || !rows.length) throw new Error('shape');
+      data.items.forEach(function (item, i) {
+        const controls = Array.from(rows[i].querySelectorAll('option, input[type="radio"]'));
+        if (typeof item.answer !== 'string' || !controls.some(node => node.value === item.answer)) throw new Error('answer');
+      });
+    } catch (_) {
+      status.textContent = 'This activity could not load. Use the printed task or discuss the questions with your teacher.';
+      actions.forEach(button => { button.disabled = true; });
+      root.dataset.activityReady = 'error';
+      return;
+    }
+    root.dataset.activityReady = 'true';
+    function selected(row) {
+      const select = row.querySelector('select');
+      const radio = row.querySelector('input[type="radio"]:checked');
+      return select ? select.value : (radio ? radio.value : '');
+    }
+    function clearFeedback() {
+      rows.forEach(function (row) {
+        row.querySelector('.mbm-act-row-feedback').textContent = '';
+        row.removeAttribute('data-check');
+      });
+    }
+    root.addEventListener('change', function (event) {
+      if (!event.target.matches('select, input[type="radio"]')) return;
+      clearFeedback();
+      status.textContent = 'Choice changed. Use Check choices when you are ready.';
+    });
+    root.addEventListener('click', function (event) {
+      const button = event.target.closest('[data-activity-action]');
+      if (!button || !root.contains(button)) return;
+      const action = button.dataset.activityAction;
+      if (action === 'retry') {
+        root.querySelectorAll('select').forEach(select => { select.value = ''; });
+        root.querySelectorAll('input[type="radio"]').forEach(input => { input.checked = false; });
+        clearFeedback();
+        explanations.hidden = true;
+        explainButton.setAttribute('aria-expanded', 'false');
+        explainButton.textContent = 'Show explanations';
+        status.textContent = 'Choices cleared. Try again, or discuss a question with a partner.';
+        const first = rows[0].querySelector('select, input[type="radio"]');
+        if (first) first.focus();
+      } else if (action === 'explain') {
+        explanations.hidden = !explanations.hidden;
+        explainButton.setAttribute('aria-expanded', String(!explanations.hidden));
+        explainButton.textContent = explanations.hidden ? 'Show explanations' : 'Hide explanations';
+        status.textContent = explanations.hidden ? 'Model explanations hidden.' : 'Model explanations shown below. Compare the reasons with your own.';
+      } else if (action === 'check') {
+        const values = rows.map(selected);
+        const duplicates = data.mode === 'order'
+          ? values.filter((v, i) => v && values.indexOf(v) !== i) : [];
+        let missing = false, revisit = false;
+        rows.forEach(function (row, i) {
+          let text, result;
+          if (!values[i]) {
+            text = 'Choose a response, or point to your choice with a partner.';
+            result = 'missing'; missing = true;
+          } else if (duplicates.includes(values[i])) {
+            text = 'This position is used more than once. Give each note a different position.';
+            result = 'review'; revisit = true;
+          } else if (values[i] === data.items[i].answer) {
+            text = 'Matches the model. Can you explain your choice?'; result = 'match';
+          } else {
+            text = 'Compare your reason with the model explanation, then keep or change your choice.';
+            result = 'review'; revisit = true;
+          }
+          row.querySelector('.mbm-act-row-feedback').textContent = text;
+          row.dataset.check = result;
+        });
+        status.textContent = missing
+          ? 'Some choices are still blank. Choose, point or discuss; then check again.'
+          : revisit
+            ? 'Some choices differ from the model. Read the explanations and discuss your reasons.'
+            : 'Your choices match the model. Explain one, then use the idea in your own work.';
+      }
+    });
+  }
+  function boot() {
+    document.querySelectorAll('[data-mbm-activity]').forEach(mount);
+    const deck = document.querySelector('main.deck');
+    const toolbar = document.querySelector('.controls');
+    if (!deck || !toolbar || !deck.querySelector('[data-mbm-activity]')) return;
+    // Wrapped toolbar rows can be taller than the donor's fixed allowance.
+    // Reserve their actual height so the last response can scroll clear.
+    const reserve = function () {
+      const space = Math.max(0, window.innerHeight - toolbar.getBoundingClientRect().top) + 18;
+      deck.style.paddingBottom = space + 'px';
+      deck.style.scrollPaddingBottom = space + 'px';
+    };
+    reserve();
+    window.addEventListener('resize', reserve);
+    if (window.ResizeObserver) new ResizeObserver(reserve).observe(toolbar);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once: true});
+  else boot();
+}());
+</script></body></html>

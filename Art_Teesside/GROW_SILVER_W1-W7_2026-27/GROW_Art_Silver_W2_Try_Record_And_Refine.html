@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en-GB" class="mbm-classroom pathway-grow"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Try, Record And Refine</title><style>
+:root{--bg:#141C24;--panel:#202D37;--panel2:#283743;--text:#F2EFE5;--muted:#C8CECA;--steel:#5B91A5;--oxide:#D1673D;--teal:#2BA193;--gold:#DFAD3E;--violet:#8B6CC7;--line:#42515d;--paper:#fff;--ink:#172334;--danger:#b93f4b}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:"Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--bg)}
+body{overflow:hidden}a,button{font:inherit}button,a.mbmhome{min-height:44px;min-width:44px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:8px;top:8px;z-index:50;background:#fff;padding:10px}
+.deck{height:100vh;padding:18px 18px 112px;overflow:auto}.slide{display:none;max-width:1120px;min-height:calc(100vh - 145px);margin:auto;background:var(--paper);border:2px solid var(--line);border-top:10px solid var(--teal);border-radius:18px;padding:22px;box-shadow:0 8px 30px #10233f18}.slide.active{display:block}
+h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-size:clamp(1.5rem,3vw,2.3rem);margin:.4rem 0 1rem}h3{margin:.2rem 0 .45rem}p,li{line-height:1.5}.tag,.time,.chips span{display:inline-block;border-radius:999px;padding:6px 10px;font-weight:800}.tag{background:#EEF5F4}.time{float:right;background:var(--ink);color:#fff}.chips{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.chips span{background:#FFF4D6}
+.hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,.7fr);gap:18px}.hero-visual{display:grid;gap:10px;align-content:center;background:var(--ink);color:#fff;border-radius:16px;padding:18px;min-height:150px;text-align:center}.hero-visual span{color:var(--teal)}
+.box,.route,.route-card,.evidence-gate,.lundy,.lundy-strip,.ladder,.prompt-ladder,.ta-card,.modal,.drawer,dialog{border:2px solid var(--line);border-radius:13px;padding:13px;margin:12px 0;background:#fff}.lo{border-left:8px solid var(--teal)}.truth{border-left:8px solid var(--oxide);background:#FFF4D6;padding:12px}.access{background:#EEF5F4;padding:12px;border-radius:12px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.routes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.route.s,.route.supported,.route-card.supported{border-top:7px solid var(--teal)}.route.m,.route.standard,.route-card.standard{border-top:7px solid var(--steel)}.route.h,.route.stretch,.route-card.stretch{border-top:7px solid var(--oxide)}.options{display:grid;gap:9px}.options button{text-align:left;padding:12px;border:2px solid var(--line);border-radius:10px;background:#fff}.vocabrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.vterm{border:2px solid var(--line);padding:12px;border-radius:12px}.vterm span{display:block;margin-top:5px}.lundy-grid,.lundy-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center;font-weight:900}.ladder,.prompt-ladder{font-weight:700}.ta-card,.modal,.drawer{background:#FFF4D6}
+.controls{position:fixed;left:8px;right:8px;bottom:58px;z-index:20;display:flex;gap:7px;overflow-x:auto;padding:8px;background:var(--ink);border-radius:14px}.controls button,.controls a{flex:0 0 auto;border:2px solid #fff;border-radius:9px;padding:7px 10px;background:#fff;color:var(--ink);font-weight:800;text-decoration:none}.prog{position:fixed;left:12px;right:12px;bottom:46px;height:6px;background:#fff;border:1px solid var(--line);z-index:19}.prog>span{display:block;height:100%;width:11.11%;background:var(--teal)}
+.overlay{display:none;position:fixed;inset:0;z-index:40;background:#10233fdd;align-items:center;justify-content:center;padding:18px}.overlay.on{display:flex}.overlay-card{max-width:700px;background:#fff;border-radius:15px;padding:20px}.overlay-card button{padding:8px 12px}
+.print-pack{display:none}.printpack{display:none}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(max-width:720px){.deck{padding:10px 10px 118px}.slide{padding:15px}.hero,.routes,.vocabrow{grid-template-columns:1fr}.lundy-grid{grid-template-columns:1fr 1fr}}
+@media print{html,body{color-scheme:light!important;background:#fff;color:#111;overflow:visible}body>*:not(.print-pack){display:none!important}.print-pack{display:block!important}.printpack{display:block!important}.print-page{break-after:page;page-break-after:always;padding:8mm;min-height:255mm}.print-page:last-child{break-after:auto;page-break-after:auto}.print-pack h1{font-size:20pt;line-height:1.15;margin:0 0 3mm}.print-pack h2{font-size:13pt;line-height:1.2;margin:3mm 0 1.5mm}.print-pack p,.print-pack li{font-size:10.5pt;line-height:1.35}.running-head{font-size:9pt;border-bottom:1px solid #666;margin-bottom:4mm;padding-bottom:2mm}.proute,.print-route{display:block;border:1px solid #777;padding:3mm;margin:3mm 0;break-inside:avoid}@page{size:A4;margin:10mm}}
+</style><style id="award-print-layout">
+      @media screen {
+        [data-mbm-guide]{display:none!important}
+        #taOverlay [data-mbm-guide]{display:block!important}
+        #taOverlay .overlay-card{max-height:calc(100vh - 36px);overflow:auto;width:min(700px,100%)}
+        body.calm .slide{box-shadow:none}
+        body.calm *,body.calm *::before,body.calm *::after{animation:none!important;transition:none!important}
+        body.teacher-freeze *,body.teacher-freeze *::before,body.teacher-freeze *::after{animation-play-state:paused!important;transition:none!important}
+      }
+      @media print {
+        .award-print .print-page{box-sizing:border-box;padding:4mm;min-height:0}
+        .award-print table{width:100%;border-collapse:collapse;table-layout:fixed}
+        .award-print th,.award-print td{border:1px solid #777;padding:2mm;vertical-align:top;font-size:9pt}
+        .award-print th:first-child{width:34%}.award-print th:last-child{width:23%}
+        .award-print td.award-response{height:18mm}
+        .award-print-figures svg{display:block;width:100%;max-height:34mm;margin:2mm 0}
+        .award-print .print-route{padding:2mm;margin:2mm 0}
+        .award-print h3{font-size:11pt;margin:0}
+        .award-print .award-review-space{height:35mm;border:1px solid #777}
+      }
+    </style><style id="mbm-classroom-chassis">/* Shared classroom presentation. Palette authority: the user's Art Studio reference. */
+html.mbm-classroom {
+  --lo-bg:#e8eef1;--lo-border:#4F869C;--ido-bg:#f3e4dc;--ido-border:#D06438;
+  --wedo-bg:#e2efec;--wedo-border:#16877A;--task-bg:#faf0d7;--task-border:#E1AB32;
+  --btn-bg:#4F869C;--btn-hover:#3a6a7d;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;
+  --sc-bg:#ffedd5;--sc-border:#f97316;--aspire-bg:#dcfce7;--aspire-border:#22c55e;
+}
+html.mbm-classroom.pathway-grow {
+  --lo-bg:#e6ebf0;--lo-border:#5B91A5;--ido-bg:#f2e6df;--ido-border:#D1673D;
+  --wedo-bg:#e2efed;--wedo-border:#2BA193;--task-bg:#f8efd8;--task-border:#DFAD3E;
+  --btn-bg:#5B91A5;--btn-hover:#436f80;--sc-border:#DFAD3E;--sc-bg:#faf3dd;
+}
+html.mbm-classroom.pathway-launch {
+  --lo-bg:#e4ebee;--lo-border:#356F83;--ido-bg:#efe3db;--ido-border:#9B5B3D;
+  --wedo-bg:#e1edeb;--wedo-border:#238C80;--task-bg:#f6eed9;--task-border:#C18B2D;
+  --btn-bg:#356F83;--btn-hover:#28576a;--sc-border:#C18B2D;--sc-bg:#f8f1de;
+}
+@media screen {
+  html.mbm-classroom, .mbm-classroom body {background:#fff;color:#1f2937;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+  .mbm-classroom main.deck {height:100vh;height:100dvh;padding:clamp(14px,3vh,36px) 4vw 110px;overflow:auto;scroll-padding-bottom:110px}
+  .mbm-classroom main.deck>.slide {width:100%;max-width:1600px;min-height:calc(100vh - 160px);margin:auto;padding:clamp(20px,3vw,40px);background:#fff;color:#1f2937;border:0;border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px #00000018}
+  .mbm-classroom .slide[data-classroom-phase="ido"] {border-top-color:var(--ido-border)}
+  .mbm-classroom .slide[data-classroom-phase="wedo"] {border-top-color:var(--wedo-border)}
+  .mbm-classroom .slide[data-classroom-phase="independent"] {border-top-color:var(--task-border)}
+  .mbm-classroom .slide[data-classroom-phase="exit"] {border-top-color:var(--sc-border)}
+  .mbm-classroom .slide h1 {display:block;color:#101820;font-size:clamp(1.8rem,3.2vw,2.8rem);line-height:1.14;margin:20px 0 24px;padding-bottom:12px;border-bottom:3px solid var(--lo-border)}
+  .mbm-classroom .slide h2 {color:#101820;font-size:clamp(1.5rem,2.5vw,2rem);line-height:1.22;margin:16px 0 22px;padding-bottom:12px;border-bottom:2px solid #e2e8f0}
+  .mbm-classroom .slide h3 {color:#182c3c;font-size:1.2rem;line-height:1.3;margin:18px 0 10px}
+  .mbm-classroom .slide p,.mbm-classroom .slide li {font-size:1.15rem;line-height:1.6;color:#334155;max-width:85ch}
+  .mbm-classroom .slide p {margin:.5em 0}
+  .mbm-classroom .slide>svg {max-width:900px;margin:18px auto;display:block;overflow:visible}
+  .mbm-classroom .slide>.tag {display:inline-block;background:var(--lo-bg);color:#183b4b;border-radius:8px;padding:6px 14px;font-size:.9rem;font-weight:800;letter-spacing:.04em}
+  .mbm-classroom .slide[data-classroom-phase="ido"]>.tag {background:var(--ido-bg);color:#68321f}
+  .mbm-classroom .slide[data-classroom-phase="wedo"]>.tag {background:var(--wedo-bg);color:#115c52}
+  .mbm-classroom .slide[data-classroom-phase="independent"]>.tag {background:var(--task-bg);color:#684811}
+  .mbm-classroom .slide>.time {float:right;border-radius:999px;background:#f5f7f8;color:#334155;border:1px solid #cbd5e1;font-size:.9rem}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.time {display:none}
+  .mbm-classroom .mbm-lesson-objective {background:var(--lo-bg);border-left:6px solid var(--lo-border);border-radius:12px;padding:14px 18px;margin:16px 0}
+  .mbm-classroom .mbm-lesson-success {background:var(--sc-bg);border-left:6px solid var(--sc-border);border-radius:12px;padding:14px 18px;margin:14px 0}
+  .mbm-classroom .box,.mbm-classroom .route,.mbm-classroom .route-card {background:#f8fafc;color:#1f2937;border:1px solid #cbd5e1;border-radius:12px;padding:16px}
+  .mbm-classroom .box.objective {background:var(--lo-bg);border-left:6px solid var(--lo-border)}
+  .mbm-classroom .lundy,.mbm-classroom .lundy-strip {background:#f8fafc;color:#334155;border:1px solid #dce3e8;border-radius:12px;padding:10px 14px;margin:22px 0 0}
+  /* Pupil voice is framed at arrival and revisited at the exit, without a
+     repeated process banner competing with each model and practical task. */
+  .mbm-classroom .slide[data-classroom-phase]:not([data-classroom-phase="title"]):not([data-classroom-phase="exit"])>.lundy,
+  .mbm-classroom .slide[data-classroom-phase]:not([data-classroom-phase="title"]):not([data-classroom-phase="exit"])>.lundy-strip {display:none}
+  .mbm-classroom .lundy-grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+  .mbm-classroom .lundy-grid>span {display:block;color:#213544;background:var(--lo-bg);border-radius:8px;padding:7px;text-align:center;font-size:.8rem;font-weight:800}
+  .mbm-classroom .lundy-grid>span:nth-child(2) {background:var(--ido-bg)}
+  .mbm-classroom .lundy-grid>span:nth-child(3) {background:var(--wedo-bg)}
+  .mbm-classroom .lundy-grid>span:nth-child(4) {background:var(--task-bg)}
+  .mbm-classroom .lundy p,.mbm-classroom .lundy-strip p {font-size:.85rem;margin:8px 0 0;max-width:none}
+  .mbm-classroom button {min-width:44px;min-height:44px;border-radius:10px;font-weight:700;background:var(--btn-hover);color:#fff;border:1px solid transparent;padding:10px 16px}
+  .mbm-classroom button:hover {background:#203f4c;color:#fff}
+  .mbm-classroom button:focus-visible,.mbm-classroom a:focus-visible,.mbm-classroom select:focus-visible,.mbm-classroom summary:focus-visible {outline:3px solid #ab5800;outline-offset:3px}
+  .mbm-classroom .controls {background:#fffffff5;backdrop-filter:blur(8px);border:1px solid #dbe3e8;box-shadow:0 4px 20px #182c3c18;border-radius:14px;padding:8px;gap:7px;flex-wrap:wrap;max-width:calc(100vw - 32px)}
+  .mbm-classroom .prog {background:#e7ecef}
+  .mbm-classroom .prog>span {background:var(--lo-border)}
+  .mbm-classroom .overlay-card {background:#fff;color:#1f2937;border-color:var(--lo-border)}
+  .mbm-classroom .slide[data-classroom-phase="title"] {text-align:center}
+  .mbm-classroom .slide[data-classroom-phase="title"]>p {max-width:760px;margin:14px auto;text-align:left}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.tag {background:#d98128;color:#172334}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.lundy {max-width:760px;margin:24px auto 0;text-align:left}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.box {text-align:left}
+  .mbm-classroom body.calm .slide {box-shadow:none}
+  @media(max-width:700px) {
+    .mbm-classroom main.deck {padding:14px 14px 180px}
+    .mbm-classroom main.deck>.slide {min-height:calc(100dvh - 205px);padding:20px 16px}
+    .mbm-classroom .slide p,.mbm-classroom .slide li {font-size:1.05rem}
+    .mbm-classroom .controls {left:14px;right:14px;bottom:14px;justify-content:center;max-width:none}
+    .mbm-classroom .controls button {font-size:.85rem;padding:8px 10px}
+    .mbm-classroom .lundy-grid {grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+  @media(prefers-reduced-motion:reduce) {
+    .mbm-classroom *, .mbm-classroom *::before, .mbm-classroom *::after {animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  }
+}
+</style><style id="mbm-classroom_activity-css">.mbm-activity{margin:1rem 0;padding:clamp(.8rem,2vw,1.25rem);border:2px solid currentColor;border-radius:16px;max-width:100%;box-sizing:border-box}
+.mbm-act-items{display:grid;gap:.65rem;margin:1rem 0}
+.mbm-act-row{padding:.65rem;border:1px solid currentColor;border-radius:10px;min-width:0}
+.mbm-act-row>label,.mbm-act-row legend{display:block;font-weight:700;margin-bottom:.4rem}
+.mbm-act-row fieldset{border:0;min-width:0;margin:0;padding:0}
+.mbm-act-row select{width:100%;max-width:100%;min-height:44px;padding:.45rem;font:inherit;color:#13212f;background:#fff;border:2px solid #506474;border-radius:6px}
+.mbm-act-choice{display:flex;align-items:center;gap:.5rem;min-height:44px;line-height:1.4;cursor:pointer}
+.mbm-act-choice input{flex:0 0 auto;width:1.25rem;height:1.25rem;margin:.25rem}
+.mbm-act-actions{display:flex;flex-wrap:wrap;gap:.5rem}
+.mbm-act-actions button{min-height:44px;padding:.6rem .9rem;font:inherit;font-weight:700;border:2px solid currentColor;border-radius:8px;cursor:pointer}
+.mbm-activity :is(button,input,select):focus-visible{outline:3px solid currentColor;outline-offset:3px}
+.mbm-act-row-feedback{margin:.45rem 0 0;font-size:.95em}
+.mbm-act-status{min-height:1.5em;font-weight:700}
+.mbm-act-explanations{padding:.5rem 1rem;border-left:4px solid currentColor}
+.mbm-act-explanations li{margin:.65rem 0}
+.mbm-act-explanations[hidden]{display:none!important}
+.mbm-act-figure{margin:.5rem auto;max-width:620px}
+.mbm-act-figure svg{display:block;width:100%;height:auto;max-height:300px}
+.mbm-act-figure figcaption{font-size:.9em;margin:.4rem 0}
+.mbm-activity-print,.mbm-activity-staff{display:none!important}
+#award-teacher-notes .mbm-activity-staff{display:block!important}
+@media print{
+ .mbm-activity,.mbm-activity-staff,#award-teacher-notes .mbm-activity-staff{display:none!important}
+ .mbm-activity-print{display:block!important;break-before:page;color:#111;background:#fff;font-size:11pt}
+ .mbm-activity-print li{break-inside:avoid;margin-bottom:.9rem}
+ .mbm-print-task{font-weight:700;margin:.3rem 0}
+ .mbm-print-options{font-size:10pt;margin:.3rem 0}
+ .mbm-print-response{margin:.7rem 0}
+ .mbm-activity-print .mbm-act-figure{max-width:110mm}
+}
+</style></head><body><!--n6-nav1:v1--><style id="n6-nav1-css">@media print{.mbmhome,.n6-splash{display:none!important}}.mbmhome{display:inline-block;margin:6px 0 0 8px;font:600 .85rem/1.4 "Segoe UI",Arial,sans-serif;color:#1e3a8a;text-decoration:none}.mbmhome:hover,.mbmhome:focus{text-decoration:underline}</style><a class="mbmhome" href="../../index.html" aria-label="Back to the Lessons catalogue">← Lessons</a><!--/n6-nav1--><a class="skip" href="#lessonDeck">Skip to lesson</a><main id="lessonDeck" class="deck"><section class="slide active" data-type="title" data-title="Lesson overview" data-min="0" data-classroom-phase="title"><div class="time">0 min</div><span class="tag">GROW Art</span><h1>Try, Record And Refine</h1><p>GROW · Art · Trinity Arts Award Silver. Try, Record And Refine.</p><p class="mbm-lesson-objective">Objective: Practise your chosen arts skill, preserve the changing work and use the evidence to refine your next step.</p><p class="mbm-lesson-success">Success evidence: Real arts practice, an ongoing record that retains earlier states, a reasoned adjustment and an exact location for the process evidence.</p><p>Use your own artwork, interests and practical choices. You can choose an abstract subject; you do not need to disclose private experiences.</p><p>40 minutes. Keep original work before making changes. Ask staff about safe tools and access.</p><div class="box rehearsal" data-mbm-guide="staff">This deck directly serves Silver Unit 1, Part 1B, Implement and review the arts challenge. Silver has TWO units, evidenced separately. This lesson belongs to Unit 1, Arts practice and pathways; keep its evidence labelled by unit and part. ONE Attempted allowed PER UNIT. Any Not Attempted = Below Pass. The whole Silver portfolio has a 20-file cap, not twenty per unit or one new file per lesson. The four assessment areas are art form knowledge and understanding, creativity, planning and review, and communication. Results are Pass or Below Pass only. Only an adviser trained at Silver may assess; delivery is through a validated centre. Staff must confirm those conditions; neither is asserted as completed here. The arts challenge must not focus on leadership. Advisers must not write pupil plans, reviews or evidence. Prompt, read or scribe the pupil’s exact words and check them back unchanged. Core, Extend and Challenge vary support within Silver, retaining the same evidence expectation and the pupil’s own choices. Digital evidence is organised by unit and part, with every locator naming the actual filename plus page, slide or timecode. A portfolio structure is an option, not an extra award rule. Samples, trial counts and prompts here are teaching scaffolds, not qualification quotas. Use accessible tools and communication without forced personal disclosure, compulsory filming or public posting. This forty-minute lesson supports a longer programme of real guided and independent practice; it does not claim all award hours are complete. Source: tools/artsaward/SPEC.json, Silver and universal rules. Part 1B requires ongoing evidence, someone ELSE’s review of the challenge and the pupil’s own final review. This deck begins sustained practice and process capture; an informal outside observation here does not replace the later required review of the challenge. The later 1B deck gathers that review and the pupil’s own final review. Work from the pupil’s actual 1A plan, teach a relevant technique before practice and preserve states before revision. The hatching demonstration is one option; adapt the taught method to the pupil’s chosen art process. Programme practice must continue for the real time their plan needs. Do not manufacture a completed challenge from one short lesson or reconstruct a lost baseline as though it were original.</div><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span>SPACE</span><span>VOICE</span><span>AUDIENCE</span><span>INFLUENCE</span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div></section><section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="3" data-ta1="Retrieve the actual plan and original work. Help preserve a usable before-state and prepare the relevant safe technique, rather than reconstructing earlier evidence." data-classroom-phase="arrival"><div class="time">3 min</div><span class="tag">Retrieval</span><h2>Arrival · retrieve</h2><h3>Use the plan to begin real practice</h3><p>Open your plan beside the starting work. Find the next practical step and explain the skill or effect it tests.</p><p>Check tools and support. Agree a safe alternative or revised order if something is missing.</p><p>Preserve the present state before changing it: keep a sample, permitted image or clear description identifying the detail. A later note alone cannot show the earlier state.</p><p>Continue this process record as your challenge develops.</p><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span>SPACE</span><span>VOICE</span><span>AUDIENCE</span><span>INFLUENCE</span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div></section><section class="slide" data-type="starter" data-title="Starter · create the need" data-min="3" data-classroom-phase="starter" data-ta1="Explain deliberate comparison without turning a controlled trial into an award quota or a universal rule for creative practice."><div class="time">3 min</div><span class="tag">Starter</span><h2>Starter · create the need</h2><h3>A change should teach you something</h3><p>Artists often try, look and adjust. The useful part is noticing what a change does to the work.</p><p>You could alter the tool, pressure, paper and spacing together. The result may be interesting. It is then harder to tell which choice caused an effect.</p><p>To test one choice, keep other features steady. Try it on a small sample first. Then you can compare more clearly.</p><p>This is a practical method, not a rule that all art must be made one way. Your intention decides what is worth checking.</p><p>Choose a detail where a careful trial could help you understand your next step.</p><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span>SPACE</span><span>VOICE</span><span>AUDIENCE</span><span>INFLUENCE</span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div></section><section class="slide" data-type="ido" data-title="I Do · model" data-min="7" data-ta1="Demonstrate hatching and cross-hatching live. For a paper-form route, demonstrate an appropriate folded tab or support with actual materials before independent work." data-classroom-phase="ido"><div class="time">7 min</div><span class="tag">I Do</span><h2>I Do · model</h2><h3>Adult model: build tone with hatching</h3><p>The adult draws parallel pencil lines with a light grip. Hatching builds tone with rows of lines; gaps leave paper visible.</p><p>On a fresh patch, they bring the lines closer while keeping similar pressure. Compare the tone beside the first patch.</p><p>On another patch, they add light lines at a different angle. This is cross-hatching. The overlapping lines make a darker tone.</p><p>Their aim is a dark area with visible line texture. Hard pressure is not the only way to darken it.</p><p>They choose a patch to develop and record the change, keeping the earlier samples. For paper form, try a tab or support before attaching it.</p><p>Examine the effect and choose what to keep. Your art and preference may differ from the adult’s.</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Four boxes show keeping an earlier state before practice, comparing the result of a deliberate change and choosing the next step."><title>Keep the process visible</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">PRESERVE</text><text x="73" y="88" text-anchor="middle" font-size="11">keep the first state</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">PRACTISE</text><text x="231" y="88" text-anchor="middle" font-size="11">make a chosen change</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">LOOK</text><text x="389" y="88" text-anchor="middle" font-size="11">compare its effect</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">REFINE</text><text x="547" y="88" text-anchor="middle" font-size="11">decide the next step</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">Preserve, practise, compare and refine.</text></svg><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span>SPACE</span><span>VOICE</span><span>AUDIENCE</span><span>INFLUENCE</span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div></section><section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="3" data-ta1="Read the actual prompt and choices; support the pupil to commit before checking. Use the item feedback as a model reason, not a judgement on personal taste. Keep real trials, meetings, views and project actions separate from these teaching examples." data-classroom-phase="wedo"><div class="time">3 min</div><span class="tag">We Do</span><h2>We Do · everyone commits</h2><section class="mbm-activity" data-mbm-activity="SILVER_ART_W2_1B1-stage4-1" aria-labelledby="SILVER_ART_W2_1B1-stage4-1-heading" data-mode="choice"><h3 id="SILVER_ART_W2_1B1-stage4-1-heading">Predict a hatching change, then test it</h3><p id="SILVER_ART_W2_1B1-stage4-1-instruction">Predict before making the next patch. Keep the original patch. Check the model reason, then compare the actual marks.</p><div class="mbm-act-items"><div class="mbm-act-row" data-activity-row="0"><fieldset aria-describedby="SILVER_ART_W2_1B1-stage4-1-instruction SILVER_ART_W2_1B1-stage4-1-row-1-feedback"><legend>The pencil, paper and light pressure stay similar. What might closer line spacing do?</legend><label class="mbm-act-choice" for="SILVER_ART_W2_1B1-stage4-1-row-1-option-1"><input id="SILVER_ART_W2_1B1-stage4-1-row-1-option-1" type="radio" name="SILVER_ART_W2_1B1-stage4-1-row-1" value="1"> <span>Create a darker tone while retaining line texture.</span></label><label class="mbm-act-choice" for="SILVER_ART_W2_1B1-stage4-1-row-1-option-2"><input id="SILVER_ART_W2_1B1-stage4-1-row-1-option-2" type="radio" name="SILVER_ART_W2_1B1-stage4-1-row-1" value="2"> <span>Make a lighter tone because less white paper is visible.</span></label></fieldset><p class="mbm-act-row-feedback" id="SILVER_ART_W2_1B1-stage4-1-row-1-feedback"></p></div><div class="mbm-act-row" data-activity-row="1"><fieldset aria-describedby="SILVER_ART_W2_1B1-stage4-1-instruction SILVER_ART_W2_1B1-stage4-1-row-2-feedback"><legend>Paper, pencil, pressure and spacing all change. Can the result isolate spacing alone?</legend><label class="mbm-act-choice" for="SILVER_ART_W2_1B1-stage4-1-row-2-option-1"><input id="SILVER_ART_W2_1B1-stage4-1-row-2-option-1" type="radio" name="SILVER_ART_W2_1B1-stage4-1-row-2" value="1"> <span>Yes; the darker sample proves spacing caused it.</span></label><label class="mbm-act-choice" for="SILVER_ART_W2_1B1-stage4-1-row-2-option-2"><input id="SILVER_ART_W2_1B1-stage4-1-row-2-option-2" type="radio" name="SILVER_ART_W2_1B1-stage4-1-row-2" value="2"> <span>No; several features changed at once.</span></label></fieldset><p class="mbm-act-row-feedback" id="SILVER_ART_W2_1B1-stage4-1-row-2-feedback"></p></div><div class="mbm-act-row" data-activity-row="2"><fieldset aria-describedby="SILVER_ART_W2_1B1-stage4-1-instruction SILVER_ART_W2_1B1-stage4-1-row-3-feedback"><legend>Your actual patch differs from your prediction. What belongs in the process record?</legend><label class="mbm-act-choice" for="SILVER_ART_W2_1B1-stage4-1-row-3-option-1"><input id="SILVER_ART_W2_1B1-stage4-1-row-3-option-1" type="radio" name="SILVER_ART_W2_1B1-stage4-1-row-3" value="1"> <span>Both real patches and what you noticed.</span></label><label class="mbm-act-choice" for="SILVER_ART_W2_1B1-stage4-1-row-3-option-2"><input id="SILVER_ART_W2_1B1-stage4-1-row-3-option-2" type="radio" name="SILVER_ART_W2_1B1-stage4-1-row-3" value="2"> <span>Only the result that you expected to see.</span></label></fieldset><p class="mbm-act-row-feedback" id="SILVER_ART_W2_1B1-stage4-1-row-3-feedback"></p></div></div><div class="mbm-act-actions"><button type="button" data-activity-action="check">Check choices</button><button type="button" data-activity-action="retry">Retry</button><button type="button" data-activity-action="explain" aria-expanded="false" aria-controls="SILVER_ART_W2_1B1-stage4-1-explanations">Show explanations</button></div><p class="mbm-act-status" role="status" aria-live="polite" aria-atomic="true"></p><div id="SILVER_ART_W2_1B1-stage4-1-explanations" class="mbm-act-explanations" hidden><h4>Model explanations</h4><ol><li><b>The pencil, paper and light pressure stay similar. What might closer line spacing do?</b> — Create a darker tone while retaining line texture.. Closer lines leave less white paper between them and can create a darker tone. Check your real samples from the same distance.</li><li><b>Paper, pencil, pressure and spacing all change. Can the result isolate spacing alone?</b> — No; several features changed at once.. The art may be useful, but several changes prevent that single-cause conclusion.</li><li><b>Your actual patch differs from your prediction. What belongs in the process record?</b> — Both real patches and what you noticed.. The real difference helps you decide a next trial. A prediction must not replace the observed work.</li></ol><p>This model supports discussion. A well-explained different connection can be useful too.</p></div><p class="mbm-act-discussion">Use the trial to refine your own challenge. Preserve the earlier state, record your decision and keep any outside comment attributed.</p><script type="application/json" data-activity-data>{"mode":"choice","items":[{"answer":"1"},{"answer":"2"},{"answer":"1"}]}</script></section><div class="box rehearsal mbm-activity-staff" data-mbm-guide="staff"><h4>Activity model: Predict a hatching change, then test it</h4><ol><li><b>The pencil, paper and light pressure stay similar. What might closer line spacing do?</b> — Create a darker tone while retaining line texture.. Closer lines leave less white paper between them and can create a darker tone. Check your real samples from the same distance.</li><li><b>Paper, pencil, pressure and spacing all change. Can the result isolate spacing alone?</b> — No; several features changed at once.. The art may be useful, but several changes prevent that single-cause conclusion.</li><li><b>Your actual patch differs from your prediction. What belongs in the process record?</b> — Both real patches and what you noticed.. The real difference helps you decide a next trial. A prediction must not replace the observed work.</li></ol><p>This classroom check is not an award grade or proof of completed pupil evidence.</p></div><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span>SPACE</span><span>VOICE</span><span>AUDIENCE</span><span>INFLUENCE</span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div></section><section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="7" data-ta1="Support proportionate capture and actual dates. Keep outside observations accurately attributed; no invented quotations or signatures. Explain the distinction from the two required later reviews." data-classroom-phase="ido"><div class="time">7 min</div><span class="tag">I Do</span><h2>I Do 2 · connect</h2><h3>Keep evidence while the work changes</h3><p>Record real actions and decisions while they happen. Keep a sample, labelled photo or clip showing the relevant detail.</p><p>Name the action and date, what you noticed and why you chose the next step. Save the earlier state before changing it.</p><p>Keep another person’s actual words separate from your thoughts, with their name or role. A comment on one detail can help a step; it is not a full challenge review.</p><p>Later, another person will review the whole challenge and you will make your own final review. Both need this ongoing record.</p><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="One panel shows process evidence and preserved states; the other shows the distinct later outside review and pupil final review."><title>Practice evidence supports later reviews</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">PROCESS RECORD</text><text x="151" y="74" text-anchor="middle" font-size="11">what I did, noticed and changed</text><text x="151" y="94" text-anchor="middle" font-size="11">earlier states stay available</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">LATER REVIEWS</text><text x="469" y="74" text-anchor="middle" font-size="11">another person’s review and mine</text><text x="469" y="94" text-anchor="middle" font-size="11">judgements about the challenge</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">An ongoing record is not a substitute for the reviews.</text></svg><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span>SPACE</span><span>VOICE</span><span>AUDIENCE</span><span>INFLUENCE</span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div></section><section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="5" data-ta1="Observe actual practice and help with access. Offer a relevant observation rather than an adult decision; preserve the pupil’s choice about the adjustment." data-classroom-phase="wedo"><div class="time">5 min</div><span class="tag">We Do</span><h2>We Do 2 · lab</h2><h3>Practise and inspect the result</h3><p>Begin the step you selected from your own plan. Use the technique staff have demonstrated for your materials.</p><p>For hatching, compare line spacing or direction without losing the earlier patch. For a folded tab, crease the joining edge clearly. Test the fit on scrap before fixing it in place.</p><p>For a tab join, fold the joining strip so it lies flat against the second piece. Align the edges before using the agreed adhesive. Support the join while it sets. Test the scrap gently and look for twisting or a gap before deciding to use it on the main form.</p><p>Pause where the result can tell you something. Look from the relevant angle or distance rather than inspecting only the easiest part.</p><p>Ask a partner or staff member what they notice. Focus their attention on the detail you are checking. Point to the work so the question is clear.</p><p>Record the response accurately if one is given. You decide whether and how it should affect your next action.</p><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span>SPACE</span><span>VOICE</span><span>AUDIENCE</span><span>INFLUENCE</span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div></section><section class="slide" data-type="independent" data-title="Independent · evidence" data-min="9" data-ta1="All tiers retain real practice, preserved changing states and the pupil’s reasoned decisions. Help capture evidence without replacing the pupil’s explanation." data-classroom-phase="independent"><div class="time">9 min</div><span class="tag">Independent work</span><h2>Independent · evidence</h2><h3>Refine the work and keep the reason</h3><p>Use what you noticed to choose a next step. You may repeat the method, adjust one feature or try a different safe approach.</p><p>Keep the earlier state before acting. Then practise the change and inspect its effect against your own intention.</p><p>Record what you did and why. Use a short note or spoken account of the detail. Simply saying the result is better does not explain the change.</p><p>Keep any outside observation clearly attributed. Add your own response rather than presenting the other person's view as yours.</p><p>Update the next step on your plan if needed. Continue the real practice for the time the challenge requires.</p><p>Save the evidence in Unit 1, Part 1B with the filename and page, slide or timecode.</p><ul><li>Core · use your own plan. Practise the chosen skill with support. Preserve the starting work and useful changing states. Show what you changed and why. Keep an actual outside observation if received, with the practice record and exact location.</li><li>Extend · undertake the same real practice and keep an ongoing record in your own format. Compare a change with an earlier state. Explain your next decision. Distinguish an informal comment from the later review of the whole challenge.</li><li>Challenge · keep the same practice and process evidence. Test another feasible change that responds to a real difficulty, then explain which approach better serves your artistic intention. Keep evidence for that judgement.</li></ul><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span>SPACE</span><span>VOICE</span><span>AUDIENCE</span><span>INFLUENCE</span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div></section><section class="slide" data-type="exit" data-title="Exit · Audience and Influence" data-min="3" data-ta1="Check actual evidence and next practice arrangements. Keep 1B marked as ongoing until its practice and both required reviews are genuinely available." data-classroom-phase="exit"><div class="time">3 min</div><span class="tag">Exit ticket</span><h2>Exit · Audience and Influence</h2><div class="lundy-status"></div><h3>Leave a useful starting point for next time</h3><p>Find the record of today's change. Can another person see what happened and why you chose it?</p><p>Check that the earlier state is still available. Repair a location note if it points at the wrong image or page.</p><p>Name the next practical step and anything that needs arranging. Keep practising between review points in the agreed programme time.</p><p>The process is still developing. A short comment today does not replace the outside review and your own final review of the challenge.</p><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span>SPACE</span><span>VOICE</span><span>AUDIENCE</span><span>INFLUENCE</span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div></section></main><nav class="controls" aria-label="Lesson controls"><button type="button" data-nav="previous">◀ Previous</button><button type="button" data-tool="1">Teacher tools</button><button type="button" data-tool="2">Evidence &amp; print</button><button type="button" data-tool="3">Calm mode</button><button type="button" data-tool="4">Static diagrams</button><button type="button" data-nav="next">Next ▶</button></nav><div class="prog" aria-hidden="true"><span></span></div><div id="taOverlay" class="overlay" aria-hidden="true"><div class="overlay-card"><h2></h2><p>Use the least prompt needed. Keep adult preparation and exact-word scribing separate from pupil authorship. Guidance is hidden from the learner surface by default.</p><button type="button" data-close-overlay>Close</button></div></div><section class="print-pack printpack award-print" aria-label="Printable lesson pack">
+      <section class="print-page">
+        <div class="running-head">GROW Art · Week 2 · Art · Trinity Arts Award Silver</div><h1>Try, Record And Refine</h1>
+        <p><b>Award evidence:</b> Silver Arts Award, Part 1B; no workbook cell (AAE-H7)</p>
+        <p><b>Objective:</b> Practise your chosen arts skill, preserve the changing work and use the evidence to refine your next step.</p>
+        <h2>My evidence record</h2><p>Carry out real arts practice from your own plan. Preserve earlier states, examine a deliberate change and record the reason for your next step. Both full challenge reviews come later.</p><p>Planned step and earlier state · Actual practice and chosen change · What I noticed and any outside observation · Next practice step and evidence location</p>
+        <table><thead><tr><th>Evidence focus</th><th>My words or response</th><th>File and page, slide or time</th></tr></thead>
+        <tbody><tr><th scope="row">Which planned skill did I practise, and what did the earlier work show?</th><td class="award-response"></td><td class="award-locator"></td></tr><tr><th scope="row">What did I change, and what effect could I see?</th><td class="award-response"></td><td class="award-locator"></td></tr><tr><th scope="row">What was my own response to the work and any real outside observation?</th><td class="award-response"></td><td class="award-locator"></td></tr><tr><th scope="row">What is next, and where can the process evidence be found?</th><td class="award-response"></td><td class="award-locator"></td></tr></tbody></table>
+        <div class="award-print-figures"><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Four boxes show keeping an earlier state before practice, comparing the result of a deliberate change and choosing the next step."><title>Keep the process visible</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">PRESERVE</text><text x="73" y="88" text-anchor="middle" font-size="11">keep the first state</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">PRACTISE</text><text x="231" y="88" text-anchor="middle" font-size="11">make a chosen change</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">LOOK</text><text x="389" y="88" text-anchor="middle" font-size="11">compare its effect</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">REFINE</text><text x="547" y="88" text-anchor="middle" font-size="11">decide the next step</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">Preserve, practise, compare and refine.</text></svg><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="One panel shows process evidence and preserved states; the other shows the distinct later outside review and pupil final review."><title>Practice evidence supports later reviews</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">PROCESS RECORD</text><text x="151" y="74" text-anchor="middle" font-size="11">what I did, noticed and changed</text><text x="151" y="94" text-anchor="middle" font-size="11">earlier states stay available</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">LATER REVIEWS</text><text x="469" y="74" text-anchor="middle" font-size="11">another person’s review and mine</text><text x="469" y="94" text-anchor="middle" font-size="11">judgements about the challenge</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">An ongoing record is not a substitute for the reviews.</text></svg></div>
+        <p>Name or learner code: ____________________ Date: ____________________</p>
+      </section>
+      <section class="print-page">
+        <div class="running-head">GROW Art · Week 2 · Art · Trinity Arts Award Silver</div><h1>Try, Record And Refine</h1>
+        <h2>Choose the support you need</h2><div class="print-route"><h3>Core</h3><p>Core · use your own plan. Practise the chosen skill with support. Preserve the starting work and useful changing states. Show what you changed and why. Keep an actual outside observation if received, with the practice record and exact location.</p></div><div class="print-route"><h3>Extend</h3><p>Extend · undertake the same real practice and keep an ongoing record in your own format. Compare a change with an earlier state. Explain your next decision. Distinguish an informal comment from the later review of the whole challenge.</p></div><div class="print-route"><h3>Challenge</h3><p>Challenge · keep the same practice and process evidence. Test another feasible change that responds to a real difficulty, then explain which approach better serves your artistic intention. Keep evidence for that judgement.</p></div>
+        <h2>Check the evidence</h2><ol><li>The record shows real practice of my chosen arts challenge.</li><li>Earlier states were preserved before revision.</li><li>My change and reason are supported by actual work.</li><li>Outside comments are attributed and remain distinct from the required later reviews.</li><li>The ongoing evidence is labelled Unit 1, Part 1B with filename plus page, slide or timecode.</li></ol>
+        <h2>My review or next step</h2><div class="award-review-space"></div>
+        <p>For a recorded response, write the actual file name and page, slide or timecode.</p>
+      </section>
+    <section class="mbm-activity-print" data-activity-print="SILVER_ART_W2_1B1-stage4-1-print" aria-labelledby="SILVER_ART_W2_1B1-stage4-1-print-heading"><h3 id="SILVER_ART_W2_1B1-stage4-1-print-heading">Predict a hatching change, then test it</h3><p>Predict before making the next patch. Keep the original patch. Check the model reason, then compare the actual marks.</p><ol><li><p class="mbm-print-task">The pencil, paper and light pressure stay similar. What might closer line spacing do?</p><p class="mbm-print-options">Create a darker tone while retaining line texture. · Make a lighter tone because less white paper is visible.</p><p class="mbm-print-response">My choice / reason: <span>____________________________</span></p></li><li><p class="mbm-print-task">Paper, pencil, pressure and spacing all change. Can the result isolate spacing alone?</p><p class="mbm-print-options">Yes; the darker sample proves spacing caused it. · No; several features changed at once.</p><p class="mbm-print-response">My choice / reason: <span>____________________________</span></p></li><li><p class="mbm-print-task">Your actual patch differs from your prediction. What belongs in the process record?</p><p class="mbm-print-options">Both real patches and what you noticed. · Only the result that you expected to see.</p><p class="mbm-print-response">My choice / reason: <span>____________________________</span></p></li></ol><p>Use the trial to refine your own challenge. Preserve the earlier state, record your decision and keep any outside comment attributed.</p></section></section><!--n6-nav1:v1--><div class="n6-splash"><div style="text-align:center;margin-top:8px"><svg width="64" height="64" viewbox="0 0 100 100" aria-label="Made by Matt"><circle cx="50" cy="50" r="47" fill="none" stroke="#1e3a8a" stroke-width="3.4"></circle><g transform="translate(0 2)"><path d="M28 71 L28 37 L50 59 L72 37 L72 71" fill="none" stroke="#1e3a8a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 22.5 L51.48 28.52 L57.5 30 L51.48 31.48 L50 37.5 L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"></path></g></svg></div></div><!--/n6-nav1--><script id="lesson-config" type="application/json">{"id": "SILVER_ART_W2_1B1", "family": "GROW Art", "week": 2, "slot": "Art · Trinity Arts Award Silver", "title": "Try, Record And Refine", "outcomes": ["Teach a useful arts technique or method appropriate to the pupil’s challenge, then undertake real practice. Preserve baseline and changing states before revision, record what was done and adapt the next step. Start a sustained process record. An informal outside view here does not replace the later required review of the challenge."], "cells": [], "objective": "Practise your chosen arts skill, preserve the changing work and use the evidence to refine your next step.", "timings": [0, 3, 3, 7, 3, 7, 5, 9, 3], "artsAward": {"level": "Silver", "parts": ["1B"]}, "planId": "e96423283f75", "weDoType": "predict-then-check", "tierLadder": ["Core", "Extend", "Challenge"]}</script><script data-award-chassis="">/* Runtime for newly authored award decks; no persistence or external dependencies. */
+(function () {
+  'use strict';
+
+  function boot() {
+    const deck = document.querySelector('main.deck');
+    const slides = Array.from(document.querySelectorAll('main.deck > .slide'));
+    if (!deck || !slides.length) return;
+    const progress = document.querySelector('.prog');
+    const bar = document.querySelector('.prog > span');
+    const overlay = document.getElementById('taOverlay');
+    const card = overlay && overlay.querySelector('.overlay-card');
+    const closeButton = overlay && overlay.querySelector('[data-close-overlay]');
+    const teacherButtons = document.querySelectorAll('[data-tool="1"]');
+    let index = Math.max(0, slides.findIndex(slide => slide.classList.contains('active')));
+    let returnFocus = null;
+    let notes = null;
+    let slotHost = null;
+
+    function show(next) {
+      index = (next + slides.length) % slides.length;
+      slides.forEach(function (slide, i) {
+        slide.classList.toggle('active', i === index);
+        slide.setAttribute('aria-hidden', i === index ? 'false' : 'true');
+      });
+      if (bar) bar.style.width = ((index + 1) / slides.length * 100) + '%';
+      if (progress) {
+        progress.removeAttribute('aria-hidden');
+        progress.setAttribute('role', 'progressbar');
+        progress.setAttribute('aria-label', 'Lesson progress');
+        progress.setAttribute('aria-valuemin', '1');
+        progress.setAttribute('aria-valuemax', String(slides.length));
+        progress.setAttribute('aria-valuenow', String(index + 1));
+        progress.setAttribute('aria-valuetext', 'Stage ' + (index + 1) + ' of ' + slides.length);
+      }
+      deck.scrollTop = 0;
+    }
+
+    function isOpen() {
+      return Boolean(overlay && overlay.classList.contains('on'));
+    }
+
+    function fillNotes() {
+      notes.replaceChildren();
+      const heading = document.createElement('h3');
+      heading.textContent = slides[index].dataset.title || 'Current stage';
+      notes.appendChild(heading);
+      ['ta1', 'ta2'].forEach(function (key) {
+        const text = slides[index].dataset[key];
+        if (!text) return;
+        const paragraph = document.createElement('p');
+        paragraph.textContent = text;
+        notes.appendChild(paragraph);
+      });
+      const sources = index === 0 ? [slides[0]] : [slides[index], slides[0]];
+      sources.forEach(function (source) {
+        source.querySelectorAll('[data-mbm-guide]').forEach(function (note) {
+          // The slot reader has its own live state and file listener: never clone it.
+          if (note.id === 'award-slot-panel' || note.closest('#award-slot-panel')) return;
+          const copy = note.cloneNode(true);
+          copy.removeAttribute('id');
+          copy.querySelectorAll('[id]').forEach(node => node.removeAttribute('id'));
+          notes.appendChild(copy);
+        });
+      });
+      // mount() runs on DOMContentLoaded. A real click comes after that event,
+      // regardless of the order in which the two embedded scripts were loaded.
+      const panel = document.getElementById('award-slot-panel');
+      if (panel && !slotHost.contains(panel)) slotHost.appendChild(panel);
+    }
+
+    function openTeacher(button) {
+      if (!card || isOpen()) return;
+      returnFocus = button || document.activeElement;
+      fillNotes();
+      overlay.classList.add('on');
+      overlay.setAttribute('aria-hidden', 'false');
+      teacherButtons.forEach(node => node.setAttribute('aria-expanded', 'true'));
+      (closeButton || card).focus();
+    }
+
+    function closeTeacher() {
+      if (!isOpen()) return;
+      overlay.classList.remove('on');
+      overlay.setAttribute('aria-hidden', 'true');
+      teacherButtons.forEach(node => node.setAttribute('aria-expanded', 'false'));
+      if (returnFocus && returnFocus.isConnected) returnFocus.focus();
+    }
+
+    function focusable() {
+      return Array.from(card.querySelectorAll('a[href], button, input, select, textarea, [tabindex]'))
+        .filter(node => !node.disabled && node.tabIndex >= 0 && node.getClientRects().length);
+    }
+
+    if (card) {
+      overlay.setAttribute('role', 'dialog');
+      overlay.setAttribute('aria-modal', 'true');
+      overlay.setAttribute('aria-hidden', 'true');
+      overlay.classList.remove('on');
+      card.tabIndex = -1;
+      let title = card.querySelector('h2');
+      if (!title) {
+        title = document.createElement('h2');
+        card.prepend(title);
+      }
+      title.id = 'award-teacher-title';
+      title.textContent = 'Teacher tools';
+      overlay.setAttribute('aria-labelledby', title.id);
+      notes = document.createElement('div');
+      notes.id = 'award-teacher-notes';
+      slotHost = document.createElement('div');
+      slotHost.id = 'award-teacher-slots';
+      card.insertBefore(notes, closeButton);
+      card.insertBefore(slotHost, closeButton);
+      if (closeButton) closeButton.addEventListener('click', closeTeacher);
+      teacherButtons.forEach(function (button) {
+        button.setAttribute('aria-controls', overlay.id);
+        button.setAttribute('aria-expanded', 'false');
+        button.addEventListener('click', () => openTeacher(button));
+      });
+      // Keep focus in the open dialog, including when scripts attempt to move it.
+      document.addEventListener('focusin', function (event) {
+        if (isOpen() && !overlay.contains(event.target)) (closeButton || card).focus();
+      });
+    }
+
+    document.querySelectorAll('[data-nav="previous"], [data-tool="5"]')
+      .forEach(button => button.addEventListener('click', () => { if (!isOpen()) show(index - 1); }));
+    document.querySelectorAll('[data-nav="next"], [data-tool="6"]')
+      .forEach(button => button.addEventListener('click', () => { if (!isOpen()) show(index + 1); }));
+    document.querySelectorAll('[data-tool="2"]')
+      .forEach(button => button.addEventListener('click', () => window.print()));
+    [['3', 'calm'], ['4', 'teacher-freeze']].forEach(function (item) {
+      const buttons = document.querySelectorAll('[data-tool="' + item[0] + '"]');
+      function sync() {
+        const active = document.body.classList.contains(item[1]);
+        buttons.forEach(button => button.setAttribute('aria-pressed', String(active)));
+      }
+      buttons.forEach(button => button.addEventListener('click', function () {
+        document.body.classList.toggle(item[1]);
+        sync();
+      }));
+      sync();
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (isOpen()) {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          closeTeacher();
+        } else if (event.key === 'Tab') {
+          const items = focusable();
+          const first = items[0] || card;
+          const last = items[items.length - 1] || card;
+          if (!items.length || !items.includes(document.activeElement)
+              || (event.shiftKey && document.activeElement === first)
+              || (!event.shiftKey && document.activeElement === last)) {
+            event.preventDefault();
+            (event.shiftKey ? last : first).focus();
+          }
+        }
+        return;
+      }
+      const target = event.target;
+      if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey
+          || (target && (target.isContentEditable
+              || (typeof target.closest === 'function' && target.closest('input, textarea, select'))))
+          || document.querySelector('dialog[open], .overlay.on, [role="dialog"][aria-hidden="false"]')) return;
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        event.preventDefault();
+        show(index + (event.key === 'ArrowRight' ? 1 : -1));
+      }
+    });
+    show(index);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once: true});
+  else boot();
+}());
+</script><script id="mbm-classroom_activity-js">/* Native controls only; no network, persistence, timers or focus trap. */
+(function () {
+  'use strict';
+  function mount(root) {
+    if (root.dataset.activityReady) return;
+    const status = root.querySelector('.mbm-act-status');
+    const rows = Array.from(root.querySelectorAll('[data-activity-row]'));
+    const actions = root.querySelectorAll('[data-activity-action]');
+    const explanations = root.querySelector('.mbm-act-explanations');
+    const explainButton = root.querySelector('[data-activity-action="explain"]');
+    let data;
+    try {
+      data = JSON.parse(root.querySelector('[data-activity-data]').textContent);
+      if (!['sort', 'match', 'choice', 'order'].includes(data.mode)
+          || data.items.length !== rows.length || !rows.length) throw new Error('shape');
+      data.items.forEach(function (item, i) {
+        const controls = Array.from(rows[i].querySelectorAll('option, input[type="radio"]'));
+        if (typeof item.answer !== 'string' || !controls.some(node => node.value === item.answer)) throw new Error('answer');
+      });
+    } catch (_) {
+      status.textContent = 'This activity could not load. Use the printed task or discuss the questions with your teacher.';
+      actions.forEach(button => { button.disabled = true; });
+      root.dataset.activityReady = 'error';
+      return;
+    }
+    root.dataset.activityReady = 'true';
+    function selected(row) {
+      const select = row.querySelector('select');
+      const radio = row.querySelector('input[type="radio"]:checked');
+      return select ? select.value : (radio ? radio.value : '');
+    }
+    function clearFeedback() {
+      rows.forEach(function (row) {
+        row.querySelector('.mbm-act-row-feedback').textContent = '';
+        row.removeAttribute('data-check');
+      });
+    }
+    root.addEventListener('change', function (event) {
+      if (!event.target.matches('select, input[type="radio"]')) return;
+      clearFeedback();
+      status.textContent = 'Choice changed. Use Check choices when you are ready.';
+    });
+    root.addEventListener('click', function (event) {
+      const button = event.target.closest('[data-activity-action]');
+      if (!button || !root.contains(button)) return;
+      const action = button.dataset.activityAction;
+      if (action === 'retry') {
+        root.querySelectorAll('select').forEach(select => { select.value = ''; });
+        root.querySelectorAll('input[type="radio"]').forEach(input => { input.checked = false; });
+        clearFeedback();
+        explanations.hidden = true;
+        explainButton.setAttribute('aria-expanded', 'false');
+        explainButton.textContent = 'Show explanations';
+        status.textContent = 'Choices cleared. Try again, or discuss a question with a partner.';
+        const first = rows[0].querySelector('select, input[type="radio"]');
+        if (first) first.focus();
+      } else if (action === 'explain') {
+        explanations.hidden = !explanations.hidden;
+        explainButton.setAttribute('aria-expanded', String(!explanations.hidden));
+        explainButton.textContent = explanations.hidden ? 'Show explanations' : 'Hide explanations';
+        status.textContent = explanations.hidden ? 'Model explanations hidden.' : 'Model explanations shown below. Compare the reasons with your own.';
+      } else if (action === 'check') {
+        const values = rows.map(selected);
+        const duplicates = data.mode === 'order'
+          ? values.filter((v, i) => v && values.indexOf(v) !== i) : [];
+        let missing = false, revisit = false;
+        rows.forEach(function (row, i) {
+          let text, result;
+          if (!values[i]) {
+            text = 'Choose a response, or point to your choice with a partner.';
+            result = 'missing'; missing = true;
+          } else if (duplicates.includes(values[i])) {
+            text = 'This position is used more than once. Give each note a different position.';
+            result = 'review'; revisit = true;
+          } else if (values[i] === data.items[i].answer) {
+            text = 'Matches the model. Can you explain your choice?'; result = 'match';
+          } else {
+            text = 'Compare your reason with the model explanation, then keep or change your choice.';
+            result = 'review'; revisit = true;
+          }
+          row.querySelector('.mbm-act-row-feedback').textContent = text;
+          row.dataset.check = result;
+        });
+        status.textContent = missing
+          ? 'Some choices are still blank. Choose, point or discuss; then check again.'
+          : revisit
+            ? 'Some choices differ from the model. Read the explanations and discuss your reasons.'
+            : 'Your choices match the model. Explain one, then use the idea in your own work.';
+      }
+    });
+  }
+  function boot() {
+    document.querySelectorAll('[data-mbm-activity]').forEach(mount);
+    const deck = document.querySelector('main.deck');
+    const toolbar = document.querySelector('.controls');
+    if (!deck || !toolbar || !deck.querySelector('[data-mbm-activity]')) return;
+    // Wrapped toolbar rows can be taller than the donor's fixed allowance.
+    // Reserve their actual height so the last response can scroll clear.
+    const reserve = function () {
+      const space = Math.max(0, window.innerHeight - toolbar.getBoundingClientRect().top) + 18;
+      deck.style.paddingBottom = space + 'px';
+      deck.style.scrollPaddingBottom = space + 'px';
+    };
+    reserve();
+    window.addEventListener('resize', reserve);
+    if (window.ResizeObserver) new ResizeObserver(reserve).observe(toolbar);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once: true});
+  else boot();
+}());
+</script></body></html>

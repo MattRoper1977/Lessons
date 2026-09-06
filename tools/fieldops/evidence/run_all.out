@@ -1,0 +1,292 @@
+
+[1m== build  release/ -> staging/[0m
+built /home/user/Lessons/tools/fieldops/staging
+  T1 01_Newport_Bridge_Lift_Permit_Lab.html
+  T2 01_Newport_Bridge_Lift_Permit_Lab.html
+  T3 01_Newport_Bridge_Lift_Permit_Lab.html
+  T1 02_Tees_Estuary_Field_Investigation_Lab.html
+  T2 02_Tees_Estuary_Field_Investigation_Lab.html
+  T3 02_Tees_Estuary_Field_Investigation_Lab.html
+  T1 03_Wilton_Carbon_Process_Control_Lab.html
+  T2 03_Wilton_Carbon_Process_Control_Lab.html
+  T3 03_Wilton_Carbon_Process_Control_Lab.html
+  T1 04_Tees_Bay_Wind_Operations_Lab.html
+  T2 04_Tees_Bay_Wind_Operations_Lab.html
+  T3 04_Tees_Bay_Wind_Operations_Lab.html
+  T4 00_BUILD_FieldOps_Teacher_Studio.html
+  T4 01_Newport_Bridge_Lift_Permit_Lab.html
+  T4 02_Tees_Estuary_Field_Investigation_Lab.html
+  T4 03_Wilton_Carbon_Process_Control_Lab.html
+  T4 04_Tees_Bay_Wind_Operations_Lab.html
+  T5a 00_BUILD_FieldOps_Teacher_Studio.html
+  T5b 00_BUILD_FieldOps_Teacher_Studio.html
+  T6a 00_BUILD_FieldOps_Teacher_Studio.html
+  T6b 00_BUILD_FieldOps_Teacher_Studio.html
+  T7 03_Wilton_Carbon_Process_Control_Lab.html
+  T8a 03_Wilton_Carbon_Process_Control_Lab.html
+  T8b 03_Wilton_Carbon_Process_Control_Lab.html
+  T8c 00_BUILD_FieldOps_Teacher_Studio.html
+  T10 03_Wilton_Carbon_Process_Control_Lab.html
+  T10 03_Wilton_Carbon_Process_Control_Lab.html
+  T11 03_Wilton_Carbon_Process_Control_Lab.html
+  T12 03_Wilton_Carbon_Process_Control_Lab.html
+  T9 03_Wilton_Carbon_Process_Control_Lab.html
+  T13 01_Newport_Bridge_Lift_Permit_Lab.html
+  T13 02_Tees_Estuary_Field_Investigation_Lab.html
+  T13 03_Wilton_Carbon_Process_Control_Lab.html
+  T13 04_Tees_Bay_Wind_Operations_Lab.html
+  T14 00_BUILD_FieldOps_Teacher_Studio.html
+  T14 01_Newport_Bridge_Lift_Permit_Lab.html
+  T14 02_Tees_Estuary_Field_Investigation_Lab.html
+  T14 03_Wilton_Carbon_Process_Control_Lab.html
+  T14 04_Tees_Bay_Wind_Operations_Lab.html
+  T15 03_Wilton_Carbon_Process_Control_Lab.html
+
+[1m== controls  every fix red on release, green on staging[0m
+id        release      patched      verdict
+------------------------------------------------------------------------------
+W-R-C6    true         true         ALREADY CORRECT ON RELEASE
+          C6 is taught as petrol through the real buttons
+          release: told "petrol range"  ->  patched: told "petrol range"
+W-R-C10   false        true         MATCHED PAIR
+          C10 is taught as petrol through the real buttons
+          release: told "kerosene range"  ->  patched: told "petrol range"
+W-R-C14   false        true         MATCHED PAIR
+          C14 is taught as kerosene through the real buttons
+          release: told "diesel range"  ->  patched: told "kerosene range"
+W-R-C18   false        true         MATCHED PAIR
+          C18 is taught as diesel through the real buttons
+          release: told "fuel-oil range"  ->  patched: told "diesel range"
+W-R-C20   false        true         MATCHED PAIR
+          C20 is taught as diesel through the real buttons
+          release: told "residue / too heavy"  ->  patched: told "diesel range"
+W-R-C21   false        true         MATCHED PAIR
+          C21 is taught as fuel-oil through the real buttons
+          release: no button  ->  patched: told "fuel-oil range"
+W-R-C24   false        UNREACHABLE  UNREACHABLE
+          C24 is taught as fuel-oil through the real buttons
+          release: no button  ->  patched: NOT DISTILLED at 390°C max
+W-SCORE   null         null         MEASURED
+          selectable feeds taught in the chemically correct band
+          release 1 of 5 selectable  ->  patched 6 of 7 selectable (C24 selectable but cannot be distilled at the ceiling)
+W-DESIGN  null         null         ASSERTED
+          every feed that cannot be distilled is one declared unreachable by design
+          undistillable at the ceiling: [C24] · declared: [C24] · headline: 6 of 7 reachable, C24 declared unreachable by design
+W-U-C11   true         true         ALREADY CORRECT ON RELEASE
+          UNIT-LEVEL — NOT USER-REACHABLE: wTray(11) is kerosene
+          bp 170°C · release "kerosene range" -> patched "kerosene range"
+W-U-C15   false        true         MATCHED PAIR
+          UNIT-LEVEL — NOT USER-REACHABLE: wTray(15) is kerosene
+          bp 250°C · release "diesel range" -> patched "kerosene range"
+W-U-C16   false        true         MATCHED PAIR
+          UNIT-LEVEL — NOT USER-REACHABLE: wTray(16) is kerosene
+          bp 270°C · release "fuel-oil range" -> patched "kerosene range"
+W-STRICT  null         null         ASSERTED
+          every band comparison in wTray is strict <, never <=
+          patched wTray contains "<=" : false (the earlier <= build is reverted)
+W-BOIL    null         null         ASSERTED UNCHANGED
+          wBoil is untouched
+          function wBoil(n){return -50+20*n}
+W-GAP     null         null         ASSERTED
+          no boundary sits on a wBoil value — every one is in a gap
+          boundaries [25,160,280,360,960] · collisions [] · 25 lies in (C3=10, C4=30) · 160 lies in (C10=150, C11=170) · 280 lies in (C16=270, C17=290) · 360 lies in (C20=350, C21=370) · 960 lies in (C50=950, C51=970)
+W-RES     null         null         ASSERTED
+          the residue band still exists, as the else, relabelled as chemistry
+          release "label:'residue / too heavy'" -> patched "label:'residue — what stays in the column'"
+W-RES-UI  false        true         MATCHED PAIR
+          the column's residue label reads as chemistry, not as a missing button
+          release [25°C · gases | 80°C · petrol range | 150°C · kerosene range | 230°C · diesel range | 300°C · fuel oils | residue] -> patched [below 25°C · gases | 110°C · petrol range | 220°C · kerosene range | 320°C · diesel range | 400°C · fuel oils | residue — what stays | in the column]
+W-DIAG    false        true         MATCHED PAIR
+          every temperature printed on the column falls in the band its own label names
+          release 4/5 agree · patched 5/5 agree
+W-DIAG-rel null         null         MEASURED
+          the printed temperatures against the RELEASE bands
+          25°C says "gases", code says "petrol range"  <-- disagree · 80°C says "petrol range", code says "petrol range" · 150°C says "kerosene range", code says "kerosene range" · 230°C says "diesel range", code says "diesel range" · 300°C says "fuel oils", code says "fuel-oil range"
+W-DIAG-pat null         null         MEASURED
+          the printed temperatures against the PATCHED bands
+          below 25°C says "gases", code says "top gases" (and 25 itself is "petrol range") · 110°C says "petrol range", code says "petrol range" · 220°C says "kerosene range", code says "kerosene range" · 320°C says "diesel range", code says "diesel range" · 400°C says "fuel oils", code says "fuel-oil range"
+W-DIAG-MARK true         true         ALREADY CONSISTENT ON RELEASE
+          for every distillable feed, the tray the marker lands on and the readout name the same fraction
+          release 5/5 agree · patched 6/6 agree
+W-DIAG-MARK-rel null         null         MEASURED
+          marker vs readout, per feed, on RELEASE
+          C6: marker on "80°C · petrol range" / readout "petrol range" · C10: marker on "150°C · kerosene range" / readout "kerosene range" · C14: marker on "230°C · diesel range" / readout "diesel range" · C18: marker on "300°C · fuel oils" / readout "fuel-oil range" · C20: marker on "residue" / readout "residue / too heavy" · C21: no button · C24: no button
+W-DIAG-MARK-pat null         null         MEASURED
+          marker vs readout, per feed, on the fixed build
+          C6: marker on "110°C · petrol range" / readout "petrol range" · C10: marker on "110°C · petrol range" / readout "petrol range" · C14: marker on "220°C · kerosene range" / readout "kerosene range" · C18: marker on "320°C · diesel range" / readout "diesel range" · C20: marker on "320°C · diesel range" / readout "diesel range" · C21: marker on "400°C · fuel oils" / readout "fuel-oil range" · C24: not distilled
+T10a      false        true         MATCHED PAIR
+          a feed this column can never boil is told why, and where it goes instead
+          release null -> patched "C24H50 boils at 430°C. This column's furnace only reaches 390°C, so C24H50 never enters the vapour stream — it leaves at the bottom as residue."
+T10b      false        true         MATCHED PAIR
+          a furnace merely turned down is told to turn it up, NOT that the column can never do it
+          at furnace 160°C on C14 — release "Effective furnace 160°C is too low for this teaching feed to enter the vapour stream." -> patched "C14H30 boils at 230°C, so it needs about 250°C to enter the vapour stream. The furnace is at 160°C — raise it."
+T12       false        true         MATCHED PAIR
+          the column carries a rendered caption separating tray temperature from boiling range
+          release {"present":false} -> patched present=true rendered=true
+W-ID24    false        true         MATCHED PAIR
+          both new feeds, C21 and C24, are present in all three feed lists
+          release buttons[6,10,14,18,20] random[6,10,14,18,20] studio[6,10,14,18,20] -> patched buttons[6,10,14,18,20,21,24] random[6,10,14,18,20,21,24] studio[6,10,14,18,20,21,24]
+W-ID3     null         null         ASSERTED
+          the three feed lists are the same set (identity re-asserted)
+          patched buttons[6,10,14,18,20,21,24] == random[6,10,14,18,20,21,24] == studio[6,10,14,18,20,21,24] · release was also identical
+P2.2a     false        true         MATCHED PAIR
+          pupil text does NOT survive a reload (memory-only ruling)
+          release returned=true -> patched returned=false (field claimText)
+P2.2b     null         null         MEASURED
+          localStorage keys after a session
+          release [stbuild.session.newport-lift-permit] -> patched []
+P2.2c-get false        true         MATCHED PAIR
+          no localStorage.getItem under this lab's own key, across a full session (T1)
+          release [get:stbuild.session.newport-lift-permit,get:stbuild.session.newport-lift-permit] -> patched []
+P2.2c-set false        true         MATCHED PAIR
+          no localStorage.setItem under this lab's own key, across a full session (T2)
+          release [set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit] -> patched []
+P2.2c-remove false        true         MATCHED PAIR
+          no localStorage.removeItem under this lab's own key, across a full session (T3)
+          release [remove:stbuild.session.newport-lift-permit] -> patched []
+P2.2c-all null         null         MEASURED
+          every localStorage call recorded, both trees
+          release [get:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,remove:stbuild.session.newport-lift-permit,get:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit,set:stbuild.session.newport-lift-permit] -> patched []
+P2.3      false        true         MATCHED PAIR
+          the exported .csv carries no cell that Excel would evaluate
+          release live["\"=1+1\"","\"@SUM(A1)\""] inert[] -> patched live[] inert["\"'=1+1\"","\"'@SUM(A1)\""]
+P2.4      false        true         MATCHED PAIR
+          body.calm is seeded from prefers-reduced-motion at boot
+          manual toggle still present: release true / patched true
+P2.5a     false        true         MATCHED PAIR
+          zero inline handlers in the Studio source
+          release 1 -> patched 0
+P2.5b     null         null         BEHAVIOUR PRESERVED
+          View still opens the capsule detail after rebinding
+          release opened=true rows=4 -> patched opened=true rows=4
+T13       false        true         MATCHED PAIR
+          NAV-1 back link matches the eleven lessons in the co-location target, and renders
+          release {"href":null,"label":null} -> staging {"href":"../../../index.html","label":"Back to the Lessons catalogue","text":"← Lessons","rendered":true}
+T13-scope null         null         ASSERTED
+          the Studio is deliberately excluded from NAV-1
+          it deploys to Matt-s-Apps-, not Lessons, so a link to the Lessons catalogue would be wrong from it. labs carrying NAV-1: release [0,0,0,0] -> staging [1,1,1,1]
+T14       null         null         BOTH LIMBS ASSERTED
+          exactly one "Made by Matt" per page — the regress trap, re-expressed not deleted
+          release per-page counts [0,0,0,0,0] (baseline, all 0) · staging [1,1,1,1,1] (deployed, all 1). Any harness asserting "Made by Matt" == 0 must be re-expressed against the deployed build, not satisfied by dropping the branding.
+T15       false        true         MATCHED PAIR
+          the lab says its temperature scale is a model, gives the real overlapping ranges, and names the C14–C16 overlap
+          release no such note -> staging "These temperatures are model values, not measurements. This column uses a straight-line rule so the pattern is visible; a real one is not straight. Re…"
+
+0 failure(s); 0 undeclared unreachable; 1 declared unreachable by design [W-R-C24]
+
+[1m== assert-unchanged  nothing moved outside the declared transforms[0m
+id        verdict   what
+------------------------------------------------------------------------------
+U1        UNCHANGED with all 19 transforms dropped the builder reproduces release byte for byte
+          all 5 files identical, 19 transforms dropped
+U2        UNCHANGED each independently-buildable transform changes exactly the files it is declared against
+          T1:4 T2:4 T3:4 T4:5 T5a:1 T5b:1 T6a:1 T6b:1 T7:1 T8a:1 T8b:1 T8c:1 T9:1 T10:1 T11:1 T12:1 T13:4 T14:5 · DEPENDENT, not measured alone: T15
+U2b       UNCHANGED every dependent transform is one whose anchor another transform introduces
+          T15 — T15's anchor is the caption T12 adds, so it cannot be built alone. Declared, not folded into T12: they are separate rulings and folding them would cost the ability to test them apart.
+U3        UNCHANGED all five files boot with no page error
+          clean
+U4 00     UNCHANGED visible text in 00_BUILD_FieldOps_Teacher_Studio.html changes only where authorised
+          1 added / 1 removed, every one declared
+U4 01     UNCHANGED visible text in 01_Newport_Bridge_Lift_Permit_Lab.html changes only where authorised
+          2 added / 1 removed, every one declared
+U4 02     UNCHANGED visible text in 02_Tees_Estuary_Field_Investigation_Lab.html changes only where authorised
+          2 added / 1 removed, every one declared
+U4 03     UNCHANGED visible text in 03_Wilton_Carbon_Process_Control_Lab.html changes only where authorised
+          19 added / 7 removed, every one declared
+U4 04     UNCHANGED visible text in 04_Tees_Bay_Wind_Operations_Lab.html changes only where authorised
+          2 added / 1 removed, every one declared
+U5        UNCHANGED mission ids for the default template of each engine are unchanged
+          newport-lift-permit=NEWPORT-LIFT-PERMIT-1C107E37 tees-estuary-fieldops=TEES-ESTUARY-FIELDOPS-BB8F2AF0 wilton-carbon-control=WILTON-CARBON-CONTROL-2B1E87AE tees-bay-wind-ops=TEES-BAY-WIND-OPS-29848190
+U6        UNCHANGED demonstration capsules still verify identically
+          release ["verified","verified","verified","verified"] -> patched ["verified","verified","verified","verified"]
+U7        UNCHANGED the three non-Wilton labs differ from release only in the storage, calm, NAV-1 and branding transforms
+          Newport, Estuary and Wind all identical once T1-T4, T13 and T14 are normalised
+
+0 unexpected change(s)
+
+[1m== P2.6  the 38 inputs[0m
+file                                           controls   unnamed   rendered 
+--------------------------------------------------------------------------------
+00_BUILD_FieldOps_Teacher_Studio.html          33 -> 33   4         22       
+01_Newport_Bridge_Lift_Permit_Lab.html         57 -> 57   11        53       
+02_Tees_Estuary_Field_Investigation_Lab.html   61 -> 61   10        57       
+03_Wilton_Carbon_Process_Control_Lab.html      60 -> 62   13        58       
+04_Tees_Bay_Wind_Operations_Lab.html           53 -> 53   14        49       
+--------------------------------------------------------------------------------
+TOTAL controls: release 264  ->  patched 266
+accessible-name sources in the patched tree: ["button text","wrapping label"]
+
+A0  predicate: <input> elements in the four pupil-facing labs, Studio excluded
+    release 38  ->  patched 38   (the figure the order calls "the 38 inputs")
+    other predicates on the same tree, so the figure cannot be quoted loose:
+      input+select+textarea, four labs: 72
+      input, all five files:            49
+      every control incl. buttons:      266
+A0 PASS  the stated predicate yields 38, unchanged by the patch
+A1 PASS  exactly 2 controls added (C21, C24, each named via button text, each rendered); no name lost
+
+A2 RED (PRE-EXISTING, NOT FIXED IN P2)
+    22 of the 38 inputs have no accessible name; 52 controls overall.
+    Identical on release — A1 proves the patch neither caused nor worsened it.
+    01 #alias [text]
+    01 #confidenceBefore [range]
+    01 #nCw [range]
+    01 #nDrag [range]
+    01 #confidenceAfter [range]
+    02 #alias [text]
+    02 #confidenceBefore [range]
+    02 #confidenceAfter [range]
+    03 #alias [text]
+    03 #confidenceBefore [range]
+    03 #wFurnace [range]
+    03 #wCracker [range]
+    03 #wSplit [range]
+    03 #confidenceAfter [range]
+    04 #alias [text]
+    04 #confidenceBefore [range]
+    04 #tWind [range]
+    04 #tRadius [range]
+    04 #tPitch [range]
+    04 #tYaw [range]
+    04 #tGrid [range]
+    04 #confidenceAfter [range]
+
+0 patch-scoped failure(s); 1 pre-existing red recorded
+
+[1m== transport  Studio <-> lab, all four splits, both directions[0m
+id            verdict  what
+------------------------------------------------------------------------------
+X0            PASS     every mission fixture was minted by a real Studio, none hand-written
+              rel_C14=minted · rel_C21=UNAVAILABLE on that Studio · rel_C24=UNAVAILABLE on that Studio · pat_C14=minted · pat_C21=minted · pat_C24=minted
+X1 rS->rL     PASS     a C14 mission from the release Studio loads into the release lab
+              title "TRANSPORT PROBE C14" feed "C14H30"
+X1 rS->sL     PASS     a C14 mission from the release Studio loads into the staging lab
+              title "TRANSPORT PROBE C14" feed "C14H30"
+X1 sS->rL     PASS     a C14 mission from the staging Studio loads into the release lab
+              title "TRANSPORT PROBE C14" feed "C14H30"
+X1 sS->sL     PASS     a C14 mission from the staging Studio loads into the staging lab
+              title "TRANSPORT PROBE C14" feed "C14H30"
+X1c           PASS     the release Studio cannot mint a C21 or C24 mission (declared asymmetry, not a defect)
+              release Studio offers [6,10,14,18,20]; C21 and C24 are new options — minted rel_C21=null rel_C24=null
+X1d C21->rL   PASS     a C21 mission from the fixed Studio does not break the release lab
+              feed "C21H44" · button present false · selected [] · zone "residue / too heavy" · C21H44 moved and condensed in the residue / too heavy. Its formula did not change.
+X1d C24->rL   PASS     a C24 mission from the fixed Studio does not break the release lab
+              feed "C24H50" · button present false · selected [] · zone "—" · Effective furnace 390°C is too low for this teaching feed to enter the vapour stream.
+X1d C21->sL   PASS     a C21 mission from the fixed Studio does not break the staging lab
+              feed "C21H44" · button present true · selected [21] · zone "fuel-oil range" · C21H44 moved and condensed in the fuel-oil range. Its formula did not change.
+X1d C24->sL   PASS     a C24 mission from the fixed Studio does not break the staging lab
+              feed "C24H50" · button present true · selected [24] · zone "—" · C24H50 boils at 430°C. This column's furnace only reaches 390°C, so C24H50 never enters the vapour stream — it leaves at the bottom as residue.
+X2 rL->rS     PASS     a capsule from the release lab verifies in the release Studio
+              ViewTRANSPORT PROBEWilton Process Chemistryguided1—1verified
+X2 rL->sS     PASS     a capsule from the release lab verifies in the staging Studio
+              ViewTRANSPORT PROBEWilton Process Chemistryguided1—1verified
+X2 sL->rS     PASS     a capsule from the staging lab verifies in the release Studio
+              ViewTRANSPORT PROBEWilton Process Chemistryguided1—1verified
+X2 sL->sS     PASS     a capsule from the staging lab verifies in the staging Studio
+              ViewTRANSPORT PROBEWilton Process Chemistryguided1—1verified
+
+0 transport failure(s) · fixtures in /tmp/p2xport-y8sdNM
+
+[1m== worst exit: 3[0m
+baseline: 0 failure(s); 0 undeclared unreachable; 1 declared unreachable by design [W-R-C24]
+

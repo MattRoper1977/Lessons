@@ -1,0 +1,35 @@
+{
+ "file": "_sownb/vb/tools/g26_reading_band.py",
+ "subject": "D-J red-proof: LAUNCH ceiling-only. Exactly one behaviour changed.",
+ "contractSha256After": "ed671277e93a64ce6ac996ff7ed16518139b5894c2a9be95658b58e555171080",
+ "toolVersionBefore": "g26-v1.0.0-pathway-reading-band",
+ "toolVersionAfter": "g26-v1.1.0-pathway-reading-band-launch-ceiling-only",
+ "matrix": [
+  {
+   "fixture": "LAUNCH deck simplified, pupil FK 8.09 (below the withdrawn floor 11.64)",
+   "old": "RED (outside the LAUNCH band 11.64-14.21)",
+   "new": "PASS",
+   "meaning": "the floor is withdrawn as a failure condition"
+  },
+  {
+   "fixture": "LAUNCH deck with one nominalised paragraph, pupil FK 14.70",
+   "old": "RED",
+   "new": "RED (above the LAUNCH ceiling 14.21)",
+   "meaning": "the ceiling still bites"
+  },
+  {
+   "fixture": "the same bytes under a BUILD path, pupil FK 14.70",
+   "old": "n/a",
+   "new": "RED (outside the BUILD band 1.0-4.0)",
+   "meaning": "BUILD/GROW stay band-bound; only LAUNCH's mode changed"
+  },
+  {
+   "fixture": "live LAUNCH_HUM_W3 unchanged, pupil FK 13.83",
+   "old": "PASS",
+   "new": "PASS",
+   "meaning": "no live verdict moved"
+  }
+ ],
+ "exitCodes": "1 on every RED row, 0 on every PASS row, taken from the process, not from a pipeline",
+ "bindingModeSource": "contract row reading.pathway.band -> value.bindingMode; changing the ruling is a contract edit, not a code edit"
+}

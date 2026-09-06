@@ -1,0 +1,538 @@
+<!DOCTYPE html><html lang="en" class="pathway-grow"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bank it: Young Duke and the team · GROW ASDAN</title>
+<style>
+    :root{--bg:#fff;--slide-bg:#fff;--text:#1f2937;--lo-bg:#e6d4e8;--lo-border:#9c27b0;--lo-text:#000;--task-bg:#fef9c3;--task-border:#eab308;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;--aspire-bg:#dcfce7;--aspire-border:#22c55e;--aspire-text:#166534;--sc-bg:#ffedd5;--sc-border:#f97316;--ido-bg:#ede9fe;--ido-border:#7c3aed;--wedo-bg:#fce7f3;--wedo-border:#db2777;--btn-bg:#3b82f6;--btn-hover:#1e3a8a;--success:#16a34a;--error:#dc2626;--muted:#64748b}
+    *{box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;background:var(--bg);color:var(--text);overflow:hidden}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}@keyframes fadeIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-4px)}40%,80%{transform:translateX(4px)}}
+    .animate-enter{animation:fadeInUp .55s ease-out forwards}.anim-delay-1{animation-delay:.15s;opacity:0;animation-fill-mode:forwards}.anim-delay-2{animation-delay:.3s;opacity:0;animation-fill-mode:forwards}
+    .slide-container{width:100vw;height:100vh;display:flex;justify-content:center;align-items:center}
+    .slide{display:none;width:92%;height:90%;background:var(--slide-bg);border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.15);padding:40px;overflow-y:auto;position:relative;flex-direction:column}.slide.active{display:flex;animation:fadeIn .45s ease}.slide[data-type="ido"]{border-top-color:var(--ido-border)}.slide[data-type="wedo"]{border-top-color:var(--wedo-border)}.slide[data-type="independent"]{border-top-color:var(--task-border)}
+    h1{color:var(--lo-text);font-size:2.5rem;margin:0 0 18px;border-bottom:3px solid var(--lo-border);display:inline-block}h2{color:var(--lo-text);margin:0 0 10px;border-bottom:2px solid #e2e8f0;padding-bottom:10px;margin-right:170px}h3{margin:10px 0 8px;color:#0f172a}p,li{font-size:1.15rem;line-height:1.6;color:#334155}
+    .content-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.logo{position:absolute;top:22px;right:40px;width:150px;height:auto;z-index:200}
+    .controls{position:fixed;bottom:18px;right:18px;z-index:1000;display:flex;gap:10px}button{background:var(--btn-bg);color:#fff;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:1rem;font-weight:bold;transition:all .2s;box-shadow:0 4px 6px rgba(0,0,0,.12);user-select:none}button:hover{background:var(--btn-hover);transform:translateY(-2px)}button.small{padding:8px 12px;font-size:.95rem}button.ghost{background:#e2e8f0;color:#0f172a}button.ghost:hover{background:#cbd5e1}
+    .progress-wrap{position:fixed;left:0;right:0;bottom:0;height:10px;z-index:1100;background:rgba(15,23,42,.12)}.progress-bar{height:100%;width:0%;background:var(--lo-border);transition:width .3s ease}.progress-label{position:fixed;left:14px;bottom:14px;z-index:1101;background:rgba(255,255,255,.95);border:1px solid #e2e8f0;padding:6px 10px;border-radius:999px;font-size:.9rem;font-weight:bold;color:var(--text);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+    .li-box{background:var(--lo-bg);border-left:6px solid var(--lo-border);padding:12px 14px;border-radius:12px;margin:8px 0 14px;color:var(--lo-text)}.task-box{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:18px;margin-bottom:12px;transition:transform .15s}.task-box:hover{transform:translateY(-2px)}.scaffold-box{background:var(--scaffold-bg);border-left:5px solid var(--scaffold-border);padding:10px 12px;border-radius:12px;font-size:1.05rem;margin-top:10px}.aspire-box{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);padding:12px 14px;border-radius:12px;color:var(--aspire-text);margin-top:10px}.sc-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:18px;border-radius:12px}.ido-box{background:var(--ido-bg);border-left:6px solid var(--ido-border);padding:14px;border-radius:12px;margin-bottom:12px}
+    .answer{display:none;margin-top:10px;padding:10px 12px;background:#f1f5f9;border-left:5px solid var(--muted);border-radius:10px;font-weight:bold;color:#334155}.show-ans .answer{display:block;animation:fadeInUp .25s}
+    .arrival-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.level-toggle{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0 12px}
+    .slide-tag{display:inline-block;padding:4px 14px;border-radius:8px;font-size:.85rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}.tag-arrival{background:#fef3c7;color:#92400e}.tag-starter{background:#dbeafe;color:#1e40af}.tag-ido{background:var(--ido-bg);color:#5b21b6}.tag-wedo{background:var(--wedo-bg);color:#9d174d}.tag-independent{background:var(--task-bg);color:#92400e}.tag-lesson{background:var(--lo-bg);color:var(--lo-border);font-size:1rem;padding:6px 18px}.tag-exit{background:var(--sc-bg);color:#9a3412}
+    .wedo-capture{border:3px solid var(--wedo-border);border-radius:14px;padding:18px;background:#fff;position:relative}.wedo-capture::before{content:'CLASS WORK';position:absolute;top:-12px;left:18px;background:var(--wedo-border);color:#fff;padding:2px 12px;border-radius:6px;font-size:.75rem;font-weight:900;letter-spacing:1px}
+    .score-bar{display:flex;align-items:center;gap:12px;padding:8px 14px;background:#f8fafc;border:2px solid #e2e8f0;border-radius:10px;margin-bottom:10px}.score-bar .score{font-weight:900;font-size:1.2rem;color:var(--success)}
+    .match-pill{padding:10px 16px;border:2px solid #cbd5e1;border-radius:10px;background:#fff;cursor:pointer;user-select:none;font-weight:bold;font-size:.95rem;transition:all .15s}.match-pill:hover{border-color:var(--task-border);background:#fefce8}.match-pill.selected{border-color:var(--wedo-border);box-shadow:0 0 0 3px rgba(219,39,119,.2);background:var(--wedo-bg)}.match-pill.placed{opacity:.35;pointer-events:none}
+    .match-target{border:2px dashed #cbd5e1;border-radius:12px;padding:12px;text-align:center;background:#fff;cursor:pointer;font-weight:bold;min-height:60px;display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:.95rem}.match-target:hover{border-color:var(--task-border);background:#fefce8}.match-target.correct{border:2px solid var(--success);background:rgba(22,163,74,.1);color:var(--success)}.match-target.wrong{border:2px solid var(--error);background:rgba(220,38,38,.1);animation:shake .4s}
+    .fact-carousel{background:#1e293b;color:#fff;border-radius:14px;padding:30px 40px;text-align:center;min-height:170px;display:flex;flex-direction:column;justify-content:center;align-items:center;margin-top:12px}.fact-text{font-size:1.2rem;line-height:1.6;max-width:650px;animation:fadeInUp .4s ease-out}.fact-num{font-size:2.4rem;font-weight:800;color:#eab308;margin-bottom:4px}.fact-nav{display:flex;gap:10px;margin-top:14px}.fact-nav button{padding:7px 20px;border-radius:8px;border:2px solid #fff;background:transparent;color:#fff;font-weight:700;cursor:pointer;font-size:.88rem;box-shadow:none}.fact-nav button:hover{background:#fff;color:#1e293b}.fact-dots{display:flex;gap:6px;margin-top:8px}.fact-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25)}.fact-dot.active{background:#eab308}
+    .react-panel{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:12px}.react-q{background:#f8fafc;border-radius:10px;padding:12px}.react-q label{font-weight:700;color:var(--ido-border);display:block;margin-bottom:4px;font-size:.9rem}.react-q textarea{width:100%;border:2px solid #e2e8f0;border-radius:8px;padding:8px;font-family:'Segoe UI',sans-serif;font-size:.95rem;resize:vertical;min-height:44px}.react-q textarea:focus{border-color:var(--scaffold-border);outline:none}
+    .compare-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:12px}.compare-card{border-radius:14px;padding:14px}.compare-card h3{font-size:1rem;margin:0 0 6px}.compare-card p{font-size:.92rem;line-height:1.45}
+    .timer-widget{display:flex;align-items:center;gap:14px;background:#1e293b;color:#fff;padding:12px 20px;border-radius:12px;margin-bottom:12px}.timer-display{font-size:2rem;font-weight:800;min-width:90px;text-align:center;color:var(--task-border)}.timer-bar-bg{flex:1;height:10px;background:rgba(255,255,255,.12);border-radius:5px;overflow:hidden}.timer-bar-fill{height:100%;background:var(--task-border);border-radius:5px;transition:width 1s linear}.timer-btns{display:flex;gap:5px}.timer-btn{padding:5px 14px;border-radius:6px;border:2px solid #fff;background:transparent;color:#fff;font-weight:700;cursor:pointer;font-size:.82rem;box-shadow:none}.timer-btn:hover{background:#fff;color:#1e293b}
+    /* Highlight-bio block */
+    .bio-block{background:#fdfdfd;border:2px solid #cbd5e1;border-radius:12px;padding:16px 20px;margin-top:8px;font-size:1.02rem;line-height:1.7;max-height:280px;overflow-y:auto;color:#1f2937}
+    .bio-block p{margin:6px 0}
+    .bio-block .key-fact.revealed{background:#fef08a;padding:1px 4px;border-radius:3px;box-shadow:0 0 0 2px rgba(234,179,8,.4);transition:all .3s}
+    /* Live-click sentence highlighting */
+    .hl-sentence{cursor:pointer;padding:2px 3px;border-radius:4px;transition:background .15s,box-shadow .15s;-webkit-tap-highlight-color:transparent}
+    .hl-sentence:hover{background:#fef9c3}
+    .hl-sentence.highlighted{background:#fde047;box-shadow:0 0 0 2px rgba(234,179,8,.5);font-weight:500}
+    .hl-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 8px;font-size:.95rem}
+    .hl-counter{background:#1e293b;color:#fef08a;padding:4px 12px;border-radius:999px;font-weight:900;font-size:.9rem;letter-spacing:.5px}
+    /* WAGOLL Ghost Typer */
+    .wagoll-trigger{background:linear-gradient(135deg,#7c3aed 0%,#db2777 100%);color:#fff;font-weight:900;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:.95rem;box-shadow:0 4px 12px rgba(124,58,237,.3);margin-top:10px;display:inline-flex;align-items:center;gap:6px}
+    .wagoll-trigger:hover{background:linear-gradient(135deg,#6d28d9 0%,#be185d 100%);transform:translateY(-2px)}
+    .wagoll-panel{display:none;background:linear-gradient(135deg,rgba(124,58,237,.06) 0%,rgba(219,39,119,.06) 100%);border:3px solid var(--ido-border);border-radius:14px;padding:16px 18px;margin-top:10px;position:relative;animation:fadeInUp .4s ease-out}
+    .wagoll-panel.visible{display:block}
+    .wagoll-panel::before{content:'🪄 WAGOLL — What A Good One Looks Like';position:absolute;top:-12px;left:14px;background:var(--ido-border);color:#fff;padding:3px 12px;border-radius:6px;font-size:.72rem;font-weight:900;letter-spacing:.5px}
+    .wagoll-text{font-family:'Georgia',serif;font-size:1rem;line-height:1.65;color:#1e293b;min-height:80px;padding:6px 4px}
+    .wagoll-text .cursor{display:inline-block;width:2px;height:1em;background:var(--ido-border);margin-left:2px;vertical-align:text-bottom;animation:caretBlink .9s steps(2) infinite}
+    @keyframes caretBlink{50%{opacity:0}}
+    .wagoll-tags{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
+    .wagoll-tag{background:#fff;border:2px solid var(--ido-border);color:var(--ido-border);font-size:.72rem;font-weight:900;padding:2px 8px;border-radius:5px;letter-spacing:.5px;display:none}
+    .wagoll-tag.show{display:inline-block;animation:fadeInUp .3s}
+    /* Mid-Point Peer Check overlay */
+    @keyframes midpointPulse{0%,100%{box-shadow:0 0 30px rgba(56,189,248,.6),0 0 60px rgba(124,58,237,.4)}50%{box-shadow:0 0 50px rgba(56,189,248,.9),0 0 100px rgba(124,58,237,.6)}}
+    .midpoint-overlay{position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:8500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(3px);animation:fadeIn .25s ease}
+    .midpoint-overlay.visible{display:flex}
+    .midpoint-modal{background:linear-gradient(135deg,#e0f2fe 0%,#ede9fe 100%);border:4px solid var(--scaffold-border);border-radius:24px;padding:30px 36px;text-align:center;animation:lessonCompletePop .55s cubic-bezier(.34,1.56,.64,1),midpointPulse 2.4s ease-in-out 0.55s infinite;max-width:600px;width:90%}
+    .midpoint-modal .mp-tag{display:inline-block;background:var(--scaffold-border);color:#fff;padding:4px 14px;border-radius:6px;font-size:.78rem;font-weight:900;letter-spacing:1.5px;margin-bottom:8px}
+    .midpoint-modal h2{margin:6px 0 10px;color:#0c4a6e;font-size:1.7rem;border:none;padding:0}
+    .midpoint-modal .mp-prompt{background:rgba(255,255,255,.85);border-left:6px solid var(--task-border);padding:14px 16px;border-radius:10px;margin:10px 0;font-size:1.1rem;color:#1e293b;font-weight:600;text-align:left}
+    .midpoint-modal .mp-prompt strong{color:#9a3412}
+    .midpoint-modal .mp-sub{font-size:.92rem;color:#475569;font-style:italic;margin:6px 0}
+    .midpoint-modal button{background:var(--scaffold-border);color:#fff;border:none;padding:11px 26px;border-radius:10px;font-weight:900;cursor:pointer;margin-top:8px;font-size:1.05rem;transition:all .2s}
+    .midpoint-modal button:hover{background:#0284c7;transform:translateY(-2px)}
+    @media (max-width:640px){
+      .wagoll-panel{padding:14px 12px}.wagoll-text{font-size:.92rem}
+      .midpoint-modal{padding:22px 20px;max-width:94%}
+      .midpoint-modal h2{font-size:1.3rem}
+      .midpoint-modal .mp-prompt{font-size:.95rem;padding:10px 12px}
+      .hl-toolbar{font-size:.85rem;gap:6px}
+    }
+    #print-area{display:none}
+    @media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}body{overflow:visible;background:#fff;height:auto;color:#000}.controls,.slide-container,.progress-wrap,.progress-label,.timer-widget{display:none!important}#print-area{display:block!important;padding:20px}.print-section{display:none;page-break-after:always}.print-section.visible{display:block}.print-line{border-bottom:1px solid #000;height:22px;margin-top:8px}.ko-table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:.95rem}.ko-table th,.ko-table td{border:1px solid #000;padding:8px;text-align:left}.ko-table th{background:#eee}.scaffold-print-box{border:2px dashed #94a3b8;padding:15px;margin-bottom:20px;border-radius:8px;background:#f8fafc}.prevent-break{page-break-inside:avoid;break-inside:avoid;margin-bottom:25px}body.print-supported .standard-content,body.print-supported .stretch-content{display:none!important}body.print-standard .supported-content,body.print-standard .stretch-content{display:none!important}body.print-stretch .supported-content,body.print-stretch .standard-content{display:none!important}}
+    /* ============== V4 POLISH ============== */
+    #auto-timer{position:fixed;top:14px;left:14px;z-index:6000;background:#fff;border:2px solid var(--ido-border);border-radius:999px;padding:6px 14px 6px 12px;display:flex;align-items:center;gap:8px;box-shadow:0 4px 14px rgba(0,0,0,.12);font-weight:900;color:var(--ido-border)}
+    #auto-timer-icon{font-size:1rem;line-height:1}
+    #auto-timer-display{font-size:1.1rem;font-variant-numeric:tabular-nums;min-width:54px}
+    #auto-timer .at-btn{background:transparent;border:none;color:var(--ido-border);cursor:pointer;font-size:1rem;padding:2px 4px;box-shadow:none}
+    #auto-timer .at-btn:hover{background:var(--ido-bg);transform:none}
+    #auto-timer.warn{border-color:var(--task-border);color:var(--task-border);animation:pulse-warn 1.2s ease-in-out infinite}
+    #auto-timer.warn .at-btn{color:var(--task-border)}
+    #auto-timer.done{border-color:var(--error);color:var(--error);background:#fee2e2}
+    @keyframes pulse-warn{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+    body.no-timer #auto-timer{display:none}
+    #ta-focus-btn,#cold-call-btn{position:fixed;z-index:6000;border:none;color:#fff;font-weight:900;letter-spacing:.5px;padding:8px 16px;border-radius:999px;cursor:pointer;font-size:.85rem;box-shadow:0 4px 12px rgba(0,0,0,.15);display:flex;align-items:center;gap:6px}
+    #ta-focus-btn{top:14px;left:170px;background:#7c3aed}
+    #ta-focus-btn:hover{background:#5b21b6;transform:translateY(-2px)}
+    #cold-call-btn{top:14px;left:280px;background:#dc2626}
+    #cold-call-btn:hover{background:#991b1b;transform:translateY(-2px)}
+    .v4-modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:7000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px);animation:fadeIn .25s ease}
+    .v4-modal-overlay.visible{display:flex}
+    .v4-modal{background:#fff;border-radius:18px;padding:22px 26px;max-width:560px;width:90%;border:3px solid var(--ido-border);box-shadow:0 20px 60px rgba(0,0,0,.4);animation:fadeInUp .3s ease}
+    .v4-modal h3{margin:0 0 10px;color:var(--ido-border);font-size:1.3rem;border-bottom:2px solid var(--ido-bg);padding-bottom:8px}
+    .v4-modal h3 .badge{display:inline-block;background:var(--ido-border);color:#fff;font-size:.7rem;padding:2px 10px;border-radius:6px;margin-left:8px;vertical-align:middle}
+    .v4-modal .ta-section,.v4-modal .cc-section{margin:8px 0;padding:10px 12px;background:#f8fafc;border-left:4px solid var(--scaffold-border);border-radius:8px;font-size:.95rem}
+    .v4-modal .ta-section strong,.v4-modal .cc-section strong{color:var(--ido-border)}
+    .v4-modal .cc-pupil{font-size:1.6rem;font-weight:900;text-align:center;color:var(--error);margin:10px 0;letter-spacing:1px;animation:nameLand .4s cubic-bezier(.34,1.56,.64,1)}
+    .v4-modal .cc-question{background:#fef3c7;border-left:6px solid #d97706;padding:12px 14px;border-radius:10px;font-size:1.05rem;font-weight:600;margin-top:8px;color:#78350f}
+    .v4-modal .cc-tier{font-size:.75rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;background:#1e293b;color:#fff;padding:2px 8px;border-radius:5px;display:inline-block;margin-bottom:6px}
+    .v4-modal-footer{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:8px;flex-wrap:wrap}
+    .v4-modal-footer button{padding:8px 14px;font-size:.9rem}
+    .v4-modal-footer .roll-again{background:var(--task-border)}
+    .v4-modal-footer .roll-again:hover{background:#ca8a04}
+    .v4-modal .pupil-list{font-size:.8rem;color:var(--muted);margin-top:6px}
+    .v4-modal input[type="text"]{width:100%;padding:8px 10px;border:2px solid #e2e8f0;border-radius:8px;font-size:.95rem;margin-top:6px;font-family:'Segoe UI',sans-serif}
+    .v4-modal input:focus{border-color:var(--scaffold-border);outline:none}
+    @keyframes nameLand{0%{opacity:0;transform:scale(.4) rotate(-15deg)}60%{opacity:1;transform:scale(1.2) rotate(5deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+    /* ================= V5 ADDITIONS ================= */
+    /* (1) Animated floating title dots */
+    @keyframes floatDot{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(-22px) translateX(10px)}}
+    .title-dots{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+    .title-dot{position:absolute;border-radius:50%;animation:floatDot ease-in-out infinite;will-change:transform}
+    .title-stage{position:relative;z-index:1}
+    /* (2) Step-by-step reveal on I Do slides */
+    .v5-step-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--ido-bg);border:2px solid var(--ido-border);border-radius:12px;padding:8px 14px;margin:8px 0 12px}
+    .v5-step-controls button{background:var(--ido-border);color:#fff;border:none;padding:8px 16px;border-radius:9px;font-weight:900;cursor:pointer;font-size:.95rem;box-shadow:0 3px 8px rgba(124,58,237,.25)}
+    .v5-step-controls button:hover{background:#5b21b6;transform:translateY(-2px)}
+    .v5-step-controls button:disabled{background:var(--success);cursor:default;transform:none;opacity:.85}
+    .v5-step-label{font-weight:900;color:var(--ido-border);font-size:.92rem;letter-spacing:.5px}
+    .v5-step-hint{font-size:.85rem;color:var(--muted)}
+    .v5-step{display:none}
+    .v5-step.revealed{display:block;animation:fadeInUp .45s ease-out}
+    .compare-grid-3 .v5-step.revealed{display:block}
+    /* (3) TURN & TALK bridge prompt */
+    @keyframes ttPulse{0%,100%{box-shadow:0 0 0 0 rgba(219,39,119,.0)}50%{box-shadow:0 0 0 5px rgba(219,39,119,.12)}}
+    .turn-talk{background:linear-gradient(135deg,#fce7f3 0%,#ede9fe 100%);border:3px solid var(--wedo-border);border-radius:14px;padding:14px 18px;margin-top:14px;position:relative;animation:ttPulse 2.6s ease-in-out infinite}
+    .turn-talk::before{content:'🗣️ TURN & TALK';position:absolute;top:-12px;left:16px;background:var(--wedo-border);color:#fff;padding:3px 12px;border-radius:6px;font-size:.74rem;font-weight:900;letter-spacing:1px}
+    .turn-talk p{margin:4px 0;font-size:1.05rem;color:#831843;font-weight:600}
+    .turn-talk .tt-sub{font-size:.85rem;color:#9d174d;font-style:italic;font-weight:500}
+    @media (max-width:640px){.v5-step-controls{padding:6px 10px;gap:8px}.v5-step-controls button{padding:6px 12px;font-size:.85rem}.turn-talk p{font-size:.95rem}.title-dot{display:none}}
+    @keyframes artHeroPulse{0%,100%{transform:scale(1);box-shadow:0 0 32px rgba(212,165,116,.55),0 0 60px rgba(124,58,237,.3)}50%{transform:scale(1.06);box-shadow:0 0 48px rgba(212,165,116,.85),0 0 100px rgba(124,58,237,.5)}}
+    @keyframes artRipple{0%{transform:scale(.4);opacity:.7}100%{transform:scale(2.4);opacity:0}}
+    @keyframes heroSlideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes arrowGrow{0%{opacity:0;transform:translateX(-12px) scale(.7)}60%{opacity:1;transform:translateX(0) scale(1.15)}100%{opacity:1;transform:translateX(0) scale(1)}}
+    @keyframes loCheckPop{0%{opacity:0;transform:scale(.4)}60%{opacity:1;transform:scale(1.4)}100%{opacity:1;transform:scale(1)}}
+    @keyframes brainFloat{0%,100%{transform:rotate(-4deg) translateY(0)}50%{transform:rotate(4deg) translateY(-3px)}}
+    @keyframes clockMelt{0%,100%{transform:rotate(-12deg) skewX(-2deg)}50%{transform:rotate(-15deg) skewX(2deg)}}
+    .title-hero{position:relative;margin:14px auto 8px;max-width:780px;padding:18px 20px;background:linear-gradient(135deg,rgba(212,165,116,.12) 0%,rgba(124,58,237,.10) 50%,rgba(234,179,8,.10) 100%);border-radius:18px;animation:heroSlideUp .8s ease-out .2s backwards;display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap}
+    .hero-palette{font-size:3rem;animation:brainFloat 3s ease-in-out infinite,heroSlideUp .8s ease-out .35s backwards;filter:drop-shadow(0 4px 8px rgba(0,0,0,.15))}
+    .hero-arrow-art{font-size:1.9rem;font-weight:900;color:var(--lo-border);animation:arrowGrow .7s ease-out .55s backwards;display:flex;flex-direction:column;align-items:center;gap:0;line-height:1}
+    .hero-arrow-art .a-text{font-size:.65rem;letter-spacing:1px;font-weight:900;color:var(--lo-border);margin-top:-2px;text-align:center}
+    .hero-grid-svg{position:relative;width:100px;height:100px;border-radius:14px;background:#fff4d6;border:3px solid #b85042;animation:artHeroPulse 2.4s ease-in-out infinite;animation-delay:.8s;animation-fill-mode:both;box-shadow:0 6px 18px rgba(0,0,0,.18);padding:6px;display:flex;align-items:center;justify-content:center}
+    .hero-grid-svg::before,.hero-grid-svg::after{content:'';position:absolute;inset:-8px;border:3px solid rgba(184,80,66,.55);border-radius:18px;pointer-events:none}
+    .hero-grid-svg::before{animation:artRipple 2.4s ease-out infinite}
+    .hero-grid-svg::after{animation:artRipple 2.4s ease-out 1.2s infinite}
+    .hero-grid-svg svg{width:100%;height:100%}
+    .hero-tag-art{font-size:.95rem;font-weight:900;color:var(--lo-border);text-align:left;line-height:1.3;animation:heroSlideUp .8s ease-out 1s backwards;max-width:240px}
+    .hero-tag-art .small{display:block;font-size:.72rem;font-weight:600;color:var(--muted);margin-top:2px;letter-spacing:.3px}
+    /* LO checkmarks */
+    .lo-anim{list-style:none;padding-left:8px;margin-top:8px}
+    .lo-anim li{position:relative;padding-left:30px;margin:6px 0}
+    .lo-anim li::before{content:'✓';position:absolute;left:0;top:0;width:22px;height:22px;background:var(--success);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.85rem;box-shadow:0 2px 4px rgba(22,163,74,.3);animation:loCheckPop .5s cubic-bezier(.34,1.56,.64,1) both}
+    .lo-anim li:nth-child(1)::before{animation-delay:1.2s}
+    .lo-anim li:nth-child(2)::before{animation-delay:1.45s}
+    .lo-anim li:nth-child(3)::before{animation-delay:1.7s}
+    /* MISCONCEPTION + QUALITY-CHECK */
+    @keyframes strikeIn{from{width:0}to{width:100%}}
+    @keyframes rightFlash{0%,100%{background:#d1fae5}30%,60%{background:#86efac;box-shadow:0 0 14px rgba(22,163,74,.5)}}
+    .misc-box{background:#fef2f2;border-left:6px solid var(--error);padding:14px;border-radius:12px;margin-top:10px;position:relative}
+    .misc-box::before{content:'⚠️ COMMON MISTAKES';position:absolute;top:-11px;left:12px;background:var(--error);color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+    .misc-box p{margin:6px 0}
+    .misc-wrong{display:inline-block;background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:4px;font-weight:bold;position:relative}
+    .misc-right{display:inline-block;background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:4px;font-weight:bold}
+    .slide.active .misc-wrong::after{content:'';position:absolute;left:0;top:50%;height:2.5px;width:0;background:var(--error);transform:translateY(-50%);box-shadow:0 0 4px rgba(220,38,38,.6);animation:strikeIn .5s ease-out forwards;animation-delay:.6s}
+    .slide.active .misc-wrong:nth-of-type(2)::after{animation-delay:.9s}
+    .slide.active .misc-right{animation:rightFlash 1.6s ease-in-out 1.4s 1}
+    .exam-tip-box{background:#fef3c7;border-left:6px solid #d97706;padding:14px;border-radius:12px;margin-top:10px;position:relative}
+    .exam-tip-box::before{content:'🎯 QUALITY CHECK';position:absolute;top:-11px;left:12px;background:#d97706;color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+    .exam-tip-box p{margin:6px 0}
+    /* BRIDGE SLIDE */
+    .bridge-banner{background:linear-gradient(135deg,#fef3c7 0%,#fce7f3 100%);border:3px dashed var(--lo-border);border-radius:16px;padding:18px 22px;margin:12px 0;position:relative;animation:fadeInUp .5s ease-out}
+    .bridge-banner::before{content:'🌉 CATCH-UP BRIDGE — L6 Dalí → L7 Höch';position:absolute;top:-13px;left:18px;background:var(--lo-border);color:#fff;padding:3px 12px;border-radius:6px;font-size:.75rem;font-weight:900;letter-spacing:1px}
+    .bridge-banner h3{margin:6px 0;color:var(--lo-border);font-size:1.15rem}
+    .bridge-flow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:10px}
+    .bridge-step{background:#fff;border:2px solid var(--scaffold-border);border-radius:10px;padding:10px 12px;text-align:center;font-size:.95rem}
+    .bridge-step .num{display:inline-block;background:var(--scaffold-border);color:#fff;width:26px;height:26px;border-radius:50%;font-weight:900;line-height:26px;margin-bottom:4px}
+    .bridge-step strong{display:block;color:#0c4a6e;margin-bottom:2px}
+    /* LESSON COMPLETE celebration */
+    @keyframes lessonCompletePop{0%{opacity:0;transform:translate(-50%,-30%) scale(.5)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+    @keyframes lcGlow{0%,100%{box-shadow:0 0 30px rgba(245,158,11,.7),0 0 60px rgba(124,58,237,.4)}50%{box-shadow:0 0 50px rgba(245,158,11,.95),0 0 100px rgba(124,58,237,.7)}}
+    @keyframes starSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+    .lesson-complete-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:8000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px);animation:fadeIn .3s ease}
+    .lesson-complete-overlay.visible{display:flex}
+    .lesson-complete-modal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:linear-gradient(135deg,#fef3c7 0%,#ede9fe 100%);border:4px solid var(--ido-border);border-radius:24px;padding:28px 36px;text-align:center;animation:lessonCompletePop .65s cubic-bezier(.34,1.56,.64,1),lcGlow 2s ease-in-out 0.65s infinite;max-width:560px;width:90%}
+    .lesson-complete-modal .lc-stars{font-size:2.4rem;letter-spacing:8px;line-height:1;display:block}
+    .lesson-complete-modal .lc-stars span{display:inline-block;animation:starSpin 4s linear infinite}
+    .lesson-complete-modal .lc-stars span:nth-child(2){animation-delay:.5s;animation-direction:reverse}
+    .lesson-complete-modal .lc-stars span:nth-child(3){animation-delay:1s}
+    .lesson-complete-modal h2{margin:14px 0 6px;color:var(--ido-border);font-size:1.8rem;border:none;padding:0}
+    .lesson-complete-modal p{margin:4px 0 12px;font-size:1.05rem;color:#5b21b6;font-weight:bold}
+    .lesson-complete-modal .lc-summary{background:rgba(255,255,255,.7);border-radius:12px;padding:10px 14px;margin:10px 0;font-size:.95rem;color:#1e293b;font-weight:600;text-align:left}
+    .lesson-complete-modal .lc-summary span{display:block;margin:3px 0}
+    .lesson-complete-modal button{background:var(--ido-border);color:#fff;border:none;padding:10px 22px;border-radius:10px;font-weight:bold;cursor:pointer;margin-top:8px;font-size:1rem;transition:all .2s}
+    .lesson-complete-modal button:hover{background:#5b21b6;transform:translateY(-2px)}
+    /* MOBILE */
+    @media (max-width:640px){
+      .slide{padding:30px 14px 24px;width:96%}
+      .logo{width:90px;top:10px;right:14px}
+      h1{font-size:1.7rem}
+      h2{font-size:1.25rem;margin-right:90px}
+      h3{font-size:1.05rem}
+      p,li{font-size:.95rem}
+      .content-grid{grid-template-columns:1fr!important;gap:12px}
+      .arrival-grid{grid-template-columns:1fr!important;gap:10px}
+      .react-panel{grid-template-columns:1fr!important;gap:10px}
+      .compare-grid-3{grid-template-columns:1fr!important;gap:12px}
+      .bridge-flow{grid-template-columns:1fr!important;gap:8px}
+      .title-hero{flex-direction:column;gap:8px;padding:14px 10px;max-width:96%}
+      .hero-palette{font-size:2.4rem}
+      .hero-grid-svg{width:80px;height:80px}
+      .hero-arrow-art{font-size:1.6rem;flex-direction:row;gap:6px}
+      .hero-tag-art{font-size:.85rem;text-align:center;max-width:100%}
+      #auto-timer{top:10px;left:10px;padding:5px 10px 5px 8px;font-size:.85rem}
+      #auto-timer-display{font-size:.95rem;min-width:42px}
+      #ta-focus-btn{left:auto;right:14px;top:50px;font-size:.7rem;padding:5px 10px}
+      #cold-call-btn{left:auto;right:14px;top:84px;font-size:.7rem;padding:5px 10px}
+      .controls{bottom:14px;right:14px}
+      .controls button{padding:8px 12px;font-size:.9rem}
+      .level-toggle{gap:6px;flex-wrap:wrap}
+      .level-toggle button{padding:6px 10px;font-size:.85rem}
+      svg{max-width:100%;height:auto}
+      .lesson-complete-modal{padding:20px 22px;max-width:94%}
+      .lesson-complete-modal h2{font-size:1.4rem}
+      .v4-modal{padding:16px 18px;max-width:94%}
+      .match-pill{font-size:.85rem;padding:8px 12px}
+      .match-target{font-size:.85rem;padding:10px 8px}
+      .timer-widget{flex-direction:column;align-items:stretch;gap:8px;padding:10px}
+      .timer-display{font-size:1.5rem}
+      .mistake-text{font-size:1.05rem!important;line-height:1.5!important}
+      .fact-carousel{padding:18px 14px;min-height:140px}
+      .fact-text{font-size:1rem}
+      .fact-num{font-size:1.8rem}
+      .compare-card{padding:12px}
+      .compare-card h3{font-size:.95rem}
+      .compare-card p{font-size:.88rem}
+      .bio-block{font-size:.92rem;padding:12px;max-height:240px}
+    }
+
+
+
+.pres-wrap{display:grid;grid-template-columns:300px 1fr;gap:18px;margin-top:8px;align-items:start}
+@media(max-width:640px){.pres-wrap{grid-template-columns:1fr}}
+.pres-cards{display:flex;flex-direction:column;gap:8px}
+.pres-card{cursor:pointer;background:#fff;border:2px solid #cbd5e1;border-radius:12px;padding:10px 12px;font-weight:800;font-size:.95rem;color:#334155;-webkit-tap-highlight-color:transparent;transition:all .15s}
+.pres-card:hover{border-color:var(--ido-border);background:#f5f3ff;transform:translateY(-2px)}
+.pres-card.done{border-color:var(--success);background:rgba(34,197,94,.12);color:#166534;cursor:default}
+.pres-side{display:flex;flex-direction:column;gap:10px}
+.pres-scorebar{display:flex;align-items:center;gap:10px;background:#1e293b;color:#fff;border-radius:10px;padding:8px 14px;font-weight:900}
+.pres-scorebar .pres-num{color:#eab308;font-size:1.3rem}
+.pres-msg{min-height:18px;font-weight:800;color:var(--scaffold-border);font-size:.92rem}
+.pres-caps{display:flex;flex-direction:column;gap:8px}
+.pres-cap{background:#fff;border-left:5px solid var(--ido-border);border-radius:10px;padding:8px 12px;font-size:.95rem;color:#3730a3;animation:fadeInUp .35s}.pres-cap strong{color:var(--ido-border)}
+@media print{.pres-wrap{display:none!important}}
+
+
+
+.xp-wrap{position:fixed;top:14px;left:14px;z-index:1102;background:rgba(255,255,255,.95);border:2px solid var(--aspire-border);padding:6px 14px;border-radius:999px;font-size:.85rem;font-weight:bold;color:var(--aspire-text);box-shadow:0 4px 12px rgba(0,0,0,.1);display:flex;align-items:center;gap:10px}
+.xp-label{white-space:nowrap}.xp-track{width:120px;height:10px;background:#e2e8f0;border-radius:5px;overflow:hidden}.xp-fill{height:100%;width:0%;background:linear-gradient(90deg,#22c55e,#16a34a);border-radius:5px;transition:width .4s ease}
+.hint-btn{background:var(--scaffold-border);color:#fff;font-size:.85rem;padding:6px 14px;border-radius:8px;border:none;cursor:pointer;font-weight:700;margin:4px 0;box-shadow:0 2px 4px rgba(0,0,0,.1)}.hint-btn:hover{background:#0284c7}
+.hint-box{display:none;background:var(--scaffold-bg);border-left:4px solid var(--scaffold-border);padding:8px 12px;border-radius:8px;margin:6px 0;font-size:.95rem;color:#0c4a6e;animation:fadeInUp .25s}.hint-box.show{display:block}
+.confetti{position:fixed;width:10px;height:10px;z-index:9999;pointer-events:none;top:-20px}
+@keyframes confettiFall{0%{transform:translateY(-20vh) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+@media print{.xp-wrap,.hint-btn,.hint-box,#auto-timer,#ta-focus-btn,#cold-call-btn,.v4-modal-overlay,.lesson-complete-overlay,.confetti{display:none!important}}
+/* ===== NEW SAVED-STYLE PUPIL PACK (continuous flow, no page-break-after) ===== */
+@page{margin:11mm}
+@media print{
+  #print-area{padding:0!important}
+  .print-section{page-break-after:auto!important;break-after:auto!important}
+  .print-section.visible{border-bottom:2px dashed #94a3b8;margin-bottom:14px;padding-bottom:14px}
+  .print-section.visible.print-last{border-bottom:0;margin-bottom:0;padding-bottom:0}
+  .print-section h1{font-size:1.2rem;margin:0 0 8px;border:0;display:block}
+  .print-section h2{font-size:1.02rem;margin:0 0 6px;border:0;padding:0}
+  .print-section h3{font-size:.95rem;margin:8px 0 4px;color:#000}
+  .print-section p,.print-section li,.print-section td,.print-section th{font-size:.9rem;line-height:1.4}
+  .print-section ul,.print-section ol{margin:4px 0 8px;padding-left:20px}
+  .ko-table{break-inside:avoid;margin-bottom:12px}
+  .scaffold-print-box{break-inside:avoid;margin-bottom:12px}
+  .prevent-break,.rev-block{break-inside:avoid}
+  .cover-line{font-size:.95rem;border:1px solid #000;padding:7px 10px;border-radius:6px;margin:0 0 12px}
+  .rev-block{margin:10px 0}
+  .self-quiz li{margin:3px 0}
+}
+
+.tag-lundy{background:#f3e8ff;color:#6b21a8}
+.lundy-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.lundy-box{border-radius:12px;padding:12px 14px;border:2px solid;background:#fff}
+.lundy-box h3{margin:0 0 4px;font-size:1rem}
+.lundy-box p{margin:0;font-size:.92rem}
+.sow-strip{display:inline-block;background:#eef2f7;border:1.5px solid #94a3b8;border-radius:999px;padding:4px 14px;font-size:.76rem;font-weight:800;letter-spacing:.05em;color:#334155;margin:4px 4px 8px}
+.award-strip{display:inline-block;background:#fdf4dc;border:1.5px solid #C18B2D;border-radius:999px;padding:4px 14px;font-size:.76rem;font-weight:800;letter-spacing:.05em;color:#7a5a10;margin:4px 4px 8px}
+.sc-v4{background:var(--sc-bg);border-left:6px solid var(--sc-border);border-radius:12px;padding:10px 16px;margin:10px auto;max-width:660px;text-align:left}
+.sc-v4 h3{margin:0 0 6px;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase}
+.sc-v4 ul{margin:0;padding-left:1.2rem}.sc-v4 li{margin:3px 0}
+.asp-v4{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);border-radius:12px;padding:8px 14px;margin:6px auto;max-width:660px;text-align:left;color:var(--aspire-text)}
+@media print{.lundy-grid{display:block}}
+html.pathway-grow{--lo-bg:#e7ecf4;--lo-border:#4A6FA5;--ido-bg:#f2e7dd;--ido-border:#C0784A;--wedo-bg:#e4efec;--wedo-border:#2E8F7B;--task-bg:#f8f0d9;--task-border:#D3A03C;--btn-bg:#4A6FA5;--btn-hover:#385781;--sc-border:#D3A03C;--sc-bg:#faf3dd;--aspire-bg:#edf1f7;--aspire-border:#4A6FA5;--aspire-text:#31496e;}/* RUN12-A pathway scope */
+/* ===== I-Do Illuminator (LI) ===== */
+.ilm{background:#ECF1F8;border:2px solid #4A6FA5;border-radius:14px;padding:10px 12px 6px;margin:10px 0}
+.ilm svg{width:100%;height:auto;display:block}
+.ilm-cap{text-align:center;font-size:.85rem;color:#32517d;font-weight:700;margin:6px 0 4px}
+.ilm text{font-family:inherit;font-weight:800}
+
+@keyframes ilmPop{0%{transform:scale(0);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+@keyframes ilmDraw{from{stroke-dashoffset:260}to{stroke-dashoffset:0}}
+@keyframes ilmGlow{0%,100%{opacity:.35}50%{opacity:1}}
+@keyframes ilmSpin{to{transform:rotate(360deg)}}
+@keyframes ilmHand{to{transform:rotate(360deg)}}
+@keyframes ilmRide{0%{transform:translateX(0);opacity:1}80%{opacity:1}100%{transform:translateX(var(--ride,300px));opacity:0}}
+@keyframes ilmRise{0%{transform:translateY(16px);opacity:0}100%{transform:translateY(0);opacity:1}}
+@keyframes ilmRipple{0%{transform:scale(.2);opacity:.9}100%{transform:scale(1);opacity:0}}
+@keyframes ilmSweep{0%{transform:translateX(-40px)}100%{transform:translateX(420px)}}
+@keyframes ilmFill{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+
+.ilm .pop{animation:ilmPop .6s ease-out both;transform-origin:center;transform-box:fill-box}
+.ilm .draw{stroke-dasharray:260;animation:ilmDraw 1.6s ease-out both}
+.ilm .glow{animation:ilmGlow 2.6s ease-in-out infinite}
+.ilm .spin{animation:ilmSpin 9s linear infinite;transform-origin:center;transform-box:fill-box}
+.ilm .hand{animation:ilmHand 8s linear infinite;transform-origin:bottom center;transform-box:fill-box}
+.ilm .ride{animation:ilmRide 5.5s ease-in-out infinite;transform-box:fill-box}
+.ilm .rise{animation:ilmRise .8s ease-out both;transform-box:fill-box}
+.ilm .rip{animation:ilmRipple 2.8s ease-out infinite;transform-origin:center;transform-box:fill-box}
+.ilm .sweep{animation:ilmSweep 4s ease-in-out infinite;transform-box:fill-box}
+.ilm .fill{animation:ilmFill 1.4s ease-out both;transform-origin:bottom center;transform-box:fill-box}
+@media(prefers-reduced-motion:reduce){.ilm *{animation:none!important;opacity:1!important;stroke-dashoffset:0!important;transform:none!important}*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0ms!important;animation-iteration-count:1!important;animation-fill-mode:forwards!important}@keyframes artHeroPulse{}@keyframes artRipple{}@keyframes brainFloat{}@keyframes caretBlink{}@keyframes floatDot{}@keyframes lcGlow{}@keyframes midpointPulse{}@keyframes starSpin{}@keyframes ttPulse{}@keyframes pulse-warn{}@keyframes rightFlash{}@keyframes shake{}@keyframes confettiFall{}@keyframes clockMelt{}.confetti{display:none!important}}
+
+.pres-card,.match-pill,.match-target,button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+button:focus-visible,.pres-card:focus-visible,.match-pill:focus-visible{outline:3px solid var(--ido-border);outline-offset:2px}
+
+/* n6 participation strip and route furniture, carried so the deck's own markup survives the reshell */
+.slide .lundy{border:2px solid #dbe2ea;border-radius:13px;padding:10px 13px;margin:12px 0 0;background:#fff;font-size:.9rem}
+.slide .lundy>.lundy-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center;font-weight:900;margin:0 0 6px}
+.slide .lundy .word-bridge{color:var(--muted);font-size:.85rem}
+.slide .lundy p{margin:4px 0}
+.ilm svg{width:100%;max-width:520px;height:auto;display:block;margin:0 auto}
+.wedo-reveal{margin-top:10px}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0;justify-content:center}
+.chips span{display:inline-block;border-radius:999px;padding:4px 10px;font-weight:800;background:#FFF4D6;font-size:.85rem}
+.ladder{font-weight:700;font-size:.9rem;margin:6px 0}
+.routes3{grid-template-columns:repeat(3,1fr)}.arrival-grid.cols1{grid-template-columns:1fr}.arrival-grid.cols2{grid-template-columns:repeat(2,1fr)}.arrival-grid.cols3{grid-template-columns:repeat(3,1fr)}
+@media (max-width:720px){.routes3,.arrival-grid.cols2,.arrival-grid.cols3{grid-template-columns:1fr}}
+.slide .scaffold-box{margin-top:8px}
+
+/* n6 participation strip and route furniture, carried so the deck's own markup survives the reshell */
+.slide .lundy{border:2px solid #dbe2ea;border-radius:13px;padding:10px 13px;margin:12px 0 0;background:#fff;font-size:.9rem}
+.slide .lundy>.lundy-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center;font-weight:900;margin:0 0 6px}
+.slide .lundy .word-bridge{color:var(--muted);font-size:.85rem}
+.slide .lundy p{margin:4px 0}
+.ilm svg{width:100%;max-width:520px;height:auto;display:block;margin:0 auto}
+.wedo-reveal{margin-top:10px}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0;justify-content:center}
+.chips span{display:inline-block;border-radius:999px;padding:4px 10px;font-weight:800;background:#FFF4D6;font-size:.85rem}
+.ladder{font-weight:700;font-size:.9rem;margin:6px 0}
+.routes3{grid-template-columns:repeat(3,1fr)}.arrival-grid.cols1{grid-template-columns:1fr}.arrival-grid.cols2{grid-template-columns:repeat(2,1fr)}.arrival-grid.cols3{grid-template-columns:repeat(3,1fr)}
+@media (max-width:720px){.routes3,.arrival-grid.cols2,.arrival-grid.cols3{grid-template-columns:1fr}}
+.slide .scaffold-box{margin-top:8px}
+</style><link rel="stylesheet" href="../visual-upgrade.css">
+<style id="mbm-guide-css">html:not(.mbm-guide-on) [data-mbm-guide],html:not(.mbm-guide-on) .asvl-purpose,html:not(.mbm-guide-on) .asvl-route{display:none!important}.mbm-guide-btn[aria-pressed="true"]{box-shadow:inset 0 0 0 2px currentColor}</style></head><body> <main id="lessonDeck" class="deck"><div class="slide-container"><div class="slide active" data-title="Title"> <div style="text-align:center;margin-top:10px"><svg width="64" height="64" viewBox="0 0 100 100" aria-label="Made by Matt"><circle cx="50" cy="50" r="47" fill="none" stroke="#1e3a8a" stroke-width="3.4"/><g transform="translate(0 2)"><path d="M28 71 L28 37 L50 59 L72 37 L72 71" fill="none" stroke="#1e3a8a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M50 22.5 L51.48 28.52 L57.5 30 L51.48 31.48 L50 37.5 L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"/></g></svg></div> <div style="text-align:center;margin-top:1%"><div class="animate-enter">
+<span class="slide-tag tag-lesson" style="background:#3F7D6E;color:#fff">GROW · Week 7 of 7</span>
+<h1>Bank it: Young Duke and the team</h1>
+<p style="font-size:1.1rem;color:var(--muted);margin:-8px 0 6px">GROW ASDAN · Autumn 2 · Week 7 · 40 minutes</p>
+<div data-mbm-guide="route" class="sow-strip">Progress SoW · ASDAN Aut 2 · 2026–27 · GROW · Week 7 · 'GROW Weekly - Autumn'!C157</div>
+<div class="li-box" style="margin:10px auto;max-width:680px;text-align:left"><b>Verbatim workbook outcome:</b> Bank Young Duke + community/UAS evidence. · Reflect on teamwork and add ASDAN/UAS evidence. · <b>Trace:</b> 'GROW Weekly - Autumn'!C157 · 'GROW Weekly - Autumn'!C187</div><div class="li-box" style="margin:10px auto;max-width:680px;text-align:left">Today we bank the Young Duke and community evidence from this term, and each of us writes what the team did and what we did in it.</div>
+<div class="sc-v4" style="text-align:left;max-width:680px;margin:8px auto"><h3>Today at a Glance</h3><div class="chips"><span>GROW ASDAN</span><span>40 minutes</span><span>offline sources</span></div><div class="ladder">GROW entry · bank one piece with the frame and dictate the team line · GROW secure · bank one piece and write the team line and my part · GROW reach · bank two pieces and say what I would change next time</div></div>
+<div class="content-grid routes3" style="height:auto;margin-top:10px"><div class="task-box"><h3 style="margin-top:0;color:#22c55e">◆ Supported</h3><p>One piece banked with the frame and a dictated team line.</p></div><div class="task-box"><h3 style="margin-top:0;color:#f97316">▲ Standard</h3><p>One piece banked with every mark, plus the team line and my I line.</p></div><div class="task-box"><h3 style="margin-top:0;color:#1e3a8a">★ Optional reach</h3><p>Two pieces banked, each naming its line, with all three parts of the reflection.</p></div></div>
+<div class="staff-card" data-mbm-guide="staff">Staff card: no learner is asked to show a photograph of themselves, and no learner is compared with another learner's folder.</div><div class="staff-card" data-mbm-guide="staff">Staff card: no learner is asked to show a photograph of themselves, and no learner is compared with another learner's folder.</div><div class="staff-card" data-mbm-guide="staff">Staff card: consent for any photograph is checked against the school list before anything is banked, every time.</div><div class="staff-card" data-mbm-guide="staff">Staff card: a learner who names no job of their own is given the team line only, and that is recorded as the route.</div><div class="drawer" data-mbm-guide="staff">Staff and source drawer: the Young Duke record sheets, the community project log and the banking sheet are on the table before the lesson. A learner with nothing to bank yet uses the example pair and that is a full route.</div>
+<div class="scaffold-box" style="display:inline-block;margin-top:8px;text-align:left"><h3 style="margin-top:0">Teacher Print Tools — Week 15</h3><div style="display:flex;gap:14px;flex-wrap:wrap"><button onclick="printPack('supported')" style="background:#22c55e;color:#fff;border:none;border-radius:8px;padding:8px 16px;font-weight:800;cursor:pointer">🖨 Supported pack</button><button onclick="printPack('standard')" style="background:#f97316;color:#fff;border:none;border-radius:8px;padding:8px 16px;font-weight:800;cursor:pointer">🖨 Standard pack</button><button onclick="printPack('stretch')" style="background:#1e3a8a;color:#fff;border:none;border-radius:8px;padding:8px 16px;font-weight:800;cursor:pointer">🖨 Stretch pack</button></div></div>
+</div></div><div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span>SPACE</span><span>VOICE</span><span>AUDIENCE</span><span>INFLUENCE</span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p><div class="word-bridge"><b>Space</b> is room to take part; <b>voice</b> is your own words; <b>audience</b> is someone listening properly; <b>influence</b> is something changing because you spoke.</div></div></div><div class="slide" data-title="Arrival" id="arrival-slide"> <span class="slide-tag tag-arrival">Arrival Task</span> <h2>Arrival Task – What we already know about banking evidence</h2> <div class="li-box" style="border-left:8px solid var(--sc-border)"><b>You do not have to show a photograph of yourself.</b> A note or a drawing banks the same as a photo. Nobody reads your folder without asking, and nobody's folder is compared with yours.</div><div class="scaffold-box">You can use the example pair. You can dictate and the words stay yours. You can point instead of talk. You can stop for a bit. Each one is a full route.</div><div class="word-bridge"><b>Bank</b> means to put a piece of evidence in the folder with its date, its line and its witness, so it is safe to count.</div><div class="arrival-grid cols2"><div class="task-box"><p>Evidence is proof that you did something. Banking it means it is in the folder and it counts.</p></div><div class="task-box"><p>A team did the community project together. Each person can say what the team did and what they did.</p></div></div><p><b>Arrival decision:</b> Choose what you will bank first today: a Young Duke piece or a community piece. Both are full answers. You can change later.</p><div data-mbm-guide="staff" class="li-box">Offer the example pair first. A learner who takes it is not prompted towards their own folder.</div> <div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span>SPACE</span><span>VOICE</span><span>AUDIENCE</span><span>INFLUENCE</span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div></div><div class="slide" data-title="Starter"> <span class="slide-tag tag-starter">Starter</span> <h2>Today at a Glance</h2> <div class="li-box"><strong>Key Question:</strong> Two reflections about the same project</div> <div class="task-box"><p>Two lines written after the same community project.</p><p><b>Line A:</b> “We did the community project and it went well.”</p><p><b>Line B:</b> “Together we cleared the path by the gate. I carried the bags and I counted them. Next time I would ask for gloves.”</p></div><p>Line B is a reflection. It says what the team did, what I did, and one thing to change. Line A says none of those.</p><div data-mbm-guide="staff" class="li-box">Do not accept a summary line as finished, and do not call it wrong. Name the gap: we have the project, we need the team, the person and the change.</div> <div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span>SPACE</span><span>VOICE</span><span>AUDIENCE</span><span>INFLUENCE</span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div></div><div class="slide" data-title="I Do 1"> <span class="slide-tag tag-ido">I Do</span> <h2>The Model — Banking a piece: the three marks and the line</h2> <div class="ilm" role="img"><svg viewbox="0 0 480 230" role="img" aria-label="A piece of evidence being banked: date, witness and name on it, and an arrow to the Young Duke line or the community line" style="width:100%;max-width:480px;height:auto"><rect x="1" y="1" width="478" height="228" fill="#fff" stroke="#172334" stroke-width="2"></rect><rect x="28" y="34" width="220" height="120" fill="none" stroke="#172334" stroke-width="3"></rect><text x="138" y="60" text-anchor="middle" font-size="12" font-weight="700" fill="#172334">Photo of the cleared path</text><text x="138" y="86" text-anchor="middle" font-size="11" fill="#172334">Thursday 10 December</text><text x="138" y="106" text-anchor="middle" font-size="11" fill="#172334">my name · seen by Mr Teacher</text><text x="138" y="132" text-anchor="middle" font-size="11" fill="#172334">I carried the bags.</text><path d="M248 94 L300 94" stroke="#172334" stroke-width="2"></path><rect x="300" y="44" width="150" height="40" rx="6" fill="none" stroke="#172334" stroke-width="3"></rect><text x="375" y="69" text-anchor="middle" font-size="12" fill="#172334">Young Duke line</text><rect x="300" y="104" width="150" height="40" rx="6" fill="none" stroke="#172334" stroke-width="2" stroke-dasharray="6 4"></rect><text x="375" y="129" text-anchor="middle" font-size="12" fill="#172334">Community line</text><text x="240" y="190" text-anchor="middle" font-size="12" fill="#172334">Date, witness, my name, what I did. Then choose the line. Then it is banked.</text><text x="240" y="214" text-anchor="middle" font-size="11" fill="#172334">One piece can point to both lines.</text></svg></div><p>The picture shows one piece of evidence. On it are the date, my name, who saw it, and what I did. From it an arrow goes to the line it counts for.</p><div class="ido-box"><p><b>Watch me do it:</b> I pick up the photo. Date: there. My name: there. Who saw it: not there, so I write “seen by my teacher”. What I did: not there, so I write “I carried the bags”. Now I choose the line. Community. Banked.</p></div><div class="task-box"><p><b>Now watch one more:</b> a note that says “I did my Young Duke cooking challenge”. Date: missing. Witness: missing. I add both. Line: Young Duke. Banked.</p></div><p>Bank in the same order every time. Date. Name. Who saw it. What I did. Which line. Then it is done.</p><div class="word-bridge"><b>Witness</b> is the person who saw you do it. Their name goes on the piece too.</div><div data-mbm-guide="staff" class="li-box">Model the five checks aloud in the same order each time. The witness and the what-I-did line are the two commonest gaps in a GROW folder.</div> <div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span>SPACE</span><span>VOICE</span><span>AUDIENCE</span><span>INFLUENCE</span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div></div><div class="slide" data-title="We Do 1"> <span class="slide-tag tag-wedo">We Do</span> <h2>Which piece is not banked yet, and why?</h2> <div style="text-align:right;margin:2px 0"><button class="ghost small" onclick="wedoReset(this)">🔄 Reset</button> <button class="ghost small" onclick="wedoReveal(this)">👁️ Reveal</button></div><div class="arrival-grid cols3"><div class="task-box"><p><b>Piece 1:</b> a note: “Thursday 10 December. I washed the tools after the litter pick. Seen by Mrs Teacher.” with my name on top, marked Community.</p></div><div class="task-box"><p><b>Piece 2:</b> a photo of the cleared path with a date and my name, marked Community, and nobody named as the witness.</p></div><div class="task-box"><p><b>Piece 3:</b> a note: “I finished my Young Duke cooking challenge. Seen by my key worker.” with my name, no date, marked Young Duke.</p></div></div><p><b>Spot it first:</b> write the number of the piece that is fully banked, and next to each other piece write the one thing it is missing. Everyone shows at the same time. Then we check the five marks together.</p><div class="task-box wedo-reveal" style="display:none"><h3 style="margin-top:0;color:var(--wedo-border)">Evidence check</h3><p>Piece 2 and piece 3 are not wrong. Each is one small step from banked. A piece that is not yet banked is a piece you can finish in ten seconds.</p></div><div data-mbm-guide="staff" class="li-box">Count down and show together, so nobody copies. A changed answer after the check is a success, not a correction.</div> <div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span>SPACE</span><span>VOICE</span><span>AUDIENCE</span><span>INFLUENCE</span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div></div><div class="slide" data-title="I Do 2"> <span class="slide-tag tag-ido">I Do</span> <h2>Proving It — The team, and me in it</h2> <div class="ilm" role="img"><svg viewbox="0 0 480 210" role="img" aria-label="A teamwork reflection in three parts: what the team did, what I did, and what I would change" style="width:100%;max-width:480px;height:auto"><rect x="1" y="1" width="478" height="208" fill="#fff" stroke="#172334" stroke-width="2"></rect><rect x="24" y="36" width="132" height="120" fill="none" stroke="#172334" stroke-width="3"></rect><rect x="174" y="36" width="132" height="120" fill="none" stroke="#172334" stroke-width="3"></rect><rect x="324" y="36" width="132" height="120" fill="none" stroke="#172334" stroke-width="2" stroke-dasharray="6 4"></rect><text x="90" y="62" text-anchor="middle" font-size="12" font-weight="700" fill="#172334">Together we</text><text x="90" y="92" text-anchor="middle" font-size="11" fill="#172334">cleared the path</text><text x="90" y="112" text-anchor="middle" font-size="11" fill="#172334">by the gate.</text><text x="240" y="62" text-anchor="middle" font-size="12" font-weight="700" fill="#172334">I</text><text x="240" y="92" text-anchor="middle" font-size="11" fill="#172334">carried the bags</text><text x="240" y="112" text-anchor="middle" font-size="11" fill="#172334">and counted them.</text><text x="390" y="62" text-anchor="middle" font-size="12" font-weight="700" fill="#172334">Next time</text><text x="390" y="92" text-anchor="middle" font-size="11" fill="#172334">I would ask</text><text x="390" y="112" text-anchor="middle" font-size="11" fill="#172334">for gloves.</text><text x="240" y="186" text-anchor="middle" font-size="11" fill="#172334">Three parts. The third one is the reflection.</text></svg></div><p>The picture shows a reflection in three parts. The team. Me. Next time.</p><p>The third part is the one that makes it a reflection and not a report. It can be small. Gloves is small, and it is real.</p><div class="task-box"><p><b>Fixing one together:</b> a line says “we did the litter pick”. We change it to “Together we cleared the path by the gate. I carried the bags and counted them. Next time I would ask for gloves.” We add the date and the witness. Now it banks on the community line.</p></div><p>Team. Me. Next time. Then the marks. Then the line.</p><div data-mbm-guide="staff" class="li-box">A learner who cannot name their own job is given the team line only, and that is recorded as the route. Nobody is compared with a partner's reflection.</div> <div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span>SPACE</span><span>VOICE</span><span>AUDIENCE</span><span>INFLUENCE</span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div></div><div class="slide" data-title="We Do 2"> <span class="slide-tag tag-wedo">We Do</span> <h2>Find the missing part together</h2> <div class="task-box"><p>We fix one reflection on the board first. Nobody writes yet. Everyone points to the part they would add first. Then we show at the same time.</p></div><div data-mbm-guide="staff" class="li-box">Take the first part from a learner who has not spoken yet. Scribe exactly what is said.</div> <div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span>SPACE</span><span>VOICE</span><span>AUDIENCE</span><span>INFLUENCE</span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div></div><div class="slide" data-title="Independent"> <span class="slide-tag tag-independent">Independent Work</span> <h2>Independent Work — Your folder: bank it, and reflect</h2> <div class="timer-widget"><div class="timer-display" id="timerDisplay">16:00</div><div class="timer-bar-bg"><div class="timer-bar-fill" id="timerBar" style="width:100%"></div></div><div class="timer-btns"><button class="timer-btn" onclick="startTimer()">▶ Start</button><button class="timer-btn" onclick="pauseTimer()">⏸ Pause</button><button class="timer-btn" onclick="resetTimer()">↺ Reset</button></div></div> <div class="li-box"><p>Bank your evidence and write your reflection. Use your own folder, or the example pair. Both are full answers.</p></div><div class="route-list"><article class="route s supported"><h3>◆ Supported</h3><p>One piece banked with the frame. Dictate the team line to an adult. The words stay yours.</p></article><article class="route m standard"><h3>▲ Standard</h3><p>One piece banked with all the marks and its line. Write the team line and your I line.</p></article><article class="route h stretch"><h3>★ Optional reach</h3><p>Two pieces banked, each naming its line. Write all three parts, and say why the next-time change would help the team.</p></article></div><div class="arrival-grid cols2"><div class="task-box"><p><b>Check yourself:</b> does each piece say what you did?</p></div><div class="task-box"><p><b>Check yourself:</b> does each piece name its line: Young Duke or Community?</p></div></div><div data-mbm-guide="staff" class="li-box">Record the route and any scribing on the banking sheet, keeping adult support visible and separate from the learner own words.</div> <div class="task-box" style="border-color:var(--sc-border)"><h3 style="margin-top:0">⏸ Pens down — quick partner check!</h3><p>Half way through: stop, swap with a partner, and check one thing on the list above together. Then carry on.</p></div> <div class="ido-box"><h3 style="margin-top:0;color:var(--ido-border)">WAGOLL — what a good one looks like</h3><p><b>A finished one:</b> Thursday 10 December. Photo of the cleared path. My name. Seen by my teacher. I carried the bags and counted them. Community line. Together we cleared the path by the gate. Next time I would ask for gloves. Banked and signed off.</p></div> <div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span>SPACE</span><span>VOICE</span><span>AUDIENCE</span><span>INFLUENCE</span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div></div><div class="slide" data-title="Lundy Loop"> <span class="slide-tag tag-lundy">Lundy Loop</span> <h2>Lundy Loop — Your Voice in This Lesson</h2> <div class="li-box"><strong>Why:</strong> SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</div> <div class="lundy-grid"><div class="lundy-box"><h3>🚪 SPACE</h3><p><b>Space</b> is room to take part;</p><p>SPACE stays available.</p></div><div class="lundy-box"><h3>📣 VOICE</h3><p>VOICE is received.</p></div><div class="lundy-box"><h3>👥 AUDIENCE</h3><p>AUDIENCE names back exactly.</p></div><div class="lundy-box"><h3>⭐ INFLUENCE</h3><p>INFLUENCE changes one real next action.</p></div></div> <div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span>SPACE</span><span>VOICE</span><span>AUDIENCE</span><span>INFLUENCE</span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div></div><div class="slide" data-title="Exit" id="exit-slide"> <span class="slide-tag tag-exit">Exit Ticket</span> <h2>Exit Ticket — Audience receives; influence changes something</h2> <div class="task-box"><p>Read your reflection to a partner or an adult. They say back what the team did and what you did.</p></div><div class="ido-box"><p>Did they mix up the team part and your part? Then one line needs changing. Change it. That change is your influence. It belongs to you.</p></div><div data-mbm-guide="staff" class="li-box">Close by naming one reflection that was signed off after a partner read it back. That is the influence record.</div> <div class="task-box" style="border-color:var(--aspire-border)"><h3 style="margin-top:0;color:var(--aspire-text)">✅ Complete</h3><p>Hand in your record and tick the learner confirmation on your sheet. That is the lesson done.</p></div> <div class="lundy" aria-label="Lundy participation strip"><div class="lundy-grid"><span>SPACE</span><span>VOICE</span><span>AUDIENCE</span><span>INFLUENCE</span></div><p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p></div></div></div></main><div class="controls"><button onclick="prevSlide()">◀ Previous</button><button onclick="showTABrief()">🧑‍🏫 TA Brief</button><button class="mbm-guide-btn" aria-pressed="false" onclick="mbmGuideToggle()">ⓘ Guidance</button><button onclick="showColdCall()">🎯 Cold Call</button><button onclick="nextSlide()">Next ▶</button></div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+<div class="progress-label" id="progressLabel">Slide 1/10</div>
+<div class="lesson-complete-overlay" id="lc-overlay" onclick="if(event.target.id==='lc-overlay')hideLessonComplete()">
+  <div class="lesson-complete-modal"><div class="lc-stars"><span>🏅</span><span>📸</span><span>✍️</span></div><h2>Present My Progress — banked!</h2><p>The term, out loud ✅</p><div class="lc-summary"><span><strong>✓</strong> I can present my progress against my Week 1 audit</span><span><strong>✓</strong> I can back each claim with dated evidence</span><span><strong>✓</strong> I can review my goals and set the next one</span><span><strong>✓</strong> Onto the Effectiveness Board: Name the skill this course should push hardest next half term.</span><span style="margin-top:8px;font-style:italic;color:var(--ido-border)">Next lesson: Weeks 7–8: consolidation — evidence audit and portfolio bank</span></div><button onclick="hideLessonComplete()">Onwards! 🚀</button></div>
+</div><div class="midpoint-overlay" id="mp-overlay">
+  <div class="midpoint-modal"><span class="mp-tag">⏸ MID-POINT PEER CHECK</span><h2>Pens down — quick partner check!</h2><div class="mp-prompt">📣 Show your partner where you’re up to. Check together against today’s success: <strong>I can present my progress against my Week 1 audit</strong> and <strong>I can back each claim with dated evidence</strong>. If something’s missing, help them add it — kindly.</div><p class="mp-sub">2 minutes max. Then I’ll resume the timer.</p><button onclick="resumeFromMidpoint()">▶ Resume Independent Work</button></div>
+</div>
+<div id="print-area"><div id="print-ko" class="print-section"><div class="print-head" style="font-size:.8rem;color:#555;border-bottom:1px solid #999;margin-bottom:8px">GROW ASDAN · Week 15 · Bank it: Young Duke and the team</div><h1 style="text-align:center;font-size:1.6rem">Knowledge Organiser (GROW W15): Bank it: Young Duke and the team</h1> <p style="text-align:center;margin:2px 0 10px"><strong>ASDAN Aut 2 · 2026–27 · Workbook outcome:</strong> Bank Young Duke + community/UAS evidence.</p> <table class="ko-table"><tr><th>Key Word</th><th>Definition</th></tr><tr><td>Watch me do it:</td><td>Watch me do it: I pick up the photo. Date: there. My name: there. Who saw it: not there, so I write “seen by my teacher”. What I did: not there, so I write “I carried the bags”. Now I choose the line. Community. Banked.</td></tr><tr><td>Now watch one more:</td><td>Now watch one more: a note that says “I did my Young Duke cooking challenge”. Date: missing. Witness: missing. I add both. Line: Young Duke. Banked.</td></tr><tr><td>Fixing one together:</td><td>Fixing one together: a line says “we did the litter pick”. We change it to “Together we cleared the path by the gate. I carried the bags and counted them. Next time I would ask for gloves.” We add the date and the witness. Now it banks on the community line.</td></tr></table> <h3>Key Facts</h3><ul><li>Evidence is proof that you did something. Banking it means it is in the folder and it counts.</li><li>A team did the community project together. Each person can say what the team did and what they did.</li></ul></div><div id="print-intro" class="print-section"><div class="print-head" style="font-size:.8rem;color:#555;border-bottom:1px solid #999;margin-bottom:8px">GROW ASDAN · Week 15 · Bank it: Young Duke and the team</div><h2>Bank it: Young Duke and the team</h2><p><strong>Name:</strong> ____________________ &nbsp; <strong>Class:</strong> __________ &nbsp; <strong>Date:</strong> <span id="print-date"></span></p><div class="rev-block"><h3>This week's spark</h3><p>Two reflections about the same project</p><h3>ASDAN evidence</h3><p>Bank Young Duke + community/UAS evidence.</p><p>Reflect on teamwork and add ASDAN/UAS evidence.</p></div></div><div id="print-arrival" class="print-section"><div class="print-head" style="font-size:.8rem;color:#555;border-bottom:1px solid #999;margin-bottom:8px">GROW ASDAN · Week 15 · Bank it: Young Duke and the team</div><h2>Arrival Task</h2><p><strong>What we already know about banking evidence</strong></p><p>1) Evidence is proof that you did something. Banking it means it is in the folder and it counts.</p><div class='print-line'></div><p>2) A team did the community project together. Each person can say what the team did and what they did.</p><div class='print-line'></div></div><div id="print-starter" class="print-section"><div class="print-head" style="font-size:.8rem;color:#555;border-bottom:1px solid #999;margin-bottom:8px">GROW ASDAN · Week 15 · Bank it: Young Duke and the team</div><h2>Two reflections about the same project</h2><p>Two lines written after the same community project.Line A: “We did the community project and it went well.”Line B: “Together we cleared the path by the gate. I carried the bags and I counted them. Next time I would ask for gloves.”</p><div class='print-line'></div><div class='print-line'></div></div><div id="print-wedo" class="print-section prevent-break"><div class="print-head" style="font-size:.8rem;color:#555;border-bottom:1px solid #999;margin-bottom:8px">GROW ASDAN · Week 15 · Bank it: Young Duke and the team</div><h2>We Do 1: Which piece is not banked yet, and why?</h2><p>Piece 1: a note: “Thursday 10 December. I washed the tools after the litter pick. Seen by Mrs Teacher.” with my name on top, marked Community.</p><p>Piece 2: a photo of the cleared path with a date and my name, marked Community, and nobody named as the witness.</p><p>Piece 3: a note: “I finished my Young Duke cooking challenge. Seen by my key worker.” with my name, no date, marked Young Duke.</p><h2 style="margin-top:16px">We Do 2: Find the missing part together</h2><p>We fix one reflection on the board first. Nobody writes yet. Everyone points to the part they would add first. Then we show at the same time.</p></div><div id="print-scaffold-supported" class="print-section"><div class="print-head" style="font-size:.8rem;color:#555;border-bottom:1px solid #999;margin-bottom:8px">GROW ASDAN · Week 15 · Bank it: Young Duke and the team</div><h2>Scaffolding – Supported</h2><div class="scaffold-print-box"><h3>Word Bank</h3><p>Watch me do it:, Now watch one more:, Fixing one together:, Space, Voice, Audience, Influence</p><h3>Your route</h3><p></p><h3>Sentence frames</h3><p>"Who … what they do … so that …" | "… because …"</p></div></div><div id="print-scaffold-standard" class="print-section"><div class="print-head" style="font-size:.8rem;color:#555;border-bottom:1px solid #999;margin-bottom:8px">GROW ASDAN · Week 15 · Bank it: Young Duke and the team</div><h2>Scaffolding – Standard</h2><div class="scaffold-print-box"><h3>Word Bank</h3><p>Watch me do it:, Now watch one more:, Fixing one together:, Space, Voice, Audience, Influence</p><h3>Your route</h3><p></p><h3>Sentence frames</h3><p>"Who … what they do … so that …" | "… because …"</p></div></div><div id="print-scaffold-stretch" class="print-section"><div class="print-head" style="font-size:.8rem;color:#555;border-bottom:1px solid #999;margin-bottom:8px">GROW ASDAN · Week 15 · Bank it: Young Duke and the team</div><h2>Scaffolding – Stretch</h2><div class="scaffold-print-box"><h3>Word Bank</h3><p>Watch me do it:, Now watch one more:, Fixing one together:, Space, Voice, Audience, Influence</p><h3>Your route</h3><p></p><h3>Sentence frames</h3><p>"Who … what they do … so that …" | "… because …"</p></div></div><div id="print-worksheet-supported" class="print-section"><div class="print-head" style="font-size:.8rem;color:#555;border-bottom:1px solid #999;margin-bottom:8px">GROW ASDAN · Week 15 · Bank it: Young Duke and the team</div><h2>🔢 Independent Work – Supported</h2><div class="prevent-break"><p><strong></strong></p><p></p><table class="ko-table"><tr><th>What I did</th><th>Evidence I kept (photo / note / recording)</th><th>Witness initials</th></tr><tr><td style="height:40px">&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td style="height:40px">&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td style="height:40px">&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td style="height:40px">&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr></table></div></div><div id="print-worksheet-standard" class="print-section"><div class="print-head" style="font-size:.8rem;color:#555;border-bottom:1px solid #999;margin-bottom:8px">GROW ASDAN · Week 15 · Bank it: Young Duke and the team</div><h2>📐 Independent Work – Standard</h2><div class="prevent-break"><p><strong></strong></p><p></p><table class="ko-table"><tr><th>What I did</th><th>Evidence I kept (photo / note / recording)</th><th>Witness initials</th></tr><tr><td style="height:40px">&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td style="height:40px">&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td style="height:40px">&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td style="height:40px">&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr></table></div></div><div id="print-worksheet-stretch" class="print-section"><div class="print-head" style="font-size:.8rem;color:#555;border-bottom:1px solid #999;margin-bottom:8px">GROW ASDAN · Week 15 · Bank it: Young Duke and the team</div><h2>🔗 Independent Work – Stretch</h2><div class="prevent-break"><p><strong></strong></p><p></p><table class="ko-table"><tr><th>What I did</th><th>Evidence I kept (photo / note / recording)</th><th>Witness initials</th></tr><tr><td style="height:40px">&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td style="height:40px">&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td style="height:40px">&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td style="height:40px">&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr></table></div></div><div id="print-exit" class="print-section"><div class="print-head" style="font-size:.8rem;color:#555;border-bottom:1px solid #999;margin-bottom:8px">GROW ASDAN · Week 15 · Bank it: Young Duke and the team</div><div class="supported-content"><h2>Exit Ticket – Supported</h2><p>1) Read your reflection to a partner or an adult. They say back what the team did and what you did.</p><div class='print-line'></div><p>2) Did they mix up the team part and your part? Then one line needs changing. Change it. That change is your influence. It belongs to you.</p><div class='print-line'></div><p>3) SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p><div class='print-line'></div></div><div class="standard-content"><h2>Exit Ticket – Standard</h2><p>1) Read your reflection to a partner or an adult. They say back what the team did and what you did.</p><div class='print-line'></div><p>2) Did they mix up the team part and your part? Then one line needs changing. Change it. That change is your influence. It belongs to you.</p><div class='print-line'></div><p>3) SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p><div class='print-line'></div></div><div class="stretch-content"><h2>Exit Ticket – Stretch</h2><p>1) Read your reflection to a partner or an adult. They say back what the team did and what you did.</p><div class='print-line'></div><p>2) Did they mix up the team part and your part? Then one line needs changing. Change it. That change is your influence. It belongs to you.</p><div class='print-line'></div><p>3) SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p><div class='print-line'></div></div></div><div id="print-witness" class="print-section"><div class="print-head" style="font-size:.8rem;color:#555;border-bottom:1px solid #999;margin-bottom:8px">GROW ASDAN · Week 15 · Bank it: Young Duke and the team</div><h1 style="text-align:center;font-size:1.5rem;margin-bottom:2px">Assessor Witness Statement</h1><p style="text-align:center;margin:0 0 10px;font-size:.88rem"><strong>GROW ASDAN W15 &#183; Bank it: Young Duke and the team</strong><br>'GROW Weekly - Autumn'!C157 &mdash; Bank Young Duke + community/UAS evidence.</p><table style="width:100%;border-collapse:collapse;font-size:.93rem;margin-bottom:10px"><tr><td style="padding:7px 8px;border:1px solid #999;width:34%"><strong>Candidate name</strong></td><td style="padding:7px 8px;border:1px solid #999">&nbsp;</td></tr><tr><td style="padding:7px 8px;border:1px solid #999"><strong>Route taken</strong></td><td style="padding:7px 8px;border:1px solid #999">◆ Supported &nbsp; ▲ Standard &nbsp; ★ Stretch</td></tr><tr><td style="padding:7px 8px;border:1px solid #999"><strong>What I saw the candidate do</strong></td><td style="padding:7px 8px;border:1px solid #999;height:70px">&nbsp;</td></tr><tr><td style="padding:7px 8px;border:1px solid #999"><strong>Evidence kept (photo / note / recording)</strong></td><td style="padding:7px 8px;border:1px solid #999;height:44px">&nbsp;</td></tr><tr><td style="padding:7px 8px;border:1px solid #999"><strong>Assessor signature and date</strong></td><td style="padding:7px 8px;border:1px solid #999;height:44px">&nbsp;</td></tr></table></div><div class="print-section" id="print-lundy"><div class="print-head" style="font-size:.8rem;color:#555;border-bottom:1px solid #999;margin-bottom:8px">GROW ASDAN · Week 15 · Bank it: Young Duke and the team</div><h2>Lundy Loop &mdash; this lesson</h2><p style="font-size:.95rem;color:#444">SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p><table class="ko-table"><tr><td style="width:22%;vertical-align:top"><strong>Space</strong></td><td>is room to take part;</td></tr><tr><td style="width:22%;vertical-align:top"><strong>Voice</strong></td><td>VOICE is received.</td></tr><tr><td style="width:22%;vertical-align:top"><strong>Audience</strong></td><td>AUDIENCE names back exactly.</td></tr><tr><td style="width:22%;vertical-align:top"><strong>Influence</strong></td><td>INFLUENCE changes one real next action.</td></tr></table></div><div id="print-feedback" class="print-section"><div class="print-head" style="font-size:.8rem;color:#555;border-bottom:1px solid #999;margin-bottom:8px">GROW ASDAN · Week 15 · Bank it: Young Duke and the team</div><h2 style="text-align:center">Bank it: Young Duke and the team &mdash; Feedback Sheet</h2><p style="font-size:.95rem;color:#444">Keep with your ASDAN portfolio.</p>
+<table class="ko-table"><tr><td style="width:50%"><strong>Pupil name:</strong></td><td><strong>Date:</strong></td></tr>
+<tr><td colspan="2"><strong>WWW (What Went Well):</strong><div class='print-line'></div><div class='print-line'></div></td></tr>
+<tr><td colspan="2"><strong>EBI (Even Better If):</strong><div class='print-line'></div><div class='print-line'></div></td></tr>
+<tr><td><strong>Level worked at:</strong> Supported / Standard / Stretch</td><td><strong>ASDAN evidence filed:</strong> Yes / Not yet</td></tr>
+<tr><td colspan="2"><strong>Pupil response — my next step:</strong><div class='print-line'></div></td></tr></table></div></div>
+<script>
+let currentSlide=0;const slides=document.querySelectorAll('.slide');
+function showSlide(i){slides.forEach((s,j)=>s.classList.toggle('active',j===i));updateProgress();}
+function nextSlide(){if(currentSlide<slides.length-1){currentSlide++;showSlide(currentSlide)}}
+function prevSlide(){if(currentSlide>0){currentSlide--;showSlide(currentSlide)}}
+document.addEventListener('keydown',e=>{const tag=(e.target&&e.target.tagName)||'';if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT')return;if(tag==='BUTTON'&&e.key===' ')return;if(document.querySelector('.v4-modal-overlay.visible')||document.querySelector('.lesson-complete-overlay.visible')||document.querySelector('.midpoint-overlay.visible'))return;if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}});
+function updateProgress(){const p=((currentSlide+1)/slides.length)*100;document.getElementById('progressBar').style.width=p+'%';const t=slides[currentSlide].getAttribute('data-title')||'Slide '+(currentSlide+1);document.getElementById('progressLabel').innerText=t+' \u2022 '+(currentSlide+1)+'/'+slides.length}
+updateProgress();
+function switchLevel(prefix,level){['supported','standard','stretch'].forEach(l=>{const el=document.getElementById(prefix+'-'+l);if(el){if(l===level){el.style.display=el.classList.contains('arrival-grid')?'grid':'block'}else{el.style.display='none'}}})}
+/* V5 step-by-step reveal on I Do slides */
+function v5UpdateLabel(slide){const total=slide.querySelectorAll('.v5-step').length;const shown=slide.querySelectorAll('.v5-step.revealed').length;const lbl=slide.querySelector('.v5-step-label');if(lbl)lbl.textContent='Step '+shown+' of '+total;const btn=slide.querySelector('.v5-step-controls button');if(btn){if(shown>=total){btn.textContent='\u2713 All revealed';btn.disabled=true;}else{btn.textContent='\u25b6 Reveal next step';btn.disabled=false;}}}
+function v5RevealNext(btn){const slide=btn.closest('.slide');if(!slide)return;const next=slide.querySelector('.v5-step:not(.revealed)');if(next){next.classList.add('revealed');try{playDing()}catch(e){}}v5UpdateLabel(slide);}
+/* WAGOLL ghost typer */
+
+let _wagollTimer=null,_wagollIdx=0;
+function _wagollClearTags(){document.querySelectorAll('#wagoll-tags .wagoll-tag').forEach(t=>t.classList.remove('show'));}
+function _wagollCheckTags(soFar){document.querySelectorAll('#wagoll-tags .wagoll-tag').forEach(t=>{const trig=t.getAttribute('data-trigger');if(trig&&soFar.toLowerCase().includes(trig.toLowerCase())&&!t.classList.contains('show')){t.classList.add('show');try{playDing()}catch(e){}}});}
+const _wagollText='My presentation ran three beats. Start point: September\'s audit — speaking in groups was my gap, evidenced by two passed votes. Movement: I\'ve spoken in every session since Week 3, logged weekly. Proof: the log, the witnessed chairing evidence from Week 3, and Tuesday\'s question I asked our visitor. I took one unrehearsed question — \'what changed?\' — and answered with the goal card: a planned first comment, every Thursday. Next goal set and boarded.';
+function startWagoll(){const panel=document.getElementById('wagoll-panel');if(!panel)return;panel.classList.add('visible');restartWagoll();}
+function restartWagoll(){if(_wagollTimer)clearInterval(_wagollTimer);_wagollIdx=0;const out=document.getElementById('wagoll-text');if(!out)return;out.innerHTML='<span class="cursor"></span>';_wagollClearTags();_wagollTimer=setInterval(()=>{_wagollIdx++;if(_wagollIdx>_wagollText.length){clearInterval(_wagollTimer);out.innerHTML=_wagollText;_wagollCheckTags(_wagollText);return;}const so=_wagollText.slice(0,_wagollIdx);out.innerHTML=so+'<span class="cursor"></span>';_wagollCheckTags(so);},22);}
+function skipWagoll(){if(_wagollTimer)clearInterval(_wagollTimer);_wagollIdx=_wagollText.length;const out=document.getElementById('wagoll-text');if(out)out.innerHTML=_wagollText;_wagollCheckTags(_wagollText);}
+/* MATCH game: tap a pill, tap its target (#wedo2 / #kw-pills, 3 pairs) */
+let selectedKWId=null;let matchScore=0;
+function selectKW(el,id){selectedKWId=id;document.querySelectorAll('#kw-pills .match-pill').forEach(p=>p.classList.remove('selected'));el.classList.add('selected');}
+function pickTarget(el){if(!selectedKWId){el.classList.add('wrong');setTimeout(()=>el.classList.remove('wrong'),500);return}if(el.classList.contains('correct'))return;const fb=document.getElementById('match-fb');if(el.getAttribute('data-correct')===selectedKWId){el.classList.add('correct');const sel=document.querySelector('#kw-pills .match-pill.selected');if(sel)sel.classList.add('placed');matchScore++;const ms=document.getElementById('match-score');if(ms)ms.textContent=matchScore;if(fb){fb.textContent='\u2705 Correct!';fb.style.color='var(--success)';}}else{el.classList.add('wrong');setTimeout(()=>el.classList.remove('wrong'),500);if(fb){fb.textContent='\u274c Try again!';fb.style.color='var(--error)';}}selectedKWId=null;}
+function resetMatch(){selectedKWId=null;matchScore=0;const ms=document.getElementById('match-score');if(ms)ms.textContent='0';const fb=document.getElementById('match-fb');if(fb)fb.textContent='';document.querySelectorAll('#kw-pills .match-pill').forEach(p=>p.classList.remove('selected','placed'));document.querySelectorAll('#wedo2 .match-target').forEach(t=>t.classList.remove('correct','wrong'));}
+function revealMatch(){document.querySelectorAll('#wedo2 .match-target').forEach(t=>t.classList.add('correct'));document.querySelectorAll('#kw-pills .match-pill').forEach(p=>p.classList.add('placed'));const ms=document.getElementById('match-score');const n=document.querySelectorAll('#wedo2 .match-target').length;matchScore=n;if(ms)ms.textContent=n;}
+/* INDEPENDENT timer + mid-point peer check */
+let timerTotal=900,timerLeft=900,timerInterval=null,timerRunning=false,midpointFired=false;
+function updateTimerDisplay(){const m=Math.floor(timerLeft/60);const s=timerLeft%60;const d=document.getElementById('timerDisplay');if(!d)return;d.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;const b=document.getElementById('timerBar');if(b)b.style.width=((timerLeft/timerTotal)*100)+'%';if(timerLeft<=60)d.style.color='#dc2626';else if(timerLeft<=300)d.style.color='#f97316';else d.style.color='#eab308';}
+function startTimer(){if(timerRunning)return;timerRunning=true;timerInterval=setInterval(()=>{if(timerLeft>0){timerLeft--;updateTimerDisplay();if(timerLeft===Math.floor(timerTotal/2)&&!midpointFired){midpointFired=true;fireMidpoint();}}else{clearInterval(timerInterval);timerRunning=false;const d=document.getElementById('timerDisplay');if(d)d.textContent='\u23f0 TIME!';try{playBuzz()}catch(e){}}},1000);}
+function pauseTimer(){clearInterval(timerInterval);timerRunning=false;}
+function resetTimer(){clearInterval(timerInterval);timerRunning=false;timerLeft=timerTotal;midpointFired=false;updateTimerDisplay();}
+function fireMidpoint(){pauseTimer();window._atWasRun=(typeof _atRunning!=='undefined'&&_atRunning);_atPause();try{playDing();setTimeout(()=>{try{playDing()}catch(e){}},250);}catch(e){}const ov=document.getElementById('mp-overlay');if(ov)ov.classList.add('visible');}
+function resumeFromMidpoint(){const ov=document.getElementById('mp-overlay');if(ov)ov.classList.remove('visible');startTimer();if(window._atWasRun)_atStart();}
+function printArm(level){document.body.classList.remove('print-supported','print-standard','print-stretch');document.querySelectorAll('.print-section').forEach(el=>el.classList.remove('visible'));document.body.classList.add('print-'+level);['ko','intro','arrival','starter','wedo','exit','witness','lundy','feedback'].forEach(id=>{const el=document.getElementById('print-'+id);if(el)el.classList.add('visible')});const sc=document.getElementById('print-scaffold-'+level);if(sc)sc.classList.add('visible');const ws=document.getElementById('print-worksheet-'+level);if(ws)ws.classList.add('visible');_stampAndMark();}function printPack(level){printArm(level);window.print()}(function(){function armed(){return /\bprint-(supported|standard|stretch)\b/.test(document.body.className)}function r4(){if(!armed())printArm('standard')}window.addEventListener('beforeprint',r4);if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',r4);else r4();})();/* R4 default-Standard */
+function _stampAndMark(){var pd=document.getElementById('print-date');if(pd)pd.textContent=new Date().toLocaleDateString('en-GB');var vis=document.querySelectorAll('.print-section.visible');vis.forEach(function(e){e.classList.remove('print-last')});if(vis.length)vis[vis.length-1].classList.add('print-last')}
+function printSection(id,level){document.body.classList.remove('print-supported','print-standard','print-stretch');if(level)document.body.classList.add('print-'+level);document.querySelectorAll('.print-section').forEach(function(el){el.classList.remove('visible')});var el=document.getElementById('print-'+id);if(el)el.classList.add('visible');_stampAndMark();window.print()}
+</script>
+<script>
+let audioCtx=null;
+function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended'){try{audioCtx.resume()}catch(e){}}return audioCtx}
+function playDing(){try{const ctx=getAudioCtx();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=880;o.type='sine';g.gain.setValueAtTime(0,ctx.currentTime);g.gain.linearRampToValueAtTime(.15,ctx.currentTime+.01);g.gain.exponentialRampToValueAtTime(.01,ctx.currentTime+.3);o.start();o.stop(ctx.currentTime+.3)}catch(e){}}
+function playBuzz(){try{const ctx=getAudioCtx();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=180;o.type='sawtooth';g.gain.setValueAtTime(0,ctx.currentTime);g.gain.linearRampToValueAtTime(.08,ctx.currentTime+.01);g.gain.exponentialRampToValueAtTime(.01,ctx.currentTime+.25);o.start();o.stop(ctx.currentTime+.25)}catch(e){}}
+function playLevelUp(){try{const ctx=getAudioCtx();[523,659,784,1047].forEach((f,i)=>{const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;o.type='triangle';g.gain.setValueAtTime(0,ctx.currentTime+i*.1);g.gain.linearRampToValueAtTime(.12,ctx.currentTime+i*.1+.01);g.gain.exponentialRampToValueAtTime(.01,ctx.currentTime+i*.1+.3);o.start(ctx.currentTime+i*.1);o.stop(ctx.currentTime+i*.1+.3)})}catch(e){}}
+let xpCount=0,xpTotal=0;
+function registerXP(n){xpTotal+=(n||1);var xt=document.getElementById('xpTotal');if(xt)xt.textContent=xpTotal}
+function gainXP(){if(xpCount>=xpTotal&&xpTotal>0)return;xpCount++;var xc=document.getElementById('xpCount');if(xc)xc.textContent=xpCount;var xf=document.getElementById('xpFill');if(xf)xf.style.width=((xpCount/xpTotal)*100)+'%';if(xpCount===xpTotal&&xpTotal>0){playLevelUp();fireConfetti();}}
+function fireConfetti(){const cols=['#9c27b0','#eab308','#22c55e','#38bdf8','#f97316','#dc2626','#7c3aed','#db2777'];for(let i=0;i<50;i++){const c=document.createElement('div');c.className='confetti';c.style.left=Math.random()*100+'vw';c.style.background=cols[i%cols.length];c.style.borderRadius=Math.random()>.5?'50%':'0';c.style.animation=`confettiFall ${2+Math.random()*1.5}s linear ${Math.random()*.3}s forwards`;document.body.appendChild(c);setTimeout(()=>c.remove(),4000)}}
+function toggleHint(btn){const box=btn.nextElementSibling;box.classList.toggle('show');btn.textContent=box.classList.contains('show')?'\ud83d\udca1 Hide hint':'\ud83d\udca1 Give me a hint'}
+document.addEventListener('DOMContentLoaded',()=>{registerXP(document.querySelectorAll('.pres-card').length);});
+const _origPickTarget=window.pickTarget;
+window.pickTarget=function(el){if(!selectedKWId)return _origPickTarget(el);if(el.classList.contains('correct'))return;const willBeCorrect=el.getAttribute('data-correct')===selectedKWId;if(willBeCorrect){playDing();gainXP();}else{playBuzz()}_origPickTarget(el)}
+
+  /* ============== V4/V5 POLISH JS ============== */
+
+  const _ccQuestions = {
+"Title":{F:"What are we learning to do in 'Present My Progress' today?",M:"What does 'Progress you can\u2019t show is progress you can\u2019t claim.' mean in your own words?",H:"You get ninety seconds and three pieces of evidence. Choose them and say what each proves."},
+"Arrival Task":{F:"What\u2019s changed since your Week 1 audit?",M:"What does 'Progress you can\u2019t show is progress you can\u2019t claim.' mean in your own words?",H:"Your audit says you grew where you have no evidence. Present that honestly \u2014 script the sentence."},
+"Starter":{F:"What does today's lesson bank for your portfolio?",M:"What goes onto the Wall?",H:"Why does taking an unrehearsed question earn more credit than a perfect script?"},
+"I Do 1":{F:"Tell me one step from the model I just showed.",M:"What does 'Progress you can\u2019t show is progress you can\u2019t claim.' mean for what you do next?",H:"Which step in the model matters most \u2014 and what breaks if we skip it?"},
+"We Do 1":{F:"Which card did you tap? Read it out.",M:"What does 'A goal without a date is?' mean in your own words?",H:"Which card could catch someone out? Explain the trap."},
+"I Do 2":{F:"What evidence do we need to capture today?",M:"What will you write in your annotation?",H:"Why does the 'why it matters' line make evidence stronger than a photo alone?"},
+"We Do 2":{F:"Read out one pair you matched.",M:"Why does 'A goal without a date is?' matter in today's work?",H:"Which pair was hardest to match \u2014 'A goal without a date is?' or 'Name two team-maker behaviours.'? Say why."},
+"Independent Work":{F:"Show me what you have done so far.",M:"Talk me through your work and one choice you made.",H:"Rank the six PEQ core skills by which grew most this term for YOU. Defend the top and bottom."},
+"Lundy Loop":{F:"Which zone is your voice in right now?",M:"How does your choice on the Wall shape what we do next?",H:"What would a Level 1 version of today's presentation add?"},
+"Exit Ticket":{F:"I can present my progress against my Week 1 audit \u2014 true for you today? Say how.",M:"What does 'Progress you can\u2019t show is progress you can\u2019t claim.' mean now the lesson\u2019s done?",H:"Write the opening sentence of next term's presentation, as if the term went perfectly."}
+};
+  const _CC_KEY='mbm_cc_v1';
+
+  const _ccDefault=[];function _ccNorm(p){if(p&&p.b){return {n:p.n,g:({SUP:'1',STD:'2',STR:'3'})[p.b]||'2',b:p.b}}return p}
+function _ccLoad(){try{const d=JSON.parse(localStorage.getItem(_CC_KEY));return (Array.isArray(d)&&d.length?d:_ccDefault.slice()).map(_ccNorm)}catch(e){return _ccDefault.slice()}}
+  function _ccSave(list){try{localStorage.setItem(_CC_KEY,JSON.stringify(list))}catch(e){}}
+  function _gradeToTier(g){if(!g)return 'M';g=String(g).toUpperCase();if(g==='U'||g==='1')return 'F';if(g==='2')return 'M';return 'H'}
+  let _ccRecent=[];
+  function _ccPick(){const list=_ccLoad();if(!list.length)return null;const pool=list.filter(p=>!_ccRecent.includes(p.n));const arr=pool.length?pool:list;const choice=arr[Math.floor(Math.random()*arr.length)];_ccRecent.push(choice.n);if(_ccRecent.length>3)_ccRecent.shift();return choice}
+  const _taBriefs={"Title": "Before the room fills: settle kit out, roster ready.", "Arrival Task": "Gentle settle — pass allowed.", "Starter": "Model a 60-second progress presentation about your own term first.", "I Do 1": "Narrate the model slowly — pupils watch, not write.", "We Do 1": "Everyone plays — pace it so nobody is left tapping alone.", "I Do 2": "Walk the evidence loop — photo, annotate, witness.", "We Do 2": "Pairs game — let pupils drive the matching; you referee, not play.", "Independent Work": "Three strong minutes, not a padded five — if this presentation may bank Communication, three minutes is the ASDAN floor (two at E3), so don’t cut it short.", "Lundy Loop": "SPACE first: regulate before you educate -- if a pupil is not settled, that is the loop job here, not the questions. Any inclusion counts: a word, a nod, a pointed finger. Pass is always allowed. At GROW this loop closes on paper: their own hand, or scribe it in their exact words if writing is the barrier. Collect the Aut 2 push-requests verbatim — they genuinely steer next term’s planning.", "Exit Ticket": "Answers independent — celebrate any honest self-assessment."};
+function showTABrief(){
+    const slide=document.querySelectorAll('.slide')[currentSlide];if(!slide)return;
+    const t=slide.getAttribute('data-title')||'';
+    const brief=_taBriefs[t]||'Walk among pupils, support anyone struggling, and use TA judgement to praise focused effort.';
+    let modal=document.getElementById('ta-modal');
+    if(!modal){modal=document.createElement('div');modal.id='ta-modal';modal.className='v4-modal-overlay';modal.onclick=function(e){if(e.target.id==='ta-modal')modal.classList.remove('visible')};modal.innerHTML='<div class="v4-modal"><h3>\ud83d\udc65 TA Focus<span class="badge" id="ta-modal-tag"></span></h3><div class="ta-section" id="ta-modal-body"></div><div class="v4-modal-footer"><span style="font-size:.8rem;color:var(--muted)">Tap outside or press Escape to close</span><button onclick="document.getElementById(\'ta-modal\').classList.remove(\'visible\')">Got it</button></div></div>';document.body.appendChild(modal);}
+    document.getElementById('ta-modal-tag').textContent=t;
+    document.getElementById('ta-modal-body').innerHTML='<strong>This slide:</strong> '+brief;
+    modal.classList.add('visible');
+  }
+  function showColdCall(){
+    const slide=document.querySelectorAll('.slide')[currentSlide];if(!slide)return;
+    const t=slide.getAttribute('data-title')||'';
+    const pool=_ccQuestions[t]||{F:'Share what you\'ve done so far.',M:'Share your current work and one thing you\'re proud of.',H:'Explain your next step and why.'};
+    const pick=_ccPick();
+    if(!pick){alert('Add pupil names first via the \u270f\ufe0f Edit list button.');return}
+    const tier=_gradeToTier(pick.g);const tierLabel={F:'Supported',M:'Standard',H:'Stretch'}[tier];const q=pool[tier]||pool.M;
+    let modal=document.getElementById('cc-modal');
+    if(!modal){modal=document.createElement('div');modal.id='cc-modal';modal.className='v4-modal-overlay';modal.onclick=function(e){if(e.target.id==='cc-modal')modal.classList.remove('visible')};modal.innerHTML='<div class="v4-modal"><h3>\ud83c\udfb2 Cold Call<span class="badge" id="cc-modal-tag"></span></h3><div class="cc-pupil" id="cc-name">\u2014</div><span class="cc-tier" id="cc-tier">\u2014</span><div class="cc-question" id="cc-q">\u2014</div><div class="v4-modal-footer"><button class="ghost" onclick="document.getElementById(\'cc-modal\').classList.remove(\'visible\');showColdCallEdit()">\u270f\ufe0f Edit list</button><div style="display:flex;gap:8px"><button class="roll-again" onclick="showColdCall()">\ud83c\udfb2 Roll again</button><button onclick="document.getElementById(\'cc-modal\').classList.remove(\'visible\')">Done</button></div></div></div>';document.body.appendChild(modal);}
+    document.getElementById('cc-modal-tag').textContent=t;
+    const nameEl=document.getElementById('cc-name');nameEl.textContent=pick.n;nameEl.style.animation='none';void nameEl.offsetWidth;nameEl.style.animation='';
+    document.getElementById('cc-tier').textContent=tierLabel+' (grade '+pick.g+')';
+    document.getElementById('cc-q').textContent=q;
+    modal.classList.add('visible');try{playDing()}catch(e){}
+  }
+  function showColdCallEdit(){
+    let modal=document.getElementById('cc-edit-modal');
+    if(!modal){modal=document.createElement('div');modal.id='cc-edit-modal';modal.className='v4-modal-overlay';modal.onclick=function(e){if(e.target.id==='cc-edit-modal')modal.classList.remove('visible')};modal.innerHTML='<div class="v4-modal"><h3>\u270f\ufe0f Edit Class List</h3><p style="font-size:.85rem;margin:0 0 6px">Format: <strong>Name,Grade</strong> on each line. Grade options: U, 1, 2, 3, 4, 5</p><textarea id="cc-edit-area" style="width:100%;min-height:200px;padding:8px;border:2px solid #e2e8f0;border-radius:8px;font-family:monospace;font-size:.9rem"></textarea><div class="v4-modal-footer"><button class="ghost" onclick="document.getElementById(\'cc-edit-modal\').classList.remove(\'visible\')">Cancel</button><button onclick="_ccApplyEdit()">\ud83d\udcbe Save</button></div></div>';document.body.appendChild(modal);}
+    const list=_ccLoad();document.getElementById('cc-edit-area').value=list.map(p=>p.n+','+p.g).join('\n');modal.classList.add('visible');
+  }
+  function _ccApplyEdit(){const txt=document.getElementById('cc-edit-area').value;const list=txt.split('\n').map(l=>l.trim()).filter(l=>l).map(l=>{const [n,g]=l.split(',').map(s=>(s||'').trim());return n?{n,g:g||'2'}:null}).filter(Boolean);_ccSave(list);_ccRecent=[];document.getElementById('cc-edit-modal').classList.remove('visible');}
+
+  /* AUTO TIMER (reads data-timer minutes per slide) */
+  let _atSeconds=0,_atTotal=0,_atRunning=false,_atIntervalId=null;
+  function _atFormat(s){const m=Math.floor(s/60),sec=s%60;return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0')}
+  function _atRender(){const d=document.getElementById('auto-timer-display');if(d)d.textContent=_atFormat(_atSeconds);const w=document.getElementById('auto-timer');if(!w)return;w.classList.remove('warn','done');if(_atTotal>0&&_atSeconds<=10&&_atSeconds>0)w.classList.add('warn');if(_atSeconds<=0&&_atTotal>0)w.classList.add('done')}
+  function _atTick(){if(!_atRunning)return;if(_atSeconds>0){_atSeconds--;_atRender();if(_atSeconds===0){_atRunning=false;clearInterval(_atIntervalId);try{playBuzz()}catch(e){}}}}
+  function _atStart(){if(_atRunning||_atTotal<=0)return;_atRunning=true;_atIntervalId=setInterval(_atTick,1000)}
+  function _atPause(){_atRunning=false;if(_atIntervalId){clearInterval(_atIntervalId);_atIntervalId=null}}
+  function autoTimerToggle(){if(_atRunning)_atPause();else _atStart()}
+  function autoTimerReset(){_atPause();_atSeconds=_atTotal;_atRender()}
+  function _atOnSlideChange(){_atPause();const slide=document.querySelectorAll('.slide')[currentSlide];if(!slide){_atTotal=0;_atSeconds=0;_atRender();return}const minStr=slide.getAttribute('data-timer');const noAuto=slide.getAttribute('data-no-autostart')==='true';const min=parseInt(minStr,10);if(!min||min<=0){_atTotal=0;_atSeconds=0;_atRender();document.body.classList.add('no-timer');return}document.body.classList.remove('no-timer');_atTotal=min*60;_atSeconds=_atTotal;_atRender();if(!noAuto)setTimeout(()=>{_atStart()},250);}
+
+  /* LESSON COMPLETE (fires when #exit-slide reveals answers) */
+  let _lcShown=false;
+  function _lcShowComplete(){if(_lcShown)return;_lcShown=true;setTimeout(()=>{try{fireConfetti()}catch(e){}try{playLevelUp()}catch(e){}const ov=document.getElementById('lc-overlay');if(ov)ov.classList.add('visible');},400);}
+  function hideLessonComplete(){const ov=document.getElementById('lc-overlay');if(ov)ov.classList.remove('visible');}
+  (function(){const exit=document.getElementById('exit-slide');if(!exit)return;const obs=new MutationObserver(()=>{if(exit.classList.contains('show-ans')&&!_lcShown)_lcShowComplete();});obs.observe(exit,{attributes:true,attributeFilter:['class']});})();
+
+  if(typeof showSlide==='function'){const _origShowSlide=showSlide;window.showSlide=function(i){_origShowSlide(i);try{_atOnSlideChange()}catch(e){}};}
+  setTimeout(()=>{try{_atOnSlideChange()}catch(e){}},150);
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'){['ta-modal','cc-modal','cc-edit-modal','lc-overlay','mp-overlay'].forEach(id=>{const m=document.getElementById(id);if(m)m.classList.remove('visible');});}});
+</script>
+<script>const _pres={t0:{text:'A wish'},t1:{text:'Listening · building on ideas · sharing credit'},t2:{text:'Define it, then break it into steps'},t3:{text:'The Effectiveness Board — audit to evidence'}};
+let _presDone=[];function presTap(el){var id=el.getAttribute('data-id');var p=_pres[id];if(!p||_presDone.indexOf(id)>=0)return;_presDone.push(id);el.classList.add('done');try{playDing()}catch(e){}try{gainXP()}catch(e){}var c=document.createElement('div');c.className='pres-cap';c.innerHTML=p.text;var pc=document.getElementById('pres-caps');if(pc)pc.appendChild(c);var pn=document.getElementById('pres-num');if(pn)pn.textContent=_presDone.length;if(_presDone.length===4){var m=document.getElementById('pres-msg');if(m)m.textContent='✅ All found — every card talked about.';}}function presReset(){_presDone=[];document.querySelectorAll('#pres-pills .pres-card').forEach(function(c){c.classList.remove('done')});var pc=document.getElementById('pres-caps');if(pc)pc.innerHTML='';var pn=document.getElementById('pres-num');if(pn)pn.textContent='0';var m=document.getElementById('pres-msg');if(m)m.textContent='';}window._pres=_pres;window.presTap=presTap;window.presReset=presReset;
+registerXP(document.querySelectorAll('.match-pill').length);
+var _pd=document.getElementById('print-date');if(_pd)_pd.textContent=new Date().toLocaleDateString('en-GB');</script>
+<script defer src="/hud.js"></script><script src="../visual-upgrade.js" defer></script>
+<!--mbm-guide:v1--><script id="mbm-guide-js">
+(function(){
+  var KEY='mbm_guide_v1';
+  function stored(){try{return localStorage.getItem(KEY)==='1'}catch(e){return false}}
+  function store(on){try{localStorage.setItem(KEY,on?'1':'0')}catch(e){}}
+  function apply(on){
+    document.documentElement.classList.toggle('mbm-guide-on',on);
+    var b=document.querySelector('.mbm-guide-btn');
+    if(b){b.setAttribute('aria-pressed',on?'true':'false');b.textContent=on?'ⓘ Guidance ✓':'ⓘ Guidance';}
+    var live=document.getElementById('vu-live-region');
+    if(live)live.textContent=on?'Guidance shown':'Guidance hidden';
+  }
+  window.mbmGuideToggle=function(){var on=!document.documentElement.classList.contains('mbm-guide-on');store(on);apply(on);};
+  document.addEventListener('keydown',function(e){
+    if(e.key!=='g'&&e.key!=='G')return;
+    var t=e.target;
+    if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.isContentEditable))return;
+    if(document.querySelector('.v4-modal-overlay.visible,.lesson-complete-overlay.visible,.midpoint-overlay.visible'))return;
+    window.mbmGuideToggle();
+  });
+  apply(stored());
+})();
+</script><script>function wedoReveal(b){var s=b.closest('.slide');s.querySelectorAll('.wedo-reveal').forEach(function(e){e.style.display='block'});}
+function wedoReset(b){var s=b.closest('.slide');s.querySelectorAll('.wedo-reveal').forEach(function(e){e.style.display='none'});}</script>
+<script>function wedoReveal(b){var s=b.closest('.slide');s.querySelectorAll('.wedo-reveal').forEach(function(e){e.style.display='block'});}
+function wedoReset(b){var s=b.closest('.slide');s.querySelectorAll('.wedo-reveal').forEach(function(e){e.style.display='none'});}</script>
+<script id="lesson-config" type="application/json">{"id": "GROW_ASDAN_W15_Bank_It_Young_Duke_And_The_Team", "family": "GROW ASDAN", "week": 15, "slot": "ASDAN", "title": "Bank it: Young Duke and the team", "outcomes": ["Bank Young Duke + community/UAS evidence.", "Reflect on teamwork and add ASDAN/UAS evidence."], "cells": ["'GROW Weekly - Autumn'!C157", "'GROW Weekly - Autumn'!C187"], "objective": "Bank one piece of Young Duke or community evidence with its date, its line and its witness, and write a teamwork reflection that separates what the team did from what I did, so that both can be signed off this term.", "source": {"workbook": "_passsg/inputs/GROW SOW 2026-27.xlsx", "sheet": "GROW Weekly - Autumn", "cell": "C157", "outcome": "Bank Young Duke + community/UAS evidence. · Reflect on teamwork and add ASDAN/UAS evidence."}, "timings": [0, 3, 3, 4, 3, 3, 4, 16, 4], "periodMinutes": 40, "tierLadder": "Supported / Standard / Stretch", "weDoType": "spot-the-error", "contractScope": "v2", "nextFile": "START_HERE.html", "previousFile": "START_HERE.html", "chassis": "classic-v2", "reshelledFrom": "/tmp/claude-0/-home-user-Lessons/c8e5badc-491c-5221-a5b6-8a086000a840/scratchpad/run14/w15/GAW15_n6.html"}</script>
+</body></html>

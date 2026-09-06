@@ -1,0 +1,36 @@
+id          verdict  what
+------------------------------------------------------------------------------
+S0a         PASS     subject present at its post-split path: matt-s-apps-/FieldOps_Teacher_Studio.html
+            55654 bytes
+S0b         PASS     subject present at its post-split path: Lessons/Science_Teesside/Build/v4_fieldops/03_Wilton_Carbon_Process_Control_Lab.html
+            58295 bytes
+S1a         PASS     the Studio, at its Matt-s-Apps- path, mints missions for every new feed
+            C14=AUTHORED-BY-HARNESS_not-a-pack-sample_C14.buildmission.json · C21=AUTHORED-BY-HARNESS_not-a-pack-sample_C21.buildmission.json · C24=AUTHORED-BY-HARNESS_not-a-pack-sample_C24.buildmission.json
+S1b C14     PASS     a mission minted in Matt-s-Apps- loads into the lab in Lessons
+            title "AUTHORED SPLIT FIXTURE C14" feed "C14H30" selected [14]
+S1b C21     PASS     a mission minted in Matt-s-Apps- loads into the lab in Lessons
+            title "AUTHORED SPLIT FIXTURE C21" feed "C21H44" selected [21]
+S1b C24     PASS     a mission minted in Matt-s-Apps- loads into the lab in Lessons
+            title "AUTHORED SPLIT FIXTURE C24" feed "C24H50" selected [24]
+S2a         PASS     the lab, at its Lessons path, exports an evidence capsule
+            3589 bytes
+S2b         PASS     a capsule from the lab in Lessons verifies in the Studio in Matt-s-Apps-
+            ViewSPLIT PROBEWilton Process Chemistryguided1—1verified
+S2c         PASS     CONTROL — a tampered capsule is REFUSED by the same import path
+            ViewSPLIT PROBEWilton Process Chemistryguided1—1changed / invalid
+S4a         PASS     the Studio's Launch anchor points at the labs' live Lessons origin, not a bare filename
+            https://madebymatt.uk/Lessons/Science_Teesside/Build/v4_fieldops/03_Wilton_Carbon_Process_Control_Lab.html#mission=eyJ…
+S4b         PASS     following that link opens the right lab on the other origin with the mission populated
+            HTTP 200 · title "AUTHORED LAUNCH-LINK FIXTURE" · question "Compare: Does the launch link survive th"
+S4c         PASS     CONTROL — the pre-T16 bare filename still 404s on the Apps origin
+            HTTP 404
+S3          PASS     NAV-1 from the placed lab resolves to a file that exists in Lessons
+            ../../../index.html -> index.html (exists: true)
+S3b         PASS     and it is the identical href its co-located neighbours use
+            neighbour "../../../index.html" vs placed "../../../index.html"
+
+0 split-transport failure(s)
+
+EVERY FIXTURE ABOVE IS AUTHORED BY THIS HARNESS. The pack's own twelve
+.buildmission.json samples were never shipped, so none was available to use.
+Fixtures in /tmp/p2split-ozb635, named AUTHORED-BY-HARNESS_not-a-pack-sample_*.

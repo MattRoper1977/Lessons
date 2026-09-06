@@ -35,8 +35,8 @@ another browser-capable environment.
 
 **Honesty already present must not be removed.** Examples at `6aaffb7`:
 `LAUNCH_ASDAN/Scheme_of_Work.html` — *"(no registration is claimed here)"*;
-`GROW_ASDAN/GROW_ASDAN_Hub.html` — *"registration and level confirmation … sit with the
-UAS/ASDAN coordinator"*. These are the model, not the problem.
+`BUILD_ASDAN/BUILD_ASDAN_Hub.html` — *"nothing is certified until the awarding
+organisation says so"*. These are the model, not the problem.
 
 ## Known integration risk — read before implementing a badge
 
@@ -49,7 +49,7 @@ adding this checklist.
 
 | signal | measurement | unit / universe |
 |---|---|---|
-| Files carrying an unconfirmed UAS unit code (`TBC`) | **25** | files / tracked `*.html` |
+| Files carrying an unconfirmed UAS unit code (`TBC`) | **60** | files / tracked `*.html` — re-measured PEQ-YEAR-2. **25** are the sheets held byte-pristine by OPEN_ITEMS item 17; the other **35** are `v3_40min` variants carrying the identical hidden comment, outside that ruling's set and unrecorded until now. |
 | Art lesson files with a self-contradictory timer contract | **24** | files / `Art_Teesside/**/*.html` |
 | Art lesson files with a consistent timer contract | **7** | files / `Art_Teesside/**/*.html` (the A2 cohort) |
 | Print execution evidence at 718×1047 for Art | **0** | executions / PRs #26 and #30 — **UNVERIFIED**, not passed |

@@ -77,8 +77,8 @@ function buildEnv(preSave) {
   const els = {};
   const doc = { getElementById(id) { return els[id] || (els[id] = El('div')); }, createElement(tag) { return El(tag); }, querySelectorAll() { return []; }, body: El('body'), addEventListener() {} };
   els.cv = El('canvas');
-  let rafCb = null; const store = new Map(); if (preSave) store.set('mbm_axiomshift', preSave);
-  const win = { devicePixelRatio: 1, innerWidth: 900, innerHeight: 520, addEventListener() {}, requestAnimationFrame(cb) { rafCb = cb; return 1; }, cancelAnimationFrame() {}, performance: { now: () => clock.t }, localStorage: { getItem: k => store.has(k) ? store.get(k) : null, setItem: (k, v) => store.set(k, v), removeItem: k => store.delete(k) }, setTimeout() { return 0; } };
+  let rafCbs = []; const store = new Map(); if (preSave) store.set('mbm_axiomshift', preSave);
+  const win = { devicePixelRatio: 1, innerWidth: 900, innerHeight: 520, addEventListener() {}, requestAnimationFrame(cb) { rafCbs.push(cb); return rafCbs.length; }, cancelAnimationFrame() {}, performance: { now: () => clock.t }, localStorage: { getItem: k => store.has(k) ? store.get(k) : null, setItem: (k, v) => store.set(k, v), removeItem: k => store.delete(k) }, setTimeout() { return 0; } };
   const sb = { window: win, document: doc, requestAnimationFrame: win.requestAnimationFrame, localStorage: win.localStorage, performance: win.performance, setTimeout: win.setTimeout, Math, Date, JSON, console: { log() {} }, encodeURIComponent };
   sb.globalThis = sb; win.AXIOM = A; sb.AXIOM = A; vm.createContext(sb);
   vm.runInContext(coreSrc, sb, { filename: 'core-shell' });
@@ -91,7 +91,7 @@ function buildEnv(preSave) {
   vm.runInContext(shellSrc, sb, { filename: 'shell' });
   return {
     els, win, doc, arcs, clock,
-    frame(t) { clock.t = t; if (rafCb) rafCb(t); },
+    frame(t) { clock.t = t; const pending = rafCbs; rafCbs = []; pending.forEach(cb => cb(t)); },
     save() { const r = win.localStorage.getItem('mbm_axiomshift'); return r ? JSON.parse(r) : null; },
     tapCv() { els.cv.dispatch('pointerdown'); els.cv.dispatch('pointerup'); },
     holdDown() { els.cv.dispatch('pointerdown'); }, holdUp() { els.cv.dispatch('pointerup'); }
@@ -102,6 +102,11 @@ function buildEnv(preSave) {
 function driveLive(env, lvlIndex, beforeRun) {
   env.els.splashStart.click(); env.els.mPlay.click();
   env.els.levelGrid.children[lvlIndex].click();
+  // V6 adds a skippable construction fly-in before authoritative play begins.
+  // Exercise that real control so live-path assertions do not measure an
+  // intentionally paused director state as a gameplay failure. On older builds
+  // the stub has no listener, so this remains a harmless no-op.
+  if (env.els.v6Cinema) env.els.v6Cinema.click();
   if (beforeRun) beforeRun();
   const lvl = A.LEVELS[lvlIndex]; const tape = lvl.tape.slice();
   const bps = A.TEMPOS.standard / 60, dt = 1 / 60, lead = 0.05;
@@ -218,7 +223,39 @@ ok('no-elimination-vocab', bannedHit.length === 0, bannedHit.length ? 'hit: ' + 
 
 ok('no-audio', !/new\s+Audio\b|AudioContext|webkitAudioContext/.test(html), '(no Audio/AudioContext)');
 ok('no-network', !/\bfetch\s*\(|XMLHttpRequest|WebSocket|\bimport\s*\(/.test(html), '(no fetch/XHR/WS/dynamic import)');
-ok('no-offorigin-src', !/(?:src|href)\s*=\s*["']https?:\/\//i.test(html), '(no off-origin src/href)');
+// A <link rel="canonical"> pointing at this estate's own origin is METADATA: the
+// browser never fetches it, so it is not a runtime dependency and cannot make
+// this file non-single-file. The estate has ruled this twice — the site repo's
+// data/hud-coverage.json (_why for /neonmeridian/: "Its only off-origin string
+// is <link rel=canonical>, which is metadata and never fetched") and order
+// EW-V6 §8 V10 ("metadata, not subresources. Do not 'fix' them"). Added
+// 2026-09-02 after Lessons #213 gave this file the estate-standard canonical
+// and this assertion, which tested every href rather than every SUBRESOURCE
+// href, went red on it.
+//
+// The exemption is deliberately the narrowest that states the ruling: rel must
+// be canonical AND the href must be https://madebymatt.uk/. A canonical to any
+// other host still reds, and every off-origin src of any kind still reds — the
+// self-test below proves all four cases rather than asserting it in prose.
+const SELF_CANONICAL = /<link\b[^>]*\brel\s*=\s*["']canonical["'][^>]*\bhref\s*=\s*["']https:\/\/madebymatt\.uk\/[^"']*["'][^>]*>/gi;
+const offOrigin = (src) => /(?:src|href)\s*=\s*["']https?:\/\//i.test(src.replace(SELF_CANONICAL, ''));
+ok('no-offorigin-src', !offOrigin(html), '(no off-origin subresource; a madebymatt.uk canonical link is metadata and exempt)');
+
+// prove the exemption did not blunt the check: every real off-origin reference,
+// and a canonical pointing anywhere else, must still be caught.
+{
+  const probes = [
+    ['script src', '<script src="https://cdn.example.com/three.min.js"></script>'],
+    ['stylesheet link', '<link rel="stylesheet" href="https://cdn.example.com/x.css">'],
+    ['image src', '<img src="https://cdn.example.com/x.png">'],
+    ['iframe src', '<iframe src="http://cdn.example.com/x.html"></iframe>'],
+    ['canonical to another host', '<link rel="canonical" href="https://example.com/x">'],
+  ];
+  const missed = probes.filter(([, tag]) => !offOrigin(html + tag)).map(([name]) => name);
+  ok('offorigin-check-self-test', missed.length === 0,
+     missed.length ? 'MISSED: ' + missed.join(', ')
+                   : '(' + probes.length + '/' + probes.length + ' off-origin probes still caught)');
+}
 
 // exactly one localStorage key literal, and no other literal-keyed calls
 const keyLiteralCount = (html.match(/mbm_axiomshift/g) || []).length;
@@ -331,6 +368,7 @@ head('Job B1 — Calm Pulse suppresses the background pulse (behavioural, from p
 {
   const env = buildEnv();
   env.els.splashStart.click(); env.els.mPlay.click(); env.els.levelGrid.children[0].click();
+  if (env.els.v6Cinema) env.els.v6Cinema.click();
   const cx = 450, cy = 0.42 * 520;
   for (let f = 0; f < 30; f++) env.frame(1000 + f * 16.7);
   const pulseOff = env.arcs.filter(a => Math.abs(a.x - cx) < 8 && Math.abs(a.y - cy) < 8).length;
@@ -389,6 +427,7 @@ head('Render smoke — drive the real loop/draw under a stub DOM (no crash)');
     const env = buildEnv();
     env.els.splashStart.click(); env.els.mPlay.click();
     if (env.els.levelGrid.children[0]) env.els.levelGrid.children[0].click();
+    if (env.els.v6Cinema) env.els.v6Cinema.click();
     for (let f = 0; f < 240; f++) env.frame(f * 16.7);   // p1: update()+render(), smudge blot
     env.els.mGuide.click();
     const env2 = buildEnv(); driveLive(env2, 5);          // finale: gates, glitch telegraph, all forms

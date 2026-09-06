@@ -8,7 +8,8 @@ options. Each item names the document that would unlock it, where one is needed.
 **The dates that now matter (full detail in `DATES_2026-27.md`):** PEQ suite is current
 (review date **31/08/2027**, no registration/certification end date set). **CoPE/AoPE close
 to new registration on 31/12/2025** — so a Sept-2026 cohort must be on **PEQ**. Operational
-sequence: register learners (coordinator, **before any assessment**) → teach/assess → **IQA
+sequence: register learners (coordinator, **before any assessment**) — **DONE 2026-08-21** →
+teach/assess → **IQA
 before EQA** → **book the first-year EQA activity** (once ≥1 unit is completed, assessed,
 IQA'd) → **confirm names to ASDAN ≈4 weeks before the EQA sampling date** → EQA feedback +
 certificates within 20 working days each.
@@ -50,11 +51,11 @@ notes "Level 2 units (UAS coordinator decision)". **Decide:** register any pupil
 (CrThSk2 etc.), or keep L2 as stretch-only with no L2 registration? (§2 estate scope: "no
 L2 registration without Cheryl's decision.")
 
-### Q4 · "Registration via UAS coordinator" — is PEQ registration actually happening?
+### Q4 · "Registration via UAS coordinator" — is PEQ registration actually happening? — **ANSWERED**
+**ANSWERED 2026-08-21 — yes: learners are registered and their units are entered.**
 Every PEQ surface says "registration via UAS coordinator". **AQA UAS is a different awarding
-body from ASDAN.** PEQ registration is with **ASDAN**; AQA UAS is separate admin. **Confirm:**
-who registers PEQ candidates with ASDAN, and that it is not being conflated with the AQA UAS
-route. Learners must be **registered before assessment counts** (§2).
+body from ASDAN**, and PEQ registration is with **ASDAN**; AQA UAS stays separate admin, so
+keep the two named separately on surfaces. Registration preceded assessment, as §2 requires.
 
 ### Q5 · Does the school's ASDAN membership already carry PEQ approval?
 The spec confirms centres must hold **ASDAN Qualifications membership approval** and, **where
@@ -113,5 +114,53 @@ where they are; nothing was moved or removed on a guess.
 ### Q12 · The two descriptive-week codes still have no home.
 The single `LSk1` and single `DecMkSk1` occurrences remain inside open item 8's
 STILL-UNDETERMINED mapping (W2/W4 both lean LSk1, which would double-bank and leave DecMkSk1
-unhomed). **Not guessed.** Still needs the member-gated unit assessment booklets plus your
-per-pupil registration intent.
+unhomed). **Not guessed.** Your per-pupil registration intent is now settled (learners
+registered and units entered, 2026-08-21); this still needs the member-gated unit
+assessment booklets.
+
+
+---
+
+## Added by PH-3, 2026-08-18
+
+*(Q5 above is now answered: the school's ASDAN registration/approval is **DONE** — Matt,
+30 Jul 2026. It is not pending.)*
+
+### Q13 · BUILD's SharePoint year plan carries a WellbLeE3 column — which story is true?
+The BUILD lessons bank **zero PEQ** and the public register tool's BUILD preset says
+"…no PEQ registration.", yet the SharePoint year plan carries a **WellbLeE3** column.
+**Decide:** is BUILD meant to bank WellbLeE3 (then the lessons/tool understate it), or is
+the plan column stale (then it should be corrected)? (Ties into Q1.)
+
+### Q14 · The Hospitality Vocational Taster clock.
+"Hospitality" as banked by LAUNCH Vocational is the **Hospitality Vocational Taster**, which
+ASDAN is withdrawing: registrations/student books until **31 Dec 2026**, final certification
+**31 Aug 2027**. **Decide:** register/purchase inside the window, switch the context to an
+unaffected Short Course (Gardening is unaffected), or accept no accreditation for that half
+of the strand after 2027.
+
+### Q15 · The ASDAN e-portfolio closes 31 Aug 2026 — what lives in it?
+Access for existing registrations ends **31/08/2026**. **Confirm** whether any BUILD/LAUNCH
+short-course evidence sits in the e-portfolio and who exports it before the cutoff.
+
+### Q16 · Should the GROW L2 stretch ever become a registration?
+GROW's Stretch tier is written to an L2 evidence standard (design). Current public wording
+(and the held C7 rewording proposal) keep L2 as **stretch language only — no L2
+registration**. **Decide:** does any pupil ever get registered for adjacent L2 units (max 3
+adjacent credits can count toward an L1 qualification), or is L2 permanently stretch-only?
+
+### Q17 · The ComSk1 four-questions wording now on W4/W5.
+PH-3 corrected the pupil-facing claim from "at least two questions" to **"at least four
+questions… written into the plan"** (spec v1.2 ComSk1 1.4.1f) and completed the labelled
+"ComSk1 minimum" statements (adding the ≥8-minute discussion route). **Confirm** the planning
+templates and any live pupil plans are updated to hold four prepared questions before
+delivery is assessed.
+
+## Added by pass PEQ-L2K (2026-08-22)
+
+- **L1 Certificate claim shape (14 required, six units = 15).** When an L1-lane pupil
+  completes all six L1 units, does ASDAN accept the 15-credit claim against the 14-credit
+  Certificate (spec §5.1 permits exceeding minima), or should the centre submit exactly 14
+  — in which case the only exact-14 arithmetic is five L1 units + ThSkE3 (12 at level + 2
+  adjacent)? Needed by names-confirmation (~4 weeks before the EQA date). Source:
+  `SPEC_FACTS_L2.md` §1–2; the year map names the default.

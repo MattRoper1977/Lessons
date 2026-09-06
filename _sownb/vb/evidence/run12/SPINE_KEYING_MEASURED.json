@@ -1,0 +1,118 @@
+{
+ "file": "_sownb/CALENDAR_2026_27.json",
+ "subject": "RUN12-A: the run-11 census filename rule adds the OLD Autumn 2 offset while its own term table adds the RULED one, so 55 decks read two different weeks",
+ "authority": {
+  "ruledMapping": {
+   "Aut1·Wn": "n",
+   "abs8": "enrichment week, no workbook row (the LAUNCH Science enzyme trio is abs 8 ENRICHMENT, not null)",
+   "Aut2·Wn": "8+n",
+   "Spr1·Wn": "15+n",
+   "Spr2·Wn": "21+n",
+   "Sum1·Wn": "26+n",
+   "Sum2·Wn": "33+n",
+   "continuousDeckLabels": "absolute week directly",
+   "termRelativeLabels": "8+n"
+  },
+  "ruledMappingSource": "Matt's confirmed dates, ORDER VB-RUN11F 2026-09-02",
+  "stateRecord": "Aut1 Wn->n; Aut2 Wn->8+n; Spr1 Wn->15+n; Spr2 Wn->21+n (W6 NOT-TIMETABLED); Sum1 Wn->26+n; Sum2 Wn->33+n",
+  "termTableInTool": {
+   "Autumn1": 0,
+   "Autumn2": 8,
+   "Spring1": 15,
+   "Spring2": 21,
+   "Summer1": 26,
+   "Summer2": 33
+  },
+  "filenameRuleInTool": "{'1':0,'2':7} -- the OLD Autumn 2 offset"
+ },
+ "wrongFirst": {
+  "claimTried": "that the tool TERM table was wrong and Autumn2 should add 7",
+  "yardstickUsed": "CALENDAR_SPINE.json calendar.termBlocks and its workbookCells absoluteWeek column",
+  "whyItWasWrong": "absoluteWeek in CALENDAR_SPINE.json is DERIVED from the old offsets, so any keying tested against it can only come back as the old keying. A derived column is not a second instrument.",
+  "circularityCheck": {
+   "cellsWithAnAbsoluteWeek": 897,
+   "fitTheOldOffsets": 897,
+   "fitTheRuledOffsets": 874,
+   "reading": "the column fits the old offsets exactly, which is what a derived column does"
+  },
+  "whatSettledIt": "_sownb/CALENDAR_2026_27.json, source \"Matt's confirmed dates, ORDER VB-RUN11F 2026-09-02\", maps Aut2 Wn -> 8+n and files 7+n under oldSpine; VB_STATE.json spine_run11.mapping records the same as ruled.",
+  "whyCalendarSpineIsNotTheAuthority": {
+   "itsOwnKind": "ORDER_FEB_CALENDAR_SPINE_SECOND_INSTRUMENT_CANDIDATE — a second-instrument CANDIDATE from the earlier FEB order, last touched 2026-09-01, the day before the VB-RUN11F ruling, and never re-derived after the re-key. That is why its termBlocks still read the old spine.",
+   "theRuledCalendarNamesTheOldOne": "_sownb/CALENDAR_2026_27.json carries an oldSpine block {Aut1: 7, Aut2: '7+n', Spr1: '14+n', Spr2: '20+n'} — the mapping first claimed here is filed there BY NAME as the superseded one.",
+   "theReKeyWasExecutedAsWork": "_sownb/vb/evidence/run11/DC_SPINE_CORRECTION.json changed 31 files with zero renames: 'A2_W7 = week 15', 'W14 trio: Autumn Week 14 (was 13)'.",
+   "aHumanActedOnIt": "_sownb/vb/CHANGES_FOR_PLANNERS.md §5 states 'Autumn 2 week 1 is now absolute week 9 (not 8), Spring 1 week 1 is week 16 (not 15), Spring 2 week 1 is week 22 (not 21) ... Autumn 1 is unchanged', and records that BUILD's SharePoint planners were corrected by hand on 2026-09-02.",
+   "confirmedDatesForceIt": "Autumn runs Tue 1 Sep to Fri 18 Dec 2026 with half term 26-30 Oct, so w/c 26 Oct is the ninth week: Autumn 1 is eight teaching weeks and Autumn 2 is absolute 9 to 15. A seven-week Autumn 1 would put half term in the week of 19 Oct, which the confirmed dates contradict."
+  }
+ },
+ "defect": {
+  "where": "census_new.py (run 11 scratch tool), the _A([12])_ filename rule",
+  "what": "it adds 7 for an Autumn 2 deck while the term table three lines above adds 8",
+  "effect": "a deck whose filename carries _A2_ reads one week earlier than the same deck read from its directory",
+  "decksAffected": 55,
+  "examples": [
+   {
+    "file": "Art_Teesside/Build/BUILD_ART_A2_W1_Surface_Hunt.html",
+    "filenameRuleSays": 8,
+    "termTableWouldSay": 9
+   },
+   {
+    "file": "Art_Teesside/Build/BUILD_ART_A2_W2_Arts_Inspiration.html",
+    "filenameRuleSays": 9,
+    "termTableWouldSay": 10
+   },
+   {
+    "file": "Art_Teesside/Build/BUILD_ART_A2_W3_Stencil_Lab.html",
+    "filenameRuleSays": 10,
+    "termTableWouldSay": 11
+   },
+   {
+    "file": "Art_Teesside/Build/BUILD_ART_A2_W4_Audience_Week.html",
+    "filenameRuleSays": 11,
+    "termTableWouldSay": 12
+   },
+   {
+    "file": "Art_Teesside/Build/BUILD_ART_A2_W5_Layer_and_Combine.html",
+    "filenameRuleSays": 12,
+    "termTableWouldSay": 13
+   },
+   {
+    "file": "Art_Teesside/Build/BUILD_ART_A2_W6_Resolve_and_Edition.html",
+    "filenameRuleSays": 13,
+    "termTableWouldSay": 14
+   },
+   {
+    "file": "Art_Teesside/Build/BUILD_ART_A2_W7_Bank_It_and_Plan_the_Teach.html",
+    "filenameRuleSays": 14,
+    "termTableWouldSay": 15
+   },
+   {
+    "file": "BUILD_ASDAN/Autumn2_W1-W6_2026-27/BUILD_ASDAN_A2_COMM_W1_Review_Progress_and_Solve_a_Problem.html",
+    "filenameRuleSays": 8,
+    "termTableWouldSay": 9
+   },
+   {
+    "file": "BUILD_ASDAN/Autumn2_W1-W6_2026-27/BUILD_ASDAN_A2_COMM_W2_Practise_a_Vocational_Skill.html",
+    "filenameRuleSays": 9,
+    "termTableWouldSay": 10
+   },
+   {
+    "file": "BUILD_ASDAN/Autumn2_W1-W6_2026-27/BUILD_ASDAN_A2_COMM_W3_Jobs_Involved_in_Our_Project.html",
+    "filenameRuleSays": 10,
+    "termTableWouldSay": 11
+   }
+  ]
+ },
+ "consequenceForBuilding": {
+  "before": "the uncovered list named W14 BUILD ASDAN and W15 GROW ASDAN as open slots",
+  "after": "both are COVERED once _A2_ decks are read on the ruled keying; W14 GROW Science, W17 BUILD Art and W17 GROW Art open instead",
+  "heldByThisFinding": [
+   "W14 BUILD ASDAN",
+   "W15 GROW ASDAN"
+  ],
+  "note": "abs 8 is an enrichment week with no workbook row, per CALENDAR_2026_27.json, so the week-8 column is an exclusion and not a gap"
+ },
+ "spineSha256": "1d58559d3e307170958e57c9e92121312581169fb479e859bb37207907befa09",
+ "calendarSha256": "d34c081157aadfa074441e5cb0b8f8effcddc6bb41c9f33a5476a5d90a117b52",
+ "status": "MEASURED",
+ "howThisWasChecked": "four independent lenses were briefed to REFUTE the first reading (ruling search, workbook arithmetic, live corpus, downstream dependencies). All four refuted it and all four landed on the same single real defect: the filename rule, not the term table."
+}

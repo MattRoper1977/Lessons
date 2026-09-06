@@ -1,0 +1,99 @@
+VB_EASTER_A3N_SAFE_HANDOFF
+TIMESTAMP_UTC=2026-09-04T06:30:00Z
+CAMPAIGN_STATUS=PAUSED (VB_EASTER_A3_PAUSED) at a clean transaction boundary
+
+LAST_CONTENT_COMMIT=840e7dbb52933ee1aaea646b9129a0e79af71273  (#288)
+  The last commit that changed a lesson, tool or workflow, blob-verified 23/23.
+AUTHORITATIVE_REMOTE_MAIN=read it, do not trust this file for it.
+  Run: git fetch origin main && git rev-parse origin/main
+  A handoff cannot name the commit that lands the handoff. Expect origin/main at
+  or ahead of LAST_CONTENT_COMMIT; ahead only by commits touching _sownb/vb/*.md,
+  VB_STATE.json or this file means nothing a gate measures has moved.
+LOCAL_BRANCH=codex/vb-easter-a3n-b1
+WORKTREE_CLEAN=YES
+
+LANDED THIS RUN (all blob-verified, none taken from a merge status):
+- #286 A3N R3 chrome        merged 6773a1b35c788d3db78cea3dfcfbc63e81bc11c8  11/11  0 units
+- #287 A3N R2 timing        merged d4d7c914add19cc92a176479f8788734545b02a2  25/25  0 units
+- #288 BATCH 1              merged 840e7dbb52933ee1aaea646b9129a0e79af71273  23/23  2 units
+
+CEILING (R1): per batch, lesson units only. Batch 1 spent 2 of 24.
+
+THE THREE RULINGS, AS EXECUTED:
+R1 done. The 22 units previously counted against A3-H6 were misattributed and are
+   noted in EASTER_LEDGER.md; nothing reversed. Every PR before #288 is 0 units.
+R2 done for the timing half. Five ASDAN decks re-timed from content: under-timed
+   stages 2 -> 0 on every deck, session 40 preserved, content untouched,
+   containment 5/5 PASS. THEN: a timing fix CANNOT move the g23 ratio, because
+   the ratio is words over family median and minutes do not enter it. All five
+   re-measure >1.6, so R2's band sends all five to SPLIT.
+R3 done. Contract refrain + title slide count zero on BOTH sides. The three W16
+   decks clear with no content edit (x1.53->1.37 RED->PASS, x1.38->1.22,
+   x1.28->1.14). Estate flip list: 20 decks move, 5 cleared, 7 regressed, net
+   +2 RED -- marginally STRICTER, not a loosening. Nothing parked.
+
+SPLITS ARE REFUSED AS SPECIFIED -- READ THIS BEFORE RE-ISSUING THE ORDER:
+R2 defines a split as happening "at a stage boundary". Neither Humanities
+candidate has one. Measured, EVERY teaching stage of both decks serves BOTH of
+its outcomes; both are slot HUM+RE (Integrated Humanities and RE) and their
+objectives tie the two outcomes in one sentence. Cutting anywhere yields two
+incomplete lessons. DEFAULTED: not split, not trimmed, not edited; both cells
+stay covered by a working integrated lesson. Logged A3-H8.
+The five ASDAN decks carry the same SPLIT verdict and are QUEUED, untested.
+
+NEXT_INCOMPLETE_ACTION, IN ORDER:
+1. Batch 2: the remaining cover-taught plans (weeks 1-7) in the NINE families
+   that have a gate-readable donor. 68 cover-taught plans exist; 2 are done.
+2. ART IS BLOCKED AND NEEDS A HUMAN OR A DONOR. No Art family has a
+   gate-readable 9-stage donor, so all 19 Art cover-taught plans are unbuildable.
+   55 of 81 measured decks declare minutes as `data-minutes`, which no gate
+   reads; only 26 use `data-min`. This is A2R's R2 regression seen from the
+   other side and it is the binding constraint on donor choice.
+
+THE AUTHORING PIPELINE IS THE MAIN ASSET THIS RUN LEAVES:
+  tools/easter/author_deck.py     8 controls. Empties every teaching block from a
+                                  donor's stages AND print pack, inserts authored
+                                  content, refuses to write a deck carrying donor
+                                  text. It refused four times and each refusal was
+                                  a real defect -- see the ledger.
+  tools/easter/build_batch.py     driver: author + g23/g18/g24/g25/g28 in one call.
+  tools/easter/content/*.json     the authored teaching content, one file per deck.
+Chassis text is DERIVED, not judged: pass a third deck of the family as
+--reference and anything donor+output share that the reference also has is
+furniture. Use a donor and reference FROM THE SAME PACK, or the reference will
+not cover the donor's chassis generation and the gate will flag 20 false leaks.
+
+KNOWN RED, NOT A REGRESSION: g24 print-dead on every deck in the estate. The
+chassis hides the slide container under @media print. A2R logged it as R3 and it
+needs print-safe figures authored -- a lesson PR, not a tool PR.
+
+3. N3e's CATALOGUE PR DID NOT RUN for batch 1. hud-coverage rows were not added
+   for the two new decks. CI is green without them, so it is a gap in the batch
+   procedure rather than a broken gate, and batch 2 should run it.
+
+MEASURED RATE, STATED PLAINLY: batch 1 delivered 2 units and 5 cells across one
+full session. The ceiling of 24 was never the constraint -- AUTHORING was. 434
+cells remain open. Any forecast that divides 434 by a 24-unit ceiling will be
+wrong by more than an order of magnitude; divide by the measured 5 cells per
+session instead, and say so.
+
+HUMAN ITEMS: A3-H1 (3 unscorable cells), A3-H2 (7 split candidates), A3-H3 (19
+stale lesson-config week labels), A3-H4 (carried), A3-H5 (ANSWERED by R3),
+A3-H6 (CLOSED), A3-H7 (LAUNCH_HUM_W8 carries 0.9% chrome where its family
+carries 24% -- likely missing the contract refrain), A3-H8 (splits refused).
+
+DEFAULTED DECISIONS (N1b), all with measurements in the ledger:
+- R3 clause (b), repeat-counts-once: ships OFF as a flag, because it reverses
+  R3's own control and its target was already removed in #280-#283.
+- R2 strict monotonicity: not enforced, because it cuts independent work from 16
+  minutes to 3 and independent work is doing time, not reading time.
+- Splits: refused as specified (A3-H8).
+- Pack-level manifest timings: removed where decks disagree, because a value true
+  of no deck is worse than no value.
+
+SESSION_LOCAL_INSTALLS=pip: lxml 6.1.3, cssselect 1.5.0, pymupdf 1.28.2, pypdf,
+cffi. Container-local; re-install in a fresh container or every gate errors.
+
+RESUME_POINTER=_sownb/vb/EASTER_LEDGER.md, then VB_STATE.json resume_easter_a3
+DATA_PRESERVED=YES. REPOSITORY_MUTATIONS_AFTER_THIS_STOP=NONE
+VB_EASTER_A3_PAUSED

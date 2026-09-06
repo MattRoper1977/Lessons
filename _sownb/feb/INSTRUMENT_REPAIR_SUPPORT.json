@@ -1,0 +1,24 @@
+{
+  "schema": "feb-instrument-support-repair-v1",
+  "anchor": "4916fe9511e24e1f5541e7454f3d2e9d4bac5f75",
+  "repairs": [
+    {
+      "instrument": "g16_frozen.py",
+      "reason": "The lesson branch had a firing control, but start_here and pack branches reported applicable:false and could therefore go green without ever going red.",
+      "repair": "Start surfaces delete their own family token in memory; pack surfaces copy to a temporary directory and delete one required filename. PASS now requires fired:true for every artifact type.",
+      "controls": {"startTokenDeletion": "RED", "temporaryPackRequiredFileDeletion": "RED", "unalteredBuildScienceStartAndPack": "PASS"}
+    },
+    {
+      "instrument": "static_pack_gate.py",
+      "reason": "The inherited pack check assumed only manifest.json and tested link existence but not reciprocity, so family-proved manifest aliases and one-way chains were outside its reach.",
+      "repair": "Bind every HTML plus every manifest*.json member and require reciprocal previousFile/nextFile links between lesson nodes.",
+      "controls": {"unalteredBuildSciencePack": "PASS", "checksumMutation": "RED", "nonexistentNextFileWithUpdatedChecksum": "RED"}
+    },
+    {
+      "instrument": "front_door_gate.js",
+      "reason": "The inherited offline branch allowed data: requests, checked only opening wrapper markers, and did not reject all DRAFT/CANDIDATE residue.",
+      "repair": "Prohibit data URIs, persistent storage and runtime-network source tokens; require both wrapper sides; broaden the residual-note predicate; retain three rendered viewports.",
+      "controls": {"missingHome": "RED", "machineTitle": "RED", "brokenTarget": "RED", "missingCloseMarker": "RED", "forbiddenRuntime": "RED", "residualReviewNote": "RED", "unalteredBuildScienceFrontDoor": "PASS"}
+    }
+  ]
+}

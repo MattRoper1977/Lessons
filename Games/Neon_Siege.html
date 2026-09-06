@@ -3,7 +3,8 @@
 <head>
 <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSIjMTYxRDNEIi8+PHBhdGggZD0iTTI2IDc2IEwyNiAzMCBMNTAgNTUgTDc0IDMwIEw3NCA3NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRThFMkQ0IiBzdHJva2Utd2lkdGg9IjEzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4=">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="canonical" href="https://madebymatt.uk/Lessons/Games/Neon_Siege.html">>
 <meta name="theme-color" content="#05060f">
 <meta name="description" content="Neon Siege — neon tower defense. Place towers, defend the Core through 15 seeded waves. Same seed = same siege, so share your run.">
 <title>Neon Siege</title>
@@ -17,7 +18,7 @@ h1,h2,h3,.disp,.btn,#banner,#countdown{font-family:'Orbitron',sans-serif;}
 .screen{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;gap:11px;background:radial-gradient(circle at 50% 30%, rgba(20,30,60,0.5), rgba(5,6,15,0.94) 70%);backdrop-filter:blur(3px);overflow-y:auto;}
 .screen.hidden{display:none;}
 .neon{letter-spacing:2px;text-transform:uppercase;}
-#title{font-size:clamp(40px,10vw,92px);font-weight:900;letter-spacing:6px;background:linear-gradient(90deg,var(--cyan),var(--magenta),var(--orange));-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 40px rgba(39,224,255,0.22);}
+#title{font-size:clamp(40px,10vw,92px);font-weight:900;letter-spacing:6px;background:linear-gradient(90deg,var(--cyan),var(--magenta),var(--orange));-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 40px rgba(39,224,255,0.22);}#title{font-family:inherit;}
 #tagline{color:#aab6e0;font-size:clamp(13px,2.6vw,16px);letter-spacing:1px;max-width:480px;margin-top:-4px;}
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;max-width:440px;width:100%;}
 .panel h3{font-size:13px;letter-spacing:2px;color:var(--cyan);margin-bottom:9px;text-transform:uppercase;}
@@ -90,6 +91,8 @@ ol#board-list li{display:flex;justify-content:space-between;padding:5px 4px;bord
 #boot .b::after{content:'';display:block;height:100%;width:40%;background:var(--cyan);box-shadow:0 0 12px var(--cyan);animation:bs 1s ease-in-out infinite;}
 @keyframes bs{0%{transform:translateX(-120%);}100%{transform:translateX(360%);}}
 @media (max-width:640px){ .btn{min-width:200px;} .tcard{width:64px;} #towerpanel{width:148px;} }
+/* Tier 1 §2.5 + G11: 44px minimum touch targets, and the centred menu panel no longer clips above the viewport or sits under the estate exit control when it is taller than the screen (measured on main at 390x844 and 360x800) */
+.btn,#startwave{min-height:44px}.iconbtn{min-width:44px;min-height:44px}#menu{justify-content:safe center;padding-top:64px}
 </style>
 </head>
 <body>
@@ -115,7 +118,7 @@ ol#board-list li{display:flex;justify-content:space-between;padding:5px 4px;bord
 <div id="banner"></div><div id="countdown" style="display:none;"></div><div id="flash"></div><div id="vignette"></div>
 
 <div id="menu" class="screen">
- <div id="title">NEON SIEGE</div>
+ <h1 id="title">NEON SIEGE</h1>
  <p id="tagline">Hold the line. Place towers along the grid and defend your Core through 15 escalating waves. Same seed = same siege — share it and see who survives.</p>
  <div class="panel">
    <h3>How it works</h3>
@@ -145,7 +148,7 @@ ol#board-list li{display:flex;justify-content:space-between;padding:5px 4px;bord
 </div>
 
 <div id="pause" class="screen hidden">
- <h1 class="neon" style="font-size:38px;color:var(--cyan);">PAUSED</h1>
+ <h2 class="neon" style="font-size:38px;color:var(--cyan);">PAUSED</h2>
  <button class="btn" id="resume-btn">RESUME</button>
  <button class="btn alt" id="restart-btn">RESTART</button>
  <button class="btn ghost" id="quit-btn">QUIT TO MENU</button>
@@ -162,7 +165,7 @@ ol#board-list li{display:flex;justify-content:space-between;padding:5px 4px;bord
 </div>
 
 <div id="board" class="screen hidden">
- <h1 class="neon" style="font-size:30px;color:var(--amber);text-shadow:0 0 20px rgba(255,176,32,0.4);">🏆 SCORES</h1>
+ <h2 class="neon" style="font-size:30px;color:var(--amber);text-shadow:0 0 20px rgba(255,176,32,0.4);">🏆 SCORES</h2>
  <div class="pill" id="board-seed"></div>
  <div class="panel"><ol id="board-list"></ol></div>
  <div class="small">Best scores are saved on this device, per seed.</div>

@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en-GB" class="mbm-classroom pathway-build">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Choice, budget and project reset · BUILD ASDAN</title>
+<style>
+:root{--ink:#17223B;--paper:#FFFCF5;--soft:#F3F6F8;--line:#CAD5DF;--muted:#526274;--gold:#B57918;--green:#246B55;--slot:#346B7B;--slot-pale:#EAF6F8;--danger:#8A3C2D}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:"Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--soft)}
+body{overflow:hidden}a,button{font:inherit}button,a.mbmhome{min-height:44px;min-width:44px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:8px;top:8px;z-index:50;background:#fff;padding:10px}
+.deck{height:100vh;padding:18px 18px 112px;overflow:auto}.slide{display:none;max-width:1120px;min-height:calc(100vh - 145px);margin:auto;background:var(--paper);border:2px solid var(--line);border-top:10px solid var(--slot);border-radius:18px;padding:22px;box-shadow:0 8px 30px #10233f18}.slide.active{display:block}
+h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-size:clamp(1.5rem,3vw,2.3rem);margin:.4rem 0 1rem}h3{margin:.2rem 0 .45rem}p,li{line-height:1.5}.tag,.time,.chips span{display:inline-block;border-radius:999px;padding:6px 10px;font-weight:800}.tag{background:var(--slot-pale)}.time{float:right;background:var(--ink);color:#fff}.chips{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.chips span{background:#FFF3D4}
+.hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,.7fr);gap:18px}.hero-visual{display:grid;gap:10px;align-content:center;background:var(--ink);color:#fff;border-radius:16px;padding:18px;min-height:150px;text-align:center}.hero-visual span{color:var(--slot)}
+.box,.route,.route-card,.evidence-gate,.lundy,.lundy-strip,.ladder,.prompt-ladder,.ta-card,.modal,.drawer,dialog{border:2px solid var(--line);border-radius:13px;padding:13px;margin:12px 0;background:#fff}.lo{border-left:8px solid var(--slot)}.truth{border-left:8px solid var(--gold);background:#FFF3D4;padding:12px}.access{background:var(--slot-pale);padding:12px;border-radius:12px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.routes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.route.s,.route.supported,.route-card.supported{border-top:7px solid var(--green)}.route.m,.route.standard,.route-card.standard{border-top:7px solid var(--slot)}.route.h,.route.stretch,.route-card.stretch{border-top:7px solid var(--gold)}.options{display:grid;gap:9px}.options button{text-align:left;padding:12px;border:2px solid var(--line);border-radius:10px;background:#fff}.vocabrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.vterm{border:2px solid var(--line);padding:12px;border-radius:12px}.vterm span{display:block;margin-top:5px}.lundy-grid,.lundy-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center;font-weight:900}.ladder,.prompt-ladder{font-weight:700}.ta-card,.modal,.drawer{background:#FFF3D4}
+.controls{position:fixed;left:8px;right:8px;bottom:58px;z-index:20;display:flex;gap:7px;overflow-x:auto;padding:8px;background:var(--ink);border-radius:14px}.controls button,.controls a{flex:0 0 auto;border:2px solid #fff;border-radius:9px;padding:7px 10px;background:#fff;color:var(--ink);font-weight:800;text-decoration:none}.prog{position:fixed;left:12px;right:12px;bottom:46px;height:6px;background:#fff;border:1px solid var(--line);z-index:19}.prog>span{display:block;height:100%;width:11.11%;background:var(--slot)}
+.overlay{display:none;position:fixed;inset:0;z-index:40;background:#10233fdd;align-items:center;justify-content:center;padding:18px}.overlay.on{display:flex}.overlay-card{max-width:700px;background:#fff;border-radius:15px;padding:20px}.overlay-card button{padding:8px 12px}
+.print-pack{display:none}.printpack{display:none}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(max-width:720px){.deck{padding:10px 10px 118px}.slide{padding:15px}.hero,.routes,.vocabrow{grid-template-columns:1fr}.lundy-grid{grid-template-columns:1fr 1fr}}
+@media print{html,body{color-scheme:light!important;background:#fff;color:#111;overflow:visible}body>*:not(.print-pack){display:none!important}.print-pack{display:block!important}.printpack{display:block!important}.print-page{break-after:page;page-break-after:always;padding:8mm;min-height:255mm}.print-page:last-child{break-after:auto;page-break-after:auto}.print-pack h1{font-size:20pt;line-height:1.15;margin:0 0 3mm}.print-pack h2{font-size:13pt;line-height:1.2;margin:3mm 0 1.5mm}.print-pack p,.print-pack li{font-size:10.5pt;line-height:1.35}.running-head{font-size:9pt;border-bottom:1px solid #666;margin-bottom:4mm;padding-bottom:2mm}.proute,.print-route{display:block;border:1px solid #777;padding:3mm;margin:3mm 0;break-inside:avoid}@page{size:A4;margin:10mm}}
+</style><!--n6m-guide:v1--><style id="n6m-guide-css">@media screen{[data-mbm-guide]{display:none!important}html.mbm-guide-on [data-mbm-guide]{display:revert!important}.n6m-guide-btn{position:fixed;right:12px;bottom:12px;z-index:2147483000;font:600 .8rem/1.2 "Segoe UI",Arial,sans-serif;padding:7px 11px;border:2px solid currentColor;border-radius:8px;background:#fff;color:#1e3a8a;cursor:pointer}.n6m-guide-btn[aria-pressed="true"]{background:#1e3a8a;color:#fff}}@media print{.n6m-guide-btn{display:none!important}}</style><script id="n6m-guide-js">(function(){var R=document.documentElement;function apply(v){R.classList.toggle("mbm-guide-on",!!v);var b=document.querySelector(".n6m-guide-btn");if(b){b.setAttribute("aria-pressed",v?"true":"false");}}function toggle(){apply(!R.classList.contains("mbm-guide-on"));}function boot(){if(!document.querySelector("[data-mbm-guide]"))return;var b=document.createElement("button");b.type="button";b.className="n6m-guide-btn";b.setAttribute("aria-pressed","false");b.setAttribute("data-n6m-guide-control","1");b.title="Show or hide staff guidance (G)";b.textContent="\u24D8 Guidance";b.addEventListener("click",toggle);document.body.appendChild(b);apply(false);document.addEventListener("keydown",function(e){if(e.key!=="g"&&e.key!=="G")return;if(e.metaKey||e.ctrlKey||e.altKey)return;var t=e.target,n=t&&t.tagName;if(n==="INPUT"||n==="TEXTAREA"||n==="SELECT"||(t&&t.isContentEditable))return;toggle();});}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();})();</script><!--/n6m-guide--><style id="mbm-classroom-chassis">/* Shared classroom presentation. Palette authority: the user's Art Studio reference. */
+html.mbm-classroom {
+  --lo-bg:#e8eef1;--lo-border:#4F869C;--ido-bg:#f3e4dc;--ido-border:#D06438;
+  --wedo-bg:#e2efec;--wedo-border:#16877A;--task-bg:#faf0d7;--task-border:#E1AB32;
+  --btn-bg:#4F869C;--btn-hover:#3a6a7d;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;
+  --sc-bg:#ffedd5;--sc-border:#f97316;--aspire-bg:#dcfce7;--aspire-border:#22c55e;
+}
+html.mbm-classroom.pathway-grow {
+  --lo-bg:#e6ebf0;--lo-border:#5B91A5;--ido-bg:#f2e6df;--ido-border:#D1673D;
+  --wedo-bg:#e2efed;--wedo-border:#2BA193;--task-bg:#f8efd8;--task-border:#DFAD3E;
+  --btn-bg:#5B91A5;--btn-hover:#436f80;--sc-border:#DFAD3E;--sc-bg:#faf3dd;
+}
+html.mbm-classroom.pathway-launch {
+  --lo-bg:#e4ebee;--lo-border:#356F83;--ido-bg:#efe3db;--ido-border:#9B5B3D;
+  --wedo-bg:#e1edeb;--wedo-border:#238C80;--task-bg:#f6eed9;--task-border:#C18B2D;
+  --btn-bg:#356F83;--btn-hover:#28576a;--sc-border:#C18B2D;--sc-bg:#f8f1de;
+}
+@media screen {
+  html.mbm-classroom, .mbm-classroom body {background:#fff;color:#1f2937;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+  .mbm-classroom main.deck {height:100vh;height:100dvh;padding:clamp(14px,3vh,36px) 4vw 110px;overflow:auto;scroll-padding-bottom:110px}
+  .mbm-classroom main.deck>.slide {width:100%;max-width:1600px;min-height:calc(100vh - 160px);margin:auto;padding:clamp(20px,3vw,40px);background:#fff;color:#1f2937;border:0;border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px #00000018}
+  .mbm-classroom .slide[data-classroom-phase="ido"] {border-top-color:var(--ido-border)}
+  .mbm-classroom .slide[data-classroom-phase="wedo"] {border-top-color:var(--wedo-border)}
+  .mbm-classroom .slide[data-classroom-phase="independent"] {border-top-color:var(--task-border)}
+  .mbm-classroom .slide[data-classroom-phase="exit"] {border-top-color:var(--sc-border)}
+  .mbm-classroom .slide h1 {display:block;color:#101820;font-size:clamp(1.8rem,3.2vw,2.8rem);line-height:1.14;margin:20px 0 24px;padding-bottom:12px;border-bottom:3px solid var(--lo-border)}
+  .mbm-classroom .slide h2 {color:#101820;font-size:clamp(1.5rem,2.5vw,2rem);line-height:1.22;margin:16px 0 22px;padding-bottom:12px;border-bottom:2px solid #e2e8f0}
+  .mbm-classroom .slide h3 {color:#182c3c;font-size:1.2rem;line-height:1.3;margin:18px 0 10px}
+  .mbm-classroom .slide p,.mbm-classroom .slide li {font-size:1.15rem;line-height:1.6;color:#334155;max-width:85ch}
+  .mbm-classroom .slide p {margin:.5em 0}
+  .mbm-classroom .slide>svg {max-width:900px;margin:18px auto;display:block;overflow:visible}
+  .mbm-classroom .slide>.tag {display:inline-block;background:var(--lo-bg);color:#183b4b;border-radius:8px;padding:6px 14px;font-size:.9rem;font-weight:800;letter-spacing:.04em}
+  .mbm-classroom .slide[data-classroom-phase="ido"]>.tag {background:var(--ido-bg);color:#68321f}
+  .mbm-classroom .slide[data-classroom-phase="wedo"]>.tag {background:var(--wedo-bg);color:#115c52}
+  .mbm-classroom .slide[data-classroom-phase="independent"]>.tag {background:var(--task-bg);color:#684811}
+  .mbm-classroom .slide>.time {float:right;border-radius:999px;background:#f5f7f8;color:#334155;border:1px solid #cbd5e1;font-size:.9rem}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.time {display:none}
+  .mbm-classroom .mbm-lesson-objective {background:var(--lo-bg);border-left:6px solid var(--lo-border);border-radius:12px;padding:14px 18px;margin:16px 0}
+  .mbm-classroom .mbm-lesson-success {background:var(--sc-bg);border-left:6px solid var(--sc-border);border-radius:12px;padding:14px 18px;margin:14px 0}
+  .mbm-classroom .box,.mbm-classroom .route,.mbm-classroom .route-card {background:#f8fafc;color:#1f2937;border:1px solid #cbd5e1;border-radius:12px;padding:16px}
+  .mbm-classroom .box.objective {background:var(--lo-bg);border-left:6px solid var(--lo-border)}
+  .mbm-classroom .lundy,.mbm-classroom .lundy-strip {background:#f8fafc;color:#334155;border:1px solid #dce3e8;border-radius:12px;padding:10px 14px;margin:22px 0 0}
+  /* Pupil voice is framed at arrival and revisited at the exit, without a
+     repeated process banner competing with each model and practical task. */
+  .mbm-classroom .slide[data-classroom-phase]:not([data-classroom-phase="title"]):not([data-classroom-phase="exit"])>.lundy,
+  .mbm-classroom .slide[data-classroom-phase]:not([data-classroom-phase="title"]):not([data-classroom-phase="exit"])>.lundy-strip {display:none}
+  .mbm-classroom .lundy-grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+  .mbm-classroom .lundy-grid>span {display:block;color:#213544;background:var(--lo-bg);border-radius:8px;padding:7px;text-align:center;font-size:.8rem;font-weight:800}
+  .mbm-classroom .lundy-grid>span:nth-child(2) {background:var(--ido-bg)}
+  .mbm-classroom .lundy-grid>span:nth-child(3) {background:var(--wedo-bg)}
+  .mbm-classroom .lundy-grid>span:nth-child(4) {background:var(--task-bg)}
+  .mbm-classroom .lundy p,.mbm-classroom .lundy-strip p {font-size:.85rem;margin:8px 0 0;max-width:none}
+  .mbm-classroom button {min-width:44px;min-height:44px;border-radius:10px;font-weight:700;background:var(--btn-hover);color:#fff;border:1px solid transparent;padding:10px 16px}
+  .mbm-classroom button:hover {background:#203f4c;color:#fff}
+  .mbm-classroom button:focus-visible,.mbm-classroom a:focus-visible,.mbm-classroom select:focus-visible,.mbm-classroom summary:focus-visible {outline:3px solid #ab5800;outline-offset:3px}
+  .mbm-classroom .controls {background:#fffffff5;backdrop-filter:blur(8px);border:1px solid #dbe3e8;box-shadow:0 4px 20px #182c3c18;border-radius:14px;padding:8px;gap:7px;flex-wrap:wrap;max-width:calc(100vw - 32px)}
+  .mbm-classroom .prog {background:#e7ecef}
+  .mbm-classroom .prog>span {background:var(--lo-border)}
+  .mbm-classroom .overlay-card {background:#fff;color:#1f2937;border-color:var(--lo-border)}
+  .mbm-classroom .slide[data-classroom-phase="title"] {text-align:center}
+  .mbm-classroom .slide[data-classroom-phase="title"]>p {max-width:760px;margin:14px auto;text-align:left}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.tag {background:#d98128;color:#172334}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.lundy {max-width:760px;margin:24px auto 0;text-align:left}
+  .mbm-classroom .slide[data-classroom-phase="title"]>.box {text-align:left}
+  .mbm-classroom body.calm .slide {box-shadow:none}
+  @media(max-width:700px) {
+    .mbm-classroom main.deck {padding:14px 14px 180px}
+    .mbm-classroom main.deck>.slide {min-height:calc(100dvh - 205px);padding:20px 16px}
+    .mbm-classroom .slide p,.mbm-classroom .slide li {font-size:1.05rem}
+    .mbm-classroom .controls {left:14px;right:14px;bottom:14px;justify-content:center;max-width:none}
+    .mbm-classroom .controls button {font-size:.85rem;padding:8px 10px}
+    .mbm-classroom .lundy-grid {grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+  @media(prefers-reduced-motion:reduce) {
+    .mbm-classroom *, .mbm-classroom *::before, .mbm-classroom *::after {animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  }
+}
+</style></head>
+<body>
+<!--mbm_guide_v1 retained as a contract marker; guidance state is memory-only-->
+<!--n6-nav1:v1-->
+<style id="n6-nav1-css">@media print{.mbmhome,.n6-splash{display:none!important}}.mbmhome{display:inline-block;margin:6px 0 0 8px;font:600 .85rem/1.4 "Segoe UI",Arial,sans-serif;color:#1e3a8a;text-decoration:none}.mbmhome:hover,.mbmhome:focus{text-decoration:underline}</style>
+<a class="mbmhome" href="../../index.html" aria-label="Back to the Lessons catalogue">← Lessons</a>
+<!--/n6-nav1-->
+<a class="skip" href="#lessonDeck">Skip to lesson</a>
+<main id="lessonDeck" class="deck">
+<section class="slide active" data-type="title" data-title="Lesson overview" data-min="0" data-classroom-phase="title">
+<div class="time">0 min</div>
+<span class="tag">Lesson overview</span>
+<h1>Cook One Snack as a Team from a Picture Card</h1><p>BUILD · ASDAN · Week 3. ASDAN cross-strand. The card, the snack, the team.</p><p class="mbm-lesson-objective">Objective: follow a visual sequence card for a household task, use that same card to complete a simple cookery challenge, and decide who does which job in the team.</p><p class="mbm-lesson-success">Success evidence: a snack card with all five steps ticked in order, one name beside every step including the clear-up step, one word for how your team decided, and one sentence about the finished plate.</p><p>No personal or family disclosure. Every card, job card and photograph today is school-approved. You describe the card, never your home. Nobody is asked out loud about allergies, diets or food at home.</p><p>40 minutes. Offline.</p><div class="box rehearsal" data-mbm-guide="staff">Before any food is out of the box, check the class allergen and dietary list held by the class team. A pupil with a listed allergy or dietary need takes a non-food job (card holder, ticker, plate-up checker) or the approved alternative. Do not ask pupils out loud what they are allergic to.</div><div class="box rehearsal" data-mbm-guide="staff">Resources, all in the ASDAN box in the food room cupboard, prepped by the class team the day before: the big five-step snack card for the board; one snack card per team; one set of the five step pictures per pupil; job cards with team names already written on; tick sheets; the two school photographs for the Starter; pre-sliced cucumber, cheese slices, crackers and plates; paper towels, wipes and a bin bag. There is no knife in this lesson — the class team slices the cucumber before it comes out of the box, so step two is putting cucumber on the plate. Run this in the food room and wash hands at the sink. If the food room is not free, run it in the classroom and wash hands at the corridor sink on the way in. Teams of three, pre-named on the job cards. If the job cards are not there, work in pairs at usual seats.</div><div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+</section>
+<section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="4" data-ta1="Cards face down until the group is settled." data-classroom-phase="arrival">
+<div class="time">4 min</div>
+<span class="tag">Arrival · retrieve</span>
+<h2>Arrival · retrieve</h2>
+<div class="box rehearsal" data-mbm-guide="staff">Cards face down until the group is settled.</div><h3>Start with what is on the card</h3><p>A sequence is a set of steps in a fixed order. The order is the part that matters.</p><p>A visual sequence card shows every step as a picture. You read the card instead of remembering the task.</p><p>A job is one step that one person agrees to finish. A job is finished when the step is ticked.</p><p>Today's snack card, job cards and photographs are school-approved. You describe the card, not your home.</p><div class="box rehearsal" data-mbm-guide="staff">Check the class allergen and dietary list before any food leaves the box. A pupil with a listed need takes a non-food job or the approved alternative. Do not ask pupils out loud what they are allergic to.</div><p>Your team has a snack card, job cards and a tick sheet. The food stays in the box until an adult brings it out.</p><div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+</section>
+<section class="slide" data-type="starter" data-title="Starter · create the need" data-min="4" data-ta1="Show both photographs side by side." data-classroom-phase="starter">
+<div class="time">4 min</div>
+<span class="tag">Starter · create the need</span>
+<h2>Starter · create the need</h2>
+<div class="box rehearsal" data-mbm-guide="staff">Show both photographs side by side.</div><h3>Two teams, one snack</h3><p>Here are two school photographs of the same snack task.</p><p>In the first photograph the card is face down on the side. Two people are putting cheese on the same cracker. Nobody has washed their hands.</p><p>In the second photograph the card is standing up where everyone can see it. Three steps are ticked.</p><p>Both teams had the same card. Only one team was using it.</p><ul><li>1 · notice which step nobody has done</li><li>2 · choose the picture that shows that step</li><li>3 · explain what the team should do next</li></ul><div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+</section>
+<section class="slide" data-type="ido" data-title="I Do · model" data-min="6" data-ta1="Model one card only." data-classroom-phase="ido">
+<div class="time">6 min</div>
+<span class="tag">I Do · model</span>
+<h2>I Do · model</h2>
+<div class="box rehearsal" data-mbm-guide="staff">Model one card only.</div><h3>Running one card, one step at a time</h3><p>SEQUENCE means steps done in a fixed order. ROLE means the job one person agrees to do. RESPONSIBILITY means the step that is yours to finish and tick.</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Four boxes in order: read the picture, say the step, do it, then tick it."><title>How to work one step</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">Read it</text><text x="73" y="88" text-anchor="middle" font-size="11">look at the picture</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">Say it</text><text x="231" y="88" text-anchor="middle" font-size="11">say the step out loud</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">Do it</text><text x="389" y="88" text-anchor="middle" font-size="11">that one step only</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">Tick it</text><text x="547" y="88" text-anchor="middle" font-size="11">tick it on the card</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">You read a step, say it, do it, then tick it.</text></svg><p>Watch me run the approved snack card. It has five pictures: wash hands, cucumber on the plate, cheese on the cracker, plate up, wipe the table and bin the waste.</p><p>The cucumber is already sliced. Nobody uses a knife today.</p><p>I read all five pictures first. I do not touch anything yet.</p><p>Step one is wash hands. I say step one out loud. Then I do it. Then I tick it.</p><p>Now I look at picture three. I am not sure if the cheese goes on before the cucumber.</p><p>I do not guess. I look at the card again. The card shows cucumber first, so I follow the card.</p><p>If the card does not show it, I say I am not sure and I ask an adult.</p><div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+</section>
+<section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="4" data-ta1="Every pupil shows a picture before anyone speaks." data-classroom-phase="wedo">
+<div class="time">4 min</div>
+<span class="tag">We Do · everyone commits</span>
+<h2>We Do · everyone commits</h2>
+<div class="box rehearsal" data-mbm-guide="staff">Every pupil shows a picture before anyone speaks.</div><h3>Put the snack steps in order</h3><p>You each have the same five pictures from the snack card. They are mixed up.</p><p>Put them in order, first to last, left to right on your desk.</p><p>Start with the picture that needs nothing before it. Then ask what that one makes possible.</p><p>When your five are in order, sit back. Nobody explains yet.</p><p>Then two people say which two pictures were hardest to order, and why.</p><p>Keep your pictures in order. You will use them in a minute.</p><div class="box rehearsal" data-mbm-guide="staff">Ordering is the task. Do not accept a reason until every desk has five pictures in a line.</div><div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+</section>
+<section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="6" data-ta1="Do the job list before any food is out." data-classroom-phase="ido">
+<div class="time">6 min</div>
+<span class="tag">I Do 2 · connect</span>
+<h2>I Do 2 · connect</h2>
+<div class="box rehearsal" data-mbm-guide="staff">Do the job list before any food is out.</div><h3>From the card to the team</h3><p>The card tells you what order the steps go in. It does not tell you who does them.</p><p>A snack is finished when every step on the card has one name beside it.</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Two columns. Left: a named step gets ticked. Right: an unnamed step is left undone."><title>A step with a name</title><rect x="8" y="42" width="288" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="152" y="70" text-anchor="middle" font-size="13">Named step</text><text x="152" y="88" text-anchor="middle" font-size="11">one person owns it</text><rect x="324" y="42" width="288" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="468" y="70" text-anchor="middle" font-size="13">No name</text><text x="468" y="88" text-anchor="middle" font-size="11">everyone waits for it</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">The step with nobody's name on it is the step that gets missed.</text></svg><p>Watch me put names on the card. Step one, wash hands: everyone. Step two, cucumber: one person. Step three, cheese: one person. Step four, plate up: one person. Step five, wipe and bin: two people.</p><p>Step five is a household task of its own. Wiping the table and binning the waste is part of the job.</p><p>I read the job list back to the team before we start. Anyone can say swap me at that point.</p><p>A job you agreed to is a responsibility. It is finished when the step is ticked.</p><div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+</section>
+<section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="5" data-ta1="Rows are choices. Any pupil may change row." data-classroom-phase="wedo">
+<div class="time">5 min</div>
+<span class="tag">We Do 2 · lab</span>
+<h2>We Do 2 · lab</h2>
+<div class="box rehearsal" data-mbm-guide="staff">Rows are choices. Any pupil may change row.</div><h3>Choose your row. Then choose your step.</h3><ul><li>◆ Supported — take one step. Say it out loud. Tick it when it is done.</li><li>▲ Standard — run all five steps with your team. Write one name beside every step.</li><li>★ Stretch — as Standard, and write what your team would change if one person were away.</li></ul><p>You work in a team of three. Your team name is on your job card.</p><p>Here is how your team decides. Go round the team. Each person says which step they want. If two people want the same step, the person with no step yet takes it. You can pass and take the step that is left.</p><p>If you do not want to choose, say pass. You will still have a step.</p><p>Write one word on the tick sheet for how you decided: asked, swapped or passed.</p><p>These rows are choices, not labels. You can start on one row and move to another.</p><div class="box rehearsal" data-mbm-guide="staff">Read the go-round out loud, then let the team run it. Take swaps now, not during the cooking.</div><p>Whichever row you take, point at the card or the tick sheet that backs what you say.</p><div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+</section>
+<section class="slide" data-type="independent" data-title="Independent · evidence" data-min="7" data-ta1="Doing time. Least prompt needed." data-classroom-phase="independent">
+<div class="time">7 min</div>
+<span class="tag">Independent · evidence</span>
+<h2>Independent · evidence</h2>
+<div class="box rehearsal" data-mbm-guide="staff">Doing time. Least prompt needed.</div><h3>Make the snack. Then clear up.</h3><p>Work the card with your team. Say each step before you do it. Tick it when it is done.</p><p>Everyone washes hands first. That is step one for all of you.</p><p>Stop making at six minutes. The last three minutes are step five: wipe the table and bin the waste.</p><p>On your sheet, write one name beside every step, including step five.</p><p>Circle one word for how your team decided: asked, swapped or passed.</p><p>Write one sentence about the finished plate. Say what you can see on it.</p><p>If you are not sure about something, write it down and mark it not sure. That is a real answer and it counts.</p><p>Work at your own pace. One step done properly and ticked is worth more than a step rushed.</p><div class="box rehearsal" data-mbm-guide="staff">Doing time, not reading time. Call six minutes out loud so step five is not lost. Prompt on a missing name.</div><div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+</section>
+<section class="slide" data-type="exit" data-title="Exit · Audience and Influence" data-min="4" data-ta1="Name back the pupil's exact words." data-classroom-phase="exit">
+<div class="time">4 min</div>
+<span class="tag">Exit · Audience and Influence</span>
+<h2>Exit · Audience and Influence</h2>
+<div class="lundy-status">
+<p>
+<b>SPACE:</b> the learner may pause or choose a private response.</p>
+<p>
+<b>VOICE:</b> the evidence statement remains in the learner’s chosen communication mode.</p>
+<p>
+<b>AUDIENCE:</b> a familiar adult receives and names back exactly what was heard or seen.</p>
+<p>
+<b>INFLUENCE:</b> one real next action is recorded: retain, add method detail, or leave open.</p>
+</div>
+<div class="box rehearsal" data-mbm-guide="staff">Name back the pupil's exact words.</div><h3>You say it. The adult says it back. You choose one thing for next week.</h3><p>You can stay quiet. Nothing happens if you do not speak. Pointing at your sheet counts as speaking.</p><p>Say one job you did today. Say one step your team had to fix.</p><p>The adult names both back to you, in your exact words.</p><p>You confirm it, or you correct it. Correcting the adult is expected here.</p><p>Then choose one real next action: keep your job, swap to another step, or take step five.</p><p>Your choice is written down and given back to you next week.</p><div class="lundy" aria-label="Lundy participation strip">
+<div class="lundy-grid">
+<span>SPACE</span>
+<span>VOICE</span>
+<span>AUDIENCE</span>
+<span>INFLUENCE</span>
+</div>
+<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
+</div>
+</section>
+</main>
+<nav class="controls" aria-label="Lesson controls">
+<button type="button" data-nav="previous">◀ Previous</button>
+<button type="button" data-tool="1">Teacher tools</button>
+<button type="button" data-tool="2">Evidence &amp; print</button>
+<button type="button" data-tool="3">Calm mode</button>
+<button type="button" data-tool="4">Static diagrams</button>
+<button type="button" data-tool="5">Previous</button>
+<button type="button" data-tool="6">Next</button>
+<button type="button" data-nav="next">Next ▶</button>
+</nav>
+<div class="prog" aria-hidden="true">
+<span>
+</span>
+</div>
+<div id="taOverlay" class="overlay" aria-hidden="true">
+<div class="overlay-card">
+<h2>TA Brief</h2>
+<p>Use the least prompt needed. Keep adult preparation and exact-word scribing separate from pupil authorship. Guidance is hidden from the learner surface by default.</p>
+<button type="button" data-close-overlay>Close</button>
+</div>
+</div>
+<section class="print-pack printpack" aria-label="Printable lesson pack">
+<section class="print-page">
+<div class="running-head">BUILD ASDAN · Week 3 · BUILD · ASDAN · Week 3 · ASDAN cross-strand · Cook One Snack as a Team from a Picture Card</div>
+<h1>Cook One Snack as a Team from a Picture Card</h1>
+<p><b>Workbook trace:</b> 'BUILD Weekly - Autumn'!C132 · 'BUILD Weekly - Autumn'!C146 · 'BUILD Weekly - Autumn'!C176</p>
+<p><b>Verbatim outcome:</b> Follow a visual sequence for a household task. · Complete a simple cookery challenge. · Decide roles and responsibilities in the team.</p>
+<p><b>Objective:</b> Follow a visual sequence card for a household task, use that same card to complete a simple cookery challenge, and decide who does which job in the team.</p>
+<h2>The five-step card</h2>
+<p>Use this pack to record the card you followed, the step you took, how your team decided, and what the finished plate showed.</p>
+<table style="width:100%;border-collapse:collapse">
+<tr>
+<th style="border:1px solid #777;padding:6px">Focus</th>
+<th style="border:1px solid #777;padding:6px">Record or action</th>
+<th style="border:1px solid #777;padding:6px">Explanation, response or limit</th>
+</tr>
+<tr>
+<td style="border:1px solid #777;padding:8px">Card and sequence</td>
+<td style="border:1px solid #777;padding:8px;height:38mm">
+</td>
+<td style="border:1px solid #777;padding:8px">
+</td>
+</tr>
+<tr>
+<td style="border:1px solid #777;padding:8px">Step, name and how we decided</td>
+<td style="border:1px solid #777;padding:8px;height:38mm">
+</td>
+<td style="border:1px solid #777;padding:8px">
+</td>
+</tr>
+<tr>
+<td style="border:1px solid #777;padding:8px">Finished plate and clear-up</td>
+<td style="border:1px solid #777;padding:8px;height:38mm">
+</td>
+<td style="border:1px solid #777;padding:8px">
+</td>
+</tr>
+</table>
+<svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Four boxes in order: read the picture, say the step, do it, then tick it."><title>How to work one step</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">Read it</text><text x="73" y="88" text-anchor="middle" font-size="11">look at the picture</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">Say it</text><text x="231" y="88" text-anchor="middle" font-size="11">say the step out loud</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">Do it</text><text x="389" y="88" text-anchor="middle" font-size="11">that one step only</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">Tick it</text><text x="547" y="88" text-anchor="middle" font-size="11">tick it on the card</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">You read a step, say it, do it, then tick it.</text></svg><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Two columns. Left: a named step gets ticked. Right: an unnamed step is left undone."><title>A step with a name</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">Named step</text><text x="151" y="74" text-anchor="middle" font-size="11">one person owns it</text><text x="151" y="94" text-anchor="middle" font-size="11">it gets done and ticked</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">No name</text><text x="469" y="74" text-anchor="middle" font-size="11">everyone waits for it</text><text x="469" y="94" text-anchor="middle" font-size="11">the plate is not finished</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">The step with nobody's name on it is the step that gets missed.</text></svg></section>
+<section class="print-page n6-lc-page">
+<div class="running-head">BUILD ASDAN · Week 3 · BUILD · ASDAN · Week 3 · ASDAN cross-strand · Cook One Snack as a Team from a Picture Card</div>
+<h2>Who does what</h2>
+<div class="print-route supported">
+<h3>◆ Supported</h3>
+<p>◆ Supported — take one step on the five-step card, say it out loud before you do it, and tick it when it is done.</p>
+</div>
+<div class="print-route standard">
+<h3>▲ Standard</h3>
+<p>▲ Standard — run all five steps with your team, write one name beside every step, and tick each step as it is finished.</p>
+</div>
+<div class="print-route stretch">
+<h3>★ Stretch</h3>
+<p>★ Stretch — as Standard, and write what your team would change if one person were away, marking anything you are unsure about.</p>
+</div>
+<h2>Doing the task</h2>
+<ol>
+<li>◆ and up — the step you took is ticked on the card and your name is written beside it.</li>
+<li>◆ and up — the tick sheet says how your team decided. One word is enough: asked, swapped or passed.</li>
+<li>◆ and up — anything you were not sure about is marked not sure rather than guessed.</li>
+<li>▲ and up — all five steps are ticked in order, with one name beside every step, including step five.</li>
+</ol>
+<div style="height:42mm;border-bottom:1px solid #777">
+</div>
+<!--n6-learner-confirm:v1--><p style="margin:14px 0 4px;font-weight:800;font-size:.95rem">5 · Learner confirmation</p>
+<p style="margin:0 0 8px;font-size:.88rem">I confirm this is my own work.</p>
+<table style="width:100%;border-collapse:collapse;font-size:.9rem">
+<tr><td style="padding:10px 8px;border:1px solid #999;width:50%">Learner name (print)<br><br></td><td style="padding:10px 8px;border:1px solid #999">Signature<br><br></td></tr>
+<tr><td style="padding:10px 8px;border:1px solid #999">Date<br><br></td><td style="padding:10px 8px;border:1px solid #999"> </td></tr></table><!--/n6-learner-confirm-->
+</section>
+</section><!--n6-nav1:v1--><div class="n6-splash"><div style="text-align:center;margin-top:8px"><svg width="64" height="64" viewbox="0 0 100 100" aria-label="Made by Matt"><circle cx="50" cy="50" r="47" fill="none" stroke="#1e3a8a" stroke-width="3.4"></circle><g transform="translate(0 2)"><path d="M28 71 L28 37 L50 59 L72 37 L72 71" fill="none" stroke="#1e3a8a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 22.5 L51.48 28.52 L57.5 30 L51.48 31.48 L50 37.5 L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"></path></g></svg></div></div><!--/n6-nav1--><script id="lesson-config" type="application/json">{"id": "BUILD_ASDAN_W3", "family": "BUILD ASDAN", "week": 3, "slot": "BUILD · ASDAN · Week 3 · ASDAN cross-strand", "title": "Cook One Snack as a Team from a Picture Card", "outcomes": ["Follow a visual sequence for a household task.", "Complete a simple cookery challenge.", "Decide roles and responsibilities in the team."], "cells": ["'BUILD Weekly - Autumn'!C132", "'BUILD Weekly - Autumn'!C146", "'BUILD Weekly - Autumn'!C176"], "objective": "Follow a visual sequence card for a household task, use that same card to complete a simple cookery challenge, and decide who does which job in the team.", "source": {"workbook": "_passsb/inputs/Build SOW 2026-2027.xlsx", "sheet": "BUILD Weekly - Autumn", "cell": "'BUILD Weekly - Autumn'!C132"}, "timings": [0, 4, 4, 6, 4, 6, 5, 7, 4], "weDoType": "sequence-or-rank", "planId": "31bab20398c2"}</script>
+<script>(function(){const slides=[...document.querySelectorAll("main.deck>.slide")],bar=document.querySelector(".prog>span");let index=0;function show(next){index=(next+slides.length)%slides.length;slides.forEach((s,i)=>s.classList.toggle("active",i===index));bar.style.width=((index+1)/slides.length*100)+"%";}document.querySelector("[data-nav=previous]").addEventListener("click",()=>show(index-1));document.querySelector("[data-nav=next]").addEventListener("click",()=>show(index+1));document.querySelectorAll("[data-tool]").forEach((button,i)=>button.addEventListener("click",()=>{if(i===0){const o=document.getElementById("taOverlay");o.classList.add("on");o.setAttribute("aria-hidden","false");}else if(i===1)document.body.classList.toggle("loop-on");else if(i===2)document.querySelector(".n6m-guide-btn")?.click();else if(i===3)document.body.classList.toggle("word-help");else if(i===4)document.body.classList.toggle("calm");else document.body.classList.toggle("teacher-freeze");}));document.querySelector("[data-close-overlay]").addEventListener("click",()=>{const o=document.getElementById("taOverlay");o.classList.remove("on");o.setAttribute("aria-hidden","true");});document.addEventListener("keydown",e=>{if(e.key==="ArrowRight")show(index+1);if(e.key==="ArrowLeft")show(index-1);});show(0);})();</script>
+</body>
+</html>

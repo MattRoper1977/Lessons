@@ -1,0 +1,74 @@
+{
+ "file": "tools/verify_hud_on_lessons_games.mjs",
+ "subject": "ORDER VB-RUN14 R4: Trekkers_Trail_Runner_Tees_Coast home control — measurement attempted under the existing harness; handoff to Order SC3",
+ "whatTheHarnessNeeds": [
+  "MBM_BASE_URL serving /hud.js and /Lessons/Games/* on one origin (verify_hud_on_lessons_games.mjs:282-284)",
+  "the canonical search index from the site repository (verify_hud_on_lessons_games.mjs:89, throws without it)"
+ ],
+ "whyItCannotRunHere": [
+  "hud.js is not in the Lessons repository; it is served from /hud.js on the site",
+  "the site checkout is absent, and VB_STATE.venueBlocked records this venue's egress proxy answers 403 to CONNECT for mattroper1977.github.io, so it cannot be fetched either",
+  "the order names Lessons as the only repository; widening scope to the game is done, widening it to a second checkout is not in the order"
+ ],
+ "whatWasMeasuredInsteadRun13": "served locally and loaded at 390x844 and 1440x900 with 5 s allowed: no exit control appeared, because /hud.js never loaded; the game carries the hud.js script line and no stamped inline exit, both correctly",
+ "repairPermitted": "only iff the defect is Lessons-side and one file. It is not established to be Lessons-side: nothing about the game itself can be judged until hud.js loads.",
+ "handoffForSC3": {
+  "route": "/Lessons/Games/Trekkers_Trail_Runner_Tees_Coast.html",
+  "exactTimeoutLines": [
+   "tools/verify_games_rendered.mjs:65  const NAV_MS = 30000;",
+   "tools/verify_games_rendered.mjs:67  const JUDGE_MS = 20000;",
+   "tools/verify_games_rendered.mjs:228 withDeadline(page.goto(url, { waitUntil: 'domcontentloaded', timeout: NAV_MS }), NAV_MS + 5000, ...)",
+   "tools/verify_games_rendered.mjs:235 withDeadline(page.evaluate(RENDERED), JUDGE_MS, `${t.route} render probe`)",
+   "tools/verify_games_rendered.mjs:252 withDeadline(page.evaluate(RAF_TICKS, 1200), JUDGE_MS, `${t.route} liveness`)"
+  ],
+  "ask": "run verify_hud_on_lessons_games.mjs against a served origin that carries /hud.js, on this exact route, once, with the harness waits as they stand. If it reds, it is a page defect for a human; no wait is lengthened."
+ },
+ "hudCoverageCitations": {
+  "rows": [
+   {
+    "route": "/Lessons/Games/Axiom_Shift.html",
+    "verifier": "tools/verify_axiomshift.sh",
+    "resolves": true
+   },
+   {
+    "route": "/Lessons/Games/Grid_Chase.html",
+    "verifier": "tools/verify_v6_selftest.mjs",
+    "resolves": true
+   },
+   {
+    "route": "/Lessons/Games/Globe_Snake (1).html",
+    "verifier": "tools/verify_v6_selftest.mjs",
+    "resolves": true
+   },
+   {
+    "route": "/Lessons/Games/OneGuy.html",
+    "verifier": "tools/verify_v6_selftest.mjs",
+    "resolves": true
+   },
+   {
+    "route": "/Lessons/Games/Static.html",
+    "verifier": "tools/verify_v6_selftest.mjs",
+    "resolves": true
+   },
+   {
+    "route": "/Lessons/Games/Vortex.html",
+    "verifier": "tools/verify_v6_selftest.mjs",
+    "resolves": true
+   },
+   {
+    "route": "/Lessons/Games/Charcoal.html",
+    "verifier": "tools/verify_charcoal.sh",
+    "resolves": true
+   },
+   {
+    "route": "/Lessons/Games/Off_Brand.html",
+    "verifier": "tools/verify_offbrand.sh",
+    "resolves": true
+   }
+  ],
+  "everyVerifierResolves": true,
+  "note": "eight excluded rows, eight resolving paths; five cite tools/verify_v6_selftest.mjs registered in run 13, three cite their own .sh verifier. No coverage row deleted."
+ },
+ "gameFilesTouched": 0,
+ "status": "HANDOFF — not measurable in this venue; nothing widened"
+}
