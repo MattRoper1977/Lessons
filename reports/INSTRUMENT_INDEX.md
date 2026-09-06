@@ -340,3 +340,48 @@ least had a measured classroom behind it. This one has none. A pass would have t
 media query is more robust than a single threshold rather than merely more precise.
 
 Raw derivation: `reports/convergence/_data/breakpoint-derivation.json`.
+
+---
+
+## IDX-5 · 41 decks the showSlide patch cannot reach
+
+**Filed 2026-08-01. Measured, not audited.**
+
+Fixing `grow-anim/wire_lessons.py` to assert content drift surfaced something the old
+version could not report: **41 decks carry a `showSlide` the patch table cannot
+match.** They are pretty-printed and carry extra calls the minified single-line
+pattern does not contain:
+
+```js
+  function showSlide(i){
+    slides.forEach((s,j)=>s.classList.toggle('active', j===i));
+    updateProgress();
+    checkTimerVisibility();
+    updateTABrief();
+  }
+```
+
+against the one form `PATCHES[0]` looks for:
+
+```js
+function showSlide(i){slides.forEach(
+```
+
+**This is not drift and is not reported as a failure** — nothing generated them, so
+there is no source they diverged from. It is a coverage gap: those 41 decks will
+never receive the `currentSlide=i` fix, and the old instrument counted every one of
+them as a pass. They now print `UNCOVERED` with the reason.
+
+A pass would have to decide whether the fix matters for these decks (their
+`nextSlide`/`prevSlide` set `currentSlide` before calling, so the desync is latent
+rather than live), and if so whether to widen the patch to a tolerant match or to
+normalise the decks. Both are estate-wide changes to live lessons, which is why this
+is filed rather than done.
+
+Enumerate them with:
+
+```sh
+find . -name '*.html' -not -path './node_modules/*' -not -path './.git/*' \
+  | xargs -d '\n' python3 grow-anim/wire_lessons.py --check --patch-only \
+  | grep '^  UNCOVERED'
+```
