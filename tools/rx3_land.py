@@ -18,12 +18,18 @@ Transformations (all measured and printed; every replacement must match exactly 
 """
 import argparse,json,re,os,sys,hashlib,shutil,importlib.util,html
 ap=argparse.ArgumentParser();ap.add_argument('--pack',required=True);ap.add_argument('--repo',required=True);ap.add_argument('--admission',required=True)
-ap.add_argument('--ids',required=True);ap.add_argument('--dry',action='store_true');ap.add_argument('--json');ap.add_argument('--img',default='/tmp/claude-0/-home-user-Lessons/66c1d222-c1e7-597f-9ba2-ca04f6d2c4f3/scratchpad/img')
+ap.add_argument('--ids',required=True);ap.add_argument('--beside',default='');ap.add_argument('--dry',action='store_true');ap.add_argument('--json');ap.add_argument('--img',default='/tmp/claude-0/-home-user-Lessons/66c1d222-c1e7-597f-9ba2-ca04f6d2c4f3/scratchpad/img')
 a=ap.parse_args();PACK=a.pack;REPO=a.repo
 sys.path.insert(0,os.path.join(REPO,'tools'));import rx3_scenes
 manifest={e['id']:e for e in json.load(open(os.path.join(PACK,'manifest.json')))}
 adm=open(a.admission,encoding='utf-8').read()
 verdict={m[0]:('ADD-BESIDE(R3)' if m[1]=='STOP' else m[1]) for m in re.findall(r'\| (\w+) \| \w+ \| [^|]+ \| [^|]+ \| \d+ \| [^|]+ \| [^|]* \| [^|]* \| \*\*(\w+)\*\* \|',adm)}
+# A REPLACE target whose bytes another current lesson set pins by digest (the David Humanities cover pack records its 30
+# existing routes' sha256 and its CI asserts them) is never overwritten (standing rule): it lands beside instead, and the
+# existing lesson keeps its standing. Ids come from --beside or RX3_BESIDE (comma-separated).
+for _lid in [x for x in (a.beside or os.environ.get('RX3_BESIDE','')).split(',') if x]:
+    assert verdict.get(_lid)=='REPLACE', 'beside override only applies to a REPLACE verdict: '+_lid
+    verdict[_lid]='ADD-BESIDE(pinned)'
 def sha(b):return hashlib.sha256(b).hexdigest()
 def once(s,old,new,label,count=1):
     c=s.count(old)
@@ -176,6 +182,7 @@ def update_manifest(e,v,target,out,rec):
         new['classicPack']={'id':e['id'],'batch':e['batch'],'period':e['period'],'sow':e['sow']['cells']}
         ls.insert(ls.index(row)+1,new)
         if 'lessonCount' in m: m['lessonCount']=len(ls)
+        if 'plannedLessonCount' in m: m['plannedLessonCount']=len(ls)  # the two counts move together (tools/easter/manifest_sequence.py control)
         rec['manifest']=mf[0]+': row added'
     json.dump(m,open(p,'w',encoding='utf-8'),indent=2,ensure_ascii=False);open(p,'a').write('\n')
 def update_source_placement(recs):
