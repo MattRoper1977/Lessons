@@ -24,12 +24,13 @@ def check(root=ROOT):
     assert 'David' not in page.text_content(), 'Public pack naming must be generic'
     files_seen = set()
     deck_count = archive_count = 0
-    for pathway in ('BUILD', 'GROW'):
+    for pathway in ('BUILD', 'GROW', 'LAUNCH'):
         directory = packs / pathway
         source = json.loads((directory / 'SOURCE_MANIFEST.json').read_text())
         archives = json.loads((directory / 'DOWNLOAD_INDEX.json').read_text())['archives']
-        assert len(source['lessons']) == 10
-        assert {r['id'] for r in source['lessons']} == {f'W{w}{p}' for w in range(3, 8) for p in 'AB'}
+        expected = {f'W{w}L{p}' for w in range(3, 8) for p in range(1, 4)} if pathway == 'LAUNCH' else {f'W{w}{p}' for w in range(3, 8) for p in 'AB'}
+        assert len(source['lessons']) == len(expected)
+        assert {r['id'] for r in source['lessons']} == expected
         for lesson in source['lessons']:
             assert lesson['durationMinutes'] == 40
             original = root / lesson['source']['repoPath']
@@ -55,17 +56,36 @@ def check(root=ROOT):
                 elif path.suffix == '.pdf':
                     assert path.read_bytes().startswith(b'%PDF-')
                 files_seen.add(path)
-        assert len(archives) == 16
-        assert sorted(len(a['lessonIds']) for a in archives) == [1]*10 + [2]*5 + [10]
+        standard = [a for a in archives if a.get('kind') != 'format']
+        assert len(standard) == len(expected) + 6
+        per_week = 3 if pathway == 'LAUNCH' else 2
+        assert sorted(len(a['lessonIds']) for a in standard) == [1]*len(expected) + [per_week]*5 + [len(expected)]
+        formats = [a for a in archives if a.get('kind') == 'format']
+        assert {a['format'] for a in formats} == {'PDF', 'PPTX', 'DOCX'}
         for archive in archives:
             path = directory / archive['file']
             assert path.stat().st_size == archive['bytes'] and digest(path) == archive['sha256']
+            included = [lesson for lesson in source['lessons'] if lesson['id'] in archive['lessonIds']]
+            required = {item['file'] for lesson in included for item in lesson['files']}
+            required.update(item['file'] for item in source.get('packFiles', []))
+            if archive.get('kind') == 'format':
+                required = {rel for rel in required if Path(rel).suffix[1:].upper() == archive['format']}
+            assert required <= set(archive['members'].values()), 'Incomplete companion resources: ' + str(path)
             with zipfile.ZipFile(path) as z:
                 assert z.testzip() is None
+                for name, relative in archive['members'].items():
+                    assert z.read(name) == (directory / relative).read_bytes(), 'Stale ZIP member: ' + name
+                if archive.get('kind') == 'format':
+                    assert all(Path(n).suffix[1:].upper() == archive['format'] for n in z.namelist())
                 assert not any('David' in n or Path(n).is_absolute() or '..' in Path(n).parts for n in z.namelist())
             assert page.xpath('//a[@href=$href]', href=pathway + '/' + archive['file'])
             archive_count += 1
-    assert deck_count == 20
+        for item in source.get('packFiles', []):
+            path = directory / item['file']
+            assert path.stat().st_size == item['bytes'] and digest(path) == item['sha256'], 'Pack guidance drift'
+            if path.suffix in {'.pptx', '.docx', '.xlsx', '.pdf'}:
+                files_seen.add(path)
+    assert deck_count == 35
     for href in page.xpath('//a/@href'):
         u = urlsplit(href)
         if u.scheme or u.netloc or href.startswith('/'):
@@ -75,9 +95,9 @@ def check(root=ROOT):
             assert target.exists(), 'Broken local download link: ' + href
         elif u.fragment:
             assert u.fragment in ids
-    assert len(bindings) == 10
-    return {'status': 'PASS', 'editable_powerpoints': deck_count, 'lesson_week_whole_archives': archive_count,
-            'unique_native_downloads': len(files_seen), 'existing_weekly_source_routes_preserved': len(bindings)}
+    assert len(bindings) == 25
+    return {'status': 'PASS', 'editable_powerpoints': deck_count, 'lesson_week_whole_format_archives': archive_count,
+            'unique_native_downloads': len(files_seen), 'classroom_source_routes_preserved': len(bindings)}
 
 
 if __name__ == '__main__':
