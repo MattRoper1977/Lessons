@@ -79,8 +79,18 @@ def run(lessons: Path, apps: Path, canonical: Path) -> list[dict]:
         mutate("assets/mbm-platform.js", lambda b: b + b"\n/* drift */\n", "Canonical shared asset drift remains rejected")
         mutate("resources.json", lambda b: b + b"\n", "Unpinned manifest byte drift remains rejected")
         mutate("index.html", lambda b: b.replace(b"</main>", b"<p>Unreviewed copy</p></main>", 1), "Apps authored wording protection remains active", root=aroot, kind="apps", base_html=apps_html)
+        # Hub rows may address a fragment of one file (…/Teaching_Packs/index.html#build); the
+        # file is what can go missing, once per file. Only a reviewed pin can be missed by the
+        # gate's byte checks; a hub target that is not a pin is asserted present in the checkout.
+        seen = set()
         for hub in SHELF_ROWS:
-            path = lroot / hub["file"]; original = path.read_bytes(); path.unlink()
+            rel = hub["file"].split("#", 1)[0]
+            if rel in seen: continue
+            seen.add(rel)
+            if rel not in gate.CATALOGUE_PINS["files"]:
+                check("Hub row target exists in the Lessons checkout (not a reviewed pin): " + hub["id"], (lessons / rel).is_file())
+                continue
+            path = lroot / rel; original = path.read_bytes(); path.unlink()
             try: check("A missing reviewed hub file is rejected: " + hub["id"], bool(gate.run_checks(lroot, kind="lessons", canonical=canonical)))
             finally: path.write_bytes(original)
 
