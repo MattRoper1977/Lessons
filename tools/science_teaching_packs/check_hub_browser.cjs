@@ -49,11 +49,22 @@ const load=filename=>JSON.parse(fs.readFileSync(filename,'utf8'));
    for(const pathway of ['BUILD','GROW','LAUNCH']){
     const id=pathway.toLowerCase();
     await page.locator('a[href="#'+id+'"]').click();
-    await page.waitForTimeout(250);
+    await page.waitForFunction(target=>{
+     const top=document.getElementById(target).getBoundingClientRect().top;
+     return location.hash==='#'+target && top>=0 && top<=80;
+    },id,{timeout:5000});
     await page.screenshot({path:path.join(output,id+'-'+width+'.png')});
     await page.locator('#'+id+'-week-7').evaluate(e=>e.open=false);
     await page.locator('a[href="#'+id+'-week-7"]').click();
+    // Fragment navigation dispatches hashchange asynchronously after the click.
+    await page.waitForFunction(target=>document.getElementById(target).open,
+     id+'-week-7',{timeout:5000});
     assert.equal(await page.locator('#'+id+'-week-7').evaluate(e=>e.open),true,'Week link opens selected week');
+    await page.waitForFunction(target=>{
+     const top=document.getElementById(target).getBoundingClientRect().top;
+     return location.hash==='#'+target && top>=0 && top<=80;
+    },id+'-week-7',{timeout:5000});
+    await page.screenshot({path:path.join(output,id+'-week-7-'+width+'.png')});
     const whole=manifests[pathway].archives.find(a=>a.kind==='whole');
     const [download]=await Promise.all([
      page.waitForEvent('download',{timeout:120000}),
