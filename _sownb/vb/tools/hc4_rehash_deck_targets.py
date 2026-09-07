@@ -8,7 +8,7 @@ Exit 1: at least one hash moved — STOP, do not edit that deck from this list.
 import hashlib, json, sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]  # _sownb/vb/tools -> repo root
 
 def check(targets):
     moved = []
@@ -19,7 +19,7 @@ def check(targets):
     return moved
 
 def main():
-    targets = json.loads((ROOT / 'HC4_DECK_TARGETS.json').read_text())
+    targets = json.loads((ROOT / '_sownb/vb/HC4_DECK_TARGETS.json').read_text())
     if '--self-test' in sys.argv:
         real = check(targets)
         planted = json.loads(json.dumps(targets))
