@@ -23,6 +23,8 @@ jobs:
         with: {fetch-depth: 0}
       - uses: actions/setup-node@v4
         with: {node-version: '22'}
+      - name: Install test-only IndexedDB implementation
+        run: npm install --no-save --no-package-lock fake-indexeddb@6.2.4
       - name: Native data and persistence firing controls
         run: node tools/glitchclash/gc-handoff.test.cjs
       - uses: actions/checkout@v4
@@ -40,7 +42,7 @@ jobs:
             --lessons "$RUNNER_TEMP/hc3-lessons-baseline" --output "$RUNNER_TEMP/hc3-play-baseline"
       - name: Install existing browser test dependency
         run: |
-          npm install --no-save --no-package-lock playwright@1.54.2
+          npm install --no-save --no-package-lock playwright@1.54.2 fake-indexeddb@6.2.4
           npx playwright install --with-deps chromium
       - name: Phone and desktop native receiver fixtures
         run: node tools/glitchclash/gc-handoff-browser.cjs Games/Glitch_Clash.html "$RUNNER_TEMP/hc3-play-baseline/games" audit-output/hc3-glitch
