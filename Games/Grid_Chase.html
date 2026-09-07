@@ -6,8 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <link rel="canonical" href="https://madebymatt.uk/Lessons/Games/Grid_Chase.html">
 <meta name="theme-color" content="#04060f">
-<title>Grid Chase · AAA V6</title>
-<meta name="description" content="Grid Chase AAA V6 — a standalone neon maze pursuit with readable hunter intent, Warden telegraphs and a viewport-first mobile command tray.">
+<title>Grid Chase — Ghost Circuit</title>
+<meta name="description" content="Grid Chase AFTERLIGHT — a standalone neon maze pursuit with readable hunter intent, Warden telegraphs and a viewport-first mobile command tray.">
 <style>
 :root{
   --cyan:#27e0ff; --magenta:#ff3df0; --amber:#ffb020; --green:#33e08a; --red:#ff3a52;
@@ -111,8 +111,8 @@ button:focus-visible,input:focus-visible{outline:3px solid #fff;outline-offset:3
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
 </style>
-</head>
-<body>
+<style>#signal-button{position:fixed;left:16px;bottom:18px;min-height:48px;z-index:10;padding:12px 16px;border:1px solid #72e5ff;background:#0b253b;color:#fff;border-radius:12px;font:700 13px system-ui}#signal-button:disabled{opacity:.55}#circuit-status{position:fixed;left:16px;top:75px;z-index:5;font:600 13px system-ui;color:#b8ddff;pointer-events:none}#circuit-story{font:14px/1.55 system-ui;color:#b8ddff;padding:12px;border-left:2px solid #78e2e9;margin:12px 0}#v6-badge,#v6-intel{display:none}button:focus-visible{outline:3px solid #fff;outline-offset:3px}@media(pointer:coarse) and (orientation:portrait){#signal-button{bottom:18px;left:12px;max-width:104px;font-size:12px}#circuit-status{top:68px;font-size:12px;max-width:80vw}}</style><style>#circuit-story{position:fixed;left:14px;right:14px;bottom:75px;z-index:6;max-width:680px;margin:0 auto;padding:8px 12px;background:#071223e8;border-radius:8px;pointer-events:none;font-size:12px}@media(pointer:coarse) and (orientation:portrait){#circuit-story{bottom:182px;left:8px;right:8px;font-size:11px;line-height:1.35}}</style></head>
+<body><button id="signal-button" type="button">DECOY [F] · 1</button><div id="circuit-status"></div><div id="circuit-story" role="status">NIX: Recover relay keys. Press F or Decoy to leave a false signal and draw the hunters away.</div>
 <div id="boot"><div class="t">GRID CHASE</div><div class="b"></div><div class="small">powering the grid…</div></div>
 <canvas id="game"></canvas>
 <div id="fx"></div>
@@ -125,7 +125,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #fff;outline-offset:3
 <div id="fright">⚡ HUNTERS VULNERABLE</div>
 <div id="bossbar"><div class="bn">⚠ THE WARDEN ⚠</div><div class="track"><div class="fill" id="bossfill"></div></div><div id="bossphase">DODGE</div></div>
 <div id="banner"></div>
-<div id="v6-badge" aria-hidden="true">AAA V6 · MADE BY MATT</div>
+<div id="v6-badge" aria-hidden="true">AFTERLIGHT · MADE BY MATT</div>
 <div id="v6-intel" aria-live="polite">THREAT INTEL · cones show hunter sight · echoes show projected routes</div>
 <div id="v6-clutch" role="status" aria-live="assertive">⚡ CLUTCH EVADE</div>
 <button id="v6-evade" type="button" aria-label="Emergency evade toward the safest open route">⚡ EVADE</button>
@@ -136,7 +136,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #fff;outline-offset:3
 
 <div id="menu" class="panel hidden" role="dialog" aria-modal="true" aria-labelledby="menu-title"><div class="card">
   <h1 class="panel-title" id="menu-title">GRID CHASE</h1>
-  <div class="pill" style="color:var(--cyan);margin-top:4px">AAA V6 · WARDEN PROTOCOL · MADE BY MATT</div>
+  <div class="pill" style="color:var(--cyan);margin-top:4px">AFTERLIGHT · WARDEN PROTOCOL · MADE BY MATT</div>
   <p id="tagline">Harvest the neon grid while four hunters — each with its own AI — close in. Clear every pip and <b style="color:var(--red)">THE WARDEN</b> awakens: dodge its shockwaves, then strike when its core opens.</p>
   <div class="rules">
     <div class="row"><span>Swipe / arrows / WASD</span><span style="color:var(--cyan)">move — up is up</span></div>
@@ -351,6 +351,31 @@ let skipBanner=false;
 let boss=null, shockwaves=[], hazards=[];
 /* stars (parallax field under floor) */
 let stars=[];
+let intermission=0,gameRandom=mulberry(1),signal=null,signalEnergy=1,signalCooldown=0,relays={},relayCount=0,circuitClock=0;
+const DISTRICTS=[
+ {name:'The Quiet Exchange',line:'NIX: The city still has a heartbeat. Take the relay keys; leave a false signal when the hunters close in.',top:'#163852',front:'#071928',edge:'#63e6f1'},
+ {name:'Glasswater Junction',line:'NIX: Water beneath the glass. The blue hunter reads corridors; turn before it does.',top:'#243461',front:'#10142f',edge:'#a7a6ff'},
+ {name:'The Amber Archive',line:'NIX: These are the memories they tried to erase. Bring every last fragment home.',top:'#4b3526',front:'#26170e',edge:'#ffd181'},
+ {name:'Orchid Relay',line:'NIX: The fourth signal is ours. Your decoy can draw the Warden away, but its shockwave keeps travelling.',top:'#442347',front:'#230d2a',edge:'#f09edf'},
+ {name:'Daybreak Core',line:'NIX: One Warden between us and morning. Restore the final circuit.',top:'#244439',front:'#0d251f',edge:'#7be5b0'}
+];
+function district(){return DISTRICTS[(level-1)%DISTRICTS.length];}
+function placeRelays(){
+ const candidates=Object.keys(maze.pipset).filter(k=>!maze.power[k]);const dist=bfs(maze,maze.start.c,maze.start.r);relays={};
+ candidates.sort((a,b)=>(dist[b]||0)-(dist[a]||0)||a.localeCompare(b));
+ for(const k of candidates){const [c,r]=k.split(',').map(Number);if(Object.keys(relays).every(q=>{const [x,y]=q.split(',').map(Number);return Math.hypot(x-c,y-r)>5;})){relays[k]=true;if(Object.keys(relays).length===3)break;}}
+}
+function signalDecoy(){
+ if(!player||!['RUN','BOSS'].includes(state)||freezeT>0||intermission>0||signalEnergy<=0||signalCooldown>0)return false;
+ signalEnergy--;signalCooldown=6;signal={c:player.c,r:player.r,t:4.5};AU.tele();updateSignalHUD();return true;
+}
+function updateSignalHUD(){const b=$('signal-button'),tx=$('circuit-status');if(b){b.textContent=signalCooldown>0?'DECOY · '+Math.ceil(signalCooldown)+'s':'DECOY [F] · '+signalEnergy;b.disabled=!['RUN','BOSS'].includes(state)||signalEnergy<=0||signalCooldown>0;}
+ if(tx)tx.textContent=district().name+' · relays '+relayCount+'/3'+(signal?' · false signal active':'');}
+function lineOfSight(a,b){if(a.c!==b.c&&a.r!==b.r)return false;const dc=Math.sign(b.c-a.c),dr=Math.sign(b.r-a.r);let c=a.c,r=a.r;while(c!==b.c||r!==b.r){c+=dc;r+=dr;if(!open_(maze,c,r))return false;}return true;}
+function drawSignals(now){if(!maze)return;ctx2.save();for(const k in relays){const [c,r]=k.split(',').map(Number),[x,y]=px(c,r,.32);ctx2.strokeStyle=district().edge;ctx2.lineWidth=2;ctx2.strokeRect(x-S*.24,y-S*.24,S*.48,S*.48);ctx2.fillStyle='#fff';ctx2.font='bold '+Math.max(10,S*.35)+'px system-ui';ctx2.textAlign='center';ctx2.fillText('R',x,y+S*.12);}
+ if(signal){const [x,y]=px(signal.c,signal.r,.1);ctx2.strokeStyle='#b3f4ff';for(let i=0;i<3;i++){let q=settings.calm?.5:((4.5-signal.t)*.7+i/3)%1;ctx2.globalAlpha=(1-q)*.8;ctx2.beginPath();ctx2.ellipse(x,y,S*(.35+q*2),S*TILT*(.35+q*2),0,0,7);ctx2.stroke();}}
+ ctx2.restore();}
+
 
 /* ============================ PROJECTION (2.5D) ============================ */
 // grid (c,r) in cells, h in cells (height) -> screen px
@@ -392,10 +417,11 @@ function hexA(hex,a){const n=parseInt(hex.slice(1),16);return `rgba(${n>>16&255}
 function todaySeed(){const d=new Date();return parseInt(""+d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0"));}
 function newRun(){AU.init();AU.resume();level=1;score=0;lives=settings.relaxed?99:3;bestChain=0;newLevel();}
 function newLevel(){
-  maze=genMaze(seed+level*101);
+  maze=genMaze(seed+level*101);gameRandom=mulberry((seed+level*7919)>>>0);intermission=0;circuitClock=0;signal=null;signalEnergy=1;signalCooldown=0;relayCount=0;placeRelays();
+  const story=$('circuit-story');if(story)story.textContent=district().line;
   pipsTotal=pipsLeft=Object.keys(maze.pipset).length;
   fright=0;comboEat=0;chain=0;chainT=0;freezeT=0.55;
-  gemKey=null;gemT=0;gemNext=7+Math.random()*7;
+  gemKey=null;gemT=0;gemNext=7+gameRandom()*7;
   boss=null;shockwaves=[];hazards=[];
   particles.length=0;
   spawnPlayer();
@@ -428,16 +454,17 @@ function v6SnapshotAll(){v6SnapshotEntity(player);hunters.forEach(v6SnapshotEnti
    authority: they expose the next decisions the existing AI has already made. */
 function v6TraceHunter(h,count=5){
   if(!maze||!player||h.state!=="chase")return[];
-  const e={c:h.c,r:h.r,dir:h.dir},out=[];
-  for(let i=0;i<count;i++){const t=huntTarget(h),d=dirToward(maze,e,t[0],t[1]);if(!open_(maze,e.c+DX[d],e.r+DY[d]))break;e.c+=DX[d];e.r+=DY[d];e.dir=d;out.push([e.c,e.r]);}
+  const e={...h},out=[];if(h.moving){e.c=h.tc;e.r=h.tr;e.moving=false;e.t=0;out.push([e.c,e.r]);}
+  for(let i=0;i<count;i++){const t=huntTarget(e),d=dirToward(maze,e,t[0],t[1]);if(!open_(maze,e.c+DX[d],e.r+DY[d]))break;e.c+=DX[d];e.r+=DY[d];e.dir=d;out.push([e.c,e.r]);}
   return out;
 }
 function drawV6ThreatIntel(now){
-  if(!maze||!player||settings.calm)return;
+  if(!maze||!player)return;
   ctx2.save();ctx2.lineCap="round";
   for(const h of hunters){if(h.state!=="chase")continue;const q=entXYDraw(h),p=px(q[0],q[1],.08),ang=Math.atan2(DY[h.dir]*TILT,DX[h.dir]);
     ctx2.fillStyle=hexA(h.color,.075);ctx2.beginPath();ctx2.moveTo(p[0],p[1]);ctx2.arc(p[0],p[1],S*3.1,ang-.28,ang+.28);ctx2.closePath();ctx2.fill();
-    const path=v6TraceHunter(h);ctx2.strokeStyle=hexA(h.color,.38);ctx2.setLineDash([3,5]);ctx2.lineDashOffset=-now*.012;ctx2.beginPath();ctx2.moveTo(p[0],p[1]);for(const cell of path){const n=px(cell[0],cell[1],.05);ctx2.lineTo(n[0],n[1]);}ctx2.stroke();ctx2.setLineDash([]);
+    const stamp=[h.c,h.r,h.dir,player.c,player.r,player.dir,Math.floor(circuitClock/9),signal?signal.c+','+signal.r:''].join(':');
+    if(h._forecastStamp!==stamp){h._forecastStamp=stamp;h._forecastPath=v6TraceHunter(h);}const path=h._forecastPath;ctx2.strokeStyle=hexA(h.color,.38);ctx2.setLineDash([3,5]);ctx2.lineDashOffset=settings.calm||reducedMotion?0:-now*.012;ctx2.beginPath();ctx2.moveTo(p[0],p[1]);for(const cell of path){const n=px(cell[0],cell[1],.05);ctx2.lineTo(n[0],n[1]);}ctx2.stroke();ctx2.setLineDash([]);
   }
   if(wishDir!==null){const q=entXYDraw(player),a=px(q[0],q[1],.12),b=px(q[0]+DX[wishDir]*2.4,q[1]+DY[wishDir]*2.4,.12);ctx2.strokeStyle="rgba(255,235,150,.55)";ctx2.setLineDash([4,4]);ctx2.beginPath();ctx2.moveTo(a[0],a[1]);ctx2.lineTo(b[0],b[1]);ctx2.stroke();ctx2.setLineDash([]);}
   if(boss){const q=entXYDraw(boss),p=px(q[0],q[1],.08),ratio=clamp(boss.phaseT/(boss.phase==="weak"?bossWeakLen():bossAttackLen()),0,1);ctx2.strokeStyle=boss.phase==="weak"?"rgba(39,224,255,.85)":"rgba(255,176,32,.72)";ctx2.lineWidth=3;ctx2.beginPath();ctx2.ellipse(p[0],p[1],S*(1.05+ratio*.35),S*TILT*(1.05+ratio*.35),0,-Math.PI/2,-Math.PI/2+ratio*Math.PI*2);ctx2.stroke();}
@@ -474,15 +501,17 @@ function updatePlayer(dt){
   });
 }
 function huntTarget(h){
-  if(h.state==="eaten")return [maze.penExit.c,maze.penExit.r];
-  const p=player;
-  if(h.type==="chaser")return [p.c,p.r];
-  if(h.type==="ambush"){let c=clamp(p.c+DX[p.dir]*3,0,GW-1),r=clamp(p.r+DY[p.dir]*3,0,GH-1);
-    return open_(maze,c,r)?[c,r]:[p.c,p.r];}
-  const corners=[[1,1],[GW-2,1],[1,GH-2],[GW-2,GH-2]];
-  if(h.type==="wander")return (Math.abs(h.c-p.c)+Math.abs(h.r-p.r)<6)?[p.c,p.r]:corners[h.scatter%4];
-  if(h.type==="flank")return (Math.abs(h.c-p.c)+Math.abs(h.r-p.r)<=4)?corners[h.scatter%4]:[p.c,p.r];
-  return [p.c,p.r];
+ if(h.state==='eaten')return [maze.penExit.c,maze.penExit.r];
+ if(signal&&h.state==='chase'){const d=bfs(maze,signal.c,signal.r)[key(h.c,h.r)];if(d!==undefined&&d<=12)return [signal.c,signal.r];}
+ const p=player;
+ if(h.type==='chaser')return [p.c,p.r];
+ if(h.type==='ambush'){let c=p.c,r=p.r;for(let i=0;i<4;i++){if(!open_(maze,c+DX[p.dir],r+DY[p.dir]))break;c+=DX[p.dir];r+=DY[p.dir];}return [c,r];}
+ if(h.type==='wander'&&!lineOfSight(h,p)){
+  const corners=[[1,1],[GW-2,1],[1,GH-2],[GW-2,GH-2]],t=corners[(h.scatter+Math.floor(circuitClock/9))%4];
+  let best=[p.c,p.r],bd=Infinity;for(const k of Object.keys(bfs(maze,h.c,h.r))){const [c,r]=k.split(',').map(Number),d=Math.abs(c-t[0])+Math.abs(r-t[1]);if(d<bd){best=[c,r];bd=d;}}return best;
+ }
+ if(h.type==='flank'){const pd=bfs(maze,p.c,p.r),hd=bfs(maze,h.c,h.r);let best=[p.c,p.r],bs=-Infinity;for(const k in pd){const [c,r]=k.split(',').map(Number);if(pd[k]<2||pd[k]>6||neighbors(maze,c,r).length<3)continue;const forward=(c-p.c)*DX[p.dir]+(r-p.r)*DY[p.dir];const value=forward*2-(hd[k]||0)-pd[k]*.3;if(value>bs){best=[c,r];bs=value;}}return best;}
+ return [p.c,p.r];
 }
 function updateHunter(h,dt){
   if(h.state==="pen"){h.wait-=dt;if(h.wait<=0)h.state=fright>0?"flee":"chase";return;}
@@ -498,6 +527,7 @@ function updateHunter(h,dt){
 /* ============================ PIPS / COLLISIONS ============================ */
 function onPlayerCell(c,r){
   const k=key(c,r);
+  if(relays[k]){delete relays[k];relayCount++;signalEnergy=Math.min(3,signalEnergy+1);score+=75;floatText('RELAY +75 · DECOY READY',c,r,district().edge);AU.eat();updateSignalHUD();}
   if(maze.pipset[k]){
     delete maze.pipset[k];pipsLeft--;chain++;chainT=2.2;if(chain>bestChain)bestChain=chain;
     const mult=1+Math.min(4,Math.floor(chain/8));
@@ -517,7 +547,7 @@ function onPlayerCell(c,r){
   }
 }
 function collectGem(){
-  gemKey=null;gemNext=10+Math.random()*9;
+  gemKey=null;gemNext=10+gameRandom()*9;
   const v=100*level;score+=v;AU.eat();
   const [x,y]=entXY(player);burst(x,y,"#ff3df0",12);floatText("+"+v+" GEM",x,y,"var(--magenta)");updateHUD();
 }
@@ -552,10 +582,10 @@ function playerCaught(){
 /* ============================ GEM ============================ */
 function updateGem(dt){
   if(boss)return;
-  if(gemKey){gemT-=dt;if(gemT<=0){gemKey=null;gemNext=9+Math.random()*8;}}
+  if(gemKey){gemT-=dt;if(gemT<=0){gemKey=null;gemNext=9+gameRandom()*8;}}
   else{gemNext-=dt;if(gemNext<=0){
     const ks=Object.keys(maze.pipset);if(!ks.length)return;
-    gemKey=ks[Math.floor(Math.random()*ks.length)];gemT=8;AU.lvl();}}
+    gemKey=ks[Math.floor(gameRandom()*ks.length)];gemT=8;AU.lvl();}}
 }
 
 /* ============================ BOSS: THE WARDEN (hybrid) ============================ */
@@ -605,7 +635,7 @@ function updateBoss(dt){
   }
   // ATTACK phase: chase + shockwaves + hazards
   b.phaseT-=dt;
-  stepGrid(b,b.speed,dt,null,()=>dirToward(maze,b,player.c,player.r));
+  stepGrid(b,b.speed,dt,null,()=>dirToward(maze,b,signal?signal.c:player.c,signal?signal.r:player.r));
   // contact = caught
   const [px_,pr]=entXY(player),[bx,br]=entXY(b);
   if(Math.hypot(bx-px_,br-pr)<0.7){playerCaught();return;}
@@ -622,7 +652,7 @@ function updateBoss(dt){
     b.hazT=Math.max(2.2,4-level*0.18);
     const n=Math.min(4,1+Math.floor(level/2));
     const opens=[];for(let r=0;r<GH;r++)for(let c=0;c<GW;c++)if(open_(maze,c,r)&&!maze.penCells[key(c,r)])opens.push([c,r]);
-    for(let i=0;i<n;i++){const [c,r]=opens[Math.floor(Math.random()*opens.length)];
+    for(let i=0;i<n;i++){const [c,r]=opens[Math.floor(gameRandom()*opens.length)];
       hazards.push({c,r,tele:0.85,zap:0.45});}
     AU.tele();
   }
@@ -653,9 +683,10 @@ function bossDown(){
   boss=null;shockwaves=[];hazards=[];bossUI(false);
   if(!settings.calm&&!reducedMotion){shakeT=0.6;zoomPunch=0.08;flash("rgba(255,176,32,0.3)");}
   banner("WARDEN DOWN → LEVEL "+(level+1),"var(--green)","+"+bonus+" boss bonus"+(bestChain?" · best chain "+bestChain:""));
-  bestChain=0;level++;skipBanner=true;
-  state="RUN";freezeT=1.6;
-  setTimeout(()=>{if(state==="RUN")newLevel();},1400);
+  quest.districts=quest.districts||{};const districtKey=String((level-1)%5);
+  quest.districts[districtKey]=Math.max(quest.districts[districtKey]||0,relayCount);saveJSON(LS_QUEST,quest);
+  const story=$('circuit-story');if(story)story.textContent=level%5===0?'NIX: All five circuits are awake. The city is yours again. The next watch begins at a higher difficulty.':'NIX: '+district().name+' is back online. '+relayCount+' relays recovered.';
+  bestChain=0;level++;skipBanner=true;state="RUN";freezeT=0;intermission=1.6;signal=null;
 }
 
 /* ============================ GAME OVER / BOARDS ============================ */
@@ -688,7 +719,7 @@ function renderBoard(sd){
   if(!b.length){ul.innerHTML='<li class="pill">No scores yet — set the first one!</li>';return;}
   b.forEach((e,i)=>{const li=document.createElement("li");
     const medal=i===0?"🥇":i===1?"🥈":i===2?"🥉":(i+1)+".";
-    li.innerHTML='<span class="brank">'+medal+'</span><span class="bname">'+e.n+'</span><span class="bsc">'+e.s+"</span>";
+    li.innerHTML='<span class="brank">'+medal+'</span><span class="bname">'+String(e.n||'YOU').replace(/[^A-Z0-9]/gi,'').slice(0,3)+'</span><span class="bsc">'+Number(e.s||0)+"</span>";
     ul.appendChild(li);});
 }
 
@@ -799,7 +830,7 @@ function drawFloor(now){
 function wallColors(now){
   if(boss){const p=0.5+0.5*Math.sin(now*0.005);
     return {top:`rgb(${60+p*50},${16},${30+p*14})`,front:"rgba(24,6,14,1)",edge:`rgba(255,${70+p*60},100,0.85)`};}
-  return {top:"#12305c",front:"#0a1a36",edge:"rgba(80,170,255,0.85)"};
+  return district();
 }
 function drawWallRow(r,now){
   const col=wallColors(now);
@@ -824,6 +855,7 @@ function drawWallRow(r,now){
     // top face
     ctx2.fillStyle=col.top;
     ctx2.fillRect(xl,ybackT,w,ytopF-ybackT);
+    if((c+r)%3===0){ctx2.strokeStyle=hexA(district().edge,.27);ctx2.lineWidth=1;ctx2.beginPath();ctx2.moveTo(xl+w*.2,ybackT+2);ctx2.lineTo(xl+w*.2,ytopF-3);ctx2.lineTo(xl+w*.8,ytopF-3);ctx2.stroke();}
     // neon edge on top-front rim
     if(belowOpen){ctx2.strokeStyle=col.edge;ctx2.lineWidth=1.5;
       ctx2.beginPath();ctx2.moveTo(xl+0.5,ytopF);ctx2.lineTo(xl+w-0.5,ytopF);ctx2.stroke();}
@@ -834,6 +866,7 @@ function drawWallRow(r,now){
 }
 function drawItems(now){
   if(!maze)return;
+  drawSignals(now);
   // pips
   for(const k in maze.pipset){
     const [c,r]=k.split(",").map(Number);
@@ -1008,12 +1041,15 @@ function drawParticles(){
 
 /* ============================ UPDATE ============================ */
 function update(dt){
+  if(state!=='RUN'&&state!=='BOSS')return;
+  if(intermission>0){intermission=Math.max(0,intermission-dt);if(intermission===0)newLevel();return;}
   if(freezeT>0){freezeT-=dt;return;}
   if(fright>0){fright-=dt;
     if(fright<=0){hunters.forEach(h=>{if(h.state==="flee")h.state="chase";});comboEat=0;}
     $("fright").classList.toggle("on",fright>0&&!boss);
   } else $("fright").classList.remove("on");
   if(chainT>0){chainT-=dt;if(chainT<=0)chain=0;}
+  circuitClock+=dt;signalCooldown=Math.max(0,signalCooldown-dt);if(signal){signal.t-=dt;if(signal.t<=0)signal=null;}updateSignalHUD();
   updatePlayer(dt);
   for(const h of hunters)updateHunter(h,dt);
   if(state==="RUN"){checkHunterHits();updateGem(dt);}
@@ -1029,6 +1065,7 @@ function setDir(d){
 }
 window.addEventListener("keydown",e=>{
   const t=e.target;if(t&&(t.tagName==="INPUT"||t.tagName==="TEXTAREA"||t.tagName==="SELECT"))return;
+  if(e.code==="KeyF"&&!e.repeat){e.preventDefault();signalDecoy();return;}
   if(e.code==="KeyP"||e.code==="Escape"){togglePause();return;}
   const map={ArrowRight:0,KeyD:0,ArrowDown:1,KeyS:1,ArrowLeft:2,KeyA:2,ArrowUp:3,KeyW:3};
   if(map[e.code]!==void 0){setDir(map[e.code]);e.preventDefault();}
@@ -1120,13 +1157,16 @@ function init(){
   fit();buildSprites();
   stars=[];for(let i=0;i<90;i++)stars.push({x:Math.random()*W,y:Math.random()*H,z:1+Math.random()*2,a:0.3+Math.random()*0.6,p:Math.random()*6});
   window.addEventListener("resize",()=>{fit();stars.forEach(s=>{s.x=Math.random()*W;s.y=Math.random()*H;});});
-  wireUI();refreshSettingsUI();
+  wireUI();refreshSettingsUI();$("signal-button").onclick=signalDecoy;
   if("ontouchstart" in window||(navigator.maxTouchPoints||0)>0)document.body.classList.add("touch");
   seed=todaySeed();$("seed-input").value=seed;refreshBest();
   $("boot").style.display="none";
   showPanel("menu");
   requestAnimationFrame(loop);
 }
+window.__AFTERLIGHT_GRID__={genMaze,bfs,newLevel,newRun,update,signalDecoy,onPlayerCell,huntTarget,bossDown,
+ get snapshot(){return {state,level,score,signalEnergy,signalCooldown,signal,intermission,relays,relayCount,maze,player,hunters,boss};},
+ testSet(o){if(o.state)state=o.state;if(o.boss)boss=o.boss;if(o.player)player=o.player;if(o.signalEnergy!==undefined)signalEnergy=o.signalEnergy;}};
 init();
 
 window.__MBM_V6_RELEASE__={
@@ -1179,7 +1219,7 @@ window.__MBM_V6_RELEASE__={
     'L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"/></svg>';
 
   function start(o) {
-    o = Object.assign({ title: "", kicker: "A Made by Matt AAA V6 Experience",
+    o = Object.assign({ title: "", kicker: "A Made by Matt AFTERLIGHT Experience",
       duration: 1950, onComplete: null }, o || {});
     if (!document.getElementById("mbm-splash-css")) {
       var st = document.createElement("style");
@@ -1195,7 +1235,7 @@ window.__MBM_V6_RELEASE__={
     el.setAttribute("aria-label", "Made by Matt introduction");
     el.innerHTML = '<div class="v6-fly-grid" aria-hidden="true"></div><div class="mbm-stage">' + MARK +
       '<p class="mbm-kicker"></p><h1 class="mbm-title"></h1>' +
-      '<p class="mbm-tagline">AAA V6 \u2022 Warden Protocol</p></div>' +
+      '<p class="mbm-tagline">AFTERLIGHT \u2022 Warden Protocol</p></div>' +
       '<button class="mbm-skip" type="button">Skip intro</button>';
     el.querySelector(".mbm-kicker").textContent = o.kicker;
     el.querySelector(".mbm-title").textContent = o.title;
