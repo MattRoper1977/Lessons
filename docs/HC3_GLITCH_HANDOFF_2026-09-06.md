@@ -1,0 +1,13 @@
+# HC3 Glitch Clash save handoff — resumed 2026-09-07
+
+Status: HELD candidate, not deployed. Supersedes the unsafe localStorage-writing receiver at 1e9578202a42b123f0731bfc7094871ed4ef32aa; that checkpoint remains in Git history. Current-main rollback: 5da7f04df02de0d775a96cbb77399d8c15ad1109. One game source file. Science packs and their owned gate updates are excluded.
+
+The native raw JSON import/export format and existing engine remain. A fragment import now creates a separate campaign in the same-origin native IndexedDB database `mbm_glitchclash_imported_campaigns_v1`. Nothing writes or removes the legacy `glitchclash_save` through this imported-campaign path. Old open tabs therefore retain their legacy campaign.
+
+An imported writer captures each snapshot before asynchronous work, serializes its own queue, and compares the record revision inside the same readwrite transaction as its update. A concurrent stale writer creates a separate continuation instead of replacing the other writer's record. Only transaction completion reports persistence. There is no compensating deletion. Saved campaigns lists every continuation; a tab keeps its own selection across reload, while a newly opened tab uses the last selected campaign as its default.
+
+Import/switch/reset waits behind a bounded native dialog; queued writes finish before selection changes. Failed writes retain the in-memory state and expose retry/export. Ordinary native file import still opens a temporary campaign when durable storage is unavailable, warns before discard, and permits an explicit retry. URL transport cannot claim success using that temporary fallback. Timed campaign actions are tied to their originating save/battle so changing campaigns cannot transfer an old result to the new save.
+
+Validation in progress: native-format and transaction controls pass locally against the actual inline source and a build-only IndexedDB test implementation. Controls cover missing persistence, concurrent writers, queues, atomic abort, quota/retry, denied/blocked storage, malformed saves, origin/path/size checks and per-tab selection. Phone/desktop Chromium fixtures and all eleven existing native suites must pass at this candidate revision before the hold can be resolved.
+
+Release ordering remains Site reviewed source evidence → compatible education publishers → receiver merge → independent Games pin release with live source proof → education sender enablement. No education stub currently includes this receiver's sender. This one adapter does not close the other native importer formats or the entire HC3 order.

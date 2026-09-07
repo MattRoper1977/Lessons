@@ -99,6 +99,7 @@ body.calm #scr-title .btn.primary{animation:none;}
 .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
   background:var(--panel2);border:1px solid #33447a;border-radius:var(--radius);
   padding:12px 16px;font-weight:800;font-size:16px;margin:8px 0;transition:transform .1s;}
+#campaignretrybtn[hidden]{display:none;}
 .btn:active{transform:scale(.98);}
 .btn.primary{background:linear-gradient(120deg,#134e48,#0f3b52);border-color:var(--emm);color:var(--emm);}
 .btn.small{width:auto;padding:8px 14px;font-size:14px;margin:4px;}
@@ -539,6 +540,9 @@ html,body{width:100%;min-height:100%;min-height:100dvh;overflow-x:hidden}
   <button class="btn" id="cbtoggle">Colourblind Palette: Off</button>
   <button class="btn" id="tutreplay">🎓 Replay tutorial</button>
   <button class="btn" id="exportbtn">⬇ Export save</button>
+  <button class="btn" id="campaignsbtn">Saved campaigns</button>
+  <button class="btn" id="campaignretrybtn" hidden>Retry save</button>
+  <div id="campaign-list" hidden></div>
   <label class="btn" style="cursor:pointer">⬆ Import save<input type="file" id="importfile" accept="application/json,.json" style="display:none" aria-label="Import save file"></label>
   <button class="btn" id="resetbtn" style="border-color:var(--soft);color:var(--soft)">Reset progress</button>
   <p class="muted">Glitch Clash saves only on this device. No accounts, no sign-in, no leaderboards — just you and the Glitches.</p>
@@ -562,6 +566,12 @@ html,body{width:100%;min-height:100%;min-height:100dvh;overflow-x:hidden}
 <div class="overlay" id="ov-card"><div class="sheet" id="cardsheet" role="dialog" aria-modal="true" aria-label="Card details"></div></div>
 
 <div class="toast" id="toast"></div>
+<p id="campaign-save-status" role="status" aria-live="polite" hidden
+   style="position:fixed;left:12px;bottom:8px;max-width:calc(100vw - 24px);z-index:90;background:var(--panel);color:var(--ink);padding:6px 10px;border-radius:8px;font-size:12px;pointer-events:none"></p>
+<dialog id="campaign-waiting" aria-labelledby="campaign-waiting-title"
+        style="background:var(--panel);color:var(--ink);border:2px solid var(--emm);border-radius:14px;max-width:calc(100vw - 32px)">
+  <p id="campaign-waiting-title" role="status">Opening saved campaign…</p>
+</dialog>
 
 <script>
 "use strict";
@@ -978,13 +988,254 @@ function loadSave(){
     SV = Engine.sanitizeSave(JSON.parse(raw), DEFAULT_SAVE());
   }catch(e){}
 }
-function save(){ try{ store().setItem("glitchclash_save", JSON.stringify(SV)); }catch(e){} }
+function save(){
+  if(campaignWriteBarrier) return Promise.resolve(false);
+  const snapshot=JSON.stringify(SV);
+  if(campaignWriter){
+    return campaignWriter.write(snapshot).then(()=>true,error=>{
+      campaignSaveNotice();return false;
+    });
+  }
+  try{store().setItem("glitchclash_save",snapshot);return Promise.resolve(true);}
+  catch(error){return Promise.resolve(false);}
+}
+
+/* Imported campaigns have their own transactional store. Older open games only
+   know glitchclash_save, so neither side can overwrite the other's campaign. */
+const CampaignStore = (()=>{
+  const NAME = "mbm_glitchclash_imported_campaigns_v1";
+  const CHOICE = "mbm_glitchclash_campaign_choice_v1";
+  function connect(factory){
+    if(!factory){try{factory=globalThis.indexedDB;}catch(_){} }
+    let connection=null;
+    function open(){
+      if(connection) return connection;
+      connection=new Promise((resolve,reject)=>{
+        let request,finished=false;
+        const timer=setTimeout(()=>finish(Error("Saved campaigns could not be opened. Please try again.")),3000);
+        function finish(error,db){
+          if(finished){if(db) db.close();return;}
+          finished=true;clearTimeout(timer);
+          if(error) reject(error);else resolve(db);
+        }
+        try{request=factory.open(NAME,1);}catch(error){finish(error);return;}
+        request.onupgradeneeded=()=>{
+          request.result.createObjectStore("campaigns",{keyPath:"id",autoIncrement:true});
+        };
+        request.onerror=()=>finish(request.error);
+        request.onblocked=()=>finish(Error("Close the other saved-campaign window and try again."));
+        request.onsuccess=()=>{
+          const db=request.result;
+          db.onversionchange=()=>{db.close();connection=null;};
+          finish(null,db);
+        };
+      });
+      connection.catch(()=>{connection=null;});
+      return connection;
+    }
+    async function transaction(mode,work){
+      const db=await open();
+      return new Promise((resolve,reject)=>{
+        let tx,result;
+        try{tx=db.transaction("campaigns",mode);}catch(error){reject(error);return;}
+        const timer=setTimeout(()=>{try{tx.abort();}catch(_){}},3000);
+        tx.oncomplete=()=>{clearTimeout(timer);resolve(result);};
+        tx.onabort=()=>{clearTimeout(timer);reject(tx.error||Error("The saved campaign was not committed."));};
+        tx.onerror=()=>{}; // Abort owns the failure; success is never a request event.
+        try{work(tx.objectStore("campaigns"),value=>{result=value;});}
+        catch(error){try{tx.abort();}catch(_){}clearTimeout(timer);reject(error);}
+      });
+    }
+    function valid(record){
+      return record && Number.isSafeInteger(record.id) && record.id>0 &&
+        Number.isSafeInteger(record.revision) && record.revision>=0 && typeof record.save==="string";
+    }
+    function confirm(store,expected,done){
+      if(!valid(expected)){store.transaction.abort();return;}
+      const request=store.get(expected.id);
+      request.onsuccess=()=>{
+        const actual=request.result;
+        if(!valid(actual) || actual.revision!==expected.revision || actual.save!==expected.save){
+          store.transaction.abort();return;
+        }
+        done(actual);
+      };
+    }
+    function insert(store,text,parentId,done){
+      const now=Date.now();
+      const record={revision:0,parentId:parentId||null,createdAt:now,updatedAt:now,save:text};
+      const request=store.add(record);
+      request.onsuccess=()=>confirm(store,{...record,id:request.result},done);
+    }
+    function create(text){
+      return transaction("readwrite",(store,done)=>insert(store,text,null,done));
+    }
+    function read(id){
+      return transaction("readonly",(store,done)=>{
+        const request=store.get(id);
+        request.onsuccess=()=>done(valid(request.result)?request.result:null);
+      });
+    }
+    function list(){
+      return transaction("readonly",(store,done)=>{
+        const request=store.getAll();
+        request.onsuccess=()=>done(request.result.filter(valid).sort((a,b)=>b.updatedAt-a.updatedAt||b.id-a.id));
+      });
+    }
+    function commit(expected,text){
+      return transaction("readwrite",(store,done)=>{
+        const request=store.get(expected.id);
+        request.onsuccess=()=>{
+          try{
+          const current=request.result;
+          if(!valid(current) || current.revision!==expected.revision){
+            // The other tab's record stays intact. Both continuations remain
+            // available in Saved campaigns; there is no rollback deletion.
+            insert(store,text,expected.id,done);
+            return;
+          }
+          const next={...current,revision:current.revision+1,updatedAt:Date.now(),save:text};
+          const write=store.put(next);
+          write.onsuccess=()=>confirm(store,next,done);
+          }catch(error){store.transaction.abort();}
+        };
+      });
+    }
+    function writer(initial,changed=()=>{}){
+      let record={...initial},tail=Promise.resolve(),pending=0,failure=null;
+      const api={
+        state:()=>({id:record.id,revision:record.revision,pending,failed:!!failure}),
+        write(text){
+          // Each caller captures its own SV bytes before asynchronous work.
+          pending++;changed(api);
+          const job=tail.then(()=>commit(record,text)).then(next=>{
+            record=next;pending--;failure=null;changed(api);return next;
+          },error=>{pending--;failure=error;changed(api);throw error;});
+          tail=job.catch(()=>{});
+          return job;
+        },
+        flush:()=>tail.then(()=>{if(failure) throw failure;return {...record};})
+      };
+      return api;
+    }
+    return {create,read,list,writer};
+  }
+  function preferred(storage,tabStorage){
+    let value=null;
+    try{tabStorage=tabStorage||globalThis.sessionStorage;value=tabStorage.getItem(CHOICE);}catch(_){}
+    if(value===null){try{storage=storage||globalThis.localStorage;value=storage.getItem(CHOICE);}catch(_){} }
+    return /^[1-9][0-9]*$/.test(value||"")&&Number.isSafeInteger(Number(value))?Number(value):null;
+  }
+  function prefer(id,storage,tabStorage){
+    const value=id===null?"legacy":String(id);
+    try{tabStorage=tabStorage||globalThis.sessionStorage;tabStorage.setItem(CHOICE,value);}catch(_){}
+    try{storage=storage||globalThis.localStorage;storage.setItem(CHOICE,value);}catch(_){}
+  }
+  function memory(text,changed=()=>{}){
+    const api={
+      state:()=>({id:null,revision:0,pending:0,failed:false,volatile:true}),
+      write(value){text=value;changed(api);return Promise.resolve({save:text});},
+      flush:()=>Promise.resolve({save:text})
+    };
+    return api;
+  }
+  return {connect,memory,preferred,prefer,NAME,CHOICE};
+})();
+const campaignRepository=CampaignStore.connect();
+let campaignWriter=null,campaignWriteBarrier=false;
+let campaignSaveNotice=()=>{};
+
+/* HC3: route-specific transport through the existing native campaign importer.
+   The file picker retains its historical sanitizer/fallback behavior. A URL
+   handoff additionally requires a valid current save and an atomic new record. */
+const CampaignImport = (()=>{
+  const KEY="glitchclash_save", ROUTE="/Lessons/Games/Glitch_Clash.html";
+  const plain=value=>!!value && typeof value==="object" && !Array.isArray(value);
+  function prepare(text, strict=false){
+    const data=JSON.parse(text);
+    if(strict){
+      const malformed=()=>{throw Error("That link does not contain a supported Glitch Clash campaign save.");};
+      if(!plain(data) || data.v!==SAVE_VERSION || !Number.isFinite(data.xp) || data.xp<0) malformed();
+      for(const key of ["owned","team","cleared"])
+        if(!Array.isArray(data[key]) || data[key].some(value=>typeof value!=="string")) malformed();
+      for(const key of ["dups","stickers","settings","stats","seen"])
+        if(!plain(data[key])) malformed();
+      for(const key of ["owned","team"])
+        if(data[key].some(id=>!Object.prototype.hasOwnProperty.call(CARD_BY_ID,id))) malformed();
+      for(const [id,count] of Object.entries(data.dups))
+        if(!Object.prototype.hasOwnProperty.call(CARD_BY_ID,id) || !Number.isFinite(count) || count<0) malformed();
+      for(const key of ["wins","clashWins"])
+        if(!Object.prototype.hasOwnProperty.call(data.stats,key)) malformed();
+      // Every campaign statistic is numeric; several render directly in result
+      // markup. Reject non-numeric optional fields as well as the required ones.
+      for(const value of Object.values(data.stats))
+        if(!Number.isFinite(value) || value<0) malformed();
+      for(const key of ["calm","hc","cb"])
+        if(typeof data.settings[key]!=="boolean") malformed();
+      if(!["auto","on","off"].includes(data.settings.motion)) malformed();
+      const pending=[[data,0]];
+      while(pending.length){
+        const [value,depth]=pending.pop();
+        if(depth>24) malformed();
+        if(value && typeof value==="object") for(const [key,item] of Object.entries(value)){
+          if(["__proto__","constructor","prototype"].includes(key)) malformed();
+          if(item && typeof item==="object") pending.push([item,depth+1]);
+        }
+      }
+    }
+    return Engine.sanitizeSave(data, DEFAULT_SAVE());
+  }
+  function cleanURL(href){
+    const url=new URL(href), params=new URLSearchParams(url.hash.slice(1));
+    if(!params.has("mbm_import")) return null;
+    params.delete("mbm_import"); url.hash=params.toString();
+    return url.href;
+  }
+  function decode(href){
+    const url=new URL(href), params=new URLSearchParams(url.hash.slice(1));
+    if(!params.has("mbm_import")) return null;
+    if(url.origin!=="https://www.madebymatt-play.uk" || url.pathname!==ROUTE)
+      throw Error("Open the campaign transfer on the Glitch Clash page on the games website.");
+    if(new TextEncoder().encode(url.hash).length>32768 || params.getAll("mbm_import").length!==1)
+      throw Error("This transfer link is too large or repeated. Use the game's save-file import instead.");
+    const encoded=params.get("mbm_import");
+    if(!encoded || !/^[A-Za-z0-9_-]+$/.test(encoded)) throw Error("This campaign transfer link could not be read.");
+    const binary=atob(encoded.replace(/-/g,"+").replace(/_/g,"/"));
+    const canonical=btoa(binary).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+    if(canonical!==encoded) throw Error("This campaign transfer link could not be read.");
+    const bytes=Uint8Array.from(binary,ch=>ch.charCodeAt(0));
+    return new TextDecoder("utf-8",{fatal:true}).decode(bytes);
+  }
+  async function receive(href, repository){
+    const text=decode(href);
+    if(text===null) return null;
+    const candidate=prepare(text,true);
+    return repository.create(JSON.stringify(candidate));
+  }
+  return {prepare,cleanURL,decode,receive};
+})();
 
 /* ---------- UI (browser only) ---------- */
 if (typeof document !== "undefined") (function(){
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const rng = Math.random;
 let battle=null, pickSlot=null;
+let cancelCampaignRing=()=>{};
+function campaignLater(action,delay){
+  const ownerSave=SV,ownerBattle=battle;
+  return setTimeout(()=>{if(SV===ownerSave && battle===ownerBattle) action();},delay);
+}
+function leaveCampaignRun(){
+  cancelCampaignRing();Pointer.cancel();
+  battle=null;endlessRun=null;boonPending=false;stopRunClock();
+}
+const rememberedCampaign=CampaignStore.preferred();
+campaignWriteBarrier=CampaignImport.cleanURL(location.href)!==null || rememberedCampaign!==null;
+for(const eventName of ["keydown","click","pointerdown"]){
+  document.addEventListener(eventName,event=>{
+    if(campaignWriteBarrier){event.preventDefault();event.stopImmediatePropagation();}
+  },true);
+}
 
 loadSave(); applySettings();
 /* FX.init() used to be called here. `const FX` is declared ~1150 lines below,
@@ -1022,7 +1273,7 @@ function openSheet(n){ if(n==="stickers") renderStickers();
 function closeSheets(){ $$(".overlay").forEach(o=>o.classList.remove("show"));
   /* Escape or the backdrop must never strand an Endless run mid-pick — if the
      boon sheet is dismissed without a choice, carry on with no boon taken. */
-  if(typeof boonPending!=="undefined" && boonPending){ boonPending=false; setTimeout(nextEndlessRound,320); }
+  if(typeof boonPending!=="undefined" && boonPending){ boonPending=false; campaignLater(nextEndlessRound,320); }
   if(lastFocus&&lastFocus.focus&&document.contains(lastFocus)) lastFocus.focus(); lastFocus=null; }
 document.addEventListener("keydown",e=>{
   if(e.key!=="Tab") return;
@@ -1089,21 +1340,51 @@ $("#exportbtn").onclick=()=>{
   }catch(e){ toast("Export isn't available in this browser."); }
 };
 $("#importfile").addEventListener("change",e=>{
-  const f=e.target.files&&e.target.files[0]; if(!f) return;
+  const f=e.target.files&&e.target.files[0]; e.target.value=""; if(!f) return;
+  if(campaignWriter && campaignWriter.state().volatile && !confirm("This campaign is saved only in this tab. Export it first if you want to keep it. Open another save now?")) return;
+  campaignWait(true);
   const r=new FileReader();
-  r.onload=()=>{
+  r.onerror=r.onabort=()=>{campaignWait(false);toast("The save file could not be read. Your current campaign is kept.");};
+  r.onload=async()=>{
     try{
-      SV=Engine.sanitizeSave(JSON.parse(r.result), DEFAULT_SAVE());
-      save(); applySettings(); closeSheets(); go("home");
-      toast("Save imported — welcome back, Keeper.");
-    }catch(err){ toast("That file didn't look like a Glitch Clash save."); }
+      const candidate=CampaignImport.prepare(r.result);
+      if(campaignWriter || location.origin==="https://www.madebymatt-play.uk"){
+        if(campaignWriter) await campaignWriter.flush();
+        try{
+          const record=await campaignRepository.create(JSON.stringify(candidate));
+          adoptCampaign(record);
+        }catch(error){
+          if(campaignWriter && !campaignWriter.state().volatile) throw error;
+          // Ordinary native file import still works without IndexedDB. Its
+          // separate in-memory continuation never writes the legacy campaign.
+          leaveCampaignRun();SV=candidate;
+          campaignWriter=CampaignStore.memory(JSON.stringify(candidate),owner=>{
+            if(campaignWriter===owner) campaignSaveNotice();
+          });
+          campaignSaveNotice();
+        }
+      }else{
+        leaveCampaignRun();SV=candidate;campaignWriteBarrier=false;
+        await save();
+      }
+      applySettings();closeSheets();go("home");
+      toast(campaignWriter && campaignWriter.state().volatile?"Save opened in this tab. Export it before closing.":"Save imported — welcome back, Keeper.");
+    }catch(err){toast("That save could not be imported. Your existing campaign is kept.");}
+    finally{campaignWait(false);}
   };
-  r.readAsText(f); e.target.value="";
+  r.readAsText(f);
 });
 let resetArm=false;
-$("#resetbtn").onclick=()=>{
+$("#resetbtn").onclick=async()=>{
   if(!resetArm){ resetArm=true; $("#resetbtn").textContent="Tap again to confirm reset"; setTimeout(()=>{resetArm=false;$("#resetbtn").textContent="Reset progress";},3000); return; }
-  SV=DEFAULT_SAVE(); save(); applySettings(); closeSheets(); go("title"); toast("Fresh start. Welcome back, Keeper.");
+  campaignWait(true);
+  try{
+    const fresh=DEFAULT_SAVE();
+    if(campaignWriter){await campaignWriter.write(JSON.stringify(fresh));leaveCampaignRun();SV=fresh;}
+    else{leaveCampaignRun();SV=fresh;campaignWriteBarrier=false;await save();}
+    applySettings();closeSheets();go("title");toast("Fresh start. Welcome back, Keeper.");
+  }catch(error){toast("Progress could not be reset. Your saved campaign is kept.");}
+  finally{campaignWait(false);}
 };
 
 /* ----- art ----- */
@@ -1371,7 +1652,7 @@ function showModPick(){
       announce(modById(id).name+(pendingMods.includes(id)?" on":" off"));
     };
   });
-  $("#modgo").onclick=()=>{ closeSheets(); setTimeout(()=>startEndless(pendingMods.slice()),260); };
+  $("#modgo").onclick=()=>{ closeSheets(); campaignLater(()=>startEndless(pendingMods.slice()),260); };
 }
 
 function startEndless(mods){
@@ -1444,7 +1725,7 @@ function endlessAdvance(won){
     endlessRun.round++;
     save();
     offerLeagueCard();
-    setTimeout(nextEndlessRound, 30);
+    campaignLater(nextEndlessRound, 30);
     return true;
   }
   if(!won){
@@ -1472,7 +1753,7 @@ function endlessAdvance(won){
   }
   // Purist skips the picker outright rather than offering a choice it then ignores
   if((endlessRun.round-1) % 3 === 0 && !(endlessRun.mods||[]).includes("noboons")) showBoonPick();
-  else setTimeout(nextEndlessRound, 500);
+  else campaignLater(nextEndlessRound, 500);
   return true;
 }
 function showBoonPick(){
@@ -1492,7 +1773,7 @@ function showBoonPick(){
       boonPending=false;
       try{ GCX.sfx.unlock(); }catch(e){}
       toast(btn.querySelector("b").textContent+" taken.");
-      closeSheets(); setTimeout(nextEndlessRound,320); };
+      closeSheets(); campaignLater(nextEndlessRound,320); };
   });
 }
 
@@ -1775,16 +2056,19 @@ const Pointer = (()=>{
     }
     st=null;
   }
-  function cancel(){
+  function cancel(notify=true){
+    if(raf){cancelAnimationFrame(raf);raf=0;}
     if(!st) return;
-    clearTimeout(st.longT);
+    const prior=st;st=null;
+    clearTimeout(prior.longT);
+    try{prior.el.releasePointerCapture(prior.id);}catch(_){}
     const g=ghostEl(); g.style.transform="translate3d(-999px,-999px,0)"; g.innerHTML="";
-    if(st.el) st.el.classList.remove("dragging");
+    if(prior.el) prior.el.classList.remove("dragging");
     document.querySelectorAll("[data-drop]").forEach(d=>d.classList.remove("drop-target","hot"));
-    st.cfg.onCancel&&st.cfg.onCancel(st.el);
-    st=null;
+    if(notify && prior.cfg.onCancel) prior.cfg.onCancel(prior.el);
   }
   return {
+    cancel:()=>cancel(false),
     bind(el,cfg){
       el.style.touchAction="none";
       el.addEventListener("pointerdown",e=>{e.preventDefault();down(e,cfg);});
@@ -1798,6 +2082,9 @@ const Pointer = (()=>{
 
 /* ================= v2: BEAM CLASH TIMING RING ================= */
 function runRing(done){
+  cancelCampaignRing();
+  const ownerSave=SV,ownerBattle=battle;
+  const current=()=>SV===ownerSave && battle===ownerBattle;
   const calm = SV.settings.calm || document.body.classList.contains("reduce-motion");
   // Calm Mode: half speed, much wider window — slower, not automatic
   const period = calm ? 2600 : 1300;
@@ -1823,9 +2110,16 @@ function runRing(done){
     : "Tap when the pointer hits the bright arc.";
   verdict.textContent=""; btn.disabled=false;
   showOv($("#ov-ring"));
-  let raf=0, t0=performance.now(), settled=false;
+  let raf=0, t0=performance.now(), settled=false,cleanupTimer=0;
+  function cleanup(){
+    settled=true;cancelAnimationFrame(raf);clearInterval(cleanupTimer);
+    document.removeEventListener("keydown",keyTap);
+    if(cancelCampaignRing===cleanup) cancelCampaignRing=()=>{};
+  }
+  cancelCampaignRing=cleanup;
   Haptics.charge();
   function loop(now){
+    if(!current()) return cleanup();
     const ang=((now-t0)%period)/period*360;
     hand.style.transform=`rotate(${ang}deg)`;
     if(now-t0 > period*3 && !settled) return finish(0.15,"TOO SLOW","ok");
@@ -1833,6 +2127,7 @@ function runRing(done){
   }
   raf=requestAnimationFrame(loop);
   function tap(){
+    if(!current()) return cleanup();
     if(settled) return;
     const ang=((performance.now()-t0)%period)/period*360;
     let d=Math.abs(((ang-(zoneStart+zoneDeg/2))+540)%360-180); // distance from zone centre
@@ -1845,18 +2140,19 @@ function runRing(done){
     finish(skill,label,cls);
   }
   function finish(skill,label,cls){
-    settled=true; cancelAnimationFrame(raf); btn.disabled=true;
+    if(!current()) return cleanup();
+    cleanup();btn.disabled=true;
     verdict.className="ring-verdict "+cls; verdict.textContent=label;
     FX.clash(); if(skill>=0.75) FX.shake(22);
     if(skill>=1.0) stick("perfect");
     if(skill>=0.75) Haptics.impact(26); else if(skill<0.4) Haptics.fail();
     announce("Clash timing: "+label);
-    setTimeout(()=>{ closeSheets(); done(skill); }, 620);
+    campaignLater(()=>{ closeSheets(); done(skill); }, 620);
   }
   $("#ringtap").onclick=tap;
   const keyTap=e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); tap(); } };
   document.addEventListener("keydown",keyTap);
-  const clean=setInterval(()=>{ if(settled){ document.removeEventListener("keydown",keyTap); clearInterval(clean); } },200);
+  cleanupTimer=setInterval(()=>{if(settled || !current()) cleanup();},200);
 }
 
 /* ================= v2: CORRUPTION PROMPT ================= */
@@ -3076,6 +3372,7 @@ function doTurn(cmd){
   }
 }
 function showClash(ev, narrate){
+  const ownerSave=SV,ownerBattle=battle;
   battle.usedClash=true;
   const share=Math.round(ev.share*100);
   $("#pbeam").style.width="50%";
@@ -3083,7 +3380,7 @@ function showClash(ev, narrate){
   $("#clashresult").textContent="";
   $("#clashsub").textContent="Two specials collide mid-arena…";
   $("#clash").classList.add("show");
-  setTimeout(()=>{
+  campaignLater(()=>{
     $("#pbeam").style.width=share+"%";
     document.querySelector(".beams").style.setProperty("--mid",share+"%");
     const won=ev.winner==="p";
@@ -3091,6 +3388,7 @@ function showClash(ev, narrate){
     if(won){ SV.stats.clashWins++; stick("clash"); save(); }
   }, document.body.classList.contains("reduce-motion")?50:600);
   $("#clashok").onclick=()=>{
+    if(SV!==ownerSave || battle!==ownerBattle) return;
     $("#clash").classList.remove("show");
     narrate();
     if(battle.__after){ const f=battle.__after; battle.__after=null; f(); }
@@ -3339,6 +3637,119 @@ function renderStickers(){
     el.insertBefore(wrap, el.firstChild);
   }
 }
+/* Campaign selection changes only after pending writes have committed. The
+   native dialog is a real interaction barrier, independent of V6 screen inert. */
+const campaignWaiting=document.getElementById("campaign-waiting");
+const campaignStatus=document.getElementById("campaign-save-status");
+campaignWaiting.addEventListener("cancel",event=>event.preventDefault());
+function campaignWait(active){
+  campaignWriteBarrier=active;
+  if(active && !campaignWaiting.open) campaignWaiting.showModal();
+  if(!active && campaignWaiting.open) campaignWaiting.close();
+}
+campaignSaveNotice=()=>{
+  const state=campaignWriter && campaignWriter.state();
+  campaignStatus.hidden=!state || (!state.pending && !state.failed && !state.volatile);
+  document.getElementById("campaignretrybtn").hidden=!state || (!state.failed && !state.volatile);
+  if(!state) return;
+  campaignStatus.textContent=state.volatile?"This campaign is open in this tab only. Export your save before closing.":state.failed?
+    "Progress is not saved yet. Keep this tab open or export your save in Settings.":
+    state.pending?"Saving campaign…":"Transferred campaign saved on this device.";
+  if(!state.failed && !state.pending && !state.volatile) CampaignStore.prefer(state.id);
+};
+function adoptCampaign(record){
+  const candidate=CampaignImport.prepare(record.save);
+  leaveCampaignRun();
+  campaignWriter=campaignRepository.writer(record,owner=>{
+    if(campaignWriter===owner) campaignSaveNotice();
+  });
+  SV=candidate;
+  campaignSaveNotice();
+}
+window.addEventListener("beforeunload",event=>{
+  const state=campaignWriter && campaignWriter.state();
+  if(state && (state.pending || state.failed || state.volatile)){
+    event.preventDefault();event.returnValue="";
+  }
+});
+window.__GCcampaign=()=>campaignWriter?campaignWriter.state():null;
+async function chooseCampaign(id){
+  if(campaignWriter && campaignWriter.state().volatile && !confirm("This campaign is saved only in this tab. Export it first if you want to keep it. Change campaign now?")) return;
+  campaignWait(true);
+  try{
+    if(campaignWriter) await campaignWriter.flush();
+    if(id===null){
+      leaveCampaignRun();campaignWriter=null;SV=DEFAULT_SAVE();loadSave();
+      CampaignStore.prefer(null);campaignSaveNotice();
+    }else{
+      const record=await campaignRepository.read(id);
+      if(!record) throw Error("That saved campaign could not be opened.");
+      adoptCampaign(record);
+    }
+    applySettings();closeSheets();go("home");
+  }catch(error){toast("The campaign could not be changed. Keep this tab open or export your current save.");}
+  finally{campaignWait(false);}
+}
+document.getElementById("campaignsbtn").onclick=async()=>{
+  const list=document.getElementById("campaign-list");
+  list.hidden=false;list.replaceChildren();
+  const existing=document.createElement("button");
+  existing.className="btn";existing.textContent="Existing campaign on this games website";
+  existing.onclick=()=>chooseCampaign(null);list.append(existing);
+  const status=document.createElement("p");status.setAttribute("role","status");
+  status.textContent="Opening saved campaigns…";list.append(status);
+  try{
+    const records=await campaignRepository.list();
+    status.textContent=records.length?"Choose a transferred campaign. Other saved campaigns are kept.":"No transferred campaigns are saved yet.";
+    for(const record of records){
+      const button=document.createElement("button");button.className="btn";
+      let progress="";
+      try{progress=" · "+CampaignImport.prepare(record.save).xp+" XP";}catch(_){}
+      button.textContent=(record.parentId?"Separate continuation ":"Transferred campaign ")+record.id+progress+" · "+new Date(record.updatedAt).toLocaleString();
+      button.dataset.campaignId=String(record.id);
+      button.onclick=()=>chooseCampaign(record.id);list.append(button);
+    }
+  }catch(error){status.textContent="Saved campaigns could not be opened. Your existing campaign and save-file tools remain available.";}
+};
+document.getElementById("campaignretrybtn").onclick=async()=>{
+  if(!campaignWriter) return;
+  campaignWait(true);
+  try{
+    const snapshot=JSON.stringify(SV);
+    if(campaignWriter.state().volatile) adoptCampaign(await campaignRepository.create(snapshot));
+    else await campaignWriter.write(snapshot);
+    toast("Campaign saved on this device.");
+  }catch(error){toast("This browser still could not save the campaign. Export your save to keep it.");}
+  finally{campaignWait(false);}
+};
+
+// Remove the transport before any asynchronous work or later game layer reads
+// the URL. Adoption waits until every native browser module has initialized.
+const campaignImportURL=location.href;
+const cleanedCampaignURL=CampaignImport.cleanURL(campaignImportURL);
+const preferredCampaign=rememberedCampaign;
+if(cleanedCampaignURL!==null || preferredCampaign!==null){
+  campaignWait(true);
+  (async()=>{
+    try{
+      if(cleanedCampaignURL!==null){
+        history.replaceState(history.state,"",cleanedCampaignURL);
+        const imported=await CampaignImport.receive(campaignImportURL,campaignRepository);
+        if(imported) adoptCampaign(imported);
+      }else{
+        const record=await campaignRepository.read(preferredCampaign);
+        if(!record) throw Error("The selected campaign was not found.");
+        adoptCampaign(record);
+      }
+      applySettings();closeSheets();go("home");
+      toast("Campaign ready — welcome back, Keeper.");
+    }catch(error){
+      leaveCampaignRun();campaignWriter=null;SV=DEFAULT_SAVE();loadSave();applySettings();
+      toast("This campaign could not be opened. Your existing progress and original copy are kept.");
+    }finally{campaignWait(false);}
+  })();
+}
+
 })();
 /* ---------- node export for sim harness ---------- */
 if (typeof module!=="undefined" && module.exports){
