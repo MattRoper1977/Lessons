@@ -56,6 +56,30 @@ SHELF_ROWS = [
     },
     {
         "subject": "Science · Teesside", "title": "LAUNCH Science teaching pack · Autumn 1 Weeks 3–7", "file": "Science_Teesside/Teaching_Packs/index.html#launch", "id": "science-teaching-pack-launch-autumn1", "type": "hub", "family": "Science Teesside", "keywords": ["science", "launch", "teaching pack", "powerpoint", "word", "pdf", "autumn 1"], "desc": "Editable LAUNCH Science lessons for Autumn 1 Weeks 3–7: PowerPoint decks, pupil resources and teacher guidance as PowerPoint, Word and PDF downloads.", "added": "2026-09-07", "new": True, "year": "2026-27"
+    },
+    {
+        "subject": "BUILD Vocational & PfA", "title": "BUILD Careers teaching pack · Autumn 1 Weeks 1–7", "file": "Careers/Teaching_Packs/index.html#build", "id": "careers-teaching-pack-build-autumn1", "type": "hub", "family": "Careers", "keywords": ["careers", "build", "teaching pack", "powerpoint", "word", "pdf", "offline html", "careers", "my journey", "skills", "profile"], "desc": "HTML lessons using the established Made by Matt classroom chassis and pathway colours. Editable PowerPoint teaching decks and matching slide PDFs.", "added": "2026-09-07", "new": True, "year": "2026-27"
+    },
+    {
+        "subject": "GROW Vocational & PfA", "title": "GROW Careers teaching pack · Autumn 1 Weeks 1–7", "file": "Careers/Teaching_Packs/index.html#grow", "id": "careers-teaching-pack-grow-autumn1", "type": "hub", "family": "Careers", "keywords": ["careers", "grow", "teaching pack", "powerpoint", "word", "pdf", "offline html", "careers", "evidence", "career families", "profile"], "desc": "HTML lessons using the established Made by Matt classroom chassis and pathway colours. Editable PowerPoint teaching decks and matching slide PDFs.", "added": "2026-09-07", "new": True, "year": "2026-27"
+    },
+    {
+        "subject": "GROW Vocational & PfA", "title": "GROW ICT teaching pack · Autumn 1 Weeks 1–7", "file": "ICT/Teaching_Packs/index.html#grow", "id": "ict-teaching-pack-grow-autumn1", "type": "hub", "family": "ICT", "keywords": ["ict", "grow", "teaching pack", "powerpoint", "word", "pdf", "offline html", "ict", "computing", "documents", "spreadsheets", "starter files"], "desc": "HTML lessons using the established Made by Matt classroom chassis and pathway colours. Editable PowerPoint teaching decks and matching slide PDFs.", "added": "2026-09-07", "new": True, "year": "2026-27"
+    },
+    {
+        "subject": "BUILD Vocational & PfA", "title": "BUILD Textiles teaching pack · Autumn 1 Weeks 5–7", "file": "DT_Textiles/Teaching_Packs/index.html#build", "id": "textiles-teaching-pack-build-autumn1", "type": "hub", "family": "DT Textiles", "keywords": ["textiles", "build", "teaching pack", "powerpoint", "word", "pdf", "offline html", "textiles", "design technology", "pocket", "pattern"], "desc": "HTML lessons using the established Made by Matt classroom chassis and pathway colours. Editable PowerPoint teaching decks and matching slide PDFs. Weeks 5 and 6 adapt the supplied lessons. Week 7 is newly authored from the GROW sequence, with BUILD adaptations based on the shared BUILD/GROW source lessons.", "added": "2026-09-07", "new": True, "year": "2026-27"
+    },
+    {
+        "subject": "GROW Vocational & PfA", "title": "GROW Textiles teaching pack · Autumn 1 Weeks 5–7", "file": "DT_Textiles/Teaching_Packs/index.html#grow", "id": "textiles-teaching-pack-grow-autumn1", "type": "hub", "family": "DT Textiles", "keywords": ["textiles", "grow", "teaching pack", "powerpoint", "word", "pdf", "offline html", "textiles", "design technology", "pocket", "pattern"], "desc": "HTML lessons using the established Made by Matt classroom chassis and pathway colours. Editable PowerPoint teaching decks and matching slide PDFs. Weeks 5 and 6 adapt the supplied lessons. Week 7 is newly authored from the GROW sequence, with BUILD adaptations based on the shared BUILD/GROW source lessons.", "added": "2026-09-07", "new": True, "year": "2026-27"
+    },
+    {
+        "subject": "BUILD Vocational & PfA", "title": "BUILD FoodWise teaching pack · Autumn 1 Weeks 1–6", "file": "BUILD_ASDAN/FoodWise/Teaching_Packs/index.html#build", "id": "foodwise-teaching-pack-build-autumn1", "type": "hub", "family": "FoodWise", "keywords": ["foodwise", "build", "teaching pack", "powerpoint", "word", "pdf", "offline html", "foodwise", "food", "safety", "labels", "recipe"], "desc": "Six existing BUILD FoodWise topics, with updated safety, labels, practical recipe support and evaluation.", "added": "2026-09-07", "new": True, "year": "2026-27"
+    },
+    {
+        "subject": "GROW Vocational & PfA", "title": "GROW FoodWise teaching pack · Autumn 1 Weeks 1–4", "file": "GROW_FoodWise/Teaching_Packs/index.html#grow", "id": "foodwise-teaching-pack-grow-autumn1", "type": "hub", "family": "FoodWise", "keywords": ["foodwise", "grow", "teaching pack", "powerpoint", "word", "pdf", "offline html", "foodwise", "food", "design technology"], "desc": "Four FoodWise lessons matching the uploaded D&T Weeks 1-4 and the current GROW D&T sequence.", "added": "2026-09-07", "new": True, "year": "2026-27"
+    },
+    {
+        "subject": "PSHE & ASDAN", "title": "GROW PSHE teaching pack · All About Me · Weeks 1–7", "file": "PSHE/Teaching_Packs/index.html#grow", "id": "pshe-teaching-pack-grow-all-about-me", "type": "hub", "family": "PSHE", "keywords": ["pshe", "grow", "teaching pack", "powerpoint", "word", "pdf", "offline html", "pshe", "all about me", "personal development", "strengths"], "desc": "Seven original GROW lessons adapted from the uploaded All About Me sequence.", "added": "2026-09-07", "new": True, "year": "2026-27"
     }
 ]
 
