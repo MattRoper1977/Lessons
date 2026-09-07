@@ -58,6 +58,7 @@ def run(lessons: Path, apps: Path, canonical: Path) -> list[dict]:
         for src, dst, kind in ((lessons, lroot, "lessons"), (apps, aroot, "apps")):
             paths = {"index.html", "resources.json" if kind == "lessons" else "apps.json", GATE, "tools/pin_manifests.py", gate.PUBLICATION_CALLER_PATH, gate.PUBLICATION_GATE_WORKFLOW_PATH, *gate.CANONICAL_HASHES}
             if kind == "lessons": paths.update(gate.CATALOGUE_PINS["files"])
+            else: paths.update(gate.LUNDYLOOP_CI_PINS)
             for rel in paths:
                 output = dst / rel; output.parent.mkdir(parents=True, exist_ok=True); shutil.copy2(src / rel, output)
         check("Unmodified Lessons fixture passes the complete cross-estate gate", not gate.run_checks(lroot, kind="lessons", canonical=canonical))
