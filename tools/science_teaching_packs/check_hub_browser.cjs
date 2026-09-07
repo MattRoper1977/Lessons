@@ -50,8 +50,10 @@ const load=filename=>JSON.parse(fs.readFileSync(filename,'utf8'));
     const id=pathway.toLowerCase();
     await page.locator('a[href="#'+id+'"]').click();
     await page.waitForFunction(target=>{
-     const top=document.getElementById(target).getBoundingClientRect().top;
-     return location.hash==='#'+target && top>=0 && top<=80;
+     const element=document.getElementById(target);
+     const offset=(parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop)||0)
+      +(parseFloat(getComputedStyle(element).scrollMarginTop)||0);
+     return location.hash==='#'+target && Math.abs(element.getBoundingClientRect().top-offset)<=2;
     },id,{timeout:5000});
     await page.screenshot({path:path.join(output,id+'-'+width+'.png')});
     await page.locator('#'+id+'-week-7').evaluate(e=>e.open=false);
@@ -61,8 +63,10 @@ const load=filename=>JSON.parse(fs.readFileSync(filename,'utf8'));
      id+'-week-7',{timeout:5000});
     assert.equal(await page.locator('#'+id+'-week-7').evaluate(e=>e.open),true,'Week link opens selected week');
     await page.waitForFunction(target=>{
-     const top=document.getElementById(target).getBoundingClientRect().top;
-     return location.hash==='#'+target && top>=0 && top<=80;
+     const element=document.getElementById(target);
+     const offset=(parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop)||0)
+      +(parseFloat(getComputedStyle(element).scrollMarginTop)||0);
+     return location.hash==='#'+target && Math.abs(element.getBoundingClientRect().top-offset)<=2;
     },id+'-week-7',{timeout:5000});
     await page.screenshot({path:path.join(output,id+'-week-7-'+width+'.png')});
     const whole=manifests[pathway].archives.find(a=>a.kind==='whole');
@@ -89,7 +93,19 @@ const load=filename=>JSON.parse(fs.readFileSync(filename,'utf8'));
    await response.dispose();
   }
   results.status='PASS';
- }catch(error){results.status='FAIL';results.error=String(error);throw error}
+ }catch(error){
+  results.status='FAIL';results.error=String(error);results.navigation=[];
+  for(const [index,page] of context.pages().entries()){
+   results.navigation.push(await page.evaluate(()=>{
+    const element=document.getElementById(location.hash.slice(1));
+    return {hash:location.hash,scrollY,top:element?.getBoundingClientRect().top,open:element?.open,
+     scrollPadding:getComputedStyle(document.documentElement).scrollPaddingTop,
+     scrollMargin:element?getComputedStyle(element).scrollMarginTop:null};
+   }));
+   await page.screenshot({path:path.join(output,'failure-'+index+'.png')});
+  }
+  throw error;
+ }
  finally{
   fs.writeFileSync(path.join(output,'results.json'),JSON.stringify(results,null,2)+'\n');
   await browser.close();
