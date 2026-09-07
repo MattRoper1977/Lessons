@@ -1219,11 +1219,13 @@ if (typeof document !== "undefined") (function(){
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const rng = Math.random;
 let battle=null, pickSlot=null;
+let cancelCampaignRing=()=>{};
 function campaignLater(action,delay){
   const ownerSave=SV,ownerBattle=battle;
   return setTimeout(()=>{if(SV===ownerSave && battle===ownerBattle) action();},delay);
 }
 function leaveCampaignRun(){
+  cancelCampaignRing();
   battle=null;endlessRun=null;boonPending=false;stopRunClock();
 }
 const rememberedCampaign=CampaignStore.preferred();
@@ -2076,6 +2078,9 @@ const Pointer = (()=>{
 
 /* ================= v2: BEAM CLASH TIMING RING ================= */
 function runRing(done){
+  cancelCampaignRing();
+  const ownerSave=SV,ownerBattle=battle;
+  const current=()=>SV===ownerSave && battle===ownerBattle;
   const calm = SV.settings.calm || document.body.classList.contains("reduce-motion");
   // Calm Mode: half speed, much wider window — slower, not automatic
   const period = calm ? 2600 : 1300;
@@ -2101,9 +2106,16 @@ function runRing(done){
     : "Tap when the pointer hits the bright arc.";
   verdict.textContent=""; btn.disabled=false;
   showOv($("#ov-ring"));
-  let raf=0, t0=performance.now(), settled=false;
+  let raf=0, t0=performance.now(), settled=false,cleanupTimer=0;
+  function cleanup(){
+    settled=true;cancelAnimationFrame(raf);clearInterval(cleanupTimer);
+    document.removeEventListener("keydown",keyTap);
+    if(cancelCampaignRing===cleanup) cancelCampaignRing=()=>{};
+  }
+  cancelCampaignRing=cleanup;
   Haptics.charge();
   function loop(now){
+    if(!current()) return cleanup();
     const ang=((now-t0)%period)/period*360;
     hand.style.transform=`rotate(${ang}deg)`;
     if(now-t0 > period*3 && !settled) return finish(0.15,"TOO SLOW","ok");
@@ -2111,6 +2123,7 @@ function runRing(done){
   }
   raf=requestAnimationFrame(loop);
   function tap(){
+    if(!current()) return cleanup();
     if(settled) return;
     const ang=((performance.now()-t0)%period)/period*360;
     let d=Math.abs(((ang-(zoneStart+zoneDeg/2))+540)%360-180); // distance from zone centre
@@ -2123,7 +2136,8 @@ function runRing(done){
     finish(skill,label,cls);
   }
   function finish(skill,label,cls){
-    settled=true; cancelAnimationFrame(raf); btn.disabled=true;
+    if(!current()) return cleanup();
+    cleanup();btn.disabled=true;
     verdict.className="ring-verdict "+cls; verdict.textContent=label;
     FX.clash(); if(skill>=0.75) FX.shake(22);
     if(skill>=1.0) stick("perfect");
@@ -2134,7 +2148,7 @@ function runRing(done){
   $("#ringtap").onclick=tap;
   const keyTap=e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); tap(); } };
   document.addEventListener("keydown",keyTap);
-  const clean=setInterval(()=>{ if(settled){ document.removeEventListener("keydown",keyTap); clearInterval(clean); } },200);
+  cleanupTimer=setInterval(()=>{if(settled || !current()) cleanup();},200);
 }
 
 /* ================= v2: CORRUPTION PROMPT ================= */

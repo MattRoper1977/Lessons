@@ -4,7 +4,7 @@ const {chromium}=require('playwright');
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const source=path.resolve(process.argv[2]),publication=path.resolve(process.argv[3]),out=path.resolve(process.argv[4]||'audit-output/hc3-glitch');
 const routePath='/Lessons/Games/Glitch_Clash.html',origin='https://www.madebymatt-play.uk',key='glitchclash_save';
-const html=fs.readFileSync(source,'utf8').replaceAll('https://madebymatt.uk','https://madebymatt-play.uk');
+const html=fs.readFileSync(source,'utf8').replaceAll('https://madebymatt.uk','https://madebymatt-play.uk').replace('window.__GCstart = (i,o)=>startBattle(i,o);','window.__fixtureRing=runRing;window.__fixtureChoose=chooseCampaign;window.__GCstart = (i,o)=>startBattle(i,o);');
 const legacyHTML=fs.readFileSync(path.join(publication,routePath),'utf8');
 const seed={v:3,owned:['stryke','halo','brik'],dups:{stryke:2},team:['stryke','halo','brik'],cleared:[],xp:123,stickers:{},settings:{calm:false,motion:'auto',hc:false,cb:false},dailyDone:'',weeklyDone:'',tutorialDone:false,seen:{},stats:{wins:0,clashWins:0}};
 const fragment=value=>'mbm_import='+Buffer.from(typeof value==='string'?value:JSON.stringify(value)).toString('base64url');
@@ -122,6 +122,20 @@ async function conflictCase(candidate=html){
   assert.equal(JSON.parse((await state(p)).records[0].save).xp,123);
   await p.evaluate(()=>__fixtureRestoreIDB());await p.locator('#campaignretrybtn').click();await settle(p);
   const s=await state(p);assert.equal(s.campaign.failed,false);assert.equal(JSON.parse(s.records[0].save).xp,444);await f.finish('failed save retained and explicit retry');
+ }
+ {
+  const f=await fixture(),p=await f.page();
+  await p.evaluate(async seed=>{
+   window.__GCstart(0);window.__fixtureOldDone=0;
+   window.__fixtureRing(()=>{window.__fixtureOldDone++;});
+   const other=await campaignRepository.create(JSON.stringify({...seed,xp:555}));
+   await window.__fixtureChoose(other.id);
+   await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+  },seed);
+  await p.keyboard.press('Enter');await settle(p);
+  const s=await state(p);assert.equal(s.memory.xp,555);assert.equal(s.memory.stats.clashWins,0);
+  assert.equal(await p.evaluate(()=>window.__fixtureOldDone),0);assert.equal(s.records.length,2);
+  await f.finish('old timing ring cancelled when campaign changes');
  }
  console.log('Browser controls real PASS / planted legacy-routing defect FAIL / restored PASS; cases '+results.length);
  fs.writeFileSync(path.join(out,'receiver-browser.json'),JSON.stringify({scope:'Candidate fixtures, actual Chromium tabs and native UI saves; baseline publication assets; not live proof',status:'PASS',results},null,2)+'\n');
