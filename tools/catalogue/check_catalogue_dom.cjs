@@ -57,7 +57,7 @@ function visibleScience(env){return [...env.document.querySelectorAll('[data-les
  const sc=environment('Science_Teesside/index.html');runFile(sc,'assets/catalogue/science-shelf.js');
  check('Science shelf has all 123 source routes exactly once',()=>{assert.equal(visibleScience(sc).length,123);assert.equal(new Set(visibleScience(sc).map(c=>c.dataset.lessonPath)).size,123);});
  let scienceCombinations=0;
- for(const pathway of ['','BUILD','GROW','LAUNCH'])for(const term of ['','Aut1','Aut2','Spr1'])for(const style of ['','recommended','current','full-lundy','earlier']){
+ for(const pathway of ['','BUILD','GROW','LAUNCH'])for(const term of ['','Aut1','Aut2','Spr1'])for(const style of [...sc.document.querySelector('#science-style').options].map(o=>o.value)){
   sc.document.querySelector('#science-pathway').value=pathway;sc.document.querySelector('#science-term').value=term;sc.document.querySelector('#science-style').value=style;event(sc,sc.document.querySelector('#science-style'),'change');
   const expected=science.lessons.filter(r=>(!pathway||r.pathway===pathway)&&(!term||r.term===term)&&(!style||r.style===style));
   assert.equal(visibleScience(sc).length,expected.length,`${pathway}/${term}/${style}`);scienceCombinations++;
@@ -88,6 +88,30 @@ function visibleScience(env){return [...env.document.querySelectorAll('[data-les
  fallback.context.fetch=async url=>{if(url.includes('terms-and-styles'))throw new Error('Simulated unavailable metadata');return {ok:true,json:async()=>structuredClone(rows)}};
  vm.runInContext(script.textContent,fallback.context);await new Promise(resolve=>setImmediate(resolve));
  check('Metadata failure leaves existing resource catalogue and search usable',()=>{assert.equal(fallback.document.querySelectorAll('#cards article.card').length,rows.filter(r=>r.year==='2026-27').length);assert(fallback.document.querySelector('#term').disabled);assert(fallback.document.querySelector('#catalogue-feedback').textContent.includes('still search'));});
+ // RX3 R3 render gate: the one non-recommended value 'alternative' must render as its own
+ // labelled batch, ordered after the current series and before the earlier versions, and
+ // be selectable by name. Proved on a synthetic entry so the renderer is gated before any
+ // lesson carries the value; the live data is a separate reviewed selection.
+ const alt=environment('index.html');runFile(alt,'assets/catalogue/catalogue.js');alt.context.MBM_CATALOGUE=alt.window.MBM_CATALOGUE;
+ const altRows=rows.filter(r=>r.year==='2026-27'&&r.type==='lesson'&&metadata.entries[r.file]&&metadata.entries[r.file].style==='current'&&metadata.entries[r.file].term==='Aut1');
+ const altMeta=structuredClone(metadata);altMeta.entries[altRows[0].file]={...altMeta.entries[altRows[0].file],style:'alternative',batch:'Alternative version'};
+ alt.context.fetch=async url=>({ok:true,status:200,json:async()=>url.includes('terms-and-styles')?altMeta:structuredClone(rows)});
+ vm.runInContext(script.textContent,alt.context);await new Promise(resolve=>setImmediate(resolve));
+ check('Alternative version renders as its own labelled batch, after current and before earlier, and is selectable',()=>{
+  assert.equal(metadata.styles.alternative,'Alternative version');
+  assert.equal(alt.document.querySelector('#style option[value="alternative"]').textContent,'Alternative version');
+  const card=[...alt.document.querySelectorAll('#cards article.card a.go')].find(a=>a.getAttribute('href')===encodeURI(altRows[0].file)).closest('article.card');
+  const term=card.closest('.catalogue-term');assert.equal(term.dataset.term,'Aut1');const styles=[...term.querySelectorAll('.catalogue-batch')].map(b=>b.dataset.style);
+  const order=alt.window.MBM_CATALOGUE.styleOrder;assert(order.indexOf('current')<order.indexOf('alternative')&&order.indexOf('alternative')<order.indexOf('earlier'));
+  assert(styles.includes('alternative'));assert.deepEqual(styles,[...styles].sort((a,b)=>order.indexOf(a)-order.indexOf(b)));assert(styles.every(x=>order.includes(x)));
+  const batch=card.closest('.catalogue-batch');assert.equal(batch.dataset.style,'alternative');assert(batch.querySelector('h4').textContent.startsWith('Alternative version'));
+  assert(batch.contains(card));assert.equal(card.querySelector('a.go').getAttribute('href'),encodeURI(altRows[0].file));
+  assert.equal([...card.querySelectorAll('.chips')].pop().querySelector('.pill:last-child').textContent,'Alternative version');
+  alt.document.querySelector('#style').value='alternative';event(alt,alt.document.querySelector('#style'),'change');
+  const expectedAlternative=rows.filter(r=>r.year==='2026-27'&&(altMeta.entries[r.file]||{}).style==='alternative').length;
+  assert.equal(alt.document.querySelectorAll('#cards article.card').length,expectedAlternative);
+  assert([...alt.document.querySelectorAll('#cards article.card a.go')].some(a=>a.getAttribute('href')===encodeURI(altRows[0].file)));
+ });
  const hu=environment('Humanities_Teesside/index.html');runFile(hu,'assets/catalogue/science-shelf.js');
  check('Humanities has every selected current and retained resource exactly once',()=>{assert.equal(visibleScience(hu).length,humanities.lessons.length);assert.deepEqual(visibleScience(hu).map(c=>c.dataset.lessonPath).sort(),humanities.lessons.map(r=>r.path).sort());});
  let humanitiesCombinations=0;

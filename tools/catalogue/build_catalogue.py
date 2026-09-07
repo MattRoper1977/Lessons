@@ -19,7 +19,12 @@ SCI=SELECTION['science']
 HUM=json.loads((PROOF/'HUMANITIES_SELECTION.json').read_text())['lessons']
 PRIOR={x['path']:x for x in SCI}
 TERM={'Aut1':'Autumn 1','Aut2':'Autumn 2','Spr1':'Spring 1','Spr2':'Spring 2','Sum1':'Summer 1','Sum2':'Summer 2','multi':'Across terms','flexible':'Flexible sequence','any':'Any term · reference','unspecified':'Term not specified'}
-STYLE={'recommended':'Recommended · current chassis','current':'Current classroom series','full-lundy':'Full Lundy Loop','award':'Flexible award sequence','earlier':'Earlier retained versions','reference':'Tools and reference'}
+STYLE={'recommended':'Recommended · current chassis','current':'Current classroom series','alternative':'Alternative version','full-lundy':'Full Lundy Loop','award':'Flexible award sequence','earlier':'Earlier retained versions','reference':'Tools and reference'}
+# RX3 R3: a lesson landed beside an existing one carries the one non-recommended
+# value 'alternative'; the existing lesson keeps its own standing. Editorial data
+# only (SHELF_SELECTION.json); no timing, completion or coverage claim.
+ALTERNATIVE=set(SELECTION.get('alternative',[]))
+RECOMMENDED_BATCHES=SELECTION.get('recommendedBatches',{})
 MANIFESTS={}
 for mf in sorted(ROOT.rglob('manifest*.json')):
  if any(part.startswith('.') for part in mf.relative_to(ROOT).parts):continue
@@ -143,7 +148,9 @@ def classify(path,row=None):
   result['term']='flexible';result['evidence'].append({'method':'award sequence; no calendar binding','source':path,'planId':config.get('planId')})
  loops=doc.xpath('//*[contains(concat(" ",normalize-space(@class)," ")," lundy-grid ") or contains(concat(" ",normalize-space(@class)," ")," lundy-loop ")]')
  if path in RECOMMENDED:
-  result['style']='recommended';result['batch']='LAUNCH W3–W7 · integrated teaching pack'
+  result['style']='recommended';result['batch']=RECOMMENDED_BATCHES.get(path,'LAUNCH W3–W7 · integrated teaching pack')
+ elif path in ALTERNATIVE:
+  result['style']='alternative';result['batch']='Alternative version'
  elif len(loops)>=4:
   result['style']='full-lundy';result['batch']='Full Lundy Loop · repeated prompts'
  elif config.get('artsAward'):
