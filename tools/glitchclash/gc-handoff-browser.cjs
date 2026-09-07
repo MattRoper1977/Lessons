@@ -57,7 +57,7 @@ async function acceptedCase(name,options={}){
  assert.equal(s.memory.xp,123);assert.equal(s.records.length,1);assert.equal(JSON.parse(s.records[0].save).xp,123);
  assert.deepEqual(JSON.parse(s.records[0].save).team,seed.team);assert.equal(s.legacy,options.existing??null);
  assert(s.home&&!s.hash.includes('mbm_import')&&s.hash.includes('keep=one'));
- await settings(p);await tabTo(p,'campaignsbtn');await p.keyboard.press('Enter');await p.locator('[data-campaign-id]').waitFor();
+ await settings(p);assert(await p.locator('#campaignretrybtn').isHidden(),'Idle saved campaigns must not show Retry');await tabTo(p,'campaignsbtn');await p.keyboard.press('Enter');await p.locator('[data-campaign-id]').waitFor();
  await p.screenshot({path:path.join(out,name+'-'+(options.width||390)+'.png')});
  await f.finish(name,{records:1,legacyUnchanged:true,realTab:true});
 }
