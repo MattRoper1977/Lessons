@@ -1,0 +1,51 @@
+name: Restore the reviewed Science pack branch
+on:
+  push:
+    branches: [codex/science-pack-transfer-20260907]
+permissions:
+  contents: write
+jobs:
+  restore:
+    if: github.repository == 'MattRoper1977/Lessons' && github.ref == 'refs/heads/codex/science-pack-transfer-20260907'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Verify and assemble the exact reviewed Git bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          data=json.loads(Path('_science_transfer/manifest.json').read_text())
+          assert data['repository']=='MattRoper1977/Lessons'
+          assert data['commit']=='f31a5b2de621d38a1f737e68166f3cb48d6380b2'
+          assert data['tree']=='a33d4b827cfdb4960b75b5af88ce816e44498c74'
+          assert data['parent']=='5da7f04df02de0d775a96cbb77399d8c15ad1109'
+          assert data['branch']=='codex/science-teaching-pack-visual-refresh'
+          assert data['bundleBytes']==263719362
+          assert data['bundleSha256']=='383950fe42ed577e8ef9341fa34492029a70e4b50ddcc14e5af1ece6276b6145'
+          digest=hashlib.sha256();size=0
+          with Path('/tmp/science-teaching-packs.bundle').open('wb') as output:
+              for index,item in enumerate(data['chunks']):
+                  assert item['path']==f'_science_transfer/part-{index:04d}.bin'
+                  payload=Path(item['path']).read_bytes()
+                  assert len(payload)==item['bytes']
+                  assert hashlib.sha256(payload).hexdigest()==item['sha256']
+                  output.write(payload);digest.update(payload);size+=len(payload)
+          assert size==data['bundleBytes'] and digest.hexdigest()==data['bundleSha256']
+          print('Exact reviewed bundle verified:',size,digest.hexdigest())
+          PY
+      - name: Restore only the approved review branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git cat-file -e '5da7f04df02de0d775a96cbb77399d8c15ad1109^{commit}'
+          git bundle verify /tmp/science-teaching-packs.bundle
+          git fetch /tmp/science-teaching-packs.bundle refs/heads/codex/science-teaching-pack-visual-refresh:refs/remotes/science-transfer/review
+          test "$(git rev-parse refs/remotes/science-transfer/review)" = f31a5b2de621d38a1f737e68166f3cb48d6380b2
+          test "$(git rev-parse refs/remotes/science-transfer/review^{tree})" = a33d4b827cfdb4960b75b5af88ce816e44498c74
+          git push origin refs/remotes/science-transfer/review:refs/heads/codex/science-teaching-pack-visual-refresh
