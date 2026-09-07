@@ -38,6 +38,24 @@ SHELF_ROWS = [
         "keywords": ["humanities", "religious education", "david", "cover", "build", "grow", "launch", "autumn 1", "weeks 3–7", "downloads"],
         "desc": "Twenty-five 40-minute cover periods with PowerPoint, Word and PDF downloads, linked to the existing Humanities and RE lessons.",
         "added": "2026-09-05", "new": True, "year": "2026-27"
+    },
+    {
+        "subject": "Humanities · Teesside", "title": "BUILD Humanities teaching pack · Autumn 1 Weeks 3–7 · World About Me", "file": "Humanities_Teesside/Teaching_Packs/index.html#build", "id": "humanities-teaching-pack-build-autumn1", "type": "hub", "family": "Humanities Teesside", "keywords": ["humanities", "build", "teaching pack", "powerpoint", "word", "pdf", "autumn 1", "world about me"], "desc": "Editable BUILD Humanities lessons for Autumn 1 Weeks 3–7 (World About Me): PowerPoint decks, pupil and teacher Word resources and print-ready PDFs, with a Start Here guide and matching classroom lesson links.", "added": "2026-09-07", "new": True, "year": "2026-27"
+    },
+    {
+        "subject": "Humanities · Teesside", "title": "GROW Humanities teaching pack · Autumn 1 Weeks 3–7 · Black British History", "file": "Humanities_Teesside/Teaching_Packs/index.html#grow", "id": "humanities-teaching-pack-grow-autumn1", "type": "hub", "family": "Humanities Teesside", "keywords": ["humanities", "grow", "teaching pack", "powerpoint", "word", "pdf", "autumn 1", "black british history"], "desc": "Editable GROW Humanities lessons for Autumn 1 Weeks 3–7 (Black British History): PowerPoint decks, pupil and teacher Word resources and print-ready PDFs, with a Start Here guide and matching classroom lesson links.", "added": "2026-09-07", "new": True, "year": "2026-27"
+    },
+    {
+        "subject": "Humanities · Teesside", "title": "LAUNCH Humanities teaching pack · Autumn 1 Weeks 3–7 · Britain in the Twentieth Century", "file": "Humanities_Teesside/Teaching_Packs/index.html#launch", "id": "humanities-teaching-pack-launch-autumn1", "type": "hub", "family": "Humanities Teesside", "keywords": ["humanities", "launch", "teaching pack", "powerpoint", "word", "pdf", "autumn 1", "britain in the twentieth century"], "desc": "Editable LAUNCH Humanities lessons for Autumn 1 Weeks 3–7 (Britain in the Twentieth Century): PowerPoint decks, pupil and teacher Word resources and print-ready PDFs, with a Start Here guide and matching classroom lesson links.", "added": "2026-09-07", "new": True, "year": "2026-27"
+    },
+    {
+        "subject": "Science · Teesside", "title": "BUILD Science teaching pack · Autumn 1 Weeks 3–7", "file": "Science_Teesside/Teaching_Packs/index.html#build", "id": "science-teaching-pack-build-autumn1", "type": "hub", "family": "Science Teesside", "keywords": ["science", "build", "teaching pack", "powerpoint", "word", "pdf", "autumn 1"], "desc": "Editable BUILD Science lessons for Autumn 1 Weeks 3–7: PowerPoint decks, pupil resources and teacher guidance as PowerPoint, Word and PDF downloads.", "added": "2026-09-07", "new": True, "year": "2026-27"
+    },
+    {
+        "subject": "Science · Teesside", "title": "GROW Science teaching pack · Autumn 1 Weeks 3–7", "file": "Science_Teesside/Teaching_Packs/index.html#grow", "id": "science-teaching-pack-grow-autumn1", "type": "hub", "family": "Science Teesside", "keywords": ["science", "grow", "teaching pack", "powerpoint", "word", "pdf", "autumn 1"], "desc": "Editable GROW Science lessons for Autumn 1 Weeks 3–7: PowerPoint decks, pupil resources and teacher guidance as PowerPoint, Word and PDF downloads.", "added": "2026-09-07", "new": True, "year": "2026-27"
+    },
+    {
+        "subject": "Science · Teesside", "title": "LAUNCH Science teaching pack · Autumn 1 Weeks 3–7", "file": "Science_Teesside/Teaching_Packs/index.html#launch", "id": "science-teaching-pack-launch-autumn1", "type": "hub", "family": "Science Teesside", "keywords": ["science", "launch", "teaching pack", "powerpoint", "word", "pdf", "autumn 1"], "desc": "Editable LAUNCH Science lessons for Autumn 1 Weeks 3–7: PowerPoint decks, pupil resources and teacher guidance as PowerPoint, Word and PDF downloads.", "added": "2026-09-07", "new": True, "year": "2026-27"
     }
 ]
 
@@ -256,11 +274,11 @@ def row_digest(rows: list) -> str:
 def preserved_rows_errors(rows: list) -> list[str]:
     errors = []
     if len(rows) != ORIGINAL_ROW_COUNT + len(SHELF_ROWS):
-        errors.append("catalogue must contain the original 734 rows plus exactly three reviewed hub rows")
+        errors.append("catalogue must contain the original 734 rows plus exactly the reviewed hub rows")
     if row_digest(rows[:ORIGINAL_ROW_COUNT]) != ORIGINAL_ROWS_SHA256:
         errors.append("an original catalogue row was removed, reordered or edited")
     if rows[ORIGINAL_ROW_COUNT:] != SHELF_ROWS:
-        errors.append("the appended hub rows differ from the three reviewed navigation entries")
+        errors.append("the appended hub rows differ from the reviewed navigation entries")
     return errors
 
 
