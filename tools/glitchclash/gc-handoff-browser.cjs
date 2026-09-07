@@ -4,7 +4,7 @@ const {chromium}=require('playwright');
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const source=path.resolve(process.argv[2]),publication=path.resolve(process.argv[3]),out=path.resolve(process.argv[4]||'audit-output/hc3-glitch');
 const routePath='/Lessons/Games/Glitch_Clash.html',origin='https://www.madebymatt-play.uk',key='glitchclash_save';
-const html=fs.readFileSync(source,'utf8').replaceAll('https://madebymatt.uk','https://madebymatt-play.uk').replace('window.__GCstart = (i,o)=>startBattle(i,o);','window.__fixtureRing=runRing;window.__fixtureChoose=chooseCampaign;window.__GCstart = (i,o)=>startBattle(i,o);');
+const html=fs.readFileSync(source,'utf8').replaceAll('https://madebymatt.uk','https://madebymatt-play.uk').replace('window.__GCstart = (i,o)=>startBattle(i,o);','window.__fixtureChoose=chooseCampaign;window.__GCstart = (i,o)=>startBattle(i,o);');
 const legacyHTML=fs.readFileSync(path.join(publication,routePath),'utf8');
 const seed={v:3,owned:['stryke','halo','brik'],dups:{stryke:2},team:['stryke','halo','brik'],cleared:[],xp:123,stickers:{},settings:{calm:false,motion:'auto',hc:false,cb:false},dailyDone:'',weeklyDone:'',tutorialDone:false,seen:{},stats:{wins:0,clashWins:0}};
 const fragment=value=>'mbm_import='+Buffer.from(typeof value==='string'?value:JSON.stringify(value)).toString('base64url');
@@ -123,19 +123,51 @@ async function conflictCase(candidate=html){
   await p.evaluate(()=>__fixtureRestoreIDB());await p.locator('#campaignretrybtn').click();await settle(p);
   const s=await state(p);assert.equal(s.campaign.failed,false);assert.equal(JSON.parse(s.records[0].save).xp,444);await f.finish('failed save retained and explicit retry');
  }
+ async function openRing(p){
+  await p.evaluate(()=>{
+   window.__GCstart(1,{__scened:true});const b=__GC();
+   b.team[b.active].en=100;b.glitch.en=100;
+   b.team[b.active].hp=b.team[b.active].maxhp=1000;b.glitch.hp=b.glitch.maxhp=1000;
+   window.__fixtureAI=Engine.aiChoose;Engine.aiChoose=()=> 'guard';
+  });
+  await p.locator('#actions [data-key="3"]').click();
+  await p.evaluate(()=>{const b=__GC();b.team[b.active].en=100;b.glitch.en=100;Engine.aiChoose=()=> 'special';});
+  await p.locator('#actions [data-key="4"]').click();
+  await p.evaluate(()=>{Engine.aiChoose=window.__fixtureAI;});
+  await p.locator('#ov-ring.show').waitFor();
+ }
+ {
+  const f=await fixture(),p=await f.page(),before=await state(p);
+  await openRing(p);await p.locator('#ringtap').click();
+  await p.locator('#clash.show').waitFor();await p.waitForFunction(()=>document.querySelector('#clashresult').textContent.length>0);
+  await p.locator('#clashok').click();await settle(p);
+  assert.equal(await p.evaluate(()=>__GC().usedClash),true);
+  assert(await p.evaluate(()=>__GC().turn>1));assert.equal((await state(p)).campaign.id,before.campaign.id);
+  assert.equal((await state(p)).legacy,before.legacy);await f.finish('normal unswitched timing ring still completes');
+ }
  {
   const f=await fixture(),p=await f.page();
-  await p.evaluate(async seed=>{
-   window.__GCstart(0);window.__fixtureOldDone=0;
-   window.__fixtureRing(()=>{window.__fixtureOldDone++;});
-   const other=await campaignRepository.create(JSON.stringify({...seed,xp:555}));
-   await window.__fixtureChoose(other.id);
-   await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
-  },seed);
-  await p.keyboard.press('Enter');await settle(p);
-  const s=await state(p);assert.equal(s.memory.xp,555);assert.equal(s.memory.stats.clashWins,0);
-  assert.equal(await p.evaluate(()=>window.__fixtureOldDone),0);assert.equal(s.records.length,2);
-  await f.finish('old timing ring cancelled when campaign changes');
+  await openRing(p);await p.keyboard.press('Escape');
+  await p.locator('#quitbtn').click();await p.locator('#quitbtn').click();
+  const other=await p.evaluate(async seed=>{const r=await campaignRepository.create(JSON.stringify({...seed,xp:555}));return r.id;},seed);
+  await settings(p);await p.locator('#campaignsbtn').click();await p.locator('[data-campaign-id="'+other+'"]').click();await settle(p);
+  const before=await state(p);
+  await p.keyboard.press('Enter');await p.keyboard.press('Space');
+  // Observe beyond the old normal ring's 3*1300 ms deadline and completion delay.
+  await p.waitForTimeout(4700);
+  const after=await state(p);assert.equal(after.memory.xp,555);assert.deepEqual(after.records,before.records);
+  assert.equal(await p.evaluate(()=>__GC()),null);assert.equal(after.legacy,before.legacy);
+  await f.finish('old timing ring cannot reward or continue a selected campaign');
+ }
+ {
+  const f=await fixture(),p=await f.page();await p.evaluate(()=>__GCstart(1,{__scened:true}));
+  const target=p.locator('#pf');
+  const box=await target.boundingBox();assert(box,'Native fighter card missing');
+  await p.mouse.move(box.x+box.width/2,box.y+box.height/2);await p.mouse.down();
+  await p.evaluate(async seed=>{const r=await campaignRepository.create(JSON.stringify({...seed,xp:666}));await __fixtureChoose(r.id);},seed);
+  await p.mouse.up();await p.waitForTimeout(250);await settle(p);
+  assert.equal((await state(p)).memory.xp,666);assert.equal(await p.evaluate(()=>__GC()),null);
+  await f.finish('captured native pointer cancelled on campaign adoption');
  }
  console.log('Browser controls real PASS / planted legacy-routing defect FAIL / restored PASS; cases '+results.length);
  fs.writeFileSync(path.join(out,'receiver-browser.json'),JSON.stringify({scope:'Candidate fixtures, actual Chromium tabs and native UI saves; baseline publication assets; not live proof',status:'PASS',results},null,2)+'\n');

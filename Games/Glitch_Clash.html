@@ -1225,7 +1225,7 @@ function campaignLater(action,delay){
   return setTimeout(()=>{if(SV===ownerSave && battle===ownerBattle) action();},delay);
 }
 function leaveCampaignRun(){
-  cancelCampaignRing();
+  cancelCampaignRing();Pointer.cancel();
   battle=null;endlessRun=null;boonPending=false;stopRunClock();
 }
 const rememberedCampaign=CampaignStore.preferred();
@@ -2055,16 +2055,19 @@ const Pointer = (()=>{
     }
     st=null;
   }
-  function cancel(){
+  function cancel(notify=true){
+    if(raf){cancelAnimationFrame(raf);raf=0;}
     if(!st) return;
-    clearTimeout(st.longT);
+    const prior=st;st=null;
+    clearTimeout(prior.longT);
+    try{prior.el.releasePointerCapture(prior.id);}catch(_){}
     const g=ghostEl(); g.style.transform="translate3d(-999px,-999px,0)"; g.innerHTML="";
-    if(st.el) st.el.classList.remove("dragging");
+    if(prior.el) prior.el.classList.remove("dragging");
     document.querySelectorAll("[data-drop]").forEach(d=>d.classList.remove("drop-target","hot"));
-    st.cfg.onCancel&&st.cfg.onCancel(st.el);
-    st=null;
+    if(notify && prior.cfg.onCancel) prior.cfg.onCancel(prior.el);
   }
   return {
+    cancel:()=>cancel(false),
     bind(el,cfg){
       el.style.touchAction="none";
       el.addEventListener("pointerdown",e=>{e.preventDefault();down(e,cfg);});
