@@ -1,331 +1,1009 @@
-<!doctype html>
-<html lang="en-GB" class="mbm-classroom pathway-build">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Choice, budget and project reset · BUILD ASDAN</title>
-<style>
-:root{--ink:#17223B;--paper:#FFFCF5;--soft:#F3F6F8;--line:#CAD5DF;--muted:#526274;--gold:#B57918;--green:#246B55;--slot:#346B7B;--slot-pale:#EAF6F8;--danger:#8A3C2D}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:"Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--soft)}
-body{overflow:hidden}a,button{font:inherit}button,a.mbmhome{min-height:44px;min-width:44px}
-.skip{position:absolute;left:-9999px}.skip:focus{left:8px;top:8px;z-index:50;background:#fff;padding:10px}
-.deck{height:100vh;padding:18px 18px 112px;overflow:auto}.slide{display:none;max-width:1120px;min-height:calc(100vh - 145px);margin:auto;background:var(--paper);border:2px solid var(--line);border-top:10px solid var(--slot);border-radius:18px;padding:22px;box-shadow:0 8px 30px #10233f18}.slide.active{display:block}
-h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.04;margin:.35rem 0}h2{font-size:clamp(1.5rem,3vw,2.3rem);margin:.4rem 0 1rem}h3{margin:.2rem 0 .45rem}p,li{line-height:1.5}.tag,.time,.chips span{display:inline-block;border-radius:999px;padding:6px 10px;font-weight:800}.tag{background:var(--slot-pale)}.time{float:right;background:var(--ink);color:#fff}.chips{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.chips span{background:#FFF3D4}
-.hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,.7fr);gap:18px}.hero-visual{display:grid;gap:10px;align-content:center;background:var(--ink);color:#fff;border-radius:16px;padding:18px;min-height:150px;text-align:center}.hero-visual span{color:var(--slot)}
-.box,.route,.route-card,.evidence-gate,.lundy,.lundy-strip,.ladder,.prompt-ladder,.ta-card,.modal,.drawer,dialog{border:2px solid var(--line);border-radius:13px;padding:13px;margin:12px 0;background:#fff}.lo{border-left:8px solid var(--slot)}.truth{border-left:8px solid var(--gold);background:#FFF3D4;padding:12px}.access{background:var(--slot-pale);padding:12px;border-radius:12px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.routes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.route.s,.route.supported,.route-card.supported{border-top:7px solid var(--green)}.route.m,.route.standard,.route-card.standard{border-top:7px solid var(--slot)}.route.h,.route.stretch,.route-card.stretch{border-top:7px solid var(--gold)}.options{display:grid;gap:9px}.options button{text-align:left;padding:12px;border:2px solid var(--line);border-radius:10px;background:#fff}.vocabrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.vterm{border:2px solid var(--line);padding:12px;border-radius:12px}.vterm span{display:block;margin-top:5px}.lundy-grid,.lundy-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center;font-weight:900}.ladder,.prompt-ladder{font-weight:700}.ta-card,.modal,.drawer{background:#FFF3D4}
-.controls{position:fixed;left:8px;right:8px;bottom:58px;z-index:20;display:flex;gap:7px;overflow-x:auto;padding:8px;background:var(--ink);border-radius:14px}.controls button,.controls a{flex:0 0 auto;border:2px solid #fff;border-radius:9px;padding:7px 10px;background:#fff;color:var(--ink);font-weight:800;text-decoration:none}.prog{position:fixed;left:12px;right:12px;bottom:46px;height:6px;background:#fff;border:1px solid var(--line);z-index:19}.prog>span{display:block;height:100%;width:11.11%;background:var(--slot)}
-.overlay{display:none;position:fixed;inset:0;z-index:40;background:#10233fdd;align-items:center;justify-content:center;padding:18px}.overlay.on{display:flex}.overlay-card{max-width:700px;background:#fff;border-radius:15px;padding:20px}.overlay-card button{padding:8px 12px}
-.print-pack{display:none}.printpack{display:none}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-@media(max-width:720px){.deck{padding:10px 10px 118px}.slide{padding:15px}.hero,.routes,.vocabrow{grid-template-columns:1fr}.lundy-grid{grid-template-columns:1fr 1fr}}
-@media print{html,body{color-scheme:light!important;background:#fff;color:#111;overflow:visible}body>*:not(.print-pack){display:none!important}.print-pack{display:block!important}.printpack{display:block!important}.print-page{break-after:page;page-break-after:always;padding:8mm;min-height:255mm}.print-page:last-child{break-after:auto;page-break-after:auto}.print-pack h1{font-size:20pt;line-height:1.15;margin:0 0 3mm}.print-pack h2{font-size:13pt;line-height:1.2;margin:3mm 0 1.5mm}.print-pack p,.print-pack li{font-size:10.5pt;line-height:1.35}.running-head{font-size:9pt;border-bottom:1px solid #666;margin-bottom:4mm;padding-bottom:2mm}.proute,.print-route{display:block;border:1px solid #777;padding:3mm;margin:3mm 0;break-inside:avoid}@page{size:A4;margin:10mm}}
-</style><!--n6m-guide:v1--><style id="n6m-guide-css">@media screen{[data-mbm-guide]{display:none!important}html.mbm-guide-on [data-mbm-guide]{display:revert!important}.n6m-guide-btn{position:fixed;right:12px;bottom:12px;z-index:2147483000;font:600 .8rem/1.2 "Segoe UI",Arial,sans-serif;padding:7px 11px;border:2px solid currentColor;border-radius:8px;background:#fff;color:#1e3a8a;cursor:pointer}.n6m-guide-btn[aria-pressed="true"]{background:#1e3a8a;color:#fff}}@media print{.n6m-guide-btn{display:none!important}}</style><script id="n6m-guide-js">(function(){var R=document.documentElement;function apply(v){R.classList.toggle("mbm-guide-on",!!v);var b=document.querySelector(".n6m-guide-btn");if(b){b.setAttribute("aria-pressed",v?"true":"false");}}function toggle(){apply(!R.classList.contains("mbm-guide-on"));}function boot(){if(!document.querySelector("[data-mbm-guide]"))return;var b=document.createElement("button");b.type="button";b.className="n6m-guide-btn";b.setAttribute("aria-pressed","false");b.setAttribute("data-n6m-guide-control","1");b.title="Show or hide staff guidance (G)";b.textContent="\u24D8 Guidance";b.addEventListener("click",toggle);document.body.appendChild(b);apply(false);document.addEventListener("keydown",function(e){if(e.key!=="g"&&e.key!=="G")return;if(e.metaKey||e.ctrlKey||e.altKey)return;var t=e.target,n=t&&t.tagName;if(n==="INPUT"||n==="TEXTAREA"||n==="SELECT"||(t&&t.isContentEditable))return;toggle();});}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();})();</script><!--/n6m-guide--><style id="mbm-classroom-chassis">/* Shared classroom presentation. Palette authority: the user's Art Studio reference. */
-html.mbm-classroom {
-  --lo-bg:#e8eef1;--lo-border:#4F869C;--ido-bg:#f3e4dc;--ido-border:#D06438;
-  --wedo-bg:#e2efec;--wedo-border:#16877A;--task-bg:#faf0d7;--task-border:#E1AB32;
-  --btn-bg:#4F869C;--btn-hover:#3a6a7d;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;
-  --sc-bg:#ffedd5;--sc-border:#f97316;--aspire-bg:#dcfce7;--aspire-border:#22c55e;
+<!DOCTYPE html>
+<html lang="en-GB" class="pathway-build" data-chassis="classic-source" data-chassis-family="BUILD Art">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="canonical" href="https://madebymatt.uk/Lessons/Art_Teesside/BUILD_W1-W8_2026-27/BUILD_Art_W1_Explore_Drawing_Colour_And_Technique_To_Show.html"><meta name="color-scheme" content="light">
+<title>One symbol, many ways · BUILD Art</title>
+<meta name="classic-donor" content="Art_Teesside/Build/BUILD_ART_W1_The_Local_Canvas.html"><meta name="classic-donor-sha256" content="02341589409cc8cde858c8ad7c64e2ff996bac2d24a54f216dd15eb9f786b1d8">
+<style id="literal-classic-donor">
+    :root{--bg:#fff;--slide-bg:#fff;--text:#1f2937;--lo-bg:#e6d4e8;--lo-border:#9c27b0;--lo-text:#000;--task-bg:#fef9c3;--task-border:#eab308;--scaffold-bg:#e0f2fe;--scaffold-border:#38bdf8;--aspire-bg:#dcfce7;--aspire-border:#22c55e;--aspire-text:#166534;--sc-bg:#ffedd5;--sc-border:#f97316;--ido-bg:#ede9fe;--ido-border:#7c3aed;--wedo-bg:#fce7f3;--wedo-border:#db2777;--btn-bg:#3b82f6;--btn-hover:#1e3a8a;--success:#16a34a;--error:#dc2626;--muted:#64748b}
+    *{box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;background:var(--bg);color:var(--text);overflow:hidden}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}@keyframes fadeIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-4px)}40%,80%{transform:translateX(4px)}}
+    .animate-enter{animation:fadeInUp .55s ease-out forwards}.anim-delay-1{animation-delay:.15s;opacity:0;animation-fill-mode:forwards}.anim-delay-2{animation-delay:.3s;opacity:0;animation-fill-mode:forwards}
+    .slide-container{width:100vw;height:100vh;display:flex;justify-content:center;align-items:center}
+    .slide{display:none;width:92%;height:90%;background:var(--slide-bg);border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.15);padding:40px;overflow-y:auto;position:relative;flex-direction:column}.slide.active{display:flex;animation:fadeIn .45s ease}.slide[data-type="ido"]{border-top-color:var(--ido-border)}.slide[data-type="wedo"]{border-top-color:var(--wedo-border)}.slide[data-type="independent"]{border-top-color:var(--task-border)}
+    h1{color:var(--lo-text);font-size:2.5rem;margin:0 0 18px;border-bottom:3px solid var(--lo-border);display:inline-block}h2{color:var(--lo-text);margin:0 0 10px;border-bottom:2px solid #e2e8f0;padding-bottom:10px;margin-right:170px}h3{margin:10px 0 8px;color:#0f172a}p,li{font-size:1.15rem;line-height:1.6;color:#334155}
+    .content-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.logo{position:absolute;top:22px;right:40px;width:150px;height:auto;z-index:200}
+    .controls{position:fixed;bottom:18px;right:18px;z-index:1000;display:flex;gap:10px}button{background:var(--btn-bg);color:#fff;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:1rem;font-weight:bold;transition:all .2s;box-shadow:0 4px 6px rgba(0,0,0,.12);user-select:none}button:hover{background:var(--btn-hover);transform:translateY(-2px)}button.small{padding:8px 12px;font-size:.95rem}button.ghost{background:#e2e8f0;color:#0f172a}button.ghost:hover{background:#cbd5e1}
+    .progress-wrap{position:fixed;left:0;right:0;bottom:0;height:10px;z-index:1100;background:rgba(15,23,42,.12)}.progress-bar{height:100%;width:0%;background:var(--lo-border);transition:width .3s ease}.progress-label{position:fixed;left:14px;bottom:14px;z-index:1101;background:rgba(255,255,255,.95);border:1px solid #e2e8f0;padding:6px 10px;border-radius:999px;font-size:.9rem;font-weight:bold;color:var(--text);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+    .li-box{background:var(--lo-bg);border-left:6px solid var(--lo-border);padding:12px 14px;border-radius:12px;margin:8px 0 14px;color:var(--lo-text)}.task-box{background:var(--task-bg);border:2px solid var(--task-border);border-radius:12px;padding:18px;margin-bottom:12px;transition:transform .15s}.task-box:hover{transform:translateY(-2px)}.scaffold-box{background:var(--scaffold-bg);border-left:5px solid var(--scaffold-border);padding:10px 12px;border-radius:12px;font-size:1.05rem;margin-top:10px}.aspire-box{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);padding:12px 14px;border-radius:12px;color:var(--aspire-text);margin-top:10px}.sc-box{background:var(--sc-bg);border-left:6px solid var(--sc-border);padding:18px;border-radius:12px}.ido-box{background:var(--ido-bg);border-left:6px solid var(--ido-border);padding:14px;border-radius:12px;margin-bottom:12px}
+    .answer{display:none;margin-top:10px;padding:10px 12px;background:#f1f5f9;border-left:5px solid var(--muted);border-radius:10px;font-weight:bold;color:#334155}.show-ans .answer{display:block;animation:fadeInUp .25s}
+    .arrival-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.level-toggle{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0 12px}
+    .slide-tag{display:inline-block;padding:4px 14px;border-radius:8px;font-size:.85rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}.tag-arrival{background:#fef3c7;color:#92400e}.tag-starter{background:#dbeafe;color:#1e40af}.tag-ido{background:var(--ido-bg);color:#5b21b6}.tag-wedo{background:var(--wedo-bg);color:#9d174d}.tag-independent{background:var(--task-bg);color:#92400e}.tag-lesson{background:var(--lo-bg);color:var(--lo-border);font-size:1rem;padding:6px 18px}.tag-exit{background:var(--sc-bg);color:#9a3412}
+    .wedo-capture{border:3px solid var(--wedo-border);border-radius:14px;padding:18px;background:#fff;position:relative}.wedo-capture::before{content:'CLASS WORK';position:absolute;top:-12px;left:18px;background:var(--wedo-border);color:#fff;padding:2px 12px;border-radius:6px;font-size:.75rem;font-weight:900;letter-spacing:1px}
+    .score-bar{display:flex;align-items:center;gap:12px;padding:8px 14px;background:#f8fafc;border:2px solid #e2e8f0;border-radius:10px;margin-bottom:10px}.score-bar .score{font-weight:900;font-size:1.2rem;color:var(--success)}
+    .match-pill{padding:10px 16px;border:2px solid #cbd5e1;border-radius:10px;background:#fff;cursor:pointer;user-select:none;font-weight:bold;font-size:.95rem;transition:all .15s}.match-pill:hover{border-color:var(--task-border);background:#fefce8}.match-pill.selected{border-color:var(--wedo-border);box-shadow:0 0 0 3px rgba(219,39,119,.2);background:var(--wedo-bg)}.match-pill.placed{opacity:.35;pointer-events:none}
+    .match-target{border:2px dashed #cbd5e1;border-radius:12px;padding:12px;text-align:center;background:#fff;cursor:pointer;font-weight:bold;min-height:60px;display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:.95rem}.match-target:hover{border-color:var(--task-border);background:#fefce8}.match-target.correct{border:2px solid var(--success);background:rgba(22,163,74,.1);color:var(--success)}.match-target.wrong{border:2px solid var(--error);background:rgba(220,38,38,.1);animation:shake .4s}
+    .fact-carousel{background:#1e293b;color:#fff;border-radius:14px;padding:30px 40px;text-align:center;min-height:170px;display:flex;flex-direction:column;justify-content:center;align-items:center;margin-top:12px}.fact-text{font-size:1.2rem;line-height:1.6;max-width:650px;animation:fadeInUp .4s ease-out}.fact-num{font-size:2.4rem;font-weight:800;color:#eab308;margin-bottom:4px}.fact-nav{display:flex;gap:10px;margin-top:14px}.fact-nav button{padding:7px 20px;border-radius:8px;border:2px solid #fff;background:transparent;color:#fff;font-weight:700;cursor:pointer;font-size:.88rem;box-shadow:none}.fact-nav button:hover{background:#fff;color:#1e293b}.fact-dots{display:flex;gap:6px;margin-top:8px}.fact-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25)}.fact-dot.active{background:#eab308}
+    .react-panel{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:12px}.react-q{background:#f8fafc;border-radius:10px;padding:12px}.react-q label{font-weight:700;color:var(--ido-border);display:block;margin-bottom:4px;font-size:.9rem}.react-q textarea{width:100%;border:2px solid #e2e8f0;border-radius:8px;padding:8px;font-family:'Segoe UI',sans-serif;font-size:.95rem;resize:vertical;min-height:44px}.react-q textarea:focus{border-color:var(--scaffold-border);outline:none}
+    .compare-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:12px}.compare-card{border-radius:14px;padding:14px}.compare-card h3{font-size:1rem;margin:0 0 6px}.compare-card p{font-size:.92rem;line-height:1.45}
+    .timer-widget{display:flex;align-items:center;gap:14px;background:#1e293b;color:#fff;padding:12px 20px;border-radius:12px;margin-bottom:12px}.timer-display{font-size:2rem;font-weight:800;min-width:90px;text-align:center;color:var(--task-border)}.timer-bar-bg{flex:1;height:10px;background:rgba(255,255,255,.12);border-radius:5px;overflow:hidden}.timer-bar-fill{height:100%;background:var(--task-border);border-radius:5px;transition:width 1s linear}.timer-btns{display:flex;gap:5px}.timer-btn{padding:5px 14px;border-radius:6px;border:2px solid #fff;background:transparent;color:#fff;font-weight:700;cursor:pointer;font-size:.82rem;box-shadow:none}.timer-btn:hover{background:#fff;color:#1e293b}
+    /* Highlight-bio block */
+    .bio-block{background:#fdfdfd;border:2px solid #cbd5e1;border-radius:12px;padding:16px 20px;margin-top:8px;font-size:1.02rem;line-height:1.7;max-height:280px;overflow-y:auto;color:#1f2937}
+    .bio-block p{margin:6px 0}
+    .bio-block .key-fact.revealed{background:#fef08a;padding:1px 4px;border-radius:3px;box-shadow:0 0 0 2px rgba(234,179,8,.4);transition:all .3s}
+    /* Live-click sentence highlighting */
+    .hl-sentence{cursor:pointer;padding:2px 3px;border-radius:4px;transition:background .15s,box-shadow .15s;-webkit-tap-highlight-color:transparent}
+    .hl-sentence:hover{background:#fef9c3}
+    .hl-sentence.highlighted{background:#fde047;box-shadow:0 0 0 2px rgba(234,179,8,.5);font-weight:500}
+    .hl-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 8px;font-size:.95rem}
+    .hl-counter{background:#1e293b;color:#fef08a;padding:4px 12px;border-radius:999px;font-weight:900;font-size:.9rem;letter-spacing:.5px}
+    /* WAGOLL Ghost Typer */
+    .wagoll-trigger{background:linear-gradient(135deg,#7c3aed 0%,#db2777 100%);color:#fff;font-weight:900;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:.95rem;box-shadow:0 4px 12px rgba(124,58,237,.3);margin-top:10px;display:inline-flex;align-items:center;gap:6px}
+    .wagoll-trigger:hover{background:linear-gradient(135deg,#6d28d9 0%,#be185d 100%);transform:translateY(-2px)}
+    .wagoll-panel{display:none;background:linear-gradient(135deg,rgba(124,58,237,.06) 0%,rgba(219,39,119,.06) 100%);border:3px solid var(--ido-border);border-radius:14px;padding:16px 18px;margin-top:10px;position:relative;animation:fadeInUp .4s ease-out}
+    .wagoll-panel.visible{display:block}
+    .wagoll-panel::before{content:'🪄 WAGOLL — What A Good One Looks Like';position:absolute;top:-12px;left:14px;background:var(--ido-border);color:#fff;padding:3px 12px;border-radius:6px;font-size:.72rem;font-weight:900;letter-spacing:.5px}
+    .wagoll-text{font-family:'Georgia',serif;font-size:1rem;line-height:1.65;color:#1e293b;min-height:80px;padding:6px 4px}
+    .wagoll-text .cursor{display:inline-block;width:2px;height:1em;background:var(--ido-border);margin-left:2px;vertical-align:text-bottom;animation:caretBlink .9s steps(2) infinite}
+    @keyframes caretBlink{50%{opacity:0}}
+    .wagoll-tags{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
+    .wagoll-tag{background:#fff;border:2px solid var(--ido-border);color:var(--ido-border);font-size:.72rem;font-weight:900;padding:2px 8px;border-radius:5px;letter-spacing:.5px;display:none}
+    .wagoll-tag.show{display:inline-block;animation:fadeInUp .3s}
+    /* Mid-Point Peer Check overlay */
+    @keyframes midpointPulse{0%,100%{box-shadow:0 0 30px rgba(56,189,248,.6),0 0 60px rgba(124,58,237,.4)}50%{box-shadow:0 0 50px rgba(56,189,248,.9),0 0 100px rgba(124,58,237,.6)}}
+    .midpoint-overlay{position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:8500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(3px);animation:fadeIn .25s ease}
+    .midpoint-overlay.visible{display:flex}
+    .midpoint-modal{background:linear-gradient(135deg,#e0f2fe 0%,#ede9fe 100%);border:4px solid var(--scaffold-border);border-radius:24px;padding:30px 36px;text-align:center;animation:lessonCompletePop .55s cubic-bezier(.34,1.56,.64,1),midpointPulse 2.4s ease-in-out 0.55s infinite;max-width:600px;width:90%}
+    .midpoint-modal .mp-tag{display:inline-block;background:var(--scaffold-border);color:#fff;padding:4px 14px;border-radius:6px;font-size:.78rem;font-weight:900;letter-spacing:1.5px;margin-bottom:8px}
+    .midpoint-modal h2{margin:6px 0 10px;color:#0c4a6e;font-size:1.7rem;border:none;padding:0}
+    .midpoint-modal .mp-prompt{background:rgba(255,255,255,.85);border-left:6px solid var(--task-border);padding:14px 16px;border-radius:10px;margin:10px 0;font-size:1.1rem;color:#1e293b;font-weight:600;text-align:left}
+    .midpoint-modal .mp-prompt strong{color:#9a3412}
+    .midpoint-modal .mp-sub{font-size:.92rem;color:#475569;font-style:italic;margin:6px 0}
+    .midpoint-modal button{background:var(--scaffold-border);color:#fff;border:none;padding:11px 26px;border-radius:10px;font-weight:900;cursor:pointer;margin-top:8px;font-size:1.05rem;transition:all .2s}
+    .midpoint-modal button:hover{background:#0284c7;transform:translateY(-2px)}
+    @media (max-width:640px){
+      .wagoll-panel{padding:14px 12px}.wagoll-text{font-size:.92rem}
+      .midpoint-modal{padding:22px 20px;max-width:94%}
+      .midpoint-modal h2{font-size:1.3rem}
+      .midpoint-modal .mp-prompt{font-size:.95rem;padding:10px 12px}
+      .hl-toolbar{font-size:.85rem;gap:6px}
+    }
+    #print-area{display:none}
+    @media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}body{overflow:visible;background:#fff;height:auto;color:#000}.controls,.slide-container,.progress-wrap,.progress-label,.timer-widget{display:none!important}#print-area{display:block!important;padding:20px}.print-section{display:none;page-break-after:always}.print-section.visible{display:block}.print-line{border-bottom:1px solid #000;height:22px;margin-top:8px}.ko-table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:.95rem}.ko-table th,.ko-table td{border:1px solid #000;padding:8px;text-align:left}.ko-table th{background:#eee}.scaffold-print-box{border:2px dashed #94a3b8;padding:15px;margin-bottom:20px;border-radius:8px;background:#f8fafc}.prevent-break{page-break-inside:avoid;break-inside:avoid;margin-bottom:25px}body.print-supported .standard-content,body.print-supported .stretch-content{display:none!important}body.print-standard .supported-content,body.print-standard .stretch-content{display:none!important}body.print-stretch .supported-content,body.print-stretch .standard-content{display:none!important}}
+    /* ============== V4 POLISH ============== */
+    #auto-timer{position:fixed;top:14px;left:14px;z-index:6000;background:#fff;border:2px solid var(--ido-border);border-radius:999px;padding:6px 14px 6px 12px;display:flex;align-items:center;gap:8px;box-shadow:0 4px 14px rgba(0,0,0,.12);font-weight:900;color:var(--ido-border)}
+    #auto-timer-icon{font-size:1rem;line-height:1}
+    #auto-timer-display{font-size:1.1rem;font-variant-numeric:tabular-nums;min-width:54px}
+    #auto-timer .at-btn{background:transparent;border:none;color:var(--ido-border);cursor:pointer;font-size:1rem;padding:2px 4px;box-shadow:none}
+    #auto-timer .at-btn:hover{background:var(--ido-bg);transform:none}
+    #auto-timer.warn{border-color:var(--task-border);color:var(--task-border);animation:pulse-warn 1.2s ease-in-out infinite}
+    #auto-timer.warn .at-btn{color:var(--task-border)}
+    #auto-timer.done{border-color:var(--error);color:var(--error);background:#fee2e2}
+    @keyframes pulse-warn{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+    body.no-timer #auto-timer{display:none}
+    #ta-focus-btn,#cold-call-btn{position:fixed;z-index:6000;border:none;color:#fff;font-weight:900;letter-spacing:.5px;padding:8px 16px;border-radius:999px;cursor:pointer;font-size:.85rem;box-shadow:0 4px 12px rgba(0,0,0,.15);display:flex;align-items:center;gap:6px}
+    #ta-focus-btn{top:14px;left:170px;background:#7c3aed}
+    #ta-focus-btn:hover{background:#5b21b6;transform:translateY(-2px)}
+    #cold-call-btn{top:14px;left:280px;background:#dc2626}
+    #cold-call-btn:hover{background:#991b1b;transform:translateY(-2px)}
+    .v4-modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:7000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px);animation:fadeIn .25s ease}
+    .v4-modal-overlay.visible{display:flex}
+    .v4-modal{background:#fff;border-radius:18px;padding:22px 26px;max-width:560px;width:90%;border:3px solid var(--ido-border);box-shadow:0 20px 60px rgba(0,0,0,.4);animation:fadeInUp .3s ease}
+    .v4-modal h3{margin:0 0 10px;color:var(--ido-border);font-size:1.3rem;border-bottom:2px solid var(--ido-bg);padding-bottom:8px}
+    .v4-modal h3 .badge{display:inline-block;background:var(--ido-border);color:#fff;font-size:.7rem;padding:2px 10px;border-radius:6px;margin-left:8px;vertical-align:middle}
+    .v4-modal .ta-section,.v4-modal .cc-section{margin:8px 0;padding:10px 12px;background:#f8fafc;border-left:4px solid var(--scaffold-border);border-radius:8px;font-size:.95rem}
+    .v4-modal .ta-section strong,.v4-modal .cc-section strong{color:var(--ido-border)}
+    .v4-modal .cc-pupil{font-size:1.6rem;font-weight:900;text-align:center;color:var(--error);margin:10px 0;letter-spacing:1px;animation:nameLand .4s cubic-bezier(.34,1.56,.64,1)}
+    .v4-modal .cc-question{background:#fef3c7;border-left:6px solid #d97706;padding:12px 14px;border-radius:10px;font-size:1.05rem;font-weight:600;margin-top:8px;color:#78350f}
+    .v4-modal .cc-tier{font-size:.75rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;background:#1e293b;color:#fff;padding:2px 8px;border-radius:5px;display:inline-block;margin-bottom:6px}
+    .v4-modal-footer{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:8px;flex-wrap:wrap}
+    .v4-modal-footer button{padding:8px 14px;font-size:.9rem}
+    .v4-modal-footer .roll-again{background:var(--task-border)}
+    .v4-modal-footer .roll-again:hover{background:#ca8a04}
+    .v4-modal .pupil-list{font-size:.8rem;color:var(--muted);margin-top:6px}
+    .v4-modal input[type="text"]{width:100%;padding:8px 10px;border:2px solid #e2e8f0;border-radius:8px;font-size:.95rem;margin-top:6px;font-family:'Segoe UI',sans-serif}
+    .v4-modal input:focus{border-color:var(--scaffold-border);outline:none}
+    @keyframes nameLand{0%{opacity:0;transform:scale(.4) rotate(-15deg)}60%{opacity:1;transform:scale(1.2) rotate(5deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+    /* ================= V5 ADDITIONS ================= */
+    /* (1) Animated floating title dots */
+    @keyframes floatDot{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(-22px) translateX(10px)}}
+    .title-dots{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+    .title-dot{position:absolute;border-radius:50%;animation:floatDot ease-in-out infinite;will-change:transform}
+    .title-stage{position:relative;z-index:1}
+    /* (2) Step-by-step reveal on I Do slides */
+    .v5-step-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--ido-bg);border:2px solid var(--ido-border);border-radius:12px;padding:8px 14px;margin:8px 0 12px}
+    .v5-step-controls button{background:var(--ido-border);color:#fff;border:none;padding:8px 16px;border-radius:9px;font-weight:900;cursor:pointer;font-size:.95rem;box-shadow:0 3px 8px rgba(124,58,237,.25)}
+    .v5-step-controls button:hover{background:#5b21b6;transform:translateY(-2px)}
+    .v5-step-controls button:disabled{background:var(--success);cursor:default;transform:none;opacity:.85}
+    .v5-step-label{font-weight:900;color:var(--ido-border);font-size:.92rem;letter-spacing:.5px}
+    .v5-step-hint{font-size:.85rem;color:var(--muted)}
+    .v5-step{display:none}
+    .v5-step.revealed{display:block;animation:fadeInUp .45s ease-out}
+    .compare-grid-3 .v5-step.revealed{display:block}
+    /* (3) TURN & TALK bridge prompt */
+    @keyframes ttPulse{0%,100%{box-shadow:0 0 0 0 rgba(219,39,119,.0)}50%{box-shadow:0 0 0 5px rgba(219,39,119,.12)}}
+    .turn-talk{background:linear-gradient(135deg,#fce7f3 0%,#ede9fe 100%);border:3px solid var(--wedo-border);border-radius:14px;padding:14px 18px;margin-top:14px;position:relative;animation:ttPulse 2.6s ease-in-out infinite}
+    .turn-talk::before{content:'🗣️ TURN & TALK';position:absolute;top:-12px;left:16px;background:var(--wedo-border);color:#fff;padding:3px 12px;border-radius:6px;font-size:.74rem;font-weight:900;letter-spacing:1px}
+    .turn-talk p{margin:4px 0;font-size:1.05rem;color:#831843;font-weight:600}
+    .turn-talk .tt-sub{font-size:.85rem;color:#9d174d;font-style:italic;font-weight:500}
+    @media (max-width:640px){.v5-step-controls{padding:6px 10px;gap:8px}.v5-step-controls button{padding:6px 12px;font-size:.85rem}.turn-talk p{font-size:.95rem}.title-dot{display:none}}
+    @keyframes artHeroPulse{0%,100%{transform:scale(1);box-shadow:0 0 32px rgba(212,165,116,.55),0 0 60px rgba(124,58,237,.3)}50%{transform:scale(1.06);box-shadow:0 0 48px rgba(212,165,116,.85),0 0 100px rgba(124,58,237,.5)}}
+    @keyframes artRipple{0%{transform:scale(.4);opacity:.7}100%{transform:scale(2.4);opacity:0}}
+    @keyframes heroSlideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes arrowGrow{0%{opacity:0;transform:translateX(-12px) scale(.7)}60%{opacity:1;transform:translateX(0) scale(1.15)}100%{opacity:1;transform:translateX(0) scale(1)}}
+    @keyframes loCheckPop{0%{opacity:0;transform:scale(.4)}60%{opacity:1;transform:scale(1.4)}100%{opacity:1;transform:scale(1)}}
+    @keyframes brainFloat{0%,100%{transform:rotate(-4deg) translateY(0)}50%{transform:rotate(4deg) translateY(-3px)}}
+    @keyframes clockMelt{0%,100%{transform:rotate(-12deg) skewX(-2deg)}50%{transform:rotate(-15deg) skewX(2deg)}}
+    .title-hero{position:relative;margin:14px auto 8px;max-width:780px;padding:18px 20px;background:linear-gradient(135deg,rgba(212,165,116,.12) 0%,rgba(124,58,237,.10) 50%,rgba(234,179,8,.10) 100%);border-radius:18px;animation:heroSlideUp .8s ease-out .2s backwards;display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap}
+    .hero-palette{font-size:3rem;animation:brainFloat 3s ease-in-out infinite,heroSlideUp .8s ease-out .35s backwards;filter:drop-shadow(0 4px 8px rgba(0,0,0,.15))}
+    .hero-arrow-art{font-size:1.9rem;font-weight:900;color:var(--lo-border);animation:arrowGrow .7s ease-out .55s backwards;display:flex;flex-direction:column;align-items:center;gap:0;line-height:1}
+    .hero-arrow-art .a-text{font-size:.65rem;letter-spacing:1px;font-weight:900;color:var(--lo-border);margin-top:-2px;text-align:center}
+    .hero-grid-svg{position:relative;width:100px;height:100px;border-radius:14px;background:#fff4d6;border:3px solid #b85042;animation:artHeroPulse 2.4s ease-in-out infinite;animation-delay:.8s;animation-fill-mode:both;box-shadow:0 6px 18px rgba(0,0,0,.18);padding:6px;display:flex;align-items:center;justify-content:center}
+    .hero-grid-svg::before,.hero-grid-svg::after{content:'';position:absolute;inset:-8px;border:3px solid rgba(184,80,66,.55);border-radius:18px;pointer-events:none}
+    .hero-grid-svg::before{animation:artRipple 2.4s ease-out infinite}
+    .hero-grid-svg::after{animation:artRipple 2.4s ease-out 1.2s infinite}
+    .hero-grid-svg svg{width:100%;height:100%}
+    .hero-tag-art{font-size:.95rem;font-weight:900;color:var(--lo-border);text-align:left;line-height:1.3;animation:heroSlideUp .8s ease-out 1s backwards;max-width:240px}
+    .hero-tag-art .small{display:block;font-size:.72rem;font-weight:600;color:var(--muted);margin-top:2px;letter-spacing:.3px}
+    /* LO checkmarks */
+    .lo-anim{list-style:none;padding-left:8px;margin-top:8px}
+    .lo-anim li{position:relative;padding-left:30px;margin:6px 0}
+    .lo-anim li::before{content:'✓';position:absolute;left:0;top:0;width:22px;height:22px;background:var(--success);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.85rem;box-shadow:0 2px 4px rgba(22,163,74,.3);animation:loCheckPop .5s cubic-bezier(.34,1.56,.64,1) both}
+    .lo-anim li:nth-child(1)::before{animation-delay:1.2s}
+    .lo-anim li:nth-child(2)::before{animation-delay:1.45s}
+    .lo-anim li:nth-child(3)::before{animation-delay:1.7s}
+    /* MISCONCEPTION + QUALITY-CHECK */
+    @keyframes strikeIn{from{width:0}to{width:100%}}
+    @keyframes rightFlash{0%,100%{background:#d1fae5}30%,60%{background:#86efac;box-shadow:0 0 14px rgba(22,163,74,.5)}}
+    .misc-box{background:#fef2f2;border-left:6px solid var(--error);padding:14px;border-radius:12px;margin-top:10px;position:relative}
+    .misc-box::before{content:'⚠️ COMMON MISTAKES';position:absolute;top:-11px;left:12px;background:var(--error);color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+    .misc-box p{margin:6px 0}
+    .misc-wrong{display:inline-block;background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:4px;font-weight:bold;position:relative}
+    .misc-right{display:inline-block;background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:4px;font-weight:bold}
+    .slide.active .misc-wrong::after{content:'';position:absolute;left:0;top:50%;height:2.5px;width:0;background:var(--error);transform:translateY(-50%);box-shadow:0 0 4px rgba(220,38,38,.6);animation:strikeIn .5s ease-out forwards;animation-delay:.6s}
+    .slide.active .misc-wrong:nth-of-type(2)::after{animation-delay:.9s}
+    .slide.active .misc-right{animation:rightFlash 1.6s ease-in-out 1.4s 1}
+    .exam-tip-box{background:#fef3c7;border-left:6px solid #d97706;padding:14px;border-radius:12px;margin-top:10px;position:relative}
+    .exam-tip-box::before{content:'🎯 QUALITY CHECK';position:absolute;top:-11px;left:12px;background:#d97706;color:#fff;padding:2px 10px;border-radius:6px;font-size:.7rem;font-weight:900;letter-spacing:1px}
+    .exam-tip-box p{margin:6px 0}
+    /* BRIDGE SLIDE */
+    .bridge-banner{background:linear-gradient(135deg,#fef3c7 0%,#fce7f3 100%);border:3px dashed var(--lo-border);border-radius:16px;padding:18px 22px;margin:12px 0;position:relative;animation:fadeInUp .5s ease-out}
+    .bridge-banner::before{content:'🌉 CATCH-UP BRIDGE — L6 Dalí → L7 Höch';position:absolute;top:-13px;left:18px;background:var(--lo-border);color:#fff;padding:3px 12px;border-radius:6px;font-size:.75rem;font-weight:900;letter-spacing:1px}
+    .bridge-banner h3{margin:6px 0;color:var(--lo-border);font-size:1.15rem}
+    .bridge-flow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:10px}
+    .bridge-step{background:#fff;border:2px solid var(--scaffold-border);border-radius:10px;padding:10px 12px;text-align:center;font-size:.95rem}
+    .bridge-step .num{display:inline-block;background:var(--scaffold-border);color:#fff;width:26px;height:26px;border-radius:50%;font-weight:900;line-height:26px;margin-bottom:4px}
+    .bridge-step strong{display:block;color:#0c4a6e;margin-bottom:2px}
+    /* LESSON COMPLETE celebration */
+    @keyframes lessonCompletePop{0%{opacity:0;transform:translate(-50%,-30%) scale(.5)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+    @keyframes lcGlow{0%,100%{box-shadow:0 0 30px rgba(245,158,11,.7),0 0 60px rgba(124,58,237,.4)}50%{box-shadow:0 0 50px rgba(245,158,11,.95),0 0 100px rgba(124,58,237,.7)}}
+    @keyframes starSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+    .lesson-complete-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:8000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px);animation:fadeIn .3s ease}
+    .lesson-complete-overlay.visible{display:flex}
+    .lesson-complete-modal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:linear-gradient(135deg,#fef3c7 0%,#ede9fe 100%);border:4px solid var(--ido-border);border-radius:24px;padding:28px 36px;text-align:center;animation:lessonCompletePop .65s cubic-bezier(.34,1.56,.64,1),lcGlow 2s ease-in-out 0.65s infinite;max-width:560px;width:90%}
+    .lesson-complete-modal .lc-stars{font-size:2.4rem;letter-spacing:8px;line-height:1;display:block}
+    .lesson-complete-modal .lc-stars span{display:inline-block;animation:starSpin 4s linear infinite}
+    .lesson-complete-modal .lc-stars span:nth-child(2){animation-delay:.5s;animation-direction:reverse}
+    .lesson-complete-modal .lc-stars span:nth-child(3){animation-delay:1s}
+    .lesson-complete-modal h2{margin:14px 0 6px;color:var(--ido-border);font-size:1.8rem;border:none;padding:0}
+    .lesson-complete-modal p{margin:4px 0 12px;font-size:1.05rem;color:#5b21b6;font-weight:bold}
+    .lesson-complete-modal .lc-summary{background:rgba(255,255,255,.7);border-radius:12px;padding:10px 14px;margin:10px 0;font-size:.95rem;color:#1e293b;font-weight:600;text-align:left}
+    .lesson-complete-modal .lc-summary span{display:block;margin:3px 0}
+    .lesson-complete-modal button{background:var(--ido-border);color:#fff;border:none;padding:10px 22px;border-radius:10px;font-weight:bold;cursor:pointer;margin-top:8px;font-size:1rem;transition:all .2s}
+    .lesson-complete-modal button:hover{background:#5b21b6;transform:translateY(-2px)}
+    /* MOBILE */
+    @media (max-width:640px){
+      .slide{padding:30px 14px 24px;width:96%}
+      .logo{width:90px;top:10px;right:14px}
+      h1{font-size:1.7rem}
+      h2{font-size:1.25rem;margin-right:90px}
+      h3{font-size:1.05rem}
+      p,li{font-size:.95rem}
+      .content-grid{grid-template-columns:1fr!important;gap:12px}
+      .arrival-grid{grid-template-columns:1fr!important;gap:10px}
+      .react-panel{grid-template-columns:1fr!important;gap:10px}
+      .compare-grid-3{grid-template-columns:1fr!important;gap:12px}
+      .bridge-flow{grid-template-columns:1fr!important;gap:8px}
+      .title-hero{flex-direction:column;gap:8px;padding:14px 10px;max-width:96%}
+      .hero-palette{font-size:2.4rem}
+      .hero-grid-svg{width:80px;height:80px}
+      .hero-arrow-art{font-size:1.6rem;flex-direction:row;gap:6px}
+      .hero-tag-art{font-size:.85rem;text-align:center;max-width:100%}
+      #auto-timer{top:10px;left:10px;padding:5px 10px 5px 8px;font-size:.85rem}
+      #auto-timer-display{font-size:.95rem;min-width:42px}
+      #ta-focus-btn{left:auto;right:14px;top:50px;font-size:.7rem;padding:5px 10px}
+      #cold-call-btn{left:auto;right:14px;top:84px;font-size:.7rem;padding:5px 10px}
+      .controls{bottom:14px;right:14px}
+      .controls button{padding:8px 12px;font-size:.9rem}
+      .level-toggle{gap:6px;flex-wrap:wrap}
+      .level-toggle button{padding:6px 10px;font-size:.85rem}
+      svg{max-width:100%;height:auto}
+      .lesson-complete-modal{padding:20px 22px;max-width:94%}
+      .lesson-complete-modal h2{font-size:1.4rem}
+      .v4-modal{padding:16px 18px;max-width:94%}
+      .match-pill{font-size:.85rem;padding:8px 12px}
+      .match-target{font-size:.85rem;padding:10px 8px}
+      .timer-widget{flex-direction:column;align-items:stretch;gap:8px;padding:10px}
+      .timer-display{font-size:1.5rem}
+      .mistake-text{font-size:1.05rem!important;line-height:1.5!important}
+      .fact-carousel{padding:18px 14px;min-height:140px}
+      .fact-text{font-size:1rem}
+      .fact-num{font-size:1.8rem}
+      .compare-card{padding:12px}
+      .compare-card h3{font-size:.95rem}
+      .compare-card p{font-size:.88rem}
+      .bio-block{font-size:.92rem;padding:12px;max-height:240px}
+    }
+  
+
+
+.pres-wrap{display:grid;grid-template-columns:300px 1fr;gap:18px;margin-top:8px;align-items:start}
+@media(max-width:640px){.pres-wrap{grid-template-columns:1fr}}
+.pres-cards{display:flex;flex-direction:column;gap:8px}
+.pres-card{cursor:pointer;background:#fff;border:2px solid #cbd5e1;border-radius:12px;padding:10px 12px;font-weight:800;font-size:.95rem;color:#334155;-webkit-tap-highlight-color:transparent;transition:all .15s}
+.pres-card:hover{border-color:var(--ido-border);background:#f5f3ff;transform:translateY(-2px)}
+.pres-card.done{border-color:var(--success);background:rgba(34,197,94,.12);color:#166534;cursor:default}
+.pres-side{display:flex;flex-direction:column;gap:10px}
+.pres-scorebar{display:flex;align-items:center;gap:10px;background:#1e293b;color:#fff;border-radius:10px;padding:8px 14px;font-weight:900}
+.pres-scorebar .pres-num{color:#eab308;font-size:1.3rem}
+.pres-msg{min-height:18px;font-weight:800;color:var(--scaffold-border);font-size:.92rem}
+.pres-caps{display:flex;flex-direction:column;gap:8px}
+.pres-cap{background:#fff;border-left:5px solid var(--ido-border);border-radius:10px;padding:8px 12px;font-size:.95rem;color:#3730a3;animation:fadeInUp .35s}.pres-cap strong{color:var(--ido-border)}
+@media print{.pres-wrap{display:none!important}}
+
+
+
+.xp-wrap{position:fixed;top:14px;left:14px;z-index:1102;background:rgba(255,255,255,.95);border:2px solid var(--aspire-border);padding:6px 14px;border-radius:999px;font-size:.85rem;font-weight:bold;color:var(--aspire-text);box-shadow:0 4px 12px rgba(0,0,0,.1);display:flex;align-items:center;gap:10px}
+.xp-label{white-space:nowrap}.xp-track{width:120px;height:10px;background:#e2e8f0;border-radius:5px;overflow:hidden}.xp-fill{height:100%;width:0%;background:linear-gradient(90deg,#22c55e,#16a34a);border-radius:5px;transition:width .4s ease}
+.hint-btn{background:var(--scaffold-border);color:#fff;font-size:.85rem;padding:6px 14px;border-radius:8px;border:none;cursor:pointer;font-weight:700;margin:4px 0;box-shadow:0 2px 4px rgba(0,0,0,.1)}.hint-btn:hover{background:#0284c7}
+.hint-box{display:none;background:var(--scaffold-bg);border-left:4px solid var(--scaffold-border);padding:8px 12px;border-radius:8px;margin:6px 0;font-size:.95rem;color:#0c4a6e;animation:fadeInUp .25s}.hint-box.show{display:block}
+.confetti{position:fixed;width:10px;height:10px;z-index:9999;pointer-events:none;top:-20px}
+@keyframes confettiFall{0%{transform:translateY(-20vh) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+@media print{.xp-wrap,.hint-btn,.hint-box,#auto-timer,#ta-focus-btn,#cold-call-btn,.v4-modal-overlay,.lesson-complete-overlay,.confetti{display:none!important}}
+/* ===== NEW SAVED-STYLE PUPIL PACK (continuous flow, no page-break-after) ===== */
+@page{margin:11mm}
+@media print{
+  #print-area{padding:0!important}
+  .print-section{page-break-after:auto!important;break-after:auto!important}
+  .print-section.visible{border-bottom:2px dashed #94a3b8;margin-bottom:14px;padding-bottom:14px}
+  .print-section.visible.print-last{border-bottom:0;margin-bottom:0;padding-bottom:0}
+  .print-section h1{font-size:1.2rem;margin:0 0 8px;border:0;display:block}
+  .print-section h2{font-size:1.02rem;margin:0 0 6px;border:0;padding:0}
+  .print-section h3{font-size:.95rem;margin:8px 0 4px;color:#000}
+  .print-section p,.print-section li,.print-section td,.print-section th{font-size:.9rem;line-height:1.4}
+  .print-section ul,.print-section ol{margin:4px 0 8px;padding-left:20px}
+  .ko-table{break-inside:avoid;margin-bottom:12px}
+  .scaffold-print-box{break-inside:avoid;margin-bottom:12px}
+  .prevent-break,.rev-block{break-inside:avoid}
+  .cover-line{font-size:.95rem;border:1px solid #000;padding:7px 10px;border-radius:6px;margin:0 0 12px}
+  .rev-block{margin:10px 0}
+  .self-quiz li{margin:3px 0}
 }
-html.mbm-classroom.pathway-grow {
-  --lo-bg:#e6ebf0;--lo-border:#5B91A5;--ido-bg:#f2e6df;--ido-border:#D1673D;
-  --wedo-bg:#e2efed;--wedo-border:#2BA193;--task-bg:#f8efd8;--task-border:#DFAD3E;
-  --btn-bg:#5B91A5;--btn-hover:#436f80;--sc-border:#DFAD3E;--sc-bg:#faf3dd;
-}
-html.mbm-classroom.pathway-launch {
-  --lo-bg:#e4ebee;--lo-border:#356F83;--ido-bg:#efe3db;--ido-border:#9B5B3D;
-  --wedo-bg:#e1edeb;--wedo-border:#238C80;--task-bg:#f6eed9;--task-border:#C18B2D;
-  --btn-bg:#356F83;--btn-hover:#28576a;--sc-border:#C18B2D;--sc-bg:#f8f1de;
-}
-@media screen {
-  html.mbm-classroom, .mbm-classroom body {background:#fff;color:#1f2937;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
-  .mbm-classroom main.deck {height:100vh;height:100dvh;padding:clamp(14px,3vh,36px) 4vw 110px;overflow:auto;scroll-padding-bottom:110px}
-  .mbm-classroom main.deck>.slide {width:100%;max-width:1600px;min-height:calc(100vh - 160px);margin:auto;padding:clamp(20px,3vw,40px);background:#fff;color:#1f2937;border:0;border-top:10px solid var(--lo-border);border-radius:20px;box-shadow:0 20px 50px #00000018}
-  .mbm-classroom .slide[data-classroom-phase="ido"] {border-top-color:var(--ido-border)}
-  .mbm-classroom .slide[data-classroom-phase="wedo"] {border-top-color:var(--wedo-border)}
-  .mbm-classroom .slide[data-classroom-phase="independent"] {border-top-color:var(--task-border)}
-  .mbm-classroom .slide[data-classroom-phase="exit"] {border-top-color:var(--sc-border)}
-  .mbm-classroom .slide h1 {display:block;color:#101820;font-size:clamp(1.8rem,3.2vw,2.8rem);line-height:1.14;margin:20px 0 24px;padding-bottom:12px;border-bottom:3px solid var(--lo-border)}
-  .mbm-classroom .slide h2 {color:#101820;font-size:clamp(1.5rem,2.5vw,2rem);line-height:1.22;margin:16px 0 22px;padding-bottom:12px;border-bottom:2px solid #e2e8f0}
-  .mbm-classroom .slide h3 {color:#182c3c;font-size:1.2rem;line-height:1.3;margin:18px 0 10px}
-  .mbm-classroom .slide p,.mbm-classroom .slide li {font-size:1.15rem;line-height:1.6;color:#334155;max-width:85ch}
-  .mbm-classroom .slide p {margin:.5em 0}
-  .mbm-classroom .slide>svg {max-width:900px;margin:18px auto;display:block;overflow:visible}
-  .mbm-classroom .slide>.tag {display:inline-block;background:var(--lo-bg);color:#183b4b;border-radius:8px;padding:6px 14px;font-size:.9rem;font-weight:800;letter-spacing:.04em}
-  .mbm-classroom .slide[data-classroom-phase="ido"]>.tag {background:var(--ido-bg);color:#68321f}
-  .mbm-classroom .slide[data-classroom-phase="wedo"]>.tag {background:var(--wedo-bg);color:#115c52}
-  .mbm-classroom .slide[data-classroom-phase="independent"]>.tag {background:var(--task-bg);color:#684811}
-  .mbm-classroom .slide>.time {float:right;border-radius:999px;background:#f5f7f8;color:#334155;border:1px solid #cbd5e1;font-size:.9rem}
-  .mbm-classroom .slide[data-classroom-phase="title"]>.time {display:none}
-  .mbm-classroom .mbm-lesson-objective {background:var(--lo-bg);border-left:6px solid var(--lo-border);border-radius:12px;padding:14px 18px;margin:16px 0}
-  .mbm-classroom .mbm-lesson-success {background:var(--sc-bg);border-left:6px solid var(--sc-border);border-radius:12px;padding:14px 18px;margin:14px 0}
-  .mbm-classroom .box,.mbm-classroom .route,.mbm-classroom .route-card {background:#f8fafc;color:#1f2937;border:1px solid #cbd5e1;border-radius:12px;padding:16px}
-  .mbm-classroom .box.objective {background:var(--lo-bg);border-left:6px solid var(--lo-border)}
-  .mbm-classroom .lundy,.mbm-classroom .lundy-strip {background:#f8fafc;color:#334155;border:1px solid #dce3e8;border-radius:12px;padding:10px 14px;margin:22px 0 0}
-  /* Pupil voice is framed at arrival and revisited at the exit, without a
-     repeated process banner competing with each model and practical task. */
-  .mbm-classroom .slide[data-classroom-phase]:not([data-classroom-phase="title"]):not([data-classroom-phase="exit"])>.lundy,
-  .mbm-classroom .slide[data-classroom-phase]:not([data-classroom-phase="title"]):not([data-classroom-phase="exit"])>.lundy-strip {display:none}
-  .mbm-classroom .lundy-grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-  .mbm-classroom .lundy-grid>span {display:block;color:#213544;background:var(--lo-bg);border-radius:8px;padding:7px;text-align:center;font-size:.8rem;font-weight:800}
-  .mbm-classroom .lundy-grid>span:nth-child(2) {background:var(--ido-bg)}
-  .mbm-classroom .lundy-grid>span:nth-child(3) {background:var(--wedo-bg)}
-  .mbm-classroom .lundy-grid>span:nth-child(4) {background:var(--task-bg)}
-  .mbm-classroom .lundy p,.mbm-classroom .lundy-strip p {font-size:.85rem;margin:8px 0 0;max-width:none}
-  .mbm-classroom button {min-width:44px;min-height:44px;border-radius:10px;font-weight:700;background:var(--btn-hover);color:#fff;border:1px solid transparent;padding:10px 16px}
-  .mbm-classroom button:hover {background:#203f4c;color:#fff}
-  .mbm-classroom button:focus-visible,.mbm-classroom a:focus-visible,.mbm-classroom select:focus-visible,.mbm-classroom summary:focus-visible {outline:3px solid #ab5800;outline-offset:3px}
-  .mbm-classroom .controls {background:#fffffff5;backdrop-filter:blur(8px);border:1px solid #dbe3e8;box-shadow:0 4px 20px #182c3c18;border-radius:14px;padding:8px;gap:7px;flex-wrap:wrap;max-width:calc(100vw - 32px)}
-  .mbm-classroom .prog {background:#e7ecef}
-  .mbm-classroom .prog>span {background:var(--lo-border)}
-  .mbm-classroom .overlay-card {background:#fff;color:#1f2937;border-color:var(--lo-border)}
-  .mbm-classroom .slide[data-classroom-phase="title"] {text-align:center}
-  .mbm-classroom .slide[data-classroom-phase="title"]>p {max-width:760px;margin:14px auto;text-align:left}
-  .mbm-classroom .slide[data-classroom-phase="title"]>.tag {background:#d98128;color:#172334}
-  .mbm-classroom .slide[data-classroom-phase="title"]>.lundy {max-width:760px;margin:24px auto 0;text-align:left}
-  .mbm-classroom .slide[data-classroom-phase="title"]>.box {text-align:left}
-  .mbm-classroom body.calm .slide {box-shadow:none}
-  @media(max-width:700px) {
-    .mbm-classroom main.deck {padding:14px 14px 180px}
-    .mbm-classroom main.deck>.slide {min-height:calc(100dvh - 205px);padding:20px 16px}
-    .mbm-classroom .slide p,.mbm-classroom .slide li {font-size:1.05rem}
-    .mbm-classroom .controls {left:14px;right:14px;bottom:14px;justify-content:center;max-width:none}
-    .mbm-classroom .controls button {font-size:.85rem;padding:8px 10px}
-    .mbm-classroom .lundy-grid {grid-template-columns:repeat(2,minmax(0,1fr))}
+
+.tag-lundy{background:#f3e8ff;color:#6b21a8}
+.lundy-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.lundy-box{border-radius:12px;padding:12px 14px;border:2px solid;background:#fff}
+.lundy-box h3{margin:0 0 4px;font-size:1rem}
+.lundy-box p{margin:0;font-size:.92rem}
+.sow-strip{display:inline-block;background:#eef2f7;border:1.5px solid #94a3b8;border-radius:999px;padding:4px 14px;font-size:.76rem;font-weight:800;letter-spacing:.05em;color:#334155;margin:4px 4px 8px}
+.award-strip{display:inline-block;background:#fdf4dc;border:1.5px solid #C18B2D;border-radius:999px;padding:4px 14px;font-size:.76rem;font-weight:800;letter-spacing:.05em;color:#7a5a10;margin:4px 4px 8px}
+.sc-v4{background:var(--sc-bg);border-left:6px solid var(--sc-border);border-radius:12px;padding:10px 16px;margin:10px auto;max-width:660px;text-align:left}
+.sc-v4 h3{margin:0 0 6px;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase}
+.sc-v4 ul{margin:0;padding-left:1.2rem}.sc-v4 li{margin:3px 0}
+.asp-v4{background:var(--aspire-bg);border-left:5px solid var(--aspire-border);border-radius:12px;padding:8px 14px;margin:6px auto;max-width:660px;text-align:left;color:var(--aspire-text)}
+@media print{.lundy-grid{display:block}}
+html.pathway-build{--lo-bg:#e8eef1;--lo-border:#4F869C;--ido-bg:#f3e4dc;--ido-border:#D06438;--wedo-bg:#e2efec;--wedo-border:#16877A;--task-bg:#faf0d7;--task-border:#E1AB32;--btn-bg:#4F869C;--btn-hover:#3a6a7d;}/* RUN12-A pathway scope */
+/* ===== I-Do Illuminator (LI) ===== */
+.ilm{background:#FBF3E6;border:2px solid #C97F2E;border-radius:14px;padding:10px 12px 6px;margin:10px 0}
+.ilm svg{width:100%;height:auto;display:block}
+.ilm-cap{text-align:center;font-size:.85rem;color:#8a5620;font-weight:700;margin:6px 0 4px}
+.ilm text{font-family:inherit;font-weight:800}
+
+@keyframes ilmPop{0%{transform:scale(0);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+@keyframes ilmDraw{from{stroke-dashoffset:260}to{stroke-dashoffset:0}}
+@keyframes ilmGlow{0%,100%{opacity:.35}50%{opacity:1}}
+@keyframes ilmSpin{to{transform:rotate(360deg)}}
+@keyframes ilmHand{to{transform:rotate(360deg)}}
+@keyframes ilmRide{0%{transform:translateX(0);opacity:1}80%{opacity:1}100%{transform:translateX(var(--ride,300px));opacity:0}}
+@keyframes ilmRise{0%{transform:translateY(16px);opacity:0}100%{transform:translateY(0);opacity:1}}
+@keyframes ilmRipple{0%{transform:scale(.2);opacity:.9}100%{transform:scale(1);opacity:0}}
+@keyframes ilmSweep{0%{transform:translateX(-40px)}100%{transform:translateX(420px)}}
+@keyframes ilmFill{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+
+.ilm .pop{animation:ilmPop .6s ease-out both;transform-origin:center;transform-box:fill-box}
+.ilm .draw{stroke-dasharray:260;animation:ilmDraw 1.6s ease-out both}
+.ilm .glow{animation:ilmGlow 2.6s ease-in-out infinite}
+.ilm .spin{animation:ilmSpin 9s linear infinite;transform-origin:center;transform-box:fill-box}
+.ilm .hand{animation:ilmHand 8s linear infinite;transform-origin:bottom center;transform-box:fill-box}
+.ilm .ride{animation:ilmRide 5.5s ease-in-out infinite;transform-box:fill-box}
+.ilm .rise{animation:ilmRise .8s ease-out both;transform-box:fill-box}
+.ilm .rip{animation:ilmRipple 2.8s ease-out infinite;transform-origin:center;transform-box:fill-box}
+.ilm .sweep{animation:ilmSweep 4s ease-in-out infinite;transform-box:fill-box}
+.ilm .fill{animation:ilmFill 1.4s ease-out both;transform-origin:bottom center;transform-box:fill-box}
+@media(prefers-reduced-motion:reduce){.ilm *{animation:none!important;opacity:1!important;stroke-dashoffset:0!important;transform:none!important}*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0ms!important;animation-iteration-count:1!important;animation-fill-mode:forwards!important}@keyframes artHeroPulse{}@keyframes artRipple{}@keyframes brainFloat{}@keyframes caretBlink{}@keyframes floatDot{}@keyframes lcGlow{}@keyframes midpointPulse{}@keyframes starSpin{}@keyframes ttPulse{}@keyframes pulse-warn{}@keyframes rightFlash{}@keyframes shake{}@keyframes confettiFall{}@keyframes clockMelt{}.confetti{display:none!important}}
+
+.pres-card,.match-pill,.match-target,button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+button:focus-visible,.pres-card:focus-visible,.match-pill:focus-visible{outline:3px solid var(--ido-border);outline-offset:2px}
+h2.slide-h1{color:var(--lo-text);font-size:2.5rem;margin:0 0 18px;border-bottom:3px solid var(--lo-border);display:inline-block}</style>
+<style id="literal-classic-controls">/* Literal common timer and modal controls from BUILD Science classic donor. */
+    #auto-timer{position:fixed;top:14px;left:14px;z-index:6000;background:#fff;border:2px solid var(--ido-border);border-radius:999px;padding:6px 14px 6px 12px;display:flex;align-items:center;gap:8px;box-shadow:0 4px 14px rgba(0,0,0,.12);font-weight:900;color:var(--ido-border)}
+    #auto-timer-icon{font-size:1rem;line-height:1}
+    #auto-timer-display{font-size:1.1rem;font-variant-numeric:tabular-nums;min-width:54px}
+    #auto-timer .at-btn{background:transparent;border:none;color:var(--ido-border);cursor:pointer;font-size:1rem;padding:2px 4px;box-shadow:none}
+    #auto-timer .at-btn:hover{background:var(--ido-bg);transform:none}
+    #auto-timer.warn{border-color:var(--task-border);color:var(--task-border);animation:pulse-warn 1.2s ease-in-out infinite}
+    #auto-timer.warn .at-btn{color:var(--task-border)}
+    #auto-timer.done{border-color:var(--error);color:var(--error);background:#fee2e2}
+    @keyframes pulse-warn{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+    body.no-timer #auto-timer{display:none}
+    #ta-focus-btn,#cold-call-btn{position:fixed;z-index:6000;border:none;color:#fff;font-weight:900;letter-spacing:.5px;padding:8px 16px;border-radius:999px;cursor:pointer;font-size:.85rem;box-shadow:0 4px 12px rgba(0,0,0,.15);display:flex;align-items:center;gap:6px}
+    #ta-focus-btn{top:14px;left:170px;background:#7c3aed}
+    #ta-focus-btn:hover{background:#5b21b6;transform:translateY(-2px)}
+    #cold-call-btn{top:14px;left:280px;background:#dc2626}
+    #cold-call-btn:hover{background:#991b1b;transform:translateY(-2px)}
+    .v4-modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:7000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px);animation:fadeIn .25s ease}
+    .v4-modal-overlay.visible{display:flex}
+    .v4-modal{background:#fff;border-radius:18px;padding:22px 26px;max-width:560px;width:90%;border:3px solid var(--ido-border);box-shadow:0 20px 60px rgba(0,0,0,.4);animation:fadeInUp .3s ease}
+    .v4-modal h3{margin:0 0 10px;color:var(--ido-border);font-size:1.3rem;border-bottom:2px solid var(--ido-bg);padding-bottom:8px}
+    .v4-modal h3 .badge{display:inline-block;background:var(--ido-border);color:#fff;font-size:.7rem;padding:2px 10px;border-radius:6px;margin-left:8px;vertical-align:middle}
+    .v4-modal .ta-section,.v4-modal .cc-section{margin:8px 0;padding:10px 12px;background:#f8fafc;border-left:4px solid var(--scaffold-border);border-radius:8px;font-size:.95rem}
+    .v4-modal .ta-section strong,.v4-modal .cc-section strong{color:var(--ido-border)}
+    .v4-modal .cc-pupil{font-size:1.6rem;font-weight:900;text-align:center;color:var(--error);margin:10px 0;letter-spacing:1px;animation:nameLand .4s cubic-bezier(.34,1.56,.64,1)}
+    .v4-modal .cc-question{background:#fef3c7;border-left:6px solid #d97706;padding:12px 14px;border-radius:10px;font-size:1.05rem;font-weight:600;margin-top:8px;color:#78350f}
+    .v4-modal .cc-tier{font-size:.75rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;background:#1e293b;color:#fff;padding:2px 8px;border-radius:5px;display:inline-block;margin-bottom:6px}
+    .v4-modal-footer{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:8px;flex-wrap:wrap}
+    .v4-modal-footer button{padding:8px 14px;font-size:.9rem}
+    .v4-modal-footer .roll-again{background:var(--task-border)}
+    .v4-modal-footer .roll-again:hover{background:#ca8a04}
+    .v4-modal .pupil-list{font-size:.8rem;color:var(--muted);margin-top:6px}
+    .v4-modal input[type="text"]{width:100%;padding:8px 10px;border:2px solid #e2e8f0;border-radius:8px;font-size:.95rem;margin-top:6px;font-family:'Segoe UI',sans-serif}
+    .v4-modal input:focus{border-color:var(--scaffold-border);outline:none}
+    @keyframes nameLand{0%{opacity:0;transform:scale(.4) rotate(-15deg)}60%{opacity:1;transform:scale(1.2) rotate(5deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+</style>
+<style id="standalone-access">/* Small standalone control and accessibility additions; donor geometry/colour tokens remain literal. */
+[hidden]{display:none!important}.classic-status{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+button:disabled{opacity:.5;cursor:default;transform:none}button,a,input,select,textarea{touch-action:manipulation}button{min-height:44px}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--ido-border);outline-offset:3px}
+.classic-toolbar{position:fixed;top:8px;right:14px;z-index:6001;display:flex;gap:6px;align-items:center}.classic-toolbar button,.classic-toolbar a{font-size:.82rem;padding:8px 12px;min-height:44px;border-radius:999px}.classic-toolbar a{background:#fff;border:1px solid #cbd5e1;color:var(--text);text-decoration:none;display:flex;align-items:center;font-weight:700}
+.classic-dialog{padding:0;background:transparent;border:0;max-width:640px;width:calc(100% - 32px);overflow:visible;color:var(--text)}.classic-dialog::backdrop{background:rgba(15,23,42,.55)}
+.classic-dialog .v4-modal{width:100%;max-width:none;max-height:85dvh;overflow:auto;animation:none}.classic-dialog h2,.classic-dialog h3{margin-right:0}.classic-dialog .v4-modal-footer{justify-content:flex-end}.classic-dialog ul{padding-left:1.25rem}.classic-dialog p,.classic-dialog li{font-size:1rem}.classic-dialog dt{font-weight:800;margin-top:12px;color:var(--ido-border)}.classic-dialog dd{margin:4px 0 12px}.classic-dialog .scaffold-box{margin-bottom:12px}
+.classic-modal-open .slide *{animation-play-state:paused!important}
+.classic-word-list{margin:0}.classic-word-list dt{font-size:1.1rem}.classic-word-list dd{font-size:1.05rem;line-height:1.6}
+.classic-print-tools{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}.classic-print-tools button[data-level="supported"]{background:#22c55e;color:#fff}.classic-print-tools button[data-level="standard"]{background:#f97316;color:#fff}.classic-print-tools button[data-level="stretch"]{background:#1e3a8a;color:#fff}
+.classic-tools-label{display:block;font-weight:800;margin:14px 0 6px}#slide-picker{font:inherit;width:100%;padding:10px;min-height:44px;border:2px solid #cbd5e1;border-radius:8px}
+.classic-brand{position:absolute;top:18px;right:26px;width:64px;height:64px;object-fit:contain}.slide:has(.classic-brand) h2{margin-right:85px}
+@media screen{.slide-container{align-items:flex-start;padding-top:64px;padding-bottom:88px}.slide{height:100%;scroll-padding-bottom:28px;min-width:0}.progress-label{bottom:62px;max-width:calc(100vw - 28px);font-size:.78rem}.controls button{min-height:44px}.slide-tag{align-self:flex-start}.content-grid>*{min-width:0}.slide img,.slide svg{max-width:100%}.slide textarea{width:100%;min-height:90px;font:inherit;line-height:1.5;padding:10px;border:2px solid #94a3b8;border-radius:8px}.slide table{max-width:100%}#auto-timer{top:10px;left:14px;min-height:44px;padding:0 6px 0 12px}#auto-timer .at-btn{min-width:44px;min-height:44px}}
+@media screen and (max-width:700px){.classic-toolbar{gap:4px;right:8px}.classic-toolbar button,.classic-toolbar a{font-size:.75rem;padding:8px}.classic-toolbar .classic-menu-label{display:none}.slide-container{padding-top:116px;padding-bottom:90px}.classic-toolbar{top:62px;left:10px;justify-content:flex-end}.controls{left:8px;right:8px;gap:4px}.controls button{padding:8px 6px;font-size:.8rem;flex:1;min-width:0}.slide{padding:26px 14px 24px;width:96%}.content-grid,.arrival-grid,.compare-grid-3,.lundy-grid{grid-template-columns:1fr!important}.slide h2{margin-right:0}.classic-brand{position:static;float:right;width:48px;height:48px;align-self:flex-end}.classic-dialog .v4-modal{padding:18px 16px}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.animate-enter,.anim-delay-1,.anim-delay-2,.anim-delay-3{opacity:1!important}}
+@media print{.classic-toolbar,.classic-dialog,#auto-timer,#classic-status,.controls,.progress-wrap,.progress-label{display:none!important}.print-section.print-last{page-break-after:auto}.print-section{break-inside:auto}#print-area img,#print-area svg{max-width:100%}#print-area table{border-collapse:collapse;width:100%}#print-area th,#print-area td{border:1px solid #334155;padding:8px}#print-area h1,#print-area h2,#print-area h3{break-after:avoid-page;page-break-after:avoid}#print-area h2{margin-right:0}#print-area p,#print-area li{font-size:11pt;line-height:1.45}.classic-brand{display:none!important}}
+
+@media print{#print-area .print-resource,#print-area .print-sheet{display:none}#print-area .print-resource.visible,#print-area .print-sheet.visible{display:block}#print-area .print-pack{display:block}#print-area .print-sheet{page-break-after:always}#print-area .print-sheet.print-last{page-break-after:auto}}
+</style>
+<style id="lesson-widgets">
+/* Content widgets: original slide/chassis rules are untouched. */
+.hero-visual svg,.visual svg{max-width:100%;height:auto;display:block;margin:auto}.hero-visual img,.visual img{max-width:100%;height:auto;display:block;margin:auto}.hero-visual,.visual{margin:12px 0}.visual-caption,figcaption{font-size:.9rem;color:var(--muted);line-height:1.4;margin-top:6px}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}.evidence{border:1px solid #cbd5e1;border-radius:12px;padding:12px;background:#fff;margin:6px 0}.evidence h3{margin-top:0}.columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.lab{border:2px solid var(--wedo-border);padding:15px;border-radius:12px;background:#fff;margin:12px 0}.lab label,.field{display:block;font-weight:700;margin:10px 0 5px}.lab select,.lab input[type=number],.lab input[type=text],select{font:inherit;padding:9px;border:2px solid #94a3b8;border-radius:7px;min-height:44px;max-width:100%;background:#fff;color:var(--text)}.lab button{margin:5px}.lab svg{max-width:100%;height:auto}.lab [role=status],.feedback,.lab-note{padding:10px;border-radius:9px;background:#f1f5f9;margin:8px 0;line-height:1.5}.lab-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:12px}.lab-controls,.choices{display:flex;flex-wrap:wrap;gap:8px}.lab-table,table{border-collapse:collapse;width:100%;margin:9px 0}.lab-table th,.lab-table td,th,td{border:1px solid #94a3b8;padding:9px;text-align:left;vertical-align:top}td details{margin:0}.lab-card{border:1px solid #94a3b8;border-radius:10px;padding:12px;margin:8px 0}.lesson-route[hidden]{display:none}.lesson-route{margin:12px 0}.route-buttons{display:flex;flex-wrap:wrap;gap:8px}.route-buttons button[aria-pressed=true]{outline:3px solid #1f2937;outline-offset:2px}.writing{font:inherit;min-height:110px;width:100%;border:2px solid #94a3b8;border-radius:10px;padding:10px;display:block}.small,.source-note{font-size:.9rem}.quiet{color:var(--muted)}.soft-check{margin:12px 0}.soft-check .options{display:grid;gap:9px}.soft-check .options button{text-align:left}.print-resource,.print-sheet{break-after:page;page-break-after:always}.print-resource:last-child,.print-sheet:last-child{break-after:auto;page-break-after:auto}.paper-space{height:34mm;border:1px solid #94a3b8;margin:8px 0 14px}.paper-space.large{height:48mm}.paper-space.short{height:21mm}.print-pack{font-family:'Segoe UI',Arial,sans-serif}.print-pack svg{max-width:100%;height:auto;max-height:125mm}.print-pack table{font-size:10pt}.print-pack p{font-size:11pt}.print-pack .content-grid{gap:8px}.staff-detail{margin:12px 0}.staff-detail p,.staff-detail li{font-size:1rem}.model-steps li{margin:8px 0}@media(max-width:760px){.columns,.cards{grid-template-columns:1fr}.lab{padding:10px}table{font-size:.92rem}th,td{padding:6px}}@media print{.paper-space{display:block}.lab,.writing{display:none}.print-pack .columns{grid-template-columns:1fr 1fr}.print-pack h1,.print-pack h2{margin-right:0;position:static}.print-pack .print-resource>svg{display:block;max-height:115mm;max-width:100%}}
+</style><!--n6m-guide:v1--><style id="n6m-guide-css">@media screen{[data-mbm-guide]{display:none!important}html.mbm-guide-on [data-mbm-guide]{display:revert!important}.n6m-guide-btn{position:fixed;right:12px;bottom:12px;z-index:2147483000;font:600 .8rem/1.2 "Segoe UI",Arial,sans-serif;padding:7px 11px;border:2px solid currentColor;border-radius:8px;background:#fff;color:#1e3a8a;cursor:pointer}.n6m-guide-btn[aria-pressed="true"]{background:#1e3a8a;color:#fff}}@media print{.n6m-guide-btn{display:none!important}}</style><script id="n6m-guide-js">(function(){var R=document.documentElement;function apply(v){R.classList.toggle("mbm-guide-on",!!v);var b=document.querySelector(".n6m-guide-btn");if(b){b.setAttribute("aria-pressed",v?"true":"false");}}function toggle(){apply(!R.classList.contains("mbm-guide-on"));}function boot(){if(!document.querySelector("[data-mbm-guide]"))return;var b=document.createElement("button");b.type="button";b.className="n6m-guide-btn";b.setAttribute("aria-pressed","false");b.setAttribute("data-n6m-guide-control","1");b.title="Show or hide staff guidance (G)";b.textContent="\u24D8 Guidance";b.addEventListener("click",toggle);document.body.appendChild(b);apply(false);document.addEventListener("keydown",function(e){if(e.key!=="g"&&e.key!=="G")return;if(e.metaKey||e.ctrlKey||e.altKey)return;var t=e.target,n=t&&t.tagName;if(n==="INPUT"||n==="TEXTAREA"||n==="SELECT"||(t&&t.isContentEditable))return;toggle();});}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();})();</script><!--/n6m-guide--></head><body><!--n6-nav1:v1--><style id="n6-nav1-css">@media print{.mbmhome,.n6-splash{display:none!important}}.mbmhome{display:inline-block;margin:6px 0 0 8px;font:600 .85rem/1.4 "Segoe UI",Arial,sans-serif;color:#1e3a8a;text-decoration:none}.mbmhome:hover,.mbmhome:focus{text-decoration:underline}</style><a class="mbmhome" href="../../index.html" aria-label="Back to the Lessons catalogue">← Lessons</a><!--/n6-nav1-->
+<div id="auto-timer" aria-label="Stage timer"><span id="auto-timer-icon" aria-hidden="true">⏱</span><span id="auto-timer-display">00:00</span><button class="at-btn" id="auto-timer-toggle" type="button" data-action="timer-toggle" aria-label="Start stage timer">▶</button><button class="at-btn" type="button" data-action="timer-reset" aria-label="Reset stage timer">↺</button></div>
+<div class="classic-toolbar"><a href="https://madebymatt.uk/Lessons/">Lessons<span class="classic-menu-label"> menu</span></a><button type="button" class="ghost" data-action="words">Word help</button><button type="button" class="ghost" data-action="pause">Pause</button><button type="button" class="ghost" data-action="tools">Tools &amp; print</button></div>
+<main class="slide-container" aria-label="One symbol, many ways"><section class="slide" id="title-slide" data-title="Start here" data-type="title" data-timer="0"><span class="slide-tag tag-arrival">BUILD · Art</span><h1>One symbol, many ways</h1><p>Autumn 1 · Week 1 · 40 minutes</p><div class="li-box"><h3>Learning intention</h3><p>I can try different marks and colours, then choose how to show an idea.</p></div><div class="sc-box"><h3>Success criteria</h3><ul><li>Make two or three different mark tests.</li><li>Choose a mark and colour for one symbol.</li><li>Point to a choice and say what it means to me.</li></ul></div><p class="quiet">Use Next to begin. Ask for word help or your usual support when needed.</p></section><section class="slide" id="stage-0" data-title="Arrival" data-stage-index="0" data-type="arrival" data-timer="2"><span class="slide-tag tag-arrival">Arrival · 2 min</span><h2>A mark you can make</h2><div class="li-box"><p><strong>Try one line on scrap paper.</strong></p><p>Make it light. Make another line darker.</p><p>Point to the line you can see most clearly.</p><p>You can draw, trace or guide an adult. Your choice counts.</p></div><figure class="visual"><svg viewBox="0 0 700 290" role="img" aria-label="Three line studies and three tones" xmlns="http://www.w3.org/2000/svg"><title>Three line studies and three tones</title><rect x="5" y="5" width="690" height="280" rx="12" fill="#f8fafc"/><text x="30" y="38" class="diagram-text">Light line</text><path d="M30 110 Q80 50 130 110 T210 110" stroke="#a0a0a0" stroke-width="2" fill="none"/><text x="260" y="38" class="diagram-text">Bold line</text><path d="M260 110 Q310 50 360 110 T440 110" stroke="#222" stroke-width="10" fill="none"/><text x="490" y="38" class="diagram-text">Hatching</text><defs><pattern id="wave-hatch-0" width="7" height="7" patternUnits="userSpaceOnUse"><path d="M0 7L7 0" stroke="#555" stroke-width="1.5"/></pattern></defs><path d="M490 98Q540 38 590 98T670 98L670 122Q630 182 590 122T490 122Z" stroke="#555" stroke-width="1" fill="url(#wave-hatch-0)"/><rect x="30" y="177" width="180" height="50" fill="#ddd"/><text x="30" y="265" class="diagram-text">Light tone</text><rect x="260" y="177" width="180" height="50" fill="#888"/><text x="260" y="265" class="diagram-text">Mid tone</text><rect x="490" y="177" width="180" height="50" fill="#222"/><text x="490" y="265" class="diagram-text">Dark tone</text></svg><figcaption>Line and tone study: keep the shape the same while changing one feature.</figcaption></figure></section><section class="slide" id="stage-1" data-title="Starter" data-stage-index="1" data-type="starter" data-timer="3"><span class="slide-tag tag-starter">Starter · 3 min</span><h2>Same shape. New effect.</h2><div class="li-box"><p><strong>Look at the three wave studies.</strong></p><p>The shape stays the same. The marks change.</p><p>Which study catches your eye? Point to a mark that helps you decide.</p><p>A different choice can still make sense. Tell us what you can see.</p></div><figure class="visual"><svg viewBox="0 0 700 290" role="img" aria-label="Three line studies and three tones" xmlns="http://www.w3.org/2000/svg"><title>Three line studies and three tones</title><rect x="5" y="5" width="690" height="280" rx="12" fill="#f8fafc"/><text x="30" y="38" class="diagram-text">Light line</text><path d="M30 110 Q80 50 130 110 T210 110" stroke="#a0a0a0" stroke-width="2" fill="none"/><text x="260" y="38" class="diagram-text">Bold line</text><path d="M260 110 Q310 50 360 110 T440 110" stroke="#222" stroke-width="10" fill="none"/><text x="490" y="38" class="diagram-text">Hatching</text><defs><pattern id="wave-hatch-1" width="7" height="7" patternUnits="userSpaceOnUse"><path d="M0 7L7 0" stroke="#555" stroke-width="1.5"/></pattern></defs><path d="M490 98Q540 38 590 98T670 98L670 122Q630 182 590 122T490 122Z" stroke="#555" stroke-width="1" fill="url(#wave-hatch-1)"/><rect x="30" y="177" width="180" height="50" fill="#ddd"/><text x="30" y="265" class="diagram-text">Light tone</text><rect x="260" y="177" width="180" height="50" fill="#888"/><text x="260" y="265" class="diagram-text">Mid tone</text><rect x="490" y="177" width="180" height="50" fill="#222"/><text x="490" y="265" class="diagram-text">Dark tone</text></svg><figcaption>Line and tone study: keep the shape the same while changing one feature.</figcaption></figure></section><section class="slide" id="stage-2" data-title="I do" data-stage-index="2" data-type="ido" data-timer="5"><span class="slide-tag tag-ido">I do · 5 min</span><h2>Watch one mark change</h2><div class="ido-box"><p><strong>I will draw a wave three ways.</strong></p><p>First I use a light line. Next I make a bold line. Then I add hatching.</p><p>I keep each try. It shows what I tested.</p><p>I choose the curved line because I want my wave to look smooth.</p></div><figure class="visual"><svg viewBox="0 0 700 290" role="img" aria-label="Three line studies and three tones" xmlns="http://www.w3.org/2000/svg"><title>Three line studies and three tones</title><rect x="5" y="5" width="690" height="280" rx="12" fill="#f8fafc"/><text x="30" y="38" class="diagram-text">Light line</text><path d="M30 110 Q80 50 130 110 T210 110" stroke="#a0a0a0" stroke-width="2" fill="none"/><text x="260" y="38" class="diagram-text">Bold line</text><path d="M260 110 Q310 50 360 110 T440 110" stroke="#222" stroke-width="10" fill="none"/><text x="490" y="38" class="diagram-text">Hatching</text><defs><pattern id="wave-hatch-2" width="7" height="7" patternUnits="userSpaceOnUse"><path d="M0 7L7 0" stroke="#555" stroke-width="1.5"/></pattern></defs><path d="M490 98Q540 38 590 98T670 98L670 122Q630 182 590 122T490 122Z" stroke="#555" stroke-width="1" fill="url(#wave-hatch-2)"/><rect x="30" y="177" width="180" height="50" fill="#ddd"/><text x="30" y="265" class="diagram-text">Light tone</text><rect x="260" y="177" width="180" height="50" fill="#888"/><text x="260" y="265" class="diagram-text">Mid tone</text><rect x="490" y="177" width="180" height="50" fill="#222"/><text x="490" y="265" class="diagram-text">Dark tone</text></svg><figcaption>Line and tone study: keep the shape the same while changing one feature.</figcaption></figure></section><section class="slide" id="stage-3" data-title="We do" data-stage-index="3" data-type="wedo" data-timer="6"><span class="slide-tag tag-wedo">We do · 6 min</span><h2>Change it, then look</h2><div class="wedo-box"><p><strong>What changes when the marks get closer?</strong></p><p>Predict which test will look darker.</p><p>Move between the wide and close lines. Look again.</p><p>Now draw both on scrap paper. Point to the test that is darker.</p><p>The screen is a model. Your own marks may vary.</p></div><div class="lab" id="lesson-lab" aria-label="Predict and compare how equal-width hatch spacing changes perceived tone."></div><details><summary>Paper or spoken route</summary><p>Print wide, medium and close hatching swatches. Predict, order from light to dark, then draw two on scrap paper.</p></details><div class="soft-check"><h3>The lines have the same width. Which square is likely to look darker?</h3><div class="options"><button type="button" data-q="3" data-a="0" aria-pressed="false">The square with closer lines.</button><button type="button" data-q="3" data-a="1" aria-pressed="false">The square with wider gaps.</button></div><p role="status" class="feedback" id="question-feedback-3"></p></div></section><section class="slide" id="stage-4" data-title="I do" data-stage-index="4" data-type="ido" data-timer="4"><span class="slide-tag tag-ido">I do · 4 min</span><h2>Colour is a choice</h2><div class="ido-box"><p><strong>Colours and marks can suggest an idea.</strong></p><p>Flow uses blue curves. To me, it suggests water.</p><p>You may read it in a different way.</p><p>I can use one colour or more. I test a small patch first.</p><p>Grey can be neutral. A grey with blue or orange in it may feel cooler or warmer.</p></div><div class="columns"><figure class="visual"><img data-asset="flow.png" alt="Flow: blue and teal curves, pale space, orange circle." loading="lazy"><figcaption>Flow · constructed teaching artwork.</figcaption></figure><figure class="visual"><img data-asset="crossing.png" alt="Crossing: diagonal black strips, orange field, cropped white circle." loading="lazy"><figcaption>Crossing · constructed teaching artwork.</figcaption></figure></div></section><section class="slide" id="stage-5" data-title="We do" data-stage-index="5" data-type="wedo" data-timer="5"><span class="slide-tag tag-wedo">We do · 5 min</span><h2>Help me choose</h2><div class="wedo-box"><p><strong>Which artwork best fits the idea “energy”?</strong></p><p>Look at Flow and Crossing. Choose one.</p><p>Say: “I chose ___ because I can see ___.”</p><p>A partner points to the part you mean.</p><p>Keep your choice or change it. Say what helped you decide.</p></div><div class="columns"><figure class="visual"><img data-asset="flow.png" alt="Flow: blue and teal curves, pale space, orange circle." loading="lazy"><figcaption>Flow · constructed teaching artwork.</figcaption></figure><figure class="visual"><img data-asset="crossing.png" alt="Crossing: diagonal black strips, orange field, cropped white circle." loading="lazy"><figcaption>Crossing · constructed teaching artwork.</figcaption></figure></div></section><section class="slide" id="stage-6" data-title="Independent" data-stage-index="6" data-type="independent" data-timer="12"><span class="slide-tag tag-independent">Independent · 12 min</span><h2>Make your own symbol study</h2><div class="task-box"><p><strong>Choose a wave, circle, triangle or your own safe shape.</strong></p><p>Try two or three kinds of mark.</p><p>Use a colour choice in one test.</p><p>Choose a version for your idea. It can show an interest, a quality or an invented character.</p><p>Keep the tests. Point, say or write why you chose one.</p></div><figure class="visual"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 170" role="img" aria-label="Symbol choices: wave, circle and triangle"><path d="M25 80Q65 15 105 80T185 80" stroke="#10233f" stroke-width="4" fill="none"/><circle cx="320" cy="73" r="46" stroke="#10233f" stroke-width="4" fill="none"/><path d="M500 116L545 26 590 116Z" stroke="#10233f" stroke-width="4" fill="none"/><text x="65" y="150" font-size="22">Wave</text><text x="290" y="150" font-size="22">Circle</text><text x="505" y="150" font-size="22">Triangle</text></svg><figcaption>Choose a supplied shape, or draw your own.</figcaption></figure><div class="route-buttons"><button type="button" data-route="0" aria-pressed="true">Supported</button><button type="button" data-route="1" aria-pressed="false">Standard</button><button type="button" data-route="2" aria-pressed="false">Stretch</button></div><div class="lesson-route scaffold-box" ><h3>Supported</h3><p>Choose a supplied symbol. Make or direct two mark tests, add a colour, then point to your chosen version.</p><p>Use the same outline twice. “I chose this mark. It shows ___.” An adult may scribe your words.</p></div><div class="lesson-route scaffold-box" hidden><h3>Standard</h3><p>Make three mark tests of one symbol. Add a deliberate colour choice and explain the version you want to develop.</p><p>“I tried ___. I chose ___ because ___. It stands for ___.”</p></div><div class="lesson-route scaffold-box" hidden><h3>Stretch</h3><p>Change one feature in your chosen study, ask how another viewer reads it, then decide whether to keep the change.</p><p>“I meant ___. They noticed ___. I will keep/change ___ because ___.”</p></div><label class="field" for="pupil-notes">My evidence or notes</label><textarea class="writing" id="pupil-notes"></textarea><p class="small">No name is needed. Save your written notes before closing or reloading.</p><button type="button" id="save-notes">Save my written notes</button></section><section class="slide" id="stage-7" data-title="Exit" data-stage-index="7" data-type="exit" data-timer="3"><span class="slide-tag tag-exit">Exit · 3 min</span><h2>Show one choice</h2><div class="li-box"><p><strong>Which part says your idea best?</strong></p><p>Point to one mark or colour.</p><p>Finish: “I chose ___ to show ___.”</p><p>Tell an adult what you would like to try next.</p><p>They will tell you what can happen in the next lesson.</p></div><div class="scaffold-box"><h3>Lundy Loop</h3><p>Choose how to share. Your adult will listen and say what happens next.</p></div></section><section class="slide" id="complete-slide" data-title="Complete" data-type="complete" data-timer="0"><span class="slide-tag tag-exit">Complete</span><h2 class="slide-h1">Lesson complete</h2><div class="sc-box"><p>Show one thing you learned.</p><p>Tell your adult what helped or what needs another look.</p></div><p>Save any written notes you want to keep. Your teacher will agree the next step.</p><p class="quiet">Use Print for pupil sheets or Back to revisit a stage.</p></section></main>
+<div class="controls" aria-label="Lesson controls"><button type="button" id="previous-slide" data-action="previous">◀ Previous</button><button type="button" data-action="ta">🧑‍🏫 TA Brief</button><button type="button" data-action="cold-call">🎯 Cold Call</button><button type="button" id="next-slide" data-action="next">Next ▶</button></div>
+<div class="progress-wrap" id="classic-progress" role="progressbar" aria-label="Lesson progress" aria-valuemin="1" aria-valuemax="10" aria-valuenow="1"><div class="progress-bar" id="progressBar"></div></div><div class="progress-label" id="progressLabel" aria-live="polite">Slide 1</div><p class="classic-status" id="classic-status" role="status"></p>
+<dialog id="ta-dialog" class="classic-dialog" aria-labelledby="ta-dialog-title" data-audience="staff"><div class="v4-modal"><h2 id="ta-dialog-title">TA Brief</h2><div class="ta-section"><strong id="ta-current-title">Current stage</strong><p id="ta-current-text"></p></div><h2>BUILD · One symbol, many ways</h2><p>Autumn 1 · Week 1</p><div class="li-box"><strong>SoW</strong><p>BUILD Weekly - Autumn!C102</p><ul><li>Explore drawing, colour and technique to show identity.</li></ul><p>Exact Week 1 outcome retained. The source workbook carries an older Discover strand label; the recorded BUILD Explore ruling is retained. This is a teaching exemplar and makes no award-completion claim.</p></div><p><strong>Prior:</strong> This opening lesson begins with marks learners can already make; no home story or earlier lesson is required.</p><p><strong>Next:</strong> Week 2 uses a chosen technique to make an identity piece. Keep the tests so the learner can choose from their own work.</p><h3>Preparation</h3><ul><li>Pencils or broad crayons, coloured pencils, scrap paper and pupil sheets with separate practice spaces.</li><li>Print the supplied wave/circle/triangle examples and wide/medium/close hatching swatches. Display the line/tone board and Flow/Crossing artworks from the lesson, or model line and tone on paper. No photograph or private story is required.</li><li>Keep a learner-selected technique sample for Week 2.</li></ul><h3>Care and safety</h3><ul><li>Use ordinary drawing tools suited to the class; no blades, paint solvents or smudging near eyes are needed.</li></ul><h3>Teacher response guidance</h3><ul><li>Closest hatch spacing appears darkest in the supplied comparison.</li><li>Flow or Crossing can represent energy if the learner supports the interpretation with a visible feature. Several visual features differ, so this comparison cannot isolate the effect of colour alone.</li><li>A valid independent answer links a chosen mark/colour to an intended idea; identical wording is not required.</li></ul><h3>Evidence of learning</h3><p>Look for a controlled or directed change in marks, a chosen colour and an explanation tied to a visible feature. Drawing precision is not a proxy for understanding.</p><h3>Access and independence</h3><p>Read one step, point to its visual, allow wait time, then add the least prompt needed. Let pupils speak, point, draw or direct. Keep access support separate from the creative decision and avoid compulsory personal disclosures.</p><h3>Lundy Loop</h3><p>Offer tool, symbol and sharing choices. An adult names back the learner’s choice and confirms one feasible next lesson action; requests that cannot happen receive a reason.</p><details class="staff-detail" data-mbm-guide="staff"><summary>Arrival · A mark you can make</summary><p>Check grip, reach and tool choice unobtrusively. Offer a broad pencil, crayon or digital stylus. Distinguish motor access from artistic judgement. The learner can direct a line even when an adult draws it.</p></details><details class="staff-detail" data-mbm-guide="staff"><summary>Starter · Same shape. New effect.</summary><p>Show all three wave studies together. Accept different preferences when the learner points to visible features. The wave shape stays recognisable; the line weight and hatching change. Do not give the studies fixed emotional meanings.</p></details><details class="staff-detail" data-mbm-guide="staff"><summary>I do · Watch one mark change</summary><p>Live-model on the same paper and tool pupils have. Explain hatching by drawing adjacent lines; crossing them would be another valid technique, cross-hatching. Model changing pressure gently, never hard enough to damage paper or strain grip. Say that this is one method, not the only correct method.</p></details><details class="staff-detail" data-mbm-guide="staff"><summary>We do · Change it, then look</summary><p>Use the interaction before the reveal. Expected: closer equal-width lines cover more of the white area and usually read as a darker tone. Keep line width constant in this comparison. Avoid equating dark with bad or light with good. Paper alternative: compare two supplied hatching swatches.</p></details><details class="staff-detail" data-mbm-guide="staff"><summary>I do · Colour is a choice</summary><p>Keep the colour-temperature nuance optional orally if the group is overloaded. Compare Flow and Crossing as two different compositions: colour, line direction, shape and spacing all differ. This is an interpretation task, not a controlled test of colour alone. No feeling belongs to one colour for everyone. Colour-first and line-first can both work; demonstrate today’s drawing order as a choice.</p></details><details class="staff-detail" data-mbm-guide="staff"><summary>We do · Help me choose</summary><p>Accept either Flow or Crossing with a visible reason: sharp angles, repeated curves, strong colour contrast or suggested movement. Model a respectful response: “I see the sharp corner you mean.” Do not grade the emotion. Note one learner-requested tool or technique to make available next lesson.</p></details><details class="staff-detail" data-mbm-guide="staff"><summary>Independent · Make your own symbol study</summary><p>Supply the three simple shape examples: wave, circle and triangle. Also allow the learner’s own safe shape. An identity response can represent curiosity, sport, music or an invented character without personal disclosure. Check for deliberate choice rather than neatness. During minute 8 ask what the learner wants help with; act on one request without taking over their artistic decision.</p></details><details class="staff-detail" data-mbm-guide="staff"><summary>Exit · Show one choice</summary><p>Possible answer: “I chose close hatching to show a dark sea” or “I chose an orange triangle to show energy.” Accept oral, pointed or scribed meaning. Read back exactly, confirm the learner intended it, and note a feasible next choice. Keep work for Week 2; avoid any automated qualification sign-off.</p></details><h3>Misconceptions</h3><p><strong>There is one correct emotion for each colour.</strong> Ask what the colour suggests to this learner and why; interpretations depend on context and experience.</p><p><strong>Colour must always come after line.</strong> Both orders can work. Today test the materials and choose an order that gives the wanted result.</p><p><strong>A neat copy is the only successful artwork.</strong> A deliberate test, reasoned choice or directed mark is useful artistic evidence.</p><h3>Sources</h3><p><a href="https://www.tate.org.uk/art/art-terms/t/tone" target="_blank" rel="noopener">Tate: Tone</a><br>Tone describes relative lightness and darkness; retrieved official search excerpt.</p><p><a href="https://www.tate.org.uk/art/colour-coursework-guide" target="_blank" rel="noopener">Tate: Colour coursework guide</a><br>Colour can be used descriptively and expressively; the lesson treats meaning as a justified choice, not a universal rule.</p><h3>Review trace</h3><p>Art_Teesside/BUILD_W1-W8_2026-27/BUILD_Art_W1_Explore_Drawing_Colour_And_Technique_To_Show.html</p><ul><li>Replace unrelated ASDAN page title and cooking diagrams with actual mark, tone and colour examples.</li><li>Remove absolute rules about number of colours, fixed colour meanings and drawing order.</li><li>Keep a non-personal symbol route while restoring learner choice and the identity outcome.</li><li>Provide an actual supplied symbol set and practice sheet with separate response spaces.</li></ul><p>Separate review copy. No live lesson or award record has been changed.</p><div class="v4-modal-footer"><button type="button" data-action="close">Close</button></div></div></dialog>
+<dialog id="word-dialog" class="classic-dialog" aria-labelledby="word-dialog-title"><div class="v4-modal"><h2 id="word-dialog-title">Word help</h2><p><strong>line:</strong> A mark that moves across the page.</p><p><strong>tone:</strong> How light or dark something looks.</p><p><strong>symbol:</strong> A shape or image used to stand for an idea.</p><p><strong>hatching:</strong> Lines drawn close together to make shade.</p><div class="v4-modal-footer"><button type="button" data-action="close">Close</button></div></div></dialog>
+<dialog id="cold-call-dialog" class="classic-dialog" aria-labelledby="cold-call-dialog-title" data-audience="staff"><div class="v4-modal"><h2 id="cold-call-dialog-title">Cold Call</h2><div class="cc-question" id="cold-call-question"></div><div class="scaffold-box"><p>Give thinking time. Invite a response by voice, pointing or showing work. A pupil can pass; check in privately when useful.</p></div><div class="v4-modal-footer"><button type="button" data-action="close">Close</button></div></div></dialog>
+<dialog id="pause-dialog" class="classic-dialog" aria-labelledby="pause-dialog-title"><div class="v4-modal"><h2 id="pause-dialog-title">Pause</h2><div class="scaffold-box"><p>Take a quiet pause.</p><p>You can look away from the screen. Come back when you are ready.</p></div><p>The lesson and your work are still here. Close this box to return.</p><div class="v4-modal-footer"><button type="button" data-action="close">Close</button></div></div></dialog>
+<dialog id="tools-dialog" class="classic-dialog" aria-labelledby="tools-dialog-title"><div class="v4-modal"><h2 id="tools-dialog-title">Lesson tools</h2><p>Choose a slide or a print route.</p><label class="classic-tools-label" for="slide-picker">Go to slide</label><select id="slide-picker"></select><h3>Teacher Print Tools</h3><div class="classic-print-tools"><button type="button" data-action="print" data-level="supported">◆ Supported pack</button><button type="button" data-action="print" data-level="standard">▲ Standard pack</button><button type="button" data-action="print" data-level="stretch">★ Stretch pack</button></div><button type="button" data-action="notes">Save my work</button><p>Your typed notes stay here while this page is open. Save them before closing or reloading.</p><div class="v4-modal-footer"><button type="button" data-action="close">Close</button></div></div></dialog>
+<div id="print-area"><div class="print-pack"><section class="print-resource"><p>Made by Matt · BUILD Art</p><h2 class="slide-h1">My symbol studio</h2><p>Autumn 1 · Week 1</p><ul><li>Choose a supplied symbol or your own shape.</li><li>Try a different mark in each practice box.</li><li>Add colour, choose one version and explain it.</li></ul><h2>Use this evidence</h2><div class="reference">Symbol choices: wave, circle, triangle or your own shape. Hatching means close lines used to make shade. Tone means how light or dark something looks.</div></section><section class="print-resource"><h2>Visual resources</h2><figure class="visual"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 170" role="img" aria-label="Symbol choices: wave, circle and triangle"><path d="M25 80Q65 15 105 80T185 80" stroke="#10233f" stroke-width="4" fill="none"/><circle cx="320" cy="73" r="46" stroke="#10233f" stroke-width="4" fill="none"/><path d="M500 116L545 26 590 116Z" stroke="#10233f" stroke-width="4" fill="none"/><text x="65" y="150" font-size="22">Wave</text><text x="290" y="150" font-size="22">Circle</text><text x="505" y="150" font-size="22">Triangle</text></svg><figcaption>Choose a symbol.</figcaption></figure><figure class="visual"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 180" role="img" aria-label="Hatching swatches: wide, medium and close spacing"><rect x="20" y="10" width="180" height="125" fill="white" stroke="#10233f"/><path d="M25 17V127" stroke="#10233f" stroke-width="2"/><path d="M49 17V127" stroke="#10233f" stroke-width="2"/><path d="M73 17V127" stroke="#10233f" stroke-width="2"/><path d="M97 17V127" stroke="#10233f" stroke-width="2"/><path d="M121 17V127" stroke="#10233f" stroke-width="2"/><path d="M145 17V127" stroke="#10233f" stroke-width="2"/><path d="M169 17V127" stroke="#10233f" stroke-width="2"/><path d="M193 17V127" stroke="#10233f" stroke-width="2"/><text x="55" y="164" font-size="22">Wide</text><rect x="230" y="10" width="180" height="125" fill="white" stroke="#10233f"/><path d="M235 17V127" stroke="#10233f" stroke-width="2"/><path d="M247 17V127" stroke="#10233f" stroke-width="2"/><path d="M259 17V127" stroke="#10233f" stroke-width="2"/><path d="M271 17V127" stroke="#10233f" stroke-width="2"/><path d="M283 17V127" stroke="#10233f" stroke-width="2"/><path d="M295 17V127" stroke="#10233f" stroke-width="2"/><path d="M307 17V127" stroke="#10233f" stroke-width="2"/><path d="M319 17V127" stroke="#10233f" stroke-width="2"/><path d="M331 17V127" stroke="#10233f" stroke-width="2"/><path d="M343 17V127" stroke="#10233f" stroke-width="2"/><path d="M355 17V127" stroke="#10233f" stroke-width="2"/><path d="M367 17V127" stroke="#10233f" stroke-width="2"/><path d="M379 17V127" stroke="#10233f" stroke-width="2"/><path d="M391 17V127" stroke="#10233f" stroke-width="2"/><path d="M403 17V127" stroke="#10233f" stroke-width="2"/><text x="265" y="164" font-size="22">Medium</text><rect x="440" y="10" width="180" height="125" fill="white" stroke="#10233f"/><path d="M445 17V127" stroke="#10233f" stroke-width="2"/><path d="M451 17V127" stroke="#10233f" stroke-width="2"/><path d="M457 17V127" stroke="#10233f" stroke-width="2"/><path d="M463 17V127" stroke="#10233f" stroke-width="2"/><path d="M469 17V127" stroke="#10233f" stroke-width="2"/><path d="M475 17V127" stroke="#10233f" stroke-width="2"/><path d="M481 17V127" stroke="#10233f" stroke-width="2"/><path d="M487 17V127" stroke="#10233f" stroke-width="2"/><path d="M493 17V127" stroke="#10233f" stroke-width="2"/><path d="M499 17V127" stroke="#10233f" stroke-width="2"/><path d="M505 17V127" stroke="#10233f" stroke-width="2"/><path d="M511 17V127" stroke="#10233f" stroke-width="2"/><path d="M517 17V127" stroke="#10233f" stroke-width="2"/><path d="M523 17V127" stroke="#10233f" stroke-width="2"/><path d="M529 17V127" stroke="#10233f" stroke-width="2"/><path d="M535 17V127" stroke="#10233f" stroke-width="2"/><path d="M541 17V127" stroke="#10233f" stroke-width="2"/><path d="M547 17V127" stroke="#10233f" stroke-width="2"/><path d="M553 17V127" stroke="#10233f" stroke-width="2"/><path d="M559 17V127" stroke="#10233f" stroke-width="2"/><path d="M565 17V127" stroke="#10233f" stroke-width="2"/><path d="M571 17V127" stroke="#10233f" stroke-width="2"/><path d="M577 17V127" stroke="#10233f" stroke-width="2"/><path d="M583 17V127" stroke="#10233f" stroke-width="2"/><path d="M589 17V127" stroke="#10233f" stroke-width="2"/><path d="M595 17V127" stroke="#10233f" stroke-width="2"/><path d="M601 17V127" stroke="#10233f" stroke-width="2"/><path d="M607 17V127" stroke="#10233f" stroke-width="2"/><path d="M613 17V127" stroke="#10233f" stroke-width="2"/><text x="475" y="164" font-size="22">Close</text></svg><figcaption>Keep line width the same; change spacing.</figcaption></figure></section><section class="print-resource"><p>BUILD · One symbol, many ways</p><h2>My evidence</h2><h3>1. Box 1: make or direct a light line test.</h3><div class="blank large"></div><h3>2. Box 2: make or direct a different mark test.</h3><div class="blank large"></div><p class="small">I may point, say, draw or write. An adult can record my exact words.</p><p>Support used: _____________________</p></section><section class="print-resource"><p>BUILD · One symbol, many ways</p><h2>My evidence</h2><h3>3. Box 3: try hatching or another mark. Add colour to one test.</h3><div class="blank large"></div><h3>4. I chose this version because ___. It stands for ___.</h3><div class="blank medium"></div><p class="small">I may point, say, draw or write. An adult can record my exact words.</p><p>Support used: _____________________</p></section><section class="print-resource"><p>BUILD · One symbol, many ways</p><h2>My evidence</h2><h3>5. Next time I would like to try ___.</h3><div class="blank short"></div><p class="small">I may point, say, draw or write. An adult can record my exact words.</p><p>Support used: _____________________</p></section></div></div>
+<script>window.CLASSIC_LESSON={"id": "build_art_marks", "title": "One symbol, many ways", "objective": "I can try different marks and colours, then choose how to show an idea.", "stages": [{"phase": "Arrival", "minutes": 2, "title": "A mark you can make", "lead": "Try one line on scrap paper.", "body": ["Make it light. Make another line darker.", "Point to the line you can see most clearly.", "You can draw, trace or guide an adult. Your choice counts."], "teacher": "Check grip, reach and tool choice unobtrusively. Offer a broad pencil, crayon or digital stylus. Distinguish motor access from artistic judgement. The learner can direct a line even when an adult draws it.", "visual": "Three wave studies with light outline, bold outline and a wave-shaped hatched band, plus light/mid/dark tone swatches. Use the first two lines for the arrival comparison."}, {"phase": "Starter", "minutes": 3, "title": "Same shape. New effect.", "lead": "Look at the three wave studies.", "body": ["The shape stays the same. The marks change.", "Which study catches your eye? Point to a mark that helps you decide.", "A different choice can still make sense. Tell us what you can see."], "teacher": "Show all three wave studies together. Accept different preferences when the learner points to visible features. The wave shape stays recognisable; the line weight and hatching change. Do not give the studies fixed emotional meanings.", "visual": "Three recognisable wave studies: light continuous outline, bold outline and a wave-shaped hatched band. Label Light line, Bold line and Hatching."}, {"phase": "I do", "minutes": 5, "title": "Watch one mark change", "lead": "I will draw a wave three ways.", "body": ["First I use a light line. Next I make a bold line. Then I add hatching.", "I keep each try. It shows what I tested.", "I choose the curved line because I want my wave to look smooth."], "teacher": "Live-model on the same paper and tool pupils have. Explain hatching by drawing adjacent lines; crossing them would be another valid technique, cross-hatching. Model changing pressure gently, never hard enough to damage paper or strain grip. Say that this is one method, not the only correct method.", "visual": "Repeat the three wave studies and light/mid/dark swatches. Model each mark on real paper while pupils compare the visible results."}, {"phase": "We do", "minutes": 6, "title": "Change it, then look", "lead": "What changes when the marks get closer?", "body": ["Predict which test will look darker.", "Move between the wide and close lines. Look again.", "Now draw both on scrap paper. Point to the test that is darker.", "The screen is a model. Your own marks may vary."], "teacher": "Use the interaction before the reveal. Expected: closer equal-width lines cover more of the white area and usually read as a darker tone. Keep line width constant in this comparison. Avoid equating dark with bad or light with good. Paper alternative: compare two supplied hatching swatches.", "visual": "Equal squares with same-width hatch marks, one widely spaced and one closely spaced.", "question": {"prompt": "The lines have the same width. Which square is likely to look darker?", "options": [{"text": "The square with closer lines.", "correct": true, "feedback": "More of the white paper is covered, so the area reads as darker."}, {"text": "The square with wider gaps.", "correct": false, "feedback": "Wider gaps leave more white paper showing. Compare the whole square, not just one line."}]}}, {"phase": "I do", "minutes": 4, "title": "Colour is a choice", "lead": "Colours and marks can suggest an idea.", "body": ["Flow uses blue curves. To me, it suggests water.", "You may read it in a different way.", "I can use one colour or more. I test a small patch first.", "Grey can be neutral. A grey with blue or orange in it may feel cooler or warmer."], "teacher": "Keep the colour-temperature nuance optional orally if the group is overloaded. Compare Flow and Crossing as two different compositions: colour, line direction, shape and spacing all differ. This is an interpretation task, not a controlled test of colour alone. No feeling belongs to one colour for everyone. Colour-first and line-first can both work; demonstrate today’s drawing order as a choice.", "visual": "Show the supplied constructed artworks Flow and Crossing together, with their titles. They are different compositions, not two colour versions of the same symbol."}, {"phase": "We do", "minutes": 5, "title": "Help me choose", "lead": "Which artwork best fits the idea “energy”?", "body": ["Look at Flow and Crossing. Choose one.", "Say: “I chose ___ because I can see ___.”", "A partner points to the part you mean.", "Keep your choice or change it. Say what helped you decide."], "teacher": "Accept either Flow or Crossing with a visible reason: sharp angles, repeated curves, strong colour contrast or suggested movement. Model a respectful response: “I see the sharp corner you mean.” Do not grade the emotion. Note one learner-requested tool or technique to make available next lesson.", "visual": "Repeat Flow and Crossing at a large scale for comparison; keep both titles visible."}, {"phase": "Independent", "minutes": 12, "title": "Make your own symbol study", "lead": "Choose a wave, circle, triangle or your own safe shape.", "body": ["Try two or three kinds of mark.", "Use a colour choice in one test.", "Choose a version for your idea. It can show an interest, a quality or an invented character.", "Keep the tests. Point, say or write why you chose one."], "teacher": "Supply the three simple shape examples: wave, circle and triangle. Also allow the learner’s own safe shape. An identity response can represent curiosity, sport, music or an invented character without personal disclosure. Check for deliberate choice rather than neatness. During minute 8 ask what the learner wants help with; act on one request without taking over their artistic decision.", "visual": "Supplied outline examples: wave, circle and triangle. Pupils can also choose their own shape. Use the large response spaces on the pupil sheet for separate mark trials."}, {"phase": "Exit", "minutes": 3, "title": "Show one choice", "lead": "Which part says your idea best?", "body": ["Point to one mark or colour.", "Finish: “I chose ___ to show ___.”", "Tell an adult what you would like to try next.", "They will tell you what can happen in the next lesson."], "teacher": "Possible answer: “I chose close hatching to show a dark sea” or “I chose an orange triangle to show energy.” Accept oral, pointed or scribed meaning. Read back exactly, confirm the learner intended it, and note a feasible next choice. Keep work for Week 2; avoid any automated qualification sign-off."}]};</script>
+<script>/* Classic control names and progression retained; standalone, no shared-site writes. */
+(function () {
+  'use strict';
+  const deck = document.querySelector('.slide-container');
+  const slides = Array.from(deck.querySelectorAll('.slide'));
+  const data = window.CLASSIC_LESSON || {};
+  let currentSlide = 0;
+  let tick = null;
+  let returnFocus = null;
+  let modalWasRunning = false;
+  const remaining = new Map();
+  const levels = ['supported', 'standard', 'stretch'];
+  const printSelectors = '.print-section,.print-resource,.print-sheet';
+  const byId = id => document.getElementById(id);
+  const number = value => Math.max(0, Number(value) || 0);
+  function seconds(slide) { return Math.round(number(slide.dataset.timer) * 60); }
+  function timerLeft() { return remaining.has(currentSlide) ? remaining.get(currentSlide) : seconds(slides[currentSlide]); }
+  function updateTimerDisplay() {
+    const left = timerLeft();
+    const display = byId('auto-timer-display');
+    if (display) display.textContent = String(Math.floor(left / 60)).padStart(2,'0') + ':' + String(left % 60).padStart(2,'0');
+    const button = byId('auto-timer-toggle');
+    if (button) { button.textContent = tick ? 'Ⅱ' : '▶'; button.setAttribute('aria-label', tick ? 'Pause stage timer' : 'Start stage timer'); }
+    const timer = byId('auto-timer');
+    if (timer) timer.classList.toggle('done', left === 0 && seconds(slides[currentSlide]) > 0);
   }
-  @media(prefers-reduced-motion:reduce) {
-    .mbm-classroom *, .mbm-classroom *::before, .mbm-classroom *::after {animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  function pauseTimer() { if (tick) clearInterval(tick); tick = null; updateTimerDisplay(); }
+  function startTimer() {
+    if (tick || timerLeft() <= 0 || document.querySelector('.classic-dialog[open]')) return;
+    tick = setInterval(() => {
+      remaining.set(currentSlide, Math.max(0, timerLeft() - 1));
+      if (timerLeft() === 0) {
+        pauseTimer();
+        const notice=byId('classic-status');
+        if (notice) notice.textContent = 'Stage time has ended. Move on when ready.';
+      }
+      updateTimerDisplay();
+    },1000);
+    updateTimerDisplay();
   }
+  function autoTimerToggle() { if (tick) pauseTimer(); else startTimer(); }
+  function autoTimerReset() { pauseTimer(); remaining.set(currentSlide, seconds(slides[currentSlide])); updateTimerDisplay(); }
+  function updateProgress() {
+    const slide=slides[currentSlide];
+    byId('progressBar').style.width = ((currentSlide + 1) / slides.length * 100) + '%';
+    byId('progressLabel').textContent = (slide.dataset.title || 'Slide') + ' • ' + (currentSlide + 1) + '/' + slides.length;
+    const progress=byId('classic-progress');
+    progress.setAttribute('aria-valuenow',String(currentSlide+1));
+    progress.setAttribute('aria-valuetext',byId('progressLabel').textContent);
+    byId('previous-slide').disabled=currentSlide===0;
+    byId('next-slide').disabled=currentSlide===slides.length-1;
+    const picker=byId('slide-picker');
+    if(picker)picker.value=String(currentSlide);
+  }
+  function showSlide(index) {
+    index = Math.max(0, Math.min(slides.length - 1, number(index)));
+    pauseTimer();
+    currentSlide = index;
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('active',i===index);
+      slide.inert = i !== index;
+      slide.setAttribute('aria-hidden', String(i !== index));
+    });
+    updateProgress(); updateTimerDisplay();
+    slides[index].scrollTop=0;
+    document.dispatchEvent(new CustomEvent('classic-slide-change', {detail:{index, slide:slides[index]}}));
+  }
+  function nextSlide(){if(currentSlide < slides.length-1)showSlide(currentSlide+1);}
+  function prevSlide(){if(currentSlide > 0)showSlide(currentSlide-1);}
+  function switchLevel(prefix,level) {
+    if(!levels.includes(level))return;
+    levels.forEach(value=>{
+      const el=byId(prefix+'-'+value);
+      if(el){el.hidden=value!==level;el.style.display=value===level?(el.classList.contains('arrival-grid')?'grid':'block'):'none';}
+    });
+    document.querySelectorAll('[data-level-prefix="'+prefix+'"] [data-level]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.level===level)));
+  }
+  function v5RevealNext(button){
+    const slide=button.closest('.slide');if(!slide)return;
+    const next=slide.querySelector('.v5-step:not(.revealed)');
+    if(next){next.hidden=false;next.classList.add('revealed');}
+    const total=slide.querySelectorAll('.v5-step').length;
+    const shown=slide.querySelectorAll('.v5-step.revealed').length;
+    const label=slide.querySelector('.v5-step-label');if(label)label.textContent='Step '+shown+' of '+total;
+    button.disabled=shown>=total;
+    if(button.disabled)button.textContent='✓ All revealed';
+  }
+  function openModal(id){
+    const modal=byId(id);if(!modal)return;
+    returnFocus=document.activeElement;
+    modalWasRunning=Boolean(tick);pauseTimer();
+    document.documentElement.classList.add('classic-modal-open');
+    modal.showModal();
+    const focus=modal.querySelector('button, input, select, textarea, a[href]');if(focus)focus.focus();
+  }
+  function closeModal(id){const modal=byId(id);if(modal&&modal.open)modal.close();}
+  document.querySelectorAll('.classic-dialog').forEach(dialog=>{
+    dialog.addEventListener('close',()=>{
+      document.documentElement.classList.remove('classic-modal-open');
+      const resume=modalWasRunning;modalWasRunning=false;
+      if(returnFocus&&returnFocus.isConnected)returnFocus.focus();
+      if(resume)startTimer();
+    });
+    dialog.addEventListener('click',event=>{if(event.target===dialog)dialog.close();});
+  });
+  function showTABrief(){
+    const stage=slides[currentSlide];
+    byId('ta-current-title').textContent=stage.dataset.title||'Current stage';
+    const notes = stage.dataset.teacher || ((data.stages || [])[Number(stage.dataset.stageIndex)] || {}).teacher || 'Use the lesson guidance below.';
+    byId('ta-current-text').textContent=notes;
+    openModal('ta-dialog');
+  }
+  function showColdCall(){
+    const stage=slides[currentSlide];
+    const question=stage.dataset.prompt || stage.querySelector('h2,h1')?.textContent || data.objective || 'What do you notice? What helps you decide?';
+    byId('cold-call-question').textContent=question;
+    openModal('cold-call-dialog');
+  }
+  function printArm(level){
+    if(!levels.includes(level))level='standard';
+    document.body.classList.remove(...levels.map(value=>'print-'+value));
+    document.body.classList.add('print-'+level);
+    document.querySelectorAll(printSelectors).forEach(section=>{
+      const specific=section.id.match(/^print-(?:scaffold|worksheet)-(supported|standard|stretch)$/);
+      const classRoute=levels.find(value=>section.classList.contains(value+'-content'));
+      const route=section.dataset.printRoute || (specific ? specific[1] : classRoute || 'all');
+      section.classList.toggle('visible',route==='all'||route===level);
+    });
+    const visible=Array.from(document.querySelectorAll('.print-section.visible,.print-resource.visible,.print-sheet.visible'));
+    document.querySelectorAll(printSelectors).forEach(section=>section.classList.remove('print-last'));
+    if(visible.length)visible[visible.length-1].classList.add('print-last');
+    if(byId('print-date'))byId('print-date').textContent=new Date().toLocaleDateString('en-GB');
+  }
+  function printPack(level){pauseTimer();printArm(level);window.print();}
+  function printSection(id,level){
+    printArm(level||'standard');
+    document.querySelectorAll(printSelectors).forEach(section=>section.classList.toggle('visible',section.id==='print-'+id));
+    window.print();
+  }
+  window.addEventListener('beforeprint',()=>{if(!/\bprint-(supported|standard|stretch)\b/.test(document.body.className))printArm('standard');});
+  function downloadNotes(){
+    const fields=Array.from(deck.querySelectorAll('textarea, input[data-note]'));
+    const text=[data.title||'Lesson work','',...fields.map((field,i)=>{
+      const slide=field.closest('.slide');
+      const label=field.getAttribute('aria-label')||field.labels?.[0]?.textContent||'Response '+(i+1);
+      return (slide?.dataset.title||'Work')+' — '+label+'\n'+(field.value||'(No response recorded)');
+    })].join('\n\n');
+    const uri=URL.createObjectURL(new Blob([text],{type:'text/plain;charset=utf-8'}));
+    const link=document.createElement('a');link.href=uri;link.download=(data.id||'lesson')+'_My_Work.txt';
+    document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(uri),1000);
+  }
+  document.addEventListener('keydown',event=>{
+    if(document.querySelector('.classic-dialog[open]')||event.altKey||event.ctrlKey||event.metaKey)return;
+    if(event.target.closest('button,input,textarea,select,a,[contenteditable="true"],[role="button"],[role="slider"]'))return;
+    if(event.key==='ArrowRight'||event.key===' '){event.preventDefault();nextSlide();}
+    if(event.key==='ArrowLeft'){event.preventDefault();prevSlide();}
+  });
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)pauseTimer();});
+  document.querySelectorAll('[data-action]').forEach(button=>button.addEventListener('click',()=>{
+    const action=button.dataset.action;
+    if(action==='previous')prevSlide();if(action==='next')nextSlide();if(action==='ta')showTABrief();
+    if(action==='cold-call')showColdCall();if(action==='timer-toggle')autoTimerToggle();if(action==='timer-reset')autoTimerReset();
+    if(action==='words')openModal('word-dialog');if(action==='pause')openModal('pause-dialog');
+    if(action==='tools')openModal('tools-dialog');if(action==='notes')downloadNotes();
+    if(action==='close')closeModal(button.closest('dialog').id);
+    if(action==='print')printPack(button.dataset.level||'standard');
+  }));
+  const picker=byId('slide-picker');
+  if(picker){slides.forEach((slide,index)=>{const option=document.createElement('option');option.value=String(index);option.textContent=(index+1)+'. '+(slide.dataset.title||'Slide');picker.appendChild(option);});picker.addEventListener('change',()=>{showSlide(Number(picker.value));closeModal('tools-dialog');});}
+  Object.assign(window,{mbmShowSlide:showSlide,showSlide,nextSlide,prevSlide,switchLevel,v5RevealNext,showTABrief,showColdCall,printArm,printPack,printSection,pauseTimer,startTimer,autoTimerToggle,autoTimerReset,downloadNotes,openModal,closeModal});
+  Object.defineProperty(window,'classicCurrentSlide',{get:()=>currentSlide});
+  printArm('standard');showSlide(0);
+}());
+</script>
+<script>const LESSON={"id": "build_art_marks", "pathway": "BUILD", "subject": "Art", "title": "One symbol, many ways", "period": "Autumn 1 · Week 1", "era": "early", "originalPath": "Art_Teesside/BUILD_W1-W8_2026-27/BUILD_Art_W1_Explore_Drawing_Colour_And_Technique_To_Show.html", "sow": {"workbook": "_passsb/inputs/Build SOW 2026-2027.xlsx", "sheet": "BUILD Weekly - Autumn", "cells": ["C102"], "outcomes": ["Explore drawing, colour and technique to show identity."], "mappingNote": "Exact Week 1 outcome retained. The source workbook carries an older Discover strand label; the recorded BUILD Explore ruling is retained. This is a teaching exemplar and makes no award-completion claim."}, "objective": "I can try different marks and colours, then choose how to show an idea.", "success": ["Make two or three different mark tests.", "Choose a mark and colour for one symbol.", "Point to a choice and say what it means to me."], "vocabulary": [{"term": "line", "meaning": "A mark that moves across the page."}, {"term": "tone", "meaning": "How light or dark something looks."}, {"term": "symbol", "meaning": "A shape or image used to stand for an idea."}, {"term": "hatching", "meaning": "Lines drawn close together to make shade."}], "prior": "This opening lesson begins with marks learners can already make; no home story or earlier lesson is required.", "next": "Week 2 uses a chosen technique to make an identity piece. Keep the tests so the learner can choose from their own work.", "palette": {"accent": "#346B7B", "light": "#EAF6F8"}, "upgrades": ["Replace unrelated ASDAN page title and cooking diagrams with actual mark, tone and colour examples.", "Remove absolute rules about number of colours, fixed colour meanings and drawing order.", "Keep a non-personal symbol route while restoring learner choice and the identity outcome.", "Provide an actual supplied symbol set and practice sheet with separate response spaces."], "sources": [{"title": "Tate: Tone", "url": "https://www.tate.org.uk/art/art-terms/t/tone", "supports": "Tone describes relative lightness and darkness; retrieved official search excerpt."}, {"title": "Tate: Colour coursework guide", "url": "https://www.tate.org.uk/art/colour-coursework-guide", "supports": "Colour can be used descriptively and expressively; the lesson treats meaning as a justified choice, not a universal rule."}], "stages": [{"phase": "Arrival", "minutes": 2, "title": "A mark you can make", "lead": "Try one line on scrap paper.", "body": ["Make it light. Make another line darker.", "Point to the line you can see most clearly.", "You can draw, trace or guide an adult. Your choice counts."], "teacher": "Check grip, reach and tool choice unobtrusively. Offer a broad pencil, crayon or digital stylus. Distinguish motor access from artistic judgement. The learner can direct a line even when an adult draws it.", "visual": "Three wave studies with light outline, bold outline and a wave-shaped hatched band, plus light/mid/dark tone swatches. Use the first two lines for the arrival comparison."}, {"phase": "Starter", "minutes": 3, "title": "Same shape. New effect.", "lead": "Look at the three wave studies.", "body": ["The shape stays the same. The marks change.", "Which study catches your eye? Point to a mark that helps you decide.", "A different choice can still make sense. Tell us what you can see."], "teacher": "Show all three wave studies together. Accept different preferences when the learner points to visible features. The wave shape stays recognisable; the line weight and hatching change. Do not give the studies fixed emotional meanings.", "visual": "Three recognisable wave studies: light continuous outline, bold outline and a wave-shaped hatched band. Label Light line, Bold line and Hatching."}, {"phase": "I do", "minutes": 5, "title": "Watch one mark change", "lead": "I will draw a wave three ways.", "body": ["First I use a light line. Next I make a bold line. Then I add hatching.", "I keep each try. It shows what I tested.", "I choose the curved line because I want my wave to look smooth."], "teacher": "Live-model on the same paper and tool pupils have. Explain hatching by drawing adjacent lines; crossing them would be another valid technique, cross-hatching. Model changing pressure gently, never hard enough to damage paper or strain grip. Say that this is one method, not the only correct method.", "visual": "Repeat the three wave studies and light/mid/dark swatches. Model each mark on real paper while pupils compare the visible results."}, {"phase": "We do", "minutes": 6, "title": "Change it, then look", "lead": "What changes when the marks get closer?", "body": ["Predict which test will look darker.", "Move between the wide and close lines. Look again.", "Now draw both on scrap paper. Point to the test that is darker.", "The screen is a model. Your own marks may vary."], "teacher": "Use the interaction before the reveal. Expected: closer equal-width lines cover more of the white area and usually read as a darker tone. Keep line width constant in this comparison. Avoid equating dark with bad or light with good. Paper alternative: compare two supplied hatching swatches.", "visual": "Equal squares with same-width hatch marks, one widely spaced and one closely spaced.", "question": {"prompt": "The lines have the same width. Which square is likely to look darker?", "options": [{"text": "The square with closer lines.", "correct": true, "feedback": "More of the white paper is covered, so the area reads as darker."}, {"text": "The square with wider gaps.", "correct": false, "feedback": "Wider gaps leave more white paper showing. Compare the whole square, not just one line."}]}}, {"phase": "I do", "minutes": 4, "title": "Colour is a choice", "lead": "Colours and marks can suggest an idea.", "body": ["Flow uses blue curves. To me, it suggests water.", "You may read it in a different way.", "I can use one colour or more. I test a small patch first.", "Grey can be neutral. A grey with blue or orange in it may feel cooler or warmer."], "teacher": "Keep the colour-temperature nuance optional orally if the group is overloaded. Compare Flow and Crossing as two different compositions: colour, line direction, shape and spacing all differ. This is an interpretation task, not a controlled test of colour alone. No feeling belongs to one colour for everyone. Colour-first and line-first can both work; demonstrate today’s drawing order as a choice.", "visual": "Show the supplied constructed artworks Flow and Crossing together, with their titles. They are different compositions, not two colour versions of the same symbol."}, {"phase": "We do", "minutes": 5, "title": "Help me choose", "lead": "Which artwork best fits the idea “energy”?", "body": ["Look at Flow and Crossing. Choose one.", "Say: “I chose ___ because I can see ___.”", "A partner points to the part you mean.", "Keep your choice or change it. Say what helped you decide."], "teacher": "Accept either Flow or Crossing with a visible reason: sharp angles, repeated curves, strong colour contrast or suggested movement. Model a respectful response: “I see the sharp corner you mean.” Do not grade the emotion. Note one learner-requested tool or technique to make available next lesson.", "visual": "Repeat Flow and Crossing at a large scale for comparison; keep both titles visible."}, {"phase": "Independent", "minutes": 12, "title": "Make your own symbol study", "lead": "Choose a wave, circle, triangle or your own safe shape.", "body": ["Try two or three kinds of mark.", "Use a colour choice in one test.", "Choose a version for your idea. It can show an interest, a quality or an invented character.", "Keep the tests. Point, say or write why you chose one."], "teacher": "Supply the three simple shape examples: wave, circle and triangle. Also allow the learner’s own safe shape. An identity response can represent curiosity, sport, music or an invented character without personal disclosure. Check for deliberate choice rather than neatness. During minute 8 ask what the learner wants help with; act on one request without taking over their artistic decision.", "visual": "Supplied outline examples: wave, circle and triangle. Pupils can also choose their own shape. Use the large response spaces on the pupil sheet for separate mark trials."}, {"phase": "Exit", "minutes": 3, "title": "Show one choice", "lead": "Which part says your idea best?", "body": ["Point to one mark or colour.", "Finish: “I chose ___ to show ___.”", "Tell an adult what you would like to try next.", "They will tell you what can happen in the next lesson."], "teacher": "Possible answer: “I chose close hatching to show a dark sea” or “I chose an orange triangle to show energy.” Accept oral, pointed or scribed meaning. Read back exactly, confirm the learner intended it, and note a feasible next choice. Keep work for Week 2; avoid any automated qualification sign-off."}], "routes": [{"name": "Supported", "task": "Choose a supplied symbol. Make or direct two mark tests, add a colour, then point to your chosen version.", "scaffold": "Use the same outline twice. “I chose this mark. It shows ___.” An adult may scribe your words."}, {"name": "Standard", "task": "Make three mark tests of one symbol. Add a deliberate colour choice and explain the version you want to develop.", "scaffold": "“I tried ___. I chose ___ because ___. It stands for ___.”"}, {"name": "Stretch", "task": "Change one feature in your chosen study, ask how another viewer reads it, then decide whether to keep the change.", "scaffold": "“I meant ___. They noticed ___. I will keep/change ___ because ___.”"}], "interaction": {"type": "hatching_comparison", "stageIndex": 3, "purpose": "Predict and compare how equal-width hatch spacing changes perceived tone.", "data": {"spacingOptions": [{"label": "Wide", "spacing": 22}, {"label": "Medium", "spacing": 12}, {"label": "Close", "spacing": 6}], "lineWidth": 2, "prediction": "Which spacing will look darkest?", "labels": ["Light", "Mid", "Dark"], "feedback": "Closer equal-width lines cover more white paper and usually look darker as a group. Your material and pressure can also affect tone."}, "paperAlternative": "Print wide, medium and close hatching swatches. Predict, order from light to dark, then draw two on scrap paper.", "expected": "Close spacing is darkest in this controlled example. Meaning and aesthetic preference have no single right answer."}, "print": {"title": "My symbol studio", "instructions": ["Choose a supplied symbol or your own shape.", "Try a different mark in each practice box.", "Add colour, choose one version and explain it."], "tasks": [{"prompt": "Box 1: make or direct a light line test.", "space": "large"}, {"prompt": "Box 2: make or direct a different mark test.", "space": "large"}, {"prompt": "Box 3: try hatching or another mark. Add colour to one test.", "space": "large"}, {"prompt": "I chose this version because ___. It stands for ___.", "space": "medium"}, {"prompt": "Next time I would like to try ___.", "space": "short"}], "reference": "Symbol choices: wave, circle, triangle or your own shape. Hatching means close lines used to make shade. Tone means how light or dark something looks."}, "teacherGuide": {"preparation": ["Pencils or broad crayons, coloured pencils, scrap paper and pupil sheets with separate practice spaces.", "Print the supplied wave/circle/triangle examples and wide/medium/close hatching swatches. Display the line/tone board and Flow/Crossing artworks from the lesson, or model line and tone on paper. No photograph or private story is required.", "Keep a learner-selected technique sample for Week 2."], "safety": ["Use ordinary drawing tools suited to the class; no blades, paint solvents or smudging near eyes are needed."], "assessment": "Look for a controlled or directed change in marks, a chosen colour and an explanation tied to a visible feature. Drawing precision is not a proxy for understanding.", "misconceptions": [{"idea": "There is one correct emotion for each colour.", "response": "Ask what the colour suggests to this learner and why; interpretations depend on context and experience."}, {"idea": "Colour must always come after line.", "response": "Both orders can work. Today test the materials and choose an order that gives the wanted result."}, {"idea": "A neat copy is the only successful artwork.", "response": "A deliberate test, reasoned choice or directed mark is useful artistic evidence."}], "access": "Read one step, point to its visual, allow wait time, then add the least prompt needed. Let pupils speak, point, draw or direct. Keep access support separate from the creative decision and avoid compulsory personal disclosures.", "answers": ["Closest hatch spacing appears darkest in the supplied comparison.", "Flow or Crossing can represent energy if the learner supports the interpretation with a visible feature. Several visual features differ, so this comparison cannot isolate the effect of colour alone.", "A valid independent answer links a chosen mark/colour to an intended idea; identical wording is not required."], "lundy": "Offer tool, symbol and sharing choices. An adult names back the learner’s choice and confirms one feasible next lesson action; requests that cannot happen receive a reason."}, "menu_href": "https://madebymatt.uk/Lessons/"};const LESSON_IMAGES={"crossing.png": "../assets/crossing.webp", "flow.png": "../assets/flow.webp"};document.querySelectorAll("img[data-asset]").forEach(x=>x.src=LESSON_IMAGES[x.dataset.asset]);
+/* Offline, keyboard-operable science models. No storage, network or dependencies. */
+function mountScienceLab(LESSON, host) {
+  'use strict';
+  const supported = ['grow_science_friction', 'build_science_permeability', 'launch_science_punnett'];
+  if (!host || !supported.includes(LESSON.id)) return false;
+  const data = LESSON.interaction.data;
+  const NS = 'http://www.w3.org/2000/svg';
+  const prefix = LESSON.id + '-';
+  let serial = 0;
+  host.replaceChildren();
+  host.classList.add('lab');
+  host.dataset.scienceLab = LESSON.id;
+  function el(tag, text, className, parent) {
+    const item = document.createElement(tag);
+    if (text !== undefined && text !== null) item.textContent = text;
+    if (className) item.className = className;
+    if (parent) parent.append(item);
+    return item;
+  }
+  function button(text, control, parent, action) {
+    const item = el('button', text, '', parent);
+    item.type = 'button'; item.dataset.control = control;
+    item.style.minHeight = '44px'; item.style.minWidth = '44px';
+    if (action) item.addEventListener('click', action);
+    return item;
+  }
+  function select(labelText, options, parent, control) {
+    const label = el('label', labelText, 'field', parent);
+    const item = el('select', null, '', label);
+    item.id = prefix + (++serial); item.dataset.control = control;
+    label.htmlFor = item.id;
+    item.style.minHeight = '44px'; item.style.minWidth = '44px';
+    item.style.width = '100%';
+    const blank = el('option', 'Choose…', '', item); blank.value = '';
+    options.forEach(option => {
+      const node = el('option', typeof option === 'string' ? option : option.label, '', item);
+      node.value = typeof option === 'string' ? option : option.value;
+    });
+    return item;
+  }
+  function feedback(parent, control) {
+    const node = el('p', '', 'feedback', parent);
+    node.setAttribute('role', 'status'); node.setAttribute('aria-live', 'polite');
+    node.setAttribute('aria-atomic', 'true'); node.dataset.control = control;
+    return node;
+  }
+  function svgNode(tag, attrs, parent, text) {
+    const node = document.createElementNS(NS, tag);
+    Object.entries(attrs || {}).forEach(([key, value]) => node.setAttribute(key, String(value)));
+    if (text !== undefined) node.textContent = text;
+    if (parent) parent.append(node);
+    return node;
+  }
+  function diagram(parent, width, height, title, description) {
+    const svg = svgNode('svg', {viewBox: `0 0 ${width} ${height}`, role: 'img'}, parent);
+    svg.style.display = 'block'; svg.style.width = '100%'; svg.style.height = 'auto';
+    const id = prefix + 'svg-' + (++serial);
+    svg.setAttribute('aria-labelledby', id + '-title ' + id + '-desc');
+    svgNode('title', {id: id + '-title'}, svg, title);
+    svgNode('desc', {id: id + '-desc'}, svg, description);
+    return svg;
+  }
+  function svgText(svg, x, y, text, extra) {
+    return svgNode('text', Object.assign({x, y, fill:'#10233f', 'font-family':'Segoe UI, Arial, sans-serif', 'font-size':20}, extra || {}), svg, text);
+  }
+  function paperNote() {
+    el('p', 'Paper route: ' + LESSON.interaction.paperAlternative, 'lab-note', host);
+  }
+
+  function friction() {
+    host.dataset.model = 'constructed';
+    el('h3', 'Predict → test → compare', '', host);
+    el('p', data.provenance, 'lab-note', host);
+    el('p', 'Kept the same: ' + data.sameConditions.join('; ') + '.', 'lab-note', host);
+    const tracks = data.tracks;
+    const tested = new Set();
+    const controls = el('div', null, 'row', host);
+    const prediction = select('1. Which surface will let the slider travel furthest?', tracks.map(t => ({label:t.label, value:t.id})), controls, 'friction-prediction');
+    const choice = select('2. Choose a surface to test', tracks.map(t => ({label:t.label, value:t.id})), controls, 'friction-surface');
+    choice.value = tracks[0].id;
+    const actions = el('div', null, 'row', host);
+    const test = button('Test selected surface', 'friction-test', actions);
+    test.disabled = true;
+    const reset = button('Reset model', 'friction-reset', actions);
+    const status = feedback(host, 'friction-feedback');
+    status.textContent = 'Make a prediction first. A prediction is an idea to test.';
+    const plot = el('div', null, '', host);
+    plot.style.margin = '1rem 0';
+    const table = el('table', null, '', host);
+    table.dataset.control = 'friction-results';
+    el('caption', 'Retained model observations', '', table);
+    const head = el('tr', null, '', el('thead', null, '', table));
+    ['Surface under the rubber slider', 'Stopping distance'].forEach(t => {
+      const th = el('th', t, '', head); th.scope = 'col';
+    });
+    const body = el('tbody', null, '', table);
+    const outputs = new Map();
+    tracks.forEach(track => {
+      const tr = el('tr', null, '', body);
+      const th = el('th', track.label, '', tr); th.scope = 'row';
+      const td = el('td', 'Not tested yet', '', tr);
+      td.dataset.track = track.id; outputs.set(track.id, td);
+    });
+    const interpretation = el('div', null, '', host);
+    interpretation.hidden = true;
+    const slowest = select('3. Which surface slowed the slider most in this model?', tracks.map(t => ({label:t.label, value:t.id})), interpretation, 'friction-interpret');
+    const interpretStatus = feedback(interpretation, 'friction-interpret-feedback');
+    button('Check my comparison', 'friction-check', interpretation, () => {
+      if (!slowest.value) { interpretStatus.textContent = 'Choose a surface, then compare its stopping distance with another.'; return; }
+      const shortest = tracks.reduce((a,b) => a.distance < b.distance ? a : b);
+      interpretStatus.textContent = slowest.value === shortest.id
+        ? 'The textured mat stops it at 24 cm, compared with 82 cm on laminate. Under the fixed model conditions, the mat slows it most. Real results depend on both materials and conditions.'
+        : 'Compare the shortest stopping distance with the longest. With the same release speed, the earlier stop shows greater slowing in this model.';
+    });
+    const transfer = el('div', null, '', host);
+    transfer.hidden = true;
+    el('h3', 'Does grip help the job?', '', transfer);
+    el('p', 'These are new design questions. Choose for each job and explain why.', '', transfer);
+    const boot = select('A walking boot needs to stop slipping on the ground.', [
+      {value:'help', label:'Grip between sole and ground helps'},
+      {value:'hinder', label:'Grip between sole and ground hinders'}
+    ], transfer, 'friction-boot');
+    const chain = select('A bicycle chain needs its links to move smoothly around each other.', [
+      {value:'help', label:'Too much friction between moving links helps'},
+      {value:'hinder', label:'Too much friction between moving links hinders'}
+    ], transfer, 'friction-chain');
+    const transferStatus = feedback(transfer, 'friction-transfer-feedback');
+    button('Check the two jobs', 'friction-transfer-check', transfer, () => {
+      if (!boot.value || !chain.value) { transferStatus.textContent = 'Choose for both jobs. Name the parts that touch as you explain.'; return; }
+      const messages = [];
+      messages.push(boot.value === 'help' ? 'Boot: yes. Friction between sole and ground helps stop slipping.' : 'Boot: its job needs grip. Friction between sole and ground helps stop slipping.');
+      messages.push(chain.value === 'hinder' ? 'Chain: yes. Too much friction at the moving links resists their movement and can wear parts.' : 'Chain: its links need to move smoothly. Too much friction there resists movement and can wear parts.');
+      transferStatus.textContent = messages.join(' ');
+    });
+    function draw() {
+      plot.replaceChildren();
+      const svg = diagram(plot, 680, 330, 'Three model tracks with a common centimetre ruler', tracks.map(t => t.label + ': ' + (tested.has(t.id) ? t.distance + ' cm.' : 'not yet tested.')).join(' '));
+      const start = 42, width = 590;
+      svgText(svg, 42, 25, 'Distance from the common start (cm)');
+      for (let cm = 0; cm <= data.maxDistance; cm += 20) {
+        const x = start + width * cm / data.maxDistance;
+        svgNode('line', {x1:x,y1:58,x2:x,y2:317,stroke:'#aab8c1','stroke-dasharray':'3 5'}, svg);
+        svgText(svg, x, 51, String(cm), {'text-anchor':'middle'});
+      }
+      tracks.forEach((track, i) => {
+        const top = 87 + i * 80;
+        svgText(svg, 42, top, track.label + (tested.has(track.id) ? ' · ' + track.distance + ' cm' : ' · ready'));
+        svgNode('rect', {x:start,y:top+31,width,height:12,fill:['#d9e3e8','#d8e8df','#bbc6bf'][i],stroke:'#5f7684'}, svg);
+        if (i > 0) for (let x = start + 5; x < start + width; x += (i === 1 ? 14 : 9)) {
+          svgNode('line', {x1:x,y1:top+32,x2:x+(i===1?6:0),y2:top+42,stroke:'#738879','stroke-width':i===1?1:2}, svg);
+        }
+        const stop = tested.has(track.id) ? track.distance : 0;
+        const x = start + width * stop / data.maxDistance;
+        const slider = svgNode('g', {'data-slider':track.id,'data-distance':stop}, svg);
+        svgNode('rect', {x:x-18,y:top+8,width:36,height:20,rx:3,fill:'#245775',stroke:'#10233f'}, slider);
+        svgNode('rect', {x:x-18,y:top+25,width:36,height:6,fill:'#142634'}, slider);
+        svgNode('line', {x1:x,y1:top+30,x2:x,y2:top+47,stroke:'#ad3d21','stroke-width':3}, slider);
+      });
+    }
+    prediction.addEventListener('change', () => {test.disabled = !prediction.value;});
+    test.addEventListener('click', () => {
+      if (!prediction.value || !choice.value) return;
+      const track = tracks.find(t => t.id === choice.value);
+      if (!track) return;
+      tested.add(track.id); prediction.disabled = true;
+      host.dataset.testedCount = String(tested.size);
+      outputs.get(track.id).textContent = track.distance + ' cm';
+      status.textContent = track.label + ': the slider stops at ' + track.distance + ' cm. ' + (tested.size === tracks.length ? 'All three results are ready. Compare the distances, then revisit your prediction.' : 'The same slider and release speed are used each time. Choose another track to compare.');
+      interpretation.hidden = tested.size !== tracks.length;
+      transfer.hidden = tested.size !== tracks.length;
+      draw();
+    });
+    reset.addEventListener('click', () => {
+      tested.clear(); host.dataset.testedCount = '0'; prediction.disabled = false; prediction.value = '';
+      choice.value = tracks[0].id; test.disabled = true;
+      slowest.value = ''; boot.value = ''; chain.value = '';
+      interpretation.hidden = true; transfer.hidden = true;
+      interpretStatus.textContent = ''; transferStatus.textContent = '';
+      outputs.forEach(cell => {cell.textContent = 'Not tested yet';});
+      status.textContent = 'Model reset. Make a fresh prediction before testing.'; draw();
+    });
+    host.dataset.testedCount = '0'; draw(); paperNote();
+  }
+
+  function permeability() {
+    el('h3', 'Trace the water. Sort the evidence.', '', host);
+    el('p', data.provenance, 'lab-note', host);
+    el('p', 'Read or hear each card. Follow where the water was seen, then choose a group. You can change any choice.', '', host);
+    const grid = el('div', null, 'tile-grid', host);
+    const cards = [];
+    function waterDiagram(card, parent) {
+      const svg = diagram(parent, 360, 244, card.label + ' — water route', card.text);
+      const top = 56, bottom = 139;
+      svgNode('rect', {x:96,y:top,width:147,height:bottom-top,rx:5,fill:'#ded7c7',stroke:'#5f5f58','stroke-width':2}, svg);
+      svgText(svg, 12, 43, 'TOP'); svgText(svg, 12, 104, 'INSIDE'); svgText(svg, 12, 180, 'BELOW');
+      svgNode('path', {d:'M 109 164 L 122 222 L 218 222 L 231 164',fill:'#f4fbff',stroke:'#617785','stroke-width':3}, svg);
+      const water = {fill:'none',stroke:'#006aa8','stroke-width':7,'stroke-linecap':'round'};
+      if (card.id === 'a') {
+        svgNode('ellipse', {cx:168,cy:47,rx:20,ry:8,fill:'#006aa8'}, svg);
+        svgText(svg, 208, 40, 'water');
+        svgText(svg, 148, 204, 'dry');
+      } else if (card.id === 'b') {
+        svgNode('path', Object.assign({d:'M 160 43 L 165 69 L 157 86 L 171 107'},water), svg);
+        svgText(svg, 205, 91, 'water');
+        svgText(svg, 148, 204, 'dry');
+      } else if (card.id === 'c' || card.id === 'e') {
+        svgNode('path', Object.assign({d:'M 164 43 L 162 78 L 177 105 L 169 140'},water), svg);
+        svgNode('circle', {cx:169,cy:154,r:5,fill:'#006aa8'}, svg);
+        svgNode('circle', {cx:169,cy:175,r:5,fill:'#006aa8'}, svg);
+        svgNode('path', {d:'M 120 203 L 219 203 L 216 219 L 124 219 Z', fill:'#70bfdf'}, svg);
+        svgText(svg, 244, 117, 'edges'); svgText(svg, 244, 139, 'secure');
+        svgNode('path', {d:'M 97 58 L 87 58 L 87 130 M 241 58 L 251 58 L 251 92', fill:'none',stroke:'#355747','stroke-width':4}, svg);
+        svgText(svg, 123, 241, card.id === 'c' ? '2 mL below' : 'drops below');
+      } else if (card.id === 'd') {
+        svgNode('path', Object.assign({d:'M 190 44 L 259 44 L 262 127 L 277 217 L 240 229'},water), svg);
+        svgNode('path', {d:'M 91 229 L 292 229',fill:'none',stroke:'#617785','stroke-width':3}, svg);
+        svgText(svg, 271, 72, 'edge'); svgText(svg, 271, 96, 'gap');
+        svgText(svg, 145, 204, 'cup');
+      } else {
+        svgText(svg, 148, 42, 'dry');
+        svgNode('rect', {x:103,y:157,width:134,height:78,fill:'#e4e8eb',stroke:'#687881','stroke-dasharray':'5 4'}, svg);
+        svgText(svg, 170, 182, 'cup not', {'text-anchor':'middle'});
+        svgText(svg, 170, 207, 'checked', {'text-anchor':'middle'});
+      }
+    }
+    data.cards.forEach(card => {
+      const article = el('div', null, 'evidence', grid);
+      article.dataset.evidenceCard = card.id;
+      el('h3', card.label, '', article);
+      waterDiagram(card, article);
+      el('p', card.text, '', article);
+      const pick = select('Where does this evidence belong?', data.groups, article, 'water-card-' + card.id);
+      pick.setAttribute('aria-label', card.label + ': choose evidence group');
+      const status = feedback(article, 'water-feedback-' + card.id);
+      button('Check this card', 'water-check-' + card.id, article, () => check(card, pick, status));
+      pick.addEventListener('change', () => {
+        status.textContent = ''; article.removeAttribute('data-correct');
+        host.dataset.sortComplete = 'false';
+        const summary = host.querySelector('[data-control="water-summary"]');
+        if (summary) summary.textContent = 'Choice changed. Check this card or check all evidence again.';
+      });
+      cards.push({card, pick, status, article});
+    });
+    function check(card, pick, status) {
+      if (!pick.value) {status.textContent = 'Choose a group. Follow the water from the top and check below.'; return false;}
+      const correct = pick.value === card.group;
+      status.textContent = (correct ? 'Your choice fits. ' : 'Trace the route again. ') + card.feedback;
+      pick.closest('[data-evidence-card]').dataset.correct = String(correct);
+      return correct;
+    }
+    const actions = el('div', null, 'row', host);
+    const status = feedback(host, 'water-summary');
+    button('Check all evidence', 'water-check-all', actions, () => {
+      const results = cards.map(c => check(c.card, c.pick, c.status));
+      const complete = results.every(Boolean);
+      host.dataset.sortComplete = String(complete);
+      status.textContent = complete
+        ? 'All six choices fit their observations. Water inside is different from water passing right through. Water below only supports “through” when it did not bypass the sample.'
+        : 'Use each card’s feedback to improve your choices. Look for water below, and check whether an edge leak could explain it.';
+    });
+    button('Reset choices', 'water-reset', actions, () => {
+      cards.forEach(c => {c.pick.value = ''; c.status.textContent = ''; c.article.removeAttribute('data-correct');});
+      host.dataset.sortComplete = 'false'; status.textContent = 'Choices cleared. The observation records are unchanged.';
+    });
+    el('p', '“No water below after two minutes” describes this observation. It does not prove a material is waterproof forever.', 'lab-note', host);
+    paperNote();
+  }
+
+  function punnett() {
+    el('h3', 'Build the four possible combinations', '', host);
+    el('p', 'One allele comes from each parent’s gamete. The four boxes are equally likely outcomes in this model; repeated combinations still occupy separate boxes.', '', host);
+    const cross = select('Choose the parent cross', [
+      {value:'Pp-Pp', label:'Pp × Pp · guided'}, {value:'Pp-pp', label:'Pp × pp · independent'}
+    ], host, 'punnett-cross');
+    cross.value = 'Pp-Pp';
+    el('p', data.provenance, 'lab-note', host);
+    el('p', 'P = purple-flower allele; p = white-flower allele. In this fictional plant model, P is dominant: PP and Pp give purple flowers; pp gives white flowers.', 'lab-note', host);
+    el('p', 'Model limits: ' + data.modelLimits.join('; ') + '.', 'lab-note', host);
+    const gridHost = el('div', null, '', host);
+    const controls = el('div', null, 'row', host);
+    const checkGametes = button('Check gametes', 'punnett-check-gametes', controls);
+    const checkBoxes = button('Check four boxes', 'punnett-check-boxes', controls);
+    const reset = button('Reset this cross', 'punnett-reset', controls);
+    const status = feedback(host, 'punnett-feedback');
+    const probabilities = el('div', null, 'notice', host);
+    probabilities.hidden = true; probabilities.dataset.control = 'punnett-probabilities';
+    const top = [], side = [], cells = [];
+    let gametesReady = false;
+    function invalidate() {
+      gametesReady = false; checkBoxes.disabled = true;
+      host.dataset.gametesReady = 'false'; host.dataset.squareCorrect = 'false';
+      probabilities.hidden = true; probabilities.replaceChildren();
+      cells.forEach(cell => {
+        cell.inputs.forEach(input => {input.value = ''; input.disabled = true;});
+        cell.output.textContent = 'Waiting for gametes'; cell.td.removeAttribute('data-correct');
+      });
+      status.textContent = 'Choose both gametes for each parent. Each gamete carries one allele.';
+    }
+    function build() {
+      gridHost.replaceChildren(); top.length = 0; side.length = 0; cells.length = 0;
+      const table = el('table', null, '', gridHost);
+      table.dataset.control = 'punnett-grid';
+      table.style.tableLayout = 'fixed';
+      el('caption', 'Top parent: Pp. Side parent: ' + (cross.value === 'Pp-Pp' ? 'Pp' : 'pp') + '.', '', table);
+      const head = el('tr', null, '', el('thead', null, '', table));
+      const corner = el('th', 'Gametes ↓ / →', '', head); corner.style.width = '28%';
+      for (let col = 0; col < 2; col++) {
+        const th = el('th', null, '', head); th.scope = 'col';
+        const input = select('Top ' + (col + 1), ['P','p'], th, 'punnett-top-' + col);
+        input.setAttribute('aria-label', 'Top parent gamete ' + (col + 1));
+        input.addEventListener('change', invalidate); top.push(input);
+      }
+      const body = el('tbody', null, '', table);
+      for (let row = 0; row < 2; row++) {
+        const tr = el('tr', null, '', body);
+        const th = el('th', null, '', tr); th.scope = 'row';
+        const input = select('Side ' + (row + 1), ['P','p'], th, 'punnett-side-' + row);
+        input.setAttribute('aria-label', 'Side parent gamete ' + (row + 1));
+        input.addEventListener('change', invalidate); side.push(input);
+        for (let col = 0; col < 2; col++) {
+          const td = el('td', null, '', tr);
+          const location = ['Top','Bottom'][row] + '-' + ['left','right'][col];
+          td.dataset.punnettCell = row + '-' + col;
+          const fromTop = select('From top', ['P','p'], td, 'punnett-cell-' + row + '-' + col + '-top');
+          fromTop.setAttribute('aria-label', location + ' box: allele from top parent');
+          const fromSide = select('From side', ['P','p'], td, 'punnett-cell-' + row + '-' + col + '-side');
+          fromSide.setAttribute('aria-label', location + ' box: allele from side parent');
+          const output = el('output', '', '', td);
+          output.style.fontWeight = '700'; output.style.fontSize = '1.15rem';
+          output.setAttribute('aria-label', location + ' genotype');
+          output.dataset.genotype = row + '-' + col;
+          const inputs = [fromTop, fromSide];
+          inputs.forEach(item => item.addEventListener('change', () => {
+            probabilities.hidden = true; probabilities.replaceChildren();
+            host.dataset.squareCorrect = 'false'; td.removeAttribute('data-correct');
+            output.textContent = inputs.every(i => i.value) ? genotype(fromTop.value, fromSide.value) : 'Choose both alleles';
+            status.textContent = 'When all four boxes are ready, check the combinations.';
+          }));
+          cells.push({row, col, td, inputs, output, location});
+        }
+      }
+      invalidate();
+    }
+    function genotype(a, b) { return a === 'P' && b === 'P' ? 'PP' : a === 'p' && b === 'p' ? 'pp' : 'Pp'; }
+    checkGametes.addEventListener('click', () => {
+      if (![...top,...side].every(s => s.value)) {status.textContent = 'Choose two gametes for each parent. Each gamete receives just one allele.'; return;}
+      const topCorrect = top.map(s => s.value).sort().join('') === 'Pp';
+      const sideExpected = cross.value === 'Pp-Pp' ? 'Pp' : 'pp';
+      const sideCorrect = side.map(s => s.value).sort().join('') === sideExpected;
+      if (!topCorrect || !sideCorrect) {
+        status.textContent = (!topCorrect ? 'Top parent Pp: its gametes must show one P option and one p option. ' : '') + (!sideCorrect ? 'Side parent ' + sideExpected + ': each gamete has one allele from that parent. Check both options.' : '');
+        return;
+      }
+      gametesReady = true; checkBoxes.disabled = false; host.dataset.gametesReady = 'true';
+      cells.forEach(cell => {
+        cell.inputs.forEach(input => {input.disabled = false;});
+        cell.output.textContent = cell.inputs.every(input => input.value)
+          ? genotype(cell.inputs[0].value, cell.inputs[1].value) : 'Choose both alleles';
+      });
+      status.textContent = 'The gametes fit the parents. In each box, combine its top allele with its side allele. Keep repeated combinations in every box where they occur.';
+    });
+    checkBoxes.addEventListener('click', () => {
+      if (!gametesReady) return;
+      const issues = [];
+      cells.forEach(cell => {
+        const [a,b] = cell.inputs;
+        const correct = a.value === top[cell.col].value && b.value === side[cell.row].value;
+        cell.td.dataset.correct = String(correct);
+        if (!a.value || !b.value) issues.push(cell.location + ': choose both alleles.');
+        else if (!correct) issues.push(cell.location + ': trace ' + (a.value !== top[cell.col].value ? 'the top column allele down' : 'the side row allele across') + ' to this box.');
+      });
+      if (issues.length) {
+        probabilities.hidden = true; host.dataset.squareCorrect = 'false';
+        status.textContent = issues.join(' '); return;
+      }
+      host.dataset.squareCorrect = 'true';
+      status.textContent = 'All four boxes follow their row and column gametes. Now use all four equally likely boxes to work out probabilities.';
+      const counts = {PP:0, Pp:0, pp:0};
+      cells.forEach(cell => {counts[genotype(cell.inputs[0].value, cell.inputs[1].value)]++;});
+      probabilities.replaceChildren(); probabilities.hidden = false;
+      el('h3', 'Probabilities for each offspring', '', probabilities);
+      Object.entries(counts).forEach(([name,count]) => el('p', name + ': ' + count + '/4 = ' + (count * 25) + '%', '', probabilities));
+      const purple = counts.PP + counts.Pp;
+      el('p', 'Purple flowers (PP or Pp): ' + purple + '/4 = ' + (purple * 25) + '%. White flowers (pp): ' + counts.pp + '/4 = ' + (counts.pp * 25) + '%.', '', probabilities);
+      el('p', 'These are probabilities for each offspring. They do not guarantee exact counts in a small group. Each fertilisation is a new chance event in this model.', 'lab-note', probabilities);
+    });
+    reset.addEventListener('click', build);
+    cross.addEventListener('change', () => {if (!cross.value) cross.value = 'Pp-Pp'; build();});
+    build(); paperNote();
+  }
+
+  if (LESSON.id === 'grow_science_friction') friction();
+  else if (LESSON.id === 'build_science_permeability') permeability();
+  else punnett();
+  return true;
 }
-</style></head>
-<body>
-<!--mbm_guide_v1 retained as a contract marker; guidance state is memory-only-->
-<!--n6-nav1:v1-->
-<style id="n6-nav1-css">@media print{.mbmhome,.n6-splash{display:none!important}}.mbmhome{display:inline-block;margin:6px 0 0 8px;font:600 .85rem/1.4 "Segoe UI",Arial,sans-serif;color:#1e3a8a;text-decoration:none}.mbmhome:hover,.mbmhome:focus{text-decoration:underline}</style>
-<a class="mbmhome" href="../../index.html" aria-label="Back to the Lessons catalogue">← Lessons</a>
-<!--/n6-nav1-->
-<a class="skip" href="#lessonDeck">Skip to lesson</a>
-<main id="lessonDeck" class="deck">
-<section class="slide active" data-type="title" data-title="Lesson overview" data-min="0" data-classroom-phase="title">
-<div class="time">0 min</div>
-<span class="tag">BUILD Art</span>
-<h1>Marks, Colour and What They Stand For</h1><p>BUILD · Art · Week 1. Trinity Arts Award Discover. Marks, Colour and What They Stand For.</p><p class="mbm-lesson-objective">Objective: choose one card from the approved symbol pack, draw it three times using three different marks, and say which mark says it best.</p><p class="mbm-lesson-success">Success evidence: three drawings of one symbol, each with a named mark, and one sentence saying which mark works best.</p><p>Every symbol comes from the approved pack. You do not draw your home. You do not draw your family. You draw the card.</p><p>40 minutes. Offline.</p><div class="lundy" aria-label="Lundy participation strip">
-<div class="lundy-grid">
-<span>SPACE</span>
-<span>VOICE</span>
-<span>AUDIENCE</span>
-<span>INFLUENCE</span>
-</div>
-<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
-</div>
-</section>
-<section class="slide" data-type="arrival" data-title="Arrival · retrieve" data-min="3" data-ta1="Hand out the symbol cards face down. Wait for the whole group before anyone turns one over." data-ta2="If a pupil starts talking about home, name the card in front of them and move on. Do not comment." data-classroom-phase="arrival">
-<div class="time">3 min</div>
-<span class="tag">Retrieval</span>
-<h2>Arrival · retrieve</h2>
-<h3>A mark is a choice</h3><p>A mark is the line you leave on the page.</p><p>A thin line is one mark. A thick line is another. A smudge is another.</p><p>The same shape can be drawn with a soft mark or a hard mark.</p><p>The shape stays the same. The feeling changes.</p><p>Today you pick one card. You keep that card all lesson.</p><div class="box rehearsal" data-mbm-guide="staff">Read the three lines once. Do not invite examples from home; the card pack is the guard the whole lesson rests on.</div><p>You need three things. The symbol card. One pencil. One sheet with three boxes.</p><p>Three words matter today. Mark. Shape. Meaning.</p><p>The mark is how you draw. The shape is what you draw. The meaning is what it tells someone.</p><p>You can change the mark and keep the shape. That is the whole lesson.</p><div class="lundy" aria-label="Lundy participation strip">
-<div class="lundy-grid">
-<span>SPACE</span>
-<span>VOICE</span>
-<span>AUDIENCE</span>
-<span>INFLUENCE</span>
-</div>
-<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
-</div>
-</section>
-<section class="slide" data-type="starter" data-title="Starter · create the need" data-min="3" data-ta1="Show the two drawings side by side. Do not say which one is better." data-classroom-phase="starter">
-<div class="time">3 min</div>
-<span class="tag">Starter</span>
-<h2>Starter · create the need</h2>
-<h3>Same shape, two marks</h3><p>Here are two drawings of one leaf.</p><p>One is drawn with a hard, sharp line. One is drawn with a soft, smudged line.</p><p>Look at the edge of each leaf. Ask yourself one thing.</p><p>Which one looks fresh, and which one looks old?</p><p>Nobody wrote a word. The mark did the work.</p><ul><li>1 · look at the edge.</li><li>2 · name the mark.</li><li>3 · say what it makes you think.</li></ul><p>Nobody is wrong here. Two people can read the same mark in two ways.</p><p>What matters is that you can say which mark you saw.</p><div class="lundy" aria-label="Lundy participation strip">
-<div class="lundy-grid">
-<span>SPACE</span>
-<span>VOICE</span>
-<span>AUDIENCE</span>
-<span>INFLUENCE</span>
-</div>
-<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
-</div>
-</section>
-<section class="slide" data-type="ido" data-title="I Do · model" data-min="7" data-ta1="Model one card only. Do not add a second example, even if a pupil asks." data-classroom-phase="ido">
-<div class="time">7 min</div>
-<span class="tag">I Do</span>
-<h2>I Do · model</h2>
-<h3>Three marks, one symbol</h3><p>I take one card from the pack. My card is a key.</p><p>In box one I draw the key with a hard line. I press down. The edge is sharp.</p><p>In box two I draw the same key with a soft line. I press lightly. The edge is faint.</p><p>In box three I draw the same key again. This time I rub the pencil sideways. The key looks worn.</p><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Four boxes joined by arrows: pick a card, draw it three times, name each mark, choose the best one"><title>From card to chosen mark</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">PICK</text><text x="73" y="88" text-anchor="middle" font-size="11">one card from the pack</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">DRAW</text><text x="231" y="88" text-anchor="middle" font-size="11">the same shape, three times</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">NAME</text><text x="389" y="88" text-anchor="middle" font-size="11">hard, soft or worn</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">CHOOSE</text><text x="547" y="88" text-anchor="middle" font-size="11">which mark says it best</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">One symbol, three marks, one choice at the end</text></svg><p>The shape did not change. The key is a key in all three boxes.</p><p>What changed is how it feels to look at.</p><div class="box rehearsal" data-mbm-guide="staff">Say the mark name out loud each time you change it. Hard. Soft. Worn. The words are the thing being taught, not the drawing.</div><p>Watch my hand, not just the page. A hard mark needs a slow, firm hand.</p><p>A soft mark needs a light, quick hand. The pencil is the same pencil.</p><p>If a box goes wrong, leave it. A crossed out box still shows a mark you tried.</p><div class="lundy" aria-label="Lundy participation strip">
-<div class="lundy-grid">
-<span>SPACE</span>
-<span>VOICE</span>
-<span>AUDIENCE</span>
-<span>INFLUENCE</span>
-</div>
-<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
-</div>
-</section>
-<section class="slide" data-type="wedo" data-title="We Do · everyone commits" data-min="3" data-ta1="Every pupil holds up a card. Nobody speaks until every hand is up." data-classroom-phase="wedo">
-<div class="time">3 min</div>
-<span class="tag">We Do</span>
-<h2>We Do · everyone commits</h2>
-<h3>Sort the marks</h3><p>You have three small mark cards. Hard. Soft. Worn.</p><p>I hold up a drawing. You hold up the card that matches the mark.</p><p>Hold it up even if you are not sure. A guess you can see is better than a blank.</p><p>We do four drawings. Then we count how many the room agreed on.</p><p>If two people hold up different cards, both say one reason. We do not vote.</p><p>Then I say which mark I drew, and you keep your reason either way.</p><div class="lundy" aria-label="Lundy participation strip">
-<div class="lundy-grid">
-<span>SPACE</span>
-<span>VOICE</span>
-<span>AUDIENCE</span>
-<span>INFLUENCE</span>
-</div>
-<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
-</div>
-</section>
-<section class="slide" data-type="ido2" data-title="I Do 2 · connect" data-min="7" data-ta1="Colour goes on top of the mark, never instead of it. Say that line if a pupil skips the pencil stage." data-classroom-phase="ido">
-<div class="time">7 min</div>
-<span class="tag">I Do</span>
-<h2>I Do 2 · connect</h2>
-<h3>Colour on top of the mark</h3><p>Now I add one colour to my key.</p><p>I use one colour only. One colour is a choice. Six colours is a mess.</p><p>A warm colour is red, orange or yellow. A cool colour is blue, green or grey.</p><p>I put a cool grey on the worn key. Now it looks like old metal.</p><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Two boxes compared: mark then colour keeps the shape, colour alone loses it"><title>Mark first, colour second</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">MARK FIRST</text><text x="151" y="74" text-anchor="middle" font-size="11">pencil, then colour</text><text x="151" y="94" text-anchor="middle" font-size="11">the shape still reads</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">COLOUR ONLY</text><text x="469" y="74" text-anchor="middle" font-size="11">no pencil under it</text><text x="469" y="94" text-anchor="middle" font-size="11">the shape goes soft</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Both start from the same card; only one keeps its edges</text></svg><p>Try the same grey on the sharp key. It looks like new metal instead.</p><p>Same colour. Different mark. Different answer.</p><p>One more rule. Colour goes on last, never first.</p><p>If you colour first, the pencil marks stop showing. The shape goes soft and you lose the edge.</p><p>So the order is always the same. Shape, then mark, then one colour.</p><ul><li>1 · draw the shape from the card.</li><li>2 · choose a mark and press to match it.</li><li>3 · add one colour on top.</li><li>4 · check the edge still shows.</li></ul><div class="lundy" aria-label="Lundy participation strip">
-<div class="lundy-grid">
-<span>SPACE</span>
-<span>VOICE</span>
-<span>AUDIENCE</span>
-<span>INFLUENCE</span>
-</div>
-<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
-</div>
-</section>
-<section class="slide" data-type="wedo2" data-title="We Do 2 · lab" data-min="5" data-ta1="Pair pupils by table, not by choice. Two minutes each way, timed out loud." data-classroom-phase="wedo">
-<div class="time">5 min</div>
-<span class="tag">We Do</span>
-<h2>We Do 2 · lab</h2>
-<h3>Test one mark on your card</h3><p>Work in twos. Take your own card.</p><p>Draw your symbol once with a hard mark. Show your partner.</p><p>Your partner says one word for how it looks. Sharp. Old. Heavy. Light.</p><p>Write that word next to the box. It is their word, not yours.</p><p>Then swap. You give them a word for theirs.</p><p>You may not use the word nice. It tells the drawer nothing they can act on.</p><p>Use a word about the mark instead. Sharp. Faint. Rough. Heavy.</p><p>If you cannot think of one, point at the part of the drawing you mean.</p><div class="lundy" aria-label="Lundy participation strip">
-<div class="lundy-grid">
-<span>SPACE</span>
-<span>VOICE</span>
-<span>AUDIENCE</span>
-<span>INFLUENCE</span>
-</div>
-<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
-</div>
-</section>
-<section class="slide" data-type="independent" data-title="Independent · evidence" data-min="9" data-ta1="Scribe exact words only. Do not tidy a pupil's sentence into a better one." data-ta2="A pupil who cannot choose may point at a box. Record the pointing as the choice." data-classroom-phase="independent">
-<div class="time">9 min</div>
-<span class="tag">Independent work</span>
-<h2>Independent · evidence</h2>
-<h3>Three boxes, one choice</h3><p>Fill all three boxes with your own card.</p><p>Box one is a hard mark. Box two is a soft mark. Box three is a worn mark.</p><p>Add one colour to one box only. Say why you chose that box.</p><p>Then ring the box that says your symbol best.</p><p>Write one sentence under it. Start with the words: I chose this one because.</p><ul><li>Supported · fill two boxes and ring one.</li><li>Standard · fill three boxes, add one colour, ring one and give a reason.</li><li>Stretch · as Standard, and say what the colour changed.</li></ul><p>Work on your own now. The card stays on your desk the whole time.</p><p>Do not copy the key I drew. Your card is your card.</p><p>If you finish early, draw one more box with a mark you have not used yet.</p><div class="lundy" aria-label="Lundy participation strip">
-<div class="lundy-grid">
-<span>SPACE</span>
-<span>VOICE</span>
-<span>AUDIENCE</span>
-<span>INFLUENCE</span>
-</div>
-<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
-</div>
-</section>
-<section class="slide" data-type="exit" data-title="Exit · Audience and Influence" data-min="3" data-ta1="The named adult reads the sentence back word for word. No paraphrase." data-classroom-phase="exit">
-<div class="time">3 min</div>
-<span class="tag">Exit ticket</span>
-<h2>Exit · Audience and Influence</h2>
-<div class="lundy-status">
-<p>
-<b>SPACE:</b> the learner may pause or choose a private response.</p>
-<p>
-<b>VOICE:</b> the evidence statement remains in the learner’s chosen communication mode.</p>
-<p>
-<b>AUDIENCE:</b> a familiar adult receives and names back exactly what was heard or seen.</p>
-<p>
-<b>INFLUENCE:</b> one real next action is recorded: retain, add method detail, or leave open.</p>
-</div>
-<h3>Say it to one adult</h3><p>Read your sentence to the adult at your table.</p><p>They read it back to you exactly as you said it.</p><p>If it is not what you meant, say it again. They write the new one.</p><p>One thing happens next. Keep the sheet, add a second colour, or leave it as it is.</p><p>Whatever you pick is written on the sheet before you go.</p><p>Your sheet goes in the arts log folder, not in your bag.</p><p>Next week you will look at this sheet again before you start.</p><div class="lundy" aria-label="Lundy participation strip">
-<div class="lundy-grid">
-<span>SPACE</span>
-<span>VOICE</span>
-<span>AUDIENCE</span>
-<span>INFLUENCE</span>
-</div>
-<p>SPACE stays available. VOICE is received. AUDIENCE names back exactly. INFLUENCE changes one real next action.</p>
-</div>
-</section>
-</main>
-<nav class="controls" aria-label="Lesson controls">
-<button type="button" data-nav="previous">◀ Previous</button>
-<button type="button" data-tool="1">Teacher tools</button>
-<button type="button" data-tool="2">Evidence &amp; print</button>
-<button type="button" data-tool="3">Calm mode</button>
-<button type="button" data-tool="4">Static diagrams</button>
-<button type="button" data-tool="5">Previous</button>
-<button type="button" data-tool="6">Next</button>
-<button type="button" data-nav="next">Next ▶</button>
-</nav>
-<div class="prog" aria-hidden="true">
-<span>
-</span>
-</div>
-<div id="taOverlay" class="overlay" aria-hidden="true">
-<div class="overlay-card">
-<h2></h2>
-<p>Use the least prompt needed. Keep adult preparation and exact-word scribing separate from pupil authorship. Guidance is hidden from the learner surface by default.</p>
-<button type="button" data-close-overlay>Close</button>
-</div>
-</div>
-<section class="print-pack printpack" aria-label="Printable lesson pack">
-<section class="print-page">
-<div class="running-head">BUILD Art · Week 1 · Art · Trinity Arts Award Discover · Marks, Colour and What They Stand For</div>
-<h1>Marks, Colour and What They Stand For</h1>
-<p><b>Workbook trace:</b> 'BUILD Weekly - Autumn'!C102</p>
-<p><b>Verbatim outcome:</b> Explore drawing, colour and technique to show identity.</p>
-<p><b>Objective:</b> Choose one card from the approved symbol pack, draw it three times using three different marks, and say which mark says it best.</p>
-<h2>One symbol, three marks</h2>
-<p></p>
-<table style="width:100%;border-collapse:collapse">
-<tr>
-<th style="border:1px solid #777;padding:6px"></th>
-<th style="border:1px solid #777;padding:6px"></th>
-<th style="border:1px solid #777;padding:6px"></th>
-</tr>
-<tr>
-<td style="border:1px solid #777;padding:8px">Three boxes, one symbol, three named marks</td>
-<td style="border:1px solid #777;padding:8px;height:38mm">
-</td>
-<td style="border:1px solid #777;padding:8px">
-</td>
-</tr>
-<tr>
-<td style="border:1px solid #777;padding:8px">One colour added to one box, with a reason</td>
-<td style="border:1px solid #777;padding:8px;height:38mm">
-</td>
-<td style="border:1px solid #777;padding:8px">
-</td>
-</tr>
-<tr>
-<td style="border:1px solid #777;padding:8px">One box ringed, with a sentence that starts I chose this one because</td>
-<td style="border:1px solid #777;padding:8px;height:38mm">
-</td>
-<td style="border:1px solid #777;padding:8px">
-</td>
-</tr>
-</table>
-<svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Four boxes in order: read the picture, say the step, do it, then tick it."><title>How to work one step</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">Read it</text><text x="73" y="88" text-anchor="middle" font-size="11">look at the picture</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">Say it</text><text x="231" y="88" text-anchor="middle" font-size="11">say the step out loud</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">Do it</text><text x="389" y="88" text-anchor="middle" font-size="11">that one step only</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">Tick it</text><text x="547" y="88" text-anchor="middle" font-size="11">tick it on the card</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">You read a step, say it, do it, then tick it.</text></svg><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Two columns. Left: a named step gets ticked. Right: an unnamed step is left undone."><title>A step with a name</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">Named step</text><text x="151" y="74" text-anchor="middle" font-size="11">one person owns it</text><text x="151" y="94" text-anchor="middle" font-size="11">it gets done and ticked</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">No name</text><text x="469" y="74" text-anchor="middle" font-size="11">everyone waits for it</text><text x="469" y="94" text-anchor="middle" font-size="11">the plate is not finished</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">The step with nobody's name on it is the step that gets missed.</text></svg><svg viewbox="0 0 620 150" role="img" width="100%" aria-label="Four boxes joined by arrows: pick a card, draw it three times, name each mark, choose the best one"><title>From card to chosen mark</title><rect x="8" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="73" y="70" text-anchor="middle" font-size="13">PICK</text><text x="73" y="88" text-anchor="middle" font-size="11">one card from the pack</text><rect x="166" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="231" y="70" text-anchor="middle" font-size="13">DRAW</text><text x="231" y="88" text-anchor="middle" font-size="11">the same shape, three times</text><line x1="138" y1="72" x2="162" y2="72" stroke="#333" stroke-width="2"></line><path d="M154 66 L166 72 L154 78 Z" fill="#333"></path><rect x="324" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="389" y="70" text-anchor="middle" font-size="13">NAME</text><text x="389" y="88" text-anchor="middle" font-size="11">hard, soft or worn</text><line x1="296" y1="72" x2="320" y2="72" stroke="#333" stroke-width="2"></line><path d="M312 66 L324 72 L312 78 Z" fill="#333"></path><rect x="482" y="42" width="130" height="60" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><text x="547" y="70" text-anchor="middle" font-size="13">CHOOSE</text><text x="547" y="88" text-anchor="middle" font-size="11">which mark says it best</text><line x1="454" y1="72" x2="478" y2="72" stroke="#333" stroke-width="2"></line><path d="M470 66 L482 72 L470 78 Z" fill="#333"></path><text x="306" y="126" text-anchor="middle" font-size="12">One symbol, three marks, one choice at the end</text></svg><svg viewbox="0 0 620 190" role="img" width="100%" aria-label="Two boxes compared: mark then colour keeps the shape, colour alone loses it"><title>Mark first, colour second</title><rect x="16" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2"></rect><circle cx="40" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="151" y="48" text-anchor="middle" font-size="14">MARK FIRST</text><text x="151" y="74" text-anchor="middle" font-size="11">pencil, then colour</text><text x="151" y="94" text-anchor="middle" font-size="11">the shape still reads</text><line x1="151" y1="120" x2="151" y2="140" stroke="#333" stroke-width="2"></line><path d="M145 132 L151 142 L157 132 Z" fill="#333"></path><rect x="334" y="16" width="270" height="104" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="7 4"></rect><circle cx="358" cy="42" r="7" fill="none" stroke="#333" stroke-width="2"></circle><text x="469" y="48" text-anchor="middle" font-size="14">COLOUR ONLY</text><text x="469" y="74" text-anchor="middle" font-size="11">no pencil under it</text><text x="469" y="94" text-anchor="middle" font-size="11">the shape goes soft</text><line x1="469" y1="120" x2="469" y2="140" stroke="#333" stroke-width="2"></line><path d="M463 132 L469 142 L475 132 Z" fill="#333"></path><rect x="16" y="140" width="588" height="40" rx="8" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="6 4"></rect><text x="310" y="165" text-anchor="middle" font-size="12">Both start from the same card; only one keeps its edges</text></svg></section>
-<section class="print-page n6-lc-page">
-<div class="running-head">BUILD Art · Week 1 · Art · Trinity Arts Award Discover · Marks, Colour and What They Stand For</div>
-<h2>Choose a route</h2>
-<div class="print-route supported">
-<h3></h3>
-<p>Fill two boxes with the same symbol and ring the one you like best.</p>
-</div>
-<div class="print-route standard">
-<h3></h3>
-<p>Fill three boxes with three named marks, add one colour to one box, ring one and give a reason.</p>
-</div>
-<div class="print-route stretch">
-<h3></h3>
-<p>As Standard, and say what adding the colour changed about the mark.</p>
-</div>
-<h2>The mark you chose, and why</h2>
-<ol>
-<li>Three boxes hold the same symbol from the approved pack.</li><li>Each box names its mark: hard, soft or worn.</li><li>One colour is added to one box, and the pupil says why that box.</li><li>One box is ringed and carries a sentence in the pupil's own words.</li></ol>
-<div style="height:42mm;border-bottom:1px solid #777">
-</div>
-<!--n6-learner-confirm:v1--><p style="margin:14px 0 4px;font-weight:800;font-size:.95rem"></p>
-<p style="margin:0 0 8px;font-size:.88rem"></p>
-<table style="width:100%;border-collapse:collapse;font-size:.9rem">
-<tr><td style="padding:10px 8px;border:1px solid #999;width:50%">Learner name (print)<br><br></td><td style="padding:10px 8px;border:1px solid #999">Signature<br><br></td></tr>
-<tr><td style="padding:10px 8px;border:1px solid #999">Date<br><br></td><td style="padding:10px 8px;border:1px solid #999"> </td></tr></table><!--/n6-learner-confirm-->
-</section>
-</section><!--n6-nav1:v1--><div class="n6-splash"><div style="text-align:center;margin-top:8px"><svg width="64" height="64" viewbox="0 0 100 100" aria-label="Made by Matt"><circle cx="50" cy="50" r="47" fill="none" stroke="#1e3a8a" stroke-width="3.4"></circle><g transform="translate(0 2)"><path d="M28 71 L28 37 L50 59 L72 37 L72 71" fill="none" stroke="#1e3a8a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 22.5 L51.48 28.52 L57.5 30 L51.48 31.48 L50 37.5 L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"></path></g></svg></div></div><!--/n6-nav1--><script id="lesson-config" type="application/json">{"id": "BUILD_ART_AUT1_W1", "family": "BUILD Art", "week": 1, "slot": "Art · Trinity Arts Award Discover", "title": "Marks, Colour and What They Stand For", "outcomes": ["Explore drawing, colour and technique to show identity."], "cells": ["'BUILD Weekly - Autumn'!C102"], "objective": "Choose one card from the approved symbol pack, draw it three times using three different marks, and say which mark says it best.", "source": {"workbook": "_passsb/inputs/Build SOW 2026-2027.xlsx", "sheet": "BUILD Weekly - Autumn", "cell": "'BUILD Weekly - Autumn'!C102"}, "timings": [0, 3, 3, 7, 3, 7, 5, 9, 3], "planId": "ac9a7a3da23c", "weDoType": "sort-or-match", "tierLadder": ["Supported", "Standard", "Stretch"]}</script>
-<script>(function(){const slides=[...document.querySelectorAll("main.deck>.slide")],bar=document.querySelector(".prog>span");let index=0;function show(next){index=(next+slides.length)%slides.length;slides.forEach((s,i)=>s.classList.toggle("active",i===index));bar.style.width=((index+1)/slides.length*100)+"%";}document.querySelector("[data-nav=previous]").addEventListener("click",()=>show(index-1));document.querySelector("[data-nav=next]").addEventListener("click",()=>show(index+1));document.querySelectorAll("[data-tool]").forEach((button,i)=>button.addEventListener("click",()=>{if(i===0){const o=document.getElementById("taOverlay");o.classList.add("on");o.setAttribute("aria-hidden","false");}else if(i===1)document.body.classList.toggle("loop-on");else if(i===2)document.querySelector(".n6m-guide-btn")?.click();else if(i===3)document.body.classList.toggle("word-help");else if(i===4)document.body.classList.toggle("calm");else document.body.classList.toggle("teacher-freeze");}));document.querySelector("[data-close-overlay]").addEventListener("click",()=>{const o=document.getElementById("taOverlay");o.classList.remove("on");o.setAttribute("aria-hidden","true");});document.addEventListener("keydown",e=>{if(e.key==="ArrowRight")show(index+1);if(e.key==="ArrowLeft")show(index-1);});show(0);})();</script>
-</body>
-</html>
+
+function mountLessonLab(lesson){
+const host=document.getElementById('lesson-lab');if(!host)return;
+if(typeof mountScienceLab==='function'&&mountScienceLab(lesson,host))return;
+const data=lesson.interaction.data,type=lesson.interaction.type;
+const el=(tag,text,attrs={})=>{const x=document.createElement(tag);if(text!==undefined)x.textContent=text;Object.entries(attrs).forEach(([k,v])=>x.setAttribute(k,v));return x};
+const add=(tag,text,attrs)=>{const x=el(tag,text,attrs);host.append(x);return x};
+function feedback(parent){const x=el('p','',{class:'feedback',role:'status','aria-live':'polite'});parent.append(x);return x}
+function select(label,options,parent=host){const wrap=el('label',label,{class:'field'}),s=el('select',undefined,{'aria-label':label});s.append(el('option','Choose…',{value:''}));for(const o of options)s.append(el('option',o,{value:o}));wrap.append(s);parent.append(wrap);return s}
+function sorter(items,categories){
+ add('h3','Make a choice. Use the evidence.');const list=add('div',undefined,{class:'tile-grid'});
+ items.forEach((c,i)=>{const box=el('div',undefined,{class:'evidence'});box.append(el('p',c.text));const s=select(`Card ${i+1}`,categories,box),button=el('button','Check my reason',{type:'button'});box.append(button);const fb=feedback(box);button.addEventListener('click',()=>{if(!s.value){fb.textContent='Choose a category first.';return}const correct=c.answer||c.category;fb.textContent=s.value===correct?'This fits. '+c.feedback:'Look again. '+c.feedback});s.addEventListener('change',()=>{fb.textContent=''});list.append(box)});
+}
+if(type==='group_activity_match'){
+ add('h3','Link a group and its activity');const choices=data.pairs.map(x=>x.activity);const list=add('div',undefined,{class:'tile-grid'});data.pairs.forEach((p,i)=>{const box=el('div',undefined,{class:'evidence'});box.append(el('h3',p.group));const s=select(p.group+' activity',choices,box),b=el('button','Check',{type:'button'});box.append(b);const fb=feedback(box);b.addEventListener('click',()=>{fb.textContent=!s.value?'Pick an activity first.':s.value===p.activity?'That fits. '+p.feedback:'Read the group label. Which activity does this group share?'});s.addEventListener('change',()=>fb.textContent='');list.append(box)});return;
+}
+if(type==='review_sentence_sorter'||type==='evidence_claim_sort'){sorter(data.cards||data.items,data.categories);return}
+if(type==='connection_source_switcher'){
+ add('h3','Which connection can this source show?');const controls=add('div',undefined,{class:'choices'});const view=add('div');
+ function show(src){view.replaceChildren();view.append(el('h3',src.title));view.append(el('p',src.summary));if(src.mode==='population'){const g=el('div',undefined,{style:'display:grid;grid-template-columns:repeat(10,1fr);gap:3px;max-width:360px',role:'img','aria-label':'100 squares, about 12 shaded: approximately 12 in 100 residents, Census 2021.'});for(let i=0;i<100;i++)g.append(el('div','',{style:'aspect-ratio:1;background:'+(i<12?'#3F7D6E':'#e0e7ed')}));view.append(g,el('p','About 12 in 100 · 2021. Rounded visual, not 12.29 exact squares.',{class:'lab-note'}))}else{const route=el('p',src.places.join(src.mode==='goods'?' — goods — ':' · · messages · · '),{style:'font-size:1.4rem;font-weight:700;padding:1rem 0'});view.append(route,el('p',src.mode==='goods'?'Connection diagram, not a scale map.':'Imagined connection, not a real partnership.',{class:'lab-note'}))}view.append(el('p','Limit: '+src.limit,{class:'notice'}));controls.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.source===src.id)))}
+ data.sources.forEach(s=>{const b=el('button',s.id+' · '+s.title,{type:'button','data-source':s.id,'aria-pressed':'false'});b.addEventListener('click',()=>show(s));controls.append(b)});show(data.sources[0]);sorter(data.claims,data.sources.map(x=>x.id));return;
+}
+if(type==='hatching_comparison'){
+ add('h3',data.prediction);const guess=select('My prediction',data.spacingOptions.map(x=>x.label));const button=add('button','Compare the marks',{type:'button'});const result=add('div');const fb=feedback(host);
+ button.addEventListener('click',()=>{if(!guess.value){fb.textContent='Choose a prediction. It is fine to change your mind.';return}result.replaceChildren();const ns='http://www.w3.org/2000/svg';const svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 650 215');svg.setAttribute('role','img');svg.setAttribute('aria-label','Hatching swatches with equal-width lines and wide, medium, close spaces.');svg.style.width='100%';data.spacingOptions.forEach((d,i)=>{const ox=20+i*215;let rect=document.createElementNS(ns,'rect');for(const[k,v]of Object.entries({x:ox,y:30,width:180,height:135,fill:'white',stroke:'#526274'}))rect.setAttribute(k,v);svg.append(rect);for(let x=ox+6;x<ox+176;x+=d.spacing){const line=document.createElementNS(ns,'line');for(const[k,v]of Object.entries({x1:x,y1:38,x2:x,y2:157,stroke:'#172b3e','stroke-width':data.lineWidth}))line.setAttribute(k,v);svg.append(line)}const t=document.createElementNS(ns,'text');t.setAttribute('x',ox);t.setAttribute('y','198');t.setAttribute('font-size','22');t.setAttribute('fill','#10233f');t.textContent=d.label;svg.append(t)});result.append(svg);fb.textContent=data.feedback});return;
+}
+if(type==='trial_evidence'){
+ add('h3','Predict before seeing the results');const pred=select('Which sign do you predict will help?', ['Sign A','Sign B','About the same']);const reveal=add('button','Open the sample observations',{type:'button'});const result=add('div');const fb=feedback(host);
+ reveal.addEventListener('click',()=>{if(!pred.value){fb.textContent='Choose a prediction first; no points are awarded.';return}result.replaceChildren();const table=el('table');table.append(el('caption',data.title));const hr=el('tr');['Same user','A: first choice correct?','B: first choice correct?'].forEach(t=>hr.append(el('th',t,{scope:'col'})));table.append(hr);for(let i=0;i<3;i++){const tr=el('tr');[String(i+1),data.conditionA.results[i]?'Yes':'No',data.conditionB.results[i]?'Yes':'No'].forEach(x=>tr.append(el('td',x)));table.append(tr)}result.append(table);result.append(el('p',data.sampleLimit,{class:'lab-note'}));result.append(el('p','A: 1 of 3 first choices correct. B: 3 of 3 first choices correct. These are sample results, not your project evidence.'));const choices=el('div',undefined,{class:'choices'});data.choices.forEach(x=>{const b=el('button',x.text,{type:'button'});b.addEventListener('click',()=>fb.textContent=x.feedback);choices.append(b)});result.append(el('h3',data.question),choices);fb.textContent='Compare the evidence with your prediction. What else could explain the change?'});return;
+}
+if(data.items&&data.categories){sorter(data.items,data.categories);return}
+if(data.cards&&data.categories){sorter(data.cards,data.categories);return}
+add('p','Use the supplied evidence cards to compare the claims, then record your reason.');
+}
+
+mountLessonLab(LESSON);
+
+document.querySelectorAll('[data-q]').forEach(b=>b.addEventListener('click',()=>{const i=Number(b.dataset.q),n=Number(b.dataset.a);b.closest('.soft-check').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));document.getElementById('question-feedback-'+i).textContent=LESSON.stages[i].question.options[n].feedback}));
+document.querySelectorAll('[data-route]').forEach(b=>b.addEventListener('click',()=>{const n=Number(b.dataset.route);document.querySelectorAll('[data-route]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));document.querySelectorAll('.lesson-route').forEach((x,i)=>{x.hidden=i!==n})}));
+document.getElementById('save-notes').addEventListener('click',()=>{const value=document.getElementById('pupil-notes').value;const blob=new Blob([LESSON.pathway+' · '+LESSON.title+'\n'+LESSON.period+'\n\n'+value],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=LESSON.id+'-notes.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)});
+</script>
+<!--n6-nav1:v1--><div class="n6-splash"><div style="text-align:center;margin-top:8px"><svg width="64" height="64" viewBox="0 0 100 100" aria-label="Made by Matt"><circle cx="50" cy="50" r="47" fill="none" stroke="#1e3a8a" stroke-width="3.4"/><g transform="translate(0 2)"><path d="M28 71 L28 37 L50 59 L72 37 L72 71" fill="none" stroke="#1e3a8a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M50 22.5 L51.48 28.52 L57.5 30 L51.48 31.48 L50 37.5 L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"/></g></svg></div></div><!--/n6-nav1--></body></html>
