@@ -409,6 +409,10 @@ body.calm.gcx-crt::after,body.reduce-motion.gcx-crt::after{display:none}
 /* ================= AAA V6 VIEWPORT + PRESENTATION SHELL ================= */
 html,body{width:100%;min-height:100%;min-height:100dvh;overflow-x:hidden}
 .screen{width:100%;max-width:min(1040px,100vw);min-height:100dvh;padding:max(14px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(28px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left))}
+/* HC4 §6.1: on Play the shared HUD back circle is fixed at 8px/8px, 44px square.
+   At phone widths every screen header sat underneath it (measured 912px² over
+   the Home heading at 390px). Clear it only when that HUD is actually present. */
+@media (max-width:700px){body:has(#mbmhud-back,#mbmexit-back) .screen{padding-top:max(60px,env(safe-area-inset-top))}}
 #scr-title .footer,#scr-home .footer{font-weight:700;letter-spacing:.08em}
 #v6badge{position:fixed;right:calc(8px + env(safe-area-inset-right));top:calc(8px + env(safe-area-inset-top));z-index:73;border:1px solid color-mix(in srgb,var(--emm) 55%,transparent);border-radius:999px;background:rgba(13,19,34,.88);color:var(--emm);padding:5px 9px;font-size:9px;font-weight:900;letter-spacing:.14em;pointer-events:none}
 #v6forecast{display:none;position:sticky;bottom:0;z-index:23;margin:7px 0 0;padding:7px 10px;border:1px solid color-mix(in srgb,var(--star) 55%,transparent);border-radius:10px;background:rgba(13,19,34,.91);color:var(--star);font-size:12px;font-weight:800;line-height:1.35;text-align:center}
