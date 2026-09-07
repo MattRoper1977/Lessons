@@ -6,8 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <link rel="canonical" href="https://madebymatt.uk/Lessons/Games/Static.html">
 <meta name="theme-color" content="#0c0d12">
-<meta name="description" content="STATIC: Signal Lost — AAA V6, a fully offline evidence-board deduction game by Made by Matt.">
-<title>STATIC — Signal Lost · AAA V6</title>
+<meta name="description" content="STATIC: Signal Lost — AFTERLIGHT, a fully offline evidence-board deduction game by Made by Matt.">
+<title>Static — The Last Ferry Edition</title>
 <style>
 :root{
   --ink:#0c0d12; --ink2:#14161f; --panel:#181b26; --line:#2a2f40;
@@ -326,7 +326,7 @@ body.large-text .card{font-size:15px;line-height:1.55}body.large-text .card .cbo
 }
 
 /* ============================================================
-   AAA V6 ASCENSION — viewport-first investigation shell
+   AFTERLIGHT ASCENSION — viewport-first investigation shell
 ============================================================ */
 :root{--safe-t:max(0px,env(safe-area-inset-top));--safe-r:max(0px,env(safe-area-inset-right));--safe-b:max(0px,env(safe-area-inset-bottom));--safe-l:max(0px,env(safe-area-inset-left));--tray-h:0px}
 html,body{width:100%;height:100%;height:100dvh}
@@ -379,7 +379,7 @@ button:focus-visible,.card:focus-visible,[role="button"]:focus-visible,input:foc
 body.calm #directorHud{background:rgba(0,0,0,.22)}body.calm .card.v6-contradiction{animation:none;outline:3px solid var(--red)}
 
 </style>
-</head>
+<style>.journal-button{min-height:44px;padding:9px 12px;border:1px solid #ddb96d;border-radius:8px;background:#27251f;color:#fff3d8;font:700 13px system-ui;cursor:pointer}.journal-objective{border-left:3px solid #d3ae66;padding:12px;background:#28251f;font:16px/1.6 system-ui}.journal-evidence{display:grid;gap:10px}.journal-evidence label{display:grid;gap:6px;font:14px system-ui}.journal-evidence select{width:100%;min-height:44px;font-size:15px}.journal-clues{display:grid;gap:9px}.journal-clues small{display:block;font:14px/1.5 system-ui;white-space:normal}.event-token{font-family:inherit;color:#eae6d8;text-align:left;min-height:70px}.ferry-case #board{background-color:#152328;background-image:radial-gradient(ellipse at 90% 0,#284e5360,transparent 60%),repeating-linear-gradient(135deg,transparent 0 34px,#bdd9d804 35px 36px)}button:focus-visible{outline:3px solid #fff;outline-offset:3px}@media(max-width:520px){#topbar .progress-pill{display:none}.modal-card{font-size:16px}.modal-card p{line-height:1.6}}</style></head>
 <body>
 <a class="skip-link" href="#viewport">Skip to evidence board</a>
 
@@ -414,7 +414,7 @@ body.calm #directorHud{background:rgba(0,0,0,.22)}body.calm .card.v6-contradicti
 <div class="screen" id="title" role="main" aria-labelledby="logoTxt">
   <h1 class="logo" id="logoTxt">STATIC</h1>
   <div class="tag">A COLD-CASE DEDUCTION</div>
-  <div class="subtitle" id="titleSub">THREE CASE FILES ON THE DESK</div>
+  <div class="subtitle" id="titleSub">FOUR CASE FILES ON THE DESK</div>
   <div class="menu">
     <button class="btn primary" id="startBtn">Open the case file</button>
     <button class="btn" id="howBtn">How to play</button>
@@ -429,7 +429,7 @@ body.calm #directorHud{background:rgba(0,0,0,.22)}body.calm .card.v6-contradicti
 <!-- ===== TOP BAR ===== -->
 <div id="topbar" class="hidden" role="banner" aria-label="Case controls">
   <div class="tb-title">STATIC<small id="caseLabel">SIGNAL LOST</small></div>
-  <div class="tb-spacer"></div>
+  <button class="journal-button" id="journalBtn">JOURNAL</button><div class="tb-spacer"></div>
   <div class="progress-pill">Leads <b id="pLeads">0</b>/<span id="pTotal">0</span></div>
   <button class="icon-btn" id="casesBtn" title="Case files" aria-label="Open case files">📁</button>
   <button class="icon-btn" id="tlBtn" title="Timeline" aria-label="Open evidence timeline">🕑</button>
@@ -482,7 +482,7 @@ body.calm #directorHud{background:rgba(0,0,0,.22)}body.calm .card.v6-contradicti
   <button class="land-btn" data-v6-action="notes" aria-label="Case notes">🗒️</button><button class="land-btn" data-v6-action="workbench" aria-label="Workbench">🧠</button>
   <button class="land-btn" data-v6-action="studio" aria-label="Investigation studio">🧰</button><button class="land-btn" data-v6-action="settings" aria-label="Settings">⚙️</button>
 </div></div>
-<div id="v6Brand">MADE BY MATT · <b>AAA V6</b></div>
+<div id="v6Brand">MADE BY MATT · <b>AFTERLIGHT</b></div>
 <div id="directorHud" aria-hidden="true"><div class="director-copy">CASEBOARD ORBITAL SCAN · EVIDENCE ONLINE</div><button id="directorSkip" aria-label="Skip evidence-board fly-through">SKIP</button></div>
 <div id="resolutionFx" aria-hidden="true"><div class="resolution-title">CASE RESOLVED<br><small style="font-size:.25em;color:var(--lamp)">CONSTELLATION LOCKED</small></div></div>
 <div id="v6Live" role="status" aria-live="polite" style="position:fixed;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap"></div>
@@ -490,7 +490,7 @@ body.calm #directorHud{background:rgba(0,0,0,.22)}body.calm .card.v6-contradicti
 <script>
 "use strict";
 /* ============================================================
-   MADE BY MATT · AAA V6 RELEASE CONTRACT
+   MADE BY MATT · AFTERLIGHT RELEASE CONTRACT
    This presentation layer is deliberately separate from case and
    verdict authority below. Legacy keys remain canonical and writable.
 ============================================================ */
@@ -520,14 +520,14 @@ migrateV6Profile();
 window.__MBM_V6_RELEASE__={
   version:"6.0.0",schema:6,gameId:"static-signal-lost",legacyUntouched:true,
   features:["viewport-first-evidence-desk","portrait-dead-zone-tray","landscape-collapsible-tools","cinematic-caseboard-flythrough","intent-scored-evidence-selection","animated-thread-preview","contradiction-pulse","restrained-camera-shake","clutch-deduction","case-constellation-resolution","compressed-webaudio-master","schema-6-profile-migration","modal-focus-trap","visibility-safety","reduced-motion-calm","offline-single-file"],
-  authority:{cases:3,caseIds:["signal-lost","understudy","cold-storage"],legacyKeys:V6_LEGACY_KEYS.slice(),caseDataSha256:"3568db602d0b85cb7c3383b467e902b2a3259cbad2a686152ebbc6d94dcc0539",deductionRulesSha256:"2c0aebacc5bd595d0ee5bc20c03538113d990108a1553c6d220aeb2a3541b93e",verdictAuthoritySha256:"f858fd21c27bbd13a2d478febc6d064c4c1ffe9920df513843ce81bb5adbfcd9",progressDefaultsSha256:"32667b0c52b98ce3b6770ea78e1a560da731a904e44707d6a536f6e89493a618",accessibilityOptionsSha256:"08f5e0ff0627fd24777a41582c4b2a0a4e125661c8a30cc47d6e2c4d47809698"},
+  authority:{cases:4,caseIds:["signal-lost","understudy","cold-storage","last-ferry"]},originalAuthority:{cases:3,caseIds:["signal-lost","understudy","cold-storage"],legacyKeys:V6_LEGACY_KEYS.slice(),caseDataSha256:"3568db602d0b85cb7c3383b467e902b2a3259cbad2a686152ebbc6d94dcc0539",deductionRulesSha256:"2c0aebacc5bd595d0ee5bc20c03538113d990108a1553c6d220aeb2a3541b93e",verdictAuthoritySha256:"f858fd21c27bbd13a2d478febc6d064c4c1ffe9920df513843ce81bb5adbfcd9",progressDefaultsSha256:"32667b0c52b98ce3b6770ea78e1a560da731a904e44707d6a536f6e89493a618",accessibilityOptionsSha256:"08f5e0ff0627fd24777a41582c4b2a0a4e125661c8a30cc47d6e2c4d47809698"},
   selfTest:function(){
-    const expected={"signal-lost":"marion|m_mast|mo_figures","understudy":"madge|m_flask|mo_letter","cold-storage":"dennis|m_took|mo_debt"};
-    const found=typeof CASES!=="undefined"&&CASES.length===3&&CASES.every(c=>expected[c.id]&&[c.solution.culprit,c.solution.method,c.solution.motive].join("|")===expected[c.id]);
+    const expected={"signal-lost":"marion|m_mast|mo_figures","understudy":"madge|m_flask|mo_letter","cold-storage":"dennis|m_took|mo_debt","last-ferry":"lf_soren|lf_remove|lf_delay"};
+    const found=typeof CASES!=="undefined"&&CASES.length===4&&CASES.every(c=>expected[c.id]&&[c.solution.culprit,c.solution.method,c.solution.motive].join("|")===expected[c.id]);
     const duplicateIds=[...document.querySelectorAll("[id]")].map(n=>n.id).filter((id,i,a)=>a.indexOf(id)!==i);
     const external=[...document.scripts].filter(s=>s.src&&!s.src.startsWith("data:"));
     const legacyOk=V6_LEGACY_KEYS.every(k=>typeof k==="string")&&V6Profile.version===6;
-    return {ok:!!(found&&!duplicateIds.length&&!external.length&&legacyOk),version:"6.0.0",schema:6,legacyUntouched:true,gameId:"static-signal-lost",cases:found?3:0,duplicateIds:duplicateIds,externalScripts:external.length,profileVersion:V6Profile.version};
+    return {ok:!!(found&&!duplicateIds.length&&!external.length&&legacyOk),version:"6.0.0",schema:6,legacyUntouched:true,gameId:"static-signal-lost",cases:found?4:0,duplicateIds:duplicateIds,externalScripts:external.length,profileVersion:V6Profile.version};
   }
 };
 /* ============================================================
@@ -982,7 +982,9 @@ const COLD_STORAGE={
   }
 };
 
-const CASES=[SIGNAL_LOST,THE_UNDERSTUDY,COLD_STORAGE];
+const THE_LAST_FERRY={"id": "last-ferry", "title": "The Last Ferry", "station": "Blackwater Harbour · Archive A", "icon": "⛴", "tagline": "A missing recording. A departing ferry. One clock seven minutes wrong.", "difficulty": "NEW CASE · CLOCKWORK", "briefFoot": "The harbour's original inspection recording has vanished before a public hearing. A camera appears to place the suspect ashore after the ferry left. <b>Test the camera's clock before you trust its timestamp.</b>", "openingHint": "Compare the <b>Archive Camera</b> with the <b>Clock Service Report</b> in Combined inference.", "frame": {"noir": {"brief": "00:00. The last ferry pulls away from Blackwater. By morning, a public hearing will decide whether the harbour's storm repairs were real or an expensive fiction. The original inspection recording should be sealed in Archive A. Inside its envelope is a blank packing insert. Four people are still awake. One of them needs the hearing delayed.", "status": "ORIGINAL RECORDING MISSING"}, "safe": {"brief": "00:00. The last ferry leaves Blackwater. Tomorrow's public hearing needs the original inspection recording to check how the harbour's repair money was spent. Its sealed envelope contains a blank packing insert. Nobody is hurt, but someone has hidden an important public record. Four people can help you find out who.", "status": "PUBLIC RECORD MISSING · NO INJURIES"}}, "suspects": [{"id": "lf_soren", "name": "Soren Pike", "role": "Harbour Operations Director", "look": {"hair": "slick", "tie": 1}, "profile": "Signed off the storm-repair programme. Says he boarded the last ferry early."}, {"id": "lf_iona", "name": "Iona Moss", "role": "Ferry Systems Engineer", "look": {"hair": "crop", "glasses": 1}, "profile": "Serviced the archive recorder before joining the ferry's engineering watch."}, {"id": "lf_mina", "name": "Mina Bell", "role": "Local Reporter", "look": {"hair": "side", "stud": 1}, "profile": "Requested the inspection recording for tomorrow's public hearing."}, {"id": "lf_pavel", "name": "Pavel Reed", "role": "Night Porter", "look": {"cap": 1}, "profile": "Watches the harbour bridge and signs the final vehicle through."}], "statements": [{"id": "lf_st_soren", "suspect": "lf_soren", "quote": "“I boarded at 23:52 and stayed aboard until departure. I couldn't have been at the archive at 23:58.”", "breaks": ["lf_corrected"], "onBreak": {"effect": "incriminate", "unlocks": ["lf_custody"], "note": "The camera runs <b>seven minutes fast</b>. Its 00:05 frame was recorded at <b>23:58</b>, and Soren's face is clearly visible at the archive counter. His continuous-onboard account breaks. The discrepancy justifies retrieving the withdrawal receipt."}}, {"id": "lf_st_custody", "suspect": "lf_soren", "quote": "“I never handled the original inspection recording. That envelope was the archivist's responsibility.”", "breaks": ["lf_custody"], "onBreak": {"effect": "incriminate", "unlocks": ["lf_audit"], "note": "The archive clerk's contemporaneous receipt records Soren collecting original <b>A17</b> at <b>23:59</b>. Both signed it; the clerk checked the serial number in his presence. There is no return entry. Now examine why that particular original mattered."}}, {"id": "lf_st_iona", "suspect": "lf_iona", "quote": "“After servicing the recorder, I was continuously in the ferry wheelhouse from 23:45 until 00:08.”", "confirms": ["lf_wheelhouse"], "onConfirm": {"effect": "exonerate", "note": "Continuous wheelhouse video identifies Iona from <b>23:45 to 00:08</b>, including the moment A17 was withdrawn. Her clock repair work makes her useful to the investigation."}}, {"id": "lf_st_mina", "suspect": "lf_mina", "quote": "“I stayed in the public press room from 23:50 until midnight, recording my report.”", "confirms": ["lf_pressroom"], "onConfirm": {"effect": "exonerate", "note": "The independent press-room camera continuously shows Mina from <b>23:50 to 00:00</b>. Her interest in the recording gives her a reason to investigate; it doesn't make her the thief."}}, {"id": "lf_st_pavel", "suspect": "lf_pavel", "quote": "“The last vehicle crossed the bridge at 23:55. People could still use the footbridge after that.”", "confirms": ["lf_bridge"], "onConfirm": {"effect": "support", "note": "The bridge record agrees: the vehicle barrier shut at <b>23:55</b>; the separate footbridge stayed open until <b>23:59:50</b>. A late pedestrian could still reach the ferry. This establishes a possible route, not the identity of its user."}}], "clues": [{"id": "lf_camera", "title": "Archive Camera", "rel": "hard", "locked": false, "body": "One clear frame shows <b>Soren Pike</b> at Archive A's open service counter with a blue evidence case. The device overlay reads <b>00:05</b>. This is the recorder's displayed time; the file has not yet been checked against the harbour reference clock.", "provenance": {"path": "Archive recorder → original frame export → evidence desk", "risk": "med"}, "visual": {"kind": "terminal", "head": "ARCHIVE A · ORIGINAL FRAME", "hot": 1, "rows": ["DISPLAY TIME 00:05", "S. PIKE · FACE VISIBLE", "BLUE EVIDENCE CASE", "CLOCK NOT YET VERIFIED"]}}, {"id": "lf_clock", "title": "Clock Service Report", "rel": "hard", "locked": false, "body": "At <b>23:40 harbour reference time</b>, the archive recorder displayed <b>23:47</b>. The engineer and duty clerk signed the comparison. Recorder settings show no clock changes or restarts between that test and 00:10. <b>The camera is seven minutes fast.</b>", "provenance": {"path": "Harbour reference clock + recorder status log → witnessed service report", "risk": "low"}, "visual": {"kind": "paper", "head": "CLOCK COMPARISON · 23:40", "rows": ["HARBOUR CLOCK: 23:40", "RECORDER CLOCK: 23:47", "OFFSET: +7 MINUTES", "NO LATER CLOCK CHANGE"]}}, {"id": "lf_locker", "title": "The Empty Envelope", "rel": "hard", "locked": false, "body": "At 00:12 the duty clerk opened the envelope labelled <b>A17: Original storm inspection</b>. Inside was its packing insert. The recording module was missing. The blue transport case assigned to A17 was also absent.", "visual": {"kind": "paper", "head": "ARCHIVE CHECK · 00:12", "rows": ["A17 ORIGINAL: MISSING", "PACKING INSERT: PRESENT", "BLUE CASE: MISSING"]}}, {"id": "lf_dispatch", "title": "Ferry Dispatch Record", "rel": "hard", "locked": false, "time": "00:00", "body": "The harbour reference system records the ferry leaving at <b>00:00</b>. The archive is a <b>40-second walk</b> from its pedestrian gangway. Departure time alone does not prove when any named passenger boarded.", "visual": {"kind": "terminal", "head": "HARBOUR DISPATCH", "rows": ["LAST FERRY · 00:00", "GANGWAY CLOSED 23:59:50", "ARCHIVE WALK: 40 SECONDS"]}}, {"id": "lf_wheelhouse", "title": "Wheelhouse Video", "rel": "hard", "locked": false, "time": "23:45", "body": "Continuous reference-clock video clearly identifies <b>Iona Moss</b> at the engineering console from <b>23:45 until 00:08</b>. No exit, gap or cut occurs.", "visual": {"kind": "terminal", "head": "WHEELHOUSE · CONTINUOUS", "rows": ["23:45 → 00:08", "IONA MOSS IDENTIFIED", "NO EXITS · NO CUTS"]}}, {"id": "lf_pressroom", "title": "Press-Room Video", "rel": "hard", "locked": false, "time": "23:50", "body": "The council's independent press-room camera continuously shows <b>Mina Bell</b> at the reporting desk from <b>23:50 until 00:00</b>. Its clock matches the harbour reference.", "visual": {"kind": "terminal", "head": "PUBLIC PRESS ROOM", "rows": ["23:50 → 00:00", "MINA BELL IDENTIFIED", "CONTINUOUS · CLOCK CHECKED"]}}, {"id": "lf_bridge", "title": "Bridge Barrier Log", "rel": "hard", "locked": false, "time": "23:55", "body": "Last vehicle admitted <b>23:55</b>. The separate pedestrian footbridge remained open until <b>23:59:50</b>. Pavel's signed shift note agrees with the independent barrier log.", "visual": {"kind": "terminal", "head": "BRIDGE CONTROLLER", "rows": ["VEHICLE BARRIER: 23:55", "FOOTBRIDGE: 23:59:50", "SEPARATE ACCESS CHANNELS"]}}, {"id": "lf_corrected", "title": "Corrected Camera Time", "rel": "hard", "locked": true, "time": "23:58", "body": "Subtract the established seven-minute offset from <b>00:05</b>: the archive frame was recorded at <b>23:58 on the previous calendar day</b>. Soren is clearly visible ashore, six minutes after he says he began staying continuously aboard.", "provenance": {"path": "Archive Camera + Clock Service Report → documented time correction", "risk": "low"}, "visual": {"kind": "terminal", "head": "TIME CORRECTION · DERIVED", "hot": 2, "rows": ["DISPLAYED: 00:05", "OFFSET: MINUS 7 MINUTES", "ACTUAL: 23:58 ◄", "PREVIOUS CALENDAR DAY"]}}, {"id": "lf_custody", "title": "A17 Withdrawal Receipt", "rel": "hard", "locked": true, "time": "23:59", "body": "At <b>23:59</b> the duty archivist handed original module <b>A17</b>, in its blue case, to <b>Soren Pike</b>. Both signed after checking the physical serial number. Purpose entered: “review before hearing”. The original's return box is blank.", "provenance": {"path": "Physical serial check + duty archivist → original countersigned receipt", "risk": "low"}, "visual": {"kind": "receipt", "big": "23:59", "rows": ["ORIGINAL MODULE A17", "COLLECTED: SOREN PIKE", "TWO SIGNATURES · SERIAL OK", "RETURN: NOT RECORDED"]}}, {"id": "lf_audit", "title": "The Audit Notice", "rel": "hard", "locked": true, "body": "A notice acknowledged by Soren that afternoon says the original A17 recording documents unfinished repairs that he certified as complete. His edited public copy omits those sections. The hearing requires the original to compare the cuts and question his signed certificates.", "provenance": {"path": "Council audit office → acknowledged notice + signed certificates → case file", "risk": "low"}, "visual": {"kind": "letter", "head": "AUDIT OFFICE · ACKNOWLEDGED", "hotline": 1, "sig": "Council audit office", "rows": ["A17 SHOWS UNFINISHED WORK", "PIKE CERTIFIED COMPLETION", "PUBLIC COPY HAS CUTS", "ORIGINAL REQUIRED AT HEARING"]}}], "inferenceRules": [{"id": "clock-correction", "pair": ["lf_camera", "lf_clock"], "strength": 4, "text": "The recorder is seven minutes fast. Its 00:05 image belongs at 23:58 on the previous day. The corrected frame can now test an account about that time.", "unlocks": ["lf_corrected"]}, {"id": "late-route", "pair": ["lf_bridge", "lf_dispatch"], "strength": 3, "text": "Vehicle access ended before pedestrian access. The short walk and the footbridge closing time leave a possible late boarding route. They do not identify who used it.", "unlocks": []}, {"id": "missing-original", "pair": ["lf_locker", "lf_custody"], "strength": 4, "text": "The missing item's serial number and transport case match the archivist's withdrawal receipt. The original was handed to Soren and has no recorded return.", "unlocks": []}], "proofRequirements": {"cracked": ["lf_st_soren", "lf_st_custody"], "inferences": ["clock-correction"], "clues": ["lf_audit"]}, "timeline": {"start": "23:40", "end": "00:15", "pins": [{"t": "23:40", "l": "Clock comparison recorded", "clue": "lf_clock"}, {"t": "23:45", "l": "Iona's continuous video begins", "clue": "lf_wheelhouse"}, {"t": "23:50", "l": "Mina's continuous video begins", "clue": "lf_pressroom"}, {"t": "23:55", "l": "Last vehicle crosses", "clue": "lf_bridge"}, {"t": "23:58", "l": "Corrected frame: Soren ashore", "hot": true, "clue": "lf_corrected"}, {"t": "23:59", "l": "Original A17 withdrawn", "hot": true, "clue": "lf_custody"}, {"t": "00:00", "l": "Last ferry departs", "clue": "lf_dispatch"}, {"t": "00:12", "l": "Empty envelope opened", "clue": "lf_locker"}], "claims": [{"t": "23:45", "l": "Iona: continuously in wheelhouse", "st": "lf_st_iona"}, {"t": "23:50", "l": "Mina: continuously in press room", "st": "lf_st_mina"}, {"t": "23:52", "l": "Soren: continuously aboard", "st": "lf_st_soren"}]}, "solution": {"culprit": "lf_soren", "method": "lf_remove", "motive": "lf_delay"}, "methods": [{"id": "lf_remote", "text": "Erase the archive remotely after the ferry left"}, {"id": "lf_remove", "text": "Collect original A17 in its blue case and withhold its return"}, {"id": "lf_vehicle", "text": "Drive a van through the closed vehicle barrier at midnight"}, {"id": "lf_reporter", "text": "Swap the reporter's press-room recording for the original"}], "motives": [{"id": "lf_scoop", "text": "Give the reporter an exclusive broadcast"}, {"id": "lf_delay", "text": "Delay scrutiny of false completion certificates and the edited public recording"}, {"id": "lf_fault", "text": "Conceal a ferry engine fault"}, {"id": "lf_salary", "text": "Force a pay increase for the night staff"}], "hardAnchor": "lf_st_soren", "epilogue": {"win": {"noir": "Seven minutes made an alibi look impossible to question. You questioned the clock instead. <em>Soren Pike</em> was ashore at 23:58 and signed for the original a minute later. Its missing return and the audit notice explain the disappearance without inventing a midnight van or blaming a reporter for wanting answers. The recording is recovered from his blue case. By morning, the committee sees the uncut version.", "safe": "The clock was wrong; your reasoning wasn't. <em>Soren Pike</em> collected A17 at 23:59 and withheld it to delay questions about the repairs. The original is recovered from his blue case and reaches the public hearing. Iona fixes the recorder clock. Mina checks every timestamp in her report. The harbour gets the answers it was owed."}, "part": "The theory needs its full evidence chain: correct the camera time, test the continuous-onboard account, then connect the original's withdrawal to its missing return and the audit notice.", "missCulprit": "A motive, a job title or a late ferry is not an identification. Correct the archive clock first, then follow the physical recording's documented custody."}};
+const ORIGINAL_INFERENCES={"signal-lost": [{"id": "signal-last-five-minutes", "pair": ["c_access", "c_tape"], "strength": 3, "text": "The corridor access event at 02:09 precedes the broadcast interruption at 02:14 by five minutes. This narrows the opportunity window. A keycard record alone does not independently identify its user or prove what happened at the mast.", "unlocks": []}, {"id": "signal-exposure-motive", "pair": ["c_access", "c_email"], "strength": 3, "text": "The access event contradicts Marion's declared absence, while Del's email supplies a documented reason for the station manager to fear that night's broadcast. Opportunity and motive strengthen the investigation together; these records do not independently prove the mast method.", "unlocks": []}, {"id": "signal-notepad-context", "pair": ["c_notes", "c_email"], "strength": 2, "text": "The sent email gives a specific context for the notepad's 'figures — press' impressions. Both originate with Del, so they are a consistent thread rather than two independent accounts.", "unlocks": []}], "understudy": [{"id": "understudy-alibi-versus-gossip", "pair": ["c_fitting", "c_gossip"], "strength": 3, "text": "The wardrobe log places Nell in a documented fitting during the relevant interval. The unattributed remark supplies no comparable evidence of opportunity. A loud rumour should not outweigh a supported alibi.", "unlocks": []}, {"id": "understudy-opportunity-and-threat", "pair": ["c_cctv", "c_letter"], "strength": 3, "text": "The corridor image identifies Madge carrying the flask at 20:07, and Vivien's letter records a threatened dismissal and accusation. Together they establish opportunity and a specific potential motive. The image itself does not show the flask being dosed.", "unlocks": []}, {"id": "understudy-lie-without-opportunity", "pair": ["c_row", "c_cuesheet"], "strength": 3, "text": "The usher's account challenges Leo's claim of perfect harmony with Vivien; the prompt copy records no stage exits during the relevant act. A relationship lie and an opportunity to tamper with the flask are different questions.", "unlocks": []}], "cold-storage": [{"id": "storage-registered-link", "pair": ["c_rental", "c_hand"], "strength": 3, "text": "The handwriting comparison links Dennis to the rental agreement's assumed name. The comparison is derived from that same signature, so it is an interpretation of the agreement rather than a second independent record of his presence.", "unlocks": []}, {"id": "storage-reopen-the-file", "pair": ["c_passport", "c_file"], "strength": 2, "text": "The recovered passport gives investigators a concrete reason to revisit the file's untested departure story and June's disregarded account. Finding a passport without stamps is not by itself proof that its owner never travelled.", "unlocks": []}, {"id": "storage-money-thread", "pair": ["c_books", "c_cash"], "strength": 2, "text": "The accounts establish a garage cash withdrawal; the cashbox identifies Dennis as the debtor on Tex's settled marker. These are leads toward a money trail. Their amounts and the remaining cash do not by themselves establish a complete transfer of funds.", "unlocks": []}]};
+const CASES=[SIGNAL_LOST,THE_UNDERSTUDY,COLD_STORAGE,THE_LAST_FERRY];
 
 /* ============================================================
    STATE
@@ -1031,6 +1033,7 @@ function audio(){
   }catch(e){return null;}
 }
 function beep(type){
+  if(state.restoring)return;
   if(!state.sound)return; const ac=audio(); if(!ac)return;
   const now=ac.currentTime, g=ac.createGain(); g.connect(MasterBus.input);
   const vol=state.calm?0.10:0.22;
@@ -1273,7 +1276,10 @@ function tryCompleteLink(cardEl){
   const type=cardEl.classList.contains("clue")?"clue":"statement";
   resolveLink(state.linking,{type,id});
 }
-function resolveLink(a,b){logAction("test",{a:a.id,b:b.id});
+function resolveLink(a,b){
+  if(!a||!b||a.type===b.type)return;
+  const candidate=a.type==='clue'?a.id:b.id;if(!visibleClues().some(c=>c.id===candidate))return;
+  logAction("test",{a:a.id,b:b.id});
   const clueId=a.type==="clue"?a.id:b.id;
   const stId  =a.type==="statement"?a.id:b.id;
   if(tutActive()&&!(clueId==="c_access"&&stId==="st_marion")){ tutBlock(); return; }
@@ -1308,10 +1314,10 @@ function doCrack(st,clueId){
   (ob.unlocks||[]).forEach(unlockClue);
   addNote("crack", toneText(ob.note));
   toast("💥 Contradiction found!","crack");
-  if(typeof V6ContradictionPulse==="function")V6ContradictionPulse(card);
-  if(st.id===state.caseData.hardAnchor&&typeof V6Clutch!=="undefined")V6Clutch.trigger(card);
+  if(!state.restoring&&typeof V6ContradictionPulse==="function")V6ContradictionPulse(card);
+  if(!state.restoring&&st.id===state.caseData.hardAnchor&&typeof V6Clutch!=="undefined")V6Clutch.trigger(card);
   if(state.tut===3&&st.id==="st_marion") tutFinish();
-  updateProgress(); checkComplete();
+  updateProgress(); checkComplete();saveInvestigation();
 }
 function doVerify(st,clueId){
   state.verified[st.id]=true;
@@ -1325,7 +1331,7 @@ function doVerify(st,clueId){
   if(oc.effect==="support"&&oc.target) bumpSuspicion(oc.target,1);
   addNote("verify", toneText(oc.note));
   toast("✓ Account confirmed","ver");
-  updateProgress(); checkComplete();
+  updateProgress(); checkComplete();saveInvestigation();
 }
 function fizzle(clueId,stId){
   addLink(clueId,stId,"fizzle");
@@ -1420,6 +1426,7 @@ function checkComplete(){
 }
 let toastT;
 function toast(msg,kind){
+  if(state.restoring)return;
   const t=$("#toast"); t.className=""; t.classList.add(kind||"","show"); t.innerHTML=msg;
   clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("show"),2600);
 }
@@ -1500,13 +1507,51 @@ function visibleClues(){return state.caseData.clues.filter(c=>state.cards[c.id]&
 function renderInference(b){const inf=state._inf||{a:null,b:null};state._inf=inf;b.innerHTML=`<div class="mech-intro">Select two independent clues. STATIC will test whether they create a useful combined inference.</div><div class="infer-grid"><button class="infer-slot ${inf.a?'filled':''}" id="infA">${inf.a?clueName(inf.a):'SELECT CLUE A'}</button><div class="infer-plus">+</div><button class="infer-slot ${inf.b?'filled':''}" id="infB">${inf.b?clueName(inf.b):'SELECT CLUE B'}</button></div><button class="btn primary small" id="buildInf" style="width:100%;margin-top:10px">Build combined inference</button>${state.inferences.map((x,i)=>`<div class="inference-card"><b>INFERENCE ${i+1}</b><br>${x.text}<div class="confidence">${[1,2,3,4].map(n=>`<i class="${n<=x.strength?'on':''}"></i>`).join('')}</div></div>`).join('')}`;$('#infA').onclick=()=>pickInference('a');$('#infB').onclick=()=>pickInference('b');$('#buildInf').onclick=buildInference}
 function clueName(id){const c=state.caseData.clues.find(x=>x.id===id);return c?c.title:id}
 function pickInference(slot){const list=visibleClues();openModal(`<h2>Select evidence</h2><div class="pick-list">${list.map(c=>`<button class="pick" data-id="${c.id}"><b>${c.title}</b><small>${c.rel.toUpperCase()} · ${c.body.replace(/<[^>]+>/g,'')}</small></button>`).join('')}</div><button class="btn small" id="pickBack">Cancel</button>`);modalCard.querySelectorAll('[data-id]').forEach(o=>o.onclick=()=>{state._inf[slot]=o.dataset.id;showWorkbench('infer')});$('#pickBack').onclick=()=>showWorkbench('infer')}
-function buildInference(){const z=state._inf;if(!z.a||!z.b||z.a===z.b){toast("Choose two different evidence items.","fizzle");return}const a=state.caseData.clues.find(x=>x.id===z.a),b=state.caseData.clues.find(x=>x.id===z.b),ind=a.rel==='hard'&&b.rel==='hard',shared=(a.time&&b.time)||(a.visual&&b.visual&&a.visual.kind===b.visual.kind);let text=`Together, ${a.title} and ${b.title} establish a relationship that neither proves alone.`;if(ind&&a.time&&b.time)text=`The two independent records constrain the timeline between ${a.time} and ${b.time}. Any account must fit both events.`;else if(ind)text=`Two independent Hard sources corroborate the same investigation thread. This is stronger than either source alone.`;else if(a.rel==='rumour'||b.rel==='rumour')text=`This combination is fragile: one source is hearsay. It may suggest a line of enquiry but cannot safely anchor a verdict.`;state.inferences.push({a:z.a,b:z.b,text,strength:ind?4:shared?2:1});state._inf={a:null,b:null};beep(ind?'verify':'tick');renderInference($('#wbBody'))}
-function renderTheories(b){const c=state.caseData;b.innerHTML=`<div class="mech-intro">Maintain up to three explanations. The score rewards coverage and penalises unsupported assumptions; it does not mark the culprit.</div><div class="theory-grid">${state.theories.map((t,i)=>`<div class="theory ${state.activeTheory===i?'active':''}" data-th="${i}"><h3>THEORY ${String.fromCharCode(65+i)}</h3><select data-f="culprit"><option value="">Possible person…</option>${c.suspects.map(s=>`<option value="${s.id}" ${t.culprit===s.id?'selected':''}>${s.name}</option>`).join('')}</select><select data-f="method"><option value="">Possible method…</option>${c.methods.map(m=>`<option value="${m.id}" ${t.method===m.id?'selected':''}>${m.text}</option>`).join('')}</select><select data-f="motive"><option value="">Possible motive…</option>${c.motives.map(m=>`<option value="${m.id}" ${t.motive===m.id?'selected':''}>${m.text}</option>`).join('')}</select><textarea data-f="why" placeholder="What evidence supports this theory?">${t.why||''}</textarea><div class="theory-score">COHERENCE <strong>${theoryScore(t)}%</strong></div><button class="btn small" data-activate="${i}">Use as verdict</button></div>`).join('')}</div>`;b.querySelectorAll('.theory').forEach((box,i)=>box.querySelectorAll('[data-f]').forEach(q=>q.onchange=()=>{state.theories[i][q.dataset.f]=q.value;renderTheories(b)}));b.querySelectorAll('[data-activate]').forEach(q=>q.onclick=()=>{const i=+q.dataset.activate,t=state.theories[i];state.activeTheory=i;state.verdict={culprit:t.culprit||null,method:t.method||null,motive:t.motive||null};toast("Theory loaded into verdict form.","ver");renderTheories(b)})}
+function inferenceRules(){return state.caseData.inferenceRules||ORIGINAL_INFERENCES[state.caseData.id]||[];}
+function applyInferenceRule(rule){
+ if(!rule||state.inferences.some(x=>x.id===rule.id))return false;
+ if(!rule.pair.every(id=>visibleClues().some(c=>c.id===id)))return false;
+ state.inferences.push({id:rule.id,a:rule.pair[0],b:rule.pair[1],text:rule.text,strength:rule.strength});
+ (rule.unlocks||[]).forEach(unlockClue);return true;
+}
+function buildInference(){const z=state._inf;
+ if(!z||!z.a||!z.b||z.a===z.b||![z.a,z.b].every(id=>visibleClues().some(c=>c.id===id))){toast('Choose two different available evidence items.','fizzle');return false;}
+ const r=inferenceRules().find(r=>r.pair.includes(z.a)&&r.pair.includes(z.b));
+ if(!r){toast('No established inference joins these clues. Reliability alone does not mean they corroborate each other.','fizzle');return false;}
+ if(!applyInferenceRule(r)){toast('That inference is already in your journal.','ver');return false;}
+ state._inf={a:null,b:null};saveInvestigation();beep('verify');renderInference($('#wbBody'));return true;
+}
+function renderTheories(b){const c=state.caseData;b.innerHTML=`<div class="mech-intro">Maintain up to three explanations. Completeness records which parts you have written. It does not assess whether your reasoning is correct.</div><div class="theory-grid">${state.theories.map((t,i)=>`<div class="theory ${state.activeTheory===i?'active':''}" data-th="${i}"><h3>THEORY ${String.fromCharCode(65+i)}</h3><select data-f="culprit"><option value="">Possible person…</option>${c.suspects.map(s=>`<option value="${s.id}" ${t.culprit===s.id?'selected':''}>${s.name}</option>`).join('')}</select><select data-f="method"><option value="">Possible method…</option>${c.methods.map(m=>`<option value="${m.id}" ${t.method===m.id?'selected':''}>${m.text}</option>`).join('')}</select><select data-f="motive"><option value="">Possible motive…</option>${c.motives.map(m=>`<option value="${m.id}" ${t.motive===m.id?'selected':''}>${m.text}</option>`).join('')}</select><textarea data-f="why" placeholder="What evidence supports this theory?">${escHtml(t.why||'')}</textarea><div class="theory-score">COMPLETENESS <strong>${theoryScore(t)}%</strong></div><button class="btn small" data-activate="${i}">Use as verdict</button></div>`).join('')}</div>`;b.querySelectorAll('.theory').forEach((box,i)=>box.querySelectorAll('[data-f]').forEach(q=>q.onchange=()=>{state.theories[i][q.dataset.f]=q.value;renderTheories(b)}));b.querySelectorAll('[data-activate]').forEach(q=>q.onclick=()=>{const i=+q.dataset.activate,t=state.theories[i];state.activeTheory=i;state.verdict={culprit:t.culprit||null,method:t.method||null,motive:t.motive||null};toast("Theory loaded into verdict form.","ver");renderTheories(b)})}
 function theoryScore(t){let n=0;if(t.culprit)n+=25;if(t.method)n+=20;if(t.motive)n+=20;if((t.why||'').trim().length>25)n+=15;n+=Math.min(20,state.inferences.length*7);return Math.min(100,n)}
-function renderReconstruction(b){if(!state.reconOrder.length)state.reconOrder=(state.caseData.timeline.pins||[]).map((x,i)=>({id:i,t:x.t,l:x.l}));b.innerHTML=`<div class="mech-intro">Tap an event to pick it up, then tap another to swap places. Test the sequence against fixed timestamps.</div><div class="recon-strip" id="reconStrip">${state.reconOrder.map(x=>`<div class="event-token${state._reconSel==x.id?' dragging':''}" data-e="${x.id}"><b>${x.t}</b><small>${x.l}</small></div>`).join('')}</div><button class="btn primary small" id="checkRecon" style="width:100%">Test reconstruction</button><div id="reconResult"></div>`;b.querySelectorAll('.event-token').forEach(e=>{e.onclick=()=>{const id=e.dataset.e;if(state._reconSel==null){state._reconSel=id;}else if(state._reconSel==id){state._reconSel=null;}else{const ai=state.reconOrder.findIndex(q=>q.id==state._reconSel),di=state.reconOrder.findIndex(q=>q.id==id),tmp=state.reconOrder[ai];state.reconOrder[ai]=state.reconOrder[di];state.reconOrder[di]=tmp;state._reconSel=null;beep("tick")}renderReconstruction(b)}});$('#checkRecon').onclick=()=>{const mins=t=>{const p=String(t).split(':');return p.length===2?(+p[0]*60+ +p[1]):+t},ok=state.reconOrder.every((x,i,a)=>i===0||mins(a[i-1].t)<=mins(x.t));$('#reconResult').innerHTML=`<div class="recon-check ${ok?'good':''}">${ok?'Sequence is chronologically possible. Now ask whether it explains every fixed event.':'At least one event occurs before an event placed ahead of it. Revise the sequence.'}</div>`;beep(ok?'verify':'fizzle')}}
+const LEGACY_PIN_CLUES={'signal-lost':['c_access','c_receipt','c_access','c_call','c_tape'],understudy:['c_fitting','c_cuesheet','c_cctv','c_fitting',null],'cold-storage':['c_books',null,'c_rental','c_file','c_cash']};
+function timelineValue(t,T){if(T.unit==='day')return Number(t);const n=x=>{const p=String(x).split(':').map(Number);return p[0]*60+p[1]+(p[2]||0)/60;};const value=n(t),start=n(T.start);return value<start?value+1440:value;}
+function visibleTimelinePins(){const T=state.caseData.timeline,map=LEGACY_PIN_CLUES[state.caseData.id]||[];return (T.pins||[]).map((p,i)=>({...p,id:i,clue:p.clue||map[i]})).filter(p=>!p.clue||visibleClues().some(c=>c.id===p.clue));}
+function validReconstruction(order){return order.every((x,i,a)=>!i||timelineValue(a[i-1].t,state.caseData.timeline)<=timelineValue(x.t,state.caseData.timeline));}
+function renderReconstruction(b){
+ const pins=visibleTimelinePins(),byId=new Map(pins.map(p=>[p.id,p]));
+ if(!state.reconOrder.length)state.reconOrder=pins.slice().reverse();
+ else {state.reconOrder=state.reconOrder.filter(p=>byId.has(+p.id)).map(p=>byId.get(+p.id));pins.forEach(p=>{if(!state.reconOrder.some(q=>q.id===p.id))state.reconOrder.push(p);});}
+ b.innerHTML=`<div class="mech-intro">Select two events to swap them. Only evidence you have uncovered appears. Times after midnight continue into the next day.</div><div class="recon-strip">${state.reconOrder.map(x=>`<button type="button" class="event-token${state._reconSel==x.id?' dragging':''}" aria-pressed="${state._reconSel==x.id}" data-e="${x.id}"><b>${x.t}</b><small>${x.l}</small></button>`).join('')}</div><button class="btn primary small" id="checkRecon">Test reconstruction</button><div id="reconResult"></div>`;
+ b.querySelectorAll('.event-token').forEach(e=>e.onclick=()=>{const id=Number(e.dataset.e);if(state._reconSel==null)state._reconSel=id;else if(state._reconSel===id)state._reconSel=null;else{const a=state.reconOrder.findIndex(q=>q.id===state._reconSel),d=state.reconOrder.findIndex(q=>q.id===id);[state.reconOrder[a],state.reconOrder[d]]=[state.reconOrder[d],state.reconOrder[a]];state._reconSel=null;}saveInvestigation();renderReconstruction(b);});
+ $('#checkRecon').onclick=()=>{const ok=validReconstruction(state.reconOrder);$('#reconResult').textContent=ok?'Chronology fits the timestamps. A possible sequence still needs an explanation.':'At least one event is out of time order. Check the midnight crossing.';beep(ok?'verify':'fizzle');};
+}
 function renderProvenance(b){b.innerHTML=`<div class="mech-intro">Trace where each claim came from. Multiple cards can still depend on one original source.</div>${visibleClues().map(c=>{const p=provenance(c);return `<div class="prov-card"><b>${c.title}</b><div class="prov-path">${p.path}</div><span class="prov-risk risk-${p.risk}">${p.risk.toUpperCase()} SOURCE RISK</span></div>`}).join('')}`}
 function renderLab(b){const tests=[{id:'auth',name:'Authenticate document',desc:'Check whether a document is original, copied or altered.'},{id:'metadata',name:'Recover metadata',desc:'Inspect timestamps and device provenance.'},{id:'travel',name:'Travel-time analysis',desc:'Test whether a claimed journey is physically possible.'},{id:'audio',name:'Signal analysis',desc:'Inspect cuts, hum and recording continuity.'}];b.innerHTML=`<div class="budget"><b>INVESTIGATION BUDGET</b>${[0,1,2].map(i=>`<i class="${i>=state.labCredits?'used':''}"></i>`).join('')} <span>${state.labCredits}/3 credits</span></div><div class="lab-grid">${tests.map(t=>`<button class="labtest" data-test="${t.id}" ${state.labCredits<=0||state.labResults[t.id]?'disabled':''}><b>${t.name}</b><small>${t.desc}</small></button>`).join('')}</div><div id="labOut">${Object.values(state.labResults).map(x=>`<div class="lab-result">${x}</div>`).join('')}</div>`;b.querySelectorAll('[data-test]').forEach(q=>q.onclick=()=>runLab(q.dataset.test))}
-function runLab(id){if(state.labCredits<=0)return;state.labCredits--;const c=state.caseData;let out={auth:'The selected case documents show consistent paper, layout and creation method. No universal forgery is indicated.',metadata:'System-generated timestamps are internally consistent. Witness estimates remain less precise.',travel:'At least one claimed journey should be tested against the case timeline; physical possibility is not the same as proof of identity.',audio:'No continuous audio source is available in this file; the examination yields no useful result.'}[id];if(c.id==='signal-lost'&&id==='audio')out='The broadcast contains a continuous room hum until the final interruption. The cut occurs in the studio, not at the transmitter.';if(c.id==='cold-storage'&&id==='auth')out='The rental signature and archived handwriting share stable letter formations; this supports the existing handwriting comparison.';state.labResults[id]=out;beep('tick');renderLab($('#wbBody'))}
+function labFinding(id){
+ const c=state.caseData;if(!c)return '';
+ let out={auth:'The available documents can be compared for consistency. No examination here authenticates an unseen source.',metadata:'System-generated timestamps are internally consistent. Witness estimates remain less precise.',travel:'Test claimed journeys against available timestamps; possibility alone does not identify a person.',audio:'No continuous audio source is available in this file; the examination yields no useful result.'}[id];
+ if(c.id==='signal-lost'&&id==='audio')out='The broadcast contains a continuous room hum until the final interruption. The cut occurs in the studio, not at the transmitter.';
+ if(c.id==='cold-storage'&&id==='auth')out='The rental signature and archived handwriting share stable letter formations; this supports the existing handwriting comparison.';
+ if(c.id==='last-ferry'){
+  const has=id=>visibleClues().some(x=>x.id===id);
+  out={auth:has('lf_custody')?'The available A17 receipt records a physical serial check.'+(has('lf_audit')?' The audit notice carries an acknowledgement.':''):'The available camera and signed service report have independent origins. Further archive records have not been released.',metadata:'The archive camera runs seven minutes fast. Compare its image with the signed Clock Service Report in Combined inference.',travel:has('lf_custody')?'Archive to gangway: 40 seconds. Collection at 23:59 allows arrival at 23:59:40, before the 23:59:50 closure. This establishes a possible route, not identity.':'The dispatch record gives a 40-second walk from archive to gangway. A verified departure time is needed to test a particular journey.',audio:'A17 is missing. There is no recording here to analyse; no credit is charged.'}[id];
+ }
+ return out||'';
+}
+function runLab(id){if(!state.caseData||state.labResults[id]||!['auth','metadata','travel','audio'].includes(id))return;
+ const cost=state.caseData.id==='last-ferry'&&id==='audio'?0:1;if(state.labCredits<cost)return;
+ state.labCredits-=cost;state.labResults[id]=labFinding(id);saveInvestigation();beep('tick');renderLab($('#wbBody'));
+}
 /* verdict */
 function showVerdict(){
   if(tutActive()){ tutBlock(); return; }
@@ -1514,7 +1559,7 @@ function showVerdict(){
   const suspectOpts=c.suspects.map(s=>optHtml("culprit",s.id,`<span class="pchip">${portrait(s.look,22)}</span>${s.name} — <span style="color:#9aa0b2">${s.role}</span>`)).join("");
   const methodOpts=c.methods.map(m=>optHtml("method",m.id,m.text)).join("");
   const motiveOpts=c.motives.map(m=>optHtml("motive",m.id,m.text)).join("");
-  const anchored=!!state.cracked[c.hardAnchor];
+  const anchored=proofComplete();
   openModal(`<h2>⚖️ Name the truth</h2>
     <div class="sub">Commit to a theory. You can always reopen the case.</div><div class="strength">Workbench: <b>${state.inferences.length}</b> combined inference(s) · <b>${state.labCredits}/3</b> investigation credits remaining · active theory <b>${String.fromCharCode(65+state.activeTheory)}</b></div>
     <div class="strength">Case strength: leads resolved <b>${solvedLeads()}/${totalLeads()}</b> · connections attempted <b>${state.sessionLog.filter(x=>x.type==="test").length}</b> · Hard contradiction on the central account: <b style="color:${anchored?'var(--good)':'var(--bad)'}">${anchored?'SECURED':'not yet'}</b></div>
@@ -1544,7 +1589,7 @@ function deliverVerdict(){
   if(!v.culprit||!v.method||!v.motive){ toast("Pick a culprit, a method and a motive.","fizzle"); return; }
   const c=state.caseData, sol=c.solution;
   const rightC=v.culprit===sol.culprit, rightM=v.method===sol.method, rightMo=v.motive===sol.motive;
-  const anchored=!!state.cracked[c.hardAnchor];
+  const anchored=proofComplete();
   beep("sting");
   let head,cls,stars,body;
   if(rightC&&rightM&&rightMo&&anchored){
@@ -1569,7 +1614,7 @@ function deliverVerdict(){
   if(!META.badges.first&&solvedLeads()>0)award(15,"FIRST THREAD","📌","first");
   if(anchored&&!META.badges.hard)award(25,"HARD ANCHOR","⚖️","hard");
   if(cls==="win"){
-    award(40,"CASE CLOSED","★");
+    META.closed=META.closed||{};if(!META.closed[c.id]){META.closed[c.id]=true;award(40,"CASE CLOSED","★");}
     const tests=state.sessionLog.filter(x=>x.type==="test").length;
     if(!META.badges.economy&&tests<=totalLeads()+2)award(20,"LEAN CASE","🧠","economy");
     const devTheories=state.theories.filter(t=>t&&t.culprit&&t.method).length;
@@ -1619,7 +1664,7 @@ function copyText(t){if(navigator.clipboard&&navigator.clipboard.writeText){navi
 function showImport(){openModal(`<h2>⇩ Review a case</h2><textarea class="sharebox" id="importCode" placeholder="Paste a STATIC proof code"></textarea><div id="importOut"></div><div class="modal-actions"><button class="btn primary small" id="loadProof">Load review</button><button class="btn small" id="imBack">Back</button></div>`);$('#loadProof').onclick=()=>{try{const d=JSON.parse(decodeURIComponent(escape(atob($('#importCode').value.trim()))));$('#importOut').innerHTML=`<div class="report"><h3>${escHtml(d.caseTitle||'Imported case')}</h3><div class="report-line">Connections: <b>${(d.links||[]).length}</b></div><div class="report-line">Notes: <b>${(d.notes||[]).length}</b></div><div class="report-line">Combined inferences: <b>${(d.inferences||[]).length}</b></div><div class="report-line">Proposed culprit: <b>${(function(){const v=d.verdict&&d.verdict.culprit;if(!v)return 'not selected';const kc=CASES.find(c=>c.id===d.caseId);const s=kc&&kc.suspects.find(x=>x.id===v);return escHtml(s?s.name:v)})()}</b></div></div>`}catch(e){$('#importOut').innerHTML='<div class="validator warn">That proof code could not be read.</div>'}};$('#imBack').onclick=showStudio}
 function showReport(){const examined=state.sessionLog.filter(x=>x.type==='examine').length,tests=state.sessionLog.filter(x=>x.type==='test').length,dur=Math.round((Date.now()-state.startTs)/60000);const stamp=new Date().toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short",year:"numeric"});openModal(`<h2>▤ Investigation report</h2><div class="report"><h3>${state.caseData.title}</h3><div class="report-line">Date: <b>${stamp}</b> · Investigator: <b>____________________</b></div><div class="report-line">Time in file: <b>${dur} minutes</b></div><div class="report-line">Evidence examinations: <b>${examined}</b></div><div class="report-line">Connections attempted: <b>${tests}</b></div><div class="report-line">Resolved accounts: <b>${solvedLeads()}/${totalLeads()}</b></div><div class="report-line">Combined inferences: <b>${state.inferences.length}</b></div><div class="report-line">Investigation credits used: <b>${3-state.labCredits}/3</b></div><div class="report-line">Current theory: <b>${state.verdict.culprit||'not committed'}</b></div><p><b>Reflection:</b> Which conclusion is supported by independent evidence, and which still depends on an assumption?</p></div><div class="modal-actions"><button class="btn primary small" id="printReport">Print</button><button class="btn small" id="repBack">Back</button></div>`);$('#printReport').onclick=()=>window.print();$('#repBack').onclick=showStudio}
 const BADGES={first:{i:'📌',n:'FIRST THREAD',d:'Resolve a lead'},hard:{i:'⚖️',n:'HARD ANCHOR',d:'Secure central evidence'},economy:{i:'🧠',n:'LEAN CASE',d:'Close with efficient testing'},daily:{i:'☀',n:'DAY SHIFT',d:'Close a daily file'},archive:{i:'🗄️',n:'ARCHIVIST',d:'Reach 600 XP'},theory:{i:'🔀',n:'RIVAL THEORIES',d:'Develop multiple explanations'}};
-function award(xp,name,icon,key){META.xp+=xp;META.rank=rankFor(META.xp);if(key)META.badges[key]=1;saveMeta();const p=$('#achievementPop');p.innerHTML=`${icon||'★'} <b>${name}</b><br>+${xp} CASEWORK XP`;p.classList.add('show');setTimeout(()=>p.classList.remove('show'),3500)}
+function award(xp,name,icon,key){if(state.restoring)return;META.xp+=xp;META.rank=rankFor(META.xp);if(key)META.badges[key]=1;saveMeta();const p=$('#achievementPop');p.innerHTML=`${icon||'★'} <b>${name}</b><br>+${xp} CASEWORK XP`;p.classList.add('show');setTimeout(()=>p.classList.remove('show'),3500)}
 function dailyStreak(){let n=0;const d=new Date();for(;;){const k=d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();if(META.daily[k]){n++;d.setDate(d.getDate()-1);}else break;}return n}
 function showMastery(){if(META.xp>=600)META.badges.archive=1;if(META.daily[daySeed()])META.badges.daily=1;openModal(`<h2>★ Mastery file</h2><div class="mastery-head"><div class="mastery-rank">${META.rank}</div><div>${META.xp} XP<br><small>${Object.keys(META.badges).length} commendations${dailyStreak()>1?` · ☀ ${dailyStreak()}-day streak`:""}</small></div></div><div class="badge-grid" style="margin-top:12px">${Object.entries(BADGES).map(([k,v])=>`<div class="badge ${META.badges[k]?'have':''}"><i>${v.i}</i><b>${v.n}</b><small>${v.d}</small></div>`).join('')}</div><div class="modal-actions"><button class="btn small" id="mastBack">Back</button></div>`);$('#mastBack').onclick=showStudio}
 function showAccessibility(){const a=META.access;openModal(`<h2>Accessibility & display</h2><div class="access-grid"><button class="access-opt ${a.large?'on':''}" data-a="large"><b>Large evidence text</b><small>Increases card reading size.</small></button><button class="access-opt ${a.font?'on':''}" data-a="font"><b>Readable font</b><small>Replaces decorative mono type.</small></button><button class="access-opt ${a.contrast?'on':''}" data-a="contrast"><b>High contrast paper</b><small>Stronger text and card borders.</small></button><button class="access-opt ${a.static?'on':''}" data-a="static"><b>Remove CRT static</b><small>Disables scanlines and flicker.</small></button></div><div class="modal-actions"><button class="btn primary small" id="accessDone">Apply</button></div>`);modalCard.querySelectorAll('[data-a]').forEach(q=>q.onclick=()=>{a[q.dataset.a]=!a[q.dataset.a];q.classList.toggle('on')});$('#accessDone').onclick=()=>{saveMeta();applyAccess();closeModal()}}
@@ -1629,6 +1674,7 @@ function applyAccess(){const a=META.access;document.body.classList.toggle('large
 ============================================================ */
 /* ---------- camera glide ---------- */
 function focusCard(id){
+  if(state.restoring)return;
   const c=state.cards[id]; if(!c)return;
   if(!isReduced()){ board.classList.add("glide"); setTimeout(()=>board.classList.remove("glide"),620); }
   state.panX=viewport.clientWidth/2-(c.x+105)*state.scale;
@@ -1680,6 +1726,7 @@ function spawnConfetti(){
 /* ---------- examine lightbox + playable tape ---------- */
 function logAction(type,data){state.sessionLog.push({t:Math.round((Date.now()-state.startTs)/1000),type,data:data||null})}
 function openExamine(id){
+  state.examined=state.examined||[];if(!state.examined.includes(id))state.examined.push(id);
   const cl=state.caseData.clues.find(x=>x.id===id); if(!cl||cl.locked)return;logAction("examine",id);
   if(tutActive()&&id!=="c_access"){ tutBlock(); return; }
   if(state.tut===1) state.tut=2;
@@ -1725,7 +1772,7 @@ function showTimeline(){
     g+=`<line x1="${x}" y1="100" x2="${x}" y2="${(day||!(m%60))?91:95}" stroke="#3a4157"/>`;
     if(day||!(m%60))g+=`<text x="${x}" y="117" text-anchor="middle" font-size="10" font-family="monospace" fill="#8b93a6">${day?("DAY "+m):(String(Math.floor(m/60)%24).padStart(2,"0")+":00")}</text>`;
   }
-  T.pins.forEach((p,i)=>{
+  visibleTimelinePins().forEach((p,i)=>{
     const x=X(p.t), y=i%2?38:62, col=p.hot?"#ff6b5e":"#7f97ad";
     g+=`<line x1="${x}" y1="${y+6}" x2="${x}" y2="100" stroke="${col}" stroke-width="1.4" opacity="${p.hot?1:.7}"/>
         <circle cx="${x}" cy="100" r="4" fill="${col}"/>
@@ -1757,21 +1804,24 @@ function showCaseSelect(){
       return `<button class="opt" data-ci="${i}" style="margin-bottom:6px">
         <b>${c.icon||"📻"} Case 0${i+1} — ${c.title}</b><br>
         <span style="color:#9aa0b2;font-size:12.5px">${c.tagline}</span><br>
-        <span style="font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--lamp)">${c.difficulty}</span>
+        <span style="font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--lamp)">${c.difficulty}${checkpointBook().cases[c.id]?" · RESUME AVAILABLE":""}</span>
         <span style="font-family:var(--mono);font-size:11px;letter-spacing:.06em;float:right">${stamp}</span></button>`;
     }).join("")+
     `<div class="modal-actions"><button class="btn small" id="mClose">Close</button></div>`);
-  modalCard.querySelectorAll(".opt").forEach(o=>o.onclick=()=>{ beep("tick"); closeModal(); startCase(+o.dataset.ci); });
+  modalCard.querySelectorAll(".opt").forEach(o=>o.onclick=()=>{ beep("tick"); closeModal(); startCase(+o.dataset.ci,true); });
   $("#mClose").onclick=closeModal;
 }
 
-function startCase(idx){
+function startCase(idx,resume=false){
+  saveInvestigation();
   if(idx!=null) state.caseIndex=idx;
   state.caseIndex=state.caseIndex||0;
   state.caseData=JSON.parse(JSON.stringify(CASES[state.caseIndex])); // fresh copy (unlock/lock state resets)
   state.tut=(state.caseIndex===0&&!store.get("static_tut_done",false))?0:null;
   $("#hintbar").classList.remove("coach");
-  buildBoard();
+  buildBoard();state.examined=[];
+  if(resume)restoreInvestigation();else{const book=checkpointBook();delete book.cases[state.caseData.id];store.set(CHECKPOINT_KEY,book);}
+  document.body.classList.toggle('ferry-case',state.caseData.id==='last-ferry');
   $("#title").classList.add("hidden");
   $("#topbar").classList.remove("hidden");
   $("#zoomctl").classList.remove("hidden");
@@ -1781,9 +1831,58 @@ function startCase(idx){
   showHint(state.caseData.openingHint,false);
 }
 
+
+/* Validated checkpoints store references to authored evidence. Restoring derives
+   notes/unlocks from that evidence instead of trusting saved HTML or lock flags. */
+const CHECKPOINT_KEY='mbm_static_afterlight_checkpoints_v1';
+function checkpointBook(){const b=store.get(CHECKPOINT_KEY,{version:1,cases:{}});return b&&b.version===1&&b.cases&&typeof b.cases==='object'?b:{version:1,cases:{}};}
+function proofComplete(){const c=state.caseData;if(!c||!state.cracked[c.hardAnchor])return false;const p=c.proofRequirements;return !p||(p.cracked.every(id=>state.cracked[id])&&p.inferences.every(id=>state.inferences.some(i=>i.id===id))&&p.clues.every(id=>visibleClues().some(c=>c.id===id)));}
+function saveInvestigation(){
+ if(!state.caseData||state.restoring)return;
+ const b=checkpointBook(),positions={};for(const id in state.cards){const q=state.cards[id];if(Number.isFinite(q.x)&&Number.isFinite(q.y))positions[id]=[q.x,q.y];}
+ b.cases[state.caseData.id]={links:state.links.filter(l=>l.kind==='crack'||l.kind==='verify').map(l=>({from:l.from,to:l.to,kind:l.kind})),inferences:state.inferences.map(i=>i.id),theories:state.theories,verdict:state.verdict,positions,recon:state.reconOrder.map(p=>p.id),examined:state.examined||[],labTests:Object.keys(state.labResults),activeTheory:state.activeTheory,sessionLog:state.sessionLog.slice(-5000),elapsed:Math.max(0,Date.now()-state.startTs),savedAt:Date.now()};store.set(CHECKPOINT_KEY,b);
+}
+function restoreInvestigation(){
+ const saved=checkpointBook().cases[state.caseData.id];if(!saved||typeof saved!=='object')return false;
+ const sound=state.sound,calm=state.calm;state.restoring=true;state.sound=false;state.calm=true;state.tut=null;
+ try{
+  const links=Array.isArray(saved.links)?saved.links.filter(l=>l&&typeof l==='object'&&typeof l.from==='string'&&typeof l.to==='string').slice(0,50):[],ids=Array.isArray(saved.inferences)?saved.inferences.slice(0,30):[];
+  for(let pass=0;pass<20;pass++){let advanced=false;for(const r of inferenceRules())if(ids.includes(r.id)&&applyInferenceRule(r))advanced=true;
+   for(const l of links){const st=state.caseData.statements.find(s=>s.id===l.to);if(!st||!visibleClues().some(c=>c.id===l.from))continue;
+    if(l.kind==='crack'&&(st.breaks||[]).includes(l.from)&&!state.cracked[st.id]){doCrack(st,l.from);advanced=true;}
+    if(l.kind==='verify'&&(st.confirms||[]).includes(l.from)&&!state.verified[st.id]){doVerify(st,l.from);advanced=true;}}
+   if(!advanced)break;
+  }
+  const cleanTheory=t=>({culprit:state.caseData.suspects.some(s=>s.id===t.culprit)?t.culprit:null,method:state.caseData.methods.some(m=>m.id===t.method)?t.method:null,motive:state.caseData.motives.some(m=>m.id===t.motive)?t.motive:null,why:String(t.why||'').slice(0,4000)});
+  if(Array.isArray(saved.theories))state.theories=[0,1,2].map(i=>cleanTheory(saved.theories[i]||{}));if(saved.verdict)state.verdict=cleanTheory(saved.verdict);
+  state.examined=(Array.isArray(saved.examined)?saved.examined:[]).filter(id=>visibleClues().some(c=>c.id===id));
+  const pins=visibleTimelinePins();state.reconOrder=(Array.isArray(saved.recon)?saved.recon:[]).map(id=>pins.find(p=>p.id===id)).filter(Boolean);
+  if(saved.positions&&typeof saved.positions==='object')for(const id in state.cards){const q=saved.positions[id];if(!Array.isArray(q)||q.length!==2||!q.every(Number.isFinite))continue;state.cards[id].x=Math.max(-100,Math.min(6000,q[0]));state.cards[id].y=Math.max(-100,Math.min(6000,q[1]));state.cards[id].el.style.left=state.cards[id].x+'px';state.cards[id].el.style.top=state.cards[id].y+'px';}
+  state.activeTheory=Number.isInteger(saved.activeTheory)?Math.max(0,Math.min(2,saved.activeTheory)):0;
+  state.labResults={};state.labCredits=3;
+  for(const id of [...new Set(Array.isArray(saved.labTests)?saved.labTests:[])])if(['auth','metadata','travel','audio'].includes(id)){
+   const cost=state.caseData.id==='last-ferry'&&id==='audio'?0:1;if(state.labCredits<cost)continue;state.labCredits-=cost;state.labResults[id]=labFinding(id);
+  }
+  const elapsed=Number.isFinite(saved.elapsed)?Math.max(0,Math.min(31536000000,saved.elapsed)):0;state.startTs=Date.now()-elapsed;
+  state.sessionLog=(Array.isArray(saved.sessionLog)?saved.sessionLog:[]).filter(x=>x&&['test','examine'].includes(x.type)&&Number.isFinite(x.t)).slice(-5000).map(x=>({t:Math.max(0,Math.min(elapsed/1000,x.t)),type:x.type,data:x.type==='examine'&&typeof x.data==='string'?x.data.slice(0,80):x.type==='test'&&x.data&&typeof x.data.a==='string'&&typeof x.data.b==='string'?{a:x.data.a.slice(0,80),b:x.data.b.slice(0,80)}:null}));
+  redrawStrings();return true;
+ }finally{state.sound=sound;state.calm=calm;state.restoring=false;}
+}
+function investigationObjective(){if(state.caseData.id!=='last-ferry')return 'Examine the evidence, test each account, then explain the person, method and motive.';
+ if(!state.inferences.some(i=>i.id==='clock-correction'))return 'The archive clock is unverified. Compare the camera frame with the signed clock report.';
+ if(!state.cracked.lf_st_soren)return 'Test Soren’s continuous-onboard account with the corrected camera time.';
+ if(!state.cracked.lf_st_custody)return 'The archive has released its withdrawal receipt. Test Soren’s account about handling A17.';
+ return 'Follow A17’s custody and the audit notice. Explain who withheld the original, how and why.';
+}
+function showJournal(){if(!state.caseData)return;saveInvestigation();const clues=visibleClues();
+ openModal(`<h2>Investigation journal</h2><p class="journal-objective">${investigationObjective()}</p><div class="journal-evidence"><label>Evidence<select id="journal-clue">${clues.map(c=>`<option value="${c.id}">${c.title}</option>`).join('')}</select></label><button class="btn small" id="journal-examine">Examine evidence</button><label>Account to test<select id="journal-account">${state.caseData.statements.map(st=>`<option value="${st.id}">${escHtml(state.caseData.suspects.find(s=>s.id===st.suspect).name+': '+st.quote)}</option>`).join('')}</select></label><button class="btn primary small" id="journal-test">Test evidence against account</button></div><p>${solvedLeads()}/${totalLeads()} accounts checked · ${state.inferences.length} authored inferences</p><div class="journal-clues">${clues.map(c=>`<button class="pick" data-jclue="${c.id}"><b>${c.title}</b><small>${c.body.replace(/<[^>]+>/g,'')}</small></button>`).join('')}</div><div class="modal-actions"><button class="btn small" id="journal-work">Combine clues</button><button class="btn small" id="journal-close">Return to board</button></div>`);
+ $('#journal-examine').onclick=()=>openExamine($('#journal-clue').value);$('#journal-test').onclick=()=>{resolveLink({type:'clue',id:$('#journal-clue').value},{type:'statement',id:$('#journal-account').value});showJournal();};$('#journal-work').onclick=()=>showWorkbench('infer');$('#journal-close').onclick=closeModal;modalCard.querySelectorAll('[data-jclue]').forEach(b=>b.onclick=()=>openExamine(b.dataset.jclue));
+}
+window.addEventListener('pagehide',saveInvestigation);document.addEventListener('visibilitychange',()=>{if(document.hidden)saveInvestigation();});document.addEventListener('change',()=>setTimeout(saveInvestigation,0));document.addEventListener('pointerup',()=>setTimeout(saveInvestigation,0));
+
 /* buttons */
 $("#startBtn").onclick=()=>{ audio(); showCaseSelect(); };
-$("#casesBtn").onclick=showCaseSelect;
+$("#casesBtn").onclick=showCaseSelect;$("#journalBtn").onclick=showJournal;
 $("#tlBtn").onclick=showTimeline;
 $("#howBtn").onclick=showHow;
 $("#setBtn").onclick=showSettings;
@@ -1797,6 +1896,7 @@ $("#zIn").onclick=()=>zoomAt(viewport.clientWidth/2,viewport.clientHeight/2,1.15
 $("#zOut").onclick=()=>zoomAt(viewport.clientWidth/2,viewport.clientHeight/2,1/1.15);
 $("#zFit").onclick=fitBoard;
 
+window.__AFTERLIGHT_STATIC__={CASES,state,proofComplete,inferenceRules,applyInferenceRule,visibleTimelinePins,timelineValue,validReconstruction,saveInvestigation,restoreInvestigation,startCase,resolveLink,buildInference,deliverVerdict,runLab,renderTheories};
 /* keyboard (exempt inputs) */
 document.addEventListener("keydown",e=>{
   const tag=(e.target.tagName||"").toUpperCase();
@@ -1846,7 +1946,7 @@ window.addEventListener("resize",()=>{ if(!$("#topbar").classList.contains("hidd
 </script>
 <script>
 /* ============================================================
-   AAA V6 PRESENTATION DIRECTOR
+   AFTERLIGHT PRESENTATION DIRECTOR
    Case arrays, deduction rules, progress keys and verdict scoring
    above remain the sole authority. This layer adds no solution hints.
 ============================================================ */
@@ -1937,9 +2037,9 @@ window.addEventListener("resize",()=>{ if(!$("#topbar").classList.contains("hidd
   document.addEventListener("visibilitychange",()=>{const hidden=document.hidden;document.body.classList.toggle("v6-hidden",hidden);if(hidden){Director.stop(false);Resolution.stop();clearPreview();if(MasterBus.ctx&&MasterBus.ctx.state==="running")MasterBus.ctx.suspend().catch(()=>{});}announce(hidden?"Investigation safely paused while hidden.":"Investigation ready. Audio resumes with your next input.");});
   window.addEventListener("pagehide",()=>{saveV6Profile();Director.stop(false);Resolution.stop();});
 
-  q("#sptag").textContent="A COLD-CASE DEDUCTION · AAA V6";q("#titleSub").textContent="THREE CASE FILES · ASCENSION DESK ONLINE";
-  const msSub=q(".ms-sub");if(msSub)msSub.textContent="PRESENTS · AAA V6";
-  announce("STATIC Signal Lost, AAA V6 by Made by Matt. Three original case files preserved.");
+  q("#sptag").textContent="A COLD-CASE DEDUCTION · AFTERLIGHT";q("#titleSub").textContent="FOUR CASE FILES · THE LAST FERRY EDITION";
+  const msSub=q(".ms-sub");if(msSub)msSub.textContent="PRESENTS · AFTERLIGHT";
+  announce("STATIC Signal Lost, AFTERLIGHT by Made by Matt. Four case files, including The Last Ferry.");
 })();
 </script>
 <!-- MBM-INLINE-EXIT:BEGIN generated by tools/render_inline_exit.py, do not edit by hand -->

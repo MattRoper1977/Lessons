@@ -4,9 +4,9 @@
 <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSIjMTYxRDNEIi8+PHBhdGggZD0iTTI2IDc2IEwyNiAzMCBMNTAgNTUgTDc0IDMwIEw3NCA3NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRThFMkQ0IiBzdHJva2Utd2lkdGg9IjEzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4=">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<link rel="canonical" href="https://madebymatt.uk/Lessons/Games/Lumins.html">>
+<link rel="canonical" href="https://madebymatt.uk/Lessons/Games/Lumins.html">
 <meta name="theme-color" content="#060a18">
-<title>LUMINS</title>
+<title>Lumins — The Way Home</title>
 <style>
 :root{
   --bg0:#060a18; --bg1:#0b1226; --panel:rgba(16,24,48,.72);
@@ -220,7 +220,7 @@ canvas#cv{border-color:rgba(91,217,255,.42);box-shadow:0 20px 70px #000b,0 0 45p
 /* Tier 1 §2.5: 44px minimum touch targets (measured 30px controls, 42px card buttons at 390x844) */
 .ctrl,.cbtn{min-height:44px}
 </style>
-</head>
+<style>#sight-note{position:absolute;left:8px;right:8px;top:8px;padding:9px;background:#061023e8;border:1px solid #a1ffe2;color:#eafcff;font:13px/1.4 system-ui;z-index:10;pointer-events:none}#sight-note[hidden]{display:none}.skill{font-family:inherit;color:inherit;min-height:58px}.lvl-tile{font-family:inherit;color:inherit;text-align:left}.mission-tip+.mission-tip{margin-top:10px}button:focus-visible{outline:3px solid #fff;outline-offset:3px}#c-sight.act{background:#244b4e;color:#fff}</style></head>
 <body>
 <div id="a11y-live" role="status" aria-live="polite" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden"></div>
 <script>window.__mbmAnnounce=function(t){var n=document.getElementById("a11y-live");if(!n||!t)return;n.textContent=String(t);};</script>
@@ -246,7 +246,7 @@ canvas#cv{border-color:rgba(91,217,255,.42);box-shadow:0 20px 70px #000b,0 0 45p
       <div id="hold-ring"></div>
       <div id="tool-wheel" role="menu" aria-label="Guardian tools"><div class="wheel-core">✦</div></div>
       <div id="preview-note"></div>
-      <div id="route-warning"></div>
+      <div id="route-warning"></div><div id="sight-note" hidden role="status"></div>
       <div id="focus-wrap"><b>FOCUS</b><div id="focus-meter"><div id="focus-fill"></div></div></div>
       <div id="tip"></div>
       <div class="ov" id="ov"><div class="card" id="card"></div></div>
@@ -254,7 +254,7 @@ canvas#cv{border-color:rgba(91,217,255,.42);box-shadow:0 20px 70px #000b,0 0 45p
   </div>
   <div id="tools"></div>
   <div id="bar">
-    <button class="ctrl" id="c-pause">⏸ PAUSE</button>
+    <button class="ctrl" id="c-sight">GUARDIAN SIGHT [F]</button><button class="ctrl" id="c-pause">⏸ PAUSE</button>
     <button class="ctrl" id="c-speed">▶ 0.75×</button>
     <button class="ctrl" id="c-restart">↻ RESTART</button>
     <button class="ctrl" id="c-undo">↶ UNDO</button>
@@ -614,6 +614,7 @@ var LEVELS=[
 }
 ];
 
+LEVELS.push.apply(LEVELS,[{"name": "11 · The Broken Causeway", "total": 8, "target": 6, "silver": 7, "gold": 8, "spawn": 28, "skills": {"block": 0, "dig": 0, "bash": 0, "build": 2, "float": 0}, "hint": "The evacuation spans have gone dark. Pause before the first arrival and shape a <b>Bridge</b> at the left edge of each five-cell gap. The first begins just beyond the high platform; the second begins beyond the middle platform. Two descending bridges reconnect the causeway.", "chapter": "The Rekindling", "story": "Guardian dispatch: The old sky-road carried the constellation home. Its two missing spans must shine again before the next light crosses.", "solution": [{"tool": "build", "c": 11, "r": 10}, {"tool": "build", "c": 24, "r": 12}], "start": 1, "map": ["........................................", "........................................", "........................................", "........................................", "........................................", "........................................", ".=......................................", ".=..E...................................", ".=......................................", ".=......................................", ".==========.............................", "........................................", "................========................", "....................................X...", ".............................==========.", "........................................", "........................................", "........................................", "........................................", "........................................", "........................................", "........................................", "........................................", "........................................"]}, {"name": "12 · The Buried Archive", "total": 9, "target": 7, "silver": 8, "gold": 9, "spawn": 24, "skills": {"block": 0, "dig": 1, "bash": 1, "build": 0, "float": 0}, "hint": "The upper road ends at steel, but the archive lies underneath. Use <b>Carve Down</b> on the narrow blue shaft two cells before the steel wall. It is a safe six-cell drop. Then <b>Tunnel</b> through the foot of the two-column blue wall on the lower road.", "chapter": "The Rekindling", "story": "Guardian dispatch: Beneath the sealed road, the archive still holds a map of every lost light. Open a way down, then uncover its eastern door.", "solution": [{"tool": "dig", "c": 17, "r": 8}, {"tool": "bash", "c": 24, "r": 13}], "start": 1, "map": ["........................................", "........................................", "........................................", ".=.................=....................", ".=.................=....................", ".=..E..............=....................", ".=.................=....................", ".=.................=....................", ".=#################=....................", ".................#......................", ".................#......................", ".................#......##..............", ".................#......##..............", "........................##.........X....", "................=======================.", "........................................", "........................................", "........................................", "........................................", "........................................", "........................................", "........................................", "........................................", "........................................"]}, {"name": "13 · Return to the First Light", "total": 8, "target": 6, "silver": 7, "gold": 8, "spawn": 18, "skills": {"block": 1, "dig": 0, "bash": 0, "build": 0, "float": 1}, "hint": "Home is below and behind you. Place an <b>Updraft</b> beneath the upper cliff, reaching the lower road, then place a <b>Barrier</b> on the lower road before the violet shade. It turns the arrivals left toward home. Both fields last fourteen simulation seconds; prepare them immediately.", "chapter": "The Rekindling", "story": "Guardian dispatch: The final gate glows beneath the starting point. Cushion the long descent and turn every light away from the shade. This time the journey ends where hope began.", "solution": [{"tool": "float", "c": 13, "r": 18}, {"tool": "block", "c": 24, "r": 20}], "start": 1, "map": ["........................................", "........................................", ".=......................................", ".=......................................", ".=..E...................................", ".=......................................", ".=......................................", ".============...........................", "........................................", "........................................", "........................................", "........................................", "........................................", "........................................", "........................................", "........................................", "........................................", "........................................", "........................................", "........................................", "....X......................*............", "..=====================================.", "........................................", "........................................"]}]);
 /* ============================ STATE ============================ */
 var G={grid:null,cols:0,rows:0,lumins:[],parts:[],saved:0,out:0,spawned:0,dead:0,
   entrance:{c:0,r:0}, exit:{c:0,r:0}, skills:{}, def:null, lvl:0,
@@ -632,7 +633,7 @@ function defFromMap(L){
       grid[r*w+c]=v; } }
   return {cols:w, rows:rows.length, grid:grid, entrance:ent, exit:ex,
     skills:{block:L.skills.block|0,dig:L.skills.dig|0,bash:L.skills.bash|0,build:L.skills.build|0,float:L.skills.float|0},
-    total:L.total, target:L.target, spawn:L.spawn, start:L.start||1, name:L.name, hint:L.hint,
+    total:L.total, target:L.target, spawn:L.spawn, start:L.start||1, name:L.name, hint:L.hint,story:L.story||"",
     silver:L.silver, gold:L.gold, eclipse:L.eclipse};
 }
 function loadDef(d){
@@ -641,6 +642,9 @@ function loadDef(d){
   G.entrance={c:d.entrance.c,r:d.entrance.r}; G.exit={c:d.exit.c,r:d.exit.r};
   G.lumins=[]; G.parts=[]; G.saved=0; G.out=0; G.spawned=0; G.dead=0;
   G.spawnT=0; G.armed=null; G.terrainDirty=true; G.mode="play"; G.crumbs={};
+  G.paused=false;G.fieldSeq=0;G.simTick=0;G.journalRecorded=false;sightOn=false;sightCache=null;
+  var pb=document.getElementById('c-pause');if(pb){pb.classList.remove('act');pb.textContent='⏸ PAUSE';}
+  var sb=document.getElementById('c-sight');if(sb)sb.classList.remove('act');
   G.fields=[]; G.focus=100; G.focusSlow=false; G.interventions=0; G.reversals=0; G.holdTicks=0; G.wheel=null; G.preview=null; G.history=[]; G.peakAtRisk=0;
   G.lvl=(typeof d.lvl==="number")?d.lvl:-1;
   G.skills={}; for(var s in d.skills) G.skills[s]=d.skills[s];
@@ -748,23 +752,23 @@ function environmentalPreview(type,c,r){
   else if(type==="dig"){for(var y=r;y<Math.min(G.rows,r+5);y++)if(cellType(c,y)===1)cells.push([c,y]);ok=cells.length>0;msg=ok?"Carve this shaft":"Aim at blue destructible ground";}
   else if(type==="bash"){for(var x=Math.max(0,c-3);x<=Math.min(G.cols-1,c+3);x++)if(cellType(x,r)===1)cells.push([x,r]);ok=cells.length>0;msg=ok?"Open a horizontal tunnel":"Aim at blue destructible ground";}
   else if(type==="build"){var L=nearestLumin(c,r),dir=L?L.dir:1;for(var n=0;n<5;n++){var bx=c+n*dir,br=r+Math.floor(n/2);if(validCell(bx,br)&&cellType(bx,br)===0)cells.push([bx,br]);}ok=cells.length>=3;msg=ok?"Shape a five-segment light bridge":"Need clear space for a bridge";}
-  else if(type==="float"){ok=!solid(c,r);for(var yy=Math.max(0,r-5);yy<=Math.min(G.rows-1,r+2);yy++)cells.push([c,yy]);msg="Updraft lasts 14 seconds";}
+  else if(type==="float"){ok=!solid(c,r);for(var yy=Math.max(0,r-6);yy<=Math.min(G.rows-1,r+2);yy++)cells.push([c,yy]);msg="Updraft lasts 14 seconds";}
   return {ok:ok,cells:cells,msg:msg};
 }
 function takeSnapshot(type,c,r,pr){
-  var cells=[];for(var i=0;i<pr.cells.length;i++){var q=pr.cells[i],idx=q[1]*G.cols+q[0];cells.push({c:q[0],r:q[1],v:G.grid[idx]});}
+  var cells=[];for(var i=0;i<pr.cells.length&&type!=="block"&&type!=="float";i++){var q=pr.cells[i],idx=q[1]*G.cols+q[0];cells.push({c:q[0],r:q[1],v:G.grid[idx]});}
   return {type:type,c:c,r:r,cells:cells,fields:G.fields.map(function(f){return Object.assign({},f)}),skills:Object.assign({},G.skills),interventions:G.interventions};
 }
 function undoIntervention(){
   var h=G.history.pop();if(!h){tip("Nothing to undo");return;}
   for(var i=0;i<h.cells.length;i++){var q=h.cells[i];G.grid[q.r*G.cols+q.c]=q.v;}
-  G.fields=h.fields.map(function(f){return Object.assign({},f)});G.skills=Object.assign({},h.skills);G.interventions=h.interventions;G.terrainDirty=true;G.preview=null;buildTools();updateUndo();tone(350,.09,"triangle",.035);tone(270,.14,"triangle",.03,.06);tip("Last intervention restored");
+  G.fields=G.fields.filter(function(f){return h.fields.some(function(old){return old.id===f.id;});});G.skills=Object.assign({},h.skills);G.interventions=h.interventions;G.terrainDirty=true;G.preview=null;buildTools();updateUndo();tone(350,.09,"triangle",.035);tone(270,.14,"triangle",.03,.06);tip("Last intervention restored");
 }
 function updateUndo(){var b=document.getElementById("c-undo");if(b)b.disabled=!G.history.length;}
 /* Pure grid/field mutation shared by live play AND the solver — keeps them in lockstep. */
 function applyToolCore(type,c,r,pr){
-  if(type==="block")G.fields.push({type:"block",c:c,r:r,w:0,h:0,t:TICKHZ*14});
-  else if(type==="float")G.fields.push({type:"float",c:c,r:r-2,w:0,h:4,t:TICKHZ*14});
+  if(type==="block")G.fields.push({id:++G.fieldSeq,type:"block",c:c,r:r,w:0,h:0,t:TICKHZ*14});
+  else if(type==="float")G.fields.push({id:++G.fieldSeq,type:"float",c:c,r:r-2,w:0,h:4,t:TICKHZ*14});
   else if(type==="dig"||type==="bash"){for(var i=0;i<pr.cells.length;i++)setEmpty(pr.cells[i][0],pr.cells[i][1]);}
   else if(type==="build"){for(var j=0;j<pr.cells.length;j++)setTerrain(pr.cells[j][0],pr.cells[j][1]);}
 }
@@ -788,10 +792,11 @@ function skillCol(id){ for(var i=0;i<SKILLDEF.length;i++) if(SKILLDEF[i].id===id
 /* ============================ SIM STEP ============================ */
 function step(){
   if(G.state!=="play") return;
+  G.simTick=(G.simTick||0)+1;
   for(var fi=G.fields.length-1;fi>=0;fi--){if(--G.fields[fi].t<=0)G.fields.splice(fi,1);}
   if(G.focusSlow)G.focus=Math.max(0,G.focus-0.42);else G.focus=Math.min(100,G.focus+0.11);
   if(G.focus<=0)closeToolWheel(true);
-  var waiting=0,atRisk=0;for(var wi=0;wi<G.lumins.length;wi++){var WL=G.lumins[wi];if(WL.state==="block")waiting++;if(WL.state!=="dead"&&WL.state!=="exit"){if(WL.state==="fall"&&WL.fall>MAXFALL-2){WL.mood="afraid";atRisk++;}else if(blockerAt(WL.c+WL.dir,WL.r)){WL.mood="waiting";}else if(WL.mood&&Math.random()<.018)WL.mood=null;}}
+  var waiting=0,atRisk=0;for(var wi=0;wi<G.lumins.length;wi++){var WL=G.lumins[wi];if(WL.state==="block")waiting++;if(WL.state!=="dead"&&WL.state!=="exit"){if(WL.state==="fall"&&WL.fall>MAXFALL-2&&!WL.floater&&!inUpdraft(WL.c,WL.r)){WL.mood="afraid";atRisk++;}else if(blockerAt(WL.c+WL.dir,WL.r)){WL.mood="waiting";}else if(WL.mood&&Math.random()<.018)WL.mood=null;}}
   G.peakAtRisk=Math.max(G.peakAtRisk,atRisk);G.holdTicks+=waiting;
   // spawn
   if(G.spawned<G.def.total){ G.spawnT++; if(G.spawnT>=(G.def.spawn||SPAWNINT)){ G.spawnT=0; spawn(); } }
@@ -807,7 +812,10 @@ function step(){
   if(G.spawned>=G.def.total && active===0){ endLevel(); }
 }
 function endLevel(){
+  if(G.state==='over')return;
   G.state="over";
+  if(G._forecast)return;
+  recordJournal();
   try{ localStorage.setItem("lumins_total", (((+localStorage.getItem("lumins_total"))||0)+G.saved)+""); }catch(e){}
   noteResult();
   showResult(G.saved>=G.def.target);
@@ -832,12 +840,48 @@ function noiseSpark(d,cut,v){if(!G.sound)return;try{if(!AC)AC=new (window.AudioC
 function toolSound(k){if(k==="block"){tone(330,.15,"square",.05);tone(660,.2,"sine",.04,.06)}else if(k==="dig"){noiseSpark(.23,650,.1);tone(165,.2,"sawtooth",.035)}else if(k==="bash"){noiseSpark(.18,900,.09);tone(220,.11,"square",.035);tone(170,.13,"square",.03,.09)}else if(k==="build"){tone(392,.12,"triangle",.05);tone(523,.14,"triangle",.045,.08);tone(659,.18,"triangle",.04,.16)}else if(k==="float"){tone(280,.4,"sine",.035);tone(560,.33,"sine",.027,.06);tone(840,.25,"sine",.02,.12)}}
 function uiSound(k){if(k==="wheel"){tone(440,.08,"sine",.03);tone(880,.14,"triangle",.025,.05)}else{tone(392,.12,"triangle",.04);tone(587,.15,"triangle",.035,.1);tone(784,.24,"sine",.03,.2)}}
 
+
+/* Guardian Sight runs the real rules on a disposable copy. It never awards
+   rescues, writes progress, changes live timers or plays sound. */
+var sightOn=false,sightCache=null,sightStamp='',keyboardCell={c:4,r:10},keyboardActive=false;
+var RESCUE_CHAPTERS=[
+ {title:'The Broken Constellation',line:'A small voice in the dark: “We remember the stars. We have forgotten the way.” Build the first paths.'},
+ {title:'Beyond the Eclipse',line:'The Guardian answers: “A safe route is one we can all follow.” Read the fall before you spend your light.'},
+ {title:'The Last Garden',line:'Beyond the shaded stone, a living constellation is waiting. Leave no light behind.'},
+ {title:'The Way Home',line:'Three final signals reach the Guardian. The bridges, the hollow and the last crossing lead home.'}
+];
+function rescueChapter(){return RESCUE_CHAPTERS[G.lvl>=10?3:G.lvl>=7?2:G.lvl>=3?1:0];}
+function cloneRuntime(source){return Object.assign({},source,{grid:new Uint8Array(source.grid),lumins:source.lumins.map(function(l){return Object.assign({},l);}),parts:[],fields:source.fields.map(function(f){return Object.assign({},f);}),crumbs:Object.assign({},source.crumbs||{}),skills:Object.assign({},source.skills),history:[],wheel:null,preview:null,_forecast:true,sound:false,calm:true,focusSlow:false,focus:100});}
+function guardianForecast(ticks,proposal){
+ var live=G,paths=[],result;G=cloneRuntime(live);G.state='play';
+ try{
+  if(proposal&&proposal.type&&Number.isFinite(proposal.c)&&Number.isFinite(proposal.r)){var pr=environmentalPreview(proposal.type,proposal.c,proposal.r);if(pr.ok&&(G.skills[proposal.type]|0)>0)applyToolCore(proposal.type,proposal.c,proposal.r,pr);}
+  for(var t=0;t<ticks&&G.state==='play';t++){step();if(t%6===0||t===ticks-1||G.state!=='play')G.lumins.forEach(function(l,i){if(!paths[i])paths[i]=[];paths[i].push({c:l.c,r:l.r,state:l.state});});}
+  result={paths:paths,saved:G.saved,dead:G.dead,spawned:G.spawned,fields:G.fields.map(function(f){return Object.assign({},f);}),lumins:G.lumins.map(function(l){return Object.assign({},l);}),ticks:t};
+ }finally{G=live;}
+ return result;
+}
+function drawGuardianSight(){
+ if(keyboardActive){ctx.save();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.strokeRect(keyboardCell.c*CELL+1,keyboardCell.r*CELL+1,CELL-2,CELL-2);ctx.restore();}
+ if(!sightOn||G.state!=='play')return;
+ var p=G.preview,stamp=[G.simTick,G.interventions,G.fields.length,p&&p.type,p&&p.c,p&&p.r].join(':');
+ if(!sightCache||stamp!==sightStamp){sightStamp=stamp;sightCache=guardianForecast(180,p);}
+ ctx.save();ctx.lineWidth=2;ctx.setLineDash([4,5]);
+ sightCache.paths.forEach(function(path){if(!path.length)return;ctx.beginPath();ctx.strokeStyle=path[path.length-1].state==='dead'?'#ff99b5':'#9bffe0';path.forEach(function(q,i){var x=(q.c+.5)*CELL,y=(q.r+.6)*CELL;i?ctx.lineTo(x,y):ctx.moveTo(x,y);});ctx.stroke();var end=path[path.length-1];ctx.setLineDash([]);ctx.beginPath();ctx.arc((end.c+.5)*CELL,(end.r+.6)*CELL,4,0,7);ctx.fillStyle=ctx.strokeStyle;ctx.fill();ctx.setLineDash([4,5]);});ctx.restore();
+ var note=document.getElementById('sight-note');if(note){note.hidden=false;note.textContent='6-second forecast'+(p&&p.ok&&(G.skills[p.type]|0)>0?' · with proposed '+p.type:'')+' · '+sightCache.saved+' home · '+sightCache.dead+' lost. Resume to continue.';}
+}
+function toggleSight(){if(G.state!=='play'||G.mode==='edit')return;sightOn=!sightOn;sightCache=null;G.paused=true;document.getElementById('c-pause').textContent='▶ RESUME';document.getElementById('c-pause').classList.add('act');document.getElementById('c-sight').classList.toggle('act',sightOn);document.getElementById('sight-note').hidden=!sightOn;}
+function loadJournal(){try{var v=JSON.parse(localStorage.getItem('lumins_afterlight_journal')||'null');return v&&v.version===1&&v.missions&&typeof v.missions==='object'?v:{version:1,missions:{}};}catch(e){return {version:1,missions:{}};}}
+function recordJournal(){if(G.journalRecorded||G.lvl<0)return;G.journalRecorded=true;var j=loadJournal(),k=String(G.lvl),p=j.missions[k]||{best:0,least:null,perfect:false};p.best=Math.max(p.best||0,G.saved);if(G.saved>=G.def.target)p.least=p.least===null?G.interventions:Math.min(p.least,G.interventions);p.perfect=p.perfect||G.saved===G.def.total;j.missions[k]=p;try{localStorage.setItem('lumins_afterlight_journal',JSON.stringify(j));}catch(e){}}
+function journalLine(i){var p=loadJournal().missions[String(i)];return p?(p.perfect?' · EVERY LIGHT HOME':'')+(p.least!==null?' · '+p.least+' best interventions':''):'';}
+
 /* ============================ RENDER ============================ */
 var cv=document.getElementById("cv"), ctx=cv.getContext("2d");
 var terCv=document.createElement("canvas"), terCtx=terCv.getContext("2d");
 var scale=1, hoverL=null;
 
 var starCv=document.createElement("canvas"), starCtx=starCv.getContext("2d");
+var sanctuaryArt=new Image();sanctuaryArt.onload=function(){if(G.def)buildLayers();};sanctuaryArt.src='assets/lumins.webp';
 var vigCv=document.createElement("canvas"), vigCtx=vigCv.getContext("2d");
 function buildLayers(){
   starCv.width=cv.width; starCv.height=cv.height;
@@ -847,6 +891,7 @@ function buildLayers(){
   var g=starCtx.createLinearGradient(0,0,0,H);
   g.addColorStop(0,"#0a1436"); g.addColorStop(.5,"#0a0f28"); g.addColorStop(1,"#06091a");
   starCtx.fillStyle=g; starCtx.fillRect(0,0,W,H);
+  if(sanctuaryArt.complete&&sanctuaryArt.naturalWidth){starCtx.globalAlpha=.64;starCtx.drawImage(sanctuaryArt,0,0,W,H);starCtx.globalAlpha=1;}
   function bloom(bx,by,r,col,a){ var q=starCtx.createRadialGradient(bx,by,0,bx,by,r);
     q.addColorStop(0,col); q.addColorStop(1,"rgba(0,0,0,0)");
     starCtx.globalAlpha=a; starCtx.fillStyle=q; starCtx.fillRect(bx-r,by-r,r*2,r*2); starCtx.globalAlpha=1; }
@@ -1250,6 +1295,7 @@ function render(){
       ctx.fillStyle=q.col; ctx.fillRect(q.x-1.5,q.y-1.5,3,3); }
     ctx.restore(); ctx.globalAlpha=1; }
   ctx.drawImage(vigCv,0,0);
+  drawGuardianSight();
   updateHUD();
 }
 
@@ -1259,16 +1305,16 @@ function updateHUD(){
   document.getElementById("s-out").textContent="◇ "+(G.def.total-G.out)+" left";
   document.getElementById("lvlname").textContent=G.def.name;
   document.getElementById("focus-fill").style.width=G.focus.toFixed(1)+"%";
-  var rw=document.getElementById("route-warning"),risk=0;for(var i=0;i<G.lumins.length;i++){var L=G.lumins[i];if(L.state==="fall"&&L.fall>MAXFALL-2&&L.state!=="dead")risk++;}if(risk){rw.textContent="⚠ "+risk+" lumin"+(risk===1?" is":"s are")+" in danger";rw.classList.add("show");}else rw.classList.remove("show");
+  var rw=document.getElementById("route-warning"),risk=0;for(var i=0;i<G.lumins.length;i++){var L=G.lumins[i];if(L.state==="fall"&&L.fall>MAXFALL-2&&!L.floater&&!inUpdraft(L.c,L.r))risk++;}if(risk){rw.textContent="⚠ "+risk+" lumin"+(risk===1?" is":"s are")+" in danger";rw.classList.add("show");}else rw.classList.remove("show");
   updateUndo();
 }
 function buildTools(){
   var box=document.getElementById("tools"); box.innerHTML="";
   SKILLDEF.forEach(function(sd){
     var n=G.skills[sd.id]|0;
-    var el=document.createElement("div"); el.className="skill"+(n<=0?" empty":"")+(G.armed===sd.id?" on":"");
+    var el=document.createElement("button");el.type="button"; el.className="skill"+(n<=0?" empty":"")+(G.armed===sd.id?" on":"");
     el.innerHTML='<div class="ic">'+sd.ic+'</div><div class="nm">'+sd.nm+'</div><div class="ct">'+n+'</div>'; el.title=(sd.desc||sd.nm)+' · key '+(SKILLDEF.indexOf(sd)+1);
-    el.onclick=function(){ if((G.skills[sd.id]|0)<=0){ tip("None left"); return; } G.armed=(G.armed===sd.id?null:sd.id); buildTools(); tip(G.armed?(sd.nm+": tap the world to place"):"Tool cancelled"); };
+    el.onclick=function(){ if((G.skills[sd.id]|0)<=0){ tip("None left"); return; } G.armed=(G.armed===sd.id?null:sd.id);G.preview=G.armed&&keyboardActive?Object.assign(environmentalPreview(G.armed,keyboardCell.c,keyboardCell.r),{type:G.armed,c:keyboardCell.c,r:keyboardCell.r}):null;sightCache=null; buildTools(); tip(G.armed?(sd.nm+": tap the world to place"):"Tool cancelled"); };
     box.appendChild(el);
   });
 }
@@ -1284,15 +1330,15 @@ var HOLD_MS=460,holdTimer=null,holdStart=null,pointerId=null;
 var wheel=document.getElementById("tool-wheel"),holdRing=document.getElementById("hold-ring"),previewNote=document.getElementById("preview-note");
 function wheelPos(){return [[0,-72],[69,-22],[43,60],[-43,60],[-69,-22]];}
 function buildWheel(){wheel.querySelectorAll(".wedge").forEach(function(e){e.remove();});var pos=wheelPos();SKILLDEF.forEach(function(sd,i){var e=document.createElement("div");e.className="wedge"+((G.skills[sd.id]|0)<=0?" off":"");e.dataset.id=sd.id;e.style.setProperty("--wx",pos[i][0]+"px");e.style.setProperty("--wy",pos[i][1]+"px");e.innerHTML='<span class="wi">'+sd.ic+'</span><span class="wn">'+sd.nm+'</span>';wheel.appendChild(e);});}
-function placeOverlay(el,p){var rect=cv.getBoundingClientRect(),x=p.clientX-rect.left,y=p.clientY-rect.top;x=Math.max(118,Math.min(rect.width-118,x));y=Math.max(118,Math.min(rect.height-118,y));el.style.left=x+"px";el.style.top=y+"px";}
-function openToolWheel(ev){if(!holdStart||G.focus<8)return;clearTimeout(holdTimer);buildWheel();placeOverlay(wheel,ev);wheel.classList.add("show");holdRing.style.display="none";G.focusSlow=true;G.wheel={x:ev.clientX,y:ev.clientY,cell:canvasCell(ev),hot:null};if(navigator.vibrate)navigator.vibrate(18);uiSound("wheel");}
+function placeOverlay(el,p){var rect=cv.getBoundingClientRect(),x=p.clientX-rect.left,y=p.clientY-rect.top;x=Math.max(118,Math.min(rect.width-118,x));y=Math.max(118,Math.min(rect.height-118,y));el.style.left=x+"px";el.style.top=y+"px";el._centre={x:rect.left+x,y:rect.top+y};}
+function openToolWheel(ev){if(!holdStart||G.focus<8)return;clearTimeout(holdTimer);buildWheel();placeOverlay(wheel,ev);wheel.classList.add("show");holdRing.style.display="none";G.focusSlow=true;G.wheel={x:wheel._centre.x,y:wheel._centre.y,cell:canvasCell(ev),hot:null};if(navigator.vibrate)navigator.vibrate(18);uiSound("wheel");}
 function closeToolWheel(cancel){clearTimeout(holdTimer);holdRing.style.display="none";wheel.classList.remove("show");previewNote.classList.remove("show");G.focusSlow=false;if(cancel){G.wheel=null;G.preview=null;}}
-function updateWheel(ev){if(!G.wheel)return;var dx=ev.clientX-G.wheel.x,dy=ev.clientY-G.wheel.y,d=Math.hypot(dx,dy),hot=null;if(d>28){var best=1e9,pos=wheelPos();for(var i=0;i<pos.length;i++){var dd=Math.hypot(dx-pos[i][0],dy-pos[i][1]);if(dd<best){best=dd;hot=i;}}}var wedges=wheel.querySelectorAll(".wedge");for(var j=0;j<wedges.length;j++)wedges[j].classList.toggle("hot",j===hot);G.wheel.hot=hot;if(hot!==null){var sd=SKILLDEF[hot],pr=environmentalPreview(sd.id,G.wheel.cell.c,G.wheel.cell.r);pr.type=sd.id;G.preview=pr;previewNote.textContent=sd.nm+" · "+pr.msg;previewNote.classList.add("show");}else{G.preview=null;previewNote.classList.remove("show");}}
+function updateWheel(ev){if(!G.wheel)return;var dx=ev.clientX-G.wheel.x,dy=ev.clientY-G.wheel.y,d=Math.hypot(dx,dy),hot=null;if(d>28){var best=1e9,pos=wheelPos();for(var i=0;i<pos.length;i++){var dd=Math.hypot(dx-pos[i][0],dy-pos[i][1]);if(dd<best){best=dd;hot=i;}}}var wedges=wheel.querySelectorAll(".wedge");for(var j=0;j<wedges.length;j++)wedges[j].classList.toggle("hot",j===hot);G.wheel.hot=hot;if(hot!==null){var sd=SKILLDEF[hot],pr=environmentalPreview(sd.id,G.wheel.cell.c,G.wheel.cell.r);pr.type=sd.id;pr.c=G.wheel.cell.c;pr.r=G.wheel.cell.r;G.preview=pr;previewNote.textContent=sd.nm+" · "+pr.msg;previewNote.classList.add("show");}else{G.preview=null;previewNote.classList.remove("show");}}
 cv.addEventListener("contextmenu",function(e){e.preventDefault();if(G.state==="play"){holdStart={x:e.clientX,y:e.clientY,t:performance.now()};openToolWheel(e);}});
-cv.addEventListener("pointermove",function(ev){if(holdStart&&!G.wheel){var d=Math.hypot(ev.clientX-holdStart.x,ev.clientY-holdStart.y);if(d>12){clearTimeout(holdTimer);holdRing.style.display="none";holdStart=null;}}if(G.wheel)updateWheel(ev);else if(G.armed){var p=canvasCell(ev),pr=environmentalPreview(G.armed,p.c,p.r);pr.type=G.armed;G.preview=pr;}});
+cv.addEventListener("pointermove",function(ev){if(holdStart&&!G.wheel){var d=Math.hypot(ev.clientX-holdStart.x,ev.clientY-holdStart.y);if(d>12){clearTimeout(holdTimer);holdRing.style.display="none";holdStart=null;}}if(G.wheel)updateWheel(ev);else if(G.armed){var p=canvasCell(ev),pr=environmentalPreview(G.armed,p.c,p.r);pr.type=G.armed;pr.c=p.c;pr.r=p.r;G.preview=pr;}});
 cv.addEventListener("pointerleave",function(){if(!G.wheel)G.preview=null;});
 cv.addEventListener("pointerdown",function(ev){
-  if(G.state!=="play"||G.mode==="edit")return;pointerId=ev.pointerId;holdStart={x:ev.clientX,y:ev.clientY,t:performance.now()};placeOverlay(holdRing,ev);holdRing.style.display="block";holdRing.style.setProperty("--hold","0%");var began=performance.now();
+  if(G.state!=="play"||G.mode==="edit")return;pointerId=ev.pointerId;try{cv.setPointerCapture(ev.pointerId);}catch(e){}holdStart={x:ev.clientX,y:ev.clientY,t:performance.now()};placeOverlay(holdRing,ev);holdRing.style.display="block";holdRing.style.setProperty("--hold","0%");var began=performance.now();
   holdTimer=setTimeout(function(){openToolWheel(ev);},HOLD_MS);
   (function pulse(){if(!holdStart||G.wheel)return;var pc=Math.min(100,(performance.now()-began)/HOLD_MS*100);holdRing.style.setProperty("--hold",pc+"%");requestAnimationFrame(pulse);})();
 });
@@ -1310,7 +1356,7 @@ function tip(msg){ var el=document.getElementById("tip"); el.textContent=msg; el
   clearTimeout(tipT); tipT=setTimeout(function(){ el.classList.remove("show"); },1200); }
 
 /* ============================ OVERLAYS ============================ */
-function showIntro(){G.state="intro";var L=G.def,daily=!!L.daily,custom=(G.lvl<0&&!daily),inv=SKILLDEF.filter(function(q){return(L.skills[q.id]|0)>0}).map(function(q){return'<span>'+q.ic+' '+q.nm+' ×'+L.skills[q.id]+'</span>'}).join("");var bs=(custom||daily)?0:bestSeal(G.lvl),seals='<div class="seals"><span class="seal-t'+(bs>=1?' have':'')+'">🥉 '+L.target+'</span><span class="seal-t'+(bs>=2?' have':'')+'">🥈 '+silverOf(L)+'</span><span class="seal-t'+(bs>=3?' have':'')+'">🥇 '+goldOf(L)+'</span></div>';var card=document.getElementById("card");card.className="card mission";card.innerHTML='<div class="mission-head"><div class="mission-k">GUARDIAN MISSION</div><h1>'+L.name+'</h1><div class="sub">Guide '+L.target+' of '+L.total+' lights home</div></div><div class="mission-body">'+seals+'<div class="mission-tip">'+L.hint+'</div><div class="mission-controls"><b>HOLD</b> to open tools · <b>SLIDE</b> to choose · <b>RELEASE</b> to shape the world</div><div class="inv">'+inv+'</div><button class="cbtn" id="go">BEGIN RESCUE ▸</button>'+(custom?'<button class="cbtn alt" id="edit-lvl">✏️ EDIT</button>':'')+'</div>';document.getElementById("ov").classList.add("show");document.getElementById("go").onclick=function(){uiSound("start");document.getElementById("ov").classList.remove("show");card.className="card";G.state="play"};var eb=document.getElementById("edit-lvl");if(eb)eb.onclick=function(){document.getElementById("ov").classList.remove("show");card.className="card";defToED(G.def);enterEditor()};buildTools()}
+function showIntro(){G.state="intro";var L=G.def,daily=!!L.daily,custom=(G.lvl<0&&!daily),inv=SKILLDEF.filter(function(q){return(L.skills[q.id]|0)>0}).map(function(q){return'<span>'+q.ic+' '+q.nm+' ×'+L.skills[q.id]+'</span>'}).join("");var bs=(custom||daily)?0:bestSeal(G.lvl),seals='<div class="seals"><span class="seal-t'+(bs>=1?' have':'')+'">🥉 '+L.target+'</span><span class="seal-t'+(bs>=2?' have':'')+'">🥈 '+silverOf(L)+'</span><span class="seal-t'+(bs>=3?' have':'')+'">🥇 '+goldOf(L)+'</span></div>';var card=document.getElementById("card");card.className="card mission";card.innerHTML='<div class="mission-head"><div class="mission-k">GUARDIAN MISSION</div><h1>'+L.name+'</h1><div class="sub">Guide '+L.target+' of '+L.total+' lights home</div></div><div class="mission-body">'+seals+'<div class="mission-tip"><strong>'+rescueChapter().title+'</strong><br>'+(L.story||rescueChapter().line)+'</div><div class="mission-tip">'+L.hint+'</div><div class="mission-controls"><b>HOLD</b> to open tools · <b>SLIDE</b> to choose · <b>RELEASE</b> to shape the world</div><div class="inv">'+inv+'</div><button class="cbtn" id="go">BEGIN RESCUE ▸</button>'+(custom?'<button class="cbtn alt" id="edit-lvl">✏️ EDIT</button>':'')+'</div>';document.getElementById("ov").classList.add("show");document.getElementById("go").onclick=function(){uiSound("start");document.getElementById("ov").classList.remove("show");card.className="card";G.state="play";G.paused=false;document.getElementById("c-pause").textContent="⏸ PAUSE";document.getElementById("c-pause").classList.remove("act")};var eb=document.getElementById("edit-lvl");if(eb)eb.onclick=function(){document.getElementById("ov").classList.remove("show");card.className="card";defToED(G.def);enterEditor()};buildTools()}
 function showResult(win){
   var L=G.def, daily=!!L.daily, custom=(G.lvl<0&&!daily), last=(G.lvl>=LEVELS.length-1);
   var h=win?'<h2 class="win">RESCUED</h2>':'<h2 class="lose">SO CLOSE</h2>';
@@ -1354,7 +1400,7 @@ function showResult(win){
   }
   var rescuePct=L.total?G.saved/L.total:0, stewardship=Math.max(0,100-Math.max(0,G.interventions-1)*6), flow=Math.max(0,100-G.reversals*4-Math.floor(G.holdTicks/90));
   var tri='<div class="hint"><b>RESCUE</b> '+Math.round(rescuePct*100)+'% &nbsp; · &nbsp; <b>STEWARDSHIP</b> '+stewardship+'% &nbsp; · &nbsp; <b>FLOW</b> '+flow+'%<br><span style="color:var(--mut)">'+G.interventions+' world intervention'+(G.interventions===1?'':'s')+' · '+G.reversals+' route reversal'+(G.reversals===1?'':'s')+'</span></div>';
-  var rescueScore=Math.round((G.saved/L.total)*100),stewardScore=Math.max(0,100-Math.max(0,G.interventions-1)*7),flowScore=Math.max(0,100-G.reversals*5-G.peakAtRisk*4);
+  var rescueScore=Math.round(rescuePct*100),stewardScore=stewardship,flowScore=flow;
   var mastery='<div class="mastery"><div><b>'+rescueScore+'%</b><small>RESCUE</small></div><div><b>'+stewardScore+'%</b><small>STEWARDSHIP</small></div><div><b>'+flowScore+'%</b><small>FLOW</small></div></div>';
   var award='';if(G.saved===L.total&&G.interventions<=2)award='<div class="achievement">✦ CONSTELLATION KEEPER — every light home with two interventions or fewer</div>';else if(G.saved===L.total)award='<div class="achievement">✦ NO LIGHT LEFT BEHIND — every lumin rescued</div>';else if(flowScore>=90&&win)award='<div class="achievement">✦ SILKEN PATH — an exceptionally smooth rescue</div>';
   var btns='';
@@ -1388,15 +1434,15 @@ function showLevelSelect(){
   var t=sealTally();
   var tiles='';
   for(var i=0;i<LEVELS.length;i++){
-    var L=LEVELS[i], ok=unlocked(i), bs=bestSeal(i), b=RUN.best[i]|0;
-    tiles+='<div class="lvl-tile'+(ok?'':' lock')+'" data-i="'+i+'">'+
+    var L=LEVELS[i], ok=unlocked(i)||i>=10, bs=bestSeal(i), b=RUN.best[i]|0;
+    tiles+='<button type="button" class="lvl-tile'+(ok?'':' lock')+'" data-i="'+i+'">'+
       '<div class="lt-seal">'+(ok?(bs?SEALICON[bs]:'◇'):'🔒')+'</div>'+
       '<div class="lt-name">'+L.name+'</div>'+
       '<div class="lt-best">'+(ok?(b?('best '+b+'/'+L.total):'not solved yet'):'earn 🥉 on the level before')+'</div>'+
-    '</div>';
+    '<div class="lt-best">'+journalLine(i)+'</div></button>';
   }
   document.getElementById("card").innerHTML=
-    '<h2>LEVELS</h2>'+
+    '<h2>LEVELS</h2><p class="hint">The Way Home: missions 11–13 are ready to explore.</p>'+
     '<div class="seal-tally">🥇×'+t[3]+'&nbsp;&nbsp;🥈×'+t[2]+'&nbsp;&nbsp;🥉×'+t[1]+'</div>'+
     '<div class="seal-tally">✦ '+lanternTotal()+' lumins guided home</div>'+
     '<div class="lvl-grid">'+tiles+'</div>'+
@@ -1410,7 +1456,7 @@ function showLevelSelect(){
   var ts=document.querySelectorAll(".lvl-tile");
   for(var k=0;k<ts.length;k++){ ts[k].onclick=function(){
     var i=+this.getAttribute("data-i");
-    if(!unlocked(i)){ tip("Earn 🥉 on the level before to unlock"); return; }
+    if(!unlocked(i)&&i<10){ tip("Earn 🥉 on the level before to unlock"); return; }
     G.challenge=null;
     document.getElementById("ov").classList.remove("show");
     loadLevel(i); showIntro();
@@ -1420,7 +1466,7 @@ function showLevelSelect(){
 /* ============================ CONTROLS ============================ */
 document.getElementById("c-pause").onclick=function(){ G.paused=!G.paused; this.classList.toggle("act",G.paused); this.textContent=G.paused?"▶ RESUME":"⏸ PAUSE"; };
 document.getElementById("c-speed").onclick=function(){G.speed=G.speed===0.75?1:(G.speed===1?1.5:0.75);this.textContent=G.speed===0.75?"▶ 0.75×":G.speed===1.5?"▶ 1.5×":"▶ 1×";tone(430+G.speed*160,.08,"square",.025);};
-document.getElementById("c-undo").onclick=undoIntervention;
+document.getElementById("c-undo").onclick=undoIntervention;document.getElementById("c-sight").onclick=toggleSight;
 document.getElementById("c-restart").onclick=function(){ if(G.lvl<0){ loadDef(G.def); } else { loadLevel(G.lvl); } showIntro(); };
 document.getElementById("c-end").onclick=function(){ if(G.state==="play") endLevel(); };
 document.getElementById("c-lvls").onclick=function(){ if(G.mode!=="edit") showLevelSelect(); };
@@ -1431,8 +1477,17 @@ document.getElementById("c-calm").onclick=function(){ G.calm=!G.calm; this.class
 document.addEventListener("keydown", function(e){
   var tg=e.target&&e.target.tagName;
   if(tg==="INPUT"||tg==="TEXTAREA"||tg==="SELECT")return;
-  if(e.key>="1"&&e.key<="5"){ var sd=SKILLDEF[+e.key-1]; if(sd&&(G.skills[sd.id]|0)>0){ G.armed=(G.armed===sd.id?null:sd.id); buildTools(); } }
-  else if(e.key===" "){ e.preventDefault(); document.getElementById("c-pause").click(); }
+  if(G.state==='play'&&G.mode!=='edit'&&['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Enter'].includes(e.key)&&tg!=='BUTTON'){
+   e.preventDefault();keyboardActive=true;
+   if(e.key==='ArrowLeft')keyboardCell.c--;if(e.key==='ArrowRight')keyboardCell.c++;if(e.key==='ArrowUp')keyboardCell.r--;if(e.key==='ArrowDown')keyboardCell.r++;
+   keyboardCell.c=Math.max(0,Math.min(G.cols-1,keyboardCell.c));keyboardCell.r=Math.max(0,Math.min(G.rows-1,keyboardCell.r));
+   if(e.key==='Enter'&&G.armed){useWorldTool(G.armed,keyboardCell.c,keyboardCell.r);buildTools();sightCache=null;}
+   else if(G.armed){G.preview=Object.assign(environmentalPreview(G.armed,keyboardCell.c,keyboardCell.r),{type:G.armed,c:keyboardCell.c,r:keyboardCell.r});}
+   return;
+  }
+  if(e.key.toLowerCase()==='f'&&G.state==='play'){e.preventDefault();toggleSight();return;}
+  if(e.key>="1"&&e.key<="5"){ var sd=SKILLDEF[+e.key-1]; if(sd&&(G.skills[sd.id]|0)>0){ G.armed=(G.armed===sd.id?null:sd.id);G.preview=G.armed&&keyboardActive?Object.assign(environmentalPreview(G.armed,keyboardCell.c,keyboardCell.r),{type:G.armed,c:keyboardCell.c,r:keyboardCell.r}):null;sightCache=null; buildTools(); } }
+  else if(e.key===" "&&tg!=="BUTTON"){ e.preventDefault(); document.getElementById("c-pause").click(); }
   else if(e.key==="r"||e.key==="R"){ document.getElementById("c-restart").click(); }
   else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="z"){e.preventDefault();undoIntervention();}
 });
@@ -1441,7 +1496,7 @@ document.addEventListener("keydown", function(e){
 var acc=0,last=0;
 function frame(t){
   if(!last) last=t; var dt=t-last; last=t;
-  if(!G.paused && G.state==="play"){ acc+=dt*G.speed*(G.focusSlow?0.24:1); var STEP=1000/TICKHZ; var guard=0;
+  if(!G.paused && G.state==="play"){if(sightOn){sightOn=false;document.getElementById("c-sight").classList.remove("act");document.getElementById("sight-note").hidden=true;} acc+=dt*G.speed*(G.focusSlow?0.24:1); var STEP=1000/TICKHZ; var guard=0;
     while(acc>=STEP && guard<8){ step(); acc-=STEP; guard++; } if(acc>300)acc=0; }
   render(); if(G.mode==="edit") drawEditorOverlay(); requestAnimationFrame(frame);
 }
@@ -1778,6 +1833,7 @@ function drawEditorOverlay(){
 }
 /* in-browser solvability check (reuses the real engine on a temp state) */
 function simulate(d){
+  var liveG=G;G=cloneRuntime(G);try {
   var keys=["grid","cols","rows","lumins","parts","saved","out","spawned","dead","entrance","exit","skills","def","state","spawnT","armed","sound","mode","crumbs","fields","simTools"];
   var snap={}; for(var q=0;q<keys.length;q++) snap[keys[q]]=G[keys[q]];
   G.cols=d.cols; G.rows=d.rows; G.grid=new Uint8Array(d.grid);
@@ -1811,8 +1867,8 @@ function simulate(d){
   }
   var res={solved:G.saved>=d.target, saved:G.saved, tools:G.simTools|0};
   for(var q2=0;q2<keys.length;q2++) G[keys[q2]]=snap[keys[q2]];
-  G.terrainDirty=true;
   return res;
+  }finally{G=liveG;}
 }
 /* editor painting input */
 cv.addEventListener("pointerdown", function(ev){ if(G.mode!=="edit") return;
@@ -1823,7 +1879,7 @@ window.addEventListener("pointerup", function(){ ED.painting=false; });
 document.getElementById("c-edit").onclick=function(){ if(!ED.grid) initED(); enterEditor(); };
 
 /* expose for headless tests */
-window.__LUMINS={G:G,step:step,simUseTool:simUseTool,loadLevel:loadLevel,loadDef:loadDef,defFromMap:defFromMap,defFromED:defFromED,defToED:defToED,ED:ED,encodeLevel:encodeLevel,decodeLevel:decodeLevel,simulate:simulate,enterEditor:enterEditor,spawn:spawn,render:render,drawMotes:drawMotes,
+window.__LUMINS={guardianForecast:guardianForecast,cloneRuntime:cloneRuntime,environmentalPreview:environmentalPreview,useWorldTool:useWorldTool,undoIntervention:undoIntervention,applyToolCore:applyToolCore,G:G,step:step,simUseTool:simUseTool,loadLevel:loadLevel,loadDef:loadDef,defFromMap:defFromMap,defFromED:defFromED,defToED:defToED,ED:ED,encodeLevel:encodeLevel,decodeLevel:decodeLevel,simulate:simulate,enterEditor:enterEditor,spawn:spawn,render:render,drawMotes:drawMotes,
   solid:solid,cellType:cellType,LEVELS:LEVELS,stepLumin:stepLumin,makeDaily:makeDaily,genDaily:genDaily,challengeUrl:challengeUrl,shareText:shareText};
 })();
 </script>

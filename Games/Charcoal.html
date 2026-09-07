@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <link rel="canonical" href="https://madebymatt.uk/Lessons/Games/Charcoal.html">
-<meta name="description" content="Charcoal AAA V6 — a tactile, accessible Made by Matt studio mystery, preserved offline in one file.">
+<meta name="description" content="Charcoal AFTERLIGHT — a tactile, accessible Made by Matt studio mystery, preserved offline in one file.">
 <meta name="theme-color" content="#161D3D">
-<title>Charcoal AAA V6 — Made by Matt</title>
+<title>Charcoal — The Unfinished Exhibition</title>
 <style>
 :root{
   --navy:#161D3D; --navy2:#0F1430; --cream:#E8E2D4; --paper:#EDE6D4; --paper2:#DED3BC;
@@ -182,7 +182,7 @@ canvas{display:block}
  #cine .cnEyebrow,#cine .cnTitle,#cine .cnRole,#cine .cnLine,#cine .cnMap,#cine .cnBegin{animation:none;opacity:1;transform:none}}
 @media (max-width:520px){.mode{flex-basis:100%}.ctCard{flex-basis:100%}}
 
-/* ================= AAA V6 VIEWPORT + PRESENTATION LAYER =================
+/* ================= AFTERLIGHT VIEWPORT + PRESENTATION LAYER =================
    Simulation, scoring, roles, collisions, rewards and legacy saves remain in
    the original engine below. This layer only reserves safe touch space and
    paints previews/cinematics over that authority. */
@@ -211,9 +211,9 @@ button,[role="button"],canvas[tabindex]{min-width:44px;min-height:44px}
 @media (prefers-reduced-motion:reduce){#scrGame.v6-fly #cvwrap,.v6spark,#v6clutch.on{animation:none!important}#v6clutch.on{opacity:1}}
 .rm #scrGame.v6-fly #cvwrap,.rm .v6spark,.rm #v6clutch.on{animation:none!important}
 </style>
-</head>
+<style>#exhibitionGoal{position:absolute;left:16px;top:66px;color:#272e44;background:rgba(237,230,212,.94);padding:7px 12px;border-radius:8px;font:600 13px system-ui;pointer-events:none;max-width:75vw}#scrTitle{background:linear-gradient(90deg,rgba(15,20,48,.92),rgba(15,20,48,.78)),url(assets/charcoal.webp) center/cover}button:focus-visible{outline:3px solid #fff;outline-offset:3px}</style></head>
 <body>
-<div id="v6badge" aria-hidden="true">AAA V6 · MADE BY MATT</div>
+<div id="v6badge" aria-hidden="true">AFTERLIGHT · MADE BY MATT</div>
 <div id="v6clutch" aria-live="polite">CLUTCH INK</div><div id="v6ascent" aria-hidden="true"></div>
 <!-- ============ SPLASH ============ -->
 <div class="scr on" id="scrSplash" role="button" aria-label="Made by Matt. Tap to continue.">
@@ -275,7 +275,7 @@ button,[role="button"],canvas[tabindex]{min-width:44px;min-height:44px}
 <div id="cine" aria-live="polite"></div>
 
 <!-- ============ GAME ============ -->
-<div class="scr" id="scrGame">
+<div class="scr" id="scrGame"><div id="exhibitionGoal" aria-live="polite"></div>
   <div id="wrap">
     <div id="topbar">
       <button id="btnPause" aria-label="Pause and menu" style="font-size:18px;padding:2px 8px">☰</button>
@@ -612,6 +612,8 @@ function newRound(round,opt){
     dropTimer:0,tut:opt.tut||false,
     reachedTenT:null,halfLogged:false,
     paused:false,skipInput:!!opt.headless};
+  S.lamps=[0,2,4].map(function(n,i){var pt=md.nodes[n%md.nodes.length];return {x:pt[0],y:pt[1],charge:0,lit:0,cool:0,snuff:0,id:i};});
+  S.exhibition={lit:0,snuffed:0,clues:0,seenDust:{}};
   spawnDropWave(true);
   S.player.wasSeen=1;
   return S;
@@ -645,14 +647,16 @@ function witnesses(p,exclActor,exclTarget){
     var c=S.chars[i];
     if(c.id===exclActor||c.id===exclTarget)continue;
     if(c.smudged||c.role==='smudge')continue;      // smudged shapes and the Smudge don't witness
-    if(dist(c,p)>TUNE.visionR)continue;
-    if(losBlocked(c,p,md))continue;
+    if(!studioLightsOn() && dist(c,p)>TUNE.visionR)continue;
+    if(!studioLightsOn() && losBlocked(c,p,md))continue;
     n++;
   }
+  if(S.lamps&&S.lamps.some(function(l){return l.lit>0&&Math.hypot(l.x-p.x,l.y-p.y)<132;}))n++;
   return n;
 }
+function studioLightsOn(){return S&&typeof S._lightsT==='number'&&S.t-S._lightsT<2;}
 function seesTarget(observer,p){
-  return dist(observer,p)<=TUNE.visionR && !losBlocked(observer,p,S.md);
+  return studioLightsOn() || (dist(observer,p)<=TUNE.visionR && !losBlocked(observer,p,S.md));
 }
 
 /* ================= drops ================= */
@@ -712,6 +716,12 @@ function freshestDustRegion(){
 /* ================= smudge / re-ink ================= */
 function inkedCount(){var n=0;for(var i=0;i<S.chars.length;i++)if(!S.chars[i].smudged)n++;return n;}
 function doSmudge(actor,victim){
+  if(!S||S.over||!actor||!victim||actor.smudged||victim.smudged)return false;
+  if(victim._blot){victim._blot=false;addDust(actor.x,actor.y);actor.nearHits+=1;
+    puff(victim.x,victim.y,'#B9E6CD',16,55,0.8,3,18);
+    log(victim.name+' blotted the charcoal before the line broke.');
+    if(!S.skipInput)toast('Blot absorbed the smudge. The fresh dust remains.');return false;}
+
   victim.smudged=true;victim.path=[];victim.state='drift';
   /* drift to the nearest edge of the room it was in — visible, walkable, not gone.
      Reduced motion keeps the dust (the tell) but drops the drift: the sketch settles at
@@ -804,7 +814,7 @@ function stepCan(dt){
 
 /* ================= AI ================= */
 function aiSmudge(c,dt){
-  c.cd-=dt;
+  /* cooldown is advanced once for both human and AI roles in tick. */
   /* isolate: prefer an inked target with no inked witnesses, on a route that breaks LOS */
   if(c.state==='roam'||!c.target){
     var cand=null,cs=-1;
@@ -943,11 +953,14 @@ function tick(dt){
   if(S.t>=TUNE.playTime-TUNE.lastLight&&!S.lastLight){S.lastLight=true;if(!S.tut)banner('LAST LIGHT — the studio dims');}
   // characters
   for(var k=0;k<S.chars.length;k++){var c=S.chars[k];
+    if(c.role==='smudge')c.cd=Math.max(0,c.cd-dt);
     if(c.isPlayer&&!S.skipInput){stepPlayer(c,dt);continue;}
+    if(c.smudged){aiCast(c,dt);continue;}
     if(c.role==='smudge')aiSmudge(c,dt);
     else if(c.role==='fixer')aiFixer(c,dt);
     else aiCast(c,dt);
   }
+  stepWorklamps(dt);
   stepReink(dt);
   stepCan(dt);
   stepDrops(dt);
@@ -986,10 +999,12 @@ function endRound(kind){
 function computeReward(kind){
   var base=6;
   var perDrop=Math.floor(S.playerDrops*0.6);
-  var win=(kind==='sealed'||kind==='held');
-  var bonus=(kind==='sealed'?14:0)+(kind==='held'?8:0);
+  var studioWin=(kind==='sealed'||kind==='held');
+  var win=S.playerRole==='smudge'?!studioWin:studioWin;
+  var bonus=win?(S.playerRole==='smudge'?14:kind==='sealed'?14:8):0;
   var total=base+perDrop+bonus + S.playerDrops; // unspent drops bank
-  return {win:win,drops:total,spent:S.playerDrops};
+  var goal=S.playerRole==='smudge'?S.exhibition.snuffed>=1:S.playerRole==='cast'?S.exhibition.lit>=2:S.exhibition.clues>=1;
+  return {win:win,drops:total+(goal?8:0),spent:S.playerDrops,commission:goal};
 }
 
 /* ================= player actions (real play) ================= */
@@ -1007,6 +1022,7 @@ function nearAction(){
   return null;
 }
 function doAction(){
+  if(!S||S.paused||S.over)return;
   var n=nearAction();if(!n)return;
   var p=S.player;
   if(n.kind==='spray'){ fixerSpray(p); }
@@ -1024,7 +1040,10 @@ var SPENDS=[
  {id:'lights',name:'Studio lights',cost:25}
 ];
 function spend(i){
+  if(!S||S.paused||S.over||!SPENDS[i])return;
   var sp=SPENDS[i],p=S.player;
+  if(sp.id==='blot'&&p._blot){toast('Your Blot is still ready.');return;}
+  if(sp.id==='trace'&&!freshestDustRegion()){toast('Wait for fresh dust before buying a Trace.');return;}
   if(p.role!=='cast'||p.smudged){toast('Only the Cast collect and spend.');return;}
   if(S.playerDrops<sp.cost){toast('Not enough drops yet — '+sp.cost+' needed.');return;}
   S.playerDrops-=sp.cost;
@@ -1033,6 +1052,44 @@ function spend(i){
   else if(sp.id==='lights'){S._lightsT=S.t;toast('Studio lights — everyone can see, for two seconds.');}
   refreshHud();
 }
+
+
+/* Work lamps are genuine safe areas. Cast restore them; the Smudge can erase
+   a lamp by remaining at its desk, leaving visible dust as the price. */
+var EXHIBITION=[
+ {name:'The Unfinished Exhibition',line:'Clara left three work lamps burning. Restore the light before the opening.'},
+ {name:'The Long Way Back',line:'A drawing can survive a mistake. On the bench, a little light gives everyone time.'},
+ {name:'The First Mark',line:'The final sheet is still blank. Keep the room together; the exhibition belongs to all six of you.'}
+];
+function exhibitionChapter(){return EXHIBITION[(S?MAP_ORDER.indexOf(S.map):Math.floor((SAVE.rounds||0)/3))%3]||EXHIBITION[0];}
+function stepWorklamps(dt){
+ if(!S.lamps)return;
+ S.lamps.forEach(function(l){
+  l.cool=Math.max(0,l.cool-dt);l.lit=Math.max(0,l.lit-dt);
+  var sm=S.chars.find(function(c){return c.role==='smudge'&&!c.smudged&&Math.hypot(c.x-l.x,c.y-l.y)<40;});
+  if(l.lit>0&&sm){l.snuff+=dt;if(l.snuff>=1.4){l.lit=0;l.cool=12;l.snuff=0;addDust(l.x,l.y);sm.nearHits+=0.65;if(sm.isPlayer)S.exhibition.snuffed++;log('A work lamp went to rough.');}}
+  else l.snuff=0;
+  if(l.lit>0||l.cool>0){l.charge=0;return;}
+  var helper=S.chars.find(function(c){return c.role!=='smudge'&&!c.smudged&&Math.hypot(c.x-l.x,c.y-l.y)<44;});
+  l.charge=helper?Math.min(2,l.charge+dt):Math.max(0,l.charge-dt);
+  if(l.charge>=2){l.lit=12;l.cool=24;l.charge=0;
+   if(!S.player.smudged&&S.player.role!=='smudge'&&Math.hypot(S.player.x-l.x,S.player.y-l.y)<44){S.exhibition.lit++;if(S.player.role==='cast')S.playerDrops+=3;}
+   puff(l.x,l.y,'#D9B44A',16,45,1,2.5,15);log('A work lamp returned to ink.');
+  }
+ });
+ if(S.player.role==='fixer'&&!S.player.smudged)S.dust.forEach(function(d){var id=d.t+':'+d.x;if(Math.hypot(d.x-S.player.x,d.y-S.player.y)<80&&!S.exhibition.seenDust[id]){S.exhibition.seenDust[id]=1;S.exhibition.clues++;}});
+}
+function drawWorklamps(){
+ if(!S.lamps)return;
+ S.lamps.forEach(function(l){ctx.save();
+  if(l.lit>0){var g=ctx.createRadialGradient(l.x,l.y,8,l.x,l.y,132);g.addColorStop(0,'rgba(255,202,100,.24)');g.addColorStop(1,'rgba(255,202,100,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(l.x,l.y,132,0,7);ctx.fill();}
+  ctx.strokeStyle=l.lit>0?'#9c7022':'rgba(42,46,58,.4)';ctx.lineWidth=2;ctx.setLineDash(l.cool>0&&l.lit<=0?[3,4]:[]);ctx.beginPath();ctx.arc(l.x,l.y,20,0,7);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle=l.lit>0?'#f4c66d':'#7c7f8a';ctx.beginPath();ctx.arc(l.x,l.y,6,0,7);ctx.fill();
+  var progress=l.lit>0?l.lit/12:l.charge/2;ctx.lineWidth=4;ctx.strokeStyle='#B07B20';ctx.beginPath();ctx.arc(l.x,l.y,25,-Math.PI/2,-Math.PI/2+progress*Math.PI*2);ctx.stroke();
+  ctx.font='600 12px system-ui';ctx.textAlign='center';ctx.fillStyle='#3b3e49';ctx.fillText(l.lit>0?'LAMP · '+Math.ceil(l.lit)+'s':l.cool>0?'RESTING':'RESTORE · 2s',l.x,l.y+42);ctx.restore();
+ });
+}
+function exhibitionGoal(){if(!S)return '';return S.playerRole==='smudge'?'Erase a work lamp: '+Math.min(1,S.exhibition.snuffed)+'/1':S.playerRole==='cast'?'Restore two work lamps: '+Math.min(2,S.exhibition.lit)+'/2':'Read fresh dust: '+Math.min(1,S.exhibition.clues)+'/1';}
 
 /* ================= rendering ================= */
 var cv,ctx,scale=1,ox=0,oy=0;
@@ -1114,7 +1171,8 @@ function draw(){
   ctx.clearRect(0,0,vw,vh);
   ctx.drawImage(floorCv,0,0,vw,vh);
   ctx.save();ctx.translate(ox,oy);ctx.scale(scale,scale);
-  var lightsOn=(S._lightsT&&S.t-S._lightsT<2);
+  var lightsOn=studioLightsOn();
+  drawWorklamps();
   // last-light warm wash
   if(S.lastLight){ctx.fillStyle='rgba(217,180,74,.06)';ctx.fillRect(0,0,W,H);}
   // dust — real charcoal grain, darker when fresh
@@ -1168,6 +1226,7 @@ function drawChar(c){
   ctx.translate(0,bob);
   var col=c.hue;
   if(c.isPlayer)glow(0,0,58,col,0.18);
+  if(c._blot){ctx.save();ctx.strokeStyle='#388D67';ctx.lineWidth=3;ctx.setLineDash([5,3]);ctx.beginPath();ctx.arc(0,0,26,0,7);ctx.stroke();ctx.restore();}
   ctx.lineWidth=3;ctx.strokeStyle=col;ctx.fillStyle=col;
   drawShape(ctx,c.shape,col);
   // eyes
@@ -1227,6 +1286,7 @@ function refreshHud(){
   $('inkedChip').textContent='inked '+inkedCount()+'/'+S.chars.length;
   $('dropChip').textContent='◦ '+S.playerDrops;
   $('timeChip').textContent=fmt(TUNE.playTime-S.t);
+  var q=$('exhibitionGoal');if(q)q.textContent=exhibitionGoal();
   if(S._toastT&&S.t-S._toastT>2.6){$('toast').className='';S._toastT=0;}
 }
 function refreshAct(){
@@ -1242,6 +1302,7 @@ function refreshAct(){
 
 /* ================= summary ================= */
 function showSummary(kind,reward){
+  if(S.summaryBanked)return;S.summaryBanked=true;
   banner('');
   var smName=charById(S.smudgeId)?charById(S.smudgeId).name:'—';
   var titles={sealed:'Sealed — the studio holds ✨',held:'The work held ✨',rough:'The work went back to rough',allrough:'The work went back to rough'};
@@ -1254,7 +1315,7 @@ function showSummary(kind,reward){
   if(kind==='sealed')body='The Fixer read the room and sealed the charcoal in one. Everything smudged tonight can be inked back in by morning.';
   else if(kind==='held')body='The last light came and '+inkedCount()+' shapes were still inked. The studio kept its work — a gentle finish.';
   else body='The charcoal got ahead of the room this time. Nothing is lost — every smudged shape is just a rough sketch waiting to be inked again.';
-  $('endBody').textContent=body;
+  $('endBody').textContent=body+' '+(reward.commission?'Exhibition commission complete: 8 extra drops.':'The exhibition commission is ready to try again.')+' '+exhibitionGoal();
   var tells='';
   if(S.events.length){var lowW=S.events.filter(function(e){return e.wit===0;}).length;
     tells='<b>The Smudge was '+smName+'.</b><br>They left '+S.smudgeCount+' patch'+(S.smudgeCount===1?'':'es')+' of dust and worked '+lowW+' of them with no one watching.';
@@ -1263,6 +1324,7 @@ function showSummary(kind,reward){
   // bank rewards
   SAVE.drops=(SAVE.drops||0)+reward.drops;
   SAVE.rounds=(SAVE.rounds||0)+1;if(win)SAVE.wins=(SAVE.wins||0)+1;
+  SAVE.exhibition=SAVE.exhibition||{};if(reward.commission)SAVE.exhibition[S.map+':'+S.playerRole]=true;
   SAVE.stars=(SAVE.stars||0)+stars;SAVE.xp=clamp((SAVE.xp||0)+stars*7,0,100);
   SAVE.rotation=((SAVE.rotation||0)+1)%ROLE_ROTATION.length;
   store();
@@ -1299,7 +1361,7 @@ function ownedCount(){var n=0;for(var k in SAVE.owned)if(SAVE.owned[k])n++;retur
 function startRound(round){
   newRound(round);
   $('scrTitle').classList.remove('on');$('scrCounter').classList.remove('on');$('scrGame').classList.add('on');
-  $('roundChip').textContent='ROUND '+round;
+  $('roundChip').textContent=exhibitionChapter().name.toUpperCase();
   banner('');fitCanvas();stopMenuCast();S.paused=true;
   cineOpen(round,function(){
     var firstTut=!SAVE.tut.first;
@@ -1321,6 +1383,7 @@ function cineOpen(round,cb){
    smudge:'You picked up the charcoal. Smudge the finished work back to rough — but only when no inked shape can see you. Break away after, before your dust gives you the room.',
    cast:'You collect ink drops and keep the studio inked. Your drops buy a Blot, a Trace, or the Studio lights — and two of you beside a rough shape ink it back in. Nobody here is only a bystander.'
   }[role];
+  line=exhibitionChapter().line+' '+line+' Stay at a work lamp for two seconds to restore its safe circle. The Smudge can erase an active lamp by staying beside it for a moment.';
   var frag=el('div');
   frag.innerHTML='<div class="cnEyebrow">ROUND '+round+' · THE STUDIO, AFTER HOURS</div>'
    +'<div class="cnTitle">TONIGHT YOU ARE <span class="g">'+roleName+'</span></div>'
@@ -1672,8 +1735,8 @@ function boot(){
   window.addEventListener('keydown',function(e){
     if(e.key==='Escape'&&cineCb){cineEnd();return;}
     if(!S)return;
-    if(e.key===' '||e.key==='Enter'){if($('btnAct').classList.contains('hid')===false)doAction();}
-    if(e.key==='Escape'){if(anyOvl()){document.querySelectorAll('.ovl.on').forEach(function(o){o.classList.remove('on');});S.paused=false;}else $('btnPause').click();}
+    if(e.key===' '&&!e.repeat&&!/INPUT|TEXTAREA|BUTTON|SELECT/.test(e.target&&e.target.tagName||'')){e.preventDefault();if($('btnAct').classList.contains('hid')===false)doAction();}
+    if(e.key==='Escape'){if(S.over)return;if(anyOvl()){document.querySelectorAll('.ovl.on').forEach(function(o){o.classList.remove('on');});S.paused=false;}else $('btnPause').click();}
   });
   $('scrTitle').classList.remove('on');
   runSplash();
@@ -1688,6 +1751,7 @@ if(typeof window!=='undefined'){
   window.CH={
     ver:GAME_VERSION,TUNE:TUNE,DIFFS:DIFFS,CAST:CAST,MAPS:MAPS,MAP_ORDER:MAP_ORDER,RARITY:RARITY,ITEMS:ITEMS,
     get S(){return S;},get SAVE(){return SAVE;},
+    stepWorklamps:stepWorklamps,spend:spend,doAction:doAction,computeReward:computeReward,studioLightsOn:studioLightsOn,
     newRound:newRound,tick:tick,witnesses:witnesses,losBlocked:losBlocked,seesTarget:seesTarget,
     doSmudge:doSmudge,fixerSpray:fixerSpray,inkedCount:inkedCount,suspectRank:suspectRank,charById:charById,
     draw:draw,fitCanvas:fitCanvas,bakeFloor:bakeFloor,drawClara:drawClara,drawItem:drawItem,
@@ -1747,7 +1811,7 @@ if(document.body)mount();else document.addEventListener("DOMContentLoaded",mount
 })();</script>
 <!-- MBM-INLINE-EXIT:END -->
 <script>
-/* ================= CHARCOAL AAA V6 — ISOLATED RELEASE SHELL =================
+/* ================= CHARCOAL AFTERLIGHT — ISOLATED RELEASE SHELL =================
    This shell never writes mbm_charcoal. The original engine remains the sole
    authority for movement, sightlines, roles, scoring, rewards and progression. */
 (function(){
