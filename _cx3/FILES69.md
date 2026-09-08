@@ -1,0 +1,73 @@
+# CX3 §A — the 69 attached exemplars, one line each
+
+`path · verdict · relabel rewrites · served bytes (education-lessons build at Lessons 43d5e5ef)`
+
+- `Humanities_Teesside/BUILD_W9-W14_2026-27/BUILD_HUM_W10_Rails_Meet_the_River_OUTSTANDING_V4.html` · **OK** · relabel 15 · 104,290 B
+- `Humanities_Teesside/BUILD_W9-W14_2026-27/BUILD_HUM_W11_The_Iron_Rush_OUTSTANDING_V4.html` · **OK** · relabel 15 · 99,514 B
+- `Humanities_Teesside/BUILD_W9-W14_2026-27/BUILD_HUM_W12_A_Town_Grows_Fast_OUTSTANDING_V4.html` · **OK** · relabel 13 · 97,079 B
+- `Humanities_Teesside/BUILD_W9-W14_2026-27/BUILD_HUM_W13_Crossing_the_Steel_River_OUTSTANDING_V4.html` · **OK** · relabel 15 · 101,419 B
+- `Humanities_Teesside/BUILD_W9-W14_2026-27/BUILD_HUM_W14_Industry_and_Nature_The_Tees_Story_OUTSTANDING_V4.html` · **OK** · relabel 5 · 101,041 B
+- `Humanities_Teesside/BUILD_W9-W14_2026-27/BUILD_HUM_W9_Meet_the_Lower_Tees_OUTSTANDING_V4.html` · **OK** · relabel 14 · 112,328 B
+- `Humanities_Teesside/GROW_W9-W14_2026-27/GROW_HUM_W10_Teesside_Connected_World_OUTSTANDING_V3_1.html` · **HELD** · relabel n/a · 139,702 B — RX3 replaced this deck in place; the attached exemplar is the pre-RX3 generation (279 live strings absent) → RX5, issue #416
+- `Humanities_Teesside/GROW_W9-W14_2026-27/GROW_HUM_W11_Light_Across_the_Map_OUTSTANDING_V3_1.html` · **OK** · relabel 11 · 92,781 B
+- `Humanities_Teesside/GROW_W9-W14_2026-27/GROW_HUM_W12_Compare_With_Care_OUTSTANDING_V3_1.html` · **OK** · relabel 11 · 88,225 B
+- `Humanities_Teesside/GROW_W9-W14_2026-27/GROW_HUM_W13_Belonging_Briefing_OUTSTANDING_V3_1.html` · **OK** · relabel 15 · 86,975 B
+- `Humanities_Teesside/GROW_W1-W8_2026-27/GROW_HUM_W3_Why_People_Moved_And_What_Changed.html` · **OK** · relabel 32 · 98,366 B
+- `Humanities_Teesside/GROW_W9-W14_2026-27/GROW_HUM_W9_Pinpoint_the_Place_OUTSTANDING_V3_1.html` · **OK** · relabel 12 · 102,747 B
+- `Art_Teesside/LAUNCH_W1-W8_2026-27/LAUNCH_Art_W3_Research_An_Artist_Practitioner.html` · **OK** · relabel 4 · 70,685 B
+- `Humanities_Teesside/LAUNCH_W9-W14_2026-27/LAUNCH_HUM_W10_Settlement_And_Urbanisation.html` · **OK** · relabel 21 · 97,756 B
+- `Humanities_Teesside/LAUNCH_W9-W14_2026-27/LAUNCH_HUM_W11_Local_Fieldwork_Collect_Data.html` · **OK** · relabel 20 · 99,449 B
+- `Humanities_Teesside/LAUNCH_W9-W14_2026-27/LAUNCH_HUM_W12_Fieldwork_Data_Graphs.html` · **OK** · relabel 21 · 96,532 B
+- `Humanities_Teesside/LAUNCH_W9-W14_2026-27/LAUNCH_HUM_W13_Contrasting_Places.html` · **OK** · relabel 20 · 95,102 B
+- `Humanities_Teesside/LAUNCH_W9-W14_2026-27/LAUNCH_HUM_W14_Fieldwork_Enquiry_Write_Up.html` · **OK** · relabel 18 · 99,425 B
+- `Humanities_Teesside/LAUNCH_W9-W14_2026-27/LAUNCH_HUM_W9_GIS_Layers_Reading_Place.html` · **OK** · relabel 21 · 126,858 B
+- `Science_Teesside/Build/W8-W13_2026-27/SCI_B_W10A_Rock_Hardness_Explore.html` · **OK** · relabel 1 · 147,319 B
+- `Science_Teesside/Build/W8-W13_2026-27/SCI_B_W10B_Hardness_Evidence_Do.html` · **OK** · relabel 0 · 111,849 B
+- `Science_Teesside/Build/W8-W13_2026-27/SCI_B_W11B_Water_Through_Rock_Lab_Do.html` · **OK** · relabel 9 · 113,855 B
+- `Science_Teesside/Build/W8-W13_2026-27/SCI_B_W12A_Rock_Jobs_Which_Property_Matters_Explore.html` · **OK** · relabel 7 · 105,662 B
+- `Science_Teesside/Build/W8-W13_2026-27/SCI_B_W12B_Choose_Rock_For_The_Job_Do.html` · **OK** · relabel 3 · 108,739 B
+- `Science_Teesside/Build/W8-W13_2026-27/SCI_B_W13A_Fair_Test_Planner_Change_One_Thing_Explore.html` · **OK** · relabel 23 · 111,778 B
+- `Science_Teesside/Build/W8-W13_2026-27/SCI_B_W13B_Method_Pilot_Test_The_Test_Do.html` · **OK** · relabel 36 · 115,618 B
+- `Science_Teesside/Build/W14-W20_2026-27/SCI_B_W14A_Autumn_Science_Review_Explore.html` · **OK** · relabel 1 · 44,740 B
+- `Science_Teesside/Build/W14-W20_2026-27/SCI_B_W14B_Autumn_Science_Evidence_Do.html` · **OK** · relabel 1 · 45,839 B
+- `Science_Teesside/Build/W14-W20_2026-27/SCI_B_W15A_Fossil_Formation_Story_Explore.html` · **OK** · relabel 1 · 45,452 B
+- `Science_Teesside/Build/W14-W20_2026-27/SCI_B_W15B_Fossil_Formation_Evidence_Do.html` · **OK** · relabel 1 · 46,802 B
+- `Science_Teesside/Build/v3_40min/SCI_B_W3A_Backbones_Explore.html` · **HELD** · relabel n/a · 63,938 B — attached replaces the We Do sorter strings beyond the two named intended edits (SC3 + starter puzzle) → needs Matt’s release
+- `Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html` · **OK** · relabel 3 · 117,758 B
+- `Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html` · **OK** · relabel 4 · 107,736 B
+- `Science_Teesside/Build/W8-W13_2026-27/SCI_B_W9A_Rock_Evidence_Explore.html` · **OK** · relabel 2 · 156,446 B
+- `Science_Teesside/Build/W8-W13_2026-27/SCI_B_W9B_Rock_Sorting_Key_Do.html` · **OK** · relabel 0 · 115,931 B
+- `Science_Teesside/Grow/Autumn2_W7_2026-27/SCI_G_A2_W7A_Autumn_Science_Review_Explore.html` · **HELD** · relabel n/a · 66,994 B — the uploaded file was 26,048 bytes / sha eb7dfd12, not the §A exemplar (72,370 / 57a9f0b7); 197 live strings absent
+- `Science_Teesside/Grow/Autumn2_W7_2026-27/SCI_G_A2_W7B_Autumn_Science_Evidence_Do.html` · **OK** · relabel 4 · 77,227 B
+- `Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W10A_Solar_System_Research_Explore.html` · **OK** · relabel 5 · 110,516 B
+- `Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W10B_Solar_System_Presentation_Do.html` · **OK** · relabel 3 · 110,580 B
+- `Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W11A_Global_Warming_Explore.html` · **OK** · relabel 4 · 109,684 B
+- `Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W11B_Climate_Action_Do.html` · **OK** · relabel 8 · 103,428 B
+- `Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W12A_Science_Connections_Explore.html` · **OK** · relabel 6 · 103,317 B
+- `Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W12B_Science_Answer_Lab_Do.html` · **OK** · relabel 4 · 103,064 B
+- `Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W13A_Rover_Rescue_Plan_Explore.html` · **OK** · relabel 5 · 101,281 B
+- `Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W13B_Rover_Rescue_Investigation_Do.html` · **OK** · relabel 4 · 101,302 B
+- `Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W8A_Day_And_Night_Explore.html` · **OK** · relabel 3 · 113,443 B
+- `Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W8B_Day_And_Night_Do.html` · **OK** · relabel 3 · 142,229 B
+- `Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W9A_Spherical_Bodies_Explore.html` · **OK** · relabel 5 · 108,481 B
+- `Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W9B_Spherical_Bodies_Do.html` · **OK** · relabel 3 · 109,857 B
+- `Science_Teesside/Launch/Autumn2_W7_2026-27/SCI_L_A2_W7L1_Topics_2_3_Assessment_Introduce.html` · **OK** · relabel 1 · 48,823 B
+- `Science_Teesside/Launch/Autumn2_W7_2026-27/SCI_L_A2_W7L2_Topics_2_3_Assessment_Explore.html` · **OK** · relabel 1 · 48,080 B
+- `Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W10L1_Growth_And_Differentiation_Introduce.html` · **OK** · relabel 5 · 112,003 B
+- `Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W10L2_Stem_Cells_And_Meristems_Explore.html` · **OK** · relabel 1 · 113,715 B
+- `Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W10L3_Growth_Stem_Cell_Data_Application_Do.html` · **OK** · relabel 6 · 113,130 B
+- `Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W11L1_Stem_Cell_Evidence_Introduce.html` · **OK** · relabel 5 · 105,113 B
+- `Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W11L2_Benefit_Risk_Uncertainty_Explore.html` · **OK** · relabel 3 · 103,403 B
+- `Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W11L3_Stem_Cell_Discuss_Do.html` · **OK** · relabel 1 · 104,125 B
+- `Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W12L1_DNA_Hierarchy_Introduce.html` · **OK** · relabel 5 · 108,066 B
+- `Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W12L2_DNA_Structure_Explore.html` · **OK** · relabel 3 · 106,286 B
+- `Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W12L3_Fruit_DNA_Evidence_Do.html` · **OK** · relabel 3 · 105,510 B
+- `Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W13L1_Alleles_Genotype_Phenotype_Introduce.html` · **OK** · relabel 5 · 102,366 B
+- `Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W13L3_Inheritance_Probability_Do.html` · **OK** · relabel 4 · 105,101 B
+- `Science_Teesside/Launch/W14-W15_2026-27/SCI_L_W14L1_Genetic_Condition_Research_Introduce.html` · **OK** · relabel 4 · 76,231 B
+- `Science_Teesside/Launch/W14-W15_2026-27/SCI_L_W14L2_Genetic_Condition_Source_Evidence_Explore.html` · **OK** · relabel 4 · 76,576 B
+- `Science_Teesside/Launch/W14-W15_2026-27/SCI_L_W14L3_Genetic_Condition_Presentation_Do.html` · **OK** · relabel 4 · 76,647 B
+- `Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L1_Enzyme_Action_Introduce.html` · **OK** · relabel 3 · 120,382 B
+- `Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L2_Amylase_pH_Core_Practical_Explore.html` · **OK** · relabel 1 · 120,886 B
+- `Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L3_Amylase_Rate_And_Topic_1_Do.html` · **OK** · relabel 6 · 119,498 B
+- `Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9L1_Cell_Cycle_Introduce.html` · **OK** · relabel 3 · 119,417 B
