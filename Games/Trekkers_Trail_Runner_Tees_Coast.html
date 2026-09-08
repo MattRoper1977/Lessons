@@ -461,7 +461,7 @@
             <p style="color:#00ffff; font-size:14px; margin-top:10px;">⛺ <strong>SHELTER:</strong> blocks one Storm hit.</p>
             <p style="color:#ffd700; font-size:14px;">🧭 <strong>PACE:</strong> chain pickups to keep your streak (max ×10).</p>
         </div>
-        <button class="btn" id="start-btn">START THE TREK</button>
+        <button class="btn" id="relay-start">COASTGUARD RELAY</button><p class="relay-intro"><b>A radio silence along the coast.</b> Tune 9 of 12 rings: follow their lane and height, stay steady through the opening. F clears nearby hazards for 15 radio. Arrows / WASD move; Space rolls; X fires. A finite three-sector rescue.</p><button class="btn" id="start-btn">CLASSIC TREK</button>
         <button class="btn" id="leaderboard-btn" style="border-color: #ffd700; color: #ffd700;">🧭 QUESTS &amp; BEST</button>
         <button class="btn" id="settings-btn" style="border-color: #ffffff; color: #ffffff;">YOUR KIT</button>
         <button class="btn" id="calm-toggle" style="border-color: #16a34a; color: #4ade80;">CALM MODE: OFF</button>
@@ -533,7 +533,14 @@
         </div>
     </div>
 
-    <script type="module">
+    <style>
+#start-screen{overflow-y:auto;justify-content:safe center;box-sizing:border-box;padding:28px 16px}#start-screen>*{flex-shrink:0}#relay-result{overflow-y:auto;place-items:safe center!important;box-sizing:border-box;padding:20px 0}
+#relay-hud{position:fixed;z-index:18;left:50%;bottom:16px;transform:translateX(-50%);background:#07151eef;border:1px solid #659a9e;border-radius:14px;padding:12px 18px;color:#dceced;font:600 12px system-ui;max-width:86vw;text-align:center;box-shadow:0 9px 35px #0008}#relay-hud [role=meter]{height:4px;background:#273d46;border-radius:4px;margin:8px 0}#relay-charge{height:100%;background:#7aead3}#relay-flare{background:#173f47;color:#defcf5;border:1px solid #78bcb5;border-radius:7px;padding:7px 12px;margin-top:7px;cursor:pointer}#relay-flare:disabled{opacity:.45}#relay-result{position:fixed;inset:0;background:#06131cf2;z-index:210;display:grid;place-items:center;color:#e8f3f3;font-family:system-ui}#relay-result>div{width:min(540px,88vw);padding:28px;border:1px solid #7db9b0;border-radius:22px;background:linear-gradient(135deg,#163839,#07151e);box-shadow:0 20px 90px #0008}#relay-result h2{font-size:clamp(28px,6vw,48px);line-height:1;letter-spacing:-.04em}#relay-result p{line-height:1.6}#relay-result [data-kicker]{font-size:11px;letter-spacing:.18em;color:#9fc5c2}#relay-result[hidden],#relay-hud[hidden]{display:none}.relay-intro{font:13px/1.5 system-ui;color:#b3d1cc;max-width:430px;margin:8px auto 18px}.relay-intro b{color:#e1f4e9}@media(max-width:750px){#relay-hud{bottom:140px;padding:8px 12px;font-size:11px}}@media(prefers-reduced-motion:reduce){#relay-result *{animation:none!important}}
+</style>
+<aside id="relay-hud" hidden aria-label="Coastguard Relay status"><div id="relay-status"></div><div role="meter" aria-label="Radio charge"><div id="relay-charge"></div></div><div id="relay-count"></div><button id="relay-flare">F · FLARE / 15 RADIO</button></aside>
+<section id="relay-result" hidden role="dialog" aria-modal="true" aria-labelledby="relay-result-title"><div><span data-kicker>TREKKERS / COASTGUARD RELAY</span><h2 id="relay-result-title"></h2><p id="relay-result-copy"></p><p id="relay-result-stats"></p><button class="btn" id="relay-retry">RETRY RELAY</button><button class="btn" id="relay-menu">TRAIL MENU</button></div></section>
+
+<script type="module">
         import * as THREE from 'three';
         import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
         import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
@@ -543,8 +550,7 @@
         const SFX = {
             ctx: null,
             init: function() {
-                window.AudioContext = window.AudioContext || window.webkitAudioContext;
-                this.ctx = new AudioContext();
+                try { const Audio=window.AudioContext||window.webkitAudioContext; if(!this.ctx&&Audio)this.ctx=new Audio(); if(this.ctx&&this.ctx.state==='suspended')this.ctx.resume().catch(()=>{}); } catch(e){this.ctx=null;}
             },
             playTone: function(freq, type, duration, vol=0.1) {
                 if(!this.ctx) return;
@@ -591,7 +597,7 @@
         //  Set TREKKERS_URL to wherever your evidence app lives. A relative
         //  filename works if you drop both files in the same GitHub folder.
         // ============================================================
-        const TREKKERS_URL = 'Trekkers_AQA_Evidence_L1.html';
+        const TREKKERS_URL = 'https://madebymatt.uk/Lessons/5_6%20Local%20Choice/Trekkers_AQA_Evidence_L1.html';
         // Each cleared trail leg in-game lights up the next real walk from the unit.
         const QUEST = [
             { emoji: '🥾', title: '① Eston Rec — the warm-up',        sub: 'Walk 1 · 19 May · five minutes from school. Find your stride.' },
@@ -602,8 +608,10 @@
         ];
         let quest = { best: 0, runs: 0, legs: 1, badges: {} };
         function loadQuest() {
-            try { const raw = localStorage.getItem('trekTrailRunner_v1'); if (raw) quest = Object.assign(quest, JSON.parse(raw)); } catch (e) {}
-            if (!quest.badges) quest.badges = {};
+            let raw={};try{raw=JSON.parse(safeRead('trekTrailRunner_v1')||'{}')||{};}catch(e){}
+            const finite=(v,d)=>typeof v==='number'&&Number.isFinite(v)&&v>=0?Math.floor(v):d;
+            quest={best:finite(raw.best,0),runs:finite(raw.runs,0),legs:Math.min(5,Math.max(1,finite(raw.legs,1))),badges:{}};
+            for(const c of CHALLENGES)if(raw.badges&&raw.badges[c.id]===true)quest.badges[c.id]=true;
         }
         function saveQuest() {
             try { localStorage.setItem('trekTrailRunner_v1', JSON.stringify(quest)); } catch (e) {}
@@ -858,7 +866,7 @@
             loadQuest();
             const _bs = document.getElementById('boot-sub'); if (_bs) _bs.innerText = pick(BOOT_LINES);
             // First run on a touch device defaults to Low graphics (kinder to phone/Chromebook GPUs).
-            if (!localStorage.getItem('trekTrailSettings_v1') && (('ontouchstart' in window) || navigator.maxTouchPoints > 0)) {
+            if (!safeRead('trekTrailSettings_v1') && (('ontouchstart' in window) || navigator.maxTouchPoints > 0)) {
                 settings.quality = 'low';
             }
             scene = new THREE.Scene(); scene.background = new THREE.Color(BG_COLOR); scene.fog = new THREE.FogExp2(BG_COLOR, 0.02); 
@@ -889,12 +897,12 @@
             if('ontouchstart' in window || navigator.maxTouchPoints > 0) {
                 document.getElementById('mobile-controls').style.display = 'flex'; setupTouch();
                 const pb = document.getElementById('touch-pause');
-                if (pb) { pb.style.display = 'block'; const doPause = (e) => { if (e) e.preventDefault(); togglePause(); }; pb.ontouchstart = doPause; pb.onclick = doPause; }
+                if(pb){pb.style.display='block';pb.onclick=e=>{e.preventDefault();togglePause();};}
             }
 
             // Auto-pause when the tab/app loses focus (saves battery, avoids resuming into chaos).
             document.addEventListener('visibilitychange', () => {
-                if (document.hidden && (gameState === 'RUNNING' || gameState === 'BOSS' || gameState === 'BOSS_WRECK')) togglePause();
+                if(document.hidden){clearControls();if(['RUNNING','BOSS','WARNING','BOSS_WRECK'].includes(gameState))togglePause();}_acc=0;_lastT=performance.now();
             });
 
             // Scene is ready: fade the boot screen out and play the menu title sequence.
@@ -1186,7 +1194,8 @@
         }
 
         function setupUI() {
-            document.getElementById('start-btn').onclick = () => { if(settings.audio) SFX.init(); startGame(); };
+            document.getElementById('start-btn').onclick = () => { if(settings.audio) SFX.init(); returnToMenu(); startGame(); };
+            document.getElementById('relay-start').onclick=()=>{if(settings.audio)SFX.init();startRelay();};document.getElementById('relay-retry').onclick=startRelay;document.getElementById('relay-menu').onclick=returnToMenu;document.getElementById('relay-flare').onclick=flareRelay;
             document.getElementById('restart-btn').onclick = () => resetGame();
             document.getElementById('resume-btn').onclick = () => togglePause();
             document.getElementById('pause-to-menu-btn').onclick = () => returnToMenu();
@@ -1228,7 +1237,7 @@
             document.getElementById('open-challenges-btn').onclick = () => { renderChallenges(); document.getElementById('leaderboard-screen').classList.add('hidden'); document.getElementById('challenges-screen').classList.remove('hidden'); };
             document.getElementById('close-challenges-btn').onclick = () => { document.getElementById('challenges-screen').classList.add('hidden'); document.getElementById('leaderboard-screen').classList.remove('hidden'); };
             const evLink = document.getElementById('trek-evidence-link'); if (evLink) evLink.setAttribute('href', TREKKERS_URL);
-            document.getElementById('submit-score-btn').onclick = () => { if(scoreSubmitted) return; const nameInput = document.getElementById('player-name-input'); let name = nameInput.value.trim(); if(!name) name = "PILOT"; saveScore(name, score); scoreSubmitted = true; document.getElementById('submit-score-btn').innerText = "SAVED!"; document.getElementById('submit-score-btn').disabled = true; document.getElementById('player-name-input').disabled = true; };
+            document.getElementById('submit-score-btn').onclick = () => { if(scoreSubmitted) return; const nameInput = document.getElementById('player-name-input'); let name = nameInput.value.trim(); if(!name) name = "PILOT"; const saved=saveScore(name, score); scoreSubmitted = true; document.getElementById('submit-score-btn').innerText = saved ? "SAVED!" : "THIS SESSION ONLY"; document.getElementById('submit-score-btn').disabled = true; document.getElementById('player-name-input').disabled = true; };
         }
         function setupSkinUI() {
             const pContainer = document.getElementById('skin-container'); pContainer.innerHTML = '';
@@ -1254,8 +1263,14 @@
                 bContainer.appendChild(tag);
             });
         }
-        function loadLeaderboard() { const stored = localStorage.getItem('neonRunnerScores_v5'); if (stored) highScores = JSON.parse(stored); else highScores = []; }
-        function saveScore(name, finalScore) { const entry = { name: name.substring(0, 10).toUpperCase(), score: Math.floor(finalScore), date: new Date().toLocaleDateString() }; highScores.push(entry); highScores.sort((a, b) => b.score - a.score); highScores = highScores.slice(0, 5); localStorage.setItem('neonRunnerScores_v5', JSON.stringify(highScores)); }
+        function loadLeaderboard() {
+            let rows=[];try{rows=JSON.parse(safeRead('neonRunnerScores_v5')||'[]');}catch(e){}
+            highScores=Array.isArray(rows)?rows.filter(r=>r&&typeof r.name==='string'&&Number.isFinite(r.score)&&r.score>=0).map(r=>({name:r.name.slice(0,10),score:Math.floor(r.score),date:typeof r.date==='string'?r.date:''})).sort((a,b)=>b.score-a.score).slice(0,5):[];
+        }
+        function saveScore(name,finalScore) {
+            highScores.push({name:String(name).slice(0,10).toUpperCase(),score:Math.max(0,Math.floor(finalScore)||0),date:new Date().toLocaleDateString()});highScores.sort((a,b)=>b.score-a.score);highScores=highScores.slice(0,5);
+            try{localStorage.setItem('neonRunnerScores_v5',JSON.stringify(highScores));return true;}catch(e){return false;}
+        }
         function renderLeaderboard() {
             const stat = document.getElementById('trek-stat');
             if (stat) stat.innerHTML = 'Best distance <b>' + Math.floor(quest.best) + '</b> &nbsp;·&nbsp; Treks finished <b>' + quest.runs + '</b> &nbsp;·&nbsp; Trail legs reached <b>' + Math.min(quest.legs, QUEST.length) + '/' + QUEST.length + '</b>';
@@ -1289,35 +1304,110 @@
         }
         // ============ INPUT ============
         let keys = {};
+        // COASTGUARD RELAY — authored finite route inside the native Three scene.
+        const RELAY_ROUTE = [
+            [-1,.8],[0,2.6],[1,.8],[0,2.6],
+            [1,2.6],[-1,.8],[0,2.6],[1,.8],
+            [-1,2.6],[1,.8],[0,.8],[-1,2.6]
+        ];
+        const RELAY_STORY = ['ESTON · The radio has gone quiet. Rebuild the first link.',
+            'THE NAB · A reply through the static. Keep the rescue channel open.',
+            'SOUTH GARE · One last relay carries the signal out to sea.'];
+        let relay = {active:false,ended:false,slot:0,caught:0,charge:65,clock:0,gate:null,sector:-1};
+        let resumeState='RUNNING', warningTicks=0, damageGrace=0;
+        const touchOwners=new Map();
+        function safeRead(key){try{return localStorage.getItem(key);}catch(e){return null;}}
+        function clearControls(){keys={};verticalVelocity=0;touchOwners.clear();
+            document.querySelectorAll('#mobile-controls .active').forEach(b=>b.classList.remove('active'));}
+        function applyHeldAltitude(){
+            const up=!!keys[settings.keys.jump]||touchOwners.has('btn-up');
+            const down=!!keys[settings.keys.down]||touchOwners.has('btn-down');
+            if(up!==down)verticalVelocity=up?ASCEND_FORCE:DESCEND_FORCE;
+            else if(up&&down)verticalVelocity=0;
+        }
+        function disposeRelay(){if(relay.gate){scene.remove(relay.gate);relay.gate.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material)o.material.dispose();});relay.gate=null;}}
+        function relayHUD(message){
+            const box=document.getElementById('relay-hud'); if(!box)return;
+            box.hidden=!relay.active;
+            const target=RELAY_ROUTE[Math.min(relay.slot,11)];
+            document.getElementById('relay-status').textContent=message||('LINK '+(Math.min(relay.slot+1,12))+'/12 · '+['LEFT','CENTRE','RIGHT'][target[0]+1]+' / '+(target[1]>2?'HIGH':'LOW'));
+            document.getElementById('relay-count').textContent=relay.caught+'/9 links · Radio '+Math.ceil(relay.charge)+'%';
+            document.getElementById('relay-charge').style.width=relay.charge+'%';
+            document.getElementById('relay-flare').disabled=gameState!=='RUNNING'||relay.charge<15||relay.ended;
+        }
+        function startRelay(){returnToMenu();startGame();relay={active:true,ended:false,slot:0,caught:0,charge:65,clock:0,gate:null,sector:-1};
+            document.getElementById('relay-result').hidden=true;relayHUD();}
+        function createRelayGate(){
+            const spec=RELAY_ROUTE[relay.slot],sector=Math.floor(relay.slot/4);
+            if(sector!==relay.sector){relay.sector=sector;applyLegTheme([1,3,5][sector]);FX.milestone(RELAY_STORY[sector]);}
+            const group=new THREE.Group();group.position.set(spec[0]*LANE_WIDTH,spec[1],-58);
+            const rim=new THREE.Mesh(new THREE.TorusGeometry(.88,.075,8,36),new THREE.MeshBasicMaterial({color:[0xffbf69,0xc8a5ff,0x75fbe4][sector]}));group.add(rim);
+            const glow=new THREE.Mesh(new THREE.RingGeometry(.91,1.12,36),new THREE.MeshBasicMaterial({color:0x9debe6,transparent:true,opacity:.28,side:THREE.DoubleSide,depthWrite:false}));group.add(glow);
+            const mast=new THREE.Mesh(new THREE.CylinderGeometry(.025,.04,spec[1]+.3,5),new THREE.MeshBasicMaterial({color:0x779ba9}));mast.position.y=-(spec[1]+.3)/2;group.add(mast);
+            group.userData.checked=false;scene.add(group);relay.gate=group;
+            // A readable approach: no random hazard may occupy the tuning plane.
+            objects.forEach(o=>{if(o.active&&o.mesh.position.z< -35){o.active=false;disposeMesh(o.mesh);scene.remove(o.mesh);}});
+            relayHUD();
+        }
+        function flareRelay(){
+            if(!relay.active||relay.ended||gameState!=='RUNNING'||relay.charge<15)return false;
+            relay.charge-=15;
+            for(const o of objects){if(o.active&&['MINE','DEADLY_BLOCK','TNT','CRATE','CEILING_SPIKE'].includes(o.type)&&o.mesh.position.z>-24){o.active=false;spawnParticles(o.mesh.position,0x75fbe4,5);disposeMesh(o.mesh);scene.remove(o.mesh);}}
+            FX.milestone('FLARE · APPROACH CLEARED / −15 RADIO');if(settings.audio)SFX.shieldUp();relayHUD();return true;
+        }
+        function endRelay(won){
+            if(!relay.active||relay.ended)return;
+            relay.ended=true;gameState='RELAY_END';clearControls();disposeRelay();
+            const box=document.getElementById('relay-result');box.hidden=false;
+            document.getElementById('relay-result-title').textContent=won?'THE COAST ANSWERS':'SIGNAL LOST';
+            document.getElementById('relay-result-copy').textContent=won?'The final relay carries your message over the water. The search team has a route home.':'Nine steady links are needed to reach the coast. Keep a little radio power in reserve; a flare clears hazards but spends 15%.';
+            document.getElementById('relay-result-stats').textContent=relay.caught+' of 12 links · '+Math.ceil(relay.charge)+'% radio · '+Math.floor(score)+' points';
+            if(won){let best={};try{best=JSON.parse(safeRead('trek_coastguard_v1')||'{}')||{};}catch(e){}
+                const record={wins:(Number.isSafeInteger(best.wins)&&best.wins>=0?best.wins:0)+1,best:Math.max(Number.isFinite(best.best)?best.best:0,Math.floor(score))};
+                try{localStorage.setItem('trek_coastguard_v1',JSON.stringify(record));}catch(e){document.getElementById('relay-result-stats').textContent+=' · Progress saving unavailable';}
+            }
+            relayHUD(won?'RESCUE CHANNEL RESTORED':'RETRY THE RELAY');
+        }
+        function updateRelay(){
+            if(!relay.active||relay.ended||gameState!=='RUNNING')return;
+            relay.clock++;
+            // Fixed speed and authored windows; classic procedural trek stays separate.
+            speed=.43+relay.sector*.025;
+            if(!relay.gate&&relay.clock>=90)createRelayGate();
+            const g=relay.gate;if(!g)return;
+            const previous=g.position.z;g.position.z+=speed;g.children[1].rotation.z+=.015;
+            if(!g.userData.checked&&previous<player.position.z&&g.position.z>=player.position.z){
+                g.userData.checked=true;
+                const caught=Math.abs(g.position.x-player.position.x)<.72&&Math.abs(g.position.y-player.position.y)<.68&&!isSpinning;
+                if(caught){relay.caught++;relay.charge=Math.min(100,relay.charge+8);score+=250;spawnParticles(g.position,0x75fbe4,18);FX.milestone('LINK '+relay.caught+' · SIGNAL LOCKED');if(settings.audio)SFX.collect();}
+                else {relay.charge=Math.max(0,relay.charge-20);FX.milestone(isSpinning?'UNSTEADY · DO NOT ROLL IN THE RING':'LINK MISSED · −20 RADIO');}
+                relayHUD();
+                if(relay.charge<=0){endRelay(false);return;}
+            }
+            if(g.position.z>6){disposeRelay();relay.slot++;relay.clock=0;if(relay.slot===12)endRelay(relay.caught>=9&&relay.charge>0);else relayHUD();}
+        }
+
         function handleInput(event) {
-            // Never hijack keys while the player is typing in a field (e.g. the callsign box).
-            const ae = document.activeElement;
-            if (ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA' || ae.tagName === 'SELECT')) return;
-            if (gameState === 'MENU' || gameState === 'GAMEOVER') return;
-
-            const keyConfig = settings.keys;
-            // Arrow keys mirror the WASD controls (and we stop them scrolling the page).
-            const aliases = { ArrowLeft: keyConfig.left, ArrowRight: keyConfig.right, ArrowUp: keyConfig.jump, ArrowDown: keyConfig.down };
-            if (event.code in aliases || event.code === 'Space') event.preventDefault();
-            const code = aliases[event.code] || event.code;
-
-            if (event.type === 'keydown') {
-                keys[code] = true;
-                if (code === keyConfig.pause) togglePause();
-                if (gameState !== 'PAUSED') {
-                    if (code === keyConfig.left) changeLane(-1);
-                    else if (code === keyConfig.right) changeLane(1);
-                    else if (code === keyConfig.jump && player.position.y < 3.0) { verticalVelocity = ASCEND_FORCE; if(settings.audio) SFX.jump(); }
-                    else if (code === keyConfig.down && player.position.y > 0.4) verticalVelocity = DESCEND_FORCE;
-                    else if (code === keyConfig.spin && !isSpinning) spin();
-                    else if (code === keyConfig.shoot && shootCooldown === 0) shoot();
-                }
-            } else if (event.type === 'keyup') {
-                keys[code] = false;
-                if (code === keyConfig.jump || code === keyConfig.down) verticalVelocity = 0;
+            const ae=document.activeElement;if(ae&&/^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName))return;
+            const aliases={ArrowLeft:settings.keys.left,ArrowRight:settings.keys.right,ArrowUp:settings.keys.jump,ArrowDown:settings.keys.down};
+            const code=aliases[event.code]||event.code;
+            if(event.type==='keyup'){keys[code]=false;if(code===settings.keys.jump||code===settings.keys.down)verticalVelocity=0;return;}
+            if(event.repeat)return;
+            if(code===settings.keys.pause||code==='Escape'){event.preventDefault();togglePause();return;}
+            if(!['RUNNING','BOSS','WARNING','BOSS_WRECK'].includes(gameState))return;
+            if(Object.values(settings.keys).includes(code)||code==='KeyF')event.preventDefault();
+            keys[code]=true;
+            if(code===settings.keys.left)changeLane(-1);else if(code===settings.keys.right)changeLane(1);
+            else if(code===settings.keys.jump){verticalVelocity=ASCEND_FORCE;if(settings.audio)SFX.jump();}
+            else if(code===settings.keys.down)verticalVelocity=DESCEND_FORCE;
+            else if(code===settings.keys.spin)spin();else if(code===settings.keys.shoot)shoot();else if(code==='KeyF')flareRelay();
+        }
+        function setupTouch(){const actions={'btn-left':()=>changeLane(-1),'btn-right':()=>changeLane(1),'btn-up':()=>verticalVelocity=ASCEND_FORCE,'btn-down':()=>verticalVelocity=DESCEND_FORCE,'btn-spin':spin,'btn-shoot':shoot};
+            for(const id in actions){const b=document.getElementById(id);b.style.touchAction='none';
+                b.onpointerdown=e=>{e.preventDefault();if(!['RUNNING','BOSS','WARNING','BOSS_WRECK'].includes(gameState)||touchOwners.has(id))return;touchOwners.set(id,e.pointerId);b.setPointerCapture(e.pointerId);b.classList.add('active');actions[id]();};
+                b.onpointerup=b.onpointercancel=b.onlostpointercapture=e=>{if(touchOwners.get(id)!==e.pointerId)return;touchOwners.delete(id);b.classList.remove('active');if(id==='btn-up'||id==='btn-down')verticalVelocity=0;};
             }
         }
-        function setupTouch() { const btns = { 'btn-left': () => changeLane(-1), 'btn-right': () => changeLane(1), 'btn-up': () => { if (player.position.y < 3.0) { verticalVelocity = ASCEND_FORCE; if(settings.audio) SFX.jump(); } }, 'btn-down': () => { if (player.position.y > 0.4) verticalVelocity = DESCEND_FORCE; }, 'btn-spin': spin, 'btn-shoot': shoot }; for (const id in btns) { const btn = document.getElementById(id); btn.ontouchstart = (e) => { e.preventDefault(); if (gameState === 'RUNNING' || gameState === 'BOSS' || gameState === 'BOSS_WRECK') { if (id.includes('left') || id.includes('right')) { if(!btn.classList.contains('active')) { btn.classList.add('active'); btns[id](); } } else btns[id](); } }; btn.ontouchend = () => { btn.classList.remove('active'); if (id === 'btn-up' || id === 'btn-down') verticalVelocity = 0; }; btn.ontouchcancel = () => { btn.classList.remove('active'); if (id === 'btn-up' || id === 'btn-down') verticalVelocity = 0; }; } }
         function changeLane(direction) { const newLane = currentLane + direction; if (newLane >= -1 && newLane <= 1) { currentLane = newLane; targetX = currentLane * LANE_WIDTH; } }
         function spin() { if (isSpinning) return; isSpinning = true; spinTimer = 30; }
         
@@ -1338,6 +1428,7 @@
         function showFloatingText(pos, text, color) { const div = document.createElement('div'); div.className = 'float-text'; div.style.color = color || '#fff'; div.innerText = text; const vec = pos.clone(); vec.project(camera); const x = (vec.x * .5 + .5) * window.innerWidth; const y = (-(vec.y * .5) + .5) * window.innerHeight; div.style.left = `${x}px`; div.style.top = `${y}px`; document.body.appendChild(div); setTimeout(() => { div.remove(); }, 800); }
 
         function startGame() {
+            clearControls();warningTicks=0;damageGrace=0;currentLane=0;targetX=0;frame=0;isSpinning=false;spinTimer=0;shootCooldown=0;playerMesh.rotation.set(0,0,0);playerMesh.scale.set(1,1,1);player.rotation.set(0,0,0);_acc=0;_lastT=performance.now();
             document.getElementById('start-screen').classList.add('hidden'); document.getElementById('pause-screen').classList.add('hidden'); document.getElementById('game-over-screen').classList.add('hidden'); document.getElementById('leaderboard-screen').classList.add('hidden'); document.getElementById('challenges-screen').classList.add('hidden');
             if (lives <= 0) lives = 5; player.visible = true; player.position.set(0, 0.4, 2); gameState = 'RUNNING'; scoreSubmitted = false;
             bonusActive = false; bonusTimer = 0; runCompass = 0; runBonusGrabs = 0; runPaceMax = 1; livesAtBossStart = lives;
@@ -1350,6 +1441,7 @@
             document.getElementById('combo-box').style.display = 'block';
         }
         function returnToMenu() {
+            clearControls();warningTicks=0;damageGrace=0;disposeRelay();relay.active=false;relay.ended=false;document.getElementById('relay-result').hidden=true;relayHUD();
             lives = 5; score = 0; levelScore = 0; level = 1; speed = BASE_SPEED;
             objects.forEach(o => scene.remove(o.mesh)); objects = [];
             enemyProjectiles.forEach(p => scene.remove(p.mesh)); enemyProjectiles = [];
@@ -1368,10 +1460,16 @@
             document.getElementById('start-screen').classList.remove('hidden'); document.getElementById('pause-screen').classList.add('hidden'); document.getElementById('game-over-screen').classList.add('hidden'); document.getElementById('leaderboard-screen').classList.add('hidden'); document.getElementById('boss-ui').style.display = 'none'; document.getElementById('boss-warning').style.display = 'none'; document.getElementById('damage-overlay').style.opacity = 0; document.getElementById('combo-box').style.display = 'none';
             gameState = 'MENU';
         }
-        function resetGame() { returnToMenu(); startGame(); }
-        function togglePause() { if (gameState === 'RUNNING' || gameState === 'BOSS' || gameState === 'BOSS_WRECK') { gameState = 'PAUSED'; document.getElementById('pause-screen').classList.remove('hidden'); } else if (gameState === 'PAUSED') { document.getElementById('pause-screen').classList.add('hidden'); gameState = boss.userData.isWreck ? 'BOSS_WRECK' : (boss.visible ? 'BOSS' : 'RUNNING'); } }
-
+        function resetGame() { if(relay.active)startRelay();else{ returnToMenu(); startGame(); } }
+        function togglePause() {
+            if(['RUNNING','BOSS','WARNING','BOSS_WRECK'].includes(gameState)){resumeState=gameState;gameState='PAUSED';clearControls();document.getElementById('pause-screen').classList.remove('hidden');}
+            else if(gameState==='PAUSED'){gameState=resumeState;clearControls();document.getElementById('pause-screen').classList.add('hidden');}
+            _acc=0;_lastT=performance.now();
+        }
         function updateGameLogic() {
+            if(damageGrace>0)damageGrace--;
+            if(gameState==='WARNING'&&--warningTicks<=0){document.getElementById('boss-warning').style.display='none';document.getElementById('boss-ui').style.display='flex';gameState='BOSS';boss.position.set(0,3,-20);}
+            if(relay.active&&gameState==='RUNNING'){updateRelay();if(relay.ended)return;}
             if(gameState === 'RUNNING') {
                 if (bonusActive) {
                     score += speed * 5 * comboMultiplier;
@@ -1382,10 +1480,10 @@
                 } else {
                     score += speed * 5 * comboMultiplier; levelScore += speed * 5;
                     // Gentle, continuous climb so the trail keeps getting harder within a leg.
-                    speed = Math.min(speed + 0.0001, 1.7);
+                    if(!relay.active)speed = Math.min(speed + 0.0001, 1.7);
                     let spawnRate = Math.max(7, 40 - (level * 3.5)); 
-                    if(frame % Math.floor(spawnRate/speed) === 0) spawnObstacle();
-                    if(levelScore >= LEVEL_LENGTH) startBossSequence();
+                    if(frame % Math.floor(spawnRate/speed) === 0 && (!relay.active || !relay.gate)) spawnObstacle();
+                    if(!relay.active && levelScore >= LEVEL_LENGTH) startBossSequence();
                 }
             }
             else if(gameState === 'BOSS') updateBoss();
@@ -1404,6 +1502,7 @@
 
             if (shootCooldown > 0) shootCooldown--;
             player.position.x += (targetX - player.position.x) * 0.2;
+            applyHeldAltitude();
             if (verticalVelocity === 0) verticalVelocity -= GRAVITY * 0.5;
             player.position.y += verticalVelocity;
             if(player.position.y <= 0.4) { player.position.y = 0.4; if (verticalVelocity < 0) verticalVelocity = 0; }
@@ -1487,11 +1586,7 @@
             document.getElementById('boss-warning').style.display = 'block';
             playerGun.visible = true; boss.visible = true;
             objects.forEach(o => { scene.remove(o.mesh); }); objects = [];
-            setTimeout(() => {
-                document.getElementById('boss-warning').style.display = 'none';
-                document.getElementById('boss-ui').style.display = 'flex';
-                gameState = 'BOSS'; boss.position.set(0, 3, -20);
-            }, 2500);
+            warningTicks=150;
         }
 
         function updateBoss() {
@@ -1579,7 +1674,8 @@
         function updateWorld() {
             for(let i=0; i<floorTiles.length; i++) { const tile = floorTiles[i]; tile.position.z += speed; if(tile.position.z > 8) tile.position.z -= WORLD_DEPTH; }
             for(let i = objects.length-1; i>=0; i--) { 
-                const obj = objects[i]; 
+                const obj = objects[i];
+                if(!obj.active){objects.splice(i,1);continue;}
                 obj.mesh.position.z += speed; 
                 if (obj.type === 'SHIELD_ITEM' || obj.type === 'WUMPA' || obj.type === 'LIFE' || obj.type === 'COMBO_ORB') {
                     obj.mesh.rotation.y += 0.05;
@@ -1602,7 +1698,7 @@
                         showFloatingText(obj.mesh.position, "⛺ SHELTER!", "#22c55e");
                     } else if(obj.type === 'COMBO_ORB') {
                          if(settings.audio) SFX.comboOrb();
-                         obj.active=false; scene.remove(obj.mesh);
+                         obj.active=false; disposeMesh(obj.mesh); scene.remove(obj.mesh);
                          comboTimer = MAX_COMBO_TIMER; // Refresh timer
                          score += 25 * comboMultiplier;
                          runCompass++; if (runCompass >= 3) awardBadge('compass3');
@@ -1692,7 +1788,9 @@
         function checkCollision(mesh, radius) { if(boss.userData.isWreck && mesh === boss.getObjectByName('Fuselage')) return false; if(!mesh.visible || (gameState !== 'RUNNING' && gameState !== 'BOSS' && gameState !== 'BOSS_WRECK')) return false; const dx = Math.abs(mesh.position.x - player.position.x); const dy = Math.abs(mesh.position.y - player.position.y); const dz = Math.abs(mesh.position.z - player.position.z); const objHalfWidth = mesh.geometry ? (mesh.geometry.parameters.width || 1) / 2 : 0.5; return dx < (objHalfWidth + 0.5) && dy < 1.0 && dz < 0.5; }
         
         function takeDamage(instaKill = false) { 
-            if(gameState === 'GAMEOVER') return;
+            if(!['RUNNING','BOSS','BOSS_WRECK'].includes(gameState)||damageGrace>0)return;
+            damageGrace=55;
+            if(relay.active){relay.charge=Math.max(0,relay.charge-10);relayHUD();if(relay.charge<=0){endRelay(false);return;}}
             if (shieldActive) {
                 shieldActive = false;
                 playerShieldMesh.visible = false;
@@ -1711,6 +1809,7 @@
             setTimeout(() => document.getElementById('damage-overlay').style.opacity = 0, 200); 
             FX.shake(instaKill ? 0.85 : 0.55); FX.stop(6); FX.flash('#ff0033', 0.45); 
             if(lives <= 0) { 
+                if(relay.active){endRelay(false);return;}
                 gameState = 'GAMEOVER'; player.visible = false; boss.visible = false; 
                 recordRun(Math.floor(score));
                 const goc = document.getElementById('go-cheese'); if (goc) goc.innerText = pick(GAME_OVER_LINES);
@@ -1745,7 +1844,7 @@
         
         function updateProjectiles() { 
             for(let i=playerProjectiles.length-1; i>=0; i--) { 
-                let p = playerProjectiles[i]; 
+                let p = playerProjectiles[i]; let consumed=false; 
                 p.mesh.position.add(p.velocity); 
                 if (gameState === 'RUNNING') {
                     for (let j = objects.length - 1; j >= 0; j--) {
@@ -1754,7 +1853,7 @@
                             const dx = Math.abs(p.mesh.position.x - obj.mesh.position.x);
                             const dz = Math.abs(p.mesh.position.z - obj.mesh.position.z);
                             if (dx < 1.0 && dz < 1.0) {
-                                p.mesh.geometry.dispose(); scene.remove(p.mesh); playerProjectiles.splice(i, 1);
+                                p.mesh.geometry.dispose(); scene.remove(p.mesh); playerProjectiles.splice(i, 1); consumed=true;
                                 obj.active = false; disposeMesh(obj.mesh); scene.remove(obj.mesh);
                                 spawnParticles(obj.mesh.position, 0xff0000, 18);
                                 score += 100 * comboMultiplier;
@@ -1766,13 +1865,13 @@
                             }
                         }
                     }
-                    if(!playerProjectiles[i]) continue; 
+                    if(consumed) continue; 
                 }
                 if (gameState === 'BOSS') { 
                     const dx = Math.abs(p.mesh.position.x - boss.position.x); 
                     const dz = p.mesh.position.z - (boss.position.z - 1.0); 
                     if (Math.abs(dz) < 0.8 && dx > 2.8 && dx < 3.4) { 
-                        scene.remove(p.mesh); playerProjectiles.splice(i, 1); spawnParticles(p.mesh.position, 0x00ffff, 5); continue; 
+                        disposeMesh(p.mesh); scene.remove(p.mesh); playerProjectiles.splice(i, 1); spawnParticles(p.mesh.position, 0x00ffff, 5); continue; 
                     } 
                 } 
                 if(gameState === 'BOSS' && p.mesh.position.z < boss.position.z + 2 && Math.abs(p.mesh.position.x - boss.position.x) < 2.5) { 
@@ -1795,6 +1894,7 @@
         }
         
         function defeatBoss() {
+            if(gameState!=='BOSS'||boss.userData.isWreck)return;
             if(settings.audio) SFX.bossExplode();
             score += 1000 * comboMultiplier;
             FX.scorePop();
@@ -1836,7 +1936,7 @@
                 player.rotation.x = Math.sin(Date.now() * 0.002) * 0.1;
             }
             if (gameState === 'RUNNING' || gameState === 'BOSS' || gameState === 'WARNING' || gameState === 'BOSS_WRECK') {
-                updateGameLogic(); updateWorld();
+                updateGameLogic(); if(['RUNNING','BOSS','WARNING','BOSS_WRECK'].includes(gameState))updateWorld();
             }
             updateBackgroundAndCity(); updateParticles();
         }
@@ -1857,7 +1957,7 @@
             if (now === undefined) now = performance.now();
             let dt = now - _lastT; _lastT = now;
             if (dt > 250) dt = 250;                        // recovered from a stall/tab switch — don't spiral
-            _acc += dt;
+            _acc = Math.min(_acc+Math.max(0,dt),_STEP*5);
             let guard = 0;
             while (_acc >= _STEP && guard < 5) { tick(); _acc -= _STEP; guard++; }
             if (settings.quality === 'low') renderer.render(scene, camera); else composer.render();

@@ -169,6 +169,12 @@
     #stompHint{bottom:calc(98px + env(safe-area-inset-bottom))}
   }
   @media (prefers-reduced-motion:reduce){#v6Clutch.on{animation:none;opacity:0}#v6Cinema{transition:none}}
+/* Last Signal: readable story and objective at every viewport. */
+.tag,.byline,.seedchip,.tog,.card h3,#v6Mark,#v6RibbonText,.v6mini,.v6jump,.hint,.splashhint{font-size:14px}
+#signalStory{max-width:560px;margin:10px 16px;color:#bfd8e8;font-size:16px;line-height:1.5;text-align:center}
+#signalObjective{position:fixed;top:110px;left:50%;transform:translateX(-50%);z-index:6;width:max-content;max-width:calc(100vw - 24px);padding:10px 14px;border:1px solid #38bdf8;border-radius:12px;background:#091326ed;color:#e0faff;font-size:14px;line-height:1.4;text-align:center;pointer-events:none}
+#scrTitle{overflow-y:auto;justify-content:safe center;padding-top:56px;padding-bottom:24px}#scrTitle>*{flex-shrink:0}
+@media(max-width:600px){#v6Mark{display:none}#signalObjective{top:110px}.codebox{width:calc(100vw - 30px)}.codebox input{min-width:0}.row{gap:6px}}
 </style>
 </head>
 <body>
@@ -187,7 +193,7 @@
   <button id="v6Jump" class="v6jump" type="button" aria-label="Jump; hold for height">JUMP</button>
   <button id="v6Pause" class="v6mini" type="button" aria-label="Pause run" aria-pressed="false">PAUSE</button>
 </div>
-<div id="v6Live" role="status" aria-live="polite"></div>
+<div id="signalObjective" class="hidden" role="status" aria-live="polite"></div><div id="v6Live" role="status" aria-live="polite"></div>
 
 <!-- SPLASH -->
 <div id="scrSplash" class="overlay">
@@ -208,7 +214,7 @@
     <div class="ghostdist" id="tGhostDist"></div>
     <div class="seedchip" id="tSeed"></div>
   </div>
-  <button class="btn" id="btnRun">▶ &nbsp;RUN</button>
+  <p id="signalStory">New chapter · The city’s last transmission is fading. Jump through four gold cores to unfold bridges, then carry the signal to the far tower.</p><button class="btn" id="btnSignal">▶ &nbsp;THE LAST SIGNAL</button><button class="btn quiet" id="btnRun">Original endless ghost race</button>
   <div class="codebox">
     <input aria-label="Ghost code — paste a code to replay a run" id="codeIn" placeholder="paste a ghost code…" autocomplete="off" spellcheck="false">
     <button class="btn ghosty" id="btnLoad" style="padding:11px 16px;font-size:14px">LOAD</button>
@@ -293,6 +299,8 @@
    ============================================================ */
 
 /* ---------- constants (all before any init) ---------- */
+const signalMemory=new Map();
+const signalStore={getItem(k){if(signalMemory.has(k))return signalMemory.get(k);try{const v=localStorage.getItem(k);signalMemory.set(k,v);return v;}catch(e){return null;}},setItem(k,v){signalMemory.set(k,String(v));try{localStorage.setItem(k,String(v));}catch(e){}},removeItem(k){signalMemory.set(k,null);try{localStorage.removeItem(k);}catch(e){}}};
 const VW = 1280, VH = 720;           // virtual world resolution
 const GROUND_Y = 560;                 // ground top in world px
 const TILE = 44;
@@ -309,12 +317,12 @@ const BOSS_SX = 640;                         // boss screen anchor (virtual px)
 const V6_PROFILE_KEY='mbm_v6_one_guy_profile';
 const V6_LEGACY_KEYS=[LSK.ghost,LSK.seed,LSK.snd,LSK.calm,'og_stats_v1','og_stomp_v1','og_skin','og_trail'];
 const V6_LEGACY_BEFORE={};let v6LegacyPreserved=true;
-try{for(const k of V6_LEGACY_KEYS){const v=localStorage.getItem(k);if(v!==null)V6_LEGACY_BEFORE[k]=v;}}catch(e){}
+try{for(const k of V6_LEGACY_KEYS){const v=signalStore.getItem(k);if(v!==null)V6_LEGACY_BEFORE[k]=v;}}catch(e){}
 function v6LoadProfile(){
-  let p=null;try{p=JSON.parse(localStorage.getItem(V6_PROFILE_KEY)||'null');}catch(e){}
+  let p=null;try{p=JSON.parse(signalStore.getItem(V6_PROFILE_KEY)||'null');}catch(e){}
   if(!p||p.version!==6){p={version:6,gameId:'one-guy',settings:{},migration:{legacyKeys:Object.keys(V6_LEGACY_BEFORE),at:new Date().toISOString()}};
-    try{localStorage.setItem(V6_PROFILE_KEY,JSON.stringify(p));}catch(e){}}
-  try{for(const k of Object.keys(V6_LEGACY_BEFORE))if(localStorage.getItem(k)!==V6_LEGACY_BEFORE[k])v6LegacyPreserved=false;}catch(e){}
+    try{signalStore.setItem(V6_PROFILE_KEY,JSON.stringify(p));}catch(e){}}
+  try{for(const k of Object.keys(V6_LEGACY_BEFORE))if(signalStore.getItem(k)!==V6_LEGACY_BEFORE[k])v6LegacyPreserved=false;}catch(e){}
   return p;
 }
 const V6_PROFILE=v6LoadProfile();
@@ -382,20 +390,20 @@ const TRAILS=[
 ];
 const STAT_LABELS={totalM:'m',bestM:'m',runs:'',ghostsBeaten:'',bossesSlain:'',bestZone:''};
 let stats={totalM:0,bestM:0,runs:0,ghostsBeaten:0,bossesSlain:0,bestZone:0};
-let stompLearned=false; try{stompLearned=localStorage.getItem('og_stomp_v1')==='1';}catch(e){}
+let stompLearned=false; try{stompLearned=signalStore.getItem('og_stomp_v1')==='1';}catch(e){}
 function learnStomp(){ if(stompLearned)return; stompLearned=true;
-  try{localStorage.setItem('og_stomp_v1','1');}catch(e){}
+  try{signalStore.setItem('og_stomp_v1','1');}catch(e){}
   banner('\ud83d\udca5 That\u2019s it \u2014 smash every orb back!'); }
 let equip={skin:'cyan',trail:'none'};
 function loadStats(){
-  try{const s=JSON.parse(localStorage.getItem('og_stats_v1'));if(s)stats={totalM:s.totalM|0,bestM:s.bestM|0,runs:s.runs|0,ghostsBeaten:s.ghostsBeaten|0,bossesSlain:s.bossesSlain|0,bestZone:s.bestZone|0};}catch(e){}
-  const sk=localStorage.getItem('og_skin'), tr=localStorage.getItem('og_trail');
+  try{const s=JSON.parse(signalStore.getItem('og_stats_v1'));if(s)stats={totalM:s.totalM|0,bestM:s.bestM|0,runs:s.runs|0,ghostsBeaten:s.ghostsBeaten|0,bossesSlain:s.bossesSlain|0,bestZone:s.bestZone|0};}catch(e){}
+  const sk=signalStore.getItem('og_skin'), tr=signalStore.getItem('og_trail');
   if(sk&&SKINS.some(s=>s.id===sk))equip.skin=sk;
   if(tr&&TRAILS.some(t=>t.id===tr))equip.trail=tr;
   if(!isUnlocked(SKINS.find(s=>s.id===equip.skin)))equip.skin='cyan';
   if(!isUnlocked(TRAILS.find(t=>t.id===equip.trail)))equip.trail='none';
 }
-function saveStats(){localStorage.setItem('og_stats_v1',JSON.stringify(stats));}
+function saveStats(){signalStore.setItem('og_stats_v1',JSON.stringify(stats));}
 function isUnlocked(item){return !item.cond || (stats[item.cond.k]||0)>=item.cond.v;}
 function unlockedIds(){return SKINS.concat(TRAILS).filter(isUnlocked).map(i=>i.id);}
 function skinPal(){return SKINS.find(s=>s.id===equip.skin)||SKINS[0];}
@@ -412,13 +420,13 @@ function strHash(s){let h=2166136261>>>0;for(let i=0;i<s.length;i++){h^=s.charCo
 
 /* ---------- varint + base64url codec ---------- */
 function vPush(arr,n){n>>>=0;while(n>127){arr.push((n&127)|128);n>>>=7}arr.push(n)}
-function vRead(bytes,st){let n=0,sh=0;for(;;){const b=bytes[st.i++];n|=(b&127)<<sh;if(!(b&128))return n>>>0;sh+=7;if(sh>35)throw new Error('varint')}}
+function vRead(bytes,st){let n=0;for(let j=0;j<5;j++){if(st.i>=bytes.length)throw new Error('truncated');const b=bytes[st.i++];if(j===4&&(b&240))throw new Error('varint');n+=(b&127)*Math.pow(2,7*j);if(!(b&128))return n>>>0;}throw new Error('varint');}
 function b64uEnc(bytes){let s='';for(let i=0;i<bytes.length;i++)s+=String.fromCharCode(bytes[i]);return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
 function b64uDec(str){str=str.replace(/-/g,'+').replace(/_/g,'/');while(str.length%4)str+='=';const s=atob(str),out=new Uint8Array(s.length);for(let i=0;i<s.length;i++)out[i]=s.charCodeAt(i);return out}
 
 /* events: array of {f,r} (frame, isRelease). Encoded as frame-deltas with LSB = release bit. */
 function encodeGhost(g){
-  const b=[CODE_VER];
+  const b=[g.chapter==='last-signal'?3:CODE_VER];
   vPush(b,g.seed);
   vPush(b,g.deathFrame);
   vPush(b,g.events.length);
@@ -427,13 +435,15 @@ function encodeGhost(g){
   return b64uEnc(b);
 }
 function decodeGhost(code){
-  const bytes=b64uDec(code.trim()); const st={i:0};
-  const ver=bytes[st.i++]; if(ver===1)throw new Error('old'); if(ver!==CODE_VER)throw new Error('version');
-  const seed=vRead(bytes,st), deathFrame=vRead(bytes,st), n=vRead(bytes,st);
-  const events=[]; let last=0;
-  for(let k=0;k<n;k++){const v=vRead(bytes,st);last+=(v>>>1);events.push({f:last,r:!!(v&1)})}
-  if(deathFrame<1||deathFrame>200000)throw new Error('range');
-  return {seed,deathFrame,events,code:code.trim()};
+  if(typeof code!=='string'||code.length>100000||!code.trim()||!/^[A-Za-z0-9_-]+$/.test(code.trim()))throw new Error('code');
+  const bytes=b64uDec(code.trim()),st={i:0},ver=bytes[st.i++];
+  if(ver===1)throw new Error('old');if(ver!==CODE_VER&&ver!==3)throw new Error('version');
+  const seed=vRead(bytes,st),deathFrame=vRead(bytes,st),n=vRead(bytes,st);
+  if(!seed||deathFrame<1||deathFrame>200000||n>20000||n>bytes.length-st.i)throw new Error('range');
+  const events=[];let last=0;
+  for(let k=0;k<n;k++){const v=vRead(bytes,st);last+=v>>>1;if(last<1||last>deathFrame)throw new Error('event');events.push({f:last,r:!!(v&1)});}
+  if(st.i!==bytes.length)throw new Error('trailing');
+  return {seed,deathFrame,events,chapter:ver===3?'last-signal':null,code:code.trim()};
 }
 function codename(code){
   const h=strHash(code);
@@ -485,14 +495,15 @@ function tilesFor(ci){
   for(let i=0;i<CHUNK;i++){ if(inArenaTile(ci*CHUNK+i)) tiles[i]={t:'g',h:0}; }
   chunkCache.set(key,tiles); return tiles;
 }
-function tileAt(wx){
+function tileAt(wx,runner,frame){
+  if(signalMode)return signalTile(wx,runner||G.player,frame);
   const ti=Math.floor(wx/TILE);
   const ci=Math.floor(ti/CHUNK), li=((ti%CHUNK)+CHUNK)%CHUNK;
   return tilesFor(ci)[li];
 }
 /* ground top y at world x (Infinity over gaps) */
-function groundTop(wx){
-  const t=tileAt(wx);
+function groundTop(wx,runner,frame){
+  const t=tileAt(wx,runner,frame);
   if(t.t==='gap')return Infinity;
   return GROUND_Y - t.h*TILE;
 }
@@ -500,21 +511,21 @@ function groundTop(wx){
 /* ---------- runner entity (player & ghost share physics) ---------- */
 function makeRunner(){
   return { y:GROUND_Y, vy:0, grounded:true, holding:false,
-           coyote:0, buffer:0, dead:false, cause:'', deadF:0 };
+           coyote:0, buffer:0, bridges:{}, dead:false, cause:'', deadF:0 };
 }
 function pressRunner(r){ r.buffer=BUFFER; r.holding=true; }
 function releaseRunner(r){ r.holding=false; if(r.vy<0)r.vy*=0.55; }
 function stepRunner(r,f){
   if(r.dead)return;
   const wx=worldXAt(f)+PLAYER_X;
-  const gFront=groundTop(wx+PW/2), gBack=groundTop(wx-PW/2);
+  const gFront=groundTop(wx+PW/2,r,f), gBack=groundTop(wx-PW/2,r,f);
   const g=Math.min(gFront,gBack);
   /* wall bonk: front foot ground is higher than feet by a big step while on/below it */
   if(gFront < r.y-14 && r.y <= GROUND_Y+2 && r.vy>=0 && gFront!==Infinity && (r.y-gFront)>14){
     if(r.grounded || r.y>gFront+14){ kill(r,f,'bonk'); return; }
   }
   /* spike touch */
-  const tF=tileAt(wx+PW*0.3), tB=tileAt(wx-PW*0.3);
+  const tF=tileAt(wx+PW*0.3,r,f), tB=tileAt(wx-PW*0.3,r,f);
   const onSpike=(tF.t==='spk'||tB.t==='spk');
   if(r.grounded){
     r.coyote=COYOTE;
@@ -528,7 +539,7 @@ function stepRunner(r,f){
     r.y+=r.vy;
     if(r.vy>=0 && g!==Infinity && r.y>=g){                       // land
       r.y=g; r.vy=0; r.grounded=true;
-      if(tileAt(wx).t==='spk'){ kill(r,f,'spike'); return; }
+      if(tileAt(wx,r,f).t==='spk'){ kill(r,f,'spike'); return; }
     }
     if(r.y>VH+80){ kill(r,f,'gap'); return; }
   }
@@ -539,6 +550,7 @@ function stepRunner(r,f){
       r.vy=JUMP_V; r.grounded=false; r.coyote=0; r.buffer=0; sfx('jump');
     }
   }
+  signalCollect(r,f);
 }
 function kill(r,f,cause){ r.dead=true; r.cause=cause; r.deadF=f; }
 
@@ -592,7 +604,8 @@ function v6StartAscent(zone){
   G.v6Ascent={start:performance.now(),duration:900,zone:zone|0,sparks:Array.from({length:10},(_,i)=>({a:i*.628,r:36+i*8}))};
 }
 function v6Pause(toggle){
-  if(G.mode!=='play'&&!G.v6Paused)return;
+  if(G.ended||G.mode!=='play')return;
+  signalRelease();
   if(toggle===false||G.v6Paused){G.v6Paused=false;G.mode='play';G.lastT=0;document.getElementById('v6Pause').textContent='PAUSE';document.getElementById('v6Pause').setAttribute('aria-pressed','false');G.raf=requestAnimationFrame(loop);v6Announce('Run resumed.');}
   else{G.v6Paused=true;cancelAnimationFrame(G.raf);document.getElementById('v6Pause').textContent='RESUME';document.getElementById('v6Pause').setAttribute('aria-pressed','true');draw();v6Announce('Run paused.');}
 }
@@ -708,7 +721,7 @@ function draw(){
   for(let ti=t0;ti<=t1;ti++){
     const wx=ti*TILE, sxx=wx-camX;
     const ci=Math.floor(ti/CHUNK), li=((ti%CHUNK)+CHUNK)%CHUNK;
-    const tile=tilesFor(Math.max(0,ci))[li]||{t:'g',h:0};
+    const tile=(signalMode?signalTile(wx,G.player,G.frame):tilesFor(Math.max(0,ci))[li])||{t:'g',h:0};
     const nxt=tileAt(Math.max(0,(ti+1))*TILE)||{t:'g',h:0};
     const prv=tileAt(Math.max(0,(ti-1))*TILE)||{t:'g',h:0};
 
@@ -892,6 +905,8 @@ function draw(){
       ctx.restore();
     }
   }
+
+  signalDraw(camX);
 
   /* ghost runner */
   if(G.ghost && !G.ghost.dead && G.mode==='play'){
@@ -1151,6 +1166,7 @@ function loop(t){
   if(G.mode==='play')G.raf=requestAnimationFrame(loop);
 }
 function simStep(){
+  if(G.mode!=='play'||G.v6Paused||G.ended)return;
   G.frame++;
   /* feed ghost its recorded inputs */
   if(G.ghost && !G.ghost.dead && G.ghostData){
@@ -1171,18 +1187,20 @@ function simStep(){
   const pti=Math.floor((worldXAt(G.frame)+PLAYER_X)/TILE);
   const z=zoneOfTile(pti);
   if(z>G.zoneSeen){ G.zoneSeen=z; banner('\ud83c\udf0c ZONE '+(z+1)+' \u2014 '+THEMES[z%THEMES.length].name); }
-  if(inArenaTile(pti)){
+  if(!signalMode&&inArenaTile(pti)){
     if(!G.bossS || G.bossS.zone!==z){
       G.bossS=makeBoss(z); sfx('roar');
       banner('\ud83d\udc79 '+bossTitle(z)+(stompLearned?' blocks the gate \u2014 stomp its orbs back!':' \u2014 LAND ON its orbs to smash them back!'));
     }
   } else if(G.bossS && G.bossS.zone!==z && G.bossS.orbs.length===0){ G.bossS=null; }
   if(G.bossS) bossStep(G.frame);
-  if(G.player.dead) endRun();
+  if(signalMode&&!G.player.dead&&worldXAt(G.frame)+PLAYER_X>=SIGNAL.finish){G.signalWon=Object.keys(G.player.bridges).length===SIGNAL.cores.length;endRun();}
+  else if(G.player.dead) endRun();
 }
 
 /* ---------- run lifecycle ---------- */
 function startRun(){
+  clearTimeout(G.endTimer);G.ended=false;G.signalWon=false;signalOwner=null;
   ensureAudio();
   chunkCacheReset();
   G.player=makeRunner(); G.events=[]; G.frame=0; G.acc=0; G.lastT=0; G.ghostPassed=false; G.ghostEvIdx=0;
@@ -1196,11 +1214,12 @@ function startRun(){
 }
 function chunkCacheReset(){ chunkCache.clear(); }
 function endRun(){
-  sfx('die'); G.shake=calmOn?0:14;
+  if(G.ended)return;G.ended=true;G.mode='ending';signalRelease();cancelAnimationFrame(G.raf);
+  sfx(G.signalWon?'win':'die'); G.shake=calmOn?0:14;
   const dist=Math.floor((worldXAt(G.frame))/PX_PER_M);
   G.lastDist=dist;
   const gd=G.ghostData;
-  const myCode=encodeGhost({seed:trackSeed,deathFrame:G.frame,events:G.events});
+  const myCode=encodeGhost({seed:trackSeed,deathFrame:G.frame,events:G.events.filter(e=>e.f<=G.frame),chapter:signalMode?'last-signal':null});
   G.lastCode=myCode;
   let win=false;
   if(!gd){ win=true; }
@@ -1217,13 +1236,13 @@ function endRun(){
   saveStats();
   G.newUnlocks=SKINS.concat(TRAILS).filter(i=>isUnlocked(i)&&!before.includes(i.id)).map(i=>i.name);
   if(win){
-    localStorage.setItem(LSK.ghost,myCode);
-    localStorage.setItem(LSK.seed,String(trackSeed));
+    signalStore.setItem(signalGhostKey(),myCode);
+    signalStore.setItem(LSK.seed,String(trackSeed));
     sfx('win');
     const pal=skinPal();
     if(!calmOn)for(let i=0;i<40;i++)burst([pal.main,'#e879f9','#fbbf24'][i%3],PLAYER_X,G.player.y-30,1);
   }
-  setTimeout(showDeath,650);
+  G.endTimer=setTimeout(()=>{if(G.ended)showDeath();},650);
 }
 
 /* V6 presentation wrappers. The five authority functions above remain the
@@ -1271,6 +1290,7 @@ function showDeath(){
     dS.textContent=(gap<=Math.max(3,gd.dist*0.05) ? CLOSE_LINES[G.frame%CLOSE_LINES.length]
                     : cause[G.frame%cause.length]);
   }
+  if(signalMode){dV.textContent=G.signalWon?'SIGNAL RESTORED':'SIGNAL LOST';dV.className='verdict '+(G.signalWon?'win':'lose');dDel.textContent=Object.keys(G.player.bridges).length+'/4 bridges connected';dS.textContent=G.signalWon?'Four bridges joined. The city can hear you again.':'Jump through each gold core. A missed core leaves its bridge open.';}
   show('dead'); updateTitleCard();
   const uEl=document.getElementById('dUnlock');
   if(G.newUnlocks&&G.newUnlocks.length){
@@ -1306,7 +1326,7 @@ function fillGrid(gridId,items,slot){
       e.stopPropagation();
       if(!un){banner('🔒 '+it.desc+' — you\u2019re at '+condProgress(it));return;}
       equip[slot]=it.id;
-      localStorage.setItem(slot==='skin'?'og_skin':'og_trail',it.id);
+      signalStore.setItem(slot==='skin'?'og_skin':'og_trail',it.id);
       buildLocker(); sfx('pass');
       banner('✅ '+it.name+' equipped');
     });
@@ -1317,11 +1337,11 @@ function burst(col,x,y,n){for(let i=0;i<n;i++)G.confetti.push({x:x+(Math.random(
 
 /* ---------- ghost persistence ---------- */
 function loadGhost(){
-  const code=localStorage.getItem(LSK.ghost);
+  const code=signalStore.getItem(signalGhostKey());
   if(!code)return null;
   try{
     const g=decodeGhost(code);
-    if(g.seed!==trackSeed)return null;                            // ghost belongs to another track
+    if(g.seed!==trackSeed||(g.chapter==='last-signal')!==signalMode)return null;                            // ghost belongs to another track
     g.dist=distOf(g.deathFrame); g.name=codename(code);
     return g;
   }catch(e){return null}
@@ -1329,9 +1349,9 @@ function loadGhost(){
 function adoptCode(code,fromLink){
   try{
     const g=decodeGhost(code);
-    trackSeed=g.seed;
-    localStorage.setItem(LSK.seed,String(g.seed));
-    localStorage.setItem(LSK.ghost,g.code);
+    signalMode=g.chapter==='last-signal';trackSeed=g.seed;
+    signalStore.setItem(LSK.seed,String(g.seed));
+    signalStore.setItem(signalGhostKey(),g.code);
     chunkCacheReset();
     updateTitleCard();
     banner((fromLink?'🔗 Challenge loaded! ':'👻 Ghost loaded! ')+codename(g.code)+' · '+distOf(g.deathFrame)+'m — beat it.');
@@ -1349,16 +1369,12 @@ function onPress(e){
   pressRunner(G.player);
   G.events.push({f:G.frame+1,r:false});                          // applied next sim frame — matches replay feed
 }
-function onRelease(e){
-  if(G.v6IgnoreRelease){G.v6IgnoreRelease=false;return;}
-  if(G.mode!=='play'||G.v6Paused)return;
-  releaseRunner(G.player);
-  G.events.push({f:G.frame+1,r:true});
-}
+function onRelease(e){signalRelease();}
 
 /* ---------- UI ---------- */
 function show(mode){
   G.mode=mode;
+  if(mode!=='play')document.getElementById('signalObjective').classList.add('hidden');
   const title=document.getElementById('scrTitle'),death=document.getElementById('scrDeath');
   title.classList.toggle('hidden',mode!=='title');death.classList.toggle('hidden',mode!=='dead');
   title.setAttribute('aria-hidden',mode==='title'?'false':'true');death.setAttribute('aria-hidden',mode==='dead'?'false':'true');
@@ -1374,6 +1390,7 @@ function show(mode){
   if(mode==='title'||mode==='dead')requestAnimationFrame(()=>{const root=mode==='title'?title:death,f=root.querySelector('button,input');if(f)f.focus({preventScroll:true});});
 }
 function updateHud(){
+  signalHud();
   const d=Math.floor(worldXAt(G.frame)/PX_PER_M);
   if(G.ghostPassed&&!G._v6ClutchFired){G._v6ClutchFired=true;v6TriggerClutch('CLUTCH GHOST PASS');}
   document.getElementById('hudDist').textContent=d+'m';
@@ -1439,14 +1456,14 @@ function v6Panel(id,open){
 /* ---------- boot (after all consts/functions) ---------- */
 function boot(){
   resize(); window.addEventListener('resize',resize);
-  sndOn=localStorage.getItem(LSK.snd)!=='0';
-  calmOn=localStorage.getItem(LSK.calm)==='1';
+  sndOn=signalStore.getItem(LSK.snd)!=='0';
+  calmOn=signalStore.getItem(LSK.calm)==='1';
   refreshTogs();
   document.querySelectorAll('.overlay').forEach(el=>{el.setAttribute('role','dialog');el.setAttribute('aria-modal','true');el.setAttribute('aria-hidden',el.classList.contains('hidden')?'true':'false');});
   document.getElementById('scrSplash').setAttribute('role','button');document.getElementById('scrSplash').setAttribute('tabindex','0');document.getElementById('scrSplash').setAttribute('aria-label','Made by Matt presents One Guy. Activate to skip.');
   loadStats();
-  trackSeed=parseInt(localStorage.getItem(LSK.seed)||'0',10);
-  if(!trackSeed){ trackSeed=(Math.random()*0xFFFFFFF|0)+1; localStorage.setItem(LSK.seed,String(trackSeed)); }
+  trackSeed=parseInt(signalStore.getItem(LSK.seed)||'0',10);
+  if(!trackSeed){ trackSeed=(Math.random()*0xFFFFFFF|0)+1; signalStore.setItem(LSK.seed,String(trackSeed)); }
 
   /* challenge link */
   try{
@@ -1464,18 +1481,23 @@ function boot(){
   sp.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();hideSplash();}});
   setTimeout(hideSplash,2500);
 
-  /* controls */
-  window.addEventListener('pointerdown',onPress,{passive:false});
-  window.addEventListener('pointerup',onRelease,{passive:true});
-  window.addEventListener('keydown',(e)=>{
-    if(e.target&&(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA'||e.target.tagName==='SELECT'||e.target.tagName==='BUTTON'))return;
-    if(e.code==='Space'||e.code==='ArrowUp'){ if(!e.repeat)onPress(null); e.preventDefault(); }
-    if((e.code==='Enter')&&G.mode==='dead')startRun();
-    if(e.key==='Escape'&&(G.mode==='play'||G.v6Paused)){e.preventDefault();v6Pause();}
+  /* One owner for keyboard or pointer; release also clears input on pause. */
+  cv.addEventListener('pointerdown',signalDown,{passive:false});
+  for(const el of [cv,document.getElementById('v6Jump')]){
+    el.addEventListener('pointerup',signalUp);el.addEventListener('pointercancel',signalUp);el.addEventListener('lostpointercapture',signalUp);
+  }
+  window.addEventListener('pointerup',signalUp);
+  window.addEventListener('keydown',e=>{
+    if(e.repeat)return;
+    if(e.key==='Escape'&&(G.mode==='play'||G.v6Paused)){e.preventDefault();v6Pause();return;}
+    if(e.target&&/INPUT|TEXTAREA|SELECT|BUTTON/.test(e.target.tagName))return;
+    if(e.code==='Space'||e.code==='ArrowUp')signalDown(e);
+    if(e.code==='Enter'&&G.mode==='dead')startRun();
   });
-  window.addEventListener('keyup',(e)=>{ if(e.code==='Space'||e.code==='ArrowUp')onRelease(null); });
-
-  document.getElementById('btnRun').addEventListener('click',(e)=>{e.stopPropagation();startRun();});
+  window.addEventListener('keyup',signalUp);
+  window.addEventListener('blur',()=>{if(G.mode==='play'&&!G.v6Paused)v6Pause();});
+  document.getElementById('btnSignal').addEventListener('click',e=>{e.stopPropagation();signalStart(true);});
+  document.getElementById('btnRun').addEventListener('click',(e)=>{e.stopPropagation();signalStart(false);});
   document.getElementById('btnAgain').addEventListener('click',(e)=>{e.stopPropagation();startRun();});
   document.getElementById('btnHome').addEventListener('click',(e)=>{e.stopPropagation();show('title');updateTitleCard();});
   document.getElementById('btnHelp').addEventListener('click',(e)=>{
@@ -1501,30 +1523,98 @@ function boot(){
   });
   document.getElementById('btnCopyGhost').addEventListener('click',(e)=>{
     e.stopPropagation();
-    const code=localStorage.getItem(LSK.ghost);
+    const code=signalStore.getItem(signalGhostKey());
     if(code)copyText(code,'Ghost code'); else banner('No ghost yet — run first!');
   });
   document.getElementById('btnNewTrack').addEventListener('click',(e)=>{
     e.stopPropagation();
     if(confirm('New track wipes this device\u2019s ghost. Fresh arms race?')){
       trackSeed=(Math.random()*0xFFFFFFF|0)+1;
-      localStorage.setItem(LSK.seed,String(trackSeed));
-      localStorage.removeItem(LSK.ghost);
+      signalStore.setItem(LSK.seed,String(trackSeed));
+      signalStore.removeItem(signalGhostKey());
       chunkCacheReset(); updateTitleCard(); banner('🆕 New track generated. Be Patient Zero.');
     }
   });
-  document.getElementById('btnShareCode').addEventListener('click',(e)=>{e.stopPropagation();copyText(G.lastWin?G.lastCode:(localStorage.getItem(LSK.ghost)||G.lastCode),'Code');});
-  document.getElementById('btnShareLink').addEventListener('click',(e)=>{e.stopPropagation();copyText(challengeLink(G.lastWin?G.lastCode:(localStorage.getItem(LSK.ghost)||G.lastCode)),'Challenge link');});
-  document.getElementById('togSnd').addEventListener('click',(e)=>{e.stopPropagation();sndOn=!sndOn;localStorage.setItem(LSK.snd,sndOn?'1':'0');refreshTogs();});
-  document.getElementById('togCalm').addEventListener('click',(e)=>{e.stopPropagation();calmOn=!calmOn;localStorage.setItem(LSK.calm,calmOn?'1':'0');refreshTogs();});
-  document.getElementById('v6Jump').addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();onPress(null);},{passive:false});
-  document.getElementById('v6Jump').addEventListener('pointerup',e=>{e.preventDefault();e.stopPropagation();onRelease(null);},{passive:false});
-  document.getElementById('v6Jump').addEventListener('pointercancel',()=>onRelease(null));
+  document.getElementById('btnShareCode').addEventListener('click',(e)=>{e.stopPropagation();copyText(G.lastWin?G.lastCode:(signalStore.getItem(signalGhostKey())||G.lastCode),'Code');});
+  document.getElementById('btnShareLink').addEventListener('click',(e)=>{e.stopPropagation();copyText(challengeLink(G.lastWin?G.lastCode:(signalStore.getItem(signalGhostKey())||G.lastCode)),'Challenge link');});
+  document.getElementById('togSnd').addEventListener('click',(e)=>{e.stopPropagation();sndOn=!sndOn;signalStore.setItem(LSK.snd,sndOn?'1':'0');refreshTogs();});
+  document.getElementById('togCalm').addEventListener('click',(e)=>{e.stopPropagation();calmOn=!calmOn;signalStore.setItem(LSK.calm,calmOn?'1':'0');refreshTogs();});
+  document.getElementById('v6Jump').addEventListener('pointerdown',signalDown,{passive:false});
   document.getElementById('v6Pause').addEventListener('click',e=>{e.stopPropagation();v6Pause();});
   document.getElementById('v6Cinema').addEventListener('click',e=>{e.stopPropagation();v6SkipIntro();});
   window.addEventListener('pageshow',()=>{if(sndOn)ensureAudio();});
   document.addEventListener('visibilitychange',()=>{if(document.hidden&&G.mode==='play'&&!G.v6Paused){v6Pause();v6Announce('Paused while the page was hidden.');}else if(!document.hidden&&sndOn)ensureAudio();});
 }
+/* LAST SIGNAL: four cores unfold four collision-bearing spans. Each runner
+   owns its bridge clock so a ghost can never make terrain solid for a player. */
+let signalMode=false, signalOwner=null;
+const SIGNAL={id:'last-signal',finish:184*TILE,cores:[32,72,112,152].map((tile,i)=>({id:i,x:tile*TILE,y:GROUND_Y-104,start:(tile+3)*TILE,end:(tile+19)*TILE}))};
+function signalGhostKey(){return signalMode?'og_last_signal_ghost_v1':LSK.ghost;}
+function signalTile(wx,r,f){
+  const ti=Math.floor(wx/TILE), c=SIGNAL.cores.find(c=>ti*TILE>=c.start&&ti*TILE<c.end);
+  if(!c)return {t:'g',h:0};
+  const built=r&&r.bridges&&r.bridges[c.id];
+  return {t:built!==undefined&&((f??G.frame)-built)*36>=Math.min(c.end,(ti+1)*TILE)-c.start?'g':'gap',h:0};
+}
+function signalCollect(r,f){
+  if(!signalMode||r.dead)return;
+  const wx=worldXAt(f)+PLAYER_X;
+  for(const c of SIGNAL.cores){
+    if(r.bridges[c.id]!==undefined)continue;
+    if(Math.abs(wx-c.x)<=PW/2+22&&c.y>=r.y-PH-20&&c.y<=r.y+20){
+      r.bridges[c.id]=f;
+      if(r===G.player){sfx('pass');banner('SIGNAL '+(c.id+1)+'/4 · BRIDGE UNFOLDING');v6Announce('Core '+(c.id+1)+' connected. Bridge unfolding.');}
+    }
+  }
+}
+function signalDraw(camX){
+  if(!signalMode)return;
+  const r=G.player;
+  ctx.save();ctx.textAlign='center';ctx.font='800 18px system-ui';
+  for(const c of SIGNAL.cores){
+    const x=c.x-camX, collected=!!r&&r.bridges[c.id]!==undefined;
+    if(x>-200&&x<VW+250){
+      ctx.strokeStyle=collected?'#a5f3fc':'#fbbf24';ctx.fillStyle=collected?'#38bdf8':'#fbbf24';ctx.lineWidth=3;
+      ctx.beginPath();ctx.moveTo(x,c.y-22);ctx.lineTo(x+22,c.y);ctx.lineTo(x,c.y+22);ctx.lineTo(x-22,c.y);ctx.closePath();ctx.stroke();
+      ctx.fillText(collected?'CONNECTED':'JUMP THROUGH',x,c.y-52);ctx.fillText('CORE '+(c.id+1),x,c.y-31);
+      ctx.setLineDash([5,7]);ctx.beginPath();ctx.moveTo(x,c.y+28);ctx.lineTo(x,GROUND_Y);ctx.stroke();ctx.setLineDash([]);
+      if(!collected){ctx.beginPath();ctx.moveTo(x-86,GROUND_Y-6);ctx.lineTo(x-70,GROUND_Y-18);ctx.lineTo(x-54,GROUND_Y-6);ctx.stroke();ctx.font='700 14px system-ui';ctx.fillText('JUMP',x-70,GROUND_Y+38);ctx.font='800 18px system-ui';}
+    }
+    const start=c.start-camX,end=c.end-camX;
+    if(end<0||start>VW)continue;
+    const fraction=collected?Math.min(1,(G.frame-r.bridges[c.id])*36/(c.end-c.start)):0;
+    ctx.strokeStyle='#385475';ctx.lineWidth=2;ctx.setLineDash([8,8]);ctx.strokeRect(start,GROUND_Y+3,end-start,16);ctx.setLineDash([]);
+    if(fraction>0){const w=(end-start)*fraction;ctx.fillStyle='#0e7490';ctx.fillRect(start,GROUND_Y,w,22);ctx.fillStyle='#a5f3fc';ctx.fillRect(start,GROUND_Y,w,4);for(let x=start;x<start+w;x+=44){ctx.beginPath();ctx.moveTo(x,GROUND_Y+5);ctx.lineTo(Math.min(x+32,start+w),GROUND_Y+20);ctx.strokeStyle='#38bdf8';ctx.stroke();}}
+  }
+  const goal=SIGNAL.finish-camX;if(goal>-100&&goal<VW+100){ctx.fillStyle='#a5f3fc';ctx.fillRect(goal-5,GROUND_Y-220,10,220);ctx.font='900 24px system-ui';ctx.fillText('LAST SIGNAL',goal,GROUND_Y-249);ctx.font='700 18px system-ui';ctx.fillText('CONNECT THE CITY',goal,GROUND_Y-225);}
+  ctx.restore();
+}
+function signalHud(){
+  const el=document.getElementById('signalObjective');
+  el.classList.toggle('hidden',!signalMode||G.mode!=='play');
+  if(!signalMode||!G.player)return;
+  const count=Object.keys(G.player.bridges).length,next=SIGNAL.cores.find(c=>G.player.bridges[c.id]===undefined),wx=worldXAt(G.frame)+PLAYER_X;
+  el.textContent='LAST SIGNAL · '+count+'/4 connected · '+(next?(next.x<wx-40?'Core missed — the span stays open':'Jump through the gold core · '+Math.max(0,Math.round((next.x-wx)/PX_PER_M))+'m ahead'):'Carry the signal to the far tower');
+}
+function signalRelease(){
+  signalOwner=null;
+  if(!G.player||!G.player.holding)return;
+  releaseRunner(G.player);
+  if(G.mode==='play'&&!G.ended)G.events.push({f:G.frame+1,r:true});
+}
+function signalDown(e){
+  if(signalOwner!==null||G.mode!=='play'||G.v6Paused||G.ended)return;
+  if(e.target&&/^(INPUT|TEXTAREA|SELECT|BUTTON|A)$/.test(e.target.tagName)&&e.currentTarget!==document.getElementById('v6Jump'))return;
+  if(e.cancelable)e.preventDefault();
+  if(G.v6Intro){v6SkipIntro();return;}
+  signalOwner=e.pointerId===undefined?'k'+e.code:'p'+e.pointerId;
+  if(e.pointerId!==undefined&&e.currentTarget&&e.currentTarget.setPointerCapture)e.currentTarget.setPointerCapture(e.pointerId);
+  onPress(null);
+}
+function signalUp(e){const owner=e.pointerId===undefined?'k'+e.code:'p'+e.pointerId;if(signalOwner===owner)signalRelease();}
+function signalStart(chapter){signalMode=chapter;document.getElementById('scrSplash').classList.add('hidden');startRun();}
+window.__SIGNAL_TEST__={G,SIGNAL,makeRunner,stepRunner,pressRunner,releaseRunner,tileAt,groundTop,signalCollect,worldXAt,encodeGhost,decodeGhost,vPush,b64uEnc,simStep,start:signalStart,pause:v6Pause,finish:()=>endRun(),showDeath,getStats:()=>stats,getMode:()=>signalMode};
+
 boot();
 </script>
 <!-- MBM-INLINE-EXIT:BEGIN generated by tools/render_inline_exit.py, do not edit by hand -->
@@ -1533,7 +1623,7 @@ try{
 if(window.__mbmExit)return;window.__mbmExit=1;
 var HOMES={"pupils":{"r":"/for/pupils/","l":"Pupils & learners"},"teachers":{"r":"/for/teachers/","l":"Teachers & education staff"},"parents":{"r":"/for/parents-carers/","l":"Parents & carers"},"schools":{"r":"/for/schools-semh/","l":"Schools & specialist settings"},"trusts":{"r":"/for/trusts/","l":"Academy trusts & education groups"},"councils":{"r":"/for/councils-organisations/","l":"Local authorities & education partners"},"partners":{"r":"/for/partners/","l":"Education organisations & service providers"},"main":{"r":"/main/","l":"Main homepage"}};
 var KEY="mbm_audience_view";
-function lsGet(k){try{var v=localStorage.getItem(k);return v===null?"":v;}catch(e){return "";}}
+function lsGet(k){try{var v=signalStore.getItem(k);return v===null?"":v;}catch(e){return "";}}
 function el(t,a,h){var e=document.createElement(t);for(var k in a)e.setAttribute(k,a[k]);if(h!==undefined)e.innerHTML=h;return e;}
 function adultOff(){try{var d=document.documentElement,b=document.body;
 return (d&&d.getAttribute("data-mbm-adult-features")==="off")||(b&&b.getAttribute("data-mbm-adult-features")==="off");}catch(e){return false;}}

@@ -1,0 +1,13 @@
+--- a/upgrades/axiom-shift/transform.py
++++ b/upgrades/axiom-shift/transform.py
+@@ -87,8 +87,8 @@
+  s=s[:start]+'''  var proofOwner=null;
+   function proofDown(e){
+     if(proofOwner!==null||!play||!play.running)return;
+-    e.preventDefault();e.stopPropagation();proofOwner='p'+e.pointerId;
+-    if(e.currentTarget.setPointerCapture)e.currentTarget.setPointerCapture(e.pointerId);liveInputDown();
++    e.preventDefault();if(e.stopPropagation)e.stopPropagation();proofOwner='p'+e.pointerId;
++    if(e.currentTarget&&e.currentTarget.setPointerCapture)e.currentTarget.setPointerCapture(e.pointerId);liveInputDown();
+   }
+   function proofUp(e){if(proofOwner!=='p'+e.pointerId)return;proofOwner=null;liveInputUp();}
+   [cv,$('v6Action')].forEach(function(el){el.addEventListener('pointerdown',proofDown,{passive:false});el.addEventListener('pointerup',proofUp);el.addEventListener('pointercancel',proofUp);el.addEventListener('lostpointercapture',proofUp);});
