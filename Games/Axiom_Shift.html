@@ -145,6 +145,13 @@ body.v6-calm #v6Clutch{display:none}
   .hud{right:0;padding-right:calc(.8rem + env(safe-area-inset-right))}
 }
 @media (prefers-reduced-motion:reduce){#v6Clutch.on{animation:none;opacity:0}#v6Cinema{transition:none}}
+/* Broken Proof chapter: readable instrument panel. */
+.eyebrow,.crest b,.crest small,.card p,.card .stars,.card .cleared,.opt .k,.opt .k small,.seg button,.hud .lbl,.hud .form,.hint,kbd,.tele,#v6Window,.v6act,.v6mini,#v6Cinema,#v6Cinema small {font-size:14px}
+#proofObjective{position:absolute;left:12px;top:66px;max-width:min(570px,calc(100% - 24px));padding:10px 14px;border:1px solid #84dfdb;border-radius:12px;background:#111b36ed;color:#e4fcf5;font-size:14px;line-height:1.45;pointer-events:none}
+#proofObjective:empty{display:none}#proofObjective b{color:#f6c676}
+#proofStory{font-size:14px;color:#d1e6e9;line-height:1.5}
+.screen{justify-content:safe center}.panel{flex-shrink:0}
+@media(max-width:540px){.panel{padding:1rem}.hud{gap:6px}.hud .form{letter-spacing:0}.v6mark{display:none}#proofObjective{top:66px}.tele{bottom:104px;max-width:95vw;white-space:normal;text-align:center}}
 </style>
 </head>
 <body>
@@ -161,7 +168,7 @@ body.v6-calm #v6Clutch{display:none}
       <div class="eyebrow">A one-button rhythm runner</div>
       <h1>Axiom <span style="color:var(--amber-lt)">Shift</span></h1>
       <p class="lead">The world runs on rigid law. Then the law <em>shifts</em>. Read the visible pulse, ride four forms, and draw your line through six Propositions. No sound — the rhythm is something you watch.</p>
-      <div class="row"><button class="btn primary" id="splashStart">Enter</button></div>
+      <p id="proofStory">New chapter · The archive is losing its last proof. Cross eight luminous apertures at the marked height to rebuild it. Four familiar forms, one unbroken line.</p><div class="row"><button class="btn primary" id="proofStart">Repair the Broken Proof</button><button class="btn" id="splashStart">Original modes</button></div>
       <p class="hint">One button. <kbd>Space</kbd> / tap. That's the whole game.</p>
     </div>
   </div>
@@ -171,7 +178,7 @@ body.v6-calm #v6Clutch{display:none}
     <div class="panel menu-anim">
       <div class="crest"><svg viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="11" fill="#161D3D"/><path d="M11 34 L20 14 L24 27 L28 14 L37 34" fill="none" stroke="#B9E6CD" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/></svg><div><b>AXIOM SHIFT</b><small>MADE BY MATT</small></div></div>
       <div class="col">
-        <button class="btn primary" id="mPlay">Play the Propositions</button>
+        <button class="btn primary" id="mProof">The Broken Proof · new chapter</button><button class="btn" id="mPlay">Play the Propositions</button>
         <button class="btn" id="mDaily">Daily Shift</button>
         <button class="btn" id="mGuide">Field Guide</button>
         <button class="btn ghost" id="mSettings">Settings</button>
@@ -278,7 +285,7 @@ body.v6-calm #v6Clutch{display:none}
 
   <!-- GAME -->
   <div id="game">
-    <canvas id="cv" tabindex="0" role="application" aria-label="Axiom Shift V6 play area. Tap, click, Space or Arrow Up performs the current form action."></canvas>
+    <div id="proofObjective" role="status" aria-live="polite"></div><canvas id="cv" tabindex="0" role="application" aria-label="Axiom Shift V6 play area. Tap, click, Space or Arrow Up performs the current form action."></canvas>
     <div class="hud">
       <button class="pausebtn" id="hudPause" aria-label="Pause">II</button>
       <div class="bar"><i id="hudBar"></i></div>
@@ -515,7 +522,7 @@ body.v6-calm #v6Clutch{display:none}
       level: level, songBeat: 0, form: level.startForm,
       y: 0, vy: 0, grounded: true, holding: false, gravDir: 1,
       smudges: 0, cleared: false, steps: 0, hw: 0,
-      cpBeat: 0, drops: {}, trace: 2166136261 >>> 0,
+      cpBeat: 0, drops: {}, seals: {}, trace: 2166136261 >>> 0,
       axiomRule: !!opts.axiomRule, seed: seed,
       force: (opts.forceSmudge || []).slice(), forceFired: {},
       simRng: mulberry32(seed),
@@ -523,6 +530,7 @@ body.v6-calm #v6Clutch{display:none}
     };
   }
   function inband(t, y, ev) {
+    if (t === 'aperture') return Math.abs(y-ev.y) <= ev.radius + 1e-9;
     if (t === 'spike') return y >= CLEAR - 1e-9;
     if (t === 'ceil') return y <= (CEIL - CLEAR) + 1e-9;
     return true;
@@ -530,6 +538,8 @@ body.v6-calm #v6Clutch{display:none}
   function restoreTo(s, beat) {
     s.songBeat = beat; s.y = 0; s.vy = 0; s.grounded = true;
     s.holding = false; s.gravDir = 1; s.form = formAt(s.level, beat);
+    s.cleared = false;
+    if(s.level.apertures) s.level.apertures.forEach(function(e){if(e.b>beat+1e-9)delete s.seals[e.seal];});
   }
   // The single smudge/rewind path — used by real hazard contact AND by the
   // harness's forced-injection, so both exercise identical machinery. The
@@ -549,9 +559,9 @@ body.v6-calm #v6Clutch{display:none}
 
   // Advance the sim to an absolute target beat, applying the tape as it goes.
   // Returns nothing; mutates state. maxSteps guards against non-clearing tapes.
-  function runToBeat(s, tape, targetBeat, maxSteps) {
+  function runToBeat(s, tape, targetBeat, maxSteps, stopOnSmudge) {
     var lvl = s.level, evs = lvl.ev;
-    while (!s.cleared && s.songBeat < targetBeat) {
+    stepLoop: while (!s.cleared && s.songBeat < targetBeat) {
       if (maxSteps && s.steps > maxSteps) break;
       var prev = s.songBeat;
       s.songBeat += DBEAT; s.steps++;
@@ -561,7 +571,7 @@ body.v6-calm #v6Clutch{display:none}
       // fires the real smudge machinery exactly once per scripted beat.
       for (var fi = 0; fi < s.force.length; fi++) {
         var fb = s.force[fi];
-        if (!s.forceFired[fi] && fb > prev + 1e-12 && fb <= s.songBeat + 1e-12) { s.forceFired[fi] = 1; doSmudge(s); }
+        if (!s.forceFired[fi] && fb > prev + 1e-12 && fb <= s.songBeat + 1e-12) { s.forceFired[fi] = 1; doSmudge(s); if(stopOnSmudge)return; continue stepLoop; }
       }
       // apply tape events crossed in (prev, songBeat]
       for (var ti = 0; ti < tape.length; ti++) {
@@ -578,8 +588,9 @@ body.v6-calm #v6Clutch{display:none}
         var e = evs[ei];
         if (e.b > prev + 1e-12 && e.b <= s.songBeat + 1e-12) {
           if (e.t === 'gate') { s.form = e.form; s.grounded = true; s.vy = 0; s.gravDir = 1; if (s.form !== 'star') s.y = 0; }
-          else if (e.t === 'spike' || e.t === 'ceil') {
-            if (!inband(e.t, s.y, e)) { doSmudge(s); }
+          else if (e.t === 'spike' || e.t === 'ceil' || e.t === 'aperture') {
+            if (!inband(e.t, s.y, e)) { doSmudge(s); if(stopOnSmudge)return; continue stepLoop; }
+            if(e.t==='aperture') s.seals[e.seal]=1;
           }
         }
       }
@@ -590,7 +601,7 @@ body.v6-calm #v6Clutch{display:none}
       }
       s.trace = foldTrace(s.trace, Math.round(s.y * 4096));
       s.trace = foldTrace(s.trace, Math.round(s.vy * 4096) & 0xffff);
-      if (s.songBeat >= lvl.endBeat) s.cleared = true;
+      if (s.songBeat >= lvl.endBeat) s.cleared = !lvl.apertures || lvl.apertures.every(function(e){return !!s.seals[e.seal] || e.b <= (s.practiceFrom || 0);});
     }
   }
 
@@ -605,7 +616,7 @@ body.v6-calm #v6Clutch{display:none}
     return {
       cleared: s.cleared, smudges: s.smudges, steps: s.steps,
       endBeat: s.songBeat, hw: s.hw, trace: s.trace >>> 0,
-      dropsCollected: Object.keys(s.drops).length
+      dropsCollected: Object.keys(s.drops).length, sealsCollected: Object.keys(s.seals).length
     };
   }
 
@@ -613,7 +624,7 @@ body.v6-calm #v6Clutch{display:none}
   function runFromCheckpoint(level, cpBeat, opts) {
     opts = opts || {};
     var s = createSim(level, opts);
-    restoreTo(s, cpBeat);
+    restoreTo(s, cpBeat); s.practiceFrom=cpBeat;
     var tape = (opts.tape || level.tape).filter(function (t) { return t.b > cpBeat + 1e-9; });
     var guard = SUB * (level.endBeat + 8) * 60;
     runToBeat(s, tape, level.endBeat + 4, guard);
@@ -632,10 +643,24 @@ body.v6-calm #v6Clutch{display:none}
     { key: 'glitch_live', label: 'The Glitch', kind: 'glitch' }
   ];
 
+  // The missing proposition uses the same authored tapes and actual form physics.
+  // Aperture heights are measured from the reference run, never guessed in pixels.
+  function brokenProof() {
+    var lvl=assemble('p7','The Broken Proof',
+      [pTriple(),{gate:'ring'},pRingCross(),{gate:'star'},pStarWeave(),
+       {gate:'mform'},pFlapHops(),{gate:'bastion'},pTriple()], 'gentle');
+    var beats=[2.6,6.6,11.4,13.4,19.5,26.7,28.1,36.6], probe=createSim(lvl);
+    var apertures=beats.map(function(b,i){runToBeat(probe,lvl.tape,b,SUB*80);
+      return {b:b,t:'aperture',y:probe.y,radius:probe.form==='star'?.64:.48,seal:i};});
+    lvl.apertures=apertures; lvl.ev=lvl.ev.concat(apertures).sort(function(a,b){return a.b-b.b;});
+    return lvl;
+  }
+  var PROOF=brokenProof(); LEVELS.push(PROOF);
+
   var api = {
     SAVE_VERSION: SAVE_VERSION, SAVE_KEY: SAVE_KEY,
     SUB: SUB, DBEAT: DBEAT, CEIL: CEIL, CLEAR: CLEAR, TEMPOS: TEMPOS,
-    FORMS: FORMS, LEVELS: LEVELS, FIELD: FIELD,
+    FORMS: FORMS, LEVELS: LEVELS, FIELD: FIELD, PROOF:PROOF, inband:inband, restoreTo:restoreTo,
     mulberry32: mulberry32, hashStr: hashStr, maxFlashHz: maxFlashHz,
     formAt: formAt, createSim: createSim, runToBeat: runToBeat,
     runTape: runTape, runFromCheckpoint: runFromCheckpoint,
@@ -646,7 +671,11 @@ body.v6-calm #v6Clutch{display:none}
       if (!raw || typeof raw !== 'object') return null;
       var v = raw.v || 0;
       // future migrations chain here: if (v < 2) { ...; v = 2; }
-      if (v === SAVE_VERSION) return raw;
+      if (v === SAVE_VERSION) {
+        var out={v:SAVE_VERSION,tier:['gentle','standard','sharp'].indexOf(raw.tier)>=0?raw.tier:'standard',axiom:!!raw.axiom,calm:!!raw.calm,seen:{},best:{},stars:{}};
+        ['seen','best','stars'].forEach(function(k){if(raw[k]&&typeof raw[k]==='object'&&!Array.isArray(raw[k]))Object.keys(raw[k]).forEach(function(id){var n=Number(raw[k][id]);if(Number.isFinite(n)&&n>=0)out[k][id]=Math.min(k==='stars'?3:k==='best'?100:1,n);});});
+        return out;
+      }
       return null; // unknown/older with no path yet -> fresh
     }
   };
@@ -676,7 +705,7 @@ if (typeof document !== 'undefined') {
       p = { version:6, gameId:'axiom-shift', settings:{sound:false}, telemetry:{launches:0}, migratedAt:new Date().toISOString() };
       try { localStorage.setItem(V6_PROFILE_KEY, JSON.stringify(p)); } catch (e) {}
     }
-    p.telemetry = p.telemetry || {launches:0}; p.telemetry.launches = (p.telemetry.launches|0) + 1;
+    p.telemetry = p.telemetry && typeof p.telemetry==='object' && !Array.isArray(p.telemetry) ? p.telemetry : {launches:0}; p.telemetry.launches = (p.telemetry.launches|0) + 1;
     // Do not persist the launch counter: profile creation stays a single,
     // atomic write and boot never churns storage.
     try { v6LegacyPreserved = localStorage.getItem(A.SAVE_KEY) === v6LegacyBefore; } catch (e) {}
@@ -804,11 +833,11 @@ if (typeof document !== 'undefined') {
 
   function newPlay(level, opts) {
     opts = opts || {};
-    var tier = opts.tier || save.tier;
+    var tier = opts.tier || (level.id==='p7' ? 'gentle' : save.tier);
     var axiom = (tier === 'sharp') && !!save.axiom;
     var st = A.createSim(level, { axiomRule: axiom });
     if (opts.fromBeat) { // practice
-      st.songBeat = opts.fromBeat; st.form = A.formAt(level, opts.fromBeat);
+      A.restoreTo(st,opts.fromBeat); st.practiceFrom=opts.fromBeat;
     }
     return {
       level: level, tier: tier, bps: A.TEMPOS[tier] / 60, st: st,
@@ -831,7 +860,7 @@ if (typeof document !== 'undefined') {
     play.wantTap = true; play.wantTapAt = perfNow();
   }
   function liveInputUp() {
-    if (!play || !play.running) return;
+    if (!play) return;
     if (play.st.form === 'star') A.FORMS.star.up(play.st);
   }
   function perfNow() { return (window.performance && performance.now) ? performance.now() : 0; }
@@ -876,7 +905,7 @@ if (typeof document !== 'undefined') {
     consumeTap(now);
     var target = st.songBeat + play.bps * dtSec;
     var guard = A.SUB * (play.level.endBeat + 8) * 60;
-    A.runToBeat(st, [], target, guard); // live: no scripted tape
+    A.runToBeat(st, [], target, st.steps + Math.ceil(play.bps * .05 * A.SUB) + 2, true); // bounded live frame; yield immediately after rewind
     play.renderAlpha = Math.max(0,Math.min(1,(target-beforeBeat)/Math.max(A.DBEAT,st.songBeat-beforeBeat)));
 
     // ground-edge tracking for coyote time
@@ -930,6 +959,23 @@ if (typeof document !== 'undefined') {
     ctx.restore();
   }
 
+  function drawProof(st,rx,pxpb){
+    var el=$('proofObjective');
+    if(!play.level.apertures){el.textContent='';return;}
+    var next=play.level.apertures.find(function(e){return e.b>st.songBeat;}), count=Object.keys(st.seals).length;
+    var act={bastion:'Tap to jump',ring:'Tap to invert gravity',star:'Hold to rise · release to fall',mform:'Tap to flap'}[st.form];
+    var msg='THE BROKEN PROOF · '+count+'/8 seals · '+act+(next?' · Aperture in '+Math.ceil(next.b-st.songBeat)+' beats':' · Archive restored');
+    if(el.textContent!==msg)el.textContent=msg;
+    play.level.apertures.forEach(function(e){
+      var x=rx+(e.b-st.songBeat)*pxpb;if(x < -50 || x>W+60)return;
+      var top=worldToScreenY(Math.min(A.CEIL,e.y+e.radius)),bottom=worldToScreenY(Math.max(0,e.y-e.radius)),ceil=worldToScreenY(A.CEIL),floor=worldToScreenY(0),done=!!st.seals[e.seal];
+      ctx.save();ctx.fillStyle=done?'#286650':'#273855';ctx.strokeStyle=done?'#B9E6CD':'#84dfdb';ctx.lineWidth=2;
+      [[ceil,top-ceil],[bottom,floor-bottom]].forEach(function(p){if(p[1]<1)return;ctx.fillRect(x-16,p[0],32,p[1]);ctx.strokeRect(x-16,p[0],32,p[1]);ctx.fillStyle='#ffffff13';ctx.beginPath();ctx.moveTo(x+16,p[0]);ctx.lineTo(x+25,p[0]-8);ctx.lineTo(x+25,p[0]+p[1]-8);ctx.lineTo(x+16,p[0]+p[1]);ctx.fill();});
+      ctx.strokeStyle='#f6c676';ctx.setLineDash([4,4]);ctx.strokeRect(x-20,top,40,Math.max(12,bottom-top));ctx.setLineDash([]);
+      var y=worldToScreenY(e.y);ctx.beginPath();ctx.moveTo(x,y-9);ctx.lineTo(x+9,y);ctx.lineTo(x,y+9);ctx.lineTo(x-9,y);ctx.closePath();ctx.fillStyle=done?'#B9E6CD':'#f6c676';ctx.fill();
+      ctx.fillStyle='#e4fcf5';ctx.font='700 14px system-ui';ctx.textAlign='center';ctx.fillText('SEAL '+(e.seal+1),x,Math.max(160,ceil-16));ctx.restore();
+    });
+  }
   function render(now) {
     ctx.clearRect(0, 0, W, H);
     var vcam=v6Camera(now);ctx.save();ctx.translate(W/2,H/2);ctx.scale(vcam.zoom,vcam.zoom);ctx.translate(-W/2+vcam.pan,-H/2);
@@ -959,6 +1005,7 @@ if (typeof document !== 'undefined') {
     if (play) {
       var st = play.st, rx = W * 0.28, PXPB = 118;
       v6DrawTrajectory(st,rx,PXPB);
+      drawProof(st,rx,PXPB);
       // ink trail behind the runner
       if (play.trail.length > 1) {
         ctx.strokeStyle = COL.amberLt; ctx.lineWidth = 3; ctx.lineJoin = 'round'; ctx.beginPath();
@@ -1044,7 +1091,7 @@ if (typeof document !== 'undefined') {
       save.stars[lvl.id] = Math.max(save.stars[lvl.id] || 0, stars);
       persist();
     }
-    $('clearKicker').textContent = play.practiceAt != null ? 'Practice section complete' : 'Proposition complete';
+    $('clearKicker').textContent = play.practiceAt != null ? 'Practice section complete' : lvl.id==='p7'?'All eight seals joined · the archive lives':'Proposition complete';
     $('clearTitle').textContent = lvl.name.replace(/^Proposition [IV]+ — /, '');
     $('clearFigure').innerHTML = "<img alt='completed figure' src=\"data:image/svg+xml," + encodeURIComponent(figureSVG(lvl.id).replace(/%23/g, '#')) + "\">";
     $('clearProg').textContent = prog + '%';
@@ -1070,7 +1117,7 @@ if (typeof document !== 'undefined') {
   }
   function lvlBlurb(id) {
     return { p1:'Bastion. Learn the pulse.', p2:'Metered jumps and pits.', p3:'The Ring inverts gravity.',
-             p4:'The Star flies free.', p5:'The M glides.', p6:'All four forms. The Glitch goes live.' }[id] || '';
+             p4:'The Star flies free.', p5:'The M glides.', p6:'All four forms. The Glitch goes live.', p7:'Repair eight precise altitude apertures across all four forms. Starts on Gentle.' }[id] || '';
   }
   function buildGuide() {
     var grid = $('guideGrid'); grid.innerHTML = '';
@@ -1130,28 +1177,37 @@ if (typeof document !== 'undefined') {
 
   // ---- pause wiring -------------------------------------------------------
   function openPause() {
-    if (!play) return; play.running = false;
+    if (!play) return; V6.director=null; $('v6Cinema').hidden=true; liveInputUp(); play.wantTap=false; proofOwner=null; play.running = false;
     $('pAxiomRow').style.display = (play.tier === 'sharp') ? 'flex' : 'none';
     $('pAxiomToggle').setAttribute('aria-checked', save.axiom ? 'true' : 'false');
     $('pCalmToggle').setAttribute('aria-checked', save.calm ? 'true' : 'false');
     $('pClearPractice').style.display = play.practiceAt != null ? 'block' : 'none';
     show('pause');
   }
-  function resumePlay() { if (play) { play.running = true; play.last = 0; show('game'); } }
+  function resumePlay() { if (play) { play.running = true; play.last = 0; show('game'); $('cv').focus({preventScroll:true}); } }
 
   // ---- input --------------------------------------------------------------
-  cv.addEventListener('pointerdown', function (e) { e.preventDefault(); liveInputDown(); }, { passive: false });
-  cv.addEventListener('pointerup', function (e) { e.preventDefault(); liveInputUp(); }, { passive: false });
-  window.addEventListener('keydown', function (e) {
-    if (e.code === 'Space' || e.code === 'ArrowUp' || e.key === ' ' || e.key === 'ArrowUp') {
-      if ($('game').classList.contains('show')) { e.preventDefault(); liveInputDown(); }
-    } else if (e.key === 'Escape' && $('game').classList.contains('show')) { openPause(); }
+  var proofOwner=null;
+  function proofDown(e){
+    if(proofOwner!==null||!play||!play.running)return;
+    e.preventDefault();if(e.stopPropagation)e.stopPropagation();proofOwner='p'+e.pointerId;
+    if(e.currentTarget&&e.currentTarget.setPointerCapture)e.currentTarget.setPointerCapture(e.pointerId);liveInputDown();
+  }
+  function proofUp(e){if(proofOwner!=='p'+e.pointerId)return;proofOwner=null;liveInputUp();}
+  [cv,$('v6Action')].forEach(function(el){el.addEventListener('pointerdown',proofDown,{passive:false});el.addEventListener('pointerup',proofUp);el.addEventListener('pointercancel',proofUp);el.addEventListener('lostpointercapture',proofUp);});
+  window.addEventListener('pointerup',proofUp);
+  window.addEventListener('keydown',function(e){
+    if(e.repeat)return;
+    if(e.key==='Escape'){if($('game').classList.contains('show')){e.preventDefault();openPause();}else if($('pause').classList.contains('show')){e.preventDefault();resumePlay();}return;}
+    if(e.target&&/INPUT|TEXTAREA|SELECT|BUTTON/.test(e.target.tagName))return;
+    if((e.code==='Space'||e.code==='ArrowUp')&&proofOwner===null&&play&&play.running){e.preventDefault();proofOwner='k'+e.code;liveInputDown();}
   });
-  window.addEventListener('keyup', function (e) {
-    if (e.code === 'Space' || e.code === 'ArrowUp' || e.key === ' ' || e.key === 'ArrowUp') { if ($('game').classList.contains('show')) liveInputUp(); }
-  });
+  window.addEventListener('keyup',function(e){if(proofOwner==='k'+e.code){proofOwner=null;liveInputUp();}});
+  window.addEventListener('blur',function(){if(play&&play.running)openPause();});
 
   // ---- menu buttons -------------------------------------------------------
+  $('proofStart').addEventListener('click',function(){startLevel(A.PROOF);});
+  $('mProof').addEventListener('click',function(){startLevel(A.PROOF);});
   $('splashStart').addEventListener('click', function () { show('menu'); refreshTierUI(); });
   $('mPlay').addEventListener('click', function () { buildLevels(); show('levels'); });
   $('mDaily').addEventListener('click', function () {
@@ -1195,19 +1251,16 @@ if (typeof document !== 'undefined') {
   $('clearMenu').addEventListener('click', function () { play = null; show('menu'); refreshTierUI(); });
 
   // ---- V6 touch/cinematic/accessibility wiring --------------------------
-  $('v6Action').addEventListener('pointerdown',function(e){e.preventDefault();e.stopPropagation();liveInputDown();},{passive:false});
-  $('v6Action').addEventListener('pointerup',function(e){e.preventDefault();e.stopPropagation();liveInputUp();},{passive:false});
-  $('v6Action').addEventListener('pointercancel',function(){liveInputUp();});
   $('v6Cinema').addEventListener('click',v6SkipIntro);
   document.addEventListener('visibilitychange',function(){
     if(document.hidden&&play&&play.running&&$('game').classList.contains('show')){openPause();announce('Paused while the page was hidden.');}
   });
-  window.addEventListener('keydown',function(e){if(e.key==='Escape'&&$('pause').classList.contains('show')){e.preventDefault();resumePlay();}});
 
   Array.prototype.forEach.call(document.querySelectorAll('.screen'),function(s){s.setAttribute('role','dialog');s.setAttribute('aria-modal','true');});
   document.body.classList.toggle('v6-calm',save.calm||V6_REDUCED);
   var oldRefreshTierUI=refreshTierUI;
   refreshTierUI=function(){oldRefreshTierUI();document.body.classList.toggle('v6-calm',save.calm||V6_REDUCED);};
+  window.__PROOF_TEST__={getPlay:function(){return play;},getSave:function(){return save;},update:update,start:startLevel,clear:onClear,pause:openPause,resume:resumePlay};
   // ---- boot ---------------------------------------------------------------
   bindSettings(); refreshTierUI(); resize();
   raf = requestAnimationFrame(loop);

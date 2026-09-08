@@ -1,0 +1,11 @@
+--- a/upgrades/trekkers/transform.py
++++ b/upgrades/trekkers/transform.py
+@@ -8,7 +8,7 @@
+  def between(a,b,new):
+   nonlocal s
+   i=s.index(a);j=s.index(b,i);s=s[:i]+new+'\n        '+s[j:]
+- one("const TREKKERS_URL = 'Trekkers_AQA_Evidence_L1.html';", "const TREKKERS_URL = 'https://madebymatt-play.uk/Lessons/Games/Trekkers_AQA_Evidence_L1.html';")
++ one("const TREKKERS_URL = 'Trekkers_AQA_Evidence_L1.html';", "const TREKKERS_URL = 'https://madebymatt.uk/Lessons/5_6%20Local%20Choice/Trekkers_AQA_Evidence_L1.html';")
+  one("window.AudioContext = window.AudioContext || window.webkitAudioContext;\n                this.ctx = new AudioContext();", "try { const Audio=window.AudioContext||window.webkitAudioContext; if(!this.ctx&&Audio)this.ctx=new Audio(); if(this.ctx&&this.ctx.state==='suspended')this.ctx.resume().catch(()=>{}); } catch(e){this.ctx=null;}")
+  between('function loadQuest() {','function saveQuest()', '''function loadQuest() {
+             let raw={};try{raw=JSON.parse(safeRead('trekTrailRunner_v1')||'{}')||{};}catch(e){}

@@ -228,6 +228,9 @@ body.hc .card{box-shadow:0 0 0 3px var(--navy),0 12px 44px rgba(0,0,0,.45)}
   to{clip-path:circle(0% at var(--mx) var(--my))}}
 @keyframes cLift{from{transform:perspective(700px) rotateX(16deg) translateY(14px);opacity:0}
   to{transform:perspective(700px) rotateX(0) translateY(0);opacity:1}}
+#pressBar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;background:#1e2a4e;padding:6px;border:1px solid #5eead4;border-radius:12px;font-size:14px}#pressBar span{margin-right:auto}#pressBar button{background:#fff7e8;color:#131b33;border:0;border-radius:8px;min-height:44px;padding:6px 10px;font-size:14px;font-weight:700}
+button,.tbtn,.tbtn .tcost,.ucount,.lvl .ld,.card .tag,.foot,#shTier,#shStats,#xpText,#perkNote,#chip,.obj,#banner .bs,#btnDetails{font-size: max(14px,1em)}
+#pressBar button:disabled{opacity:.5}#sheet{bottom:176px}body:has(#pressBar:not(.hidden)) #sheet{bottom:232px}
 </style>
 </head>
 <body>
@@ -249,6 +252,7 @@ body.hc .card{box-shadow:0 0 0 3px var(--navy),0 12px 44px rgba(0,0,0,.45)}
   <div id="tip" class="hidden"><span id="tipText"></span><br><button id="tipSkip">Skip tips</button></div>
   <div id="infoCard" class="hidden"></div>
   <div id="botbar">
+    <div id="pressBar" class="hidden"><span>THE LAST IMPRESSION</span><button id="pressSelect">Gate 1 · G</button><button id="pressFire">Print · H</button></div>
     <div id="buildBar"></div>
     <div id="rowB">
       <div id="utilBar">
@@ -290,6 +294,7 @@ body.hc .card{box-shadow:0 0 0 3px var(--navy),0 12px 44px rgba(0,0,0,.45)}
     <div class="tag">a Made by Matt defence</div>
     <p>Glitches are marching on the Mark. Place your towers, keep a cool head, and hold the line — calm play charges your Focus.</p>
     <button class="btn primary" id="btnPlay">Play</button>
+    <button class="btn mint" id="btnImpression">Play The Last Impression</button>
     <button class="btn mint" id="btnDaily">Daily Mark</button>
     <button class="btn ghost" id="btnHow">How to play</button>
     <button class="btn ghost" id="btnGuide">Field Guide</button>
@@ -362,7 +367,7 @@ body.hc .card{box-shadow:0 0 0 3px var(--navy),0 12px 44px rgba(0,0,0,.45)}
 <div class="scr hidden" id="scrRegroup">
   <div class="card">
     <h2>Time to regroup</h2>
-    <p>The Mark took a battering — but your towers are still standing. Gold from that scramble resets so every retry starts fair, and the Mark rallies ◆25 to help you regroup. Take a breath, tweak your setup, and try again.</p>
+    <p>The Mark took a battering. Retry restores your exact pre-wave towers, gold, integrity, utilities and printing charges. Purchases and earnings from the failed wave are rolled back. Adjust your setup and try again when ready.</p>
     <button class="btn primary" id="btnRetry">Retry this wave</button>
     <button class="btn ghost" id="btnRegQuit">Quit to menu</button>
   </div>
@@ -499,6 +504,47 @@ const ENEMY={
   phase:{hp:26, spd:.95, gold:8, r:.24}
 };
 
+/* Seventh chapter: The Last Impression. Native path gates, combat and rollback. */
+const PRESS_POS=[.27,.68];
+const PRESS_STORY=['The archive is dark. Two presses still answer the Mark.','Runners cross the first plate. Time an impression.','Split ink travels in pairs. Let it bunch at a gate.','The long edition arrives. Keep the second plate covered.','Armoured type needs a Bastion and a clean impression.','The Proofreader wants the last word.','The presses answer together. Move your aim downstream.','Splitters smear the page. Amber catches the spill.','A shield escort protects the new edition.','Fast ink, heavy ink. Keep a charge for the tail.','The archive doors are closing. Hold both presses.','Final Imprint is here. Leave the Mark on the page.'];
+function pressOn(){return S.level===6}
+function pressReset(){S.press={selected:0,active:-1,left:2,time:0,used:0}}
+function pressSelect(){if(S.mode!=='play'||!pressOn())return false;S.press.selected=1-S.press.selected;syncPress();return true}
+function pressFire(){
+  if(S.mode!=='play'||!pressOn()||!S.waveActive||S.press.left<=0||S.press.time>0)return false;
+  S.press.left--;S.press.active=S.press.selected;S.press.time=5;S.press.used++;
+  showChip('Gate '+(S.press.active+1)+' printing: 65% slow and +35% tower damage for 5s');syncPress();return true;
+}
+function inPress(e){return pressOn()&&S.press.time>0&&Math.abs(e.d-PRESS_POS[S.press.active]*L.total)<=1.35*L.cell}
+function stepPress(dt){if(pressOn()&&S.waveActive)S.press.time=Math.max(0,S.press.time-dt)}
+function syncPress(){const bar=$('pressBar');if(!bar)return;bar.classList.toggle('hidden',!pressOn());if(!pressOn())return;
+  $('pressSelect').textContent='Gate '+(S.press.selected+1)+' · G';
+  $('pressFire').textContent=S.press.time>0?'Printing '+Math.ceil(S.press.time)+'s':'Print · '+S.press.left+'/2 · H';
+  $('pressFire').disabled=S.mode!=='play'||!S.waveActive||S.press.left<=0||S.press.time>0;
+  $('pressSelect').disabled=S.mode!=='play';
+}
+function drawPress(){if(!pressOn())return;ctx.save();PRESS_POS.forEach((v,i)=>{const p=posAt(v*L.total),hot=S.press.time>0&&S.press.active===i;
+  ctx.strokeStyle=hot?COL.amber:COL.mint;ctx.fillStyle=hot?'rgba(246,173,85,.22)':'rgba(94,234,212,.09)';ctx.lineWidth=i===S.press.selected?4:2;
+  ctx.beginPath();ctx.arc(p.x,p.y,L.cell*1.35,0,Math.PI*2);ctx.fill();ctx.stroke();
+  ctx.fillStyle=COL.cream;ctx.font='bold 14px system-ui';ctx.textAlign='center';ctx.fillText('GATE '+(i+1),p.x,p.y-L.cell*1.45);
+});ctx.restore()}
+function captureWave(){
+  const fields=['gold','integ','util','washT','stats','dmgBy','focus','slowmo','kern','kernPend','kernT','press','obj','_harmChip'];
+  const data={};for(const k of fields)data[k]=S[k];
+  data.obj={...S.obj,types:Array.from(S.obj.types)};
+  data.towers=S.towers.map(t=>({...t,x:L.portrait?t.y:t.x,y:L.portrait?t.x:t.y}));
+  S.waveSnapshot=JSON.parse(JSON.stringify(data));
+}
+function restoreWave(){
+  if(!S.waveSnapshot)return false;
+  const data=JSON.parse(JSON.stringify(S.waveSnapshot));data.obj.types=new Set(data.obj.types);
+  for(const k of Object.keys(data))S[k]=data[k];
+  S.enemies=[];S.queue=[];S.shots=[];S.parts=[];S.pops=[];S.waveClock=0;
+  S.towers.forEach(t=>{if(L.portrait){const x=t.x;t.x=t.y;t.y=x}const c=cellCenter(t.x,t.y);t.cx=c.x;t.cy=c.y});
+  rebuildPath();computeHarmony();FX.dirty=true;S.buildSel=null;S.ghost=null;S.kcur=null;S.hitstop=0;S.shake=0;
+  resetInput();closeSheet();$('vignette').classList.toggle('think',S.slowmo>0);return true;
+}
+
 /* ---------- levels (landscape grid 15×9; portrait auto-transposes) ---------- */
 const GRID={COLS:15,ROWS:9};
 const LEVELS=[
@@ -519,7 +565,8 @@ const LEVELS=[
   {name:'Kerning Run', desc:'The route re-kerns mid-wave. Cover the counter, not the cell.',
    modDesc:'Level rule: the middle of the route slides sideways mid-wave. It is telegraphed 3s ahead \u2014 any tower it lands on is refunded in full.',
    path:[[-1,7],[2,7],[2,2],[5,2],[5,7],[8,7],[8,2],[11,2],[11,7],[15,7]],
-   hpF:2.1, gold:155, kern:[3,6]}
+   hpF:2.1, gold:155, kern:[3,6]},
+  {name:"The Last Impression",desc:"Keep the archive alive through twelve authored waves.",modDesc:"Two printing gates hold the last archive. Select a gate (G), then print (H): 5s of 65% slow and +35% tower damage nearby. Two impressions each wave.",path:[[-1,4],[3,4],[3,1],[7,1],[7,7],[11,7],[11,3],[15,3]],hpF:1.55,gold:175}
 ];
 const WAVES_PER_LEVEL=12;
 
@@ -548,6 +595,10 @@ function baseWaveComp(w){
 }
 function waveComp(w){
   const g=baseWaveComp(w);
+  if(S.level===6&&w<=WAVES_PER_LEVEL){
+    const editions=[ [grp('drip',9,.85)], [grp('drip',7,.8),grp('dart',4,.6,3)], [grp('split',3,1.3),grp('drip',5,.8,2)], [grp('dart',8,.65),grp('slab',2,2,3)], [grp('slab',4,1.7),grp('drip',8,.7,2)], [grp('boss',1,0),grp('drip',7,.9,3)], [grp('dart',10,.5),grp('slab',3,1.8,2)], [grp('split',6,1.1),grp('drip',8,.7,2)], [grp('aegis',1,0,3),grp('slab',4,1.5),grp('dart',6,.6,2)], [grp('dart',10,.55),grp('slab',5,1.4,3)], [grp('split',5,1.1),grp('slab',5,1.5,2),grp('dart',6,.6,4)], [grp('boss',2,8),grp('slab',4,1.5,3),grp('dart',8,.6,5)] ];
+    return editions[w-1];
+  }
   if(S.level===3){ // Phasers stalk the long road
     if(w===4)g.push(grp('phase',4,1.0,3));
     if(w===8)g.push(grp('phase',6,.8,2));
@@ -637,7 +688,7 @@ function computeLayout(){
   const wasPortrait=L.portrait,hadLayout=L._init;L.portrait=H>W;L._init=true;
   L.cols=L.portrait?GRID.ROWS:GRID.COLS;
   L.rows=L.portrait?GRID.COLS:GRID.ROWS;
-  const padTop=64,padBot=150,padSide=6;
+  const padTop=W<500?110:72,padBot=pressOn()?230:174,padSide=6;
   L.cell=Math.min((W-padSide*2)/L.cols,(H-padTop-padBot)/L.rows);
   L.ox=(W-L.cell*L.cols)/2;
   L.oy=padTop+((H-padTop-padBot)-L.cell*L.rows)/2;
@@ -967,7 +1018,7 @@ function showBanner(main,sub){
   b.classList.add('show');announce(sub?main+', '+sub:main);clearTimeout(banT);
   banT=setTimeout(()=>b.classList.remove('show'),1900);
 }
-const BOSSN=[['Sir Fuzz','The Static King'],['Granite Glitch','The Unravel'],['Patch-Eater','Null the Vast'],['Hum','The Long Static'],['The Warden','Null Chorus'],['The Justify','Baseline Null']];
+const BOSSN=[['Sir Fuzz','The Static King'],['Granite Glitch','The Unravel'],['Patch-Eater','Null the Vast'],['Hum','The Long Static'],['The Warden','Null Chorus'],['The Justify','Baseline Null'],['The Proofreader','Final Imprint']];
 
 /* ---------- sticker shelf (local, positive-only) ---------- */
 const STICKERS=[
@@ -1054,6 +1105,9 @@ function spawnEnemy(t,surged){
     showChip('\u{1F441} '+CALLOUT[t])}
 }
 function startWave(){
+  if(S.mode!=='play'||S.waveActive)return;
+  if(pressOn()){S.press.left=2;S.press.time=0;S.press.active=-1}
+  captureWave();
   S.queue=[];S.waveClock=0;S.waveActive=true;S.countdown=0;
   S.spawnedThisWave=0;S.killedThisWave=0;
   if(S.obj)S.obj.earnedWave=0;
@@ -1066,7 +1120,7 @@ function startWave(){
   if(bi>=0&&!S.encore){showBanner(BOSSN[S.level][bi],'Boss wave \u2014 hold steady');
     cineBreach(BOSSN[S.level][bi])}
   else if(S.encore&&S.wave%3===0)showBanner('The Returning Static','Encore wave '+(S.wave-WAVES_PER_LEVEL));
-  else showBanner('Wave '+waveLabel(),'');
+  else showBanner('Wave '+waveLabel(),pressOn()?PRESS_STORY[(S.wave-1)%12]:'');
   snd(300,.3,'triangle',.09,520);
 }
 function waveLabel(){return S.encore?('E'+(S.wave-WAVES_PER_LEVEL)):(S.wave+'/'+WAVES_PER_LEVEL)}
@@ -1107,6 +1161,7 @@ function evalDirector(){
 /* ---------- combat ---------- */
 function damage(e,d,src,brk){
   if(e.dead)return;
+  if(src&&TOWERS[src]&&inPress(e))d*=1.35;
   if(brk&&(e.t==='boss'||e.t==='slab'))d*=1.25;
   if(S.level===2&&src&&TOWERS[src]){          // Gauntlet rule: same-type repeat hits resisted
     if(e.rSrc===src&&e.rT>0)d*=.6;
@@ -1330,6 +1385,7 @@ const OBJ=[
    {t:'Lose no tower to a re-kern',c:()=>!S.obj.kerned},
    {t:'Use all four tower shapes',c:()=>S.obj.types.size>=4}]
 ];
+OBJ.push([{t:'Finish with 6+ integrity',c:()=>S.integ>=6},{t:'Print at least twelve impressions',c:()=>S.press.used>=12},{t:'Use all four tower shapes',c:()=>S.obj.types.size>=4}]);
 function evalObjectives(){return OBJ[S.level].map(o=>({t:o.t,ok:!!o.c()}))}
 
 /* ---------- level flow ---------- */
@@ -1353,7 +1409,7 @@ function updateDailyBtn(){
   b.textContent='Daily Mark'+(done?' \u2713':'');
 }
 function startLevel(i){
-  S.level=i;S.gold=LEVELS[i].gold||110;S.integ=S.INTEG_MAX;S.wave=1;S.encore=false;
+  S.level=i;S.waveSnapshot=null;pressReset();S.gold=LEVELS[i].gold||110;S.integ=S.INTEG_MAX;S.wave=1;S.encore=false;
   S.enemies=[];S.shots=[];S.parts=[];S.queue=[];S.towers=[];
   S.util={flare:2,wash:2,patch:1};S.washT=0;
   S.stats={kills:0,focus:0,utils:0};S._harmChip=false;S.pops=[];
@@ -1381,13 +1437,9 @@ function startLevel(i){
   $('vignette').classList.remove('think');
 }
 function retryWave(){
-  const ew=(S.obj&&S.obj.earnedWave)||0;   // gold from the failed scramble resets
-  S.gold=Math.max(0,S.gold-ew);
-  if(S.obj){S.obj.goldEarned=Math.max(0,S.obj.goldEarned-ew);S.obj.earnedWave=0}
-  S.gold+=25;                               // rally grant: no softlocks, no farming loop
-  S.integ=4;S.mode='play';S.waveActive=false;
-  S.countdown=SAVE.set.auto?3:0;show(null);lastT=performance.now();
-  showChip('\u2695 The Mark rallies \u2014 +\u25C625 to regroup with');
+  if(S.mode!=='regroup'||!restoreWave())return;
+  S.mode='play';S.waveActive=false;S.countdown=0;show(null);lastT=performance.now();
+  showChip('Pre-wave setup restored. Rebuild, then start when ready.');syncPress();
 }
 function buildRunDetails(){
   const tot=S.dmgBy.ring+S.dmgBy.emm+S.dmgBy.star+S.dmgBy.sq;
@@ -1540,6 +1592,8 @@ function handleKey(key){
     return false;
   }
   if(S.mode!=='play')return false;
+  if(key==='g'||key==='G'){pressSelect();return true}
+  if(key==='h'||key==='H'){pressFire();return true}
   if(key>='1'&&key<='4'){selectTower(TORDER[+key-1]);return true}
   if(key==='f'||key==='F'){tryFocus();return true}
   if(key==='p'||key==='P'){openPause();return true}
@@ -1654,7 +1708,7 @@ function closeSheet(){S.sheetTower=null;$('sheet').classList.add('hidden')}
 
 /* ---------- input ---------- */
 function tryPlaceAt(x,y){
-  if(!S.buildSel||!inBoard(x,y))return false;
+  if(S.mode!=='play'||!S.buildSel||!inBoard(x,y))return false;
   const t=S.buildSel,T=TOWERS[t];
   const blocked=L.pathCells.has(x+','+y)||findTower(x,y);
   if(!blocked&&S.gold>=T.cost){
@@ -1706,7 +1760,7 @@ function resetInput(){
   IN.ramp=0;IN.ox=IN.oy=0;IN.cellHold=null;drag.on=false;
 }
 function upgradeTower(tw){
-  if(!tw||tw.tier>=2){hapNo();return false}
+  if(S.mode!=='play'||!tw||!S.towers.includes(tw)||tw.tier>=2){hapNo();return false}
   const c=TOWERS[tw.t].upg[tw.tier];
   if(S.gold<c){hapNo();showChip('Need \u25C6'+c+' to upgrade');return false}
   S.gold-=c;tw.spent+=c;tw.tier++;S.obj.spent+=c;
@@ -1714,7 +1768,7 @@ function upgradeTower(tw){
   return true;
 }
 function sellTower(tw){
-  if(!tw)return false;
+  if(S.mode!=='play'||S.waveActive||!tw||!S.towers.includes(tw))return false;
   S.gold+=Math.floor(tw.spent*.7);
   S.towers=S.towers.filter(t=>t!==tw);
   S.obj.sold=true;computeHarmony();
@@ -2025,7 +2079,7 @@ function draw(){
   ctx.drawImage(FX.board,0,0,W,H);
   if(S.motes.length){ctx.fillStyle='rgba(255,247,232,.10)';
     for(const m of S.motes){ctx.beginPath();ctx.arc(m.x,m.y,m.r,0,7);ctx.fill()}}
-  pathRibbon();
+  pathRibbon();drawPress();
   {const p0=L.pts[0],ph=reducedMotion()?.5:(performance.now()/900)%1;
     ctx.strokeStyle='rgba(251,113,133,'+(0.4*(1-ph)).toFixed(3)+')';ctx.lineWidth=2.5;
     ctx.beginPath();ctx.arc(p0.x,p0.y,L.cell*(.18+.32*ph),0,7);ctx.stroke();
@@ -2354,6 +2408,7 @@ function cineHeld(done){
 
 /* ---------- HUD sync ---------- */
 function syncHUD(){
+  syncPress();
   if($('hud').classList.contains('hidden'))return;
   $('statInteg').textContent=S.integ;
   $('statGold').textContent=S.gold;
@@ -2401,6 +2456,7 @@ function step(dt,raw){
     const zp=posAt(zt*L.total);S.zx=zp.x;S.zy=zp.y;S.zoneOn=true;
   }else S.zoneOn=false;
   if(S.waveActive){
+    stepPress(dt);
     S.waveClock+=dt;
     while(S.queue.length&&S.queue[0].at<=S.waveClock){
       const q=S.queue.shift();spawnEnemy(q.t,q.surged);
@@ -2419,6 +2475,7 @@ function step(dt,raw){
       let mul=(e.slowT>0?e.slowTo:1)*(S.washT>0?.35:1)*calmF;
       if(S.level===1&&e.t==='dart'&&onLongStraight(e.d))mul*=1.35;
       if(S.daily&&S.daily.mut==='spd')mul*=1.1;
+      if(inPress(e))mul*=.35;
       e.d+=ENEMY[e.t].spd*L.cell*mul*dt;
       if(e.d>=L.total){e.dead=true;leak(e);if(S.mode!=='play')return}
     }
@@ -2459,7 +2516,10 @@ function frame(t){
 
 /* ---------- wiring & init ---------- */
 function bindUI(){
+  $("pressSelect").addEventListener("click",pressSelect);
+  $("pressFire").addEventListener("click",pressFire);
   $('btnPlay').addEventListener('click',()=>{ensureAudio();renderLevels();show('scrLevels')});
+  $('btnImpression').addEventListener('click',()=>{ensureAudio();startLevel(6)});
   $('btnDaily').addEventListener('click',()=>{ensureAudio();startDaily()});
   $('btnHow').addEventListener('click',()=>show('scrHow'));
   $('btnGuide').addEventListener('click',()=>{renderGuide();show('scrGuide')});
