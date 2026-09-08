@@ -568,6 +568,9 @@ CATALOGUE_RECORD_PATHS = {
     "tools/catalogue/README.md",
     "tools/catalogue/pin_catalogue_contract.py",
     "tools/catalogue/verify_catalogue_contract_controls.py",
+    # UX2 A1 (2026-09-08): the record's schema travels with the record. It is
+    # data, not a lesson payload; it is enforced by tools/ux2/check_catalogue_schema.py.
+    "resources.schema.json",
 }
 
 # The education publisher is executable release configuration, not a hub asset.
