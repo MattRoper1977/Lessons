@@ -2,7 +2,7 @@
 (function (root) {
   'use strict';
   const termOrder = ['Aut1', 'Aut2', 'Spr1', 'Spr2', 'Sum1', 'Sum2', 'multi', 'flexible', 'any', 'unspecified'];
-  const styleOrder = ['recommended', 'current', 'full-lundy', 'award', 'earlier', 'reference'];
+  const styleOrder = ['recommended', 'current', 'alternative', 'full-lundy', 'award', 'earlier', 'reference'];
   const compare = new Intl.Collator('en', { numeric: true, sensitivity: 'base' }).compare;
   function metadata(row, catalogue) {
     return (catalogue.entries || {})[row.file || row.path || row.url] || { term: 'unspecified', terms: [], style: 'earlier', batch: 'Earlier retained versions' };
