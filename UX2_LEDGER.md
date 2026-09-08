@@ -34,7 +34,7 @@ Auto-decisions this order left open are logged at the end.
 | "From Matt" aside + mailto | RETIRED — maker voice belongs on the site homepage's maker panel (B2); the contact mailto SURVIVES in the footer |
 | Footer "Made by Matt · Learn • Build • Explore" + "Single-file · offline-first · hand-built in Teesside" + contact | SURVIVES as F1 "Made by Matt · Lessons" with the tagline as its small line; contact line kept; no version, no Ko-fi |
 | Header styling (sticky navy header, brand flex layout, small-line letterspacing) and the no-JS narrow-width nav rules | SURVIVES — ported verbatim from the old hub's inline styles into `hub.css` (screen rules) and the hub's `<noscript>` block (no-JS rules); the browser matrix measures the header at 320–1440 |
-| High lumen theme (projector / IWB, `data-theme="highlumen"`) | SURVIVES — token block and header rules ported into `hub.css`; `hub_gates.mjs` measures contrast on cream, dark and highlumen |
+| Reading themes (pink, blue, light, dark, highlumen; cream default) | SURVIVE — each page's `<style id="mbmTheme">` block carries one token rule per engine theme (the theme-parity contract); component rules stay in `hub.css`; `hub_gates.mjs` measures contrast on all six and asserts the hub's and the subject page's blocks are identical |
 | Print styles | SURVIVES — hub and subject page print as a clean expanded list |
 | Storage keys `mbm.lesson.saved.v1`, `mbm.lesson.recent.v1`, `mbm.lesson.return.v1` | SURVIVE unchanged |
 | `assets/catalogue/catalogue.js` (term/style grouping) | RETIRED from the hub; still used by the Science and Humanities shelves |

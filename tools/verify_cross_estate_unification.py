@@ -118,13 +118,13 @@ APPS_HUB_REVIEWED_WORDING_SHA256 = "696efb97549286f33b9514308bee48d82d3af654cf61
 CATALOGUE_PINS = {
     "visible_body_sha256": "274667c0aaae306b7ceaeb7760d63a01fc15e636b8bb96a456d046231016a70d",
     "files": {
-        "index.html": "915f72f3ab7280fab80fa45db0d71bc9028cccadc1fa65f18035ec307963bcb5",
+        "index.html": "4f6904d712fed43608c58efeb148cb6c1da63d64971c06b6b02ae99930b44f2d",
         "Science_Teesside/index.html": "47e85a28c6cb17663a051f38646126d0afea0e59d71942671c40553567424fd9",
         "Humanities_Teesside/index.html": "7594ce3f6bd34025e32f556d736d39fd218b409a36511ab57e779c4080c4cd86",
         "humanities_teesside.html": "1e2faab06cb4caf4a26f377200a55cbd380c7f3ceada74f666998b47611896b7",
-        "subject.html": "6c7bc919778b73598a84bb82532c26a48084e5d04e5ac2a16c70ce7ea32b4d40",
+        "subject.html": "67e3cb944d5a69fe051252b216fb7372339e1bd039577e8646ac33a891ca0de1",
         "assets/catalogue/hub.js": "1987692e28d178c9be62245dd108ebee859ee2c4fd4a8500cf79fa673e637110",
-        "assets/catalogue/hub.css": "45056055c71b96aa7314f817d1f7715f5b35b40c0202bfa78eb1d89320f4a150",
+        "assets/catalogue/hub.css": "92e6704773816b3291c0f7936190409adcab39f793972944418067e9ccc5195f",
         "data/calendar-spine.json": "d199474b13c9d340add2c87165396d83712b0f1c9f8bd03b7b12e8fdf6af0d61",
         "Humanities_Teesside/David_Cover_Autumn1_W3-W7/index.html": "4e25eb9ca8f9f93c720d88d945f3d6d79580f3362a88698fe7af75d146f01e96",
         "assets/catalogue/catalogue.css": "59abee137c41a8a015e42cf0b32d20b7f4e5fc8e3d236a1cd735322386bf8569",

@@ -212,7 +212,14 @@ for (const file of ['index.html', 'subject.html']) {
 }
 
 /* ---------- 6. reduced motion + contrast + print ---------- */
-for (const theme of ['cream', 'dark', 'highlumen']) {
+{
+  const block = f => (fs.readFileSync(path.join(ROOT, f), 'utf8').match(/<style id="mbmTheme">([\s\S]*?)<\/style>/) || [])[1] || null;
+  const a = block('index.html'), b = block('subject.html');
+  check('the named theme block is identical on the hub and the subject page', a !== null && a === b, a === null ? 'missing' : (a === b ? 'identical' : 'differs'));
+  check('the named theme block styles every engine theme except the default', ['pink', 'blue', 'light', 'dark', 'highlumen'].every(t => (a || '').includes(`[data-theme="${t}"]`)) && !(a || '').includes('[data-theme="cream"]'), '');
+}
+
+for (const theme of ['cream', 'pink', 'blue', 'light', 'dark', 'highlumen']) {
   const page = await newPage({ reducedMotion: 'reduce' });
   await page.addInitScript(t => { try { localStorage.setItem('mbm_reading_theme', t); } catch (_) {} }, theme);
   await page.goto(`${origin}/Lessons/subject.html?subject=${encodeURIComponent(subjectSlugs[0])}`, { waitUntil: 'load' });
