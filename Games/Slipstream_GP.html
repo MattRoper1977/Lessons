@@ -1061,7 +1061,6 @@ function playerAccel(){ return (CFG.baseAccel+profile.up.engine*CFG.engineAccel)
 function playerTank(){ return CFG.boostTank+profile.up.boost*CFG.boostTankUp; }
 
 function startRace(rungIdx, rematch, dailyDate, s2, opts){
-  heatClearInput();
   opts=opts||{};
   state.rung=rungIdx; state.isRematch=!!rematch; state.isDaily=dailyDate||null; state.isS2=!!s2;
   state.isGauntlet=!!opts.gauntlet;
@@ -1892,7 +1891,12 @@ function heatHud(){
 }
 function heatInitUI(){
   state.paused=true;
-  const close=()=>{document.getElementById('heat-brief').hidden=true;const splash=document.getElementById('ma-splash');if(splash)splash.style.display='none';state.paused=false;};
+  const brief=document.getElementById('heat-brief');
+  const close=()=>{if(brief.hidden)return;brief.hidden=true;const splash=document.getElementById('ma-splash');if(splash)splash.style.display='none';state.paused=false;};
+  // The brief must not block the shipped route. Like the splash it sits on, any key (Tab excepted, so its buttons stay reachable)
+  // or a tap outside it dismisses it and unpauses the lobby, so the throttle still drives you through the RACE gate.
+  addEventListener('keydown',e=>{if(e.code!=='Tab')close();});
+  addEventListener('pointerdown',e=>{if(!brief.contains(e.target))close();});
   document.getElementById('heat-start').onclick=()=>{close();AudioSys.init();startRace(Math.min(profile.rung,7),profile.defeated.includes(profile.rung));};
   document.getElementById('heat-lobby').onclick=close;document.getElementById('heat-pause').onclick=togglePause;
   addEventListener('pointerdown',e=>{if(e.pointerType==='touch'){inputMode='touch';document.getElementById('touch').style.display='block';TRECT=null;}},{passive:true});
