@@ -6,7 +6,10 @@ On PUPIL-FACING surfaces this tool replaces calendar-specific labels with SEQUEN
 the unit (the family manifest's recommended sequence), "Lesson k" for a sibling lesson, "the previous/next unit" for a
 lesson outside it, "next lesson" for "next week" — and leaves STAFF layers alone ([data-mbm-guide], TA drawers/modals,
 manifests, _sownb, teacher overviews). Every rewrite is string-level and reversible: the enclosing element keeps the
-original text in data-mbm-cal (attributes in data-mbm-cal-<name>); --revert restores it.
+original text in data-mbm-cal (attributes in data-mbm-cal-<name>); --revert restores it. A rewritten label on the TITLE STAGE
+(the first .slide) also keeps a staff-layer twin of the original — <span data-mbm-guide="staff" class="mbm-cal-staff" style="display:none"> —
+so the reviewed download-pack evidence (tools/downloads/SOURCE_PLACEMENT.json reads the title stage) and staff still see the
+calendar declaration; pupils, and print, do not.
 
 Modes:  --report  census only (RELABEL=report does the same) · --apply  rewrite in place · --revert  undo · --gate  0-hit gate
         --plant   plant one forbidden token into a copy and prove the gate goes red.
@@ -108,8 +111,9 @@ class Rewriter:
 def walk(html_text, path, mode, rel=True):
     """mode: 'census' -> hits; 'apply' -> (new_html, changes); 'revert' -> (new_html, restored)"""
     rw = Rewriter(path, rel) if mode == 'apply' else None
-    toks = TOK.split(html_text); stack = []; hits = []; changes = {}; attr_changes = {}; restored = 0
+    toks = TOK.split(html_text); stack = []; hits = []; changes = {}; attr_changes = {}; restored = 0; seen_slide = [False]
     def instaff(): return any(x[2] for x in stack)
+    def intitle(): return any(x[5] for x in stack)
     for i, tk in enumerate(toks):
         if not tk: continue
         if tk.startswith('<'):
@@ -142,7 +146,9 @@ def walk(html_text, path, mode, rel=True):
                         tk = re.sub(r'\s+data-mbm-cal-%s="[^"]*"' % re.escape(a), '', tk, count=1); restored += 1
                 toks[i] = tk
             if name in VOID or tk.rstrip().endswith('/>'): continue
-            stack.append([name, i, staff, 0, attrs.get('data-mbm-cal')])
+            title = False
+            if 'slide' in cls and not seen_slide[0]: seen_slide[0] = True; title = True
+            stack.append([name, i, staff, 0, attrs.get('data-mbm-cal'), title])
             continue
         # text node
         if not stack: continue
@@ -163,6 +169,9 @@ def walk(html_text, path, mode, rel=True):
             if new != plain:
                 if not new.strip(): new = ' '   # never leave an empty text node: --revert counts text nodes by position
                 toks[i] = H.escape(new, quote=False) if '&' in raw or '<' in plain else new
+                if intitle() and FORBID.search(plain):
+                    # the title stage's calendar declaration moves to a STAFF layer (guide-on shows it; screen and print hide it)
+                    toks[i] += '<span data-mbm-guide="staff" class="mbm-cal-staff" style="display:none">' + H.escape(plain.strip(), quote=False) + '</span>'
                 changes.setdefault(top[1], []).append((idx, raw))
         elif mode == 'revert' and top[4]:
             cal = dict((int(k), v) for k, v in (x.split('=', 1) for x in top[4].split(SEP) if '=' in x))
@@ -174,7 +183,7 @@ def walk(html_text, path, mode, rel=True):
             toks[ti] = re.sub(r'\s*/?>$', lambda mm: ' data-mbm-cal="%s"%s' % (H.escape(val, quote=True), mm.group(0)), toks[ti], count=1)
         return ''.join(toks), sum(len(v) for v in changes.values()) + len(attr_changes)
     if mode == 'revert':
-        out = ''.join(toks); out = re.sub(r'\s+data-mbm-cal="[^"]*"', '', out); return out, restored
+        out = ''.join(toks); out = re.sub(r'\s+data-mbm-cal="[^"]*"', '', out); out = re.sub(r'<span data-mbm-guide="staff" class="mbm-cal-staff" style="display:none">.*?</span>', '', out, flags=re.S); return out, restored
 
 def main():
     ap = argparse.ArgumentParser(); g = ap.add_mutually_exclusive_group(); g.add_argument('--report', action='store_true'); g.add_argument('--apply', action='store_true'); g.add_argument('--revert', action='store_true'); g.add_argument('--gate', action='store_true'); g.add_argument('--plant', action='store_true')
