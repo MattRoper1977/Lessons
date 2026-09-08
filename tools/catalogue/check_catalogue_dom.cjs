@@ -47,7 +47,7 @@ function visibleScience(env){return [...env.document.querySelectorAll('[data-les
  }
  reports.push({name:`Root term/style filter intersections match source metadata (${combinations} combinations)`,status:'PASS'});
  env.document.querySelector('#term').value='Aut1';env.document.querySelector('#style').value='recommended';event(env,env.document.querySelector('#style'),'change');
- check('Recommended filter exposes exactly the 15 integrated LAUNCH Science lessons',()=>assert.equal(env.document.querySelectorAll('#cards article.card').length,15));
+ check('Recommended filter exposes exactly the 15 integrated LAUNCH Science lessons and the 6 FoodWise taught-week recommendations',()=>assert.equal(env.document.querySelectorAll('#cards article.card').length,21));
  event(env,env.document.querySelector('[data-clear-filters]'),'click');
  check('Clear filters restores all declared rows and resets both new controls',()=>{assert.equal(env.document.querySelectorAll('#cards article.card').length,rows.length);assert.equal(env.document.querySelector('#term').value,'');assert.equal(env.document.querySelector('#style').value,'');});
  env.document.querySelector('#subject').value='Science · Teesside';event(env,env.document.querySelector('#subject'),'change');
@@ -55,7 +55,7 @@ function visibleScience(env){return [...env.document.querySelectorAll('[data-les
  env.document.querySelector('#subject').value='';env.document.querySelector('#search').value='osmosis';event(env,env.document.querySelector('#search'),'input');
  check('Existing keyword search still returns matching resources',()=>assert(env.document.querySelectorAll('#cards article.card').length>0));
  const sc=environment('Science_Teesside/index.html');runFile(sc,'assets/catalogue/science-shelf.js');
- check('Science shelf has all 123 source routes exactly once',()=>{assert.equal(visibleScience(sc).length,123);assert.equal(new Set(visibleScience(sc).map(c=>c.dataset.lessonPath)).size,123);});
+ check('Science shelf has all 129 source routes exactly once',()=>{assert.equal(visibleScience(sc).length,129);assert.equal(new Set(visibleScience(sc).map(c=>c.dataset.lessonPath)).size,129);});
  let scienceCombinations=0;
  for(const pathway of ['','BUILD','GROW','LAUNCH'])for(const term of ['','Aut1','Aut2','Spr1'])for(const style of [...sc.document.querySelector('#science-style').options].map(o=>o.value)){
   sc.document.querySelector('#science-pathway').value=pathway;sc.document.querySelector('#science-term').value=term;sc.document.querySelector('#science-style').value=style;event(sc,sc.document.querySelector('#science-style'),'change');
@@ -64,25 +64,25 @@ function visibleScience(env){return [...env.document.querySelectorAll('[data-les
  }
  reports.push({name:`Science pathway/term/style filters match source routes (${scienceCombinations} combinations)`,status:'PASS'});
  event(sc,sc.document.querySelector('#science-clear'),'click');
- check('Science clear filters restores all alternatives',()=>assert.equal(visibleScience(sc).length,123));
+ check('Science clear filters restores all alternatives',()=>assert.equal(visibleScience(sc).length,129));
  const rec=environment('Science_Teesside/index.html','?pathway=LAUNCH&term=Aut1&style=recommended');runFile(rec,'assets/catalogue/science-shelf.js');
  check('Recommended deep link selects correct pathway, term and all 15 lessons',()=>{assert.equal(visibleScience(rec).length,15);assert(visibleScience(rec).every(c=>c.dataset.style==='recommended'));});
  const launch=environment('Science_Teesside/index.html','?pathway=LAUNCH');runFile(launch,'assets/catalogue/science-shelf.js');
- check('All LAUNCH deep link exposes all 57 preserved teaching versions across three terms',()=>{assert.equal(visibleScience(launch).length,57);assert.deepEqual([...new Set(visibleScience(launch).map(c=>c.dataset.term))].sort(),['Aut1','Aut2','Spr1']);});
+ check('All LAUNCH deep link exposes all 59 preserved teaching versions across three terms',()=>{assert.equal(visibleScience(launch).length,59);assert.deepEqual([...new Set(visibleScience(launch).map(c=>c.dataset.term))].sort(),['Aut1','Aut2','Spr1']);});
  const launchWeek=environment('Science_Teesside/index.html','?pathway=LAUNCH&term=Aut2&week=1');runFile(launchWeek,'assets/catalogue/science-shelf.js');
- check('Week filter follows accepted term-local week, not obsolete filename numbering',()=>{const cards=visibleScience(launchWeek);assert.equal(cards.length,3);assert(cards.every(c=>c.dataset.lessonPath.includes('W9')));assert(cards.every(c=>c.querySelector('.science-week').textContent.includes('Autumn 2')));});
- check('All LAUNCH shortcut clears term/week/style and retains every version',()=>{event(launchWeek,launchWeek.document.querySelector('[data-shortcut="all-launch"]'),'click');assert.equal(visibleScience(launchWeek).length,57);assert.equal(launchWeek.document.querySelector('#science-week').value,'');assert.equal(launchWeek.location.search,'?pathway=LAUNCH');});
+ check('Week filter follows accepted term-local week, not obsolete filename numbering',()=>{const cards=visibleScience(launchWeek);assert.equal(cards.length,4);assert(cards.every(c=>c.dataset.lessonPath.includes('W9')));assert(cards.every(c=>c.querySelector('.science-week').textContent.includes('Autumn 2')));});
+ check('All LAUNCH shortcut clears term/week/style and retains every version',()=>{event(launchWeek,launchWeek.document.querySelector('[data-shortcut="all-launch"]'),'click');assert.equal(visibleScience(launchWeek).length,59);assert.equal(launchWeek.document.querySelector('#science-week').value,'');assert.equal(launchWeek.location.search,'?pathway=LAUNCH');});
  const unbound=environment('Science_Teesside/index.html','?week=unspecified');runFile(unbound,'assets/catalogue/science-shelf.js');
  check('Unproven weeks stay discoverable with an honest unknown label',()=>{assert.equal(visibleScience(unbound).length,4);assert(visibleScience(unbound).every(c=>c.querySelector('.science-week').textContent==='Week not specified'));});
- check('Science clear removes the week filter and restores all routes',()=>{event(unbound,unbound.document.querySelector('#science-clear'),'click');assert.equal(visibleScience(unbound).length,123);assert.equal(unbound.location.search,'');});
+ check('Science clear removes the week filter and restores all routes',()=>{event(unbound,unbound.document.querySelector('#science-clear'),'click');assert.equal(visibleScience(unbound).length,129);assert.equal(unbound.location.search,'');});
  const full=environment('Science_Teesside/index.html','?style=full-lundy');runFile(full,'assets/catalogue/science-shelf.js');
- check('Full Lundy shortcut preserves access to all 88 alternatives',()=>assert.equal(visibleScience(full).length,88));
+ check('Full Lundy shortcut preserves access to all 86 alternatives',()=>assert.equal(visibleScience(full).length,86));
  check('Native keyboard/touch semantics and live status are declared',()=>{
   for(const doc of [env.document,sc.document])for(const s of doc.querySelectorAll('.toolbar select,.toolbar input'))assert(s.closest('label'));
   assert.equal(sc.document.querySelector('#science-count').getAttribute('aria-live'),'polite');
   assert([...sc.document.querySelectorAll('.science-pathway')].every(d=>d.tagName==='DETAILS'&&d.firstElementChild.tagName==='SUMMARY'));
  });
- check('Science version shortcut applies its filters without losing alternatives',()=>{event(sc,sc.document.querySelector('[data-shortcut="full-lundy"]'),'click');assert.equal(visibleScience(sc).length,88);assert.equal(sc.document.querySelector('#science-pathway').value,'');});
+ check('Science version shortcut applies its filters without losing alternatives',()=>{event(sc,sc.document.querySelector('[data-shortcut="full-lundy"]'),'click');assert.equal(visibleScience(sc).length,86);assert.equal(sc.document.querySelector('#science-pathway').value,'');});
  check('Catalogue print hooks open and restore collapsed sections',()=>{const closed=[...env.document.querySelectorAll('#cards details:not([open])')];env.window.dispatchEvent(new env.window.Event('beforeprint'));assert(closed.every(d=>d.open===true));env.window.dispatchEvent(new env.window.Event('afterprint'));assert(closed.every(d=>d.open===false));const section=rec.document.querySelector('.science-pathway[data-pathway="LAUNCH"]');section.open=false;rec.window.dispatchEvent(new rec.window.Event('beforeprint'));assert.equal(section.open,true);rec.window.dispatchEvent(new rec.window.Event('afterprint'));assert.equal(section.open,false);});
  const fallback=environment('index.html');runFile(fallback,'assets/catalogue/catalogue.js');fallback.context.MBM_CATALOGUE=fallback.window.MBM_CATALOGUE;
  fallback.context.fetch=async url=>{if(url.includes('terms-and-styles'))throw new Error('Simulated unavailable metadata');return {ok:true,json:async()=>structuredClone(rows)}};
