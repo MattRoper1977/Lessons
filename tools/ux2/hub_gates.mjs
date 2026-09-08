@@ -152,11 +152,24 @@ for (const slug of subjectSlugs) {
     }
     await page.locator('#fchips button[data-format=""]').click().catch(() => {});
   }
-  // the pack sheet, when a Pack chip exists on this page
-  const packChip = page.locator('button[data-pack]').first();
+  // the pack sheet, when a Pack chip exists on this page: the first view shows
+  // one pathway with today's half-term open, so look through every pathway with
+  // every accordion row and "Show n more" expanded before concluding there is none
+  // (UX2 D3: pack entries can sit in any half-term of any pathway).
+  let packChip = page.locator('button[data-pack]').first();
+  if (!(await packChip.count())) {
+    const tabs = await page.$$eval('#seg [role="tab"]', ts => ts.map(t => t.dataset.pathway));
+    for (const pathway of tabs) {
+      await page.locator(`#seg [role="tab"][data-pathway="${pathway}"]`).click(); await page.waitForTimeout(80);
+      for (let i = 0; i < 300; i++) { const t = page.locator('button[data-toggle][aria-expanded="false"]').first(); if (!(await t.count())) break; await t.click(); }
+      for (let i = 0; i < 300; i++) { const m = page.locator('button[data-more]').first(); if (!(await m.count())) break; await m.click(); }
+      packChip = page.locator('button[data-pack]').first();
+      if (await packChip.count()) break;
+    }
+  }
   if (await packChip.count()) {
     anyPackSheet = true;
-    await packChip.click(); await page.waitForTimeout(100);
+    await packChip.scrollIntoViewIfNeeded(); await packChip.click(); await page.waitForTimeout(100);
     check(`${slug}: sheet open → focus on close control`, (await page.evaluate(namedActive)).includes('Close'), await page.evaluate(namedActive));
     check(`${slug}: targets ≥44px (sheet open)`, (await page.evaluate(() => [...document.querySelectorAll('#pack-sheet a[href],#pack-sheet button')].filter(e => { const b = e.getBoundingClientRect(); return b.width < 44 || b.height < 44; }).length)) === 0, '');
     const packLinks = await page.$$eval('#pack-sheet a[href]', as => as.length);

@@ -493,7 +493,7 @@ def census(rows: list[dict], derived: dict) -> dict:
 
 
 def self_test() -> None:
-    rows = read_json(CATALOGUE)
+    rows, _packs = split_packs(read_json(CATALOGUE))
     derived = derive(rows)
     verdicts = verify_classes(rows, derived)
     tagged = apply(rows, derived, verdicts)
@@ -550,7 +550,10 @@ def main() -> int:
     if args.self_test:
         self_test()
         return 0
-    rows = read_json(CATALOGUE)
+    # UX2 D3: companion-pack entries (kind "pack") are the catalogue's tail and
+    # carry tags copied by tools/ux2/companion_catalogue.py, which checks them;
+    # this tool derives tags for lesson rows only and passes the tail through.
+    rows, packs = split_packs(read_json(CATALOGUE))
     base = [stripped(r) for r in rows]
     derived = derive(base)
     verdicts = verify_classes(base, derived)
@@ -569,9 +572,18 @@ def main() -> int:
             return 1
         print(f"[PASS] committed tags match the derivation: halfTerm {sum('halfTerm' in r for r in rows)}, unit {sum('unit' in r for r in rows)}")
     if args.write:
-        CATALOGUE.write_bytes(serialise(tagged))
-        print(f"[DONE] wrote {CATALOGUE.relative_to(ROOT)}: halfTerm {sum('halfTerm' in r for r in tagged)}, unit {sum('unit' in r for r in tagged)}")
+        CATALOGUE.write_bytes(serialise(tagged + packs))
+        print(f"[DONE] wrote {CATALOGUE.relative_to(ROOT)}: halfTerm {sum('halfTerm' in r for r in tagged)}, unit {sum('unit' in r for r in tagged)}; {len(packs)} pack rows passed through")
     return 0
+
+
+def split_packs(rows: list[dict]) -> tuple[list[dict], list[dict]]:
+    """Lesson rows first, companion-pack rows (kind "pack") as the contiguous tail."""
+    first = next((i for i, r in enumerate(rows) if r.get("kind") == "pack"), len(rows))
+    head, tail = rows[:first], rows[first:]
+    if any(r.get("kind") != "pack" for r in tail):
+        raise SystemExit("[FAIL] a non-pack row follows the companion-pack rows; packs must be the catalogue's tail")
+    return head, tail
 
 
 if __name__ == "__main__":

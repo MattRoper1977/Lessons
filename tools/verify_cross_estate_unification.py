@@ -101,7 +101,7 @@ MANIFEST_PINS = {
     # Ruled onto the pin 2026-08-12 (Ruling 3): the deck install is a
     # resources.json edit, and the blanket rule forbade it the same way it
     # once forbade studio adds. Same pattern, same tool, same commit rule.
-    "resources.json": "e925dc862edf979ffb543adefe15df7853468e6e075740ee8152ab8b3eb2941a",
+    "resources.json": "605b8129dd3eeca28409848f6911912bea2e7b0ff23fc947cf335026d64fa94c",
 }
 PIN_COMMAND = "python3 tools/pin_manifests.py   (from either checkout — it writes both gate copies or neither)"
 
@@ -123,7 +123,7 @@ CATALOGUE_PINS = {
         "Humanities_Teesside/index.html": "7594ce3f6bd34025e32f556d736d39fd218b409a36511ab57e779c4080c4cd86",
         "humanities_teesside.html": "1e2faab06cb4caf4a26f377200a55cbd380c7f3ceada74f666998b47611896b7",
         "subject.html": "67e3cb944d5a69fe051252b216fb7372339e1bd039577e8646ac33a891ca0de1",
-        "assets/catalogue/hub.js": "1987692e28d178c9be62245dd108ebee859ee2c4fd4a8500cf79fa673e637110",
+        "assets/catalogue/hub.js": "6054f0d89ee498df171cc8861e0a292f3154315a6462d895f130eaadbf7e71a6",
         "assets/catalogue/hub.css": "96192065b59e2d5113f92e03da3386c45e7425aa2443b79e8203914b587eeca9",
         "data/calendar-spine.json": "d199474b13c9d340add2c87165396d83712b0f1c9f8bd03b7b12e8fdf6af0d61",
         "Humanities_Teesside/David_Cover_Autumn1_W3-W7/index.html": "4e25eb9ca8f9f93c720d88d945f3d6d79580f3362a88698fe7af75d146f01e96",
@@ -138,7 +138,7 @@ CATALOGUE_PINS = {
         "tools/catalogue/build_catalogue.py": "4a009a17c37ae7336056329e2250c590910d6d054001ad92e57228e157bc8c90",
         "tools/catalogue/build_science_shelf.py": "a06ce779e4331661dadcdeb896b5d533374ca82bba812f605860c6fe53d11335",
         "tools/catalogue/build_humanities_shelf.py": "ef74f9eced59fd6ec33f22c02cf0d39d518ac6f2eb8873aaf21517859fb78662",
-        "tools/catalogue/check_catalogue_static.py": "41923331f350007d958703697f4871a06ae07cee1512fba53730399e390329c9",
+        "tools/catalogue/check_catalogue_static.py": "1f55f22846763ded7bd27fdc389b57d1cba3b1eb58c066c944dde9b6b70617df",
         "tools/catalogue/check_catalogue_dom.cjs": "9afa5c7b5355940199f602fca443fb6436882426058cc7ac1cba5bd0a94ac257",
         "tools/catalogue/verify_education_navigation.cjs": "67ec1000073b78b39cdd8458773e7a41ec169f3ce751b423f67f863f0ef49d41",
         "tools/catalogue/SHELF_SELECTION.json": "95def027287e7cc1eb1190bafa21733c9c0999286c15a231dc17dfe7a56331f4",
@@ -148,8 +148,8 @@ CATALOGUE_PINS = {
         "tools/test_served_publications.py": "128f691b0a1f5880a68190540266e3f78993e4849cd75d7f1b6db75e098e1d31",
         ".github/workflows/glv3-verify.yml": "4bf27ca7471a21359e35d1bc7277c5fa0adeb5f31a47c769f192165796037088",
         "_glv3/tools/verify_change_boundary.py": "83abbfb09690729b65da0a0d8adeec1564f6f0f7b198b8de2e2334be5039fcfa",
-        "_glv3/tools/browser_verify.mjs": "ce70c354380ed8fedba90714981465dce39fb7d9b6452a12f6a0b2d782969e86",
-        "_glv3/tools/chip_gate.mjs": "0f2ffe5e738fb5d5998755e172e47dc3695944b2513dc86da66a5dd2a1c51723",
+        "_glv3/tools/browser_verify.mjs": "ec094d38eb6ebeda1525a35f4141dba5d99c685a6e939671afa39de632005dc7",
+        "_glv3/tools/chip_gate.mjs": "5011665dcdb1d4eed917e2500a825efc4539cebe7e30b493492a035ecca83479",
         "tools/humanities_resources/SOURCE_MANIFEST.json": "8b9c0bec517a7357fb210979712e62d465dfd9d2f2dd5f349dd2d398d9bf5cef",
         "tools/humanities_resources/DOWNLOAD_MANIFEST.json": "1d872aa4e9d01d7f10d26a0e8d182ddcb4513598413314f7c38d055318d39a2f",
         "tools/humanities_resources/CONTENT.json": "335ea55d7964d8095064e2c67c95fbd8d65e28b4d1ddf25f6e4ee812abd29b98",
@@ -158,7 +158,7 @@ CATALOGUE_PINS = {
         "tools/humanities_resources/check_resources.py": "ec5383e3a34cbff999f190b0014a4a73e00a3a29e2714498f7620fd638dc2aa5",
         "tools/humanities_resources/resource.css": "1aed9aaca0d73a4b200c4e5d0977e73f4e906c747d7340c7a62f4197a8344bae",
         "tools/humanities_resources/resource.js": "ad40afed95490bfcce92dc062da46e1b27bcb96bdc80e37eabdfe02bf6ffc446",
-        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "b3c42bb35042e2f7e92be6def847aad1a5261c6c9f30561e9e76b2ed4e5bdad4",
+        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "df0052e9ee44a1bee9d4454c8e931d55ba6e93e0d5d29139b1f95b83c080fea5",
         "tools/catalogue/TERM_REVIEW.json": "b0ed0d82fe21a222c75f6a38390b01defc0d5d958fac8e85421b7901ce6d201d",
         "tools/catalogue/SCIENCE_WEEK_BINDINGS.json": "f3375440baa49ffe39a4fb7e34ccbf1cf788ed6d73b283abc15d6e1440203238",
         "primary/year5/science/autumn/forces/Lesson8_ExploreGravity.html": "20047720bf1d309055abdf232d341b6fd99b833631efa0bcbfb3dabed9671196",
@@ -552,14 +552,20 @@ CATALOGUE_PINS = {
 # an edited, deleted or reordered original resource, or an extra lesson row.
 CATALOGUE_ORIGINAL_ROWS = 734
 CATALOGUE_ORIGINAL_ROWS_SHA256 = "b8ffcb16f5fd2a413e8a0b06ad2d4b112f450364fa294377869dc32c8235bb2c"
-CATALOGUE_SHELF_ROWS = 49
+# The appended rows are the 49 reviewed hub rows followed, since UX2 D3
+# (2026-09-08), by the companion-pack entries DERIVED from
+# data/companion-packs.json by tools/ux2/companion_catalogue.py. The count and
+# digest below are re-cut by tools/catalogue/pin_catalogue_contract.py from
+# rows it has verified against that derivation; an edit to any appended row,
+# a removed pack row or an extra lesson row still reds here.
+CATALOGUE_SHELF_ROWS = 114
 # UX2 A1: keys that may be appended to an original row without moving its
 # digest (see catalogue_errors). Nothing else is additive. No original row
 # carried either key before the ruling (measured 2026-09-08: 0 of 734), so the
 # second set is empty and the allowance cannot launder a pre-existing value.
 CATALOGUE_ADDITIVE_TAG_KEYS = frozenset({"halfTerm", "unit"})
 CATALOGUE_ORIGINAL_KEYS_BEFORE_TAGS = frozenset()
-CATALOGUE_SHELF_ROWS_SHA256 = "3ab3e66308af203301acf75d57fa78728c83e6a336ba8a17d0392d9a092859c5"
+CATALOGUE_SHELF_ROWS_SHA256 = "cd8f2f33a77634501e5e1f6efacdc0b95daf00284d9bbfcfbd844de34bdbb53c"
 
 # These named review records and review tools can change with their reviewed
 # transaction. Tools are not served assets; they are reviewed as executable
