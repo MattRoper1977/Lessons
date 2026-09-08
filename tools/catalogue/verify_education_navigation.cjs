@@ -277,17 +277,22 @@ async function educationJourneyTests(browser) {
       await publicationPage(page, '/main/');
       assert.equal(await page.locator('body').getAttribute('data-site-kind'), 'education', 'The old general homepage is still being served');
       assert.match(await page.locator('h1').innerText(), /Find your next lesson/);
-      const heading = page.locator('.section-head').filter({ has: page.getByRole('heading', { name: 'Go straight to your subject' }) });
-      assert.match(await heading.locator('p').innerText(), /subject.*pathway.*term/i, 'Homepage does not distinguish subject from pathway and term');
+      // UX2 B2: the homepage is Appendix A §HOME. "Go straight to your subject" is
+      // the tile row itself now, with no explanatory paragraph beneath it, and each
+      // tile is one of the four subject cards the Lessons hub derives - so the names
+      // and the destinations both come from the record rather than from this file's
+      // memory of the old shelf URLs.
+      assert.equal(await page.locator('#subjects').count(), 1, 'The homepage has no subject tile row');
+      assert.equal(await page.getByRole('heading', { name: 'Go straight to your subject', exact: true }).count(), 1);
       const subjects = [
-        ['Science', '/Lessons/Science_Teesside/index.html'],
-        ['Humanities', '/Lessons/Humanities_Teesside/index.html'],
-        ['Art', '/Lessons/?subject=Art'],
-        ['ASDAN', '/Lessons/?subject=ASDAN%20%26%20life%20skills'],
+        ['Science', '/Lessons/subject.html?subject=science'],
+        ['Humanities & RE', '/Lessons/subject.html?subject=humanities-re'],
+        ['Art Studio', '/Lessons/subject.html?subject=art-studio'],
+        ['Lifeskills', '/Lessons/subject.html?subject=lifeskills'],
       ];
       const links = [];
       for (const [label, expected] of subjects) {
-        const card = page.locator('a.route-card').filter({ has: page.getByRole('heading', { name: label, exact: true }) });
+        const card = page.locator('#subjects a.route-card').filter({ has: page.getByRole('heading', { name: label, exact: true }) });
         assert.equal(await card.count(), 1, `${label} does not have one clear subject card`);
         const href = new URL(await card.getAttribute('href'), page.url());
         assert.equal(href.href, targetURL(expected));
@@ -295,31 +300,40 @@ async function educationJourneyTests(browser) {
         assert(res.ok(), `${label} destination returned ${res.status()}`);
         links.push({ label, href: href.pathname + href.search, status: res.status() });
       }
-      await page.locator('.learning-shortcuts').scrollIntoViewIfNeeded();
-      const shortcutImage = await shot(page, name + '-home-teaching-shortcuts');
-      const cover = page.locator('.learning-shortcuts a').filter({ hasText: 'Cover teaching packs' });
-      assert.equal(await cover.count(), 1, 'Finished cover teaching packs are absent from the homepage shortcuts');
-      const coverURL = new URL(await cover.getAttribute('href'), page.url());
-      assert.equal(coverURL.origin, origin);
-      assert((await page.request.get(coverURL.href)).ok(), 'Cover teaching-packs shortcut is broken');
+      // UX2 B1 retired the "Ready to teach?" shortcut bar. The ledger relocates every
+      // row rather than dropping it, so this follows the named destinations instead
+      // of the bar - and asserts the retirement, so a silent return is caught too.
+      assert.equal(await page.locator('.learning-shortcuts').count(), 0, 'The retired teaching-shortcut bar is back on the homepage');
+      const subjectsImage = await shot(page, name + '-home-subjects');
+      // Saved and recommended relocate to the hub's own view controls.
       for (const view of ['saved', 'recommended']) {
-        await page.locator(`.learning-shortcuts a[href="/Lessons/?view=${view}"]`).click();
-        await page.waitForFunction(() => /\d+ of \d+ resources/.test(document.querySelector('#count')?.textContent || ''));
+        await goto(page, `/Lessons/?view=${view}`, true);
         assert.equal(new URL(page.url()).pathname, '/Lessons/');
         assert.equal(new URL(page.url()).searchParams.get('view'), view);
-        assert.equal(await page.locator(`[data-view="${view}"]`).getAttribute('aria-pressed'), 'true');
+        assert.equal(await page.locator(`[data-view="${view}"]`).getAttribute('aria-pressed'), 'true', `The hub's ${view} control does not report itself pressed`);
         if (view === 'saved') assert.match(await page.locator('#cards').innerText(), /No saved lessons/, 'Fresh browser saved state is misleading');
-        else assert(await page.locator('#cards .card').count() > 0, 'Recommended shortcut has no lessons');
-        await page.goBack({ waitUntil: 'domcontentloaded' });
-        await page.waitForSelector('.learning-shortcuts');
+        else assert(await page.locator('#cards .card').count() > 0, 'The recommended view has no lessons');
       }
-      await page.locator('a.route-card').filter({ has: page.getByRole('heading', { name: 'Art', exact: true }) }).click();
-      // UX2: the old ?subject=Art query still resolves on the hub as the flat Art results.
-      await page.waitForFunction(() => new URLSearchParams(location.search).get('subject') === 'Art' && document.querySelectorAll('#cards .card').length > 0);
-      assert.equal(new URL(page.url()).searchParams.get('subject'), 'Art');
-      await page.goBack({ waitUntil: 'domcontentloaded' });
-      await page.locator('.section-head').filter({ has: page.getByRole('heading', { name: 'Go straight to your subject' }) }).scrollIntoViewIfNeeded();
-      return { subjects: links, screenshots: [shortcutImage, await shot(page, name + '-home-subjects')] };
+      // Cover teaching packs relocate to a Resources card. Found by searching rather
+      // than by a typed href, so the card has to be genuinely discoverable.
+      await publicationPage(page, '/resources/');
+      await page.locator('#rxSearch').fill('cover pack');
+      await page.waitForFunction(() => document.querySelectorAll('#rxOut .rx-cardx').length > 0);
+      const cover = page.locator('#rxOut .rx-cardx a').filter({ hasText: 'cover pack' });
+      assert(await cover.count() >= 1, 'Finished cover teaching packs are not discoverable from Resources');
+      const coverURL = new URL(await cover.first().getAttribute('href'), page.url());
+      assert.equal(coverURL.origin, origin);
+      assert((await page.request.get(coverURL.href)).ok(), 'The relocated cover teaching-pack link is broken');
+      // The Art Studio tile reaches the subject page, which is where the Art lessons
+      // now live. The pre-UX2 ?subject= query means an exact record subject, so it is
+      // exercised with the record's own string in the storage case below rather than
+      // with a card name that never was one.
+      await publicationPage(page, '/main/');
+      await page.locator('#subjects a.route-card').filter({ has: page.getByRole('heading', { name: 'Art Studio', exact: true }) }).click();
+      await page.waitForFunction(() => /\d+ lessons/.test(document.querySelector('#summary')?.textContent || ''));
+      assert.equal(new URL(page.url()).pathname, '/Lessons/subject.html');
+      assert.equal(new URL(page.url()).searchParams.get('subject'), 'art-studio');
+      return { subjects: links, cover: coverURL.pathname, screenshots: [subjectsImage, await shot(page, name + '-home-subject-page')] };
     });
     await checkCase(name + '-tools-finder-before-features-and-filtering', page, async () => {
       await publicationPage(page, '/tools/');
@@ -355,12 +369,15 @@ async function educationJourneyTests(browser) {
     });
     await checkCase(name + '-resources-search-and-new-lesson-finder', page, async () => {
       await publicationPage(page, '/resources/');
-      await page.waitForFunction(() => /Showing \d+ of \d+ resources/.test(document.querySelector('#rxCount')?.textContent || ''));
-      assert.match(await page.locator('.rx-hero h1').innerText(), /next lesson/i);
+      // UX2 B4: /resources/ is Appendix A §RESOURCES - one card per unit, a derived
+      // "<n> unit packs" count, and the page's own name as its heading. The card is a
+      // list item whose link carries the title, not an h3.
+      await page.waitForFunction(() => /\d+ unit packs/.test(document.querySelector('#rxCount')?.textContent || ''));
+      assert.match(await page.locator('.rx-hero h1').innerText(), /^Resources$/);
       const screenshots = [await shot(page, name + '-resources-start')];
       await page.locator('#rxSearch').fill('Surface Hunt');
       await page.waitForFunction(() => document.querySelectorAll('#rxOut .rx-cardx').length > 0);
-      const cards = await page.locator('#rxOut .rx-cardx').evaluateAll(cards => cards.map(c => ({ title: c.querySelector('h3')?.textContent, links: [...c.querySelectorAll('a[href]')].map(a => a.getAttribute('href')) })));
+      const cards = await page.locator('#rxOut .rx-cardx').evaluateAll(cards => cards.map(c => ({ title: (c.querySelector('h3') || c.querySelector('a[href]'))?.textContent, links: [...c.querySelectorAll('a[href]')].map(a => a.getAttribute('href')) })));
       assert(cards.every(c => /Surface Hunt/i.test(c.title)), 'Resource search retained unrelated titles');
       assert(cards.some(c => c.links.some(href => href.includes('BUILD_ART_A2_W1_Surface_Hunt.html'))), 'The searchable resource hub lost the reported Surface Hunt lesson');
       await hitTarget(page, '#rxSearch');
@@ -371,7 +388,11 @@ async function educationJourneyTests(browser) {
       await page.locator('#rxClear').click();
       assert.equal(await page.locator('#rxSearch').inputValue(), '');
       assert(await page.locator('#rxOut .rx-cardx').count() > 0);
-      await page.locator('.education-jumps a[href="/Lessons/"]').click();
+      // UX2 B1 retired the jump bar; the route to the hub is the menu, and the
+      // "Three places, one site" card on the homepage. Take the menu, since that is
+      // the one every page carries.
+      await page.locator('.mbm-unified-menu > summary').click();
+      await page.locator('#mbm-navigation-panel').getByRole('link', { name: 'Lessons', exact: true }).click();
       // UX2: the hub's browse view derives "<M> resources · <S> subjects" and shows the subject cards.
       await page.waitForFunction(() => /\d+ resources · \d+ subjects/.test(document.querySelector('#count')?.textContent || ''));
       assert.equal(new URL(page.url()).pathname, '/Lessons/');
@@ -390,7 +411,12 @@ async function storageAndUntrustedContextTests(browser) {
     Object.defineProperty(window, 'sessionStorage', { configurable: true, get() { throw new DOMException('Storage denied by browser', 'SecurityError'); } });
   });
   await checkCase('storage-denied-still-browses-and-does-not-falsely-save', blocked.page, async () => {
-    await goto(blocked.page, '/Lessons/?subject=Art&pathway=BUILD&term=Aut2&q=Surface%20Hunt', true);
+    // The hub's ?subject= means an exact record subject, as it did before UX2 - the
+    // Part D3 catalogue restored that after Part A had briefly widened it to the
+    // subject card. This lesson's record subject is "Art · Teesside Studio Suite",
+    // so the card query uses that rather than the card's name, which never matched
+    // this row and now correctly does not.
+    await goto(blocked.page, '/Lessons/?subject=' + encodeURIComponent('Art · Teesside Studio Suite') + '&q=Surface%20Hunt', true);
     await blocked.page.locator('#cards button[data-save]').first().click();
     assert.match(await blocked.page.locator('#lesson-save-status').innerText(), /cannot save/);
     assert.equal(await blocked.page.locator('[data-saved-count]').first().innerText(), '0');
