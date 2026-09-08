@@ -1,310 +1,33 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="mbm-platform-version" content="mbm-cross-estate-unification-lessons-apps-2026-08-08">
-<title>The Lesson Hub — Made by Matt</title>
-<meta name="description" content="Single-file, offline-first lessons structured to BUILD core skills, GROW confidence and LAUNCH independent mastery.">
-<meta name="theme-color" content="#161D3D"><meta property="og:title" content="The Lesson Hub — Made by Matt"><meta property="og:description" content="Single-file, offline-first lessons across BUILD, GROW and LAUNCH — free, accessible, built in a real classroom."><meta property="og:url" content="https://madebymatt.uk/Lessons/"><meta property="og:type" content="website"><meta property="og:site_name" content="Made by Matt"><meta property="og:image" content="https://madebymatt.uk/assets/og-cover.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://madebymatt.uk/assets/og-cover.png">
+<title>Lessons — Made by Matt</title>
+<meta name="description" content="Interactive lessons and editable packs for the BUILD, GROW and LAUNCH pathways, made by a teacher.">
+<meta name="theme-color" content="#161D3D"><meta property="og:title" content="Lessons — Made by Matt"><meta property="og:description" content="Interactive lessons and editable packs for the BUILD, GROW and LAUNCH pathways, made by a teacher."><meta property="og:url" content="https://madebymatt.uk/Lessons/"><meta property="og:type" content="website"><meta property="og:site_name" content="Made by Matt"><meta property="og:image" content="https://madebymatt.uk/assets/og-cover.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://madebymatt.uk/assets/og-cover.png">
 <link rel="icon" href="https://madebymatt.uk/favicon.svg">
-<style>
-:root{--navy:#161D3D;--navy-lt:#232C55;--mint:#B9E6CD;--mint-deep:#2F6B4D;--amber:#E08A2E;--amber-lt:#F2A24A;
---cream:#F6F1E4;--cream-dk:#EDE5D2;--card:#FFFDF6;--ink:#1B2140;--mut:#4A5170;
---t-build:#985710;--t-grow:#2F6B4D;--t-launch:#81680F;
---b-build:#E08A2E;--b-grow:#4C9A6F;--b-launch:#DFB62B;
---font:Poppins,"Segoe UI",system-ui,sans-serif;--max:1180px}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{background:var(--cream);color:var(--ink);font-family:var(--font);min-height:100vh}
-::selection{background:var(--amber-lt);color:var(--navy)}
-.skip{position:absolute;left:-999px;top:8px;background:var(--amber-lt);color:var(--navy);
-padding:.5rem 1rem;border-radius:8px;font-weight:700;z-index:99}
-.skip:focus{left:8px}
-a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
-outline:3px solid var(--amber);outline-offset:2px;border-radius:6px}
-/* ---------- navy header ---------- */
-.header{position:sticky;top:0;background:#161D3Df2;backdrop-filter:blur(8px);
-border-bottom:1px solid #B9E6CD2e;z-index:20}
-.bar{max-width:var(--max);margin:auto;display:flex;align-items:center;gap:1rem;
-justify-content:space-between;padding:.6rem 1rem;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:.7rem;text-decoration:none;color:#E8E2D4}
-.brand strong{letter-spacing:.05em}
-.brand small{display:block;color:var(--mint);font-size:.62rem;letter-spacing:.22em;text-transform:uppercase}
-.mono{width:44px;height:44px;flex:none}
-.xnav{display:flex;gap:.2rem;flex-wrap:wrap;justify-content:flex-end}
-.xnav a{color:#E8E2D4;text-decoration:none;font-size:.82rem;letter-spacing:.04em;
-padding:.35rem .6rem;border-radius:8px;border:1px solid transparent}
-.xnav a:hover{color:var(--amber-lt)}
-.xnav a[aria-current]{border-color:#B9E6CD55;color:var(--mint);font-weight:700}
-@media (max-width:560px){.xnav a{font-size:.74rem;padding:.3rem .5rem}}
-/* ---------- hero ---------- */
-.hero{background:var(--cream);text-align:center}
-.hero-in{max-width:var(--max);margin:auto;padding:2.6rem 1rem 1.4rem}
-.eyebrow{color:var(--amber);letter-spacing:.32em;text-transform:uppercase;font-size:.72rem;font-weight:700}
-h1{font-size:clamp(2.1rem,7vw,3.4rem);letter-spacing:.02em;color:var(--navy);
-font-weight:800;margin:.4rem 0 .5rem}
-h1 span{color:var(--mint-deep)}
-.lead{color:var(--mut);max-width:44rem;margin:0 auto;font-size:.98rem;line-height:1.55}
-.lead b{color:var(--t-build)}.lead b.g{color:var(--t-grow)}.lead b.l{color:var(--t-launch)}
-.hero .count{display:inline-block;margin-top:1rem;background:var(--card);
-border:1.5px solid var(--navy);border-radius:99px;padding:.4rem 1rem;font-size:.8rem;
-letter-spacing:.08em;color:var(--navy);font-weight:700}
-/* ---------- journey strip ---------- */
-.journey{max-width:var(--max);margin:auto;padding:1.4rem 1rem .6rem;border-bottom:1px solid #161D3D1a}.jkey{display:none;max-width:var(--max);margin:auto;padding:.55rem 1rem .65rem;font-size:.78rem;line-height:1.45;color:#3a4360;border-bottom:1px solid #161D3D1a}.jkey b{color:#161D3D;letter-spacing:.02em}
-.j-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;text-align:center}
-.j-tier{background:none;border:2px solid transparent;border-radius:16px;padding:.9rem .5rem .8rem;
-font:inherit;color:var(--ink);cursor:pointer;transition:background .15s,border-color .15s}
-.j-tier:hover{background:var(--card)}
-.j-tier[aria-pressed="true"]{background:var(--card);border-color:currentColor;box-shadow:0 2px 8px #161D3D14}
-.j-tier svg{width:clamp(44px,9vw,64px);height:clamp(44px,9vw,64px)}
-.j-name{display:block;font-weight:800;letter-spacing:.08em;font-size:clamp(.95rem,3.4vw,1.25rem);margin-top:.35rem}
-.j-tier.build{color:var(--t-build)}.j-tier.grow{color:var(--t-grow)}.j-tier.launch{color:var(--t-launch)}
-.j-bold{display:block;color:var(--ink);font-weight:700;font-size:clamp(.72rem,2.6vw,.9rem);margin-top:.3rem}
-.j-more{display:block;color:var(--mut);font-size:clamp(.7rem,2.5vw,.85rem);line-height:1.45;margin-top:.25rem}
-.journey.collapsed .j-more{display:none}
-.j-foot{display:flex;justify-content:center;gap:1rem;align-items:center;padding:.6rem 0 .2rem;flex-wrap:wrap}
-.j-toggle{background:none;border:1.5px solid #161D3D33;border-radius:99px;color:var(--mut);
-font:inherit;font-size:.78rem;font-weight:600;padding:.35rem .9rem;cursor:pointer}
-.j-toggle:hover{border-color:var(--navy);color:var(--navy)}
-.j-hint{color:var(--mut);font-size:.72rem}
-/* ---------- toolbar ---------- */
-.toolbar{max-width:var(--max);margin:auto;padding:1.1rem 1rem .4rem;display:flex;gap:.7rem;flex-wrap:wrap}
-.toolbar label{display:flex;flex-direction:column;gap:.3rem;font-size:.72rem;
-letter-spacing:.1em;text-transform:uppercase;color:var(--mut);font-weight:700;flex:1;min-width:150px}
-.toolbar input,.toolbar select{background:var(--card);border:1.5px solid #161D3D55;border-radius:99px;
-color:var(--ink);font:inherit;font-size:.92rem;padding:.55rem 1rem;width:100%}
-.toolbar input::placeholder{color:#4A517099}
-.toolbar select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23161D3D' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
-background-repeat:no-repeat;background-position:right 1rem center;padding-right:2.2rem}
-/* subject chips */
-.chiprow{max-width:var(--max);margin:auto;padding:.5rem 1rem .2rem;display:flex;gap:.45rem;
-overflow-x:auto;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
-@media (min-width:860px){.chiprow{flex-wrap:wrap;overflow:visible}}
-.chip{flex:none;background:var(--card);border:1.5px solid #161D3D44;border-radius:99px;min-height:44px;display:inline-flex;align-items:center;touch-action:manipulation;
-color:var(--ink);font:inherit;font-size:.78rem;font-weight:600;padding:.4rem .85rem;cursor:pointer;white-space:nowrap}
-.chip:hover{border-color:var(--navy)}
-.chip[aria-pressed="true"]{background:var(--amber-lt);border-color:var(--amber);color:var(--navy);font-weight:700}
-.status{max-width:var(--max);margin:auto;padding:.3rem 1rem;color:var(--mut);font-size:.85rem}
-/* ---------- sections + cards ---------- */
-.cat{max-width:var(--max);margin:auto;padding:1.4rem 1rem 0;display:flex;align-items:baseline;
-justify-content:space-between;gap:1rem;flex-wrap:wrap}
-.cat h2{text-transform:uppercase;letter-spacing:.04em;color:var(--navy);font-size:1.25rem;font-weight:800}
-.cat .tot{color:var(--mut);font-size:.85rem}
-.grid{max-width:var(--max);margin:auto;padding:.8rem 1rem 1.2rem;display:grid;
-grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:.9rem}
-.card{background:var(--card);border:2px solid #161D3D22;border-radius:16px;padding:.85rem .95rem;
-display:flex;flex-direction:column;gap:.45rem;box-shadow:0 1px 4px #161D3D0d}
-.card.t-BUILD{border-color:var(--b-build)}
-.card.t-GROW{border-color:var(--b-grow)}
-.card.t-LAUNCH{border-color:var(--b-launch)}
-.card .kind{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--mut)}
-.card.t-BUILD .kind{color:var(--t-build)}
-.card.t-GROW .kind{color:var(--t-grow)}
-.card.t-LAUNCH .kind{color:var(--t-launch)}
-.card h3{font-size:1rem;line-height:1.3}
-.card h3 a{color:var(--navy);text-decoration:none}
-.card h3 a:hover{text-decoration:underline}
-.card p{color:var(--mut);font-size:.85rem;line-height:1.5;flex:1}
-.chips{display:flex;gap:.4rem;flex-wrap:wrap}
-.fmt{display:flex;gap:.45rem;align-items:center}
-.fmt svg{width:21px;height:21px;color:var(--mut)}
-.actrow{display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin-top:.15rem}
-a.go{font-size:.68rem;font-weight:800;letter-spacing:.08em;text-decoration:none;color:#FFF6E8;background:var(--navy);border-radius:999px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;touch-action:manipulation;padding:.42rem .85rem;white-space:nowrap}
-a.go:hover{background:#232C55}
-a.go:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
-.legend{max-width:var(--max);margin:auto;padding:.15rem 1rem .3rem;font-size:.7rem;color:var(--mut);display:flex;gap:.9rem;flex-wrap:wrap;align-items:center}
-.legend svg{width:16px;height:16px;vertical-align:-3px;color:var(--mut)}
-.callout{background:linear-gradient(150deg,#FDF6E4,#FBEDD8);border:2px solid var(--amber);border-radius:16px;padding:1rem 1.1rem;margin:.3rem 0 .9rem;display:flex;flex-direction:column;gap:.5rem}
-.callout .stamp{align-self:flex-start;font-size:.62rem;font-weight:800;letter-spacing:.1em;background:#E4F0E8;color:#2F6B4D;border:1.5px solid #2F6B4D;border-radius:999px;padding:.25rem .7rem}
-.lx-vid{margin:.4rem 0 0;max-width:420px;display:flex;flex-direction:column;gap:.4rem}
-.lx-vidbtn{position:relative;display:block;width:100%;padding:0;border:1.5px solid var(--amber);background:var(--navy);border-radius:14px;overflow:hidden;cursor:pointer;aspect-ratio:16/9}
-.lx-vidbtn img{display:block;width:100%;height:100%;object-fit:cover}
-.lx-vidbtn::after{content:"";position:absolute;left:50%;top:50%;width:56px;height:56px;transform:translate(-50%,-50%);border-radius:50%;background:var(--amber-lt) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 7.5v9l7.5-4.5z' fill='%23161D3D'/%3E%3C/svg%3E") center/58% no-repeat;box-shadow:0 6px 18px rgba(22,29,61,.4)}
-.lx-vidbtn:hover{border-color:var(--mint)}
-.lx-vidbtn:focus-visible{outline:3px solid #B9E6CD;outline-offset:3px}
-.lx-vid iframe{display:block;width:100%;aspect-ratio:16/9;border:0;border-radius:14px;background:var(--navy)}
-.lx-vid figcaption{font-size:.8rem;font-weight:700;color:var(--mint-deep)}
-[data-theme="dark"] .lx-vid figcaption{color:var(--mint)}
-.callout h3{font-size:1.02rem;color:var(--navy)}
-.callout p{font-size:.82rem;color:var(--mut);line-height:1.5}
-.callout .acts{display:flex;gap:.5rem;flex-wrap:wrap}
-.callout .acts button{font:inherit;font-size:.7rem;font-weight:800;letter-spacing:.06em;border:1.5px solid var(--navy);background:var(--card);color:var(--navy);border-radius:999px;padding:.42rem .95rem;cursor:pointer}
-.callout .acts button:hover,.callout .acts button:focus-visible{background:var(--navy);color:#FFF6E8;outline:none}
-details.legacy{margin:.2rem 0 1rem;border:1.5px dashed #C9C0AB;border-radius:14px;background:#F3EDDD}
-details.legacy>summary{cursor:pointer;list-style:none;padding:.8rem 1rem;font-size:.82rem;font-weight:800;letter-spacing:.05em;color:#4A5170;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
-details.legacy>summary::-webkit-details-marker{display:none}
-details.legacy>summary::before{content:"▸";color:#C97F2E;transition:transform .15s ease}
-details.legacy[open]>summary::before{transform:rotate(90deg)}
-details.legacy .grid{padding:.2rem .8rem .9rem}
-details.legacy .cat{margin-top:0}
-details.legacy>summary .note{font-weight:600;color:#8A8261;font-size:.72rem;letter-spacing:0}
-.pill{font-size:.68rem;font-weight:700;border-radius:99px;padding:.22rem .65rem;
-border:1.5px solid #161D3D44;color:var(--ink);letter-spacing:.03em}
-.pill.tier{border:none;color:var(--navy)}
-.pill.tier.BUILD{background:var(--b-build)}
-.pill.tier.GROW{background:var(--b-grow);color:#fff}
-.pill.tier.LAUNCH{background:var(--b-launch)}
-.pill.yr-new{background:var(--mint);border-color:var(--mint-deep)}
-
-/* ---------- year collection tabs ---------- */
-.ytabs{max-width:var(--max);margin:1.2rem auto 0;padding:0 1rem;display:flex;gap:.6rem;flex-wrap:wrap}
-.ytab{flex:1 1 240px;text-align:left;background:var(--card);border:2px solid #161D3D2b;border-radius:14px;
-padding:.75rem 1rem;font:inherit;cursor:pointer;color:var(--ink);transition:border-color .15s,box-shadow .15s}
-.ytab:hover{border-color:#161D3D66}
-.ytab[aria-pressed="true"]{border-color:var(--navy);box-shadow:0 3px 10px #161D3D1c;background:var(--cream-dk)}
-.ytab .yt-k{display:flex;align-items:center;gap:.5rem;font-weight:800;letter-spacing:.04em;font-size:.92rem}
-.ytab .yt-badge{font-size:.62rem;font-weight:800;letter-spacing:.08em;background:var(--mint);color:var(--mint-deep);
-border-radius:99px;padding:.18rem .55rem;text-transform:uppercase}
-.ytab.lib .yt-badge{background:var(--cream-dk);color:var(--mut);border:1px solid #161D3D2b}
-.ytab[aria-pressed="true"].lib .yt-badge{background:#fff}
-.ytab .yt-n{display:block;color:var(--mut);font-size:.76rem;margin-top:.25rem}
-/* ---------- pathway subgroups ---------- */
-.pathhead{display:flex;align-items:center;gap:.55rem;margin:1.15rem 0 .55rem;padding:.4rem .8rem;
-border-left:5px solid;border-radius:8px;background:var(--card)}
-.pathhead svg{width:26px;height:26px;flex:none}
-/* §6b — pathway lanes. BUILD / GROW / LAUNCH are the top level of the browse
-   view; subject sits inside a lane. Colours come from the pathway tokens the
-   estate already defines (--b-* border, --t-* text), so the lanes and the
-   cards inside them cannot drift apart. */
-.lane{border:1px solid var(--line,#dcdcd2);border-left:6px solid var(--mut,#888);border-radius:14px;margin:1.1rem 0;background:#fff;overflow:hidden}
-.lane>summary{list-style:none;cursor:pointer;padding:.85rem 1rem;display:flex;align-items:center;gap:.7rem;flex-wrap:wrap}
-.lane>summary::-webkit-details-marker{display:none}
-.lane>summary:focus-visible{outline:3px solid var(--navy,#12305c);outline-offset:-3px}
-.lanehead .lh-mark svg{width:30px;height:30px;flex:none;display:block}
-.lanehead .lh-text{display:flex;flex-direction:column;line-height:1.25;min-width:0}
-.lanehead .ph-name{font-weight:800;letter-spacing:.06em;font-size:1rem}
-.lanehead .ph-sub{color:var(--mut,#666);font-size:.78rem;font-weight:400}
-.lane.l-BUILD{border-left-color:var(--b-build)}
-.lane.l-BUILD .lanehead .ph-name{color:var(--t-build)}
-.lane.l-GROW{border-left-color:var(--b-grow)}
-.lane.l-GROW .lanehead .ph-name{color:var(--t-grow)}
-.lane.l-LAUNCH{border-left-color:var(--b-launch)}
-.lane.l-LAUNCH .lanehead .ph-name{color:var(--t-launch)}
-.lane>.acc,.lane>.legacy{margin:0 .75rem .75rem}
-.acc.subacc>summary{font-size:.95rem}
-.pill.tier.OTHER{background:var(--mut,#8a8a80);color:#fff}
-/* the lane size, shown on the journey tile that already selects it */
-.j-count{display:block;font-size:clamp(.68rem,2.4vw,.8rem);font-weight:700;color:var(--mut);margin-top:.15rem;letter-spacing:.01em}
-@media (prefers-reduced-motion:reduce){.lane{transition:none}}
-.pathhead .ph-name{font-weight:800;letter-spacing:.06em;font-size:.9rem}
-.pathhead .ph-sub{color:var(--mut);font-size:.78rem}
-.pathhead.BUILD{border-color:var(--b-build)}.pathhead.BUILD .ph-name{color:var(--t-build)}
-.pathhead.GROW{border-color:var(--b-grow)}.pathhead.GROW .ph-name{color:var(--t-grow)}
-.pathhead.LAUNCH{border-color:var(--b-launch)}.pathhead.LAUNCH .ph-name{color:var(--t-launch)}
-.pathhead.OTHER{border-color:#161D3D33}.pathhead.OTHER .ph-name{color:var(--mut)}
-/* ---------- signature + footer ---------- */
-.sig{max-width:var(--max);margin:2rem auto 0;padding:0 1rem}
-.sig>div{background:var(--cream-dk);border:1px solid #161D3D1f;border-radius:14px;padding:1rem 1.2rem;
-display:flex;gap:.8rem;align-items:flex-start;color:var(--mut);font-size:.9rem;line-height:1.55}
-.sig b{color:var(--ink)}
-.sig a{color:var(--mint-deep);font-weight:600}
-.sig .wave{font-size:1.4rem;line-height:1}
-.footer{background:var(--navy);color:#E8E2D4;margin-top:2.2rem;padding:1.4rem 0 1rem}
-.footer .bar{justify-content:flex-start}
-.footer p{font-weight:600}
-.footer small{color:#E8E2D4b3}
-.footer a{color:inherit}
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
-/* ===== NAV-1: Latest additions + the Science 2026-27 front door ===== */
-.mbml{max-width:var(--max);margin:1.1rem auto 0;padding:0 1rem}
-.mbml h2{text-transform:uppercase;letter-spacing:.04em;color:var(--navy);font-size:1.05rem;font-weight:800;margin:0 0 .55rem}
-.mbml-sci{background:var(--card);border:2px solid var(--b-launch);border-radius:16px;padding:.9rem 1rem;margin-bottom:.9rem;display:flex;flex-direction:column;gap:.45rem}
-.mbml-sci .kind{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--t-launch)}
-.mbml-sci h3{font-size:1.05rem;color:var(--navy)}
-.mbml-sci p{color:var(--mut);font-size:.85rem;line-height:1.5}
-.mbml-sci .acts{display:flex;gap:.5rem;flex-wrap:wrap}
-.mbml-sci .acts a{font-size:.72rem;font-weight:800;letter-spacing:.06em;text-decoration:none;color:#FFF6E8;background:var(--navy);border-radius:999px;min-height:44px;display:inline-flex;align-items:center;padding:.42rem .95rem}
-.mbml-sci .acts a:hover{background:var(--navy-lt)}
-.mbml-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:.55rem;list-style:none;margin:0;padding:0}
-.mbml-list li{background:var(--card);border:1.5px solid #161D3D2b;border-radius:12px;padding:.55rem .7rem;display:flex;flex-direction:column;gap:.2rem}
-.mbml-list a{color:var(--navy);text-decoration:none;font-weight:700;font-size:.88rem;line-height:1.3}
-.mbml-list a:hover{text-decoration:underline}
-.mbml-meta{color:var(--mut);font-size:.72rem}
-.mbml-meta b{color:var(--mint-deep);font-weight:800}
-[data-theme="dark"] .mbml-meta b{color:var(--mint)}
-@media print{.mbml{display:none}}
-
-.hero26{background:linear-gradient(135deg,#0E4F4A,#186B5F);color:#EDF7F3;border-radius:14px;margin:0 0 1rem;padding:.85rem 1.1rem;display:flex;gap:.9rem;align-items:center;flex-wrap:wrap}
-.hero26 .pin{font-size:1.3rem}
-.hero26 b{color:#FFD9A0}
-.hero26 p{margin:0;font-size:.86rem;line-height:1.45;flex:1;min-width:220px}
-
-/* ===== v5 accordions ===== */
-details.acc{background:#FDFBF4;border:2px solid var(--navy);border-radius:14px;margin:0 0 .9rem;overflow:hidden}
-details.acc>summary{list-style:none;cursor:pointer;user-select:none;padding:.8rem 1rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;background:#F4EEE0}
-details.acc>summary::-webkit-details-marker{display:none}
-details.acc .aname{font-weight:800;font-size:.95rem;letter-spacing:.04em;color:var(--navy)}
-details.acc .apill{background:#fff;border:1.5px solid #C9C0AB;border-radius:999px;padding:.18rem .6rem;font-size:.72rem;font-weight:700;color:#4A5170}
-details.acc .apill.main{background:var(--mint);border-color:var(--mint-deep);color:#143324}
-details.acc .tot2{font-size:.7rem;color:#8A8261;font-weight:600;margin-left:auto}
-details.acc .chev{margin-left:auto;color:#C97F2E;transition:transform .18s ease;font-size:.9rem}
-details.acc .tot2+.chev{margin-left:.4rem}
-details.acc[open] .chev{transform:rotate(180deg)}
-details.acc>.grid,details.acc>.callout{margin-left:1rem;margin-right:1rem}
-details.acc>:last-child{margin-bottom:1rem}
-@media(max-width:760px){
-.journey{display:none}
-.jkey{display:block}
-.hero{padding-top:1.4rem}
-.hero .lead{font-size:.88rem}
-.hero26{font-size:.82rem;padding:.7rem .85rem}
-}
-</style><style id="mbmFix">
-.chip.lib{border-style:dashed}
-.status .widen{font:inherit;font-size:.82rem;font-weight:800;color:#FFF6E8;background:var(--navy);border:0;border-radius:999px;padding:.5rem 1rem;min-height:44px;cursor:pointer;margin-left:.4rem}
-.status .widen:hover{background:var(--navy-lt)}
-.status .widen:focus-visible{outline:3px solid var(--amber-lt);outline-offset:2px}
-[data-theme="dark"] .status .widen{background:#F2A24A;color:#161D3D}
-</style>
-<style id="mbmTheme">
-/* Made by Matt — reading themes (shared key mbm_reading_theme) */
-[data-theme="pink"]{--cream:#F9E8EC;--cream-dk:#F3DCE2;--card:#FFF9FA;--ink:#1B2140;--mut:#4A5170}
-[data-theme="blue"]{--cream:#E7EEF7;--cream-dk:#DCE7F3;--card:#F8FBFF;--ink:#1B2140;--mut:#4A5170}
-[data-theme="light"]{--cream:#F7F7F4;--cream-dk:#EFEFEC;--card:#FFFFFF;--ink:#1B2140;--mut:#4A5170}
-[data-theme="dark"]{--cream:#121834;--cream-dk:#0E1430;--card:#1B234A;--ink:#E8E2D4;--mut:#A9B2CC}
-[data-theme="pink"] body{background:#F9E8EC}
-[data-theme="blue"] body{background:#E7EEF7}
-[data-theme="light"] body{background:#F7F7F4}
-[data-theme="dark"] body{background:#121834}
-[data-theme="dark"] .callout{background:linear-gradient(150deg,#1F2A52,#182142);border-color:#C97F2E}
-[data-theme="dark"] .callout .stamp{background:#1E3A2C;color:#B9E6CD;border-color:#2F6B4D}
-[data-theme="dark"] a.go,[data-theme="dark"] .callout .acts button:hover,[data-theme="dark"] .callout .acts a:hover{background:#F2A24A;color:#161D3D}
-[data-theme="dark"] details.legacy,[data-theme="dark"] details.acc{background:#1B234A;border-color:#2E3860}
-[data-theme="dark"] details.legacy>summary,[data-theme="dark"] details.legacy>summary .note,[data-theme="dark"] details.acc .tot2,[data-theme="dark"] .toolbar input::placeholder{color:#A9B2CC}
-[data-theme="dark"] details.acc .apill{background:#232B52;color:#E8E2D4}
-[data-theme="dark"] .hero26{background:#16304A;border-color:#2F6B4D}
-[data-theme="dark"] .jkey{color:#A9B2CC}
-[data-theme="dark"] .jkey b{color:#E8E2D4}
-/* High lumen — projector / IWB. Additive, and measured on the rendered
-   page rather than eyeballed from hex values. Amber stays light: it is a
-   background here, and near-black on it is already 9.05:1. */
-[data-theme="highlumen"]{--cream:#FFFFFF;--cream-dk:#FFFFFF;--card:#FFFFFF;--ink:#000000;--mut:#3A3A3A;--mint:#FFFFFF;--mint-deep:#0F5132;--t-build:#7A4A00;--t-grow:#0F5132;--t-launch:#5C4A00}
-[data-theme="highlumen"] body{background:#FFFFFF}
-[data-theme="highlumen"] .skip,[data-theme="highlumen"] .chip{color:#0B1020}
-html[data-theme="highlumen"] .header,html[data-theme="highlumen"] .header .bar{background:#0B1020;background-image:none}
-html[data-theme="highlumen"] .hero,html[data-theme="highlumen"] .hero26,html[data-theme="highlumen"] .callout{background:#FFFFFF!important;background-image:none!important;border:1px solid #4A4A4A}
-html[data-theme="highlumen"] .hero,html[data-theme="highlumen"] .hero *,html[data-theme="highlumen"] .hero26,html[data-theme="highlumen"] .hero26 *,html[data-theme="highlumen"] .callout,html[data-theme="highlumen"] .callout *{color:#000000!important}
-html[data-theme="highlumen"] .tot2,html[data-theme="highlumen"] .note{color:#3A3A3A!important}
-html[data-theme="highlumen"] main summary{color:#3A3A3A!important}
-html[data-theme="highlumen"] .header summary{color:#FFFFFF!important}
-[data-theme="highlumen"] footer,[data-theme="highlumen"] footer .bar{background:#FFFFFF;background-image:none}
-[data-theme="highlumen"] footer,[data-theme="highlumen"] footer *{color:#000000}
-html[data-theme="highlumen"] .header a,html[data-theme="highlumen"] .header strong,html[data-theme="highlumen"] .header small{color:#FFFFFF}
-[data-theme="highlumen"] .kind,[data-theme="highlumen"] .tot2,[data-theme="highlumen"] .eyebrow{color:#3A3A3A}
-[data-theme="highlumen"] .yt-badge,[data-theme="highlumen"] .apill,[data-theme="highlumen"] .stamp{background:#FFFFFF;color:#0F5132;border:1px solid #0F5132}
-[data-theme="highlumen"] :focus-visible{outline:3px solid #0B1020;outline-offset:2px}
-</style>
 <link rel="stylesheet" href="assets/mbm-platform.css">
 <link rel="stylesheet" href="assets/mbm-hub.css">
+<link rel="stylesheet" href="assets/catalogue/hub.css">
+<style id="mbmTheme">
+/* Made by Matt — reading themes (shared key mbm_reading_theme). One rule per theme the
+   canonical engine offers; cream is the default and has none (it removes the attribute).
+   The same block sits in index.html and subject.html; tools/ux2/hub_gates.mjs asserts they match. */
+[data-theme="pink"]{--cream:#F9E8EC;--cream-dk:#F3DCE2;--card:#FFF9FA}
+[data-theme="blue"]{--cream:#E7EEF7;--cream-dk:#DCE7F3;--card:#F8FBFF}
+[data-theme="light"]{--cream:#F7F7F4;--cream-dk:#EFEFEC;--card:#FFFFFF;--ink:#1B2140;--mut:#4A5170}
+[data-theme="dark"]{--cream:#121834;--cream-dk:#1B234A;--card:#1E2750;--ink:#EEEAE0;--mut:#C9CFE3;--line:#B9E6CD33;--t-build:#F2B77A;--t-grow:#9BE0B6;--t-launch:#EAD37A;--b-build:#4A3213;--b-grow:#1E3D2E;--b-launch:#4A4014;--mint-deep:#9BE0B6}
+[data-theme="highlumen"]{--cream:#FFFFFF;--cream-dk:#FFFFFF;--card:#FFFFFF;--ink:#000000;--mut:#3A3A3A;--mint:#FFFFFF;--mint-deep:#0F5132;--t-build:#7A4A00;--t-grow:#0F5132;--t-launch:#5C4A00}
+</style>
 <noscript><style>
 @media(max-width:900px){
   .mbm-site-header .bar{flex-wrap:wrap}
   .mbm-site-header .menu{display:none!important}
-  .mbm-site-header .nav,.mbm-site-header .mbm-site-nav{display:flex!important;position:static!important;flex:1 0 100%;max-height:none!important;overflow:visible!important;padding:.55rem 0 0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;flex-direction:column!important;align-items:stretch!important}
+  .mbm-site-header .nav,.mbm-site-header .mbm-site-nav{display:flex!important;position:static!important;flex:1 0 100%;max-height:none!important;overflow:visible!important;padding:.55rem 0 0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
   .mbm-site-header .mbm-primary-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.25rem}
 }
 @media(max-width:350px){.mbm-site-header .mbm-primary-links,.mbm-site-header .mbm-nav-panel{grid-template-columns:1fr}}
 </style></noscript>
 <script>try{var t=localStorage.getItem('mbm_reading_theme');if(t&&t!=='cream')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
-<link rel="stylesheet" href="assets/catalogue/catalogue.css">
 </head><body class="mbm-hub mbm-hub-lessons" data-mbm-estate="lessons">
 <a class="skip" href="#main">Skip to content</a>
 <header class="header mbm-site-header" data-mbm-platform="mbm-cross-estate-unification-lessons-apps-2026-08-08"><div class="bar">
@@ -313,323 +36,96 @@ html[data-theme="highlumen"] .header a,html[data-theme="highlumen"] .header stro
 <button class="menu" id="menu" type="button" aria-expanded="false" aria-controls="nav">Menu</button>
 <nav class="nav mbm-site-nav" id="nav" aria-label="Site navigation"><div class="mbm-primary-links"><a href="/games/">Games</a><a href="/Lessons/" aria-current="page">Lessons</a><a href="/Matt-s-Apps-/">Apps</a><a href="/tools/">Tools</a><a href="/resources/">Resources</a></div><details class="mbm-nav-more"><summary>More</summary><div class="mbm-nav-panel"><a href="/stats/">Stats</a><a href="/members/">Members</a><a href="/#about">About</a><a href="/privacy/">Privacy</a></div></details><details class="mbm-theme-menu"><summary>Display</summary><div class="mbm-theme-panel" data-mbm-theme-slot></div></details></nav>
 </div></header>
-<main id="main">
-<section class="hero"><div class="hero-in">
-<nav class="lesson-breadcrumb" aria-label="Breadcrumb"><a href="/main/">Home</a><span aria-hidden="true">/</span><span>Lessons</span><a href="/resources/">All resources</a><a href="/tools/">Teacher tools</a></nav>
-<p class="eyebrow">Made by Matt · Teaching collection</p>
-<h1>Find your <span>next lesson.</span></h1>
-<p class="lead">Choose a subject, then the pathway your class uses. Save useful lessons here for next time.</p>
+<div class="hub-bar" role="search" aria-label="Search the lessons"><div class="wrap">
+<label for="search">Search<input id="search" type="search" placeholder="Topic, title or week…" autocomplete="off"></label>
+<button class="pill" type="button" id="view-saved" data-view="saved" aria-pressed="false">Saved <b data-saved-count></b></button>
+<button class="pill" type="button" id="view-recommended" data-view="recommended" aria-pressed="false">Recommended</button>
+</div></div>
+<main id="main" class="wrap">
+<h1>Lessons</h1>
+<p class="lead" id="lead">Lessons for BUILD, GROW and LAUNCH pathways.</p>
 <span class="count" id="count" aria-live="polite" aria-atomic="true">Loading…</span>
-</div></section>
-
-
-<p class="jkey" id="jkey">Pathways — <b>BUILD</b> laying the groundwork · <b>GROW</b> developing independence · <b>LAUNCH</b> mastery in action</p>
-<section class="journey" id="journey" aria-label="The learning journey — Build, Grow, Launch" hidden>
-<div class="j-grid rail">
-<button class="j-tier build" data-tier="BUILD" aria-pressed="false" aria-controls="cards">
-<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="40" width="20" height="14" rx="3" fill="#E08A2E"/><rect x="30" y="40" width="20" height="14" rx="3" fill="#4C9A6F"/><rect x="14" y="25" width="20" height="14" rx="3" fill="#DFB62B"/><rect x="36" y="25" width="18" height="14" rx="3" fill="#232C55"/><rect x="24" y="10" width="20" height="14" rx="3" fill="#E08A2E"/></svg>
-<span class="j-name">BUILD</span>
-<span class="j-bold">Laying the groundwork.</span>
-<span class="j-more">We introduce core concepts, establish baseline techniques, and secure the foundational knowledge you need.</span>
-</button>
-<button class="j-tier grow" data-tier="GROW" aria-pressed="false" aria-controls="cards">
-<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M14 52 Q32 44 50 52 L46 58 H18 Z" fill="#8A5A2B"/><path d="M32 50 V30" stroke="#2F6B4D" stroke-width="4" stroke-linecap="round"/><path d="M32 34 Q20 32 18 20 Q30 22 32 34 Z" fill="#4C9A6F"/><path d="M32 30 Q44 28 46 16 Q34 18 32 30 Z" fill="#6FBF8F"/></svg>
-<span class="j-name">GROW</span>
-<span class="j-bold">Developing independence.</span>
-<span class="j-more">We experiment, review, improve, and add layers of detail — taking feedback and pushing your skills further.</span>
-</button>
-<button class="j-tier launch" data-tier="LAUNCH" aria-pressed="false" aria-controls="cards">
-<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 6 Q44 18 44 34 L44 44 H20 L20 34 Q20 18 32 6 Z" fill="#DDE3EA"/><circle cx="32" cy="28" r="6" fill="#232C55"/><circle cx="32" cy="28" r="3.2" fill="#B9E6CD"/><path d="M20 36 L10 48 L20 46 Z" fill="#E05A4E"/><path d="M44 36 L54 48 L44 46 Z" fill="#E05A4E"/><path d="M26 46 Q32 60 38 46 Q32 52 26 46 Z" fill="#F2A24A"/></svg>
-<span class="j-name">LAUNCH</span>
-<span class="j-bold">Mastery in action.</span>
-<span class="j-more">The stabilisers come off. Apply what you've learned to evaluate sources, create final pieces, and think independently.</span>
-</button>
-</div>
-<div class="j-foot">
-<button class="j-toggle" id="jtoggle" aria-expanded="true" hidden>How it works ▾</button>
-<span class="j-hint">Tap a stage to see only those lessons</span>
-</div>
-</section>
-
-<div class="ytabs" id="ytabs" role="group" aria-label="Choose an academic year collection">
-<button class="ytab" data-year="2026-27" aria-pressed="true" aria-controls="cards"><span class="yt-k">2026–27 ACADEMIC YEAR <span class="yt-badge">Current</span></span><span class="yt-n" data-count>—</span></button>
-<button class="ytab lib" data-year="2025-26" aria-pressed="false" aria-controls="cards"><span class="yt-k">2025–26 · THE LIBRARY <span class="yt-badge">Past year</span></span><span class="yt-n" data-count>—</span></button>
-<button class="ytab lib" data-year="" aria-pressed="false" aria-controls="cards"><span class="yt-k">EVERYTHING <span class="yt-badge">All years</span></span><span class="yt-n" data-count>—</span></button>
-</div>
-<div class="toolbar" role="search" aria-label="Filter the catalogue">
-<label>Search lessons<input id="search" type="search" placeholder="Topic, title or week…" autocomplete="off"></label>
-<label>Subject<select id="subject-group"><option value="">All subjects</option><option>Science</option><option>Humanities &amp; RE</option><option>Art</option><option>ASDAN &amp; life skills</option><option>Tutor time</option><option>Other resources</option></select></label>
-<label>Pathway<select id="pathway"><option value="">All pathways</option><option>BUILD</option><option>GROW</option><option>LAUNCH</option></select></label>
-<label>Term<select id="term" disabled><option value="">All terms</option></select></label>
-<details class="more-filters"><summary>Collection, version and format</summary><div>
-<label>Collection<select id="subject"><option value="">All collections</option></select></label>
-<label>Type<select id="type"><option value="">All types</option></select></label>
-<label>Teaching style<select id="style" disabled><option value="">All teaching styles</option></select></label>
-</div></details>
-</div>
-<section class="catalogue-intro" aria-label="Teaching shortcuts"><div class="catalogue-links"><a href="Science_Teesside/index.html?pathway=LAUNCH"><strong>All LAUNCH Science</strong><span>Browse every available term and teaching version</span></a><a href="Science_Teesside/index.html?pathway=LAUNCH&amp;term=Aut1&amp;style=recommended"><strong>LAUNCH Science pack</strong><span>Autumn 1 · Weeks 3–7 · recommended slides and resources</span></a><a href="Science_Teesside/index.html?pathway=BUILD"><strong>BUILD Science</strong><span>Browse lessons and retained teaching versions</span></a><a href="Science_Teesside/index.html?pathway=GROW&amp;term=Aut1"><strong>GROW Science</strong><span>Lessons, practicals and handovers</span></a><a href="Science_Teesside/Teaching_Packs/"><strong>BUILD, GROW &amp; LAUNCH Science teaching packs</strong><span>Autumn 1 · Weeks 3–7 · PowerPoint, Word and PDF</span></a><a href="Humanities_Teesside/Teaching_Packs/"><strong>BUILD, GROW &amp; LAUNCH Humanities teaching packs</strong><span>Autumn 1 · Weeks 3–7 · PowerPoint, Word and PDF</span></a><a href="Teaching_Packs/"><strong>Editable teaching packs · 7 subjects</strong><span>Science, Humanities, Careers, ICT, Textiles, FoodWise and PSHE · PowerPoint, Word, PDF and offline HTML</span></a><a href="Humanities_Teesside/index.html"><strong>Humanities &amp; RE</strong><span>Browse by pathway, term and week</span></a><a href="?subject=Art"><strong>Art &amp; Arts Award</strong><span>Studio lessons and print packs</span></a></div><p class="catalogue-feedback" id="catalogue-feedback" role="status"></p></section>
-<div class="lesson-personal"><div class="lesson-views" role="group" aria-label="Choose lessons"><button type="button" data-view="all" aria-pressed="true">Browse all</button><button type="button" data-view="recommended" aria-pressed="false">Recommended versions</button><button type="button" data-view="saved" aria-pressed="false">Saved lessons <span id="saved-count">0</span></button></div><p id="lesson-save-status" role="status">Saved lessons stay on this device.</p><div id="lesson-recent" hidden></div></div>
-<div class="chiprow rail" id="quicknav" aria-label="Browse by collection"></div>
 <p class="status" id="status" aria-live="polite" aria-atomic="true"></p>
-<p class="legend"><span><b>Formats:</b></span><span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M12 16v3M8.5 21h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg> slides</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8V4h10v4M7 16h10v5H7z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><rect x="4" y="8" width="16" height="8" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg> print pack inside</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 16h5v4H5zM9.5 10h5v10h-5zM14 4h5v16h-5z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg> 3 tiers</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7.5" width="19" height="10" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 10.2v4.6M5.7 12.5h4.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="15.6" cy="11" r="1.1" fill="currentColor"/><circle cx="18.2" cy="13.6" r="1.1" fill="currentColor"/></svg> game</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.9"/><circle cx="12" cy="18" r="1.1" fill="currentColor"/></svg> interactive</span></p>
-<div id="cards"></div>
-<details class="mbml recent-additions"><summary>Recent additions and Science suites</summary>
-<div class="mbml-sci"><span class="kind">Science · Teesside · 2026–27</span>
-<h3>Science 2026–27 · 40-minute routes</h3>
-<p>The three new science suites in one place — BUILD, GROW and LAUNCH, each a set of single-file 40-minute lessons with tiers, print packs and hands-on labs. Every suite index carries its own governance banner.</p>
-<div class="acts"><a href="Science_Teesside/Build/v3_40min/index.html">BUILD · Explore</a><a href="Science_Teesside/Grow/v3_40min/index.html">GROW · Physics</a><a href="Science_Teesside/Launch/v3_40min/index.html">LAUNCH · GCSE Biology</a></div></div>
-<h2>Latest additions</h2>
-<ul class="mbml-list" id="mbml-latest"><li><span class="mbml-meta">Loading…</span></li></ul>
-</details>
+<p class="status" id="lesson-save-status" aria-live="polite" aria-atomic="true"></p>
+<section id="browse" aria-label="Browse the lessons">
+<div class="tiles" id="tiles"></div>
+<section class="sec added" id="added" aria-labelledby="added-h"><div class="sec-head"><h2 id="added-h">Added this half-term</h2><a href="?added=current" id="added-all">See all →</a></div><div class="rail" id="added-rail"></div></section>
+<section class="sec" id="subjects" aria-labelledby="subjects-h"><h2 id="subjects-h">Subjects</h2><div class="scards" id="scards"></div></section>
+</section>
+<section id="results" aria-label="Matching lessons" hidden>
+<div class="recent" id="lesson-recent" hidden></div>
+<div class="grid" id="cards"></div>
+</section>
 </main>
-<aside class="sig"><div><span class="wave" aria-hidden="true">👋</span><p><b>From Matt</b> — I teach science and art in an alternative provision in the North East, and every file on this shelf started life in front of a real class. It’s all free and it stays that way. Spotted a bug or got an idea? <a href="mailto:contactmadebymatt@gmail.com">Tell me</a> — I read everything.</p></div></aside>
 <footer class="footer"><div class="bar"><svg class="mono" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="47" fill="none" stroke="#B9E6CD" stroke-width="3.4"/><g transform="translate(0 2)"><path d="M28 71 L28 37 L50 59 L72 37 L72 71" fill="none" stroke="#E8E2D4" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M50 22.5 L51.48 28.52 L57.5 30 L51.48 31.48 L50 37.5 L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"/></g></svg>
-<div><p>Made by Matt · Learn • Build • Explore</p>
-<small>Single-file · offline-first · hand-built in Teesside</small></div>
-</div><p class="mbm-contact" style="text-align:center;font-size:.85rem;opacity:.85;margin:16px auto 10px;max-width:90%">Questions, ideas or bug reports — <a href="mailto:contactmadebymatt@gmail.com" style="color:inherit;font-weight:600">contactmadebymatt@gmail.com</a></p>
+<div><p>Made by Matt · Lessons</p>
+<small>Learn • Build • Explore</small></div>
+</div><p class="mbm-contact">Questions, ideas or bug reports — <a href="mailto:contactmadebymatt@gmail.com">contactmadebymatt@gmail.com</a></p>
 </footer>
-<script src="assets/catalogue/catalogue.js"></script>
-<script>const $=s=>document.querySelector(s);
-const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-function safeHref(value){
-  const s=String(value??"").trim();
-  if(!s||/^(?:javascript|data|vbscript):/i.test(s))return"#";
-  if(/^https?:\/\//i.test(s))return encodeURI(s);
-  if(!/^[a-z][a-z0-9+.-]*:/i.test(s)&&!/^\/\//.test(s)&&!/[\\\u0000-\u001f]/.test(s))return encodeURI(s);
-  return"#";
+<script src="assets/catalogue/hub.js"></script>
+<script>(function(){
+'use strict';
+const H=window.MBM_HUB,{$,$$,esc,safeHref,COPY,CARDS,ICONS,chip,badge,card,fmtDay}=H;
+const params=()=>new URLSearchParams(location.search);
+function subjectCard(c){
+  const rows=c.rows,fixed=CARDS[c.slug];
+  const pathways=H.pathwaysPresent(rows);
+  const chips=[];
+  pathways.forEach(p=>chips.push(chip(p,'tier '+p)));
+  if(c.slug==='art-studio'){if(rows.some(r=>/Art Teesside/i.test(r.family)))chips.push(chip('TEESSIDE STUDIO'));if(rows.some(r=>/arts award/i.test(r.family+' '+r.subject)))chips.push(chip('ARTS AWARD'));}
+  if(c.slug==='lifeskills'){[...new Set(rows.map(r=>String(r.subject)))].sort().forEach(s=>chips.push(chip(s)));}
+  const badges=H.formatsPresent(rows).map(badge).join('');
+  let desc='';
+  if(c.slug==='science')desc=pathways.length===3?fixed.desc3:fixed.descShort;else if(fixed)desc=fixed.desc;
+  const browse=fixed?fixed.browse:`Browse ${c.name} →`;
+  return `<article class="scard" data-card="${esc(c.slug)}"><div class="icon">${ICONS[c.slug]||ICONS.extra}</div><h3>${esc(c.name)}</h3><div class="body">${chips.length?`<div class="chips">${chips.join('')}</div>`:''}${desc?`<p>${esc(desc)}</p>`:''}<div class="chips">${badges}</div><a class="browse" href="subject.html?subject=${encodeURIComponent(c.slug)}">${esc(browse)}</a></div></article>`;
 }
-const scrollBehavior=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth";
-function fillSelect(id,vals){const el=$("#"+id);[...new Set(vals)].sort().forEach(v=>{
-const o=document.createElement("option");o.textContent=v;el.appendChild(o)})}
-const NICE={pupil:"Pupil app",lesson:"Lesson",revision:"Revision",game:"Game",teacher:"Teacher",support:"Support"};
-let ALL=[],TIER="",YEAR="2026-27",BROWSING=true,CATALOGUE={entries:{},terms:{},styles:{}};
-let VIEW="all",SAVED=[],RECENT=[];
-const SAVE_KEY="mbm.lesson.saved.v1",RECENT_KEY="mbm.lesson.recent.v1",RETURN_KEY="mbm.lesson.return.v1";
-function readLocal(key){try{const rows=JSON.parse(window.localStorage.getItem(key)||"[]");return Array.isArray(rows)?rows.filter(x=>typeof x==="string").slice(0,500):[]}catch(_){return[]}}
-SAVED=readLocal(SAVE_KEY);RECENT=readLocal(RECENT_KEY);
-function subjectGroup(r){const s=String(r.subject||"");if(/science|biology|chemistry|physics/i.test(s))return"Science";if(/humanities|religio|\bRE\b|geography|history|rivers/i.test(s))return"Humanities & RE";if(/\bart\b|arts/i.test(s))return"Art";if(/ASDAN|vocational|PfA|life skills/i.test(s))return"ASDAN & life skills";if(/tutor/i.test(s))return"Tutor time";return"Other resources"}
-function preferred(r){return["recommended","current","award"].includes(catalogueMeta(r).style)}
-function personalMatches(r){return(!$("#subject-group").value||subjectGroup(r)===$("#subject-group").value)&&(VIEW!=="saved"||SAVED.includes(r.file||r.url))&&(VIEW!=="recommended"||preferred(r))}
-function rememberState(){const p=new URLSearchParams();for(const[id,key]of[["search","q"],["subject-group","subject"],["subject","collection"],["type","type"],["term","term"],["style","style"]])if($("#"+id).value)p.set(key,$("#"+id).value);if(TIER)p.set("pathway",TIER);if(YEAR!=="2026-27")p.set("year",YEAR||"all");if(VIEW!=="all")p.set("view",VIEW);try{history.replaceState(null,"",location.pathname+(p.size?"?"+p.toString():"")+location.hash)}catch(_){}}
-function restoreState(){const p=new URLSearchParams(location.search);for(const[id,key]of[["subject-group","subject"],["subject","collection"],["type","type"],["term","term"],["style","style"]]){const e=$("#"+id),v=p.get(key)||"";e.value=[...e.options].some(o=>o.value===v)?v:"";}$("#search").value=(p.get("q")||"").slice(0,200);TIER=["BUILD","GROW","LAUNCH"].includes(p.get("pathway"))?p.get("pathway"):"";$("#pathway").value=TIER;YEAR=["2026-27","2025-26","all"].includes(p.get("year"))?(p.get("year")==="all"?"":p.get("year")):"2026-27";VIEW=["saved","recommended"].includes(p.get("view"))?p.get("view"):"all";document.querySelectorAll(".ytab").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.year===YEAR)));}
-function renderPersonal(){const known=new Set(ALL.map(r=>r.file||r.url));$("#saved-count").textContent=SAVED.filter(x=>known.has(x)).length;document.querySelectorAll("[data-view]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.view===VIEW)));const recent=RECENT.map(f=>ALL.find(r=>(r.file||r.url)===f)).filter(Boolean).slice(0,4),el=$("#lesson-recent");el.hidden=!recent.length;el.innerHTML=recent.length?'<h2>Recently opened</h2><div>'+recent.map(r=>`<a data-lesson-link href="${esc(safeHref(r.file||r.url))}">${esc(r.title)}</a>`).join("")+"</div>":"";}
-const catalogueMeta=r=>MBM_CATALOGUE.metadata(r,CATALOGUE);
-let cataloguePrintClosed=[];
-window.addEventListener("beforeprint",()=>{cataloguePrintClosed=[...document.querySelectorAll("#cards details:not([open])")];cataloguePrintClosed.forEach(section=>{section.open=true;});});
-window.addEventListener("afterprint",()=>{cataloguePrintClosed.forEach(section=>{section.open=false;});cataloguePrintClosed=[];});
-function catalogueMatches(r){return MBM_CATALOGUE.matches(r,CATALOGUE,$("#term").value,$("#style").value)}
-function catalogueSections(rows){
-  if(!Object.keys(CATALOGUE.entries).length)return `<div class="grid">${rows.map(card).join("")}</div>`;
-  return MBM_CATALOGUE.groups(rows,CATALOGUE).map(group=>`<section class="catalogue-term" data-term="${esc(group.term)}"><h3>${esc(group.label)} <span>· ${group.batches.reduce((n,b)=>n+b.rows.length,0)} resources</span></h3>${group.batches.map(batch=>`<section class="catalogue-batch" data-style="${esc(batch.style)}"><h4>${esc(batch.label)} <span>· ${batch.rows.length}</span></h4><div class="grid">${batch.rows.map(card).join("")}</div></section>`).join("")}</section>`).join("");
+function renderHub(){
+  const s=H.state,rows=s.rows;
+  $('#tiles').innerHTML=`<a class="tile" href="?format=html"><strong>${esc(COPY.T1[0])}</strong><span>${esc(COPY.T1[1])}</span></a><a class="tile" href="?format=packs"><strong>${esc(COPY.T2[0])}</strong><span>${esc(COPY.T2[1])}</span></a>`;
+  const w=H.halfTermWindow(s.spine,H.today());
+  $('#added-h').textContent=w?COPY.added:COPY.addedFallback;
+  const from=w?w.start:H.sixtyDaysAgo();
+  const recent=rows.filter(r=>r.added&&r.added>=from&&r.added<=H.today()).sort((a,b)=>b.added.localeCompare(a.added)||String(a.title).localeCompare(String(b.title))).slice(0,6);
+  $('#added-rail').innerHTML=recent.map(r=>`<a class="acard" href="${esc(safeHref(r._path))}" data-resource-path="${esc(r._path)}"><span class="when">${esc(fmtDay(r.added))}</span><h3>${esc(r.title)}</h3><span class="chips">${badge(r._fmt)}</span><span class="sub">${esc(String(r.subject))}</span></a>`).join('');
+  $('#added').hidden=!recent.length;
+  const cards=H.cardsFromRows(rows);
+  $('#scards').innerHTML=cards.map(subjectCard).join('');
+  $('#count').textContent=`${rows.length} resources · ${cards.length} subjects`;
+  // every entry belongs to exactly one card
+  const total=cards.reduce((n,c)=>n+c.rows.length,0);
+  if(total!==rows.length)$('#status').textContent='Subject map error: an entry belongs to no card or to two.';
 }
-function tierOf(r){const f=r.file||r.url||"";
-if(/(?:^|\/)Build\//.test(f))return"BUILD";
-if(/(?:^|\/)Grow\//.test(f))return"GROW";
-if(/(?:^|\/)Launch\//.test(f))return"LAUNCH";
-const base=f.split("/").pop().toUpperCase(),first=(f.split("/")[0]||"").toUpperCase();
-for(const t of["BUILD","GROW","LAUNCH"]){
-if(base.indexOf(t+"_")===0||first.indexOf(t+"_")===0)return t;}
-const m=(r.title||"").match(/^(BUILD|GROW|LAUNCH)(?![A-Za-z])/);if(m)return m[1];
-if(/^BUILD(?![A-Za-z])/.test(r.subject||""))return"BUILD";
-return null}
-const PATH={
-BUILD:{name:"BUILD PATHWAY",sub:"Laying the groundwork — core concepts and baseline techniques.",
-svg:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="10" y="38" width="18" height="12" rx="2.5" fill="#E08A2E"/><rect x="30" y="38" width="18" height="12" rx="2.5" fill="#4C9A6F"/><rect x="20" y="24" width="18" height="12" rx="2.5" fill="#DFB62B"/></svg>'},
-GROW:{name:"GROW PATHWAY",sub:"Developing independence — experiment, review, improve.",
-svg:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 52 V30" stroke="#2F6B4D" stroke-width="5" stroke-linecap="round"/><path d="M32 36 Q18 34 16 20 Q30 22 32 36 Z" fill="#4C9A6F"/><path d="M32 30 Q46 28 48 14 Q34 16 32 30 Z" fill="#6FBF8F"/></svg>'},
-LAUNCH:{name:"LAUNCH PATHWAY",sub:"Mastery in action — independent, critical application.",
-svg:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 8 Q42 18 42 32 L42 42 H22 L22 32 Q22 18 32 8 Z" fill="#DDE3EA"/><circle cx="32" cy="27" r="5" fill="#232C55"/><path d="M27 42 Q32 54 37 42 Q32 47 27 42 Z" fill="#F2A24A"/></svg>'},
-OTHER:{name:"RESOURCES",sub:"Hubs, teacher guides and cross-pathway material.",svg:''}};
-function lanehead(t,n,subs){const p=PATH[t]||{name:t,sub:"",svg:""};
-return `<span class="lh-mark">${p.svg}</span><span class="lh-text"><span class="ph-name">${p.name}</span><span class="ph-sub">${esc(p.sub||"")}</span></span><span class="apill main">${n}</span><span class="apill">${subs} subject${subs===1?"":"s"}</span>`}
-function pathhead(t,n){const p=PATH[t];return `<div class="pathhead ${t}">${p.svg}<div><span class="ph-name">${p.name}</span> · <span class="ph-sub">${p.sub}</span> <span class="ph-sub">(${n})</span></div></div>`}
-const SUITE="Art · Teesside Studio Suite";
-const PRIORITY=[SUITE,"Science · Teesside","Humanities","BUILD Vocational & PfA","GROW Vocational & PfA","LAUNCH Vocational & PfA","Primary Science","Tutor Time · BV · BF · KCSIE"];
-const LEGACY={"Art":"Original series — superseded by the Teesside Studio Suite above. Kept for reference."};
-function subjOrder(x,z){const lx=x in LEGACY?1:0,lz=z in LEGACY?1:0;if(lx!==lz)return lx-lz;const px=PRIORITY.indexOf(x),pz=PRIORITY.indexOf(z);if((px>=0)!==(pz>=0))return px>=0?-1:1;if(px>=0&&pz>=0)return px-pz;return x.localeCompare(z)}
-const PRINTPACK=new Set([SUITE,"Humanities","BUILD Vocational & PfA","GROW Vocational & PfA","LAUNCH Vocational & PfA"]);
-const IC={screen:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M12 16v3M8.5 21h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',print:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8V4h10v4M7 16h10v5H7z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><rect x="4" y="8" width="16" height="8" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>',tiers:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 16h5v4H5zM9.5 10h5v10h-5zM14 4h5v16h-5z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>',pad:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7.5" width="19" height="10" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 10.2v4.6M5.7 12.5h4.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="15.6" cy="11" r="1.1" fill="currentColor"/><circle cx="18.2" cy="13.6" r="1.1" fill="currentColor"/></svg>',tab:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.9"/><circle cx="12" cy="18" r="1.1" fill="currentColor"/></svg>'};
-function isPack(r){return r.year==="2026-27"&&(r.type==="lesson"||r.type==="revision")&&PRINTPACK.has(r.subject)}
-function fmtIcons(r){const o=[];
-if(r.type==="lesson"||r.type==="revision")o.push([IC.screen,"whiteboard slideshow"]);
-if(isPack(r)){o.push([IC.print,"print pack inside the lesson"]);o.push([IC.tiers,"three tiers"])}
-if(r.type==="game")o.push([IC.pad,"game"]);
-if(r.type==="teacher"||r.type==="pupil")o.push([IC.tab,"interactive"]);
-return o.length?`<div class="fmt">${o.map(x=>`<span title="${x[1]}" aria-label="${x[1]}" role="img">${x[0]}</span>`).join("")}</div>`:""}
-function actLabel(r){return {lesson:"Open lesson →",revision:"Open lesson →",game:"PLAY →",hub:"OPEN HUB →",teacher:"OPEN TOOL →",pupil:"OPEN APP →",support:"OPEN PACK →"}[r.type]||"OPEN →"}
-function card(r){const t=r._tier,_s=r.file||r.url||"",href=esc(safeHref(_s)),m=catalogueMeta(r);
-// §6b: the pathway tag is on EVERY card, in every view. It used to vanish in the
-// browsing view, which is exactly the view somebody browsing by pathway is in.
-const pills=`<div class="chips">${t?`<span class="pill tier ${t}">${t}</span>`:`<span class="pill tier OTHER">RESOURCE</span>`}${BROWSING?"":`<span class="pill${r.year==="2026-27"?" yr-new":""}">${r.year==="2026-27"?"2026–27":"2025–26"}</span>`}</div>`;
-let _dt=r.title||"";if(!BROWSING&&t&&_dt.indexOf(t+" · ")===0)_dt=_dt.slice((t+" · ").length);
-return `<article class="card${t?" t-"+t:""}" data-resource-path="${esc(_s)}"><div class="kind">${esc(subjectGroup(r))} · ${esc(NICE[r.type]||r.type)}</div>
-<h3><a href="${href}">${esc(_dt)}</a></h3><p>${esc(r.desc||r.description||"")}</p>${pills}${Object.keys(CATALOGUE.entries).length?`<div class="chips"><span class="pill">${esc(CATALOGUE.terms[m.term]||"Term not specified")}</span><span class="pill ${m.style==="recommended"?"recommended":""}">${esc(CATALOGUE.styles[m.style]||"Earlier retained versions")}</span></div>`:""}
-<div class="actrow"><button class="lesson-save" type="button" data-save="${esc(_s)}" aria-pressed="${SAVED.includes(_s)}" aria-label="${SAVED.includes(_s)?"Remove saved lesson: ":"Save lesson: "}${esc(_dt)}">${SAVED.includes(_s)?"★ Saved":"☆ Save"}</button><a class="go" href="${href}">${actLabel(r)}</a></div></article>`}
-function setFilterStatus(shown){
-  const el=$("#status");el.replaceChildren();
-  if(!($("#search").value||$("#subject").value||$("#subject-group").value||$("#type").value||$("#term").value||$("#style").value||TIER||VIEW!=="all"))return;
-  el.append(document.createTextNode(`Showing ${shown} matching resources.`));
-  const b=document.createElement("button");b.type="button";b.className="mbm-clear";b.dataset.clearFilters="";b.textContent="Clear filters";el.appendChild(b);
+function renderFlat(p){
+  const rows=H.flatFilter(p,H.state.rows);
+  const view=p.get('view')||'';
+  $('#browse').hidden=true;$('#results').hidden=false;
+  const recentEl=$('#lesson-recent');
+  if(view==='saved'){const rec=H.state.recent.map(f=>H.state.rows.find(r=>r._path===f)).filter(Boolean).slice(0,4);recentEl.hidden=!rec.length;recentEl.innerHTML=rec.length?`<h2>Recently opened</h2><div>${rec.map(r=>`<a href="${esc(safeHref(r._path))}" data-resource-path="${esc(r._path)}">${esc(r.title)}</a>`).join('')}</div>`:'';}else{recentEl.hidden=true;recentEl.innerHTML='';}
+  const empty=view==='saved'?'<p class="status">No saved lessons match these filters. Use Save on any lesson you want to keep.</p>':'<p class="status">No matches — try fewer words or clear a filter.</p>';
+  $('#cards').innerHTML=rows.length?rows.map(card).join(''):empty;
+  const st=$('#status');st.replaceChildren();st.append(document.createTextNode(`Showing ${rows.length} matching resources.`));
+  const b=document.createElement('button');b.type='button';b.className='btn';b.dataset.clearFilters='';b.textContent='Clear filters';st.appendChild(b);
+  $('#count').textContent=`${rows.length} of ${H.state.rows.length} resources`;
+  $$('.hub-bar .pill').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.view===view)));
+  if(p.get('q')!==null)$('#search').value=p.get('q');
 }
-function clearFilters(){
-  $("#search").value="";$("#subject").value="";$("#type").value="";$("#term").value="";$("#style").value="";TIER="";
-  $("#subject-group").value="";$("#pathway").value="";VIEW="all";
-  document.querySelectorAll(".j-tier").forEach(x=>x.setAttribute("aria-pressed","false"));
-  buildQuicknav();buildLaneCounts();render();
+function render(){
+  const p=params();
+  if(H.isFlat(p))renderFlat(p);else{$('#browse').hidden=false;$('#results').hidden=true;$('#status').replaceChildren();$$('.hub-bar .pill').forEach(x=>x.setAttribute('aria-pressed','false'));renderHub();}
+  $$('[data-saved-count]').forEach(el=>{el.textContent=String(H.savedCount());});
 }
-function suiteCallout(n){return `<div class="callout"><span class="stamp">ARTS AWARD · TEESSIDE ART</span>
-<h3>Teesside Art Studio Suite</h3>
-<p>The art programme: ${n} studio lessons across BUILD, GROW and LAUNCH. Browse by pathway, then use the award level and part labels in each pack. Open a lesson for its slides, support options and print pack.</p>
-<div class="acts"><button type="button" data-suite="">Browse the whole suite</button><button type="button" data-suite="BUILD">BUILD · Art</button><button type="button" data-suite="GROW">GROW · Art</button><button type="button" data-suite="LAUNCH">LAUNCH · Art</button></div>
-<figure class="lx-vid"><button class="lx-vidbtn" type="button" data-yt="vhuk-K_wWas" aria-label="Play video: a full year of art — and it runs itself, 60-second tour"><img src="assets/video/poster-art.webp" alt="" loading="lazy" width="1280" height="720"></button><figcaption>▶ Watch: a full year of art — and it runs itself (60-second tour)</figcaption></figure></div>`}
-function render(){const q=$("#search").value.toLowerCase(),s=$("#subject").value,t=$("#type").value,y=YEAR;
-const a=ALL.filter(r=>(!q||[r.title,r.desc||r.description||"",r.subject,r.family,r._tier,...(r.keywords||[])].join(" ").toLowerCase().includes(q))
-&&(!s||r.subject===s)&&(!t||(NICE[r.type]||r.type)===t)&&(!y||r.year===y)&&(!TIER||r._tier===TIER)&&catalogueMatches(r)&&personalMatches(r));
-const browsing=!q&&!s&&!t&&!TIER&&!$("#subject-group").value&&!$("#term").value&&!$("#style").value&&VIEW==="all";BROWSING=browsing;
-if(browsing){ // pathway-first: BUILD / GROW / LAUNCH are the lanes, subject sits inside one
-  const inYear=ALL.filter(r=>!YEAR||r.year===YEAR).length;
-  const byTier={BUILD:[],GROW:[],LAUNCH:[],OTHER:[]};
-  a.forEach(r=>{(byTier[r._tier&&byTier[r._tier]?r._tier:"OTHER"]).push(r)});
-  const lanes=["BUILD","GROW","LAUNCH","OTHER"].filter(t=>byTier[t].length);
-  $("#cards").innerHTML=lanes.map((t,li)=>{
-    const lrows=byTier[t];
-    const bySub={};lrows.forEach(r=>{(bySub[r.subject]=bySub[r.subject]||[]).push(r)});
-    const subs=Object.keys(bySub).sort(subjOrder);
-    const body=subs.map(subj=>{
-      const rows=bySub[subj];
-      const grid=catalogueSections(rows);
-      if(LEGACY[subj])return `<details class="legacy"><summary>${esc(subj)} · ${rows.length} <span class="note">${LEGACY[subj]} Tap to show.</span></summary>${grid}</details>`;
-      const kinds={};rows.forEach(r=>{const k=(r.type||"resource").toLowerCase();kinds[k]=(kinds[k]||0)+1});
-      const mix=Object.entries(kinds).sort((a,b)=>b[1]-a[1]).slice(0,2).map(([k,n])=>`<span class="apill">${n} ${esc(k)}${n>1&&!k.endsWith("s")?"s":""}</span>`).join("");
-      return `<details class="acc subacc" open><summary><span class="aname">${esc(subj)}</span><span class="apill main">${rows.length}</span>${mix}<span class="chev" aria-hidden="true">▾</span></summary>${subj===SUITE?suiteCallout(rows.length):""}${grid}</details>`;
-    }).join("");
-    return `<details class="lane l-${t}"${li===0?" open":""}><summary class="lanehead">${lanehead(t,lrows.length,subs.length)}${li===0?`<span class="tot2">${inYear} in this collection</span>`:""}<span class="chev" aria-hidden="true">▾</span></summary>${body}</details>`;
-  }).join("");
-}else{
-  let empty=VIEW==="saved"?'<p class="status">No saved lessons match these filters. Choose Browse all, then use Save on any lesson you want to keep.</p>':'<p class="status">No matches — try fewer words or clear a filter.</p>';
-  if(!a.length&&YEAR){
-    const anywhere=ALL.filter(r=>(!q||[r.title,r.desc||r.description||"",r.subject,r.family,r._tier,...(r.keywords||[])].join(" ").toLowerCase().includes(q))&&(!s||r.subject===s)&&(!t||(NICE[r.type]||r.type)===t)&&(!TIER||r._tier===TIER)&&catalogueMatches(r)&&personalMatches(r)).length;
-    if(anywhere)empty=`<p class="status">Nothing in the ${YEAR==="2026-27"?"2026–27 collection":"2025–26 library"} — but ${anywhere} match${anywhere===1?"":"es"} across all years. <button type="button" id="widenYear" class="widen">Search all years →</button></p>`;
-  }
-  $("#cards").innerHTML=(s===SUITE&&!q&&!t?suiteCallout(a.length):"")+(a.length?catalogueSections(a):empty);
-}
-const bits=[];if(TIER)bits.push(TIER+" pathway");if(YEAR)bits.push(YEAR==="2026-27"?"2026–27 collection":"2025–26 library");
-$("#count").textContent=`${a.length} of ${ALL.length} resources${bits.length?" · "+bits.join(" · "):""}`;
-setFilterStatus(a.length);renderPersonal();rememberState();}
-function buildLaneCounts(){
-  // §6b: the pathway control already existed as the journey tiles - adding a
-  // second row of the same three buttons would have been duplication, not
-  // navigation. What they lacked was the size of each lane, so that is what
-  // is added, DERIVED from the catalogue rows actually loaded rather than typed.
-  const n={BUILD:0,GROW:0,LAUNCH:0};
-  ALL.forEach(r=>{if((!YEAR||r.year===YEAR)&&n[r._tier]!==undefined)n[r._tier]++});
-  document.querySelectorAll(".j-tier[data-tier]").forEach(b=>{
-    const t=b.dataset.tier;let c=b.querySelector(".j-count");
-    if(!c){c=document.createElement("span");c.className="j-count";b.querySelector(".j-name").after(c);}
-    c.textContent=`${n[t]} lesson${n[t]===1?"":"s"} in this collection`;
-    b.setAttribute("aria-pressed",TIER===t?"true":"false");
-  });
-}
-function buildQuicknav(){
-  const inCol={},total={};
-  ALL.forEach(r=>{total[r.subject]=(total[r.subject]||0)+1;if(!YEAR||r.year===YEAR)inCol[r.subject]=(inCol[r.subject]||0)+1});
-  const chip=(label,val,on,lib,titleOverride)=>{const ttl=titleOverride?` title="${esc(titleOverride)}"`:(lib?' title="Not in this collection - opens the full catalogue"':"");return `<button class="chip${lib?" lib":""}" data-sub="${esc(val)}" aria-pressed="${on?"true":"false"}" aria-controls="cards"${ttl}>${esc(label)}</button>`};
-  const cur=$("#subject").value;
-  $("#quicknav").innerHTML=chip("All collections","",!cur)+Object.keys(total).sort(subjOrder).map(su=>{
-    const n=inCol[su]||0;
-    return chip(`${su} (${n||total[su]})`,su,cur===su,n===0,su in LEGACY?"Original series — superseded by the Teesside Studio Suite":null);
-  }).join("");
-}
-
-$("#cards").addEventListener("click",e=>{
-  if(!e.target.closest("#widenYear"))return;
-  YEAR="";document.querySelectorAll(".ytab").forEach(x=>x.setAttribute("aria-pressed",x.dataset.year===""?"true":"false"));
-  buildQuicknav();buildLaneCounts();render();
+function setParams(mutate){const p=params();mutate(p);try{history.replaceState(null,'',location.pathname+(p.toString()?'?'+p.toString():'')+location.hash)}catch(_){}render();}
+$('#search').addEventListener('input',()=>setParams(p=>{const q=$('#search').value.trim();if(q)p.set('q',q);else p.delete('q');}));
+document.addEventListener('click',e=>{
+  const v=e.target.closest('button[data-view]');if(v){setParams(p=>{if(p.get('view')===v.dataset.view)p.delete('view');else p.set('view',v.dataset.view);});return;}
+  if(e.target.closest('[data-clear-filters]')){$('#search').value='';setParams(p=>{['q','format','view','added','subject','pathway','year','collection','type','term','style'].forEach(k=>p.delete(k));});$('#search').focus();return;}
+  const a=e.target.closest('a.tile,#added-all');if(a&&a.origin===location.origin){e.preventDefault();const u=new URL(a.href);setParams(p=>{['q','format','view','added'].forEach(k=>p.delete(k));u.searchParams.forEach((val,k)=>p.set(k,val));});window.scrollTo({top:0,behavior:H.reduceMotion()?'auto':'smooth'});$('#status').setAttribute('tabindex','-1');$('#status').focus();}
 });
-$("#quicknav").addEventListener("click",e=>{
-  const b=e.target.closest("button[data-sub]");if(!b)return;
-  const sub=b.dataset.sub;
-  if(sub&&YEAR&&!ALL.some(r=>r.subject===sub&&r.year===YEAR)){
-    YEAR="";document.querySelectorAll(".ytab").forEach(x=>x.setAttribute("aria-pressed",x.dataset.year===""?"true":"false"));
-  }
-  $("#subject").value=sub;$("#subject-group").value=sub?subjectGroup({subject:sub}):"";$("#search").value="";$("#type").value="";
-  buildQuicknav();render();
-  $("#cards").scrollIntoView({behavior:scrollBehavior,block:"start"});
-});
-
-document.querySelectorAll(".ytab").forEach(b=>b.addEventListener("click",()=>{
-  YEAR=b.dataset.year;
-  document.querySelectorAll(".ytab").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));
-  buildQuicknav();buildLaneCounts();render();
-}));
-function fillTabCounts(){const c={"2026-27":0,"2025-26":0,"":ALL.length};
-  ALL.forEach(r=>{if(c[r.year]!==undefined)c[r.year]++});
-  document.querySelectorAll(".ytab").forEach(b=>{const n=c[b.dataset.year];
-  b.querySelector("[data-count]").textContent=`${n} resources`})}
-// journey strip: collapse detail + tier filtering
-(function(){const j=$("#journey"),tg=$("#jtoggle");
-j.classList.add("collapsed");tg.hidden=false;tg.setAttribute("aria-expanded","false");
-tg.addEventListener("click",()=>{const open=j.classList.toggle("collapsed")===false;
-tg.setAttribute("aria-expanded",open?"true":"false");
-tg.textContent=open?"How it works ▴":"How it works ▾"});
-document.querySelectorAll(".j-tier").forEach(b=>b.addEventListener("click",()=>{
-TIER=TIER===b.dataset.tier?"":b.dataset.tier;
-$("#pathway").value=TIER;
-document.querySelectorAll(".j-tier").forEach(x=>x.setAttribute("aria-pressed",x.dataset.tier===TIER?"true":"false"));
-render();if(TIER)$("#cards").scrollIntoView({behavior:scrollBehavior,block:"start"})}));
-})();
-$("#status").addEventListener("click",e=>{if(e.target.closest("[data-clear-filters]"))clearFilters();});
-/* NAV-1: Latest additions — rendered from the `added` field the catalogue
-   already carries. The DATE is the label, so it never goes stale. Sorted
-   added desc; ties broken by the existing subject order, then title. Reads
-   ALL and writes its own list only — the filter chain is untouched. */
-function renderLatest(){
-  const el=document.getElementById("mbml-latest");if(!el)return;
-  let dated=ALL.filter(r=>r.added&&(r.file||r.url));
-  dated.sort((a,b)=>b.added.localeCompare(a.added)||subjOrder(a.subject,b.subject)||String(a.title).localeCompare(String(b.title)));
-  /* many entries share one added date, so within each date the pick is
-     spread round-robin across subjects — the strip shows what arrived,
-     not twelve slices of the first subject */
-  const grouped={};dated.forEach(r=>{(grouped[r.added+"|"+r.subject]=grouped[r.added+"|"+r.subject]||[]).push(r)});
-  const dates=[...new Set(dated.map(r=>r.added))].sort().reverse();
-  const spread=[];
-  for(const dt of dates){
-    const subs=[...new Set(dated.filter(r=>r.added===dt).map(r=>r.subject))].sort(subjOrder);
-    for(let round=0;spread.length<24;round++){
-      let took=false;
-      for(const su of subs){const q=grouped[dt+"|"+su];if(q&&q[round]){spread.push(q[round]);took=true;if(spread.length>=24)break}}
-      if(!took)break;
-    }
-    if(spread.length>=24)break;
-  }
-  dated=spread;
-  const fmt=iso=>{const [y,m,d]=iso.split("-");const M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][Number(m)-1]||m;return `${Number(d)} ${M} ${y}`};
-  el.innerHTML=dated.slice(0,12).map(r=>`<li><a href="${esc(safeHref(r.file||r.url))}">${esc(r.title)}</a><span class="mbml-meta"><b>Added ${esc(fmt(r.added))}</b> · ${esc(r.subject)}</span></li>`).join("")||'<li><span class="mbml-meta">Nothing dated yet.</span></li>';
-}
-Promise.all([fetch("resources.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error(`resources.json ${r.status}`);return r.json()}),fetch("assets/catalogue/terms-and-styles.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error("Version labels unavailable");return r.json()}).catch(()=>null)]).then(([d,metadata])=>{if(!Array.isArray(d))throw new Error("Invalid resources.json");ALL=d;
-if(metadata&&metadata.schema===1&&metadata.entries&&metadata.terms&&metadata.styles){CATALOGUE=metadata;for(const [id,labels] of [["term",CATALOGUE.terms],["style",CATALOGUE.styles]]){const select=$("#"+id);for(const [value,label] of Object.entries(labels)){const option=document.createElement("option");option.value=value;option.textContent=label;select.appendChild(option)}select.disabled=false;}}else{$("#catalogue-feedback").textContent="Term and version labels are temporarily unavailable. You can still search and open all resources.";}
-ALL.forEach(r=>{r._tier=tierOf(r)});
-fillSelect("subject",d.map(r=>r.subject));fillSelect("type",d.map(r=>NICE[r.type]||r.type));restoreState();buildQuicknav();buildLaneCounts();fillTabCounts();render();renderLatest()})
-.catch(()=>{$("#count").textContent="Couldn't load resources.json"});
-["search","subject","subject-group","pathway","type","term","style"].forEach(id=>$("#"+id).addEventListener(id==="search"?"input":"change",()=>{if(id==="pathway")TIER=$("#pathway").value;if(id==="subject-group")$("#subject").value="";if(id==="subject")$("#subject-group").value=$("#subject").value?subjectGroup({subject:$("#subject").value}):"";buildQuicknav();buildLaneCounts();fillTabCounts();render()}));document.addEventListener("click",e=>{const b=e.target.closest("[data-suite]");if(!b)return;
-$("#subject").value=SUITE;$("#subject-group").value=subjectGroup({subject:SUITE});TIER=b.getAttribute("data-suite")||"";$("#pathway").value=TIER;$("#search").value="";render();
-const top=document.querySelector(".callout");if(top&&top.scrollIntoView)top.scrollIntoView({behavior:scrollBehavior,block:"start"});});
-document.addEventListener("click",e=>{
- const view=e.target.closest("button[data-view]");if(view){VIEW=view.dataset.view;render();return;}
- const save=e.target.closest("button[data-save]");if(save){const f=save.dataset.save;if(!ALL.some(r=>(r.file||r.url)===f))return;const wasSaved=SAVED.includes(f),next=wasSaved?SAVED.filter(x=>x!==f):[...SAVED,f];try{window.localStorage.setItem(SAVE_KEY,JSON.stringify(next));SAVED=next;$("#lesson-save-status").textContent=wasSaved?"Removed from saved lessons.":"Saved on this device.";}catch(_){$("#lesson-save-status").textContent="This browser cannot save lessons right now. You can still open them or bookmark the page.";return;}const label=save.getAttribute("aria-label");render();const replacement=[...document.querySelectorAll("button[data-save]")].find(b=>b.dataset.save===f);if(replacement)replacement.focus();else $("[data-view='saved']").focus();return;}
- const link=e.target.closest("#cards a[href],#lesson-recent a[href],#mbml-latest a[href]");if(!link)return;
- try{const u=new URL(link.href,location.href),row=ALL.find(r=>new URL(safeHref(r.file||r.url),location.href).href===u.href);if(!row||u.origin!==location.origin)return;const f=row.file||row.url;RECENT=[f,...RECENT.filter(x=>x!==f)].slice(0,6);window.localStorage.setItem(RECENT_KEY,JSON.stringify(RECENT));}catch(_){}
-});
-window.addEventListener("popstate",()=>{restoreState();buildQuicknav();buildLaneCounts();fillTabCounts();render();});
-(function(){document.addEventListener("click",function(e){
-var btn=e.target.closest&&e.target.closest(".lx-vidbtn");if(!btn)return;
-var id=btn.getAttribute("data-yt");if(!id)return;
-try{var ifr=document.createElement("iframe");
-ifr.src="https://www.youtube-nocookie.com/embed/"+id+"?autoplay=1&rel=0";
-ifr.title="Made by Matt video";
-ifr.setAttribute("allow","autoplay; encrypted-media; picture-in-picture; fullscreen");
-ifr.setAttribute("allowfullscreen","");ifr.setAttribute("loading","lazy");
-ifr.width="1280";ifr.height="720";btn.parentNode.replaceChild(ifr,btn);
-}catch(err){try{window.open("https://youtu.be/"+id,"_blank","noopener");}catch(_){}}});})();
-</script><script defer src="assets/mbm-theme.js"></script><script defer src="assets/mbm-platform.js"></script><script defer src="assets/catalogue/lesson-navigation.js"></script>
+window.addEventListener('popstate',render);
+document.addEventListener('mbm:saved-changed',()=>{if(params().get('view')==='saved')render();});
+H.wireSaveAndRecent(document);
+H.loadAll().then(()=>{document.body.insertAdjacentHTML('beforeend',H.packSheetHtml());H.wirePackSheet(document);render();const first=H.isFlat(params())?($('#cards a[href]')||$('[data-clear-filters]')):$('#tiles a');if(first)first.focus({preventScroll:true});}).catch(()=>{$('#count').textContent="Couldn't load resources.json";});
+})();</script>
+<script defer src="assets/mbm-theme.js"></script><script defer src="assets/mbm-platform.js"></script><script defer src="assets/catalogue/lesson-navigation.js"></script>
 </body></html>

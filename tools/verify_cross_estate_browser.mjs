@@ -93,7 +93,7 @@ try{
           title:document.title,
           count:q('#count')?.textContent?.trim()||'',
           leadCount:q('#leadCount')?.textContent?.trim()||'',
-          cards:document.querySelectorAll('.card').length,
+          cards:document.querySelectorAll('.card, .scard').length,
           overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,
           headerCount:document.querySelectorAll('[data-mbm-navigation="education"]').length,
           active:[...document.querySelectorAll(educationNavigation?'#mbm-navigation-panel a[aria-current="page"]':'.mbm-primary-links a[aria-current="page"]')].map(anchor=>anchor.getAttribute('href')),

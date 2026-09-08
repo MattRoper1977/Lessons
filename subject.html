@@ -1,0 +1,150 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="mbm-platform-version" content="mbm-cross-estate-unification-lessons-apps-2026-08-08">
+<title>Subject — Lessons — Made by Matt</title>
+<meta name="description" content="One subject, one pathway at a time: the lessons and editable packs for BUILD, GROW and LAUNCH, grouped by half-term and unit.">
+<meta name="theme-color" content="#161D3D"><meta name="robots" content="noindex">
+<link rel="icon" href="https://madebymatt.uk/favicon.svg">
+<link rel="stylesheet" href="assets/mbm-platform.css">
+<link rel="stylesheet" href="assets/catalogue/hub.css">
+<style id="mbmTheme">
+/* Made by Matt — reading themes (shared key mbm_reading_theme). One rule per theme the
+   canonical engine offers; cream is the default and has none (it removes the attribute).
+   The same block sits in index.html and subject.html; tools/ux2/hub_gates.mjs asserts they match. */
+[data-theme="pink"]{--cream:#F9E8EC;--cream-dk:#F3DCE2;--card:#FFF9FA}
+[data-theme="blue"]{--cream:#E7EEF7;--cream-dk:#DCE7F3;--card:#F8FBFF}
+[data-theme="light"]{--cream:#F7F7F4;--cream-dk:#EFEFEC;--card:#FFFFFF;--ink:#1B2140;--mut:#4A5170}
+[data-theme="dark"]{--cream:#121834;--cream-dk:#1B234A;--card:#1E2750;--ink:#EEEAE0;--mut:#C9CFE3;--line:#B9E6CD33;--t-build:#F2B77A;--t-grow:#9BE0B6;--t-launch:#EAD37A;--b-build:#4A3213;--b-grow:#1E3D2E;--b-launch:#4A4014;--mint-deep:#9BE0B6}
+[data-theme="highlumen"]{--cream:#FFFFFF;--cream-dk:#FFFFFF;--card:#FFFFFF;--ink:#000000;--mut:#3A3A3A;--mint:#FFFFFF;--mint-deep:#0F5132;--t-build:#7A4A00;--t-grow:#0F5132;--t-launch:#5C4A00}
+</style>
+<script>try{var t=localStorage.getItem('mbm_reading_theme');if(t&&t!=='cream')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head><body class="mbm-hub mbm-hub-lessons mbm-subject" data-mbm-estate="lessons">
+<a class="skip" href="#main">Skip to content</a>
+<main id="main" class="wrap sub-main">
+<div class="sub-head">
+<a class="mbmhome" href="index.html" id="back">← Lessons</a>
+<div class="sub-title"><div class="icon" id="sub-icon" aria-hidden="true"></div><h1 id="sub-name">Subject</h1></div>
+<p class="lead" id="lead">Pick a pathway, then a half-term. One pathway shows at a time.</p>
+<div class="sub-search" role="search" aria-label="Search this subject"><input id="search" type="search" placeholder="Search this subject…" autocomplete="off" aria-label="Search this subject"></div>
+</div>
+<div class="chooser" id="chooser" hidden></div>
+<div class="suites" id="suites" hidden></div>
+<div class="seg" id="seg" role="tablist" aria-label="Pathway" hidden></div>
+<div class="fchips" id="fchips" role="group" aria-label="Format" hidden></div>
+<p class="summary" id="summary" aria-live="polite" aria-atomic="true"></p>
+<p class="status" id="status" aria-live="polite" aria-atomic="true"></p>
+<p class="status" id="lesson-save-status" aria-live="polite" aria-atomic="true"></p>
+<div id="rows"></div>
+</main>
+<button id="to-top" type="button" aria-label="Back to top" hidden>↑</button>
+<footer class="footer"><div class="bar"><svg class="mono" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="47" fill="none" stroke="#B9E6CD" stroke-width="3.4"/><g transform="translate(0 2)"><path d="M28 71 L28 37 L50 59 L72 37 L72 71" fill="none" stroke="#E8E2D4" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M50 22.5 L51.48 28.52 L57.5 30 L51.48 31.48 L50 37.5 L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"/></g></svg>
+<div><p>Made by Matt · Lessons</p>
+<small>Learn • Build • Explore</small></div>
+</div><p class="mbm-contact">Questions, ideas or bug reports — <a href="mailto:contactmadebymatt@gmail.com">contactmadebymatt@gmail.com</a></p>
+</footer>
+<script src="assets/catalogue/hub.js"></script>
+<script>(function(){
+'use strict';
+const H=window.MBM_HUB,{$,$$,esc,safeHref,COPY,CARDS,ICONS,PATHWAYS,HALF_TERMS,chip,lessonRow}=H;
+const params=()=>new URLSearchParams(location.search);
+let CARD=null,ROWS=[],OPEN=new Set(),OPENED_FOR='',EXPANDED=new Set();
+function setParam(k,v){const p=params();if(v)p.set(k,v);else p.delete(k);try{history.replaceState(null,'',location.pathname+(p.toString()?'?'+p.toString():'')+location.hash)}catch(_){}}
+function chooser(cards){
+  $('#sub-name').textContent='Choose a subject';$('#sub-icon').innerHTML='';$('#lead').textContent=COPY.S2;
+  const el=$('#chooser');el.hidden=false;el.innerHTML=cards.map(c=>`<a href="subject.html?subject=${encodeURIComponent(c.slug)}"><span class="icon" style="width:32px;height:32px;display:inline-block">${ICONS[c.slug]||ICONS.extra}</span>${esc(c.name)}</a>`).join('');
+  $('#seg').hidden=true;$('#fchips').hidden=true;$('#rows').innerHTML='';$('#summary').textContent='';
+}
+function pathwayRows(p){return p==='ALL'?ROWS.filter(r=>!r._tier):ROWS.filter(r=>r._tier===p);}
+function population(){const p=params();const pw=currentPathway();let rows=pathwayRows(pw);const f=p.get('format')||'';if(f)rows=rows.filter(r=>r._fmt===f||(r.files||[]).some(x=>(x.type==='pdf'?'pdf':'packs')===f));const q=(p.get('q')||'').toLowerCase().trim();if(q)rows=rows.filter(r=>[r.title,r.desc||r.description||'',r.family,r.unit,r.halfTerm,...(r.keywords||[])].join(' ').toLowerCase().includes(q));return rows;}
+function segments(){const present=H.pathwaysPresent(ROWS);const unknowable=ROWS.some(r=>!r._tier);return unknowable?[...present,'ALL']:present;}
+function currentPathway(){const segs=segments();const want=(params().get('pathway')||'').toUpperCase();if(segs.includes(want))return want;return segs[0]||'ALL';}
+function renderSeg(){
+  const segs=segments(),cur=currentPathway();const el=$('#seg');
+  el.hidden=segs.length<=1&&segs[0]==='ALL';
+  el.innerHTML=segs.map(p=>`<button role="tab" class="${esc(p)}" id="tab-${esc(p)}" aria-selected="${p===cur}" tabindex="${p===cur?0:-1}" data-pathway="${esc(p)}" aria-controls="rows">${p==='ALL'?'All':esc(p)}</button>`).join('');
+}
+function renderChips(){
+  const pw=currentPathway();const present=H.formatsPresent(pathwayRows(pw));const cur=params().get('format')||'';const el=$('#fchips');
+  const labels={html:COPY.formats[1],packs:COPY.formats[2],pdf:COPY.formats[3]};
+  el.hidden=!present.length;
+  el.innerHTML=[`<button type="button" data-format="" aria-pressed="${!cur}">${esc(COPY.formats[0])}</button>`,...present.map(f=>`<button type="button" data-format="${f}" aria-pressed="${cur===f}">${esc(labels[f])}</button>`)].join('');
+}
+function keyOf(r){return r.halfTerm&&r.unit?{kind:'unit',label:`${r.halfTerm} · ${r.unit}`,halfTerm:r.halfTerm,unit:r.unit}:{kind:'family',label:String(r.family||r.subject||''),halfTerm:null,unit:null};}
+function groups(rows){
+  const map=new Map();
+  rows.forEach(r=>{const k=keyOf(r);const id=k.kind+'|'+k.label;if(!map.has(id))map.set(id,{...k,id,rows:[]});map.get(id).rows.push(r);});
+  const ht=x=>HALF_TERMS.indexOf(x.halfTerm);
+  const list=[...map.values()];
+  list.forEach(g=>g.rows.sort((a,b)=>(HALF_TERMS.indexOf(a.halfTerm)-HALF_TERMS.indexOf(b.halfTerm))||0));
+  return list.sort((a,b)=>{if(a.kind!==b.kind)return a.kind==='unit'?-1:1;if(a.kind==='unit'){return ht(a)-ht(b)||a.unit.localeCompare(b.unit);}return a.label.localeCompare(b.label);});
+}
+function defaultOpen(list){
+  const w=H.halfTermWindow(H.state.spine,H.today());
+  if(w){const hit=list.find(g=>g.kind==='unit'&&g.halfTerm===w.label);if(hit)return hit.id;}
+  else{return list[0]?list[0].id:null;}
+  const next=list.find(g=>g.kind==='unit'&&HALF_TERMS.indexOf(g.halfTerm)>HALF_TERMS.indexOf(w.label));
+  return next?next.id:(list[0]?list[0].id:null);
+}
+function planningLink(g){
+  const pk=H.state.planning;if(!pk||g.kind!=='unit')return '';
+  const pw=currentPathway();
+  const hit=pk.keys.find(k=>k.subject===CARD.slug&&k.pathway===pw&&k.halfTerm===g.halfTerm&&k.unit===g.unit);
+  if(!hit||!hit.href)return '';
+  return `<p class="planning"><a href="${esc(safeHref(hit.href))}">${esc(COPY.planning)}</a></p>`;
+}
+function renderRows(){
+  const rows=population();const list=groups(rows);
+  const popKey=currentPathway()+'|'+(params().get('format')||'')+'|'+(params().get('q')||'');
+  if(OPENED_FOR!==popKey){OPEN=new Set();const d=defaultOpen(list);if(d)OPEN.add(d);OPENED_FOR=popKey;}
+  const units=new Set(rows.filter(r=>r.halfTerm&&r.unit).map(r=>r.halfTerm+'|'+r.unit)).size;
+  const lessons=rows.filter(H.isLesson).length;
+  $('#summary').textContent=(units?`${units} units · `:'')+`${lessons} lessons`;
+  const p=params();const filtering=!!(p.get('q')||p.get('format'));
+  const st=$('#status');st.replaceChildren();
+  if(filtering){st.append(document.createTextNode(`Showing ${rows.length} matching resources.`));const b=document.createElement('button');b.type='button';b.className='btn';b.dataset.clearFilters='';b.textContent='Clear filters';st.appendChild(b);}
+  $('#rows').innerHTML=list.map(g=>{
+    const open=OPEN.has(g.id),all=EXPANDED.has(g.id),shown=all?g.rows:g.rows.slice(0,3),more=g.rows.length-shown.length;
+    const pid='panel-'+H.slugify(g.id);
+    return `<section class="acc" data-group="${esc(g.id)}"><button type="button" aria-expanded="${open}" aria-controls="${pid}" data-toggle="${esc(g.id)}"><span class="chev" aria-hidden="true">▾</span><span>${esc(g.label)}</span><span class="n">${g.rows.length}</span></button><div class="acc-body" id="${pid}"${open?'':' hidden'}><ul class="lrows">${shown.map(lessonRow).join('')}</ul>${more>0?`<p class="more"><button type="button" class="btn" data-more="${esc(g.id)}">${esc(COPY.showMore(more))}</button></p>`:''}${planningLink(g)}</div></section>`;
+  }).join('')||'<p class="status">No matches — try fewer words or clear a filter.</p>';
+  $$('.acc-body[hidden] a,.acc-body[hidden] button').forEach(el=>el.setAttribute('tabindex','-1'));
+}
+function renderSuites(){
+  const hubs=ROWS.filter(r=>/^hub$/i.test(r.type));const el=$('#suites');
+  el.hidden=!hubs.length;el.innerHTML=hubs.map(r=>`<a href="${esc(safeHref(r._path))}" data-resource-path="${esc(r._path)}">${esc(r.title)}</a>`).join('');
+}
+function render(){renderSeg();renderChips();renderRows();}
+function boot(){
+  const cards=H.cardsFromRows(H.state.rows);
+  const slug=H.slugForQuery(params().get('subject')||'');
+  CARD=cards.find(c=>c.slug===slug)||null;
+  if(!CARD){chooser(cards);return;}
+  ROWS=CARD.rows;
+  document.title=`${CARD.name} — Lessons — Made by Matt`;
+  $('#sub-name').textContent=CARD.name;$('#sub-icon').innerHTML=ICONS[CARD.slug]||ICONS.extra;
+  if(params().get('q'))$('#search').value=params().get('q');
+  renderSuites();
+  document.body.insertAdjacentHTML('beforeend',H.packSheetHtml());H.wirePackSheet(document);
+  render();
+  const first=$('#seg [role="tab"][aria-selected="true"]');
+  if(first&&!$('#seg').hidden)first.focus();else $('#search').focus();
+}
+document.addEventListener('click',e=>{
+  const tab=e.target.closest('#seg [role="tab"]');if(tab){setParam('pathway',tab.dataset.pathway==='ALL'?'ALL':tab.dataset.pathway);render();$('#seg [role="tab"][aria-selected="true"]').focus();return;}
+  const fc=e.target.closest('#fchips button');if(fc){setParam('format',fc.dataset.format);render();$(`#fchips button[data-format="${fc.dataset.format}"]`).focus();return;}
+  const tg=e.target.closest('button[data-toggle]');if(tg){const id=tg.dataset.toggle;if(OPEN.has(id))OPEN.delete(id);else OPEN.add(id);renderRows();const again=$$('button[data-toggle]').find(b=>b.dataset.toggle===id);if(again)again.focus();return;}
+  const mo=e.target.closest('button[data-more]');if(mo){EXPANDED.add(mo.dataset.more);renderRows();const sec=$$('.acc').find(s=>s.dataset.group===mo.dataset.more);const panel=sec&&sec.querySelector('.lrows li:nth-child(4) a');if(panel)panel.focus();return;}
+  if(e.target.closest('[data-clear-filters]')){$('#search').value='';setParam('q','');setParam('format','');render();$('#search').focus();return;}
+});
+$('#seg').addEventListener('keydown',e=>{
+  const tabs=$$('#seg [role="tab"]');const i=tabs.indexOf(document.activeElement);if(i<0)return;
+  let j=null;if(e.key==='ArrowRight')j=(i+1)%tabs.length;if(e.key==='ArrowLeft')j=(i-1+tabs.length)%tabs.length;if(e.key==='Home')j=0;if(e.key==='End')j=tabs.length-1;
+  if(j===null)return;e.preventDefault();tabs[j].click();
+});
+$('#search').addEventListener('input',()=>{setParam('q',$('#search').value.trim());renderRows();});
+window.addEventListener('popstate',()=>{render();});
+H.wireSaveAndRecent(document);H.wireTop();
+H.loadAll().then(boot).catch(()=>{$('#summary').textContent="Couldn't load resources.json";});
+})();</script>
+<script defer src="assets/mbm-theme.js"></script><script defer src="assets/mbm-platform.js"></script><script defer src="assets/catalogue/lesson-navigation.js"></script>
+</body></html>

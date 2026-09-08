@@ -27,33 +27,61 @@ function runFile(env,filename){vm.runInContext(fs.readFileSync(path.join(root,fi
 function event(env,element,type){const event=new env.window.Event(type,{bubbles:true,cancelable:true});if(type==='click')event.button=0;element.dispatchEvent(event);}
 function visibleScience(env){return [...env.document.querySelectorAll('[data-lesson-path]')].filter(c=>!c.hidden);}
 (async()=>{
- const env=environment('index.html');
- runFile(env,'assets/catalogue/catalogue.js');env.context.MBM_CATALOGUE=env.window.MBM_CATALOGUE;
- const script=[...env.document.querySelectorAll('script:not([src])')].find(s=>s.textContent.startsWith('const $='));
- vm.runInContext(script.textContent,env.context,{filename:'index.html:inline-catalogue'});
- await new Promise(resolve=>setImmediate(resolve));
- check('Root initial catalogue load preserves current-year resource count',()=>assert.equal(env.document.querySelectorAll('#cards article.card').length,rows.filter(r=>r.year==='2026-27').length));
- const allYears=env.document.querySelector('.ytab[data-year=""]');event(env,allYears,'click');
- check('All-years browse includes each declared resource row once',()=>assert.equal(env.document.querySelectorAll('#cards article.card').length,rows.length));
- check('All existing catalogue links remain usable, including space-containing paths',()=>{
-  const links=[...env.document.querySelectorAll('#cards article.card a.go')];assert.equal(links.length,rows.length);assert(links.every(a=>a.getAttribute('href')!=='#'));
-  const expected=rows.map(r=>encodeURI(r.file||r.url)).sort();assert.deepEqual(links.map(a=>a.getAttribute('href')).sort(),expected);
- });
- let combinations=0;
- for(const term of ['',...Object.keys(metadata.terms)])for(const style of ['',...Object.keys(metadata.styles)]){
-  env.document.querySelector('#term').value=term;env.document.querySelector('#style').value=style;event(env,env.document.querySelector('#style'),'change');
-  const expected=rows.filter(r=>env.context.MBM_CATALOGUE.matches(r,metadata,term,style));
-  assert.equal(env.document.querySelectorAll('#cards article.card').length,expected.length,`${term}/${style}`);combinations++;
+ // UX2 A2/A3 (2026-09-08): the hub is the subject front door and the subject page is the
+ // browsing surface. The old hub's term/style/year/subject filters were retired, so their
+ // linkedom cases are replaced by the contracts the new surfaces carry.
+ function hubEnv(file, search=''){
+  const env=environment(file, search);
+  runFile(env,'assets/catalogue/hub.js');env.context.MBM_HUB=env.window.MBM_HUB;
+  const script=[...env.document.querySelectorAll('script:not([src])')].find(s=>s.textContent.startsWith('(function(){'));
+  return {env, script};
  }
- reports.push({name:`Root term/style filter intersections match source metadata (${combinations} combinations)`,status:'PASS'});
- env.document.querySelector('#term').value='Aut1';env.document.querySelector('#style').value='recommended';event(env,env.document.querySelector('#style'),'change');
- check('Recommended filter exposes exactly the 15 integrated LAUNCH Science lessons and the 6 FoodWise taught-week recommendations',()=>assert.equal(env.document.querySelectorAll('#cards article.card').length,21));
- event(env,env.document.querySelector('[data-clear-filters]'),'click');
- check('Clear filters restores all declared rows and resets both new controls',()=>{assert.equal(env.document.querySelectorAll('#cards article.card').length,rows.length);assert.equal(env.document.querySelector('#term').value,'');assert.equal(env.document.querySelector('#style').value,'');});
- env.document.querySelector('#subject').value='Science · Teesside';event(env,env.document.querySelector('#subject'),'change');
- check('Existing subject filter still operates with new organisation',()=>assert.equal(env.document.querySelectorAll('#cards article.card').length,rows.filter(r=>r.subject==='Science · Teesside').length));
- env.document.querySelector('#subject').value='';env.document.querySelector('#search').value='osmosis';event(env,env.document.querySelector('#search'),'input');
- check('Existing keyword search still returns matching resources',()=>assert(env.document.querySelectorAll('#cards article.card').length>0));
+ async function boot(file, search=''){
+  const {env, script}=hubEnv(file, search);
+  vm.runInContext(script.textContent, env.context, {filename:file+':inline'});
+  // the pages fetch five JSON files; wait for the derived line rather than a tick count
+  for(let i=0;i<400;i++){ await new Promise(resolve=>setImmediate(resolve)); const text=(env.document.querySelector('#summary')?.textContent||'')+(env.document.querySelector('#count')?.textContent||''); if(/\d+ (lessons|resources|of)/.test(text)||env.document.querySelector('#chooser:not([hidden])')) break; }
+  return env;
+ }
+ const H=hubEnv('index.html').env.window.MBM_HUB;
+ const cards=H.cardsFromRows(H.state.rows.length?H.state.rows:JSON.parse(JSON.stringify(rows)).map(r=>{r._card=H.cardOf(r);r._tier=H.tierOf(r);r._fmt=H.formatOf(r);r._path=r.file||r.url||'';return r;}));
+ const env=await boot('index.html');
+ check('Hub renders one subject card per subject group and derives its count line',()=>{
+  assert.equal(env.document.querySelectorAll('.scard').length,cards.length);
+  assert.equal(env.document.querySelector('#count').textContent,`${rows.length} resources · ${cards.length} subjects`);
+ });
+ check('Every catalogue entry belongs to exactly one subject card',()=>{
+  const total=cards.reduce((n,c)=>n+c.rows.length,0);assert.equal(total,rows.length);
+  assert.equal(new Set(rows.map(r=>H.cardOf(r))).size,cards.length);
+ });
+ check('Format tiles open the existing flat results path pre-filtered by format',()=>{
+  const tiles=[...env.document.querySelectorAll('.tile')].map(a=>a.getAttribute('href'));assert.deepEqual(tiles,['?format=html','?format=packs']);
+ });
+ const recommended=await boot('index.html','?view=recommended');
+ check('Recommended view exposes exactly the 15 integrated LAUNCH Science lessons and the 6 FoodWise taught-week recommendations',()=>assert.equal(recommended.document.querySelectorAll('#cards article.card').length,21));
+ const searching=await boot('index.html','?q=osmosis');
+ check('Existing keyword search still returns matching resources with the announced count',()=>{const n=searching.document.querySelectorAll('#cards article.card').length;assert(n>0);assert(searching.document.querySelector('#status').textContent.startsWith(`Showing ${n} matching resources.`));});
+ const legacy=await boot('index.html','?subject=Science&pathway=BUILD');
+ check('Old hub query ?subject=Science&pathway=BUILD renders the BUILD science records',()=>{const n=legacy.document.querySelectorAll('#cards article.card').length;const expected=rows.filter(r=>H.cardOf(r)==='science'&&H.tierOf(r)==='BUILD').length;assert.equal(n,expected);assert(n>0);});
+ let rendered=new Set();
+ for(const c of cards){
+  const segs=[...H.pathwaysPresent(c.rows), ...(c.rows.some(r=>!H.tierOf(r))?['ALL']:[])];
+  for(const seg of segs){
+   const page=await boot('subject.html',`?subject=${encodeURIComponent(c.slug)}&pathway=${seg}`);
+   const expected=(seg==='ALL'?c.rows.filter(r=>!H.tierOf(r)):c.rows.filter(r=>H.tierOf(r)===seg)).map(r=>r.file||r.url||'');
+   // open every row and expand every "Show n more" through the real controls
+   for(let i=0;i<200;i++){const b=page.document.querySelector('button[data-toggle][aria-expanded="false"]');if(!b)break;event(page,b,'click');}
+   for(let i=0;i<200;i++){const b=page.document.querySelector('button[data-more]');if(!b)break;event(page,b,'click');}
+   const got=[...page.document.querySelectorAll('.lrow')].map(e=>e.dataset.resourcePath);
+   if(JSON.stringify(got.slice().sort())!==JSON.stringify(expected.slice().sort()))throw new assert.AssertionError({message:`${c.slug}/${seg}: rendered ${got.length}, expected ${expected.length}; missing ${JSON.stringify(expected.filter(x=>!got.includes(x)).slice(0,4))}; extra ${JSON.stringify(got.filter(x=>!expected.includes(x)).slice(0,4))}`});
+   got.forEach(x=>rendered.add(x));
+   const tab=page.document.querySelector('#seg [role="tab"][aria-selected="true"]');
+   if(segs.length>1||seg!=='ALL')assert.equal(tab&&tab.dataset.pathway,seg,`${c.slug}/${seg} tab`);
+  }
+ }
+ check(`Every catalogue entry is rendered on exactly one subject × pathway path (${cards.length} subjects)`,()=>{assert.equal(rendered.size,rows.length);});
+ const noSlug=await boot('subject.html','?subject=no-such-subject');
+ check('Unknown subject slug shows the inline chooser',()=>{assert(!noSlug.document.querySelector('#chooser').hidden);assert.equal(noSlug.document.querySelectorAll('#chooser a').length,cards.length);});
  const sc=environment('Science_Teesside/index.html');runFile(sc,'assets/catalogue/science-shelf.js');
  check('Science shelf has all 129 source routes exactly once',()=>{assert.equal(visibleScience(sc).length,129);assert.equal(new Set(visibleScience(sc).map(c=>c.dataset.lessonPath)).size,129);});
  let scienceCombinations=0;
@@ -78,40 +106,15 @@ function visibleScience(env){return [...env.document.querySelectorAll('[data-les
  const full=environment('Science_Teesside/index.html','?style=full-lundy');runFile(full,'assets/catalogue/science-shelf.js');
  check('Full Lundy shortcut preserves access to all 86 alternatives',()=>assert.equal(visibleScience(full).length,86));
  check('Native keyboard/touch semantics and live status are declared',()=>{
-  for(const doc of [env.document,sc.document])for(const s of doc.querySelectorAll('.toolbar select,.toolbar input'))assert(s.closest('label'));
+  for(const doc of [sc.document])for(const s of doc.querySelectorAll('.toolbar select,.toolbar input'))assert(s.closest('label'));
+  assert(env.document.querySelector('label[for="search"] #search'));
   assert.equal(sc.document.querySelector('#science-count').getAttribute('aria-live'),'polite');
   assert([...sc.document.querySelectorAll('.science-pathway')].every(d=>d.tagName==='DETAILS'&&d.firstElementChild.tagName==='SUMMARY'));
  });
  check('Science version shortcut applies its filters without losing alternatives',()=>{event(sc,sc.document.querySelector('[data-shortcut="full-lundy"]'),'click');assert.equal(visibleScience(sc).length,86);assert.equal(sc.document.querySelector('#science-pathway').value,'');});
- check('Catalogue print hooks open and restore collapsed sections',()=>{const closed=[...env.document.querySelectorAll('#cards details:not([open])')];env.window.dispatchEvent(new env.window.Event('beforeprint'));assert(closed.every(d=>d.open===true));env.window.dispatchEvent(new env.window.Event('afterprint'));assert(closed.every(d=>d.open===false));const section=rec.document.querySelector('.science-pathway[data-pathway="LAUNCH"]');section.open=false;rec.window.dispatchEvent(new rec.window.Event('beforeprint'));assert.equal(section.open,true);rec.window.dispatchEvent(new rec.window.Event('afterprint'));assert.equal(section.open,false);});
- const fallback=environment('index.html');runFile(fallback,'assets/catalogue/catalogue.js');fallback.context.MBM_CATALOGUE=fallback.window.MBM_CATALOGUE;
- fallback.context.fetch=async url=>{if(url.includes('terms-and-styles'))throw new Error('Simulated unavailable metadata');return {ok:true,json:async()=>structuredClone(rows)}};
- vm.runInContext(script.textContent,fallback.context);await new Promise(resolve=>setImmediate(resolve));
- check('Metadata failure leaves existing resource catalogue and search usable',()=>{assert.equal(fallback.document.querySelectorAll('#cards article.card').length,rows.filter(r=>r.year==='2026-27').length);assert(fallback.document.querySelector('#term').disabled);assert(fallback.document.querySelector('#catalogue-feedback').textContent.includes('still search'));});
- // RX3 R3 render gate: the one non-recommended value 'alternative' must render as its own
- // labelled batch, ordered after the current series and before the earlier versions, and
- // be selectable by name. Proved on a synthetic entry so the renderer is gated before any
- // lesson carries the value; the live data is a separate reviewed selection.
- const alt=environment('index.html');runFile(alt,'assets/catalogue/catalogue.js');alt.context.MBM_CATALOGUE=alt.window.MBM_CATALOGUE;
- const altRows=rows.filter(r=>r.year==='2026-27'&&r.type==='lesson'&&metadata.entries[r.file]&&metadata.entries[r.file].style==='current'&&metadata.entries[r.file].term==='Aut1');
- const altMeta=structuredClone(metadata);altMeta.entries[altRows[0].file]={...altMeta.entries[altRows[0].file],style:'alternative',batch:'Alternative version'};
- alt.context.fetch=async url=>({ok:true,status:200,json:async()=>url.includes('terms-and-styles')?altMeta:structuredClone(rows)});
- vm.runInContext(script.textContent,alt.context);await new Promise(resolve=>setImmediate(resolve));
- check('Alternative version renders as its own labelled batch, after current and before earlier, and is selectable',()=>{
-  assert.equal(metadata.styles.alternative,'Alternative version');
-  assert.equal(alt.document.querySelector('#style option[value="alternative"]').textContent,'Alternative version');
-  const card=[...alt.document.querySelectorAll('#cards article.card a.go')].find(a=>a.getAttribute('href')===encodeURI(altRows[0].file)).closest('article.card');
-  const term=card.closest('.catalogue-term');assert.equal(term.dataset.term,'Aut1');const styles=[...term.querySelectorAll('.catalogue-batch')].map(b=>b.dataset.style);
-  const order=alt.window.MBM_CATALOGUE.styleOrder;assert(order.indexOf('current')<order.indexOf('alternative')&&order.indexOf('alternative')<order.indexOf('earlier'));
-  assert(styles.includes('alternative'));assert.deepEqual(styles,[...styles].sort((a,b)=>order.indexOf(a)-order.indexOf(b)));assert(styles.every(x=>order.includes(x)));
-  const batch=card.closest('.catalogue-batch');assert.equal(batch.dataset.style,'alternative');assert(batch.querySelector('h4').textContent.startsWith('Alternative version'));
-  assert(batch.contains(card));assert.equal(card.querySelector('a.go').getAttribute('href'),encodeURI(altRows[0].file));
-  assert.equal([...card.querySelectorAll('.chips')].pop().querySelector('.pill:last-child').textContent,'Alternative version');
-  alt.document.querySelector('#style').value='alternative';event(alt,alt.document.querySelector('#style'),'change');
-  const expectedAlternative=rows.filter(r=>r.year==='2026-27'&&(altMeta.entries[r.file]||{}).style==='alternative').length;
-  assert.equal(alt.document.querySelectorAll('#cards article.card').length,expectedAlternative);
-  assert([...alt.document.querySelectorAll('#cards article.card a.go')].some(a=>a.getAttribute('href')===encodeURI(altRows[0].file)));
- });
+ check('Catalogue print hooks open and restore collapsed sections',()=>{const section=rec.document.querySelector('.science-pathway[data-pathway="LAUNCH"]');section.open=false;rec.window.dispatchEvent(new rec.window.Event('beforeprint'));assert.equal(section.open,true);rec.window.dispatchEvent(new rec.window.Event('afterprint'));assert.equal(section.open,false);});
+ // UX2: the metadata-failure and alternative-batch cases tested the retired term/style filter chain; the
+ // subject page groups by half-term and unit (record fields), so those cases are retired with the filters.
  const hu=environment('Humanities_Teesside/index.html');runFile(hu,'assets/catalogue/science-shelf.js');
  check('Humanities has every selected current and retained resource exactly once',()=>{assert.equal(visibleScience(hu).length,humanities.lessons.length);assert.deepEqual(visibleScience(hu).map(c=>c.dataset.lessonPath).sort(),humanities.lessons.map(r=>r.path).sort());});
  let humanitiesCombinations=0;
