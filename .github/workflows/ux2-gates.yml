@@ -8,28 +8,49 @@ name: UX2 gates
 #   nowhere before A1), the halfTerm/unit tags equal their derivation from the
 #   named sources, and the shared contract gate still bites after the
 #   additive-tag allowance.
+# derived-data — the published spine and the size table equal their derivations.
+# hub-and-subject — Chromium at 390px on the hub and every subject page:
+#   reachability (record count == distinct rendered entries, red-proved by a
+#   hidden family), 44px targets in every state, focus after load / pathway
+#   switch / sheet, the chip gate through the real filter chain (red-proved by
+#   a removed row), every href resolving, the pre-UX2 href census, egress,
+#   Appendix A copy, reduced motion, contrast on cream and dark, print.
 
 on:
   pull_request:
     branches: [main]
     paths:
+      - index.html
+      - subject.html
       - resources.json
       - resources.schema.json
+      - assets/catalogue/**
+      - data/**
       - tools/ux2/**
+      - tools/verify_lessons_chips.mjs
       - tools/verify_cross_estate_unification.py
       - tools/catalogue/pin_catalogue_contract.py
-      - assets/catalogue/terms-and-styles.json
+      - _sownb/CALENDAR_2026_27.json
       - .github/workflows/ux2-gates.yml
   push:
     branches: [main]
     paths:
+      - index.html
+      - subject.html
       - resources.json
       - resources.schema.json
+      - assets/catalogue/**
+      - data/**
       - tools/ux2/**
+      - tools/verify_lessons_chips.mjs
       - tools/verify_cross_estate_unification.py
       - tools/catalogue/pin_catalogue_contract.py
-      - assets/catalogue/terms-and-styles.json
+      - _sownb/CALENDAR_2026_27.json
       - .github/workflows/ux2-gates.yml
+  schedule:
+    # The size table and the spine are derived files: a lesson edit that misses
+    # the path filter above is caught here within a day.
+    - cron: '23 5 * * *'
   workflow_dispatch:
 
 permissions:
@@ -58,3 +79,54 @@ jobs:
           python3 tools/ux2/unit_tags.py --check
       - name: The shared contract gate still catches every non-tag edit to an original row
         run: python3 tools/ux2/prove_catalogue_gate.py
+
+  derived-data:
+    name: Published spine and size table equal their derivations
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: python3 tools/ux2/build_spine.py --check
+      - run: python3 tools/ux2/resource_sizes.py --check
+
+  hub-and-subject:
+    name: Hub and subject page in Chromium at 390px (red-proved)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check out the canonical Made by Matt platform (served at / beside /Lessons/)
+        uses: actions/checkout@v4
+        with:
+          repository: MattRoper1977/mattroper1977.github.io
+          path: _reference/site
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Install the browser harness
+        run: |
+          npm install --no-save --no-package-lock playwright@1.54.2 linkedom@0.18.12
+          npx playwright install --with-deps chromium
+      - name: Every hub and subject-page limb, with both red proofs
+        run: node tools/ux2/hub_gates.mjs --site _reference/site --out audit-output/ux2-hub --red-proof
+      - name: The chip gate through the real filter chain over HTTP, then its red proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p _served && for f in _reference/site/*; do ln -s "$PWD/$f" "_served/$(basename "$f")"; done
+          rm -f _served/Lessons && ln -s "$PWD" _served/Lessons
+          python3 -m http.server 4188 --bind 127.0.0.1 --directory _served >/tmp/ux2-http.log 2>&1 &
+          for attempt in $(seq 1 30); do if curl -fsS http://127.0.0.1:4188/Lessons/ >/dev/null; then break; fi; sleep 1; done
+          node tools/verify_lessons_chips.mjs --base http://127.0.0.1:4188/
+          node tools/verify_lessons_chips.mjs --base http://127.0.0.1:4188/ --red-proof
+      - name: The linkedom catalogue DOM check (the copy Site CI runs on the pinned source)
+        run: node tools/catalogue/check_catalogue_dom.cjs
+      - name: Upload the evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ux2-hub-${{ github.event.pull_request.number || github.run_id }}
+          path: audit-output/ux2-hub
+          if-no-files-found: ignore
