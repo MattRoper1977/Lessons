@@ -31,8 +31,13 @@ WHAT EACH SOURCE IS HERE
     reported.
 
   unit
-    (a)      the family manifest row for the file: Science_Teesside/*/v3_40min/
-             manifest-v3.json `topic` (the lesson's own metadata record).
+    (a)+(c)  the lesson's own text or family-manifest `sow` line quotes a
+             scheme-of-work weekly row's outcome VERBATIM (≥25 characters, the
+             row's own lane) — the deck names the SoW row and the SoW grid row
+             for that strand and half-term names the unit. Every such match on
+             one lesson must agree on one unit. (The Science family manifests'
+             `topic` field is a per-lesson topic, not a unit: measured
+             2026-09-08, one topic per lesson, so it is not used as a unit.)
     (b)      the pack index / START_HERE: Humanities_Teesside/Teaching_Packs/
              DOWNLOADS_MANIFEST_HTML.json lesson titles joined to a catalogue
              row whose own title ends with that lesson title verbatim, with the
@@ -170,6 +175,19 @@ def load_spine_terms() -> dict[str, set[str]]:
     return result
 
 
+def load_manifest_rows() -> dict[str, list[dict]]:
+    """file (repo path) → its family-manifest lesson rows (for the `sow` declaration)."""
+    rows: dict[str, list[dict]] = {}
+    for manifest in SCIENCE_MANIFESTS:
+        if not manifest.is_file():
+            continue
+        for lesson in read_json(manifest):
+            file_name = lesson.get("file")
+            if file_name:
+                rows.setdefault((manifest.parent / file_name).relative_to(ROOT).as_posix(), []).append(lesson)
+    return rows
+
+
 def load_science_topics() -> dict[str, tuple[str, str]]:
     """file (repo path) → (topic, manifest path) from the family manifests' own lesson rows."""
     topics = {}
@@ -237,6 +255,34 @@ def half_term_of_weeks(weeks: str) -> str | None:
     return f"{SEASON[match.group(1).lower()]} {match.group(2)}" if match else None
 
 
+def sow_unit_for_text(sow: dict, lane: str | None, text: str, half_term: str | None) -> tuple[str, str] | None:
+    """(unit, source) when the deck's own text quotes a weekly SoW outcome verbatim.
+
+    Every weekly row of the lane whose outcome (≥25 chars) appears in the text
+    is a match; each match resolves through (strand, half-term) to a grid unit;
+    the matches must agree on ONE unit (else None). The week named by the
+    matched row must sit in the row's own half-term (else None)."""
+    if not lane or lane not in sow or not text:
+        return None
+    lane_sow = sow[lane]
+    units = set()
+    sources = []
+    for weekly in lane_sow.get("weekly", []):
+        outcome = (weekly.get("outcome") or "").strip()
+        if len(outcome) < 25 or outcome not in text:
+            continue
+        week_half = half_term_of_weeks((weekly.get("week") or "").replace("·", " "))
+        if half_term and week_half != half_term:
+            return None
+        for grid in lane_sow.get("grid", []):
+            if grid.get("strand") == weekly.get("strand") and half_term_of_weeks(grid.get("weeks")) == week_half and grid.get("unit"):
+                units.add(grid["unit"])
+                sources.append(f"weekly row {weekly.get('row')} → grid row {grid.get('row')}")
+    if len(units) == 1:
+        return next(iter(units)), f"_next6/sow/{lane}.json {sources[0]}"
+    return None
+
+
 def sow_unit_for_title(sow: dict, lane: str | None, title: str) -> tuple[str, str] | None:
     """(unit, source) when a SoW row of the row's lane names the title verbatim."""
     if not lane or lane not in sow:
@@ -262,6 +308,7 @@ def derive(rows: list[dict]) -> dict:
     terms_and_styles = read_json(TERMS_AND_STYLES)["entries"]
     spine_terms = load_spine_terms()
     topics = load_science_topics()
+    manifest_rows = load_manifest_rows()
     pack_units = load_humanities_pack_units()
     sow = load_sow()
 
@@ -295,9 +342,14 @@ def derive(rows: list[dict]) -> dict:
         if record["halfTerm"] not in IN_SCOPE:
             record["worklist"] = "outside Autumn 2026 or no half-term source"
             continue
-        # unit, in order (a) manifest topic, (b) START_HERE via the pack index, (c) SoW verbatim
-        if file_key in topics:
-            record["unit"], record["unitSource"] = topics[file_key][0], "manifest-v3 topic (" + topics[file_key][1] + ")"
+        # unit, in order: (a)+(c) the deck's own text / manifest sow line quoting a
+        # SoW weekly outcome verbatim, (b) START_HERE via the pack index, (c) a SoW
+        # row naming the title verbatim. manifest-v3 `topic` is recorded, not used.
+        record["lessonTopic"] = topics.get(file_key, (None, None))[0]
+        sow_text = (deck_text(location, 40000) if location.is_file() else "") + " " + " ".join(m.get("sow", "") for m in manifest_rows.get(file_key, []))
+        verbatim = sow_unit_for_text(sow, lane_of(row), sow_text, record["halfTerm"])
+        if verbatim:
+            record["unit"], record["unitSource"] = verbatim[0], "SoW verbatim outcome (" + verbatim[1] + ")"
         else:
             title = row.get("title", "")
             hit = next(((unit, lane, source) for lesson_title, (unit, lane, source) in pack_units.items()
@@ -342,19 +394,27 @@ def verify_classes(rows: list[dict], derived: dict) -> dict:
         agree += ok
         detail.append({"file": rec["file"], "halfTerm": rec["halfTerm"], "deckText": sorted(independent), "evidenceReproved": reproved, "ok": ok})
     verdicts["halfTerm:terms-and-styles"] = {"sampled": len(sample), "agree": agree, "pass": len(sample) == 0 or agree >= min(PASS_MARK, len(sample)), "detail": detail}
-    # unit from manifest topics: independent reading = the topic words appear in the deck's own text
-    pool = [r for r in records if r["unit"] and (r["unitSource"] or "").startswith("manifest-v3")]
+    # unit from the SoW verbatim join: independent reading = the matched weekly row's
+    # strand belongs to the row's subject group and its week sits in the row's half-term
+    # (both re-read from the SoW file, not from the derivation).
+    sow = load_sow()
+    pool = [r for r in records if r["unit"] and (r["unitSource"] or "").startswith("SoW verbatim outcome")]
     sample = rng.sample(pool, min(SAMPLE_SIZE, len(pool)))
     agree = 0
     detail = []
     for rec in sample:
-        text = deck_text(ROOT / rec["file"]).lower()
-        words = [w for w in re.findall(r"[a-z]{4,}", rec["unit"].lower()) if w not in {"with", "from", "that", "this", "their"}]
-        ok = bool(words) and sum(w in text for w in words) >= max(1, len(words) // 2)
+        row = rows[rec["index"]]
+        lane = lane_of(row)
+        m = re.search(r"weekly row (\d+)", rec["unitSource"] or "")
+        weekly = next((w for w in sow.get(lane, {}).get("weekly", []) if str(w.get("row")) == (m.group(1) if m else "")), None)
+        subject_words = re.findall(r"[a-z]{4,}", str(row.get("subject", "")).lower())
+        strand = (weekly or {}).get("strand", "").lower()
+        week_half = half_term_of_weeks(((weekly or {}).get("week") or "").replace("·", " "))
+        ok = bool(weekly) and week_half == rec["halfTerm"] and (any(w in strand for w in subject_words) or "vocational" in str(row.get("subject", "")).lower())
         agree += ok
-        detail.append({"file": rec["file"], "unit": rec["unit"], "ok": ok})
-    verdicts["unit:manifest-v3"] = {"sampled": len(sample), "agree": agree, "pass": len(sample) == 0 or agree >= min(PASS_MARK, len(sample)), "detail": detail}
-    for label, prefix in (("unit:START_HERE", "START_HERE"), ("unit:SoW", "SoW verbatim")):
+        detail.append({"file": rec["file"], "unit": rec["unit"], "strand": (weekly or {}).get("strand"), "week": (weekly or {}).get("week"), "ok": ok})
+    verdicts["unit:SoW-verbatim"] = {"sampled": len(sample), "agree": agree, "pass": len(sample) == 0 or agree >= min(PASS_MARK, len(sample)), "detail": detail}
+    for label, prefix in (("unit:START_HERE", "START_HERE ("), ("unit:SoW", "SoW verbatim (")):
         pool = [r for r in records if r["unit"] and (r["unitSource"] or "").startswith(prefix)]
         sample = rng.sample(pool, min(SAMPLE_SIZE, len(pool)))
         agree = 0
@@ -372,12 +432,14 @@ def verify_classes(rows: list[dict], derived: dict) -> dict:
 def apply(rows: list[dict], derived: dict, verdicts: dict) -> list[dict]:
     tagged = copy.deepcopy(rows)
     discard_units = {label.split(":")[1] for label, v in verdicts.items() if label.startswith("unit:") and not v["pass"]}
+    prefix_of = {"SoW verbatim outcome": "SoW-verbatim", "START_HERE": "START_HERE", "SoW verbatim": "SoW"}
     discard_half = not verdicts["halfTerm:terms-and-styles"]["pass"]
     for rec in derived["rows"]:
         row = tagged[rec["index"]]
         if rec["halfTerm"] in IN_SCOPE and not (discard_half and rec["halfTermSources"] == ["terms-and-styles"]):
             row["halfTerm"] = rec["halfTerm"]
-        source = (rec["unitSource"] or "").split(" ")[0]
+        label = (rec["unitSource"] or "").split(" (")[0]
+        source = prefix_of.get(label, label)
         if rec["unit"] and "halfTerm" in row and source not in discard_units:
             row["unit"] = rec["unit"]
     return tagged
@@ -417,6 +479,8 @@ def census(rows: list[dict], derived: dict) -> dict:
         if rec["halfTerm"] in IN_SCOPE:
             out["halfTerm"][rec["halfTerm"]] += 1
             group["halfTerm"] += 1
+        if rec.get("lessonTopic"):
+            out["lessonTopicsRecordedNotUsed"] = out.get("lessonTopicsRecordedNotUsed", 0) + 1
         if rec["unit"]:
             out["unit"] += 1
             group["unit"] += 1
