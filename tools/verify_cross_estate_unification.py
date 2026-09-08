@@ -587,9 +587,9 @@ PUBLICATION_CALLER_PATH = ".github/workflows/education-pages.yml"
 # §3.3 touch-action revisions, transition pairs) by Order HC4.
 # Until Order UX2 both callers advanced together and this one digest served
 # both repositories' callers. UX2 moved the Lessons caller alone (Lessons #436,
-# #438; the order writes nothing to the Apps repository), so this digest is the
+# #438, #442; the order writes nothing to the Apps repository), so this digest is the
 # LESSONS caller's, and the Apps caller carries its own reviewed digest below.
-PUBLICATION_CALLER_SHA256 = "0d89d3a41b53c97716806056e4b97143ee9e9d22e9b5abd9bea919228c2a67f6"
+PUBLICATION_CALLER_SHA256 = "67b1d737208fbc9339703cb8f17ec77b8375ae91a84a8704920475441eb9f6ab"
 # One reviewed caller digest per repository kind. The Apps entry is the Apps
 # caller at the Site's reviewed Apps pin 924ab986 (Site domain-split-verify.yml;
 # the caller there names Site 23a4f360), which the Site's catalogue contract
