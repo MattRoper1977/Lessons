@@ -103,8 +103,63 @@
         "type": "string",
         "minLength": 1,
         "description": "UX2 A1 (2026-09-08): the unit the lesson belongs to, only when its own metadata, its pack index / START_HERE, or a scheme-of-work row naming the same title states one. Written only by tools/ux2/unit_tags.py."
+      },
+      "kind": {
+        "enum": [
+          "pack"
+        ],
+        "description": "UX2 D3 (2026-09-08): record kind for non-lesson entries. 'pack' = a companion pack (editable slides and documents) for one deployed lesson; the pack's HTML is never deployed. Written only by tools/ux2/companion_catalogue.py."
+      },
+      "companionOf": {
+        "type": "string",
+        "minLength": 1,
+        "description": "UX2 D3: the deployed lesson this pack was matched to (D1: sha256, exact title, or normalised filename), as a catalogue-relative path. The lesson is canonical; the pack never edits it."
+      },
+      "builtFrom": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$",
+        "description": "UX2 D3: sha256 of the pack's own source HTML, recorded when the deployed lesson was matched by title or filename rather than by digest."
+      },
+      "packRevisionDrift": {
+        "type": "boolean",
+        "description": "UX2 D3: true when the pack HTML and the deployed lesson differ in title, learning-objective line or stage minutes (D1 DRIFT check). Teacher-facing only: 'Built from an earlier revision of this lesson.'"
+      },
+      "files": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "role",
+            "type",
+            "path"
+          ],
+          "properties": {
+            "role": {
+              "enum": [
+                "lesson",
+                "teacher",
+                "pupil",
+                "slides"
+              ]
+            },
+            "type": {
+              "enum": [
+                "pptx",
+                "docx",
+                "pdf"
+              ]
+            },
+            "path": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "description": "UX2 D3: the pack's landed files, one entry each; role and type are the closed sets the order names. Held files (D2) are not listed."
       }
     }
   },
-  "description": "Made by Matt lesson catalogue. Enforced by tools/ux2/check_catalogue_schema.py (UX2 A1); additionalProperties is false, so a new key needs a schema change first."
+  "description": "Made by Matt lesson catalogue. Enforced by tools/ux2/check_catalogue_schema.py (UX2 A1); additionalProperties is false, so a new key needs a schema change first. UX2 D3 (2026-09-08) added kind, companionOf, builtFrom, packRevisionDrift and files for companion-pack entries."
 }
