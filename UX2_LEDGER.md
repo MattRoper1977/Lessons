@@ -122,7 +122,9 @@ verified rows by `tools/catalogue/pin_catalogue_contract.py`.
    (`Science`, `ASDAN & life skills`) are unaffected. The GLV3 chip gate is
    re-pointed at that surface: its content — advertised == returned == the count
    derived from the record, and every GLV3 entry reachable — is unchanged, and
-   the year clause goes because the results view renders every year.
+   the year clause goes because the results view renders every year. Its sibling
+   `_glv3/tools/browser_verify.mjs` drove the same retired controls in its
+   catalogue phase and is re-pointed identically; both run in the same job.
 
 ## AUTO-DECISIONs
 
