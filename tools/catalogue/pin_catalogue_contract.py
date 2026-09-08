@@ -879,17 +879,24 @@ REVIEWED_PATHS += (
     '.github/workflows/science-teaching-packs.yml',
 )
 
+ADDITIVE_TAG_KEYS = frozenset({"halfTerm", "unit"})  # UX2 A1; mirrors CATALOGUE_ADDITIVE_TAG_KEYS in the gate
+
+
 def row_digest(rows: list) -> str:
     return hashlib.sha256(json.dumps(rows, ensure_ascii=False, separators=(",", ":")).encode("utf-8")).hexdigest()
+
+
+def without_tags(rows: list) -> list:
+    return [{k: v for k, v in row.items() if k not in ADDITIVE_TAG_KEYS} for row in rows]
 
 
 def preserved_rows_errors(rows: list) -> list[str]:
     errors = []
     if len(rows) != ORIGINAL_ROW_COUNT + len(SHELF_ROWS):
         errors.append("catalogue must contain the original 734 rows plus exactly the reviewed hub rows")
-    if row_digest(rows[:ORIGINAL_ROW_COUNT]) != ORIGINAL_ROWS_SHA256:
+    if row_digest(without_tags(rows[:ORIGINAL_ROW_COUNT])) != ORIGINAL_ROWS_SHA256:
         errors.append("an original catalogue row was removed, reordered or edited")
-    if rows[ORIGINAL_ROW_COUNT:] != SHELF_ROWS:
+    if without_tags(rows[ORIGINAL_ROW_COUNT:]) != SHELF_ROWS:
         errors.append("the appended hub rows differ from the reviewed navigation entries")
     return errors
 

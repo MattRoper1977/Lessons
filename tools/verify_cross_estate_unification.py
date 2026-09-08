@@ -101,7 +101,7 @@ MANIFEST_PINS = {
     # Ruled onto the pin 2026-08-12 (Ruling 3): the deck install is a
     # resources.json edit, and the blanket rule forbade it the same way it
     # once forbade studio adds. Same pattern, same tool, same commit rule.
-    "resources.json": "ca4ce5ade391130b2dee4a85a8c57363d2c4c6ce175f0a62cbe46e245a8a9e1c",
+    "resources.json": "d429986d5a2d554edc01433773f2dd78c9dfb57234407bd0672d658a8038ce4b",
 }
 PIN_COMMAND = "python3 tools/pin_manifests.py   (from either checkout — it writes both gate copies or neither)"
 
@@ -549,6 +549,12 @@ CATALOGUE_PINS = {
 CATALOGUE_ORIGINAL_ROWS = 734
 CATALOGUE_ORIGINAL_ROWS_SHA256 = "b8ffcb16f5fd2a413e8a0b06ad2d4b112f450364fa294377869dc32c8235bb2c"
 CATALOGUE_SHELF_ROWS = 49
+# UX2 A1: keys that may be appended to an original row without moving its
+# digest (see catalogue_errors). Nothing else is additive. No original row
+# carried either key before the ruling (measured 2026-09-08: 0 of 734), so the
+# second set is empty and the allowance cannot launder a pre-existing value.
+CATALOGUE_ADDITIVE_TAG_KEYS = frozenset({"halfTerm", "unit"})
+CATALOGUE_ORIGINAL_KEYS_BEFORE_TAGS = frozenset()
 CATALOGUE_SHELF_ROWS_SHA256 = "3ab3e66308af203301acf75d57fa78728c83e6a336ba8a17d0392d9a092859c5"
 
 # These named review records and review tools can change with their reviewed
@@ -702,9 +708,26 @@ def catalogue_errors(root: Path, kind: str, text: str) -> list[str]:
             def row_digest(value):
                 encoded = json.dumps(value, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
                 return hashlib.sha256(encoded).hexdigest()
-            if row_digest(rows[:CATALOGUE_ORIGINAL_ROWS]) != CATALOGUE_ORIGINAL_ROWS_SHA256:
+            # UX2 A1 (2026-09-08): the two ADDITIVE tag keys, `halfTerm` and `unit`,
+            # may be appended to an original row. Every other byte of every
+            # original row stays under the digest: the keys are stripped before
+            # hashing, so an edit to any existing value, a removal or a reorder
+            # still reds here. The tag values themselves are gated by
+            # tools/ux2/unit_tags.py --check (derivation) and
+            # tools/ux2/check_catalogue_schema.py (enum/shape). Proved red on a
+            # planted title edit and a planted unknown key by
+            # tools/ux2/prove_catalogue_gate.py.
+            def without_tags(value):
+                return [{k: v for k, v in row.items() if k not in CATALOGUE_ADDITIVE_TAG_KEYS} for row in value]
+            if row_digest(without_tags(rows[:CATALOGUE_ORIGINAL_ROWS])) != CATALOGUE_ORIGINAL_ROWS_SHA256:
                 errors.append("an original catalogue row was removed, reordered or edited")
-            if row_digest(rows[CATALOGUE_ORIGINAL_ROWS:]) != CATALOGUE_SHELF_ROWS_SHA256:
+            for index, row in enumerate(rows[:CATALOGUE_ORIGINAL_ROWS]):
+                for key in row:
+                    if key in CATALOGUE_ADDITIVE_TAG_KEYS and key not in CATALOGUE_ORIGINAL_KEYS_BEFORE_TAGS:
+                        continue
+                    if key in CATALOGUE_ADDITIVE_TAG_KEYS:
+                        errors.append(f"original row {index} carried {key} before the tag ruling; refusing to treat it as additive")
+            if row_digest(without_tags(rows[CATALOGUE_ORIGINAL_ROWS:])) != CATALOGUE_SHELF_ROWS_SHA256:
                 errors.append("the reviewed catalogue hub rows changed")
     except (ValueError, OSError) as exc:
         errors.append(f"reviewed catalogue row preservation could not be verified: {exc}")
