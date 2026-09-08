@@ -109,6 +109,20 @@ verified rows by `tools/catalogue/pin_catalogue_contract.py`.
    pathway from the row's own derived values, the digest the D2 manifest recorded,
    method "companion pack placement manifest" — appended in derivation order with
    the record's existing 907 entries untouched. `--check` re-derives all three.
+7. **Old `?subject=` URLs keep their exact meaning.** The GLV3 exact-tree gate,
+   which fires on any `resources.json` change, was the first thing to reach the
+   hub's flat results since Part A replaced the old controls, and it found that
+   `?subject=<a record subject string>` returned nothing: the filter matched only
+   a subject card's slug, while the retired select had filtered by the record's
+   own subject string. Four such strings (`Art · Teesside Studio Suite`,
+   `GROW Vocational & PfA`, `LAUNCH Vocational & PfA`, `Humanities`) resolved to
+   an unmapped slug that owns no rows. The hub now filters by an exact record
+   subject when the value names one, and by the card otherwise — the old meaning
+   and the UX2 one, in that order. Values that are not record subjects
+   (`Science`, `ASDAN & life skills`) are unaffected. The GLV3 chip gate is
+   re-pointed at that surface: its content — advertised == returned == the count
+   derived from the record, and every GLV3 entry reachable — is unchanged, and
+   the year clause goes because the results view renders every year.
 
 ## AUTO-DECISIONs
 
