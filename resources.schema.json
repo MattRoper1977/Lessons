@@ -11,8 +11,7 @@
       "title",
       "file",
       "type",
-      "family",
-      "keywords"
+      "family"
     ],
     "properties": {
       "id": {
@@ -38,8 +37,12 @@
           "revision",
           "pupil",
           "teacher",
-          "support"
-        ]
+          "support",
+          "hub",
+          "Lesson",
+          "Hub"
+        ],
+        "description": "Record type. 'Lesson', 'Hub' and 'hub' are legacy spellings already carried by 105 rows (UX2 A1, 2026-09-08); new rows use the lower-case forms."
       },
       "family": {
         "type": "string",
@@ -50,7 +53,7 @@
         "items": {
           "type": "string"
         },
-        "uniqueItems": true
+        "description": "Search keywords. Absent on 88 legacy rows that carry description/thumbnail instead (measured 2026-09-08); required on new rows by the UX2 catalogue tools. uniqueItems is not asserted: 8 reviewed shelf rows (743-750) repeat a keyword and are digest-locked."
       },
       "added": {
         "type": "string",
@@ -75,7 +78,33 @@
       },
       "featured": {
         "type": "boolean"
+      },
+      "description": {
+        "type": "string",
+        "description": "Legacy alias of desc on 88 rows; new rows use desc."
+      },
+      "thumbnail": {
+        "type": "string",
+        "description": "Legacy thumbnail path on 88 rows; new rows use thumb."
+      },
+      "halfTerm": {
+        "type": "string",
+        "enum": [
+          "Autumn 1",
+          "Autumn 2",
+          "Spring 1",
+          "Spring 2",
+          "Summer 1",
+          "Summer 2"
+        ],
+        "description": "UX2 A1 (2026-09-08): the half-term the lesson resolves to, from the lesson's own declaration or a scheme-of-work cell; labels are the spine's (_sownb/TERM_DATES.md). Never derived from a filename. Written only by tools/ux2/unit_tags.py."
+      },
+      "unit": {
+        "type": "string",
+        "minLength": 1,
+        "description": "UX2 A1 (2026-09-08): the unit the lesson belongs to, only when its own metadata, its pack index / START_HERE, or a scheme-of-work row naming the same title states one. Written only by tools/ux2/unit_tags.py."
       }
     }
-  }
+  },
+  "description": "Made by Matt lesson catalogue. Enforced by tools/ux2/check_catalogue_schema.py (UX2 A1); additionalProperties is false, so a new key needs a schema change first."
 }
