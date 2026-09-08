@@ -20,9 +20,9 @@ Auto-decisions this order left open are logged at the end.
 | Year tabs 2026–27 / 2025–26 / Everything | RETIRED — "Pathways/Collections tabs NOT built"; every year renders; `?year=` is accepted and ignored |
 | Toolbar: Search | SURVIVES — `#search` in the hub bar, same behaviour (flat results, `#status` "Showing n matching resources.", Clear filters) |
 | Toolbar: Subject select, Pathway select, Term, Collection, Type, Teaching style | RETIRED — subject cards + the subject page's pathway control and format chips replace them; old query URLs (`?subject=…&pathway=…`, `?view=…`) still resolve on the hub |
-| Catalogue shortcut links (All LAUNCH Science, LAUNCH Science pack, BUILD Science, GROW Science) | RETIRED — pathway deep links into the Science shelf; the shelf is a catalogue row on the Science page's Suites row and the pathway control replaces the query |
+| Catalogue shortcut links (All LAUNCH Science, LAUNCH Science pack, BUILD Science, GROW Science) | RETIRED — pathway deep links into the Science shelf; the shelf is a catalogue row on the Science page's Suites row and the pathway control replaces the query. The shelf itself SURVIVES as a static link in the Subjects section head, "Science by pathway and term" (the shelf page's own title; A5) |
 | Catalogue shortcut links (Science / Humanities teaching packs, Editable teaching packs · 7 subjects) | RELOCATES — each subject's pack hub is a catalogue row (`…/Teaching_Packs/index.html#build/#grow/#launch`) on its subject page's Suites row; the all-subjects landing (`Teaching_Packs/`) has no catalogue row and is retired (reason recorded in `tools/ux2/fixtures/retired-hrefs.json`) |
-| Catalogue shortcut links (Humanities & RE, Art & Arts Award) | RELOCATES — subject cards HUMANITIES & RE and ART STUDIO |
+| Catalogue shortcut links (Humanities & RE, Art & Arts Award) | RELOCATES — subject cards HUMANITIES & RE and ART STUDIO. The Humanities shelf (`Humanities_Teesside/index.html`) SURVIVES as a static link in the Subjects section head, "Humanities by pathway and term" (the shelf page's own title; A5) |
 | Views: Browse all / Recommended versions / Saved lessons (+ saved count) | RELOCATES — hub bar controls "Saved <n>" and "Recommended" (B1's header controls, delivered here); `?view=saved` / `?view=recommended` unchanged |
 | Recently opened | RELOCATES — shown at the top of the Saved view |
 | Subject chips `#quicknav` + the 23/23 chip gate | RETIRED (chips) — the gate is RE-POINTED at the subject page's format chips (`tools/verify_lessons_chips.mjs`) |
@@ -145,3 +145,24 @@ verified rows by `tools/catalogue/pin_catalogue_contract.py`.
     listed in the gate's change boundary in the documented Ruling 6 shape (files
     that cannot change a studio's served bytes); the size table changes on
     every lesson edit and must not red the boundary.
+14. **Static shelf links (A5).** The Site's static catalogue gate
+    (`check_catalogue_static.py`, run by its domain-split job on the pinned
+    Lessons source, not by any Lessons workflow) requires the hub itself to link
+    `Humanities_Teesside/index.html` without JavaScript. A2's subject cards are
+    rendered by `hub.js`, so the served hub carried no such link and Site #331
+    went red on the first pin to the A2 main. The hub's Subjects section head now
+    carries two static links, one per original shelf, named by the shelf pages'
+    own titles ("Science by pathway and term", "Humanities by pathway and term").
+    Additive: nothing else on the hub changes; the catalogue pins are re-cut. The
+    ledger rows land here rather than in A5 because this file is itself a
+    published file admitted in a two-state transition pair (Part A → Part D).
+15. **One publication-caller digest per repository (A5).** The shared contract
+    gate assumed both education publication callers advance together and pinned
+    one caller digest. The UX2 pin moves (#436, #438) advanced the Lessons caller
+    alone — the order writes nothing to the Apps repository — so the Site's
+    catalogue contract control, which runs the Lessons copy of the gate against
+    its pinned Apps checkout as kind "apps", went red on that digest. The gate
+    now keys the reviewed caller digest by kind: the Lessons caller's, and the
+    Apps caller's at the Site's reviewed Apps pin 924ab986. Both callers stay
+    byte-pinned; neither check is weakened; moving the Site's Apps pin moves the
+    Apps entry.
