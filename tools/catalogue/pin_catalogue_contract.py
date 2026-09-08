@@ -676,6 +676,8 @@ SHELF_ROWS = [{'subject': 'Science · Teesside',
 # The verifier and pin tool exclude themselves to avoid a recursive file hash.
 REVIEWED_PATHS = (
     "index.html", "Science_Teesside/index.html", "Humanities_Teesside/index.html", "humanities_teesside.html",
+    # UX2 A2/A3 (2026-09-08): the shared subject page, its engine, its stylesheet and the published spine.
+    "subject.html", "assets/catalogue/hub.js", "assets/catalogue/hub.css", "data/calendar-spine.json",
     "Humanities_Teesside/David_Cover_Autumn1_W3-W7/index.html",
     "assets/catalogue/catalogue.css", "assets/catalogue/catalogue.js",
     "assets/catalogue/lesson-navigation.js",
