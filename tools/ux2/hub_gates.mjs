@@ -115,6 +115,7 @@ const hubLog = hub._log;
 const seen = new Set();
 const allHrefs = new Set(hubHrefs);
 let anyPackSheet = false;
+let planningLinksSeen = 0, planningKeysSeen = 0;
 const subjectSlugs = hubSubjects.map(h => new URL(h, `${origin}/Lessons/`).searchParams.get('subject'));
 async function collectPage(page) {
   // expand every "Show n more" then read every record path in every open panel
@@ -139,6 +140,37 @@ for (const slug of subjectSlugs) {
     for (let i = 0; i < 200; i++) { const tg = page.locator('button[data-toggle][aria-expanded="false"]').first(); if (!(await tg.count())) break; await tg.click(); }
     await collectPage(page);
     check(`${slug}/${t || 'all'}: targets ≥44px (expanded)`, (await page.evaluate(smallTargets)).length === 0, JSON.stringify((await page.evaluate(smallTargets)).slice(0, 4)));
+    // B4 planning: a row offers "Planning and evidence" exactly when one of the
+    // lessons it holds sits at a key in data/planning-keys.json for this subject
+    // card and pathway. Both sides are read from the page - the rendered rows
+    // mapped back through the record, and the file the page itself loaded - so a
+    // link that claims evidence for a lesson the row does not hold is caught,
+    // and so is a row that holds one and stays silent.
+    const planning = await page.evaluate(() => {
+      const H = window.MBM_HUB;
+      const slug = H.slugForQuery(new URLSearchParams(location.search).get('subject'));
+      const tab = document.querySelector('#seg [role=tab][aria-selected="true"]');
+      const pw = tab ? tab.dataset.pathway : 'ALL';
+      const keys = (H.state.planning && H.state.planning.keys) || [];
+      const byPath = new Map(H.state.rows.map(r => [r._path, r]));
+      const at = r => (r.halfTerm || '') + '\u0000' + (r.unit || '');
+      const rendered = [], owed = [];
+      for (const section of document.querySelectorAll('section.acc')) {
+        const held = new Set([...section.querySelectorAll('[data-resource-path]')]
+          .map(e => byPath.get(e.getAttribute('data-resource-path'))).filter(Boolean).map(at));
+        const hit = keys.find(k => k.subject === slug && k.pathway === pw && held.has(at(k)));
+        const link = section.querySelector('.planning a');
+        const id = section.getAttribute('data-group');
+        if (link) rendered.push({ id, href: link.getAttribute('href'), justified: !!hit, expected: hit ? hit.href : null });
+        else if (hit) owed.push({ id, href: hit.href });
+      }
+      return { keys: keys.length, rendered, owed };
+    });
+    const wrong = planning.rendered.filter(r => !r.justified || r.href !== r.expected);
+    check(`${slug}/${t || 'all'}: every planning link is one the record owes`, wrong.length === 0, JSON.stringify(wrong.slice(0, 3)));
+    check(`${slug}/${t || 'all'}: no row owed a planning link is silent`, planning.owed.length === 0, JSON.stringify(planning.owed.slice(0, 3)));
+    planningLinksSeen += planning.rendered.length;
+    planningKeysSeen = planning.keys;
     // chip gate: each format chip's rendered count equals the set the filter chain returns
     const chips = await page.$$eval('#fchips button', bs => bs.map(b => b.dataset.format));
     for (const f of chips) {
@@ -260,6 +292,12 @@ for (const theme of ['cream', 'pink', 'blue', 'light', 'dark', 'highlumen']) {
 }
 await hub._ctx.close();
 
+/* ---------- 6b. B4 planning links are non-vacuous ---------- */
+// A planning gate that never saw a key or never saw a link would pass on an
+// empty record and on a page that renders nothing. Both sides must be present.
+check('planning: the record supplies at least one key', planningKeysSeen > 0, `${planningKeysSeen} keys`);
+check('planning: at least one row renders the link', planningLinksSeen > 0, `${planningLinksSeen} links`);
+
 /* ---------- 7. red proofs ---------- */
 if (RED) {
   const page = await newPage();
@@ -275,6 +313,19 @@ if (RED) {
   const chipsExpected = await page.evaluate(() => 1 + window.MBM_HUB.formatsPresent(window.MBM_HUB.state.rows.filter(r => r._card === window.MBM_HUB.slugForQuery(new URLSearchParams(location.search).get('subject')) && r._tier === 'BUILD')).length);
   check('RED PROOF: a removed chip is caught by the chip census', chipsNow < chipsExpected, `${chipsNow} < ${chipsExpected}`);
   await page._ctx.close();
+  // The planning links must follow the file, not the page. Serve one key whose
+  // half-term no lesson carries: every link must vanish. A page that still
+  // shows one is deciding for itself, which is the failure this proves.
+  const planted = await newPage();
+  await planted.route('**/data/planning-keys.json', route => route.fulfill({
+    status: 200, contentType: 'application/json',
+    body: JSON.stringify({ schema: 'mbm-planning-keys-v1', keys: [{ subject: 'science', pathway: 'BUILD', halfTerm: 'Autumn 9', unit: null, href: '/resources/?subject=science&pathway=BUILD', count: 1 }] }) }));
+  await planted.goto(`${origin}/Lessons/subject.html?subject=${encodeURIComponent(subjectSlugs[0])}`, { waitUntil: 'load' });
+  await planted.waitForFunction(() => /lessons/.test(document.querySelector('#summary')?.textContent || ''), null, { timeout: 15000 });
+  for (let i = 0; i < 200; i++) { const tg = planted.locator('button[data-toggle][aria-expanded="false"]').first(); if (!(await tg.count())) break; await tg.click(); }
+  const plantedLinks = await planted.$$eval('.planning a', as => as.length);
+  check('RED PROOF: a key at a half-term no lesson holds renders no planning link', plantedLinks === 0, `${plantedLinks} links`);
+  await planted._ctx.close();
 }
 
 await browser.close(); server.close();

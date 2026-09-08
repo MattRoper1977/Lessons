@@ -54,3 +54,21 @@ The publisher is immutable and never edits source, so the file is committed
 and kept in step by `.github/workflows/ux2-gates.yml` (on the paths it names
 and once a day). The same workflow keeps `data/calendar-spine.json` equal to
 its derivation from `_sownb/CALENDAR_2026_27.json` (`tools/ux2/build_spine.py`).
+
+## Planning keys (UX2 B4)
+
+`data/planning-keys.json` says which (subject, pathway, half-term, unit) keys
+hold at least one non-lesson resource. The subject page reads it to decide
+which accordion rows show "Planning and evidence →". It is **derived, never
+typed**, but by a generator in the site repository, because the rule is the
+Resources page's:
+
+```sh
+python3 domain-split/ux2_planning_keys.py --lessons <this checkout> \
+        --out <this checkout>/data/planning-keys.json    # run from the site repository
+```
+
+Nothing here can regenerate it, so re-run that after any change to
+`resources.json`. `tools/ux2/hub_gates.mjs` proves the links the file produces
+against the rendered rows in both directions, which catches a stale file in the
+direction that matters.
