@@ -674,6 +674,14 @@ ALLOWED_DIFF = {
     "data/calendar-spine.json",
     "data/resource-sizes.json",
     "data/planning-keys.json",
+    # ORDER UX2 Part D2 (2026-09-08): each subject's checksum manifest is
+    # regenerated in the content PR that places companion packs (the order
+    # requires it). A checksum list is a record of bytes, not a studio; the
+    # gate that proves the packs is tools/ux2/check_companion_packs.py.
+    "Humanities_Teesside/Teaching_Packs/SHA256SUMS.txt",
+    "Science_Teesside/Teaching_Packs/BUILD/SHA256SUMS.txt",
+    "Science_Teesside/Teaching_Packs/GROW/SHA256SUMS.txt",
+    "Science_Teesside/Teaching_Packs/LAUNCH/SHA256SUMS.txt",
 }
 
 
