@@ -101,7 +101,7 @@ MANIFEST_PINS = {
     # Ruled onto the pin 2026-08-12 (Ruling 3): the deck install is a
     # resources.json edit, and the blanket rule forbade it the same way it
     # once forbade studio adds. Same pattern, same tool, same commit rule.
-    "resources.json": "e925dc862edf979ffb543adefe15df7853468e6e075740ee8152ab8b3eb2941a",
+    "resources.json": "605b8129dd3eeca28409848f6911912bea2e7b0ff23fc947cf335026d64fa94c",
 }
 PIN_COMMAND = "python3 tools/pin_manifests.py   (from either checkout — it writes both gate copies or neither)"
 
@@ -552,14 +552,20 @@ CATALOGUE_PINS = {
 # an edited, deleted or reordered original resource, or an extra lesson row.
 CATALOGUE_ORIGINAL_ROWS = 734
 CATALOGUE_ORIGINAL_ROWS_SHA256 = "b8ffcb16f5fd2a413e8a0b06ad2d4b112f450364fa294377869dc32c8235bb2c"
-CATALOGUE_SHELF_ROWS = 49
+# The appended rows are the 49 reviewed hub rows followed, since UX2 D3
+# (2026-09-08), by the companion-pack entries DERIVED from
+# data/companion-packs.json by tools/ux2/companion_catalogue.py. The count and
+# digest below are re-cut by tools/catalogue/pin_catalogue_contract.py from
+# rows it has verified against that derivation; an edit to any appended row,
+# a removed pack row or an extra lesson row still reds here.
+CATALOGUE_SHELF_ROWS = 114
 # UX2 A1: keys that may be appended to an original row without moving its
 # digest (see catalogue_errors). Nothing else is additive. No original row
 # carried either key before the ruling (measured 2026-09-08: 0 of 734), so the
 # second set is empty and the allowance cannot launder a pre-existing value.
 CATALOGUE_ADDITIVE_TAG_KEYS = frozenset({"halfTerm", "unit"})
 CATALOGUE_ORIGINAL_KEYS_BEFORE_TAGS = frozenset()
-CATALOGUE_SHELF_ROWS_SHA256 = "3ab3e66308af203301acf75d57fa78728c83e6a336ba8a17d0392d9a092859c5"
+CATALOGUE_SHELF_ROWS_SHA256 = "cd8f2f33a77634501e5e1f6efacdc0b95daf00284d9bbfcfbd844de34bdbb53c"
 
 # These named review records and review tools can change with their reviewed
 # transaction. Tools are not served assets; they are reviewed as executable

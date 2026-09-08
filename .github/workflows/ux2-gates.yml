@@ -79,6 +79,10 @@ jobs:
           python3 tools/ux2/unit_tags.py --check
       - name: The shared contract gate still catches every non-tag edit to an original row
         run: python3 tools/ux2/prove_catalogue_gate.py
+      - name: The companion-pack entries equal their derivation, every file resolves once, and six plants go red
+        run: |
+          python3 tools/ux2/companion_catalogue.py --self-test
+          python3 tools/ux2/companion_catalogue.py --check
 
   derived-data:
     name: Published spine and size table equal their derivations

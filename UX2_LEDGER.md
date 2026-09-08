@@ -60,8 +60,42 @@ are the worklist. The Science family manifests' `topic` is a per-lesson topic
 
 ## Part D — companion packs
 
-See the D2/D3 pull requests and `data/companion-packs.json` for the per-pack
-inventory (placed files, held files and their reasons, drift flags).
+Per-pack inventory (placed files, held files and their reasons, drift flags):
+`data/companion-packs.json` (D2). The catalogue entries (D3) are DERIVED from
+it by `tools/ux2/companion_catalogue.py` and appended after the reviewed hub
+rows; `--check` and six red proofs run in the UX2 gates workflow, and the
+shared contract gate's appended-row count and digest are re-cut from the
+verified rows by `tools/catalogue/pin_catalogue_contract.py`.
+
+| item | verdict |
+|---|---|
+| 65 packs (Science 48: BUILD 15 / GROW 13 / LAUNCH 20; Humanities 17: BUILD 6 / GROW 5 / LAUNCH 6) | LANDED — 363 files byte-identical to intake under each subject's Teaching_Packs convention; 27 files held at file level (5 truncated Slides.pdf; 22 Teacher docx/pdf whose body text carries OUTSTANDING_V4 / _V3_1); the pack HTML is never deployed |
+| The LAUNCH Art W3 pack the Read Me claims | ABSENT from every uploaded zip — nothing landed, nothing stubbed |
+| Catalogue entries | 65 rows, one per pack, `kind:"pack"`, `companionOf`, `files[]`, `builtFrom`, `packRevisionDrift` (18 true), `halfTerm` (Autumn 2 = 58, Autumn 1 = 7) |
+| Pack chip on a lesson row | NOT YET — none of the 65 matched lessons has a catalogue row (the record lists each directory's START_HERE and the reviewed "Classic" lessons only), so every pack renders as its own row under its subject × pathway × half-term and the chip attaches to 0 lesson rows today; a future catalogue row for a matched lesson attaches its pack automatically (`companionOf` join) |
+| The two packs that pre-date the order (BUILD Science W3A Backbones; GROW Humanities W3) | UNTOUCHED — catalogued as hub rows already; drift reported in the D2 report, not re-catalogued |
+| Size (measured with `du -sb`) | Lessons working tree 924,204,578 B → 1,025,995,956 B (+101,791,378 B incl. the manifest and tools); the published `education-lessons` tree 685,727,843 B before Part D, so ≈787 MB after the 363 files land — about 213 MB of headroom under the 1 GB Pages limit; each publication tree is its own Pages site |
+
+## Part D AUTO-DECISIONs
+
+1. **Subject and family of a pack row** come from the catalogue row that states
+   its lesson directory's convention (the START_HERE teacher row), never typed:
+   Science packs read "Science · Teesside" / "Science Teesside" (four BUILD
+   W14–W20 packs read the directory's "BUILD Science", two LAUNCH Autumn-2 W7
+   packs "LAUNCH Science"); Humanities packs "Humanities" / "Humanities Teesside".
+2. **halfTerm of a pack row** is the matched lesson's when that lesson is
+   catalogued, else the pack's own term from the filename week (D2's
+   tie-break rule); `unit` is copied only from a catalogued lesson, so no pack
+   row carries one today.
+3. **Row id** is the manifest id with `_` → `-` (`pack-launch-science-a2-w7l2`)
+   because the catalogue id pattern is `^[a-z0-9-]+$`; nothing else changes.
+4. **The catalogue PR touches** resources.json, the schema (own commit), the
+   derivation tool, the UX2 gates workflow, the size table, the pin tool and
+   the gate's re-cut literals, and this ledger — and zero files under any
+   Teaching_Packs tree (GLV3 isolation asserted both ways).
+5. **Type** of a pack row is `support` (the record's existing value for
+   material that sits alongside a lesson); `kind:"pack"` is the discriminator
+   the hub and the Resources page read.
 
 ## AUTO-DECISIONs
 
