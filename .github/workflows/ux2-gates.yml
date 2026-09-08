@@ -1,0 +1,60 @@
+name: UX2 gates
+
+# Order UX2 (2026-09-08). New workflow, additive: it never replaces or narrows an
+# existing gate. Each job proves itself red on a planted defect before it is
+# allowed to report green (silence ≠ green).
+#
+# catalogue-contract — the catalogue's schema is enforced (it existed but ran
+#   nowhere before A1), the halfTerm/unit tags equal their derivation from the
+#   named sources, and the shared contract gate still bites after the
+#   additive-tag allowance.
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - resources.json
+      - resources.schema.json
+      - tools/ux2/**
+      - tools/verify_cross_estate_unification.py
+      - tools/catalogue/pin_catalogue_contract.py
+      - assets/catalogue/terms-and-styles.json
+      - .github/workflows/ux2-gates.yml
+  push:
+    branches: [main]
+    paths:
+      - resources.json
+      - resources.schema.json
+      - tools/ux2/**
+      - tools/verify_cross_estate_unification.py
+      - tools/catalogue/pin_catalogue_contract.py
+      - assets/catalogue/terms-and-styles.json
+      - .github/workflows/ux2-gates.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ux2-gates-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  catalogue-contract:
+    name: Catalogue schema, tags and contract (proven red first)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: The schema is enforced, and eight planted defects are refused
+        run: |
+          python3 tools/ux2/check_catalogue_schema.py --self-test
+          python3 tools/ux2/check_catalogue_schema.py
+      - name: The tags equal their derivation, and the derivation's own controls go red
+        run: |
+          python3 tools/ux2/unit_tags.py --self-test
+          python3 tools/ux2/unit_tags.py --check
+      - name: The shared contract gate still catches every non-tag edit to an original row
+        run: python3 tools/ux2/prove_catalogue_gate.py
