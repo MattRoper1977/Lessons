@@ -35,32 +35,39 @@ def chassis(p):
     if 'LAUNCH_W9' in p: return 'hum-launch'
     return 'classic'
 
-def week_of(name):
-    m = re.search(r'_W(\d+)', name); return int(m.group(1)) if m else None
+def entry_week(x):
+    """A lesson's teaching week comes from its manifest entry — the ruled workbook cell (cells[].termWeek) or the entry's own
+    week field — never from a path (VB-RUN13 R0 / g27)."""
+    if isinstance(x.get('absoluteWeek'), int): return x['absoluteWeek']
+    if isinstance(x.get('week'), int): return x['week']
+    for c in x.get('cells') or []:
+        if isinstance(c.get('absoluteWeek'), int): return c['absoluteWeek']
+    return None
 
 def sequence(path):
-    """The family's recommended lesson sequence (manifest order, RX3 _CLASSIC siblings excluded): returns (n, N, unit, weekmap)."""
-    d = os.path.dirname(path); mf = next((os.path.join(d, m) for m in ('manifest.json', 'manifest-v3.1.json', 'manifest-v3.json') if os.path.exists(os.path.join(d, m))), None)
-    files = []
+    """The family's recommended lesson sequence (manifest order, RX3 _CLASSIC siblings excluded): (n, N, unit, weekmap, weeks).
+    Weeks come from the manifest entries only; a file with no manifest entry gets n=None and its own-week strips are left alone."""
+    d = os.path.dirname(path); mf = next((os.path.join(d, m) for m in ('manifest-v3.1.json', 'manifest-v3.json', 'manifest.json') if os.path.exists(os.path.join(d, m))), None)
+    files = []; unit = ''
     if mf:
-        m = json.load(open(mf, encoding='utf-8')); L = m.get('lessons') or m.get('sequence') or []
+        m = json.load(open(mf, encoding='utf-8')); L = m.get('lessons') or m.get('sequence') or []; unit = m.get('title') or ''
         for x in L:
             f = x.get('file') or x.get('path') or ''
             if not f or '_CLASSIC' in (x.get('id') or '') or '_Classic' in f or 'START_HERE' in f: continue
-            files.append((x.get('week') or week_of(f) or 0, f))
-    if not files:
-        files = [(week_of(f) or 0, f) for f in sorted(os.listdir(d)) if f.endswith('.html') and 'START_HERE' not in f and '_Classic' not in f]
-    files.sort(key=lambda t: (t[0], t[1])); names = [f for _, f in files]
+            w = entry_week(x)
+            if w is None: continue
+            files.append((w, f))
+    names = [f for _, f in files]   # manifest order IS the recommended sequence; never re-sorted, never read from a path
     base = os.path.basename(path); n = names.index(base) + 1 if base in names else None; N = len(names)
     weekmap = {}
     for i, (w, f) in enumerate(files): weekmap.setdefault(w, []).append(i + 1)
-    unit = (json.load(open(mf, encoding='utf-8')).get('title') if mf else '') or ''
+    own = files[n - 1][0] if n else None
     if FORBID.search(unit or ''): unit = ''
-    return n, N, unit, weekmap, [w for w, _ in files]
+    return n, N, unit, weekmap, [w for w, _ in files], own
 
 class Rewriter:
     def __init__(s, path, rel):
-        s.n, s.N, s.unit, s.weekmap, s.weeks = sequence(path); s.own = week_of(os.path.basename(path)); s.rel = rel
+        s.n, s.N, s.unit, s.weekmap, s.weeks, s.own = sequence(path); s.rel = rel
         s.lo, s.hi = (min(s.weeks), max(s.weeks)) if s.weeks else (None, None)
     def lesson_ref(s, w, letter=None):
         if w == s.own and not letter: return 'this lesson'
