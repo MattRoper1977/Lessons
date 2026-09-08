@@ -31,7 +31,10 @@ check('No browser zoom restriction added',all('user-scalable=no' not in (r/p).re
 humanities=json.loads((r/'assets/catalogue/humanities-shelf.json').read_text())['lessons']
 hselection=json.loads((r/'tools/catalogue/HUMANITIES_SELECTION.json').read_text())
 selected=hselection['lessons']
-declared={row['file'] for row in rows if row.get('subject','').casefold()==hselection['resourcesSubject'].casefold() and row.get('type')!='hub'}
+# UX2 D3: the shelf lists the subject's lessons. A companion pack is a support row
+# whose file is a deck placed beside a lesson, so it is not a shelf entry; the pack
+# rows are checked against their own derivation by tools/ux2/companion_catalogue.py.
+declared={row['file'] for row in rows if row.get('subject','').casefold()==hselection['resourcesSubject'].casefold() and row.get('type')!='hub' and row.get('kind')!='pack'}
 for manifest_path in hselection['manifestSources']:
  mf=r/manifest_path;md=json.loads(mf.read_text())
  for row in md.get('lessons',md.get('sequence',[])):

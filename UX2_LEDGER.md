@@ -96,6 +96,19 @@ verified rows by `tools/catalogue/pin_catalogue_contract.py`.
 5. **Type** of a pack row is `support` (the record's existing value for
    material that sits alongside a lesson); `kind:"pack"` is the discriminator
    the hub and the Resources page read.
+6. **Pack rows in the shipped-tree checks.** Three checks that read the whole
+   catalogue treated every row as a lesson-shaped one. Each is a scope statement,
+   not a narrowing: `preserved_rows_errors()` called with no pack rows now derives
+   them from this checkout's placement manifest (the Site runs
+   `check_catalogue_static.py` from its pinned Lessons source and passes none, so
+   the default of "no packs" read all 65 real rows as unreviewed appends); the
+   Humanities shelf selection excludes `kind: "pack"` (a pack's file is a deck
+   placed beside a lesson, not a shelf entry); and every pack row's file now
+   carries a term-and-style evidence entry DERIVED by
+   `tools/ux2/companion_catalogue.py --write` from the manifest — half-term and
+   pathway from the row's own derived values, the digest the D2 manifest recorded,
+   method "companion pack placement manifest" — appended in derivation order with
+   the record's existing 907 entries untouched. `--check` re-derives all three.
 
 ## AUTO-DECISIONs
 

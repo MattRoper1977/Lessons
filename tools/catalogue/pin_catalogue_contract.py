@@ -911,7 +911,14 @@ def pack_rows_for(lessons: Path, rows: list) -> list:
 
 
 def preserved_rows_errors(rows: list, pack_rows: list | None = None) -> list[str]:
-    pack_rows = pack_rows or []
+    # UX2 D3: callers that check the shipped tree (check_catalogue_static.py, the
+    # contract controls, and the Site's own job running this module from its pinned
+    # Lessons source) pass no pack rows. Derive them from this checkout's placement
+    # manifest rather than defaulting to none, which would read every real pack row
+    # as an unreviewed append. An explicit list still wins, and a checkout without
+    # the manifest still derives the empty tail.
+    if pack_rows is None:
+        pack_rows = pack_rows_for(Path(__file__).resolve().parents[2], rows)
     errors = []
     if len(rows) != ORIGINAL_ROW_COUNT + len(SHELF_ROWS) + len(pack_rows):
         errors.append("catalogue must contain the original 734 rows plus exactly the reviewed hub rows and the derived companion-pack rows")

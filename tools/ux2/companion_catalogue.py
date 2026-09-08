@@ -39,6 +39,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 CATALOGUE = ROOT / "resources.json"
 DEFAULT_MANIFEST = ROOT / "data/companion-packs.json"
+EVIDENCE = ROOT / "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json"
 HALF_TERMS = ("Autumn 1", "Autumn 2", "Spring 1", "Spring 2", "Summer 1", "Summer 2")
 ROLES = ("lesson", "teacher", "pupil", "slides")
 TYPES = ("pptx", "docx", "pdf")
@@ -142,6 +143,70 @@ def apply(rows: list[dict], packs: list[dict]) -> list[dict]:
     return [r for r in rows if not is_pack(r)] + packs
 
 
+
+def evidence_entries(packs: list[dict], manifest: dict, tree: Path) -> dict:
+    """The term/style evidence for each pack row's file, DERIVED like the row itself.
+
+    check_catalogue_static.py requires every catalogue row's file to carry an entry
+    in tools/catalogue/TERM_AND_STYLE_EVIDENCE.json. A pack row's file is a newly
+    placed deck, so its entry is derived here rather than authored: the half-term
+    and pathway are the row's own derived values, the digest is the one the D2
+    placement manifest recorded for that file (the same digest check_companion_packs
+    re-verifies against the bytes on disk), and the method names the manifest.
+    """
+    by_id = {pack["id"].replace("_", "-"): pack for pack in manifest["packs"]}
+    out = {}
+    for row in packs:
+        pack = by_id[row["id"]]
+        placed = {f["path"]: f for f in pack["files"]}
+        digest = (placed.get(row["file"]) or {}).get("sha256")
+        entry = {
+            "term": row["halfTerm"],
+            "terms": [row["halfTerm"]],
+            "style": "current",
+            "pathway": pack["pathway"],
+            "evidence": [{
+                "method": "companion pack placement manifest",
+                "source": "data/companion-packs.json",
+                "pack": pack["id"],
+                "companionOf": row["companionOf"],
+                "builtFrom": row["builtFrom"],
+            }],
+            "batch": "UX2 Part D companion packs",
+            "title": row["title"],
+        }
+        if digest:
+            entry["sha256"] = digest
+        out[row["file"]] = entry
+    return out
+
+
+def evidence_errors(packs: list[dict], manifest: dict, tree: Path) -> list[str]:
+    if not EVIDENCE.is_file():
+        return ["no term-and-style evidence record to check pack entries against"]
+    have = read_json(EVIDENCE)["entries"]
+    want = evidence_entries(packs, manifest, tree)
+    errors = []
+    for path, entry in want.items():
+        if path not in have:
+            errors.append(f"{path}: no term-and-style evidence entry for a pack row's file")
+        elif have[path] != entry:
+            keys = sorted(k for k in set(have[path]) | set(entry) if have[path].get(k) != entry.get(k))
+            errors.append(f"{path}: evidence entry differs from its derivation on {keys}")
+    return errors
+
+
+def write_evidence(packs: list[dict], manifest: dict, tree: Path) -> int:
+    record = read_json(EVIDENCE)
+    entries = record["entries"]
+    want = evidence_entries(packs, manifest, tree)
+    changed = sum(1 for path, entry in want.items() if entries.get(path) != entry)
+    # Append in derivation order; never reorder the record's existing entries.
+    entries.update(want)
+    record["entries"] = entries
+    EVIDENCE.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n", "utf-8")
+    return changed
+
 def check(rows: list[dict], manifest: dict, tree: Path) -> list[str]:
     errors: list[str] = []
     packs, problems = derive(rows, manifest)
@@ -154,6 +219,7 @@ def check(rows: list[dict], manifest: dict, tree: Path) -> list[str]:
         if h != w:
             keys = sorted(k for k in set(h) | set(w) if h.get(k) != w.get(k))
             errors.append(f"pack row {index} ({h.get('id')}): differs from the derivation on {keys}")
+    errors.extend(evidence_errors(packs, manifest, tree))
     if rows and is_pack(rows[0]):
         errors.append("a pack row precedes the original rows (packs are appended)")
     first_pack = next((i for i, r in enumerate(rows) if is_pack(r)), len(rows))
@@ -241,7 +307,8 @@ def main() -> int:
             print(json.dumps({"notLanded": problems}, ensure_ascii=False, indent=2))
         text = serialise(apply(rows, packs))
         CATALOGUE.write_text(text, "utf-8")
-        print(f"[DONE] {len(packs)} pack rows written after {sum(1 for r in rows if not is_pack(r))} rows ({len(problems)} not landed)")
+        moved = write_evidence(packs, manifest, args.tree)
+        print(f"[DONE] {len(packs)} pack rows written after {sum(1 for r in rows if not is_pack(r))} rows ({len(problems)} not landed); {moved} evidence entr(y/ies) written")
         rows = json.loads(text)
     if args.check or not (args.write or args.report):
         errors = check(rows, manifest, args.tree)
