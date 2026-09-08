@@ -92,7 +92,8 @@ async function goto(page, route, hub = false) {
   const response = await page.goto(targetURL(route), { waitUntil: 'domcontentloaded' });
   assert(response && response.ok(), `Route ${route} returned ${response?.status()}`);
   if (hub) {
-    await page.waitForFunction(() => document.querySelector('#term') && !document.querySelector('#term').disabled && /\d+ of \d+ resources/.test(document.querySelector('#count')?.textContent || ''));
+    // UX2: the hub renders a derived count line; the subject page a derived summary line.
+    await page.waitForFunction(() => /\d+ (of \d+ )?resources/.test(document.querySelector('#count')?.textContent || '') || /\d+ lessons/.test(document.querySelector('#summary')?.textContent || ''));
   } else {
     const html = await response.text();
     assert(/<script\b[^>]*src=["'][^"']*assets\/catalogue\/lesson-navigation\.js(?:\?[^"']*)?["']/i.test(html), 'Built lesson HTML lacks the publication-injected navigation script');
@@ -137,45 +138,62 @@ async function newPage(browser, viewport = { width: 390, height: 844 }, init) {
   return { context, page };
 }
 
+async function assertPageContrast(page) {
+  // UX2 A2/A3: the hub and subject page have no hero; measure the visible headline text.
+  const evidence = await page.evaluate(() => {
+    const rgb = value => { const m = value.match(/^rgba?\(\s*([\d.]+)[, ]+([\d.]+)[, ]+([\d.]+)(?:\s*[,/]\s*([\d.]+))?\s*\)$/); if (!m) throw new Error('Unsupported computed color: ' + value); return [+m[1], +m[2], +m[3], m[4] === undefined ? 1 : +m[4]]; };
+    const over = (fg, bg) => fg.slice(0, 3).map((v, i) => v * fg[3] + bg[i] * (1 - fg[3]));
+    const luminance = c => c.map(v => { v /= 255; return v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; }).reduce((n, v, i) => n + v * [.2126, .7152, .0722][i], 0);
+    const contrast = (a, b) => { const x = luminance(a), y = luminance(b); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); };
+    const targets = [...document.querySelectorAll('main h1, main .lead, main #summary, main #count, main .acc > button, main .scard h3')].filter(e => e.getBoundingClientRect().height > 0 && e.textContent.trim());
+    if (targets.length < 2) throw new Error('Headline text targets are missing');
+    return targets.map(e => {
+      let underlay = [255, 255, 255]; const ancestors = []; for (let n = e; n; n = n.parentElement) ancestors.unshift(n);
+      for (const n of ancestors) underlay = over(rgb(getComputedStyle(n).backgroundColor), underlay);
+      const style = getComputedStyle(e); const color = rgb(style.color);
+      const large = parseFloat(style.fontSize) >= 24 || (parseFloat(style.fontSize) >= 18.66 && Number(style.fontWeight) >= 700);
+      return { text: e.textContent.trim().slice(0, 40), selector: e.tagName.toLowerCase(), required: large ? 3 : 4.5, minimum: contrast(over(color, underlay), underlay) };
+    });
+  });
+  for (const item of evidence) assert(item.minimum >= item.required, `${item.selector} "${item.text}" has contrast ${item.minimum.toFixed(2)}:1, below ${item.required}:1`);
+  return evidence;
+}
+
 async function hubTests(browser) {
   const { context, page } = await newPage(browser);
-  await checkCase('subject-pathway-filter-and-url-reload', page, async () => {
-    await goto(page, '/Lessons/?subject=Science&pathway=LAUNCH&term=Aut1', true);
-    const heroContrast = await assertHeroContrast(page);
-    assert.equal(await page.locator('#subject-group').inputValue(), 'Science');
-    assert.equal(await page.locator('#pathway').inputValue(), 'LAUNCH');
-    assert.equal(await page.locator('#term').inputValue(), 'Aut1');
-    assert.match(await page.locator('label:has(#subject-group)').innerText(), /^Subject/);
-    assert.match(await page.locator('label:has(#pathway)').innerText(), /^Pathway/);
-    const subjects = await page.locator('#subject-group option').allTextContents();
-    assert(!subjects.some(s => ['BUILD', 'GROW', 'LAUNCH'].includes(s.trim())), 'Pathways are still presented as subjects');
-    const cards = await page.locator('#cards .card').evaluateAll(els => els.map(e => ({ kind: e.querySelector('.kind')?.textContent, route: e.dataset.resourcePath, text: e.textContent })));
-    assert(cards.length > 0 && cards.every(c => /^Science\s*·/.test(c.kind) && /LAUNCH/.test(c.text)), 'Subject/pathway selection produced an unrelated or unlabelled card');
-    await page.locator('#pathway').selectOption('GROW');
+  await checkCase('subject-pathway-selection-and-url-reload', page, async () => {
+    await goto(page, '/Lessons/subject.html?subject=science&pathway=LAUNCH', true);
+    const contrast = await assertPageContrast(page);
+    assert.equal(await page.locator('#seg [role="tab"][aria-selected="true"]').getAttribute('data-pathway'), 'LAUNCH');
+    assert.match(await page.locator('#sub-name').innerText(), /^SCIENCE$/);
+    const tabs = await page.locator('#seg [role="tab"]').allTextContents();
+    assert(tabs.some(t => /LAUNCH/.test(t)) && tabs.some(t => /BUILD/.test(t)), 'Pathway control is missing a pathway');
+    const rows = await page.locator('#rows .lrow').evaluateAll(els => els.map(e => e.dataset.resourcePath));
+    assert(rows.length > 0 && rows.every(r => /Launch|LAUNCH/.test(r)), 'Pathway selection produced an unrelated row');
+    await page.locator('#seg [role="tab"][data-pathway="GROW"]').click();
     assert.equal(new URL(page.url()).searchParams.get('pathway'), 'GROW');
     await page.reload({ waitUntil: 'domcontentloaded' });
-    await page.waitForFunction(() => document.querySelector('#pathway').value === 'GROW' && document.querySelectorAll('#cards .card').length > 0);
-    return { cards: cards.length, heroContrast, screenshot: await shot(page, 'hub-science-grow-390') };
+    await page.waitForFunction(() => document.querySelector('#seg [role="tab"][aria-selected="true"]')?.dataset.pathway === 'GROW' && document.querySelectorAll('#rows .lrow').length > 0);
+    return { rows: rows.length, contrast: contrast.length, screenshot: await shot(page, 'subject-science-grow-390') };
   });
-  await checkCase('browser-history-restores-root-selection', page, async () => {
-    await goto(page, '/Lessons/?subject=Art&pathway=BUILD&term=Aut2', true);
-    await goto(page, '/Lessons/?subject=Science&pathway=GROW&term=Aut1', true);
+  await checkCase('browser-history-restores-subject-selection', page, async () => {
+    await goto(page, '/Lessons/subject.html?subject=art-studio&pathway=BUILD', true);
+    await goto(page, '/Lessons/subject.html?subject=science&pathway=GROW', true);
     await page.goBack({ waitUntil: 'domcontentloaded' });
-    await page.waitForFunction(() => document.querySelector('#subject-group')?.value === 'Art' && document.querySelector('#pathway')?.value === 'BUILD');
-    assert.equal(await page.locator('#term').inputValue(), 'Aut2');
-    return { url: page.url(), count: await page.locator('#cards .card').count() };
+    await page.waitForFunction(() => /ART STUDIO/.test(document.querySelector('#sub-name')?.textContent || '') && document.querySelector('#seg [role="tab"][aria-selected="true"]')?.dataset.pathway === 'BUILD');
+    return { url: page.url(), count: await page.locator('#rows .lrow').count() };
   });
-  await checkCase('save-persists-reload-and-saved-filter-removal', page, async () => {
-    await goto(page, '/Lessons/?subject=Art&pathway=BUILD&term=Aut2&q=Surface%20Hunt', true);
+  await checkCase('save-persists-reload-and-saved-view-removal', page, async () => {
+    await goto(page, '/Lessons/?q=Surface%20Hunt', true);
     const save = page.locator('#cards .card').filter({ has: page.locator('a[href*="BUILD_ART_A2_W1_Surface_Hunt.html"]') }).locator('button[data-save]').first();
     const resource = await save.getAttribute('data-save');
     assert(resource, 'Surface Hunt card does not expose its save key');
     await save.scrollIntoViewIfNeeded(); await save.focus(); await page.keyboard.press('Enter');
     await page.waitForFunction(key => JSON.parse(localStorage.getItem(key) || '[]').length === 1, SAVE_KEY);
     assert.equal(await save.getAttribute('aria-pressed'), 'true');
-    assert.equal(await page.locator('#saved-count').innerText(), '1');
+    assert.equal(await page.locator('[data-saved-count]').first().innerText(), '1');
     await page.reload({ waitUntil: 'domcontentloaded' });
-    await page.waitForFunction(() => document.querySelector('#saved-count')?.textContent === '1');
+    await page.waitForFunction(() => document.querySelector('[data-saved-count]')?.textContent === '1');
     await page.locator('[data-view="saved"]').click();
     assert.equal(new URL(page.url()).searchParams.get('view'), 'saved');
     assert.equal(await page.locator('#cards .card').count(), 1);
@@ -183,26 +201,27 @@ async function hubTests(browser) {
     await page.locator('#cards button[data-save]').click();
     assert.equal(await page.locator('#cards .card').count(), 0);
     assert.match(await page.locator('#cards').innerText(), /No saved lessons/);
-    assert.equal(await page.locator('#saved-count').innerText(), '0');
+    assert.equal(await page.locator('[data-saved-count]').first().innerText(), '0');
     return { resource, screenshot };
   });
   await checkCase('lesson-link-captures-context-and-recent-lesson', page, async () => {
-    const selected = '/Lessons/?subject=Art&pathway=BUILD&term=Aut2&q=Surface%20Hunt';
+    const selected = '/Lessons/subject.html?subject=art-studio&pathway=BUILD&q=Surface%20Hunt';
     await goto(page, selected, true);
     const expected = new URL(page.url()).pathname + new URL(page.url()).search;
-    assertSameRoute(expected, selected, 'Selected lesson finder');
-    await page.locator('#cards a.go[href*="BUILD_ART_A2_W1_Surface_Hunt.html"]').click();
+    assertSameRoute(expected, selected, 'Selected subject page');
+    for (let i = 0; i < 50; i++) { const t = page.locator('button[data-toggle][aria-expanded="false"]').first(); if (!(await t.count())) break; await t.click(); }
+    await page.locator('#rows a.go[href*="BUILD_ART_A2_W1_Surface_Hunt.html"]').first().click();
     await page.waitForURL(targetURL(SURFACE));
     await page.waitForSelector('#mbm-lesson-tools #mbmhud-back');
     const back = await page.locator('#mbmhud-back').getAttribute('href');
     assertSameRoute(back, selected, 'Lessons return link');
     const stored = await page.evaluate(({ key, route }) => JSON.parse(sessionStorage.getItem(key) || '{}')[route], { key: RETURN_KEY, route: SURFACE });
-    assertSameRoute(stored, selected, 'Stored lesson finder context');
+    assertSameRoute(stored, selected, 'Stored subject-page context');
     await page.locator('#mbmhud-back').click();
-    await page.waitForFunction(() => document.querySelector('#subject-group')?.value === 'Art' && document.querySelector('#pathway')?.value === 'BUILD');
-    assertSameRoute(page.url(), selected, 'Returned lesson finder');
-    assert.equal(await page.locator('#term').inputValue(), 'Aut2');
+    await page.waitForFunction(() => /ART STUDIO/.test(document.querySelector('#sub-name')?.textContent || '') && document.querySelector('#seg [role="tab"][aria-selected="true"]')?.dataset.pathway === 'BUILD');
+    assertSameRoute(page.url(), selected, 'Returned subject page');
     assert.equal(await page.locator('#search').inputValue(), 'Surface Hunt');
+    await goto(page, '/Lessons/?view=saved', true);
     assert(await page.locator('#lesson-recent a[href*="BUILD_ART_A2_W1_Surface_Hunt.html"]').count() > 0, 'Opened lesson is missing from Recently opened');
     return { returnedTo: page.url() };
   });
@@ -222,6 +241,19 @@ async function hubTests(browser) {
     await page.waitForSelector('#mbm-lesson-tools #mbmhud-back');
     assert.equal(new URL(await page.locator('#mbmhud-back').getAttribute('href'), origin).href, targetURL(route));
     return { destination: destination.pathname, screenshot: await shot(page, 'recommended-science-return-context-390') };
+  });
+  await checkCase('subject-page-pack-sheet-when-a-pack-exists', page, async () => {
+    // Non-vacuous only once companion packs are catalogued (UX2 D3); records the state either way.
+    await goto(page, '/Lessons/subject.html?subject=science&pathway=BUILD', true);
+    for (let i = 0; i < 50; i++) { const t = page.locator('button[data-toggle][aria-expanded="false"]').first(); if (!(await t.count())) break; await t.click(); }
+    const chip = page.locator('button[data-pack]').first();
+    if (!(await chip.count())) return { packs: 0, note: 'no pack entries in the record' };
+    await chip.click();
+    assert(await page.locator('#pack-sheet[open]').count(), 'Pack sheet did not open');
+    assert(await page.locator('#pack-sheet a[href]').count() >= 1, 'Pack sheet lists no file');
+    await page.keyboard.press('Escape');
+    assert(await page.evaluate(() => document.activeElement?.dataset?.pack != null), 'Focus did not return to the Pack chip');
+    return { packs: await page.locator('button[data-pack]').count() };
   });
   await context.close();
 }
@@ -282,7 +314,8 @@ async function educationJourneyTests(browser) {
         await page.waitForSelector('.learning-shortcuts');
       }
       await page.locator('a.route-card').filter({ has: page.getByRole('heading', { name: 'Art', exact: true }) }).click();
-      await page.waitForFunction(() => document.querySelector('#subject-group')?.value === 'Art' && document.querySelectorAll('#cards .card').length > 0);
+      // UX2: the old ?subject=Art query still resolves on the hub as the flat Art results.
+      await page.waitForFunction(() => new URLSearchParams(location.search).get('subject') === 'Art' && document.querySelectorAll('#cards .card').length > 0);
       assert.equal(new URL(page.url()).searchParams.get('subject'), 'Art');
       await page.goBack({ waitUntil: 'domcontentloaded' });
       await page.locator('.section-head').filter({ has: page.getByRole('heading', { name: 'Go straight to your subject' }) }).scrollIntoViewIfNeeded();
@@ -339,10 +372,12 @@ async function educationJourneyTests(browser) {
       assert.equal(await page.locator('#rxSearch').inputValue(), '');
       assert(await page.locator('#rxOut .rx-cardx').count() > 0);
       await page.locator('.education-jumps a[href="/Lessons/"]').click();
-      await page.waitForFunction(() => /\d+ of \d+ resources/.test(document.querySelector('#count')?.textContent || ''));
+      // UX2: the hub's browse view derives "<M> resources · <S> subjects" and shows the subject cards.
+      await page.waitForFunction(() => /\d+ resources · \d+ subjects/.test(document.querySelector('#count')?.textContent || ''));
       assert.equal(new URL(page.url()).pathname, '/Lessons/');
-      assert.match(await page.locator('h1').innerText(), /Find your next lesson/);
-      assert(await page.locator('#subject-group').isVisible(), 'Resource hub returns to the older lesson browser');
+      assert.match(await page.locator('main h1').innerText(), /^Lessons$/);
+      assert(await page.locator('#subjects').isVisible(), 'Resource hub does not return to the subject cards');
+      assert((await page.locator('#scards .scard').count()) >= 4, 'Resource hub returns to a hub without subject cards');
       return { matched: cards, screenshots };
     });
     await context.close();
@@ -358,7 +393,7 @@ async function storageAndUntrustedContextTests(browser) {
     await goto(blocked.page, '/Lessons/?subject=Art&pathway=BUILD&term=Aut2&q=Surface%20Hunt', true);
     await blocked.page.locator('#cards button[data-save]').first().click();
     assert.match(await blocked.page.locator('#lesson-save-status').innerText(), /cannot save/);
-    assert.equal(await blocked.page.locator('#saved-count').innerText(), '0');
+    assert.equal(await blocked.page.locator('[data-saved-count]').first().innerText(), '0');
     assert.equal(await blocked.page.locator('#cards button[data-save]').first().getAttribute('aria-pressed'), 'false');
     await goto(blocked.page, SURFACE);
     const back = new URL(await blocked.page.locator('#mbmhud-back').getAttribute('href'), origin);

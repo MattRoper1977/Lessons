@@ -125,10 +125,23 @@ def run(lessons: Path, apps: Path, canonical: Path) -> list[dict]:
 
         # Re-pinning cannot bless an edited original row, and failure writes
         # neither gate. Likewise divergent gate logic must be reconciled first.
-        originals = [(lroot / GATE).read_bytes(), (aroot / GATE).read_bytes()]
+        estate = [(lroot / GATE).read_bytes(), (aroot / GATE).read_bytes()]
         manifest = lroot / "resources.json"; manifest_bytes = manifest.read_bytes()
         changed = json.loads(manifest_bytes); changed[0]["title"] += " sabotage"; manifest.write_text(json.dumps(changed))
         try:
+            if estate[0] != estate[1]:
+                # Order UX2 (2026-09-08): the Apps copy of the gate trails the Lessons
+                # copy — the order writes nothing to the Apps repository (UX2_LEDGER.md,
+                # AUTO-DECISION 1). On the real pair every re-pin refuses before it
+                # reaches the row check, so the row and success-path controls below
+                # would pass for the wrong reason. Assert the real pair's refusal first,
+                # then run those controls on matching copies (the Lessons copy in both
+                # roots), which is the precondition their names state.
+                generic = subprocess.run(["python3", str(lroot / "tools/pin_manifests.py"), "--lessons", str(lroot), "--apps", str(aroot)], text=True, capture_output=True)
+                check("A trailing Apps gate copy makes the generic re-pin refuse and write neither gate", generic.returncode != 0 and estate == [(lroot / GATE).read_bytes(), (aroot / GATE).read_bytes()])
+                (aroot / GATE).write_bytes(estate[0])
+            originals = [(lroot / GATE).read_bytes(), (aroot / GATE).read_bytes()]
+            check("Re-pin controls run on matching gate copies", originals[0] == originals[1])
             rejected = False
             try: pin(lroot, aroot, check=False)
             except ValueError: rejected = True
@@ -141,8 +154,8 @@ def run(lessons: Path, apps: Path, canonical: Path) -> list[dict]:
             check("Immutable row preservation still fails after a successful generic manifest re-pin", any("original catalogue row" in error for error in errors))
         finally:
             manifest.write_bytes(manifest_bytes)
-            for path, original in zip((lroot / GATE, aroot / GATE), originals): path.write_bytes(original)
-        (aroot / GATE).write_bytes(originals[1] + b"\n# divergence\n")
+            for path, original in zip((lroot / GATE, aroot / GATE), estate): path.write_bytes(original)
+        (aroot / GATE).write_bytes(estate[1] + b"\n# divergence\n")
         divergent = [(lroot / GATE).read_bytes(), (aroot / GATE).read_bytes()]
         rejected = False
         try: pin(lroot, aroot, check=False)

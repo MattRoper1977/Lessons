@@ -676,6 +676,8 @@ SHELF_ROWS = [{'subject': 'Science · Teesside',
 # The verifier and pin tool exclude themselves to avoid a recursive file hash.
 REVIEWED_PATHS = (
     "index.html", "Science_Teesside/index.html", "Humanities_Teesside/index.html", "humanities_teesside.html",
+    # UX2 A2/A3 (2026-09-08): the shared subject page, its engine, its stylesheet and the published spine.
+    "subject.html", "assets/catalogue/hub.js", "assets/catalogue/hub.css", "data/calendar-spine.json",
     "Humanities_Teesside/David_Cover_Autumn1_W3-W7/index.html",
     "assets/catalogue/catalogue.css", "assets/catalogue/catalogue.js",
     "assets/catalogue/lesson-navigation.js",
@@ -879,18 +881,54 @@ REVIEWED_PATHS += (
     '.github/workflows/science-teaching-packs.yml',
 )
 
+ADDITIVE_TAG_KEYS = frozenset({"halfTerm", "unit"})  # UX2 A1; mirrors CATALOGUE_ADDITIVE_TAG_KEYS in the gate
+
+
 def row_digest(rows: list) -> str:
     return hashlib.sha256(json.dumps(rows, ensure_ascii=False, separators=(",", ":")).encode("utf-8")).hexdigest()
 
 
-def preserved_rows_errors(rows: list) -> list[str]:
+def without_tags(rows: list) -> list:
+    return [{k: v for k, v in row.items() if k not in ADDITIVE_TAG_KEYS} for row in rows]
+
+
+def pack_rows_for(lessons: Path, rows: list) -> list:
+    """UX2 D3 (2026-09-08): the companion-pack entries are the catalogue's tail,
+    after the reviewed hub rows. They are not a second hand-kept literal: they
+    are DERIVED from data/companion-packs.json (the D2 placement manifest) by
+    tools/ux2/companion_catalogue.py, whose --check and six red proofs run in
+    the UX2 gates workflow. Without that manifest the tail must be empty."""
+    manifest = lessons / "data/companion-packs.json"
+    if not manifest.is_file():
+        return []
+    tool = importlib.util.spec_from_file_location("companion_catalogue", lessons / "tools/ux2/companion_catalogue.py")
+    value = importlib.util.module_from_spec(tool)
+    tool.loader.exec_module(value)
+    packs, problems = value.derive([r for r in rows if r.get("kind") != "pack"], json.loads(manifest.read_text("utf-8")))
+    if problems:
+        raise ValueError("companion-pack derivation has problems; nothing pinned: " + "; ".join(f"{p['id']}: {p['problem']}" for p in problems[:3]))
+    return packs
+
+
+def preserved_rows_errors(rows: list, pack_rows: list | None = None) -> list[str]:
+    # UX2 D3: callers that check the shipped tree (check_catalogue_static.py, the
+    # contract controls, and the Site's own job running this module from its pinned
+    # Lessons source) pass no pack rows. Derive them from this checkout's placement
+    # manifest rather than defaulting to none, which would read every real pack row
+    # as an unreviewed append. An explicit list still wins, and a checkout without
+    # the manifest still derives the empty tail.
+    if pack_rows is None:
+        pack_rows = pack_rows_for(Path(__file__).resolve().parents[2], rows)
     errors = []
-    if len(rows) != ORIGINAL_ROW_COUNT + len(SHELF_ROWS):
-        errors.append("catalogue must contain the original 734 rows plus exactly the reviewed hub rows")
-    if row_digest(rows[:ORIGINAL_ROW_COUNT]) != ORIGINAL_ROWS_SHA256:
+    if len(rows) != ORIGINAL_ROW_COUNT + len(SHELF_ROWS) + len(pack_rows):
+        errors.append("catalogue must contain the original 734 rows plus exactly the reviewed hub rows and the derived companion-pack rows")
+    if row_digest(without_tags(rows[:ORIGINAL_ROW_COUNT])) != ORIGINAL_ROWS_SHA256:
         errors.append("an original catalogue row was removed, reordered or edited")
-    if rows[ORIGINAL_ROW_COUNT:] != SHELF_ROWS:
+    shelf_end = ORIGINAL_ROW_COUNT + len(SHELF_ROWS)
+    if without_tags(rows[ORIGINAL_ROW_COUNT:shelf_end]) != SHELF_ROWS:
         errors.append("the appended hub rows differ from the reviewed navigation entries")
+    if rows[shelf_end:] != pack_rows:
+        errors.append("the companion-pack rows differ from their derivation (tools/ux2/companion_catalogue.py)")
     return errors
 
 
@@ -907,7 +945,8 @@ def pin(lessons: Path, apps: Path, *, check: bool) -> dict:
     if originals[0] != originals[1]:
         raise ValueError("gate copies differ; reconcile their reviewed logic before pinning. Nothing written")
     rows = json.loads((lessons / "resources.json").read_text("utf-8"))
-    errors = preserved_rows_errors(rows)
+    pack_rows = pack_rows_for(lessons, rows)
+    errors = preserved_rows_errors(rows, pack_rows)
     if errors:
         raise ValueError("; ".join(errors))
     gate = module(gates[0])
@@ -924,6 +963,16 @@ def pin(lessons: Path, apps: Path, *, check: bool) -> dict:
         patched, count = pattern.subn(lambda m: m[1] + digest + m[3], patched)
         if count != 1:
             raise ValueError("expected exactly one manifest pin: " + name)
+    # UX2 D3: the gate's appended-row count and digest cover the reviewed hub
+    # rows AND the derived companion-pack rows; both literals are re-cut here
+    # from the rows this tool has just verified, never typed.
+    appended = rows[ORIGINAL_ROW_COUNT:]
+    for literal, value in (("CATALOGUE_SHELF_ROWS", str(len(appended))),
+                           ("CATALOGUE_SHELF_ROWS_SHA256", '"' + row_digest(without_tags(appended)) + '"')):
+        pattern = re.compile(r"^(" + literal + r" = )(\S+)$", re.M)
+        patched, count = pattern.subn(lambda m, v=value: m[1] + v, patched)
+        if count != 1:
+            raise ValueError("expected exactly one gate literal: " + literal)
     changed = patched != originals[0]
     if check and changed:
         raise ValueError("reviewed catalogue or manifest pins differ; review and re-pin both copies")
@@ -937,7 +986,7 @@ def pin(lessons: Path, apps: Path, *, check: bool) -> dict:
             for path, original in zip(gates, originals):
                 path.write_text(original, "utf-8")
             raise
-    return {"status": "PASS", "mode": "check" if check else "pin", "reviewedFiles": len(files), "originalRowsPreserved": ORIGINAL_ROW_COUNT, "appendedShelfRows": len(SHELF_ROWS), "gateSha256": hashlib.sha256(patched.encode()).hexdigest()}
+    return {"status": "PASS", "mode": "check" if check else "pin", "reviewedFiles": len(files), "originalRowsPreserved": ORIGINAL_ROW_COUNT, "appendedShelfRows": len(SHELF_ROWS), "derivedPackRows": len(pack_rows), "gateSha256": hashlib.sha256(patched.encode()).hexdigest()}
 
 
 def main() -> int:

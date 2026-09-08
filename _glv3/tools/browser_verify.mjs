@@ -162,7 +162,8 @@ if (result.print.failures.length) {
 }
 
 // Real current catalogue filter-chain reachability. The Lesson Hub's own UI
-// uses .ytab[data-year], #quicknav .chip[data-sub], and #cards article.card.
+// reaches a subject through its card or the ?subject= query and renders the
+// matching entries as #cards .card with a derived "<n> of <m> resources" line.
 // Catalogue-shell console diagnostics are recorded separately from the 94-page
 // estate boot gate so they cannot contaminate that universe's zero-error proof.
 cataloguePhase = true;
@@ -172,27 +173,18 @@ if (newResources.length !== 88) throw new Error(`catalogue expected 88 GLV3 entr
 const chipNames = [...new Set(newResources.map(x => x.subject))].sort();
 for (const chip of chipNames) {
   activeFile = `catalogue:${chip}`;
-  await page.goto(BASE + '/index.html', {waitUntil:'networkidle', timeout:30000});
-  await page.waitForSelector('.ytab[data-year="2026-27"]');
+  // UX2 Part A (Lessons #437) retired the year tabs and #quicknav chips: every year
+  // renders, and a subject is reached by its card or the ?subject= query, which
+  // resolves to the hub's flat results. The journey measured is unchanged —
+  // advertised == rendered == derived from the record, through the page's own
+  // filter chain — on the surface that now carries it.
+  await page.goto(BASE + '/index.html?subject=' + encodeURIComponent(chip), {waitUntil:'networkidle', timeout:30000});
+  await page.waitForFunction(() => /\d+ of \d+ resources/.test(document.querySelector('#count')?.textContent || ''));
 
-  const yearButton = page.locator('.ytab[data-year="2026-27"]');
-  if (await yearButton.count() !== 1) throw new Error(`year tab 2026-27 not uniquely found for ${chip}`);
-  await yearButton.click();
-  await page.waitForTimeout(80);
-  const activeYear = await page.locator('.ytab[aria-pressed="true"]').getAttribute('data-year');
-  if (activeYear !== '2026-27') throw new Error(`year tab did not activate 2026-27 for ${chip}: active=${activeYear}`);
+  const label = (await page.locator('#count').textContent()) || '';
+  const advertised = Number((label.match(/^\s*(\d+) of \d+ resources/) || [])[1]);
 
-  await page.waitForSelector('#quicknav .chip');
-  const cb = page.locator('#quicknav .chip[data-sub=' + JSON.stringify(chip) + ']');
-  if (await cb.count() !== 1) throw new Error(`current catalogue chip not uniquely found: ${chip}`);
-  const chipClass = await cb.getAttribute('class') || '';
-  if (chipClass.split(/\s+/).includes('lib')) throw new Error(`${chip}: current chip is marked lib/outside active collection`);
-  const label = (await cb.textContent()) || '';
-  const advertised = Number((label.match(/\((\d+)\)\s*$/) || [])[1]);
-  await cb.click();
-  await page.waitForTimeout(120);
-
-  const state = await page.evaluate(() => [...document.querySelectorAll('#cards article.card')].map(el => {
+  const state = await page.evaluate(() => [...document.querySelectorAll('#cards .card')].map(el => {
     const a = el.querySelector('a[href]');
     return {
       href: a?.getAttribute('href') || '',
@@ -200,7 +192,7 @@ for (const chip of chipNames) {
     };
   }));
 
-  const expectedTotal = resources.filter(x => x.subject === chip && x.year === '2026-27').length;
+  const expectedTotal = resources.filter(x => x.subject === chip).length;
   if (!Number.isFinite(advertised) || advertised !== expectedTotal || state.length !== expectedTotal) {
     throw new Error(`${chip}: advertised=${advertised} rendered=${state.length} JSON=${expectedTotal}`);
   }
@@ -212,7 +204,7 @@ for (const chip of chipNames) {
     if (h.endsWith('/')) h += 'index.html';
     got.add(h);
   }
-  const want = newResources.filter(x => x.subject === chip && x.year === '2026-27').map(x => x.file);
+  const want = newResources.filter(x => x.subject === chip).map(x => x.file);
   const missing = want.filter(x => ![...got].some(h => h === x || h.endsWith('/' + x)));
   if (missing.length) {
     const textJoined = state.map(x => x.text).join('\n');

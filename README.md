@@ -39,3 +39,18 @@ Records worth knowing about: `REGISTER.md` (constraints, append-only) ·
 (what is open, who owns it, what triggers it).
 
 Term: Tue 1 Sep – Fri 18 Dec 2026 · half term 26–30 Oct · Aut 1 = W1–W8 (1 Sep → 19 Oct)
+
+## Resource sizes (UX2 A3.1)
+
+`data/resource-sizes.json` is the size table the subject page reads for its
+"<duration> · <TYPE> · <size>" line. It is **derived, never typed**:
+
+```sh
+python3 tools/ux2/resource_sizes.py --write    # after any change to a catalogued file
+python3 tools/ux2/resource_sizes.py --check    # what the UX2 gates workflow runs
+```
+
+The publisher is immutable and never edits source, so the file is committed
+and kept in step by `.github/workflows/ux2-gates.yml` (on the paths it names
+and once a day). The same workflow keeps `data/calendar-spine.json` equal to
+its derivation from `_sownb/CALENDAR_2026_27.json` (`tools/ux2/build_spine.py`).
