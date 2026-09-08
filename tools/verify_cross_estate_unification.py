@@ -116,15 +116,15 @@ APPS_HUB_REVIEWED_WORDING_SHA256 = "696efb97549286f33b9514308bee48d82d3af654cf61
 
 # BEGIN REVIEWED CATALOGUE PINS
 CATALOGUE_PINS = {
-    "visible_body_sha256": "274667c0aaae306b7ceaeb7760d63a01fc15e636b8bb96a456d046231016a70d",
+    "visible_body_sha256": "bc1011a2b1241c790cb35b98d7581168b7f2376c7754aaa531bf34d4c7589ca4",
     "files": {
-        "index.html": "4f6904d712fed43608c58efeb148cb6c1da63d64971c06b6b02ae99930b44f2d",
+        "index.html": "a583d509cff551ac8215618dd4ffe723a21614c920302030863394aafaad4cc6",
         "Science_Teesside/index.html": "47e85a28c6cb17663a051f38646126d0afea0e59d71942671c40553567424fd9",
         "Humanities_Teesside/index.html": "7594ce3f6bd34025e32f556d736d39fd218b409a36511ab57e779c4080c4cd86",
         "humanities_teesside.html": "1e2faab06cb4caf4a26f377200a55cbd380c7f3ceada74f666998b47611896b7",
         "subject.html": "67e3cb944d5a69fe051252b216fb7372339e1bd039577e8646ac33a891ca0de1",
         "assets/catalogue/hub.js": "1987692e28d178c9be62245dd108ebee859ee2c4fd4a8500cf79fa673e637110",
-        "assets/catalogue/hub.css": "92e6704773816b3291c0f7936190409adcab39f793972944418067e9ccc5195f",
+        "assets/catalogue/hub.css": "96192065b59e2d5113f92e03da3386c45e7425aa2443b79e8203914b587eeca9",
         "data/calendar-spine.json": "d199474b13c9d340add2c87165396d83712b0f1c9f8bd03b7b12e8fdf6af0d61",
         "Humanities_Teesside/David_Cover_Autumn1_W3-W7/index.html": "4e25eb9ca8f9f93c720d88d945f3d6d79580f3362a88698fe7af75d146f01e96",
         "assets/catalogue/catalogue.css": "59abee137c41a8a015e42cf0b32d20b7f4e5fc8e3d236a1cd735322386bf8569",
@@ -578,14 +578,26 @@ CATALOGUE_RECORD_PATHS = {
 }
 
 # The education publisher is executable release configuration, not a hub asset.
-# Both callers advance together to the same reviewed Site commit. Permit only
-# this named workflow, and require its complete reviewed bytes on every run.
-# A broader permission, trigger, job, floating ref or mismatched builder is red.
+# Permit only this named workflow, and require its complete reviewed bytes on
+# every run. A broader permission, trigger, job, floating ref or mismatched
+# builder is red.
 PUBLICATION_CALLER_PATH = ".github/workflows/education-pages.yml"
 # Reviewed Education completion publication caller, Site PR #268, 2026-09-06;
 # advanced to Site #299 47811e56, then Site #301 50877370 (Play revision registry: Glitch HUD and
 # §3.3 touch-action revisions, transition pairs) by Order HC4.
+# Until Order UX2 both callers advanced together and this one digest served
+# both repositories' callers. UX2 moved the Lessons caller alone (Lessons #436,
+# #438, #442; the order writes nothing to the Apps repository), so this digest is the
+# LESSONS caller's, and the Apps caller carries its own reviewed digest below.
 PUBLICATION_CALLER_SHA256 = "67b1d737208fbc9339703cb8f17ec77b8375ae91a84a8704920475441eb9f6ab"
+# One reviewed caller digest per repository kind. The Apps entry is the Apps
+# caller at the Site's reviewed Apps pin 924ab986 (Site domain-split-verify.yml;
+# the caller there names Site 23a4f360), which the Site's catalogue contract
+# control runs this gate against as kind "apps". Moving that pin moves this.
+PUBLICATION_CALLER_SHA256_BY_KIND = {
+    "lessons": PUBLICATION_CALLER_SHA256,
+    "apps": "c420519111f6c73c54db0b5b506033b9c5edb41696335235edf48bae5f1c7178",
+}
 PUBLICATION_GATE_WORKFLOW_PATH = ".github/workflows/mbm-cross-estate-unification.yml"
 
 
@@ -816,12 +828,12 @@ def publication_trigger_errors(root: Path) -> list[str]:
     return errors
 
 
-def publication_errors(root: Path) -> list[str]:
+def publication_errors(root: Path, kind: str = "lessons") -> list[str]:
     errors = publication_trigger_errors(root)
     caller = root / PUBLICATION_CALLER_PATH
     if not caller.is_file():
         errors.append("reviewed education publication caller is missing")
-    elif digest(caller) != PUBLICATION_CALLER_SHA256:
+    elif digest(caller) != PUBLICATION_CALLER_SHA256_BY_KIND.get(kind, PUBLICATION_CALLER_SHA256):
         errors.append("education publication caller differs from the reviewed immutable publisher pin")
     return errors
 
@@ -903,7 +915,7 @@ def run_checks(
     check_git: bool = False,
     base_ref: str | None = None,
 ) -> list[str]:
-    errors: list[str] = publication_errors(root) + lundyloop_ci_errors(root, kind)
+    errors: list[str] = publication_errors(root, kind) + lundyloop_ci_errors(root, kind)
     index_path = root / "index.html"
     if not index_path.is_file():
         return ["missing index.html"]
