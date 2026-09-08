@@ -22,7 +22,7 @@
 <a class="skip" href="#main">Skip to content</a>
 <header class="header mbm-site-header" data-mbm-platform="mbm-cross-estate-unification-lessons-apps-2026-08-08"><div class="bar">
 <a class="brand" href="https://madebymatt.uk/"><svg class="mono" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="47" fill="none" stroke="#B9E6CD" stroke-width="3.4"/><g transform="translate(0 2)"><path d="M28 71 L28 37 L50 59 L72 37 L72 71" fill="none" stroke="#E8E2D4" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M50 22.5 L51.48 28.52 L57.5 30 L51.48 31.48 L50 37.5 L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"/></g></svg><span><strong>MADE BY MATT</strong>
-<small>Lessons</small></span></a>
+<small>Learn • Build • Explore</small></span></a>
 <button class="menu" id="menu" type="button" aria-expanded="false" aria-controls="nav">Menu</button>
 <nav class="nav mbm-site-nav" id="nav" aria-label="Site navigation"><div class="mbm-primary-links"><a href="/games/">Games</a><a href="/Lessons/" aria-current="page">Lessons</a><a href="/Matt-s-Apps-/">Apps</a><a href="/tools/">Tools</a><a href="/resources/">Resources</a></div><details class="mbm-nav-more"><summary>More</summary><div class="mbm-nav-panel"><a href="/stats/">Stats</a><a href="/members/">Members</a><a href="/#about">About</a><a href="/privacy/">Privacy</a></div></details><details class="mbm-theme-menu"><summary>Display</summary><div class="mbm-theme-panel" data-mbm-theme-slot></div></details></nav>
 </div></header>
@@ -113,6 +113,7 @@ document.addEventListener('click',e=>{
   const a=e.target.closest('a.tile,#added-all');if(a&&a.origin===location.origin){e.preventDefault();const u=new URL(a.href);setParams(p=>{['q','format','view','added'].forEach(k=>p.delete(k));u.searchParams.forEach((val,k)=>p.set(k,val));});window.scrollTo({top:0,behavior:H.reduceMotion()?'auto':'smooth'});$('#status').setAttribute('tabindex','-1');$('#status').focus();}
 });
 window.addEventListener('popstate',render);
+document.addEventListener('mbm:saved-changed',()=>{if(params().get('view')==='saved')render();});
 H.wireSaveAndRecent(document);
 H.loadAll().then(()=>{document.body.insertAdjacentHTML('beforeend',H.packSheetHtml());H.wirePackSheet(document);render();const first=H.isFlat(params())?($('#cards a[href]')||$('[data-clear-filters]')):$('#tiles a');if(first)first.focus({preventScroll:true});}).catch(()=>{$('#count').textContent="Couldn't load resources.json";});
 })();</script>

@@ -372,10 +372,12 @@ async function educationJourneyTests(browser) {
       assert.equal(await page.locator('#rxSearch').inputValue(), '');
       assert(await page.locator('#rxOut .rx-cardx').count() > 0);
       await page.locator('.education-jumps a[href="/Lessons/"]').click();
-      await page.waitForFunction(() => /\d+ of \d+ resources/.test(document.querySelector('#count')?.textContent || ''));
+      // UX2: the hub's browse view derives "<M> resources · <S> subjects" and shows the subject cards.
+      await page.waitForFunction(() => /\d+ resources · \d+ subjects/.test(document.querySelector('#count')?.textContent || ''));
       assert.equal(new URL(page.url()).pathname, '/Lessons/');
-      assert.match(await page.locator('h1').innerText(), /Find your next lesson/);
-      assert(await page.locator('#subject-group').isVisible(), 'Resource hub returns to the older lesson browser');
+      assert.match(await page.locator('main h1').innerText(), /^Lessons$/);
+      assert(await page.locator('#subjects').isVisible(), 'Resource hub does not return to the subject cards');
+      assert((await page.locator('#scards .scard').count()) >= 4, 'Resource hub returns to a hub without subject cards');
       return { matched: cards, screenshots };
     });
     await context.close();
@@ -391,7 +393,7 @@ async function storageAndUntrustedContextTests(browser) {
     await goto(blocked.page, '/Lessons/?subject=Art&pathway=BUILD&term=Aut2&q=Surface%20Hunt', true);
     await blocked.page.locator('#cards button[data-save]').first().click();
     assert.match(await blocked.page.locator('#lesson-save-status').innerText(), /cannot save/);
-    assert.equal(await blocked.page.locator('#saved-count').innerText(), '0');
+    assert.equal(await blocked.page.locator('[data-saved-count]').first().innerText(), '0');
     assert.equal(await blocked.page.locator('#cards button[data-save]').first().getAttribute('aria-pressed'), 'false');
     await goto(blocked.page, SURFACE);
     const back = new URL(await blocked.page.locator('#mbmhud-back').getAttribute('href'), origin);

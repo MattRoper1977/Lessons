@@ -11,7 +11,7 @@ Auto-decisions this order left open are logged at the end.
 
 | item | verdict |
 |---|---|
-| Canonical platform header (`mbm-site-header`: brand, Menu, primary links Games · Lessons · Apps · Tools · Resources, More, Display) | SURVIVES — byte-shaped contract kept; the brand's small line reads "Lessons" (the tagline is footer-only). The publisher replaces `<header>` with the unified menu; nothing the hub needs lives inside it. |
+| Canonical platform header (`mbm-site-header`: brand, Menu, primary links Games · Lessons · Apps · Tools · Resources, More, Display) | SURVIVES — byte-identical to main (the shared contract gate pins the brand markup, small line included). The publisher replaces `<header>` with the unified menu; nothing the hub needs lives inside it. |
 | Skip link `#main` | SURVIVES |
 | Breadcrumb Home → `/main/` · All resources → `/resources/` · Teacher tools → `/tools/` | RETIRED (row) — `/resources/` and `/tools/` SURVIVE in the header's primary links; `/main/` is overlaid by the homepage in the education build and the brand already links home |
 | Eyebrow "Made by Matt · Teaching collection", h1 "Find your next lesson.", lead | RETIRED — replaced by h1 "Lessons" + S1 "Lessons for BUILD, GROW and LAUNCH pathways." (Appendix A) |
@@ -33,10 +33,12 @@ Auto-decisions this order left open are logged at the end.
 | "Latest additions" (12, `added` desc) | RETIRED — replaced by "Added this half-term" (top 6 within the current half-term per the spine, "See all →" to the full list); `new:` is read nowhere |
 | "From Matt" aside + mailto | RETIRED — maker voice belongs on the site homepage's maker panel (B2); the contact mailto SURVIVES in the footer |
 | Footer "Made by Matt · Learn • Build • Explore" + "Single-file · offline-first · hand-built in Teesside" + contact | SURVIVES as F1 "Made by Matt · Lessons" with the tagline as its small line; contact line kept; no version, no Ko-fi |
+| Header styling (sticky navy header, brand flex layout, small-line letterspacing) and the no-JS narrow-width nav rules | SURVIVES — ported verbatim from the old hub's inline styles into `hub.css` (screen rules) and the hub's `<noscript>` block (no-JS rules); the browser matrix measures the header at 320–1440 |
+| High lumen theme (projector / IWB, `data-theme="highlumen"`) | SURVIVES — token block and header rules ported into `hub.css`; `hub_gates.mjs` measures contrast on cream, dark and highlumen |
 | Print styles | SURVIVES — hub and subject page print as a clean expanded list |
 | Storage keys `mbm.lesson.saved.v1`, `mbm.lesson.recent.v1`, `mbm.lesson.return.v1` | SURVIVE unchanged |
 | `assets/catalogue/catalogue.js` (term/style grouping) | RETIRED from the hub; still used by the Science and Humanities shelves |
-| `assets/catalogue/lesson-navigation.js` | SURVIVES — `subject.html` added to its hub set; query keys `format`, `unit`, `added` carried in the return context |
+| `assets/catalogue/lesson-navigation.js` | SURVIVES — `subject.html` added to its hub set (inserted after `index.html`: the Site publisher anchors on the set's last entry to append the Primary hubs, so the tail is unchanged); query keys `format`, `unit`, `added` carried in the return context |
 
 ### New surfaces
 
@@ -99,3 +101,13 @@ inventory (placed files, held files and their reasons, drift flags).
     "Browse <Name> →" without invented copy.
 11. **Retired from the linkedom catalogue check:** the metadata-failure and
     "alternative version" cases tested the retired term/style filter chain.
+12. **Derived-count contract re-pointed.** The shared contract gate required
+    three tokens naming the old hub's year-tab and subject-chip counters. Those
+    controls are retired; keeping dead functions to satisfy a grep would be a
+    vacuous pass. The gate now names the two derived count expressions and the
+    fetch they derive from. The Apps copy of the gate trails (see 1).
+13. **Boundary list.** The order's ledger, the README, the re-pointed chip
+    gate, the UX2 workflow and tools, and the three derived data files are
+    listed in the gate's change boundary in the documented Ruling 6 shape (files
+    that cannot change a studio's served bytes); the size table changes on
+    every lesson edit and must not red the boundary.

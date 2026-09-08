@@ -212,7 +212,7 @@ for (const file of ['index.html', 'subject.html']) {
 }
 
 /* ---------- 6. reduced motion + contrast + print ---------- */
-for (const theme of ['cream', 'dark']) {
+for (const theme of ['cream', 'dark', 'highlumen']) {
   const page = await newPage({ reducedMotion: 'reduce' });
   await page.addInitScript(t => { try { localStorage.setItem('mbm_reading_theme', t); } catch (_) {} }, theme);
   await page.goto(`${origin}/Lessons/subject.html?subject=${encodeURIComponent(subjectSlugs[0])}`, { waitUntil: 'load' });

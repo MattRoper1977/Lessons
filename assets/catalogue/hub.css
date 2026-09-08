@@ -27,11 +27,27 @@ h1{font-size:clamp(1.7rem,6vw,2.6rem);line-height:1.15;color:var(--navy);font-we
 [data-theme="dark"] h1,[data-theme="dark"] h2,[data-theme="dark"] h3{color:#E8E2D4}
 h2{font-size:1.15rem;color:var(--navy);font-weight:800;letter-spacing:.04em;text-transform:uppercase}
 .mono{width:44px;height:44px;flex:none}
+/* ---------- navy header: main's treatment, ported verbatim from the old hub's inline styles.
+   The header markup is byte-identical to main (the shared contract gate pins it); the publisher
+   replaces <header> on the served site, but the source hub still has to lay it out. ---------- */
+.header{position:sticky;top:0;background:#161D3Df2;backdrop-filter:blur(8px);border-bottom:1px solid #B9E6CD2e;z-index:20}
+.brand{display:flex;align-items:center;gap:.7rem;text-decoration:none;color:#E8E2D4}
+.brand strong{letter-spacing:.05em}
+.brand small{display:block;color:var(--mint);font-size:.62rem;letter-spacing:.22em;text-transform:uppercase}
+/* High lumen — projector / IWB. Ported from the old hub: additive, measured on the rendered page. */
+[data-theme="highlumen"]{--cream:#FFFFFF;--cream-dk:#FFFFFF;--card:#FFFFFF;--ink:#000000;--mut:#3A3A3A;--mint:#FFFFFF;--mint-deep:#0F5132;--t-build:#7A4A00;--t-grow:#0F5132;--t-launch:#5C4A00}
+[data-theme="highlumen"] body{background:#FFFFFF}
+[data-theme="highlumen"] .skip{color:#0B1020}
+html[data-theme="highlumen"] .header,html[data-theme="highlumen"] .header .bar{background:#0B1020;background-image:none}
+html[data-theme="highlumen"] .header summary{color:#FFFFFF!important}
+html[data-theme="highlumen"] .header a,html[data-theme="highlumen"] .header strong,html[data-theme="highlumen"] .header small{color:#FFFFFF}
+html[data-theme="highlumen"] main summary{color:#3A3A3A!important}
+[data-theme="highlumen"] :focus-visible{outline:3px solid #0B1020;outline-offset:2px}
 /* ---------- hub bar: search + personal controls (outside <header>, which the publisher replaces) ---------- */
 .hub-bar{background:var(--navy-lt);border-bottom:1px solid #B9E6CD2e}
 .hub-bar .wrap{display:flex;gap:.5rem;align-items:center;padding:.55rem 1rem;flex-wrap:wrap}
-.hub-bar label{flex:1 1 220px;display:flex;align-items:center;gap:.5rem;color:#E8E2D4;font-size:.8rem;font-weight:700}
-.hub-bar input[type="search"]{flex:1;min-height:var(--tap);border:1.5px solid #B9E6CD88;border-radius:10px;padding:.5rem .8rem;font:inherit;font-size:1rem;background:#FFFDF6;color:#1B2140}
+.hub-bar label{flex:1 1 220px;min-width:0;display:flex;align-items:center;gap:.5rem;color:#E8E2D4;font-size:.8rem;font-weight:700}
+.hub-bar input[type="search"]{flex:1 1 0;width:0;min-width:0;min-height:var(--tap);border:1.5px solid #B9E6CD88;border-radius:10px;padding:.5rem .8rem;font:inherit;font-size:1rem;background:#FFFDF6;color:#1B2140}
 .hub-bar .pill{min-height:var(--tap);min-width:var(--tap);display:inline-flex;align-items:center;gap:.35rem;padding:.4rem .9rem;border-radius:99px;border:1.5px solid #B9E6CD88;background:transparent;color:#E8E2D4;font:inherit;font-weight:700;font-size:.85rem;cursor:pointer;text-decoration:none}
 .hub-bar .pill[aria-pressed="true"]{background:var(--mint);color:var(--navy);border-color:var(--mint)}
 .hub-bar .pill b{background:#E8E2D4;color:var(--navy);border-radius:99px;padding:0 .45rem;font-size:.75rem;min-width:1.4em;text-align:center}
@@ -102,7 +118,7 @@ h2{font-size:1.15rem;color:var(--navy);font-weight:800;letter-spacing:.04em;text
 .sub-title{display:flex;align-items:center;gap:.7rem}
 .sub-title .icon{width:44px;height:44px;color:var(--mint-deep)}.sub-title .icon svg{width:100%;height:100%}
 .sub-search{display:flex;gap:.5rem;align-items:center}
-.sub-search input[type="search"]{flex:1;min-height:var(--tap);border:1.5px solid var(--navy);border-radius:10px;padding:.5rem .8rem;font:inherit;font-size:1rem;background:var(--card);color:var(--ink)}
+.sub-search input[type="search"]{flex:1 1 0;width:0;min-width:0;min-height:var(--tap);border:1.5px solid var(--navy);border-radius:10px;padding:.5rem .8rem;font:inherit;font-size:1rem;background:var(--card);color:var(--ink)}
 .suites{display:flex;flex-wrap:wrap;gap:.5rem;margin:.2rem 0 .6rem}
 .suites a{min-height:var(--tap);display:inline-flex;align-items:center;padding:.4rem .8rem;border-radius:12px;border:1.5px solid var(--navy);background:var(--card);text-decoration:none;font-weight:700;font-size:.88rem;color:var(--navy)}
 [data-theme="dark"] .suites a{color:#E8E2D4;border-color:#B9E6CD}
