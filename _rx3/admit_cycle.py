@@ -18,6 +18,10 @@ for c in a.census:
         tree[p] = [d, 'ARRIVING']; moved.append(('ARRIVING', p, '', d))
     for p, ch in t['changed'].items():
         cur = tree[p]; cur = cur if isinstance(cur, list) else [cur]
+        if not (main_out / p).exists():
+            # absent from main's build: an ARRIVING row whose reviewed digest moves with the branch
+            assert 'ARRIVING' in cur, ('absent from main but not ARRIVING', p)
+            tree[p] = [ch['built'], 'ARRIVING']; moved.append(('ARRIVING', p, '+'.join(x[:8] for x in cur), ch['built'])); continue
         main_d = hashlib.sha256((main_out / p).read_bytes()).hexdigest(); assert main_d in cur, ('main digest not admitted', p)
         tree[p] = [main_d, ch['built']]; moved.append(('PAIR', p, '+'.join(x[:8] for x in cur), ch['built']))
 reg['reviewSources'].append(a.note)
