@@ -122,7 +122,7 @@ CATALOGUE_PINS = {
         "Science_Teesside/index.html": "47e85a28c6cb17663a051f38646126d0afea0e59d71942671c40553567424fd9",
         "Humanities_Teesside/index.html": "7594ce3f6bd34025e32f556d736d39fd218b409a36511ab57e779c4080c4cd86",
         "humanities_teesside.html": "1e2faab06cb4caf4a26f377200a55cbd380c7f3ceada74f666998b47611896b7",
-        "subject.html": "67e3cb944d5a69fe051252b216fb7372339e1bd039577e8646ac33a891ca0de1",
+        "subject.html": "bd7d2277bce74c92095afd11dd96f005b5c1fef384e9909c839f9dc32a1e4106",
         "assets/catalogue/hub.js": "6054f0d89ee498df171cc8861e0a292f3154315a6462d895f130eaadbf7e71a6",
         "assets/catalogue/hub.css": "96192065b59e2d5113f92e03da3386c45e7425aa2443b79e8203914b587eeca9",
         "data/calendar-spine.json": "d199474b13c9d340add2c87165396d83712b0f1c9f8bd03b7b12e8fdf6af0d61",
@@ -540,7 +540,7 @@ CATALOGUE_PINS = {
         "tools/science_teaching_packs/refresh_packs.py": "ce14bfa3c503bde2a5e0a8a07effbfe52d6c7262894cf062dcad358c473e7d47",
         "Science_Teesside/Teaching_Packs/GROW/Image_Credits.docx": "b7fe4b107695458bd8138170b0c98d14adddfe156871bd228db798790dbf3786",
         "Science_Teesside/Teaching_Packs/GROW/Image_Credits.pdf": "651dcd9f749c6cfb5ffccd73eb9ffb14a57f8ff8a8860f348969b34114396f86",
-        "tools/science_teaching_packs/check_hub_browser.cjs": "27756f9dfc18bae97722b2f4514cb1bf3606a416c698fcd309a62437a6ff91ae",
+        "tools/science_teaching_packs/check_hub_browser.cjs": "cf95cd468472495950f24a3dd0b1f4b9794f0a7df251ca7ab0c4e3098a276ad8",
         "tools/science_teaching_packs/VISUAL_REFRESH_QA.json": "3ce5b90abaf89fc5a2a4085791bb16e09667545cf489a985c1c525bd7698fc80",
         ".github/workflows/science-teaching-packs.yml": "bc177669ef54ecaf7f21247ecca0aa75993476679eab978e716c76385960e9ce"
     }
