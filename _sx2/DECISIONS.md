@@ -770,7 +770,26 @@ The estate already agreed with the ruling before it was made: across the 42 deck
 measured, visible text carries `tutor*` 126 times against `assembl*` 61, and not
 one `<title>` says assembly.
 
-## D24 — §8a amended: the gate was measuring embeds while the risk was strings
+## D24 — WITHDRAWN (Matt, 2026-09-09). §8a's amended wording survives it.
+
+**Withdrawn, not superseded: the ruling was correct on the evidence and the
+evidence was wrong.** D24 ordered V08's YouTube URL relocated into the staff
+aside. It is already there — byte **24,225** in the aside's `Video status:`
+paragraph, byte **35,793** in the `DATA` payload that aside renders from.
+**V08 needs no relocation and no hold**; it lands with B06, S10 and B07 on the §5
+clearance as written.
+
+Three things survive D24 permanently:
+
+1. **The amended §8a wording**, below — a better gate than "0 YouTube", now with
+   measured numbers behind it: **0/42 and 0/8 on both limbs**.
+2. **`tools/lf1/gate_thirdparty.cjs` as the sole authority** for that gate, with
+   its `<details>` scoping intact. A collapsed disclosure is pupil-visible; a
+   staff aside is not. That distinction is not to be "simplified".
+3. **Its application to GC1 G4**: the Scratch editor and AQA unit links stay,
+   because their visible text is a label, not a URL.
+
+The original ruling and the measurement that withdrew it follow.
 
 Ruled by Matt, 2026-09-09. This wording replaces the "0 YouTube" line:
 
@@ -852,3 +871,41 @@ mismatching** — a confident, specific, entirely false finding. Scoped to the
 package the collection came from, the answer is 42 of 42.
 
 A basename collision does not announce itself. It produces a plausible number.
+
+
+## D27 — gates measure rendered output, never source
+
+Any gate whose subject is what a pupil can see is measured in a **laid-out page**.
+
+A regex over source is not a measurement of visibility: it cannot see a payload
+the page renders, and it cannot see where the page renders it. `innerText` on a
+**detached** clone is not one either: with no layout it degrades to `textContent`
+and swallows every `<script>` body.
+
+Both produced confident, specific, false findings this week — the first said V08
+showed a pupil-facing YouTube URL when it sits in the staff aside; the second said
+25 of 42 decks failed §8a when none does.
+
+**Applies to every pupil-visible gate in the estate.** Existing gates that still
+read source are listed in `_sx2/tutor_time/GATES_READING_SOURCE.md`. They are
+**listed, not fixed**, under this order.
+
+## D28 — no instrument counts until it has a two-sided control
+
+Every gate, checker and comparison ships with a planted **true positive** (the
+thing it must catch, caught) and a planted **true negative** (the permitted
+lookalike, not caught), **both run in the invocation that produces the number**.
+
+A number from an instrument without both is **MEASUREMENT INVALID** and cannot be
+reported, quoted or acted on.
+
+This is the general form of three misses on this arc, each plausible, specific and
+wrong, and each of which would have died against its own negative control:
+
+| instrument | false finding | the negative control it lacked |
+|---|---|---|
+| basename keying | 17 of 42 payloads "mismatching" | a payload compared against its *own* package |
+| detached-clone `innerText` | 25 of 42 decks "failing" §8a | a URL placed in the permitted staff aside |
+| source regex | V08 "shows a pupil-facing URL" | the same URL rendered inside the aside |
+
+D26 sits below this one: path-not-basename is a specific case of the general rule.
