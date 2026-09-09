@@ -75,8 +75,27 @@ const TYPES = {'.html':'text/html; charset=utf-8','.css':'text/css','.js':'text/
         p.unshift(x.tagName.toLowerCase() + (typeof x.className === 'string' && x.className.trim()
           ? '.' + x.className.trim().split(/\s+/)[0] : ''));
       for (let k = 0; k < m.length; k++)
-        rows.push({id: i + ':' + k, hidden, staff, path: p.slice(-4).join('>'),
+        rows.push({id: i + ':' + k, hidden, staff, path: p.slice(-4).join('>'), kind: 'text',
                    text: n.nodeValue.replace(/\s+/g, ' ').trim().slice(0, 240)});
+    }
+    // Accessible names are read aloud, so they are pupil-facing text too. Three
+    // of the 121 LF1 occurrences were aria-labels and no text walker sees them.
+    let j = 0;
+    for (const el of document.querySelectorAll('[aria-label],[title],[alt],[data-title]')) {
+      j++;
+      for (const a of ['aria-label', 'title', 'alt', 'data-title']) {
+        const v = el.getAttribute(a); if (!v) continue;
+        const mm = v.match(rx); if (!mm) continue;
+        let hidden = false;
+        for (let x = el; x; x = x.parentElement) {
+          const cs = getComputedStyle(x);
+          if (cs.display === 'none' || cs.visibility === 'hidden') { hidden = true; break; }
+        }
+        for (let k = 0; k < mm.length; k++)
+          rows.push({id: 'a' + j + ':' + a + ':' + k, hidden, staff: !!el.closest('[data-mbm-guide]'),
+                     path: el.tagName.toLowerCase() + '[' + a + ']', kind: 'attr',
+                     text: v.replace(/\s+/g, ' ').trim().slice(0, 240)});
+      }
     }
     return rows;
   };
@@ -90,13 +109,52 @@ const TYPES = {'.html':'text/html; charset=utf-8','.css':'text/css','.js':'text/
 
     const seen = new Map();          // id -> {routes, meta}
     const absorb = (rows, route) => rows.forEach(r => {
-      const e = seen.get(r.id) || (seen.set(r.id, {routes: new Set(), staff: r.staff, path: r.path, text: r.text}), seen.get(r.id));
+      const e = seen.get(r.id) || (seen.set(r.id, {routes: new Set(), staff: r.staff, path: r.path, text: r.text, kind: r.kind}), seen.get(r.id));
       if (!r.hidden) e.routes.add(route);
       if (route === 'dom') e.routes.add('dom');       // present in the document at all
     });
 
     absorb(await page.evaluate(SCAN, PHRASES), 'dom');
     const slides = await page.evaluate(() => document.querySelectorAll('.slide,[data-slide]').length || 1);
+
+    // Press the controls that gate pupil-facing content. .tier is display:none
+    // until its tier button is pressed and .model-step / .scaffold until their
+    // reveal is; content behind one press is pupil-facing, so leaving it
+    // unpressed is an undercount, not a caveat.
+    // Press each control and sample AFTER EACH ONE. Pressing them in a batch and
+    // sampling once only ever shows the last tier chosen: Supported, Standard and
+    // Stretch are three separate panels and a pupil sees whichever their teacher
+    // selects, so all three have to be sampled.
+    const GATES = '[data-reveal],[data-toggle],[data-tier-button]';
+    const openEverything = async (route) => {
+      const n = await page.evaluate((g) => document.querySelectorAll(g).length, GATES);
+      for (let round = 0; round < 3; round++) {        // model reveals advance one step per press
+        for (let k = 0; k < n; k++) {
+          await page.evaluate(([g, i]) => {
+            const el = document.querySelectorAll(g)[i]; if (el) { try { el.click(); } catch (e) {} }
+          }, [GATES, k]);
+          await page.waitForTimeout(40);
+          absorb(await page.evaluate(SCAN, PHRASES), route);
+        }
+      }
+    };
+
+    // PRINT first, on the page as loaded. The worksheet has its own tier
+    // selector, so the honest figure is the union over every tier a teacher can
+    // print -- and it has to be taken before the deck presses, which change it.
+    await page.emulateMedia({media: 'print'}); await page.waitForTimeout(150);
+    absorb(await page.evaluate(SCAN, PHRASES), 'print');
+    const tiers = await page.evaluate(() => document.querySelectorAll('[data-print-tier]').length);
+    for (let t = 0; t < tiers; t++) {
+      await page.evaluate((k) => { const b = document.querySelectorAll('[data-print-tier]')[k]; if (b) b.click(); }, t);
+      await page.waitForTimeout(90);
+      absorb(await page.evaluate(SCAN, PHRASES), 'print');
+    }
+    await page.emulateMedia({media: 'screen'});
+
+    // DECK on a clean load, so the print-tier presses above cannot colour it.
+    await page.reload({waitUntil: 'load'}); await page.waitForTimeout(350);
+    await openEverything('deck'); await page.waitForTimeout(120);
     absorb(await page.evaluate(SCAN, PHRASES), 'deck');
     for (let i = 0; i < slides + 3; i++) {
       const clicked = await page.evaluate(() => {
@@ -105,13 +163,11 @@ const TYPES = {'.html':'text/html; charset=utf-8','.css':'text/css','.js':'text/
       });
       if (!clicked) await page.keyboard.press('ArrowRight');
       await page.waitForTimeout(80);
+      await openEverything('deck'); await page.waitForTimeout(90);
       absorb(await page.evaluate(SCAN, PHRASES), 'deck');
     }
 
-    await page.emulateMedia({media: 'print'}); await page.waitForTimeout(150);
-    absorb(await page.evaluate(SCAN, PHRASES), 'print');
-    await page.emulateMedia({media: 'screen'});
-
+    await page.reload({waitUntil: 'load'}); await page.waitForTimeout(300);
     await page.evaluate(() => document.documentElement.classList.add('mbm-guide-on'));
     await page.waitForTimeout(120);
     absorb(await page.evaluate(SCAN, PHRASES), 'guide');
@@ -130,7 +186,7 @@ const TYPES = {'.html':'text/html; charset=utf-8','.css':'text/css','.js':'text/
     await page.evaluate(() => document.documentElement.classList.remove('mbm-guide-on'));
 
     out[rel] = {slides, guideDoubled: doubled,
-      occurrences: [...seen.entries()].map(([id, e]) => ({id, routes: [...e.routes], staff: e.staff, path: e.path, text: e.text}))};
+      occurrences: [...seen.entries()].map(([id, e]) => ({id, routes: [...e.routes], staff: e.staff, path: e.path, kind: e.kind, text: e.text}))};
     await ctx.close();
     process.stderr.write('.');
   }
@@ -148,6 +204,7 @@ const TYPES = {'.html':'text/html; charset=utf-8','.css':'text/css','.js':'text/
   console.log('  rendered with GUIDE on    : ' + tot(R('guide')));
   console.log('  rendered on NO route      : ' + tot(x => !rendered(x)));
   console.log('  inside a staff layer      : ' + tot(x => x.staff));
+  console.log('  in an accessible name     : ' + tot(x => x.kind === 'attr'));
   console.log('guide-doubled pairs         : ' + Object.values(out).reduce((a, o) => a + o.guideDoubled.length, 0));
   for (const k of pages) {
     const o = out[k]; if (!o.occurrences.length) continue;
