@@ -303,3 +303,163 @@ word-for-word restatements, and leaves the 17 doing their job.
 **The proxy substitution is resolved.** Matt fetched the origin directly. The
 admission-registry membership argument is retired as a served proof for LF1;
 served proof is a fetch of the four URLs, read as rendered DOM.
+
+**A URL already fetched in this session is not a fresh read after a deploy.**
+Closing LF1, two of the four proof pages first came back still showing the
+placeholder. That looked like a partial publication — some paths served, some
+not — which would have been a serious finding about the publisher. It was fetch
+cache. The pages were correct; the reader was not.
+
+So a re-fetch of a URL the same session has already opened proves nothing about
+what is being served now. It has to be a genuinely fresh read: a different
+client, a cache-defeating request, or a device that has not seen the page.
+
+What actually closed LF1 was the second instrument agreeing with the first. The
+census of the published tree said 0 on every route and the phone said the same,
+and the phone had never loaded those URLs. Two readings from independent paths,
+not one reading taken twice.
+
+LF1 confirmed live 2026-09-09 19:50 BST: SCI_L_W8L1 and LAUNCH_HUM_W9 clean on
+screen and in print; SCI_B_W13A reads "for the W14 rock investigation"; SCI_B_W8B's
+Arrival reads W8A / W7 / W4 / W2-W3.
+
+---
+
+## D11 — A changed admitted byte needs a registry move as much as a new path does
+
+`education-publication-admission.json` pins **a digest per path**. The publisher
+refuses to emit a tree when a built file's digest is not among those admitted, so
+a *changed* digest blocks publication exactly as an *unlisted* path does.
+
+The same gate blocked publication twice on 2026-09-09:
+
+| | what changed | what was checked before merging |
+|---|---|---|
+| #454 | added served paths | — |
+| #468 | changed the bytes of 30 already-admitted paths | "does this add a new served path?" — answered no |
+
+The second question was the wrong one. The right test is **"does this change the
+bytes of any path the registry already admits?"** Both times the answer arrived
+after the merge, from a red publication, with the change sitting on main and not
+being served. The second time that meant a live pupil-facing correction was
+merged, announced, and not actually live; a pupil went on reading "the previous
+unit" for the length of the recovery.
+
+The move is staged as a **transition pair** `[pre, post]` so a build at either
+Lessons state passes and no merge ordering can wedge the publisher, then
+`builder_ref` advances to the Site commit carrying it (D1).
+
+`tools/lf1/check_admission_move.py` makes this checkable before the merge. It
+asserts the necessary condition — a changed admitted path must carry a pair — and
+deliberately does not assert the digests, because the registry pins the digest of
+the *published artefact* and the publisher injects navigation into many pages: 19
+of 40 sampled paths match their source blob and the rest do not, by design.
+Proving a pair holds the right digests needs the reviewed builder and a full
+build, which is the publisher's own gate.
+
+## D12 — Build a counterfactual to contradict you, not to pass
+
+LF1-B §2.2 required that no page carry two adjacent nodes with identical text.
+Measured on live: **0**. Measured on the fix: **0**. A two-column table would have
+recorded that as a pass, and it would have proved nothing — the invariant reads 0
+on live only because the pupil line said "the next unit" while its staff twin said
+"W14", so they were never identical to begin with.
+
+The third column is what made it an invariant rather than a formality: the
+restorations applied with the twin deletions **withheld** — **9** adjacent
+identical nodes. That is the measure firing, and it is the only evidence that the
+9 deletions are necessary rather than tidy.
+
+It also caught an instrument fault. The first counterfactual returned **6**, not
+9. A standalone probe found a pair on `BUILD_HUM_W9` that the census called
+absent — 232 characters, byte-equal, adjacent. The census was wrong: these decks
+persist the chosen tier, so the guide pass's `page.reload()` came back showing
+only the last tier the deck walk had pressed. It was measuring one tier's DOM and
+calling it the page. Fixed with a fresh context; 6 → 9.
+
+That fault was found only because the counterfactual supplied a number to
+disagree with. A measurement that agrees with your expectation teaches you
+nothing; give yourself something that can contradict you and check whether it
+does.
+
+## D13 — A browser-rendered census is the standard for a pupil-visible claim
+
+Two false findings in one day, from opposite directions, both from not rendering:
+
+- **Mine.** `git grep -c` counts matching *lines*, not occurrences, and the search
+  set omitted `the next unit` in the Science Build tree. Reported 31 across 19
+  files. The real figure was **121 across 22** — and the two worst pages in the
+  estate, `SCI_B_W13A` (18) and `SCI_B_W13B` (33), were not in the list at all.
+- **Matt's.** A direct fetch of `SCI_B_W13A` appeared to show the placeholder and
+  the correct copy in one node. It is the `span.mbm-cal-staff` twin, inline
+  `display:none`; a browser renders one copy, but any tag strip that ignores CSS
+  concatenates both.
+
+Neither a source grep nor a tag-stripped fetch is a render. `tools/lf1/render_census.cjs`
+walks the DOM the browser builds. A source scan is still sound for *enumerating
+candidates* — nothing can render that is not in the bytes — but it never
+adjudicates what a pupil reads.
+
+## D14 — What a render census has to cover
+
+The LF1 numbers, same phrase, same 22 pages, by how it was measured:
+
+| measured as | count |
+|---|---|
+| source grep, lines | 31 |
+| DOM text nodes, slide 1 only | 8 |
+| driving the real slide control | 72 |
+| …sampling after **each** gate press, not a batch | 83 |
+| …pressing both chassis conventions | 86 |
+| print emulation, union over every printable tier | 35 |
+| accessible names (`aria-label`) | 3 |
+| **total in the document** | **121** |
+| **rendering on no route at all** | **0** |
+
+Every row of that table is a way of undercounting:
+
+- **A count on slide 1 is not the deck.** Most slides are `display:none` until
+  navigated and `showSlide` sits inside a closure, so the walk must drive the real
+  `#next` control.
+- **Pressing every gate then sampling once shows only the last tier chosen.**
+  Supported, Standard and Stretch are three panels; sample after each press.
+- **Two chassis, two conventions.** Science gates on data-attributes, Humanities
+  on inline `onclick="tier(...)"` with a `.tierbtn` or `aria-expanded` button.
+- **Print is a different subtree.** 35 occurrences live in the `.printpack`
+  worksheet, and `SCI_B_W8B` had four in print and none on screen at load — the
+  defect reached handouts before it reached a screen.
+- **Accessible names are pupil-facing text.** Three occurrences were `aria-label`s
+  no text-node walker can see and a screen reader reads aloud.
+- **"Behind a control" is not "unseen".** Content one press away is pupil-facing.
+  Reported as 11 unreachable, then 3, then **0**.
+
+## D15 — One re-run is a discriminating test; a second identical failure is an outage
+
+An install-time failure — one that happens before any test body runs — is
+re-run **once**, not as a retry but as the test that tells you which it was: the
+runner, or the change. If it passes, the first result was the runner. If it fails
+identically, that is an outage, and an outage is **waited out**, never bypassed,
+never merged past, never disabled.
+
+Observed 2026-09-09 on #469 (two YAML lines and a digest pin). All four
+Chromium-dependent checks failed at browser install, twice, verbatim:
+
+```
+E: Failed to fetch https://dl.google.com/linux/chrome-stable/deb/dists/stable/main/binary-amd64/Packages.gz  Hash Sum mismatch
+   Last modification reported: Wed, 09 Sep 2026 09:41:12 +0000
+   Release file created at:    Wed, 09 Sep 2026 17:16:59 +0000
+E: Some index files failed to download. They have been ignored, or old ones used instead.
+Failed to install browsers
+Error: Installation process exited with code: 100
+```
+
+Google's own apt index disagreeing with its own `Release` file — a stale CDN
+edge, external to this estate and to GitHub. `browser-matrix` fails one step
+later with `browserType.launch: Executable doesn't exist at
+…/chromium_headless_shell-1181/…`, which is the same failure seen downstream: the
+install never happened, so the binary is not there.
+
+A failure **inside** a test body is never attributed to infrastructure without
+evidence. The eleven non-browser checks on that PR all passed, and the diff
+touches nothing any of the four exercises — but that is the argument for waiting,
+not for merging.
