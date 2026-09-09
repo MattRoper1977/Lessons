@@ -33,10 +33,11 @@ the site repository and is not this repository's to move.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
+import io
 import json
 import re
-import shutil
 import sys
 import tempfile
 from pathlib import Path
@@ -242,6 +243,80 @@ def self_test() -> int:
         check("exactly one line changes for one moved pin",
               len(text_before) == len(text_after) and len(differing) == 1,
               "lines differing: %d" % len(differing))
+
+        # ---- Shared and colliding hashes. SX2R R1/R2 ruling, 2026-09-09.
+        #
+        # The substitution is POSITIONAL, not value-based: re.sub walks matches
+        # in document order and `order` is consumed in the same order, so the
+        # i-th pin literal always takes the i-th target's hash. The old value is
+        # never used as a search key, which is exactly what a naive
+        # text.replace(old, new) would do. Duplicate hashes are therefore
+        # structurally irrelevant rather than merely unlikely -- and the case
+        # below would fail loudly under a value-based implementation, so it
+        # proves the distinction instead of asserting it.
+        shared = root / "shared"
+        shared.mkdir()
+        twin_a, twin_b, lone = (shared / "twin_a.html", shared / "twin_b.html",
+                                shared / "lone.html")
+        twin_a.write_text("<p>identical bytes</p>", encoding="utf-8")
+        twin_b.write_text("<p>identical bytes</p>", encoding="utf-8")
+        lone.write_text("<p>different bytes</p>", encoding="utf-8")
+        h_twin, h_lone = sha256_file(twin_a), sha256_file(lone)
+        check("two files with identical bytes do hash the same",
+              sha256_file(twin_b) == h_twin and h_lone != h_twin)
+
+        def many(entries: list[dict]) -> None:
+            targets.write_text(
+                json.dumps({"schema": "t-v1", "targets": entries}, indent=1) + "\n",
+                encoding="utf-8")
+
+        def capture(write: bool) -> tuple[int, str]:
+            buf = io.StringIO()
+            with contextlib.redirect_stdout(buf):
+                code = run(targets, root, write)
+            return code, buf.getvalue()
+
+        def pins() -> list[dict]:
+            return json.loads(targets.read_text(encoding="utf-8"))["targets"]
+
+        # (a) Two targets whose patched bytes are identical, both pins stale.
+        many([{"path": "shared/twin_a.html", PIN_KEY: "1" * 64, "note": "row-a"},
+              {"path": "shared/twin_b.html", PIN_KEY: "2" * 64, "note": "row-b"}])
+        rc, out = capture(write=True)
+        rows_after = pins()
+        check("shared patched bytes: both rows move to the same hash",
+              rc == 0 and rows_after[0][PIN_KEY] == h_twin
+              and rows_after[1][PIN_KEY] == h_twin)
+        check("shared patched bytes: reported as 2, not 1",
+              "pins to move : 2" in out,
+              [ln for ln in out.splitlines() if "pins to move" in ln][0].strip())
+
+        # (b) The sharp one. Two DIFFERENT files carrying the SAME stale pin.
+        # A value-based replace would write one hash into both rows.
+        many([{"path": "shared/twin_a.html", PIN_KEY: "3" * 64, "note": "row-a"},
+              {"path": "shared/lone.html", PIN_KEY: "3" * 64, "note": "row-b"}])
+        rc, out = capture(write=True)
+        rows_after = pins()
+        check("identical stale pins on different files: each row gets its own hash",
+              rc == 0 and rows_after[0][PIN_KEY] == h_twin
+              and rows_after[1][PIN_KEY] == h_lone)
+        check("no substitution landed on the wrong row",
+              rows_after[0]["note"] == "row-a" and rows_after[1]["note"] == "row-b")
+        check("the colliding-pin file re-checks green", capture(write=False)[0] == 0)
+
+        # (c) A target carrying no pin literal at all must refuse the write,
+        # because the positional mapping cannot be established.
+        many([{"path": "shared/twin_a.html", PIN_KEY: "4" * 64},
+              {"path": "shared/lone.html"}])
+        before_refusal = targets.read_text(encoding="utf-8")
+        try:
+            capture(write=True)
+            refused = False
+        except SystemExit:
+            refused = True
+        check("a target with no pin literal refuses the write", refused)
+        check("and that refusal writes nothing",
+              targets.read_text(encoding="utf-8") == before_refusal)
 
     print()
     print("=" * 62)
