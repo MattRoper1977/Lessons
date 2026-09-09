@@ -96,6 +96,24 @@ def check(registry, rows, tree='education-lessons'):
             if status in ('A', 'C') and '/' in path and path.rsplit('/', 1)[0] in dirs:
                 problems.append('UNADMITTED %s: added where the publisher serves, but no registry row' % path)
             continue
+        if status in ('A', 'C'):
+            # A path that did not exist before is not a byte MOVE, and asking it for
+            # [pre, post] asks for a "pre" that never existed. The row it needs is
+            # [ARRIVING, digest]: ARRIVING permits the prior absence, the digest
+            # admits the bytes now arriving. A row without ARRIVING claims the file
+            # was already there, which contradicts the diff, so that is reported
+            # rather than waved through.
+            #
+            # Until the first genuinely new served path met this guard, every case it
+            # had seen was a modification; an added path fell into the branch below
+            # and was told to stage a move it could not have.
+            if ARRIVING in (row if isinstance(row, list) else [row]):
+                staged.append(path)
+            else:
+                problems.append('ADDED WITHOUT ARRIVING %s: new path, but its row pins %d digest(s) '
+                                'and does not permit the absence it is arriving from'
+                                % (path, len(admitted(row))))
+            continue
         if status == 'D':
             if ARRIVING not in (row if isinstance(row, list) else [row]):
                 problems.append('REMOVED %s: deleted, but its row does not permit absence' % path)
@@ -141,8 +159,14 @@ def self_test():
     p, s = check(reg2, [('A', 'brand-new.html')])
     want('an ADDED file at the repository root is ignored (no served sibling)', not p)
 
+    # This assertion used to read "an added path that already has a row is treated
+    # as a byte move", and it passed because that is what the code did. It was the
+    # DEFECT written down as an expectation: staged.html's row is [pre, post], which
+    # says the file existed and changed, while the diff says it was added. Those
+    # disagree, and the guard should say so rather than accept the pair.
     p, s = check(reg, [('A', 'staged.html')])
-    want('an added path that already has a row is treated as a byte move', not p)
+    want('an ADDED path whose row is a [pre, post] pair is RED, not silently accepted',
+         len(p) == 1 and p[0].startswith('ADDED WITHOUT ARRIVING'))
 
     p, s = check(reg, [('D', 'pinned.html')])
     want('a DELETED served path whose row forbids absence is RED', len(p) == 1 and p[0].startswith('REMOVED'))
@@ -158,6 +182,22 @@ def self_test():
     want('a mixed branch reports only the unstaged path', len(p) == 1 and 'pinned.html' in p[0])
 
     want('admitted() drops ARRIVING', admitted(['x' * 64, ARRIVING]) == ['x' * 64])
+
+    # A genuinely NEW served path: the row it needs is [ARRIVING, digest].
+    reg3 = {'trees': {'education-lessons': {
+        'Science/unit/one.html': 'a' * 64,
+        'Science/unit/new.json': [ARRIVING, 'd' * 64],
+        'Science/unit/badnew.json': 'e' * 64,
+    }}}
+    p, s = check(reg3, [('A', 'Science/unit/new.json')])
+    want('an ADDED path whose row carries ARRIVING is clean', not p and s == ['Science/unit/new.json'])
+    p, s = check(reg3, [('A', 'Science/unit/badnew.json')])
+    want('an ADDED path whose row has no ARRIVING is RED',
+         len(p) == 1 and p[0].startswith('ADDED WITHOUT ARRIVING'))
+    want('  ... and it says the row does not permit the absence', 'permit the absence' in p[0])
+    p, s = check(reg3, [('M', 'Science/unit/one.html')])
+    want('  ... and a MODIFIED path still needs a real pair, not ARRIVING',
+         len(p) == 1 and p[0].startswith('NO STAGED MOVE'))
     want('admitted() accepts a bare string', admitted('y' * 64) == ['y' * 64])
 
     print('\n%d checks, %d failed' % (ok[0], len(bad)))
