@@ -65,3 +65,14 @@ converges five values onto one.
 - format badges HTML amber / PPTX red / DOCX blue / PDF grey — source not yet located
 - dark set for Play — to be read from the shelf CSS (`domain-split/play/play.css`)
 - contrast: every ink/background pair measured ≥4.5:1 body, ≥3:1 large and chips
+
+## Outcome
+
+`assets/mbm-tokens.css` written on Site branch `claude/sw2-t1-tokens` (61e905e),
+3,959 bytes against the 8 KB cap. Format badges and subject accents each ship a
+paired ink token, because the measurement showed no single ink is readable on all
+four: amber needs dark ink and fails under white, the other three the reverse. With
+the pairs, every combination the file offers measures ≥4.5:1 against a 3:1
+requirement. Raw table in `_sw2/T1_contrast.txt`.
+
+Remaining in Part T: T2 chrome templates, T3 stamping, T4 gates, T5 landing.
