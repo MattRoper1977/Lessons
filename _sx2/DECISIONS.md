@@ -252,3 +252,54 @@ not hand-authored. The C3 list (unrecoverable, needing a human) is **empty**.
 The 22 files cannot be relabelled by tooling any more, and should not be. Their
 recaps name specific earlier lessons; turning those into sequence-relative text
 needs someone who knows what the pupil is being asked to remember.
+
+### LF1-B — how the count was wrong, and what a pupil-visible claim now costs
+
+**31 → 121.** The first LF1 census reported 31 occurrences across 19 files. The
+real figure is 121 across 22. Two independent errors, both in the same direction:
+
+1. `git grep -c` counts matching **lines**, not occurrences. A line carrying
+   `the previous unit–the previous unit` counted as one.
+2. The search set was incomplete. `the next unit` was never searched for in the
+   Science Build tree, so `SCI_B_W13A` (18) and `SCI_B_W13B` (33) — the two worst
+   pages in the estate — were absent from the list entirely.
+
+**The standard, from here.** Any claim about pupil-visible text is measured in a
+browser, on the DOM, on every route the page has. `tools/lf1/render_census.cjs`
+is that measurement. What it changed about the LF1 numbers:
+
+| measured as | count |
+|---|---|
+| source grep, lines | 31 |
+| DOM text nodes, slide 1 only | 8 |
+| DOM, driving the slide control | 72 |
+| …also pressing the tier and model-step controls | 75 |
+| print emulation, union over every printable tier | 35 |
+| accessible names (`aria-label`) | 3 |
+| **total in the document** | **121** |
+
+Three lessons in that table. A count on slide 1 is not the deck — most slides are
+`display:none` until navigated, and `showSlide` is inside a closure, so the walk
+has to drive the real `#next` control. Content behind one press of a tier or
+reveal button is pupil-facing, not a caveat. And the printed worksheet is a
+separate DOM subtree: `SCI_B_W8B` had four occurrences in print and none on
+screen at load, so the defect reached handouts before it reached a screen.
+
+**The duplicate that was not one.** A direct fetch of `SCI_B_W13A` appeared to
+show placeholder and correct copy in one node. It is the `span.mbm-cal-staff`
+twin the six *v4 relabel bytes* commits (`a229cdf`, `aa6aaea`, `d1ae3a2`,
+`ba61840`, `edc6b36`, `06b77c8`) add so staff keep the calendar declaration a
+pupil no longer sees. It is inline `display:none`, so a browser renders one copy
+— but any tag strip that ignores CSS renders both, which is what the fetch did.
+26 twins exist; the 8 files with only the first CX3 pass have none.
+
+**But the hiding is not load-bearing.** `html.mbm-guide-on
+[data-mbm-guide]{display:revert!important}` beats an inline non-important
+`display:none`, so with guide/TA mode on the line renders twice — 9 such pairs on
+5 pages. That is a guide-mode bug, not a relabel bug, and it is recorded
+separately; the LF1 fix deletes only the 9 twins that restoration makes into
+word-for-word restatements, and leaves the 17 doing their job.
+
+**The proxy substitution is resolved.** Matt fetched the origin directly. The
+admission-registry membership argument is retired as a served proof for LF1;
+served proof is a fetch of the four URLs, read as rendered DOM.
