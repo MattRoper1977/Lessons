@@ -101,8 +101,8 @@ const TYPES = {'.html':'text/html; charset=utf-8','.css':'text/css','.js':'text/
   };
 
   for (const rel of pages) {
-    const ctx = await browser.newContext({viewport: {width: 1280, height: 900}});
-    const page = await ctx.newPage();
+    let ctx = await browser.newContext({viewport: {width: 1280, height: 900}});
+    let page = await ctx.newPage();
     await page.goto(base + '/Lessons/' + rel.split('/').map(encodeURIComponent).join('/'),
                     {waitUntil: 'load', timeout: 60000});
     await page.waitForTimeout(350);
@@ -171,7 +171,16 @@ const TYPES = {'.html':'text/html; charset=utf-8','.css':'text/css','.js':'text/
       absorb(await page.evaluate(SCAN, PHRASES), 'deck');
     }
 
-    await page.reload({waitUntil: 'load'}); await page.waitForTimeout(300);
+    // The guide pass needs a genuinely clean page, not a reload. These decks
+    // persist the chosen tier, so after the deck walk a reload comes back with
+    // whatever tier was selected last and the other panels hidden -- which
+    // silently hid three of the adjacent-identical pairs the first time.
+    await ctx.close();
+    ctx = await browser.newContext({viewport: {width: 1280, height: 900}});
+    page = await ctx.newPage();
+    await page.goto(base + '/Lessons/' + rel.split('/').map(encodeURIComponent).join('/'),
+                    {waitUntil: 'load', timeout: 60000});
+    await page.waitForTimeout(400);
     await page.evaluate(() => document.documentElement.classList.add('mbm-guide-on'));
     await page.waitForTimeout(120);
     absorb(await page.evaluate(SCAN, PHRASES), 'guide');
