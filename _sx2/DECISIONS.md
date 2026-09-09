@@ -737,3 +737,324 @@ narrowing `FORBID` changes what the gate blocks on, and that wants a ruling, not
 a commit. Filed beside the UNSEEN asymmetry in D20, which is the same shape of
 problem in the opposite direction: one pattern sees what it should not, the other
 does not see what it should.
+
+## D22 — R-CAL-1 does not apply to `Tutor_Time/` or `Assembly/`
+
+LF1-M §8e. Stated here so no future relabelling pass reaches for them.
+
+The tutor-time sessions carry **batch slots**, not spine weeks. "Batch 03 · 28 Sep"
+is a position in a publishing run of three linked morning sessions a week; it is
+not `Aut1·W4`, it does not map through `_sownb/TERM_DATES.md`, and it has no
+manifest week to be relative to. A tool that turned a batch number into
+"Lesson n of N" would be inventing a sequence that does not exist — the same
+class of error as the 121, with a different vocabulary.
+
+**So:**
+
+- `tools/relabel_public.py` is never run over `Tutor_Time/` or `Assembly/`, in
+  report, apply, revert or gate mode.
+- Batch and week labels in those trees are **not** bound to spine or calendar
+  tokens, and the forbidden-token gate's vocabulary does not govern them.
+- The placeholder dates (14 Sep → 14 Dec, break week of 26 Oct) are **not**
+  resolved against the real calendar and are never presented as scheduled (§8f).
+- `[PLANNED]` sessions are proposals: no route, no card, no catalogue entry.
+
+The naming follows the same logic and is ruled in §2a: successors route under
+`Lessons/Tutor_Time/<strand>/<id>/` with strand folders `Behaviour`,
+`Safeguarding`, `British_Values`. Cards, hub copy, catalogue entries and search
+text say **"Tutor Time"**, never "assembly". `Assembly/` survives only as the
+three genuine assembly routes among the retiring originals, plus their three
+posters, behind successor-pointer pages. **No new `Assembly/` routes.**
+
+The estate already agreed with the ruling before it was made: across the 42 decks
+measured, visible text carries `tutor*` 126 times against `assembl*` 61, and not
+one `<title>` says assembly.
+
+## D24 — WITHDRAWN (Matt, 2026-09-09). §8a's amended wording survives it.
+
+**Withdrawn, not superseded: the ruling was correct on the evidence and the
+evidence was wrong.** D24 ordered V08's YouTube URL relocated into the staff
+aside. It is already there — byte **24,225** in the aside's `Video status:`
+paragraph, byte **35,793** in the `DATA` payload that aside renders from.
+**V08 needs no relocation and no hold**; it lands with B06, S10 and B07 on the §5
+clearance as written.
+
+Three things survive D24 permanently:
+
+1. **The amended §8a wording**, below — a better gate than "0 YouTube", now with
+   measured numbers behind it: **0/42 and 0/8 on both limbs**.
+2. **`tools/lf1/gate_thirdparty.cjs` as the sole authority** for that gate, with
+   its `<details>` scoping intact. A collapsed disclosure is pupil-visible; a
+   staff aside is not. That distinction is not to be "simplified".
+3. **Its application to GC1 G4**: the Scratch editor and AQA unit links stay,
+   because their visible text is a label, not a URL.
+
+The original ruling and the measurement that withdrew it follow.
+
+Ruled by Matt, 2026-09-09. This wording replaces the "0 YouTube" line:
+
+> Zero third-party **LOADS** on any pupil route (no iframe, script src, font,
+> image or fetch), and zero third-party **URLs in pupil-visible text**. Cited
+> third-party URLs are permitted inside staff asides.
+
+Two properties, and the old wording only measured the first. A count of embeds
+says nothing about a URL printed as prose, and a count of `https?://` in the
+source says nothing about where it renders.
+
+### The correction I owe on V08
+
+I reported that `V08_Belonging_Without_Assumptions` renders a youtube.com URL on
+a pupil-facing surface. **That was wrong.** Both occurrences are in the permitted
+place:
+
+| occurrence | where | |
+|---|---|---|
+| byte 24,225 | **inside** `<aside class="staff" hidden>`, in the `Video status:` paragraph | permitted |
+| byte 35,793 | inside `<script>`, the `DATA` payload `note` field the aside renders from | not rendered as itself |
+
+**V08 needs no relocation and no hold.** The error was measuring source with a
+regex instead of rendering: the citations live in a `DATA` payload and the page
+renders them into the staff aside, which a source scan cannot see.
+
+### The gate, and what it took to make it honest
+
+`tools/lf1/gate_thirdparty.cjs` walks all 8 stages and all 3 task routes with the
+staff aside in its default state and reads **text nodes only** — never an `href`,
+because a link whose visible text is "Open Scratch" shows no URL while a paragraph
+that prints one does.
+
+It got the wrong answer first, and the reason is worth keeping. A **detached**
+clone has no layout, so `innerText` degrades to `textContent` and swallows every
+`<script>` body — the `DATA` payload included. That reported **25 of 42 decks**
+as failing, and the tell was that the pupil-visible count equalled the
+staff-aside count on almost every deck: the same citations counted twice. With
+`script`, `style`, `template` and `aside.staff` stripped explicitly, it reads
+`textContent`, so text inside a **collapsed `<details>`** still counts — a pupil
+can open a disclosure, and that is not what "inside a staff aside" means.
+
+### The result, with a two-sided control
+
+| | decks | collections |
+|---|---:|---:|
+| third-party **loads** | **0** of 42 | **0** of 8 |
+| third-party **URLs in pupil-visible text** | **0** of 42 | **0** of 8 |
+| console/page errors while walking 8 stages × 3 routes | **0** of 42 | — |
+
+The control proves the gate both fires and stays silent correctly. The same
+sentence was planted twice in a copy of V08:
+
+- in footer prose, outside the aside → **caught**, gate red;
+- inside `<aside class="staff">` → **not caught**, correctly permitted.
+
+A gate that only ever passes has proved nothing; this one is shown to fail on the
+forbidden case and to allow the permitted one.
+
+Collections are measured on their shell, because their `ITEMS` payloads **are** the
+deck files — byte-equal minus the pack-link, 42 of 42 — so measuring them again
+would be measuring the same bytes twice.
+
+**This gate also governs GROW Computing** (GC1 G4): the Scratch editor and AQA unit
+links stay as links with `rel="noopener"`, because their visible text is a label,
+not a URL.
+
+## D26 — STANDING RULE: path, never basename
+
+Every comparison between an original and a re-cut, and every payload-to-original
+lookup anywhere in this estate, is keyed on **full path**. A lookup with no path
+match is a **listed conflict reported by name**; it never falls back to basename
+and never resolves silently.
+
+The rule exists because it already bit. `B02_Ready_Respectful_Safe.html` exists in
+the originals pack *and* in batch 02. A §6b check keyed on basename compared each
+batch collection's payload against the **original** deck and reported **17 of 42
+mismatching** — a confident, specific, entirely false finding. Scoped to the
+package the collection came from, the answer is 42 of 42.
+
+A basename collision does not announce itself. It produces a plausible number.
+
+
+## D27 — gates measure rendered output, never source
+
+Any gate whose subject is what a pupil can see is measured in a **laid-out page**.
+
+A regex over source is not a measurement of visibility: it cannot see a payload
+the page renders, and it cannot see where the page renders it. `innerText` on a
+**detached** clone is not one either: with no layout it degrades to `textContent`
+and swallows every `<script>` body.
+
+Both produced confident, specific, false findings this week — the first said V08
+showed a pupil-facing YouTube URL when it sits in the staff aside; the second said
+25 of 42 decks failed §8a when none does.
+
+**Applies to every pupil-visible gate in the estate.** Existing gates that still
+read source are listed in `_sx2/tutor_time/GATES_READING_SOURCE.md`. They are
+**listed, not fixed**, under this order.
+
+## D28 — no instrument counts until it has a two-sided control
+
+Every gate, checker and comparison ships with a planted **true positive** (the
+thing it must catch, caught) and a planted **true negative** (the permitted
+lookalike, not caught), **both run in the invocation that produces the number**.
+
+A number from an instrument without both is **MEASUREMENT INVALID** and cannot be
+reported, quoted or acted on.
+
+This is the general form of three misses on this arc, each plausible, specific and
+wrong, and each of which would have died against its own negative control:
+
+| instrument | false finding | the negative control it lacked |
+|---|---|---|
+| basename keying | 17 of 42 payloads "mismatching" | a payload compared against its *own* package |
+| detached-clone `innerText` | 25 of 42 decks "failing" §8a | a URL placed in the permitted staff aside |
+| source regex | V08 "shows a pupil-facing URL" | the same URL rendered inside the aside |
+
+D26 sits below this one: path-not-basename is a specific case of the general rule.
+
+## D29 — §4c restoration proceeds on the derived 86
+
+Ruled by Matt, 2026-09-09 (LF1M-FIN). The count is the **output** of the
+derivation, never a target to match: the 183 does not gate §4c, and a figure not
+produced by a script that was run is MEASUREMENT INVALID.
+
+Derived: **103 dropped sentences, 86 of them content.** `status` and `model.type`
+are deliberate state changes and stay excluded; the 17 non-content sentences are
+recorded in `_sx2/tutor_time/RESTORE_4C.md`, not restored.
+
+**Restored: 12 ids, 51 sentences, derived diff 0 on every one.**
+**Held: 5** — S06 and S04 under S2, and B02, B05, V04 as listed B1 conflicts.
+
+### The distinction the run turned up
+
+Six of the 86 are **not dropped lines at all — they are replacements.** The slot
+holds different approved wording, so appending the original verbatim would put two
+instructions in one single-sentence slot. That is a conflict to post, not a
+restoration to perform. The thirteenth named line is one of them:
+
+> `V04` `model.steps[3].text` — original *"A trusted adult can help when pressure
+> continues."*, re-cut *"Ask a trusted adult now if worried; no refusal is required
+> first."*
+
+Merging those would reword safeguarding text, which S7 forbids. **A diff that says
+"absent" cannot tell a deletion from a replacement, and only one of them is
+restorable.**
+
+### Two copies, one write
+
+Each re-cut holds its text twice — the static `<aside class="staff" hidden>` and
+the `DATA` payload — and they agree today. So a field's exact text must occur
+**exactly twice** in the file: 2 before the write and 2 after is B2 proved, and a
+single write updates both copies so they cannot drift. Nothing is regenerated;
+there is no builder here, and a divergence is a STOP.
+
+The B4 proof is arithmetic: the whole-file byte delta equals exactly **twice** the
+appended text on all 12. Any other edit would show up in that number.
+
+### `model.*` is not appendable
+
+`model.caption` and `model.steps[*]` render into the SVG as `textLength`-fitted
+`<text>` runs, plus a `<desc>` and an `aria-label`. An append there is a relayout,
+not a verbatim insertion. `tools/lf1/restore_recut.py` refuses any `model.*` path
+outright, and that refusal is one of its D28 controls.
+
+## D30 — the loose Week 01 never lands
+
+`GROW_Week_01_Interactive.html`, **24,008 B, md5 `b927e6f686`**, is **provenance,
+not content**. It predates the current chassis: no `id="route"` selector, no
+`id="largeText"`, no `id="chassis"` stage nav, and its options are `0,1,2,3`
+instead of step / main / challenge. It cannot satisfy P1's eight-stages-three-routes
+gate.
+
+**The canonical Week 01 lesson is the copy inside
+`GROW_Computing_Weeks_01_02_Complete.zip`, 33,712 B, md5 `d8f60ff52b`**, and
+G7(b)'s duplicate `id="centre"` is a property of *that* copy — the order's
+measurement was taken correctly.
+
+**The slides diverge too.** `GROW_Week_01_Teaching_Slides.pptx` is **47,188 B, md5
+`dd2951722d`** loose against **59,661 B, md5 `fc6c7f7cb8`** in the zip. Not a
+duplicate: a superseded revision, listed by name, never landed, never merged with
+the zip copy.
+
+Both go to `_authoring/GROW_Computing_2026-09-09/superseded/` under **G13**. G13 is
+a GC1 **P2** step and GC1 is at P0–P1 with zero writes, so the copy is **deferred
+with its destination and hashes pinned here**; the record is made now, the bytes
+move when the queue opens.
+
+## D31 — same-basename register
+
+`_authoring/BASENAME_CONFLICTS.md` records every same-basename divergence:
+basename, both paths, both sizes, both md5s, which is canonical, and why.
+
+Any future upload sharing a basename with a landed file is compared by **content
+hash before use**. A hash mismatch is a listed conflict reported by name — never a
+silent overwrite, never a merge. **This is D26 applied to inbound files rather than
+to lookups.**
+
+## D32 — G5 revised: rewrite becomes add
+
+All eight lessons carry base64 `data:` URIs only, so **there is no href to
+repoint**. The reason is unchanged and stronger for it: a managed school browser
+that blocks `data:` downloads removes **every** Scratch file from **every** lesson
+at once, with no error a teacher would see.
+
+- **(a)** On the **served copies only**, P3 *adds* a relative href
+  (`../Scratch_Projects/<file>.sb3`, plus `download`) as the primary route, by a
+  canonical writer with a red proof. Never a hand edit, never per-file.
+- **(b)** The base64 payload is **retained in place, untouched.** Stripping is a
+  content edit, and the offline zips are byte-identical to the served source today.
+- **(c)** The offline zips are unchanged and keep `data:` primary. No server behind
+  them.
+- **(d)** Gate: every added href resolves 200 on the served origin with bytes equal
+  to the tree; the count equals the supplied projects for that lesson; and the page
+  still offers a working download with JavaScript disabled.
+- **(e)** Two-sided control per D28: a planted missing sibling reds the gate, a
+  planted correct one passes.
+
+**The retained-bytes finding (b), measured, for a later ruling — no action here:**
+
+| | lesson bytes | base64 bytes | share | projects |
+|---|---:|---:|---:|---:|
+| W01 | 33,712 | 2,284 | 6.8% | 1 |
+| W02 | 38,445 | 6,780 | 17.6% | 3 |
+| W03 | 26,427 | 932 | 3.5% | 1 |
+| W04 | 30,609 | 5,032 | 16.4% | 2 |
+| W05 | 31,304 | 5,592 | 17.9% | 2 |
+| W06 | 31,838 | 6,068 | 19.1% | 2 |
+| W07 | 35,092 | 6,968 | 19.9% | 2 |
+| W08 | 35,421 | 7,628 | 21.5% | 2 |
+| **total** | **262,848** | **41,284** | **15.7%** | **15** |
+
+The base64 measurement needed correcting once: the data URI is **built at runtime**
+from a `FILES[].data` field, so a regex for `data:application/x.scratch.sb3;base64,`
+returns **0 payloads on all eight lessons** — a clean, confident zero from an
+instrument looking for a string the file never contains. D28 again.
+
+**The G5(d) baseline**: 23 `.sb3` = **15 pupil projects in `Scratch_Projects/`**,
+every one embedded in its own lesson with names matching exactly, plus **8 teacher
+models in `Teacher_Only/`**, one per week, **none embedded in a pupil lesson** — G3
+already holds. So the added-href count per lesson is 1,3,1,2,2,2,2,2.
+
+## D33 — a text-mode read is not a byte measurement
+
+Byte equality is asserted from **binary reads or `os.path.getsize` plus a content
+hash**, never from a text-mode read, which normalises line endings and produces a
+plausible near-miss.
+
+Re-asserted for W03–W06, zip against loose, md5 on binary reads: **`6973fbee1ffc`,
+`ba23e3f395f6`, `c27cadaccf0a`, `14c1411c2a29` — equal, all four.** The earlier
+"byte-identical" was right by luck, not by instrument: the text-mode read showed
+26,427 against a real 26,429, and a two-byte gap is exactly the size of a mistake
+that looks like rounding.
+
+## D34 — duplicate uploads
+
+Byte-identical duplicates of files already measured; stored once by hash, and P1 is
+**not** re-run against them:
+
+| file | copies | bytes | md5 |
+|---|---:|---:|---|
+| `GROW_Computing_Weeks_01_02_Complete.zip` | 3 | 1,839,368 | `154671b031` |
+| `GROW_Computing_Weeks_03_06_Complete.zip` | 2 | 2,864,859 | `50ea9dd5fe` |
+| `GROW_Computing_Weeks_07_08_Complete.zip` | 2 | 1,053,102 | `4719a668cd` |
+| `GROW_Computing_Week_07.zip` | 2 | 573,914 | `1c106bbe2e` |
+| `GROW_Computing_Week_08.zip` | 2 | 573,363 | `0d513bd6a1` |
+| `GROW_Week_04_Interactive.html` | 2 | 30,611 | `ba23e3f395` |
