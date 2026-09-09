@@ -272,7 +272,11 @@ def self_test(rows: list[dict], manifest: dict, tree: Path) -> None:
     b = copy.deepcopy(good); b[-1]["kind"] = "bundle"; plants.append(("a novel kind", b))
     c = copy.deepcopy(good); c[-1]["files"].append(dict(c[-2]["files"][0])); plants.append(("one file under two pack entries", c))
     d = copy.deepcopy(good); del d[-1]["companionOf"]; plants.append(("a pack row without companionOf", d))
-    e = copy.deepcopy(good); e[-1]["halfTerm"] = "Spring 2"; plants.append(("a pack half-term that is not its derivation", e))
+    e = copy.deepcopy(good)
+    # a half-term the row does not already carry: a fixed literal plants nothing once a
+    # pack of that half-term is the last row (safe only while every pack was Autumn).
+    e[-1]["halfTerm"] = next(h for h in HALF_TERMS if h != e[-1].get("halfTerm"))
+    plants.append(("a pack half-term that is not its derivation", e))
     f = copy.deepcopy(good); f.pop(); plants.append(("a dropped pack row", f))
     for name, planted in plants:
         red = bool(check(planted, manifest, tree))
