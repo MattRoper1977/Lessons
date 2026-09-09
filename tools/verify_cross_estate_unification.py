@@ -140,7 +140,7 @@ CATALOGUE_PINS = {
         "tools/catalogue/build_humanities_shelf.py": "ef74f9eced59fd6ec33f22c02cf0d39d518ac6f2eb8873aaf21517859fb78662",
         "tools/catalogue/check_catalogue_static.py": "1f55f22846763ded7bd27fdc389b57d1cba3b1eb58c066c944dde9b6b70617df",
         "tools/catalogue/check_catalogue_dom.cjs": "9afa5c7b5355940199f602fca443fb6436882426058cc7ac1cba5bd0a94ac257",
-        "tools/catalogue/verify_education_navigation.cjs": "67ec1000073b78b39cdd8458773e7a41ec169f3ce751b423f67f863f0ef49d41",
+        "tools/catalogue/verify_education_navigation.cjs": "b0d9297a33fb9ea2494fecaa45e02ae6fcf6fa88e6a62ced35cf521fbb1851fd",
         "tools/catalogue/SHELF_SELECTION.json": "95def027287e7cc1eb1190bafa21733c9c0999286c15a231dc17dfe7a56331f4",
         "tools/catalogue/HUMANITIES_SELECTION.json": "5df3e69d4d9d3825225bcc80376b3fbebf61656df6e333f6b9a8aaded1893bf4",
         "tools/easter/science_original_browser.cjs": "650884c0ef6ec714edc429bbf7c5601e26176df44012661462c37ee3de7478d1",
@@ -595,7 +595,7 @@ PUBLICATION_CALLER_PATH = ".github/workflows/education-pages.yml"
 # both repositories' callers. UX2 moved the Lessons caller alone (Lessons #436,
 # #438, #442; the order writes nothing to the Apps repository), so this digest is the
 # LESSONS caller's, and the Apps caller carries its own reviewed digest below.
-PUBLICATION_CALLER_SHA256 = "57b04ba7864168a5d264e290e9d272297b0b6227c3deb30129a0e9347bbeeb0a"
+PUBLICATION_CALLER_SHA256 = "b6d0358f28ae3efccb351da7abba822009abdca5c6f6a8495b92cb101b6cedbd"
 # One reviewed caller digest per repository kind. The Apps entry is the Apps
 # caller at the Site's reviewed Apps pin 924ab986 (Site domain-split-verify.yml;
 # the caller there names Site 23a4f360), which the Site's catalogue contract

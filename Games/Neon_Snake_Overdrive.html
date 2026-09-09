@@ -4,7 +4,7 @@
 <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSIjMTYxRDNEIi8+PHBhdGggZD0iTTI2IDc2IEwyNiAzMCBMNTAgNTUgTDc0IDMwIEw3NCA3NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRThFMkQ0IiBzdHJva2Utd2lkdGg9IjEzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4=">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<link rel="canonical" href="https://madebymatt.uk/Lessons/Games/Neon_Snake_Overdrive.html">>
+<link rel="canonical" href="https://madebymatt.uk/Lessons/Games/Neon_Snake_Overdrive.html">
 <title>Neon Snake: Overdrive</title>
 <script src="vendor/three-0.128.0/three.min.js"></script>
 <style>
@@ -111,9 +111,19 @@
   .hidden{ display:none !important; }
 /* Tier 1 §2.5: 44px minimum touch targets (measured 42px options, 34px save at 390x844) */
 .skin-opt,.btn,.save-btn{min-height:44px}
+
+/* Remaster controls: readable labels and a separate touch tray. */
+.subtitle,.label,.hint,.scorebox h3,.final-label,.newbest,.over-reason,.initials-block span,.score-list li.empty{font-size:14px;color:#cbd5e1;letter-spacing:.04em}
+.hidden-screen{visibility:hidden}.screen{touch-action:pan-y}.icon-btn,select{min-height:44px;min-width:44px}
+#circuit-status{position:fixed;left:16px;top:84px;max-width:calc(100vw - 32px);padding:10px 12px;background:#0f172aee;border:1px solid #38bdf8;border-radius:10px;font-size:14px;z-index:11;pointer-events:none}
+#overdrive-btn{position:fixed;right:16px;bottom:20px;width:auto;font-size:14px;z-index:12;min-height:48px;touch-action:manipulation}
+#overdrive-btn:disabled{opacity:.55}.chapter-brief{font-size:14px;line-height:1.5;color:#d5e8ff;margin:0}
+@media(max-width:767px){.dpad-wrap{justify-content:flex-start}.stat-bar{gap:8px;padding:10px;font-size:14px}#overdrive-btn{bottom:72px;right:10px;max-width:145px;padding:12px 8px}.dpad{width:168px;height:168px}#circuit-status{top:82px}}
+@media(pointer:coarse){.dpad-wrap{display:flex}}
 </style>
 </head>
 <body>
+<div id="circuit-status" role="status">BLACKOUT CIRCUIT</div><button id="overdrive-btn" class="btn btn-ghost" type="button">OVERDRIVE · 1 CARGO</button>
 <div id="a11y-live" role="status" aria-live="polite" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden"></div>
 <script>window.__mbmAnnounce=function(t){var n=document.getElementById("a11y-live");if(!n||!t)return;n.textContent=String(t);};</script>
 
@@ -167,7 +177,9 @@
     </div>
     <div>
       <label class="label">Mode</label>
-      <div class="mode-row">
+      <p class="chapter-brief">BLACKOUT CIRCUIT: the harbor has gone dark. Carry food energy to the three blue relays in order; each needs 2 cargo. Spend 1 cargo on Overdrive to lift amber gates for 18 moves. The central gap always stays open.</p>
+<div class="mode-row"><label for="chapter-setting">Chapter</label><select id="chapter-setting"><option value="circuit">Blackout Circuit</option><option value="classic">Classic arena</option></select></div>
+<div class="mode-row">
         <span>Round length</span>
         <select id="timer-setting">
           <option value="60">Timed · 60s</option>
@@ -339,10 +351,11 @@ function init3D() {
   headSprite = makeGlowSprite(SKINS[selectedSkin].color, 2.8, 0.7);
 
   addEventListener('resize', onResize);
-  animate();
+  onResize();animate();
 }
 
 function onResize() {
+  const fit=Math.max(1,.95/(innerWidth/innerHeight));baseCam={x:GRID/2,y:14*fit,z:GRID/2+12*fit};camera.position.set(baseCam.x,baseCam.y,baseCam.z);camera.lookAt(GRID/2,0,GRID/2);
   camera.aspect = innerWidth / innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(innerWidth, innerHeight);
@@ -366,7 +379,7 @@ function animate() {
   headLight.position.x += (headTarget.x - headLight.position.x) * 0.35;
   headLight.position.z += (headTarget.z - headLight.position.z) * 0.35;
 
-  for (let i = particles.length - 1; i >= 0; i--) {
+  for (let i = gameState==='playing'?particles.length-1:-1; i >= 0; i--) {
     const p = particles[i];
     p.position.x += p.userData.v.x; p.position.y += p.userData.v.y; p.position.z += p.userData.v.z;
     p.userData.v.y -= 0.012; p.userData.life -= 0.04;
@@ -374,7 +387,7 @@ function animate() {
     if (p.userData.life <= 0) { scene.remove(p); particles.splice(i, 1); }
   }
 
-  FX.update();
+  if(gameState==='playing')FX.update();
   renderer.render(scene, camera);
 }
 
@@ -431,7 +444,7 @@ const sfxLevel = () => { tone(520, 0.06, 'triangle', 0.1); setTimeout(() => tone
 /* ============================================================
    HIGH SCORES
    ============================================================ */
-function loadScores() { try { return JSON.parse(localStorage.getItem(SCORE_KEY)) || []; } catch (e) { return []; } }
+function loadScores() { try { const v=JSON.parse(localStorage.getItem(SCORE_KEY));return Array.isArray(v)?v.filter(s=>s&&typeof s.name==='string'&&Number.isFinite(s.score)&&s.score>=0).slice(-100):[]; } catch(e){return [];} }
 function saveScores(l) { try { localStorage.setItem(SCORE_KEY, JSON.stringify(l)); } catch (e) {} }
 function topScores() { return loadScores().sort((a, b) => b.score - a.score).slice(0, 5); }
 function bestScore() { const t = topScores(); return t.length ? t[0].score : 0; }
@@ -442,6 +455,62 @@ function renderScores() {
     `<li class="${i === 0 ? 'top' : ''}"><span>${String(i + 1).padStart(2, '0')}. ${escapeHtml(s.name)}</span><span>${s.score}</span></li>`).join('');
 }
 
+/* BLACKOUT CIRCUIT: integrated into tick/resetRound, with native Three meshes. */
+let circuit = { enabled:true, repaired:0, charge:0, open:0, moves:0 };
+let turnQueue = [], circuitMeshes = [], clockRemaining = 60000, clockStamp = 0;
+const CIRCUIT_NODES = [{x:4,z:3,name:'North relay'},{x:11,z:3,name:'Uplink'},{x:11,z:12,name:'Harbor beacon'}];
+const CIRCUIT_WALLS = Array.from({length:12},(_,i)=>({x:i+2,z:6})).filter(p=>![3,7,12].includes(p.x));
+const CIRCUIT_GATES = [{x:3,z:6},{x:12,z:6}];
+const sameCell = (a,b) => a.x===b.x && a.z===b.z;
+function circuitBlocked(p, spawning=false) {
+  return circuit.enabled && (CIRCUIT_WALLS.some(w=>sameCell(w,p)) || ((spawning||circuit.open===0)&&CIRCUIT_GATES.some(w=>sameCell(w,p))));
+}
+function resetCircuit() {
+  circuitMeshes.forEach(m=>{scene.remove(m);m.geometry.dispose();m.material.dispose();});circuitMeshes=[];
+  circuit={enabled:document.getElementById('chapter-setting').value!=='classic',repaired:0,charge:0,open:0,moves:0}; turnQueue=[];
+  if(!circuit.enabled)return;
+  CIRCUIT_WALLS.concat(CIRCUIT_GATES).forEach(p=>{
+    const gate=CIRCUIT_GATES.some(q=>sameCell(p,q));
+    const m=new THREE.Mesh(new THREE.BoxGeometry(.92,1.1,.92),new THREE.MeshStandardMaterial({color:gate?0xfbbf24:0x334155,emissive:gate?0xf59e0b:0x1e293b,emissiveIntensity:.5,transparent:true,opacity:1}));
+    m.position.set(p.x,.55,p.z);m.userData.gate=gate;scene.add(m);circuitMeshes.push(m);
+  });
+  CIRCUIT_NODES.forEach((p,i)=>{
+    const m=new THREE.Mesh(new THREE.TorusGeometry(.43,.09,8,24),new THREE.MeshStandardMaterial({color:0x38bdf8,emissive:0x38bdf8,emissiveIntensity:1.5}));
+    m.rotation.x=Math.PI/2;m.position.set(p.x,.18,p.z);m.userData.node=i;scene.add(m);circuitMeshes.push(m);
+  });
+}
+function circuitVisual() {
+  circuitMeshes.forEach(m=>{
+    if(m.userData.gate){m.position.y=circuit.open>0?1.8:.55;m.material.opacity=circuit.open>0?.26:1;m.material.emissive.setHex(circuit.open>0?0x34d399:0xf59e0b);}
+    if(Number.isInteger(m.userData.node)){const n=m.userData.node;m.material.color.setHex(n<circuit.repaired?0x34d399:n===circuit.repaired?0x38bdf8:0x475569);m.material.emissive.copy(m.material.color);m.position.y=n===circuit.repaired?.23+.07*Math.sin(circuit.moves*.7):.12;m.scale.setScalar(n===circuit.repaired?1.25:.85);}
+  });
+}
+function triggerOverdrive() {
+  if(gameState!=='playing'||!circuit.enabled||circuit.charge<1||circuit.open>0)return;
+  circuit.charge--;circuit.open=18;circuitVisual();updateHUD();sfxLevel();
+}
+function circuitStep(head) {
+  if(!circuit.enabled)return;
+  circuit.moves++;
+  if(circuit.open>0){circuit.open--;if(circuit.open===0&&snake.some(p=>CIRCUIT_GATES.some(g=>sameCell(p,g))))circuit.open=1;}
+  const node=CIRCUIT_NODES[circuit.repaired];
+  if(node&&sameCell(head,node)&&circuit.charge>=2){
+    circuit.charge-=2;circuit.repaired++;score+=50;
+    burst(node.x,node.z,pMatEat,20);sfxLevel();window.__mbmAnnounce(node.name+' restored.');
+    if(circuit.repaired===CIRCUIT_NODES.length){circuitVisual();updateHUD();endGame('Blackout lifted — harbor online!');return;}
+  }
+  circuitVisual();updateHUD();
+}
+function circuitHUD(){
+ const node=CIRCUIT_NODES[circuit.repaired];
+ document.getElementById('circuit-status').textContent=!circuit.enabled?'CLASSIC · original open arena':circuit.repaired===3?'HARBOR ONLINE · 3 / 3 relays':(circuit.repaired+1)+'/3 '+node.name+' · cargo '+circuit.charge+'/3 · '+(circuit.open?'gates open '+circuit.open+' moves':'2 cargo to repair');
+ const b=document.getElementById('overdrive-btn');b.disabled=gameState!=='playing'||!circuit.enabled||circuit.charge<1||circuit.open>0;b.textContent=circuit.open?'GATES OPEN '+circuit.open:'OVERDRIVE · 1 CARGO';
+}
+function syncClock(){
+ if(gameState!=='playing'||timeLimit===0)return;
+ const now=performance.now();clockRemaining=Math.max(0,clockRemaining-Math.max(0,now-clockStamp));clockStamp=now;timeLeft=Math.ceil(clockRemaining/1000);updateHUD();if(clockRemaining===0)endGame("Time's up");
+}
+
 /* ============================================================
    GAMEPLAY
    ============================================================ */
@@ -449,11 +518,12 @@ function resetRound() {
   snakeMeshes.forEach(m => scene.remove(m)); snakeMeshes = [];
   particles.forEach(p => scene.remove(p)); particles = [];
 
+  resetCircuit();
   snake = [{ x: 5, z: 8 }, { x: 4, z: 8 }, { x: 3, z: 8 }];
   dir = { x: 1, z: 0 }; nextDir = { x: 1, z: 0 };
   score = 0; foodEaten = 0; gameSpeed = BASE_SPEED; pendingScored = false;
 
-  timeLimit = parseInt(document.getElementById('timer-setting').value, 10);
+  timeLimit = parseInt(document.getElementById('timer-setting').value, 10);if(![0,60,90,120].includes(timeLimit))timeLimit=60;clockRemaining=timeLimit*1000;clockStamp=performance.now();
   timeLeft = timeLimit; best = bestScore();
 
   updateHUD();
@@ -478,21 +548,21 @@ function recolorSnake() {
 }
 
 function generateFood() {
-  if (snake.length >= GRID * GRID) { endGame('Board cleared!'); return; }
-  let ok = false;
-  while (!ok) {
-    food.x = Math.floor(Math.random() * GRID); food.z = Math.floor(Math.random() * GRID);
-    ok = !snake.some(s => s.x === food.x && s.z === food.z);
-  }
-  foodMesh.position.set(food.x, 0.5, food.z);
-  foodSprite.position.set(food.x, 0.5, food.z);
+  const free=[];
+  for(let z=0;z<GRID;z++)for(let x=0;x<GRID;x++){const p={x,z};if(!snake.some(s=>sameCell(s,p))&&!circuitBlocked(p,true)&&(!circuit.enabled||!CIRCUIT_NODES.some(n=>sameCell(n,p))))free.push(p);}
+  if(!free.length){endGame('Board cleared!');return false;}
+  food={...free[Math.min(free.length-1,Math.floor(Math.random()*free.length))]};
+  foodMesh.position.set(food.x,.5,food.z);foodSprite.position.set(food.x,.5,food.z);return true;
 }
 
 function tick() {
-  dir = nextDir;
+  if(gameState!=='playing')return;
+  dir = turnQueue.length?turnQueue.shift():nextDir;nextDir={...dir};
   const head = { x: snake[0].x + dir.x, z: snake[0].z + dir.z };
   if (head.x < 0 || head.x >= GRID || head.z < 0 || head.z >= GRID) { endGame('Hit the wall'); return; }
-  if (snake.some(s => s.x === head.x && s.z === head.z)) { endGame('Bit yourself'); return; }
+  if(circuitBlocked(head)){endGame('Hit a circuit barrier');return;}
+  const eating=sameCell(head,food);
+  if(snake.slice(0,eating?snake.length:-1).some(s=>sameCell(s,head))){endGame('Bit yourself');return;}
 
   snake.unshift(head);
   addSegment(head.x, head.z);
@@ -501,7 +571,7 @@ function tick() {
   headTarget = { x: head.x, z: head.z };
 
   if (head.x === food.x && head.z === food.z) {
-    score += 10; foodEaten++;
+    score += 10; foodEaten++;if(circuit.enabled)circuit.charge=Math.min(3,circuit.charge+1);
     burst(food.x, food.z, pMatEat, 14);
     FX.shake(0.18); FX.flash(SKINS[selectedSkin].css, 0.2);
     sfxEat(); haptic(30);
@@ -513,16 +583,14 @@ function tick() {
   } else {
     snake.pop(); scene.remove(snakeMeshes.pop());
   }
-  recolorSnake();
+  recolorSnake();if(gameState==='playing')circuitStep(head);
 }
 
 function startTickLoop() { clearInterval(tickTimer); tickTimer = setInterval(tick, gameSpeed); }
-function startClock() {
-  clearInterval(clockTimer);
-  if (timeLimit === 0) return;
-  clockTimer = setInterval(() => { timeLeft--; updateHUD(); if (timeLeft <= 0) endGame("Time's up"); }, 1000);
-}
+function startClock(){clearInterval(clockTimer);clockStamp=performance.now();if(timeLimit===0)return;clockTimer=setInterval(syncClock,100);}
+
 function updateHUD() {
+  circuitHUD();
   document.getElementById('score-val').innerText = score;
   document.getElementById('best-val').innerText = best;
   document.getElementById('timer-val').innerText = timeLimit === 0 ? '∞' : timeLeft;
@@ -535,21 +603,21 @@ const show = id => document.getElementById(id).classList.remove('hidden-screen')
 const hide = id => document.getElementById(id).classList.add('hidden-screen');
 
 function startGame() {
-  initAudio(); resetRound(); gameState = 'playing';
+  initAudio();clearInterval(tickTimer);clearInterval(clockTimer);gameState='playing';resetRound();
   hide('menu-screen'); hide('over-screen'); hide('pause-screen');
   startTickLoop(); startClock();
 }
 function pauseGame() {
   if (gameState !== 'playing') return;
-  gameState = 'paused'; clearInterval(tickTimer); clearInterval(clockTimer); show('pause-screen');
+  syncClock();if(gameState!=='playing')return;turnQueue=[];nextDir={...dir};gameState = 'paused';updateHUD(); clearInterval(tickTimer); clearInterval(clockTimer); show('pause-screen');
 }
 function resumeGame() {
   if (gameState !== 'paused') return;
-  gameState = 'playing'; hide('pause-screen'); startTickLoop(); startClock();
+  gameState = 'playing';updateHUD(); hide('pause-screen'); startTickLoop(); startClock();
 }
 function endGame(reason) {
   if (gameState === 'over') return;
-  gameState = 'over'; clearInterval(tickTimer); clearInterval(clockTimer);
+  gameState = 'over';turnQueue=[];updateHUD(); clearInterval(tickTimer); clearInterval(clockTimer);
   FX.shake(0.9); FX.flash('#ffffff', 0.6); sfxDie(); haptic([80, 40, 120]);
   best = bestScore();
   const isBest = score > 0 && score >= best;
@@ -571,7 +639,7 @@ function logScore() {
   best = bestScore(); updateHUD(); renderScores();
 }
 function toMenu() {
-  gameState = 'menu'; clearInterval(tickTimer); clearInterval(clockTimer);
+  gameState = 'menu';turnQueue=[]; clearInterval(tickTimer); clearInterval(clockTimer);
   best = bestScore(); updateHUD(); renderScores();
   hide('pause-screen'); hide('over-screen'); show('menu-screen');
 }
@@ -579,28 +647,28 @@ function toMenu() {
 /* ============================================================
    INPUT
    ============================================================ */
-function steer(x, z) {
-  if (gameState !== 'playing') return;
-  if ((x !== 0 && dir.x === -x) || (z !== 0 && dir.z === -z)) return;
-  if (nextDir.x === x && nextDir.z === z) return;
-  nextDir = { x, z }; sfxTurn(); haptic(8);
+function steer(x,z){
+ if(gameState!=='playing'||Math.abs(x)+Math.abs(z)!==1||turnQueue.length>=2)return;
+ const last=turnQueue.length?turnQueue[turnQueue.length-1]:dir;
+ if((last.x===x&&last.z===z)||(last.x===-x&&last.z===-z))return;
+ turnQueue.push({x,z});sfxTurn();haptic(8);
 }
+
 function haptic(p) { if (navigator.vibrate) navigator.vibrate(p); }
 
 addEventListener('keydown', e => {
+  if(e.target&&/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;
+  if(e.repeat)return;
+  if(e.code==='Space'){e.preventDefault();triggerOverdrive();return;}
   switch (e.key) {
     case 'ArrowUp': case 'w': case 'W': e.preventDefault(); steer(0, -1); break;
     case 'ArrowDown': case 's': case 'S': e.preventDefault(); steer(0, 1); break;
     case 'ArrowLeft': case 'a': case 'A': e.preventDefault(); steer(-1, 0); break;
     case 'ArrowRight': case 'd': case 'D': e.preventDefault(); steer(1, 0); break;
-    case 'p': case 'P': gameState === 'playing' ? pauseGame() : resumeGame(); break;
+    case 'Escape': case 'p': case 'P': gameState === 'playing' ? pauseGame() : resumeGame(); break;
   }
 });
-function bindPad(id, x, z) {
-  const el = document.getElementById(id);
-  el.addEventListener('touchstart', e => { e.preventDefault(); e.stopPropagation(); steer(x, z); }, { passive: false });
-  el.addEventListener('mousedown', e => { e.preventDefault(); steer(x, z); });
-}
+function bindPad(id,x,z){const el=document.getElementById(id);el.addEventListener('pointerdown',e=>{e.preventDefault();steer(x,z);});el.addEventListener('click',e=>{if(e.detail===0)steer(x,z);});}
 bindPad('pad-up', 0, -1); bindPad('pad-down', 0, 1); bindPad('pad-left', -1, 0); bindPad('pad-right', 1, 0);
 
 let touchStart = null;
@@ -636,6 +704,8 @@ document.querySelectorAll('.skin-opt').forEach(btn => {
   });
 });
 
+addEventListener('blur',pauseGame);document.addEventListener('visibilitychange',()=>{if(document.hidden)pauseGame();});
+document.getElementById('overdrive-btn').addEventListener('click',triggerOverdrive);
 document.getElementById('start-btn').addEventListener('click', startGame);
 document.getElementById('restart-btn').addEventListener('click', startGame);
 document.getElementById('pause-btn').addEventListener('click', () => { if (gameState === 'playing') pauseGame(); });
@@ -713,7 +783,7 @@ renderScores();
     el.setAttribute("aria-modal", "true");
     el.setAttribute("aria-label", "Made by Matt introduction");
     el.innerHTML = '<div class="mbm-stage">' + MARK +
-      '<p class="mbm-kicker"></p><h1 class="mbm-title"></h1>' +
+      '<p class="mbm-kicker"></p><h2 class="mbm-title"></h2>' +
       '<p class="mbm-tagline">Learn \u2022 Build \u2022 Explore</p></div>' +
       '<button class="mbm-skip" type="button">Skip intro</button>';
     el.querySelector(".mbm-kicker").textContent = o.kicker;

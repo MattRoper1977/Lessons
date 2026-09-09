@@ -285,7 +285,12 @@ const PLANS = {
     rule:
       'One Guy banks a finished run into og_stats_v1 — runs, totalM, bestM, bossesSlain — ' +
       'by its own stats.runs++ at the end of a run. The route is the shipped RUN control and ' +
-      'the shipped jump; the first thing the game itself remembers is a run that ended.',
+      'the shipped jump; the first thing the game itself remembers is a run that ended. Since ' +
+      'The Last Signal chapter the title ships TWO entry controls, #btnSignal (the chapter, ' +
+      'focused at load) and #btnRun (the original endless race); a run started from either ' +
+      'banks into the same og_stats_v1, so the blocked-route control has to remove both — ' +
+      'with only #btnRun gone, #btnSignal keeps its load-time focus and the first Space press ' +
+      'is a click on it, and the control did not bite.',
     approaches: [
       { name: 'run, then jump the obstacles',
         steps: [['click', '#btnRun'], ['settle', 2500],
@@ -304,7 +309,7 @@ const PLANS = {
       return { reached: runs > 0 || total > 0, completed: (s.bossesSlain || 0) > 0 || best >= 250,
                runs, best, total, bosses: s.bossesSlain || 0 };
     },
-    blockedBy: '#btnRun',
+    blockedBy: '#btnRun, #btnSignal',
   },
 
   'Hold_the_Mark.html': {
