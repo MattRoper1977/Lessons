@@ -600,7 +600,7 @@ PUBLICATION_CALLER_PATH = ".github/workflows/education-pages.yml"
 # Science batch. The Site commit is 92abc460 byte-identical except that registry and
 # the retained usage-registry baseline; education-publication.yml is unchanged between
 # them, so no builder, Play or usage-discovery code moves with the pin.
-PUBLICATION_CALLER_SHA256 = "92122bb7b40715002b3ea19c5ff749102e0ab3256388b224705f9956df6c756b"
+PUBLICATION_CALLER_SHA256 = "8beb87ee30288fdfdc031c8efd29fbe1e9214eea89c8fff55a5e9213609b7ade"
 # One reviewed caller digest per repository kind. detect_kind() reads the root
 # it is standing in, so this entry is only ever compared against the Apps
 # repository's own caller: the Lessons gate run and the Apps gate runs are the
