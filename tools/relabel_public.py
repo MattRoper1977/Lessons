@@ -34,6 +34,7 @@ F2. No manifest claims the file.
 F3. Manifest claims the file but the entry carries no week. (D19: manifest defect, referred for data repair, not resolved by the tool.)
 F4. Manifest shape unrecognised. Refuse cleanly; never crash — a crash tells you nothing about the files after it.
 F5. Reference ambiguous: NEITHER week NOR id disambiguates -- a bare week reference to a week several lessons share, an id no entry carries, or a week no lesson claims. Genuinely ambiguous, still a refusal.
+F6. Entry carries an explicit no-week marker. The literal label stands. Not a defect, not a backlog, no repair. (Ruling 2, 2026-09-09: missing is not the same as inapplicable. An ABSENT week where a week exists is a manifest defect and stays F3; an INAPPLICABLE week, where no week will ever be correct, is stated in the manifest with its reason and refuses here.)
 Every refusal names file, token, reason code, and quotes the sentence.
 
 NEVER
@@ -142,6 +143,31 @@ def entry_week(x):
         if isinstance(c.get('absoluteWeek'), int): return c['absoluteWeek']
     return None
 
+NOWEEK_KEYS = ('noWeek', 'weekNotApplicable')
+
+
+def entry_no_week(x):
+    """The entry's EXPLICIT no-week marker, or None.
+
+    R-CAL-1 F6. Missing is not the same as inapplicable. A manifest entry with no
+    week field at all is a defect: a week exists and nobody recorded it (F3, D19).
+    An entry that SAYS it has no week, and says why, is a different statement --
+    the estate's calendar has ruled that no week will ever be correct there, and
+    "repairing" it would mean inventing one.
+
+    The reason is the whole point, so a marker with no reason text is not a marker.
+    A bare true, an empty string or a blank one falls through to F3, because "this
+    has no week" without "because ..." is indistinguishable from forgetting.
+    """
+    for k in NOWEEK_KEYS:
+        v = x.get(k)
+        if isinstance(v, str) and v.strip(): return v.strip()
+        if isinstance(v, dict):
+            r = v.get('reason')
+            if isinstance(r, str) and r.strip(): return r.strip()
+    return None
+
+
 def manifest_lessons(mf):
     """(entries, unit title, shape) from a manifest, whatever envelope it uses.
 
@@ -194,18 +220,20 @@ def sequence(path):
         if shape != 'ok':
             why = ('F4', 'the folder manifest %s is %s, not an envelope this tool reads' % (os.path.basename(mf), shape))
         else:
-            claimed = weekless = False
+            claimed = weekless = False; marker = None
             for x in L:
                 f = x.get('file') or x.get('path') or ''
                 if not f or '_CLASSIC' in (x.get('id') or '') or '_Classic' in f or 'START_HERE' in f: continue
                 w = entry_week(x)
                 if f == base or os.path.basename(f) == base:
                     claimed = True
-                    if w is None: weekless = True
+                    if w is None: weekless = True; marker = entry_no_week(x)
                 if w is None: continue
                 files.append((w, f)); ids.append((w, f, x.get('id') or ''))
             if not claimed:
                 why = ('F2', 'the folder manifest %s carries no entry for this file' % os.path.basename(mf))
+            elif weekless and marker:
+                why = ('F6', 'the manifest entry states this file has no week — %s' % marker)
             elif weekless:
                 why = ('F3', 'the manifest entry for this file carries no week — a manifest defect to repair, not a label to decide (D19)')
     names = [f for _, f in files]   # manifest order IS the recommended sequence; never re-sorted, never read from a path
@@ -440,13 +468,15 @@ def measure(paths, jsonpath=None):
     print('  no pupil-facing token      %5d' % sum(1 for r in rows if r['bucket'] == 'no-token'))
     print('  RESOLVED                   %5d file(s), %d label(s) rewritten' % (resolved, rewrites))
     print('  REFUSED                    %5d' % sum(codes.values()))
-    for c in ('F1', 'F2', 'F3', 'F4', 'F5'):
-        print('      %s  %-58s %5d' % (c, {
+    for c in ('F1', 'F2', 'F3', 'F4', 'F5', 'F6'):
+        print('      %s  %-58s %5d%s' % (c, {
             'F1': 'week outside the folder sequence',
             'F2': 'no manifest claims the file',
-            'F3': 'manifest entry carries no week (D19)',
+            'F3': 'manifest entry carries no week — REPAIRABLE (D19)',
             'F4': 'manifest shape unrecognised',
-            'F5': 'reference ambiguous, or matches no lesson'}[c], codes.get(c, 0)))
+            'F5': 'reference ambiguous, or matches no lesson',
+            'F6': 'explicit no-week marker — not a defect, no repair'}[c], codes.get(c, 0),
+            '   <-- the repair queue' if c == 'F3' and codes.get(c) else ''))
     print('  CRASHED                    %5d%s' % (len(crashed), '   <-- MUST BE 0' if crashed else ''))
     for q, why in crashed[:10]: print('      %s  %s' % (q, why))
     print('  UNSEEN (instrument, not a rule bucket)  %5d' % len(unseen))
@@ -479,11 +509,11 @@ def self_test():
     """LF1 B. Proves both directions: a resolvable label is still rewritten, an
     unresolvable one aborts the file with its bytes untouched and a non-zero exit."""
     import shutil, subprocess, tempfile
-    ok = [0]; bad = []
+    ok = [0, 0]; bad = []          # ok[0] checks run, ok[1] checks failed
     def check(name, cond):
         ok[0] += 1
         print(('  PASS  ' if cond else '  FAIL  ') + name)
-        if not cond: bad.append(name)
+        if not cond: ok[1] += 1; bad.append(name)
 
     def unit(tmp, weeks, files=None, title='Autumn Science'):
         d = os.path.join(tmp, 'unit'); os.makedirs(d, exist_ok=True)
@@ -692,6 +722,32 @@ def self_test():
         body = open(os.path.join(rc, 'R1.html'), encoding='utf-8').read()
         check('R2 a wholly resolvable range still rewrites both ends',
               r.returncode == 0 and 'Lesson 2' in body and 'Lesson 3' in body)
+        # ---- F6: an explicit no-week marker is not the same as a missing week -------
+        def MFW(entries):
+            return {'title': 'U', 'lessons': entries}
+        BASE = lambda extra: MFW([dict({'file': 'R1.html', 'id': 'R1'}, **extra),
+                                  {'file': 'R2.html', 'week': 9, 'id': 'R2'}])
+        r, same = rcal(BASE({}), 'Recap W9 method.')
+        check('F3 an ABSENT week is still a defect and still refuses',
+              r.returncode == 2 and '[F3]' in r.stdout and same)
+        r, same = rcal(BASE({'noWeek': 'Spr2 W6 is NOT-TIMETABLED per TERM_DATES.md'}), 'Recap W9 method.')
+        check('F6 an EXPLICIT marker with a reason refuses under its own code',
+              r.returncode == 2 and '[F6]' in r.stdout and '[F3]' not in r.stdout and same)
+        check('  ... and the refusal repeats the stated reason back',
+              'NOT-TIMETABLED' in r.stdout)
+        r, _ = rcal(BASE({'weekNotApplicable': {'reason': 'ruled out of the timetable'}}), 'Recap W9 method.')
+        check('F6 accepts the weekNotApplicable alias and a {reason: ...} object',
+              r.returncode == 2 and '[F6]' in r.stdout)
+        for junk, what in [(True, 'a bare true'), ('', 'an empty string'), ('   ', 'a blank string')]:
+            r, _ = rcal(BASE({'noWeek': junk}), 'Recap W9 method.')
+            check('%s is NOT a marker and falls back to F3 -- "no week" without "because" is\n'
+                  '        indistinguishable from forgetting' % what,
+                  r.returncode == 2 and '[F3]' in r.stdout and '[F6]' not in r.stdout)
+        r = subprocess.run([sys.executable, os.path.abspath(__file__), '--measure',
+                            os.path.join(rc, 'R1.html')], capture_output=True, text=True)
+        check('--measure calls F3 the repair queue and F6 not a defect',
+              'REPAIRABLE' in r.stdout and 'not a defect, no repair' in r.stdout)
+
         # ---- the SoW cell reference as the estate actually writes it ----------------
         rcal(MF([('R1.html', 8)]), "Source: 'BUILD Weekly - Spring'!C29 for W8.")
         out = open(os.path.join(rc, 'R1.html'), encoding='utf-8').read()
@@ -729,9 +785,18 @@ def self_test():
                 caught = 'outside' in e.reason
             check('the real page that broke (SCI_B_W8A, W5/W6/W7B) now refuses', caught)
 
-    print('\n%d checks, %d failed' % (ok[0], len(bad)))
+    # The count is kept independently of the list on purpose. A loop variable in the
+    # suite body once shadowed `bad`, and the summary then reported three failures that
+    # had never happened while a real one could have been swallowed the same way. A
+    # harness that can mis-state its own result is worse than a missing test.
+    if len(bad) != ok[1]:
+        print('\n  HARNESS FAULT: %d failures counted, %d recorded. The failure list was '
+              'overwritten by the suite body; fix that before trusting any result below.'
+              % (ok[1], len(bad)))
+        return 1
+    print('\n%d checks, %d failed' % (ok[0], ok[1]))
     for b in bad: print('  FAILED:', b)
-    return 1 if bad else 0
+    return 1 if ok[1] else 0
 
 
 def main():
