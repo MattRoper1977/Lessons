@@ -24,7 +24,7 @@ PRINCIPLE
 A week label is re-tokenised only when the referenced week resolves from an authority the tool can read. Where it cannot, the existing literal label stands. A correct literal label is not a defect; a wrong token is. The tool improves accurate labels — it never replaces an accurate literal with an inaccurate token.
 
 RESOLVE — re-tokenise
-R1. The referenced week lies inside the folder's own sequence AND the manifest entry for that week carries both a file and a week value.
+R1. The referenced week lies inside the folder's own sequence AND the manifest entry for that week carries both a file and a week value. A manifest may hold SEVERAL entries for the same week, disambiguated by lesson id (L1/L2/L3 in one week is the LAUNCH pattern, not a defect); resolution keys on (week, id), not week alone. (Ruling 3, LF1-M, 2026-09-09.)
 R2. Range references (W2–W3) resolve only when BOTH endpoints satisfy R1. A half-resolved range is a refusal, never a partial rewrite.
 R3. Array-shaped manifests resolve identically to sibling-week manifests where entries carry file, week and id (per #473's evidence). Shape is not a reason to refuse; missing data is.
 
@@ -33,7 +33,7 @@ F1. Referenced week outside the folder's sequence (below min or above max). Majo
 F2. No manifest claims the file.
 F3. Manifest claims the file but the entry carries no week. (D19: manifest defect, referred for data repair, not resolved by the tool.)
 F4. Manifest shape unrecognised. Refuse cleanly; never crash — a crash tells you nothing about the files after it.
-F5. Reference ambiguous: two entries claim the week, or it matches none.
+F5. Reference ambiguous: NEITHER week NOR id disambiguates -- a bare week reference to a week several lessons share, an id no entry carries, or a week no lesson claims. Genuinely ambiguous, still a refusal.
 F6. Entry carries an explicit no-week marker. The literal label stands. Not a defect, not a backlog, no repair. (Ruling 2, 2026-09-09: missing is not the same as inapplicable. An ABSENT week where a week exists is a manifest defect and stays F3; an INAPPLICABLE week, where no week will ever be correct, is stated in the manifest with its reason and refuses here.)
 Every refusal names file, token, reason code, and quotes the sentence.
 
@@ -116,6 +116,24 @@ def chassis(p):
     if 'LAUNCH_W9' in p: return 'hum-launch'
     return 'classic'
 
+def lesson_suffix(eid, week):
+    """The lesson-within-week suffix an entry's manifest ID carries, or None.
+
+    R-CAL-1 R1 as amended (Ruling 3): several entries may share a week, told apart
+    by lesson id -- W3A/W3B in BUILD and GROW, W3L1/W3L2/W3L3 in LAUNCH. Resolution
+    keys on (week, id).
+
+    The id is read from the MANIFEST, never from the filename: g27, and N2. The
+    week the id encodes must also match the week the entry declares, or the id is
+    not describing this entry and is ignored rather than trusted -- a manifest that
+    disagrees with itself resolves nothing.
+    """
+    m = re.match(r'W?(\d+)[-_ ]?([A-Z]|L[1-3])$', (eid or '').strip(), re.I)
+    if not m: return None
+    if week is not None and int(m.group(1)) != week: return None
+    return m.group(2).upper()
+
+
 def entry_week(x):
     """A lesson's teaching week comes from its manifest entry — the ruled workbook cell (cells[].termWeek) or the entry's own
     week field — never from a path (VB-RUN13 R0 / g27)."""
@@ -194,7 +212,7 @@ def sequence(path):
     """The family's recommended lesson sequence (manifest order, RX3 _CLASSIC siblings excluded): (n, N, unit, weekmap, weeks).
     Weeks come from the manifest entries only; a file with no manifest entry gets n=None and its own-week strips are left alone."""
     d = os.path.dirname(path); mf = next((os.path.join(d, m) for m in ('manifest-v3.1.json', 'manifest-v3.json', 'manifest.json') if os.path.exists(os.path.join(d, m))), None)
-    files = []; unit = ''; why = None; base = os.path.basename(path)
+    files = []; ids = []; unit = ''; why = None; base = os.path.basename(path)
     if mf is None:
         why = ('F2', 'no manifest in this folder, so nothing claims this file')
     else:
@@ -211,7 +229,7 @@ def sequence(path):
                     claimed = True
                     if w is None: weekless = True; marker = entry_no_week(x)
                 if w is None: continue
-                files.append((w, f))
+                files.append((w, f)); ids.append((w, f, x.get('id') or ''))
             if not claimed:
                 why = ('F2', 'the folder manifest %s carries no entry for this file' % os.path.basename(mf))
             elif weekless and marker:
@@ -220,15 +238,19 @@ def sequence(path):
                 why = ('F3', 'the manifest entry for this file carries no week — a manifest defect to repair, not a label to decide (D19)')
     names = [f for _, f in files]   # manifest order IS the recommended sequence; never re-sorted, never read from a path
     n = names.index(base) + 1 if base in names else None; N = len(names)
-    weekmap = {}
-    for i, (w, f) in enumerate(files): weekmap.setdefault(w, []).append(i + 1)
+    weekmap = {}; idmap = {}
+    for i, (w, f) in enumerate(files):
+        weekmap.setdefault(w, []).append(i + 1)
+    for i, (w, f, eid) in enumerate(ids):
+        sfx = lesson_suffix(eid, w)
+        if sfx: idmap[(w, sfx)] = i + 1
     own = files[n - 1][0] if n else None
     if FORBID.search(unit or ''): unit = ''
-    return n, N, unit, weekmap, [w for w, _ in files], own, why
+    return n, N, unit, weekmap, [w for w, _ in files], own, why, idmap
 
 class Rewriter:
     def __init__(s, path, rel):
-        s.n, s.N, s.unit, s.weekmap, s.weeks, s.own, s.why = sequence(path); s.rel = rel
+        s.n, s.N, s.unit, s.weekmap, s.weeks, s.own, s.why, s.idmap = sequence(path); s.rel = rel
         s.lo, s.hi = (min(s.weeks), max(s.weeks)) if s.weeks else (None, None)
     def lesson_ref(s, w, letter=None):
         """R-CAL-1: resolve under R1-R3, or raise with the reason code that refuses it.
@@ -249,15 +271,22 @@ class Rewriter:
         if not ns:
             raise Unresolvable(w, letter, "it falls inside the unit's weeks %d-%d but no manifest lesson claims it" % (s.lo, s.hi), code='F5')
         if letter:
-            k = {'A': 0, 'B': 1, 'L1': 0, 'L2': 1, 'L3': 2}.get(letter.upper(), 0)
-            if k >= len(ns):
-                # the old code clamped with min(k, len(ns)-1): W7B in a one-lesson week
-                # silently became W7A. That is N2 inference from file order, not a
-                # resolution, and it is the same class of guess LF1 removed.
-                raise Unresolvable(w, letter, "week %d has %d manifest lesson(s), so '%s' names one that does not exist" % (w, len(ns), letter), code='F5')
-            return 'Lesson %d' % ns[k]
+            # (week, id), not (week, position). The old code indexed ns by a fixed
+            # A=0/B=1/L1=0.. table, which is manifest ORDER wearing an id's clothes:
+            # reorder the manifest and W3B silently means a different lesson. The id
+            # is the authority, and if no entry carries it this refuses.
+            hit = s.idmap.get((w, letter.upper()))
+            if hit is None:
+                have = sorted(sfx for (ww, sfx) in s.idmap if ww == w)
+                raise Unresolvable(w, letter, "no manifest entry for week %d carries the lesson id '%s'%s"
+                                   % (w, letter.upper(), (' (week %d has %s)' % (w, ', '.join(have))) if have else
+                                      ' (no entry for that week carries a lesson id at all)'), code='F5')
+            return 'Lesson %d' % hit
         if len(ns) > 1:
-            raise Unresolvable(w, letter, "%d manifest lessons claim week %d (Lessons %s) and the reference does not say which" % (len(ns), w, ', '.join(str(x) for x in ns)), code='F5')
+            have = sorted(sfx for (ww, sfx) in s.idmap if ww == w)
+            raise Unresolvable(w, letter, "%d manifest lessons claim week %d (Lessons %s) and the reference names no lesson id to pick one%s"
+                               % (len(ns), w, ', '.join(str(x) for x in ns),
+                                  (" -- the ids for that week are %s" % ', '.join(have)) if have else ''), code='F5')
         return 'Lesson %d' % ns[0]
     def text(s, t):
         try:
@@ -627,6 +656,8 @@ def self_test():
             return r, open(q, 'rb').read() == before
 
         MF = lambda pairs: {'title': 'U', 'lessons': [{'file': f, 'week': w, 'id': f} for f, w in pairs]}
+        # (week, id) form: entries carry the estate's real lesson ids, W3A / W3L2 / ...
+        MFID = lambda triples: {'title': 'U', 'lessons': [{'file': f, 'week': w, 'id': i} for f, w, i in triples]}
         r, same = rcal(MF([('R1.html', 8), ('R2.html', 9)]), 'Recap W20 method.')
         check('F1 week above the folder sequence', r.returncode == 2 and '[F1]' in r.stdout and same)
         r, same = rcal(MF([('R1.html', 8), ('R2.html', 9)]), 'Recap W3 method.')
@@ -646,12 +677,43 @@ def self_test():
               'Lessons 2\u20133' not in r.stdout and 'Lessons 2-3' not in r.stdout)
         # a bare "W9B" is invisible to FORBID (no word boundary after the digit), so the
         # letter pathway is only ever reached beside a token the census can see.
-        r, same = rcal(MF([('R1.html', 8), ('R2.html', 9)]), 'Recap W8 then W9B method.')
-        check('F5 a letter naming a lesson the week does not have (W9B, one lesson in W9)',
+        r, same = rcal(MFID([('R1.html', 8, 'W8A'), ('R2.html', 9, 'W9A')]), 'Recap W8 then W9B method.')
+        check('F5 an id no entry carries (W9B, week 9 holds only W9A)',
               r.returncode == 2 and '[F5]' in r.stdout and same)
-        r, same = rcal(MF([('R1.html', 8), ('R2.html', 9), ('R3.html', 9)]), 'Recap W8 then W9B method.')
-        check('  ... but a letter that DOES disambiguate still resolves (W9B -> Lesson 3)',
+        check('  ... and the refusal names the ids that DO exist', "week 9 has A" in r.stdout)
+        r, same = rcal(MFID([('R1.html', 8, 'W8A'), ('R2.html', 9, 'W9A'), ('R3.html', 9, 'W9B')]),
+                       'Recap W8 then W9B method.')
+        check('R1 amended: (week, id) resolves W9B -> Lesson 3',
               r.returncode == 0 and 'Lesson 3' in open(os.path.join(rc, 'R1.html'), encoding='utf-8').read())
+
+        # The sharp one. Manifest ORDER and lesson ID disagree: W9B is listed FIRST.
+        # Position-keying answers Lesson 2, id-keying answers Lesson 3. Only one of
+        # those is reading the authority.
+        r, _ = rcal(MFID([('R1.html', 8, 'W8A'), ('R3.html', 9, 'W9B'), ('R2.html', 9, 'W9A')]),
+                    'Recap W8 then W9B method.')
+        body = open(os.path.join(rc, 'R1.html'), encoding='utf-8').read()
+        check('(week, id) beats (week, position): W9B listed first still resolves by its id',
+              r.returncode == 0 and 'Lesson 2' in body and 'Lesson 3' not in body)
+        r, _ = rcal(MFID([('R1.html', 8, 'W8A'), ('R2.html', 9, 'W9A'), ('R3.html', 9, 'W9B')]),
+                    'Recap W8 then W9A method.')
+        check('  ... and its sibling W9A resolves to the other one', 'Lesson 2' in open(os.path.join(rc, 'R1.html'), encoding='utf-8').read())
+        # LAUNCH's three-a-week pattern is legitimate, not a defect
+        r, _ = rcal(MFID([('R1.html', 3, 'W3L1'), ('R2.html', 3, 'W3L2'), ('R3.html', 3, 'W3L3'),
+                          ('R4.html', 4, 'W4L1')]), 'Recap W4 then W3L3 method.')
+        check('three lessons in one week resolve by id (LAUNCH W3L1/L2/L3)',
+              r.returncode == 0 and 'Lesson 3' in open(os.path.join(rc, 'R1.html'), encoding='utf-8').read())
+        # F5 as narrowed: neither week nor id disambiguates
+        r, same = rcal(MFID([('R1.html', 8, 'W8A'), ('R2.html', 9, 'W9A'), ('R3.html', 9, 'W9B')]),
+                       'Recap W9 method.')
+        check('F5 narrowed: a BARE week two lessons share still refuses',
+              r.returncode == 2 and '[F5]' in r.stdout and same)
+        check('  ... and it says the reference named no lesson id', 'names no lesson id' in r.stdout)
+        r, same = rcal(MF([('R1.html', 8), ('R2.html', 9), ('R3.html', 9)]), 'Recap W8 then W9B method.')
+        check('F5 when the week has entries but none carries a lesson id at all',
+              r.returncode == 2 and '[F5]' in r.stdout and 'no entry for that week carries a lesson id' in r.stdout)
+        r, _ = rcal(MFID([('R1.html', 8, 'W8A'), ('R2.html', 9, 'W7B')]), 'Recap W8 then W9B method.')
+        check('an id whose week contradicts the entry week is ignored, not trusted (W7B on a week-9 entry)',
+              r.returncode == 2 and '[F5]' in r.stdout)
         # R2: a range resolves only if both endpoints do
         r, same = rcal(MF([('R1.html', 8), ('R2.html', 9), ('R3.html', 10)]), 'Recap W9-W20 evidence.')
         check('R2 a half-resolvable range refuses whole, and writes nothing',
