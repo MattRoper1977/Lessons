@@ -76,3 +76,39 @@ the pairs, every combination the file offers measures ≥4.5:1 against a 3:1
 requirement. Raw table in `_sw2/T1_contrast.txt`.
 
 Remaining in Part T: T2 chrome templates, T3 stamping, T4 gates, T5 landing.
+
+---
+
+# SW2 T2 and T3 — state at 2026-09-09 07:40Z
+
+All on Site branch `claude/sw2-t1-tokens`, three commits, nothing merged.
+
+- **T1** `61e905e` — `assets/mbm-tokens.css`, 3,959 B, every value sourced, contrast
+  measured with 0 failures once each colour ships its own ink.
+- **T2** `0c8964c` — `assets/chrome/{header,nav-row,footer,menu-sheet}.html`, three
+  variants each, plus `tools/sw2/check_chrome_templates.py`: 18 checks, 0 failures.
+  The menu sheet deliberately delegates to `shared_navigation.py` rather than
+  restating UX2's menu, which Appendix B forbids changing.
+- **T3** `c513ca6` — `tools/stamp_chrome.py` with `--check`, and
+  `docs/SW2_T3_NOTE.md`. The tool works; the design does not yet. A real stamping
+  run took `verify_professional_site.js` from 0 findings to 11, and the pages were
+  reverted.
+
+## What T3 still needs, in order
+
+1. Move the markers INSIDE the existing `<header>` and `<footer>`, around only what
+   the chrome owns. Wholesale replacement destroys authored prose on `/main/` and
+   `/tools/`, drops `/main/#contact` and `/main/#collections`, and clears a pinned
+   tools-hub footer description.
+2. Converge the brand visual first, in its own commit. Six pages disagree today:
+   root-absolute, relative, and an inline SVG on `games/index.html`. Until they
+   agree, one template reds the preservation gate on every page it does not match.
+3. Give `/privacy/` a footer. It has none.
+4. Then the `/for/` generator consumes the same templates, per T3.
+
+## Carried forward
+
+- T0's stop stands: no silver-M mark exists, `micro_mark.svg` is the current one.
+- AUTO-DECISION T1-1 (pathway chips read from `hub.css`, not a deck chassis).
+- AUTO-DECISION T1-2 (subject accents from the shipped map, not the order's words).
+- §0.6 is violated today on 13 of 14 page types and T2's footer is the fix.
