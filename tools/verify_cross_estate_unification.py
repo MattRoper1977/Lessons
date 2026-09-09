@@ -595,7 +595,7 @@ PUBLICATION_CALLER_PATH = ".github/workflows/education-pages.yml"
 # both repositories' callers. UX2 moved the Lessons caller alone (Lessons #436,
 # #438, #442; the order writes nothing to the Apps repository), so this digest is the
 # LESSONS caller's, and the Apps caller carries its own reviewed digest below.
-PUBLICATION_CALLER_SHA256 = "18504eb464174837e3c5528f2933bfdef309efaf6cf8634565d6afa870419d75"
+PUBLICATION_CALLER_SHA256 = "b6d0358f28ae3efccb351da7abba822009abdca5c6f6a8495b92cb101b6cedbd"
 # One reviewed caller digest per repository kind. The Apps entry is the Apps
 # caller at the Site's reviewed Apps pin 924ab986 (Site domain-split-verify.yml;
 # the caller there names Site 23a4f360), which the Site's catalogue contract
