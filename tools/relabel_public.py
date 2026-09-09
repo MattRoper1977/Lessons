@@ -13,13 +13,13 @@ calendar declaration; pupils, and print, do not.
 
 Modes:  --report  census only (RELABEL=report does the same) · --apply  rewrite in place · --revert  undo · --gate  0-hit gate
         --plant   plant one forbidden token into a copy and prove the gate goes red.
-Forbidden public tokens (the gate): \bW(eek)?\s?\d+\b · \bAut(umn)?\s?[12]\b · \bSpr(ing)?\s?[12]\b · w/c · 2026-27 · "of 14" · "of 8" — the last two
+Forbidden public tokens (the gate): \bW(eek)?\s?\d+\b · \bAut(umn)?\s?[12]\b · \bSpr(ing)?\s?[12]\b · \bSum(mer)?\s?[12]\b · w/c · 2026-27 · "of 14" · "of 8" — the last two
 are week counts ("Week 3 of 8"); the sequence-relative form this tool writes ("Lesson 3 of 8") is the rule's own target and is not a hit.
 Exempt (provenance, never rewritten): source-card codes HUM-B-W10-S01 / SCI-… and lesson ids / file names (SCI_B_W9A…, LAUNCH_ART_AUT1_W3).
 """
 import argparse, json, os, re, sys, html as H
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FORBID = re.compile(r"\bW(?:eek)?\s?\d+\b|\bAut(?:umn)?\s?[12]\b|\bSpr(?:ing)?\s?[12]\b|\bw/c\b|2026[-–]27|(?<!Lesson \d )(?<!Lesson \d\d )\bof 14\b|(?<!Lesson \d )(?<!Lesson \d\d )\bof 8\b|\b(?:BUILD|GROW|LAUNCH) Weekly\s*[-–]\s*\w+'?!?\s?[A-Z]+\d+(?::[A-Z]+\d+)?", re.I)  # the last alternative: a SoW cell reference on a pupil-facing surface (staff layers only)
+FORBID = re.compile(r"\bW(?:eek)?\s?\d+\b|\bAut(?:umn)?\s?[12]\b|\bSpr(?:ing)?\s?[12]\b|\bSum(?:mer)?\s?[12]\b|\bw/c\b|2026[-–]27|(?<!Lesson \d )(?<!Lesson \d\d )\bof 14\b|(?<!Lesson \d )(?<!Lesson \d\d )\bof 8\b|\b(?:BUILD|GROW|LAUNCH) Weekly\s*[-–]\s*\w+'?!?\s?[A-Z]+\d+(?::[A-Z]+\d+)?", re.I)  # the last alternative: a SoW cell reference on a pupil-facing surface (staff layers only)
 EXEMPT = re.compile(r"\b(?:HUM|SCI)-[A-Z]-W\d+-[A-Z]\d+\b|\bW\d+[A-Z]?L?\d?-S\d+\b|\b(?:SCI|HUM|ART)_[A-Z]+_[A-Z0-9_]*W\d+[A-Z0-9_]*\b|\b[A-Z]+_(?:HUM|ART|ASDAN)_[A-Z0-9_]*W\d+[A-Za-z0-9_]*\b|\bLAUNCH_ART_AUT\d_W\d+\b")
 STAFF_ATTR = ('data-mbm-guide',); STAFF_CLASSES = {'ta-drawer', 'mbm-modal', 'staff-only', 'teacher-only', 'ta-note', 'ta-focus', 'staffnote'}
 STAFF_IDS = {'mbmTA', 'ta', 'staff', 'teacher-notes'}
