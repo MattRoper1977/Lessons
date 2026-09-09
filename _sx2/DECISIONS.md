@@ -577,6 +577,38 @@ The repair itself is not a licence to derive. §2 of LF1-I applies: a week is
 recovered from an authority or it goes on a list for Matt. The same rule that
 governed the 121.
 
+### D19 as amended — Ruling 2, LF1-M, 2026-09-09: missing is not inapplicable
+
+> - **ABSENT** week field, where a week exists and should be recorded → manifest
+>   defect → **F3** → repair.
+> - **INAPPLICABLE** week, where no week will ever be correct (the three
+>   `Spr2·W6`) → not a defect; repairing it would mean inventing a week.
+
+A manifest entry may therefore carry an **explicit no-week marker with a stated
+reason**, and the tool refuses it under a new code:
+
+> **F6.** Entry carries an explicit no-week marker. The literal label stands. Not
+> a defect, not a backlog, no repair.
+
+The reason is the whole marker. `noWeek: true`, `noWeek: ""` and a blank string
+are **not** markers and fall back to F3 — "this has no week" without "because …"
+is indistinguishable from having forgotten, and the point of the amendment is to
+separate exactly those two. Accepted forms: `noWeek` or `weekNotApplicable`,
+either a non-empty string or an object carrying `reason`.
+
+The three markers written under this ruling all quote the same authority:
+`_sownb/TERM_DATES.md` — *"Spring 2 has five timetabled weeks, so its sixth
+column is NOT-TIMETABLED"* — plus the collision the mapping makes explicit
+(`Spr2 Wn → 21+n` puts a sixth at 27; `Sum1 Wn → 26+n` already holds it).
+
+**What a pupil reads on those three pages, measured rather than assumed.** All
+three already render `BUILD/GROW/LAUNCH · SCIENCE · Lesson 10 of 10` (11 of 11
+for GROW). `Spr2·W6` survives only inside `data-mbm-cal`, the reversibility
+store, which is never rendered. Browser census over all three, every route:
+**`Spr2·W6` renders 0 times** on deck, print, guide and accessible names, against
+a positive control ("Lesson 1") rendering 14/15/15 on the deck. So there is no
+literal calendar label there to be wrong on its face, and F6 defers nothing.
+
 ## D20 — RULE R-CAL-1, when a calendar token may be re-tokenised
 
 Ruled by Matt, 2026-09-09. Landed verbatim below and in the docstring of
@@ -599,6 +631,7 @@ Ruled by Matt, 2026-09-09. Landed verbatim below and in the docstring of
 > F3. Manifest claims the file but the entry carries no week. (D19: manifest defect, referred for data repair, not resolved by the tool.)
 > F4. Manifest shape unrecognised. Refuse cleanly; never crash — a crash tells you nothing about the files after it.
 > F5. Reference ambiguous: two entries claim the week, or it matches none.
+> **F6. Entry carries an explicit no-week marker. The literal label stands. Not a defect, not a backlog, no repair.** *(added by Ruling 2, LF1-M, 2026-09-09 — see D19 as amended)*
 > Every refusal names file, token, reason code, and quotes the sentence.
 >
 > **NEVER**
@@ -660,3 +693,47 @@ hides. The same asymmetry hides a bare `W9B`: `\bW\d+\b` needs a word boundary
 after the digit, so a lesson-letter reference standing alone is invisible to the
 gate as well. **Neither is fixed here** — widening the rewriter's pattern changes
 what it will write, and that wants a ruling, not a commit.
+
+## D21 — 75 of the 205 refusals are a numbered question, not a week
+
+Found while proving the three `Spr2·W6` pages under F6, because all three refuse
+on `W1.`, not on anything calendrical.
+
+Classifying every one of the 205 refusals by the token that actually blocked the
+file — normalised so `W3` and `Week 3` count the same — leaves no residue:
+
+| the blocking token is | files | |
+|---|---:|---:|
+| a real week reference | 130 | 63.4% |
+| **a numbered question** (`W1.` `W2:` `W3)`) | **75** | **36.6%** |
+
+| code | total | numbered question | week reference |
+|---|---:|---:|---:|
+| **F1** | 68 | **59** | 9 |
+| F2 | 109 | 13 | 96 |
+| F3 | 10 | 0 | 10 |
+| F5 | 15 | 0 | 15 |
+| F6 | 3 | 3 | 0 |
+
+**87% of F1 is question numbering.** F1 is the code R-CAL-1 calls "the majority
+case, correct behaviour, not a backlog", and it is even more correct than that
+description: most of it is not a cross-unit reference at all. It is
+`W1. Sort A, B and C. Give one evidence clue.` — the first question on a
+worksheet — being read as week 1 and, quite rightly, refused rather than rewritten
+into `Lesson 1. Sort A, B and C.`
+
+Two consequences worth carrying into SX3.
+
+**The scope finding is softer than it reads.** "Seven in eight Science pages carry
+an un-re-tokenisable calendar token" is true of the gate's output, but over a
+third of those pages carry **no calendar token in the blocking position**. They
+carry a question number. The genuine cross-unit-reference population is smaller
+than the refusal count suggests.
+
+**The gate counts question numbers as pupil-facing calendar tokens.** `FORBID`'s
+`\bW(?:eek)?\s?\d+\b` cannot tell `W1.` on a worksheet from `W1` meaning week 1,
+so every hit count the gate has ever produced includes them. **Not changed here** —
+narrowing `FORBID` changes what the gate blocks on, and that wants a ruling, not
+a commit. Filed beside the UNSEEN asymmetry in D20, which is the same shape of
+problem in the opposite direction: one pattern sees what it should not, the other
+does not see what it should.
