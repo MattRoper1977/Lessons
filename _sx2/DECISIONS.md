@@ -463,3 +463,96 @@ A failure **inside** a test body is never attributed to infrastructure without
 evidence. The eleven non-browser checks on that PR all passed, and the diff
 touches nothing any of the four exercises — but that is the argument for waiting,
 not for merging.
+
+---
+
+## D16 — A crash is not a refusal
+
+A refusal names the problem, leaves the file byte-unchanged, and lets the run
+continue. A crash aborts wherever it reached and says nothing about the files
+after it. The two must never be reported together, and a crashed run's partial
+output is not a measurement.
+
+`tools/relabel_public.py` assumed a manifest was a JSON object. Three Science
+`v3_40min` manifests are a top-level array, so `m.get('lessons')` raised
+`AttributeError` on the **47 files in those folders — every one of them served**.
+It had done so since before #466; #466's 25 self-tests did not cover it, which is
+a gap in that PR's testing rather than a regression it introduced.
+
+The consequence is bigger than 47 files. While the tool crashes on a tree, no
+census that runs it over that tree can be trusted: the run has an unknown tail.
+Any "0 findings" from such a run is a statement about where the crash happened,
+not about the estate.
+
+Fixed in #473 by normalising the envelope, not by catching the exception:
+`manifest_lessons()` reads the object form, the array form, and returns no
+entries for anything else — which makes `lesson_ref` refuse, the same outcome as
+no manifest at all. Handled rather than refused for the array because the
+evidence said so: its entries carry the same `file`, `week` and `id` fields the
+object form does.
+
+**What the crash had been hiding, and what it had not.** The 47 carry **zero**
+`data-mbm-cal` attributes and zero `mbm-cal-staff` twins — the relabeller's own
+signature on every node it rewrites. It had therefore never written to any of
+them: the crash is in `sequence()`, before any rewrite. A rendered census of all
+47 as published found **0 placeholders on every route**. The crash prevented
+processing; it did not damage what is served.
+
+## D17 — A positive control is part of a clean result, not an optional extra
+
+The census of those 47 returned 0. On its own that is worth nothing: a page that
+failed to load returns 0 too. The control was to run the same census, over the
+same pages, for a phrase that must be present.
+
+The first control used "Science" and came back **45 of 47** — two pages returned
+nothing. That looked like two pages the instrument could not read. It was not:
+`LAUNCH_SCIENCE_PRACTICALS_MATRIX.html` and its `_PROGRESS_SCHOOLS` twin are
+titled *"LAUNCH GCSE Biology"* and contain the word "Science" nowhere. Their
+rendered text is ~12,800 characters; the control phrase was simply absent.
+
+Re-run with a phrase present in all 47: **47 of 47**, 6352 occurrences, 3963 on
+the deck and 1632 in print — the same routes the clean census reported 0 on. Only
+then is the 0 earned.
+
+Two rules from that. A control phrase has to be verified present before it can
+prove absence of anything else. And a control that fails is a question, not a
+verdict — it was my control that was wrong, not the instrument, and assuming
+either way round without checking would have been an error.
+
+## D18 — What the estate's manifests actually look like
+
+Three envelopes are in use and only two were known:
+
+| envelope | example | entries carry |
+|---|---|---|
+| object under `sequence` | `Build/W8-W13_2026-27/manifest.json` | `file`, `week`, `id` |
+| object under `lessons` | various | `file`, `week`, `id` |
+| **top-level array** | `Build/v3_40min/manifest-v3.json` | `file`, `week`, `id` |
+
+`Grow/v3_40min/manifest-v3.json` is the array form but its entries carry **no
+`week`**, where its Build and Launch siblings do. That is a data gap in one
+manifest, and it is why 10 lesson decks that *are* listed still cannot be
+resolved.
+
+Across `Science_Teesside`, 97 files are unclaimed by any manifest, all served.
+35 are lesson decks — 25 in folders with no manifest at all, 10 the weekless
+`Grow/v3_40min` entries. The other 62 are companion worksheets, pack copies,
+indexes, matrices and guides, which no manifest should list. Four served pages
+have no inbound link from anywhere in the estate.
+
+## LF1-G §6 — DEFERRED, recorded as the next order
+
+**The guide-mode CSS defect.** `html.mbm-guide-on [data-mbm-guide]{display:revert
+!important}` beats an inline non-important `display:none`, so the staff layer's
+hiding is not load-bearing. LF1 met it as 9 doubled lines on 5 pages and deleted
+only the twins its own fix made redundant; **the 17 twins that remain still double
+under guide mode**, less nonsensically but in front of a class.
+
+The order when it comes: census every `display:none` staff/TA span in the Lessons
+estate against guide mode, calm view, large text and Teacher Freeze — in the
+browser, each mode toggled — and report what becomes visible. If it reveals
+pupil-visible nonsense anywhere else it jumps the queue, as LF1 did.
+
+Remember R4 while doing it: the "70 pupil-visible calendar literals" that turned
+out to be text inside `display:none` staff spans were not a wrong count. They were
+a **conditional** one, and this is the condition.
