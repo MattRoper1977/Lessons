@@ -36,7 +36,15 @@ const load=filename=>JSON.parse(fs.readFileSync(filename,'utf8'));
     overflow:document.documentElement.scrollWidth>innerWidth,
     lessons:document.querySelectorAll('article.lesson').length,
     archives:[...document.querySelectorAll('a[download]')].filter(a=>a.getAttribute('href').endsWith('.zip')).length,
-    emptyLinks:[...document.querySelectorAll('a')].filter(a=>!a.textContent.trim()).length,
+    // UX2 B1 gave every published page a header whose search control is an
+    // icon link: an <a aria-label="Search"> whose only child is an
+    // aria-hidden SVG. Its text is empty and its accessible NAME is not,
+    // which is the thing this count is for. A link with no name at all
+    // still counts, so the control below keeps biting.
+    emptyLinks:[...document.querySelectorAll('a')].filter(a=>!(a.textContent.trim()
+      ||(a.getAttribute('aria-label')||'').trim()
+      ||(a.getAttribute('title')||'').trim()
+      ||[...a.querySelectorAll('img[alt],[aria-label]')].some(e=>(e.getAttribute('alt')||e.getAttribute('aria-label')||'').trim()))).length,
    }));
    assert.equal(counts.overflow,false,'Horizontal overflow at '+width);
    assert.equal(counts.lessons,35);assert.equal(counts.archives,62);assert.equal(counts.emptyLinks,0);
