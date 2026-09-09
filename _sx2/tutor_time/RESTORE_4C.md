@@ -18,13 +18,34 @@ sentences are recorded here and not restored.
 | `V02` | 3 | **3** | 2 | 2/2 | 2/2 | +498 bytes = 2 × 249 appended |
 | `V03` | 5 | **5** | 2 | 2/2 | 2/2 | +680 bytes = 2 × 340 appended |
 | `V05` | 4 | **4** | 2 | 2/2 | 2/2 | +572 bytes = 2 × 286 appended |
-| `V06` | 3 | **3** | 2 | 2/2 | 2/2 | +566 bytes = 2 × 283 appended |
+| `V06` | 3 | **3** | 2 | 2/2 | 2/2 | +578 bytes = 2 × 289 appended |
 | `V07` | 6 | **6** | 2 | 2/2 | 2/2 | +734 bytes = 2 × 367 appended |
 | **total** | **51** | **51** | | **12/12** | **12/12** | **clean on all 12** |
 
 **51 of 51 sentences present in the restored payload, and the derived diff is
 0 for every one of the 12.** The byte delta equalling exactly twice the appended
 text is the B4 proof that nothing else moved: any other edit would show up in it.
+
+### Re-derived under FIN3 §7, and one figure was wrong
+
+The deltas above were re-measured against the re-cut sources rather than read back
+from this table. Every one is predicted exactly by
+
+> `delta = 2 × ( Σ bytes of the restored sentences + one separator per field )`
+
+— and **`V06` was recorded as +566 = 2 × 283 when the file is +578 = 2 × 289.**
+Corrected above. Three sentences, 286 bytes, three separators: 289 per copy.
+
+The restoration itself was never in doubt and is not changed: `V06`'s three
+sentences each occur exactly twice, and a character-level diff of the file against
+its re-cut source returns **four insertions and nothing else** — two distinct texts,
+each appearing once in the static aside and once in the `DATA` payload. Nothing was
+removed and nothing else moved.
+
+What was wrong was the number this document offers as its own proof, which is the
+one number a reader cannot check by eye. A B4 assertion that is not re-derived is
+decoration: it only constrains anything if someone recomputes it and it can come
+back different. This one did.
 
 ## Why the two-copies count *is* the byte-equality assertion
 
