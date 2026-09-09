@@ -955,3 +955,106 @@ appended text on all 12. Any other edit would show up in that number.
 `<text>` runs, plus a `<desc>` and an `aria-label`. An append there is a relayout,
 not a verbatim insertion. `tools/lf1/restore_recut.py` refuses any `model.*` path
 outright, and that refusal is one of its D28 controls.
+
+## D30 — the loose Week 01 never lands
+
+`GROW_Week_01_Interactive.html`, **24,008 B, md5 `b927e6f686`**, is **provenance,
+not content**. It predates the current chassis: no `id="route"` selector, no
+`id="largeText"`, no `id="chassis"` stage nav, and its options are `0,1,2,3`
+instead of step / main / challenge. It cannot satisfy P1's eight-stages-three-routes
+gate.
+
+**The canonical Week 01 lesson is the copy inside
+`GROW_Computing_Weeks_01_02_Complete.zip`, 33,712 B, md5 `d8f60ff52b`**, and
+G7(b)'s duplicate `id="centre"` is a property of *that* copy — the order's
+measurement was taken correctly.
+
+**The slides diverge too.** `GROW_Week_01_Teaching_Slides.pptx` is **47,188 B, md5
+`dd2951722d`** loose against **59,661 B, md5 `fc6c7f7cb8`** in the zip. Not a
+duplicate: a superseded revision, listed by name, never landed, never merged with
+the zip copy.
+
+Both go to `_authoring/GROW_Computing_2026-09-09/superseded/` under **G13**. G13 is
+a GC1 **P2** step and GC1 is at P0–P1 with zero writes, so the copy is **deferred
+with its destination and hashes pinned here**; the record is made now, the bytes
+move when the queue opens.
+
+## D31 — same-basename register
+
+`_authoring/BASENAME_CONFLICTS.md` records every same-basename divergence:
+basename, both paths, both sizes, both md5s, which is canonical, and why.
+
+Any future upload sharing a basename with a landed file is compared by **content
+hash before use**. A hash mismatch is a listed conflict reported by name — never a
+silent overwrite, never a merge. **This is D26 applied to inbound files rather than
+to lookups.**
+
+## D32 — G5 revised: rewrite becomes add
+
+All eight lessons carry base64 `data:` URIs only, so **there is no href to
+repoint**. The reason is unchanged and stronger for it: a managed school browser
+that blocks `data:` downloads removes **every** Scratch file from **every** lesson
+at once, with no error a teacher would see.
+
+- **(a)** On the **served copies only**, P3 *adds* a relative href
+  (`../Scratch_Projects/<file>.sb3`, plus `download`) as the primary route, by a
+  canonical writer with a red proof. Never a hand edit, never per-file.
+- **(b)** The base64 payload is **retained in place, untouched.** Stripping is a
+  content edit, and the offline zips are byte-identical to the served source today.
+- **(c)** The offline zips are unchanged and keep `data:` primary. No server behind
+  them.
+- **(d)** Gate: every added href resolves 200 on the served origin with bytes equal
+  to the tree; the count equals the supplied projects for that lesson; and the page
+  still offers a working download with JavaScript disabled.
+- **(e)** Two-sided control per D28: a planted missing sibling reds the gate, a
+  planted correct one passes.
+
+**The retained-bytes finding (b), measured, for a later ruling — no action here:**
+
+| | lesson bytes | base64 bytes | share | projects |
+|---|---:|---:|---:|---:|
+| W01 | 33,712 | 2,284 | 6.8% | 1 |
+| W02 | 38,445 | 6,780 | 17.6% | 3 |
+| W03 | 26,427 | 932 | 3.5% | 1 |
+| W04 | 30,609 | 5,032 | 16.4% | 2 |
+| W05 | 31,304 | 5,592 | 17.9% | 2 |
+| W06 | 31,838 | 6,068 | 19.1% | 2 |
+| W07 | 35,092 | 6,968 | 19.9% | 2 |
+| W08 | 35,421 | 7,628 | 21.5% | 2 |
+| **total** | **262,848** | **41,284** | **15.7%** | **15** |
+
+The base64 measurement needed correcting once: the data URI is **built at runtime**
+from a `FILES[].data` field, so a regex for `data:application/x.scratch.sb3;base64,`
+returns **0 payloads on all eight lessons** — a clean, confident zero from an
+instrument looking for a string the file never contains. D28 again.
+
+**The G5(d) baseline**: 23 `.sb3` = **15 pupil projects in `Scratch_Projects/`**,
+every one embedded in its own lesson with names matching exactly, plus **8 teacher
+models in `Teacher_Only/`**, one per week, **none embedded in a pupil lesson** — G3
+already holds. So the added-href count per lesson is 1,3,1,2,2,2,2,2.
+
+## D33 — a text-mode read is not a byte measurement
+
+Byte equality is asserted from **binary reads or `os.path.getsize` plus a content
+hash**, never from a text-mode read, which normalises line endings and produces a
+plausible near-miss.
+
+Re-asserted for W03–W06, zip against loose, md5 on binary reads: **`6973fbee1ffc`,
+`ba23e3f395f6`, `c27cadaccf0a`, `14c1411c2a29` — equal, all four.** The earlier
+"byte-identical" was right by luck, not by instrument: the text-mode read showed
+26,427 against a real 26,429, and a two-byte gap is exactly the size of a mistake
+that looks like rounding.
+
+## D34 — duplicate uploads
+
+Byte-identical duplicates of files already measured; stored once by hash, and P1 is
+**not** re-run against them:
+
+| file | copies | bytes | md5 |
+|---|---:|---:|---|
+| `GROW_Computing_Weeks_01_02_Complete.zip` | 3 | 1,839,368 | `154671b031` |
+| `GROW_Computing_Weeks_03_06_Complete.zip` | 2 | 2,864,859 | `50ea9dd5fe` |
+| `GROW_Computing_Weeks_07_08_Complete.zip` | 2 | 1,053,102 | `4719a668cd` |
+| `GROW_Computing_Week_07.zip` | 2 | 573,914 | `1c106bbe2e` |
+| `GROW_Computing_Week_08.zip` | 2 | 573,363 | `0d513bd6a1` |
+| `GROW_Week_04_Interactive.html` | 2 | 30,611 | `ba23e3f395` |
