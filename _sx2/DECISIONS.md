@@ -175,3 +175,80 @@ Do **not** work around this by adding transient conflicts to
 `zero_check_baseline.json`. That file's own `_how_it_fails` calls an unpruned
 entry stale evidence, and a conflict that clears on rebase would leave a row
 nobody prunes.
+
+---
+
+## LF1 — A relabeller that cannot resolve a label must refuse, not guess
+
+**Status: the tool change is here. The 121 restorations are proposed, not landed.**
+
+### What went wrong
+
+`tools/relabel_public.py` replaces pupil-facing calendar labels ("Week 9",
+"W14") with sequence-relative ones ("Lesson 3 of 12"). It resolves a week
+number against the unit manifest in the file's own folder. When the week was
+not in that manifest it returned one of two strings:
+
+```python
+if s.lo is not None and w < s.lo: return 'the previous unit'
+if s.hi is not None and w > s.hi: return 'the next unit'
+```
+
+Neither is a translation of a week number. Both are a guess, and on the CX3
+pass of 2026-09-08 the guess was taken **121 times across 22 published pages**.
+
+### Why the guess is always wrong here
+
+The two branches fired on cross-unit references — a recap naming an earlier
+week, or a forward reference to the next half-term. Four failure shapes came
+out of them:
+
+| shape | occurrences | example |
+|---|---|---|
+| distinct weeks collapse to one phrase | 105 | `W5:` `W6:` `W7B:` all became `the previous unit:` — three different recap lines, one indistinguishable label |
+| ranges double the phrase | 16 | `W2–W3:` → `the previous unit–the previous unit:` |
+| an article in front of it duplicates | 11 | `the W14 question` → `the the next unit question` |
+| the reference is not to a unit at all | all of them | W5–W7 are earlier lessons in the same strand; calling them "the previous unit" is wrong even where it reads |
+
+(Shapes overlap: the range and article counts are subsets of the first.)
+
+The causal set is exactly two branches — `w < lo` (54 occurrences) and
+`w > hi` (51) — plus the never-taken third fallback. Simulating the tool on the
+recovered originals reproduces the live bytes for **103 of 103** affected
+nodes, so nothing about the mechanism is unexplained. An earlier hypothesis
+that flat folders (`sequence()` returning `n=None`) caused it is **wrong**: no
+live occurrence came from a flat folder. Every affected file resolved its own
+sequence correctly.
+
+### The rule
+
+A tool that cannot resolve a label says which label, in which file, in which
+sentence, and changes nothing. `Unresolvable` is raised; the file is not
+written; the run exits 2. There is no mode in which this tool authors a label
+it did not read.
+
+`added_banned()` is the post-condition (LF1 B6): a run may never *increase* the
+count of `the previous unit` / `the next unit`. It asserts an increase, not
+zero, because both are honest prose a teacher may have written — `6
+Art/Lesson15` and `Grow/Slideshows/GROW_HUM_W7` each contain one, authored, and
+neither is a defect.
+
+Red-proved in both directions on the real estate, not on fixtures: of the 64
+HTML files the CX3 pass touched, the fixed tool refuses **exactly** the 22 that
+carry the defect and applies cleanly to all 42 that do not. No false positive,
+no false negative.
+
+### Recovery is from stored bytes, never re-derivation
+
+The relabeller stores the original text in `data-mbm-cal` on the enclosing
+element. That store was checked against an independent source: for all 22
+files, `walk(live, 'revert')` is **byte-identical** to the blob at the parent of
+the first CX3 commit. Two sources, agreeing on every byte, so the restored
+strings are the ones that were there — not inferred from neighbouring weeks,
+not hand-authored. The C3 list (unrecoverable, needing a human) is **empty**.
+
+### What this costs
+
+The 22 files cannot be relabelled by tooling any more, and should not be. Their
+recaps name specific earlier lessons; turning those into sequence-relative text
+needs someone who knows what the pupil is being asked to remember.

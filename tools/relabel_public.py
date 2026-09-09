@@ -28,6 +28,43 @@ SKIP_TAGS = {'script', 'style', 'template', 'noscript'}
 VOID = {'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr'}
 ATTRS = ('data-title', 'aria-label', 'title', 'data-page-title', 'alt', 'content')
 SEP = '⁋'
+BANNED = ('the previous unit', 'the next unit')   # LF1: labels this tool must never author. See Unresolvable.
+
+
+class Unresolvable(Exception):
+    """A calendar label that cannot be turned into a sequence-relative one.
+
+    The first version of this tool answered these with 'the previous unit' or
+    'the next unit'. Neither is a translation of a week number; both are a guess.
+    On 2026-09-08 they replaced 121 specific week references across 22 published
+    pages, and every one of them was wrong — W5, W6 and W7 all became the same
+    four words, ranges became "the previous unit-the previous unit", and "the W14
+    question" became "the the next unit question".
+
+    A tool that cannot resolve a label must say which label, in which file, with
+    the sentence it appears in, and then change nothing. A human decides what a
+    pupil reads. LF1 C2.
+    """
+
+    def __init__(s, week, letter, reason, path=None, context=None):
+        s.week, s.letter, s.reason, s.path, s.context = week, letter, reason, path, context
+        super().__init__(reason)
+
+    def report(s):
+        tok = 'W%d%s' % (s.week, s.letter or '')
+        ctx = re.sub(r'\s+', ' ', (s.context or '')).strip()
+        return ('REFUSING %s\n'
+                '  cannot resolve %s: %s\n'
+                '  in: "%s"\n'
+                '  Nothing was written. Decide what a pupil should read here, or give this\n'
+                '  unit a manifest entry for that week; this tool will not guess. (LF1 C2)'
+                % (s.path or '?', tok, s.reason, ctx[:240]))
+
+
+def added_banned(before, after):
+    """B6: the post-condition. 'the previous unit' can be honest prose a teacher wrote,
+    so the assertion is that a run never INCREASES the count, not that it is zero."""
+    return [(b, before.count(b), after.count(b)) for b in BANNED if after.count(b) > before.count(b)]
 TOK = re.compile(r'(<!--.*?-->|<script\b.*?</script\s*>|<style\b.*?</style\s*>|<template\b.*?</template\s*>|<[^>]+>)', re.S | re.I)
 
 def chassis(p):
@@ -75,15 +112,25 @@ class Rewriter:
         s.lo, s.hi = (min(s.weeks), max(s.weeks)) if s.weeks else (None, None)
     def lesson_ref(s, w, letter=None):
         if w == s.own and not letter: return 'this lesson'
-        if s.lo is not None and w < s.lo: return 'the previous unit'
-        if s.hi is not None and w > s.hi: return 'the next unit'
+        if s.lo is None:
+            raise Unresolvable(w, letter, 'this file has no manifest entry, so it has no sequence to be relative to')
+        if w < s.lo or w > s.hi:
+            raise Unresolvable(w, letter, "it is outside this unit's manifest weeks %d-%d" % (s.lo, s.hi))
         ns = s.weekmap.get(w)
-        if not ns: return 'the next unit' if (s.own and w > s.own) else 'the previous unit'
+        if not ns:
+            raise Unresolvable(w, letter, "it falls inside the unit's weeks %d-%d but no manifest lesson claims it" % (s.lo, s.hi))
         if letter:
             k = {'A': 0, 'B': 1, 'L1': 0, 'L2': 1, 'L3': 2}.get(letter.upper().replace('L', 'L') if len(letter) > 1 else letter.upper(), 0)
             return 'Lesson %d' % ns[min(k, len(ns) - 1)]
         return 'Lesson %d' % ns[0] if len(ns) == 1 else 'Lessons %d–%d' % (ns[0], ns[-1])
     def text(s, t):
+        try:
+            return s._text(t)
+        except Unresolvable as e:
+            if e.context is None: e.context = t
+            raise
+
+    def _text(s, t):
         o = t
         if s.n:
             t = re.sub(r'\bWeek\s?\d+\s+of\s+\d+\b', 'Lesson %d of %d' % (s.n, s.N), t)
@@ -185,15 +232,133 @@ def walk(html_text, path, mode, rel=True):
     if mode == 'revert':
         out = ''.join(toks); out = re.sub(r'\s+data-mbm-cal="[^"]*"', '', out); out = re.sub(r'<span data-mbm-guide="staff" class="mbm-cal-staff" style="display:none">.*?</span>', '', out, flags=re.S); return out, restored
 
+
+def self_test():
+    """LF1 B. Proves both directions: a resolvable label is still rewritten, an
+    unresolvable one aborts the file with its bytes untouched and a non-zero exit."""
+    import shutil, subprocess, tempfile
+    ok = [0]; bad = []
+    def check(name, cond):
+        ok[0] += 1
+        print(('  PASS  ' if cond else '  FAIL  ') + name)
+        if not cond: bad.append(name)
+
+    def unit(tmp, weeks, files=None, title='Autumn Science'):
+        d = os.path.join(tmp, 'unit'); os.makedirs(d, exist_ok=True)
+        files = files or ['L%d.html' % (i + 1) for i in range(len(weeks))]
+        json.dump({'title': title, 'lessons': [{'file': f, 'week': w, 'id': f}
+                                               for f, w in zip(files, weeks)]},
+                  open(os.path.join(d, 'manifest.json'), 'w'))
+        return d
+
+    def write(d, name, body):
+        q = os.path.join(d, name); open(q, 'w', encoding='utf-8').write('<body><p>%s</p></body>' % body); return q
+
+    def apply_one(q):
+        return subprocess.run([sys.executable, os.path.abspath(__file__), '--apply', q],
+                              capture_output=True, text=True)
+
+    with tempfile.TemporaryDirectory() as tmp:
+        d = unit(tmp, [8, 9, 10])
+        # ---- green direction: the tool still does its job
+        q = write(d, 'L1.html', 'Recap W9 and the W10 planner.')
+        r = apply_one(q); body = open(q, encoding='utf-8').read()
+        check('in-unit weeks still rewrite (W9 -> Lesson 2, W10 -> Lesson 3)',
+              r.returncode == 0 and 'Lesson 2' in body and 'Lesson 3' in body)
+        check('a resolvable run authors no banned label', not any(b in body for b in BANNED))
+        q = write(d, 'L1.html', 'Week 8 of 3 · W8 today.')
+        apply_one(q); body = open(q, encoding='utf-8').read()
+        check('own week becomes "this lesson" / "Lesson 1 of 3"',
+              'this lesson' in body or 'Lesson 1 of 3' in body)
+        q = write(d, 'L3.html', 'Last lesson: retrieve W8.')
+        apply_one(q)
+        check('last lesson of a unit resolves a sibling week', 'Lesson 1' in open(q, encoding='utf-8').read())
+
+        # ---- red direction: every shape that produced the live defect now refuses
+        for name, body_in, why in [
+            ('sibling week below the unit (W6 in an 8-10 unit)', 'W6: foods can be grouped.', 'outside'),
+            ('sibling week above the unit (W14 in an 8-10 unit)', 'Plan the W14 repeats.', 'outside'),
+            ('a range (W6-W7) refuses rather than doubling the phrase', 'Recap W6-W7 evidence.', 'outside'),
+            ('an article-led reference ("the W14 question")', 'Write the W14 question.', 'outside'),
+        ]:
+            q = write(d, 'L2.html', body_in); before = open(q, 'rb').read()
+            r = apply_one(q)
+            check(name, r.returncode == 2 and 'REFUSING' in r.stdout)
+            check('  ... and the file is byte-unchanged', open(q, 'rb').read() == before)
+            check('  ... and the refusal quotes the sentence', body_in.split(':')[0][:12] in r.stdout)
+
+        # ---- the shapes the order named: flat folder, single-lesson unit
+        flat = os.path.join(tmp, 'flat'); os.makedirs(flat)
+        q = write(flat, 'X.html', 'Recap W3 evidence.'); before = open(q, 'rb').read()
+        r = apply_one(q)
+        check('flat folder (no manifest) refuses instead of guessing',
+              r.returncode == 2 and 'no manifest entry' in r.stdout and open(q, 'rb').read() == before)
+        shutil.rmtree(os.path.join(tmp, 'unit'))
+        d1 = unit(tmp, [14], ['S1.html'])
+        q = write(d1, 'S1.html', 'Builds on W12 DNA.'); before = open(q, 'rb').read()
+        r = apply_one(q)
+        check('single-lesson unit (lo == hi) refuses a week outside it',
+              r.returncode == 2 and open(q, 'rb').read() == before)
+        q = write(d1, 'S1.html', 'W14 today.'); r = apply_one(q)
+        check('single-lesson unit still resolves its own week', r.returncode == 0)
+
+        # ---- a gap inside the unit's range
+        shutil.rmtree(os.path.join(tmp, 'unit'))
+        d2 = unit(tmp, [8, 10], ['G1.html', 'G2.html'])
+        q = write(d2, 'G1.html', 'Recap W9.'); r = apply_one(q)
+        check('a week inside the range that no lesson claims refuses',
+              r.returncode == 2 and 'no manifest lesson claims it' in r.stdout)
+
+        # ---- B6 post-condition, and honest prose
+        check('B6 sees an increase', added_banned('x', 'x the next unit') != [])
+        check('B6 ignores prose the author wrote', added_banned('go on to the next unit.', 'go on to the next unit.') == [])
+        shutil.rmtree(os.path.join(tmp, 'unit'), ignore_errors=True)
+        d3 = unit(tmp, [8], ['P1.html'])
+        q = write(d3, 'P1.html', 'Leave a gap and go on to the next unit.')
+        r = apply_one(q)
+        check('a page whose author wrote "the next unit" is left alone and passes',
+              r.returncode == 0 and 'the next unit' in open(q, encoding='utf-8').read())
+
+        # ---- --revert is untouched by this change
+        q = write(d3, 'P1.html', 'W8 today, recap W8 again.'); before = open(q, 'rb').read()
+        apply_one(q)
+        subprocess.run([sys.executable, os.path.abspath(__file__), '--revert', q], capture_output=True)
+        check('--revert still restores the original bytes', open(q, 'rb').read() == before)
+
+        # ---- the live regression itself, when the repo is present
+        live = os.path.join(ROOT, 'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html')
+        if os.path.exists(live):
+            src = open(live, encoding='utf-8').read()
+            rev, _ = walk(src, live, 'revert')            # the pre-relabel bytes, from the file's own store
+            try:
+                walk(rev, live, 'apply'); caught = False
+            except Unresolvable as e:
+                caught = 'outside' in e.reason
+            check('the real page that broke (SCI_B_W8A, W5/W6/W7B) now refuses', caught)
+
+    print('\n%d checks, %d failed' % (ok[0], len(bad)))
+    for b in bad: print('  FAILED:', b)
+    return 1 if bad else 0
+
+
 def main():
-    ap = argparse.ArgumentParser(); g = ap.add_mutually_exclusive_group(); g.add_argument('--report', action='store_true'); g.add_argument('--apply', action='store_true'); g.add_argument('--revert', action='store_true'); g.add_argument('--gate', action='store_true'); g.add_argument('--plant', action='store_true')
-    ap.add_argument('--json'); ap.add_argument('files', nargs='+'); a = ap.parse_args()
+    ap = argparse.ArgumentParser(); g = ap.add_mutually_exclusive_group(); g.add_argument('--report', action='store_true'); g.add_argument('--apply', action='store_true'); g.add_argument('--revert', action='store_true'); g.add_argument('--gate', action='store_true'); g.add_argument('--plant', action='store_true'); g.add_argument('--self-test', action='store_true', dest='self_test')
+    ap.add_argument('--json'); ap.add_argument('files', nargs='*'); a = ap.parse_args()
+    if a.self_test: sys.exit(self_test())
     if os.environ.get('RELABEL') == 'report': a.report, a.apply = True, False
-    total = 0; out = {}
+    total = 0; refused = 0; out = {}
     for p in a.files:
         s = open(p, encoding='utf-8').read()
         if a.apply:
-            new, n = walk(s, p, 'apply'); open(p, 'w', encoding='utf-8').write(new); hits = walk(new, p, 'census'); print(f'{p}: rewrote {n} · residual pupil-facing tokens {len(hits)}'); out[p] = {'rewrote': n, 'residual': hits}; total += len(hits)
+            try:
+                new, n = walk(s, p, 'apply')
+            except Unresolvable as e:
+                e.path = p; print(e.report()); out[p] = {'refused': e.reason, 'week': e.week}; refused += 1; continue
+            grew = added_banned(s, new)
+            if grew:                        # B6: unreachable by construction, asserted anyway
+                print('REFUSING %s\n  the run would author %s (%d -> %d). Nothing was written.'
+                      % (p, grew[0][0], grew[0][1], grew[0][2])); out[p] = {'refused': 'banned label'}; refused += 1; continue
+            open(p, 'w', encoding='utf-8').write(new); hits = walk(new, p, 'census'); print(f'{p}: rewrote {n} · residual pupil-facing tokens {len(hits)}'); out[p] = {'rewrote': n, 'residual': hits}; total += len(hits)
         elif a.revert:
             new, n = walk(s, p, 'revert'); open(p, 'w', encoding='utf-8').write(new); print(f'{p}: restored {n}'); out[p] = n
         elif a.plant:
@@ -202,6 +367,7 @@ def main():
         else:
             hits = walk(s, p, 'census'); out[p] = hits; total += len(hits); print(f'{p}: {len(hits)} pupil-facing calendar tokens')
     if a.json: json.dump(out, open(a.json, 'w'), indent=1, ensure_ascii=False)
+    if a.apply and refused: print(f'REFUSED {refused} file(s); every one of them is byte-unchanged.'); sys.exit(2)
     if a.gate or a.apply: print('GATE', 'PASS' if total == 0 else f'FAIL ({total} hits)'); sys.exit(0 if total == 0 else 1)
     if a.plant: sys.exit(total)
 if __name__ == '__main__': main()
