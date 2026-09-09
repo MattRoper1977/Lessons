@@ -101,7 +101,7 @@ MANIFEST_PINS = {
     # Ruled onto the pin 2026-08-12 (Ruling 3): the deck install is a
     # resources.json edit, and the blanket rule forbade it the same way it
     # once forbade studio adds. Same pattern, same tool, same commit rule.
-    "resources.json": "605b8129dd3eeca28409848f6911912bea2e7b0ff23fc947cf335026d64fa94c",
+    "resources.json": "59753f2bb92e9dd9d3cac5ec1901b514420de163503c4f715b9572d9ad1da5ee",
 }
 PIN_COMMAND = "python3 tools/pin_manifests.py   (from either checkout — it writes both gate copies or neither)"
 
@@ -158,7 +158,7 @@ CATALOGUE_PINS = {
         "tools/humanities_resources/check_resources.py": "ec5383e3a34cbff999f190b0014a4a73e00a3a29e2714498f7620fd638dc2aa5",
         "tools/humanities_resources/resource.css": "1aed9aaca0d73a4b200c4e5d0977e73f4e906c747d7340c7a62f4197a8344bae",
         "tools/humanities_resources/resource.js": "ad40afed95490bfcce92dc062da46e1b27bcb96bdc80e37eabdfe02bf6ffc446",
-        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "df0052e9ee44a1bee9d4454c8e931d55ba6e93e0d5d29139b1f95b83c080fea5",
+        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "c0cfcc042ebd7dcf9fe232d17cde403d3e4215c7058ccd1216fe7309c61bb4b5",
         "tools/catalogue/TERM_REVIEW.json": "b0ed0d82fe21a222c75f6a38390b01defc0d5d958fac8e85421b7901ce6d201d",
         "tools/catalogue/SCIENCE_WEEK_BINDINGS.json": "f3375440baa49ffe39a4fb7e34ccbf1cf788ed6d73b283abc15d6e1440203238",
         "primary/year5/science/autumn/forces/Lesson8_ExploreGravity.html": "20047720bf1d309055abdf232d341b6fd99b833631efa0bcbfb3dabed9671196",
@@ -558,14 +558,14 @@ CATALOGUE_ORIGINAL_ROWS_SHA256 = "b8ffcb16f5fd2a413e8a0b06ad2d4b112f450364fa2943
 # digest below are re-cut by tools/catalogue/pin_catalogue_contract.py from
 # rows it has verified against that derivation; an edit to any appended row,
 # a removed pack row or an extra lesson row still reds here.
-CATALOGUE_SHELF_ROWS = 114
+CATALOGUE_SHELF_ROWS = 216
 # UX2 A1: keys that may be appended to an original row without moving its
 # digest (see catalogue_errors). Nothing else is additive. No original row
 # carried either key before the ruling (measured 2026-09-08: 0 of 734), so the
 # second set is empty and the allowance cannot launder a pre-existing value.
 CATALOGUE_ADDITIVE_TAG_KEYS = frozenset({"halfTerm", "unit"})
 CATALOGUE_ORIGINAL_KEYS_BEFORE_TAGS = frozenset()
-CATALOGUE_SHELF_ROWS_SHA256 = "cd8f2f33a77634501e5e1f6efacdc0b95daf00284d9bbfcfbd844de34bdbb53c"
+CATALOGUE_SHELF_ROWS_SHA256 = "b04f6823dd790ee070d522e4d42cd9e9b240bd9000da093b42144e6aa683eb36"
 
 # These named review records and review tools can change with their reviewed
 # transaction. Tools are not served assets; they are reviewed as executable
@@ -596,13 +596,23 @@ PUBLICATION_CALLER_PATH = ".github/workflows/education-pages.yml"
 # #438, #442; the order writes nothing to the Apps repository), so this digest is the
 # LESSONS caller's, and the Apps caller carries its own reviewed digest below.
 PUBLICATION_CALLER_SHA256 = "b6d0358f28ae3efccb351da7abba822009abdca5c6f6a8495b92cb101b6cedbd"
-# One reviewed caller digest per repository kind. The Apps entry is the Apps
-# caller at the Site's reviewed Apps pin 924ab986 (Site domain-split-verify.yml;
-# the caller there names Site 23a4f360), which the Site's catalogue contract
-# control runs this gate against as kind "apps". Moving that pin moves this.
+# One reviewed caller digest per repository kind. detect_kind() reads the root
+# it is standing in, so this entry is only ever compared against the Apps
+# repository's own caller: the Lessons gate run and the Apps gate runs are the
+# only callers of publication_errors(), and the Site repository invokes this
+# verifier in no workflow at all.
+# UX2 A5 pinned this to the Apps caller at 924ab986 -- the commit Site
+# domain-split-verify.yml checks out, whose caller names Site 23a4f360 -- on the
+# premise that a Site catalogue-contract control ran this gate against that
+# checkout. No such control exists, and 924ab986 is behind Apps main. The
+# reviewed Apps caller is the merged one: Apps #72 advanced it 23a4f360 ->
+# 6430f23f (CX3 cycle C) on 2026-09-08, superseding c420519111f6 thirty-six
+# minutes after it was written. The mismatch stayed invisible while the Apps
+# gate copy predated UX2 A5 and so had no by-kind map to read; putting the two
+# copies back in step is what made it fire.
 PUBLICATION_CALLER_SHA256_BY_KIND = {
     "lessons": PUBLICATION_CALLER_SHA256,
-    "apps": "c420519111f6c73c54db0b5b506033b9c5edb41696335235edf48bae5f1c7178",
+    "apps": "732591ddeae08b96f5a2aedcf9cbc52246c7ade65fc256507d40ee4030359eff",
 }
 PUBLICATION_GATE_WORKFLOW_PATH = ".github/workflows/mbm-cross-estate-unification.yml"
 
@@ -682,6 +692,15 @@ ALLOWED_DIFF = {
     ".github/workflows/ux2-gates.yml",
     "tools/ux2/hub_gates.mjs",
     "tools/ux2/unit_tags.py",
+    # UX2 D3 added the companion-pack deriver and its placement manifest but did
+    # not list them here, though every peer is listed (build_spine, unit_tags,
+    # resource_sizes, calendar-spine.json, resource-sizes.json ...). The gap was
+    # invisible because it only bites a PR that changes one of them AND this
+    # file, which only a contract re-pin forces. pin_catalogue_contract.py --
+    # already allowed -- imports the deriver and reads the manifest to rebuild
+    # the pack tail, so both are catalogue-record machinery, not lesson payload.
+    "tools/ux2/companion_catalogue.py",
+    "data/companion-packs.json",
     "tools/ux2/check_catalogue_schema.py",
     "tools/ux2/prove_catalogue_gate.py",
     "tools/ux2/build_spine.py",

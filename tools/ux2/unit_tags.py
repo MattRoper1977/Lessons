@@ -81,7 +81,8 @@ SPINE = ROOT / "_sownb/CALENDAR_SPINE.json"
 SOW_DIR = ROOT / "_next6/sow"
 HUM_PACK_INDEX = ROOT / "Humanities_Teesside/Teaching_Packs/DOWNLOADS_MANIFEST_HTML.json"
 HUM_PACK_DIR = ROOT / "Humanities_Teesside/Teaching_Packs"
-SCIENCE_MANIFESTS = [ROOT / "Science_Teesside" / lane / "v3_40min/manifest-v3.json" for lane in ("Build", "Grow", "Launch")]
+SCIENCE_MANIFESTS = ([ROOT / "Science_Teesside" / lane / "v3_40min/manifest-v3.json" for lane in ("Build", "Grow", "Launch")]
+                     + sorted(ROOT.glob("Science_Teesside/*/*/manifest.json")))
 
 EVIDENCE = ROOT / "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json"
 # The evidence methods of class (a) — the lesson's own declaration or manifest
@@ -100,7 +101,10 @@ EVIDENCE_METHODS = {
 TAG_KEYS = ("halfTerm", "unit")
 HALF_TERMS = ["Autumn 1", "Autumn 2", "Spring 1", "Spring 2", "Summer 1", "Summer 2"]
 SHORT = {"Aut1": "Autumn 1", "Aut2": "Autumn 2", "Spr1": "Spring 1", "Spr2": "Spring 2", "Sum1": "Summer 1", "Sum2": "Summer 2"}
-IN_SCOPE = {"Autumn 1", "Autumn 2"}
+# Was {"Autumn 1", "Autumn 2"} while the estate held only Autumn content. SHORT and
+# HALF_TERMS have always carried all six; this gate was the only thing scoped to
+# Autumn, and it silently derived None for every Spring/Summer row.
+IN_SCOPE = set(SHORT.values())
 LESSON_TYPES = {"lesson", "Lesson", "revision"}
 SAMPLE_SEED = 20260908
 SAMPLE_SIZE = 20
@@ -175,13 +179,35 @@ def load_spine_terms() -> dict[str, set[str]]:
     return result
 
 
+def manifest_lessons(manifest: Path) -> list[dict]:
+    """A family manifest's lesson rows. manifest-v3.json is a bare list; the folder
+    manifests are {"lessons": [...]} (feb-pack-v1) or {"sequence": [...]}."""
+    data = read_json(manifest)
+    if isinstance(data, list):
+        return data
+    return data.get("lessons") or data.get("sequence") or []
+
+
+def manifest_half_terms(rows: list[dict]) -> set[str]:
+    """Half-terms a manifest lesson row resolves to through its own workbook cells
+    (termWeek, never absoluteWeek) — the evidence class the tool already names
+    "current manifest lesson row with resolved workbook cells"."""
+    terms = set()
+    for row in rows:
+        for cell in row.get("cells") or []:
+            short = str(cell.get("termWeek") or "").split("\u00b7")[0].strip()
+            if short in SHORT:
+                terms.add(SHORT[short])
+    return terms
+
+
 def load_manifest_rows() -> dict[str, list[dict]]:
     """file (repo path) → its family-manifest lesson rows (for the `sow` declaration)."""
     rows: dict[str, list[dict]] = {}
     for manifest in SCIENCE_MANIFESTS:
         if not manifest.is_file():
             continue
-        for lesson in read_json(manifest):
+        for lesson in manifest_lessons(manifest):
             file_name = lesson.get("file")
             if file_name:
                 rows.setdefault((manifest.parent / file_name).relative_to(ROOT).as_posix(), []).append(lesson)
@@ -194,7 +220,7 @@ def load_science_topics() -> dict[str, tuple[str, str]]:
     for manifest in SCIENCE_MANIFESTS:
         if not manifest.is_file():
             continue
-        for lesson in read_json(manifest):
+        for lesson in manifest_lessons(manifest):
             topic = lesson.get("topic")
             file_name = lesson.get("file")
             if topic and file_name:
@@ -277,7 +303,7 @@ def sow_unit_for_text(sow: dict, lane: str | None, text: str, half_term: str | N
         for grid in lane_sow.get("grid", []):
             if grid.get("strand") == weekly.get("strand") and half_term_of_weeks(grid.get("weeks")) == week_half and grid.get("unit"):
                 units.add(grid["unit"])
-                sources.append(f"weekly row {weekly.get('row')} → grid row {grid.get('row')}")
+                sources.append(f"weekly row {weekly.get('row')} [{weekly.get('sheet')}] → grid row {grid.get('row')}")
     if len(units) == 1:
         return next(iter(units)), f"_next6/sow/{lane}.json {sources[0]}"
     return None
@@ -329,6 +355,9 @@ def derive(rows: list[dict]) -> dict:
             candidates["terms-and-styles"] = SHORT[term]
         if file_key in spine_terms and len(spine_terms[file_key]) == 1:
             candidates["spine-cell"] = next(iter(spine_terms[file_key]))
+        manifest_terms = manifest_half_terms(manifest_rows.get(file_key) or [])
+        if len(manifest_terms) == 1:
+            candidates["manifest-cell"] = next(iter(manifest_terms))
         text = deck_text(location) if location.is_file() else ""
         in_text = half_terms_in_text(text)
         if len(in_text) == 1:
@@ -405,8 +434,11 @@ def verify_classes(rows: list[dict], derived: dict) -> dict:
     for rec in sample:
         row = rows[rec["index"]]
         lane = lane_of(row)
-        m = re.search(r"weekly row (\d+)", rec["unitSource"] or "")
-        weekly = next((w for w in sow.get(lane, {}).get("weekly", []) if str(w.get("row")) == (m.group(1) if m else "")), None)
+        # (sheet, row) — a row number alone matches the first sheet that carries it,
+        # which was always the right one while the estate held only Autumn content.
+        m = re.search(r"weekly row (\d+) \[([^\]]+)\]", rec["unitSource"] or "")
+        weekly = next((w for w in sow.get(lane, {}).get("weekly", [])
+                       if m and str(w.get("row")) == m.group(1) and w.get("sheet") == m.group(2)), None)
         subject_words = re.findall(r"[a-z]{4,}", str(row.get("subject", "")).lower())
         strand = (weekly or {}).get("strand", "").lower()
         week_half = half_term_of_weeks(((weekly or {}).get("week") or "").replace("·", " "))
@@ -465,7 +497,7 @@ def assert_append_only(before: list[dict], after: list[dict]) -> None:
 
 
 def census(rows: list[dict], derived: dict) -> dict:
-    out = {"rows": len(rows), "lessons2026": 0, "halfTerm": {"Autumn 1": 0, "Autumn 2": 0}, "unit": 0,
+    out = {"rows": len(rows), "lessons2026": 0, "halfTerm": {label: 0 for label in sorted(IN_SCOPE)}, "unit": 0,
            "unitBySource": {}, "worklist": 0, "conflicts": 0, "bySubject": {}}
     for rec in derived["rows"]:
         if not rec["lesson"]:
