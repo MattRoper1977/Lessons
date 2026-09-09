@@ -85,10 +85,19 @@ function defaultOpen(list){
   const next=list.find(g=>g.kind==='unit'&&HALF_TERMS.indexOf(g.halfTerm)>HALF_TERMS.indexOf(w.label));
   return next?next.id:(list[0]?list[0].id:null);
 }
+// A row groups by half-term AND unit, or else by family; B4 keys planning
+// evidence by half-term and unit too, and a resource carrying a half-term but
+// no unit keys with a null unit. Comparing a key against the group's own key
+// therefore only ever matched a unit row, whose unit is never null - and every
+// planning key the record produces is null-unit, so nothing rendered at all.
+// Match against the rows the group actually holds instead: a group offers
+// planning when one of its own lessons sits at that key. Read from the
+// rendered rows, so a link can never claim evidence for a lesson not shown.
+function rowKeys(g){return new Set(g.rows.map(r=>`${r.halfTerm||''}\u0000${r.unit||''}`));}
 function planningLink(g){
-  const pk=H.state.planning;if(!pk||g.kind!=='unit')return '';
-  const pw=currentPathway();
-  const hit=pk.keys.find(k=>k.subject===CARD.slug&&k.pathway===pw&&k.halfTerm===g.halfTerm&&k.unit===g.unit);
+  const pk=H.state.planning;if(!pk)return '';
+  const pw=currentPathway(),held=rowKeys(g);
+  const hit=pk.keys.find(k=>k.subject===CARD.slug&&k.pathway===pw&&held.has(`${k.halfTerm||''}\u0000${k.unit||''}`));
   if(!hit||!hit.href)return '';
   return `<p class="planning"><a href="${esc(safeHref(hit.href))}">${esc(COPY.planning)}</a></p>`;
 }

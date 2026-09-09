@@ -195,3 +195,30 @@ verified rows by `tools/catalogue/pin_catalogue_contract.py`.
     Apps caller's at the Site's reviewed Apps pin 924ab986. Both callers stay
     byte-pinned; neither check is weakened; moving the Site's Apps pin moves the
     Apps entry.
+16. **A unit-null planning key attaches to the row that holds its lessons (B4).**
+    A3 groups a row by half-term **and** unit, or else by family. B4 keys planning
+    evidence by half-term and unit too, and its own rule sends a resource with a
+    half-term but no unit to a key whose unit is null. Those two rules never meet:
+    a unit row's unit is a string, so `key.unit === row.unit` could only ever be
+    true for a row that carries a unit, and every planning key the record actually
+    produces is unit-null. Measured against the shipped record: 848 rows, 65
+    non-lesson resources with a half-term, none with a unit, 9 keys, 114 rendered
+    rows of which 7 carry a unit — and **0** rows able to render the link. The
+    feature could not fire, and nothing said so.
+    The order leaves the meeting point open, so: a key attaches to a row when one
+    of the lessons that row actually holds sits at that key, compared on
+    (half-term, unit) with a missing value read as null. That is read from the
+    rendered rows, so a link can never claim evidence for a lesson the row does
+    not show, and it needs no new key shape. It yields 7 rows across the subject
+    pages, at most two on any one page and pathway. `hub_gates.mjs` now proves
+    both directions at every pathway — no link the record does not owe, no owed
+    row silent — with a red proof that plants a key at a half-term no lesson holds
+    and requires every link to vanish.
+17. **`data/planning-keys.json` is derived across repositories (B4).** Its
+    generator is the Site's `domain-split/ux2_planning_keys.py`, because the key
+    rule is the Resources page's, so nothing in this repository's own workflows
+    can regenerate or check it the way `resource_sizes.py` and `build_spine.py`
+    are checked daily. It is committed here because the publisher is immutable
+    and never edits source. Re-run the generator after any change to
+    `resources.json`; the browser gate above catches a file that has gone stale
+    in the direction that matters, a row claiming evidence it no longer has.
