@@ -304,6 +304,25 @@ word-for-word restatements, and leaves the 17 doing their job.
 admission-registry membership argument is retired as a served proof for LF1;
 served proof is a fetch of the four URLs, read as rendered DOM.
 
+**A URL already fetched in this session is not a fresh read after a deploy.**
+Closing LF1, two of the four proof pages first came back still showing the
+placeholder. That looked like a partial publication — some paths served, some
+not — which would have been a serious finding about the publisher. It was fetch
+cache. The pages were correct; the reader was not.
+
+So a re-fetch of a URL the same session has already opened proves nothing about
+what is being served now. It has to be a genuinely fresh read: a different
+client, a cache-defeating request, or a device that has not seen the page.
+
+What actually closed LF1 was the second instrument agreeing with the first. The
+census of the published tree said 0 on every route and the phone said the same,
+and the phone had never loaded those URLs. Two readings from independent paths,
+not one reading taken twice.
+
+LF1 confirmed live 2026-09-09 19:50 BST: SCI_L_W8L1 and LAUNCH_HUM_W9 clean on
+screen and in print; SCI_B_W13A reads "for the W14 rock investigation"; SCI_B_W8B's
+Arrival reads W8A / W7 / W4 / W2-W3.
+
 ---
 
 ## D11 — A changed admitted byte needs a registry move as much as a new path does
