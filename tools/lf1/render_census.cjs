@@ -125,7 +125,11 @@ const TYPES = {'.html':'text/html; charset=utf-8','.css':'text/css','.js':'text/
     // sampling once only ever shows the last tier chosen: Supported, Standard and
     // Stretch are three separate panels and a pupil sees whichever their teacher
     // selects, so all three have to be sampled.
-    const GATES = '[data-reveal],[data-toggle],[data-tier-button]';
+    // Two chassis, two conventions: the Science decks gate on data-attributes,
+    // the Humanities ones on inline onclick="tier(...)" / "toggle(...)" with a
+    // .tierbtn or aria-expanded button. Missing the second left three Standard
+    // and Stretch panels uncounted.
+    const GATES = '[data-reveal],[data-toggle],[data-tier-button],.tierbtn,button[aria-expanded]';
     const openEverything = async (route) => {
       const n = await page.evaluate((g) => document.querySelectorAll(g).length, GATES);
       for (let round = 0; round < 3; round++) {        // model reveals advance one step per press
@@ -171,6 +175,27 @@ const TYPES = {'.html':'text/html; charset=utf-8','.css':'text/css','.js':'text/
     await page.evaluate(() => document.documentElement.classList.add('mbm-guide-on'));
     await page.waitForTimeout(120);
     absorb(await page.evaluate(SCAN, PHRASES), 'guide');
+    // LF1-B 2.2: two adjacent rendered nodes saying exactly the same thing. This
+    // is measured with guide ON, the strictest view, because that is where a
+    // pupil-facing line and its staff twin can both render.
+    const adjacent = await page.evaluate(() => {
+      const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      const vis = []; let n;
+      while ((n = w.nextNode())) {
+        const el = n.parentElement; if (!el || ['SCRIPT','STYLE'].includes(el.tagName)) continue;
+        let hidden = false;
+        for (let x = el; x; x = x.parentElement) {
+          const cs = getComputedStyle(x);
+          if (cs.display === 'none' || cs.visibility === 'hidden') { hidden = true; break; }
+        }
+        const t = n.nodeValue.replace(/\s+/g, ' ').trim();
+        if (!hidden && t.length >= 20) vis.push(t);
+      }
+      const out = [];
+      for (let i = 1; i < vis.length; i++) if (vis[i] === vis[i - 1]) out.push(vis[i].slice(0, 120));
+      return out;
+    });
+
     const doubled = await page.evaluate(() => {
       const pairs = [];
       for (const s of document.querySelectorAll('span.mbm-cal-staff')) {
@@ -185,7 +210,7 @@ const TYPES = {'.html':'text/html; charset=utf-8','.css':'text/css','.js':'text/
     });
     await page.evaluate(() => document.documentElement.classList.remove('mbm-guide-on'));
 
-    out[rel] = {slides, guideDoubled: doubled,
+    out[rel] = {slides, guideDoubled: doubled, adjacentIdentical: adjacent,
       occurrences: [...seen.entries()].map(([id, e]) => ({id, routes: [...e.routes], staff: e.staff, path: e.path, kind: e.kind, text: e.text}))};
     await ctx.close();
     process.stderr.write('.');
@@ -206,6 +231,7 @@ const TYPES = {'.html':'text/html; charset=utf-8','.css':'text/css','.js':'text/
   console.log('  inside a staff layer      : ' + tot(x => x.staff));
   console.log('  in an accessible name     : ' + tot(x => x.kind === 'attr'));
   console.log('guide-doubled pairs         : ' + Object.values(out).reduce((a, o) => a + o.guideDoubled.length, 0));
+  console.log('adjacent identical nodes    : ' + Object.values(out).reduce((a, o) => a + o.adjacentIdentical.length, 0) + '   (guide on, >=20 chars)');
   for (const k of pages) {
     const o = out[k]; if (!o.occurrences.length) continue;
     console.log('  ' + k.split('/').pop().slice(0, 52).padEnd(54) +
