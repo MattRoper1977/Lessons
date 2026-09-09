@@ -85,13 +85,44 @@ def entry_week(x):
         if isinstance(c.get('absoluteWeek'), int): return c['absoluteWeek']
     return None
 
+def manifest_lessons(mf):
+    """(entries, unit title) from a manifest, whatever envelope it uses.
+
+    Two envelopes are in the estate and both are legitimate. Most manifests are an
+    OBJECT carrying the sequence under 'lessons' or 'sequence'. Three -- the
+    Science v3_40min ones for Build, Grow and Launch -- are the ARRAY itself, and
+    their entries carry the same per-entry fields the object form does (file,
+    week, id), so it is a third envelope for the same data rather than a different
+    schema. Build and Launch entries have week numbers; Grow's do not, which is not
+    this function's problem: an entry with no week is already skipped, and a file
+    whose unit yields no weeks refuses rather than being guessed at.
+
+    Anything else is not a manifest this tool understands. It returns no entries,
+    which leaves the file with no sequence and makes lesson_ref refuse -- the same
+    outcome as no manifest at all. It must never raise: `m.get(...)` on a
+    top-level array raised AttributeError on 47 served pages, and a crash is worse
+    than a refusal because it aborts the run wherever it reached and says nothing
+    about the files after it.
+    """
+    try:
+        m = json.load(open(mf, encoding='utf-8'))
+    except (OSError, ValueError):
+        return [], ''
+    if isinstance(m, list):
+        return [x for x in m if isinstance(x, dict)], ''
+    if isinstance(m, dict):
+        L = m.get('lessons') or m.get('sequence') or []
+        return ([x for x in L if isinstance(x, dict)] if isinstance(L, list) else []), (m.get('title') or '')
+    return [], ''
+
+
 def sequence(path):
     """The family's recommended lesson sequence (manifest order, RX3 _CLASSIC siblings excluded): (n, N, unit, weekmap, weeks).
     Weeks come from the manifest entries only; a file with no manifest entry gets n=None and its own-week strips are left alone."""
     d = os.path.dirname(path); mf = next((os.path.join(d, m) for m in ('manifest-v3.1.json', 'manifest-v3.json', 'manifest.json') if os.path.exists(os.path.join(d, m))), None)
     files = []; unit = ''
     if mf:
-        m = json.load(open(mf, encoding='utf-8')); L = m.get('lessons') or m.get('sequence') or []; unit = m.get('title') or ''
+        L, unit = manifest_lessons(mf)
         for x in L:
             f = x.get('file') or x.get('path') or ''
             if not f or '_CLASSIC' in (x.get('id') or '') or '_Classic' in f or 'START_HERE' in f: continue
@@ -233,6 +264,17 @@ def walk(html_text, path, mode, rel=True):
         out = ''.join(toks); out = re.sub(r'\s+data-mbm-cal="[^"]*"', '', out); out = re.sub(r'<span data-mbm-guide="staff" class="mbm-cal-staff" style="display:none">.*?</span>', '', out, flags=re.S); return out, restored
 
 
+def manifest_lessons_probe(obj):
+    """self-test helper: manifest_lessons() against an in-memory manifest."""
+    import tempfile as _t
+    with _t.NamedTemporaryFile('w', suffix='.json', delete=False) as fh:
+        json.dump(obj, fh); name = fh.name
+    try:
+        return manifest_lessons(name)
+    finally:
+        os.unlink(name)
+
+
 def self_test():
     """LF1 B. Proves both directions: a resolvable label is still rewritten, an
     unresolvable one aborts the file with its bytes untouched and a non-zero exit."""
@@ -324,6 +366,50 @@ def self_test():
         apply_one(q)
         subprocess.run([sys.executable, os.path.abspath(__file__), '--revert', q], capture_output=True)
         check('--revert still restores the original bytes', open(q, 'rb').read() == before)
+
+        # ---- manifest envelopes: three shapes, none of them may crash (LF1-G 3.1)
+        shutil.rmtree(os.path.join(tmp, 'unit'), ignore_errors=True)
+        arr = os.path.join(tmp, 'arr'); os.makedirs(arr, exist_ok=True)
+        json.dump([{'id': 'W3A', 'week': 3, 'file': 'A1.html'},
+                   {'id': 'W4A', 'week': 4, 'file': 'A2.html'}],
+                  open(os.path.join(arr, 'manifest-v3.json'), 'w'))
+        q = write(arr, 'A1.html', 'Recap W4 method.')
+        r = apply_one(q)
+        check('an ARRAY manifest resolves instead of crashing',
+             r.returncode == 0 and 'Lesson 2' in open(q, encoding='utf-8').read())
+        check('  ... and does not raise AttributeError', 'AttributeError' not in r.stdout + r.stderr)
+        q = write(arr, 'A1.html', 'Recap W9 method.'); before = open(q, 'rb').read()
+        r = apply_one(q)
+        check('an ARRAY manifest still REFUSES an out-of-unit week',
+             r.returncode == 2 and 'REFUSING' in r.stdout and open(q, 'rb').read() == before)
+
+        noweek = os.path.join(tmp, 'noweek'); os.makedirs(noweek, exist_ok=True)
+        json.dump([{'id': 'W3A', 'file': 'N1.html', 'mission': 'no week field'}],
+                  open(os.path.join(noweek, 'manifest-v3.json'), 'w'))
+        q = write(noweek, 'N1.html', 'Recap W3 method.'); before = open(q, 'rb').read()
+        r = apply_one(q)
+        check('an ARRAY manifest whose entries carry no week refuses, byte-unchanged',
+             r.returncode == 2 and open(q, 'rb').read() == before)
+
+        for name, blob in [('a bare string', '"not a manifest"'),
+                           ('a number', '42'),
+                           ('an object with no lessons key', '{"title": "x"}'),
+                           ('a truncated file', '{"lessons": [')]:
+            odd = os.path.join(tmp, 'odd'); os.makedirs(odd, exist_ok=True)
+            open(os.path.join(odd, 'manifest-v3.json'), 'w').write(blob)
+            q = write(odd, 'O1.html', 'Recap W3 method.'); before = open(q, 'rb').read()
+            r = apply_one(q)
+            check('%s is refused, not crashed' % name,
+                 r.returncode == 2 and 'Traceback' not in r.stdout + r.stderr
+                 and open(q, 'rb').read() == before)
+            shutil.rmtree(odd)
+
+        check('manifest_lessons reads the object envelope',
+             manifest_lessons_probe({'lessons': [{'file': 'x'}], 'title': 'T'}) == ([{'file': 'x'}], 'T'))
+        check('manifest_lessons reads the array envelope',
+             manifest_lessons_probe([{'file': 'x'}]) == ([{'file': 'x'}], ''))
+        check('manifest_lessons drops non-dict entries',
+             manifest_lessons_probe([{'file': 'x'}, 'junk', 7]) == ([{'file': 'x'}], ''))
 
         # ---- the live regression itself, when the repo is present
         live = os.path.join(ROOT, 'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html')
