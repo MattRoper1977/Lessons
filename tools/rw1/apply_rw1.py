@@ -20,7 +20,6 @@ import pathways
 
 REPO = Path(__file__).resolve().parents[2]
 BRANDLINE_CSS = '.brandline{font-weight:950;color:var(--growdark);letter-spacing:.08em;text-transform:uppercase}'
-GROWDARK = '--growdark:#355E7B'
 
 
 def report(name, before, after, expect=None):
@@ -45,8 +44,13 @@ def brandline(text, which, pw):
     # the live rule needs the live variable; the pack defines neither
     if BRANDLINE_CSS not in text:
         text = text.replace('.review-meta{', BRANDLINE_CSS + '\n.review-meta{', 1)
-    if GROWDARK not in text:
-        text = re.sub(r'(--bg:#fff)', GROWDARK + ';' + r'\1', text, count=1)
+    growdark = pathways.need(pw, 'growdark')
+    if growdark not in text:
+        before = text
+        text = re.sub(r'(--bg:#fff)', growdark + ';' + r'\1', text, count=1)
+        assert text != before, ('the --bg:#fff anchor was not found, so %s was '
+                                'never injected -- re.sub returns its input '
+                                'unchanged on no match' % growdark)
     return text, n
 
 
@@ -88,19 +92,18 @@ def cross_links(text, which, pw):
     read from pack_links as {pack-relative href: lesson key}, and never inferred
     from which file is being processed.
     """
-    links = pathways.need(pw, 'pack_links')
-    if isinstance(links, dict):
-        for href, target in links.items():
-            text = text.replace(href, Path(pathways.need(pw, 'live', target)).name)
-        return text
-    # two-lesson form: a flat list, every href pointing at the one sibling
     keys = list(pathways.need(pw, 'lessons'))
-    if len(keys) != 2:
-        raise ValueError('%s has %d lessons; pack_links must be a {href: lesson} '
-                         'map, not a flat list' % (pw['name'], len(keys)))
-    sib = Path(pathways.need(pw, 'live', keys[1 - keys.index(which)])).name
-    for link in links:
-        text = text.replace(link, sib)
+    for href, (kind, target) in pathways.need(pw, 'pack_links'):
+        if kind == 'literal':
+            repl = target
+        elif target is None:
+            if len(keys) != 2:
+                raise ValueError('%s has %d lessons, so ("lesson", None) is '
+                                 'ambiguous; name the target' % (pw['name'], len(keys)))
+            repl = Path(pathways.need(pw, 'live', keys[1 - keys.index(which)])).name
+        else:
+            repl = Path(pathways.need(pw, 'live', target)).name
+        text = text.replace(href, repl)
     return text
 
 

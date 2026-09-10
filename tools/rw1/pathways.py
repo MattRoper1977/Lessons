@@ -60,11 +60,21 @@ BUILD = {
         r'<p class="review-meta">BUILD &middot; SCIENCE &middot; Week 8 &middot; w/c 19 October 2026</p>',
         r'<p class="review-meta">BUILD · SCIENCE · Week 8 · w/c 19 October 2026</p>',
     ],
-    # Pack-relative forward/back links. Both files land in the SAME served
-    # directory, so each must become the sibling's live filename or it 404s.
+    # Pack-relative links. Every lesson lands in the SAME served directory, so a
+    # pack-relative href is wrong there. Each entry is (href, (kind, target)):
+    #   ('lesson', KEY)  -> the live filename of that lesson
+    #   ('lesson', None) -> whichever sibling is not the file being processed
+    #   ('literal', S)   -> S verbatim
+    #
+    # ../START_HERE.html is the pupil-facing "Lessons" control in the toolbar. It
+    # is in ALL THREE packs and it 404s on every served route: START_HERE.html
+    # exists in each WEEK directory and not in the pathway directory above it, so
+    # the '../' walks straight past it. Dropping the '../' is what live already
+    # does -- live links to 'START_HERE.html' with no prefix.
     'pack_links': [
-        '../Lesson_B_Body_Checkpoint/BUILD_W8B_Interactive.html',
-        '../Lesson_A_Sugar_Evidence/BUILD_W8A_Interactive.html',
+        ('../Lesson_B_Body_Checkpoint/BUILD_W8B_Interactive.html', ('lesson', 'B')),
+        ('../Lesson_A_Sugar_Evidence/BUILD_W8A_Interactive.html', ('lesson', 'A')),
+        ('../START_HERE.html', ('literal', 'START_HERE.html')),
     ],
     # pathway · subject · lesson title, for the print identity line (RW1-E W2).
     'identity': {'A': ('BUILD', 'Science', 'Sugar Evidence'),
@@ -73,6 +83,7 @@ BUILD = {
     'literal_fixes': [('E gives3+3+3+3=12 g sugar per 100 g.',
                        'E gives 3+3+3+3 = 12 g sugar per 100 g.')],
     'date_tokens': [r'\s*&middot;\s*19 October 2026', r'\s*·\s*19 October 2026'],
+    'growdark': '--growdark:#355E7B',
 }
 
 # GROW is measured by the GW1-B survey. Every None below is a value that must be
@@ -89,12 +100,35 @@ GROW = {
         'A': 'Lesson_A_Sky_Shift/SCI_G_W8A_Day_And_Night_Explore.html',
         'B': 'Lesson_B_Control_Room/SCI_G_W8B_Day_And_Night_Do.html',
     },
-    'brandline': None,
-    'review_meta': None,
-    'pack_links': None,
-    'identity': None,
+    # Measured by the GW1-B survey and spot-checked independently. GROW uses the
+    # LITERAL separator U+00B7 exclusively: '&middot;' appears 0 times in either
+    # pack file and 0 times in either live file. Composing with the entity form
+    # would emit bytes that exist nowhere in the GROW estate -- and BUILD's
+    # entity-first pattern matches 0 of 9 here, which report() prints as
+    # "already applied / nothing to do". A silent no-op that reads as success.
+    'brandline': {
+        'A': '<p class="brandline">GROW \u00b7 Science \u00b7 Week 8A \u00b7 Explore</p>',
+        'B': '<p class="brandline">GROW \u00b7 Science \u00b7 Week 8B \u00b7 Do</p>',
+    },
+    'review_meta': [
+        r'<p class="review-meta">GROW \u00b7 SCIENCE \u00b7 Week 8 \u00b7 w/c 19 October 2026</p>',
+    ],
+    'pack_links': [
+        ('../Lesson_B_Control_Room/SCI_G_W8B_Day_And_Night_Do.html', ('lesson', 'B')),
+        ('../Lesson_A_Sky_Shift/SCI_G_W8A_Day_And_Night_Explore.html', ('lesson', 'A')),
+        ('../START_HERE.html', ('literal', 'START_HERE.html')),
+    ],
+    # Titles corroborated three ways: the pack <title>, the pack's own
+    # science-meta bodies, and the live <title>.
+    'identity': {'A': ('GROW', 'Science', 'Day and Night: Sky Shift'),
+                 'B': ('GROW', 'Science', 'Day and Night: 24-Hour Control Room')},
     'literal_fixes': [],
-    'date_tokens': None,
+    # BUILD's patterns anchor the date to a preceding separator. GROW writes
+    # "\u00b7 w/c 19 October 2026", so the 'w/c ' sits between them and BUILD's
+    # form matches 0 of 6. Match the date itself.
+    'date_tokens': [r'\s*\u00b7\s*w/c\s+19\s+October\s+2026', r'\s*\u00b7\s*19\s+October\s+2026'],
+    # GROW live defines its own brand colour. BUILD's #355E7B is a different hue.
+    'growdark': '--growdark:#215E53',
 }
 
 # LAUNCH is three lessons, not two (LW1 §0.2), and its filenames are preserved
