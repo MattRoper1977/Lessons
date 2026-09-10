@@ -84,6 +84,11 @@ BUILD = {
                        'E gives 3+3+3+3 = 12 g sugar per 100 g.')],
     'date_tokens': [r'\s*&middot;\s*19 October 2026', r'\s*·\s*19 October 2026'],
     'growdark': '--growdark:#355E7B',
+    # The separator to JOIN with. BUILD's estate uses the entity form; GROW's and
+    # LAUNCH's use the literal character and contain zero entities. Joining with
+    # the wrong one introduces bytes that exist nowhere in that estate -- 40 per
+    # file, in the first GROW and LAUNCH builds, before this was a parameter.
+    'sep': ' &middot; ',
     # The host the marking card REPLACES. BUILD's pack ships a "Lundy alongside
     # learning" desk card and the card takes its place, so no staff guidance is
     # deleted without a replacement. Where a pack already authors its own card
@@ -135,6 +140,7 @@ GROW = {
     'date_tokens': [r'\s*\u00b7\s*w/c\s+19\s+October\s+2026', r'\s*\u00b7\s*19\s+October\s+2026'],
     # GROW live defines its own brand colour. BUILD's #355E7B is a different hue.
     'growdark': '--growdark:#215E53',
+    'sep': ' \u00b7 ',
     # None, and measured: the GROW pack carries 0 "Lundy alongside learning" desk
     # cards and already ships id="print-marking" of its own. Running BUILD's
     # replacement here would substitute against 0 hosts and then inject the card
@@ -214,6 +220,7 @@ LAUNCH = {
     'date_tokens': [r'\s*\u00b7\s*w/c\s+19\s+October\s+2026',
                     r'\s*\u00b7\s*19\s+October\s+2026'],
     'growdark': '--growdark:#4B3B6B',
+    'sep': ' \u00b7 ',
     # Measured: all three LAUNCH pack files already ship id="print-marking" and
     # carry 0 Lundy desk cards, same as GROW.
     'assessment_host': None,

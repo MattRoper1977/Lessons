@@ -47,7 +47,7 @@ def line(which, route, pw, staff=False):
     parts = ([('STAFF ANSWERS' if staff else None)] + [pathway, subject, title]
              + [ROUTE.get(route)])
     return ('<p class="science-meta">'
-            + ' &middot; '.join(p for p in parts if p) + '</p>')
+            + pathways.need(pw, 'sep').join(p for p in parts if p) + '</p>')
 
 
 def apply(text, which, pw):
@@ -78,7 +78,34 @@ def apply(text, which, pw):
         staff = route == 'staff' or 'mk-print' in attrs
         end = text.find('</section>', m.end())
         body = text[m.end():end]
+        # THE PROBE MUST SEE AN IDENTITY LINE THAT CARRIES NO CLASS.
+        #
+        # Looking only for <p class="science-meta"> finds 6 of 20 sections in the
+        # GROW and LAUNCH packs. Seven more already carry the correct identity
+        # line as an UNCLASSED bare <p> -- print-shared and the six print-task-*
+        # sheets -- so the classed probe missed them, the "no identity" branch
+        # fired, and a SECOND identity paragraph was prepended above the first.
+        # Seven duplicated headers per file, on pupil print sheets, and it
+        # shipped. BUILD was clean only because its pack has no unclassed
+        # variant, which is exactly why testing on one pathway proved nothing.
+        #
+        # So: the section's FIRST leading paragraph, classed or not, counts as
+        # its identity line when it opens with the pathway name.
         meta = re.search(r'<p class="science-meta">(.*?)</p>', body, re.S)
+        if meta is None:
+            pathway = pathways.need(pw, 'identity', which)[0]
+            # Two shapes count as "this section's existing identity line":
+            #   1. a leading <p>, before any heading   (the six print-task-* sheets)
+            #   2. the first <p> immediately AFTER the section's own heading
+            #      (#print-shared, whose header sits under its <h1>)
+            # Anything further in is body text and is left alone -- a paragraph
+            # that merely mentions the pathway is not a header.
+            for pat in (r'\s*<p(?:\s[^>]*)?>(.*?)</p>',
+                        r'\s*<h[1-3][^>]*>.*?</h[1-3]>\s*<p(?:\s[^>]*)?>(.*?)</p>'):
+                cand = re.match(pat, body, re.S)
+                if cand and re.sub(r'<[^>]+>', '', cand.group(1)).strip().startswith(pathway):
+                    meta = cand
+                    break
         if staff:
             stats['staff_skipped'] += 1
             new_body = body                      # W3: staff sheets untouched
