@@ -3275,3 +3275,46 @@ where it came from in the same sentence. When you build from a source you have
 not verified — a hash you were given but could not check against a file — say
 *asserted, not verified*, on the artefact itself, not only in the readback.
 
+### GW1-A N1 — A stored trigger carries instructions, not measurements
+
+*(Filed alongside RW1-C's N1–N3, RW1-D's T1 and GW1's A6. Tenth instance of the
+family, and the one that is different in kind: the other nine were caught by a
+person or an instrument reading the output. **This class executes with no
+reader.**)*
+
+Any sha, ref, count, branch state or blocked status written into a stored
+trigger is stale the moment the estate moves — and a trigger fires with nobody
+looking at it. Triggers name **what to derive and where from**; they never carry
+the derived value.
+
+Worked example, and both halves are mine. The SX2R §5 trigger, written at 00:55
+and set to fire at 15:31, carried two measurements as instructions:
+
+- *"advance builder_ref `2a154e33` → `ee56d2c7`"*. By the time it was due to
+  fire the pin was `2e49afdd`, a **child** of `ee56d2c7` carrying GC1's rows on
+  top. Obeyed literally, the trigger would have moved the pin **backwards** and
+  dropped 163 admitted rows.
+- *"GC1 P2–P6 is BLOCKED, the order text is not recorded in any repo, ask Matt
+  to re-post it."* It was recorded, at `docs/orders/AMEND-3R-GC1.md`, merged in
+  **#490**. Obeyed literally, the trigger would have asked Matt for something he
+  had already given.
+
+Neither line was wrong when written. Both were false fourteen hours later.
+
+The correct forms carry no value at all:
+
+- *"builder_ref is re-derived at fire time from the current pin; never advanced
+  from a stored value."*
+- *"check whether the GC1 order text is recorded before asking for it."*
+
+**The failure mode this closes, and it is the reason this one is different.**
+When I found the first stale line I flagged it in the readback. When I found the
+second I flagged that too. Flagging is the right instinct wrongly executed: an
+unattended trigger cannot read a flag. The rule that follows is unconditional —
+
+> **A stale line in a stored trigger is corrected in the same turn it is found,
+> or the trigger is disarmed until it is.**
+
+Sibling of *classify, do not count*, *prove the output not the absence of the
+input*, and T1. All of them are one instruction seen from a different side: the
+artefact must carry the thing that stays true, not the thing that was true.
