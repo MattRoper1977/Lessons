@@ -3205,8 +3205,18 @@ one family across this run, with what caught each:**
 | 12 | the D49 census counter reading a page-keyed object as a list: `occurrences 0` on five branches, four of them wrong | **reported** | **TH1 §0.3 — the positive control runs first** |
 | 13 | the `a4_fit` `%4d` format token, printing the printable height as the A4 height and the padding as the verdict | **reported** | GW1-A §M4 requiring the figures be re-measured, not quoted |
 
-**Eleven of the thirteen are faults in what the code looked at or reported. Two —
-the unfired plant and the unbalanced extraction — are faults in what it did.**
+| 14 | the carried furniture shipped without its CSS, so `.skip{left:-9999px}` was absent and **"Skip to lesson" rendered visible to every pupil** on all three pathways | **looked at** | the GROW furniture survey; `render_check` had only ever asked whether the link existed and moved focus |
+| 15 | the CSS extractor allowed grouped selectors, lifting `@media print{.mbmhome,.n6-splash{display:none}}` out of its wrapper and hiding the splash on all seven files | **did** | the render check, one minute after the fix that introduced it |
+| 16 | that same check then *clicked* a link it had just correctly parked off-screen | **looked at** | the timeout — and the right question turned out to be "focus it, as a keyboard user does" |
+| 17 | print identity probed only `class="science-meta"`, so **7 of 20 sections per file got a second identity header** prepended above their unclassed first | **looked at** | the print-identity survey |
+| 18 | `line()` joined with `&middot;`, putting **40 entities per file** into GROW and LAUNCH, estates that contained zero | **did** | the same survey |
+| 19 | #498 raised the caller's `--wait-seconds` without reading the ceiling three lines below the default it read | **did** | main, in under a second, after the merge |
+
+**Seventeen of the nineteen are faults in what the code looked at or reported.**
+The original claim was eleven of thirteen; the ratio has held as the sample
+nearly doubled. Two — the unfired plant and the unbalanced extraction — were
+faults in what the code *did*, joined later by three more that emitted wrong
+bytes or passed a wrong argument.
 
 That distribution is the finding, and it has not moved as the sample grew: from
 five-of-six to eleven-of-thirteen. This estate's failures cluster in what gets
@@ -3441,3 +3451,38 @@ repository** — measured, not assumed: no `UX1*` file under `docs/`,
 
 Same root cause as #490: a ruling that lives only in a transcript is not an input
 to a later run.
+
+
+### D51 — the twentieth, and the first with no reader at all
+
+Filed in full at `_sx2/decisions/0041-d51-*`, on the serve-proof branch where the
+fix lives. **The serve proof passes green on every pull request without
+running**: both of its live steps carry `if: github.event_name != 'pull_request'`
+(`.github/workflows/fieldops-p2-and-sweep.yml`, lines 356 and 367). On a PR they
+skip, the job passes, and the check reports green.
+
+The guard's reasoning is sound and the workflow says it — *a PR branch is not
+deployed*, so there is no publication of that source to compare against. What was
+never stated is the consequence: **no pull request in this estate can prove
+anything about publication, and the green it reports reads as evidence when it is
+an absence.**
+
+**Why it is structural and not incidental.** The other nineteen were caught by a
+person or an instrument reading an output — even D49's census, which printed `0`
+on five branches, existed as a wrong number somebody could read. This one
+produces **a green with nothing behind it, on every pull request this estate will
+ever open**. There is no output to misread, because there is no output. It is not
+a wrong answer; it is the absence of an answer wearing the costume of a right one.
+
+Worked example, and it is mine: **PR #498**, whose entire subject was the serve
+proof, was gated by a serve proof that did not run. It went green, merged, and
+main failed in under a second. The check most qualified to catch it was the one
+structurally incapable of doing so.
+
+**On the number.** GW1-C §2.4 calls this the thirteenth. By this register's own
+table it is the **twentieth** — the order was written against a tally that read
+thirteen, and entries 14–19 were found between that reading and this one. The
+number is corrected in the open rather than quietly accepted or quietly
+renumbered: **a tally whose increments are not auditable is worth nothing**
+(R-HUC04, which made exactly this correction about a mis-open count reading ten
+against an order's nine).
