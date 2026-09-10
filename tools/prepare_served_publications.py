@@ -231,9 +231,32 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     for key in ['site', 'lessons', 'apps', 'shelf', 'output']:
         parser.add_argument('--' + key, type=Path, required=True)
-    parser.add_argument('--wait-seconds', type=int, default=240)
+    # THREE NUMBERS THAT HAVE TO AGREE, and they are listed here because getting
+    # two of them right is what shipped the last red:
+    #
+    #   1. this default and ceiling      -- how long the tool may wait
+    #   2. the caller's --wait-seconds   -- .github/workflows/fieldops-p2-and-sweep.yml
+    #   3. that job's timeout-minutes    -- must exceed (2), or the job is killed
+    #                                       mid-wait and the wait buys nothing
+    #
+    # The wait is for the Education Pages publication OF THE SAME COMMIT. Both
+    # workflows start from the same push and run concurrently, so the bound must
+    # exceed how long a publication takes. Twelve consecutive runs on main
+    # measured 6m20s at the fastest, ~7m50s typically, 26m17s at the slowest.
+    #
+    # The ceiling was 300s and the default 240s -- both below every one of those
+    # twelve, so the step had never once been able to finish its measurement on a
+    # push, and main read red for it every time. Raising the caller alone made it
+    # worse, not better: the tool rejected 1800 against the old 300 ceiling and
+    # failed instantly instead of after four minutes.
+    #
+    # No rationale for 300 was ever recorded. It is raised deliberately here
+    # rather than worked around, and the ceiling is the only thing that bounds
+    # the wait -- the job timeout still stops a genuinely stuck run.
+    parser.add_argument('--wait-seconds', type=int, default=1800)
     args = parser.parse_args()
-    require(1 <= args.wait_seconds <= 300, 'Publication wait must be bounded to 1–300 seconds')
+    require(1 <= args.wait_seconds <= 2700,
+            'Publication wait must be bounded to 1–2700 seconds')
     roots = {'site': args.site, 'lessons': args.lessons, 'apps': args.apps, 'games': args.shelf}
     wanted = {kind: head(root) for kind, root in roots.items()}
     config = json.loads((args.shelf/'play-publication.json').read_text())
