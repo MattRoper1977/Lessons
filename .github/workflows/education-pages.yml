@@ -11,11 +11,35 @@ jobs:
   publication:
     # Pinned 2026-09-07 reviewed Glitch handoff and all-file admission publisher (Site PR #292); this workflow reads
     # this repository's current source commit and never edits source content.
-    # Advanced 2026-09-09 (SX1/SX2) 92abc460 -> 94ae15f8, a surgical Site commit that is
-    # 92abc460 byte-identical except two review records: the all-file admission registry,
-    # which now admits this repository's Spring/Summer Science batch (#454, #455), and the
-    # retained usage-registry baseline it moves. education-publication.yml itself is
-    # unchanged between the two, and no builder, Play or usage-discovery code moves.
-    uses: MattRoper1977/mattroper1977.github.io/.github/workflows/education-publication.yml@94ae15f8d98ab9fe9d814aeb9bf417942452b83e
+    # Advanced 2026-09-09 (LF1) 94ae15f8 -> 2e4d9966, a surgical Site commit that is
+    # 94ae15f8 byte-identical except one review record: the all-file admission registry,
+    # which now admits the 22 lessons and 8 SHA256SUMS.txt the LF1 week-label restoration
+    # changed (#468), as 30 transition pairs. education-publication.yml itself is unchanged
+    # between the two, and no builder, Play or usage-discovery code moves.
+    # Advanced 2026-09-09 (FIN3 §4) 2e4d9966 -> 2a154e33, again surgical: measured, the
+    # tree differs from 2e4d9966 in exactly one path, that same review record, and
+    # education-publication.yml is byte-identical across the two, so the gate itself
+    # does not move. It admits the four Science manifests whose bytes two Lessons
+    # merges changed without a registry move -- Ruling 1 (#475) and Ruling 2
+    # (aee37a1f) -- as transition pairs, and Ruling 3b's three new whole-route
+    # manifests (#479) as ARRIVING. Those four are exactly what the publisher named
+    # when it blocked publication on main tonight.
+    # Advanced 2026-09-10 (AMEND-3R-GC1 P6) 2a154e33 -> 2e49afdd. This one is NOT
+    # registry-only, and saying so is the point: it moves builder code as well.
+    # .sb3 was missing from the publisher's extension allowlist, so all 23 Scratch
+    # projects in the GROW Computing unit were dropped from the built tree by
+    # extension while the source tree showed their 15 sibling links resolving. The
+    # commit adds .sb3 to PUBLIC in build_education.py and to INERT in the admission
+    # census, and extends the disguised-code control to it -- 58 controls pass, the
+    # sb3 one planted-FAIL and restored-PASS on all three trees. Beside that it
+    # admits the unit: 163 education-lessons paths ARRIVING at built bytes, plus
+    # transition pairs for ICT/Teaching_Packs/index.html and the site
+    # data/usage-registry.json. Measured against both the currently pinned 2a154e33
+    # and Thursday's carrier ee56d2c7: 0 paths lost, 0 digests lost -- a strict
+    # widening of both, not a sibling. education-publication.yml is byte-identical
+    # to the pinned revision, so the gate itself does not move. Proven green in both
+    # directions before pinning: a build of Lessons main (unit absent) and a build of
+    # Lessons main + #493 (unit present) each report 0 admission problems.
+    uses: MattRoper1977/mattroper1977.github.io/.github/workflows/education-publication.yml@2e49afdd4f6cc5ae84aa687a0293fb89145bf009
     with:
-      builder_ref: 94ae15f8d98ab9fe9d814aeb9bf417942452b83e
+      builder_ref: 2e49afdd4f6cc5ae84aa687a0293fb89145bf009
