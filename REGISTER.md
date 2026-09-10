@@ -3178,3 +3178,50 @@ all 30 citation hosts return 000, because this session's egress proxy answers 40
 outside the organisation allowlist. A uniform 0/30 with controls green is an infrastructure
 signature, not link rot. Nothing removed. Recorded at
 [`_next6/evidence/M5_link_liveness_reading2.json`](_next6/evidence/M5_link_liveness_reading2.json).
+
+---
+
+## Three promotions from the W8 return-week run, 2026-09-10
+
+They are one family. Cite them together: the next pass needs the family, not one
+member. The argument is the tally, not any single instance — **five instances of
+one failure class in a single run**: `data-mbm-guide` counted as strings, my own
+`data-mbm-cal` premise, the splash guard testing a string the CSS already
+contained, the red proof whose regex never fired, and nine identical TA prompts
+passing a nine-for-nine count.
+
+### N1 — Structural surgery is balanced or it is not done
+
+HTML blocks are extracted, moved or removed by **balanced walk**. Never by
+first-closing-tag, never by index, never by regex.
+
+The reason it matters is not tidiness. **An HTML parser repairs an unbalanced
+tag**, so the page renders correctly and every render-level check passes while
+the tree is wrong. Detection is therefore **structural** — ask whether X is a
+descendant of Y — and never visual.
+
+Worked example. The `n6-splash` extraction took *the first `</div>` after
+`</svg>`*, which closes the inner div and leaves `<div class="n6-splash">` open.
+Every element after it, including the prev/next row, became a **child** of the
+splash. The print rule is `@media print{.n6-splash{display:none!important}}`, so
+the nav row would have been hidden in every print output of both lessons. The
+browser auto-closed the tag; the page looked right; the render check passed.
+
+### N2 — A mutation test asserts its mutation before it asserts its failure
+
+A plant that cannot fire reports PASS and **certifies the guard it was meant to
+test** — worse than no plant, because it converts an untested guard into a proved
+one. Every red proof states the byte or node delta it made, and **throws if that
+delta is empty**.
+
+Worked example. The first splash red proof used a regex that never matched. It
+reported PASS on a file it had not touched.
+
+### N3 — Where N matches N, sample the values
+
+Equal counts are blind to substitution. Nine TA prompts in, nine out, and all
+nine had been replaced by one repeated sentence. **Parity by count proves arity,
+never content.**
+
+Sibling of *classify, do not count* and *prove the output, not the absence of the
+input*. All three are the same instruction seen from three sides.

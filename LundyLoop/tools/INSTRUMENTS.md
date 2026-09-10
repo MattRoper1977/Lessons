@@ -354,3 +354,17 @@ These are decisions, not scan results, and belong in the exception register prop
 - The deliberately identical Standard/Stretch rows.
 - `coldCall_y10` → `ps_coldcall_roster` migration state, and the deliberately estate-wide shared keys.
 - The superseded Surrealist Collage file.
+
+## Three rules for instruments, 2026-09-10 (full text in REGISTER.md)
+
+- **N1 Balanced or not done.** Extract, move or remove an HTML block by balanced
+  walk. A parser repairs an unbalanced tag, so the page renders and every
+  render-level check passes while the tree is wrong. Detect structurally — is X a
+  descendant of Y — never visually.
+- **N2 A plant asserts its mutation first.** A red proof that cannot fire reports
+  PASS and certifies the guard. State the delta; throw when it is empty.
+- **N3 Where N matches N, sample the values.** Counts prove arity, never content.
+  Read with *classify, do not count* and *prove the output*.
+
+Five instances of this one family in a single run is the argument, not any one of
+them.
