@@ -3183,12 +3183,26 @@ signature, not link rot. Nothing removed. Recorded at
 
 ## Three promotions from the W8 return-week run, 2026-09-10
 
-They are one family. Cite them together: the next pass needs the family, not one
-member. The argument is the tally, not any single instance — **five instances of
-one failure class in a single run**: `data-mbm-guide` counted as strings, my own
-`data-mbm-cal` premise, the splash guard testing a string the CSS already
-contained, the red proof whose regex never fired, and nine identical TA prompts
-passing a nine-for-nine count.
+They are one family with *classify, do not count* and *prove the output*. Cite
+them together: the next pass needs the family, not one member.
+
+**N4 — the tally is the argument, not any single instance. Six instances of one
+family in a single run:**
+
+1. `data-mbm-guide` counted as strings, not attributes — 4/4/2/2 for 1/1/2/2
+2. my own `data-mbm-cal` premise: I read an undo buffer as a calendar store
+3. the splash guard testing `n6-splash`, a string the carried CSS already held
+4. the red proof whose regex never fired, and so reported PASS
+5. nine identical TA prompts passing a nine-for-nine count
+6. the A5 delete census: **2 by regex, 13 verified**, the eleven missed being
+   `.mjs` and Python shapes the inclusion rule was never built to look at
+
+**Five of the six are inclusion or counting rules, not logic errors.** Only the
+unfired plant is a fault in what the code *does*; the rest are faults in what it
+*looks at*. That distribution is the finding: this estate's failures cluster in
+what gets measured, not in what gets built. Instrument review is therefore worth
+more here than code review, and a number without its inclusion rule is worth
+very little.
 
 ### N1 — Structural surgery is balanced or it is not done
 
@@ -3225,3 +3239,18 @@ never content.**
 
 Sibling of *classify, do not count* and *prove the output, not the absence of the
 input*. All three are the same instruction seen from three sides.
+
+### T1 — A census declares its universe and its blind spots, or it reports a floor as a total
+
+Every census states three things, not one: its **inclusion rule**, the file
+shapes and language constructs it **cannot see**, and therefore what its number
+is a **floor** for. A bare total invites the reader to treat it as a ceiling.
+
+Worked example. The A5 unguarded-delete census reported **2**. The adversarial
+sweep over the same three repositories, with lenses per language rather than one
+regex, verified **13**. Both of the original two survived — the instrument was
+not wrong about what it saw, it was wrong about what it was looking at. Its
+inclusion rule covered shell and a narrow set of Python idioms; the eleven it
+missed were `.mjs` deletes and Python shapes outside that set.
+
+Say "13 found under this rule; here is what the rule cannot see", never "13".

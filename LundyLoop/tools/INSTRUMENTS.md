@@ -366,5 +366,11 @@ These are decisions, not scan results, and belong in the exception register prop
 - **N3 Where N matches N, sample the values.** Counts prove arity, never content.
   Read with *classify, do not count* and *prove the output*.
 
-Five instances of this one family in a single run is the argument, not any one of
-them.
+- **T1 A census declares its universe and its blind spots**, or it reports a
+  floor as a total. State the inclusion rule, what the rule cannot see, and that
+  the number is a floor. Worked example: the A5 delete census, 2 by regex and 13
+  verified, the eleven missed being shapes the rule never looked at.
+
+Six instances of this one family in a single run is the argument, not any one of
+them — and **five of the six were inclusion or counting rules rather than logic
+errors**. The failures cluster in what gets measured, not in what gets built.
