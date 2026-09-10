@@ -24,6 +24,7 @@ Every count carries its denominator (GW1-B §R1): text nodes examined, attribute
 examined, and the split between pupil and staff must reconcile to the total.
 """
 import re, sys, argparse
+from html import escape
 from pathlib import Path
 import lxml.html
 
@@ -60,7 +61,10 @@ IGNORED_ATTRS = ('data-mbm-cal',)
 
 
 def scan(path):
-    text = Path(path).read_text(encoding='utf-8')
+    return scan_text(Path(path).read_text(encoding='utf-8'))
+
+
+def scan_text(text):
     doc = lxml.html.document_fromstring(text)
     for bad in doc.xpath('//script | //style'):
         bad.getparent().remove(bad)
@@ -84,6 +88,12 @@ def scan(path):
                 for m in rx.finditer(value):
                     rows.append({'kind': label, 'where': kind, 'staff': staff,
                                  'tag': el.tag, 'match': m.group(0),
+                                 # raw is the node value EXACTLY as parsed. The
+                                 # scrub edits raw bytes, so a whitespace-
+                                 # normalised preview cannot be what it matches
+                                 # on -- the organiser header is spaced with
+                                 # double spaces and normalising loses that.
+                                 'raw': value,
                                  'context': re.sub(r'\s+', ' ', value)[:110]})
     return rows, {'text_nodes': nodes, 'attributes': attrs,
                   'elements': sum(1 for e in doc.iter() if isinstance(e.tag, str))}
@@ -161,3 +171,68 @@ if __name__ == '__main__':
             paths.append(str(Path(a.pack) / pathways.need(pw, 'pack', k)) if a.pack
                          else pathways.need(pw, 'live', k))
     sys.exit(1 if report(paths, a.verbose) else 0)
+
+
+# ---------------------------------------------------------------------------
+# LW1 §A2 · the FIX, driven by the same property as the census.
+#
+# Three families of dated pupil text turned up in GROW and LAUNCH that BUILD did
+# not have: the <title>, the exit-slip headers, and an organiser header spaced
+# "Week 8 | w/c 19 October 2026 | Made by Matt". My organiser pattern missed that
+# last one because it allowed no 'w/c' between the pipe and the date -- the same
+# blind spot that had already cost me the B3 check and the print-identity date
+# regex, now for the third time.
+#
+# So the fix does not get a fourth bespoke pattern. It uses the census's OWN
+# matchers: every text node and spoken attribute the census calls pupil-facing
+# has its week tokens and dates removed, together with the separator that
+# orphaned them. Any family I have not thought of is covered by construction,
+# and the census re-run is the proof.
+SEP = r'(?:\s*[·|,–—-]\s*|\s+)'
+
+
+def _scrub(value):
+    """Remove week tokens and dates from one string, taking the separator that
+    binds them with it, and leave the rest exactly as it was."""
+    out = value
+    for rx in (DATE, WEEK):
+        # token plus a LEADING separator, else token plus a TRAILING one
+        out = re.sub(SEP + rx.pattern, '', out, flags=re.I)
+        out = re.sub(rx.pattern + SEP, '', out, flags=re.I)
+        out = rx.sub('', out)
+    out = re.sub(r'(' + SEP + r')\1+', r'\1', out)          # collapse doubles
+    out = re.sub(r'^\s*[·|,–—-]\s*', '', out)  # orphaned lead
+    out = re.sub(r'\s*[·|,–—-]\s*$', '', out)  # orphaned tail
+    return out
+
+
+def scrub_text(text):
+    """Scrub every pupil-facing surface. Returns (text, edits, before, after)
+    with before/after taken from the census itself, so the fix reports the same
+    numbers the gate does."""
+    rows, _ = scan_text(text)
+    before = sum(1 for r in rows if not r['staff'])
+    edits, seen = 0, set()
+    for r in rows:
+        if r['staff'] or r['raw'] in seen:
+            continue
+        raw = r['raw']
+        cleaned = _scrub(raw)
+        if cleaned == raw:
+            continue
+        seen.add(raw)
+        # lxml gives back the ENTITY-DECODED value; the file holds the encoded
+        # bytes. Try the decoded form first, then the escaped form, and count
+        # every replacement so a node that could not be located is visible as a
+        # shortfall rather than as silence.
+        for form_in, form_out in ((raw, cleaned),
+                                  (escape(raw, quote=True), escape(cleaned, quote=True)),
+                                  (escape(raw, quote=False), escape(cleaned, quote=False))):
+            n = text.count(form_in)
+            if n:
+                text = text.replace(form_in, form_out)
+                edits += n
+                break
+    rows2, _ = scan_text(text)
+    after = sum(1 for r in rows2 if not r['staff'])
+    return text, edits, before, after

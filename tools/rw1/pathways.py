@@ -161,12 +161,59 @@ LAUNCH = {
         'L2': 'Lesson_2_Amylase_pH/SCI_L_W8L2_Amylase_pH_Core_Practical_Explore.html',
         'L3': 'Lesson_3_Rates_And_Reasoning/SCI_L_W8L3_Amylase_Rate_And_Topic_1_Do.html',
     },
-    'brandline': None,
-    'review_meta': None,
-    'pack_links': None,
-    'identity': None,
+    # Lifted VERBATIM from live, twin and undo buffer included, and that is the
+    # whole point of taking the outer HTML rather than the text.
+    #
+    # LAUNCH live has already been through the CX3 relabeller and GROW live has
+    # not. Its brandline is sequence-relative for the pupil ("Lesson 1 of 18"),
+    # keeps the week form for staff in a display:none span.mbm-cal-staff twin,
+    # and carries the original in data-mbm-cal so the rewrite stays reversible.
+    # Copying only the visible text would drop the staff week AND the undo
+    # buffer, and a later relabel could not be reversed.
+    #
+    # My first extraction missed these entirely: <p class="brandline">([^<]*)</p>
+    # stops at the nested <span> and returned only the OTHER brandline, "Staff
+    # route" -- so LAUNCH looked as though it had no identity line at all. Third
+    # time this session that a pattern was narrower than the property.
+    'brandline': {
+        'L1': ('<p class="brandline" data-mbm-cal="0=LAUNCH \u00b7 GCSE Biology \u00b7 Week 8 '
+               'Enrichment \u00b7 Introduce">LAUNCH \u00b7 GCSE Biology \u00b7 Lesson 1 of 18 '
+               'Enrichment \u00b7 Introduce<span data-mbm-guide="staff" class="mbm-cal-staff" '
+               'style="display:none">LAUNCH \u00b7 GCSE Biology \u00b7 Week 8 Enrichment '
+               '\u00b7 Introduce</span></p>'),
+        'L2': ('<p class="brandline" data-mbm-cal="0=LAUNCH \u00b7 GCSE Biology \u00b7 Week 8 '
+               'Enrichment \u00b7 Explore">LAUNCH \u00b7 GCSE Biology \u00b7 Lesson 2 of 18 '
+               'Enrichment \u00b7 Explore<span data-mbm-guide="staff" class="mbm-cal-staff" '
+               'style="display:none">LAUNCH \u00b7 GCSE Biology \u00b7 Week 8 Enrichment '
+               '\u00b7 Explore</span></p>'),
+        'L3': ('<p class="brandline" data-mbm-cal="0=LAUNCH \u00b7 GCSE Biology \u00b7 Week 8 '
+               'Enrichment \u00b7 Do">LAUNCH \u00b7 GCSE Biology \u00b7 Lesson 3 of 18 '
+               'Enrichment \u00b7 Do<span data-mbm-guide="staff" class="mbm-cal-staff" '
+               'style="display:none">LAUNCH \u00b7 GCSE Biology \u00b7 Week 8 Enrichment '
+               '\u00b7 Do</span></p>'),
+    },
+    'review_meta': [
+        '<p class="review-meta">LAUNCH \u00b7 SCIENCE \u00b7 Week 8 \u00b7 w/c 19 October 2026</p>',
+    ],
+    # Three lessons, so every href names its TARGET. "the other one" is not a
+    # thing here: L1 links forward to L2 and L3, L2 back to L1 and on to L3.
+    'pack_links': [
+        ('../Lesson_1_Enzyme_Action/SCI_L_W8L1_Enzyme_Action_Introduce.html', ('lesson', 'L1')),
+        ('../Lesson_2_Amylase_pH/SCI_L_W8L2_Amylase_pH_Core_Practical_Explore.html', ('lesson', 'L2')),
+        ('../Lesson_3_Rates_And_Reasoning/SCI_L_W8L3_Amylase_Rate_And_Topic_1_Do.html', ('lesson', 'L3')),
+        ('../START_HERE.html', ('literal', 'START_HERE.html')),
+    ],
+    # "GCSE Biology", not "Science": that is what LAUNCH live calls the subject,
+    # in both the brandline and the <title>.
+    'identity': {
+        'L1': ('LAUNCH', 'GCSE Biology', 'Enzyme Action: Preparing the pH Investigation'),
+        'L2': ('LAUNCH', 'GCSE Biology', 'Amylase and pH: Continuous-Sampling Investigation'),
+        'L3': ('LAUNCH', 'GCSE Biology', 'Amylase Rate, Graph and Topic 1 Consolidation'),
+    },
     'literal_fixes': [],
-    'date_tokens': None,
+    'date_tokens': [r'\s*\u00b7\s*w/c\s+19\s+October\s+2026',
+                    r'\s*\u00b7\s*19\s+October\s+2026'],
+    'growdark': '--growdark:#4B3B6B',
     # Measured: all three LAUNCH pack files already ship id="print-marking" and
     # carry 0 Lundy desk cards, same as GROW.
     'assessment_host': None,
