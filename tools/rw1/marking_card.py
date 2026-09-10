@@ -4,14 +4,23 @@
 Removes the "Lundy alongside learning" staff desk card and puts one
 "Feedback and marking · this lesson" card in its place, per lesson.
 
-PROVENANCE, because this is policy content and reconstruction is not allowed:
-the policy DOCUMENT is not in this repository. RW1-A C3 therefore binds this card
-to _sciv3/build/POLICY_ALIGNMENT.md and nothing else -- a hash-pinned reviewed
-archive document (sha256 9d16fb2c...), byte-identical to the digest the publisher
-pins in REVIEWED_ARCHIVE_DOCUMENTS. What that document does not contain is
-OMITTED and listed, never inferred: the codes' verbatim expansions, the policy's
-grouping headings, "Yellow Box next step in green pen", and "pupil responds in
-their own colour".
+PROVENANCE, and it is labelled at the moment of writing because that is now a
+standing rule (GW1 A6): a reconstruction that enters the record is later quoted
+as source.
+
+  SOURCE OF THE EIGHT CODES: ORDER GW1 §A3, Matt's own transcription of the two
+  columns from Feedback & Marking Policy 2025/2026, Issue 1, May 2026 (Earwig
+  version). RW1-B §J1 rules that Matt's own written expansions ARE a C2 source.
+  DOCUMENT NOT SEEN. GW1 §A1 states sha256
+  aa41d67963846cf35e9bb6e53e708c7b46725c2d5cef432c2e1994a78e434e53 and asks that
+  it be verified against the file in the session. The file is NOT in the session
+  -- no upload matches it and it is not in either return-week zip -- so that hash
+  is ASSERTED, NOT VERIFIED. Say so on the card. When the document arrives,
+  verify the hash and upgrade the provenance line; do not upgrade it before.
+
+STRUCK under GW1 §A2 as contaminated -- a reconstruction of mine that entered the
+record and was then quoted back as source: "Yellow Box", "green pen", "pupil
+responds in their own colour", "EFL". They are not in the policy.
 
 The five cause reads are not invented either: they are compressed, one line each,
 from the removed desk card's own three-column table, which is authored pack
@@ -20,10 +29,23 @@ content.
 import re
 
 POLICY_SRC = '_sciv3/build/POLICY_ALIGNMENT.md'
-POLICY_SHA = '9d16fb2c'
+POLICY_ALIGN_SHA = '9d16fb2c'
 
-# As the source document has them, in its order.
-CODES = 'VF &middot; WS &middot; I &middot; NS+ &middot; E &middot; R &middot; // &middot; ?'
+# The document's own two columns, verbatim, in source order (GW1 A3). The third
+# theory-mapping column is deliberately not reproduced.
+CODES = [
+    ('VF',      'Verbal feedback given here'),
+    ('WS',      'Worked with support'),
+    ('I',       'Independent'),
+    ('NS + &hellip;', 'Next step one specific thing'),
+    ('E',       'Evidence on Earwig'),
+    ('R',       'Responded loop closed (Audience has happened)'),
+    ('//',      'Self-edit point'),
+    ('?',       'Read this back to me'),
+]
+MARGIN_EDIT = 'in the same colour, on the same page'
+POLICY = ('Feedback &amp; Marking Policy 2025/2026, Issue 1, May 2026 (Earwig version)')
+POLICY_SHA = 'aa41d679&hellip;'  
 VOICE = ('point, sign, verbal response, demonstration, re-attempt, edit or '
          'authorised short clip')
 AUDIENCE = 'an adult genuinely receives the response'
@@ -77,7 +99,18 @@ LESSON = {
 WEEK = 'Week 8 &middot; w/c 19 October 2026'   # staff surface only (RW1-A B3)
 
 
-def _body(k):
+def causes_line(k):
+    """§4.5: if the sheet will not fit, compress the five cause reads to a single
+    line of five labels BEFORE dropping any policy content -- the codes and the
+    R-gate are why the sheet exists. After the GW1 A3 retrofit the code table
+    grew and both cards overflowed A4 (W8A by 62px, W8B by 40px), so the PRINT
+    variant takes the compressed line. The on-page card keeps the full table:
+    one A4 side is a print constraint, and nothing is lost on screen."""
+    return ('<p class="mk-causes-line"><b>Read the cause, not the child:</b> '
+            + ' &middot; '.join(c[0] for c in LESSON[k]['causes']) + '.</p>')
+
+
+def _body(k, compact=False):
     L = LESSON[k]
     rows = ''.join(
         '<tr><td><b>%s</b></td><td>%s</td><td>%s</td></tr>' % c for c in L['causes'])
@@ -85,22 +118,24 @@ def _body(k):
         '<li><b>%s</b> &mdash; %s</li>' % p for p in L['prompts'])
     return (
       '<h4>Codes</h4>'
-      '<p class="mk-codes">' + CODES + '</p>'
-      '<p class="mk-small">Recorded as the staff-side policy reference lists them. Their wording and '
-      'grouping are <b>not</b> reproduced here: the policy document is not in this repository, and '
-      'reconstructing it would be inventing policy. Ask Matt to supply it.</p>'
+      '<div class="science-table-wrap"><table class="science-table mk-codetable"><tbody>'
+      + ''.join('<tr><td class="mk-code">%s</td><td>%s</td></tr>' % c for c in CODES)
+      + '</tbody></table></div>'
+      '<p class="mk-small">Margin edits: ' + MARGIN_EDIT + '.</p>'
 
       '<h4>The R gate</h4>'
       '<ul class="mk-gate"><li><b>Voice</b> &mdash; ' + VOICE + '.</li>'
       '<li><b>Audience</b> &mdash; ' + AUDIENCE + '.</li>'
       '<li><b>R</b> only when both happened.</li></ul>'
 
-      '<h4>NS+ prompts, one per route</h4><ul class="mk-prompts">' + prompts + '</ul>'
+      '<h4>NS + &hellip; prompts, one per route</h4><ul class="mk-prompts">' + prompts + '</ul>'
 
-      '<h4>Read the cause, not the child</h4>'
-      '<div class="science-table-wrap"><table class="science-table mk-causes"><thead><tr>'
-      '<th scope="col">Cause</th><th scope="col">What you see</th>'
-      '<th scope="col">Next teaching move</th></tr></thead><tbody>' + rows + '</tbody></table></div>'
+      + (causes_line(k) if compact else
+         '<h4>Read the cause, not the child</h4>'
+         '<div class="science-table-wrap"><table class="science-table mk-causes"><thead><tr>'
+         '<th scope="col">Cause</th><th scope="col">What you see</th>'
+         '<th scope="col">Next teaching move</th></tr></thead><tbody>' + rows + '</tbody></table></div>')
+      +
 
       '<h4>Involvement moment &mdash; ' + L['wedo'] + '</h4>'
       '<p>Pupil voice is invited here and can be recorded as <b>VF</b>. Voice is ' + VOICE + ' &mdash; '
@@ -110,10 +145,10 @@ def _body(k):
       '<p class="mk-script">' + L['arrival'] + '</p>'
       '<p class="mk-small">' + L['arrival_note'] + '</p>'
 
-      '<p class="mk-small mk-prov">Source: <code>' + POLICY_SRC + '</code> (sha256 ' + POLICY_SHA +
-      '&hellip;), the repository&rsquo;s hash-pinned policy alignment record. '
-      'Omitted pending the policy document: code expansions, the policy&rsquo;s own grouping headings, '
-      'the Yellow Box / green pen mechanism, and the pupil-response colour rule.</p>')
+      '<p class="mk-small mk-prov">Codes from ' + POLICY + '. Voice and Audience from '
+      '<code>' + POLICY_SRC + '</code> (sha256 ' + POLICY_ALIGN_SHA + '&hellip;), the repository&rsquo;s '
+      'hash-pinned alignment record. The policy document itself was <b>not in the session</b> when this '
+      'card was built, so its stated hash ' + POLICY_SHA + ' is asserted, not verified.</p>')
 
 
 def card(k):
@@ -135,16 +170,18 @@ def print_section(k):
             '<header class="mk-head"><p>' + L['brand'] + ' &middot; ' + WEEK + '</p>'
             '<h2>Feedback and marking &middot; ' + L['id'] + '</h2>'
             '<p class="mk-staffonly">Staff copy &mdash; not for pupil books.</p></header>'
-            + _body(k) +
+            + _body(k, compact=True) +
             '<footer class="mk-foot"><p>Made by Matt</p></footer></section>')
 
 
 CSS = (
  '.mk-card{margin:18px 0}'
  '.mk-small{font-size:.82rem;color:#475569}'
- '.mk-codes{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.05rem;letter-spacing:.04em}'
+ '.mk-codetable td{font-size:.88rem;padding:3px 7px}'
+ '.mk-code{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700;white-space:nowrap;width:1%}'
  '.mk-script{font-style:italic;border-left:3px solid #94a3b8;padding-left:10px}'
  '.mk-causes td,.mk-causes th{font-size:.86rem;padding:4px 6px}'
+ '.mk-causes-line{font-size:.86rem}'
  '@media print{'
  '.mk-print{font-size:9.4pt;line-height:1.28}'
  '.mk-print h2{font-size:13pt;margin:2pt 0 4pt}'

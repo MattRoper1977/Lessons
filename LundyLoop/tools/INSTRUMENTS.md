@@ -371,6 +371,10 @@ These are decisions, not scan results, and belong in the exception register prop
   the number is a floor. Worked example: the A5 delete census, 2 by regex and 13
   verified, the eleven missed being shapes the rule never looked at.
 
-Six instances of this one family in a single run is the argument, not any one of
+- **A6 A reconstruction that enters the record is later quoted as source.** Label
+  it as reconstruction when you write it. A hash you were given but could not
+  check against a file is *asserted, not verified*, and says so on the artefact.
+
+Nine instances of this one family in a single run is the argument, not any one of
 them — and **five of the six were inclusion or counting rules rather than logic
 errors**. The failures cluster in what gets measured, not in what gets built.

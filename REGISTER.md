@@ -3254,3 +3254,24 @@ inclusion rule covered shell and a narrow set of Python idioms; the eleven it
 missed were `.mjs` deletes and Python shapes outside that set.
 
 Say "13 found under this rule; here is what the rule cannot see", never "13".
+
+### A6 — A reconstruction that enters the record is later quoted as source
+
+Anything reconstructed is **labelled as reconstruction at the moment it is
+written**, or it becomes indistinguishable from evidence one pass later.
+
+Worked example, and it is mine twice over. My §4.1 text listed the marking codes
+as "NS+ Yellow Box next step in green pen", "pupil responds in their own colour"
+and "E evidence on EFL". None of that is in the policy. It was a reconstruction;
+it entered the order text; the next pass quoted it back as the source it was
+being checked against, and it reached two lesson files and a card generator
+before the real document's own two columns retired it.
+
+**Ninth instance of the family, and the same shape as the R-H16 propagation
+entry**: something written once, unlabelled, becomes an authority it never was.
+
+The rule has a cheap form. When you write something you did not read, write
+where it came from in the same sentence. When you build from a source you have
+not verified — a hash you were given but could not check against a file — say
+*asserted, not verified*, on the artefact itself, not only in the readback.
+
