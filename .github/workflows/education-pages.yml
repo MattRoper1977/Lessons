@@ -24,6 +24,22 @@ jobs:
     # (aee37a1f) -- as transition pairs, and Ruling 3b's three new whole-route
     # manifests (#479) as ARRIVING. Those four are exactly what the publisher named
     # when it blocked publication on main tonight.
-    uses: MattRoper1977/mattroper1977.github.io/.github/workflows/education-publication.yml@2a154e3338570c1f9a02a2b7bb4739022c6637ae
+    # Advanced 2026-09-10 (AMEND-3R-GC1 P6) 2a154e33 -> 2e49afdd. This one is NOT
+    # registry-only, and saying so is the point: it moves builder code as well.
+    # .sb3 was missing from the publisher's extension allowlist, so all 23 Scratch
+    # projects in the GROW Computing unit were dropped from the built tree by
+    # extension while the source tree showed their 15 sibling links resolving. The
+    # commit adds .sb3 to PUBLIC in build_education.py and to INERT in the admission
+    # census, and extends the disguised-code control to it -- 58 controls pass, the
+    # sb3 one planted-FAIL and restored-PASS on all three trees. Beside that it
+    # admits the unit: 163 education-lessons paths ARRIVING at built bytes, plus
+    # transition pairs for ICT/Teaching_Packs/index.html and the site
+    # data/usage-registry.json. Measured against both the currently pinned 2a154e33
+    # and Thursday's carrier ee56d2c7: 0 paths lost, 0 digests lost -- a strict
+    # widening of both, not a sibling. education-publication.yml is byte-identical
+    # to the pinned revision, so the gate itself does not move. Proven green in both
+    # directions before pinning: a build of Lessons main (unit absent) and a build of
+    # Lessons main + #493 (unit present) each report 0 admission problems.
+    uses: MattRoper1977/mattroper1977.github.io/.github/workflows/education-publication.yml@2e49afdd4f6cc5ae84aa687a0293fb89145bf009
     with:
-      builder_ref: 2a154e3338570c1f9a02a2b7bb4739022c6637ae
+      builder_ref: 2e49afdd4f6cc5ae84aa687a0293fb89145bf009
