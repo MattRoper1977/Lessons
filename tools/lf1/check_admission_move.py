@@ -39,9 +39,34 @@ So this is a necessary condition, not a sufficient one: it cannot tell you the
 pair holds the right digests, but it will not let a changed served path reach
 main with no pair at all. That is the failure that actually happened, twice.
 
+WHICH REGISTRY IT MUST READ
+
+There is only one registry that decides anything, and it is not the obvious one.
+The publisher reads the all-file admission record from the BUILDER CHECKOUT at
+the `builder_ref` this repository pins, never from Site main (D1). Those are not
+the same tree and never have been: the pinned builder is a deliberately surgical
+commit kept off Site main, so Site main's copy of the record can disagree with
+the one in force by thousands of rows.
+
+On 2026-09-09 this guard was pointed at a Site main checkout and reported "0
+served paths" for a commit that had just moved the bytes of three admitted
+manifests. It was not wrong about the diff. It was reading a file in which those
+three paths had no row at all, so each one fell into "not served, ignore" -- and
+said nothing, in the same run in which the publisher blocked publication on
+exactly those paths. A guard that reads the wrong authority does not fail; it
+agrees with you.
+
+So --pin-from is the normal mode: read `builder_ref` out of the publication
+workflow, then read the record out of the Site checkout AT THAT REF. --registry
+still works for a file you have in hand, and says loudly in the output that it is
+not the pinned authority. Either way the output now names the registry it read,
+because the version that did not name it is the version that missed this.
+
 USAGE
-  python3 tools/lf1/check_admission_move.py --registry <admission.json> \
+  python3 tools/lf1/check_admission_move.py --site <site checkout> \
+      [--pin-from .github/workflows/education-pages.yml] \
       [--base origin/main] [--head HEAD] [--tree education-lessons]
+  python3 tools/lf1/check_admission_move.py --registry <admission.json> ...
   python3 tools/lf1/check_admission_move.py --self-test
 
 Exit 0 clean, 1 if any changed admitted path lacks a staged move, 2 on a usage
@@ -49,10 +74,38 @@ or input error.
 """
 import argparse
 import json
+import re
 import subprocess
 import sys
 
 ARRIVING = 'ARRIVING'
+REGISTRY_IN_SITE = 'domain-split/education-publication-admission.json'
+PIN_DEFAULT = '.github/workflows/education-pages.yml'
+
+
+def read_builder_pin(text):
+    """The builder_ref this repository pins, read from the publication workflow.
+
+    Keyed on the `builder_ref:` line and nothing else. The same sha also appears
+    on the `uses: ...@<sha>` line and abbreviated in the advance comments, and a
+    looser scan would happily return one of those -- which is fine until the day
+    they disagree, which is precisely the day it matters.
+    """
+    found = re.findall(r'^\s*builder_ref:\s*["\']?([0-9a-f]{40})["\']?\s*$', text, re.M)
+    if not found:
+        raise ValueError('no builder_ref: <40-hex sha> line in the workflow')
+    if len(set(found)) > 1:
+        raise ValueError('workflow pins more than one builder_ref: ' + ', '.join(sorted(set(found))))
+    return found[0]
+
+
+def registry_at(site_repo, ref, path=REGISTRY_IN_SITE):
+    out = subprocess.run(['git', 'show', '%s:%s' % (ref, path)],
+                         cwd=site_repo, capture_output=True, text=True)
+    if out.returncode:
+        raise ValueError('cannot read %s at %s in %s: %s'
+                         % (path, ref[:12], site_repo, out.stderr.strip()))
+    return json.loads(out.stdout)
 
 
 def admitted(row):
@@ -95,6 +148,24 @@ def check(registry, rows, tree='education-lessons'):
             # cries about every new script is a gate people learn to ignore.
             if status in ('A', 'C') and '/' in path and path.rsplit('/', 1)[0] in dirs:
                 problems.append('UNADMITTED %s: added where the publisher serves, but no registry row' % path)
+            continue
+        if status in ('A', 'C'):
+            # A path that did not exist before is not a byte MOVE, and asking it for
+            # [pre, post] asks for a "pre" that never existed. The row it needs is
+            # [ARRIVING, digest]: ARRIVING permits the prior absence, the digest
+            # admits the bytes now arriving. A row without ARRIVING claims the file
+            # was already there, which contradicts the diff, so that is reported
+            # rather than waved through.
+            #
+            # Until the first genuinely new served path met this guard, every case it
+            # had seen was a modification; an added path fell into the branch below
+            # and was told to stage a move it could not have.
+            if ARRIVING in (row if isinstance(row, list) else [row]):
+                staged.append(path)
+            else:
+                problems.append('ADDED WITHOUT ARRIVING %s: new path, but its row pins %d digest(s) '
+                                'and does not permit the absence it is arriving from'
+                                % (path, len(admitted(row))))
             continue
         if status == 'D':
             if ARRIVING not in (row if isinstance(row, list) else [row]):
@@ -141,8 +212,14 @@ def self_test():
     p, s = check(reg2, [('A', 'brand-new.html')])
     want('an ADDED file at the repository root is ignored (no served sibling)', not p)
 
+    # This assertion used to read "an added path that already has a row is treated
+    # as a byte move", and it passed because that is what the code did. It was the
+    # DEFECT written down as an expectation: staged.html's row is [pre, post], which
+    # says the file existed and changed, while the diff says it was added. Those
+    # disagree, and the guard should say so rather than accept the pair.
     p, s = check(reg, [('A', 'staged.html')])
-    want('an added path that already has a row is treated as a byte move', not p)
+    want('an ADDED path whose row is a [pre, post] pair is RED, not silently accepted',
+         len(p) == 1 and p[0].startswith('ADDED WITHOUT ARRIVING'))
 
     p, s = check(reg, [('D', 'pinned.html')])
     want('a DELETED served path whose row forbids absence is RED', len(p) == 1 and p[0].startswith('REMOVED'))
@@ -158,7 +235,63 @@ def self_test():
     want('a mixed branch reports only the unstaged path', len(p) == 1 and 'pinned.html' in p[0])
 
     want('admitted() drops ARRIVING', admitted(['x' * 64, ARRIVING]) == ['x' * 64])
+
+    # A genuinely NEW served path: the row it needs is [ARRIVING, digest].
+    reg3 = {'trees': {'education-lessons': {
+        'Science/unit/one.html': 'a' * 64,
+        'Science/unit/new.json': [ARRIVING, 'd' * 64],
+        'Science/unit/badnew.json': 'e' * 64,
+    }}}
+    p, s = check(reg3, [('A', 'Science/unit/new.json')])
+    want('an ADDED path whose row carries ARRIVING is clean', not p and s == ['Science/unit/new.json'])
+    p, s = check(reg3, [('A', 'Science/unit/badnew.json')])
+    want('an ADDED path whose row has no ARRIVING is RED',
+         len(p) == 1 and p[0].startswith('ADDED WITHOUT ARRIVING'))
+    want('  ... and it says the row does not permit the absence', 'permit the absence' in p[0])
+    p, s = check(reg3, [('M', 'Science/unit/one.html')])
+    want('  ... and a MODIFIED path still needs a real pair, not ARRIVING',
+         len(p) == 1 and p[0].startswith('NO STAGED MOVE'))
     want('admitted() accepts a bare string', admitted('y' * 64) == ['y' * 64])
+
+    # --- the pin parser: which registry is the authority (D1) ---
+    PIN, OTHER = 'a' * 40, 'b' * 40
+    wf = ('jobs:\n  publication:\n'
+          '    # Advanced 2026-09-09 (LF1) 94ae15f8 -> 2e4d9966, surgical\n'
+          '    uses: Owner/repo/.github/workflows/education-publication.yml@%s\n'
+          '    with:\n      builder_ref: %s\n' % (PIN, PIN))
+    want('reads builder_ref out of the publication workflow', read_builder_pin(wf) == PIN)
+
+    # The near-miss: a looser scan for "any 40-hex" would return whichever it hit
+    # first. Here the reusable-workflow ref and the builder_ref disagree, which is
+    # the only case where guessing costs anything -- and it is exactly the case a
+    # sha-anywhere regex gets wrong.
+    skew = wf.replace('education-publication.yml@' + PIN, 'education-publication.yml@' + OTHER)
+    want('a uses: @sha that disagrees with builder_ref does not win', read_builder_pin(skew) == PIN)
+
+    want('an abbreviated sha in an advance comment is not mistaken for the pin',
+         read_builder_pin('      builder_ref: %s\n# was 2e4d9966 -> 2a154e33\n' % PIN) == PIN)
+    want('a quoted value is read', read_builder_pin('      builder_ref: "%s"\n' % PIN) == PIN)
+
+    def raises(text):
+        try:
+            read_builder_pin(text); return False
+        except ValueError:
+            return True
+    want('no builder_ref line at all is an error, not a silent None',
+         raises('jobs:\n  publication:\n    uses: Owner/repo/wf.yml@' + PIN + '\n'))
+    want('two disagreeing builder_ref lines are an error, not a coin toss',
+         raises('      builder_ref: %s\n      builder_ref: %s\n' % (PIN, OTHER)))
+    want('the same pin written twice is not an error',
+         read_builder_pin('      builder_ref: %s\n      builder_ref: %s\n' % (PIN, PIN)) == PIN)
+    want('an abbreviated builder_ref is refused rather than half-read',
+         raises('      builder_ref: 2e4d9966\n'))
+
+    # The blind spot itself, as an assertion: a path with no row in the registry
+    # you happen to be holding is reported as "not served" -- which is true of
+    # that file and false of the estate. This is why the source is now printed.
+    p, s = check(reg, [('M', 'Science_Teesside/Grow/W18-W26_2026-27/manifest.json')])
+    want('a MODIFIED path absent from THIS registry is silent -- hence --site',
+         not p and not s)
 
     print('\n%d checks, %d failed' % (ok[0], len(bad)))
     for b in bad: print('  FAILED:', b)
@@ -167,7 +300,9 @@ def self_test():
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--registry')
+    ap.add_argument('--registry', help='an admission record in hand; NOT the pinned authority')
+    ap.add_argument('--site', help='a Site checkout, read at the pinned builder_ref')
+    ap.add_argument('--pin-from', default=PIN_DEFAULT, dest='pin_from')
     ap.add_argument('--base', default='origin/main')
     ap.add_argument('--head', default='HEAD')
     ap.add_argument('--tree', default='education-lessons')
@@ -176,13 +311,24 @@ def main():
     a = ap.parse_args()
     if a.self_test:
         sys.exit(self_test())
-    if not a.registry:
-        print('--registry is required (the Site checkout\'s education-publication-admission.json)',
-              file=sys.stderr)
+    if a.site:
+        try:
+            pin = read_builder_pin(open(a.pin_from, encoding='utf-8').read())
+            registry = registry_at(a.site, pin)
+        except (ValueError, OSError) as e:
+            print(e, file=sys.stderr)
+            sys.exit(2)
+        source = '%s@%s (builder_ref, from %s)' % (a.site, pin[:12], a.pin_from)
+    elif a.registry:
+        registry = json.load(open(a.registry, encoding='utf-8'))
+        source = '%s -- NOT the pinned builder; the publisher reads builder_ref (D1)' % a.registry
+    else:
+        print('give --site <site checkout> (preferred: reads the pinned builder_ref) '
+              'or --registry <admission.json>', file=sys.stderr)
         sys.exit(2)
-    registry = json.load(open(a.registry, encoding='utf-8'))
     rows = changed_paths(a.base, a.head, a.repo)
     problems, staged = check(registry, rows, a.tree)
+    print('registry read from       : %s' % source)
     print('changed files            : %d' % len(rows))
     print('of those, served paths   : %d' % (len(problems) + len(staged)))
     print('with a staged move       : %d' % len(staged))
