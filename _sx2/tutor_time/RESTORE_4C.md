@@ -36,6 +36,18 @@ from this table. Every one is predicted exactly by
 — and **`V06` was recorded as +566 = 2 × 283 when the file is +578 = 2 × 289.**
 Corrected above. Three sentences, 286 bytes, three separators: 289 per copy.
 
+**The arithmetic, since a proof nobody can check twice is not a proof.**
+For `V06`: Σ = 286 B over 3 fields, so 286 + 3 = 289 per copy and 578 in total,
+which is what the file measures. The recorded 566 is 2 × 283, and **283 = 286 − 3**:
+the separator term was *subtracted* where it should have been *added*. So the
+defect is a sign, not an off-by-one — an off-by-one would have recorded
+2 × (286 + 2) = **576**, and 576 is not 566. Worth pinning down, because "one
+boundary short" and "the wrong sign" fail differently as the field count grows:
+an off-by-one stays 2 B out forever, a sign error grows at 4 B per field.
+
+Eleven of twelve matching the formula is the evidence the formula is sound. One
+disagreeing is the evidence the record was typed rather than derived.
+
 The restoration itself was never in doubt and is not changed: `V06`'s three
 sentences each occur exactly twice, and a character-level diff of the file against
 its re-cut source returns **four insertions and nothing else** — two distinct texts,
