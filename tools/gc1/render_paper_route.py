@@ -54,8 +54,13 @@ ALLOWED_BLOCK_WORDS = [
     'go to x', 'change x by', 'change y by', 'steps',
     'point in direction', 'glide', 'secs to x',
     'forever', 'wait until', 'touching', 'say ', 'seconds',
-    'if then', 'if <', 'if<',
 ]
+# The if-block is written several ways in these banks -- "if then", "if _ then",
+# "if <> then", "if <touching [Maze]?> then" -- so it needs a shape, not a literal.
+# The word cap is what stops it swallowing prose: "if you finish then ask a
+# partner" is seven words and is refused, "if <touching [Maze]?> then" is three.
+IF_BLOCK = re.compile(r'^\s*if\b.*\bthen\b\s*$', re.I)
+IF_BLOCK_MAX_WORDS = 6
 # A variable block is data_* in Scratch. In English on a worksheet it looks like
 # one of these, and any of them on a printed grid is R7 broken in a way that
 # cannot be taken back once the sheet is in a classroom.
@@ -101,6 +106,8 @@ def check_word_bank(words, where):
                     'R7: %s offers %r, which reads as a variable block. '
                     'Scoring is unit 122058 and does not belong on this sheet.' % (where, w))
         if is_note(w):
+            continue
+        if IF_BLOCK.match(w) and len(w.split()) <= IF_BLOCK_MAX_WORDS:
             continue
         if not any(tok in low for tok in ALLOWED_BLOCK_WORDS):
             raise BlockVocabularyError(
@@ -357,8 +364,10 @@ def self_test():
          check_word_bank(['forever', 'Your first block comes in Week 4.'], 'w'))
     want('  ... but a note cannot smuggle a variable in behind a full stop',
          raises(lambda: check_word_bank(['Remember to set score to 0 first.'], 'w')))
-    want('the real if-block wordings are accepted',
-         check_word_bank(['if then', 'if <> then', 'if <touching [Maze]?> then'], 'w'))
+    want('every real if-block wording is accepted',
+         check_word_bank(['if then', 'if _ then', 'if <> then', 'if <touching [Maze]?> then'], 'w'))
+    want('  ... but an if-shaped SENTENCE is refused on the word cap',
+         raises(lambda: check_word_bank(['if you finish early then ask a partner'], 'w')))
 
     # The maze must agree with the lesson, so the wall census is asserted rather
     # than eyeballed: six walls, and the two the pupil is told about.
