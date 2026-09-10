@@ -38,13 +38,38 @@ UPLOAD_STEPS = {'site': 'Save the reviewed education output',
                 'games': 'Run actions/upload-artifact@v4'}
 
 
+class Red(Exception):
+    """A contradiction the tool OBSERVED. The evidence was reached and it
+    disagrees: a digest that does not match, a publication that failed, an
+    archive member that is a symlink, a caller misconfigured against this
+    tool's own bounds. Exit 1."""
+
+
 class Inconclusive(Exception):
-    pass
+    """The evidence could NOT BE REACHED. Nothing is claimed about the estate --
+    the tool ran out of time or the network refused. Exit 2.
+
+    GW1-C §1.2. These were one class until now: require() raised Inconclusive, so
+    "the downloaded artifact digest differs" -- a real, observed defect -- reported
+    in the same words and the same exit code as "I arrived before the publication
+    finished". One channel carrying two opposite meanings, which is how twelve
+    reds on main all read as a broken estate when they meant "I arrived early".
+
+    NEITHER IS GREEN, and that is deliberate. A serve proof that could not measure
+    must not read as proof; a wait that times out and returns green is the same
+    defect in different clothes. The distinction is in what the run SAYS, not in
+    whether it blocks."""
 
 
 def require(ok, detail):
+    """A contradiction. See Red."""
     if not ok:
-        raise Inconclusive(detail)
+        raise Red(detail)
+
+
+def no_result(detail):
+    """Evidence out of reach. See Inconclusive."""
+    raise Inconclusive(detail)
 
 
 def head(root):
@@ -60,11 +85,17 @@ def digest(data):
 class GitHub:
     def __init__(self, deadline):
         self.deadline = deadline
+        self.started = time.monotonic()
+
+    def waited(self):
+        return int(time.monotonic() - self.started)
         self.token = os.environ.get('GITHUB_TOKEN') or os.environ.get('GH_TOKEN')
         require(self.token, 'Artifact provenance needs GITHUB_TOKEN with actions:read')
 
     def read(self, route, raw=False):
-        require(time.monotonic() < self.deadline, 'Publication retrieval deadline reached')
+        if time.monotonic() >= self.deadline:
+            no_result('no result: publication retrieval deadline reached, '
+                      'waited %d seconds' % self.waited())
         url = API + route
         headers = {'Accept': 'application/vnd.github+json', 'User-Agent': 'mbm-served-publication',
                    'Authorization': 'Bearer ' + self.token, 'X-GitHub-Api-Version': '2022-11-28'}
@@ -85,7 +116,9 @@ class GitHub:
                 chunks = []
                 size = 0
                 while True:
-                    require(time.monotonic() < self.deadline, 'Publication download deadline reached')
+                    if time.monotonic() >= self.deadline:
+                        no_result('no result: publication download deadline reached, '
+                                  'waited %d seconds' % self.waited())
                     chunk = response.read(1024 * 1024)
                     if not chunk:
                         break
@@ -224,7 +257,11 @@ def prepare_one(kind, wanted, output, github):
         return {'root': str(root.resolve()), 'source_sha': wanted, 'publication_sha': selected['head_sha'],
                 'run_id': selected['id'], 'run_url': selected['html_url'], 'artifact_id': artifact['id'],
                 'artifact_sha256': artifact['digest'], 'deployment': 'success', **attempt_evidence}
-    raise Inconclusive(f'{kind}: exact-source publication did not become available within the retrieval bound')
+    # GW1-C §1.2: name the seconds. "did not become available" is a fact about
+    # the tool's patience, and a reader cannot tell whether it waited 4 seconds
+    # or 40 minutes without being told which.
+    raise Inconclusive(f'no result: {kind} exact-source publication did not become '
+                       f'available, waited {github.waited()} seconds')
 
 
 def main():
@@ -250,13 +287,20 @@ def main():
     # worse, not better: the tool rejected 1800 against the old 300 ceiling and
     # failed instantly instead of after four minutes.
     #
-    # No rationale for 300 was ever recorded. It is raised deliberately here
-    # rather than worked around, and the ceiling is the only thing that bounds
-    # the wait -- the job timeout still stops a genuinely stuck run.
+    # WHAT THE CEILING IS FOR, since the 300 arrived with no comment, no test and
+    # no recorded reason, and the next person deserves something to argue against:
+    # it is the promise that this job cannot hold a runner indefinitely waiting on
+    # another workflow that may never finish. It is NOT a statement about how long
+    # a publication takes -- that is what the default is for. So the ceiling
+    # should sit just under the job's timeout-minutes (a wait the job would kill
+    # anyway is not a wait), and the default should sit above the slowest
+    # publication actually measured. Raise the default when publications get
+    # slower; raise the ceiling only when the job timeout rises with it.
+    # tools/check_serve_proof_bounds.py enforces exactly that, and red-proves it.
     parser.add_argument('--wait-seconds', type=int, default=1800)
     args = parser.parse_args()
-    require(1 <= args.wait_seconds <= 2700,
-            'Publication wait must be bounded to 1–2700 seconds')
+    require(1 <= args.wait_seconds <= 2400,
+            'Publication wait must be bounded to 1–2400 seconds')
     roots = {'site': args.site, 'lessons': args.lessons, 'apps': args.apps, 'games': args.shelf}
     wanted = {kind: head(root) for kind, root in roots.items()}
     config = json.loads((args.shelf/'play-publication.json').read_text())
@@ -279,6 +323,9 @@ def main():
 if __name__ == '__main__':
     try:
         main()
+    except Red as error:
+        print('[RED] ' + str(error), file=sys.stderr)
+        sys.exit(1)
     except Inconclusive as error:
         print('[INCONCLUSIVE] ' + str(error), file=sys.stderr)
         sys.exit(2)
