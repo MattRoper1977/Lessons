@@ -600,7 +600,13 @@ PUBLICATION_CALLER_PATH = ".github/workflows/education-pages.yml"
 # Science batch. The Site commit is 92abc460 byte-identical except that registry and
 # the retained usage-registry baseline; education-publication.yml is unchanged between
 # them, so no builder, Play or usage-discovery code moves with the pin.
-PUBLICATION_CALLER_SHA256 = "23a51a2b260f1902a59bffbbb8290800fc4dce81ac486de71d6ca85daa47f7f6"
+# Advanced 2026-09-10 (AMEND-3R-GC1 P6): the publisher pin moves Site 2a154e33 ->
+# 2e49afdd. Unlike every advance above it, this one moves BUILDER code and not only
+# the admission registry -- .sb3 is added to the publisher extension allowlist and
+# to the admission census, without which the 23 Scratch projects in the GROW
+# Computing unit never reach the served tree. education-publication.yml is
+# unchanged between the two, so the gate itself still does not move.
+PUBLICATION_CALLER_SHA256 = "8123e3827e238e4233bf5afa16a025e29779d9184a6c63fff0bed4ec607fcc0c"
 # One reviewed caller digest per repository kind. detect_kind() reads the root
 # it is standing in, so this entry is only ever compared against the Apps
 # repository's own caller: the Lessons gate run and the Apps gate runs are the
