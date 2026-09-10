@@ -1301,6 +1301,7 @@ REVIEWED_PATHS = (
     "tools/catalogue/SHELF_SELECTION.json", "tools/catalogue/HUMANITIES_SELECTION.json",
     "tools/easter/science_original_browser.cjs",
     "tools/prepare_served_publications.py", "tools/test_served_publications.py",
+    ".github/workflows/watch-main.yml",
     # GLV3 admits only these reviewed publisher checks and cover inputs.
     ".github/workflows/glv3-verify.yml", "_glv3/tools/verify_change_boundary.py",
     "_glv3/tools/browser_verify.mjs", "_glv3/tools/chip_gate.mjs",
