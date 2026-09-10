@@ -14,6 +14,7 @@ Stage 1, the overview, keeps the pack's generic sentence, as I1 directs.
 GENERIC = 'Which piece of evidence supports your answer? Show us where.'
 
 PROMPTS = {
+ 'BUILD': {
  'A': [GENERIC,
    'Point to the part of the label you used, and name it before you say the number.',
    'Show me the sugars line, not the carbohydrate line. What number is on it?',
@@ -32,15 +33,25 @@ PROMPTS = {
    'Which way is the arrow pointing, and what is it carrying?',
    'Where does this model stop being true? Name one thing it cannot show.',
    'On the ticket, show me the evidence you used, not only your conclusion.'],
+ },
+ # Authored by the GW1-B survey pass. Absent, not copied: nine BUILD prompts on a
+ # GROW lesson would be nine prompts naming evidence that lesson does not have,
+ # which is the same defect as nine identical ones wearing a different disguise.
+ 'GROW': {},
 }
 
 
-def apply(text, which):
+def apply(text, which, pw):
     """Replace the nine data-prompt values in document order. Idempotent: the
     generic sentence survives at stage 1, so re-running is a no-op after the
     first pass except where a value still equals the generic beyond stage 1."""
     import re
-    vals = PROMPTS[which]
+    name = pw['name'] if isinstance(pw, dict) else pw
+    block = PROMPTS.get(name) or {}
+    if which not in block:
+        raise KeyError('ta prompts: no authored prompts for pathway %r lesson %r. '
+                       'Author them; do not reuse the other pathway\'s.' % (name, which))
+    vals = block[which]
     out, i, n = [], 0, [0]
 
     def sub(m):

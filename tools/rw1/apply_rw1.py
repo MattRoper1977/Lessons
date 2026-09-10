@@ -16,21 +16,11 @@ import marking_card
 import furniture
 import ta_prompts
 import print_identity
+import pathways
 
 REPO = Path(__file__).resolve().parents[2]
-LIVE = {
-    'A': 'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html',
-    'B': 'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html',
-}
-# Copied out of the live counterpart, not composed (RW1-A B2).
-BRANDLINE = {
-    'A': '<p class="brandline">BUILD &middot; Science &middot; Week 8A &middot; Explore</p>',
-    'B': '<p class="brandline">BUILD &middot; Science &middot; Week 8B &middot; Do</p>',
-}
 BRANDLINE_CSS = '.brandline{font-weight:950;color:var(--growdark);letter-spacing:.08em;text-transform:uppercase}'
 GROWDARK = '--growdark:#355E7B'
-PACK_META = re.compile(r'<p class="review-meta">BUILD &middot; SCIENCE &middot; Week 8 &middot; w/c 19 October 2026</p>')
-PACK_META_PLAIN = re.compile(r'<p class="review-meta">BUILD · SCIENCE · Week 8 · w/c 19 October 2026</p>')
 
 
 def report(name, before, after, expect=None):
@@ -40,16 +30,17 @@ def report(name, before, after, expect=None):
     return after
 
 
-def brandline(text, which):
-    """B2: the nine pupil-visible dated review-meta lines become ONE live-form
+def brandline(text, which, pw):
+    """B2: the pupil-visible dated review-meta lines become ONE live-form
     brandline on the title slide. Live carries one identity brandline per FILE,
-    not per slide (measured: 1 of 2 .brandline elements, the other is 'Staff
-    route'), so the surplus eight are deleted rather than relabelled."""
-    pat = PACK_META if PACK_META.search(text) else PACK_META_PLAIN
+    not per slide (measured on BUILD: 1 of 2 .brandline elements, the other is
+    'Staff route'), so the surplus are deleted rather than relabelled."""
+    forms = [re.compile(f) for f in pathways.need(pw, 'review_meta')]
+    pat = next((f for f in forms if f.search(text)), forms[0])
     n = len(pat.findall(text))
     if not n:
         return text, 0
-    text = pat.sub(BRANDLINE[which], text, count=1)
+    text = pat.sub(pathways.need(pw, 'brandline', which), text, count=1)
     text = pat.sub('', text)
     # the live rule needs the live variable; the pack defines neither
     if BRANDLINE_CSS not in text:
@@ -79,19 +70,37 @@ def strip_self_links(text):
     return text
 
 
-def fix_caption(text):
-    """D1. One string literal in a ternary; the proof is the rendered caption."""
-    return text.replace('E gives3+3+3+3=12 g sugar per 100 g.',
-                        'E gives 3+3+3+3 = 12 g sugar per 100 g.')
+def fix_caption(text, pw):
+    """D1. Measured string literals, one per defect found in that pack -- never a
+    general 'tidy the spacing' pass, which would edit teaching content."""
+    for before, after in pw.get('literal_fixes') or []:
+        text = text.replace(before, after)
+    return text
 
 
-def cross_links(text, which):
-    """D3, and a defect the order did not name: the pack's forward link is
-    PACK-RELATIVE (../Lesson_B_Body_Checkpoint/...). Both files land in the same
-    served directory, so it must become the live sibling filename or it 404s."""
-    sib = {'A': Path(LIVE['B']).name, 'B': Path(LIVE['A']).name}[which]
-    text = text.replace('../Lesson_B_Body_Checkpoint/BUILD_W8B_Interactive.html', sib)
-    text = text.replace('../Lesson_A_Sugar_Evidence/BUILD_W8A_Interactive.html', sib)
+def cross_links(text, which, pw):
+    """D3, and a defect the order did not name: the pack's forward links are
+    PACK-RELATIVE. Every lesson lands in the SAME served directory, so each link
+    must become the target's live filename or it 404s.
+
+    Two lessons make 'the other one' unambiguous. Three do not -- L1 links
+    forward to L2 and L2 back to L1 and on to L3 -- so the mapping is BY TARGET,
+    read from pack_links as {pack-relative href: lesson key}, and never inferred
+    from which file is being processed.
+    """
+    links = pathways.need(pw, 'pack_links')
+    if isinstance(links, dict):
+        for href, target in links.items():
+            text = text.replace(href, Path(pathways.need(pw, 'live', target)).name)
+        return text
+    # two-lesson form: a flat list, every href pointing at the one sibling
+    keys = list(pathways.need(pw, 'lessons'))
+    if len(keys) != 2:
+        raise ValueError('%s has %d lessons; pack_links must be a {href: lesson} '
+                         'map, not a flat list' % (pw['name'], len(keys)))
+    sib = Path(pathways.need(pw, 'live', keys[1 - keys.index(which)])).name
+    for link in links:
+        text = text.replace(link, sib)
     return text
 
 
@@ -100,37 +109,40 @@ DETAILS = re.compile(
     re.S)
 
 
-def assessment_layer(text, which):
+def assessment_layer(text, which, pw):
     """§4.2 removes the Lundy desk card; §4.3 puts the marking card in its place --
     in the SAME position, so no staff guidance is deleted without a replacement.
     §4.5 adds the print route beside the organiser's, on the existing mechanism."""
     if 'id="marking-card"' not in text:
-        text = DETAILS.sub(lambda _: marking_card.card(which), text, count=1)
+        text = DETAILS.sub(lambda _: marking_card.card(which, pw), text, count=1)
     if 'id="print-marking"' not in text:
         # last print section closes just before #print-area's own close
         i = text.rfind('</section></div>')
         if i < 0:
             i = text.rfind('</section>')
-        text = text[:i + len('</section>')] + marking_card.print_section(which) + text[i + len('</section>'):]
+        text = (text[:i + len('</section>')] + marking_card.print_section(which, pw)
+                + text[i + len('</section>'):])
     if '.mk-card{' not in text:
         text = text.replace('.review-meta{', marking_card.CSS + '\n.review-meta{', 1)
     return text
 
 
-def run(which, src, check=False):
+def run(which, src, pw, check=False):
     text = original = Path(src).read_text(encoding='utf-8')
-    print('%s  %s' % (which, src))
-    t, n = brandline(text, which)
+    print('%s  %s  [%s]' % (which, src, pw['name']))
+    t, n = brandline(text, which, pw)
     text = report('B2 dated review-meta -> live brandline (%d found)' % n, text, t)
-    text = report('D1 caption spacing', text, fix_caption(text))
+    text = report('D1 measured literal fixes (%d)' % len(pw.get('literal_fixes') or []),
+                  text, fix_caption(text, pw))
     text = report('D2 lundy selectors', text, strip_lundy(text))
     text = report('E1 madebymatt.uk self-link', text, strip_self_links(text))
-    text = report('D3 cross-link rewired to the served sibling', text, cross_links(text, which))
+    text = report('D3 cross-link rewired to the served sibling', text,
+                  cross_links(text, which, pw))
     text = report('4.2/4.3/4.5 Lundy desk card -> marking card + print route', text,
-                  assessment_layer(text, which))
-    prompted, npr = ta_prompts.apply(text, which)
+                  assessment_layer(text, which, pw))
+    prompted, npr = ta_prompts.apply(text, which, pw)
     text = report('I1 nine stage-specific TA prompts (%d hosts)' % npr, text, prompted)
-    ident, nadd, nclean, nnorm, pstats = print_identity.apply(text, which)
+    ident, nadd, nclean, nnorm, pstats = print_identity.apply(text, which, pw)
     text = report('W print identity (%d of %d pupil sections: +%d added, %d dates '
                   'removed, %d normalised, %d already correct; %d staff skipped, '
                   '%d sections examined)'
@@ -138,22 +150,25 @@ def run(which, src, check=False):
                      pstats['pupil_sections'], nadd, nclean, nnorm,
                      pstats['already_correct'], pstats['staff_skipped'],
                      pstats['sections_examined']), text, ident)
-    carried, missing = furniture.carry(text, which)
+    carried, missing = furniture.carry(text, which, pw)
     if missing:
         print('  [FAIL] furniture parts not found in live: ' + ', '.join(missing))
     text = report('D4/D6 estate furniture carried from live', text, carried)
-    out = REPO / LIVE[which]
+    target = pathways.need(pw, 'live', which)
+    out = REPO / target
     if not check:
         out.write_text(text, encoding='utf-8')
-    print('  bytes %d -> %d   target %s' % (len(original.encode()), len(text.encode()), LIVE[which]))
+    print('  bytes %d -> %d   target %s' % (len(original.encode()), len(text.encode()), target))
     return text
 
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
     ap.add_argument('--pack', required=True)
+    ap.add_argument('--pathway', default='BUILD', choices=sorted(pathways.ALL))
     ap.add_argument('--check', action='store_true')
     a = ap.parse_args()
+    pw = pathways.ALL[a.pathway]
     p = Path(a.pack)
-    run('A', p / 'Lesson_A_Sugar_Evidence/BUILD_W8A_Interactive.html', a.check)
-    run('B', p / 'Lesson_B_Body_Checkpoint/BUILD_W8B_Interactive.html', a.check)
+    for which in pathways.need(pw, 'lessons'):
+        run(which, p / pathways.need(pw, 'pack', which), pw, a.check)

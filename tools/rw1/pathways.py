@@ -1,0 +1,116 @@
+#!/usr/bin/env python3
+"""One place for everything that differs between pathways.
+
+WHY THIS EXISTS. The return-week build is the same job twice: pack bytes become
+the served file, live furniture is carried forward. Only the strings differ.
+Forking the toolchain for GROW would duplicate nine hundred lines and guarantee
+that the next fix lands in one copy and not the other -- which is how the
+"Yellow Box" reconstruction survived three passes.
+
+WHAT MAY LIVE HERE. Values MEASURED from the pack and live files. Nothing in this
+file is composed: every string is either lifted verbatim from a live file or
+matched against pack bytes. A value that has not been measured yet is None, and
+`need()` turns using it into a loud failure rather than a silent one -- GW1-B R1
+applied to configuration, where an unset value is 'empty', not 'zero'.
+"""
+
+
+class Unmeasured(Exception):
+    pass
+
+
+def need(pw, key, which=None):
+    """Fetch a pathway value, refusing to hand back a placeholder.
+
+    An unmeasured parameter must stop the build at the point of use, naming
+    itself. The alternative -- None flowing into a regex or a replace() -- is a
+    silent no-op that reports 'already applied / nothing to do'.
+    """
+    v = pw.get(key)
+    if which is not None and isinstance(v, dict):
+        v = v.get(which)
+    if v is None:
+        raise Unmeasured(
+            '%s: %s%s has not been measured yet. Measure it from the pack/live '
+            'files and put it in pathways.py; do not guess it from the other '
+            'pathway.' % (pw.get('name', '?'), key, '[%s]' % which if which else ''))
+    return v
+
+
+BUILD = {
+    'name': 'BUILD',
+    # Lesson keys, in teaching order. BUILD and GROW run two lessons in the
+    # return week; LAUNCH runs three. Nothing downstream may assume two.
+    'lessons': ('A', 'B'),
+    'live': {
+        'A': 'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html',
+        'B': 'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html',
+    },
+    'pack': {
+        'A': 'Lesson_A_Sugar_Evidence/BUILD_W8A_Interactive.html',
+        'B': 'Lesson_B_Body_Checkpoint/BUILD_W8B_Interactive.html',
+    },
+    # Copied out of the live counterpart, not composed (RW1-A B2).
+    'brandline': {
+        'A': '<p class="brandline">BUILD &middot; Science &middot; Week 8A &middot; Explore</p>',
+        'B': '<p class="brandline">BUILD &middot; Science &middot; Week 8B &middot; Do</p>',
+    },
+    # Both forms exist in these files; the entity form is tried first.
+    'review_meta': [
+        r'<p class="review-meta">BUILD &middot; SCIENCE &middot; Week 8 &middot; w/c 19 October 2026</p>',
+        r'<p class="review-meta">BUILD · SCIENCE · Week 8 · w/c 19 October 2026</p>',
+    ],
+    # Pack-relative forward/back links. Both files land in the SAME served
+    # directory, so each must become the sibling's live filename or it 404s.
+    'pack_links': [
+        '../Lesson_B_Body_Checkpoint/BUILD_W8B_Interactive.html',
+        '../Lesson_A_Sugar_Evidence/BUILD_W8A_Interactive.html',
+    ],
+    # pathway · subject · lesson title, for the print identity line (RW1-E W2).
+    'identity': {'A': ('BUILD', 'Science', 'Sugar Evidence'),
+                 'B': ('BUILD', 'Science', 'Body Science Checkpoint')},
+    # A single content defect measured in the pack, not a class of them.
+    'literal_fixes': [('E gives3+3+3+3=12 g sugar per 100 g.',
+                       'E gives 3+3+3+3 = 12 g sugar per 100 g.')],
+    'date_tokens': [r'\s*&middot;\s*19 October 2026', r'\s*·\s*19 October 2026'],
+}
+
+# GROW is measured by the GW1-B survey. Every None below is a value that must be
+# read off the GROW pack or the GROW live file before the build can run; need()
+# refuses to proceed without it.
+GROW = {
+    'name': 'GROW',
+    'lessons': ('A', 'B'),
+    'live': {
+        'A': 'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W8A_Day_And_Night_Explore.html',
+        'B': 'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W8B_Day_And_Night_Do.html',
+    },
+    'pack': {
+        'A': 'Lesson_A_Sky_Shift/SCI_G_W8A_Day_And_Night_Explore.html',
+        'B': 'Lesson_B_Control_Room/SCI_G_W8B_Day_And_Night_Do.html',
+    },
+    'brandline': None,
+    'review_meta': None,
+    'pack_links': None,
+    'identity': None,
+    'literal_fixes': [],
+    'date_tokens': None,
+}
+
+# LAUNCH is three lessons, not two (LW1 §0.2), and its filenames are preserved
+# exactly -- no renames. Live directory and every string are measured, not
+# assumed; the None slots are what the LW1 survey must fill.
+LAUNCH = {
+    'name': 'LAUNCH',
+    'lessons': ('L1', 'L2', 'L3'),
+    'live': None,
+    'pack': None,
+    'brandline': None,
+    'review_meta': None,
+    'pack_links': None,
+    'identity': None,
+    'literal_fixes': [],
+    'date_tokens': None,
+}
+
+ALL = {'BUILD': BUILD, 'GROW': GROW, 'LAUNCH': LAUNCH}

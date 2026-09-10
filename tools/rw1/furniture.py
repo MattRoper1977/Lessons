@@ -14,18 +14,16 @@ Everything below is lifted out of the live file at origin/main by marker, so a
 change to the estate's furniture reaches these two lessons the next time this
 runs rather than being frozen as a copy.
 """
-import re, subprocess
+import re, subprocess, sys
 from pathlib import Path
-
-LIVE = {
-    'A': 'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html',
-    'B': 'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html',
-}
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import pathways
 
 
-def live_text(which):
+def live_text(which, pw):
     return subprocess.check_output(
-        ['git', 'show', 'origin/main:' + LIVE[which]], cwd=str(Path(__file__).resolve().parents[2])
+        ['git', 'show', 'origin/main:' + pathways.need(pw, 'live', which)],
+        cwd=str(Path(__file__).resolve().parents[2])
     ).decode('utf-8')
 
 
@@ -37,8 +35,8 @@ def _span(s, open_pat, close_lit):
     return s[i:j + len(close_lit)] if j >= 0 else None
 
 
-def parts(which):
-    s = live_text(which)
+def parts(which, pw):
+    s = live_text(which, pw)
     body = re.search(r'<body([^>]*)>', s)
     # Balanced walk, not "the first </div> after </svg>". That shortcut closed the
     # INNER div and left <div class="n6-splash"> open, so every element after it --
@@ -72,8 +70,8 @@ def parts(which):
     )
 
 
-def carry(text, which):
-    p = parts(which)
+def carry(text, which, pw):
+    p = parts(which, pw)
     missing = [k for k, v in p.items() if not v]
     # <body> data attributes: the guide, nav and pathway layers read them
     if p['body_attrs'] and 'data-lesson-id' not in text:

@@ -24,25 +24,33 @@ The class is .science-meta, which is not invented here: the Science authoring
 toolchain emits exactly this at _authoring/science_2026-27/_toolchain/build/
 build_html.py:144, and the pack already carries its print CSS.
 """
-import re
+import re, sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import pathways
 
-LESSON = {'A': ('BUILD', 'Science', 'Sugar Evidence'),
-          'B': ('BUILD', 'Science', 'Body Science Checkpoint')}
 ROUTE = {'supported': 'Supported', 'standard': 'Standard', 'stretch': 'Stretch'}
 # W4: shared sheets omit the route rather than guessing one.
 SHARED = {'all', '', None}
-DATE = re.compile(r'\s*&middot;\s*19 October 2026|\s*·\s*19 October 2026')
 
 
-def line(which, route, staff=False):
-    pathway, subject, title = LESSON[which]
+def date_re(pw):
+    """The dates to strip, per pathway. Both the entity and the literal middot
+    forms occur in these files, so both are matched -- and the date is matched
+    INDEPENDENTLY of any 'w/c' prefix, because a check that assumed the prefix
+    missed three pupil sheets that carry the bare date."""
+    return re.compile('|'.join(pathways.need(pw, 'date_tokens')))
+
+
+def line(which, route, pw, staff=False):
+    pathway, subject, title = pathways.need(pw, 'identity', which)
     parts = ([('STAFF ANSWERS' if staff else None)] + [pathway, subject, title]
              + [ROUTE.get(route)])
     return ('<p class="science-meta">'
             + ' &middot; '.join(p for p in parts if p) + '</p>')
 
 
-def apply(text, which):
+def apply(text, which, pw):
     """Returns (text, added, cleaned, normalised, stats).
 
     GW1-B R1: this function once reported "+0 added" as a success because its
@@ -55,6 +63,7 @@ def apply(text, which):
     stats = {'sections_examined': 0, 'staff_skipped': 0, 'pupil_sections': 0,
              'already_correct': 0}
     out, pos = [], 0
+    DATE = date_re(pw)
     # NOT class="print-section": four of the sixteen carry a second class
     # (organiser-paper, exit-paper, mk-print) and an exact-string match skipped
     # every one of them, reporting "+0 added" as a success. Token match, in any
@@ -75,11 +84,11 @@ def apply(text, which):
             new_body = body                      # W3: staff sheets untouched
         elif (stats.__setitem__('pupil_sections', stats['pupil_sections'] + 1)
               or meta is None):
-            new_body = line(which, route) + body  # W: the four with no identity
+            new_body = line(which, route, pw) + body  # W: the four with no identity
             added += 1
         else:
             before = meta.group(0)
-            after = line(which, route)
+            after = line(which, route, pw)
             if DATE.search(before):
                 cleaned += 1
             elif before != after:
