@@ -3538,3 +3538,53 @@ and `verify_fieldops_served.mjs` already ran *Inconclusive → 2, otherwise → 
 The Python tool was the outlier. **Enumerating the consumers told me the change
 was smaller than I thought**, which is the other half of what the enumeration is
 for — it is not only a way of finding breakage.
+
+
+### GW1-E — A string replacement is scoped by what it matches, and what it matches is not what you looked at
+
+**Read the whole of what you anchor on.** A partial anchor silently orphans
+everything below it, and nothing in the diff says so.
+
+Worked example, and it is the fifth of this family in one sequence. Adding a
+`waited()` method to a class, I anchored on the first two lines of a four-line
+`__init__`:
+
+```python
+    def __init__(self, deadline):        # ← anchor matched here
+        self.deadline = deadline         # ← and here
+        self.started = time.monotonic()
+                                         #   waited() inserted at this point
+    def waited(self):
+        return int(time.monotonic() - self.started)
+        self.token = os.environ.get('GITHUB_TOKEN') or …    # ← orphaned
+        require(self.token, 'Artifact provenance needs …')   # ← orphaned
+```
+
+The anchor was unique. The replacement applied exactly once. The file parsed. The
+diff read as two lines added and two removed, in the right place. **Every signal
+available said the edit was correct**, and `self.token` was never assigned again.
+
+**Why the diff cannot catch this.** A diff shows you what moved. It does not show
+you what is now unreachable, because unreachability is a property of the
+after-state as a whole and the diff only ever shows you its edges. The proof has
+to be the whole definition, read back.
+
+The three checks that close it, and they cost seconds:
+
+1. **Print the whole definition first** — `def` to its last statement — and edit
+   against what you printed, not against what you remember.
+2. **State the match count before applying**, as a number. Not "it looked
+   unique". Assert it in the edit so a second match refuses rather than silently
+   taking the first.
+3. **Print the whole definition again afterwards.** The proof is the after-state
+   read in full, never the diff.
+
+**Sequence position, which is the uncomfortable part.** This landed **one commit
+after** GW1-D's *enumerate the consumers* rule, which I had just written, filed
+and pushed. That rule is about looking outward at what depends on your change;
+this one is its inward sibling — look at the whole of the thing you are changing.
+Knowing the first did not confer the second, and writing a rule down is not the
+same as having absorbed it.
+
+Sibling of GW1-D. Both are the same instruction pointed in opposite directions:
+**the scope of a change is not the scope of your attention.**
