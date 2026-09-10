@@ -36,7 +36,7 @@ disagree.
 | `0023` | [D27 — gates measure rendered output, never source](decisions/0023-d27-gates-measure-rendered-output-never-source.md) | Any gate whose subject is what a pupil can see is measured in a laid-out page. |
 | `0024` | [D28 — no instrument counts until it has a two-sided control](decisions/0024-d28-no-instrument-counts-until-it-has-a-two-sided-control.md) | Every gate, checker and comparison ships with a planted true positive (the |
 | `0025` | [D29 — §4c restoration proceeds on the derived 86](decisions/0025-d29-4c-restoration-proceeds-on-the-derived-86.md) | Ruled by Matt, 2026-09-09 (LF1M-FIN). The count is the output of the |
-| `0026` | [D30 — the loose Week 01 never lands](decisions/0026-d30-the-loose-week-01-never-lands.md) | GROW_Week_01_Interactive.html, 24,008 B, md5 b927e6f686, is provenance, |
+| `0026` | [D30 — the loose Week 01 never lands](decisions/0026-d30-the-loose-week-01-never-lands.md) | GROW_Week_01_Interactive.html, 24,013 B, md5 b927e6f686, is provenance, |
 | `0027` | [D31 — same-basename register](decisions/0027-d31-same-basename-register.md) | _authoring/BASENAME_CONFLICTS.md records every same-basename divergence: |
 | `0028` | [D32 — G5 revised: rewrite becomes add](decisions/0028-d32-g5-revised-rewrite-becomes-add.md) | All eight lessons carry base64 data: URIs only, so there is no href to |
 | `0029` | [D33 — a text-mode read is not a byte measurement](decisions/0029-d33-a-text-mode-read-is-not-a-byte-measurement.md) | Byte equality is asserted from binary reads or os.path.getsize plus a content |
