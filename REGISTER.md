@@ -3414,3 +3414,30 @@ Corollary, and it is the cheap check: **verify the control's presence in the tre
 before the run**, not from the run. A control absent from its target is knowable
 in a single grep and costs nothing; discovering it afterwards costs the whole
 census.
+
+
+## UX1 Part A — read the placement rulings before starting
+
+**`docs/orders/UX1A-HUB-PLACEMENT.md` is an input to UX1 Part A and Part A must
+not be run without it.** It rules on where tutor time and Computing sit on the
+hub, and it carries six gates (G1–G6) that Part A is measured against.
+
+Four of its rulings are the ones most likely to be lost if the file is not read:
+
+- **Nothing lands without its catalogue row in the same arc.** PR #163 put 208
+  files live that nothing linked to.
+- **Tutor time gets no fifth card**, but every session must be in the catalogue,
+  the search index and the sitemap — and **nothing surfaces until LF1-M's
+  restoration completes**, because seventeen re-cuts are still missing verbatim
+  safeguarding lines and exposing them early makes the defect easier to reach.
+- **Computing is a third CTA on the Lifeskills card, not a card**, and it appears
+  **only after #493 and its admission cycle land**.
+- **No live URL in the `ICT/` tree is renamed.** "Computing" is a display label;
+  the path stays `ICT/`. The mapping is recorded so nobody later "fixes" it.
+
+Filed here rather than in a UX1 record because **UX1 has no record file in this
+repository** — measured, not assumed: no `UX1*` file under `docs/`,
+`docs/orders/` or `_sx2/`. When one is created the pointer belongs there too.
+
+Same root cause as #490: a ruling that lives only in a transcript is not an input
+to a later run.
