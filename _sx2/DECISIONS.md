@@ -47,5 +47,6 @@ disagree.
 | `0034` | [D46 — the instrument correction is recorded, not just the result](decisions/0034-d46-two-independent-sixes.md) | Three facts belong in the register together, because it is their agreement that |
 | `0035` | [D39 — the seeded faults are content and are never repaired](decisions/0035-d39-the-seeded-faults-are-content-do-not-autofix.md) | W08_Bug_Hunt's three faults and W07_Bug_Hunt's wrong-sprite rule are the |
 | `0036` | [D47 — a gate that cannot see the served tree is not a gate](decisions/0036-d47-a-gate-that-cannot-see-the-served-tree.md) | AMEND-3R-GC1 G9 asks whether every week's sibling .sb3 link resolves at |
+| `0037` | [D48 — `.sb3` is admitted by reviewed digest, not by being a Scratch project](decisions/0037-d48-sb3-is-admitted-by-reviewed-digest-not-by-being-scratch.md) | Site 2e49afdd adds .sb3 to two allowlists: PUBLIC in build_education.py |
 
-36 rulings. The text of each is in its own file and is never edited after landing.
+37 rulings. The text of each is in its own file and is never edited after landing.
