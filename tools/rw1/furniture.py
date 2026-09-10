@@ -57,6 +57,30 @@ def parts(which, pw):
             else:
                 i += 1
     skip = re.search(r'<a class="skip"[^>]*>[^<]*</a>', s)
+    # The CSS for the carried furniture lives in the LIVE FILE'S OWN <style>, not
+    # in the 411-byte nav block, and the packs have none of it. Carrying the
+    # markup without these rules ships a permanently visible "Skip to lesson"
+    # link on every pupil route -- .skip is position:fixed;left:-9999px until
+    # :focus -- and an unstyled prev/next row.
+    #
+    # render_check.cjs passed it: the link existed and moved focus, which is what
+    # it asks. Neither question is "is it off screen until focused". Evidence,
+    # not proxy -- the rendered position is now asserted, see the same file.
+    # SINGLE selectors only, and never a grouped one. The first version allowed
+    # a comma-separated group and included .mbmhome, so it lifted
+    #   @media print{.mbmhome,.n6-splash{display:none!important}}
+    # out of its @media wrapper and pasted the inner rule into the top-level
+    # sheet -- which hid the splash on screen, on all seven files. The render
+    # check caught it (splash visible false) within a minute of the previous fix.
+    # A rule inside @media cannot be carried by copying its body; carry only what
+    # is safe to carry, and .mbmhome is already handled by the nav block anyway.
+    CSS_WANTED = ('.skip', '.skip:focus', '.links', '.next-link',
+                  '.next-link:hover', '.next-link:focus')
+    css = ''
+    for sel in CSS_WANTED:
+        m = re.search(r'(?<![-\w.])' + re.escape(sel) + r'\s*\{[^}]*\}', s)
+        if m:
+            css += m.group(0)
     deck = re.search(r'<main id="lessonDeck"([^>]*)>', s)
     links = _span(s, '<div class="links">', '</div>')
     return dict(
@@ -67,6 +91,7 @@ def parts(which, pw):
         skip=(skip.group(0) if skip else None),
         deck_attrs=(deck.group(1).strip() if deck else ''),
         links=links,
+        css=css,
     )
 
 
@@ -103,4 +128,8 @@ def carry(text, which, pw):
     # the estate's own mechanism rather than by an invented anchor.
     if p['links'] and 'next-link' not in text:
         text = text.replace('</body>', p['links'] + '</body>', 1)
+    # ...and the rules that make all of it behave. Last, so the guard sees the
+    # markup that is actually present.
+    if p['css'] and '.skip{' not in text:
+        text = text.replace('</style>', p['css'] + '</style>', 1)
     return text, missing

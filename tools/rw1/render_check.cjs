@@ -61,6 +61,20 @@ const PLANT = process.argv.includes('--plant-strip-splash');
         guideBtnVisible: !!(bb && bb.width > 0 && bb.height > 0),
         guideBtnText: btn ? (btn.textContent || '').trim().slice(0, 40) : '',
         skip: q('a.skip'), deck: q('#lessonDeck'),
+        // EVIDENCE, NOT PROXY. "the skip link exists and moves focus" was true
+        // of a link that also sat visible on the page for every pupil, because
+        // the .skip rule that parks it at left:-9999px lives in the live file's
+        // own <style> and was not being carried. Ask where it actually is.
+        skipOffscreen: (() => {
+          const a = document.querySelector('a.skip'); if (!a) return null;
+          const r = a.getBoundingClientRect();
+          return r.right < 0 || r.bottom < 0 || r.left > innerWidth || r.top > innerHeight
+                 || getComputedStyle(a).display === 'none';
+        })(),
+        linksStyled: (() => {
+          const l = document.querySelector('.links'); if (!l) return null;
+          return getComputedStyle(l).display === 'flex';
+        })(),
         deckIsSlideContainer: !!document.querySelector('main#lessonDeck.slide-container'),
         dupIds: (() => { const m = new Map(); document.querySelectorAll('[id]').forEach(e => m.set(e.id, (m.get(e.id) || 0) + 1)); return [...m].filter(([, n]) => n > 1).map(([i]) => i); })(),
         idTotal: document.querySelectorAll('[id]').length,
@@ -69,8 +83,21 @@ const PLANT = process.argv.includes('--plant-strip-splash');
     });
 
     // H4: the skip link must MOVE FOCUS to the deck, not merely exist.
-    let focusMoved = null;
+    //
+    // FOCUS IT, DO NOT CLICK IT AT ITS RESTING POSITION. Once the carried .skip
+    // rule is present the link sits at left:-9999px until :focus, so
+    // page.click() times out with "element is outside of the viewport" -- which
+    // is the rule working, not a regression. A keyboard user tabs to it, :focus
+    // fires, .skip:focus{left:8px} brings it on screen, and THEN they press it.
+    // Doing it in that order also proves the focus rule reveals the link, which
+    // is the accessibility behaviour that actually matters.
+    let focusMoved = null, skipRevealsOnFocus = null;
     if (r.skip) {
+      await page.focus('a.skip');
+      skipRevealsOnFocus = await page.evaluate(() => {
+        const a = document.querySelector('a.skip'); const b = a.getBoundingClientRect();
+        return b.left >= 0 && b.top >= 0 && b.width > 0 && b.height > 0;
+      });
       await page.click('a.skip');
       focusMoved = await page.evaluate(() => {
         const a = document.activeElement;
@@ -87,6 +114,8 @@ const PLANT = process.argv.includes('--plant-strip-splash');
       r.guideBtnInDom, r.guideBtnVisible, r.guideBtnText);
     console.log('   skip    link %d · #lessonDeck %d · deck is main.slide-container %s · FOCUS MOVES %s',
       r.skip, r.deck, r.deckIsSlideContainer, focusMoved);
+    console.log('   css     skip link OFF SCREEN at rest %s · ON SCREEN when focused %s · .links row flex %s',
+      r.skipOffscreen, skipRevealsOnFocus, r.linksStyled);
     console.log('   dupIds  %d of %d ids examined (%d elements in the document) %s',
       r.dupIds.length, r.idTotal, r.elementTotal, r.dupIds.join(',') || '');
     console.log('   console errors %d of %d console messages · non-file requests %d of %d requests %s',
@@ -101,6 +130,8 @@ const PLANT = process.argv.includes('--plant-strip-splash');
       : (r.splashInDom && r.splashVisible && r.guideBtnInDom && r.guideBtnVisible
          && r.skip === 1 && r.deck === 1 && r.deckIsSlideContainer && focusMoved === true
          && r.dupIds.length === 0
+         && r.skipOffscreen === true && skipRevealsOnFocus === true
+         && r.linksStyled === true
          && r.idTotal > 0 && r.elementTotal > 0 && requestTotal > 0);
     console.log('   %s\n', PLANT ? (ok ? 'PLANT CONFIRMED: with the splash removed the check fails'
                                        : 'PLANT DID NOT FIRE  <-- the guard is not guarding')
