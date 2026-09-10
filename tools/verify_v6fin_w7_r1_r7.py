@@ -240,15 +240,11 @@ def main() -> int:
             }
         )
 
-    expected_changed = {rel for _, rel in TARGETS} | SUPPORT_PATHS
+    # AR8: the changed-path confinement expired when V6FIN-CX2 W7 PR #275
+    # merged. The authored-byte baseline below is live and unchanged. Authorised by
+    # Matt, Order AR8, 2026-09-10.
     actual_changed = changed_paths(root, args.base)
     actual_changed.discard(PINNED_REFERENCE_CHECKOUT)
-    unexpected_changed = actual_changed - expected_changed
-    if unexpected_changed:
-        raise ValueError(
-            "changed-path fence mismatch: "
-            + json.dumps({"unexpected": sorted(unexpected_changed)})
-        )
 
     firing = controls(canon, (root / TARGETS[0][1]).read_bytes())
     if not all(row["observedRed"] for row in firing):
