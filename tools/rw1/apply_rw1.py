@@ -13,6 +13,7 @@ import argparse, re, sys, subprocess
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import marking_card
+import furniture
 
 REPO = Path(__file__).resolve().parents[2]
 LIVE = {
@@ -125,6 +126,10 @@ def run(which, src, check=False):
     text = report('D3 cross-link rewired to the served sibling', text, cross_links(text, which))
     text = report('4.2/4.3/4.5 Lundy desk card -> marking card + print route', text,
                   assessment_layer(text, which))
+    carried, missing = furniture.carry(text, which)
+    if missing:
+        print('  [FAIL] furniture parts not found in live: ' + ', '.join(missing))
+    text = report('D4/D6 estate furniture carried from live', text, carried)
     out = REPO / LIVE[which]
     if not check:
         out.write_text(text, encoding='utf-8')
