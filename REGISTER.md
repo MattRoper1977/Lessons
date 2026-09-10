@@ -3178,3 +3178,58 @@ all 30 citation hosts return 000, because this session's egress proxy answers 40
 outside the organisation allowlist. A uniform 0/30 with controls green is an infrastructure
 signature, not link rot. Nothing removed. Recorded at
 [`_next6/evidence/M5_link_liveness_reading2.json`](_next6/evidence/M5_link_liveness_reading2.json).
+
+
+---
+
+## AR3-A — AR1 findings filed after the revert, reconciled gate pair and served proof
+
+Matt authorised this append in Orders AR2, AR3 and AR3-A, issued 2026-09-10. Findings and promotions below retain the ordered wording.
+
+F1 per_page=30 unpaginated — same estate state yields Red or Inconclusive
+   depending on run volume
+
+F2 `|| echo "apps clone failed"` non-fatal → uncaught CalledProcessError → a
+   traceback carrying no verdict marker, exit 1: a runner fact wearing a gate's verdict
+
+F3 the futures comprehension discards the games exception silently — gather all
+   four before raising
+
+F4 the rollup gate at :239 pre-empts the deploy-job gate and the digest check —
+   latent ordering defect
+
+F5 A REVERT IS NOT THE INVERSE OF A MERGE UNDER AN ADD-EXEMPT BOUNDARY CHECK.
+   --diff-filter=MRD makes additions free and deletions costly, so a change can
+   pass on the way in and its exact reversal fail on the way out.
+
+**F5 status: DEFERRED-FIX.** The symmetric repair, including A in the diff filter, is not adopted by this order and needs its own ruling.
+
+P5.1 A GREEN RUN THAT DID NOT EXERCISE THE GATE IS NOT EVIDENCE THE GATE PASSES.
+   Runs 41–50 each produced an artifact of exactly 5,192,491 bytes; the first
+   commit that altered published output was the first to fail.
+
+P5.2 A CROSS-REPO MEASUREMENT HAS A SHELF LIFE. Any record asserting a fact about
+   a repo it does not own must state the ref and time measured, and name pending
+   PRs there as live risk.
+
+F6 A GATE PAIR HELD IDENTICAL BY A LOCAL COMMAND IS NOT HELD IDENTICAL BY CI.
+The Lessons and Apps copies diverged in three literals and every CI check stayed
+green; only the local re-pin refused. An invariant nothing enforces is a wish.
+
+F7 A WORKFLOW WITH NO PATH FILTER MAKES EVERY MERGE A PUBLICATION. An ordering
+ruling that assumes otherwise is reasoning about a workflow nobody read.
+
+**F7 attribution:** Found by the agent against Matt's own stated premise.
+
+**Measured outcome, with shelf life.** At `2026-09-10T19:55:46Z`, the fresh served proof on Lessons `2838bf00f9123bc670407b9398ef8e1edbb1ef13` reported `44 served byte-identical · 0 red · 0 inconclusive, of 44 derived` and `5/5 controls fired`. The shared serve command exited 0, evidenced by the successful Bash `-e -o pipefail` Actions step; it does not create separate per-estate processes. Source: `github_fetch_workflow_job_logs({repo_full_name:"MattRoper1977/Lessons",job_id:103022879572})`, [run 34522408706](https://github.com/MattRoper1977/Lessons/actions/runs/34522408706/job/103022879572).
+
+| Estate | Checked and deployed source | Publication run | Review artifact |
+|---|---|---|---|
+| Site | `85e3e02059c3e3314eddab03d6e3c842f0da7ec7` | `34376148858` | `10114178122` |
+| Lessons | `2838bf00f9123bc670407b9398ef8e1edbb1ef13` | `34522409458` | `10170430512` |
+| Games | `809b6c9a65f175cd48182e793bee166ad4f6bd3f` | `34319079851` | `10091171007` |
+| Apps | `d00330034715b69e8a6cf7593ce8d88543b29d66` | `34521704353` | `10170111024` |
+
+The pair divergence reddens no CI check. The reconciliation is for correctness and to unblock the local re-pin. Apps #76 landed first; its publication build and deploy both passed before Lessons #501 landed. The failed Apps run `34366941877` was not re-driven; the new Apps source resolves to run `34521704353`. Pin `2e49afdd4f6cc5ae84aa687a0293fb89145bf009` was not moved.
+
+**Live risk at this measurement:** Apps #4; Site #346, #291, #109, #106 and #91; Games #79 and #78 remain pending. Source: `github_fetch` of each repository's `/pulls?state=open&per_page=100&page=1`, observed during this readback. Lessons #456 remains on Matt's standing hold until the Site registry half lands, with no comment posted. Lessons #460–#464 remain outside this order: no rebase and no serial merge. These facts expire when any named source or pending PR changes; they are not claims about a later publication. This REGISTER append comes after the measured proof and itself triggers a new Lessons publication.
