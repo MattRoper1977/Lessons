@@ -6,9 +6,11 @@ import tempfile
 import time
 import unittest
 import zipfile
+import os
 from prepare_served_publications import (Inconclusive, Red, no_result, require,
                                         validate_artifact, publication_run_matches,
                                          extract_archive, prepare_one, digest, select_artifact)
+import prepare_served_publications
 
 
 class ProvenanceControls(unittest.TestCase):
@@ -156,5 +158,44 @@ class ProvenanceControls(unittest.TestCase):
         self.assertTrue(issubclass(Inconclusive, Exception))
         with self.assertRaises(Inconclusive):
             no_result('no result: waited 1 seconds')
+
+
+    # GW1-E §2.2. Every other test in this file uses the STUB GitHub defined
+    # below, which takes no arguments and never runs the real __init__. That is
+    # why eleven green tests could not see self.token go unassigned: the real
+    # constructor is reached only on the live path, and the live path is the one
+    # thing a pull request does not run (D51).
+    #
+    # This test constructs the REAL GitHub exactly as main() does --
+    # GitHub(time.monotonic() + args.wait_seconds) -- and asserts the whole of
+    # __init__ ran, not just its first two lines.
+    def test_real_github_constructor_assigns_every_attribute(self):
+        real = prepare_served_publications.GitHub
+        previous = os.environ.get('GITHUB_TOKEN')
+        os.environ['GITHUB_TOKEN'] = 'token-for-this-test'
+        try:
+            client = real(time.monotonic() + 1800)      # exactly main()'s call
+            self.assertEqual(client.token, 'token-for-this-test')
+            self.assertTrue(hasattr(client, 'deadline'))
+            self.assertTrue(hasattr(client, 'started'))
+            self.assertIsInstance(client.waited(), int)
+        finally:
+            if previous is None:
+                del os.environ['GITHUB_TOKEN']
+            else:
+                os.environ['GITHUB_TOKEN'] = previous
+
+    def test_no_github_method_has_a_statement_below_its_return(self):
+        """The shape of the defect, not just the symptom: two lines of __init__
+        ended up below waited()'s return and were never executed."""
+        import ast, inspect
+        tree = ast.parse(inspect.getsource(prepare_served_publications))
+        cls = [n for n in ast.walk(tree)
+               if isinstance(n, ast.ClassDef) and n.name == 'GitHub'][0]
+        dead = [(fn.name, fn.body[i + 1].lineno)
+                for fn in cls.body if isinstance(fn, ast.FunctionDef)
+                for i, stmt in enumerate(fn.body[:-1])
+                if isinstance(stmt, (ast.Return, ast.Raise))]
+        self.assertEqual(dead, [], 'unreachable statements in GitHub: %r' % (dead,))
 
 if __name__ == '__main__': unittest.main(verbosity=2)
