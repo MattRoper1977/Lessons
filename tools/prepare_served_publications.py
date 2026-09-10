@@ -86,11 +86,11 @@ class GitHub:
     def __init__(self, deadline):
         self.deadline = deadline
         self.started = time.monotonic()
+        self.token = os.environ.get('GITHUB_TOKEN') or os.environ.get('GH_TOKEN')
+        require(self.token, 'Artifact provenance needs GITHUB_TOKEN with actions:read')
 
     def waited(self):
         return int(time.monotonic() - self.started)
-        self.token = os.environ.get('GITHUB_TOKEN') or os.environ.get('GH_TOKEN')
-        require(self.token, 'Artifact provenance needs GITHUB_TOKEN with actions:read')
 
     def read(self, route, raw=False):
         if time.monotonic() >= self.deadline:
