@@ -88,6 +88,12 @@ def staff_block(week):
         ('Teacher_Only/GROW_Week_%s_Teacher_Guide.pdf' % w, 'Teacher guide (PDF)'),
         ('Teacher_Only/W%s_Teacher_Model.sb3' % w, 'Teacher model project (SB3)'),
         ('../Teacher_Only/GROW_Computing_Final_Evidence_Check.pdf', 'Final evidence check (PDF)'),
+        ('../Teacher_Only/GROW_Computing_Paper_Route_Evidence_Map.pdf',
+         'Paper route evidence map: how each outcome is evidenced without a device (PDF)'),
+        ('../Teacher_Only/GROW_Computing_Paper_Route_Evidence_Map.docx',
+         'Paper route evidence map (editable DOCX)'),
+        ('../Teacher_Only/GROW_Computing_Final_Evidence_Check.docx',
+         'Final evidence check (editable DOCX)'),
     ]
     lis = ''.join('<li><a href="%s" download>%s</a></li>' % (h, t) for h, t in items)
     return ('<section class="gc1-offline gc1-staff" data-mbm-guide="staff" '
@@ -169,6 +175,8 @@ def self_test():
     want('the staff block is added', 'gc1-staff' in out)
     want('  ... marked for the guidance toggle, so it is hidden by default (R4/G10)',
          'data-mbm-guide="staff"' in out)
+    want('  ... and it reaches the G15 evidence map, outcome by outcome',
+         'Paper_Route_Evidence_Map.pdf' in out)
     want('  ... and it reaches the answers, the model and the evidence check',
          'Paper_Route_Answers.pdf' in out and 'W05_Teacher_Model.sb3' in out
          and 'Final_Evidence_Check.pdf' in out)
