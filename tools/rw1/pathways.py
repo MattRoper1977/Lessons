@@ -84,6 +84,12 @@ BUILD = {
                        'E gives 3+3+3+3 = 12 g sugar per 100 g.')],
     'date_tokens': [r'\s*&middot;\s*19 October 2026', r'\s*·\s*19 October 2026'],
     'growdark': '--growdark:#355E7B',
+    # The host the marking card REPLACES. BUILD's pack ships a "Lundy alongside
+    # learning" desk card and the card takes its place, so no staff guidance is
+    # deleted without a replacement. Where a pack already authors its own card
+    # this is None and the whole step stands down -- see assessment_layer().
+    'assessment_host': (r'<details class="teacher-only"><summary>Lundy alongside '
+                        r'learning[^<]*</summary>.*?</details>'),
 }
 
 # GROW is measured by the GW1-B survey. Every None below is a value that must be
@@ -129,6 +135,11 @@ GROW = {
     'date_tokens': [r'\s*\u00b7\s*w/c\s+19\s+October\s+2026', r'\s*\u00b7\s*19\s+October\s+2026'],
     # GROW live defines its own brand colour. BUILD's #355E7B is a different hue.
     'growdark': '--growdark:#215E53',
+    # None, and measured: the GROW pack carries 0 "Lundy alongside learning" desk
+    # cards and already ships id="print-marking" of its own. Running BUILD's
+    # replacement here would substitute against 0 hosts and then inject the card
+    # CSS anyway -- dead rules for an element that never gets created.
+    'assessment_host': None,
 }
 
 # LAUNCH is three lessons, not two (LW1 §0.2), and its filenames are preserved
@@ -156,6 +167,9 @@ LAUNCH = {
     'identity': None,
     'literal_fixes': [],
     'date_tokens': None,
+    # Measured: all three LAUNCH pack files already ship id="print-marking" and
+    # carry 0 Lundy desk cards, same as GROW.
+    'assessment_host': None,
 }
 
 ALL = {'BUILD': BUILD, 'GROW': GROW, 'LAUNCH': LAUNCH}

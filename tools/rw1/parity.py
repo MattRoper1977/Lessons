@@ -44,14 +44,26 @@ ROWS = [
  ('#lessonDeck',            r'id="lessonDeck"',             "//*[@id='lessonDeck']",            None),
  ('[data-lesson-id]',       r'data-lesson-id',              '//*[@data-lesson-id]',             None),
  ('[data-pathway]',         r'data-pathway',                '//*[@data-pathway]',               None),
- # DECLARED EQUIVALENCE. Live's TA prompt hosts carry data-ta1; the pack's carry
- # data-prompt. Nothing was renamed by this build -- the two chassis simply name
- # the same host differently, and ta_prompts.py fills the pack's own attribute.
- # So data-ta1 going to zero is not a dropped marker PROVIDED data-prompt picks
- # up the same number of hosts. That condition is checked, not assumed: see
- # EQUIVALENCE below. Without it this instrument exits non-zero on a benign
- # rename, and a gate that cries wolf stops being read.
+ # DECLARED EQUIVALENCE, and the pairing matters.
+ #
+ # Live's 9 data-ta1 are TA BRIEFS ("Read setup, safety and sensory notes before
+ # pupils enter"), read by a script that says dataset.ta1. The pack replaces the
+ # whole chassis: its script reads dataset.teacher and dataset.prompt, and its
+ # markup supplies 9 data-teacher briefs (the same ROLE as live's data-ta1) plus
+ # 9 data-prompt cold-call questions (a role live had no attribute for).
+ #
+ # So the equivalence is data-ta1 -> data-teacher BY ROLE, and data-prompt is an
+ # addition. I first declared it as data-ta1 -> data-prompt, which pairs a TA
+ # brief with a pupil question -- right about nothing being dropped, wrong about
+ # what replaced what.
+ #
+ # And the reason nothing is orphaned is the READER, not the count: live's script
+ # references dataset.ta1 once, the built file references it zero times, so there
+ # is no code left looking for the attribute that went away. Both halves are
+ # checked below -- an attribute arriving is not enough if the old reader
+ # survives, and a reader disappearing is not enough if nothing replaced it.
  ('[data-ta1]',             r'data-ta1=',                   '//*[@data-ta1]',                   None),
+ ('[data-teacher]',         r'data-teacher=',               '//*[@data-teacher]',               None),
  ('[data-prompt]',          r'data-prompt=',                '//*[@data-prompt]',                None),
  ('[data-mbm-guide=staff]', r'data-mbm-guide="staff"',      "//*[@data-mbm-guide='staff']",     None),
  ('.teacher-only',          r'class="[^"]*teacher-only',    cls('*','teacher-only'),            None),
@@ -96,9 +108,11 @@ def script_builds_button(doc):
 
 # A carried marker may legitimately go to zero if a DECLARED equivalent picks up
 # the same population. (gone, arrived, what it means)
-EQUIVALENCE = [('[data-ta1]', '[data-prompt]',
-                'TA prompt hosts: live names them data-ta1, the pack names them '
-                'data-prompt. Same hosts, different chassis vocabulary.')]
+EQUIVALENCE = [('[data-ta1]', '[data-teacher]',
+                'TA briefs: live names them data-ta1 and reads them as '
+                'dataset.ta1; the pack names them data-teacher and reads them as '
+                'dataset.teacher. Same role, replaced together with their reader.',
+                'dataset.ta1')]
 
 
 def denominators(doc):
@@ -166,14 +180,24 @@ def main():
         # Declared equivalences, checked rather than trusted.
         by_label_live = {r[0]: r[2] for r in lc}
         by_label_now = {r[0]: r[2] for r in nc}
-        for gone, arrived, why in EQUIVALENCE:
+        for gone, arrived, why, reader in EQUIVALENCE:
             lg, ng = by_label_live.get(gone), by_label_now.get(gone)
-            la, na = by_label_live.get(arrived), by_label_now.get(arrived)
+            na = by_label_now.get(arrived)
             if lg and not ng:
-                ok = na == lg
-                print('   EQUIVALENCE %s -> %s : live %s hosts, now %s   %s'
-                      % (gone, arrived, lg, na, 'HOLDS' if ok else 'DOES NOT HOLD'))
+                same_count = na == lg
+                # the second half: is the code that read the old attribute gone?
+                reader_live = len(re.findall(re.escape(reader), live_text(k)))
+                reader_now = len(re.findall(re.escape(reader), now))
+                orphaned = reader_now > 0
+                ok = same_count and not orphaned
+                print('   EQUIVALENCE %s -> %s : live %s hosts, now %s   reader %r '
+                      'live %d / now %d   %s'
+                      % (gone, arrived, lg, na, reader, reader_live, reader_now,
+                         'HOLDS' if ok else 'DOES NOT HOLD'))
                 print('   %-26s   %s' % ('', why))
+                if orphaned:
+                    print('   %-26s   ORPHANED READER: code still asks for the '
+                          'attribute that went away' % '')
                 satisfied.add('%s %s' % (k, gone))
                 if not ok:
                     moved.append('%s %s (equivalence failed)' % (k, arrived))
