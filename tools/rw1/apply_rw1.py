@@ -127,6 +127,45 @@ def assessment_layer(text, which, pw):
     return text
 
 
+
+# LW1 §A2 · the knowledge organiser's own dated header, which every earlier check
+# walked straight past.
+#
+# HOW IT HID. The organiser header is rendered TWICE: once as <text> inside the
+# SVG (both the on-screen #ko-screen-group and the printed #ko-print-group) and
+# once as the <p> transcript behind "Read organiser text". print_identity only
+# ever looked for <p class="science-meta">, so the SVG was invisible to it. And
+# the string is spaced "Week 8  |  19 October 2026" with DOUBLE spaces around the
+# pipes, so a grep for the single-spaced form returned zero -- which is what my
+# own B3 check ran and reported clean.
+#
+# The organiser is a PUPIL sheet (#print-organiser carries data-print-route="all"),
+# so under RW1-E §W2 it may carry no week token and no date.
+#
+# NOTHING REPLACES THEM. The header is three lines and the first two already read
+# "BUILD SCIENCE  |  KNOWLEDGE ORGANISER" and then the sheet title -- which IS the
+# pathway / subject / lesson-title identity, with the sheet type standing in for
+# the route. Substituting the title into the third line produced "Sugar evidence
+# Sugar Evidence  |  Made by Matt", a near-duplicate differing only in case. So
+# the week and the date are deleted and "Made by Matt" stays where it was: the
+# smallest pupil-visible delta that satisfies W2, per RW1-A B6.
+#
+# The transcript is rewritten in the SAME pass and by the same rule. Changing the
+# SVG alone would leave the screen-reader text disagreeing with the picture, which
+# is a worse accessibility outcome than the date.
+ORGANISER_HEAD = re.compile(
+    r'Week\s*\d{1,2}\s*\|\s*'
+    r'\d{1,2}\s+(?:January|February|March|April|May|June|July|August|September'
+    r'|October|November|December)\s+\d{4}\s*\|\s*')
+
+
+def organiser_identity(text, which, pw):
+    """Delete the week token and the date from the organiser header, on every
+    surface that renders it -- the SVG and its transcript alike."""
+    pathways.need(pw, 'identity', which)      # refuse to run on an unmeasured pathway
+    return ORGANISER_HEAD.sub('', text)
+
+
 def run(which, src, pw, check=False):
     text = original = Path(src).read_text(encoding='utf-8')
     print('%s  %s  [%s]' % (which, src, pw['name']))
@@ -142,6 +181,10 @@ def run(which, src, pw, check=False):
                   assessment_layer(text, which, pw))
     prompted, npr = ta_prompts.apply(text, which, pw)
     text = report('I1 nine stage-specific TA prompts (%d hosts)' % npr, text, prompted)
+    before_org = text
+    text = organiser_identity(text, which, pw)
+    text = report('A2 organiser header: week token and date deleted, SVG + transcript (%d)'
+                  % len(ORGANISER_HEAD.findall(before_org)), before_org, text)
     ident, nadd, nclean, nnorm, pstats = print_identity.apply(text, which, pw)
     text = report('W print identity (%d of %d pupil sections: +%d added, %d dates '
                   'removed, %d normalised, %d already correct; %d staff skipped, '
