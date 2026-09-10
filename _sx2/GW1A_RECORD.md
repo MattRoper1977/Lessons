@@ -133,3 +133,91 @@ not measurements**, alongside RW1-C's N1–N3, RW1-D's T1 and GW1's A6.
 What makes it different in kind from the other nine: those were caught by a
 person or an instrument reading the output. **This class executes with no
 reader.**
+
+---
+
+# GW1-B addenda
+
+## §Q1 — 165 and 163, reconciled
+
+**Both figures are right, and they count different things.** Measured today by
+diffing the two registry blobs directly:
+
+| | at `ee56d2c7` | at `2e49afdd` |
+|---|---|---|
+| `education-site` | 191 | 191 |
+| `education-lessons` | 3,575 | **3,738** |
+| `education-apps` | 106 | 106 |
+| **total rows** | **3,872** | **4,035** |
+
+- **163 = rows ADDED.** New paths admitted at `2e49afdd` that did not exist at
+  `ee56d2c7`. All 163 are under `ICT/Teaching_Packs/GROW_Computing/`:
+  pdf 62 · docx 54 · sb3 23 · html 11 · pptx 8 · zip 4 · txt 1 = 163. It is also
+  exactly the unit's source-file count on `claude/fin5-gc1-place` — 163 source
+  files, 163 admitted rows, one to one.
+- **165 = rows TOUCHED.** 163 added **+ 0 removed + 2 changed in place**. The two
+  changed are `education-lessons | ICT/Teaching_Packs/index.html` and
+  `education-site | data/usage-registry.json` — the unit's index entry and the
+  usage registry, both of which had to move because the unit arrived.
+
+So: **163 is the admitted-rows figure and 165 is the rows-touched figure.** Both
+were measured, at different moments, against different denominators — which is
+the same lesson as 38 → 35 and is exactly what R1 now requires be stated.
+
+**The pin decision is unaffected, and the consequence is slightly worse than
+either number alone.** Re-pinning backwards regresses all 165: the 163 vanish
+entirely, and the 2 changed rows revert to their pre-GC1 digests.
+
+## §S2 — the A4 figures re-measured through the fixed tool
+
+| card | in the GW1-A record | re-measured after the printer fix | match |
+|---|---|---|---|
+| W8A `print-marking` | 976px, fits by 147px | **976px, fits by 147px** | **yes** |
+| W8B `print-marking` | 955px, fits by 168px | **955px, fits by 168px** | **yes** |
+
+They match, and the reason is worth stating rather than treated as luck. The
+broken line was
+
+```
+console.log('%s %s height %dpx / printable %4dpx (A4 %d less %dpx padding)  %s', …)
+```
+
+The corruption began **at** `%4d`. Everything before it — `%s`, `%s`, `%d` ← the
+card height — bound correctly. So the heights were never wrong; `printable`,
+`A4`, `padding` and the verdict were the four that shifted. That is why the
+verdict still read FITS: it was computed, not formatted, and then printed in the
+wrong slot as a trailing extra argument.
+
+**The figures stand.** They are no longer standing on an unverified printer.
+
+## §S3 — denominators for the four instruments already banked
+
+| instrument | what it examined | what it found |
+|---|---|---|
+| `parity.py` | **22 markers** against 1,563 elements (440 with a class), 94 ids, 4 scripts (A); 1,668 / 398 / 108 / 4 (B) | 22 rows, substring and DOM side by side; 1 declared equivalence, checked and holding |
+| `render_check.cjs` | 1,573 elements, **94 ids**, **0 console messages**, **1 request** (A); 1,678 / 108 / 0 / 1 (B) | 0 duplicate ids, 0 console errors, 0 non-file requests |
+| `print_identity.apply` | **16 print sections**, of which 5 staff and **11 pupil** | 4 added + 3 dates removed + 4 normalised + 0 already correct = **11 of 11**, asserted |
+| `w5_screen_delta.cjs` | **16 print sections**, **15 science-meta**, 1,573 elements | 0 of 16 visible on screen, 0 of 15 meta on screen |
+
+Three things this surfaced that a bare count had hidden:
+
+1. **`render_check`'s request denominator is 1.** These are single self-contained
+   files, so the only request is the file itself. "0 non-file requests" is true
+   and it is as strong as a population of one allows — which is worth saying out
+   loud rather than implying a sweep.
+2. **16 sections but 15 identity lines**, and the gap reconciles: `#print-marking`
+   (class `print-section mk-print`) is a staff sheet, and print identity leaves
+   staff sheets alone by design (§W3). The sixteenth is the marking card.
+3. **`parity.py` was exiting non-zero on every run** over `[data-ta1] → 0`. Live
+   names the TA prompt hosts `data-ta1`; the pack names them `data-prompt`;
+   nothing was renamed by this build. That is now a declared equivalence, checked
+   (live 9 hosts, now 9, HOLDS) rather than assumed, and reported separately from
+   an unexplained drop. A gate that cries wolf stops being read.
+
+And one row was wrong in kind: `button.n6m-guide-btn` asked a static parse for a
+tag that a script builds at runtime with `createElement`. The parse returned 0
+forever against a substring count of 6. The file's own docstring already required
+that a non-element marker be declared and given the nearest real DOM question;
+this row had not been. It is now `SCRIPT-CREATED`, the static question is "does a
+script still construct it" (1 of 4 scripts), and the rendered proof stays with
+`render_check.cjs`, which finds it present, visible, labelled "ⓘ Guidance".

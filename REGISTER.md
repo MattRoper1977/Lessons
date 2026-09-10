@@ -3186,23 +3186,42 @@ signature, not link rot. Nothing removed. Recorded at
 They are one family with *classify, do not count* and *prove the output*. Cite
 them together: the next pass needs the family, not one member.
 
-**N4 — the tally is the argument, not any single instance. Six instances of one
-family in a single run:**
+**N4 — the tally is the argument, not any single instance. THIRTEEN instances of
+one family across this run, with what caught each:**
 
-1. `data-mbm-guide` counted as strings, not attributes — 4/4/2/2 for 1/1/2/2
-2. my own `data-mbm-cal` premise: I read an undo buffer as a calendar store
-3. the splash guard testing `n6-splash`, a string the carried CSS already held
-4. the red proof whose regex never fired, and so reported PASS
-5. nine identical TA prompts passing a nine-for-nine count
-6. the A5 delete census: **2 by regex, 13 verified**, the eleven missed being
-   `.mjs` and Python shapes the inclusion rule was never built to look at
+| # | the instance | fault in what it | caught by |
+|---|---|---|---|
+| 1 | `data-mbm-guide` counted as strings, not attributes — 4/4/2/2 reported for 1/1/2/2 | **looked at** | re-reading my own output before citing it |
+| 2 | my own `data-mbm-cal` premise: I read an undo buffer as a calendar store | **looked at** | reading the relabeller's source instead of its name |
+| 3 | the splash guard testing `n6-splash`, a string the carried CSS already held | **looked at** | RW1-B §H — count by DOM as well as substring |
+| 4 | the red proof whose regex never fired, and so reported PASS | **did** | checking the plant's own byte delta |
+| 5 | nine identical TA prompts passing a nine-for-nine count | **looked at** | RW1-B §I — sample the values where N matches N |
+| 6 | the A5 delete census: **2** by regex, **13** verified; the eleven missed were `.mjs` and Python shapes | **looked at** | RW1-C's adversarial per-language sweep |
+| 7 | the splash extractor taking the first `</div>` after `</svg>`, leaving the div open | **did** | asking whether the nav row was a *descendant* — a structural question, not a visual one |
+| 8 | the B3 check grepping `w/c 19 October 2026`, missing three sheets carrying the bare date | **looked at** | RW1-E §W re-deriving the date independently of its prefix |
+| 9 | print identity matching `class="print-section"` exactly, skipping four sections with a second class, and reporting **+0 added** as success | **reported** | RW1-E §W's rendered check of the sheets |
+| 10 | the reconstruction — "Yellow Box", "green pen", "own colour", "EFL" — quoted back as source | **looked at** | Matt supplying the document's own two columns |
+| 11 | the stored trigger carrying a sha and a blocked status as instructions | **looked at** | re-deriving the pin at pre-flight instead of obeying the stored value |
+| 12 | the D49 census counter reading a page-keyed object as a list: `occurrences 0` on five branches, four of them wrong | **reported** | **TH1 §0.3 — the positive control runs first** |
+| 13 | the `a4_fit` `%4d` format token, printing the printable height as the A4 height and the padding as the verdict | **reported** | GW1-A §M4 requiring the figures be re-measured, not quoted |
 
-**Five of the six are inclusion or counting rules, not logic errors.** Only the
-unfired plant is a fault in what the code *does*; the rest are faults in what it
-*looks at*. That distribution is the finding: this estate's failures cluster in
-what gets measured, not in what gets built. Instrument review is therefore worth
-more here than code review, and a number without its inclusion rule is worth
-very little.
+**Eleven of the thirteen are faults in what the code looked at or reported. Two —
+the unfired plant and the unbalanced extraction — are faults in what it did.**
+
+That distribution is the finding, and it has not moved as the sample grew: from
+five-of-six to eleven-of-thirteen. This estate's failures cluster in what gets
+measured and what gets printed, not in what gets built. Instrument review is
+therefore worth more here than code review, and a number without its inclusion
+rule and its denominator is worth very little.
+
+**The argument for control gates is now empirical, not theoretical.** Instance 12
+is the proof. The D49 census was caught by a gate Matt had mandated **one order
+earlier** — TH1 §0.3, *every new or changed gate ships with a planted red*. The
+control fired on four branches and did not fire on the fifth, and only that
+asymmetry exposed a counter that had been printing `0` for all five. Without the
+control-first rule the census would have read clean on every branch, and five
+content branches would have merged on a zero that had measured nothing at all. A
+gate written on Wednesday paid for itself on Thursday.
 
 ### N1 — Structural surgery is balanced or it is not done
 
@@ -3318,3 +3337,80 @@ unattended trigger cannot read a flag. The rule that follows is unconditional �
 Sibling of *classify, do not count*, *prove the output not the absence of the
 input*, and T1. All of them are one instruction seen from a different side: the
 artefact must carry the thing that stays true, not the thing that was true.
+
+### GW1-B R1 — Zero and empty are different values
+
+Any counter that can return **0** must distinguish *searched and found nothing*
+from *was handed nothing to search*. A shape mismatch that yields an empty
+collection sums to zero, raises nothing, and prints as a clean result.
+
+**Every count reports its denominator** — items examined, not only items found —
+and **a denominator of zero is a failure, never a pass**.
+
+Worked example. The D49 census counter did
+
+```python
+sum(len(p.get('occurrences', [])) for p in (d if isinstance(d, list) else d.get('pages', [])))
+```
+
+against an object keyed by page path. `d.get('pages', [])` returned `[]`, the sum
+was `0`, and nothing raised — so the `|| echo '?'` fallback never fired either.
+It printed `occurrences 0` on five branches, on four of which the positive
+control had genuinely found things. The number was not wrong about the tree; it
+had never looked at the tree.
+
+The cheap form of the rule: if a counter can be handed a shape it does not
+recognise, it **raises** rather than returning a number it did not compute. The
+replacement exits 3 on an unrecognised shape.
+
+Applied retroactively to every instrument banked in this order — `parity.py`,
+`render_check.cjs`, `print_identity.apply`, `w5_screen_delta.cjs` — each of which
+had at least one count with nothing to divide it by.
+
+### GW1-B R2 — The report is an instrument and is tested like one
+
+Format strings, serialisation and templating are **untested code paths that emit
+authoritative-looking numbers**. A correct computation with a broken printer is
+worse than a wrong verdict, because *a wrong verdict invites argument and a
+misaligned number invites belief*.
+
+**Test the emitted line against known inputs, not only the computed value.**
+
+Worked example. `tools/rw1/a4_fit.cjs` printed
+
+```
+height 976px / printable %4dpx (A4 1123 less 1123px padding)  0 FITS
+```
+
+Node's `console.log` supports `%s %d %i %f %j %o %O %c` and **not** `%4d`. The
+token printed literally and every argument after it landed one slot early, so the
+line reads *"the printable area is 0px and the card fits it."* The verdict was
+computed correctly and every number beside it was in the wrong place.
+
+**The fix that matters is the second one.** Rebuilding the line as a string
+corrects the display; making the tool distinguish *0px padding* from *no
+`#print-area` element* corrects what it can tell you. A printer that cannot
+express "I found nothing to measure" will express it as a zero, and a zero reads
+as a measurement.
+
+### GW1-B R3 — A positive control is chosen per target class, not per run
+
+One phrase across heterogeneous chassis is not a control. It is a control for one
+chassis and a **silent no-op everywhere else** — and the no-op is invisible,
+because a control that finds nothing looks exactly like a tree that is clean.
+
+**Each branch, tree or file class proves its own control fires before its real
+result counts.**
+
+Worked example. The SX2R census used `"Learning objective"` as its control across
+five branches. On `grow-a` that phrase has **0 source hits across all eight**
+pages, because those eight are `Grow/resources/GS_W*.html` — resource sheets, a
+different chassis from the decks the phrase was chosen for. The control could not
+fire, so grow-a's clean result rested on an instrument never shown to work on
+grow-a's files. Re-run with `"Return to the lesson"` (present on 8/8), the control
+found 8 and rendered 8, and only then was the real zero a result.
+
+Corollary, and it is the cheap check: **verify the control's presence in the tree
+before the run**, not from the run. A control absent from its target is knowable
+in a single grep and costs nothing; discovering it afterwards costs the whole
+census.
