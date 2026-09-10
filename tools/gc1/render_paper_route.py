@@ -243,6 +243,19 @@ def maze_grid(doc, walls, start=(-180, -120), finish=(180, 120), step=20):
 WALLS = [[-220, -160, 440, 20], [-220, 140, 440, 20], [-220, -140, 20, 280],
          [200, -140, 20, 280], [-70, -140, 20, 220], [50, -80, 20, 220]]
 
+# The pupil save filenames, from each lesson's own W.save / DATA.save field. G12
+# requires them unchanged in the lessons, the booklets AND the paper route, and
+# they are bound to printed booklets already in pupils' hands (R2), so they are
+# neither derived nor renamed.
+#
+# Naming the file on a route that never creates one is deliberate. A pupil moving
+# between routes, or a teacher reading Week 7's "open your own W06_Win.sb3", needs
+# both routes to use one vocabulary -- and saying what the paper equivalent IS
+# stops a teacher recording a filename that was never made.
+SAVE = {1: 'W01_MyCode.sb3', 2: 'W02_MyControls.sb3', 3: 'W03_Maze.sb3',
+        4: 'W04_Controls.sb3', 5: 'W05_Walls.sb3', 6: 'W06_Win.sb3',
+        7: 'W07_Challenge.sb3', 8: 'W08_Final.sb3'}
+
 
 def render(route, donor, out_path):
     doc = blank_document(donor)
@@ -255,6 +268,11 @@ def render(route, donor, out_path):
     for line in route['intro']:
         body(doc, line)
     body(doc, 'Point, say, draw or write. Someone may record your exact words.')
+    if wk in SAVE:
+        body(doc, 'On the screen route this week is saved as %s. On the paper route no file is '
+                  'made. Your pages are the record: write your name and the date on every page '
+                  'and put them in your folder. An adult initials the folder. Nobody should ask '
+                  'you for %s if you took the paper route.' % (SAVE[wk], SAVE[wk]))
 
     title(doc, 'Write your code', page_break=True)
     for g in route['p1_grids']:
@@ -334,6 +352,10 @@ def self_test():
         except exc:
             return True
 
+    want('every week has a save filename for the record line (G12)',
+         sorted(SAVE) == [1, 2, 3, 4, 5, 6, 7, 8] and all(v.endswith('.sb3') for v in SAVE.values()))
+    want('  ... and they are the pack\u2019s own names, unrenamed',
+         SAVE[1] == 'W01_MyCode.sb3' and SAVE[8] == 'W08_Final.sb3')
     want('a real word bank passes',
          check_word_bank(['when green flag clicked', 'change x by', 'forever', 'if <> then', 'touching [Maze]?'], 'w'))
     want('a variable block is refused',

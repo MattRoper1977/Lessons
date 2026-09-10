@@ -140,11 +140,30 @@ CSS = ('<style id="gc1-paper-css">@media print{'
        '}</style>')
 
 
+# The same save-filename line the .docx carries, so the two delivery paths are the
+# same route rather than two similar ones. G12 wants the name in the paper route;
+# a teacher reading one path and printing the other must not find them different.
+SAVE = {1: 'W01_MyCode.sb3', 2: 'W02_MyControls.sb3', 3: 'W03_Maze.sb3',
+        4: 'W04_Controls.sb3', 5: 'W05_Walls.sb3', 6: 'W06_Win.sb3',
+        7: 'W07_Challenge.sb3', 8: 'W08_Final.sb3'}
+
+
+def save_line(week):
+    f = SAVE[week]
+    return ('On the screen route this week is saved as %s. On the paper route no file is made. '
+            'Your pages are the record: write your name and the date on every page and put them '
+            'in your folder. An adult initials the folder. Nobody should ask you for %s if you '
+            'took the paper route.' % (f, f))
+
+
 def slim(route):
     """Only what the printed sheet needs. The teacher answers are not included."""
+    intro = list(route['intro'])
+    if route['week'] in SAVE:
+        intro.append(save_line(route['week']))
     return {
         'label': route['label'],
-        'intro': route['intro'],
+        'intro': intro,
         'grids': [{'s': g['sprite'], 'p': g['purpose'], 'h': g['hatBlock'],
                    'r': g['rows'], 'w': g['allowedBlocks']} for g in route['p1_grids']],
         'maze': route['p2_maze'],
@@ -212,6 +231,10 @@ def self_test():
 
     s = slim(route)
     want('slim() drops the teacher answers', 'p7_teacherAnswers' not in s)
+    want('slim() adds the save-filename line, so both delivery paths match (G12)',
+         any('W05_Walls.sb3' in x for x in s['intro']))
+    want('  ... and it says no file is made on this route',
+         any('no file is made' in x for x in s['intro']))
     want('slim() keeps every grid', len(s['grids']) == len(route['p1_grids']))
     want('slim() keeps the honest gap on the record, for the teacher guide',
          s['record'].get('honestGap') == 'NONE')
