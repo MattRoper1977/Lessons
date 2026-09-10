@@ -102,3 +102,85 @@ assignment.
 | `tools/fixtures/pr124/workflows/*` | fixture copies of workflows, not live harnesses |
 | `_teachgreen/DECISIONS.md:409,412,417` | markdown quoting a diff |
 | Site `uas/vendor/tesseract/worker.min.js:2` | minified vendor bundle; now below the 500-character line cap |
+
+---
+
+# Superseded count, and the remediation order (RW1-C §S)
+
+**This census said 2. The verified answer is 13 UNGUARDED across three repos**,
+plus 2 PARTIAL, from a 130-agent adversarial sweep with 0 errors. Both of the
+two survived verification; the eleven missed were `.mjs` and Python shapes the
+regex inclusion rule was never built to look at. A count that rises when the
+inclusion rule is fixed is the instrument improving, not the estate worsening.
+
+Ruled as **T1** in `REGISTER.md`: a census declares its universe and its blind
+spots, or it reports a floor as a total.
+
+## The remediation order, which is not the order the census listed them in
+
+**`mattroper1977.github.io domain-split/build_education.py:221` is first,
+regardless.** It is the only one of the thirteen in the **live publication
+path** — and it is in the file this session edited today for the `.sb3`
+allowlist. Everything else is a local harness or a verifier.
+
+```python
+def build(output, lessons, apps=None, allow_sparse=False):
+    ...
+    dest = output/('education-'+name)
+    if dest.exists(): shutil.rmtree(dest)
+```
+
+`output` is the caller's `--output`. Its two verifiers split UNGUARDED/PARTIAL,
+and both readings are fair: the `education-` prefix bounds the damage to a
+directory of that name under whatever the caller points at, which is a real
+constraint and not a containment proof.
+
+### The guard shape, recorded and NOT applied
+
+**Assert, then delete. Never derive and delete.** Before removing `dest`:
+it is absolute; it is non-empty; it resolves **under a known build root**; and
+its name carries the expected `education-` prefix. Raise on any failure.
+
+Its own PR, its own red proof: **a planted wrong path must raise rather than
+remove.** Not a rider on a lesson PR and not a rider on a publisher pin.
+
+## The thirteen
+
+| repo | path:line |
+|---|---|
+| **Site** | **`domain-split/build_education.py:221`** ← first |
+| Site | `tools/film/ak_capture.mjs:9` |
+| Site | `tools/cyberpulse/capture_trailer.mjs:32` |
+| Lessons | `_rx3/reland.sh:4`, `_rx3/family_gates.sh:29` ← the original two |
+| Lessons | `tools/build_staff_pack.py:297,797` |
+| Lessons | `_sciv3/tools/build_packs.py:615`, `_sciv3/tools/build_baseline.py:96` |
+| Lessons | `_finish/tools/build_estate.py:168` |
+| Lessons | `_glv3/tools/safe_extract_transport.py:45` |
+| Lessons | `tools/easter/prove_chassis.py:418` |
+| Lessons | `tools/scrapcore/verify_csp_allows_estate.mjs:35` |
+| Lessons | `tools/verify_toolkits_offline.mjs:51` |
+
+## PARTIAL, with the verifier's reason attached
+
+- `_authoring/science_2026-27/_toolchain/build/docs.py:191` — `shutil.rmtree(q)`
+  where `q = BASE/'qa'/'docs'/d['id']/name`; bounded by a hardcoded `BASE` and a
+  two-value name list, tainted only through `d['id']`.
+- `_glv3/tools/positive_controls.py:60` — the victim is selected from the
+  lessons manifest, not supplied.
+
+## Overturned to SAFE, with the reason — because an overturned candidate with no
+## recorded reason is a future re-find
+
+| path:line | why the verifier overturned it |
+|---|---|
+| `.github/workflows/glv3-production-byte-check.yml:47` | target created by the script four lines above, same loop iteration |
+| `.github/workflows/glv3-verify.yml:186` | `set -euo pipefail` — an unset `GITHUB_WORKSPACE` aborts the step rather than deleting `/hud.js` |
+| `.github/workflows/ux2-gates.yml:123` | the delete target is the literal `_served/Lessons`; the variable is in the *other* command on the line |
+| `_nav1/tools/nprint.js:33` | `tmp` is rebuilt from `os.tmpdir()` immediately above the unlink |
+| `tools/verify_games_splash.mjs:294` | the file unlinked is one the self-test wrote itself, in a directory it owns |
+
+Also refuted, and worth keeping because my own regex census had flagged them:
+`_rx3/family.sh:5,7` (line 4 carries a guard the claim missed),
+`tools/verify_audit_output_guard.sh:92` (hardcoded relative literal),
+`tools/fieldops/dropmatrix.sh:21` (cwd pinned to the script's own directory,
+`$T` bound from a hardcoded list).
