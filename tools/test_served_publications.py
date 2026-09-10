@@ -6,7 +6,8 @@ import tempfile
 import time
 import unittest
 import zipfile
-from prepare_served_publications import (Inconclusive, validate_artifact, publication_run_matches,
+from prepare_served_publications import (Inconclusive, Red, no_result, require,
+                                        validate_artifact, publication_run_matches,
                                          extract_archive, prepare_one, digest, select_artifact)
 
 
@@ -47,7 +48,7 @@ class ProvenanceControls(unittest.TestCase):
         for mutation in [{'expired': True}, {'name': 'unreviewed'}, {'digest': ''},
                          {'workflow_run': {'id': 124, 'head_sha': 'a'*40}},
                          {'workflow_run': {'id': 123, 'head_sha': 'b'*40}}]:
-            with self.assertRaises(Inconclusive): validate_artifact({**self.artifact, **mutation}, self.run, 'lessons')
+            with self.assertRaises(Red): validate_artifact({**self.artifact, **mutation}, self.run, 'lessons')
 
     def test_four_reruns_select_only_successful_attempts_upload(self):
         old = [{**self.artifact, 'id': number, 'created_at': created} for number, created in enumerate([
@@ -62,13 +63,13 @@ class ProvenanceControls(unittest.TestCase):
         for artifacts in [[self.artifact, {**self.artifact, 'id': 457}],
                           [{**self.artifact, 'created_at': '2026-09-05T18:33:15Z'}],
                           [{**self.artifact, 'created_at': '2026-09-05T18:43:40Z'}]]:
-            with self.assertRaises(Inconclusive): select_artifact(artifacts, self.run, self.jobs, 'lessons')
+            with self.assertRaises(Red): select_artifact(artifacts, self.run, self.jobs, 'lessons')
         stale_jobs = copy.deepcopy(self.jobs)
         stale_jobs[1]['run_attempt'] = 3
-        with self.assertRaises(Inconclusive): select_artifact([self.artifact], self.run, stale_jobs, 'lessons')
+        with self.assertRaises(Red): select_artifact([self.artifact], self.run, stale_jobs, 'lessons')
         stale_jobs = copy.deepcopy(self.jobs)
         stale_jobs[0]['run_attempt'] = 3
-        with self.assertRaises(Inconclusive): select_artifact([self.artifact], self.run, stale_jobs, 'lessons')
+        with self.assertRaises(Red): select_artifact([self.artifact], self.run, stale_jobs, 'lessons')
 
     def archive(self, name='index.html', data=b'approved'):
         stream = io.BytesIO()
@@ -80,12 +81,12 @@ class ProvenanceControls(unittest.TestCase):
             dest = Path(temp)/'publication'
             extract_archive(self.archive(), dest)
             self.assertEqual((dest/'index.html').read_bytes(), b'approved')
-            with self.assertRaises(Inconclusive): extract_archive(self.archive(), dest)
+            with self.assertRaises(Red): extract_archive(self.archive(), dest)
 
     def test_escaping_archive_names_fail(self):
         with tempfile.TemporaryDirectory() as temp:
             for number, name in enumerate(['../outside', '/absolute', 'a/../../outside', 'a\\outside']):
-                with self.assertRaises(Inconclusive): extract_archive(self.archive(name), Path(temp)/str(number))
+                with self.assertRaises(Red): extract_archive(self.archive(name), Path(temp)/str(number))
 
     def test_successful_review_without_successful_deploy_fails(self):
         outer = self
@@ -95,7 +96,7 @@ class ProvenanceControls(unittest.TestCase):
                 if '/workflows/' in route: return {'workflow_runs': [outer.run]}
                 if '/jobs?' in route: return {'jobs': [{'name': 'publish / deploy', 'conclusion': 'skipped'}]}
                 raise AssertionError('Must stop before reading any artifact')
-        with tempfile.TemporaryDirectory() as temp, self.assertRaises(Inconclusive):
+        with tempfile.TemporaryDirectory() as temp, self.assertRaises(Red):
             prepare_one('lessons', 'a'*40, Path(temp), GitHub())
 
     def test_verified_archive_accepts_and_download_mutation_fails(self):
@@ -116,7 +117,44 @@ class ProvenanceControls(unittest.TestCase):
             self.assertEqual(Path(evidence['root'], 'index.html').read_bytes(), b'approved')
         with tempfile.TemporaryDirectory() as temp:
             bad = GitHub(); bad.mutate = True
-            with self.assertRaises(Inconclusive): prepare_one('lessons', 'a'*40, Path(temp), bad)
+            with self.assertRaises(Red): prepare_one('lessons', 'a'*40, Path(temp), bad)
 
+
+
+    # GW1-C §1.2. Every assertion above says Red, and the rename is not the
+    # point: the point is that these are contradictions the tool OBSERVED --
+    # a digest that does not match, an archive member that escapes, a deploy
+    # that is missing. They were Inconclusive until now, which meant "the
+    # downloaded artifact digest differs" reported in the same words and the
+    # same exit code as "I arrived before the publication finished".
+    #
+    # The distinction is only real if it is tested, so it is tested here rather
+    # than left to the class names.
+    def test_red_and_inconclusive_are_distinct_states(self):
+        self.assertFalse(issubclass(Red, Inconclusive))
+        self.assertFalse(issubclass(Inconclusive, Red))
+
+        # a contradiction observed -> Red
+        with self.assertRaises(Red):
+            require(False, 'lessons: downloaded artifact digest differs')
+        # evidence out of reach -> Inconclusive, and it names how long it waited
+        with self.assertRaises(Inconclusive) as caught:
+            no_result('no result: publication retrieval deadline reached, waited 37 seconds')
+        self.assertIn('waited 37 seconds', str(caught.exception))
+        self.assertTrue(str(caught.exception).startswith('no result:'))
+
+        # and neither is caught by the other, which is the whole property
+        with self.assertRaises(Red):
+            try:
+                require(False, 'a contradiction')
+            except Inconclusive:
+                self.fail('a Red was swallowed as Inconclusive')
+
+    def test_a_timeout_never_reports_as_success(self):
+        """A wait that times out and returns green is the same defect in
+        different clothes. Inconclusive is not a pass."""
+        self.assertTrue(issubclass(Inconclusive, Exception))
+        with self.assertRaises(Inconclusive):
+            no_result('no result: waited 1 seconds')
 
 if __name__ == '__main__': unittest.main(verbosity=2)
