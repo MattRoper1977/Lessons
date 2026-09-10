@@ -36,10 +36,14 @@ const PLANT = process.argv.includes('--plant-strip-splash');
     fs.writeFileSync(tmp, html);
     const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 } });
     const page = await ctx.newPage();
+    // GW1-B R1: a zero is only a result next to its denominator. "0 console
+    // errors" is vacuous if the page logged nothing at all, and "0 non-file
+    // requests" is vacuous if it made no requests. Count both populations.
     const errors = [], requests = [];
-    page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
+    let consoleTotal = 0, requestTotal = 0;
+    page.on('console', m => { consoleTotal++; if (m.type() === 'error') errors.push(m.text()); });
     page.on('pageerror', e => errors.push('pageerror: ' + e.message));
-    page.on('request', r => { const u = new URL(r.url()); if (u.protocol !== 'file:') requests.push(u.host); });
+    page.on('request', r => { requestTotal++; const u = new URL(r.url()); if (u.protocol !== 'file:') requests.push(u.host); });
     await page.goto('file://' + path.resolve(tmp), { waitUntil: 'load' });
 
     const r = await page.evaluate(() => {
@@ -59,6 +63,8 @@ const PLANT = process.argv.includes('--plant-strip-splash');
         skip: q('a.skip'), deck: q('#lessonDeck'),
         deckIsSlideContainer: !!document.querySelector('main#lessonDeck.slide-container'),
         dupIds: (() => { const m = new Map(); document.querySelectorAll('[id]').forEach(e => m.set(e.id, (m.get(e.id) || 0) + 1)); return [...m].filter(([, n]) => n > 1).map(([i]) => i); })(),
+        idTotal: document.querySelectorAll('[id]').length,
+        elementTotal: document.querySelectorAll('*').length,
       };
     });
 
@@ -81,13 +87,21 @@ const PLANT = process.argv.includes('--plant-strip-splash');
       r.guideBtnInDom, r.guideBtnVisible, r.guideBtnText);
     console.log('   skip    link %d · #lessonDeck %d · deck is main.slide-container %s · FOCUS MOVES %s',
       r.skip, r.deck, r.deckIsSlideContainer, focusMoved);
-    console.log('   dupIds  %d %s', r.dupIds.length, r.dupIds.join(',') || '');
-    console.log('   console errors %d · non-file requests %s', errors.length,
+    console.log('   dupIds  %d of %d ids examined (%d elements in the document) %s',
+      r.dupIds.length, r.idTotal, r.elementTotal, r.dupIds.join(',') || '');
+    console.log('   console errors %d of %d console messages · non-file requests %d of %d requests %s',
+      errors.length, consoleTotal, requests.length, requestTotal,
       JSON.stringify([...new Set(requests)]));
+    // A denominator of zero is a failure, not a pass: if nothing was examined,
+    // the zero above measured nothing.
+    if (r.idTotal === 0 || r.elementTotal === 0 || requestTotal === 0)
+      console.log('   [DENOMINATOR ZERO] ids %d · elements %d · requests %d -- this run examined nothing',
+        r.idTotal, r.elementTotal, requestTotal);
     const ok = PLANT ? !r.splashInDom
       : (r.splashInDom && r.splashVisible && r.guideBtnInDom && r.guideBtnVisible
          && r.skip === 1 && r.deck === 1 && r.deckIsSlideContainer && focusMoved === true
-         && r.dupIds.length === 0);
+         && r.dupIds.length === 0
+         && r.idTotal > 0 && r.elementTotal > 0 && requestTotal > 0);
     console.log('   %s\n', PLANT ? (ok ? 'PLANT CONFIRMED: with the splash removed the check fails'
                                        : 'PLANT DID NOT FIRE  <-- the guard is not guarding')
                                  : (ok ? 'PASS' : 'FAIL'));

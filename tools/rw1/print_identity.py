@@ -43,7 +43,17 @@ def line(which, route, staff=False):
 
 
 def apply(text, which):
+    """Returns (text, added, cleaned, normalised, stats).
+
+    GW1-B R1: this function once reported "+0 added" as a success because its
+    section pattern matched none of the sections it was supposed to be editing.
+    A count with no denominator cannot tell "examined 16, none needed a change"
+    from "examined 0". So it now returns what it examined, and the four outcome
+    counts must reconcile to it exactly.
+    """
     added = cleaned = normalised = 0
+    stats = {'sections_examined': 0, 'staff_skipped': 0, 'pupil_sections': 0,
+             'already_correct': 0}
     out, pos = [], 0
     # NOT class="print-section": four of the sixteen carry a second class
     # (organiser-paper, exit-paper, mk-print) and an exact-string match skipped
@@ -52,6 +62,7 @@ def apply(text, which):
     # which I had already written and did not use here.
     SECTION = re.compile(r'<section\b(?=[^>]*\bclass="[^"]*(?<![-\w])print-section(?![-\w])[^"]*")([^>]*)>')
     for m in SECTION.finditer(text):
+        stats['sections_examined'] += 1
         attrs = m.group(1)
         route = (re.search(r'data-print-route="([^"]*)"', attrs).group(1)
                  if re.search(r'data-print-route="([^"]*)"', attrs) else '')
@@ -60,8 +71,10 @@ def apply(text, which):
         body = text[m.end():end]
         meta = re.search(r'<p class="science-meta">(.*?)</p>', body, re.S)
         if staff:
+            stats['staff_skipped'] += 1
             new_body = body                      # W3: staff sheets untouched
-        elif meta is None:
+        elif (stats.__setitem__('pupil_sections', stats['pupil_sections'] + 1)
+              or meta is None):
             new_body = line(which, route) + body  # W: the four with no identity
             added += 1
         else:
@@ -71,7 +84,20 @@ def apply(text, which):
                 cleaned += 1
             elif before != after:
                 normalised += 1
+            else:
+                stats['already_correct'] += 1
             new_body = body[:meta.start()] + after + body[meta.end():]
         out.append(text[pos:m.end()]); out.append(new_body); pos = end
     out.append(text[pos:])
-    return ''.join(out), added, cleaned, normalised
+    # The reconciliation IS the denominator check. If these do not add up, the
+    # pattern is seeing sections it is not accounting for, which is exactly the
+    # failure this function shipped once.
+    accounted = added + cleaned + normalised + stats['already_correct']
+    assert accounted == stats['pupil_sections'], (
+        'print identity did not account for every pupil section: '
+        '%d accounted vs %d pupil sections of %d examined'
+        % (accounted, stats['pupil_sections'], stats['sections_examined']))
+    assert stats['sections_examined'] > 0, (
+        'print identity examined ZERO print sections -- a denominator of zero '
+        'is a failure, not a pass')
+    return ''.join(out), added, cleaned, normalised, stats

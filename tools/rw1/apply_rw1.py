@@ -130,9 +130,14 @@ def run(which, src, check=False):
                   assessment_layer(text, which))
     prompted, npr = ta_prompts.apply(text, which)
     text = report('I1 nine stage-specific TA prompts (%d hosts)' % npr, text, prompted)
-    ident, nadd, nclean, nnorm = print_identity.apply(text, which)
-    text = report('W print identity (+%d added, %d dates removed, %d normalised)'
-                  % (nadd, nclean, nnorm), text, ident)
+    ident, nadd, nclean, nnorm, pstats = print_identity.apply(text, which)
+    text = report('W print identity (%d of %d pupil sections: +%d added, %d dates '
+                  'removed, %d normalised, %d already correct; %d staff skipped, '
+                  '%d sections examined)'
+                  % (nadd + nclean + nnorm + pstats['already_correct'],
+                     pstats['pupil_sections'], nadd, nclean, nnorm,
+                     pstats['already_correct'], pstats['staff_skipped'],
+                     pstats['sections_examined']), text, ident)
     carried, missing = furniture.carry(text, which)
     if missing:
         print('  [FAIL] furniture parts not found in live: ' + ', '.join(missing))

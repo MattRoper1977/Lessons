@@ -44,11 +44,28 @@ ROWS = [
  ('#lessonDeck',            r'id="lessonDeck"',             "//*[@id='lessonDeck']",            None),
  ('[data-lesson-id]',       r'data-lesson-id',              '//*[@data-lesson-id]',             None),
  ('[data-pathway]',         r'data-pathway',                '//*[@data-pathway]',               None),
+ # DECLARED EQUIVALENCE. Live's TA prompt hosts carry data-ta1; the pack's carry
+ # data-prompt. Nothing was renamed by this build -- the two chassis simply name
+ # the same host differently, and ta_prompts.py fills the pack's own attribute.
+ # So data-ta1 going to zero is not a dropped marker PROVIDED data-prompt picks
+ # up the same number of hosts. That condition is checked, not assumed: see
+ # EQUIVALENCE below. Without it this instrument exits non-zero on a benign
+ # rename, and a gate that cries wolf stops being read.
  ('[data-ta1]',             r'data-ta1=',                   '//*[@data-ta1]',                   None),
  ('[data-prompt]',          r'data-prompt=',                '//*[@data-prompt]',                None),
  ('[data-mbm-guide=staff]', r'data-mbm-guide="staff"',      "//*[@data-mbm-guide='staff']",     None),
  ('.teacher-only',          r'class="[^"]*teacher-only',    cls('*','teacher-only'),            None),
- ('button.n6m-guide-btn',   r'n6m-guide-btn',               cls('button','n6m-guide-btn'),      None),
+ # NOT an element in the static document. All six substring hits are a CSS rule,
+ # a docked-variant rule, a print rule, and two lines of script -- the button is
+ # built at runtime by document.createElement. A static parse returns 0 forever,
+ # so asking the parse for a tag was asking the wrong question; the real static
+ # question is whether a script still constructs it. render_check.cjs answers the
+ # rendered question and finds it present, visible, labelled "(i) Guidance".
+ ('button.n6m-guide-btn',   r'n6m-guide-btn',               None,
+    'SCRIPT-CREATED: never in the static DOM. DOM question is the row below; '
+    'the rendered proof is render_check.cjs'),
+ ('script building the btn', r'zzz-never-matches-zzz',       None,
+    'counted by parsing <script> text for the className assignment'),
  ('style#n6m-guide-css',    r'n6m-guide-css',               "//style[@id='n6m-guide-css']",     None),
  ('script[usage-client]',   r'usage-client\.js',            '//script[contains(@src,"usage-client.js")]', None),
  ('script[lesson-nav]',     r'lesson-navigation\.js',       '//script[contains(@src,"lesson-navigation.js")]', None),
@@ -70,6 +87,32 @@ def script_with_key(doc, key='mbm_guide_v1'):
     return sum(1 for s in doc.xpath('//script') if key in (s.text or ''))
 
 
+def script_builds_button(doc):
+    """The static DOM question for a script-created element: does a script still
+    assign the class that makes it?"""
+    return sum(1 for s in doc.xpath('//script')
+               if 'n6m-guide-btn' in (s.text or '') and 'createElement' in (s.text or ''))
+
+
+# A carried marker may legitimately go to zero if a DECLARED equivalent picks up
+# the same population. (gone, arrived, what it means)
+EQUIVALENCE = [('[data-ta1]', '[data-prompt]',
+                'TA prompt hosts: live names them data-ta1, the pack names them '
+                'data-prompt. Same hosts, different chassis vocabulary.')]
+
+
+def denominators(doc):
+    """GW1-B R1. Every row below is a count; these are what those counts are
+    drawn from. A denominator of zero means the parse saw nothing and every
+    zero above it is vacuous, not clean."""
+    ids = [e.get('id') for e in doc.xpath('//*[@id]')]
+    return {'elements': len(doc.xpath('//*')),
+            'elements_with_class': len(doc.xpath('//*[@class]')),
+            'ids': len(ids), 'unique_ids': len(set(ids)),
+            'scripts': len(doc.xpath('//script')),
+            'markers_examined': len(ROWS)}
+
+
 def counts(text):
     doc = doc_of(text)
     out = []
@@ -77,6 +120,8 @@ def counts(text):
         s = len(re.findall(sub, text))
         if label == 'script holding the key':
             d, s = script_with_key(doc), len(re.findall(r'mbm_guide_v1', text))
+        elif label == 'script building the btn':
+            d, s = script_builds_button(doc), len(re.findall(r'n6m-guide-btn', text))
         elif css is None:
             d = None
         else:
@@ -90,12 +135,21 @@ def live_text(k):
 
 
 def main():
-    moved = []
+    moved, satisfied = [], set()
     for k in 'AB':
         now = (REPO / LIVE[k]).read_text(encoding='utf-8')
         lc, ldoc = counts(live_text(k))
         nc, ndoc = counts(now)
+        ld_, nd_ = denominators(ldoc), denominators(ndoc)
         print('=== %s  ·  substring vs DOM, live vs now ===' % k)
+        print('   examined %d markers against %d elements (%d with a class), %d ids '
+              '(%d unique), %d scripts   [live: %d elements, %d ids]'
+              % (nd_['markers_examined'], nd_['elements'], nd_['elements_with_class'],
+                 nd_['ids'], nd_['unique_ids'], nd_['scripts'],
+                 ld_['elements'], ld_['ids']))
+        if not nd_['elements'] or not nd_['ids']:
+            print('   [DENOMINATOR ZERO] the parse saw nothing -- every count below is vacuous')
+            moved.append('%s DENOMINATOR ZERO' % k)
         print('   %-26s %-13s %-13s' % ('marker', 'LIVE sub/dom', 'NOW sub/dom'))
         for (lab, ls, ld, note), (_, ns, nd, _n) in zip(lc, nc):
             disagree = (ld is not None and ls != ld) or (nd is not None and ns != nd)
@@ -109,16 +163,35 @@ def main():
                      '   <-- DROPPED' if drop else ''))
             if note and (lab.endswith('(name)') or lab.endswith('(key)')):
                 print('   %-26s   %s' % ('', note))
+        # Declared equivalences, checked rather than trusted.
+        by_label_live = {r[0]: r[2] for r in lc}
+        by_label_now = {r[0]: r[2] for r in nc}
+        for gone, arrived, why in EQUIVALENCE:
+            lg, ng = by_label_live.get(gone), by_label_now.get(gone)
+            la, na = by_label_live.get(arrived), by_label_now.get(arrived)
+            if lg and not ng:
+                ok = na == lg
+                print('   EQUIVALENCE %s -> %s : live %s hosts, now %s   %s'
+                      % (gone, arrived, lg, na, 'HOLDS' if ok else 'DOES NOT HOLD'))
+                print('   %-26s   %s' % ('', why))
+                satisfied.add('%s %s' % (k, gone))
+                if not ok:
+                    moved.append('%s %s (equivalence failed)' % (k, arrived))
         # H5
         ids = ndoc.xpath('//*[@id]')
         vals = [e.get('id') for e in ids]
         deck = ndoc.xpath(cls('main', 'slide-container'))
-        print('   H5: duplicate ids %d · main.slide-container resolves %d · #lessonDeck is that element %s'
-              % (len(vals) - len(set(vals)), len(deck),
+        print('   H5: duplicate ids %d of %d ids examined · main.slide-container '
+              'resolves %d · #lessonDeck is that element %s'
+              % (len(vals) - len(set(vals)), len(vals), len(deck),
                  bool(deck) and deck[0].get('id') == 'lessonDeck'))
         print()
-    print('ROWS WHERE A CARRIED MARKER IS ABSENT:', moved or 'none')
-    return 1 if moved else 0
+    unexplained = [m for m in moved if m not in satisfied]
+    explained = [m for m in moved if m in satisfied]
+    if explained:
+        print('CARRIED MARKERS ABSENT BUT EXPLAINED BY A CHECKED EQUIVALENCE:', explained)
+    print('ROWS WHERE A CARRIED MARKER IS ABSENT AND UNEXPLAINED:', unexplained or 'none')
+    return 1 if unexplained else 0
 
 
 if __name__ == '__main__':
