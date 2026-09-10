@@ -3486,3 +3486,55 @@ number is corrected in the open rather than quietly accepted or quietly
 renumbered: **a tally whose increments are not auditable is worth nothing**
 (R-HUC04, which made exactly this correction about a mis-open count reading ten
 against an order's nine).
+
+
+### GW1-D — A change is scoped by what reads it, not by what it touches
+
+Before altering a value, a return code or a contract, **enumerate the
+consumers**. The diff tells you what you touched; it does not tell you what
+depends on it, and those are different questions.
+
+**The enumeration is cheap. The discovery is luck.**
+
+Four worked examples, all from one sequence, all mine:
+
+| # | what was changed | what read it | how it was found |
+|---|---|---|---|
+| 1 | `--wait-seconds` in the workflow | the ceiling three lines below the default I had just read, in the tool it calls | **main, in under a second, after the merge** |
+| 2 | `require()` raising `Red` instead of `Inconclusive` | `tools/test_served_publications.py`, nine tests I did not know existed | **six of them breaking, one minute after the push** |
+| 3 | the bytes of both those files | two SHA256 pins in `verify_cross_estate_unification.py` | **a census, before the merge** |
+| 4 | the same bytes | a membership list in `pin_catalogue_contract.py` | the same census |
+
+The first two were found **by breaking them**. The second two were found **by
+looking**, and the third is the one that makes the rule: the gate holding those
+pins triggers on a `paths:` filter that **does not include the files it pins**,
+so a stale pin would have sat dormant and gone red on the next unrelated pull
+request that touched `index.html`. Someone else's change, my defect, and no
+signal at the moment I introduced it.
+
+**A suite discovered by breaking it was never in scope, and the next one may not
+break loudly.** Instance 2 broke within a minute and taught me nothing I could
+rely on; instance 3 would have been silent for as long as nobody edited an
+unrelated file. Treating the loud one as the normal case is the error.
+
+The census that closes it is four questions and costs minutes:
+
+1. **Who invokes it?** — grep the name across workflows, shells, tools.
+2. **Who imports it?** — grep the module name; tests are the usual answer, and
+   the usual thing nobody greps for.
+3. **Who pins or digests it?** — reviewed-byte registries do not announce
+   themselves, and their gates may not run on the paths they protect.
+4. **Who reads its outputs or its exit codes?** — including as text, and
+   including whether anything distinguishes one non-zero from another.
+
+Sibling of *classify, do not count* and *prove the output, not the absence of
+the input*: all three are the same instruction about looking at the thing itself
+rather than at your intention toward it.
+
+**One corollary worth keeping.** The census on this occasion also proved
+something clean, and a clean census reported is worth as much as a dirty one: the
+exit-code split was not an invention. `watch_main_runs.mjs`, `verify_served.mjs`
+and `verify_fieldops_served.mjs` already ran *Inconclusive → 2, otherwise → 1*.
+The Python tool was the outlier. **Enumerating the consumers told me the change
+was smaller than I thought**, which is the other half of what the enumeration is
+for — it is not only a way of finding breakage.
