@@ -15,6 +15,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import marking_card
 import furniture
 import ta_prompts
+import print_identity
 
 REPO = Path(__file__).resolve().parents[2]
 LIVE = {
@@ -129,6 +130,9 @@ def run(which, src, check=False):
                   assessment_layer(text, which))
     prompted, npr = ta_prompts.apply(text, which)
     text = report('I1 nine stage-specific TA prompts (%d hosts)' % npr, text, prompted)
+    ident, nadd, nclean, nnorm = print_identity.apply(text, which)
+    text = report('W print identity (+%d added, %d dates removed, %d normalised)'
+                  % (nadd, nclean, nnorm), text, ident)
     carried, missing = furniture.carry(text, which)
     if missing:
         print('  [FAIL] furniture parts not found in live: ' + ', '.join(missing))
