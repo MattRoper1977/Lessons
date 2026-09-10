@@ -40,11 +40,24 @@ def _span(s, open_pat, close_lit):
 def parts(which):
     s = live_text(which)
     body = re.search(r'<body([^>]*)>', s)
+    # Balanced walk, not "the first </div> after </svg>". That shortcut closed the
+    # INNER div and left <div class="n6-splash"> open, so every element after it --
+    # including the prev/next row -- became a child of the splash, which the print
+    # CSS hides. The browser auto-closed the tag, so it still RENDERED; only a
+    # balance check finds it.
     splash = None
     k = s.find('<div class="n6-splash"')
     if k >= 0:
-        e = s.find('</div>', s.find('</svg>', k))
-        splash = s[k:e + len('</div>')] if e > 0 else None
+        depth, i = 0, k
+        while i < len(s):
+            if s.startswith('<div', i):
+                depth += 1; i += 4
+            elif s.startswith('</div>', i):
+                depth -= 1; i += 6
+                if depth == 0:
+                    splash = s[k:i]; break
+            else:
+                i += 1
     skip = re.search(r'<a class="skip"[^>]*>[^<]*</a>', s)
     deck = re.search(r'<main id="lessonDeck"([^>]*)>', s)
     links = _span(s, '<div class="links">', '</div>')
