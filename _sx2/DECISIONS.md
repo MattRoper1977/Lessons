@@ -3,303 +3,50 @@
 Order SX2 (2026-09-09), written at the time, per the `_eca1`/`_glv3` convention.
 Phase S: finish SX1 and get the Spring/Summer Science batch served.
 
-## Merged, with rollback SHAs
+**This file is generated.** One ruling per file in `_sx2/decisions/`; a landed
+decision file is never edited. Add a ruling by adding a file, then run
+`tools/decisions/build_index.py`. `--check` reds if this index and that directory
+disagree.
 
-| repo | PR | merged | rollback |
-|---|---|---|---|
-| Lessons | #454 content (51 lessons, 309 pack files, authoring source) | `d4b9b0ca` | `2c33266b` |
-| Apps | #74 gate-copy sync, stale apps caller pin corrected | `ca7c3a36` | `630e838a` |
-| Lessons | #455 catalogue, 848 → 950 rows | `331b0074` | `d4b9b0ca` |
-| Apps | #75 caller-digest parity | `3bd55dbf` | `ca7c3a36` |
 
-Lessons #453 was closed unmerged and superseded by #454 + #455. The GLV3 fence
-never needed repair: `glv3-verify.yml` is `verify_change_boundary.py`'s only
-caller and does not trigger on `Science_Teesside/**`. #453 carried content *and*
-`resources.json`, which summoned the fence and then handed it protected content
-to judge. Split, #454 ran 9 checks instead of 13 and the fence never fired.
-
----
-
-## D1 — The publisher reads the admission registry from the BUILDER CHECKOUT, not Site main
-
-**This is the entry to read before touching publication.** It is not obvious from
-either repository and it cost a full diagnosis cycle to establish.
-
-`MattRoper1977/Lessons .github/workflows/education-pages.yml` calls the Site's
-reusable `education-publication.yml` with a `builder_ref`. The publisher checks
-the Site out at that ref into `.sources/Site` and reads
-`domain-split/education-publication-admission.json` **from there**. Site `main`
-is never consulted by a Lessons publication.
-
-Consequences, each measured:
-
-- A registry fix landed on Site `main` does nothing for the Lessons publish. The
-  pin must move, or nothing changes.
-- The registry is **builder-specific**. Between the pinned builder `92abc460`
-  and Site main, twelve files differ, `usage_discovery.py` among them, so the
-  two builders emit different `education-site` bytes. A census taken against one
-  is wrong for the other.
-- It is also **source-specific**. `education-publication.yml` checks Lessons out
-  at `${{ github.repository == 'MattRoper1977/Lessons' && github.sha || '6ae34c37…' }}`.
-  Only the Lessons trigger builds live Lessons; a Site trigger builds the pinned
-  commit. A flat exact-digest census of Lessons main is therefore correct on the
-  Lessons trigger and **wrong on main**, where the same paths read as MISSING.
-  That is what `ARRIVING` markers and transition pairs in the registry are for.
-- `verify()` raises on the first failing tree, so CI shows only that tree's
-  problems. Reproduce the publisher locally to see the whole census at once.
-
-### The surgical pin, and why it is not on main
-
-Site `94ae15f8` is the reviewed builder `92abc460` plus two review records only:
-
-```
-git diff --name-only 92abc460 94ae15f8
-domain-split/check_education_separation.py
-domain-split/education-publication-admission.json
-```
-
-Pinning instead to a Site main commit would carry the twelve-file builder delta,
-including 342 lines of `play/play.js`, and so would **move Play** — forbidden by
-SX2 §0.1. Merging `94ae15f8` into main would replace main's registry with one
-built by an older builder against a different Lessons pin, breaking the
-site-triggered publish. So it is deliberately not on main, and Site #339 is
-closed rather than merged.
-
-### Durability — a deleted branch would kill publish silently
-
-Nothing in the Lessons repository would look wrong; publication would simply
-fail at checkout. Anchors, in order of strength:
-
-1. `refs/pull/339/head` → `94ae15f8`. GitHub maintains this permanently once a
-   PR has been opened and users cannot delete it. **Verified present.**
-2. Branch `claude/sx1-science-admission-pin` → `94ae15f8`.
-
-An annotated tag `education-publisher-pin-sx1` was created locally and is the
-intended third anchor, but **this session cannot push it**: GitHub answers
-`HTTP 403` to `git-receive-pack` for a tag ref while branch pushes to the same
-repository succeed, so the credential permits `refs/heads/*` and not
-`refs/tags/*`. The agent proxy recorded no failure for github.com, so this is
-GitHub's refusal, not egress policy. Reported rather than routed around. To
-create it by hand:
-
-```sh
-git tag -a education-publisher-pin-sx1 94ae15f8d98ab9fe9d814aeb9bf417942452b83e \
-  -m "Education publisher pin, SX1/SX2. DO NOT MOVE OR DELETE."
-git push origin refs/tags/education-publisher-pin-sx1
-```
-
-Before retiring any of these anchors, repoint `education-pages.yml` (both the
-`uses:` ref and `builder_ref`) at a successor commit and re-pin
-`PUBLICATION_CALLER_SHA256` in **both** copies of
-`tools/verify_cross_estate_unification.py`.
-
----
-
-## D2 — The apps caller pin was a mid-PR state, never on main
-
-`PUBLICATION_CALLER_SHA256_BY_KIND["apps"]` held `c420519111f6`: the Apps caller
-at `924ab986`, an intermediate state **inside Apps #72**, superseded 36 minutes
-later in that same PR when CX3 cycle C advanced the caller from Site `23a4f360`
-to `6430f23f`. Apps main has carried `732591ddeae0` since #72 merged; the pinned
-value was never on main.
-
-UX2 A5 justified it as "the Site's catalogue contract control runs this gate
-against as kind apps". **No such control exists**: the Site invokes this verifier
-in zero workflows, and `detect_kind()` derives the kind from the root it is
-standing in, so the only readers are the Apps repository's own gate runs against
-their own tree. Corrected in #74/#455.
-
-It stayed invisible because the Apps gate copy predated UX2 A5 and had no
-by-kind map to read. **Syncing the two copies is what made it fire** — a general
-lesson: a constant that no consumer evaluates is not verified, however exact it
-looks. Session `011cypYwzsjkJRHnYRjJzpZF` reached the same conclusion
-independently within the hour, from the same evidence (Lessons #456).
-
----
-
-## D3 — Re-freezing the retained usage-registry baseline
-
-`check_education_separation.py` freezes the digest of the rows
-`registry_partition()` retains. The 51 new lesson records move it: **926 → 977
-rows, 51 added, 0 removed, 0 field of any existing record changed.**
-
-The method matters more than the number. A build at this repository's previously
-pinned source `2c33266b` reproduces the *previous* baseline `d2439c61` **exactly
-at 926 rows**. Without that equality the before/after comparison would prove
-nothing, so re-freeze this way rather than by taking the new digest on trust.
-
----
-
-## D4 — Part R builds the target pin-mover (Order SX3 amendment A1)
-
-`tools/easter/SCIENCE_ORIGINAL_TARGETS.json` pins 25 lessons by
-`expectedPatchedSha256`, asserted as `Source identity: <file>` by the long
-`Original Science navigation` job. **All 25 are files the Autumn 1 refresh
-patches**, so any R landing reds that job unless the hashes move with it. No tool
-rewrites them today; the file is hand-maintained, and it is *not* in
-`CATALOGUE_PINS`, so no catalogue re-pin is involved.
-
-Ruled (SX3 A1): the mover is built **once, in Part R, inside the fence**. It
-recomputes `expectedPatchedSha256` from the patched bytes, rewrites the JSON in
-the same commit, **fails if any target path is missing**, and is red-proved by
-planting one stale hash. SX3 reuses it for its 64 REPLACE/PATCH files.
-
----
-
-## D5 — Deferred: the zero-check gate should exclude conflicted PRs
-
-**No code now. Own PR, later, never inside an order.**
-
-`tools/pr_check_census.mjs` reds when any non-draft open PR across the three
-repositories has zero check runs and is not declared in
-`tools/zero_check_baseline.json`. The intent is sound: a green tick on a PR
-nothing ran is a false green.
-
-But a PR whose `mergeable_state` is `dirty` **cannot be merged at all**, so it
-carries no false-green risk — GitHub can build no merge ref, so no workflow can
-fire however the filters are written. The gate's own output says exactly this:
-`conflicted — no merge ref, so no workflow could fire`. The result is that one
-conflicted PR anywhere in the estate reds **every** PR in the estate, including
-unrelated ones in other repositories.
-
-Observed 2026-09-09: three conflicted PRs (Lessons #456, Apps #73, Site #339)
-red-flagged Lessons #457, which had 13 green checks and no relationship to any
-of them.
-
-Proposed rule: exclude `mergeable_state == 'dirty'` from the undeclared count and
-report it as a separate conflicted census, keeping it visible without letting it
-gate. `draft` is already excluded on the same reasoning — draftness is read, not
-inferred — and conflictedness is the stronger signal of the two.
-
-Do **not** work around this by adding transient conflicts to
-`zero_check_baseline.json`. That file's own `_how_it_fails` calls an unpruned
-entry stale evidence, and a conflict that clears on rebase would leave a row
-nobody prunes.
-
----
-
-## LF1 — A relabeller that cannot resolve a label must refuse, not guess
-
-**Status: the tool change is here. The 121 restorations are proposed, not landed.**
-
-### What went wrong
-
-`tools/relabel_public.py` replaces pupil-facing calendar labels ("Week 9",
-"W14") with sequence-relative ones ("Lesson 3 of 12"). It resolves a week
-number against the unit manifest in the file's own folder. When the week was
-not in that manifest it returned one of two strings:
-
-```python
-if s.lo is not None and w < s.lo: return 'the previous unit'
-if s.hi is not None and w > s.hi: return 'the next unit'
-```
-
-Neither is a translation of a week number. Both are a guess, and on the CX3
-pass of 2026-09-08 the guess was taken **121 times across 22 published pages**.
-
-### Why the guess is always wrong here
-
-The two branches fired on cross-unit references — a recap naming an earlier
-week, or a forward reference to the next half-term. Four failure shapes came
-out of them:
-
-| shape | occurrences | example |
+| # | ruling | summary |
 |---|---|---|
-| distinct weeks collapse to one phrase | 105 | `W5:` `W6:` `W7B:` all became `the previous unit:` — three different recap lines, one indistinguishable label |
-| ranges double the phrase | 16 | `W2–W3:` → `the previous unit–the previous unit:` |
-| an article in front of it duplicates | 11 | `the W14 question` → `the the next unit question` |
-| the reference is not to a unit at all | all of them | W5–W7 are earlier lessons in the same strand; calling them "the previous unit" is wrong even where it reads |
+| `0001` | [Merged, with rollback SHAs](decisions/0001-merged-with-rollback-shas.md) | \| repo \| PR \| merged \| rollback \| |
+| `0002` | [D1 — The publisher reads the admission registry from the BUILDER CHECKOUT, not Site main](decisions/0002-d1-the-publisher-reads-the-admission-registry-from-the-build.md) | This is the entry to read before touching publication. It is not obvious from |
+| `0003` | [D2 — The apps caller pin was a mid-PR state, never on main](decisions/0003-d2-the-apps-caller-pin-was-a-mid-pr-state-never-on-main.md) | PUBLICATION_CALLER_SHA256_BY_KIND"apps" held c420519111f6: the Apps caller |
+| `0004` | [D3 — Re-freezing the retained usage-registry baseline](decisions/0004-d3-re-freezing-the-retained-usage-registry-baseline.md) | check_education_separation.py freezes the digest of the rows |
+| `0005` | [D4 — Part R builds the target pin-mover (Order SX3 amendment A1)](decisions/0005-d4-part-r-builds-the-target-pin-mover-order-sx3-amendment-a1.md) | tools/easter/SCIENCE_ORIGINAL_TARGETS.json pins 25 lessons by |
+| `0006` | [D5 — Deferred: the zero-check gate should exclude conflicted PRs](decisions/0006-d5-deferred-the-zero-check-gate-should-exclude-conflicted-pr.md) | No code now. Own PR, later, never inside an order. |
+| `0007` | [LF1 — A relabeller that cannot resolve a label must refuse, not guess](decisions/0007-lf1-a-relabeller-that-cannot-resolve-a-label-must-refuse-not.md) | Status: the tool change is here. The 121 restorations are proposed, not landed. |
+| `0008` | [D11 — A changed admitted byte needs a registry move as much as a new path does](decisions/0008-d11-a-changed-admitted-byte-needs-a-registry-move-as-much-as.md) | education-publication-admission.json pins a digest per path. The publisher |
+| `0009` | [D12 — Build a counterfactual to contradict you, not to pass](decisions/0009-d12-build-a-counterfactual-to-contradict-you-not-to-pass.md) | LF1-B §2.2 required that no page carry two adjacent nodes with identical text. |
+| `0010` | [D13 — A browser-rendered census is the standard for a pupil-visible claim](decisions/0010-d13-a-browser-rendered-census-is-the-standard-for-a-pupil-vi.md) | Two false findings in one day, from opposite directions, both from not rendering: |
+| `0011` | [D14 — What a render census has to cover](decisions/0011-d14-what-a-render-census-has-to-cover.md) | The LF1 numbers, same phrase, same 22 pages, by how it was measured: |
+| `0012` | [D15 — One re-run is a discriminating test; a second identical failure is an outage](decisions/0012-d15-one-re-run-is-a-discriminating-test-a-second-identical-f.md) | An install-time failure — one that happens before any test body runs — is |
+| `0013` | [D16 — A crash is not a refusal](decisions/0013-d16-a-crash-is-not-a-refusal.md) | A refusal names the problem, leaves the file byte-unchanged, and lets the run |
+| `0014` | [D17 — A positive control is part of a clean result, not an optional extra](decisions/0014-d17-a-positive-control-is-part-of-a-clean-result-not-an-opti.md) | The census of those 47 returned 0. On its own that is worth nothing: a page that |
+| `0015` | [D18 — What the estate's manifests actually look like](decisions/0015-d18-what-the-estate-s-manifests-actually-look-like.md) | Three envelopes are in use and only two were known: |
+| `0016` | [LF1-G §6 — DEFERRED, recorded as the next order](decisions/0016-lf1-g-6-deferred-recorded-as-the-next-order.md) | The guide-mode CSS defect. html.mbm-guide-on data-mbm-guide{display:revert |
+| `0017` | [D19 — A manifest entry with no week is a data defect, not a labelling decision](decisions/0017-d19-a-manifest-entry-with-no-week-is-a-data-defect-not-a-lab.md) | Granted by Matt, 2026-09-09, on the amendment argued in |
+| `0018` | [D20 — RULE R-CAL-1, when a calendar token may be re-tokenised](decisions/0018-d20-rule-r-cal-1-when-a-calendar-token-may-be-re-tokenised.md) | Ruled by Matt, 2026-09-09. Landed verbatim below and in the docstring of |
+| `0019` | [D21 — 75 of the 205 refusals are a numbered question, not a week](decisions/0019-d21-75-of-the-205-refusals-are-a-numbered-question-not-a-wee.md) | Found while proving the three Spr2·W6 pages under F6, because all three refuse |
+| `0020` | [D22 — R-CAL-1 does not apply to `Tutor_Time/` or `Assembly/`](decisions/0020-d22-r-cal-1-does-not-apply-to-tutortime-or-assembly.md) | LF1-M §8e. Stated here so no future relabelling pass reaches for them. |
+| `0021` | [D24 — WITHDRAWN (Matt, 2026-09-09). §8a's amended wording survives it.](decisions/0021-d24-withdrawn-matt-2026-09-09-8a-s-amended-wording-survives.md) | Withdrawn, not superseded: the ruling was correct on the evidence and the |
+| `0022` | [D26 — STANDING RULE: path, never basename](decisions/0022-d26-standing-rule-path-never-basename.md) | Every comparison between an original and a re-cut, and every payload-to-original |
+| `0023` | [D27 — gates measure rendered output, never source](decisions/0023-d27-gates-measure-rendered-output-never-source.md) | Any gate whose subject is what a pupil can see is measured in a laid-out page. |
+| `0024` | [D28 — no instrument counts until it has a two-sided control](decisions/0024-d28-no-instrument-counts-until-it-has-a-two-sided-control.md) | Every gate, checker and comparison ships with a planted true positive (the |
+| `0025` | [D29 — §4c restoration proceeds on the derived 86](decisions/0025-d29-4c-restoration-proceeds-on-the-derived-86.md) | Ruled by Matt, 2026-09-09 (LF1M-FIN). The count is the output of the |
+| `0026` | [D30 — the loose Week 01 never lands](decisions/0026-d30-the-loose-week-01-never-lands.md) | GROW_Week_01_Interactive.html, 24,013 B, md5 b927e6f686, is provenance, |
+| `0027` | [D31 — same-basename register](decisions/0027-d31-same-basename-register.md) | _authoring/BASENAME_CONFLICTS.md records every same-basename divergence: |
+| `0028` | [D32 — G5 revised: rewrite becomes add](decisions/0028-d32-g5-revised-rewrite-becomes-add.md) | All eight lessons carry base64 data: URIs only, so there is no href to |
+| `0029` | [D33 — a text-mode read is not a byte measurement](decisions/0029-d33-a-text-mode-read-is-not-a-byte-measurement.md) | Byte equality is asserted from binary reads or os.path.getsize plus a content |
+| `0030` | [D34 — duplicate uploads](decisions/0030-d34-duplicate-uploads.md) | Byte-identical duplicates of files already measured; stored once by hash, and P1 is |
+| `0031` | [D31 — a registry move travels with the bytes that need it](decisions/0031-d31-a-registry-move-travels-with-the-bytes.md) | Any PR that changes the bytes of an admitted served path MUST carry the registry |
+| `0032` | [D3 — the §6 citation fix is CLOSED-VOID](decisions/0032-d3-the-section-6-citation-fix-is-closed-void.md) | Status: CLOSED-VOID. There was never anything to ship. Recorded here so nobody |
+| `0033` | [D45 — the GROW Computing collectible is backlog, not a gap](decisions/0033-d45-the-grow-computing-collectible-is-backlog-not-a-gap.md) | Nothing is built for it in this order. It is not a STOP, not a defect, and not |
+| `0034` | [D46 — the instrument correction is recorded, not just the result](decisions/0034-d46-two-independent-sixes.md) | Three facts belong in the register together, because it is their agreement that |
+| `0035` | [D39 — the seeded faults are content and are never repaired](decisions/0035-d39-the-seeded-faults-are-content-do-not-autofix.md) | W08_Bug_Hunt's three faults and W07_Bug_Hunt's wrong-sprite rule are the |
+| `0036` | [D47 — a gate that cannot see the served tree is not a gate](decisions/0036-d47-a-gate-that-cannot-see-the-served-tree.md) | AMEND-3R-GC1 G9 asks whether every week's sibling .sb3 link resolves at |
+| `0037` | [D48 — `.sb3` is admitted by reviewed digest, not by being a Scratch project](decisions/0037-d48-sb3-is-admitted-by-reviewed-digest-not-by-being-scratch.md) | Site 2e49afdd adds .sb3 to two allowlists: PUBLIC in build_education.py |
 
-(Shapes overlap: the range and article counts are subsets of the first.)
-
-The causal set is exactly two branches — `w < lo` (54 occurrences) and
-`w > hi` (51) — plus the never-taken third fallback. Simulating the tool on the
-recovered originals reproduces the live bytes for **103 of 103** affected
-nodes, so nothing about the mechanism is unexplained. An earlier hypothesis
-that flat folders (`sequence()` returning `n=None`) caused it is **wrong**: no
-live occurrence came from a flat folder. Every affected file resolved its own
-sequence correctly.
-
-### The rule
-
-A tool that cannot resolve a label says which label, in which file, in which
-sentence, and changes nothing. `Unresolvable` is raised; the file is not
-written; the run exits 2. There is no mode in which this tool authors a label
-it did not read.
-
-`added_banned()` is the post-condition (LF1 B6): a run may never *increase* the
-count of `the previous unit` / `the next unit`. It asserts an increase, not
-zero, because both are honest prose a teacher may have written — `6
-Art/Lesson15` and `Grow/Slideshows/GROW_HUM_W7` each contain one, authored, and
-neither is a defect.
-
-Red-proved in both directions on the real estate, not on fixtures: of the 64
-HTML files the CX3 pass touched, the fixed tool refuses **exactly** the 22 that
-carry the defect and applies cleanly to all 42 that do not. No false positive,
-no false negative.
-
-### Recovery is from stored bytes, never re-derivation
-
-The relabeller stores the original text in `data-mbm-cal` on the enclosing
-element. That store was checked against an independent source: for all 22
-files, `walk(live, 'revert')` is **byte-identical** to the blob at the parent of
-the first CX3 commit. Two sources, agreeing on every byte, so the restored
-strings are the ones that were there — not inferred from neighbouring weeks,
-not hand-authored. The C3 list (unrecoverable, needing a human) is **empty**.
-
-### What this costs
-
-The 22 files cannot be relabelled by tooling any more, and should not be. Their
-recaps name specific earlier lessons; turning those into sequence-relative text
-needs someone who knows what the pupil is being asked to remember.
-
-### LF1-B — how the count was wrong, and what a pupil-visible claim now costs
-
-**31 → 121.** The first LF1 census reported 31 occurrences across 19 files. The
-real figure is 121 across 22. Two independent errors, both in the same direction:
-
-1. `git grep -c` counts matching **lines**, not occurrences. A line carrying
-   `the previous unit–the previous unit` counted as one.
-2. The search set was incomplete. `the next unit` was never searched for in the
-   Science Build tree, so `SCI_B_W13A` (18) and `SCI_B_W13B` (33) — the two worst
-   pages in the estate — were absent from the list entirely.
-
-**The standard, from here.** Any claim about pupil-visible text is measured in a
-browser, on the DOM, on every route the page has. `tools/lf1/render_census.cjs`
-is that measurement. What it changed about the LF1 numbers:
-
-| measured as | count |
-|---|---|
-| source grep, lines | 31 |
-| DOM text nodes, slide 1 only | 8 |
-| DOM, driving the slide control | 72 |
-| …also pressing the tier and model-step controls | 75 |
-| print emulation, union over every printable tier | 35 |
-| accessible names (`aria-label`) | 3 |
-| **total in the document** | **121** |
-
-Three lessons in that table. A count on slide 1 is not the deck — most slides are
-`display:none` until navigated, and `showSlide` is inside a closure, so the walk
-has to drive the real `#next` control. Content behind one press of a tier or
-reveal button is pupil-facing, not a caveat. And the printed worksheet is a
-separate DOM subtree: `SCI_B_W8B` had four occurrences in print and none on
-screen at load, so the defect reached handouts before it reached a screen.
-
-**The duplicate that was not one.** A direct fetch of `SCI_B_W13A` appeared to
-show placeholder and correct copy in one node. It is the `span.mbm-cal-staff`
-twin the six *v4 relabel bytes* commits (`a229cdf`, `aa6aaea`, `d1ae3a2`,
-`ba61840`, `edc6b36`, `06b77c8`) add so staff keep the calendar declaration a
-pupil no longer sees. It is inline `display:none`, so a browser renders one copy
-— but any tag strip that ignores CSS renders both, which is what the fetch did.
-26 twins exist; the 8 files with only the first CX3 pass have none.
-
-**But the hiding is not load-bearing.** `html.mbm-guide-on
-[data-mbm-guide]{display:revert!important}` beats an inline non-important
-`display:none`, so with guide/TA mode on the line renders twice — 9 such pairs on
-5 pages. That is a guide-mode bug, not a relabel bug, and it is recorded
-separately; the LF1 fix deletes only the 9 twins that restoration makes into
-word-for-word restatements, and leaves the 17 doing their job.
-
-**The proxy substitution is resolved.** Matt fetched the origin directly. The
-admission-registry membership argument is retired as a served proof for LF1;
-served proof is a fetch of the four URLs, read as rendered DOM.
+37 rulings. The text of each is in its own file and is never edited after landing.
