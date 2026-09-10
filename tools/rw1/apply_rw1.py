@@ -14,6 +14,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import marking_card
 import furniture
+import ta_prompts
 
 REPO = Path(__file__).resolve().parents[2]
 LIVE = {
@@ -126,6 +127,8 @@ def run(which, src, check=False):
     text = report('D3 cross-link rewired to the served sibling', text, cross_links(text, which))
     text = report('4.2/4.3/4.5 Lundy desk card -> marking card + print route', text,
                   assessment_layer(text, which))
+    prompted, npr = ta_prompts.apply(text, which)
+    text = report('I1 nine stage-specific TA prompts (%d hosts)' % npr, text, prompted)
     carried, missing = furniture.carry(text, which)
     if missing:
         print('  [FAIL] furniture parts not found in live: ' + ', '.join(missing))
