@@ -638,6 +638,11 @@ LUNDYLOOP_CI_PINS = {
 }
 
 ALLOWED_DIFF = {
+    # Gate reconciliation to Lessons main c603cb56 + two ALLOWED_DIFF entries.
+    # Authorised by Matt, Order AR3, 2026-09-10. Allowlist entries are temporary —
+    # remove when SW2 T5 re-lands with admitted registry digests.
+    "assets/mbm-tokens.css",
+    "tools/sw2/check_tokens_inert.cjs",
     PUBLICATION_CALLER_PATH,
     "index.html",
     "apps.json",
