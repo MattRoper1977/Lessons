@@ -135,6 +135,30 @@ def served_dirs(admittedmap):
     return {p.rsplit('/', 1)[0] for p in admittedmap if '/' in p}
 
 
+def under_served_tree(path, dirs):
+    """True if any ANCESTOR directory of this path is one the publisher serves.
+
+    The first version of this asked only about the immediate parent, which is the
+    right question for a file dropped beside existing ones and the wrong one for a
+    whole new subtree. GC1 added 162 files under
+    ICT/Teaching_Packs/GROW_Computing/Week_01/ and friends. None of those
+    directories existed, so none was a served directory, so the guard reported
+    "served paths: 1" -- the one already-admitted index.html whose bytes moved --
+    and said nothing about the other 162.
+
+    The publisher would have said plenty. verify_tree_census walks the whole built
+    tree and calls every path it does not recognise UNREVIEWED, so those 162 were
+    162 blocked publications the guard could not see. ICT/Teaching_Packs IS served
+    (its index.html is admitted), so an ancestor test catches them while still
+    ignoring tools/ and _sx2/, which have no served ancestor at all.
+    """
+    parts = path.split('/')
+    for i in range(len(parts) - 1, 0, -1):
+        if '/'.join(parts[:i]) in dirs:
+            return True
+    return False
+
+
 def check(registry, rows, tree='education-lessons'):
     admittedmap = registry['trees'][tree]
     dirs = served_dirs(admittedmap)
@@ -146,8 +170,8 @@ def check(registry, rows, tree='education-lessons'):
             # publisher already serves. tools/, _sx2/ and the rest of the working
             # repository are not served and must not be reported: a gate that
             # cries about every new script is a gate people learn to ignore.
-            if status in ('A', 'C') and '/' in path and path.rsplit('/', 1)[0] in dirs:
-                problems.append('UNADMITTED %s: added where the publisher serves, but no registry row' % path)
+            if status in ('A', 'C') and '/' in path and under_served_tree(path, dirs):
+                problems.append('UNADMITTED %s: added under a tree the publisher serves, but no registry row' % path)
             continue
         if status in ('A', 'C'):
             # A path that did not exist before is not a byte MOVE, and asking it for
@@ -207,6 +231,21 @@ def self_test():
     p, s = check(reg2, [('A', 'Science/unit/two.html')])
     want('an ADDED file in a directory the publisher serves is RED',
          len(p) == 1 and p[0].startswith('UNADMITTED'))
+
+    # The shape the first version missed: a wholly new SUBTREE under a served one.
+    # None of its directories exists yet, so a parent-only test sees nothing, while
+    # the publisher censuses the built tree and calls all of them UNREVIEWED.
+    p, s = check(reg2, [('A', 'Science/unit/newweek/lesson.html')])
+    want('an ADDED file in a NEW subdirectory under a served tree is RED',
+         len(p) == 1 and p[0].startswith('UNADMITTED'))
+    p, s = check(reg2, [('A', 'Science/unit/a/b/c/deep.html')])
+    want('  ... however deep the new subtree goes', len(p) == 1)
+    p, s = check(reg2, [('A', 'tools/lf1/a/b/new_tool.py')])
+    want('  ... and a deep path with NO served ancestor is still ignored', not p)
+    want('under_served_tree finds a grandparent',
+         under_served_tree('Science/unit/new/x.html', {'Science/unit'}))
+    want('  ... and does not match a sibling prefix',
+         not under_served_tree('Science/unitother/x.html', {'Science/unit'}))
     p, s = check(reg2, [('A', 'tools/lf1/new_tool.py')])
     want('an ADDED file where nothing is served is ignored', not p)
     p, s = check(reg2, [('A', 'brand-new.html')])
