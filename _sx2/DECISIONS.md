@@ -41,5 +41,10 @@ disagree.
 | `0028` | [D32 — G5 revised: rewrite becomes add](decisions/0028-d32-g5-revised-rewrite-becomes-add.md) | All eight lessons carry base64 data: URIs only, so there is no href to |
 | `0029` | [D33 — a text-mode read is not a byte measurement](decisions/0029-d33-a-text-mode-read-is-not-a-byte-measurement.md) | Byte equality is asserted from binary reads or os.path.getsize plus a content |
 | `0030` | [D34 — duplicate uploads](decisions/0030-d34-duplicate-uploads.md) | Byte-identical duplicates of files already measured; stored once by hash, and P1 is |
+| `0031` | [D31 — a registry move travels with the bytes that need it](decisions/0031-d31-a-registry-move-travels-with-the-bytes.md) | Any PR that changes the bytes of an admitted served path MUST carry the registry |
+| `0032` | [D3 — the §6 citation fix is CLOSED-VOID](decisions/0032-d3-the-section-6-citation-fix-is-closed-void.md) | Status: CLOSED-VOID. There was never anything to ship. Recorded here so nobody |
+| `0033` | [D45 — the GROW Computing collectible is backlog, not a gap](decisions/0033-d45-the-grow-computing-collectible-is-backlog-not-a-gap.md) | Nothing is built for it in this order. It is not a STOP, not a defect, and not |
+| `0034` | [D46 — the instrument correction is recorded, not just the result](decisions/0034-d46-two-independent-sixes.md) | Three facts belong in the register together, because it is their agreement that |
+| `0035` | [D39 — the seeded faults are content and are never repaired](decisions/0035-d39-the-seeded-faults-are-content-do-not-autofix.md) | W08_Bug_Hunt's three faults and W07_Bug_Hunt's wrong-sprite rule are the |
 
-30 rulings. The text of each is in its own file and is never edited after landing.
+35 rulings. The text of each is in its own file and is never edited after landing.
