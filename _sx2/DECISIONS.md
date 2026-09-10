@@ -41,5 +41,7 @@ disagree.
 | `0028` | [D32 — G5 revised: rewrite becomes add](decisions/0028-d32-g5-revised-rewrite-becomes-add.md) | All eight lessons carry base64 data: URIs only, so there is no href to |
 | `0029` | [D33 — a text-mode read is not a byte measurement](decisions/0029-d33-a-text-mode-read-is-not-a-byte-measurement.md) | Byte equality is asserted from binary reads or os.path.getsize plus a content |
 | `0030` | [D34 — duplicate uploads](decisions/0030-d34-duplicate-uploads.md) | Byte-identical duplicates of files already measured; stored once by hash, and P1 is |
+| `0031` | [D31 — a registry move travels with the bytes that need it](decisions/0031-d31-a-registry-move-travels-with-the-bytes.md) | Any PR that changes the bytes of an admitted served path MUST carry the registry |
+| `0032` | [D3 — the §6 citation fix is CLOSED-VOID](decisions/0032-d3-the-section-6-citation-fix-is-closed-void.md) | Status: CLOSED-VOID. There was never anything to ship. Recorded here so nobody |
 
-30 rulings. The text of each is in its own file and is never edited after landing.
+32 rulings. The text of each is in its own file and is never edited after landing.
