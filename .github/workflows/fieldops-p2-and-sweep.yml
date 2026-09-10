@@ -280,7 +280,7 @@ jobs:
   served:
     name: Merged is not served - the placed labs and the Studio
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 45
     permissions:
       contents: read
       actions: read
@@ -337,6 +337,21 @@ jobs:
       # their own domain. Recover the exact output of a successful deployment
       # for each checked-out source; do not rebuild with a newer Site builder
       # or consult stale legacy Pages build metadata. Missing proof fails closed.
+      #
+      # THE BOUND MUST OUTLAST WHAT IT WAITS FOR. This step waits for the
+      # Education Pages publication of the SAME commit, and both workflows are
+      # started by the same push and run concurrently. The bound was 240s. Twelve
+      # consecutive publication runs on main measured 6m20s at the fastest, about
+      # 7m50s typically and 26m17s at the slowest -- so 240s was below every one
+      # of them and the step had never once been able to finish its measurement
+      # on a push. It gave up 3m16s before the publication it was waiting for
+      # succeeded, twelve times in a row, and main read red for it every time.
+      #
+      # A re-run cannot help: the race is structural, so re-running only re-loses
+      # it. 1800s clears the worst observed run with margin, and the job's
+      # timeout-minutes is raised to 45 so the job can outlast its own wait --
+      # change them together or the job is killed mid-wait and nothing improves.
+      # See _sx2/decisions/0040-d50-*.
       - name: Recover successful source-bound publication artifacts
         if: github.event_name != 'pull_request'
         env:
@@ -345,7 +360,7 @@ jobs:
           python tools/prepare_served_publications.py \
             --site "$RUNNER_TEMP/site" --lessons "$GITHUB_WORKSPACE" \
             --apps "$RUNNER_TEMP/apps" --shelf "$RUNNER_TEMP/shelf" \
-            --output "$RUNNER_TEMP/served-publications" --wait-seconds 240 \
+            --output "$RUNNER_TEMP/served-publications" --wait-seconds 1800 \
             | tee "$RUNNER_TEMP/served-publications.txt"
 
       - name: Every original subject serves the exact successful publication
