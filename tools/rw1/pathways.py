@@ -103,8 +103,19 @@ GROW = {
 LAUNCH = {
     'name': 'LAUNCH',
     'lessons': ('L1', 'L2', 'L3'),
-    'live': None,
-    'pack': None,
+    # Derived from the estate, not assumed (LW1 §0.2): all three routes exist on
+    # origin/main under Science_Teesside/Launch/W8-W13_2026-27/, so all three are
+    # REPLACEs and none takes the admission path. Filenames preserved exactly.
+    'live': {
+        'L1': 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L1_Enzyme_Action_Introduce.html',
+        'L2': 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L2_Amylase_pH_Core_Practical_Explore.html',
+        'L3': 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L3_Amylase_Rate_And_Topic_1_Do.html',
+    },
+    'pack': {
+        'L1': 'Lesson_1_Enzyme_Action/SCI_L_W8L1_Enzyme_Action_Introduce.html',
+        'L2': 'Lesson_2_Amylase_pH/SCI_L_W8L2_Amylase_pH_Core_Practical_Explore.html',
+        'L3': 'Lesson_3_Rates_And_Reasoning/SCI_L_W8L3_Amylase_Rate_And_Topic_1_Do.html',
+    },
     'brandline': None,
     'review_meta': None,
     'pack_links': None,
