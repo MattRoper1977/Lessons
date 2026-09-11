@@ -7,12 +7,16 @@ const assert=require('node:assert/strict');
 
 function hasModelContract(c){return c.video.url==='Earth_rotation_clip.mp4';}
 
-async function assertEarthRotationModel(page){
+async function assertEarthRotationModel(page,{advanceStage,current}){
   const host=page.locator('[data-science-return="earth"]');
   assert.equal(await host.count(),1,'The replacement must contain one Earth rotation/orbit model');
-  const slides=await page.locator('.slide').count();
-  for(let i=0;i<slides&&!await host.isVisible();i++)
-    await page.locator('.controls button[onclick="nextSlide()"]').click();
+  const targetStage=await host.evaluate(node=>[...document.querySelectorAll('.slide')].indexOf(node.closest('.slide')));
+  assert.ok(targetStage>=0,'The replacement model must belong to a lesson stage');
+  const from=await current(page);assert.ok(from>=0&&from<=targetStage,'The replacement starts at or before its model stage');
+  // Use the original browser runner's reviewed navigation: Next can reveal
+  // several diagram steps before advancing. Never bypass those real clicks.
+  for(let at=from;at<targetStage;at++)await advanceStage(page,at+1);
+  assert.equal(await current(page),targetStage,'Native Next navigation must reach the model stage');
   assert.equal(await host.isVisible(),true,'The replacement model must be reachable through lesson navigation');
   const mode=host.locator('select[data-sr="mode"]'),step=host.locator('button[data-sr="step"]'),reset=host.locator('button[data-sr="reset"]');
   for(const [name,control] of [['Focus',mode],['Next position',step],['Reset',reset]]){
@@ -55,7 +59,7 @@ async function assertEarthRotationModel(page){
   await reset.click();assert.deepEqual(await geometry(),year,'Reset must restore the initial orbit geometry');
 }
 
-async function assertMediaResource({page,c,url,viewport,loadedImage}){
+async function assertMediaResource({page,c,url,viewport,loadedImage,advanceStage,current}){
   const fallback=page.locator('.media img');await loadedImage(fallback);assert.equal(await fallback.getAttribute('src'),c.video.fallback_image);
   const mediaText=await page.locator('.media').innerText();assert.ok(mediaText.includes(c.video.prompt));assert.ok(mediaText.includes(c.video.fallback_text));
   if(c.week===7)assert.equal(await fallback.getAttribute('src'),'assets/Moon_rotation_fallback.png');
@@ -69,7 +73,7 @@ async function assertMediaResource({page,c,url,viewport,loadedImage}){
     assert.equal(await link.isVisible(),true,'The replacement model link must be visible');
     try{
       await link.click();await page.waitForURL(target);
-      await assertEarthRotationModel(page);
+      await assertEarthRotationModel(page,{advanceStage,current});
     }finally{await page.goto(url,{waitUntil:'domcontentloaded'});await page.locator('html.js').waitFor();}
   }else if(c.video.local_file){
     assert.equal(await video.getAttribute('preload'),'none');assert.equal(await video.getAttribute('autoplay'),null);assert.notEqual(await video.getAttribute('controls'),null);

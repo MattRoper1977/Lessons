@@ -19,11 +19,31 @@ function verifyInputs({root,targets,content}){
   for(const row of targets.files)assert.equal(digest(fs.readFileSync(path.join(root,row.path))),row.sha256,'Source identity: '+row.path);
 }
 
-async function run({browser,root,out,configure,measured,report}){
+function verifyResourceEntryHrefs(hrefs,expected){
+  assert.ok(hrefs.length>=1,'At least one '+expected.day+' resource entry is required');
+  for(const href of hrefs)assert.equal(href,'resources/'+expected.id+'.html',
+    'Every '+expected.day+' resource entry must link to the expected companion');
+}
+function periodResourceLinks(page,expected){
+  const day=expected.day.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  return page.locator('.slide.active a').filter({hasText:new RegExp('^\\s*'+day+'\\s+resources\\b','i')});
+}
+async function verifyResourceEntries(page,expected){
+  const links=periodResourceLinks(page,expected);
+  verifyResourceEntryHrefs(await links.evaluateAll(nodes=>nodes.map(n=>n.getAttribute('href'))),expected);
+  return links;
+}
+
+async function run({browser,root,out,configure,measured,report,advanceStage,current}){
   const targets=JSON.parse(fs.readFileSync(path.join(root,'tools/grow_resources/BROWSER_TARGETS.json'),'utf8'));
   const content=JSON.parse(fs.readFileSync(path.join(root,'tools/grow_resources/CONTENT.json'),'utf8'));
   const result={schema:'grow-resource-browser-review-v1',inputs:targets,scope:'Rendered desktop and phone checks using the existing reviewed CI browser. Videos are deliberately blocked in outage cases; no playback claim. PDF page-image review remains a human/agent release step.',cases:[],routes:[],pdfs:[],images:[]};
-  const check=async(name,fn)=>{try{await measured('grow-resources/'+name,fn);result.cases.push({name,passed:true});}catch(e){result.cases.push({name,passed:false,error:e.message});throw e;}};
+  const recordCase=record=>{
+    result.cases.push(record);
+    if(!record.passed||['negative-controls/','navigation-equivalence/','media-equivalence/'].some(prefix=>record.name.startsWith(prefix)))
+      console.log(JSON.stringify({scope:'grow-resources-case',...record}));
+  };
+  const check=async(name,fn)=>{try{await measured('grow-resources/'+name,fn);recordCase({name,passed:true});}catch(e){recordCase({name,passed:false,error:e.message});throw e;}};
   const snapshot=async(page,name)=>{const file=name+'.png';await page.screenshot({path:path.join(out,file),fullPage:true});result.images.push(file);};
   const reject=async(fn)=>{let fired=false;try{await fn();}catch(e){fired=true;}assert.ok(fired,'The planted defect must be detected');};
   const noOverflow=async(page)=>{const size=await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth}));assert.ok(size.scroll<=size.width+2,'No document horizontal overflow');};
@@ -57,16 +77,23 @@ async function run({browser,root,out,configure,measured,report}){
             for(const period of ['A','B']){
               await page.goto(url,{waitUntil:'domcontentloaded'});
               const expected=content.find(c=>c.online_path===target.path&&c.period===period);assert.ok(expected);
-              const link=page.locator('.slide.active a[href="resources/'+expected.id+'.html"]');assert.equal(await link.count(),1);
-              await navigationClear(page);
-              if(mobile)await targetSize(link,viewport);
-              else{await link.focus();assert.equal(await link.evaluate(n=>document.activeElement===n),true);}
-              await snapshot(page,id+'-'+period);
-              if(mobile)await link.tap();else await link.press('Enter');
-              await page.waitForURL(origin+'/Lessons/Science_Teesside/Grow/resources/'+expected.id+'.html');
-              assert.equal((await page.locator('.hero h1').innerText()).trim(),expected.title);
-              await page.getByRole('link',{name:'Return to the lesson',exact:true}).click();
-              await page.waitForURL(url);assert.equal(await page.locator('.slide.active').getAttribute('data-title'),'Title');
+              const count=await (await verifyResourceEntries(page,expected)).count();
+              for(let entry=0;entry<count;entry++){
+                await page.goto(url,{waitUntil:'domcontentloaded'});
+                const links=await verifyResourceEntries(page,expected);
+                assert.equal(await links.count(),count,'Period resource entries must remain present after reload');
+                const link=links.nth(entry);
+                await navigationClear(page);
+                if(mobile)await targetSize(link,viewport);
+                else{await link.focus();assert.equal(await link.evaluate(n=>document.activeElement===n),true);}
+                await snapshot(page,id+'-'+period+'-entry-'+entry);
+                if(mobile)await link.tap();else await link.press('Enter');
+                await page.waitForURL(origin+'/Lessons/Science_Teesside/Grow/resources/'+expected.id+'.html');
+                assert.equal((await page.locator('.hero h1').innerText()).trim(),expected.title);
+                await page.getByRole('link',{name:'Return to the lesson',exact:true}).click();
+                await page.waitForURL(url);assert.equal(await page.locator('.slide.active').getAttribute('data-title'),'Title');
+              }
+              (result.resourceEntries ||= []).push({file:target.path,period,viewport:viewport.width,entries:count});
             }
             await noOverflow(page);
             assert.equal(report.errors.length,before.errors);assert.equal(report.missingLocal.length,before.missing);assert.equal(report.external.length,before.external);
@@ -105,7 +132,7 @@ async function run({browser,root,out,configure,measured,report}){
             await answer.locator(':scope > summary').press('Enter');assert.equal(await answer.getAttribute('open'),null);
           });
           await check(id+'/video-outage-and-matched-still',async()=>{
-            await assertMediaResource({page,c,url,viewport,loadedImage});
+            await assertMediaResource({page,c,url,viewport,loadedImage,advanceStage,current});
             await snapshot(page,id+'-video-fallback');
           });
           if(!mobile)await check(id+'/pupil-and-answer-print',async()=>{
@@ -161,6 +188,28 @@ async function run({browser,root,out,configure,measured,report}){
     }finally{await collisionContext.close();}
     const controlContext=await browser.newContext();await configure(controlContext);const page=await controlContext.newPage();
     try{
+      const entryExpected=content.find(c=>c.online_path===targets.lessons[0].path&&c.period==='A');assert.ok(entryExpected);
+      const entryUrl=origin+'/Lessons/'+entryExpected.online_path;
+      const oneEntry=async()=>{
+        await page.goto(entryUrl,{waitUntil:'domcontentloaded'});
+        const links=await verifyResourceEntries(page,entryExpected);
+        await links.evaluateAll(nodes=>nodes.slice(1).forEach(n=>n.remove()));
+      };
+      const twoEntries=async()=>{
+        await oneEntry();await periodResourceLinks(page,entryExpected).evaluate(n=>n.after(n.cloneNode(true)));
+      };
+      await oneEntry();
+      await check('navigation-equivalence/single-period-entry',async()=>assert.equal(await (await verifyResourceEntries(page,entryExpected)).count(),1));
+      await twoEntries();
+      await check('navigation-equivalence/two-period-entries',async()=>assert.equal(await (await verifyResourceEntries(page,entryExpected)).count(),2));
+      await periodResourceLinks(page,entryExpected).evaluateAll(nodes=>nodes.forEach(n=>n.remove()));
+      await check('negative-controls/no-period-resource-entry',()=>assert.rejects(()=>verifyResourceEntries(page,entryExpected),/At least one .* resource entry is required/));
+      for(const entry of [0,1]){
+        await twoEntries();await periodResourceLinks(page,entryExpected).nth(entry).evaluate(n=>n.setAttribute('href','resources/wrong-companion.html'));
+        await check('negative-controls/wrong-period-destination-'+entry,()=>assert.rejects(()=>verifyResourceEntries(page,entryExpected),/Every .* resource entry must link to the expected companion/));
+      }
+      await page.goto(entryUrl,{waitUntil:'domcontentloaded'});
+      await check('navigation-equivalence/restored-period-entries',()=>verifyResourceEntries(page,entryExpected));
       await check('negative-controls/wrong-source-hash',()=>reject(async()=>assert.equal(digest(fs.readFileSync(path.join(root,targets.pages[0].path))),'0'.repeat(64))));
       await page.goto(origin+'/Lessons/'+targets.pages[0].path);await page.locator('.media img').evaluate(n=>n.remove());
       await check('negative-controls/missing-video-fallback',()=>reject(async()=>assert.equal(await page.locator('.media img').count(),1)));
@@ -174,7 +223,7 @@ async function run({browser,root,out,configure,measured,report}){
       const c=content.find(hasModelContract);assert.ok(c,'Expected reviewed Earth-rotation media contract');
       const url=origin+'/Lessons/'+targets.pages.find(t=>t.id===c.id).path;
       const restored=async()=>{await mediaPage.goto(url,{waitUntil:'domcontentloaded'});await mediaPage.locator('html.js').waitFor();};
-      const verify=()=>assertMediaResource({page:mediaPage,c,url,viewport:mediaViewport,loadedImage});
+      const verify=()=>assertMediaResource({page:mediaPage,c,url,viewport:mediaViewport,loadedImage,advanceStage,current});
       await restored();
       const modelReplacement=await mediaPage.locator('video').count()===0;
       result.mediaContract={identity:c.video.url,representation:modelReplacement?'linked-model':'local-video'};
@@ -197,19 +246,19 @@ async function run({browser,root,out,configure,measured,report}){
           ['empty-model-svg',async()=>{await model().locator('.sr-diagram svg').evaluate(n=>n.replaceChildren());},/must contain the Sun and Earth/]
         ]){
           await mediaPage.goto(target,{waitUntil:'domcontentloaded'});await mutate();
-          await check('negative-controls/'+name,()=>assert.rejects(()=>assertEarthRotationModel(mediaPage),message));
+          await check('negative-controls/'+name,()=>assert.rejects(()=>assertEarthRotationModel(mediaPage,{advanceStage,current}),message));
         }
       }
       await restored();await check('media-equivalence/restored-after-defects',verify);
       const videoContent=content.find(row=>row.video.local_file&&!hasModelContract(row));assert.ok(videoContent,'Expected an existing original local-video path');
       const videoResource=origin+'/Lessons/'+targets.pages.find(t=>t.id===videoContent.id).path;
       await mediaPage.goto(videoResource,{waitUntil:'domcontentloaded'});
-      await check('media-equivalence/original-local-video-outage',()=>assertMediaResource({page:mediaPage,c:videoContent,url:videoResource,viewport:mediaViewport,loadedImage}));
+      await check('media-equivalence/original-local-video-outage',()=>assertMediaResource({page:mediaPage,c:videoContent,url:videoResource,viewport:mediaViewport,loadedImage,advanceStage,current}));
       await mediaPage.goto(videoResource,{waitUntil:'domcontentloaded'});await mediaPage.locator('video').evaluate(n=>n.remove());
-      await check('negative-controls/unapproved-missing-local-video',()=>assert.rejects(()=>assertMediaResource({page:mediaPage,c:videoContent,url:videoResource,viewport:mediaViewport,loadedImage}),/requires an explicit equivalent-model contract/));
+      await check('negative-controls/unapproved-missing-local-video',()=>assert.rejects(()=>assertMediaResource({page:mediaPage,c:videoContent,url:videoResource,viewport:mediaViewport,loadedImage,advanceStage,current}),/requires an explicit equivalent-model contract/));
     }finally{await mediaContext.close();}
     assert.ok(result.routes.every(r=>r.result==='PASS'),'One or more supplemental GROW routes failed');result.result='PASS';
   }catch(e){result.result='FAIL';result.error=e.message;throw e;}
   finally{fs.writeFileSync(path.join(out,'grow-resource-browser.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({scope:'grow-resources',result:result.result,cases:result.cases.length,passed:result.cases.filter(c=>c.passed).length,routes:result.routes.length,pdfs:result.pdfs.length,failedCases:result.cases.filter(c=>!c.passed),failedRoutes:result.routes.filter(r=>r.result!=='PASS')}));}
 }
-module.exports={run,verifyInputs};
+module.exports={run,verifyInputs,verifyResourceEntryHrefs};
