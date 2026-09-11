@@ -86,6 +86,14 @@ jobs:
           from pathlib import Path
           value=json.loads(Path('s1m-admission-controls.json').read_text())
           print(json.dumps(value,indent=2))
+          evidence=json.loads(Path(value['evidence']).read_text())
+          required={'S1-M wrong size','S1-M missing size entry','S1-M changed input without regeneration'}
+          found={case['name'] for case in evidence['cases'] if case['name'] in required}
+          assert found==required, 'Required derivation controls missing from evidence'
+          for case in evidence['cases']:
+              if case['name'] in required:
+                  assert (case['real'],case['planted'],case['restored'])==('PASS','FAIL','PASS'), case
+                  print(case['name']+' FIRED; '+case['reason']+'; restored PASS')
           PY
       - name: Save the candidate publication proof
         uses: actions/upload-artifact@v4
@@ -94,5 +102,6 @@ jobs:
           path: |
             s1m-admission-controls.json
             publisher/domain-split/output/education-build-report.json
+            publisher/domain-split/output/education-admission-controls.json
             publisher/domain-split/output/education-lessons/data/resource-sizes.json
           retention-days: 30
