@@ -62,3 +62,18 @@ Games/WorldCup_v5_Showdown.html
 Games/Wrecking_Crew.html
 Games/voxelcraft.html
 Summer Term Fun/Kids_vs_Staff_Studio_Game_Show_v8_Autopilot.html
+
+
+## S1-M — permanent admission repair, 2026-09-11
+
+The preceding S1-K text is a historical decision record. The cross-repository SAME COMMIT rule was voided by S1-L: it cannot be satisfied across two repositories and should never have been written that way. S1-M authorised Track B after the 31 mis-included / 0 legitimate classification.
+
+The generator now excludes the handoff class from its size inputs. The exact difference from the deployed table was 31 paths, all 31 matching the preserved census, with zero unaccounted paths. The aligned generator emits 1,463 sizes and zero missing inputs. The deliberate downstream size-table filter moved to the generator; other catalogue filtering is unchanged.
+
+Publisher 810ae8f8830dc9e30a7ceec9ada4ec24d575a04d, direct child of 7072a5605e795b1c872f843f04f2403a8880c409, admits only education-lessons/data/resource-sizes.json by derivation from the same finished published tree. Every other admission retains its existing digest assertion. The 1,463 aligned inputs are exactly covered: 0 uncovered, 0 pattern-only, 0 undetermined. A planted one-byte input defect was rejected on that input.
+
+Wrong size, deleted table entry, and changed input without regeneration each blocked the full candidate publication on derivation, then passed after restoration. The final full preflight ran as 34596434017, job 103253153724, with all 61 controls passing. Other admitted paths still reject planted changes.
+
+Lessons #509 merged at 67e9c6fea9c40d5f8c4b914cec311282aa7caa46, after Apps #80. Publication run 34597860802 reached deploy job 103259984344 SUCCESS; github-pages artifact 10263716116 was 707060767 bytes and expired false when verified. The derived-table digest ratchet is removed by this same-publication derivation assertion; it does not remove exact admissions for source content.
+
+S1-M M5 repairs this PR's evidence artifact, not the sweep parser: its verification record now names the census file, and structured input records are generated from the unchanged ordered 31 paths. The bounded negative control reports an absent input as STALE — SUBJECT ABSENT and clears on exact restoration. The dry-run sweep reports stale rows with exit 0; that firing signal is the verdict and count, not a claimed nonzero exit.
