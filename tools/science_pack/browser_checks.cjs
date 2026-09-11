@@ -7,6 +7,12 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 
+function resourceFallbackUrl(href,lessonUrl,id){
+  const actual=new URL(href,lessonUrl).href;
+  assert.equal(actual,new URL('resources/'+id+'.html',lessonUrl).href,'Resource entry retains its declared standalone fallback');
+  return actual;
+}
+
 async function exercise({page,root,out,measured,move,current,id,viewport,responsive,report,t}){
   const content=JSON.parse(fs.readFileSync(path.join(root,'tools/science_pack/RESOURCE_CONTENT.json'),'utf8'));
   const lesson=content.find(c=>c.online_path===t.path);
@@ -26,11 +32,22 @@ async function exercise({page,root,out,measured,move,current,id,viewport,respons
     assert.deepEqual(overlaps,[],'Native stage controls must remain separate from shared tools');
   };
   await measured(id+'/native-navigation-hud-clearance',navigationClear);
+  await measured(id+'/resources-ordinary-link-fallback',async()=>{
+    await move(page,0);
+    const lessonUrl=page.url();
+    const entry=page.locator('.slide.active [data-open-science-pack]').first();
+    const fallback=resourceFallbackUrl(await entry.getAttribute('href'),lessonUrl,lesson.id);
+    await dialog.evaluate(n=>Object.defineProperty(n,'showModal',{configurable:true,value:undefined}));
+    if(responsive)await entry.tap();else await entry.click();
+    await page.waitForURL(fallback);
+    assert.equal(await page.locator('.mbm-sp-page').count(),1,'An ordinary click reaches the standalone pupil resource');
+    await page.goto(lessonUrl,{waitUntil:'domcontentloaded'});
+  });
   await measured(id+'/resources-open-focus-and-reason',async()=>{
     await move(page,0);
     opener=page.locator('.slide.active [data-open-science-pack]').first();
     assert.equal(await opener.count(),1);
-    resourceUrl=new URL(await opener.getAttribute('href'),page.url()).href;
+    resourceUrl=resourceFallbackUrl(await opener.getAttribute('href'),page.url(),lesson.id);
     assert.equal(await page.locator('iframe').count(),0,'No unsolicited video frame');
     if(responsive)await opener.tap();else await opener.click();
     assert.equal(await dialog.isVisible(),true);
@@ -60,10 +77,7 @@ async function exercise({page,root,out,measured,move,current,id,viewport,respons
     assert.equal(await dialog.locator('textarea').nth(1).inputValue(),'Use the evidence in our explanation');
     const section=dialog.locator('.mbm-sp-section').nth(2);
     await section.locator(':scope > summary').click();
-    const model=section.locator('img');
-    await model.scrollIntoViewIfNeeded();
-    assert.equal(await model.isVisible(),true);
-    assert.equal(await model.evaluate(n=>n.complete&&n.naturalWidth>0),true,'Embedded no-video model loads');
+    await require('./rendered_model.cjs').assertRenderedModel(section.locator('details[open] figure'));
     assert.equal(await dialog.locator('iframe').count(),0);
     let fixtureRequests=0;
     const handler=async route=>{fixtureRequests++;await route.fulfill({contentType:'text/html',body:'<!doctype html><title>Video transport fixture</title><p>Video playback is outside this acceptance.</p>'});};
@@ -121,4 +135,4 @@ async function exercise({page,root,out,measured,move,current,id,viewport,respons
     await page.goto('http://science-original.test/Lessons/'+t.path,{waitUntil:'domcontentloaded'});
   });
 }
-module.exports={exercise};
+module.exports={exercise,resourceFallbackUrl};

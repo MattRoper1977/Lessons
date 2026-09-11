@@ -18,6 +18,14 @@ def digest(path):
 def check(root=ROOT):
     packs = root / PACK_REL
     bindings = json.loads((root / 'assets/catalogue/science-download-bindings.json').read_text())
+    # Native-pack source records describe the bytes used at authoring time.
+    # Current classroom editions have their own reviewed, full-byte identities;
+    # use those without rewriting the pack's historical source provenance.
+    reviewed = json.loads((root / 'tools/easter/SCIENCE_ORIGINAL_TARGETS.json').read_text())
+    assert reviewed['schema'] == 'original-science-browser-targets-v1'
+    current_sources = {row['path']: row['expectedPatchedSha256'] for row in reviewed['targets']}
+    assert len(current_sources) == len(reviewed['targets']), 'Duplicate classroom source expectation'
+    assert set(current_sources) == set(bindings), 'Classroom source coverage drift'
     page = html.fromstring((packs / 'index.html').read_text())
     ids = page.xpath('//@id')
     assert len(ids) == len(set(ids)), 'Duplicate download anchor'
@@ -34,7 +42,7 @@ def check(root=ROOT):
         for lesson in source['lessons']:
             assert lesson['durationMinutes'] == 40
             original = root / lesson['source']['repoPath']
-            assert digest(original) == lesson['source']['sha256'], 'Classroom source drift: ' + str(original)
+            assert digest(original) == current_sources[lesson['source']['repoPath']], 'Classroom source drift: ' + str(original)
             assert bindings[lesson['source']['repoPath']].split('#')[1] in ids
             assert any(f['format'] == 'PPTX' and f['role'] == 'Teaching slides' for f in lesson['files'])
             assert any(f['format'] == 'DOCX' and f['role'] == 'Pupil materials' for f in lesson['files'])
@@ -73,6 +81,13 @@ def check(root=ROOT):
             assert required <= set(archive['members'].values()), 'Incomplete companion resources: ' + str(path)
             with zipfile.ZipFile(path) as z:
                 assert z.testzip() is None
+                if archive.get('kind') != 'format':
+                    manifests = [name for name in z.namelist() if Path(name).name == 'SOURCE_MANIFEST.json']
+                    assert len(manifests) == 1, 'Missing or duplicate archived source provenance: ' + str(path)
+                    archived_lessons = json.loads(z.read(manifests[0]))['lessons']
+                    archived_sources = {row['id']: row['source'] for row in archived_lessons}
+                    assert len(archived_sources) == len(archived_lessons), 'Duplicate archived source lesson'
+                    assert archived_sources == {row['id']: row['source'] for row in included}, 'Pack source provenance drift: ' + str(path)
                 for name, relative in archive['members'].items():
                     assert z.read(name) == (directory / relative).read_bytes(), 'Stale ZIP member: ' + name
                 if archive.get('kind') == 'format':
