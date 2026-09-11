@@ -183,7 +183,7 @@ async function negativeControls(){
     await negativeControls();
     for(const t of doc.targets)await exercise(t);
     for(const t of doc.targets.filter(t=>t.responsiveRepresentative))for(const viewport of [{width:390,height:844},{width:840,height:720}])await exercise(t,viewport,true);
-    await require('../grow_resources/browser_checks.cjs').run({browser,root,out,configure,measured,report});
+    await require('../grow_resources/browser_checks.cjs').run({browser,root,out,configure,measured,report,advanceStage,current});
     await require('../humanities_resources/browser_checks.cjs').run({browser,root,out,configure,measured,report});
     assert.ok(report.routes.every(r=>r.result==='PASS'),'One or more authored routes failed');report.result='PASS';
   }catch(e){report.result='FAIL';report.error=e.stack;process.exitCode=1;}

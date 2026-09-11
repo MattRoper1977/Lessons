@@ -143,10 +143,14 @@ CATALOGUE_PINS = {
         "tools/catalogue/verify_education_navigation.cjs": "b0d9297a33fb9ea2494fecaa45e02ae6fcf6fa88e6a62ced35cf521fbb1851fd",
         "tools/catalogue/SHELF_SELECTION.json": "95def027287e7cc1eb1190bafa21733c9c0999286c15a231dc17dfe7a56331f4",
         "tools/catalogue/HUMANITIES_SELECTION.json": "5df3e69d4d9d3825225bcc80376b3fbebf61656df6e333f6b9a8aaded1893bf4",
-        "tools/easter/science_original_browser.cjs": "650884c0ef6ec714edc429bbf7c5601e26176df44012661462c37ee3de7478d1",
+        "tools/easter/science_original_browser.cjs": "a0559d92067813845457e05a20a045f1f1aab2401965bbe40f001409e9776567",
+        "tools/science_pack/browser_checks.cjs": "058c9bc1f06c876f2994a23d467d83fced683c6355eb92d0ef43986d3e28d72d",
         "tools/prepare_served_publications.py": "acae94bb9c142e20479bc9e5e103b09af87ba84ba3b1dde7baaa86cdb0792629",
         "tools/test_served_publications.py": "063e76bc6579402a41b0bd0b7a79ae99be301cb9db97deb5b7257b85687b851b",
-        ".github/workflows/watch-main.yml": "32d09fcb959c9a9c950feca5927afce2e31578b78af00d2e668e571e7fa9084d",
+        "tools/ux2/resource_sizes.py": "2e8d36613fb39e3114c2006337771ddc9c724f9b6333a6e05cfed4e646e4224b",
+        "tools/ux2/s1m_published_input_proof.py": "95b82480a9fdbb607fcaf3077d1e58dc1e9a5eafd96581fdbec281c979de1d10",
+        ".github/workflows/s1m-published-input-proof.yml": "fcc9f4c6b6a550873bda92346bb73e47d9ec0cfe95664a8eec66d0e7947dfb76",
+        ".github/workflows/watch-main.yml": "19a24724d0e762f218211b8a3b009dd87eb06d9b0575dfd16b79777f38661c85",
         "tools/verify_v6fin_w7_r1_r7.py": "2be87c68256802e46131d9a4c70228e3d8635c51eb1789c01b94f2b316960dae",
         ".github/workflows/glv3-verify.yml": "4bf27ca7471a21359e35d1bc7277c5fa0adeb5f31a47c769f192165796037088",
         "_glv3/tools/verify_change_boundary.py": "83abbfb09690729b65da0a0d8adeec1564f6f0f7b198b8de2e2334be5039fcfa",
@@ -357,7 +361,7 @@ CATALOGUE_PINS = {
         "tools/science_teaching_packs/BUILD_SOURCE_PROVENANCE.json": "bd3093b818cd94ab74260f28f2c8ae08e77fbac307e8dcd0cf2a77540e299197",
         "tools/science_teaching_packs/GROW_QA.json": "a8cdaa361414a3700c463ea40e0a159029db3fb803024e50b0eb39d082c6f364",
         "tools/science_teaching_packs/build_hub.py": "db1a706f68c8b33cdbcfc4c6f197781fb5cde2f3fe53dc979eea5c5b592ade10",
-        "tools/science_teaching_packs/check_packs.py": "8895154bc87c7238f2e6d4a65991f5958cdbd29a27b58fdafb551e07f7a769c1",
+        "tools/science_teaching_packs/check_packs.py": "01609d0d19e3e4a5de810725d68ac97fcfa0f8843d626dc5a7aaddca009aa578",
         "tools/humanities_resources/PUBLIC_LABEL_CHANGES.json": "6ff5c272460a5175a48b6cb98cc1c1a4f8eaccc42da4709ef7e2653c1f6a8179",
         "Humanities_Teesside/David_Cover_Autumn1_W3-W7/BH_W3.html": "3cb06cdadc3af0b852e54192a10203295be12c6139601e98e86c9496478a79f0",
         "Humanities_Teesside/David_Cover_Autumn1_W3-W7/BH_W4.html": "ad5f0adbe53b57189e3c9958ec5e79d3f9b91018e6fc85001140141284e5c387",
@@ -608,7 +612,7 @@ PUBLICATION_CALLER_PATH = ".github/workflows/education-pages.yml"
 # to the admission census, without which the 23 Scratch projects in the GROW
 # Computing unit never reach the served tree. education-publication.yml is
 # unchanged between the two, so the gate itself still does not move.
-PUBLICATION_CALLER_SHA256 = "8123e3827e238e4233bf5afa16a025e29779d9184a6c63fff0bed4ec607fcc0c"
+PUBLICATION_CALLER_SHA256 = "ccce374caae8c14c1712f890d85e237143705666f86bc84960fad2dd85d82e5a"
 # One reviewed caller digest per repository kind. detect_kind() reads the root
 # it is standing in, so this entry is only ever compared against the Apps
 # repository's own caller: the Lessons gate run and the Apps gate runs are the

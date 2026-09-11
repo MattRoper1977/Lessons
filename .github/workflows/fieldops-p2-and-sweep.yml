@@ -110,6 +110,10 @@ jobs:
         run: |
           mkdir -p "$RUNNER_TEMP/science-review"
           python tools/humanities_resources/check_resources.py --root . --report "$RUNNER_TEMP/science-review/humanities-cover-static.json"
+      - name: Prove the no-video model check accepts both formats and rejects broken models
+        env:
+          NODE_PATH: ${{ runner.temp }}/science-browser/node_modules
+        run: node tools/science_pack/model_controls.cjs --root . --out "$RUNNER_TEMP/science-review/model-controls.json" --channel chrome
       - name: Drive original Science and Humanities cover pages
         env:
           NODE_PATH: ${{ runner.temp }}/science-browser/node_modules
