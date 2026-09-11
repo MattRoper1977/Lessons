@@ -11,6 +11,13 @@ const digest=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
 const origin='http://science-original.test';
 const firstSentence=text=>text.match(/^[\s\S]*?[.!?](?:\s|$)/)?.[0].trim()||text;
 
+function verifyInputs({root,targets,content}){
+  assert.equal(targets.schema,'grow-resource-browser-targets-v1');
+  assert.equal(targets.pages.length,10);assert.equal(targets.lessons.length,5);
+  assert.deepEqual(targets.pages.map(p=>p.id).sort(),content.map(c=>c.id).sort());
+  for(const row of targets.files)assert.equal(digest(fs.readFileSync(path.join(root,row.path))),row.sha256,'Source identity: '+row.path);
+}
+
 async function run({browser,root,out,configure,measured,report}){
   const targets=JSON.parse(fs.readFileSync(path.join(root,'tools/grow_resources/BROWSER_TARGETS.json'),'utf8'));
   const content=JSON.parse(fs.readFileSync(path.join(root,'tools/grow_resources/CONTENT.json'),'utf8'));
@@ -33,14 +40,8 @@ async function run({browser,root,out,configure,measured,report}){
     });
     assert.deepEqual(overlaps,[],'Native lesson controls must not overlap the shared HUD');
   };
-  const verifyInputs=()=>{
-    assert.equal(targets.schema,'grow-resource-browser-targets-v1');
-    assert.equal(targets.pages.length,10);assert.equal(targets.lessons.length,5);
-    assert.deepEqual(targets.pages.map(p=>p.id).sort(),content.map(c=>c.id).sort());
-    for(const row of targets.files)assert.equal(digest(fs.readFileSync(path.join(root,row.path))),row.sha256,'Source identity: '+row.path);
-  };
   try{
-    await check('input-identities',async()=>verifyInputs());
+    await check('input-identities',async()=>verifyInputs({root,targets,content}));
     const pairPaths=new Set(targets.lessons.map(x=>x.path));
     assert.equal(pairPaths.size,5);assert.ok(content.every(c=>pairPaths.has(c.online_path)));
     for(const viewport of targets.viewports){
@@ -192,4 +193,4 @@ async function run({browser,root,out,configure,measured,report}){
   }catch(e){result.result='FAIL';result.error=e.message;throw e;}
   finally{fs.writeFileSync(path.join(out,'grow-resource-browser.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({scope:'grow-resources',result:result.result,cases:result.cases.length,passed:result.cases.filter(c=>c.passed).length,routes:result.routes.length,pdfs:result.pdfs.length,failedCases:result.cases.filter(c=>!c.passed),failedRoutes:result.routes.filter(r=>r.result!=='PASS')}));}
 }
-module.exports={run};
+module.exports={run,verifyInputs};
