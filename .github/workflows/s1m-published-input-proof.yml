@@ -38,3 +38,61 @@ jobs:
           name: s1m-published-input-evidence
           path: s1m-proof/*.json
           retention-days: 30
+  publication-preflight:
+    name: S1-M full publication and derivation controls
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: MattRoper1977/mattroper1977.github.io
+          ref: 810ae8f8830dc9e30a7ceec9ada4ec24d575a04d
+          path: publisher
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          path: lessons
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: MattRoper1977/Matt-s-Apps-
+          ref: 3ad0a7df958274e5401e8d40d0a94096be0962bc
+          path: apps
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: python -m pip install lxml==6.0.1
+      - name: Verify the shared generator bytes
+        run: |
+          sha256sum lessons/tools/ux2/resource_sizes.py publisher/domain-split/resource_sizes.py
+          cmp lessons/tools/ux2/resource_sizes.py publisher/domain-split/resource_sizes.py
+      - name: Build and verify the complete candidate publication
+        run: |
+          python publisher/domain-split/build_publications.py --lessons lessons
+          python publisher/domain-split/build_education.py --lessons lessons --apps apps
+          python publisher/domain-split/check_publications.py
+          python publisher/domain-split/check_education_separation.py --self-test
+          python publisher/domain-split/check_education_separation.py
+          python publisher/domain-split/verify_education_tree_has_no_games.py --output publisher/domain-split/output
+          python publisher/domain-split/check_education_support.py
+          node publisher/domain-split/check_game_saves.cjs
+      - name: Fire the full admission battery including the three derivation defects
+        run: |
+          python publisher/domain-split/check_education_publication_admission.py --output publisher/domain-split/output --lessons lessons --apps apps --build-control > s1m-admission-controls.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          value=json.loads(Path('s1m-admission-controls.json').read_text())
+          print(json.dumps(value,indent=2))
+          PY
+      - name: Save the candidate publication proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: s1m-full-publication-proof
+          path: |
+            s1m-admission-controls.json
+            publisher/domain-split/output/education-build-report.json
+            publisher/domain-split/output/education-lessons/data/resource-sizes.json
+          retention-days: 30
