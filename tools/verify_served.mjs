@@ -20,6 +20,7 @@
  *   lessons   tools/fieldops/build.mjs LABS[] — the builder cannot emit a lab
  *             it does not name — plus the hub those labs' NAV-1 link resolves
  *             to, taken from the link rather than assumed.
+ *             LAUNCH whole-lesson pages come from Science_Teesside/Launch/manifest.json.
  *   apps      the same builder's STUDIO.
  *
  * A group that yields nothing is INCONCLUSIVE for that group and the run exits
@@ -202,6 +203,33 @@ function siteRoutes() {
   }
 }
 
+/* S1-M: the whole-lesson manifest owns this population. A missing, empty,
+   duplicated or escaping declaration must fail closed, never erase routes. */
+function launchSubjects(root = HERE, origin = LESSONS_ORIGIN) {
+  const directory = 'Science_Teesside/Launch';
+  const manifest = `${directory}/manifest.json`;
+  let declaration;
+  try { declaration = JSON.parse(fs.readFileSync(path.join(root, manifest), 'utf8')); }
+  catch (error) { throw new Inconclusive(`${manifest}: ${error.message}`); }
+  if (!Array.isArray(declaration?.lessons) || !declaration.lessons.length)
+    throw new Inconclusive(`${manifest}: no lesson routes declared`);
+  const base = path.resolve(root, directory);
+  const seen = new Set();
+  return declaration.lessons.map(entry => {
+    const file = entry?.file;
+    if (typeof file !== 'string' || !/\.html$/i.test(file) || file.includes('\\') ||
+        file.split('/').some(part => !part || part === '.' || part === '..'))
+      throw new Inconclusive(`${manifest}: invalid lesson path ${JSON.stringify(file)}`);
+    const blob = path.resolve(base, file);
+    if (!blob.startsWith(base + path.sep) || seen.has(file))
+      throw new Inconclusive(`${manifest}: duplicate or escaping lesson path ${file}`);
+    seen.add(file);
+    return { group: 'lessons', name: `${directory}/${file}`,
+      url: `${origin}/${directory}/${file.split('/').map(encodeURIComponent).join('/')}`,
+      blob, type: 'text/html', source_manifest: manifest };
+  });
+}
+
 function subjects() {
   const { LABS, STUDIO } = fieldopsDecls();
   const list = [];
@@ -232,6 +260,7 @@ function subjects() {
   const hub = hubFrom(LABS);
   list.push({ group: 'lessons', name: `hub (${hub})`, url: `${LESSONS_ORIGIN}/`,
     blob: path.join(HERE, hub), type: 'text/html' });
+  list.push(...launchSubjects());
 
   if (fs.existsSync(APPS)) {
     list.push({ group: 'apps', name: STUDIO, url: `${APPS_ORIGIN}/FieldOps_Teacher_Studio.html`,
@@ -417,7 +446,7 @@ function selfTest() {
   try { s = subjects(); } catch (e) { say(false, 'the subject set derives', e.message); return 1; }
 
   const byGroup = g => s.list.filter(x => x.group === g).length;
-  say(s.list.length > 0, 'the subject set composes from three canonical records',
+  say(s.list.length > 0, 'the subject set composes from canonical records',
       `${s.list.length} routes — site ${byGroup('site')}, lessons ${byGroup('lessons')}, apps ${byGroup('apps')}`);
   say(s.missing.length === 0, 'every subject has a committed blob to compare against',
       s.missing.map(m => m.name).join(', ') || 'all present');
@@ -593,6 +622,6 @@ async function main() {
   return red.length ? 1 : inc.length ? 2 : 0;
 }
 
-export { Inconclusive, get, mapLimit, responseVerdict, destinationVerdict, verdictFor, publicationSubjects };
+export { Inconclusive, get, mapLimit, responseVerdict, destinationVerdict, verdictFor, publicationSubjects, launchSubjects, subjects, assess };
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url))
   main().then(code => process.exit(code), error => { console.error(error); process.exit(error instanceof Inconclusive ? 2 : 1); });
