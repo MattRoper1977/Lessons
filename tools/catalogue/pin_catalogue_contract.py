@@ -1300,6 +1300,7 @@ REVIEWED_PATHS = (
     "tools/catalogue/check_catalogue_static.py", "tools/catalogue/check_catalogue_dom.cjs", "tools/catalogue/verify_education_navigation.cjs",
     "tools/catalogue/SHELF_SELECTION.json", "tools/catalogue/HUMANITIES_SELECTION.json",
     "tools/easter/science_original_browser.cjs",
+    "tools/science_pack/browser_checks.cjs",
     "tools/prepare_served_publications.py", "tools/test_served_publications.py",
     ".github/workflows/watch-main.yml",
     # AR9: brought under digest guard so the V6FIN baseline file cannot change silently.
