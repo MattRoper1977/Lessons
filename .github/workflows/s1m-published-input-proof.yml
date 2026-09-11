@@ -1,0 +1,40 @@
+name: S1-M published input proof
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/s1m-published-input-proof.yml'
+      - 'tools/ux2/s1m_published_input_proof.py'
+      - 'tools/ux2/resource_sizes.py'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  input-coverage:
+    name: S1-M actual deployed input admission
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: lessons
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: MattRoper1977/mattroper1977.github.io
+          ref: 7072a5605e795b1c872f843f04f2403a8880c409
+          path: publisher
+          sparse-checkout: /domain-split/
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Read deployed bytes, assert coverage and plant a one-byte input defect
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python lessons/tools/ux2/s1m_published_input_proof.py --lessons lessons --publisher publisher --output s1m-proof
+      - name: Save coverage evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: s1m-published-input-evidence
+          path: s1m-proof/*.json
+          retention-days: 30
