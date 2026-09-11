@@ -9,6 +9,7 @@ const path=require('node:path');
 const crypto=require('node:crypto');
 const digest=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
 const origin='http://science-original.test';
+const {hasModelContract,assertEarthRotationModel,assertMediaResource}=require('./media_checks.cjs');
 const firstSentence=text=>text.match(/^[\s\S]*?[.!?](?:\s|$)/)?.[0].trim()||text;
 
 function verifyInputs({root,targets,content}){
@@ -33,11 +34,16 @@ async function verifyResourceEntries(page,expected){
   return links;
 }
 
-async function run({browser,root,out,configure,measured,report}){
+async function run({browser,root,out,configure,measured,report,advanceStage,current}){
   const targets=JSON.parse(fs.readFileSync(path.join(root,'tools/grow_resources/BROWSER_TARGETS.json'),'utf8'));
   const content=JSON.parse(fs.readFileSync(path.join(root,'tools/grow_resources/CONTENT.json'),'utf8'));
   const result={schema:'grow-resource-browser-review-v1',inputs:targets,scope:'Rendered desktop and phone checks using the existing reviewed CI browser. Videos are deliberately blocked in outage cases; no playback claim. PDF page-image review remains a human/agent release step.',cases:[],routes:[],pdfs:[],images:[]};
-  const check=async(name,fn)=>{try{await measured('grow-resources/'+name,fn);result.cases.push({name,passed:true});}catch(e){result.cases.push({name,passed:false,error:e.message});throw e;}};
+  const recordCase=record=>{
+    result.cases.push(record);
+    if(!record.passed||['negative-controls/','navigation-equivalence/','media-equivalence/'].some(prefix=>record.name.startsWith(prefix)))
+      console.log(JSON.stringify({scope:'grow-resources-case',...record}));
+  };
+  const check=async(name,fn)=>{try{await measured('grow-resources/'+name,fn);recordCase({name,passed:true});}catch(e){recordCase({name,passed:false,error:e.message});throw e;}};
   const snapshot=async(page,name)=>{const file=name+'.png';await page.screenshot({path:path.join(out,file),fullPage:true});result.images.push(file);};
   const reject=async(fn)=>{let fired=false;try{await fn();}catch(e){fired=true;}assert.ok(fired,'The planted defect must be detected');};
   const noOverflow=async(page)=>{const size=await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth}));assert.ok(size.scroll<=size.width+2,'No document horizontal overflow');};
@@ -126,30 +132,7 @@ async function run({browser,root,out,configure,measured,report}){
             await answer.locator(':scope > summary').press('Enter');assert.equal(await answer.getAttribute('open'),null);
           });
           await check(id+'/video-outage-and-matched-still',async()=>{
-            const fallback=page.locator('.media img');await loadedImage(fallback);assert.equal(await fallback.getAttribute('src'),c.video.fallback_image);
-            const mediaText=await page.locator('.media').innerText();assert.ok(mediaText.includes(c.video.prompt));assert.ok(mediaText.includes(c.video.fallback_text));
-            if(c.week===7)assert.equal(await fallback.getAttribute('src'),'assets/Moon_rotation_fallback.png');
-            if(c.video.local_file){
-              const video=page.locator('video');assert.equal(await video.getAttribute('preload'),'none');assert.equal(await video.getAttribute('autoplay'),null);assert.notEqual(await video.getAttribute('controls'),null);
-              const fixtureUrl=new URL(c.video.local_file,url);
-              fixtureUrl.searchParams.set('mbm-outage',String(viewport.width));
-              const videoUrl=fixtureUrl.href;let blocked=0;
-              await page.route(videoUrl,async route=>{blocked++;await route.abort('failed');});
-              // A failed child <source> emits a request/source error without
-              // consistently setting HTMLMediaElement.error. Measure the
-              // actual blocked request instead of that optional video state.
-              const failedRequest=page.waitForEvent('requestfailed',{predicate:request=>request.url()===videoUrl});
-              // Isolate the deliberately failed load from a pending media
-              // request that load() may cancel itself on a phone viewport.
-              await video.evaluate((v,src)=>{v.querySelector('source').src=src;v.preload='auto';v.load();},videoUrl);
-              const failed=await failedRequest;
-              assert.ok(failed.failure()?.errorText,'The browser reports the failed media request');
-              assert.ok(blocked>0,'The local-media failure fixture actually ran');
-              assert.equal(await video.evaluate(v=>v.readyState),0,'The blocked clip supplies no playable media');
-              assert.equal(await fallback.isVisible(),true);assert.ok((await page.locator('.media').innerText()).includes(c.video.fallback_text));
-            }else{
-              const link=page.locator('.media a[target="_blank"]');assert.equal(await link.getAttribute('href'),c.video.url);assert.ok((await link.getAttribute('rel')).includes('noopener'));
-            }
+            await assertMediaResource({page,c,url,viewport,loadedImage,advanceStage,current});
             await snapshot(page,id+'-video-fallback');
           });
           if(!mobile)await check(id+'/pupil-and-answer-print',async()=>{
@@ -233,6 +216,47 @@ async function run({browser,root,out,configure,measured,report}){
       await page.goto(origin+'/Lessons/'+targets.pages[0].path);await page.locator('.task details.answer').evaluate(n=>n.open=true);
       await check('negative-controls/premature-answer',()=>reject(async()=>assert.equal(await page.locator('.task details.answer').getAttribute('open'),null)));
     }finally{await controlContext.close();}
+    // Exercise the same production assertions against temporary DOM defects.
+    // Expected messages prevent unrelated failures being counted as detection.
+    const mediaViewport={width:1280,height:800},mediaContext=await browser.newContext({viewport:mediaViewport,reducedMotion:'reduce'});await configure(mediaContext);const mediaPage=await mediaContext.newPage();mediaPage.setDefaultTimeout(10000);
+    try{
+      const c=content.find(hasModelContract);assert.ok(c,'Expected reviewed Earth-rotation media contract');
+      const url=origin+'/Lessons/'+targets.pages.find(t=>t.id===c.id).path;
+      const restored=async()=>{await mediaPage.goto(url,{waitUntil:'domcontentloaded'});await mediaPage.locator('html.js').waitFor();};
+      const verify=()=>assertMediaResource({page:mediaPage,c,url,viewport:mediaViewport,loadedImage,advanceStage,current});
+      await restored();
+      const modelReplacement=await mediaPage.locator('video').count()===0;
+      result.mediaContract={identity:c.video.url,representation:modelReplacement?'linked-model':'local-video'};
+      await check('media-equivalence/restored-representation',verify);
+      await restored();await mediaPage.locator('.media video,.media a').evaluateAll(nodes=>nodes.forEach(n=>n.remove()));
+      await check('negative-controls/missing-replacement-link',()=>assert.rejects(verify,/requires one model link/));
+      await restored();await mediaPage.locator('.media').evaluate(n=>{n.querySelectorAll('video,a').forEach(x=>x.remove());const a=document.createElement('a');a.href='/Lessons/missing-model.html';a.textContent='Wrong target fixture';n.append(a);});
+      await check('negative-controls/wrong-replacement-target',()=>assert.rejects(verify,/must link to the expected source lesson/));
+      // Model mutations apply whenever the reviewed resource uses that path;
+      // the older valid video representation never requires a future model.
+      if(modelReplacement){
+        const target=origin+'/Lessons/'+c.online_path;
+        const model=()=>mediaPage.locator('[data-science-return="earth"]');
+        for(const [name,mutate,message] of [
+          ['missing-model',async()=>{await model().evaluate(n=>n.remove());},/must contain one Earth rotation\/orbit model/],
+          ['missing-model-control',async()=>{await model().locator('[data-sr="step"]').evaluate(n=>n.remove());},/requires the Next position control/],
+          ['disabled-model-control',async()=>{await model().locator('[data-sr="step"]').evaluate(n=>n.disabled=true);},/Next position control must be enabled/],
+          ['inert-model-control',async()=>{await model().locator('[data-sr="step"]').evaluate(n=>n.replaceWith(n.cloneNode(true)));},/Next position must move the observer/],
+          ['absent-model-svg',async()=>{await model().locator('.sr-diagram svg').evaluate(n=>n.remove());},/must render one SVG diagram/],
+          ['empty-model-svg',async()=>{await model().locator('.sr-diagram svg').evaluate(n=>n.replaceChildren());},/must contain the Sun and Earth/]
+        ]){
+          await mediaPage.goto(target,{waitUntil:'domcontentloaded'});await mutate();
+          await check('negative-controls/'+name,()=>assert.rejects(()=>assertEarthRotationModel(mediaPage,{advanceStage,current}),message));
+        }
+      }
+      await restored();await check('media-equivalence/restored-after-defects',verify);
+      const videoContent=content.find(row=>row.video.local_file&&!hasModelContract(row));assert.ok(videoContent,'Expected an existing original local-video path');
+      const videoResource=origin+'/Lessons/'+targets.pages.find(t=>t.id===videoContent.id).path;
+      await mediaPage.goto(videoResource,{waitUntil:'domcontentloaded'});
+      await check('media-equivalence/original-local-video-outage',()=>assertMediaResource({page:mediaPage,c:videoContent,url:videoResource,viewport:mediaViewport,loadedImage,advanceStage,current}));
+      await mediaPage.goto(videoResource,{waitUntil:'domcontentloaded'});await mediaPage.locator('video').evaluate(n=>n.remove());
+      await check('negative-controls/unapproved-missing-local-video',()=>assert.rejects(()=>assertMediaResource({page:mediaPage,c:videoContent,url:videoResource,viewport:mediaViewport,loadedImage,advanceStage,current}),/requires an explicit equivalent-model contract/));
+    }finally{await mediaContext.close();}
     assert.ok(result.routes.every(r=>r.result==='PASS'),'One or more supplemental GROW routes failed');result.result='PASS';
   }catch(e){result.result='FAIL';result.error=e.message;throw e;}
   finally{fs.writeFileSync(path.join(out,'grow-resource-browser.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({scope:'grow-resources',result:result.result,cases:result.cases.length,passed:result.cases.filter(c=>c.passed).length,routes:result.routes.length,pdfs:result.pdfs.length,failedCases:result.cases.filter(c=>!c.passed),failedRoutes:result.routes.filter(r=>r.result!=='PASS')}));}
