@@ -48,5 +48,7 @@ disagree.
 | `0035` | [D39 — the seeded faults are content and are never repaired](decisions/0035-d39-the-seeded-faults-are-content-do-not-autofix.md) | W08_Bug_Hunt's three faults and W07_Bug_Hunt's wrong-sprite rule are the |
 | `0036` | [D47 — a gate that cannot see the served tree is not a gate](decisions/0036-d47-a-gate-that-cannot-see-the-served-tree.md) | AMEND-3R-GC1 G9 asks whether every week's sibling .sb3 link resolves at |
 | `0037` | [D48 — `.sb3` is admitted by reviewed digest, not by being a Scratch project](decisions/0037-d48-sb3-is-admitted-by-reviewed-digest-not-by-being-scratch.md) | Site 2e49afdd adds .sb3 to two allowlists: PUBLIC in build_education.py |
+| `0041` | [D51 — the serve proof passes green on every PR without running](decisions/0041-d51-the-serve-proof-passes-green-on-every-pr-without-running.md) | STRUCTURAL, not incidental. Filed under GW1-C §2. |
+| `0042` | [S1-K — the derived-table admission ratchet and the coverage condition](decisions/0042-s1k-derived-table-admission.md) | Order S1-K, issued by Matt on 2026-09-11. K4 fallback, selected because K2 failed its source-input control. |
 
-37 rulings. The text of each is in its own file and is never edited after landing.
+39 rulings. The text of each is in its own file and is never edited after landing.
