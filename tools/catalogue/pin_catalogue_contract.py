@@ -1302,6 +1302,9 @@ REVIEWED_PATHS = (
     "tools/easter/science_original_browser.cjs",
     "tools/science_pack/browser_checks.cjs",
     "tools/prepare_served_publications.py", "tools/test_served_publications.py",
+    # S1-M: named derivation code and its read-only publication proof, digest guarded.
+    "tools/ux2/resource_sizes.py", "tools/ux2/s1m_published_input_proof.py",
+    ".github/workflows/s1m-published-input-proof.yml",
     ".github/workflows/watch-main.yml",
     # AR9: brought under digest guard so the V6FIN baseline file cannot change silently.
     # Guarded, not exempted. Authorised by Matt, Order AR9, 2026-09-10.
