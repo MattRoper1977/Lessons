@@ -18,6 +18,22 @@ async function assertEarthRotationModel(page,{advanceStage,current}){
   for(let at=from;at<targetStage;at++)await advanceStage(page,at+1);
   assert.equal(await current(page),targetStage,'Native Next navigation must reach the model stage');
   assert.equal(await host.isVisible(),true,'The replacement model must be reachable through lesson navigation');
+  // An active slide can still be at the opacity-zero first frame of its
+  // finite entrance animation (including the .01ms reduced-motion version).
+  // Wait for those running ancestor animations under the page's existing
+  // 10-second timeout. Do not finish/cancel them or make hidden content visible.
+  // Paused and infinite animations cannot delay the unchanged paint checks.
+  await page.waitForFunction(()=>{
+    const node=document.querySelector('[data-science-return="earth"]');
+    if(!node)return true; // The structural assertions still reject a missing model.
+    for(let parent=node;parent&&parent instanceof Element;parent=parent.parentElement){
+      for(const animation of parent.getAnimations()){
+        if(animation.effect?.target===parent&&animation.playState==='running'&&
+          Number.isFinite(animation.effect.getComputedTiming().endTime))return false;
+      }
+    }
+    return true;
+  });
   const mode=host.locator('select[data-sr="mode"]'),step=host.locator('button[data-sr="step"]'),reset=host.locator('button[data-sr="reset"]');
   for(const [name,control] of [['Focus',mode],['Next position',step],['Reset',reset]]){
     assert.equal(await control.count(),1,'The replacement requires the '+name+' control');

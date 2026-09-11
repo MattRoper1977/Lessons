@@ -237,11 +237,24 @@ async function run({browser,root,out,configure,measured,report,advanceStage,curr
       if(modelReplacement){
         const target=origin+'/Lessons/'+c.online_path;
         const model=()=>mediaPage.locator('[data-science-return="earth"]');
+        await mediaPage.goto(target,{waitUntil:'domcontentloaded'});
+        await assertEarthRotationModel(mediaPage,{advanceStage,current});
+        await check('media-equivalence/finite-entrance-animation',async()=>{
+          const initialOpacity=await model().evaluate(node=>{
+            // Hold the actual model at opacity zero long enough to expose a
+            // first-frame read, then let its own finite animation finish.
+            node.animate([{opacity:0},{opacity:1}],{duration:100,delay:300,fill:'both'});
+            return getComputedStyle(node).opacity;
+          });
+          assert.equal(initialOpacity,'0','The entrance fixture must begin with an unpainted model');
+          await assertEarthRotationModel(mediaPage,{advanceStage,current});
+        });
         for(const [name,mutate,message] of [
           ['missing-model',async()=>{await model().evaluate(n=>n.remove());},/must contain one Earth rotation\/orbit model/],
           ['missing-model-control',async()=>{await model().locator('[data-sr="step"]').evaluate(n=>n.remove());},/requires the Next position control/],
           ['disabled-model-control',async()=>{await model().locator('[data-sr="step"]').evaluate(n=>n.disabled=true);},/Next position control must be enabled/],
           ['inert-model-control',async()=>{await model().locator('[data-sr="step"]').evaluate(n=>n.replaceWith(n.cloneNode(true)));},/Next position must move the observer/],
+          ['permanently-transparent-model',async()=>{await model().evaluate(n=>{for(const animation of n.getAnimations())animation.cancel();n.style.opacity='0';});},/must contain the Sun and Earth/],
           ['absent-model-svg',async()=>{await model().locator('.sr-diagram svg').evaluate(n=>n.remove());},/must render one SVG diagram/],
           ['empty-model-svg',async()=>{await model().locator('.sr-diagram svg').evaluate(n=>n.replaceChildren());},/must contain the Sun and Earth/]
         ]){
