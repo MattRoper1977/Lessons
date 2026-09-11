@@ -5,7 +5,19 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
-import { Inconclusive, get, mapLimit, responseVerdict, verdictFor, publicationSubjects } from './verify_served.mjs';
+import { fileURLToPath } from 'node:url';
+// Only this isolated harness skips the wait between retries; production bounds
+// and the number of attempts are unchanged. The actual assess() path still runs.
+const savedRetryInterval = process.env.SERVE_RETRY_MS;
+process.env.SERVE_RETRY_MS = '0';
+let verifier;
+try { verifier = await import('./verify_served.mjs'); }
+finally {
+  if (savedRetryInterval === undefined) delete process.env.SERVE_RETRY_MS;
+  else process.env.SERVE_RETRY_MS = savedRetryInterval;
+}
+const { Inconclusive, get, mapLimit, responseVerdict, verdictFor, publicationSubjects,
+  launchSubjects, subjects, assess } = verifier;
 
 let passed = 0;
 async function check(label, action) { await action(); passed++; console.log('CONTROL PASS: ' + label); }
@@ -108,6 +120,92 @@ try {
     write(proof);
     fs.unlinkSync(path.join(publications.games.root, 'apexkick/index.html'));
     assert.throws(() => publicationSubjects(population, record, roots), Inconclusive);
+  });
+
+  const lessonRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+  const launchManifest = 'Science_Teesside/Launch/manifest.json';
+  const declaredLaunch = JSON.parse(fs.readFileSync(path.join(lessonRoot, launchManifest), 'utf8')).lessons;
+  let selectedLaunch;
+  await check('S1-M every real LAUNCH manifest member is in the composed serve set', () => {
+    const actual = subjects().list.filter(entry => entry.source_manifest === launchManifest);
+    const expected = declaredLaunch.map(entry => `Science_Teesside/Launch/${entry.file}`);
+    assert(expected.length > 0);
+    assert.equal(actual.length, expected.length);
+    assert.deepEqual(new Set(actual.map(entry => entry.name)), new Set(expected));
+    for (const entry of actual) {
+      assert.equal(entry.group, 'lessons');
+      assert(fs.existsSync(entry.blob), entry.blob);
+    }
+    selectedLaunch = actual[0];
+    console.log(`S1-M actual manifest membership: ${actual.length} routes; selected ${selectedLaunch.url}`);
+  });
+  const declarationRoot = path.join(temp, 'launch-declaration');
+  const declarationFile = path.join(declarationRoot, launchManifest);
+  fs.mkdirSync(path.dirname(declarationFile), { recursive: true });
+  await check('S1-M the next declared lesson is included and its URL is component-encoded', () => {
+    const extra = { file: 'future lesson & (class)/new lesson.html' };
+    fs.writeFileSync(declarationFile, JSON.stringify({ lessons: [...declaredLaunch, extra] }));
+    const derived = launchSubjects(declarationRoot, 'https://madebymatt.uk/Lessons');
+    assert.equal(derived.length, declaredLaunch.length + 1);
+    assert.equal(derived.at(-1).url, 'https://madebymatt.uk/Lessons/Science_Teesside/Launch/future%20lesson%20%26%20(class)/new%20lesson.html');
+  });
+  await check('S1-M empty, malformed, duplicate and escaping LAUNCH declarations fail closed', () => {
+    const invalid = [null, {}, { lessons: [] }, { lessons: [null] },
+      { lessons: [{ file: '../escape.html' }] }, { lessons: [{ file: '/escape.html' }] },
+      { lessons: [{ file: 'bad\\path.html' }] }, { lessons: [{ file: 'nested//empty.html' }] },
+      { lessons: [{ file: './relative.html' }] }, { lessons: [{ file: 'image.svg' }] },
+      { lessons: [declaredLaunch[0], declaredLaunch[0]] }];
+    for (const value of invalid) {
+      fs.writeFileSync(declarationFile, JSON.stringify(value));
+      assert.throws(() => launchSubjects(declarationRoot), Inconclusive);
+    }
+    fs.writeFileSync(declarationFile, '{broken JSON');
+    assert.throws(() => launchSubjects(declarationRoot), Inconclusive);
+    fs.unlinkSync(declarationFile);
+    assert.throws(() => launchSubjects(declarationRoot), Inconclusive);
+  });
+  await check('S1-M one newly covered LAUNCH route uses published bytes and reds on a served-byte mismatch', async () => {
+    const relative = path.relative(lessonRoot, selectedLaunch.blob);
+    const sourceFile = path.join(roots.lessons, relative);
+    const publishedFile = path.join(publications.lessons.root, relative);
+    const sourceBytes = fs.readFileSync(selectedLaunch.blob);
+    const publishedBytes = Buffer.concat([sourceBytes, Buffer.from('\n<!-- S1-M published-tree control fixture -->\n')]);
+    fs.mkdirSync(path.dirname(sourceFile), { recursive: true });
+    fs.mkdirSync(path.dirname(publishedFile), { recursive: true });
+    fs.writeFileSync(sourceFile, sourceBytes);
+    fs.writeFileSync(publishedFile, publishedBytes);
+    execFileSync('git', ['-C', roots.lessons, 'add', '.']);
+    execFileSync('git', ['-C', roots.lessons, '-c', 'user.name=Serve Control', '-c', 'user.email=serve-control@example.invalid', 'commit', '-qm', 'actual LAUNCH subject fixture']);
+    const revision = execFileSync('git', ['-C', roots.lessons, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+    publications.lessons.source_sha = revision;
+    publications.lessons.publication_sha = revision;
+    write(proof);
+    const launchPopulation = { list: [{ ...selectedLaunch, blob: sourceFile }], residue: [], missing: [] };
+    const remapped = publicationSubjects(launchPopulation, record, roots).list[0];
+    assert.equal(remapped.blob, publishedFile);
+    assert.equal(remapped.url, selectedLaunch.url);
+    assert.equal(remapped.source_group, 'lessons');
+    assert.equal(remapped.publication_run, publications.lessons.run_id);
+    const savedFetch = globalThis.fetch;
+    let servedBytes = publishedBytes;
+    let calls = 0;
+    globalThis.fetch = async url => {
+      assert.equal(url, selectedLaunch.url);
+      calls++;
+      return new Response(servedBytes, { status: 200, headers: { 'content-type': 'text/html' } });
+    };
+    try {
+      const permitted = [new URL(selectedLaunch.url).host];
+      const run = () => assess(remapped, permitted, new Set(), {});
+      assert.equal((await run()).verdict, 'SERVED');
+      servedBytes = Buffer.concat([publishedBytes, Buffer.from([0])]);
+      const mismatch = await run();
+      assert.equal(mismatch.verdict, 'RED');
+      assert.match(mismatch.detail, /HTTP 200: expected .* vs served/);
+      servedBytes = publishedBytes;
+      assert.equal((await run()).verdict, 'SERVED');
+      console.log(`S1-M newly covered ${selectedLaunch.url}: SERVED -> RED -> SERVED; HTTP 200 throughout; ${calls} fixture responses; ${mismatch.detail}`);
+    } finally { globalThis.fetch = savedFetch; }
   });
 } finally { fs.rmSync(temp, { recursive: true, force: true }); }
 console.log(`PASS: ${passed} served-proof regression controls`);

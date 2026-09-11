@@ -1,0 +1,35 @@
+name: S1-L read the deployed publication
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/s1l-publication-readback.yml'
+      - '_sx2/evidence/s1l_read_publication.py'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  read-published-tree:
+    name: S1-L exact deployed artifact and 31 preserved routes
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: '/_sx2/evidence/'
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prove provenance and missing-member refusals
+        run: python _sx2/evidence/s1l_read_publication.py --self-test
+      - name: Read the existing successful deployment without rebuilding
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python _sx2/evidence/s1l_read_publication.py --census _sx2/evidence/S1L_31_UNCOVERED_INPUTS.json
+      - name: Save the compact published-tree readback
+        uses: actions/upload-artifact@v4
+        with:
+          name: s1l-published-readback
+          path: s1l-published-readback/
+          retention-days: 30

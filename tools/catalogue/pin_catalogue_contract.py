@@ -1302,6 +1302,8 @@ REVIEWED_PATHS = (
     "tools/easter/science_original_browser.cjs",
     "tools/science_pack/browser_checks.cjs",
     "tools/prepare_served_publications.py", "tools/test_served_publications.py",
+    # S1-M M7: reviewed serve instrument, its firing controls, and decision index.
+    "tools/verify_served.mjs", "tools/test_verify_served.mjs", "_sx2/DECISIONS.md",
     # S1-M: named derivation code and its read-only publication proof, digest guarded.
     "tools/ux2/resource_sizes.py", "tools/ux2/s1m_published_input_proof.py",
     ".github/workflows/s1m-published-input-proof.yml",
