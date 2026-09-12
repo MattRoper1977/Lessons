@@ -1,5 +1,37 @@
 # RF3 phased continuation — measured 12 September 2026
 
+## Current checkpoint — PIN1 deployed; SB1 fitness stop recorded
+
+Measured 2026-09-12T13:24:36.954Z. Lessons main remains `a20a09b96ddb0cdbe37709631603de82cc8b1d6a`.
+PIN1 #515 post-merge UX2 run `34695886241` SUCCESS; census job `103559550830`
+records all 9 proof steps PASS at that exact main commit, event `push`; its five
+reporter tests pass. Artifact `10298711482` (1,064 bytes) uploaded successfully.
+Publication `34695886467`: build `103559177796` and deploy `103560005879` SUCCESS.
+Review artifact `10297804318` (732,463,339 bytes) and Pages `10297664420`
+(730,883,657 bytes) are present and unexpired.
+
+Latest main-check snapshot: 14 SUCCESS, 1 baseline sweep FAIL, 2 still running
+(Science navigation/print and responsive-downloads). Sweep job `103559177041`
+again measures exactly 1,418 stale / 6,307 live / 6,899 row labels / 47 unmatched,
+exit 2. No full-main-green claim. Re-read pending checks at the next continuation.
+The first scheduled run of the NEW census is NOT OBSERVED: latest discovered UX2
+schedule `34685884276` was on old main `aad04718` before #515. Do not credit it to PIN1.
+
+The next eligible small pass was SB1's existing-tool fitness check. It is complete
+and records **SB1_BLOCKED** under §3.1: the parent checker accepts an invalid-schema
+`{}` project and a zero-file scan. Official scratch-parser 6.0.1 rejects the former.
+All 23 current projects pass parent checks, 14/14 parent controls pass, and a derived
+null-parent plant fires. No production code/workflow was changed; no implementation
+PR was opened. `SB1_FITNESS_READOUT.md` contains the concrete same-tool extension
+proposal, exact source hash, local parser results, limitations and original stop text.
+
+Next: resolve that recorded §3.1 fitness proposal before wiring SB1; preserve the
+parent check, add official Scratch-3 schema validation in the same entry point,
+prove unavailable-parser/empty-input are not green, derive admission population and
+extension-specific triggers, then execute the original controls in one PR. This
+proposal is not an implemented gate. A second Scratch unit remains held until SB1.
+PIN1's original trigger plants remain open; LP1's material-scope hold is unchanged.
+
 ## Current checkpoint — PIN1 UX2 census pass merged
 
 Measured 2026-09-12T13:16:02.888Z. Lessons #515 merged as `a20a09b96ddb0cdbe37709631603de82cc8b1d6a`.

@@ -1,0 +1,127 @@
+{
+  "base": "a20a09b96ddb0cdbe37709631603de82cc8b1d6a",
+  "tool_sha256": "43ded2eb09e27895b9ea7f3e20ba0eb33a8a86a14902ae596a3b68b339f52961",
+  "parser_version": "6.0.1",
+  "tracked_sb3_count": 23,
+  "tracked_parent_failures": {},
+  "genuine_path": "ICT/Teaching_Packs/GROW_Computing/Week_01/Scratch_Projects/W01_Start.sb3",
+  "cases": [
+    {
+      "case": "genuine",
+      "fixture_sha256": "3fafaff6fbd419074983f3522511a9a9b34d859a4ea2f5afb27acee62615f8a5",
+      "parent_checker_errors": [],
+      "parent_checker_accepts": true,
+      "official_parser": {
+        "accepted": true,
+        "projectVersion": 3
+      }
+    },
+    {
+      "case": "missing_project_json",
+      "fixture_sha256": "3c445ae47916da187ce6adc36e419f67115b9dad99bea1b677e75f3c426cf055",
+      "parent_checker_errors": [
+        "missing_project_json.sb3: UNREADABLE (\"There is no item named 'project.json' in the archive\")"
+      ],
+      "parent_checker_accepts": false,
+      "official_parser": {
+        "accepted": false,
+        "error": "Failed to unzip and extract project.json, with error: missing project or sprite json"
+      }
+    },
+    {
+      "case": "corrupt_project_json",
+      "fixture_sha256": "f6b5c8177f3d500253552cfaa1a02c0c1c99866a8215e9973a91eac0fab7c3d7",
+      "parent_checker_errors": [
+        "corrupt_project_json.sb3: UNREADABLE (Expecting property name enclosed in double quotes: line 1 column 2 (char 1))"
+      ],
+      "parent_checker_accepts": false,
+      "official_parser": {
+        "accepted": false,
+        "error": "SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)"
+      }
+    },
+    {
+      "case": "invalid_schema_empty_object",
+      "fixture_sha256": "127c91181d0394dc74ba146bcde4835409f35977c2a7dafd18003a6f1eb160fb",
+      "parent_checker_errors": [],
+      "parent_checker_accepts": true,
+      "official_parser": {
+        "accepted": false,
+        "error": {
+          "validationError": "Could not parse as a valid SB2 or SB3 project.",
+          "sb2Errors": [
+            {
+              "keyword": "required",
+              "dataPath": "",
+              "schemaPath": "#/required",
+              "params": {
+                "missingProperty": "objName"
+              },
+              "message": "should have required property 'objName'"
+            }
+          ],
+          "sb3Errors": [
+            {
+              "keyword": "required",
+              "dataPath": "",
+              "schemaPath": "#/required",
+              "params": {
+                "missingProperty": "meta"
+              },
+              "message": "should have required property 'meta'"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "empty_population": {
+    "exit": 0,
+    "stdout": "sb3 checked           : 0\ninconsistent links    : 0\n"
+  },
+  "parent_selftest": {
+    "exit": 0,
+    "stdout": "  PASS  a consistent project is clean\n  PASS  a next whose child has parent null is caught\n  PASS    ... and the message names both blocks and the opcode\n  PASS    ... and it prints the parent it actually found\n  PASS  an INPUT whose child names the wrong parent is caught\n  PASS    ... and it says which input\n  PASS  a next naming a block that does not exist is caught\n  PASS  an obscured shadow is checked too, not skipped\n  PASS    ... and a broken obscured shadow is caught\n  PASS  two sprites reusing the same block ids are each judged on their own\n  PASS    ... and a real break in the SECOND sprite is still caught\n  PASS    ... and it is attributed to that sprite, not the first\n  PASS  a target with no blocks is clean, not a crash\n  PASS  a project with no targets key is clean, not a crash\n\n14 checks, 0 failed\n"
+  },
+  "parent_red_proof": {
+    "exit": 0,
+    "stdout": "RED PROOF on W01_Start.sb3\n  planted null parent: target Courier, start_0_0 -> start_0_1\n  original : 0 problem(s)\n  planted  : 1 problem(s)\n    planted.sb3: Courier next of start_0_0 (event_whenflagclicked) names start_0_1, but that block's parent is None\n  control FIRES\n"
+  },
+  "measured_at": "2026-09-12T13:22:57.353029+00:00",
+  "inherited_admission_evidence": {
+    "path": "recovery/p6-publication/education-admission-controls.json",
+    "sha256": "6f94a7d3966d050a532aedc07d609ab1a5dca94b99be777604f1b75257ea592a",
+    "status": "PASS",
+    "controls": 61,
+    "sb3_controls": [
+      {
+        "name": "disguised code cannot enter as sb3",
+        "real": "PASS",
+        "planted": "FAIL",
+        "reason": "Education file admission blocked publication:\nUNREVIEWED education-site/hc3-disguised.sb3",
+        "restored": "PASS"
+      },
+      {
+        "name": "disguised code cannot enter as sb3",
+        "real": "PASS",
+        "planted": "FAIL",
+        "reason": "Education file admission blocked publication:\nUNREVIEWED education-lessons/hc3-disguised.sb3",
+        "restored": "PASS"
+      },
+      {
+        "name": "disguised code cannot enter as sb3",
+        "real": "PASS",
+        "planted": "FAIL",
+        "reason": "Education file admission blocked publication:\nUNREVIEWED education-apps/hc3-disguised.sb3",
+        "restored": "PASS"
+      }
+    ],
+    "measurement": "READ of prior P6 execution; not re-executed in this stopped fitness pass"
+  },
+  "workflow_scan": {
+    "sb3_mentions": "education-pages.yml comments only",
+    "executable_sb3_gate_found": false,
+    "measurement": "source scan, not Actions trigger proof"
+  },
+  "status": "SB1_BLOCKED"
+}
