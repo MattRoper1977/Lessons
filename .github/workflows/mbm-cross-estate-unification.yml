@@ -402,6 +402,7 @@ on:
       - 'assets/mbm-platform.css'
       - 'assets/mbm-platform.js'
       - 'assets/mbm-theme.js'
+      - 'assets/mbm-tokens.css'
       - 'data/calendar-spine.json'
       - 'docs/MBM_CROSS_ESTATE_UNIFICATION.md'
       - 'humanities_teesside.html'
@@ -443,6 +444,7 @@ on:
       - 'tools/science_teaching_packs/check_hub_browser.cjs'
       - 'tools/science_teaching_packs/check_packs.py'
       - 'tools/science_teaching_packs/refresh_packs.py'
+      - 'tools/sw2/check_tokens_inert.cjs'
       - 'tools/test_served_publications.py'
       - 'tools/test_verify_served.mjs'
       - 'tools/ux2/resource_sizes.py'
@@ -853,6 +855,7 @@ on:
       - 'assets/mbm-platform.css'
       - 'assets/mbm-platform.js'
       - 'assets/mbm-theme.js'
+      - 'assets/mbm-tokens.css'
       - 'data/calendar-spine.json'
       - 'docs/MBM_CROSS_ESTATE_UNIFICATION.md'
       - 'humanities_teesside.html'
@@ -894,6 +897,7 @@ on:
       - 'tools/science_teaching_packs/check_hub_browser.cjs'
       - 'tools/science_teaching_packs/check_packs.py'
       - 'tools/science_teaching_packs/refresh_packs.py'
+      - 'tools/sw2/check_tokens_inert.cjs'
       - 'tools/test_served_publications.py'
       - 'tools/test_verify_served.mjs'
       - 'tools/ux2/resource_sizes.py'
@@ -1052,6 +1056,7 @@ jobs:
           prefix=$(cat /tmp/mbm-prefix)
           for _ in $(seq 1 30); do curl -fsS "http://127.0.0.1:4173/$prefix/" >/dev/null && break; sleep 1; done
           MBM_BASE_URL="http://127.0.0.1:4173/$prefix/" node tools/verify_cross_estate_browser.mjs
+          node tools/sw2/check_tokens_inert.cjs --base "http://127.0.0.1:4173/$prefix/"
 
       # The estate HUD is the only shared chrome these pages carry, and it is
       # served from the site origin - so this is the one job that can prove it,
@@ -1148,6 +1153,7 @@ jobs:
         run: |
           set -euo pipefail
           MBM_NAVIGATION_MODE=education MBM_BASE_URL="$(cat /tmp/mbm-live-base)" MBM_CACHE_BUST="$GITHUB_SHA" node tools/verify_cross_estate_browser.mjs
+          node tools/sw2/check_tokens_inert.cjs --base "$(cat /tmp/mbm-live-base)" --published --output audit-output/sw2-token-inertness-live.json
 
       - name: Record production proof on the release PR
         env:
