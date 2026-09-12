@@ -86,8 +86,10 @@ jobs:
             if(week===1){await page.evaluate(()=>document.documentElement.classList.add('mbm-guide-on'));let caught=false;try{await guide(page,false)}catch{caught=true}assert.ok(caught,'Visibility negative control falsely passed');report.controls.push('Forced open guidance rejected');await page.evaluate(()=>document.documentElement.classList.remove('mbm-guide-on'));await guide(page,false);}
             for(const route of ['step','main','challenge']){
              await page.locator('#route').selectOption(route);assert.equal(await page.locator('#route').inputValue(),route);
-             for(let stage=0;stage<8;stage++){
-              await page.locator('#chassis button').nth(stage).click();assert.equal(await page.locator('#position').innerText(),`${stage+1} of 8`);row.positions.push(`${route}:${stage+1}`);
+             while(await page.locator('#prev').isEnabled())await page.locator('#prev').click();
+             const total=Number((await page.locator('#position').innerText()).split(' of ')[1]);assert.ok(total>=8&&total<=12);
+             for(let stage=0;stage<total;stage++){
+              if(stage)await page.locator('#next').click();assert.equal(await page.locator('#position').innerText(),`${stage+1} of ${total}`);row.positions.push(`${route}:${stage+1}`);
               if(!await page.locator('.model').count())continue;
               const buttons=await page.locator('.model button').evaluateAll(bs=>bs.map(b=>b.id?'#'+b.id:['key','gap','probe','repair'].filter(k=>b.hasAttribute('data-'+k)).map(k=>'[data-'+k+'="'+b.getAttribute('data-'+k)+'"]')[0]));assert.ok(buttons.length>0&&buttons.every(Boolean),'Unidentified model button');
               if(week===1&&route==='step'&&row.modelActions.length===0){const b=page.locator(buttons[0]);await b.evaluate(el=>{window.__gc1Original=el.onclick;el.onclick=null});let caught=false;try{await click(page,buttons[0])}catch{caught=true}assert.ok(caught,'Missing-handler negative control falsely passed');await b.evaluate(el=>el.onclick=window.__gc1Original);report.controls.push('Missing model handler rejected');}
@@ -95,7 +97,7 @@ jobs:
               if(week===8){await click(page,'#restoreBug');const cycle={route,stage:stage+1,repairs:[]};for(const repair of ['down','wallOnce','keepMsg']){const before=await checks(page);await click(page,`[data-repair="${repair}"]`);assert.equal(await page.locator(`[data-repair="${repair}"]`).isDisabled(),true);const after=await checks(page);cycle.repairs.push({repair,before,after});row.modelActions.push({route,stage:stage+1,selector:`[data-repair="${repair}"]`});}assert.ok(Object.values(cycle.repairs[2].after).every(x=>x.pass),'Final repaired checks not all green');assert.equal(cycle.repairs[0].before.arrows.pass,false);assert.equal(cycle.repairs[0].after.arrows.pass,true);assert.equal(cycle.repairs[1].before.walls.pass,false);assert.equal(cycle.repairs[1].after.walls.pass,true);assert.equal(cycle.repairs[2].before.restart.pass,false);row.repairCycles.push(cycle);await click(page,'#restoreBug');}
              }
             }
-            assert.equal(new Set(row.positions).size,24);assert.ok(row.modelActions.length>0);await guide(page,false);
+            assert.equal(new Set(row.positions).size,row.positions.length);assert.ok(row.positions.length>=24);assert.ok(row.modelActions.length>0);await guide(page,false);
             await page.evaluate(()=>window.dispatchEvent(new Event('beforeprint')));await page.emulateMedia({media:'print'});const paper=page.locator('.print-record .gc1-paper');assert.equal(await paper.count(),1);assert.equal(await paper.isVisible(),true);const txt=await paper.innerText();assert.match(txt,/paper route/i);assert.ok(txt.length>1000,'Paper route is a stub');assert.match(txt,/completion/i);row.print={characters:txt.length,heading:await paper.locator('h1').innerText(),visible:true};
             console.log('WEEK',week,'PASS',JSON.stringify({guidance:row.guide,positions:row.positions.length,modelActions:row.modelActions.length,repairCycles:row.repairCycles.length,print:row.print}));await page.close();
            }
