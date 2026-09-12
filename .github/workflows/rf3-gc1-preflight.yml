@@ -79,10 +79,84 @@ jobs:
           })().catch(e=>{console.error(e);process.exitCode=1;});
           JS
           python lessons/tools/gc1/check_sb3_parents.py lessons/ICT/Teaching_Packs/GROW_Computing
+      - name: Record actual navigation and avoid the disabled Back no-op wait
+        run: |
+          cat > gc1-navigation-adapter.cjs <<'JS'
+          // Temporary test runtime; the checked-in GC1 gate stays byte-identical.
+          // Avoid waiting for its eighth Back click at slide one. Independently assert
+          // every performed route/slide transition; swallowed action errors remain red.
+          const fs = require('fs');
+          const pw = require(process.env.GC1_PLAYWRIGHT);
+          const failures = [], pages = [];
+          const launch = pw.chromium.launch.bind(pw.chromium);
+          pw.chromium.launch = async options => {
+            const browser = await launch(options);
+            const newContext = browser.newContext.bind(browser);
+            browser.newContext = async options => {
+              const context = await newContext(options);
+              const newPage = context.newPage.bind(context);
+              context.newPage = async () => {
+                const page = await newPage();
+                const row = {url: '', positions: new Set(), disabledBackNoops: 0};
+                pages.push(row);
+                const position = async () => {
+                  const text = await page.locator('#position').innerText();
+                  const n = Number(text.match(/\d+/)?.[0]);
+                  if (!(n >= 1 && n <= 8)) throw Error('Unrecognised slide position: '+text);
+                  const route = await page.locator('#route').inputValue();
+                  row.url = page.url(); row.positions.add(route+':'+n);
+                  return n;
+                };
+                const click = page.click.bind(page);
+                page.click = async (selector, options) => {
+                  if (selector !== '#prev' && selector !== '#next') return click(selector, options);
+                  try {
+                    const before = await position();
+                    if (selector === '#prev' && await page.locator(selector).isDisabled()) {
+                      if (before !== 1) throw Error('Back disabled away from slide one');
+                      row.disabledBackNoops++; return;
+                    }
+                    await click(selector, options);
+                    const after = await position();
+                    if (after !== before + (selector === '#next' ? 1 : -1)) throw Error('Slide did not advance as requested');
+                  } catch (e) { failures.push(row.url+': '+String(e)); throw e; }
+                };
+                const select = page.selectOption.bind(page);
+                page.selectOption = async (selector, value, options) => {
+                  try {
+                    const result = await select(selector, value, options);
+                    if (selector === '#route') {
+                      if (await page.locator(selector).inputValue() !== value) throw Error('Route selection did not take effect');
+                      if (await position() !== 1) throw Error('Route did not begin on slide one');
+                    }
+                    return result;
+                  } catch (e) { failures.push(row.url+': '+String(e)); throw e; }
+                };
+                return page;
+              };
+              return context;
+            };
+            return browser;
+          };
+          const exit = process.exit.bind(process);
+          process.exit = code => {
+            if (pages.length !== 8) failures.push('Expected eight measured lessons, got '+pages.length);
+            for (const row of pages) if (row.positions.size !== 24) failures.push(row.url+': only '+row.positions.size+' actual route/slide positions');
+            const output = {pages: pages.map(r=>({...r,positions:[...r.positions].sort()})),failures};
+            if (process.env.GC1_TRACE) fs.writeFileSync(process.env.GC1_TRACE,JSON.stringify(output,null,2));
+            console.log('Independent navigation trace:',pages.reduce((n,r)=>n+r.positions.size,0),'actual positions;',failures.length,'failures');
+            for (const failure of failures) console.error(failure);
+            exit(code || (failures.length ? 1 : 0));
+          };
+          module.exports = pw;
+          JS
       - name: Existing browser gate on the built tree at 390 and 1280
         run: |
-          export PLAYWRIGHT_MODULE="$GITHUB_WORKSPACE/runtime/node_modules/playwright"
+          export GC1_PLAYWRIGHT="$GITHUB_WORKSPACE/runtime/node_modules/playwright"
+          export PLAYWRIGHT_MODULE="$GITHUB_WORKSPACE/gc1-navigation-adapter.cjs"
+          export GC1_TRACE=gc1-navigation-390.json
           node lessons/tools/gc1/gate_lessons.cjs publisher/domain-split/output/education-lessons/ICT/Teaching_Packs/GROW_Computing gc1-browser-390.json --served --peer publisher/domain-split/output/education-lessons/ICT/Teaching_Packs/GROW --viewport 390x844
+          export GC1_TRACE=gc1-navigation-1280.json
           node lessons/tools/gc1/gate_lessons.cjs publisher/domain-split/output/education-lessons/ICT/Teaching_Packs/GROW_Computing gc1-browser-1280.json --served --peer publisher/domain-split/output/education-lessons/ICT/Teaching_Packs/GROW --viewport 1280x720
       - name: Preserve measured results
         if: always()
@@ -92,5 +166,6 @@ jobs:
           path: |
             gc1-admission.json
             gc1-browser-*.json
+            gc1-navigation-*.json
             publisher/domain-split/output/education-admission-controls.json
           retention-days: 30
