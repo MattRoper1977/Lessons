@@ -1,5 +1,31 @@
 # RF3 continuation — 12 September 2026
 
+## Current checkpoint — SB1 release closeout and PIN1 gate-A refresh
+
+Measured 2026-09-12T14:12:04.207Z. Lessons main `12828ac35af20b1058b9f5f1c0774f30d34df0b1` is deployed.
+Publication `34697885918`: build `103564413750` and deploy `103565487223` SUCCESS.
+Served proof job `103564412966` binds the exact successful publications and records
+**59/59 byte-identical, 0 red, 0 inconclusive**. Both publication artifacts are present
+and unexpired. All **20 main checks are terminal: 16 SUCCESS, 4 FAIL**. The failures
+are one unchanged stale-evidence sweep and three Watch summaries reporting it.
+Latest Watch `103565796156`: 5 PASS / 1 FAIL / 0 NO VERDICT / 0 pending among its
+21 derived workflows (12 dormant, 3 dispatch-only). No blanket-green claim.
+
+SB1 is CLOSED and its old board row is corrected. PIN1's actual digest gate was
+freshly censused at verified main Git blobs: 444 declared distinct pins, **440
+asserted Lessons paths, 6 triggered, 434 asserted but not triggered**, zero missing
+asserted files. Four reverse-asymmetry trigger paths are intentional checker,
+workflow and documentation coverage. See `PIN1_GATE_A_NEXT_PASS.md` and the full
+path-level `rf3-evidence/PIN1_GATE_A_REFRESH.json`.
+
+Next eligible implementation is PIN1 §2.1's actual digest-gate derivation, followed
+by its §3 scratch-branch proofs. The separate §2.2 UX2 fallback is already delivered.
+This pass changes no production code or pins; it closes release verification,
+refreshes the source census, and reconciles the programme board. TH1C recovery
+returned no usable original order; its lane remains held. LP1 and the remaining
+recorded holds remain unchanged. The first scheduled invocation of the new PIN1
+census is still not claimed from a PR or push run.
+
 ## Current checkpoint — SB1_CLOSED, schema gate merged and proved on main
 
 Measured 2026-09-12T14:00:32.452Z. Lessons #516 is merged at `12828ac35af20b1058b9f5f1c0774f30d34df0b1`.
@@ -194,8 +220,8 @@ Content PR and resources.json catalogue PR must stay separate. Never infer P2Q.
 | 5 | PRX1 | Authorized RF3 repair merged and deployed, full golden proved |
 | 6 | BL1 | Approved #351 → #346 → #350 sequence completed; #291 HELD |
 | 7 | LP1 | Census materially changes scope: 18 gated proofs (16 collapsed maker steps), plus 21 separate no-PR-trigger proofs; §5 STOP pending scope ruling |
-| 8 | PIN1 | Ruling filed; 444 distinct pinned paths, 443 excluding caller, five registries, one asserting digest gate; implementation not closed |
-| 9 | SB1 | Full order recovered; existing parent tool inspection underway; due before second unit, not before #493 |
+| 8 | PIN1 | UX2 §2.2 fallback delivered in #515; fresh gate-A census at 12828ac3: 440 asserted / 6 triggered / 434 uncovered. Next: §2.1 registry-derived coverage and §3 scratch-branch proofs; PIN1_PARTIAL |
+| 9 | SB1 | SB1_CLOSED: #516 merged 12828ac3; schema 23/23, controls 11/11 + original 14/14, admission 61 before/after; main job and publication verified |
 | 10 | LF1-M | Full original missing; retain S06/S04 S2 and B02/B05/V04 replacement holds |
 | 11 | UX1A | §3+ missing; reconcile with landed UX2/SW2 after recovery |
 | 12 | SW2 → Part B | Supplied sequence retained; Lessons #456 HELD; partial UX1B §1.5+ missing |
