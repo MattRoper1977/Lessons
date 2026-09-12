@@ -32,6 +32,15 @@ on:
       - tools/catalogue/pin_catalogue_contract.py
       - _sownb/CALENDAR_2026_27.json
       - .github/workflows/ux2-gates.yml
+      # SB1: suffix-specific triggers include new paths and all case variants.
+      - '**/*.sb3'
+      - '**/*.SB3'
+      - '**/*.Sb3'
+      - '**/*.sB3'
+      - tools/gc1/check_sb3_parents.py
+      - tools/gc1/schema-runtime/package.json
+      - tools/gc1/schema-runtime/package-lock.json
+      - .github/workflows/education-pages.yml
   push:
     branches: [main]
     paths:
@@ -47,6 +56,15 @@ on:
       - tools/catalogue/pin_catalogue_contract.py
       - _sownb/CALENDAR_2026_27.json
       - .github/workflows/ux2-gates.yml
+      # SB1: suffix-specific triggers include new paths and all case variants.
+      - '**/*.sb3'
+      - '**/*.SB3'
+      - '**/*.Sb3'
+      - '**/*.sB3'
+      - tools/gc1/check_sb3_parents.py
+      - tools/gc1/schema-runtime/package.json
+      - tools/gc1/schema-runtime/package-lock.json
+      - .github/workflows/education-pages.yml
   schedule:
     # The size table and the spine are derived files: a lesson edit that misses
     # the path filter above is caught here within a day.
@@ -181,4 +199,52 @@ jobs:
         with:
           name: ux2-drift-census-${{ github.run_id }}-${{ github.run_attempt }}
           path: audit-output/ux2-drift-census
+          if-no-files-found: error
+
+  scratch-schema:
+    defaults:
+      run:
+        shell: bash -Eeo pipefail {0}
+    name: SB1 official Scratch 3 schema (independent of digest admission)
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Derive the immutable builder from this commit's publisher caller
+        id: publisher
+        run: |
+          ref=$(python3 tools/gc1/check_sb3_parents.py --publisher-ref)
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v4
+        with:
+          repository: MattRoper1977/mattroper1977.github.io
+          ref: ${{ steps.publisher.outputs.ref }}
+          path: _reference/sb1-builder
+          persist-credentials: false
+          sparse-checkout: domain-split/education-publication-admission.json
+          sparse-checkout-cone-mode: false
+      - name: Install the locked official parser (failure is UNMEASURED)
+        run: |
+          npm ci --prefix tools/gc1/schema-runtime --ignore-scripts --no-audit --no-fund || { echo 'UNMEASURED: official parser installation failed'; exit 2; }
+      - name: Every tracked and registered Scratch input parses as Scratch 3
+        run: |
+          python3 tools/gc1/check_sb3_parents.py --schema \
+            --registry _reference/sb1-builder/domain-split/education-publication-admission.json \
+            --report audit-output/sb1/schema.json
+      - name: Schema controls and the preserved parent-link controls
+        run: |
+          genuine=$(python3 -c "import json; print(next(r['path'] for r in json.load(open('audit-output/sb1/schema.json'))['rows'] if r['status']=='PASS'))")
+          python3 tools/gc1/check_sb3_parents.py --schema-self-test "$genuine" | tee audit-output/sb1/schema-controls.txt
+          python3 tools/gc1/check_sb3_parents.py --self-test | tee audit-output/sb1/parent-controls.txt
+          python3 tools/gc1/check_sb3_parents.py --red-proof "$genuine" | tee audit-output/sb1/parent-red-proof.txt
+      - name: Preserve the schema diagnosis and controls
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sb1-schema-${{ github.run_id }}-${{ github.run_attempt }}
+          path: audit-output/sb1
           if-no-files-found: error

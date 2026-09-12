@@ -48,6 +48,12 @@ USAGE
   python3 tools/gc1/check_sb3_parents.py --self-test
   python3 tools/gc1/check_sb3_parents.py --red-proof <sb3>   plant, prove, discard
 
+SB1 additive modes (the original parent-only commands stay separate):
+  --schema --registry <pinned-builder-registry> --report <json>
+  --schema-self-test <genuine-sb3>
+Schema mode: exit 0 all Scratch 3; 1 invalid project; 2 UNMEASURED.
+It never asserts program behaviour or repairs a deliberately seeded lesson fault.
+
 Exit 0 clean, 1 if any link is inconsistent, 2 on a usage error.
 """
 import argparse
@@ -56,6 +62,192 @@ import json
 import os
 import sys
 import zipfile
+import subprocess
+import re
+from pathlib import Path
+
+
+# SB1: schema is additive. The original graph functions and their controls below
+# remain independent; valid projects may deliberately contain behavioural faults.
+SCHEMA_RUNTIME = Path(__file__).resolve().parent / 'schema-runtime/node_modules/scratch-parser'
+SCHEMA_BRIDGE = r'''
+const fs = require('fs');
+let parser;
+try {
+  if (require(process.argv[1] + '/package.json').version !== '6.0.1') throw Error('Unexpected parser version');
+  parser = require(process.argv[1]);
+} catch (e) { console.log(JSON.stringify({unmeasured:String(e)})); process.exit(2); }
+(async () => {
+  const paths = JSON.parse(fs.readFileSync(0, 'utf8'));
+  const rows = [];
+  for (const path of paths) {
+    let bytes;
+    try { bytes = fs.readFileSync(path); }
+    catch (e) { rows.push({path, status:'UNMEASURED', reason:String(e)}); continue; }
+    rows.push(await new Promise(resolve => {
+      try {
+        parser(bytes, false, (err, result) => {
+          if (err) return resolve({path, status:'FAIL', reason:JSON.stringify(err)});
+          if (!result || !result[0]) return resolve({path, status:'UNMEASURED', reason:'No parsed project'});
+          const version = result[0].projectVersion;
+          resolve({path, status:version === 3 ? 'PASS' : 'FAIL',
+            reason:version === 3 ? 'Official Scratch 3 schema accepted' : 'Expected Scratch 3; got ' + version});
+        });
+      } catch (e) { resolve({path, status:'UNMEASURED', reason:String(e)}); }
+    }));
+  }
+  console.log(JSON.stringify({parser_version:'6.0.1', rows}));
+})().catch(e => {console.log(JSON.stringify({unmeasured:String(e)}));process.exitCode=2;});
+'''
+
+
+def schema_check(paths, runtime=SCHEMA_RUNTIME, node='node'):
+    """Official parser only. Exit 2 is unavailable evidence, never invalid schema."""
+    paths = [str(Path(p).resolve()) for p in paths]
+    if not paths:
+        return {'status': 'UNMEASURED', 'reason': 'No Scratch files to measure', 'rows': []}, 2
+    try:
+        run = subprocess.run([node, '-e', SCHEMA_BRIDGE, str(runtime)],
+                             input=json.dumps(paths), text=True, capture_output=True, timeout=60)
+        value = json.loads(run.stdout)
+        if run.returncode or not isinstance(value, dict) or value.get('parser_version') != '6.0.1':
+            raise ValueError('Parser unavailable or unexpected response: ' + run.stdout[:1500])
+        rows = value['rows']
+        if [r['path'] for r in rows] != paths or any(r['status'] not in {'PASS', 'FAIL', 'UNMEASURED'} for r in rows):
+            raise ValueError('Parser response does not cover the exact requested population')
+        code = 2 if any(r['status'] == 'UNMEASURED' for r in rows) else 1 if any(r['status'] == 'FAIL' for r in rows) else 0
+        value['status'] = {0: 'PASS', 1: 'FAIL', 2: 'UNMEASURED'}[code]
+        return value, code
+    except (OSError, subprocess.SubprocessError, ValueError, KeyError, TypeError) as error:
+        return {'status': 'UNMEASURED', 'reason': str(error), 'rows': []}, 2
+
+
+def publisher_ref(root):
+    text = (root / '.github/workflows/education-pages.yml').read_text()
+    uses = re.findall(r'^\s*uses: MattRoper1977/mattroper1977.github.io/\.github/workflows/education-publication.yml@([0-9a-f]{40})\s*$', text, re.M)
+    refs = re.findall(r'^\s*builder_ref: ([0-9a-f]{40})\s*$', text, re.M)
+    if len(uses) != 1 or refs != uses:
+        raise ValueError('Cannot derive one matching immutable publisher and builder ref')
+    return refs[0]
+
+
+def schema_population(root, registry):
+    """All tracked SB3s, a conservative superset of this repo's admitted SB3s.
+
+    Registry rows are NOT digest-checked here: that independent admission gate
+    must not mask the schema diagnosis on an unreviewed test fixture.
+    """
+    def unique_pairs(items):
+        out = {}
+        for key, value in items:
+            if key in out:
+                raise ValueError('Duplicate registry key: ' + key)
+            out[key] = value
+        return out
+    value = json.loads(registry.read_text(), object_pairs_hook=unique_pairs)
+    if value.get('schemaVersion') != 1 or set(value.get('trees', {})) != {'education-site', 'education-lessons', 'education-apps'}:
+        raise ValueError('Unsupported or incomplete admission registry')
+    admitted = {p: d for p, d in value['trees']['education-lessons'].items() if p.lower().endswith('.sb3')}
+    tracked = subprocess.check_output(['git', '-C', str(root), 'ls-files', '-z'], text=True).split('\0')
+    tracked = {p for p in tracked if p.lower().endswith('.sb3')}
+    absent_arriving, paths = [], []
+    for relative in sorted(tracked | set(admitted)):
+        path = root / relative
+        if Path(relative).is_absolute() or '..' in Path(relative).parts or path.is_symlink() or not path.resolve().is_relative_to(root):
+            raise ValueError('Unsafe Scratch input: ' + relative)
+        if not path.is_file():
+            if relative not in tracked and isinstance(admitted.get(relative), list) and 'ARRIVING' in admitted[relative]:
+                absent_arriving.append(relative)
+                continue
+            raise ValueError('Missing Scratch input: ' + relative)
+        if relative not in tracked:
+            raise ValueError('Admitted Scratch input is not tracked: ' + relative)
+        paths.append(path)
+    return paths, {'tracked': len(tracked), 'registered': len(admitted),
+                   'registered_present': len(set(admitted) & tracked),
+                   'source_only': sorted(tracked - set(admitted)), 'absent_arriving': absent_arriving}
+
+
+def schema_run(root, registry, report_path):
+    from datetime import datetime, timezone
+    try:
+        import hashlib
+        ref = publisher_ref(root)
+        builder_head = subprocess.check_output(['git', '-C', str(registry.parent), 'rev-parse', 'HEAD'], text=True).strip()
+        committed_registry = subprocess.check_output(['git', '-C', str(registry.parent), 'show',
+                                                     ref + ':domain-split/education-publication-admission.json'])
+        if builder_head != ref or registry.read_bytes() != committed_registry:
+            raise ValueError('Registry must be unchanged bytes from the caller-pinned builder checkout')
+        paths, population = schema_population(root, registry)
+        report, code = schema_check(paths)
+        report['population'] = population
+        report['source_sha'] = subprocess.check_output(['git', '-C', str(root), 'rev-parse', 'HEAD'], text=True).strip()
+        report['publisher_ref'] = ref
+        report['registry_sha256'] = hashlib.sha256(committed_registry).hexdigest()
+        for row in report['rows']:
+            row['path'] = Path(row['path']).relative_to(root).as_posix()
+    except (OSError, ValueError, KeyError, TypeError, AttributeError, subprocess.SubprocessError) as error:
+        report, code = {'status': 'UNMEASURED', 'reason': str(error), 'rows': []}, 2
+    report['measured_at'] = datetime.now(timezone.utc).isoformat()
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+    report_path.write_text(json.dumps(report, indent=2) + '\n')
+    print(json.dumps(report, indent=2))
+    return code
+
+
+def schema_self_test(genuine):
+    """Real parser controls on temporary archives, no production files changed."""
+    import tempfile
+    controls = []
+    def want(name, paths, expected, **kwargs):
+        result, code = schema_check(paths, **kwargs)
+        controls.append({'name': name, 'expected_exit': expected, 'exit': code,
+                         'pass': code == expected, 'result': result})
+    with tempfile.TemporaryDirectory(prefix='sb1-schema-controls-') as temp:
+        temp = Path(temp)
+        want('genuine project', [genuine], 0)
+        with zipfile.ZipFile(genuine) as archive:
+            payload = {name: archive.read(name) for name in archive.namelist()}
+        for name, replacement in [('missing-project-json', None), ('corrupt-json', b'{broken'),
+                                  ('invalid-schema', b'{}'), ('scratch-2', b'{"objName":"Stage"}')]:
+            path = temp / (name + '.sb3')
+            with zipfile.ZipFile(path, 'w', zipfile.ZIP_DEFLATED) as archive:
+                for member, data in payload.items():
+                    if member != 'project.json': archive.writestr(member, data)
+                if replacement is not None: archive.writestr('project.json', replacement)
+            # Assert the mutation landed before invoking the gate.
+            with zipfile.ZipFile(path) as archive:
+                assert ('project.json' not in archive.namelist()) if replacement is None else archive.read('project.json') == replacement
+            want(name, [path], 1)
+        want('no inputs', [], 2)
+        want('missing input', [temp / 'absent.sb3'], 2)
+        want('missing parser', [genuine], 2, runtime=temp / 'absent-module')
+        want('missing Node', [genuine], 2, node=str(temp / 'absent-node'))
+        # Population controls: newly added files cannot hide behind the registry,
+        # and a tracked missing file is not silently treated as absent ARRIVING.
+        fixture = temp / 'population'
+        fixture.mkdir()
+        subprocess.run(['git', 'init', '-q', str(fixture)], check=True)
+        project = fixture / 'new-unit.SB3'
+        project.write_bytes(Path(genuine).read_bytes())
+        subprocess.run(['git', '-C', str(fixture), 'add', project.name], check=True)
+        registry = temp / 'registry.json'
+        registry.write_text(json.dumps({'schemaVersion': 1, 'trees': {
+            'education-site': {}, 'education-lessons': {}, 'education-apps': {}}}))
+        paths, population = schema_population(fixture, registry)
+        controls.append({'name': 'new unregistered uppercase SB3 is measured',
+                         'pass': paths == [project] and population['source_only'] == [project.name]})
+        project.unlink()
+        caught = False
+        try:
+            schema_population(fixture, registry)
+        except ValueError as error:
+            caught = 'Missing Scratch input' in str(error)
+        controls.append({'name': 'tracked missing SB3 cannot disappear from census', 'pass': caught})
+    for row in controls:
+        print(json.dumps(row))
+    print('Schema controls: %d/%d PASS' % (sum(r['pass'] for r in controls), len(controls)))
+    return 0 if all(r['pass'] for r in controls) else 1
 
 
 def blocks_by_target(project):
@@ -249,7 +441,26 @@ def main():
     ap.add_argument('dirs', nargs='*')
     ap.add_argument('--self-test', action='store_true', dest='self_test')
     ap.add_argument('--red-proof')
+    ap.add_argument('--schema', action='store_true')
+    ap.add_argument('--schema-self-test', type=Path)
+    ap.add_argument('--publisher-ref', action='store_true')
+    ap.add_argument('--root', type=Path, default=Path(__file__).resolve().parents[2])
+    ap.add_argument('--registry', type=Path)
+    ap.add_argument('--report', type=Path)
     a = ap.parse_args()
+    if a.publisher_ref:
+        try:
+            print(publisher_ref(a.root.resolve()))
+        except (OSError, ValueError) as error:
+            print('UNMEASURED: ' + str(error), file=sys.stderr)
+            sys.exit(2)
+        sys.exit(0)
+    if a.schema_self_test:
+        sys.exit(schema_self_test(a.schema_self_test))
+    if a.schema:
+        if not a.registry or not a.report:
+            ap.error('--schema requires --registry and --report')
+        sys.exit(schema_run(a.root.resolve(), a.registry, a.report))
     if a.self_test:
         sys.exit(self_test())
     if a.red_proof:
