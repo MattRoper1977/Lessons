@@ -168,7 +168,7 @@ CATALOGUE_PINS = {
         "tools/humanities_resources/resource.css": "1aed9aaca0d73a4b200c4e5d0977e73f4e906c747d7340c7a62f4197a8344bae",
         "tools/humanities_resources/resource.js": "ad40afed95490bfcce92dc062da46e1b27bcb96bdc80e37eabdfe02bf6ffc446",
         "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "7b5d722d39de39b10c3e797a36beb6a61403e05495e0909f8230b6b6ccb41b62",
-        "tools/catalogue/TERM_REVIEW.json": "b0ed0d82fe21a222c75f6a38390b01defc0d5d958fac8e85421b7901ce6d201d",
+        "tools/catalogue/TERM_REVIEW.json": "f7823f104879f9fbaee457f2b8ad806790b1f5cc8001f502e1c189105970ecc4",
         "tools/catalogue/SCIENCE_WEEK_BINDINGS.json": "f3375440baa49ffe39a4fb7e34ccbf1cf788ed6d73b283abc15d6e1440203238",
         "primary/year5/science/autumn/forces/Lesson8_ExploreGravity.html": "20047720bf1d309055abdf232d341b6fd99b833631efa0bcbfb3dabed9671196",
         "primary/year5/science/autumn/forces/Y5_Forces_SoW_and_Plans.docx": "ca36cfd92f1c768ea66f0eb748d47e6227f67569f77b5472d0da13d03f92f2e6",
