@@ -1,5 +1,29 @@
 # RF3 phased continuation — measured 12 September 2026
 
+## Current checkpoint — PIN1 UX2 census pass merged
+
+Measured 2026-09-12T13:16:02.888Z. Lessons #515 merged as `a20a09b96ddb0cdbe37709631603de82cc8b1d6a`.
+The recovered §2.2 fallback is implemented for UX2 alone: existing daily schedule,
+all nine existing proof-step outcomes, commit-bound JSON/Markdown/Actions summary,
+FAIL on complete failed evidence and UNMEASURED (exit 2) on incomplete evidence.
+No trigger paths, existing proof commands, pins or other workflows changed.
+
+PR run `34695419199` and census job `103558313348` succeeded: 9/9 proof outcomes PASS;
+all five reporter test methods passed in Actions. Artifact `10298985341` is saved.
+All 12 PR checks are terminal: 11 SUCCESS, one independently matched baseline
+sweep FAIL (1,418 stale / 6,307 live / 6,899 row labels / 47 unmatched files).
+Reviewed, GitHub-tested and merged trees all equal `1e9cea18b5b5eca2d36148bf5edf2ec391c4751d`.
+
+At this checkpoint, post-merge UX2 `34695886241`, publication `34695886467` and
+FieldOps `34695886249` are in progress. Do not call them successful from PR results.
+The first actual daily scheduled census is also NOT OBSERVED. Next continuation
+starts by re-reading these runs; no background poller or dispatch is left running.
+
+This bounded implementation pass is complete; **PIN1_PARTIAL** overall. The original
+pinned-file RED/GREEN/DORMANT trigger proofs remain open. LP1's material-scope hold
+remains. See `PIN1_UX2_RELEASE.md` and `pin1/DECISIONS.md` on main for exact scope.
+Earlier P6 and other completed passes retain their own measured timestamps.
+
 ## Current checkpoint — P6 catalogue publication complete
 
 Measured 2026-09-12T12:52:30.989626+00:00. The Computing card is deployed by Lessons #514 at
