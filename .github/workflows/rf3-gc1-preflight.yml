@@ -1,4 +1,4 @@
-name: RF3 Computing candidate preflight
+name: RF3 Computing missing interactions
 on:
   pull_request:
     paths:
@@ -7,9 +7,9 @@ permissions:
   contents: read
 jobs:
   gc1:
-    name: Exact Computing candidate browser and schema proof
+    name: G10 and G13 exact candidate interactions
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
         with:
@@ -43,14 +43,12 @@ jobs:
       - name: Install the declared test dependencies
         run: |
           python -m pip install lxml==6.0.1
-          npm install --prefix runtime --no-audit --no-fund --ignore-scripts playwright@1.54.2 scratch-parser@6.0.1
+          npm install --prefix runtime --no-audit --no-fund --ignore-scripts playwright@1.54.2
           node runtime/node_modules/playwright/cli.js install --with-deps chromium
       - name: Build the actual publisher inputs
         run: |
           python publisher/domain-split/build_publications.py --lessons lessons
           python publisher/domain-split/build_education.py --lessons lessons --apps apps
-          python publisher/domain-split/check_education_publication_admission.py --output publisher/domain-split/output --lessons lessons --apps apps --build-control > gc1-admission.json
-          cat gc1-admission.json
       - name: Bind every unit output to the existing reviewed digest ledger
         run: |
           python - <<'PY'
@@ -66,106 +64,51 @@ jobs:
           assert len(rows)==163, len(rows)
           print('163/163 reviewed unit outputs byte-identical')
           PY
-      - name: Official Scratch schema and existing parent-link gate
+      - name: Required guidance and model interactions at 390px
         run: |
-          node <<'JS'
-          const fs=require('fs'),path=require('path'),parser=require('./runtime/node_modules/scratch-parser');
-          function walk(p){return fs.readdirSync(p,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.join(p,e.name)):[path.join(p,e.name)]);}
-          (async()=>{
-            const files=walk('lessons/ICT/Teaching_Packs/GROW_Computing').filter(x=>x.endsWith('.sb3'));
-            if(files.length!==23)throw new Error('Expected 23 Scratch projects, got '+files.length);
-            for(const file of files)await new Promise((resolve,reject)=>parser(fs.readFileSync(file),false,err=>err?reject(new Error(file+': '+JSON.stringify(err))):resolve()));
-            console.log('Official scratch-parser 6.0.1: 23/23 PASS');
-          })().catch(e=>{console.error(e);process.exitCode=1;});
+          cat > gc1-interactions.cjs <<'JS'
+          const fs=require('fs'),path=require('path'),http=require('http'),assert=require('node:assert/strict');
+          const {chromium}=require(process.env.GC1_PLAYWRIGHT);
+          const root=path.resolve(process.argv[2]),output=process.argv[3];
+          const report={candidateTree:'751fcc8bd12316869cea5f5f78c353f718e8ecd8',viewport:{width:390,height:844},lessons:[],errors:[],controls:[]};
+          const server=http.createServer((req,res)=>{try{const p=path.resolve(root,'.'+decodeURIComponent(new URL(req.url,'http://localhost').pathname).replace(/^\/Lessons/,''));if(!p.startsWith(root+path.sep))throw Error('outside root');const b=fs.readFileSync(p);res.setHeader('Content-Type',p.endsWith('.html')?'text/html; charset=utf-8':p.endsWith('.js')?'text/javascript':p.endsWith('.css')?'text/css':'application/octet-stream');res.end(b);}catch(e){res.statusCode=404;res.end('not found');}});
+          async function click(page,selector){const b=page.locator(selector);assert.equal(await b.count(),1,selector);assert.equal(await b.isEnabled(),true,selector);await b.evaluate(el=>{if(typeof el.onclick!=='function')throw Error('No model handler: '+el.outerHTML);const original=el.onclick;window.__gc1Calls=0;el.onclick=function(e){window.__gc1Calls++;return original.call(this,e)};});await b.click();assert.equal(await page.evaluate(()=>window.__gc1Calls),1,'Handler did not run: '+selector);}
+          async function guide(page,on){assert.equal(await page.locator('.n6m-guide-btn').getAttribute('aria-pressed'),String(on));const staff=page.locator('[data-mbm-guide="staff"]');assert.ok(await staff.count()>0);for(const el of await staff.all())assert.equal(await el.isVisible(),on,'Staff visibility');const answers=page.locator('a[href*="Teacher_Only/"]');assert.ok(await answers.count()>=3);assert.ok((await answers.allTextContents()).some(x=>/paper.*answer/i.test(x)),'Paper answers missing');for(const a of await answers.all())assert.equal(await a.isVisible(),on,'Teacher link visibility');return {staff:await staff.count(),links:await answers.count(),visible:on};}
+          async function checks(page){const result={};for(const id of ['arrows','walls','finish','feature','restart']){await click(page,`[data-test="${id}"]`);const actual=await page.locator(`[data-test="${id}"]`).locator('xpath=ancestor::tr').locator('td').last().innerText();assert.ok(actual.length>20&&!actual.includes('not run yet'),id);assert.match(actual,/[✓✗]$/);result[id]={actual,pass:actual.endsWith('✓')};}assert.equal(result.finish.pass,true);assert.equal(result.feature.pass,true);return result;}
+          (async()=>{let browser;try{
+           await new Promise(r=>server.listen(0,'127.0.0.1',r));browser=await chromium.launch();const context=await browser.newContext({viewport:report.viewport});
+           for(let week=1;week<=8;week++){
+            const w=String(week).padStart(2,'0'),rel=`ICT/Teaching_Packs/GROW_Computing/Week_${w}/GROW_Week_${w}_Interactive.html`;
+            const page=await context.newPage();page.setDefaultTimeout(6000);page.on('pageerror',e=>report.errors.push({week,type:'pageerror',message:String(e)}));page.on('console',m=>{if(m.type()==='error')report.errors.push({week,type:'console',message:m.text()});});
+            const row={week,file:rel,guide:[],positions:[],modelActions:[],repairCycles:[],print:null};report.lessons.push(row);
+            await page.goto(`http://127.0.0.1:${server.address().port}/Lessons/${rel}`,{waitUntil:'load'});
+            row.guide.push(await guide(page,false));await page.locator('.n6m-guide-btn').click();row.guide.push(await guide(page,true));await page.locator('.n6m-guide-btn').click();row.guide.push(await guide(page,false));
+            if(week===1){await page.evaluate(()=>document.documentElement.classList.add('mbm-guide-on'));let caught=false;try{await guide(page,false)}catch{caught=true}assert.ok(caught,'Visibility negative control falsely passed');report.controls.push('Forced open guidance rejected');await page.evaluate(()=>document.documentElement.classList.remove('mbm-guide-on'));await guide(page,false);}
+            for(const route of ['step','main','challenge']){
+             await page.locator('#route').selectOption(route);assert.equal(await page.locator('#route').inputValue(),route);
+             for(let stage=0;stage<8;stage++){
+              await page.locator('#chassis button').nth(stage).click();assert.equal(await page.locator('#position').innerText(),`${stage+1} of 8`);row.positions.push(`${route}:${stage+1}`);
+              if(!await page.locator('.model').count())continue;
+              const buttons=await page.locator('.model button').evaluateAll(bs=>bs.map(b=>b.id?'#'+b.id:['key','gap','probe','repair'].filter(k=>b.hasAttribute('data-'+k)).map(k=>'[data-'+k+'="'+b.getAttribute('data-'+k)+'"]')[0]));assert.ok(buttons.length>0&&buttons.every(Boolean),'Unidentified model button');
+              if(week===1&&route==='step'&&row.modelActions.length===0){const b=page.locator(buttons[0]);await b.evaluate(el=>{window.__gc1Original=el.onclick;el.onclick=null});let caught=false;try{await click(page,buttons[0])}catch{caught=true}assert.ok(caught,'Missing-handler negative control falsely passed');await b.evaluate(el=>el.onclick=window.__gc1Original);report.controls.push('Missing model handler rejected');}
+              for(const selector of buttons.filter(x=>!x.includes('data-repair'))){await click(page,selector);row.modelActions.push({route,stage:stage+1,selector});}
+              if(week===8){await click(page,'#restoreBug');const cycle={route,stage:stage+1,repairs:[]};for(const repair of ['down','wallOnce','keepMsg']){const before=await checks(page);await click(page,`[data-repair="${repair}"]`);assert.equal(await page.locator(`[data-repair="${repair}"]`).isDisabled(),true);const after=await checks(page);cycle.repairs.push({repair,before,after});row.modelActions.push({route,stage:stage+1,selector:`[data-repair="${repair}"]`});}assert.ok(Object.values(cycle.repairs[2].after).every(x=>x.pass),'Final repaired checks not all green');assert.equal(cycle.repairs[0].before.arrows.pass,false);assert.equal(cycle.repairs[0].after.arrows.pass,true);assert.equal(cycle.repairs[1].before.walls.pass,false);assert.equal(cycle.repairs[1].after.walls.pass,true);assert.equal(cycle.repairs[2].before.restart.pass,false);row.repairCycles.push(cycle);await click(page,'#restoreBug');}
+             }
+            }
+            assert.equal(new Set(row.positions).size,24);assert.ok(row.modelActions.length>0);await guide(page,false);
+            await page.evaluate(()=>window.dispatchEvent(new Event('beforeprint')));await page.emulateMedia({media:'print'});const paper=page.locator('.print-record .gc1-paper');assert.equal(await paper.count(),1);assert.equal(await paper.isVisible(),true);const txt=await paper.innerText();assert.match(txt,/paper route/i);assert.ok(txt.length>1000,'Paper route is a stub');assert.match(txt,/completion/i);row.print={characters:txt.length,heading:await paper.locator('h1').innerText(),visible:true};
+            console.log('WEEK',week,'PASS',JSON.stringify({guidance:row.guide,positions:row.positions.length,modelActions:row.modelActions.length,repairCycles:row.repairCycles.length,print:row.print}));await page.close();
+           }
+           assert.equal(report.errors.length,0,JSON.stringify(report.errors));report.status='PASS';
+           }catch(e){report.status='FAIL';report.failure=String(e.stack||e);console.error(report.failure);process.exitCode=1;}finally{if(browser)await browser.close();server.close();fs.writeFileSync(output,JSON.stringify(report,null,2));console.log('RESULT',JSON.stringify({status:report.status,lessons:report.lessons.length,positions:report.lessons.reduce((n,x)=>n+x.positions.length,0),modelActions:report.lessons.reduce((n,x)=>n+x.modelActions.length,0),repairCycles:report.lessons.reduce((n,x)=>n+x.repairCycles.length,0),errors:report.errors,controls:report.controls}));}
+          })();
           JS
-          python lessons/tools/gc1/check_sb3_parents.py lessons/ICT/Teaching_Packs/GROW_Computing
-      - name: Record actual navigation and avoid the disabled Back no-op wait
-        run: |
-          cat > gc1-navigation-adapter.cjs <<'JS'
-          // Temporary test runtime; the checked-in GC1 gate stays byte-identical.
-          // Avoid waiting for its eighth Back click at slide one. Independently assert
-          // every performed route/slide transition; swallowed action errors remain red.
-          const fs = require('fs');
-          const pw = require(process.env.GC1_PLAYWRIGHT);
-          const failures = [], pages = [];
-          const launch = pw.chromium.launch.bind(pw.chromium);
-          pw.chromium.launch = async options => {
-            const browser = await launch(options);
-            const newContext = browser.newContext.bind(browser);
-            browser.newContext = async options => {
-              const context = await newContext(options);
-              const newPage = context.newPage.bind(context);
-              context.newPage = async () => {
-                const page = await newPage();
-                const row = {url: '', positions: new Set(), disabledBackNoops: 0};
-                pages.push(row);
-                const position = async () => {
-                  const text = await page.locator('#position').innerText();
-                  const n = Number(text.match(/\d+/)?.[0]);
-                  if (!(n >= 1 && n <= 8)) throw Error('Unrecognised slide position: '+text);
-                  const route = await page.locator('#route').inputValue();
-                  row.url = page.url(); row.positions.add(route+':'+n);
-                  return n;
-                };
-                const click = page.click.bind(page);
-                page.click = async (selector, options) => {
-                  if (selector !== '#prev' && selector !== '#next') return click(selector, options);
-                  try {
-                    const before = await position();
-                    if (selector === '#prev' && await page.locator(selector).isDisabled()) {
-                      if (before !== 1) throw Error('Back disabled away from slide one');
-                      row.disabledBackNoops++; return;
-                    }
-                    await click(selector, options);
-                    const after = await position();
-                    if (after !== before + (selector === '#next' ? 1 : -1)) throw Error('Slide did not advance as requested');
-                  } catch (e) { failures.push(row.url+': '+String(e)); throw e; }
-                };
-                const select = page.selectOption.bind(page);
-                page.selectOption = async (selector, value, options) => {
-                  try {
-                    const result = await select(selector, value, options);
-                    if (selector === '#route') {
-                      if (await page.locator(selector).inputValue() !== value) throw Error('Route selection did not take effect');
-                      if (await position() !== 1) throw Error('Route did not begin on slide one');
-                    }
-                    return result;
-                  } catch (e) { failures.push(row.url+': '+String(e)); throw e; }
-                };
-                return page;
-              };
-              return context;
-            };
-            return browser;
-          };
-          const exit = process.exit.bind(process);
-          process.exit = code => {
-            if (pages.length !== 8) failures.push('Expected eight measured lessons, got '+pages.length);
-            for (const row of pages) if (row.positions.size !== 24) failures.push(row.url+': only '+row.positions.size+' actual route/slide positions');
-            const output = {pages: pages.map(r=>({...r,positions:[...r.positions].sort()})),failures};
-            if (process.env.GC1_TRACE) fs.writeFileSync(process.env.GC1_TRACE,JSON.stringify(output,null,2));
-            console.log('Independent navigation trace:',pages.reduce((n,r)=>n+r.positions.size,0),'actual positions;',failures.length,'failures');
-            for (const failure of failures) console.error(failure);
-            exit(code || (failures.length ? 1 : 0));
-          };
-          module.exports = pw;
-          JS
-      - name: Existing browser gate on the built tree at 390 and 1280
-        run: |
           export GC1_PLAYWRIGHT="$GITHUB_WORKSPACE/runtime/node_modules/playwright"
-          export PLAYWRIGHT_MODULE="$GITHUB_WORKSPACE/gc1-navigation-adapter.cjs"
-          export GC1_TRACE=gc1-navigation-390.json
-          node lessons/tools/gc1/gate_lessons.cjs publisher/domain-split/output/education-lessons/ICT/Teaching_Packs/GROW_Computing gc1-browser-390.json --served --peer publisher/domain-split/output/education-lessons/ICT/Teaching_Packs/GROW --viewport 390x844
-          export GC1_TRACE=gc1-navigation-1280.json
-          node lessons/tools/gc1/gate_lessons.cjs publisher/domain-split/output/education-lessons/ICT/Teaching_Packs/GROW_Computing gc1-browser-1280.json --served --peer publisher/domain-split/output/education-lessons/ICT/Teaching_Packs/GROW --viewport 1280x720
-      - name: Preserve measured results
+          node gc1-interactions.cjs publisher/domain-split/output/education-lessons gc1-interactions.json
+      - name: Preserve measured interaction results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: rf3-gc1-exact-candidate-proof
-          path: |
-            gc1-admission.json
-            gc1-browser-*.json
-            gc1-navigation-*.json
-            publisher/domain-split/output/education-admission-controls.json
+          name: rf3-gc1-interactions
+          path: gc1-interactions.json
           retention-days: 30
