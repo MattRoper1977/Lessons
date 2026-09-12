@@ -1284,6 +1284,9 @@ SHELF_ROWS = [{'subject': 'Science · Teesside',
   'new': True,
   'year': '2026-27'}]
 
+# GC1 P6: one reviewed unit card; the 950 existing rows retain their values and order.
+SHELF_ROWS.append({'subject': 'GROW Vocational & PfA', 'title': 'GROW Computing · Programming with Scratch · Weeks 1–8', 'file': 'ICT/Teaching_Packs/index.html#grow-computing', 'id': 'grow-computing-scratch-71638', 'type': 'hub', 'family': 'ICT', 'keywords': ['computing', 'ict', 'grow', 'scratch', 'programming', 'AQA', 'UAS', '71638', 'unit 6', 'Level One', 'maze', 'debugging', 'eight weeks', '40 minutes', 'teaching pack', 'powerpoint', 'word', 'pdf', 'paper evidence', 'Scratch projects'], 'desc': 'Eight 40-minute lessons for AQA UAS 71638, Programming with Scratch (unit 6), Level One. Build and test Scratch projects on a laptop, with editable slides, pupil booklets, printable paper activities and teacher guidance. Capture completed work for printed evidence; unit weeks are sequence labels.', 'added': '2026-09-12', 'new': True, 'year': '2026-27'})
+
 # Exact reviewed files, not patterns. A future new UI file requires an explicit
 # change here; a lesson cannot become permitted because it shares a directory.
 # The verifier and pin tool exclude themselves to avoid a recursive file hash.
