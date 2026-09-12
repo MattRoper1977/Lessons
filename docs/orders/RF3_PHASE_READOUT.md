@@ -1,5 +1,35 @@
 # RF3 phased continuation — measured 12 September 2026
 
+## Current checkpoint — SB1_CLOSED, schema gate merged and proved on main
+
+Measured 2026-09-12T14:00:32.452Z. Lessons #516 is merged at `12828ac35af20b1058b9f5f1c0774f30d34df0b1`.
+The existing checker now has an official Scratch 3 schema mode and a separate job
+in UX2. The final PR proof and the post-merge SB1 job both PASS: 23/23 projects,
+11/11 schema/population controls and 14/14 original parent fixture controls.
+Main proof: run `34697885634`, job `103564413035`, reporting that exact main SHA.
+All 61 admission controls pass before and after; disguised SB3 stays refused in
+all three trees. No digest, publisher pin, pupil project or original graph function
+was changed. All existing UX2 jobs and PIN1's nine-proof census remain unchanged.
+
+Final head `9b6f4d44a46a709e87216ae5dc0b7d8b228651f3`; PR tested merge
+`b94e19a260cf46666ec54bc4a2f69cd1bbd7c077`. Reviewed/tested/merged tree:
+`a59a2c4b17eb56ae1c594e7fc4d01c6bc60cf33c`. All 13 PR checks terminal:
+12 SUCCESS, 1 independently matched baseline sweep FAIL (1,418 stale / 6,307 live /
+6,899 row labels / 47 unmatched). No checks suppressed. Initial `acd67215` was
+superseded before the final proof to remove an unnecessary real-project graph
+assertion; the gate remains schema-only for valid blank and variable projects.
+
+This closes SB1's implemented gate and its requested proofs. Broader post-merge
+publication `34697885918`, FieldOps `34697885618` and the remaining UX2 browser/census
+jobs were still running at their last inspected snapshot; do not infer their
+completion from SB1's job success. The next continuation begins by reading those
+exact runs. No background poller is left active. No second Scratch unit was added.
+PIN1's original trigger plants and LP1's material-scope hold remain open; the first
+scheduled invocation of the new PIN1 census remains unobserved in this session.
+See `SB1_RELEASE_READOUT.md` for exact proof results, artifact references and limits.
+Earlier SB1_BLOCKED fitness and prepared-SB1_PARTIAL statements are historical,
+superseded by this authorised implementation and proof.
+
 ## Current checkpoint — PIN1 deployed; SB1 fitness stop recorded
 
 Measured 2026-09-12T13:24:36.954Z. Lessons main remains `a20a09b96ddb0cdbe37709631603de82cc8b1d6a`.
