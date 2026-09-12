@@ -19,7 +19,7 @@ remain the inherited `Missing current shelf control #group`; no check was weaken
 At final #352 main, all 23 check records are terminal. Its two shelf failures,
 `103536048128` and `103536047913`, carry that same assertion in their actual logs.
 
-## Computing phase — browser proofs passed; content release held at G14/G15
+## Computing phase — content #493 merged; publication blocked by download registration
 
 Source: #493 `c460eada50a93b266f7330e70cb436b82ec6304d` merged locally with current
 Lessons main `aad04718c11a2396ecf323a662f55bf0e0c2441b`. Candidate tree is exactly
@@ -106,30 +106,59 @@ into the unit, zero broken, all 163 unit files referenced. Its method excludes
 absolute estate routes and fragment-only links; it does not reuse the old 297
 denominator. Complete/link and collection sizes are now recorded on #493.
 
-### Next small release pass — held at paper-only completion proof
+### Content release resumed on Matt's clarification
 
-Fresh exact-ref readback on 12 September: main `aad04718`, content head `c460eada`,
-and candidate tree `751fcc8b` unchanged. Eight PR checks and 33 current-main check
-records SUCCESS. Caller remains Site `810ae8f8`, with Apps `3ad0a7df`. Open #497,
-#465 and held #456 have no changed-path collision with #493. No repeated browser
-or schema run was needed.
+Matt confirms the established route: pupils complete Scratch work on laptops;
+all pupils have laptop access. Evidence is captured as screenshots/photos or
+printable work, printed, scanned and emailed as a PDF to the UAS lead. The lead
+checks actual submissions and returns any further-work requirements. Matt says
+no additional advance check is needed. The assistant-introduced advance UAS-lead
+approval hold is withdrawn; no speculative route-review email is to be sent.
 
-The final teacher-guide read found an unresolved G14/G15 condition. Both
-`Teacher_Only/GROW_Computing_Paper_Route_Evidence_Map.docx` and its PDF end with
-“The one thing to decide locally”: Week 7 Outcome 5. If the centre requires
-creation inside Scratch, the text says the act should be repeated when a device
-is next available. R8/G14 requires completing the unit with no device; G15 requires
-all six outcomes on paper. A targeted later-ruling search found no resolution.
-The previous successful browser/print proof does not decide qualification parity.
+This submission format is not evidence of device-free learning. No G14/G15
+paper-only parity result is inferred. The existing paper alternative and its
+stated limitations remain unchanged. Current lesson print output is the paper
+route; it is not asserted to capture a pupil's external Scratch project.
+Screenshots/photos are the confirmed normal evidence path. Any distinct
+print-evidence enhancement belongs in a bounded later content change, not an
+unreviewed addition to this release.
 
-Full source excerpts, byte sizes and SHA-256 values are in
-`rf3-evidence/gc1-paper-release-blocker.json`. This is an unresolved release proof,
-not a finding that AQA rejects paper evidence. Do not remove the conditional or
-assert six-of-six parity without a supported centre/UAS decision. Next input:
-the centre's decision on paper-only Outcome 5; then the appropriate source-document
-repair and bounded revalidation. GC1's own rule that a red gate halts its phase
-keeps #493 open. No merge was attempted, no content changed, and P6 remains separate.
-The G10/G13 proofs stay valid and do not need replaying at unchanged bytes.
+Fresh readback: main `aad04718`, content head `c460eada`, candidate tree `751fcc8b`
+unchanged; eight PR checks and 33 main check records SUCCESS. Caller remains
+Site `810ae8f8`, Apps `3ad0a7df`. No path collision with open #497, #465 or #456.
+Rollback baseline recorded in #493 before merge.
+
+**#493 merged at `36ea10467b8c5385d4b01ee149ca0550d1190f45`.** The actual merge tree
+is `751fcc8bd12316869cea5f5f78c353f718e8ecd8`, exactly the tested candidate.
+Publication run `34690363074` failed build job `103544411018`; deploy job
+`103544618859` was SKIPPED. Nothing was deployed by this run. P6 catalogue remains separate;
+no whole-GC1 CLOSED claim. The earlier G10/G13 proofs remain valid.
+
+The superseded document-based concern is retained in
+`rf3-evidence/gc1-paper-release-blocker.json` as history. Matt's later submission
+clarifications and the current action are in `GC1_PAPER_SUBMISSION_WORKFLOW.md`.
+
+### Publication blocker - exact download-registration delta
+
+The complete emitted-tree separation check reports one failure:
+`usage-registry.json` - `Download additions differ from the reviewed installed
+pack: /Lessons/ICT/Teaching_Packs/`.
+
+At the identical local candidate, the reviewed prefix has 36 rows and generated
+output has 164. All 36 old rows are byte-equivalent as parsed records; 128 new
+rows are all under GROW_Computing. Zero old rows removed or changed. Full delta:
+`rf3-evidence/gc1-publication-registry-delta.json`.
+
+The earlier all-file admission/browser proof omitted this separate complete
+separation gate; it therefore did not prove this registration predicate. Record
+that coverage gap explicitly. No check has been weakened or disabled.
+
+Next small transaction: review the 128 added download rows, update the governed
+publisher download-additions record and digest, prove the separation predicate
+and firing controls, preserve current admissions, advance the actual caller and
+verify deployment. This is a publisher registration repair; do not alter lesson
+bytes or reset the publisher to an old pin. P6 catalogue remains separate.
+Matt's UAS evidence-submission clarification is settled and is not this blocker.
 
 ## Science phase — archive and source/served census complete; placement intake partial
 

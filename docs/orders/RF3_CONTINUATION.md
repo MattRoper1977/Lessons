@@ -76,7 +76,7 @@ Content PR and resources.json catalogue PR must stay separate. Never infer P2Q.
 |---|---|---|
 | 1 | SX2R §5 + TH1C | S1-M closed; TH1C full original still missing; recover documentary residue only |
 | 2 | GW1-E → GW1 B–F → LW1 | Original scopes missing; do not reconstruct authority from titles |
-| 3 | GC1 #493 | G10/full G13 passed; exact refs/checks green; content #493 now HELD at G14/G15: Outcome 5 guide leaves conditional later-device completion; centre/UAS decision needed, P6 separate |
+| 3 | GC1 #493 | Content #493 merged 36ea1046 after Matt clarified laptop/Scratch evidence workflow and no advance lead check; publication 34690363074 FAILED: 128 new Computing downloads absent from reviewed registration; next bounded publisher-registration repair; P6 separate |
 | 4 | ML1 | CLOSED-BY-DL; historical notice #352 merged and deployed |
 | 5 | PRX1 | Authorized RF3 repair merged and deployed, full golden proved |
 | 6 | BL1 | Approved #351 → #346 → #350 sequence completed; #291 HELD |
@@ -114,3 +114,13 @@ Release-pass correction: final guide read found the same conditional later-devic
 Outcome 5 requirement in its DOCX and PDF. No later resolving ruling recovered.
 G14/G15 prevent merging #493; no merge attempted. This supersedes the earlier
 “content transaction next” readiness statement, not the valid browser proofs.
+
+Later user clarification supersedes the advance-lead-approval hold above: all
+pupils have laptops; normal Scratch work is captured, printed, scanned and emailed
+as a PDF through the existing lead process. #493 merged 36ea1046 with exactly the
+tested tree. This is not proof of device-free parity. P6 remains separate.
+
+Final publication readback: 34690363074 build 103544411018 FAILURE, deploy
+103544618859 SKIPPED. Exact delta: 36 existing ICT registrations unchanged,
+128 new Computing rows unregistered; zero removals/changes. No live deployment.
+Next is the separate publisher-registration repair and deployment verification.

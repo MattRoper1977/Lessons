@@ -37,3 +37,15 @@ Matt
 ## Current boundary
 
 No email has been sent. #493 remains unmerged under the separately recorded G14/G15 release-proof hold. The successful G10/G13 browser proofs remain valid. No lesson, awarding-body document or source pack was changed by this submission-workflow clarification.
+
+## Later clarification - supersedes the advance-review hold above
+
+> So when my pupils completed work on the computer previously I printed it, scanned it and sent it to get as a pdf, we don't need to check.
+
+> Obviously the normal route with scratch has to be computer so I'll take screenshots and or photos of work or normally include a print evidence button at the end.
+>
+> All pupils can access a laptop
+
+Operational correction: the normal route is Scratch on a laptop; evidence is captured in screenshots/photos or printable work, then printed, scanned and emailed as PDF through the existing UAS-lead process. No new advance route-approval check is required. The assistant-introduced advance-approval hold was withdrawn on Matt's instruction. Do not send the speculative route-review PDF. Do not infer device-free learning from the submission medium, or claim the existing lesson paper-route print captures an external Scratch project.
+
+#493 merged 36ea10467b8c5385d4b01ee149ca0550d1190f45 with tested tree 751fcc8bd12316869cea5f5f78c353f718e8ecd8. Publication is currently blocked for an unrelated download-registration mismatch, not a UAS-lead decision. See RF3_PHASE_READOUT.md.
