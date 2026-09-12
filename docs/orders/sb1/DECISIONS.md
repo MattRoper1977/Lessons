@@ -20,8 +20,9 @@ Base main: `a20a09b96ddb0cdbe37709631603de82cc8b1d6a`.
 - Existing parent-link functions and their 14 controls remain unchanged and callable
   separately. Schema mode never repairs behaviour or rejects intentionally faulty
   lesson logic. It does not impose this first unit's no-variable graph assumption
-  on a future unit. The CI graph plant tests the preserved instrument on a genuine
-  project selected from the schema report, not a hard-coded filename.
+  on a future unit. CI runs its original positive/negative fixture controls. The
+  real-project graph plant remains a separate local instrument proof, so a valid
+  blank or variables project cannot fail the new schema gate on graph assumptions.
 
 ## Population and trigger derivation
 
@@ -78,8 +79,9 @@ negative controls before it can complete successfully.
 - Missing parser, missing Node, missing input and empty list: UNMEASURED, exit 2.
 - New unregistered uppercase SB3 enters the census; deleting a tracked file cannot
   silently remove it from the denominator. **11/11 schema/population controls PASS.**
-- Original graph self-tests: **14/14 PASS**. Its null-parent plant remains required
-  in CI; the prior fitness pass already observed it firing on a genuine project.
+- Original graph self-tests: **14/14 PASS**, also required in CI. The separate local
+  null-parent plant fired again on the genuine W01 project (0 original / 1 planted
+  error). It is not applied as a graph-validity requirement to every future unit.
 - Existing publication controls executed before and after this implementation:
   **61/61 PASS both times**, identical outcomes and diagnoses apart from the
   expected temporary-directory names in three symlink-control messages. Disguised SB3: real PASS,

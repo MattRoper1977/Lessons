@@ -240,7 +240,6 @@ jobs:
           genuine=$(python3 -c "import json; print(next(r['path'] for r in json.load(open('audit-output/sb1/schema.json'))['rows'] if r['status']=='PASS'))")
           python3 tools/gc1/check_sb3_parents.py --schema-self-test "$genuine" | tee audit-output/sb1/schema-controls.txt
           python3 tools/gc1/check_sb3_parents.py --self-test | tee audit-output/sb1/parent-controls.txt
-          python3 tools/gc1/check_sb3_parents.py --red-proof "$genuine" | tee audit-output/sb1/parent-red-proof.txt
       - name: Preserve the schema diagnosis and controls
         if: always()
         uses: actions/upload-artifact@v4
