@@ -706,3 +706,17 @@ A derivation precedent exists at `/home/user/mattroper1977.github.io/tools/deriv
 - Derived data: `.../union_paths.json` (444), `.../catalogue_paths.json` (434), `.../uncovered.json` (418)
 
 **PIN1 §1 complete. §2 and §3 NOT attempted.**
+
+---
+
+## RF3 §4.3 — PIN1 ruling filed, 12 September 2026
+
+Source: `RF3_HANDOVER.md` §4 at Lessons `cb5b2966c3ed47ca4cd31465fc161b57052bd21b`, supplied by Matt for continuation.
+
+> **PIN1 §2:** `ux2-gates.yml` has no registry, so PIN1 §2.2 applies — a scheduled census reporting drift, that gate ALONE, UNMEASURED never green, never widen to `**`.
+
+This is the ruling, not an assertion that the scheduled census has been implemented. Preserve the distinction between the one actual digest gate and `ux2-gates.yml`; do not invent a registry or widen another gate under this ruling. The source measurements above retain their original timestamps and scopes.
+
+LP1's original §5 material-scope stop also remains in the recovered text. The 18 scoped proofs and 21 absent-PR-trigger proofs remain separate populations. A decision to implement the second population has not been recovered; this handoff does not silently add it.
+
+P5.5 is filed in `docs/orders/RF3_FINDINGS.md`. Source-only censuses are never represented as Actions executions or live proof.
