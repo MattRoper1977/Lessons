@@ -1,0 +1,96 @@
+name: RF3 Computing candidate preflight
+on:
+  pull_request:
+    paths:
+      - .github/workflows/rf3-gc1-preflight.yml
+permissions:
+  contents: read
+jobs:
+  gc1:
+    name: Exact Computing candidate browser and schema proof
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: MattRoper1977/mattroper1977.github.io
+          ref: 810ae8f8830dc9e30a7ceec9ada4ec24d575a04d
+          path: publisher
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: aad04718c11a2396ecf323a662f55bf0e0c2441b
+          path: lessons
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: MattRoper1977/Matt-s-Apps-
+          ref: 3ad0a7df958274e5401e8d40d0a94096be0962bc
+          path: apps
+          persist-credentials: false
+      - name: Assemble and bind the exact content candidate
+        run: |
+          git -C lessons fetch origin refs/pull/493/head
+          test "$(git -C lessons rev-parse FETCH_HEAD)" = c460eada50a93b266f7330e70cb436b82ec6304d
+          git -C lessons -c user.name='RF3 preflight' -c user.email='preflight@invalid.example' merge --no-ff FETCH_HEAD -m 'Isolated Computing candidate proof'
+          test "$(git -C lessons rev-parse HEAD^{tree})" = 751fcc8bd12316869cea5f5f78c353f718e8ecd8
+          git -C lessons diff --name-only aad04718c11a2396ecf323a662f55bf0e0c2441b HEAD
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Install the declared test dependencies
+        run: |
+          python -m pip install lxml==6.0.1
+          npm install --prefix runtime --no-audit --no-fund --ignore-scripts playwright@1.54.2 scratch-parser@6.0.1
+          node runtime/node_modules/playwright/cli.js install --with-deps chromium
+      - name: Build the actual publisher inputs
+        run: |
+          python publisher/domain-split/build_publications.py --lessons lessons
+          python publisher/domain-split/build_education.py --lessons lessons --apps apps
+          python publisher/domain-split/check_education_publication_admission.py --output publisher/domain-split/output --lessons lessons --apps apps --build-control > gc1-admission.json
+          cat gc1-admission.json
+      - name: Bind every unit output to the existing reviewed digest ledger
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          rows=[]
+          for line in Path('lessons/_sx2/gc1/GC1_BUILT_DIGESTS.txt').read_text().splitlines():
+              if not line or line.startswith('#'): continue
+              digest,path=line.split(None,1)
+              actual=hashlib.sha256((Path('publisher/domain-split/output/education-lessons')/path).read_bytes()).hexdigest()
+              assert actual==digest, path
+              rows.append(path)
+          assert len(rows)==163, len(rows)
+          print('163/163 reviewed unit outputs byte-identical')
+          PY
+      - name: Official Scratch schema and existing parent-link gate
+        run: |
+          node <<'JS'
+          const fs=require('fs'),path=require('path'),parser=require('./runtime/node_modules/scratch-parser');
+          function walk(p){return fs.readdirSync(p,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.join(p,e.name)):[path.join(p,e.name)]);}
+          (async()=>{
+            const files=walk('lessons/ICT/Teaching_Packs/GROW_Computing').filter(x=>x.endsWith('.sb3'));
+            if(files.length!==23)throw new Error('Expected 23 Scratch projects, got '+files.length);
+            for(const file of files)await new Promise((resolve,reject)=>parser(fs.readFileSync(file),false,err=>err?reject(new Error(file+': '+JSON.stringify(err))):resolve()));
+            console.log('Official scratch-parser 6.0.1: 23/23 PASS');
+          })().catch(e=>{console.error(e);process.exitCode=1;});
+          JS
+          python lessons/tools/gc1/check_sb3_parents.py lessons/ICT/Teaching_Packs/GROW_Computing
+      - name: Existing browser gate on the built tree at 390 and 1280
+        run: |
+          export PLAYWRIGHT_MODULE="$GITHUB_WORKSPACE/runtime/node_modules/playwright"
+          node lessons/tools/gc1/gate_lessons.cjs publisher/domain-split/output/education-lessons/ICT/Teaching_Packs/GROW_Computing gc1-browser-390.json --served --peer publisher/domain-split/output/education-lessons/ICT/Teaching_Packs/GROW --viewport 390x844
+          node lessons/tools/gc1/gate_lessons.cjs publisher/domain-split/output/education-lessons/ICT/Teaching_Packs/GROW_Computing gc1-browser-1280.json --served --peer publisher/domain-split/output/education-lessons/ICT/Teaching_Packs/GROW --viewport 1280x720
+      - name: Preserve measured results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rf3-gc1-exact-candidate-proof
+          path: |
+            gc1-admission.json
+            gc1-browser-*.json
+            publisher/domain-split/output/education-admission-controls.json
+          retention-days: 30
