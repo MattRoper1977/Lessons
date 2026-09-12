@@ -76,7 +76,7 @@ Content PR and resources.json catalogue PR must stay separate. Never infer P2Q.
 |---|---|---|
 | 1 | SX2R §5 + TH1C | S1-M closed; TH1C full original still missing; recover documentary residue only |
 | 2 | GW1-E → GW1 B–F → LW1 | Original scopes missing; do not reconstruct authority from titles |
-| 3 | GC1 #493 | Measured preflight passed; paused at three-blocker ceiling for missing G10/full G13; #493 open, P6 separate |
+| 3 | GC1 #493 | G10/full G13 passed at run 34688998548: 204 positions, 672 model actions, 450 Week 8 checks; next exact-ref/check readback then content #493, P6 separate |
 | 4 | ML1 | CLOSED-BY-DL; historical notice #352 merged and deployed |
 | 5 | PRX1 | Authorized RF3 repair merged and deployed, full golden proved |
 | 6 | BL1 | Approved #351 → #346 → #350 sequence completed; #291 HELD |
@@ -102,3 +102,10 @@ Standing limits survive: #291 untouched; Lessons #456 held; Games #78/#79 remain
 with pin owner; Apps #91/#106/#109 closed unmerged with branches preserved; no
 REGISTER write, brand-asset replacement, size-table ratchet or check weakening.
 Three distinct blockers stop their lane, not every other eligible lane.
+
+Small-pass continuation at 12 September 10:41 UTC: Matt authorized the missing
+Computing proofs; all pass without content edits. Earlier 192-position coverage
+was partial because Weeks 1–2 have ten slides each. Complete required 390px
+coverage is now 204 positions. See RF3_PHASE_READOUT.md and
+rf3-evidence/gc1-interactions-readback.json. This checkpoint completes the proof
+pass; it does not merge #493 or close P6. Other holds are unchanged.

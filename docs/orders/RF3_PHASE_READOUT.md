@@ -19,7 +19,7 @@ remain the inherited `Missing current shelf control #group`; no check was weaken
 At final #352 main, all 23 check records are terminal. Its two shelf failures,
 `103536048128` and `103536047913`, carry that same assertion in their actual logs.
 
-## Computing phase — measured preflight passed; required interactions still missing
+## Computing phase — G10/G13 continuation passed; content release next
 
 Source: #493 `c460eada50a93b266f7330e70cb436b82ec6304d` merged locally with current
 Lessons main `aad04718c11a2396ecf323a662f55bf0e0c2441b`. Candidate tree is exactly
@@ -60,23 +60,45 @@ inspecting the artifact JSON is made. Durable CI summary is in
 `rf3-evidence/gc1-ci-readback.json` and the complete test implementation remains on
 the preserved #511 branch.
 
-**Master order §6.2's three-distinct-blocker ceiling is reached in Lane E:**
+**Authorized small continuation completed, 12 September 10:41 UTC.** Matt's
+instruction to continue in order and small passes lifts the specific missing-proof
+stop. Test head `85c756d5d150f03762fd8b8decc8097f354ffcae`, run `34688998548`, job
+`103540860248`: SUCCESS. The candidate tree, publisher inputs and all 163 output
+hashes are unchanged. No lesson content or production gate was edited.
 
-1. Local Chromium socket execution is forbidden; escalation was rejected by policy.
-2. The existing harness waits on disabled Back clicks and swallows action errors;
-   its counter alone is not proof that a slide was visited. The isolated trace now
-   measures actual navigation without changing the repository gate.
-3. The harness never opens the teacher toggle (required G10), or runs the model
-   buttons and five Week 8 checks before/after each of three repairs (full G13).
-   Those interactions remain UNMEASURED, not PASS.
+| Additional required measurement | Result |
+|---|---|
+| G10 default closed → open → closed | 8/8 lessons; one staff panel and eight Teacher_Only links per lesson, including paper answers, hidden → visible → hidden |
+| G13 full navigation at 390×844 | 204 actual slide/route positions: 30 each in Weeks 1–2, 24 each in Weeks 3–8 |
+| Every model button | 672 actions across all three routes and every authored slide; original handler invocation asserted |
+| Week 8 repair checks | 15 complete cycles (five model-bearing slides × three routes), three cumulative repairs each, all five checks before and after every repair: 450 test-button invocations |
+| Repair outcomes | Arrows/walls change from FAIL to PASS after their repairs; restart fails before the final repair; all five pass after all three repairs; finish and feature remain passing throughout |
+| G5 print | Full paper-route container visible under print emulation, 8/8; 8,875–21,222 characters, completion text present |
+| Browser errors | Zero page or console errors |
+| Probe negative controls | Forced visible guidance while closed rejected; missing model handler rejected |
 
-No #493 merge or further Computing/SB1 implementation at this checkpoint. A narrow
-continuation ruling is needed for the missing G10/G13 proofs. Proposed next work:
-verify default-hidden/open-visible/restored-hidden teacher material on all eight;
-exercise each required model control; record all five Week 8 tests before and after
-each repair; prove console/error and actual interaction coverage; then re-read
-exact heads and gates before the content transaction. Content and P6 catalogue
-remain separate. No content alteration is proposed merely to achieve a green test.
+**Coverage correction:** the first continuation run `34688866321` failed because
+this test assumed eight slides. Source inspection and the browser show ten slides
+in each of Weeks 1 and 2. The probe was corrected to traverse every actual slide;
+no lesson was changed. The previous 192-position result was partial coverage, not
+all authored slides. Its 1280px result remains partial; the complete required
+390px drive is now the 204-position result above. G10 measures rendered visibility;
+hidden teacher markup remains in the HTML, as the authored toggle requires.
+
+The successful job's actual logs and artifact metadata were read. Artifact
+`10296606330`, 4,782 B, SHA-256
+`cb9d814f298126f53a6f674e5a540cc22d5253cdee887211548fd654981f630a`, expires
+12 October 10:41 UTC. Full artifact JSON was not locally downloaded. Durable
+per-week log-derived measurements and asserted repair semantics are preserved in
+`rf3-evidence/gc1-interactions-readback.json`; exact test source remains on #511's
+preserved branch. #511 is closed unmerged after this pass.
+
+The narrow G10/G13 proof stop is resolved. #493 stays open at this small-pass
+checkpoint. Next in order: re-read exact main/head and required checks, complete
+the content transaction, then the separate P6 catalogue/admission transaction and
+served G5/G14/G15 proof. This result does not label GC1 or P6 closed. No need to
+repeat schema, full admission controls, or earlier unrelated phases at unchanged
+inputs. P2Q remains held until Matt names the second unit.
 
 The PR's stale file counts and three ZIP sizes were corrected from binary reads.
 Fresh relative-reference census: 225 from unit HTML plus 37 subject-page references
