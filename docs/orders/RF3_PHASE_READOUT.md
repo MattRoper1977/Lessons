@@ -19,7 +19,22 @@ remain the inherited `Missing current shelf control #group`; no check was weaken
 At final #352 main, all 23 check records are terminal. Its two shelf failures,
 `103536048128` and `103536047913`, carry that same assertion in their actual logs.
 
-## Computing phase — content #493 merged; publication blocked by download registration
+## Current checkpoint — Computing publication repair complete
+
+Site #353, Apps #83 and Lessons #512 are merged and their publications succeeded.
+Lessons main is `db5d804f5559a543c65c9d8bd0034a5764c05a40`; publication run
+`34691889316`, build `103548484790` and deploy `103549456718` are SUCCESS.
+All 39 selected live files match reviewed SHA-256 values: eight lessons, eight
+pupil PDFs and 23 Scratch projects. The 61-control admission gate passed.
+
+The stale-evidence sweep remains an explicitly measured baseline red; the latest
+workflow watch reports six PASS and one FAIL, no pending/no-verdict workflows.
+Full release refs, evidence and limits are in `GC1_REGISTRATION_RELEASE.md`.
+**Next small pass: the separate P6 catalogue/resources.json transaction.**
+Historical preflight holds and initial publication failure below are superseded
+by this release record, while their measurements and provenance remain retained.
+
+## Computing phase — earlier preflight and initial publication failure
 
 Source: #493 `c460eada50a93b266f7330e70cb436b82ec6304d` merged locally with current
 Lessons main `aad04718c11a2396ecf323a662f55bf0e0c2441b`. Candidate tree is exactly
@@ -153,7 +168,7 @@ The earlier all-file admission/browser proof omitted this separate complete
 separation gate; it therefore did not prove this registration predicate. Record
 that coverage gap explicitly. No check has been weakened or disabled.
 
-Next small transaction: review the 128 added download rows, update the governed
+Historical next action, now completed in GC1_REGISTRATION_RELEASE.md: review the 128 added download rows, update the governed
 publisher download-additions record and digest, prove the separation predicate
 and firing controls, preserve current admissions, advance the actual caller and
 verify deployment. This is a publisher registration repair; do not alter lesson

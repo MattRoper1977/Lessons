@@ -1,9 +1,21 @@
 # RF3 continuation — 12 September 2026
 
-Checkpoint originally measured 09:52 UTC. Current results are in
-`RF3_PHASE_READOUT.md`: RF3 releases are deployed; Computing is paused at the
-master §6.2 ceiling; Science and FP2 intake evidence is filed. This supplements, and does not
-replace or duplicate, `RF3_HANDOVER.md` at `cb5b2966`.
+## Current checkpoint — Computing publication repair complete
+
+Site #353, Apps #83 and Lessons #512 are merged and their publications succeeded.
+Lessons main is `db5d804f5559a543c65c9d8bd0034a5764c05a40`; publication run
+`34691889316`, build `103548484790` and deploy `103549456718` are SUCCESS.
+All 39 selected live files match reviewed SHA-256 values: eight lessons, eight
+pupil PDFs and 23 Scratch projects. The 61-control admission gate passed.
+
+The stale-evidence sweep remains an explicitly measured baseline red; the latest
+workflow watch reports six PASS and one FAIL, no pending/no-verdict workflows.
+Full release refs, evidence and limits are in `GC1_REGISTRATION_RELEASE.md`.
+**Next small pass: the separate P6 catalogue/resources.json transaction.**
+Historical preflight holds and initial publication failure below are superseded
+by this release record, while their measurements and provenance remain retained.
+
+This supplements `RF3_HANDOVER.md` at `cb5b2966`; the original is unchanged.
 
 ## Durable work and release sequence
 
@@ -48,7 +60,7 @@ Those internal docs paths are excluded by the actual publication policy at both
 current Site and Lessons' pinned builder. This does not claim the wider Lane G
 ledger migration is complete.
 
-## Active Computing preflight
+## Historical Computing preflight — superseded by current checkpoint
 
 Lessons #493 remains OPEN, head `c460eada50a93b266f7330e70cb436b82ec6304d`.
 Its instruments dependency #492 is merged at `00d052e57564460e6199170af6e441bd7e02bdbf`.
@@ -76,7 +88,7 @@ Content PR and resources.json catalogue PR must stay separate. Never infer P2Q.
 |---|---|---|
 | 1 | SX2R §5 + TH1C | S1-M closed; TH1C full original still missing; recover documentary residue only |
 | 2 | GW1-E → GW1 B–F → LW1 | Original scopes missing; do not reconstruct authority from titles |
-| 3 | GC1 #493 | Content #493 merged 36ea1046 after Matt clarified laptop/Scratch evidence workflow and no advance lead check; publication 34690363074 FAILED: 128 new Computing downloads absent from reviewed registration; next bounded publisher-registration repair; P6 separate |
+| 3 | GC1 #493 | Content merged 36ea1046; registration repair Site #353 / Apps #83 / Lessons #512 merged and deployed, Lessons db5d804f. Admission 61 controls PASS; live 39/39 identical. Next: separate P6 catalogue/resources.json transaction; baseline sweep red recorded |
 | 4 | ML1 | CLOSED-BY-DL; historical notice #352 merged and deployed |
 | 5 | PRX1 | Authorized RF3 repair merged and deployed, full golden proved |
 | 6 | BL1 | Approved #351 → #346 → #350 sequence completed; #291 HELD |
@@ -120,7 +132,7 @@ pupils have laptops; normal Scratch work is captured, printed, scanned and email
 as a PDF through the existing lead process. #493 merged 36ea1046 with exactly the
 tested tree. This is not proof of device-free parity. P6 remains separate.
 
-Final publication readback: 34690363074 build 103544411018 FAILURE, deploy
+Historical initial publication readback (superseded): 34690363074 build 103544411018 FAILURE, deploy
 103544618859 SKIPPED. Exact delta: 36 existing ICT registrations unchanged,
 128 new Computing rows unregistered; zero removals/changes. No live deployment.
-Next is the separate publisher-registration repair and deployment verification.
+That publisher-registration repair and deployment verification are now complete; see the current checkpoint and GC1_REGISTRATION_RELEASE.md. P6 remains next.
