@@ -62,6 +62,11 @@ concurrency:
 
 jobs:
   catalogue-contract:
+    outputs:
+      schema: ${{ steps.schema.outcome }}
+      tags: ${{ steps.tags.outcome }}
+      contract: ${{ steps.contract.outcome }}
+      companions: ${{ steps.companions.outcome }}
     name: Catalogue schema, tags and contract (proven red first)
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -70,21 +75,28 @@ jobs:
       - uses: actions/setup-python@v5
         with: {python-version: '3.12'}
       - name: The schema is enforced, and eight planted defects are refused
+        id: schema
         run: |
           python3 tools/ux2/check_catalogue_schema.py --self-test
           python3 tools/ux2/check_catalogue_schema.py
       - name: The tags equal their derivation, and the derivation's own controls go red
+        id: tags
         run: |
           python3 tools/ux2/unit_tags.py --self-test
           python3 tools/ux2/unit_tags.py --check
       - name: The shared contract gate still catches every non-tag edit to an original row
+        id: contract
         run: python3 tools/ux2/prove_catalogue_gate.py
       - name: The companion-pack entries equal their derivation, every file resolves once, and six plants go red
+        id: companions
         run: |
           python3 tools/ux2/companion_catalogue.py --self-test
           python3 tools/ux2/companion_catalogue.py --check
 
   derived-data:
+    outputs:
+      spine: ${{ steps.spine.outcome }}
+      sizes: ${{ steps.sizes.outcome }}
     name: Published spine and size table equal their derivations
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -92,10 +104,16 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: {python-version: '3.12'}
-      - run: python3 tools/ux2/build_spine.py --check
-      - run: python3 tools/ux2/resource_sizes.py --check
+      - id: spine
+        run: python3 tools/ux2/build_spine.py --check
+      - id: sizes
+        run: python3 tools/ux2/resource_sizes.py --check
 
   hub-and-subject:
+    outputs:
+      hub: ${{ steps.hub.outcome }}
+      chips: ${{ steps.chips.outcome }}
+      dom: ${{ steps.dom.outcome }}
     name: Hub and subject page in Chromium at 390px (red-proved)
     runs-on: ubuntu-latest
     timeout-minutes: 25
@@ -114,8 +132,10 @@ jobs:
           npm install --no-save --no-package-lock playwright@1.54.2 linkedom@0.18.12
           npx playwright install --with-deps chromium
       - name: Every hub and subject-page limb, with both red proofs
+        id: hub
         run: node tools/ux2/hub_gates.mjs --site _reference/site --out audit-output/ux2-hub --red-proof
       - name: The chip gate through the real filter chain over HTTP, then its red proof
+        id: chips
         shell: bash
         run: |
           set -euo pipefail
@@ -126,6 +146,7 @@ jobs:
           node tools/verify_lessons_chips.mjs --base http://127.0.0.1:4188/
           node tools/verify_lessons_chips.mjs --base http://127.0.0.1:4188/ --red-proof
       - name: The linkedom catalogue DOM check (the copy Site CI runs on the pinned source)
+        id: dom
         run: node tools/catalogue/check_catalogue_dom.cjs
       - name: Upload the evidence
         if: always()
@@ -134,3 +155,30 @@ jobs:
           name: ux2-hub-${{ github.event.pull_request.number || github.run_id }}
           path: audit-output/ux2-hub
           if-no-files-found: ignore
+
+  drift-census:
+    name: UX2 scheduled drift census (all nine proofs required)
+    # The existing daily schedule is retained. PR/push runs exercise this same
+    # reporter without adding paths or claiming that UX2 asserts file pins.
+    if: always()
+    needs: [catalogue-contract, derived-data, hub-and-subject]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Prove failure and missing evidence cannot report green
+        run: python3 -m unittest discover -s tools/ux2 -p test_drift_census.py -v
+      - name: Record the actual proof outcomes at this commit
+        if: always()
+        env:
+          UX2_NEEDS: ${{ toJSON(needs) }}
+        run: python3 tools/ux2/drift_census.py --out audit-output/ux2-drift-census
+      - name: Preserve the census even when a proof fails
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ux2-drift-census-${{ github.run_id }}-${{ github.run_attempt }}
+          path: audit-output/ux2-drift-census
+          if-no-files-found: error
