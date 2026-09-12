@@ -1,5 +1,20 @@
 # RF3 continuation — 12 September 2026
 
+## Current checkpoint — P6 catalogue publication complete
+
+Measured 2026-09-12T12:52:30.989626+00:00. The Computing card is deployed by Lessons #514 at
+`4f8227cef7a0191df25145d53fe2bc05f7aa2ef9`, publication `34694243164`, build
+`103554856058` / deploy `103555671187` SUCCESS. #513 added one card while preserving
+all 950 previous catalogue rows; #514 completed its four-output admission repair.
+Apps #84 and #85 were each deployed first. Live search passes at 390px/1280px;
+all eight live print routes pass; 24/24 lesson and pupil paper files are byte-identical.
+
+The requested catalogue pass is complete for Matt's confirmed laptop/Scratch and
+print/scan/PDF evidence process. It is not a paper-only G14/G15 parity claim.
+Baseline metadata gaps and the stale-evidence audit remain recorded and enabled.
+See `GC1_P6_RELEASE.md` for exact commits, admission correction, evidence and limits.
+Historical statements below that call P6 the next pass are now superseded.
+
 ## Current checkpoint — Computing publication repair complete
 
 Site #353, Apps #83 and Lessons #512 are merged and their publications succeeded.
@@ -11,7 +26,7 @@ pupil PDFs and 23 Scratch projects. The 61-control admission gate passed.
 The stale-evidence sweep remains an explicitly measured baseline red; the latest
 workflow watch reports six PASS and one FAIL, no pending/no-verdict workflows.
 Full release refs, evidence and limits are in `GC1_REGISTRATION_RELEASE.md`.
-**Next small pass: the separate P6 catalogue/resources.json transaction.**
+**Historical next step, now completed: P6 catalogue/resources.json; see GC1_P6_RELEASE.md.**
 Historical preflight holds and initial publication failure below are superseded
 by this release record, while their measurements and provenance remain retained.
 
@@ -88,7 +103,7 @@ Content PR and resources.json catalogue PR must stay separate. Never infer P2Q.
 |---|---|---|
 | 1 | SX2R §5 + TH1C | S1-M closed; TH1C full original still missing; recover documentary residue only |
 | 2 | GW1-E → GW1 B–F → LW1 | Original scopes missing; do not reconstruct authority from titles |
-| 3 | GC1 #493 | Content merged 36ea1046; registration repair Site #353 / Apps #83 / Lessons #512 merged and deployed, Lessons db5d804f. Admission 61 controls PASS; live 39/39 identical. Next: separate P6 catalogue/resources.json transaction; baseline sweep red recorded |
+| 3 | GC1 #493 | Content merged 36ea1046; registration repair Site #353 / Apps #83 / Lessons #512 merged and deployed, Lessons db5d804f. Admission 61 controls PASS; live 39/39 identical. P6 catalogue and admission complete via #513/#514; live card/8 prints/24 byte comparisons pass; baseline audit red recorded |
 | 4 | ML1 | CLOSED-BY-DL; historical notice #352 merged and deployed |
 | 5 | PRX1 | Authorized RF3 repair merged and deployed, full golden proved |
 | 6 | BL1 | Approved #351 → #346 → #350 sequence completed; #291 HELD |
