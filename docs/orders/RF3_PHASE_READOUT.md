@@ -19,7 +19,7 @@ remain the inherited `Missing current shelf control #group`; no check was weaken
 At final #352 main, all 23 check records are terminal. Its two shelf failures,
 `103536048128` and `103536047913`, carry that same assertion in their actual logs.
 
-## Computing phase — G10/G13 continuation passed; content release next
+## Computing phase — browser proofs passed; content release held at G14/G15
 
 Source: #493 `c460eada50a93b266f7330e70cb436b82ec6304d` merged locally with current
 Lessons main `aad04718c11a2396ecf323a662f55bf0e0c2441b`. Candidate tree is exactly
@@ -105,6 +105,31 @@ Fresh relative-reference census: 225 from unit HTML plus 37 subject-page referen
 into the unit, zero broken, all 163 unit files referenced. Its method excludes
 absolute estate routes and fragment-only links; it does not reuse the old 297
 denominator. Complete/link and collection sizes are now recorded on #493.
+
+### Next small release pass — held at paper-only completion proof
+
+Fresh exact-ref readback on 12 September: main `aad04718`, content head `c460eada`,
+and candidate tree `751fcc8b` unchanged. Eight PR checks and 33 current-main check
+records SUCCESS. Caller remains Site `810ae8f8`, with Apps `3ad0a7df`. Open #497,
+#465 and held #456 have no changed-path collision with #493. No repeated browser
+or schema run was needed.
+
+The final teacher-guide read found an unresolved G14/G15 condition. Both
+`Teacher_Only/GROW_Computing_Paper_Route_Evidence_Map.docx` and its PDF end with
+“The one thing to decide locally”: Week 7 Outcome 5. If the centre requires
+creation inside Scratch, the text says the act should be repeated when a device
+is next available. R8/G14 requires completing the unit with no device; G15 requires
+all six outcomes on paper. A targeted later-ruling search found no resolution.
+The previous successful browser/print proof does not decide qualification parity.
+
+Full source excerpts, byte sizes and SHA-256 values are in
+`rf3-evidence/gc1-paper-release-blocker.json`. This is an unresolved release proof,
+not a finding that AQA rejects paper evidence. Do not remove the conditional or
+assert six-of-six parity without a supported centre/UAS decision. Next input:
+the centre's decision on paper-only Outcome 5; then the appropriate source-document
+repair and bounded revalidation. GC1's own rule that a red gate halts its phase
+keeps #493 open. No merge was attempted, no content changed, and P6 remains separate.
+The G10/G13 proofs stay valid and do not need replaying at unchanged bytes.
 
 ## Science phase — archive and source/served census complete; placement intake partial
 

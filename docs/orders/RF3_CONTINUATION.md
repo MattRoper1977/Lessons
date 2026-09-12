@@ -76,7 +76,7 @@ Content PR and resources.json catalogue PR must stay separate. Never infer P2Q.
 |---|---|---|
 | 1 | SX2R §5 + TH1C | S1-M closed; TH1C full original still missing; recover documentary residue only |
 | 2 | GW1-E → GW1 B–F → LW1 | Original scopes missing; do not reconstruct authority from titles |
-| 3 | GC1 #493 | G10/full G13 passed at run 34688998548: 204 positions, 672 model actions, 450 Week 8 checks; next exact-ref/check readback then content #493, P6 separate |
+| 3 | GC1 #493 | G10/full G13 passed; exact refs/checks green; content #493 now HELD at G14/G15: Outcome 5 guide leaves conditional later-device completion; centre/UAS decision needed, P6 separate |
 | 4 | ML1 | CLOSED-BY-DL; historical notice #352 merged and deployed |
 | 5 | PRX1 | Authorized RF3 repair merged and deployed, full golden proved |
 | 6 | BL1 | Approved #351 → #346 → #350 sequence completed; #291 HELD |
@@ -109,3 +109,8 @@ was partial because Weeks 1–2 have ten slides each. Complete required 390px
 coverage is now 204 positions. See RF3_PHASE_READOUT.md and
 rf3-evidence/gc1-interactions-readback.json. This checkpoint completes the proof
 pass; it does not merge #493 or close P6. Other holds are unchanged.
+
+Release-pass correction: final guide read found the same conditional later-device
+Outcome 5 requirement in its DOCX and PDF. No later resolving ruling recovered.
+G14/G15 prevent merging #493; no merge attempted. This supersedes the earlier
+“content transaction next” readiness statement, not the valid browser proofs.
