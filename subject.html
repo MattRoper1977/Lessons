@@ -29,12 +29,13 @@
 <div class="sub-search" role="search" aria-label="Search this subject"><input id="search" type="search" placeholder="Search this subject…" autocomplete="off" aria-label="Search this subject"></div>
 </div>
 <div class="chooser" id="chooser" hidden></div>
-<div class="suites" id="suites" hidden></div>
+<details class="browse-options subject-options"><summary>Teaching packs and collections</summary><div class="suites" id="suites" hidden></div></details>
 <div class="seg" id="seg" role="tablist" aria-label="Pathway" hidden></div>
 <div class="fchips" id="fchips" role="group" aria-label="Format" hidden></div>
 <p class="summary" id="summary" aria-live="polite" aria-atomic="true"></p>
 <p class="status" id="status" aria-live="polite" aria-atomic="true"></p>
 <p class="status" id="lesson-save-status" aria-live="polite" aria-atomic="true"></p>
+<nav class="term-nav" id="term-nav" aria-label="Terms"></nav>
 <div id="rows"></div>
 </main>
 <button id="to-top" type="button" aria-label="Back to top" hidden>↑</button>
@@ -70,14 +71,11 @@ function renderChips(){
   el.hidden=!present.length;
   el.innerHTML=[`<button type="button" data-format="" aria-pressed="${!cur}">${esc(COPY.formats[0])}</button>`,...present.map(f=>`<button type="button" data-format="${f}" aria-pressed="${cur===f}">${esc(labels[f])}</button>`)].join('');
 }
-function keyOf(r){return r.halfTerm&&r.unit?{kind:'unit',label:`${r.halfTerm} · ${r.unit}`,halfTerm:r.halfTerm,unit:r.unit}:{kind:'family',label:String(r.family||r.subject||''),halfTerm:null,unit:null};}
+function keyOf(r){const label=H.termOf(r);return {kind:HALF_TERMS.includes(label)?'unit':'family',label,halfTerm:HALF_TERMS.includes(label)?label:null,unit:null};}
 function groups(rows){
   const map=new Map();
-  rows.forEach(r=>{const k=keyOf(r);const id=k.kind+'|'+k.label;if(!map.has(id))map.set(id,{...k,id,rows:[]});map.get(id).rows.push(r);});
-  const ht=x=>HALF_TERMS.indexOf(x.halfTerm);
-  const list=[...map.values()];
-  list.forEach(g=>g.rows.sort((a,b)=>(HALF_TERMS.indexOf(a.halfTerm)-HALF_TERMS.indexOf(b.halfTerm))||0));
-  return list.sort((a,b)=>{if(a.kind!==b.kind)return a.kind==='unit'?-1:1;if(a.kind==='unit'){return ht(a)-ht(b)||a.unit.localeCompare(b.unit);}return a.label.localeCompare(b.label);});
+  rows.forEach(r=>{const k=keyOf(r),id=k.kind+'|'+k.label;if(!map.has(id))map.set(id,{...k,id,rows:[]});map.get(id).rows.push(r);});
+  return [...map.values()].sort((a,b)=>{const x=HALF_TERMS.indexOf(a.label),y=HALF_TERMS.indexOf(b.label);return (x<0?99:x)-(y<0?99:y)||a.label.localeCompare(b.label);});
 }
 function defaultOpen(list){
   const w=H.halfTermWindow(H.state.spine,H.today());
@@ -102,22 +100,40 @@ function planningLink(g){
   if(!hit||!hit.href)return '';
   return `<p class="planning"><a href="${esc(safeHref(hit.href))}">${esc(COPY.planning)}</a></p>`;
 }
+function accordion(id,label,body,number,classes=''){
+ const open=OPEN.has(id),pid='panel-'+H.slugify(id);
+ return `<section class="${classes==='teaching-week'?'week-group':'acc'} ${classes}" data-group="${esc(id)}"><button type="button" aria-expanded="${open}" aria-controls="${pid}" data-toggle="${esc(id)}"><span class="chev" aria-hidden="true">▾</span><span>${esc(label)}</span>${number===undefined?'':`<span class="n">${number}</span>`}</button><div class="acc-body" id="${pid}"${open?'':' hidden'}>${body}</div></section>`;
+}
+function groupedCard(group){
+ const r=group.primary,rest=group.members.filter(x=>x!==r),weeks=H.weeksOf(r);
+ const style=H.styleOf(r),label=H.state.meta?.styles?.[style]||'';
+ const head=`<div class="lesson-position">${weeks.length?weeks.map(w=>esc(w.label)).join('; '):'Week not specified'}${H.recommended(r)?' · Recommended':''}</div>`;
+ let extra='';
+ if(rest.length){const id='versions|'+group.key;extra=accordion(id,'Downloads and alternative versions',`<ul class="lrows">${rest.map(lessonRow).join('')}</ul>`+planningLink({rows:rest}),rest.length,'lesson-alternatives');}
+ return `<li class="lesson-group" data-lesson-identity="${esc(group.key)}">${head}<ul class="lrows">${lessonRow(r)}</ul>${extra}</li>`;
+}
+function groupBody(g){
+ const cards=H.lessonGroups(g.rows),current=cards.filter(c=>['recommended','current','award'].includes(H.styleOf(c.primary))),other=cards.filter(c=>!current.includes(c));
+ const selected=current.length?current:cards.filter(c=>H.styleOf(c.primary)!=='earlier'&&H.styleOf(c.primary)!=='reference');
+ const retained=cards.filter(c=>!selected.includes(c));
+ const weeks=new Map();
+ selected.forEach(c=>{const w=H.weeksOf(c.primary).map(x=>x.label).join('; ')||'Week not specified';if(!weeks.has(w))weeks.set(w,[]);weeks.get(w).push(c);});
+ let content=[...weeks].map(([label,items])=>accordion('week|'+g.id+'|'+label,label,`<ol class="lesson-list">${items.map(groupedCard).join('')}</ol>`,items.length,'teaching-week')).join('');
+ if(retained.length){const id='retained|'+g.id;content+=accordion(id,'Earlier collections and other resources',`<ol class="lesson-list">${retained.map(groupedCard).join('')}</ol>`+planningLink({rows:retained.flatMap(x=>x.members)}),retained.length,'retained-collection');}
+ return content+planningLink(g);
+}
 function renderRows(){
-  const rows=population();const list=groups(rows);
-  const popKey=currentPathway()+'|'+(params().get('format')||'')+'|'+(params().get('q')||'');
-  if(OPENED_FOR!==popKey){OPEN=new Set();const d=defaultOpen(list);if(d)OPEN.add(d);OPENED_FOR=popKey;}
-  const units=new Set(rows.filter(r=>r.halfTerm&&r.unit).map(r=>r.halfTerm+'|'+r.unit)).size;
-  const lessons=rows.filter(H.isLesson).length;
-  $('#summary').textContent=(units?`${units} units · `:'')+`${lessons} lessons`;
-  const p=params();const filtering=!!(p.get('q')||p.get('format'));
-  const st=$('#status');st.replaceChildren();
-  if(filtering){st.append(document.createTextNode(`Showing ${rows.length} matching resources.`));const b=document.createElement('button');b.type='button';b.className='btn';b.dataset.clearFilters='';b.textContent='Clear filters';st.appendChild(b);}
-  $('#rows').innerHTML=list.map(g=>{
-    const open=OPEN.has(g.id),all=EXPANDED.has(g.id),shown=all?g.rows:g.rows.slice(0,3),more=g.rows.length-shown.length;
-    const pid='panel-'+H.slugify(g.id);
-    return `<section class="acc" data-group="${esc(g.id)}"><button type="button" aria-expanded="${open}" aria-controls="${pid}" data-toggle="${esc(g.id)}"><span class="chev" aria-hidden="true">▾</span><span>${esc(g.label)}</span><span class="n">${g.rows.length}</span></button><div class="acc-body" id="${pid}"${open?'':' hidden'}><ul class="lrows">${shown.map(lessonRow).join('')}</ul>${more>0?`<p class="more"><button type="button" class="btn" data-more="${esc(g.id)}">${esc(COPY.showMore(more))}</button></p>`:''}${planningLink(g)}</div></section>`;
-  }).join('')||'<p class="status">No matches — try fewer words or clear a filter.</p>';
-  $$('.acc-body[hidden] a,.acc-body[hidden] button').forEach(el=>el.setAttribute('tabindex','-1'));
+ const rows=population(),list=groups(rows);
+ const popKey=currentPathway()+'|'+(params().get('format')||'')+'|'+(params().get('q')||'');
+ if(OPENED_FOR!==popKey){OPEN=new Set();const d=defaultOpen(list);if(d){OPEN.add(d);const g=list.find(x=>x.id===d),cards=H.lessonGroups(g.rows),first=cards.find(c=>['recommended','current','award'].includes(H.styleOf(c.primary)))||cards.find(c=>!['earlier','reference'].includes(H.styleOf(c.primary)));if(first){const label=H.weeksOf(first.primary).map(x=>x.label).join('; ')||'Week not specified';OPEN.add('week|'+g.id+'|'+label);}}OPENED_FOR=popKey;}
+ const lessons=H.distinctLessons(rows);
+ $('#summary').textContent=`${lessons} lessons · ${rows.length} resources and versions`;
+ const p=params(),filtering=!!(p.get('q')||p.get('format'));
+ const st=$('#status');st.replaceChildren();
+ if(filtering){st.append(document.createTextNode(`Showing ${rows.length} matching resources.`));const b=document.createElement('button');b.type='button';b.className='btn';b.dataset.clearFilters='';b.textContent='Clear filters';st.appendChild(b);}
+ $('#term-nav').innerHTML=list.filter(g=>g.halfTerm).map(g=>`<button type="button" data-term-open="${esc(g.id)}" aria-pressed="${OPEN.has(g.id)}">${esc(g.label)}</button>`).join('');
+ $('#rows').innerHTML=list.map(g=>accordion(g.id,g.label,groupBody(g),H.distinctLessons(g.rows),'term-group')).join('')||'<p class="status">No matches — try fewer words or clear a filter.</p>';
+ $$('.acc-body[hidden] a,.acc-body[hidden] button').forEach(el=>el.setAttribute('tabindex','-1'));
 }
 function renderSuites(){
   const hubs=ROWS.filter(r=>/^hub$/i.test(r.type));const el=$('#suites');
@@ -140,6 +156,7 @@ function boot(){
   if(first&&!$('#seg').hidden)first.focus();else $('#search').focus();
 }
 document.addEventListener('click',e=>{
+  const term=e.target.closest('[data-term-open]');if(term){OPEN.add(term.dataset.termOpen);renderRows();const heading=$$('button[data-toggle]').find(b=>b.dataset.toggle===term.dataset.termOpen);if(heading){heading.focus();heading.scrollIntoView({block:'nearest'});}return;}
   const tab=e.target.closest('#seg [role="tab"]');if(tab){setParam('pathway',tab.dataset.pathway==='ALL'?'ALL':tab.dataset.pathway);render();$('#seg [role="tab"][aria-selected="true"]').focus();return;}
   const fc=e.target.closest('#fchips button');if(fc){setParam('format',fc.dataset.format);render();$(`#fchips button[data-format="${fc.dataset.format}"]`).focus();return;}
   const tg=e.target.closest('button[data-toggle]');if(tg){const id=tg.dataset.toggle;if(OPEN.has(id))OPEN.delete(id);else OPEN.add(id);renderRows();const again=$$('button[data-toggle]').find(b=>b.dataset.toggle===id);if(again)again.focus();return;}

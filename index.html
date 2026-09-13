@@ -37,21 +37,25 @@
 <button class="menu" id="menu" type="button" aria-expanded="false" aria-controls="nav">Menu</button>
 <nav class="nav mbm-site-nav" id="nav" aria-label="Site navigation"><div class="mbm-primary-links"><a href="/games/">Games</a><a href="/Lessons/" aria-current="page">Lessons</a><a href="/Matt-s-Apps-/">Apps</a><a href="/tools/">Tools</a><a href="/resources/">Resources</a></div><details class="mbm-nav-more"><summary>More</summary><div class="mbm-nav-panel"><a href="/stats/">Stats</a><a href="/members/">Members</a><a href="/#about">About</a><a href="/privacy/">Privacy</a></div></details><details class="mbm-theme-menu"><summary>Display</summary><div class="mbm-theme-panel" data-mbm-theme-slot></div></details></nav>
 </div></header>
+<main id="main" class="wrap l-hub">
+<nav class="lesson-breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><span>Lessons</span></nav>
+<h1>Lessons</h1>
+<p class="lead" id="lead">Lessons for BUILD, GROW and LAUNCH pathways.</p>
 <div class="hub-bar" role="search" aria-label="Search the lessons"><div class="wrap">
 <label for="search">Search<input id="search" type="search" placeholder="Topic, title or week…" autocomplete="off"></label>
 <button class="pill" type="button" id="view-saved" data-view="saved" aria-pressed="false">Saved <b data-saved-count></b></button>
 <button class="pill" type="button" id="view-recommended" data-view="recommended" aria-pressed="false">Recommended</button>
 </div></div>
-<main id="main" class="wrap">
-<h1>Lessons</h1>
-<p class="lead" id="lead">Lessons for BUILD, GROW and LAUNCH pathways.</p>
+
 <span class="count" id="count" aria-live="polite" aria-atomic="true">Loading…</span>
 <p class="status" id="status" aria-live="polite" aria-atomic="true"></p>
 <p class="status" id="lesson-save-status" aria-live="polite" aria-atomic="true"></p>
 <section id="browse" aria-label="Browse the lessons">
-<div class="tiles" id="tiles"></div>
+<section class="sec" id="subjects" aria-labelledby="subjects-h"><div class="sec-head"><h2 id="subjects-h">Subjects</h2></div><div class="scards" id="scards"></div></section>
+
+<details class="browse-options"><summary>More ways to browse</summary><nav class="shelves" aria-label="Subject shelves by pathway and term"><a href="Science_Teesside/index.html">Science by pathway and term</a><a href="Humanities_Teesside/index.html">Humanities by pathway and term</a></nav><div class="tiles" id="tiles"></div>
 <section class="sec added" id="added" aria-labelledby="added-h"><div class="sec-head"><h2 id="added-h">Added this half-term</h2><a href="?added=current" id="added-all">See all →</a></div><div class="rail" id="added-rail"></div></section>
-<section class="sec" id="subjects" aria-labelledby="subjects-h"><div class="sec-head"><h2 id="subjects-h">Subjects</h2><nav class="shelves" aria-label="Subject shelves by pathway and term"><a href="Science_Teesside/index.html">Science by pathway and term</a><a href="Humanities_Teesside/index.html">Humanities by pathway and term</a></nav></div><div class="scards" id="scards"></div></section>
+</details>
 </section>
 <section id="results" aria-label="Matching lessons" hidden>
 <div class="recent" id="lesson-recent" hidden></div>
@@ -87,7 +91,7 @@ function renderHub(){
   const w=H.halfTermWindow(s.spine,H.today());
   $('#added-h').textContent=w?COPY.added:COPY.addedFallback;
   const from=w?w.start:H.sixtyDaysAgo();
-  const recent=rows.filter(r=>r.added&&r.added>=from&&r.added<=H.today()).sort((a,b)=>b.added.localeCompare(a.added)||String(a.title).localeCompare(String(b.title))).slice(0,6);
+  const recent=rows.filter(r=>r.added&&r.added>=from&&r.added<=H.today()).sort((a,b)=>b.added.localeCompare(a.added)||String(a.title).localeCompare(String(b.title))).slice(0,3);
   $('#added-rail').innerHTML=recent.map(r=>`<a class="acard" href="${esc(safeHref(r._path))}" data-resource-path="${esc(r._path)}"><span class="when">${esc(fmtDay(r.added))}</span><h3>${esc(r.title)}</h3><span class="chips">${badge(r._fmt)}</span><span class="sub">${esc(String(r.subject))}</span></a>`).join('');
   $('#added').hidden=!recent.length;
   const cards=H.cardsFromRows(rows);
@@ -126,7 +130,7 @@ document.addEventListener('click',e=>{
 window.addEventListener('popstate',render);
 document.addEventListener('mbm:saved-changed',()=>{if(params().get('view')==='saved')render();});
 H.wireSaveAndRecent(document);
-H.loadAll().then(()=>{document.body.insertAdjacentHTML('beforeend',H.packSheetHtml());H.wirePackSheet(document);render();const first=H.isFlat(params())?($('#cards a[href]')||$('[data-clear-filters]')):$('#tiles a');if(first)first.focus({preventScroll:true});}).catch(()=>{$('#count').textContent="Couldn't load resources.json";});
+H.loadAll().then(()=>{document.body.insertAdjacentHTML('beforeend',H.packSheetHtml());H.wirePackSheet(document);render();const first=H.isFlat(params())?($('#cards a[href]')||$('[data-clear-filters]')):$('#search');if(first)first.focus({preventScroll:true});}).catch(()=>{$('#count').textContent="Couldn't load resources.json";});
 })();</script>
 <script defer src="assets/mbm-theme.js"></script><script defer src="assets/mbm-platform.js"></script><script defer src="assets/catalogue/lesson-navigation.js"></script>
 </body></html>
