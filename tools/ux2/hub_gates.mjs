@@ -55,6 +55,9 @@ const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '
 const server = http.createServer((req, res) => {
   let u = decodeURIComponent(req.url.split('?')[0]);
   let f = u.startsWith('/Lessons/') ? path.join(ROOT, u.slice(9)) : path.join(SITE, u.replace(/^\//, ''));
+  // K's stamped page loads these existing publication-owned root assets.
+  const publicationAssets = new Set(['shared-navigation.css','shared-navigation.js','shared-footer.css','education-palette.css']);
+  if (!fs.existsSync(f) && u.startsWith('/assets/') && publicationAssets.has(u.slice(8))) f=path.join(SITE,'domain-split',u.slice(8));
   if (fs.existsSync(f) && fs.statSync(f).isDirectory()) f = path.join(f, 'index.html');
   if (!fs.existsSync(f) || fs.statSync(f).isDirectory()) { res.writeHead(404); res.end('nf'); return; }
   if (req.method === 'HEAD') { res.writeHead(200, { 'content-type': TYPES[path.extname(f)] || 'application/octet-stream' }); res.end(); return; }
@@ -338,6 +341,16 @@ if (RED) {
     check(`RED PROOF: a removed ${defect} relationship is detected`, measured.some(v => !v), JSON.stringify(measured));
     await badPage._ctx.close();
   }
+}
+
+/* ---------- Part K: every real companion page and native print ---------- */
+if (fs.existsSync(path.join(ROOT, 'pack.html'))) {
+  const { spawn } = await import('node:child_process');
+  const code = await new Promise((resolve, reject) => {
+    const child = spawn(process.execPath, [path.join(ROOT, 'tools/sw2/check_pack_page.cjs'), '--base', origin, '--output', path.join(OUT, 'pack-page')], {stdio:'inherit'});
+    child.on('error', reject); child.on('exit', resolve);
+  });
+  check('Part K: every companion page, file, theme and print', code === 0, 'independent record-driven browser contract');
 }
 
 /* ---------- 7. red proofs ---------- */
