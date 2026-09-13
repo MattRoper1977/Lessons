@@ -1297,6 +1297,9 @@ REVIEWED_PATHS = (
     "assets/catalogue/lesson-order.json", "tools/catalogue/build_lesson_order.py", "tools/ux2/hub_gates.mjs",
     "index.html", "Science_Teesside/index.html", "Humanities_Teesside/index.html", "humanities_teesside.html",
     # UX2 A2/A3 (2026-09-08): the shared subject page, its engine, its stylesheet and the published spine.
+    "pack.html", "assets/catalogue/pack.js", "assets/catalogue/pack.css",
+    "assets/catalogue/pack-notes.json", "tools/sw2/pack_notes.py",
+    "tools/sw2/stamp_pack_page.py", "tools/sw2/check_pack_page.cjs",
     "subject.html", "assets/catalogue/hub.js", "assets/catalogue/hub.css", "data/calendar-spine.json",
     "Humanities_Teesside/David_Cover_Autumn1_W3-W7/index.html",
     "assets/catalogue/catalogue.css", "assets/catalogue/catalogue.js",
