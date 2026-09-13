@@ -51,6 +51,7 @@ function cardOf(row) {
   return 'x-' + String(s).toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 }
 function tierOf(r) {
+  if (PATHWAYS.includes(r._shelfPathway)) return r._shelfPathway;
   const f = r.file || r.url || '';
   if (/(?:^|\/)Build\//.test(f)) return 'BUILD';
   if (/(?:^|\/)Grow\//.test(f)) return 'GROW';
@@ -67,7 +68,15 @@ function matchesFormat(r, fmt) { return !fmt || formatOf(r) === fmt || (r.files 
 
 const manifest = await (await fetch(new URL('Lessons/resources.json', BASE))).json();
 if (!Array.isArray(manifest)) { console.error('[FAIL] resources.json is not an array'); process.exit(1); }
-console.log(`resources.json over HTTP: ${manifest.length} entries`);
+// Independently derive the accepted shelf union; never trust the page's projection.
+const known = new Set(manifest.map(r=>r.file||r.url));
+for (const [name,subject] of [['science-shelf.json','Science'],['humanities-shelf.json','Humanities']]) {
+  const shelf = await (await fetch(new URL('Lessons/assets/catalogue/'+name, BASE))).json();
+  for (const r of shelf.lessons) if (!known.has(r.path)) {
+    manifest.push({file:r.path,title:r.title,subject,type:r.resourceType||'lesson',family:subject+' Teesside',_shelfPathway:r.pathway});known.add(r.path);
+  }
+}
+console.log(`Accepted catalogue and shelves over HTTP: ${manifest.length} entries`);
 
 const browser = await chromium.launch({ args: ['--use-gl=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
 const page = await (await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true })).newPage();

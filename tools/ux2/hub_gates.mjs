@@ -65,7 +65,10 @@ const origin = 'http://127.0.0.1:' + server.address().port;
 
 const results = [];
 const check = (limb, ok, detail) => { results.push({ limb, ok, detail }); console.log(`  ${ok ? 'PASS' : 'FAIL'}  ${String(limb).padEnd(48)} ${detail}`); return ok; };
-const rows = JSON.parse(fs.readFileSync(path.join(ROOT, 'resources.json'), 'utf8'));
+const catalogueRows = JSON.parse(fs.readFileSync(path.join(ROOT, 'resources.json'), 'utf8'));
+const shelves = ['science-shelf.json','humanities-shelf.json'].flatMap(name => JSON.parse(fs.readFileSync(path.join(ROOT,'assets/catalogue',name),'utf8')).lessons);
+const knownPaths = new Set(catalogueRows.map(r => r.file || r.url));
+const rows = [...catalogueRows, ...shelves.filter(r=>!knownPaths.has(r.path)).map(r=>({file:r.path}))];
 const appendix = JSON.parse(fs.readFileSync(path.join(ROOT, 'tools/ux2/fixtures/appendix-a-lessons.json'), 'utf8'));
 const retired = JSON.parse(fs.readFileSync(path.join(ROOT, 'tools/ux2/fixtures/retired-hrefs.json'), 'utf8'));
 const before = fs.readFileSync(path.join(ROOT, 'tools/ux2/fixtures/hub-hrefs-before-ux2.txt'), 'utf8').split('\n').map(s => s.trim()).filter(s => s && !s.startsWith('#'));
@@ -137,7 +140,7 @@ for (const slug of subjectSlugs) {
   for (const t of (tabs.length ? tabs : [null])) {
     if (t) { await page.locator(`#seg [role=tab][data-pathway="${t}"]`).click(); await page.waitForTimeout(80); check(`${slug}/${t}: focus after pathway switch`, (await page.evaluate(namedActive)).startsWith('button#tab-'), await page.evaluate(namedActive)); }
     // open every accordion row so every lesson is rendered, then collect
-    for (let i = 0; i < 200; i++) { const tg = page.locator('button[data-toggle][aria-expanded="false"]').first(); if (!(await tg.count())) break; await tg.click(); }
+    for (let i = 0; i < 200; i++) { const tg = page.locator('button[data-toggle][aria-expanded="false"]:visible').first(); if (!(await tg.count())) break; await tg.click(); }
     await collectPage(page);
     check(`${slug}/${t || 'all'}: targets ≥44px (expanded)`, (await page.evaluate(smallTargets)).length === 0, JSON.stringify((await page.evaluate(smallTargets)).slice(0, 4)));
     // B4 planning: a row offers "Planning and evidence" exactly when one of the
@@ -175,7 +178,7 @@ for (const slug of subjectSlugs) {
     const chips = await page.$$eval('#fchips button', bs => bs.map(b => b.dataset.format));
     for (const f of chips) {
       await page.locator(`#fchips button[data-format="${f}"]`).click(); await page.waitForTimeout(60);
-      for (let i = 0; i < 200; i++) { const tg = page.locator('button[data-toggle][aria-expanded="false"]').first(); if (!(await tg.count())) break; await tg.click(); }
+      for (let i = 0; i < 200; i++) { const tg = page.locator('button[data-toggle][aria-expanded="false"]:visible').first(); if (!(await tg.count())) break; await tg.click(); }
       for (let i = 0; i < 50; i++) { const more = page.locator('button[data-more]').first(); if (!(await more.count())) break; await more.click(); }
       const rendered = await page.$$eval('.lrow', els => els.map(e => e.dataset.resourcePath));
       const expected = await page.evaluate(({ fmt, pathway }) => { const H = window.MBM_HUB; const pool = H.state.rows.filter(r => r._card === new URLSearchParams(location.search).get('subject') || H.slugForQuery(new URLSearchParams(location.search).get('subject')) === r._card); const pw = pathway; let rows = pw === 'ALL' ? pool.filter(r => !r._tier) : pool.filter(r => r._tier === pw); if (fmt) rows = rows.filter(r => r._fmt === fmt || (r.files || []).some(x => (x.type === 'pdf' ? 'pdf' : 'packs') === fmt)); return rows.map(r => r._path); }, { fmt: f, pathway: t || 'ALL' });
@@ -193,7 +196,7 @@ for (const slug of subjectSlugs) {
     const tabs = await page.$$eval('#seg [role="tab"]', ts => ts.map(t => t.dataset.pathway));
     for (const pathway of tabs) {
       await page.locator(`#seg [role="tab"][data-pathway="${pathway}"]`).click(); await page.waitForTimeout(80);
-      for (let i = 0; i < 300; i++) { const t = page.locator('button[data-toggle][aria-expanded="false"]').first(); if (!(await t.count())) break; await t.click(); }
+      for (let i = 0; i < 300; i++) { const t = page.locator('button[data-toggle][aria-expanded="false"]:visible').first(); if (!(await t.count())) break; await t.click(); }
       for (let i = 0; i < 300; i++) { const m = page.locator('button[data-more]').first(); if (!(await m.count())) break; await m.click(); }
       packChip = page.locator('button[data-pack]').first();
       if (await packChip.count()) break;
@@ -298,13 +301,52 @@ await hub._ctx.close();
 check('planning: the record supplies at least one key', planningKeysSeen > 0, `${planningKeysSeen} keys`);
 check('planning: at least one row renders the link', planningLinksSeen > 0, `${planningLinksSeen} links`);
 
+/* ---------- Part L: independently audited version/week relationships ---------- */
+const launchAudit = JSON.parse(fs.readFileSync(path.join(ROOT, 'tools/catalogue/SCIENCE_WEEK_BINDINGS.json'), 'utf8'));
+const versionPairs = launchAudit.launchVersionPairs;
+async function measurePairs(page) {
+  return page.evaluate(pairs => pairs.map(pair => {
+    const groups = [...document.querySelectorAll('[data-lesson-identity]')];
+    const group = groups.find(e => e.dataset.lessonIdentity === pair.canonicalSlotPath);
+    const paths = group ? [...group.querySelectorAll('[data-resource-path]')].map(e => e.dataset.resourcePath) : [];
+    return !!group && paths.includes(pair.canonicalSlotPath) && paths.includes(pair.versionPath) &&
+      groups.filter(e => [...e.querySelectorAll('[data-resource-path]')].some(r => r.dataset.resourcePath === pair.versionPath)).length === 1 &&
+      !!group.querySelector('.lesson-downloads') && !group.querySelector('.lesson-position')?.textContent.includes('Week not specified');
+  }), versionPairs);
+}
+async function loadSequence(page) {
+  await page.goto(`${origin}/Lessons/subject.html?subject=science&pathway=LAUNCH`);
+  await page.waitForFunction(() => /lessons/.test(document.querySelector('#summary')?.textContent || ''));
+}
+const sequencePage = await newPage();
+await loadSequence(sequencePage);
+const sequence = await measurePairs(sequencePage);
+check('Part L: every audited LAUNCH pair shares one lesson, a week and downloads', sequence.length > 0 && sequence.every(Boolean), `${sequence.filter(Boolean).length}/${versionPairs.length}`);
+await sequencePage._ctx.close();
+if (RED) {
+  for (const defect of ['version', 'week']) {
+    const badPage = await newPage();
+    await badPage.route('**/assets/catalogue/lesson-order.json', route => {
+      const data = JSON.parse(fs.readFileSync(path.join(ROOT, 'assets/catalogue/lesson-order.json'), 'utf8'));
+      const pair = versionPairs[0];
+      if (defect === 'version') data.entries[pair.versionPath].canonical = pair.versionPath;
+      else data.entries[pair.canonicalSlotPath].weeks = [];
+      return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(data) });
+    });
+    await loadSequence(badPage);
+    const measured = await measurePairs(badPage);
+    check(`RED PROOF: a removed ${defect} relationship is detected`, measured.some(v => !v), JSON.stringify(measured));
+    await badPage._ctx.close();
+  }
+}
+
 /* ---------- 7. red proofs ---------- */
 if (RED) {
   const page = await newPage();
   await page.addInitScript(() => { document.addEventListener('DOMContentLoaded', () => { const s = document.createElement('style'); s.textContent = '.acc:first-of-type{display:none!important}'; document.head.appendChild(s); }); });
   await page.goto(`${origin}/Lessons/subject.html?subject=${encodeURIComponent(subjectSlugs[0])}`, { waitUntil: 'load' });
   await page.waitForFunction(() => /lessons/.test(document.querySelector('#summary')?.textContent || ''), null, { timeout: 15000 });
-  for (let i = 0; i < 200; i++) { const tg = page.locator('button[data-toggle][aria-expanded="false"]').first(); if (!(await tg.count())) break; await tg.click(); }
+  for (let i = 0; i < 200; i++) { const tg = page.locator('button[data-toggle][aria-expanded="false"]:visible').first(); if (!(await tg.count())) break; await tg.click(); }
   const visiblePaths = await page.$$eval('[data-resource-path]', els => els.filter(e => e.getBoundingClientRect().height > 0).map(e => e.dataset.resourcePath));
   const expectedPaths = await page.evaluate(() => { const H = window.MBM_HUB; const slug = H.slugForQuery(new URLSearchParams(location.search).get('subject')); return H.state.rows.filter(r => r._card === slug && (r._tier === H.pathwaysPresent(H.state.rows.filter(x => x._card === slug))[0])).length; });
   check('RED PROOF: a hidden family drops the reachability count', visiblePaths.length < expectedPaths, `${visiblePaths.length} < ${expectedPaths}`);

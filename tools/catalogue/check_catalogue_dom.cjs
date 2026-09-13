@@ -4,10 +4,14 @@ const path = require('node:path');
 const vm = require('node:vm');
 const {parseHTML} = require('linkedom');
 const root = path.resolve(__dirname,'../..');
-const rows = JSON.parse(fs.readFileSync(path.join(root,'resources.json'),'utf8'));
+const originalRows = JSON.parse(fs.readFileSync(path.join(root,'resources.json'),'utf8'));
 const metadata = JSON.parse(fs.readFileSync(path.join(root,'assets/catalogue/terms-and-styles.json'),'utf8'));
 const science = JSON.parse(fs.readFileSync(path.join(root,'assets/catalogue/science-shelf.json'),'utf8'));
 const humanities = JSON.parse(fs.readFileSync(path.join(root,'assets/catalogue/humanities-shelf.json'),'utf8'));
+// Part L composes the already accepted shelves without editing resources.json.
+const known = new Set(originalRows.map(r=>r.file||r.url));
+const supplements = [[science,'Science'],[humanities,'Humanities']].flatMap(([shelf,subject])=>shelf.lessons.filter(r=>!known.has(r.path)).map(r=>({file:r.path,title:r.title,subject,type:r.resourceType||'lesson',family:subject+' Teesside',_shelfPathway:r.pathway})));
+const rows = [...originalRows,...supplements];
 const reports = [];
 function check(name, fn){fn();reports.push({name,status:'PASS'});}
 function environment(filename, search=''){

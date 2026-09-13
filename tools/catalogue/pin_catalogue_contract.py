@@ -1291,6 +1291,10 @@ SHELF_ROWS.append({'subject': 'GROW Vocational & PfA', 'title': 'GROW Computing 
 # change here; a lesson cannot become permitted because it shares a directory.
 # The verifier and pin tool exclude themselves to avoid a recursive file hash.
 REVIEWED_PATHS = (
+    "tools/verify_lessons_chips.mjs",
+    "tools/sw2/check_tokens_inert.cjs",
+    # Part L view, its deterministic derivation, and independent browser controls.
+    "assets/catalogue/lesson-order.json", "tools/catalogue/build_lesson_order.py", "tools/ux2/hub_gates.mjs",
     "index.html", "Science_Teesside/index.html", "Humanities_Teesside/index.html", "humanities_teesside.html",
     # UX2 A2/A3 (2026-09-08): the shared subject page, its engine, its stylesheet and the published spine.
     "subject.html", "assets/catalogue/hub.js", "assets/catalogue/hub.css", "data/calendar-spine.json",
@@ -1575,6 +1579,9 @@ def pin(lessons: Path, apps: Path, *, check: bool) -> dict:
     errors = preserved_rows_errors(rows, pack_rows)
     if errors:
         raise ValueError("; ".join(errors))
+    order = module(lessons / "tools/catalogue/build_lesson_order.py")
+    if json.loads((lessons / "assets/catalogue/lesson-order.json").read_text()) != order.derive():
+        raise ValueError("Part L lesson order differs from its accepted evidence projection")
     gate = module(gates[0])
     files = {path: hashlib.sha256((lessons / path).read_bytes()).hexdigest() for path in REVIEWED_PATHS}
     text = (lessons / "index.html").read_text("utf-8")
