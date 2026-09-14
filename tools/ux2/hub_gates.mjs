@@ -353,6 +353,14 @@ if (fs.existsSync(path.join(ROOT, 'pack.html'))) {
   check('Part K: every companion page, file, theme and print', code === 0, 'independent record-driven browser contract');
 }
 
+/* ---------- EDU-D2: mapped titles, references and discovery ---------- */
+{
+  const titlesPage = await newPage();
+  const detail = await require('../catalogue/check_display_titles_browser.cjs').verify({page:titlesPage,origin,root:ROOT,out:path.join(OUT,'display-titles')});
+  check('EDU-D2: readable titles retain references, routes and filters',true,JSON.stringify(detail));
+  await titlesPage._ctx.close();
+}
+
 /* ---------- 7. red proofs ---------- */
 if (RED) {
   const page = await newPage();

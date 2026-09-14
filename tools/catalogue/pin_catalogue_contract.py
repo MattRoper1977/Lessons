@@ -1291,6 +1291,8 @@ SHELF_ROWS.append({'subject': 'GROW Vocational & PfA', 'title': 'GROW Computing 
 # change here; a lesson cannot become permitted because it shares a directory.
 # The verifier and pin tool exclude themselves to avoid a recursive file hash.
 REVIEWED_PATHS = (
+    "assets/catalogue/display-titles.json", "tools/catalogue/build_display_titles.py",
+    "tools/catalogue/check_display_titles.cjs", "tools/catalogue/check_display_titles_browser.cjs",
     "tools/verify_lessons_chips.mjs",
     "tools/sw2/check_tokens_inert.cjs",
     # Part L view, its deterministic derivation, and independent browser controls.

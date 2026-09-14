@@ -124,7 +124,7 @@ function groupBody(g){
 }
 function renderRows(){
  const rows=population(),list=groups(rows);
- const popKey=currentPathway()+'|'+(params().get('format')||'')+'|'+(params().get('q')||'');
+ const popKey=currentPathway()+'|'+(params().get('format')||'')+'|'+(params().get('q')||'')+'|'+(params().get('unit')||'');
  if(OPENED_FOR!==popKey){OPEN=new Set();const d=defaultOpen(list);if(d){OPEN.add(d);const g=list.find(x=>x.id===d),cards=H.lessonGroups(g.rows),first=cards.find(c=>['recommended','current','award'].includes(H.styleOf(c.primary)))||cards.find(c=>!['earlier','reference'].includes(H.styleOf(c.primary)));if(first){const label=H.weeksOf(first.primary).map(x=>x.label).join('; ')||'Week not specified';OPEN.add('week|'+g.id+'|'+label);}}OPENED_FOR=popKey;}
  const lessons=H.distinctLessons(rows);
  $('#summary').textContent=`${lessons} lessons · ${rows.length} resources and versions`;
