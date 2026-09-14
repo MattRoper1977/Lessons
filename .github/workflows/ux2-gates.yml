@@ -30,6 +30,10 @@ on:
       - tools/verify_lessons_chips.mjs
       - tools/verify_cross_estate_unification.py
       - tools/catalogue/pin_catalogue_contract.py
+      - tools/catalogue/build_display_titles.py
+      - tools/catalogue/check_display_titles.cjs
+      - tools/catalogue/check_display_titles_browser.cjs
+      - tools/sw2/check_pack_page.cjs
       - _sownb/CALENDAR_2026_27.json
       - .github/workflows/ux2-gates.yml
       # SB1: suffix-specific triggers include new paths and all case variants.
@@ -54,6 +58,10 @@ on:
       - tools/verify_lessons_chips.mjs
       - tools/verify_cross_estate_unification.py
       - tools/catalogue/pin_catalogue_contract.py
+      - tools/catalogue/build_display_titles.py
+      - tools/catalogue/check_display_titles.cjs
+      - tools/catalogue/check_display_titles_browser.cjs
+      - tools/sw2/check_pack_page.cjs
       - _sownb/CALENDAR_2026_27.json
       - .github/workflows/ux2-gates.yml
       # SB1: suffix-specific triggers include new paths and all case variants.
@@ -95,6 +103,8 @@ jobs:
       - name: The schema is enforced, and eight planted defects are refused
         id: schema
         run: |
+          python3 tools/catalogue/build_display_titles.py --check
+          node tools/catalogue/check_display_titles.cjs
           python3 tools/ux2/check_catalogue_schema.py --self-test
           python3 tools/ux2/check_catalogue_schema.py
       - name: The tags equal their derivation, and the derivation's own controls go red

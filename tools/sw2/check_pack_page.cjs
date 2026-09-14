@@ -6,6 +6,7 @@ const arg=(n,d)=>{const i=process.argv.indexOf(n);return i<0?d:process.argv[i+1]
 const base=arg('--base','http://127.0.0.1:8765'),out=path.resolve(arg('--output','audit-output/pack-page'));
 fs.mkdirSync(out,{recursive:true});
 const packs=JSON.parse(fs.readFileSync(path.join(root,'resources.json'),'utf8')).filter(r=>r.kind==='pack'&&r.companionOf);
+const titlePairs=JSON.parse(fs.readFileSync(path.join(root,'data/companion-packs.json'),'utf8')).packs;
 const notes=JSON.parse(fs.readFileSync(path.join(root,'assets/catalogue/pack-notes.json'),'utf8')).entries;
 const rank=f=>['lesson:pptx','slides:pdf','pupil:docx','pupil:pdf','teacher:docx','teacher:pdf'].indexOf(f.role+':'+f.type);
 const report={base,packs:[],matrix:[],errors:[],requests:[],notes:0};
@@ -20,6 +21,8 @@ function contrast(f,b){const l=s=>{const v=s.match(/[\d.]+/g).slice(0,3).map(Num
  for(const pack of packs){
   await open(pack);
   const facts=await page.evaluate(()=>({title:document.querySelector('h1').textContent,rows:[...document.querySelectorAll('.pk-file')].map(r=>({path:r.dataset.file,href:r.querySelector('a').getAttribute('href'),download:r.querySelector('a').hasAttribute('download')})),delivery:document.querySelector('#delivery').getAttribute('href'),drift:!!document.querySelector('.pk-drift'),note:document.querySelector('.pk-note p')?.textContent||null,back:document.querySelector('.pk-back').getAttribute('href'),badges:[...document.querySelectorAll('.pk-format')].map(e=>e.textContent)}));
+  const titlePair=titlePairs.find(p=>p.companionOf===pack.companionOf);
+  assert(titlePair);assert.equal(facts.title,titlePair.title.trim(),pack.id+' readable title');
   const files=[...pack.files].sort((a,b)=>(rank(a)<0?99:rank(a))-(rank(b)<0?99:rank(b)));
   assert.equal(facts.rows.length,pack.files.length,pack.id+' count');
   assert.deepEqual(facts.rows.map(r=>r.path),files.map(f=>f.path),pack.id+' membership/order');

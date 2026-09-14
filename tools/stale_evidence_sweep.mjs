@@ -160,8 +160,12 @@ const MATRIX_ROW   = new RegExp(String.raw`^\s{2,}(${ID})\s+(watched|LOAD-BEARIN
 /* A report LABEL is not a transform id and does not have to look like one:
    run_all.out labels rows W-BOIL, W-STRICT, W-GAP. Third widening, and the
    third one the NO FORM MATCHED control reported rather than swallowed. */
-const ROW_LABEL    = String.raw`[A-Z][A-Za-z0-9-]*`;
+const ROW_LABEL    = String.raw`[A-Z][A-Za-z0-9_-]*`;
 const REPORT_ROW   = new RegExp(String.raw`^(${ROW_LABEL})(?:\s+\S+)*?\s+(PASS|FAIL|SKIP|ERROR|UNCHANGED|CHANGED|ASSERTED)\b`);
+/* Archived control transcripts and verdict-led notes describe outcomes, not
+   transform identifiers. Explicit paths on these rows are still resolved. */
+const CONTROL_ROW = /^(.+?): (?:RED|GREEN|INCONCLUSIVE); exit [0-9]+; (?:PASS|FAIL)$/;
+const VERDICT_NOTE = /^(PASS|FAIL|SKIP|ERROR|UNCHANGED|CHANGED|ASSERTED):\s+\S/;
 const PATH_NAMED   = /(?:tools|release|staging|Games)\/[A-Za-z0-9_./-]+\.(?:mjs|py|sh|js|html)/g;
 const ROUTE_NAMED  = /"\/([a-z0-9-]{3,})\/"/g;
 const SECTION      = /^==\s+(.+?)\s*$/;
@@ -198,7 +202,27 @@ function qaClaimsFrom(text, ctx) {
     if (typeof node.file === 'string' && node.file)
       claims.push({ form: 'qa-record', subject: node.file, resolver: 'qa-subject', line: 0, ctx,
                     why: 'a QA record naming the file it reports on' });
+    if (typeof node.pilot === 'string' && node.pilot && Array.isArray(node.checks))
+      claims.push({ form: 'qa-pilot', subject: node.pilot, resolver: 'path', line: 0, ctx,
+                    why: 'the repository-relative pilot named by a verification report' });
+    if (typeof node.source_repository === 'string' && node.source_repository &&
+        typeof node.source_path === 'string' && node.source_path)
+      claims.push({ form: 'qa-source', subject: `${node.source_repository}/${node.source_path}`,
+                    resolver: 'repository-path', repository: node.source_repository, file: node.source_path, line: 0, ctx,
+                    why: 'a route record names its source repository and source path' });
+    const commandRun = typeof node.name === 'string' && node.name &&
+      Number.isInteger(node.status) && typeof node.stdout === 'string' &&
+      typeof node.stderr === 'string' && (node.signal === null || typeof node.signal === 'string');
+    if (commandRun) {
+      claims.push({ form: 'qa-command-run', subject: `${trail}:${node.name}`, resolver: 'none', line: 0, ctx,
+                    why: `recorded command exit ${node.status}; output subjects are resolved separately` });
+      /* Do not rubber-stamp a captured log: unknown asserting rows in stdout or
+         stderr must still reach NO FORM MATCHED, and named paths must fire. */
+      for (const stream of ['stdout', 'stderr'])
+        claims.push(...claimsFrom(node[stream], `${ctx}:${trail}.${stream}`));
+    }
     for (const [k, v] of Object.entries(node)) {
+      if (commandRun && (k === 'stdout' || k === 'stderr')) continue;
       if (typeof v === 'string' && QA_VERDICT.test(v) && k !== 'file')
         /* A verdict whose subject is the record it sits in, or the document as a
            whole. Recorded rather than dropped, and marked NOT A CLAIM with the
@@ -206,20 +230,31 @@ function qaClaimsFrom(text, ctx) {
            row this tool chooses not to judge must still be visible. */
         claims.push({ form: 'qa-verdict', subject: `${trail}.${k}`, resolver: 'none', line: 0, ctx,
                       why: `verdict "${v}" on ${trail}.${k}; its subject is the file named by the ` +
-                           `enclosing record, which is judged separately` });
+                           `report, which is judged separately where named` });
       else walk(v, `${trail}.${k}`);
     }
   };
   walk(doc, path.basename(ctx));
-  /* Only take the structural route if it actually recognised a subject. A JSON
-     file with no record naming anything is not "understood" — it goes back to
-     the text forms so it can still be reported. */
-  return claims.some(c => c.form === 'qa-record') ? claims : [];
+  /* A typed command capture can contain only outcome rows. Otherwise require
+     a named subject; subjectless, unrecognised JSON still reaches the fallback. */
+  return claims.some(c => ['qa-record', 'qa-pilot', 'qa-source', 'qa-command-run'].includes(c.form))
+    ? claims : [];
 }
 
 function claimsFrom(text, ctx) {
   const structural = qaClaimsFrom(text, ctx);
-  if (structural.length) return structural;
+  if (structural.length) {
+    /* These report shapes previously used the text grammar. Keep every explicit
+       path/route it judged as well as the newly understood structured subjects.
+       Existing qa-record documents retain their established relative resolver. */
+    if (!structural.some(c => c.form === 'qa-record')) {
+      for (const p of text.match(PATH_NAMED) || [])
+        structural.push({ form: 'path-named', subject: p, resolver: 'path', line: 0, ctx });
+      for (const r of [...text.matchAll(ROUTE_NAMED)].map(x => x[1]))
+        structural.push({ form: 'route-named', subject: `/${r}/`, resolver: 'route', line: 0, ctx });
+    }
+    return structural;
+  }
   const claims = [];
   let section = '';
   for (const [i, raw] of strip(text).split('\n').entries()) {
@@ -239,7 +274,7 @@ function claimsFrom(text, ctx) {
         claims.push({ form: 'control-exercised', subject: m[3], resolver: 'control', line: i + 1, ctx });
       continue;
     }
-    if ((m = line.match(REPORT_ROW))) {
+    if ((m = line.match(REPORT_ROW) || line.match(CONTROL_ROW) || line.match(VERDICT_NOTE))) {
       /* THE RESCUE. The id here is a label in the first column of a report; the
          subject is whatever the row goes on to name, and the loop below picks
          that up on its own. Reading this id as a transform is exactly the
@@ -265,7 +300,7 @@ function claimsFrom(text, ctx) {
 }
 
 /* -------------------------------------------------------------- resolvers */
-function resolvers(root, evidenceFile) {
+function resolvers(root, evidenceFile, repositories = REPOS) {
   const dir = path.dirname(path.join(root, evidenceFile));
   const near = name => [path.join(dir, '..', name), path.join(dir, name)].find(p => fs.existsSync(p)) || null;
   const buildPath = near('build.mjs');
@@ -326,6 +361,19 @@ function resolvers(root, evidenceFile) {
                  : [false, `no ${f} beside ${path.relative(root, path.join(dir, '..'))}, in ` +
                            `${path.relative(root, dir)}, or at the repository root`];
     },
+    'repository-path': (subject, claim) => {
+      const { repository: name, file } = claim;
+      const shortName = name.replace(/^MattRoper1977\//i, '');
+      const canonical = ({ Site: 'mattroper1977.github.io', Apps: 'Matt-s-Apps-' })[shortName] || shortName;
+      const repo = repositories.find(r => r.name === canonical);
+      if (!repo || !repo.present)
+        return ['unresolved', `source repository ${name} is unknown or not checked out`];
+      const resolved = path.resolve(repo.root, file);
+      const relative = path.relative(repo.root, resolved);
+      if (path.isAbsolute(file) || relative === '..' || relative.startsWith('../'))
+        return ['unresolved', `source path ${file} is not relative to ${name}`];
+      return [fs.existsSync(resolved), `${name}/${file}`];
+    },
     path: p => [fs.existsSync(path.join(root, p)), p],
     route: r => [fs.existsSync(path.join(root, r.replace(/^\/|\/$/g, ''), 'index.html')), `${r}index.html`],
     none: () => [null, null],
@@ -334,7 +382,7 @@ function resolvers(root, evidenceFile) {
 }
 
 /* ------------------------------------------------------------------ sweep */
-function forward(root, repoName, present = true) {
+function forward(root, repoName, present = true, repositories = REPOS) {
   const rows = [];
   if (!present) {
     rows.push({ dir: 'forward', repo: repoName, file: '—', subject: root, form: '—',
@@ -352,7 +400,7 @@ function forward(root, repoName, present = true) {
   for (const f of files) {
     const text = readIf(path.join(root, f));
     if (text === null) continue;
-    const R = resolvers(root, f);
+    const R = resolvers(root, f, repositories);
     const claims = claimsFrom(text, f);
     if (!claims.length) {
       rows.push({ dir: 'forward', repo: repoName, file: f, subject: '(nothing)', form: '—',
@@ -368,7 +416,7 @@ function forward(root, repoName, present = true) {
       const key = `${c.form} ${c.subject}`;
       if (seen.has(key)) continue;
       seen.add(key);
-      const [ok, where] = R[c.resolver](c.subject);
+      const [ok, where] = R[c.resolver](c.subject, c);
       rows.push({
         dir: 'forward', repo: repoName, file: f, subject: c.subject, form: c.form, line: c.line,
         verdict: ok === 'unmatched' ? 'NO FORM MATCHED'
@@ -613,6 +661,87 @@ function selfTest() {
   execFileSync('git', ['-C', root, 'commit', '-qm', 'restore']);
   check('restored: unresolved back to 0',
         forward(root, 'FIXTURE', true).filter(r => /^UNRESOLVED/.test(r.verdict)).length === 0);
+
+  console.log('\n§4.6 ARCHIVED REPORTS — new forms must resolve subjects and retain unknown rows');
+  const archive = ev('AUTHORED-FIXTURE_archive.json');
+  const transcript = ev('AUTHORED-FIXTURE_transcript.txt');
+  const missingPilot = 'tools/kit/pilot-missing.html';
+  const missingSource = 'Unit with spaces/Source (2).html';
+  const missingLogPath = 'tools/kit/log-missing.mjs';
+  const command = stdout => ({ name: 'controls', status: 0, signal: null, stdout, stderr: '' });
+  const archiveDocument = {
+    pilot: missingPilot, checks: [{ status: 'PASS' }],
+    classification_counts: { 'FILTER-DROPPED': 0 },
+    namedRoute: '/absent-route/',
+    rows: [
+      { source_repository: 'Lessons', source_path: missingSource },
+      { source_repository: 'Site', source_path: 'site-only.html' },
+      { source_repository: 'MattRoper1977/Lessons', source_path: missingSource },
+    ],
+    runs: [command(`control planted: RED; exit 1; PASS\nCHECK PASS ${missingLogPath}\n`)],
+  };
+  fs.writeFileSync(archive, JSON.stringify(archiveDocument, null, 2));
+  fs.writeFileSync(transcript,
+    'viewport planted: RED; exit 1; PASS\n' +
+    'viewport removed: GREEN; exit 0; PASS\n' +
+    'dynamic function: INCONCLUSIVE; exit 2; PASS\n' +
+    'PLACEHOLDER_SELF_TEST PASS; restoration proved\n' +
+    'UNCHANGED: homepage retains its original hash.\n' +
+    `file planted: RED; exit 1; PASS\nUNCHANGED: ${missingLogPath}\n`);
+  execFileSync('git', ['-C', root, 'add', '-A']);
+  const siteRoot = path.join(tmp, 'site');
+  fs.mkdirSync(siteRoot);
+  fs.writeFileSync(path.join(siteRoot, 'site-only.html'), 'site subject');
+  const fixtureRepos = [
+    { name: 'Lessons', root, present: true },
+    { name: 'mattroper1977.github.io', root: siteRoot, present: true },
+  ];
+  const archiveRows = () => forward(root, 'FIXTURE', true, fixtureRepos)
+    .filter(r => /AUTHORED-FIXTURE_(archive|transcript)\./.test(r.file));
+  let parsed = archiveRows();
+  const missing = [missingPilot, `Lessons/${missingSource}`, `MattRoper1977/Lessons/${missingSource}`, missingLogPath, '/absent-route/'];
+  for (const subject of missing)
+    check(`absent archived subject is STALE: ${subject}`,
+      parsed.some(r => r.subject === subject && /^STALE/.test(r.verdict)));
+  check('Site source alias resolves in the named repository',
+    parsed.some(r => r.subject === 'Site/site-only.html' && r.verdict === 'SUBJECT EXISTS'));
+  check('typed JSON and all three transcript forms parse without dropping paths',
+    parsed.every(r => !/NO FORM|UNRESOLVED/.test(r.verdict)) &&
+    parsed.filter(r => r.form === 'report-row').length >= 6 &&
+    parsed.some(r => r.file.endsWith('transcript.txt') && r.subject === missingLogPath && /^STALE/.test(r.verdict)));
+  for (const file of [missingPilot, missingSource, missingLogPath, 'absent-route/index.html']) {
+    fs.mkdirSync(path.dirname(path.join(root, file)), { recursive: true });
+    fs.writeFileSync(path.join(root, file), 'restored');
+  }
+  parsed = archiveRows();
+  for (const subject of missing)
+    check(`restored archived subject exists: ${subject}`,
+      parsed.some(r => r.subject === subject && r.verdict === 'SUBJECT EXISTS') &&
+      !parsed.some(r => r.subject === subject && /^STALE/.test(r.verdict)));
+
+  /* A known record beside an unknown assertion must not swallow the latter. */
+  archiveDocument.runs[0].stdout += 'unknown result: PASS\n';
+  archiveDocument.runs[0].stderr = 'unmodelled error: FAIL\n';
+  archiveDocument.rows.push({ source_repository: 'Unrecognised', source_path: missingSource });
+  archiveDocument.rows.push({ source_repository: 'Apps', source_path: missingSource });
+  fs.writeFileSync(archive, JSON.stringify(archiveDocument, null, 2));
+  parsed = archiveRows();
+  check('unknown stdout and stderr assertions both remain NO FORM MATCHED',
+    parsed.filter(r => r.verdict === 'NO FORM MATCHED').length === 2);
+  for (const name of ['Unrecognised', 'Apps'])
+    check(`unknown or absent repository is UNRESOLVED, not STALE: ${name}`,
+      parsed.some(r => r.subject === `${name}/${missingSource}` && /^UNRESOLVED/.test(r.verdict)));
+  fs.writeFileSync(archive, JSON.stringify({ status: 'PASS', note: 'no subject' }, null, 2));
+  check('subjectless JSON is still NO FORM MATCHED',
+    archiveRows().some(r => r.file.endsWith('archive.json') && r.verdict === 'NO FORM MATCHED'));
+  fs.writeFileSync(archive, JSON.stringify({ name: 'not a typed run', stdout: 'unknown: PASS' }, null, 2));
+  check('incomplete command envelope is still NO FORM MATCHED',
+    archiveRows().some(r => r.file.endsWith('archive.json') && r.verdict === 'NO FORM MATCHED'));
+  archiveDocument.runs[0] = command(`CHECK PASS ${missingLogPath}\n`);
+  archiveDocument.rows.splice(3);
+  fs.writeFileSync(archive, JSON.stringify(archiveDocument, null, 2));
+  check('restoring report shape clears unknown rows and leaves no stale subjects',
+    archiveRows().every(r => !/NO FORM|UNRESOLVED|STALE/.test(r.verdict)));
 
   console.log('\n§4.4 the inverse direction still runs');
   const inv = inverse();
