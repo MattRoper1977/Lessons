@@ -92,7 +92,7 @@ function renderHub(){
   $('#added-h').textContent=w?COPY.added:COPY.addedFallback;
   const from=w?w.start:H.sixtyDaysAgo();
   const recent=rows.filter(r=>r.added&&r.added>=from&&r.added<=H.today()).sort((a,b)=>b.added.localeCompare(a.added)||String(a.title).localeCompare(String(b.title))).slice(0,3);
-  $('#added-rail').innerHTML=recent.map(r=>`<a class="acard" href="${esc(safeHref(r._path))}" data-resource-path="${esc(r._path)}"><span class="when">${esc(fmtDay(r.added))}</span><h3>${esc(r.title)}</h3><span class="chips">${badge(r._fmt)}</span><span class="sub">${esc(String(r.subject))}</span></a>`).join('');
+  $('#added-rail').innerHTML=recent.map(r=>`<a class="acard" href="${esc(safeHref(r._path))}" data-resource-path="${esc(r._path)}"><span class="when">${esc(fmtDay(r.added))}</span><h3>${esc(H.displayTitle(r))}</h3><span class="chips">${badge(r._fmt)}</span><span class="sub">${esc(String(r.subject))}</span></a>`).join('');
   $('#added').hidden=!recent.length;
   const cards=H.cardsFromRows(rows);
   $('#scards').innerHTML=cards.map(subjectCard).join('');
@@ -106,7 +106,7 @@ function renderFlat(p){
   const view=p.get('view')||'';
   $('#browse').hidden=true;$('#results').hidden=false;
   const recentEl=$('#lesson-recent');
-  if(view==='saved'){const rec=H.state.recent.map(f=>H.state.rows.find(r=>r._path===f)).filter(Boolean).slice(0,4);recentEl.hidden=!rec.length;recentEl.innerHTML=rec.length?`<h2>Recently opened</h2><div>${rec.map(r=>`<a href="${esc(safeHref(r._path))}" data-resource-path="${esc(r._path)}">${esc(r.title)}</a>`).join('')}</div>`:'';}else{recentEl.hidden=true;recentEl.innerHTML='';}
+  if(view==='saved'){const rec=H.state.recent.map(f=>H.state.rows.find(r=>r._path===f)).filter(Boolean).slice(0,4);recentEl.hidden=!rec.length;recentEl.innerHTML=rec.length?`<h2>Recently opened</h2><div>${rec.map(r=>`<a href="${esc(safeHref(r._path))}" data-resource-path="${esc(r._path)}">${esc(H.displayTitle(r))}</a>`).join('')}</div>`:'';}else{recentEl.hidden=true;recentEl.innerHTML='';}
   const empty=view==='saved'?'<p class="status">No saved lessons match these filters. Use Save on any lesson you want to keep.</p>':'<p class="status">No matches — try fewer words or clear a filter.</p>';
   $('#cards').innerHTML=rows.length?rows.map(card).join(''):empty;
   const st=$('#status');st.replaceChildren();st.append(document.createTextNode(`Showing ${rows.length} matching resources.`));
@@ -124,7 +124,7 @@ function setParams(mutate){const p=params();mutate(p);try{history.replaceState(n
 $('#search').addEventListener('input',()=>setParams(p=>{const q=$('#search').value.trim();if(q)p.set('q',q);else p.delete('q');}));
 document.addEventListener('click',e=>{
   const v=e.target.closest('button[data-view]');if(v){setParams(p=>{if(p.get('view')===v.dataset.view)p.delete('view');else p.set('view',v.dataset.view);});return;}
-  if(e.target.closest('[data-clear-filters]')){$('#search').value='';setParams(p=>{['q','format','view','added','subject','pathway','year','collection','type','term','style'].forEach(k=>p.delete(k));});$('#search').focus();return;}
+  if(e.target.closest('[data-clear-filters]')){$('#search').value='';setParams(p=>{['q','format','view','added','subject','pathway','unit','year','collection','type','term','style'].forEach(k=>p.delete(k));});$('#search').focus();return;}
   const a=e.target.closest('a.tile,#added-all');if(a&&a.origin===location.origin){e.preventDefault();const u=new URL(a.href);setParams(p=>{['q','format','view','added'].forEach(k=>p.delete(k));u.searchParams.forEach((val,k)=>p.set(k,val));});window.scrollTo({top:0,behavior:H.reduceMotion()?'auto':'smooth'});$('#status').setAttribute('tabindex','-1');$('#status').focus();}
 });
 window.addEventListener('popstate',render);
