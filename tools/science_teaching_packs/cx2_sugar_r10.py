@@ -121,7 +121,7 @@ def refresh_sums(check):
     return changed
 
 
-REVIEW_BASE = 'bb8d7c79e6ff1157c30969e74ad8b603baa17011'   # Lessons main after #541; the Sugar bytes at review
+REVIEW_BASE = 'a8b3c9689d9b1d74e56a70f065773bf3942b63c9'   # main after Diffusion #546 merged (CX2 §3)
 MEMBERS = (LESSON, TEACHER_DOCX, TEACHER_PDF, SUMS)
 VAR, NAME, MARK = 'SUGAR_R10_REPLACEMENTS', 'Sugar R10 hygiene', 'SUGAR R10 HYGIENE'
 
