@@ -390,7 +390,8 @@ def supersession_controls(root):
     if first is None:
         return rows
     name, files = first
-    rel = sorted(owned_members(name, files))[0]
+    owned = owned_members(name, files)
+    rel = sorted(owned)[0]
     pins = pin_map(root)
     before = git_before_entries(root, 'HEAD', [rel])
     partial = [('M', rel)]
@@ -400,7 +401,7 @@ def supersession_controls(root):
     check('A later declared transaction retires the earlier claim on the same path',
           not replacement_errors(name, files, root, partial, pins, before, owners))
     check('The retired path drops out of the earlier transaction\'s controls',
-          rel not in owned_members(name, files, owners) and len(owned_members(name, files, owners)) == len(files) - 1)
+          rel not in owned_members(name, files, owners) and len(owned_members(name, files, owners)) == len(owned) - 1)
     later = {rel: {'beforeGitBlob': before[rel][2], 'afterSha256': sha(root / rel), 'bytes': (root / rel).stat().st_size}}
     pins_later = dict(pins); pins_later[rel] = later[rel]['afterSha256']
     check('The later transaction judges the superseded path itself',
