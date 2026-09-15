@@ -655,8 +655,7 @@ button[aria-disabled=true]{opacity:.75;cursor:default}.arrival-access{font-size:
   const data = window.CLASSIC_LESSON || {};
   let currentSlide = 0;
   let tick = null;
-  let returnFocus = null;
-  let modalWasRunning = false;
+  const modalState = new WeakMap();
   const remaining = new Map();
   const levels = ['supported', 'standard', 'stretch'];
   const printSelectors = '.print-section,.print-resource,.print-sheet';
@@ -737,23 +736,31 @@ button[aria-disabled=true]{opacity:.75;cursor:default}.arrival-access{font-size:
     button.disabled=shown>=total;
     if(button.disabled)button.textContent='✓ All revealed';
   }
+  function finishModal(modal){
+    const state=modalState.get(modal);if(!state)return;
+    modalState.delete(modal);
+    if(document.querySelector('.classic-dialog[open]'))return;
+    document.documentElement.classList.remove('classic-modal-open');
+    if(state.returnFocus?.isConnected&&!state.returnFocus.closest('[inert]'))state.returnFocus.focus({preventScroll:true});
+    if(state.wasRunning)startTimer();
+  }
   function openModal(id){
-    const modal=byId(id);if(!modal)return;
-    returnFocus=document.activeElement;
-    modalWasRunning=Boolean(tick);pauseTimer();
-    document.documentElement.classList.add('classic-modal-open');
+    const modal=byId(id);if(!modal||document.querySelector('.classic-dialog[open]'))return;
+    modalState.set(modal,{returnFocus:document.activeElement,wasRunning:Boolean(tick)});
+    pauseTimer();document.documentElement.classList.add('classic-modal-open');
     modal.showModal();
     const focus=modal.querySelector('[data-action=close]')||modal.querySelector('button, input, select, textarea, a[href]');if(focus)focus.focus();
   }
-  function closeModal(id){const modal=byId(id);if(modal&&modal.open)modal.close();}
+  function closeModal(id){
+    const modal=byId(id);if(!modal||!modal.open)return;
+    modal.close();finishModal(modal);
+  }
   document.querySelectorAll('.classic-dialog').forEach(dialog=>{
-    dialog.addEventListener('close',()=>{
-      document.documentElement.classList.remove('classic-modal-open');
-      const resume=modalWasRunning;modalWasRunning=false;
-      if(returnFocus&&returnFocus.isConnected&&!returnFocus.closest('[inert]'))returnFocus.focus({preventScroll:true});
-      if(resume)startTimer();
-    });
-    dialog.addEventListener('click',event=>{if(event.target===dialog)dialog.close();});
+    // Native close events are queued. Complete our own closes synchronously so
+    // an old dialog cannot steal focus or restart the clock after another opens.
+    dialog.addEventListener('close',()=>{if(!dialog.open)finishModal(dialog);});
+    dialog.addEventListener('cancel',event=>{event.preventDefault();closeModal(dialog.id);});
+    dialog.addEventListener('click',event=>{if(event.target===dialog)closeModal(dialog.id);});
   });
   function showTABrief(){
     const stage=slides[currentSlide];
@@ -824,7 +831,7 @@ button[aria-disabled=true]{opacity:.75;cursor:default}.arrival-access{font-size:
     if(action==='print')printPack(button.dataset.level||'standard');
   }));
   const picker=byId('slide-picker');
-  if(picker){slides.forEach((slide,index)=>{const option=document.createElement('option');option.value=String(index);option.textContent=(index+1)+'. '+(slide.dataset.title||'Slide');picker.appendChild(option);});picker.addEventListener('change',()=>{showSlide(Number(picker.value),false);returnFocus=slides[currentSlide].querySelector('h1,h2');returnFocus.tabIndex=-1;modalWasRunning=false;closeModal('tools-dialog');});}
+  if(picker){slides.forEach((slide,index)=>{const option=document.createElement('option');option.value=String(index);option.textContent=(index+1)+'. '+(slide.dataset.title||'Slide');picker.appendChild(option);});picker.addEventListener('change',()=>{showSlide(Number(picker.value),false);const heading=slides[currentSlide].querySelector('h1,h2');heading.tabIndex=-1;modalState.set(byId('tools-dialog'),{returnFocus:heading,wasRunning:false});closeModal('tools-dialog');});}
   Object.assign(window,{mbmShowSlide:showSlide,showSlide,nextSlide,prevSlide,switchLevel,v5RevealNext,showTABrief,showColdCall,printArm,printPack,printSection,pauseTimer,startTimer,autoTimerToggle,autoTimerReset,downloadNotes,openModal,closeModal});
   Object.defineProperty(window,'classicCurrentSlide',{get:()=>currentSlide});
   const startMatch=location.hash.match(/^#slide-(\d+)$/);printArm('standard');showSlide(startMatch?Number(startMatch[1])-1:0,false);window.addEventListener('hashchange',()=>{const match=location.hash.match(/^#slide-(\d+)$/);if(match)showSlide(Number(match[1])-1);});

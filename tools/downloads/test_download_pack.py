@@ -95,6 +95,32 @@ def controls():
         put("subject/lessons/start.html", '<script id="grow-hud-loader">(function(){function add(src,onfail){var s=document.createElement("script");s.src=src;if(onfail)s.onerror=onfail;document.body.appendChild(s);}add("/hud.js",function(){add("hud.js");});})();</script>')
         c = build(repo, definition())
         assert_control("real-grow-helper-loader-detected", c['status'] == 'REFUSED' and len([e for e in c['dependencies'] if e['kind'] == 'grow-hud-loader']) == 2)
+    # Keep every historically repaired route under real navigation coverage,
+    # even where an approved lesson has replaced its old Guidance panel.
+    from prepare_pack_browser import guidance_kind, validate_guidance_census, SUGAR_GUIDANCE
+    from lxml import html
+    source_root=Path(__file__).resolve().parents[2]
+    census=json.loads((source_root/'_sownb/vb/evidence/download_packs/guidance_source_repair.json').read_text())
+    identities=[row['file'] for row in census['rows']]
+    validate_guidance_census(identities)
+    results.append({'id':'all-original-guidance-identities-retained','pass':True})
+    for name,changed in [
+        ('missing-guidance-route-refused',identities[:-1]),
+        ('same-count-wrong-guidance-route-refused',identities[:-1]+['Science_Teesside/unreviewed.html']),
+        ('duplicate-guidance-route-refused',identities[:-1]+[identities[0]]),
+    ]:
+        try:validate_guidance_census(changed)
+        except ValueError:results.append({'id':name,'pass':True})
+        else:raise AssertionError(name)
+    candidate=(source_root/SUGAR_GUIDANCE).read_bytes()
+    assert guidance_kind(SUGAR_GUIDANCE,candidate)=='classic-dialog'
+    results.append({'id':'sugar-replacement-remains-in-guidance-census','pass':True})
+    for selector in ['//button[@data-action="ta"]','//button[@id="next-slide"]','//button[@id="previous-slide"]','//dialog[@id="ta-dialog"]//button[@data-action="close"]']:
+        page=html.fromstring(candidate)
+        node=page.xpath(selector)[0];node.getparent().remove(node)
+        try:guidance_kind(SUGAR_GUIDANCE,html.tostring(page))
+        except ValueError:results.append({'id':'missing-sugar-control-refused:'+selector,'pass':True})
+        else:raise AssertionError('Missing Sugar control accepted: '+selector)
     return results
 
 

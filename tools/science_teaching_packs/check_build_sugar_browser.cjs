@@ -48,8 +48,19 @@ const check=(name,value)=>{assert.ok(value,name);report.checks.push(name)};
   await page.keyboard.press('Escape');
   check('TA Escape restores invoking control',await page.locator('[data-action="ta"]').evaluate(e=>e===document.activeElement));
   await page.locator('[data-action="tools"]').press('Enter');
+  check('Tools dialog opens after TA Escape',await page.locator('#tools-dialog').evaluate(e=>e.open));
+  check('Tools dialog focuses Close',await page.locator('#tools-dialog [data-action="close"]').evaluate(e=>e===document.activeElement));
   await page.locator('#slide-picker').selectOption('4');
   check('Tools slide jump focuses new heading',await page.locator('#slide-5 h2').evaluate(e=>e===document.activeElement));
+  // Cross a queued native close event before reopening the same dialog.
+  for(let i=0;i<3;i++){
+   await page.locator('[data-action="tools"]').press('Enter');
+   await page.keyboard.press('Escape');
+   await page.locator('[data-action="tools"]').press('Enter');
+   await page.waitForFunction(()=>document.querySelector('#tools-dialog')?.open&&document.activeElement===document.querySelector('#tools-dialog [data-action="close"]'));
+   await page.locator('#tools-dialog [data-action="close"]').press('Enter');
+   check('Repeated Tools close preserves focus '+i,await page.locator('[data-action="tools"]').evaluate(e=>e===document.activeElement));
+  }
   for(const letter of ['A','B','C','D']){
    await page.locator(`[data-item="${letter}"]`).press('Enter');
    await page.locator(`[data-zone="${letter}"] [data-place-here]`).press('Enter');
@@ -99,6 +110,6 @@ const check=(name,value)=>{assert.ok(value,name);report.checks.push(name)};
   const fallback=await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:900}});const nojs=await fallback.newPage();await nojs.goto(url);
   check('No-script lesson remains readable',await nojs.locator('#slide-8').isVisible());await nojs.screenshot({path:path.join(out,'no-script.png')});await fallback.close();
   report.status='PASS';
- }catch(error){report.status='FAIL';report.error=String(error);report.pageErrors=errors;await page.screenshot({path:path.join(out,'failure.png')}).catch(()=>{});throw error;
- }finally{fs.writeFileSync(path.join(out,'report.json'),JSON.stringify(report,null,2)+'\n');await browser.close();}
+ }catch(error){report.status='FAIL';report.error=String(error);report.pageErrors=errors;report.failureState=await page.evaluate(()=>({focus:document.activeElement?.outerHTML,dialogs:[...document.querySelectorAll('dialog')].map(e=>({id:e.id,open:e.open,display:getComputedStyle(e).display})),picker:document.querySelector('#slide-picker')?.getBoundingClientRect().toJSON()})).catch(()=>null);await page.screenshot({path:path.join(out,'failure.png')}).catch(()=>{});throw error;
+ }finally{console.log('EDU_Q1_REPORT '+JSON.stringify(report));fs.writeFileSync(path.join(out,'report.json'),JSON.stringify(report,null,2)+'\n');await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1});

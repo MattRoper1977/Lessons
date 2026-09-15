@@ -23,3 +23,13 @@ Inline scripts and the new browser check parse successfully; whitespace checks p
 Do not merge this draft. Complete the PowerPoint/slide PDF and current companion mapping, check browser and print evidence, resolve the actual source-admission requirements with exact changes, and reconcile relevant canonical discovery before promotion. Screen-reader acceptance remains unperformed, not waived. Preserve GROW W3B and the shared LAUNCH guide when their pilots are reached.
 
 Next boundary: routine CI monitoring on Light, then pause for High before screenshot review or fixes. No later pass starts while paused.
+
+## 15 September — first CI repair candidate
+
+Initial Science run 34953613643 timed out at hidden #slide-picker. Prepared per-dialog state and synchronous Escape/Close cleanup to remove a queued-close focus race. Added repeated keyboard reopen checks and failure-state reporting; browser confirmation remains pending. The original artifact download returned HTTP 403, so its screenshots and PDF evidence could not be reviewed here.
+
+FieldOps archive preparation excluded Sugar after its old Guidance marker was replaced. The revised preparation keeps exactly the same 47 source identities, checked against their sorted path digest, and requires actual teacher-dialog/Next/Previous controls. The offline browser now clicks the new dialog, closes it, checks focus and uses Next/Previous at both original widths. Other 46 routes retain their existing interaction checks. Forty packaging controls pass, including missing, substituted and duplicate route refusals and removal of each Sugar control. Inline lesson and changed browser scripts parse; git diff --check passes.
+
+All initial runs have now finished. Cross-estate browser-matrix passed; static-contract failed on the intentionally changed Sugar source and workflow. FieldOps seven jobs passed, archive job failed. Exact source admission, affected test-tool admission, both catalogue gate copies and immutable publisher reconciliation remain pending until accepted final source/companions. Do not waive or re-pin around these failures. This draft remains unready for release.
+
+Next: routine new-head CI monitoring on Light, then High for remaining diagnosis, evidence review and slide companions. No merge/publication or later-pass start. PLAY-BRAND-20260915 and all holds remain in force.
