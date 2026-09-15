@@ -1527,6 +1527,25 @@ def without_tags(rows: list) -> list:
     return [{k: v for k, v in row.items() if k not in ADDITIVE_TAG_KEYS} for row in rows]
 
 
+# EDU-Q1 Sugar: individually reviewed source, companions and their proof tools.
+REVIEWED_PATHS += (
+    # Already admitted before EDU-Q1; keep the existing sweep pin on regeneration.
+    'tools/stale_evidence_sweep.mjs',
+    'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html',
+    'Science_Teesside/Teaching_Packs/BUILD/lessons/W8A/BUILD_Science_Autumn1_W8A_Sugar_Evidence_Read_The_Label.pdf',
+    'Science_Teesside/Teaching_Packs/BUILD/lessons/W8A/BUILD_Science_Autumn1_W8A_Sugar_Evidence_Read_The_Label.pptx',
+    'Science_Teesside/Teaching_Packs/BUILD/lessons/W8A/BUILD_Science_Autumn1_W8A_Sugar_Evidence_Read_The_Label_Pupil.docx',
+    'Science_Teesside/Teaching_Packs/BUILD/lessons/W8A/BUILD_Science_Autumn1_W8A_Sugar_Evidence_Read_The_Label_Pupil.pdf',
+    'Science_Teesside/Teaching_Packs/BUILD/lessons/W8A/BUILD_Science_Autumn1_W8A_Sugar_Evidence_Read_The_Label_Teacher.docx',
+    'Science_Teesside/Teaching_Packs/BUILD/lessons/W8A/BUILD_Science_Autumn1_W8A_Sugar_Evidence_Read_The_Label_Teacher.pdf',
+    'tools/downloads/offline_pack_browser.cjs',
+    'tools/downloads/prepare_pack_browser.py',
+    'tools/downloads/test_download_pack.py',
+    'tools/science_teaching_packs/check_build_sugar_browser.cjs',
+    'tools/science_teaching_packs/check_build_sugar_pdfs.py',
+)
+
+
 def pack_rows_for(lessons: Path, rows: list) -> list:
     """UX2 D3 (2026-09-08): the companion-pack entries are the catalogue's tail,
     after the reviewed hub rows. They are not a second hand-kept literal: they
@@ -1579,6 +1598,10 @@ def pin(lessons: Path, apps: Path, *, check: bool) -> dict:
     originals = [p.read_text("utf-8") for p in gates]
     if originals[0] != originals[1]:
         raise ValueError("gate copies differ; reconcile their reviewed logic before pinning. Nothing written")
+    gate = module(gates[0])
+    omitted = set(gate.CATALOGUE_PINS['files']) - set(REVIEWED_PATHS)
+    if omitted:
+        raise ValueError('reviewed-path list omits existing admissions; reconcile explicitly before pinning: ' + ', '.join(sorted(omitted)))
     rows = json.loads((lessons / "resources.json").read_text("utf-8"))
     pack_rows = pack_rows_for(lessons, rows)
     errors = preserved_rows_errors(rows, pack_rows)
@@ -1587,7 +1610,6 @@ def pin(lessons: Path, apps: Path, *, check: bool) -> dict:
     order = module(lessons / "tools/catalogue/build_lesson_order.py")
     if json.loads((lessons / "assets/catalogue/lesson-order.json").read_text()) != order.derive():
         raise ValueError("Part L lesson order differs from its accepted evidence projection")
-    gate = module(gates[0])
     files = {path: hashlib.sha256((lessons / path).read_bytes()).hexdigest() for path in REVIEWED_PATHS}
     text = (lessons / "index.html").read_text("utf-8")
     pins = {"visible_body_sha256": hashlib.sha256(gate.normalized_visible_body(text, "lessons").encode("utf-8")).hexdigest(), "files": files}

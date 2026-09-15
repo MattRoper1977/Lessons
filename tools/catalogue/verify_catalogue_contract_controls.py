@@ -17,6 +17,7 @@ import subprocess
 import tempfile
 
 from pin_catalogue_contract import GATE, ORIGINAL_ROW_COUNT, SHELF_ROWS, pin, preserved_rows_errors
+import pin_catalogue_contract as catalogue_pin_owner
 
 
 def load(path):
@@ -96,10 +97,14 @@ def run(lessons: Path, apps: Path, canonical: Path) -> list[dict]:
 
         for owner, kind in ((lroot, "lessons"), (aroot, "apps")):
             check(kind + " admits the exact reviewed caller through its named boundary", not gate.boundary_errors({gate.PUBLICATION_CALLER_PATH}, kind))
-            caller_trigger = ("      - " + gate.PUBLICATION_CALLER_PATH + "\n").encode()
-            mutate(gate.PUBLICATION_GATE_WORKFLOW_PATH, lambda b: b.replace(caller_trigger, b"", 1), kind + " rejects missing pull-request caller trigger", root=owner, kind=kind)
-            mutate(gate.PUBLICATION_GATE_WORKFLOW_PATH, lambda b: b"".join(b.rsplit(caller_trigger, 1)), kind + " rejects missing push caller trigger", root=owner, kind=kind)
-            mutate(gate.PUBLICATION_GATE_WORKFLOW_PATH, lambda b: b.replace(caller_trigger, b"      # " + caller_trigger.strip() + b"\n", 1), kind + " rejects a comment masquerading as a caller trigger", root=owner, kind=kind)
+            workflow_bytes = (owner / gate.PUBLICATION_GATE_WORKFLOW_PATH).read_bytes()
+            caller_pattern = rb"(?m)^      - (?P<quote>['\"]?)" + re.escape(gate.PUBLICATION_CALLER_PATH.encode()) + rb"(?P=quote)\r?\n"
+            caller_triggers = [match.group(0) for match in re.finditer(caller_pattern, workflow_bytes)]
+            check(kind + " trigger controls locate both actual YAML list entries", len(caller_triggers) == 2)
+            first_trigger, last_trigger = caller_triggers
+            mutate(gate.PUBLICATION_GATE_WORKFLOW_PATH, lambda b: b.replace(first_trigger, b"", 1), kind + " rejects missing pull-request caller trigger", root=owner, kind=kind)
+            mutate(gate.PUBLICATION_GATE_WORKFLOW_PATH, lambda b: b"".join(b.rsplit(last_trigger, 1)), kind + " rejects missing push caller trigger", root=owner, kind=kind)
+            mutate(gate.PUBLICATION_GATE_WORKFLOW_PATH, lambda b: b.replace(first_trigger, b"      # " + first_trigger.strip() + b"\n", 1), kind + " rejects a comment masquerading as a caller trigger", root=owner, kind=kind)
             mutate(gate.PUBLICATION_CALLER_PATH, lambda b: b.replace(b"contents: read", b"contents: write", 1), kind + " rejects broader publication permissions", root=owner, kind=kind)
             mutate(gate.PUBLICATION_CALLER_PATH, lambda b: b + b"\n  unreviewed-job:\n    runs-on: ubuntu-latest\n", kind + " rejects an extra publication job", root=owner, kind=kind)
             mutate(gate.PUBLICATION_CALLER_PATH, lambda b: re.sub(rb"builder_ref: [0-9a-f]{40}", b"builder_ref: main", b, count=1), kind + " rejects a floating or mismatched builder", root=owner, kind=kind)
@@ -155,6 +160,18 @@ def run(lessons: Path, apps: Path, canonical: Path) -> list[dict]:
         finally:
             manifest.write_bytes(manifest_bytes)
             for path, original in zip((lroot / GATE, aroot / GATE), estate): path.write_bytes(original)
+        retained = 'tools/stale_evidence_sweep.mjs'
+        reviewed_paths = catalogue_pin_owner.REVIEWED_PATHS
+        check("Omission control targets an existing admitted file", retained in reviewed_paths and retained in gate.CATALOGUE_PINS['files'])
+        try:
+            catalogue_pin_owner.REVIEWED_PATHS = tuple(path for path in reviewed_paths if path != retained)
+            refused = False
+            try: pin(lroot, aroot, check=False)
+            except ValueError as error: refused = 'omits existing admissions' in str(error) and retained in str(error)
+            check("Re-pinning refuses a silently omitted existing admission", refused)
+            check("Omitted-admission refusal changes neither disposable gate", estate == [(lroot / GATE).read_bytes(), (aroot / GATE).read_bytes()])
+        finally:
+            catalogue_pin_owner.REVIEWED_PATHS = reviewed_paths
         (aroot / GATE).write_bytes(estate[1] + b"\n# divergence\n")
         divergent = [(lroot / GATE).read_bytes(), (aroot / GATE).read_bytes()]
         rejected = False
