@@ -71,9 +71,13 @@ python3 tools/grow_resources/admit_w3_friction.py --check   # transaction, pins,
 
 The eight pupil/teacher DOCX/PDF files keep the hashes recorded in `GROW_W3_FEEDBACK_2026-09-15.md`. Pack record and resource-page hashes are in the commit and `SHA256SUMS.txt`.
 
+## 6a. Human assistive-technology listening pass (R1, CX2)
+
+Reviewer: Matt. Device: phone. Date: 2026-09-15. Result reported by Matt: "I've checked the sound — it works". Candidate hash: `508f1967b6481671dafb149d7177b620b194074312cee0dbdd30553c166b634a` (the full hash of `Science_Teesside/Grow/SCI_G_W3_Friction.html` in section 6). OS, browser and assistive technology: not stated by Matt. Accepted under CX2 R1 in the same shape as Sugar's; nothing further owed. Original RESULTS.md Not-run rows untouched.
+
 ## 7. Still open before any release
 
-1. **Human assistive-technology listening pass on Friction** by Matt or an accessibility reviewer, naming the real OS, browser, assistive technology and the exact candidate hash above. Sugar's pass does not close this.
+1. ~~Human assistive-technology listening pass~~ recorded in section 6a (CX2 R1).
 2. Immutable publisher output admission (Site registry) and the Apps gate copy, through their owners; required CI on a pull request (this branch alone triggers no PR workflows).
 3. The offline HTML companions listed in section 2 and the pre-existing static catalogue check failure on main.
 4. Merge only outside the 08:30–15:30 UK school-day hold and after every gate above; then served-file verification before calling anything live.
