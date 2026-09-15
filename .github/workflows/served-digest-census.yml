@@ -1,0 +1,94 @@
+# CX2 B2: report the digests the education publisher actually produces.
+#
+# A served digest cannot be measured from a developer container: a local run of
+# the pinned publisher reproduces every non-HTML published file exactly (PDF,
+# DOCX, PPTX, ZIP, JSON, SVG, TXT, PNG, CSS all 100%) but only 559 of 1503 HTML,
+# while main publishes green. Rather than guess a digest into an admission
+# registry, this workflow runs the publisher the way the real publication runs it
+# and prints the census for the paths you ask about.
+#
+# It builds and measures only. It writes nothing outside the runner, touches no
+# registry, deploys nothing and has no repository write permission.
+name: Served digest census
+
+on:
+  workflow_dispatch:
+    inputs:
+      builder_ref:
+        description: Site publisher commit to build with (the carrier this branch pins)
+        required: true
+      paths:
+        description: Newline- or comma-separated published paths; blank means every path that differs from origin/main
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  census:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: .sources/Lessons
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/checkout@v4
+        with:
+          repository: MattRoper1977/mattroper1977.github.io
+          ref: ${{ inputs.builder_ref }}
+          path: .sources/Site
+          persist-credentials: false
+
+      # The same pinned Apps source the education publisher uses when the
+      # Lessons caller drives it. Kept in step so the built tree matches.
+      - uses: actions/checkout@v4
+        with:
+          repository: MattRoper1977/Matt-s-Apps-
+          ref: 3ad0a7df958274e5401e8d40d0a94096be0962bc
+          path: .sources/Apps
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: python -m pip install lxml==6.0.1
+
+      - name: Build the education trees exactly as the publisher does
+        run: |
+          set -euo pipefail
+          python .sources/Site/domain-split/build_publications.py --lessons .sources/Lessons
+          python .sources/Site/domain-split/build_education.py --lessons .sources/Lessons --apps .sources/Apps
+
+      - name: Report the served digest of each requested path
+        env:
+          REQUESTED: ${{ inputs.paths }}
+        run: |
+          python - <<'PY'
+          import hashlib, os, pathlib, subprocess, json
+          tree = pathlib.Path('.sources/Site/domain-split/output/education-lessons')
+          requested = [p.strip() for p in os.environ.get('REQUESTED','').replace(',', '\n').splitlines() if p.strip()]
+          if not requested:
+              src = pathlib.Path('.sources/Lessons')
+              subprocess.run(['git','-C',str(src),'fetch','--depth','1','origin','main'], check=True)
+              out = subprocess.check_output(
+                  ['git','-C',str(src),'diff','--name-only','FETCH_HEAD...HEAD'], text=True)
+              requested = [p for p in out.split('\n') if p.strip()]
+          rows = {}
+          for rel in requested:
+              f = tree / rel
+              rows[rel] = hashlib.sha256(f.read_bytes()).hexdigest() if f.is_file() else None
+          published = {k: v for k, v in rows.items() if v}
+          skipped = sorted(k for k, v in rows.items() if not v)
+          print('=== SERVED DIGEST CENSUS ===')
+          print(json.dumps(published, indent=2, sort_keys=True))
+          print(f'\n{len(published)} published path(s) measured; {len(skipped)} not in the published tree')
+          for k in skipped:
+              print('  not published:', k)
+          pathlib.Path(os.environ['GITHUB_STEP_SUMMARY']).write_text(
+              '## Served digest census\n\n```json\n' + json.dumps(published, indent=2, sort_keys=True) + '\n```\n')
+          PY
