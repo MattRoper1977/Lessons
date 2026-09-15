@@ -63,7 +63,7 @@ async function advanceStage(page,index){
 async function periodBoundary(page,t,index){
   const boundary=page.locator('.slide').nth(index-1).locator('.period-break');
   assert.equal(await boundary.count(),1,'Period 1 has its own visible stop instruction');
-  const text=await boundary.innerText();assert.match(text,/STOP for today/);assert.ok(text.includes(t.periodDays[1]));
+  const text=await boundary.innerText();assert.match(text,/STOP for today|Stop after Lesson A/);assert.ok(text.includes(t.periodDays[1]));
 }
 async function clock(page){
   assert.equal(await slide(page).getAttribute('data-title'),'Independent Work');
@@ -113,7 +113,7 @@ async function exercise(t,viewport={width:1280,height:800},responsive=false){
     });
     await measured(id+'/independent-restart',async()=>{
       if(t.sessionCount===2){
-        await slide(page).getByRole('button',{name:/Resume period 2/i}).click();assert.equal(await current(page),independent);
+        await slide(page).getByRole('button',{name:/Resume (period 2|Lesson B)/i}).click();assert.equal(await current(page),independent);
         const text=await slide(page).innerText();assert.ok(text.includes(t.periodDays[1]));
         await periodBoundary(page,t,independent);
       }else await move(page,independent);

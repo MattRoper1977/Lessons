@@ -31,7 +31,7 @@ BOUNDARY = ROOT / '_glv3/tools/verify_change_boundary.py'
 HELPER = ROOT / 'tools/catalogue/pin_catalogue_contract.py'
 GATE = ROOT / 'tools/verify_cross_estate_unification.py'
 EVIDENCE = ROOT / 'tools/catalogue/TERM_AND_STYLE_EVIDENCE.json'
-REVIEW_BASE = '3a14e9c4d57832fed87ed588ef6f0ae4fd3d6064'   # Lessons main after #539
+REVIEW_BASE = 'ec7d34ab48eb290f9abb67b27c735b6e09b9930c'   # main after Sugar #547 merged (CX2 §4.8)
 
 LESSONS = {
     'BUILD': ['Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html'],
@@ -130,18 +130,28 @@ def repin(check):
     helper = importlib.reload(importlib.import_module('pin_catalogue_contract'))
     committed = git('show', 'HEAD:tools/verify_cross_estate_unification.py')
     apps_digest = re.search(r'"apps\.json":\s*"([0-9a-f]{64})"', committed).group(1)
+    # The stand-in's apps.json can never carry the Apps repository's digest, so the
+    # helper's own check mode would always report the manifest pin as moved. --check
+    # therefore pins in write mode, compares the gate bytes (apps digest put back) and
+    # restores the original bytes; a differing gate is the finding check mode exists for.
+    before = GATE.read_bytes()
     with tempfile.TemporaryDirectory(prefix='apps-gate-stand-in-') as temp:
         apps = Path(temp); (apps / 'tools').mkdir()
         shutil.copyfile(GATE, apps / 'tools/verify_cross_estate_unification.py')
         (apps / 'apps.json').write_bytes(b'{}')
         try:
-            result = helper.pin(ROOT, apps, check=check)
+            result = helper.pin(ROOT, apps, check=False)
         except ValueError as exc:
             raise SystemExit('[FAIL] ' + str(exc))
-    if not check:
-        after = GATE.read_text()
-        after, count = re.subn(r'("apps\.json":\s*")[0-9a-f]{64}(")', lambda m: m[1] + apps_digest + m[2], after)
-        assert count == 1
+    after = GATE.read_text()
+    after, count = re.subn(r'("apps\.json":\s*")[0-9a-f]{64}(")', lambda m: m[1] + apps_digest + m[2], after)
+    assert count == 1
+    if check:
+        GATE.write_bytes(before)
+        if after.encode() != before:
+            raise SystemExit('[FAIL] reviewed catalogue pins differ from the tree; re-run without --check')
+        result['mode'] = 'check'
+    else:
         GATE.write_text(after)
     return result
 
