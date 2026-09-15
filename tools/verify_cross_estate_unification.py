@@ -669,9 +669,11 @@ PUBLICATION_CALLER_PATH = ".github/workflows/education-pages.yml"
 # candidate. Only the caller's references and comment move.
 # Advanced 2026-09-15 (CX2 §2 Friction) to Site carrier 8cfd08b3abe08eeb79ff2139bedf07fbf536c520 on the same carrier branch:
 # the GROW W3 Friction candidate (this branch, #538) admitted beside its published rollback digests — the lesson, resource pages, GROW pack records, seven Week 3 archives, W3A/W3B natives, the hub index, lesson-order.json and the usage registry (30 pairs, nothing added or removed). Digests from a full three-repository build at this builder, qualified by a control build of main that reproduces all 4044 admitted digests. Publisher code is unchanged.
+# Advanced 2026-09-15 (CX2 §2 Friction rows) to Site carrier 17e82d701c25354719114b4fca2fc3207a9da3d8 on the same carrier branch:
+# the reviewed Science download rows (science-download-usage-additions.json, pinned by check_education_separation.py) brought to the nine Friction files whose size changed; the first publication of main acae624f stopped there after admission had passed. Registry unchanged from 8cfd08b3; no other publisher code moves.
 # Advanced 2026-09-15 (CX2 §3 Diffusion) to Site carrier 7f97cbbfba76a44e86514116eaea67bd46782274 on the same carrier branch:
-# the LAUNCH W4L1 Diffusion candidate (this branch, #546) admitted beside the published Friction digests — the lesson, LAUNCH pack records, combined worksheets and teacher guide, W4L1 natives, every LAUNCH archive, the hub index, lesson-order.json and the usage registry (38 pairs, nothing added or removed) — and its thirteen download rows reviewed to the built sizes. Digests from a full three-repository build qualified by a control build of main acae624f that reproduces all 4044 admitted digests. Publisher code is unchanged.
-PUBLICATION_CALLER_SHA256 = "ade65ef36928fc61ffc4ea659e91835957a5102a0c83cf2078c6b905d783be90"
+# the LAUNCH W4L1 Diffusion candidate (this branch, #546) admitted beside the published Friction digests (38 pairs, nothing added or removed) with its thirteen download rows reviewed; one commit on from the Friction rows carrier main pins. Publisher code is unchanged.
+PUBLICATION_CALLER_SHA256 = "859aeb47a6997d053c54e402a3fba6c731581120030c57420b0faab6e077e73b"
 # One reviewed caller digest per repository kind. detect_kind() reads the root
 # it is standing in, so this entry is only ever compared against the Apps
 # repository's own caller: the Lessons gate run and the Apps gate runs are the
@@ -770,6 +772,14 @@ ALLOWED_DIFF = {
     # lesson pull request. None of these is a studio and none can alter one.
     "UX2_LEDGER.md",
     "README.md",
+    # ORDER CX2, 2026-09-15. The same shape as the UX2 ledger: the order, its
+    # working checkpoint (appended after every material result), the lesson
+    # standard it cites and the recorded PLAY amendment. Documentation only;
+    # none of these is a studio, none is served and none can alter one.
+    "docs/orders/CX2_FINISH_2026-09-15.md",
+    "docs/orders/CX2_CHECKPOINT.md",
+    "docs/orders/LESSON_STANDARD_2026-27.md",
+    "docs/orders/PLAY_BRAND_AMENDMENT_2026-09-15.md",
     "tools/verify_lessons_chips.mjs",
     ".github/workflows/ux2-gates.yml",
     "tools/ux2/hub_gates.mjs",
