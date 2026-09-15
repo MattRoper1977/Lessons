@@ -45,6 +45,8 @@ Arrival, organiser, exit, help-prompt and review components, all stage timers an
 | All-stage acceptance (`friction_acceptance.py`) | 120 stage cases (standalone and local HTTP × 320/390/768/1280 reduced motion, 390/1280 default motion × 10 stages): zero serious/critical axe violations, no horizontal overflow; 108 keyboard transitions with heading focus (embedded models step first on stages 3, 5, 6, 7, by design); 8 enlarged cases (200 % zoom at 1280, 320 px reflow at double density, 200 % text at 1280 and 390); dark scheme and forced colours (contrast recorded, not asserted under forced colours); no media in the lesson, resource clips have controls, no autoplay, `preload="none"`; 4 no-JavaScript cases; 46 one-page prints; 6 six-page packs; zero page errors |
 | Regression suites on the final bytes | focus 162 (0 errors); arrival 24 cases, 12 one-page prints; organiser 56, exit 24, 10 prints, 32 axe runs; feedback 16/8/8/16 axe/4 prints/6 pack selections; all zero errors |
 | Decks | 22 unchanged slides pixel-identical; 10 changed/new pages reviewed; both decks open, unique shape ids, checksum-clean ZIPs |
+| GLV3 change boundary on the committed transaction (`--base origin/main --self-test`) | PASS: 28 protected changes judged, 430 controls (312 GROW W3, 81 Sugar, 37 original) |
+| Pack, source-binding, size, lesson-order and PIN1 checks | all PASS on the committed tree |
 
 Reproduce from the repository root with the installed Chromium, PyMuPDF and axe-core:
 
