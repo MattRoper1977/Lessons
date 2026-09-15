@@ -1568,6 +1568,14 @@ REVIEWED_PATHS += (
 )
 
 
+# CX2 §3 LAUNCH W4L1 Diffusion: the lesson, its native pack files, the LAUNCH pack
+# records and the original-targets ledger admitted as one reviewed replacement transaction.
+REVIEWED_PATHS += (
+    'Science_Teesside/Launch/SCI_L_W4_L1_Diffusion.html',
+    'Science_Teesside/Teaching_Packs/LAUNCH/SHA256SUMS.txt',
+)
+
+
 def pack_rows_for(lessons: Path, rows: list) -> list:
     """UX2 D3 (2026-09-08): the companion-pack entries are the catalogue's tail,
     after the reviewed hub rows. They are not a second hand-kept literal: they
