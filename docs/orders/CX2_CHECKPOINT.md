@@ -143,3 +143,31 @@ Matt supplied three concept boards. Identity checked by digest against the maste
 **Play board.** Received and recorded, but its digest does not match the approved PLAY-D2 reference, and PLAY-D2 sits after EDU-D3 in the order. Treated as a further concept, not as the approved asset; no PLAY work started and none claimed. To be put to Matt at the readback: whether this supersedes the LEFT-controller extraction from `exec-73468ce7…`, or sits alongside it.
 
 Nothing is implemented from any of these. EDU-D3 remains queued behind EDU-Q1, per both amendments' own handover paragraphs.
+
+## 13. EDU-HEADER-BRAND-20260915 read and recorded; three order copies reconciled — 15 September 2026
+
+**EDU-HEADER-BRAND-20260915 — approved header tagline and single-line name. Status: approved and queued; implementation and live verification pending.** Requested by Matt on 15 September 2026 from mobile screenshots of madebymatt.uk, where the footer showed both lines correctly but the header wrapped the name after "BY".
+
+- Keep **MADE BY MATT** together on one line in the Education page header, including phone layouts.
+- Add **Learn • Build • Explore** beneath the logo/brand block at the top of the page, rendered as readable text, with the original approved M artwork intact.
+- Apply consistently to the shared Education header and its owning templates. Retain the existing footer branding.
+- **This supersedes the earlier Education rule prohibiting a header tagline or restricting that wording to the footer.** Play branding and Play copy are unaffected and remain separately approved.
+- Give the brand room through responsive layout, repositioning header actions if needed. Preserve Saved, search, Menu and the four navigation links, readable text and usable touch targets. Wrapping must not be solved with clipped text or blocked zoom.
+- Acceptance: desktop and mobile at 320 and 390 CSS pixels and enlarged text; the complete name stays on one line; the tagline sits underneath; no control overlap and no horizontal overflow; the served header verified after the normal release checks.
+- Scheduling: a bounded follow-up owned by the Education shared-header owner, queued for the next suitable Education chrome checkpoint, coordinated with EDU-HERO-20260915 in EDU-D3. It does not expand an already-checked release candidate without owner review, and claims no website change.
+
+**Cross-check against the approved artwork.** Both concept boards verified in entry 12 already render this header correctly: "MADE BY MATT" on one line with "Learn • Build • Explore" beneath the silver circular M, on phone, tablet and desktop frames alike. So the amendment and the approved imagery agree, and EDU-D3 can implement them together as the order intends.
+
+**Three copies of the master order, reconciled by digest.** Matt has now supplied the order three times, each sent as the latest. Measured, they run oldest-last:
+
+| Upload | SHA-256 | Bytes | Lines | Carries EDU-HERO amendment | Carries EDU-TRY-LESSON |
+|---|---|---|---|---|---|
+| `72c9a98b` | `2209ab83cce586bc47ab6414acbef9de19c909bd3c242dfb762f80983a42138f` | 430,421 | 2,809 | yes | yes |
+| `eaea9ef1` | `24129d3f9c18899f69bdbb6abb25ed3497356cc5f8649c2a6af2b155b04f4f47` | 373,187 | 2,538 | truncated mid-section | no |
+| `cc039887` | `a5756b8b8acccdd84798e9814e4e09b32784898d0961de6444e22824a1a69a96` | 347,012 | 2,416 | no | no |
+
+The second is byte-identical to the first for 373,131 characters and then stops mid-sentence. The third diverges from the first at line 3 and is missing twenty-four sections, among them the whole EDU-HERO amendment. Each is a subset of the first; none adds anything the first lacks. **`72c9a98b` (`2209ab83…`) is the document of record for this session**, and all three amendments have been recorded from it. EDU-HEADER-BRAND survives in all three copies, so this one amendment was never at risk; EDU-HERO and EDU-TRY-LESSON would have been lost had the later uploads been trusted. Raised with Matt so the export that produced the short copies can be checked.
+
+**Merge-hold note.** The master order records an EDU-Q1 08:30–15:30 UK school-day merge hold. ORDER CX2 R2 lifted it in favour of one merge at a time with publication settled between, which is the rule being followed; the merges made tonight also fall outside that window in any case.
+
+Nothing implemented from EDU-D3. EDU-Q1 continues first, as every one of the three amendments instructs in its own handover paragraph.
