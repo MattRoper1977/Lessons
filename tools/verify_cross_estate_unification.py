@@ -161,7 +161,7 @@ CATALOGUE_PINS = {
         "tools/catalogue/verify_education_navigation.cjs": "b0d9297a33fb9ea2494fecaa45e02ae6fcf6fa88e6a62ced35cf521fbb1851fd",
         "tools/catalogue/SHELF_SELECTION.json": "95def027287e7cc1eb1190bafa21733c9c0999286c15a231dc17dfe7a56331f4",
         "tools/catalogue/HUMANITIES_SELECTION.json": "5df3e69d4d9d3825225bcc80376b3fbebf61656df6e333f6b9a8aaded1893bf4",
-        "tools/easter/science_original_browser.cjs": "a0559d92067813845457e05a20a045f1f1aab2401965bbe40f001409e9776567",
+        "tools/easter/science_original_browser.cjs": "aae28a4166d41546cbe5b0acd0866eeaf5e6f47cd5b1949fc48ecb2d4c79a1ec",
         "tools/science_pack/browser_checks.cjs": "058c9bc1f06c876f2994a23d467d83fced683c6355eb92d0ef43986d3e28d72d",
         "tools/prepare_served_publications.py": "acae94bb9c142e20479bc9e5e103b09af87ba84ba3b1dde7baaa86cdb0792629",
         "tools/test_served_publications.py": "063e76bc6579402a41b0bd0b7a79ae99be301cb9db97deb5b7257b85687b851b",
@@ -588,8 +588,9 @@ CATALOGUE_PINS = {
         "Science_Teesside/Grow/resources/GS_W3A.html": "e5bfaf2bc70912aeb59fe9a2eb1032d86c7a473a1059ba782fee1be7b3513dc1",
         "Science_Teesside/Grow/resources/GS_W3B.html": "fb6580bfd1e02d82627d60e1c2e08c3a34b227d0cbe760545502a8e51ab91208",
         "Science_Teesside/Teaching_Packs/GROW/SHA256SUMS.txt": "758dcbdd646219106ef7c416034c24e5e89da1423df5393621eef985e0c4a3a1",
-        "tools/easter/SCIENCE_ORIGINAL_TARGETS.json": "e73f5818f1ca19055110ed4ff2f32a775e185f0ad051c088b295c095bf846e64",
-        "tools/grow_resources/CONTENT.json": "8b51f89b02b50ddb2ff409bd0959c730b1d28f25a1ffdd264a21d3fba17c7677"
+        "tools/easter/SCIENCE_ORIGINAL_TARGETS.json": "79cf7c9453ca0267e00244a64999ce2f19afc536759233fbfa6a23e60e9cf76e",
+        "tools/grow_resources/CONTENT.json": "8b51f89b02b50ddb2ff409bd0959c730b1d28f25a1ffdd264a21d3fba17c7677",
+        "tools/grow_resources/BROWSER_TARGETS.json": "a223e070f70b979809c2bbc8325d505af3217bf633ecb3cec3bc63b954e876c4"
     }
 }
 # END REVIEWED CATALOGUE PINS

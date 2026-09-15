@@ -32,7 +32,7 @@ PREFIXES = ('Science_Teesside/',)
 # but the cross-estate boundary reds on any modified file it does not pin --
 # so they are admitted by exact digest through REVIEWED_PATHS like every other
 # reviewed record (BUILD_QA.json, TERM_AND_STYLE_EVIDENCE.json).
-RECORDS = ('tools/easter/SCIENCE_ORIGINAL_TARGETS.json', 'tools/grow_resources/CONTENT.json')
+RECORDS = ('tools/easter/SCIENCE_ORIGINAL_TARGETS.json', 'tools/grow_resources/CONTENT.json', 'tools/grow_resources/BROWSER_TARGETS.json')
 
 
 def sha(path):
