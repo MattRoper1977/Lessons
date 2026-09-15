@@ -45,13 +45,15 @@ const check=(name,value)=>{assert.ok(value,name);report.checks.push(name)};
    check('Arrival reveal retains useful focus '+route,await page.locator('[data-arrival-reveal]').evaluate(e=>e===document.activeElement));
   }
   await page.locator('[data-action="ta"]').press('Enter');
-  check('TA dialog focuses Close',await page.locator('#ta-dialog [data-action="close"]').evaluate(e=>e===document.activeElement));
+  check('TA dialog starts at its heading',await page.locator('#ta-dialog .v4-modal').evaluate(e=>e.scrollTop===0&&e.querySelector('h2')===document.activeElement));
   await page.keyboard.press('Escape');
   check('TA Escape restores invoking control',await page.locator('[data-action="ta"]').evaluate(e=>e===document.activeElement));
   await page.locator('[data-action="tools"]').press('Enter');
   check('Tools dialog opens after TA Escape',await page.locator('#tools-dialog').evaluate(e=>e.open));
   check('Tools dialog focuses Close',await page.locator('#tools-dialog [data-action="close"]').evaluate(e=>e===document.activeElement));
   await page.locator('#slide-picker').selectOption('4');
+  check('Tools selection waits for confirmation',await page.locator('#tools-dialog').evaluate(e=>e.open)&&await page.locator('#slide-2').evaluate(e=>e.classList.contains('active')));
+  await page.locator('#tools-dialog [data-action="goto"]').press('Enter');
   check('Tools slide jump focuses new heading',await page.locator('#slide-5 h2').evaluate(e=>e===document.activeElement));
   // Cross a queued native close event before reopening the same dialog.
   for(let i=0;i<3;i++){
