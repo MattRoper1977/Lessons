@@ -4,6 +4,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const crypto=require('node:crypto');
+const {execFileSync}=require('node:child_process');
 const root=path.resolve(__dirname,'../..');
 const rel='Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html';
 const url=new URL(rel,process.env.EDU_Q1_BASE_URL||'http://127.0.0.1:4187/').href;
@@ -100,6 +101,10 @@ const check=(name,value)=>{assert.ok(value,name);report.checks.push(name)};
    await page.emulateMedia({media:'print'});await page.pdf({path:path.join(out,`${id}.pdf`),preferCSSPageSize:true,printBackground:true});await page.emulateMedia({media:'screen'});
    await page.evaluate(()=>dispatchEvent(new Event('afterprint')));
   }
+  // DOM visibility passed while the first organiser PDF contained no text.
+  // Inspect the produced bytes before allowing the browser report to pass.
+  report.pdfReport=JSON.parse(execFileSync('python',['tools/science_teaching_packs/check_build_sugar_pdfs.py',out],{cwd:root,encoding:'utf8'}));
+  check('Browser PDFs retain organiser text, complete tickets and printable margins',report.pdfReport.status==='PASS');
   await page.evaluate(()=>document.documentElement.style.fontSize='200%');
   for(let i=0;i<9;i++){await page.evaluate(i=>window.mbmShowSlide(i),i);check('No horizontal loss at 200 percent text '+(i+1),await page.locator('.slide.active').evaluate(e=>e.scrollWidth<=e.clientWidth+1));}
   await page.screenshot({path:path.join(out,'text-200.png')});
