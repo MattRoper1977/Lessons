@@ -55,7 +55,16 @@ REPLACEMENT_TRANSACTIONS = {
     # BEGIN DECLARED TRANSACTION ENTRIES
     # END DECLARED TRANSACTION ENTRIES
 }
+# Declaration order is review order: a later transaction that names a path
+# supersedes the earlier claim on it (a merged transaction is history; a later
+# reviewed edit of the same file is its own exact transaction). The map keeps
+# the last declaration for every path.
 ALL_REPLACEMENTS = {rel: name for name, (_, files) in REPLACEMENT_TRANSACTIONS.items() for rel in files}
+
+
+def owned_members(name, files, owners=None):
+    owners = ALL_REPLACEMENTS if owners is None else owners
+    return {rel: entry for rel, entry in files.items() if owners.get(rel, name) == name}
 
 
 def git_before_entries(root, base, paths=None):
@@ -73,7 +82,8 @@ def git_before_entries(root, base, paths=None):
     return result
 
 
-def replacement_errors(name, files, root, changes, pins, before_entries):
+def replacement_errors(name, files, root, changes, pins, before_entries, owners=None):
+    files = owned_members(name, files, owners)
     selected = [(status, rel) for status, rel in changes if rel in files]
     if not selected:
         return []
@@ -113,6 +123,7 @@ def transaction_controls(root, name, proposed_pins=None):
     # exercise the proposed transaction before paired admissions are staged;
     # such a run is conditional evidence, never a production gate pass.
     base, files = REPLACEMENT_TRANSACTIONS[name]
+    files = owned_members(name, files)
     if not files:
         return []
     errors_for = lambda *a: replacement_errors(name, files, *a)
@@ -252,6 +263,7 @@ def judge(root, changes, base=None):
     try:
         pins = pin_map(root)
         for name, (_, files) in REPLACEMENT_TRANSACTIONS.items():
+            files = owned_members(name, files)
             if any(path in files for _, path in relevant):
                 if base is None:
                     return [name + ' replacements require the actual comparison base']
@@ -362,6 +374,40 @@ def controls(root):
         mutate(sorted(retained)[0], lambda b: b + b'\n', 'Retained Humanities content drift is rejected even if omitted from the supplied diff')
     for name in REPLACEMENT_TRANSACTIONS:
         rows.extend(transaction_controls(root, name))
+    rows.extend(supersession_controls(root))
+    return rows
+
+
+def supersession_controls(root):
+    # A later declared transaction on the same path retires the earlier claim, and
+    # judges the path itself; the earlier transaction's exactness rule no longer
+    # reds on a partial diff. Proven on a real member with a synthetic later claim.
+    rows = []
+    def check(name, condition):
+        if not condition: raise AssertionError(name)
+        rows.append({'name': name, 'status': 'PASS'})
+    first = next(((name, files) for name, (_, files) in REPLACEMENT_TRANSACTIONS.items() if len(owned_members(name, files)) > 1), None)
+    if first is None:
+        return rows
+    name, files = first
+    rel = sorted(owned_members(name, files))[0]
+    pins = pin_map(root)
+    before = git_before_entries(root, 'HEAD', [rel])
+    partial = [('M', rel)]
+    check('A partial diff of an earlier transaction is still rejected while it owns the path',
+          bool(replacement_errors(name, files, root, partial, pins, before)))
+    owners = dict(ALL_REPLACEMENTS); owners[rel] = 'Later'
+    check('A later declared transaction retires the earlier claim on the same path',
+          not replacement_errors(name, files, root, partial, pins, before, owners))
+    check('The retired path drops out of the earlier transaction\'s controls',
+          rel not in owned_members(name, files, owners) and len(owned_members(name, files, owners)) == len(files) - 1)
+    later = {rel: {'beforeGitBlob': before[rel][2], 'afterSha256': sha(root / rel), 'bytes': (root / rel).stat().st_size}}
+    pins_later = dict(pins); pins_later[rel] = later[rel]['afterSha256']
+    check('The later transaction judges the superseded path itself',
+          not replacement_errors('Later', later, root, partial, pins_later, before, owners))
+    wrong = {rel: dict(later[rel], afterSha256='0' * 64)}
+    check('The later transaction still rejects bytes that differ from its review',
+          bool(replacement_errors('Later', wrong, root, partial, pins_later, before, owners)))
     return rows
 
 

@@ -174,7 +174,7 @@ CATALOGUE_PINS = {
         ".github/workflows/watch-main.yml": "796f0aa8d9967fc301bdd47923bb47ad7055f7c5036fa44b2df8780ce31a016c",
         "tools/verify_v6fin_w7_r1_r7.py": "2be87c68256802e46131d9a4c70228e3d8635c51eb1789c01b94f2b316960dae",
         ".github/workflows/glv3-verify.yml": "4bf27ca7471a21359e35d1bc7277c5fa0adeb5f31a47c769f192165796037088",
-        "_glv3/tools/verify_change_boundary.py": "d6bcb8ac1d458ca444980c0dad551dcb4ef09c750ecf8ab8967e65a696cecbd0",
+        "_glv3/tools/verify_change_boundary.py": "42f0102f03fb3959be7d674782720740f713edbf691c2d027ee10a3938a8d5e8",
         "_glv3/tools/browser_verify.mjs": "737ad30f297e061407161743f017614179cc6c56f1c9a3904bbe7c98df38c888",
         "_glv3/tools/chip_gate.mjs": "16cdd5c0ad3745c57340ed0ec6a208d221e4793bfc9b1cd9bc703a6c2613dd9a",
         "_glv3/tools/catalogue_membership.mjs": "4d7ab03e23ee0d3c3fc934f4f0a901afc61169754db099f4f5c24dd9cce058ec",
