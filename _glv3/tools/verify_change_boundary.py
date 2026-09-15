@@ -41,11 +41,37 @@ BOUND_INPUTS = (SOURCE, DOWNLOADS, LABEL_EDITS, 'tools/humanities_resources/CONT
 SUGAR_REVIEW_BASE = '11bba1875e27016547186754ed65752152e27c9b'
 SUGAR_REPLACEMENTS = {'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html': {'beforeGitBlob': 'bd1d6da15f32efc7ce068e9f4e846bb7038bb80a', 'afterSha256': '8594f15916211ff3de03bb928b2de3756bff0dbe8c52adabd3e4cccfda9d42a3', 'bytes': 628443}, 'Science_Teesside/Teaching_Packs/BUILD/lessons/W8A/BUILD_Science_Autumn1_W8A_Sugar_Evidence_Read_The_Label.pdf': {'beforeGitBlob': 'abd9261ff123775b2af979761d08dbe1ea5e2662', 'afterSha256': 'fc9ba726c94177000d872c28e3c7db3812c268d6552e936a316c38654a95a0dd', 'bytes': 431296}, 'Science_Teesside/Teaching_Packs/BUILD/lessons/W8A/BUILD_Science_Autumn1_W8A_Sugar_Evidence_Read_The_Label.pptx': {'beforeGitBlob': 'aff41a6c51c8eb21fbce611316590ed255be7078', 'afterSha256': 'd93b814710bcf57ece951ba0aaf82ed41320247571ec48147e26a5423b3c07e3', 'bytes': 158524}, 'Science_Teesside/Teaching_Packs/BUILD/lessons/W8A/BUILD_Science_Autumn1_W8A_Sugar_Evidence_Read_The_Label_Pupil.docx': {'beforeGitBlob': '81015f010d39c157bdd7f5c3f453ad2e6912c11e', 'afterSha256': 'be71bc9be6c6d9c23383ee35ec739df80830ad5e336e7095098deaf3003a6d64', 'bytes': 42521}, 'Science_Teesside/Teaching_Packs/BUILD/lessons/W8A/BUILD_Science_Autumn1_W8A_Sugar_Evidence_Read_The_Label_Pupil.pdf': {'beforeGitBlob': 'a1e81df065fe01d01d0eda19549ec33883bc1a27', 'afterSha256': '25544b193963f552a1511ac17bd5b5353cbeeca71d6788ac4deddbc61f905dc4', 'bytes': 170636}, 'Science_Teesside/Teaching_Packs/BUILD/lessons/W8A/BUILD_Science_Autumn1_W8A_Sugar_Evidence_Read_The_Label_Teacher.docx': {'beforeGitBlob': 'b111d7326d3bcad325167f2357b7f3741917dad1', 'afterSha256': '033a59447d5b42ea990dd0737c93db99a717e9055307f1c6b6ebe5bf7262c9b3', 'bytes': 43099}, 'Science_Teesside/Teaching_Packs/BUILD/lessons/W8A/BUILD_Science_Autumn1_W8A_Sugar_Evidence_Read_The_Label_Teacher.pdf': {'beforeGitBlob': '3fd844034e225e1c404a5cb50985951a0b4406ec', 'afterSha256': 'a4f9888e6b742339d54ba9128da824904b65e786054e8820d60df9980fa4af86', 'bytes': 114441}}
 
-def git_before_entries(root, base):
+# Further reviewed replacement transactions are declared here by their own
+# admission tools (tools/grow_resources/admit_w3_friction.py, tools/rw1/admit_w8.py),
+# each as an exact per-file map; never a directory-wide permission.
+# BEGIN DECLARED TRANSACTIONS
+# END DECLARED TRANSACTIONS
+
+# Each transaction is judged on its own: every member present as exactly one
+# modification, previous identities from the actual merge base, exact bytes and
+# a matching owner-reviewed catalogue admission for every member.
+REPLACEMENT_TRANSACTIONS = {
+    'Sugar': (SUGAR_REVIEW_BASE, SUGAR_REPLACEMENTS),
+    # BEGIN DECLARED TRANSACTION ENTRIES
+    # END DECLARED TRANSACTION ENTRIES
+}
+# Declaration order is review order: a later transaction that names a path
+# supersedes the earlier claim on it (a merged transaction is history; a later
+# reviewed edit of the same file is its own exact transaction). The map keeps
+# the last declaration for every path.
+ALL_REPLACEMENTS = {rel: name for name, (_, files) in REPLACEMENT_TRANSACTIONS.items() for rel in files}
+
+
+def owned_members(name, files, owners=None):
+    owners = ALL_REPLACEMENTS if owners is None else owners
+    return {rel: entry for rel, entry in files.items() if owners.get(rel, name) == name}
+
+
+def git_before_entries(root, base, paths=None):
     # Match git_changes' triple-dot semantics; do not trust a supplied manifest
     # for the previous file identities.
     merge_base = subprocess.check_output(['git', 'merge-base', base, 'HEAD'], cwd=root).decode().strip()
-    raw = subprocess.check_output(['git', 'ls-tree', '-z', merge_base, '--', *sorted(SUGAR_REPLACEMENTS)], cwd=root)
+    raw = subprocess.check_output(['git', 'ls-tree', '-z', merge_base, '--', *sorted(paths if paths is not None else SUGAR_REPLACEMENTS)], cwd=root)
     result = {}
     for record in raw.decode().split('\0'):
         if not record:
@@ -56,77 +82,99 @@ def git_before_entries(root, base):
     return result
 
 
-def sugar_replacement_errors(root, changes, pins, before_entries):
-    selected = [(status, rel) for status, rel in changes if rel in SUGAR_REPLACEMENTS]
+def replacement_errors(name, files, root, changes, pins, before_entries, owners=None):
+    files = owned_members(name, files, owners)
+    selected = [(status, rel) for status, rel in changes if rel in files]
     if not selected:
         return []
-    if len(selected) != len(SUGAR_REPLACEMENTS) or {rel for _, rel in selected} != set(SUGAR_REPLACEMENTS):
-        return ['Sugar replacement must contain exactly the seven reviewed file modifications']
+    if len(selected) != len(files) or {rel for _, rel in selected} != set(files):
+        return [name + ' replacement must contain exactly the ' + number_word(len(files)) + ' reviewed file modifications']
     errors = []
     for status, rel in selected:
-        reviewed = SUGAR_REPLACEMENTS[rel]
+        reviewed = files[rel]
         path = root / rel
         if status != 'M':
-            errors.append('Sugar replacement is not a modification: ' + rel)
+            errors.append(name + ' replacement is not a modification: ' + rel)
         if before_entries.get(rel) != ('100644', 'blob', reviewed['beforeGitBlob']):
-            errors.append('Sugar previous file identity or mode differs: ' + rel)
+            errors.append(name + ' previous file identity or mode differs: ' + rel)
         if path.is_symlink() or not path.is_file() or path.resolve().is_relative_to(root.resolve()) is False:
-            errors.append('Sugar replacement must be a regular file inside the tree: ' + rel)
+            errors.append(name + ' replacement must be a regular file inside the tree: ' + rel)
         elif path.stat().st_size != reviewed['bytes'] or sha(path) != reviewed['afterSha256']:
-            errors.append('Sugar replacement bytes differ: ' + rel)
+            errors.append(name + ' replacement bytes differ: ' + rel)
         if pins.get(rel) != reviewed['afterSha256']:
-            errors.append('Sugar replacement lacks matching owner-reviewed catalogue admission: ' + rel)
+            errors.append(name + ' replacement lacks matching owner-reviewed catalogue admission: ' + rel)
     return errors
 
 
+def number_word(n):
+    return {7: 'seven'}.get(n, str(n))
+
+
+def sugar_replacement_errors(root, changes, pins, before_entries):
+    return replacement_errors('Sugar', SUGAR_REPLACEMENTS, root, changes, pins, before_entries)
+
+
 def sugar_controls(root, proposed_pins=None):
+    return transaction_controls(root, 'Sugar', proposed_pins)
+
+
+def transaction_controls(root, name, proposed_pins=None):
     # CI uses the real reviewed pin map. The optional map lets a review harness
     # exercise the proposed transaction before paired admissions are staged;
     # such a run is conditional evidence, never a production gate pass.
+    base, files = REPLACEMENT_TRANSACTIONS[name]
+    files = owned_members(name, files)
+    if not files:
+        return []
+    errors_for = lambda *a: replacement_errors(name, files, *a)
     pins = pin_map(root) if proposed_pins is None else proposed_pins
-    changes = [('M', rel) for rel in sorted(SUGAR_REPLACEMENTS)]
-    before = git_before_entries(root, SUGAR_REVIEW_BASE)
+    changes = [('M', rel) for rel in sorted(files)]
+    before = git_before_entries(root, base, files)
     rows = []
     def check(name, condition):
         if not condition:
             raise AssertionError(name)
         rows.append({'name': name, 'status': 'PASS'})
-    check('All seven reviewed replacements pass the bounded rule', not sugar_replacement_errors(root, changes, pins, before))
-    for rel in sorted(SUGAR_REPLACEMENTS):
+    check(name + ': all reviewed replacements pass the bounded rule', not errors_for(root, changes, pins, before))
+    for rel in sorted(files):
         missing_pin = dict(pins); missing_pin.pop(rel, None)
-        check('Missing owner admission rejected: ' + rel, bool(sugar_replacement_errors(root, changes, missing_pin, before)))
+        check(name + ' missing owner admission rejected: ' + rel, bool(errors_for(root, changes, missing_pin, before)))
         wrong_before = dict(before); wrong_before[rel] = ('100644', 'blob', '0' * 40)
-        check('Wrong previous identity rejected: ' + rel, bool(sugar_replacement_errors(root, changes, pins, wrong_before)))
-        wrong_mode = dict(before); wrong_mode[rel] = ('120000', 'blob', SUGAR_REPLACEMENTS[rel]['beforeGitBlob'])
-        check('Previous symlink mode rejected: ' + rel, bool(sugar_replacement_errors(root, changes, pins, wrong_mode)))
+        check(name + ' wrong previous identity rejected: ' + rel, bool(errors_for(root, changes, pins, wrong_before)))
+        wrong_mode = dict(before); wrong_mode[rel] = ('120000', 'blob', files[rel]['beforeGitBlob'])
+        check(name + ' previous symlink mode rejected: ' + rel, bool(errors_for(root, changes, pins, wrong_mode)))
         for status in ('A', 'D', 'T'):
             altered = [(status if path == rel else kind, path) for kind, path in changes]
-            check('Wrong change type '+status+' rejected: ' + rel, bool(sugar_replacement_errors(root, altered, pins, before)))
-        check('Omitted replacement rejected: ' + rel, bool(sugar_replacement_errors(root, [(kind, path) for kind, path in changes if path != rel], pins, before)))
-    check('Duplicate replacement rejected', bool(sugar_replacement_errors(root, changes + [changes[0]], pins, before)))
-    with tempfile.TemporaryDirectory(prefix='sugar-replacement-proof-') as temp:
+            check(name + ' wrong change type '+status+' rejected: ' + rel, bool(errors_for(root, altered, pins, before)))
+        if len(files) > 1:
+            # Omitting one member of a multi-file transaction leaves a partial transaction, which must fail.
+            # A one-member transaction has nothing left to judge when its member is omitted; that case is
+            # the plain protected-path fence, covered by its own controls above.
+            check(name + ' omitted replacement rejected: ' + rel, bool(errors_for(root, [(kind, path) for kind, path in changes if path != rel], pins, before)))
+    check(name + ' duplicate replacement rejected', bool(errors_for(root, changes + [changes[0]], pins, before)))
+    with tempfile.TemporaryDirectory(prefix='replacement-proof-') as temp:
         fixture = Path(temp)
-        for rel in SUGAR_REPLACEMENTS:
+        for rel in files:
             target = fixture / rel; target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(root / rel, target)
-        check('Actual candidate bytes pass in disposable fixture', not sugar_replacement_errors(fixture, changes, pins, before))
-        for rel in sorted(SUGAR_REPLACEMENTS):
+        check(name + ' actual candidate bytes pass in disposable fixture', not errors_for(fixture, changes, pins, before))
+        for rel in sorted(files):
             path = fixture / rel; original = path.read_bytes()
             try:
                 path.write_bytes(original + b'changed')
-                check('Changed candidate bytes rejected: ' + rel, bool(sugar_replacement_errors(fixture, changes, pins, before)))
+                check(name + ' changed candidate bytes rejected: ' + rel, bool(errors_for(fixture, changes, pins, before)))
                 # Even changing the caller's catalogue digest cannot change the
                 # independent exact replacement review.
                 repinned = dict(pins); repinned[rel] = sha(path)
-                check('Repinned changed bytes still rejected: ' + rel, bool(sugar_replacement_errors(fixture, changes, repinned, before)))
+                check(name + ' repinned changed bytes still rejected: ' + rel, bool(errors_for(fixture, changes, repinned, before)))
                 path.unlink()
-                check('Missing candidate file rejected: ' + rel, bool(sugar_replacement_errors(fixture, changes, pins, before)))
+                check(name + ' missing candidate file rejected: ' + rel, bool(errors_for(fixture, changes, pins, before)))
                 path.symlink_to(root / rel)
-                check('Candidate symlink rejected: ' + rel, bool(sugar_replacement_errors(fixture, changes, pins, before)))
+                check(name + ' candidate symlink rejected: ' + rel, bool(errors_for(fixture, changes, pins, before)))
             finally:
                 if path.is_symlink(): path.unlink()
                 path.write_bytes(original)
-        check('All sabotage was restored', not sugar_replacement_errors(fixture, changes, pins, before))
+        check(name + ' all sabotage was restored', not errors_for(fixture, changes, pins, before))
     return rows
 
 
@@ -214,20 +262,22 @@ def judge(root, changes, base=None):
     errors = []
     try:
         pins = pin_map(root)
-        if any(path in SUGAR_REPLACEMENTS for _, path in relevant):
-            if base is None:
-                return ['Sugar replacements require the actual comparison base']
-            errors.extend(sugar_replacement_errors(root, relevant, pins, git_before_entries(root, base)))
-            if errors:
-                return errors
+        for name, (_, files) in REPLACEMENT_TRANSACTIONS.items():
+            files = owned_members(name, files)
+            if any(path in files for _, path in relevant):
+                if base is None:
+                    return [name + ' replacements require the actual comparison base']
+                errors.extend(replacement_errors(name, files, root, relevant, pins, git_before_entries(root, base, files)))
+        if errors:
+            return errors
         cover_paths = explicit_cover_paths(root)
         label_paths = public_label_paths(root, pins)
         for status, rel in relevant:
             if rel in SHELVES:
                 if status not in ('A', 'M') or not (root / rel).is_file() or pins.get(rel) != sha(root / rel):
                     errors.append('reviewed shelf bytes or change type differ: ' + rel)
-            elif rel in SUGAR_REPLACEMENTS:
-                # Already checked as one exact seven-file M transaction above.
+            elif rel in ALL_REPLACEMENTS:
+                # Already checked as one exact M transaction above.
                 pass
             elif rel.startswith(SCIENCE_PACKS) and rel in pins:
                 # Owner-requested 6 September additive BUILD/GROW downloads.
@@ -289,7 +339,7 @@ def controls(root):
     check('A modification of an existing cover file is not an additive installation', bool(judge(root, [('M', COVER+'/resource.css')])))
     check('A deleted shelf is rejected', bool(judge(root, [('D', SHELVES[0])])))
     check('Rename-as-delete/add cannot move a retained lesson into the cover exception', bool(judge(root, [('D', sorted(retained)[0]), additions[0]])))
-    science_additions = [('A', rel) for rel in pin_map(root) if rel.startswith(SCIENCE_PACKS) and rel not in SUGAR_REPLACEMENTS]
+    science_additions = [('A', rel) for rel in pin_map(root) if rel.startswith(SCIENCE_PACKS) and rel not in ALL_REPLACEMENTS]
     if science_additions:
         check('Exact individually pinned Science teaching files pass as additions', not judge(root, science_additions))
         first = science_additions[0][1]
@@ -322,7 +372,43 @@ def controls(root):
         native = next(row['path'] for row in json.loads((root / DOWNLOADS).read_text())['dependencies'] if row['path'].endswith('.pdf'))
         mutate(native, lambda b: b + b'\n', 'Native download byte drift is rejected')
         mutate(sorted(retained)[0], lambda b: b + b'\n', 'Retained Humanities content drift is rejected even if omitted from the supplied diff')
-    rows.extend(sugar_controls(root))
+    for name in REPLACEMENT_TRANSACTIONS:
+        rows.extend(transaction_controls(root, name))
+    rows.extend(supersession_controls(root))
+    return rows
+
+
+def supersession_controls(root):
+    # A later declared transaction on the same path retires the earlier claim, and
+    # judges the path itself; the earlier transaction's exactness rule no longer
+    # reds on a partial diff. Proven on a real member with a synthetic later claim.
+    rows = []
+    def check(name, condition):
+        if not condition: raise AssertionError(name)
+        rows.append({'name': name, 'status': 'PASS'})
+    first = next(((name, files) for name, (_, files) in REPLACEMENT_TRANSACTIONS.items() if len(owned_members(name, files)) > 1), None)
+    if first is None:
+        return rows
+    name, files = first
+    owned = owned_members(name, files)
+    rel = sorted(owned)[0]
+    pins = pin_map(root)
+    before = git_before_entries(root, 'HEAD', [rel])
+    partial = [('M', rel)]
+    check('A partial diff of an earlier transaction is still rejected while it owns the path',
+          bool(replacement_errors(name, files, root, partial, pins, before)))
+    owners = dict(ALL_REPLACEMENTS); owners[rel] = 'Later'
+    check('A later declared transaction retires the earlier claim on the same path',
+          not replacement_errors(name, files, root, partial, pins, before, owners))
+    check('The retired path drops out of the earlier transaction\'s controls',
+          rel not in owned_members(name, files, owners) and len(owned_members(name, files, owners)) == len(owned) - 1)
+    later = {rel: {'beforeGitBlob': before[rel][2], 'afterSha256': sha(root / rel), 'bytes': (root / rel).stat().st_size}}
+    pins_later = dict(pins); pins_later[rel] = later[rel]['afterSha256']
+    check('The later transaction judges the superseded path itself',
+          not replacement_errors('Later', later, root, partial, pins_later, before, owners))
+    wrong = {rel: dict(later[rel], afterSha256='0' * 64)}
+    check('The later transaction still rejects bytes that differ from its review',
+          bool(replacement_errors('Later', wrong, root, partial, pins_later, before, owners)))
     return rows
 
 
