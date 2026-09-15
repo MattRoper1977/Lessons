@@ -657,7 +657,11 @@ PUBLICATION_CALLER_PATH = ".github/workflows/education-pages.yml"
 # Advanced 2026-09-15 (CX2 Lane D BUILD) to Site carrier 08f84452084391203b940a4d3619c4b3b6ecd91e on the same
 # carrier branch: 297ed5de plus one registry commit admitting the return-week BUILD W8B lesson and its
 # lesson-order beside the published rollback digests. Only the caller's references and comment move.
-PUBLICATION_CALLER_SHA256 = "1a5d373bf9f230e63a25be0eda8878e82fff5ffa6100b10988dbe30cf66f7d56"
+# Advanced 2026-09-15 (CX2 S3) to Site carrier a89e2c601b491be7b0121754a17f56228eafa21a, one commit
+# beyond 08f84452 on the same carrier branch, admitting the relabelled teaching-pack hub. Measured a
+# strict widening of 08f84452 (4044 paths both sides, one entry widened, none narrowed or removed),
+# so the pin is correct in either merge order. Only the caller's references and comment move.
+PUBLICATION_CALLER_SHA256 = "abea6547bb5b16d6446ea4c737e2a8bd4a50f0ef19792a6d099d94d556b34873"
 # One reviewed caller digest per repository kind. detect_kind() reads the root
 # it is standing in, so this entry is only ever compared against the Apps
 # repository's own caller: the Lessons gate run and the Apps gate runs are the
