@@ -3,6 +3,7 @@ on:
   pull_request:
     branches: [main]
     paths:
+      - Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html
       - Science_Teesside/Teaching_Packs/**
       - Science_Teesside/index.html
       - assets/catalogue/science-download-bindings.json
@@ -58,6 +59,7 @@ jobs:
             sleep 1
           done
           node tools/science_teaching_packs/check_hub_browser.cjs
+          node tools/science_teaching_packs/check_build_sugar_browser.cjs
       - name: Verify the published hub and all refreshed downloads
         if: github.event_name == 'workflow_run' || (github.event_name == 'workflow_dispatch' && inputs.verify_live)
         env:
