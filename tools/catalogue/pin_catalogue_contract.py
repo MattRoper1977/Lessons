@@ -1554,6 +1554,20 @@ REVIEWED_PATHS += (
 )
 
 
+# EDU-Q1 GROW W3 Friction: the paired lesson, its resource pages, the Week 3
+# pack records, the original-targets ledger and the GROW resource content
+# admitted as one reviewed replacement transaction.
+REVIEWED_PATHS += (
+    'Science_Teesside/Grow/SCI_G_W3_Friction.html',
+    'Science_Teesside/Grow/resources/GS_W3A.html',
+    'Science_Teesside/Grow/resources/GS_W3B.html',
+    'Science_Teesside/Teaching_Packs/GROW/SHA256SUMS.txt',
+    'tools/easter/SCIENCE_ORIGINAL_TARGETS.json',
+    'tools/grow_resources/CONTENT.json',
+    'tools/grow_resources/BROWSER_TARGETS.json',
+)
+
+
 def pack_rows_for(lessons: Path, rows: list) -> list:
     """UX2 D3 (2026-09-08): the companion-pack entries are the catalogue's tail,
     after the reviewed hub rows. They are not a second hand-kept literal: they
