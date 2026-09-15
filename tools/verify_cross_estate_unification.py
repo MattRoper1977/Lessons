@@ -649,7 +649,11 @@ PUBLICATION_CALLER_PATH = ".github/workflows/education-pages.yml"
 # unchanged between the two, so the gate itself still does not move.
 # GC1 12 September: reviewed 810ae8f8 -> 3c2743fb registration-only carrier.
 # SW2-T5R1: consumer-specific registry-only carriers, with unchanged publisher code.
-PUBLICATION_CALLER_SHA256 = "59e595c347fffcd03edefc9840e5165ae7f56a410581b9555ceb1edbfa3ae425"
+# Advanced 2026-09-15 (CX2 R5) to Site carrier 297ed5dea71461d25365fa8a9ef1139b7d161996, which is
+# c06526c5 byte-identical except the admission registry (two regenerated catalogue files admitted
+# beside their published rollback digests). Only the caller's two commit references and its
+# comment move; this digest is the caller file after that move.
+PUBLICATION_CALLER_SHA256 = "05b07056346fa5dd5809e66f16c6d0181762a1cacba7b619dd4e76f22485aadb"
 # One reviewed caller digest per repository kind. detect_kind() reads the root
 # it is standing in, so this entry is only ever compared against the Apps
 # repository's own caller: the Lessons gate run and the Apps gate runs are the
