@@ -25,6 +25,14 @@ BOUNDARY = ROOT / '_glv3/tools/verify_change_boundary.py'
 HELPER = ROOT / 'tools/catalogue/pin_catalogue_contract.py'
 GATE = ROOT / 'tools/verify_cross_estate_unification.py'
 PREFIXES = ('Science_Teesside/',)
+# Review records that move with the transaction but are not protected Science
+# payload: the original-targets ledger carries the patched lesson's SHA-256 and
+# the GROW resource content is the source the resource pages are built from.
+# Neither is served as a studio, so they stay out of the GLV3 replacement block,
+# but the cross-estate boundary reds on any modified file it does not pin --
+# so they are admitted by exact digest through REVIEWED_PATHS like every other
+# reviewed record (BUILD_QA.json, TERM_AND_STYLE_EVIDENCE.json).
+RECORDS = ('tools/easter/SCIENCE_ORIGINAL_TARGETS.json', 'tools/grow_resources/CONTENT.json')
 
 
 def sha(path):
@@ -68,13 +76,14 @@ def extend_reviewed_paths(files, check):
     sys.path.insert(0, str(HELPER.parent))
     import importlib
     helper = importlib.import_module('pin_catalogue_contract')
-    missing = [rel for rel in files if rel not in helper.REVIEWED_PATHS]
+    missing = [rel for rel in (*files, *RECORDS) if rel not in helper.REVIEWED_PATHS]
     if missing:
         if check:
             raise SystemExit('[FAIL] reviewed-path list lacks: ' + ', '.join(missing))
         text = HELPER.read_text()
-        addition = ('\n\n# EDU-Q1 GROW W3 Friction: the paired lesson, its resource pages and the Week 3\n'
-                    '# pack records admitted as one reviewed replacement transaction.\nREVIEWED_PATHS += (\n'
+        addition = ('\n\n# EDU-Q1 GROW W3 Friction: the paired lesson, its resource pages, the Week 3\n'
+                    '# pack records, the original-targets ledger and the GROW resource content\n'
+                    '# admitted as one reviewed replacement transaction.\nREVIEWED_PATHS += (\n'
                     + ''.join(f'    {rel!r},\n' for rel in missing) + ')\n')
         anchor = "\n\ndef pack_rows_for(lessons: Path, rows: list) -> list:"
         assert text.count(anchor) == 1
@@ -91,18 +100,29 @@ def repin(check):
     # gate so a stand-in never leaks into the Lessons copy.
     committed = git('show', 'HEAD:tools/verify_cross_estate_unification.py')
     apps_digest = re.search(r'"apps\.json":\s*"([0-9a-f]{64})"', committed).group(1)
+    # The stand-in's apps.json can never carry the Apps repository's digest, so
+    # the helper's own check mode would always report the manifest pin as moved.
+    # --check therefore pins in write mode and compares the gate file before and
+    # after (with the apps.json digest put back), then restores the original bytes:
+    # a differing gate is the same finding the helper's check mode exists to raise.
+    before = GATE.read_bytes()
     with tempfile.TemporaryDirectory(prefix='apps-gate-stand-in-') as temp:
         apps = Path(temp); (apps / 'tools').mkdir()
         shutil.copyfile(GATE, apps / 'tools/verify_cross_estate_unification.py')
         (apps / 'apps.json').write_bytes(b'{}')
         try:
-            result = helper.pin(ROOT, apps, check=check)
+            result = helper.pin(ROOT, apps, check=False)
         except ValueError as exc:
             raise SystemExit('[FAIL] ' + str(exc))
-    if not check:
-        after = GATE.read_text()
-        after, count = re.subn(r'("apps\.json":\s*")[0-9a-f]{64}(")', lambda m: m[1] + apps_digest + m[2], after)
-        assert count == 1
+    after = GATE.read_text()
+    after, count = re.subn(r'("apps\.json":\s*")[0-9a-f]{64}(")', lambda m: m[1] + apps_digest + m[2], after)
+    assert count == 1
+    if check:
+        GATE.write_bytes(before)
+        if after.encode() != before:
+            raise SystemExit('[FAIL] reviewed catalogue pins differ from the tree; re-run without --check')
+        result['mode'] = 'check'
+    else:
         GATE.write_text(after)
     return result
 
