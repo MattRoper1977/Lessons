@@ -2,6 +2,8 @@
 
 Draft control transaction based on Sugar PR #536 head `b92ad96ddc56f17f3836c42381dde168214eb47d`. This candidate has not been merged or published. Lessons main remains `11bba1875e27016547186754ed65752152e27c9b`; the matching Apps gate candidate is based on `8d7b05d42f5921fbeff2def568c4e25391323cea`.
 
+Review locations: Lessons draft #537 and Apps draft #103. The Lessons integration draft targets main because the existing PR workflows filter on that base; its admission commit keeps the six control/derived-record changes distinct from #536's unchanged content candidate. The first stacked-base snapshot had no PR runs and is not CI evidence. Both Lessons drafts remain open and unready to merge.
+
 The GLV3 boundary admits exactly the seven reviewed Sugar modifications: one canonical HTML and six existing native companions. It requires actual previous merge-base blob identities, regular-file modes, complete membership, exact current sizes/hashes and matching independent catalogue pins. Other protected paths and the existing Science addition-only rule remain fenced.
 
 The supported paired pin helper verified all 463 reviewed files, preserved 734 original catalogue rows and derived 116 companion rows after checking the actual lesson-order projection. Both gate copies are identical, SHA256 `4be0ccdc6f93faad53e522de56b3b7459740f5ba698fa821c900bf618842cea8`. No original admission path was removed. The pre-existing sweep pin remains; the helper now refuses to omit an existing admission silently. Its regression control changes only disposable gate fixtures.
