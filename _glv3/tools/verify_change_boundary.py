@@ -44,7 +44,13 @@ SUGAR_REPLACEMENTS = {'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Lab
 # Further reviewed replacement transactions are declared here by their own
 # admission tools (tools/grow_resources/admit_w3_friction.py, tools/rw1/admit_w8.py),
 # each as an exact per-file map; never a directory-wide permission.
+# CX2 §8.3 Lane D: the return-week W8 lessons, one transaction per pathway,
+# written by tools/rw1/admit_w8.py.
+RW_W8_REVIEW_BASE = '3a14e9c4d57832fed87ed588ef6f0ae4fd3d6064'
 # BEGIN DECLARED TRANSACTIONS
+# BEGIN RETURN WEEK W8 BUILD REPLACEMENTS
+RW_W8_BUILD_REPLACEMENTS = {'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html': {'beforeGitBlob': 'f5ca0a4ef3334d13d377d866ef37e3c7c55a9c0d', 'afterSha256': '022157abe904045f782821936f0e639843cb7459152059b6c4ab0131a8cd15da', 'bytes': 305519}}
+# END RETURN WEEK W8 BUILD REPLACEMENTS
 # END DECLARED TRANSACTIONS
 
 # Each transaction is judged on its own: every member present as exactly one
@@ -53,6 +59,7 @@ SUGAR_REPLACEMENTS = {'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Lab
 REPLACEMENT_TRANSACTIONS = {
     'Sugar': (SUGAR_REVIEW_BASE, SUGAR_REPLACEMENTS),
     # BEGIN DECLARED TRANSACTION ENTRIES
+    'Return week W8 BUILD': (RW_W8_REVIEW_BASE, RW_W8_BUILD_REPLACEMENTS),
     # END DECLARED TRANSACTION ENTRIES
 }
 ALL_REPLACEMENTS = {rel: name for name, (_, files) in REPLACEMENT_TRANSACTIONS.items() for rel in files}
