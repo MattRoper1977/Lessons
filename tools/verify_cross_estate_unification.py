@@ -126,7 +126,7 @@ CATALOGUE_PINS = {
         "tools/catalogue/check_display_titles_browser.cjs": "5662cdb93c7796ead4fb9bb69ce94ac65fe1e29e103f00c65bd07a4d5129a7cd",
         "tools/verify_lessons_chips.mjs": "f6561fb7633bb65689acc27381c205648d5ecc099465137adde3b24c706ad130",
         "tools/sw2/check_tokens_inert.cjs": "482642d3d85a649a5785eed5183dc385bc0c68e294f51cd192af2e7d96d3224e",
-        "assets/catalogue/lesson-order.json": "4feed982e9bad9bddc16ab54d36359df8116b78b2993f0a406b8d07b94ab7964",
+        "assets/catalogue/lesson-order.json": "a57bd51ffea06645bc8a16184ab886f1fa06c00ac0414613d640a9afe17f9530",
         "tools/catalogue/build_lesson_order.py": "95032f6572a6b64fa518a7ff6fd1902854c9ef6f204841c553b5078c0afb8a9a",
         "tools/ux2/hub_gates.mjs": "80ae8def49c49e549c8a2e6b65d521cfdaebb2b7d05f650fa6d5e436f2b6586d",
         "index.html": "389c3320b158e9bc472b4402d41d1d23e4bb2d78b54385884c0be6ca31f73309",
@@ -150,7 +150,7 @@ CATALOGUE_PINS = {
         "assets/catalogue/lesson-navigation.js": "fa6bdae6826950422dfb13a905a2a50c5c959bef50fb438f00b6170befbfaf8f",
         "assets/catalogue/science-shelf.css": "f664655e57c086abe35499f5dedf737eddaa0942e6629dd4a7fcf4e801536508",
         "assets/catalogue/science-shelf.js": "b47b998866401f136968a2e1e94cc5beb65be83fbd342f49ff5a811804792651",
-        "assets/catalogue/terms-and-styles.json": "16c87b20e3df9ca030488afddd02bb1732bcbf9d1923f5f08e421ff25d556f6f",
+        "assets/catalogue/terms-and-styles.json": "fbcc0ad022a7239a2fc0f0137716c1dc4d2156e13214944e7a0d55b01363ca24",
         "assets/catalogue/science-shelf.json": "1d48dc37ce5ae12ea33b9319810a094dd86f527f38bf825af84da10b34e3af06",
         "assets/catalogue/humanities-shelf.json": "b2facaa50c6781f0fdf19fad5b3b170bfaef54546c030e951956ccf47223f8c0",
         "tools/catalogue/build_catalogue.py": "4a009a17c37ae7336056329e2250c590910d6d054001ad92e57228e157bc8c90",
@@ -186,7 +186,7 @@ CATALOGUE_PINS = {
         "tools/humanities_resources/check_resources.py": "ec5383e3a34cbff999f190b0014a4a73e00a3a29e2714498f7620fd638dc2aa5",
         "tools/humanities_resources/resource.css": "1aed9aaca0d73a4b200c4e5d0977e73f4e906c747d7340c7a62f4197a8344bae",
         "tools/humanities_resources/resource.js": "ad40afed95490bfcce92dc062da46e1b27bcb96bdc80e37eabdfe02bf6ffc446",
-        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "4a61b1ea756d8d8b6559a2f6f4594dde5d2ae816aa2a479ecd28eeafd17b99bd",
+        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "01859d2b5b55ab5713d11d361bbd3298d4b3dc7201b869223e074cd4592682b9",
         "tools/catalogue/TERM_REVIEW.json": "b0ed0d82fe21a222c75f6a38390b01defc0d5d958fac8e85421b7901ce6d201d",
         "tools/catalogue/SCIENCE_WEEK_BINDINGS.json": "b13c25e76ffbb916cf997ee62a265a6ff0bf296c125b00458df42d87985aaba2",
         "primary/year5/science/autumn/forces/Lesson8_ExploreGravity.html": "20047720bf1d309055abdf232d341b6fd99b833631efa0bcbfb3dabed9671196",
@@ -653,7 +653,11 @@ PUBLICATION_CALLER_PATH = ".github/workflows/education-pages.yml"
 # unchanged between the two, so the gate itself still does not move.
 # GC1 12 September: reviewed 810ae8f8 -> 3c2743fb registration-only carrier.
 # SW2-T5R1: consumer-specific registry-only carriers, with unchanged publisher code.
-PUBLICATION_CALLER_SHA256 = "59e595c347fffcd03edefc9840e5165ae7f56a410581b9555ceb1edbfa3ae425"
+# Advanced 2026-09-15 (CX2 R5) to Site carrier 297ed5dea71461d25365fa8a9ef1139b7d161996, which is
+# c06526c5 byte-identical except the admission registry (two regenerated catalogue files admitted
+# beside their published rollback digests). Only the caller's two commit references and its
+# comment move; this digest is the caller file after that move.
+PUBLICATION_CALLER_SHA256 = "05b07056346fa5dd5809e66f16c6d0181762a1cacba7b619dd4e76f22485aadb"
 # One reviewed caller digest per repository kind. detect_kind() reads the root
 # it is standing in, so this entry is only ever compared against the Apps
 # repository's own caller: the Lessons gate run and the Apps gate runs are the
