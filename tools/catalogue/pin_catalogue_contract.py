@@ -1576,6 +1576,12 @@ REVIEWED_PATHS += (
 )
 
 
+# CX2 4.8 Sugar hygiene: the BUILD checksum list joins the reviewed Sugar files.
+REVIEWED_PATHS += (
+    'Science_Teesside/Teaching_Packs/BUILD/SHA256SUMS.txt',
+)
+
+
 def pack_rows_for(lessons: Path, rows: list) -> list:
     """UX2 D3 (2026-09-08): the companion-pack entries are the catalogue's tail,
     after the reviewed hub rows. They are not a second hand-kept literal: they
