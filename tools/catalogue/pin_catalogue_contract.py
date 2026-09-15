@@ -1547,6 +1547,13 @@ REVIEWED_PATHS += (
 )
 
 
+# CX2 S3: the teaching-pack hub, relabelled so the offline companion set is not read
+# as the lesson itself.
+REVIEWED_PATHS += (
+    'Science_Teesside/Teaching_Packs/web-slides.html',
+)
+
+
 # CX2 §3 LAUNCH W4L1 Diffusion: the lesson, its native pack files, the LAUNCH pack
 # records and the original-targets ledger admitted as one reviewed replacement transaction.
 REVIEWED_PATHS += (

@@ -49,11 +49,27 @@ def git(*args):
     return subprocess.check_output(['git', '-C', str(ROOT), *args]).decode()
 
 
+def foreign_paths():
+    """Paths another declared transaction already owns (the shape
+    tools/grow_resources/admit_w3_friction.py established). The sweep takes every
+    protected Science path that differs from the review base; once main carries other
+    transactions over Science_Teesside/ (S3's web-slides.html), a path one of those
+    changed still differs from this base, and claiming it here would both record a file
+    W4L1 never touched and, under the declaration-order supersession rule, strip the
+    real owner of its member."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location('_glv3_boundary', BOUNDARY)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return {rel for rel, owner in module.ALL_REPLACEMENTS.items() if owner != NAME}
+
+
 def transaction():
+    foreign = foreign_paths()
     files = {}
     for row in git('diff', '--name-status', REVIEW_BASE, '--').splitlines():
         kind, rel = row.split('\t', 1)
-        if not rel.startswith(PREFIXES):
+        if not rel.startswith(PREFIXES) or rel in foreign:
             continue
         assert kind == 'M', 'protected path is not a modification: ' + row
         entry = git('ls-tree', REVIEW_BASE, '--', rel).split()
