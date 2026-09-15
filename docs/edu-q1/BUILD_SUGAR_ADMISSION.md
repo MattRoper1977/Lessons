@@ -23,3 +23,11 @@ These are source admission and control results. New branch CI, exact published-o
 Preserve the master order's serialized release/control ownership and all holds, including the EDU-Q1 school-day hold, Site #291, Lessons #456 and LP1. The account/admin exception does not apply. Keep High for ownership, implementation and acceptance.
 
 Remaining order: EDU-Q1 → EDU-D3 → PLAY-D2 → PLAY-Q1 → PLAY-I1 → evidence-justified MAINT-1 → PLAY-X1. EDU-HERO-20260915 and EDU-HEADER-BRAND-20260915 remain recorded together for EDU-D3, after EDU-Q1 acceptance; PLAY-BRAND's approved Xbox hero and unified splashes remain queued. Preserve GROW W3B/shared timing, the LAUNCH guide and all completed work.
+
+## Admission CI repair — 15 September 2026
+
+The first admission-head CI run proved Science and FieldOps green, and the cross-estate browser matrix green. UX2 failed on the stale Sugar display-title guard, PIN1 refused missing generated triggers, and GLV3's browser catalogue expectation counted resources.json without the hub's existing lesson-order supplements (Humanities 98 instead of 159). These are source-control repairs; the seven approved Sugar payload files are unchanged.
+
+The unchanged display-title generator refreshes one Sugar originalTitle field. Both GLV3 browser checks now derive the complete expected union and require exact card-path and link membership, with duplicate, wrong-origin and wrong-fragment rejection; matching visible title text cannot excuse a broken link. The existing 88 GLV3 rows, four subject chips, 94-page boot and 24-print checks remain. The shared helper includes 12 negative controls invoked by both browser checks. All existing 463 file admissions remain, with the exact helper added as file 464. The supported PIN1 generator adds the 13 newly admitted paths to each event's exact trigger list; jobs and permissions are unchanged.
+
+The repaired browser and pack journeys require fresh CI evidence: the local Playwright package is present but its Chromium executable is unavailable. Local source/control checks must not be reported as browser acceptance. The immutable publisher/output admission and actual screen-reader acceptance remain open. No merge or publication; EDU-Q1 remains active ahead of EDU-D3 and the recorded updated PLAY order, with every hold preserved.

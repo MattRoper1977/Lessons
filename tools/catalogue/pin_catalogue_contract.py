@@ -1326,6 +1326,7 @@ REVIEWED_PATHS = (
     # GLV3 admits only these reviewed publisher checks and cover inputs.
     ".github/workflows/glv3-verify.yml", "_glv3/tools/verify_change_boundary.py",
     "_glv3/tools/browser_verify.mjs", "_glv3/tools/chip_gate.mjs",
+    "_glv3/tools/catalogue_membership.mjs",
     "tools/humanities_resources/SOURCE_MANIFEST.json", "tools/humanities_resources/DOWNLOAD_MANIFEST.json",
     "tools/humanities_resources/CONTENT.json", "tools/humanities_resources/ORIGINAL_MEMBER_MANIFEST.json",
     "tools/humanities_resources/build_resources.py", "tools/humanities_resources/check_resources.py",

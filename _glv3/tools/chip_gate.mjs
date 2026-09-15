@@ -1,9 +1,13 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import { chromium } from 'playwright';
+import { expectedSubjectRows, verifySubjectCards, catalogueMembershipControls } from './catalogue_membership.mjs';
+
+catalogueMembershipControls();
 
 const BASE = process.env.GLV3_BASE_URL || process.argv[2] || 'http://127.0.0.1:8123';
 const resources = JSON.parse(fs.readFileSync('resources.json', 'utf8'));
+const order = JSON.parse(fs.readFileSync('assets/catalogue/lesson-order.json', 'utf8'));
 const newResources = resources.filter(x => String(x.id || '').startsWith('glv3-'));
 if (newResources.length !== 88) {
   throw new Error(`expected 88 GLV3 resources, got ${newResources.length}`);
@@ -45,28 +49,16 @@ try {
     const advertised = Number(advertisedMatch[1]);
 
     const cards = await page.evaluate(() => [...document.querySelectorAll('#cards .card')].map(el => ({
-      href: [...el.querySelectorAll('a[href]')].map(a => a.getAttribute('href') || '').join(' '),
+      path: el.getAttribute('data-resource-path') || '',
+      href: el.querySelector('h3 a[href]')?.getAttribute('href') || '',
       text: (el.textContent || '').replace(/\s+/g, ' ').trim(),
     })));
 
     const returned = cards.length;
-    const expected = resources.filter(x => x.subject === chip).length;
-    if (advertised !== returned || returned !== expected) {
-      throw new Error(`${chip}: advertised=${advertised} returned=${returned} expected=${expected}`);
-    }
-
-    const hrefs = cards.flatMap(x => x.href.split(' ').map(h => decodeURIComponent(h.split('#')[0].split('?')[0])));
+    const expectedRows = expectedSubjectRows(resources, order, chip);
+    const expected = expectedRows.length;
+    verifySubjectCards({subject: chip, expected: expectedRows, advertised, cards, base: BASE});
     const wantedNew = newResources.filter(x => x.subject === chip);
-    const missing = wantedNew.filter(resource =>
-      !hrefs.some(href => href.endsWith(resource.file)) &&
-      !cards.some(card => card.text.includes(resource.title))
-    );
-    if (missing.length) {
-      throw new Error(
-        `${chip}: ${missing.length}/${wantedNew.length} GLV3 entries are not reachable: ` +
-        missing.slice(0, 6).map(x => x.file).join(', ')
-      );
-    }
 
     report[chip] = {
       advertised,
