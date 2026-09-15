@@ -1547,29 +1547,23 @@ REVIEWED_PATHS += (
 )
 
 
-# EDU-Q1 GROW W3 Friction: the paired lesson, its resource pages and the Week 3
-# pack records admitted as one reviewed replacement transaction.
+# CX2 S3: the teaching-pack hub, relabelled so the offline companion set is not read
+# as the lesson itself.
+REVIEWED_PATHS += (
+    'Science_Teesside/Teaching_Packs/web-slides.html',
+)
+
+
+# EDU-Q1 GROW W3 Friction: the paired lesson, its resource pages, the Week 3
+# pack records, the original-targets ledger and the GROW resource content
+# admitted as one reviewed replacement transaction.
 REVIEWED_PATHS += (
     'Science_Teesside/Grow/SCI_G_W3_Friction.html',
     'Science_Teesside/Grow/resources/GS_W3A.html',
     'Science_Teesside/Grow/resources/GS_W3B.html',
     'Science_Teesside/Teaching_Packs/GROW/SHA256SUMS.txt',
-)
-
-
-# EDU-Q1 GROW W3 Friction: the paired lesson, its resource pages, the Week 3
-# pack records, the original-targets ledger and the GROW resource content
-# admitted as one reviewed replacement transaction.
-REVIEWED_PATHS += (
     'tools/easter/SCIENCE_ORIGINAL_TARGETS.json',
     'tools/grow_resources/CONTENT.json',
-)
-
-
-# EDU-Q1 GROW W3 Friction: the paired lesson, its resource pages, the Week 3
-# pack records, the original-targets ledger and the GROW resource content
-# admitted as one reviewed replacement transaction.
-REVIEWED_PATHS += (
     'tools/grow_resources/BROWSER_TARGETS.json',
 )
 

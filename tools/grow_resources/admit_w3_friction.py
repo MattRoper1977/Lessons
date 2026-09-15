@@ -43,12 +43,29 @@ def git(*args):
     return subprocess.check_output(['git', '-C', str(ROOT), *args]).decode()
 
 
+def foreign_paths():
+    """Paths another declared transaction already owns.
+
+    This sweep takes every protected Science path that differs from the review
+    base. That was safe while Friction was the only transaction over
+    Science_Teesside/, but the Lane D foundation added more, and a path changed
+    by one of those still differs from this base. Claiming it here would both
+    record a file Friction never touched and, under the declaration-order
+    supersession rule, strip the real owner of its member."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location('_glv3_boundary', BOUNDARY)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return {rel for rel, owner in module.ALL_REPLACEMENTS.items() if owner != NAME}
+
+
 def transaction():
     status = git('diff', '--name-status', BASE, '--')
+    foreign = foreign_paths()
     files = {}
     for row in status.splitlines():
         kind, rel = row.split('\t', 1)
-        if not rel.startswith(PREFIXES):
+        if not rel.startswith(PREFIXES) or rel in foreign:
             continue
         assert kind == 'M', 'protected path is not a modification: ' + row
         entry = git('ls-tree', BASE, '--', rel).split()
@@ -60,16 +77,37 @@ def transaction():
     return dict(sorted(files.items()))
 
 
+VAR, NAME, MARK = 'GROW_W3_REPLACEMENTS', 'GROW W3 Friction', 'GROW W3'
+
+
 def write_boundary(files, check):
+    """Declare the Friction replacement as its own entry in the generalised
+    transaction table. The boundary tool gained that table with the Lane D
+    foundation, which retired the hand-written GROW W3 block this tool used to
+    patch; the block markers no longer exist on main, so the old rewrite could
+    never match. Same review base, same members, same exactness rule."""
     text = BOUNDARY.read_text()
-    block = '# BEGIN GROW W3 REPLACEMENTS\nGROW_W3_REPLACEMENTS = ' + repr(files) + '\n# END GROW W3 REPLACEMENTS'
-    patched, count = re.subn(r'# BEGIN GROW W3 REPLACEMENTS\n.*?# END GROW W3 REPLACEMENTS', lambda _: block, text, flags=re.S)
-    assert count == 1
-    if patched != text:
-        if check:
-            raise SystemExit('[FAIL] GROW W3 replacement block differs from the tree')
-        BOUNDARY.write_text(patched)
-    return patched != text
+    block = '# BEGIN %s REPLACEMENTS\n%s = %r\n# END %s REPLACEMENTS\n' % (MARK, VAR, files, MARK)
+    if 'GROW_W3_REVIEW_BASE' not in text:
+        text = text.replace('# BEGIN DECLARED TRANSACTIONS\n',
+                            "# EDU-Q1 GROW W3 Friction: the paired lesson and its two resource pages,\n"
+                            "# written by tools/grow_resources/admit_w3_friction.py.\n"
+                            "GROW_W3_REVIEW_BASE = %r\n# BEGIN DECLARED TRANSACTIONS\n" % BASE, 1)
+    pattern = r'# BEGIN %s REPLACEMENTS\n.*?# END %s REPLACEMENTS\n' % (MARK, MARK)
+    if re.search(pattern, text, flags=re.S):
+        text = re.sub(pattern, lambda _: block, text, flags=re.S)
+    else:
+        text = text.replace('# END DECLARED TRANSACTIONS\n', block + '# END DECLARED TRANSACTIONS\n', 1)
+    entry = "    %r: (GROW_W3_REVIEW_BASE, %s),\n" % (NAME, VAR)
+    if entry not in text:
+        text = text.replace('    # END DECLARED TRANSACTION ENTRIES\n', entry + '    # END DECLARED TRANSACTION ENTRIES\n', 1)
+    assert text.count(entry) == 1 and text.count('# BEGIN %s REPLACEMENTS' % MARK) == 1
+    changed = text != BOUNDARY.read_text()
+    if changed and check:
+        raise SystemExit('[FAIL] GROW W3 replacement block differs from the tree')
+    if changed:
+        BOUNDARY.write_text(text)
+    return changed
 
 
 def extend_reviewed_paths(files, check):
