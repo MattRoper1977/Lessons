@@ -189,3 +189,33 @@ Gap worth naming: the amendment identifies this artwork **by filename only** and
 **Holds carried.** The amendment keeps the 08:30–15:30 UK school-day merge rule and the Site #291 / Lessons #456 / LP1 holds "unless separately and explicitly overridden". ORDER CX2 R2 is exactly such an explicit override of the merge hold, and is the rule in force; tonight's merges also fall outside that window. The Site and Lessons holds are untouched by anything in this session.
 
 **Access note for implementation.** Play and Games live outside this session's repository scope, which is `mattroper1977/lessons`. PLAY-D2 and PLAY-Q1-SPLASH will need those repositories attached before any work, and none has been attempted.
+
+## 15. BLOCKER B2: served digests for changed lesson HTML cannot be measured in this container — 15 September 2026
+
+Friction's carrier work exposed this, and it invalidates a digest already written into a carrier. Found by running the control the order requires (0.3: a green run that did not exercise the gate is not evidence) rather than trusting the first build.
+
+**Method under test.** Candidate served digests were being computed by running the pinned publisher locally: `build_education.py --lessons <tree> --output <dir> --allow-sparse`. The sparse flag is needed because this container has no Apps checkout.
+
+**Control.** Build Lessons **main** the same way and ask whether each output file reproduces a digest the carrier already admits. Main publishes green, so a faithful build must reproduce every one.
+
+| Type | Reproduce an admitted digest | Faithful |
+|---|---|---|
+| PDF | 773 / 773 | yes |
+| DOCX | 415 / 415 | yes |
+| PPTX | 246 / 246 | yes |
+| ZIP | 113 / 113 | yes |
+| JSON | 112 / 112 | yes |
+| SVG | 112 / 112 | yes |
+| TXT | 91 / 91 | yes |
+| PNG | 80 / 80 | yes |
+| CSS | 34 / 34 | yes |
+| **HTML** | **559 / 1503** | **no** |
+| Overall | 2797 / 3742 | |
+
+**What was ruled out.** The publisher's only HTML transformation is `with_lesson_navigation`, which inserts exactly 76 bytes (`<script defer src="/Lessons/assets/catalogue/lesson-navigation.js"></script>`) before the last `</body>`, deterministically, and returns the text unchanged when the adapter is already present. Byte-diffing source against output confirms that insertion and nothing else. `build_publications.py`, the step the caller runs first, was also run: it writes to its own output directory and leaves the Lessons tree unmodified (0 files changed). For the 944 mismatching HTML files the admitted digest equals **neither** the source digest nor the source-plus-injection digest, so the difference is not the injection and not a stale source. The remaining difference between this run and the live one is the Apps source, which the live caller supplies and this container cannot.
+
+**Consequence, and the correction made.** The BUILD W8B candidate digest `47364350…`, written into Site carrier `08f84452` and carried into `a89e2c60`, was produced by this method and is not trustworthy. Site carrier **`e1645d384ef88c9d761c18c91794f8624813b99c`** withdraws it and restores W8B's original rollback pair. Nothing independently confirmed was touched: the teaching-pack hub pair stands because publication run 35025572232 succeeded on the carrier carrying it, and the catalogue JSON entries are of a type the control reproduces exactly. No fabricated identity remains in the chain.
+
+**BLOCKER B2.** Any pull request that changes **lesson HTML bytes** cannot have its served digest measured here, so it cannot be given a correct carrier from this container. That is #543 Lane D BUILD (now returned to draft), #538 Friction, #546 Diffusion and #547 Sugar. Work that changes only non-HTML public files is unaffected, and #548 already shipped on that basis.
+
+Routes out, for Matt to choose: (a) attach the Apps repository to this session so a full non-sparse build can run; (b) measure the digests in a CI job on the real publisher and read them back; (c) accept a deliberate first publication failure per pathway and take the digest the publisher reports from its own refusal. Option (c) needs no new access and is self-correcting, but it spends a red publication run each time. Nothing is guessed in the meantime.
