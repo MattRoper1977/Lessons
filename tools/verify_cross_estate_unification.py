@@ -669,7 +669,9 @@ PUBLICATION_CALLER_PATH = ".github/workflows/education-pages.yml"
 # candidate. Only the caller's references and comment move.
 # Advanced 2026-09-15 (CX2 §2 Friction) to Site carrier 8cfd08b3abe08eeb79ff2139bedf07fbf536c520 on the same carrier branch:
 # the GROW W3 Friction candidate (this branch, #538) admitted beside its published rollback digests — the lesson, resource pages, GROW pack records, seven Week 3 archives, W3A/W3B natives, the hub index, lesson-order.json and the usage registry (30 pairs, nothing added or removed). Digests from a full three-repository build at this builder, qualified by a control build of main that reproduces all 4044 admitted digests. Publisher code is unchanged.
-PUBLICATION_CALLER_SHA256 = "30816c962f3e67c75a899df149ff1e8d545241eca5808f56528252f28c195a1c"
+# Advanced 2026-09-15 (CX2 §3 Diffusion) to Site carrier 7f97cbbfba76a44e86514116eaea67bd46782274 on the same carrier branch:
+# the LAUNCH W4L1 Diffusion candidate (this branch, #546) admitted beside the published Friction digests — the lesson, LAUNCH pack records, combined worksheets and teacher guide, W4L1 natives, every LAUNCH archive, the hub index, lesson-order.json and the usage registry (38 pairs, nothing added or removed) — and its thirteen download rows reviewed to the built sizes. Digests from a full three-repository build qualified by a control build of main acae624f that reproduces all 4044 admitted digests. Publisher code is unchanged.
+PUBLICATION_CALLER_SHA256 = "ade65ef36928fc61ffc4ea659e91835957a5102a0c83cf2078c6b905d783be90"
 # One reviewed caller digest per repository kind. detect_kind() reads the root
 # it is standing in, so this entry is only ever compared against the Apps
 # repository's own caller: the Lessons gate run and the Apps gate runs are the
