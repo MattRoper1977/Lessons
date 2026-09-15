@@ -118,3 +118,28 @@ Measured: the two are byte-identical to char 373,131 and then the second simply 
 **Eligibility measured today.** The amendment admits only accepted AND published EDU-Q1 identities. Sugar is published. Friction (#538) is held and unmerged; Diffusion (#546) is accepted by Matt's listening pass but unmerged and unpublished. So **one of three is eligible right now**, and the amendment's own rule makes that a static card with no carousel controls. Implementing the rotation before Friction and Diffusion publish would either ship a degenerate one-item carousel or promote unfinished drafts, which the amendment forbids. Both amendments are therefore recorded and queued, and EDU-Q1 continues first, exactly as each handover paragraph instructs.
 
 **#548 merged** — main `28d51c8e73328d668b4358a1b99226d3f8a7769f`, all nineteen checks green. That lands the S3 offline-edition relabelling. Publication run follows; the carrier `a89e2c60` admits both the rollback and the new hub digest, and the registry is fail-closed, so a mistake blocks publication rather than serving wrong bytes.
+
+## 12. EDU-D3 concept assets received and identity-verified; Play board does not match its approved reference — 15 September 2026
+
+Matt supplied three concept boards. Identity checked by digest against the master order rather than by appearance:
+
+| Board | SHA-256 | Order's recorded identity | Verdict |
+|---|---|---|---|
+| "02 / IDEAS COMING TO LIFE", owl and resources | `c6c1b9e8d6fb78b4b044d521cd75cef389e8b2a5a3f478f95ec718b79932b248` | homepage asset `27988.jpg` | **exact match** |
+| "04 / LEARNING COMES TO LIFE", classroom blend | `4cdfedd8b48fa7efdc0debd6a7c332a9fba0e4547c147291d46bab0d0360e77e` | Teachers asset `exec-c1f6aed3-0463-4f3a-addf-c22a5c9a7b03.png` | **exact match** |
+| Play, single neon controller, "Pick a game. Make it yours." | `f2d77fa5442d2fddc1dd1507755d7f7f64d12c779e907898f092f38fa8222811` | PLAY-D2 approves the **LEFT** controller inside the two-controller comparison `exec-73468ce7-8fc0-452e-872c-bceb9c7a2a2f.png` | **no match** — different asset |
+
+**Both Education boards are the approved assets.** EDU-HERO's authoritative homepage reference `27988.jpg` is therefore this device-mockup board, not a bare photograph. Since the same amendment rules that "device frames, mockup page text and presentation-board titles are references only and must not be embedded into the live page", the homepage hero must be **extracted** from the composition inside the board's desktop frame — the same shape as PLAY-D2's "extract the left composition only". Recorded so implementation does not embed a picture of a monitor.
+
+**Refinements now visible in the approved homepage board, and owed at implementation.** Each is already required by EDU-HERO; this records where each one bites:
+1. The prism sits directly against the owl's face and breast. Move it clear and restore breathing room around the owl.
+2. Foreground carries globe, pencil pot, open notebook, prism, tablet and a stack of four books at once. Simplify, especially at phone width.
+3. Two slogans are inside the artwork and must go: a handwritten "Small steps brighter tomorrows" across the notebook page, and "A BRIGHTER HUMAN FUTURE" on the tablet screen.
+4. Already correct and to be preserved: the headline "Big on ideas. Light on prep.", the eyebrow "MADE BY A TEACHER. BUILT FOR REAL CLASSROOMS.", MADE BY MATT on one line with "Learn • Build • Explore" beneath, and the silver circular M.
+5. The board's subject cards read Science / Humanities & RE / Art Studio / Lifeskills with BUILD / GROW / LAUNCH chips. These are mockup labels: confirm every label, destination and pathway chip against the real catalogue before use, because the amendment forbids mockup content replacing verified records.
+
+**Teachers board.** Matches the approved allocation (teacher and three teenage learners, prism, tablet, shared notebook). Two carries: the wall art reads "Curious Kind Brighter Together", which is a supplementary slogan inside the artwork and falls under refinement 3; and the people are generated, so alt text must describe purpose and must never present them as actual staff, pupils or testimonials.
+
+**Play board.** Received and recorded, but its digest does not match the approved PLAY-D2 reference, and PLAY-D2 sits after EDU-D3 in the order. Treated as a further concept, not as the approved asset; no PLAY work started and none claimed. To be put to Matt at the readback: whether this supersedes the LEFT-controller extraction from `exec-73468ce7…`, or sits alongside it.
+
+Nothing is implemented from any of these. EDU-D3 remains queued behind EDU-Q1, per both amendments' own handover paragraphs.
