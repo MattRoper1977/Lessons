@@ -1,6 +1,6 @@
 # EDU Q1 BUILD Sugar candidate
 
-Status: first authored candidate for browser review, not a release candidate.
+Status: Sugar companion and discovery integration is in draft. The bounded screen/print review passes on the previous runtime-identical source; new-head CI, actual screen-reader coverage and coordinated release admission remain open. The latest dated entry below governs earlier historical entries. No merge or publication.
 
 Base: Lessons 11bba1875e27016547186754ed65752152e27c9b. The source was unchanged from the 15 September intake when refreshed. No existing EDU-Q1 pull request was found.
 
@@ -45,3 +45,15 @@ A PDF-byte check now verifies all nine PDF outputs: page counts, nonempty text, 
 Six native companions are complete and reviewed separately. The unchanged C1-C7 production checker recognised 40 minutes in the six-file isolated Sugar preparation; live bindings remain untouched. The new HTML print candidate requires new browser evidence. Exact accepted-source admission, affected test tools, both catalogue gates, publisher, full companion/discovery derivation and actual screen-reader coverage remain open. No merge or publication.
 
 EDU-HEADER-BRAND-20260915 is read and recorded: MADE BY MATT stays on one line, including mobile, with Learn • Build • Explore beneath the Education header logo; this supersedes the earlier footer-only restriction. Queue it for the next suitable shared-header checkpoint. PLAY-BRAND and order EDU-Q1 → PLAY-D2 → PLAY-Q1 → PLAY-I1 → evidence-justified MAINT-1 → PLAY-X1 remain, with all holds. Next: Light for routine new-head CI monitoring; High again for renewed print review/debugging.
+
+## 15 September — companion and discovery integration
+
+Verified the supplied Science run 34960428417 ZIP against artifact 10392868248: 3144292 bytes, SHA256 0a2341c41e864ba7097cfb8fc2474862c7f7e3cb96e38af8621b6c8a7c1f5d90. Its 88 browser checks and nine PDF checks pass on source c9a96df42e784f30e3ff5fb218f05f665a8034bc10d16d4e53a49affc2f924be. All 20 screenshots match the reviewed previous captures; 21 of 25 PDF pages match the same-renderer comparison. Inspected all four changed pages: the Supported organiser text is restored and all three exit sheets contain two complete inset tickets. This closes the two observed print defects; it does not establish assistive-technology or physical-printer acceptance.
+
+Integrated all six reviewed native companions at their existing repository URLs. The source, placement record, companion catalogue evidence and six measured download sizes now agree. Existing C1–C7 checks pass on the exact isolated Sugar pack: six files, 960517 bytes, 39 editable slides, 61 native PDF pages and 40 recognised minutes. All historical intake hashes remain. The companion-row generator accepts an optional sourceRevisionNote; only Sugar uses it to state that the lesson and pack were refreshed together. Its other 115 generated rows are unchanged.
+
+Added a nonvisual lesson-config declaring the retained Autumn 1 term and actual classic-v2 chassis. Current HTML is 626431 bytes, SHA256 fdf2d09803e19d11e8f82949efaeb8255893627841fd1a3f7860093350bbca1e. Removing that exact script restores the previously reviewed HTML bytes; no teaching content, CSS, executable JavaScript or header was changed in this integration. Existing classifier logic now derives Current classroom series, replacing the obsolete repeated-Lundy classification and removed quotation. Sugar remains Week not specified: no workbook-cell or calendar-week binding was invented.
+
+Updated only Sugar's derived term/style records and current source review. The unchanged Science card function derives its new card with the actual source-hash assertion. The static page moves it between the existing BUILD Autumn 1 batches (current 5→6, full-Lundy 12→11); all other 128 cards and all page bytes outside those two batches are identical. The current shelf has 129 routes; the older week-audit summary's 123-route figure is historical and was not used as the current count. No shared-header or other-session account work was changed.
+
+These are bounded derivations against the actual checked-out source and reviewed baseline, not a full-tree regeneration. Existing UX2 CI now owns complete-tree companion derivation/file resolution and size-table verification. Science and FieldOps CI recheck this new head. Exact admission of the final changed source, tools and derived records through both catalogue verifiers and the immutable publisher remains open; no pin or gate was weakened. Actual screen-reader acceptance remains required. Preserve all existing holds, EDU-HEADER-BRAND-20260915, PLAY-BRAND-20260915 and the agreed pass order. Next: Light for routine CI monitoring; High before diagnosis or further acceptance work.
