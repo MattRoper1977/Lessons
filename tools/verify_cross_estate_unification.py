@@ -768,6 +768,14 @@ ALLOWED_DIFF = {
     # lesson pull request. None of these is a studio and none can alter one.
     "UX2_LEDGER.md",
     "README.md",
+    # ORDER CX2, 2026-09-15. The same shape as the UX2 ledger: the order, its
+    # working checkpoint (appended after every material result), the lesson
+    # standard it cites and the recorded PLAY amendment. Documentation only;
+    # none of these is a studio, none is served and none can alter one.
+    "docs/orders/CX2_FINISH_2026-09-15.md",
+    "docs/orders/CX2_CHECKPOINT.md",
+    "docs/orders/LESSON_STANDARD_2026-27.md",
+    "docs/orders/PLAY_BRAND_AMENDMENT_2026-09-15.md",
     "tools/verify_lessons_chips.mjs",
     ".github/workflows/ux2-gates.yml",
     "tools/ux2/hub_gates.mjs",
