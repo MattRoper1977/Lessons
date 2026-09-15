@@ -654,7 +654,11 @@ PUBLICATION_CALLER_PATH = ".github/workflows/education-pages.yml"
 # c06526c5 byte-identical except the admission registry (two regenerated catalogue files admitted
 # beside their published rollback digests). Only the caller's two commit references and its
 # comment move; this digest is the caller file after that move.
-PUBLICATION_CALLER_SHA256 = "05b07056346fa5dd5809e66f16c6d0181762a1cacba7b619dd4e76f22485aadb"
+# Advanced 2026-09-15 (CX2 S3) to Site carrier a89e2c601b491be7b0121754a17f56228eafa21a on the same
+# carrier branch: 297ed5de plus two registry commits (Lane D BUILD W8B and its lesson-order; the
+# relabelled teaching-pack hub). Every entry keeps its published rollback digest beside the
+# candidate. Only the caller's references and comment move.
+PUBLICATION_CALLER_SHA256 = "9079af3bd47a38ddaa801826ddf663f66d6c4f7a0eca15eb962e52ee2f2b377f"
 # One reviewed caller digest per repository kind. detect_kind() reads the root
 # it is standing in, so this entry is only ever compared against the Apps
 # repository's own caller: the Lessons gate run and the Apps gate runs are the
