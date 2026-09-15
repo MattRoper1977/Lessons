@@ -42,7 +42,7 @@ async function run(root, out) {
       for(let i=0;i<titles.length;i++) await check('context focus: '+titles[i],async()=>{await goto(i);assert.equal(await focused('.slide.active h1,.slide.active h2'),true);assert.equal(await page.locator('.slide.active h1,.slide.active h2').first().getAttribute('tabindex'),'-1');});
       await check('both periods retain exact pacing and boundary',async()=>{
         assert.deepEqual(await page.locator('.slide').evaluateAll(nodes=>nodes.map(n=>Number(n.dataset.timer))),[1,4,2,9,10,4,10,32,4,4]);
-        await goto(0);const resume=page.getByRole('button',{name:'Resume period 2',exact:false});await resume.focus();await page.keyboard.press('Enter');assert.equal(await active(),'Independent Work');assert.equal(await focused('.slide.active h2'),true);
+        await goto(0);const resume=page.getByRole('button',{name:'Resume Lesson B',exact:false});await resume.focus();await page.keyboard.press('Enter');assert.equal(await active(),'Independent Work');assert.equal(await focused('.slide.active h2'),true);
         await page.locator('button[onclick="prevSlide()"]').focus();await page.keyboard.press('Enter');assert.equal(await active(),'We Do 2');assert.equal(await focused('.slide.active h2'),true);
       });
       await goto(3);
