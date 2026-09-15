@@ -1547,6 +1547,12 @@ REVIEWED_PATHS += (
 )
 
 
+# CX2 §8.3 Lane D: return-week W8 lessons admitted as reviewed replacement transactions.
+REVIEWED_PATHS += (
+    'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html',
+)
+
+
 def pack_rows_for(lessons: Path, rows: list) -> list:
     """UX2 D3 (2026-09-08): the companion-pack entries are the catalogue's tail,
     after the reviewed hub rows. They are not a second hand-kept literal: they
