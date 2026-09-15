@@ -1547,6 +1547,13 @@ REVIEWED_PATHS += (
 )
 
 
+# CX2 S3: the teaching-pack hub, relabelled so the offline companion set is not read
+# as the lesson itself.
+REVIEWED_PATHS += (
+    'Science_Teesside/Teaching_Packs/web-slides.html',
+)
+
+
 def pack_rows_for(lessons: Path, rows: list) -> list:
     """UX2 D3 (2026-09-08): the companion-pack entries are the catalogue's tail,
     after the reviewed hub rows. They are not a second hand-kept literal: they

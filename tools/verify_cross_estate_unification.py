@@ -174,7 +174,7 @@ CATALOGUE_PINS = {
         ".github/workflows/watch-main.yml": "796f0aa8d9967fc301bdd47923bb47ad7055f7c5036fa44b2df8780ce31a016c",
         "tools/verify_v6fin_w7_r1_r7.py": "2be87c68256802e46131d9a4c70228e3d8635c51eb1789c01b94f2b316960dae",
         ".github/workflows/glv3-verify.yml": "4bf27ca7471a21359e35d1bc7277c5fa0adeb5f31a47c769f192165796037088",
-        "_glv3/tools/verify_change_boundary.py": "74ac64ca6b8b98b6cbb5b977f2a4c8f01007619a833c6c9586eb98173745d363",
+        "_glv3/tools/verify_change_boundary.py": "4e830200432df02adb1223e720560fda637e659c5ce850907aeaef0f31761954",
         "_glv3/tools/browser_verify.mjs": "737ad30f297e061407161743f017614179cc6c56f1c9a3904bbe7c98df38c888",
         "_glv3/tools/chip_gate.mjs": "16cdd5c0ad3745c57340ed0ec6a208d221e4793bfc9b1cd9bc703a6c2613dd9a",
         "_glv3/tools/catalogue_membership.mjs": "4d7ab03e23ee0d3c3fc934f4f0a901afc61169754db099f4f5c24dd9cce058ec",
@@ -583,7 +583,8 @@ CATALOGUE_PINS = {
         "tools/downloads/prepare_pack_browser.py": "9b5e9a0166822d8a12c6d628fccddfebf65aa0d349c7e4aaecea3aa6d074ceea",
         "tools/downloads/test_download_pack.py": "1fd8ed1c791ab7ac60227ea10929f5ff13966d151c807c15192427bdd9ba0f2e",
         "tools/science_teaching_packs/check_build_sugar_browser.cjs": "1c89ea763fdbeedba36bc497db6ef9bcdacf807ee74b01f008e6981b6c339c29",
-        "tools/science_teaching_packs/check_build_sugar_pdfs.py": "62f8d1d1989be600374fdae1dbda9c7ebf407711cfb572123a3f9c31c4442a03"
+        "tools/science_teaching_packs/check_build_sugar_pdfs.py": "62f8d1d1989be600374fdae1dbda9c7ebf407711cfb572123a3f9c31c4442a03",
+        "Science_Teesside/Teaching_Packs/web-slides.html": "f31f09d03f5d8c417af1745b38309fa537afb8bb4c6a08f387db3349d9e1cba2"
     }
 }
 # END REVIEWED CATALOGUE PINS
@@ -653,7 +654,11 @@ PUBLICATION_CALLER_PATH = ".github/workflows/education-pages.yml"
 # c06526c5 byte-identical except the admission registry (two regenerated catalogue files admitted
 # beside their published rollback digests). Only the caller's two commit references and its
 # comment move; this digest is the caller file after that move.
-PUBLICATION_CALLER_SHA256 = "05b07056346fa5dd5809e66f16c6d0181762a1cacba7b619dd4e76f22485aadb"
+# Advanced 2026-09-15 (CX2 S3) to Site carrier a89e2c601b491be7b0121754a17f56228eafa21a on the same
+# carrier branch: 297ed5de plus two registry commits (Lane D BUILD W8B and its lesson-order; the
+# relabelled teaching-pack hub). Every entry keeps its published rollback digest beside the
+# candidate. Only the caller's references and comment move.
+PUBLICATION_CALLER_SHA256 = "9079af3bd47a38ddaa801826ddf663f66d6c4f7a0eca15eb962e52ee2f2b377f"
 # One reviewed caller digest per repository kind. detect_kind() reads the root
 # it is standing in, so this entry is only ever compared against the Apps
 # repository's own caller: the Lessons gate run and the Apps gate runs are the

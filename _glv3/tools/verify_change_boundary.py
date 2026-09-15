@@ -44,7 +44,14 @@ SUGAR_REPLACEMENTS = {'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Lab
 # Further reviewed replacement transactions are declared here by their own
 # admission tools (tools/grow_resources/admit_w3_friction.py, tools/rw1/admit_w8.py),
 # each as an exact per-file map; never a directory-wide permission.
+# CX2 S3 (Matt's ruling, 15 September 2026): the pack hub names the offline companion
+# set as a lightweight offline edition and links each entry to its canonical lesson,
+# written by tools/science_teaching_packs/cx2_s3_offline_edition.py.
+CX2_S3_REVIEW_BASE = '5778ede06902e7a218459452ae79e3ce330db693'
 # BEGIN DECLARED TRANSACTIONS
+# BEGIN S3 OFFLINE EDITION REPLACEMENTS
+CX2_S3_REPLACEMENTS = {'Science_Teesside/Teaching_Packs/web-slides.html': {'beforeGitBlob': '6596d65c7a9bd5bb1875c5b46bbc331df8652144', 'afterSha256': 'f31f09d03f5d8c417af1745b38309fa537afb8bb4c6a08f387db3349d9e1cba2', 'bytes': 18607}}
+# END S3 OFFLINE EDITION REPLACEMENTS
 # END DECLARED TRANSACTIONS
 
 # Each transaction is judged on its own: every member present as exactly one
@@ -53,6 +60,7 @@ SUGAR_REPLACEMENTS = {'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Lab
 REPLACEMENT_TRANSACTIONS = {
     'Sugar': (SUGAR_REVIEW_BASE, SUGAR_REPLACEMENTS),
     # BEGIN DECLARED TRANSACTION ENTRIES
+    'S3 offline edition labelling': (CX2_S3_REVIEW_BASE, CX2_S3_REPLACEMENTS),
     # END DECLARED TRANSACTION ENTRIES
 }
 # Declaration order is review order: a later transaction that names a path
