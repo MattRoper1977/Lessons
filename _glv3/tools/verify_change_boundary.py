@@ -54,6 +54,9 @@ RW_W8_BUILD_REPLACEMENTS = {'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8B_Aut
 # BEGIN RETURN WEEK W8 GROW REPLACEMENTS
 RW_W8_GROW_REPLACEMENTS = {'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W8A_Day_And_Night_Explore.html': {'beforeGitBlob': 'ef8195bba4529ba1b9698f0db5cec507f7433aff', 'afterSha256': 'f78b9aaba8f353ff509e79389048e82fa5a567951e1a417e4398f7a2ae59bfa1', 'bytes': 281932}, 'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W8B_Day_And_Night_Do.html': {'beforeGitBlob': 'a7f2e7437f4fdfad0a397b7ad323b54128eefa23', 'afterSha256': '9a095e1829c75fc4c8ac4082e6003db7463081eb00bc027cb00828f9045c9837', 'bytes': 274599}}
 # END RETURN WEEK W8 GROW REPLACEMENTS
+# BEGIN RETURN WEEK W8 LAUNCH REPLACEMENTS
+RW_W8_LAUNCH_REPLACEMENTS = {'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L1_Enzyme_Action_Introduce.html': {'beforeGitBlob': 'e92efe5671f2e89f4e9fd0eda10013e6124cd878', 'afterSha256': 'e21d25a52a9ff196d2677dac83fd180fe1129972859ab3fd2953b07767ce2724', 'bytes': 281159}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L2_Amylase_pH_Core_Practical_Explore.html': {'beforeGitBlob': '96adc448f37fcb0b6eed5f79c9cebad4da41a25e', 'afterSha256': '2601205547fa330e9d0e4b88ed4b97b126afcdb3855b0f055cf6bf15224a9225', 'bytes': 275755}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L3_Amylase_Rate_And_Topic_1_Do.html': {'beforeGitBlob': '7a2efdef9cd54395af81e4a993e305d1cae5651f', 'afterSha256': 'e1f93d7023cdec3a9e1ef5df8753bb0fec4d56ac569e3db1dea01c250a29efa0', 'bytes': 289038}}
+# END RETURN WEEK W8 LAUNCH REPLACEMENTS
 # END DECLARED TRANSACTIONS
 
 # Each transaction is judged on its own: every member present as exactly one
@@ -64,6 +67,7 @@ REPLACEMENT_TRANSACTIONS = {
     # BEGIN DECLARED TRANSACTION ENTRIES
     'Return week W8 BUILD': (RW_W8_REVIEW_BASE, RW_W8_BUILD_REPLACEMENTS),
     'Return week W8 GROW': (RW_W8_REVIEW_BASE, RW_W8_GROW_REPLACEMENTS),
+    'Return week W8 LAUNCH': (RW_W8_REVIEW_BASE, RW_W8_LAUNCH_REPLACEMENTS),
     # END DECLARED TRANSACTION ENTRIES
 }
 ALL_REPLACEMENTS = {rel: name for name, (_, files) in REPLACEMENT_TRANSACTIONS.items() for rel in files}
