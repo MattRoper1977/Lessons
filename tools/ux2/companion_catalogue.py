@@ -122,7 +122,7 @@ def derive(rows: list[dict], manifest: dict) -> tuple[list[dict], list[dict]]:
             "type": "support",
             "family": anchor["family"],
             "added": generated,
-            "desc": f"Companion pack for the {pack['pathway']} {pack['subject']} lesson {pack['wtoken']} · {pack['title']}: {describe(files)}. The lesson itself is unchanged.",
+            "desc": f"Companion pack for the {pack['pathway']} {pack['subject']} lesson {pack['wtoken']} · {pack['title']}: {describe(files)}. " + pack.get("sourceRevisionNote", "The lesson itself is unchanged."),
             "year": year,
             "halfTerm": half_term,
         }

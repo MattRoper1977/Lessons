@@ -16,6 +16,37 @@ PACKS = [
      for level in ['bronze','explore','silver']]
 
 
+# EDU-Q1 changes Sugar's guidance presentation, not its navigation coverage.
+# The census digest preserves all 47 original source identities (sorted, LF-joined)
+# from guidance_source_repair.json. No lesson may disappear by losing a marker.
+GUIDANCE_ROUTES_SHA256 = "a7f5c3473f78c0a3f5ec5048a92ae30bf93bccfd56a07f7699145a51db769a2b"
+SUGAR_GUIDANCE = "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html"
+
+
+def guidance_kind(member, content):
+    source = member.removeprefix('Lessons/')
+    if source == SUGAR_GUIDANCE:
+        from lxml import html
+        page = html.fromstring(content)
+        required = [
+            '//button[@data-action="ta"]',
+            '//dialog[@id="ta-dialog"]//button[@data-action="close"]',
+            '//button[@id="next-slide" and @data-action="next"]',
+            '//button[@id="previous-slide" and @data-action="previous"]',
+        ]
+        if not all(len(page.xpath(selector)) == 1 for selector in required):
+            raise ValueError('Sugar replacement must retain real teacher-dialog and navigation controls')
+        return 'classic-dialog'
+    return 'docked-guidance' if b'n6m-guide-docked' in content else None
+
+
+def validate_guidance_census(members):
+    identities = [member.removeprefix('Lessons/') for member in members]
+    actual = hashlib.sha256('\n'.join(sorted(identities)).encode()).hexdigest()
+    if len(identities) != 47 or len(set(identities)) != 47 or actual != GUIDANCE_ROUTES_SHA256:
+        raise ValueError('All 47 original Guidance routes must receive actual navigation checks; identities differ')
+
+
 def validate_archive(archive):
     names=archive.namelist()
     if len(names)!=len(set(names)) or len(names)!=len(set(n.casefold() for n in names)):
@@ -76,20 +107,21 @@ def prepare(definitions, archives, extracted, manifest):
                 if 'tools/artsaward/SLOTS.json' not in names:raise ValueError('Missing offline slot register')
             destination.mkdir()
             z.extractall(destination)
-            guide_members=[m for m in members if b'n6m-guide-docked' in z.read(m)]
+            guide_variants={m:guidance_kind(m,z.read(m)) for m in members}
+            guide_variants={m:kind for m,kind in guide_variants.items() if kind}
+            guide_members=list(guide_variants)
             result['packs'].append({'id':ident,'root':ident,'kind':kind,'pathway':lane,'term':term,
                 'archive':source.name,'zipSha256':hashlib.sha256(source.read_bytes()).hexdigest(),
                 'title':definition['title'],'entry':'START_HERE.html',
                 'packStart':prefix+definition['entry'],'lessons':members,'firstLesson':members[0],
                 'laterSample':later,'expectHud':prefix=='Lessons/' and term=='aut1',
-                'guidanceNavigationMembers':guide_members,
+                'guidanceNavigationMembers':guide_members,'guidanceNavigationVariants':guide_variants,
                 'memberCount':len(names),'declaredLessonCount':len(members),'validatedSourceHashes':len(metadata['sources'])})
     result['packCount']=len(result['packs'])
     result['packagedLessonFiles']=sum(p['declaredLessonCount'] for p in result['packs'])
     result['interactiveRepresentativeCount']=sum(1+bool(p['laterSample']) for p in result['packs'])
     result['guidanceNavigationRoutes']=sum(len(p['guidanceNavigationMembers']) for p in result['packs'])
-    if result['guidanceNavigationRoutes'] != 47:
-        raise ValueError('All 47 repaired Guidance routes must receive actual navigation checks')
+    validate_guidance_census([m for p in result['packs'] for m in p['guidanceNavigationMembers']])
     manifest.parent.mkdir(parents=True,exist_ok=True)
     manifest.write_text(json.dumps(result,indent=2)+'\n')
     return result

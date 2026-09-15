@@ -34,8 +34,8 @@ const report={schema:'lesson-offline-browser-acceptance-v1',status:'RUNNING',
   limitations:['Representative interactions only; not every lesson activity tested.',
     'Print invocation and print-media contents checked; no physical printer or page-pagination claim.',
     'Microphone permission/capture and external video sites are not exercised.']};
-const nextSelector='button[data-nav="next"], button#next, button[onclick="nextSlide()"]';
-const prevSelector='button[data-nav="previous"], button#prev, button[onclick="prevSlide()"]';
+const nextSelector='button#next-slide[data-action="next"], button[data-nav="next"], button#next, button[onclick="nextSlide()"]';
+const prevSelector='button#previous-slide[data-action="previous"], button[data-nav="previous"], button#prev, button[onclick="prevSlide()"]';
 function clean(text){return String(text||'').replace(/\s+/g,' ').trim();}
 async function active(page){return page.locator('.slide').evaluateAll(nodes=>{
   const all=nodes.map((n,index)=>({index,active:n.classList.contains('active'),
@@ -189,19 +189,31 @@ async function inspectAward(page,row,root,slotsRequired){
             await page.setViewportSize(viewport);
             await page.goto(pathToFileURL(inside(root,member)).href);
             const initial=await stage(page);
-            const guidance=page.locator('.controls .left .n6m-guide-btn');
-            assert.equal(await guidance.count(),1,'Guidance shares the actual toolbar');
+            const variant=pack.guidanceNavigationVariants?.[member];
+            assert.ok(['classic-dialog','docked-guidance'].includes(variant),'Known guidance interaction required');
+            const guidance=page.locator(variant==='classic-dialog'?'button[data-action="ta"]':'.controls .left .n6m-guide-btn');
+            assert.equal(await guidance.count(),1,'One reachable teacher guidance control');
             assert.ok((await guidance.boundingBox()).height>=44,'Guidance has a 44px target');
-            const before=await guidance.getAttribute('aria-pressed');
-            await guidance.click();
-            assert.notEqual(await guidance.getAttribute('aria-pressed'),before,'Guidance opens with an actual click');
-            await guidance.click();
-            assert.equal(await guidance.getAttribute('aria-pressed'),before,'Guidance returns to its prior state');
+            if(variant==='classic-dialog'){
+              await guidance.click();
+              const dialog=page.locator('#ta-dialog');
+              await dialog.waitFor({state:'visible'});
+              assert.ok(clean(await dialog.innerText()).length>80,'Teacher guidance contains actual text');
+              await dialog.locator('[data-action="close"]').click();
+              await dialog.waitFor({state:'hidden'});
+              assert.ok(await guidance.evaluate(n=>n===document.activeElement),'Teacher Close restores invoking control');
+            }else{
+              const before=await guidance.getAttribute('aria-pressed');
+              await guidance.click();
+              assert.notEqual(await guidance.getAttribute('aria-pressed'),before,'Guidance opens with an actual click');
+              await guidance.click();
+              assert.equal(await guidance.getAttribute('aria-pressed'),before,'Guidance returns to its prior state');
+            }
             await (await findVisible(page,nextSelector)).click();
             assert.notEqual((await stage(page)).index,initial.index,'Guidance must not obstruct Next');
             await (await findVisible(page,prevSelector)).click();
             assert.equal((await stage(page)).index,initial.index,'Previous remains reachable');
-            report.guidanceNavigation.push({packId:pack.id,member,viewport,actualClicks:true});
+            report.guidanceNavigation.push({packId:pack.id,member,viewport,variant,actualClicks:true});
             if(args.artifacts&&member===pack.guidanceNavigationMembers[0])
               await page.screenshot({path:path.join(args.artifacts,pack.id+'-guidance-'+viewport.width+'.png'),fullPage:true});
           }

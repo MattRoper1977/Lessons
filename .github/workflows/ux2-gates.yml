@@ -117,6 +117,9 @@ jobs:
         run: python3 tools/ux2/prove_catalogue_gate.py
       - name: The companion-pack entries equal their derivation, every file resolves once, and six plants go red
         id: companions
+        # Collect the independent file/derivation proof even if admission fails.
+        # Earlier failures still fail the job; cancellation still stops it.
+        if: ${{ !cancelled() }}
         run: |
           python3 tools/ux2/companion_catalogue.py --self-test
           python3 tools/ux2/companion_catalogue.py --check

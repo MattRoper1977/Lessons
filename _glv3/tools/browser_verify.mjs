@@ -3,6 +3,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { chromium } from 'playwright';
+import { expectedSubjectRows, verifySubjectCards, catalogueMembershipControls } from './catalogue_membership.mjs';
+
+catalogueMembershipControls();
 
 const ROOT = process.cwd();
 const BASE = process.env.GLV3_BASE_URL || 'http://127.0.0.1:8123';
@@ -168,6 +171,7 @@ if (result.print.failures.length) {
 // estate boot gate so they cannot contaminate that universe's zero-error proof.
 cataloguePhase = true;
 const resources = JSON.parse(fs.readFileSync('resources.json','utf8'));
+const order = JSON.parse(fs.readFileSync('assets/catalogue/lesson-order.json', 'utf8'));
 const newResources = resources.filter(x => String(x.id || '').startsWith('glv3-'));
 if (newResources.length !== 88) throw new Error(`catalogue expected 88 GLV3 entries, got ${newResources.length}`);
 const chipNames = [...new Set(newResources.map(x => x.subject))].sort();
@@ -187,30 +191,16 @@ for (const chip of chipNames) {
   const state = await page.evaluate(() => [...document.querySelectorAll('#cards .card')].map(el => {
     const a = el.querySelector('a[href]');
     return {
+      path: el.getAttribute('data-resource-path') || '',
       href: a?.getAttribute('href') || '',
       text:(el.textContent || '').replace(/\s+/g,' ').trim(),
     };
   }));
 
-  const expectedTotal = resources.filter(x => x.subject === chip).length;
-  if (!Number.isFinite(advertised) || advertised !== expectedTotal || state.length !== expectedTotal) {
-    throw new Error(`${chip}: advertised=${advertised} rendered=${state.length} JSON=${expectedTotal}`);
-  }
-
-  const got = new Set();
-  for (const x of state) {
-    if (!x.href) continue;
-    let h = decodeURIComponent(x.href.split('#')[0].split('?')[0]).replace(/^\.\//,'').replace(/^\//,'');
-    if (h.endsWith('/')) h += 'index.html';
-    got.add(h);
-  }
+  const expected = expectedSubjectRows(resources, order, chip);
+  const expectedTotal = expected.length;
+  verifySubjectCards({subject: chip, expected, advertised, cards: state, base: BASE});
   const want = newResources.filter(x => x.subject === chip).map(x => x.file);
-  const missing = want.filter(x => ![...got].some(h => h === x || h.endsWith('/' + x)));
-  if (missing.length) {
-    const textJoined = state.map(x => x.text).join('\n');
-    const stillMissing = newResources.filter(x => missing.includes(x.file) && !textJoined.includes(x.title)).map(x => x.file);
-    if (stillMissing.length) throw new Error(`${chip}: ${stillMissing.length} new entries not reachable through real filter chain: ${stillMissing.slice(0,8).join(', ')}`);
-  }
   result.catalogue.chips[chip] = {
     new_entries: want.length,
     advertised,

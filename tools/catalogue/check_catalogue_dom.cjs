@@ -108,14 +108,15 @@ function visibleScience(env){return [...env.document.querySelectorAll('[data-les
  check('Unproven weeks stay discoverable with an honest unknown label',()=>{assert.equal(visibleScience(unbound).length,4);assert(visibleScience(unbound).every(c=>c.querySelector('.science-week').textContent==='Week not specified'));});
  check('Science clear removes the week filter and restores all routes',()=>{event(unbound,unbound.document.querySelector('#science-clear'),'click');assert.equal(visibleScience(unbound).length,129);assert.equal(unbound.location.search,'');});
  const full=environment('Science_Teesside/index.html','?style=full-lundy');runFile(full,'assets/catalogue/science-shelf.js');
- check('Full Lundy shortcut preserves access to all 86 alternatives',()=>assert.equal(visibleScience(full).length,86));
+ const fullLundyPaths=science.lessons.filter(r=>r.style==='full-lundy').map(r=>r.path).sort();
+ check('Full Lundy shortcut exposes exactly the current matching source routes',()=>assert.deepEqual(visibleScience(full).map(c=>c.dataset.lessonPath).sort(),fullLundyPaths));
  check('Native keyboard/touch semantics and live status are declared',()=>{
   for(const doc of [sc.document])for(const s of doc.querySelectorAll('.toolbar select,.toolbar input'))assert(s.closest('label'));
   assert(env.document.querySelector('label[for="search"] #search'));
   assert.equal(sc.document.querySelector('#science-count').getAttribute('aria-live'),'polite');
   assert([...sc.document.querySelectorAll('.science-pathway')].every(d=>d.tagName==='DETAILS'&&d.firstElementChild.tagName==='SUMMARY'));
  });
- check('Science version shortcut applies its filters without losing alternatives',()=>{event(sc,sc.document.querySelector('[data-shortcut="full-lundy"]'),'click');assert.equal(visibleScience(sc).length,86);assert.equal(sc.document.querySelector('#science-pathway').value,'');});
+ check('Science version shortcut applies its filters without losing alternatives',()=>{event(sc,sc.document.querySelector('[data-shortcut="full-lundy"]'),'click');assert.deepEqual(visibleScience(sc).map(c=>c.dataset.lessonPath).sort(),fullLundyPaths);assert.equal(sc.document.querySelector('#science-pathway').value,'');});
  check('Catalogue print hooks open and restore collapsed sections',()=>{const section=rec.document.querySelector('.science-pathway[data-pathway="LAUNCH"]');section.open=false;rec.window.dispatchEvent(new rec.window.Event('beforeprint'));assert.equal(section.open,true);rec.window.dispatchEvent(new rec.window.Event('afterprint'));assert.equal(section.open,false);});
  // UX2: the metadata-failure and alternative-batch cases tested the retired term/style filter chain; the
  // subject page groups by half-term and unit (record fields), so those cases are retired with the filters.

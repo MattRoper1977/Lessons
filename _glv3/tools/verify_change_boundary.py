@@ -36,6 +36,100 @@ BOUND_INPUTS = (SOURCE, DOWNLOADS, LABEL_EDITS, 'tools/humanities_resources/CONT
                 'tools/humanities_resources/resource.js')
 
 
+# EDU-Q1: exactly the reviewed Sugar HTML and six existing companions.
+# This is a replacement transaction, never a directory-wide permission.
+SUGAR_REVIEW_BASE = '11bba1875e27016547186754ed65752152e27c9b'
+SUGAR_REPLACEMENTS = {'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html': {'beforeGitBlob': 'bd1d6da15f32efc7ce068e9f4e846bb7038bb80a', 'afterSha256': '8594f15916211ff3de03bb928b2de3756bff0dbe8c52adabd3e4cccfda9d42a3', 'bytes': 628443}, 'Science_Teesside/Teaching_Packs/BUILD/lessons/W8A/BUILD_Science_Autumn1_W8A_Sugar_Evidence_Read_The_Label.pdf': {'beforeGitBlob': 'abd9261ff123775b2af979761d08dbe1ea5e2662', 'afterSha256': 'fc9ba726c94177000d872c28e3c7db3812c268d6552e936a316c38654a95a0dd', 'bytes': 431296}, 'Science_Teesside/Teaching_Packs/BUILD/lessons/W8A/BUILD_Science_Autumn1_W8A_Sugar_Evidence_Read_The_Label.pptx': {'beforeGitBlob': 'aff41a6c51c8eb21fbce611316590ed255be7078', 'afterSha256': 'd93b814710bcf57ece951ba0aaf82ed41320247571ec48147e26a5423b3c07e3', 'bytes': 158524}, 'Science_Teesside/Teaching_Packs/BUILD/lessons/W8A/BUILD_Science_Autumn1_W8A_Sugar_Evidence_Read_The_Label_Pupil.docx': {'beforeGitBlob': '81015f010d39c157bdd7f5c3f453ad2e6912c11e', 'afterSha256': 'be71bc9be6c6d9c23383ee35ec739df80830ad5e336e7095098deaf3003a6d64', 'bytes': 42521}, 'Science_Teesside/Teaching_Packs/BUILD/lessons/W8A/BUILD_Science_Autumn1_W8A_Sugar_Evidence_Read_The_Label_Pupil.pdf': {'beforeGitBlob': 'a1e81df065fe01d01d0eda19549ec33883bc1a27', 'afterSha256': '25544b193963f552a1511ac17bd5b5353cbeeca71d6788ac4deddbc61f905dc4', 'bytes': 170636}, 'Science_Teesside/Teaching_Packs/BUILD/lessons/W8A/BUILD_Science_Autumn1_W8A_Sugar_Evidence_Read_The_Label_Teacher.docx': {'beforeGitBlob': 'b111d7326d3bcad325167f2357b7f3741917dad1', 'afterSha256': '033a59447d5b42ea990dd0737c93db99a717e9055307f1c6b6ebe5bf7262c9b3', 'bytes': 43099}, 'Science_Teesside/Teaching_Packs/BUILD/lessons/W8A/BUILD_Science_Autumn1_W8A_Sugar_Evidence_Read_The_Label_Teacher.pdf': {'beforeGitBlob': '3fd844034e225e1c404a5cb50985951a0b4406ec', 'afterSha256': 'a4f9888e6b742339d54ba9128da824904b65e786054e8820d60df9980fa4af86', 'bytes': 114441}}
+
+def git_before_entries(root, base):
+    # Match git_changes' triple-dot semantics; do not trust a supplied manifest
+    # for the previous file identities.
+    merge_base = subprocess.check_output(['git', 'merge-base', base, 'HEAD'], cwd=root).decode().strip()
+    raw = subprocess.check_output(['git', 'ls-tree', '-z', merge_base, '--', *sorted(SUGAR_REPLACEMENTS)], cwd=root)
+    result = {}
+    for record in raw.decode().split('\0'):
+        if not record:
+            continue
+        fields, path = record.split('\t', 1)
+        mode, kind, blob = fields.split()
+        result[path] = (mode, kind, blob)
+    return result
+
+
+def sugar_replacement_errors(root, changes, pins, before_entries):
+    selected = [(status, rel) for status, rel in changes if rel in SUGAR_REPLACEMENTS]
+    if not selected:
+        return []
+    if len(selected) != len(SUGAR_REPLACEMENTS) or {rel for _, rel in selected} != set(SUGAR_REPLACEMENTS):
+        return ['Sugar replacement must contain exactly the seven reviewed file modifications']
+    errors = []
+    for status, rel in selected:
+        reviewed = SUGAR_REPLACEMENTS[rel]
+        path = root / rel
+        if status != 'M':
+            errors.append('Sugar replacement is not a modification: ' + rel)
+        if before_entries.get(rel) != ('100644', 'blob', reviewed['beforeGitBlob']):
+            errors.append('Sugar previous file identity or mode differs: ' + rel)
+        if path.is_symlink() or not path.is_file() or path.resolve().is_relative_to(root.resolve()) is False:
+            errors.append('Sugar replacement must be a regular file inside the tree: ' + rel)
+        elif path.stat().st_size != reviewed['bytes'] or sha(path) != reviewed['afterSha256']:
+            errors.append('Sugar replacement bytes differ: ' + rel)
+        if pins.get(rel) != reviewed['afterSha256']:
+            errors.append('Sugar replacement lacks matching owner-reviewed catalogue admission: ' + rel)
+    return errors
+
+
+def sugar_controls(root, proposed_pins=None):
+    # CI uses the real reviewed pin map. The optional map lets a review harness
+    # exercise the proposed transaction before paired admissions are staged;
+    # such a run is conditional evidence, never a production gate pass.
+    pins = pin_map(root) if proposed_pins is None else proposed_pins
+    changes = [('M', rel) for rel in sorted(SUGAR_REPLACEMENTS)]
+    before = git_before_entries(root, SUGAR_REVIEW_BASE)
+    rows = []
+    def check(name, condition):
+        if not condition:
+            raise AssertionError(name)
+        rows.append({'name': name, 'status': 'PASS'})
+    check('All seven reviewed replacements pass the bounded rule', not sugar_replacement_errors(root, changes, pins, before))
+    for rel in sorted(SUGAR_REPLACEMENTS):
+        missing_pin = dict(pins); missing_pin.pop(rel, None)
+        check('Missing owner admission rejected: ' + rel, bool(sugar_replacement_errors(root, changes, missing_pin, before)))
+        wrong_before = dict(before); wrong_before[rel] = ('100644', 'blob', '0' * 40)
+        check('Wrong previous identity rejected: ' + rel, bool(sugar_replacement_errors(root, changes, pins, wrong_before)))
+        wrong_mode = dict(before); wrong_mode[rel] = ('120000', 'blob', SUGAR_REPLACEMENTS[rel]['beforeGitBlob'])
+        check('Previous symlink mode rejected: ' + rel, bool(sugar_replacement_errors(root, changes, pins, wrong_mode)))
+        for status in ('A', 'D', 'T'):
+            altered = [(status if path == rel else kind, path) for kind, path in changes]
+            check('Wrong change type '+status+' rejected: ' + rel, bool(sugar_replacement_errors(root, altered, pins, before)))
+        check('Omitted replacement rejected: ' + rel, bool(sugar_replacement_errors(root, [(kind, path) for kind, path in changes if path != rel], pins, before)))
+    check('Duplicate replacement rejected', bool(sugar_replacement_errors(root, changes + [changes[0]], pins, before)))
+    with tempfile.TemporaryDirectory(prefix='sugar-replacement-proof-') as temp:
+        fixture = Path(temp)
+        for rel in SUGAR_REPLACEMENTS:
+            target = fixture / rel; target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(root / rel, target)
+        check('Actual candidate bytes pass in disposable fixture', not sugar_replacement_errors(fixture, changes, pins, before))
+        for rel in sorted(SUGAR_REPLACEMENTS):
+            path = fixture / rel; original = path.read_bytes()
+            try:
+                path.write_bytes(original + b'changed')
+                check('Changed candidate bytes rejected: ' + rel, bool(sugar_replacement_errors(fixture, changes, pins, before)))
+                # Even changing the caller's catalogue digest cannot change the
+                # independent exact replacement review.
+                repinned = dict(pins); repinned[rel] = sha(path)
+                check('Repinned changed bytes still rejected: ' + rel, bool(sugar_replacement_errors(fixture, changes, repinned, before)))
+                path.unlink()
+                check('Missing candidate file rejected: ' + rel, bool(sugar_replacement_errors(fixture, changes, pins, before)))
+                path.symlink_to(root / rel)
+                check('Candidate symlink rejected: ' + rel, bool(sugar_replacement_errors(fixture, changes, pins, before)))
+            finally:
+                if path.is_symlink(): path.unlink()
+                path.write_bytes(original)
+        check('All sabotage was restored', not sugar_replacement_errors(fixture, changes, pins, before))
+    return rows
+
+
 def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -113,19 +207,28 @@ def public_label_paths(root, pins):
     return expected
 
 
-def judge(root, changes):
+def judge(root, changes, base=None):
     relevant = [(status, path) for status, path in changes if protected(path)]
     if not relevant:
         return []
     errors = []
     try:
         pins = pin_map(root)
+        if any(path in SUGAR_REPLACEMENTS for _, path in relevant):
+            if base is None:
+                return ['Sugar replacements require the actual comparison base']
+            errors.extend(sugar_replacement_errors(root, relevant, pins, git_before_entries(root, base)))
+            if errors:
+                return errors
         cover_paths = explicit_cover_paths(root)
         label_paths = public_label_paths(root, pins)
         for status, rel in relevant:
             if rel in SHELVES:
                 if status not in ('A', 'M') or not (root / rel).is_file() or pins.get(rel) != sha(root / rel):
                     errors.append('reviewed shelf bytes or change type differ: ' + rel)
+            elif rel in SUGAR_REPLACEMENTS:
+                # Already checked as one exact seven-file M transaction above.
+                pass
             elif rel.startswith(SCIENCE_PACKS) and rel in pins:
                 # Owner-requested 6 September additive BUILD/GROW downloads.
                 # Every individual file has an explicit reviewed digest; the
@@ -149,7 +252,7 @@ def judge(root, changes):
                 errors.append('unreviewed cover validation input: ' + rel)
         if not errors:
             verify_humanities(root)
-    except (AssertionError, ValueError, OSError, KeyError, TypeError, ImportError) as exc:
+    except (AssertionError, ValueError, OSError, KeyError, TypeError, ImportError, subprocess.CalledProcessError) as exc:
         errors.append('reviewed catalogue/cover proof failed: ' + str(exc))
     return errors
 
@@ -186,7 +289,7 @@ def controls(root):
     check('A modification of an existing cover file is not an additive installation', bool(judge(root, [('M', COVER+'/resource.css')])))
     check('A deleted shelf is rejected', bool(judge(root, [('D', SHELVES[0])])))
     check('Rename-as-delete/add cannot move a retained lesson into the cover exception', bool(judge(root, [('D', sorted(retained)[0]), additions[0]])))
-    science_additions = [('A', rel) for rel in pin_map(root) if rel.startswith(SCIENCE_PACKS)]
+    science_additions = [('A', rel) for rel in pin_map(root) if rel.startswith(SCIENCE_PACKS) and rel not in SUGAR_REPLACEMENTS]
     if science_additions:
         check('Exact individually pinned Science teaching files pass as additions', not judge(root, science_additions))
         first = science_additions[0][1]
@@ -219,6 +322,7 @@ def controls(root):
         native = next(row['path'] for row in json.loads((root / DOWNLOADS).read_text())['dependencies'] if row['path'].endswith('.pdf'))
         mutate(native, lambda b: b + b'\n', 'Native download byte drift is rejected')
         mutate(sorted(retained)[0], lambda b: b + b'\n', 'Retained Humanities content drift is rejected even if omitted from the supplied diff')
+    rows.extend(sugar_controls(root))
     return rows
 
 
@@ -230,7 +334,7 @@ def main():
     args = parser.parse_args(); root = args.root.resolve()
     try:
         changes = git_changes(root, args.base)
-        errors = judge(root, changes)
+        errors = judge(root, changes, args.base)
         report = {'status': 'FAIL' if errors else 'PASS', 'protectedChanges': len(changes), 'errors': errors}
         if args.self_test:
             report['controls'] = controls(root)
