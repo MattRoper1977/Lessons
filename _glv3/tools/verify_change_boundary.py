@@ -44,7 +44,14 @@ SUGAR_REPLACEMENTS = {'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Lab
 # Further reviewed replacement transactions are declared here by their own
 # admission tools (tools/grow_resources/admit_w3_friction.py, tools/rw1/admit_w8.py),
 # each as an exact per-file map; never a directory-wide permission.
+# CX2 4.8: the accepted Sugar lesson's staff card without a product name (R10), the
+# re-rendered teacher document and the refreshed BUILD checksum rows, written by
+# tools/science_teaching_packs/cx2_sugar_r10.py.
+SUGAR_R10_REVIEW_BASE = 'bb8d7c79e6ff1157c30969e74ad8b603baa17011'
 # BEGIN DECLARED TRANSACTIONS
+# BEGIN SUGAR R10 HYGIENE REPLACEMENTS
+SUGAR_R10_REPLACEMENTS = {'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html': {'beforeGitBlob': 'ce67f2e573a849f528332657c3274ea5d23ae3b8', 'afterSha256': '9f08cc72aadc12b2480ea8c1104e0118c7335ce087446308d39336c79379e96f', 'bytes': 628527}, 'Science_Teesside/Teaching_Packs/BUILD/SHA256SUMS.txt': {'beforeGitBlob': '74bcf89dd21aae3c14d03871a6cf7249dc1fd91b', 'afterSha256': '316444eaaa55fd786c393a40443f511b450c0f04a5ba1f752cef125fd254be01', 'bytes': 43722}, 'Science_Teesside/Teaching_Packs/BUILD/lessons/W8A/BUILD_Science_Autumn1_W8A_Sugar_Evidence_Read_The_Label_Teacher.docx': {'beforeGitBlob': '0218f8fdc5ec18d88ff784bbeaca4221e3610707', 'afterSha256': '7932493b683f1ac4ab7fbaabef8f55ec13e0db311dc63334788dc88e9fc5d099', 'bytes': 43120}, 'Science_Teesside/Teaching_Packs/BUILD/lessons/W8A/BUILD_Science_Autumn1_W8A_Sugar_Evidence_Read_The_Label_Teacher.pdf': {'beforeGitBlob': '8c48364a5c100fbd2a4d2f44d0b2e34e8d36894e', 'afterSha256': '8c9984c7683196b03a8acdf90764d7136f390f4fb0e28211077eb4184311f5a5', 'bytes': 94156}}
+# END SUGAR R10 HYGIENE REPLACEMENTS
 # END DECLARED TRANSACTIONS
 
 # Each transaction is judged on its own: every member present as exactly one
@@ -53,6 +60,7 @@ SUGAR_REPLACEMENTS = {'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Lab
 REPLACEMENT_TRANSACTIONS = {
     'Sugar': (SUGAR_REVIEW_BASE, SUGAR_REPLACEMENTS),
     # BEGIN DECLARED TRANSACTION ENTRIES
+    'Sugar R10 hygiene': (SUGAR_R10_REVIEW_BASE, SUGAR_R10_REPLACEMENTS),
     # END DECLARED TRANSACTION ENTRIES
 }
 # Declaration order is review order: a later transaction that names a path
