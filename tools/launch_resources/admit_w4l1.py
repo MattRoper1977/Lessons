@@ -33,7 +33,7 @@ BOUNDARY = ROOT / '_glv3/tools/verify_change_boundary.py'
 HELPER = ROOT / 'tools/catalogue/pin_catalogue_contract.py'
 GATE = ROOT / 'tools/verify_cross_estate_unification.py'
 EVIDENCE = ROOT / 'tools/catalogue/TERM_AND_STYLE_EVIDENCE.json'
-REVIEW_BASE = '8a993ae1c82087150f9076be49395747f238decc'   # claude/cx2-lane-d-foundation (Lane D #542)
+REVIEW_BASE = 'acae624f34ab4b2a88903cb6ea528976b5a1e210'   # main after Friction #538 merged (CX2 §2)
 PREFIXES = ('Science_Teesside/',)
 LESSON = 'Science_Teesside/Launch/SCI_L_W4_L1_Diffusion.html'
 # Review records that move with the transaction but are not protected Science payload.
@@ -61,7 +61,19 @@ def foreign_paths():
     spec = importlib.util.spec_from_file_location('_glv3_boundary', BOUNDARY)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    return {rel for rel, owner in module.ALL_REPLACEMENTS.items() if owner != NAME}
+    # Only a path whose bytes on this tree are still the owner's declared bytes is
+    # foreign. A path this branch changes again (the teaching-pack hub after GROW W3
+    # Friction merged) must be claimed here, declared after the earlier owner, so
+    # the declaration-order supersession rule moves it to this transaction and the
+    # earlier one keeps its exactness over the members it still owns.
+    foreign = set()
+    for rel, owner in module.ALL_REPLACEMENTS.items():
+        if owner == NAME:
+            continue
+        declared = module.REPLACEMENT_TRANSACTIONS[owner][1][rel]['afterSha256']
+        if sha(ROOT / rel) == declared:
+            foreign.add(rel)
+    return foreign
 
 
 def transaction():
