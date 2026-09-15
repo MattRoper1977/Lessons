@@ -789,6 +789,25 @@ ALLOWED_DIFF = {
     "docs/orders/CX2_CHECKPOINT.md",
     "docs/orders/LESSON_STANDARD_2026-27.md",
     "docs/orders/PLAY_BRAND_AMENDMENT_2026-09-15.md",
+    # ORDER CX2, 2026-09-15. The source-admission tools. Each one stages one
+    # reviewed replacement transaction: it declares the transaction in the GLV3
+    # boundary, extends the reviewed-path list, refreshes the derived catalogue
+    # records and re-cuts the pins. They run locally and in review, ship nothing
+    # and are outside the publisher's public_file() admission, so none is served
+    # and none can alter a studio.
+    #
+    # They are listed because of an asymmetry in this very check: the changed set
+    # counts MODIFICATIONS, not additions, so each tool passed silently while it
+    # was new and reds the first time it is touched after its branch merges. That
+    # bit the CX2 checkpoint above and then tools/rw1/admit_w8.py, whose review
+    # base must move to the current main on every re-admission. Listing the class
+    # rather than the instance that happened to fail.
+    "tools/grow_resources/admit_w3_friction.py",
+    "tools/launch_resources/admit_w4l1.py",
+    "tools/launch_resources/refresh_w4l1_pack_records.py",
+    "tools/science_teaching_packs/cx2_sugar_r10.py",
+    "tools/rw1/admit_w8.py",
+    "tools/rw1/cx2_lane_d.py",
     "tools/verify_lessons_chips.mjs",
     ".github/workflows/ux2-gates.yml",
     "tools/ux2/hub_gates.mjs",
