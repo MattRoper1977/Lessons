@@ -17,3 +17,22 @@ Append-only. Every entry: pass · source identities · owned files · PR/head ·
   - `13-Gathering_Feedback_and_Portfolio_Evidence.pptx` (SHA-256 `04dbc4f3b08d99744b12a2a84a3965bbc3dcc866f8522d16946db4bb59b7cb55`) is an Arts Award lesson deck, not a policy.
 - R5: `check_catalogue_static.py` red on main 929cf731 (51 Spring/Summer Science lesson rows absent from TERM_AND_STYLE_EVIDENCE.json). Own PR #539 from branch `claude/cx2-r5-catalogue-evidence` head d10543f2d41c3e47c98f9f27d2a82153a7396ae3: generators re-run, red-before/green-after, planted control red, pins re-cut. Next: required CI green → merge → publication settled → rebase #538.
 - R4 finding: `Teaching_Packs/GROW/HTML/*.html`, `Resources/*.html`, `Teacher_Notes.html`, `Pupil_Resources.html`, `GROW/index.html` are not exports of the canonical lesson (different chassis, no slide elements, one script, no long byte runs shared with the 6 September source). No generator exists in the repository or its history (`git log -S mbm-offline-classroom` finds nothing); they arrived whole in PR #431. Sugar's six native companions were produced outside the repository; the in-repo mechanism for Friction's DOCX/PDF is `tools/grow_resources/author_w3*.py`. STOP S3 raised in the readback with options; other lanes continue.
+
+## 2. §2.3 reading-band report (Friction, report only) and S3 — 15 September 2026
+Instrument: `_sownb/vb/tools/g26_reading_band.py` v1.3.0 (13/13 controls fired), bands from `_sownb/STYLE_CONTRACT.json` (GROW 3.0–7.0, BUILD 1.0–4.0, LAUNCH ≤14.21 ceiling), Flesch-Kincaid on pupil-addressee text.
+
+| Text | Pupil FK | GROW band |
+|---|---|---|
+| Whole lesson (instrument's own run) | 6.98 | PASS |
+| Arrival Supported / Standard / Stretch | 5.64 / 5.76 / 5.44 | in band |
+| Lesson A exit Supported / Standard / Stretch | 3.70 / 6.54 / 5.88 | in band |
+| Knowledge organiser | 7.51 | above |
+| Review the evidence (B) | 6.96 | in band |
+| Help prompts | 5.19 | in band |
+| Lesson B exit slide (unchanged legacy) | 7.87 | above |
+| Print scaffold Supported / Standard / Stretch | 7.80 / 5.62 / 5.29 | Supported above |
+| Print worksheet Supported / Standard / Stretch (legacy) | 7.33 / 7.96 / 7.70 | above |
+
+Accepted lesson: no re-open (4.2). Matt list: organiser, W3B exit, Supported scaffold and the three legacy worksheets read above the GROW band. Sugar (accepted): pupil FK 5.26 against BUILD 1.0–4.0, RED report-only, Matt list.
+
+**STOP S3 (R4).** The stale offline companions (`Teaching_Packs/GROW/HTML/*.html`, `Resources/*.html`, `Teacher_Notes.html`, `Pupil_Resources.html`, `GROW/index.html`) are linked from the public hub `Science_Teesside/Teaching_Packs/web-slides.html` and listed as retained alternatives in `tools/downloads/SOURCE_PLACEMENT.json`. They are a separately authored offline chassis, not an export of the canonical bytes; no generator exists in the repository or its history. Options: (A) author a new in-repo exporter that regenerates the W3A/W3B offline companions from the current canonical lesson in the same chassis — new design work, needs a ruling; (B) inside #538, retire the two Week 3 companion entries on web-slides.html/GROW/index.html/Teacher_Notes.html to a clearly labelled superseded section that links the canonical lesson and the native pack (satisfies §25.4, smallest change, no generator needed because nothing is regenerated); (C) leave as is and ship the duplicate (violates R4). Friction Ready waits on this ruling; every other lane continues.
