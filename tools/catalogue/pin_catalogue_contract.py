@@ -15,8 +15,21 @@ from pathlib import Path
 import re
 
 GATE = "tools/verify_cross_estate_unification.py"
-ORIGINAL_ROW_COUNT = 734
-ORIGINAL_ROWS_SHA256 = "b8ffcb16f5fd2a413e8a0b06ad2d4b112f450364fa294377869dc32c8235bb2c"
+# 2026-09-16, Matt: the Science v3_40min renditions are retracted from the catalogue.
+# Weeks 3-7 served two renditions of every topic. The pathway roots carry the classroom
+# chassis (xpWrap, #auto-timer, hud.js) and fill the timetable exactly on their own --
+# BUILD and GROW one file of two sessions per week, LAUNCH three of one -- while the 35
+# v3_40min lessons and their 3 route index pages were the earlier, thinner, off-chassis
+# copy that terms-and-styles.json already labelled "Earlier retained versions".
+# This block previously held 734 rows; those 38 sat contiguously at indices 448-485
+# inside it, so removing them leaves 696 and reorders nothing. The digest below is
+# re-cut over the remaining 696, and the reviewed hub rows still line up exactly at the
+# new offset. No byte is deleted: the files stay in the tree, stay pinned by sha256 in
+# _glv3/PROTECTED_TREES.json, and stay published, because the education publication
+# copies Science_Teesside by tree and not by catalogue. Nothing 404s; the duplicates
+# simply stop appearing in the catalogue and the search index.
+ORIGINAL_ROW_COUNT = 696
+ORIGINAL_ROWS_SHA256 = "6b38ad0fc5be48350e95700ebe05264a08610160746fa459828023f896119367"
 SHELF_ROWS = [{'subject': 'Science · Teesside',
   'title': 'Science · browse by pathway, term and teaching version',
   'file': 'Science_Teesside/index.html',
@@ -1687,7 +1700,7 @@ def preserved_rows_errors(rows: list, pack_rows: list | None = None) -> list[str
         pack_rows = pack_rows_for(Path(__file__).resolve().parents[2], rows)
     errors = []
     if len(rows) != ORIGINAL_ROW_COUNT + len(SHELF_ROWS) + len(pack_rows):
-        errors.append("catalogue must contain the original 734 rows plus exactly the reviewed hub rows and the derived companion-pack rows")
+        errors.append("catalogue must contain the original 696 rows plus exactly the reviewed hub rows and the derived companion-pack rows")
     if row_digest(without_tags(rows[:ORIGINAL_ROW_COUNT])) != ORIGINAL_ROWS_SHA256:
         errors.append("an original catalogue row was removed, reordered or edited")
     shelf_end = ORIGINAL_ROW_COUNT + len(SHELF_ROWS)

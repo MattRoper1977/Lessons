@@ -11,9 +11,14 @@ def check(name,condition):
  assert condition,name
  checks.append({'name':name,'status':'PASS'})
 base=(r/'resources.json').read_bytes()
-check('Original 734 resource rows remain unchanged and ordered, with only three reviewed hub rows appended',not preserved_rows_errors(rows))
+check('Original 696 resource rows remain unchanged and ordered, with only three reviewed hub rows appended',not preserved_rows_errors(rows))
 check('Every committed resource row has additive metadata',len(rows)>0 and all(x['file'] in proof for x in rows))
-check('All 129 Science lessons remain available with a proven or explicitly unknown term',len(science)==129 and len({x['path'] for x in science})==129 and all((r/x['path']).is_file() and x['term'] in ['Aut1','Aut2','Spr1','unspecified'] for x in science))
+# 2026-09-16, Matt: 94, not 129. The 35 Science v3_40min lessons are retracted from the
+# shelf -- see the note on ORIGINAL_ROW_COUNT in pin_catalogue_contract.py. Every other
+# clause here is unchanged and still load-bearing: each remaining path must still be a
+# real file on disk with a proven or explicitly unknown term, and the recommended
+# selection below is still exactly the 15 LAUNCH routes, none of which moved.
+check('All 94 Science lessons remain available with a proven or explicitly unknown term',len(science)==94 and len({x['path'] for x in science})==94 and all((r/x['path']).is_file() and x['term'] in ['Aut1','Aut2','Spr1','unspecified'] for x in science))
 check('Current content hashes match every hashed metadata entry',all(hashlib.sha256((r/p).read_bytes()).hexdigest()==v['sha256'] for p,v in proof.items() if 'sha256' in v))
 check('Recommended selection contains only the 15 selected LAUNCH Science routes',sum(x['style']=='recommended' for x in science)==15 and all(x['pathway']=='LAUNCH' for x in science if x['style']=='recommended'))
 for filename in ['index.html','Science_Teesside/index.html','Humanities_Teesside/index.html']:
