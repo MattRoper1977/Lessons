@@ -692,7 +692,10 @@ PUBLICATION_CALLER_PATH = ".github/workflows/education-pages.yml"
 # Carrier 40339776 admits the six catalogue/discovery outputs the companion rows move, as [served, candidate] from full builds (served oracle main e1a05dce).
 # Advanced 2026-09-16 (CX2 §5.3 EDU-Q1 companions (second mint)) to Site carrier 7491329d8533b7edf6d32cfaa13a065c28af3f41 on the same carrier branch:
 # Carrier admits hub.js (pathway directory read case-insensitively) beside the six catalogue/discovery outputs, as [served, candidate] from full builds.
-PUBLICATION_CALLER_SHA256 = "e4bcd8bacb891e9c377ce8839ac23285ef155eddd6f42850f2117d0d9aa80b8a"
+# Advanced 2026-09-16 (CX2 section 7.1 PLAY-Q1 batch 2) to Site carrier 08d74766de02b90e90e6138b7c20e66bb30aada4 on the same carrier branch:
+# Carrier admits the two re-stamped education lessons, the lesson-order projection and the resource
+# size table, and carries the Play evidence rebound to the batch 2 bytes.
+PUBLICATION_CALLER_SHA256 = "4e1678265e6a4a4d7478112778ff8ef552d08003b67ac4f2cc2aa7802111c17f"
 # One reviewed caller digest per repository kind. detect_kind() reads the root
 # it is standing in, so this entry is only ever compared against the Apps
 # repository's own caller: the Lessons gate run and the Apps gate runs are the
