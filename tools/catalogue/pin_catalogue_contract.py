@@ -1603,6 +1603,36 @@ REVIEWED_PATHS += (
 )
 
 
+# CX2 R10 estate sweep, 2026-09-16. These sixteen published files carried the
+# product name on a public surface and the sweep took it off. The cross-estate
+# boundary forbids a release CHANGING an existing standalone lesson or studio,
+# and it is right to: an unreviewed edit to a served teaching file is exactly
+# what that invariant exists to stop. The gate's own admission route is this
+# list — a named, dated review decision — after which the tool cuts each
+# digest from the reviewed bytes and the boundary admits the change because it
+# is pinned, not because it is exempt. Ten are catalogue rows in resources.json;
+# six are LundyLoop staff references and one Grow evidence window that are
+# published but were never pinned, so admitting them here also closes that gap.
+REVIEWED_PATHS += (
+    'LundyLoop/1_whole_school/Day_to_Day_Desk_Sheet.html',
+    'LundyLoop/1_whole_school/Whole_School_Reference_v2.html',
+    'LundyLoop/2_leadership/Impact_Framework.html',
+    'LundyLoop/2_leadership/Impact_Monitoring_Crib.html',
+    'LundyLoop/2_leadership/Ofsted_LAUNCH_Loop_Sheet.html',
+    'LundyLoop/3_subject_guides/science.html',
+    'Science_Teesside/Grow/v3_40min/LUNDY_DAILY_REFLECTION_EVIDENCE_WINDOW.html',
+    'Science_Teesside/Grow/v3_40min/SCI_G_W3B_Friction_Do.html',
+    'Science_Teesside/Grow/v3_40min/SCI_G_W4A_Mechanisms_Explore.html',
+    'Science_Teesside/Grow/v3_40min/SCI_G_W4B_Mechanisms_Do.html',
+    'Science_Teesside/Grow/v3_40min/SCI_G_W5A_Fair_Test_Explore.html',
+    'Science_Teesside/Grow/v3_40min/SCI_G_W5B_Fair_Test_Do.html',
+    'Science_Teesside/Grow/v3_40min/SCI_G_W6A_Earth_And_Planets_Explore.html',
+    'Science_Teesside/Grow/v3_40min/SCI_G_W6B_Earth_And_Planets_Do.html',
+    'Science_Teesside/Grow/v3_40min/SCI_G_W7A_The_Moon_Explore.html',
+    'Science_Teesside/Grow/v3_40min/SCI_G_W7B_The_Moon_Do.html',
+)
+
+
 def pack_rows_for(lessons: Path, rows: list) -> list:
     """UX2 D3 (2026-09-08): the companion-pack entries are the catalogue's tail,
     after the reviewed hub rows. They are not a second hand-kept literal: they

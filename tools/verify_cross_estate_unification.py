@@ -600,7 +600,23 @@ CATALOGUE_PINS = {
         "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W8B_Day_And_Night_Do.html": "97ef11162a1c36b1df421d0f85ab32be6139bfbd47ee36314426020a1162a32b",
         "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L1_Enzyme_Action_Introduce.html": "1e46f94da927f5bbf190c067ea84b16cd60d0112c6381bd17de07c774fabd346",
         "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L2_Amylase_pH_Core_Practical_Explore.html": "d69088d64598a8f230603a9af232f3055dab3796330e30c19566dd087f5f52f6",
-        "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L3_Amylase_Rate_And_Topic_1_Do.html": "81e67475c5a727e1fae1806504b56a0f49b15f9573be563cb6c55cc4e381dfda"
+        "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L3_Amylase_Rate_And_Topic_1_Do.html": "81e67475c5a727e1fae1806504b56a0f49b15f9573be563cb6c55cc4e381dfda",
+        "LundyLoop/1_whole_school/Day_to_Day_Desk_Sheet.html": "170fdded4a26dd7fa92992fa99cf109038c71ffa7d89184f0a2dcb45e20395c8",
+        "LundyLoop/1_whole_school/Whole_School_Reference_v2.html": "d2668c89e218192f87137a77d270e04d4cdce1d36c373fe6767bc50b86efe2af",
+        "LundyLoop/2_leadership/Impact_Framework.html": "84bcad36767fd69b9b3afa5912b1b27faa20fc80c30d0bc7cf5596c64de5e773",
+        "LundyLoop/2_leadership/Impact_Monitoring_Crib.html": "dd6d9bfe1453eddbeefa93aa95aeddcc3981b657223918a23183551b41f9550e",
+        "LundyLoop/2_leadership/Ofsted_LAUNCH_Loop_Sheet.html": "c2a081cb5cba2f977099a43b11236c852601842d898bf8579aed9c7f62594cff",
+        "LundyLoop/3_subject_guides/science.html": "2945a7783ecc44966bcd62fdfd76aac410f78620cc2795bc97f058efb3ea70b7",
+        "Science_Teesside/Grow/v3_40min/LUNDY_DAILY_REFLECTION_EVIDENCE_WINDOW.html": "5145899e4c822dbecaf1a98fbc2211db63ac48ad42c9af469c6f8f77eac8dfe4",
+        "Science_Teesside/Grow/v3_40min/SCI_G_W3B_Friction_Do.html": "97aed0e499bb85d11d2aefc822c9bd8c4c856281813ec7bbc04cd8d1f86a7c24",
+        "Science_Teesside/Grow/v3_40min/SCI_G_W4A_Mechanisms_Explore.html": "fd28d3366804e5a50cf1c93f0d831841e31f005b783179b170cc67527c391d8f",
+        "Science_Teesside/Grow/v3_40min/SCI_G_W4B_Mechanisms_Do.html": "7f186cec059e51af8d68c19bf8854f000cecdf63d4f12b187214905eafb5692a",
+        "Science_Teesside/Grow/v3_40min/SCI_G_W5A_Fair_Test_Explore.html": "cf7c715478fad8e29cbe1a42c3d5e7819465589fda764989256fbf47d9132bfc",
+        "Science_Teesside/Grow/v3_40min/SCI_G_W5B_Fair_Test_Do.html": "a404195e8d314ba7f40e6dd54d37a02946f5c08482054d416143fb1b11d1a7a4",
+        "Science_Teesside/Grow/v3_40min/SCI_G_W6A_Earth_And_Planets_Explore.html": "ebfa441095f114e2fdb427ccd9ee24860e17ad12ba55d2de77525768997a4869",
+        "Science_Teesside/Grow/v3_40min/SCI_G_W6B_Earth_And_Planets_Do.html": "91ae4a3586aff866541f5b1809b423cadcdf3321f664b29fce53defc4a6ce1ae",
+        "Science_Teesside/Grow/v3_40min/SCI_G_W7A_The_Moon_Explore.html": "2b54a5399c6422873be70b5ab43ea271112f54ae1401d990705b19a2f75030b4",
+        "Science_Teesside/Grow/v3_40min/SCI_G_W7B_The_Moon_Do.html": "85c9c9c7d4a12fa67fe6a098960aef0e880a3b7bf217667e39dad570bac11ebc"
     }
 }
 # END REVIEWED CATALOGUE PINS
