@@ -103,11 +103,91 @@ finds it on a phone. That report is a Matt-list item, not a silent addition.
 
 ---
 
+## D-3 — the three pathway pills on the education front door carry no explanation
+
+**Raised by Matt, 16 September 2026, from the served page**, with a screenshot of
+`madebymatt.uk` at 390 wide showing the band headed *Three pathways, one place* and, beneath
+it, three bare pills reading BUILD, GROW and LAUNCH. Matt's words: *"I would like build, grow
+launch explained so people will understand what each pathway represents. Please add a small
+definition - maybe under the writing on the pic - explaining what each pathway means."*
+
+**Why it is a defect and not a nicety.** The pills are the only place on the public front door
+where the estate's organising idea is named, and they are the label a visitor meets before any
+lesson. A parent, a commissioner or a teacher who does not already work at Progress Schools
+cannot tell from the word BUILD whether it means a construction course, a beginner tier or a
+key stage. The band therefore states a structure and withholds its meaning. Worse, the three
+words are load-bearing everywhere else on the estate — subject chips, catalogue rows, the
+teaching packs, the lesson shells — so the front door is the one surface that has to define
+them, and it is the one surface that does not.
+
+**The source, and it is not to be invented.** Matt supplied the authority on 16 September:
+*Progress Schools Curriculum Policy 2026/27, Issue 2, §5.3 "Pathways"* (page 13 of the supplied
+PDF), which describes four pathways in summary — Build, Grow, Launch and Reintegration — and
+§3.2, which states the stage-not-age principle the band is expressing. No blurb may be written
+from memory, from the mockup, or from what the lessons appear to do. Every clause traces to
+§5.3 or §3.2.
+
+**Two hard constraints that shape the copy.**
+
+- **R11.** §5.3's Build paragraph names low Boxall scores among its placement indicators, and §6
+  names BKSB. Neither may reach a public surface, in any form, however summarised. The public
+  blurb describes what the pathway *offers*, never how a student is *scored into* it.
+- **R10.** No product name. The policy's accreditation lists name awarding bodies and
+  qualifications, which are not products in R10's sense, but the blurbs should stay at the level
+  of what a student works towards rather than becoming a qualifications list.
+
+**The fourth pathway.** §5.3 describes four. The band says three. That is not an error to
+correct silently: Reintegration is a time-limited 6- or 12-week commissioned placement aligned
+to a home school, not a teaching pathway with lessons on this estate, so the three-pathway band
+is right for what it indexes. The amendment records the reasoning so that nobody later "fixes"
+the band by adding a fourth pill that leads nowhere. Whether the front door should mention
+Reintegration in prose is a Matt-list question, not a change to make unasked.
+
+**Proposed copy, for Matt's sight before it publishes.** Each is a faithful compression of its
+§5.3 paragraph, R11-clean, at or below the BUILD reading band so the sentence is readable by the
+widest audience that meets it:
+
+- **BUILD** — *For students who are not yet consistently ready for formal learning. Short,
+  calm learning episodes with strong visual and communication support, building reading
+  readiness, confidence and small-step achievements.*
+- **GROW** — *The bridge between nurture and formal learning. Practical, real-world tasks that
+  build everyday reading, writing and number, applied subject learning and a portfolio of
+  evidence.*
+- **LAUNCH** — *For students ready for formal qualifications with therapeutic support in place.
+  Exam readiness, revision routines, access arrangements and planning for life after school.*
+
+**Requirements.**
+
+1. The definition sits with its pill, so a pill and its meaning are never separated by a
+   reflow — one block per pathway, not a legend elsewhere on the page.
+2. It reads at 320, 390 and desktop widths without truncation, ellipsis or horizontal scroll,
+   and the band's height change does not push the Try-a-lesson card below a second fold on a
+   390-wide phone. Measure it; do not assume it.
+3. Colour is not the only cue. The pathway name stays as text next to its definition, and the
+   existing pill tints continue to fail safe under High Contrast.
+4. The pills' current role — whatever they link or filter — is unchanged. This is an addition
+   of meaning, not a redesign of the band.
+5. The same three definitions, byte-identical, are used anywhere else the estate later explains
+   a pathway, from one source, so the front door and the subject hubs cannot drift apart.
+
+**Instrument obligation.** A check that reads the published education front door, finds each of
+the three pathway names, and asserts a non-empty definition within the same block — with a
+planted-failure control proving it reds when a definition is removed or emptied. Without that,
+a future template change can drop the definitions and nothing will say so. The same instrument
+asserts the R11 word list is absent from the band.
+
+**Exit.** The three definitions are served on `madebymatt.uk`, measured at 320 and 390 on the
+published bytes, the instrument is green with its red-before recorded, and Matt has seen the
+wording on his phone.
+
+---
+
 ## Where these sit in the order
 
-Both are §10 estate check-over rows in shape: an instrument, a finding, a fix with a red-before and
+D-1 and D-2 are §10 estate check-over rows in shape: an instrument, a finding, a fix with a red-before and
 green-after, one merge at a time, a served proof after each. D-2 is also an EDU-D3 completion row —
-EDU-D3 is CLOSED on the Site, and its intent is not met on the Apps path until D-2 lands. Neither
+EDU-D3 is CLOSED on the Site, and its intent is not met on the Apps path until D-2 lands. D-3 is an EDU-D3 completion row of the same kind as D-2: the front door
+serves the pathway band, and the band does not yet say what a pathway is. None of the three
 re-opens EDU-Q1's accepted lesson content: D-1 changes the shell a lesson is mounted on, and the
 lesson's words are preserved.
 
