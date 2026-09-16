@@ -163,15 +163,24 @@ def run(lessons: Path, apps: Path, canonical: Path) -> list[dict]:
         retained = 'tools/stale_evidence_sweep.mjs'
         reviewed_paths = catalogue_pin_owner.REVIEWED_PATHS
         check("Omission control targets an existing admitted file", retained in reviewed_paths and retained in gate.CATALOGUE_PINS['files'])
+        # pin() compares the two gate copies before it reads the reviewed-path list,
+        # so on the real pair (the Apps copy trailing, as above) this control only
+        # ever meets the gate-copy refusal and proves nothing about omission. Run it
+        # on matching copies, as the row controls do, and restore the pair after.
+        (aroot / GATE).write_bytes(estate[0])
+        matching = [(lroot / GATE).read_bytes(), (aroot / GATE).read_bytes()]
+        check("Omission control runs on matching gate copies", matching[0] == matching[1])
         try:
             catalogue_pin_owner.REVIEWED_PATHS = tuple(path for path in reviewed_paths if path != retained)
             refused = False
             try: pin(lroot, aroot, check=False)
             except ValueError as error: refused = 'omits existing admissions' in str(error) and retained in str(error)
             check("Re-pinning refuses a silently omitted existing admission", refused)
-            check("Omitted-admission refusal changes neither disposable gate", estate == [(lroot / GATE).read_bytes(), (aroot / GATE).read_bytes()])
+            check("Omitted-admission refusal changes neither disposable gate", matching == [(lroot / GATE).read_bytes(), (aroot / GATE).read_bytes()])
         finally:
             catalogue_pin_owner.REVIEWED_PATHS = reviewed_paths
+            (aroot / GATE).write_bytes(estate[1])
+        check("Omission control restored the real gate pair", estate == [(lroot / GATE).read_bytes(), (aroot / GATE).read_bytes()])
         (aroot / GATE).write_bytes(estate[1] + b"\n# divergence\n")
         divergent = [(lroot / GATE).read_bytes(), (aroot / GATE).read_bytes()]
         rejected = False
