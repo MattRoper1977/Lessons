@@ -58,6 +58,9 @@ CX2_W4L1_REVIEW_BASE = 'acae624f34ab4b2a88903cb6ea528976b5a1e210'
 # re-rendered teacher document and the refreshed BUILD checksum rows, written by
 # tools/science_teaching_packs/cx2_sugar_r10.py.
 SUGAR_R10_REVIEW_BASE = 'a8b3c9689d9b1d74e56a70f065773bf3942b63c9'
+# CX2 §8.3 Lane D: the return-week W8 lessons, one transaction per pathway,
+# written by tools/rw1/admit_w8.py.
+RW_W8_REVIEW_BASE = 'ec7d34ab48eb290f9abb67b27c735b6e09b9930c'
 # BEGIN DECLARED TRANSACTIONS
 # BEGIN S3 OFFLINE EDITION REPLACEMENTS
 CX2_S3_REPLACEMENTS = {'Science_Teesside/Teaching_Packs/web-slides.html': {'beforeGitBlob': '6596d65c7a9bd5bb1875c5b46bbc331df8652144', 'afterSha256': 'f31f09d03f5d8c417af1745b38309fa537afb8bb4c6a08f387db3349d9e1cba2', 'bytes': 18607}}
@@ -71,6 +74,15 @@ CX2_W4L1_REPLACEMENTS = {'Science_Teesside/Launch/SCI_L_W4_L1_Diffusion.html': {
 # BEGIN SUGAR R10 HYGIENE REPLACEMENTS
 SUGAR_R10_REPLACEMENTS = {'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html': {'beforeGitBlob': 'ce67f2e573a849f528332657c3274ea5d23ae3b8', 'afterSha256': '9f08cc72aadc12b2480ea8c1104e0118c7335ce087446308d39336c79379e96f', 'bytes': 628527}, 'Science_Teesside/Teaching_Packs/BUILD/SHA256SUMS.txt': {'beforeGitBlob': '74bcf89dd21aae3c14d03871a6cf7249dc1fd91b', 'afterSha256': '316444eaaa55fd786c393a40443f511b450c0f04a5ba1f752cef125fd254be01', 'bytes': 43722}, 'Science_Teesside/Teaching_Packs/BUILD/lessons/W8A/BUILD_Science_Autumn1_W8A_Sugar_Evidence_Read_The_Label_Teacher.docx': {'beforeGitBlob': '0218f8fdc5ec18d88ff784bbeaca4221e3610707', 'afterSha256': '7932493b683f1ac4ab7fbaabef8f55ec13e0db311dc63334788dc88e9fc5d099', 'bytes': 43120}, 'Science_Teesside/Teaching_Packs/BUILD/lessons/W8A/BUILD_Science_Autumn1_W8A_Sugar_Evidence_Read_The_Label_Teacher.pdf': {'beforeGitBlob': '8c48364a5c100fbd2a4d2f44d0b2e34e8d36894e', 'afterSha256': '8c9984c7683196b03a8acdf90764d7136f390f4fb0e28211077eb4184311f5a5', 'bytes': 94156}}
 # END SUGAR R10 HYGIENE REPLACEMENTS
+# BEGIN RETURN WEEK W8 BUILD REPLACEMENTS
+RW_W8_BUILD_REPLACEMENTS = {'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html': {'beforeGitBlob': 'f5ca0a4ef3334d13d377d866ef37e3c7c55a9c0d', 'afterSha256': '7b27a0d82cd7df671c6a3b52b46d5d620ed678c332cdc58d1c649c3b29dacbac', 'bytes': 317400}}
+# END RETURN WEEK W8 BUILD REPLACEMENTS
+# BEGIN RETURN WEEK W8 GROW REPLACEMENTS
+RW_W8_GROW_REPLACEMENTS = {'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W8A_Day_And_Night_Explore.html': {'beforeGitBlob': 'ef8195bba4529ba1b9698f0db5cec507f7433aff', 'afterSha256': '2560984b05d13f2e998c7ae00cabf414b313821b836d6d68299774da55db8928', 'bytes': 291226}, 'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W8B_Day_And_Night_Do.html': {'beforeGitBlob': 'a7f2e7437f4fdfad0a397b7ad323b54128eefa23', 'afterSha256': '97ef11162a1c36b1df421d0f85ab32be6139bfbd47ee36314426020a1162a32b', 'bytes': 284158}}
+# END RETURN WEEK W8 GROW REPLACEMENTS
+# BEGIN RETURN WEEK W8 LAUNCH REPLACEMENTS
+RW_W8_LAUNCH_REPLACEMENTS = {'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L1_Enzyme_Action_Introduce.html': {'beforeGitBlob': 'e92efe5671f2e89f4e9fd0eda10013e6124cd878', 'afterSha256': '1e46f94da927f5bbf190c067ea84b16cd60d0112c6381bd17de07c774fabd346', 'bytes': 293788}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L2_Amylase_pH_Core_Practical_Explore.html': {'beforeGitBlob': '96adc448f37fcb0b6eed5f79c9cebad4da41a25e', 'afterSha256': 'd69088d64598a8f230603a9af232f3055dab3796330e30c19566dd087f5f52f6', 'bytes': 289583}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L3_Amylase_Rate_And_Topic_1_Do.html': {'beforeGitBlob': '7a2efdef9cd54395af81e4a993e305d1cae5651f', 'afterSha256': '81e67475c5a727e1fae1806504b56a0f49b15f9573be563cb6c55cc4e381dfda', 'bytes': 301824}}
+# END RETURN WEEK W8 LAUNCH REPLACEMENTS
 # END DECLARED TRANSACTIONS
 
 # Each transaction is judged on its own: every member present as exactly one
@@ -83,6 +95,9 @@ REPLACEMENT_TRANSACTIONS = {
     'GROW W3 Friction': (GROW_W3_REVIEW_BASE, GROW_W3_REPLACEMENTS),
     'Diffusion W4L1': (CX2_W4L1_REVIEW_BASE, CX2_W4L1_REPLACEMENTS),
     'Sugar R10 hygiene': (SUGAR_R10_REVIEW_BASE, SUGAR_R10_REPLACEMENTS),
+    'Return week W8 BUILD': (RW_W8_REVIEW_BASE, RW_W8_BUILD_REPLACEMENTS),
+    'Return week W8 GROW': (RW_W8_REVIEW_BASE, RW_W8_GROW_REPLACEMENTS),
+    'Return week W8 LAUNCH': (RW_W8_REVIEW_BASE, RW_W8_LAUNCH_REPLACEMENTS),
     # END DECLARED TRANSACTION ENTRIES
 }
 # Declaration order is review order: a later transaction that names a path
