@@ -688,7 +688,9 @@ PUBLICATION_CALLER_PATH = ".github/workflows/education-pages.yml"
 # the whole return week (this branch, #545, carrying #543 and #544) admitted beside the published Sugar digests, re-cut after the authored lesson-config block was restored to all six lessons (W8B b67be20d -> 492a4c28). Seven pairs, nothing added or removed; no reviewed download row moves. Digests from a full three-repository build qualified by a control build of main ec7d34ab. Publisher code is unchanged.
 # Advanced 2026-09-16 (CX2 §8.3 Lane D, corrected again) to Site carrier 3032ae716518c9e51b3ea00314e288bbb4145d9a on the same carrier branch:
 # the whole return week (this branch, #545, carrying #543 and #544) admitted beside the published Sugar digests, re-cut after the guidance button was docked and the stage timer moved off the home link in all six lessons (the full offline-pack check now passes 12/12). Seven pairs, nothing added or removed; no reviewed download row moves. Digests from a full three-repository build qualified by a control build of main ec7d34ab. Publisher code is unchanged.
-PUBLICATION_CALLER_SHA256 = "a0812c171376f685a30f77ab3f0235de24bba402fa7648455649c340723befb2"
+# Advanced 2026-09-16 (CX2 §5.3 EDU-Q1 companions) to Site carrier 40339776460347d0018569d598c45d0dd1a93497 on the same carrier branch:
+# Carrier 40339776 admits the six catalogue/discovery outputs the companion rows move, as [served, candidate] from full builds (served oracle main e1a05dce).
+PUBLICATION_CALLER_SHA256 = "765863d9ffbfe3218e34057c7792ad5eebfd6668846f90440757e90f980e43e5"
 # One reviewed caller digest per repository kind. detect_kind() reads the root
 # it is standing in, so this entry is only ever compared against the Apps
 # repository's own caller: the Lessons gate run and the Apps gate runs are the
