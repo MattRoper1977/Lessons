@@ -23,7 +23,7 @@ def build():
         host, companion = by_path[path], packs[path]
         title = pack['title'].strip()
         # Each selected title is verbatim within the current host's own title.
-        # This is a guard for the reviewed 116 pairs, not filename inference.
+        # This is a guard for the reviewed pairs (116 at EDU-D2, 118 after CX2 §5.3), not filename inference.
         if title not in host['title']:
             raise ValueError('Review changed lesson title: ' + path)
         for row in (host, companion):
@@ -38,10 +38,14 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check', action='store_true')
     args = parser.parse_args()
-    value = json.dumps(build(), ensure_ascii=False, indent=2) + '\n'
+    built = build()
+    value = json.dumps(built, ensure_ascii=False, indent=2) + '\n'
     if args.check:
         if OUTPUT.read_text() != value:
             raise SystemExit('Display-title map is stale; review source changes before rebuilding.')
     else:
         OUTPUT.write_text(value)
-    print('EDU-D2: 116 verified companion pairs; 232 guarded display-title entries.')
+    # Two entries per reviewed pair (host lesson and companion pack); the counts are
+    # derived from the manifest, never typed (116 pairs at EDU-D2, 118 after the
+    # EDU-Q1 companions of CX2 §5.3).
+    print('EDU-D2: ' + str(len(built['entries']) // 2) + ' verified companion pairs; ' + str(len(built['entries'])) + ' guarded display-title entries.')

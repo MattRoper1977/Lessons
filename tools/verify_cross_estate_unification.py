@@ -103,7 +103,7 @@ MANIFEST_PINS = {
     # Ruled onto the pin 2026-08-12 (Ruling 3): the deck install is a
     # resources.json edit, and the blanket rule forbade it the same way it
     # once forbade studio adds. Same pattern, same tool, same commit rule.
-    "resources.json": "80044df349d0ba6cf44c7b0b72b769f47125ae9e68030179368f4cac3d2746d6",
+    "resources.json": "c0aa743e746f82cc7b54681c0f030733fda5999b0636d7c5b13c1e2861460c6b",
 }
 PIN_COMMAND = "python3 tools/pin_manifests.py   (from either checkout — it writes both gate copies or neither)"
 
@@ -120,13 +120,13 @@ APPS_HUB_REVIEWED_WORDING_SHA256 = "9e5a4ac6c1e9bfb04a1c0186a82fce96aa03565a02dc
 CATALOGUE_PINS = {
     "visible_body_sha256": "9961e6f6c4627d644a364dedef7b37b1731cf8508e0ec85909f070a328bec187",
     "files": {
-        "assets/catalogue/display-titles.json": "504ca0a8d1ad406add8c7a7aca7ca6b9e95260d3a0d1c3091be56fcd28f2edef",
-        "tools/catalogue/build_display_titles.py": "855f250e5a66dfc0857f83f246db9a72b0d6da7fa78278c1caa8c2529c64e149",
-        "tools/catalogue/check_display_titles.cjs": "a52a18208876902ea2052c9f2deb325c1717bcd4b474115e1c6e325ea769daf4",
+        "assets/catalogue/display-titles.json": "1875250dbd936603d092bc563e0d4f199e821c948327989b90da576c7fc97360",
+        "tools/catalogue/build_display_titles.py": "4256ab6b07420af4ef090e57d32b8f29fcae88d9075d64750e52f17947dbd8a1",
+        "tools/catalogue/check_display_titles.cjs": "5d06689114a69124a2d7f59d644a85775756eadd2b470df01e066c2202df681b",
         "tools/catalogue/check_display_titles_browser.cjs": "5662cdb93c7796ead4fb9bb69ce94ac65fe1e29e103f00c65bd07a4d5129a7cd",
-        "tools/verify_lessons_chips.mjs": "f6561fb7633bb65689acc27381c205648d5ecc099465137adde3b24c706ad130",
+        "tools/verify_lessons_chips.mjs": "e417afd94ae4f3a450caab2edf4b6c41d14e4588f070d0ad822263e30a86cf39",
         "tools/sw2/check_tokens_inert.cjs": "482642d3d85a649a5785eed5183dc385bc0c68e294f51cd192af2e7d96d3224e",
-        "assets/catalogue/lesson-order.json": "7d1407c1ec76834af612157c30c291f767e2c44362fb230633fd583812efd519",
+        "assets/catalogue/lesson-order.json": "1a5c7dfeae0c185e77bafa0e473a9d25e0c138c76bf18e262616dcc128b3dcf3",
         "tools/catalogue/build_lesson_order.py": "95032f6572a6b64fa518a7ff6fd1902854c9ef6f204841c553b5078c0afb8a9a",
         "tools/ux2/hub_gates.mjs": "80ae8def49c49e549c8a2e6b65d521cfdaebb2b7d05f650fa6d5e436f2b6586d",
         "index.html": "389c3320b158e9bc472b4402d41d1d23e4bb2d78b54385884c0be6ca31f73309",
@@ -141,7 +141,7 @@ CATALOGUE_PINS = {
         "tools/sw2/stamp_pack_page.py": "ee37ba3739598535989353dd2ecd0225ad8f4ded0b9f3e6d83bbc0c2326bd4d8",
         "tools/sw2/check_pack_page.cjs": "fb093130e13b7e11e996f681f7845620b51e1a2802b6e7b80e8cf3eef92c5eff",
         "subject.html": "e5515e9169c05d51252d0ae1a7c68c49df3011fba4b481d587f5425cc060af96",
-        "assets/catalogue/hub.js": "e57c6dc62ce1d188d74374e6fc11975bb0f073770e28745ec10c149eb9632ba2",
+        "assets/catalogue/hub.js": "588f4c2dee4aa5030901f6d260f5dd160aaf306d4634732e99d38046d334e652",
         "assets/catalogue/hub.css": "603586d0668c39a2039891ab9f599cc234f65748a6794eee7fc65c334b5a23e5",
         "data/calendar-spine.json": "d199474b13c9d340add2c87165396d83712b0f1c9f8bd03b7b12e8fdf6af0d61",
         "Humanities_Teesside/David_Cover_Autumn1_W3-W7/index.html": "4e25eb9ca8f9f93c720d88d945f3d6d79580f3362a88698fe7af75d146f01e96",
@@ -186,7 +186,7 @@ CATALOGUE_PINS = {
         "tools/humanities_resources/check_resources.py": "ec5383e3a34cbff999f190b0014a4a73e00a3a29e2714498f7620fd638dc2aa5",
         "tools/humanities_resources/resource.css": "1aed9aaca0d73a4b200c4e5d0977e73f4e906c747d7340c7a62f4197a8344bae",
         "tools/humanities_resources/resource.js": "ad40afed95490bfcce92dc062da46e1b27bcb96bdc80e37eabdfe02bf6ffc446",
-        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "96d08784865474ee20d1982438f1976c165ab3508c0ba13a93453b94f3a6e478",
+        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "462ba1f109cc6565f6d2641b6a6aba51e05e52ff00c39c739cca2ec0fecb1af5",
         "tools/catalogue/TERM_REVIEW.json": "b0ed0d82fe21a222c75f6a38390b01defc0d5d958fac8e85421b7901ce6d201d",
         "tools/catalogue/SCIENCE_WEEK_BINDINGS.json": "b13c25e76ffbb916cf997ee62a265a6ff0bf296c125b00458df42d87985aaba2",
         "primary/year5/science/autumn/forces/Lesson8_ExploreGravity.html": "20047720bf1d309055abdf232d341b6fd99b833631efa0bcbfb3dabed9671196",
@@ -616,14 +616,14 @@ CATALOGUE_ORIGINAL_ROWS_SHA256 = "b8ffcb16f5fd2a413e8a0b06ad2d4b112f450364fa2943
 # digest below are re-cut by tools/catalogue/pin_catalogue_contract.py from
 # rows it has verified against that derivation; an edit to any appended row,
 # a removed pack row or an extra lesson row still reds here.
-CATALOGUE_SHELF_ROWS = 217
+CATALOGUE_SHELF_ROWS = 219
 # UX2 A1: keys that may be appended to an original row without moving its
 # digest (see catalogue_errors). Nothing else is additive. No original row
 # carried either key before the ruling (measured 2026-09-08: 0 of 734), so the
 # second set is empty and the allowance cannot launder a pre-existing value.
 CATALOGUE_ADDITIVE_TAG_KEYS = frozenset({"halfTerm", "unit"})
 CATALOGUE_ORIGINAL_KEYS_BEFORE_TAGS = frozenset()
-CATALOGUE_SHELF_ROWS_SHA256 = "e60b37f32f1af7dd2cad00ed73eac9045865f1088437e6c4e98eeac31afa0298"
+CATALOGUE_SHELF_ROWS_SHA256 = "6f41b12359528c062f78c1797800b9a7ff14b15ec1ecbff8aefe8ba3c8f820c9"
 
 # These named review records and review tools can change with their reviewed
 # transaction. Tools are not served assets; they are reviewed as executable
@@ -688,7 +688,11 @@ PUBLICATION_CALLER_PATH = ".github/workflows/education-pages.yml"
 # the whole return week (this branch, #545, carrying #543 and #544) admitted beside the published Sugar digests, re-cut after the authored lesson-config block was restored to all six lessons (W8B b67be20d -> 492a4c28). Seven pairs, nothing added or removed; no reviewed download row moves. Digests from a full three-repository build qualified by a control build of main ec7d34ab. Publisher code is unchanged.
 # Advanced 2026-09-16 (CX2 §8.3 Lane D, corrected again) to Site carrier 3032ae716518c9e51b3ea00314e288bbb4145d9a on the same carrier branch:
 # the whole return week (this branch, #545, carrying #543 and #544) admitted beside the published Sugar digests, re-cut after the guidance button was docked and the stage timer moved off the home link in all six lessons (the full offline-pack check now passes 12/12). Seven pairs, nothing added or removed; no reviewed download row moves. Digests from a full three-repository build qualified by a control build of main ec7d34ab. Publisher code is unchanged.
-PUBLICATION_CALLER_SHA256 = "a0812c171376f685a30f77ab3f0235de24bba402fa7648455649c340723befb2"
+# Advanced 2026-09-16 (CX2 §5.3 EDU-Q1 companions) to Site carrier 40339776460347d0018569d598c45d0dd1a93497 on the same carrier branch:
+# Carrier 40339776 admits the six catalogue/discovery outputs the companion rows move, as [served, candidate] from full builds (served oracle main e1a05dce).
+# Advanced 2026-09-16 (CX2 §5.3 EDU-Q1 companions (second mint)) to Site carrier 7491329d8533b7edf6d32cfaa13a065c28af3f41 on the same carrier branch:
+# Carrier admits hub.js (pathway directory read case-insensitively) beside the six catalogue/discovery outputs, as [served, candidate] from full builds.
+PUBLICATION_CALLER_SHA256 = "e4bcd8bacb891e9c377ce8839ac23285ef155eddd6f42850f2117d0d9aa80b8a"
 # One reviewed caller digest per repository kind. detect_kind() reads the root
 # it is standing in, so this entry is only ever compared against the Apps
 # repository's own caller: the Lessons gate run and the Apps gate runs are the

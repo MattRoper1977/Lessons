@@ -24,7 +24,10 @@ async function hub(mode) {
 }
 (async () => {
   const H = await hub('current');
-  assert.equal(Object.keys(map.entries).length, 232);
+  // Two guarded entries per reviewed companion pair, derived from the placement manifest
+  // (116 pairs at EDU-D2; 118 after the EDU-Q1 companions of CX2 §5.3), never a typed count.
+  const pairs = JSON.parse(read('data/companion-packs.json')).packs.length;
+  assert.equal(Object.keys(map.entries).length, 2 * pairs);
   for (const [file, entry] of Object.entries(map.entries)) {
     const row = H.state.rows.find(r => r._path === file);
     assert.ok(row, file);
@@ -41,5 +44,5 @@ async function hub(mode) {
     for (const r of fallback.state.rows) assert.equal(fallback.displayTitle(r), r.title || '', mode);
   }
   assert.equal(H.flatFilter(new URLSearchParams({q:'edud2-no-such-topic-9af68'}), H.state.rows).length, 0);
-  console.log('PASS: 232 titles, topic/original/path search, canonical links, reference details, missing/stale map fallback and empty results.');
+  console.log('PASS: ' + Object.keys(map.entries).length + ' titles for ' + pairs + ' companion pairs, topic/original/path search, canonical links, reference details, missing/stale map fallback and empty results.');
 })().catch(e => { console.error(e); process.exitCode = 1; });
