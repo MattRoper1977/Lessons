@@ -126,7 +126,7 @@ CATALOGUE_PINS = {
         "tools/catalogue/check_display_titles_browser.cjs": "5662cdb93c7796ead4fb9bb69ce94ac65fe1e29e103f00c65bd07a4d5129a7cd",
         "tools/verify_lessons_chips.mjs": "f6561fb7633bb65689acc27381c205648d5ecc099465137adde3b24c706ad130",
         "tools/sw2/check_tokens_inert.cjs": "482642d3d85a649a5785eed5183dc385bc0c68e294f51cd192af2e7d96d3224e",
-        "assets/catalogue/lesson-order.json": "b026e43faaf6d34e8b8657d7463d94122a5665b118bff385e3fa90695c8631be",
+        "assets/catalogue/lesson-order.json": "1a5c7dfeae0c185e77bafa0e473a9d25e0c138c76bf18e262616dcc128b3dcf3",
         "tools/catalogue/build_lesson_order.py": "95032f6572a6b64fa518a7ff6fd1902854c9ef6f204841c553b5078c0afb8a9a",
         "tools/ux2/hub_gates.mjs": "80ae8def49c49e549c8a2e6b65d521cfdaebb2b7d05f650fa6d5e436f2b6586d",
         "index.html": "389c3320b158e9bc472b4402d41d1d23e4bb2d78b54385884c0be6ca31f73309",
@@ -174,7 +174,7 @@ CATALOGUE_PINS = {
         ".github/workflows/watch-main.yml": "796f0aa8d9967fc301bdd47923bb47ad7055f7c5036fa44b2df8780ce31a016c",
         "tools/verify_v6fin_w7_r1_r7.py": "2be87c68256802e46131d9a4c70228e3d8635c51eb1789c01b94f2b316960dae",
         ".github/workflows/glv3-verify.yml": "4bf27ca7471a21359e35d1bc7277c5fa0adeb5f31a47c769f192165796037088",
-        "_glv3/tools/verify_change_boundary.py": "d3283be5b00fd8b9757d0eba135cd2fa5dca399b9820b3f20abd21a4b8413503",
+        "_glv3/tools/verify_change_boundary.py": "8497238e50615b354493a93293b2a9e146bfa181c8c9300008db8cbcbf1ec3bb",
         "_glv3/tools/browser_verify.mjs": "737ad30f297e061407161743f017614179cc6c56f1c9a3904bbe7c98df38c888",
         "_glv3/tools/chip_gate.mjs": "16cdd5c0ad3745c57340ed0ec6a208d221e4793bfc9b1cd9bc703a6c2613dd9a",
         "_glv3/tools/catalogue_membership.mjs": "4d7ab03e23ee0d3c3fc934f4f0a901afc61169754db099f4f5c24dd9cce058ec",
@@ -186,7 +186,7 @@ CATALOGUE_PINS = {
         "tools/humanities_resources/check_resources.py": "ec5383e3a34cbff999f190b0014a4a73e00a3a29e2714498f7620fd638dc2aa5",
         "tools/humanities_resources/resource.css": "1aed9aaca0d73a4b200c4e5d0977e73f4e906c747d7340c7a62f4197a8344bae",
         "tools/humanities_resources/resource.js": "ad40afed95490bfcce92dc062da46e1b27bcb96bdc80e37eabdfe02bf6ffc446",
-        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "b01410f18c739db00048381a1552ed75bef669065766b1eb270be4f7acdf7cf2",
+        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "462ba1f109cc6565f6d2641b6a6aba51e05e52ff00c39c739cca2ec0fecb1af5",
         "tools/catalogue/TERM_REVIEW.json": "b0ed0d82fe21a222c75f6a38390b01defc0d5d958fac8e85421b7901ce6d201d",
         "tools/catalogue/SCIENCE_WEEK_BINDINGS.json": "b13c25e76ffbb916cf997ee62a265a6ff0bf296c125b00458df42d87985aaba2",
         "primary/year5/science/autumn/forces/Lesson8_ExploreGravity.html": "20047720bf1d309055abdf232d341b6fd99b833631efa0bcbfb3dabed9671196",
@@ -594,7 +594,13 @@ CATALOGUE_PINS = {
         "tools/grow_resources/BROWSER_TARGETS.json": "a223e070f70b979809c2bbc8325d505af3217bf633ecb3cec3bc63b954e876c4",
         "Science_Teesside/Launch/SCI_L_W4_L1_Diffusion.html": "563e0bddc7049afb1dfc7245b1810da5094c19bca8027a08bbaf4c26d5a0dc54",
         "Science_Teesside/Teaching_Packs/LAUNCH/SHA256SUMS.txt": "cbb0aa2c07320596ce8118df19526c158e952a7c6b730fcd4492dc57b7052586",
-        "Science_Teesside/Teaching_Packs/BUILD/SHA256SUMS.txt": "316444eaaa55fd786c393a40443f511b450c0f04a5ba1f752cef125fd254be01"
+        "Science_Teesside/Teaching_Packs/BUILD/SHA256SUMS.txt": "316444eaaa55fd786c393a40443f511b450c0f04a5ba1f752cef125fd254be01",
+        "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html": "7b27a0d82cd7df671c6a3b52b46d5d620ed678c332cdc58d1c649c3b29dacbac",
+        "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W8A_Day_And_Night_Explore.html": "2560984b05d13f2e998c7ae00cabf414b313821b836d6d68299774da55db8928",
+        "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W8B_Day_And_Night_Do.html": "97ef11162a1c36b1df421d0f85ab32be6139bfbd47ee36314426020a1162a32b",
+        "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L1_Enzyme_Action_Introduce.html": "1e46f94da927f5bbf190c067ea84b16cd60d0112c6381bd17de07c774fabd346",
+        "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L2_Amylase_pH_Core_Practical_Explore.html": "d69088d64598a8f230603a9af232f3055dab3796330e30c19566dd087f5f52f6",
+        "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L3_Amylase_Rate_And_Topic_1_Do.html": "81e67475c5a727e1fae1806504b56a0f49b15f9573be563cb6c55cc4e381dfda"
     }
 }
 # END REVIEWED CATALOGUE PINS
@@ -676,7 +682,13 @@ PUBLICATION_CALLER_PATH = ".github/workflows/education-pages.yml"
 # the LAUNCH W4L1 Diffusion candidate (this branch, #546) admitted beside the published Friction digests (38 pairs, nothing added or removed) with its thirteen download rows reviewed; one commit on from the Friction rows carrier main pins. Publisher code is unchanged.
 # Advanced 2026-09-15 (CX2 §4.8 Sugar R10) to Site carrier d76182f4cbb0071b3652feba265dc66129d393f0 on the same carrier branch:
 # the Sugar R10 hygiene candidate (this branch, #547) admitted beside the published Diffusion digests: the BUILD W8A lesson whose feedback card no longer names the evidence product, its re-rendered teacher DOCX and PDF, the BUILD checksum list and lesson-order.json (5 pairs, nothing added or removed). No reviewed download row moves — the two documents keep their KB-rounded sizes, measured at 0 of 320 rows changed. Digests from a full three-repository build qualified by a control build of main a8b3c968 that reproduces every admitted digest. Publisher code is unchanged.
-PUBLICATION_CALLER_SHA256 = "92d0fe1e09f1d04ac6a9a15fb1ff1a03cfef627fda97973544a9eba9c8bee66c"
+# Advanced 2026-09-15 (CX2 §8.3 Lane D) to Site carrier 429dd4ecf0ef00f8e04d2296473cf99f46243cbd on the same carrier branch:
+# the whole return week (this branch, #545, carrying #543 BUILD and #544 GROW) admitted beside the published Sugar digests: BUILD W8B, GROW W8A and W8B, LAUNCH W8L1-W8L3 and lesson-order.json (7 pairs, nothing added or removed). No reviewed download row moves — these six lessons carry no pack downloads, measured at 0 of 320 rows. This carrier also replaces the withdrawn sparse W8B digest with the one a full build actually produces. Digests from a full three-repository build qualified by a control build of main ec7d34ab that reproduces every admitted digest. Publisher code is unchanged.
+# Advanced 2026-09-15 (CX2 §8.3 Lane D, corrected) to Site carrier dd9d228aeb183f6efc26f2f7f35982f70b3f91de on the same carrier branch:
+# the whole return week (this branch, #545, carrying #543 and #544) admitted beside the published Sugar digests, re-cut after the authored lesson-config block was restored to all six lessons (W8B b67be20d -> 492a4c28). Seven pairs, nothing added or removed; no reviewed download row moves. Digests from a full three-repository build qualified by a control build of main ec7d34ab. Publisher code is unchanged.
+# Advanced 2026-09-16 (CX2 §8.3 Lane D, corrected again) to Site carrier 3032ae716518c9e51b3ea00314e288bbb4145d9a on the same carrier branch:
+# the whole return week (this branch, #545, carrying #543 and #544) admitted beside the published Sugar digests, re-cut after the guidance button was docked and the stage timer moved off the home link in all six lessons (the full offline-pack check now passes 12/12). Seven pairs, nothing added or removed; no reviewed download row moves. Digests from a full three-repository build qualified by a control build of main ec7d34ab. Publisher code is unchanged.
+PUBLICATION_CALLER_SHA256 = "a0812c171376f685a30f77ab3f0235de24bba402fa7648455649c340723befb2"
 # One reviewed caller digest per repository kind. detect_kind() reads the root
 # it is standing in, so this entry is only ever compared against the Apps
 # repository's own caller: the Lessons gate run and the Apps gate runs are the
@@ -783,6 +795,25 @@ ALLOWED_DIFF = {
     "docs/orders/CX2_CHECKPOINT.md",
     "docs/orders/LESSON_STANDARD_2026-27.md",
     "docs/orders/PLAY_BRAND_AMENDMENT_2026-09-15.md",
+    # ORDER CX2, 2026-09-15. The source-admission tools. Each one stages one
+    # reviewed replacement transaction: it declares the transaction in the GLV3
+    # boundary, extends the reviewed-path list, refreshes the derived catalogue
+    # records and re-cuts the pins. They run locally and in review, ship nothing
+    # and are outside the publisher's public_file() admission, so none is served
+    # and none can alter a studio.
+    #
+    # They are listed because of an asymmetry in this very check: the changed set
+    # counts MODIFICATIONS, not additions, so each tool passed silently while it
+    # was new and reds the first time it is touched after its branch merges. That
+    # bit the CX2 checkpoint above and then tools/rw1/admit_w8.py, whose review
+    # base must move to the current main on every re-admission. Listing the class
+    # rather than the instance that happened to fail.
+    "tools/grow_resources/admit_w3_friction.py",
+    "tools/launch_resources/admit_w4l1.py",
+    "tools/launch_resources/refresh_w4l1_pack_records.py",
+    "tools/science_teaching_packs/cx2_sugar_r10.py",
+    "tools/rw1/admit_w8.py",
+    "tools/rw1/cx2_lane_d.py",
     "tools/verify_lessons_chips.mjs",
     ".github/workflows/ux2-gates.yml",
     "tools/ux2/hub_gates.mjs",

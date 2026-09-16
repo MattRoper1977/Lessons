@@ -31,7 +31,7 @@ BOUNDARY = ROOT / '_glv3/tools/verify_change_boundary.py'
 HELPER = ROOT / 'tools/catalogue/pin_catalogue_contract.py'
 GATE = ROOT / 'tools/verify_cross_estate_unification.py'
 EVIDENCE = ROOT / 'tools/catalogue/TERM_AND_STYLE_EVIDENCE.json'
-REVIEW_BASE = '3a14e9c4d57832fed87ed588ef6f0ae4fd3d6064'   # Lessons main after #539
+REVIEW_BASE = 'ec7d34ab48eb290f9abb67b27c735b6e09b9930c'   # main after Sugar #547 merged (CX2 §4.8)
 
 LESSONS = {
     'BUILD': ['Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html'],
