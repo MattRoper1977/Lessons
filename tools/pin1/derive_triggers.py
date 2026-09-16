@@ -21,6 +21,8 @@ CHECKER_PATHS = {
     GATE, WORKFLOW, 'tools/verify_cross_estate_browser.mjs',
     'docs/MBM_CROSS_ESTATE_UNIFICATION.md',
     'tools/pin1/derive_triggers.py', 'tools/pin1/test_derive_triggers.py',
+    # D-1: the shell census gate runs in this workflow, so an edit to the checker fires it.
+    'tools/chassis_census.py',
 }
 EVENTS = ('pull_request', 'push')
 BEGIN = '      # BEGIN PIN1 DERIVED PATHS'

@@ -61,6 +61,10 @@ SUGAR_R10_REVIEW_BASE = 'a8b3c9689d9b1d74e56a70f065773bf3942b63c9'
 # CX2 §8.3 Lane D: the return-week W8 lessons, one transaction per pathway,
 # written by tools/rw1/admit_w8.py.
 RW_W8_REVIEW_BASE = 'ec7d34ab48eb290f9abb67b27c735b6e09b9930c'
+# D-1: the BUILD W8A Sugar Evidence lesson re-dressed on the classroom chassis and the
+# pack checksum file that names it, one transaction, written by
+# tools/build_resources/admit_w8a_chassis.py.
+BUILD_W8A_CHASSIS_REVIEW_BASE = '48c2ecb9ab19f238cdbe5443196935a5c45f375b'
 # BEGIN DECLARED TRANSACTIONS
 # BEGIN S3 OFFLINE EDITION REPLACEMENTS
 CX2_S3_REPLACEMENTS = {'Science_Teesside/Teaching_Packs/web-slides.html': {'beforeGitBlob': '6596d65c7a9bd5bb1875c5b46bbc331df8652144', 'afterSha256': 'f31f09d03f5d8c417af1745b38309fa537afb8bb4c6a08f387db3349d9e1cba2', 'bytes': 18607}}
@@ -83,6 +87,9 @@ RW_W8_GROW_REPLACEMENTS = {'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W8A_Day_A
 # BEGIN RETURN WEEK W8 LAUNCH REPLACEMENTS
 RW_W8_LAUNCH_REPLACEMENTS = {'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L1_Enzyme_Action_Introduce.html': {'beforeGitBlob': 'e92efe5671f2e89f4e9fd0eda10013e6124cd878', 'afterSha256': '1e46f94da927f5bbf190c067ea84b16cd60d0112c6381bd17de07c774fabd346', 'bytes': 293788}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L2_Amylase_pH_Core_Practical_Explore.html': {'beforeGitBlob': '96adc448f37fcb0b6eed5f79c9cebad4da41a25e', 'afterSha256': 'd69088d64598a8f230603a9af232f3055dab3796330e30c19566dd087f5f52f6', 'bytes': 289583}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L3_Amylase_Rate_And_Topic_1_Do.html': {'beforeGitBlob': '7a2efdef9cd54395af81e4a993e305d1cae5651f', 'afterSha256': '81e67475c5a727e1fae1806504b56a0f49b15f9573be563cb6c55cc4e381dfda', 'bytes': 301824}}
 # END RETURN WEEK W8 LAUNCH REPLACEMENTS
+# BEGIN BUILD W8A CHASSIS REPLACEMENTS
+BUILD_W8A_CHASSIS_REPLACEMENTS = {'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html': {'beforeGitBlob': '1035792c9d9a95865d16b7e829d9704014a53e42', 'afterSha256': '74d17d4e0f6873f094691daa753539f8a351887160beea6a8a8d727bba864d2d', 'bytes': 639630}, 'Science_Teesside/Build/W8-W13_2026-27/SHA256SUMS.txt': {'beforeGitBlob': 'ce5a5c862dfe85cae88ad3a186f7ebef393f8234', 'afterSha256': 'e00a7819a77039be3ab614ba92de09889748723aa9ad759f7a6bfe64c2e5fb28', 'bytes': 1905}}
+# END BUILD W8A CHASSIS REPLACEMENTS
 # END DECLARED TRANSACTIONS
 
 # Each transaction is judged on its own: every member present as exactly one
@@ -98,6 +105,7 @@ REPLACEMENT_TRANSACTIONS = {
     'Return week W8 BUILD': (RW_W8_REVIEW_BASE, RW_W8_BUILD_REPLACEMENTS),
     'Return week W8 GROW': (RW_W8_REVIEW_BASE, RW_W8_GROW_REPLACEMENTS),
     'Return week W8 LAUNCH': (RW_W8_REVIEW_BASE, RW_W8_LAUNCH_REPLACEMENTS),
+    'BUILD W8A chassis': (BUILD_W8A_CHASSIS_REVIEW_BASE, BUILD_W8A_CHASSIS_REPLACEMENTS),
     # END DECLARED TRANSACTION ENTRIES
 }
 # Declaration order is review order: a later transaction that names a path

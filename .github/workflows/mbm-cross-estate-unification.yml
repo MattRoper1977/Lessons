@@ -46,6 +46,7 @@ on:
       - 'LundyLoop/3_subject_guides/science.html'
       - 'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html'
       - 'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html'
+      - 'Science_Teesside/Build/W8-W13_2026-27/SHA256SUMS.txt'
       - 'Science_Teesside/Grow/SCI_G_W3_Friction.html'
       - 'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W8A_Day_And_Night_Explore.html'
       - 'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W8B_Day_And_Night_Do.html'
@@ -447,6 +448,7 @@ on:
       - 'assets/mbm-theme.js'
       - 'assets/mbm-tokens.css'
       - 'data/calendar-spine.json'
+      - 'data/chassis-census.json'
       - 'docs/MBM_CROSS_ESTATE_UNIFICATION.md'
       - 'humanities_teesside.html'
       - 'index.html'
@@ -470,6 +472,7 @@ on:
       - 'tools/catalogue/check_display_titles.cjs'
       - 'tools/catalogue/check_display_titles_browser.cjs'
       - 'tools/catalogue/verify_education_navigation.cjs'
+      - 'tools/chassis_census.py'
       - 'tools/downloads/offline_pack_browser.cjs'
       - 'tools/downloads/prepare_pack_browser.py'
       - 'tools/downloads/test_download_pack.py'
@@ -486,6 +489,7 @@ on:
       - 'tools/humanities_resources/check_resources.py'
       - 'tools/humanities_resources/resource.css'
       - 'tools/humanities_resources/resource.js'
+      - 'tools/launch_resources/lesson_acceptance.py'
       - 'tools/pin1/derive_triggers.py'
       - 'tools/pin1/test_derive_triggers.py'
       - 'tools/prepare_served_publications.py'
@@ -561,6 +565,7 @@ on:
       - 'LundyLoop/3_subject_guides/science.html'
       - 'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html'
       - 'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html'
+      - 'Science_Teesside/Build/W8-W13_2026-27/SHA256SUMS.txt'
       - 'Science_Teesside/Grow/SCI_G_W3_Friction.html'
       - 'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W8A_Day_And_Night_Explore.html'
       - 'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W8B_Day_And_Night_Do.html'
@@ -962,6 +967,7 @@ on:
       - 'assets/mbm-theme.js'
       - 'assets/mbm-tokens.css'
       - 'data/calendar-spine.json'
+      - 'data/chassis-census.json'
       - 'docs/MBM_CROSS_ESTATE_UNIFICATION.md'
       - 'humanities_teesside.html'
       - 'index.html'
@@ -985,6 +991,7 @@ on:
       - 'tools/catalogue/check_display_titles.cjs'
       - 'tools/catalogue/check_display_titles_browser.cjs'
       - 'tools/catalogue/verify_education_navigation.cjs'
+      - 'tools/chassis_census.py'
       - 'tools/downloads/offline_pack_browser.cjs'
       - 'tools/downloads/prepare_pack_browser.py'
       - 'tools/downloads/test_download_pack.py'
@@ -1001,6 +1008,7 @@ on:
       - 'tools/humanities_resources/check_resources.py'
       - 'tools/humanities_resources/resource.css'
       - 'tools/humanities_resources/resource.js'
+      - 'tools/launch_resources/lesson_acceptance.py'
       - 'tools/pin1/derive_triggers.py'
       - 'tools/pin1/test_derive_triggers.py'
       - 'tools/prepare_served_publications.py'
@@ -1128,6 +1136,18 @@ jobs:
           PY
           for script in /tmp/mbm-inline-scripts/*.js; do node --check "$script"; done
           git diff --check origin/main...HEAD
+
+      - name: Verify the taught-lesson chassis census and the declared classroom shells
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Lessons only; resources.json is this estate's marker, as in the step above.
+          # --check proves the record is fresh. --gate is the verdict that carries D-1: without
+          # it a declared lesson that leaves the classroom shell prints RED and still exits 0.
+          if [ -f resources.json ]; then
+            python tools/chassis_census.py --self-test
+            python tools/chassis_census.py --check --gate
+          fi
 
       - name: Preserve the PIN1 trigger-versus-assertion census
         if: always()
