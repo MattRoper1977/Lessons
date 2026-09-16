@@ -1633,6 +1633,31 @@ REVIEWED_PATHS += (
 )
 
 
+# D-1 BUILD W8A chassis: the pack checksum file that names the re-dressed lesson,
+# admitted with it as one reviewed replacement transaction.
+REVIEWED_PATHS += (
+    'Science_Teesside/Build/W8-W13_2026-27/SHA256SUMS.txt',
+)
+
+
+# D-1 BUILD W8A chassis: the pack checksum file that names the re-dressed lesson,
+# admitted with it as one reviewed replacement transaction.
+REVIEWED_PATHS += (
+    'data/chassis-census.json',
+)
+
+
+# D-1, 2026-09-16: the all-stage acceptance instrument moves with the lesson it
+# had to accept. Two assumptions in it were W4L1's shape rather than the estate's,
+# and both would refuse any lesson carrying its own media: it asserted the lesson
+# page embeds none, and it hardcoded W4L1's organiser id. Both are now declared in
+# the per-lesson config, so an undeclared video still fails and every source must
+# still be local. W4L1 re-runs identically with its own config untouched.
+REVIEWED_PATHS += (
+    'tools/launch_resources/lesson_acceptance.py',
+)
+
+
 def pack_rows_for(lessons: Path, rows: list) -> list:
     """UX2 D3 (2026-09-08): the companion-pack entries are the catalogue's tail,
     after the reviewed hub rows. They are not a second hand-kept literal: they

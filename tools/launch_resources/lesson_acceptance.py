@@ -10,6 +10,22 @@ check and not a human assistive-technology journey. Requires Python Playwright
 
 CONFIG.json names the lesson (rel), its stage timers, resource pages, print sections,
 the per-route print sections, the pack exclusions and the no-JS expectations.
+
+Two of those are declarations about the lesson's own shape rather than fixed rules, because
+lessons in this estate legitimately differ on both:
+
+  lesson_media   {"selector": ..., "count": n} -- the media the lesson is EXPECTED to embed.
+                 Omitted means none. The instrument asserts the page carries exactly what was
+                 declared and nothing more, so an undeclared <video> still fails; that the
+                 declared elements are the ones the selector names; that each is opt-in
+                 (no autoplay, controls present, paused, preload="none") on the same terms the
+                 resource pages are held to; and that every source is local. Zero external
+                 sources is asserted for the page either way, declared media or not.
+  nojs.organiserSelector / nojs.organiserMedia -- which element is the knowledge organiser and
+                 in which medium it is reachable with JavaScript off. Defaults "#print-ko" and
+                 "screen", so a config that says nothing behaves exactly as it did before. A
+                 lesson that reveals its organiser through @media print declares "print"; the
+                 check still runs, in that medium, and still fails if it is unreachable there.
 """
 import functools, http.server, json, os, sys, threading
 from pathlib import Path
@@ -23,6 +39,17 @@ REL = CFG['rel']; RESOURCE_PAGES = CFG.get('resource_pages', []); TIMERS = CFG['
 WIDTHS = [320, 390, 768, 1280]
 PRINT_SECTIONS = CFG['print_sections']; ROUTED = set(CFG['routed_sections']); PACK_EXCLUDED = set(CFG['pack_excluded'])
 NOJS = CFG['nojs']
+LESSON_MEDIA = CFG.get('lesson_media', {})
+ORGANISER = NOJS.get('organiserSelector', '#print-ko')
+ORGANISER_MEDIA = NOJS.get('organiserMedia', 'screen')
+# one description of a media element, used for the lesson's own media and for the resource pages, so both
+# are held to the same bar. `local` is every URL the element could load from, none of them remote.
+MEDIA_INFO = '''(sel)=>[...document.querySelectorAll(sel)].map(v=>{
+  const urls=[v.getAttribute('src'),...[...v.querySelectorAll('source[src]')].map(s=>s.getAttribute('src'))].filter(Boolean);
+  return {tag:v.tagName,autoplay:v.autoplay,controls:v.controls,preload:v.preload,paused:v.paused,
+    tracks:v.querySelectorAll('track').length,fallbackText:v.textContent.trim().slice(0,60),
+    hasLocalSource:!!v.querySelector('source[src]'),sources:urls.length,
+    local:urls.length>0&&urls.every(u=>!/^https?:/i.test(u))}})'''
 LEVELS = ['supported', 'standard', 'stretch']
 
 
@@ -129,13 +156,24 @@ def media(browser, mode, base):
     ctx, page = new_page(browser, 1280, reduced_motion='reduce')
     page.goto(base(REL))
     lesson_media = page.evaluate("()=>document.querySelectorAll('video,audio,iframe,[autoplay]').length")
+    declared = LESSON_MEDIA.get('count', 0); selector = LESSON_MEDIA.get('selector')
+    declared_found = page.evaluate("(s)=>s?document.querySelectorAll(s).length:0", selector)
+    detail = page.evaluate(MEDIA_INFO, selector) if selector else []
     animated = page.evaluate("()=>[...document.querySelectorAll('*')].filter(e=>{const s=getComputedStyle(e);return s.animationName!=='none'&&s.animationDuration!=='0s'}).length")
     external = page.evaluate("()=>[...document.querySelectorAll('[src]')].map(e=>e.getAttribute('src')).filter(s=>/^https?:/.test(s))")
-    report['media'].append({'mode': mode, 'lessonMediaElements': lesson_media, 'runningAnimationsUnderReducedMotion': animated, 'externalSrcLoaded': external})
-    assert lesson_media == 0 and not external, (lesson_media, external)
+    report['media'].append({'mode': mode, 'lessonMediaElements': lesson_media, 'declaredMedia': declared, 'declaredSelector': selector,
+                            'declaredFound': declared_found, 'declaredMediaDetail': detail,
+                            'runningAnimationsUnderReducedMotion': animated, 'externalSrcLoaded': external})
+    # exactly the media the config declared, and nothing else: an undeclared element still fails here
+    assert lesson_media == declared, ('undeclared media on the lesson page', lesson_media, declared, selector)
+    assert declared_found == declared, ('the declared selector does not match the declared count', declared_found, declared, selector)
+    # and whatever was declared is opt-in and local, the same bar the resource pages are held to
+    assert all(not m['autoplay'] and m['controls'] and m['paused'] and m['preload'] == 'none' for m in detail), detail
+    assert all(m['local'] for m in detail), ('declared media must load from local sources only', detail)
+    assert not external, external
     for rel in RESOURCE_PAGES:
         page.goto(base(rel))
-        info = page.evaluate("()=>[...document.querySelectorAll('video,audio')].map(v=>({tag:v.tagName,autoplay:v.autoplay,controls:v.controls,preload:v.preload,paused:v.paused,tracks:v.querySelectorAll('track').length,fallbackText:v.textContent.trim().slice(0,60),hasLocalSource:!!v.querySelector('source[src]')}))")
+        info = page.evaluate(MEDIA_INFO, 'video,audio')
         violations = axe(page)
         report['resource_pages'].append({'mode': mode, 'page': rel, 'media': info, 'axe': violations,
                                          'dayWords': page.evaluate("()=>/Monday|Tuesday|\\d\\d:\\d\\d/.test(document.body.innerText)")})
@@ -150,9 +188,19 @@ def nojs(browser, mode, url):
         page.goto(url)
         r = page.evaluate('''([w,cfg])=>{const q=s=>[...document.querySelectorAll(s)];const vis=e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0&&getComputedStyle(e).visibility!=='hidden'};
           return {slides:q('.slide').filter(vis).length, arrivalQuestions:q(cfg.arrivalQuestionSelector).filter(vis).length,
-            exitItems:q(cfg.exitItemSelector).filter(vis).length, organiser:vis(document.getElementById('print-ko')), note:vis(document.querySelector('.nojs-note')),
+            exitItems:q(cfg.exitItemSelector).filter(vis).length,
+            organiser:(function(){const e=document.querySelector(cfg.organiserSelector||'#print-ko');return !!e&&vis(e)})(),
+            note:vis(document.querySelector('.nojs-note')),
             controls:q('.controls,.progress-label').filter(vis).length, docScrollWidth:document.documentElement.scrollWidth,
             wide:q('body *').filter(e=>vis(e)&&!(function(x){for(let a=x.parentElement;a;a=a.parentElement){const o=getComputedStyle(a).overflowX;if(o==='auto'||o==='scroll')return true}return false})(e)&&e.getBoundingClientRect().right>w+1).map(e=>e.tagName+'#'+e.id+'.'+String(e.className).slice(0,30)).slice(0,5)}}''', [width, NOJS])
+        # a lesson may deliver its organiser to a JS-off reader through @media print rather than on screen.
+        # This does not soften the check: it moves to the declared medium and still demands the organiser be there.
+        if ORGANISER_MEDIA != 'screen':
+            page.emulate_media(media=ORGANISER_MEDIA)
+            r['organiser'] = page.evaluate('''(s)=>{const e=document.querySelector(s);if(!e)return false;
+              const b=e.getBoundingClientRect();return b.width>0&&b.height>0&&getComputedStyle(e).visibility!=='hidden'}''', ORGANISER)
+            page.emulate_media(media='screen')
+        r['organiserSelector'] = ORGANISER; r['organiserMedia'] = ORGANISER_MEDIA
         report['nojs'].append({'mode': mode, 'width': width, **r})
         page.screenshot(path=str(OUT / f'{mode}-nojs-{width}.png'))
         assert r['slides'] == N and r['arrivalQuestions'] == NOJS['arrivalQuestions'] and r['exitItems'] == NOJS['exitItems'] and r['organiser'] and r['note'] and r['controls'] == 0 and r['docScrollWidth'] <= width + 1 and not r['wide'], r
