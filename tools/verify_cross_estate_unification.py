@@ -171,7 +171,7 @@ CATALOGUE_PINS = {
         "tools/ux2/resource_sizes.py": "2e8d36613fb39e3114c2006337771ddc9c724f9b6333a6e05cfed4e646e4224b",
         "tools/ux2/s1m_published_input_proof.py": "95b82480a9fdbb607fcaf3077d1e58dc1e9a5eafd96581fdbec281c979de1d10",
         ".github/workflows/s1m-published-input-proof.yml": "fcc9f4c6b6a550873bda92346bb73e47d9ec0cfe95664a8eec66d0e7947dfb76",
-        ".github/workflows/watch-main.yml": "796f0aa8d9967fc301bdd47923bb47ad7055f7c5036fa44b2df8780ce31a016c",
+        ".github/workflows/watch-main.yml": "59a20898874af37f5ec5314fa7fe175777a2504dc0e1020ddb3b2b46feeeb7cf",
         "tools/verify_v6fin_w7_r1_r7.py": "2be87c68256802e46131d9a4c70228e3d8635c51eb1789c01b94f2b316960dae",
         ".github/workflows/glv3-verify.yml": "4bf27ca7471a21359e35d1bc7277c5fa0adeb5f31a47c769f192165796037088",
         "_glv3/tools/verify_change_boundary.py": "8497238e50615b354493a93293b2a9e146bfa181c8c9300008db8cbcbf1ec3bb",
