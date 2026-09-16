@@ -690,7 +690,9 @@ PUBLICATION_CALLER_PATH = ".github/workflows/education-pages.yml"
 # the whole return week (this branch, #545, carrying #543 and #544) admitted beside the published Sugar digests, re-cut after the guidance button was docked and the stage timer moved off the home link in all six lessons (the full offline-pack check now passes 12/12). Seven pairs, nothing added or removed; no reviewed download row moves. Digests from a full three-repository build qualified by a control build of main ec7d34ab. Publisher code is unchanged.
 # Advanced 2026-09-16 (CX2 §5.3 EDU-Q1 companions) to Site carrier 40339776460347d0018569d598c45d0dd1a93497 on the same carrier branch:
 # Carrier 40339776 admits the six catalogue/discovery outputs the companion rows move, as [served, candidate] from full builds (served oracle main e1a05dce).
-PUBLICATION_CALLER_SHA256 = "765863d9ffbfe3218e34057c7792ad5eebfd6668846f90440757e90f980e43e5"
+# Advanced 2026-09-16 (CX2 §5.3 EDU-Q1 companions (second mint)) to Site carrier 7491329d8533b7edf6d32cfaa13a065c28af3f41 on the same carrier branch:
+# Carrier admits hub.js (pathway directory read case-insensitively) beside the six catalogue/discovery outputs, as [served, candidate] from full builds.
+PUBLICATION_CALLER_SHA256 = "e4bcd8bacb891e9c377ce8839ac23285ef155eddd6f42850f2117d0d9aa80b8a"
 # One reviewed caller digest per repository kind. detect_kind() reads the root
 # it is standing in, so this entry is only ever compared against the Apps
 # repository's own caller: the Lessons gate run and the Apps gate runs are the
