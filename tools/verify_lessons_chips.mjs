@@ -53,9 +53,10 @@ function cardOf(row) {
 function tierOf(r) {
   if (PATHWAYS.includes(r._shelfPathway)) return r._shelfPathway;
   const f = r.file || r.url || '';
-  if (/(?:^|\/)Build\//.test(f)) return 'BUILD';
-  if (/(?:^|\/)Grow\//.test(f)) return 'GROW';
-  if (/(?:^|\/)Launch\//.test(f)) return 'LAUNCH';
+  // Case-insensitive like hub.js: the teaching-pack layout capitalises the pathway segment.
+  if (/(?:^|\/)Build\//i.test(f)) return 'BUILD';
+  if (/(?:^|\/)Grow\//i.test(f)) return 'GROW';
+  if (/(?:^|\/)Launch\//i.test(f)) return 'LAUNCH';
   const base = f.split('/').pop().toUpperCase(), first = (f.split('/')[0] || '').toUpperCase();
   for (const t of PATHWAYS) { if (base.indexOf(t + '_') === 0 || first.indexOf(t + '_') === 0) return t; }
   const m = (r.title || '').match(/^(BUILD|GROW|LAUNCH)(?![A-Za-z])/); if (m) return m[1];
