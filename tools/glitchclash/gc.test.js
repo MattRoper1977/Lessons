@@ -104,10 +104,26 @@ const TARGET = 'file://' + (process.argv[2]
   // drive a real endless round through the shipped button
   const runStart = await pg.evaluate(()=>{ try{
       document.getElementById('endlessbtn').click(); return 'clicked'; }catch(e){ return 'ERR '+e.message; } });
-  await pg.waitForTimeout(400);
-  ok(await pg.evaluate(()=>!!document.getElementById('modgo')),'Endless offers run modifiers first');
+  // PLAY-Q1 shelf, 2026-09-16. These two waits were hand-timed sleeps of 400ms
+  // and 1200ms. Stamping the generated splash region onto this file added about
+  // twenty kilobytes and two seconds of load-time work, and the sleeps became
+  // marginal: this suite failed here once in seven runs, on a machine doing
+  // nothing else, while passing six times. A re-run would have hidden that, so
+  // the sleeps are gone instead. Neither wait is circular - the first waits for
+  // the modifier sheet to appear and the second waits only for A BATTLE TO
+  // EXIST. What is asserted afterwards is unchanged: that the sheet is offered
+  // BEFORE the battle, and that the battle which starts is flagged endless and
+  // is round one. A run that starts an ordinary battle, or an endless run at
+  // the wrong round, still reds exactly as it did.
+  const sheetShown = await pg.waitForFunction(()=>!!document.getElementById('modgo'), null, {timeout:15000})
+    .then(()=>true).catch(()=>false);
+  ok(sheetShown,'Endless offers run modifiers first');
   await pg.click('#modgo');                              // start a clean run
-  await pg.waitForTimeout(1200);
+  // Not "wait until a battle exists" - earlier checks in this suite already left
+  // one, so that condition is true the instant it is asked and the read below
+  // would catch the OLD battle. The transition being waited for is the modifier
+  // sheet closing, which is what starting the run does.
+  await pg.waitForFunction(()=>!document.getElementById('modgo'), null, {timeout:15000}).catch(()=>{});
   const inEndless = await pg.evaluate(()=>{ const b=window.__GC?window.__GC():null;
     return b?{endless:!!b.endless, round:b.endless&&b.endless.round}:null; });
   console.log('  start: '+runStart+'  state: '+JSON.stringify(inEndless));

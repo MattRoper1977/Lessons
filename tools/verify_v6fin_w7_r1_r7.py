@@ -165,6 +165,17 @@ def changed_paths(root: Path, base: str) -> set[str]:
     return changed
 
 
+def r1r7_population_problem(declared: list[str], expected_routes: list[str]) -> str | None:
+    """The R1-R7 half of the ledger rule, as one function so its firing controls
+    exercise the shipped code rather than a paraphrase of it."""
+    if len(declared) != len(set(declared)):
+        return "makerSplash.applied declares a route more than once"
+    expected_set = set(expected_routes)
+    if [route for route in declared if route in expected_set] != expected_routes:
+        return "makerSplash.applied does not declare R1-R7 exactly once each, in order"
+    return None
+
+
 def controls(canon: bytes, sample: bytes) -> list[dict[str, object]]:
     rows: list[dict[str, object]] = []
 
@@ -177,6 +188,28 @@ def controls(canon: bytes, sample: bytes) -> list[dict[str, object]]:
 
     rows.append({"name": "authored byte beside region", "observedRed": stripped + b"x" != stripped})
     rows.append({"name": "zoom blocker detector", "observedRed": bool(ZOOM_BLOCK_RE.search("width=device-width,user-scalable=no"))})
+
+    # PLAY-Q1 shelf, 2026-09-16. The population rule stopped being list equality,
+    # so each way it can now be broken gets its own planted failure. The first
+    # three prove the R1-R7 half still bites; the fourth proves the wider half
+    # is not vacuous - an extra applied route carrying no region is refused, not
+    # skipped. That the honest population is ACCEPTED is proved by this gate
+    # passing on a ledger that carries the seven plus the stamped shelf, so it
+    # is not restated here as a row that would have to be read backwards.
+    seven = [f"/Lessons/{rel}" for _, rel in TARGETS]
+    rows.append({"name": "a declared route appears twice",
+                 "observedRed": r1r7_population_problem(seven + [seven[0]], seven) is not None})
+    rows.append({"name": "an R1-R7 route dropped from the declaration",
+                 "observedRed": r1r7_population_problem(seven[1:], seven) is not None})
+    rows.append({"name": "R1-R7 declared out of order",
+                 "observedRed": r1r7_population_problem([seven[1], seven[0]] + seven[2:], seven) is not None})
+    unstamped = strip_region(sample)[0]
+    try:
+        strip_region(unstamped)
+        refused = False
+    except ValueError:
+        refused = True
+    rows.append({"name": "an extra applied route carrying no region", "observedRed": refused})
     return rows
 
 
@@ -195,9 +228,42 @@ def main() -> int:
     ledger = json.loads((root / "data" / "hud-coverage.json").read_text(encoding="utf-8"))
     declared = [entry["route"] for entry in ledger.get("makerSplash", {}).get("applied", [])]
     expected_routes = [f"/Lessons/{rel}" for _, rel in TARGETS]
-    if declared != expected_routes or len(set(declared)) != 7:
-        raise ValueError("makerSplash.applied is not the exact ordered R1-R7 population")
-    if ledger["makerSplash"].get("declined-with-reason") or ledger["makerSplash"].get("variant-retained-with-reason"):
+    expected_set = set(expected_routes)
+    # PLAY-Q1 shelf, 2026-09-16. This was list EQUALITY against exactly the seven
+    # R1-R7 routes, so a twenty-eighth correctly stamped route reddened a gate
+    # that has nothing to say about it. Equality over the whole population was
+    # never what R1-R7 needed proving. What it needs is that each of its seven
+    # routes is declared exactly once, in its order, and that is asserted below
+    # unchanged. Every other applied route is then held to the SAME canon-region
+    # standard the per-target loop applies, so this gate now covers more of the
+    # estate than it did before, not less. A route that is declared but not
+    # stamped, stamped twice, stamped from a different generator, or missing from
+    # the checkout entirely, all still red here.
+    problem = r1r7_population_problem(declared, expected_routes)
+    if problem:
+        raise ValueError(problem)
+    for route in declared:
+        if route in expected_set:
+            continue
+        rel = route[len("/Lessons/"):] if route.startswith("/Lessons/") else route.lstrip("/")
+        path = root / rel
+        if not path.is_file():
+            raise ValueError(f"{route}: applied route has no file in this checkout")
+        # strip_region already refuses anything but exactly one balanced region.
+        _, region = strip_region(path.read_bytes())
+        if region != canon:
+            raise ValueError(f"{route}: generated region differs from the pinned Site generator")
+    # The blanket ban below read "R1-R7 declaration contains an exception", and
+    # that intent is kept exactly: none of the seven may be declined or retained
+    # as a variant. It is narrowed to the seven because the exception lists are
+    # the estate's documented way to record a route that genuinely cannot take
+    # the region, and a blanket ban would forbid recording one for any route at
+    # all - which is not a stronger gate, only a blunter one.
+    exceptions = set()
+    for key in ("declined-with-reason", "variant-retained-with-reason"):
+        for entry in ledger["makerSplash"].get(key) or []:
+            exceptions.add(entry["route"] if isinstance(entry, dict) else entry)
+    if exceptions & expected_set:
         raise ValueError("R1-R7 declaration contains an exception")
 
     rows = []
