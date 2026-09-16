@@ -730,7 +730,14 @@ PUBLICATION_CALLER_SHA256 = "4e1678265e6a4a4d7478112778ff8ef552d08003b67ac4f2cc2
 # gate copy predated UX2 A5 and so had no by-kind map to read; putting the two
 # copies back in step is what made it fire.
 PUBLICATION_CALLER_SHA256_BY_KIND = {
-    "lessons": PUBLICATION_CALLER_SHA256,
+# Advanced 2026-09-16 (D-1): this repository's own publisher pin moved to the Site
+# carrier f70f4973, which re-binds the homepage feature card to this repository's main
+# and mints the publication admission for the paths whose bytes had moved. The caller
+# file therefore changed, and this is its digest re-cut from those bytes. The "lessons"
+# entry is now its own literal rather than an alias of PUBLICATION_CALLER_SHA256, which
+# stays where UX2 A5 left it: the two kinds pin different files and had no business
+# sharing one constant.
+    "lessons": "597915266a4da01266532737c26375cb33026d975c40781504ef95ea8cdd4c5b",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.
