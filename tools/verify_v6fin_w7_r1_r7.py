@@ -53,6 +53,19 @@ PINNED_REFERENCE_CHECKOUT = "_reference/site/"
 EXCEPTION_KEYS = ("declined-with-reason", "variant-retained-with-reason")
 EXCEPTION_PIN = {"count": 0, "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"}
 MIN_REASON_CHARS = 24
+
+# WHICH routes may carry the region is the gate's authority, not the ledger's.
+# Until LV4 this file asserted the applied list was EXACTLY the seven; widening it to
+# cover extra routes accidentally handed that authority away, because a route appended
+# to data/hud-coverage.json was admitted on the strength of being correctly stamped.
+# Measured on the identical tree: the pre-widening body reds on Lessons main
+# ("makerSplash.applied is not the exact ordered R1-R7 population") where the widened
+# body is green. Correct stamping is necessary and is NOT sufficient.
+#
+# The population is R1-R7 and nothing else. A route joins it only by a reviewed
+# release that also carries its revision record; that release extends the tuple below,
+# which is the single place this authority is written down.
+AUTHORISED_BEYOND_R1_R7 = ()
 AUTHORED_BASE = "178912c57583a1152be0dfa711fa3f652cb3b993"
 
 
@@ -237,6 +250,16 @@ def main() -> int:
         raise ValueError("makerSplash.applied does not open with the exact ordered R1-R7 population")
     if len(set(declared)) != len(declared):
         raise ValueError("makerSplash.applied declares a route more than once")
+
+    # Authority check. Being stamped to canon does not admit a route; being in the
+    # authorised population does, and then the canon standard below still applies.
+    population = expected_routes + list(AUTHORISED_BEYOND_R1_R7)
+    outside = [route for route in declared if route not in population]
+    if outside:
+        raise ValueError(
+            "makerSplash.applied declares route(s) outside the authorised population: "
+            + ", ".join(outside)
+        )
 
     # Every route declared BEYOND R1-R7 is held to the canon-region standard: it must exist, it
     # must carry the generated region exactly once, and that region must be the pinned generator's
