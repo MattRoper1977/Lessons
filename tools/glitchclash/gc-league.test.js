@@ -22,6 +22,20 @@ const fs = require('fs');
 const os = require('os');
 const { chromium } = require('playwright');
 
+// PLAY-Q1 shelf, 2026-09-16. Every scene in this suite used to be "goto, sleep
+// 500-700 ms, drive the menu". The page now carries the generated launch splash,
+// which guards pointer and key events at the window for its first two seconds,
+// so a click at 700 ms is swallowed and no battle starts - L7, L8 and L10 all
+// red, deterministically, twice in a row. The sleeps were never the condition
+// being waited for; the splash being gone is. This waits for that, bounded, and
+// leaves the assertions untouched. It is not circular: it waits for the launch
+// overlay to leave, not for the state each check then asserts.
+async function settled(pg) {
+  await pg.waitForFunction(() => !document.querySelector('[data-mbm-maker-splash]'), null, { timeout: 15000 }).catch(() => {});
+  await pg.waitForTimeout(150);
+}
+
+
 const TARGET = process.argv[2] || path.join(__dirname, '..', '..', 'Games', 'Glitch_Clash.html');
 const LEAGUE_KEY = 'mbm_glitchclash_league_v1';
 const SAVE_KEY = 'glitchclash_save';
@@ -42,7 +56,7 @@ async function capturePreExpansionSave(browser, file) {
   const ctx = await browser.newContext();
   const page = await ctx.newPage();
   await page.goto('file://' + file, { waitUntil: 'domcontentloaded' });
-  await page.waitForTimeout(700);
+  await settled(page);
   const raw = await page.evaluate(async () => {
     /* Drive the game's own writer rather than fabricating a blob: earn a win,
        flip settings, mark the tutorial, then let it save. */
@@ -66,7 +80,7 @@ async function withPage(browser, file, seedFn) {
   const page = await ctx.newPage();
   if (seedFn) await page.addInitScript(seedFn);
   await page.goto('file://' + file, { waitUntil: 'domcontentloaded' });
-  await page.waitForTimeout(600);
+  await settled(page);
   return { ctx, page };
 }
 
@@ -167,7 +181,7 @@ async function withPage(browser, file, seedFn) {
     const p2 = await ctx2.newPage();
     await p2.addInitScript(saved => { try { localStorage.setItem('glitchclash_save', saved); } catch (_) {} }, captured);
     await p2.goto('file://' + file, { waitUntil: 'domcontentloaded' });
-    await p2.waitForTimeout(700);
+    await settled(p2);
     const after = await p2.evaluate(() => ({
       raw: localStorage.getItem('glitchclash_save'),
       leagueKeyPresent: localStorage.getItem('mbm_glitchclash_league_v1') !== null,
@@ -196,7 +210,7 @@ async function withPage(browser, file, seedFn) {
     const mangled = JSON.stringify(Object.assign(JSON.parse(captured), { xp: 999999 }));
     await p3.addInitScript(saved => { try { localStorage.setItem('glitchclash_save', saved); } catch (_) {} }, mangled);
     await p3.goto('file://' + file, { waitUntil: 'domcontentloaded' });
-    await p3.waitForTimeout(600);
+    await settled(p3);
     const tam = await p3.evaluate(() => SV.xp);
     t('L4 TAMPER: the losslessness comparison can tell saves apart',
       tam !== before.xp, `mangled xp read back as ${tam}, original was ${before.xp}`);
@@ -245,7 +259,7 @@ async function withPage(browser, file, seedFn) {
       page.on('pageerror', e => errs.push(String(e.message).slice(0, 70)));
       await page.addInitScript(b => { try { localStorage.setItem('mbm_glitchclash_league_v1', b); } catch (_) {} }, blob);
       await page.goto('file://' + file, { waitUntil: 'domcontentloaded' });
-      await page.waitForTimeout(500);
+      await settled(page);
       const ok = await page.evaluate(() => {
         try { const s = GCX3.read(); return Array.isArray(s.route) && Array.isArray(s.log) && s.log.length <= 40 && typeof s.at === 'number'; }
         catch (e) { return false; }
@@ -265,7 +279,7 @@ async function withPage(browser, file, seedFn) {
     const errs = [];
     page.on('pageerror', e => errs.push(String(e.message).slice(0, 90)));
     await page.goto('file://' + file, { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(700);
+    await settled(page);
     /* THIS GATE WAS VACUOUS AND SHIPPED THAT WAY. It read
          typeof battle !== 'undefined' && battle !== null
        which looks like it inspects the game's battle object. It does not.
@@ -317,7 +331,7 @@ async function withPage(browser, file, seedFn) {
     const errs = [];
     page.on('pageerror', e => errs.push(String(e.message).slice(0, 90)));
     await page.goto('file://' + file, { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(700);
+    await settled(page);
     const out = await page.evaluate(async () => {
       const res = {};
       for (const id of ['weeklybtn', 'endlessbtn', 'dailybtn']) {
@@ -393,7 +407,7 @@ async function withPage(browser, file, seedFn) {
     const c = await browser.newContext();
     const pg = await c.newPage();
     await pg.goto('file://' + file, { waitUntil: 'domcontentloaded' });
-    await pg.waitForTimeout(500);
+    await settled(pg);
     const seq = await pg.evaluate(({ s, n }) => {
       GCX3.clear(); GCX3.begin(s);
       const out = [];
@@ -435,7 +449,7 @@ async function withPage(browser, file, seedFn) {
     const errs = [];
     pg.on('pageerror', e => errs.push(String(e.message).slice(0, 90)));
     await pg.goto('file://' + targetFile, { waitUntil: 'domcontentloaded' });
-    await pg.waitForTimeout(700);
+    await settled(pg);
     const rows = await pg.evaluate(async ({ cid, patch }) => {
       if (patch) eval(patch);
       /* startLeague() keeps an already-active league rather than minting a new
@@ -550,7 +564,7 @@ async function withPage(browser, file, seedFn) {
     const c = await browser.newContext();
     const pg = await c.newPage();
     await pg.goto('file://' + targetFile, { waitUntil: 'domcontentloaded' });
-    await pg.waitForTimeout(500);
+    await settled(pg);
     const out = await pg.evaluate((cid) => {
       /* NOTE: page-scope `CARDS` is the FIGHTER roster. The Fracture Cards are
          GCX3.CARDS. Same word, two pools — worth saying out loud once. */
@@ -599,7 +613,7 @@ async function withPage(browser, file, seedFn) {
     const cards = await browser.newContext().then(async c => {
       const pg = await c.newPage();
       await pg.goto('file://' + file, { waitUntil: 'domcontentloaded' });
-      await pg.waitForTimeout(400);
+      await settled(pg);
       const ids = await pg.evaluate(() => GCX3.CARDS.map(x => x.id));
       await c.close();
       return ids;
@@ -643,7 +657,7 @@ async function withPage(browser, file, seedFn) {
     const c = await browser.newContext();
     const pg = await c.newPage();
     await pg.goto('file://' + file, { waitUntil: 'domcontentloaded' });
-    await pg.waitForTimeout(500);
+    await settled(pg);
     const rows = await pg.evaluate(({ calm, norm }) => {
       GCX3.clear(); GCX3.begin('calm-floor');
       return GCX3.CARDS.concat([{ id: null }]).map(card => {
@@ -667,7 +681,7 @@ async function withPage(browser, file, seedFn) {
     const rc = await browser.newContext({ reducedMotion: 'reduce' });
     const rp = await rc.newPage();
     await rp.goto('file://' + file, { waitUntil: 'domcontentloaded' });
-    await rp.waitForTimeout(700);
+    await settled(rp);
     const rm = await rp.evaluate(({ calm }) => {
       GCX3.clear(); GCX3.begin('calm-live');
       const wideCard = GCX3.CARDS.find(x => x.ring);
@@ -724,7 +738,7 @@ async function withPage(browser, file, seedFn) {
     const seeder = await browser.newContext();
     const sp = await seeder.newPage();
     await sp.goto('file://' + file, { waitUntil: 'domcontentloaded' });
-    await sp.waitForTimeout(500);
+    await settled(sp);
     const seedFor = await sp.evaluate(() => {
       const want = {};
       for (let i = 0; i < 8000 && Object.keys(want).length < GCX3.CARDS.length; i++) {
@@ -748,7 +762,7 @@ async function withPage(browser, file, seedFn) {
       const c = await browser.newContext();
       const pg = await c.newPage();
       await pg.goto('file://' + targetFile, { waitUntil: 'domcontentloaded' });
-      await pg.waitForTimeout(600);
+      await settled(pg);
       const said = await pg.evaluate(async (s) => {
         GCX3.clear(); GCX3.begin(s);
         const live = [...document.querySelectorAll('[aria-live="polite"]')].find(n => !n.id);
