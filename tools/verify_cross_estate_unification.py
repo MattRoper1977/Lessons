@@ -627,8 +627,17 @@ CATALOGUE_PINS = {
 # These semantic pins are deliberately outside the movable file/manifest block.
 # Neither the catalogue pin tool nor the generic manifest pin tool can bless
 # an edited, deleted or reordered original resource, or an extra lesson row.
-CATALOGUE_ORIGINAL_ROWS = 734
-CATALOGUE_ORIGINAL_ROWS_SHA256 = "b8ffcb16f5fd2a413e8a0b06ad2d4b112f450364fa294377869dc32c8235bb2c"
+# 2026-09-16, Matt: the Science v3_40min renditions are retracted from the catalogue.
+# This pin sits outside the movable block on purpose, so no tool can bless a removal --
+# it is edited by hand, with the reason, or not at all. See the matching note on
+# ORIGINAL_ROW_COUNT in tools/catalogue/pin_catalogue_contract.py for the measurement:
+# Weeks 3-7 served two renditions of every topic, the pathway roots carry the classroom
+# chassis and fill the timetable on their own, and all 38 removed rows sat contiguously
+# at indices 448-485 inside this block, so 734 becomes 696 and nothing is reordered.
+# No byte is deleted; the files stay in the tree, stay pinned in _glv3/PROTECTED_TREES.json
+# and stay published, because the education publication copies Science_Teesside by tree.
+CATALOGUE_ORIGINAL_ROWS = 696
+CATALOGUE_ORIGINAL_ROWS_SHA256 = "6b38ad0fc5be48350e95700ebe05264a08610160746fa459828023f896119367"
 # The appended rows are the 49 reviewed hub rows followed, since UX2 D3
 # (2026-09-08), by the companion-pack entries DERIVED from
 # data/companion-packs.json by tools/ux2/companion_catalogue.py. The count and
