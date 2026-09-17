@@ -51,7 +51,7 @@ PAIRS_DOCX = [
      'Evidence capture on ' + PLATFORM + ' should be lean and purposeful, with clips listened to before tagging.'),
     ('E - evidence on EFL;', 'E - evidence captured on ' + PLATFORM + ';'),
 ]
-BANNED = re.compile(r'\bEarwig\b|\bEfL\b|\bEFL\b', re.I)
+BANNED = re.compile(r'\bEarwig\b|\bCypher\b|\bEfL\b|\bEFL\b', re.I)
 
 
 def sha(path):
