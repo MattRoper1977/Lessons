@@ -210,7 +210,7 @@ def process(rel, check):
         pend = text.find('</p>', k) + 4
         text = text[:pend] + addition + text[pend:]; log.append(('staff link', 'applied'))
     import re
-    for banned in (r'\bEarwig\b', r'\bEfL\b', r'\bEFL\b', 'asserted, not verified', 'Yellow Box', 'green pen'):
+    for banned in (r'\bEarwig\b', r'\bCypher\b', r'\bEfL\b', r'\bEFL\b', 'asserted, not verified', 'Yellow Box', 'green pen'):
         # word-bounded: the bare substring "EFL" also occurs inside base64 image data
         m = re.search(banned, text)
         assert not m, '%s still carries %r at offset %d: %r' % (rel, banned, m.start(), text[max(0, m.start()-60):m.end()+60])

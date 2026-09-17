@@ -40,7 +40,7 @@ except Exception:
 
 # Taken verbatim from tools/science_teaching_packs/cx2_sugar_r10.py line 54 and
 # tools/rw1/cx2_lane_d.py line 213.
-PRODUCT_NAMES = re.compile(r'\bEarwig\b|\bEfL\b|\bEFL\b', re.I)
+PRODUCT_NAMES = re.compile(r'\bEarwig\b|\bCypher\b|\bEfL\b|\bEFL\b', re.I)
 # §4.3 forbids the RECONSTRUCTED marking policy — a Yellow Box the teacher deep-marks and a
 # green pen the pupil responds in. The words alone are not the offence: "click each yellow box
 # to type" is a user-interface instruction and "pass me the green pen" is a typing exercise.
