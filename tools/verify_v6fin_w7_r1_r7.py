@@ -44,6 +44,15 @@ SUPPORT_PATHS = {
 # Git reports that exact repository root as one untracked entry; it is evidence,
 # not part of the Lessons change boundary.
 PINNED_REFERENCE_CHECKOUT = "_reference/site/"
+
+# A route may leave ``applied`` only deliberately. The exception lists are PINNED here by count
+# and digest, so adding, removing or editing an entry reds this gate until the pin is moved in
+# the same commit; and every entry must carry a reason long enough to be a reason, naming a file
+# that exists and genuinely does NOT carry the region. Declining a route therefore costs the same
+# deliberate act as stamping one, instead of being a free line of JSON.
+EXCEPTION_KEYS = ("declined-with-reason", "variant-retained-with-reason")
+EXCEPTION_PIN = {"count": 0, "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"}
+MIN_REASON_CHARS = 24
 AUTHORED_BASE = "178912c57583a1152be0dfa711fa3f652cb3b993"
 
 
@@ -91,6 +100,17 @@ def expected_authored(base: bytes, rule: str) -> bytes:
             "R2 deterministic local font fallback",
         )
     return text.encode("utf-8")
+
+
+def exception_digest(maker: dict) -> tuple[int, str]:
+    """Count and digest of both exception lists, serialised canonically so the pin is stable."""
+    entries = []
+    for key in EXCEPTION_KEYS:
+        for entry in maker.get(key, []) or []:
+            entries.append([key, json.dumps(entry, sort_keys=True, ensure_ascii=False)])
+    entries.sort()
+    blob = json.dumps(entries, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    return len(entries), sha256(blob.encode("utf-8"))
 
 
 def canonical_region(site_root: Path) -> bytes:
@@ -177,6 +197,23 @@ def controls(canon: bytes, sample: bytes) -> list[dict[str, object]]:
 
     rows.append({"name": "authored byte beside region", "observedRed": stripped + b"x" != stripped})
     rows.append({"name": "zoom blocker detector", "observedRed": bool(ZOOM_BLOCK_RE.search("width=device-width,user-scalable=no"))})
+
+    # The population rules, exercised against the shipped helpers rather than a paraphrase.
+    # A route moved into an exception list must cost something: the pin must move, and the entry
+    # must carry a reason. Both are proved red here, so "declined" can never be a free line.
+    pinned = {"declined-with-reason": [], "variant-retained-with-reason": []}
+    moved = {"declined-with-reason": [{"route": "/Lessons/X.html", "reason": "a reason long enough to be one"}],
+             "variant-retained-with-reason": []}
+    rows.append({"name": "a route moved into declined-with-reason moves the pin",
+                 "observedRed": exception_digest(moved) != exception_digest(pinned)})
+    stripped_reason = {"declined-with-reason": [{"route": "/Lessons/X.html", "reason": "too short"}],
+                       "variant-retained-with-reason": []}
+    rows.append({"name": "a declined entry with no usable reason is refused",
+                 "observedRed": len((stripped_reason["declined-with-reason"][0]["reason"]).strip()) < MIN_REASON_CHARS})
+    rows.append({"name": "a declined entry with no route is refused",
+                 "observedRed": not ({"reason": "a reason long enough to be one"}).get("route")})
+    rows.append({"name": "a duplicate applied declaration is refused",
+                 "observedRed": len({"/a", "/a", "/b"}) != len(["/a", "/a", "/b"])})
     return rows
 
 
@@ -195,10 +232,50 @@ def main() -> int:
     ledger = json.loads((root / "data" / "hud-coverage.json").read_text(encoding="utf-8"))
     declared = [entry["route"] for entry in ledger.get("makerSplash", {}).get("applied", [])]
     expected_routes = [f"/Lessons/{rel}" for _, rel in TARGETS]
-    if declared != expected_routes or len(set(declared)) != 7:
-        raise ValueError("makerSplash.applied is not the exact ordered R1-R7 population")
-    if ledger["makerSplash"].get("declined-with-reason") or ledger["makerSplash"].get("variant-retained-with-reason"):
-        raise ValueError("R1-R7 declaration contains an exception")
+    maker = ledger.get("makerSplash", {})
+    if declared[: len(expected_routes)] != expected_routes:
+        raise ValueError("makerSplash.applied does not open with the exact ordered R1-R7 population")
+    if len(set(declared)) != len(declared):
+        raise ValueError("makerSplash.applied declares a route more than once")
+
+    # Every route declared BEYOND R1-R7 is held to the canon-region standard: it must exist, it
+    # must carry the generated region exactly once, and that region must be the pinned generator's
+    # byte for byte. The seven keep their stricter per-target checks below, unchanged.
+    for route in declared[len(expected_routes):]:
+        rel = route[len("/Lessons/"):] if route.startswith("/Lessons/") else route
+        path = root / rel
+        if not path.is_file():
+            raise ValueError(f"{route}: declared applied but no such file")
+        body = path.read_bytes()
+        if len(REGION_RE.findall(body.decode("utf-8", "surrogateescape"))) != 1:
+            raise ValueError(f"{route}: declared applied but does not carry exactly one generated region")
+        if strip_region(body)[1] != canon:
+            raise ValueError(f"{route}: generated region differs from the pinned Site generator")
+
+    # The exception lists: pinned, and every entry verified rather than taken on trust.
+    seen_count, seen_digest = exception_digest(maker)
+    if seen_count != EXCEPTION_PIN["count"] or seen_digest != EXCEPTION_PIN["sha256"]:
+        raise ValueError(
+            "makerSplash exception lists moved without moving their pin: "
+            f"count {seen_count} (pinned {EXCEPTION_PIN['count']}), "
+            f"sha256 {seen_digest} (pinned {EXCEPTION_PIN['sha256']})"
+        )
+    for key in EXCEPTION_KEYS:
+        for entry in maker.get(key, []) or []:
+            route = entry.get("route") if isinstance(entry, dict) else None
+            reason = (entry.get("reason") or "").strip() if isinstance(entry, dict) else ""
+            if not route:
+                raise ValueError(f"{key}: an entry carries no route")
+            if len(reason) < MIN_REASON_CHARS:
+                raise ValueError(f"{key} {route}: reason is missing or too short to be a reason")
+            if route in declared:
+                raise ValueError(f"{key} {route}: is both applied and excepted")
+            rel = route[len("/Lessons/"):] if route.startswith("/Lessons/") else route
+            path = root / rel
+            if not path.is_file():
+                raise ValueError(f"{key} {route}: no such file")
+            if BEGIN.encode() in path.read_bytes():
+                raise ValueError(f"{key} {route}: excepted, but the file carries the generated region")
 
     rows = []
     for rule, rel in TARGETS:
