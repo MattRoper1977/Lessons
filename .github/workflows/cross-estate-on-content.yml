@@ -1,0 +1,18 @@
+name: Cross-estate contract on lesson content
+
+# The cross-estate contract already guards the catalogue's lesson-order projection,
+# but it only ran on PR shapes that touch a PIN1-pinned path. A PR that changes only
+# Science_Teesside lesson content did not trigger it, so the projection could move -
+# dropping a lesson's term and week binding - with every check on the PR green, and
+# the red would surface later on main's scheduled run. This fires the same contract
+# on those PRs. Trigger only: no job, threshold, scope or assertion is changed here.
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'Science_Teesside/**'
+
+jobs:
+  cross-estate:
+    uses: ./.github/workflows/mbm-cross-estate-unification.yml
