@@ -22,20 +22,44 @@ PACKS = [
 GUIDANCE_ROUTES_SHA256 = "a7f5c3473f78c0a3f5ec5048a92ae30bf93bccfd56a07f7699145a51db769a2b"
 SUGAR_GUIDANCE = "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html"
 
+# SX3 moves eight more BUILD routes onto the classic chassis Sugar already sits on. The
+# docked guidance injection cannot ride along: n6m-guide:v1 ships
+# [data-mbm-guide]{display:none!important}, and on the classic chassis data-mbm-guide also
+# carries the TA and cold-call dialogs — injecting it would hide the TA dialog outright.
+# So these routes change guidance PRESENTATION, exactly as EDU-Q1's Sugar variant did, and
+# keep their navigation check: asserted on four real controls instead of a marker substring,
+# which is strictly stronger than the substring it replaces. The census is unchanged — same
+# 47 identities, same digest. Membership here is named, never inferred from page shape: the
+# landing puts 66 decks on this chassis and shape-matching would silently grow the census.
+CLASSIC_CHASSIS_ROUTES = frozenset({
+    SUGAR_GUIDANCE,
+    "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W9A_Rock_Evidence_Explore.html",
+    "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W9B_Rock_Sorting_Key_Do.html",
+    "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W10A_Rock_Hardness_Explore.html",
+    "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W10B_Hardness_Evidence_Do.html",
+    "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W12A_Rock_Jobs_Which_Property_Matters_Explore.html",
+    "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W12B_Choose_Rock_For_The_Job_Do.html",
+    "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W13A_Fair_Test_Planner_Change_One_Thing_Explore.html",
+    "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W13B_Method_Pilot_Test_The_Test_Do.html",
+})
+
+CLASSIC_NAVIGATION = (
+    '//button[@data-action="ta"]',
+    '//dialog[@id="ta-dialog"]//button[@data-action="close"]',
+    '//button[@id="next-slide" and @data-action="next"]',
+    '//button[@id="previous-slide" and @data-action="previous"]',
+)
+
 
 def guidance_kind(member, content):
     source = member.removeprefix('Lessons/')
-    if source == SUGAR_GUIDANCE:
+    if source in CLASSIC_CHASSIS_ROUTES:
         from lxml import html
         page = html.fromstring(content)
-        required = [
-            '//button[@data-action="ta"]',
-            '//dialog[@id="ta-dialog"]//button[@data-action="close"]',
-            '//button[@id="next-slide" and @data-action="next"]',
-            '//button[@id="previous-slide" and @data-action="previous"]',
-        ]
-        if not all(len(page.xpath(selector)) == 1 for selector in required):
-            raise ValueError('Sugar replacement must retain real teacher-dialog and navigation controls')
+        if not all(len(page.xpath(selector)) == 1 for selector in CLASSIC_NAVIGATION):
+            raise ValueError(
+                'Classic-chassis route must retain real teacher-dialog and navigation '
+                'controls: ' + source)
         return 'classic-dialog'
     return 'docked-guidance' if b'n6m-guide-docked' in content else None
 

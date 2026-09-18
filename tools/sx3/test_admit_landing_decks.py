@@ -107,5 +107,16 @@ class RestoreToken(unittest.TestCase):
         self.assertNotIn("W99", out)
 
 
+class IdenticalToBase(unittest.TestCase):
+    def test_a_deck_equal_to_its_base_is_skipped_not_refused(self):
+        # The base's lesson-config is pretty-printed and would not round-trip.
+        # A held deck reverted to the base still appears in the diff, so without
+        # the skip the tool refuses a deck it has no work to do on.
+        pretty = deck(BASE_CONFIG).replace(json.dumps(BASE_CONFIG, ensure_ascii=False),
+                                           json.dumps(BASE_CONFIG, indent=2))
+        with self.assertRaises(admit.Refuse):
+            admit.restore_binding_keys(pretty, pretty)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
