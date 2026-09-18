@@ -1323,6 +1323,12 @@ REVIEWED_PATHS = (
     # AR9: brought under digest guard so the V6FIN baseline file cannot change silently.
     # Guarded, not exempted. Authorised by Matt, Order AR9, 2026-09-10.
     "tools/verify_v6fin_w7_r1_r7.py",
+    # SX3-M4 1(b): the fence naming the decks whose proof the #586 limb narrowing
+    # removed. The gate reads it and fails a pull request that touches one, so it
+    # is pinned here — a fence the tree can edit silently is not a fence. It is a
+    # review decision and cannot be re-derived, which is why the control is a pin
+    # rather than a regeneration.
+    "_sx3/FENCE.json",
     # GLV3 admits only these reviewed publisher checks and cover inputs.
     ".github/workflows/glv3-verify.yml", "_glv3/tools/verify_change_boundary.py",
     "_glv3/tools/browser_verify.mjs", "_glv3/tools/chip_gate.mjs",

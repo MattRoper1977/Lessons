@@ -1154,3 +1154,59 @@ Under ORDER SX3-M2 the position is **36 land, 39 held**. The 19 here is
 the 39 is that 19 plus the 10 BUILD W9–W14 decks with an unruled second
 generation and the 10 `expectedStageCount` decks. `_sx3/HELD.md` is the
 authoritative held list. `_sx3/RECONCILIATIONS.md` shows the arithmetic.
+
+## FENCE — 11 decks carrying a latent loss of proof (ORDER SX3-M4 §1)
+
+`#586` narrowed the term-and-style quote limb to the term·week token derived from
+`SCIENCE_WEEK_BINDINGS`. Measured across all 129 shelf decks, that narrowing
+**removed a proof that existed on 11 of them** — see `_sx3/STOP_L_limb_population.md`.
+
+The loss is **latent**: the limb only runs when a deck's bytes drift from its
+recorded evidence sha256, and none of these currently do. It bites the next time
+one is edited, and it bites **silently** — none of the 11 is `style: recommended`,
+so none raises an `AssertionError`; the deck simply falls into
+`unresolvedTiming` and loses its week binding.
+
+The fallback limb that repairs this lands in the **next** release, with two arms
+and two separate red proofs.
+
+### Fenced — DO NOT MODIFY until the fallback limb lands (6)
+
+Enforced by `fence_errors()` in `tools/verify_cross_estate_unification.py`,
+against the pull request's own diff, in the gate that already runs on every PR in
+both estates. The list lives in `_sx3/FENCE.json`, which is itself digest-pinned
+in `CATALOGUE_PINS` — a fence the tree can edit silently is not a fence.
+
+| deck | why the proof was lost |
+|---|---|
+| `Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html` | no week recorded → `bool(tokens)` is false, so the limb can never fire |
+| `Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html` | no week recorded |
+| `Build/W8-W13_2026-27/SCI_B_W11A_Rock_Permeability_Explore.html` | no week recorded |
+| `Build/W8-W13_2026-27/SCI_B_W13_Where_did_this_material_come_from_Classic.html` | binding written in label form (`Autumn 2 · Week 5`) |
+| `Grow/Autumn2_W7_2026-27/SCI_G_A2_W7A_Autumn_Science_Review_Explore.html` | label form (`Autumn 2 · Week 7`) |
+| `Grow/Autumn2_W7_2026-27/SCI_G_A2_W7B_Autumn_Science_Evidence_Do.html` | label form (`Autumn 2 · Week 7`) |
+
+### Not fenced — in the landing 36 and repaired by this release (5)
+
+These carry the same latent loss and **this release repairs them**: the single
+content change writes the derived term·week token onto each, which is exactly
+what the narrowed limb asks for. They are named here so the fence and the landing
+set cannot be read as contradicting each other.
+
+| deck | why the proof was lost | repaired by |
+|---|---|---|
+| `Build/W8-W13_2026-27/SCI_B_W12_Give_a_rock_a_job_Classic.html` | label form (`Autumn 2 · Week 4`) | the content change's derived token |
+| `Grow/W8-W13_2026-27/SCI_G_W9_Turn_Earth_explain_the_sky_Classic.html` | label form (`Autumn 2 · Week 1`) | as above |
+| `Grow/W8-W13_2026-27/SCI_G_W12_Follow_the_warming_chain_Classic.html` | label form (`Autumn 2 · Week 4`) | as above |
+| `Launch/W8-W13_2026-27/SCI_L_W9_Copy_separate_divide_Classic.html` | label form (`Autumn 2 · Week 1`) | as above |
+| `Launch/W8-W13_2026-27/SCI_L_W12_Zoom_into_genetic_information_Classic.html` | label form (`Autumn 2 · Week 4`) | as above |
+
+**11 = 6 fenced + 5 repaired.** An earlier readback of mine said one of the 11
+was in the landing set. That was wrong — I had checked only the BUILD deck. Five
+are, which is why the fence is 6 rather than 10.
+
+### Retiring the fence
+
+Delete `_sx3/FENCE.json` when the fallback limb has landed with both red proofs:
+the no-week arm, and the label-form arm including a wrong-label case. The gate
+treats a missing file as no fence, so deletion is the whole retirement.
