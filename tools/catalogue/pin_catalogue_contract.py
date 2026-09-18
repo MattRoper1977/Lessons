@@ -1667,6 +1667,20 @@ REVIEWED_PATHS += (
 )
 
 
+# SX3 LAUNCH W9, 2026-09-18. The download definition that names a continuation
+# lesson by title. verify_definitions.py asserts that title against the deck's
+# own lesson_label(), so a deck whose title is re-authored makes this file stale
+# and reds CI - which is what happened when SCI_L_W9L1_Cell_Cycle_Introduce.html
+# landed its new title. The definition is hand-maintained and nothing re-derives
+# it, so it is admitted the same way the deck is: by digest pin, in one reviewed
+# transaction with the lesson whose title it mirrors. This is the STOP-P1 class
+# and the pin is the control the standing rule requires until the title can be
+# derived from the deck instead of typed.
+REVIEWED_PATHS += (
+    'tools/downloads/definitions/launch-science-aut1-main.json',
+)
+
+
 # D-1, 2026-09-16: the all-stage acceptance instrument moves with the lesson it
 # had to accept. Two assumptions in it were W4L1's shape rather than the estate's,
 # and both would refuse any lesson carrying its own media: it asserted the lesson
