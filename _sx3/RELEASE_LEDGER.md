@@ -1241,10 +1241,11 @@ writing what the exemplar has would be authoring, not repair.
 | 31 | `.science-reveal` — the pack uses `details.answer-details` | 12 of 36 | **R-SR**: no dressing. Same role, different markup is a gap, not a pass. |
 | 30 | `.teacher-only` — **pre-existing, no pack source** | 1 of 36, `Science_Teesside/Build/W8-W13_2026-27/SCI_B_W12_Give_a_rock_a_job_Classic.html` | **R-GAPS**, ORDER SX3-M6 §1: named, not fixed. The BUILD exemplar carries two `.teacher-only` blocks; this deck's pack carries no teacher-only content to restore, and writing two blocks the exemplar has would be authoring. Carried as the one named exception in the re-acceptance table. |
 
-## Three instrument corrections, standing
+## Four instrument corrections, standing
 
-All three were faults in how this release MEASURED, not in what it changed. All
-three produced a number that looked clean and was not about the thing under test.
+All four were faults in how this release MEASURED, not in what it changed. All
+four produced a number that looked clean, or an error that looked like someone
+else's, and was not about the thing under test.
 
 **A harness takes its target as an argument and refuses to run without one.**
 `openers.mjs` read a hard-coded `/tmp/sx3_out` and ignored its argument, so it
@@ -1317,6 +1318,39 @@ or reads `git ls-remote origin <ref>`, which is authoritative.** A plain
 `git fetch origin <branch>` is not a refresh. This is the same shape as the other
 two corrections above: an instrument that reports success while measuring
 something other than what was asked.
+
+
+**Repository tooling runs on the interpreter the WORKFLOW pins, not the container
+default.** Reproducing the education publication locally to measure STOP-P1's
+three digests, the builder failed twice and neither failure was the builder's:
+
+```
+domain-split/education_frontdoors.py:35
+    f'... aria-label="{'Find it' if kind == 'pupils' else 'Search'}" ...'
+SyntaxError: f-string: expecting '}'
+```
+
+Single quotes nested inside a single-quoted f-string is PEP 701, valid from
+**Python 3.12**. `education-publication.yml:63` pins `python-version: '3.12'`.
+This container's default `python3` is **3.11.15**, and 3.10, 3.11, 3.12 and 3.13
+are all installed. Measured both ways:
+
+```
+python3.11 parses education_frontdoors.py: SyntaxError: f-string: expecting '}'
+python3.12 parses education_frontdoors.py: OK
+```
+
+An interpreter one minor version behind turns a correct builder into what reads
+like a broken one, at a pinned carrier nobody had touched. The first of the two
+failed builds was a different fault of the same family: `build_education.py` was
+run without `build_publications.py`, which the workflow runs first at
+`education-publication.yml:69` and which writes the
+`education-site/data/domain-catalogue.json` the second step reads.
+
+The rule: **run repository tooling the way the workflow runs it — the pinned
+interpreter, and the steps in the workflow's order.** Read the workflow before
+reproducing, rather than invoking the tool the way it looks like it should be
+invoked.
 
 
 ## Pre-CI checklist — the eight-check sweep
@@ -1516,6 +1550,10 @@ has the matching name.
    to `origin/<branch>` in the Lessons or Apps clone — their fetch refspec
    covers `main` only, so a plain `git fetch origin <branch>` refreshes
    nothing that a later command reads.
+7. **Python: the version the workflow pins**, not the container default. The
+   publication pins 3.12; `python3` here is 3.11. Run the steps in the
+   workflow's order too — a tool run without its prerequisite fails on a
+   missing input and looks like a broken tool.
 
 A stale derived artefact, or a stale pin on a current one, found by CI rather than
 by this checklist is a reportable miss.
@@ -1825,3 +1863,72 @@ list, has no pin, has a pin that disagrees with its bytes, or whose status is no
 
 Each restored to PASS afterwards. (ii) is the sharper one: dropping a member does
 not shrink the transaction, it drops that deck back through the fence.
+
+---
+
+## The merge-sequence verdict, and its stated bound
+
+ORDER SX3-S2 as amended. Main's `mbm-cross-estate-unification` run counts as a
+verdict when `static-contract`, `browser-matrix` and `announce-live-run` are green
+and the ONLY red is `live-proof` failing on STOP-P1's three stale pins. The three
+routes and the PINNED column may not move; the BUILT column may, as this release's
+`resources.json` changes land.
+
+`check_tokens_inert.cjs:22` pins exactly three:
+
+```
+lessons ''              01e571fa7b4d619d05dbfdd5ca194a430195e309547ad1867701b0901be84639
+lessons 'subject.html'  048f41f8c63c2a90257880aea4fefd899216dd025e1fda3fe6cfd178c0848ced
+apps    ''              a2d5dedca49c9fa867c6ac2aabec83d877f1f9e4fe59bf79f2c75b771b6806bb
+```
+
+Anything else — a fourth route, a different assertion, a different line, or any
+movement in the pinned column — is a NEW red and halts with attribution. This
+release does not touch `check_tokens_inert.cjs`.
+
+### THE BOUND ON THIS VERDICT, STATED RATHER THAN GLOSSED
+
+`live-proof` drives the **live** origin (`$(cat /tmp/mbm-live-base)`), which is 403
+from the agent container, so CI's own failure cannot be read here: the logs are 403
+and the job's annotations carry only `Process completed with exit code 1`. What is
+measured instead is the **builder's** output — pinned versus what the pinned
+builder now produces — which is the same comparison STOP-P1 made on 17 September.
+
+Running the checker against that built tree stops here:
+
+```
+Error: Expected admitted publication did not become ready:
+[{"route":"","status":200,"actual":"5c4e3ced64113e43…"},
+ {"route":"subject.html","status":200,"actual":"93a071a895033cce…"}]
+    at waitForPublished (tools/sw2/check_tokens_inert.cjs:43)
+```
+
+**`waitForPublished` is the first thing the tool does, so nothing after it runs**,
+and the browser step ahead of it in the CI job needs the live origin. So the honest
+claim is *nothing else FAILED*, which is not the same as *everything else PASSED*.
+Every verdict in this sequence carries that bound.
+
+Two things the run does establish positively: the checker's own `actual` digests
+match the sha256 computed independently over the built files, and
+`/assets/mbm-tokens.css` is in the same `wanted` set and is absent from the
+mismatch list, so the token CSS matched its pin.
+
+### Verdict log
+
+| PR | merged | main run | lessons `''` | lessons `subject.html` | apps `''` | Apps PR |
+|---|---|---|---|---|---|---|
+| `#576` | `ca184d38` | [35401641468] | `5c4e3ced64113e43…` | `93a071a895033cce…` | `f15bc17d01e76150…` | Apps `#113` (`60d2302`) |
+
+At `#576` the built column is **identical to the 17 September STOP-P1 measurement**.
+That is expected and was mispredicted once: `#576` does not touch `resources.json`
+— the title work that does is on `#580` and `#581` — so the hub pages it feeds are
+unchanged. The built column should move at `#580`, not before.
+
+### The Apps companions are pull requests, not pushes
+
+Each gate-copy move opens its own Apps PR carrying the Lessons PR and merged SHA it
+pairs with, the hand-verified gate digest, and the main run id that gave the
+verdict. One Apps PR for all four was considered and refused: it would break the
+pairing, landing the gate copy once instead of with each Lessons merge and leaving
+the two estates' copies disagreeing in between. Pushing a companion branch straight
+to Apps `main` was refused outright.
