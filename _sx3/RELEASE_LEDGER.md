@@ -1726,3 +1726,102 @@ not contain, because that file is untracked. The duplicate `'dialog_source_ids'`
 key at line 292 of reader D is real, still present, and harmless — both entries
 bind the same value. It goes to the next order with the chassis toolchain, which
 is where a fix could actually be committed.
+
+---
+
+## GLV3 — a fence that was rejecting every landing deck, and never ran
+
+`_glv3/tools/verify_change_boundary.py:22` protects the whole `Science_Teesside`
+prefix:
+
+```python
+PROTECTED = ('Art_Teesside', 'GROW_ASDAN', 'LAUNCH_ASDAN', 'Grow/Slideshows',
+             'Launch/Slideshows', 'Science_Teesside', 'Humanities_Teesside',
+             'Baseline_Weeks', 'BUILD_Estate_v3')
+```
+
+A modification to a lesson deck matches none of the four admitted cases — the two
+shelf `index.html` files, a declared replacement transaction, an **additive**
+pinned `Teaching_Packs/` file, or a Humanities cover path — and falls through to
+line 347: *`original GLV3 protected-path fence rejected: <deck>`*.
+
+**It had been rejecting every landing deck on every branch the whole time.**
+Measured from clean worktrees, one at a time:
+
+| branch | before the title work | after | glv3 trigger paths touched |
+|---|---|---|---|
+| build-1 | FAIL, protectedChanges 1 | FAIL, 1 | 0 → 0 |
+| grow-1 | FAIL, 12 | FAIL, 7 | 0 → 0 |
+| launch-1 | FAIL, 12 | FAIL, 12 | 0 → **1** |
+| launch-2 | FAIL, 11 | FAIL, 11 | 0 → **1** |
+
+`protectedChanges` tracks the landing-deck count exactly, at every head — including
+the heads reported green. `glv3-verify.yml:18-24` fires on `resources.json`,
+`_glv3/**`, `GROW_Estate_v3/**`, `LAUNCH_Estate_v3/**`, `_finish/ROUTES.md` and its
+own file, and **never on `Science_Teesside/**`**. The title realignment changed
+`resources.json`, which is the first thing this release touched inside that filter.
+The green on those four heads meant *this gate did not run*, not *this gate passed*.
+
+**This is the STOP-P1 class again, in a new shape.** STOP-P1 was a hand-maintained
+table nothing re-derives. This is a gate whose reach is decided by a path filter
+that does not cover what the gate actually judges: `PROTECTED` says
+`Science_Teesside`, the trigger says `resources.json`. A gate that only fires on
+its own path filter reports green by absence.
+
+**Next order: `glv3-verify.yml` fires on `Science_Teesside/**`** — the same
+correction the cross-estate contract already received, where
+`cross-estate-on-content.yml` was added precisely because a Science-content-only
+PR did not trigger it. That precedent is the argument; this is the second gate
+with the same gap.
+
+### The admission, declared not widened
+
+`REPLACEMENT_TRANSACTIONS` is GLV3's equivalent of `CATALOGUE_PINS`.
+`replacement_errors` judges each member: exactly the reviewed set and no more,
+status `M`, previous blob identity from the real merge base, exact bytes, and — at
+line 157 — a matching `CATALOGUE_PINS` admission, which all 31 decks already have.
+The precedent is `'BUILD W8A chassis'`, one chassis-transplanted deck declared the
+same way and written by `tools/build_resources/admit_w8a_chassis.py`.
+
+**One transaction per branch, not one for the release — measured, not assumed.** A
+single declaration naming all 31 was judged on `claude/sx3-build-1`, where exactly
+one of them is modified:
+
+```
+SX3 hypothetical replacement must contain exactly the 31 reviewed file modifications
+```
+
+`replacement_errors:143-144` requires the CHANGED set to equal the DECLARED set, so
+a release-wide declaration can never be satisfied on any single branch. Four
+transactions, one per branch; declaration order is review order and later
+declarations supersede earlier claims, so they accumulate on main without colliding.
+
+| transaction | branch | members | GLV3 with it |
+|---|---|---|---|
+| `SX3 BUILD W12` | `claude/sx3-build-1` | 1 | PASS |
+| `SX3 GROW W9-W13` | `claude/sx3-grow-1` | 7 | PASS |
+| `SX3 LAUNCH W8-W13` | `claude/sx3-launch-1` | 12 | PASS |
+| `SX3 LAUNCH W12-W15 A2W7` | `claude/sx3-launch-2` | 11 | PASS |
+
+`tools/build_resources/admit_sx3_release.py` DERIVES every value: `beforeGitBlob`
+from `git ls-tree` at the real merge base, `afterSha256` and `bytes` from the bytes
+on disk, and it refuses a deck that is not in the landing set, is named in the held
+list, has no pin, has a pin that disagrees with its bytes, or whose status is not
+`M`. Nothing is typed.
+
+### Red-proved three ways, on the 12-member LAUNCH transaction
+
+```
+(i)   planted byte change on one member
+      -> SX3 LAUNCH W8-W13 replacement bytes differ: …SCI_L_W12L2_DNA_Structure_Explore.html
+
+(ii)  member removed from the declaration while still modified (11 declared, 12 changed)
+      -> original GLV3 protected-path fence rejected: …SCI_L_W12L2_DNA_Structure_Explore.html
+
+(iii) that deck's CATALOGUE_PINS digest altered by one character, bytes untouched
+      -> SX3 LAUNCH W8-W13 replacement lacks matching owner-reviewed catalogue
+         admission: …SCI_L_W12L2_DNA_Structure_Explore.html
+```
+
+Each restored to PASS afterwards. (ii) is the sharper one: dropping a member does
+not shrink the transaction, it drops that deck back through the fence.
