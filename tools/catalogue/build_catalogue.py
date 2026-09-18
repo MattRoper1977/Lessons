@@ -1,6 +1,31 @@
 """Build additive catalogue metadata from current lesson content and SoW evidence.
 
 No filename week inference, resource-row edits, route moves or timing assertions.
+
+MERGED ARTEFACT HAZARD — READ BEFORE RUNNING THIS
+TERM_AND_STYLE_EVIDENCE.json is NOT written by this tool alone. Other tools --
+the UX2 companion-pack tools, the admit_* tools -- write rows into it that this
+tool cannot produce. Every .pptx row is one of those: classify() returns its bare
+stub for anything that is not an existing .html file, so a plain re-run used to
+replace 118 enriched companion-pack rows with {term:'any', style:'reference'} and
+drop their term, batch, sha256 and title. Measured on 2026-09-18 at 3e2dcbd2: a
+NO-OP rebuild silently degraded 125 entries. Nothing in the file said so, and no
+gate caught it, because the pins move with the file.
+
+So this tool now MERGES rather than replaces, under two rules:
+
+  1. Where the builder returns its bare stub for a path it CANNOT read as an
+     .html file, the row already on disk is kept verbatim. That is the merged
+     row, and it is not this tool's to author.
+  2. Where the builder CAN read the file and still returns a stub although the
+     record held more, that is a regression in this tool's own reading, not a
+     merged row. It REFUSES to write rather than publish the degradation.
+
+The proof of (1) is a no-op rebuild leaving every .pptx row intact; the proof of
+(2) is that the refusal fires. tools/catalogue/test_build_catalogue_merge.py
+red-proves both, and also proves the guard is load-bearing by removing it. An
+.html row whose style or title is re-derived differently is NOT this hazard --
+that is the tool doing its job, and it still happens.
 """
 from pathlib import Path
 from lxml import html
@@ -178,6 +203,26 @@ for selected in HUM:
  m.setdefault('title',selected['title']);m.setdefault('batch','Tools and reference')
  humanities.append({'path':path,'resourceType':selected['type'],**m})
  entries.setdefault(path,m)
+# MERGED ARTEFACT GUARD. See the module header. Rows this tool cannot author
+# are kept; a degradation it CAN author is refused rather than written.
+PROOF_PATH=PROOF/'TERM_AND_STYLE_EVIDENCE.json'
+prior_entries=json.loads(PROOF_PATH.read_text())['entries'] if PROOF_PATH.is_file() else {}
+def is_stub(entry):
+ return (entry.get('term')=='any' and not entry.get('terms')
+  and entry.get('style')=='reference' and not entry.get('evidence'))
+def readable_here(path):
+ candidate=ROOT/path
+ return candidate.is_file() and candidate.suffix.lower()=='.html'
+preserved=[];regressed=[];dropped=sorted(set(prior_entries)-set(entries))
+for path,prior in prior_entries.items():
+ current=entries.get(path)
+ if current is None or is_stub(prior) or not is_stub(current):continue
+ if readable_here(path):regressed.append(path)
+ else:preserved.append(path);entries[path]=prior
+assert not regressed,('build_catalogue.py read these files and produced less than the '
+ 'record already holds; that is a regression in this tool, not a merged row: '+', '.join(sorted(regressed)))
+print('Merged rows preserved:',len(preserved),'| prior rows no longer present:',len(dropped))
+
 proof={'schema':'catalogue-evidence-v1','basis':'Explicit current lesson/SoW evidence. Flexible sequences are not assigned calendar weeks. Recommended is an editorial selection, not a claim of universal curriculum coverage.','entries':entries}
 (PROOF/'TERM_AND_STYLE_EVIDENCE.json').write_text(json.dumps(proof,ensure_ascii=False,indent=2)+'\n')
 public={'schema':1,'terms':TERM,'styles':STYLE,'entries':{p:{k:v for k,v in m.items() if k not in ('evidence','sha256','title','pathway')} for p,m in entries.items()}}
