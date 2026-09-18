@@ -631,7 +631,7 @@ CATALOGUE_PINS = {
         "Science_Teesside/Grow/v3_40min/SCI_G_W7A_The_Moon_Explore.html": "2b54a5399c6422873be70b5ab43ea271112f54ae1401d990705b19a2f75030b4",
         "Science_Teesside/Grow/v3_40min/SCI_G_W7B_The_Moon_Do.html": "85c9c9c7d4a12fa67fe6a098960aef0e880a3b7bf217667e39dad570bac11ebc",
         "Science_Teesside/Build/W8-W13_2026-27/SHA256SUMS.txt": "e00a7819a77039be3ab614ba92de09889748723aa9ad759f7a6bfe64c2e5fb28",
-        "data/chassis-census.json": "e5d0f3c93bfae0a47a498fc01a0315b1746433fa752b4ade04334b8a0bcdca40",
+        "data/chassis-census.json": "c8bbe094c322d763842433fd37159e6a1dc5b69058b7f2413d0196bf9d113223",
         "tools/launch_resources/lesson_acceptance.py": "bbebaeb821f32c04eb1b2e01e819795ffa97cd851f33d7c22fec0b0505a9fe21"
     }
 }
