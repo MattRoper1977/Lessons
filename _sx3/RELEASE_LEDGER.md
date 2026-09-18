@@ -1592,3 +1592,62 @@ matching trigger path. The pair working exactly as designed, in both directions:
 
 Gate copies hand-verified byte-identical at
 `fda74114ff09c8c1a444b30e1bee1e2c8784a61cf2b14036aac800e9e2d89a4b`.
+
+---
+
+## The definition pin, approved — and what it obliges
+
+`tools/downloads/definitions/launch-science-aut1-main.json` is digest-pinned in
+`CATALOGUE_PINS`, approved as strictly tighter than an `ALLOWED_DIFF` entry.
+
+**Standing consequence: every future edit to that file needs a deliberate re-pin**
+via `tools/catalogue/pin_catalogue_contract.py --lessons <path> --apps <path>`,
+which writes both estate gate copies, plus `tools/pin1/derive_triggers.py --write`
+if the trigger list does not already carry it. A hand edit alone will red the
+cross-estate contract, by design.
+
+**Next order — the "derive, don't type" list.** Two entries now:
+
+1. `verify_definitions.py`'s continuation titles. Derive from the deck's own
+   `lesson_label()` on both sides rather than typing one of them. The pin above
+   becomes unnecessary the day this lands.
+2. The two copies of the publication selector (`tools/lib/publication_artifacts.py`
+   in Site, `tools/prepare_served_publications.py` in Lessons). Unify them, and add
+   the comparison control that would have caught their divergence.
+
+## FINDING — five GROW `_Do` decks carry their paired `_Explore` deck's heading
+
+Surfaced only when the 31 changed titles were tabled beside the 5 unchanged for
+the S2 pack. Across all 36 landing decks there are exactly five cases where a
+deck's new `<h1>` equals a **different** deck's title on main, and all five are one
+shape: the `_Do` deck of a GROW pair has taken the `_Explore` deck's heading
+verbatim, while the `_Explore` deck is unchanged.
+
+| week | `_Explore` (unchanged) | `_Do` on main | `_Do` on the branch |
+|---|---|---|---|
+| W9  | Spherical Bodies: Shape Evidence | Spherical Bodies: World Shape Lab | **Spherical Bodies: Shape Evidence** |
+| W10 | Solar System Research: Evidence Desk | Solar System Presentation: Mission Briefing | **Solar System Research: Evidence Desk** |
+| W11 | Climate Chain: From Gas to Warming | Climate Action: Plan, Measure, Improve | **Climate Chain: From Gas to Warming** |
+| W12 | Science Connections: Evidence Control | Answer Lab: Say It, Support It, Improve It | **Science Connections: Evidence Control** |
+| W13 | Rover Rescue: Plan a Fair Test | Rover Evidence Lab | **Rover Rescue: Plan a Fair Test** |
+
+All five are on `grow-1` (#578). `build-1`, `launch-1` and `launch-2` have no
+collisions: every changed title there is unique within the landing set and equal to
+no other deck's title on main.
+
+**What a teacher would see.** The derived display titles are unchanged — measured
+on `assets/catalogue/display-titles.json` at `origin/main` and at the `grow-1`
+head, all ten rows identical. So the hub still lists each `_Do` deck under its own
+title, and the defect is inside the deck: the hub offers *Solar System
+Presentation: Mission Briefing*, the page that opens is headed *Solar System
+Research: Evidence Desk*, and both decks of the pair are headed identically.
+
+**Why nothing caught it, and the gap that leaves.** Condition (d) baselines on each
+branch's pre-change head, so a heading supplied by the pack was already there.
+`build_display_titles.py --check` passes because display titles derive from the
+catalogue, not from the deck's `<h1>`, so the two can disagree silently. **No check
+in the estate compares a deck's own heading with the title it is listed under, and
+none looks for two decks sharing a heading.** Both belong on the next order's list.
+
+Recorded as a finding. Nothing changed; the five decks sit at the digests in the
+re-acceptance table.
