@@ -1228,6 +1228,23 @@ what kind of table it is:
 kind and has neither control. That is why it went stale unnoticed and why
 `live-proof` has been red on main since 17 September.
 
+## Why the binding keys are restored rather than a token written
+
+`SCI_L_W14L1_Genetic_Condition_Research_Introduce.html`,
+`SCI_L_W14L2_Genetic_Condition_Source_Evidence_Explore.html` and
+`SCI_L_W14L3_Genetic_Condition_Presentation_Do.html` are in the bucket that had
+**nothing in their own text** to re-prove their binding against — the sharpest
+form of the evidence-model defect, where the record asserts a fact the artefact
+does not restate and only the byte hash holds it.
+
+They are resolved by **restored `lesson-config`**, not by a token, and that is
+the justification for the binding-key restoration as a whole: *the evidence
+lives in the deck's own configuration rather than in prose a later edit can
+break.* A token in a title slide is prose; `sow`, `objective` and `source` are
+structure. The quote limb's whole history — 750–1200-character comparisons
+broken by an inserted breadcrumb, a `Knowledge organiser` label, a retitle — is
+what happens when a binding is held in prose.
+
 ## Breach — a force-push on `claude/sx3-build-1`, 2026-09-18
 
 Recorded because it happened, not because it was found. No standing limit was
