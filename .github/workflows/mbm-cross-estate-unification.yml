@@ -1,6 +1,12 @@
 name: Made by Matt cross-estate unification
 
 on:
+  # Callable so the same contract can be triggered by lesson-content PRs, which the
+  # PIN1-derived path list below cannot cover: it is an exact-path registry of pinned
+  # inputs and exact_path() refuses globs by design. Nothing else about this workflow
+  # changes - same jobs, same thresholds, same assertions. announce-live-run and
+  # live-proof stay skipped, because a called run keeps the caller's event name.
+  workflow_call:
   pull_request:
     branches: [main]
     paths:
