@@ -66,6 +66,7 @@ RW_W8_REVIEW_BASE = 'ec7d34ab48eb290f9abb67b27c735b6e09b9930c'
 # tools/build_resources/admit_w8a_chassis.py.
 BUILD_W8A_CHASSIS_REVIEW_BASE = '48c2ecb9ab19f238cdbe5443196935a5c45f375b'
 # SX3 · SX3 GROW W9-W13: this branch's landing decks, re-dressed on the pathway exemplar
+# SX3 · SX3 BUILD W12: this branch's landing decks, re-dressed on the pathway exemplar
 # chassis, one transaction, derived and written by
 # tools/build_resources/admit_sx3_release.py. Every member also carries a
 # CATALOGUE_PINS admission, which replacement_errors cross-checks.
@@ -76,6 +77,7 @@ BUILD_W8A_CHASSIS_REVIEW_BASE = '48c2ecb9ab19f238cdbe5443196935a5c45f375b'
 # list and the transaction listing — at STOP-S2. The members are derived; the
 # decision to admit them is the line above.
 SX3_GROW_W9_W13_REVIEW_BASE = '55bff167946ecefa20eaab9d2064768549df351f'
+SX3_BUILD_W12_REVIEW_BASE = '55bff167946ecefa20eaab9d2064768549df351f'
 # BEGIN DECLARED TRANSACTIONS
 # BEGIN S3 OFFLINE EDITION REPLACEMENTS
 CX2_S3_REPLACEMENTS = {'Science_Teesside/Teaching_Packs/web-slides.html': {'beforeGitBlob': '6596d65c7a9bd5bb1875c5b46bbc331df8652144', 'afterSha256': 'f31f09d03f5d8c417af1745b38309fa537afb8bb4c6a08f387db3349d9e1cba2', 'bytes': 18607}}
@@ -104,6 +106,9 @@ BUILD_W8A_CHASSIS_REPLACEMENTS = {'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W
 # BEGIN SX3_GROW_W9_W13 REPLACEMENTS
 SX3_GROW_W9_W13_REPLACEMENTS = {'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W10A_Solar_System_Research_Explore.html': {'beforeGitBlob': '44f914320587d4dea2f2b7c63687a70bf9c0be48', 'afterSha256': 'e10e97c2d792de2fad0ce454962e3a31ec608b43750bd71315b3bb1b0655981a', 'bytes': 1208801}, 'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W11A_Global_Warming_Explore.html': {'beforeGitBlob': '1b93eab3f43facc231cd0d231e7cb2ba068975c6', 'afterSha256': '82b34329f1faf788152bc22c9e1f9eb8fd8236f3116d07337b9dca62b1325ced', 'bytes': 1250571}, 'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W12A_Science_Connections_Explore.html': {'beforeGitBlob': 'bd1b8dd818d1701dd48c28fa0cf04f1fbad3e868', 'afterSha256': '062a12a7dee5f5199ae91726f9ac0009cdf17e2dc4446d9e75c0288ab1213024', 'bytes': 1191958}, 'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W12_Follow_the_warming_chain_Classic.html': {'beforeGitBlob': '638e7f164589a6d97e3ddc07db21b0de525f8699', 'afterSha256': '94addd62c6e0169778b206e5dd59f51b508fd2ad329594718472d5222f224335', 'bytes': 1175220}, 'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W13A_Rover_Rescue_Plan_Explore.html': {'beforeGitBlob': '71b42846333433b4bf977c05018c352515e8d950', 'afterSha256': 'bae4a588c9382eec0be5901a500a9e3cde6e4b3d7bbc43d8fb1aeabebace712b', 'bytes': 1080841}, 'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W9A_Spherical_Bodies_Explore.html': {'beforeGitBlob': '296742454d41a40cfe497e00c698dcaec91df933', 'afterSha256': '2681b3f42b2bd6b8acedcd682c23d617c77eecfcce03b7cdac3db5a6751edb2d', 'bytes': 1183127}, 'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W9_Turn_Earth_explain_the_sky_Classic.html': {'beforeGitBlob': '2f4d1cb39459a14e63fde95fec961527c1c2322c', 'afterSha256': '3efded0179e818a3e7c0a5d0692610acfb4b91b1d85bc937c4b79bdd79668851', 'bytes': 1250935}}
 # END SX3_GROW_W9_W13 REPLACEMENTS
+# BEGIN SX3_BUILD_W12 REPLACEMENTS
+SX3_BUILD_W12_REPLACEMENTS = {'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W12_Give_a_rock_a_job_Classic.html': {'beforeGitBlob': 'c773b52672335bf5306427612837cd2cfe058165', 'afterSha256': '509f38056bd09e903c70b0426ac55ab7ff73f7da10261a97eec11d49d7b27d1c', 'bytes': 1002362}}
+# END SX3_BUILD_W12 REPLACEMENTS
 # END DECLARED TRANSACTIONS
 
 # Each transaction is judged on its own: every member present as exactly one
@@ -120,6 +125,7 @@ REPLACEMENT_TRANSACTIONS = {
     'Return week W8 GROW': (RW_W8_REVIEW_BASE, RW_W8_GROW_REPLACEMENTS),
     'Return week W8 LAUNCH': (RW_W8_REVIEW_BASE, RW_W8_LAUNCH_REPLACEMENTS),
     'BUILD W8A chassis': (BUILD_W8A_CHASSIS_REVIEW_BASE, BUILD_W8A_CHASSIS_REPLACEMENTS),
+    'SX3 BUILD W12': (SX3_BUILD_W12_REVIEW_BASE, SX3_BUILD_W12_REPLACEMENTS),
     'SX3 GROW W9-W13': (SX3_GROW_W9_W13_REVIEW_BASE, SX3_GROW_W9_W13_REPLACEMENTS),
     # END DECLARED TRANSACTION ENTRIES
 }

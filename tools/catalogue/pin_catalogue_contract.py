@@ -1344,6 +1344,7 @@ REVIEWED_PATHS = (
     "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W9A_Spherical_Bodies_Explore.html",
     "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W9B_Spherical_Bodies_Do.html",
     "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W9_Turn_Earth_explain_the_sky_Classic.html",
+    "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W12_Give_a_rock_a_job_Classic.html",
     # GLV3 admits only these reviewed publisher checks and cover inputs.
     ".github/workflows/glv3-verify.yml", "_glv3/tools/verify_change_boundary.py",
     "_glv3/tools/browser_verify.mjs", "_glv3/tools/chip_gate.mjs",
