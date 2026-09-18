@@ -1322,3 +1322,155 @@ As of this release it yields eight, and on a content branch they report:
 `tools/catalogue/build_lesson_order.py --check` is run alongside them. It is not
 in the grep because the workflows invoke it differently, which is itself the
 reason to re-derive the list each time rather than read it from here.
+---
+
+## The four reds on the content branches, and what each one was
+
+All four content pull requests went red on their first full CI round. None was a
+flake except one, and that one was measured rather than assumed. Recorded here
+because three of the four were mine and the fourth is the first measured cost of
+the force-push breach.
+
+### The census pin — all four branches
+
+```
+[FAIL] reviewed catalogue bytes differ: data/chassis-census.json
+```
+
+`verify_cross_estate_unification.py:981`, reproduced locally on all four from
+clean worktrees against the canonical Site checkout. `data/chassis-census.json`
+is pinned in `CATALOGUE_PINS["files"]`. Each branch regenerated it — correctly —
+and none re-pinned it.
+
+**This is the third derived artefact the pre-CI checklist must cover, and it
+changes the checklist's shape.** The eight `--check` invocations answer *is this
+artefact current?* They do not answer *is the current artefact admitted?* A
+regenerated artefact that is also digest-pinned needs BOTH, and the sweep passed
+on all four branches while the pin was stale, so the sweep alone would never have
+caught this. The rule is now: **regenerate AND pin, never one without the other.**
+
+The pin is moved by `tools/catalogue/pin_catalogue_contract.py --lessons <path>
+--apps <path>`, which writes both estate gate copies in one operation and refuses
+to write anything while they disagree. The refusal is real and fired here: the
+content branches' Lessons copy already carried branch-local pin values the Apps
+copy did not, so the Lessons copy is reset to main's before pinning, and the tool
+then writes the agreed values into both. Hand-verified byte-identical per branch:
+
+| branch | gate copy sha256 |
+|---|---|
+| `claude/sx3-build-1`  | `33bbaec919ba7a6d5ff4cb775c814a5e15336e9f3a33ca29518f3369ea4b79db` |
+| `claude/sx3-grow-1`   | `0682106083857e59af7983e7a91414c9212136d63a1c6f77b8620283d4452d95` |
+| `claude/sx3-launch-1` | `1c81b9f0de692ea2b05f4ae4ce7e5a35e09c62dbb4c0d17ab62cb5fa278fcbde` |
+| `claude/sx3-launch-2` | `3ed6407172bda8307b630926d1e55c31a760b7370b8fb53647492777065a15c0` |
+
+### The classic-chassis widening on build-1 — the breach's first measured cost
+
+```
+ValueError: Classic-chassis route must retain real teacher-dialog and navigation
+controls: Science_Teesside/Build/W8-W13_2026-27/SCI_B_W9A_Rock_Evidence_Explore.html
+```
+
+`tools/downloads/prepare_pack_browser.py:60`, from the FieldOps offline-pack job.
+`CLASSIC_CHASSIS_ROUTES` had been widened from Sugar alone to nine routes, on the
+stated premise that this branch moves eight W9–W13 BUILD routes onto the classic
+chassis. Measured against the four required controls, on the branch tip:
+
+```
+PASS  [1,1,1,1]  SCI_B_W8A_Sugar_Labels_Explore.html
+FAIL  [0,0,0,0]  the other eight, every one
+```
+
+Zero on every selector — not a near-miss. Searching every `origin/claude/sx3-*`
+branch for a diff touching those eight against `origin/main` returns exactly one:
+`origin/claude/sx3-build-1-history`. **The transplant exists only on the branch
+preserved after the force-push.** The force-push replaced the seven transplant
+commits on `build-1` and took the transplanted deck bytes with them; the widening
+that *asserts* the transplant survived on the tip. The branch was asserting a
+state it no longer held, and nothing said so until CI ran the assertion.
+
+That is the first measured cost of the breach recorded in this ledger. The
+standing rule it came from — *a rewrite that requires `-f` is the signal to stop
+and add a commit instead* — now has a price attached to it.
+
+The widening is **withdrawn**, not repaired. The eight are HELD (Held A, BUILD
+W9–W14), sit at main's bytes, still carry `n6m-guide-docked`, and are correctly
+`docked-guidance`. Nothing is re-cut from the history branch: it stays as the
+record, never merged and never deleted. Membership is now Sugar plus the one deck
+this branch actually lands, `SCI_B_W12_Give_a_rock_a_job_Classic.html`, measured
+4 of 4 on the tip.
+
+**And that entry is inert, which is said here rather than left to be discovered.**
+Classic decks are not packaged, so no pack member ever matches it and the
+four-control assertion never fires for it. The guidance census measures 47 —
+1 `classic-dialog` (Sugar) + 46 `docked-guidance` — unchanged.
+
+### The admission tool on build-1
+
+```
+[FAIL] standalone/offline boundary violated by changed files:
+       ['tools/sx3/admit_landing_decks.py', 'tools/sx3/test_admit_landing_decks.py']
+```
+
+`verify_cross_estate_unification.py:1091`. Both files are already on main; the
+content branch carried a 20-line improvement to them. Tooling rides the toolchain
+pull request only, so both return to main's bytes on `build-1` and the change is
+ported to `claude/sx3-toolchain`.
+
+**A correction made in the middle of this, before it was pushed.** The first
+reading of that refusal was that the tool was an unmerged file riding along, and
+the fix applied was `git rm` on both. They are on main, so that would have deleted
+them from the estate. Caught by checking `git ls-tree origin/main tools/sx3/`
+before pushing, and reverted. The boundary refusal says *changed*, and a deletion
+is a change; reading it as *added* was the error.
+
+### grow-1's published battery — measured transient
+
+`cross-estate / browser-matrix`, step *Verify the published Education menu and
+unchanged standalone pages*, `mbm-cross-estate-unification.yml:1237`, which reads
+`https://madebymatt.uk/Lessons/`. Annotations carried only `Process completed with
+exit code 1`; the log download is 403 and the origin is 403 from this container
+(`CONNECT tunnel failed, response 403`), so it could not be reproduced locally.
+The same step against the same origin passed on `launch-1` [35380242730] and
+`launch-2` [35380249741] in the same window, and `browser-matrix` is not gated on
+`static-contract` (launch-1: `static-contract` failure, `browser-matrix` success),
+so the passes are real observations and not skips.
+
+One re-run was authorised and spent: attempt 2 of job 105714417240 in run
+[35380239637] returned **success**. Recorded as a transient on the live origin.
+That was the single permitted re-run for this red; a second failure would have
+been real.
+
+## The two selector copies — FINDING, NOT A FIX
+
+W made the *Site* selector conclusion-aware: `tools/lib/publication_artifacts.py`,
+which `tools/hc5/serve_witness.py` imports and calls. The Lessons estate carries a
+second, unshared copy of the same tool — `tools/prepare_served_publications.py`,
+ten shared function names, `prepare_one` divergent — which still hard-stops on the
+first head-matching run regardless of conclusion. It is safe today only because
+`education-pages.yml` carries no `concurrency:` block (verified: zero matches).
+Nothing compares the two copies. Unifying them, and the comparison control that
+would have caught the divergence, go to the next order with the fallback limb and
+STOP-P1. Recorded in full at `docs/orders/LV6_RECORD_2026-09-18.md` §4.
+
+This also corrects a claim made in this session before it was measured: the first
+report said W had not made selection conclusion-aware at all. It had — in one copy
+of two. The measurement that settled it was reading which module
+`serve_witness.py` actually imports, rather than which file in the Lessons tree
+has the matching name.
+
+## Pre-CI checklist, as amended
+
+1. Re-derive the `--check` list rather than reading it from a table:
+   `grep -rhoE "(python3?|node) [A-Za-z0-9_./-]+ --check[a-z-]*" .github/workflows/*.yml | sort -u`
+2. Run every one of them, plus `tools/catalogue/build_lesson_order.py --check`,
+   which the workflows invoke differently and the grep therefore misses.
+3. **Re-pin every regenerated artefact that is digest-pinned.** The sweep says an
+   artefact is current; it does not say it is admitted. `chassis_census.py --check`
+   passed on all four branches while the census pin was stale.
+4. Run the cross-estate contract locally against a clean canonical checkout, with
+   `--self-test`, from the branch as committed — deletions and additions only show
+   in `git diff ...HEAD` once they are commits.
+5. Commit generated census and pin files before any branch switch.
+
+A stale derived artefact, or a stale pin on a current one, found by CI rather than
+by this checklist is a reportable miss.
