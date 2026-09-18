@@ -1329,6 +1329,10 @@ REVIEWED_PATHS = (
     # review decision and cannot be re-derived, which is why the control is a pin
     # rather than a regeneration.
     "_sx3/FENCE.json",
+    # SX3 landing decks. A deck is admitted by being named here: the boundary
+    # permits a changed file only if it is pinned, and tools/pin1/derive_triggers.py
+    # then materialises the matching trigger path and asserts the two sets are equal.
+    "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W12_Give_a_rock_a_job_Classic.html",
     # GLV3 admits only these reviewed publisher checks and cover inputs.
     ".github/workflows/glv3-verify.yml", "_glv3/tools/verify_change_boundary.py",
     "_glv3/tools/browser_verify.mjs", "_glv3/tools/chip_gate.mjs",
