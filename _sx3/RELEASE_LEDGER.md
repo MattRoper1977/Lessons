@@ -1241,10 +1241,10 @@ writing what the exemplar has would be authoring, not repair.
 | 31 | `.science-reveal` — the pack uses `details.answer-details` | 12 of 36 | **R-SR**: no dressing. Same role, different markup is a gap, not a pass. |
 | 30 | `.teacher-only` — **pre-existing, no pack source** | 1 of 36, `Science_Teesside/Build/W8-W13_2026-27/SCI_B_W12_Give_a_rock_a_job_Classic.html` | **R-GAPS**, ORDER SX3-M6 §1: named, not fixed. The BUILD exemplar carries two `.teacher-only` blocks; this deck's pack carries no teacher-only content to restore, and writing two blocks the exemplar has would be authoring. Carried as the one named exception in the re-acceptance table. |
 
-## Two instrument corrections, standing
+## Three instrument corrections, standing
 
-Both were faults in how this release MEASURED, not in what it changed. Both
-produced a number that looked clean and was not about the thing under test.
+All three were faults in how this release MEASURED, not in what it changed. All
+three produced a number that looked clean and was not about the thing under test.
 
 **A harness takes its target as an argument and refuses to run without one.**
 `openers.mjs` read a hard-coded `/tmp/sx3_out` and ignored its argument, so it
@@ -1277,6 +1277,47 @@ Each branch then reports `[PASS] data/chassis-census.json equals its derivation:
 180 lessons`. The census check had been failing on every content branch since
 before the content change — measured at each pre-change head, where it fails
 identically, and at `origin/main`, where it passes.
+
+**A remote-tracking ref in these clones is not refreshed by `git fetch origin
+<branch>`, and every measurement that reads one must force the refspec.**
+Both estate clones carry a single-branch fetch refspec:
+
+```
+$ git config --get-all remote.origin.fetch
++refs/heads/main:refs/remotes/origin/main
+```
+
+`refs/remotes/origin/main` is therefore current, and **every**
+`refs/remotes/origin/claude/*` holds whatever an earlier explicit refspec last
+wrote into it. `git fetch origin claude/sx3-build-1` updates `FETCH_HEAD` and
+nothing else, so it reads as a successful fetch and changes no tracking ref. The
+Site clone has the ordinary `+refs/heads/*:refs/remotes/origin/*` and does not
+behave this way, which is why the fault only appears on Lessons and Apps.
+
+It cost three things in this release, in ascending order of how badly it would
+have read if it had gone unnoticed. A push to `claude/sx3-toolchain` was rejected
+as non-fast-forward while `git rev-list --left-right --count` said 0 behind, 1
+ahead — because the reset that built the commit had used a tracking ref four
+commits stale, silently dropping the pre-CI checklist append from its base. A CI
+wait loop polled the four content branches, returned "settled", and reported the
+conclusions of the PREVIOUS heads: four reds that had already been fixed, for
+commits no longer at the tip. And a branch-wide search for the eight held BUILD
+decks scanned `origin/claude/sx3-*` against refs of unknown age; re-run across all
+292 `origin/claude/*` refs after a forced refresh it finds three branches rather
+than one — `claude/sx3-build-1-history` (the SX3 transplant, 18 September),
+`claude/new-session-q7ztqq` (28 August) and `claude/lf1-restore-week-labels`
+(9 September), the latter two unrelated older work whose versions of those decks
+differ substantially from the transplant. The conclusion drawn from it is
+unchanged and better supported: none of the four content branches carries the
+transplant.
+
+The rule: **any measurement or reset that reads `origin/<branch>` in the Lessons
+or Apps clone first runs `git fetch origin "+refs/heads/*:refs/remotes/origin/*"`,
+or reads `git ls-remote origin <ref>`, which is authoritative.** A plain
+`git fetch origin <branch>` is not a refresh. This is the same shape as the other
+two corrections above: an instrument that reports success while measuring
+something other than what was asked.
+
 
 ## Pre-CI checklist — the eight-check sweep
 
@@ -1471,6 +1512,10 @@ has the matching name.
    `--self-test`, from the branch as committed — deletions and additions only show
    in `git diff ...HEAD` once they are commits.
 5. Commit generated census and pin files before any branch switch.
+6. Refresh tracking refs with an explicit refspec before reading or resetting
+   to `origin/<branch>` in the Lessons or Apps clone — their fetch refspec
+   covers `main` only, so a plain `git fetch origin <branch>` refreshes
+   nothing that a later command reads.
 
 A stale derived artefact, or a stale pin on a current one, found by CI rather than
 by this checklist is a reportable miss.
