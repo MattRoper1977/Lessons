@@ -1651,3 +1651,78 @@ none looks for two decks sharing a heading.** Both belong on the next order's li
 
 Recorded as a finding. Nothing changed; the five decks sit at the digests in the
 re-acceptance table.
+
+---
+
+## A deck's title is mirrored in FIVE places, and only the deck is the source
+
+ORDER SX3-S2 §2.1 names three. Aligning the 17 found five, and the count matters
+because each one is a place the title can go stale on its own:
+
+| # | where | how it moves | who asserts it |
+|---|---|---|---|
+| 1 | the deck's own `<h1>` | authored | **THE SOURCE** |
+| 2 | `data/companion-packs.json` `title` | hand-maintained, reviewed pairs | `build_display_titles.py` |
+| 3 | `assets/catalogue/science-shelf.json` `title` | hand-maintained composite | must CONTAIN #2 verbatim |
+| 4 | `assets/catalogue/lesson-order.json` → `display-titles.json` | derived from #2/#3 | `--check` |
+| 5 | `tools/downloads/definitions/*.json` `continuations` | hand-maintained | `verify_definitions.py` |
+
+The order's three were #1, #3→#4 and #5. **#2 is the one that actually decides
+what the hub shows**, and it was found by a refusal rather than by reading:
+realigning the shelf alone makes `build_display_titles.py` raise *"Review changed
+lesson title"*, because it requires the companion-pack title to appear verbatim
+inside the host's shelf title. Nothing in the order or in this ledger knew #2 was
+there until that refusal fired.
+
+**Two composite shapes, also found by a refusal.** The shelf records a title as
+either `LAUNCH GCSE Biology W10L1 · <title> · 40 minutes` or
+`<title> · LAUNCH Science`. `tools/sx3/align_shelf_titles.py` refused the second
+shape rather than guessing which segment was the title, and now accepts it only
+when the leading segment is exactly what `display-titles.json` lists. Position
+alone is never trusted.
+
+**An ordering the checklist did not have.** `build_display_titles.py` must run
+AFTER `companion_catalogue.py --write` and `unit_tags.py --write`, because those
+rewrite `resources.json` and leave the display-title map stale. Run in the wrong
+order the sweep reds on a map that was correct a moment earlier — which it did,
+once, on `launch-1`.
+
+**Next order, "derive, don't type".** Three entries now:
+
+1. **The display title.** Derive `data/companion-packs.json` / the shelf
+   composite's lesson segment from the deck's `<h1>`, rather than typing it in two
+   places and asserting containment between them.
+2. **The continuation title** in `verify_definitions.py`, from the same source.
+3. **The two publication-selector copies**, `tools/lib/publication_artifacts.py`
+   and `tools/prepare_served_publications.py`, unified with a comparison control.
+
+Until (1) and (2) land, **LISTED is the standing control**:
+`tools/sx3/check_landing_titles.py` fails a landing set in which any deck's `<h1>`
+differs from the title it is listed under. `DECLARED_DIVERGENCES` is EMPTY and an
+entry in it is a review decision, never a way to quiet the check.
+
+### What was realigned
+
+| branch | decks realigned | shelf shape |
+|---|---|---|
+| `claude/sx3-launch-1` (`#580`) | 10 | three-segment |
+| `claude/sx3-launch-2` (`#581`) | 7 | 5 three-segment, 2 two-segment |
+
+Measured on `origin/main`, **zero** of the 31 landing decks had a divergence
+before this release; 17 had one after it. Every one is now closed. On all four
+heads: DISTINCT 0, LISTED 0, `DECLARED_DIVERGENCES` empty, `verify_definitions`
+exits 0.
+
+`science-shelf.json` does not re-serialise byte-identically — `json.dumps(indent=2)`
+turns 34KB into 45KB — so its titles are spliced as exact JSON strings, refusing
+unless each occurs exactly once. `companion-packs.json` does round-trip and is
+rewritten normally. Neither file is reformatted by this work.
+
+## Correction accepted, and one defect deferred
+
+`f5be94b8` stands: commit `375599fe`'s message claimed a fix to
+`_authoring/science_2026-27/_toolchain/chassis/adapters.py` that the commit did
+not contain, because that file is untracked. The duplicate `'dialog_source_ids'`
+key at line 292 of reader D is real, still present, and harmless — both entries
+bind the same value. It goes to the next order with the chassis toolchain, which
+is where a fix could actually be committed.
