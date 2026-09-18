@@ -32,6 +32,19 @@ The estate admits a lesson deck by naming it in **two** places at once:
 Measured: of the **24** named Science `.html` files in that trigger list,
 **24 are boundary-permitted**. The pairing is the mechanism.
 
+> **Correction, ORDER SX3-M5 §1(a).** I first described that 24/24 pairing as an
+> observed coincidence with a silent failure mode. It is not a coincidence and
+> the failure mode is not silent: **`tools/pin1/derive_triggers.py` already
+> asserts it**, in both directions, on every run. `CATALOGUE_PINS` is the
+> registry; `--write` materialises the matching trigger paths into the
+> workflow's `BEGIN/END PIN1 DERIVED PATHS` block; `--check` fails if the two
+> sets differ either way. So the trigger list is **generated**, not
+> hand-maintained, and admitting a deck is not a CI edit.
+>
+> This session met it head-on: adding `_sx3/FENCE.json` to `CATALOGUE_PINS`
+> reddened `static-contract` on #589 with
+> `missing=['_sx3/FENCE.json']`, and `derive_triggers.py --write` cleared it.
+
 Measured on this release's decks:
 
 | | in the 514-path trigger list | boundary-permitted |

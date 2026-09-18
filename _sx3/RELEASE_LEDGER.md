@@ -1210,3 +1210,20 @@ are, which is why the fence is 6 rather than 10.
 Delete `_sx3/FENCE.json` when the fallback limb has landed with both red proofs:
 the no-week arm, and the label-form arm including a wrong-label case. The gate
 treats a missing file as no fence, so deletion is the whole retirement.
+
+## Standing rule, amended (ORDER SX3-M5 §3)
+
+A table that CI asserts against must have a control, and the control depends on
+what kind of table it is:
+
+- **Derivable** — regenerable from a source of truth. The control is a
+  **re-derivation check**. Example: the cross-estate workflow's trigger paths are
+  derived from `CATALOGUE_PINS` by `tools/pin1/derive_triggers.py`, whose
+  `--check` fails on `missing=[…]` or `unexpected=[…]` in either direction.
+- **A review decision** — cannot be re-derived, because it records a judgement.
+  The control is a **digest pin**. Examples: `_sx3/FENCE.json`; the reviewed
+  catalogue byte set in `CATALOGUE_PINS` itself.
+
+`tools/sw2/check_tokens_inert.cjs`'s `PUBLISHED` table (STOP-P1) is of the first
+kind and has neither control. That is why it went stale unnoticed and why
+`live-proof` has been red on main since 17 September.
