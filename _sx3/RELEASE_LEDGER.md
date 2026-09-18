@@ -1227,3 +1227,53 @@ what kind of table it is:
 `tools/sw2/check_tokens_inert.cjs`'s `PUBLISHED` table (STOP-P1) is of the first
 kind and has neither control. That is why it went stale unnoticed and why
 `live-proof` has been red on main since 17 September.
+
+## R-GAPS — accepted gaps in the landed decks
+
+Gaps that are recorded and accepted rather than fixed. Each is pre-existing,
+each has been measured identically before and after this release's content
+change, and in each case the pack carries no source to restore from — so
+writing what the exemplar has would be authoring, not repair.
+
+| contract row | gap | decks | ruling |
+|---|---|---|---|
+| 15 | KO groups — the pack ships an HTML organiser (`article.sheet`), not the exemplar's clipped A4 vector (`clipPath#ko-*`) | 36 of 36 | **R-KO**: accept the HTML organiser. No SVG render, no `#ko-*` ids added. KO must still open in the exemplar dialog and print on one A4 page. |
+| 31 | `.science-reveal` — the pack uses `details.answer-details` | 12 of 36 | **R-SR**: no dressing. Same role, different markup is a gap, not a pass. |
+| 30 | `.teacher-only` — **pre-existing, no pack source** | 1 of 36, `Science_Teesside/Build/W8-W13_2026-27/SCI_B_W12_Give_a_rock_a_job_Classic.html` | **R-GAPS**, ORDER SX3-M6 §1: named, not fixed. The BUILD exemplar carries two `.teacher-only` blocks; this deck's pack carries no teacher-only content to restore, and writing two blocks the exemplar has would be authoring. Carried as the one named exception in the re-acceptance table. |
+
+## Two instrument corrections, standing
+
+Both were faults in how this release MEASURED, not in what it changed. Both
+produced a number that looked clean and was not about the thing under test.
+
+**A harness takes its target as an argument and refuses to run without one.**
+`openers.mjs` read a hard-coded `/tmp/sx3_out` and ignored its argument, so it
+reported "75 decks, all dialogs openable" for decks that were not the 36 under
+measurement. A hard-coded path is a scope that cannot be printed, and a scope
+that cannot be printed is not a scope. Replaced by
+`tools/sx3/check_dialog_openers.mjs`, which validates the directory before any
+browser starts, prints the resolved path and the deck count, and refuses on: no
+argument, a path that does not exist, a file where a directory is expected, and
+a directory with no decks in it. `tools/sx3/test_check_dialog_openers.mjs`
+red-proves all four refusals plus a deck carrying a dialog nothing opens.
+
+**Generated census and pin files are committed before any branch switch.**
+`data/chassis-census.json` was left uncommitted while branches were switched, so
+git carried one branch's census onto the others: `claude/sx3-build-1` briefly
+showed eleven census rows belonging to `claude/sx3-launch-2`. The same shape had
+already appeared once, with the Apps copy of the cross-estate gate carrying
+across a branch switch.
+
+The proof that it is fixed is per branch, and stays here:
+
+| branch | census rows changed vs `origin/main` | that branch's own landing decks | stray |
+|---|---|---|---|
+| `claude/sx3-build-1` | 1 | 1 | **0** |
+| `claude/sx3-grow-1` | 12 | 12 | **0** |
+| `claude/sx3-launch-1` | 12 | 12 | **0** |
+| `claude/sx3-launch-2` | 11 | 11 | **0** |
+
+Each branch then reports `[PASS] data/chassis-census.json equals its derivation:
+180 lessons`. The census check had been failing on every content branch since
+before the content change — measured at each pre-change head, where it fails
+identically, and at `origin/main`, where it passes.
