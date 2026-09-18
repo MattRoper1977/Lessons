@@ -1,0 +1,76 @@
+{
+  "schema": "sx3-fence-v1",
+  "authority": "ORDER SX3-M4 §1(b), 2026-09-18",
+  "why": "tools/catalogue/build_lesson_order.py's term-and-style quote limb was narrowed in #586 to the term·week token derived from SCIENCE_WEEK_BINDINGS. Measured across all 129 shelf decks, that narrowing removed a proof that existed on 11 of them. The loss is LATENT: the limb only runs when a deck's bytes drift from its recorded evidence sha256, and none of these currently do. A drift on a fenced deck drops its week binding SILENTLY, because none of them is style:recommended and so none raises. The fallback limb that repairs this lands in the NEXT release.",
+  "rule": "No pull request may modify, rename or delete a fenced path until the fallback limb has landed and this file is retired. tools/verify_cross_estate_unification.py enforces this against the PR's own diff.",
+  "retireWhen": "the fallback limb lands with both red proofs: the no-week arm and the label-form arm, the latter including a wrong-label case.",
+  "fenced": [
+    {
+      "path": "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W11A_Rock_Permeability_Explore.html",
+      "reason": "no week recorded",
+      "lostBecause": "bool(tokens) is false, so the narrowed limb can never fire"
+    },
+    {
+      "path": "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html",
+      "reason": "no week recorded",
+      "lostBecause": "bool(tokens) is false, so the narrowed limb can never fire"
+    },
+    {
+      "path": "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html",
+      "reason": "no week recorded",
+      "lostBecause": "bool(tokens) is false, so the narrowed limb can never fire"
+    },
+    {
+      "path": "Science_Teesside/Grow/Autumn2_W7_2026-27/SCI_G_A2_W7A_Autumn_Science_Review_Explore.html",
+      "reason": "label form Aut2·W7",
+      "lostBecause": "the deck writes its binding in label form, which term_codes and weeks_from accept and the narrowed limb does not"
+    },
+    {
+      "path": "Science_Teesside/Grow/Autumn2_W7_2026-27/SCI_G_A2_W7B_Autumn_Science_Evidence_Do.html",
+      "reason": "label form Aut2·W7",
+      "lostBecause": "the deck writes its binding in label form, which term_codes and weeks_from accept and the narrowed limb does not"
+    },
+    {
+      "path": "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W13_Where_did_this_material_come_from_Classic.html",
+      "reason": "label form Aut2·W5",
+      "lostBecause": "the deck writes its binding in label form, which term_codes and weeks_from accept and the narrowed limb does not"
+    }
+  ],
+  "notFenced": {
+    "why": "These five carry the same latent loss, and this release repairs them: the one content change writes the derived term·week token onto each, which is exactly what the narrowed limb asks for. They are named here so the fence and the landing set cannot be read as contradicting each other.",
+    "paths": [
+      {
+        "path": "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W12_Give_a_rock_a_job_Classic.html",
+        "reason": "label form Aut2·W4",
+        "repairedBy": "ORDER SX3-M2 §7(b) visible derived token, in the single content change"
+      },
+      {
+        "path": "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W12_Follow_the_warming_chain_Classic.html",
+        "reason": "label form Aut2·W4",
+        "repairedBy": "ORDER SX3-M2 §7(b) visible derived token, in the single content change"
+      },
+      {
+        "path": "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W9_Turn_Earth_explain_the_sky_Classic.html",
+        "reason": "label form Aut2·W1",
+        "repairedBy": "ORDER SX3-M2 §7(b) visible derived token, in the single content change"
+      },
+      {
+        "path": "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W12_Zoom_into_genetic_information_Classic.html",
+        "reason": "label form Aut2·W4",
+        "repairedBy": "ORDER SX3-M2 §7(b) visible derived token, in the single content change"
+      },
+      {
+        "path": "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9_Copy_separate_divide_Classic.html",
+        "reason": "label form Aut2·W1",
+        "repairedBy": "ORDER SX3-M2 §7(b) visible derived token, in the single content change"
+      }
+    ]
+  },
+  "counts": {
+    "latentLossTotal": 11,
+    "fenced": 6,
+    "repairedByThisRelease": 5
+  },
+  "evidence": "_sx3/STOP_L_limb_population.md",
+  "contingency": "The fence is 6 and not 11 ONLY because the single content change of this release writes the derived term·week token onto the five decks listed under notFenced. If that change does not land, those five are not repaired and THE FENCE GROWS TO 11: add every path under notFenced.paths to fenced, and re-pin. A fence of 6 with the content change unlanded is a fence with five holes in it."
+}

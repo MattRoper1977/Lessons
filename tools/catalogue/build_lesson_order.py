@@ -52,7 +52,14 @@ def derive():
     preserved_outcome=any(p.get('currentOutcome') and config.get('sow')==p['currentOutcome'] and p.get('refs') and all(ref in cells for ref in p['refs']) for p in e['evidence'])
     timing=[p['quote'] for p in audit.get('evidence',[]) if p.get('method')=='own title slide declaration' and isinstance(p.get('quote'),str)]
     enrichment=any(p.get('method')=='current explicit enrichment label and ruled school calendar' and p.get('quote') in text and config.get('week')==8 and 'enrichment' in config.get('placement','') for p in audit.get('evidence',[]))
-    proved=enrichment or explicit_cell or preserved_outcome or (proofs and all(norm(p['quote']) in text for p in proofs)) or (approved_science.get(path)==digest and timing and all(norm(q) in text for q in timing))
+    # Decision signed by Matt Roper, 2026-09-18 (_sx3/DECISION_quote_limb.md):
+    # the term-and-style quote limb is narrowed to the term·week token derived
+    # from SCIENCE_WEEK_BINDINGS. A recorded declaration is still required, and
+    # every derived token must still be present in the current text; only the
+    # surrounding prose is no longer compared. The sha256 limb is unchanged.
+    tokens={w['key'] for w in audit.get('weeks',[])}
+    token_proved=bool(proofs) and bool(tokens) and all(key in text for key in tokens)
+    proved=enrichment or explicit_cell or preserved_outcome or token_proved or (approved_science.get(path)==digest and timing and all(norm(q) in text for q in timing))
     if proved:refreshed.append(path)
     else:
      assert m.get('style')!='recommended','Recommended source needs current proof: '+path
