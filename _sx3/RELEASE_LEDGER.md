@@ -1,0 +1,1156 @@
+# SX3 release ledger — ORDER SX3-END
+
+56 decks land, 19 are held. Every row is measured. Behavioural and print rows come from a
+rendered browser under the relevant media; a static parse returns NOT-CHECKED for them and
+can never report PASS. Historical print-row and row-37 print-provenance passes are void and
+are not cited anywhere in this file.
+
+## Held — 19 decks, named, with the reason each is held
+
+| deck | pathway | reason |
+|---|---|---|
+| `SCI_L_W3_L1_Microscopy` | LAUNCH | authoritative Complete generation carries 0 print pages (Reader D reads pages: {} because the source has none, and its own #printArea is empty on load); the served deck has printable content; landing would remove it and red the publication gate "Printable learning content must be present and visible" |
+| `SCI_L_W3_L2_Magnification` | LAUNCH | authoritative Complete generation carries 0 print pages (Reader D reads pages: {} because the source has none, and its own #printArea is empty on load); the served deck has printable content; landing would remove it and red the publication gate "Printable learning content must be present and visible" |
+| `SCI_L_W3_L3_ExamSkills` | LAUNCH | authoritative Complete generation carries 0 print pages (Reader D reads pages: {} because the source has none, and its own #printArea is empty on load); the served deck has printable content; landing would remove it and red the publication gate "Printable learning content must be present and visible" |
+| `SCI_L_W4_L1_Diffusion` | LAUNCH | authoritative Complete generation carries 0 print pages (Reader D reads pages: {} because the source has none, and its own #printArea is empty on load); the served deck has printable content; landing would remove it and red the publication gate "Printable learning content must be present and visible" |
+| `SCI_L_W4_L2_GasExchange` | LAUNCH | authoritative Complete generation carries 0 print pages (Reader D reads pages: {} because the source has none, and its own #printArea is empty on load); the served deck has printable content; landing would remove it and red the publication gate "Printable learning content must be present and visible" |
+| `SCI_L_W4_L3_ExamSkills` | LAUNCH | authoritative Complete generation carries 0 print pages (Reader D reads pages: {} because the source has none, and its own #printArea is empty on load); the served deck has printable content; landing would remove it and red the publication gate "Printable learning content must be present and visible" |
+| `SCI_L_W5_L1_Osmosis` | LAUNCH | authoritative Complete generation carries 0 print pages (Reader D reads pages: {} because the source has none, and its own #printArea is empty on load); the served deck has printable content; landing would remove it and red the publication gate "Printable learning content must be present and visible" |
+| `SCI_L_W5_L2_OsmosisCP` | LAUNCH | authoritative Complete generation carries 0 print pages (Reader D reads pages: {} because the source has none, and its own #printArea is empty on load); the served deck has printable content; landing would remove it and red the publication gate "Printable learning content must be present and visible" |
+| `SCI_L_W5_L3_Evaluate` | LAUNCH | authoritative Complete generation carries 0 print pages (Reader D reads pages: {} because the source has none, and its own #printArea is empty on load); the served deck has printable content; landing would remove it and red the publication gate "Printable learning content must be present and visible" |
+| `SCI_L_W6_L1_ActiveTransport` | LAUNCH | authoritative Complete generation carries 0 print pages (Reader D reads pages: {} because the source has none, and its own #printArea is empty on load); the served deck has printable content; landing would remove it and red the publication gate "Printable learning content must be present and visible" |
+| `SCI_L_W6_L2_RootAndGut` | LAUNCH | authoritative Complete generation carries 0 print pages (Reader D reads pages: {} because the source has none, and its own #printArea is empty on load); the served deck has printable content; landing would remove it and red the publication gate "Printable learning content must be present and visible" |
+| `SCI_L_W6_L3_Compare` | LAUNCH | authoritative Complete generation carries 0 print pages (Reader D reads pages: {} because the source has none, and its own #printArea is empty on load); the served deck has printable content; landing would remove it and red the publication gate "Printable learning content must be present and visible" |
+| `SCI_L_W7_L1_RoundUp` | LAUNCH | authoritative Complete generation carries 0 print pages (Reader D reads pages: {} because the source has none, and its own #printArea is empty on load); the served deck has printable content; landing would remove it and red the publication gate "Printable learning content must be present and visible" |
+| `SCI_L_W7_L2_CommandWords` | LAUNCH | authoritative Complete generation carries 0 print pages (Reader D reads pages: {} because the source has none, and its own #printArea is empty on load); the served deck has printable content; landing would remove it and red the publication gate "Printable learning content must be present and visible" |
+| `SCI_L_W7_L3_ExamPractice` | LAUNCH | authoritative Complete generation carries 0 print pages (Reader D reads pages: {} because the source has none, and its own #printArea is empty on load); the served deck has printable content; landing would remove it and red the publication gate "Printable learning content must be present and visible" |
+| `SCI_B_W5A_Right_Nutrition` | BUILD | 0 COVERAGE rows; two distinct lessons with SCI_B_W5B, not a split |
+| `SCI_B_W5B_Right_Nutrition` | BUILD | 0 COVERAGE rows; two distinct lessons with SCI_B_W5A, not a split |
+| `SCI_G_A2_W7A_Autumn_Science_Review_Explore` | GROW | one lesson with SCI_G_A2_W7B, one character apart (data-start-stage a0 vs b0), both 917,895 B |
+| `SCI_G_A2_W7B_Autumn_Science_Evidence_Do` | GROW | one lesson with SCI_G_A2_W7A, one character apart (data-start-stage a0 vs b0), both 917,895 B |
+
+Served bytes for all 19 are untouched. The parent Launch START_HERE keeps linking the 15,
+which is correct — they are still the served lessons.
+
+## Source selection — explicit and recorded (never filesystem order)
+
+| deck | generations | chosen source | sha256 | bytes |
+|---|---:|---|---|---:|
+| `SCI_L_W4_L1_Diffusion` | 2 | `Week_4/SCI_L_W4_L1_Diffusion/SCI_L_W4_L1_Diffusion.html` | `43724b0bedd64320…` | 182,139 |
+| `SCI_L_W4_L2_GasExchange` | 2 | `Week_4/SCI_L_W4_L2_GasExchange/SCI_L_W4_L2_GasExchange.html` | `2f819532f5796fc9…` | 187,107 |
+| `SCI_L_W4_L3_ExamSkills` | 2 | `Week_4/SCI_L_W4_L3_ExamSkills/SCI_L_W4_L3_ExamSkills.html` | `79556b0104c10e12…` | 182,500 |
+| `SCI_L_W5_L1_Osmosis` | 2 | `Week_5/SCI_L_W5_L1_Osmosis/SCI_L_W5_L1_Osmosis.html` | `b09567f98a6a2a0e…` | 186,388 |
+| `SCI_L_W5_L2_OsmosisCP` | 2 | `Week_5/SCI_L_W5_L2_OsmosisCP/SCI_L_W5_L2_OsmosisCP.html` | `1aecf98ca935233d…` | 192,739 |
+| `SCI_L_W5_L3_Evaluate` | 2 | `Week_5/SCI_L_W5_L3_Evaluate/SCI_L_W5_L3_Evaluate.html` | `2fd6f6555a2de073…` | 192,173 |
+| `SCI_L_W6_L1_ActiveTransport` | 2 | `Week_6/SCI_L_W6_L1_ActiveTransport/SCI_L_W6_L1_ActiveTransport.html` | `a756d6df0a276e9e…` | 192,252 |
+| `SCI_L_W6_L2_RootAndGut` | 2 | `Week_6/SCI_L_W6_L2_RootAndGut/SCI_L_W6_L2_RootAndGut.html` | `c69c3ef0986820c1…` | 186,586 |
+| `SCI_L_W6_L3_Compare` | 2 | `Week_6/SCI_L_W6_L3_Compare/SCI_L_W6_L3_Compare.html` | `afe2ab3904de085a…` | 203,264 |
+| `SCI_L_W7_L1_RoundUp` | 2 | `Week_7/SCI_L_W7_L1_RoundUp/SCI_L_W7_L1_RoundUp.html` | `b384baf182065e4a…` | 185,111 |
+| `SCI_L_W7_L2_CommandWords` | 2 | `Week_7/SCI_L_W7_L2_CommandWords/SCI_L_W7_L2_CommandWords.html` | `4350d56cbb195cad…` | 188,171 |
+| `SCI_L_W7_L3_ExamPractice` | 2 | `Week_7/SCI_L_W7_L3_ExamPractice/SCI_L_W7_L3_ExamPractice.html` | `366b6e6fc80572a1…` | 184,431 |
+
+Every other deck has one generation. Two generations for one filename stops the run.
+
+## Named gaps per landing deck — pack-owned print
+
+The pack script assigns `#print-area.innerHTML` at load, so on these decks the chassis print
+sections do not exist once JS runs. Each lost section is named with the pack page that serves
+the same region. **No pack in this release ships a PDF or DOCX companion for these sections** —
+the only PDFs are pupil worksheets in `grow-science-aut1` (10) and `launch-science-aut1` (46,
+for the held W3 decks). The equivalent is the pack's own print page, named below and measured
+reachable from a control on 58/58 pack-owned decks.
+
+| deck | pathway | #print-area at runtime | chassis section lost | pack page serving it |
+|---|---|---|---|---|
+| `SCI_B_W10A_Rock_Hardness_Explore` | BUILD | pack-owned (wiped) | `#print-staff` | `staff-A` |
+|  |  |  | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported` | — none (named gap) |
+|  |  |  | `#print-task-standard` | — none (named gap) |
+|  |  |  | `#print-task-stretch` | — none (named gap) |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `answers-A-standard` |
+| `SCI_B_W10B_Hardness_Evidence_Do` | BUILD | pack-owned (wiped) | `#print-staff` | `staff-A` |
+|  |  |  | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported` | — none (named gap) |
+|  |  |  | `#print-task-standard` | — none (named gap) |
+|  |  |  | `#print-task-stretch` | — none (named gap) |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `answers-A-standard` |
+| `SCI_B_W12A_Rock_Jobs_Which_Property_Matters_Explore` | BUILD | pack-owned (wiped) | `#print-staff` | `staff-A` |
+|  |  |  | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported` | — none (named gap) |
+|  |  |  | `#print-task-standard` | — none (named gap) |
+|  |  |  | `#print-task-stretch` | — none (named gap) |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `answers-A-standard` |
+| `SCI_B_W12B_Choose_Rock_For_The_Job_Do` | BUILD | pack-owned (wiped) | `#print-staff` | `staff-A` |
+|  |  |  | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported` | — none (named gap) |
+|  |  |  | `#print-task-standard` | — none (named gap) |
+|  |  |  | `#print-task-stretch` | — none (named gap) |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `answers-A-standard` |
+| `SCI_B_W12_Give_a_rock_a_job_Classic` | BUILD | pack-owned (wiped) | `#print-staff` | `staff-A` |
+|  |  |  | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported` | — none (named gap) |
+|  |  |  | `#print-task-standard` | — none (named gap) |
+|  |  |  | `#print-task-stretch` | — none (named gap) |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `answers-A-standard` |
+| `SCI_B_W13A_Fair_Test_Planner_Change_One_Thing_Explore` | BUILD | pack-owned (wiped) | `#print-staff` | `staff-A` |
+|  |  |  | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported` | — none (named gap) |
+|  |  |  | `#print-task-standard` | — none (named gap) |
+|  |  |  | `#print-task-stretch` | — none (named gap) |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `answers-A-standard` |
+| `SCI_B_W13B_Method_Pilot_Test_The_Test_Do` | BUILD | pack-owned (wiped) | `#print-staff` | `staff-A` |
+|  |  |  | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported` | — none (named gap) |
+|  |  |  | `#print-task-standard` | — none (named gap) |
+|  |  |  | `#print-task-stretch` | — none (named gap) |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `answers-A-standard` |
+| `SCI_B_W14A_Autumn_Science_Review_Explore` | BUILD | pack-owned (wiped) | `#print-staff` | `staff-A` |
+|  |  |  | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported` | — none (named gap) |
+|  |  |  | `#print-task-standard` | — none (named gap) |
+|  |  |  | `#print-task-stretch` | — none (named gap) |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `answers-A-standard` |
+| `SCI_B_W14B_Autumn_Science_Evidence_Do` | BUILD | pack-owned (wiped) | `#print-staff` | `staff-A` |
+|  |  |  | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported` | — none (named gap) |
+|  |  |  | `#print-task-standard` | — none (named gap) |
+|  |  |  | `#print-task-stretch` | — none (named gap) |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `answers-A-standard` |
+| `SCI_B_W3_Backbones` | BUILD | pack-owned (wiped) | `#print-staff` | `staff-A` |
+|  |  |  | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `sources` |
+|  |  |  | `#print-task-supported` | — none (named gap) |
+|  |  |  | `#print-task-standard` | — none (named gap) |
+|  |  |  | `#print-task-stretch` | — none (named gap) |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `activity-answers` |
+| `SCI_B_W4_Muscle_Pairs` | BUILD | pack-owned (wiped) | `#print-staff` | `staff-A` |
+|  |  |  | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `sources` |
+|  |  |  | `#print-task-supported` | — none (named gap) |
+|  |  |  | `#print-task-standard` | — none (named gap) |
+|  |  |  | `#print-task-stretch` | — none (named gap) |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `independent-answers` |
+| `SCI_B_W5_Right_Nutrition` | BUILD | pack-owned (wiped) | `#print-staff` | `staff-A` |
+|  |  |  | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `sources` |
+|  |  |  | `#print-task-supported` | — none (named gap) |
+|  |  |  | `#print-task-standard` | — none (named gap) |
+|  |  |  | `#print-task-stretch` | — none (named gap) |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `independent-answers` |
+| `SCI_B_W6_Balanced_Plate` | BUILD | pack-owned (wiped) | `#print-staff` | `staff-A` |
+|  |  |  | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported` | — none (named gap) |
+|  |  |  | `#print-task-standard` | — none (named gap) |
+|  |  |  | `#print-task-stretch` | — none (named gap) |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `answers-A-standard` |
+| `SCI_B_W7_Where_Food_Comes_From` | BUILD | pack-owned (wiped) | `#print-staff` | `staff-A` |
+|  |  |  | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported` | — none (named gap) |
+|  |  |  | `#print-task-standard` | — none (named gap) |
+|  |  |  | `#print-task-stretch` | — none (named gap) |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `answers-A-standard` |
+| `SCI_B_W9A_Rock_Evidence_Explore` | BUILD | pack-owned (wiped) | `#print-staff` | `staff-A` |
+|  |  |  | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported` | — none (named gap) |
+|  |  |  | `#print-task-standard` | — none (named gap) |
+|  |  |  | `#print-task-stretch` | — none (named gap) |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `answers-A-standard` |
+| `SCI_B_W9B_Rock_Sorting_Key_Do` | BUILD | pack-owned (wiped) | `#print-staff` | `staff-A` |
+|  |  |  | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported` | — none (named gap) |
+|  |  |  | `#print-task-standard` | — none (named gap) |
+|  |  |  | `#print-task-stretch` | — none (named gap) |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `answers-A-standard` |
+| `SCI_G_W10A_Solar_System_Research_Explore` | GROW | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `arrival-B-supported` |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `arrival-B-standard` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `arrival-B-stretch` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `answers-A-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_G_W10B_Solar_System_Presentation_Do` | GROW | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `arrival-B-supported` |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `arrival-B-standard` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `arrival-B-stretch` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `answers-A-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_G_W11A_Global_Warming_Explore` | GROW | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `arrival-B-supported` |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `arrival-B-standard` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `arrival-B-stretch` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `answers-A-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_G_W11B_Climate_Action_Do` | GROW | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `arrival-B-supported` |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `arrival-B-standard` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `arrival-B-stretch` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `answers-A-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_G_W12A_Science_Connections_Explore` | GROW | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `arrival-B-supported` |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `arrival-B-standard` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `arrival-B-stretch` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `answers-A-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_G_W12B_Science_Answer_Lab_Do` | GROW | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `arrival-B-supported` |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `arrival-B-standard` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `arrival-B-stretch` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `answers-A-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_G_W12_Follow_the_warming_chain_Classic` | GROW | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | — none (named gap) |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | — none (named gap) |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | — none (named gap) |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `answers-A-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_G_W13A_Rover_Rescue_Plan_Explore` | GROW | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `arrival-B-supported` |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `arrival-B-standard` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `arrival-B-stretch` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `answers-A-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_G_W13B_Rover_Rescue_Investigation_Do` | GROW | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `arrival-B-supported` |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `arrival-B-standard` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `arrival-B-stretch` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `answers-A-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_G_W3_Friction` | GROW | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `arrival-B-supported` |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `arrival-B-standard` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `arrival-B-stretch` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `answers-A-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_G_W4_Mechanisms` | GROW | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `arrival-B-supported` |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `arrival-B-standard` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `arrival-B-stretch` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `answers-A-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_G_W5_Fair_Test` | GROW | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `arrival-B-supported` |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `arrival-B-standard` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `arrival-B-stretch` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `answers-A-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_G_W6_Earth_And_Planets` | GROW | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `arrival-B-supported` |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `arrival-B-standard` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `arrival-B-stretch` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `answers-A-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_G_W7_The_Moon` | GROW | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `arrival-B-supported` |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `arrival-B-standard` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `arrival-B-stretch` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `answers-A-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_G_W9A_Spherical_Bodies_Explore` | GROW | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `arrival-B-supported` |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `arrival-B-standard` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `arrival-B-stretch` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `answers-A-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_G_W9B_Spherical_Bodies_Do` | GROW | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `arrival-B-supported` |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `arrival-B-standard` |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `arrival-B-stretch` |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `answers-A-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_G_W9_Turn_Earth_explain_the_sky_Classic` | GROW | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-A-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `arrival-A-supported-answers` |
+|  |  |  | `#print-arrival-standard` | `arrival-A-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `arrival-A-standard-answers` |
+|  |  |  | `#print-arrival-stretch` | `arrival-A-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `arrival-A-stretch-answers` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | — none (named gap) |
+|  |  |  | `#print-exit-supported` | `exit-A-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | — none (named gap) |
+|  |  |  | `#print-exit-standard` | `exit-A-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | — none (named gap) |
+|  |  |  | `#print-exit-stretch` | `exit-A-stretch` |
+|  |  |  | `#print-answers` | `answers-A-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_L_A2_W7L1_Topics_2_3_Assessment_Introduce` | LAUNCH | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `answers-supported` |
+|  |  |  | `#print-arrival-standard` | `arrival-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `answers-standard` |
+|  |  |  | `#print-arrival-stretch` | `arrival-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `answers-stretch` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `evidence-record` |
+|  |  |  | `#print-exit-supported` | `exit-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `evidence-record` |
+|  |  |  | `#print-exit-standard` | `exit-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `evidence-record` |
+|  |  |  | `#print-exit-stretch` | `exit-stretch` |
+|  |  |  | `#print-answers` | `answers-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_L_A2_W7L2_Topics_2_3_Assessment_Explore` | LAUNCH | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `answers-supported` |
+|  |  |  | `#print-arrival-standard` | `arrival-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `answers-standard` |
+|  |  |  | `#print-arrival-stretch` | `arrival-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `answers-stretch` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `evidence-record` |
+|  |  |  | `#print-exit-supported` | `exit-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `evidence-record` |
+|  |  |  | `#print-exit-standard` | `exit-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `evidence-record` |
+|  |  |  | `#print-exit-stretch` | `exit-stretch` |
+|  |  |  | `#print-answers` | `answers-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_L_A2_W7L3_Topics_2_3_Assessment_Do` | LAUNCH | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `answers-supported` |
+|  |  |  | `#print-arrival-standard` | `arrival-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `answers-standard` |
+|  |  |  | `#print-arrival-stretch` | `arrival-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `answers-stretch` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `evidence-record` |
+|  |  |  | `#print-exit-supported` | `exit-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `evidence-record` |
+|  |  |  | `#print-exit-standard` | `exit-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `evidence-record` |
+|  |  |  | `#print-exit-stretch` | `exit-stretch` |
+|  |  |  | `#print-answers` | `answers-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_L_W10L1_Growth_And_Differentiation_Introduce` | LAUNCH | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `answers-supported` |
+|  |  |  | `#print-arrival-standard` | `arrival-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `answers-standard` |
+|  |  |  | `#print-arrival-stretch` | `arrival-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `answers-stretch` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `evidence-record` |
+|  |  |  | `#print-exit-supported` | `exit-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `evidence-record` |
+|  |  |  | `#print-exit-standard` | `exit-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `evidence-record` |
+|  |  |  | `#print-exit-stretch` | `exit-stretch` |
+|  |  |  | `#print-answers` | `answers-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_L_W10L2_Stem_Cells_And_Meristems_Explore` | LAUNCH | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `answers-supported` |
+|  |  |  | `#print-arrival-standard` | `arrival-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `answers-standard` |
+|  |  |  | `#print-arrival-stretch` | `arrival-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `answers-stretch` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `evidence-record` |
+|  |  |  | `#print-exit-supported` | `exit-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `evidence-record` |
+|  |  |  | `#print-exit-standard` | `exit-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `evidence-record` |
+|  |  |  | `#print-exit-stretch` | `exit-stretch` |
+|  |  |  | `#print-answers` | `answers-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_L_W10L3_Growth_Stem_Cell_Data_Application_Do` | LAUNCH | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `answers-supported` |
+|  |  |  | `#print-arrival-standard` | `arrival-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `answers-standard` |
+|  |  |  | `#print-arrival-stretch` | `arrival-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `answers-stretch` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `evidence-record` |
+|  |  |  | `#print-exit-supported` | `exit-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `evidence-record` |
+|  |  |  | `#print-exit-standard` | `exit-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `evidence-record` |
+|  |  |  | `#print-exit-stretch` | `exit-stretch` |
+|  |  |  | `#print-answers` | `answers-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_L_W11L1_Stem_Cell_Evidence_Introduce` | LAUNCH | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `answers-supported` |
+|  |  |  | `#print-arrival-standard` | `arrival-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `answers-standard` |
+|  |  |  | `#print-arrival-stretch` | `arrival-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `answers-stretch` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `evidence-record` |
+|  |  |  | `#print-exit-supported` | `exit-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `evidence-record` |
+|  |  |  | `#print-exit-standard` | `exit-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `evidence-record` |
+|  |  |  | `#print-exit-stretch` | `exit-stretch` |
+|  |  |  | `#print-answers` | `answers-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_L_W11L2_Benefit_Risk_Uncertainty_Explore` | LAUNCH | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `answers-supported` |
+|  |  |  | `#print-arrival-standard` | `arrival-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `answers-standard` |
+|  |  |  | `#print-arrival-stretch` | `arrival-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `answers-stretch` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `evidence-record` |
+|  |  |  | `#print-exit-supported` | `exit-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `evidence-record` |
+|  |  |  | `#print-exit-standard` | `exit-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `evidence-record` |
+|  |  |  | `#print-exit-stretch` | `exit-stretch` |
+|  |  |  | `#print-answers` | `answers-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_L_W11L3_Stem_Cell_Discuss_Do` | LAUNCH | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `answers-supported` |
+|  |  |  | `#print-arrival-standard` | `arrival-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `answers-standard` |
+|  |  |  | `#print-arrival-stretch` | `arrival-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `answers-stretch` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `evidence-record` |
+|  |  |  | `#print-exit-supported` | `exit-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `evidence-record` |
+|  |  |  | `#print-exit-standard` | `exit-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `evidence-record` |
+|  |  |  | `#print-exit-stretch` | `exit-stretch` |
+|  |  |  | `#print-answers` | `answers-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_L_W12L1_DNA_Hierarchy_Introduce` | LAUNCH | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `answers-supported` |
+|  |  |  | `#print-arrival-standard` | `arrival-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `answers-standard` |
+|  |  |  | `#print-arrival-stretch` | `arrival-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `answers-stretch` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `evidence-record` |
+|  |  |  | `#print-exit-supported` | `exit-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `evidence-record` |
+|  |  |  | `#print-exit-standard` | `exit-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `evidence-record` |
+|  |  |  | `#print-exit-stretch` | `exit-stretch` |
+|  |  |  | `#print-answers` | `answers-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_L_W12L2_DNA_Structure_Explore` | LAUNCH | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `answers-supported` |
+|  |  |  | `#print-arrival-standard` | `arrival-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `answers-standard` |
+|  |  |  | `#print-arrival-stretch` | `arrival-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `answers-stretch` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `evidence-record` |
+|  |  |  | `#print-exit-supported` | `exit-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `evidence-record` |
+|  |  |  | `#print-exit-standard` | `exit-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `evidence-record` |
+|  |  |  | `#print-exit-stretch` | `exit-stretch` |
+|  |  |  | `#print-answers` | `answers-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_L_W12L3_Fruit_DNA_Evidence_Do` | LAUNCH | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `answers-supported` |
+|  |  |  | `#print-arrival-standard` | `arrival-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `answers-standard` |
+|  |  |  | `#print-arrival-stretch` | `arrival-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `answers-stretch` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `evidence-record` |
+|  |  |  | `#print-exit-supported` | `exit-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `evidence-record` |
+|  |  |  | `#print-exit-standard` | `exit-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `evidence-record` |
+|  |  |  | `#print-exit-stretch` | `exit-stretch` |
+|  |  |  | `#print-answers` | `answers-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_L_W12_Zoom_into_genetic_information_Classic` | LAUNCH | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `answers-supported` |
+|  |  |  | `#print-arrival-standard` | `arrival-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `answers-standard` |
+|  |  |  | `#print-arrival-stretch` | `arrival-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `answers-stretch` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `evidence-record` |
+|  |  |  | `#print-exit-supported` | `exit-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `evidence-record` |
+|  |  |  | `#print-exit-standard` | `exit-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `evidence-record` |
+|  |  |  | `#print-exit-stretch` | `exit-stretch` |
+|  |  |  | `#print-answers` | `answers-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_L_W13L1_Alleles_Genotype_Phenotype_Introduce` | LAUNCH | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `answers-supported` |
+|  |  |  | `#print-arrival-standard` | `arrival-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `answers-standard` |
+|  |  |  | `#print-arrival-stretch` | `arrival-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `answers-stretch` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `evidence-record` |
+|  |  |  | `#print-exit-supported` | `exit-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `evidence-record` |
+|  |  |  | `#print-exit-standard` | `exit-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `evidence-record` |
+|  |  |  | `#print-exit-stretch` | `exit-stretch` |
+|  |  |  | `#print-answers` | `answers-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_L_W13L2_Punnett_Square_Explore` | LAUNCH | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `answers-supported` |
+|  |  |  | `#print-arrival-standard` | `arrival-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `answers-standard` |
+|  |  |  | `#print-arrival-stretch` | `arrival-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `answers-stretch` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `evidence-record` |
+|  |  |  | `#print-exit-supported` | `exit-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `evidence-record` |
+|  |  |  | `#print-exit-standard` | `exit-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `evidence-record` |
+|  |  |  | `#print-exit-stretch` | `exit-stretch` |
+|  |  |  | `#print-answers` | `answers-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_L_W13L3_Inheritance_Probability_Do` | LAUNCH | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `answers-supported` |
+|  |  |  | `#print-arrival-standard` | `arrival-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `answers-standard` |
+|  |  |  | `#print-arrival-stretch` | `arrival-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `answers-stretch` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `evidence-record` |
+|  |  |  | `#print-exit-supported` | `exit-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `evidence-record` |
+|  |  |  | `#print-exit-standard` | `exit-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `evidence-record` |
+|  |  |  | `#print-exit-stretch` | `exit-stretch` |
+|  |  |  | `#print-answers` | `answers-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_L_W14L1_Genetic_Condition_Research_Introduce` | LAUNCH | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `answers-supported` |
+|  |  |  | `#print-arrival-standard` | `arrival-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `answers-standard` |
+|  |  |  | `#print-arrival-stretch` | `arrival-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `answers-stretch` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `evidence-record` |
+|  |  |  | `#print-exit-supported` | `exit-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `evidence-record` |
+|  |  |  | `#print-exit-standard` | `exit-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `evidence-record` |
+|  |  |  | `#print-exit-stretch` | `exit-stretch` |
+|  |  |  | `#print-answers` | `answers-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_L_W14L2_Genetic_Condition_Source_Evidence_Explore` | LAUNCH | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `answers-supported` |
+|  |  |  | `#print-arrival-standard` | `arrival-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `answers-standard` |
+|  |  |  | `#print-arrival-stretch` | `arrival-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `answers-stretch` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `evidence-record` |
+|  |  |  | `#print-exit-supported` | `exit-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `evidence-record` |
+|  |  |  | `#print-exit-standard` | `exit-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `evidence-record` |
+|  |  |  | `#print-exit-stretch` | `exit-stretch` |
+|  |  |  | `#print-answers` | `answers-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_L_W14L3_Genetic_Condition_Presentation_Do` | LAUNCH | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `answers-supported` |
+|  |  |  | `#print-arrival-standard` | `arrival-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `answers-standard` |
+|  |  |  | `#print-arrival-stretch` | `arrival-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `answers-stretch` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `evidence-record` |
+|  |  |  | `#print-exit-supported` | `exit-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `evidence-record` |
+|  |  |  | `#print-exit-standard` | `exit-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `evidence-record` |
+|  |  |  | `#print-exit-stretch` | `exit-stretch` |
+|  |  |  | `#print-answers` | `answers-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_L_W9L1_Cell_Cycle_Introduce` | LAUNCH | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `answers-supported` |
+|  |  |  | `#print-arrival-standard` | `arrival-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `answers-standard` |
+|  |  |  | `#print-arrival-stretch` | `arrival-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `answers-stretch` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `evidence-record` |
+|  |  |  | `#print-exit-supported` | `exit-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `evidence-record` |
+|  |  |  | `#print-exit-standard` | `exit-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `evidence-record` |
+|  |  |  | `#print-exit-stretch` | `exit-stretch` |
+|  |  |  | `#print-answers` | `answers-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_L_W9L2_Mitosis_Sequence_Explore` | LAUNCH | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `answers-supported` |
+|  |  |  | `#print-arrival-standard` | `arrival-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `answers-standard` |
+|  |  |  | `#print-arrival-stretch` | `arrival-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `answers-stretch` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `evidence-record` |
+|  |  |  | `#print-exit-supported` | `exit-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `evidence-record` |
+|  |  |  | `#print-exit-standard` | `exit-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `evidence-record` |
+|  |  |  | `#print-exit-stretch` | `exit-stretch` |
+|  |  |  | `#print-answers` | `answers-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_L_W9L3_Identical_Daughter_Cells_Do` | LAUNCH | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `answers-supported` |
+|  |  |  | `#print-arrival-standard` | `arrival-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `answers-standard` |
+|  |  |  | `#print-arrival-stretch` | `arrival-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `answers-stretch` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `evidence-record` |
+|  |  |  | `#print-exit-supported` | `exit-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `evidence-record` |
+|  |  |  | `#print-exit-standard` | `exit-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `evidence-record` |
+|  |  |  | `#print-exit-stretch` | `exit-stretch` |
+|  |  |  | `#print-answers` | `answers-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+| `SCI_L_W9_Copy_separate_divide_Classic` | LAUNCH | pack-owned (wiped) | `#print-organiser` | `organiser` |
+|  |  |  | `#print-arrival-supported` | `arrival-supported` |
+|  |  |  | `#print-arrival-answers-supported` | `answers-supported` |
+|  |  |  | `#print-arrival-standard` | `arrival-standard` |
+|  |  |  | `#print-arrival-answers-standard` | `answers-standard` |
+|  |  |  | `#print-arrival-stretch` | `arrival-stretch` |
+|  |  |  | `#print-arrival-answers-stretch` | `answers-stretch` |
+|  |  |  | `#print-shared` | `activity-cards` |
+|  |  |  | `#print-task-supported-1` | `independent-supported` |
+|  |  |  | `#print-task-supported-2` | `evidence-record` |
+|  |  |  | `#print-exit-supported` | `exit-supported` |
+|  |  |  | `#print-task-standard-1` | `independent-standard` |
+|  |  |  | `#print-task-standard-2` | `evidence-record` |
+|  |  |  | `#print-exit-standard` | `exit-standard` |
+|  |  |  | `#print-task-stretch-1` | `independent-stretch` |
+|  |  |  | `#print-task-stretch-2` | `evidence-record` |
+|  |  |  | `#print-exit-stretch` | `exit-stretch` |
+|  |  |  | `#print-answers` | `answers-standard` |
+|  |  |  | `#print-marking` | `staff-feedback` |
+|  |  |  | `#print-first-back` | — none (named gap) |
+
+Decks whose chassis print area survives intact (no gap): 0 — none
+
+## Backlog, recorded 2026-09-18
+
+- **No single deck registry.** Four independent records pin these decks, and they
+  disagree: `TERM_AND_STYLE_EVIDENCE.json` (sha256, current),
+  `SCIENCE_WEEK_BINDINGS.json` (`sourceSha256`, stale on 55 of 129),
+  `tools/downloads/SOURCE_PLACEMENT.json` (route + cell), and
+  `tools/easter/SCIENCE_ORIGINAL_TARGETS.json` (`expectedStageCount`,
+  `expectedPatchedSha256`). Only `expectedStageCount` encodes a **curricular
+  fact**; the rest encode byte states that drift silently.
+- **`build_science_shelf.py` is dead and unexercised.** Byte-pinned and named as
+  a path trigger, never executed by any workflow. See
+  `_sx3/STOP_C2b_shelf_restore.md`.
+- **`build_catalogue.py` is not reproducible against its own checked-in output.**
+  A no-op rebuild rewrites 125 `TERM_AND_STYLE_EVIDENCE` entries, destroying the
+  `.pptx` rows a different tool wrote. The evidence file is a merged artefact and
+  nothing says so.
+- **The two cross-estate gate copies are not held identical by either gate.**
+  Measured: Apps on the old pin, Lessons on the new — both arms still report
+  `[PASS]`. `pin_catalogue_contract.py --check` catches it; neither gate does.
+  The "writes both gate copies or neither" discipline is tooled but unenforced.
+  Adjacent to ORDER SX3-END2 §10, the dormant-gate audit.
+
+## Superseded — read HELD.md instead
+
+This file's opening line, *"56 decks land, 19 are held"*, and its 19-row held
+table are **superseded**, not wrong: they record the position under ORDER SX3-END,
+before two further hold classes were established.
+
+Under ORDER SX3-M2 the position is **36 land, 39 held**. The 19 here is
+15 parked LAUNCH + 4 (`SCI_B_W5A`, `SCI_B_W5B`, `SCI_G_A2_W7A`, `SCI_G_A2_W7B`);
+the 39 is that 19 plus the 10 BUILD W9–W14 decks with an unruled second
+generation and the 10 `expectedStageCount` decks. `_sx3/HELD.md` is the
+authoritative held list. `_sx3/RECONCILIATIONS.md` shows the arithmetic.
