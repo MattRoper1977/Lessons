@@ -22,25 +22,33 @@ PACKS = [
 GUIDANCE_ROUTES_SHA256 = "a7f5c3473f78c0a3f5ec5048a92ae30bf93bccfd56a07f7699145a51db769a2b"
 SUGAR_GUIDANCE = "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html"
 
-# SX3 moves eight more BUILD routes onto the classic chassis Sugar already sits on. The
-# docked guidance injection cannot ride along: n6m-guide:v1 ships
+# SX3 moves ONE more BUILD route onto the classic chassis Sugar already sits on:
+# SCI_B_W12_Give_a_rock_a_job_Classic.html, the single deck this branch lands. The docked
+# guidance injection cannot ride along: n6m-guide:v1 ships
 # [data-mbm-guide]{display:none!important}, and on the classic chassis data-mbm-guide also
-# carries the TA and cold-call dialogs — injecting it would hide the TA dialog outright.
-# So these routes change guidance PRESENTATION, exactly as EDU-Q1's Sugar variant did, and
-# keep their navigation check: asserted on four real controls instead of a marker substring,
-# which is strictly stronger than the substring it replaces. The census is unchanged — same
-# 47 identities, same digest. Membership here is named, never inferred from page shape: the
-# landing puts 66 decks on this chassis and shape-matching would silently grow the census.
+# carries the TA and cold-call dialogs - injecting it would hide the TA dialog outright. So
+# this route changes guidance PRESENTATION, exactly as EDU-Q1's Sugar variant did, and keeps
+# its navigation check: asserted on four real controls instead of a marker substring, which
+# is strictly stronger than the substring it replaces.
+#
+# Matt's ruling on the four reds, SS3: withdraw the widening. An earlier version of this
+# set also named eight W9-W13 BUILD routes. That was wrong and is withdrawn. Those
+# eight are HELD (Held A, BUILD W9-W14): they sit at main's bytes, still carry
+# n6m-guide-docked, and are correctly 'docked-guidance'. Naming them here
+# asserted a transplant this branch does not contain - the widening survived a force-push that
+# removed the commits carrying the decks - and the four-control assertion measured 0 of 4 on
+# every one of them. Membership is named, never inferred from page shape: the landing puts 66
+# decks on this chassis and shape-matching would silently grow the census.
+#
+# The census stays at 47, measured: 1 classic-dialog (Sugar) + 46 docked-guidance. The
+# W12 Classic entry is INERT today - Classic decks are not packaged, so no pack member
+# ever matches it and the four-control assertion never fires for it. It is named anyway,
+# because the ruling is that membership is declared from what the branch lands and
+# measured on the tip (4 of 4 there), so that if the deck is ever packaged it is typed
+# correctly rather than silently read as a docked route it no longer is.
 CLASSIC_CHASSIS_ROUTES = frozenset({
     SUGAR_GUIDANCE,
-    "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W9A_Rock_Evidence_Explore.html",
-    "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W9B_Rock_Sorting_Key_Do.html",
-    "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W10A_Rock_Hardness_Explore.html",
-    "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W10B_Hardness_Evidence_Do.html",
-    "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W12A_Rock_Jobs_Which_Property_Matters_Explore.html",
-    "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W12B_Choose_Rock_For_The_Job_Do.html",
-    "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W13A_Fair_Test_Planner_Change_One_Thing_Explore.html",
-    "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W13B_Method_Pilot_Test_The_Test_Do.html",
+    "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W12_Give_a_rock_a_job_Classic.html",
 })
 
 CLASSIC_NAVIGATION = (
