@@ -1277,3 +1277,48 @@ Each branch then reports `[PASS] data/chassis-census.json equals its derivation:
 180 lessons`. The census check had been failing on every content branch since
 before the content change — measured at each pre-change head, where it fails
 identically, and at `origin/main`, where it passes.
+
+## Pre-CI checklist — the eight-check sweep
+
+**Standing, ORDER SX3-M7.** Before any content branch is declared ready for CI,
+every `--check` invocation in `.github/workflows/` is run locally **on that
+branch** and the results listed **by name** — all of them, not the ones already
+known about. A stale derived artefact found by CI rather than by this sweep is a
+**reportable miss**.
+
+The rule exists because it was earned. `lesson-order.json`, the pins and the
+census were regenerated; `data/resource-sizes.json` was not, and the branch was
+reported as ready. CI found it:
+
+```
+[FAIL] data/resource-sizes.json differs from the working tree —
+       run: python3 tools/ux2/resource_sizes.py --write
+```
+
+The boundary list in `verify_cross_estate_unification.py` had said so all along
+— *"a lesson edit regenerates the size table"*. Fixing the one CI named and
+waiting for the next round would have found the next one the same way. Sweeping
+all eight at once found that this was the only remaining stale artefact.
+
+Derive the list rather than trusting this table to stay current:
+
+```
+grep -rhoE "(python3?|node) [A-Za-z0-9_./-]+ --check[a-z-]*" .github/workflows/*.yml | sort -u
+```
+
+As of this release it yields eight, and on a content branch they report:
+
+| check | what it asserts | result on a content branch |
+|---|---|---|
+| `tools/chassis_census.py --check` | which shell each lesson is mounted on | PASS — 180 lessons |
+| `tools/catalogue/build_display_titles.py --check` | guarded display titles | PASS — 118 verified companion pairs |
+| `tools/pin1/derive_triggers.py --check` | trigger list == pin registry, both ways | PASS — 509 asserted, 516 triggers |
+| `tools/ux2/build_spine.py --check` | the published calendar spine | PASS — 6 blocks, 40 weeks |
+| `tools/ux2/companion_catalogue.py --check` | companion pack rows | PASS — 118 pack rows |
+| `tools/ux2/resource_sizes.py --check` | the hub's size table | **the one that was stale** |
+| `tools/ux2/unit_tags.py --check` | half-term and unit tags | PASS — halfTerm 462, unit 86 |
+| `tools/liveteach/stamp_core.mjs --check` | the three stamped copies | PASS — byte-for-byte |
+
+`tools/catalogue/build_lesson_order.py --check` is run alongside them. It is not
+in the grep because the workflows invoke it differently, which is itself the
+reason to re-derive the list each time rather than read it from here.
