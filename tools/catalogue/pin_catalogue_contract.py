@@ -1329,6 +1329,21 @@ REVIEWED_PATHS = (
     # review decision and cannot be re-derived, which is why the control is a pin
     # rather than a regeneration.
     "_sx3/FENCE.json",
+    # SX3 landing decks. A deck is admitted by being named here: the boundary
+    # permits a changed file only if it is pinned, and tools/pin1/derive_triggers.py
+    # then materialises the matching trigger path and asserts the two sets are equal.
+    "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W10A_Solar_System_Research_Explore.html",
+    "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W10B_Solar_System_Presentation_Do.html",
+    "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W11A_Global_Warming_Explore.html",
+    "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W11B_Climate_Action_Do.html",
+    "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W12A_Science_Connections_Explore.html",
+    "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W12B_Science_Answer_Lab_Do.html",
+    "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W12_Follow_the_warming_chain_Classic.html",
+    "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W13A_Rover_Rescue_Plan_Explore.html",
+    "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W13B_Rover_Rescue_Investigation_Do.html",
+    "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W9A_Spherical_Bodies_Explore.html",
+    "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W9B_Spherical_Bodies_Do.html",
+    "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W9_Turn_Earth_explain_the_sky_Classic.html",
     # GLV3 admits only these reviewed publisher checks and cover inputs.
     ".github/workflows/glv3-verify.yml", "_glv3/tools/verify_change_boundary.py",
     "_glv3/tools/browser_verify.mjs", "_glv3/tools/chip_gate.mjs",
