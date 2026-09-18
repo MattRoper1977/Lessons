@@ -65,6 +65,17 @@ RW_W8_REVIEW_BASE = 'ec7d34ab48eb290f9abb67b27c735b6e09b9930c'
 # pack checksum file that names it, one transaction, written by
 # tools/build_resources/admit_w8a_chassis.py.
 BUILD_W8A_CHASSIS_REVIEW_BASE = '48c2ecb9ab19f238cdbe5443196935a5c45f375b'
+# SX3 · SX3 LAUNCH W12-W15 A2W7: this branch's landing decks, re-dressed on the pathway exemplar
+# chassis, one transaction, derived and written by
+# tools/build_resources/admit_sx3_release.py. Every member also carries a
+# CATALOGUE_PINS admission, which replacement_errors cross-checks.
+#
+# REVIEW: S2 signed — Matt Roper, 2026-09-18
+# This transaction is a review decision, not a derivation. It exists because
+# the owner accepted the SX3 re-acceptance pack — the 31-row table, the title
+# list and the transaction listing — at STOP-S2. The members are derived; the
+# decision to admit them is the line above.
+SX3_LAUNCH_W12_W15_A2W7_REVIEW_BASE = '55bff167946ecefa20eaab9d2064768549df351f'
 # BEGIN DECLARED TRANSACTIONS
 # BEGIN S3 OFFLINE EDITION REPLACEMENTS
 CX2_S3_REPLACEMENTS = {'Science_Teesside/Teaching_Packs/web-slides.html': {'beforeGitBlob': '6596d65c7a9bd5bb1875c5b46bbc331df8652144', 'afterSha256': 'f31f09d03f5d8c417af1745b38309fa537afb8bb4c6a08f387db3349d9e1cba2', 'bytes': 18607}}
@@ -90,6 +101,9 @@ RW_W8_LAUNCH_REPLACEMENTS = {'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L1_
 # BEGIN BUILD W8A CHASSIS REPLACEMENTS
 BUILD_W8A_CHASSIS_REPLACEMENTS = {'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html': {'beforeGitBlob': '1035792c9d9a95865d16b7e829d9704014a53e42', 'afterSha256': '74d17d4e0f6873f094691daa753539f8a351887160beea6a8a8d727bba864d2d', 'bytes': 639630}, 'Science_Teesside/Build/W8-W13_2026-27/SHA256SUMS.txt': {'beforeGitBlob': 'ce5a5c862dfe85cae88ad3a186f7ebef393f8234', 'afterSha256': 'e00a7819a77039be3ab614ba92de09889748723aa9ad759f7a6bfe64c2e5fb28', 'bytes': 1905}}
 # END BUILD W8A CHASSIS REPLACEMENTS
+# BEGIN SX3_LAUNCH_W12_W15_A2W7 REPLACEMENTS
+SX3_LAUNCH_W12_W15_A2W7_REPLACEMENTS = {'Science_Teesside/Launch/Autumn2_W7_2026-27/SCI_L_A2_W7L1_Topics_2_3_Assessment_Introduce.html': {'beforeGitBlob': 'e157eaf36349d1435be825badd1c0e7dae5926b4', 'afterSha256': '5032cd225d7202573c556a371ca554889b9df3a43534757621474bbaf9653dbe', 'bytes': 622533}, 'Science_Teesside/Launch/Autumn2_W7_2026-27/SCI_L_A2_W7L2_Topics_2_3_Assessment_Explore.html': {'beforeGitBlob': 'e45a65cd3351b1f2497bd775829abf0921b987ea', 'afterSha256': 'a6904e5055e43c1d7e61351f13602670c7ddf1d053b882c66a37f792823014f1', 'bytes': 623614}, 'Science_Teesside/Launch/Autumn2_W7_2026-27/SCI_L_A2_W7L3_Topics_2_3_Assessment_Do.html': {'beforeGitBlob': '258fa3934cab6f7dcb78600956e44047db4370a9', 'afterSha256': '938d8894fbb06368717264a59fc0b97830272770dc50caf9941d8d77470fd389', 'bytes': 354327}, 'Science_Teesside/Launch/W14-W15_2026-27/SCI_L_W14L1_Genetic_Condition_Research_Introduce.html': {'beforeGitBlob': '46571781c85215414c948bb617e1623f977a9f30', 'afterSha256': '501a2e9d1d8b3af42ce872e0812a68f18a6103ebeea6395652c911ad80d7a999', 'bytes': 623737}, 'Science_Teesside/Launch/W14-W15_2026-27/SCI_L_W14L2_Genetic_Condition_Source_Evidence_Explore.html': {'beforeGitBlob': 'bd6c3dc9cd5855b0ad89c2e5455cb1e8952ee542', 'afterSha256': 'b0b03f10e6991660d820582a520ca2698c9010916db66bf592243c9a64639b0e', 'bytes': 625263}, 'Science_Teesside/Launch/W14-W15_2026-27/SCI_L_W14L3_Genetic_Condition_Presentation_Do.html': {'beforeGitBlob': 'fbd780abae1f0fe4edb0458991ffff8695ff732d', 'afterSha256': '46f816f7ea9a3101c874f07c000322a944a165cbff42ebf5f658bffc143727b8', 'bytes': 625643}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W13L3_Inheritance_Probability_Do.html': {'beforeGitBlob': 'adc86a1bd75c807f4816c4268021cf29d07a52ea', 'afterSha256': 'a48127f498d131f0fafe9661fa47a788e2887cc96d3c7b275999ef712a85dd22', 'bytes': 567264}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9L1_Cell_Cycle_Introduce.html': {'beforeGitBlob': '10058b326cb5aa04cbf570bb0691c45b48053e0d', 'afterSha256': '72af021ab2aa1d8c7f6ea5573993623e85c9dd2aa2a31c26b19162a1ced6b3c6', 'bytes': 654865}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9L2_Mitosis_Sequence_Explore.html': {'beforeGitBlob': '44ae55043d80964410d6323dd8f88427217fb98e', 'afterSha256': 'c2e4a7aeffe0738949c7372e230f8107b37b6f82705a5a412f604514fabcbc50', 'bytes': 672345}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9L3_Identical_Daughter_Cells_Do.html': {'beforeGitBlob': 'ae08526b50e4352364cf97b95852ddbc295356aa', 'afterSha256': '588a6fdeac00afa6976357ff06ae86b47d600df570eec5b7a5fdb4d6983b5c11', 'bytes': 658289}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9_Copy_separate_divide_Classic.html': {'beforeGitBlob': '20fcb0ed3989a7ea5f2d4b95f2234e209a7f0bf9', 'afterSha256': '649a152c0fd4a768496f55de23add747acb75dcad4e73a30bfe9453e0d6bcc8d', 'bytes': 656870}}
+# END SX3_LAUNCH_W12_W15_A2W7 REPLACEMENTS
 # END DECLARED TRANSACTIONS
 
 # Each transaction is judged on its own: every member present as exactly one
@@ -106,6 +120,7 @@ REPLACEMENT_TRANSACTIONS = {
     'Return week W8 GROW': (RW_W8_REVIEW_BASE, RW_W8_GROW_REPLACEMENTS),
     'Return week W8 LAUNCH': (RW_W8_REVIEW_BASE, RW_W8_LAUNCH_REPLACEMENTS),
     'BUILD W8A chassis': (BUILD_W8A_CHASSIS_REVIEW_BASE, BUILD_W8A_CHASSIS_REPLACEMENTS),
+    'SX3 LAUNCH W12-W15 A2W7': (SX3_LAUNCH_W12_W15_A2W7_REVIEW_BASE, SX3_LAUNCH_W12_W15_A2W7_REPLACEMENTS),
     # END DECLARED TRANSACTION ENTRIES
 }
 # Declaration order is review order: a later transaction that names a path
