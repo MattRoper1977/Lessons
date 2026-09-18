@@ -1519,3 +1519,76 @@ has the matching name.
 
 A stale derived artefact, or a stale pin on a current one, found by CI rather than
 by this checklist is a reportable miss.
+
+---
+
+## The continuation title — STOP-P1 class, and why (d) did not flag it
+
+`tools/downloads/verify_definitions.py:90` asserts each Science definition's
+continuation title against the deck's own `lesson_label()`. `launch-2` re-authored
+`SCI_L_W9L1_Cell_Cycle_Introduce.html`'s title and the hand-typed title in
+`tools/downloads/definitions/launch-science-aut1-main.json` did not follow it, so
+CI red on a deck that is otherwise correct.
+
+Measured before anything was changed, so the direction was not assumed:
+
+```
+main      lesson_label : 'Cell Cycle: Copy, Check, Divide'
+launch-2  lesson_label : 'Cell cycle: copy, check, divide'
+definition on BOTH main and launch-2, untouched : the main casing
+```
+
+The branch changed the deck; the definition is stale against it. **Ruled option
+A**: the re-authoring is the release, so the definition follows the deck. One
+line, `launch-2` only.
+
+**This is the STOP-P1 class.** A hand-maintained table that CI asserts against,
+with nothing that re-derives it. Under the standing rule as amended — *derivable
+tables get a re-derivation control; review decisions get a digest pin* — this one
+is derivable in principle and is pinned in practice, because the derivation does
+not exist yet. **For the next order: `verify_definitions`' continuation titles
+should be derived from the decks they name, not typed.** A title that is read from
+`lesson_label()` on both sides cannot go stale, and the pin below becomes
+unnecessary the day that lands.
+
+### Why condition (d) did not flag it, and why that is correct
+
+(d) measures the **admission step's** rendered delta, against **each branch's
+pre-change head** — *does the admission alter rendered content*, not *does the
+transplant*. A title supplied by the pack was already present at that baseline, so
+it was outside (d)'s scope by construction. (d) measured 30 decks zero visible
+delta, 6 token-only, 0 anything else, and that remains exact.
+
+Measured separately, across all 36 landing decks, `<h1>` on `origin/main` versus
+each branch head: **31 of 36 differ.** That is the transplant's authored re-cut,
+which is what this release is for; it is not something (d) was asked about and not
+something (d) missed. Recorded here so the two numbers are never read as
+contradicting each other.
+
+### The admission the ruling did not name
+
+No file under `tools/downloads/definitions/` had ever been admitted through the
+cross-estate boundary, so the one-line edit refused:
+
+```
+[FAIL] standalone/offline boundary violated by changed files:
+       ['tools/downloads/definitions/launch-science-aut1-main.json']
+```
+
+It is admitted the way this estate admits a deck — **by digest pin, not by
+widening the boundary** — following the precedent already in `REVIEWED_PATHS` for
+the pack checksum file *"admitted with it as one reviewed replacement
+transaction"*. Pinning is strictly tighter than an `ALLOWED_DIFF` entry: the file
+may now change only with a deliberate re-pin, where an allow-list entry would have
+let it change unwatched. The consequence is permanent and is stated rather than
+left to be discovered: **every future edit to that definition file needs a
+re-pin.**
+
+PIN1 then refused the pin on its own —
+`missing=['tools/downloads/definitions/launch-science-aut1-main.json']`, on both
+`pull_request` and `push` — until `derive_triggers.py --write` materialised the
+matching trigger path. The pair working exactly as designed, in both directions:
+520 asserted, 527 exact triggers.
+
+Gate copies hand-verified byte-identical at
+`fda74114ff09c8c1a444b30e1bee1e2c8784a61cf2b14036aac800e9e2d89a4b`.
