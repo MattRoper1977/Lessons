@@ -13,6 +13,19 @@ on:
     paths:
       - 'Science_Teesside/**'
 
+# A called workflow cannot be granted more than the caller holds, and the called workflow
+# declares contents: read, issues: write, pull-requests: write at workflow level. This caller
+# declared none, so it passed the repository default and every call ended in startup_failure
+# before a job ran. Granting exactly what the callee declares - no more - lets the call start.
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
 jobs:
   cross-estate:
     uses: ./.github/workflows/mbm-cross-estate-unification.yml
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
