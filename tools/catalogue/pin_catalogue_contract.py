@@ -1329,6 +1329,20 @@ REVIEWED_PATHS = (
     # review decision and cannot be re-derived, which is why the control is a pin
     # rather than a regeneration.
     "_sx3/FENCE.json",
+    # SX3 landing decks. A deck is admitted by being named here: the boundary
+    # permits a changed file only if it is pinned, and tools/pin1/derive_triggers.py
+    # then materialises the matching trigger path and asserts the two sets are equal.
+    "Science_Teesside/Launch/Autumn2_W7_2026-27/SCI_L_A2_W7L1_Topics_2_3_Assessment_Introduce.html",
+    "Science_Teesside/Launch/Autumn2_W7_2026-27/SCI_L_A2_W7L2_Topics_2_3_Assessment_Explore.html",
+    "Science_Teesside/Launch/Autumn2_W7_2026-27/SCI_L_A2_W7L3_Topics_2_3_Assessment_Do.html",
+    "Science_Teesside/Launch/W14-W15_2026-27/SCI_L_W14L1_Genetic_Condition_Research_Introduce.html",
+    "Science_Teesside/Launch/W14-W15_2026-27/SCI_L_W14L2_Genetic_Condition_Source_Evidence_Explore.html",
+    "Science_Teesside/Launch/W14-W15_2026-27/SCI_L_W14L3_Genetic_Condition_Presentation_Do.html",
+    "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W13L3_Inheritance_Probability_Do.html",
+    "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9L1_Cell_Cycle_Introduce.html",
+    "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9L2_Mitosis_Sequence_Explore.html",
+    "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9L3_Identical_Daughter_Cells_Do.html",
+    "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9_Copy_separate_divide_Classic.html",
     # GLV3 admits only these reviewed publisher checks and cover inputs.
     ".github/workflows/glv3-verify.yml", "_glv3/tools/verify_change_boundary.py",
     "_glv3/tools/browser_verify.mjs", "_glv3/tools/chip_gate.mjs",
