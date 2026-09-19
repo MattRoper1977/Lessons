@@ -1241,10 +1241,10 @@ writing what the exemplar has would be authoring, not repair.
 | 31 | `.science-reveal` — the pack uses `details.answer-details` | 12 of 36 | **R-SR**: no dressing. Same role, different markup is a gap, not a pass. |
 | 30 | `.teacher-only` — **pre-existing, no pack source** | 1 of 36, `Science_Teesside/Build/W8-W13_2026-27/SCI_B_W12_Give_a_rock_a_job_Classic.html` | **R-GAPS**, ORDER SX3-M6 §1: named, not fixed. The BUILD exemplar carries two `.teacher-only` blocks; this deck's pack carries no teacher-only content to restore, and writing two blocks the exemplar has would be authoring. Carried as the one named exception in the re-acceptance table. |
 
-## Four instrument corrections, standing
+## Five instrument corrections, standing
 
-All four were faults in how this release MEASURED, not in what it changed. All
-four produced a number that looked clean, or an error that looked like someone
+All five were faults in how this release MEASURED, not in what it changed. All
+five produced a number that looked clean, or an error that looked like someone
 else's, and was not about the thing under test.
 
 **A harness takes its target as an argument and refuses to run without one.**
@@ -1351,6 +1351,26 @@ The rule: **run repository tooling the way the workflow runs it — the pinned
 interpreter, and the steps in the workflow's order.** Read the workflow before
 reproducing, rather than invoking the tool the way it looks like it should be
 invoked.
+
+**A step is reproduced when every command in it has been run, not when the
+commands the tooling was built for have been run.** Step 9 of
+`education-publication.yml` runs seven commands. The local proof that reported
+the publication as reproduced had run commands 1, 2 and a direct `verify()` —
+three of seven — and none of 3 through 7. Command 5 is the one that was red, and
+it had never executed locally at all. The report that followed was confident,
+specific, and about a different thing than the one failing in CI.
+
+This is the fourth correction's fault one level up. That one said: run the
+tooling the way the workflow runs it. This one says: **run all of it.** A step is
+the unit CI reports on, so a step is the unit a reproduction has to cover; a
+subset of a step reproduces nothing, and reporting the subset as the step turns a
+gap in coverage into a false negative that reads like evidence. Two wrong
+attributions of the publication red — first to `#580`, then to the admission
+census — both trace to commands that were never run.
+
+The rule: **enumerate a step's commands from the workflow file and run every one
+of them, in order, before reporting the step reproduced.** Where a command cannot
+be run locally, name it as not run rather than leaving it out of the count.
 
 
 ## Pre-CI checklist — the eight-check sweep
@@ -1932,3 +1952,137 @@ verdict. One Apps PR for all four was considered and refused: it would break the
 pairing, landing the gate copy once instead of with each Lessons merge and leaving
 the two estates' copies disagreeing in between. Pushing a companion branch straight
 to Apps `main` was refused outright.
+
+## Main is red on ONE line, attributed, for a bounded window (ORDER SX3-PUB ruling 1)
+
+`Education Pages publication` has been red on Lessons `main` since `ca184d38`,
+the first content merge of this release. Two earlier attributions of mine were
+wrong and are withdrawn: it is not `#580`, and it is **not the admission
+census**. This is the measured attribution, from the job log of run
+`35435924952` at `0f4fea52` (job `publication / build`, job id `105878435135`).
+
+### The failing command
+
+Step 9, `Build and verify separated publication trees`
+(`education-publication.yml:69-75`), runs seven commands under `set -e`. The log
+resolves them one by one:
+
+| # | command | result |
+|---|---|---|
+| 1 | `build_publications.py` | ok — `education_overlay_pages: 5`, 0 missing/external refs |
+| 2 | `build_education.py` | **PASS** — `STAGED_NOT_LIVE`; site 126→203, lessons 3682→3723, apps 106→107; `missing_source_files: 0` |
+| 3 | `check_publications.py` | PASS — `game_payloads: 69`, `publication_trees: 4` |
+| 4 | `check_education_separation.py --self-test` | `self-test PASS` |
+| 5 | `check_education_separation.py` | **FAIL → exit 1** |
+| 6 | `verify_education_tree_has_no_games.py` | never ran |
+| 7 | `check_education_support.py` | never ran |
+
+Command 2 imports and runs the admission tree census
+(`build_education.py:342` → `education_publication_admission.verify`). It
+**passes**. The 29 transition pairs and the carrier move are proved working at
+main; they were necessary and they are not the red. Step 10's
+`check_education_publication_admission.py --build-control` is `skipped` — never
+reached, so unproven rather than failed.
+
+### The cause — one frozen digest, not a tree
+
+Command 5 returns exactly one failure across a 4033-file, 26076-reference walk:
+
+```json
+{"file": "usage-registry.json",
+ "reason": "Installed combined registry records changed"}
+```
+
+`check_education_separation.py:151`. `registry_errors()` partitions
+`output/usage-registry.json`, sets the reviewed `Teaching_Packs` prefixes aside,
+and requires the digest of the **retained** rows to equal a hardcoded
+`baseline_sha = ec7dc075…4de7`. The other three failure modes did not fire: the
+Science and teaching-pack addition digests both still match, and
+`registry_partition()` raised no per-prefix error. Only the retained digest moved.
+
+It moved because this release moved it, by design.
+`usage_discovery.py:117-121` builds one lesson row per
+`assets/catalogue/*-shelf.json` entry and `:94` stores that entry's **title** on
+the row. So the 20 landed decks add rows, and the 17 titles
+`tools/sx3/align_shelf_titles.py` realigned change one field on existing rows.
+
+### Precedent — this fence is designed to be re-frozen
+
+The comment block above the constant is a ledger of five prior re-freezes, each
+naming its lane, its row delta and its proof method. The most recent is the
+same shape as ours:
+
+> *Re-frozen 16 September (CX2 §5 EDU-D3): the Lessons pin moves from 2c33266b
+> to the main that carries the EDU-Q1 companions (#551) … 51 Science_Teesside
+> lesson records join …, 0 removed, and one existing record changes in one
+> field — the Sugar lesson's title after its public-surface hygiene sweep.*
+
+The procedure is therefore established: re-cut `baseline_sha`, proved by diffing
+`registry_partition()` output between a build at the old pin and one at the new,
+and record the delta in the comment. The fence lives in the **Site** repo and
+step 9 runs it from `.sources/Site`, checked out at `inputs.builder_ref`
+(`education-publication.yml:38-39`) — so re-freezing costs a Site commit **and a
+second carrier move**.
+
+### What pupils see — nothing changed
+
+`build_education.py` reports `status: STAGED_NOT_LIVE`. Every step that could
+reach the served site — the admission proof, the artifact save, the Pages
+configuration read, the games-domain cutover gate, the packaging step and the
+`github-pages` deploy job — is **after** the command that failed, and none of
+them ran. No new publication has been deployed since `ca184d38`. **The last good
+publication is what pupils are served.** The red is a gate refusing to publish,
+which is the gate working; it is not a broken site.
+
+### The window, and what ends it
+
+Re-freezing now would be stale within one merge: the retained digest moves again
+when `#581` lands. Under ORDER SX3-PUB ruling 1 the re-freeze is folded into §4
+— its `baseline_sha` is taken from the §4b build, lands on `#581`'s Site
+transition PR, and rides carrier PR #2.
+
+Until then **main stays red on `check_education_separation.py:151` and on
+nothing else.** `FieldOps P2` is red downstream of it, at
+`Recover successful source-bound publication artifacts`. The window closes with
+the re-freeze. **If anything else goes red inside it, this halts** — the window
+licenses one known line, not a red main.
+
+### 3b has no registry effect — measured read-only, before the build
+
+ORDER SX3-PUB ruling 2 asked whether the three `START_HERE` files and the
+`resources.json` change in 3b produce registry rows or alter a retained field.
+`usage_discovery.registry()` has exactly seven row sources. Each was read at
+Site `be86b584`:
+
+| # | source | reads from | 3b effect |
+|---|---|---|---|
+| 1 | `output/games/data/domain-catalogue.json` (`source='play'`) | Games estate | none — 3b touches no Games content |
+| 2 | `site_source/data/mbm-search-index.json`, `category=='lesson'` | **Site repo root** — `refresh_usage(output, lessons, apps, ROOT)`, `build_education.py:325`; static, last changed `acd9f0cc` | none — not derived from Lessons during the build |
+| 3 | `lessons/resources.json`, `type=='lesson'` | Lessons | none — **conditional, see below** |
+| 4 | `lessons/assets/catalogue/{science,humanities}-shelf.json`, `resourceType=='lesson'` | Lessons | none — 3b adds no shelf entry |
+| 5 | `Humanities_Teesside/David_Cover_Autumn1_W3-W7/index.html` links | Lessons | none |
+| 6 | `output/education-lessons/primary/catalogue.json` | primary | none |
+| 7 | download scrape: every `*.html` in all three output trees, links whose suffix ∈ `EXTENSIONS` | all trees | **none — proved** |
+
+Source 7 is the one that a new page could trip, because it walks every emitted
+HTML file. Every link in all three files was enumerated — 29 links, and **every
+one is `.html`**. `EXTENSIONS` is `{.pdf .doc .docx .ppt .pptx .xls .xlsx .odt
+.odp .ods .zip .epub}`. No link in any of the three matches, so the three pages
+can neither create a `download_request` row nor re-title one. (`add()` keeps the
+first writer's title and the scrape walks `sorted(rglob('*.html'))`, so a page
+that registered nothing cannot re-title anything either.)
+
+Source 3 is conditional on how 3b types its rows, and the precedent in
+`resources.json` is unanimous: **all 40+ existing `START_HERE` rows carry
+`type: 'teacher'`**, including the three existing Science_Teesside pack start
+pages. `registry()` adds a row only for `type=='lesson'`. So this is a
+constraint on how 3b is authored, not an unknown:
+
+> **3b must register the three `START_HERE` rows as `type: 'teacher'` and must
+> add no shelf entry.** Authored that way, 3b has no registry effect.
+
+**Answer: NO.** The re-freeze rides `#581`'s Site transition PR and carrier
+PR #2; 3b lands after it. The proof at 3b is a re-run of `registry()` alone
+against the retained §4b build output with the three pages and the
+`resources.json` rows in place — a function call on an existing tree, not a
+rebuild, comparing the retained digest before and after.
