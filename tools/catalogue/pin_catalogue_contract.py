@@ -1310,6 +1310,11 @@ REVIEWED_PATHS = (
     "assets/catalogue/terms-and-styles.json", "assets/catalogue/science-shelf.json", "assets/catalogue/humanities-shelf.json",
     "tools/catalogue/build_catalogue.py", "tools/catalogue/build_science_shelf.py", "tools/catalogue/build_humanities_shelf.py",
     "tools/catalogue/check_catalogue_static.py", "tools/catalogue/check_catalogue_dom.cjs", "tools/catalogue/verify_education_navigation.cjs",
+    # SX3-PASSES Ruling C: Science_Teesside/index.html is a derivable table that
+    # had no control, because build_science_shelf.py cannot run against 77 stale
+    # week bindings. This re-derives only the cards' title text and supplies the
+    # missing --check. Pinned, so the control itself cannot drift unreviewed.
+    "tools/catalogue/sync_shelf_card_titles.py",
     "tools/catalogue/SHELF_SELECTION.json", "tools/catalogue/HUMANITIES_SELECTION.json",
     "tools/easter/science_original_browser.cjs",
     "tools/science_pack/browser_checks.cjs",
