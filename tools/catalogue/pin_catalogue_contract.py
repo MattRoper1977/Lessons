@@ -1315,6 +1315,10 @@ REVIEWED_PATHS = (
     # week bindings. This re-derives only the cards' title text and supplies the
     # missing --check. Pinned, so the control itself cannot drift unreviewed.
     "tools/catalogue/sync_shelf_card_titles.py",
+    # ORDER SX3-PASSES: the reviewed re-stamp of recorded evidence digests. It writes
+    # only the sha256 of an explicitly listed, moved, limb-proved entry, and is pinned
+    # so the tool that moves a review digest cannot itself drift unreviewed.
+    "tools/catalogue/restamp_evidence_sha256.py",
     "tools/catalogue/SHELF_SELECTION.json", "tools/catalogue/HUMANITIES_SELECTION.json",
     "tools/easter/science_original_browser.cjs",
     "tools/science_pack/browser_checks.cjs",
