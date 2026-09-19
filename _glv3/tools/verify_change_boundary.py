@@ -25,6 +25,17 @@ PROTECTED = ('Art_Teesside', 'GROW_ASDAN', 'LAUNCH_ASDAN', 'Grow/Slideshows',
 SHELVES = ('Science_Teesside/index.html', 'Humanities_Teesside/index.html')
 COVER = 'Humanities_Teesside/David_Cover_Autumn1_W3-W7'
 SCIENCE_PACKS = 'Science_Teesside/Teaching_Packs/'
+# ORDER SX3-PASSES PASS 4 (3b): the ruling that installs the three Science
+# pathway LANDING pages. Science_Teesside is protected, and before this set the
+# fence had no route for a brand-new protected navigation page: SHELVES means the
+# subject index, a replacement transaction member must be an 'M' carrying a
+# beforeGitBlob, and a new file has none. Exactly these three paths, admitted ONLY
+# as additions whose bytes equal their CATALOGUE_PINS admission. A later 'M' to one
+# of them is NOT admitted here -- it falls through to the existing routes, so
+# editing a landing page still needs its own reviewed transaction.
+PATHWAY_PARENTS = ('Science_Teesside/Build/START_HERE.html',
+                   'Science_Teesside/Grow/START_HERE.html',
+                   'Science_Teesside/Launch/START_HERE.html')
 SOURCE = 'tools/humanities_resources/SOURCE_MANIFEST.json'
 DOWNLOADS = 'tools/humanities_resources/DOWNLOAD_MANIFEST.json'
 LABEL_EDITS = 'tools/humanities_resources/PUBLIC_LABEL_CHANGES.json'
@@ -371,6 +382,11 @@ def judge(root, changes, base=None):
                 # prefix alone never admits a file or an existing-file edit.
                 if status != 'A' or not (root / rel).is_file() or pins[rel] != sha(root / rel):
                     errors.append('Science teaching pack must be an exact reviewed addition: ' + rel)
+            elif rel in PATHWAY_PARENTS:
+                # SX3-PASSES PASS 4 (3b). Additive only, and the bytes must equal the
+                # reviewed admission; the set alone never admits an edit or a deletion.
+                if status != 'A' or not (root / rel).is_file() or pins.get(rel) != sha(root / rel):
+                    errors.append('pathway landing page must be an exact reviewed addition: ' + rel)
             elif rel in cover_paths:
                 # This ruling installs new cover resources. It does not permit
                 # edits, deletions or renames of existing lesson payloads.
@@ -424,6 +440,35 @@ def controls(root):
     check('An undeclared cover file is rejected', bool(judge(root, [('A', COVER + '/unreviewed.html')])))
     check('A modification of an existing cover file is not an additive installation', bool(judge(root, [('M', COVER+'/resource.css')])))
     check('A deleted shelf is rejected', bool(judge(root, [('D', SHELVES[0])])))
+    # ORDER SX3-PASSES PASS 4 (3b) red proofs for PATHWAY_PARENTS. The set is only
+    # as good as its refusals, so each of the three ways it could go wrong is proved
+    # to go RED rather than assumed to.
+    check('The three pathway landing pages pass as exact reviewed additions',
+          not judge(root, [('A', p) for p in PATHWAY_PARENTS]))
+    # (i) a fourth path planted in the set, with no pin behind it.
+    planted = 'Science_Teesside/Build/UNREVIEWED_START_HERE.html'
+    saved = globals()['PATHWAY_PARENTS']
+    try:
+        globals()['PATHWAY_PARENTS'] = saved + (planted,)
+        check('A fourth path planted in PATHWAY_PARENTS with no pin is rejected',
+              bool(judge(root, [('A', planted)])))
+    finally:
+        globals()['PATHWAY_PARENTS'] = saved
+    # (ii) a listed page whose reviewed pin disagrees with the bytes on disk.
+    pins = pin_map(root)
+    disagreeing = dict(pins); disagreeing[PATHWAY_PARENTS[0]] = '0' * 64
+    real_pin_map = globals()['pin_map']
+    try:
+        globals()['pin_map'] = lambda _root: disagreeing
+        check('A pathway landing page whose pin disagrees with its bytes is rejected',
+              bool(judge(root, [('A', PATHWAY_PARENTS[0])])))
+    finally:
+        globals()['pin_map'] = real_pin_map
+    # (iii) an EDIT of a listed page is not an installation: it falls through to the
+    # existing routes and is rejected there, so editing one still needs its own
+    # reviewed transaction.
+    check('A modification of a pathway landing page is not an additive installation',
+          bool(judge(root, [('M', PATHWAY_PARENTS[0])])))
     check('Rename-as-delete/add cannot move a retained lesson into the cover exception', bool(judge(root, [('D', sorted(retained)[0]), additions[0]])))
     science_additions = [('A', rel) for rel in pin_map(root) if rel.startswith(SCIENCE_PACKS) and rel not in ALL_REPLACEMENTS]
     if science_additions:
