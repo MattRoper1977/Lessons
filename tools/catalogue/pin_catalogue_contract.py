@@ -1287,6 +1287,13 @@ SHELF_ROWS = [{'subject': 'Science · Teesside',
 # GC1 P6: one reviewed unit card; the 950 existing rows retain their values and order.
 SHELF_ROWS.append({'subject': 'GROW Vocational & PfA', 'title': 'GROW Computing · Programming with Scratch · Weeks 1–8', 'file': 'ICT/Teaching_Packs/index.html#grow-computing', 'id': 'grow-computing-scratch-71638', 'type': 'hub', 'family': 'ICT', 'keywords': ['computing', 'ict', 'grow', 'scratch', 'programming', 'AQA', 'UAS', '71638', 'unit 6', 'Level One', 'maze', 'debugging', 'eight weeks', '40 minutes', 'teaching pack', 'powerpoint', 'word', 'pdf', 'paper evidence', 'Scratch projects'], 'desc': 'Eight 40-minute lessons for AQA UAS 71638, Programming with Scratch (unit 6), Level One. Build and test Scratch projects on a laptop, with editable slides, pupil booklets, printable paper activities and teacher guidance. Capture completed work for printed evidence; unit weeks are sequence labels.', 'added': '2026-09-12', 'new': True, 'year': '2026-27'})
 
+# ORDER SX3-PASSES 3b: the three Science pathway PARENT start pages. They are
+# navigation for teachers -- type 'teacher' -- and carry NO shelf entry: the
+# shelf lists lessons, and a parent index is not one.
+SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'BUILD Science · five-week lesson pack', 'file': 'Science_Teesside/Build/START_HERE.html', 'id': 'catalogue-2026-27-science-build-w3-w7-pack', 'type': 'teacher', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'weeks 3–7', 'five-week pack', 'start here', 'skeletons', 'nutrition'], 'desc': 'BUILD · Weeks 3–7. Backbones and no backbones, muscles working in pairs, what a body needs, building a balanced plate, and where animal food comes from.', 'added': '2026-09-19', 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'GROW Science · five-week lesson pack', 'file': 'Science_Teesside/Grow/START_HERE.html', 'id': 'catalogue-2026-27-science-grow-w3-w7-pack', 'type': 'teacher', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'weeks 3–7', 'five-week pack', 'start here', 'forces', 'space'], 'desc': "GROW · Weeks 3–7. Friction as friend and enemy, levers, pulleys and gears, planning a fair test, Earth and the planets, and the Moon's journey.", 'added': '2026-09-19', 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH GCSE Biology · five-week lesson pack', 'file': 'Science_Teesside/Launch/START_HERE.html', 'id': 'catalogue-2026-27-science-launch-w3-w7-pack', 'type': 'teacher', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'gcse biology', 'weeks 3–7', 'five-week pack', 'start here', 'cell transport'], 'desc': 'LAUNCH · Weeks 3–7, fifteen lessons in Discover / Use / Master triplets: microscopy and magnification, diffusion and gas exchange, osmosis and its core practical, active transport, and a Topic 1 round-up with exam practice.', 'added': '2026-09-19', 'year': '2026-27'})
+
 # Exact reviewed files, not patterns. A future new UI file requires an explicit
 # change here; a lesson cannot become permitted because it shares a directory.
 # The verifier and pin tool exclude themselves to avoid a recursive file hash.
@@ -1319,6 +1326,15 @@ REVIEWED_PATHS = (
     # only the sha256 of an explicitly listed, moved, limb-proved entry, and is pinned
     # so the tool that moves a review digest cannot itself drift unreviewed.
     "tools/catalogue/restamp_evidence_sha256.py",
+    # ORDER SX3-PASSES 3b: the three Science pathway PARENT start pages. Science_Teesside
+    # is a GLV3 protected prefix, and the fence admits a protected ADDITION only by pin
+    # (verify_change_boundary.py: status A requires pins[rel] == sha(file)). They are
+    # navigation, not lessons, so they carry no shelf entry and no replacement
+    # transaction -- a transaction member must be a modification with a beforeGitBlob,
+    # and a new file has none.
+    "Science_Teesside/Build/START_HERE.html",
+    "Science_Teesside/Grow/START_HERE.html",
+    "Science_Teesside/Launch/START_HERE.html",
     "tools/catalogue/SHELF_SELECTION.json", "tools/catalogue/HUMANITIES_SELECTION.json",
     "tools/easter/science_original_browser.cjs",
     "tools/science_pack/browser_checks.cjs",

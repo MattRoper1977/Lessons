@@ -25,6 +25,17 @@ PROTECTED = ('Art_Teesside', 'GROW_ASDAN', 'LAUNCH_ASDAN', 'Grow/Slideshows',
 SHELVES = ('Science_Teesside/index.html', 'Humanities_Teesside/index.html')
 COVER = 'Humanities_Teesside/David_Cover_Autumn1_W3-W7'
 SCIENCE_PACKS = 'Science_Teesside/Teaching_Packs/'
+# ORDER SX3-PASSES PASS 4 (3b): the ruling that installs the three Science
+# pathway LANDING pages. Science_Teesside is protected, and before this set the
+# fence had no route for a brand-new protected navigation page: SHELVES means the
+# subject index, a replacement transaction member must be an 'M' carrying a
+# beforeGitBlob, and a new file has none. Exactly these three paths, admitted ONLY
+# as additions whose bytes equal their CATALOGUE_PINS admission. A later 'M' to one
+# of them is NOT admitted here -- it falls through to the existing routes, so
+# editing a landing page still needs its own reviewed transaction.
+PATHWAY_PARENTS = ('Science_Teesside/Build/START_HERE.html',
+                   'Science_Teesside/Grow/START_HERE.html',
+                   'Science_Teesside/Launch/START_HERE.html')
 SOURCE = 'tools/humanities_resources/SOURCE_MANIFEST.json'
 DOWNLOADS = 'tools/humanities_resources/DOWNLOAD_MANIFEST.json'
 LABEL_EDITS = 'tools/humanities_resources/PUBLIC_LABEL_CHANGES.json'
@@ -371,6 +382,11 @@ def judge(root, changes, base=None):
                 # prefix alone never admits a file or an existing-file edit.
                 if status != 'A' or not (root / rel).is_file() or pins[rel] != sha(root / rel):
                     errors.append('Science teaching pack must be an exact reviewed addition: ' + rel)
+            elif rel in PATHWAY_PARENTS:
+                # SX3-PASSES PASS 4 (3b). Additive only, and the bytes must equal the
+                # reviewed admission; the set alone never admits an edit or a deletion.
+                if status != 'A' or not (root / rel).is_file() or pins.get(rel) != sha(root / rel):
+                    errors.append('pathway landing page must be an exact reviewed addition: ' + rel)
             elif rel in cover_paths:
                 # This ruling installs new cover resources. It does not permit
                 # edits, deletions or renames of existing lesson payloads.
