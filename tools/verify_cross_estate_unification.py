@@ -216,7 +216,7 @@ CATALOGUE_PINS = {
         "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W9_Turn_Earth_explain_the_sky_Classic.html": "3efded0179e818a3e7c0a5d0692610acfb4b91b1d85bc937c4b79bdd79668851",
         "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W12_Give_a_rock_a_job_Classic.html": "509f38056bd09e903c70b0426ac55ab7ff73f7da10261a97eec11d49d7b27d1c",
         ".github/workflows/glv3-verify.yml": "4bf27ca7471a21359e35d1bc7277c5fa0adeb5f31a47c769f192165796037088",
-        "_glv3/tools/verify_change_boundary.py": "c0aaa97009d834c1c0cbfb2d4c6368355dcb2e2d89dea799fc53c35e2e96f44a",
+        "_glv3/tools/verify_change_boundary.py": "1dad143df1850dbbe039e33fbfe0557c64d0b9c921f330957d8db23f042ad3be",
         "_glv3/tools/browser_verify.mjs": "737ad30f297e061407161743f017614179cc6c56f1c9a3904bbe7c98df38c888",
         "_glv3/tools/chip_gate.mjs": "16cdd5c0ad3745c57340ed0ec6a208d221e4793bfc9b1cd9bc703a6c2613dd9a",
         "_glv3/tools/catalogue_membership.mjs": "4d7ab03e23ee0d3c3fc934f4f0a901afc61169754db099f4f5c24dd9cce058ec",
