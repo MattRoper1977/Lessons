@@ -105,3 +105,14 @@ BUILD_RE 14 / GROW_RE 14 / LAUNCH_RE 14 = 42 RE.
 
 The intake record's "NOT SUPPLIED" is superseded for these two packs. The
 report carries them as supplied, with the arrival hashes above.
+
+## Part A progress (2026-09-19, late) — A1–A3 run, A2 applied in the workspace, A4 pending the last two instruments
+
+| step | state |
+|---|---|
+| A1 proofread | done: 27 Class A groups / 545 occurrences / 71 lessons (PROOF_LEDGER.md); Class B ledger B0001–B0093; Class V none (OCR not run) |
+| A2 apply | done in the workspace copies only: `apply_proof.py --write` → 220 edits in 175 files across 65 lessons, 0 refusals; a second write re-applied 3 prefix-of-proposed headings (measured, repaired, matcher closed); third write 0 planned / 220 already applied (idempotent). Residual Class A after re-index: the held `Salah` heading group (5) + 14 occurrences in 8 Teacher_Notes.pdf whose DOCX is proofed but which this container cannot re-render (LibreOffice loads no DOCX at all). 105 Pupil_Resources/Knowledge_Organiser PDFs re-rendered (Chromium A4). SHA256SUMS.txt regenerated in 11 packs; a dated "Proof pass" section appended to each CHANGELOG_Final. **No lesson file is committed.** |
+| A3 checks | CHECKS.md: E1 PASS · E2 PASS · E3 FAIL systematic (ruling) · E4 PASS/FAIL-ruling · E5 PASS + focus gaps · E6 running (settled-state rerun) · E7 PASS · E8 running (decode/duration/blank/safe; OCR NOT RUN) · E9 PASS · E10 NOT RUN (proxy) · E11 NOT RUN (proxy) · E12 report · E13 PASS · E14 59 Class B · E15 PASS · E16 PASS · E17 report · E18 PASS framing + 19 gaps |
+| A4 close | STOP S0 report after E6/E8 finish |
+
+Residue, led by the Fallback 14: no Teacher_Notes / Model_Transcript / Pupil_Resources.html / `#save-independent` surfaces; no `sehm`/`re_safeguard` fields; generation `fallback-2026-09-19` in the report only.
