@@ -4,12 +4,12 @@ Resume at the first phase not marked done.
 
 | phase | state | note |
 |---|---|---|
-| A0 INTAKE       | **BLOCKED — STOP at intake** | 92 of 120 lessons in hand; 2 RE packs missing |
-| A1 PROOFREAD    | not started | needs the full 120, or a ruling to proceed on 92 |
-| A2 APPLY CLASS A| not started | |
-| A3 CHECKS E1-E18| not started | |
-| A4 CLOSE PART A | not started | |
-| PART B          | not started | hard-gated; see INFLIGHT.md |
+| A0 INTAKE       | done | 120 lessons in hand (the two RE packs arrived) |
+| A1 PROOFREAD    | done | Class A A0001–A0027; Class B B0001–B0130 |
+| A2 APPLY CLASS A| done | + rulings H2/H5/H6 applied (A0028–A0038) |
+| A3 CHECKS E1-E18| done | E6 re-measure after H5 in progress |
+| A4 CLOSE PART A | in progress | HUMD5_PARTA_CLOSE.md |
+| PART B          | PREPARE ONLY | PARTB_PLAN.md (STOP-B1); gated on SCIENCE S5 + phone check |
 
 ## A0 intake result (2026-09-19)
 

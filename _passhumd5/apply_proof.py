@@ -102,7 +102,9 @@ def main():
             cur,pro=derive(g['kind'],o.get('current') or g['current'],o.get('proposed') or g.get('proposed'))
             if g.get('per_occurrence_strings') and not (o.get('current') and o.get('proposed')): skipped.append((g['id'],lid,surf,'per-occurrence strings missing')); continue
             if cur==pro: skipped.append((g['id'],lid,surf,'no-op (current == proposed)')); continue
-            if surf=='config' or path.endswith('.html'):
+            if (surf=='config' or path.endswith('.html')) and not g.get('raw'):
+                # `raw` groups edit markup or JSON STRUCTURE (an svg opener, a new config key), not
+                # text inside a JSON string; they are validated after the write instead (below).
                 if '"' in pro or '\\' in pro: raise SystemExit(f'{g["id"]}: proposed string is not JSON-safe: {pro!r}')
             edits[(path,g['kind'],cur,pro)][g['id']]+=1
     plan=[]; refusals=[]; touched=set()
@@ -122,6 +124,11 @@ def main():
                 new=new.replace(cur,pro); results.append({'ids':ids,'current':cur[:60],'proposed':pro[:60],'status':'PLANNED','found':n,'ledger_rows':expected,'note':'every hit in the file replaced: body and config JSON stay in step'})
             if any(r['status']=='PLANNED' for r in results):
                 touched.add(path)
+                if path.endswith('_Lesson.html'):
+                    # a raw edit may not break the config: prove window.CLASSIC_LESSON still parses
+                    i=new.find('window.CLASSIC_LESSON'); j=new.find('=',i)+1
+                    try: json.JSONDecoder().raw_decode(new[j:].lstrip())
+                    except Exception as e: raise SystemExit(f'{path}: window.CLASSIC_LESSON would not parse after the edit: {e}')
                 if a.write: open(path,'w',encoding='utf-8').write(new)
             plan.append({'file':os.path.relpath(path,a.root),'edits':results})
         elif ext in ('.docx','.pptx'):
@@ -133,8 +140,18 @@ def main():
                 # a run that already holds the PROPOSED text is done: never match `current` inside it
                 # (when `current` is a prefix of `proposed`, e.g. "Book or place" -> "Book or place?",
                 # a second pass would otherwise append again - measured, repaired, and closed here)
-                done_runs=[r for r in runs if pro in r.text]
-                hits=[r for r in runs if rx.search(r.text) and pro not in r.text]; n=sum(len(rx.findall(r.text)) for r in hits)
+                # "done" means the run holds the proposed text and NOT the current one: when the
+                # proposed string is a prefix of the current one (H2: "Previous lesson reminder: X"
+                # -> "Previous lesson reminder:"), every unedited run also contains it (measured:
+                # 180 DOCX/PPTX edits were skipped as already applied on the first A0028 write)
+                # Two prefix cases, both measured on this map:
+                #   A  current is a prefix of proposed ("Book or place" -> "Book or place?"): a run that
+                #      already holds the proposed text is done, and `current` still matches inside it;
+                #   B  proposed is a prefix of current ("Previous lesson reminder: X" -> "Previous lesson
+                #      reminder:"): every unedited run also holds the proposed text, so holding it is
+                #      not "done" - only a run without `current` is.
+                done_runs=[r for r in runs if pro in r.text and not rx.search(r.text)] if not (cur in pro) else [r for r in runs if pro in r.text]
+                hits=[r for r in runs if rx.search(r.text) and not (cur in pro and pro in r.text)]; n=sum(len(rx.findall(r.text)) for r in hits)
                 # a string split across runs: count in paragraph text but not in any run
                 if n==0:
                     para_n=sum(1 for p in (getattr(doc,'paragraphs',[]) ) if cur in p.text) if ext=='.docx' else 0
