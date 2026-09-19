@@ -763,7 +763,10 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # entry is now its own literal rather than an alias of PUBLICATION_CALLER_SHA256, which
 # stays where UX2 A5 left it: the two kinds pin different files and had no business
 # sharing one constant.
-    "lessons": "597915266a4da01266532737c26375cb33026d975c40781504ef95ea8cdd4c5b",
+# ORDER SX3-PUB: the publisher pin moves to Site be86b584, which mints the
+# admission for this release's 29 published paths. The caller file therefore
+# changed and this is its digest re-cut from those bytes.
+    "lessons": "48b20026dab7a2f3cd1a89d3e94ee5dc692e71f8cb632867d11c038b5f2c6000",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.
