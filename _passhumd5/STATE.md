@@ -62,3 +62,46 @@ HUM_Autumn_1_BUILD_GROW_Final.zip was NOT supplied; the Fallback was.
 So the Fallback path is the live one: those 14 rows carry
 generation="fallback-2026-09-19" in the report and lead the residue list.
 Both were not supplied, so the "never land both" clause is not engaged.
+
+---
+
+## A0 RECONCILIATION (ordered 2026-09-19) — the answer is §3, not §2
+
+The intake record and the A0 index did not disagree; they described two
+different moments. Intake ran BEFORE RE_Autumn_BUILD_Final.zip and
+RE_Autumn_LAUNCH_Final.zip were supplied. They arrived in the message
+carrying the ruling, were verified on arrival, and the index was built after.
+Nothing was miscounted, so correction #10 does not apply.
+
+### Measured population, by the real pattern *_Lesson.html
+  HUM_Autumn_1_BUILD_GROW_Fallback  14      RE_Autumn_BUILD_Final    14
+  HUM_Autumn_1_LAUNCH_Final          7      RE_Autumn_GROW_Final     14
+  HUM_Autumn_2_BUILD_Final           7      RE_Autumn_LAUNCH_Final   14
+  HUM_Autumn_2_GROW_Final            7
+  HUM_Autumn_2_LAUNCH_Final          7      HUM_00_SoW_and_Order      0
+  HUM_Spring_1_BUILD_GROW_Final     12        (SoW pack, correctly not
+  HUM_Spring_1_LAUNCH_Final          6         counted as lessons)
+  HUM_Spring_2_BUILD_GROW_Final     12
+  HUM_Spring_2_LAUNCH_Final          6      TOTAL                   120
+
+By pathway, from the filename: BUILD 26 / GROW 26 / LAUNCH 26 = 78 Humanities;
+BUILD_RE 14 / GROW_RE 14 / LAUNCH_RE 14 = 42 RE.
+
+### The 28 that were NOT SUPPLIED at intake are now SUPPLIED
+  RE_Autumn_BUILD_Final.zip   12931456 bytes
+    sha256 70b1c36e882a056a406d4120605ffca72cd7b225ba1aa3d055404661c45134f9
+  RE_Autumn_LAUNCH_Final.zip  14421087 bytes
+    sha256 5bb70f0ca5cd3412c371d0f8d4d50771c3c8da249c1985a438d58b742aec5803
+
+  SHA256SUMS re-verified: BUILD PASS (201 files), LAUNCH PASS (201 files).
+  Generation: 14/14 carry #vary-exit AND a starter block in each pack;
+  CHANGELOG_Final_2026-09-19.md present in both. Final, not Reviewed.
+
+### Rendered pass scope
+  on disk 120 | static index 120 | rendered index 120 | missing none
+  RE BUILD 14/14 rendered, RE LAUNCH 14/14 rendered.
+  NOT RUN files: 0 entries in both. The per-lesson pageerror -> NOT RUN rule
+  stands and fired zero times because zero lessons raised a page error.
+
+The intake record's "NOT SUPPLIED" is superseded for these two packs. The
+report carries them as supplied, with the arrival hashes above.
