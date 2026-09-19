@@ -164,8 +164,43 @@ Nothing below was edited. Source instrument in brackets.
 | B0092 | LAUNCH_A1_W01 · stretch | 9.51 | 9 |
 | B0093 | LAUNCH_S1_W06 · stretch | 9.48 | 9 |
 
+## Video duration (E8), 29 outside 30–40 s — Class B
+
+| id | lesson | container duration |
+|---|---|---|
+| B0094 | LAUNCH_A1_W02 | 41.0 s |
+| B0095 | LAUNCH_A1_W07 | 41.0 s |
+| B0096 | BUILD_A2_W02 | 48.0 s |
+| B0097 | GROW_A2_W02 | 29.0 s |
+| B0098 | GROW_A2_W05 | 47.0 s |
+| B0099 | GROW_A2_W06 | 51.0 s |
+| B0100 | GROW_A2_W07 | 29.0 s |
+| B0101 | GROW_S1_W01 | 47.0 s |
+| B0102 | GROW_S1_W05 | 48.0 s |
+| B0103 | LAUNCH_S1_W02 | 43.0 s |
+| B0104 | LAUNCH_S1_W06 | 54.0 s |
+| B0105 | GROW_S2_W05 | 28.0 s |
+| B0106 | GROW_S2_W06 | 29.0 s |
+| B0107 | LAUNCH_S2_W05 | 28.0 s |
+| B0108 | BUILD_RE_A1_W05 | 48.0 s |
+| B0109 | BUILD_RE_A1_W07 | 49.0 s |
+| B0110 | BUILD_RE_A2_W02 | 47.0 s |
+| B0111 | GROW_RE_A1_W01 | 47.0 s |
+| B0112 | GROW_RE_A1_W04 | 47.0 s |
+| B0113 | GROW_RE_A1_W07 | 47.0 s |
+| B0114 | GROW_RE_A2_W03 | 28.0 s |
+| B0115 | GROW_RE_A2_W07 | 29.0 s |
+| B0116 | LAUNCH_RE_A1_W02 | 52.0 s |
+| B0117 | LAUNCH_RE_A1_W04 | 47.0 s |
+| B0118 | LAUNCH_RE_A1_W06 | 47.0 s |
+| B0119 | LAUNCH_RE_A2_W01 | 47.0 s |
+| B0120 | LAUNCH_RE_A2_W03 | 28.0 s |
+| B0121 | LAUNCH_RE_A2_W05 | 50.0 s |
+| B0122 | LAUNCH_RE_A2_W06 | 28.0 s |
+
 # Class V — video captions
 
 None ledgered: OCR of caption frames is NOT RUN (no tesseract). The text leg
 (Model_Transcript.txt carries every config model step) is PASS 106/106; the 14
-Fallback lessons have no transcript surface.
+Fallback lessons have no transcript surface. Every video decodes (PyAV), 0 blank
+sampled frames, embedded copies byte-identical.

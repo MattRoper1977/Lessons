@@ -19,7 +19,7 @@ the workspace `/tmp/claude-0/humd5/` (E*_*.json); the E4 PDFs in `pdf_e4/`.
 | E5 | Keyboard-only | **PASS** on rounds, traps, Next, starters, exits, modals; **focus indicator gaps — Class B** | 17 sampled lessons | render_e5_keyboard.js; E5_SAMPLE.json names the sample and the two absent kinds |
 | E6 | Accessibility (axe, both viewports) + contrast | see §E6 | 120 × 9 stages × 2 viewports | render_e6_axe.js (axe 4.10.2, preload off) |
 | E7 | Reduced motion | **PASS** | 120/120; memory flash 12/12 | render_e7_e16_e17.js: 0 running animations > 10 ms and 0 visible elements with animation/transition > 0.01 s on any stage; the memory-flash starter (12 lessons, W05 of each term) still hides its words at 10 s (JS timer) |
-| E8 | Video | decode/duration/blank/safe-area: see §E8; caption text vs transcript: PASS 106/106 text leg; **OCR NOT RUN** | 120 videos | render_e8_video.js; E8_TEXT_LEG.json; ffmpeg and tesseract are not installable here |
+| E8 | Video | decode **PASS** 120/120; embedded copy **PASS** 120/120; blank frames **PASS** 0; duration **29 outside 30–40 s — Class B**; safe area PASS 106/106 (Fallback 14 not measurable); caption OCR **NOT RUN** | 120 videos | scan_e8_pyav.py (PyAV); E8_TEXT_LEG.json; tesseract absent |
 | E9 | Data | **PASS** numbers; 3 minor | 9 datasets, 9 CSV, 11 XLSX, 9 printed tables | scan_e9_data.py: config == CSV == XLSX == printed table cell-for-cell (ISO timestamps == Excel datetimes); units + source present on config/XLSX/printed; CSV carries units only in the header on 3 (GROW_S2_W03/W05/W06); no lesson has a pupil-input-driven graph (graph leg vacuous, recorded) |
 | E10 | External links | **NOT RUN** | 57 distinct URLs | collect_e10_urls.py + curl: every host is refused by the egress proxy (CONNECT 403) — "dead" cannot be distinguished from "blocked"; URL list retained in E10_URLS.json |
 | E11 | Facts spot-audit against cited sources | **NOT RUN** | — | the cited pages are unreachable (same proxy policy as E10); the claims themselves were read for E18 and Class B; nothing scored |
@@ -95,7 +95,19 @@ E6_RESULTS_PLACEHOLDER
 
 ## E8 — Video
 
-E8_RESULTS_PLACEHOLDER
+`render_e8_video.js` could not run: the Playwright Chromium build has no H.264
+decoder (loadedmetadata never fires on any file). The legs were re-run with
+`scan_e8_pyav.py` (PyAV 18.1 / bundled ffmpeg), 120 videos, every frame decoded.
+
+| leg | measured |
+|---|---|
+| decode | **120/120** decode fully (h264, 1280×720, 280–640 frames); 0 decoder errors |
+| embedded copy | **120/120** lesson HTML `data:video/mp4` payloads are byte-identical to the file |
+| duration 30–40 s | **91/120**; 29 outside the range (28–54 s): LAUNCH_A1_W02 41.0s, LAUNCH_A1_W07 41.0s, BUILD_A2_W02 48.0s, GROW_A2_W02 29.0s, GROW_A2_W05 47.0s, GROW_A2_W06 51.0s, GROW_A2_W07 29.0s, GROW_S1_W01 47.0s, GROW_S1_W05 48.0s, LAUNCH_S1_W02 43.0s, LAUNCH_S1_W06 54.0s, GROW_S2_W05 28.0s, GROW_S2_W06 29.0s, LAUNCH_S2_W05 28.0s, BUILD_RE_A1_W05 48.0s, BUILD_RE_A1_W07 49.0s, BUILD_RE_A2_W02 47.0s, GROW_RE_A1_W01 47.0s, GROW_RE_A1_W04 47.0s, GROW_RE_A1_W07 47.0s, GROW_RE_A2_W03 28.0s, GROW_RE_A2_W07 29.0s, LAUNCH_RE_A1_W02 52.0s, LAUNCH_RE_A1_W04 47.0s, LAUNCH_RE_A1_W06 47.0s, LAUNCH_RE_A2_W01 47.0s, LAUNCH_RE_A2_W03 28.0s, LAUNCH_RE_A2_W05 50.0s, LAUNCH_RE_A2_W06 28.0s — ledgered B0094–B0122 |
+| blank frames | **0** of 960 sampled frames (8 per video; grey sd < 2) |
+| safe area | 106/106 Final videos: every sampled frame's content inside the 5 % margin; the 14 **Fallback** videos carry a full-frame non-flat background, so the corner-pixel method cannot isolate the caption box — NOT MEASURED for those 14 |
+| caption text vs transcript / model steps | text leg **PASS 106/106** (every config model step present in Model_Transcript.txt; the 14 Fallback lessons have no transcript surface); **OCR of the burned-in captions NOT RUN** (no tesseract) — no Class V item can be raised or cleared by reading the frames |
+
 
 ## E12 — Media rights — report only
 
