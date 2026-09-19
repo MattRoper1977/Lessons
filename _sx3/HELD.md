@@ -84,7 +84,52 @@ is why those two branches carry zero files.
 `SCI_L_W6_L1_ActiveTransport` · `SCI_L_W6_L2_RootAndGut` · `SCI_L_W6_L3_Compare` ·
 `SCI_L_W7_L1_RoundUp` · `SCI_L_W7_L2_CommandWords` · `SCI_L_W7_L3_ExamPractice`
 
-## The landing set — measured 36; held 39
+## D — Held on body provenance: five GROW `_Do` decks carry their `_Explore` partner's lesson (5)
+
+**ORDER SX3-S2. Added after the S2 pack was built, not before.** Tabling the 31
+changed titles beside the 5 unchanged showed that the five unchanged were all GROW
+`_Explore` decks whose titles were also, verbatim, the NEW titles of their paired
+`_Do` decks. Measured on the branch head, each `_Do` deck's VISIBLE TEXT — script
+and style stripped — is byte-for-byte identical to its `_Explore` partner's:
+
+| deck (held) | its `_Explore` partner | visible text | chars |
+|---|---|---|---|
+| `SCI_G_W9B_Spherical_Bodies_Do.html` | `SCI_G_W9A_Spherical_Bodies_Explore.html` | identical | 48,766 |
+| `SCI_G_W10B_Solar_System_Presentation_Do.html` | `SCI_G_W10A_Solar_System_Research_Explore.html` | identical | 58,217 |
+| `SCI_G_W11B_Climate_Action_Do.html` | `SCI_G_W11A_Global_Warming_Explore.html` | identical | 51,269 |
+| `SCI_G_W12B_Science_Answer_Lab_Do.html` | `SCI_G_W12A_Science_Connections_Explore.html` | identical | 50,619 |
+| `SCI_G_W13B_Rover_Rescue_Investigation_Do.html` | `SCI_G_W13A_Rover_Rescue_Plan_Explore.html` | identical | 50,098 |
+
+**Body provenance: PARTNER `_Explore`, on all five.** The slide content says the
+same thing as the digests. W13B is headed *Rover Rescue: Plan a Fair Test* and
+teaches fair-test planning — change one thing, measure, release, repeat — which is
+the Explore lesson; its own Do lesson, the results desk that keeps or rejects
+48/51/49 cm and takes a mean, is absent. W9B teaches sphere-versus-disc from
+viewpoint, not the six-observation world shape lab. On all five the Explore lesson
+would land twice under two filenames and the Do lesson would not land at all.
+
+So they are **held, not repaired by restoring the heading**: a heading swap would
+put a Do title on an Explore lesson, which is worse than the mismatch it fixes.
+All five sit at main's bytes on `claude/sx3-grow-1`.
+
+**Authoring lane: GROW W9–W13 `_Do`, re-transplant from the correct donor.** The
+fault is donor selection at the point of invocation, not the adapter: the adapter
+faithfully transplanted what it was handed, which is why the visible text is
+identical rather than merely mis-headed. The donor path comes from the caller and
+that caller is not in the repository, so no line of `adapters.py` is named here.
+
+**What was attempted and refused.** Withdrawing the five from `REVIEWED_PATHS` was
+tried and the pin tool refused — *"reviewed-path list omits existing admissions;
+reconcile explicitly before pinning"* — and the refusal was not forced. The five
+stay named in the reviewed set and are pinned at main's bytes, which is truthful
+about what is there. Withdrawing an admission has no mechanical path in the tool
+and is Matt's to rule.
+
+**How it would be caught next time.** `tools/sx3/check_landing_titles.py`:
+DISTINCT fires 10 failures on the pre-hold head `13ac57e9` — five shared headings
+and five shared visible-text digests. Neither existed when this happened.
+
+## The landing set — measured 36 before the D holds; 31 land; held 44
 
 56 files on the six branches, minus 10 (A), minus 10 (B) = **36**. The order
 expected 36; the measurement is 36. Both hold classes survived their rulings
@@ -98,14 +143,38 @@ Held is **39** against the 75-deck population the order counts
 |---|---|---|---|
 | `claude/sx3-build-1` | 11 | 10 | **1** |
 | `claude/sx3-build-2` | 5 | 5 | **0** |
-| `claude/sx3-grow-1` | 12 | 0 | **12** |
+| `claude/sx3-grow-1` | 12 | 5 | **7** |
 | `claude/sx3-grow-2` | 5 | 5 | **0** |
 | `claude/sx3-launch-1` | 12 | 0 | **12** |
 | `claude/sx3-launch-2` | 11 | 0 | **11** |
 | `claude/sx3-launch-3` | 0 | — | 0 |
 | `claude/sx3-launch-4` | 0 | — | 0 |
 
-By pathway the 36 are Build 1 · Grow 12 · Launch 23. The single BUILD lander is
+**Revised by the D holds: 31 land, not 36.** By pathway the 31 are Build 1 ·
+Grow 7 · Launch 23. The earlier figure of 36 was correct for every check that
+existed when it was measured; D was found by a control built afterwards.
+
+### The held count, and a discrepancy with the order
+
+ORDER SX3-S2 §2.2 and §4 say **24 held by name**. Counted here, it is **25**, and
+the arithmetic is shown rather than the number adjusted to fit:
+
+| class | decks held by name | overlap with the others |
+|---|---|---|
+| A — second generation, no ruling | 10 | none |
+| B — Original Science stage contract | 10 | none |
+| D — body provenance (this order) | 5 | none |
+| **union** | **25** | A∩B, A∩D, B∩D all empty |
+
+Class C's 15 are parked from an earlier pass and are not named deck-by-deck in
+this file, so they are not in the 25; counted with them and with the 4 from the
+ledger's original held list, the wider figure is **44** (39 as reconciled below,
+plus D's 5).
+
+25 rather than 24 is not a deck I have added: A and B are unchanged from before
+this order and D is exactly the five measured above. I have not adjusted any class
+to reach 24, and the difference wants a word before the close-out repeats either
+number. The single BUILD lander is
 `Science_Teesside/Build/W8-W13_2026-27/SCI_B_W12_Give_a_rock_a_job_Classic.html`.
 
 **Four of the eight PRs would carry no content**: `sx3-build-2` and `sx3-grow-2`
