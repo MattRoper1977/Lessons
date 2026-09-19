@@ -21,3 +21,5 @@ closed with rulings recorded. Part B will declare its own INFLIGHT entry.
 
 ## 2026-09-19 late — Part A A1–A3 measured, A2 applied in the workspace; A4 STOP S0 pending E6 (settled rerun) and E8 (decode/duration/blank/safe legs)
 Instruments added: render_visibility.js, render_e4_print.js, render_e5_keyboard.js, render_e6_axe.js, render_e7_e16_e17.js, render_e8_video.js, rerender_pdfs.js, scan_e2_parity.py, scan_e9_data.py, scan_e12_media.py, scan_e13_residue.py, scan_e14_readability.py, collect_e10_urls.py, apply_proof.py (+ APPLY_PLAN.json).
+
+## Part A CLOSED for STOP S0 (2026-09-19 ~23:00Z). INFLIGHT for Part A: none. Part B not started (gated on science).

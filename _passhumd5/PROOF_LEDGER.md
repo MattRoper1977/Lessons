@@ -164,6 +164,19 @@ Nothing below was edited. Source instrument in brackets.
 | B0092 | LAUNCH_A1_W01 · stretch | 9.51 | 9 |
 | B0093 | LAUNCH_S1_W06 · stretch | 9.48 | 9 |
 
+## Accessibility (E6), report only (R6: no recolour, no restyle)
+
+| id | scope | finding |
+|---|---|---|
+| B0123 | all 40 LAUNCH lessons | primary buttons white text on `#3b82f6` — 3.68:1 (below 4.5:1); the incoming LAUNCH button colour is not R6's `#9c27b0` |
+| B0124 | all 120 lessons | timer text `#auto-timer-display` and timer buttons `button.at-btn` `#c9803b` on white — 3.17:1 |
+| B0125 | all 120 lessons | model-node current button white on `#f3e6da` / `#ede9fe` — 1.2:1 |
+| B0126 | all 120 lessons | axe `color-contrast` serious on `#previous-slide` / `#next-slide` (509 / 499 stage-visits) and `button[data-action="organiser"]` (80) |
+| B0127 | 27 lessons (map SVGs) | `svg-img-alt`: inline `<svg role="img">` without an accessible name (35 nodes) |
+| B0128 | 18 lessons (map SVGs) | `nested-interactive`: interactive controls inside a `role="img"` SVG (26 nodes) |
+| B0129 | 4 rank-kind lessons (GROW_A1_W05, GROW_S1_W04, LAUNCH_A1_W05, LAUNCH_S1_W04) | `select-name` **critical**: `#rank-criterion` has no accessible label |
+| B0130 | all 120 lessons | no lesson is free of a serious axe finding at either viewport; moderate/minor: 0 |
+
 ## Video duration (E8), 29 outside 30–40 s — Class B
 
 | id | lesson | container duration |

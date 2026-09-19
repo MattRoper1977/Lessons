@@ -17,7 +17,7 @@ the workspace `/tmp/claude-0/humd5/` (E*_*.json); the E4 PDFs in `pdf_e4/`.
 | E3 | Answers never on a pupil surface | **FAIL — systematic, ruling** | on screen 106/120; KO 218/218; Pupil_Resources.html 5; print see E4 | render_visibility.js (default state, per stage, control proved 120/120); E3_VISIBLE_CLASSIFIED.json |
 | E4 | Print routes | **PASS** on pages/blank/clipped/.vary-box; **FAIL — systematic, ruling** on zero answers | 480 PDFs (3 routes + organiser × 120) | render_e4_print.js + E4_RESULT.json: pages 6–7 / organiser 1; 0 blank; 0 clipped candidates at A4 width; .vary-box 0 visible; answers on the organiser page (KO "Remember" q/a) and the arrival page (reminder strip) in 480/480 |
 | E5 | Keyboard-only | **PASS** on rounds, traps, Next, starters, exits, modals; **focus indicator gaps — Class B** | 17 sampled lessons | render_e5_keyboard.js; E5_SAMPLE.json names the sample and the two absent kinds |
-| E6 | Accessibility (axe, both viewports) + contrast | see §E6 | 120 × 9 stages × 2 viewports | render_e6_axe.js (axe 4.10.2, preload off) |
+| E6 | Accessibility (axe, both viewports) + contrast | **FAIL — report only**: serious color-contrast on 120/120, svg-img-alt 27, nested-interactive 18, select-name critical 4; LAUNCH button text 3.68:1; brandline PASS | 120 × 9 stages × 2 viewports | render_e6_axe.js (axe 4.10.2, preload off, 800 ms settle); E6_AXE.json |
 | E7 | Reduced motion | **PASS** | 120/120; memory flash 12/12 | render_e7_e16_e17.js: 0 running animations > 10 ms and 0 visible elements with animation/transition > 0.01 s on any stage; the memory-flash starter (12 lessons, W05 of each term) still hides its words at 10 s (JS timer) |
 | E8 | Video | decode **PASS** 120/120; embedded copy **PASS** 120/120; blank frames **PASS** 0; duration **29 outside 30–40 s — Class B**; safe area PASS 106/106 (Fallback 14 not measurable); caption OCR **NOT RUN** | 120 videos | scan_e8_pyav.py (PyAV); E8_TEXT_LEG.json; tesseract absent |
 | E9 | Data | **PASS** numbers; 3 minor | 9 datasets, 9 CSV, 11 XLSX, 9 printed tables | scan_e9_data.py: config == CSV == XLSX == printed table cell-for-cell (ISO timestamps == Excel datetimes); units + source present on config/XLSX/printed; CSV carries units only in the header on 3 (GROW_S2_W03/W05/W06); no lesson has a pupil-input-driven graph (graph leg vacuous, recorded) |
@@ -91,7 +91,22 @@ BUILD has no editor-kind lesson; LAUNCH has no sequence-kind lesson (chain LAUNC
 
 ## E6 — axe + contrast
 
-E6_RESULTS_PLACEHOLDER
+`render_e6_axe.js`, axe-core 4.10.2 (`preload:false` — the default asset preload cost a
+flat 10 s per run on file:// pages), scoped to the active stage plus the fixed chrome,
+on every stage of every lesson at 1280×720 and 390×844 touch, after an 800 ms settle
+(the first run sampled each stage mid-fade and read blended colours: `.brandline`
+came out #96a6b3 against its real rgb(47,80,104); that run is kept as
+E6_AXE_midfade.json and NOT used). 120/120 lessons, 0 NOT RUN, 2,160 stage-visits.
+
+| leg | measured |
+|---|---|
+| serious/critical, axe | **no lesson is clean**: `color-contrast` serious on every lesson (2,208 nodes desktop / 2,190 phone) — targets `#auto-timer-display` (1,440), `#previous-slide` (509), `#next-slide` (499), the model-node `.current` button (240), `button[data-action="organiser"]` (80); `svg-img-alt` serious on 27 lessons (35 nodes: the inline map `<svg role="img">` without an accessible name); `nested-interactive` serious on 18 lessons (26: interactive controls inside those `role="img"` SVGs); `select-name` **critical** on 4 rank-kind lessons (`#rank-criterion` has no label) |
+| moderate/minor | 0 entries at either viewport |
+| contrast leg (own): button text on the pathway colours | BUILD `#4E7A9B` and GROW `#3f7d6e` primary buttons with white text are **≥ 4.5:1** (4.59, 4.81); **LAUNCH primary buttons are white on `#3b82f6` = 3.68:1 — FAIL** on all 40 LAUNCH lessons (the incoming LAUNCH button colour is not R6's `#9c27b0`) |
+| contrast leg: other buttons | timer buttons `button.at-btn` `#c9803b` on white **3.17:1** (BUILD + GROW, 80 lessons); the model-node current button white on `#f3e6da` / `#ede9fe` **1.2:1** (all 120) |
+| contrast leg: `.brandline` | **0** below 4.5:1 at either viewport (settled state) |
+
+Nothing recoloured (R6). Ledgered B0123–B0130.
 
 ## E8 — Video
 
