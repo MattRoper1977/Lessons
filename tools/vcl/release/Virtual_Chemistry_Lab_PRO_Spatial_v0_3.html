@@ -1,0 +1,1646 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07111f">
+<title>Virtual Chemistry Lab PRO v0.3 — Spatial Sandbox & Multi-Bench Suite</title>
+<style>
+:root{
+  --bg:#07111f;--bg2:#0a1627;--panel:#0f1d31;--panel2:#12233a;--panel3:#172b45;
+  --line:#28405e;--line2:#395777;--text:#eef6ff;--muted:#9fb2c8;--faint:#7187a0;
+  --cyan:#38d7ff;--blue:#4f8cff;--green:#45d69b;--amber:#ffc857;--red:#ff6b76;
+  --violet:#b08cff;--pink:#ff8cc8;--white:#fff;--shadow:0 18px 45px rgba(0,0,0,.28);
+  --radius:14px;--hit:46px;
+}
+*{box-sizing:border-box}
+html{color-scheme:dark}
+body{
+  margin:0;min-height:100vh;background:
+  radial-gradient(circle at 40% -10%,rgba(56,215,255,.12),transparent 28rem),
+  linear-gradient(180deg,var(--bg2),var(--bg));
+  color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  line-height:1.4
+}
+body.calm{
+  --bg:#eaf0f6;--bg2:#f6f9fc;--panel:#fff;--panel2:#f4f7fa;--panel3:#e7eef5;
+  --line:#c6d2df;--line2:#aabacb;--text:#102033;--muted:#455b72;--faint:#6b7f94;
+  --shadow:0 8px 24px rgba(27,48,73,.09);
+  background:linear-gradient(180deg,#f8fbfd,#eaf0f6);color-scheme:light
+}
+body.calm *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
+button,input,select,textarea{font:inherit}
+button,select,input[type=range],input[type=checkbox]{touch-action:manipulation}
+button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
+button{
+  min-height:var(--hit);border:1px solid var(--line2);border-radius:11px;padding:9px 13px;
+  color:var(--text);background:var(--panel3);font-weight:750;cursor:pointer
+}
+button:hover:not(:disabled){filter:brightness(1.08);transform:translateY(-1px)}
+button:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btn-primary{background:linear-gradient(180deg,#138cbd,#08739f);border-color:#2bc7ff;color:#fff}
+.btn-success{background:linear-gradient(180deg,#15966a,#0e7554);border-color:#35d99a;color:#fff}
+.btn-danger{background:linear-gradient(180deg,#a63c4a,#812c38);border-color:#e26572;color:#fff}
+.btn-ghost{background:transparent}
+.btn-small{min-height:38px;padding:6px 9px;font-size:.78rem}
+.icon-btn{min-width:var(--hit);padding:8px}
+.topbar{
+  position:sticky;top:0;z-index:20;display:grid;grid-template-columns:minmax(250px,1fr) minmax(260px,420px) auto;
+  align-items:center;gap:12px;padding:12px 16px;background:rgba(7,17,31,.92);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--line);box-shadow:0 8px 30px rgba(0,0,0,.18)
+}
+.calm .topbar{background:rgba(255,255,255,.94)}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.brand-mark{
+  width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-weight:950;
+  background:linear-gradient(145deg,#0ca6d4,#674cff);box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)
+}
+.brand h1{font-size:1rem;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand p{margin:2px 0 0;color:var(--muted);font-size:.72rem}
+.top-select{display:flex;align-items:center;gap:9px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:7px 10px}
+.top-select label{font-size:.74rem;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+select,input[type=text],input[type=number],textarea{
+  width:100%;min-height:42px;color:var(--text);background:var(--bg);border:1px solid var(--line2);border-radius:9px;padding:8px 10px
+}
+textarea{min-height:82px;resize:vertical}
+.actions{display:flex;gap:7px;justify-content:flex-end;flex-wrap:wrap}
+.shell{max-width:1720px;margin:0 auto;padding:14px}
+.safety-strip{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;padding:9px 12px;
+  background:rgba(255,200,87,.08);border:1px solid rgba(255,200,87,.35);border-radius:11px;color:var(--muted);font-size:.78rem
+}
+.safety-strip strong{color:var(--amber)}
+.workbench{
+  display:grid;grid-template-columns:minmax(260px,330px) minmax(480px,1fr) minmax(330px,430px);
+  gap:14px;align-items:stretch
+}
+.panel{
+  min-width:0;background:linear-gradient(180deg,var(--panel),rgba(15,29,49,.96));border:1px solid var(--line);
+  border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden
+}
+.calm .panel{background:var(--panel)}
+.panel-head{
+  min-height:53px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 13px;border-bottom:1px solid var(--line);
+  background:rgba(255,255,255,.02)
+}
+.panel-head h2{font-size:.82rem;margin:0;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.panel-head .status{font-size:.72rem;color:var(--cyan);font-weight:800}
+.panel-body{padding:12px}
+.stack{display:flex;flex-direction:column;gap:10px}
+.card{padding:11px;border:1px solid var(--line);border-radius:11px;background:var(--panel2)}
+.card h3{margin:0 0 8px;font-size:.8rem}
+.card p{margin:6px 0;color:var(--muted);font-size:.75rem}
+.var-tag{display:inline-flex;align-items:center;gap:6px;font-size:.68rem;font-weight:850;letter-spacing:.06em;text-transform:uppercase}
+.var-tag::before{content:"";width:8px;height:8px;border-radius:999px;background:currentColor}
+.iv{color:var(--cyan)} .dv{color:var(--red)} .cv{color:var(--green)} .tech{color:var(--violet)}
+.control{display:flex;flex-direction:column;gap:5px;margin-top:9px}
+.label-row{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:.73rem}
+.label-row output,.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-weight:800;color:var(--text)}
+.range-wrap{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+input[type=range]{width:100%;accent-color:var(--cyan);min-height:40px}
+.toggle{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;padding:7px 0;font-size:.75rem;color:var(--muted)
+}
+.toggle input{width:22px;height:22px;accent-color:var(--cyan)}
+.stage-panel{display:flex;flex-direction:column;min-height:650px}
+.stage-topline{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:10px 12px;border-bottom:1px solid var(--line);background:var(--panel2)
+}
+.metric{min-width:0;padding:8px;border:1px solid var(--line);border-radius:9px;background:var(--bg)}
+.metric .k{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.metric .v{font-size:1rem;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stage{
+  position:relative;flex:1;min-height:430px;display:grid;place-items:center;overflow:hidden;
+  background:
+    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px),
+    radial-gradient(circle at 50% 40%,rgba(79,140,255,.09),transparent 55%);
+  background-size:28px 28px,28px 28px,auto
+}
+.calm .stage{background:linear-gradient(#00000008 1px,transparent 1px),linear-gradient(90deg,#00000008 1px,transparent 1px),#fbfdff;background-size:28px 28px}
+.stage-inner{width:100%;height:100%;min-height:430px;display:grid;place-items:center;padding:12px}
+.stage svg{width:100%;height:100%;max-height:520px;display:block}
+.stage-toolbar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;padding:10px;border-top:1px solid var(--line);background:var(--panel2)}
+.stage-note{position:absolute;left:12px;bottom:12px;max-width:72%;padding:7px 9px;border:1px solid var(--line);border-radius:9px;background:rgba(7,17,31,.85);font-size:.7rem;color:var(--muted)}
+.calm .stage-note{background:rgba(255,255,255,.92)}
+.data-panel{display:flex;flex-direction:column;min-height:650px}
+.data-body{display:flex;flex-direction:column;gap:10px;padding:12px;min-height:0}
+.readout{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:8px
+}
+.readout .tile{padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--panel2)}
+.readout .tile span{display:block;color:var(--muted);font-size:.66rem;text-transform:uppercase;letter-spacing:.05em}
+.readout .tile strong{display:block;margin-top:2px;font-size:1.1rem}
+.table-wrap{border:1px solid var(--line);border-radius:10px;overflow:auto;max-height:245px;background:var(--bg)}
+table{border-collapse:collapse;width:100%;font-size:.72rem}
+th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{position:sticky;top:0;background:var(--panel3);z-index:2;color:var(--muted);font-size:.65rem}
+th:first-child,td:first-child{text-align:left}
+tr.anomaly td{box-shadow:inset 3px 0 0 var(--amber);background:rgba(255,200,87,.07)}
+td.anomaly-cell{outline:2px solid var(--amber);outline-offset:-3px;background:rgba(255,200,87,.09)}
+.graph-card{height:245px;padding:8px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.graph-card canvas{width:100%;height:100%;display:block}
+.legend{display:flex;gap:8px;flex-wrap:wrap;color:var(--muted);font-size:.68rem}
+.legend span::before{content:"";display:inline-block;width:10px;height:3px;background:var(--legend,var(--cyan));margin-right:4px;vertical-align:middle;border-radius:5px}
+.empty{display:grid;place-items:center;min-height:140px;padding:18px;text-align:center;color:var(--muted);font-size:.78rem}
+.phase-dock{margin-top:14px;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--panel)}
+.phase-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 13px;border-bottom:1px solid var(--line)}
+.phase-head strong{font-size:.82rem}
+.timeline{display:flex;gap:4px;align-items:center;color:var(--muted);font-size:.7rem}
+.timeline .seg{height:7px;width:52px;border-radius:99px;background:var(--line)}
+.timeline .seg.on{background:var(--cyan)}
+.phases{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.phase{padding:12px 13px;min-height:185px;border-right:1px solid var(--line)}
+.phase:last-child{border-right:0}
+.phase h3{margin:0 0 6px;font-size:.82rem;display:flex;gap:7px;align-items:center}
+.phase-num{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--blue);color:white;font-size:.72rem}
+.phase .time{margin-left:auto;color:var(--muted);font-size:.65rem}
+.phase p{margin:5px 0 8px;color:var(--muted);font-size:.74rem}
+.answer-row{display:grid;grid-template-columns:1fr auto;gap:7px}
+.feedback{min-height:20px;margin-top:5px;font-size:.7rem;font-weight:750}
+.good{color:var(--green)}.warn{color:var(--amber)}.bad{color:var(--red)}
+.evidence-strip{
+  margin-top:12px;display:grid;grid-template-columns:minmax(160px,240px) 1fr auto;gap:9px;align-items:end;
+  padding:11px;border:1px solid var(--line);border-radius:12px;background:var(--panel)
+}
+.field label{display:block;margin-bottom:4px;color:var(--muted);font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;font-weight:800}
+.toast{
+  position:fixed;right:18px;bottom:18px;z-index:50;max-width:360px;padding:10px 13px;border:1px solid var(--line2);
+  border-radius:11px;background:var(--panel3);box-shadow:var(--shadow);font-size:.78rem;opacity:0;transform:translateY(8px);pointer-events:none;transition:.18s
+}
+.toast.show{opacity:1;transform:translateY(0)}
+.modal-backdrop{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.58);display:none;place-items:center;padding:16px}
+.modal-backdrop.open{display:grid}
+.modal{width:min(720px,100%);max-height:90vh;overflow:auto;background:var(--panel);border:1px solid var(--line2);border-radius:16px;box-shadow:var(--shadow)}
+.modal h2{margin:0;font-size:1rem}.modal-head,.modal-foot{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.modal-head{border-bottom:1px solid var(--line)}.modal-foot{border-top:1px solid var(--line)}
+.modal-body{padding:14px}.modal-body p,.modal-body li{color:var(--muted);font-size:.8rem}
+.help-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.help-card{padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--panel2)}
+.help-card h3{margin:0 0 5px;font-size:.78rem}
+.print-sheet{display:none}
+@media(max-width:1250px){
+  .topbar{grid-template-columns:1fr auto}.top-select{grid-column:1/-1;grid-row:2}.workbench{grid-template-columns:320px 1fr}.data-panel{grid-column:1/-1;min-height:auto}
+  .data-body{display:grid;grid-template-columns:1fr 1fr}.graph-card{height:270px}
+}
+@media(max-width:850px){
+  .topbar{position:relative;grid-template-columns:1fr}.top-select{grid-row:auto}.actions{justify-content:flex-start}
+  .shell{padding:8px}.workbench{grid-template-columns:1fr}.stage-panel,.data-panel{min-height:auto}.data-panel{grid-column:auto}
+  .data-body{display:flex}.stage-topline{grid-template-columns:repeat(2,1fr)}.phases{grid-template-columns:1fr}.phase{border-right:0;border-bottom:1px solid var(--line)}
+  .phase:last-child{border-bottom:0}.evidence-strip{grid-template-columns:1fr}.safety-strip{align-items:flex-start;flex-direction:column}.help-grid{grid-template-columns:1fr}
+}
+@media(max-width:520px){
+  .brand p{display:none}.actions button .txt{display:none}.actions button{min-width:46px;padding:8px}
+  .top-select{display:block}.top-select label{display:block;margin-bottom:5px}.stage{min-height:360px}.stage-inner{min-height:360px;padding:4px}
+  .readout{grid-template-columns:1fr 1fr}.answer-row{grid-template-columns:1fr}.answer-row button{width:100%}
+}
+@page{size:A4 portrait;margin:8mm}
+@media print{
+  body{background:#fff!important;color:#000!important}
+  .topbar,.safety-strip,.workbench,.phase-dock,.evidence-strip,.toast,.modal-backdrop{display:none!important}
+  .shell{padding:0!important;max-width:none!important}
+  .print-sheet{display:block!important;color:#000!important;font-family:Arial,sans-serif}
+  .print-sheet h1{font-size:15pt;margin:0}.print-sheet h2{font-size:10pt;margin:5mm 0 2mm;border-bottom:1px solid #000;padding-bottom:1mm}
+  .print-meta{display:grid;grid-template-columns:2fr 1fr 1fr;gap:4mm;font-size:8.5pt;margin-top:2mm}
+  .print-box{border:1px solid #000;padding:2.5mm;margin-top:2.5mm;font-size:8.5pt}
+  .print-sheet table{font-size:7.5pt;border-collapse:collapse}.print-sheet th,.print-sheet td{border:1px solid #555;padding:1.3mm;color:#000;background:#fff!important}
+  .print-graph{width:100%;max-height:72mm;object-fit:contain;border:1px solid #777;margin-top:2mm}
+  .print-lines{min-height:28mm;background:repeating-linear-gradient(0deg,transparent,transparent 7mm,#ccc 7.2mm);border:1px solid #777;margin-top:2mm}
+}
+/* ========================================================================== 
+   v0.3 SPATIAL DIRECT-MANIPULATION + MICROSCALE ENGINES
+   ========================================================================== */
+.audio-on{color:var(--green)!important}
+.audio-off{color:var(--muted)!important}
+.stage:has(.spatial-root),.stage:has(.micro-root){display:block;padding:0;min-height:560px}
+.spatial-root{position:absolute;inset:0;overflow:hidden;touch-action:none;background:
+  linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px),
+  radial-gradient(circle at 50% 20%,rgba(56,215,255,.08),transparent 55%);
+  background-size:32px 32px,32px 32px,auto}
+.calm .spatial-root{background:linear-gradient(#00000009 1px,transparent 1px),linear-gradient(90deg,#00000009 1px,transparent 1px),#fbfdff;background-size:32px 32px}
+.spatial-bench-rim{position:absolute;left:0;right:0;bottom:0;height:72px;background:linear-gradient(180deg,#31465f,#17283b);border-top:3px solid #49647e;box-shadow:0 -12px 28px rgba(0,0,0,.35)}
+.calm .spatial-bench-rim{background:linear-gradient(#d8e2eb,#c8d5e1);border-color:#a9b9c8}
+.spatial-node-layer{position:absolute;inset:0;z-index:5}
+.spatial-overlay{position:absolute;inset:0;width:100%;height:100%;z-index:12;pointer-events:none;overflow:visible}
+.spatial-node{position:absolute;transform-origin:50% 50%;cursor:grab;touch-action:none;filter:drop-shadow(0 9px 12px rgba(0,0,0,.32));will-change:left,top,transform}
+.spatial-node.dragging{cursor:grabbing;z-index:70!important;filter:drop-shadow(0 15px 18px rgba(0,0,0,.5))}
+.spatial-node.selected::after{content:"";position:absolute;inset:-7px;border:2px solid var(--cyan);border-radius:12px;box-shadow:0 0 0 3px rgba(56,215,255,.12);pointer-events:none}
+.spatial-node.snapped::before{content:"SNAP";position:absolute;left:50%;bottom:-18px;transform:translateX(-50%);font-size:8px;font-weight:900;letter-spacing:.08em;color:var(--green);background:var(--panel);padding:1px 4px;border-radius:4px;white-space:nowrap}
+.spatial-node svg{width:100%;height:100%;overflow:visible;pointer-events:none}
+.spatial-label{position:absolute;left:50%;top:100%;transform:translate(-50%,3px) rotate(calc(-1 * var(--node-angle,0deg)));font-size:9px;font-weight:850;color:var(--muted);background:rgba(7,17,31,.82);border:1px solid var(--line);border-radius:5px;padding:1px 4px;white-space:nowrap;pointer-events:none}
+.calm .spatial-label{background:rgba(255,255,255,.9)}
+.rotate-handle{position:absolute;right:-15px;top:-15px;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--panel3);border:2px solid var(--cyan);color:var(--cyan);font-size:15px;font-weight:900;cursor:crosshair;pointer-events:auto;transform:rotate(calc(-1 * var(--node-angle,0deg)))}
+.spatial-port{pointer-events:none}
+.spatial-tube-path{fill:none;stroke:#b9d5e5;stroke-width:8;stroke-linecap:round;filter:drop-shadow(0 3px 2px rgba(0,0,0,.3))}
+.spatial-tube-core{fill:none;stroke:#4d6b80;stroke-width:3;stroke-linecap:round;stroke-dasharray:7 6}
+.tube-handle{pointer-events:all;cursor:grab;fill:var(--panel3);stroke:var(--cyan);stroke-width:3}
+.tube-handle.connected{fill:var(--green)}
+.pour-stream{fill:none;stroke:#75d9ff;stroke-width:6;stroke-linecap:round;opacity:.75;filter:drop-shadow(0 0 4px rgba(56,215,255,.65))}
+.snap-ghost{fill:rgba(69,214,155,.08);stroke:var(--green);stroke-width:3;stroke-dasharray:7 6}
+.spill-puddle{stroke-width:2;opacity:.72}
+.spatial-manifold{position:absolute;left:18px;bottom:17px;z-index:25;display:flex;align-items:center;gap:8px;padding:7px 9px;border:1px solid var(--line2);border-radius:10px;background:rgba(7,17,31,.92);box-shadow:var(--shadow);font-size:.7rem;font-weight:850}
+.calm .spatial-manifold{background:rgba(255,255,255,.94)}
+.spatial-manifold button{min-height:36px;padding:5px 9px}
+.spatial-pilot{position:absolute;right:24px;bottom:14px;z-index:20;display:flex;align-items:flex-end;gap:7px;color:var(--amber);font-size:.62rem;font-weight:900;text-transform:uppercase;letter-spacing:.05em}
+.pilot-flame{width:22px;height:34px;position:relative;filter:drop-shadow(0 0 8px rgba(255,200,87,.55))}
+.pilot-flame::before{content:"";position:absolute;inset:0;background:linear-gradient(#fff6b7,#ff9f2e);clip-path:polygon(50% 0,76% 38%,92% 70%,72% 100%,28% 100%,7% 70%,25% 38%);border-radius:50%}
+.spatial-guide{position:absolute;left:12px;top:12px;z-index:20;max-width:360px;padding:7px 9px;border:1px solid var(--line);border-radius:9px;background:rgba(7,17,31,.82);font-size:.68rem;color:var(--muted);pointer-events:none}
+.calm .spatial-guide{background:rgba(255,255,255,.91)}
+.spatial-hazard{position:absolute;left:50%;top:12px;z-index:30;transform:translateX(-50%);max-width:65%;padding:7px 11px;border-radius:9px;border:1px solid var(--amber);background:rgba(69,39,7,.92);color:#ffe7ac;font-size:.72rem;font-weight:850;text-align:center;opacity:0;pointer-events:none;transition:.18s}
+.spatial-hazard.show{opacity:1}.spatial-hazard.critical{border-color:var(--red);background:rgba(88,20,29,.94);color:#ffd5d9}
+.trolley-grid-pro{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.trolley-card{min-height:74px;padding:7px 5px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px;text-align:center;font-size:.66rem;background:var(--bg);border:1px solid var(--line);border-radius:9px;color:var(--text);cursor:pointer}
+.trolley-card:hover{border-color:var(--cyan);background:rgba(56,215,255,.07)}
+.trolley-card .ico{font-size:1.35rem;line-height:1}.trolley-card small{display:block;color:var(--muted);font-size:.58rem}
+.reagent-card{display:grid;grid-template-columns:auto 1fr auto;gap:7px;align-items:center;min-height:52px;padding:7px;border:1px solid var(--line);border-radius:9px;background:var(--bg);cursor:pointer}
+.reagent-card:hover{border-color:var(--cyan)}.reagent-card .bottle-dot{width:19px;height:30px;border:2px solid #a9c8da;border-radius:5px 5px 8px 8px;background:var(--liquid,rgba(255,255,255,.1));box-shadow:inset 0 -12px 0 var(--liquid,rgba(255,255,255,.1))}
+.reagent-card strong{font-size:.7rem}.reagent-card span{font-size:.58rem;color:var(--muted)}.hazard-chip{font-size:.55rem!important;color:var(--amber)!important;border:1px solid rgba(255,200,87,.45);border-radius:4px;padding:2px 3px}
+.rig-tree{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.68rem;line-height:1.55;color:var(--muted)}
+.rig-tree strong{color:var(--text)}
+.event-log{display:flex;flex-direction:column;gap:5px;max-height:180px;overflow:auto}
+.event-item{padding:6px 7px;border:1px solid var(--line);border-radius:7px;background:var(--bg);font-size:.66rem;color:var(--muted)}
+.event-item.warn{border-left:3px solid var(--amber)}.event-item.bad{border-left:3px solid var(--red)}.event-item.good{border-left:3px solid var(--green)}
+.inspector-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}.inspector-actions button{min-height:38px;padding:5px 7px;font-size:.7rem}
+.chem-vector{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.64rem;color:var(--muted);line-height:1.55;white-space:normal;word-break:break-word}
+.progress-list{display:flex;flex-direction:column;gap:5px}.progress-step{display:flex;gap:7px;align-items:flex-start;font-size:.68rem;color:var(--muted)}.progress-step::before{content:"○";color:var(--faint);font-weight:900}.progress-step.done::before{content:"✓";color:var(--green)}
+.teacher-faults summary{cursor:pointer;color:var(--violet);font-size:.72rem;font-weight:850}.teacher-faults .fault-grid{display:flex;flex-direction:column;gap:6px;margin-top:8px}.teacher-faults label{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:.67rem;color:var(--muted)}
+.diagram-stage{display:grid;place-items:center;min-height:330px;background:#fff;border:1px solid #b7c0c8;border-radius:10px;padding:12px;color:#000}.diagram-stage svg{width:100%;height:auto;max-height:480px}.diagram-actions{display:flex;gap:7px;flex-wrap:wrap}
+.micro-root{position:absolute;inset:0;display:grid;place-items:center;padding:14px;overflow:auto;background:radial-gradient(circle at 50% 30%,rgba(255,255,255,.05),transparent 55%)}
+.micro-plate{width:min(620px,95%);padding:25px;border-radius:20px;background:#f7f9fb;border:3px solid #d6dfe7;box-shadow:0 22px 38px rgba(0,0,0,.38),inset 0 3px 5px #fff,inset 0 -5px 9px #b8c4cf;display:grid;grid-template-columns:repeat(4,1fr);gap:17px;color:#152334}
+.micro-well{aspect-ratio:1;border-radius:50%;position:relative;overflow:hidden;cursor:pointer;background:radial-gradient(circle at 38% 32%,#fff,#edf2f6 58%,#bac5cf 100%);box-shadow:inset 0 7px 12px rgba(0,0,0,.36),0 2px 3px rgba(0,0,0,.18);transition:.12s}
+.micro-well:hover{transform:scale(1.03);box-shadow:inset 0 7px 12px rgba(0,0,0,.4),0 0 0 4px rgba(56,215,255,.65)}.micro-well.selected{box-shadow:inset 0 7px 12px rgba(0,0,0,.4),0 0 0 4px var(--amber)}
+.micro-well .well-name{position:absolute;left:50%;top:7px;transform:translateX(-50%);font:900 10px ui-monospace;color:#68798a;z-index:5}.micro-liquid{position:absolute;inset:9px;border-radius:50%;background:var(--well-color,transparent);transform:scale(var(--fill-scale,.45));transition:.22s;display:grid;place-items:center}.micro-ppt{width:54%;height:42%;border-radius:48% 52% 57% 43%;background:var(--ppt,#fff);filter:blur(1.2px);opacity:.95;box-shadow:0 4px 7px rgba(0,0,0,.25)}
+.micro-bubble{position:absolute;width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.9);animation:microRise .8s infinite ease-in}.micro-bubble:nth-child(2){left:62%;animation-delay:.18s;width:5px;height:5px}.micro-bubble:nth-child(3){left:40%;animation-delay:.36s;width:6px;height:6px}
+@keyframes microRise{0%{transform:translateY(18px) scale(.4);opacity:0}45%{opacity:1}100%{transform:translateY(-18px) scale(1.15);opacity:0}}
+.calm .micro-bubble{animation:none;opacity:.75}.micro-active{padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);font-size:.68rem;color:var(--muted)}
+.micro-rack{display:flex;flex-direction:column;gap:6px}.micro-dropper{display:grid;grid-template-columns:10px 1fr auto;gap:7px;align-items:center;padding:7px;border:1px solid var(--line);border-radius:8px;background:var(--bg);cursor:pointer}.micro-dropper.active{border-color:var(--cyan);box-shadow:0 0 0 2px rgba(56,215,255,.12)}.micro-dropper .dot{width:10px;height:28px;border-radius:5px;background:var(--drop-color,#fff);border:1px solid rgba(255,255,255,.4)}.micro-dropper strong{font-size:.68rem}.micro-dropper small{font-size:.56rem;color:var(--muted)}
+.micro-observation{padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);font-size:.7rem;color:var(--muted)}
+.micro-key{font-size:.62rem}.micro-key td,.micro-key th{white-space:normal;text-align:left}
+.transient-pink{animation:pinkFade 1.5s ease-out forwards}@keyframes pinkFade{0%{opacity:.8}100%{opacity:0}}
+.swirl-ring{transform-origin:center;animation:swirl .6s ease-out}@keyframes swirl{to{transform:rotate(360deg)}}
+@media(max-width:1250px){.stage:has(.spatial-root),.stage:has(.micro-root){min-height:620px}}
+@media(max-width:850px){.stage:has(.spatial-root),.stage:has(.micro-root){min-height:680px}.spatial-guide{max-width:58%}.micro-plate{gap:10px;padding:16px}}
+@media(max-width:520px){.spatial-guide{display:none}.spatial-manifold{left:7px}.spatial-pilot{right:8px}.micro-plate{grid-template-columns:repeat(3,1fr);gap:8px;padding:10px}}
+@media print{.diagram-stage{border:1px solid #000}.micro-plate{box-shadow:none!important;border:2px solid #000!important}.micro-well{box-shadow:none!important;border:1px solid #999}}
+
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark" aria-hidden="true">⚗</div>
+    <div>
+      <h1>Virtual Chemistry Lab PRO v0.3</h1>
+      <p>Spatial sandbox · microscale analysis · structured practicals · offline and local-first</p>
+    </div>
+  </div>
+  <div class="top-select">
+    <label for="benchSelect">Chemistry bench</label>
+    <select id="benchSelect" aria-label="Select chemistry practical">
+      <option value="spatial">Spatial Sandbox · Direct Manipulation</option>
+      <option value="microscale">Microscale · 12-Well Qualitative Analysis</option>
+      <option value="rates">Rates · Gas Syringe</option>
+      <option value="titration">Titration · Strong Acid / Alkali</option>
+      <option value="gastest">Gas Tests · Unknown Identification</option>
+    </select>
+  </div>
+  <div class="actions">
+    <button class="btn-ghost" id="calmBtn" title="Toggle Calm Mode">☼ <span class="txt">Calm</span></button>
+    <button class="btn-ghost" id="noiseBtn" title="Toggle authentic measurement noise">≈ <span class="txt">Noise</span></button>
+    <button class="btn-ghost audio-on" id="audioBtn" title="Toggle procedural laboratory audio">🔊 <span class="txt">Audio</span></button>
+    <button class="btn-ghost" id="shareBtn" title="Copy resumable URL">🔗 <span class="txt">Share</span></button>
+    <button class="btn-ghost" id="printBtn" title="Print current lab record">🖨 <span class="txt">Print</span></button>
+    <button class="btn-ghost" id="helpBtn" title="How this virtual lab works">? <span class="txt">Guide</span></button>
+  </div>
+</header>
+
+<main class="shell">
+  <div class="safety-strip">
+    <span><strong>Virtual practical boundary:</strong> this simulator develops planning, observation, data handling and scientific reasoning. It does not certify hands-on competence with chemicals, glassware or real safety procedures.</span>
+    <span class="mono">local-only · no login · no external files</span>
+  </div>
+
+  <section class="workbench" aria-label="Virtual chemistry laboratory">
+    <aside class="panel">
+      <div class="panel-head"><h2>1 · Apparatus Trolley</h2><span class="status" id="leftStatus">Setup</span></div>
+      <div class="panel-body stack" id="controlsPane"></div>
+    </aside>
+
+    <section class="panel stage-panel">
+      <div class="panel-head"><h2 id="stageTitle">2 · Interactive Bench</h2><span class="status" id="stageStatus">Ready</span></div>
+      <div class="stage-topline" id="metricBar"></div>
+      <div class="stage" id="stagePane"></div>
+      <div class="stage-toolbar" id="stageToolbar"></div>
+    </section>
+
+    <aside class="panel data-panel">
+      <div class="panel-head"><h2>3 · Measurement & Data HUD</h2><span class="status" id="dataStatus">Evidence</span></div>
+      <div class="data-body" id="dataPane"></div>
+    </aside>
+  </section>
+
+  <section class="phase-dock" aria-label="40 minute lesson arc">
+    <div class="phase-head">
+      <strong>4 · 40-minute lesson arc</strong>
+      <div class="timeline" aria-label="Introduce 10 minutes, Explore 15 minutes, Do 15 minutes">
+        <span>0</span><span class="seg on"></span><span>10</span><span class="seg on"></span><span>25</span><span class="seg on"></span><span>40 min</span>
+      </div>
+    </div>
+    <div class="phases" id="phasePane"></div>
+  </section>
+
+  <section class="evidence-strip">
+    <div class="field">
+      <label for="pupilName">Pupil / learner name (optional)</label>
+      <input id="pupilName" type="text" maxlength="70" autocomplete="off" placeholder="Name for print/export only">
+    </div>
+    <div class="field">
+      <label for="reflectionNotes">Evidence note / conclusion</label>
+      <textarea id="reflectionNotes" placeholder="What changed? What did you observe? Why did it happen?"></textarea>
+    </div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap">
+      <button id="exportBtn">⬇ Export JSON</button>
+      <button id="clearBtn" class="btn-danger">↺ Reset Bench</button>
+    </div>
+  </section>
+
+  <section id="printSheet" class="print-sheet"></section>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<div class="modal-backdrop" id="helpModal" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="helpTitle">Using the Virtual Chemistry Lab</h2>
+      <button id="closeHelp" class="icon-btn" aria-label="Close guide">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="help-grid">
+        <div class="help-card"><h3>Introduce · 0–10 min</h3><p>Make a prediction, identify variables or technique decisions, and inspect the apparatus before collecting evidence.</p></div>
+        <div class="help-card"><h3>Explore · 10–25 min</h3><p>Change one factor, run repeats, use authentic-noise mode if appropriate, and record observations/data.</p></div>
+        <div class="help-card"><h3>Do · 25–40 min</h3><p>Calculate, interpret graphs, identify concordance/anomalies, and write a scientific explanation or exam-style response.</p></div>
+        <div class="help-card"><h3>Calm Mode</h3><p>Removes rapid visual movement and uses a light, lower-stimulation interface. Core results stay the same.</p></div>
+        <div class="help-card"><h3>Share</h3><p>Encodes the current bench, settings and logged evidence into the URL fragment. No account or server is required.</p></div>
+        <div class="help-card"><h3>Evidence</h3><p>Print a practical record, copy data as TSV, generate an exam schematic or export local JSON. Nothing is uploaded automatically.</p></div>
+        <div class="help-card"><h3>Spatial Sandbox</h3><p>Drag, snap, rotate, pour, heat, connect flexible tubing and allow mistakes to produce diagnostic virtual consequences.</p></div>
+        <div class="help-card"><h3>Microscale Analysis</h3><p>Use separate wells and correct acidification sequences to avoid false positives in qualitative ion tests.</p></div>
+      </div>
+      <p><strong>Teacher note:</strong> this prototype intentionally avoids instructions for unsupervised home chemistry. Apparatus behaviour and observations are simulated, not an invitation to recreate procedures outside a suitably managed laboratory.</p>
+    </div>
+    <div class="modal-foot"><span style="color:var(--muted);font-size:.75rem">Prototype v0.3 · zero dependency · spatial chemistry engine</span><button id="closeHelp2">Close</button></div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="diagramModal" role="dialog" aria-modal="true" aria-labelledby="diagramTitle">
+  <div class="modal" style="width:min(920px,100%)">
+    <div class="modal-head"><h2 id="diagramTitle">Exam-Standard Apparatus Diagram</h2><button id="closeDiagram" class="icon-btn" aria-label="Close diagram">×</button></div>
+    <div class="modal-body"><div class="diagram-stage" id="diagramStage"></div></div>
+    <div class="modal-foot"><span style="color:var(--muted);font-size:.75rem">Generated procedurally from the active apparatus hierarchy.</span><div class="diagram-actions"><button id="downloadDiagram">⬇ Download SVG</button><button id="closeDiagram2">Close</button></div></div>
+  </div>
+</div>
+
+<script>
+(() => {
+"use strict";
+
+const $ = (s,root=document)=>root.querySelector(s);
+const $$ = (s,root=document)=>[...root.querySelectorAll(s)];
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const round=(v,d=1)=>Number(v.toFixed(d));
+const fmt=(v,d=1)=>Number.isFinite(v)?v.toFixed(d):"—";
+const nowISO=()=>new Date().toISOString();
+const gasMolarVolumeCm3=24000;
+const molarMassCaCO3=100.0869;
+
+function gaussian(){
+  let u=0,v=0;
+  while(u===0)u=Math.random();
+  while(v===0)v=Math.random();
+  return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);
+}
+function mean(arr){ return arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:NaN; }
+function sd(arr){ if(arr.length<2)return 0; const m=mean(arr); return Math.sqrt(arr.reduce((s,x)=>s+(x-m)**2,0)/(arr.length-1)); }
+function escapeHTML(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));}
+function stableId(prefix="run"){return prefix+"_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,7);}
+function toast(msg){
+  const t=$("#toast"); t.textContent=msg; t.classList.add("show");
+  clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("show"),2200);
+}
+function base64urlEncode(obj){
+  const json=JSON.stringify(obj);
+  const bytes=new TextEncoder().encode(json);
+  let bin=""; bytes.forEach(b=>bin+=String.fromCharCode(b));
+  return btoa(bin).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+}
+function base64urlDecode(s){
+  s=s.replace(/-/g,"+").replace(/_/g,"/");
+  while(s.length%4)s+="=";
+  const bin=atob(s), bytes=Uint8Array.from(bin,c=>c.charCodeAt(0));
+  return JSON.parse(new TextDecoder().decode(bytes));
+}
+function copyText(text){
+  if(navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
+  return new Promise(resolve=>{
+    const ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.opacity="0";
+    document.body.appendChild(ta);ta.select();try{document.execCommand("copy");}catch(e){}
+    ta.remove();resolve();
+  });
+}
+function download(name,text,type="application/json"){
+  const blob=new Blob([text],{type}),url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+/* --------------------------------------------------------------------------
+   v0.3 Procedural audio and extended bench state
+   -------------------------------------------------------------------------- */
+const LabAudio={
+  ctx:null,enabled:true,loops:{},master:null,
+  init(){
+    if(!this.enabled)return null;
+    const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;
+    if(!this.ctx){this.ctx=new AC();this.master=this.ctx.createGain();this.master.gain.value=.42;this.master.connect(this.ctx.destination);}
+    if(this.ctx.state==="suspended")this.ctx.resume();return this.ctx;
+  },
+  tone(freq=440,dur=.12,type="sine",gain=.16,endFreq=null){
+    const c=this.init();if(!c)return;const t=c.currentTime,o=c.createOscillator(),g=c.createGain();
+    o.type=type;o.frequency.setValueAtTime(Math.max(20,freq),t);if(endFreq)o.frequency.exponentialRampToValueAtTime(Math.max(20,endFreq),t+dur);
+    g.gain.setValueAtTime(gain,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g);g.connect(this.master);o.start(t);o.stop(t+dur+.02);
+  },
+  noise(dur=.2,frequency=700,q=1.2,gain=.12,kind="bandpass"){
+    const c=this.init();if(!c)return;const t=c.currentTime,n=Math.max(1,Math.floor(c.sampleRate*dur)),b=c.createBuffer(1,n,c.sampleRate),d=b.getChannelData(0);
+    for(let i=0;i<n;i++)d[i]=Math.random()*2-1;const s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();s.buffer=b;f.type=kind;f.frequency.value=frequency;f.Q.value=q;g.gain.setValueAtTime(gain,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);s.connect(f);f.connect(g);g.connect(this.master);s.start(t);s.stop(t+dur+.02);
+  },
+  drop(){this.tone(620,.09,"sine",.13,1700);},
+  clink(){this.tone(1240,.08,"triangle",.08,760);setTimeout(()=>this.tone(870,.07,"sine",.05,520),28);},
+  fizz(){this.noise(.65,1450,3,.14,"bandpass");},
+  rinse(){this.noise(.35,560,.7,.14,"lowpass");},
+  pop(){this.tone(1400,.14,"sine",.35,220);this.noise(.09,900,1.4,.16,"bandpass");},
+  success(){[523.25,659.25,783.99].forEach((f,i)=>setTimeout(()=>this.tone(f,.22,"sine",.11),i*60));},
+  error(){this.tone(135,.22,"sawtooth",.13,105);},
+  startLoop(name,mode="hiss",level=.08){
+    if(!this.enabled||this.loops[name])return;const c=this.init();if(!c)return;const n=c.sampleRate*2,b=c.createBuffer(1,n,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=Math.random()*2-1;
+    const s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();s.buffer=b;s.loop=true;f.type="bandpass";f.frequency.value=mode==="roar"?430:mode==="flame"?240:900;f.Q.value=mode==="roar"?1.8:1;g.gain.value=level;s.connect(f);f.connect(g);g.connect(this.master);s.start();this.loops[name]={s,f,g};
+  },
+  updateLoop(name,mode,level){const L=this.loops[name];if(!L)return;L.f.frequency.setTargetAtTime(mode==="roar"?430:mode==="flame"?240:900,this.ctx.currentTime,.08);L.g.gain.setTargetAtTime(level,this.ctx.currentTime,.08);},
+  stopLoop(name){const L=this.loops[name];if(!L)return;try{L.g.gain.setTargetAtTime(.001,this.ctx.currentTime,.04);setTimeout(()=>{try{L.s.stop()}catch(e){}},180);}catch(e){}delete this.loops[name];},
+  stopAll(){Object.keys(this.loops).forEach(k=>this.stopLoop(k));}
+};
+
+function makeSpatialState(){
+  return {
+    mission:"heating",nodes:[],tubes:[],spills:[],events:[],selectedId:null,nextId:1,gasTap:false,gasExposure:0,elapsed:0,timeScale:4,
+    snapHint:null,pouring:null,examSVG:"",teacher:{balanceDrift:0,gasLeak:0,blockedTube:false,wetGlassware:false,carbonateNaOH:false},
+    achievements:{safeLight:false,blueFlame:false,heated60:false,tared:false,poured:false,saltBlue:false,filtered:false,gasCollected:false,bungPopped:false,boiledDry:false}
+  };
+}
+function makeMicroState(){
+  return {
+    active:"sample_mystery",selected:0,mysteryCode:"M-01",mysteryKey:"FeCl3",events:[],
+    wells:Array.from({length:12},(_,i)=>({id:i,name:["A1","A2","A3","A4","B1","B2","B3","B4","C1","C2","C3","C4"][i],drops:[],colour:"transparent",ppt:null,fizzUntil:0,pH:7,observation:"Empty well",warnings:[]}))
+  };
+}
+
+const initialState = () => ({
+  version:"0.3",
+  bench:"spatial",
+  calm:false,
+  noise:true,
+  audio:true,
+  pupil:"",
+  notes:"",
+  phaseAnswers:{spatial:["","",""],microscale:["","",""],rates:["","",""],titration:["","",""],gastest:["","",""]},
+  spatial:makeSpatialState(),
+  micro:makeMicroState(),
+  rates:{
+    focus:"concentration",conc:1.0,form:"chips",temp:20,mass:0.25,acidVol:25,
+    running:false,simTime:0,currentVol:0,lastAuto:0,activeRun:null,runs:[]
+  },
+  titration:{
+    sampleCode:"A17",baseConc:0.100,acidVol:25.0,startReading:0.20,added:0,
+    rough:true,runs:[],lastResult:"",resultTone:"",revealed:false,transientPinkUntil:0,swirlCount:0
+  },
+  gastest:{
+    sampleCode:"G-21",unknownIndex:0,tests:[],lastTest:null,identified:"",locked:false
+  }
+});
+
+let state=initialState();
+let rateRAF=0,rateLastReal=0;
+const gasNames=["Hydrogen","Oxygen","Carbon dioxide"];
+const gasKeys=["hydrogen","oxygen","carbon-dioxide"];
+const gasTests={
+  "burning-splint":{
+    label:"Burning splint",
+    hydrogen:"A short squeaky pop is heard.",
+    oxygen:"The splint continues to burn; it is not the characteristic oxygen test.",
+    "carbon-dioxide":"The flame is extinguished."
+  },
+  "glowing-splint":{
+    label:"Glowing splint",
+    hydrogen:"No relighting; this is not the characteristic hydrogen test.",
+    oxygen:"The glowing splint relights brightly.",
+    "carbon-dioxide":"The glowing splint is extinguished."
+  },
+  limewater:{
+    label:"Bubble through limewater",
+    hydrogen:"The limewater remains clear.",
+    oxygen:"The limewater remains clear.",
+    "carbon-dioxide":"The limewater turns milky/cloudy."
+  }
+};
+
+function sampleAcidConc(code){
+  let n=0; for(const c of code)n=(n*31+c.charCodeAt(0))>>>0;
+  const vals=[0.084,0.092,0.100,0.108,0.116];
+  return vals[n%vals.length];
+}
+function gasIndexFromCode(code){
+  let n=0; for(const c of code)n=(n*17+c.charCodeAt(0))>>>0;
+  return n%3;
+}
+state.gastest.unknownIndex=gasIndexFromCode(state.gastest.sampleCode);
+
+const dom={
+  bench:$("#benchSelect"),controls:$("#controlsPane"),stage:$("#stagePane"),toolbar:$("#stageToolbar"),
+  data:$("#dataPane"),phases:$("#phasePane"),metrics:$("#metricBar"),stageTitle:$("#stageTitle"),
+  stageStatus:$("#stageStatus"),leftStatus:$("#leftStatus"),dataStatus:$("#dataStatus"),
+  pupil:$("#pupilName"),notes:$("#reflectionNotes"),calm:$("#calmBtn"),noise:$("#noiseBtn"),audio:$("#audioBtn"),
+  share:$("#shareBtn"),print:$("#printBtn"),help:$("#helpBtn"),export:$("#exportBtn"),clear:$("#clearBtn"),
+  modal:$("#helpModal"),diagramModal:$("#diagramModal"),printSheet:$("#printSheet")
+};
+
+const chipsMeta={
+  large:{label:"Large chips",factor:.72},
+  chips:{label:"Small chips",factor:1.00},
+  powder:{label:"Powder",factor:1.85}
+};
+
+function ratesVmax(){
+  const molesSolid=state.rates.mass/molarMassCaCO3;
+  const molesAcid=state.rates.conc*(state.rates.acidVol/1000);
+  const molesCO2=Math.min(molesSolid,molesAcid/2);
+  return molesCO2*gasMolarVolumeCm3;
+}
+function ratesK(){
+  const r=state.rates;
+  const arrhenius=Math.pow(2,(r.temp-20)/10);
+  return .024*Math.pow(r.conc,1.05)*chipsMeta[r.form].factor*arrhenius;
+}
+function theoreticalVolume(t){
+  return ratesVmax()*(1-Math.exp(-ratesK()*t));
+}
+function rateConditionKey(){
+  const r=state.rates;return [r.conc.toFixed(2),r.form,r.temp,r.mass.toFixed(2),r.acidVol].join("|");
+}
+function rateConditionLabel(runLike=state.rates){
+  const r=runLike;
+  return `${Number(r.conc).toFixed(1)} M · ${chipsMeta[r.form]?.label||r.form} · ${r.temp} °C`;
+}
+function measuredRatePoint(t){
+  let v=theoreticalVolume(t);
+  if(state.noise && t>0){
+    const sigma=Math.max(.18,v*.012);
+    v+=gaussian()*sigma;
+  }
+  return clamp(v,0,ratesVmax());
+}
+function currentRateGroup(){
+  const key=rateConditionKey();
+  return state.rates.runs.filter(r=>r.key===key).slice(-3);
+}
+function ensureActiveRateRun(){
+  if(state.rates.activeRun)return state.rates.activeRun;
+  const r=state.rates;
+  const run={
+    id:stableId("rate"),key:rateConditionKey(),conc:r.conc,form:r.form,temp:r.temp,mass:r.mass,acidVol:r.acidVol,
+    created:nowISO(),points:[{t:0,v:0,theory:0}]
+  };
+  state.rates.runs.push(run);state.rates.activeRun=run;return run;
+}
+function addRatePoint(t,force=false){
+  const run=ensureActiveRateRun();
+  const snapped=force?round(t,1):Math.round(t/10)*10;
+  if(run.points.some(p=>Math.abs(p.t-snapped)<.15))return;
+  const theory=theoreticalVolume(snapped),v=measuredRatePoint(snapped);
+  run.points.push({t:snapped,v:round(v,1),theory:round(theory,1)});
+  run.points.sort((a,b)=>a.t-b.t);
+}
+function startRates(){
+  if(state.rates.running)return;
+  if(state.rates.simTime>=120)resetRateApparatus(true);
+  ensureActiveRateRun();
+  state.rates.running=true;rateLastReal=performance.now();rateRAF=requestAnimationFrame(rateLoop);
+  renderBench();
+}
+function rateLoop(ts){
+  if(!state.rates.running)return;
+  const dt=Math.min(.08,(ts-rateLastReal)/1000);rateLastReal=ts;
+  state.rates.simTime=clamp(state.rates.simTime+dt*4,0,120);
+  const theory=theoreticalVolume(state.rates.simTime);
+  const shimmer=(state.noise&&!state.calm)?Math.sin(state.rates.simTime*2.7)*Math.min(.28,theory*.004):0;
+  state.rates.currentVol=clamp(theory+shimmer,0,ratesVmax());
+  const decade=Math.floor(state.rates.simTime/10)*10;
+  if(decade>state.rates.lastAuto && decade<=120){
+    addRatePoint(decade);state.rates.lastAuto=decade;
+    renderRatesDataOnly();
+  }
+  updateRateLiveDOM();
+  if(state.rates.simTime>=120){
+    addRatePoint(120);state.rates.running=false;cancelAnimationFrame(rateRAF);state.rates.currentVol=theoreticalVolume(120);renderBench();syncHash();
+    return;
+  }
+  rateRAF=requestAnimationFrame(rateLoop);
+}
+function stopRates(){state.rates.running=false;cancelAnimationFrame(rateRAF);renderBench();}
+function resetRateApparatus(advance=true){
+  state.rates.running=false;cancelAnimationFrame(rateRAF);
+  if(advance && state.rates.activeRun && state.rates.activeRun.points.length>1) state.rates.activeRun=null;
+  state.rates.simTime=0;state.rates.currentVol=0;state.rates.lastAuto=0;
+  renderBench();syncHash();
+}
+function clearRateRuns(){state.rates.runs=[];state.rates.activeRun=null;resetRateApparatus(false);}
+function rateAnomaly(p){
+  if(!state.noise||p.t===0)return false;
+  return Math.abs(p.v-p.theory)>Math.max(.6,p.theory*.025);
+}
+
+function titrationPH(){
+  const t=state.titration,cA=sampleAcidConc(t.sampleCode),va=t.acidVol/1000,vb=t.added/1000,cB=t.baseConc;
+  const na=cA*va,nb=cB*vb,V=va+vb;
+  if(Math.abs(na-nb)<1e-9)return 7;
+  if(na>nb)return clamp(-Math.log10((na-nb)/V),0,14);
+  const pOH=-Math.log10((nb-na)/V);return clamp(14-pOH,0,14);
+}
+function titreEquivalence(){
+  const t=state.titration;return sampleAcidConc(t.sampleCode)*t.acidVol/t.baseConc;
+}
+function titrationColour(ph=titrationPH()){
+  if(ph<8.2)return {name:"colourless",fill:"rgba(230,242,255,.55)"};
+  if(ph<10.2)return {name:"very pale pink",fill:"rgba(255,177,215,.45)"};
+  return {name:"deep pink",fill:"rgba(255,62,155,.72)"};
+}
+function dispense(v){
+  const t=state.titration;
+  if(t.added+v>50-t.startReading){toast("Burette capacity reached.");return;}
+  t.added=round(t.added+v,2);const eq=titreEquivalence();
+  if(t.added<eq&&t.added>eq-.45){t.transientPinkUntil=Date.now()+1500;setTimeout(()=>{if(state.bench==="titration"&&Date.now()>=state.titration.transientPinkUntil)renderBench();},1520);}
+  t.lastResult=`Added ${v.toFixed(2)} cm³`;t.resultTone="";LabAudio.drop();
+  renderBench();syncHash();
+}
+function swirlTitration(){const t=state.titration;t.swirlCount++;if(t.added<titreEquivalence())t.transientPinkUntil=0;t.lastResult=t.added<titreEquivalence()?"Swirled: transient pink cleared into the bulk solution.":"Swirled: faint pink remains at or beyond the endpoint.";t.resultTone=t.added<titreEquivalence()?"good":"warn";LabAudio.noise(.18,620,1,.08,"bandpass");renderBench();syncHash();}
+function recordTitre(){
+  const t=state.titration,final=t.startReading+t.added,eq=titreEquivalence(),ph=titrationPH(),col=titrationColour(ph);
+  if(t.added<1){toast("Add titrant before recording a titre.");return;}
+  const overshoot=t.added>eq+0.35;
+  t.runs.push({
+    id:stableId("titre"),rough:t.rough,start:round(t.startReading,2),final:round(final,2),titre:round(t.added,2),
+    pH:round(ph,2),colour:col.name,overshoot,created:nowISO()
+  });
+  t.lastResult=overshoot?"Recorded — likely overshot endpoint.":"Titre recorded.";
+  t.resultTone=overshoot?"warn":"good";
+  newTitrationRun();
+}
+function newTitrationRun(){
+  const t=state.titration;
+  t.rough=t.runs.length===0;
+  t.startReading=round(0.10+((t.runs.length*0.17)%0.70),2);
+  t.added=0;t.transientPinkUntil=0;
+  renderBench();syncHash();
+}
+function concordantTitres(){
+  const vals=state.titration.runs.filter(r=>!r.rough&&!r.overshoot).map(r=>r.titre);
+  if(vals.length<2)return [];
+  let best=[];
+  for(let i=0;i<vals.length;i++)for(let j=i+1;j<vals.length;j++){
+    if(Math.abs(vals[i]-vals[j])<=.20){
+      const pair=[vals[i],vals[j]];
+      const extras=vals.filter((v,k)=>k!==i&&k!==j&&Math.abs(v-mean(pair))<=.20);
+      const group=[...pair,...extras];
+      if(group.length>best.length)best=group;
+    }
+  }
+  return best;
+}
+function resetTitration(){
+  const code=state.titration.sampleCode,base=state.titration.baseConc;
+  state.titration={sampleCode:code,baseConc:base,acidVol:25,startReading:.20,added:0,rough:true,runs:[],lastResult:"",resultTone:"",revealed:false,transientPinkUntil:0,swirlCount:0};
+  renderBench();syncHash();
+}
+
+function newGasUnknown(){
+  const n=parseInt(state.gastest.sampleCode.replace(/\D/g,"")||"21",10)+1;
+  state.gastest.sampleCode=`G-${String(n).padStart(2,"0")}`;
+  state.gastest.unknownIndex=gasIndexFromCode(state.gastest.sampleCode);
+  state.gastest.tests=[];state.gastest.lastTest=null;state.gastest.identified="";state.gastest.locked=false;
+  renderBench();syncHash();
+}
+function performGasTest(kind){
+  const g=state.gastest,key=gasKeys[g.unknownIndex],test=gasTests[kind];
+  const result=test[key];
+  if(kind==="burning-splint"&&key==="hydrogen")LabAudio.pop();else if(kind==="glowing-splint"&&key==="oxygen")LabAudio.success();else if(kind==="limewater"&&key==="carbon-dioxide")LabAudio.fizz();else LabAudio.tone(380,.12,"triangle",.06,250);
+  g.tests.push({id:stableId("gas"),test:kind,label:test.label,result,created:nowISO()});
+  g.lastTest={kind,label:test.label,result};renderBench();syncHash();
+}
+function submitGasIdentity(){
+  const sel=$("#gasIdentity"); if(!sel)return;
+  state.gastest.identified=sel.value;
+  const correct=sel.value===gasKeys[state.gastest.unknownIndex];
+  state.gastest.locked=correct;
+  toast(correct?"Correct identification supported by the test evidence.":"Not yet — use another characteristic gas test.");
+  renderBench();syncHash();
+}
+function resetGasTests(){
+  state.gastest.tests=[];state.gastest.lastTest=null;state.gastest.identified="";state.gastest.locked=false;renderBench();syncHash();
+}
+
+/* --------------------------------------------------------------------------
+   v0.3 Spatial direct-manipulation chemistry engine
+   -------------------------------------------------------------------------- */
+const spatialDefs={
+  mat:{label:"Heatproof mat",w:150,h:30,icon:"▰"},bunsen:{label:"Bunsen burner",w:78,h:150,icon:"♨"},tripod:{label:"Tripod",w:140,h:150,icon:"△"},gauze:{label:"Wire gauze",w:108,h:20,icon:"▦"},
+  beaker:{label:"250 cm³ beaker",w:96,h:118,icon:"▱",vessel:true,capacity:250,emptyMass:112.4,glassMass:112.4},cylinder:{label:"100 cm³ cylinder",w:68,h:150,icon:"▯",vessel:true,capacity:100,emptyMass:68.2,glassMass:68.2},
+  flask:{label:"Conical flask",w:108,h:128,icon:"⚗",vessel:true,capacity:250,emptyMass:98.6,glassMass:98.6},basin:{label:"Evaporating basin",w:112,h:58,icon:"◡",vessel:true,capacity:100,emptyMass:74,glassMass:74},
+  bottle:{label:"Reagent bottle",w:74,h:124,icon:"▥",vessel:true,capacity:100,emptyMass:54,glassMass:54},thermometer:{label:"Thermometer",w:24,h:154,icon:"🌡"},balance:{label:"Top-pan balance",w:158,h:84,icon:"⚖"},
+  splint:{label:"Wooden splint",w:126,h:26,icon:"╾"},funnel:{label:"Filter funnel",w:96,h:104,icon:"▽"},bung:{label:"Rubber bung",w:52,h:30,icon:"⬟"},gasSyringe:{label:"100 cm³ gas syringe",w:222,h:78,icon:"⇥"},spatula:{label:"CuO spatula",w:126,h:28,icon:"╾"}
+};
+const spatialVesselTypes=new Set(Object.keys(spatialDefs).filter(k=>spatialDefs[k].vessel));
+const spatialReagents={
+  water:{name:"Deionised water",formula:"H₂O",hazard:"Low hazard",colour:"rgba(90,190,255,.24)",volume:70,species:{}},
+  hcl:{name:"Hydrochloric acid",formula:"HCl · 1.0 mol dm⁻³",hazard:"Irritant",colour:"rgba(205,239,255,.18)",volume:50,species:{H:0.050,Cl:0.050}},
+  h2so4:{name:"Sulfuric acid",formula:"H₂SO₄ · 0.5 mol dm⁻³",hazard:"Irritant",colour:"rgba(210,230,255,.18)",volume:50,species:{H:0.050,SO4:0.025}},
+  naoh:{name:"Sodium hydroxide",formula:"NaOH · 0.5 mol dm⁻³",hazard:"Irritant",colour:"rgba(235,250,255,.14)",volume:50,species:{Na:0.025,OH:0.025}},
+  carbonate:{name:"Sodium carbonate",formula:"Na₂CO₃ · 0.5 mol dm⁻³",hazard:"Irritant",colour:"rgba(235,250,255,.14)",volume:50,species:{Na:0.050,CO3:0.025}},
+  cuso4:{name:"Copper(II) sulfate",formula:"CuSO₄ · 0.10 mol dm⁻³",hazard:"Harmful to aquatic life",colour:"rgba(40,135,235,.55)",volume:50,species:{Cu2:0.005,SO4:0.005}}
+};
+const spatialUI={root:null,nodeLayer:null,overlay:null,hazard:null,mode:null,pointerId:null,nodeId:null,handle:null,start:null,lastRender:0,lastPanel:0,tubeRuntime:new Map(),stream:null};
+class VerletTube{
+  constructor(p1,p2,segments=10,length=290){this.p1=p1;this.p2=p2;this.segLen=length/segments;this.length=length;this.points=Array.from({length:segments+1},(_,i)=>{const q=i/segments,x=p1.x+q*(p2.x-p1.x),y=p1.y+q*(p2.y-p1.y);return{x,y,oldX:x,oldY:y};});}
+  update(gravity=.28,iterations=5){for(let i=1;i<this.points.length-1;i++){const p=this.points[i],vx=p.x-p.oldX,vy=p.y-p.oldY;p.oldX=p.x;p.oldY=p.y;p.x+=vx*.985;p.y+=vy*.985+gravity;}
+    this.points[0].x=this.p1.x;this.points[0].y=this.p1.y;const z=this.points.length-1;this.points[z].x=this.p2.x;this.points[z].y=this.p2.y;
+    for(let it=0;it<iterations;it++)for(let i=0;i<this.points.length-1;i++){const a=this.points[i],b=this.points[i+1],dx=b.x-a.x,dy=b.y-a.y,dist=Math.hypot(dx,dy)||1,diff=(dist-this.segLen)/dist;if(i!==0){a.x+=dx*.5*diff;a.y+=dy*.5*diff;}if(i+1!==z){b.x-=dx*.5*diff;b.y-=dy*.5*diff;}}
+  }
+  path(){let d=`M ${this.points[0].x.toFixed(1)} ${this.points[0].y.toFixed(1)}`;for(let i=1;i<this.points.length-1;i++){const xc=(this.points[i].x+this.points[i+1].x)/2,yc=(this.points[i].y+this.points[i+1].y)/2;d+=` Q ${this.points[i].x.toFixed(1)} ${this.points[i].y.toFixed(1)} ${xc.toFixed(1)} ${yc.toFixed(1)}`;}const p=this.points.at(-1);return d+` L ${p.x.toFixed(1)} ${p.y.toFixed(1)}`;}
+}
+function spatialRect(){return spatialUI.root?.getBoundingClientRect()||{left:0,top:0,width:760,height:520};}
+function spatialNode(id){return state.spatial.nodes.find(n=>n.id===id)||null;}
+function spatialChildren(id){return state.spatial.nodes.filter(n=>n.parentId===id);}
+function spatialDescendants(id,out=[]){for(const c of spatialChildren(id)){out.push(c);spatialDescendants(c.id,out);}return out;}
+function spatialNewContents(){return{volume:0,temp:20,species:{},solids:[],precipitates:{},gasPending:0,pressure:1,label:"Empty",colour:"transparent"};}
+function spatialReagentContents(key){const r=spatialReagents[key],wet=state.spatial.teacher.wetGlassware?5:0,c=spatialNewContents();c.volume=r.volume+wet;c.label=r.name;c.colour=r.colour;c.species={...r.species};if(wet)c.label+=" · wet glassware dilution";if(key==="naoh"&&state.spatial.teacher.carbonateNaOH)c.species.CO3=(c.species.CO3||0)+.0005;return c;}
+function spatialAddEvent(level,msg){const a=state.spatial.events,last=a[0];if(last&&last.msg===msg&&Date.now()-last.at<1500)return;a.unshift({at:Date.now(),level,msg});if(a.length>40)a.length=40;}
+function spatialSpawn(type,reagent=null,coords=null){
+  const d=spatialDefs[type];if(!d)return;const i=state.spatial.nextId++,n={id:`N${i}`,type,x:coords?.x??(.20+((i-1)%5)*.13),y:coords?.y??(.30+(Math.floor((i-1)/5)%3)*.16),angle:0,parentId:null,z:i,state:{}};
+  if(spatialVesselTypes.has(type))n.contents=reagent?spatialReagentContents(reagent):spatialNewContents();
+  if(type==="bunsen")n.state={lit:false,collar:0};if(type==="splint")n.state={burning:false,burnLeft:0};if(type==="thermometer")n.state={reading:20};if(type==="balance")n.state={tare:0,corroded:false};
+  if(type==="gasSyringe")n.state={gasVolume:0};if(type==="funnel")n.state={filterPaper:true,retainedMass:0};if(type==="bung")n.state={popped:false};if(type==="spatula")n.state={solid:"CuO",load:.05};if(type==="bottle")n.state.reagent=reagent;
+  state.spatial.nodes.push(n);state.spatial.selectedId=n.id;spatialAddEvent("good",`${d.label} placed on the bench.`);LabAudio.clink();renderBench();syncHash();
+}
+function spatialSpawnTube(){const i=state.spatial.nextId++,id=`T${i}`,t={id,length:290,a:{nodeId:null,port:null,x:.40,y:.28},b:{nodeId:null,port:null,x:.68,y:.34}};state.spatial.tubes.push(t);spatialAddEvent("good","Flexible delivery tube placed. Drag each cyan end onto a compatible port.");renderBench();syncHash();}
+function spatialRemoveSelected(){const id=state.spatial.selectedId;if(!id)return;const ids=new Set([id,...spatialDescendants(id).map(n=>n.id)]);state.spatial.nodes=state.spatial.nodes.filter(n=>!ids.has(n.id));state.spatial.tubes.forEach(t=>{for(const e of [t.a,t.b])if(ids.has(e.nodeId)){e.nodeId=null;e.port=null;}});state.spatial.selectedId=null;spatialAddEvent("warn","Selected apparatus removed; attached children were also cleared.");renderBench();syncHash();}
+function spatialReset(){LabAudio.stopLoop("gas");LabAudio.stopLoop("flame");const mission=state.spatial.mission,teacher={...state.spatial.teacher};state.spatial=makeSpatialState();state.spatial.mission=mission;state.spatial.teacher=teacher;state.phaseAnswers.spatial=["","",""];renderBench();syncHash();}
+function spatialLoadKit(mission=state.spatial.mission){state.spatial.nodes=[];state.spatial.tubes=[];state.spatial.spills=[];state.spatial.events=[];state.spatial.nextId=1;state.spatial.selectedId=null;state.spatial.mission=mission;
+  if(mission==="heating"){spatialSpawnSilent("mat",null,.42,.79);spatialSpawnSilent("bunsen",null,.42,.67);spatialSpawnSilent("tripod",null,.42,.59);spatialSpawnSilent("gauze",null,.42,.44);spatialSpawnSilent("beaker",null,.42,.33);spatialSpawnSilent("thermometer",null,.50,.28);spatialSpawnSilent("splint",null,.72,.68);spatialSpawnSilent("bottle","water",.21,.37);spatialSpawnSilent("balance",null,.76,.45);}
+  else if(mission==="salt"){spatialSpawnSilent("mat",null,.35,.80);spatialSpawnSilent("bunsen",null,.35,.68);spatialSpawnSilent("tripod",null,.35,.59);spatialSpawnSilent("gauze",null,.35,.44);spatialSpawnSilent("beaker",null,.35,.33);spatialSpawnSilent("bottle","h2so4",.15,.36);spatialSpawnSilent("spatula",null,.68,.35);spatialSpawnSilent("flask",null,.75,.61);spatialSpawnSilent("funnel",null,.75,.43);spatialSpawnSilent("basin",null,.60,.70);spatialSpawnSilent("splint",null,.72,.78);}
+  else{spatialSpawnSilent("flask",null,.30,.53);spatialSpawnSilent("bottle","hcl",.15,.32);spatialSpawnSilent("bottle","carbonate",.15,.58);spatialSpawnSilent("gasSyringe",null,.70,.43);spatialSpawnSilent("bung",null,.30,.35);spatialSpawnSilent("tube",null,.5,.5);}
+  spatialAddEvent("good",`Starter kit loaded for ${mission==="heating"?"heating and measurement":mission==="salt"?"soluble salt preparation":"gas generation and collection"}. Apparatus remains freely movable.`);renderBench();syncHash();
+}
+function spatialSpawnSilent(type,reagent,x,y){if(type==="tube"){const i=state.spatial.nextId++;state.spatial.tubes.push({id:`T${i}`,length:290,a:{nodeId:null,port:null,x:.42,y:.38},b:{nodeId:null,port:null,x:.58,y:.40}});return;}const d=spatialDefs[type],i=state.spatial.nextId++,n={id:`N${i}`,type,x,y,angle:0,parentId:null,z:i,state:{}};if(spatialVesselTypes.has(type))n.contents=reagent?spatialReagentContents(reagent):spatialNewContents();if(type==="bunsen")n.state={lit:false,collar:0};if(type==="splint")n.state={burning:false,burnLeft:0};if(type==="thermometer")n.state={reading:20};if(type==="balance")n.state={tare:0,corroded:false};if(type==="gasSyringe")n.state={gasVolume:0};if(type==="funnel")n.state={filterPaper:true,retainedMass:0};if(type==="bung")n.state={popped:false};if(type==="spatula")n.state={solid:"CuO",load:.05};if(type==="bottle")n.state.reagent=reagent;state.spatial.nodes.push(n);}
+function spatialMass(n){if(!n)return 0;const d=spatialDefs[n.type],c=n.contents;let m=d?.emptyMass||0;if(c){m+=c.volume;for(const s of c.solids||[])m+=s.mass||0;for(const v of Object.values(c.precipitates||{}))m+=v*100;}return m;}
+function spatialBalanceReading(b){let gross=0;for(const c of spatialChildren(b.id))if(spatialVesselTypes.has(c.type))gross+=spatialMass(c);const drift=Number(state.spatial.teacher.balanceDrift||0)+(b.state.corroded?Math.sin(state.spatial.elapsed*2.1)*.12:.0);return gross+drift-(b.state.tare||0);}
+function spatialMixtureColour(c){if(!c||c.volume<=0)return"transparent";const cu=(c.species.Cu2||0)/Math.max(c.volume/1000,1e-6),ppt=c.precipitates.CuOH2||0;if(ppt>0)return"rgba(46,137,218,.78)";if(cu>0)return`rgba(34,126,224,${clamp(.24+cu*2.4,.28,.82)})`;return c.colour||"rgba(110,205,255,.22)";}
+function spatialPH(c){if(!c||c.volume<=0)return 7;const V=c.volume/1000,H=Math.max(0,(c.species.H||0)-(c.species.OH||0)),OH=Math.max(0,(c.species.OH||0)-(c.species.H||0));if(H>1e-12)return clamp(-Math.log10(H/V),0,14);if(OH>1e-12)return clamp(14+Math.log10(OH/V),0,14);return 7;}
+function spatialSpeciesText(c){if(!c||c.volume<=0)return"empty";const parts=Object.entries(c.species).filter(([,v])=>v>1e-8).map(([k,v])=>`${k}:${v.toExponential(2)} mol`);if(c.solids?.length)parts.push(...c.solids.map(s=>`${s.id}:${s.mass.toFixed(2)} g solid`));if(c.precipitates?.CuOH2)parts.push(`Cu(OH)₂:${c.precipitates.CuOH2.toExponential(2)} mol ppt`);return parts.join(" · ")||"water / neutral solvent";}
+function spatialRotatable(n){return["beaker","cylinder","flask","basin","bottle","splint","thermometer","spatula"].includes(n.type);}
+function spatialVesselSVG(n,shape){const d=spatialDefs[n.type],c=n.contents||spatialNewContents(),ratio=clamp(c.volume/(d.capacity||1),0,1),colour=spatialMixtureColour(c),id=`clip${n.id.replace(/[^a-z0-9]/gi,"")}`,h=d.h,w=d.w,fillY=h*.86-ratio*h*.62,solids=(c.solids||[]).map((s,i)=>`<circle cx="${w*.35+(i%4)*w*.1}" cy="${h*.81-(i%2)*4}" r="${2.5+Math.min(4,s.mass*8)}" fill="${s.id==="CuO"?"#101318":"#d6dbe0"}"/>`).join(""),bubbles=c.gasPending>1e-8&&!state.calm?`<g>${[0,1,2,3].map(i=>`<circle cx="${w*(.32+i*.12)}" cy="${h*(.72-(i%2)*.13)}" r="${2+i%2}" fill="#fff" opacity=".78"/>`).join("")}</g>`:"";
+  let path="";if(shape==="beaker")path=`M ${w*.17} ${h*.12} V ${h*.82} Q ${w*.17} ${h*.9} ${w*.28} ${h*.9} H ${w*.74} Q ${w*.83} ${h*.9} ${w*.83} ${h*.82} V ${h*.12}`;
+  if(shape==="cylinder")path=`M ${w*.27} ${h*.08} V ${h*.84} Q ${w*.27} ${h*.9} ${w*.37} ${h*.9} H ${w*.63} Q ${w*.73} ${h*.9} ${w*.73} ${h*.84} V ${h*.08}`;
+  if(shape==="flask")path=`M ${w*.40} ${h*.09} V ${h*.34} L ${w*.16} ${h*.84} Q ${w*.11} ${h*.91} ${w*.25} ${h*.91} H ${w*.77} Q ${w*.9} ${h*.91} ${w*.84} ${h*.83} L ${w*.60} ${h*.34} V ${h*.09}`;
+  if(shape==="bottle")path=`M ${w*.36} ${h*.08} H ${w*.64} V ${h*.23} Q ${w*.82} ${h*.27} ${w*.82} ${h*.42} V ${h*.84} Q ${w*.82} ${h*.91} ${w*.72} ${h*.91} H ${w*.28} Q ${w*.18} ${h*.91} ${w*.18} ${h*.84} V ${h*.42} Q ${w*.18} ${h*.27} ${w*.36} ${h*.23} Z`;
+  if(shape==="basin")path=`M ${w*.08} ${h*.30} Q ${w*.12} ${h*.84} ${w*.50} ${h*.88} Q ${w*.88} ${h*.84} ${w*.92} ${h*.30} Z`;
+  return `<svg viewBox="0 0 ${w} ${h}"><defs><clipPath id="${id}"><path d="${path}"/></clipPath><linearGradient id="g${id}" x1="0" x2="1"><stop stop-color="#d9f3ff" stop-opacity=".12"/><stop offset=".5" stop-color="#fff" stop-opacity=".38"/><stop offset="1" stop-color="#87d5fa" stop-opacity=".10"/></linearGradient></defs><path d="${path}" fill="url(#g${id})" stroke="#9fc2d7" stroke-width="3"/>
+  <g clip-path="url(#${id})" transform="rotate(${-n.angle} ${w/2} ${h/2})"><rect x="0" y="${fillY}" width="${w}" height="${h}" fill="${colour}"/>${solids}${bubbles}</g>
+  ${shape==="cylinder"?Array.from({length:6},(_,i)=>`<line x1="${w*.28}" y1="${h*(.24+i*.1)}" x2="${w*(i%5===0?.51:.43)}" y2="${h*(.24+i*.1)}" stroke="#a8c5d6"/>`).join(""):""}
+  ${n.state?.cracked?`<path d="M ${w*.62} ${h*.35} l -12 18 l 10 12 l -14 20" fill="none" stroke="#ff6b76" stroke-width="2.5"/>`:""}</svg>`;
+}
+function spatialNodeMarkup(n){const d=spatialDefs[n.type],sel=state.spatial.selectedId===n.id,classes=`spatial-node ${sel?"selected":""} ${n.parentId?"snapped":""}`,style=`left:${n.x*100}%;top:${n.y*100}%;width:${d.w}px;height:${d.h}px;z-index:${n.z};transform:translate(-50%,-50%) rotate(${n.angle}deg);--node-angle:${n.angle}deg`;let svg="";
+  if(n.type==="mat")svg=`<svg viewBox="0 0 150 30"><rect x="3" y="8" width="144" height="16" rx="4" fill="#8f9eaa" stroke="#d4dde4" stroke-width="2"/><path d="M12 12 H138 M12 18 H138" stroke="#657480" stroke-dasharray="4 3"/></svg>`;
+  else if(n.type==="bunsen"){const lit=n.state.lit&&state.spatial.gasTap,col=n.state.collar||0,fc=col===0?"#ffc857":"#38d7ff",inner=col===2?"#f6fbff":"#fff0a3",fh=col===2?66:col===1?52:60;svg=`<svg viewBox="0 0 78 150">${lit?`<path d="M39 ${10+60-fh} Q ${66} 48 39 76 Q 12 48 39 ${10+60-fh}Z" fill="${fc}" opacity=".85"/><path d="M39 ${34+55-fh} Q 51 58 39 72 Q 27 58 39 ${34+55-fh}Z" fill="${inner}" opacity=".9"/>`:""}<rect x="33" y="63" width="12" height="67" fill="#778d9e" stroke="#30475b" stroke-width="2"/><rect x="26" y="106" width="26" height="18" rx="3" fill="#25394d" stroke="#6b8194"/><circle cx="39" cy="115" r="5" fill="${col===0?"#05080b":"#38d7ff"}"/><rect x="7" y="128" width="64" height="15" rx="5" fill="#24394e" stroke="#6c8296" stroke-width="2"/></svg>`;}
+  else if(n.type==="tripod")svg=`<svg viewBox="0 0 140 150"><ellipse cx="70" cy="18" rx="53" ry="10" fill="none" stroke="#758a9b" stroke-width="5"/><path d="M22 20 L5 143 M70 25 V147 M118 20 L135 143" stroke="#5c7286" stroke-width="5" stroke-linecap="round"/></svg>`;
+  else if(n.type==="gauze")svg=`<svg viewBox="0 0 108 20"><rect x="3" y="4" width="102" height="12" rx="2" fill="#c2cbd2" stroke="#576d80" stroke-width="2"/><path d="M12 4 V16 M24 4 V16 M36 4 V16 M48 4 V16 M60 4 V16 M72 4 V16 M84 4 V16 M96 4 V16 M3 10 H105" stroke="#8394a1" stroke-width=".8"/><circle cx="54" cy="10" r="8" fill="#e5e9ec" opacity=".8"/></svg>`;
+  else if(["beaker","cylinder","flask","bottle","basin"].includes(n.type))svg=spatialVesselSVG(n,n.type);
+  else if(n.type==="thermometer"){const r=clamp((n.state.reading||20),0,120),y=135-r*1.0;svg=`<svg viewBox="0 0 24 154"><rect x="7" y="5" width="10" height="132" rx="5" fill="rgba(255,255,255,.65)" stroke="#6a7f91" stroke-width="2"/><line x1="12" y1="132" x2="12" y2="${y}" stroke="#e43f4e" stroke-width="4"/><circle cx="12" cy="140" r="8" fill="#e43f4e"/><text x="12" y="12" text-anchor="middle" font-size="7" fill="#22384b">${Math.round(r)}</text></svg>`;}
+  else if(n.type==="balance"){const val=spatialBalanceReading(n);svg=`<svg viewBox="0 0 158 84"><rect x="12" y="34" width="134" height="44" rx="8" fill="#283d52" stroke="#71879a" stroke-width="3"/><rect x="30" y="22" width="98" height="14" rx="4" fill="#bcc9d2" stroke="#71879a"/><rect x="35" y="45" width="88" height="22" rx="4" fill="#04080d" stroke="#557087"/><text data-balance-live="${n.id}" x="118" y="61" text-anchor="end" font-family="monospace" font-size="15" font-weight="900" fill="#45d69b">${val.toFixed(2)} g</text>${n.state.corroded?`<path d="M18 58 l8 -5 l7 8 l8 -6" fill="none" stroke="#ffc857" stroke-width="3"/>`:""}</svg>`;}
+  else if(n.type==="splint")svg=`<svg viewBox="0 0 126 26"><rect x="4" y="10" width="109" height="7" rx="2" fill="#a76c34" stroke="#74441f"/>${n.state.burning?`<path d="M115 14 Q 126 -1 124 14 Q 126 26 115 14Z" fill="#ff9d2e"/><path d="M117 14 Q 123 7 121 15 Q 122 20 117 14Z" fill="#fff4ad"/>`:""}</svg>`;
+  else if(n.type==="funnel")svg=`<svg viewBox="0 0 96 104"><path d="M8 12 H88 L55 59 V98 H41 V59 Z" fill="rgba(226,245,255,.18)" stroke="#9dc1d7" stroke-width="3"/><path d="M14 18 H82 L53 54 H43 Z" fill="rgba(255,255,255,.72)" stroke="#c6d1d9" stroke-dasharray="3 2"/>${n.state.retainedMass>0?`<ellipse cx="48" cy="50" rx="18" ry="7" fill="#16191d" opacity=".9"/>`:""}</svg>`;
+  else if(n.type==="bung")svg=`<svg viewBox="0 0 52 30"><path d="M11 5 H41 L36 26 H16 Z" fill="#6e4329" stroke="#3a2418" stroke-width="2"/><circle cx="39" cy="11" r="3" fill="#9bc3d8"/></svg>`;
+  else if(n.type==="gasSyringe"){const v=clamp(n.state.gasVolume||0,0,100),x=25+v*1.45;svg=`<svg viewBox="0 0 222 78"><rect x="17" y="22" width="154" height="34" rx="5" fill="rgba(230,248,255,.16)" stroke="#a8cadc" stroke-width="3"/><path d="M17 35 H2 V44 H17" fill="#9eb5c3"/>${Array.from({length:11},(_,i)=>`<line x1="${25+i*14.5}" y1="22" x2="${25+i*14.5}" y2="${i%5===0?35:29}" stroke="#b9d2df"/>`).join("")}<rect x="${x}" y="24" width="8" height="30" fill="#17283a"/><rect x="${x+8}" y="35" width="55" height="8" fill="#8297a7"/><rect x="${x+61}" y="27" width="8" height="24" fill="#8297a7"/><text x="94" y="72" text-anchor="middle" fill="currentColor" font-size="11" font-weight="900">${v.toFixed(1)} cm³</text></svg>`;}
+  else if(n.type==="spatula")svg=`<svg viewBox="0 0 126 28"><rect x="4" y="11" width="92" height="6" rx="3" fill="#9daab4"/><path d="M92 8 H122 Q126 14 122 20 H92 Z" fill="#c4cdd4" stroke="#6d7d89"/>${n.state.load>0?`<circle cx="107" cy="11" r="3" fill="#111418"/><circle cx="113" cy="14" r="2.5" fill="#111418"/>`:""}</svg>`;
+  return `<div class="${classes}" data-node="${n.id}" style="${style}">${svg}${sel&&spatialRotatable(n)?`<span class="rotate-handle" title="Drag to rotate">↻</span>`:""}<span class="spatial-label">${escapeHTML(d.label)}${n.contents?.volume?` · ${n.contents.volume.toFixed(1)} cm³`:""}</span></div>`;
+}
+function spatialStageHTML(){return `<div class="spatial-root" id="spatialRoot"><div class="spatial-guide"><strong>Direct manipulation:</strong> drag apparatus, use the round ↻ handle to tilt vessels, and drop compatible items near one another to snap a real hierarchy. Incorrect actions are allowed and create simulated consequences.</div><div class="spatial-hazard" id="spatialHazard"></div><div class="spatial-node-layer" id="spatialNodeLayer"></div><svg class="spatial-overlay" id="spatialOverlay"></svg><div class="spatial-bench-rim"></div><div class="spatial-manifold"><span>Gas tap</span><button data-action="spatial-gas" class="${state.spatial.gasTap?"btn-success":"btn-danger"}">${state.spatial.gasTap?"ON":"OFF"}</button></div><div class="spatial-pilot"><span class="pilot-flame"></span><span>Pilot lighter</span></div></div>`;}
+function spatialControlsHTML(){const s=state.spatial;const cards=[["mat","Heatproof mat"],["bunsen","Bunsen"],["tripod","Tripod"],["gauze","Gauze"],["beaker","Beaker"],["cylinder","Cylinder"],["flask","Flask"],["basin","Evap basin"],["thermometer","Thermometer"],["balance","Balance"],["splint","Splint"],["funnel","Funnel"],["bung","Bung"],["gasSyringe","Gas syringe"],["spatula","CuO spatula"]];return `<div class="card"><span class="var-tag tech">Open spatial mission</span><select id="spatialMission"><option value="heating" ${s.mission==="heating"?"selected":""}>Heating, temperature & balance</option><option value="salt" ${s.mission==="salt"?"selected":""}>Making soluble copper(II) sulfate</option><option value="gas" ${s.mission==="gas"?"selected":""}>Gas generation & collection</option></select><button style="width:100%;margin-top:7px" data-action="spatial-kit">Load movable starter kit</button></div><div class="card"><h3>Apparatus trolley</h3><div class="trolley-grid-pro">${cards.map(([k,l])=>`<button class="trolley-card" data-action="spatial-spawn" data-type="${k}"><span class="ico">${spatialDefs[k].icon}</span><strong>${l}</strong></button>`).join("")}<button class="trolley-card" data-action="spatial-tube"><span class="ico">〰</span><strong>Flexible tube</strong><small>Verlet physics</small></button></div></div><div class="card"><h3>Reagent prep cupboard</h3><div class="stack">${Object.entries(spatialReagents).map(([k,r])=>`<button class="reagent-card" data-action="spatial-reagent" data-reagent="${k}"><span class="bottle-dot" style="--liquid:${r.colour}"></span><span><strong>${r.name}</strong><br><span>${r.formula}</span></span><span class="hazard-chip">${r.hazard}</span></button>`).join("")}</div></div><details class="card teacher-faults"><summary>Teacher diagnostic fault injection</summary><div class="fault-grid"><label>Balance drift <select id="faultBalance"><option value="0" ${!s.teacher.balanceDrift?"selected":""}>None</option><option value="0.18" ${s.teacher.balanceDrift===.18?"selected":""}>+0.18 g</option><option value="-0.25" ${s.teacher.balanceDrift===-.25?"selected":""}>−0.25 g</option></select></label><label>Gas-path leak <input id="faultLeak" type="checkbox" ${s.teacher.gasLeak?"checked":""}></label><label>Blocked delivery tube <input id="faultBlocked" type="checkbox" ${s.teacher.blockedTube?"checked":""}></label><label>Wet glassware dilution <input id="faultWet" type="checkbox" ${s.teacher.wetGlassware?"checked":""}></label><label>Carbonated NaOH <input id="faultCarbonate" type="checkbox" ${s.teacher.carbonateNaOH?"checked":""}></label></div></details>`;}
+function spatialToolbarHTML(){return `<button class="btn-danger" data-action="spatial-emergency">■ Emergency gas shutoff</button><button data-action="spatial-upright" ${state.spatial.selectedId?"":"disabled"}>↥ Upright selected</button><button data-action="spatial-diagram">⌁ Generate exam diagram</button><button data-action="copy-tsv">⧉ Copy evidence TSV</button><button data-action="spatial-reset">↺ Clear sandbox</button>`;}
+function spatialSelectedHTML(){const n=spatialNode(state.spatial.selectedId);if(!n)return`<div class="empty">Select apparatus on the spatial bench to inspect it, rotate it, tare a balance or dispense a solid.</div>`;const d=spatialDefs[n.type],c=n.contents;let actions=`<button data-action="spatial-upright">↥ Upright</button><button data-action="spatial-delete">Delete</button>`;if(n.type==="bunsen")actions=`<button data-action="spatial-collar">Collar: ${["closed / yellow","half-open / blue","fully open / roaring"][n.state.collar||0]}</button><button data-action="spatial-delete">Delete</button>`;if(n.type==="balance")actions=`<button data-action="spatial-tare">TARE / ZERO</button><button data-action="spatial-delete">Delete</button>`;if(n.type==="spatula")actions=`<button data-action="spatial-spatula">Tap 0.05 g CuO</button><button data-action="spatial-delete">Delete</button>`;return `<div class="card"><h3>${escapeHTML(d.label)}</h3><div class="readout"><div class="tile"><span>Docked to</span><strong style="font-size:.78rem">${n.parentId?escapeHTML(spatialDefs[spatialNode(n.parentId)?.type]?.label||n.parentId):"Free"}</strong></div><div class="tile"><span>Angle</span><strong>${Math.round(n.angle)}°</strong></div>${c?`<div class="tile"><span>Volume</span><strong>${c.volume.toFixed(1)} cm³</strong></div><div class="tile"><span>Temperature</span><strong>${c.temp.toFixed(1)} °C</strong></div>`:""}</div><div class="inspector-actions">${actions}</div>${c?`<div class="chem-vector">pH ${spatialPH(c).toFixed(2)} · ${escapeHTML(spatialSpeciesText(c))}</div>`:""}</div>`;}
+function spatialRigTree(){const roots=state.spatial.nodes.filter(n=>!n.parentId);function line(n,depth=0){return`${"&nbsp;".repeat(depth*4)}${depth?"└─ ":""}<strong>${escapeHTML(spatialDefs[n.type].label)}</strong>${spatialChildren(n.id).map(c=>`<br>${line(c,depth+1)}`).join("")}`;}return roots.length?roots.map(r=>line(r)).join("<br>"):"No apparatus placed.";}
+function spatialProgress(){const s=state.spatial,a=s.achievements;if(s.mission==="heating")return[["Build mat → burner + tripod → gauze → beaker",!!spatialCompleteHeatingRig()],["Light with gas on and air hole closed",a.safeLight],["Open collar to a blue flame",a.blueFlame],["Immerse thermometer and heat to 60 °C",a.heated60],["Use balance and tare",a.tared]];if(s.mission==="salt")return[["Warm dilute sulfuric acid safely",state.spatial.nodes.some(n=>n.contents?.species?.H>0&&n.contents.temp>40)],["Add CuO until blue Cu²⁺ solution forms",a.saltBlue],["Leave excess black CuO",state.spatial.nodes.some(n=>n.contents?.solids?.some(x=>x.id==="CuO"&&x.mass>.02)&&n.contents.species.Cu2>0)],["Filter excess CuO",a.filtered]];return[["Place acid and carbonate in a flask",state.spatial.nodes.some(n=>n.type==="flask"&&(n.contents?.species?.H||0)>0&&(n.contents?.gasPending||0)>0)],["Connect flask to gas syringe with flexible tube",!!spatialGasPath()],["Collect at least 20 cm³ gas",a.gasCollected],["Recognise any leak / blockage fault",state.spatial.events.some(e=>/leak|blocked|pressure/i.test(e.msg))]];}
+function spatialDataHTML(){const selected=spatialSelectedHTML(),progress=spatialProgress();return `${selected}<div class="card"><h3>Mission progress</h3><div class="progress-list">${progress.map(([t,d])=>`<div class="progress-step ${d?"done":""}">${escapeHTML(t)}</div>`).join("")}</div></div><div class="card"><h3>Parent–child rig hierarchy</h3><div class="rig-tree">${spatialRigTree()}</div></div><div class="card"><h3>Consequence & observation log</h3><div class="event-log">${state.spatial.events.length?state.spatial.events.slice(0,9).map(e=>`<div class="event-item ${e.level}">${new Date(e.at).toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit",second:"2-digit"})} · ${escapeHTML(e.msg)}</div>`).join(""):`<div class="event-item">No actions recorded yet.</div>`}</div></div>`;}
+function spatialMetrics(){const lit=state.spatial.nodes.find(n=>n.type==="bunsen"&&n.state.lit&&state.spatial.gasTap),therms=state.spatial.nodes.filter(n=>n.type==="thermometer"),maxT=Math.max(20,...state.spatial.nodes.filter(n=>n.contents).map(n=>n.contents.temp)),gas=Math.max(0,...state.spatial.nodes.filter(n=>n.type==="gasSyringe").map(n=>n.state.gasVolume||0));return[["Gas manifold",state.spatial.gasTap?"OPEN":"OFF"],["Active flame",lit?["Yellow","Gentle blue","Roaring blue"][lit.state.collar||0]:"None"],["Max vessel temp",`${maxT.toFixed(1)} °C`],["Gas collected",`${gas.toFixed(1)} cm³`]];}
+function spatialPhases(){return phaseCards("spatial",[{title:"Introduce · Assemble",time:"0–10",prompt:"Why must a Bunsen burner be lit with the air hole closed before the collar is opened for heating?",placeholder:"Safety flame reasoning…",type:"text"},{title:"Explore · Diagnose",time:"10–25",prompt:"Build and operate the selected mission. Record one apparatus decision and the consequence you observed.",placeholder:"I changed… and observed…",type:"text"},{title:"Do · Transfer",time:"25–40",prompt:"Explain one limitation of virtual evidence compared with proving hands-on practical competence.",placeholder:"A virtual lab can… but cannot…",type:"text"}]);}
+function initSpatialDOM(){spatialUI.root=$("#spatialRoot");spatialUI.nodeLayer=$("#spatialNodeLayer");spatialUI.overlay=$("#spatialOverlay");spatialUI.hazard=$("#spatialHazard");spatialUI.tubeRuntime.clear();if(!spatialUI.root)return;renderSpatialNodes();drawSpatialOverlay();
+  spatialUI.root.addEventListener("pointerdown",spatialPointerDown);spatialUI.root.addEventListener("pointermove",spatialPointerMove);spatialUI.root.addEventListener("pointerup",spatialPointerUp);spatialUI.root.addEventListener("pointercancel",spatialPointerUp);
+}
+function renderSpatialNodes(){if(!spatialUI.nodeLayer)return;spatialUI.nodeLayer.innerHTML=state.spatial.nodes.map(spatialNodeMarkup).join("");}
+function spatialPositionElement(n){const el=spatialUI.nodeLayer?.querySelector(`[data-node="${n.id}"]`);if(!el)return;el.style.left=`${n.x*100}%`;el.style.top=`${n.y*100}%`;el.style.transform=`translate(-50%,-50%) rotate(${n.angle}deg)`;el.style.setProperty("--node-angle",`${n.angle}deg`);}
+function spatialPointerDown(e){LabAudio.init();const handle=e.target.closest(".tube-handle");if(handle){spatialUI.mode="tube";spatialUI.pointerId=e.pointerId;spatialUI.handle={tubeId:handle.dataset.tube,end:handle.dataset.end};spatialUI.root.setPointerCapture(e.pointerId);e.preventDefault();return;}const el=e.target.closest(".spatial-node");if(!el){state.spatial.selectedId=null;renderSpatialNodes();dom.data.innerHTML=spatialDataHTML();return;}const n=spatialNode(el.dataset.node);if(!n)return;state.spatial.selectedId=n.id;const r=spatialRect(),p={x:e.clientX-r.left,y:e.clientY-r.top};spatialUI.mode=e.target.closest(".rotate-handle")?"rotate":"drag";spatialUI.pointerId=e.pointerId;spatialUI.nodeId=n.id;spatialUI.start={pointer:p,x:n.x,y:n.y,angle:n.angle,desc:spatialDescendants(n.id).map(c=>({id:c.id,x:c.x,y:c.y}))};if(n.parentId)n.parentId=null;el.classList.add("dragging");spatialUI.root.setPointerCapture(e.pointerId);renderSpatialNodes();e.preventDefault();}
+function spatialPointerMove(e){if(e.pointerId!==spatialUI.pointerId||!spatialUI.mode)return;const r=spatialRect(),px=e.clientX-r.left,py=e.clientY-r.top;if(spatialUI.mode==="tube"){const t=state.spatial.tubes.find(x=>x.id===spatialUI.handle.tubeId),ep=t?.[spatialUI.handle.end];if(ep){ep.nodeId=null;ep.port=null;ep.x=clamp(px/r.width,.01,.99);ep.y=clamp(py/r.height,.01,.94);drawSpatialOverlay();}return;}const n=spatialNode(spatialUI.nodeId);if(!n)return;if(spatialUI.mode==="drag"){const dx=(px-spatialUI.start.pointer.x)/r.width,dy=(py-spatialUI.start.pointer.y)/r.height;n.x=clamp(spatialUI.start.x+dx,.04,.96);n.y=clamp(spatialUI.start.y+dy,.05,.91);spatialUI.start.desc.forEach(d=>{const c=spatialNode(d.id);if(c){c.x=clamp(d.x+dx,.03,.97);c.y=clamp(d.y+dy,.04,.93);spatialPositionElement(c);}});spatialPositionElement(n);state.spatial.snapHint=spatialSnapCandidate(n);}
+  else{const cx=n.x*r.width,cy=n.y*r.height;n.angle=clamp(Math.atan2(py-cy,px-cx)*180/Math.PI+90,-125,125);spatialPositionElement(n);if(Math.abs(n.angle)>16)n.parentId=null;}
+  drawSpatialOverlay();spatialEvaluateProximity();}
+function spatialPointerUp(e){if(e.pointerId!==spatialUI.pointerId)return;if(spatialUI.mode==="tube"){spatialSnapTubeEnd(spatialUI.handle.tubeId,spatialUI.handle.end);LabAudio.clink();}
+  else{const n=spatialNode(spatialUI.nodeId);if(n&&spatialUI.mode==="drag"){const c=spatialSnapCandidate(n);if(c)spatialApplySnap(n,c);LabAudio.clink();}spatialEvaluateProximity();}
+  spatialUI.mode=null;spatialUI.pointerId=null;spatialUI.nodeId=null;spatialUI.handle=null;state.spatial.snapHint=null;renderSpatialNodes();drawSpatialOverlay();dom.data.innerHTML=spatialDataHTML();renderMetrics();syncHash();}
+function spatialNodePoint(n,lx,ly){const r=spatialRect(),d=spatialDefs[n.type],cx=n.x*r.width,cy=n.y*r.height,a=n.angle*Math.PI/180,x=lx-d.w/2,y=ly-d.h/2;return{x:cx+x*Math.cos(a)-y*Math.sin(a),y:cy+x*Math.sin(a)+y*Math.cos(a)};}
+function spatialDesired(parent,childType){const r=spatialRect(),pd=spatialDefs[parent.type],cd=spatialDefs[childType],cx=parent.x*r.width,cy=parent.y*r.height;let x=cx,y=cy;if(parent.type==="mat"&&childType==="bunsen")y=cy-(pd.h/2+cd.h/2-17);else if(parent.type==="mat"&&childType==="tripod")y=cy-(pd.h/2+cd.h/2-12);else if(parent.type==="tripod"&&childType==="gauze")y=cy-pd.h/2+cd.h/2+2;else if(parent.type==="gauze"&&spatialVesselTypes.has(childType))y=cy-pd.h/2-cd.h/2+8;else if(parent.type==="balance"&&spatialVesselTypes.has(childType))y=cy-pd.h/2-cd.h/2+13;else if(spatialVesselTypes.has(parent.type)&&childType==="thermometer"){x=cx+pd.w*.18;y=cy-pd.h*.18;}else if(parent.type==="flask"&&childType==="funnel")y=cy-pd.h/2-cd.h/2+18;else if(parent.type==="flask"&&childType==="bung")y=cy-pd.h/2-cd.h/2+13;return{x,y};}
+function spatialSnapCandidate(n){const valid=[];for(const p of state.spatial.nodes){if(p.id===n.id)continue;let ok=false;if(p.type==="mat"&&["bunsen","tripod"].includes(n.type))ok=true;if(p.type==="tripod"&&n.type==="gauze")ok=true;if(p.type==="gauze"&&spatialVesselTypes.has(n.type)&&n.type!=="bottle")ok=true;if(p.type==="balance"&&spatialVesselTypes.has(n.type))ok=true;if(spatialVesselTypes.has(p.type)&&n.type==="thermometer")ok=true;if(p.type==="flask"&&["funnel","bung"].includes(n.type))ok=true;if(!ok)continue;const q=spatialDesired(p,n.type),r=spatialRect(),d=Math.hypot(n.x*r.width-q.x,n.y*r.height-q.y);if(d<108)valid.push({parent:p,x:q.x/r.width,y:q.y/r.height,dist:d});}return valid.sort((a,b)=>a.dist-b.dist)[0]||null;}
+function spatialApplySnap(n,c){n.parentId=c.parent.id;n.x=c.x;n.y=c.y;n.angle=0;spatialAddEvent("good",`${spatialDefs[n.type].label} snapped to ${spatialDefs[c.parent.type].label}.`);if(n.type==="thermometer")spatialAddEvent("good","Thermometer bulb immersed in the vessel contents.");}
+function spatialNearestPort(px,py,exclude=null){const ports=[];for(const n of state.spatial.nodes){if(n.id===exclude)continue;if(n.type==="flask")ports.push({node:n,port:"sidearm",...spatialNodePoint(n,spatialDefs[n.type].w*.86,spatialDefs[n.type].h*.33)});if(n.type==="gasSyringe")ports.push({node:n,port:"nozzle",...spatialNodePoint(n,2,spatialDefs[n.type].h*.43)});}return ports.map(p=>({...p,dist:Math.hypot(px-p.x,py-p.y)})).filter(p=>p.dist<38).sort((a,b)=>a.dist-b.dist)[0]||null;}
+function spatialTubeAnchor(ep){if(ep.nodeId){const n=spatialNode(ep.nodeId);if(n){if(ep.port==="sidearm")return spatialNodePoint(n,spatialDefs[n.type].w*.86,spatialDefs[n.type].h*.33);if(ep.port==="nozzle")return spatialNodePoint(n,2,spatialDefs[n.type].h*.43);}}const r=spatialRect();return{x:ep.x*r.width,y:ep.y*r.height};}
+function spatialSnapTubeEnd(id,end){const t=state.spatial.tubes.find(x=>x.id===id);if(!t)return;const ep=t[end],p=spatialTubeAnchor(ep),other=t[end==="a"?"b":"a"],cand=spatialNearestPort(p.x,p.y,other.nodeId);if(cand){ep.nodeId=cand.node.id;ep.port=cand.port;spatialAddEvent("good",`Delivery tube connected to ${spatialDefs[cand.node.type].label}.`);}drawSpatialOverlay();}
+function drawSpatialOverlay(){if(!spatialUI.overlay)return;const r=spatialRect();spatialUI.overlay.setAttribute("viewBox",`0 0 ${r.width} ${r.height}`);let out="";for(const t of state.spatial.tubes){const a=spatialTubeAnchor(t.a),b=spatialTubeAnchor(t.b),dist=Math.hypot(a.x-b.x,a.y-b.y);let vr=spatialUI.tubeRuntime.get(t.id);if(!vr){vr=new VerletTube(a,b,10,t.length);spatialUI.tubeRuntime.set(t.id,vr);}vr.p1=a;vr.p2=b;vr.update();if(dist>t.length*1.27&&(t.a.nodeId||t.b.nodeId)){const ep=t.a.nodeId?t.a:t.b;ep.nodeId=null;ep.port=null;spatialAddEvent("warn","Delivery tube stretched beyond its safe length and popped free with a hiss.");LabAudio.noise(.25,1000,1.2,.13);}
+    out+=`<path class="spatial-tube-path" d="${vr.path()}"/><path class="spatial-tube-core" d="${vr.path()}"/><circle class="tube-handle ${t.a.nodeId?"connected":""}" data-tube="${t.id}" data-end="a" cx="${a.x}" cy="${a.y}" r="10"/><circle class="tube-handle ${t.b.nodeId?"connected":""}" data-tube="${t.id}" data-end="b" cx="${b.x}" cy="${b.y}" r="10"/>`;}
+  if(state.spatial.snapHint){const p=state.spatial.snapHint.parent,d=spatialDefs[p.type],q=spatialDesired(p,spatialNode(spatialUI.nodeId)?.type||"beaker"),cd=spatialDefs[spatialNode(spatialUI.nodeId)?.type||"beaker"];out+=`<rect class="snap-ghost" x="${q.x-cd.w/2-5}" y="${q.y-cd.h/2-5}" width="${cd.w+10}" height="${cd.h+10}" rx="10"/>`;}
+  if(state.spatial.pouring){const p=state.spatial.pouring;out+=`<path class="pour-stream" d="M ${p.x1} ${p.y1} Q ${(p.x1+p.x2)/2+12} ${(p.y1+p.y2)/2} ${p.x2} ${p.y2}"/>`;}
+  for(const s of state.spatial.spills){out+=`<ellipse class="spill-puddle" cx="${s.x*r.width}" cy="${s.y*r.height}" rx="${Math.min(46,10+s.volume*1.3)}" ry="${Math.min(20,4+s.volume*.45)}" fill="${s.colour}" stroke="${s.hazard?"#ff6b76":"#38d7ff"}"/>`;}
+  spatialUI.overlay.innerHTML=out;}
+function spatialSpout(n){const d=spatialDefs[n.type],right=n.angle>=0;return spatialNodePoint(n,right?d.w*.92:d.w*.08,d.h*.18);}
+function spatialTargetAt(p,source){let best=null;for(const n of state.spatial.nodes){if(n.id===source.id)continue;if(!(spatialVesselTypes.has(n.type)||n.type==="funnel"))continue;const d=spatialDefs[n.type],q=spatialNodePoint(n,d.w*.5,d.h*.12),dist=Math.hypot(p.x-q.x,p.y-q.y);if(dist<92&&(!best||dist<best.dist))best={node:n,point:q,dist};}return best;}
+function spatialTransfer(source,target,amount){const sc=source.contents;if(!sc||sc.volume<=0||amount<=0)return 0;let dest=target;if(target.type==="funnel"){const receiver=spatialNode(target.parentId);if(!receiver||receiver.type!=="flask")return 0;dest=receiver;}const dc=dest.contents;if(!dc)return 0;const free=Math.max(0,(spatialDefs[dest.type].capacity||0)-dc.volume),before=sc.volume,actual=Math.min(amount,before,free);if(actual<=0)return 0;const f=actual/before;if(target.type==="funnel"){target.state.retainedMass+=(sc.solids||[]).reduce((s,x)=>s+x.mass*f,0);sc.solids=(sc.solids||[]).map(x=>({...x,mass:x.mass*(1-f)})).filter(x=>x.mass>.001);state.spatial.achievements.filtered=target.state.retainedMass>.02;}
+  const oldV=dc.volume;for(const [k,v] of Object.entries(sc.species)){const moved=v*f;sc.species[k]-=moved;dc.species[k]=(dc.species[k]||0)+moved;}dc.temp=(dc.temp*oldV+sc.temp*actual)/Math.max(oldV+actual,1e-6);dc.volume=oldV+actual;sc.volume-=actual;spatialResolveImmediate(dest);state.spatial.achievements.poured=true;return actual;}
+function spatialResolveImmediate(n){const c=n.contents;if(!c)return;let H=c.species.H||0,OH=c.species.OH||0;if(H>0&&OH>0){const q=Math.min(H,OH);c.species.H-=q;c.species.OH-=q;const cap=Math.max(70,c.volume*4.18+(spatialDefs[n.type].glassMass||60)*.84);c.temp+=q*57000/cap;spatialAddEvent("good",`Neutralisation in ${spatialDefs[n.type].label} released heat; temperature rose.`);}
+  H=c.species.H||0;const CO3=c.species.CO3||0;if(H>0&&CO3>0){const q=Math.min(CO3,H/2);c.species.CO3-=q;c.species.H-=2*q;c.gasPending+=q;spatialAddEvent("good","Acid–carbonate reaction began; carbon dioxide is being generated.");LabAudio.fizz();}
+  const Cu=c.species.Cu2||0;OH=c.species.OH||0;if(Cu>0&&OH>0){const q=Math.min(Cu,OH/2);c.species.Cu2-=q;c.species.OH-=2*q;c.precipitates.CuOH2=(c.precipitates.CuOH2||0)+q;spatialAddEvent("good","A blue copper(II) hydroxide precipitate formed.");}
+}
+function spatialSpill(source,amount,point){const c=source.contents;if(!c||amount<=0)return;const before=c.volume,f=amount/Math.max(before,1e-6);for(const k of Object.keys(c.species))c.species[k]*=(1-f);c.volume=Math.max(0,c.volume-amount);const r=spatialRect(),hazard=(c.species.H||0)>1e-7||(c.species.OH||0)>1e-7;let s=state.spatial.spills.find(x=>Math.hypot(x.x-point.x/r.width,x.y-point.y/r.height)<.05);if(!s){s={x:point.x/r.width,y:point.y/r.height,volume:0,colour:spatialMixtureColour(c)||"rgba(86,193,255,.45)",hazard};state.spatial.spills.push(s);}s.volume+=amount;s.hazard=s.hazard||hazard;if(hazard){for(const b of state.spatial.nodes.filter(n=>n.type==="balance")){const bp={x:b.x*r.width,y:b.y*r.height};if(Math.hypot(bp.x-point.x,bp.y-point.y)<100&&!b.state.corroded){b.state.corroded=true;spatialAddEvent("bad","Chemical splash reached the balance; the display now drifts because of simulated corrosion.");}}}if(amount>.08)spatialAddEvent(hazard?"bad":"warn",`${hazard?"Chemical":"Liquid"} spilled onto the bench because no receiving vessel was beneath the tilted source.`);}
+function spatialPourStep(dt){state.spatial.pouring=null;for(const n of state.spatial.nodes){if(!spatialVesselTypes.has(n.type)||!n.contents||n.contents.volume<=0||Math.abs(n.angle)<45)continue;if(n.parentId)n.parentId=null;const p=spatialSpout(n),target=spatialTargetAt(p,n),flow=5+clamp((Math.abs(n.angle)-45)/55,0,1)*25,amount=flow*dt*state.spatial.timeScale;if(target){const moved=spatialTransfer(n,target.node,amount);if(moved>0)state.spatial.pouring={x1:p.x,y1:p.y,x2:target.point.x,y2:target.point.y};}
+    else{const end={x:p.x+Math.sin(n.angle*Math.PI/180)*45,y:p.y+55};spatialSpill(n,amount*.28,end);state.spatial.pouring={x1:p.x,y1:p.y,x2:end.x,y2:end.y};}}
+}
+function spatialCompleteHeatingRig(){for(const mat of state.spatial.nodes.filter(n=>n.type==="mat")){const burner=spatialChildren(mat.id).find(n=>n.type==="bunsen"),tripod=spatialChildren(mat.id).find(n=>n.type==="tripod");if(!burner||!tripod)continue;const gauze=spatialChildren(tripod.id).find(n=>n.type==="gauze");if(!gauze)continue;const vessel=spatialChildren(gauze.id).find(n=>spatialVesselTypes.has(n.type)&&n.type!=="bottle");if(vessel)return{mat,burner,tripod,gauze,vessel};}return null;}
+function spatialGasPath(){for(const t of state.spatial.tubes){const ends=[t.a,t.b],fl=ends.find(e=>spatialNode(e.nodeId)?.type==="flask"),sy=ends.find(e=>spatialNode(e.nodeId)?.type==="gasSyringe");if(fl&&sy)return{tube:t,flask:spatialNode(fl.nodeId),syringe:spatialNode(sy.nodeId)};}return null;}
+function spatialHeatStep(dt){const ambient=20,rig=spatialCompleteHeatingRig(),heated=new Set();if(rig&&rig.burner.state.lit&&state.spatial.gasTap&&!rig.vessel.state.cracked){const b=rig.burner,v=rig.vessel,c=v.contents,collar=b.state.collar||0,P=[60,290,550][collar],eff=[.25,.55,.75][collar]*Math.max(.35,1-(v.state.soot||0)*.08),cap=Math.max(65,c.volume*4.18+(spatialDefs[v.type].glassMass||60)*.84),loss=.9*Math.max(0,c.temp-ambient),Q=Math.max(0,P*eff-loss)*dt*state.spatial.timeScale;heated.add(v.id);if(c.volume>0&&c.temp<100)c.temp=Math.min(100,c.temp+Q/cap);else if(c.volume>0){const evaporated=Math.min(c.volume,Q/2260);c.volume-=evaporated;c.temp=100;if(evaporated>.03)spatialAddEvent("warn","Water is boiling; evaporation is reducing volume and increasing dissolved-solute concentration.");}else{c.temp+=Q/Math.max(35,(spatialDefs[v.type].glassMass||60)*.84);if(c.temp>160&&!v.state.cracked){v.state.cracked=true;state.spatial.achievements.boiledDry=true;spatialAddEvent("bad","The vessel boiled dry and developed a simulated thermal-stress crack.");LabAudio.error();}}
+    if(collar===0){v.state.soot=(v.state.soot||0)+dt*.035;if(v.state.soot>.25&&!v.state.sootWarned){v.state.sootWarned=true;spatialAddEvent("warn","Yellow safety flame deposited soot and transferred heat inefficiently.");}}
+    if(c.temp>=60)state.spatial.achievements.heated60=true;if(collar>0)state.spatial.achievements.blueFlame=true;}
+  for(const n of state.spatial.nodes.filter(n=>n.contents&&!heated.has(n.id))){const c=n.contents;c.temp+=(ambient-c.temp)*(1-Math.exp(-dt*.035*state.spatial.timeScale));}
+}
+function spatialCuOStep(dt){for(const n of state.spatial.nodes.filter(n=>n.contents)){const c=n.contents,solid=c.solids?.find(s=>s.id==="CuO"),H=c.species.H||0;if(!solid||solid.mass<=0||H<=0)continue;const factor=Math.pow(2,(c.temp-20)/20),molRate=.00009*factor*state.spatial.timeScale*dt,max=Math.min(H/2,solid.mass/79.545),q=Math.min(max,molRate);if(q<=0)continue;c.species.H-=2*q;c.species.Cu2=(c.species.Cu2||0)+q;solid.mass-=q*79.545;c.colour="rgba(30,126,230,.62)";state.spatial.achievements.saltBlue=true;if(!n.state.cuoStarted){n.state.cuoStarted=true;spatialAddEvent("good","Black copper(II) oxide began reacting with warm acid; blue Cu²⁺ solution formed.");}if(solid.mass<.001)c.solids=c.solids.filter(x=>x!==solid);}}
+function spatialGasStep(dt){const path=spatialGasPath();for(const n of state.spatial.nodes.filter(n=>n.contents)){const c=n.contents;if(c.gasPending>1e-10){const release=Math.min(c.gasPending,Math.max(.000002,c.gasPending*.42*dt*state.spatial.timeScale));c.gasPending-=release;if(path&&path.flask.id===n.id&&!state.spatial.teacher.blockedTube){const kept=release*(1-state.spatial.teacher.gasLeak),lost=release-kept;path.syringe.state.gasVolume=clamp((path.syringe.state.gasVolume||0)+kept*24000,0,100);if(path.syringe.state.gasVolume>=20)state.spatial.achievements.gasCollected=true;if(lost>0&&!path.tube.leakWarned){path.tube.leakWarned=true;spatialAddEvent("warn","Injected gas-path leak is losing about 15% of the generated gas.");}}
+      else{const bung=spatialChildren(n.id).find(x=>x.type==="bung");if(bung){c.pressure=(c.pressure||1)+release*4200*(state.spatial.teacher.blockedTube?2:1);if(c.pressure>1.65){bung.parentId=null;bung.y=Math.max(.08,bung.y-.12);bung.angle=35;bung.state.popped=true;c.pressure=1;state.spatial.achievements.bungPopped=true;spatialAddEvent("bad","Pressure rose in the sealed flask and the rubber bung popped out.");LabAudio.pop();}}}}
+    const bung=spatialChildren(n.id).find(x=>x.type==="bung");if(bung&&c.temp>86&&!path){c.pressure=(c.pressure||1)+(c.temp-86)*dt*.002*state.spatial.timeScale;if(c.pressure>1.65){bung.parentId=null;bung.y=Math.max(.08,bung.y-.12);bung.state.popped=true;c.pressure=1;spatialAddEvent("bad","Heating a sealed flask increased vapour pressure until the bung popped.");LabAudio.pop();}}else c.pressure=Math.max(1,(c.pressure||1)-dt*.04);}}
+function spatialThermometerStep(dt){for(const t of state.spatial.nodes.filter(n=>n.type==="thermometer")){const parent=spatialNode(t.parentId),target=parent?.contents?.temp??20;t.state.reading+=(target-t.state.reading)*(1-Math.exp(-dt*1.2));}}
+function spatialEvaluateProximity(){const r=spatialRect(),pilot={x:r.width-58,y:r.height-55};for(const s of state.spatial.nodes.filter(n=>n.type==="splint")){const tip=spatialNodePoint(s,spatialDefs.splint.w*.96,spatialDefs.splint.h*.5);if(!s.state.burning&&Math.hypot(tip.x-pilot.x,tip.y-pilot.y)<52){s.state.burning=true;s.state.burnLeft=20;spatialAddEvent("good","Wooden splint lit at the pilot lighter.");LabAudio.tone(760,.12,"triangle",.08,1120);}if(s.state.burning)for(const b of state.spatial.nodes.filter(n=>n.type==="bunsen"&&!n.state.lit)){const chimney=spatialNodePoint(b,spatialDefs.bunsen.w*.5,spatialDefs.bunsen.h*.40);if(Math.hypot(tip.x-chimney.x,tip.y-chimney.y)<48&&state.spatial.gasTap){if((b.state.collar||0)>0){spatialAddEvent("bad","Burner was lit with the air hole open: simulated strike-back extinguished the flame. Close the collar first.");LabAudio.error();}else{b.state.lit=true;state.spatial.achievements.safeLight=true;spatialAddEvent("good","Bunsen lit correctly on a yellow safety flame with the air hole closed.");LabAudio.tone(310,.18,"sine",.09,440);}}}}
+}
+function spatialAudioAndHazard(dt){const lit=state.spatial.nodes.find(n=>n.type==="bunsen"&&n.state.lit&&state.spatial.gasTap);if(state.spatial.gasTap&&!lit){state.spatial.gasExposure+=dt;LabAudio.startLoop("gas","hiss",.045);}else{state.spatial.gasExposure=Math.max(0,state.spatial.gasExposure-dt*2);LabAudio.stopLoop("gas");}if(lit){const mode=lit.state.collar===2?"roar":"flame",level=lit.state.collar===2?.075:.035;LabAudio.startLoop("flame",mode,level);LabAudio.updateLoop("flame",mode,level);}else LabAudio.stopLoop("flame");for(const s of state.spatial.nodes.filter(n=>n.type==="splint"&&n.state.burning)){s.state.burnLeft-=dt;if(s.state.burnLeft<=0){s.state.burning=false;spatialAddEvent("warn","The wooden splint burned out.");}}
+  let msg="",critical=false;if(state.spatial.gasExposure>8){msg="Unlit gas has been flowing for several seconds. Close the manifold and ventilate before attempting to relight.";critical=true;}else if(state.spatial.gasExposure>3)msg="Gas is flowing without a lit burner — simulated gas accumulation warning.";if(state.spatial.teacher.blockedTube&&spatialGasPath())msg="Teacher fault active: delivery tube is blocked; pressure may rise in the generating flask.";const cracked=state.spatial.nodes.find(n=>n.state?.cracked);if(cracked){msg="Thermal-stress crack detected: heating has become unsafe and the vessel should be replaced.";critical=true;}if(spatialUI.hazard){spatialUI.hazard.textContent=msg;spatialUI.hazard.className=`spatial-hazard ${msg?"show":""} ${critical?"critical":""}`;}}
+function spatialStep(dt,ts){state.spatial.elapsed+=dt;spatialPourStep(dt);spatialHeatStep(dt);spatialCuOStep(dt);spatialGasStep(dt);spatialThermometerStep(dt);spatialAudioAndHazard(dt);spatialEvaluateProximity();drawSpatialOverlay();if(!spatialUI.mode&&ts-spatialUI.lastRender>220){renderSpatialNodes();spatialUI.lastRender=ts;}if(ts-spatialUI.lastPanel>700){renderMetrics();dom.data.innerHTML=spatialDataHTML();spatialUI.lastPanel=ts;}}
+function spatialToggleGas(){state.spatial.gasTap=!state.spatial.gasTap;if(!state.spatial.gasTap)for(const b of state.spatial.nodes.filter(n=>n.type==="bunsen"))b.state.lit=false;spatialAddEvent(state.spatial.gasTap?"warn":"good",state.spatial.gasTap?"Gas manifold opened.":"Gas manifold closed; active flames extinguished.");renderBench();syncHash();}
+function spatialCycleCollar(){const n=spatialNode(state.spatial.selectedId);if(!n||n.type!=="bunsen")return;n.state.collar=((n.state.collar||0)+1)%3;if(n.state.collar>0&&n.state.lit)state.spatial.achievements.blueFlame=true;spatialAddEvent("good",`Bunsen collar set to ${["closed yellow safety flame","half-open gentle blue flame","fully open roaring blue flame"][n.state.collar]}.`);renderBench();syncHash();}
+function spatialTare(){const n=spatialNode(state.spatial.selectedId);if(!n||n.type!=="balance")return;let gross=0;for(const c of spatialChildren(n.id))if(spatialVesselTypes.has(c.type))gross+=spatialMass(c);n.state.tare=gross+Number(state.spatial.teacher.balanceDrift||0);state.spatial.achievements.tared=true;spatialAddEvent("good","Balance tared to zero with the current load in place.");LabAudio.tone(480,.12,"sine",.08,740);renderBench();syncHash();}
+function spatialTapSpatula(){const s=spatialNode(state.spatial.selectedId);if(!s||s.type!=="spatula")return;const r=spatialRect(),sp={x:s.x*r.width,y:s.y*r.height};const target=state.spatial.nodes.filter(n=>spatialVesselTypes.has(n.type)&&n.type!=="bottle").map(n=>({n,d:Math.hypot(n.x*r.width-sp.x,n.y*r.height-sp.y)})).sort((a,b)=>a.d-b.d)[0];if(!target||target.d>110){toast("Move the spatula over an open vessel before tapping.");return;}const solids=target.n.contents.solids,existing=solids.find(x=>x.id==="CuO");if(existing)existing.mass+=.05;else solids.push({id:"CuO",mass:.05,surface:"powder"});spatialAddEvent("good","0.05 g black copper(II) oxide powder added from the spatula.");LabAudio.clink();renderBench();syncHash();}
+function spatialUpright(){const n=spatialNode(state.spatial.selectedId);if(!n)return;n.angle=0;renderBench();syncHash();}
+function spatialEmergency(){state.spatial.gasTap=false;state.spatial.gasExposure=0;for(const b of state.spatial.nodes.filter(n=>n.type==="bunsen"))b.state.lit=false;LabAudio.stopLoop("gas");LabAudio.stopLoop("flame");spatialAddEvent("good","Emergency gas shutoff activated.");renderBench();syncHash();}
+function spatialExamSVG(){const rig=spatialCompleteHeatingRig(),gas=spatialGasPath();let body="";if(rig)body+=`<g transform="translate(120 55)" stroke="#000" fill="none" stroke-width="3"><path d="M150 30 V115 Q150 130 170 130 H250 Q270 130 270 115 V30"/><line x1="125" y1="135" x2="295" y2="135"/><path d="M145 140 L120 300 M210 140 V305 M275 140 L300 300"/><rect x="185" y="215" width="50" height="65"/><path d="M210 205 C225 180 195 180 210 145 C225 180 195 180 210 205Z"/><text x="210" y="20" text-anchor="middle" font-size="17" fill="#000" stroke="none">beaker</text><text x="315" y="145" font-size="15" fill="#000" stroke="none">wire gauze</text><text x="315" y="265" font-size="15" fill="#000" stroke="none">tripod + Bunsen</text></g>`;if(gas)body+=`<g transform="translate(420 80)" stroke="#000" fill="none" stroke-width="3"><path d="M40 70 V115 L5 210 Q0 224 18 224 H115 Q132 224 126 210 L91 115 V70"/><path d="M65 70 V35 H190 V130"/><rect x="190" y="105" width="180" height="55"/><line x1="220" y1="105" x2="220" y2="160"/><line x1="220" y1="132" x2="320" y2="132"/><text x="65" y="250" text-anchor="middle" font-size="15" fill="#000" stroke="none">reaction flask</text><text x="280" y="188" text-anchor="middle" font-size="15" fill="#000" stroke="none">gas syringe</text></g>`;if(!body)body=`<text x="380" y="210" text-anchor="middle" font-size="24">Assemble a complete heating or gas-collection rig first.</text>`;return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420" role="img" aria-label="Exam-standard apparatus diagram"><rect width="760" height="420" fill="#fff"/><text x="30" y="35" font-family="Arial" font-size="21" font-weight="700">Exam-standard apparatus schematic</text>${body}</svg>`;}
+function spatialShowDiagram(){state.spatial.examSVG=spatialExamSVG();$("#diagramStage").innerHTML=state.spatial.examSVG;$("#diagramModal").classList.add("open");}
+function spatialDownloadDiagram(){const svg=state.spatial.examSVG||spatialExamSVG();download("Virtual_Lab_Exam_Diagram.svg",svg,"image/svg+xml");}
+
+/* --------------------------------------------------------------------------
+   v0.3 Microscale 12-well qualitative analysis engine
+   -------------------------------------------------------------------------- */
+const microSamples={
+  sample_cu:{name:"Copper(II) sulfate",formula:"CuSO₄ · 0.10 M",colour:"rgba(45,137,230,.48)",species:{Cu2:5e-6,SO4:5e-6}},
+  sample_fe2:{name:"Iron(II) sulfate",formula:"FeSO₄ · 0.10 M",colour:"rgba(150,205,160,.28)",species:{Fe2:5e-6,SO4:5e-6}},
+  sample_fe3:{name:"Iron(III) chloride",formula:"FeCl₃ · 0.10 M",colour:"rgba(232,174,89,.28)",species:{Fe3:5e-6,Cl:15e-6}},
+  sample_al:{name:"Aluminium sulfate",formula:"Al₂(SO₄)₃ · 0.05 M",colour:"rgba(255,255,255,.08)",species:{Al3:5e-6,SO4:7.5e-6}},
+  sample_ca:{name:"Calcium chloride",formula:"CaCl₂ · 0.10 M",colour:"rgba(255,255,255,.08)",species:{Ca2:5e-6,Cl:10e-6}},
+  sample_kcl:{name:"Potassium chloride",formula:"KCl · 0.10 M",colour:"rgba(255,255,255,.08)",species:{K:5e-6,Cl:5e-6}},
+  sample_kbr:{name:"Potassium bromide",formula:"KBr · 0.10 M",colour:"rgba(255,255,255,.08)",species:{K:5e-6,Br:5e-6}},
+  sample_ki:{name:"Potassium iodide",formula:"KI · 0.10 M",colour:"rgba(255,255,255,.08)",species:{K:5e-6,I:5e-6}},
+  sample_carbonate:{name:"Sodium carbonate",formula:"Na₂CO₃ · 0.20 M",colour:"rgba(255,255,255,.08)",species:{Na:20e-6,CO3:10e-6}},
+  sample_mystery:{name:"Mystery sample",formula:"Unknown aqueous salt",colour:"rgba(255,255,255,.08)",species:{}}
+};
+const microReagents={
+  reagent_naoh:{name:"Sodium hydroxide",formula:"NaOH · 0.40 M",colour:"rgba(255,255,255,.08)",species:{Na:20e-6,OH:20e-6}},
+  reagent_hno3:{name:"Dilute nitric acid",formula:"HNO₃ · 1.0 M",colour:"rgba(255,255,255,.08)",species:{H:50e-6,NO3:50e-6}},
+  reagent_agno3:{name:"Silver nitrate",formula:"AgNO₃ · 0.10 M",colour:"rgba(255,255,255,.08)",species:{Ag:5e-6,NO3:5e-6}},
+  reagent_hcl:{name:"Dilute hydrochloric acid",formula:"HCl · 1.0 M",colour:"rgba(255,255,255,.08)",species:{H:50e-6,Cl:50e-6}},
+  reagent_bacl2:{name:"Barium chloride",formula:"BaCl₂ · 0.10 M",colour:"rgba(255,255,255,.08)",species:{Ba:5e-6,Cl:10e-6}},
+  reagent_ui:{name:"Universal indicator",formula:"Indicator",colour:"rgba(48,207,98,.7)",species:{},indicator:true}
+};
+const microMysteries=[
+  {key:"CuSO4",name:"Copper(II) sulfate",species:{Cu2:5e-6,SO4:5e-6},colour:"rgba(45,137,230,.48)"},
+  {key:"FeCl2",name:"Iron(II) chloride",species:{Fe2:5e-6,Cl:10e-6},colour:"rgba(150,205,160,.24)"},
+  {key:"FeCl3",name:"Iron(III) chloride",species:{Fe3:5e-6,Cl:15e-6},colour:"rgba(232,174,89,.28)"},
+  {key:"Al2SO43",name:"Aluminium sulfate",species:{Al3:5e-6,SO4:7.5e-6},colour:"rgba(255,255,255,.08)"},
+  {key:"KI",name:"Potassium iodide",species:{K:5e-6,I:5e-6},colour:"rgba(255,255,255,.08)"},
+  {key:"KBr",name:"Potassium bromide",species:{K:5e-6,Br:5e-6},colour:"rgba(255,255,255,.08)"},
+  {key:"Na2CO3",name:"Sodium carbonate",species:{Na:20e-6,CO3:10e-6},colour:"rgba(255,255,255,.08)"}
+];
+function microMystery(code=state.micro.mysteryCode){let n=0;for(const c of code)n=(n*29+c.charCodeAt(0))>>>0;return microMysteries[n%microMysteries.length];}
+function microCatalogue(key){if(key==="sample_mystery"){const m=microMystery();return{name:`Mystery ${state.micro.mysteryCode}`,formula:"Unknown aqueous salt",colour:m.colour,species:m.species};}return microSamples[key]||microReagents[key];}
+function microResolve(w){const pool={},counts={};let base="transparent",indicator=false;w.warnings=[];for(const key of w.drops){const r=microCatalogue(key);counts[key]=(counts[key]||0)+1;if(key.startsWith("sample_"))base=r.colour;indicator=indicator||!!r.indicator;for(const [ion,m] of Object.entries(r.species||{}))pool[ion]=(pool[ion]||0)+m;}
+  let H=pool.H||0,OH=pool.OH||0,neutral=Math.min(H,OH);H-=neutral;OH-=neutral;pool.H=H;pool.OH=OH;const V=Math.max(1,w.drops.length)*.00005;if(H>1e-12)w.pH=clamp(-Math.log10(H/V),0,14);else if(OH>1e-12)w.pH=clamp(14+Math.log10(OH/V),0,14);else w.pH=7;
+  w.ppt=null;w.observation="Clear solution; no characteristic change.";const has=k=>(pool[k]||0)>1e-10,drop=k=>(counts[k]||0);
+  if(has("CO3")&&H>0){w.fizzUntil=Date.now()+1700;w.observation="Effervescence: bubbles of carbon dioxide are released.";pool.CO3=0;LabAudio.fizz();}
+  const oh=pool.OH||0;
+  if(has("Cu2")&&oh>0){const q=Math.min(pool.Cu2||0,(pool.OH||0)/2);pool.Cu2-=q;pool.OH-=2*q;w.ppt={name:"copper(II) hydroxide",formula:"Cu(OH)₂",colour:"#2d8cda"};w.observation="A light blue precipitate forms.";}
+  else if(has("Fe2")&&oh>0){const q=Math.min(pool.Fe2||0,(pool.OH||0)/2);pool.Fe2-=q;pool.OH-=2*q;w.ppt={name:"iron(II) hydroxide",formula:"Fe(OH)₂",colour:"#4c8d56"};w.observation="A dirty green precipitate forms; it may brown slowly in air.";}
+  else if(has("Fe3")&&oh>0){const q=Math.min(pool.Fe3||0,(pool.OH||0)/3);pool.Fe3-=q;pool.OH-=3*q;w.ppt={name:"iron(III) hydroxide",formula:"Fe(OH)₃",colour:"#aa5a28"};w.observation="A red-brown precipitate forms.";}
+  else if(has("Al3")&&oh>0){const al=pool.Al3||0;if(oh>4.2*al){pool.OH=Math.max(0,oh-4*al);pool.Al3=0;w.ppt=null;w.observation="The white precipitate redissolves in excess sodium hydroxide to give a colourless solution.";}else{const q=Math.min(al,oh/3);pool.Al3-=q;pool.OH-=3*q;w.ppt={name:"aluminium hydroxide",formula:"Al(OH)₃",colour:"#f4f6f7"};w.observation="A white precipitate forms.";}}
+  else if(has("Ca2")&&oh>0){const q=Math.min(pool.Ca2||0,(pool.OH||0)/2);pool.Ca2-=q;pool.OH-=2*q;w.ppt={name:"calcium hydroxide",formula:"Ca(OH)₂",colour:"#f5f6f4"};w.observation="A white precipitate forms and remains in excess sodium hydroxide.";}
+  const nitric=drop("reagent_hno3")>0,silver=drop("reagent_agno3")>0;if(silver){if(has("CO3")&&!nitric){w.ppt={name:"silver carbonate interference",formula:"Ag₂CO₃",colour:"#e7d66b"};w.observation="A pale yellow carbonate interference forms because the sample was not acidified with nitric acid first.";w.warnings.push("Acidify a fresh portion with nitric acid before adding silver nitrate.");}
+    else if(nitric&&has("Cl")){w.ppt={name:"silver chloride",formula:"AgCl",colour:"#f7f7f4"};w.observation="A white silver chloride precipitate forms.";}
+    else if(nitric&&has("Br")){w.ppt={name:"silver bromide",formula:"AgBr",colour:"#f1e5aa"};w.observation="A cream silver bromide precipitate forms.";}
+    else if(nitric&&has("I")){w.ppt={name:"silver iodide",formula:"AgI",colour:"#e8c93f"};w.observation="A yellow silver iodide precipitate forms.";}
+    else if(!nitric)w.warnings.push("The halide test should use a fresh portion acidified with dilute nitric acid before silver nitrate is added.");}
+  const hcl=drop("reagent_hcl")>0,barium=drop("reagent_bacl2")>0;if(barium&&hcl&&has("SO4")){w.ppt={name:"barium sulfate",formula:"BaSO₄",colour:"#fafaf7"};w.observation="A dense white barium sulfate precipitate forms.";}else if(barium&&!hcl)w.warnings.push("For the sulfate test, acidify a fresh portion with dilute hydrochloric acid before adding barium chloride.");
+  H=pool.H||0;OH=pool.OH||0;if(H>1e-12)w.pH=clamp(-Math.log10(H/V),0,14);else if(OH>1e-12)w.pH=clamp(14+Math.log10(OH/V),0,14);else w.pH=7;
+  if(indicator){if(w.pH<3)base="rgba(224,54,62,.85)";else if(w.pH<6)base="rgba(242,137,38,.82)";else if(w.pH<8)base="rgba(47,183,92,.82)";else if(w.pH<11)base="rgba(45,122,220,.82)";else base="rgba(148,75,205,.84)";w.observation+=` Universal indicator shows approximately pH ${w.pH.toFixed(1)}.`;}
+  w.colour=base;w.pool=pool;w.counts=counts;return w;
+}
+function microSelect(key){state.micro.active=key;renderBench();syncHash();}
+function microDrop(index){const w=state.micro.wells[index];state.micro.selected=index;if(!state.micro.active){renderBench();return;}if(w.drops.length>=10){toast("This microscale well is full. Rinse it before adding more drops.");return;}w.drops.push(state.micro.active);microResolve(w);state.micro.events.unshift({at:Date.now(),well:w.name,reagent:microCatalogue(state.micro.active).name,observation:w.observation});if(state.micro.events.length>60)state.micro.events.length=60;LabAudio.drop();if(w.ppt)LabAudio.tone(310,.18,"triangle",.09,170);renderBench();syncHash();if(w.fizzUntil>Date.now())setTimeout(()=>{if(state.bench==="microscale")renderBench();},1750);}
+function microRinse(index=null){const wells=index==null?state.micro.wells:[state.micro.wells[index]];for(const w of wells)Object.assign(w,{drops:[],colour:"transparent",ppt:null,fizzUntil:0,pH:7,observation:"Empty well",warnings:[],pool:{},counts:{}});LabAudio.rinse();renderBench();syncHash();}
+function microNewMystery(){const n=parseInt(state.micro.mysteryCode.replace(/\D/g,"")||"1",10)+1;state.micro.mysteryCode=`M-${String(n).padStart(2,"0")}`;state.micro.mysteryKey=microMystery().key;state.micro.wells=makeMicroState().wells;state.micro.events=[];renderBench();syncHash();toast(`New deterministic mystery assigned: ${state.micro.mysteryCode}.`);}
+function microControlsHTML(){const active=state.micro.active;return `<div class="card"><span class="var-tag tech">Sample rack</span><div class="micro-rack">${Object.entries(microSamples).map(([k,r])=>{const rr=microCatalogue(k);return`<button class="micro-dropper ${active===k?"active":""}" data-action="micro-select" data-key="${k}"><span class="dot" style="--drop-color:${rr.colour}"></span><span><strong>${escapeHTML(rr.name)}</strong><br><small>${escapeHTML(rr.formula)}</small></span><small>${active===k?"ACTIVE":"sample"}</small></button>`;}).join("")}</div></div><div class="card"><span class="var-tag iv">Analytical reagent rack</span><div class="micro-rack">${Object.entries(microReagents).map(([k,r])=>`<button class="micro-dropper ${active===k?"active":""}" data-action="micro-select" data-key="${k}"><span class="dot" style="--drop-color:${r.colour}"></span><span><strong>${escapeHTML(r.name)}</strong><br><small>${escapeHTML(r.formula)}</small></span><small>${active===k?"ACTIVE":"reagent"}</small></button>`).join("")}</div></div><div class="card"><h3>Correct test sequencing</h3><p><strong>Halides:</strong> fresh portion → dilute nitric acid → silver nitrate.</p><p><strong>Sulfate:</strong> fresh portion → dilute hydrochloric acid → barium chloride.</p><p>Use separate wells to avoid chloride or carbonate interference.</p></div>`;}
+function microStageHTML(){const active=microCatalogue(state.micro.active);return `<div class="micro-root"><div style="width:100%;max-width:680px"><div class="micro-active">Active dropper: <strong>${escapeHTML(active?.name||"None")}</strong> · click a well to add one 0.05 cm³ drop.</div><div class="micro-plate">${state.micro.wells.map((w,i)=>{const fizz=w.fizzUntil>Date.now(),scale=Math.min(1,.42+w.drops.length*.08);return`<button class="micro-well ${state.micro.selected===i?"selected":""}" data-action="micro-well" data-index="${i}" aria-label="Well ${w.name}, ${escapeHTML(w.observation)}"><span class="well-name">${w.name}</span><span class="micro-liquid" style="--well-color:${w.colour};--fill-scale:${scale}">${w.ppt?`<span class="micro-ppt" style="--ppt:${w.ppt.colour}"></span>`:""}${fizz&&!state.calm?`<span class="micro-bubble" style="left:27%;top:58%"></span><span class="micro-bubble" style="top:52%"></span><span class="micro-bubble" style="top:64%"></span>`:""}</span></button>`;}).join("")}</div></div></div>`;}
+function microToolbarHTML(){return `<button class="btn-danger" data-action="micro-rinse-all">🚿 Rinse all wells</button><button data-action="micro-rinse-one">💧 Rinse selected</button><button class="btn-success" data-action="micro-new">🎲 New mystery</button><button data-action="copy-tsv">⧉ Copy observations TSV</button>`;}
+function microDataHTML(){const w=state.micro.wells[state.micro.selected],m=microMystery();const counts=Object.entries(w.counts||{});return `<div class="readout"><div class="tile"><span>Selected well</span><strong>${w.name}</strong></div><div class="tile"><span>Total drops</span><strong>${w.drops.length}</strong></div><div class="tile"><span>Estimated pH</span><strong>${w.pH.toFixed(1)}</strong></div><div class="tile"><span>Mystery code</span><strong>${state.micro.mysteryCode}</strong></div></div><div class="micro-observation"><strong>Observation:</strong> ${escapeHTML(w.observation)}${w.warnings?.length?`<div class="feedback warn">${w.warnings.map(escapeHTML).join(" ")}</div>`:""}</div><div class="card"><h3>Drops in ${w.name}</h3><div class="drop-count-pills">${counts.length?counts.map(([k,n])=>`<span class="drop-pill">${n}× ${escapeHTML(microCatalogue(k).formula)}</span>`).join(""):`<span style="color:var(--muted);font-size:.7rem">Empty well</span>`}</div></div><div class="table-wrap"><table><thead><tr><th>Well</th><th>Reagent added</th><th>Latest observation</th></tr></thead><tbody>${state.micro.events.length?state.micro.events.slice(0,14).map(e=>`<tr><td>${e.well}</td><td style="text-align:left">${escapeHTML(e.reagent)}</td><td style="text-align:left;white-space:normal">${escapeHTML(e.observation)}</td></tr>`).join(""):`<tr><td colspan="3">No microscale evidence logged yet.</td></tr>`}</tbody></table></div><div class="card"><h3>GCSE qualitative key</h3><table class="micro-key"><tbody><tr><td>Cu²⁺ + NaOH</td><td>light blue ppt</td></tr><tr><td>Fe²⁺ + NaOH</td><td>dirty green ppt</td></tr><tr><td>Fe³⁺ + NaOH</td><td>red-brown ppt</td></tr><tr><td>Al³⁺ + NaOH</td><td>white; dissolves in excess</td></tr><tr><td>Cl⁻ / Br⁻ / I⁻</td><td>white / cream / yellow AgX</td></tr><tr><td>SO₄²⁻</td><td>white BaSO₄</td></tr><tr><td>CO₃²⁻ + acid</td><td>CO₂ effervescence</td></tr></tbody></table></div>`;}
+function microMetrics(){const used=state.micro.wells.filter(w=>w.drops.length).length,ppt=state.micro.wells.filter(w=>w.ppt).length;return[["Mystery sample",state.micro.mysteryCode],["Wells used",`${used}/12`],["Precipitates",String(ppt)],["Selected",state.micro.wells[state.micro.selected].name]];}
+function microPhases(){return phaseCards("microscale",[{title:"Introduce · Recall",time:"0–10",prompt:"What colour precipitate is produced when sodium hydroxide is added to Fe³⁺ solution?",placeholder:"Colour and formula…",type:"text"},{title:"Explore · Mystery",time:"10–25",prompt:`Use separate wells to identify both ions in mystery ${state.micro.mysteryCode}. Which salt is present?`,placeholder:"Name / formula of mystery salt…",type:"text"},{title:"Do · Explain",time:"25–40",prompt:"Why must the halide test be acidified with nitric acid rather than hydrochloric acid?",placeholder:"Explain the interference…",type:"text"}]);}
+
+const benches={
+  spatial:{
+    title:"Spatial Sandbox · Direct Manipulation",
+    metrics:spatialMetrics,
+    controls:spatialControlsHTML,
+    stage:spatialStageHTML,
+    toolbar:spatialToolbarHTML,
+    data:spatialDataHTML,
+    phases:spatialPhases,
+    afterRender:initSpatialDOM
+  },
+  microscale:{
+    title:"Microscale Analysis · 12-Well Tile",
+    metrics:microMetrics,
+    controls:microControlsHTML,
+    stage:microStageHTML,
+    toolbar:microToolbarHTML,
+    data:microDataHTML,
+    phases:microPhases
+  },
+
+  rates:{
+    title:"Rates of Reaction · Gas Syringe",
+    metrics(){
+      return [
+        ["Time",`${fmt(state.rates.simTime,1)} s`],
+        ["Gas volume",`${fmt(state.rates.currentVol,1)} cm³`],
+        ["Theory yield",`${fmt(ratesVmax(),1)} cm³`],
+        ["Condition",`${state.rates.conc.toFixed(1)} M · ${state.rates.temp}°C`]
+      ];
+    },
+    controls(){
+      const r=state.rates,disabled=r.running?"disabled":"";
+      return `
+      <div class="card">
+        <span class="var-tag iv">Investigation factor</span>
+        <div class="control"><div class="label-row"><label for="rateFocus">Choose one factor to investigate</label></div>
+          <select id="rateFocus" ${disabled}>
+            <option value="concentration" ${r.focus==="concentration"?"selected":""}>Acid concentration</option>
+            <option value="surface" ${r.focus==="surface"?"selected":""}>Surface area</option>
+            <option value="temperature" ${r.focus==="temperature"?"selected":""}>Temperature</option>
+          </select>
+        </div>
+        <p>Change one factor across runs and keep the others controlled for a fair comparison.</p>
+      </div>
+      <div class="card">
+        <span class="var-tag ${r.focus==="concentration"?"iv":"cv"}">${r.focus==="concentration"?"Independent":"Control"} variable</span>
+        <div class="control">
+          <div class="label-row"><label for="rateConc">Hydrochloric acid concentration</label><output>${r.conc.toFixed(1)} M</output></div>
+          <input id="rateConc" type="range" min=".5" max="2" step=".25" value="${r.conc}" ${disabled}>
+        </div>
+      </div>
+      <div class="card">
+        <span class="var-tag ${r.focus==="surface"?"iv":"cv"}">${r.focus==="surface"?"Independent":"Control"} variable</span>
+        <div class="control"><div class="label-row"><label for="rateForm">Calcium carbonate form</label></div>
+          <select id="rateForm" ${disabled}>
+            ${Object.entries(chipsMeta).map(([k,v])=>`<option value="${k}" ${r.form===k?"selected":""}>${v.label}</option>`).join("")}
+          </select>
+        </div>
+      </div>
+      <div class="card">
+        <span class="var-tag ${r.focus==="temperature"?"iv":"cv"}">${r.focus==="temperature"?"Independent":"Control"} variable</span>
+        <div class="control">
+          <div class="label-row"><label for="rateTemp">Temperature</label><output>${r.temp} °C</output></div>
+          <input id="rateTemp" type="range" min="10" max="50" step="5" value="${r.temp}" ${disabled}>
+        </div>
+        <p>Fixed solid mass: <strong>0.25 g CaCO₃</strong> · acid volume: <strong>25 cm³</strong>. Across the available concentrations, acid remains in excess so CaCO₃ fixes the final CO₂ yield.</p>
+      </div>
+      <div class="card">
+        <span class="var-tag dv">Dependent variable</span>
+        <p>Volume of CO₂ collected in the gas syringe over time (cm³).</p>
+      </div>`;
+    },
+    stage(){
+      const v=state.rates.currentVol,ratio=clamp(v/100,0,1),plunger=354+ratio*240;
+      const bubbles=state.rates.running&&!state.calm?Array.from({length:Math.max(3,Math.round(state.rates.conc*5))},(_,i)=>{
+        const x=130+(i*31)%95,y=350-((i*37+Math.round(state.rates.simTime*16))%105),rr=2+(i%3);
+        return `<circle cx="${x}" cy="${y}" r="${rr}" fill="#eafaff" opacity=".75"/>`;
+      }).join(""):"";
+      return `
+      <div class="stage-inner">
+      <svg viewBox="0 0 760 500" role="img" aria-label="Conical flask connected to a gas syringe">
+        <defs>
+          <linearGradient id="glass" x1="0" x2="1"><stop offset="0" stop-color="#dff7ff" stop-opacity=".12"/><stop offset=".5" stop-color="#fff" stop-opacity=".36"/><stop offset="1" stop-color="#a8e4ff" stop-opacity=".10"/></linearGradient>
+          <linearGradient id="acid" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#6ddcff" stop-opacity=".28"/><stop offset="1" stop-color="#1388bd" stop-opacity=".62"/></linearGradient>
+          <filter id="softGlow"><feGaussianBlur stdDeviation="5"/></filter>
+        </defs>
+        <rect x="38" y="420" width="680" height="18" rx="6" fill="#29415e"/><rect x="38" y="420" width="680" height="3" fill="#587695"/>
+        <g>
+          <path d="M145 195 L145 245 L95 400 Q92 414 108 414 H232 Q248 414 245 400 L195 245 L195 195 Z" fill="url(#glass)" stroke="#9fc0d8" stroke-width="4"/>
+          <path d="M116 350 L224 350 L242 404 Q245 412 232 412 H108 Q95 412 98 404 Z" fill="url(#acid)"/>
+          <g fill="#d9e3ea" stroke="#8298aa" stroke-width="1.5">
+            ${state.rates.form==="powder"
+              ?Array.from({length:18},(_,i)=>`<circle cx="${122+(i*19)%94}" cy="${398-(i%3)*5}" r="2.3"/>`).join("")
+              :Array.from({length:state.rates.form==="large"?5:9},(_,i)=>`<circle cx="${124+(i*23)%91}" cy="${398-(i%3)*6}" r="${state.rates.form==="large"?8:5}"/>`).join("")}
+          </g>
+          <g>${bubbles}</g>
+          <ellipse cx="170" cy="195" rx="27" ry="8" fill="#7a4b2b" stroke="#45291a" stroke-width="3"/>
+          <text x="170" y="458" text-anchor="middle" fill="currentColor" font-size="15" font-weight="700">CaCO₃ + HCl</text>
+        </g>
+        <path d="M170 195 V120 Q170 102 190 102 H335 Q354 102 354 122 V236" fill="none" stroke="#c8e4f4" stroke-width="9" stroke-linecap="round"/>
+        <path d="M170 195 V120 Q170 102 190 102 H335 Q354 102 354 122 V236" fill="none" stroke="#37c8ff" stroke-width="2" stroke-dasharray="8 8" opacity=".75"/>
+        <g transform="translate(354 188)">
+          <rect x="0" y="30" width="280" height="62" rx="8" fill="url(#glass)" stroke="#a4c4da" stroke-width="3"/>
+          <path d="M0 52 H-24 V70 H0" fill="#9eb4c4"/>
+          ${Array.from({length:11},(_,i)=>{
+            const x=18+i*24; return `<line x1="${x}" y1="30" x2="${x}" y2="${i%5===0?47:41}" stroke="#b9d1e0" stroke-width="${i%5===0?2:1}"/>${i%5===0?`<text x="${x}" y="24" fill="currentColor" font-size="11" text-anchor="middle">${i*10}</text>`:""}`;
+          }).join("")}
+          <g transform="translate(${plunger-354},0)">
+            <rect x="-5" y="33" width="10" height="56" rx="2" fill="#132236" stroke="#6d8297"/>
+            <rect x="5" y="57" width="110" height="8" fill="#8399aa"/><rect x="115" y="43" width="9" height="36" rx="3" fill="#8399aa"/>
+          </g>
+          <text x="140" y="116" text-anchor="middle" fill="currentColor" font-size="13" font-weight="800">100 cm³ GAS SYRINGE</text>
+        </g>
+        <g transform="translate(565 330)">
+          <rect x="0" y="0" width="142" height="62" rx="10" fill="#07111f" stroke="#38d7ff" stroke-width="2"/>
+          <text x="71" y="22" text-anchor="middle" fill="#9fb2c8" font-size="11">LIVE CO₂ VOLUME</text>
+          <text id="svgRateVol" x="71" y="46" text-anchor="middle" fill="#ff7b83" font-size="21" font-weight="900">${fmt(v,1)} cm³</text>
+        </g>
+      </svg>
+      <div class="stage-note">Reaction speed is accelerated ×4 for lesson pacing. Logged timestamps are simulated experimental seconds.</div>
+      </div>`;
+    },
+    toolbar(){
+      const r=state.rates;
+      return `
+        <button class="btn-success" data-action="rates-start" ${r.running?"disabled":""}>▶ ${r.activeRun&&r.simTime>0?"Resume":"Start reaction"}</button>
+        <button data-action="rates-stop" ${!r.running?"disabled":""}>Ⅱ Pause</button>
+        <button data-action="rates-log" ${!r.activeRun?"disabled":""}>＋ Log current reading</button>
+        <button data-action="rates-reset">↺ New repeat</button>
+        <button data-action="copy-tsv">⧉ Copy TSV</button>
+      `;
+    },
+    data(){
+      return ratesDataHTML();
+    },
+    phases(){
+      return phaseCards("rates",[
+        {title:"Introduce · Predict",time:"0–10",prompt:"If hydrochloric acid concentration increases while the other conditions stay the same, what should happen to the initial rate? Explain using collision theory.",placeholder:"Your prediction and reason…",type:"text"},
+        {title:"Explore · Evidence",time:"10–25",prompt:"Collect at least two comparable runs. Which condition gives the steepest early section of the graph?",placeholder:"Condition and evidence…",type:"text"},
+        {title:"Do · Calculate",time:"25–40",prompt:"For the current condition, calculate mean initial rate from 0–20 s: mean volume at 20 s ÷ 20.",placeholder:"cm³/s",type:"number"}
+      ]);
+    }
+  },
+
+  titration:{
+    title:"Acid–Base Titration · Precision & Concordance",
+    metrics(){
+      const t=state.titration,ph=titrationPH(),final=t.startReading+t.added;
+      return [
+        ["Burette",`${final.toFixed(2)} cm³`],
+        ["Titre added",`${t.added.toFixed(2)} cm³`],
+        ["pH",ph.toFixed(2)],
+        ["Indicator",titrationColour(ph).name]
+      ];
+    },
+    controls(){
+      const t=state.titration;
+      return `
+      <div class="card">
+        <span class="var-tag tech">Technique target</span>
+        <h3>Unknown HCl sample <span class="mono">${escapeHTML(t.sampleCode)}</span></h3>
+        <p>Pipette aliquot: <strong>25.00 cm³</strong>. Standard sodium hydroxide in the burette: <strong>${t.baseConc.toFixed(3)} mol dm⁻³</strong>.</p>
+        <div class="control"><div class="label-row"><label for="titreCode">Sample code</label></div><input id="titreCode" type="text" maxlength="12" value="${escapeHTML(t.sampleCode)}"></div>
+      </div>
+      <div class="card">
+        <span class="var-tag cv">Controlled / known</span>
+        <p>Phenolphthalein indicator · 25.00 cm³ acid aliquot · 0.100 mol dm⁻³ NaOH.</p>
+      </div>
+      <div class="card">
+        <span class="var-tag dv">Measured</span>
+        <p>Accurate titre = final burette reading − initial burette reading. Seek at least two concordant accurate titres within <strong>0.20 cm³</strong>.</p>
+      </div>
+      <div class="card">
+        <h3>Burette tap control</h3>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:7px">
+          <button data-action="titre-add" data-v="1">+1.00 cm³</button>
+          <button data-action="titre-add" data-v=".5">+0.50 cm³</button>
+          <button data-action="titre-add" data-v=".1">+0.10 cm³</button>
+          <button data-action="titre-add" data-v=".05">+0.05 cm³</button>
+        </div>
+        <p>Use larger additions early, then switch to dropwise additions as the endpoint approaches.</p>
+      </div>`;
+    },
+    stage(){
+      const t=state.titration,final=t.startReading+t.added,remaining=clamp(50-final,0,50),fillH=remaining/50*280,fillY=92+(280-fillH);
+      const ph=titrationPH(),colour=titrationColour(ph),eq=titreEquivalence(),near=Math.abs(t.added-eq)<.4,flash=t.transientPinkUntil>Date.now()&&t.added<eq;
+      return `
+      <div class="stage-inner">
+      <svg viewBox="0 0 760 500" role="img" aria-label="Burette delivering sodium hydroxide into a conical flask">
+        <defs><linearGradient id="bGlass" x1="0" x2="1"><stop stop-color="#dff7ff" stop-opacity=".12"/><stop offset=".5" stop-color="#fff" stop-opacity=".36"/><stop offset="1" stop-color="#8edaff" stop-opacity=".10"/></linearGradient></defs>
+        <rect x="70" y="432" width="620" height="16" rx="5" fill="#29415e"/>
+        <rect x="585" y="70" width="12" height="360" rx="4" fill="#5e7489"/><rect x="535" y="420" width="110" height="12" rx="5" fill="#405a72"/>
+        <g>
+          <rect x="310" y="62" width="58" height="320" rx="8" fill="url(#bGlass)" stroke="#aac9dc" stroke-width="3"/>
+          <rect x="317" y="${fillY}" width="44" height="${fillH}" rx="5" fill="rgba(72,193,255,.28)"/>
+          ${Array.from({length:26},(_,i)=>{
+            const y=72+i*12,major=i%5===0;
+            return `<line x1="${major?318:326}" y1="${y}" x2="355" y2="${y}" stroke="#bcd3e0" stroke-width="${major?1.7:1}"/>${major?`<text x="302" y="${y+4}" text-anchor="end" fill="currentColor" font-size="10">${i*2}</text>`:""}`;
+          }).join("")}
+          <rect x="326" y="383" width="26" height="15" rx="4" fill="#788fa2"/><line x1="339" y1="390" x2="389" y2="390" stroke="#93a9ba" stroke-width="7" stroke-linecap="round"/>
+          <path d="M339 398 V426" stroke="#b9d8e8" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="339" cy="430" r="3" fill="#7edbff"/>
+        </g>
+        <g>
+          <path d="M275 303 L275 340 L225 425 Q220 435 234 435 H445 Q460 435 454 425 L404 340 V303 Z" fill="url(#bGlass)" stroke="#aac9dc" stroke-width="4"/>
+          <path d="M240 405 H439 L452 428 Q456 433 445 433 H234 Q224 433 229 425 Z" fill="${colour.fill}" stroke="none"/>
+          <ellipse cx="339" cy="304" rx="34" ry="8" fill="rgba(255,255,255,.12)" stroke="#aac9dc" stroke-width="2"/>
+          ${!state.calm&&t.added>0?`<path d="M270 415 Q339 ${near?390:405} 410 415" fill="none" stroke="#ff9dcc" opacity=".55" stroke-width="4"/>`:""}
+          ${flash?`<ellipse class="transient-pink" cx="339" cy="414" rx="93" ry="16" fill="rgba(255,94,174,.62)"/>`:""}
+        </g>
+        <g transform="translate(70 90)">
+          <rect width="188" height="120" rx="12" fill="#07111f" stroke="#4f8cff" stroke-width="2"/>
+          <text x="18" y="28" fill="#9fb2c8" font-size="12">INITIAL READING</text><text x="170" y="28" text-anchor="end" fill="#fff" font-size="17" font-weight="900">${t.startReading.toFixed(2)} cm³</text>
+          <text x="18" y="60" fill="#9fb2c8" font-size="12">FINAL READING</text><text x="170" y="60" text-anchor="end" fill="#fff" font-size="17" font-weight="900">${final.toFixed(2)} cm³</text>
+          <text x="18" y="92" fill="#9fb2c8" font-size="12">TITRE</text><text x="170" y="92" text-anchor="end" fill="#ffcc63" font-size="20" font-weight="900">${t.added.toFixed(2)} cm³</text>
+        </g>
+        <g transform="translate(488 274)">
+          <rect width="190" height="100" rx="12" fill="#07111f" stroke="#b08cff" stroke-width="2"/>
+          <text x="95" y="27" text-anchor="middle" fill="#9fb2c8" font-size="12">LIVE pH</text>
+          <text x="95" y="58" text-anchor="middle" fill="#b08cff" font-size="28" font-weight="900">${ph.toFixed(2)}</text>
+          <text x="95" y="82" text-anchor="middle" fill="#ff8cc8" font-size="12" font-weight="800">${colour.name.toUpperCase()}</text>
+        </g>
+      </svg>
+      <div class="stage-note">The unknown concentration is fixed by the sample code, so the same code can be shared for a fair repeat or peer comparison.</div>
+      </div>`;
+    },
+    toolbar(){
+      const t=state.titration;
+      return `
+        <button class="btn-success" data-action="titre-record">✓ Record ${t.rough?"rough":"accurate"} titre</button>
+        <button data-action="titre-swirl">↻ Swirl flask</button>
+        <button data-action="titre-new">↺ Fresh flask / repeat</button>
+        <button data-action="copy-tsv">⧉ Copy TSV</button>
+        <button data-action="titre-clear">Clear titres</button>`;
+    },
+    data(){
+      const t=state.titration,conc=concordantTitres(),m=mean(conc);
+      return `
+      <div class="readout">
+        <div class="tile"><span>Sample</span><strong>${escapeHTML(t.sampleCode)}</strong></div>
+        <div class="tile"><span>Concordance</span><strong>${conc.length>=2?"✓ "+conc.length+" titres":"Not yet"}</strong></div>
+        <div class="tile"><span>Mean concordant</span><strong>${Number.isFinite(m)?m.toFixed(2)+" cm³":"—"}</strong></div>
+        <div class="tile"><span>Endpoint aim</span><strong>Faint pink</strong></div>
+      </div>
+      <div class="table-wrap">
+        <table><thead><tr><th>Run</th><th>Start</th><th>Final</th><th>Titre</th><th>Note</th></tr></thead>
+        <tbody>${t.runs.length?t.runs.map((r,i)=>`<tr class="${r.overshoot?"anomaly":""}"><td>${r.rough?"Rough":"T"+(i)}</td><td>${r.start.toFixed(2)}</td><td>${r.final.toFixed(2)}</td><td>${r.titre.toFixed(2)}</td><td>${r.overshoot?"Overshot":r.colour}</td></tr>`).join(""):`<tr><td colspan="5">No titres recorded yet.</td></tr>`}</tbody></table>
+      </div>
+      <div class="graph-card"><canvas id="mainGraph" width="760" height="420" aria-label="Titration curve graph"></canvas></div>
+      <div class="legend"><span style="--legend:#b08cff">pH curve</span><span style="--legend:#ff8cc8">indicator transition</span></div>
+      ${t.lastResult?`<div class="feedback ${t.resultTone||""}">${escapeHTML(t.lastResult)}</div>`:""}`;
+    },
+    phases(){
+      return phaseCards("titration",[
+        {title:"Introduce · Technique",time:"0–10",prompt:"Why should a burette be rinsed with the solution that will go into it before the final fill?",placeholder:"Explain the dilution problem…",type:"text"},
+        {title:"Explore · Concordance",time:"10–25",prompt:"Complete a rough titre, then obtain at least two accurate concordant titres. What is your mean concordant titre?",placeholder:"cm³",type:"number"},
+        {title:"Do · Calculate",time:"25–40",prompt:"Using your mean titre and c(NaOH)=0.100 mol dm⁻³ for a 1:1 HCl:NaOH reaction, calculate c(HCl).",placeholder:"mol dm⁻³",type:"number"}
+      ]);
+    }
+  },
+
+  gastest:{
+    title:"Gas Tests · Unknown Identification",
+    metrics(){
+      const g=state.gastest;
+      return [
+        ["Unknown",g.sampleCode],
+        ["Tests used",String(g.tests.length)],
+        ["Identity",g.locked?gasNames[g.unknownIndex]:"Hidden"],
+        ["Status",g.locked?"Identified":"Investigating"]
+      ];
+    },
+    controls(){
+      const g=state.gastest;
+      return `
+      <div class="card">
+        <span class="var-tag tech">Unknown sample</span>
+        <h3>Gas sample <span class="mono">${escapeHTML(g.sampleCode)}</span></h3>
+        <p>Use characteristic observations to identify the gas. The same sample code always recreates the same unknown.</p>
+      </div>
+      <div class="card">
+        <h3>Choose a test</h3>
+        <button style="width:100%;margin-top:5px" data-action="gas-test" data-test="burning-splint">🔥 Burning splint</button>
+        <button style="width:100%;margin-top:7px" data-action="gas-test" data-test="glowing-splint">✨ Glowing splint</button>
+        <button style="width:100%;margin-top:7px" data-action="gas-test" data-test="limewater">🧪 Bubble through limewater</button>
+      </div>
+      <div class="card">
+        <span class="var-tag dv">Observation</span>
+        <p>Record what you actually observe before deciding which gas is present.</p>
+      </div>
+      <div class="card">
+        <h3>Identify unknown</h3>
+        <select id="gasIdentity">
+          <option value="">Choose identity…</option>
+          ${gasKeys.map((k,i)=>`<option value="${k}" ${g.identified===k?"selected":""}>${gasNames[i]}</option>`).join("")}
+        </select>
+        <button class="btn-success" style="width:100%;margin-top:7px" data-action="gas-submit">✓ Submit identification</button>
+      </div>`;
+    },
+    stage(){
+      const g=state.gastest,last=g.lastTest;
+      const scene=last?.kind||"none";
+      return `
+      <div class="stage-inner">
+      <svg viewBox="0 0 760 500" role="img" aria-label="Gas test apparatus">
+        <defs><linearGradient id="tubeGlass" x1="0" x2="1"><stop stop-color="#dff7ff" stop-opacity=".12"/><stop offset=".5" stop-color="#fff" stop-opacity=".4"/><stop offset="1" stop-color="#8edaff" stop-opacity=".10"/></linearGradient></defs>
+        <rect x="70" y="430" width="620" height="16" rx="5" fill="#29415e"/>
+        <g transform="translate(285 95)">
+          <path d="M50 0 H150 V285 Q150 340 100 340 Q50 340 50 285 Z" fill="url(#tubeGlass)" stroke="#acd0e4" stroke-width="4"/>
+          <path d="M60 264 H140 V288 Q140 330 100 330 Q60 330 60 288 Z" fill="rgba(87,185,255,.12)"/>
+          <ellipse cx="100" cy="3" rx="53" ry="10" fill="rgba(255,255,255,.08)" stroke="#acd0e4" stroke-width="3"/>
+          <text x="100" y="380" text-anchor="middle" fill="currentColor" font-size="14" font-weight="800">UNKNOWN GAS ${escapeHTML(g.sampleCode)}</text>
+        </g>
+        ${scene==="burning-splint"?`
+          <g transform="translate(120 120) rotate(20 150 80)">
+            <rect x="20" y="70" width="230" height="18" rx="6" fill="#8b5a32"/>
+            <path d="M250 78 C272 50 285 70 273 84 C294 89 275 112 255 92 C246 105 235 90 250 78Z" fill="#ff9f35"/>
+            ${!state.calm?`<path d="M259 78 C270 62 277 76 269 85 C281 88 269 99 258 90Z" fill="#fff1a8"/>`:""}
+          </g>`:""}
+        ${scene==="glowing-splint"?`
+          <g transform="translate(122 120) rotate(20 150 80)">
+            <rect x="20" y="70" width="230" height="18" rx="6" fill="#8b5a32"/>
+            <circle cx="255" cy="79" r="${gasKeys[g.unknownIndex]==="oxygen"?18:8}" fill="#ff6a3d" opacity=".9"/>
+            ${gasKeys[g.unknownIndex]==="oxygen"&&!state.calm?`<path d="M250 78 C270 48 286 70 272 88 C286 98 266 110 253 91Z" fill="#ffd66b"/>`:""}
+          </g>`:""}
+        ${scene==="limewater"?`
+          <g transform="translate(96 95)">
+            <rect x="0" y="245" width="205" height="110" rx="8" fill="rgba(255,255,255,.08)" stroke="#9ec2d7" stroke-width="3"/>
+            <rect x="8" y="284" width="189" height="63" rx="5" fill="${gasKeys[g.unknownIndex]==="carbon-dioxide"?"rgba(235,239,242,.82)":"rgba(205,239,255,.30)"}"/>
+            <path d="M200 80 V295 H145" fill="none" stroke="#c8e5f4" stroke-width="8" stroke-linecap="round"/>
+            <text x="102" y="380" text-anchor="middle" fill="currentColor" font-size="13" font-weight="800">LIMEWATER</text>
+          </g>`:""}
+        <g transform="translate(480 110)">
+          <rect width="215" height="190" rx="12" fill="#07111f" stroke="#38d7ff" stroke-width="2"/>
+          <text x="18" y="27" fill="#9fb2c8" font-size="12">OBSERVATION</text>
+          <foreignObject x="18" y="42" width="179" height="130">
+            <div xmlns="http://www.w3.org/1999/xhtml" style="color:#eef6ff;font:700 15px system-ui;line-height:1.45">${last?escapeHTML(last.result):"Choose a characteristic test from the apparatus trolley."}</div>
+          </foreignObject>
+        </g>
+      </svg>
+      <div class="stage-note">Virtual observations only. This bench teaches recognition of standard school gas-test evidence without asking pupils to generate gases physically.</div>
+      </div>`;
+    },
+    toolbar(){
+      return `<button class="btn-success" data-action="gas-new">🎲 New unknown sample</button><button data-action="copy-tsv">⧉ Copy TSV</button><button data-action="gas-reset">↺ Clear test evidence</button>`;
+    },
+    data(){
+      const g=state.gastest;
+      return `
+      <div class="readout">
+        <div class="tile"><span>Sample code</span><strong>${escapeHTML(g.sampleCode)}</strong></div>
+        <div class="tile"><span>Evidence items</span><strong>${g.tests.length}</strong></div>
+        <div class="tile"><span>Current decision</span><strong>${g.identified?escapeHTML(gasNames[gasKeys.indexOf(g.identified)]||"—"):"—"}</strong></div>
+        <div class="tile"><span>Verification</span><strong>${g.locked?"✓ Correct":"Open"}</strong></div>
+      </div>
+      <div class="table-wrap">
+        <table><thead><tr><th>#</th><th>Test</th><th>Observation</th></tr></thead>
+        <tbody>${g.tests.length?g.tests.map((x,i)=>`<tr><td>${i+1}</td><td>${escapeHTML(x.label)}</td><td style="text-align:left;white-space:normal">${escapeHTML(x.result)}</td></tr>`).join(""):`<tr><td colspan="3">No gas-test evidence yet.</td></tr>`}</tbody></table>
+      </div>
+      <div class="card"><h3>Evidence rule</h3><p>A gas is identified from a <strong>characteristic observation</strong>, not from colour, guesswork or the name of the test alone.</p></div>`;
+    },
+    phases(){
+      return phaseCards("gastest",[
+        {title:"Introduce · Recall",time:"0–10",prompt:"Which test gives a positive result for oxygen, and what is the observation?",placeholder:"Test + observation…",type:"text"},
+        {title:"Explore · Test",time:"10–25",prompt:"Perform tests on the unknown. Which single observation is most diagnostic for your sample?",placeholder:"Evidence statement…",type:"text"},
+        {title:"Do · Justify",time:"25–40",prompt:"Write a complete conclusion: “The gas is ___ because ___.”",placeholder:"Conclusion with evidence…",type:"text"}
+      ]);
+    }
+  }
+};
+
+function phaseCards(bench,items){
+  const answers=state.phaseAnswers[bench]||["","",""];
+  return items.map((it,i)=>`
+    <article class="phase">
+      <h3><span class="phase-num">${i+1}</span>${it.title}<span class="time">${it.time} min</span></h3>
+      <p>${it.prompt}</p>
+      <div class="answer-row">
+        <input id="phase-${bench}-${i}" data-phase="${i}" type="${it.type}" ${it.type==="number"?'step="0.001"':""} value="${escapeHTML(answers[i]||"")}" placeholder="${escapeHTML(it.placeholder)}">
+        <button class="btn-primary" data-action="phase-check" data-phase="${i}">Check</button>
+      </div>
+      <div class="feedback" id="phase-fb-${bench}-${i}"></div>
+    </article>`).join("");
+}
+
+function ratesDataHTML(){
+  const group=currentRateGroup(),times=Array.from({length:13},(_,i)=>i*10);
+  const rows=times.map(t=>{
+    const pts=group.map(r=>r.points.find(p=>Math.abs(p.t-t)<.15));
+    const vals=pts.map(p=>p?.v);
+    const present=vals.filter(Number.isFinite),m=mean(present),s=sd(present);
+    const anomaly=present.length>=3 && s>1.5;
+    const trialCell=p=>p
+      ?`<td class="${rateAnomaly(p)?"anomaly-cell":""}" title="${rateAnomaly(p)?"Possible anomalous reading — compare with repeat/theory":""}">${p.v.toFixed(1)}</td>`
+      :"<td>—</td>";
+    return `<tr class="${anomaly?"anomaly":""}"><td>${t}</td>
+      ${trialCell(pts[0])}${trialCell(pts[1])}${trialCell(pts[2])}
+      <td>${Number.isFinite(m)?m.toFixed(1):"—"}</td></tr>`;
+  }).join("");
+  return `
+    <div class="readout">
+      <div class="tile"><span>Current condition</span><strong style="font-size:.88rem">${escapeHTML(rateConditionLabel())}</strong></div>
+      <div class="tile"><span>Repeats</span><strong>${group.length}/3</strong></div>
+      <div class="tile"><span>Runs retained</span><strong>${state.rates.runs.length}</strong></div>
+      <div class="tile"><span>Max theoretical CO₂</span><strong>${ratesVmax().toFixed(1)} cm³</strong></div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>Time / s</th><th>Trial 1</th><th>Trial 2</th><th>Trial 3</th><th>Mean</th></tr></thead><tbody>${rows}</tbody></table></div>
+    <div class="graph-card"><canvas id="mainGraph" width="760" height="420" aria-label="Gas volume against time graph"></canvas></div>
+    <div class="legend">${state.rates.runs.slice(-4).map((r,i)=>`<span style="--legend:${["#38d7ff","#ffc857","#ff6b76","#45d69b"][i]}">${escapeHTML(rateConditionLabel(r))}</span>`).join("")||"<span>No runs plotted yet</span>"}</div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap"><button class="btn-small" data-action="rates-clear">Clear all rate data</button></div>`;
+}
+
+function updateRateLiveDOM(){
+  const v=state.rates.currentVol,svg=$("#svgRateVol");if(svg)svg.textContent=`${fmt(v,1)} cm³`;
+  const metrics=$$("#metricBar .metric .v");
+  if(metrics.length>=2){metrics[0].textContent=`${fmt(state.rates.simTime,1)} s`;metrics[1].textContent=`${fmt(v,1)} cm³`;}
+}
+function renderRatesDataOnly(){
+  if(state.bench!=="rates")return;
+  dom.data.innerHTML=ratesDataHTML();
+  drawMainGraph();
+}
+
+function renderMetrics(){
+  dom.metrics.innerHTML=benches[state.bench].metrics().map(([k,v])=>`<div class="metric"><div class="k">${escapeHTML(k)}</div><div class="v">${escapeHTML(v)}</div></div>`).join("");
+}
+function renderBench(){
+  if(state.bench!=="rates"&&state.rates.running){state.rates.running=false;cancelAnimationFrame(rateRAF);}if(state.bench!=="spatial"){LabAudio.stopLoop("gas");LabAudio.stopLoop("flame");}
+  const b=benches[state.bench];if(!b){state.bench="spatial";return renderBench();}
+  dom.bench.value=state.bench;dom.stageTitle.textContent="2 · "+b.title;
+  dom.controls.innerHTML=b.controls();dom.stage.innerHTML=b.stage();dom.toolbar.innerHTML=b.toolbar();dom.data.innerHTML=b.data();dom.phases.innerHTML=b.phases();
+  const status={spatial:["Sandbox","Direct manipulation","Consequences"],microscale:["Droppers","Qualitative tests","Well evidence"],rates:["Variables",state.rates.running?"Running":"Ready","Graph + repeats"],titration:["Technique","Precision","Concordance"],gastest:["Tests","Observe","Evidence"]}[state.bench];
+  dom.leftStatus.textContent=status[0];dom.stageStatus.textContent=status[1];dom.dataStatus.textContent=status[2];
+  document.body.classList.toggle("calm",state.calm);LabAudio.enabled=state.audio!==false;
+  dom.calm.innerHTML=(state.calm?'☾ <span class="txt">Dark</span>':'☼ <span class="txt">Calm</span>');
+  dom.noise.innerHTML=(state.noise?'≈ <span class="txt">Noise on</span>':'≡ <span class="txt">Ideal</span>');dom.noise.disabled=state.bench!=="rates";
+  dom.audio.className=`btn-ghost ${state.audio?"audio-on":"audio-off"}`;dom.audio.innerHTML=(state.audio?'🔊 <span class="txt">Audio</span>':'🔇 <span class="txt">Muted</span>');
+  renderMetrics();drawMainGraph();if(b.afterRender)b.afterRender();dom.pupil.value=state.pupil||"";dom.notes.value=state.notes||"";
+}
+function canvasSetup(canvas){
+  const rect=canvas.getBoundingClientRect(),dpr=Math.min(2,window.devicePixelRatio||1);
+  const w=Math.max(300,Math.round(rect.width*dpr)),h=Math.max(180,Math.round(rect.height*dpr));
+  if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h}
+  const ctx=canvas.getContext("2d");ctx.setTransform(dpr,0,0,dpr,0,0);ctx.imageSmoothingEnabled=false;
+  return {ctx,w:rect.width,h:rect.height};
+}
+function graphTheme(){
+  const cs=getComputedStyle(document.body);
+  return {text:cs.getPropertyValue("--muted").trim(),grid:cs.getPropertyValue("--line").trim(),bg:cs.getPropertyValue("--bg").trim()};
+}
+function drawAxes(ctx,w,h,xMax,yMax,xStep,yStep,xLabel,yLabel){
+  const pad={l:46,r:14,t:14,b:38},pw=w-pad.l-pad.r,ph=h-pad.t-pad.b,theme=graphTheme();
+  ctx.clearRect(0,0,w,h);ctx.fillStyle=theme.bg;ctx.fillRect(0,0,w,h);
+  ctx.strokeStyle=theme.grid;ctx.fillStyle=theme.text;ctx.lineWidth=1;ctx.font="11px system-ui";
+  ctx.textAlign="center";ctx.textBaseline="top";
+  for(let x=0;x<=xMax+1e-9;x+=xStep){const px=pad.l+(x/xMax)*pw;ctx.beginPath();ctx.moveTo(px,pad.t);ctx.lineTo(px,pad.t+ph);ctx.stroke();ctx.fillText(String(round(x,2)),px,pad.t+ph+7);}
+  ctx.textAlign="right";ctx.textBaseline="middle";
+  for(let y=0;y<=yMax+1e-9;y+=yStep){const py=pad.t+ph-(y/yMax)*ph;ctx.beginPath();ctx.moveTo(pad.l,py);ctx.lineTo(pad.l+pw,py);ctx.stroke();ctx.fillText(String(round(y,2)),pad.l-6,py);}
+  ctx.fillStyle=theme.text;ctx.textAlign="center";ctx.textBaseline="alphabetic";ctx.font="12px system-ui";ctx.fillText(xLabel,pad.l+pw/2,h-4);
+  ctx.save();ctx.translate(12,pad.t+ph/2);ctx.rotate(-Math.PI/2);ctx.fillText(yLabel,0,0);ctx.restore();
+  return {pad,pw,ph,x:x=>pad.l+(x/xMax)*pw,y:y=>pad.t+ph-(y/yMax)*ph};
+}
+function drawMainGraph(){
+  const canvas=$("#mainGraph");if(!canvas)return;
+  const {ctx,w,h}=canvasSetup(canvas);
+  if(state.bench==="rates")drawRatesGraph(ctx,w,h);
+  else if(state.bench==="titration")drawTitrationGraph(ctx,w,h);
+}
+function drawRatesGraph(ctx,w,h){
+  const A=drawAxes(ctx,w,h,120,70,20,10,"Time / s","CO₂ volume / cm³");
+  const cols=["#38d7ff","#ffc857","#ff6b76","#45d69b"];
+  state.rates.runs.slice(-4).forEach((run,i)=>{
+    if(run.points.length<1)return;ctx.strokeStyle=cols[i%cols.length];ctx.fillStyle=cols[i%cols.length];ctx.lineWidth=2.4;
+    ctx.beginPath();run.points.forEach((p,j)=>{const x=A.x(p.t),y=A.y(p.v);j?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke();
+    run.points.forEach(p=>{ctx.beginPath();ctx.arc(A.x(p.t),A.y(p.v),3.3,0,Math.PI*2);ctx.fill();});
+  });
+}
+function drawTitrationGraph(ctx,w,h){
+  const A=drawAxes(ctx,w,h,50,14,10,2,"NaOH added / cm³","pH");
+  ctx.strokeStyle="#b08cff";ctx.lineWidth=2.4;ctx.beginPath();
+  const t=state.titration,cA=sampleAcidConc(t.sampleCode),va=t.acidVol/1000,cB=t.baseConc;
+  for(let ml=0;ml<=50;ml+=.25){
+    const nb=cB*ml/1000,na=cA*va,V=va+ml/1000;let ph;
+    if(Math.abs(na-nb)<1e-10)ph=7;else if(na>nb)ph=-Math.log10((na-nb)/V);else ph=14-(-Math.log10((nb-na)/V));
+    ph=clamp(ph,0,14);const x=A.x(ml),y=A.y(ph);ml?ctx.lineTo(x,y):ctx.moveTo(x,y);
+  }ctx.stroke();
+  ctx.fillStyle="#ff8cc8";ctx.globalAlpha=.16;
+  const x1=A.x(titreEquivalence()+.001),x2=A.x(Math.min(50,titreEquivalence()+.25));ctx.fillRect(x1,A.pad.t,x2-x1,A.ph);ctx.globalAlpha=1;
+  ctx.fillStyle="#ffc857";ctx.beginPath();ctx.arc(A.x(t.added),A.y(titrationPH()),4.5,0,Math.PI*2);ctx.fill();
+}
+function checkPhase(i){
+  const bench=state.bench,input=$(`#phase-${bench}-${i}`),fb=$(`#phase-fb-${bench}-${i}`);if(!input||!fb)return;
+  const raw=input.value.trim(),low=raw.toLowerCase();state.phaseAnswers[bench][i]=raw;
+  let ok=false,msg="";
+  if(bench==="rates"){
+    if(i===0){ok=(/(increase|faster|steep|greater)/.test(low)&&/(collision|particle|frequency|successful)/.test(low));msg=ok?"Good: higher concentration means more reacting particles per unit volume, so successful collisions occur more frequently.":"Include both the rate change and collision-theory reason.";}
+    if(i===1){ok=raw.length>=12;msg=ok?"Evidence statement captured. Compare early gradients rather than only final gas volume.":"Name a condition and cite what the early graph/data show.";}
+    if(i===2){const g=currentRateGroup(),vals=g.map(r=>r.points.find(p=>p.t===20)?.v).filter(Number.isFinite),expected=mean(vals)/20,val=parseFloat(raw);ok=Number.isFinite(expected)&&Number.isFinite(val)&&Math.abs(val-expected)<=.08;msg=Number.isFinite(expected)?(ok?`Correct for the current repeats: about ${expected.toFixed(2)} cm³/s.`:`Use mean volume at 20 s (${mean(vals).toFixed(1)} cm³) ÷ 20 s.`):"Collect a reading at 20 s first.";}
+  }else if(bench==="titration"){
+    if(i===0){ok=/(dilut|concentr|water|contamin)/.test(low);msg=ok?"Correct: residual water would dilute the titrant and change its effective concentration.":"Think about any water left inside the burette and the concentration of the titrant.";}
+    if(i===1){const c=concordantTitres(),expected=mean(c),val=parseFloat(raw);ok=Number.isFinite(expected)&&Number.isFinite(val)&&Math.abs(val-expected)<=.03;msg=Number.isFinite(expected)?(ok?`Correct mean concordant titre: ${expected.toFixed(2)} cm³.`:`Your concordant mean from the recorded titres is ${expected.toFixed(2)} cm³.`):"Obtain at least two accurate titres within 0.20 cm³ first.";}
+    if(i===2){const c=concordantTitres(),titre=mean(c),expected=Number.isFinite(titre)?state.titration.baseConc*(titre/state.titration.acidVol):NaN,val=parseFloat(raw);ok=Number.isFinite(expected)&&Number.isFinite(val)&&Math.abs(val-expected)<=.0035;msg=Number.isFinite(expected)?(ok?`Correct: ${expected.toFixed(3)} mol dm⁻³ (within rounding).`:`Use c(acid) × 25.00 = 0.100 × ${titre.toFixed(2)} for the 1:1 reaction.`):"You need concordant accurate titres before calculating the concentration.";}
+  }else if(bench==="gastest"){
+    if(i===0){ok=/(glow|glowing)/.test(low)&&/(relight|re-light|relights)/.test(low);msg=ok?"Correct: oxygen relights a glowing splint.":"State both the glowing-splint test and the relighting observation.";}
+    if(i===1){ok=raw.length>=12&&state.gastest.tests.length>0;msg=ok?"Observation captured. Prefer the most characteristic positive result.":"Perform at least one test and cite a specific observation.";}
+    if(i===2){const name=gasNames[state.gastest.unknownIndex].toLowerCase();ok=low.includes(name.split(" ")[0])&&/(because|since|as)/.test(low)&&raw.length>18;msg=ok?"Strong conclusion: identity plus supporting observation.":"Use the form “The gas is ___ because ___” and include the observed test result.";}
+  }else if(bench==="spatial"){
+    if(i===0){ok=/(air ?hole|collar)/.test(low)&&/(clos|yellow|safety)/.test(low)&&/(strike|safe|visible|light)/.test(low);msg=ok?"Correct: close the air hole for an easily visible safety flame and to reduce strike-back risk during ignition.":"Refer to the closed air hole/yellow safety flame and why it is safer for ignition.";}
+    if(i===1){ok=raw.length>=18&&state.spatial.events.length>=2;msg=ok?"Diagnostic observation captured from your own apparatus actions.":"Carry out at least two apparatus actions, then describe one decision and its consequence.";}
+    if(i===2){ok=/(hands|physical|manual|dexterity|real|competenc|chemical|glass|safety)/.test(low)&&/(cannot|not|doesn|limitation|but)/.test(low);msg=ok?"Good boundary: simulated reasoning evidence is not proof of real handling and safety competence.":"State what the virtual lab supports, then name a real hands-on competence it cannot certify.";}
+  }else{
+    if(i===0){ok=/(red.?brown|brown)/.test(low)&&/(fe|iron|hydroxide|oh)/.test(low);msg=ok?"Correct: Fe³⁺ gives a red-brown Fe(OH)₃ precipitate with sodium hydroxide.":"Include the red-brown colour and iron(III) hydroxide.";}
+    if(i===1){const m=microMystery(),norm=s=>s.toLowerCase().replace(/[^a-z0-9]/g,"");ok=[m.key,m.name].some(x=>norm(raw).includes(norm(x)));msg=ok?`Correct: mystery ${state.micro.mysteryCode} is ${m.name}.`:"Use separate fresh portions to identify both the cation and anion before naming the complete salt.";}
+    if(i===2){ok=/(chloride|cl-|cl⁻|chlor)/.test(low)&&/(false|interfer|precipitate|silver chloride|agcl)/.test(low)&&/(nitric|nitrate)/.test(low);msg=ok?"Correct: hydrochloric acid would introduce chloride ions and could create a false AgCl result; nitric acid does not add a tested halide.":"Explain which ion HCl would add and how that could falsify the silver-nitrate test.";}
+  }
+  fb.className=`feedback ${ok?"good":"bad"}`;fb.textContent=(ok?"✓ ":"→ ")+msg;if(ok)LabAudio.success();else LabAudio.error();syncHash();
+}
+
+function serialisableState(){
+  const copy=JSON.parse(JSON.stringify(state));copy.version="0.3";copy.rates.running=false;copy.rates.simTime=round(copy.rates.simTime,1);copy.rates.currentVol=round(copy.rates.currentVol,1);copy.rates.activeRun=null;
+  copy.spatial.snapHint=null;copy.spatial.pouring=null;copy.spatial.examSVG="";return copy;
+}
+function syncHash(){
+  try{const token=base64urlEncode(serialisableState());try{history.replaceState(null,"","#s="+token);}catch(err){location.hash="s="+token;}}
+  catch(e){console.warn("State URL encode failed",e);}
+}
+function loadHash(){
+  try{const m=location.hash.match(/^#s=(.+)$/);if(!m)return false;const incoming=base64urlDecode(m[1]);if(!incoming||!["0.2","0.3"].includes(incoming.version))return false;const fresh=initialState();
+    state={...fresh,...incoming,rates:{...fresh.rates,...incoming.rates},titration:{...fresh.titration,...incoming.titration},gastest:{...fresh.gastest,...incoming.gastest},spatial:{...fresh.spatial,...incoming.spatial,teacher:{...fresh.spatial.teacher,...incoming.spatial?.teacher},achievements:{...fresh.spatial.achievements,...incoming.spatial?.achievements}},micro:{...fresh.micro,...incoming.micro},phaseAnswers:{...fresh.phaseAnswers,...incoming.phaseAnswers}};
+    if(!Array.isArray(state.micro.wells)||state.micro.wells.length!==12)state.micro.wells=fresh.micro.wells;if(!Array.isArray(state.spatial.nodes))state.spatial.nodes=[];if(!Array.isArray(state.spatial.tubes))state.spatial.tubes=[];
+    state.version="0.3";state.rates.running=false;state.rates.activeRun=null;state.gastest.unknownIndex=gasIndexFromCode(state.gastest.sampleCode);state.micro.mysteryKey=microMystery(state.micro.mysteryCode).key;LabAudio.enabled=state.audio!==false;return true;
+  }catch(e){console.warn("Could not load shared state",e);return false;}
+}
+function printDataTableHTML(){
+  if(state.bench==="rates"){const group=currentRateGroup(),times=Array.from({length:13},(_,i)=>i*10);return `<table><thead><tr><th>Time / s</th><th>Trial 1</th><th>Trial 2</th><th>Trial 3</th><th>Mean</th></tr></thead><tbody>${times.map(t=>{const vals=group.map(r=>r.points.find(p=>Math.abs(p.t-t)<.15)?.v),p=vals.filter(Number.isFinite);return `<tr><td>${t}</td>${[0,1,2].map(i=>`<td>${Number.isFinite(vals[i])?vals[i].toFixed(1):""}</td>`).join("")}<td>${p.length?mean(p).toFixed(1):""}</td></tr>`;}).join("")}</tbody></table>`;}
+  if(state.bench==="titration")return `<table><thead><tr><th>Run</th><th>Start / cm³</th><th>Final / cm³</th><th>Titre / cm³</th><th>Observation</th></tr></thead><tbody>${state.titration.runs.map((r,i)=>`<tr><td>${r.rough?"Rough":"T"+i}</td><td>${r.start.toFixed(2)}</td><td>${r.final.toFixed(2)}</td><td>${r.titre.toFixed(2)}</td><td>${escapeHTML(r.overshoot?"Overshot":r.colour)}</td></tr>`).join("")}</tbody></table>`;
+  if(state.bench==="gastest")return `<table><thead><tr><th>#</th><th>Test</th><th>Observation</th></tr></thead><tbody>${state.gastest.tests.map((x,i)=>`<tr><td>${i+1}</td><td>${escapeHTML(x.label)}</td><td>${escapeHTML(x.result)}</td></tr>`).join("")}</tbody></table>`;
+  if(state.bench==="spatial")return `<table><thead><tr><th>ID</th><th>Apparatus</th><th>Docked to</th><th>Angle</th><th>Volume</th><th>Temp</th><th>pH</th></tr></thead><tbody>${state.spatial.nodes.map(n=>`<tr><td>${n.id}</td><td>${escapeHTML(spatialDefs[n.type].label)}</td><td>${n.parentId||""}</td><td>${Math.round(n.angle)}°</td><td>${n.contents?n.contents.volume.toFixed(1):""}</td><td>${n.contents?n.contents.temp.toFixed(1):n.type==="thermometer"?(n.state.reading||20).toFixed(1):""}</td><td>${n.contents?spatialPH(n.contents).toFixed(2):""}</td></tr>`).join("")}</tbody></table><h2>Observation and consequence log</h2><table><thead><tr><th>Time</th><th>Level</th><th>Observation</th></tr></thead><tbody>${state.spatial.events.slice().reverse().map(e=>`<tr><td>${new Date(e.at).toLocaleTimeString("en-GB")}</td><td>${e.level}</td><td>${escapeHTML(e.msg)}</td></tr>`).join("")}</tbody></table>`;
+  return `<table><thead><tr><th>Well</th><th>Drops</th><th>Observation</th><th>pH</th></tr></thead><tbody>${state.micro.wells.filter(w=>w.drops.length).map(w=>`<tr><td>${w.name}</td><td>${escapeHTML(w.drops.map(k=>microCatalogue(k).formula).join(" + "))}</td><td>${escapeHTML(w.observation)}</td><td>${w.pH.toFixed(1)}</td></tr>`).join("")}</tbody></table>`;
+}
+function preparePrint(){
+  const canvas=$("#mainGraph"),graph=canvas?canvas.toDataURL("image/png"):"",b=benches[state.bench],answers=state.phaseAnswers[state.bench]||[];let setup="",extra="";
+  if(state.bench==="rates")setup=`Condition: ${rateConditionLabel()} · solid mass 0.25 g · acid volume 25 cm³ · theoretical final CO₂ ${ratesVmax().toFixed(1)} cm³`;
+  if(state.bench==="titration"){const c=concordantTitres();setup=`Unknown HCl sample ${state.titration.sampleCode} · NaOH 0.100 mol dm⁻³ · 25.00 cm³ acid aliquot · mean concordant titre ${Number.isFinite(mean(c))?mean(c).toFixed(2)+" cm³":"not yet obtained"}`;}
+  if(state.bench==="gastest")setup=`Unknown sample ${state.gastest.sampleCode} · tests performed ${state.gastest.tests.length} · identification ${state.gastest.locked?gasNames[state.gastest.unknownIndex]:"not yet confirmed"}`;
+  if(state.bench==="spatial"){setup=`Mission: ${state.spatial.mission} · apparatus ${state.spatial.nodes.length} · gas manifold ${state.spatial.gasTap?"open":"off"} · teacher faults ${Object.values(state.spatial.teacher).filter(Boolean).length}`;extra=`<h2>Exam-standard schematic generated from the apparatus tree</h2><div class="diagram-stage">${state.spatial.examSVG||spatialExamSVG()}</div>`;}
+  if(state.bench==="microscale")setup=`Mystery ${state.micro.mysteryCode} · wells used ${state.micro.wells.filter(w=>w.drops.length).length}/12 · active analytical evidence ${state.micro.events.length} additions`;
+  dom.printSheet.innerHTML=`<h1>Virtual Chemistry Practical Record</h1><div class="print-meta"><div><strong>Learner:</strong> ${escapeHTML(state.pupil||"________________")}</div><div><strong>Date:</strong> ${new Date().toLocaleDateString("en-GB")}</div><div><strong>Bench:</strong> ${escapeHTML(b.title)}</div></div><div class="print-box"><strong>Setup / variables:</strong> ${escapeHTML(setup)}<br><strong>Mode:</strong> ${state.noise?"Authentic measurement noise":"Ideal theory"} · ${state.calm?"Calm display":"Standard display"} · ${state.audio?"Audio enabled":"Audio muted"}</div><h2>Primary evidence</h2>${printDataTableHTML()}${graph?`<h2>Graph / measurement curve</h2><img class="print-graph" src="${graph}" alt="">`:""}${extra}<h2>Introduce → Explore → Do responses</h2><div class="print-box"><strong>1.</strong> ${escapeHTML(answers[0]||"")}<br><br><strong>2.</strong> ${escapeHTML(answers[1]||"")}<br><br><strong>3.</strong> ${escapeHTML(answers[2]||"")}</div><h2>Conclusion / evidence note</h2><div class="print-box">${escapeHTML(state.notes||"")||'<div class="print-lines"></div>'}</div><div style="margin-top:3mm;font-size:7.5pt">Simulation evidence supports scientific reasoning and data analysis; it is not evidence of hands-on laboratory competency.</div>`;
+}
+function exportEvidence(){state.pupil=dom.pupil.value.trim();state.notes=dom.notes.value.trim();const payload={schema:"virtual-chem-lab-evidence/0.3",exportedAt:nowISO(),state:serialisableState()};const safe=(state.pupil||"learner").replace(/[^a-z0-9_-]+/gi,"_").slice(0,30);download(`Chemistry_Lab_${state.bench}_${safe}.json`,JSON.stringify(payload,null,2));toast("Evidence JSON exported locally.");}
+function resetCurrentBench(){if(state.bench==="rates")clearRateRuns();else if(state.bench==="titration")resetTitration();else if(state.bench==="gastest")resetGasTests();else if(state.bench==="spatial"){spatialReset();return;}else{state.micro=makeMicroState();renderBench();syncHash();}state.phaseAnswers[state.bench]=["","",""];state.notes="";dom.notes.value="";renderBench();syncHash();toast("Current bench reset.");}
+function currentTSV(){
+  if(state.bench==="rates"){const group=currentRateGroup(),times=Array.from({length:13},(_,i)=>i*10);return["Time_s\tTrial_1_cm3\tTrial_2_cm3\tTrial_3_cm3\tMean_cm3",...times.map(t=>{const vals=group.map(r=>r.points.find(p=>Math.abs(p.t-t)<.15)?.v),p=vals.filter(Number.isFinite);return[t,...vals.map(v=>Number.isFinite(v)?v.toFixed(1):""),p.length?mean(p).toFixed(1):""].join("\t");})].join("\n");}
+  if(state.bench==="titration")return["Run\tInitial_cm3\tFinal_cm3\tTitre_cm3\tpH\tObservation",...state.titration.runs.map((r,i)=>[r.rough?"Rough":"T"+i,r.start.toFixed(2),r.final.toFixed(2),r.titre.toFixed(2),r.pH.toFixed(2),r.overshoot?"Overshot":r.colour].join("\t"))].join("\n");
+  if(state.bench==="gastest")return["Number\tTest\tObservation",...state.gastest.tests.map((x,i)=>[i+1,x.label,x.result].join("\t"))].join("\n");
+  if(state.bench==="spatial")return["ID\tApparatus\tParent\tAngle_deg\tVolume_cm3\tTemp_C\tpH\tState_vector",...state.spatial.nodes.map(n=>[n.id,spatialDefs[n.type].label,n.parentId||"",Math.round(n.angle),n.contents?n.contents.volume.toFixed(1):"",n.contents?n.contents.temp.toFixed(1):n.type==="thermometer"?(n.state.reading||20).toFixed(1):"",n.contents?spatialPH(n.contents).toFixed(2):"",n.contents?spatialSpeciesText(n.contents):""].join("\t")),"","Time\tLevel\tObservation",...state.spatial.events.slice().reverse().map(e=>[new Date(e.at).toISOString(),e.level,e.msg].join("\t"))].join("\n");
+  return["Well\tDrops\tObservation\tpH",...state.micro.wells.filter(w=>w.drops.length).map(w=>[w.name,w.drops.map(k=>microCatalogue(k).formula).join(" + "),w.observation,w.pH.toFixed(1)].join("\t"))].join("\n");
+}
+async function copyCurrentTSV(){await copyText(currentTSV());toast("Tab-separated data copied for Excel or Google Sheets.");}
+
+dom.bench.addEventListener("change",e=>{state.bench=e.target.value;renderBench();syncHash();});
+dom.calm.addEventListener("click",()=>{state.calm=!state.calm;renderBench();syncHash();});
+dom.noise.addEventListener("click",()=>{if(state.bench!=="rates")return;state.noise=!state.noise;renderBench();syncHash();});
+dom.audio.addEventListener("click",()=>{state.audio=!state.audio;LabAudio.enabled=state.audio;if(!state.audio)LabAudio.stopAll();else LabAudio.init();renderBench();syncHash();});
+dom.share.addEventListener("click",async()=>{state.pupil=dom.pupil.value.trim();state.notes=dom.notes.value.trim();syncHash();await copyText(location.href);toast("Resumable lab link copied.");});
+dom.print.addEventListener("click",()=>{state.pupil=dom.pupil.value.trim();state.notes=dom.notes.value.trim();preparePrint();window.print();});
+dom.help.addEventListener("click",()=>dom.modal.classList.add("open"));
+$("#closeHelp").addEventListener("click",()=>dom.modal.classList.remove("open"));
+$("#closeHelp2").addEventListener("click",()=>dom.modal.classList.remove("open"));
+$("#closeDiagram").addEventListener("click",()=>dom.diagramModal.classList.remove("open"));
+$("#closeDiagram2").addEventListener("click",()=>dom.diagramModal.classList.remove("open"));
+$("#downloadDiagram").addEventListener("click",spatialDownloadDiagram);
+dom.modal.addEventListener("click",e=>{if(e.target===dom.modal)dom.modal.classList.remove("open")});
+dom.diagramModal.addEventListener("click",e=>{if(e.target===dom.diagramModal)dom.diagramModal.classList.remove("open")});
+dom.export.addEventListener("click",exportEvidence);
+dom.clear.addEventListener("click",resetCurrentBench);
+dom.pupil.addEventListener("input",e=>{state.pupil=e.target.value;});
+dom.notes.addEventListener("input",e=>{state.notes=e.target.value;});
+
+dom.controls.addEventListener("input",e=>{
+  const id=e.target.id;
+  if(id==="rateConc"){
+    state.rates.conc=parseFloat(e.target.value);
+    const out=e.target.closest(".control")?.querySelector("output");if(out)out.textContent=state.rates.conc.toFixed(1)+" M";
+    renderMetrics();
+  }
+  if(id==="rateTemp"){
+    state.rates.temp=parseInt(e.target.value,10);
+    const out=e.target.closest(".control")?.querySelector("output");if(out)out.textContent=state.rates.temp+" °C";
+    renderMetrics();
+  }
+});
+dom.controls.addEventListener("change",e=>{
+  const id=e.target.id;
+  if(id==="rateConc"||id==="rateTemp"){renderBench();syncHash();}
+  if(id==="rateFocus"){state.rates.focus=e.target.value;renderBench();syncHash();}
+  if(id==="rateForm"){state.rates.form=e.target.value;renderBench();syncHash();}
+  if(id==="titreCode"){
+    state.titration.sampleCode=e.target.value.toUpperCase().replace(/[^A-Z0-9-]/g,"").slice(0,12)||"A17";
+    state.titration.runs=[];state.titration.added=0;state.titration.startReading=.20;renderBench();syncHash();
+  }
+  if(id==="spatialMission"){state.spatial.mission=e.target.value;renderBench();syncHash();}
+  if(id==="faultBalance"){state.spatial.teacher.balanceDrift=parseFloat(e.target.value);renderBench();syncHash();}
+  if(id==="faultLeak"){state.spatial.teacher.gasLeak=e.target.checked?.15:0;renderBench();syncHash();}
+  if(id==="faultBlocked"){state.spatial.teacher.blockedTube=e.target.checked;renderBench();syncHash();}
+  if(id==="faultWet"){state.spatial.teacher.wetGlassware=e.target.checked;renderBench();syncHash();}
+  if(id==="faultCarbonate"){state.spatial.teacher.carbonateNaOH=e.target.checked;renderBench();syncHash();}
+});
+document.addEventListener("click",e=>{
+  const btn=e.target.closest("[data-action]");if(!btn)return;
+  const a=btn.dataset.action;
+  if(a==="rates-start")startRates();
+  else if(a==="rates-stop")stopRates();
+  else if(a==="rates-log"){addRatePoint(state.rates.simTime,true);renderBench();syncHash();}
+  else if(a==="rates-reset")resetRateApparatus(true);
+  else if(a==="rates-clear")clearRateRuns();
+  else if(a==="titre-add")dispense(parseFloat(btn.dataset.v));
+  else if(a==="titre-record")recordTitre();
+  else if(a==="titre-new")newTitrationRun();
+  else if(a==="titre-clear")resetTitration();
+  else if(a==="gas-test")performGasTest(btn.dataset.test);
+  else if(a==="gas-submit")submitGasIdentity();
+  else if(a==="gas-new")newGasUnknown();
+  else if(a==="gas-reset")resetGasTests();
+  else if(a==="titre-swirl")swirlTitration();
+  else if(a==="copy-tsv")copyCurrentTSV();
+  else if(a==="spatial-spawn")spatialSpawn(btn.dataset.type);
+  else if(a==="spatial-reagent")spatialSpawn("bottle",btn.dataset.reagent);
+  else if(a==="spatial-tube")spatialSpawnTube();
+  else if(a==="spatial-kit")spatialLoadKit();
+  else if(a==="spatial-gas")spatialToggleGas();
+  else if(a==="spatial-emergency")spatialEmergency();
+  else if(a==="spatial-collar")spatialCycleCollar();
+  else if(a==="spatial-tare")spatialTare();
+  else if(a==="spatial-spatula")spatialTapSpatula();
+  else if(a==="spatial-upright")spatialUpright();
+  else if(a==="spatial-delete")spatialRemoveSelected();
+  else if(a==="spatial-diagram")spatialShowDiagram();
+  else if(a==="spatial-reset")spatialReset();
+  else if(a==="micro-select")microSelect(btn.dataset.key);
+  else if(a==="micro-well")microDrop(parseInt(btn.dataset.index,10));
+  else if(a==="micro-rinse-all")microRinse();
+  else if(a==="micro-rinse-one")microRinse(state.micro.selected);
+  else if(a==="micro-new")microNewMystery();
+  else if(a==="phase-check")checkPhase(parseInt(btn.dataset.phase,10));
+});
+document.addEventListener("input",e=>{
+  if(e.target.matches("[data-phase]")){
+    const i=parseInt(e.target.dataset.phase,10);state.phaseAnswers[state.bench][i]=e.target.value;
+  }
+});
+window.addEventListener("resize",()=>requestAnimationFrame(drawMainGraph));
+window.addEventListener("beforeprint",preparePrint);
+window.addEventListener("hashchange",()=>{if(loadHash())renderBench();});
+
+loadHash();LabAudio.enabled=state.audio!==false;
+dom.pupil.value=state.pupil||"";dom.notes.value=state.notes||"";
+renderBench();
+let labLast=performance.now();function labLoop(ts){const dt=Math.min(.05,Math.max(0,(ts-labLast)/1000));labLast=ts;if(state.bench==="spatial")spatialStep(dt,ts);requestAnimationFrame(labLoop);}requestAnimationFrame(labLoop);
+syncHash();
+})();
+</script>
+</body>
+</html>
