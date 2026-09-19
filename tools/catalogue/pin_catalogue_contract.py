@@ -1310,6 +1310,15 @@ REVIEWED_PATHS = (
     "assets/catalogue/terms-and-styles.json", "assets/catalogue/science-shelf.json", "assets/catalogue/humanities-shelf.json",
     "tools/catalogue/build_catalogue.py", "tools/catalogue/build_science_shelf.py", "tools/catalogue/build_humanities_shelf.py",
     "tools/catalogue/check_catalogue_static.py", "tools/catalogue/check_catalogue_dom.cjs", "tools/catalogue/verify_education_navigation.cjs",
+    # SX3-PASSES Ruling C: Science_Teesside/index.html is a derivable table that
+    # had no control, because build_science_shelf.py cannot run against 77 stale
+    # week bindings. This re-derives only the cards' title text and supplies the
+    # missing --check. Pinned, so the control itself cannot drift unreviewed.
+    "tools/catalogue/sync_shelf_card_titles.py",
+    # ORDER SX3-PASSES: the reviewed re-stamp of recorded evidence digests. It writes
+    # only the sha256 of an explicitly listed, moved, limb-proved entry, and is pinned
+    # so the tool that moves a review digest cannot itself drift unreviewed.
+    "tools/catalogue/restamp_evidence_sha256.py",
     "tools/catalogue/SHELF_SELECTION.json", "tools/catalogue/HUMANITIES_SELECTION.json",
     "tools/easter/science_original_browser.cjs",
     "tools/science_pack/browser_checks.cjs",
@@ -1332,6 +1341,17 @@ REVIEWED_PATHS = (
     # SX3 landing decks. A deck is admitted by being named here: the boundary
     # permits a changed file only if it is pinned, and tools/pin1/derive_triggers.py
     # then materialises the matching trigger path and asserts the two sets are equal.
+    "Science_Teesside/Launch/Autumn2_W7_2026-27/SCI_L_A2_W7L1_Topics_2_3_Assessment_Introduce.html",
+    "Science_Teesside/Launch/Autumn2_W7_2026-27/SCI_L_A2_W7L2_Topics_2_3_Assessment_Explore.html",
+    "Science_Teesside/Launch/Autumn2_W7_2026-27/SCI_L_A2_W7L3_Topics_2_3_Assessment_Do.html",
+    "Science_Teesside/Launch/W14-W15_2026-27/SCI_L_W14L1_Genetic_Condition_Research_Introduce.html",
+    "Science_Teesside/Launch/W14-W15_2026-27/SCI_L_W14L2_Genetic_Condition_Source_Evidence_Explore.html",
+    "Science_Teesside/Launch/W14-W15_2026-27/SCI_L_W14L3_Genetic_Condition_Presentation_Do.html",
+    "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W13L3_Inheritance_Probability_Do.html",
+    "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9L1_Cell_Cycle_Introduce.html",
+    "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9L2_Mitosis_Sequence_Explore.html",
+    "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9L3_Identical_Daughter_Cells_Do.html",
+    "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9_Copy_separate_divide_Classic.html",
     "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W10L1_Growth_And_Differentiation_Introduce.html",
     "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W10L2_Stem_Cells_And_Meristems_Explore.html",
     "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W10L3_Growth_Stem_Cell_Data_Application_Do.html",
@@ -1678,6 +1698,20 @@ REVIEWED_PATHS += (
 # admitted with it as one reviewed replacement transaction.
 REVIEWED_PATHS += (
     'data/chassis-census.json',
+)
+
+
+# SX3 LAUNCH W9, 2026-09-18. The download definition that names a continuation
+# lesson by title. verify_definitions.py asserts that title against the deck's
+# own lesson_label(), so a deck whose title is re-authored makes this file stale
+# and reds CI - which is what happened when SCI_L_W9L1_Cell_Cycle_Introduce.html
+# landed its new title. The definition is hand-maintained and nothing re-derives
+# it, so it is admitted the same way the deck is: by digest pin, in one reviewed
+# transaction with the lesson whose title it mirrors. This is the STOP-P1 class
+# and the pin is the control the standing rule requires until the title can be
+# derived from the deck instead of typed.
+REVIEWED_PATHS += (
+    'tools/downloads/definitions/launch-science-aut1-main.json',
 )
 
 
