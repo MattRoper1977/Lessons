@@ -440,6 +440,35 @@ def controls(root):
     check('An undeclared cover file is rejected', bool(judge(root, [('A', COVER + '/unreviewed.html')])))
     check('A modification of an existing cover file is not an additive installation', bool(judge(root, [('M', COVER+'/resource.css')])))
     check('A deleted shelf is rejected', bool(judge(root, [('D', SHELVES[0])])))
+    # ORDER SX3-PASSES PASS 4 (3b) red proofs for PATHWAY_PARENTS. The set is only
+    # as good as its refusals, so each of the three ways it could go wrong is proved
+    # to go RED rather than assumed to.
+    check('The three pathway landing pages pass as exact reviewed additions',
+          not judge(root, [('A', p) for p in PATHWAY_PARENTS]))
+    # (i) a fourth path planted in the set, with no pin behind it.
+    planted = 'Science_Teesside/Build/UNREVIEWED_START_HERE.html'
+    saved = globals()['PATHWAY_PARENTS']
+    try:
+        globals()['PATHWAY_PARENTS'] = saved + (planted,)
+        check('A fourth path planted in PATHWAY_PARENTS with no pin is rejected',
+              bool(judge(root, [('A', planted)])))
+    finally:
+        globals()['PATHWAY_PARENTS'] = saved
+    # (ii) a listed page whose reviewed pin disagrees with the bytes on disk.
+    pins = pin_map(root)
+    disagreeing = dict(pins); disagreeing[PATHWAY_PARENTS[0]] = '0' * 64
+    real_pin_map = globals()['pin_map']
+    try:
+        globals()['pin_map'] = lambda _root: disagreeing
+        check('A pathway landing page whose pin disagrees with its bytes is rejected',
+              bool(judge(root, [('A', PATHWAY_PARENTS[0])])))
+    finally:
+        globals()['pin_map'] = real_pin_map
+    # (iii) an EDIT of a listed page is not an installation: it falls through to the
+    # existing routes and is rejected there, so editing one still needs its own
+    # reviewed transaction.
+    check('A modification of a pathway landing page is not an additive installation',
+          bool(judge(root, [('M', PATHWAY_PARENTS[0])])))
     check('Rename-as-delete/add cannot move a retained lesson into the cover exception', bool(judge(root, [('D', sorted(retained)[0]), additions[0]])))
     science_additions = [('A', rel) for rel in pin_map(root) if rel.startswith(SCIENCE_PACKS) and rel not in ALL_REPLACEMENTS]
     if science_additions:
