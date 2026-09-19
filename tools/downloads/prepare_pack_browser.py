@@ -22,20 +22,52 @@ PACKS = [
 GUIDANCE_ROUTES_SHA256 = "a7f5c3473f78c0a3f5ec5048a92ae30bf93bccfd56a07f7699145a51db769a2b"
 SUGAR_GUIDANCE = "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html"
 
+# SX3 moves ONE more BUILD route onto the classic chassis Sugar already sits on:
+# SCI_B_W12_Give_a_rock_a_job_Classic.html, the single deck this branch lands. The docked
+# guidance injection cannot ride along: n6m-guide:v1 ships
+# [data-mbm-guide]{display:none!important}, and on the classic chassis data-mbm-guide also
+# carries the TA and cold-call dialogs - injecting it would hide the TA dialog outright. So
+# this route changes guidance PRESENTATION, exactly as EDU-Q1's Sugar variant did, and keeps
+# its navigation check: asserted on four real controls instead of a marker substring, which
+# is strictly stronger than the substring it replaces.
+#
+# Matt's ruling on the four reds, SS3: withdraw the widening. An earlier version of this
+# set also named eight W9-W13 BUILD routes. That was wrong and is withdrawn. Those
+# eight are HELD (Held A, BUILD W9-W14): they sit at main's bytes, still carry
+# n6m-guide-docked, and are correctly 'docked-guidance'. Naming them here
+# asserted a transplant this branch does not contain - the widening survived a force-push that
+# removed the commits carrying the decks - and the four-control assertion measured 0 of 4 on
+# every one of them. Membership is named, never inferred from page shape: the landing puts 66
+# decks on this chassis and shape-matching would silently grow the census.
+#
+# The census stays at 47, measured: 1 classic-dialog (Sugar) + 46 docked-guidance. The
+# W12 Classic entry is INERT today - Classic decks are not packaged, so no pack member
+# ever matches it and the four-control assertion never fires for it. It is named anyway,
+# because the ruling is that membership is declared from what the branch lands and
+# measured on the tip (4 of 4 there), so that if the deck is ever packaged it is typed
+# correctly rather than silently read as a docked route it no longer is.
+CLASSIC_CHASSIS_ROUTES = frozenset({
+    SUGAR_GUIDANCE,
+    "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W12_Give_a_rock_a_job_Classic.html",
+})
+
+CLASSIC_NAVIGATION = (
+    '//button[@data-action="ta"]',
+    '//dialog[@id="ta-dialog"]//button[@data-action="close"]',
+    '//button[@id="next-slide" and @data-action="next"]',
+    '//button[@id="previous-slide" and @data-action="previous"]',
+)
+
 
 def guidance_kind(member, content):
     source = member.removeprefix('Lessons/')
-    if source == SUGAR_GUIDANCE:
+    if source in CLASSIC_CHASSIS_ROUTES:
         from lxml import html
         page = html.fromstring(content)
-        required = [
-            '//button[@data-action="ta"]',
-            '//dialog[@id="ta-dialog"]//button[@data-action="close"]',
-            '//button[@id="next-slide" and @data-action="next"]',
-            '//button[@id="previous-slide" and @data-action="previous"]',
-        ]
-        if not all(len(page.xpath(selector)) == 1 for selector in required):
-            raise ValueError('Sugar replacement must retain real teacher-dialog and navigation controls')
+        if not all(len(page.xpath(selector)) == 1 for selector in CLASSIC_NAVIGATION):
+            raise ValueError(
+                'Classic-chassis route must retain real teacher-dialog and navigation '
+                'controls: ' + source)
         return 'classic-dialog'
     return 'docked-guidance' if b'n6m-guide-docked' in content else None
 
