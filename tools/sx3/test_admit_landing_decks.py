@@ -8,9 +8,12 @@ Every case runs against synthetic text in memory. No repository file is touched.
 """
 from __future__ import annotations
 
+import contextlib
 import importlib.util
+import io
 import json
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -105,6 +108,70 @@ class RestoreToken(unittest.TestCase):
                                            {"p.html": {"weeks": [{"key": "Aut2·W4"}]}})
         self.assertEqual(written, ["Aut2·W4"])
         self.assertNotIn("W99", out)
+
+
+class IdenticalToBase(unittest.TestCase):
+    """The skip in main() for a deck whose bytes already equal the base.
+
+    A held deck reverted to the base in the working tree still appears in the
+    diff against that base, so main() is handed a deck it has no work to do on.
+    The base's own lesson-config is pretty-printed and does not round-trip, so
+    without the skip the tool REFUSES that deck instead of passing over it.
+
+    The first version of this test asserted only the premise - that
+    restore_binding_keys refuses a pretty-printed config - and so passed with
+    the skip deleted. It therefore controlled nothing. These two cases drive
+    main() itself, and the second is the control: it deletes the skip from a
+    copy of the source and requires the refusal to come back.
+    """
+
+    PRETTY = deck(BASE_CONFIG).replace(json.dumps(BASE_CONFIG, ensure_ascii=False),
+                                       json.dumps(BASE_CONFIG, indent=2))
+
+    def _run(self, module):
+        """Run module.main() over one deck whose bytes equal its base."""
+        rel = "Science_Teesside/Grow/W1_2026-27/SCI_G_W1_Held.html"
+        root = Path(tempfile.mkdtemp())
+        (root / rel).parent.mkdir(parents=True)
+        (root / rel).write_text(self.PRETTY)
+        (root / admit.BINDINGS).parent.mkdir(parents=True, exist_ok=True)
+        (root / admit.BINDINGS).write_text(json.dumps({"entries": []}))
+        old_root, old_changed, old_git, old_argv = (
+            module.ROOT, module.changed_science, module.git_text, sys.argv)
+        module.ROOT = root
+        module.changed_science = lambda base: [rel]
+        module.git_text = lambda base, path: self.PRETTY
+        sys.argv = ["admit", "--base", "origin/main", "--check"]
+        try:
+            buffer = io.StringIO()
+            with contextlib.redirect_stdout(buffer):
+                code = module.main()
+            return code, buffer.getvalue()
+        finally:
+            (module.ROOT, module.changed_science, module.git_text, sys.argv) = (
+                old_root, old_changed, old_git, old_argv)
+
+    def test_a_deck_equal_to_its_base_is_skipped_not_refused(self):
+        code, out = self._run(admit)
+        self.assertEqual(code, 0, out)
+        self.assertIn("REFUSED               : 0 deck(s)", out)
+        self.assertIn("already correct       : 1 deck(s)", out)
+
+    def test_control_removing_the_skip_brings_the_refusal_back(self):
+        source = (ROOT / "tools/sx3/admit_landing_decks.py").read_text()
+        skip = ("        if base_text is not None and text == base_text:\n"
+                "            untouched.append(rel)\n"
+                "            continue\n")
+        self.assertTrue(skip in source,
+                        "the skip this test controls is no longer in main()")
+        patched = Path(tempfile.mkdtemp()) / "admit_no_skip.py"
+        patched.write_text(source.replace(skip, ""))
+        spec_no_skip = importlib.util.spec_from_file_location("admit_no_skip", patched)
+        module = importlib.util.module_from_spec(spec_no_skip)
+        spec_no_skip.loader.exec_module(module)
+        code, out = self._run(module)
+        self.assertEqual(code, 1, out)
+        self.assertIn("REFUSED               : 1 deck(s)", out)
 
 
 if __name__ == "__main__":

@@ -134,6 +134,15 @@ def main() -> int:
             continue
         text = original = source.read_text()
         base_text = git_text(args.base, rel)
+        # A deck whose bytes already equal the base needs nothing, and must not
+        # be refused for it. This happens whenever a held deck has been reverted
+        # to the base in the working tree while HEAD still carries the
+        # transplanted version, so the diff still names it. The base's own
+        # lesson-config is pretty-printed and would not round-trip, so without
+        # this the tool refuses decks it has no work to do on.
+        if base_text is not None and text == base_text:
+            untouched.append(rel)
+            continue
         try:
             if base_text is not None:
                 text, carried = restore_binding_keys(text, base_text)
