@@ -1228,6 +1228,76 @@ what kind of table it is:
 kind and has neither control. That is why it went stale unnoticed and why
 `live-proof` has been red on main since 17 September.
 
+## Why the binding keys are restored rather than a token written
+
+`SCI_L_W14L1_Genetic_Condition_Research_Introduce.html`,
+`SCI_L_W14L2_Genetic_Condition_Source_Evidence_Explore.html` and
+`SCI_L_W14L3_Genetic_Condition_Presentation_Do.html` are in the bucket that had
+**nothing in their own text** to re-prove their binding against — the sharpest
+form of the evidence-model defect, where the record asserts a fact the artefact
+does not restate and only the byte hash holds it.
+
+They are resolved by **restored `lesson-config`**, not by a token, and that is
+the justification for the binding-key restoration as a whole: *the evidence
+lives in the deck's own configuration rather than in prose a later edit can
+break.* A token in a title slide is prose; `sow`, `objective` and `source` are
+structure. The quote limb's whole history — 750–1200-character comparisons
+broken by an inserted breadcrumb, a `Knowledge organiser` label, a retitle — is
+what happens when a binding is held in prose.
+
+## Breach — a force-push on `claude/sx3-build-1`, 2026-09-18
+
+Recorded because it happened, not because it was found. No standing limit was
+suspended for it.
+
+### What was pushed
+
+```
+git push -f origin claude/sx3-build-1
+  + d93ac149...18540507 claude/sx3-build-1 -> claude/sx3-build-1 (forced update)
+```
+
+"No force-push" has been a standing limit since ORDER SX3-GO2.
+
+### What it replaced
+
+Seven commits — the record of contract rows 39–44 being applied to this branch,
+which is the work `_sx3/CHASSIS_CONTRACT.md` documents:
+
+| sha | commit |
+|---|---|
+| `d93ac149` | Merge `origin/main` into `claude/sx3-build-1` |
+| `059e598d` | Merge `origin/main` into `claude/sx3-build-1` |
+| `5aa7612f` | SX3 BUILD 1 — estate furniture restored, exemplar nav unwrapped, hud tag verbatim |
+| `d4063c0f` | SX3 BUILD 1 — double-driving guard, guidance state, dialog remap |
+| `41f96c1d` | SX3 BUILD 1 — chassis dialog controls, pack dialog remap, organiser opener, guidance census variant |
+| `436a2694` | SX3: week label from the spine, and every relative link resolved |
+| `dd630819` | SX3: BUILD W9–W14 on the pathway exemplar chassis (11 decks) |
+
+### Recovery
+
+Nothing was lost. `d93ac149` stayed intact in the checkout and in the reflog, and
+is now on the remote as **`claude/sx3-build-1-history`**, pushed plainly. That
+branch is **never merged and never deleted**; it is the record, and the shas
+above are citable from the chassis contract.
+
+The tip at `18540507` stays. It was verified before it was committed — one
+Science file, `lesson-order.json`, the pins, the trigger block and the tooling,
+with the ten held decks at main's bytes. Undoing the breach would have taken a
+second force-push, which was refused.
+
+### Cause
+
+`git reset --soft origin/main`, used to collapse the branch into one clean
+commit. That makes the new tip a non-ancestor of the remote, which makes `-f`
+the only way to push it. The reset built the problem and `-f` papered over it.
+The correct move was a **commit on top** of the existing head, which is what the
+three remaining content branches get.
+
+### Standing rule, restated
+
+**A rewrite that requires `-f` is the signal to stop and add a commit instead.**
+The need for `--force` is never the thing to solve; it is the thing to read.
 ## R-GAPS — accepted gaps in the landed decks
 
 Gaps that are recorded and accepted rather than fixed. Each is pre-existing,

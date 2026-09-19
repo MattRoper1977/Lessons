@@ -1287,6 +1287,13 @@ SHELF_ROWS = [{'subject': 'Science · Teesside',
 # GC1 P6: one reviewed unit card; the 950 existing rows retain their values and order.
 SHELF_ROWS.append({'subject': 'GROW Vocational & PfA', 'title': 'GROW Computing · Programming with Scratch · Weeks 1–8', 'file': 'ICT/Teaching_Packs/index.html#grow-computing', 'id': 'grow-computing-scratch-71638', 'type': 'hub', 'family': 'ICT', 'keywords': ['computing', 'ict', 'grow', 'scratch', 'programming', 'AQA', 'UAS', '71638', 'unit 6', 'Level One', 'maze', 'debugging', 'eight weeks', '40 minutes', 'teaching pack', 'powerpoint', 'word', 'pdf', 'paper evidence', 'Scratch projects'], 'desc': 'Eight 40-minute lessons for AQA UAS 71638, Programming with Scratch (unit 6), Level One. Build and test Scratch projects on a laptop, with editable slides, pupil booklets, printable paper activities and teacher guidance. Capture completed work for printed evidence; unit weeks are sequence labels.', 'added': '2026-09-12', 'new': True, 'year': '2026-27'})
 
+# ORDER SX3-PASSES 3b: the three Science pathway PARENT start pages. They are
+# navigation for teachers -- type 'teacher' -- and carry NO shelf entry: the
+# shelf lists lessons, and a parent index is not one.
+SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'BUILD Science · five-week lesson pack', 'file': 'Science_Teesside/Build/START_HERE.html', 'id': 'catalogue-2026-27-science-build-w3-w7-pack', 'type': 'teacher', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'weeks 3–7', 'five-week pack', 'start here', 'skeletons', 'nutrition'], 'desc': 'BUILD · Weeks 3–7. Backbones and no backbones, muscles working in pairs, what a body needs, building a balanced plate, and where animal food comes from.', 'added': '2026-09-19', 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'GROW Science · five-week lesson pack', 'file': 'Science_Teesside/Grow/START_HERE.html', 'id': 'catalogue-2026-27-science-grow-w3-w7-pack', 'type': 'teacher', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'weeks 3–7', 'five-week pack', 'start here', 'forces', 'space'], 'desc': "GROW · Weeks 3–7. Friction as friend and enemy, levers, pulleys and gears, planning a fair test, Earth and the planets, and the Moon's journey.", 'added': '2026-09-19', 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH GCSE Biology · five-week lesson pack', 'file': 'Science_Teesside/Launch/START_HERE.html', 'id': 'catalogue-2026-27-science-launch-w3-w7-pack', 'type': 'teacher', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'gcse biology', 'weeks 3–7', 'five-week pack', 'start here', 'cell transport'], 'desc': 'LAUNCH · Weeks 3–7, fifteen lessons in Discover / Use / Master triplets: microscopy and magnification, diffusion and gas exchange, osmosis and its core practical, active transport, and a Topic 1 round-up with exam practice.', 'added': '2026-09-19', 'year': '2026-27'})
+
 # Exact reviewed files, not patterns. A future new UI file requires an explicit
 # change here; a lesson cannot become permitted because it shares a directory.
 # The verifier and pin tool exclude themselves to avoid a recursive file hash.
@@ -1310,6 +1317,24 @@ REVIEWED_PATHS = (
     "assets/catalogue/terms-and-styles.json", "assets/catalogue/science-shelf.json", "assets/catalogue/humanities-shelf.json",
     "tools/catalogue/build_catalogue.py", "tools/catalogue/build_science_shelf.py", "tools/catalogue/build_humanities_shelf.py",
     "tools/catalogue/check_catalogue_static.py", "tools/catalogue/check_catalogue_dom.cjs", "tools/catalogue/verify_education_navigation.cjs",
+    # SX3-PASSES Ruling C: Science_Teesside/index.html is a derivable table that
+    # had no control, because build_science_shelf.py cannot run against 77 stale
+    # week bindings. This re-derives only the cards' title text and supplies the
+    # missing --check. Pinned, so the control itself cannot drift unreviewed.
+    "tools/catalogue/sync_shelf_card_titles.py",
+    # ORDER SX3-PASSES: the reviewed re-stamp of recorded evidence digests. It writes
+    # only the sha256 of an explicitly listed, moved, limb-proved entry, and is pinned
+    # so the tool that moves a review digest cannot itself drift unreviewed.
+    "tools/catalogue/restamp_evidence_sha256.py",
+    # ORDER SX3-PASSES 3b: the three Science pathway PARENT start pages. Science_Teesside
+    # is a GLV3 protected prefix, and the fence admits a protected ADDITION only by pin
+    # (verify_change_boundary.py: status A requires pins[rel] == sha(file)). They are
+    # navigation, not lessons, so they carry no shelf entry and no replacement
+    # transaction -- a transaction member must be a modification with a beforeGitBlob,
+    # and a new file has none.
+    "Science_Teesside/Build/START_HERE.html",
+    "Science_Teesside/Grow/START_HERE.html",
+    "Science_Teesside/Launch/START_HERE.html",
     "tools/catalogue/SHELF_SELECTION.json", "tools/catalogue/HUMANITIES_SELECTION.json",
     "tools/easter/science_original_browser.cjs",
     "tools/science_pack/browser_checks.cjs",
@@ -1329,6 +1354,45 @@ REVIEWED_PATHS = (
     # review decision and cannot be re-derived, which is why the control is a pin
     # rather than a regeneration.
     "_sx3/FENCE.json",
+    # SX3 landing decks. A deck is admitted by being named here: the boundary
+    # permits a changed file only if it is pinned, and tools/pin1/derive_triggers.py
+    # then materialises the matching trigger path and asserts the two sets are equal.
+    "Science_Teesside/Launch/Autumn2_W7_2026-27/SCI_L_A2_W7L1_Topics_2_3_Assessment_Introduce.html",
+    "Science_Teesside/Launch/Autumn2_W7_2026-27/SCI_L_A2_W7L2_Topics_2_3_Assessment_Explore.html",
+    "Science_Teesside/Launch/Autumn2_W7_2026-27/SCI_L_A2_W7L3_Topics_2_3_Assessment_Do.html",
+    "Science_Teesside/Launch/W14-W15_2026-27/SCI_L_W14L1_Genetic_Condition_Research_Introduce.html",
+    "Science_Teesside/Launch/W14-W15_2026-27/SCI_L_W14L2_Genetic_Condition_Source_Evidence_Explore.html",
+    "Science_Teesside/Launch/W14-W15_2026-27/SCI_L_W14L3_Genetic_Condition_Presentation_Do.html",
+    "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W13L3_Inheritance_Probability_Do.html",
+    "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9L1_Cell_Cycle_Introduce.html",
+    "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9L2_Mitosis_Sequence_Explore.html",
+    "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9L3_Identical_Daughter_Cells_Do.html",
+    "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9_Copy_separate_divide_Classic.html",
+    "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W10L1_Growth_And_Differentiation_Introduce.html",
+    "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W10L2_Stem_Cells_And_Meristems_Explore.html",
+    "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W10L3_Growth_Stem_Cell_Data_Application_Do.html",
+    "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W11L1_Stem_Cell_Evidence_Introduce.html",
+    "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W11L2_Benefit_Risk_Uncertainty_Explore.html",
+    "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W11L3_Stem_Cell_Discuss_Do.html",
+    "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W12L1_DNA_Hierarchy_Introduce.html",
+    "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W12L2_DNA_Structure_Explore.html",
+    "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W12L3_Fruit_DNA_Evidence_Do.html",
+    "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W12_Zoom_into_genetic_information_Classic.html",
+    "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W13L1_Alleles_Genotype_Phenotype_Introduce.html",
+    "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W13L2_Punnett_Square_Explore.html",
+    "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W10A_Solar_System_Research_Explore.html",
+    "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W10B_Solar_System_Presentation_Do.html",
+    "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W11A_Global_Warming_Explore.html",
+    "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W11B_Climate_Action_Do.html",
+    "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W12A_Science_Connections_Explore.html",
+    "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W12B_Science_Answer_Lab_Do.html",
+    "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W12_Follow_the_warming_chain_Classic.html",
+    "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W13A_Rover_Rescue_Plan_Explore.html",
+    "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W13B_Rover_Rescue_Investigation_Do.html",
+    "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W9A_Spherical_Bodies_Explore.html",
+    "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W9B_Spherical_Bodies_Do.html",
+    "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W9_Turn_Earth_explain_the_sky_Classic.html",
+    "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W12_Give_a_rock_a_job_Classic.html",
     # GLV3 admits only these reviewed publisher checks and cover inputs.
     ".github/workflows/glv3-verify.yml", "_glv3/tools/verify_change_boundary.py",
     "_glv3/tools/browser_verify.mjs", "_glv3/tools/chip_gate.mjs",
@@ -1650,6 +1714,20 @@ REVIEWED_PATHS += (
 # admitted with it as one reviewed replacement transaction.
 REVIEWED_PATHS += (
     'data/chassis-census.json',
+)
+
+
+# SX3 LAUNCH W9, 2026-09-18. The download definition that names a continuation
+# lesson by title. verify_definitions.py asserts that title against the deck's
+# own lesson_label(), so a deck whose title is re-authored makes this file stale
+# and reds CI - which is what happened when SCI_L_W9L1_Cell_Cycle_Introduce.html
+# landed its new title. The definition is hand-maintained and nothing re-derives
+# it, so it is admitted the same way the deck is: by digest pin, in one reviewed
+# transaction with the lesson whose title it mirrors. This is the STOP-P1 class
+# and the pin is the control the standing rule requires until the title can be
+# derived from the deck instead of typed.
+REVIEWED_PATHS += (
+    'tools/downloads/definitions/launch-science-aut1-main.json',
 )
 
 
