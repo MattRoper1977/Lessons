@@ -61,7 +61,7 @@ Full table with measurements: `PROOF_LEDGER.md` § "Rulings applied 2026-09-19".
 
 **Phone reality (B0009–B0012, report only):** at rest `summary` 18 px (20 of 25 per lesson), `a.pack-link` 42, `a.skip` 38, `a.mbmhome` 19, data-editor inputs 38, sort/rank selects 37/19; buttons are 44.
 
-**Accessibility residue (E6 POST):** see §4.
+**Accessibility residue (E6 POST):** one class only — the model-node ribbon (B0125), every lesson, one stage each; report only as ruled, one-string fix named in §5.
 
 **Video (B0094–B0122):** 29 of 120 captioned models outside 30–40 s (28–54 s); OCR leg NOT RUN. **Readability (B0035–B0093):** 59 flags, report only. **Data (B0006):** 3 CSVs carry units only in the header. **Slide notes (B0007):** 13 lessons carry the check answer in slide notes only. **E10/E11:** NOT RUN (57 URLs proxy-refused).
 
@@ -72,7 +72,7 @@ Full table with measurements: `PROOF_LEDGER.md` § "Rulings applied 2026-09-19".
 | render_visibility.js (E3, default state, 120 lessons, control 120/120) | 112 VISIBLE (106 via the reminder strip) | 27 VISIBLE (0 via the strip) |
 | render_e17_b0008_atrest.js (B0008, 390×844 DPR3, 700 ms settle) | 43.5 px (rect mid-animation) | 44 px offsetHeight and rect, all 120, 0 under |
 | axe 4.10.2 in situ (verify stage, 4 rank lessons; sampled map/diagram stages) | select-name critical 4/4; svg-img-alt + nested-interactive on every sampled map | 0 violations |
-| render_e6_axe.js (E6, 120 × 9 stages × 2 viewports) — full re-run | color-contrast serious 120/120; svg-img-alt 27; nested-interactive 18; select-name 4 | E6 POST: pending at close time — the run is in progress; the line is filled in CHECKS.md when it lands |
+| render_e6_axe.js (E6, 120 × 9 stages × 2 viewports) — full re-run, same instrument | color-contrast serious 120/120 (1080 stage-visits per viewport); svg-img-alt 27 lessons (35 nodes); nested-interactive 18 (26); select-name 4 (4) | svg-img-alt 0; nested-interactive 0; select-name 0; color-contrast 120 stage-visits per viewport, all on the model-node ribbon (B0125, report only as ruled: white on #f3e6da / #ede9fe, 1.2:1); the LAUNCH-button and timer rows are gone from the contrast leg; 0 not-run |
 
 ## 5. Matt's decisions (nothing here was ruled by me)
 
