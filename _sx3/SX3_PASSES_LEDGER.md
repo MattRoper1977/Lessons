@@ -707,3 +707,62 @@ L36  THE HUB IS DERIVED FROM A SIGNED RECORD, NOT FROM A TITLE  [ORDER HUB-1, 20
      looks like; a slot the plan names but nothing serves is a listed gap, never a
      red -- and never a card invented to fill it. A signature names digests; when the
      bytes move, the table is signed again, never stretched.
+
+L37  ORDER HUM-T, BATCH 1: THREE CORRECTIONS, THE STOP-T3 RULINGS, AND THE §Q4 RECORD
+     (accepted by Matt Roper, 2026-09-20).
+     1. A DIFF GATE ON AN EMPTY CHANGE SET IS NOT A PASS (instrument correction, own).
+        The local battery ran the diff-based gates (cross-estate static contract, GLV3
+        change boundary) before the commit, so they compared origin/main with an
+        identical HEAD and judged nothing; the report said so, "protectedChanges": 0,
+        and CI then refused the same head twice. The batch runner now commits first and
+        gates the committed head, the way CI does. STANDING RULE: a gate whose population
+        is the diff is proved only on a committed head.
+     2. THE RENUMBERED CHASSIS CONTRACT ADMITTED BY NAME. The STOP-T2 ruling renumbered
+        _sx3/CHASSIS_CONTRACT.md; its siblings SX3_PASSES_LEDGER.md and FENCE.json were
+        pinned, it was not. Admitted through REVIEWED_PATHS, its digest carried into both
+        gate copies, the trigger derived by tools/pin1/derive_triggers.py --write and
+        asserted as a pair by PIN1 (710 asserted, 717 exact triggers).
+     3. THE HUMANITIES REPLACEMENT DECLARER. The GLV3 fence protects the whole
+        Humanities_Teesside prefix and had no route for an in-place deck edit; the
+        designed admission is a declared replacement transaction, and only a Science
+        declarer existed. tools/hum/admit_transaction.py derives the declaration (before
+        blob from the merge base, digest and size from the bytes on disk, pin from the
+        gate copy) and refuses a deck outside the measured landable set, an addition, a
+        deletion, an unpinned deck, and a pin that disagrees with its bytes. Seven red
+        proofs. replacement_errors is untouched.
+     BATCH 1 LANDED: Lessons #606 -> 3887f7ac (squash), Apps #128 -> 327da98e; the
+     unification gate observed on the PR head, run 35540344306 / job 106156730725,
+     SUCCESS. On main: cross-estate contract 35541047675, GLV3 35541047347 and UX2
+     35541047334 SUCCESS; Education Pages publication 35541047709 FAILURE as the L33
+     admission red (the log names exactly the six decks, the lesson order and the size
+     table), FieldOps 35541047352 red behind it ("exact-source publication failed"). The
+     Site window is #416 (eight transition pairs derived from the local build, both L31
+     pin pairs to 3887f7ac/327da98e); the carrier bump on this PR is the closer.
+     STOP-T3, RULED. The census _hum/EVIDENCE_LIMB_CENSUS.md measured two digest fences:
+     all 73 signed decks pinned in TERM_AND_STYLE_EVIDENCE.json, 31 holding a limb the
+     re-stamp tool accepts; 27 of the David cover pack's 30 pinned routes signed decks,
+     15 of them among the 31; 16 landable under both. Matt's rulings, 2026-09-20:
+       Q1 YES. HUMANITIES_STRAND.json (signed, digest-pinned) is an accepted binding
+          source: a deck's term.week may be proved by its strand row when no deck limb
+          holds. Implemented as build_lesson_order.strand_proof (row present; record
+          digest == its CATALOGUE_PINS pin; row term.week == the deck's own projection),
+          asserted by check_catalogue_static.py on every strand-proved deck and used by
+          the re-stamp tool through the projection; six red proofs in the re-stamp
+          self-test (row absent, row week != projection, digest != pin, unpinned record,
+          no projected week). The 12 decks that spell the whole A1 reference in the cell
+          field (the doubled reference the gate can never find) are RECORDED HERE AS A
+          DECK DEFECT for the evidence-model order, not corrected.
+       Q2 YES. tools/hum/restamp_cover_routes.py re-stamps a cover route only when it is
+          named in the batch's declared replacement transaction and its bytes on disk
+          equal the declared transplanted bytes; basis recorded per route, verbatim:
+          "re-stamped to HUM-T transplanted bytes under Matt's STOP-SIGN per batch;
+          original review basis unchanged". Refuses a route outside the batch, bytes
+          that differ from the declaration, a missing route, and a batch with no
+          declaration; seven red proofs. The manifest is pinned afterwards.
+       Q3 The order does not close at 16: all 57 proceed in batches under Q1/Q2; a deck
+          neither rescues is HELD by name.
+     §Q4 RECORD. tools/catalogue/TERM_BASES.json is created by SCI-COMPLETE PASS A (the
+     first to land) with the science bases read from SCIENCE_WEEK_BINDINGS.json's own
+     calendar note (Aut1 +0, Aut2 +8, Spr1 +15, Spr2 +21, Sum1 +26, Sum2 +33). HUM-T
+     writes its humanities bases (Aut2 = 7 + n) into the same record when its first
+     week-bearing change lands.
