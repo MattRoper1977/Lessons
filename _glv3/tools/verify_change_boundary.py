@@ -25,6 +25,15 @@ PROTECTED = ('Art_Teesside', 'GROW_ASDAN', 'LAUNCH_ASDAN', 'Grow/Slideshows',
 SHELVES = ('Science_Teesside/index.html', 'Humanities_Teesside/index.html')
 COVER = 'Humanities_Teesside/David_Cover_Autumn1_W3-W7'
 SCIENCE_PACKS = 'Science_Teesside/Teaching_Packs/'
+# ORDER "#597, R1, R9, SHELF RECLASSIFICATION" §2 (2026-09-20): the HUM-D5 proofread
+# packs land in Humanities_Teesside/Teaching_Packs as ADDITIVE, individually pinned
+# pack files (R1). Humanities_Teesside is protected and, before this line, the fence
+# had no route for a pack file there: SCIENCE_PACKS admits only its own prefix,
+# measured in _passhumd5/R1_GLV3_NO_ROUTE.md (judge() rejected a Humanities pack
+# addition even with a pin injected). Same shape as SCIENCE_PACKS and no wider:
+# status A only, every file pin-checked against its bytes, the prefix alone admits
+# nothing, and an 'M' or 'D' to a landed pack file falls through to the fence.
+HUMANITIES_PACKS = 'Humanities_Teesside/Teaching_Packs/'
 # ORDER SX3-PASSES PASS 4 (3b): the ruling that installs the three Science
 # pathway LANDING pages. Science_Teesside is protected, and before this set the
 # fence had no route for a brand-new protected navigation page: SHELVES means the
@@ -97,11 +106,17 @@ SX3_BUILD_W12_REVIEW_BASE = '55bff167946ecefa20eaab9d2064768549df351f'
 # chassis, one transaction, derived and written by
 # tools/build_resources/admit_sx3_release.py. Every member also carries a
 # CATALOGUE_PINS admission, which replacement_errors cross-checks.
+# REVIEW: Reviewed by Matt Roper 2026-09-20 (STOP-S, Order FINISH-2): SX3-FU1 F2 LAUNCH W9-W11 (9 members)
+#          and W12-W15 A2W7 (11 members) — arrival stage split, no visible content lost, rows 1–42 re-meas
+#         ured; published digests admitted; carrier pin moved.
 SX3_FU1_F2_LAUNCH_W9_W11_REVIEW_BASE = '6bb8238f145e0d9cdef84f7142ed72a24f6f13d8'
 # SX3 · SX3-FU1 F2 LAUNCH W12-W15 A2W7: this branch's landing decks, re-dressed on the pathway exemplar
 # chassis, one transaction, derived and written by
 # tools/build_resources/admit_sx3_release.py. Every member also carries a
 # CATALOGUE_PINS admission, which replacement_errors cross-checks.
+# REVIEW: Reviewed by Matt Roper 2026-09-20 (STOP-S, Order FINISH-2): SX3-FU1 F2 LAUNCH W9-W11 (9 members)
+#          and W12-W15 A2W7 (11 members) — arrival stage split, no visible content lost, rows 1–42 re-meas
+#         ured; published digests admitted; carrier pin moved.
 SX3_FU1_F2_LAUNCH_W12_W15_A2W7_REVIEW_BASE = '8fe3702cf9f3cb292c3e9585bbb7a23b203dbefb'
 # BEGIN DECLARED TRANSACTIONS
 # BEGIN S3 OFFLINE EDITION REPLACEMENTS
@@ -400,6 +415,11 @@ def judge(root, changes, base=None):
                 # prefix alone never admits a file or an existing-file edit.
                 if status != 'A' or not (root / rel).is_file() or pins[rel] != sha(root / rel):
                     errors.append('Science teaching pack must be an exact reviewed addition: ' + rel)
+            elif rel.startswith(HUMANITIES_PACKS) and rel in pins:
+                # ORDER §2 (2026-09-20): the HUM-D5 additive pack landing. Same rule
+                # as SCIENCE_PACKS above -- an exact, individually pinned addition.
+                if status != 'A' or not (root / rel).is_file() or pins[rel] != sha(root / rel):
+                    errors.append('Humanities teaching pack must be an exact reviewed addition: ' + rel)
             elif rel in PATHWAY_PARENTS:
                 # SX3-PASSES PASS 4 (3b). Additive only, and the bytes must equal the
                 # reviewed admission; the set alone never admits an edit or a deletion.
@@ -495,6 +515,22 @@ def controls(root):
         check('An existing Science teaching download remains protected from replacement', bool(judge(root, [('M', first)])))
         check('A Science teaching download cannot be deleted', bool(judge(root, [('D', first)])))
         check('An unlisted Science teaching file is rejected', bool(judge(root, [('A', SCIENCE_PACKS+'unreviewed.pptx')])))
+    # ORDER §2 (2026-09-20) red proofs for HUMANITIES_PACKS, the three ways it could go
+    # wrong, each proved RED rather than assumed: (i) a path outside the prefix,
+    # (ii) an addition inside the prefix with no pin, (iii) a modification of a pinned
+    # pack file (falls through to the fence). The positive control and (iii) run on
+    # the tree's own pinned pack files when there are any, and on a planted, pinned
+    # file in the disposable fixture below when there are none.
+    check('A Humanities file outside the pack prefix is not admitted by the pack route',
+          bool(judge(root, [('A', 'Humanities_Teesside/UNREVIEWED_pack_file.pptx')])))
+    check('An unlisted Humanities teaching file is rejected',
+          bool(judge(root, [('A', HUMANITIES_PACKS + 'unreviewed.pptx')])))
+    humanities_additions = [('A', rel) for rel in pin_map(root) if rel.startswith(HUMANITIES_PACKS) and rel not in ALL_REPLACEMENTS]
+    if humanities_additions:
+        check('Exact individually pinned Humanities teaching files pass as additions', not judge(root, humanities_additions))
+        first_h = humanities_additions[0][1]
+        check('An existing Humanities teaching pack file remains protected from replacement', bool(judge(root, [('M', first_h)])))
+        check('A Humanities teaching pack file cannot be deleted', bool(judge(root, [('D', first_h)])))
     with tempfile.TemporaryDirectory(prefix='glv3-reviewed-boundary-') as temp:
         fixture = Path(temp)
         files = {*explicit_cover_paths(root), *SHELVES, *retained, *BOUND_INPUTS, *(rel for _, rel in science_additions),
@@ -504,6 +540,22 @@ def controls(root):
         check('Disposable fixture is initially accepted by the real validators', not judge(fixture, reviewed))
         if science_additions:
             check('Disposable Science fixture is initially accepted', not judge(fixture, science_additions))
+        # ORDER §2 (2026-09-20): plant one pinned Humanities pack file in the fixture so
+        # the HUMANITIES_PACKS positive control, (iii) and byte drift are proved on
+        # every tree, including one that carries no pack file yet.
+        planted_h = HUMANITIES_PACKS + 'PLANTED_SELF_TEST/planted_pack_file.txt'
+        (fixture / planted_h).parent.mkdir(parents=True, exist_ok=True); (fixture / planted_h).write_bytes(b'planted pack bytes\n')
+        planted_pins = dict(pin_map(root)); planted_pins[planted_h] = sha(fixture / planted_h)
+        real_pin_map_h = globals()['pin_map']
+        try:
+            globals()['pin_map'] = lambda _root: planted_pins
+            check('A planted, exactly pinned Humanities pack file passes as an addition', not judge(fixture, [('A', planted_h)]))
+            check('A modification of a pinned Humanities pack file is rejected', bool(judge(fixture, [('M', planted_h)])))
+            check('A deletion of a pinned Humanities pack file is rejected', bool(judge(fixture, [('D', planted_h)])))
+            (fixture / planted_h).write_bytes(b'drifted\n')
+            check('A pinned Humanities pack file whose bytes drift from its pin is rejected', bool(judge(fixture, [('A', planted_h)])))
+        finally:
+            globals()['pin_map'] = real_pin_map_h
         def mutate(rel, replacement, message, changes=reviewed):
             path = fixture / rel; original = path.read_bytes()
             try:

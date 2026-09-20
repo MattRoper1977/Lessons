@@ -35,6 +35,10 @@ run "PIN1 trigger list (derive_triggers --check)"       "$PY" tools/pin1/derive_
 # a whole-spine check would be red from day one (240 of 529 existingHtml entries were
 # stale on 6bb8238f; recorded as a next-order finding, not repaired by this sweep).
 BASE="${BASE:-origin/main}"
+# L30: cross-estate/static-contract runs `git diff --check origin/main...HEAD` after the
+# unification gate and nothing local did, so #600 went red on CR-at-EOL in nine reviewed
+# CSVs. The same command, the same range, here.
+run "git diff --check (whitespace, as static-contract runs it)" git diff --check "$BASE"...HEAD
 spine_changed=$(git diff --name-only "$BASE" -- '*.html' 2>/dev/null | "$PY" -c 'import sys,json; sp={x["path"] for x in json.load(open("_sownb/CALENDAR_SPINE.json"))["existingHtml"]}; print(" ".join(p for p in sys.stdin.read().split() if p in sp))')
 if [ -n "$spine_changed" ]; then
   run "CALENDAR_SPINE blobSha256 (recensus --check, changed)" "$PY" _sownb/vb/tools/recensus_existing_html.py --check $spine_changed
