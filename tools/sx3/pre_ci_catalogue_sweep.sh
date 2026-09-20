@@ -28,6 +28,19 @@ run "TERM_AND_STYLE_EVIDENCE (check_catalogue_static)" "$PY" tools/catalogue/che
 run "CATALOGUE_PINS (pin_catalogue_contract --check)"  "$PY" tools/catalogue/pin_catalogue_contract.py --lessons . --apps "${APPS:-/home/user/matt-s-apps-}" --check
 run "data/resource-sizes.json (resource_sizes --check)" "$PY" tools/ux2/resource_sizes.py --check
 run "PIN1 trigger list (derive_triggers --check)"       "$PY" tools/pin1/derive_triggers.py --check
+# Eighth writer -- F3 RE-CENSUS RULE (standing, RULINGS 2026-09-20): every PR that
+# changes a deck's bytes re-censuses that deck in _sownb/CALENDAR_SPINE.json with the
+# spine's own census tool (census only: blobSha256, nothing else). Scoped to the decks
+# this tree changes against BASE that the spine records, exactly as the rule states --
+# a whole-spine check would be red from day one (240 of 529 existingHtml entries were
+# stale on 6bb8238f; recorded as a next-order finding, not repaired by this sweep).
+BASE="${BASE:-origin/main}"
+spine_changed=$(git diff --name-only "$BASE" -- '*.html' 2>/dev/null | "$PY" -c 'import sys,json; sp={x["path"] for x in json.load(open("_sownb/CALENDAR_SPINE.json"))["existingHtml"]}; print(" ".join(p for p in sys.stdin.read().split() if p in sp))')
+if [ -n "$spine_changed" ]; then
+  run "CALENDAR_SPINE blobSha256 (recensus --check, changed)" "$PY" _sownb/vb/tools/recensus_existing_html.py --check $spine_changed
+else
+  printf '  %-48s %s\n' "CALENDAR_SPINE blobSha256 (recensus --check)" "no spine-recorded deck changed against $BASE"
+fi
 # L23 tail: data/resource-sizes.json is a PUBLISHED derived record. When any published
 # record moved, the Site admission registry must admit the new digest BEFORE the build
 # that supplies pairs is taken (regenerate, THEN build, THEN write pairs). The census
@@ -39,6 +52,6 @@ else
   printf '  %-48s %s\n' "publication census (Site admission)" "NOT RUN - set SITE=<site checkout> (and OUTPUT= to a built tree) to run the tail"
 fi
 echo
-if [ "$fail" -eq 0 ]; then echo "SWEEP PASS - all four derived records are in step"
+if [ "$fail" -eq 0 ]; then echo "SWEEP PASS - every derived record is in step"
 else echo "SWEEP FAIL - a derived record is stale. Run that writer's --write, never hand-edit."; fi
 exit "$fail"
