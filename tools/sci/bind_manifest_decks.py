@@ -7,7 +7,7 @@ a binding, and the binding must be DERIVED under the record's own rule:
 
     Calendar binding uses explicit current content/manifest/SoW evidence. No week
     inferred from filename or folder. termWeek resolved from workbook cells
-    outranks obsolete cell.absoluteWeek and CALENDAR_SPINE.calendar blocks.
+    outranks every obsolete week column and CALENDAR_SPINE.calendar blocks.
 
 So, per selected route without an entry:
 
@@ -16,9 +16,11 @@ So, per selected route without an entry:
     is refused.
   * the ruled absolute week is term base + week within term, the bases read from
     the record's own calendarNotes line ("Ruled absolute offsets: ..."), never
-    typed here. Where the manifest also states absoluteWeek, the two must agree
-    or the route is refused. ORDER SCI-COMPLETE §Q4: the science bases are also
-    written to tools/catalogue/TERM_BASES.json for the other subject to read.
+    typed here. No other week column is consulted: VB-RUN13 R0 (g27) puts the
+    superseded absolute-week columns out of bounds, the manifests' included,
+    because they were written on the old offsets. ORDER SCI-COMPLETE §Q4: the
+    science bases are also written to tools/catalogue/TERM_BASES.json for the
+    other subject to read.
   * a workbook week the calendar does not timetable (the record's own note:
     "Spring2 has five timetabled weeks; workbook Spr2·W6 is not timetabled") is
     bound to its term and week and marked timetabled: false, with no ruled
@@ -72,7 +74,7 @@ def untimetabled(notes):
     return out
 
 
-def weeks_for(refs, cells, bases, not_timetabled, manifest_abs, sow=None):
+def weeks_for(refs, cells, bases, not_timetabled, sow=None):
     """Pure: the weeks list for one route, or a Refuse.
 
     With `sow`, the route is the builder's sow-declaration fallback: the week is the
@@ -104,9 +106,6 @@ def weeks_for(refs, cells, bases, not_timetabled, manifest_abs, sow=None):
             entry['timetabled'] = False
         else:
             entry['ruledAbsoluteWeek'] = bases[term] + n
-            if manifest_abs is not None and len(keys) == 1 and manifest_abs != entry['ruledAbsoluteWeek']:
-                raise Refuse('manifest absoluteWeek %s disagrees with the ruled week %s for %s'
-                             % (manifest_abs, entry['ruledAbsoluteWeek'], key))
         weeks.append(entry)
     return weeks
 
@@ -132,7 +131,7 @@ def derive():
         by_sow = evid['method'] == SOW_METHOD
         refs = [c.get('reference', '') if isinstance(c, dict) else c for c in item.get('cells', [])] if by_sow else evid['refs']
         try:
-            weeks = weeks_for(refs, cells, bases, nt, item.get('absoluteWeek'), sow=item.get('sow') if by_sow else None)
+            weeks = weeks_for(refs, cells, bases, nt, sow=item.get('sow') if by_sow else None)
         except Refuse as x:
             refused.append((rel, str(x))); continue
         e = ev.get(rel, {})
@@ -175,30 +174,29 @@ def self_test():
     bases = ruled_bases(notes); nt = untimetabled(notes)
     check('bases are read from the record, Aut2 = 8 + n', bases['Aut2'] == 8 and bases['Sum2'] == 33)
     cells = {'A': {'termWeek': 'Spr1·W3'}, 'B': {'termWeek': 'Spr1·W4'}, 'S': {'termWeek': 'Spr2·W6'}}
-    w = weeks_for(['A'], cells, bases, nt, 18)
-    check('a resolved cell binds to the spine week with the ruled absolute week', w[0]['key'] == 'Spr1·W3' and w[0]['ruledAbsoluteWeek'] == 18)
+    w = weeks_for(['A'], cells, bases, nt)
+    check('a resolved cell binds to the spine week with the ruled absolute week, base + n', w[0]['key'] == 'Spr1·W3' and w[0]['ruledAbsoluteWeek'] == 18)
+    import inspect
+    check('no other week column is read: the tool never consults a stored absolute week',
+          'absolute' + 'Week' not in inspect.getsource(weeks_for) + inspect.getsource(derive))
     try:
-        weeks_for(['A'], cells, bases, nt, 19); check('a manifest absoluteWeek that disagrees is refused', False)
-    except Refuse as x:
-        check('a manifest absoluteWeek that disagrees is refused', 'disagrees' in str(x))
-    try:
-        weeks_for(['Z'], cells, bases, nt, None); check('a cell outside the spine is refused', False)
+        weeks_for(['Z'], cells, bases, nt); check('a cell outside the spine is refused', False)
     except Refuse as x:
         check('a cell outside the spine is refused', 'not in the calendar spine' in str(x))
-    w = weeks_for(['S'], cells, bases, nt, None)
+    w = weeks_for(['S'], cells, bases, nt)
     check('an untimetabled workbook week is bound, marked, and given no absolute week',
           w[0]['timetabled'] is False and 'ruledAbsoluteWeek' not in w[0])
-    w = weeks_for(['A', 'B'], cells, bases, nt, 18)
+    w = weeks_for(['A', 'B'], cells, bases, nt)
     check('a two-week deck keeps both weeks', [x['key'] for x in w] == ['Spr1·W3', 'Spr1·W4'])
-    w = weeks_for(['A', 'Q'], cells, bases, nt, 18, sow='Spr1·W3 — x')
+    w = weeks_for(['A', 'Q'], cells, bases, nt, sow='Spr1·W3 — x')
     check('a sow token corroborated by the resolving cell binds; the unresolved cell does not block',
           w[0]['key'] == 'Spr1·W3' and w[0]['ruledAbsoluteWeek'] == 18)
     try:
-        weeks_for(['B', 'Q'], cells, bases, nt, 19, sow='Spr1·W3 — x'); check('a sow token the resolving cell contradicts is refused', False)
+        weeks_for(['B', 'Q'], cells, bases, nt, sow='Spr1·W3 — x'); check('a sow token the resolving cell contradicts is refused', False)
     except Refuse as x:
         check('a sow token the resolving cell contradicts is refused', 'disagree' in str(x))
     try:
-        weeks_for(['Q'], cells, bases, nt, None, sow='Spr1·W3 — x'); check('a sow token with no corroborating cell is refused', False)
+        weeks_for(['Q'], cells, bases, nt, sow='Spr1·W3 — x'); check('a sow token with no corroborating cell is refused', False)
     except Refuse as x:
         check('a sow token with no corroborating cell is refused', 'corroborate' in str(x))
     try:
