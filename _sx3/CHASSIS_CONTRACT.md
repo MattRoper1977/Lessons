@@ -596,7 +596,61 @@ and so on). Transplanted verbatim, every deck inherited the exemplar's
 neighbours. Links the chassis contributes are tagged `data-sx3-shell-link` and
 unwrapped rather than copied.
 
-## Row 45 — WRITTEN AND REVERTED. Not a rule.
+## Rows 45 and 46 — RENUMBERED BY RULING (ORDER HUM-T, STOP-T2)
+
+The two numbers below were placeholders, not rules: 45 was written and reverted,
+46 was proposed and never implemented. ORDER HUM-T's STOP-T2 ruling assigns 45 to
+the loop panel and 46 to the RE no-belief row, and starts the policy rows at 47.
+The former occupants are retired here with their text kept, so the history of the
+numbering is not lost.
+
+## Row 45 — every non-modelling stage carries one loop panel, and the panel enforces the order
+
+A stage that invites a pupil response carries exactly ONE loop panel. Teacher
+modelling stages (I Do) carry none — that is the 98 measure taken from the science
+exemplars (14 decks x 9 stages = 126, less the 28 I Do panels).
+
+The panel has four parts, and a panel missing any one of them fails the row:
+
+1. **a response point** naming THIS stage's own task, offering the pathway's
+   modalities (Feedback & Marking Policy body section 10, verbatim);
+2. **an audience prompt** — an adult receives it and names it back; R only after
+   (Feedback Policy body 7);
+3. **an influence branch** naming what changes next, from the deck's own sequence;
+4. **the act is named** — every control that advances the loop carries a visible
+   label saying what the pupil is doing. This part comes from ORDER HUM-T's
+   verification pass, which found the science exemplar feeding VOICE silently from
+   unlabelled lesson controls (prediction buttons, hinge buttons, lab cards): the
+   pupil acts and nothing tells them the act was their Voice.
+
+The panel must REFUSE out-of-order operation: Audience before Voice, and Influence
+before Audience, are both refused with a message. That is Feedback Policy body 3
+("All four conditions must be in order, or the cycle is broken") implemented as
+behaviour rather than printed as a reminder.
+
+Behavioural. Proved by driving the real controls in a rendered browser, and
+red-proved by removing the guards on one deck.
+
+**Panels are wired PER STAGE and independently.** The science exemplar drives every
+panel in the document from one shared state object, so receiving Audience on the
+exit stage retro-flips the arrival panel. That is recorded as an EXEMPLAR DEFECT
+(ORDER HUM-T verification) and is corrected in SCI-COMPLETE PASS C; the per-stage
+form is the contract.
+
+## Row 46 — no RE panel asks for a belief
+
+On a Religious Education deck the response point is phrased from the source — what
+the source says — never from a personal belief. Tested with a negation-aware
+pattern: a phrase that looks like a belief question inside a safeguard sentence
+("you never have to say what you believe") is not a belief question. That is
+instrument correction #13.
+
+Safeguard sentences a deck already carries are kept verbatim; none is added.
+
+## Retired numbering, kept for the record
+
+### former Row 45 — WRITTEN AND REVERTED. Not a rule.
+
 
 A print-isolation remap was written on the premise that the chassis should own
 `#print-area` on dialect D decks. **The premise was disproved**: the pack
@@ -604,7 +658,7 @@ source's own `#printArea` is empty in the file and filled at runtime by the
 pack's `setPrint()`. The remap was reverted. It is recorded here so the next
 person does not rediscover the same wrong premise — there is no row 45.
 
-## Row 46 — PROPOSED, not implemented. `lesson-config` binding keys.
+### former Row 46 — PROPOSED, not implemented. `lesson-config` binding keys.
 
 Measured 2026-09-18, not yet authorised. The transplant **replaces**
 `lesson-config` wholesale instead of merging it, so the deck loses its tie to the
