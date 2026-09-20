@@ -93,6 +93,11 @@ SX3_LAUNCH_W12_W15_A2W7_REVIEW_BASE = '55bff167946ecefa20eaab9d2064768549df351f'
 SX3_LAUNCH_W8_W13_REVIEW_BASE = '55bff167946ecefa20eaab9d2064768549df351f'
 SX3_GROW_W9_W13_REVIEW_BASE = '55bff167946ecefa20eaab9d2064768549df351f'
 SX3_BUILD_W12_REVIEW_BASE = '55bff167946ecefa20eaab9d2064768549df351f'
+# SX3 · SX3-FU1 F2 LAUNCH W9-W11: this branch's landing decks, re-dressed on the pathway exemplar
+# chassis, one transaction, derived and written by
+# tools/build_resources/admit_sx3_release.py. Every member also carries a
+# CATALOGUE_PINS admission, which replacement_errors cross-checks.
+SX3_FU1_F2_LAUNCH_W9_W11_REVIEW_BASE = '6bb8238f145e0d9cdef84f7142ed72a24f6f13d8'
 # BEGIN DECLARED TRANSACTIONS
 # BEGIN S3 OFFLINE EDITION REPLACEMENTS
 CX2_S3_REPLACEMENTS = {'Science_Teesside/Teaching_Packs/web-slides.html': {'beforeGitBlob': '6596d65c7a9bd5bb1875c5b46bbc331df8652144', 'afterSha256': 'f31f09d03f5d8c417af1745b38309fa537afb8bb4c6a08f387db3349d9e1cba2', 'bytes': 18607}}
@@ -130,6 +135,9 @@ SX3_GROW_W9_W13_REPLACEMENTS = {'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W10A
 # BEGIN SX3_BUILD_W12 REPLACEMENTS
 SX3_BUILD_W12_REPLACEMENTS = {'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W12_Give_a_rock_a_job_Classic.html': {'beforeGitBlob': 'c773b52672335bf5306427612837cd2cfe058165', 'afterSha256': '509f38056bd09e903c70b0426ac55ab7ff73f7da10261a97eec11d49d7b27d1c', 'bytes': 1002362}}
 # END SX3_BUILD_W12 REPLACEMENTS
+# BEGIN SX3_FU1_F2_LAUNCH_W9_W11 REPLACEMENTS
+SX3_FU1_F2_LAUNCH_W9_W11_REPLACEMENTS = {'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W10L1_Growth_And_Differentiation_Introduce.html': {'beforeGitBlob': '4b7d78b5ecf21b420f54e1c0da139a706e88f7cf', 'afterSha256': 'c5f7062f97517b87080578f7e9cc996320450a28414aafef722c5311abf74f02', 'bytes': 581455}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W10L2_Stem_Cells_And_Meristems_Explore.html': {'beforeGitBlob': '08bd4d6d012d5600f314f486f783148648007eea', 'afterSha256': '386454dba2e88fee123ddbd39c3965c6af2f7c18248eb1f4c58665f0f2c56ea5', 'bytes': 586931}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W10L3_Growth_Stem_Cell_Data_Application_Do.html': {'beforeGitBlob': '93325158600d010e5112d739cf778eb68f2c59f8', 'afterSha256': '5f4fa6ce615bd0210601c6229f15e76b309e7d3e070aae67be703689114cfadd', 'bytes': 597824}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W11L1_Stem_Cell_Evidence_Introduce.html': {'beforeGitBlob': 'e2b69ee18fd6af87cbed4cd6977fd86cec2085fc', 'afterSha256': 'd080289046c68268eb64f388251adbb05109f0c7da2ffb1fa0d596d44f82f66d', 'bytes': 670157}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W11L2_Benefit_Risk_Uncertainty_Explore.html': {'beforeGitBlob': '9ce4213d4cbbf797dd276c4475bd463853b96634', 'afterSha256': 'b4e898fa0e87db690fc1b95206df6fa5c95ff6827e267b8c96d10f377527ac9f', 'bytes': 666066}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W11L3_Stem_Cell_Discuss_Do.html': {'beforeGitBlob': '5ffc07d5db8125ae8fac55f2bb16b38f625c9c8c', 'afterSha256': 'ee3308dda387e77bcdec5a1d0bc150367858a906469885c9cdb21c466ec412b5', 'bytes': 670302}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9L1_Cell_Cycle_Introduce.html': {'beforeGitBlob': '853b380ea2ba3cd4ef4896b7f5d13a38b5cc5334', 'afterSha256': 'c0e2a3725ab889f9b0b51e5bad3c9056d1faf973f9f6353122947139e6084586', 'bytes': 655111}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9L2_Mitosis_Sequence_Explore.html': {'beforeGitBlob': '8e8d6a7768602c356afda2391787509ce1ecb486', 'afterSha256': '3439d5e6d06fba838ad695d732b08f86775bf6fbf0536812447ba0ed5ef8116d', 'bytes': 672597}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9L3_Identical_Daughter_Cells_Do.html': {'beforeGitBlob': '352544a8ff5739a6f474b662d0813172645f7847', 'afterSha256': 'a40855bf2e4d520ad1ec45f8dd442635141cb459c802dc56f9c4198505d708fd', 'bytes': 658549}}
+# END SX3_FU1_F2_LAUNCH_W9_W11 REPLACEMENTS
 # END DECLARED TRANSACTIONS
 
 # Each transaction is judged on its own: every member present as exactly one
@@ -150,6 +158,7 @@ REPLACEMENT_TRANSACTIONS = {
     'SX3 BUILD W12': (SX3_BUILD_W12_REVIEW_BASE, SX3_BUILD_W12_REPLACEMENTS),
     'SX3 GROW W9-W13': (SX3_GROW_W9_W13_REVIEW_BASE, SX3_GROW_W9_W13_REPLACEMENTS),
     'SX3 LAUNCH W8-W13': (SX3_LAUNCH_W8_W13_REVIEW_BASE, SX3_LAUNCH_W8_W13_REPLACEMENTS),
+    'SX3-FU1 F2 LAUNCH W9-W11': (SX3_FU1_F2_LAUNCH_W9_W11_REVIEW_BASE, SX3_FU1_F2_LAUNCH_W9_W11_REPLACEMENTS),
     # END DECLARED TRANSACTION ENTRIES
 }
 # Declaration order is review order: a later transaction that names a path

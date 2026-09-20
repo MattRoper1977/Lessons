@@ -1314,6 +1314,16 @@ REVIEWED_PATHS = (
     # outside the publisher's public set, so it cannot alter the standalone/offline
     # payload this boundary exists to protect.
     "_sownb/CALENDAR_SPINE.json",
+    # ORDER FINISH-2 §2 (F3), same route (b) as the spine above: two files created
+    # in 545d9e8b and never modified since, so no admission for a MODIFICATION of
+    # either has ever been needed. _sx3/SX3_PASSES_LEDGER.md is the one ledger every
+    # pass appends to (L26-L28 land with F3a). tools/sx3/pre_ci_catalogue_sweep.sh
+    # gains the eighth writer, the per-PR spine re-census the F3 RE-CENSUS RULE
+    # (standing, 2026-09-20) requires. Admitted by PIN, not by ALLOWED_DIFF: an edit
+    # to either re-pins both gate copies and is judged by exact bytes, exactly as
+    # the spine is. Nothing is loosened; the gate keeps judging them.
+    "_sx3/SX3_PASSES_LEDGER.md",
+    "tools/sx3/pre_ci_catalogue_sweep.sh",
     "assets/catalogue/display-titles.json", "tools/catalogue/build_display_titles.py",
     "tools/catalogue/check_display_titles.cjs", "tools/catalogue/check_display_titles_browser.cjs",
     "tools/verify_lessons_chips.mjs",

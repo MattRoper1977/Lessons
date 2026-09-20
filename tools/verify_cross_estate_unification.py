@@ -121,6 +121,8 @@ CATALOGUE_PINS = {
     "visible_body_sha256": "9961e6f6c4627d644a364dedef7b37b1731cf8508e0ec85909f070a328bec187",
     "files": {
         "_sownb/CALENDAR_SPINE.json": "48d962c3f97e8b25873fd006b100c5888fbf700c9f8dc539b4b11ef1ff114d67",
+        "_sx3/SX3_PASSES_LEDGER.md": "4c47b97880f45050ba35cf301212592e9b39cc0cbb4423091a8553f695885e48",
+        "tools/sx3/pre_ci_catalogue_sweep.sh": "742316438ef8421c1bd199341b1c364654c05e895fa51cc5d362e6e86133aaf3",
         "assets/catalogue/display-titles.json": "8e8aac1643221c5511b469cbf734838dd14fbd7bdd7e8cb2fc71e5227c0339bd",
         "tools/catalogue/build_display_titles.py": "4256ab6b07420af4ef090e57d32b8f29fcae88d9075d64750e52f17947dbd8a1",
         "tools/catalogue/check_display_titles.cjs": "5d06689114a69124a2d7f59d644a85775756eadd2b470df01e066c2202df681b",
@@ -217,7 +219,7 @@ CATALOGUE_PINS = {
         "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W9_Turn_Earth_explain_the_sky_Classic.html": "3efded0179e818a3e7c0a5d0692610acfb4b91b1d85bc937c4b79bdd79668851",
         "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W12_Give_a_rock_a_job_Classic.html": "509f38056bd09e903c70b0426ac55ab7ff73f7da10261a97eec11d49d7b27d1c",
         ".github/workflows/glv3-verify.yml": "4bf27ca7471a21359e35d1bc7277c5fa0adeb5f31a47c769f192165796037088",
-        "_glv3/tools/verify_change_boundary.py": "1dad143df1850dbbe039e33fbfe0557c64d0b9c921f330957d8db23f042ad3be",
+        "_glv3/tools/verify_change_boundary.py": "5c894b2c2faf5a408884948e0f43b9a2f39272f76abffd8ed977e9c75f6df578",
         "_glv3/tools/browser_verify.mjs": "737ad30f297e061407161743f017614179cc6c56f1c9a3904bbe7c98df38c888",
         "_glv3/tools/chip_gate.mjs": "16cdd5c0ad3745c57340ed0ec6a208d221e4793bfc9b1cd9bc703a6c2613dd9a",
         "_glv3/tools/catalogue_membership.mjs": "4d7ab03e23ee0d3c3fc934f4f0a901afc61169754db099f4f5c24dd9cce058ec",
