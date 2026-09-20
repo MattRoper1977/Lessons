@@ -344,3 +344,57 @@ HUM-D5 H3 STOP-X (not applied): the "five pupil-sheet prose answers" are not pro
   lights only. No real flame.") is a safety instruction. BUILD_S2_W04's leak maps to no answer
   string (apostrophe variant in the scanner, ’ vs '). GROW_RE_A2_W03 is a Choose-hint (B0002
   family) and is in the held-PDF set. Ruling requested before any move.
+
+L26  TWO INSTRUMENT CATCHES OF THE #10 FAMILY (SX3-FU1, own), both with self-tests.
+Both are the same class as #11 (a force-revealed index is not a visibility
+measurement): an instrument that answers a NARROWER question than the one asked,
+and returns a confident wrong answer rather than an error.
+
+(a) VISIBLE STAGE vs WHOLE DECK. The F2 acceptance test asked "same text, nothing
+lost" and read `document.body.innerText`. innerText returns only the RENDERED text,
+so on a one-stage-at-a-time deck it returns ONE stage. Before the split the visible
+stage 0 was the merged ARRIVAL; after it was the new OPENING. The instrument compared
+two different stages and reported 92 failures - `text SHRANK 2687->1942`,
+`TEXT LOST {'to':1,'04:00':1,'ARRIVAL':1,'LAUNCH':1}`. Nothing was lost.
+The second attempt, `textContent` on the deck root, was also wrong but differently:
+textContent inserts NO whitespace at element boundaries, so tokens glue across edges
+(`ArrivalLAUNCH`, `MINUTESReview`). Moving a boundary re-glues them, and a string diff
+scores a legitimate reordering as delete+insert.
+Settled form: the deck's non-empty TEXT NODES in document order, compared as a
+multiset. Boundary-independent, and it reports a reordering AS a reordering. On that
+basis: 20/20, nothing lost, exactly two nodes created.
+RULE: before trusting a text instrument, state which DOM property it reads and what
+that property does at element boundaries and with hidden content.
+
+(b) A STRUCTURAL EDIT IS NOT PROVED BY READING ITS DIFF. The first cut of the arrival
+split stranded `div.knowledge-shortcut` - the knowledge-organiser opener - in the
+arrival stage. Contract row 41 puts it in slide 1, and on all three exemplars it is
+the LAST CHILD of the opening stage; on a merged deck it trails the arrival content,
+so the cut takes it. The diff looked clean: no text lost, stage counts right, every
+row-1-to-37 count unchanged. Only DRIVING THE REAL CONTROL in a browser caught it -
+row 41 went 155 dialogs opened to 132, failing on 23/23 decks.
+RULE: contract rows 38-42 are behavioural. The contract's own standing rule 5 already
+says a static parse is structurally unable to emit PASS for them; this extends it -
+a rendered COUNT is not enough either, the control has to be driven.
+Both faults are now planted in `split_arrival_stage.py --self-test` (27/27) so neither
+can return silently.
+
+L27  `[data-arrival-root]` ORPHANED AT `<body>` ON ALL 31 LANDED SCIENCE DECKS.
+Found by F1, measured on all 31, NOT repaired by SX3-FU1 and deliberately so - it is
+outside the split's scope and repairing it silently inside a shape change would hide
+it. The F2 acceptance test asserts the orphan is still exactly as found
+(`arrivalRootStage == -1` before AND after, unchanged), so the split cannot quietly
+move or fix it. Carried open to the next science order.
+
+L28  A GUARD NO EVIDENCE CAN SATISFY  [finding for the evidence-model order].
+`tools/catalogue/build_catalogue.py` re-proves a census binding with
+    outcomes = all(len(norm(CELLS[x]['verbatimOutcome'])) > 28
+                   and norm(CELLS[x]['verbatimOutcome']) in body for x in refs)
+The workbook outcome for the LAUNCH W9-W13 decks is `'Explain growth & stem cells.'`,
+which is EXACTLY 28 characters. The guard is `> 28`, so that limb can never fire for
+those decks even against a byte-perfect match. The threshold is presumably there to
+stop a short generic outcome matching by accident; as written it silently excludes a
+real binding rather than reporting that it declined one.
+NOT changed here, per ruling R2 - recorded for the evidence-model order. The binding
+is instead registered by the second instrument (restored lesson-config,
+preserved_outcome / explicit_cell).
