@@ -14,6 +14,13 @@ base=(r/'resources.json').read_bytes()
 check('Original 734 resource rows remain unchanged and ordered, with only three reviewed hub rows appended',not preserved_rows_errors(rows))
 check('Every committed resource row has additive metadata',len(rows)>0 and all(x['file'] in proof for x in rows))
 check('All 129 Science lessons remain available with a proven or explicitly unknown term',len(science)==129 and len({x['path'] for x in science})==129 and all((r/x['path']).is_file() and x['term'] in ['Aut1','Aut2','Spr1','unspecified'] for x in science))
+# ORDER HUM-T STOP-T3 ruling Q1: every deck the projection proves through the strand record
+# must still satisfy the limb's three conditions on this tree, judged by the same function.
+import sys as _sys;_sys.path.insert(0,str(r/'tools/catalogue'))
+from build_lesson_order import strand_proof,strand_rows
+_order=json.loads((r/'assets/catalogue/lesson-order.json').read_text())
+_srows,_srecord,_spin=strand_rows()
+check('Strand-proved decks: row present, record digest == pin, row term·week == projection',all(strand_proof(p,_srows,_srecord,_spin,['%s·W%d'%(w['term'],w['week']) for w in _order['entries'][p]['weeks']])[0] for p in _order.get('strandProofs',[])))
 check('Current content hashes match every hashed metadata entry',all(hashlib.sha256((r/p).read_bytes()).hexdigest()==v['sha256'] for p,v in proof.items() if 'sha256' in v))
 check('Recommended selection contains only the 15 selected LAUNCH Science routes',sum(x['style']=='recommended' for x in science)==15 and all(x['pathway']=='LAUNCH' for x in science if x['style']=='recommended'))
 for filename in ['index.html','Science_Teesside/index.html','Humanities_Teesside/index.html']:

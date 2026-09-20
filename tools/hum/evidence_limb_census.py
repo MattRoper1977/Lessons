@@ -115,10 +115,27 @@ def cover_pinned_paths():
     return {r['path'] for record in doc.get('records', []) for r in record.get('existing_routes', [])}
 
 
-def is_landable(limb_holds, cover_pinned):
-    """A deck lands only when BOTH fences allow it: a limb the re-stamp tool accepts,
-    and no digest pin in the cover pack, which nothing re-stamps."""
-    return bool(limb_holds) and not cover_pinned
+def is_landable(limb_holds, cover_pinned, strand_provable=False, q2=True):
+    """A deck lands when the evidence fence admits it and the cover fence admits it.
+
+    Evidence fence: a deck limb holds, OR (STOP-T3 ruling Q1, Matt Roper 2026-09-20) its
+    row in the signed, digest-pinned strand record agrees with the deck's own projection.
+    Cover fence: not pinned by the David cover pack, OR (ruling Q2) the route is re-stamped
+    in its signed batch by tools/hum/restamp_cover_routes.py. A deck neither rescues is
+    HELD by name (ruling Q3)."""
+    return (bool(limb_holds) or bool(strand_provable)) and (not cover_pinned or q2)
+
+
+def strand_provable(rel, cells, entry, rows, record_digest, pinned_digest):
+    """Q1 on the pre-transplant bytes: what the deck projects today, against its strand row.
+
+    The projection is what build_lesson_order.weeks_from reads from the deck's recorded
+    evidence, filtered to the deck's own terms, exactly as the projection does."""
+    sys.path.insert(0, str(ROOT / 'tools/catalogue'))
+    import build_lesson_order as blo
+    keys = [k for k in blo.weeks_from_cells(entry.get('evidence', []), cells)
+            if blo.WEEK_KEY.match(k) and blo.WEEK_KEY.match(k)[1] in entry.get('terms', [])]
+    return blo.strand_proof(rel, rows, record_digest, pinned_digest, keys)
 
 
 def census(read_source):
@@ -127,6 +144,9 @@ def census(read_source):
     ev = json.loads(EVIDENCE.read_text())['entries']
     sci = json.loads(BINDINGS.read_text())['entries']
     cover = cover_pinned_paths()
+    sys.path.insert(0, str(ROOT / 'tools/catalogue'))
+    import build_lesson_order as blo
+    srows, srecord, spin = blo.strand_rows()
     rows = []
     for r in json.loads(STRAND.read_text())['lessons']:
         rel = r['path']
@@ -138,20 +158,21 @@ def census(read_source):
         config = json.loads(cfgs[0]) if cfgs else {}
         held = limbs(entry, config, text, cells, sci.get(rel, {}))
         pinned_by_cover = rel in cover
-        ok = is_landable(any(held.values()), pinned_by_cover)
+        q1_ok, q1_why = strand_provable(rel, cells, entry, srows, srecord, spin)
+        ok = is_landable(any(held.values()), pinned_by_cover, q1_ok)
         rows.append({'path': rel, 'pathway': r['pathway'], 'strand': r['strand'],
                      'term': r.get('term'), 'week': r.get('week'),
                      'pinned': bool(entry.get('sha256')),
                      'limb': next((k for k, v in held.items() if v), None),
                      'landable': ok,
                      'limbHolds': any(held.values()),
+                     'strandProvable': q1_ok,
+                     'strandWhy': q1_why,
                      'coverPinned': pinned_by_cover,
+                     'coverRoute': 'Q2 re-stamp in its signed batch' if pinned_by_cover else None,
                      'refConstructionDefect': '!' in ((config.get('source') or {}).get('cell') or ''),
                      'rescuedByCorrectedRef': (not any(held.values())) and rescued_by_correction(entry, config, cells),
-                     'reason': None if ok else (
-                         'the David cover pack pins this route by digest and nothing re-stamps it'
-                         if pinned_by_cover and any(held.values())
-                         else why_not(entry, config, cells))})
+                     'reason': None if ok else ('HELD (Q3): no deck limb, and the strand row cannot be compared: ' + q1_why)})
     return rows
 
 
@@ -207,8 +228,10 @@ def self_test():
     check('correcting the reference rescues nothing when no outcome is recorded',
           not rescued_by_correction(entry, {'source': {'sheet': 'S', 'cell': "'S'!C1"}}, cells))
     check('a limb with no cover pin lands', is_landable(True, False))
-    check('a cover-pinned deck is refused even when a limb holds', not is_landable(True, True))
-    check('a deck with no limb is refused whatever the cover says',
+    check('before Q2, a cover-pinned deck was refused even when a limb held', not is_landable(True, True, q2=False))
+    check('under Q2, a cover-pinned deck lands and its route is re-stamped in the batch', is_landable(True, True))
+    check('under Q1, a deck with no limb but a strand row agreeing with its projection lands', is_landable(False, False, strand_provable=True))
+    check('a deck with no limb and no strand proof is HELD whatever the cover says',
           not is_landable(False, False) and not is_landable(False, True))
     check('the cover manifest is read and names its routes', len(cover_pinned_paths()) == 30)
     print('self-test ' + ('PASS' if not bad else 'FAIL (%d)' % bad))
@@ -238,7 +261,10 @@ def main():
     print('refused (only the pin holds the week): %d' % (len(rows) - len(limb)))
     print('of the re-stampable, also pinned by the David cover pack: %d'
           % sum(r['coverPinned'] for r in limb))
-    print('LANDABLE under both fences: %d' % len(land))
+    print('rescued by the strand row (ruling Q1): %d' % sum(r['strandProvable'] and not r['limbHolds'] for r in rows))
+    print('cover routes to re-stamp in their batch (ruling Q2): %d' % sum(r['coverPinned'] for r in land))
+    print('LANDABLE under the rulings: %d' % len(land))
+    print('HELD by name (ruling Q3): %d' % len(block))
     print('refused decks whose config spells the whole reference in `cell`: %d'
           % sum(r['refConstructionDefect'] for r in block))
     print('of those, rescued if the reference were built as the deck spells it: %d'
