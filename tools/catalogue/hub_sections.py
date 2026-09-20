@@ -10,8 +10,11 @@ structure back:
       card; a slot with no shelf card but a pack lesson is filled by that pack lesson.
   S3  PACKS & DOWNLOADS: one card per pack, links read from the pack's own manifest;
       printable packs, schemes of work and folder start pages under "Reference".
-  S4  EARLIER VERSIONS: one collapsed section at the end, Pathway -> Week, every card
-      labelled with its route family. Nothing is deleted: card count in == out.
+  S4  EARLIER VERSIONS: one collapsed section at the end, Pathway -> Term (the shelf
+      record's own term; VB-RUN13 R0 forbids deriving a week from a path, and
+      lesson-order.json records a week for 1 of the 52 earlier cards), every card
+      labelled with its route family and keeping its own title. Nothing is
+      deleted: card count in == out.
   S5  Terms come from the subject's own term bases (the strand record carries them).
   S6  The filter toolbar keeps working; without JavaScript everything is listed,
       current first, earlier last.
@@ -41,12 +44,6 @@ EARLIER_STYLES = ('earlier',)
 
 def natural(value: str):
     return [int(x) if x.isdigit() else x.lower() for x in re.split(r'(\d+)', value)]
-
-
-def week_from_name(path: str):
-    """The W<n> in a filename (never a directory), or None."""
-    m = re.search(r'(?<![A-Za-z0-9])W(\d{1,2})(?![0-9])', Path(path).name)
-    return int(m.group(1)) if m else None
 
 
 # ---------------------------------------------------------------- derivation
@@ -245,12 +242,13 @@ def render_packs(pack_cards: list[dict], reference_rows: list[dict], href_of, su
     return ''.join(out), rendered
 
 
-def render_earlier(earlier_rows: list[dict], families: dict[str, str], href_of) -> tuple[str, list[str]]:
+def render_earlier(earlier_rows: list[dict], families: dict[str, str], href_of, terms: dict[str, str]) -> tuple[str, list[str]]:
+    """S4. Grouped Pathway -> recorded term. No week is derived from any path."""
     rendered: list[str] = []
     n = len(earlier_rows)
     out = [f'<details class="science-pathway earlier" id="earlier" data-pathway="EARLIER"><summary><h2>Earlier versions</h2>'
            f'<span data-pathway-count>{n} resources</span><span class="chev" aria-hidden="true">▾</span></summary>'
-           '<p class="hub-note">Retained teaching versions, grouped by pathway and week. Each card names its family.</p>']
+           '<p class="hub-note">Retained teaching versions, grouped by pathway and recorded term. Each card names its family and keeps its own title.</p>']
     for pathway in PATHWAYS + ('OTHER',):
         rows = [r for r in earlier_rows if r['pathway'] == pathway]
         if not rows:
@@ -258,15 +256,15 @@ def render_earlier(earlier_rows: list[dict], families: dict[str, str], href_of) 
         out.append(f'<section class="catalogue-term earlier-pathway" data-term="earlier"><h3>{E("Shared" if pathway == "OTHER" else pathway)} <span data-term-count>· {len(rows)} resources</span></h3>')
         groups = collections.defaultdict(list)
         for r in rows:
-            groups[week_from_name(r['path'])].append(r)
-        for wk in sorted(groups, key=lambda w: (w is None, w or 0)):
-            label = f'Week {wk}' if wk is not None else 'No week in the record'
-            out.append(f'<section class="catalogue-batch" data-style="earlier"><h4>{E(label)} <span data-batch-count>· {len(groups[wk])} resources</span></h4><div class="grid">')
-            for r in sorted(groups[wk], key=lambda r: natural(r['path'])):
+            groups[r['term']].append(r)
+        order = {t: i for i, t in enumerate(terms)}
+        for term in sorted(groups, key=lambda t: order.get(t, len(order))):
+            out.append(f'<section class="catalogue-batch" data-style="earlier"><h4>{E(terms.get(term, term))} <span data-batch-count>· {len(groups[term])} resources</span></h4><div class="grid">')
+            for r in sorted(groups[term], key=lambda r: natural(r['title'])):
                 rendered.append(r['path'])
                 title = re.sub(r'\s*[·—]\s*40 minutes\s*$', '', r['title'])
                 fam = families.get(r['path'], 'earlier')
-                out.append(_card(r, href_of(r['path']), title, f'{pathway if pathway != "OTHER" else "Shared"} · {fam}', wk, None,
+                out.append(_card(r, href_of(r['path']), title, f'{pathway if pathway != "OTHER" else "Shared"} · {fam}', None, None,
                                  f'<p class="badges"><span class="pill">{E(fam)}</span></p>', 'earlier'))
             out.append('</div></section>')
         out.append('</section>')
@@ -314,7 +312,8 @@ def self_test() -> int:
     check('C4 red: a card dropped', any('not rendered' in e for e in c4_errors(['a.html', 'b.html'], shelf)))
     check('C4 red: a card duplicated', any('2 times' in e for e in c4_errors(['a.html', 'a.html', 'b.html', 'c.html'], shelf)))
     check('C4 red: a card invented', any('no shelf row' in e for e in c4_errors(['a.html', 'b.html', 'c.html', 'z.html'], shelf)))
-    check('week_from_name reads the filename only, never a W9-W14 folder', week_from_name('X/BUILD_W9-W14_2026-27/BUILD_HUM_W12_A.html') == 12 and week_from_name('X/BUILD_W9-W14_2026-27/START_HERE.html') is None)
+    html_out, got = render_earlier([shelf[1]], fam, lambda p: p, terms)
+    check('S4 groups earlier cards by the RECORDED term and derives no week from a path', got == ['b.html'] and 'Autumn 1' in html_out and 'data-week="unspecified"' in html_out)
     print(f'hub_sections self-test: {13 - ok} of 13 controls ok, {ok} FAIL')
     return 1 if ok else 0
 
