@@ -8,6 +8,46 @@ ROOT=Path(__file__).resolve().parents[2]
 OUT=ROOT/'assets/catalogue/lesson-order.json'
 def read(name):return json.loads((ROOT/name).read_text())
 def norm(s):return re.sub(r'\s+',' ',s).strip()
+STRAND=ROOT/'tools/catalogue/HUMANITIES_STRAND.json'
+GATE=ROOT/'tools/verify_cross_estate_unification.py'
+WEEK_KEY=re.compile(r'^(Aut[12]|Spr[12]|Sum[12])·W(\d+)$')
+def strand_proof(path,rows,record_digest,pinned_digest,projected_keys):
+ """ORDER HUM-T, STOP-T3 ruling Q1 (Matt Roper, 2026-09-20): the signed, digest-pinned
+ strand record tools/catalogue/HUMANITIES_STRAND.json is an accepted binding source. A
+ deck whose bytes moved and which no deck limb proves is proved by its strand row when
+ (1) the row exists, (2) the record's bytes equal its CATALOGUE_PINS digest, and (3) the
+ row's term·week equals what the deck's own evidence projects. Any of the three failing
+ is a refusal, by name. Pure, so the re-stamp tool's self-test plants against it."""
+ row=rows.get(path)
+ if row is None:return False,'no strand row for '+path
+ if not pinned_digest or record_digest!=pinned_digest:return False,'strand record digest differs from its pin'
+ if row.get('term') is None or row.get('week') is None:return False,'strand row carries no term·week'
+ key='%s·W%d'%(row['term'],int(row['week']))
+ keys=sorted(set(projected_keys))
+ if not keys:return False,'the deck projects no week to compare with the strand row'
+ if keys!=[key]:return False,'strand row %s differs from the projection %s'%(key,keys)
+ return True,key
+def weeks_from_cells(proofs,cells):
+ values=[]
+ for p in proofs:
+  for ref in p.get('refs',[]):
+   if ref in cells:values.append(cells[ref]['termWeek'])
+  quote=p.get('quote','')
+  if isinstance(quote,str):
+   values.extend(a.title()+b+'·W'+w for a,b,w in re.findall(r'\b(Aut|Spr|Sum)(?:umn|ing|mer)?\s*([12])\s*[·:—-]?\s*W(?:eek)?\s*(\d+)\b',quote,re.I))
+  values.extend(weeks_from_cells(p.get('donorEvidence',[]),cells))
+ return values
+def strand_rows():
+ if not STRAND.is_file():return {},None,None
+ raw=STRAND.read_bytes();doc=json.loads(raw)
+ rows={r['path']:r for r in doc.get('lessons',[])}
+ pinned=None
+ if GATE.is_file():
+  import ast
+  for node in ast.parse(GATE.read_text()).body:
+   if isinstance(node,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='CATALOGUE_PINS' for t in node.targets):
+    pinned=ast.literal_eval(node.value).get('files',{}).get(STRAND.relative_to(ROOT).as_posix())
+ return rows,hashlib.sha256(raw).hexdigest(),pinned
 def derive():
  rows=read('resources.json'); known={r['file']:r for r in rows}; supplements=[]
  for filename,subject in [('science-shelf.json','Science'),('humanities-shelf.json','Humanities')]:
@@ -21,18 +61,10 @@ def derive():
  science=read('tools/catalogue/SCIENCE_WEEK_BINDINGS.json')
  cells={r['reference']:r for r in read('_sownb/CALENDAR_SPINE.json')['workbookCells']}
  terms=read('assets/catalogue/terms-and-styles.json')['terms']
- entries={}; refreshed=[]; unresolved=[]
+ entries={}; refreshed=[]; unresolved=[]; strand_proved=[]
+ srows,srecord,spin=strand_rows()
  approved_science={r['path']:r['expectedPatchedSha256'] for r in read('tools/easter/SCIENCE_ORIGINAL_TARGETS.json')['targets']}
- def weeks_from(proofs):
-  values=[]
-  for p in proofs:
-   for ref in p.get('refs',[]):
-    if ref in cells:values.append(cells[ref]['termWeek'])
-   quote=p.get('quote','')
-   if isinstance(quote,str):
-    values.extend(a.title()+b+'·W'+w for a,b,w in re.findall(r'\b(Aut|Spr|Sum)(?:umn|ing|mer)?\s*([12])\s*[·:—-]?\s*W(?:eek)?\s*(\d+)\b',quote,re.I))
-   values.extend(weeks_from(p.get('donorEvidence',[])))
-  return values
+ def weeks_from(proofs):return weeks_from_cells(proofs,cells)
  for ordinal,row in enumerate(rows):
   path=row['file'];m=metadata.get(path,{});e=evidence.get(path,{})
   info={'ordinal':ordinal,'canonical':path,'weeks':[]}
@@ -60,6 +92,11 @@ def derive():
     tokens={w['key'] for w in audit.get('weeks',[])}
     token_proved=bool(proofs) and bool(tokens) and all(key in text for key in tokens)
     proved=enrichment or explicit_cell or preserved_outcome or token_proved or (approved_science.get(path)==digest and timing and all(norm(q) in text for q in timing))
+    if not proved:
+     # STOP-T3 ruling Q1: the strand row, compared against the deck's own projection.
+     projected=[k for k in weeks_from(e.get('evidence',[])) if WEEK_KEY.match(k) and WEEK_KEY.match(k)[1] in m.get('terms',[])]
+     ok,_why=strand_proof(path,srows,srecord,spin,projected)
+     if ok:proved=True;strand_proved.append(path)
     if proved:refreshed.append(path)
     else:
      assert m.get('style')!='recommended','Recommended source needs current proof: '+path
@@ -95,7 +132,7 @@ def derive():
    assert target not in seen,'Version cycle';seen.add(target);target=entries[target]['canonical']
   info['canonical']=target
   assert all(w['term'] in metadata.get(path,{}).get('terms',[]) for w in info['weeks']),path
- return {'schema':1,'basis':'Projection of accepted catalogue, explicit week evidence and registered version donors. Unrecorded weeks and sequences stay unspecified.','supplements':supplements,'entries':entries,'refreshedSourceProofs':refreshed,'unresolvedTiming':unresolved}
+ return {'schema':1,'basis':'Projection of accepted catalogue, explicit week evidence and registered version donors. Unrecorded weeks and sequences stay unspecified.','supplements':supplements,'entries':entries,'refreshedSourceProofs':refreshed,'strandProofs':strand_proved,'unresolvedTiming':unresolved}
 def main():
  p=argparse.ArgumentParser();p.add_argument('--check',action='store_true');args=p.parse_args()
  data=derive();text=json.dumps(data,ensure_ascii=False,indent=2)+'\n'

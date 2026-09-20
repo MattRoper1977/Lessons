@@ -19,8 +19,11 @@ to act on judgement it has not been given:
     never touched, whatever its digest says.
   * each listed deck carries its REVIEWED NEW DIGEST. If the working tree does not match, the
     bytes moved after the review and the tool refuses the whole run.
-  * the narrowed token limb must hold on the new bytes. build_lesson_order.py proves a drifted
-    deck through that limb (_sx3/DECISION_quote_limb.md); a deck it cannot prove is refused,
+  * a limb must hold on the new bytes. build_lesson_order.py proves a drifted deck through
+    the narrowed token limb (_sx3/DECISION_quote_limb.md) or, since ORDER HUM-T STOP-T3
+    ruling Q1 (Matt Roper, 2026-09-20), through its row in the signed, digest-pinned
+    strand record tools/catalogue/HUMANITIES_STRAND.json when the row's term·week equals
+    the deck's own projection (build_lesson_order.strand_proof); a deck it cannot prove is refused,
     because re-stamping would freeze in a week binding nothing can demonstrate. This is the
     latent loss _sx3/FENCE.json exists to fence, so a fenced path is refused outright.
   * the entry's recorded term/weeks must still agree with SCIENCE_WEEK_BINDINGS, and style is
@@ -217,6 +220,25 @@ def self_test():
 
     e, r, n = restamp_plan(entries, {}, d, proved, bindings, fenced)
     check('an empty list writes nothing', not e and not r and not n)
+
+    # STOP-T3 ruling Q1: the strand-record limb, planted against the function the
+    # projection is judged by. Row absent, row week differing from the projection, and a
+    # record digest differing from its pin are each a refusal by name.
+    sys.path.insert(0, str(ROOT / 'tools/catalogue'))
+    from build_lesson_order import strand_proof
+    rows = {'H/a.html': {'term': 'Aut1', 'week': 4}}
+    ok, why = strand_proof('H/a.html', rows, 'd' * 64, 'd' * 64, ['Aut1·W4'])
+    check('Q1: a pinned strand row agreeing with the projection proves the deck', ok and why == 'Aut1·W4')
+    ok, why = strand_proof('H/z.html', rows, 'd' * 64, 'd' * 64, ['Aut1·W4'])
+    check('Q1: row absent -> FAIL', not ok and 'no strand row' in why)
+    ok, why = strand_proof('H/a.html', rows, 'd' * 64, 'd' * 64, ['Aut1·W5'])
+    check('Q1: row week != projection -> FAIL', not ok and 'differs from the projection' in why)
+    ok, why = strand_proof('H/a.html', rows, 'd' * 64, 'e' * 64, ['Aut1·W4'])
+    check('Q1: record digest != pin -> FAIL', not ok and 'differs from its pin' in why)
+    ok, why = strand_proof('H/a.html', rows, 'd' * 64, None, ['Aut1·W4'])
+    check('Q1: an unpinned record proves nothing', not ok)
+    ok, why = strand_proof('H/a.html', rows, 'd' * 64, 'd' * 64, [])
+    check('Q1: a deck projecting no week cannot be compared, so it is not proved', not ok and 'projects no week' in why)
 
     print('self-test ' + ('PASS' if not ok else f'FAIL ({ok})'))
     return 1 if ok else 0
