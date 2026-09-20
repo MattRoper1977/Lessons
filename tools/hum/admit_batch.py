@@ -12,7 +12,7 @@ materialises the matching trigger path; PIN1 asserts the two sets are equal in b
 directions, so an admission without a trigger (or the reverse) is red.
 """
 from __future__ import annotations
-import re, sys
+import importlib.util, sys
 from pathlib import Path
 
 MARK = '# ORDER HUM-T landing — transplanted decks, admitted per batch'
@@ -21,7 +21,15 @@ MARK = '# ORDER HUM-T landing — transplanted decks, admitted per batch'
 def admit(root: Path, paths, batch: str):
     f = root / 'tools/catalogue/pin_catalogue_contract.py'
     src = f.read_text()
-    already = set(re.findall(r"'([^']+\.html)'", src)) | set(re.findall(r'"([^"]+\.html)"', src))
+    # Dedupe against the REAL tuple, not against every quoted .html in the file:
+    # SHELF_ROWS carries deck paths too, and matching those made every deck look
+    # already-admitted (batch 1 reported "admitted 0"). Import the module and read
+    # REVIEWED_PATHS itself. The module is import-safe: its CLI is behind
+    # `if __name__ == "__main__"`.
+    spec = importlib.util.spec_from_file_location('_pin_contract_for_admit', f)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    already = set(mod.REVIEWED_PATHS)
     new = [p for p in paths if p not in already]
     if not new:
         return 0
