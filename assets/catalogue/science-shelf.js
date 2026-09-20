@@ -3,7 +3,11 @@
   const controls = {q:document.getElementById('science-search'),pathway:document.getElementById('science-pathway'),term:document.getElementById('science-term'),style:document.getElementById('science-style')};
   const weekControl=document.getElementById('science-week');
   if (weekControl) controls.week=weekControl;
+  // HUB-1: a strand select is optional (Humanities | RE); cards carry data-strand.
+  const strandControl=document.getElementById('science-strand');
+  if (strandControl) controls.strand=strandControl;
   const cards = [...document.querySelectorAll('[data-lesson-path]')];
+  const extras = [...document.querySelectorAll('[data-pack-lesson],[data-pack]')];
   const batches = [...document.querySelectorAll('.catalogue-batch')];
   const terms = [...document.querySelectorAll('.catalogue-term')];
   const pathways = [...document.querySelectorAll('.science-pathway')];
@@ -20,13 +24,16 @@
     const q = controls.q.value.trim().toLowerCase();
     let shown = 0;
     cards.forEach(card => {
-      const show = (!q || card.textContent.toLowerCase().includes(q)) && ['pathway','term','style'].every(key => !controls[key].value || card.dataset[key] === controls[key].value) && (!weekControl || !weekControl.value || (card.dataset.week || 'unspecified').split(' ').includes(weekControl.value));
+      const show = (!q || card.textContent.toLowerCase().includes(q)) && ['pathway','term','style'].every(key => !controls[key].value || card.dataset[key] === controls[key].value) && (!strandControl || !strandControl.value || card.dataset.strand === strandControl.value) && (!weekControl || !weekControl.value || (card.dataset.week || 'unspecified').split(' ').includes(weekControl.value));
       card.hidden = !show;
       if (show) shown++;
     });
+    extras.forEach(card => {
+      card.hidden = !((!q || card.textContent.toLowerCase().includes(q)) && ['pathway','term'].every(key => !controls[key].value || card.dataset[key] === controls[key].value) && (!strandControl || !strandControl.value || card.dataset.strand === strandControl.value) && (!controls.style.value || card.dataset.style === controls.style.value));
+    });
     for (const [containers, selector] of [[batches,'[data-batch-count]'],[terms,'[data-term-count]'],[pathways,'[data-pathway-count]']]) {
       containers.forEach(container => {
-        const n = [...container.querySelectorAll('[data-lesson-path]')].filter(card => !card.hidden).length;
+        const n = [...container.querySelectorAll('[data-lesson-path],[data-pack-lesson],[data-pack]')].filter(card => !card.hidden).length;
         container.hidden = n === 0;
         container.querySelector(selector).textContent = (selector==='[data-pathway-count]'?'':'· ') + n + ' '+noun+(n===1?'':'s');
         if (container.tagName === 'DETAILS' && n && Object.values(controls).some(control => control.value)) container.open = true;

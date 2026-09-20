@@ -1354,7 +1354,7 @@ REVIEWED_PATHS = (
     # inline (carried forward verbatim from the served hub; the root page no longer
     # holds it), and the hub's own derivation record (slots, gaps, pack cards).
     "tools/catalogue/HUMANITIES_STRAND.json", "tools/catalogue/hub_sections.py",
-    "assets/catalogue/shelf-base.css",
+    "assets/catalogue/shelf-base.css", "assets/catalogue/humanities-hub-bindings.json",
     # ORDER SX3-PASSES: the reviewed re-stamp of recorded evidence digests. It writes
     # only the sha256 of an explicitly listed, moved, limb-proved entry, and is pinned
     # so the tool that moves a review digest cannot itself drift unreviewed.
