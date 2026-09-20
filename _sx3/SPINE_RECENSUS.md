@@ -283,3 +283,54 @@ nothing going red.
 on its own evidence — 14 digests derived from bytes, 0 terms lost,
 `build_lesson_order --check` PASS, sweep PASS, DOM 28/28, hub gates 303/303 — but the
 one gate that exists to judge whether this file may change at all has not looked at it.
+
+---
+
+# Admitted by pin — route (b), per ruling §1
+
+`_sownb/CALENDAR_SPINE.json` is now in `REVIEWED_PATHS`, with the rationale in the
+file naming this order. `ALLOWED_DIFF` was refused: it would admit the file and leave
+it unwatched, which is the state that let 254 of 529 entries drift.
+
+**Both consequences are machine-written, never by hand:**
+
+- `pin_catalogue_contract.py --write` re-cut both gate copies from the rows it had
+  just verified — byte-identical at `1796ab50ace3eb6a`.
+- `derive_triggers.py --write` materialised the matching PIN1 trigger path. The
+  workflow diff is **exactly two additive lines**, one per event:
+
+```
++      - '_sownb/CALENDAR_SPINE.json'
++      - '_sownb/CALENDAR_SPINE.json'
+```
+
+PIN1 goes 557 → **558 exact triggers per event**, 551 asserted, 7 checker dependencies.
+This is the #581 precedent: generated from the pins, never typed.
+
+## What this buys, measured
+
+Running the gate's own `boundary_errors()` over this branch's changed set:
+
+| before | after |
+|---|---|
+| `standalone/offline boundary violated by changed files: ['_sownb/CALENDAR_SPINE.json']` | **NONE — admitted** |
+
+And the gate will now **fire** on a spine change rather than being silent on it, which
+is the half that matters: the previous green was a non-run.
+
+| check | result |
+|---|---|
+| four-writer sweep | **SWEEP PASS** |
+| `pin_catalogue_contract --check` | **PASS** |
+| `derive_triggers --check` | **PASS** — 558 triggers per event |
+| `build_lesson_order --check` | **PASS** — 1080 entries, 274 week-bound |
+| `build_display_titles --check` | **PASS** — 236 entries, 118 pairs |
+| `check_catalogue_dom.cjs` | **PASS**, 28 checks |
+| gate copies | byte-identical, both repos |
+
+`STATIC_CHECK_RESULTS.json` and `DOM_CHECK_RESULTS.json` drift on every run and are
+read by no gate; ledger L24's deferral stands, so both are restored rather than
+committed.
+
+Per the ruling, this does not merge on the strength of a green: `static-contract` must
+be **observed running** on the new head, with its run id recorded, and passing.

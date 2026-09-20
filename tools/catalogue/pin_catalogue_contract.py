@@ -1298,6 +1298,22 @@ SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH GCSE Biolo
 # change here; a lesson cannot become permitted because it shares a directory.
 # The verifier and pin tool exclude themselves to avoid a recursive file hash.
 REVIEWED_PATHS = (
+    # ORDER "#597, R1, R9, SHELF RECLASSIFICATION" §1: admit the calendar spine by
+    # PIN, not by ALLOWED_DIFF. build_catalogue.py re-proves a deck's workbook
+    # binding against existingHtml[].blobSha256 -- the `unchanged` limb -- so this
+    # record decides catalogue terms. It was admitted by nothing and watched by no
+    # workflow's path filter, so it drifted unseen: 254 of 529 entries no longer
+    # matched their file, and the first change that forced a catalogue regeneration
+    # dropped the term on 14 decks and broke build_lesson_order.py outright.
+    # ALLOWED_DIFF was refused for exactly that reason -- it would admit the file
+    # and leave it unwatched, which is the state that caused the drift. Pinning it
+    # here TIGHTENS twice over: the record carries a reviewed digest, so a census
+    # cannot move unreviewed, and derive_triggers.py --write materialises the
+    # matching PIN1 trigger path so the boundary gate FIRES on a spine change
+    # instead of being silent on it. It ships nothing: an underscore directory is
+    # outside the publisher's public set, so it cannot alter the standalone/offline
+    # payload this boundary exists to protect.
+    "_sownb/CALENDAR_SPINE.json",
     "assets/catalogue/display-titles.json", "tools/catalogue/build_display_titles.py",
     "tools/catalogue/check_display_titles.cjs", "tools/catalogue/check_display_titles_browser.cjs",
     "tools/verify_lessons_chips.mjs",
