@@ -1,0 +1,1 @@
+Unzip this folder before opening START_HERE.html. Keep lesson files in their folders. Print the knowledge organiser and the chosen independent route. See Review_record.html for scope and verification limits.
