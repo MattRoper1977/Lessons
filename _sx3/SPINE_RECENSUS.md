@@ -237,3 +237,49 @@ correct and the shelf page must be rebuilt and re-admitted, or the classifier ha
 drifted and should be brought back. Four latencies now sit behind the same assert —
 the 14 terms (repaired here), `display-titles.json`, `Science_Teesside/index.html`, and
 the UX2 census that reports on them.
+
+---
+
+# The boundary red did not go away — the gate stopped running
+
+Narrowing the PR to three files made `static-contract` disappear from the checks.
+That is **not** a resolution, and it must not be read as one.
+
+| head | files changed | `static-contract` |
+|---|---|---|
+| `3da013e4` (wide) | 6, incl. catalogue records | **RAN and FAILED** — `standalone/offline boundary violated by changed files: ['_sownb/CALENDAR_SPINE.json']` |
+| `374da075` (narrow) | 3: the spine, the tool, this record | **DID NOT RUN** |
+
+The check lives in `.github/workflows/mbm-cross-estate-unification.yml`, whose
+`paths:` filter is the PIN1-derived list. Measured:
+
+```
+$ grep -rn "_sownb/CALENDAR_SPINE.json" .github/workflows/*.yml
+(no output)
+```
+
+**No workflow watches this file.** The only `_sownb` strings in any workflow are `run:`
+steps, not path filters. The wide head fired the gate because it also touched
+`assets/catalogue/*` and `tools/catalogue/*`, which are watched. Take those away and
+the boundary check has nothing to trigger on.
+
+So on this head the gate is not passing — it is absent. Green here means **not
+judged**, not judged and cleared.
+
+This is the same failure class the estate keeps cataloguing. `_sx3/RELEASE_LEDGER.md`
+on the GLV3 fence: *"It had been rejecting every landing deck on every branch the whole
+time."* And the same shape again in the Humanities `Teaching_Packs` finding: the 245
+files there were never admitted, their commits simply never fired the fence.
+
+It is also the second, independent argument for **route (b)**. Admitting the spine
+through `REVIEWED_PATHS` makes `tools/pin1/derive_triggers.py --write` add
+`- '_sownb/CALENDAR_SPINE.json'` to both PIN1 blocks — which is precisely the two lines
+measured earlier. After that the gate would actually fire on a spine change, instead of
+being silent on it. Route (a) (`ALLOWED_DIFF`) would admit the file and leave it
+unwatched and unpinned, i.e. exactly the state that let 254 of 529 entries drift with
+nothing going red.
+
+**Nothing here is a reason to merge on the strength of a green.** The change is sound
+on its own evidence — 14 digests derived from bytes, 0 terms lost,
+`build_lesson_order --check` PASS, sweep PASS, DOM 28/28, hub gates 303/303 — but the
+one gate that exists to judge whether this file may change at all has not looked at it.
