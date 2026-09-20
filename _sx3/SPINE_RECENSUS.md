@@ -170,3 +170,70 @@ without anything going red. Route (b) closes that hole as a side effect.
 **Ruling needed:** route (a), route (b), or a third the estate prefers. Until then
 this PR stays red on `static-contract` by design — the work is proved and staged,
 and the last step is an admission that is not mine to grant.
+
+---
+
+# Narrowed: this PR ships the re-census only
+
+CI found a fourth latency of the same family, and it decides the shape of this PR.
+
+## A fourth record the repair unblocks — and this one has no runnable writer
+
+`Hub and subject page in Chromium at 390px` failed on `check_catalogue_dom.cjs`:
+
+```
+AssertionError: //full-lundy
+85 !== 54
+```
+
+The Science shelf filter compares the cards rendered from `Science_Teesside/index.html`
+against `assets/catalogue/science-shelf.json`. Regenerating the catalogue moves **31
+entries from `style: full-lundy` to `style: earlier`** (with the matching `batch`
+relabel), so the JSON says 54 where the committed page still renders 85.
+
+Those 31 are **not** caused by the re-census — proved earlier by diffing the writer's
+output on clean main against this branch, which differs on 14 entries, term only. They
+are pre-existing drift, and on clean main they never land because `build_lesson_order.py`
+asserts first and the chain stops. Repairing the assert lets them through.
+
+`display-titles.json` had a writer, so it was regenerated. This one's writer,
+`tools/catalogue/build_science_shelf.py`, rewrites the whole of
+`Science_Teesside/index.html` — a **served page under a GLV3 `PROTECTED` prefix**.
+Bringing that into a spine-census PR would be a much larger change than the ruling
+asks for, and it is not what R2 repairs.
+
+`UX2 scheduled drift census` was red for the same reason and is not independent:
+`needs: [catalogue-contract, derived-data, hub-and-subject]` with `if: always()`, so it
+reports those jobs' outcomes. `catalogue-contract` is green on the current head.
+
+## So the PR now carries the repair and nothing else
+
+Reverted: `TERM_AND_STYLE_EVIDENCE.json`, `lesson-order.json`, `science-shelf.json`,
+`terms-and-styles.json`, `display-titles.json` and both gate copies. Kept: the
+re-censused spine, the tool, and this record.
+
+The repair is unaffected. The regeneration was R2's **proof**, not its payload — the
+committed records already read `Aut2` for those 14, and after this PR the next
+regeneration keeps them instead of dropping them. Measured on this shape:
+
+| check | result |
+|---|---|
+| four-writer sweep | **SWEEP PASS**, all four in step |
+| `check_catalogue_dom.cjs` | **PASS**, 28 checks |
+| `build_lesson_order.py --check` | **PASS** — 1080 entries, 274 week-bound |
+| `build_display_titles.py --check` | **PASS** — 236 entries, 118 pairs |
+| `hub_gates.mjs --red-proof` | **PASS — 303/303 limbs** |
+| gate copies | byte-identical at `f38a2a6f91cc5c83`, equal to main |
+
+The Apps companion has nothing left to carry and is closed.
+
+## Carried out of this PR, named
+
+**The catalogue cannot be regenerated on main without breaking two records.** Its own
+writer moves 31 entries `full-lundy → earlier`, which `Science_Teesside/index.html`
+does not reflect, and the only writer for that page rewrites a served GLV3-protected
+file. That is a second ruling, separate from the spine: either the reclassification is
+correct and the shelf page must be rebuilt and re-admitted, or the classifier has
+drifted and should be brought back. Four latencies now sit behind the same assert —
+the 14 terms (repaired here), `display-titles.json`, `Science_Teesside/index.html`, and
+the UX2 census that reports on them.
