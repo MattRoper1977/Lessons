@@ -1,3 +1,9 @@
 # Native teaching-pack PDFs retain their exact document bytes. Some PDF
 # encoders emit ASCII streams; Git must still treat these as binary files.
 Science_Teesside/Teaching_Packs/**/*.pdf binary
+# HUM-D5 pack data files (ORDER FINISH-2 s3): nine *_Data.csv files are RFC 4180
+# CSVs with CRLF line endings, exactly as reviewed and summed in the packs. Their
+# bytes are not altered; this declares the convention so the static-contract
+# whitespace check (git diff --check) reads CR-at-EOL as the file's line ending and
+# still reports any other whitespace error in them. 0 literal trailing spaces measured.
+Humanities_Teesside/Teaching_Packs/**/*.csv whitespace=cr-at-eol
