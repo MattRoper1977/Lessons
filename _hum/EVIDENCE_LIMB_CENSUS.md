@@ -1,10 +1,11 @@
-# ORDER HUM-T — the evidence re-stamp fence, measured
+# ORDER HUM-T — the two digest fences, measured
 
 Derived by `tools/hum/evidence_limb_census.py` (self-test PASS). Nothing below is typed:
 every row is read from the deck's own bytes at `origin/main`, from
-`tools/catalogue/TERM_AND_STYLE_EVIDENCE.json`, and from `_sownb/CALENDAR_SPINE.json`.
+`tools/catalogue/TERM_AND_STYLE_EVIDENCE.json`, from `_sownb/CALENDAR_SPINE.json` and from
+`tools/humanities_resources/SOURCE_MANIFEST.json`.
 
-## What the fence is
+## Fence 1 — the term-and-style evidence pin
 
 Each of the 73 signed Humanities/RE decks carries a pinned source digest in the evidence
 record. `tools/catalogue/check_catalogue_static.py` asserts that pin against the working
@@ -19,6 +20,15 @@ it refuses a deck whose week binding nothing but the pin can demonstrate:
 `tools/catalogue/build_lesson_order.py` holds the limbs it accepts. A deck it cannot prove
 falls into `unresolvedTiming`, where its weeks project as `[]`.
 
+## Fence 2 — the David cover pack route pin
+
+`tools/humanities_resources/SOURCE_MANIFEST.json` pins 30 existing lesson routes by digest,
+and `check_resources.py` asserts each one against the working tree —
+`verify_change_boundary.py` calls `check(root, root)`. Transplanting any of those routes
+turns the GLV3 boundary gate red. Nothing derives that manifest: `build_resources.py` reads
+it and never writes it, so there is no mechanical re-stamp and no limb to hold. 27 of the
+30 routes are signed HUM-T decks.
+
 ## The measurement
 
 A limb that holds before the transplant holds after it: the adapter only adds. It never
@@ -27,8 +37,9 @@ pre-transplant bytes and still describe the post-transplant tree.
 
 That was checked against ground truth, not assumed. All 73 decks were transplanted in the
 working tree and `build_lesson_order.derive()` was run: `refreshedSourceProofs` named the
-same 31 decks this census names, and `unresolvedTiming` named the same 42. The nine decks
-of the first batch were built and derived independently first, and agreed 9 of 9.
+same 31 decks this census names, and `unresolvedTiming` named the same 42. The first batch
+of decks was built and derived separately first, and agreed 9 of 9. Fence 2 was found the
+same way — by the boundary gate refusing a built batch, naming the route it refused.
 
 ## The split
 
@@ -36,6 +47,8 @@ SEARCH SCOPE: 73 signed decks in tools/catalogue/HUMANITIES_STRAND.json, bytes a
 pinned source digest: 73 of 73
 re-stampable (a limb holds): 31
 refused (only the pin holds the week): 42
+of the re-stampable, also pinned by the David cover pack: 15
+LANDABLE under both fences: 16
 refused decks whose config spells the whole reference in `cell`: 12
 of those, rescued if the reference were built as the deck spells it: 0
 
@@ -44,12 +57,12 @@ of those, rescued if the reference were built as the deck spells it: 0
 | BUILD_HUM_W1_People_Special_To_Me.html | BUILD | declared cell | LANDABLE |
 | BUILD_HUM_W2_A_Special_Book_A_Special_Place.html | BUILD | declared cell | LANDABLE |
 | BUILD_HUM_W2_People_Who_Help_Us.html | BUILD | declared cell | LANDABLE |
-| BUILD_HUM_W3_Places_In_My_Community.html | BUILD | declared cell | LANDABLE |
-| BUILD_HUM_W4_Then_And_Now.html | BUILD | declared cell | LANDABLE |
-| BUILD_HUM_W5_Same_And_Different.html | BUILD | declared cell | LANDABLE |
-| BUILD_HUM_W6_Our_Class_Map.html | BUILD | declared cell | LANDABLE |
+| BUILD_HUM_W3_Places_In_My_Community.html | BUILD | declared cell | the David cover pack pins this route by digest and nothing re-stamps it |
+| BUILD_HUM_W4_Then_And_Now.html | BUILD | declared cell | the David cover pack pins this route by digest and nothing re-stamps it |
+| BUILD_HUM_W5_Same_And_Different.html | BUILD | declared cell | the David cover pack pins this route by digest and nothing re-stamps it |
+| BUILD_HUM_W6_Our_Class_Map.html | BUILD | declared cell | the David cover pack pins this route by digest and nothing re-stamps it |
 | BUILD_HUM_W7_A_place_in_the_group_Classic.html | BUILD | — | the deck carries no lesson-config, so it declares nothing |
-| BUILD_HUM_W7_Groups_We_Belong_To.html | BUILD | declared cell | LANDABLE |
+| BUILD_HUM_W7_Groups_We_Belong_To.html | BUILD | declared cell | the David cover pack pins this route by digest and nothing re-stamps it |
 | BUILD_HUM_W8_A_Festival_Of_Light.html | BUILD | declared cell | LANDABLE |
 | BUILD_Humanities_W4_Show_Respect_When_Handling_Special_Objects.html | BUILD | — | even read as the deck spells it, the deck declares the cell but records no outcome text |
 | BUILD_Humanities_W5_Notice_Similarities_Between_People_S_Beliefs.html | BUILD | — | even read as the deck spells it, the deck declares the cell but records no outcome text |
@@ -70,11 +83,11 @@ of those, rescued if the reference were built as the deck spells it: 0
 | GROW_HUM_W1_Migration_On_A_Timeline.html | GROW | declared cell | LANDABLE |
 | GROW_HUM_W2_How_Beliefs_Shape_Who_We_Are.html | GROW | declared cell | LANDABLE |
 | GROW_HUM_W2_Reading_A_Migration_Source.html | GROW | declared cell | LANDABLE |
-| GROW_HUM_W3_Why_People_Moved_And_What_Changed.html | GROW | declared cell | LANDABLE |
-| GROW_HUM_W4_Diverse_British_History.html | GROW | declared cell | LANDABLE |
-| GROW_HUM_W5_Was_It_Significant.html | GROW | declared cell | LANDABLE |
-| GROW_HUM_W6_Planning_An_Account.html | GROW | declared cell | LANDABLE |
-| GROW_HUM_W7_Writing_And_Marking_The_Account.html | GROW | declared cell | LANDABLE |
+| GROW_HUM_W3_Why_People_Moved_And_What_Changed.html | GROW | declared cell | the David cover pack pins this route by digest and nothing re-stamps it |
+| GROW_HUM_W4_Diverse_British_History.html | GROW | declared cell | the David cover pack pins this route by digest and nothing re-stamps it |
+| GROW_HUM_W5_Was_It_Significant.html | GROW | declared cell | the David cover pack pins this route by digest and nothing re-stamps it |
+| GROW_HUM_W6_Planning_An_Account.html | GROW | declared cell | the David cover pack pins this route by digest and nothing re-stamps it |
+| GROW_HUM_W7_Writing_And_Marking_The_Account.html | GROW | declared cell | the David cover pack pins this route by digest and nothing re-stamps it |
 | GROW_HUM_W8_Finding_Places_In_An_Atlas.html | GROW | declared cell | LANDABLE |
 | GROW_Humanities_W4_Explore_Hanukkah_And_The_Theme_Of_Light.html | GROW | — | even read as the deck spells it, the deck declares the cell but records no outcome text |
 | GROW_Humanities_W5_Explore_Christmas_And_Christian_Belief.html | GROW | — | even read as the deck spells it, the deck declares the cell but records no outcome text |
@@ -95,11 +108,11 @@ of those, rescued if the reference were built as the deck spells it: 0
 | LAUNCH_HUM_W2_Cause_And_Consequence_Of_Migration.html | LAUNCH | declared cell | LANDABLE |
 | LAUNCH_HUM_W2_Two_Worldviews_Side_By_Side.html | LAUNCH | declared cell | LANDABLE |
 | LAUNCH_HUM_W3_Can_this_record_prove_it_Classic.html | LAUNCH | — | the deck carries no lesson-config, so it declares nothing |
-| LAUNCH_HUM_W3_Evaluating_A_Digital_Archive_Source.html | LAUNCH | declared cell | LANDABLE |
-| LAUNCH_HUM_W4_A_Timeline_Of_Twentieth_Century_Britain.html | LAUNCH | declared cell | LANDABLE |
-| LAUNCH_HUM_W5_Who_Shaped_Britain.html | LAUNCH | declared cell | LANDABLE |
-| LAUNCH_HUM_W6_A_Structured_Account_From_Evidence.html | LAUNCH | declared cell | LANDABLE |
-| LAUNCH_HUM_W7_Source_Based_Assessment.html | LAUNCH | declared cell | LANDABLE |
+| LAUNCH_HUM_W3_Evaluating_A_Digital_Archive_Source.html | LAUNCH | declared cell | the David cover pack pins this route by digest and nothing re-stamps it |
+| LAUNCH_HUM_W4_A_Timeline_Of_Twentieth_Century_Britain.html | LAUNCH | declared cell | the David cover pack pins this route by digest and nothing re-stamps it |
+| LAUNCH_HUM_W5_Who_Shaped_Britain.html | LAUNCH | declared cell | the David cover pack pins this route by digest and nothing re-stamps it |
+| LAUNCH_HUM_W6_A_Structured_Account_From_Evidence.html | LAUNCH | declared cell | the David cover pack pins this route by digest and nothing re-stamps it |
+| LAUNCH_HUM_W7_Source_Based_Assessment.html | LAUNCH | declared cell | the David cover pack pins this route by digest and nothing re-stamps it |
 | LAUNCH_HUM_W8_Maps_Symbols_And_Grid_References.html | LAUNCH | declared cell | LANDABLE |
 | LAUNCH_Humanities_W4_Festivals_Shared_Values_Day_Of_Peace.html | LAUNCH | — | even read as the deck spells it, the deck declares the cell but records no outcome text |
 | LAUNCH_Humanities_W5_Structured_Explain_Response.html | LAUNCH | — | even read as the deck spells it, the deck declares the cell but records no outcome text |

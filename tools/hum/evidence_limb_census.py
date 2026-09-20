@@ -30,6 +30,7 @@ STRAND = ROOT / 'tools/catalogue/HUMANITIES_STRAND.json'
 EVIDENCE = ROOT / 'tools/catalogue/TERM_AND_STYLE_EVIDENCE.json'
 SPINE = ROOT / '_sownb/CALENDAR_SPINE.json'
 BINDINGS = ROOT / 'tools/catalogue/SCIENCE_WEEK_BINDINGS.json'
+COVER_MANIFEST = ROOT / 'tools/humanities_resources/SOURCE_MANIFEST.json'
 
 
 def norm(s):
@@ -98,11 +99,34 @@ def rescued_by_correction(entry, config, cells):
             and any(ref in p.get('refs', []) for p in entry.get('evidence', [])))
 
 
+def cover_pinned_paths():
+    """Lesson routes the David cover pack pins by digest.
+
+    tools/humanities_resources/check_resources.py asserts each of these 30 routes
+    against the WORKING TREE (verify_change_boundary.py calls check(root, root)), so a
+    transplant of any of them turns the GLV3 boundary gate red. Unlike the evidence
+    record, nothing derives this manifest — build_resources.py reads it and never writes
+    it — so there is no mechanical re-stamp and no limb to hold. A deck pinned here
+    cannot be transplanted without a ruling.
+    """
+    if not COVER_MANIFEST.is_file():
+        return set()
+    doc = json.loads(COVER_MANIFEST.read_text())
+    return {r['path'] for record in doc.get('records', []) for r in record.get('existing_routes', [])}
+
+
+def is_landable(limb_holds, cover_pinned):
+    """A deck lands only when BOTH fences allow it: a limb the re-stamp tool accepts,
+    and no digest pin in the cover pack, which nothing re-stamps."""
+    return bool(limb_holds) and not cover_pinned
+
+
 def census(read_source):
     from lxml import html
     cells = {r['reference']: r for r in json.loads(SPINE.read_text())['workbookCells']}
     ev = json.loads(EVIDENCE.read_text())['entries']
     sci = json.loads(BINDINGS.read_text())['entries']
+    cover = cover_pinned_paths()
     rows = []
     for r in json.loads(STRAND.read_text())['lessons']:
         rel = r['path']
@@ -113,15 +137,21 @@ def census(read_source):
         cfgs = tree.xpath('//script[@id="lesson-config"]/text()')
         config = json.loads(cfgs[0]) if cfgs else {}
         held = limbs(entry, config, text, cells, sci.get(rel, {}))
-        ok = any(held.values())
+        pinned_by_cover = rel in cover
+        ok = is_landable(any(held.values()), pinned_by_cover)
         rows.append({'path': rel, 'pathway': r['pathway'], 'strand': r['strand'],
                      'term': r.get('term'), 'week': r.get('week'),
                      'pinned': bool(entry.get('sha256')),
                      'limb': next((k for k, v in held.items() if v), None),
                      'landable': ok,
+                     'limbHolds': any(held.values()),
+                     'coverPinned': pinned_by_cover,
                      'refConstructionDefect': '!' in ((config.get('source') or {}).get('cell') or ''),
-                     'rescuedByCorrectedRef': (not ok) and rescued_by_correction(entry, config, cells),
-                     'reason': None if ok else why_not(entry, config, cells)})
+                     'rescuedByCorrectedRef': (not any(held.values())) and rescued_by_correction(entry, config, cells),
+                     'reason': None if ok else (
+                         'the David cover pack pins this route by digest and nothing re-stamps it'
+                         if pinned_by_cover and any(held.values())
+                         else why_not(entry, config, cells))})
     return rows
 
 
@@ -176,6 +206,11 @@ def self_test():
           why_not(entry, {'source': {'sheet': 'S', 'cell': "'S'!C9"}}, cells))
     check('correcting the reference rescues nothing when no outcome is recorded',
           not rescued_by_correction(entry, {'source': {'sheet': 'S', 'cell': "'S'!C1"}}, cells))
+    check('a limb with no cover pin lands', is_landable(True, False))
+    check('a cover-pinned deck is refused even when a limb holds', not is_landable(True, True))
+    check('a deck with no limb is refused whatever the cover says',
+          not is_landable(False, False) and not is_landable(False, True))
+    check('the cover manifest is read and names its routes', len(cover_pinned_paths()) == 30)
     print('self-test ' + ('PASS' if not bad else 'FAIL (%d)' % bad))
     return 1 if bad else 0
 
@@ -195,11 +230,15 @@ def main():
         return 0
     land = [r for r in rows if r['landable']]
     block = [r for r in rows if not r['landable']]
+    limb = [r for r in rows if r['limbHolds']]
     print('SEARCH SCOPE: %d signed decks in %s, bytes at %s'
           % (len(rows), STRAND.relative_to(ROOT), args.revision))
     print('pinned source digest: %d of %d' % (sum(r['pinned'] for r in rows), len(rows)))
-    print('re-stampable (a limb holds): %d' % len(land))
-    print('refused (only the pin holds the week): %d' % len(block))
+    print('re-stampable (a limb holds): %d' % len(limb))
+    print('refused (only the pin holds the week): %d' % (len(rows) - len(limb)))
+    print('of the re-stampable, also pinned by the David cover pack: %d'
+          % sum(r['coverPinned'] for r in limb))
+    print('LANDABLE under both fences: %d' % len(land))
     print('refused decks whose config spells the whole reference in `cell`: %d'
           % sum(r['refConstructionDefect'] for r in block))
     print('of those, rescued if the reference were built as the deck spells it: %d'
