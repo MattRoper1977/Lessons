@@ -33,6 +33,7 @@ def main(root: Path, write: bool):
             'ribbons_removed': info['ribbons_removed'],
             'lundy_stage_removed': info['lundy_stage_removed'],
             'title_fixed': tinfo['title'], 'cells_blanked': tinfo['council_cells'],
+            'cells_added': tinfo['cells_added'],
             'bytes_before': len(original.encode()), 'bytes_after': len(after.encode()),
             'fails': [{'row': x['row'], 'name': x['name'], 'detail': x['detail'][:200]} for x in fails],
             'verdict': 'SHIP' if not fails else 'HELD',
@@ -59,6 +60,7 @@ if __name__ == '__main__':
     print('  quarantined stages cut: %d' % sum(x['lundy_stage_removed'] for x in rep))
     print('  titles corrected      : %d' % sum(1 for x in rep if x['title_fixed']))
     print('  stray cells blanked   : %d' % sum(x['cells_blanked'] for x in rep))
+    print('  missing cells added   : %d in %d decks' % (sum(x['cells_added'] for x in rep), sum(1 for x in rep if x['cells_added'])))
     for x in held[:10]:
         print('  HELD %s' % x['path'])
         for f in x['fails'][:3]:

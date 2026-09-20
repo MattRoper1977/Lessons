@@ -94,10 +94,47 @@ def fix_council(html: str):
     return splice(html, edits), len(edits)
 
 
+def fix_short_rows(html: str):
+    """(c) THE TWO-CELL EVIDENCE ROW. Eight decks carry a three-column pupil
+    evidence table whose first body row has only two cells, so the third column
+    ("My reason, in my words") has nowhere to write. The missing cells are added,
+    empty, exactly matching the row's own sibling cells.
+
+    A row that spans the table with colspan is CORRECT and is left alone — that is
+    how "No sites sampled yet" is written, and it is not a defect."""
+    doc = parse(html)
+    edits = []
+    added = 0
+    for t in doc.walk():
+        if t.tag != 'table':
+            continue
+        header = None
+        for tr in t.find(lambda n: n.tag == 'tr'):
+            cells = [c for c in tr.children if c.tag in ('td', 'th')]
+            if not cells:
+                continue
+            width = sum(int(c.attrs.get('colspan') or 1) for c in cells)
+            if header is None and any(c.tag == 'th' for c in cells):
+                header = width
+                continue
+            if header is None or width >= header:
+                continue
+            if any(c.attrs.get('colspan') for c in cells):
+                continue                      # a deliberate spanning row
+            last = cells[-1]
+            filler = ' '.join('<td>&nbsp;</td>' for _ in range(header - width))
+            edits.append((last.end, last.end, filler))
+            added += header - width
+    if not edits:
+        return html, 0
+    return splice(html, edits), added
+
+
 def fix(html: str):
     html, t = fix_title(html)
     html, c = fix_council(html)
-    return html, {'title': t, 'council_cells': c}
+    html, r = fix_short_rows(html)
+    return html, {'title': t, 'council_cells': c, 'cells_added': r}
 
 
 def self_test() -> bool:
@@ -122,6 +159,18 @@ def self_test() -> bool:
              '<td><i>the council minute</i></td><td><i>it records a decision</i></td></tr></table>')
     out8, n8 = fix_council(whole)
     checks.append(('a COMPLETE worked example row is left intact', out8 == whole and n8 == 0))
+    short = ('<table><tr><th>A</th><th>B</th><th>C</th></tr>'
+             '<tr><td>label</td><td>x</td></tr></table>')
+    out10, n10 = fix_short_rows(short)
+    checks.append(('a short row gains the missing cell',
+                   n10 == 1 and out10.count('<td>') == 3))
+    span = ('<table><tr><th>A</th><th>B</th><th>C</th></tr>'
+            '<tr><td colspan="3">No sites sampled yet</td></tr></table>')
+    out11, n11 = fix_short_rows(span)
+    checks.append(('a deliberate spanning row is left alone', out11 == span and n11 == 0))
+    full = ('<table><tr><th>A</th><th>B</th></tr><tr><td>x</td><td>y</td></tr></table>')
+    out12, n12 = fix_short_rows(full)
+    checks.append(('a complete row is left alone', out12 == full and n12 == 0))
     orphan = ('<table><tr><td>Three details from the approved source</td>'
               '<td><i>the council minute</i></td><td> </td></tr></table>')
     out9, n9 = fix_council(orphan)
@@ -164,6 +213,8 @@ if __name__ == '__main__':
                 print('    title  %r -> %r' % info['title'])
             if info['council_cells']:
                 print('    blanked %d stray example cell(s)' % info['council_cells'])
+            if info['cells_added']:
+                print('    added %d missing evidence cell(s)' % info['cells_added'])
             if write:
                 p.write_text(out)
     print('%d decks %s' % (changed, 'rewritten' if write else 'would change (dry run)'))

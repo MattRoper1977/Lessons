@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
 """ORDER HUM-T — the loop acceptance battery.
 
-Numbered rows. Row numbers 37 (provenance), 43 (the loop row) and 44 (the RE row)
-are the numbers ORDER HUM-T gives them. NOTE FOR THE READBACK: the SX3 chassis
-contract already uses rows 43 and 44 for "estate furniture survives the transplant"
-and "the exemplar's sibling navigation is unwrapped". These are a DIFFERENT battery
-(the adapter's own), and the collision is reported, not silently renumbered.
+Numbered rows, MERGED INTO THE CHASSIS CONTRACT numbering by ruling (STOP-T2):
+
+    row 45  the loop panel row  (chassis 43/44 keep estate furniture and sibling nav)
+    row 46  no RE panel asks for a belief
+    rows 47+ reserved for the policy rows
+
+The provenance check ("no panel text equals the science exemplar's") was numbered 37
+in the order, but chassis row 37 is the pathway theme class. Rather than leave a
+second collision it is folded into row 45, where it belongs: a panel whose words are
+the exemplar's is not a panel filled from this deck.
 
 Rows 38-42 and 45 are behavioural: chassis standing rule 5 says a static parse is
 structurally unable to emit PASS for them, so they report NOT-CHECKED here and are
@@ -132,29 +137,49 @@ def verify(after_html: str, before_html: str, strand: str, science_panel_texts):
     row(12, 'Earwig line staff-side at the closing stage',
         PASS if exit_ta else FAIL, '%d staff blocks carry it' % len(exit_ta))
 
-    # 37 — PROVENANCE: no panel text equals the science exemplar's
+    # 45p — PROVENANCE (part of row 45): no panel text equals the science exemplar's
     clash = []
     for p in panels(doc):
         t = re.sub(r'\s+', ' ', p.inner_text()).strip()
         if t in science_panel_texts:
             clash.append(p.attrs.get('data-loop-stage'))
-    row(37, 'no panel text equals the science exemplar\'s', PASS if not clash else FAIL, str(clash))
+    row(45.1, 'provenance: no panel text equals the science exemplar\'s',
+        PASS if not clash else FAIL, str(clash))
 
-    # 43 — THE LOOP ROW
-    ok43 = all(r['status'] == PASS for r in rows if r['row'] in (1, 2, 4, 5, 6, 7))
-    row(43, 'every non-I-Do stage carries one panel with all three parts',
-        PASS if ok43 else FAIL, 'composite of rows 1,2,4,5,6,7')
+    # 45.2 — THE ACT IS NAMED (row 45 part 4). Every control that advances the loop
+    # carries a visible label. The verification pass found the science exemplar
+    # feeding VOICE from unlabelled lesson controls: the pupil acts and nothing says
+    # the act was their Voice.
+    unnamed = []
+    for p in panels(doc):
+        for n in p.find(lambda n: n.attrs.get('data-action', '').startswith('lundy-')):
+            if not n.inner_text().strip():
+                unnamed.append((p.attrs.get('data-loop-stage'), n.attrs.get('data-action')))
+    # and nothing OUTSIDE a panel may advance the loop
+    outside = [n.attrs.get('data-action') for n in doc.walk()
+               if n.attrs.get('data-action', '').startswith('lundy-')
+               and not any(is_ribbon(a) for a in n.ancestors())]
+    row(45.2, 'the act is named: every loop control is labelled, and none sits outside a panel',
+        PASS if not (unnamed or outside) else FAIL,
+        'unlabelled=%s outside=%s' % (unnamed[:3], outside[:3]))
 
-    # 44 — THE RE ROW (negation-aware, per correction #13)
+    # 45 — THE LOOP ROW (chassis numbering, by ruling)
+    ok45 = all(r['status'] == PASS for r in rows
+               if r['row'] in (1, 2, 4, 5, 6, 7, 45.1, 45.2))
+    row(45, 'every non-I-Do stage carries one panel with all four parts',
+        PASS if ok45 else FAIL, 'composite of rows 1,2,4,5,6,7,45.1,45.2')
+
+    # 46 — THE RE ROW (negation-aware, per correction #13)
     asks = []
     if strand == 'RE':
         for p in panels(doc):
             for sent in re.split(r'(?<=[.!?])\s+', p.inner_text()):
                 if ASK_BELIEF.search(sent) and not NEGATION.search(sent):
                     asks.append(sent[:90])
-    row(44, 'no RE panel asks for a belief', PASS if not asks else FAIL, str(asks))
+    row(46, 'no RE panel asks for a belief', PASS if not asks else FAIL, str(asks))
 
-    # 45 — nothing lost: every sentence of the source deck survives somewhere
+    # 13 — nothing lost: every sentence of the source deck survives somewhere.
+    # (Numbered in the adapter's own low range: 45 is the chassis loop row.)
     # The ribbon is REPLACED by ruling R1, so its own boilerplate is not "lost".
     # Every other sentence the deck had must still be there.
     #
@@ -182,7 +207,7 @@ def verify(after_html: str, before_html: str, strand: str, science_panel_texts):
     before_s = block_sentences(before_html)
     after_t = parse(after_html).inner_text()
     lost = sorted(x for x in before_s if x not in after_t)
-    row(45, 'rendered-text diff: nothing lost', PASS if not lost else FAIL,
+    row(13, 'rendered-text diff: nothing lost', PASS if not lost else FAIL,
         '%d sentences absent: %s' % (len(lost), lost[:3]))
 
     # behavioural rows — proved in the browser, never here
@@ -244,11 +269,11 @@ def self_test(root: Path):
                    key=lambda n: n.start)[0]
     dropped = after[:first.start] + after[first.end:]
     checks.append(('row 1 fails when a panel is removed', status(dropped, 1) == FAIL))
-    checks.append(('row 43 fails with it too', status(dropped, 43) == FAIL))
+    checks.append(('row 45 fails with it too', status(dropped, 45) == FAIL))
     # plant: blank an influence line
     hurt = re.sub(r'(data-loop-part="influence">)[^<]*', r'\1', after, count=1)
     checks.append(('row 5 fails when an influence line is blanked', status(hurt, 5) == FAIL))
-    checks.append(('row 43 fails with it', status(hurt, 43) == FAIL))
+    checks.append(('row 45 fails with it', status(hurt, 45) == FAIL))
     # plant: remove the order-enforcing script
     hurt = after.replace('data-hum-t-loop="1"', 'data-broken="1"', 1)
     checks.append(('row 7 fails when the script is removed', status(hurt, 7) == FAIL))
@@ -262,13 +287,13 @@ def self_test(root: Path):
     # plant: a belief question in a panel on an RE deck
     hurt = after.replace('data-loop-part="response">Say or show what the source says here:',
                          'data-loop-part="response">Write your own belief about this:', 1)
-    checks.append(('row 44 fails when a panel asks for a belief', status(hurt, 44) == FAIL))
+    checks.append(('row 46 fails when a panel asks for a belief', status(hurt, 46) == FAIL))
     # plant: the science exemplar's own panel text
     if sci:
         one = sorted(sci)[0]
         hurt = re.sub(r'(<div class="lundy hum-t-loop"[^>]*>).*?(</div>)',
                       lambda m: m.group(1) + one + m.group(2), after, count=1, flags=re.S)
-        checks.append(('row 37 fails on science-identical panel text', status(hurt, 37) == FAIL))
+        checks.append(('row 45.1 fails on science-identical panel text', status(hurt, 45.1) == FAIL))
     # running the adapter twice must refuse, not double the panels
     from loop_adapter import AlreadyAdapted
     try:
@@ -302,8 +327,8 @@ def self_test(root: Path):
     # plant: drop a sentence from the deck
     a_sent = 'Six statement cards are on your table.'
     if a_sent in after:
-        checks.append(('row 45 fails when a sentence is dropped',
-                       status(after.replace(a_sent, ''), 45) == FAIL))
+        checks.append(('row 13 fails when a sentence is dropped',
+                       status(after.replace(a_sent, ''), 13) == FAIL))
     ok = True
     for name, good in checks:
         print(('  PASS ' if good else '  FAIL ') + name)
