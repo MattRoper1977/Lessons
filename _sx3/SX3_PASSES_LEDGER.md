@@ -573,3 +573,137 @@ L35  A PIN DESIGN THAT CANNOT BE LOADED IS NOT A PIN  [ORDER FINISH-2, manifest-
      is pinned through a reviewed manifest and the manifest is expanded and
      digest-checked by the gate -- never pinned per file until the workflow stops
      loading, and never admitted by a directory wildcard.
+
+L36  THE HUB IS DERIVED FROM A SIGNED RECORD, NOT FROM A TITLE  [ORDER HUB-1, 2026-09-20;
+     strand record STOP-SIGN, C1 restated, W8 option (ii), W14 ownership].
+     WHAT WAS ORDERED. Make lessons, packs and downloads easy to find on the composite
+     Humanities hub (Humanities_Teesside/index.html): a Start-here strip (S1), ONE
+     current card per week under Pathway -> Strand -> Term -> Week (S2), one card per
+     pack with download links read from the pack's own manifest (S3), earlier versions
+     in one collapsed section at the end (S4), terms from the subject's own bases (S5),
+     filters and no-JavaScript order kept (S6); controls C1-C4 red-proved; nothing
+     deleted (142 cards in == 142 out).
+     THE RECORDS THAT DECIDE. Strand is derived from a record, never from a title:
+     tools/catalogue/HUMANITIES_STRAND.json, 73 rows (one per served dated-folder
+     lesson card with a week), basis named per row in the ruled precedence
+     a) RE SoW week objective 14 / b) Humanities SoW week objective 35 / c) pair
+     pattern 3 / d) content read 8 / e) Matt's rulings 13; UNASSIGNED 0. Signed
+     verbatim on Matt's word and digest-pinned (a review decision, so a pin).
+     Term bases are PER SUBJECT (ruling: option ii): the Humanities SoW's own
+     7,7,6,6,6,7 -> 0,7,14,20,26,32; the spine's ruledMapping (0,8,15,21,26,33) is
+     science's and stays with the science bindings. W8 -> Aut2 week 1.
+     The route family IS the marking (M2 ruling): Humanities_Teesside/<dated folder>
+     = current (82: 73 lessons + 9 folder start pages), *_Estate_v3 (27) and
+     Build|Grow|Launch/Slideshows (25) = earlier, the rest (8) = reference.
+     A Classic alternative is a badge-level card in the same week row.
+     WEEK 14 OWNERSHIP (ruling 3, measured). Humanities SoW, Build Autumn 2 week 7:
+     "Make a festivals display and gather UAS evidence" -> Festivals Display and
+     Reflection (BUILD_W14-W20, whose START_HERE claims "Absolute week 14") is
+     CURRENT; Industry and Nature: The Tees Story (BUILD_W9-W14, listed in no SoW)
+     is the ALTERNATIVE, Humanities, basis (e), the sixth card of the retained
+     OUTSTANDING_V4 Tees series.
+     INSTRUMENT CORRECTION #12. Basis (c) is a rule with a precondition (a slot of
+     exactly two cards). The first derivation applied it to a three-card slot and
+     assigned RE to a local-history deck. A rule with a precondition must ASSERT
+     the precondition; the basis key now records the withdrawal condition and the
+     row reached Matt as a thirteenth ruling instead of hiding behind a green table.
+     C1 RESTATED (ruling). Exactly one current card per (pathway, term, week, strand)
+     slot that has a lesson ANYWHERE in the served estate -- the shelf OR the pack
+     tree. Measured: 65 shelf-current slots + 55 slots filled by pack lessons
+     (RE Aut1 4, RE Aut2 19, Humanities Aut2 2, Spr1 12, Spr2 18); double-current 0;
+     UNASSIGNED 0. A slot the SoW plans but nothing serves is a GAP, listed in the
+     hub's "Not yet published" note and here, never red: 39, all Humanities Summer 1
+     (18) and Summer 2 (21). RE gaps 0, as the ruling expected. The ruling expected
+     69 Humanities gaps; the measured 39 is the same rule applied to the pack tree
+     as it stands -- the eight HUM Spring packs (36 lessons) serve Spring 1 and 2.
+     THE WRITER. build_humanities_shelf.py reads the shelf record, the signed strand
+     record, the pack tree (SHA256SUMS.txt / MANIFEST.json / DOWNLOADS_MANIFEST.json
+     are the ONLY source of download links; 15 pack cards) and the two SoWs, through
+     the shared tools/catalogue/hub_sections.py (the same change the science writer
+     takes once it can run), and REFUSES to write while any C1-C4 control is red.
+     Self-test 13 controls, 0 FAIL: double-current red / UNASSIGNED red / earlier
+     card rendered as current red / current-family card with no strand row red /
+     missing pack link red / dropped, duplicated and invented cards red / a pack
+     lesson fills an empty slot green / a gap counts and does not red.
+     It also writes assets/catalogue/humanities-hub-bindings.json: every slot, its
+     current card and where it came from, its alternatives, the gaps, the packs.
+     PROOF (Playwright Chromium 390x844, served at /Lessons/): S1 strip inside the
+     first fold (cards at 346-571 px), no horizontal scroll; GROW · RE · Autumn 1 ·
+     Week 4 (W4 · Eight Nights, One Lamp, and What the Light Is For; the RE SoW's
+     "Hanukkah & the theme of light") opened in 2 taps, its pack lesson linked from
+     the same row; Autumn 1 BUILD Complete Pack zip (4,124,845 bytes, HTTP 200) in
+     2 taps; every pack card link resolves over HTTP; axe 0 serious/critical (one
+     moderate heading-order); the strand filter works; with JavaScript off all 142
+     cards are listed, current first, earlier last. Static gate PASS, linkedom DOM
+     gate 28/28 PASS, contract controls 280 / 0 FAIL, gate self-test PASS, GLV3 judge
+     PASS, PIN1 PASS.
+     FINDING, NAMED AND CARRIED, NOT PATCHED. The two shelf writers scraped their house
+     stylesheet from the root index.html's first <style>. The root page no longer
+     holds that 18,657-byte block (its first <style> is a 651-byte header media rule),
+     so a fresh run of EITHER writer produced an unstyled hub whose header overflowed
+     to 701 px and failed contrast -- measured, and measured absent on the served hub,
+     which still carries the old inline copy. The block now lives in
+     assets/catalogue/shelf-base.css, carried forward VERBATIM from the served hub
+     (not authored), pinned, and embedded by the writer. The science writer keeps the
+     dead scrape until the shelf-restore order.
+     FINDING, RECORDED UNDER TERM_BASES. assets/catalogue/lesson-order.json carries
+     weeks for all 142 shelf paths: 62 rows agree with the record, 6 (the Tees series)
+     have none, and the five Autumn-2 _Classic cards sit one week early -- base 8
+     showing through. The hub derives from the SoW record, not from lesson-order's
+     timing; nothing patched.
+     STOP-X, SCIENCE LEG. build_science_shelf.py asserts every week binding's
+     sourceSha256; 77 of 129 are stale (the 2026-09-06 audit), so the science hub
+     cannot be regenerated without loosening that guard. The shelf-restore decision
+     rules it; the science hub is re-measured as served (title sync 129/129 PASS).
+     A RED FOUND AND FIXED ON THE FIRST HEAD, ATTRIBUTED. CI on #602's 3223563d: the VB
+     mechanism battery marked g27_no_filename_weeks.py FAIL (VB-RUN13 R0: no tool derives
+     a week from a filename or folder name). hub_sections.week_from_name() read W<n> from
+     a filename to group Earlier versions, and the writer read W<nn> from a pack folder to
+     key download rows. Both removed: Earlier versions group Pathway -> the shelf record's
+     own term (lesson-order.json records a week for 1 of the 52, so a week grouping had no
+     record behind it); a pack lesson's pathway, term and week are read from ITS OWN config
+     text ("week": N, "term", "pathway" -- all 120 carry exactly one), and download rows
+     are keyed by the lesson's directory and labelled by that week. Same derivation (55
+     filled, 39 gaps); g27 PASS; the battery SUCCESS on 29886812. S4's "-> Week" is met as
+     far as a record allows and no further.
+     THE HUB'S BYTES MOVED WITH THE FIX, SO THE SIGNED TABLE MOVED. A signature that names
+     digests is not stretched over new ones: the four changed rows were tabled again and
+     re-signed (hub ea77a660->2c89f93d; resource-sizes abd0a1ba->aabb7da9; hub pin
+     7594ce3f->6f69b888; gate 1987983a->3539ad6a), the five others unchanged. The Site
+     prepare script asserts every built row equals the signed table before it writes.
+     LANDING. Two Lessons PRs of <= 12 files with the Apps gate companion each, one merge
+     at a time, each on its own green read: #602 -> a16505ce (with Apps #124 -> 553d3c14),
+     #603 -> 9e8a947a (with Apps #125 -> f374e8cc). The gate observed on both mains by run
+     id (35526015474 static-contract SUCCESS; 35526807463, all four jobs SUCCESS). The
+     window opened exactly as named: publication 35526015846 on a16505ce red on the one
+     path (UNREVIEWED shelf-base.css), FieldOps red only because it waits on it; at
+     9e8a947a the publication (35526807535) red on the first tree censused
+     (usage-registry), the six lessons-tree paths behind that halt. The Site window is one
+     PR (#415): the seven-path table with the re-signature verbatim in reviewSources, both
+     L31 pin pairs to 9e8a947a/f374e8cc, and one consequence of S3 named: the hub's direct
+     pack links make the build emit 825 reviewed download rows where the list held 663 --
+     the 663 kept in order, 162 appended, TEACHING_PACK_ADDITIONS_SHA256 re-pinned. The
+     carrier bump on the first Lessons PR after the Site merge (L33) is the closer:
+     Lessons #604 -> 9eca50b2 (with Apps #126 -> d4e0d608), education-pages.yml uses@ and
+     builder_ref 3ed4577f -> 5a039ae1, the caller digest re-cut in both gate copies.
+     THE CLOSER, OBSERVED (correction #11: by its own run id, never "did not run"). On
+     9eca50b2 the Education Pages publication ran as run 35529424558, referencing
+     education-publication.yml@5a039ae1, and completed SUCCESS at 18:41:48Z -- the window
+     is CLOSED by that run id. FieldOps 35529424141 SUCCESS: its serve proof reads the
+     publication provenance (lessons: checked source 9eca50b2 == deployed source, run
+     35529424558, artifact 10611091922) and 59 of 59 derived routes served byte-identical,
+     0 red, 0 inconclusive, 5/5 controls fired; unification 35529424116 SUCCESS; UX2
+     35529424134 SUCCESS. Site main 5a039ae1: Domain split publication 35528465172,
+     Education publication 35528465209, audience closeout 35528465178 and splash records
+     35528465189 all SUCCESS (AGX-1 is pull_request-only: 35526945959 on the PR head,
+     SUCCESS). Apps main d4e0d608: publication 35529440885, unification 35529440385,
+     LundyLoop 35529440393, all SUCCESS. The hub's served bytes are proved by the chain,
+     not by a hand fetch: the registry admits 2c89f93d, the publication that reads it went
+     green on this tree, and the serve proof shows that publication deployed; the 390x844
+     harness ran on those exact bytes. The serve proof's 59-route set does not include the
+     hub path itself, and the live domain was not reachable from the landing session
+     (proxy 403) -- recorded, not glossed.
+     STANDING RULE: a hub groups by what a signed record says, never by what a title
+     looks like; a slot the plan names but nothing serves is a listed gap, never a
+     red -- and never a card invented to fill it. A signature names digests; when the
+     bytes move, the table is signed again, never stretched.
