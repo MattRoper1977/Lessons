@@ -398,3 +398,178 @@ real binding rather than reporting that it declined one.
 NOT changed here, per ruling R2 - recorded for the evidence-model order. The binding
 is instead registered by the second instrument (restored lesson-config,
 preserved_outcome / explicit_cell).
+
+L29  L17, SECOND INSTANCE (own): A GATE JUDGED BEFORE THE COMMIT PASSES VACUOUSLY.
+     tools/verify_cross_estate_unification.py --base origin/main judges base...HEAD.
+     Run on F3a's worktree with the changes staged, not committed, HEAD equalled the
+     base and the boundary judged an empty set: [PASS], nothing judged. After the
+     first commit the same gate named two unadmitted modifications (the ledger, the
+     sweep script). L17's rule stands and is restated here because it caught me a
+     second time: commit, then judge; a gate result taken before the commit is not
+     a pre-CI result.
+
+L30  THE LOCAL PRE-CI NEVER RAN git diff --check  [instrument gap; STOP-R on #600].
+     cross-estate/static-contract runs `git diff --check origin/main...HEAD` after
+     the unification gate. Neither the eight-writer sweep nor the three gates run
+     locally include it, so #600's head ebfde962 went red (run 35508760763, job
+     106072898977, exit 2) on 68 CR-at-EOL lines in nine RFC 4180 CSVs
+     (*_Data.csv, CRLF as reviewed and summed in the packs) that no local
+     instrument had read. Measured: 68 of 68 are CR at end of line, 0 literal
+     trailing spaces; core.whitespace=cr-at-eol silences all 68. Fixed by
+     declaration, not by bytes: .gitattributes `whitespace=cr-at-eol` on the pack
+     CSVs, the estate's own route for a bytes-unaltered payload the whitespace
+     check misreads (the gate's rationale for admitting .gitattributes). The sweep
+     gains the same `git diff --check "$BASE"...HEAD` tail in the re-pin commit
+     that carries this entry, so the gap closes where it opened.
+
+L31  THE SITE'S LESSONS PIN AND ITS APPS PIN MOVE TOGETHER OR NOT AT ALL
+     [instrument gap; STOP-R on Site #413].
+     verify_catalogue_contract_controls.py builds an Apps fixture from the Site's
+     Apps checkout and runs the LESSONS gate copy against it. The two pins must
+     therefore name commits whose gate copies agree, and nothing said so: the
+     FINISH-2 window moved the Lessons pins to 6bb8238f (gate copy 1796ab50, the
+     #597 spine admission) and left the Apps pin at dfca094b (bd4cb83f, before
+     #119). Red, mine, on "Complete separated publications" run 35510178578 job
+     106076593121. Three measured pairs settled it:
+       Site main's own pair   Lessons b32bf1c7 + Apps dfca094b  PASS 274
+       this PR before the fix Lessons 6bb8238f + Apps dfca094b  FAIL
+       this PR after the fix  Lessons 6bb8238f + Apps a7d330b8  PASS 273
+     tools/lessons_pin_lag_control.py censuses every LESSONS pin and G1 compares
+     the two estates' gate copies, but nothing censuses the Site's APPS pins or
+     asserts pin-pair agreement. That is the next order's Site item, beside the
+     pinned-but-unwatched census: extend the lag control to the Apps pins and make
+     pair agreement a control with its own red proof.
+
+L32  THE APPLY RECORD AND ITS VERIFICATION ARE TWO DIFFERENT DOCUMENTS (HUM-D5, own).
+     _passhumd5/APPLY_PLAN.json is written by apply_proof.py on EVERY run, write or
+     dry. The committed record (09:14:54Z) is the write run: write=true, 22 files,
+     22 already_applied, 0 refusals -- D1's actual application. A later verification
+     pass (10:21:28Z) overwrote the working copy with write=false, 460 files, 1087
+     already_applied, 0 planned_edits, 0 refusals, 128 skipped: the proof that
+     nothing remained to apply across the whole pack set. Committing that over the
+     first would have replaced an apply record with a dry run under the same name
+     and the same schema -- indistinguishable in review except by the write flag.
+     The working copy was restored to the committed record and the verification's
+     figures carried into the readback as their own measurement. Finding for the
+     evidence-model order: a record whose meaning depends on a boolean field inside
+     it should carry that field in its NAME, or the tool should refuse to overwrite
+     a write-run record with a dry-run one.
+
+L33  THE CARRIER BUMP ON THE LAST LESSONS PR LEAVES THE EARLIER MERGES PUBLISHING AT
+     THE OLD CARRIER  [sequencing; STOP-R on Lessons main 8fe3702c].
+     Education Pages publication run 35512157865, job 106081826175 "publication /
+     build", 12:58:56 -> 13:02:25Z, FAILURE: "Education file admission blocked
+     publication" with exactly ten CHANGED paths -- the nine F3a decks and
+     assets/catalogue/lesson-order.json. Attributed locally without a build: the
+     run's referenced_workflows names education-publication.yml@a1b2a85c, the Site
+     carrier Lessons still pins because the carrier bump sits on #600 (the order's
+     "last Lessons PR"); the one build's digests for those ten are admitted 0/10 in
+     the registry at a1b2a85c and 10/10 at fa4aa9e7 (#413). So #598's and #599's
+     main pushes cannot publish green: the pairs that admit their bytes exist only
+     at a carrier they do not yet name. It is the same mechanism and the same closer
+     as the named red window (#600 lands the carrier bump), but it is not the named
+     red (that is check_education_separation.py after #600), so it is STOP-R and
+     nothing merged past it. FieldOps P2 on the same push is expected to follow it
+     red: its serve-proof polls for a successful publication (the ordering
+     dependency the order records). Finding: a carrier bump belongs on the FIRST
+     Lessons PR of a window whose Site PR has merged, or as its own PR immediately
+     after the Site merge; on the last PR it guarantees a red publication per
+     earlier merge.
+
+L34  THE NAMED RED WINDOW, WIDENED BY RULING (a) TO COVER BOTH REDS  [ORDER FINISH-2,
+     ruling 2026-09-20; precedent #408/#410; no new bytes].
+     Three Lessons-main publications go red inside this window, each by a mechanism
+     the window already contains and each closed by the same two commits:
+       1. main 8fe3702c (#598, F3a)   Education Pages publication 35512157865, job
+          106081826175, FAILURE 13:02:25Z -- admission: CHANGED x10 (the nine F3a
+          decks + assets/catalogue/lesson-order.json) at the old carrier a1b2a85c,
+          whose registry predates #413 (0/10 admitted there, 10/10 at fa4aa9e7).
+          CLOSER: #600 lands the carrier bump (education-pages.yml -> fa4aa9e7).
+       2. main 5915a63c (#599, F3b)   Education Pages publication 35513233724 -- the same
+          admission red, now the 20 decks + lesson-order.json at the old carrier.
+          CLOSER: the same.
+       3. main <#600 merge; SHA and run id in the CLOSE readback, FINISH2_CLOSE.md,
+          since this entry lands IN #600>   Education Pages publication -- the carrier
+          now names fa4aa9e7 so the 21 F3 pairs admit; the 1750 pack files are
+          UNREVIEWED at that registry and check_education_separation.py reds on
+          "Download additions differ from the reviewed installed pack:
+          /Lessons/Humanities_Teesside/Teaching_Packs/" (663 emitted vs 108
+          approved). CLOSER: Site PR-2 -- the 663-row reviewed list in emitted
+          order with its digest re-pinned, 1750 [digest, ARRIVING], the
+          usage-registry pair, both pins to post-merge Lessons main with ITS Apps
+          companion (L31) -- then the publication is re-dispatched on Lessons main
+          and its SUCCESS run id closes the window.
+     FieldOps P2 follows each of the three red (its serve-proof polls for a
+     successful publication of that SHA: the ordering dependency the next order
+     carries). Any red not in this list is STOP-R.
+     STANDING RULE (Matt, from L33): a carrier bump belongs on the FIRST Lessons PR
+     after a Site merge, not the last -- a pair that publishes at the old carrier
+     publishes against a registry its digests are not in.
+
+L35  A PIN DESIGN THAT CANNOT BE LOADED IS NOT A PIN  [ORDER FINISH-2, manifest-pin
+     ruling 2026-09-20; pin-design change, named as such].
+     WHAT HAPPENED. #600 pinned the 1750 HUM-D5 pack files individually, as R1
+     required and as SCIENCE_PACKS does. PIN1 materialises one exact trigger path per
+     pinned file, so the derived mbm-cross-estate-unification.yml reached 4,645 list
+     entries / 534,033 bytes -- and GitHub never loaded it. Three push runs on this
+     branch completed instantly with ZERO jobs and the run named by the file path
+     rather than by the workflow's own `name:` (35509145935 on 4dd90c43, 35512149909
+     on 6ad78b5c, 35513723753 on d2f5b7c3), and across 330 pull_request runs of that
+     workflow not one was ever created for a #600 head. The gate did not fail on this
+     PR: it never ran on it, on any head, at any point.
+     HOW IT WAS MISSED. The PR looked green because its OTHER workflows (FieldOps,
+     UX2, GLV3) ran and passed, and because I recorded "static-contract run 35509150284
+     observed; 534 KB workflow proved" -- a run id that is in neither run list of that
+     workflow. INSTRUMENT CORRECTION #11: a workflow is proved to run by ITS OWN run,
+     read from that workflow's run list with jobs > 0, never by a green-looking suite
+     and never by a run id transcribed from elsewhere. This is L17's rule (a gate is
+     fixed only when OBSERVED to run on its target) applied to the gate's EXISTENCE,
+     not to its verdict, and it is L17's third instance.
+     THE RULING. Pin the packs BY MANIFEST; cover the route on the caller.
+       1. CATALOGUE_PINS carries the 11 SHA256SUMS.txt manifests, one per Final pack,
+          plus the 134 files of the two packs that ship without one (HUM_00, 7; the
+          Autumn 1 Fallback, 127 -- recorded, not invented). 145 pinned paths for 1750
+          files; REVIEWED_PATHS 2246 -> 642, CATALOGUE_PINS 2296 -> 692, PIN1 2310 ->
+          706 exact triggers per event, workflow 534,033 -> 139,627 bytes (main's own
+          copy is 104,085). gateSha256 b1056230 -> fd3608a5.
+       2. cross-estate-on-content.yml gains Humanities_Teesside/** beside
+          Science_Teesside/**, on pull_request AND on push to main. push carries
+          Humanities only: Science pack files keep their own per-file PIN1 paths on
+          both events, and it is the Humanities members that stopped having one. The
+          caller is admitted by DIGEST PIN (REVIEWED_PATHS), not by ALLOWED_DIFF --
+          the #597 s1 route (b) precedent: ALLOWED_DIFF would let it change freely,
+          pinned by nothing, which is how coverage falls away silently.
+     WHY THIS IS NOT A LOOSENING, PROVED NOT ASSERTED. Dropping 1605 per-file pins
+     would have stopped the gate digest-checking those bytes, so the indirection was
+     carried into the gate itself, not only into GLV3:
+       - catalogue_errors() expands every pinned manifest and digest-checks each of
+         the 1605 listed members on EVERY run. Controls (gate self-test): member drift
+         red / member missing red / manifest enlargement red on BOTH the expansion and
+         its own pin / unreadable manifest red / empty manifest red / restored green.
+       - GLV3's HUMANITIES_PACKS manifest route admits a member only when its manifest
+         is pinned, the manifest's own bytes still equal that pin, the member is listed
+         BY NAME, and the member's bytes equal the listed digest. Self-test 1321 -> 1330
+         controls, 0 FAIL, carrying the ruling's three named red proofs: bytes drifted
+         from the listed digest -> rejected; a file the manifest does not list ->
+         rejected; a manifest enlarged to admit one -> stops matching its pin, so the
+         route closes. Judge PASS, protectedChanges 1750.
+       - The writer's "omits existing admissions" refusal is the control that stops an
+         admission being withdrawn silently, so it was reconciled BY PROOF, never by an
+         exception list: manifest_admitted() withdraws a per-file pin only while a
+         still-pinned manifest lists that exact path at the digest the file on disk
+         actually has. Contract controls 273 -> 280, 0 FAIL, including: a member whose
+         bytes drift is no longer proved so its pin cannot be withdrawn; withdrawing
+         the manifests withdraws the proof for every member they carried; and a
+         manifest-admitted member's byte drift is rejected by the COMPLETE gate.
+     NAMED CONSEQUENCE, FAILING CLOSED. boundary_errors() admits a changed path by
+     exact membership of CATALOGUE_PINS, and it was deliberately NOT given a manifest
+     route. It only ever sees --diff-filter=MRD, so the 1750 ADDITIONS never reach it
+     and this PR is unaffected; but a future MODIFICATION of a manifest-admitted member
+     will red there until it is admitted. That is a refusal, not a hole -- loud, not
+     silent -- and it is the first item for the next pack update rather than something
+     to widen here on my own initiative.
+     STANDING RULE: an exact-path registry cannot carry a payload-scale population.
+     When a pinned set would push the derived workflow past main's own scale, the set
+     is pinned through a reviewed manifest and the manifest is expanded and
+     digest-checked by the gate -- never pinned per file until the workflow stops
+     loading, and never admitted by a directory wildcard.
