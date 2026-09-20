@@ -104,3 +104,91 @@ Identical before and after on all 23; recorded for a later order, not fixed here
 | 14 `#organiser-dialog` | 1 | 2 | duplicate id |
 | 15, 21, 22, 23, 24, 26, 27, 28, 29 | 4, 3, 3, 3, 6, 2, 1, 1, 2 | 0 | the print family — the contract's own VOID ruling says the pack owns `#print-area` at runtime and deletes every static `#print-*` section the moment JS runs, so 0 at runtime is what that ruling predicts |
 | 30 `.teacher-only` | 3 | 1 | pre-existing |
+
+---
+
+# Correction: 20 decks split, 3 refused, and the landing is blocked on main
+
+The first pass split 23. Regenerating the derived records afterwards — which any
+change to a deck's bytes forces — showed that three of them lost their catalogue
+term binding. Both facts below were measured against a clean `origin/main`
+worktree, so each red is attributed before anything was written.
+
+## The 3 refusals
+
+On most decks the `science-meta` line states only the arrival stage's minutes. On
+three it glues two different facts together:
+
+```
+LAUNCH · GCSE BIOLOGY FOUNDATION · W12 · LESSON Classic · 4 MINUTES · Aut2·W4
+                                                          ^^^^^^^^^   ^^^^^^^
+                                            the arrival stage's timer  the LESSON's term
+```
+
+`build_catalogue.py`'s weakest fallback derives a deck's term from a term code
+appearing anywhere in **stage 0's text**. F2 carries the minutes to the arrival
+stage, so the term travels with them and the catalogue term silently falls to
+`unspecified`. The adapter now refuses rather than dropping a binding:
+
+| deck | term at risk |
+|---|---|
+| `SCI_L_W9_Copy_separate_divide_Classic.html` | `Aut2·W1` |
+| `SCI_L_W12_Zoom_into_genetic_information_Classic.html` | `Aut2·W4` |
+| `SCI_L_W13L2_Punnett_Square_Explore.html` | `Aut2·W5` |
+
+All three are left exactly as found. Splitting them needs a ruling: either the term
+is registered by a stronger instrument, or the meta is separated into a stage line
+and a lesson line — neither is derivable from the deck.
+
+**20 decks split, and the rendered acceptance is 20/20, 0 failures**, with the 11
+untouched decks byte-identical on every measured field. F2's isolated effect on the
+catalogue record is now exactly **20 sha256 updates and nothing else** — proved by
+running `build_catalogue.py` on a clean main worktree and on this branch and
+diffing the two writer outputs.
+
+## The landing is blocked by a pre-existing defect on main
+
+`origin/main` at `cbfbc70c` **cannot regenerate its own catalogue record.** Measured
+on a clean worktree, with no change of mine:
+
+- `build_lesson_order.py --check` PASSES on pristine main — the committed records are
+  mutually consistent.
+- but running `build_catalogue.py` first, then `build_lesson_order.py`, **asserts** on
+  `SCI_L_W10L1_Growth_And_Differentiation_Introduce.html`.
+
+Its own writer changes 38 entries and drops the term on **14 LAUNCH W9–W13 decks**,
+every one of them from `current content re-proves audited workbook binding` to
+`current presentation structure`. Root cause, for one of the 14:
+
+| limb of the re-prove | state |
+|---|---|
+| `blobSha256` unchanged | **no** — `_sownb/CALENDAR_SPINE.json` still pins the **pre-transplant** bytes `503c0cdd…`; the deck is now `612b4544…` |
+| verbatim outcome present in the body | **no** — the transplant re-worded the deck |
+| that outcome long enough to count | **no** — `'Explain growth & stem cells.'` is exactly 28 characters and the guard is `len(...) > 28`, so a byte-perfect match would still be rejected |
+| `secondInstrumentEvidence` | **empty** |
+
+No limb can fire. The committed record still reads `Aut2` only because it has not
+been regenerated since the transplant changed those bytes.
+
+**Consequence.** Any change to a science deck forces a catalogue regeneration, which
+breaks `build_lesson_order.py`, which blocks `pin_catalogue_contract.py` — the pins
+step. So F3's landing cannot complete the four-writer sweep until the spine is
+reconciled. F2 is simply the first change to trip a latency that is already there.
+The derived records are therefore **left untouched on this branch**: regenerating
+them would carry main's 14 term losses into an F2 PR.
+
+## Sweep attribution
+
+Run against a clean `origin/main` worktree and an `origin/main` Apps worktree:
+
+| writer | clean main | this branch | attributed to |
+|---|---|---|---|
+| `check_catalogue_static` | PASS | FAIL | **F2** — the 20 deck hashes moved |
+| `pin_catalogue_contract --check` | PASS | — | — |
+| `data/resource-sizes.json` | PASS | FAIL | **F2** — the 20 deck sizes moved |
+| `derive_triggers --check` | PASS | PASS | — |
+| publication census | NOT RUN | NOT RUN | needs the one granted build |
+
+A fifth red seen first time round — `gate copies differ` — was **not** the estate: the
+local Apps clone sat on `claude/sx3-apps-pair4`. Lessons main and Apps main hold the
+gate byte-identical at `f38a2a6f91cc5c83…`, exactly as the order names.

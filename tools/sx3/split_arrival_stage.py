@@ -124,6 +124,24 @@ def text_of(html):
     return re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', html)).strip()
 
 
+# The catalogue derives a deck's teaching term from a term code appearing anywhere in
+# stage 0's TEXT - build_catalogue.py's weakest fallback, `term_codes(title_slide)`.
+# This is that same expression, so the two agree by construction.
+TERM_CODE = re.compile(r'\b(Aut|Spr|Sum)(?:umn|ing|mer)?\s*([12])\b', re.I)
+
+
+def term_codes(s):
+    return sorted(set(a.title() + b for a, b in TERM_CODE.findall(s)))
+
+
+def stage0_text(html):
+    st = stages(html)
+    if not st:
+        return ''
+    s0, e0, tag0 = st[0]
+    return text_of(html[s0 + len(tag0):e0])
+
+
 def stages(html):
     """Every stage section as (start, end, opening_tag). The last ends at its own </section>."""
     marks = list(SECTION.finditer(html))
@@ -253,6 +271,18 @@ def check_invariants(before, after, info):
             p.append('text lost after the split: %r' % token[:40])
     if 'id="title-a1"' not in after:
         p.append('the arrival heading was not created')
+    # A term binding must not be carried out of the opening stage. On a few decks the
+    # science-meta line glues two different facts together - the arrival stage's
+    # minutes AND the lesson's term, e.g.
+    #   "LAUNCH - GCSE BIOLOGY FOUNDATION - W12 - LESSON Classic - 4 MINUTES - Aut2.W4"
+    # The minutes travel to the arrival stage, so the term would travel with them and
+    # the catalogue's term would silently fall to "unspecified". Refuse instead.
+    lost_terms = [c for c in term_codes(stage0_text(before)) if c not in term_codes(stage0_text(after))]
+    if lost_terms:
+        p.append('the split would carry the term binding %s out of the opening stage, where '
+                 'the catalogue reads it (build_catalogue.py title-slide fallback); the '
+                 'science-meta line states both the arrival minutes and the lesson term'
+                 % ', '.join(lost_terms))
     # contract row 41: the organiser opener must end up in the opening stage
     if 'data-action="organiser"' in before:
         sa = stages(after)
@@ -325,7 +355,9 @@ def self_test():
                 after, info = split(doc)
                 pr = check_invariants(doc, after, info)
                 got = 'split clean' if not pr else 'refused: ' + '; '.join(pr)
-                passed = expect_ok and not pr
+                # A negative case may be caught by needs_split, by a raise, OR by the
+                # invariants. All three are a correct refusal.
+                passed = (expect_ok and not pr) or (not expect_ok and bool(pr))
             except ValueError as e:
                 got = 'refused: %s' % e
                 passed = not expect_ok
@@ -351,6 +383,8 @@ def self_test():
          DECK.replace('</div>\'\n        \'</section>', '</div><p>after</p></section>')
              .replace('data-action="organiser">Open knowledge organiser</button></div>',
                       'data-action="organiser">Open knowledge organiser</button></div><p>after</p>', 1), False)
+    case('a deck whose meta glues the term to the arrival minutes REFUSES',
+         DECK.replace('LAUNCH \u00b7 W9 \u00b7 4 MINUTES', 'LAUNCH \u00b7 W9 \u00b7 4 MINUTES \u00b7 Aut2\u00b7W1'), False)
     case('a deck with no knowledge shortcut still splits cleanly',
          re.sub(r'<div class="knowledge-shortcut">.*?</div>', '', DECK, flags=re.S), True)
 
