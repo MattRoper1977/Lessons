@@ -241,3 +241,10 @@ Matt's rulings on the Class B ledger, what was done under each, and what came ba
 | H8 | E10, E11, E8 OCR leg | **NOT RUN, with reason** | E10 57 URLs proxy-refused (CONNECT 403); E11 cited pages unreachable; E8 OCR needs tesseract (absent). Never ABSENT. |
 
 Apply record: `apply_proof.py` map A0029–A0038, 365 planned edits in 120 Lesson.html, 0 refusals; second write 0 planned / 365 already applied; full-map dry run 0 planned / 945 already applied (idempotent). `raw` groups (markup and config-structure edits) are validated after the write by re-parsing `window.CLASSIC_LESSON` in every touched file (120/120 parse). SHA256SUMS.txt regenerated in the 11 Final packs and the Fallback MANIFEST.json rehashed (14 entries); each pack's CHANGELOG carries a "Rulings applied 2026-09-19" block with its own counts.
+
+### Adversarial verify of the H4/H5/H6 measurements (read-only subagents, results re-checked here) — corrections to the record
+- A0029 replaced 80 of the 160 `--btn-bg:#3b82f6` occurrences: the 40 LAUNCH files × 2. The 80 left in BUILD/GROW are their inert `:root` copies (proved by injection: BUILD/GROW render the `html.pathway-*` values), left as-is deliberately under "one token change per pack".
+- The fadeIn keyframes change (opacity-only) proposed against B0008 was NOT applied: B0008 closed as an instrument artefact, so there was no defect to edit; recorded as an option only.
+- The at-rest `input` rule is `input{font:inherit;max-width:100%;padding:8px}` (not the string first quoted); `var(--ido-border)` occurs 41 times per file (not 35). Neither changes what was edited.
+- Practice-grid svg parents are div.resource-visual 9 / div#interactive-map 4 / div.paper-resource 7 (BUILD_A1_W06 also carries slide-3 and slide-5 copies); the applied A0032 string binds the label after `sel.id` — semantically identical to the proposed ordering.
+- Both verifiers re-ran axe in situ on the post-edit files: select-name 0 violations on the 4 rank lessons (slide-5 active); svg-img-alt / nested-interactive 0 violations on every sampled map and diagram stage.
