@@ -98,3 +98,75 @@ change caused.
   whose bytes change goes stale again by construction, so the F3 PRs must re-census the
   decks they touch, at their post-split bytes, in the same PR — exactly as the four
   derived-record writers are run. This PR repairs main so that it can.
+
+---
+
+## STOP — the boundary has no route for this record
+
+CI on the first head found two reds. One was mine to fix; the other is a gate
+question I will not answer on my own.
+
+### Fixed: a seventh derived record, and why it only surfaces now
+
+`Catalogue schema, tags and contract` failed on
+`build_display_titles.py --check` — *"Display-title map is stale"*.
+
+`assets/catalogue/display-titles.json` derives from `lesson-order.json`'s
+`supplements`. On clean main that record **cannot go stale**, because
+`build_lesson_order.py` asserts before it ever writes — so the chain stops and
+nothing downstream moves. Repairing the assert lets the chain run to the end for
+the first time, and the next record in it is then one regeneration behind.
+Regenerated with its own writer: 236 entries, 118 companion pairs, only
+`originalTitle` moves on 28 of them, and the writer's own guard
+(`if title not in host['title']: raise`) did not fire, so every reviewed pair still
+holds. `check_display_titles.cjs` PASS; `check_catalogue_schema.py` self-test 8/8
+and 956 rows valid.
+
+### STOPPED: `_sownb/CALENDAR_SPINE.json` is not admitted through the boundary
+
+`static-contract` failed with
+
+```
+[FAIL] standalone/offline boundary violated by changed files: ['_sownb/CALENDAR_SPINE.json']
+```
+
+Reproduced locally against `origin/main`. Of the six modified files, five are
+admitted through `CATALOGUE_PINS.files` and one is not admitted at all:
+
+| modified file | admitted by |
+|---|---|
+| `assets/catalogue/lesson-order.json` | `CATALOGUE_PINS.files` |
+| `assets/catalogue/science-shelf.json` | `CATALOGUE_PINS.files` |
+| `assets/catalogue/terms-and-styles.json` | `CATALOGUE_PINS.files` |
+| `tools/catalogue/TERM_AND_STYLE_EVIDENCE.json` | `CATALOGUE_PINS.files` |
+| `tools/verify_cross_estate_unification.py` | `ALLOWED_DIFF` |
+| **`_sownb/CALENDAR_SPINE.json`** | **nothing** |
+
+`build_catalogue.py` line 37 reads this exact file, so R2 cannot be carried out
+without modifying it. There is no transaction route: `fence_errors` is a deny list
+of fenced decks, not an admission. The gate's own error names the remedy —
+"the estate admits a deck by naming it in `CATALOGUE_PINS`".
+
+Two routes exist, both touching gate machinery. **Measured, then reverted:**
+
+| route | cost | effect |
+|---|---|---|
+| **(a)** add to `ALLOWED_DIFF` | 1 line in `tools/verify_cross_estate_unification.py` | **loosens** — the file may then change freely, pinned by nothing |
+| **(b)** add to `REVIEWED_PATHS` | 1 line in `tools/catalogue/pin_catalogue_contract.py`, the re-pin in both gate copies, **+2 machine-derived trigger lines** in `.github/workflows/mbm-cross-estate-unification.yml` | **tightens** — the record carries a reviewed digest, and the gate starts firing when it changes |
+
+Route (b) is the better one on the merits. The workflow edit is two additive lines
+in a `paths:` watch list, one under `pull_request` and one under `push`, written by
+`tools/pin1/derive_triggers.py --write` and never by hand; PIN1 asserts the two sets
+are equal in both directions, so the admission **forces** it rather than choosing it.
+It adds coverage and removes none.
+
+It is still a CI edit, and the standing limits are "nothing loosened; no CI edit
+except carrier pin moves under precedence, named". **So neither route is taken here.**
+
+Worth saying plainly: the spine is not watched by that workflow today, and it
+carries no reviewed digest. That is very likely *why* 254 of 529 entries drifted
+without anything going red. Route (b) closes that hole as a side effect.
+
+**Ruling needed:** route (a), route (b), or a third the estate prefers. Until then
+this PR stays red on `static-contract` by design — the work is proved and staged,
+and the last step is an admission that is not mine to grant.
