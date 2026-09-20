@@ -58,7 +58,12 @@ def run(lessons: Path, apps: Path, canonical: Path) -> list[dict]:
         base = Path(temp); lroot = base / "Lessons"; aroot = base / "Apps"
         for src, dst, kind in ((lessons, lroot, "lessons"), (apps, aroot, "apps")):
             paths = {"index.html", "resources.json" if kind == "lessons" else "apps.json", GATE, "tools/pin_manifests.py", gate.PUBLICATION_CALLER_PATH, gate.PUBLICATION_GATE_WORKFLOW_PATH, *gate.CANONICAL_HASHES}
-            if kind == "lessons": paths.update(gate.CATALOGUE_PINS["files"])
+            # ORDER FINISH-2, manifest-pin ruling (2026-09-20): the pack members are
+            # admitted by their pinned manifest rather than one by one, and the gate
+            # expands and digest-checks every listed member on each run. A fixture
+            # holding the manifests but not the members is not the tree the gate
+            # judges, and the control below would read that absence as a gate failure.
+            if kind == "lessons": paths.update(gate.CATALOGUE_PINS["files"]); paths.update(gate.catalogue_manifest_member_paths(src))
             else: paths.update(gate.LUNDYLOOP_CI_PINS)
             for rel in paths:
                 output = dst / rel; output.parent.mkdir(parents=True, exist_ok=True); shutil.copy2(src / rel, output)
@@ -78,6 +83,13 @@ def run(lessons: Path, apps: Path, canonical: Path) -> list[dict]:
         mutate("assets/catalogue/catalogue.css", lambda b: b + b"\n.card{display:none!important}\n", "Unreviewed catalogue styling is rejected")
         mutate("assets/catalogue/catalogue.js", lambda b: b + b"\nlocation.href='/games/';\n", "Unreviewed catalogue routing is rejected")
         mutate("assets/mbm-platform.js", lambda b: b + b"\n/* drift */\n", "Canonical shared asset drift remains rejected")
+        # ORDER FINISH-2, manifest-pin ruling: 1605 pack members lost their individual
+        # pins, so the one thing that must be proved here is that their bytes are still
+        # judged by the COMPLETE gate - not merely by the expansion in isolation.
+        manifest_members = gate.catalogue_manifest_member_paths(lessons)
+        if manifest_members:
+            mutate(sorted(manifest_members)[0], lambda b: b + b"\n<!-- unreviewed drift -->\n",
+                   "A manifest-admitted pack member's byte drift is rejected by the complete gate")
         mutate("resources.json", lambda b: b + b"\n", "Unpinned manifest byte drift remains rejected")
         mutate("index.html", lambda b: b.replace(b"</main>", b"<p>Unreviewed copy</p></main>", 1), "Apps authored wording protection remains active", root=aroot, kind="apps", base_html=apps_html)
         # Hub rows may address a fragment of one file (…/Teaching_Packs/index.html#build); the
@@ -181,6 +193,35 @@ def run(lessons: Path, apps: Path, canonical: Path) -> list[dict]:
             catalogue_pin_owner.REVIEWED_PATHS = reviewed_paths
             (aroot / GATE).write_bytes(estate[1])
         check("Omission control restored the real gate pair", estate == [(lroot / GATE).read_bytes(), (aroot / GATE).read_bytes()])
+        # ORDER FINISH-2, manifest-pin ruling (2026-09-20). The refusal proved just
+        # above is what stops an admission being withdrawn silently, and
+        # manifest_admitted() is the ONLY thing that now relaxes it. That relaxation
+        # must be bound to PROOF, not to a list of exceptions -- an exception list is
+        # exactly what this estate refuses, because it withdraws coverage by assertion.
+        # So: a member is proved only while its bytes still match the digest its
+        # manifest carries, and withdrawing the manifests withdraws the proof for every
+        # member they carried.
+        proved = sorted(gate.catalogue_manifest_member_paths(lroot))
+        if proved:
+            member = proved[0]
+            check("Manifest-withdrawal control targets a member carrying no reviewed line of its own",
+                  member not in gate.CATALOGUE_PINS['files'] and member not in reviewed_paths)
+            check("A pinned manifest proves its member while the bytes match", member in catalogue_pin_owner.manifest_admitted(lroot))
+            member_bytes = (lroot / member).read_bytes()
+            try:
+                (lroot / member).write_bytes(member_bytes + b"\n<!-- unreviewed drift -->\n")
+                check("A member whose bytes drift from its manifest is no longer proved, so its pin cannot be withdrawn",
+                      member not in catalogue_pin_owner.manifest_admitted(lroot))
+            finally:
+                (lroot / member).write_bytes(member_bytes)
+            check("Restoring the member's bytes restores the proof", member in catalogue_pin_owner.manifest_admitted(lroot))
+            try:
+                catalogue_pin_owner.REVIEWED_PATHS = tuple(
+                    path for path in reviewed_paths if not path.endswith("/" + catalogue_pin_owner.PACK_MANIFEST_NAME))
+                check("Withdrawing the manifests withdraws the proof for every member they carried",
+                      not catalogue_pin_owner.manifest_admitted(lroot))
+            finally:
+                catalogue_pin_owner.REVIEWED_PATHS = reviewed_paths
         (aroot / GATE).write_bytes(estate[1] + b"\n# divergence\n")
         divergent = [(lroot / GATE).read_bytes(), (aroot / GATE).read_bytes()]
         rejected = False

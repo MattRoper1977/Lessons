@@ -505,3 +505,71 @@ L34  THE NAMED RED WINDOW, WIDENED BY RULING (a) TO COVER BOTH REDS  [ORDER FINI
      STANDING RULE (Matt, from L33): a carrier bump belongs on the FIRST Lessons PR
      after a Site merge, not the last -- a pair that publishes at the old carrier
      publishes against a registry its digests are not in.
+
+L35  A PIN DESIGN THAT CANNOT BE LOADED IS NOT A PIN  [ORDER FINISH-2, manifest-pin
+     ruling 2026-09-20; pin-design change, named as such].
+     WHAT HAPPENED. #600 pinned the 1750 HUM-D5 pack files individually, as R1
+     required and as SCIENCE_PACKS does. PIN1 materialises one exact trigger path per
+     pinned file, so the derived mbm-cross-estate-unification.yml reached 4,645 list
+     entries / 534,033 bytes -- and GitHub never loaded it. Three push runs on this
+     branch completed instantly with ZERO jobs and the run named by the file path
+     rather than by the workflow's own `name:` (35509145935 on 4dd90c43, 35512149909
+     on 6ad78b5c, 35513723753 on d2f5b7c3), and across 330 pull_request runs of that
+     workflow not one was ever created for a #600 head. The gate did not fail on this
+     PR: it never ran on it, on any head, at any point.
+     HOW IT WAS MISSED. The PR looked green because its OTHER workflows (FieldOps,
+     UX2, GLV3) ran and passed, and because I recorded "static-contract run 35509150284
+     observed; 534 KB workflow proved" -- a run id that is in neither run list of that
+     workflow. INSTRUMENT CORRECTION #11: a workflow is proved to run by ITS OWN run,
+     read from that workflow's run list with jobs > 0, never by a green-looking suite
+     and never by a run id transcribed from elsewhere. This is L17's rule (a gate is
+     fixed only when OBSERVED to run on its target) applied to the gate's EXISTENCE,
+     not to its verdict, and it is L17's third instance.
+     THE RULING. Pin the packs BY MANIFEST; cover the route on the caller.
+       1. CATALOGUE_PINS carries the 11 SHA256SUMS.txt manifests, one per Final pack,
+          plus the 134 files of the two packs that ship without one (HUM_00, 7; the
+          Autumn 1 Fallback, 127 -- recorded, not invented). 145 pinned paths for 1750
+          files; REVIEWED_PATHS 2246 -> 642, CATALOGUE_PINS 2296 -> 692, PIN1 2310 ->
+          706 exact triggers per event, workflow 534,033 -> 139,627 bytes (main's own
+          copy is 104,085). gateSha256 b1056230 -> fd3608a5.
+       2. cross-estate-on-content.yml gains Humanities_Teesside/** beside
+          Science_Teesside/**, on pull_request AND on push to main. push carries
+          Humanities only: Science pack files keep their own per-file PIN1 paths on
+          both events, and it is the Humanities members that stopped having one. The
+          caller is admitted by DIGEST PIN (REVIEWED_PATHS), not by ALLOWED_DIFF --
+          the #597 s1 route (b) precedent: ALLOWED_DIFF would let it change freely,
+          pinned by nothing, which is how coverage falls away silently.
+     WHY THIS IS NOT A LOOSENING, PROVED NOT ASSERTED. Dropping 1605 per-file pins
+     would have stopped the gate digest-checking those bytes, so the indirection was
+     carried into the gate itself, not only into GLV3:
+       - catalogue_errors() expands every pinned manifest and digest-checks each of
+         the 1605 listed members on EVERY run. Controls (gate self-test): member drift
+         red / member missing red / manifest enlargement red on BOTH the expansion and
+         its own pin / unreadable manifest red / empty manifest red / restored green.
+       - GLV3's HUMANITIES_PACKS manifest route admits a member only when its manifest
+         is pinned, the manifest's own bytes still equal that pin, the member is listed
+         BY NAME, and the member's bytes equal the listed digest. Self-test 1321 -> 1330
+         controls, 0 FAIL, carrying the ruling's three named red proofs: bytes drifted
+         from the listed digest -> rejected; a file the manifest does not list ->
+         rejected; a manifest enlarged to admit one -> stops matching its pin, so the
+         route closes. Judge PASS, protectedChanges 1750.
+       - The writer's "omits existing admissions" refusal is the control that stops an
+         admission being withdrawn silently, so it was reconciled BY PROOF, never by an
+         exception list: manifest_admitted() withdraws a per-file pin only while a
+         still-pinned manifest lists that exact path at the digest the file on disk
+         actually has. Contract controls 273 -> 280, 0 FAIL, including: a member whose
+         bytes drift is no longer proved so its pin cannot be withdrawn; withdrawing
+         the manifests withdraws the proof for every member they carried; and a
+         manifest-admitted member's byte drift is rejected by the COMPLETE gate.
+     NAMED CONSEQUENCE, FAILING CLOSED. boundary_errors() admits a changed path by
+     exact membership of CATALOGUE_PINS, and it was deliberately NOT given a manifest
+     route. It only ever sees --diff-filter=MRD, so the 1750 ADDITIONS never reach it
+     and this PR is unaffected; but a future MODIFICATION of a manifest-admitted member
+     will red there until it is admitted. That is a refusal, not a hole -- loud, not
+     silent -- and it is the first item for the next pack update rather than something
+     to widen here on my own initiative.
+     STANDING RULE: an exact-path registry cannot carry a payload-scale population.
+     When a pinned set would push the derived workflow past main's own scale, the set
+     is pinned through a reviewed manifest and the manifest is expanded and
+     digest-checked by the gate -- never pinned per file until the workflow stops
+     loading, and never admitted by a directory wildcard.

@@ -7,11 +7,30 @@ name: Cross-estate contract on lesson content
 # the red would surface later on main's scheduled run. This fires the same contract
 # on those PRs. Trigger only: no job, threshold, scope or assertion is changed here.
 
+# ORDER FINISH-2, manifest-pin ruling (2026-09-20): Humanities_Teesside joins it.
+# The HUM-D5 packs used to be watched by 1750 PIN1-derived exact paths, one per pinned
+# pack file. That list took the derived workflow to 534,033 bytes and GitHub refused to
+# load it - three push runs ended instantly with zero jobs and no pull_request run was
+# ever created - so the contract ran on nothing at all. The packs are now pinned by
+# their 11 SHA256SUMS manifests, which PIN1 still watches exactly; this caller restores
+# the coverage those 1750 paths gave, through a workflow_call, whose run is NOT subject
+# to the callee's own path filters.
+#
+# push carries Humanities only, and deliberately: Science pack files keep their own
+# per-file PIN1 paths on both events, so adding them here would only double their runs,
+# whereas the Humanities members no longer have any path of their own on a push to
+# main. This is the same coverage as before the re-pin, not more - a member altered
+# without its manifest is exactly the case that must still reach the gate.
 on:
   pull_request:
     branches: [main]
     paths:
       - 'Science_Teesside/**'
+      - 'Humanities_Teesside/**'
+  push:
+    branches: [main]
+    paths:
+      - 'Humanities_Teesside/**'
 
 # A called workflow cannot be granted more than the caller holds, and the called workflow
 # declares contents: read, issues: write, pull-requests: write at workflow level. This caller

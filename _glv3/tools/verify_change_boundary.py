@@ -192,6 +192,43 @@ REPLACEMENT_TRANSACTIONS = {
 ALL_REPLACEMENTS = {rel: name for name, (_, files) in REPLACEMENT_TRANSACTIONS.items() for rel in files}
 
 
+# ORDER FINISH-2, manifest-pin ruling (2026-09-20). The pack members are no longer
+# pinned one by one: 1750 per-file pins drove PIN1's derived trigger list to 534,033
+# bytes and GitHub refused to load the workflow at all, so the cross-estate gate never
+# ran on the pull request that landed them. Each pack is now admitted through its own
+# SHA256SUMS manifest, which IS pinned. The route below is deliberately no wider than
+# the per-file one it replaces: status A only; the manifest must be pinned AND its own
+# bytes must still equal that pin; the member must be listed in it BY NAME; and the
+# member's bytes must equal the digest the manifest lists. The prefix alone still
+# admits nothing, an unpinned pack admits nothing, and a manifest edited to admit a
+# new file stops matching its pin -- so the pin catches the edit before the list it
+# carries is ever honoured.
+PACK_MANIFEST = 'SHA256SUMS.txt'
+
+
+def pack_manifest(root, pins, rel):
+    """The pinned manifest admitting a Humanities pack member: (manifest, member, digest) or None."""
+    if not rel.startswith(HUMANITIES_PACKS) or rel in pins:
+        return None
+    parts = rel[len(HUMANITIES_PACKS):].split('/')
+    if len(parts) < 2:
+        return None
+    manifest_rel = HUMANITIES_PACKS + parts[0] + '/' + PACK_MANIFEST
+    path = root / manifest_rel
+    if manifest_rel not in pins or not path.is_file() or pins[manifest_rel] != sha(path):
+        return None
+    member = '/'.join(parts[1:])
+    for line in path.read_text(encoding='utf-8', errors='replace').splitlines():
+        if not line.strip():
+            continue
+        checksum, separator, name = line.partition('  ')
+        if not separator or not re.fullmatch(r'[0-9a-f]{64}', checksum):
+            return None
+        if name.strip() == member:
+            return manifest_rel, member, checksum
+    return None
+
+
 def owned_members(name, files, owners=None):
     owners = ALL_REPLACEMENTS if owners is None else owners
     return {rel: entry for rel, entry in files.items() if owners.get(rel, name) == name}
@@ -403,6 +440,7 @@ def judge(root, changes, base=None):
         cover_paths = explicit_cover_paths(root)
         label_paths = public_label_paths(root, pins)
         for status, rel in relevant:
+            governed = pack_manifest(root, pins, rel)
             if rel in SHELVES:
                 if status not in ('A', 'M') or not (root / rel).is_file() or pins.get(rel) != sha(root / rel):
                     errors.append('reviewed shelf bytes or change type differ: ' + rel)
@@ -418,8 +456,18 @@ def judge(root, changes, base=None):
             elif rel.startswith(HUMANITIES_PACKS) and rel in pins:
                 # ORDER §2 (2026-09-20): the HUM-D5 additive pack landing. Same rule
                 # as SCIENCE_PACKS above -- an exact, individually pinned addition.
+                # This is now the route for the manifests themselves and for the two
+                # packs that shipped without one (recorded, not invented).
                 if status != 'A' or not (root / rel).is_file() or pins[rel] != sha(root / rel):
                     errors.append('Humanities teaching pack must be an exact reviewed addition: ' + rel)
+            elif governed is not None:
+                # ORDER FINISH-2 manifest-pin ruling (2026-09-20): admitted by the pack
+                # manifest, which is itself pinned. No wider than the clause above --
+                # the digest simply comes from the reviewed manifest instead of from a
+                # reviewed line of its own.
+                _manifest_rel, _member, listed = governed
+                if status != 'A' or not (root / rel).is_file() or listed != sha(root / rel):
+                    errors.append('Humanities teaching pack must be an exact manifest-listed addition: ' + rel)
             elif rel in PATHWAY_PARENTS:
                 # SX3-PASSES PASS 4 (3b). Additive only, and the bytes must equal the
                 # reviewed admission; the set alone never admits an edit or a deletion.
@@ -568,6 +616,38 @@ def controls(root):
         mutate(SHELVES[0], lambda b: b + b'<!-- unreviewed -->', 'Shelf byte drift is rejected')
         mutate(SOURCE, lambda b: b + b'\n', 'A changed source manifest cannot redefine retained lessons')
         mutate(DOWNLOADS, lambda b: b + b'\n', 'A changed download manifest cannot enlarge the allowed set')
+        # ORDER FINISH-2 manifest-pin ruling (2026-09-20): the manifest route, proved on
+        # the tree's own pack. The ruling named three ways it could go wrong and each
+        # is proved RED here, not assumed: (i) a member whose bytes drift from the
+        # digest its manifest lists, (ii) a member the manifest does not list at all,
+        # (iii) a manifest edited to admit one -- caught by the manifest's own pin,
+        # because the edit changes the bytes that pin covers.
+        manifest_pins = [rel for rel in pin_map(root)
+                         if rel.startswith(HUMANITIES_PACKS) and rel.endswith('/' + PACK_MANIFEST)
+                         and len(rel[len(HUMANITIES_PACKS):].split('/')) == 2]
+        if manifest_pins:
+            manifest_rel = sorted(manifest_pins)[0]
+            manifest_base = manifest_rel[: -len(PACK_MANIFEST)]
+            listed_rows = [line for line in (root / manifest_rel).read_text(encoding='utf-8').splitlines() if line.strip()]
+            member_rel = manifest_base + listed_rows[0].partition('  ')[2].strip()
+            for rel in (manifest_rel, member_rel):
+                copy_to = fixture / rel; copy_to.parent.mkdir(parents=True, exist_ok=True); shutil.copy2(root / rel, copy_to)
+            check('A manifest-listed Humanities pack member passes as an addition without a pin of its own',
+                  not judge(fixture, [('A', member_rel)]))
+            check('A manifest-listed member is admitted as an addition only',
+                  bool(judge(fixture, [('M', member_rel)])))
+            check('A manifest-listed member cannot be deleted',
+                  bool(judge(fixture, [('D', member_rel)])))
+            check('A Humanities pack file its manifest does not list is rejected',
+                  bool(judge(fixture, [('A', manifest_base + 'unlisted_addition.pptx')])))
+            check('A Humanities pack member whose manifest is not pinned is rejected',
+                  bool(judge(fixture, [('A', HUMANITIES_PACKS + 'UNPINNED_PACK/anything.pptx')])))
+            mutate(member_rel, lambda b: b + b'drifted',
+                   'A manifest-listed member whose bytes drift from the listed digest is rejected',
+                   [('A', member_rel)])
+            mutate(manifest_rel, lambda b: b + b'0' * 64 + b'  unlisted_addition.pptx\n',
+                   'A manifest enlarged to admit an unreviewed file stops matching its pin, so the route closes',
+                   [('A', member_rel)])
         page = next(path for path in sorted(explicit_cover_paths(root)) if re.search(r'/BH_W3\.html$', path))
         mutate(page, lambda b: b.replace(b'data-minutes="3"', b'data-minutes="43"', 1), 'Changed teaching minutes are rejected by the shared Humanities validator')
         native = next(row['path'] for row in json.loads((root / DOWNLOADS).read_text())['dependencies'] if row['path'].endswith('.pdf'))
