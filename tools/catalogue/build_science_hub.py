@@ -32,6 +32,7 @@ DATA = json.loads((ROOT / 'assets/catalogue/science-shelf.json').read_text())
 WEEKS = json.loads((ROOT / 'tools/catalogue/SCIENCE_WEEK_BINDINGS.json').read_text())['entries']
 CENSUS = json.loads((ROOT / 'tools/catalogue/SCIENCE_CHASSIS_CENSUS.json').read_text())
 PACKS = ROOT / 'Science_Teesside/Teaching_Packs'
+DOWNLOADS = json.loads((ROOT / 'assets/catalogue/science-download-bindings.json').read_text())
 E = H.escape
 TERM_LABEL = DATA['terms']
 DOWNLOAD_EXT = {'.pdf': 'PDF', '.docx': 'DOCX', '.pptx': 'PPTX', '.zip': 'ZIP', '.html': 'HTML', '.txt': 'TXT'}
@@ -41,14 +42,27 @@ for p in CONFORMING:
     assert CENSUS['entries'][p]['sha256'] == hashlib.sha256((ROOT / p).read_bytes()).hexdigest(), f'the census was measured on other bytes: {p}'
 
 
+TITLE_MAX = 120  # a card title is a lesson name, not a page of slide text (C6)
+
+
 def h1_of(path: Path) -> str:
-    text = path.read_text(encoding='utf-8', errors='replace')
-    m = re.search(r'<h1[^>]*>(.*?)</h1>', text, re.S)
-    h1 = H.unescape(re.sub(r'<[^>]+>', '', m.group(1))).strip() if m else ''
-    if h1:
-        return h1
-    t = re.search(r'<title>(.*?)</title>', text, re.S)
-    return re.split(r'\s+[|—]\s+', H.unescape(t.group(1)).strip())[0].strip() if t else path.stem
+    """The deck's OWN first heading, read with a parser -- never a regex over the raw bytes.
+
+    31 Science decks write their printable packs from a script, so their source carries
+    <h1>Knowledge organiser<\\/h1> INSIDE a JavaScript string. A regex hunting for </h1> steps
+    straight over the escaped close and runs on to the next REAL one: measured on
+    SCI_G_W10A_Solar_System_Research_Explore.html that turned 86 KB of slide text into a
+    49,963-character card title (and a 1.12 MB hub that scrolled sideways at 390 px). A parser
+    keeps script content in a text node, so a heading written inside one is never markup.
+    """
+    doc = lhtml.fromstring(path.read_bytes())
+    for e in doc.iter('h1'):
+        text = ' '.join(e.text_content().split()).strip()
+        if text:
+            return text
+    t = doc.find('.//title')
+    title = ' '.join((t.text_content() if t is not None else '').split()).strip()
+    return re.split(r'\s+[|—]\s+', title)[0].strip() if title else path.stem
 
 
 def part_of(path: Path) -> str | None:
@@ -228,6 +242,17 @@ def bound_weeks(row):
     return (' '.join(str(w['weekWithinTerm']) for w in ws) or 'unspecified',
             '; '.join(w['label'] for w in ws) or 'Week not specified')
 S.CARD_WEEK_HOOK = bound_weeks
+
+
+def download_link(path: str) -> str:
+    """The route's recorded Teaching Packs section, straight from the reviewed record -- the link
+    the shelf carried before PASS F ("PowerPoint, Word and PDF downloads →"), restored on the HUB-1
+    card. A route the record does not bind carries nothing; the text is never composed here."""
+    href = DOWNLOADS.get(path)
+    return f'<p><a class="go" href="{E(href, quote=True)}">PowerPoint, Word and PDF downloads →</a></p>' if href else ''
+
+
+S.CARD_DOWNLOAD_HOOK = download_link
 WEEK_MAX = max((w['weekWithinTerm'] for e in WEEKS.values() for w in e.get('weeks', [])), default=8)
 shortcuts = ('<div class="catalogue-links"><a href="?pathway=LAUNCH" data-shortcut="all-launch">All LAUNCH Science</a>'
              '<a href="?pathway=LAUNCH&amp;term=Aut1&amp;style=recommended" data-shortcut="recommended">LAUNCH Science pack · Autumn 1 Weeks 3–7</a>'
@@ -243,6 +268,35 @@ def recorded_week(path: str):
 earlier_html, r3 = S.render_earlier(D['earlier'], FAMILIES, href_of, TERM_LABEL, week_of=recorded_week)
 rendered = r1 + r2 + r3
 errors += S.c4_errors(rendered, DATA['lessons'])
+
+
+def c6_errors(rows: list[dict]) -> list[str]:
+    """C6. A card title is a title: one line, at most TITLE_MAX characters. Longer means the
+    reader is being shown the deck's slide text instead of its lesson name."""
+    return [f'C6 card title is not a title ({len(r["h1"])} characters): {r["path"]}'
+            for r in sorted(rows, key=lambda r: r['path']) if len(r['h1']) > TITLE_MAX or '\n' in r['h1']]
+
+
+def c7_errors(page: str, rendered_paths: list[str]) -> list[str]:
+    """C7. Every rendered route the download record binds carries THAT record's link, once per
+    card; no card carries one the record does not bind."""
+    errs, carried = [], set()
+    for path, body in re.findall(r'<article class="card[^"]*" data-lesson-path="([^"]+)"(.*?)</article>', page, re.S):
+        want = DOWNLOADS.get(path)
+        got = re.findall(r'<a class="go" href="([^"]+)">PowerPoint, Word and PDF downloads', body)
+        if got:
+            carried.add(path)
+        if want and got != [E(want, quote=True)]:
+            errs.append(f'C7 recorded downloads link missing or wrong on a card: {path} (record {want}, card {got})')
+        if not want and got:
+            errs.append(f'C7 downloads link on a route the record does not bind: {path}')
+    errs += [f'C7 bound route rendered with no downloads link: {p}'
+             for p in sorted(set(rendered_paths) & set(DOWNLOADS) - carried)]
+    return errs
+
+
+page_cards = current_html + packs_html + earlier_html
+errors += c6_errors(lessons) + c7_errors(page_cards, rendered)
 if errors:
     print('\n'.join(errors)); raise SystemExit(f'REFUSED: {len(errors)} control error(s); nothing written')
 
@@ -303,4 +357,4 @@ bindings = {
 print(f'Built the Science hub: {len(rendered)} of {len(DATA["lessons"])} shelf cards rendered '
       f'({len(D["current"])} current = {conforming_now} CONFORMS + {not_yet_now} NOT YET, {len(D["reference"])} reference, '
       f'{len(D["earlier"])} earlier, of which {len(REPLACED)} have a proven same-part conforming replacement); '
-      f'{len(D["slots"])} current slots; {len(cards)} pack cards; controls C1-C5 0 errors.')
+      f'{len(D["slots"])} current slots; {len(cards)} pack cards; controls C1-C7 0 errors.')
