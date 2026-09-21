@@ -51,6 +51,58 @@ GATE = ROOT / "tools/verify_cross_estate_unification.py"
 CENSUS = ROOT / "tools/hum/evidence_limb_census.py"
 PREFIX = "Humanities_Teesside/"
 
+# --- SCIENCE LANDABILITY LIMB (Matt Roper, 2026-09-22, ruling on STOP-B2) -------------------
+# _glv3 protects Science_Teesside exactly as it protects Humanities_Teesside, so a transplanted
+# Science deck needs a declared transaction too -- but the Humanities landable census measures the
+# two HUMANITIES digest fences and knows no Science route, so it could only ever answer "no member
+# to declare". The ruled Science limb, in the Q1 shape:
+#
+#   a Science deck is landable when its SCIENCE_WEEK_BINDINGS row EXISTS (the record signed at
+#   STOP-SIGN-A), the RECORD's digest equals its pin, and the row's term-week equals the deck's
+#   OWN PROJECTION.
+#
+# "Projection" is the estate's existing notion, not a new one: the two forms tools/sci/
+# reprove_bindings.py already accepts as a deck stating its own binding -- the week key token
+# (Spr1-W3) or the label (Spring 1 - Week 3). The quote limb is an evidence sentence rather than a
+# term-week projection, so it is not one of the two here.
+SCIENCE_PREFIX = "Science_Teesside/"
+BINDINGS = ROOT / "tools/catalogue/SCIENCE_WEEK_BINDINGS.json"
+BINDINGS_PIN_KEY = "tools/catalogue/SCIENCE_WEEK_BINDINGS.json"
+TERM_LABEL = {"Aut1": "Autumn 1", "Aut2": "Autumn 2", "Spr1": "Spring 1",
+              "Spr2": "Spring 2", "Sum1": "Summer 1", "Sum2": "Summer 2"}
+STRANDS = {"Humanities": PREFIX, "Science": SCIENCE_PREFIX}
+
+
+def flat_text(data: bytes) -> str:
+    """The deck's visible text, tags stripped and whitespace flattened -- the same shape
+    tools/sci/reprove_bindings.py reads a projection out of."""
+    return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", data.decode("utf-8", "replace")))
+
+
+def projects(entry: dict, text: str) -> bool:
+    """Pure. Does this deck's own text project every week the record binds it to?"""
+    weeks = entry.get("weeks") or []
+    if not weeks:
+        return False
+    if all(w["key"] in text for w in weeks):
+        return True
+    return all("%s \u00b7 Week %d" % (TERM_LABEL.get(w["term"], w["term"]), w["weekWithinTerm"]) in text
+               for w in weeks)
+
+
+def judge_science(rel, entry, record_ok, text):
+    """Pure. None when the ruled Science limb makes this deck landable, else the reason."""
+    if not record_ok:
+        return "the SCIENCE_WEEK_BINDINGS record's digest does not equal its pin"
+    if entry is None:
+        return "no SCIENCE_WEEK_BINDINGS row; the signed record does not bind it"
+    if not (entry.get("weeks") or []):
+        return "the record binds it to no week, so there is no term-week to project"
+    if not projects(entry, text):
+        weeks = ", ".join(w["key"] for w in entry["weeks"])
+        return f"the record's term-week ({weeks}) is not projected by the deck's own text"
+    return None
+
 
 class Refuse(Exception):
     """A condition that makes declaring unsafe. Never repaired."""
@@ -106,20 +158,47 @@ def judge_member(rel, status, allowed, pinned, digest):
     return None
 
 
-def derive(base: str) -> tuple[str, dict]:
+def science_allowed(paths) -> tuple[set, dict]:
+    """The ruled Science limb, applied to the paths this branch changed.
+
+    Returns (landable set, reason per refused path). The record is read once and its digest
+    compared with its CATALOGUE_PINS entry, so a record that has drifted refuses every deck
+    rather than letting one through on a stale row."""
+    raw = BINDINGS.read_bytes()
+    record_ok = pins().get(BINDINGS_PIN_KEY) == hashlib.sha256(raw).hexdigest()
+    entries = json.loads(raw)["entries"]
+    ok, why = set(), {}
+    for rel in paths:
+        path = ROOT / rel
+        text = flat_text(path.read_bytes()) if path.is_file() and not path.is_symlink() else ""
+        reason = judge_science(rel, entries.get(rel), record_ok, text)
+        if reason:
+            why[rel] = reason
+        else:
+            ok.add(rel)
+    return ok, why
+
+
+def derive(base: str, strand: str = "Humanities") -> tuple[str, dict]:
+    prefix = STRANDS[strand]
     mb = merge_base(base)
     statuses = {}
-    for line in git("diff", "--name-status", f"{mb}..HEAD", "--", PREFIX).splitlines():
+    for line in git("diff", "--name-status", f"{mb}..HEAD", "--", prefix).splitlines():
         parts = line.split("\t")
         if len(parts) >= 2 and parts[-1].endswith(".html"):
             statuses[parts[-1]] = parts[0][0]
 
-    print(f"SEARCH SCOPE: {len(statuses)} Humanities .html path(s) differing from the merge "
+    print(f"SEARCH SCOPE: {len(statuses)} {strand} .html path(s) differing from the merge "
           f"base {mb[:12]} with {base}; blobs read from that merge base, digests from the "
           f"bytes on disk, pins from CATALOGUE_PINS in {GATE.relative_to(ROOT)}")
 
-    allowed = landable(base)
-    print(f"  landable set from {CENSUS.relative_to(ROOT)}: {len(allowed)} deck(s)")
+    if strand == "Science":
+        allowed, science_why = science_allowed(statuses)
+        print(f"  landable set from the ruled Science limb over "
+              f"{BINDINGS.relative_to(ROOT)}: {len(allowed)} of {len(statuses)} deck(s)")
+    else:
+        allowed, science_why = landable(base), {}
+        print(f"  landable set from {CENSUS.relative_to(ROOT)}: {len(allowed)} deck(s)")
     registry = pins()
     files, refused = {}, []
     for rel, status in sorted(statuses.items()):
@@ -130,6 +209,8 @@ def derive(base: str) -> tuple[str, dict]:
         data = path.read_bytes()
         digest = hashlib.sha256(data).hexdigest()
         why = judge_member(rel, status, allowed, registry.get(rel), digest)
+        if why and rel in science_why:
+            why = science_why[rel]  # the ruled limb's own words, not the generic refusal
         if why:
             refused.append((rel, why))
             continue
@@ -217,6 +298,34 @@ def self_test() -> int:
           "disagrees with the bytes" in
           judge_member("Humanities_Teesside/a.html", "M", allowed, "b" * 64, d))
     check("the slug is stable and file-safe", slug("HUM-T batch 1 (BUILD)") == "HUM_T_BATCH_1_BUILD")
+
+    # --- the ruled Science limb, with the three red proofs the ruling names
+    rel = "Science_Teesside/Grow/W18-W26_2026-27/SCI_G_W18A_The_Cold_Case.html"
+    entry = {"weeks": [{"key": "Spr1\u00b7W3", "term": "Spr1", "weekWithinTerm": 3,
+                        "label": "Spring 1 \u00b7 Week 3"}]}
+    token_text = "... the cold case Spr1\u00b7W3 lesson ..."
+    label_text = "... the cold case Spring 1 \u00b7 Week 3 lesson ..."
+    check("Science: a bound deck that projects its week by TOKEN is landable",
+          judge_science(rel, entry, True, token_text) is None)
+    check("Science: the same deck projecting by LABEL is landable",
+          judge_science(rel, entry, True, label_text) is None)
+    check("RED PROOF (row absent): a deck the signed record does not bind is refused",
+          "does not bind it" in judge_science(rel, None, True, token_text))
+    check("RED PROOF (pin mismatch): a record whose digest is not its pin refuses every deck",
+          "does not equal its pin" in judge_science(rel, entry, False, token_text))
+    check("RED PROOF (week mismatch): a deck projecting a different week is refused",
+          "is not projected by the deck" in
+          judge_science(rel, entry, True, "... the cold case Spr1\u00b7W4 lesson ..."))
+    check("Science: a deck projecting NO week at all is refused",
+          "is not projected by the deck" in judge_science(rel, entry, True, "nothing here"))
+    check("Science: a row the record binds to no week is refused, not silently landable",
+          "no term-week to project" in judge_science(rel, {"weeks": []}, True, token_text))
+    check("Science: a two-week row needs BOTH weeks projected",
+          judge_science(rel, {"weeks": [entry["weeks"][0],
+                                        {"key": "Spr1\u00b7W4", "term": "Spr1", "weekWithinTerm": 4,
+                                         "label": "Spring 1 \u00b7 Week 4"}]}, True, token_text) is not None)
+    check("the Humanities strand still maps to its own prefix, untouched",
+          STRANDS["Humanities"] == PREFIX and STRANDS["Science"] == SCIENCE_PREFIX)
     print("self-test " + ("PASS" if not bad else f"FAIL ({bad})"))
     return 1 if bad else 0
 
@@ -225,6 +334,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--name", help="transaction name, e.g. 'HUM-T batch 1 BUILD'")
     parser.add_argument("--base", default="origin/main")
+    parser.add_argument("--strand", default="Humanities", choices=sorted(STRANDS))
     parser.add_argument("--check", action="store_true")
     parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args()
@@ -233,7 +343,7 @@ def main() -> int:
     if not args.name:
         parser.error("--name is required unless --self-test")
     try:
-        base_sha, files = derive(args.base)
+        base_sha, files = derive(args.base, args.strand)
         for rel, entry in sorted(files.items()):
             print(f"     {entry['beforeGitBlob'][:12]} -> {entry['afterSha256'][:12]}  "
                   f"{entry['bytes']:>9,}  {rel.rsplit('/', 1)[1]}")

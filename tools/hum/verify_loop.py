@@ -322,6 +322,33 @@ def science_texts(root: Path):
 def self_test(root: Path):
     """Red-proofs: each planted fault must turn its row FAIL."""
     from loop_adapter import adapt
+    # PURE CONTROLS FIRST. The fixture-driven part of this self-test can SKIP when no
+    # untransplanted copy of the fixture is reachable, and a self-test that skips everything
+    # proves nothing. These need no fixture, so they run and are reported either way.
+    pure = []
+    # --- R3 Earwig furniture, ruled 2026-09-22 on the four Soil/Blackout decks.
+    # The line is TA-layer furniture quoted from the policy, so the adapter supplies it wherever
+    # the deck HAS a TA layer. These controls pin that rule at its own boundary, because the four
+    # held decks name no closing stage at all and so could never satisfy row 12 before.
+    from loop_adapter import earwig_stages
+    for name, names, eligible, want in (
+        ('R3: a named exit that is eligible carries the line',
+         ['title', 'arrival', 'exit'], {1, 2}, {2}),
+        ('R3: a named exit keeps its place even when it is not last',
+         ['exit', 'arrival', 'independent'], {0, 1, 2}, {0}),
+        ('R3: a deck naming NO closing stage puts it on the last ELIGIBLE stage',
+         ['ido', 'independent', 'lundy_stage', 'unnamed'], {1, 3}, {3}),
+        ('R3: it never lands on a stage that gets no TA card',
+         ['independent', 'lundy_stage'], {0}, {0}),
+        ('R3: a named exit that is not eligible falls back to the last eligible stage',
+         ['exit', 'independent'], {1}, {1}),
+        ('R3 RED PROOF: a deck with no eligible stage gets no line, so row 12 FAILs and it is HELD',
+         ['title'], set(), set()),
+    ):
+        pure.append((name, earwig_stages(names, eligible) == want))
+    for name, good in pure:
+        print(('  PASS ' if good else '  FAIL ') + name)
+
     rec = json.loads((root / 'tools/catalogue/HUMANITIES_STRAND.json').read_text())
     rel = 'Humanities_Teesside/GROW_W1-W8_2026-27/GROW_Humanities_W4_Explore_Hanukkah_And_The_Theme_Of_Light.html'
     src = root / rel
@@ -340,8 +367,8 @@ def self_test(root: Path):
     if before is None:
         before = src.read_text(errors='replace')
     if MARK in before:
-        print('  SKIP self-test: no untransplanted copy of the fixture is available')
-        return True
+        print('  SKIP the fixture-driven rows: no untransplanted copy of the fixture is available')
+        return all(good for _n, good in pure)
     after, _ = adapt(before, r['pathway'], r['strand'] == 'RE')
     sci = science_texts(root)
 
@@ -463,7 +490,8 @@ def self_test(root: Path):
     if a_sent in after:
         checks.append(('row 13 fails when a sentence is dropped',
                        status(after.replace(a_sent, ''), 13) == FAIL))
-    ok = True
+
+    ok = all(good for _n, good in pure)
     for name, good in checks:
         print(('  PASS ' if good else '  FAIL ') + name)
         ok = ok and good
