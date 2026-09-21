@@ -35,6 +35,7 @@ from __future__ import annotations
 import collections, html, re
 from pathlib import Path
 
+CONTROLS_VERSION = 'hub-sections-controls/2.0.0'
 E = html.escape
 PATHWAYS = ('BUILD', 'GROW', 'LAUNCH')
 TERM_ORDER = ('Aut1', 'Aut2', 'Spr1', 'Spr2', 'Sum1', 'Sum2')
@@ -70,8 +71,13 @@ def derive(shelf_rows: list[dict], lessons: list[dict], pack_lessons: list[dict]
         key = (P['pathway'], P['term'], P['week'], P['strand'])
         slots.setdefault(key, {'current': [], 'alternatives': [], 'pack': []})['pack'].append(P)
     def _double(cur):
-        parts = [L.get('part') for L in cur]
-        return len(cur) > 1 and (any(p is None for p in parts) or len(set(parts)) != len(parts))
+        """C1 v2 (ruling of 2026-09-22 on STOP-F2): a slot reds ONLY when two decks declare the
+        SAME lesson-config part. A deck that declares no part makes no part claim, so it may share
+        a week with others -- that is the estate's real shape, not an ambiguity to refuse, and the
+        card says so with a 'part not declared' badge. Nothing is silently duplicated:
+        distinct_errors() below reds two current rows whose visible text is identical."""
+        declared = [L.get('part') for L in cur if L.get('part')]
+        return len(declared) != len(set(declared))
     def _slot_key(k):
         """Order slot keys when a record binds no week. A week-unbound row carries week=None,
         which cannot be compared with an int, so sort those first and keep every bound week in
@@ -126,13 +132,35 @@ def c3_errors(root: Path, pack_cards: list[dict]) -> list[str]:
 
 
 def c4_errors(rendered_paths: list[str], shelf_rows: list[dict]) -> list[str]:
-    want = collections.Counter(r['path'] for r in shelf_rows)
-    got = collections.Counter(rendered_paths)
-    errs = [f'C4 shelf row not rendered: {p}' for p in want if p not in got]
-    errs += [f'C4 card rendered {n} times: {p}' for p, n in got.items() if n != 1]
-    errs += [f'C4 card with no shelf row: {p}' for p in got if p not in want]
-    if sum(want.values()) != len(rendered_paths):
-        errs.append(f'C4 card count in {sum(want.values())} != out {len(rendered_paths)}')
+    """C4 v2 (ruling of 2026-09-22 on STOP-F2): ROUTES in == ROUTES out. A route the bindings
+    record places in more than one week renders in each of them, which is what the record says.
+    What must never happen is a route lost from the hub, or a card invented that no shelf row
+    backs -- both still red."""
+    want = {r['path'] for r in shelf_rows}
+    got = set(rendered_paths)
+    errs = [f'C4 shelf row not rendered: {p}' for p in sorted(want - got)]
+    errs += [f'C4 card with no shelf row: {p}' for p in sorted(got - want)]
+    if len(want) != len(got):
+        errs.append(f'C4 route count in {len(want)} != out {len(got)}')
+    return errs
+
+
+def distinct_errors(d: dict) -> list[str]:
+    """DISTINCT (ruling of 2026-09-22 on STOP-F2). C1 v2 lets partless decks share a week, so
+    this is what stops one lesson being listed twice under two names. Two current rows in one slot
+    whose visible text is identical are the same lesson twice, whatever their parts say. A row
+    supplies its own comparison key in 'text' (the deck's normalised visible text, or a digest of
+    it); with none supplied the heading is compared, which is still an honest claim about what a
+    reader sees."""
+    errs = []
+    for k in sorted(d['slots'], key=lambda t: tuple(str(x) for x in t)):
+        seen: dict[str, str] = {}
+        for L in d['slots'][k]['current']:
+            key = L.get('text') or L.get('h1') or ''
+            if key and key in seen:
+                errs.append(f'DISTINCT identical visible text in slot {k}: {seen[key]} and {L["path"]}')
+            elif key:
+                seen[key] = L['path']
     return errs
 
 
@@ -329,13 +357,22 @@ def self_test() -> int:
     check('a pack lesson fills the empty slot; gap 0', not d2['gaps'] and d2['filled_by_pack'] == [('BUILD', 'Aut1', 2, 'RE')])
     L2 = L + [{'path': 'b.html', 'pathway': 'BUILD', 'term': 'Aut1', 'week': 1, 'strand': 'RE', 'h1': 'B', 'alternative': False}]
     d3 = derive(shelf, L2, [], sow, fam, terms)
-    check('C1 red: two current cards in one slot', any(e.startswith('C1 double-current') for e in c1_errors(d3)))
-    Lp = [dict(L[0], part='A'), dict(L[0], path='b.html', h1='B', part='B')]
-    check('C1 green: parts A and B of one week share the slot', not c1_errors(derive(shelf, Lp, [], sow, fam, terms)))
-    Lq = [dict(L[0], part='A'), dict(L[0], path='b.html', h1='B', part='A')]
-    check('C1 red: two rows with the same part', any(e.startswith('C1 double-current') for e in c1_errors(derive(shelf, Lq, [], sow, fam, terms))))
-    Lr = [dict(L[0], part='A'), dict(L[0], path='b.html', h1='B')]
-    check('C1 red: a part beside a row with no part', any(e.startswith('C1 double-current') for e in c1_errors(derive(shelf, Lr, [], sow, fam, terms))))
+    # --- C1 v2 and DISTINCT, the red proofs the ruling of 2026-09-22 names
+    Ldo = [dict(L[0], part='Do'), dict(L[0], path='b.html', h1='B', part='Do')]
+    check('C1 red: two decks declaring "Do" in one slot',
+          any(e.startswith('C1 double-current') for e in c1_errors(derive(shelf, Ldo, [], sow, fam, terms))))
+    Lmix = [dict(L[0], part='Do'), dict(L[0], path='b.html', h1='B')]
+    check('C1 green: a partless deck beside a declared one shares the slot',
+          not c1_errors(derive(shelf, Lmix, [], sow, fam, terms)))
+    Lparts = [dict(L[0], part='Explore'), dict(L[0], path='b.html', h1='B', part='Do')]
+    check('C1 green: Explore and Do of one week share the slot',
+          not c1_errors(derive(shelf, Lparts, [], sow, fam, terms)))
+    Lsame = [dict(L[0], text='the same body'), dict(L[0], path='b.html', h1='B', text='the same body')]
+    check('DISTINCT red: two partless decks with identical body',
+          any(e.startswith('DISTINCT') for e in distinct_errors(derive(shelf, Lsame, [], sow, fam, terms))))
+    Ldiff = [dict(L[0], text='one body'), dict(L[0], path='b.html', h1='B', text='another body')]
+    check('DISTINCT green: two partless decks that differ',
+          not distinct_errors(derive(shelf, Ldiff, [], sow, fam, terms)))
     dn = derive(shelf, [dict(L[0], week=None)], [], {}, fam, terms)
     hn, gn = render_current(dn, 'S', lambda p: p, lambda p: p, {'RE': 'RE'})
     check('a week-unbound current row renders last, labelled, and is counted', gn == ['a.html'] and 'Week not bound' in hn)
@@ -350,10 +387,12 @@ def self_test() -> int:
         cards = [{'id': 'p', 'links': [('PDF', 'x.pdf')]}, {'id': 'q', 'links': [('PDF', 'missing.pdf')]}]
         errs = c3_errors(root, cards)
         check('C3: a resolving link passes, a missing one reds', len(errs) == 1 and 'missing.pdf' in errs[0])
-    check('C4 green: every row exactly once', not c4_errors(['a.html', 'b.html', 'c.html'], shelf))
-    check('C4 red: a card dropped', any('not rendered' in e for e in c4_errors(['a.html', 'b.html'], shelf)))
-    check('C4 red: a card duplicated', any('2 times' in e for e in c4_errors(['a.html', 'a.html', 'b.html', 'c.html'], shelf)))
-    check('C4 red: a card invented', any('no shelf row' in e for e in c4_errors(['a.html', 'b.html', 'c.html', 'z.html'], shelf)))
+    check('C4 green: every route rendered', not c4_errors(['a.html', 'b.html', 'c.html'], shelf))
+    check('C4 red: a route missing from the output', any('not rendered' in e for e in c4_errors(['a.html', 'b.html'], shelf)))
+    check('C4 red: a card whose route is not in the input (none invented)',
+          any('no shelf row' in e for e in c4_errors(['a.html', 'b.html', 'c.html', 'z.html'], shelf)))
+    check('C4 green: a route bound to two weeks renders in both',
+          not c4_errors(['a.html', 'a.html', 'b.html', 'c.html'], shelf))
     html_out, got = render_earlier([shelf[1]], fam, lambda p: p, terms)
     check('S4 groups earlier cards by the RECORDED term and derives no week from a path', got == ['b.html'] and 'Autumn 1' in html_out and 'data-week="unspecified"' in html_out)
     html_w, got_w = render_earlier([shelf[1]], fam, lambda p: p, terms, week_of=lambda p: 3)
