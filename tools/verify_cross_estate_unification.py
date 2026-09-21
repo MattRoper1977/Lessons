@@ -103,7 +103,7 @@ MANIFEST_PINS = {
     # Ruled onto the pin 2026-08-12 (Ruling 3): the deck install is a
     # resources.json edit, and the blanket rule forbade it the same way it
     # once forbade studio adds. Same pattern, same tool, same commit rule.
-    "resources.json": "733772e93ae497830627af2c3a21fcbf743bb42b550d40bfb24959c8e221f9f1",
+    "resources.json": "13b571c96e4da9ef9a5b1030f1d869e58e5d5b6ae7628cae64cbb9732eb9a76c",
 }
 PIN_COMMAND = "python3 tools/pin_manifests.py   (from either checkout — it writes both gate copies or neither)"
 
@@ -129,12 +129,12 @@ CATALOGUE_PINS = {
         "tools/catalogue/check_display_titles_browser.cjs": "5662cdb93c7796ead4fb9bb69ce94ac65fe1e29e103f00c65bd07a4d5129a7cd",
         "tools/verify_lessons_chips.mjs": "e417afd94ae4f3a450caab2edf4b6c41d14e4588f070d0ad822263e30a86cf39",
         "tools/sw2/check_tokens_inert.cjs": "0feabd4ad86fd578ca85a69b491dd92ea133697c77f4385cd3a15ebc1810abf9",
-        "assets/catalogue/lesson-order.json": "3d61f4b8dadb33fe8960d7151d3b05a1bb533e452cc02394713ec1dfc24d450f",
+        "assets/catalogue/lesson-order.json": "6b56de0c107d8c5b8a8f7111ec76d73e6f0953b0a1c24c8f15abc5e63e7a7b05",
         "tools/catalogue/build_lesson_order.py": "2caa4b97584b58330e3ca8e07754cc2877d687a1660688e321c50b730f89db54",
         "tools/ux2/hub_gates.mjs": "80ae8def49c49e549c8a2e6b65d521cfdaebb2b7d05f650fa6d5e436f2b6586d",
         "index.html": "389c3320b158e9bc472b4402d41d1d23e4bb2d78b54385884c0be6ca31f73309",
         "Science_Teesside/index.html": "14bea75f9db56cd7a1e7686b37a0f9b83dd4c2e3ed78178a20a2cacfb20a0852",
-        "Humanities_Teesside/index.html": "6f69b888c3829c2fe44c2bc579b4b598acf35aa297e87621a68138c99b221388",
+        "Humanities_Teesside/index.html": "b24383c100c5c8c476f3981c24e8d50523fb4427e32ed724f836054adf160356",
         "humanities_teesside.html": "1e2faab06cb4caf4a26f377200a55cbd380c7f3ceada74f666998b47611896b7",
         "pack.html": "c05cde1b83de3da3a292d150e7c400782719d30aec6a130fb4df158786993b65",
         "assets/catalogue/pack.js": "acfd0f1b00dce1421fabd8a1870b55d4c54ffc1157b2efe8a01b354f385ccf4b",
@@ -153,9 +153,9 @@ CATALOGUE_PINS = {
         "assets/catalogue/lesson-navigation.js": "fa6bdae6826950422dfb13a905a2a50c5c959bef50fb438f00b6170befbfaf8f",
         "assets/catalogue/science-shelf.css": "b2b1eb328662d841add139ccfff107f985f17373f1ee82b8762475663097ab60",
         "assets/catalogue/science-shelf.js": "a59fe0c988a5de7d614afc6a36d7dacf14c6e3fa92c732740442e4914d00f356",
-        "assets/catalogue/terms-and-styles.json": "f3a6b10216dd955eb1ef3e47c1955a5feee0e09d2ac2b600b212196d28056191",
+        "assets/catalogue/terms-and-styles.json": "9c128de2914f29ba0dcbe793af6f99c18068d3660e6cd3548b23306ff930ebc8",
         "assets/catalogue/science-shelf.json": "f4b6725b373070831b91d07b64a0dec216c422571c891c99328701a1f4dac89f",
-        "assets/catalogue/humanities-shelf.json": "b2facaa50c6781f0fdf19fad5b3b170bfaef54546c030e951956ccf47223f8c0",
+        "assets/catalogue/humanities-shelf.json": "5798287e7c1e2f4ee2071ae83676b14fc42b25bf8280cb2e7003beca8cd46f10",
         "tools/catalogue/build_catalogue.py": "10a704418e67c6b9ec80bb911cfe267df7a12e8c4adbb6e878ca14c5cfb7c3b1",
         "tools/catalogue/build_science_shelf.py": "396b6aeb7cb3cabe037b7af27877ae7a090e5aa1bce284409e400549d5204c24",
         "tools/catalogue/build_humanities_shelf.py": "3ed6e289a2656ed5de228082012dd9e957d2d13b2fa77f5857b9dee22ae138a9",
@@ -164,16 +164,16 @@ CATALOGUE_PINS = {
         "tools/catalogue/check_catalogue_dom.cjs": "039fb7977fbb92565ef108920cac59b199cf23bd5eb9f8c84dd0bc6ac4a87909",
         "tools/catalogue/verify_education_navigation.cjs": "b0d9297a33fb9ea2494fecaa45e02ae6fcf6fa88e6a62ced35cf521fbb1851fd",
         "tools/catalogue/sync_shelf_card_titles.py": "f906e244fd8fd2e596e6e5e0a1fce9a53bee828eed0b74194eccf4860e45b7a0",
-        "tools/catalogue/HUMANITIES_STRAND.json": "0a9f184b3253c757ae376898358cd269ca2f1b2b26df8a845b4d0ffa45cfa7af",
+        "tools/catalogue/HUMANITIES_STRAND.json": "29ae9ee3bdc2486ff8d1ca033b0ad92cb134c03df93de421b15652c2cb1c67b2",
         "tools/catalogue/hub_sections.py": "5a4307003cc33c692d8716125809b7d6866d26e21f1c2fd28ab91d2eeaa89fb3",
         "assets/catalogue/shelf-base.css": "951d6188059da3d2f20717ab7d82773b335d453d8c2d82f5b75f230229351e61",
-        "assets/catalogue/humanities-hub-bindings.json": "edd1c2aca59ffb39409c1aaec8f861d2141c44e81978e9bd48dfa85be634e3dc",
+        "assets/catalogue/humanities-hub-bindings.json": "2424521e31ee1b8646c77a48ff520a95992e6b70130b313ff4f58e2378858377",
         "tools/catalogue/restamp_evidence_sha256.py": "611d3db56e0289b172bba1bd2794ca22f597a9300ff4f0321c45ff2c7bfca54e",
         "Science_Teesside/Build/START_HERE.html": "acac26140f5aeef22292e6ce3831fa61aaf5e62432cc3998b340918c8bfaee7f",
         "Science_Teesside/Grow/START_HERE.html": "d2bec305dec3212215c6f599cad3925c571f9a34ca6e85268893c8ed142170dd",
         "Science_Teesside/Launch/START_HERE.html": "10b46e7cf26e3aa4b7f1fb4758a039bcbec7000bc2ec8d30dfe3ce0e0b966353",
         "tools/catalogue/SHELF_SELECTION.json": "7d4cb97190e6007ebaf5ed6fd91117fe3a0b4c3f66603dc8c619c73fc1a680ba",
-        "tools/catalogue/HUMANITIES_SELECTION.json": "5df3e69d4d9d3825225bcc80376b3fbebf61656df6e333f6b9a8aaded1893bf4",
+        "tools/catalogue/HUMANITIES_SELECTION.json": "6ca6cf88b06e6df1d4c4c4a60e06f2027a4a90a45ad06df8cb1d8d783910e7fe",
         "tools/easter/science_original_browser.cjs": "aae28a4166d41546cbe5b0acd0866eeaf5e6f47cd5b1949fc48ecb2d4c79a1ec",
         "tools/science_pack/browser_checks.cjs": "058c9bc1f06c876f2994a23d467d83fced683c6355eb92d0ef43986d3e28d72d",
         "tools/prepare_served_publications.py": "acae94bb9c142e20479bc9e5e103b09af87ba84ba3b1dde7baaa86cdb0792629",
@@ -243,7 +243,7 @@ CATALOGUE_PINS = {
         "tools/humanities_resources/check_resources.py": "ec5383e3a34cbff999f190b0014a4a73e00a3a29e2714498f7620fd638dc2aa5",
         "tools/humanities_resources/resource.css": "1aed9aaca0d73a4b200c4e5d0977e73f4e906c747d7340c7a62f4197a8344bae",
         "tools/humanities_resources/resource.js": "ad40afed95490bfcce92dc062da46e1b27bcb96bdc80e37eabdfe02bf6ffc446",
-        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "180cf4c072e0a3f1cb46df9e4953fe5887eb37981e48da451c81a8dc55aec544",
+        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "22de9a9b87ab4f2d5179754bc6980f172c5d8c0e5e254c4f07dd12d89e8c01e8",
         "tools/catalogue/TERM_REVIEW.json": "b0ed0d82fe21a222c75f6a38390b01defc0d5d958fac8e85421b7901ce6d201d",
         "tools/catalogue/SCIENCE_WEEK_BINDINGS.json": "2f7ea74d51d4d1e132c65ec756780f8e29d5a2be1c4efd94e1c4ac85b9096200",
         "primary/year5/science/autumn/forces/Lesson8_ExploreGravity.html": "20047720bf1d309055abdf232d341b6fd99b833631efa0bcbfb3dabed9671196",
@@ -325,6 +325,50 @@ CATALOGUE_PINS = {
         "_sownb/vb/tools/reshell_classic_v2_contract.py": "ebf77751927f961453f73607e700378729865e44342642cf80817c2a703856c1",
         "Humanities_Teesside/BUILD_W14-W20_2026-27/BUILD_HUM_W16_Then_And_Now_And_What_Is_Fair.html": "8513df51ec2501cbfe57d63892347c235cf101cfb6fe63eebf868079470b7dd5",
         "tools/hum/admit_transaction.py": "c8f8d37c327b7b5c2341c749801441a78c82bd0e25eaa288c42a02ce8b54f502",
+        "Humanities_Teesside/BUILD_W27-W39_2026-27/BUILD/Summer_1/W01/BUILD_SU1_W01_Knowledge_Organiser.html": "85ecebe968594cb94ee15a8da384619ba1a5b229a7c29102cda3131515cf2c0f",
+        "Humanities_Teesside/BUILD_W27-W39_2026-27/BUILD/Summer_1/W01/BUILD_SU1_W01_Lesson.html": "9b6b9f78b8275d7194bc125c89c9d29d3fbedc5b22d02cbd80455292cba1b217",
+        "Humanities_Teesside/BUILD_W27-W39_2026-27/BUILD/Summer_1/W01/BUILD_SU1_W01_Pupil_Resources.html": "bd2049f71f47b65b96253d4d434cfd8de070c8ae314c207090e49bec6ee32f0a",
+        "Humanities_Teesside/BUILD_W27-W39_2026-27/BUILD/Summer_1/W02/BUILD_SU1_W02_Knowledge_Organiser.html": "1b9578bb8fa9f7c6b472893439c0a6306544f34ad494efdf94ebe5d28e5377b9",
+        "Humanities_Teesside/BUILD_W27-W39_2026-27/BUILD/Summer_1/W02/BUILD_SU1_W02_Lesson.html": "e20b51d68705391314f582035b4285fd9a61dcd7c74c5efd9178e93797e1c5ba",
+        "Humanities_Teesside/BUILD_W27-W39_2026-27/BUILD/Summer_1/W02/BUILD_SU1_W02_Pupil_Resources.html": "6544c1180af179f95a11cc94f16dfb7df73343230bcc3c0867935af7d949e0be",
+        "Humanities_Teesside/BUILD_W27-W39_2026-27/BUILD/Summer_1/W03/BUILD_SU1_W03_Knowledge_Organiser.html": "fdfefac47211222bfc1c969e3a4891124db5d337010bfa452e511226284d3aa7",
+        "Humanities_Teesside/BUILD_W27-W39_2026-27/BUILD/Summer_1/W03/BUILD_SU1_W03_Lesson.html": "7c623a6ca48b344cab42af006a08f78c28ebf892e75a4027b42343112157426e",
+        "Humanities_Teesside/BUILD_W27-W39_2026-27/BUILD/Summer_1/W03/BUILD_SU1_W03_Pupil_Resources.html": "d33c71758de749f5f621fb87e70c75b20b5da80cb18fc6afdf4a13594036d917",
+        "Humanities_Teesside/BUILD_W27-W39_2026-27/BUILD/Summer_1/W04/BUILD_SU1_W04_Knowledge_Organiser.html": "ce4ae88c9cb4b6bcff2fcd4661d55971f104262f216ef54576c2a538b747ea21",
+        "Humanities_Teesside/BUILD_W27-W39_2026-27/BUILD/Summer_1/W04/BUILD_SU1_W04_Lesson.html": "b6a676c7ba75beeaf7bb4d94f79f38b39216daca44e4fba95f3447ada273da3d",
+        "Humanities_Teesside/BUILD_W27-W39_2026-27/BUILD/Summer_1/W04/BUILD_SU1_W04_Pupil_Resources.html": "bf648a7c3cfb8ad7839e33cf3da63d509c42ff89edae292e262d53d2d69b5f77",
+        "Humanities_Teesside/BUILD_W27-W39_2026-27/BUILD/Summer_1/W05/BUILD_SU1_W05_Knowledge_Organiser.html": "a98fb44f837cbb4ca7c95da17403e03ce61775a5b14d055e98265c423f27ef79",
+        "Humanities_Teesside/BUILD_W27-W39_2026-27/BUILD/Summer_1/W05/BUILD_SU1_W05_Lesson.html": "1443af28d9f6bfd0599ed515967b75ac99e61b89308023876694d930fa4a56c9",
+        "Humanities_Teesside/BUILD_W27-W39_2026-27/BUILD/Summer_1/W05/BUILD_SU1_W05_Pupil_Resources.html": "7a7ade95f79868269414671eb85ab2fded03ca746e75d790e693d6b94ccbb049",
+        "Humanities_Teesside/BUILD_W27-W39_2026-27/BUILD/Summer_1/W06/BUILD_SU1_W06_Knowledge_Organiser.html": "3c6d0f7df8ada1d48ebc53506d233483dcaff26fe9ef8194c3bc5c01b3240326",
+        "Humanities_Teesside/BUILD_W27-W39_2026-27/BUILD/Summer_1/W06/BUILD_SU1_W06_Lesson.html": "c88f73a4e76e8b2f9572a452bb800a132ca39ea48470df87aff39e2927a77893",
+        "Humanities_Teesside/BUILD_W27-W39_2026-27/BUILD/Summer_1/W06/BUILD_SU1_W06_Pupil_Resources.html": "8be069e1614d93e9c535e0c225d52ab906ae7d70b3ed0c5209c324196080934e",
+        "Humanities_Teesside/BUILD_W27-W39_2026-27/START_HERE.html": "b2001a0ce78b181a6df69987feabcd9284840ef45415865f423e30e8fa1b68e7",
+        "Humanities_Teesside/BUILD_W27-W39_2026-27/Sources_and_checks.html": "dac061e62f58aae8c7c803ae3bc55155a85544a20873c61a6953bff154f7318b",
+        "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W01/GROW_SU1_W01_Knowledge_Organiser.html": "8d1ae5921abce094c2ad74bafade3ed3688707fd5578ecde8acaf945f71c9386",
+        "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W01/GROW_SU1_W01_Lesson.html": "aba9d4def8c1cfbac1ba560743340ae5cb1d67f0ee1c77a244fa3c0fe82a59e6",
+        "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W01/GROW_SU1_W01_Pupil_Resources.html": "e3c89deb66416320c7e6b3f1b8f18386df6abfb2ee7e1c28d18622bd113c05e2",
+        "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W02/GROW_SU1_W02_Knowledge_Organiser.html": "91320f79fdc50cbaff1eea3ddf4dec6886b38ea5c6bfb8c0ca1673bf2f3257fb",
+        "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W02/GROW_SU1_W02_Lesson.html": "e2fa781599b5bc91434d238ddca4d93c597959828f11b032830d7464692faea7",
+        "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W02/GROW_SU1_W02_Pupil_Resources.html": "f10d2ba9bca4355a5b9c98f2dcd6c0324b0be1b35b18b95f4115ba506304b350",
+        "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W03/GROW_SU1_W03_Knowledge_Organiser.html": "4e8af594ea64f18c8261727a725186bd7a29c46e83228fa7df4e63c1daa26be9",
+        "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W03/GROW_SU1_W03_Lesson.html": "4fde6960ba1cd4c97d2326ba4fe2c4f5389308471b23585e3217946e08c6fd85",
+        "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W03/GROW_SU1_W03_Pupil_Resources.html": "3cc19f1a4db2b42c3cafb45da14298c9a19c2b02edb3db81e962933f6483db09",
+        "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W03/Sources_and_checks.html": "0695612e8f5b20de9aa3135efea5b1a0bd06f716648fc50dda3c82e070c0d997",
+        "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W04/GROW_SU1_W04_Knowledge_Organiser.html": "97d528bc6e6bfba0680b4530f28bfd34077742bad9ab78a0672e7ed5ee6ea9fe",
+        "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W04/GROW_SU1_W04_Lesson.html": "ff3cd06730ac637de7762799c6d6dabd55075a467d3819bc0663f5fc7396d731",
+        "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W04/GROW_SU1_W04_Pupil_Resources.html": "6de130d57dc01b5668237361ed2d11fb6d11176ad71fdf3573d2c504e508ad41",
+        "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W04/Sources_and_checks.html": "8b9bcfab4dadd69aed94dd73f029b8642ccce860bed1b0d6bc6fb1f5d9fef1fc",
+        "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W05/GROW_SU1_W05_Knowledge_Organiser.html": "a2c46027b583d10b1910ae7d1c9bddddcc72e097373696d788cfe58ab39fdc1f",
+        "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W05/GROW_SU1_W05_Lesson.html": "f2ba16fa2c8a98dfdd42e37dcc96d44ee38851f185ef900996cd0fa88366c447",
+        "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W05/GROW_SU1_W05_Pupil_Resources.html": "8a2496f0b8fd3d3ba60fa2c63071c9b027d864bc85d713ff6dee78fd29924135",
+        "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W05/Sources_and_checks.html": "797bf7a881d70a68f359de12c75c0166d7167533c800583b43574b517c26ab95",
+        "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W06/GROW_SU1_W06_Knowledge_Organiser.html": "20c5fa197537c95b0cabb8200e71e2771c7cd38c7354cf73eca1da5d2500938b",
+        "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W06/GROW_SU1_W06_Lesson.html": "d639f206fcacabbb88c2fe4bd84751c5b5a24edfd4a69ba731d76bea515b0567",
+        "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W06/GROW_SU1_W06_Pupil_Resources.html": "7961ed3dff451796708eb4cb2ebc82c21fe5694f9f09bd32622da90e709ad4c3",
+        "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W06/Sources_and_checks.html": "c8b1afc89b1f3e4a1825afac6d6e9b397192281455979e5ae6859188877f9965",
+        "Humanities_Teesside/GROW_W27-W39_2026-27/START_HERE.html": "da13101150e86eec36dd41cc39a893957a2ec4e7c8af47c0d249164c9845a329",
+        "Humanities_Teesside/GROW_W27-W39_2026-27/Sources_and_checks.html": "95d917f2a92d00a906c6b16b50b667d3e737c4629580445a9fe7ab51ebc08943",
         "assets/catalogue/science-download-bindings.json": "efb435f7e0dc4c9083050f5bb3e348494838422fe7de6e809fbdf8f877d9b10d",
         "Science_Teesside/Teaching_Packs/BUILD/BUILD_Science_Autumn1_W3-W7_Teaching_Guide.docx": "c4fd055acdb11a2310fe820b6f473733835dc4789b9151cd3377ec4d251f2196",
         "Science_Teesside/Teaching_Packs/BUILD/BUILD_Science_Autumn1_W3-W7_Teaching_Guide.pdf": "a479821f2de450e28bd414625f8066768d2c72423bd5ff76046536bf8f7a5d7a",
@@ -916,14 +960,14 @@ CATALOGUE_ORIGINAL_ROWS_SHA256 = "b8ffcb16f5fd2a413e8a0b06ad2d4b112f450364fa2943
 # digest below are re-cut by tools/catalogue/pin_catalogue_contract.py from
 # rows it has verified against that derivation; an edit to any appended row,
 # a removed pack row or an extra lesson row still reds here.
-CATALOGUE_SHELF_ROWS = 222
+CATALOGUE_SHELF_ROWS = 236
 # UX2 A1: keys that may be appended to an original row without moving its
 # digest (see catalogue_errors). Nothing else is additive. No original row
 # carried either key before the ruling (measured 2026-09-08: 0 of 734), so the
 # second set is empty and the allowance cannot launder a pre-existing value.
 CATALOGUE_ADDITIVE_TAG_KEYS = frozenset({"halfTerm", "unit"})
 CATALOGUE_ORIGINAL_KEYS_BEFORE_TAGS = frozenset()
-CATALOGUE_SHELF_ROWS_SHA256 = "0e6805d0866fd029aed17b9410785ce013d21c51b6d7a0fddfc972efbc9e98a5"
+CATALOGUE_SHELF_ROWS_SHA256 = "dfe0745c22a471a0accaeeb631cb39b394c102fb7ac209a62f2f0a98e8d79b31"
 
 # These named review records and review tools can change with their reviewed
 # transaction. Tools are not served assets; they are reviewed as executable
