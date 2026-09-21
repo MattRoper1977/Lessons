@@ -35,7 +35,7 @@ from __future__ import annotations
 import collections, html, re
 from pathlib import Path
 
-CONTROLS_VERSION = 'hub-sections-controls/2.0.0'
+CONTROLS_VERSION = 'hub-sections-controls/2.0.1'  # 2.0.1: the week hook sees the card's own week; controls unchanged
 E = html.escape
 PATHWAYS = ('BUILD', 'GROW', 'LAUNCH')
 TERM_ORDER = ('Aut1', 'Aut2', 'Spr1', 'Spr2', 'Sum1', 'Sum2')
@@ -168,13 +168,19 @@ def distinct_errors(d: dict) -> list[str]:
 # A subject whose shelf script filters by the week its own bindings RECORD (science-shelf.js:
 # data-week may hold several week values; the card names them in <p class="science-week">)
 # installs a hook: row -> (week attribute, week label) or None. Unset, cards are unchanged.
+#
+# The row handed to the hook carries THIS CARD's own week under 'week' (None when the slot binds
+# none). Without it the hook only ever saw the shelf row, which is keyed by ROUTE, so a route the
+# record binds to two weeks put the same week list on both of its cards and a reader filtering to
+# one of those weeks was shown the lesson twice. Ruling of 2026-09-22 on STOP-F2: a route bound to
+# two weeks renders in both slots -- each card naming the week it stands for. Controls unchanged.
 CARD_WEEK_HOOK = None
 
 
 def _card(row: dict, href: str, title: str, kind: str, week: int | None, strand: str | None,
           extra: str = '', cls: str = '') -> str:
     week_attr = str(week) if week is not None else 'unspecified'
-    hooked = CARD_WEEK_HOOK(row) if CARD_WEEK_HOOK else None
+    hooked = CARD_WEEK_HOOK({**row, 'week': week}) if CARD_WEEK_HOOK else None
     if hooked:
         week_attr = hooked[0]
         extra = f'<p class="science-week">{E(hooked[1])}</p>' + extra

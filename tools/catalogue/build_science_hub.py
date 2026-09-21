@@ -203,11 +203,28 @@ for pw in S.PATHWAYS:
     blurb[pw] = h1_of(sh)
     start_hrefs[pw] = f'{pw.capitalize()}/START_HERE.html'
 def bound_weeks(row):
-    """The route's RECORDED weeks as science-shelf.js filters them: every bound week in the
-    data-week attribute (space-separated), the record's own labels on the card, and
-    'unspecified' / 'Week not specified' when the record binds none (the old shelf's exact
-    contract; check_catalogue_dom.cjs proves the week filter and the honest unknown label)."""
+    """The RECORDED week this card stands for, as science-shelf.js filters it.
+
+    A current row IS one binding: strand_rows() emits one row per bound week, so the route the
+    record binds to two weeks produces two cards, one in each week row (the ruling of 2026-09-22
+    on STOP-F2: "a route bound to two weeks may render twice"). Each card therefore carries ITS
+    OWN week, not the route's whole list. Carrying the list would put "3 4" on both cards, and a
+    reader filtering to Week 3 would be shown the same lesson twice with identical text -- the
+    duplication the DISTINCT control exists to forbid, arriving through the filter instead of the
+    slot. Measured before the fix: ?pathway=LAUNCH&term=Spr1&week=3 showed 3 cards for 2 routes.
+
+    Rows the record binds to no week keep the old shelf's exact contract: 'unspecified' and
+    'Week not specified' (check_catalogue_dom.cjs proves the week filter and the honest label).
+    A row that names no week of its own -- an earlier-family or pack card -- keeps the whole
+    recorded list, which is what those surfaces have always shown.
+    """
     ws = (WEEKS.get(row['path']) or {}).get('weeks') or []
+    own = row.get('week')
+    if own is not None:
+        mine = [w for w in ws if w['weekWithinTerm'] == own and w['term'] == row.get('term')]
+        if mine:
+            return (' '.join(str(w['weekWithinTerm']) for w in mine),
+                    '; '.join(w['label'] for w in mine))
     return (' '.join(str(w['weekWithinTerm']) for w in ws) or 'unspecified',
             '; '.join(w['label'] for w in ws) or 'Week not specified')
 S.CARD_WEEK_HOOK = bound_weeks
