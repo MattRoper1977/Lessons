@@ -41,7 +41,7 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
-VERSION = "classic-v2-contract-selftest-v1.1.0"
+VERSION = "classic-v2-contract-selftest-v1.2.0"
 
 _spec = importlib.util.spec_from_file_location(
     "contract", ROOT / "_sownb/vb/tools/reshell_classic_v2_contract.py")
@@ -50,10 +50,28 @@ _spec.loader.exec_module(contract)
 
 # THE TWO FIXTURES. v1 still carries its own Lundy slide; v2 is a deck the order
 # transplanted, which carries none and panels every stage the pupil works in.
+# THE v1 FIXTURE IS A SNAPSHOT, AND WHY (v1.2.0, ruled 2026-09-22, STOP-T5).
+# ORDER HUM-T transplants W16 as batch 6b, which takes the v1 shape off the last deck
+# that carried it: measured across the estate, 54 decks are recipe-shaped, 25 still have
+# their own Lundy slide, and only W16 reaches 9/10 -- the rest red on lesson-config, on a
+# missing working stage, and on timings no revision of theirs ever carried. With W16
+# transplanted the v1 route had no base at all and this file refused outright.
+# So the v1 base is the BYTES THE ESTATE SHIPPED for W16, snapshotted at the commit named
+# below. It is not an invented fixture: every byte was served, and the claim is auditable --
+#     git show <bytesFrom.commit>:<bytesFrom.deck> | sha256sum
+# must equal the recorded digest, which --rebase verifies against git and every run checks.
+# Freezing the live lesson as a fixture was refused; so was retiring the route.
+V1_DECK = "Humanities_Teesside/BUILD_W14-W20_2026-27/BUILD_HUM_W16_Then_And_Now_And_What_Is_Fair.html"
+V1_FIXTURE = "_sownb/vb/evidence/a2r/fixtures/classic_v2_v1_base.html"
+V1_BYTES_COMMIT = "cdc14919efc819ed56b3c2cdd97a0c567fd96e79"
 FIXTURES = (
-    ("v1", "Humanities_Teesside/BUILD_W14-W20_2026-27/BUILD_HUM_W16_Then_And_Now_And_What_Is_Fair.html"),
+    ("v1", V1_FIXTURE),
     ("v2", "Humanities_Teesside/BUILD_W1-W8_2026-27/BUILD_HUM_W3_Places_In_My_Community.html"),
 )
+# A fixture that is a snapshot takes its minutes from the deck the bytes came from; its own
+# path has no history to walk. The minutes stay KEYED TO THE FIXTURE, as ruled.
+MINUTES_DECK = {V1_FIXTURE: V1_DECK}
+SNAPSHOT_OF = {V1_FIXTURE: (V1_DECK, V1_BYTES_COMMIT)}
 MINUTES_RECORD = ROOT / "_sownb/vb/evidence/a2r/classic_v2_fixture_minutes.json"
 SLIDE_RX = re.compile(r'<div class="slide(?: active)?"')
 
@@ -82,12 +100,37 @@ def measure_minutes(rel: str) -> dict:
                      f"{contract.PERIOD_MINUTES}; a fixture may not invent them")
 
 
+def snapshot_provenance(rel: str) -> dict:
+    """Record where a snapshot fixture's bytes came from, CHECKED AGAINST GIT.
+
+    The commit is not taken on trust: the blob at that commit is read back and must equal
+    the fixture byte for byte, or the record is refused rather than written."""
+    deck, commit = SNAPSHOT_OF[rel]
+    blob = subprocess.run(["git", "show", f"{commit}:{deck}"], cwd=ROOT,
+                          capture_output=True, check=True).stdout
+    raw = (ROOT / rel).read_bytes()
+    if blob != raw:
+        raise SystemExit(f"REFUSED: {rel} is not the bytes of {deck} at {commit[:12]}")
+    return {"deck": deck, "commit": commit,
+            "sha256": hashlib.sha256(raw).hexdigest(),
+            "derivation": f"git show {commit}:{deck} | sha256sum"}
+
+
 def rebase_record() -> dict:
+    fixtures = {}
+    for _, rel in FIXTURES:
+        rec = measure_minutes(MINUTES_DECK.get(rel, rel))
+        rec["minutesDeck"] = MINUTES_DECK.get(rel, rel)
+        if rel in SNAPSHOT_OF:
+            rec["bytesFrom"] = snapshot_provenance(rel)
+        fixtures[rel] = rec
     record = {"tool": "classic_v2_contract_selftest.py --rebase",
               "period": contract.PERIOD_MINUTES,
-              "note": ("each deck's own stage minutes, read from the newest revision of "
-                       "itself that still carried them; #271's reshell dropped them"),
-              "fixtures": {rel: measure_minutes(rel) for _, rel in FIXTURES}}
+              "note": ("each fixture's stage minutes, read from the newest revision of the deck "
+                       "they belong to that still carried them; #271's reshell dropped them. A "
+                       "snapshot fixture also records the commit its bytes came from, verified "
+                       "against git when this record is written and checked on every run."),
+              "fixtures": fixtures}
     MINUTES_RECORD.parent.mkdir(parents=True, exist_ok=True)
     MINUTES_RECORD.write_text(json.dumps(record, indent=1, sort_keys=True) + "\n",
                               encoding="utf-8")
@@ -103,6 +146,21 @@ def load_minutes(rel: str) -> dict:
     if rec["sum"] != contract.PERIOD_MINUTES or sum(rec["minutes"]) != contract.PERIOD_MINUTES:
         raise SystemExit(f"REFUSED: recorded minutes for {rel} do not sum to the period")
     return rec
+
+
+def fixture_integrity(rel: str, raw: str = None, prov: dict = None):
+    """(ok, detail) for a fixture's bytes against their recorded digest.
+
+    A live deck has no recorded digest and is its own authority; a SNAPSHOT has one, and if
+    the bytes and the record disagree the fixture is no longer the thing it claims to be."""
+    if prov is None:
+        prov = load_minutes(rel).get("bytesFrom")
+    if not prov:
+        return True, "live deck, no recorded digest"
+    if raw is None:
+        raw = (ROOT / rel).read_text(encoding="utf-8")
+    got = hashlib.sha256(raw.encode("utf-8")).hexdigest()
+    return got == prov["sha256"], f"sha256 {got[:16]} vs recorded {prov['sha256'][:16]}"
 
 
 def _stamp(raw: str, minutes) -> str:
@@ -241,6 +299,13 @@ MUTATIONS = [
 ]
 
 
+def _evaluate_full(source: str) -> dict:
+    with tempfile.TemporaryDirectory() as tmp:
+        p = Path(tmp) / "deck.html"
+        p.write_text(source, encoding="utf-8")
+        return {c["clause"]: c for c in contract.evaluate(p)}
+
+
 def _evaluate(source: str) -> dict:
     with tempfile.TemporaryDirectory() as tmp:
         p = Path(tmp) / "deck.html"
@@ -249,7 +314,8 @@ def _evaluate(source: str) -> dict:
 
 
 def list_controls() -> list[str]:
-    return [cid for cid, _, _ in MUTATIONS] + [pid for pid, *_ in FIXTURE_PROOFS]
+    return ([cid for cid, _, _ in MUTATIONS] + [pid for pid, *_ in FIXTURE_PROOFS]
+            + [pid for pid, *_ in INTEGRITY_PROOFS] + [ROUTE_CONTROL[0]])
 
 
 # THE THREE PROOFS THE RULING NAMES. The clause battery proves each clause can be
@@ -287,6 +353,57 @@ FIXTURE_PROOFS = (
     ("v2-minutes-off-by-one", "v2", "stage-timings-carried", None, -1,
      "the measured table is stamped one minute short of the period"),
 )
+
+
+# THE THREE CONTROLS THE STOP-T5 RULING NAMES. Two red proofs on the snapshot's integrity,
+# and one positive control that both routes are still reachable at base -- the v1 route
+# through the fixture, the v2 route through the transplanted deck.
+INTEGRITY_PROOFS = (
+    ("v1-fixture-one-byte-altered", "v1",
+     "one byte of the fixture is altered, so it is no longer the bytes the estate shipped"),
+    ("v1-fixture-digest-mismatch", "v1",
+     "the recorded digest is moved off the fixture's own bytes"),
+)
+ROUTE_CONTROL = ("both-routes-pass-at-base",
+                 "the v1 route passes through the snapshot fixture (own slide) and the v2 "
+                 "route through the transplanted deck (sound panels on every working stage)")
+
+
+def integrity_proofs() -> list[dict]:
+    out = []
+    for pid, shape, description in INTEGRITY_PROOFS:
+        rel = dict(FIXTURES)[shape]
+        raw = (ROOT / rel).read_text(encoding="utf-8")
+        prov = load_minutes(rel).get("bytesFrom")
+        before_ok, detail = fixture_integrity(rel, raw, prov)
+        if not prov:
+            out.append({"proof": pid, "shape": shape, "deck": rel, "planted": description,
+                        "fired": False, "detail": "no recorded digest to defend"})
+            continue
+        if pid.endswith("one-byte-altered"):
+            altered = raw[:-1] + ("x" if raw[-1:] != "x" else "y")
+            assert altered != raw and len(altered) == len(raw)
+            after_ok, after_detail = fixture_integrity(rel, altered, prov)
+        else:
+            moved = dict(prov)
+            moved["sha256"] = ("0" * 64) if prov["sha256"] != "0" * 64 else "f" * 64
+            after_ok, after_detail = fixture_integrity(rel, raw, moved)
+        out.append({"proof": pid, "shape": shape, "deck": rel, "planted": description,
+                    "baseVerdict": "intact" if before_ok else "ALREADY BROKEN",
+                    "mutatedVerdict": "intact" if after_ok else "refused",
+                    "detail": after_detail, "fired": before_ok and not after_ok})
+    return out
+
+
+def route_control(sources: dict) -> dict:
+    """Both routes reachable at base: v1 by its own slide, v2 by its panels."""
+    cid = "lundy-in-three-places"
+    v1 = _evaluate_full(sources["v1"])[cid]
+    v2 = _evaluate_full(sources["v2"])[cid]
+    v1_ok = v1["status"] == "PASS" and "own slide=True" in v1["evidence"]
+    v2_ok = v2["status"] == "PASS" and "own slide=False" in v2["evidence"]
+    return {"proof": ROUTE_CONTROL[0], "kind": "positive control", "planted": ROUTE_CONTROL[1],
+            "v1": v1["evidence"], "v2": v2["evidence"], "fired": v1_ok and v2_ok}
 
 
 def fixture_proofs(sources: dict, verdicts: dict) -> list[dict]:
@@ -341,6 +458,10 @@ def run() -> dict:
             "controls": results,
         })
     proofs = fixture_proofs(sources, verdicts)
+    integrity = integrity_proofs()
+    route = route_control(sources)
+    intact = [{"fixture": rel, "ok": fixture_integrity(rel)[0], "detail": fixture_integrity(rel)[1]}
+              for _, rel in FIXTURES]
     # ONE LINE PER LISTED CONTROL, COUNTED ONCE. A clause control counts as fired
     # only if it fired on EVERY fixture -- a clause that can be made to red on the
     # v1 deck and not on the v2 deck is a clause tested on one shape of deck.
@@ -349,7 +470,8 @@ def run() -> dict:
         for r in f["controls"]:
             per_clause.setdefault(r["clause"], []).append(r["fired"])
     fired = sorted([cid for cid, res in per_clause.items() if res and all(res)]
-                   + [pr["proof"] for pr in proofs if pr["fired"]])
+                   + [pr["proof"] for pr in proofs + integrity if pr["fired"]]
+                   + ([route["proof"]] if route["fired"] else []))
     declared_controls = list_controls()
     return {
         "tool": "classic_v2_contract_selftest", "toolVersion": VERSION,
@@ -362,9 +484,13 @@ def run() -> dict:
         "controlsFired": len(fired),
         "controlsNotFired": sorted(set(declared_controls) - set(fired)),
         "fixtures": fixtures,
+        "fixtureIntegrity": intact,
         "fixtureProofs": proofs,
+        "integrityProofs": integrity,
+        "routeControl": route,
         "allListedControlsFired": (all(f["allListedControlsFired"] for f in fixtures)
-                                   and all(p["fired"] for p in proofs)
+                                   and all(p["fired"] for p in proofs + integrity)
+                                   and route["fired"] and all(i["ok"] for i in intact)
                                    and len(fired) == len(declared_controls)),
     }
 
@@ -413,8 +539,16 @@ def main() -> int:
               f"clause order matches the contract: {f['clauseOrderMatchesContract']}")
     for pr in report["fixtureProofs"]:
         mark = "ok  " if pr["fired"] else "FAIL"
-        print(f"  {mark} {pr['proof']:24s} {pr['shape']} {pr['clause']}  "
+        print(f"  {mark} {pr['proof']:28s} {pr['shape']} {pr['clause']}  "
               f"{pr['baseVerdict']} -> {pr['mutatedVerdict']}")
+    for i in report["fixtureIntegrity"]:
+        print(f"  {'ok  ' if i['ok'] else 'FAIL'} fixture intact               "
+              f"{Path(i['fixture']).name}  {i['detail']}")
+    for pr in report["integrityProofs"]:
+        mark = "ok  " if pr["fired"] else "FAIL"
+        print(f"  {mark} {pr['proof']:28s} {pr['shape']} {pr['detail']}")
+    r = report["routeControl"]
+    print(f"  {'ok  ' if r['fired'] else 'FAIL'} {r['proof']:28s} positive control")
     print(f"  {report['controlsFired']}/{report['controlsDeclared']} listed controls fired"
           + (f"; not fired: {report['controlsNotFired']}" if report["controlsNotFired"] else ""))
     print(f"  deterministic (two runs byte-identical): {deterministic}  "
