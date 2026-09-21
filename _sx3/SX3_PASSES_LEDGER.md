@@ -925,3 +925,34 @@ L44  HUM-T BATCH 5 LANDED UNDER THE OVERNIGHT ORDER  [2026-09-21; pre-signed by 
      the local build of the two mains; Domain split publication 35572842054 SUCCESS.
      THE CLOSER: this pure carrier (L38 check PASS); Education Pages publication run reported
      in the readback and entered in the CLOSE record.
+
+L45  HUM-T BATCH 6 LANDED UNDER THE OVERNIGHT ORDER  [2026-09-21; pre-signed by Matt Roper
+     2026-09-21 (PRE-SIGNATURE, ORDER HUM-T batch 6 BUILD): 10 rows, TERM+WEEK UNCHANGED
+     10/10, evidence sha == served bytes 10/10, 61 panels, zero exceptions; carried out by
+     Claude without a further STOP].
+     Ten BUILD Humanities decks carry the science exemplar's loop panel in every stage,
+     filled from each stage's own text, nothing hand-authored, in the RULED P1 shape (no Title
+     panel; the four response outcomes as influence lines phrased for the stage's task; a
+     collapsed "Feedback loop" disclosure per stage; VOICE names the task; corrections #14/#15). Evidence re-stamped
+     where a deck limb holds or, under STOP-T3 ruling Q1, where the strand row agrees with the
+     projection; nine David cover routes re-stamped under ruling Q2 inside the batch's declared
+     GLV3 replacement transaction (10 members); pins re-cut in both gate copies.
+     HELD BY RULING (Matt Roper, 2026-09-22, STOP-T4): the eleventh deck of the signed BUILD
+     set, BUILD_HUM_W16_Then_And_Now_And_What_Is_Fair.html, is NOT in this batch. It is the real
+     base fixture of _sownb/vb/tools/classic_v2_contract_selftest.py, whose clause
+     `lundy-in-three-places` wants the deck's own Lundy slide and whose RESTORED_MINUTES table
+     assumes ten slides; the transplant redistributes that slide into the per-stage panels, so the
+     self-test base red on two clauses and two of ten controls could not fire (VB mechanism
+     battery MEASUREMENT INVALID, run 35577895174). The batch was REBUILT as ten from origin/main,
+     not unpicked: every derived record is a ten-deck derivation. W16 is byte-identical to main
+     here and lands as batch 6b behind the versioned classic-v2 contract (its own PR, own red
+     proofs). Batch 6 therefore closes at ten, and the signed BUILD set completes at 6b.
+     LANDED: Lessons #621 -> 3825ecf0 (re-cut from 0fc3839a after the batch 5
+     carrier; the deck digests identical to the pre-signed table and the preview branch); unification observed
+     on the PR head 8127c0e4 run 35581190142 SUCCESS. Apps #142 -> 4c7e9c60.
+     RENDERED on the PR head at 390 px: 61/61 panels reached and 61/61 disclosures opened; rows 38-40 61/61/61; 0 refusal
+     faults; 0 page errors.
+     THE WINDOW: Site #423 -> 8e95534e; pairs derived by the window runner from
+     the local build of the two mains; Domain split publication 35583082980 SUCCESS.
+     THE CLOSER: this pure carrier (L38 check PASS); Education Pages publication run reported
+     in the readback and entered in the CLOSE record.
