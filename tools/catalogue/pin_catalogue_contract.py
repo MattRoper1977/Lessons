@@ -1542,7 +1542,7 @@ REVIEWED_PATHS += (
 )
 
 # ORDER HUM-T landing — transplanted decks, admitted per batch
-# batch 6 (BUILD, 11 decks)
+# batch 6 (BUILD, 10 decks)
 REVIEWED_PATHS += (
     'Humanities_Teesside/BUILD_W1-W8_2026-27/BUILD_HUM_W3_Places_In_My_Community.html',
     'Humanities_Teesside/BUILD_W1-W8_2026-27/BUILD_HUM_W4_Then_And_Now.html',
@@ -1554,7 +1554,6 @@ REVIEWED_PATHS += (
     'Humanities_Teesside/BUILD_W1-W8_2026-27/BUILD_Humanities_W5_Notice_Similarities_Between_People_S_Beliefs.html',
     'Humanities_Teesside/BUILD_W1-W8_2026-27/BUILD_Humanities_W6_Reflect_Quietly_On_Belonging_Day_Of_Peace.html',
     'Humanities_Teesside/BUILD_W1-W8_2026-27/BUILD_Humanities_W7_Share_A_Special_To_Me_Object_With.html',
-    'Humanities_Teesside/BUILD_W14-W20_2026-27/BUILD_HUM_W16_Then_And_Now_And_What_Is_Fair.html',
 )
 
 # Owner-reviewed additive Science download transaction, 6 September 2026.
