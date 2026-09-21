@@ -222,8 +222,9 @@ rewritten; every other file in this pack is the v3 byte for byte.
 The root SHA256SUMS.txt in this pack has been re-cut for exactly these files and this
 CHANGELOG; every other row is the v3 row. It still covers the complete pack.
 
+
 ==============================================================================
-HTML shell added to 12 served pages - BUILD Humanities, Summer 1
+HTML shell added to 10 served pages - BUILD Humanities, Summer 1
 Applied 2026-09-22 by Claude on Matt Roper's STOP-R ruling (option 2).
 ==============================================================================
 
@@ -232,11 +233,11 @@ furniture, and that adapter refuses a page which is not a whole HTML document:
 
     ValueError: Usage adapter needs an HTML shell: .../START_HERE.html
 
-Fifty of the seventy served pages in the three Summer 1 trees arrived as fragments,
-while all ninety-two pages of the estate's existing Humanities pathway dirs are whole
-documents. The publication was red on Lessons main until this was repaired.
+Forty-eight of the seventy served pages in the three Summer 1 trees arrived as
+fragments, while all ninety-two pages of the estate's existing Humanities pathway dirs
+are whole documents. The publication was red on Lessons main until this was repaired.
 
-WHAT WAS DONE. tools/hum/wrap_page_shell.py (sha256 dbac912ab5163885)
+WHAT WAS DONE. tools/hum/wrap_page_shell.py (sha256 4e89f9982b16fb03)
 places each fragment, byte for byte, inside:
 
     <!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
@@ -248,10 +249,17 @@ has no heading. Nothing inside <body> changes; a page that already had a shell i
 byte-identical, and running the tool twice is running it once. Both properties are
 red-proved in its self-test. The eighteen signed lesson files are untouched.
 
-    page                                                         sha256 before -> after        bytes
+WHAT WAS NOT DONE, AND WHY. The tool refuses any page that already carries </head> OR
+</body>. Four pages in these trees do, and none was touched: BUILD's START_HERE.html
+and Sources_and_checks.html are whole documents, and BUILD's Week 1 Knowledge Organiser
+and Pupil Resources are whole HTML5 documents whose <head> is IMPLIED - they open
+<!doctype html><html> and close </body></html> with no </head> anywhere. Wrapping such
+a page would nest one document inside another. Those last two still cannot take the
+usage furniture, because the adapter wants an explicit </head>; they are held, named,
+for Matt's ruling.
 
-    BUILD/Summer_1/W01/BUILD_SU1_W01_Knowledge_Organiser.html    85ecebe96859 -> de16e257eba7    5953 ->   6162
-    BUILD/Summer_1/W01/BUILD_SU1_W01_Pupil_Resources.html        bd2049f71f47 -> a84b024d7e43   10830 ->  11031
+    page                                                      sha256 before -> after        bytes
+
     BUILD/Summer_1/W02/BUILD_SU1_W02_Knowledge_Organiser.html    1b9578bb8fa9 -> b7a3c289858e    1589 ->   1794
     BUILD/Summer_1/W02/BUILD_SU1_W02_Pupil_Resources.html        6544c1180af1 -> 265dcb9b0ae4   88565 ->  88767
     BUILD/Summer_1/W03/BUILD_SU1_W03_Knowledge_Organiser.html    fdfefac47211 -> efd929fce9cb    1595 ->   1795

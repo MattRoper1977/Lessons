@@ -36,8 +36,18 @@ LESSON_ID = re.compile(r'((?:BUILD|GROW|LAUNCH)_SU1_W\d{2})')
 
 
 def has_shell(text: str) -> bool:
-    """The publication's own test, quoted: a page is whole when it closes head AND body."""
-    return '</head>' in text and '</body>' in text
+    """The RULED test: a page carrying </head> OR </body> is not this tool's business.
+
+    CORRECTION (2026-09-22). This first read "and", quoting the usage adapter's own guard. That
+    was wrong, and wrong in the direction that does damage. HTML5 lets a document leave <head>
+    implied: <!doctype html><html><meta charset><title><style><body>...</body></html> is a WHOLE
+    document with no </head> in it anywhere. Under "and" such a page counts as a fragment, and
+    wrapping it nests a whole document inside another -- two doctypes, two <html>, two </body> --
+    which the adapter then refuses for a new reason ("requires one real document body closing
+    tag"). Matt's ruling says it plainly: the tool "refuses a page that already has </head> or
+    </body>". Either tag means the page already closes something this tool would open.
+    """
+    return '</head>' in text or '</body>' in text
 
 
 def title_for(text: str, path: Path) -> str:
@@ -117,8 +127,16 @@ def self_test() -> int:
           '<title>GROW_SU1_W03</title>' in wrap(headless, p))
     check('a page with no heading and no lesson id in its name takes its stem',
           '<title>Sources_and_checks</title>' in wrap(headless, Path('Sources_and_checks.html')))
-    check('half a shell is not a shell: </head> alone does not count',
-          not has_shell('<head></head><p>x</p>') and has_shell('<head></head><body></body>'))
+    check('either closing tag means the page is not this tool\'s business',
+          has_shell('<head></head><p>x</p>') and has_shell('<p>x</p><body></body>')
+          and not has_shell('<p>x</p>'))
+    implied = ('<!doctype html><html lang="en-GB"><meta charset="utf-8">'
+               '<title>Week 1 knowledge organiser</title><style>p{}</style>'
+               '<body><article><h1>Our school</h1></article></body></html>')
+    check('RED PROOF (implied head): a whole HTML5 document with no </head> is left '
+          'byte-identical, never nested',
+          wrap(implied, p) == implied
+          and implied.count('<!doctype') == 1 and implied.count('</body>') == 1)
     print('wrap_page_shell self-test: %s' % ('PASS' if not bad else 'FAIL (%d)' % bad))
     return 1 if bad else 0
 
