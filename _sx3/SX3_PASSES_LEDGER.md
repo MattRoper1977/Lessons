@@ -842,3 +842,23 @@ L39  SCI-COMPLETE PASS A LANDED UNDER THE OVERNIGHT ORDER  [2026-09-21; STOP-SIG
      START_HERE page; the twelve listed decks are on the hub, listed not hidden.
      PASS B CENSUS (held for STOP-B1): 180 routes, 14 conforming (the exemplars), 166 without
      Lundy furniture, of which 40 are recorded full-lundy.
+
+L41  HUM-T BATCH 2 LANDED UNDER THE OVERNIGHT ORDER  [2026-09-21; pre-signed by Matt Roper
+     2026-09-21 (PRE-SIGNATURE, ORDER HUM-T batch 2 GROW): 12 rows, TERM+WEEK UNCHANGED
+     12/12, evidence sha == served bytes 12/12, 84 panels, zero exceptions; carried out by
+     Claude without a further STOP].
+     Twelve GROW Humanities decks carry the science exemplar's loop panel in every stage,
+     filled from each stage's own text, nothing hand-authored; built and green before the P1
+     order, landed as-is and re-cut to P1 shape in a follow-on batch. Evidence re-stamped
+     where a deck limb holds or, under STOP-T3 ruling Q1, where the strand row agrees with the
+     projection; seven David cover routes re-stamped under ruling Q2 inside the batch's declared
+     GLV3 replacement transaction (12 members); pins re-cut in both gate copies.
+     LANDED: Lessons #613 -> 256e5331 (re-cut from 26b58664 after the SCI-COMPLETE
+     PASS A carrier; the deck digests identical to the pre-signed table); unification observed
+     on the PR head e5b1ea61 run 35555342644 (cross-estate / static-contract, the on-content wrapper) SUCCESS. Apps #134 -> b8bb4eb8.
+     RENDERED on the PR head at 390 px: 84/84 panels reached; rows 38-40 84/84/84; 0 refusal
+     faults; 0 page errors.
+     THE WINDOW: Site #419 -> 297e09b43b090e52d4e34f984664e28d39f05bea; pairs derived by the window runner from
+     the local build of the two mains; Domain split publication 35556534987 SUCCESS.
+     THE CLOSER: this pure carrier (L38 check PASS); Education Pages publication run reported
+     in the readback and entered in the CLOSE record.
