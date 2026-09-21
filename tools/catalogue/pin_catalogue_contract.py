@@ -1394,6 +1394,16 @@ REVIEWED_PATHS = (
     # review decision and cannot be re-derived, which is why the control is a pin
     # rather than a regeneration.
     "_sx3/FENCE.json",
+    # ORDER HUM-D5 (2026-09-21): the pass's own record and the instrument that builds its
+    # text index. CHECKS.md is a pass record, pinned for the same reason SX3_PASSES_LEDGER.md is
+    # -- a record the tree can edit silently is not a record. build_text_index.py is the A0
+    # instrument every E-check reads downstream: ruling 1 of 2026-09-22 approved a fix to it
+    # (it could not see a lesson that spaces its config key, so E1/E2 would have "passed" over
+    # a short set), and an instrument that can be widened unreviewed is worth less than the
+    # checks it feeds. Admitted by PIN, not by ALLOWED_DIFF: both gate copies are re-pinned and
+    # judged by exact bytes. Nothing is loosened.
+    "_passhumd5/CHECKS.md",
+    "_passhumd5/build_text_index.py",
     # SX3 landing decks. A deck is admitted by being named here: the boundary
     # permits a changed file only if it is pinned, and tools/pin1/derive_triggers.py
     # then materialises the matching trigger path and asserts the two sets are equal.
