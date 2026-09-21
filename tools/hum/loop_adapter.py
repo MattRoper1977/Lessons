@@ -15,6 +15,18 @@ RULINGS IMPLEMENTED (STOP-T1)
   R5  RE response points are phrased from the source, never from a belief;
       safeguard sentences already present are left untouched.
 
+P1 SHAPE (Matt Roper, overnight order 2026-09-21; applied to batches not yet built,
+batches already built land as-is and are re-cut in a follow-on batch). The reading is
+mine and is recorded for correction:
+  P1-1  no Title-stage panel: the overview stage is metadata, not a response point.
+  P1-2  RULED 2026-09-21: four response outcomes, one influence line each, phrased for
+        the stage's task (not yet / needs help -> reduce the prompt; with support -> same
+        task, new example; independently -> explain a reason; and explained -> move on).
+  P1-3  the panel sits inside a collapsed "Feedback loop" disclosure per stage, opened
+        by the pupil or adult with a real tap on its summary.
+  P1-4  VOICE names the stage's task: the VOICE step and the "I have answered" control
+        carry the task the response point quotes, not the bare word.
+
 THREE ADAPTERS, ONE CONTRACT
   quarantined (family A) the dedicated Lundy stage is redistributed into per-stage
                          panels and the emptied stage removed; nothing lost.
@@ -231,6 +243,59 @@ def stage_task(stage: Node, limit: int = 120) -> str:
     return best
 
 
+CONFIG_RX = re.compile(r'<script[^>]*id="lesson-config"[^>]*>(.*?)</script>', re.S)
+
+
+def deck_config(html: str) -> dict:
+    """The deck's own lesson-config, when it carries one (48 of the 73 do)."""
+    m = CONFIG_RX.search(html)
+    if not m:
+        return {}
+    try:
+        cfg = json.loads(m.group(1))
+    except ValueError:
+        return {}
+    return cfg if isinstance(cfg, dict) else {}
+
+
+INFLUENCE_OUTCOMES = (
+    # key, the pupil's response outcome (the control's label), the ruled next move
+    ('needs-help', 'Not yet / needs help', 'reduce the prompt'),
+    ('with-support', 'Did it with support', 'same task, new example'),
+    ('independent', 'Did it independently', 'explain a reason'),
+    ('explained', 'Did it and explained', 'move on'),
+)
+
+
+def influence_options(task: str, next_title: str = '', own_next: str = ''):
+    """P1-2 (RULING, Matt Roper 2026-09-21): the four response outcomes are the
+    canonical influence outcomes, one line each, phrased for THIS stage's task:
+    not yet / needs help -> reduce the prompt; did it with support -> same task, new
+    example; did it independently -> explain a reason; did it and explained -> move on.
+    Nothing is authored here: the outcome and the move are the ruling's words, the
+    task is the stage's own (the one row 8 proves), and the fourth line's destination
+    is the deck's own 'what happens next' sentence or its own next stage. The four
+    prefixes differ, so no two lines in one panel can be identical (row 16 reds on a
+    repeat all the same)."""
+    t = (task or '').strip().rstrip('.!?\u2026')
+    if own_next:
+        move_on = 'Did it and explained \u2192 move on. %s' % own_next
+    elif next_title:
+        move_on = 'Did it and explained \u2192 move on: %s' % next_title
+    else:
+        move_on = 'Did it and explained \u2192 move on to the next stage.'
+    lines = {
+        'needs-help': ('Not yet / needs help \u2192 reduce the prompt: take the first step of '
+                       '\u201c%s\u201d with the smallest prompt that works, then wait.' % t),
+        'with-support': ('Did it with support \u2192 same task, new example: \u201c%s\u201d again '
+                         'with a fresh example and one prompt fewer.' % t),
+        'independent': ('Did it independently \u2192 explain a reason: ask why for \u201c%s\u201d '
+                        'and take the reason in the pupil\u2019s own mode.' % t),
+        'explained': move_on,
+    }
+    return [(k, label, lines[k]) for k, label, _ in INFLUENCE_OUTCOMES]
+
+
 def stage_own_next(stage: Node) -> str:
     """The stage's OWN 'what happens next' sentence, where the deck has one."""
     m = NEXT_RX.search(pupil_text(stage))
@@ -270,8 +335,25 @@ def quarantined_definitions(doc: Node):
     return []
 
 
+VOICE_LABEL_LIMIT = 40
+VOICE_LABEL_CORE = 24   # verify_loop row 17 looks for the task's first 24 characters
+
+
+def voice_label(task: str) -> str:
+    """The task as the VOICE step and its control name it: at most 40 characters,
+    cut at a word boundary where one falls after the 24-character core the
+    verifier proves, and at the hard limit otherwise (a long word straddling
+    the cut must not shorten the label below the core: correction #14)."""
+    if len(task) <= VOICE_LABEL_LIMIT:
+        return task
+    cut = task[:VOICE_LABEL_LIMIT]
+    soft = cut.rsplit(' ', 1)[0]
+    return (soft if len(soft) >= VOICE_LABEL_CORE else cut) + '…'
+
+
 def build_panel(stage: Node, index: int, next_title: str, pathway: str,
-                is_re: bool, sentences, definitions) -> str:
+                is_re: bool, sentences, definitions, cfg=None) -> str:
+    cfg = cfg or {}
     task = stage_task(stage)
     head = short_stage_label(stage) or stage_heading(stage)
     modal = POLICY_MODALITIES.get((pathway or '').upper(), POLICY_MODALITIES['GROW'])
@@ -282,37 +364,44 @@ def build_panel(stage: Node, index: int, next_title: str, pathway: str,
     audience = ('At %s, an adult receives it and names back what they heard, in your '
                 'words. R goes on only after that.' % (short_stage_label(stage) or 'this stage'))
     own_next = stage_own_next(stage)
-    if own_next:
-        influence = 'What you said changes what happens next. %s' % own_next
-    else:
-        influence = ('What you said changes what happens next: %s' % (next_title or head))
+    moves = influence_options(task, next_title or head, own_next)
+    influence_lines = ''.join(
+        '<p class="loop-line loop-influence" data-loop-part="influence" data-loop-option="%s">%s</p>'
+        % (esc(k), esc(line)) for k, _, line in moves)
+    branch = ('<div class="branch" aria-label="What the pupil did: choose the outcome, and the next move follows">' +
+              ''.join('<button type="button" data-next-move="%s" data-action="lundy-influence">%s</button>'
+                      % (esc(k), esc(label)) for k, label, _ in moves) + '</div>')
     key = hashlib.sha256((task + '|' + (next_title or '')).encode()).hexdigest()[:12]
+    voice_task = voice_label(task)
     steps = []
-    labels = {'space': 'SPACE', 'voice': 'VOICE', 'audience': 'AUDIENCE', 'influence': 'INFLUENCE'}
+    labels = {'space': 'SPACE', 'voice': 'VOICE · %s' % voice_task, 'audience': 'AUDIENCE',
+              'influence': 'INFLUENCE'}
     for i, (k, lab) in enumerate(labels.items()):
         state = 'available' if k == 'space' else 'waiting'
-        steps.append('<div class="ls" data-lundy-step="%s" data-state="%s">%s</div>' % (k, state, lab))
+        steps.append('<div class="ls" data-lundy-step="%s" data-state="%s">%s</div>' % (k, state, esc(lab)))
     defs = ''
     if definitions:
         defs = ('<ul class="loop-defs">' +
                 ''.join('<li>%s</li>' % esc(d) for d in definitions) + '</ul>')
     return (
+      '<details class="loop-disclosure" data-hum-t-disclosure="1">'
+      '<summary>Feedback loop</summary>'
       '<div class="lundy hum-t-loop" %s="1" data-loop-stage="%d" data-loop-stage-name="%s" '
       'data-loop-key="%s" aria-label="Lundy participation status">'
       '<div class="lundy-grid">%s</div>'
       '<p class="lundy-state" data-lundy-status>SPACE available · VOICE waiting · '
       'AUDIENCE waiting · INFLUENCE waiting</p>'
       '<p class="loop-line loop-response" data-loop-part="response">%s <span class="loop-modes">%s</span></p>'
-      '<button type="button" data-action="lundy-voice">I have answered</button>'
+      '<button type="button" data-action="lundy-voice">I have answered: %s</button>'
       '<p class="loop-line loop-audience" data-loop-part="audience">%s</p>'
       '<button type="button" data-action="lundy-audience">Adult received this response</button>'
-      '<p class="loop-line loop-influence" data-loop-part="influence">%s</p>'
-      '<button type="button" data-action="lundy-influence">Agree what changes</button>'
+      '%s'
+      '%s'
       '<p class="loop-result" data-loop-result role="status" aria-live="polite">%s</p>'
-      '%s</div>'
+      '%s</div></details>'
     ) % (MARK, index, esc(stage_name(stage)), key,
-         ''.join(steps), esc(response), esc(modal), esc(audience), esc(influence),
-         esc(' '.join(sentences)), defs)
+         ''.join(steps), esc(response), esc(modal), esc(voice_task), esc(audience), influence_lines,
+         branch, esc(' '.join(sentences)), defs)
 
 
 LOOP_SCRIPT = """
@@ -345,16 +434,34 @@ LOOP_SCRIPT = """
       if(!state.voice){ say(REFUSE_VOICE_FIRST); return; }
       state.audience=true; b.disabled=true;
       say('Audience done — the adult named it back. R may go on now.'); paint(); });
-    on('lundy-influence',function(b){
+    var moves=panel.querySelectorAll('[data-action="lundy-influence"]');
+    for(var k=0;k<moves.length;k++){ (function(b){ b.addEventListener('click',function(){
       if(!state.voice){ say(REFUSE_VOICE_FIRST); return; }
       if(!state.audience){ say(REFUSE_AUDIENCE_NEXT); return; }
-      state.influence=true; b.disabled=true;
-      say('Influence agreed — one real thing changes next.'); paint(); });
+      state.influence=true; state.move=b.getAttribute('data-next-move')||'';
+      for(var j=0;j<moves.length;j++) moves[j].disabled=true;
+      say('Influence agreed — '+(b.textContent||'').trim()+': one real thing changes next.'); paint(); }); })(moves[k]); }
     paint();
+  }
+  /* P1-3: the disclosure opens on a real tap of its summary OR when the stage's own
+     task is used (a control, field or chip of the stage outside the disclosure). */
+  function openOnTaskUse(d){
+    var stage=d.parentElement;
+    while(stage && !(stage.classList && stage.classList.contains('slide'))) stage=stage.parentElement;
+    if(!stage) return;
+    function used(ev){
+      var t=ev.target; if(!t || !t.closest || d.contains(t)) return;
+      if(t.closest('button,input,select,textarea,[role="button"],[data-chip],.chip')) d.open=true;
+    }
+    stage.addEventListener('click',used,true);
+    stage.addEventListener('input',used,true);
+    stage.addEventListener('change',used,true);
   }
   function init(){
     var ps=document.querySelectorAll('.hum-t-loop');
     for(var i=0;i<ps.length;i++) wire(ps[i]);
+    var ds=document.querySelectorAll('details.loop-disclosure');
+    for(var j=0;j<ds.length;j++) openOnTaskUse(ds[j]);
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
   else init();
@@ -376,6 +483,10 @@ LOOP_CSS = """
 .hum-t-loop .ls[data-state="available"]{font-weight:800}
 .hum-t-loop .loop-defs{margin:6px 0 0;padding-left:1.1em}
 .hum-t-loop .loop-result{margin:6px 0 0;min-height:1.2em}
+.hum-t-loop .branch{display:flex;flex-wrap:wrap;gap:4px}
+.loop-disclosure{margin:10px 0}
+.loop-disclosure>summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:700}
+@media print{.loop-disclosure{display:none}}
 </style>
 """
 
@@ -407,12 +518,13 @@ def adapt(html: str, pathway: str, is_re: bool):
         raise AlreadyAdapted('deck already carries %s panels — refusing to transplant twice' % MARK)
     html, narrowed = neutralise_ribbon_hiding(html)
     doc = parse(html)
+    cfg = deck_config(html)
     fam = family(doc)
     st = stages(doc)
     sentences = lundy_sentences(doc)
     definitions = quarantined_definitions(doc) if fam == 'quarantined' else []
     eligible = [s for s in st if stage_name(s) not in MODELLING_STAGES
-                and stage_name(s) != 'lundy_stage']
+                and stage_name(s) not in ('lundy_stage', 'title')]   # P1-1
     titles = [stage_heading(s) or (s.attrs.get('data-title') or '') for s in st]
     edits = []
     panels = 0
@@ -428,7 +540,7 @@ def adapt(html: str, pathway: str, is_re: bool):
             nxt = titles[-1] if titles else (stage_heading(s) or '')
         # the removed stage's own words are carried ONCE, on the first panel
         panel = build_panel(s, i, nxt, pathway, is_re, sentences,
-                            definitions if panels == 0 else [])
+                            definitions if panels == 0 else [], cfg)
         ta = ta_brief(stage_name(s) in ('exit', 'complete'))
         close = html.rfind('</', s.start, s.end)
         edits.append((close, close, panel + ta))

@@ -23,7 +23,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from deck_dom import parse, stages, stage_name, is_ribbon          # noqa: E402
 from loop_adapter import (MODELLING_STAGES, MARK, pupil_text,      # noqa: E402
-                          stage_task, POLICY_CODES, POLICY_SPACE, POLICY_EARWIG)
+                          stage_task, POLICY_CODES, POLICY_SPACE, POLICY_EARWIG, deck_config,
+                          influence_options, INFLUENCE_OUTCOMES)
 
 PASS, FAIL, NC = 'PASS', 'FAIL', 'NOT-CHECKED'
 
@@ -31,6 +32,15 @@ PASS, FAIL, NC = 'PASS', 'FAIL', 'NOT-CHECKED'
 ASK_BELIEF = re.compile(r'(?<![a-z])(?:write|say|tell|share|state)\b[^.]{0,40}\byour own belief'
                         r'|what do you believe\?', re.I)
 NEGATION = re.compile(r'\b(never|not|nobody|no one|no pupil|no learner|without)\b', re.I)
+
+
+def pathway_of(panel):
+    from loop_adapter import POLICY_MODALITIES
+    modes = ' '.join(n.inner_text() for n in panel.find(lambda n: 'loop-modes' in n.classes()))
+    for pw, text in POLICY_MODALITIES.items():
+        if text[:24] in modes:
+            return pw
+    return 'GROW'
 
 
 def panels(doc):
@@ -42,6 +52,15 @@ def panel_parts(p):
             for n in p.find(lambda n: n.attrs.get('data-loop-part'))}
 
 
+
+def task_core(task: str, n: int = 24) -> str:
+    """The first n characters of a stage's task with its trailing punctuation removed:
+    the string rows 16 and 17 look for inside the panel's own text. A short task that
+    ends in a full stop ("Pinpoint the place.") is quoted without it by the adapter,
+    so the core is cut AFTER the strip, never before (batch 4 rebuild, 2026-09-21)."""
+    return re.sub(r'[.!?\u2026\s]+$', '', task or '')[:n]
+
+
 def verify(after_html: str, before_html: str, strand: str, science_panel_texts):
     doc = parse(after_html)
     st = stages(doc)
@@ -50,13 +69,15 @@ def verify(after_html: str, before_html: str, strand: str, science_panel_texts):
     def row(num, name, status, detail=''):
         rows.append({'row': num, 'name': name, 'status': status, 'detail': detail})
 
-    eligible = [s for s in st if stage_name(s) not in MODELLING_STAGES]
+    eligible = [s for s in st if stage_name(s) not in MODELLING_STAGES
+                and stage_name(s) != 'title']                       # P1-1
     modelling = [s for s in st if stage_name(s) in MODELLING_STAGES]
+    title_stages = [s for s in st if stage_name(s) == 'title']
 
     # 1 — every eligible stage carries exactly one panel
     bad = [(stage_name(s), len(s.find(is_ribbon))) for s in eligible
            if len(s.find(is_ribbon)) != 1]
-    row(1, 'one panel per non-modelling stage', PASS if not bad else FAIL, str(bad))
+    row(1, 'one panel per non-modelling, non-title stage', PASS if not bad else FAIL, str(bad))
 
     # 2 — modelling stages carry none (R1: the 98 measure)
     bad = [stage_name(s) for s in modelling if s.find(is_ribbon)]
@@ -72,13 +93,17 @@ def verify(after_html: str, before_html: str, strand: str, science_panel_texts):
            if len(p.find(lambda n: 'data-lundy-step' in n.attrs and 'data-state' in n.attrs)) != 4]
     row(4, 'every panel has four stateful steps', PASS if not bad else FAIL, str(bad))
 
-    # 5 — every panel carries all three parts, non-empty
+    # 5 — every panel carries all three parts, and EVERY part element is non-empty
+    # (several influence lines under P1-2: a blank one among them is a blank one)
     bad = []
     for p in panels(doc):
         parts = panel_parts(p)
         for k in ('response', 'audience', 'influence'):
             if not (parts.get(k) or '').strip():
                 bad.append((p.attrs.get('data-loop-stage'), k))
+        for n in p.find(lambda n: n.attrs.get('data-loop-part')):
+            if not n.inner_text().strip():
+                bad.append((p.attrs.get('data-loop-stage'), n.attrs.get('data-loop-part') + ' (blank element)'))
     row(5, 'every panel carries response + audience + influence', PASS if not bad else FAIL, str(bad))
 
     # 6 — every panel carries the three controls the script drives
@@ -163,11 +188,75 @@ def verify(after_html: str, before_html: str, strand: str, science_panel_texts):
         PASS if not (unnamed or outside) else FAIL,
         'unlabelled=%s outside=%s' % (unnamed[:3], outside[:3]))
 
-    # 45 — THE LOOP ROW (chassis numbering, by ruling)
+    # 14 — P1-1: the Title stage carries no panel (it is metadata, not a response point)
+    bad = [stage_name(s) for s in title_stages if s.find(is_ribbon)]
+    row(14, 'P1-1: the Title stage carries no panel', PASS if not bad else FAIL, str(bad))
+
+    # 15 — P1-3: every panel sits inside a CLOSED "Feedback loop" disclosure of its own
+    bad = []
+    for p in panels(doc):
+        d = next((a for a in p.ancestors() if a.tag == 'details'), None)
+        if d is None:
+            bad.append((p.attrs.get('data-loop-stage'), 'no disclosure')); continue
+        if 'open' in d.attrs:
+            bad.append((p.attrs.get('data-loop-stage'), 'open by default')); continue
+        sm = d.find(lambda n: n.tag == 'summary')
+        if not sm or sm[0].inner_text().strip() != 'Feedback loop':
+            bad.append((p.attrs.get('data-loop-stage'), 'summary != Feedback loop'))
+    if '@media print{.loop-disclosure{display:none}}' not in after_html:
+        bad.append(('deck', 'print does not exclude the disclosure'))
+    if 'openOnTaskUse' not in after_html:
+        bad.append(('deck', 'no task-use opener in the loop script'))
+    row(15, 'P1-3: every panel behind a collapsed "Feedback loop" disclosure; opens on tap or task use; print excludes it',
+        PASS if not bad else FAIL, str(bad))
+
+    # 16 — P1-2 (RULED 2026-09-21): the four response outcomes, one influence line each,
+    # each naming its outcome and its canonical move and carrying THIS stage's task (the
+    # core row 8 proves), each with its own labelled control; no two lines identical
+    bad = []
+    want = [k for k, _, _ in INFLUENCE_OUTCOMES]
+    for s in eligible:
+        core = task_core(stage_task(s))
+        for p in s.find(is_ribbon):
+            lines = [n for n in p.find(lambda n: n.attrs.get('data-loop-part') == 'influence')]
+            texts = [re.sub(r'\s+', ' ', n.inner_text()).strip() for n in lines]
+            keys = [n.attrs.get('data-loop-option', '') for n in lines]
+            ctl = [n for n in p.find(lambda n: n.attrs.get('data-action') == 'lundy-influence')]
+            ctls = [n.attrs.get('data-next-move', '') for n in ctl]
+            ctl_labels = [re.sub(r'\s+', ' ', n.inner_text()).strip() for n in ctl]
+            if keys != want:
+                bad.append((stage_name(s), 'lines %s != the four outcomes %s' % (keys, want))); continue
+            if len(set(texts)) != len(texts):
+                bad.append((stage_name(s), 'influence lines not distinct')); continue
+            if ctls != want or ctl_labels != [lab for _, lab, _ in INFLUENCE_OUTCOMES]:
+                bad.append((stage_name(s), 'controls %s != outcomes %s' % (ctls, want))); continue
+            for (k, label, move), t in zip(INFLUENCE_OUTCOMES, texts):
+                if not t.startswith(label + ' \u2192 ' + move):
+                    bad.append((stage_name(s), 'a line does not name its outcome and move: %r' % t[:50])); break
+                if k != 'explained' and core and core not in t:
+                    bad.append((stage_name(s), 'a line does not carry this stage\'s task: %r' % t[:50])); break
+    row(16, 'P1-2 (ruled): four outcome lines per panel, each naming its move for this stage\'s task, each with its own control',
+        PASS if not bad else FAIL, str(bad))
+
+    # 17 — P1-4: VOICE names the stage's task, on the step and on its control
+    bad = []
+    for s in eligible:
+        core = task_core(stage_task(s))
+        for p in s.find(is_ribbon):
+            step = p.find(lambda n: n.attrs.get('data-lundy-step') == 'voice')
+            ctl = p.find(lambda n: n.attrs.get('data-action') == 'lundy-voice')
+            st_ok = bool(step) and core and core in step[0].inner_text()
+            ct_ok = bool(ctl) and core and core in ctl[0].inner_text()
+            if not (st_ok and ct_ok):
+                bad.append((stage_name(s), 'step=%s control=%s' % (st_ok, ct_ok)))
+    row(17, 'P1-4: VOICE names the stage\'s task on the step and its control',
+        PASS if not bad else FAIL, str(bad))
+
+    # 45 — THE LOOP ROW (chassis numbering, by ruling); the P1 rows join the composite
     ok45 = all(r['status'] == PASS for r in rows
-               if r['row'] in (1, 2, 4, 5, 6, 7, 45.1, 45.2))
+               if r['row'] in (1, 2, 4, 5, 6, 7, 14, 15, 16, 17, 45.1, 45.2))
     row(45, 'every non-I-Do stage carries one panel with all four parts',
-        PASS if ok45 else FAIL, 'composite of rows 1,2,4,5,6,7,45.1,45.2')
+        PASS if ok45 else FAIL, 'composite of rows 1,2,4,5,6,7,14,15,16,17,45.1,45.2')
 
     # 46 — THE RE ROW (negation-aware, per correction #13)
     asks = []
@@ -271,7 +360,7 @@ def self_test(root: Path):
     checks.append(('row 1 fails when a panel is removed', status(dropped, 1) == FAIL))
     checks.append(('row 45 fails with it too', status(dropped, 45) == FAIL))
     # plant: blank an influence line
-    hurt = re.sub(r'(data-loop-part="influence">)[^<]*', r'\1', after, count=1)
+    hurt = re.sub(r'(data-loop-part="influence"[^>]*>)[^<]*', r'\1', after, count=1)
     checks.append(('row 5 fails when an influence line is blanked', status(hurt, 5) == FAIL))
     checks.append(('row 45 fails with it', status(hurt, 45) == FAIL))
     # plant: remove the order-enforcing script
@@ -288,6 +377,51 @@ def self_test(root: Path):
     hurt = after.replace('data-loop-part="response">Say or show what the source says here:',
                          'data-loop-part="response">Write your own belief about this:', 1)
     checks.append(('row 46 fails when a panel asks for a belief', status(hurt, 46) == FAIL))
+    # P1 red proofs
+    hurt = after.replace('<details class="loop-disclosure" data-hum-t-disclosure="1">',
+                         '<details class="loop-disclosure" data-hum-t-disclosure="1" open>', 1)
+    checks.append(('row 15 fails when a disclosure is open by default', status(hurt, 15) == FAIL))
+    hurt = after.replace('<summary>Feedback loop</summary>', '<summary>Loop</summary>', 1)
+    checks.append(('row 15 fails when the summary is not "Feedback loop"', status(hurt, 15) == FAIL))
+    hurt = after.replace('<details class="loop-disclosure" data-hum-t-disclosure="1"><summary>Feedback loop</summary>', '', 1)
+    hurt = hurt.replace('</div></details>', '</div>', 1)
+    checks.append(('row 15 fails when a panel has no disclosure', status(hurt, 15) == FAIL))
+    hurt = re.sub(r'(data-lundy-step="voice" data-state="waiting">)VOICE · [^<]*', r'\1VOICE', after, count=1)
+    checks.append(('row 17 fails when the VOICE step drops the task', status(hurt, 17) == FAIL))
+    hurt = re.sub(r'(data-action="lundy-voice">)I have answered: [^<]*', r'\1I have answered', after, count=1)
+    checks.append(('row 17 fails when the VOICE control drops the task', status(hurt, 17) == FAIL))
+    from loop_adapter import voice_label
+    from loop_adapter import influence_options
+    short = 'Pinpoint the place.'
+    checks.append(('row 16 core matches the adapter\'s quoting of a short task ending in a full stop',
+                   all(task_core(short) in line for k, _, line in influence_options(short, 'Next') if k != 'explained')))
+    long_word = 'Inherited → Complete a belief-and-belonging task and map-skills check'
+    checks.append(('VOICE label keeps the 24-character core when a long word straddles the cut',
+                   long_word[:24] in voice_label(long_word) and len(voice_label(long_word)) <= 41))
+    checks.append(('VOICE label still cuts at a word boundary when one falls after the core',
+                   voice_label('Sort the four sources into fact, opinion and evidence cards') ==
+                   'Sort the four sources into fact,…'))
+    m2 = re.search(r'<p class="loop-line loop-influence" data-loop-part="influence"[^>]*>[^<]*</p>', after)
+    hurt = after[:m2.start()] + m2.group(0) + m2.group(0) + after[m2.end():]
+    checks.append(('row 16 fails when an influence line is duplicated', status(hurt, 16) == FAIL))
+    hurt = re.sub(r'<button type="button" data-next-move="with-support" data-action="lundy-influence">[^<]*</button>', '', after, count=1)
+    checks.append(('row 16 fails when an outcome loses its control', status(hurt, 16) == FAIL))
+    hurt = after.replace('data-loop-option="with-support">Did it with support → same task, new example',
+                         'data-loop-option="with-support">Did it independently → same task, new example', 1)
+    checks.append(('row 16 fails when a line does not name its outcome', status(hurt, 16) == FAIL))
+    hurt = re.sub(r'(data-loop-option="needs-help">Not yet / needs help → reduce the prompt: )[^<]*', r'\1wait.', after, count=1)
+    checks.append(('row 16 fails when a line drops this stage\'s task', status(hurt, 16) == FAIL))
+    hurt = after.replace('@media print{.loop-disclosure{display:none}}', '', 1)
+    checks.append(('row 15 fails when print no longer excludes the disclosure', status(hurt, 15) == FAIL))
+    hurt = after.replace('openOnTaskUse', 'noTaskOpen')
+    checks.append(('row 15 fails when the task-use opener is removed', status(hurt, 15) == FAIL))
+    tdoc = parse(after)
+    tstage = next((x for x in stages(tdoc) if stage_name(x) == 'title'), None)
+    if tstage is not None:
+        panel_html = re.search(r'<details class="loop-disclosure".*?</details>', after, re.S).group(0)
+        close = after.rfind('</', tstage.start, tstage.end)
+        hurt = after[:close] + panel_html + after[close:]
+        checks.append(('row 14 fails when the Title stage carries a panel', status(hurt, 14) == FAIL))
     # plant: the science exemplar's own panel text
     if sci:
         one = sorted(sci)[0]
