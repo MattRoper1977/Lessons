@@ -1404,6 +1404,11 @@ REVIEWED_PATHS = (
     # judged by exact bytes. Nothing is loosened.
     "_passhumd5/CHECKS.md",
     "_passhumd5/build_text_index.py",
+    # G-vocab, ADDENDUM 3 v3 (2026-09-21): cross-surface vocabulary parity, term SET and
+    # definition, across the screen organiser, the print organiser and the Knowledge
+    # Organiser. Arrives as an added file; pinned rather than taking the boundary's free
+    # pass, as every added check has been since L47.
+    "_passhumd5/scan_gvocab.py",
     # P0 (ruling 4, 2026-09-22): the cell map, the retire list, the per-deck source table and the
     # instrument that derives all three. All four ARRIVE as additions, and the boundary judges only
     # MODIFIED files -- measured on the P0 branch before this pin: [PASS] cross-estate static

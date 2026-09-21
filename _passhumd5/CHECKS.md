@@ -378,3 +378,316 @@ The BUILD lessons cite `#sow`, `#plans` and `#townside`. So **`#plans` and `#tow
 the 11 links — would land dead**, and the file is not byte-identical to any `_records` copy.
 That is the whole of the hold: ids that match the lessons' own anchors, one file at the pack
 root, identical to the `_records` copy.
+
+## ADDENDUM 3 v2 — the three W01-06_Final packs, every gate re-run, 2026-09-21
+
+ADDENDUM 3 was re-issued with three new zips,
+`HUM_Summer_1_{BUILD,GROW,LAUNCH}_W01-06_Final.zip`, and it withdrew what the A3.0–A3.3
+results above were measured on. **Those results are therefore VOID as evidence for what
+lands.** Everything below is re-derived on the new artefacts. The withdrawn extractions
+were moved out of the working area before a single line of this was measured, so that no
+gate here could read a withdrawn byte.
+
+### A3.0 v2 — inputs verified by CONTENT
+
+| pack | SHA256SUMS | files | lessons | `PACK-1R` section in the changelog |
+|---|---|---|---|---|
+| BUILD  | 106/106 verified, 0 failed, 0 missing | 107 | 6 | yes |
+| GROW   |  89/89  verified, 0 failed, 0 missing |  90 | 6 | no |
+| LAUNCH | 101/101 verified, 0 failed, 0 missing | 102 | 6 | yes |
+
+The withdrawal clause requires the `PACK-1R` section only of a **BUILD** W01-06 Final, and
+BUILD has one. GROW's absence is not a withdrawal trigger. File counts differ from the
+withdrawn generation (93 / 88 / 90), which is one more way of showing these are not those.
+
+### G-A v2 — and CORRECTION #30, against my own A3.3 line
+
+9 slides, `data-timer` summing 40, and the pathway in the title: **18/18**.
+
+The `<h1>` leg does not read as A3.3 recorded it. Counted with the parser:
+
+```
+deck carries exactly one <h1>   : 18/18
+document carries exactly one    : 13/18
+```
+
+`BUILD_SU1_W02..W06` carry **four** `<h1>` each: one in `slide-1`, two inside `v4-modal`
+dialogs (the organiser and the Teacher card) and one in the print-only organiser section.
+`BUILD_SU1_W01` and all twelve GROW and LAUNCH lessons carry one.
+
+**A3.3 states "exactly one `<h1>` per lesson … PASS 18/18". That was measured over the
+DECK and written as though it were over the document.** The two are the same number on
+thirteen lessons and not on five. The withdrawn generation has the identical shape at
+identical byte offsets, so this is **not** a regression in the new packs — it is a defect
+in my own reporting, and the line above is the correction. Only one of the four is visible
+in any one medium, so no pupil sees two; but five lessons differ from the convention their
+own twelve stablemates keep, and that is GPT's to reconcile, not mine to edit.
+
+### G-B v2 — PASS, 36 rows of 36 clean
+
+Real Chromium, each pack served over http from its own root, every stage activated in turn.
+BUILD 12/12, GROW 12/12, LAUNCH 12/12 at 390 and 1280: 0 page errors, 0 console errors,
+0 off-origin requests, no horizontal overflow at either width.
+
+### G-C v2 — PASS 18/18, 0 flagged
+
+Pupil-visible text, the union of `document.body.innerText` over every activated stage.
+
+### G-D v2 — PASS, 0 pupil-visible
+
+Rendered leg 18/18 clean. Whole-pack leg, text **and** binary, every file opened and read
+(0 library failures, so nothing is NOT RUN):
+
+```
+BUILD    107 files   "Thunberg" occurrences 0
+GROW      90 files   "Thunberg" occurrences 0
+LAUNCH   102 files   "Thunberg" occurrences 62, in 23 files
+```
+
+Every one of the 62 is a staff or config sentence of the three kinds A3.3 names — "the
+teacher supplies the school's copy … no extract or quotation is included", "This pack
+includes no quotation or extract", and the scheme's own resources line. **0 book text, 0
+pupil-visible.**
+
+### G-E — still NOT RUN
+
+`resources.json` rows, the chip-count filter chain and hub reachability are landing-time
+gates and the 18 have not landed.
+
+### Ruling 3 v2 — `Sources_and_checks.html`
+
+Every link resolved to a real file and, where it carries a fragment, to a real id in that
+file — in both directions:
+
+```
+lesson -> Sources links   BUILD  8    GROW 15    LAUNCH 27    broken 0
+Sources -> * links        BUILD  0    GROW 12    LAUNCH 18    broken 0
+```
+
+The `#authored` fragment I first counted as unmatched is an id in the root record itself
+(`w01..w06, authored, sow, book`); it resolves, and the count above is the corrected one.
+
+| pack | root copy | per-week copies | `_records` copy | byte-identical to root |
+|---|---|---|---|---|
+| BUILD  | yes, 2 232 B  | none      | five, differently named | **all five, yes** |
+| GROW   | yes, 7 452 B  | W03–W06   | **no `_records` directory at all** | cannot be checked |
+| LAUNCH | yes, 17 691 B | W01–W06   | one | **yes** |
+
+Ruling 3's "identical to the `_records` copy" is satisfied for BUILD and LAUNCH. **GROW
+ships no `_records` directory**, so for GROW the clause has nothing to compare against.
+That is the one outstanding item of ruling 3 and it is the author's to supply.
+
+### Ruling 2 v2 — THE TWO LAUNCH DEFECTS ARE STILL THERE
+
+The re-delivery did **not** repair them. Byte for byte the same two cells:
+
+| lesson | word | on screen | print + Knowledge_Organiser |
+|---|---|---|---|
+| `LAUNCH_SU1_W01` | provenance | "1980 is 338.76 ppm and 2025 is 427.35 ppm." | "Who made a source, when and why" |
+| `LAUNCH_SU1_W02` | mitigation | "Reducing a source of greenhouse-gas emissions." | "Reducing greenhouse-gas emissions or increasing their removal" |
+
+16 of 18 clean. **The A3.5 ruling-2 hold stands unchanged: `LAUNCH_SU1_W01` and
+`LAUNCH_SU1_W02` do not land.** Nothing was edited.
+
+### Ruling 4 v2 — NOAA 2025 still UNVERIFIED-BY-CLAUDE
+
+A third attempt at `https://gml.noaa.gov/webdata/ccgg/trends/co2/co2_annmean_mlo.csv` from
+this session: `curl: (56) CONNECT tunnel failed, response 403`. 427.35 ppm is unread by me,
+exactly as A3.2 R2 anticipates, and nothing was edited.
+
+What *can* be measured here: the lesson's printed table equals the shipped CSV's data rows
+exactly —
+
+```
+Year CO2 ppm | 1980 338.76 | 1990 354.45 | 2000 369.71 | 2010 390.10 | 2020 414.21 | 2025 427.35
+```
+
+— and the XLSX carries the same six values, with one presentational loss: it stores
+`390.10` as the number `390.1`, so the spreadsheet shows one fewer significant figure than
+the lesson and the CSV. Report-only.
+
+### Report-only extras
+
+* **LAUNCH claim table** — 25 claim rows, **all 25** with an access date; 22 with an
+  external URL and 3 citing the pack's own authored-practice anchor, which resolves. The
+  three are the invented practice numbers and say so ("Invented teaching number, not a
+  school observation"). URL reachability is UNVERIFIED-BY-CLAUDE: no egress.
+* **Mark-scheme language** — pupil-visible, all 18: **0**, against `mark scheme`, `AO1–4`,
+  `level 1–4`, `band 1–4`, `N marks`, `grade`, `assessment objective`.
+* **GROW W05 Middlesbrough / Helmsley** — pupil-visible text names the two places as the
+  comparison subject and asserts nothing about them (4 label strings, no claim sentence).
+  The factual claims sit in the sources record, each with a named source, a URL and an
+  explicit limitation ("This identifies a built feature, not current bridge access";
+  "This does not establish the absence of other transport").
+* **GROW W03 dataset** — lesson table == `Data.csv` == `Data.xlsx`, exactly, all three.
+* **BUILD W05 world map at 390 px** — 22 labels on each of four slides, smallest rendered
+  font **17 CSS px**, 0 labels clipped to zero width, 0 overlapping label pairs.
+
+### One cross-finding this re-run turned up, which is not about the packs
+
+Measured on 238 decks — the 220 landed, plus these three new packs — under the oracle
+**as it stands on Lessons main (`17b3d554`)** and under the oracle on the unmerged #634:
+
+```
+                                        main 17b3d554     PR #634
+data-type="starter" slides named 'title'        132            0
+title stages per deck                 {1:107, 2:131}      {1:238}
+zero-timer slides not title/complete              1            0
+```
+
+The two defects the first adversarial round found are **live on main right now**, because
+the fix for them is #634 and #634 is not merged. Nothing already served is harmed —
+affected decks 132, transplanted decks 62, **overlap 0** — but the affected 132 include
+**all twelve GROW and LAUNCH Summer 1 lessons in these new packs**, which are precisely the
+ones ruling 2 sends to intake. A Summer 1 transplant cut from main today would silently
+withhold the Lundy panel from the starter stage of every one of the twelve. **#634 merges
+before any Summer 1 or PASS B batch is cut.**
+
+### Part A v2 — the index and the static E-checks, re-run on the new packs
+
+**A0 / TEXT_INDEX — 19,649 rows, 0 NOT_RUN.** Every surface opened and read; the DOCX, PPTX,
+PDF and XLSX libraries all import in this container, so no leg is silently absent.
+
+```
+rows 19,649   NOT_RUN 0   lesson ids 18 (+3 pack roots)   config rows 3,125
+BUILD 6,299   GROW 6,379   LAUNCH 6,971
+surfaces: config, Pupil_Resources.html/.pdf, Editable_Pack.docx, Teacher_Notes.docx/.pdf,
+          Editable_Slides.pptx (+:notes), Knowledge_Organiser.html/.docx/.pdf,
+          Sources_and_checks.html, START_HERE.html, Data.csv, Data.xlsx, Model_Transcript.txt
+```
+
+Every one of the 18 carries config rows. The withdrawn generation gave 19,130; this is 19,649.
+
+**E13 residue — PASS.** 19,649 text units across 16 surfaces: **0** emails, phone numbers, file
+paths, artefacts, review-copy markers, TODO, lorem, NaN, undefined or template braces. 33 name
+candidates, of the same kinds as the HUM-D5 pass — table-header pairs read as names
+(`Europe Southern`, `Continent Ocean`, `Cause Impact`) and historical figures.
+
+**E2 cross-surface parity — 392 field rows × 7 surfaces, 34 coverage flags — and a gap in E2
+itself.** The flags are the kinds the HUM-D5 E2 already records: 9 where the field is simply
+absent on that surface (`Editable_Slides.pptx:notes` for 7 of them), and the rest case,
+punctuation or truncation differences.
+
+**None of the 34 names `provenance` or `mitigation`.** E2 compares the **config** against each
+**surface**; the two held LAUNCH defects are a disagreement *between two renderings of the same
+lesson* — the on-screen organiser against the print organiser and the Knowledge Organiser — and
+that axis is not one E2 tests. So **E2 as built cannot see either defect**, and its PASS on this
+class would have been a clean report over a comparison that was never made. The vocabulary-parity
+leg is what finds them, and that is why it exists. Recorded here rather than left implied.
+
+**Still owed on Part A:** E1 and E3–E18 on these 18. E4 (480 PDFs), E6 (axe, 18 × 9 × 2), E8
+(video) and E17 are the heavy legs and have not been re-run on the new artefacts; E10/E11 remain
+NOT RUN for want of egress, exactly as for the 120.
+
+## ADDENDUM 3 v3 — INTAKE on the PACK-1R_v3 packs, 2026-09-21
+
+Three v3 zips arrived; the GROW v3 zip was **not in the container** and is requested. Every
+claim in the addendum's cover text was re-measured here on the delivered bytes before it was
+believed; nothing below is copied from the cover.
+
+### Hash on arrival, and A3.0 v3 by content
+
+```
+Humanities_Summer_1_LAUNCH_Weeks_01-06_PACK-1R_v3.zip   251f190b3584b877ba77cebfb6ccb63a3ce8307a8ee41031873982baa119f505   4,543,989 B
+Humanities_Summer_1_BUILD_Weeks_01-03_PACK-1R_v3.zip    1c4edef4c911980e607f957b0569da9c83ab67249aa6a3e066833f9b6966adb7   4,445,375 B
+Humanities_Summer_1_BUILD_Weeks_04-06_PACK-1R_v3.zip    b902013aec3313649faeb3ca123740d961f904d846f03247fa0ef2e265d6173d   3,836,139 B
+```
+
+| pack | SHA256SUMS by content | files | lessons |
+|---|---|---|---|
+| LAUNCH W01–06 | 105/105, 0 failed, 0 missing | 106 | 6 |
+| BUILD W01–03  |  62/62,  0 failed, 0 missing |  63 | 3 |
+| BUILD W04–06  |  60/60,  0 failed, 0 missing |  61 | 3 |
+
+227/227 delivered here; the addendum expects 330 across four packs, so GROW v3 accounts for
+the remainder. **One id, one file: 12/12.** The v2 extractions stay quarantined; no lesson id
+has two live generations in front of an instrument.
+
+### CHANGELOG byte-offset claims — checked, not believed
+
+Each changelog names a Before and After SHA-256 per lesson, zero-based byte ranges with old
+and new hex, and says no byte outside those ranges changes. Against the v2 bytes held here:
+
+```
+After-SHA matches the delivered v3 file     : 12 of 12
+Before-SHA matches the v2 copy held here     : 12 of 12
+applying the listed hex patches to v2, highest offset first, reproduces v3 byte for byte : 12 of 12
+first differing byte lies inside a listed range                                          : 12 of 12
+teaching files (DOCX/PPTX/PDF/MP4/CSV/XLSX/SVG/PNG) byte-identical to v2 : 74 + 32 + 37, 0 differ
+```
+
+BUILD W01 is declared UNCHANGED and is byte-identical. The LAUNCH edits are one or two
+organiser cells per lesson; the BUILD W02–W06 edits are six single-byte `1`→`2` demotions
+(three `<h1>`→`<h2>` pairs).
+
+### Ruling 2 — the two LAUNCH holds are CLEARED on the bytes
+
+| lesson | word | screen | print | Knowledge Organiser |
+|---|---|---|---|---|
+| `LAUNCH_SU1_W01` | provenance | Who made a source, when and why | same | same |
+| `LAUNCH_SU1_W02` | mitigation | Reducing greenhouse-gas emissions or increasing their removal | same | same |
+
+One definition on all three surfaces, the KO's. 12/12 clean on the by-word check.
+
+### Correction #30 restated — `<h1>` on the STATIC document, script strings and dialog templates excluded
+
+```
+lesson            all <h1>   in a script string   in a dialog / v4-modal   print-only   STATIC
+every one of 12          2                    1                        0            0        1
+```
+
+**12/12.** The second `<h1>` in every v3 lesson sits inside a script string (the
+organiser-dialog template). That was **not** so in v2: there the extra `<h1>`s in BUILD W02–W06
+were real elements in `v4-modal` divs and the print organiser, at `inside=None` under the same
+measurement — v3's six demotions are what moved them. The exemplar-parity claim holds for v3.
+
+### Ruling 3 v3 — `Sources_and_checks.html`
+
+Every internal link out of every copy, and every lesson → Sources link, resolved to a real file
+and a real id: LAUNCH 45, BUILD W01–03 5, BUILD W04–06 3 — **0 broken**. `_records` copies
+byte-identical to the root copy in all three packs (LAUNCH 1, BUILD W01–03 4, BUILD W04–06 1).
+
+### G-vocab — a new check, red-proved on the bytes the ruling names
+
+`_passhumd5/scan_gvocab.py`. A lesson's vocabulary is on three surfaces a pupil can meet — the
+on-screen organiser, the print organiser, the Knowledge Organiser — and they must agree on
+**(1) the set of terms** and **(2) the definition of every shared term**. Clause (1) exists
+because of what the v1/v2 LAUNCH packs carried: a first screen row (`sustainability`, with a
+definition belonging to no term) that print and KO did not carry at all. A by-word comparison
+had nothing to compare it with and passed it — the vocabulary-parity leg above reported
+16/18 clean on v2 for exactly that reason. Set equality is what sees a row present on one
+surface only. Where a KO carries its words as `word: meaning` prose under "Words to use" rather
+than a table (BUILD W01), the check reads that form from the file's own structure.
+
+```
+self-test (8 controls, exit 0):
+  v1 withdrawn LAUNCH   6/6 flag   W01,W02 by definition · W03–W06 by term-set (screen-only row)
+  v2 LAUNCH             6/6 flag   same six, same kinds
+  v3 W04 clean before seeding; seeded control flags exactly one definition defect, screen only
+v3, 12 lessons  : 12/12 clean, exit 0
+v2, 18 lessons  :  6/18 flagged — exactly the six LAUNCH lessons (record)
+```
+
+The instrument arrives as an added file and is admitted and pinned rather than taking the
+boundary's free pass.
+
+### G-B / G-C / G-D / E6 on v3
+
+* **G-B — PASS 24/24 rows.** Real Chromium, each pack served over http from its own root,
+  every stage activated, 390 and 1280: 0 page errors, 0 console errors, 0 off-origin, no
+  horizontal overflow. GPT's own browser leg is recorded NOT RUN; this is the line that runs it.
+* **G-C — PASS 12/12.** **G-D — PASS**: rendered 12/12; whole-pack incl. binary, 0 library
+  failures; LAUNCH 61 occurrences in 22 files, all staff or config sentences of the three
+  named kinds; BUILD 0; **0 pupil-visible.**
+* **E6 — axe 4.10.2, 12/12 run, 216 stage × viewport, 0 NOT RUN.** `color-contrast` serious on
+  216/216 (the `#auto-timer-display` / `.at-btn` chrome at 3.17:1 and 3.68:1, and the ruled
+  REPORT-ONLY model-node ribbon at 1.19:1); **0 `svg-img-alt`, 0 `nested-interactive`** — the
+  v2 run's 12 and 10 were on GROW only, and GROW v3 is not here. 0 of 12 free of a serious
+  finding, as for the 120.
+
+### Still held / still owed
+
+* **GROW v3** — not in the container; A3.0's 330 and G-vocab / G-B / E6 on GROW await it.
+* **NOAA 2025 (427.35 ppm)** — UNVERIFIED-BY-CLAUDE, pending Matt (ruling 6).
+* **Landing** — only after intake closes on all four packs, by the SX1-style route the
+  addendum names; nothing has landed.
