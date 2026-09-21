@@ -97,9 +97,37 @@ row 14 under the FIXED identity   (slide id)  : FAIL  title stages tested: 1   [
 
 The breach is the same breach in both runs. The shipped identity could not see it.
 
-**The battery is unchanged.** `verify_loop.py --self-test` returns the same 6 PASS and the same
-one SKIP ("the fixture-driven rows: no untransplanted copy of the fixture is available"), exit 0,
-on the patched code and on `git HEAD`. That SKIP is pre-existing and is not cleared by this change.
+**The battery is unchanged — and that is not a control.** `verify_loop.py --self-test` returns the
+same 6 PASS and the same one SKIP ("the fixture-driven rows: no untransplanted copy of the fixture
+is available"), exit 0, on the patched code and on `git HEAD`. A second review round challenged
+that line as evidence, and it is right. Measured by wrapping `verify_loop.stage_name` in a call
+counter and running `self_test(Path('.'))`: those six controls call `stage_name()` **zero times**.
+They are pure `earwig_stages()` arithmetic over name lists the test supplies itself. An unchanged
+battery therefore says nothing whatever about a change to the oracle, and it is struck here as
+evidence for this one. What the measurement found instead is worse than the claim it removes.
+
+**The fixture-driven battery has been dark since #613.** `self_test` takes its fixture from
+`git show origin/main:Humanities_Teesside/GROW_W1-W8_2026-27/GROW_Humanities_W4_Explore_Hanukkah_And_The_Theme_Of_Light.html`
+and skips everything downstream when that copy already carries the panel. #613 (`256e5331`,
+HUM-T batch 2) transplanted that very deck on main. So from the moment #613 merged, 29 of the
+self-test's 35 checks have not run — among them the row 14 red proof, the four row 16 proofs and
+the two row 15 proofs. Supplied with the pre-transplant bytes the battery runs in full:
+
+```
+fixture from origin/main (as shipped)   :  6 checks,   0 stage_name() calls,  29 SKIPPED
+fixture from 256e5331^ (pre-transplant) : 35 checks, 775 stage_name() calls,  35 PASS 0 FAIL
+```
+
+**And un-skipped it still could not have caught this defect.** Run against the *shipped* data-type
+oracle with that same pre-transplant fixture it is 35 PASS, 0 FAIL, with the row 14 red proof
+present and passing. Its one fixture is a nine-stage deck that types its own stages
+`title / arrival / starter / ido / wedo / ido2 / wedo2 / independent / exit` — the single shape on
+which the data-type short-circuit and the name-derived oracle agree stage for stage, all nine
+identical, no slide carrying an `id` at all. A red proof is only as wide as its fixture; this one
+is one deck, and it is the deck the defect does not touch.
+
+Neither the skip nor the single fixture is altered here. `verify_loop.py` is a check, and no check
+is edited without a ruling; both go to Matt as findings.
 
 ## Still open
 
@@ -173,3 +201,51 @@ But each panel records `data-loop-stage-name="wedo"` where the slide's own headi
 so **those 11 decks are not byte-reproducible by their own adapter until they are re-cut**, by one
 attribute value per deck. The new name is the correct one; the old was the defect. Recorded rather
 than preserved.
+
+## A second review round: three more claims, each re-measured before it was believed
+
+The first round is above. A second set of lenses returned three further claims against this fix.
+None was taken on trust; each was measured here.
+
+**"The self-test is not evidence — it never calls `stage_name()` once."** CONFIRMED, and it
+carried a larger finding with it. Struck and recorded under *The controls it passed*, above.
+
+**"90 slides whose own text says 'I Do' leave `modelling` and receive a pupil-response panel."**
+REFUTED as worded, CONFIRMED in its number, against a population I had not measured. Across the
+220 landed and 18 Summer 1 decks, slides whose own words say "I Do" and are *not* in `modelling`:
+**0**. My first answer stopped there and called the claim refuted; that was the wrong predicate on
+the wrong set. The 90 is real and it is elsewhere — see the next section. And no slide receives a
+panel, because none of those decks is transplanted.
+
+**"`data-kind='learn'` maps to a name in neither `MODELLING_STAGES` nor the title set, so 17
+slides become eligible."** CONFIRMED, and it is 90, not 17.
+
+## What the fixed oracle does to the Autumn 1 W3–W7 decks — nothing served, ruling wanted
+
+Measured over the fifteen `*_Humanities_W3..W7.html` decks in
+`Humanities_Teesside/Teaching_Packs/{BUILD,GROW,LAUNCH}/HTML/`, shipped oracle against fixed:
+
+```
+stages whose NAME changes across the two oracles : 105 of 180
+of those, stages whose ELIGIBILITY changes       :  90, every one ido -> eligible
+    ido -> independent  28        ido -> arrival     15
+    ido -> learn        17        ido -> vocabulary  15
+                                  ido -> wedo        15
+```
+
+Those decks stamp `data-type="ido"` on every stage after the title. Under the shipped oracle all
+twelve stages of each were "modelling", `eligible` was **empty**, and the deck could never have
+received a pupil-response panel at all — the same empty-set failure as row 14, in a different row
+and on a different set of decks. The fixed oracle reads each stage from its own heading and
+`data-kind`, which is what ruling 5 is for. This is the change working, not a regression.
+
+**Nothing served or judged changes today.** None of the fifteen carries a panel (`panels=0` on all
+fifteen) and none appears in `HUMANITIES_STRAND.json`, so `verify_loop` does not see them. The
+change lands when the Aut1 W3–W7 PASS B batch is cut.
+
+**Before that batch it needs a ruling.** Two of the new names are new to the estate as
+panel-bearing stages: `learn` (17 slides) and `vocabulary` (15). `loop_adapter.py:179` derives the
+panel's visible label from the stage name, so a pupil would read a panel headed "learn" or
+"vocabulary". Nothing fails closed — the adapter keys only off `MODELLING_STAGES`, `lundy_stage`,
+`title` and `exit`/`complete`, and the task text is derived from the slide's own content, so an
+unfamiliar name needs no table entry. It is a wording decision, and it is not mine to take.

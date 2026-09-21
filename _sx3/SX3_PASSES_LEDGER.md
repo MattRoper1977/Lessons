@@ -1278,9 +1278,47 @@ and not worth contorting the oracle to preserve.
 All controls re-measured after the two fixes: sets on the 62 transplanted decks still 0 of 62
 moved; `unnamed` still 0; empty `title_stages` still 120 -> 0 landed and 18 -> 0 Summer 1; the
 self-test still exit 0 with the same 6 PASS and the same one SKIP; both red proofs still fire.
+**That self-test line is struck as evidence — see L48 addendum 2 below.**
 
 **The lesson, since it is the third time this week.** A control proves exactly what it measures and
 nothing adjacent. Mine compared index sets on the decks that already carry panels — sound for that
 claim, blind to a name change and blind to every deck the transplant has not reached, which is
 where both defects lived. The review was worth running, and the finding belongs in the record
 whether or not it flatters the fix.
+
+**L48 ADDENDUM 2 — a second review round, and correction #29.** Three further claims came back
+against the ruling 5 fix. Each was re-measured here before it was believed; the full working is in
+`tools/hum/STAGE_IDENTITY_RULE.md`.
+
+*Correction #29.* "`verify_loop --self-test` exit 0, same 6 PASS, same one SKIP" was offered above
+and in the commit message of `6b10008a` as a control on this change. It is not one. Wrapping
+`verify_loop.stage_name` in a call counter and running `self_test(Path('.'))` gives **0 calls**:
+the six that run are pure `earwig_stages()` arithmetic over name lists the test supplies itself.
+The line proves the battery did not break; it proves nothing about the oracle, and it is struck.
+
+The measurement found two things worth more than the line it removed. First, the self-test's
+fixture is read from `git show origin/main:<GROW W4 Hanukkah>`, and #613 (`256e5331`) transplanted
+that deck on main — so **29 of its 35 checks have not run since #613 merged**, the row 14, row 15
+and row 16 red proofs among them. Supplied with the pre-transplant bytes it is 35 checks, 775
+`stage_name()` calls, 35 PASS. Second, even un-skipped it could not have caught this defect: run
+against the *shipped* data-type oracle on that same fixture it is also 35 PASS, because its one
+fixture is a nine-stage deck typed `title/arrival/starter/ido/wedo/ido2/wedo2/independent/exit`,
+the single shape on which both oracles agree stage for stage. A red proof is only as wide as its
+fixture. `verify_loop.py` is a check, so neither the skip nor the single fixture is touched here;
+both go to Matt.
+
+*The 90.* A lens claimed "90 slides whose own text says 'I Do' leave `modelling`". I measured the
+220 landed and 18 Summer 1 decks, found 0, and called it refuted. Wrong predicate, wrong set: the
+90 is real and sits on the fifteen untransplanted Autumn 1 W3–W7 decks, which stamp
+`data-type="ido"` on every stage after the title. Under the shipped oracle their `eligible` set was
+**empty** — twelve "modelling" stages per deck and no pupil-response panel possible anywhere in
+them. That is the same empty-set failure as row 14 in a different row, and the fix is the fix, not
+a regression. Nothing served changes: all fifteen are untransplanted and none is in
+`HUMANITIES_STRAND.json`. Two of the new names, `learn` (17 slides) and `vocabulary` (15), would be
+new to the estate as panel-bearing stages and the panel's visible label is derived from the stage
+name, so the wording is put to Matt before that PASS B batch is cut.
+
+**The lesson, restated because the first statement of it was itself too generous.** I wrote that a
+control proves exactly what it measures. The sharper form: a control that never calls the code
+under change measures nothing at all, and an unchanged result is the easiest thing in the world to
+mistake for a passing one.
