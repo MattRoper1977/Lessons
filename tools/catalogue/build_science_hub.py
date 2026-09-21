@@ -249,7 +249,7 @@ def download_link(path: str) -> str:
     the shelf carried before PASS F ("PowerPoint, Word and PDF downloads →"), restored on the HUB-1
     card. A route the record does not bind carries nothing; the text is never composed here."""
     href = DOWNLOADS.get(path)
-    return f'<p><a class="go" href="{E(href, quote=True)}">PowerPoint, Word and PDF downloads →</a></p>' if href else ''
+    return f'<p class="downloads-link"><a href="{E(href, quote=True)}">PowerPoint, Word and PDF downloads →</a></p>' if href else ''
 
 
 S.CARD_DOWNLOAD_HOOK = download_link
@@ -283,7 +283,7 @@ def c7_errors(page: str, rendered_paths: list[str]) -> list[str]:
     errs, carried = [], set()
     for path, body in re.findall(r'<article class="card[^"]*" data-lesson-path="([^"]+)"(.*?)</article>', page, re.S):
         want = DOWNLOADS.get(path)
-        got = re.findall(r'<a class="go" href="([^"]+)">PowerPoint, Word and PDF downloads', body)
+        got = re.findall(r'<p class="downloads-link"><a href="([^"]+)">PowerPoint, Word and PDF downloads', body)
         if got:
             carried.add(path)
         if want and got != [E(want, quote=True)]:
