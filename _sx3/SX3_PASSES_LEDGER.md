@@ -785,11 +785,19 @@ L38  A CARRIER THAT MOVES A PUBLISHED FILE IS NOT A CARRIER  [ORDER HUM-T batch 
      not argued: tools/hum/check_carrier_pure.py takes the education-lessons key set of the
      Site's education-publication-admission.json as the served set, intersects it with the
      branch's changed and committed paths, and refuses a non-empty intersection by name. It
-     refuses rather than passes when the registry is missing, unreadable, names no
-     education-lessons tree, or admits no path. Seven red proofs plus the missing-registry
+     refuses an ADDED file too, because the publication calls an unexpected path UNREVIEWED
+     rather than CHANGED: a new file whose directory is one the published tree draws from is
+     refused. It refuses rather than passes when the registry is missing, unreadable, names
+     no education-lessons tree, or admits no path. Eleven red proofs plus the missing-registry
      refusal; and it reproduces this correction's own failure -- judged against the main
      the carrier left (3887f7ac), it names assets/catalogue/lesson-order.json, exactly what
      run 35544583041 named, and passes on the pure carrier that replaces it.
+     WHAT THE CHECK DOES NOT PROVE, stated in its own docstring: whether the builder would
+     copy some new file into the tree from a directory the tree does not already draw from.
+     Only the build decides that, so the Site window's local build_education.py stays the
+     full proof and this check is the fence that stops the common mistake before a push.
+     Measured on this estate: of tools/, only tools/artsaward/SLOTS.json is published, which
+     is why a tools/hum addition passes and why #608's publication named only the lesson order.
      THE SECOND WINDOW: Site #417 (claude/humt-b1-window-2), one transition pair derived
      from the local build of the two mains, assets/catalogue/lesson-order.json 34abdfee ->
      325b864f; the local build reproduced the CI refusal before the edit and admitted
