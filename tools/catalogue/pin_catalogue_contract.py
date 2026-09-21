@@ -1529,6 +1529,12 @@ REVIEWED_PATHS += (
     'tools/hum/STAGE_IDENTITY_RULE.md',
     'tools/hum/render_proof.cjs',
     'tools/hum/verify_loop.py',
+    # The second self-test fixture, ruled 2026-09-21: a snapshot of a shipped twelve-stage
+    # Autumn 1 deck, taken so the two stage-identity oracles can disagree inside the battery.
+    # It ARRIVES as an added file, which the standalone/offline boundary does not judge, so it
+    # is pinned here for the same reason P0's four files were -- a fixture the tree could edit
+    # silently is not a fixture.
+    'tools/hum/fixtures/aut1_twelve_stage_v1_base.html',
 )
 
 # ORDER HUM-T landing — transplanted decks, admitted per batch
