@@ -148,9 +148,13 @@ def parse(html: str) -> Node:
 # words: "We do . review the evidence" is a We Do, not a Review.
 STAGE_NAMES = [
     ('title',       re.compile(r'\btitle\b|lesson overview|today at a glance|at a glance'
-                               r'|start here|\bopening\b|start the enquiry', re.I)),
+                               r'|start here|\bopening\b', re.I)),
     ('arrival',     re.compile(r'\barrival\b|start with what you know', re.I)),
-    ('starter',     re.compile(r'\bstarter\b', re.I)),
+    # "Start the enquiry" is the STARTER, measured: 132 slides carry it and every one of them sits
+    # at position 2, after the overview (data-timer="0") and the arrival task, with data-timer="3".
+    # It was in the title pattern for one revision of this file and wrongly took 132 teaching
+    # stages out of `eligible`; the adversarial review caught it before it reached a transplant.
+    ('starter',     re.compile(r'\bstarter\b|start the enquiry', re.I)),
     ('vocabulary',  re.compile(r'words that help', re.I)),
     ('ido2',        re.compile(r'i do\s*2', re.I)),
     ('ido',         re.compile(r'\bi do\b|watch a worked example', re.I)),
@@ -181,16 +185,23 @@ def stage_probe(node: Node) -> str:
     return ' '.join(probe.split())
 
 
+COMPLETE_RX = re.compile(r'\bcomplete\b', re.I)
+
+
 def stage_name(node: Node) -> str:
     probe = stage_probe(node)
+    # A stage the deck gives NO teaching time is either the overview or the completion marker, and
+    # nothing else: measured, data-timer="0" appears at position 0 on 128 landed decks and all 18
+    # Summer 1 decks, and elsewhere only on the 8 id="complete-slide" slides. Tested before the
+    # word table so that a topic word in an overview's own heading cannot claim it.
+    if (node.attrs.get('data-timer') or '').strip() == '0':
+        return 'complete' if COMPLETE_RX.search(probe) else 'title'
     for name, rx in STAGE_NAMES:
         if rx.search(probe):
             return name
     kind = (node.attrs.get('data-kind') or '').strip()
     if kind:
         return KIND_STAGE.get(kind, kind)
-    if (node.attrs.get('data-timer') or '').strip() == '0':
-        return 'title'
     return 'unnamed'
 
 
