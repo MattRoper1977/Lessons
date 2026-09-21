@@ -862,3 +862,24 @@ L41  HUM-T BATCH 2 LANDED UNDER THE OVERNIGHT ORDER  [2026-09-21; pre-signed by 
      the local build of the two mains; Domain split publication 35556534987 SUCCESS.
      THE CLOSER: this pure carrier (L38 check PASS); Education Pages publication run reported
      in the readback and entered in the CLOSE record.
+
+L42  HUM-T BATCH 3 LANDED UNDER THE OVERNIGHT ORDER  [2026-09-21; pre-signed by Matt Roper
+     2026-09-21 (PRE-SIGNATURE, ORDER HUM-T batch 3 LAUNCH): 12 rows, TERM+WEEK UNCHANGED
+     12/12, evidence sha == served bytes 12/12, 73 panels, zero exceptions; carried out by
+     Claude without a further STOP].
+     Twelve LAUNCH Humanities decks carry the science exemplar's loop panel in every stage,
+     filled from each stage's own text, nothing hand-authored, in the RULED P1 shape (no Title
+     panel; the four response outcomes as influence lines phrased for the stage's task; a
+     collapsed "Feedback loop" disclosure per stage; VOICE names the task; corrections #14/#15). Evidence re-stamped
+     where a deck limb holds or, under STOP-T3 ruling Q1, where the strand row agrees with the
+     projection; six David cover routes re-stamped under ruling Q2 inside the batch's declared
+     GLV3 replacement transaction (12 members); pins re-cut in both gate copies.
+     LANDED: Lessons #615 -> cd09718b (re-cut from 1766ea05 after the batch 2
+     carrier; the deck digests identical to the pre-signed table and the preview branch); unification observed
+     on the PR head 5c79b949 run 35559315552 (cross-estate / static-contract, the on-content wrapper) SUCCESS. Apps #136 -> dd26d456.
+     RENDERED on the PR head at 390 px: 73/73 panels reached and 73/73 disclosures opened; rows 38-40 73/73/73; 0 refusal
+     faults; 0 page errors.
+     THE WINDOW: Site #420 -> 83ffbe8b35dee53222ff493b77d187e0d22710d4; pairs derived by the window runner from
+     the local build of the two mains; Domain split publication 35560548548 SUCCESS.
+     THE CLOSER: this pure carrier (L38 check PASS); Education Pages publication run reported
+     in the readback and entered in the CLOSE record.
