@@ -27,10 +27,16 @@ WHY EACH CLAUSE IS HERE, not "because the order said so":
                               adult in the room cannot tell which.
   hud-js-present              the estate's route gate requires it; a deck without
                               it is unreachable from the hub.
-  lundy-in-three-places       pupil voice has to survive the shell: its own
-                              slide, a working stage, and the print pack. Two out
-                              of three is a deck where the paper copy has no
-                              voice in it.
+  lundy-in-three-places       pupil voice has to survive the shell, in EITHER of
+                              two shapes (v1.1.0, ruled 2026-09-22). v1: the deck's
+                              own Lundy slide, a working stage, and the print pack.
+                              v2, the ORDER HUM-T transplant: no slide of its own,
+                              because the loop moved into a panel on EVERY non-I-Do
+                              teaching stage -- each panel carrying all four
+                              dimensions as steps, each step carrying the state the
+                              panel enforces, four next moves -- plus the print pack.
+                              Two out of three, in either shape, is a deck where the
+                              paper copy has no voice in it.
   three-tier-print-pack       supported / standard / stretch. A single-tier print
                               pack hands every pupil the same sheet.
   surfaces-in-range           21-25 teaching surfaces (slides + print sections).
@@ -61,7 +67,7 @@ from pathlib import Path
 
 from lxml import html as lh
 
-VERSION = "classic-v2-contract-v1.0.0"
+VERSION = "classic-v2-contract-v1.1.0"
 ROOT = Path(__file__).resolve().parents[3]
 
 _g19_spec = importlib.util.spec_from_file_location("g19_v2", ROOT / "_sownb/vb/tools/g19_v2.py")
@@ -73,6 +79,17 @@ stages_mod = importlib.util.module_from_spec(_ls_spec)
 _ls_spec.loader.exec_module(stages_mod)
 
 SURFACES_MIN, SURFACES_MAX = 21, 25
+LUNDY_DIMENSIONS = ("space", "voice", "audience", "influence")
+# The transplanted panel, as the adapter writes it: <div class="lundy hum-t-loop">
+# wrapping a collapsed disclosure, four data-lundy-step elements and four next moves.
+LOOP_PANEL_CLASS = "hum-t-loop"
+STEP_ATTR = "data-lundy-step"
+MOVE_ATTR = "data-next-move"
+# A stage the pupil works in. Title is the lesson's front matter and I Do is the
+# teacher modelling; neither is a stage where the pupil's voice is solicited, and
+# the transplant puts no panel on them. Measured, not assumed: on every deck the
+# order landed the panels sit on exactly Arrival, Starter, We Do *, Independent, Exit.
+UNPANELLED_STAGES = ("title", "i do")
 PERIOD_MINUTES = 40
 TIERS = ("supported", "standard", "stretch")
 
@@ -83,6 +100,33 @@ def _slides(tree):
 
 def _print_sections(tree):
     return tree.xpath('//*[contains(concat(" ",normalize-space(@class)," ")," print-section ")]')
+
+
+def panel_stages(slides) -> tuple[list, list]:
+    """(stages that must carry a transplanted panel, stages that carry a sound one).
+
+    Sound means: exactly one panel on the stage, all four dimensions present as
+    steps, every step carrying the order state the panel enforces, and one next
+    move per response outcome. A panel with three dimensions, or with its order
+    dropped, is not a place the pupil's voice survives -- so the v2 route asks
+    for MORE per stage than the v1 slide ever did, on more stages.
+    """
+    want, sound = [], []
+    for s in slides:
+        title = " ".join((s.get("data-title") or "").split()).lower()
+        if not title or title.startswith(UNPANELLED_STAGES):
+            continue
+        want.append(title)
+        panels = s.xpath(
+            './/*[contains(concat(" ",normalize-space(@class)," ")," %s ")]' % LOOP_PANEL_CLASS)
+        steps = s.xpath(".//*[@%s]" % STEP_ATTR)
+        moves = s.xpath(".//*[@%s]" % MOVE_ATTR)
+        if (len(panels) == 1
+                and {e.get(STEP_ATTR) for e in steps} == set(LUNDY_DIMENSIONS)
+                and all(e.get("data-state") for e in steps)
+                and len(moves) == len(LUNDY_DIMENSIONS)):
+            sound.append(title)
+    return want, sound
 
 
 def evaluate(path: Path) -> list[dict]:
@@ -100,14 +144,19 @@ def evaluate(path: Path) -> list[dict]:
     # voice, audience, influence -- not usually as the word "Lundy", which is
     # the framework's name and not language a pupil needs. Testing for the
     # literal word failed a deck that carries all four in all three stages.
-    LUNDY_DIMENSIONS = ("space", "voice", "audience", "influence")
     lundy_stage = any(
         "lundy" in " ".join(s.text_content().split()).lower()
         or all(d in " ".join(s.text_content().split()).lower() for d in LUNDY_DIMENSIONS)
         for s in slides
         if (s.get("data-title") or "").lower().startswith(("we do", "independent"))
     )
-    lundy_places = sum([lundy_slide, lundy_print, lundy_stage])
+    lundy_v1 = lundy_slide and lundy_stage and lundy_print
+    # v1.1.0: the transplanted shape. A deck ORDER HUM-T has landed has no Lundy
+    # slide to find, because the loop is now on every stage the pupil works in.
+    # Read as absence that is a clause that reds ten good decks and cannot be
+    # satisfied by any deck the order touches.
+    want_panels, sound_panels = panel_stages(slides)
+    lundy_v2 = bool(want_panels) and want_panels == sound_panels and lundy_print
 
     tiers_present = [t for t in TIERS
                      if any(t in (p.get("id") or "").lower() for p in sections)]
@@ -148,8 +197,9 @@ def evaluate(path: Path) -> list[dict]:
                f"target TA modals = {n_modal} (need 1)"),
         clause("hud-js-present", "hud.js" in raw,
                f"hud.js references = {raw.count('hud.js')}"),
-        clause("lundy-in-three-places", lundy_places == 3,
-               f"own slide={lundy_slide}, working stage={lundy_stage}, print pack={lundy_print}"),
+        clause("lundy-in-three-places", lundy_v1 or lundy_v2,
+               f"v1 own slide={lundy_slide}, working stage={lundy_stage}, print pack={lundy_print}; "
+               f"v2 sound panels {len(sound_panels)}/{len(want_panels)} stages, print pack={lundy_print}"),
         clause("three-tier-print-pack", len(tiers_present) == 3,
                f"tiers found = {tiers_present}"),
         clause("surfaces-in-range", SURFACES_MIN <= len(slides) + len(sections) <= SURFACES_MAX,
