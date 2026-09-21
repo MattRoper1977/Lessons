@@ -152,7 +152,20 @@ for pw in S.PATHWAYS:
     assert sh.is_file(), f'no START_HERE page for {pw}'
     blurb[pw] = h1_of(sh)
     start_hrefs[pw] = f'{pw.capitalize()}/START_HERE.html'
-strip = S.render_start_strip('Science', blurb, start_hrefs)
+def bound_weeks(row):
+    """The route's RECORDED weeks as science-shelf.js filters them: every bound week in the
+    data-week attribute (space-separated), the record's own labels on the card, and
+    'unspecified' / 'Week not specified' when the record binds none (the old shelf's exact
+    contract; check_catalogue_dom.cjs proves the week filter and the honest unknown label)."""
+    ws = (WEEKS.get(row['path']) or {}).get('weeks') or []
+    return (' '.join(str(w['weekWithinTerm']) for w in ws) or 'unspecified',
+            '; '.join(w['label'] for w in ws) or 'Week not specified')
+S.CARD_WEEK_HOOK = bound_weeks
+WEEK_MAX = max((w['weekWithinTerm'] for e in WEEKS.values() for w in e.get('weeks', [])), default=8)
+shortcuts = ('<div class="catalogue-links"><a href="?pathway=LAUNCH" data-shortcut="all-launch">All LAUNCH Science</a>'
+             '<a href="?pathway=LAUNCH&amp;term=Aut1&amp;style=recommended" data-shortcut="recommended">LAUNCH Science pack · Autumn 1 Weeks 3–7</a>'
+             '<a href="?style=full-lundy" data-shortcut="full-lundy">Browse full Lundy Loop versions</a></div>')
+strip = S.render_start_strip('Science', blurb, start_hrefs) + shortcuts
 current_html, r1 = S.render_current(D, 'Science', href_of, pack_href, {'Science': 'Science'}, DATA['styles'])
 packs_html, r2 = S.render_packs(cards, D['reference'], href_of, 'Science')
 def recorded_week(path: str):
@@ -196,7 +209,7 @@ output = '''<!doctype html>
 </head><body class="mbm-hub mbm-hub-lessons hub-v2" data-mbm-estate="lessons" data-catalogue-subject="Science" data-catalogue-noun="teaching version"><a class="skip" href="#main">Skip to Science lessons</a>''' + header + '''
 <main id="main"><section class="hero hero-compact"><div class="hero-in"><nav class="lesson-breadcrumb" aria-label="Breadcrumb"><a href="/">Learning home</a><a href="../">All lessons</a></nav><p class="eyebrow">Science · Teesside</p><h1>Science by pathway, term and week</h1><p class="lede">The current lesson for each week first, then packs and downloads, then earlier versions.</p></div></section>
 ''' + strip + '''
-<div class="toolbar" role="search" aria-label="Filter Science lessons"><label>Search<input id="science-search" type="search" placeholder="Try: osmosis, muscles, fossils…" autocomplete="off"></label><label>Pathway<select id="science-pathway"><option value="">All pathways</option><option value="BUILD">BUILD</option><option value="GROW">GROW</option><option value="LAUNCH">LAUNCH</option></select></label><label>Strand<select id="science-strand"><option value="">All strands</option><option value="Science">Science</option></select></label><label>Term<select id="science-term"><option value="">All terms</option>''' + term_options + '''</select></label><label>Teaching style<select id="science-style"><option value="">All teaching styles</option>''' + style_options + '''</select></label></div>
+<div class="toolbar" role="search" aria-label="Filter Science lessons"><label>Search<input id="science-search" type="search" placeholder="Try: osmosis, muscles, fossils…" autocomplete="off"></label><label>Pathway<select id="science-pathway"><option value="">All pathways</option><option value="BUILD">BUILD</option><option value="GROW">GROW</option><option value="LAUNCH">LAUNCH</option></select></label><label>Strand<select id="science-strand"><option value="">All strands</option><option value="Science">Science</option></select></label><label>Term<select id="science-term"><option value="">All terms</option>''' + term_options + '''</select></label><label>Week within term<select id="science-week"><option value="">All weeks</option>''' + ''.join(f'<option value="{n}">Week {n}</option>' for n in range(1, WEEK_MAX + 1)) + '''<option value="unspecified">Week not specified</option></select></label><label>Teaching style<select id="science-style"><option value="">All teaching styles</option>''' + style_options + '''</select></label></div>
 <div class="science-status"><p id="science-count" role="status" aria-live="polite" aria-atomic="true">''' + str(len(DATA['lessons'])) + ''' Science teaching versions</p><button type="button" id="science-clear">Clear filters</button></div>
 <p id="science-empty" class="status" hidden>No matching lessons. Try a different term or clear the filters.</p>
 <noscript><p class="status">All lessons are listed below: current lessons first, then packs and downloads, then earlier versions. The filters need JavaScript; every link works without it.</p></noscript>

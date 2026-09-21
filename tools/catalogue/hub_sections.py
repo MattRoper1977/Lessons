@@ -131,11 +131,22 @@ def c4_errors(rendered_paths: list[str], shelf_rows: list[dict]) -> list[str]:
 
 
 # ----------------------------------------------------------------- rendering
+# A subject whose shelf script filters by the week its own bindings RECORD (science-shelf.js:
+# data-week may hold several week values; the card names them in <p class="science-week">)
+# installs a hook: row -> (week attribute, week label) or None. Unset, cards are unchanged.
+CARD_WEEK_HOOK = None
+
+
 def _card(row: dict, href: str, title: str, kind: str, week: int | None, strand: str | None,
           extra: str = '', cls: str = '') -> str:
+    week_attr = str(week) if week is not None else 'unspecified'
+    hooked = CARD_WEEK_HOOK(row) if CARD_WEEK_HOOK else None
+    if hooked:
+        week_attr = hooked[0]
+        extra = f'<p class="science-week">{E(hooked[1])}</p>' + extra
     data = (f' data-term="{E(row["term"], quote=True)}" data-style="{E(row["style"], quote=True)}"'
             f' data-pathway="{E(row["pathway"], quote=True)}"'
-            f' data-week="{E(str(week) if week is not None else "unspecified")}"')
+            f' data-week="{E(week_attr)}"')
     if strand:
         data += f' data-strand="{E(strand)}"'
     return (f'<article class="card t-{E(row["pathway"])}{(" " + cls) if cls else ""}" '
