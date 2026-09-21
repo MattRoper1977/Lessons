@@ -8,7 +8,14 @@ against the registry the carrier is leaving, and the publication refuses it (bat
 
 This check reads the Site's education-publication-admission.json, takes the education-lessons
 tree's key set as the served path set, and refuses when the branch's changed paths meet it.
+An ADDED file is refused too, because the publication judges an unexpected path UNREVIEWED,
+not CHANGED: a new file is refused when its directory is one the published tree draws from.
 It never guesses: no registry, no tree, or an empty tree is a refusal, not a pass.
+
+What it does NOT prove: whether the builder would copy some new file into the tree from a
+directory the tree does not already draw from. Only the build decides that, so the Site
+window's local build (build_education.py) remains the full proof; this check is the fence
+that stops the common carrier mistake before a push.
 """
 import argparse, json, subprocess, sys
 from pathlib import Path
@@ -32,6 +39,36 @@ def served_paths(site: Path) -> set:
     if not paths:
         raise SystemExit('REFUSED: the %s tree admits no path; nothing could be proved' % TREE)
     return paths
+
+
+def served_directories(served: set) -> set:
+    dirs = set()
+    for path in served:
+        parts = path.split('/')[:-1]
+        for i in range(len(parts)):
+            dirs.add('/'.join(parts[:i + 1]))
+    return dirs
+
+
+def added_paths(root: Path, base: str) -> set:
+    def run(*args):
+        out = subprocess.run(('git', '-C', str(root)) + args, capture_output=True, text=True)
+        if out.returncode:
+            raise SystemExit('REFUSED: %s failed: %s' % (' '.join(args), out.stderr.strip()))
+        return out.stdout.splitlines()
+    added = set()
+    for line in run('status', '--porcelain'):
+        if line[:2].strip() in ('A', '??'):
+            added.add(line[3:].strip())
+    if base:
+        for line in run('diff', '--name-status', '--diff-filter=A', '%s..HEAD' % base):
+            added.add(line.split('\t', 1)[1].strip())
+    return {p for p in added if p}
+
+
+def judge_additions(added: set, served: set) -> list:
+    dirs = served_directories(served)
+    return sorted(p for p in added if p not in served and '/'.join(p.split('/')[:-1]) in dirs)
 
 
 def changed_paths(root: Path, base: str) -> set:
@@ -73,9 +110,26 @@ def self_test() -> int:
         ('a path merely under a served prefix passes', {'assets/catalogue/lesson-order.json.bak'}, []),
         ('no change at all passes', set(), []),
     ]
+    added_red = [
+        ('a new deck in a published folder is refused',
+         {'Humanities_Teesside/BUILD_W1-W8_2026-27/BUILD_HUM_W9_New.html'},
+         ['Humanities_Teesside/BUILD_W1-W8_2026-27/BUILD_HUM_W9_New.html']),
+        ('a new catalogue asset is refused', {'assets/catalogue/new-record.json'},
+         ['assets/catalogue/new-record.json']),
+        ('a new tool in a folder the tree never draws from passes',
+         {'tools/hum/check_carrier_pure.py'}, []),
+        ('a new record outside the tree passes', {'_sx3/NEW_LEDGER.md'}, []),
+    ]
     bad = 0
     for name, changed, want in red:
         got = judge(changed, served)
+        if got != want:
+            bad += 1
+            print('  FAIL %s: wanted %s, got %s' % (name, want, got))
+        else:
+            print('  PASS %s' % name)
+    for name, added, want in added_red:
+        got = judge_additions(added, served)
         if got != want:
             bad += 1
             print('  FAIL %s: wanted %s, got %s' % (name, want, got))
@@ -107,11 +161,15 @@ def main() -> int:
     served = served_paths(a.site)
     changed = changed_paths(a.root, a.base)
     hit = judge(changed, served)
-    print('L38 carrier purity: %d changed, %d served, %d served among the changed'
-          % (len(changed), len(served), len(hit)))
-    if hit:
+    additions = judge_additions(added_paths(a.root, a.base), served)
+    print('L38 carrier purity: %d changed, %d served, %d served among the changed, '
+          '%d addition(s) in a published folder'
+          % (len(changed), len(served), len(hit), len(additions)))
+    if hit or additions:
         for p in hit:
             print('  REFUSED: the carrier changes a served file: %s' % p)
+        for p in additions:
+            print('  REFUSED: the carrier adds a file the publication would call UNREVIEWED: %s' % p)
         return 1
     print('[PASS] the carrier changes nothing the publication serves')
     return 0
