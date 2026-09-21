@@ -218,11 +218,12 @@ line pass.
 | GROW   | 88/88 verified by content, 0 failed | 6 |
 | LAUNCH | 90/90 verified by content, 0 failed (91 files, as A3.0 states) | 6 |
 
-**HELD (A3.0 name clause).** A3.0 names input 2 `HUM_Summer_1_GROW_W01-06_Final.zip`.
-The artefact attached to this session is `HUM_Summer_1_GROW_Final.zip`. Its
-content verifies 88/88 and it carries `CHANGELOG_Final_2026-09-21.md`, so it is
-the pack ADDENDUM 2 required, but the name is not the name A3.0 gives. Flagged,
-not resolved by assumption.
+**A3.0 input 2, the name — RULED 2026-09-22 (A3.5 ruling 1): accepted by CONTENT.**
+A3.0 named `HUM_Summer_1_GROW_W01-06_Final.zip`; the artefact delivered is
+`HUM_Summer_1_GROW_Final.zip`. Its 88 of 88 entries verify by digest and it carries
+`CHANGELOG_Final_2026-09-21.md`, and that pair — the digests plus the Addendum 2
+changelog — **is** the identity. The record is corrected to the delivered name. Not a
+hold; nothing about the pack is in question.
 
 ### A3.1 counts — derived from the pack population
 
@@ -351,7 +352,29 @@ the lesson (×1) and the same PPTX. W02 has the identical shape. So both packs
 disagree with themselves across surfaces — an E2 meaning-level disagreement, the
 class E2 currently records as 0.
 
-**HELD — not edited.** A vocabulary definition is authored text. R2 sets the
-precedent for this pack ("do not edit the value yourself… that is an authored
-edit"), so both cells are reported and left alone for a ruling. BUILD and GROW
-are clean on every gate run above and are not held by this.
+**RULED 2026-09-22 (A3.5 ruling 2): HELD, author's defect, sent back to GPT.**
+Neither cell was edited — a vocabulary definition is authored text, and R2 sets this pack's
+precedent. `LAUNCH_SU1_W01` and `LAUNCH_SU1_W02` do not land until GPT re-delivers them.
+**BUILD W01–W06, GROW W01–W06 and LAUNCH W03–W06 are clear on every gate above** and proceed
+to intake and landing once the `Sources_and_checks.html` re-delivery of ruling 3 arrives.
+
+## Rulings on this addendum, recorded 2026-09-22
+
+| # | ruling | state here |
+|---|---|---|
+| 1 | GROW pack accepted by content; the A3.0 name corrected in the record | applied above |
+| 2 | `LAUNCH_SU1_W01` / `W02` HELD, author's defect, back to GPT; the other 16 proceed once ruling 3 lands | applied above |
+| 3 | `Sources_and_checks.html` back to GPT — ids must match the lessons' own anchors, one per pack root, identical to the `_records` copy | HELD, not re-delivered |
+| 4 | NOAA 2025 (427.35 ppm) stays as authored, flagged UNVERIFIED; no edit until Matt replies "NOAA ok" or a value | applied — nothing edited |
+| 5 | the R1 exception is recorded; "HUM-D5 has no donor-diff gate" is a **next-order finding**, not built now | recorded above, not built |
+| 6 | G-B on this container's real Chromium stands; no runner run needed | recorded above |
+| 7 | `stage_name()` returning `data-type` verbatim: confirmed, fixed, red-proved | see `tools/hum/STAGE_IDENTITY_RULE.md` |
+| 8 | correction #26 accepted | recorded above |
+
+### Ruling 3 — what the re-delivery has to satisfy, measured
+
+The supplied `Sources_and_checks.html` offers the anchor ids `sow, authored, book, w01 … w06`.
+The BUILD lessons cite `#sow`, `#plans` and `#townside`. So **`#plans` and `#townside` — 4 of
+the 11 links — would land dead**, and the file is not byte-identical to any `_records` copy.
+That is the whole of the hold: ids that match the lessons' own anchors, one file at the pack
+root, identical to the `_records` copy.

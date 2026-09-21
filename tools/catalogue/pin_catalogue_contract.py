@@ -1506,6 +1506,16 @@ REVIEWED_PATHS += (
 REVIEWED_PATHS += (
     '_hum/LOOP_CONTRACT.md',
     'tools/hum/loop_adapter.py',
+    # RULING 5 (2026-09-22): deck_dom.py holds stage_name(), the single identity oracle that
+    # loop_adapter.py and verify_loop.py both call, and STAGE_IDENTITY_RULE.md is the ruled rule
+    # it implements with its measured basis. loop_adapter.py and verify_loop.py were already
+    # pinned; the oracle they read was not, so the one file that decides what every stage IS
+    # could change unreviewed while both its callers were guarded. Pinned here for that reason.
+    # The rule file is added rather than modified, and the boundary judges only MODIFIED files
+    # (git diff --diff-filter=MRD), so it would arrive unjudged exactly as build_science_hub.py
+    # did; pinning it judges it by exact bytes from now on.
+    'tools/hum/deck_dom.py',
+    'tools/hum/STAGE_IDENTITY_RULE.md',
     'tools/hum/render_proof.cjs',
     'tools/hum/verify_loop.py',
 )
