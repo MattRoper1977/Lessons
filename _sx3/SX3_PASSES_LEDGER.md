@@ -766,3 +766,42 @@ L37  ORDER HUM-T, BATCH 1: THREE CORRECTIONS, THE STOP-T3 RULINGS, AND THE §Q4 
      calendar note (Aut1 +0, Aut2 +8, Spr1 +15, Spr2 +21, Sum1 +26, Sum2 +33). HUM-T
      writes its humanities bases (Aut2 = 7 + n) into the same record when its first
      week-bearing change lands.
+
+L38  A CARRIER THAT MOVES A PUBLISHED FILE IS NOT A CARRIER  [ORDER HUM-T batch 1, second
+     window, 2026-09-20; INSTRUMENT CORRECTION #13, own].
+     The L33 carrier for batch 1 (Lessons #608 -> 68635747, Apps #130 -> 166101ca) carried
+     the STOP-T3 ruling Q1 tooling with it, and that tooling's record, strandProofs, rides
+     assets/catalogue/lesson-order.json -- a file the Education Pages publication serves.
+     The carrier's own publication was therefore refused by the very registry it had just
+     been pointed at: run 35544583041, job 106168117337, "Education file admission blocked
+     publication: CHANGED education-lessons/assets/catalogue/lesson-order.json". The
+     admission fence held exactly as designed; the sequencing was mine, and L33 alone does
+     not prevent it.
+     STANDING RULE: the carrier bump rides a PR that changes NO file the publication
+     serves. A carrier may move the workflow pin, the two gate copies, the static-check
+     baseline and records outside the published trees (_sx3/, _hum/, _sci/); anything that
+     changes lesson-order.json, resource-sizes.json, a deck, a shelf or any other served
+     path belongs in the content PR whose Site window admits it. Proved before every push,
+     not argued: tools/hum/check_carrier_pure.py takes the education-lessons key set of the
+     Site's education-publication-admission.json as the served set, intersects it with the
+     branch's changed and committed paths, and refuses a non-empty intersection by name. It
+     refuses rather than passes when the registry is missing, unreadable, names no
+     education-lessons tree, or admits no path. Seven red proofs plus the missing-registry
+     refusal; and it reproduces this correction's own failure -- judged against the main
+     the carrier left (3887f7ac), it names assets/catalogue/lesson-order.json, exactly what
+     run 35544583041 named, and passes on the pure carrier that replaces it.
+     THE SECOND WINDOW: Site #417 (claude/humt-b1-window-2), one transition pair derived
+     from the local build of the two mains, assets/catalogue/lesson-order.json 34abdfee ->
+     325b864f; the local build reproduced the CI refusal before the edit and admitted
+     after it. Both L31 pin pairs to 68635747 / 166101ca, gate copies byte-identical there
+     (gateSha256 fa70ffab). Nothing outside Matt's batch 1 signature of 2026-09-20 moves
+     but that one record key: no deck, no week, no term.
+     THE CLOSER is this PR, a pure carrier under the rule above; its Education Pages
+     publication run id is reported to Matt with the batch 1 close and entered in the
+     HUM-T CLOSE record.
+     BATCH 1 SERVED PROOF (taken on the publication's own output bytes for 3887f7ac; the
+     six decks' bytes are unchanged since, which is why this window admits only the lesson
+     order): BUILD_HUM_W1_People_Special_To_Me.html, served digest 9a93f7be, admitted by
+     the registry; 7 panels, 7 reached by the deck's own navigation (row 41); rows 38-40
+     7/7; rows 45, 45.1, 45.2, 13 and 46 PASS; axe serious 2, pre-transplant 2, so 0
+     introduced.
