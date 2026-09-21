@@ -148,6 +148,11 @@ HUM_T_BATCH_5_LAUNCH_REVIEW_BASE = 'b79fa079b93eb6371fa7bc2759f8ccb4b8228e62'
 # tools/hum/admit_transaction.py. Every member also carries a CATALOGUE_PINS
 # admission, which replacement_errors cross-checks.
 HUM_T_BATCH_6_BUILD_REVIEW_BASE = '0fc3839a2c61c86e8c40f8017e7fdd4e5e1e542f'
+# ORDER HUM-T · HUM-T batch 6b BUILD: this batch's transplanted decks, each stage carrying the
+# science exemplar's loop panel. One transaction, derived and written by
+# tools/hum/admit_transaction.py. Every member also carries a CATALOGUE_PINS
+# admission, which replacement_errors cross-checks.
+HUM_T_BATCH_6B_BUILD_REVIEW_BASE = '13b602e7ff7ea6327fc806ce3f23b022ef6c45c0'
 # BEGIN DECLARED TRANSACTIONS
 # BEGIN S3 OFFLINE EDITION REPLACEMENTS
 CX2_S3_REPLACEMENTS = {'Science_Teesside/Teaching_Packs/web-slides.html': {'beforeGitBlob': '6596d65c7a9bd5bb1875c5b46bbc331df8652144', 'afterSha256': 'f31f09d03f5d8c417af1745b38309fa537afb8bb4c6a08f387db3349d9e1cba2', 'bytes': 18607}}
@@ -209,6 +214,9 @@ HUM_T_BATCH_5_LAUNCH_REPLACEMENTS = {'Humanities_Teesside/LAUNCH_W1-W8_2026-27/L
 # BEGIN HUM_T_BATCH_6_BUILD REPLACEMENTS
 HUM_T_BATCH_6_BUILD_REPLACEMENTS = {'Humanities_Teesside/BUILD_W1-W8_2026-27/BUILD_HUM_W3_Places_In_My_Community.html': {'beforeGitBlob': '2acae9bd3f72b7605b3a893690aa1376ae6e8e0f', 'afterSha256': '1ed894d2443de648e0deb5aaf4615c6b92b0735abc27c109947a3c31c137d5e6', 'bytes': 102204}, 'Humanities_Teesside/BUILD_W1-W8_2026-27/BUILD_HUM_W4_Then_And_Now.html': {'beforeGitBlob': '6e8e92bffa170d29d2ce44b6c84ef11d6c6776cc', 'afterSha256': 'a794d0c8095c8b8a29619335db783ced6742da4bde938161312908eb78c34a04', 'bytes': 103203}, 'Humanities_Teesside/BUILD_W1-W8_2026-27/BUILD_HUM_W5_Same_And_Different.html': {'beforeGitBlob': 'ed5086569bcc26de22bb466e2299d080143d409f', 'afterSha256': '7e8bbd4524445a76e3f22ea8eab447ba4ab7b7d5f44704e74b7633bef2e5f8a3', 'bytes': 101656}, 'Humanities_Teesside/BUILD_W1-W8_2026-27/BUILD_HUM_W6_Our_Class_Map.html': {'beforeGitBlob': '64c6c14a87392d48c6fb65663df559d3a9797c7b', 'afterSha256': '3ed142de2819ad74040c4ec8a55038225e41f98671a82c018f0a1c4f3a36b5be', 'bytes': 98852}, 'Humanities_Teesside/BUILD_W1-W8_2026-27/BUILD_HUM_W7_A_place_in_the_group_Classic.html': {'beforeGitBlob': '9171468b4c651e8d4e8c519279790e226d1aa8e5', 'afterSha256': '8846108977a6fc8dca26f820a24421340348da432bbbf9e34865f9930ce3eecd', 'bytes': 166328}, 'Humanities_Teesside/BUILD_W1-W8_2026-27/BUILD_HUM_W7_Groups_We_Belong_To.html': {'beforeGitBlob': 'ffd928ffa71f0c5a6e1372933da203c1928c6b75', 'afterSha256': '3dc05abc16c9baa2cb2978226d0f047d84fc8f2583fe2ba3da9d9a5a20ccf063', 'bytes': 100604}, 'Humanities_Teesside/BUILD_W1-W8_2026-27/BUILD_Humanities_W4_Show_Respect_When_Handling_Special_Objects.html': {'beforeGitBlob': '1dcf51c195596b85854c12c960415c2f36547781', 'afterSha256': '3b884a498d58b04130fe97ecfae52b60ad8c13687d4b82c8581c5a9c7f89670a', 'bytes': 71815}, 'Humanities_Teesside/BUILD_W1-W8_2026-27/BUILD_Humanities_W5_Notice_Similarities_Between_People_S_Beliefs.html': {'beforeGitBlob': 'f261e1d70c248483b803da0c454810cf1217e3ea', 'afterSha256': '701831c9205b4756b9397a583370b68f774110bcc11863380622eb816a1bd91a', 'bytes': 71006}, 'Humanities_Teesside/BUILD_W1-W8_2026-27/BUILD_Humanities_W6_Reflect_Quietly_On_Belonging_Day_Of_Peace.html': {'beforeGitBlob': 'a9d6d72817e468210b0b6c2a78bf13d28e14fe0c', 'afterSha256': '788f671f8221b03e2358371e620cba251f03879c7ac223aaec265118b6cd2665', 'bytes': 72427}, 'Humanities_Teesside/BUILD_W1-W8_2026-27/BUILD_Humanities_W7_Share_A_Special_To_Me_Object_With.html': {'beforeGitBlob': '088e1636c3fc291f430c9476f93355a31bb9b4e1', 'afterSha256': 'be33baa63d4523febdbd0c4f6826efe272b68958c3be44b560a349b0ebd05266', 'bytes': 72865}}
 # END HUM_T_BATCH_6_BUILD REPLACEMENTS
+# BEGIN HUM_T_BATCH_6B_BUILD REPLACEMENTS
+HUM_T_BATCH_6B_BUILD_REPLACEMENTS = {'Humanities_Teesside/BUILD_W14-W20_2026-27/BUILD_HUM_W16_Then_And_Now_And_What_Is_Fair.html': {'beforeGitBlob': '2524f8483d79a689889441eed736bf799c9f9173', 'afterSha256': '8513df51ec2501cbfe57d63892347c235cf101cfb6fe63eebf868079470b7dd5', 'bytes': 100827}}
+# END HUM_T_BATCH_6B_BUILD REPLACEMENTS
 # END DECLARED TRANSACTIONS
 
 # Each transaction is judged on its own: every member present as exactly one
@@ -237,6 +245,7 @@ REPLACEMENT_TRANSACTIONS = {
     'HUM-T batch 4 GROW': (HUM_T_BATCH_4_GROW_REVIEW_BASE, HUM_T_BATCH_4_GROW_REPLACEMENTS),
     'HUM-T batch 5 LAUNCH': (HUM_T_BATCH_5_LAUNCH_REVIEW_BASE, HUM_T_BATCH_5_LAUNCH_REPLACEMENTS),
     'HUM-T batch 6 BUILD': (HUM_T_BATCH_6_BUILD_REVIEW_BASE, HUM_T_BATCH_6_BUILD_REPLACEMENTS),
+    'HUM-T batch 6b BUILD': (HUM_T_BATCH_6B_BUILD_REVIEW_BASE, HUM_T_BATCH_6B_BUILD_REPLACEMENTS),
     # END DECLARED TRANSACTION ENTRIES
 }
 # Declaration order is review order: a later transaction that names a path
