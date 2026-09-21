@@ -159,6 +159,7 @@ CATALOGUE_PINS = {
         "tools/catalogue/build_catalogue.py": "10a704418e67c6b9ec80bb911cfe267df7a12e8c4adbb6e878ca14c5cfb7c3b1",
         "tools/catalogue/build_science_shelf.py": "396b6aeb7cb3cabe037b7af27877ae7a090e5aa1bce284409e400549d5204c24",
         "tools/catalogue/build_humanities_shelf.py": "3ed6e289a2656ed5de228082012dd9e957d2d13b2fa77f5857b9dee22ae138a9",
+        "tools/catalogue/build_science_hub.py": "ca7993b84a587d712158ac5524979ebf2d0a326f12170e7ad5bc7610c4da12c2",
         "tools/catalogue/check_catalogue_static.py": "eaea1b94c5f36b5f998529a5822866b00502af3dae6e7304b7040d85369354a3",
         "tools/catalogue/check_catalogue_dom.cjs": "039fb7977fbb92565ef108920cac59b199cf23bd5eb9f8c84dd0bc6ac4a87909",
         "tools/catalogue/verify_education_navigation.cjs": "b0d9297a33fb9ea2494fecaa45e02ae6fcf6fa88e6a62ced35cf521fbb1851fd",
