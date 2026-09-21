@@ -491,6 +491,25 @@ LOOP_CSS = """
 """
 
 
+def earwig_stages(names: list[str], eligible: set) -> set:
+    """Pure. Which stage indexes carry the R3 Earwig line, by the ruling of 2026-09-22 on the
+    four Soil/Blackout decks: the line is TA-LAYER FURNITURE quoted from the policy, not
+    authoring, so the adapter supplies it where the deck has a TA layer.
+
+    A deck that NAMES its closing stage keeps the behaviour it already had -- the named exit or
+    complete stage carries the line, wherever it sits. A deck that names no closing stage at all
+    (the four held decks run ... independent, lundy_stage, unnamed) had no TA layer carrying the
+    line and so could never pass verifier row 12; its LAST stage carries it instead. Nothing that
+    already had the line loses it, and nothing gains it twice.
+
+    A deck with no stages at all gets no TA layer, so row 12 still FAILs and the deck is HELD by
+    name -- which is the ruled outcome, not a gap."""
+    named = {i for i, n in enumerate(names) if n in ('exit', 'complete') and i in eligible}
+    if named:
+        return named
+    return {max(eligible)} if eligible else set()
+
+
 def ta_brief(is_exit: bool) -> str:
     """R2 + R4 (+ R3 at Exit) — staff layer only, never the pupil surface."""
     codes = ' · '.join('<b>%s</b> %s' % (esc(c), esc(m)) for c, m in POLICY_CODES)
@@ -528,6 +547,10 @@ def adapt(html: str, pathway: str, is_re: bool):
     titles = [stage_heading(s) or (s.attrs.get('data-title') or '') for s in st]
     edits = []
     panels = 0
+    # R3 furniture: which stages carry the Earwig line. Computed over the ELIGIBLE stages,
+    # because a TA card is emitted only where a panel is -- so the line can only land where the
+    # deck actually has a TA layer (ruling of 2026-09-22).
+    earwig_at = earwig_stages([stage_name(x) for x in st], {st.index(x) for x in eligible})
     for s in eligible:
         i = st.index(s)
         nxt = ''
@@ -541,7 +564,7 @@ def adapt(html: str, pathway: str, is_re: bool):
         # the removed stage's own words are carried ONCE, on the first panel
         panel = build_panel(s, i, nxt, pathway, is_re, sentences,
                             definitions if panels == 0 else [], cfg)
-        ta = ta_brief(stage_name(s) in ('exit', 'complete'))
+        ta = ta_brief(i in earwig_at)
         close = html.rfind('</', s.start, s.end)
         edits.append((close, close, panel + ta))
         panels += 1
