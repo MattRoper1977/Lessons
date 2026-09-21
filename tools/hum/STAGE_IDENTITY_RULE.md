@@ -142,3 +142,34 @@ mis-identifying. Lowest concern of the three.
 decide whether the split is needed, and writes `data-type="opening"`. This is the writer that
 created the opening/arrival split in the first place; a deck it has not run on is exactly a deck
 whose overview is still typed `arrival`.
+
+## Two defects in the first cut of this fix, found by adversarial review
+
+**"Start the enquiry" is the STARTER.** It was in the `title` pattern for one revision. Measured:
+132 slides carry the phrase and every one sits at **position 2**, after the overview
+(`data-timer="0"`) and the arrival task, with `data-timer="3"`. Reading it as the overview gave
+**131 of 238 decks two title stages** and removed 132 teaching stages from `eligible`. Now in
+`starter`. After: exactly one title stage on 220 of 220 landed decks and 18 of 18 Summer 1 decks.
+
+**A topic word must not beat the deck's own statement that a stage has no teaching time.**
+`GROW_A2_W07_Lesson.html`'s overview reads "Belief and belonging review"; the `review` pattern
+claimed it before the timer fallback ran, so the overview resolved to `review` — eligible — and a
+panel would have landed on the metadata stage. `data-timer == "0"` is now tested **first** and
+resolves only between the two stages that legitimately carry no teaching time:
+
+```python
+if (node.attrs.get('data-timer') or '').strip() == '0':
+    return 'complete' if COMPLETE_RX.search(probe) else 'title'
+```
+
+Measured: 1 deck before, 0 after.
+
+## Known drift: 11 transplanted decks record a stage name this oracle no longer returns
+
+`ido -> ido2` and `wedo -> wedo2` on 22 slides across GROW_HUM W9–W14 (5 decks) and LAUNCH_HUM
+W9–W14 (6). The eligible / modelling / title sets do **not** move — `ido2` is modelling exactly as
+`ido` is, `wedo2` eligible exactly as `wedo` is — so no panel moves and no row changes verdict.
+But each panel records `data-loop-stage-name="wedo"` where the slide's own heading says "We Do 2",
+so **those 11 decks are not byte-reproducible by their own adapter until they are re-cut**, by one
+attribute value per deck. The new name is the correct one; the old was the defect. Recorded rather
+than preserved.

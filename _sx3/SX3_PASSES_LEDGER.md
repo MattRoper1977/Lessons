@@ -1240,3 +1240,47 @@ MODIFIED files (`git diff --diff-filter=MRD`). Measured on the P0 branch before 
 pinned: `[PASS] lessons cross-estate static contract`, `PIN1 PASS 778/785`. They would have gone in
 completely unjudged, exactly as `build_science_hub.py` did in L47 and the snapshot fixture did in
 correction #19. The free pass was declined and all four are pinned here.
+
+### L48 addendum — the adversarial review found two defects in my own fix, and one overstatement
+
+An adversarial review of the ruling 5 change (five independent lenses, each asked to REFUTE the
+claimed controls by measurement) was run after the pair merged. Three of its findings were
+re-measured here and all three stand. Two are defects I introduced; the third is a claim of mine
+that was stronger than the evidence.
+
+**Defect A — "Start the enquiry" is the STARTER, and I put it in the title pattern.** Measured:
+132 slides carry that phrase and **every one of them sits at position 2**, after the overview
+(`data-timer="0"`) and the arrival task, with `data-timer="3"`. Reading it as the overview gave
+**131 of 238 decks TWO title stages** and took 132 real teaching stages out of `eligible` — the
+same shape of harm the fix exists to prevent, in the opposite direction. Moved to the `starter`
+pattern. After: **every deck has exactly one title stage, 220 of 220 landed and 18 of 18
+Summer 1.**
+
+**Defect B — a topic word in an overview's own heading beat the signal that describes the slide.**
+`GROW_A2_W07_Lesson.html`'s overview reads "Belief and belonging review", which the `review`
+pattern claimed before the `data-timer == "0"` fallback could run. That deck's overview resolved to
+`review`, which is eligible — a panel on the metadata stage, the exact P1-1 breach. Fixed at the
+cause: `data-timer == "0"` is now tested FIRST and resolves only between the two stages that
+legitimately carry no teaching time, the overview and the completion marker
+(`'complete' if COMPLETE_RX.search(probe) else 'title'`). Measured: 1 deck before, 0 after.
+
+**Overstatement C — "nothing moved" was true of the SETS and not of the NAMES.** On **11 of the 62
+transplanted decks** a stage's NAME changes although the eligible / modelling / title index sets do
+not: `ido -> ido2` and `wedo -> wedo2`, 22 slides in all, on GROW_HUM W9–W14 (5) and LAUNCH_HUM
+W9–W14 (6). The sets are unmoved because `ido2` is modelling exactly as `ido` is and `wedo2` is
+eligible exactly as `wedo` is, so no panel moves and no row changes verdict. But `verify_loop`
+embeds `stage_name(s)` in its detail strings and the adapter writes `data-loop-stage-name` into
+each panel — those 11 decks record `wedo` where the deck's own heading says "We Do 2". **So they
+are not byte-reproducible by their own adapter until they are re-cut**, by one attribute value per
+deck. The new name is the correct one; the old one was the defect. Recorded, not smoothed over,
+and not worth contorting the oracle to preserve.
+
+All controls re-measured after the two fixes: sets on the 62 transplanted decks still 0 of 62
+moved; `unnamed` still 0; empty `title_stages` still 120 -> 0 landed and 18 -> 0 Summer 1; the
+self-test still exit 0 with the same 6 PASS and the same one SKIP; both red proofs still fire.
+
+**The lesson, since it is the third time this week.** A control proves exactly what it measures and
+nothing adjacent. Mine compared index sets on the decks that already carry panels — sound for that
+claim, blind to a name change and blind to every deck the transplant has not reached, which is
+where both defects lived. The review was worth running, and the finding belongs in the record
+whether or not it flatters the fix.
