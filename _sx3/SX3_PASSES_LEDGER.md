@@ -1033,3 +1033,91 @@ L46  HUM-T BATCH 6b LANDED, AND THE SIGNED BUILD SET CLOSES AT ELEVEN  [2026-09-
      6b's carrier merged before this entry was written, so L46 lands separately. Noted so the
      pattern break is in the record rather than inferred from it.
      THE SIGNED BUILD SET IS COMPLETE AT ELEVEN.
+## L47 — SCI-COMPLETE PASS F: the hub's Current list becomes the served lesson for every week
+
+     RULED 2026-09-22 (STOP-F2). "Current" was the 14 chassis conformers; it is now the served
+     lesson for each week, so the hub lists all 180 Science routes -- 14 CONFORMS, 166 NOT YET --
+     and Earlier stays empty until PASS C delivers a same-part replacement. MEASURED, NOT ASSUMED:
+     of 91 slots only 9 hold a conformer, only 7 non-conformers share a slot with one, and ZERO of
+     those 7 are same-part replacements; replaced_routes() is the only demotion path and it returns
+     {} on this tree.
+     THE FIRST CUT WAS REFUSED BY THE SITE'S OWN GATE, AND IT WAS RIGHT TO REFUSE IT. Site #425
+     admitted the hub built at Lessons edb27b0c; its publication run 35618364589 failed at step 24,
+     "Mount and exercise the actual education publication". Reproduced locally on the served bytes,
+     thirteen harnesses in the shipped order, two real reds:
+       [FAIL] No sideways scrolling: /Lessons/Science_Teesside/   (check_shared_navigation.cjs)
+              documentElement.scrollWidth 1209 against a 390 px viewport, JavaScript on AND off
+       [FAIL] Every week-numbered current BUILD row links its Teaching Packs section: 0 !== 5
+              (check_completion.cjs)
+     Both were LESSONS defects in the hub the window was admitting, and neither was a check that
+     needed changing.
+     DEFECT ONE, THE CARD TITLE. h1_of() read the deck's heading with a regex over the raw bytes.
+     31 of the 180 Science decks write their printable packs from a script, so their source carries
+     <h1>Knowledge organiser<\/h1> INSIDE a JavaScript string; the escaped close does not match
+     </h1>, so the regex ran on to the next REAL one. On
+     SCI_G_W10A_Solar_System_Research_Explore.html the first escaped <h1> sits at byte 179,400 and
+     the first real </h1> at 265,534, so 86 KB of slide text became a 49,963-character card title.
+     That IS the 1.12 MB hub carried as a "fix in the next order" finding -- a defect, not a design
+     cost -- and it is the sideways scroll. h1_of now parses, so a heading written inside a script
+     is a text node and never markup: 149 of 180 titles unchanged, 31 corrected, the longest card
+     title 49,963 -> 70 characters, the page 1,117,122 -> 342,248 bytes.
+     DEFECT TWO, THE DOWNLOADS LINK. The reviewed link "PowerPoint, Word and PDF downloads" from
+     assets/catalogue/science-download-bindings.json had been dropped by the HUB-1 card shape, so
+     no week-numbered current BUILD row linked its Teaching Packs section. hub_sections 2.1.0 lets
+     a subject hand a card its recorded downloads link; Science hands over the record verbatim for
+     its 25 bound routes. Restored first as the old shelf drew it (a.go, white-space:nowrap), the
+     346 px pill did not fit the narrower HUB-1 week grid: at the widths check_shared_navigation
+     actually sweeps, 320 -> 376 and 1280 -> 1301. A second red, avoided before it reached CI by
+     rendering it as the card's own wrapping secondary link; 320/390/768/1280 all clean.
+     TWO NEW CONTROLS, FOUR RED PROOFS, the tree restored byte-for-byte each time (hub 14bea75f9db5
+     before and after): C6 the old regex h1_of -> REFUSED, 31 routes named; C7 the hook removed ->
+     REFUSED, 50; C7 an unbound route given a link -> REFUSED, 1; C7 the recorded href rewritten ->
+     REFUSED, 1.
+     THE WRITER IS NOW INSIDE THE BOUNDARY. The standalone/offline boundary judges MODIFIED files
+     (git diff --diff-filter=MRD), so tools/catalogue/build_science_hub.py -- added by PASS F and
+     never modified since -- had never been judged, and the first edit to it went red. Admitted
+     beside its siblings by the named tool; PIN1 refused the admission without a trigger and
+     derive_triggers.py --write materialised it, 777/784 -> 778/785. A file that was outside the
+     boundary is now inside it. Nothing loosened.
+     THE WINDOW WAS RE-CUT, NOT AMENDED. #425's registry rows were anchored on the defective
+     digests, so re-deriving on top of them would have paired the fixed bytes against the defective
+     ones instead of against main's. #426 is cut from Site main plus the two STOP-F3 commits, every
+     pair anchored on main's own digests; #425 is closed as superseded, no branch deleted and
+     nothing force-pushed.
+     STOP-F3, CARRIED OUT AS RULED (option 1). The derive-and-pin writer
+     domain-split/derive_science_download_additions.py, 22 of 22 controls, red-proved. The hub fix
+     does not move its output: 910 emitted rows, reviewed file 910, added 0 / removed 0 / changed
+     0, digest 3b750fe8fdf9, --check PASS. Authority as signed: download registrations derived from
+     the served estate under HUB-1 S3, signed by Matt Roper 2026-09-22.
+     THE CHAIN, BY RUN ID. Lessons #630 -> main 0d4817de (cross-estate contract 35625998200, UX2
+     35625997902, Science packs 35625997768, FieldOps 35625997742), Apps #150 -> main 4e98e48f
+     (35624791543, 35624791806, 35624791830). Site #426 -> main 9600846c, Domain split publication
+     35629015362 SUCCESS -- the same workflow whose step 24 failed on #425. Pure carrier #631 ->
+     main 667e0e44 with Apps #151 -> main 5a122fd6, gateSha256 97b1c83a. Closer: Education Pages
+     publication 35634345106 SUCCESS on Lessons main, calling education-publication.yml@9600846c,
+     with cross-estate unification 35634344480 and UX2 gates 35634344448 SUCCESS beside it.
+     SERVED PROOF, on the Site's own publication output rather than a local build: the published
+     hub is f7eceed9 and the registry admits ['faf76054','f7eceed9'] -- ADMITTED. 181 cards, 14
+     CONFORMS and 167 NOT YET pills (166 NOT YET routes; the extra pill is the one route bound to
+     two weeks, which renders in both, as ruled). 25 downloads links, 0 of 25 anchors missing from
+     the published Teaching_Packs page. 948 distinct file links in Packs & downloads, 0 absent from
+     the published tree. At 390x844: three taps -- pathway GROW, term Spring 1, week 3 -- reach
+     exactly the two Spring 1 GROW Week 3 routes, no horizontal scroll, axe 0 violations, no page
+     errors. 344,449 bytes served.
+     CORRECTION #23 STANDS FROM THE PREVIOUS ENTRY. CORRECTION #24, MINE: #612's own 390 px proof
+     reported "no horizontal scroll", and that reading was taken in the FILTERED state, three taps
+     to GROW / Spring 1 / Week 3, which hides the Autumn 2 cards that overflow. Measured on the
+     defective hub: unfiltered scrollWidth 1209, and 390 after those three taps. The proof should
+     have measured the page as first served. It does now, at 320, 390, 768 and 1280.
+     CORRECTION #25, MINE: I cut the L33 carrier WITHOUT the publisher-caller re-pin, reasoning
+     that the pin writer had left the gate unmoved. The gate refused it -- "education publication
+     caller differs from the reviewed immutable publisher pin" -- and it was right: the caller
+     file's own digest is pinned separately from the catalogue map, so a carrier that edits the
+     caller always moves the gate and always needs the companion.
+     THE IN-WINDOW RED, NAMED: while Lessons main carried 0d4817de the watch read FAIL --
+     watch-main 35628303669 and 35628671534 -- because main served the new hub while still pinning
+     Site f29214ed, whose registry held only the pre-fix digest. That is the L33 case the carrier
+     exists to close, and the closer above shows it closed.
+     RAISED, NOT ACTED: the hub-budget fix proposed for the next order (Earlier/Packs rendered from
+     a JSON manifest on open, budget <=400 KB) is no longer needed to get under a sane budget, the
+     page having fallen to 342,248 bytes with no section removed. Left for Matt to rule on.
