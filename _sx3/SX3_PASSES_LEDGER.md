@@ -956,3 +956,80 @@ L45  HUM-T BATCH 6 LANDED UNDER THE OVERNIGHT ORDER  [2026-09-21; pre-signed by 
      the local build of the two mains; Domain split publication 35583082980 SUCCESS.
      THE CLOSER: this pure carrier (L38 check PASS); Education Pages publication run reported
      in the readback and entered in the CLOSE record.
+
+L46  HUM-T BATCH 6b LANDED, AND THE SIGNED BUILD SET CLOSES AT ELEVEN  [2026-09-21; ruled by
+     Matt Roper 2026-09-22 (STOP-T4 and STOP-T5 option (a)); pre-signed by Matt Roper
+     2026-09-21 (PRE-SIGNATURE, ORDER HUM-T batch 6b BUILD): 1 row, TERM+WEEK UNCHANGED 1/1,
+     evidence sha == served bytes 1/1, 6 panels, zero exceptions].
+     THE HELD DECK: BUILD_HUM_W16_Then_And_Now_And_What_Is_Fair.html, row 11 of the signed
+     BUILD set, held at L45 because it was the live base fixture of
+     _sownb/vb/tools/classic_v2_contract_selftest.py: the transplant redistributes the deck's own
+     Lundy slide into the per-stage panels, so the self-test could not prove its v1 route and the
+     VB mechanism battery read MEASUREMENT INVALID (run 35577895174, declared=10 fired=8/10).
+     THE TWO CHECK CHANGES THAT CAME FIRST, each its own PR with red proofs, as ruled:
+     (i) Lessons #623 -> cdc14919, classic-v2 contract v1.1.0: `lundy-in-three-places` is
+     satisfied by the deck's own Lundy slide (v1 shape) OR by a sound panel on every non-I-Do,
+     non-Title stage (v2 shape) -- four dimensions, each with a state, one next-move control each
+     -- plus the print pack either way.
+     (ii) Lessons #624 -> 13b602e7 (Apps #144 -> b5391eb6), self-test v1.2.0 under STOP-T5
+     ruling (a): the v1 route runs against a NAMED SNAPSHOT of the bytes W16 shipped at
+     cdc14919, sha256 c9ec2ea5fcd7a7b1 with its derivation recorded beside it
+     (`git show cdc14919:<W16> | sha256sum`) and re-checked against git on every run, so the
+     fixture is auditable and tamper-evident; the v2 route runs against the live W3 deck; the
+     ten-slide timing table re-based from the deck's own history, never typed. 17 controls,
+     including fixture-bytes-altered and fixture-digest-mismatch. Options (b) and (c) were
+     refused by ruling: (b) freezes a live lesson as a test fixture, (c) retires a working route.
+     THE BATCH: one deck, transplanted in the RULED P1 shape (no Title panel; the four response
+     outcomes as influence lines phrased for the stage's own task; one labelled control per
+     outcome; a collapsed "Feedback loop" disclosure per stage, excluded from print; VOICE names
+     the stage's task). Six panels. Evidence re-stamped; declared as a ONE-MEMBER GLV3
+     replacement transaction; pins re-cut in both gate copies, gateSha256 82ee6c9e6f0d, PIN1
+     776 asserted / 783 exact triggers.
+     WHAT THE VERSIONED CONTRACT MAKES OF IT: RED 9/10 [classic-v2-contract-v1.1.0], the only
+     red `stage-timings-carried` (0 of 9 stages declare minutes) -- the pre-existing #271
+     backlog, not introduced here. `lundy-in-three-places` PASSES by the v2 route, 6/6 stages
+     plus the print pack. The v1 route stays proved by the snapshot.
+     LANDED: Lessons #625 -> 6fd6564f. Apps #145 -> a946c586. Unification observed on the PR
+     head af0b0785 run 35594900152 SUCCESS (VB mechanism battery job 106317358240 SUCCESS in FieldOps 35594899829).
+     RENDERED on the PR head at 390 px: 6/6 panels reached and 6/6 disclosures opened; rows
+     38-40 6/6/6; 0 refusal faults; 0 page errors; axe introduced 0.
+     THE WINDOW: Site #424 -> f29214ed; pairs derived by the window runner from the
+     local build of the two mains; Domain split publication 35597649406 SUCCESS.
+     THE CLOSER: pure carrier Lessons #626 -> 32243307 / Apps #146 -> 23a89528
+     (L38 check PASS, carrier changes nothing served); Education Pages publication 35603355640 SUCCESS, with FieldOps 35603354804 SUCCESS and
+     UX2 35603354740 SUCCESS on the same head; the publication read
+     education-publication.yml@f29214ed, the moved pin.
+     SERVED: publication-output sha256 73f4fc5a1c7b; the registry admits
+     ['ce5d6c4c8643','73f4fc5a1c7b'] -> ADMITTED. Six hum-t-loop panels in the published bytes and
+     24 next-move controls counted as DOM elements, four on each of Arrival, Starter, We Do 1,
+     We Do 2, Independent and Exit (needs-help / with-support / independent / explained).
+     390 px harness on those exact bytes: 6/6 panels reached, 6/6 disclosed, rows 38-40 6/6/6,
+     0 refusal faults, 0 page errors, axe serious 1 (color-contrast, pre-existing), introduced 0.
+     RECORDED WITH IT, three corrections. #19 RESTATED FROM MEASUREMENT: admitting the four
+     _sownb files and re-deriving PIN1 did widen the unification workflow's own path filters by
+     the sanctioned route -- `_sownb/` trigger lines 2 at 3825ecf0 and cdc14919, 10 at 13b602e7
+     and after -- so the fence now runs in CI on those four and cdc14919's green-by-absence
+     cannot recur for them; what remains open is narrower, that coverage is per-admitted-file
+     rather than `_sownb/**`, and widening it is a CI change for Matt.
+     #20: Lessons main 13b602e7 read red on FieldOps 35594146123, `RED lessons
+     Science_Teesside/Launch/SCI_L_W5_L1_Osmosis.html - HTTP 503`, 58 of 59 served byte-identical,
+     5/5 controls fired. An origin refusal, not a digest mismatch, on a route the commit does not
+     touch; attempt 2 of the same run SUCCEEDED and watch-main 35595736183 went green. The live
+     domain is unreachable from the working session (L36), so the single ruled re-run was the only
+     measurement available. Not STOP-R.
+     #21: site_window.sh built the commit message's "Registry baseline:" clause from a /tmp record
+     written only when a re-freeze actually runs, and /tmp survives between runs -- so every Site
+     window since 3cff4ba7 (#418) replayed that one genuine re-freeze verbatim, batches 2 to 6
+     included. Nothing served or gated was affected: the pairs, both pin pairs and the whole
+     battery were genuinely derived and passing in each of those runs. The record was wrong, not
+     the work. Fixed at the cause and red-proved both ways; #424's squash message states
+     `Registry baseline: unchanged`; no force-push, so the branch commits keep the stale line.
+     THE IN-WINDOW RED, NAMED: while Lessons main carried 6fd6564f the watch read 2 FAIL --
+     Education Pages publication 35596150219 and FieldOps 35596149700 -- because main served
+     W16's new bytes while still pinning Site 8e95534e, whose registry held only `ce5d6c4c`
+     where f29214ed holds the pair. That is the L33 case this carrier exists to close, and the
+     closer above shows it closed.
+     THIS ENTRY RIDES ITS OWN DOCS-ONLY PR. L41 to L45 each rode their batch's pure carrier;
+     6b's carrier merged before this entry was written, so L46 lands separately. Noted so the
+     pattern break is in the record rather than inferred from it.
+     THE SIGNED BUILD SET IS COMPLETE AT ELEVEN.
