@@ -346,6 +346,73 @@ def self_test(root: Path):
          ['title'], set(), set()),
     ):
         pure.append((name, earwig_stages(names, eligible) == want))
+
+    # --- SECOND FIXTURE, ruled 2026-09-21. The fixture-driven battery below takes its only
+    # fixture from a NINE-stage deck that types its own stages
+    # title/arrival/starter/ido/wedo/ido2/wedo2/independent/exit -- the single shape on which
+    # identity-by-data-type and identity-by-declaration agree stage for stage. Measured: with a
+    # pre-transplant fixture supplied, that battery is 35 PASS under BOTH oracles, so it could
+    # never have caught the ruling-5 defect; and since #613 transplanted its fixture on main it
+    # SKIPS 29 of its 35 checks outright. This fixture exists so the two readings can DISAGREE
+    # inside the battery, and it is pure: it needs no untransplanted copy of anything, so it
+    # runs on every invocation rather than skipping with the rest.
+    #
+    # The bytes are a snapshot of a deck the estate really ships, not an invented fixture, and
+    # the claim is auditable rather than asserted -- re-checked on every run, not at pin time:
+    #     git show AUT1_BYTES_COMMIT:AUT1_DECK | sha256sum   ==   AUT1_SHA256
+    AUT1_FIXTURE = 'tools/hum/fixtures/aut1_twelve_stage_v1_base.html'
+    AUT1_DECK = 'Humanities_Teesside/Teaching_Packs/BUILD/HTML/BUILD_Humanities_W3.html'
+    AUT1_BYTES_COMMIT = 'aed400da53a7e85b7e501b78e1e9c564bab24bad'
+    AUT1_SHA256 = 'ab9f6abd62ef33df3bad621267aec70a5ccad6f765de71d623e55f13f0a5e2c5'
+    import hashlib, subprocess
+    fx = root / AUT1_FIXTURE
+    raw = fx.read_bytes() if fx.exists() else b''
+    pure.append(('AUT1 fixture: the snapshot is present and matches its pinned digest',
+                 bool(raw) and hashlib.sha256(raw).hexdigest() == AUT1_SHA256))
+    try:
+        g = subprocess.run(['git', '-C', str(root), 'show',
+                            AUT1_BYTES_COMMIT + ':' + AUT1_DECK], capture_output=True)
+        prov = g.returncode == 0 and hashlib.sha256(g.stdout).hexdigest() == AUT1_SHA256
+        note = '' if prov else (' -- git bytes differ from the snapshot' if g.returncode == 0
+                                else ' -- git could not produce the object')
+    except Exception as exc:                                    # noqa: BLE001
+        prov, note = False, ' -- %s' % type(exc).__name__
+    pure.append(('AUT1 fixture: git show %s:%s still equals the snapshot%s'
+                 % (AUT1_BYTES_COMMIT[:8], AUT1_DECK.rsplit('/', 1)[-1], note), prov))
+
+    if raw:
+        fst = stages(parse(raw.decode('utf-8', 'replace')))
+        declared = [stage_name(s) for s in fst]
+        typed = [(s.attrs.get('data-type') or '').strip() or 'unnamed' for s in fst]
+
+        def _split(names):
+            return ([n for n in names if n not in MODELLING_STAGES and n != 'title'],
+                    [n for n in names if n in MODELLING_STAGES],
+                    [n for n in names if n == 'title'])
+        de, dm, dt = _split(declared)
+        te, tm, tt = _split(typed)
+        pure.append(('AUT1 fixture: it is the twelve-stage Autumn 1 shape the rule was written for',
+                     len(fst) == 12))
+        # What the deck says about ITSELF if identity came from the type attribute. Recorded as
+        # the defect being guarded against, never as an expectation of this oracle.
+        pure.append(('AUT1 fixture: identity by data-type would give eligible 4 / modelling 7 / title 1',
+                     (len(te), len(tm), len(tt)) == (4, 7, 1)))
+        pure.append(('AUT1 fixture: identity by DECLARATION gives eligible 10 / modelling 1 / title 1',
+                     (len(de), len(dm), len(dt)) == (10, 1, 1)))
+        # THE RED PROOF, and the reason a second fixture was ruled. Six stages this deck types
+        # "ido" declare themselves otherwise in their own headings. If stage_name ever returns
+        # data-type again, `declared` collapses onto `typed`, `moved` drops to zero and this
+        # line FAILs -- which the nine-stage fixture structurally cannot do.
+        moved = [(i, typed[i], declared[i]) for i in range(len(fst))
+                 if typed[i] in MODELLING_STAGES and declared[i] not in MODELLING_STAGES]
+        pure.append(('AUT1 RED PROOF: six stages typed "ido" declare themselves otherwise, so '
+                     'identity by data-type would withhold six pupil-response panels',
+                     len(moved) == 6 and all(t == 'ido' for _i, t, _d in moved)))
+        pure.append(('AUT1 fixture: the one stage that really is I Do keeps its name',
+                     dm == ['ido']))
+        pure.append(('AUT1 fixture: the oracle names every stage of it',
+                     'unnamed' not in declared))
+
     for name, good in pure:
         print(('  PASS ' if good else '  FAIL ') + name)
 
