@@ -120,32 +120,77 @@ def parse(html: str) -> Node:
     return r.root
 
 
+# RULING 5 (standing instrument rule, 2026-09-22): a stage is identified by its slide id --
+# by what the deck declares for that slide -- and NEVER by the data-type attribute.
+#
+# data-type is a CATEGORY, not an identity, and the estate proves it: one value covers three
+# slides ("We do", "Check", "Review" are all data-type="wedo") on 120 landed decks and all 18
+# Summer 1 decks, two slides ("Opening" and "Arrival" are both data-type="arrival") on the same
+# 120, and SEVEN slides on the 15 Autumn 1 W3-W7 decks, where "Try one together", "Choose, then
+# explain" and "Show what you mean" are all data-type="ido".
+#
+# Reading it as the identity made verify_loop row 14 (P1-1, "the Title stage carries no panel")
+# run over an EMPTY title_stages on 120 of 220 landed decks and on all 18 Summer 1 decks: the
+# overview stage was typed "arrival", so the row could not see the stage it exists to protect
+# and passed without testing anything.
+#
+# The order below is the deck's own declarations, every step justified by a measured count:
+#   1. data-title + the slide's own heading -- present on 1,853 of 2,033 landed slides and
+#      162 of 162 Summer 1 slides, BETTER coverage than data-type's 1,763
+#   2. data-kind -- the declared role, on 180 landed slides ('opening' marks the overview)
+#   3. data-timer == "0" -- the deck's own statement that a stage has no teaching time.
+#      Measured: timer 0 appears at position 0 on 128 landed decks and all 18 Summer 1 decks,
+#      and nowhere else except the 8 id="complete-slide" slides, which step 1 already names
+#      'complete'. So it needs no position argument to be safe.
+#   4. 'unnamed' -- and never data-type. Measured after the change: 0 slides reach it.
+#
+# First match wins, so the "2" stages and the specific phrases are tested before their base
+# words: "We do . review the evidence" is a We Do, not a Review.
 STAGE_NAMES = [
-    ('title',       re.compile(r'\btitle\b|lesson overview|today at a glance|at a glance|start here', re.I)),
-    ('arrival',     re.compile(r'\barrival\b', re.I)),
+    ('title',       re.compile(r'\btitle\b|lesson overview|today at a glance|at a glance'
+                               r'|start here|\bopening\b|start the enquiry', re.I)),
+    ('arrival',     re.compile(r'\barrival\b|start with what you know', re.I)),
     ('starter',     re.compile(r'\bstarter\b', re.I)),
+    ('vocabulary',  re.compile(r'words that help', re.I)),
     ('ido2',        re.compile(r'i do\s*2', re.I)),
-    ('ido',         re.compile(r'\bi do\b', re.I)),
+    ('ido',         re.compile(r'\bi do\b|watch a worked example', re.I)),
     ('wedo2',       re.compile(r'we do\s*2', re.I)),
-    ('wedo',        re.compile(r'\bwe do\b', re.I)),
-    ('independent', re.compile(r'\bindependent\b', re.I)),
+    ('wedo',        re.compile(r'\bwe do\b|try one together', re.I)),
+    ('check',       re.compile(r'check the method|check the reasoning|^check$', re.I)),
+    ('independent', re.compile(r'\bindependent\b|now it is your turn|choose, then explain'
+                               r'|show what you mean|make the reasoning visible', re.I)),
     ('lundy_stage', re.compile(r'lundy loop', re.I)),
-    ('exit',        re.compile(r'\bexit\b', re.I)),
+    ('review',      re.compile(r'review and improve|\breview\b', re.I)),
+    ('voice',       re.compile(r'your voice shapes', re.I)),
+    ('exit',        re.compile(r'\bexit\b|before you go', re.I)),
     ('complete',    re.compile(r'\bcomplete\b', re.I)),
 ]
 
+# data-kind is a declared ROLE, not the type attribute ruling 5 forbids.
+KIND_STAGE = {'opening': 'title', 'learn': 'learn', 'task': 'independent',
+              'review': 'review', 'voice': 'voice', 'exit': 'exit'}
 
-def stage_name(node: Node) -> str:
-    dt = (node.attrs.get('data-type') or '').strip()
-    if dt:
-        return dt
+
+def stage_probe(node: Node) -> str:
+    """What the deck itself says this slide is: its declared title and its own heading.
+    data-type is not read here and is not read anywhere in stage identity (ruling 5)."""
     probe = node.attrs.get('data-title') or ''
     hs = node.find(lambda n: n.tag in ('h1', 'h2', 'h3'))
     if hs:
         probe = probe + ' ' + hs[0].inner_text()
+    return ' '.join(probe.split())
+
+
+def stage_name(node: Node) -> str:
+    probe = stage_probe(node)
     for name, rx in STAGE_NAMES:
         if rx.search(probe):
             return name
+    kind = (node.attrs.get('data-kind') or '').strip()
+    if kind:
+        return KIND_STAGE.get(kind, kind)
+    if (node.attrs.get('data-timer') or '').strip() == '0':
+        return 'title'
     return 'unnamed'
 
 

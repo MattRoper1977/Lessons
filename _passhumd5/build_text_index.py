@@ -27,9 +27,15 @@ def skip(lesson_id, pack, surface, path, reason):
 
 def config_of(html_path):
     s = html_path.read_text(encoding='utf-8', errors='replace')
-    k = 'window.CLASSIC_LESSON='
-    if k not in s: return None, s
-    i = s.index(k) + len(k)
+    # The key is matched with optional whitespace around '='. A literal
+    # 'window.CLASSIC_LESSON=' missed every lesson that writes the spaced form --
+    # measured on the twelve Summer 1 lessons of ADDENDUM 2, all of which write
+    # 'window.CLASSIC_LESSON = ': 6 of 6 BUILD lessons produced 0 config rows and
+    # 6 'not found or not parseable' skips. An index that cannot see a lesson makes
+    # every check that reads it report on nothing and look clean doing it.
+    m = re.search(r'window\.CLASSIC_LESSON\s*=\s*', s)
+    if not m: return None, s
+    i = m.end()
     d = 0; j = i; instr = False; esc = False
     while j < len(s):
         c = s[j]

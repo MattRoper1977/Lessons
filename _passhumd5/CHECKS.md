@@ -12,7 +12,7 @@ the workspace `/tmp/claude-0/humd5/` (E*_*.json); the E4 PDFs in `pdf_e4/`.
 
 | id | check | verdict | count | evidence |
 |---|---|---|---|---|
-| E1 | SoW fidelity (outcome + assessment == SoW cell) | **PASS** | 120/120 | E1_DRIFT.json empty; Humanities vs Humanities_Scheme_of_Work_2026-27.html, RE vs RE_Scheme_of_Work_Autumn_2026.html |
+| E1 | SoW fidelity (outcome + assessment == SoW cell) | **NOT RUN** | 0 of 120 | RULED 2026-09-22 (ADDENDUM 2, ruling 3): the former **PASS** rested on E1_DRIFT.json, a two-byte `[]` that no instrument in `_passhumd5/` writes or reads — an empty file proves nothing about whether the comparison ran. The file is deleted from the record. E1 stays NOT RUN until a drift instrument writes it from the config outcome/assessment against the SoW cell (Humanities vs Humanities_Scheme_of_Work_2026-27.html, RE vs RE_Scheme_of_Work_Autumn_2026.html). |
 | E2 | Cross-surface parity | **PASS** (0 meaning-level disagreements) | 2,653 field rows × 7 surfaces | scan_e2_parity.py; 50 DOCX heading punctuation drops → Class A group; 13 lessons carry the check answer in slide notes only (informational) |
 | E3 | Answers never on a pupil surface | **RULED** H1 by design (KO), H2 applied (strip: 106 → 0 on screen, re-measured), H3 STOP-X | POST: 27/120 visible in default state, all by-design classes (match options 26, word bank/hints); KO 218/218 by design; Pupil_Resources.html 5 held | render_visibility.js (default state, per stage, control proved 120/120); E3_VISIBLE_CLASSIFIED.json |
 | E4 | Print routes | **PASS** on pages/blank/clipped/.vary-box; **FAIL — systematic, ruling** on zero answers | 480 PDFs (3 routes + organiser × 120) | render_e4_print.js + E4_RESULT.json: pages 6–7 / organiser 1; 0 blank; 0 clipped candidates at A4 width; .vary-box 0 visible; answers on the organiser page (KO "Remember" q/a) and the arrival page (reminder strip) in 480/480 |
@@ -203,3 +203,178 @@ are exactly the RE members (BUILD_RE_A2_W07 · GROW_RE_A2_W07 · LAUNCH_RE_A1_W0
 - The rendered index is force-revealed (correction #11) — visibility is measured by `render_visibility.js`, never inferred from it.
 - axe's default asset preload cost a flat 10 s per run on file:// pages; `preload:false` was set (rule set unchanged).
 - PDF text extraction wraps long URLs at line ends (the ONS URL in GROW_RE_A1_W01 Teacher_Notes.pdf) — the DOCX carries it whole; not a dead link.
+
+## ADDENDUM 3 — Summer 1, all three pathways (A3.0–A3.5), 2026-09-21
+
+Eighteen lessons, ids `BUILD_SU1_W01..W06`, `GROW_SU1_W01..W06`,
+`LAUNCH_SU1_W01..W06`. Measured before any landing; nothing edited to make a
+line pass.
+
+### A3.0 inputs — verified by content, not by trusting the file name
+
+| pack | SHA256SUMS | lessons found |
+|---|---|---|
+| BUILD  | 93/93 verified by content, 0 failed | 6 |
+| GROW   | 88/88 verified by content, 0 failed | 6 |
+| LAUNCH | 90/90 verified by content, 0 failed (91 files, as A3.0 states) | 6 |
+
+**A3.0 input 2, the name — RULED 2026-09-22 (A3.5 ruling 1): accepted by CONTENT.**
+A3.0 named `HUM_Summer_1_GROW_W01-06_Final.zip`; the artefact delivered is
+`HUM_Summer_1_GROW_Final.zip`. Its 88 of 88 entries verify by digest and it carries
+`CHANGELOG_Final_2026-09-21.md`, and that pair — the digests plus the Addendum 2
+changelog — **is** the identity. The record is corrected to the delivered name. Not a
+hold; nothing about the pack is in question.
+
+### A3.1 counts — derived from the pack population
+
+    previous HUM-D5 population : 78 Humanities + 42 RE = 120
+    Summer 1 adds              : 6 BUILD + 6 GROW + 6 LAUNCH = 18, all Humanities
+    Humanities                 : 78 + 18 = 96
+    RE                         : 42 + 0  = 42
+    combined                   : 96 + 42 = 138
+
+A3.1 expects 96 + 42 = 138. **MATCHES.**
+
+### A3.2 — pre-ruled items, recorded by name
+
+**R1 — the authorised skeleton difference, by name.**
+`LAUNCH_SU1_W01` carries **six** NOAA annual-mean rows where its donor skeleton
+(`LAUNCH_S2_W05`) carries four. GPT's own strict G2 skeleton check scored this
+FAIL at 784 donor / 790 output — two extra `tr` and four extra `td`. **RULED NOT
+A DEFECT (A3.2 R1): the six years were the brief.** Re-derived here with a
+parser, not a byte diff: W01's printed data table is
+
+    Year | CO2 ppm
+    1980 | 338.76
+    1990 | 354.45
+    2000 | 369.71
+    2010 | 390.10
+    2020 | 414.21
+    2025 | 427.35
+
+six year rows, twelve cells, against the donor's four rows and eight cells:
+exactly the +2 `tr` / +4 `td` GPT reported. W02 780/780, W03 780/780, W04
+778/778, W05 783/783, W06 769/769 all PASS on GPT's own gate.
+
+HUM-D5 has **no skeleton or donor-diff gate of its own** — E1–E18 contain none,
+and the G2 check is the pack builder's. The exception is therefore recorded here,
+by name, so that any skeleton or diff gate added to HUM-D5 reads it before it
+runs, and so that nobody "repairs" the two rows:
+
+> **AUTHORISED DIFFERENCE `R1-LAUNCH_SU1_W01-NOAA-SIX-YEARS`** — two additional
+> `tr` and four additional `td` in the `LAUNCH_SU1_W01` data table against donor
+> `LAUNCH_S2_W05`. Authorised by ADDENDUM 3 A3.2 R1. Not to be repaired, and not
+> to be hidden by widening the skeleton gate.
+
+**R2 — NOAA 2025, UNVERIFIED.** `https://gml.noaa.gov/webdata/ccgg/trends/co2/co2_annmean_mlo.csv`
+was attempted twice from this session. Both attempts:
+`curl: (56) CONNECT tunnel failed, response 403`. The 2025 line was never read,
+so 427.35 ppm is **UNVERIFIED-BY-CLAUDE**, exactly as R2 anticipates. Nothing was
+edited; A3.2 R2 says continue when there is no egress, and that is what happened.
+
+**R3** — LAUNCH ships six per-week `Sources_and_checks.html` plus one at pack root:
+confirmed, 7 files. They are evidence pages and take no catalogue row.
+
+### A3.3 gates — re-derived here
+
+**G-A — PASS 18/18.** 9 slides per lesson, `data-timer` summing 40, pathway in
+the title, and exactly **one** `<h1>` per lesson. The `<h1>` count was taken with
+a parser. A naive `<h1` regex reports 2 on the LAUNCH lessons: the second hit
+lives inside a JavaScript string, the same trap that produced the 1.12 MB Science
+hub (L47). A regex count would have failed a gate that in fact passes.
+
+**G-B — PASS, 36 rows of 36 clean.** Real Chromium, each pack served over http
+from its own root, every stage activated in turn so that no stage's width goes
+unmeasured:
+
+    BUILD   lessons 6, rows 12 (390 and 1280), clean 12, flagged 0
+    GROW    lessons 6, rows 12 (390 and 1280), clean 12, flagged 0
+    LAUNCH  lessons 6, rows 12 (390 and 1280), clean 12, flagged 0
+
+0 page errors, 0 console errors, 0 off-origin requests, no horizontal overflow at
+either width. **No runner run id**: A3.3 asks for the runner *"if the container
+has no browser"*. This container has Chromium, so G-B ran here, on real Chromium,
+and the condition for the runner leg was never met. The GROW and LAUNCH READMEs
+both record "Chromium was unavailable… desktop/phone layout tests were NOT RUN" —
+this is the line that closes that gap for them.
+
+**G-C — PASS 18/18, 0 occurrences.** Pupil-visible text, measured as the union of
+`document.body.innerText` over every activated stage (a hidden stage returns the
+empty string, so the union is what a pupil can actually see). Named terms, counted
+case-sensitively **and** case-insensitively: `USGS`, `earthquake`, `Migration`,
+`OS symbol`, `LAUNCH_S2_`, `LAUNCH_A1_`, `LAUNCH_A2_` — every count 0. The
+equivalent donor-id leg for BUILD and GROW was derived from their own records
+(BUILD ← `HUM_Autumn_2_BUILD_Reviewed.zip`; GROW ← `GROW_S2_W03/W04`,
+`GROW_A2_W05/W07`; LAUNCH ← `LAUNCH_S2_W03/W05`, `LAUNCH_A1_W02/W06/W07`,
+`LAUNCH_A2_W03`) and generalised to any foreign lesson id
+`(BUILD|GROW|LAUNCH)_(A1|A2|S1|S2)_W\d+` — 0 in all 18.
+
+*Red proof:* a copy of `LAUNCH_SU1_W01` was seeded inside its `<h1>` with
+`USGS earthquake LAUNCH_S2_W05 Thunberg`. The instrument then reported 5 clean /
+1 flagged, naming `USGS 1`, `earthquake 1`, `LAUNCH_S2_ 1`, foreign id
+`LAUNCH_S2_W05`, `thunberg 1` — and flagged only the seeded lesson. An instrument
+that cannot go red proves nothing when it goes green.
+
+**G-D — PASS. 0 quotations, 0 extracts.** Case-insensitive scan of the whole
+LAUNCH pack, text surfaces *and* binary (12 DOCX, 6 PPTX, 18 PDF, 1 XLSX, all
+extracted and read — the DOCX/PPTX/PDF/XLSX libraries are importable in this
+container, so this leg RAN). The name appears in 18 staff files and in the
+lessons' config, never as book text. Every occurrence is one of three sentences:
+"the teacher supplies the school's copy of No One Is Too Small by Greta Thunberg;
+no extract or quotation is included", "This pack includes no quotation or
+extract", and the SoW resources line "selected No One Is Too Small extracts by
+Thunberg" — the scheme's own list of what the *teacher* brings. **Pupil-visible
+count: 0 in all six lessons.**
+
+**G-E — NOT RUN.** `resources.json` rows, the chip-count filter chain and
+hub reachability are landing-time gates; the 18 have not landed.
+
+### Proofread — two defects found in LAUNCH, neither by a supplied gate
+
+Measured by comparing each lesson's **on-screen** organiser dialog against its
+**print** organiser and its `Knowledge_Organiser.html`, then re-measured as
+rendered by real Chromium (the source table could have been repainted from the
+config at load; it is not — what is in the bytes is what the pupil reads).
+
+| lesson | word | on screen | print + Knowledge_Organiser |
+|---|---|---|---|
+| `LAUNCH_SU1_W01` | provenance | "1980 is 338.76 ppm and 2025 is 427.35 ppm." | "Who made a source, when and why" |
+| `LAUNCH_SU1_W02` | mitigation | "Reducing a source of greenhouse-gas emissions." | "Reducing greenhouse-gas emissions or increasing their removal" |
+
+16 of 18 lessons are clean. W01's screen cell is not a definition of provenance
+at all — a data sentence has replaced it. W02's screen cell is narrower than the
+printed one: it drops removal, which is half of what mitigation means.
+
+Neither is confined to one cell. W01's wrong string is carried by
+`LAUNCH_SU1_W01_Lesson.html` (×2), `Editable_Slides.pptx`, `Teacher_Notes.docx`
+and `Teacher_Notes.pdf`; the right string by `Knowledge_Organiser.html`/`.pdf`,
+the lesson (×1) and the same PPTX. W02 has the identical shape. So both packs
+disagree with themselves across surfaces — an E2 meaning-level disagreement, the
+class E2 currently records as 0.
+
+**RULED 2026-09-22 (A3.5 ruling 2): HELD, author's defect, sent back to GPT.**
+Neither cell was edited — a vocabulary definition is authored text, and R2 sets this pack's
+precedent. `LAUNCH_SU1_W01` and `LAUNCH_SU1_W02` do not land until GPT re-delivers them.
+**BUILD W01–W06, GROW W01–W06 and LAUNCH W03–W06 are clear on every gate above** and proceed
+to intake and landing once the `Sources_and_checks.html` re-delivery of ruling 3 arrives.
+
+## Rulings on this addendum, recorded 2026-09-22
+
+| # | ruling | state here |
+|---|---|---|
+| 1 | GROW pack accepted by content; the A3.0 name corrected in the record | applied above |
+| 2 | `LAUNCH_SU1_W01` / `W02` HELD, author's defect, back to GPT; the other 16 proceed once ruling 3 lands | applied above |
+| 3 | `Sources_and_checks.html` back to GPT — ids must match the lessons' own anchors, one per pack root, identical to the `_records` copy | HELD, not re-delivered |
+| 4 | NOAA 2025 (427.35 ppm) stays as authored, flagged UNVERIFIED; no edit until Matt replies "NOAA ok" or a value | applied — nothing edited |
+| 5 | the R1 exception is recorded; "HUM-D5 has no donor-diff gate" is a **next-order finding**, not built now | recorded above, not built |
+| 6 | G-B on this container's real Chromium stands; no runner run needed | recorded above |
+| 7 | `stage_name()` returning `data-type` verbatim: confirmed, fixed, red-proved | see `tools/hum/STAGE_IDENTITY_RULE.md` |
+| 8 | correction #26 accepted | recorded above |
+
+### Ruling 3 — what the re-delivery has to satisfy, measured
+
+The supplied `Sources_and_checks.html` offers the anchor ids `sow, authored, book, w01 … w06`.
+The BUILD lessons cite `#sow`, `#plans` and `#townside`. So **`#plans` and `#townside` — 4 of
+the 11 links — would land dead**, and the file is not byte-identical to any `_records` copy.
+That is the whole of the hold: ids that match the lessons' own anchors, one file at the pack
+root, identical to the `_records` copy.

@@ -1394,6 +1394,16 @@ REVIEWED_PATHS = (
     # review decision and cannot be re-derived, which is why the control is a pin
     # rather than a regeneration.
     "_sx3/FENCE.json",
+    # ORDER HUM-D5 (2026-09-21): the pass's own record and the instrument that builds its
+    # text index. CHECKS.md is a pass record, pinned for the same reason SX3_PASSES_LEDGER.md is
+    # -- a record the tree can edit silently is not a record. build_text_index.py is the A0
+    # instrument every E-check reads downstream: ruling 1 of 2026-09-22 approved a fix to it
+    # (it could not see a lesson that spaces its config key, so E1/E2 would have "passed" over
+    # a short set), and an instrument that can be widened unreviewed is worth less than the
+    # checks it feeds. Admitted by PIN, not by ALLOWED_DIFF: both gate copies are re-pinned and
+    # judged by exact bytes. Nothing is loosened.
+    "_passhumd5/CHECKS.md",
+    "_passhumd5/build_text_index.py",
     # SX3 landing decks. A deck is admitted by being named here: the boundary
     # permits a changed file only if it is pinned, and tools/pin1/derive_triggers.py
     # then materialises the matching trigger path and asserts the two sets are equal.
@@ -1496,6 +1506,16 @@ REVIEWED_PATHS += (
 REVIEWED_PATHS += (
     '_hum/LOOP_CONTRACT.md',
     'tools/hum/loop_adapter.py',
+    # RULING 5 (2026-09-22): deck_dom.py holds stage_name(), the single identity oracle that
+    # loop_adapter.py and verify_loop.py both call, and STAGE_IDENTITY_RULE.md is the ruled rule
+    # it implements with its measured basis. loop_adapter.py and verify_loop.py were already
+    # pinned; the oracle they read was not, so the one file that decides what every stage IS
+    # could change unreviewed while both its callers were guarded. Pinned here for that reason.
+    # The rule file is added rather than modified, and the boundary judges only MODIFIED files
+    # (git diff --diff-filter=MRD), so it would arrive unjudged exactly as build_science_hub.py
+    # did; pinning it judges it by exact bytes from now on.
+    'tools/hum/deck_dom.py',
+    'tools/hum/STAGE_IDENTITY_RULE.md',
     'tools/hum/render_proof.cjs',
     'tools/hum/verify_loop.py',
 )
