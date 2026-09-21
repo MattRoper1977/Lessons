@@ -69,7 +69,10 @@ def derive(shelf_rows: list[dict], lessons: list[dict], pack_lessons: list[dict]
     for P in pack_lessons:
         key = (P['pathway'], P['term'], P['week'], P['strand'])
         slots.setdefault(key, {'current': [], 'alternatives': [], 'pack': []})['pack'].append(P)
-    double = sorted(k for k, s in slots.items() if len(s['current']) > 1)
+    def _double(cur):
+        parts = [L.get('part') for L in cur]
+        return len(cur) > 1 and (any(p is None for p in parts) or len(set(parts)) != len(parts))
+    double = sorted(k for k, s in slots.items() if _double(s['current']))
     filled_by_pack = sorted(k for k, s in slots.items() if not s['current'] and s['pack'])
     gaps = collections.Counter()
     for strand, planned in sow_slots.items():
@@ -141,9 +144,12 @@ def _card(row: dict, href: str, title: str, kind: str, week: int | None, strand:
             f'{extra}<a class="go" href="{E(href, quote=True)}">Open lesson <span aria-hidden="true">→</span></a></article>')
 
 
-def render_start_strip(subject: str, pathway_blurbs: dict[str, str]) -> str:
+def render_start_strip(subject: str, pathway_blurbs: dict[str, str], pathway_hrefs: dict[str, str] | None = None) -> str:
+    """S1. A pathway card links its in-page section unless the subject hands it the
+    pathway's own START_HERE page (PASS F: three pathway START_HERE + Packs)."""
+    hrefs = pathway_hrefs or {}
     cards = ''.join(
-        f'<a class="start-card p-{p}" href="#lessons-{p.lower()}"><strong>{E(p)}</strong>'
+        f'<a class="start-card p-{p}" href="{E(hrefs.get(p, "#lessons-" + p.lower()), quote=True)}"><strong>{E(p)}</strong>'
         f'<span>{E(pathway_blurbs.get(p, "Current lessons by term and week"))}</span></a>' for p in PATHWAYS)
     cards += ('<a class="start-card p-PACKS" href="#packs"><strong>Packs &amp; downloads</strong>'
               '<span>Editable Word, PowerPoint and PDF packs, one card per pack</span></a>')
@@ -165,8 +171,10 @@ def render_current(d: dict, subject: str, href_of, pack_href_of, strand_labels: 
                    f'<summary><h2>{pathway}</h2><span data-pathway-count>{n} weeks</span><span class="chev" aria-hidden="true">▾</span></summary>')
         for strand in strands:
             out.append(f'<section class="hub-strand" data-strand="{E(strand)}"><h3 class="strand-h">{E(strand_labels.get(strand, strand))}</h3>')
-            for term in TERM_ORDER:
-                tkeys = sorted((k for k in keys if k[3] == strand and k[1] == term), key=lambda k: k[2])
+            # the six terms first, then any extra term key the subject's own record carries
+            # (a route bound to no timetabled week sits under 'unspecified', never dropped)
+            for term in list(TERM_ORDER) + [t for t in d['terms'] if t not in TERM_ORDER]:
+                tkeys = sorted((k for k in keys if k[3] == strand and k[1] == term), key=lambda k: (k[2] is None, k[2] or 0))
                 if not tkeys:
                     continue
                 out.append(f'<section class="catalogue-term" data-term="{term}"><h3>{E(d["terms"][term])} <span data-term-count>· {len(tkeys)} weeks</span></h3><div class="grid week-grid">')
@@ -175,15 +183,17 @@ def render_current(d: dict, subject: str, href_of, pack_href_of, strand_labels: 
                     week = k[2]
                     out.append(f'<div class="week-row" data-week="{week}">')
                     if s['current']:
-                        L = s['current'][0]
-                        row = d['by_path'][L['path']]
-                        rendered.append(L['path'])
-                        extra = ''
-                        if s['pack']:
-                            P = s['pack'][0]
-                            extra += f'<p class="pack-link"><a href="{E(pack_href_of(P["path"]), quote=True)}">Pack lesson: {E(P["h1"])} →</a></p>'
-                        badges = f'<p class="badges"><span class="pill">{E(strand)}</span><span class="pill">{E(style_labels.get(row["style"], row["style"]))}</span></p>'
-                        out.append(_card(row, href_of(row['path']), f'W{week} · {L["h1"]}', f'{pathway} · {strand}', week, strand, badges + extra))
+                        wk = f'W{week}' if week is not None else 'Week not bound'
+                        for L in sorted(s['current'], key=lambda L: L.get('part') or ''):
+                            row = d['by_path'][L['path']]
+                            rendered.append(L['path'])
+                            extra = ''
+                            if s['pack'] and L is s['current'][0]:
+                                P = s['pack'][0]
+                                extra += f'<p class="pack-link"><a href="{E(pack_href_of(P["path"]), quote=True)}">Pack lesson: {E(P["h1"])} →</a></p>'
+                            badges = f'<p class="badges"><span class="pill">{E(strand)}</span><span class="pill">{E(style_labels.get(row["style"], row["style"]))}</span>' + L.get('badges', '') + '</p>'
+                            part = f' · {L["part"]}' if L.get('part') else ''
+                            out.append(_card(row, href_of(row['path']), f'{wk}{part} · {L["h1"]}', f'{pathway} · {strand}', week, strand, badges + extra))
                     else:
                         P = s['pack'][0]
                         out.append(f'<article class="card t-{pathway} pack-lesson" data-pack-lesson="{E(P["path"], quote=True)}" data-term="{term}" data-style="pack" data-pathway="{pathway}" data-week="{week}" data-strand="{E(strand)}">'
@@ -242,8 +252,11 @@ def render_packs(pack_cards: list[dict], reference_rows: list[dict], href_of, su
     return ''.join(out), rendered
 
 
-def render_earlier(earlier_rows: list[dict], families: dict[str, str], href_of, terms: dict[str, str]) -> tuple[str, list[str]]:
-    """S4. Grouped Pathway -> recorded term. No week is derived from any path."""
+def render_earlier(earlier_rows: list[dict], families: dict[str, str], href_of, terms: dict[str, str],
+                   week_of=None) -> tuple[str, list[str]]:
+    """S4. Grouped Pathway -> recorded term. No week is derived from any path; a subject
+    whose own bindings RECORD a week for an earlier route may hand it in through week_of
+    (path -> week or None), and the card then carries it."""
     rendered: list[str] = []
     n = len(earlier_rows)
     out = [f'<details class="science-pathway earlier" id="earlier" data-pathway="EARLIER"><summary><h2>Earlier versions</h2>'
@@ -260,11 +273,14 @@ def render_earlier(earlier_rows: list[dict], families: dict[str, str], href_of, 
         order = {t: i for i, t in enumerate(terms)}
         for term in sorted(groups, key=lambda t: order.get(t, len(order))):
             out.append(f'<section class="catalogue-batch" data-style="earlier"><h4>{E(terms.get(term, term))} <span data-batch-count>· {len(groups[term])} resources</span></h4><div class="grid">')
-            for r in sorted(groups[term], key=lambda r: natural(r['title'])):
+            wk = (lambda r: week_of(r['path']) if week_of else None)
+            for r in sorted(groups[term], key=lambda r: ((wk(r) is None), wk(r) or 0, natural(r['title']))):
                 rendered.append(r['path'])
                 title = re.sub(r'\s*[·—]\s*40 minutes\s*$', '', r['title'])
                 fam = families.get(r['path'], 'earlier')
-                out.append(_card(r, href_of(r['path']), title, f'{pathway if pathway != "OTHER" else "Shared"} · {fam}', None, None,
+                w = wk(r)
+                out.append(_card(r, href_of(r['path']), (f'W{w} · ' if w is not None else '') + title,
+                                 f'{pathway if pathway != "OTHER" else "Shared"} · {fam}', w, None,
                                  f'<p class="badges"><span class="pill">{E(fam)}</span></p>', 'earlier'))
             out.append('</div></section>')
         out.append('</section>')
@@ -297,6 +313,15 @@ def self_test() -> int:
     L2 = L + [{'path': 'b.html', 'pathway': 'BUILD', 'term': 'Aut1', 'week': 1, 'strand': 'RE', 'h1': 'B', 'alternative': False}]
     d3 = derive(shelf, L2, [], sow, fam, terms)
     check('C1 red: two current cards in one slot', any(e.startswith('C1 double-current') for e in c1_errors(d3)))
+    Lp = [dict(L[0], part='A'), dict(L[0], path='b.html', h1='B', part='B')]
+    check('C1 green: parts A and B of one week share the slot', not c1_errors(derive(shelf, Lp, [], sow, fam, terms)))
+    Lq = [dict(L[0], part='A'), dict(L[0], path='b.html', h1='B', part='A')]
+    check('C1 red: two rows with the same part', any(e.startswith('C1 double-current') for e in c1_errors(derive(shelf, Lq, [], sow, fam, terms))))
+    Lr = [dict(L[0], part='A'), dict(L[0], path='b.html', h1='B')]
+    check('C1 red: a part beside a row with no part', any(e.startswith('C1 double-current') for e in c1_errors(derive(shelf, Lr, [], sow, fam, terms))))
+    dn = derive(shelf, [dict(L[0], week=None)], [], {}, fam, terms)
+    hn, gn = render_current(dn, 'S', lambda p: p, lambda p: p, {'RE': 'RE'})
+    check('a week-unbound current row renders last, labelled, and is counted', gn == ['a.html'] and 'Week not bound' in hn)
     check('C2 red: an earlier-family card rendered as current', any('earlier-family' in e for e in c2_errors(d3, fam)))
     L3 = [dict(L[0], strand='UNASSIGNED')] + [L[1]]
     check('C1 red: UNASSIGNED strand', any('UNASSIGNED' in e for e in c1_errors(derive(shelf, L3, [], sow, fam, terms))))
@@ -314,7 +339,9 @@ def self_test() -> int:
     check('C4 red: a card invented', any('no shelf row' in e for e in c4_errors(['a.html', 'b.html', 'c.html', 'z.html'], shelf)))
     html_out, got = render_earlier([shelf[1]], fam, lambda p: p, terms)
     check('S4 groups earlier cards by the RECORDED term and derives no week from a path', got == ['b.html'] and 'Autumn 1' in html_out and 'data-week="unspecified"' in html_out)
-    print(f'hub_sections self-test: {13 - ok} of 13 controls ok, {ok} FAIL')
+    html_w, got_w = render_earlier([shelf[1]], fam, lambda p: p, terms, week_of=lambda p: 3)
+    check('S4 carries a RECORD-supplied week on an earlier card', got_w == ['b.html'] and 'data-week="3"' in html_w and '>W3 · B<' in html_w)
+    print(f'hub_sections self-test: {18 - ok} of 18 controls ok, {ok} FAIL')
     return 1 if ok else 0
 
 
