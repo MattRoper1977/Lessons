@@ -1313,6 +1313,16 @@ SHELF_ROWS.append({'id': 'pack1r-su1-grow-w03-our-school-route-fieldwork', 'subj
 SHELF_ROWS.append({'id': 'pack1r-su1-grow-w04-physical-and-human-features', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Physical and human features · GROW Humanities', 'file': 'Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W04/GROW_SU1_W04_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'GROW Humanities · Summer 1 · Week 4 (PACK-1R). Learning goal: Describe physical and human features of a place.', 'keywords': ['humanities', 'grow', 'summer 1 · week 4', 'pack-1r', 'physical', 'human', 'features']})
 SHELF_ROWS.append({'id': 'pack1r-su1-grow-w05-middlesbrough-and-helmsley', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Middlesbrough and Helmsley · GROW Humanities', 'file': 'Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W05/GROW_SU1_W05_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'GROW Humanities · Summer 1 · Week 5 (PACK-1R). Learning goal: Compare my locality with a contrasting place.', 'keywords': ['humanities', 'grow', 'summer 1 · week 5', 'pack-1r', 'middlesbrough', 'helmsley']})
 SHELF_ROWS.append({'id': 'pack1r-su1-grow-w06-our-locality-study-and-evidence', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Our locality study and evidence · GROW Humanities', 'file': 'Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W06/GROW_SU1_W06_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'GROW Humanities · Summer 1 · Week 6 (PACK-1R). Learning goal: Complete a fieldwork and locality study and bank UAS evidence.', 'keywords': ['humanities', 'grow', 'summer 1 · week 6', 'pack-1r', 'locality', 'study', 'evidence']})
+# The LAUNCH rows of the same landing, appended AFTER the BUILD and GROW rows already on
+# main so the reviewed literals stay in the order resources.json carries them: the
+# contract compares the two sequences position by position.
+SHELF_ROWS.append({'id': 'catalogue-2026-27-humanities-launch-w27-w39-pack1r', 'subject': 'Humanities', 'type': 'teacher', 'title': 'LAUNCH · Humanities · Summer 1', 'file': 'Humanities_Teesside/LAUNCH_W27-W39_2026-27/START_HERE.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': "Start page for the six LAUNCH Humanities lessons of Summer 1, weeks 1-6, with each lesson's knowledge organiser, pupil resources, editable pack, slides and teacher notes beside it.", 'keywords': ['humanities', 'launch', 'summer 1', 'start here', 'pack-1r']})
+SHELF_ROWS.append({'id': 'pack1r-su1-launch-w01-resource-use-and-carbon-dioxide', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Resource use and carbon dioxide · LAUNCH Humanities', 'file': 'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W01/LAUNCH_SU1_W01_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'LAUNCH Humanities · Summer 1 · Week 1 (PACK-1R). Learning goal: Explain resource use and climate change using online data.', 'keywords': ['humanities', 'launch', 'summer 1 · week 1', 'pack-1r', 'resource', 'carbon', 'dioxide']})
+SHELF_ROWS.append({'id': 'pack1r-su1-launch-w02-judging-climate-responses', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Judging climate responses · LAUNCH Humanities', 'file': 'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W02/LAUNCH_SU1_W02_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'LAUNCH Humanities · Summer 1 · Week 2 (PACK-1R). Learning goal: Evaluate responses to climate change.', 'keywords': ['humanities', 'launch', 'summer 1 · week 2', 'pack-1r', 'judging', 'climate', 'responses']})
+SHELF_ROWS.append({'id': 'pack1r-su1-launch-w03-choosing-a-school-sustainability-option', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Choosing a school sustainability option · LAUNCH Humanities', 'file': 'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W03/LAUNCH_SU1_W03_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'LAUNCH Humanities · Summer 1 · Week 3 (PACK-1R). Learning goal: Make a reasoned geographical decision.', 'keywords': ['humanities', 'launch', 'summer 1 · week 3', 'pack-1r', 'choosing', 'school', 'sustainability', 'option']})
+SHELF_ROWS.append({'id': 'pack1r-su1-launch-w04-an-accurate-earth-day-campaign', 'subject': 'Humanities', 'type': 'lesson', 'title': 'An accurate Earth Day campaign · LAUNCH Humanities', 'file': 'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W04/LAUNCH_SU1_W04_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'LAUNCH Humanities · Summer 1 · Week 4 (PACK-1R). Learning goal: Create a digital sustainability campaign linked to Earth Day.', 'keywords': ['humanities', 'launch', 'summer 1 · week 4', 'pack-1r', 'accurate', 'earth', 'campaign']})
+SHELF_ROWS.append({'id': 'pack1r-su1-launch-w05-a-measurable-community-contribution', 'subject': 'Humanities', 'type': 'lesson', 'title': 'A measurable community contribution · LAUNCH Humanities', 'file': 'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W05/LAUNCH_SU1_W05_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'LAUNCH Humanities · Summer 1 · Week 5 (PACK-1R). Learning goal: Link learning to local action with Community Project links.', 'keywords': ['humanities', 'launch', 'summer 1 · week 5', 'pack-1r', 'measurable', 'community', 'contribution']})
+SHELF_ROWS.append({'id': 'pack1r-su1-launch-w06-our-sustainability-decision-report', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Our sustainability decision report · LAUNCH Humanities', 'file': 'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W06/LAUNCH_SU1_W06_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'LAUNCH Humanities · Summer 1 · Week 6 (PACK-1R). Learning goal: Complete a sustainability decision report.', 'keywords': ['humanities', 'launch', 'summer 1 · week 6', 'pack-1r', 'sustainability', 'decision', 'report']})
 
 # Exact reviewed files, not patterns. A future new UI file requires an explicit
 # change here; a lesson cannot become permitted because it shares a directory.
@@ -1828,6 +1838,102 @@ REVIEWED_PATHS += (
 REVIEWED_PATHS += (
     'Humanities_Teesside/BUILD_W27-W39_2026-27/CHANGELOG.txt',
     'Humanities_Teesside/GROW_W27-W39_2026-27/CHANGELOG.txt',
+)
+
+# ORDER HUM-T landing — transplanted decks, admitted per batch
+# ADDENDUM 3 v3 Summer 1 landing, LAUNCH: every file of the served pathway tree, pinned by its own bytes
+REVIEWED_PATHS += (
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/CHANGELOG.txt',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W01/LAUNCH_SU1_W01_Captioned_Model.mp4',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W01/LAUNCH_SU1_W01_Data.csv',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W01/LAUNCH_SU1_W01_Data.xlsx',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W01/LAUNCH_SU1_W01_Editable_Pack.docx',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W01/LAUNCH_SU1_W01_Editable_Slides.pptx',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W01/LAUNCH_SU1_W01_Knowledge_Organiser.html',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W01/LAUNCH_SU1_W01_Knowledge_Organiser.pdf',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W01/LAUNCH_SU1_W01_Lesson.html',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W01/LAUNCH_SU1_W01_Model_Transcript.txt',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W01/LAUNCH_SU1_W01_Pupil_Resources.html',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W01/LAUNCH_SU1_W01_Pupil_Resources.pdf',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W01/LAUNCH_SU1_W01_Teacher_Notes.docx',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W01/LAUNCH_SU1_W01_Teacher_Notes.pdf',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W01/Sources_and_checks.html',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W01/Teaching_Visual_1.png',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W01/Teaching_Visual_1.svg',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W01/Visual_Resource.png',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W02/LAUNCH_SU1_W02_Captioned_Model.mp4',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W02/LAUNCH_SU1_W02_Editable_Pack.docx',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W02/LAUNCH_SU1_W02_Editable_Slides.pptx',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W02/LAUNCH_SU1_W02_Knowledge_Organiser.html',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W02/LAUNCH_SU1_W02_Knowledge_Organiser.pdf',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W02/LAUNCH_SU1_W02_Lesson.html',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W02/LAUNCH_SU1_W02_Model_Transcript.txt',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W02/LAUNCH_SU1_W02_Pupil_Resources.html',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W02/LAUNCH_SU1_W02_Pupil_Resources.pdf',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W02/LAUNCH_SU1_W02_Teacher_Notes.docx',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W02/LAUNCH_SU1_W02_Teacher_Notes.pdf',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W02/Sources_and_checks.html',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W02/Teaching_Visual_1.png',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W02/Teaching_Visual_1.svg',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W02/Visual_Resource.png',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W03/LAUNCH_SU1_W03_Captioned_Model.mp4',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W03/LAUNCH_SU1_W03_Editable_Pack.docx',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W03/LAUNCH_SU1_W03_Editable_Slides.pptx',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W03/LAUNCH_SU1_W03_Knowledge_Organiser.html',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W03/LAUNCH_SU1_W03_Knowledge_Organiser.pdf',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W03/LAUNCH_SU1_W03_Lesson.html',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W03/LAUNCH_SU1_W03_Model_Transcript.txt',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W03/LAUNCH_SU1_W03_Pupil_Resources.html',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W03/LAUNCH_SU1_W03_Pupil_Resources.pdf',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W03/LAUNCH_SU1_W03_Teacher_Notes.docx',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W03/LAUNCH_SU1_W03_Teacher_Notes.pdf',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W03/Sources_and_checks.html',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W03/Teaching_Visual_1.png',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W03/Teaching_Visual_1.svg',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W03/Visual_Resource.png',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W04/LAUNCH_SU1_W04_Captioned_Model.mp4',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W04/LAUNCH_SU1_W04_Editable_Pack.docx',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W04/LAUNCH_SU1_W04_Editable_Slides.pptx',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W04/LAUNCH_SU1_W04_Knowledge_Organiser.html',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W04/LAUNCH_SU1_W04_Knowledge_Organiser.pdf',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W04/LAUNCH_SU1_W04_Lesson.html',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W04/LAUNCH_SU1_W04_Model_Transcript.txt',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W04/LAUNCH_SU1_W04_Pupil_Resources.html',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W04/LAUNCH_SU1_W04_Pupil_Resources.pdf',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W04/LAUNCH_SU1_W04_Teacher_Notes.docx',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W04/LAUNCH_SU1_W04_Teacher_Notes.pdf',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W04/Sources_and_checks.html',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W04/Visual_Resource.png',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W05/LAUNCH_SU1_W05_Captioned_Model.mp4',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W05/LAUNCH_SU1_W05_Editable_Pack.docx',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W05/LAUNCH_SU1_W05_Editable_Slides.pptx',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W05/LAUNCH_SU1_W05_Knowledge_Organiser.html',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W05/LAUNCH_SU1_W05_Knowledge_Organiser.pdf',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W05/LAUNCH_SU1_W05_Lesson.html',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W05/LAUNCH_SU1_W05_Model_Transcript.txt',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W05/LAUNCH_SU1_W05_Pupil_Resources.html',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W05/LAUNCH_SU1_W05_Pupil_Resources.pdf',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W05/LAUNCH_SU1_W05_Teacher_Notes.docx',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W05/LAUNCH_SU1_W05_Teacher_Notes.pdf',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W05/Sources_and_checks.html',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W05/Visual_Resource.png',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W06/LAUNCH_SU1_W06_Captioned_Model.mp4',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W06/LAUNCH_SU1_W06_Editable_Pack.docx',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W06/LAUNCH_SU1_W06_Editable_Slides.pptx',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W06/LAUNCH_SU1_W06_Knowledge_Organiser.html',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W06/LAUNCH_SU1_W06_Knowledge_Organiser.pdf',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W06/LAUNCH_SU1_W06_Lesson.html',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W06/LAUNCH_SU1_W06_Model_Transcript.txt',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W06/LAUNCH_SU1_W06_Pupil_Resources.html',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W06/LAUNCH_SU1_W06_Pupil_Resources.pdf',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W06/LAUNCH_SU1_W06_Teacher_Notes.docx',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W06/LAUNCH_SU1_W06_Teacher_Notes.pdf',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W06/Sources_and_checks.html',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W06/Visual_Resource.png',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/README.md',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/SHA256SUMS.txt',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/START_HERE.html',
+    'Humanities_Teesside/LAUNCH_W27-W39_2026-27/Sources_and_checks.html',
 )
 
 # Owner-reviewed additive Science download transaction, 6 September 2026.
