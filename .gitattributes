@@ -7,3 +7,17 @@ Science_Teesside/Teaching_Packs/**/*.pdf binary
 # whitespace check (git diff --check) reads CR-at-EOL as the file's line ending and
 # still reports any other whitespace error in them. 0 literal trailing spaces measured.
 Humanities_Teesside/Teaching_Packs/**/*.csv whitespace=cr-at-eol
+# ADDENDUM 3 v3 (2026-09-22): the Summer 1 PACK-1R pathway trees carry the same RFC 4180
+# CSVs with CRLF line endings, reviewed and summed inside the signed packs. Same declaration
+# as the Teaching_Packs line above and no wider: the bytes are not altered, git reads CR-at-EOL
+# as the file's line ending, and any OTHER whitespace error in them is still reported.
+Humanities_Teesside/BUILD_W27-W39_2026-27/**/*.csv whitespace=cr-at-eol
+Humanities_Teesside/GROW_W27-W39_2026-27/**/*.csv whitespace=cr-at-eol
+Humanities_Teesside/LAUNCH_W27-W39_2026-27/**/*.csv whitespace=cr-at-eol
+# ADDENDUM 3 v3: the same, for the pack PDFs. ReportLab wrote these with ASCII streams, so git
+# reads them as text and `git diff --check` reports every xref row as trailing whitespace. Same
+# declaration as the Science_Teesside line at the top of this file and no wider; the document
+# bytes are untouched and are pinned individually in CATALOGUE_PINS.
+Humanities_Teesside/BUILD_W27-W39_2026-27/**/*.pdf binary
+Humanities_Teesside/GROW_W27-W39_2026-27/**/*.pdf binary
+Humanities_Teesside/LAUNCH_W27-W39_2026-27/**/*.pdf binary
