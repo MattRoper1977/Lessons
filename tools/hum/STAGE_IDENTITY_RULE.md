@@ -106,3 +106,39 @@ on the patched code and on `git HEAD`. That SKIP is pre-existing and is not clea
 18 already-transplanted decks carry a Lundy panel on their Title stage — the pre-P1 batch-1
 decks already scheduled for a re-cut. Row 14 reds on them; that is the row working, not a new
 defect, and the re-cut is the fix.
+
+## Estate-wide sweep — three sites outside the ruled scope, named not changed
+
+The rule binds "every E-check and the HUM-T / PASS B verifiers", and those are fixed at the oracle
+above. A sweep of every `data-type` read in `tools/` and `_passhumd5/` finds three more places that
+take stage identity from the type attribute. All three sit OUTSIDE the ruled scope, so none was
+touched. They are recorded here with their measured size, for a decision.
+
+**`tools/easter/classroom_presentation.py:26`** — the largest.
+
+```python
+phase = PHASES[index] if len(stages) == 9 else stage.get('data-type','')
+stage.set('data-classroom-phase', phase)
+```
+
+It stamps `data-classroom-phase` from `data-type` on any deck that does not have exactly nine
+stages. Measured across the landed Humanities decks:
+
+```
+decks by stage count : {9: 197, 10: 8, 12: 15}
+the data-type fallback fires on 23 of 220
+```
+
+On the 15 twelve-stage decks (Autumn 1 W3–W7) seven slides would all be stamped `ido`. The chassis
+CSS selects on `[data-classroom-phase]`, so unlike the verifier sites this one reaches what is
+**displayed**, not only what is checked.
+
+**`tools/build_resources/author_w8a_chassis.py:544`** — `indep = [s for s in stages if
+s.get('data-type') == 'independent']`, then asserts the list is exactly `['slide-8']` with
+`data-timer="10"`. Identity by type, but pinned to one expected id, so it reds rather than silently
+mis-identifying. Lowest concern of the three.
+
+**`tools/sx3/split_arrival_stage.py:172–179, 217`** — reads stage 0's `data-type == 'arrival'` to
+decide whether the split is needed, and writes `data-type="opening"`. This is the writer that
+created the opening/arrival split in the first place; a deck it has not run on is exactly a deck
+whose overview is still typed `arrival`.

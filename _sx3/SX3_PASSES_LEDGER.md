@@ -1121,3 +1121,122 @@ L46  HUM-T BATCH 6b LANDED, AND THE SIGNED BUILD SET CLOSES AT ELEVEN  [2026-09-
      RAISED, NOT ACTED: the hub-budget fix proposed for the next order (Earlier/Packs rendered from
      a JSON manifest on open, budget <=400 KB) is no longer needed to get under a sane budget, the
      page having fallen to 342,248 bytes with no section removed. Left for Matt to rule on.
+
+## L48 — HUM-D5: an index that could not see, a row that could not see, and P0 run at last (2026-09-21/22)
+
+Four things closed under the A3.5 rulings, and three of them are the same failure in different
+clothes: an instrument reporting cleanly on a set it could not see.
+
+**A0, the text index (ruling 1).** `_passhumd5/build_text_index.py` found the lesson config by the
+literal `window.CLASSIC_LESSON=`. Every landed lesson writes exactly that; all eighteen Summer 1
+lessons write `window.CLASSIC_LESSON = `, with spaces. Measured before any edit, on the six
+admissible BUILD lessons: 6 lessons indexed, 1,241 text rows, **0 config rows, 6 skips**. E1 and E2
+are fed entirely from TEXT_INDEX, so a Part A run on those twelve would have returned a tidy PASS
+over an empty set. Fixed to match with optional whitespace. **It can only see more, proved:** the
+old and new readers were both run over the existing 120-lesson population -- the set every recorded
+E-check verdict was measured on -- and the outputs are byte-identical (TEXT_INDEX a7b82c3173a28c28
+== a7b82c3173a28c28, 49,334 rows both; NOT_RUN 41ac3f27230ff46b both; 120 == 120 lessons, 0 == 0
+skips). No check was edited.
+
+**ADDENDUM 3, the Summer 1 gate record.** Eighteen lessons, measured before any landing. A3.0 by
+content: BUILD 93/93, GROW 88/88, LAUNCH 90/90, 0 failed, 6 lessons each. A3.1 derived from the
+population: 78 + 18 = 96 Humanities, 42 RE, 138 -- MATCHES. R1 recorded by name as
+`R1-LAUNCH_SU1_W01-NOAA-SIX-YEARS`, with the finding that **HUM-D5 owns no skeleton or donor-diff
+gate at all** (ruled a next-order item, not built). R2 attempted twice, both `curl: (56) CONNECT
+tunnel failed, response 403` -- 427.35 ppm stays UNVERIFIED and nothing was edited. G-A 18/18,
+G-B 36 rows of 36 clean on real Chromium at 390 and 1280, G-C 18/18 with the instrument red-proved
+first, G-D 0 quotations and 0 extracts across text and binary surfaces. G-E is a landing-time gate
+and the eighteen have not landed.
+
+**Two LAUNCH defects no supplied gate caught.** `LAUNCH_SU1_W01` tells a pupil on screen that
+*provenance* means "1980 is 338.76 ppm and 2025 is 427.35 ppm."; the print organiser and the
+Knowledge Organiser say "Who made a source, when and why". `LAUNCH_SU1_W02` narrows *mitigation* on
+screen to "Reducing a source of greenhouse-gas emissions.", dropping the removal half the printed
+copy keeps. 16 of 18 clean. Re-measured as RENDERED by real Chromium, because the dialog could have
+been repainted from the config at load -- it is not. Each pack therefore disagrees with itself
+across surfaces, which is the class E2 records as 0. Ruled an author's defect and sent back to GPT;
+neither cell was edited.
+
+**RULING 5, and the row that could not see its own breach.** `tools/hum/deck_dom.py::stage_name()`,
+the single identity oracle `loop_adapter.py` and `verify_loop.py` both call, returned `data-type`
+verbatim and short-circuited the table that reads the slide's own words. Measured over 220 landed
+Humanities decks (2,033 slides) and the 18 Summer 1 decks (162): `data-type` is a CATEGORY, not an
+identity -- "We do", "Check" and "Review" are all `wedo` on 120 landed decks and all 18 Summer 1;
+"Opening" and "Arrival" are both `arrival` on the same 120 and all 18; and SEVEN slides are `ido`
+on the 15 Autumn 1 W3-W7 decks, among them "Try one together", "Choose, then explain" and "Show
+what you mean".
+
+The consequence: `verify_loop` row 14 is P1-1, "the Title stage carries no panel", and it tests
+`title_stages`. Because the overview slide is typed `arrival`, that list was **EMPTY on 120 of the
+220 landed decks and on all 18 Summer 1 decks** -- the row passed on more than half the estate
+without testing anything. The self-test's own red proof for row 14 is guarded `if tstage is not
+None`, so it was skipped for the same reason: the proof was conditional on the identity that was
+broken.
+
+Fixed to resolve the deck's own declarations for that slide id -- `data-title` plus the slide's own
+heading (1,853 of 2,033 landed slides, 162 of 162 Summer 1, better coverage than `data-type`'s
+1,763), then `data-kind` (180 slides), then `data-timer == "0"` (position 0 on 128 landed decks and
+all 18 Summer 1, and nowhere else but the 8 `complete-slide`s already named), then `unnamed`.
+`data-type` is never returned.
+
+CONTROLS: **nothing moved** -- 0 of the 62 already-transplanted decks change their eligible,
+modelling or title sets; **nothing lost** -- `unnamed` 0 before, 0 after; **now testable** --
+decks with an empty `title_stages` 120 -> 0 landed and 18 -> 0 Summer 1; battery unchanged, same
+6 PASS and same one SKIP, exit 0, on the patch and on HEAD.
+
+RED PROOF (a), row 2 with the deck's own panel bytes grafted into its I Do stage:
+`PASS modelling stages tested: 2 []` -> `FAIL ... ['ido']`.
+RED PROOF (b), row 14 on `BUILD_SU1_W02` with a panel grafted onto its overview stage:
+shipped identity `PASS  title stages tested: 0`; fixed identity `FAIL  title stages tested: 1
+['title']`. Same breach in both runs.
+
+**P0 run at last (ruling 4).** 159 SoW cells derived from the two scheme files (Humanities 117, RE
+42); 138 incoming lessons, 0 unparsed, 0 with no cell. CELL_MAP: 18 NEW, 120 PACK COPY ONLY, 21 NO
+INCOMING AND NO SURFACE, and **0 cells where an incoming lesson replaces a served route**. The
+plan's "12 of 39 LAND" is measured as **18 of 39**, the remaining 21 being exactly Summer 2
+Humanities, 7 per pathway. And the finding that blocks the rest of RETIRE_LIST: of 762 tracked
+html, 228 have a lesson-shaped name and **228 of 228 carry neither a `data-lesson-id` nor an
+`absolute_week`**, so their cell cannot be derived at all -- only ruled.
+
+**Corrections.** #26: an earlier commit message of mine said only lxml was installed and every
+DOCX/PPTX/PDF/XLSX leg was NOT RUN. Untrue -- all four import, and the A0 run over the eighteen
+reads every surface (19,130 rows, 0 NOT RUN). #27: the P0 instrument's summary line printed "10
+surfaces on a covered cell" where its own file held 120, because a loop variable shadowed the
+counter. Fixed at the cause and re-run; the written files were always right, the printed summary
+was not. #28: I first wrote that `ido2` and `wedo2` were unreachable names. They are not -- 22
+landed slides carry each. The empty set was the title set, not the modelling set.
+
+**Ruling 5's scope completed, and three sites named rather than changed.** The rule binds "every
+E-check and the HUM-T / PASS B verifiers". Those are fixed at the oracle. A sweep of every
+`data-type` read in `tools/` and `_passhumd5/` finds three more sites that take stage identity from
+the type attribute. All three sit OUTSIDE the ruled scope, so none was touched; they are named here
+with their measured size, for a decision:
+
+- `tools/easter/classroom_presentation.py:26` — `phase = PHASES[index] if len(stages) == 9 else
+  stage.get('data-type','')`. It stamps `data-classroom-phase` from `data-type` on any deck that
+  does not have exactly nine stages. Measured: **23 of 220 landed Humanities decks** (8 with ten
+  stages, 15 with twelve — the Autumn 1 W3–W7 set). On those 15, seven slides would all be stamped
+  `ido`. The chassis CSS selects on `[data-classroom-phase]`, so this one reaches what is
+  **displayed**, not only what is verified. The largest of the three.
+- `tools/build_resources/author_w8a_chassis.py:544` — `indep = [s for s in stages if
+  s.get('data-type') == 'independent']`, then asserts the list is exactly `['slide-8']` with
+  `data-timer="10"`. Identity by type, but pinned to one expected id, so it reds rather than
+  silently mis-identifies. Lowest concern.
+- `tools/sx3/split_arrival_stage.py:172–179, 217` — reads stage 0's `data-type == 'arrival'` and
+  writes `data-type="opening"`. This is the writer that created the opening/arrival split in the
+  first place, and its not having run on a deck is *why* that deck's overview is typed `arrival`.
+
+Nothing here is a loosening and nothing was edited: the rule was applied where it was ruled, and
+the rest is reported with numbers.
+
+**Landed.** Lessons #633 -> main `17b3d554` with Apps #153 -> main `9898c3fc`, merged as a pair on
+green: Made by Matt cross-estate unification `35640796989`, FieldOps P2 and the serve proof
+`35640797079`, UX2 gates `35640797000`, all SUCCESS on `3ba93e2a`. Gate `eb90ff88 -> 0f8869b2`,
+both copies byte-identical, PIN1 780/787 -> 782/789.
+
+**The added-vs-modified gap, met head-on for once.** P0's four files -- `p0_cell_map.py`,
+`CELL_MAP.md`, `RETIRE_LIST.md`, `P0_SOURCES.md` -- are ADDED, and the boundary judges only
+MODIFIED files (`git diff --diff-filter=MRD`). Measured on the P0 branch before anything was
+pinned: `[PASS] lessons cross-estate static contract`, `PIN1 PASS 778/785`. They would have gone in
+completely unjudged, exactly as `build_science_hub.py` did in L47 and the snapshot fixture did in
+correction #19. The free pass was declined and all four are pinned here.
