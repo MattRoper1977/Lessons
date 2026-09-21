@@ -35,7 +35,7 @@ from __future__ import annotations
 import collections, html, re
 from pathlib import Path
 
-CONTROLS_VERSION = 'hub-sections-controls/2.0.1'  # 2.0.1: the week hook sees the card's own week; controls unchanged
+CONTROLS_VERSION = 'hub-sections-controls/2.1.0'  # 2.1.0: a card carries its recorded downloads link; controls unchanged
 E = html.escape
 PATHWAYS = ('BUILD', 'GROW', 'LAUNCH')
 TERM_ORDER = ('Aut1', 'Aut2', 'Spr1', 'Spr2', 'Sum1', 'Sum2')
@@ -175,6 +175,10 @@ def distinct_errors(d: dict) -> list[str]:
 # one of those weeks was shown the lesson twice. Ruling of 2026-09-22 on STOP-F2: a route bound to
 # two weeks renders in both slots -- each card naming the week it stands for. Controls unchanged.
 CARD_WEEK_HOOK = None
+# A subject may hand the card its recorded downloads link: path -> html, '' for a route the
+# subject's record does not bind. Science binds Teaching_Packs sections (PASS F restored the link
+# the HUB-1 card shape dropped); a subject that sets no hook renders exactly as before.
+CARD_DOWNLOAD_HOOK = None
 
 
 def _card(row: dict, href: str, title: str, kind: str, week: int | None, strand: str | None,
@@ -184,6 +188,7 @@ def _card(row: dict, href: str, title: str, kind: str, week: int | None, strand:
     if hooked:
         week_attr = hooked[0]
         extra = f'<p class="science-week">{E(hooked[1])}</p>' + extra
+    downloads = (CARD_DOWNLOAD_HOOK(row['path']) or '') if CARD_DOWNLOAD_HOOK else ''
     data = (f' data-term="{E(row["term"], quote=True)}" data-style="{E(row["style"], quote=True)}"'
             f' data-pathway="{E(row["pathway"], quote=True)}"'
             f' data-week="{E(week_attr)}"')
@@ -192,7 +197,8 @@ def _card(row: dict, href: str, title: str, kind: str, week: int | None, strand:
     return (f'<article class="card t-{E(row["pathway"])}{(" " + cls) if cls else ""}" '
             f'data-lesson-path="{E(row["path"], quote=True)}"{data}>'
             f'<p class="kind">{E(kind)}</p><h4><a href="{E(href, quote=True)}">{E(title)}</a></h4>'
-            f'{extra}<a class="go" href="{E(href, quote=True)}">Open lesson <span aria-hidden="true">→</span></a></article>')
+            f'{extra}<a class="go" href="{E(href, quote=True)}">Open lesson <span aria-hidden="true">→</span></a>'
+            f'{downloads}</article>')
 
 
 def render_start_strip(subject: str, pathway_blurbs: dict[str, str], pathway_hrefs: dict[str, str] | None = None) -> str:

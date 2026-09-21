@@ -1342,6 +1342,13 @@ REVIEWED_PATHS = (
     "assets/catalogue/science-shelf.css", "assets/catalogue/science-shelf.js",
     "assets/catalogue/terms-and-styles.json", "assets/catalogue/science-shelf.json", "assets/catalogue/humanities-shelf.json",
     "tools/catalogue/build_catalogue.py", "tools/catalogue/build_science_shelf.py", "tools/catalogue/build_humanities_shelf.py",
+    # SCI-COMPLETE PASS F moved the Science writer behind the shim: build_science_shelf.py now runs
+    # build_science_hub.py, which is the file that actually writes the served hub. The boundary
+    # judges MODIFIED files (git diff --diff-filter=MRD), so a file that arrives new is not judged
+    # on the commit that adds it -- which is how the real writer came in unadmitted while the shim
+    # it hides behind was pinned. Admitting it here judges it by exact bytes from now on, the same
+    # way every other writer on this list is judged. Nothing is loosened.
+    "tools/catalogue/build_science_hub.py",
     "tools/catalogue/check_catalogue_static.py", "tools/catalogue/check_catalogue_dom.cjs", "tools/catalogue/verify_education_navigation.cjs",
     # SX3-PASSES Ruling C: Science_Teesside/index.html is a derivable table that
     # had no control, because build_science_shelf.py cannot run against 77 stale
