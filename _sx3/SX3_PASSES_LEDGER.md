@@ -1213,11 +1213,22 @@ the type attribute. All three sit OUTSIDE the ruled scope, so none was touched; 
 with their measured size, for a decision:
 
 - `tools/easter/classroom_presentation.py:26` — `phase = PHASES[index] if len(stages) == 9 else
-  stage.get('data-type','')`. It stamps `data-classroom-phase` from `data-type` on any deck that
-  does not have exactly nine stages. Measured: **23 of 220 landed Humanities decks** (8 with ten
-  stages, 15 with twelve — the Autumn 1 W3–W7 set). On those 15, seven slides would all be stamped
-  `ido`. The chassis CSS selects on `[data-classroom-phase]`, so this one reaches what is
-  **displayed**, not only what is verified. The largest of the three.
+  stage.get('data-type','')`. **CORRECTED 2026-09-21 (ruling withdrawn on the measurement).** L48
+  first said this "fires on 23 of 220 landed Humanities decks". The 23 was **deck_dom's** stage
+  count (`{9: 197, 10: 8, 12: 15}`), not the writer's. The writer selects stages with
+  `//main[… deck …]/section[… slide …]`, and under that selector every Humanities deck returns
+  **9 or 0** — 159 and 53 of 212 — never anything else, so `else stage.get('data-type','')` is
+  never evaluated on a single stage anywhere in the estate. The fifteen twelve-stage decks return
+  **0** (their `<main>` is `class="main"`, their slides sit in `div.slide-container`), carry no
+  `data-classroom-phase`, and are not in `CLASSROOM_TARGETS.json`. Of the 101 targets, 100 have
+  exactly nine stages and 1 has zero; recomputing what the writer would emit gives **101 of 101
+  byte-identical** to what is stamped. The correct figure is **0**, there is no re-stamp, and the
+  branch that would have fixed it (`claude/classroom-phase-identity`, 8d2b6b3b) stays parked,
+  unpushed, as the record. The one real finding, carried to the next order: **all 101
+  `CLASSROOM_TARGETS.json` digests are stale**, so `refresh(targets)` refuses at its first deck
+  (`ValueError: Source changed: …BUILD_Art_Bronze_W1_What_Getting_Better_Would_Look_Like.html`)
+  — the writer is unrunnable today, the same class as the shelf bindings were. Bytes are not
+  structure, and one tool's count is not another tool's.
 - `tools/build_resources/author_w8a_chassis.py:544` — `indep = [s for s in stages if
   s.get('data-type') == 'independent']`, then asserts the list is exactly `['slide-8']` with
   `data-timer="10"`. Identity by type, but pinned to one expected id, so it reds rather than
@@ -1322,3 +1333,18 @@ name, so the wording is put to Matt before that PASS B batch is cut.
 control proves exactly what it measures. The sharper form: a control that never calls the code
 under change measures nothing at all, and an unchanged result is the easiest thing in the world to
 mistake for a passing one.
+
+**Correction #31 — a pin cut from a working tree is not a pin of the commit (2026-09-21).** On
+Lessons #635 the ruling-2 L48 correction above was drafted as uncommitted edits on another branch
+and rode across a `git checkout` into the #635 working tree. `pin_catalogue_contract.py` was run
+with those two files modified, so the gate copy digested the CORRECTED bytes; the edits were then
+stashed back out and a gate copy pinning bytes the commit did not hold was committed. The local
+gate run "passed" because it ran before the stash, against the same dirty tree. CI said what the
+local run could not: `[FAIL] reviewed catalogue bytes differ: _sx3/SX3_PASSES_LEDGER.md` and
+`tools/hum/STAGE_IDENTITY_RULE.md`. Reproduced on the clean tree, re-pinned from the committed
+bytes (exactly two digest lines changed, `98fd9e9a -> 269f2d96`), digests now match
+`git show HEAD:<file>`. Rule, added to the pre-push list: **`git status --porcelain` is empty
+before the pin tool runs, and the local gate runs on the tree that is committed, not the one
+that is open.** Third time this session that a control measured something adjacent to what it was
+said to measure; the first two were the self-test that never called the oracle (#29) and the
+h1 count taken over the deck instead of the document (#30).
