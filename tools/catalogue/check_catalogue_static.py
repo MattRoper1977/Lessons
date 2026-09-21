@@ -13,7 +13,7 @@ def check(name,condition):
 base=(r/'resources.json').read_bytes()
 check('Original 734 resource rows remain unchanged and ordered, with only three reviewed hub rows appended',not preserved_rows_errors(rows))
 check('Every committed resource row has additive metadata',len(rows)>0 and all(x['file'] in proof for x in rows))
-check('All 129 Science lessons remain available with a proven or explicitly unknown term',len(science)==129 and len({x['path'] for x in science})==129 and all((r/x['path']).is_file() and x['term'] in ['Aut1','Aut2','Spr1','unspecified'] for x in science))
+check('All 180 Science lessons remain available with a proven or explicitly unknown term',len(science)==180 and len({x['path'] for x in science})==180 and all((r/x['path']).is_file() and x['term'] in ['Aut1','Aut2','Spr1','Spr2','Sum1','Sum2','unspecified'] for x in science))
 # ORDER HUM-T STOP-T3 ruling Q1: every deck the projection proves through the strand record
 # must still satisfy the limb's three conditions on this tree, judged by the same function.
 import sys as _sys;_sys.path.insert(0,str(r/'tools/catalogue'))

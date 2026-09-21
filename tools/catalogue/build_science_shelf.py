@@ -48,9 +48,13 @@ for link in list(header_doc.xpath('//a[@href]')):
  u=urlsplit(link.get('href'))
  if u.netloc in {'madebymatt-play.uk','www.madebymatt-play.uk'} or u.path.rstrip('/').lower()=='/games':link.drop_tree()
 header=lhtml.tostring(header_doc,encoding='unicode')
-# Reuse the actual Lesson Hub house styles and current header. Relative platform
-# assets are addressed from this shelf's own directory, not from a new shell.
-base_css=re.search(r'<style>(.*?)</style>',root_source,re.S).group(1)
+# The house stylesheet is READ FROM ITS PINNED FILE, not scraped from the root page.
+# ORDER HUB-1 measured the scrape failing: the root page's first <style> is now a
+# 651-byte header media rule, so a fresh writer run produced an unstyled hub whose
+# header overflowed to 701px and failed contrast. assets/catalogue/shelf-base.css
+# carries the 18,657-byte served block forward verbatim and is digest-pinned.
+base_css=(ROOT/'assets/catalogue/shelf-base.css').read_text()
+assert len(base_css) > 15000, 'shelf-base.css is not the house block: %d bytes' % len(base_css)
 output='''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Science by pathway and term — Made by Matt</title><meta name="description" content="Find Science lessons by BUILD, GROW and LAUNCH pathway, term and teaching version. Recommended lessons, fuller Lundy Loop versions and earlier resources stay together.">
