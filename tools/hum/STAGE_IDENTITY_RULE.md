@@ -150,16 +150,47 @@ stage.set('data-classroom-phase', phase)
 ```
 
 It stamps `data-classroom-phase` from `data-type` on any deck that does not have exactly nine
-stages. Measured across the landed Humanities decks:
+stages — *as the writer counts them*. The first version of this passage did not say that, and
+the number it gave was wrong for that reason.
+
+**CORRECTED 2026-09-21; the ruling to fix it was withdrawn on this measurement.** The counts
+first recorded here were **deck_dom's**:
 
 ```
-decks by stage count : {9: 197, 10: 8, 12: 15}
-the data-type fallback fires on 23 of 220
+deck_dom.stages()   any element with class "slide"     {9: 197, 10: 8, 12: 15}   ->  23 decks != 9
 ```
 
-On the 15 twelve-stage decks (Autumn 1 W3–W7) seven slides would all be stamped `ido`. The chassis
-CSS selects on `[data-classroom-phase]`, so unlike the verifier sites this one reaches what is
-**displayed**, not only what is checked.
+The writer does not use deck_dom. Its own selector is
+`//main[contains(@class," deck ")]/section[contains(@class," slide ")]`, and under it every
+Humanities deck returns **9 or 0** and nothing else:
+
+```
+writer's selector   main.deck > section.slide          {9: 159, 0: 53}   of 212  ->  0 decks != 9 and != 0
+```
+
+So `else stage.get('data-type','')` is **never evaluated on a single stage anywhere in the
+estate**. The fifteen twelve-stage Autumn 1 W3–W7 decks return 0 under it — their `<main>` carries
+`class="main"`, not `deck`, and their twelve `section.slide` elements sit inside
+`div.slide-container` — they carry no `data-classroom-phase` at all, and none is in
+`CLASSROOM_TARGETS.json`. The "ido seven times" was real, but it was deck_dom reading their
+`data-type`, not the writer stamping anything.
+
+What the writer governs is `CLASSROOM_TARGETS.json`: 101 decks, 100 with exactly nine stages
+under its own selector and 1 with zero; their stamped phases are exactly the nine-stage table
+(title 100 · arrival 100 · starter 100 · ido 200 · wedo 200 · independent 100 · exit 100), and
+recomputing what the writer would emit gives **101 of 101 byte-identical** to what is there.
+No fix, no re-stamp; the correct figure is **0**. The branch that would have changed the writer
+(`claude/classroom-phase-identity`, 8d2b6b3b) stays parked and unpushed as the record.
+
+**The one real finding, carried to the next order.** All 101 recorded digests in
+`CLASSROOM_TARGETS.json` are stale against main, and `refresh_classroom_presentation.refresh()`
+refuses at the first deck:
+
+```
+ValueError: Source changed: Art_Teesside/BUILD_BRONZE_W1-W7_2026-27/BUILD_Art_Bronze_W1_What_Getting_Better_Would_Look_Like.html
+```
+
+The writer is unrunnable today — the same class of failure the shelf bindings had.
 
 **`tools/build_resources/author_w8a_chassis.py:544`** — `indep = [s for s in stages if
 s.get('data-type') == 'independent']`, then asserts the list is exactly `['slide-8']` with
