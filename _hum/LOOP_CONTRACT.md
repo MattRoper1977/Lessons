@@ -168,3 +168,28 @@ The misconception branch is filled from the deck's own `cfg.misconception`. **Th
 proof that the transplant can be mechanical**: the influence branch already reads its
 content from the deck's own configuration rather than from authored prose, which is
 exactly what stage B requires.
+
+## 8. P1 shape (overnight order, 2026-09-21) — stated reading, pending Matt's P1 ok; P1-2 RULED
+
+Matt's four lines, verbatim: "no Title-stage panel; one distinct influence line per option;
+collapsed 'Feedback loop' disclosure per stage; Voice names the stage's task." Applied to
+batches not yet built (batch 3 onward); batches already built land as-is and are re-cut in a
+follow-on batch. The reading below is mine; each line names the derivation so the morning can
+correct the reading without re-deriving the facts.
+
+| | rule | derivation | row |
+|---|---|---|---|
+| P1-1 | the Title stage carries no panel | it is metadata, not a response point (its "task" was the deck's objective) | 14 |
+| P1-2 | one distinct influence line per option | **RULED (Matt Roper, 2026-09-21): the four response outcomes are the canonical influence outcomes, one line each, phrased for THIS stage's task** — not yet / needs help → reduce the prompt; did it with support → same task, new example; did it independently → explain a reason; did it and explained → move on. One labelled control (`data-next-move`, the outcome as its label) and one line per outcome; the first three carry the stage's own task (the one row 8 proves), the fourth carries the deck's own "what happens next" sentence or its own next stage. No two lines identical in one panel (row 16 reds on a repeat). The text is NOT the science exemplar's influence section (a deck-wide mirror with one generic sentence per stage — the STOP-T2 finding); the per-stage independent wiring and order enforcement are batch 1's (e.g. `BUILD_HUM_W1_People_Special_To_Me`). Two earlier readings (the pupil's task choice; §7's five named moves) are superseded by the ruling. | 16 |
+| P1-3 | collapsed "Feedback loop" disclosure per stage | `<details class="loop-disclosure">` with the summary "Feedback loop", closed by default, opened by a real tap on its summary OR by use of the stage's own task (a control, field or chip of the stage outside the disclosure — `openOnTaskUse` in the loop script, capture-phase click / input / change on the stage); print excludes it (`@media print{.loop-disclosure{display:none}}`). The render harness first uses the stage's task (a field input, else a chip tap) and counts `openedByTask`, falling back to the summary tap, and reads visibility with `checkVisibility()`, because a closed details still gives its content a box in Chromium (measured 330×791 while hidden) | 15 |
+| P1-4 | Voice names the stage's task | the VOICE step reads "VOICE · <task>" and the control "I have answered: <task>", the same task row 8 proves the response point quotes; the label is at most 40 characters, cut at a word boundary only where one falls after the first 24 characters (correction #14) | 17 |
+
+Rows 14–17 join the row-45 composite. Ten red proofs in the verifier's self-test.
+
+P1-1 "six per lesson": a deck with two We Do stages carries seven panels (one per response
+stage); none is dropped by this reading — the count is reported per deck and left for the ok.
+P1-5 (a GROW deck at 508 KB with embedded media): no deck in the HUM-T population is that size
+(the largest landable GROW deck is 166 KB; the only landable deck with embedded media is
+`BUILD_HUM_W7_A_place_in_the_group_Classic`, whose media sizes are reported in the batch record);
+nothing is inlined or re-encoded by the transplant, which changes only the panel furniture.
+Status: stated reading, pending Matt's P1 ok.

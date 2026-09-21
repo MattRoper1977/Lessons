@@ -842,3 +842,194 @@ L39  SCI-COMPLETE PASS A LANDED UNDER THE OVERNIGHT ORDER  [2026-09-21; STOP-SIG
      START_HERE page; the twelve listed decks are on the hub, listed not hidden.
      PASS B CENSUS (held for STOP-B1): 180 routes, 14 conforming (the exemplars), 166 without
      Lundy furniture, of which 40 are recorded full-lundy.
+
+L41  HUM-T BATCH 2 LANDED UNDER THE OVERNIGHT ORDER  [2026-09-21; pre-signed by Matt Roper
+     2026-09-21 (PRE-SIGNATURE, ORDER HUM-T batch 2 GROW): 12 rows, TERM+WEEK UNCHANGED
+     12/12, evidence sha == served bytes 12/12, 84 panels, zero exceptions; carried out by
+     Claude without a further STOP].
+     Twelve GROW Humanities decks carry the science exemplar's loop panel in every stage,
+     filled from each stage's own text, nothing hand-authored; built and green before the P1
+     order, landed as-is and re-cut to P1 shape in a follow-on batch. Evidence re-stamped
+     where a deck limb holds or, under STOP-T3 ruling Q1, where the strand row agrees with the
+     projection; seven David cover routes re-stamped under ruling Q2 inside the batch's declared
+     GLV3 replacement transaction (12 members); pins re-cut in both gate copies.
+     LANDED: Lessons #613 -> 256e5331 (re-cut from 26b58664 after the SCI-COMPLETE
+     PASS A carrier; the deck digests identical to the pre-signed table); unification observed
+     on the PR head e5b1ea61 run 35555342644 (cross-estate / static-contract, the on-content wrapper) SUCCESS. Apps #134 -> b8bb4eb8.
+     RENDERED on the PR head at 390 px: 84/84 panels reached; rows 38-40 84/84/84; 0 refusal
+     faults; 0 page errors.
+     THE WINDOW: Site #419 -> 297e09b43b090e52d4e34f984664e28d39f05bea; pairs derived by the window runner from
+     the local build of the two mains; Domain split publication 35556534987 SUCCESS.
+     THE CLOSER: this pure carrier (L38 check PASS); Education Pages publication run reported
+     in the readback and entered in the CLOSE record.
+
+L42  HUM-T BATCH 3 LANDED UNDER THE OVERNIGHT ORDER  [2026-09-21; pre-signed by Matt Roper
+     2026-09-21 (PRE-SIGNATURE, ORDER HUM-T batch 3 LAUNCH): 12 rows, TERM+WEEK UNCHANGED
+     12/12, evidence sha == served bytes 12/12, 73 panels, zero exceptions; carried out by
+     Claude without a further STOP].
+     Twelve LAUNCH Humanities decks carry the science exemplar's loop panel in every stage,
+     filled from each stage's own text, nothing hand-authored, in the RULED P1 shape (no Title
+     panel; the four response outcomes as influence lines phrased for the stage's task; a
+     collapsed "Feedback loop" disclosure per stage; VOICE names the task; corrections #14/#15). Evidence re-stamped
+     where a deck limb holds or, under STOP-T3 ruling Q1, where the strand row agrees with the
+     projection; six David cover routes re-stamped under ruling Q2 inside the batch's declared
+     GLV3 replacement transaction (12 members); pins re-cut in both gate copies.
+     LANDED: Lessons #615 -> cd09718b (re-cut from 1766ea05 after the batch 2
+     carrier; the deck digests identical to the pre-signed table and the preview branch); unification observed
+     on the PR head 5c79b949 run 35559315552 (cross-estate / static-contract, the on-content wrapper) SUCCESS. Apps #136 -> dd26d456.
+     RENDERED on the PR head at 390 px: 73/73 panels reached and 73/73 disclosures opened; rows 38-40 73/73/73; 0 refusal
+     faults; 0 page errors.
+     THE WINDOW: Site #420 -> 83ffbe8b35dee53222ff493b77d187e0d22710d4; pairs derived by the window runner from
+     the local build of the two mains; Domain split publication 35560548548 SUCCESS.
+     THE CLOSER: this pure carrier (L38 check PASS); Education Pages publication run reported
+     in the readback and entered in the CLOSE record.
+
+L43  HUM-T BATCH 4 LANDED UNDER THE OVERNIGHT ORDER  [2026-09-21; pre-signed by Matt Roper
+     2026-09-21 (PRE-SIGNATURE, ORDER HUM-T batch 4 GROW): 10 rows, TERM+WEEK UNCHANGED
+     10/10, evidence sha == served bytes 10/10, 61 panels, zero exceptions; carried out by
+     Claude without a further STOP].
+     Ten GROW Humanities decks carry the science exemplar's loop panel in every stage,
+     filled from each stage's own text, nothing hand-authored, in the RULED P1 shape (no Title
+     panel; the four response outcomes as influence lines phrased for the stage's task; a
+     collapsed "Feedback loop" disclosure per stage; VOICE names the task; corrections #14/#15). Evidence re-stamped
+     where a deck limb holds or, under STOP-T3 ruling Q1, where the strand row agrees with the
+     projection; two David cover routes re-stamped under ruling Q2 inside the batch's declared
+     GLV3 replacement transaction (10 members); pins re-cut in both gate copies.
+     LANDED: Lessons #617 -> f05c7ab1 (re-cut from ae32def6 after the batch 3
+     carrier; the deck digests identical to the pre-signed table and the preview branch); unification observed
+     on the PR head 178b309c run 35565218579 SUCCESS. Apps #138 -> 3043b43d.
+     RENDERED on the PR head at 390 px: 61/61 panels reached and 61/61 disclosures opened; rows 38-40 61/61/61; 0 refusal
+     faults; 0 page errors.
+     THE WINDOW: Site #421 -> aad258a9; pairs derived by the window runner from
+     the local build of the two mains; Domain split publication 35567196181 SUCCESS.
+     THE CLOSER: this pure carrier (L38 check PASS); Education Pages publication run reported
+     in the readback and entered in the CLOSE record.
+
+L44  HUM-T BATCH 5 LANDED UNDER THE OVERNIGHT ORDER  [2026-09-21; pre-signed by Matt Roper
+     2026-09-21 (PRE-SIGNATURE, ORDER HUM-T batch 5 LAUNCH): 11 rows, TERM+WEEK UNCHANGED
+     11/11, evidence sha == served bytes 11/11, 66 panels, zero exceptions; carried out by
+     Claude without a further STOP].
+     Eleven LAUNCH Humanities decks carry the science exemplar's loop panel in every stage,
+     filled from each stage's own text, nothing hand-authored, in the RULED P1 shape (no Title
+     panel; the four response outcomes as influence lines phrased for the stage's task; a
+     collapsed "Feedback loop" disclosure per stage; VOICE names the task; corrections #14/#15). Evidence re-stamped
+     where a deck limb holds or, under STOP-T3 ruling Q1, where the strand row agrees with the
+     projection; three David cover routes re-stamped under ruling Q2 inside the batch's declared
+     GLV3 replacement transaction (11 members); pins re-cut in both gate copies.
+     LANDED: Lessons #619 -> 894cba95 (re-cut from b79fa079 after the batch 4
+     carrier; the deck digests identical to the pre-signed table and the preview branch); unification observed
+     on the PR head 75d30678 run 35571009313 SUCCESS. Apps #140 -> 70a3074a.
+     RENDERED on the PR head at 390 px: 66/66 panels reached and 66/66 disclosures opened; rows 38-40 66/66/66; 0 refusal
+     faults; 0 page errors.
+     THE WINDOW: Site #422 -> ec58a420; pairs derived by the window runner from
+     the local build of the two mains; Domain split publication 35572842054 SUCCESS.
+     THE CLOSER: this pure carrier (L38 check PASS); Education Pages publication run reported
+     in the readback and entered in the CLOSE record.
+
+L45  HUM-T BATCH 6 LANDED UNDER THE OVERNIGHT ORDER  [2026-09-21; pre-signed by Matt Roper
+     2026-09-21 (PRE-SIGNATURE, ORDER HUM-T batch 6 BUILD): 10 rows, TERM+WEEK UNCHANGED
+     10/10, evidence sha == served bytes 10/10, 61 panels, zero exceptions; carried out by
+     Claude without a further STOP].
+     Ten BUILD Humanities decks carry the science exemplar's loop panel in every stage,
+     filled from each stage's own text, nothing hand-authored, in the RULED P1 shape (no Title
+     panel; the four response outcomes as influence lines phrased for the stage's task; a
+     collapsed "Feedback loop" disclosure per stage; VOICE names the task; corrections #14/#15). Evidence re-stamped
+     where a deck limb holds or, under STOP-T3 ruling Q1, where the strand row agrees with the
+     projection; nine David cover routes re-stamped under ruling Q2 inside the batch's declared
+     GLV3 replacement transaction (10 members); pins re-cut in both gate copies.
+     HELD BY RULING (Matt Roper, 2026-09-22, STOP-T4): the eleventh deck of the signed BUILD
+     set, BUILD_HUM_W16_Then_And_Now_And_What_Is_Fair.html, is NOT in this batch. It is the real
+     base fixture of _sownb/vb/tools/classic_v2_contract_selftest.py, whose clause
+     `lundy-in-three-places` wants the deck's own Lundy slide and whose RESTORED_MINUTES table
+     assumes ten slides; the transplant redistributes that slide into the per-stage panels, so the
+     self-test base red on two clauses and two of ten controls could not fire (VB mechanism
+     battery MEASUREMENT INVALID, run 35577895174). The batch was REBUILT as ten from origin/main,
+     not unpicked: every derived record is a ten-deck derivation. W16 is byte-identical to main
+     here and lands as batch 6b behind the versioned classic-v2 contract (its own PR, own red
+     proofs). Batch 6 therefore closes at ten, and the signed BUILD set completes at 6b.
+     LANDED: Lessons #621 -> 3825ecf0 (re-cut from 0fc3839a after the batch 5
+     carrier; the deck digests identical to the pre-signed table and the preview branch); unification observed
+     on the PR head 8127c0e4 run 35581190142 SUCCESS. Apps #142 -> 4c7e9c60.
+     RENDERED on the PR head at 390 px: 61/61 panels reached and 61/61 disclosures opened; rows 38-40 61/61/61; 0 refusal
+     faults; 0 page errors.
+     THE WINDOW: Site #423 -> 8e95534e; pairs derived by the window runner from
+     the local build of the two mains; Domain split publication 35583082980 SUCCESS.
+     THE CLOSER: this pure carrier (L38 check PASS); Education Pages publication run reported
+     in the readback and entered in the CLOSE record.
+
+L46  HUM-T BATCH 6b LANDED, AND THE SIGNED BUILD SET CLOSES AT ELEVEN  [2026-09-21; ruled by
+     Matt Roper 2026-09-22 (STOP-T4 and STOP-T5 option (a)); pre-signed by Matt Roper
+     2026-09-21 (PRE-SIGNATURE, ORDER HUM-T batch 6b BUILD): 1 row, TERM+WEEK UNCHANGED 1/1,
+     evidence sha == served bytes 1/1, 6 panels, zero exceptions].
+     THE HELD DECK: BUILD_HUM_W16_Then_And_Now_And_What_Is_Fair.html, row 11 of the signed
+     BUILD set, held at L45 because it was the live base fixture of
+     _sownb/vb/tools/classic_v2_contract_selftest.py: the transplant redistributes the deck's own
+     Lundy slide into the per-stage panels, so the self-test could not prove its v1 route and the
+     VB mechanism battery read MEASUREMENT INVALID (run 35577895174, declared=10 fired=8/10).
+     THE TWO CHECK CHANGES THAT CAME FIRST, each its own PR with red proofs, as ruled:
+     (i) Lessons #623 -> cdc14919, classic-v2 contract v1.1.0: `lundy-in-three-places` is
+     satisfied by the deck's own Lundy slide (v1 shape) OR by a sound panel on every non-I-Do,
+     non-Title stage (v2 shape) -- four dimensions, each with a state, one next-move control each
+     -- plus the print pack either way.
+     (ii) Lessons #624 -> 13b602e7 (Apps #144 -> b5391eb6), self-test v1.2.0 under STOP-T5
+     ruling (a): the v1 route runs against a NAMED SNAPSHOT of the bytes W16 shipped at
+     cdc14919, sha256 c9ec2ea5fcd7a7b1 with its derivation recorded beside it
+     (`git show cdc14919:<W16> | sha256sum`) and re-checked against git on every run, so the
+     fixture is auditable and tamper-evident; the v2 route runs against the live W3 deck; the
+     ten-slide timing table re-based from the deck's own history, never typed. 17 controls,
+     including fixture-bytes-altered and fixture-digest-mismatch. Options (b) and (c) were
+     refused by ruling: (b) freezes a live lesson as a test fixture, (c) retires a working route.
+     THE BATCH: one deck, transplanted in the RULED P1 shape (no Title panel; the four response
+     outcomes as influence lines phrased for the stage's own task; one labelled control per
+     outcome; a collapsed "Feedback loop" disclosure per stage, excluded from print; VOICE names
+     the stage's task). Six panels. Evidence re-stamped; declared as a ONE-MEMBER GLV3
+     replacement transaction; pins re-cut in both gate copies, gateSha256 82ee6c9e6f0d, PIN1
+     776 asserted / 783 exact triggers.
+     WHAT THE VERSIONED CONTRACT MAKES OF IT: RED 9/10 [classic-v2-contract-v1.1.0], the only
+     red `stage-timings-carried` (0 of 9 stages declare minutes) -- the pre-existing #271
+     backlog, not introduced here. `lundy-in-three-places` PASSES by the v2 route, 6/6 stages
+     plus the print pack. The v1 route stays proved by the snapshot.
+     LANDED: Lessons #625 -> 6fd6564f. Apps #145 -> a946c586. Unification observed on the PR
+     head af0b0785 run 35594900152 SUCCESS (VB mechanism battery job 106317358240 SUCCESS in FieldOps 35594899829).
+     RENDERED on the PR head at 390 px: 6/6 panels reached and 6/6 disclosures opened; rows
+     38-40 6/6/6; 0 refusal faults; 0 page errors; axe introduced 0.
+     THE WINDOW: Site #424 -> f29214ed; pairs derived by the window runner from the
+     local build of the two mains; Domain split publication 35597649406 SUCCESS.
+     THE CLOSER: pure carrier Lessons #626 -> 32243307 / Apps #146 -> 23a89528
+     (L38 check PASS, carrier changes nothing served); Education Pages publication 35603355640 SUCCESS, with FieldOps 35603354804 SUCCESS and
+     UX2 35603354740 SUCCESS on the same head; the publication read
+     education-publication.yml@f29214ed, the moved pin.
+     SERVED: publication-output sha256 73f4fc5a1c7b; the registry admits
+     ['ce5d6c4c8643','73f4fc5a1c7b'] -> ADMITTED. Six hum-t-loop panels in the published bytes and
+     24 next-move controls counted as DOM elements, four on each of Arrival, Starter, We Do 1,
+     We Do 2, Independent and Exit (needs-help / with-support / independent / explained).
+     390 px harness on those exact bytes: 6/6 panels reached, 6/6 disclosed, rows 38-40 6/6/6,
+     0 refusal faults, 0 page errors, axe serious 1 (color-contrast, pre-existing), introduced 0.
+     RECORDED WITH IT, three corrections. #19 RESTATED FROM MEASUREMENT: admitting the four
+     _sownb files and re-deriving PIN1 did widen the unification workflow's own path filters by
+     the sanctioned route -- `_sownb/` trigger lines 2 at 3825ecf0 and cdc14919, 10 at 13b602e7
+     and after -- so the fence now runs in CI on those four and cdc14919's green-by-absence
+     cannot recur for them; what remains open is narrower, that coverage is per-admitted-file
+     rather than `_sownb/**`, and widening it is a CI change for Matt.
+     #20: Lessons main 13b602e7 read red on FieldOps 35594146123, `RED lessons
+     Science_Teesside/Launch/SCI_L_W5_L1_Osmosis.html - HTTP 503`, 58 of 59 served byte-identical,
+     5/5 controls fired. An origin refusal, not a digest mismatch, on a route the commit does not
+     touch; attempt 2 of the same run SUCCEEDED and watch-main 35595736183 went green. The live
+     domain is unreachable from the working session (L36), so the single ruled re-run was the only
+     measurement available. Not STOP-R.
+     #21: site_window.sh built the commit message's "Registry baseline:" clause from a /tmp record
+     written only when a re-freeze actually runs, and /tmp survives between runs -- so every Site
+     window since 3cff4ba7 (#418) replayed that one genuine re-freeze verbatim, batches 2 to 6
+     included. Nothing served or gated was affected: the pairs, both pin pairs and the whole
+     battery were genuinely derived and passing in each of those runs. The record was wrong, not
+     the work. Fixed at the cause and red-proved both ways; #424's squash message states
+     `Registry baseline: unchanged`; no force-push, so the branch commits keep the stale line.
+     THE IN-WINDOW RED, NAMED: while Lessons main carried 6fd6564f the watch read 2 FAIL --
+     Education Pages publication 35596150219 and FieldOps 35596149700 -- because main served
+     W16's new bytes while still pinning Site 8e95534e, whose registry held only `ce5d6c4c`
+     where f29214ed holds the pair. That is the L33 case this carrier exists to close, and the
+     closer above shows it closed.
+     THIS ENTRY RIDES ITS OWN DOCS-ONLY PR. L41 to L45 each rode their batch's pure carrier;
+     6b's carrier merged before this entry was written, so L46 lands separately. Noted so the
+     pattern break is in the record rather than inferred from it.
+     THE SIGNED BUILD SET IS COMPLETE AT ELEVEN.
