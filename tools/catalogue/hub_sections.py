@@ -72,8 +72,14 @@ def derive(shelf_rows: list[dict], lessons: list[dict], pack_lessons: list[dict]
     def _double(cur):
         parts = [L.get('part') for L in cur]
         return len(cur) > 1 and (any(p is None for p in parts) or len(set(parts)) != len(parts))
-    double = sorted(k for k, s in slots.items() if _double(s['current']))
-    filled_by_pack = sorted(k for k, s in slots.items() if not s['current'] and s['pack'])
+    def _slot_key(k):
+        """Order slot keys when a record binds no week. A week-unbound row carries week=None,
+        which cannot be compared with an int, so sort those first and keep every bound week in
+        its own numeric order. Ordering only, never membership."""
+        pathway, term, week, strand = k
+        return (pathway, term, 0 if week is None else 1, week if week is not None else 0, strand)
+    double = sorted((k for k, s in slots.items() if _double(s['current'])), key=_slot_key)
+    filled_by_pack = sorted((k for k, s in slots.items() if not s['current'] and s['pack']), key=_slot_key)
     gaps = collections.Counter()
     for strand, planned in sow_slots.items():
         for (pathway, term, week) in planned:

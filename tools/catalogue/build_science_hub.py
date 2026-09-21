@@ -10,9 +10,14 @@ Inputs, every one a pinned record or a pack manifest:
 Outputs:
   Science_Teesside/index.html
   assets/catalogue/science-hub-bindings.json       the derivation: slots, conformers, packs
-"current" = the census's conforming routes and nothing else (exemplar-chassis lessons only as
-current, CONFORMS badge from the census); every other route is listed under Earlier versions
-labelled by its RECORDED style, so nothing is called current that the bytes do not prove.
+"current" = THE SERVED LESSON FOR EACH WEEK (ORDER SCI-COMPLETE, ruling of 2026-09-22 on
+STOP-F1). A lesson is demoted to Earlier versions only where a conforming replacement EXISTS --
+that is, another route bound to the SAME pathway, term and week whose own bytes carry the exemplar
+chassis AND which is the SAME part of that week (the deck's own lesson-config kind). Conformance
+alone never demotes: until PASS C delivers replacements, every lesson pupils use today stays
+current, carrying a CONFORMS or NOT YET badge derived from the census. The badge flips as PASS C
+lands. A route whose part cannot be read from its lesson-config is NEVER treated as replaced -- a
+replacement has to be shown to exist, not assumed.
 The writer refuses to write while any C1-C5 control is red.
 """
 from pathlib import Path
@@ -59,30 +64,65 @@ def part_of(path: Path) -> str | None:
     return kind.strip() if isinstance(kind, str) and kind.strip() else None
 
 
-# ------------------------------------------------------------ route families
+# ------------------------------------------------------------ replacement, and route families
+PART = {r['path']: part_of(ROOT / r['path']) for r in DATA['lessons']}
+
+
+def replaced_routes() -> dict[str, str]:
+    """The ONLY lessons the ruling lets us demote: a route bound to a (pathway, term, week) slot
+    where a CONFORMING route sits in the same slot AND is the same part of the week. Returns
+    {replaced path: the conforming route that replaces it}. A part of None is not a part: it
+    matches nothing, because a replacement must be shown, never assumed."""
+    slots: dict[tuple, list[str]] = collections.defaultdict(list)
+    for r in DATA['lessons']:
+        e = WEEKS.get(r['path']) or {}
+        for w in (e.get('weeks') or []):
+            slots[(e['pathway'], w['term'], w['weekWithinTerm'])].append(r['path'])
+    out: dict[str, str] = {}
+    for members in slots.values():
+        conformers = [p for p in members if p in CONFORMING]
+        for cand in members:
+            if cand in CONFORMING or PART[cand] is None:
+                continue
+            match = next((c for c in conformers if PART[c] is not None and PART[c] == PART[cand]), None)
+            if match:
+                out[cand] = match
+    return out
+
+
+REPLACED = replaced_routes()
+
+
 def family(path: str) -> str:
-    if path in CONFORMING:
-        return 'current'
     if Path(path).name.startswith('START_HERE'):
         return 'reference'
-    style = (WEEKS.get(path) or {}).get('style') or next((r['style'] for r in DATA['lessons'] if r['path'] == path), 'earlier')
-    return f'recorded {style}'
+    if path in REPLACED:
+        style = (WEEKS.get(path) or {}).get('style') or next((r['style'] for r in DATA['lessons'] if r['path'] == path), 'earlier')
+        return f'recorded {style}'
+    return 'current'
 
 
 FAMILIES = {r['path']: family(r['path']) for r in DATA['lessons']}
 
 
-# ------------------------------------------------------------ strand rows (the conformers)
+# --------------------------------------------- strand rows (every served lesson, badged)
+CONFORMS_PILL = '<span class="pill ok" data-conforms="1">CONFORMS</span>'
+NOT_YET_PILL = '<span class="pill" data-conforms="0">NOT YET</span>'
+
+
 def strand_rows() -> list[dict]:
+    """Every lesson that is current under the ruling -- the served lesson for its week -- each
+    carrying the badge the census earns it. Only a proven same-part replacement is left out."""
     rows = []
-    for p in sorted(CONFORMING):
-        e = WEEKS[p]
-        weeks = e['weeks'] or [None]
+    for path in sorted(r['path'] for r in DATA['lessons'] if FAMILIES[r['path']] == 'current'):
+        e = WEEKS.get(path) or {}
+        weeks = e.get('weeks') or [None]
         for w in weeks:
-            rows.append({'path': p, 'pathway': e['pathway'], 'term': (w['term'] if w else next(r['term'] for r in DATA['lessons'] if r['path'] == p)),
-                         'week': (w['weekWithinTerm'] if w else None), 'strand': 'Science', 'h1': h1_of(ROOT / p),
-                         'alternative': False, 'part': part_of(ROOT / p),
-                         'badges': '<span class="pill ok" data-conforms="1">CONFORMS</span>'})
+            rows.append({'path': path, 'pathway': e.get('pathway') or next(r['pathway'] for r in DATA['lessons'] if r['path'] == path),
+                         'term': (w['term'] if w else next(r['term'] for r in DATA['lessons'] if r['path'] == path)),
+                         'week': (w['weekWithinTerm'] if w else None), 'strand': 'Science', 'h1': h1_of(ROOT / path),
+                         'alternative': False, 'part': PART[path],
+                         'badges': CONFORMS_PILL if path in CONFORMING else NOT_YET_PILL})
     return rows
 
 
@@ -135,15 +175,25 @@ D = S.derive(DATA['lessons'], lessons, [], {}, FAMILIES, TERM_LABEL)
 errors = S.c1_errors(D) + S.c2_errors(D, FAMILIES) + S.c3_errors(ROOT / 'Science_Teesside', cards)
 
 
-def c5_errors(d: dict, conforming: set) -> list[str]:
-    """PASS F: current <=> conforming. A current card the census did not prove, or a
-    conforming route not rendered current, is red."""
-    errs = [f'C5 current card not in the chassis census: {p}' for p in sorted(d['current'] - conforming)]
+def c5_errors(d: dict, conforming: set, replaced: dict[str, str]) -> list[str]:
+    """PASS F under the ruling of 2026-09-22: CURRENT = THE SERVED LESSON FOR THE WEEK.
+    Red if a served lesson was dropped from current without a proven replacement (the thing the
+    ruling exists to prevent), if a replaced lesson is still shown as current, if a conforming
+    route is not current, or if any current card carries the wrong badge."""
+    served = {r['path'] for r in DATA['lessons'] if not Path(r['path']).name.startswith('START_HERE')}
+    errs = [f'C5 served lesson dropped from current with no conforming replacement: {p}'
+            for p in sorted(served - d['current'] - set(replaced))]
+    errs += [f'C5 replaced lesson still rendered current: {p} (replaced by {replaced[p]})'
+             for p in sorted(set(replaced) & d['current'])]
     errs += [f'C5 conforming route not rendered current: {p}' for p in sorted(conforming - d['current'])]
+    for row in lessons:
+        want = CONFORMS_PILL if row['path'] in conforming else NOT_YET_PILL
+        if row['badges'] != want:
+            errs.append(f'C5 wrong badge on a current card: {row["path"]}')
     return errs
 
 
-errors += c5_errors(D, CONFORMING)
+errors += c5_errors(D, CONFORMING, REPLACED)
 href_of = lambda path: '../' + path
 pack_href = lambda path: path.removeprefix('Science_Teesside/')
 blurb, start_hrefs = {}, {}
@@ -184,8 +234,10 @@ for r in D['earlier']:
     for w in (WEEKS.get(r['path']) or {}).get('weeks', []):
         served_by_earlier[(r['pathway'], w['term'])] += 1
 note_items = ''.join(f'<li>{E(p)} · {E(TERM_LABEL.get(t, t))}: {n} lessons</li>' for (p, t), n in sorted(served_by_earlier.items(), key=lambda kv: (S.PATHWAYS.index(kv[0][0]), (S.TERM_ORDER.index(kv[0][1]) if kv[0][1] in S.TERM_ORDER else len(S.TERM_ORDER)))))
-note_html = (f'<details class="hub-gaps" id="pre-chassis"><summary>Lessons in the earlier shape · {len(D["earlier"])} routes listed under Earlier versions</summary>'
-             f'<p class="hub-note">Current shows only the lessons whose own bytes carry the exemplar chassis (the PASS B census). Every other lesson is still served and listed below, by pathway and recorded term.</p><ul>{note_items}</ul></details>')
+conforming_now = len([r for r in DATA['lessons'] if r['path'] in CONFORMING])
+not_yet_now = len(D['current']) - conforming_now
+note_html = (f'<details class="hub-gaps" id="pre-chassis"><summary>How these lessons are badged · {conforming_now} CONFORMS, {not_yet_now} NOT YET</summary>'
+             f'<p class="hub-note">Current shows the lesson each week is actually taught from. A lesson is only moved to Earlier versions once a replacement for that same part of the week exists; until then it stays here, badged NOT YET, because it is the lesson being used. CONFORMS means the lesson\u2019s own bytes carry the exemplar chassis (the PASS B census); the badge changes as lessons are rebuilt.</p><ul>{note_items}</ul></details>')
 
 # ------------------------------------------------------------ page
 term_options = ''.join(f'<option value="{E(term)}">{E(label)}</option>' for term, label in DATA['terms'].items() if any(r['term'] == term or term in r['terms'] for r in DATA['lessons']))
@@ -231,5 +283,7 @@ bindings = {
     'packs': [{'id': c['id'], 'pathway': c['pathway'], 'lessons': c['lesson_count'], 'startHere': c['start_here'], 'links': len(c['links'])} for c in cards],
 }
 (ROOT / 'assets/catalogue/science-hub-bindings.json').write_text(json.dumps(bindings, indent=1, ensure_ascii=False) + '\n')
-print(f'Built the Science hub: {len(rendered)} of {len(DATA["lessons"])} shelf cards rendered ({len(D["current"])} current CONFORMS, {len(D["reference"])} reference, {len(D["earlier"])} earlier); '
+print(f'Built the Science hub: {len(rendered)} of {len(DATA["lessons"])} shelf cards rendered '
+      f'({len(D["current"])} current = {conforming_now} CONFORMS + {not_yet_now} NOT YET, {len(D["reference"])} reference, '
+      f'{len(D["earlier"])} earlier, of which {len(REPLACED)} have a proven same-part conforming replacement); '
       f'{len(D["slots"])} current slots; {len(cards)} pack cards; controls C1-C5 0 errors.')
