@@ -8,6 +8,9 @@
  *   row 39  influence is refused before audience
  *   row 40  driven in order, the panel reaches INFLUENCE
  *   row 41  every panel is reachable at 390px
+ *   P1-3    a panel sits behind a collapsed "Feedback loop" disclosure: hidden until its
+ *           summary is tapped (a real click on the deck's own control) or the stage's own
+ *           task is used (a field input or a chip tap outside the disclosure), visible after
  *   row 42  the deck's own controls are not double-driven
  *   axe     0 serious/critical
  *   R5      the RE safeguard sentences the deck already had are still there
@@ -69,6 +72,7 @@ async function activeIndex(page) {
 
 async function run(page, file) {
   const res = { file, panels: 0, reached: 0, r38: 0, r39: 0, r40: 0,
+                disclosed: 0, disclosureFaults: [], openedByTask: 0, taskNA: 0, taskFaults: [],
                 refusals: [], errors: [], axe: null, doubleDriven: [] };
   const errs = [];
   page.on('pageerror', e => errs.push(String(e).slice(0, 180)));
@@ -84,19 +88,60 @@ async function run(page, file) {
     const idx = await activeIndex(page);
     if (idx >= 0 && !seen.has(idx)) {
       seen.add(idx);
-      const info = await page.evaluate((i) => {
+      // The deck's own slide transition can hold the new stage at visibility:hidden for
+      // ~100ms; checkVisibility() reports that honestly (a rect did not), so the after-tap
+      // reading waits for the transition rather than judging inside it.
+      const measure = (i, tap) => page.evaluate(([i, tap]) => {
         const all = [...document.querySelectorAll('.slide')]
           .filter(n => !n.parentElement.closest('.slide'));
         const st = all[i];
         if (!st) return null;
         const p = st.querySelector('.hum-t-loop');
         if (!p) return { hasPanel: false };
-        const r = p.getBoundingClientRect();
-        return { hasPanel: true, visible: r.height > 0 && r.width > 0,
-                 stage: p.getAttribute('data-loop-stage-name') };
-      }, idx);
+        const vis = () => p.checkVisibility
+          ? p.checkVisibility({ contentVisibilityAuto: true, visibilityProperty: true })
+          : (() => { const r = p.getBoundingClientRect(); return r.height > 0 && r.width > 0; })();
+        const d = p.closest('details.loop-disclosure');
+        const sum = d && d.querySelector('summary');
+        const out = { hasPanel: true, visible: vis(), open: d ? !!d.open : null,
+                      hasDisclosure: !!d, label: sum ? sum.textContent.trim() : '',
+                      stage: p.getAttribute('data-loop-stage-name'), taskControl: null };
+        if (tap === 'task' && d) {                          // P1-3: the stage's own task, used
+          const outside = n => !d.contains(n) && !n.closest('.hum-t-loop');
+          const field = [...st.querySelectorAll('input,select,textarea')].find(outside);
+          const chip = [...st.querySelectorAll('button[data-chip],button.chip,[role="button"]')].find(outside);
+          if (field) { field.dispatchEvent(new Event('input', { bubbles: true })); out.taskControl = field.tagName.toLowerCase(); }
+          else if (chip) { chip.click(); out.taskControl = 'chip'; }
+        } else if (tap === true && sum) sum.click();        // the real control, as a pupil taps it
+        return out;
+      }, [i, tap]);
+      await page.waitForTimeout(260);
+      const before = await measure(idx, 'task');          // reads the closed state, then uses the task
+      await page.waitForTimeout(260);
+      let after = before && before.hasPanel ? await measure(idx, false) : null;
+      if (before && before.hasPanel && before.hasDisclosure) {
+        if (before.taskControl && after.open) res.openedByTask++;
+        else {
+          if (before.taskControl) res.taskFaults.push([before.stage, before.taskControl]);
+          else res.taskNA++;
+          await measure(idx, true);                        // the summary tap instead
+          await page.waitForTimeout(260);
+          after = await measure(idx, false);
+        }
+      }
+      const info = before && before.hasPanel
+        ? { hasPanel: true, stage: before.stage, visible: after.visible,
+            disclosure: before.hasDisclosure
+              ? { hiddenBefore: !before.open && !before.visible, openAfter: after.open,
+                  visibleAfter: after.visible, label: before.label } : null }
+        : before;
       if (info && info.hasPanel) {
         if (info.visible) res.reached++;
+        if (info.disclosure) {
+          const d = info.disclosure;
+          if (d.hiddenBefore && d.openAfter && d.visibleAfter && d.label === 'Feedback loop') res.disclosed++;
+          else res.disclosureFaults.push([info.stage, d]);
+        }
         // --- drive the panel, wrong order first
         const panel = await page.$(`.slide:nth-of-type(${idx + 1}) .hum-t-loop`)
           || await page.evaluateHandle((i) => {
@@ -173,10 +218,11 @@ async function run(page, file) {
   fs.writeFileSync(out, JSON.stringify(all, null, 1));
   const tot = all.reduce((a, r) => ({
     panels: a.panels + (r.panels || 0), reached: a.reached + (r.reached || 0),
+    disclosed: a.disclosed + (r.disclosed || 0),
     r38: a.r38 + (r.r38 || 0), r39: a.r39 + (r.r39 || 0), r40: a.r40 + (r.r40 || 0),
     serious: a.serious + ((r.axe && r.axe.serious) || 0),
     errs: a.errs + ((r.errors && r.errors.length) || 0),
     fatal: a.fatal + (r.fatal ? 1 : 0),
-  }), { panels: 0, reached: 0, r38: 0, r39: 0, r40: 0, serious: 0, errs: 0, fatal: 0 });
+  }), { panels: 0, reached: 0, disclosed: 0, r38: 0, r39: 0, r40: 0, serious: 0, errs: 0, fatal: 0 });
   console.log(JSON.stringify({ decks: all.length, ...tot }, null, 1));
 })();
