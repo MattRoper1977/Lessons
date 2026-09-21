@@ -813,3 +813,32 @@ L38  A CARRIER THAT MOVES A PUBLISHED FILE IS NOT A CARRIER  [ORDER HUM-T batch 
      the registry; 7 panels, 7 reached by the deck's own navigation (row 41); rows 38-40
      7/7; rows 45, 45.1, 45.2, 13 and 46 PASS; axe serious 2, pre-transplant 2, so 0
      introduced.
+
+L39  SCI-COMPLETE PASS A LANDED UNDER THE OVERNIGHT ORDER  [2026-09-21; STOP-SIGN-A signed by
+     Matt Roper 2026-09-20; carried out by Claude without a further STOP].
+     The shelf restored 129 -> 180: 43 routes cell-resolved and 8 by manifest sow token, bound
+     from the calendar spine with the ruled bases in tools/catalogue/TERM_BASES.json (science
+     Aut1 0, Aut2 8, Spr1 15, Spr2 21, Sum1 26, Sum2 33; s.Q4); three Spr2 W6 decks
+     untimetabled and listed, one LAUNCH deck on two weeks and listed, the eight sow-token
+     decks carrying their unresolved cells by name. The exception rows Matt accepted: 31
+     re-dressed decks re-deriving full-lundy -> earlier (no Lundy furniture in their bytes;
+     PASS C restores it) and 32 composite titles re-derived from the decks' own <title>.
+     LANDED: Lessons #607 -> 9df4ec80 after two merges of main (68635747, then the
+     pure carrier 581e61fd), records regenerated on the merged tree and CATALOGUE_PINS written
+     by the pin writer, never by the merge's textual result; unification observed on the PR
+     head a0d1e5bb through the on-content contract, run 35548214556, SUCCESS; FieldOps
+     35548214330 SUCCESS. Apps #129 -> c28d0203 (mergeable clean).
+     THE WINDOW: Site #418 -> 3cff4ba7a260355c43d0b431eb8443a914cf941c; seven transition pairs derived by the
+     window runner from the local build of the two mains (education-site/data/usage-registry.json;
+     education-lessons/Science_Teesside/index.html, assets/catalogue/display-titles.json,
+     lesson-order.json, science-shelf.json, terms-and-styles.json, data/resource-sizes.json),
+     0 ARRIVING; the publication's own admission refused the build before the edit (three
+     rounds, 1 then 6 moves named) and admitted it after. Domain split publication
+     35551627196 SUCCESS.
+     THE CLOSER: this pure carrier (L38 check PASS), Education Pages publication run reported
+     in the readback and entered in the CLOSE record.
+     SERVED PROOF, hub lists 180: on the built bytes the Science hub's distinct lesson links
+     meet the 180 science-shelf.json routes exactly (180 of 180, 0 missing), plus the pathway
+     START_HERE page; the twelve listed decks are on the hub, listed not hidden.
+     PASS B CENSUS (held for STOP-B1): 180 routes, 14 conforming (the exemplars), 166 without
+     Lundy furniture, of which 40 are recorded full-lundy.
