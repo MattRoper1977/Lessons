@@ -542,3 +542,39 @@ affected decks 132, transplanted decks 62, **overlap 0** — but the affected 13
 ones ruling 2 sends to intake. A Summer 1 transplant cut from main today would silently
 withhold the Lundy panel from the starter stage of every one of the twelve. **#634 merges
 before any Summer 1 or PASS B batch is cut.**
+
+### Part A v2 — the index and the static E-checks, re-run on the new packs
+
+**A0 / TEXT_INDEX — 19,649 rows, 0 NOT_RUN.** Every surface opened and read; the DOCX, PPTX,
+PDF and XLSX libraries all import in this container, so no leg is silently absent.
+
+```
+rows 19,649   NOT_RUN 0   lesson ids 18 (+3 pack roots)   config rows 3,125
+BUILD 6,299   GROW 6,379   LAUNCH 6,971
+surfaces: config, Pupil_Resources.html/.pdf, Editable_Pack.docx, Teacher_Notes.docx/.pdf,
+          Editable_Slides.pptx (+:notes), Knowledge_Organiser.html/.docx/.pdf,
+          Sources_and_checks.html, START_HERE.html, Data.csv, Data.xlsx, Model_Transcript.txt
+```
+
+Every one of the 18 carries config rows. The withdrawn generation gave 19,130; this is 19,649.
+
+**E13 residue — PASS.** 19,649 text units across 16 surfaces: **0** emails, phone numbers, file
+paths, artefacts, review-copy markers, TODO, lorem, NaN, undefined or template braces. 33 name
+candidates, of the same kinds as the HUM-D5 pass — table-header pairs read as names
+(`Europe Southern`, `Continent Ocean`, `Cause Impact`) and historical figures.
+
+**E2 cross-surface parity — 392 field rows × 7 surfaces, 34 coverage flags — and a gap in E2
+itself.** The flags are the kinds the HUM-D5 E2 already records: 9 where the field is simply
+absent on that surface (`Editable_Slides.pptx:notes` for 7 of them), and the rest case,
+punctuation or truncation differences.
+
+**None of the 34 names `provenance` or `mitigation`.** E2 compares the **config** against each
+**surface**; the two held LAUNCH defects are a disagreement *between two renderings of the same
+lesson* — the on-screen organiser against the print organiser and the Knowledge Organiser — and
+that axis is not one E2 tests. So **E2 as built cannot see either defect**, and its PASS on this
+class would have been a clean report over a comparison that was never made. The vocabulary-parity
+leg is what finds them, and that is why it exists. Recorded here rather than left implied.
+
+**Still owed on Part A:** E1 and E3–E18 on these 18. E4 (480 PDFs), E6 (axe, 18 × 9 × 2), E8
+(video) and E17 are the heavy legs and have not been re-run on the new artefacts; E10/E11 remain
+NOT RUN for want of egress, exactly as for the 120.
