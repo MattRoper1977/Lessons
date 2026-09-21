@@ -578,3 +578,116 @@ leg is what finds them, and that is why it exists. Recorded here rather than lef
 **Still owed on Part A:** E1 and E3–E18 on these 18. E4 (480 PDFs), E6 (axe, 18 × 9 × 2), E8
 (video) and E17 are the heavy legs and have not been re-run on the new artefacts; E10/E11 remain
 NOT RUN for want of egress, exactly as for the 120.
+
+## ADDENDUM 3 v3 — INTAKE on the PACK-1R_v3 packs, 2026-09-21
+
+Three v3 zips arrived; the GROW v3 zip was **not in the container** and is requested. Every
+claim in the addendum's cover text was re-measured here on the delivered bytes before it was
+believed; nothing below is copied from the cover.
+
+### Hash on arrival, and A3.0 v3 by content
+
+```
+Humanities_Summer_1_LAUNCH_Weeks_01-06_PACK-1R_v3.zip   251f190b3584b877ba77cebfb6ccb63a3ce8307a8ee41031873982baa119f505   4,543,989 B
+Humanities_Summer_1_BUILD_Weeks_01-03_PACK-1R_v3.zip    1c4edef4c911980e607f957b0569da9c83ab67249aa6a3e066833f9b6966adb7   4,445,375 B
+Humanities_Summer_1_BUILD_Weeks_04-06_PACK-1R_v3.zip    b902013aec3313649faeb3ca123740d961f904d846f03247fa0ef2e265d6173d   3,836,139 B
+```
+
+| pack | SHA256SUMS by content | files | lessons |
+|---|---|---|---|
+| LAUNCH W01–06 | 105/105, 0 failed, 0 missing | 106 | 6 |
+| BUILD W01–03  |  62/62,  0 failed, 0 missing |  63 | 3 |
+| BUILD W04–06  |  60/60,  0 failed, 0 missing |  61 | 3 |
+
+227/227 delivered here; the addendum expects 330 across four packs, so GROW v3 accounts for
+the remainder. **One id, one file: 12/12.** The v2 extractions stay quarantined; no lesson id
+has two live generations in front of an instrument.
+
+### CHANGELOG byte-offset claims — checked, not believed
+
+Each changelog names a Before and After SHA-256 per lesson, zero-based byte ranges with old
+and new hex, and says no byte outside those ranges changes. Against the v2 bytes held here:
+
+```
+After-SHA matches the delivered v3 file     : 12 of 12
+Before-SHA matches the v2 copy held here     : 12 of 12
+applying the listed hex patches to v2, highest offset first, reproduces v3 byte for byte : 12 of 12
+first differing byte lies inside a listed range                                          : 12 of 12
+teaching files (DOCX/PPTX/PDF/MP4/CSV/XLSX/SVG/PNG) byte-identical to v2 : 74 + 32 + 37, 0 differ
+```
+
+BUILD W01 is declared UNCHANGED and is byte-identical. The LAUNCH edits are one or two
+organiser cells per lesson; the BUILD W02–W06 edits are six single-byte `1`→`2` demotions
+(three `<h1>`→`<h2>` pairs).
+
+### Ruling 2 — the two LAUNCH holds are CLEARED on the bytes
+
+| lesson | word | screen | print | Knowledge Organiser |
+|---|---|---|---|---|
+| `LAUNCH_SU1_W01` | provenance | Who made a source, when and why | same | same |
+| `LAUNCH_SU1_W02` | mitigation | Reducing greenhouse-gas emissions or increasing their removal | same | same |
+
+One definition on all three surfaces, the KO's. 12/12 clean on the by-word check.
+
+### Correction #30 restated — `<h1>` on the STATIC document, script strings and dialog templates excluded
+
+```
+lesson            all <h1>   in a script string   in a dialog / v4-modal   print-only   STATIC
+every one of 12          2                    1                        0            0        1
+```
+
+**12/12.** The second `<h1>` in every v3 lesson sits inside a script string (the
+organiser-dialog template). That was **not** so in v2: there the extra `<h1>`s in BUILD W02–W06
+were real elements in `v4-modal` divs and the print organiser, at `inside=None` under the same
+measurement — v3's six demotions are what moved them. The exemplar-parity claim holds for v3.
+
+### Ruling 3 v3 — `Sources_and_checks.html`
+
+Every internal link out of every copy, and every lesson → Sources link, resolved to a real file
+and a real id: LAUNCH 45, BUILD W01–03 5, BUILD W04–06 3 — **0 broken**. `_records` copies
+byte-identical to the root copy in all three packs (LAUNCH 1, BUILD W01–03 4, BUILD W04–06 1).
+
+### G-vocab — a new check, red-proved on the bytes the ruling names
+
+`_passhumd5/scan_gvocab.py`. A lesson's vocabulary is on three surfaces a pupil can meet — the
+on-screen organiser, the print organiser, the Knowledge Organiser — and they must agree on
+**(1) the set of terms** and **(2) the definition of every shared term**. Clause (1) exists
+because of what the v1/v2 LAUNCH packs carried: a first screen row (`sustainability`, with a
+definition belonging to no term) that print and KO did not carry at all. A by-word comparison
+had nothing to compare it with and passed it — the vocabulary-parity leg above reported
+16/18 clean on v2 for exactly that reason. Set equality is what sees a row present on one
+surface only. Where a KO carries its words as `word: meaning` prose under "Words to use" rather
+than a table (BUILD W01), the check reads that form from the file's own structure.
+
+```
+self-test (8 controls, exit 0):
+  v1 withdrawn LAUNCH   6/6 flag   W01,W02 by definition · W03–W06 by term-set (screen-only row)
+  v2 LAUNCH             6/6 flag   same six, same kinds
+  v3 W04 clean before seeding; seeded control flags exactly one definition defect, screen only
+v3, 12 lessons  : 12/12 clean, exit 0
+v2, 18 lessons  :  6/18 flagged — exactly the six LAUNCH lessons (record)
+```
+
+The instrument arrives as an added file and is admitted and pinned rather than taking the
+boundary's free pass.
+
+### G-B / G-C / G-D / E6 on v3
+
+* **G-B — PASS 24/24 rows.** Real Chromium, each pack served over http from its own root,
+  every stage activated, 390 and 1280: 0 page errors, 0 console errors, 0 off-origin, no
+  horizontal overflow. GPT's own browser leg is recorded NOT RUN; this is the line that runs it.
+* **G-C — PASS 12/12.** **G-D — PASS**: rendered 12/12; whole-pack incl. binary, 0 library
+  failures; LAUNCH 61 occurrences in 22 files, all staff or config sentences of the three
+  named kinds; BUILD 0; **0 pupil-visible.**
+* **E6 — axe 4.10.2, 12/12 run, 216 stage × viewport, 0 NOT RUN.** `color-contrast` serious on
+  216/216 (the `#auto-timer-display` / `.at-btn` chrome at 3.17:1 and 3.68:1, and the ruled
+  REPORT-ONLY model-node ribbon at 1.19:1); **0 `svg-img-alt`, 0 `nested-interactive`** — the
+  v2 run's 12 and 10 were on GROW only, and GROW v3 is not here. 0 of 12 free of a serious
+  finding, as for the 120.
+
+### Still held / still owed
+
+* **GROW v3** — not in the container; A3.0's 330 and G-vocab / G-B / E6 on GROW await it.
+* **NOAA 2025 (427.35 ppm)** — UNVERIFIED-BY-CLAUDE, pending Matt (ruling 6).
+* **Landing** — only after intake closes on all four packs, by the SX1-style route the
+  addendum names; nothing has landed.
