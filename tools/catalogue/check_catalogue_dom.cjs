@@ -86,27 +86,47 @@ function visibleScience(env){return [...env.document.querySelectorAll('[data-les
  check(`Every catalogue entry is rendered on exactly one subject × pathway path (${cards.length} subjects)`,()=>{assert.equal(rendered.size,rows.length);});
  const noSlug=await boot('subject.html','?subject=no-such-subject');
  check('Unknown subject slug shows the inline chooser',()=>{assert(!noSlug.document.querySelector('#chooser').hidden);assert.equal(noSlug.document.querySelectorAll('#chooser a').length,cards.length);});
+ // ROUTES vs CARDS -- the ruling of 2026-09-22 on STOP-F2, carried into this check. The hub renders
+ // one card per (route, week) the RECORD binds, so the one route bound to two weeks renders in both
+ // and the page holds more cards than routes. Population is therefore counted in BINDINGS and
+ // identity asserted on ROUTES, both derived from tools/catalogue/SCIENCE_WEEK_BINDINGS.json: the
+ // record the builder READS, never the record it WRITES, which would make this check circular.
+ // Nothing is loosened -- the retired lines asserted a bare count; these assert the exact route set,
+ // the exact binding set, and that no card is rendered twice.
+ const weekBindings=JSON.parse(fs.readFileSync(path.join(root,'tools/catalogue/SCIENCE_WEEK_BINDINGS.json'),'utf8')).entries;
+ const scienceCards=science.lessons.flatMap(r=>{const ws=(weekBindings[r.path]||{}).weeks||[];return ws.length?ws.map(w=>({...r,term:w.term,week:String(w.weekWithinTerm)})):[{...r,week:'unspecified'}];});
+ const scienceRoutes=[...new Set(science.lessons.map(r=>r.path))].sort();
+ const launchCards=scienceCards.filter(r=>r.pathway==='LAUNCH');
+ const launchRoutes=[...new Set(launchCards.map(r=>r.path))].sort();
+ const cardKey=c=>`${c.dataset.lessonPath}|${c.dataset.term}|${c.dataset.week}`;
+ const bindKey=r=>`${r.path}|${r.term}|${r.week}`;
+ const routesOf=cards=>[...new Set(cards.map(c=>c.dataset.lessonPath))].sort();
  const sc=environment('Science_Teesside/index.html');runFile(sc,'assets/catalogue/science-shelf.js');
- check('Science shelf has all 180 source routes exactly once',()=>{assert.equal(visibleScience(sc).length,180);assert.equal(new Set(visibleScience(sc).map(c=>c.dataset.lessonPath)).size,180);});
+ check(`Science shelf renders every route in every week the record binds it (${scienceRoutes.length} routes, ${scienceCards.length} cards)`,()=>{
+  const cards=visibleScience(sc);
+  assert.deepEqual(routesOf(cards),scienceRoutes);
+  assert.deepEqual(cards.map(cardKey).sort(),scienceCards.map(bindKey).sort());
+  assert.equal(new Set(cards.map(cardKey)).size,cards.length);
+ });
  let scienceCombinations=0;
  for(const pathway of ['','BUILD','GROW','LAUNCH'])for(const term of ['','Aut1','Aut2','Spr1'])for(const style of [...sc.document.querySelector('#science-style').options].map(o=>o.value)){
   sc.document.querySelector('#science-pathway').value=pathway;sc.document.querySelector('#science-term').value=term;sc.document.querySelector('#science-style').value=style;event(sc,sc.document.querySelector('#science-style'),'change');
-  const expected=science.lessons.filter(r=>(!pathway||r.pathway===pathway)&&(!term||r.term===term)&&(!style||r.style===style));
+  const expected=scienceCards.filter(r=>(!pathway||r.pathway===pathway)&&(!term||r.term===term)&&(!style||r.style===style));
   assert.equal(visibleScience(sc).length,expected.length,`${pathway}/${term}/${style}`);scienceCombinations++;
  }
- reports.push({name:`Science pathway/term/style filters match source routes (${scienceCombinations} combinations)`,status:'PASS'});
+ reports.push({name:`Science pathway/term/style filters match the record's bindings (${scienceCombinations} combinations)`,status:'PASS'});
  event(sc,sc.document.querySelector('#science-clear'),'click');
- check('Science clear filters restores all alternatives',()=>assert.equal(visibleScience(sc).length,180));
+ check('Science clear filters restores all alternatives',()=>{assert.equal(visibleScience(sc).length,scienceCards.length);assert.deepEqual(routesOf(visibleScience(sc)),scienceRoutes);});
  const rec=environment('Science_Teesside/index.html','?pathway=LAUNCH&term=Aut1&style=recommended');runFile(rec,'assets/catalogue/science-shelf.js');
  check('Recommended deep link selects correct pathway, term and all 15 lessons',()=>{assert.equal(visibleScience(rec).length,15);assert(visibleScience(rec).every(c=>c.dataset.style==='recommended'));});
  const launch=environment('Science_Teesside/index.html','?pathway=LAUNCH');runFile(launch,'assets/catalogue/science-shelf.js');
- check('All LAUNCH deep link exposes all 76 preserved teaching versions across six terms',()=>{assert.equal(visibleScience(launch).length,76);assert.deepEqual([...new Set(visibleScience(launch).map(c=>c.dataset.term))].sort(),['Aut1','Aut2','Spr1','Spr2','Sum1','Sum2']);});
+ check(`All LAUNCH deep link exposes every preserved LAUNCH route across six terms (${launchRoutes.length} routes, ${launchCards.length} cards)`,()=>{assert.deepEqual(routesOf(visibleScience(launch)),launchRoutes);assert.equal(visibleScience(launch).length,launchCards.length);assert.deepEqual([...new Set(visibleScience(launch).map(c=>c.dataset.term))].sort(),['Aut1','Aut2','Spr1','Spr2','Sum1','Sum2']);});
  const launchWeek=environment('Science_Teesside/index.html','?pathway=LAUNCH&term=Aut2&week=1');runFile(launchWeek,'assets/catalogue/science-shelf.js');
  check('Week filter follows accepted term-local week, not obsolete filename numbering',()=>{const cards=visibleScience(launchWeek);assert.equal(cards.length,4);assert(cards.every(c=>c.dataset.lessonPath.includes('W9')));assert(cards.every(c=>c.querySelector('.science-week').textContent.includes('Autumn 2')));});
- check('All LAUNCH shortcut clears term/week/style and retains every version',()=>{event(launchWeek,launchWeek.document.querySelector('[data-shortcut="all-launch"]'),'click');assert.equal(visibleScience(launchWeek).length,76);assert.equal(launchWeek.document.querySelector('#science-week').value,'');assert.equal(launchWeek.location.search,'?pathway=LAUNCH');});
+ check('All LAUNCH shortcut clears term/week/style and retains every version',()=>{event(launchWeek,launchWeek.document.querySelector('[data-shortcut="all-launch"]'),'click');assert.equal(visibleScience(launchWeek).length,launchCards.length);assert.deepEqual(routesOf(visibleScience(launchWeek)),launchRoutes);assert.equal(launchWeek.document.querySelector('#science-week').value,'');assert.equal(launchWeek.location.search,'?pathway=LAUNCH');});
  const unbound=environment('Science_Teesside/index.html','?week=unspecified');runFile(unbound,'assets/catalogue/science-shelf.js');
  check('Unproven weeks stay discoverable with an honest unknown label',()=>{assert.equal(visibleScience(unbound).length,4);assert(visibleScience(unbound).every(c=>c.querySelector('.science-week').textContent==='Week not specified'));});
- check('Science clear removes the week filter and restores all routes',()=>{event(unbound,unbound.document.querySelector('#science-clear'),'click');assert.equal(visibleScience(unbound).length,180);assert.equal(unbound.location.search,'');});
+ check('Science clear removes the week filter and restores all routes',()=>{event(unbound,unbound.document.querySelector('#science-clear'),'click');assert.equal(visibleScience(unbound).length,scienceCards.length);assert.deepEqual(routesOf(visibleScience(unbound)),scienceRoutes);assert.equal(unbound.location.search,'');});
  const full=environment('Science_Teesside/index.html','?style=full-lundy');runFile(full,'assets/catalogue/science-shelf.js');
  const fullLundyPaths=science.lessons.filter(r=>r.style==='full-lundy').map(r=>r.path).sort();
  check('Full Lundy shortcut exposes exactly the current matching source routes',()=>assert.deepEqual(visibleScience(full).map(c=>c.dataset.lessonPath).sort(),fullLundyPaths));
