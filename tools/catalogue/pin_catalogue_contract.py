@@ -1404,6 +1404,17 @@ REVIEWED_PATHS = (
     # judged by exact bytes. Nothing is loosened.
     "_passhumd5/CHECKS.md",
     "_passhumd5/build_text_index.py",
+    # P0 (ruling 4, 2026-09-22): the cell map, the retire list, the per-deck source table and the
+    # instrument that derives all three. All four ARRIVE as additions, and the boundary judges only
+    # MODIFIED files -- measured on the P0 branch before this pin: [PASS] cross-estate static
+    # contract, PIN1 PASS 778/785, with nothing admitted at all. That is the same free pass
+    # build_science_hub.py took (L47) and the snapshot fixture took (correction #19). Declined here:
+    # a record the tree can edit silently is not a record, and an instrument that can be widened
+    # unreviewed is worth less than the map it writes.
+    "_passhumd5/p0_cell_map.py",
+    "_passhumd5/CELL_MAP.md",
+    "_passhumd5/RETIRE_LIST.md",
+    "_passhumd5/P0_SOURCES.md",
     # SX3 landing decks. A deck is admitted by being named here: the boundary
     # permits a changed file only if it is pinned, and tools/pin1/derive_triggers.py
     # then materialises the matching trigger path and asserts the two sets are equal.
