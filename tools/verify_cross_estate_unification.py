@@ -121,7 +121,7 @@ CATALOGUE_PINS = {
     "visible_body_sha256": "9961e6f6c4627d644a364dedef7b37b1731cf8508e0ec85909f070a328bec187",
     "files": {
         "_sownb/CALENDAR_SPINE.json": "cd1cc2a6ed95877caa8826c155b605782ea696a8a801b3cf6489b2b0a8fe35f8",
-        "_sx3/SX3_PASSES_LEDGER.md": "94f905e8d45f12118fd7a3eb2e4a2411c4e9739bd38de0f91519a8a9cf0e407a",
+        "_sx3/SX3_PASSES_LEDGER.md": "7ca4e5edb2c71d484dcfda4b48d2f7a57b33d7928b7223502f20a1b7cefd4ae7",
         "tools/sx3/pre_ci_catalogue_sweep.sh": "9848b9e4e9ccab0bd8225d26d7ffa4683c59c249bff688f33c5d665671d9f818",
         "assets/catalogue/display-titles.json": "e8072487ca9d163089b83160ac5c57a8e94729c09d9fb0bb76632938a018bcb9",
         "tools/catalogue/build_display_titles.py": "4256ab6b07420af4ef090e57d32b8f29fcae88d9075d64750e52f17947dbd8a1",
@@ -1319,7 +1319,7 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # PASS F admission window (Site #426), which admits the rebuilt Science hub and the
 # registrations it links. The caller file therefore changed, and this is its digest re-cut
 # from those bytes -- computed, never typed.
-    "lessons": "8d07252cc0fd99d8ae9203fc24f07cca72793360b033c02aa1592dc052f218de",
+    "lessons": "fe261c02c467028b1aed47ef9423d1271bb1d5553e00068fcee258305f42ec41",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.
