@@ -162,6 +162,17 @@ jobs:
     # CLOSER: education-publication.yml resolves .sources/Site from builder_ref, so until it
     # moves the publication still reads the OLD admission record and reds identically.
     # SHA read with git rev-parse on the Site checkout, never typed.
-    uses: MattRoper1977/mattroper1977.github.io/.github/workflows/education-publication.yml@e52667a1067efeb65216e6afe16bb4aa6ec3f9af
+          # Moved 2026-09-22 (Summer 1 responsive re-delivery, STANDING RULE L33 and the ruled
+          # pending-then-land fold, STOP-RESP-2 step 2): e52667a1 -> aeb47509523dd0b7f8efb1c94f5eb550c17e2318,
+          # the squash merge of Site #430 -- the window that admits this PR's 27 published paths as
+          # [main-today, pending] transition pairs. THIS LINE IS THE CLOSER: education-publication.yml
+          # resolves .sources/Site from builder_ref, so until it moves the publication still reads the
+          # OLD admission record and refuses all 27 by name, as at run 35714663331. The bump is FOLDED
+          # INTO this content PR rather than following it, so the publication reads the new registry on
+          # its first run and no red is produced anywhere in the sequence. The purity check is scoped to
+          # these two carrier lines: this PR deliberately moves 27 served paths, so the whole-diff form
+          # of tools/hum/check_carrier_pure.py refuses it by design and is not the test here; step 3 is
+          # the pure carrier. SHA read with git rev-parse on the Site checkout, never typed.
+    uses: MattRoper1977/mattroper1977.github.io/.github/workflows/education-publication.yml@aeb47509523dd0b7f8efb1c94f5eb550c17e2318
     with:
-      builder_ref: e52667a1067efeb65216e6afe16bb4aa6ec3f9af
+      builder_ref: aeb47509523dd0b7f8efb1c94f5eb550c17e2318
