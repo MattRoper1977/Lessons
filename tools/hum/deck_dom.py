@@ -274,34 +274,103 @@ def _document_stages(node: Node):
     return stages(a[-1]) if a else [node]
 
 
-def eyebrow_stage_name(node: Node) -> str:
-    """The ruled Science route: the eyebrow text, disambiguated by document order.
+def eyebrow_names(stage_list) -> list:
+    """The eyebrow route over a WHOLE document, in one left-to-right pass.
 
-    Returns '' when the stage carries no eyebrow at all, and 'unnamed' when it carries one this
-    map does not know -- never a silent pass. An unknown label is a deck-level RED for the caller,
-    because a stage that cannot be named must not fall quietly into `eligible` as neither title
-    nor modelling; that is the defect this route exists to remove.
+    Resolved as a sequence rather than per node because every ordinal question -- is this the
+    first "I do" or the second, has the deck already declared the "1" this "2" needs, is this a
+    third -- is a question about what the DECK has declared SO FAR, and the answer must be the
+    name the route actually gave those earlier stages, not their raw labels. A per-node walk that
+    re-read the labels could count a bare "I do" and an explicit "I do 2" as different things and
+    hand out ido2 twice.
+
+    '' means the stage carries no eyebrow. 'unnamed' means it carries one this route refuses:
+    a label outside the emitted vocabulary, a "2" declared before its "1" (STOP-C2 ruling 3), or
+    a modelling kind declared more times than a lesson has (STOP-C3 D3). Never a silent pass.
     """
-    label = stage_eyebrow(node)
-    if not label:
-        return ''
-    name = EYEBROW_STAGE.get(label.lower())
-    if name is None:
-        return 'unnamed'
-    earlier = []
-    for s in _document_stages(node):
+    out, seen = [], {}
+    for node in stage_list:
+        label = stage_eyebrow(node)
+        if not label:
+            out.append('')
+            continue
+        name = EYEBROW_STAGE.get(label.lower())
+        if name is None:
+            out.append('unnamed')
+            continue
+        if name in EYEBROW_ORDINAL_BASE:                    # an explicit "I do 2" / "We do 2"
+            base = EYEBROW_ORDINAL_BASE[name]
+            if not seen.get(base) or seen.get(name):
+                out.append('unnamed')                       # no "1" yet, or a second "2"
+                continue
+        elif name in EYEBROW_ORDINAL:                       # a bare "I do" / "We do"
+            two = EYEBROW_ORDINAL[name]
+            if seen.get(name) and seen.get(two):
+                out.append('unnamed')                       # D3: a third -- unbounded modelling
+                continue
+            if seen.get(name):
+                name = two
+        seen[name] = seen.get(name, 0) + 1
+        out.append(name)
+    return out
+
+
+def eyebrow_stage_name(node: Node) -> str:
+    """This stage's name under the eyebrow route, resolved in its document's own order."""
+    doc_stages = _document_stages(node)
+    names = eyebrow_names(doc_stages)
+    for s, n in zip(doc_stages, names):
         if s is node:
-            break
-        earlier.append(EYEBROW_STAGE.get(stage_eyebrow(s).lower()))
-    if name in EYEBROW_ORDINAL_BASE:
-        # An explicit "2" label is honoured only where the deck has already declared its "1".
-        return name if EYEBROW_ORDINAL_BASE[name] in earlier else 'unnamed'
-    if name in EYEBROW_ORDINAL and name in earlier:
-        return EYEBROW_ORDINAL[name]
-    return name
+            return n
+    return ''
 
 
-def stage_name(node: Node) -> str:
+# STOP-C3 D1 (ruled 2026-09-22): WHICH NAMING CHANNEL A DECK DECLARES.
+#
+# The eyebrow vocabulary is SIXTEEN phrases emitted by one generator. Gating every deck on it
+# was wrong in the opposite direction from the defect it was written for: measured, it turned
+# rows 2 and 14 RED on 60 and 92 of 230 Humanities decks and 117 and 162 of 200 Science decks,
+# every one of them a deck whose stages an earlier route names perfectly well.
+#
+# Ruled: a deck is gated on the channel it ACTUALLY DECLARES. The channel is the one that names
+# EVERY stage of the deck -- not most, not the first -- and it is read off the deck, never
+# assumed from its path. Measured under this rule: Humanities 230/230 table, the SX3 31 31/31
+# eyebrow, the verify_loop run population 91/91 table, and 19 Science decks declare NEITHER,
+# which is RED rather than a pass.
+def identity_channel(stage_list) -> str:
+    """'table', 'eyebrow', or '' when the deck declares no naming channel at all."""
+    if not stage_list:
+        return ''
+    if all(table_stage_name(s) for s in stage_list):
+        return 'table'
+    if all(EYEBROW_STAGE.get(stage_eyebrow(s).lower()) for s in stage_list):
+        return 'eyebrow'
+    return ''
+
+
+PATHWAY_CLASS_RX = re.compile(r'\bpathway-([a-z]+)\b', re.I)
+
+
+def declared_pathways(doc: Node) -> set:
+    """The pathway(s) the deck declares on its root element, e.g. <html class="pathway-build">.
+
+    Read from the deck rather than hard-coded, so the title-heading predicate that uses it works
+    on every subject instead of the one it was first written against.
+    """
+    for n in doc.walk():
+        if n.tag == 'html':
+            return {m.group(1).lower()
+                    for m in PATHWAY_CLASS_RX.finditer(n.attrs.get('class') or '')}
+    return set()
+
+
+def table_stage_name(node: Node) -> str:
+    """Everything stage_name resolves BEFORE the eyebrow route: the timer marker, the STAGE_NAMES
+    word table, then data-kind. '' when none of them names the stage.
+
+    Split out of stage_name so a caller can ask which naming CHANNEL a deck declares without
+    re-implementing the oracle beside it. stage_name calls this, so there is one route, not two.
+    """
     probe = stage_probe(node)
     # A stage the deck gives NO teaching time is either the overview or the completion marker, and
     # nothing else: measured, data-timer="0" appears at position 0 on 128 landed decks and all 18
@@ -315,6 +384,13 @@ def stage_name(node: Node) -> str:
     kind = (node.attrs.get('data-kind') or '').strip()
     if kind:
         return KIND_STAGE.get(kind, kind)
+    return ''
+
+
+def stage_name(node: Node) -> str:
+    table = table_stage_name(node)
+    if table:
+        return table
     eyebrow = eyebrow_stage_name(node)          # STOP-C1: the science route, LAST by ruling
     if eyebrow:
         return eyebrow
