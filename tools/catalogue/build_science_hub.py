@@ -9,7 +9,8 @@ Inputs, every one a pinned record or a pack manifest:
   every current deck's own lesson-config           its part (kind: Explore / Do) -- never a filename
 Outputs:
   Science_Teesside/index.html
-  assets/catalogue/science-hub-bindings.json       the derivation: slots, conformers, packs
+  assets/catalogue/science-hub-bindings.json       the derivation: population, families, slots (in
+                                                   rendered order), earlier counts, packs
 "current" = THE SERVED LESSON FOR EACH WEEK (ORDER SCI-COMPLETE, ruling of 2026-09-22 on
 STOP-F1), ordered and filtered by GENERATION, never by style (Matt's ruling on the S02 STOP,
 2026-09-22):
@@ -23,7 +24,8 @@ ordering or membership keys. PASS C is an in-place transplant: a lesson is rebui
 route (replacements in place), so its CONFORMS / NOT YET badge flips as PASS C lands and the
 card does not move. A Classic is the deck's own declaration -- its head <title>, or its
 lesson-config key, prefix, title or stage lesson -- never its file name.
-The writer refuses to write while any C1-C9 control is red. --self-test runs the red proofs.
+The writer refuses to write while any C1-C10 control is red. --self-test runs the red proofs, reads
+the ordering back from the RENDERED page, and fails while any control is red.
 """
 from pathlib import Path
 import collections, hashlib, html as H, json, re, sys
@@ -92,6 +94,7 @@ def part_of(path: Path) -> str | None:
 # ------------------------------------------- generation, and route families (ruling on S02)
 PART = {r['path']: part_of(ROOT / r['path']) for r in DATA['lessons']}
 OLDER_COPY_FOLDERS = ('v3_40min', 'Slideshows')
+OLDER_COPY_LABEL = {'v3_40min': '40-minute copy', 'Slideshows': 'Slideshows series'}
 DATED_FOLDER = re.compile(r'_\d{4}-\d{2}$')
 GENERATION_RANK = {'dated': 0, 'pathway': 1, 'older copy': 2}
 
@@ -169,8 +172,7 @@ def family(path: str) -> str:
     if Path(path).name.startswith('START_HERE'):
         return 'reference'
     if path in OLDER:
-        style = (WEEKS.get(path) or {}).get('style') or next((r['style'] for r in DATA['lessons'] if r['path'] == path), 'earlier')
-        return f'recorded {style}'
+        return OLDER_COPY_LABEL[Path(path).parent.name]     # the card's visible family label
     return 'current'
 
 
@@ -184,7 +186,8 @@ NOT_YET_PILL = '<span class="pill" data-conforms="0">NOT YET</span>'
 
 def strand_rows() -> list[dict]:
     """Every lesson that is current under the ruling -- the served lesson for its week -- each
-    carrying the badge the census earns it. Only a proven same-part replacement is left out."""
+    carrying the badge the census earns it. Only an older copy a newer generation replaces in
+    every week it serves is left out; it moves to Earlier versions."""
     rows = []
     for path in sorted(r['path'] for r in DATA['lessons'] if FAMILIES[r['path']] == 'current'):
         e = WEEKS.get(path) or {}
@@ -385,12 +388,35 @@ def c8_errors(rows: list[dict]) -> list[str]:
     return errs
 
 
+# C10 reads the folder names LITERALLY rather than through OLDER_COPY_FOLDERS / generation(), so a
+# change to those cannot switch off the check that is meant to catch it (review of the first cut:
+# with OLDER_COPY_FOLDERS emptied, every v3_40min copy rendered current and C5 and C9, both built on
+# generation(), stayed green).
+C10_OLDER_COPY = re.compile(r'/(?:v3_40min|Slideshows)/[^/]+$')
+
+
+def rendered_week_rows(current_page: str) -> dict[tuple, list[str]]:
+    """{(pathway, term, week): [lesson paths, in rendered order]}, read off the page itself."""
+    doc = lhtml.fromstring(f'<div>{current_page}</div>')
+    out: dict[tuple, list[str]] = {}
+    for row in doc.xpath('//div[contains(concat(" ", normalize-space(@class), " "), " week-row ")]'):
+        pw = row.xpath('ancestor::details[@data-pathway][1]/@data-pathway')
+        term = row.xpath('ancestor::section[@data-term][1]/@data-term')
+        key = (pw[0] if pw else '', term[0] if term else '', row.get('data-week'))
+        out.setdefault(key, []).extend(a.get('data-lesson-path') for a in row.xpath('.//article[@data-lesson-path]'))
+    return out
+
+
 def c9_errors(current_page: str, slots: dict[tuple, list[str]], current: set, classic: dict[str, bool]) -> list[str]:
     """C9. The generation order, read back from the RENDERED page, not from the hook that wrote it.
     Red if a week is served by two dated folders (choosing the newest would need a date no record
     carries), if a week has no current lesson, if a file named Classic that does not declare it
     shares its week (its place would rest on a file name), or if a week row renders a later
-    generation or a Classic ahead of an earlier generation or a non-Classic."""
+    generation or a Classic ahead of an earlier generation or a non-Classic, or breaks lesson order
+    inside one generation (A before B, L1 before L2).
+    C10. Red if a week row renders an older copy (a v3_40min or Slideshows file) beside a lesson
+    from any other folder: the ruling moves it to Earlier versions wherever a newer generation
+    serves its week."""
     errs = []
     for k, members in sorted(slots.items(), key=lambda kv: tuple(str(x) for x in kv[0])):
         dated = sorted({str(Path(p).parent) for p in members if generation(p) == 'dated'})
@@ -407,12 +433,18 @@ def c9_errors(current_page: str, slots: dict[tuple, list[str]], current: set, cl
         ranks = [(GENERATION_RANK[generation(p)], classic.get(p, False)) for p in paths]
         if ranks != sorted(ranks):
             errs.append(f'C9 week row out of generation order (headline {paths[0]}): ' + ', '.join(paths))
+        elif [(r, S.natural(p)) for r, p in zip(ranks, paths)] != sorted((r, S.natural(p)) for r, p in zip(ranks, paths)):
+            errs.append(f'C9 week row out of lesson order inside one generation: ' + ', '.join(paths))
+        older = [p for p in paths if C10_OLDER_COPY.search(p)]
+        if older and len(older) < len(paths):
+            errs.append(f'C10 older copy rendered current beside a newer generation: ' + ', '.join(paths))
     return errs
 
 
 page_cards = current_html + packs_html + earlier_html
 errors += c6_errors(lessons) + c7_errors(page_cards, rendered) + c8_errors(lessons)
 errors += c9_errors(current_html, SLOTS, D['current'], CLASSIC)
+ROWS = rendered_week_rows(current_html)
 
 
 def self_test() -> int:
@@ -430,15 +462,28 @@ def self_test() -> int:
     classic_first = classic_first.replace(g1[0]['path'], classic_path, 1)
     checks = [
         ('RED PROOF: before the ruling, GROW Aut2 W1 headlined its Classic', CLASSIC[old_order(g1)[0]['path']]),
-        ('GROW Aut2 W1 now headlines the dated folder\'s non-Classic, SCI_G_W8A_Day_And_Night_Explore',
-         within_week(g1)[0]['path'].endswith('/SCI_G_W8A_Day_And_Night_Explore.html')),
-        ('GROW Aut2 W1: the Classic comes after every non-Classic',
-         [CLASSIC[L['path']] for L in within_week(g1)] == sorted(CLASSIC[L['path']] for L in g1)),
-        ("Matt's check: GROW Aut2 W2's headline is SCI_G_W9A_Spherical_Bodies_Explore, not a Classic",
-         within_week(g2)[0]['path'].endswith('/SCI_G_W9A_Spherical_Bodies_Explore.html')),
+        # Read off the RENDERED page, not from within_week(): the review of the first cut unhooked
+        # the order and these checks, then calling the hook directly, stayed green.
+        ('GROW Aut2 W1 on the page headlines the dated folder\'s non-Classic, SCI_G_W8A_Day_And_Night_Explore',
+         ROWS.get(('GROW', 'Aut2', '1'), [''])[0].endswith('/SCI_G_W8A_Day_And_Night_Explore.html')),
+        ('GROW Aut2 W1 on the page: the Classic comes after every non-Classic',
+         [CLASSIC[p] for p in ROWS.get(('GROW', 'Aut2', '1'), [])] == sorted(CLASSIC[L['path']] for L in g1)
+         and any(CLASSIC[L['path']] for L in g1)),
+        # Matt's named check. It already held before the ruling -- the W9 Classic is bound to Aut2
+        # W1, not W2 -- so it is kept as a control, and the W1 checks above are the red proof.
+        ("Matt's check, on the page: GROW Aut2 W2's headline is SCI_G_W9A_Spherical_Bodies_Explore, not a Classic",
+         ROWS.get(('GROW', 'Aut2', '2'), [''])[0].endswith('/SCI_G_W9A_Spherical_Bodies_Explore.html')),
         ('RED PROOF: C9 reds a week row that renders the Classic first',
          any('out of generation order' in e for e in c9_errors(classic_first, {}, set(), CLASSIC))),
-        ('the page as built passes C9', not c9_errors(current_html, SLOTS, D['current'], CLASSIC)),
+        ('RED PROOF: C9 reds a week row out of lesson order inside one generation',
+         any('out of lesson order' in e for e in c9_errors(
+             '<div class="week-row"><article data-lesson-path="' + dated + 'X_W9B_Do.html"></article>'
+             '<article data-lesson-path="' + dated + 'X_W9A_Explore.html"></article></div>', {}, set(), {}))),
+        ('RED PROOF: C10 reds an older copy rendered beside a newer generation, read from its folder alone',
+         any(e.startswith('C10 ') for e in c9_errors(
+             '<div class="week-row"><article data-lesson-path="' + dated + 'X_Explore.html"></article>'
+             '<article data-lesson-path="Science_Teesside/Grow/v3_40min/X_v3.html"></article></div>', {}, set(), {}))),
+        ('the page as built passes every control, C1-C10: 0 errors', not errors),
         ('RED PROOF: an older copy beside a dated deck leaves current',
          older_copies(planted_slots) == {'Science_Teesside/Grow/v3_40min/X_v3.html': dated + 'X_Explore.html'}),
         ('an older copy that alone serves its week stays current (no week loses its lesson)',
@@ -476,7 +521,8 @@ note_items = ''.join(f'<li>{E(p)} · {E(TERM_LABEL.get(t, t))}: {n} lessons</li>
 conforming_now = len([r for r in DATA['lessons'] if r['path'] in CONFORMING])
 not_yet_now = len(D['current']) - conforming_now
 note_html = (f'<details class="hub-gaps" id="pre-chassis"><summary>How these lessons are ordered and badged · {conforming_now} CONFORMS, {not_yet_now} NOT YET</summary>'
-             f'<p class="hub-note">Each week lists its newest lessons first: the lessons in that week\u2019s newest folder, then that folder\u2019s Classic. Older 40-minute copies sit in Earlier versions. CONFORMS means the lesson\u2019s own bytes carry the exemplar chassis (the PASS B census); NOT YET means they do not yet. The badge changes as lessons are rebuilt in place, and it never changes a lesson\u2019s position.</p><ul>{note_items}</ul></details>')
+             f'<p class="hub-note">Each week lists its newest lessons first: the lessons in that week\u2019s newest folder, then that folder\u2019s Classic. Older 40-minute copies sit in Earlier versions. CONFORMS means the lesson\u2019s own bytes carry the exemplar chassis (the PASS B census); NOT YET means they do not yet. The badge changes as lessons are rebuilt in place, and it never changes a lesson\u2019s position.</p>'
+             f'<p class="hub-note">Older copies now in Earlier versions, by pathway and term:</p><ul>{note_items}</ul></details>')
 
 # ------------------------------------------------------------ page
 term_options = ''.join(f'<option value="{E(term)}">{E(label)}</option>' for term, label in DATA['terms'].items() if any(r['term'] == term or term in r['terms'] for r in DATA['lessons']))
@@ -516,7 +562,7 @@ bindings = {
     'population': {'shelfRows': len(DATA['lessons']), 'rendered': len(rendered), 'currentCards': len(D['current']),
                    'reference': len(D['reference']), 'earlier': len(D['earlier']), 'packCards': len(cards)},
     'families': dict(collections.Counter(FAMILIES.values())),
-    'slots': [{'pathway': k[0], 'term': k[1], 'week': k[2], 'current': [{'path': L['path'], 'part': L.get('part')} for L in s['current']]}
+    'slots': [{'pathway': k[0], 'term': k[1], 'week': k[2], 'current': [{'path': L['path'], 'part': L.get('part')} for L in within_week(s['current'])]}
               for k, s in sorted(D['slots'].items(), key=lambda kv: (S.PATHWAYS.index(kv[0][0]), (S.TERM_ORDER.index(kv[0][1]) if kv[0][1] in S.TERM_ORDER else len(S.TERM_ORDER)), kv[0][2] is None, kv[0][2] or 0))],
     'earlierByPathwayTerm': [{'pathway': p, 'term': t, 'lessons': n} for (p, t), n in sorted(served_by_earlier.items())],
     'packs': [{'id': c['id'], 'pathway': c['pathway'], 'lessons': c['lesson_count'], 'startHere': c['start_here'], 'links': len(c['links'])} for c in cards],
@@ -525,4 +571,4 @@ bindings = {
 print(f'Built the Science hub: {len(rendered)} of {len(DATA["lessons"])} shelf cards rendered '
       f'({len(D["current"])} current = {conforming_now} CONFORMS + {not_yet_now} NOT YET, {len(D["reference"])} reference, '
       f'{len(D["earlier"])} earlier, of which {len(OLDER)} are older copies a newer generation replaces); '
-      f'{len(D["slots"])} current slots; {len(cards)} pack cards; controls C1-C9 0 errors.')
+      f'{len(D["slots"])} current slots; {len(cards)} pack cards; controls C1-C10 0 errors.')

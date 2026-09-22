@@ -1380,7 +1380,7 @@ REVIEWED_PATHS = (
     # way every other writer on this list is judged. Nothing is loosened.
     "tools/catalogue/build_science_hub.py",
     # Ruling on the S02 STOP (2026-09-22): the Science hub orders each week by generation, and its
-    # own derivation record -- slots, families, the older copies moved to Earlier versions -- is
+    # own derivation record -- slots in rendered order, family counts, Earlier counts, packs -- is
     # pinned beside the writer that produces it, exactly as humanities-hub-bindings.json is below
     # (HUB-1). It arrived with PASS F as an ADDED file, which the boundary does not judge; the first
     # change to it is judged here, by exact bytes. A tightening; nothing is loosened.

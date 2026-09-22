@@ -1041,6 +1041,9 @@ L46  HUM-T BATCH 6b LANDED, AND THE SIGNED BUILD SET CLOSES AT ELEVEN  [2026-09-
      of 91 slots only 9 hold a conformer, only 7 non-conformers share a slot with one, and ZERO of
      those 7 are same-part replacements; replaced_routes() is the only demotion path and it returns
      {} on this tree.
+     (Superseded 2026-09-22 by Matt's ruling on the S02 STOP, within-week order by generation:
+     replaced_routes() is gone, and Earlier now holds the 35 v3_40min copies that a newer
+     generation serves in every week they were bound to -- 145 current, 35 earlier.)
      THE FIRST CUT WAS REFUSED BY THE SITE'S OWN GATE, AND IT WAS RIGHT TO REFUSE IT. Site #425
      admitted the hub built at Lessons edb27b0c; its publication run 35618364589 failed at step 24,
      "Mount and exercise the actual education publication". Reproduced locally on the served bytes,
