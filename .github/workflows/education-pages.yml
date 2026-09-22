@@ -173,6 +173,16 @@ jobs:
           # these two carrier lines: this PR deliberately moves 27 served paths, so the whole-diff form
           # of tools/hum/check_carrier_pure.py refuses it by design and is not the test here; step 3 is
           # the pure carrier. SHA read with git rev-parse on the Site checkout, never typed.
-    uses: MattRoper1977/mattroper1977.github.io/.github/workflows/education-publication.yml@aeb47509523dd0b7f8efb1c94f5eb550c17e2318
+          # RE-BUMPED 2026-09-22 (STOP-RESP-4, route A): aeb47509 -> 0f93108616d196cc5869380ce390a6c8c34a8812, the
+          # squash merge of Site #431. #430 admitted the 27 CONTENT movers, but regenerating the
+          # size table produced a 28th, data/resource-sizes.json, which is itself served and which
+          # #430 does not admit. The publication resolves .sources/Site from builder_ref, so this
+          # line pointing at aeb47509 would have made THIS PR's own publication refuse that path by
+          # name -- and step 3 could not repair it, because by then the publication has run.
+          # STANDING RULE, added here: a carrier must point at the Site SHA that admits EVERY mover
+          # in the pair, derived artefacts included, so the carrier bump is the LAST edit on the
+          # Lessons branch, made only after every window it depends on has merged. SHA read with
+          # git rev-parse on the Site checkout, never typed.
+    uses: MattRoper1977/mattroper1977.github.io/.github/workflows/education-publication.yml@0f93108616d196cc5869380ce390a6c8c34a8812
     with:
-      builder_ref: aeb47509523dd0b7f8efb1c94f5eb550c17e2318
+      builder_ref: 0f93108616d196cc5869380ce390a6c8c34a8812
