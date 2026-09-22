@@ -35,7 +35,7 @@ from __future__ import annotations
 import collections, html, re
 from pathlib import Path
 
-CONTROLS_VERSION = 'hub-sections-controls/2.1.0'  # 2.1.0: a card carries its recorded downloads link; controls unchanged
+CONTROLS_VERSION = 'hub-sections-controls/2.2.0'  # 2.2.0: a subject may hand its own within-week card order; controls unchanged
 E = html.escape
 PATHWAYS = ('BUILD', 'GROW', 'LAUNCH')
 TERM_ORDER = ('Aut1', 'Aut2', 'Spr1', 'Spr2', 'Sum1', 'Sum2')
@@ -179,6 +179,11 @@ CARD_WEEK_HOOK = None
 # subject's record does not bind. Science binds Teaching_Packs sections (PASS F restored the link
 # the HUB-1 card shape dropped); a subject that sets no hook renders exactly as before.
 CARD_DOWNLOAD_HOOK = None
+# A subject may hand the renderer its own within-week order for current cards: list -> list, the
+# same rows reordered, never added to or dropped. Science sets it (Matt's ruling on the S02 STOP,
+# 2026-09-22): generation first, a deck's Classic after it, never style or badge. A subject that
+# sets no hook keeps the part order every hub has always rendered.
+CURRENT_ORDER_HOOK = None
 
 
 def _card(row: dict, href: str, title: str, kind: str, week: int | None, strand: str | None,
@@ -241,7 +246,10 @@ def render_current(d: dict, subject: str, href_of, pack_href_of, strand_labels: 
                     out.append(f'<div class="week-row" data-week="{week}">')
                     if s['current']:
                         wk = f'W{week}' if week is not None else 'Week not bound'
-                        for L in sorted(s['current'], key=lambda L: L.get('part') or ''):
+                        ordered = (CURRENT_ORDER_HOOK(s['current']) if CURRENT_ORDER_HOOK
+                                   else sorted(s['current'], key=lambda L: L.get('part') or ''))
+                        assert sorted(map(id, ordered)) == sorted(map(id, s['current'])), 'an order hook may only reorder'
+                        for L in ordered:
                             row = d['by_path'][L['path']]
                             rendered.append(L['path'])
                             extra = ''

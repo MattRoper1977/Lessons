@@ -1846,8 +1846,10 @@ would not always be harmless.
 
 `served ∩ diff` **structurally cannot see an added path**: a new path is by definition
 not in the served set, and the publisher raises `UNREVIEWED` for exactly that case. So
-the intersection rule is not a gate for additions at all — and **Autumn 2 batch 1 of
-PASS C is additions**. The tool gains a second limb: any added path under a pinned
+the intersection rule is not a gate for additions at all. (This line first said "Autumn 2
+batch 1 of PASS C is additions". **Corrected 2026-09-22 by Matt's ruling S1 on the S02 STOP:
+PASS C is an in-place transplant — replacements in place**, each deck rebuilt at its own
+served route, TERM+WEEK UNCHANGED; the 31 are CHANGED paths, not additions.) The tool gains a second limb: any added path under a pinned
 publication tree needs an admission (a window carrying an `ARRIVING` or transition
 entry) before merge, and is refused otherwise. The docstring names **both** limbs and
 what neither proves.
