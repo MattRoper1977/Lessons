@@ -431,6 +431,13 @@ def self_test():
     # is exercised by the case below, which is the red proof that it can still fire.
     case('a deck whose meta glues the term to the arrival minutes now SPLITS, term retained',
          DECK.replace('LAUNCH \u00b7 W9 \u00b7 4 MINUTES', 'LAUNCH \u00b7 W9 \u00b7 4 MINUTES \u00b7 Aut2\u00b7W1'), True)
+    # RULING 2's SECOND RED PROOF, and the case the comment above promises: a split that would
+    # carry the term token off stage 0 must FAIL. Here the code sits in the route panel, which is
+    # on the arrival side of the cut, so the opening stage loses it -- and the catalogue's term
+    # would silently fall to "unspecified". The amended rule moves the minutes, never the term.
+    case('RED PROOF: a split that would carry the term token off stage 0 is refused',
+         DECK.replace('<section class="route-panel">panel</section>',
+                      '<section class="route-panel">panel Aut2</section>', 1), False)
     case('a deck with no knowledge shortcut still splits cleanly',
          re.sub(r'<div class="knowledge-shortcut">.*?</div>', '', DECK, flags=re.S), True)
 
