@@ -1041,6 +1041,9 @@ L46  HUM-T BATCH 6b LANDED, AND THE SIGNED BUILD SET CLOSES AT ELEVEN  [2026-09-
      of 91 slots only 9 hold a conformer, only 7 non-conformers share a slot with one, and ZERO of
      those 7 are same-part replacements; replaced_routes() is the only demotion path and it returns
      {} on this tree.
+     (Superseded 2026-09-22 by Matt's ruling on the S02 STOP, within-week order by generation:
+     replaced_routes() is gone, and Earlier now holds the 35 v3_40min copies that a newer
+     generation serves in every week they were bound to -- 145 current, 35 earlier.)
      THE FIRST CUT WAS REFUSED BY THE SITE'S OWN GATE, AND IT WAS RIGHT TO REFUSE IT. Site #425
      admitted the hub built at Lessons edb27b0c; its publication run 35618364589 failed at step 24,
      "Mount and exercise the actual education publication". Reproduced locally on the served bytes,
@@ -1846,8 +1849,10 @@ would not always be harmless.
 
 `served ∩ diff` **structurally cannot see an added path**: a new path is by definition
 not in the served set, and the publisher raises `UNREVIEWED` for exactly that case. So
-the intersection rule is not a gate for additions at all — and **Autumn 2 batch 1 of
-PASS C is additions**. The tool gains a second limb: any added path under a pinned
+the intersection rule is not a gate for additions at all. (This line first said "Autumn 2
+batch 1 of PASS C is additions". **Corrected 2026-09-22 by Matt's ruling S1 on the S02 STOP:
+PASS C is an in-place transplant — replacements in place**, each deck rebuilt at its own
+served route, TERM+WEEK UNCHANGED; the 31 are CHANGED paths, not additions.) The tool gains a second limb: any added path under a pinned
 publication tree needs an admission (a window carrying an `ARRIVING` or transition
 entry) before merge, and is refused otherwise. The docstring names **both** limbs and
 what neither proves.

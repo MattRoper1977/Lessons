@@ -35,7 +35,7 @@ from __future__ import annotations
 import collections, html, re
 from pathlib import Path
 
-CONTROLS_VERSION = 'hub-sections-controls/2.1.0'  # 2.1.0: a card carries its recorded downloads link; controls unchanged
+CONTROLS_VERSION = 'hub-sections-controls/2.2.0'  # 2.2.0: a subject may hand its own within-week card order; controls unchanged
 E = html.escape
 PATHWAYS = ('BUILD', 'GROW', 'LAUNCH')
 TERM_ORDER = ('Aut1', 'Aut2', 'Spr1', 'Spr2', 'Sum1', 'Sum2')
@@ -179,6 +179,11 @@ CARD_WEEK_HOOK = None
 # subject's record does not bind. Science binds Teaching_Packs sections (PASS F restored the link
 # the HUB-1 card shape dropped); a subject that sets no hook renders exactly as before.
 CARD_DOWNLOAD_HOOK = None
+# A subject may hand the renderer its own within-week order for current cards: list -> list, the
+# same rows reordered, never added to or dropped. Science sets it (Matt's ruling on the S02 STOP,
+# 2026-09-22): generation first, a deck's Classic after it, never style or badge. A subject that
+# sets no hook keeps the part order every hub has always rendered.
+CURRENT_ORDER_HOOK = None
 
 
 def _card(row: dict, href: str, title: str, kind: str, week: int | None, strand: str | None,
@@ -241,7 +246,11 @@ def render_current(d: dict, subject: str, href_of, pack_href_of, strand_labels: 
                     out.append(f'<div class="week-row" data-week="{week}">')
                     if s['current']:
                         wk = f'W{week}' if week is not None else 'Week not bound'
-                        for L in sorted(s['current'], key=lambda L: L.get('part') or ''):
+                        ordered = (CURRENT_ORDER_HOOK(s['current']) if CURRENT_ORDER_HOOK
+                                   else sorted(s['current'], key=lambda L: L.get('part') or ''))
+                        if sorted(map(id, ordered)) != sorted(map(id, s['current'])):
+                            raise ValueError('an order hook may only reorder')   # not an assert: -O strips those
+                        for L in ordered:
                             row = d['by_path'][L['path']]
                             rendered.append(L['path'])
                             extra = ''
@@ -388,6 +397,16 @@ def self_test() -> int:
     dn = derive(shelf, [dict(L[0], week=None)], [], {}, fam, terms)
     hn, gn = render_current(dn, 'S', lambda p: p, lambda p: p, {'RE': 'RE'})
     check('a week-unbound current row renders last, labelled, and is counted', gn == ['a.html'] and 'Week not bound' in hn)
+    global CURRENT_ORDER_HOOK
+    saved_hook, CURRENT_ORDER_HOOK = CURRENT_ORDER_HOOK, (lambda cur: cur[:-1])
+    try:
+        render_current(dn, 'S', lambda p: p, lambda p: p, {'RE': 'RE'})
+        dropped = False
+    except ValueError as e:
+        dropped = 'may only reorder' in str(e)
+    finally:
+        CURRENT_ORDER_HOOK = saved_hook
+    check('RED PROOF: an order hook that drops a lesson is refused, and not by an assert', dropped)
     check('C2 red: an earlier-family card rendered as current', any('earlier-family' in e for e in c2_errors(d3, fam)))
     L3 = [dict(L[0], strand='UNASSIGNED')] + [L[1]]
     check('C1 red: UNASSIGNED strand', any('UNASSIGNED' in e for e in c1_errors(derive(shelf, L3, [], sow, fam, terms))))
@@ -409,7 +428,7 @@ def self_test() -> int:
     check('S4 groups earlier cards by the RECORDED term and derives no week from a path', got == ['b.html'] and 'Autumn 1' in html_out and 'data-week="unspecified"' in html_out)
     html_w, got_w = render_earlier([shelf[1]], fam, lambda p: p, terms, week_of=lambda p: 3)
     check('S4 carries a RECORD-supplied week on an earlier card', got_w == ['b.html'] and 'data-week="3"' in html_w and '>W3 · B<' in html_w)
-    print(f'hub_sections self-test: {18 - ok} of 18 controls ok, {ok} FAIL')
+    print(f'hub_sections self-test: {19 - ok} of 19 controls ok, {ok} FAIL')
     return 1 if ok else 0
 
 

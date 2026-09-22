@@ -1379,6 +1379,12 @@ REVIEWED_PATHS = (
     # it hides behind was pinned. Admitting it here judges it by exact bytes from now on, the same
     # way every other writer on this list is judged. Nothing is loosened.
     "tools/catalogue/build_science_hub.py",
+    # Ruling on the S02 STOP (2026-09-22): the Science hub orders each week by generation, and its
+    # own derivation record -- slots in rendered order, family counts, Earlier counts, packs -- is
+    # pinned beside the writer that produces it, exactly as humanities-hub-bindings.json is below
+    # (HUB-1). It arrived with PASS F as an ADDED file, which the boundary does not judge; the first
+    # change to it is judged here, by exact bytes. A tightening; nothing is loosened.
+    "assets/catalogue/science-hub-bindings.json",
     "tools/catalogue/check_catalogue_static.py", "tools/catalogue/check_catalogue_dom.cjs", "tools/catalogue/verify_education_navigation.cjs",
     # SX3-PASSES Ruling C: Science_Teesside/index.html is a derivable table that
     # had no control, because build_science_shelf.py cannot run against 77 stale
