@@ -186,6 +186,108 @@ def stage_probe(node: Node) -> str:
 
 
 COMPLETE_RX = re.compile(r'\bcomplete\b', re.I)
+LESSON_ID_RX = re.compile(r'title-([a-z])\d+$')
+
+
+# STOP-C1 (ruled 2026-09-22): the SCIENCE stage-identity route.
+#
+# Ruling 5 forbids data-type as an identity. Science decks carry no data-kind either -- measured,
+# absent on all 317 stages of the three exemplars plus the SX3 31 -- so neither route above can
+# name them: 268 of 290 stages on the 31 came back 'unnamed', which left verify_loop row 2 running
+# over an EMPTY modelling set on 31 of 31 decks and row 14 over an empty title set on 8 of 31.
+#
+# What names them is the EYEBROW: <span class="slide-tag tag-NAME">TEXT</span>. Its TEXT, never its
+# class. The generator settles which of the two is the deck's declaration --
+# _authoring/science_2026-27/_toolchain/build/build_html.py:109-111 emits
+#     st  = s['stage']
+#     typ = {'I do':'ido','We do':'wedo','You do':'independent'}.get(st,'')
+#     tag = {'Opening':'arrival','Retrieval':'starter',...}.get(st,'starter')
+#     ...data-type="{typ}"...<span class="slide-tag tag-{tag}">{e(st)}</span>
+# so data-type and the tag- class are both LOSSY MAPS of s['stage'] while the text is s['stage']
+# VERBATIM. The eyebrow is upstream of data-type, not laundered from it. Measured over the 34:
+# 9 data-type values cover 15 distinct eyebrow texts, and data-type="wedo" alone covers "We do",
+# "We do 2", "Check" and "Review evidence" -- the very conflation ruling 5 exists to forbid, which
+# reading the text repairs rather than repeats.
+#
+# THE ROUTE RUNS LAST, after the table and after data-kind, and that ordering is load-bearing.
+# The eyebrow is estate furniture, not a Science marker: it sits on 1772 of 2123 HUMANITIES stages
+# (83.5%, 191 of 230 decks) and it DOES conflate there -- "I Do - learn and model" covers six
+# different names across 103 stages, "I Do" covers ido and ido2 30/30, "Review" covers review and
+# check. Measured Humanities impact by placement, all 230 decks:
+#     eyebrow BEFORE the table    622 names changed on 191 decks, 191 decks red
+#     eyebrow after the table      34 names changed on  15 decks,  15 decks red
+#     eyebrow LAST                  0 names changed on   0 decks,   0 decks red
+# Last means the route fires only where everything else returns 'unnamed' -- exactly the Science
+# gap -- so a Humanities stage the table already names never reaches it.
+EYEBROW_STAGE = {
+    'opening': 'title',
+    'arrival': 'arrival', 'arrival task': 'arrival',
+    'starter': 'starter',
+    'retrieval': 'retrieve',
+    'i do': 'ido', 'i do 2': 'ido2',
+    'we do': 'wedo', 'we do 2': 'wedo2',
+    'hinge': 'check', 'check': 'check',
+    'review': 'review', 'review evidence': 'review',
+    'you do': 'independent', 'independent': 'independent',
+    'refine': 'independent', 'workshop': 'independent',
+    'exit': 'exit',
+}
+
+# The eyebrow alone cannot separate the FIRST "I do" from the SECOND: all three exemplars label
+# both modelling stages "I do", and 23 of the 31 need an "I do 2" that no exemplar wording
+# supplies. Ruled: the second occurrence in DOCUMENT ORDER is the "2" variant.
+EYEBROW_ORDINAL = {'ido': 'ido2', 'wedo': 'wedo2'}
+
+
+def stage_eyebrow(node: Node) -> str:
+    """The stage's own rendered eyebrow label -- its text, never its class."""
+    for n in node.walk():
+        if 'slide-tag' in n.classes():
+            return ' '.join(n.inner_text().split())
+    return ''
+
+
+def stage_lesson(node: Node) -> str:
+    """'a' or 'b' for a two-lesson deck, read from the stage heading id (title-a3, title-b0).
+
+    The five 13-stage GROW decks are two lessons concatenated: they carry TWO "Arrival" and TWO
+    "Exit" eyebrows, which the eyebrow text cannot tell apart. The heading ids can, so a control
+    that must not double-count a closing stage reads the lesson from here rather than inferring
+    it. Stage identity itself is unaffected.
+    """
+    for h in node.find(lambda n: n.tag in ('h1', 'h2', 'h3')):
+        m = LESSON_ID_RX.match((h.attrs.get('id') or '').strip())
+        if m:
+            return m.group(1)
+    return ''
+
+
+def _document_stages(node: Node):
+    a = node.ancestors()
+    return stages(a[-1]) if a else [node]
+
+
+def eyebrow_stage_name(node: Node) -> str:
+    """The ruled Science route: the eyebrow text, disambiguated by document order.
+
+    Returns '' when the stage carries no eyebrow at all, and 'unnamed' when it carries one this
+    map does not know -- never a silent pass. An unknown label is a deck-level RED for the caller,
+    because a stage that cannot be named must not fall quietly into `eligible` as neither title
+    nor modelling; that is the defect this route exists to remove.
+    """
+    label = stage_eyebrow(node)
+    if not label:
+        return ''
+    name = EYEBROW_STAGE.get(label.lower())
+    if name is None:
+        return 'unnamed'
+    if name in EYEBROW_ORDINAL:
+        for s in _document_stages(node):
+            if s is node:
+                break
+            if EYEBROW_STAGE.get(stage_eyebrow(s).lower()) == name:
+                return EYEBROW_ORDINAL[name]
+    return name
 
 
 def stage_name(node: Node) -> str:
@@ -202,6 +304,9 @@ def stage_name(node: Node) -> str:
     kind = (node.attrs.get('data-kind') or '').strip()
     if kind:
         return KIND_STAGE.get(kind, kind)
+    eyebrow = eyebrow_stage_name(node)          # STOP-C1: the science route, LAST by ruling
+    if eyebrow:
+        return eyebrow
     return 'unnamed'
 
 

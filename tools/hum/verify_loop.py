@@ -21,6 +21,7 @@ import json, re, sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import deck_dom
 from deck_dom import parse, stages, stage_name, is_ribbon          # noqa: E402
 from loop_adapter import (MODELLING_STAGES, MARK, pupil_text,      # noqa: E402
                           stage_task, POLICY_CODES, POLICY_SPACE, POLICY_EARWIG, deck_config,
@@ -61,6 +62,49 @@ def task_core(task: str, n: int = 24) -> str:
     return re.sub(r'[.!?\u2026\s]+$', '', task or '')[:n]
 
 
+def declared_count(stage_list, names):
+    """How many stages DECLARE one of `names`, read from the raw eyebrow label.
+
+    STOP-C1 ruling 3 requires each "X stages carry no panel" row to assert its subset against the
+    deck's own declaration before judging the contents, so that an empty subset cannot pass as a
+    vacuous success. The declaration is taken from the eyebrow TEXT via deck_dom.EYEBROW_STAGE --
+    the same source the identity oracle reads, but taken RAW, without the document-order
+    disambiguation. That keeps the comparison honest in the direction that matters: if the oracle
+    silently drops a stage from a subset, the declared count still sees it and the row goes RED.
+    A deck that carries no eyebrows at all declares nothing and is judged as before.
+    """
+    want = set(names)
+    seen = 0
+    for s in stage_list:
+        label = deck_dom.EYEBROW_STAGE.get(deck_dom.stage_eyebrow(s).lower())
+        if label in want or (label in deck_dom.EYEBROW_ORDINAL
+                             and deck_dom.EYEBROW_ORDINAL[label] in want):
+            seen += 1
+    return seen
+
+
+PATHWAY_SEGMENT = re.compile(r'^(build|grow|launch)\s+science(\s+\S+)?$', re.I)
+
+
+def _norm(s):
+    return ' '.join((s or '').split()).strip()
+
+
+def deck_title_heading(doc):
+    """The deck's own title, as the HEAD <title> states it, minus the pathway marker."""
+    titles = doc.find(lambda n: n.tag == 'title')
+    head = [x for x in titles if any(a.tag == 'head' for a in x.ancestors())] or titles
+    if not head:
+        return ''
+    segs = [_norm(x) for x in _norm(head[0].inner_text()).split('\u00b7')]
+    return ' \u00b7 '.join(x for x in segs if not PATHWAY_SEGMENT.match(x)).lower()
+
+
+def stage_heading(stage):
+    hs = stage.find(lambda n: n.tag in ('h1', 'h2', 'h3'))
+    return _norm(hs[0].inner_text()).lower() if hs else ''
+
+
 def verify(after_html: str, before_html: str, strand: str, science_panel_texts):
     doc = parse(after_html)
     st = stages(doc)
@@ -80,8 +124,18 @@ def verify(after_html: str, before_html: str, strand: str, science_panel_texts):
     row(1, 'one panel per non-modelling, non-title stage', PASS if not bad else FAIL, str(bad))
 
     # 2 — modelling stages carry none (R1: the 98 measure)
+    #
+    # STOP-C1 ruling 3: AN EMPTY SET IS NOT A PASS. The subset is asserted against what the deck
+    # DECLARES before its contents are judged. Measured before the fix, this row ran over an empty
+    # modelling set on 31 of 31 SX3 decks -- every one of them declares one or two modelling stages
+    # and the oracle found none -- so "I Do stages carry no panel" tested nothing at all across the
+    # whole population, while row 1 simultaneously demanded a panel on each of those same stages
+    # because an unnamed stage falls into `eligible` by default.
+    declared_mod = declared_count(st, MODELLING_STAGES)
     bad = [stage_name(s) for s in modelling if s.find(is_ribbon)]
-    row(2, 'I Do stages carry no panel', PASS if not bad else FAIL, str(bad))
+    row(2, 'I Do stages carry no panel',
+        PASS if (len(modelling) == declared_mod and not bad) else FAIL,
+        'declared=%d resolved=%d %s' % (declared_mod, len(modelling), bad))
 
     # 3 — no static ribbon survives
     leftovers = [p for p in panels(doc) if not p.attrs.get(MARK)]
@@ -189,8 +243,18 @@ def verify(after_html: str, before_html: str, strand: str, science_panel_texts):
         'unlabelled=%s outside=%s' % (unnamed[:3], outside[:3]))
 
     # 14 — P1-1: the Title stage carries no panel (it is metadata, not a response point)
+    #
+    # STOP-C1 ruling 3: AN EMPTY SET IS NOT A PASS -- and note that a blanket "empty is RED" would
+    # be wrong, which is why this compares against the DECLARED count rather than against zero.
+    # Measured before the fix, this row ran over an empty title set on 8 of 31 SX3 decks (the 7-
+    # and 13-stage shapes, whose Opening carries data-timer="2" rather than "0", so the timer route
+    # missed it) while genuinely being 0/0 on three others. Only the declared comparison separates
+    # those two cases.
+    declared_title = declared_count(st, {'title'})
     bad = [stage_name(s) for s in title_stages if s.find(is_ribbon)]
-    row(14, 'P1-1: the Title stage carries no panel', PASS if not bad else FAIL, str(bad))
+    row(14, 'P1-1: the Title stage carries no panel',
+        PASS if (len(title_stages) == declared_title and not bad) else FAIL,
+        'declared=%d resolved=%d %s' % (declared_title, len(title_stages), bad))
 
     # 15 — P1-3: every panel sits inside a CLOSED "Feedback loop" disclosure of its own
     bad = []
@@ -266,6 +330,33 @@ def verify(after_html: str, before_html: str, strand: str, science_panel_texts):
                 if ASK_BELIEF.search(sent) and not NEGATION.search(sent):
                     asks.append(sent[:90])
     row(46, 'no RE panel asks for a belief', PASS if not asks else FAIL, str(asks))
+
+    # 47 — STOP-C1 ruling 6: NO PANEL ON THE STAGE THAT CARRIES THE DECK TITLE HEADING.
+    #
+    # This row does not read a stage NAME, and that is the whole point of it. Rows 1, 2 and 14 all
+    # key off stage_name(); when the oracle mis-names a stage they mis-fire together, and the
+    # adversarial review demonstrated exactly that by running loop_adapter.adapt() with a proposed
+    # oracle patched in: on the three LAUNCH decks whose title is still MERGED into stage 0, that
+    # stage was named 'arrival', so it was eligible, so the adapter placed a pupil-response panel
+    # on the slide holding the lesson's own <h1> -- and row 14 passed with detail [] over a
+    # title_stages of length ZERO. A panel there is wrong whatever the oracle believes.
+    #
+    # The deck title is taken from the HEAD <title>, minus whichever segment is the pathway marker.
+    # Three format variations are real and each one broke a naive predicate before it was measured:
+    #   - the title can carry more than one separator ("BUILD Science . Give a rock a job . Classic"),
+    #     so splitting on the LAST one yields "Classic" and misses 3 decks;
+    #   - the exemplars reverse the order ("Day and Night: Sky Shift . GROW Science"), so splitting
+    #     on the FIRST one misses 2 more -- hence dropping the segment that IS the pathway, by
+    #     pattern, rather than trusting position;
+    #   - the pathway segment can carry a week code ("BUILD Science W8A . ...").
+    # Two further hazards: a document holds several <title> nodes because inline SVGs carry their
+    # own, so the head one is selected by ancestry; and the exemplars have no <h1> inside any stage
+    # at all, so the heading probe accepts h1/h2/h3. Measured well-defined on all 34 decks of the
+    # three exemplars plus the SX3 31: exactly one stage per deck, always stage 0.
+    title_stage = [s for s in st if deck_title_heading(doc) and stage_heading(s) == deck_title_heading(doc)]
+    bad = [stage_name(s) for s in title_stage if s.find(is_ribbon)]
+    row(47, 'no panel on the stage carrying the deck title heading',
+        PASS if not bad else FAIL, str(bad))
 
     # 13 — nothing lost: every sentence of the source deck survives somewhere.
     # (Numbered in the adapter's own low range: 45 is the chassis loop row.)
