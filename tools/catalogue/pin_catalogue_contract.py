@@ -2482,6 +2482,21 @@ REVIEWED_PATHS += (
 )
 
 
+# STOP-C1/C3 (ruled 2026-09-22): the arrival-stage splitter, admitted for the same reason and by
+# the same route as refresh_pack_checksums.py above. Ruling 2 amends its rule so the lesson TERM
+# token stays on the title stage where build_catalogue reads it and only the arrival content and
+# its minutes travel; that amendment modifies the file, and the cross-estate gate's
+# standalone/offline boundary refused it because it sat in no allowed set -- a red latent on the
+# branch from its first commit, found by running the gate rather than by CI.
+#
+# Pinning it is a TIGHTENING, not an exemption. From here its bytes are digest-pinned like any
+# other reviewed file: the tool that decides where a lesson's title ends and its arrival begins
+# cannot change again without a re-pin and the review that comes with it.
+REVIEWED_PATHS += (
+    'tools/sx3/split_arrival_stage.py',
+)
+
+
 def pack_rows_for(lessons: Path, rows: list) -> list:
     """UX2 D3 (2026-09-08): the companion-pack entries are the catalogue's tail,
     after the reviewed hub rows. They are not a second hand-kept literal: they

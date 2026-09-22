@@ -21,6 +21,7 @@ import json, re, sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import deck_dom
 from deck_dom import parse, stages, stage_name, is_ribbon          # noqa: E402
 from loop_adapter import (MODELLING_STAGES, MARK, pupil_text,      # noqa: E402
                           stage_task, POLICY_CODES, POLICY_SPACE, POLICY_EARWIG, deck_config,
@@ -61,6 +62,68 @@ def task_core(task: str, n: int = 24) -> str:
     return re.sub(r'[.!?\u2026\s]+$', '', task or '')[:n]
 
 
+def declared_count(stage_list, names):
+    """How many stages the deck DECLARES as one of `names`, read through the naming channel the
+    deck itself declares. None when it declares no channel at all -- which the caller reds.
+
+    STOP-C3 D1. This used to resolve every deck through EYEBROW_STAGE, a sixteen-phrase vocabulary
+    one generator emits. Measured, that turned rows 2 and 14 RED on 60 and 92 of 230 Humanities
+    decks and on 117 and 162 of 200 Science decks -- decks whose stages the word table names
+    perfectly well, failing only because they were being asked a question in the wrong language.
+    """
+    channel = deck_dom.identity_channel(stage_list)
+    if channel == 'table':
+        seq = [deck_dom.table_stage_name(s) for s in stage_list]
+    elif channel == 'eyebrow':
+        seq = deck_dom.eyebrow_names(stage_list)
+    else:
+        return None
+    want = set(names)
+    return sum(1 for n in seq if n in want)
+
+
+def _norm(s):
+    return re.sub(r'\s+', ' ', s or '').strip()
+
+
+def deck_title_headings(doc):
+    """The heading text(s) that would identify this deck's own title slide, lowercased.
+
+    STOP-C3 D2. The pathway segment of a deck's <title> ("BUILD Humanities", "GROW Science") is
+    decoration, not the lesson's name, and must be dropped before the title is compared with a
+    stage heading. That segment used to be matched by a pattern with "science" written into it,
+    so on a Humanities deck nothing was ever stripped, the comparison never matched, and row 47
+    passed over an empty set on 230 of 230 Humanities decks -- the very vacuity it was added to
+    abolish.
+
+    The pathway is now read off the deck: <html class="pathway-build|grow|launch">. A deck that
+    declares one has exactly that segment dropped. 53 of the 91 decks verify_loop runs on declare
+    none anywhere in their bytes, so for those the comparison widens to every segment of the
+    title. Widening can only find MORE candidate title slides, never fewer, so it cannot
+    reintroduce a vacuous pass. Measured on the run population: 68 of 91 decks bind exactly one
+    stage, never more than one, and always stage 0.
+    """
+    titles = doc.find(lambda n: n.tag == 'title')
+    head = [x for x in titles if any(a.tag == 'head' for a in x.ancestors())] or titles
+    if not head:
+        return set()
+    title = _norm(head[0].inner_text())
+    segs = [_norm(x) for x in title.split('\u00b7') if _norm(x)]
+    if not segs:
+        return set()
+    pathways = deck_dom.declared_pathways(doc)
+    if pathways:
+        keep = [x for x in segs
+                if (x.split()[0].lower() if x.split() else '') not in pathways]
+        return {' \u00b7 '.join(keep).lower()} if keep else set()
+    return {x.lower() for x in segs} | {title.lower()}
+
+
+def stage_heading(stage):
+    hs = stage.find(lambda n: n.tag in ('h1', 'h2', 'h3'))
+    return _norm(hs[0].inner_text()).lower() if hs else ''
+
+
 def verify(after_html: str, before_html: str, strand: str, science_panel_texts):
     doc = parse(after_html)
     st = stages(doc)
@@ -80,8 +143,24 @@ def verify(after_html: str, before_html: str, strand: str, science_panel_texts):
     row(1, 'one panel per non-modelling, non-title stage', PASS if not bad else FAIL, str(bad))
 
     # 2 — modelling stages carry none (R1: the 98 measure)
+    #
+    # STOP-C1 ruling 3: AN EMPTY SET IS NOT A PASS. The subset is asserted against what the deck
+    # DECLARES before its contents are judged. Measured before the fix, this row ran over an empty
+    # modelling set on 31 of 31 SX3 decks -- every one of them declares one or two modelling stages
+    # and the oracle found none -- so "I Do stages carry no panel" tested nothing at all across the
+    # whole population, while row 1 simultaneously demanded a panel on each of those same stages
+    # because an unnamed stage falls into `eligible` by default.
+    declared_mod = declared_count(st, MODELLING_STAGES)
     bad = [stage_name(s) for s in modelling if s.find(is_ribbon)]
-    row(2, 'I Do stages carry no panel', PASS if not bad else FAIL, str(bad))
+    if declared_mod is None:
+        row(2, 'I Do stages carry no panel', FAIL,
+            'no identity channel: the deck declares neither the stage-name table nor the '
+            'eyebrow vocabulary over all %d of its stages' % len(st))
+    else:
+        row(2, 'I Do stages carry no panel',
+            PASS if (len(modelling) == declared_mod and not bad) else FAIL,
+            'channel=%s declared=%d resolved=%d %s'
+            % (deck_dom.identity_channel(st), declared_mod, len(modelling), bad))
 
     # 3 — no static ribbon survives
     leftovers = [p for p in panels(doc) if not p.attrs.get(MARK)]
@@ -189,8 +268,24 @@ def verify(after_html: str, before_html: str, strand: str, science_panel_texts):
         'unlabelled=%s outside=%s' % (unnamed[:3], outside[:3]))
 
     # 14 — P1-1: the Title stage carries no panel (it is metadata, not a response point)
+    #
+    # STOP-C1 ruling 3: AN EMPTY SET IS NOT A PASS -- and note that a blanket "empty is RED" would
+    # be wrong, which is why this compares against the DECLARED count rather than against zero.
+    # Measured before the fix, this row ran over an empty title set on 8 of 31 SX3 decks (the 7-
+    # and 13-stage shapes, whose Opening carries data-timer="2" rather than "0", so the timer route
+    # missed it) while genuinely being 0/0 on three others. Only the declared comparison separates
+    # those two cases.
+    declared_title = declared_count(st, {'title'})
     bad = [stage_name(s) for s in title_stages if s.find(is_ribbon)]
-    row(14, 'P1-1: the Title stage carries no panel', PASS if not bad else FAIL, str(bad))
+    if declared_title is None:
+        row(14, 'P1-1: the Title stage carries no panel', FAIL,
+            'no identity channel: the deck declares neither the stage-name table nor the '
+            'eyebrow vocabulary over all %d of its stages' % len(st))
+    else:
+        row(14, 'P1-1: the Title stage carries no panel',
+            PASS if (len(title_stages) == declared_title and not bad) else FAIL,
+            'channel=%s declared=%d resolved=%d %s'
+            % (deck_dom.identity_channel(st), declared_title, len(title_stages), bad))
 
     # 15 — P1-3: every panel sits inside a CLOSED "Feedback loop" disclosure of its own
     bad = []
@@ -266,6 +361,35 @@ def verify(after_html: str, before_html: str, strand: str, science_panel_texts):
                 if ASK_BELIEF.search(sent) and not NEGATION.search(sent):
                     asks.append(sent[:90])
     row(46, 'no RE panel asks for a belief', PASS if not asks else FAIL, str(asks))
+
+    # 47 — STOP-C1 ruling 6: NO PANEL ON THE STAGE THAT CARRIES THE DECK TITLE HEADING.
+    #
+    # This row does not read a stage NAME, and that is the whole point of it. Rows 1, 2 and 14 all
+    # key off stage_name(); when the oracle mis-names a stage they mis-fire together, and the
+    # adversarial review demonstrated exactly that by running loop_adapter.adapt() with a proposed
+    # oracle patched in: on the three LAUNCH decks whose title is still MERGED into stage 0, that
+    # stage was named 'arrival', so it was eligible, so the adapter placed a pupil-response panel
+    # on the slide holding the lesson's own <h1> -- and row 14 passed with detail [] over a
+    # title_stages of length ZERO. A panel there is wrong whatever the oracle believes.
+    #
+    # The deck title is taken from the HEAD <title>, minus whichever segment is the pathway marker.
+    # Three format variations are real and each one broke a naive predicate before it was measured:
+    #   - the title can carry more than one separator ("BUILD Science . Give a rock a job . Classic"),
+    #     so splitting on the LAST one yields "Classic" and misses 3 decks;
+    #   - the exemplars reverse the order ("Day and Night: Sky Shift . GROW Science"), so splitting
+    #     on the FIRST one misses 2 more -- hence dropping the segment that IS the pathway, by
+    #     pattern, rather than trusting position;
+    #   - the pathway segment can carry a week code ("BUILD Science W8A . ...").
+    # Two further hazards: a document holds several <title> nodes because inline SVGs carry their
+    # own, so the head one is selected by ancestry; and the exemplars have no <h1> inside any stage
+    # at all, so the heading probe accepts h1/h2/h3. Measured well-defined on all 34 decks of the
+    # three exemplars plus the SX3 31: exactly one stage per deck, always stage 0.
+    wanted = deck_title_headings(doc)
+    title_stage = [s for s in st if wanted and stage_heading(s) in wanted]
+    bad = [stage_name(s) for s in title_stage if s.find(is_ribbon)]
+    row(47, 'no panel on the stage carrying the deck title heading',
+        PASS if not bad else FAIL,
+        'bound=%d %s' % (len(title_stage), bad))
 
     # 13 — nothing lost: every sentence of the source deck survives somewhere.
     # (Numbered in the adapter's own low range: 45 is the chassis loop row.)
@@ -346,6 +470,156 @@ def self_test(root: Path):
          ['title'], set(), set()),
     ):
         pure.append((name, earwig_stages(names, eligible) == want))
+
+    # --- STOP-C1/C2 SCIENCE IDENTITY, ruled 2026-09-22. Pure controls: they build their own
+    # documents, so they need no fixture and can never skip. Each one pins a clause of the ruling
+    # at the boundary where it could silently stop holding.
+    from deck_dom import EYEBROW_STAGE, EYEBROW_ORDINAL_BASE
+
+    NEUTRAL = 'the next part of the work'
+    # A phrase the STAGE_NAMES word table claims for 'arrival'. Used to make an EARLIER route win,
+    # which is the only way the oracle and the declaration can disagree once the eyebrow runs last.
+    CLAIMED = 'start with what you know'
+
+    def _sci(rows, head_title='Photosynthesis today'):
+        out = ['<html><head><title>%s</title></head><body>' % head_title]
+        for i, (lab, heading, panel) in enumerate(rows):
+            out.append('<section class="slide" data-timer="5">'
+                       '<span class="slide-tag tag-x">%s</span>'
+                       '<h2 id="title-a%d">%s</h2>%s</section>'
+                       % (lab, i, heading, '<div class="lundy">p</div>' if panel else ''))
+        return ''.join(out) + '</body></html>'
+
+    def _names(labels):
+        return [stage_name(x) for x in stages(parse(_sci([(l, NEUTRAL, False) for l in labels])))]
+
+    def _row(html, n):
+        return next(x['status'] for x in verify(html, html, '', set()) if x['row'] == n)
+
+    # C1 -- every label the generator emits resolves, and resolves to the ruled name. The two
+    # ordinal labels are excluded here and tested by C3/C4, where their ruled behaviour lives.
+    solo = {lab: _names([lab])[0] for lab in EYEBROW_STAGE
+            if EYEBROW_STAGE[lab] not in EYEBROW_ORDINAL_BASE}
+    pure.append(('C1: every ruled eyebrow label resolves to its ruled name (%d labels)'
+                 % len(solo),
+                 all(solo[lab] == EYEBROW_STAGE[lab] for lab in solo)))
+    # C2 RED PROOF -- a label outside the generator's emitted vocabulary is never a quiet pass.
+    pure.append(('C2 RED PROOF: an eyebrow text outside the emitted set names the stage "unnamed"',
+                 _names(['Zzz Quux Nonmatching']) == ['unnamed']))
+    # C3 -- the conflation the eyebrow alone cannot settle, resolved by DECLARED ORDER.
+    pure.append(('C3: the second "I do" and "We do" in document order are ido2 / wedo2',
+                 _names(['I do', 'We do', 'I do', 'We do'])
+                 == ['ido', 'wedo', 'ido2', 'wedo2']))
+    pure.append(('C3: an explicit "I do 2" after its "I do" is honoured as declared',
+                 _names(['I do', 'I do 2', 'We do', 'We do 2'])
+                 == ['ido', 'ido2', 'wedo', 'wedo2']))
+    # C4 RED PROOF -- label and order contradicting each other is RED, not a silent choice.
+    pure.append(('C4 RED PROOF: an "I do 2" declared before any "I do" is RED for that deck',
+                 _names(['I do 2', 'I do']) == ['unnamed', 'ido']))
+    pure.append(('C4 RED PROOF: the same holds for "We do 2" before any "We do"',
+                 _names(['We do 2', 'We do']) == ['unnamed', 'wedo']))
+    # C5 -- THE PLACEMENT. The eyebrow runs LAST, so a stage an earlier route already names is
+    # never renamed by it. This is what keeps 2123 Humanities stages at 0 names changed.
+    pure.append(('C5: the eyebrow never overrides a name an earlier route already gave',
+                 [stage_name(x) for x in
+                  stages(parse(_sci([('I do', CLAIMED, False)])))] == ['arrival']))
+
+    # C6/C7 RED PROOFS -- an empty set is not a pass (STOP-C2 ruling 3). The subset is asserted
+    # against what the deck DECLARES before its contents are judged. Both rows passed with an
+    # empty bad-list on the very decks whose stages they were meant to be testing.
+    d_ok = _sci([('Opening', NEUTRAL, False), ('I do', NEUTRAL, False), ('Exit', NEUTRAL, True)])
+    d_title_lost = _sci([('Opening', CLAIMED, False), ('I do', NEUTRAL, False),
+                         ('Exit', NEUTRAL, True)])
+    d_mod_lost = _sci([('Opening', NEUTRAL, False), ('I do', CLAIMED, True),
+                       ('Exit', NEUTRAL, True)])
+    pure.append(('C6: row 14 passes when the declared title stage is the one resolved',
+                 _row(d_ok, 14) == PASS))
+    pure.append(('C6 RED PROOF: row 14 FAILs when a declared title stage resolves to something '
+                 'else, instead of passing over an empty set',
+                 _row(d_title_lost, 14) == FAIL))
+    pure.append(('C7: row 2 passes when the declared modelling stage is the one resolved',
+                 _row(d_ok, 2) == PASS))
+    pure.append(('C7 RED PROOF: row 2 FAILs when a declared modelling stage resolves to something '
+                 'else, instead of passing over an empty set',
+                 _row(d_mod_lost, 2) == FAIL))
+
+    # C8 RED PROOF -- the harm case the split exists to prevent, and the check that would have
+    # caught the three merged decks: no pupil-response panel may land on the slide that carries
+    # the lesson's own title heading.
+    d47_ok = _sci([('Opening', 'Photosynthesis today', False), ('Exit', NEUTRAL, True)])
+    d47_bad = _sci([('Opening', 'Photosynthesis today', True), ('Exit', NEUTRAL, True)])
+    pure.append(('C8: row 47 passes when the deck-title slide carries no panel',
+                 _row(d47_ok, 47) == PASS))
+    pure.append(('C8 RED PROOF: row 47 FAILs when a panel lands on the slide carrying the deck '
+                 'title heading',
+                 _row(d47_bad, 47) == FAIL))
+
+    # --- STOP-C3, ruled 2026-09-22. The three defects the adversarial review found in the
+    # first cut of this change, each pinned by the control that would have caught it.
+
+    def _sci_pw(rows, head_title='Photosynthesis today', pathway=None):
+        cls = ' class="pathway-%s"' % pathway if pathway else ''
+        out = ['<html%s><head><title>%s</title></head><body>' % (cls, head_title)]
+        for i, (lab, heading, panel) in enumerate(rows):
+            out.append('<section class="slide" data-timer="5">'
+                       '<span class="slide-tag tag-x">%s</span>'
+                       '<h2 id="title-a%d">%s</h2>%s</section>'
+                       % (lab, i, heading, '<div class="lundy">p</div>' if panel else ''))
+        return ''.join(out) + '</body></html>'
+
+    # D1 -- THE CHANNEL. Rows 2 and 14 ask a deck about the naming channel IT declares. The first
+    # cut asked every deck in the Science generator's sixteen-phrase vocabulary, which turned
+    # both rows RED on 60/230 and 92/230 Humanities decks and 117/200 and 162/200 Science decks.
+    eyebrow_deck = stages(parse(_sci_pw([('Opening', NEUTRAL, False), ('I do', NEUTRAL, False),
+                                         ('Exit', NEUTRAL, True)])))
+    pure.append(('D1: a deck whose stages are named only by their eyebrows is on the eyebrow '
+                 'channel', deck_dom.identity_channel(eyebrow_deck) == 'eyebrow'))
+    table_deck = stages(parse(_sci_pw([('Zzz', 'start with what you know', False),
+                                       ('Zzz', 'watch a worked example', False),
+                                       ('Zzz', 'before you go', True)])))
+    pure.append(('D1: a deck whose stages the word table names is on the table channel, whatever '
+                 'its eyebrows say', deck_dom.identity_channel(table_deck) == 'table'))
+    # A REAL Humanities deck, not a synthetic one: the pinned Autumn 1 fixture, whose bytes this
+    # self-test digest-checks a few controls below.
+    _fx = root / 'tools/hum/fixtures/aut1_twelve_stage_v1_base.html'
+    _fx_raw = _fx.read_text(errors='replace') if _fx.exists() else ''
+    pure.append(('D1: the pinned Autumn 1 Humanities fixture resolves to the TABLE channel',
+                 bool(_fx_raw) and
+                 deck_dom.identity_channel(stages(parse(_fx_raw))) == 'table'))
+    no_channel = _sci_pw([('Zzz Quux', NEUTRAL, False), ('Zzz Quux', NEUTRAL, True)])
+    pure.append(('D1 RED PROOF: a deck declaring NEITHER channel is RED "no identity channel" on '
+                 'row 2, never a pass', _row(no_channel, 2) == FAIL))
+    pure.append(('D1 RED PROOF: and on row 14', _row(no_channel, 14) == FAIL))
+    pure.append(('D1: declared_count reports no channel rather than a count',
+                 declared_count(stages(parse(no_channel)), {'title'}) is None))
+
+    # D2 -- THE PATHWAY SEGMENT, read off the deck. Written with "science" in it, the pattern
+    # stripped nothing on a Humanities deck, so the title never matched a stage heading and row 47
+    # passed over an empty set on 230 of 230 of them -- the vacuity it was added to abolish.
+    hum_clean = _sci_pw([('Zzz', 'Then and Now', False), ('Zzz', 'before you go', True)],
+                        head_title='Then and Now \u00b7 BUILD Humanities', pathway='build')
+    hum_harm = _sci_pw([('Zzz', 'Then and Now', True), ('Zzz', 'before you go', True)],
+                       head_title='Then and Now \u00b7 BUILD Humanities', pathway='build')
+    pure.append(('D2: a Humanities deck\'s title slide is FOUND, so row 47 has something to test',
+                 bool(deck_title_headings(parse(hum_clean)))))
+    pure.append(('D2: row 47 passes on a Humanities deck whose title slide carries no panel',
+                 _row(hum_clean, 47) == PASS))
+    pure.append(('D2 RED PROOF: a panel planted on a HUMANITIES deck\'s title slide is RED '
+                 '(the hard-coded pattern passed it)', _row(hum_harm, 47) == FAIL))
+    pure.append(('D2: the pathway is read from <html class="pathway-...">, not assumed',
+                 deck_dom.declared_pathways(parse(hum_harm)) == {'build'}))
+
+    # D3 -- THE ORDINAL BOUND. "the second I do is ido2" says nothing about a third; the first cut
+    # named every occurrence after the first ido2, so a deck could carry three.
+    pure.append(('D3: two of a modelling kind is the declared maximum',
+                 _names(['I do', 'I do', 'We do', 'We do'])
+                 == ['ido', 'ido2', 'wedo', 'wedo2']))
+    pure.append(('D3 RED PROOF: a third bare "I do" is RED "unbounded modelling"',
+                 _names(['I do', 'I do', 'I do']) == ['ido', 'ido2', 'unnamed']))
+    pure.append(('D3 RED PROOF: the same for a third bare "We do"',
+                 _names(['We do', 'We do', 'We do']) == ['wedo', 'wedo2', 'unnamed']))
+    pure.append(('D3 RED PROOF: a second explicit "I do 2" is RED too',
+                 _names(['I do', 'I do 2', 'I do 2']) == ['ido', 'ido2', 'unnamed']))
 
     # --- SECOND FIXTURE, ruled 2026-09-21. The fixture-driven battery below takes its only
     # fixture from a NINE-stage deck that types its own stages

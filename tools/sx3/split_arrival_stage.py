@@ -68,6 +68,9 @@ import sys
 SECTION = re.compile(r'<section\b[^>]*\bid="slide-(\d+)"[^>]*>')
 TAG_SPAN = re.compile(r'\s*<span class="slide-tag[^"]*"[^>]*>.*?</span>', re.S)
 META_P = re.compile(r'\s*<p class="science-meta"[^>]*>.*?</p>', re.S)
+# The arrival stage's minutes inside that line, with the separator that precedes them, so
+# removing the match leaves a well-formed line behind for the title stage.
+MINUTES_SEGMENT = re.compile(r'\s*\u00b7\s*(?P<mins>\d+\s*MINUTES)\b', re.I)
 H1 = re.compile(r'<h1\b[^>]*>(.*?)</h1>', re.S)
 CUT = '<div class="route-controls"'
 OPEN_TAG_SPAN = '<span class="slide-tag tag-opening">Opening</span>'
@@ -196,11 +199,45 @@ def split(html):
     span_arr = m_span.group(0).strip()
     head = head[:m_span.start()] + head[m_span.end():]
 
+    # RULED 2026-09-22 (STOP-C1, the split refusal amended rather than bypassed).
+    #
+    # On a few decks the science-meta line glues two unrelated facts together:
+    #   "LAUNCH - GCSE BIOLOGY FOUNDATION - W9 - LESSON Classic - 4 MINUTES - Aut2.W1"
+    # The MINUTES belong to the arrival stage; the TERM belongs to the lesson, and
+    # build_catalogue.py reads it from stage 0's text (its title-slide fallback). Moving
+    # the whole line therefore carried the term off the title stage and the catalogue's
+    # term fell silently to "unspecified" -- which is why this tool refused all three
+    # decks outright.
+    #
+    # It no longer has to choose. The line is SPLIT: the term (and everything else that
+    # describes the lesson) stays on the title stage, and only the minutes travel, as
+    # their own meta line on the arrival stage. The refusal below is kept exactly as it
+    # was and becomes the red proof: if a split ever does carry a term code off stage 0,
+    # it still FAILS.
     m_meta = META_P.search(head)
     meta = ''
+    meta_split_chars = 0
     if m_meta:
-        meta = m_meta.group(0).strip()
-        head = head[:m_meta.start()] + head[m_meta.end():]
+        whole = m_meta.group(0).strip()
+        m_min = MINUTES_SEGMENT.search(whole)
+        if m_min and term_codes(whole):
+            kept = MINUTES_SEGMENT.sub('', whole, count=1)
+            minutes = m_min.group('mins').strip()
+            meta = '<p class="science-meta">%s</p>' % minutes
+            head = head[:m_meta.start()] + kept + head[m_meta.end():]
+            # EXACT ACCOUNTING, not a tolerance. Splitting the glued line drops the one
+            # separator that used to join the minutes to the rest -- nothing else. The
+            # figure is derived from the three strings themselves and handed to the
+            # verifier, which keeps demanding an exact match rather than a range.
+            # The isolated strings account for the dropped separator; the whole-document
+            # measure also gains ONE character, because the single <p> becomes two blocks
+            # and text_of() joins adjacent blocks with one separator. Both terms are
+            # derived, so the verifier below stays an exact equality.
+            meta_split_chars = (len(text_of(kept)) + len(text_of(meta))
+                                - len(text_of(whole)) + 1)
+        else:
+            meta = whole
+            head = head[:m_meta.start()] + head[m_meta.end():]
 
     m_h1 = H1.search(head)
     if not m_h1:
@@ -241,7 +278,7 @@ def split(html):
         return ''.join(out)
 
     return _renumber(new), dict(deck_title=deck_title, data_title=data_title, timer=timer,
-                                shortcut=bool(shortcut))
+                                shortcut=bool(shortcut), meta_split_chars=meta_split_chars)
 
 
 def timer_total(html):
@@ -262,10 +299,15 @@ def check_invariants(before, after, info):
         p.append('duplicate stage ids')
     tb, ta = text_of(before), text_of(after)
     added = 'Opening ' + info['data_title']
-    if len(ta) != len(tb) + len(added) + 1:
+    # When the science-meta line glued the arrival minutes to the lesson term, the split
+    # separates them and the one joining separator goes with it. split() measures that cost
+    # from the strings it actually produced and reports it here, so this stays an exact
+    # equality rather than becoming a tolerance.
+    expected = len(tb) + len(added) + 1 + info.get('meta_split_chars', 0)
+    if len(ta) != expected:
         # exact accounting: the only new visible text is the tag word and the arrival heading
         p.append('visible text length moved by %d, expected %d (the tag word plus the arrival heading)'
-                 % (len(ta) - len(tb), len(added) + 1))
+                 % (len(ta) - len(tb), expected - len(tb)))
     for token in (info['deck_title'], info['data_title']):
         if token and token not in ta:
             p.append('text lost after the split: %r' % token[:40])
@@ -383,8 +425,19 @@ def self_test():
          DECK.replace('</div>\'\n        \'</section>', '</div><p>after</p></section>')
              .replace('data-action="organiser">Open knowledge organiser</button></div>',
                       'data-action="organiser">Open knowledge organiser</button></div><p>after</p>', 1), False)
-    case('a deck whose meta glues the term to the arrival minutes REFUSES',
-         DECK.replace('LAUNCH \u00b7 W9 \u00b7 4 MINUTES', 'LAUNCH \u00b7 W9 \u00b7 4 MINUTES \u00b7 Aut2\u00b7W1'), False)
+    # RULED 2026-09-22: this case used to expect a REFUSAL. The splitter's rule is amended,
+    # not bypassed -- the term token now stays on the title stage where build_catalogue reads
+    # it, and only the minutes travel, so the deck splits. The refusal itself is untouched and
+    # is exercised by the case below, which is the red proof that it can still fire.
+    case('a deck whose meta glues the term to the arrival minutes now SPLITS, term retained',
+         DECK.replace('LAUNCH \u00b7 W9 \u00b7 4 MINUTES', 'LAUNCH \u00b7 W9 \u00b7 4 MINUTES \u00b7 Aut2\u00b7W1'), True)
+    # RULING 2's SECOND RED PROOF, and the case the comment above promises: a split that would
+    # carry the term token off stage 0 must FAIL. Here the code sits in the route panel, which is
+    # on the arrival side of the cut, so the opening stage loses it -- and the catalogue's term
+    # would silently fall to "unspecified". The amended rule moves the minutes, never the term.
+    case('RED PROOF: a split that would carry the term token off stage 0 is refused',
+         DECK.replace('<section class="route-panel">panel</section>',
+                      '<section class="route-panel">panel Aut2</section>', 1), False)
     case('a deck with no knowledge shortcut still splits cleanly',
          re.sub(r'<div class="knowledge-shortcut">.*?</div>', '', DECK, flags=re.S), True)
 
