@@ -34,6 +34,16 @@ SCIENCE_PACKS = 'Science_Teesside/Teaching_Packs/'
 # status A only, every file pin-checked against its bytes, the prefix alone admits
 # nothing, and an 'M' or 'D' to a landed pack file falls through to the fence.
 HUMANITIES_PACKS = 'Humanities_Teesside/Teaching_Packs/'
+# ORDER HUM-D5 ADDENDUM 3 v3, signed by Matt Roper 2026-09-22 and landed under his STOP-L1
+# tree ruling: the Summer 1 PACK-1R pathway trees. Humanities_Teesside is protected and the
+# fence had no route for them -- HUMANITIES_PACKS admits only its own prefix, and a replacement
+# member must be an 'M' carrying a beforeGitBlob, which a brand-new file has not got. Same shape
+# as HUMANITIES_PACKS and no wider: status 'A' only, every file admitted by its own reviewed
+# digest, the prefix alone admits nothing, and a later 'M' or 'D' to a landed file falls through
+# to the fence and is rejected. The three prefixes are named, not matched by pattern.
+SUMMER1_PATHWAY_TREES = ('Humanities_Teesside/BUILD_W27-W39_2026-27/',
+                         'Humanities_Teesside/GROW_W27-W39_2026-27/',
+                         'Humanities_Teesside/LAUNCH_W27-W39_2026-27/')
 # ORDER SX3-PASSES PASS 4 (3b): the ruling that installs the three Science
 # pathway LANDING pages. Science_Teesside is protected, and before this set the
 # fence had no route for a brand-new protected navigation page: SHELVES means the
@@ -531,6 +541,11 @@ def judge(root, changes, base=None):
                 _manifest_rel, _member, listed = governed
                 if status != 'A' or not (root / rel).is_file() or listed != sha(root / rel):
                     errors.append('Humanities teaching pack must be an exact manifest-listed addition: ' + rel)
+            elif rel.startswith(SUMMER1_PATHWAY_TREES) and rel in pins:
+                # ADDENDUM 3 v3 (2026-09-22): the Summer 1 pathway trees. Same rule as the two
+                # pack clauses above -- an exact, individually pinned addition, never an edit.
+                if status != 'A' or not (root / rel).is_file() or pins[rel] != sha(root / rel):
+                    errors.append('Summer 1 pathway tree must be an exact reviewed addition: ' + rel)
             elif rel in PATHWAY_PARENTS:
                 # SX3-PASSES PASS 4 (3b). Additive only, and the bytes must equal the
                 # reviewed admission; the set alone never admits an edit or a deletion.
@@ -589,6 +604,29 @@ def controls(root):
     check('An undeclared cover file is rejected', bool(judge(root, [('A', COVER + '/unreviewed.html')])))
     check('A modification of an existing cover file is not an additive installation', bool(judge(root, [('M', COVER+'/resource.css')])))
     check('A deleted shelf is rejected', bool(judge(root, [('D', SHELVES[0])])))
+    # ADDENDUM 3 v3 red proofs for SUMMER1_PATHWAY_TREES. The route is only as good as its
+    # refusals, so each way it could go wrong is proved to go RED rather than assumed to.
+    landed = sorted(r for r in pin_map(root)
+                    if r.startswith(SUMMER1_PATHWAY_TREES) and (root / r).is_file())
+    check('the Summer 1 pathway trees have landed files to judge', bool(landed))
+    if landed:
+        check('every pinned Summer 1 pathway file passes as an exact reviewed addition',
+              not judge(root, [('A', r) for r in landed]))
+        check('an addition under the Summer 1 prefix with no pin is rejected '
+              '(the prefix alone admits nothing)',
+              bool(judge(root, [('A', SUMMER1_PATHWAY_TREES[0] + 'unreviewed.html')])))
+        check('a modification of a landed Summer 1 file is rejected (additive only)',
+              bool(judge(root, [('M', landed[0])])))
+        check('a deletion of a landed Summer 1 file is rejected',
+              bool(judge(root, [('D', landed[0])])))
+        disagree = dict(pin_map(root)); disagree[landed[0]] = '0' * 64
+        real = globals()['pin_map']
+        try:
+            globals()['pin_map'] = lambda _root: disagree
+            check('a Summer 1 file whose reviewed pin disagrees with its bytes is rejected',
+                  bool(judge(root, [('A', landed[0])])))
+        finally:
+            globals()['pin_map'] = real
     # ORDER SX3-PASSES PASS 4 (3b) red proofs for PATHWAY_PARENTS. The set is only
     # as good as its refusals, so each of the three ways it could go wrong is proved
     # to go RED rather than assumed to.
