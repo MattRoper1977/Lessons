@@ -68,6 +68,28 @@ PREFIX = "Humanities_Teesside/"
 SCIENCE_PREFIX = "Science_Teesside/"
 BINDINGS = ROOT / "tools/catalogue/SCIENCE_WEEK_BINDINGS.json"
 BINDINGS_PIN_KEY = "tools/catalogue/SCIENCE_WEEK_BINDINGS.json"
+# STOP-B3 (Matt Roper, 2026-09-22). The limb as first ruled accepted two forms of projection,
+# and MEASURED over the 180 bound science routes it admitted 49 of them: 19 more state their
+# week only as the SoW CELL their own lesson-config names, and 108 state nothing at all. PASS B
+# batch 1 was 0 of 12 landable under it. The ruling widens the accepted forms to four, matching
+# the STOP-T3 Q1 shape on the Humanities side:
+#
+#   (i)   the week key token          Spr1·W3, in the deck's own text
+#   (ii)  the week label              Spring 1 · Week 3, in the deck's own text
+#   (iii) the SoW-cell chain          the deck's own lesson-config names a workbook cell, and
+#                                     the SIGNED calendar spine maps that cell to a term-week
+#   (iv)  the signed row alone        where the deck projects NOTHING by (i)-(iii), the signed
+#                                     SCIENCE_WEEK_BINDINGS row proves it: row present, and the
+#                                     record's digest equal to its CATALOGUE_PINS entry
+#
+# A deck that projects a DIFFERENT week from its row still refuses — that is the one case (iv)
+# must never swallow, and it is red-proved below. Both records the limb reads are pinned, and a
+# drifted one refuses every deck rather than letting a stale row through.
+SPINE = ROOT / "_sownb/CALENDAR_SPINE.json"
+SPINE_PIN_KEY = "_sownb/CALENDAR_SPINE.json"
+WEEK_TOKEN = re.compile(r"(Aut[12]|Spr[12]|Sum[12])\u00b7W(\d+)")
+WEEK_LABEL = re.compile(r"(Autumn|Spring|Summer) ([12]) \u00b7 Week (\d+)")
+LABEL_TERM = {"Autumn": "Aut", "Spring": "Spr", "Summer": "Sum"}
 TERM_LABEL = {"Aut1": "Autumn 1", "Aut2": "Autumn 2", "Spr1": "Spring 1",
               "Spr2": "Spring 2", "Sum1": "Summer 1", "Sum2": "Summer 2"}
 STRANDS = {"Humanities": PREFIX, "Science": SCIENCE_PREFIX}
@@ -79,29 +101,53 @@ def flat_text(data: bytes) -> str:
     return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", data.decode("utf-8", "replace")))
 
 
-def projects(entry: dict, text: str) -> bool:
-    """Pure. Does this deck's own text project every week the record binds it to?"""
-    weeks = entry.get("weeks") or []
-    if not weeks:
-        return False
-    if all(w["key"] in text for w in weeks):
-        return True
-    return all("%s \u00b7 Week %d" % (TERM_LABEL.get(w["term"], w["term"]), w["weekWithinTerm"]) in text
-               for w in weeks)
+def config_cells(data: bytes) -> set:
+    """Pure. The workbook cells the deck's OWN lesson-config names, as spine references.
+    Read from the raw bytes, because the config is a <script> body and flat_text strips it."""
+    out = set()
+    for body in re.findall(r"<script[^>]*id=[\"']lesson-config[\"'][^>]*>(.*?)</script>",
+                           data.decode("utf-8", "replace"), re.S | re.I):
+        try:
+            source = json.loads(body).get("source") or {}
+        except Exception:
+            continue
+        sheet, cell = source.get("sheet"), source.get("cell")
+        if sheet and cell:
+            out.add("'%s'!%s" % (sheet, cell))
+    return out
 
 
-def judge_science(rel, entry, record_ok, text):
+def projected(text: str, cells: set, spine: dict) -> set:
+    """Pure. EVERY term-week this deck states about itself, by any of the three reading forms.
+    Not narrowed to the record's own weeks: a deck that names a week its row does not bind must
+    be visible here, or the mismatch below could not refuse it."""
+    out = {"%s\u00b7W%d" % (m[1], int(m[2])) for m in WEEK_TOKEN.finditer(text)}
+    out |= {"%s%s\u00b7W%d" % (LABEL_TERM[m[1]], m[2], int(m[3])) for m in WEEK_LABEL.finditer(text)}
+    for ref in cells:
+        row = spine.get(ref)
+        if row and row.get("termWeek"):
+            out.add(row["termWeek"])
+    return out
+
+
+def judge_science(rel, entry, record_ok, text, cells=frozenset(), spine=None, spine_ok=True):
     """Pure. None when the ruled Science limb makes this deck landable, else the reason."""
     if not record_ok:
         return "the SCIENCE_WEEK_BINDINGS record's digest does not equal its pin"
+    if not spine_ok:
+        return "the calendar spine's digest does not equal its pin"
     if entry is None:
         return "no SCIENCE_WEEK_BINDINGS row; the signed record does not bind it"
     if not (entry.get("weeks") or []):
         return "the record binds it to no week, so there is no term-week to project"
-    if not projects(entry, text):
-        weeks = ", ".join(w["key"] for w in entry["weeks"])
-        return f"the record's term-week ({weeks}) is not projected by the deck's own text"
-    return None
+    want = {w["key"] for w in entry["weeks"]}
+    got = projected(text, set(cells), spine or {})
+    if not got:
+        return None  # form (iv): the deck states nothing, and the signed row proves it
+    if want <= got:
+        return None  # forms (i)-(iii): every bound week is one the deck states about itself
+    return ("the deck states %s about itself, which does not cover the record's term-week (%s)"
+            % (", ".join(sorted(got)), ", ".join(sorted(want))))
 
 
 class Refuse(Exception):
@@ -327,14 +373,23 @@ def science_allowed(paths) -> tuple[set, dict]:
     Returns (landable set, reason per refused path). The record is read once and its digest
     compared with its CATALOGUE_PINS entry, so a record that has drifted refuses every deck
     rather than letting one through on a stale row."""
+    registry = pins()
     raw = BINDINGS.read_bytes()
-    record_ok = pins().get(BINDINGS_PIN_KEY) == hashlib.sha256(raw).hexdigest()
+    record_ok = registry.get(BINDINGS_PIN_KEY) == hashlib.sha256(raw).hexdigest()
     entries = json.loads(raw)["entries"]
+    # The cell chain (form iii) reads the calendar spine, so the spine is held to the same
+    # standard as the bindings record: a digest that is not its pin refuses every deck.
+    spine_raw = SPINE.read_bytes() if SPINE.is_file() else b""
+    spine_ok = bool(spine_raw) and registry.get(SPINE_PIN_KEY) == hashlib.sha256(spine_raw).hexdigest()
+    spine = {row["reference"]: row
+             for row in (json.loads(spine_raw)["workbookCells"] if spine_ok else [])}
     ok, why = set(), {}
     for rel in paths:
         path = ROOT / rel
-        text = flat_text(path.read_bytes()) if path.is_file() and not path.is_symlink() else ""
-        reason = judge_science(rel, entries.get(rel), record_ok, text)
+        data = path.read_bytes() if path.is_file() and not path.is_symlink() else b""
+        text = flat_text(data) if data else ""
+        reason = judge_science(rel, entries.get(rel), record_ok, text,
+                               config_cells(data), spine, spine_ok)
         if reason:
             why[rel] = reason
         else:
@@ -488,13 +543,34 @@ def self_test() -> int:
     check("RED PROOF (pin mismatch): a record whose digest is not its pin refuses every deck",
           "does not equal its pin" in judge_science(rel, entry, False, token_text))
     check("RED PROOF (week mismatch): a deck projecting a different week is refused",
-          "is not projected by the deck" in
+          "does not cover the record's term-week" in
           judge_science(rel, entry, True, "... the cold case Spr1\u00b7W4 lesson ..."))
-    check("Science: a deck projecting NO week at all is refused",
-          "is not projected by the deck" in judge_science(rel, entry, True, "nothing here"))
+    # STOP-B3 forms (iii) and (iv), with the refusals the ruling names.
+    spine = {"'GROW Weekly - Spring'!C28": {"reference": "'GROW Weekly - Spring'!C28",
+                                            "termWeek": "Spr1\u00b7W3"},
+             "'GROW Weekly - Spring'!C40": {"reference": "'GROW Weekly - Spring'!C40",
+                                            "termWeek": "Spr1\u00b7W5"}}
+    cell_deck = b'<script id="lesson-config">{"source":{"sheet":"GROW Weekly - Spring","cell":"C28"}}</script>'
+    other_cell = b'<script id="lesson-config">{"source":{"sheet":"GROW Weekly - Spring","cell":"C40"}}</script>'
+    check("Science (iii): a deck whose own lesson-config cell the spine maps to its row's "
+          "term-week is landable",
+          judge_science(rel, entry, True, "nothing here", config_cells(cell_deck), spine) is None)
+    check("RED PROOF (iii): the same chain pointing at a DIFFERENT week is refused",
+          "does not cover the record's term-week" in
+          judge_science(rel, entry, True, "nothing here", config_cells(other_cell), spine))
+    check("Science (iv): a deck that states NOTHING about its own week is proved by the signed row",
+          judge_science(rel, entry, True, "nothing here") is None)
+    check("RED PROOF (iv): form (iv) does not swallow a deck that states a DIFFERENT week",
+          "does not cover the record's term-week" in
+          judge_science(rel, entry, True, "... the cold case Spr1\u00b7W5 lesson ..."))
+    check("RED PROOF (spine pin): a calendar spine whose digest is not its pin refuses every deck",
+          "the calendar spine's digest does not equal its pin" in
+          judge_science(rel, entry, True, token_text, frozenset(), spine, False))
+    check("Science: the cell reader ignores a lesson-config that names no cell",
+          config_cells(b'<script id="lesson-config">{"week":15}</script>') == set())
     check("Science: a row the record binds to no week is refused, not silently landable",
           "no term-week to project" in judge_science(rel, {"weeks": []}, True, token_text))
-    check("Science: a two-week row needs BOTH weeks projected",
+    check("Science: a two-week row is not covered by a deck that states only one of them",
           judge_science(rel, {"weeks": [entry["weeks"][0],
                                         {"key": "Spr1\u00b7W4", "term": "Spr1", "weekWithinTerm": 4,
                                          "label": "Spring 1 \u00b7 Week 4"}]}, True, token_text) is not None)
