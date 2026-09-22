@@ -235,6 +235,56 @@ def tool_digest() -> str:
     return hashlib.sha256((ROOT / "tools/hum/explicit_document_tags.py").read_bytes()).hexdigest()
 
 
+# --- THE RESPONSIVE LIMB (PACK-1R v4 re-delivery, ruling 2026-09-23 §4) --------------------
+# "responsive re-delivery -- GPT PACK-1R v4 pages, lesson bytes untouched".
+#
+# Same shape as the explicit-tags limb and for the same reason: the change is an ADDITIVE,
+# REVERSIBLE wrapper that moves no content. tools/hum/responsive_pages.py writes down a
+# viewport meta (only where the page declares none) and one reviewed <style> block, both
+# immediately before the page's own </head>. A member qualifies only when the bytes on disk
+# are EXACTLY what that reviewed tool produces from the bytes at the merge base, and when the
+# tool's own checker -- which undoes the recorded insertions, demands the original bytes back,
+# and compares the two PARSED documents' text content -- passes.
+#
+# The delivery arrived from outside this estate. That is precisely why it is judged and not
+# trusted: repair() over main's own bytes reproduces all twenty-one delivered pages byte for
+# byte, so "GPT sent it" is nowhere in the predicate.
+
+
+def _responsive():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "responsive_pages", ROOT / "tools/hum/responsive_pages.py")
+    m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+    return m
+
+
+def responsive_tool_digest() -> str:
+    return hashlib.sha256((ROOT / "tools/hum/responsive_pages.py").read_bytes()).hexdigest()
+
+
+def judge_responsive(rel: str, before: bytes, after: bytes):
+    """Pure. None when this member is its own base bytes with the responsive furniture added."""
+    R = _responsive()
+    if not rel.startswith(SUMMER1_TREES):
+        return "not a Summer 1 pathway page; this transaction re-delivers nothing else"
+    b = before.decode("utf-8", "replace")
+    a = after.decode("utf-8", "replace")
+    try:
+        want, inserts = R.repair(b)
+    except R.Refuse as why:
+        return "the reviewed tool refuses this page: %s" % why
+    if not inserts:
+        return "the base bytes already carry the responsive furniture, so there is nothing to add"
+    if a != want:
+        return "the bytes on disk are not what the reviewed tool produces from the base bytes"
+    try:
+        R.check(b, a, inserts)
+    except R.Refuse as why:
+        return "the tool's own checker refuses the result: %s" % why
+    return None
+
+
 def judge_explicit_tags(rel: str, before: bytes, after: bytes):
     """Pure. None when this member is its own base bytes with the implied tags written down."""
     T = _tagger()
@@ -268,8 +318,14 @@ def sums_rows(text: str) -> list:
     return rows
 
 
-def judge_explicit_tags_record(rel: str, before: bytes, after: bytes, members: dict, disk: dict):
-    """Pure. None when this pack record is derived from its own marked-up members, else why not."""
+def judge_explicit_tags_record(rel: str, before: bytes, after: bytes, members: dict, disk: dict,
+                               digest: str = ""):
+    """Pure. None when this pack record is derived from its own re-cut members, else why not.
+
+    `digest` is the digest of the tool that derived the members -- the tagger's by default,
+    the responsive writer's when the responsive limb calls it. A CHANGELOG entry must carry
+    it, so a record cannot claim a derivation the transaction did not perform."""
+    digest = digest or tool_digest()
     tree = next((t for t in SUMMER1_TREES if rel.startswith(t)), None)
     if tree is None:
         return "not a Summer 1 pathway record; this transaction re-cuts nothing else"
@@ -287,7 +343,7 @@ def judge_explicit_tags_record(rel: str, before: bytes, after: bytes, members: d
         added = a[len(b):]
         if not added.strip():
             return "the CHANGELOG gained no derivation entry"
-        if tool_digest()[:16] not in added:
+        if digest[:16] not in added:
             return "the derivation entry does not carry the tool's own digest"
         table = {}
         for line in added.splitlines():
@@ -332,6 +388,16 @@ def judge_explicit_tags_record(rel: str, before: bytes, after: bytes, members: d
 
 def explicit_tags_allowed(statuses, blob_reader) -> tuple[set, dict]:
     """The ruled limb applied to the paths this branch changed: pages first, then their records."""
+    return _pack_limb_allowed(statuses, blob_reader, judge_explicit_tags, tool_digest())
+
+
+def responsive_allowed(statuses, blob_reader) -> tuple[set, dict]:
+    """The ruled responsive limb, same walk, its own page judge and its own tool digest."""
+    return _pack_limb_allowed(statuses, blob_reader, judge_responsive, responsive_tool_digest())
+
+
+def _pack_limb_allowed(statuses, blob_reader, judge_page, digest) -> tuple[set, dict]:
+    """Shared by both pack limbs: pages first, then each pack's records from its own members."""
     ok, why, seen = set(), {}, {}
     for rel, status in sorted(statuses.items()):
         path = ROOT / rel
@@ -342,7 +408,7 @@ def explicit_tags_allowed(statuses, blob_reader) -> tuple[set, dict]:
         seen[rel] = (before, after)
         if rel.endswith(SUMMER1_RECORDS):
             continue                      # judged below, once this pack's pages are known
-        reason = judge_explicit_tags(rel, before, after)
+        reason = judge_page(rel, before, after)
         if reason:
             why[rel] = reason
         else:
@@ -359,7 +425,7 @@ def explicit_tags_allowed(statuses, blob_reader) -> tuple[set, dict]:
             p = ROOT / (tree + record) if tree else None
             if p is not None and p.is_file():
                 disk[record] = p.read_bytes()
-        reason = judge_explicit_tags_record(rel, before, after, members, disk)
+        reason = judge_explicit_tags_record(rel, before, after, members, disk, digest)
         if reason:
             why[rel] = reason
         else:
@@ -402,7 +468,7 @@ def derive(base: str, strand: str = "Humanities", limb: str = "") -> tuple[str, 
     mb = merge_base(base)
     # The explicit-tags limb also reads each pack's own two records, because a mark-up the
     # record does not carry is a mark-up the pack cannot verify. Every other limb sees .html.
-    kinds = (".html",) + (SUMMER1_RECORDS if limb == "explicit-tags" else ())
+    kinds = (".html",) + (SUMMER1_RECORDS if limb in ("explicit-tags", "responsive") else ())
     statuses = {}
     for line in git("diff", "--name-status", f"{mb}..HEAD", "--", prefix).splitlines():
         parts = line.split("\t")
@@ -413,7 +479,15 @@ def derive(base: str, strand: str = "Humanities", limb: str = "") -> tuple[str, 
           f"the merge base {mb[:12]} with {base}; blobs read from that merge base, digests from "
           f"the bytes on disk, pins from CATALOGUE_PINS in {GATE.relative_to(ROOT)}")
 
-    if limb == "explicit-tags":
+    if limb == "responsive":
+        allowed, science_why = responsive_allowed(
+            statuses, lambda rel: subprocess.run(["git", "show", f"{mb}:{rel}"], cwd=ROOT,
+                                                 capture_output=True).stdout)
+        pages = len([r for r in allowed if not r.endswith(SUMMER1_RECORDS)])
+        print(f"  landable set from the ruled responsive limb (the reviewed writer reproduces "
+              f"these bytes from the base): {pages} page(s) and {len(allowed) - pages} derived "
+              f"pack record(s), {len(allowed)} of {len(statuses)} path(s)")
+    elif limb == "explicit-tags":
         allowed, science_why = explicit_tags_allowed(
             statuses, lambda rel: subprocess.run(["git", "show", f"{mb}:{rel}"], cwd=ROOT,
                                                  capture_output=True).stdout)
@@ -670,6 +744,49 @@ def self_test() -> int:
     check("RED PROOF (a pack with no marked-up page): its record has nothing to re-cut",
           "nothing to re-cut" in
           judge_explicit_tags_record(tree + "CHANGELOG.txt", log_before, log_after, {}, disk))
+    # RULING 2026-09-23 §4: the responsive limb, with the refusals its shape implies.
+    R = _responsive()
+    rpage = "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W03/GROW_SU1_W03_Pupil_Resources.html"
+    plain = (b'<!doctype html><html lang="en-GB"><head><meta charset="utf-8">'
+             b'<title>Pupil resources</title><style>body{max-width:180mm}</style></head>'
+             b'<body><h1>Sheet</h1><table><tr><td>x</td></tr></table></body></html>')
+    served = R.repair(plain.decode())[0].encode()
+    check("responsive: a page the reviewed writer produces from its base bytes is a member",
+          judge_responsive(rpage, plain, served) is None)
+    check("RED PROOF (outside the trees): a page outside the Summer 1 trees is refused",
+          "not a Summer 1 pathway page" in
+          judge_responsive("Humanities_Teesside/GROW_W1-W8_2026-27/x.html", plain, served))
+    check("RED PROOF (already responsive): a page that already carries the block is refused",
+          "already carry the responsive furniture" in judge_responsive(rpage, served, served))
+    check("RED PROOF (content edited beside correct furniture): a smuggled edit is refused",
+          "not what the reviewed tool produces" in
+          judge_responsive(rpage, plain, served.replace(b"<h1>Sheet</h1>", b"<h1>Sheat</h1>")))
+    check("RED PROOF (hand-written furniture): a block that is not the reviewed bytes is refused",
+          judge_responsive(rpage, plain,
+                           served.replace(b"box-sizing: border-box",
+                                          b"box-sizing: content-box")) is not None)
+    check("RED PROOF (no </head>): a page the writer cannot place furniture in is refused",
+          "refuses this page" in
+          judge_responsive(rpage, b"<html><body><h1>bare</h1></body></html>",
+                           b"<html><body><h1>bare</h1></body></html>"))
+    # THE TRAP THIS LIMB MUST NOT FALL INTO: the explicit-tags limb would admit nothing here,
+    # and the responsive limb must likewise admit nothing an explicit-tags transaction changed.
+    # The two limbs read the same trees, so a member judged by the wrong one would slip through.
+    marked = _tagger().repair(
+        '<!doctype html><html lang="en-GB"><meta charset="utf-8"><title>t</title>'
+        '<style>p{}</style><h2>h</h2></html>')[0].encode()
+    check("RED PROOF (wrong limb): a marked-up page is not a responsive member",
+          judge_responsive(rpage,
+                           b'<!doctype html><html lang="en-GB"><meta charset="utf-8">'
+                           b'<title>t</title><style>p{}</style><h2>h</h2></html>',
+                           marked) is not None)
+    check("RED PROOF (wrong limb, the other way): a responsive page is not a tags member",
+          judge_explicit_tags(rpage, plain, served) is not None)
+    # The record clause carries the RESPONSIVE writer's digest, not the tagger's, so a
+    # CHANGELOG naming the wrong tool cannot pass for a derivation this transaction performed.
+    check("the two limbs' tool digests differ, so a record cannot claim the wrong derivation",
+          responsive_tool_digest() != tool_digest())
+
     check("the Humanities strand still maps to its own prefix, untouched",
           STRANDS["Humanities"] == PREFIX and STRANDS["Science"] == SCIENCE_PREFIX)
     print("self-test " + ("PASS" if not bad else f"FAIL ({bad})"))
@@ -681,7 +798,7 @@ def main() -> int:
     parser.add_argument("--name", help="transaction name, e.g. 'HUM-T batch 1 BUILD'")
     parser.add_argument("--base", default="origin/main")
     parser.add_argument("--strand", default="Humanities", choices=sorted(STRANDS))
-    parser.add_argument("--limb", default="", choices=["", "explicit-tags"],
+    parser.add_argument("--limb", default="", choices=["", "explicit-tags", "responsive"],
                         help="the ruled limb that decides the landable set")
     parser.add_argument("--check", action="store_true")
     parser.add_argument("--self-test", action="store_true")

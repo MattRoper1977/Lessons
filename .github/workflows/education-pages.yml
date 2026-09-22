@@ -162,6 +162,27 @@ jobs:
     # CLOSER: education-publication.yml resolves .sources/Site from builder_ref, so until it
     # moves the publication still reads the OLD admission record and reds identically.
     # SHA read with git rev-parse on the Site checkout, never typed.
-    uses: MattRoper1977/mattroper1977.github.io/.github/workflows/education-publication.yml@e52667a1067efeb65216e6afe16bb4aa6ec3f9af
+          # Moved 2026-09-22 (Summer 1 responsive re-delivery, STANDING RULE L33 and the ruled
+          # pending-then-land fold, STOP-RESP-2 step 2): e52667a1 -> aeb47509523dd0b7f8efb1c94f5eb550c17e2318,
+          # the squash merge of Site #430 -- the window that admits this PR's 27 published paths as
+          # [main-today, pending] transition pairs. THIS LINE IS THE CLOSER: education-publication.yml
+          # resolves .sources/Site from builder_ref, so until it moves the publication still reads the
+          # OLD admission record and refuses all 27 by name, as at run 35714663331. The bump is FOLDED
+          # INTO this content PR rather than following it, so the publication reads the new registry on
+          # its first run and no red is produced anywhere in the sequence. The purity check is scoped to
+          # these two carrier lines: this PR deliberately moves 27 served paths, so the whole-diff form
+          # of tools/hum/check_carrier_pure.py refuses it by design and is not the test here; step 3 is
+          # the pure carrier. SHA read with git rev-parse on the Site checkout, never typed.
+          # RE-BUMPED 2026-09-22 (STOP-RESP-4, route A): aeb47509 -> 0f93108616d196cc5869380ce390a6c8c34a8812, the
+          # squash merge of Site #431. #430 admitted the 27 CONTENT movers, but regenerating the
+          # size table produced a 28th, data/resource-sizes.json, which is itself served and which
+          # #430 does not admit. The publication resolves .sources/Site from builder_ref, so this
+          # line pointing at aeb47509 would have made THIS PR's own publication refuse that path by
+          # name -- and step 3 could not repair it, because by then the publication has run.
+          # STANDING RULE, added here: a carrier must point at the Site SHA that admits EVERY mover
+          # in the pair, derived artefacts included, so the carrier bump is the LAST edit on the
+          # Lessons branch, made only after every window it depends on has merged. SHA read with
+          # git rev-parse on the Site checkout, never typed.
+    uses: MattRoper1977/mattroper1977.github.io/.github/workflows/education-publication.yml@0f93108616d196cc5869380ce390a6c8c34a8812
     with:
-      builder_ref: e52667a1067efeb65216e6afe16bb4aa6ec3f9af
+      builder_ref: 0f93108616d196cc5869380ce390a6c8c34a8812

@@ -117,10 +117,33 @@ def verify(sums: Path) -> dict:
             "status": "OK" if not bad else "MISMATCH"}
 
 
+def pack_root_for(path: Path) -> Path:
+    """The nearest ancestor that carries a checksum file.
+
+    A pack's manifest sits at its ROOT, but its members can be NESTED: a Humanities
+    Summer 1 pack keeps its pages at <pack>/<PATHWAY>/Summer_1/<week>/. Resolving the
+    pack as the file's own parent finds no manifest for those and reports
+    "NO CHECKSUM FILE", which leaves a nested edit carrying a stale digest and no error
+    -- the exact fault this tool exists to prevent, on the layout most of the Humanities
+    estate uses. Measured: all 21 Summer 1 responsive pages reported NO CHECKSUM FILE
+    under the parent-only rule while SHA256SUMS.txt sat three directories above them.
+
+    Row paths in a manifest are relative to the pack root, so finding the root is the
+    whole fix: refresh() already re-hashes each row against <root>/<row path>.
+    """
+    start = Path(path).resolve().parent
+    for candidate in (start, *start.parents):
+        if sums_file(candidate):
+            return candidate
+        if candidate == ROOT:
+            break
+    return start
+
+
 def packs_for(decks) -> dict:
     out = {}
     for d in decks:
-        pack = Path(d).resolve().parent
+        pack = pack_root_for(d)
         s = sums_file(pack)
         out.setdefault(str(pack), {"sums": s, "decks": []})["decks"].append(Path(d).name)
     return out
@@ -140,6 +163,11 @@ CONTROL_IDS = [
     "check-mode-writes-nothing",
     "verify-catches-a-stale-digest",
     "every-path-in-the-record-resolves-from-the-repository-root",
+    # RULING 2026-09-23 intake: nested pack members (Humanities keeps pages three
+    # directories below the manifest).
+    "a-nested-member-finds-its-pack-root",
+    "a-nested-member-has-its-row-refreshed",
+    "pack-root-search-stops-at-a-pack-with-no-manifest",
 ]
 
 _A = "alpha\n"
@@ -185,6 +213,32 @@ def controls() -> list[dict]:
             "refreshing must not enrol a file nobody reviewed -- the failure mode "
             "of a regenerate-from-glob tool",
             (2, 2, 0), (r2["rowsBefore"], r2["rowsAfter"], r2["rowsAdded"]))
+
+        # RULING 2026-09-23 intake: a pack whose members are NESTED. The Humanities
+        # Summer 1 packs keep pages at <pack>/<PATHWAY>/Summer_1/<week>/, three levels
+        # below the manifest. Resolving the pack as the file's own parent found no
+        # manifest and reported NO CHECKSUM FILE for all 21 responsive pages, which
+        # would have left every one carrying a stale digest with no error raised.
+        pn = _mkpack(d / "pn", "SHA256SUMS.txt")
+        deep = d / "pn/GROW/Summer_1/W01"
+        deep.mkdir(parents=True)
+        (deep / "page.html").write_text("deep page\n", encoding="utf-8")
+        rows = pn.read_text(encoding="utf-8").rstrip("\n").splitlines()
+        rows.append(hashlib.sha256(b"deep page\n").hexdigest() + "  GROW/Summer_1/W01/page.html")
+        pn.write_text("\n".join(rows) + "\n", encoding="utf-8")
+        rec("a-nested-member-finds-its-pack-root",
+            "the manifest sits at the pack ROOT; a member three directories down must "
+            "still find it, or a nested edit ships a stale digest silently",
+            str((d / "pn").resolve()), str(pack_root_for(deep / "page.html")))
+        (deep / "page.html").write_text("deep page edited\n", encoding="utf-8")
+        rn = refresh(pn)
+        rec("a-nested-member-has-its-row-refreshed",
+            "and its row is the one refreshed, with the row count unmoved",
+            (["GROW/Summer_1/W01/page.html"], 3, 3),
+            ([c["name"] for c in rn["refreshed"]], rn["rowsBefore"], rn["rowsAfter"]))
+        rec("pack-root-search-stops-at-a-pack-with-no-manifest",
+            "a file in no pack at all resolves to its own parent, never to the repository root",
+            str(d.resolve()), str(pack_root_for(d / "loose.html")))
 
         p3 = _mkpack(d / "p3", "SHA256SUMS.txt")
         (d / "p3/b.html").unlink()
