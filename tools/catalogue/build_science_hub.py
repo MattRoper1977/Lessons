@@ -18,7 +18,7 @@ alone never demotes: until PASS C delivers replacements, every lesson pupils use
 current, carrying a CONFORMS or NOT YET badge derived from the census. The badge flips as PASS C
 lands. A route whose part cannot be read from its lesson-config is NEVER treated as replaced -- a
 replacement has to be shown to exist, not assumed.
-The writer refuses to write while any C1-C5 control is red.
+The writer refuses to write while any C1-C8 control is red.
 """
 from pathlib import Path
 import collections, hashlib, html as H, json, re, sys
@@ -26,6 +26,7 @@ from lxml import html as lhtml
 from urllib.parse import urlsplit
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import hub_sections as S
+from title_slide import title_slide_heading   # RULING 2026-09-23 B.2, one definition
 
 ROOT = Path(__file__).resolve().parents[2]
 DATA = json.loads((ROOT / 'assets/catalogue/science-shelf.json').read_text())
@@ -46,8 +47,9 @@ TITLE_MAX = 120  # a card title is a lesson name, not a page of slide text (C6)
 
 
 def h1_of(path: Path) -> str:
-    """The deck's OWN first heading, read with a parser -- never a regex over the raw bytes.
+    """The deck's listed title: its TITLE SLIDE's heading, falling back only off a deck.
 
+    The parser rule below is kept for pages that carry no slides at all (hub and shelf pages).
     31 Science decks write their printable packs from a script, so their source carries
     <h1>Knowledge organiser<\\/h1> INSIDE a JavaScript string. A regex hunting for </h1> steps
     straight over the escaped close and runs on to the next REAL one: measured on
@@ -55,7 +57,11 @@ def h1_of(path: Path) -> str:
     49,963-character card title (and a 1.12 MB hub that scrolled sideways at 390 px). A parser
     keeps script content in a text node, so a heading written inside one is never markup.
     """
-    doc = lhtml.fromstring(path.read_bytes())
+    raw = path.read_bytes()
+    heading = title_slide_heading(raw.decode('utf-8', 'replace'))
+    if heading:
+        return heading
+    doc = lhtml.fromstring(raw)
     for e in doc.iter('h1'):
         text = ' '.join(e.text_content().split()).strip()
         if text:
@@ -295,8 +301,41 @@ def c7_errors(page: str, rendered_paths: list[str]) -> list[str]:
     return errs
 
 
+def c8_errors(rows: list[dict]) -> list[str]:
+    """C8. A card title is the deck's OWN TITLE SLIDE's heading -- never another slide's.
+
+    RULING 2026-09-23 B.2. The defect this stands against is silent: a first-<h1>-in-the-document
+    rule returns a task slide's heading whenever the title slide writes its heading as an <h2>,
+    and the hub then lists a lesson as "Your task * 1 of 2". Measured on main before the fix:
+    six served pages carried that string, five decks plus the hub itself.
+
+    The control re-reads each deck and refuses when the listed title is not what the title slide
+    says. It names the first-<h1> case separately, because that is the defect with a history and a
+    reader should not have to infer it from a diff of two strings.
+    """
+    errs = []
+    for r in sorted(rows, key=lambda r: r['path']):
+        path = ROOT / r['path']
+        if not path.is_file():
+            continue
+        raw = path.read_bytes()
+        want = title_slide_heading(raw.decode('utf-8', 'replace'))
+        if want is None or r['h1'] == want:
+            continue
+        doc = lhtml.fromstring(raw)
+        first = next((' '.join(e.text_content().split()).strip()
+                      for e in doc.iter('h1') if ' '.join(e.text_content().split()).strip()), None)
+        if r['h1'] == first:
+            errs.append(f'C8 card title is the document\'s first <h1>, not the title slide\'s heading: '
+                        f'{r["path"]} (listed {r["h1"]!r}, title slide {want!r})')
+        else:
+            errs.append(f'C8 card title is not the title slide\'s heading: '
+                        f'{r["path"]} (listed {r["h1"]!r}, title slide {want!r})')
+    return errs
+
+
 page_cards = current_html + packs_html + earlier_html
-errors += c6_errors(lessons) + c7_errors(page_cards, rendered)
+errors += c6_errors(lessons) + c7_errors(page_cards, rendered) + c8_errors(lessons)
 if errors:
     print('\n'.join(errors)); raise SystemExit(f'REFUSED: {len(errors)} control error(s); nothing written')
 
@@ -357,4 +396,4 @@ bindings = {
 print(f'Built the Science hub: {len(rendered)} of {len(DATA["lessons"])} shelf cards rendered '
       f'({len(D["current"])} current = {conforming_now} CONFORMS + {not_yet_now} NOT YET, {len(D["reference"])} reference, '
       f'{len(D["earlier"])} earlier, of which {len(REPLACED)} have a proven same-part conforming replacement); '
-      f'{len(D["slots"])} current slots; {len(cards)} pack cards; controls C1-C7 0 errors.')
+      f'{len(D["slots"])} current slots; {len(cards)} pack cards; controls C1-C8 0 errors.')
