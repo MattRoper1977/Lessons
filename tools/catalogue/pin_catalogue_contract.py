@@ -2465,6 +2465,22 @@ REVIEWED_PATHS += (
     'tools/launch_resources/lesson_acceptance.py',
 )
 
+# RULING 2026-09-23, STOP-RESP-1 option (c) — the #597 route (b): admit the pack-root fix by
+# REVIEWED_PATHS with its derived trigger pair, NOT by widening ALLOWED_DIFF.
+#
+# tools/easter/refresh_pack_checksums.py carries correction #32's pack_root_for(). The old
+# packs_for() took Path(deck).resolve().parent and treated it as the pack, which is true only for
+# a file lying beside SHA256SUMS.txt; every real member is nested, so the refresh set was EMPTY and
+# the tool reported success over nothing. The cross-estate gate's standalone/offline boundary then
+# refused the file, because it sat in no allowed set.
+#
+# Pinning it is a TIGHTENING, not an exemption. From here its bytes are digest-pinned like any
+# other reviewed file, and tools/pin1/derive_triggers.py --write materialises the workflow path
+# filter so an edit to it FIRES the gate instead of slipping past it. ALLOWED_DIFF stays closed.
+REVIEWED_PATHS += (
+    'tools/easter/refresh_pack_checksums.py',
+)
+
 
 def pack_rows_for(lessons: Path, rows: list) -> list:
     """UX2 D3 (2026-09-08): the companion-pack entries are the catalogue's tail,
