@@ -438,6 +438,89 @@ def self_test(root: Path):
     ):
         pure.append((name, earwig_stages(names, eligible) == want))
 
+    # --- STOP-C1/C2 SCIENCE IDENTITY, ruled 2026-09-22. Pure controls: they build their own
+    # documents, so they need no fixture and can never skip. Each one pins a clause of the ruling
+    # at the boundary where it could silently stop holding.
+    from deck_dom import EYEBROW_STAGE, EYEBROW_ORDINAL_BASE
+
+    NEUTRAL = 'the next part of the work'
+    # A phrase the STAGE_NAMES word table claims for 'arrival'. Used to make an EARLIER route win,
+    # which is the only way the oracle and the declaration can disagree once the eyebrow runs last.
+    CLAIMED = 'start with what you know'
+
+    def _sci(rows, head_title='Photosynthesis today'):
+        out = ['<html><head><title>%s</title></head><body>' % head_title]
+        for i, (lab, heading, panel) in enumerate(rows):
+            out.append('<section class="slide" data-timer="5">'
+                       '<span class="slide-tag tag-x">%s</span>'
+                       '<h2 id="title-a%d">%s</h2>%s</section>'
+                       % (lab, i, heading, '<div class="lundy">p</div>' if panel else ''))
+        return ''.join(out) + '</body></html>'
+
+    def _names(labels):
+        return [stage_name(x) for x in stages(parse(_sci([(l, NEUTRAL, False) for l in labels])))]
+
+    def _row(html, n):
+        return next(x['status'] for x in verify(html, html, '', set()) if x['row'] == n)
+
+    # C1 -- every label the generator emits resolves, and resolves to the ruled name. The two
+    # ordinal labels are excluded here and tested by C3/C4, where their ruled behaviour lives.
+    solo = {lab: _names([lab])[0] for lab in EYEBROW_STAGE
+            if EYEBROW_STAGE[lab] not in EYEBROW_ORDINAL_BASE}
+    pure.append(('C1: every ruled eyebrow label resolves to its ruled name (%d labels)'
+                 % len(solo),
+                 all(solo[lab] == EYEBROW_STAGE[lab] for lab in solo)))
+    # C2 RED PROOF -- a label outside the generator's emitted vocabulary is never a quiet pass.
+    pure.append(('C2 RED PROOF: an eyebrow text outside the emitted set names the stage "unnamed"',
+                 _names(['Zzz Quux Nonmatching']) == ['unnamed']))
+    # C3 -- the conflation the eyebrow alone cannot settle, resolved by DECLARED ORDER.
+    pure.append(('C3: the second "I do" and "We do" in document order are ido2 / wedo2',
+                 _names(['I do', 'We do', 'I do', 'We do'])
+                 == ['ido', 'wedo', 'ido2', 'wedo2']))
+    pure.append(('C3: an explicit "I do 2" after its "I do" is honoured as declared',
+                 _names(['I do', 'I do 2', 'We do', 'We do 2'])
+                 == ['ido', 'ido2', 'wedo', 'wedo2']))
+    # C4 RED PROOF -- label and order contradicting each other is RED, not a silent choice.
+    pure.append(('C4 RED PROOF: an "I do 2" declared before any "I do" is RED for that deck',
+                 _names(['I do 2', 'I do']) == ['unnamed', 'ido']))
+    pure.append(('C4 RED PROOF: the same holds for "We do 2" before any "We do"',
+                 _names(['We do 2', 'We do']) == ['unnamed', 'wedo']))
+    # C5 -- THE PLACEMENT. The eyebrow runs LAST, so a stage an earlier route already names is
+    # never renamed by it. This is what keeps 2123 Humanities stages at 0 names changed.
+    pure.append(('C5: the eyebrow never overrides a name an earlier route already gave',
+                 [stage_name(x) for x in
+                  stages(parse(_sci([('I do', CLAIMED, False)])))] == ['arrival']))
+
+    # C6/C7 RED PROOFS -- an empty set is not a pass (STOP-C2 ruling 3). The subset is asserted
+    # against what the deck DECLARES before its contents are judged. Both rows passed with an
+    # empty bad-list on the very decks whose stages they were meant to be testing.
+    d_ok = _sci([('Opening', NEUTRAL, False), ('I do', NEUTRAL, False), ('Exit', NEUTRAL, True)])
+    d_title_lost = _sci([('Opening', CLAIMED, False), ('I do', NEUTRAL, False),
+                         ('Exit', NEUTRAL, True)])
+    d_mod_lost = _sci([('Opening', NEUTRAL, False), ('I do', CLAIMED, True),
+                       ('Exit', NEUTRAL, True)])
+    pure.append(('C6: row 14 passes when the declared title stage is the one resolved',
+                 _row(d_ok, 14) == PASS))
+    pure.append(('C6 RED PROOF: row 14 FAILs when a declared title stage resolves to something '
+                 'else, instead of passing over an empty set',
+                 _row(d_title_lost, 14) == FAIL))
+    pure.append(('C7: row 2 passes when the declared modelling stage is the one resolved',
+                 _row(d_ok, 2) == PASS))
+    pure.append(('C7 RED PROOF: row 2 FAILs when a declared modelling stage resolves to something '
+                 'else, instead of passing over an empty set',
+                 _row(d_mod_lost, 2) == FAIL))
+
+    # C8 RED PROOF -- the harm case the split exists to prevent, and the check that would have
+    # caught the three merged decks: no pupil-response panel may land on the slide that carries
+    # the lesson's own title heading.
+    d47_ok = _sci([('Opening', 'Photosynthesis today', False), ('Exit', NEUTRAL, True)])
+    d47_bad = _sci([('Opening', 'Photosynthesis today', True), ('Exit', NEUTRAL, True)])
+    pure.append(('C8: row 47 passes when the deck-title slide carries no panel',
+                 _row(d47_ok, 47) == PASS))
+    pure.append(('C8 RED PROOF: row 47 FAILs when a panel lands on the slide carrying the deck '
+                 'title heading',
+                 _row(d47_bad, 47) == FAIL))
+
     # --- SECOND FIXTURE, ruled 2026-09-21. The fixture-driven battery below takes its only
     # fixture from a NINE-stage deck that types its own stages
     # title/arrival/starter/ido/wedo/ido2/wedo2/independent/exit -- the single shape on which

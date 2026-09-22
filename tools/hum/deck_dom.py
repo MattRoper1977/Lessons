@@ -238,6 +238,13 @@ EYEBROW_STAGE = {
 # supplies. Ruled: the second occurrence in DOCUMENT ORDER is the "2" variant.
 EYEBROW_ORDINAL = {'ido': 'ido2', 'wedo': 'wedo2'}
 
+# The inverse, and the reason it exists: 23 of the 31 label the second modelling stage "I do 2"
+# outright. Document order and the deck's own label must AGREE. A deck that declares "I do 2"
+# before it declares any "I do" is declaring two things that contradict each other, and the
+# ruled answer (STOP-C2 ruling 3) is RED for that deck rather than a quiet acceptance of
+# whichever reading happens to be consulted first.
+EYEBROW_ORDINAL_BASE = {'ido2': 'ido', 'wedo2': 'wedo'}
+
 
 def stage_eyebrow(node: Node) -> str:
     """The stage's own rendered eyebrow label -- its text, never its class."""
@@ -281,12 +288,16 @@ def eyebrow_stage_name(node: Node) -> str:
     name = EYEBROW_STAGE.get(label.lower())
     if name is None:
         return 'unnamed'
-    if name in EYEBROW_ORDINAL:
-        for s in _document_stages(node):
-            if s is node:
-                break
-            if EYEBROW_STAGE.get(stage_eyebrow(s).lower()) == name:
-                return EYEBROW_ORDINAL[name]
+    earlier = []
+    for s in _document_stages(node):
+        if s is node:
+            break
+        earlier.append(EYEBROW_STAGE.get(stage_eyebrow(s).lower()))
+    if name in EYEBROW_ORDINAL_BASE:
+        # An explicit "2" label is honoured only where the deck has already declared its "1".
+        return name if EYEBROW_ORDINAL_BASE[name] in earlier else 'unnamed'
+    if name in EYEBROW_ORDINAL and name in earlier:
+        return EYEBROW_ORDINAL[name]
     return name
 
 
