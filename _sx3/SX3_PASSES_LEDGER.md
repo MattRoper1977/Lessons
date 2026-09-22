@@ -1348,3 +1348,830 @@ before the pin tool runs, and the local gate runs on the tree that is committed,
 that is open.** Third time this session that a control measured something adjacent to what it was
 said to measure; the first two were the self-test that never called the oracle (#29) and the
 h1 count taken over the deck instead of the document (#30).
+
+## L49 — STOP-R2 explicit document tags, and the Summer 1 tree's first admission
+2026-09-22. Window opened Site #427, closed by publication 35679100796.
+
+### Mains after the window
+
+| repo | main | how |
+|---|---|---|
+| Site | `25e613d9` | squash merge of #427 |
+| Lessons | `4bc86c33` | squash merge of #643, the pure carrier |
+| Apps | `67ff3ed4` | squash merge of #163, the gate-copy companion |
+
+### Gates observed, by run id
+
+| gate | run | conclusion |
+|---|---|---|
+| Education Pages publication (the closer) | 35679100796 | build SUCCESS + deploy SUCCESS |
+| — its admission step | job 106591920306 step 10 | SUCCESS 02:25:49–02:30:12 |
+| — deploy | job 106593990113 | SUCCESS 02:31:30–02:32:02 |
+| FieldOps P2, the sweep, and the serve proof | 35679100372 | SUCCESS |
+| UX2 gates | 35679100365 | SUCCESS |
+| Cross-estate contract on lesson content | 35672816163 attempt 2 | SUCCESS |
+| Site window, all eight checks | on `3df5c730` | SUCCESS (1 skipped by design) |
+
+Admission is what matters, and the first draft of this paragraph got both the step and the
+population wrong. **CORRECTED:** the step literally titled *"Prove all-file admission before
+packaging any education tree"* was `skipped` on all four red runs and has no verdict on any of
+them. Exactly **one** of the four reached admission at all — `35672816193`, the run immediately
+before the closer — where the IN-BUILD check (`build_education.py:343` →
+`education_publication_admission.verify_tree_census`, inside step 9 *"Build and verify separated
+publication trees"*) raised
+`CHANGED education-site/data/{domain-catalogue,resource-discovery,usage-registry}.json`.
+The three earlier reds — `35663407795`, `35664843403`, `35671629275` — **never reached admission**:
+each died upstream in the same step at `usage_discovery.py` `inject()` with
+`Usage adapter needs an HTML shell: .../Humanities_Teesside/GROW_W27-W39_2026-27/START_HERE.html`,
+the STOP-R2 shell defect that #642 fixed. It passed here because #427 admits exactly those three
+data files as L31 pin pairs.
+
+Writing "refused on all three prior runs (…four run ids…)" was careless twice over: the count
+disagreed with its own list, and it credited a named step with a refusal that step never performed.
+
+### Two reds on the window head, both measured
+
+**1. Registry baseline.** `check_education_separation.py` `5a3adcc3` → `a6e96f29`,
+derived by building twice with identical builder code and only the pins differing.
+The OLD build reproduces the pinned baseline byte for byte at 977 retained rows,
+which is what proves the comparison base real; the NEW gives 1105. **128 joined,
+0 removed, 0 existing records changed in any field.** Every joined row is a
+Summer 1 Humanities route — BUILD 42, GROW 43, LAUNCH 43; 18 lesson rows and 110
+resource rows — all 128 admitted by digest with built bytes equal to the admitted
+digest, and no download-hub, Science or Teaching_Packs row moved. Basis in
+`REGISTRY_REFREEZE_BASIS.md`.
+
+**2. CORRECTION #22 — a Site pin pair is FOUR lines, not two.**
+*(NUMBER COLLISION, recorded not silently renumbered.* `CORRECTION #22` was already spent on
+2026-09-21, on Lessons main in `edb27b0c` (#612): *"CORRECTION #22, MINE: #628 versioned the two
+controls the ruling named and I did not sweep the estate for every OTHER check written on
+'cards == routes'."* Two unrelated corrections now carry the same number, and the pin-pair sense of
+`#22` is already cited in landed artefacts — this ledger, `.github/workflows/education-pages.yml`
+and the Site's `education-publication.yml` comment blocks. Renumbering would edit records in three
+repositories to fix a label, so the collision is written down here instead and the numbers are left
+as they were issued. **Allocation rule for the next one: take the next number above the highest
+issued anywhere, not the highest in the file you are editing.** The highest issued at this entry is
+`#38`.)*
+
+The first cut moved
+only the two `domain-split-verify.yml` pins.
+`tools/verify_split_live_publication.py` reads the publication subject pins from
+`education-publication.yml`, so AGX-1 built the candidate from the OLD Lessons tree
+against the NEW admission record and raised
+`Education file admission blocked publication: MISSING … Summer_1 …`.
+`tools/lessons_pin_lag_control.py` P5 — "two EQUAL-declared pins on different
+commits" — is precisely this fault and its own self-test plants it; I had not run
+it before the first push. **It now joins the pre-push battery for every window.**
+After the fix: P4 EQUAL holds on both declared pins, P5 agree `1e668ee4`,
+G1 gate copies identical `7abf0bc4`, RESULT PASS over 13 pins.
+
+### A red on Lessons main, closed not excused
+
+`Cross-estate contract on lesson content` 35672816163 on `1e668ee4` failed at
+`cross-estate/browser-matrix` step 8, which fetches `https://madebymatt.uk/Lessons/`
+**live**. It failed at 00:48:54 because the live origin was still serving the
+pre-Summer-1 publication, the `1e668ee4` publication having been refused at 00:40.
+The carrier commit did not re-run it: that workflow triggers on push only for
+`Humanities_Teesside/**`, and a pure carrier touches no Humanities file — the path
+filter behaved correctly.
+
+ONE re-run, basis named: the live bytes the step reads were republished at
+02:32:02 by this window's own closer, so the precondition changed. Attempt 2 came
+back SUCCESS with step 8 passing 02:44:31–02:44:49, same commit, same step. A
+window-interval red closed by the window's publication (the L34 / ruling-(a)
+class), not a flake and not a real red.
+
+### Carrier purity
+
+`9600846c` → `25e613d9`, OLD derived from the file, NEW from `git rev-parse`.
+Caller digest `40d0f3cb66c4` → `8d07252cc0fd`; both gate copies asserted
+byte-identical at `9b62db6722f1` by the script, and re-verified on the two mains
+after merging. L38: `2 changed, 5739 served, 0 served among the changed,
+0 addition(s) in a published folder` → PASS.
+
+### Measurements on the published bytes
+
+- **Row 45 = 126 panels.** 18 lessons, 9 stages and 7 panels each, one bucket
+  `(9,7)×18`, counted with `verify_loop.panels()` over `deck_dom.parse()`, never a
+  regex. Record `ROW45_su1_built.json`.
+- **50/50 whole documents by DOM** (ruling 3), 0 structurally bad.
+- **Usage furniture 2/2.** Of the 50 marked-up pages only 2 fall inside any of the
+  adapter's three populations (the GROW and LAUNCH `START_HERE.html`, via
+  `teaching_download_pages`), and both carry `usage-client.js` and `usage.css`
+  once. The other 48 are outside all three, as is every KO and Pupil_Resources
+  page in the estate. So "the 50 pages with usage furniture" resolves on
+  measurement to **2 that take it and 48 the adapter never visits** — the
+  corrective is still discharged, because the refusal was on pages it does visit.
+- **Layout control:** `scrollWidth` identical 50/50 pre-markup vs published; the
+  mark-up changed nothing.
+- **Hub census unchanged:** 163/163 shelf cards, 83 current + 8 alternatives,
+  20 reference, 52 earlier; 55 slots filled by pack lessons; 15 pack cards;
+  gaps 21; C1–C4 0 errors. A pure carrier must not move it, and it did not.
+
+### FINDING — pre-existing, raised not hidden
+
+20 of the 50 scroll sideways at 390 px, unchanged by this window: **17 of the 18
+`*_SU1_W*_Pupil_Resources.html` at `scrollWidth` 570** (all but BUILD W01), both
+`START_HERE.html` (415, 430), and GROW's `Sources_and_checks.html` (497). These
+are the pupil-facing phone pages. Recommend a named pass; nothing touched here.
+
+### Constraint recorded
+
+This container cannot reach the live origin — `madebymatt.uk:443` is a 403 policy
+denial at the egress gateway, measured. The 390 px work above is therefore a proof
+on the **published bytes**, not a fetch of the origin, and is not reported as one.
+Live-equals-published is proved by the estate's own instruments, which run where
+egress is allowed: AGX-1's byte-for-byte live comparison (SUCCESS on the window
+head) and `cross-estate/live-proof`.
+
+### CORRECTION #32 — a pack-root search that stopped at the first directory (2026-09-22)
+
+Ruling 2026-09-23 §2 accepted the refresh route over a full regenerate. While
+refreshing the three PACK-1R manifests, `tools/easter/refresh_pack_checksums.py`
+silently refreshed **nothing** for any member that does not sit at the pack root.
+
+`packs_for(paths)` mapped each changed file to a pack by taking
+`Path(p).resolve().parent` and treating that directory as the pack. That is true
+only for a file lying directly beside `SHA256SUMS.txt`. Every real member is
+nested — `<pack>/<PATHWAY>/Summer_1/<week>/<file>` — so the parent is a week
+directory, which carries no manifest, and the file was dropped from the refresh
+set with no error and no count. The tool reported success over an empty set.
+
+This is the third control this session to measure something adjacent to what it
+was said to measure (after #29, the self-test that never called the oracle, and
+#30, the h1 count taken over the deck rather than the document). The shape is the
+same each time: **an empty set is indistinguishable from a passing one unless the
+tool refuses to report on nothing.**
+
+Fixed by deriving the pack root instead of assuming it — **on the Summer 1 responsive branch,
+not on main.** Lessons main at `f326675f` still carries the parent-only rule (`packs_for()` with
+`Path(d).resolve().parent`) at `tools/easter/refresh_pack_checksums.py:120-126`; this correction
+records the defect and its fix, and the fix lands with the responsive re-pin pair, not with this
+ledger entry. Stated here because the first draft wrote "Fixed by…" as though it were already on
+main, which it is not:
+
+```python
+def pack_root_for(path: Path) -> Path:
+    """The nearest ancestor that carries a checksum file."""
+    start = Path(path).resolve().parent
+    for candidate in (start, *start.parents):
+        if sums_file(candidate):
+            return candidate
+        if candidate == ROOT:
+            break
+    return start
+```
+
+Three red proofs added to `CONTROL_IDS`, so the battery's `declared == fired`
+assertion covers them:
+
+| control | proves |
+|---|---|
+| `a-nested-member-finds-its-pack-root` | a file at `<pack>/<PATHWAY>/Summer_1/<week>/` resolves to `<pack>`, not to `<week>` |
+| `a-nested-member-has-its-row-refreshed` | and its manifest row actually moves — the fix is not merely a different return value |
+| `pack-root-search-stops-at-a-pack-with-no-manifest` | the walk terminates at `ROOT` rather than climbing out of the repository |
+
+Self-test 12/12 PASS, `declared == fired`.
+
+**Two further findings from the same work, recorded not bent.**
+
+*Manifests list more rows than there are files.* Each pack's `SHA256SUMS.txt`
+carries rows for delivery artefacts that are not published. This is why
+"regenerate the full SHA256SUMS", as first asked, would have silently dropped
+28 / 16 / 16 reviewed rows across the three packs. The docstring's own route —
+refresh the rows that exist, leave the rest — is the correct one, and ruling §2
+confirmed it.
+
+*CHANGELOGs edited after a refresh make the refresh stale.* The ruling-§3
+`_records` omission note was appended to all three pack CHANGELOGs **after** the
+manifests had been refreshed, which left three stale digests. Re-refreshed;
+`verify` OK, +0 / −0. Rule, added to the pack-landing list: **the manifest refresh
+is the last write before the commit, never the second-to-last.**
+
+### CORRECTION #33 — PR-green is not admission (2026-09-22)
+
+Lessons #644, the title-derivation fix, merged on a fully green PR head and turned
+**Education Pages publication** red on main at `4f19ac9e` — run `35714663331`, job
+`106703209657`:
+
+```
+CHANGED education-lessons/Science_Teesside/index.html
+CHANGED education-lessons/data/resource-sizes.json
+[error] Process completed with exit code 1
+```
+
+The all-file admission step refused, because both files are in the publication's
+**served set** and the Site's admission record does not admit them at their new
+bytes. A served-byte change needs a Site admission window BEFORE the Lessons PR
+merges. None was opened.
+
+**Why it was missed, stated exactly.** I classified #644 by what it was *about* —
+a title-derivation rule, its red proofs, a re-derived size table — and concluded it
+was tooling and records. It was not: `build_science_hub.py` writes
+`Science_Teesside/index.html`, which is served, and the size table beside it is
+served too. The classification was of the PR's *intent*, not of its *diff*.
+
+**And why PR CI did not catch it.** The publication workflow has no `pull_request`
+trigger; the admission step runs only on `push` to main. So every check on the PR
+head can be green while the merge is inadmissible. Sixteen green checks said nothing
+whatsoever about admission — 22 check runs on `7c5a5d23`: 16 SUCCESS, 3 skipped and 3 cancelled,
+the cancelled being a standalone run superseded by its caller, which is the very pattern this
+entry's own FINDING describes. (The first draft said fifteen. The count is beside the point either
+way — the publication has no `pull_request` trigger — but a number put on the record is a claim,
+and this one was not counted.) This is the fourth time this session a control was read
+as evidence for something adjacent to what it measures (after #29, the self-test that
+never called the oracle; #30, the h1 count taken over the deck rather than the
+document; #32, the pack-root search that reported success over an empty set).
+
+**RULED STANDING RULE (2026-09-23, ruling 2).** *Any PR whose diff touches a path in
+the publication's served set needs a Site admission window before merge, regardless
+of what the PR is "about". PR-green is never evidence for admission.* The runner
+asserts it — `served-set ∩ diff ≠ ∅` refuses the merge when no window is open — and
+it joins the pre-merge checklist.
+
+The sharper form of the lesson: **a gate that does not run on the PR cannot be
+satisfied by the PR being green.** Before merging, the question is not "is it green?"
+but "which gates does this merge face that this head has never run?"
+
+### FINDING (recorded, not built) — the watch and the superseded caller
+
+Ruling 3. `Watch main` was red on `4bc86c33` across five consecutive runs (1614–1618,
+02:32–10:10) and it is **not a product red**: its own measurement reads
+`6 PASS · 0 FAIL · 1 NO VERDICT`, and the single NO VERDICT is
+`Made by Matt cross-estate unification` run `35679100353`, `conclusion=cancelled`.
+
+That workflow runs both standalone and as the `workflow_call` target of
+`cross-estate-on-content.yml`, and declares `cancel-in-progress: true` on a group
+keyed by `github.event.pull_request.number || github.ref`. When the caller supersedes
+the standalone run, the standalone's record is `cancelled`, which the watch counts as
+"not coverage" by design — correctly, in general, since a cancelled run says nothing
+about the commit it was asked to judge.
+
+**The concurrency group is NOT to be touched** (ruled). The finding, for a later
+order: the watch should treat the caller's run of the same reusable workflow as the
+verdict for that path — or exclude a cancelled run that has a superseding caller run
+on the same head. Either way the content IS proved; it is proved under a different
+run id than the one the watch looks for.
+
+Worth noting in the watch's own defence: it prints
+*"one of which was a FALSE RED (run 32029976055). A sample this small is not a track
+record, and the write leg stays dry until it is."* It is a reporter in soak, and it
+told the truth about what it measured.
+
+### CORRECTION #34 — "a Site pin pair is FOUR lines" is right about the pair and wrong as a counting rule (2026-09-22)
+
+Correction #22 established that a Site pin pair is four lines, not two:
+`domain-split-verify.yml` ×2 and `education-publication.yml` ×2. That is correct,
+and it was earned — `tools/verify_split_live_publication.py::sources()` reads
+**only** `education-publication.yml` (line 111 opens that one file), so a window
+that moved only the `domain-split-verify.yml` pair built the candidate from the OLD
+Lessons tree against the NEW admission record.
+
+But the wording is unsafe **as a way of finding the lines**. Measured on Site main
+`25e613d9`: those two files carry **SIX** Lessons/Apps pin lines, not four. The two
+extra are both in `domain-split-verify.yml` and both are **frozen by design**:
+
+| line | pin | path | why frozen |
+|---|---|---|---|
+| 131 | `1a8e3b29` | `.sources/Previous-Lessons` | "the previously released Lessons pin for independent-release controls" — 721 commits behind main |
+| 144 | `95146202` | `.sources/Receiver-Lessons` | "the exact reviewed Glitch receiver candidate" — 691 commits behind main |
+
+Neither declares EQUAL; the lag control reports both as *"reported; this pin declares
+no equality"*. **Moving either would defeat the control it exists for** — a
+"previously released" pin that equals main is no longer previous. Repo-wide there are
+13 literal Lessons pins and 3 literal Apps pins, so counting is hopeless.
+
+**RESTATED RULE.** The moving pair is *the declared-EQUAL Lessons pin and its
+declared-EQUAL Apps companion, in both files* — four lines. **The test is the EQUAL
+declaration in the pin's own contiguous comment block, not the count, and not the
+file it sits in.** `tools/lessons_pin_lag_control.py` already prints
+`declared-EQUAL=yes` for exactly the right two Lessons lines; that output is the
+selector, and a window should derive the four from it rather than counting `ref:`
+lines.
+
+Two hard constraints on the edit, both red-proved rather than assumed:
+
+- `tools/verify_split_live_publication.py:119` is `require(len(found) == 1, …)`. Exactly one
+  checkout step per repository; a second Lessons or Apps checkout fails the
+  publication **closed**.
+- `tools/verify_split_live_publication.py:121-123` fullmatches the ref against the templated form.
+  A bare 40-char sha gives **no match** and `require()` raises. So pins 3 and 4 keep
+  their `${{ github.repository == '…' && github.sha || '<sha>' }}` wrapper and only
+  the **quoted fallback** is substituted. Pins 1 and 2 are bare and stay bare.
+
+### FINDING for the ruling-2 assertion (2026-09-23, ruling 4 — build after the window lands)
+
+The served set is `trees.education-lessons` in
+`domain-split/education-publication-admission.json`, **5739 paths** — the same record
+the publication's own all-file admission check reads. Tested against the real failure:
+of Lessons #644's 7 changed paths, exactly **2** intersect it —
+`Science_Teesside/index.html` and `data/resource-sizes.json`, the two the publication
+refused — and none of the five `tools/` files. The draft would have refused the merge.
+
+**But control (7) of the draft found a hole, and it should be fixed before the tool
+lands rather than papered over.** The rule "a served path is its Lessons repository
+path" is *nearly* true: 4 of 5739 are **publisher-generated** and have no Lessons
+source at all —
+
+```
+.nojekyll                               (digest is the empty-string sha256)
+assets/catalogue/primary-discovery.css
+assets/catalogue/primary-discovery.js
+primary/catalogue.json
+```
+
+`domain-split/primary_discovery.py:220-224` writes **three** of them at publish time
+(`primary/catalogue.json` at :220, and `assets/catalogue/primary-discovery.{css,js}` at :221-224,
+copied from the files beside the script). `.nojekyll` has a **different** writer —
+`domain-split/build_education.py:311`, `write(dest, '.nojekyll', '')`, inside the per-publication
+loop at :235-236 — which is why its digest is the empty-string sha256.
+
+For the *forward* direction this is harmless: a path with no Lessons source can never
+appear in a Lessons diff, so it cannot be missed. **The real risk is the reverse.**
+`primary/catalogue.json` is *derived from Lessons catalogue data*, so a Lessons change
+could move its built bytes while the changed Lessons path itself is not in the served
+set — the diff would look clean and the publication would still refuse. The same shape
+of risk applies to any generator whose output the publisher creates rather than reads
+from the repo.
+
+Not a reason to weaken the tool; a reason to state its limit in its own docstring and
+add a control for it. The honest claim the tool may make is: *"this diff touches N
+served paths"*, never *"this merge is admissible"*. The estate's derive-and-pin checks
+(`build_science_hub.py --check`, `resource_sizes.py --check`) already hold committed
+generator output equal to its derivation, which is what keeps the common case sound.
+
+**When the tool is built it needs: the four generated paths named explicitly so the set
+cannot grow silently, a control asserting every OTHER served path is a Lessons
+repository path, and a control over the generated-from-Lessons case above.**
+
+### STANDING FORMS adopted 2026-09-23 (rulings 1–3 on the window)
+
+**1. The pin selector (correction #34 adopted as the standing form of #22).** The pins a
+window moves are the ones `tools/lessons_pin_lag_control.py` prints `declared-EQUAL=yes`
+for — never a count, never "the four in those two files". `.sources/Previous-Lessons`
+(`domain-split-verify.yml:131`) and `.sources/Receiver-Lessons` (`:144`) are frozen by
+design and are never moved. The pre-push battery uses the lag control's own output as
+the selector.
+
+**2. The admission derivation.** Admission digests are of **built** bytes, not repository
+bytes — the publisher injects usage furniture, so the Science hub is 342316 in the Lessons
+repo and **344517** built — a 2201-byte delta, 2 furniture references published against 0 in
+source — while `data/resource-sizes.json` is published verbatim. Therefore:
+
+  - build the education tree at BOTH pins, in the workflow's own order
+    (`build_publications.py` then `build_education.py`);
+  - **before editing anything**, verify the old-pin build reproduces the CURRENT second
+    half of each transition pair — that anchors the pair instead of assuming it;
+  - the new pair is `[what the old pin built, what the new pin builds]`, and the
+    superseded half is dropped.
+
+**3. Record edits keep the file's own encoding.** `json.dumps(ensure_ascii=False)` on
+`education-publication-admission.json` un-escapes every `\uXXXX` in its 54-entry
+`reviewSources` log: a 47-line reformat around the 5 lines that matter. **A reformat-only
+diff is a defect**, not cosmetic — it hides the real change and defeats review. Dump with
+the encoding as found.
+
+The through-line of all three, and of corrections #29, #30, #32, #33 and #34: *the thing
+that measures is not always the thing you think it is.* A count is not a selector. A
+repository digest is not a built digest. A green PR is not an admitted merge. Each time,
+the fix was to go and look at what the code actually reads.
+
+### CORRECTION #35 — the pre-push battery was assembled from the change, not the gate set (2026-09-22)
+
+Site window #428 went red on its own PR at `ee416253`: *"Gates are proven red, not just
+green"*, 1 of 47, **`s10-workflows-reference-no-path-that-does-not-exist`**. Reproduced
+locally in one command:
+
+```
+[FAIL] 2 reference(s) point at a path that does not exist:
+  - domain-split-verify.yml:88  -> data/resource-sizes.json                 (never existed)
+  - domain-split-verify.yml:126 -> tools/verify_cross_estate_unification.py (never existed)
+```
+
+Both were lines I had written minutes earlier. s10 scans workflow files for `tools/`,
+`assets/` and `data/` references and requires each to name a file in the **Site**
+repository; mine named a Lessons path and a Lessons/Apps path, unqualified.
+
+**The part worth keeping.** s10 is exactly the check that `c0130703` on
+`claude/fin1-master-order-9k91ej` was written to satisfy, on 2026-09-19 — *"Name the
+three Lessons files repo-qualified: s10 refused them as Site paths"*. That morning I
+surveyed the branch and correctly found the commit **superseded**: main no longer carries
+the comment block it fixed. Then within the hour I re-introduced the same defect in new
+prose. **"The comment is gone" is not "the rule is gone."** The census answered one
+question and I acted as though it had answered two.
+
+**RULED, 2026-09-23.** *Superseded ≠ retired. A commit being superseded says nothing
+about whether the rule it satisfied is still live. Census questions are answered one at
+a time.*
+
+**RULED, 2026-09-23.** *A window's pre-push battery is the repository's own gate battery
+— every `--check` its CI runs on that path set — not a subset chosen by what the change
+is about.* Mine ran the lag control, the admission and the separation check: the gates
+the window's CONTENT touches. It never ran the Site's own gate battery, which is what a
+Site PR is graded on. `tools/check_workflow_paths.py` joins the Site-window battery, and
+the rule applies equally to Lessons and Apps windows and carriers.
+
+This is correction #33 one level up. There, a gate that does not run on the PR could not
+be satisfied by the PR being green. Here, a gate that *does* run on the PR was never run
+before the push because it did not look like part of the subject. Both are the same
+error: **choosing what to measure by what the work is about, instead of by what will
+judge it.**
+
+**RULED, 2026-09-23.** *Comment prose naming a `tools/`, `assets/` or `data/` path is
+repo-qualified, with the reason stated inline.* Each fixed line now says why it carries
+the prefix — neither path exists in the Site repo, and the gate copy lives in Lessons and
+Apps, never there — so the next editor does not strip it back:
+
+```
+data/resource-sizes.json                 -> Lessons/data/resource-sizes.json
+Science_Teesside/index.html              -> Lessons/Science_Teesside/index.html
+tools/verify_cross_estate_unification.py -> Lessons/tools/verify_cross_estate_unification.py
+```
+
+`Science_Teesside/index.html` was not among the two s10 named — it scans those three
+prefixes only — but it is the same class and was qualified rather than left to be caught
+by a later window.
+
+### CORRECTION #36 — the lag control's 80-line scan ceiling drops a pin silently (2026-09-22)
+
+Found by adversarial verification of the #428 derivation, not by any check.
+
+`tools/lessons_pin_lag_control.py::find_pins()` scans forward from each
+`repository: MattRoper1977/...` key only as far as
+`for j in range(i + 1, min(i + 80, len(lines)))`. **If a `ref:` sits more than 79 lines
+below its `repository:` key, the pin is dropped from the population with no RED and no
+message.**  (`range(i + 1, min(i + 80, len(lines)))` last visits `j = i + 79`, so distance 79 is
+still found and distance 80 is the first dropped; margin below is therefore 79 − distance.) The tool then reports PASS over a smaller population than the file contains,
+and says nothing about the difference.
+
+This is not hypothetical, and it is dated. Measured at Site `13845055`:
+
+| `repository:` key | repo | distance to its `ref:` | margin |
+|---|---|---|---|
+| `domain-split-verify.yml:29` | Lessons | **65** | **14** |
+| `domain-split-verify.yml:99` | Apps | 32 | 47 |
+| `education-publication.yml:44` | Lessons | 51 | 28 |
+| `education-publication.yml:100` | Apps | 34 | 45 |
+
+All six pins are inside the ceiling today, so #428's `RESULT: PASS (13 pins controlled)`
+is real. But that first pin sits under a 64-line provenance block, and **every window
+adds about seven lines to it** — this one added seven. At roughly two more windows the
+Lessons pin that P4 and P5 exist to control falls out of the population, and the control
+keeps reporting PASS.
+
+The irony is exact: the provenance comments are written so the next window can read what
+moved, and it is their growth that would blind the control.
+
+**RULED 2026-09-23 (1) — FIX, its own PR after the carrier.** Scan from each
+`repository:` key to the NEXT `repository:` key (or the end of the block); **no fixed
+ceiling**. RED when a `repository:` key has no `ref:` within its block. Red proofs:
+
+1. a `ref:` placed 120 lines below its key **is found**;
+2. a block with no `ref:` **FAILs** rather than passing silently;
+3. the population count is asserted (**13**), so a silent drop reds.
+
+**Provenance blocks stay exactly as they are — the tool adapts to the file, not the file
+to the tool.** Trimming history to fit a scan window would trade a real record for a
+tool's convenience, which is the wrong way round.
+
+### ADOPTED 2026-09-23 (2) — the served-set range
+
+The served-set intersection is measured over **the moved pin's range** (old pin .. new
+pin), never parent..head. For #428 the two differ: `4bc86c33..4f19ac9e` is 7 paths,
+`1e668ee4..4f19ac9e` is 8 (it also spans the #643 carrier). The served intersection is
+**identical — the same two** — so the window is unaffected, but the method was wrong and
+would not always be harmless.
+
+### ADOPTED 2026-09-23 (3) — the ruling-4 tool gains an ADDITIONS limb
+
+`served ∩ diff` **structurally cannot see an added path**: a new path is by definition
+not in the served set, and the publisher raises `UNREVIEWED` for exactly that case. So
+the intersection rule is not a gate for additions at all — and **Autumn 2 batch 1 of
+PASS C is additions**. The tool gains a second limb: any added path under a pinned
+publication tree needs an admission (a window carrying an `ARRIVING` or transition
+entry) before merge, and is refused otherwise. The docstring names **both** limbs and
+what neither proves.
+
+Generated-stub paths — the ~37 game sources whose published bytes are stubs derived from
+the route rather than copied — are excluded **by the registry's own stub marker, never by
+a hand-maintained list**. Under an advisory tool over-flagging them is harmless; under a
+refuse-merge rule it would cost 37 unnecessary windows.
+
+### SEQUENCING, NAMED BEFORE IT HAPPENS (ruling 4)
+
+**A red on Lessons main between #428 merging and the carrier landing is the window not
+yet applied, not the window failing.** `education-publication.yml:39` resolves
+`.sources/Site` from `builder_ref`, and Lessons main still pins that at the OLD Site sha
+`25e613d9`. Until the carrier moves it, the next publication on Lessons main reads the
+OLD admission record and emits the identical two `CHANGED` lines. The carrier is what
+clears main. Recorded here in advance so the red is read correctly when it appears.
+
+### RULED 2026-09-23 — the find_pins fix, and what it will find
+
+Ruling: remove the 80-line ceiling (scan each `repository:` block to the next
+`repository:` key or block end); add the category **"floating by design"** for a block
+with no `ref:`, admitted ONLY when the block's own comment declares it floats AND the
+workflow records what it resolved. A no-ref block WITHOUT that declaration is **RED**.
+Red proofs: townlife's block listed and PASS; the same block with the declaration
+removed FAIL; a `ref:` 120 lines down found; population asserted (13 pinned + N
+floating).
+
+**Measured before building, so the PR lands with its consequences known.**
+
+*The ceiling removal changes nothing today.* 19 Lessons checkout steps resolve a `ref:`
+with the ceiling and 19 without — no pin is currently beyond it. The fix is purely
+preventive; it cannot alter any current verdict. What it prevents is dated: the Lessons
+pin in `domain-split-verify.yml` had **14 lines of margin** under a block every window
+grows by ~7.
+
+*Exactly two Lessons checkout steps carry no `ref:` at all*, and they are opposite cases:
+
+| step | declares? | verdict under the ruling |
+|---|---|---|
+| `townlife-verify.yml:78` | **yes** — *"They are checked out here instead, and the resolved commit is recorded as evidence."* | **floating by design**, listed with its declaration quoted |
+| `serve-witness.yml:31` | **no comment at all** | **RED** |
+
+`serve-witness.yml` is the model of why the clause is right. Its job is to be a byte
+witness over four publications, and it checks out **both** Lessons and Apps with
+`fetch-depth: 1` and no ref and no word about it — so the witness's own subject is
+whatever the default branch happened to be at run time, unrecorded. A witness that does
+not record what it witnessed is not evidence. The tool controls Lessons pins only today,
+so the Apps checkout beside it is out of its scope but the same shape; noted here rather
+than silently passed over.
+
+### NEXT-ORDER ITEM — the publication job's duration headroom is 3m26s
+
+`Complete separated publications` (domain-split-verify.yml) carries
+`timeout-minutes: 35`, and its own comment records the basis:
+
+> *"NAV-2 expands the owner/header matrix; the preceding full run took 24m09s.
+> Retain every assertion and allow the complete matrix to finish."*
+
+Measured on Site #428 at `13845055`, run `35718564767` job `106715864772`:
+
+| | |
+|---|---|
+| total | **31m34s** (10:55:15 → 11:26:49) |
+| step 24, *Mount and exercise the actual education publication* | **22m28s** (11:04:21 → 11:26:49) |
+| steps 1–23 together | 9m06s |
+| headroom under the cap | **3m26s** |
+
+So the job now takes **31% longer than the figure its own timeout was set from**, and a
+single step accounts for 71% of it. Nothing in this window can explain the growth — the
+diff is three files of pin SHAs, comment prose and two JSON digests, none of which the
+browser mount reads. It is the served tree getting larger: every landing adds pages for
+the mount to walk.
+
+It did not time out and no re-run was spent. Recorded now, while it is a measurement
+rather than an incident, because the next few landings will consume the remaining 3m26s
+and the failure mode is a **timeout**, which looks like a red on whatever window happens
+to be open when the limit is crossed — not on the landing that actually pushed it over.
+
+## L50 — Title derivation: the window that admitted it, and the line that actually cleared main (2026-09-22)
+
+Window opened Site #428, closed by publication `35723573309`.
+
+### Mains after the window
+
+| repo | main | how |
+|---|---|---|
+| Site | `e52667a1` | squash merge of #428, the admission window |
+| Apps | `5a1b6fd6` | squash merge of #165, the gate-copy companion (merged FIRST, L31) |
+| Lessons | `f326675f` | squash merge of #645, the pure carrier |
+
+### Gates observed, by run id
+
+| gate | run | conclusion |
+|---|---|---|
+| **Education Pages publication (the closer)** | **35723573309** | build SUCCESS + deploy SUCCESS |
+| — its build job | job `106731808255` | SUCCESS |
+| — step 9, *Build and verify separated publication trees* | | SUCCESS 11:49:42–11:52:52 |
+| — step 10, *Prove all-file admission before packaging* | | SUCCESS 11:52:52–11:55:35 |
+| — its deploy job | job `106734094933` | SUCCESS, `deploy-pages` 11:56:43–11:57:11 |
+| FieldOps P2, the sweep, and the serve proof | 35723572587 | SUCCESS |
+| UX2 gates | 35723572605 | SUCCESS |
+| Made by Matt cross-estate unification | 35723572638 | SUCCESS |
+| Apps — Verify LundyLoop Professional OS | 35722335701 | SUCCESS |
+| Apps — cross-estate unification | 35722336107 | SUCCESS |
+| Apps — Education Pages publication | 35722336327 | SUCCESS |
+| Site window #428, on `13845055` | 35718564767 job `106715864772` | SUCCESS (7 + 1 skipped by design) |
+
+Heads green before merge, by count: **Lessons #645** 17 checks, 15 SUCCESS + 2 skipped, 0 FAIL
+(runs 35722089015 / 35722090334 / 35722091142); **Apps #165** 9 checks, 5 SUCCESS + 4 skipped
+(runs 35722043273 / 35722043286 / 35722043351).
+
+### The sequencing flag, named in advance and then observed exactly
+
+L49 recorded, *before* it happened, that a red on Lessons main between #428 merging and the
+carrier landing would be **the window not yet applied, not the window failing**. It happened and
+it read correctly: `Watch main` failed on `4f19ac9e` at runs `35723060159` and `35722910285`,
+because `education-publication.yml:39` resolves `.sources/Site` from `builder_ref` and Lessons
+main still pinned the OLD Site sha. The carrier moved that line; `Watch main` is **SUCCESS on
+`f326675f`** at runs `35724486838` and `35725160189`.
+
+**CORRECTED before this entry landed, by adversarial verification of my own draft.** The first
+version of this paragraph ended *"The carrier moved that line; `Watch main` is SUCCESS on
+`f326675f` at runs 35724486838 and 35725160189"*, and that was two errors in one sentence. The
+sentinel looked at the carrier sha **six** times, and the full record is:
+
+| run | # | created | head | conclusion |
+|---|---|---|---|---|
+| `35722910285` | 1624 | 11:42:00Z | `4f19ac9e` | failure |
+| `35723060159` | 1625 | 11:43:33Z | `4f19ac9e` | failure |
+| — carrier `f326675f` lands 11:49:00Z — | | | | |
+| **`35723994270`** | **1626** | **11:53:32Z** | **`f326675f`** | **failure** |
+| `35724337469` | 1627 | 11:57:16Z | `f326675f` | success |
+| `35724429936` | 1628 | 11:58:16Z | `f326675f` | success |
+| `35724486838` | 1629 | 11:58:55Z | `f326675f` | success |
+| `35725160189` | 1630 | 12:05:45Z | `f326675f` | success |
+| `35726418373` | 1631 | 12:18:43Z | `f326675f` | success |
+
+So: **one red on the carrier sha, then five greens** — and the two runs I named were the *third and
+fourth* successes, not the flip.
+
+What the carrier did do is exactly what L49 predicted, and run `35723994270` is the evidence for it:
+4m32s after the carrier landed it reported `2 PASS · 0 FAIL · 1 NO VERDICT · 3 pending`, the two
+admission FAILs on `4f19ac9e` (`35714663331`, `35714662481`) **gone**. It was still RED for a
+different reason — `[RED] 0 failing · 1 without a verdict` — the NO VERDICT being
+`Science teaching pack downloads 4f19ac9 · run 35714843484 · conclusion=skipped`, a skipped run on
+the *previous* head, while `Education Pages publication f326675 · run 35723573309` was still
+`status=in_progress`. `Science teaching pack downloads` then completed green on the carrier sha at
+run `35724337543` (11:57:16Z), and the sentinel went green on its next look.
+
+The estate's own red sentinel is still what says the STOP-R is closed — but it says it in six looks,
+one of them red, not in the single clean flip my draft implied. **A sentinel's verdict is its whole
+sequence on a sha, not the first green you find in it.** Writing down only the greens on the sha you
+are claiming is clean is the same fault as counting a population by the members you went looking
+for.
+
+### Carrier purity
+
+`25e613d9` → `e52667a1`, OLD derived from the carrier line in the file, NEW from `git rev-parse`
+on the Site checkout; neither typed. Caller digest `8d07252cc0fd` → `fe261c02c467`; both gate
+copies asserted byte-identical at `eb470772ae49`. L38, measured before the push:
+
+```
+2 changed, 5739 served, 0 served among the changed, 0 addition(s) in a published folder
+[PASS] the carrier changes nothing the publication serves
+```
+
+### Served proof — PASS
+
+Built locally from the same three trees the Lessons-triggered publication checks out, each
+verified equal to its landed commit **by tree hash before building** (derive, don't type):
+
+| tree | commit | tree hash |
+|---|---|---|
+| Site | `e52667a1` | `93c6b273` |
+| Lessons | `f326675f` | `dacff54d` |
+| Apps | `ecc78fff` | `21e75ada` |
+
+The Apps tree comes from the **Site pin**, not Apps main: a Lessons-triggered publication resolves
+its Apps checkout from `education-publication.yml`, so building against Apps main would have been
+a different publication from the one that ran. `build_education.py` exited 0 and produced
+**5739** education-lessons files — the served-set size the admission record declares.
+
+- Structure / population / rule / size table: **11 checks, 0 FAIL**.
+- Chromium 390 × 844 DPR 3 on the published bytes: **9 checks, 0 FAIL**.
+- **0** cards titled from a task slide (the defect #644 fixed, on the served bytes).
+- Every lesson-card render equals its deck's own title-slide heading, re-run through the
+  **shipped** `tools/catalogue/title_slide.py` rather than a re-implementation; **0** mismatched,
+  **0** card targets absent.
+- Size row `342316` equals the **source** hub byte count; the published hub is `344517`, and the
+  `2201`-byte delta is publisher-injected usage furniture (2 furniture refs published, 0 in
+  source). The size table measures source bytes, not served bytes.
+
+### CORRECTION #37 — a wait is only a wait if the turn holds for it (2026-09-22)
+
+Driving #645 to green, I read the container clock as frozen: eleven GitHub polls returned almost
+no movement while `date` advanced about five minutes across roughly forty-seven minutes of issued
+`sleep`. I recorded it as a virtualised clock.
+
+It was not. Measured directly — `date; sleep 60; date` → `11:38:27` then `11:39:27` — **sleeps
+advance the clock 1:1**. What actually happened is that I launched each wait as a *background*
+task and then kept issuing tool calls instead of holding for its completion notification. The
+waits ran; I never waited. All eleven polls landed inside the first five real minutes.
+
+The error is the same shape as #29, #30, #32 and #33, in a new place: **I diagnosed the
+environment instead of my own use of it.** The instrument (`sleep`) did exactly what it says;
+what was wrong was the claim I attached to its output. A measurement that contradicts the
+documented behaviour of a primitive deserves one direct test of the primitive before it becomes a
+finding about the platform.
+
+**Rule:** a wait is only a wait if the turn holds for its notification. Polling a remote gate
+without holding is not observation, it is repetition.
+
+### CORRECTION #38 — "180 cards" was a row count wearing a card count's name (2026-09-22)
+
+#644's commit message states *"Hub diff: one line, 180 cards before and after"*. Measured on the
+served hub, the number is right and the noun is wrong. The correct statement is **180 rows /
+184 cards**:
+
+| measured on the published `Science_Teesside/index.html` | |
+|---|---|
+| distinct shelf rows in `assets/catalogue/science-shelf.json` | **180** |
+| `article.card` elements rendered | **184** |
+| — of which lesson cards | 181 |
+| — of which pathway landing cards (`BUILD/GROW/LAUNCH · Autumn 1 · Science`) | 3 |
+
+181 lesson-card renders of 180 rows, because one row renders in **two** week slots:
+`Science_Teesside/Launch/W17-W26_2026-27/SCI_L_W18L2_Genetic_Engineering_Change_Test_Decide.html`
+appears in both `Spr1 W3` and `Spr1 W4`. Set membership is exact in both directions — 0
+served-but-not-in-shelf, 0 shelf-but-not-served — so nothing is missing or extra; one row is
+placed twice.
+
+**Pre-existing, and proved so rather than assumed:** #644's entire diff to that file is **one
+line**, and that line is a title. The double placement is untouched by this window. Raised, not
+bent — no blocklist, no check change, no reclassification.
+
+The ledger carries **180 rows / 184 cards** from here on. The general fault is the one this
+session keeps meeting: *a count is not a selector, and a population is not a rendering.* 180 is
+the shelf's population; 184 is what the page draws from it.
+
+### Four errors of my own in the served proof, each caught by my own controls
+
+None was a product finding; all four were my assumptions about the artefact rather than
+measurements of it.
+
+| # | what I assumed | what the document said |
+|---|---|---|
+| 1 | the card selector was `.lesson-card` | 0 matched; the served class is `article.card`, derived off the document |
+| 2 | `resource-sizes.json` was keyed at top level and measured served bytes | rows live under `sizes`, and the table measures **source** bytes |
+| 3 | education-lessons is served at the origin root | its own links are root-absolute `/Lessons/…`, so the mount is education-site at `/` and education-lessons at `/Lessons/` |
+| 4 | a URL-less console line was a second failed resource | it is an echo of the one request that did carry a URL |
+
+Assumption 3 is the instructive one. Mounted wrongly, the proof reported a **404 on
+`/assets/education-palette.css`** and I was one step from filing it as a cross-publication asset
+defect. The sweep that settled it was a population question, not a spot check: of **93** distinct
+root-absolute references in the published tree, **91** did not resolve under my mount — only `/`
+and `/assets/mbm-tokens.css` did — and 64 of the 91 were `/Lessons/...` paths that obviously do
+exist. A single missing asset looks like a defect; 91 missing assets is a mount that is wrong.
+(The first count I wrote here was 91/89: my scan dropped every reference carrying a `#` or a `?`.
+Corrected by re-measuring the whole population rather than the subset my regex happened to keep —
+which is the very fault this paragraph is about.) Under the correct mount the palette is
+the **Site** publication's asset at the origin root, and it loads — asserted positively via
+`document.styleSheets`, not by absence of an error.
+
+**Rule, of the same family as #35:** when a check reports a failure, measure the *population* of
+failures before naming the cause. One failure invites a story; the distribution refutes it.
+
+### Environment, not product
+
+`check_education_publication_admission.py --build-control` could not complete in this container:
+it copies a second full publication tree into `/tmp` and the disk was exhausted mid-copy
+(`OSError: [Errno 28]`). The primary build — which is where admission actually runs, at
+`build_education.py:343` — exited 0. CI ran the same control green as **step 10** of
+`35723573309`. Recorded as a container limit, not reported as a product result, and not counted
+as a pass.
+
+### The draft of this entry was wrong in thirteen places, and none of them was found by a check
+
+Before L49 and L50 were committed, every factual claim in both was put to an adversarial
+verification pass: six independent verifiers (L50 run ids, L49 run ids, commits and tree hashes,
+served-proof numbers, L49's code and file claims, internal coherence), each finding then
+re-adjudicated by a second, independent agent that had to reproduce the defect from primary sources
+before it counted. **Twenty findings were raised and upheld; deduplicated, thirteen distinct
+defects in my own drafting.** I then re-verified the five most consequential myself rather than
+taking the report on trust — all five held.
+
+| # | the draft said | the measurement says |
+|---|---|---|
+| 1 | `Watch main` flipped to SUCCESS on `f326675f` at two named runs | six looks at that sha: one **red** (`35723994270`) then five greens; the two I named were the third and fourth |
+| 2 | the named admission step *"refused on all three prior runs"* (listing four) | that step was **skipped** on all four; exactly one run (`35672816193`) reached admission, in-build; three died upstream at `usage_discovery.py` |
+| 3 | step 24 ran 22m28s, 71% of the job | **21m35s**, **68%** — 22m28s folded steps 25–59 into it |
+| 4 | headroom 3m26s, carried as a standing figure | run-variable: the same job re-ran at **27m44s / 7m16s** on `e52667a1` |
+| 5 | "Fifteen green checks" | **sixteen** (22 runs: 16 SUCCESS, 3 skipped, 3 cancelled) |
+| 6 | a `ref:` more than **78** lines down is dropped; margins 15/48/29/46 | **79**; margins **14/47/28/45** |
+| 7 | the Science hub is 342392 built | **344517** built (2201-byte furniture delta) |
+| 8 | `primary_discovery.py:220-221` writes all four generated paths | it writes **three** at :220-224; `.nojekyll` is `build_education.py:311` |
+| 9 | 91 root-absolute refs, 89 unresolved | **93** and **91** — my scan dropped every ref carrying `#` or `?` |
+| 10 | CORRECTION #34's two constraints cite `education-publication.yml:119` / `:121-123` | the file is `tools/verify_split_live_publication.py`; the line numbers were right |
+| 11 | "Fixed by deriving the pack root instead of assuming it" | **not on main** — `packs_for()` still takes `.parent` at `refresh_pack_checksums.py:120-126` |
+| 12 | `CORRECTION #22` was free | already spent 2026-09-21 in `edb27b0c` (#612) — collision recorded above |
+| 13 | (L50 corrected #644's *"180 cards"*) | **180 rows / 184 cards** — CORRECTION #38 above |
+
+Two of these are worse than slips. **#11 asserted a landed fix that is not landed** — the exact
+shape of correction #31, a claim about the tree made from the branch I happened to be looking at.
+**#1 and #2 both reported a gate's verdict by the runs that suited the story**: in #1 I listed only
+the greens on the sha I was calling clean, in #2 I credited a step with a refusal it never
+performed while its actual runs were skipped. That is the session's recurring fault — *the thing
+that measures is not always the thing you think it is* — arriving now in the ledger itself, which
+is the one artefact whose whole job is to be true.
+
+**The honest conclusion is not that the verification worked.** It is that a ledger written from
+memory of a session, hours after the runs, reproduces none of the discipline the session applied to
+the code. Nothing here was caught by a check, because no check reads this file. **RULE, adopted:
+every ledger entry's run ids, counts and code references are re-derived from primary sources before
+the entry is committed — the entry is evidence, and evidence is measured, not recalled.**
+
+### Standing, carried forward
+
+- The publication job's duration headroom is still the next-order item, but the **number is
+  run-variable and L49's 3m26s is one run's measurement, not a property of the tree.** The same
+  job ran twice inside this window on identical content: Site #428 on `13845055`, run
+  `35718564767` job `106715864772`, **31m34s** (headroom 3m26s, step 24 21m35s); and Site main
+  `e52667a1`, run `35721924375` job `106726562965`, 11:31:32 → 11:59:16 = **27m44s** (headroom
+  **7m16s**, step 24 **20m17s**). Two runs 36 minutes apart differ by 3m50s. Carry the *concern*
+  forward — step 24 dominates and the cap is 35m — and re-measure on the next window's Site run
+  rather than restating a figure.
+- The `find_pins` ceiling fix (L49, ruled) is the next PR after this ledger lands.
