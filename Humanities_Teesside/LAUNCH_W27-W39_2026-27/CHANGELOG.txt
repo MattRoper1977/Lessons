@@ -187,3 +187,74 @@ rewritten; every other file in this pack is the v3 byte for byte.
 
 The root SHA256SUMS.txt in this pack has been re-cut for exactly these files and this
 CHANGELOG; every other row is the v3 row. It still covers the complete pack.
+
+
+==============================================================================
+Implied <head> and <body> written down on 20 served pages - LAUNCH Humanities, Summer 1
+Applied 2026-09-22 by Claude on Matt Roper's STOP-R2 ruling, option (a).
+==============================================================================
+
+WHY. The estate publishes these pages through an adapter that injects its usage
+furniture, and that adapter finds its insertion points by looking for the literal
+strings </head> and </body>:
+
+    ValueError: Usage adapter needs an HTML shell: .../START_HERE.html
+
+These pages were never fragments. Each one opens
+
+    <!doctype html><html lang="en-GB"><meta charset><meta viewport><title><style>
+
+and closes </html>. In HTML5 that is a WHOLE document: <head> and <body> are both
+implied, and every browser parses it correctly. What the pages lacked was only the
+EXPLICIT closing tags the adapter greps for.
+
+WHAT WAS NOT DONE. An earlier corrective wrapped these pages in a second document.
+That was withdrawn before it landed: it nested a whole document inside another, two
+doctypes and two </html> per page, which the adapter's substring test cannot see.
+
+WHAT WAS DONE. tools/hum/explicit_document_tags.py (sha256 9fa0d799133e5975)
+writes down the tags the page already implies, and inserts nothing else:
+
+    <head>          immediately after the page's own <html ...> tag
+    </head><body>   immediately before the first element that is not head content
+    </body>         immediately before the page's own </html>
+
+Not one byte of content moves. The tool reports the offset of every insertion and
+its own checker undoes exactly those, demanding the original back, then asserts that
+no document furniture was duplicated or lost. A page that already writes head and
+body is returned byte-identical, so running the tool twice is running it once.
+
+THE ORACLE. Chromium - the parser that actually serves these pages - loads the bytes
+before and after and compares the doctype, head.innerHTML, body.innerHTML, the title
+and the element count. All seventy served pages in the three trees parse to an
+IDENTICAL document before and after. lxml cannot be that judge and is red-proved
+unusable for it: libxml2 does not implement HTML5's head/body inference, so on a real
+Knowledge Organiser it puts the first <button> inside <head> and never opens <body>.
+
+The eighteen signed lesson files are untouched, and so are the twenty pages that
+already wrote their tags down.
+
+    page                                                        sha256 before -> after        bytes
+
+    LAUNCH/Summer_1/W01/LAUNCH_SU1_W01_Knowledge_Organiser.html d862f88d686d -> 7be6562956e1    1634 ->   1660
+    LAUNCH/Summer_1/W01/LAUNCH_SU1_W01_Pupil_Resources.html     0613f4dffa05 -> 4762c9e4d778   13348 ->  13374
+    LAUNCH/Summer_1/W01/Sources_and_checks.html                 683871b91cd5 -> 29877c91d174     643 ->    669
+    LAUNCH/Summer_1/W02/LAUNCH_SU1_W02_Knowledge_Organiser.html 730f0c80ef11 -> 2940b779de56    1605 ->   1631
+    LAUNCH/Summer_1/W02/LAUNCH_SU1_W02_Pupil_Resources.html     6cb2a4919b79 -> 74b0fa6f2f5b   11644 ->  11670
+    LAUNCH/Summer_1/W02/Sources_and_checks.html                 7b182cf27716 -> 3bfdb8be74a4     643 ->    669
+    LAUNCH/Summer_1/W03/LAUNCH_SU1_W03_Knowledge_Organiser.html 6d246c56b418 -> 4e6f5a54ad4a    1608 ->   1634
+    LAUNCH/Summer_1/W03/LAUNCH_SU1_W03_Pupil_Resources.html     307992c83b67 -> d959fb5482f9   12016 ->  12042
+    LAUNCH/Summer_1/W03/Sources_and_checks.html                 d27c1abab08c -> 81c9c9ff9dcc     643 ->    669
+    LAUNCH/Summer_1/W04/LAUNCH_SU1_W04_Knowledge_Organiser.html 568b6859ec73 -> a6e0134a5bde    1604 ->   1630
+    LAUNCH/Summer_1/W04/LAUNCH_SU1_W04_Pupil_Resources.html     c5abbe12dac5 -> 4d565463075d   12134 ->  12160
+    LAUNCH/Summer_1/W04/Sources_and_checks.html                 79df232958df -> b05876ddf7f8     643 ->    669
+    LAUNCH/Summer_1/W05/LAUNCH_SU1_W05_Knowledge_Organiser.html 5eb726de1965 -> ab7f110871e6    1614 ->   1640
+    LAUNCH/Summer_1/W05/LAUNCH_SU1_W05_Pupil_Resources.html     2772d82b2a3c -> 657e678228dd   12078 ->  12104
+    LAUNCH/Summer_1/W05/Sources_and_checks.html                 9381f9c0e53a -> dc2bb0e06c96     643 ->    669
+    LAUNCH/Summer_1/W06/LAUNCH_SU1_W06_Knowledge_Organiser.html 73fefe67a692 -> 45f2e1ea5821    1622 ->   1648
+    LAUNCH/Summer_1/W06/LAUNCH_SU1_W06_Pupil_Resources.html     98a2e27473cf -> b18e2e2f1060   12537 ->  12563
+    LAUNCH/Summer_1/W06/Sources_and_checks.html                 589dbf5e4f08 -> fd389ef2d42c     643 ->    669
+    START_HERE.html                                             d4695400c63c -> 297f2674532d   10730 ->  10756
+    Sources_and_checks.html                                     080500a19618 -> fff2824ac1fa   17691 ->  17717
+
+The root SHA256SUMS.txt is re-cut for exactly these pages and this CHANGELOG.
