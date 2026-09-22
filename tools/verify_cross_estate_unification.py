@@ -1338,7 +1338,10 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # the squash merge of Site #431, so education-pages.yml changed again and so does its digest.
 # This is the second cut in one fold and it is the cost the standing rule exists to avoid:
 # bump the carrier ONCE, LAST, at a SHA that already admits every mover.
-    "lessons": "ac4f2e64d76e1cb5c765b9e782def0d96568c4dd936ddf01d634ae6841c8722c",
+# Re-cut 2026-09-22 (the Science hub's generation order, ruling on the S02 STOP): the carrier
+# moves to Site main bb283643, the squash merge of Site #433, bumped once and last. Digest
+# derived with sha256 over the edited file, never transcribed.
+    "lessons": "ba73217d07c265b9f5209d0612c57186c7880d441a52019c556494387cc9b3ce",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.
