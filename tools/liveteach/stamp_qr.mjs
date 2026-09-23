@@ -33,7 +33,26 @@ function check(files) {
 }
 
 const MODE = process.argv[2] || '';
-if (MODE === '--check') {
+/* Find-out-more posters (ORDER LW-4 §2b): stamp each POSTER.html's {QR:…} placeholder with a
+   static code for the page's live URL, from this same encoder source. --posters-check re-derives
+   every region and exits 1 on drift, a missing region, or a placeholder left unstamped. The
+   decode proof is qr_gate.mjs --posters (an independent decoder), not this. */
+if (MODE === '--posters' || MODE === '--posters-check') {
+  const P = await import('./poster_qr.mjs');
+  const list = P.posters();
+  const bad = [];
+  for (const rel of list) {
+    const p = path.join(ROOT, rel);
+    const html = fs.readFileSync(p, 'utf8');
+    let next;
+    try { next = P.stamp(html, P.liveUrl(rel)); } catch (e) { bad.push(rel + ': ' + e.message); continue; }
+    if (MODE === '--posters') { if (next !== html) fs.writeFileSync(p, next); console.log('[STAMPED] ' + rel); }
+    else if (next !== html) bad.push(rel + ': ' + (P.readRegion(html) ? 'POSTER QR REGION DRIFTED' : 'NOT STAMPED'));
+  }
+  if (!list.length) bad.push('no posters found under ' + P.TREE + '/');
+  if (bad.length) { bad.forEach(b => console.log('[FAIL] ' + b)); process.exit(1); }
+  console.log('[OK] ' + list.length + ' poster QR regions ' + (MODE === '--posters' ? 'stamped' : 'match qr_source.js and their routes'));
+} else if (MODE === '--check') {
   const bad = check(VIEWS);
   if (bad.length) { bad.forEach(b => console.log('[FAIL] ' + b)); process.exit(1); }
   console.log('[OK] both stamped QR regions match qr_source.js byte-for-byte');

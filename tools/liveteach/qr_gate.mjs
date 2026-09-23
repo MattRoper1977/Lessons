@@ -61,6 +61,58 @@ const say = (ok, label, detail) => {
   if (!ok) bad++;
 };
 
+/* Find-out-more posters (ORDER LW-4 §2b): read EVERY stamped poster code back with jsQR and
+   require the exact live URL of the page beside it. Codes on posters only: a page that carries a
+   code, or a poster still carrying its {QR:…} placeholder, is a failure. */
+function posterFaults(P, rel, html, pageHtml) {
+  const f = [];
+  const want = P.liveUrl(rel);
+  if (/\{QR:/.test(html)) f.push('placeholder {QR:…} still present');
+  const r = P.readRegion(html);
+  if (!r) { f.push('no stamped QR region'); return f; }
+  if (r.url !== want) f.push('region names ' + r.url + ', route is ' + want);
+  const got = r.modules ? decode({ size: r.size, modules: r.modules }) : null;
+  if (got !== want) f.push('jsQR read ' + JSON.stringify(got) + ', want ' + want);
+  if (pageHtml == null) f.push('no index.html beside the poster');
+  else if (pageHtml.includes(P.BEGIN_PREFIX) || /class="qr-code"/.test(pageHtml) || /\{QR:/.test(pageHtml)) f.push('the page carries a code or placeholder (codes on posters only)');
+  return f;
+}
+if (MODE === '--posters' || MODE === '--posters-self-test') {
+  const P = await import('./poster_qr.mjs');
+  const fs = require('node:fs');
+  const list = P.posters();
+  const read = rel => fs.readFileSync(path.join(P.ROOT, rel), 'utf8');
+  const pageOf = rel => { const q = path.join(P.ROOT, rel.replace(/POSTER\.html$/, 'index.html')); return fs.existsSync(q) ? fs.readFileSync(q, 'utf8') : null; };
+  if (MODE === '--posters') {
+    let ok = 0;
+    for (const rel of list) {
+      const f = posterFaults(P, rel, read(rel), pageOf(rel));
+      if (f.length) say(false, rel, f.join('; ')); else ok++;
+    }
+    const pages = P.pages();
+    say(list.length > 0 && pages.length === list.length, 'one page per poster', pages.length + ' pages, ' + list.length + ' posters');
+    console.log('posters read back: ' + ok + '/' + list.length);
+    console.log(bad ? 'POSTER QR GATE FAILED (' + bad + ')' : 'POSTER QR GATE PASSED');
+    process.exit(bad ? 1 : 0);
+  }
+  // --posters-self-test: the read-back must go red on each way a poster can be wrong.
+  const rel = list[0], other = list.find(r => P.liveUrl(r) !== P.liveUrl(rel));
+  say(!!rel && !!other, 'setup: at least two stamped posters exist');
+  const html = read(rel), page = pageOf(rel);
+  say(posterFaults(P, rel, html, page).length === 0, 'GREEN: the real poster reads back');
+  const swapped = html.replace(P.readRegion(html).url, P.liveUrl(other));
+  say(posterFaults(P, rel, swapped, page).length > 0, 'RED: a region naming another week\'s URL');
+  const wrongCode = P.stamp(html, P.liveUrl(other)).replace(P.liveUrl(other) + ' -->', P.liveUrl(rel) + ' -->');
+  say(posterFaults(P, rel, wrongCode, page).length > 0, 'RED: another week\'s code under this poster\'s label');
+  const a = html.indexOf('<path fill="#000" d="') + 21;
+  const corrupt = html.slice(0, a) + html.slice(a).replace(/M(\d+) (\d+)h1v1h-1z/g, (m, x, y) => ((+x + +y) % 3 ? m : ''));
+  say(posterFaults(P, rel, corrupt, page).length > 0, 'RED: a corrupted matrix');
+  say(posterFaults(P, rel, html, page + P.region(P.liveUrl(rel))).length > 0, 'RED: a code on the page');
+  say(posterFaults(P, rel, html, null).length > 0, 'RED: no page beside the poster');
+  console.log(bad ? '[SELF-TEST] FAIL' : '[SELF-TEST] PASS');
+  process.exit(bad ? 1 : 0);
+}
+
 if (MODE === '--self-test') {
   // (a) heavy corruption must not decode back to the payload
   const c = LTQR.encode(PAYLOADS[3].text);
