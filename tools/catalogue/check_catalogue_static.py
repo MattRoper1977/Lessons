@@ -21,6 +21,14 @@ from build_lesson_order import strand_proof,strand_rows
 _order=json.loads((r/'assets/catalogue/lesson-order.json').read_text())
 _srows,_srecord,_spin=strand_rows()
 check('Strand-proved decks: row present, record digest == pin, row term·week == projection',all(strand_proof(p,_srows,_srecord,_spin,['%s·W%d'%(w['term'],w['week']) for w in _order['entries'][p]['weeks']])[0] for p in _order.get('strandProofs',[])))
+# Ruling on the batch-2 limbs (2026-09-22): the same re-check for the two Science limbs, judged by
+# the functions derive() calls, against the pinned SCIENCE_WEEK_BINDINGS record. Both lists are named
+# only while a moved deck awaits its re-stamp, so on a re-stamped tree there is nothing to re-check.
+from build_lesson_order import science_row_proof,science_label_proof,catalogue_pin,SCIENCE_BINDINGS,deck_statement_text
+from lxml import html as _lhtml
+_brows=json.loads(SCIENCE_BINDINGS.read_text())['entries'];_brec=hashlib.sha256(SCIENCE_BINDINGS.read_bytes()).hexdigest();_bpin=catalogue_pin(SCIENCE_BINDINGS)
+check('Science-row-proved decks: row present, record digest == pin, row term·week == the projected weeks',all(science_row_proof(p,_brows,_brec,_bpin,['%s·W%d'%(w['term'],w['week']) for w in _order['entries'][p]['weeks']])[0] for p in _order.get('scienceRowProofs',[])))
+check('Science-label-proved decks: the deck\'s own label still equals its pinned row',all(science_label_proof(p,_brows,_brec,_bpin,deck_statement_text(_lhtml.fromstring((r/p).read_text())))[0] for p in _order.get('scienceLabelProofs',[])))
 check('Current content hashes match every hashed metadata entry',all(hashlib.sha256((r/p).read_bytes()).hexdigest()==v['sha256'] for p,v in proof.items() if 'sha256' in v))
 check('Recommended selection contains only the 15 selected LAUNCH Science routes',sum(x['style']=='recommended' for x in science)==15 and all(x['pathway']=='LAUNCH' for x in science if x['style']=='recommended'))
 for filename in ['index.html','Science_Teesside/index.html','Humanities_Teesside/index.html']:

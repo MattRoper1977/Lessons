@@ -1430,6 +1430,14 @@ REVIEWED_PATHS = (
     # review decision and cannot be re-derived, which is why the control is a pin
     # rather than a regeneration.
     "_sx3/FENCE.json",
+    # Limbs ruling (Matt, 2026-09-23): "The re-stamp list excludes held decks BY DERIVATION from
+    # _sci/HELD.md and the R-GAPS record, never by hand". restamp_evidence_sha256.py now READS both
+    # records, so each is a derivation input and pinned beside the tool that reads it -- a held
+    # list the tree can edit silently would release a deck unreviewed. _sci/WEEK_TOKEN_
+    # DISAGREEMENTS.md is the record the same ruling corrects (B_W4A-W7A: the reader, not the
+    # decks; W16B refused); an edit to it is judged by exact bytes from now on. Admitted by PIN,
+    # not by ALLOWED_DIFF: both gate copies are re-pinned. A tightening; nothing is loosened.
+    "_sci/HELD.md", "_sx3/RELEASE_LEDGER.md", "_sci/WEEK_TOKEN_DISAGREEMENTS.md",
     # ORDER HUM-D5 (2026-09-21): the pass's own record and the instrument that builds its
     # text index. CHECKS.md is a pass record, pinned for the same reason SX3_PASSES_LEDGER.md is
     # -- a record the tree can edit silently is not a record. build_text_index.py is the A0
