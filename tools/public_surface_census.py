@@ -132,6 +132,120 @@ def scan_fields(root: Path):
             'identityFields': len(rows), 'rows': rows}
 
 
+# ---------------------------------------------------------------------------------------------
+# NAMES GATE (ruling 2026-09-23, C4): the product-name limb alone, as a required CI gate over
+# every PUBLIC path. Three differences from the census above, each ruled:
+#   * scope is the served tree: Site's own public_file() decides (pass --site); without a Site
+#     checkout the same rule is mirrored here and the output says so;
+#   * embedded image data (data: URIs) is not text and is skipped -- two decks matched "EFL"
+#     inside base64 before this;
+#   * office files are read: the text parts of .xlsx/.docx/.pptx (26 served weekly plans carried
+#     the name where the census could not see it).
+# A name kept on purpose is listed in RETAINED with its exact count and reason; the gate is red
+# if that count moves either way, so the allowance cannot widen silently.
+OFFICE_SUFFIXES = {'.xlsx', '.docx', '.pptx'}
+DATA_URI = re.compile(r'data:[\w.+-]+/[\w.+-]+(?:;[\w=.+-]+)*;base64,[A-Za-z0-9+/=\s]+')
+RETAINED = {
+    'biology/Testing Breath - FINAL Observation Lesson (1).html': [
+        ('value="EFL clip"', 1, 'saved-setting value (localStorage ps_co2_final_observation_v1): internal '
+                               'identifier, not displayed, retained on purpose (ruling 2026-09-23 C2)'),
+        ("v==='EFL clip'", 1, 'comparison against that saved value: internal identifier, not displayed, '
+                              'retained on purpose (ruling 2026-09-23 C2)'),
+        # the per-pupil state property is saved in the same localStorage record, so renaming it
+        # would drop a teacher's saved evidence ticks exactly as renaming the value would
+        ('efl:false', 6, 'saved per-pupil state property: internal identifier, not displayed, retained on purpose (C2)'),
+        ('p.efl', 5, 'reads/writes of that property: internal identifier, not displayed, retained on purpose (C2)'),
+        ('].efl', 2, 'toggle of that property: internal identifier, not displayed, retained on purpose (C2)'),
+    ],
+}
+_SKIP_TOP = {'tools', 'reports', 'docs', 'domain-split', 'node_modules', 'supabase', 'schema'}
+_PUBLIC_SUFFIX = {'.html', '.htm', '.css', '.js', '.mjs', '.json', '.svg', '.txt', '.xml', '.webmanifest',
+                  '.md', '.csv', '.xlsx', '.docx', '.pptx'}
+
+
+def public_rule(site: Path | None):
+    """Site's own public_file() when a Site checkout is given; else the mirrored rule."""
+    if site and (site / 'domain-split/build_education.py').is_file():
+        import importlib.util
+        sys.path.insert(0, str(site / 'domain-split'))
+        spec = importlib.util.spec_from_file_location('_mbm_build_education', site / 'domain-split/build_education.py')
+        mod = importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
+        return mod.public_file, "Site's public_file()"
+    def mirrored(rel):
+        parts = Path(rel).parts
+        return (not any(x.startswith(('.', '_')) for x in parts) and parts[0] not in _SKIP_TOP
+                and Path(rel).suffix.lower() in _PUBLIC_SUFFIX)
+    return mirrored, 'the mirrored public-file rule (no Site checkout given)'
+
+
+def public_text(p: Path) -> str:
+    if p.suffix.lower() in OFFICE_SUFFIXES:
+        import zipfile
+        try:
+            z = zipfile.ZipFile(p)
+        except zipfile.BadZipFile:
+            return ''
+        parts = [n for n in z.namelist() if n.endswith('.xml') and not n.startswith('customXml')]
+        return '\n'.join(re.sub(r'<[^>]+>', ' ', z.read(n).decode('utf-8', 'replace')) for n in parts)
+    return DATA_URI.sub(' ', p.read_text(errors='ignore'))
+
+
+def names_gate(root: Path, site: Path | None = None) -> dict:
+    is_public, rule = public_rule(site)
+    hits, retained_bad, scanned = [], [], 0
+    for p in sorted(root.rglob('*')):
+        if not p.is_file() or '.git' in p.parts:
+            continue
+        rel = p.relative_to(root).as_posix()
+        if p.suffix.lower() not in TEXT_SUFFIXES | OFFICE_SUFFIXES or not is_public(rel):
+            continue
+        scanned += 1
+        text = public_text(p)
+        for lit, want, _why in RETAINED.get(rel, []):
+            got = text.count(lit)
+            if got != want:
+                retained_bad.append({'file': rel, 'literal': lit, 'want': want, 'got': got})
+            text = text.replace(lit, ' ')
+        for m in PRODUCT_NAMES.finditer(text):
+            hits.append({'file': rel, 'match': m.group(0),
+                         'context': text[max(0, m.start() - 50):m.end() + 50].replace('\n', ' ')})
+    return {'rule': rule, 'publicFilesScanned': scanned, 'hits': hits, 'retainedMismatch': retained_bad}
+
+
+def names_gate_self_test() -> int:
+    import tempfile, zipfile
+    checks = []
+    with tempfile.TemporaryDirectory() as t:
+        root = Path(t)
+        (root / 'clean.html').write_text('<p>Capture it on the school’s digital evidence platform.</p>')
+        checks.append(('GREEN: a clean public page passes', not names_gate(root)['hits']))
+        (root / 'img.html').write_text('<img src="data:image/png;base64,iVBORw0KGgoEFlAAAA">')
+        checks.append(('GREEN: embedded image data is not text', not names_gate(root)['hits']))
+        (root / '_staff').mkdir(); (root / '_staff/card.md').write_text('E: evidence captured on Cypher')
+        checks.append(('GREEN: a staff path (never served) is out of scope', not names_gate(root)['hits']))
+        for name in ('Earwig', 'Cypher', 'Evidence for Learning', 'EFL'):
+            (root / 'planted.html').write_text('<p>Upload it to %s afterwards.</p>' % name)
+            checks.append(('RED: a planted %r on a public page is caught' % name, len(names_gate(root)['hits']) == 1))
+        (root / 'planted.html').unlink()
+        with zipfile.ZipFile(root / 'plan.xlsx', 'w') as z:
+            z.writestr('xl/sharedStrings.xml', '<sst><si><t>video to EFL, same day</t></si></sst>')
+        checks.append(('RED: the name inside a public .xlsx is caught', len(names_gate(root)['hits']) == 1))
+        (root / 'plan.xlsx').unlink()
+        rel = 'biology/Testing Breath - FINAL Observation Lesson (1).html'
+        (root / 'biology').mkdir()
+        keep = '<script>v===\'EFL clip\';' + 'efl:false,' * 6 + 'p.efl;' * 5 + 'a[0].efl;' * 2 + '</script>'
+        (root / rel).write_text('<option value="EFL clip">evidence clip</option>' + keep)
+        r = names_gate(root)
+        checks.append(('GREEN: the retained biology key, at its exact count, passes', not r['hits'] and not r['retainedMismatch']))
+        (root / rel).write_text('<option value="EFL clip">EFL clip</option>' + keep)
+        checks.append(('RED: the same name made visible again beside the retained key is caught', len(names_gate(root)['hits']) == 1))
+        (root / rel).write_text('<option value="EFL clip">x</option>')
+        checks.append(('RED: a retained literal whose count moves is caught', bool(names_gate(root)['retainedMismatch'])))
+    for name, ok in checks:
+        print(('PASS ' if ok else 'FAIL ') + name)
+    return 0 if all(ok for _, ok in checks) else 1
+
+
 def report(root: Path) -> dict:
     files, hits = scan_text(root)
     fields = scan_fields(root)
@@ -196,9 +310,25 @@ def main() -> int:
     ap.add_argument('--root', type=Path, help='a checkout (source scan)')
     ap.add_argument('--json', type=Path)
     ap.add_argument('--self-test', action='store_true')
+    ap.add_argument('--names-gate', type=Path, metavar='ROOT', help='CI gate: product names on public paths only')
+    ap.add_argument('--site', type=Path, help='a Site checkout, whose public_file() decides what is public')
+    ap.add_argument('--names-gate-self-test', action='store_true')
     a = ap.parse_args()
     if a.self_test:
         return self_test()
+    if a.names_gate_self_test:
+        return names_gate_self_test()
+    if a.names_gate:
+        g = names_gate(a.names_gate, a.site)
+        if a.json:
+            a.json.write_text(json.dumps(g, indent=2) + '\n')
+        print(f"NAMES GATE over {g['publicFilesScanned']} public files ({g['rule']}): "
+              f"{len(g['hits'])} product name(s), {len(g['retainedMismatch'])} retained-count mismatch(es)")
+        for h in g['hits'][:20]:
+            print(f"   {h['file']}: {h['match']!r} … {h['context'][:90]}")
+        for h in g['retainedMismatch']:
+            print(f"   retained {h['file']}: {h['literal']!r} want {h['want']} got {h['got']}")
+        return 1 if g['hits'] or g['retainedMismatch'] else 0
     root = a.built or a.root
     if root is None:
         print('give --built or --root'); return 2
