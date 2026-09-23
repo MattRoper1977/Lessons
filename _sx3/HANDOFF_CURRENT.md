@@ -8,7 +8,7 @@ Written 2026-09-23 by the **recovery session** `01H8icJ6`
 (https://claude.ai/code/session_01H8icJ6TeH8oHkN3L1oGeLi). The overnight session `01Grmg9b` ran
 out of credits after closing PASS C batch 1's fold and before it wrote this file or an S06 ledger
 entry. Every line below was re-read from the repos, the PRs and the CI runs, not from memory. The
-full recovery readback is `RECOVERY_READBACK_2026-09-23.md` at the Site repo root.
+full recovery readback is `docs/RECOVERY_READBACK_2026-09-23.md` in the Site repo (not the root: the root is served, and the admission gate refused it there).
 
 Last event: **PASS C Autumn 2 batch 1 is folded and published.** Lessons #664 (pure carrier)
 merged as `e763a398`; its publication, run 35834505142, succeeded.
