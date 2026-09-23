@@ -29,6 +29,9 @@
 
 **Regulation break:** Offer the pre-agreed help/pause signal without a public explanation. Follow the pupil’s existing plan for place, adult and length; retain supervision. On return, point to the last completed step, give a small re-entry choice and record access/support factually.
 
+**Regulation:** Follow `REGULATION_PLAN.md` (beside this brief) for the check-ins, transition recovery and agreed pause/re-entry route.
+**Regulation handoff:** At Exit, pass the prompt level and independent step to the teacher; next lesson, rehearse the response to NS+ before R. E: evidence captured on Cypher only if the linked Job 2 behaviour occurred.
+
 ## Teacher time and handoff
 
 **TEACHER-TIME:** Independent stage — one adult (teacher OR TA, decided at the start of the lesson) works with the supported pupil(s); the other adult holds the group. Swap roles across the week so the supported pupils get direct teacher time (EEF: supplement, not replace). DEFAULT BY RULING, not from source. The supplied lesson stage evidence does not specify a teacher-with-supported-pupils / TA-with-group exchange; agree this before integration instead of treating a proposed activity as that stage.
