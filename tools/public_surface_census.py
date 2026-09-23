@@ -39,8 +39,10 @@ except Exception:
     lxml_html = None
 
 # Taken verbatim from tools/science_teaching_packs/cx2_sugar_r10.py line 54 and
-# tools/rw1/cx2_lane_d.py line 213.
-PRODUCT_NAMES = re.compile(r'\bEarwig\b|\bCypher\b|\bEfL\b|\bEFL\b', re.I)
+# tools/rw1/cx2_lane_d.py line 213. "Evidence for Learning" added beside them (ruling
+# 2026-09-23: the platform's full name is forbidden on every public route, as Earwig and
+# Cypher are; the abbreviation alone did not catch it).
+PRODUCT_NAMES = re.compile(r'\bEarwig\b|\bCypher\b|\bEfL\b|\bEFL\b|\bEvidence\s+for\s+Learning\b', re.I)
 # §4.3 forbids the RECONSTRUCTED marking policy — a Yellow Box the teacher deep-marks and a
 # green pen the pupil responds in. The words alone are not the offence: "click each yellow box
 # to type" is a user-interface instruction and "pass me the green pen" is a typing exercise.
@@ -155,6 +157,10 @@ def self_test() -> int:
         (root / 'named.html').write_text('<html><body><p>Upload it to Earwig afterwards.</p></body></html>')
         r = report(root)
         checks.append(('CONTROL: a product name is found', r['verdict']['productName'] == 1))
+        (root / 'named_cypher.html').write_text('<html><body><p>Record it on Cypher at Exit.</p></body></html>')
+        checks.append(('CONTROL: Cypher is found', report(root)['verdict']['productName'] == 2))
+        (root / 'named_full.html').write_text('<html><body><p>Captured in Evidence for\nLearning today.</p></body></html>')
+        checks.append(('CONTROL: "Evidence for Learning" (even across a line break) is found', report(root)['verdict']['productName'] == 3))
 
         (root / 'feedback.html').write_text('<html><body><p>Use the Yellow Box and a green pen.</p></body></html>')
         r = report(root)
