@@ -5,33 +5,33 @@ every earlier version. The sequence ledger beside it (`_sx3/sequence_2026-09-22/
 the evidence for each closed item.
 
 Written 2026-09-23 by session `01Grmg9b` (https://claude.ai/code/session_01Grmg9bdXpQhYEj2CAZ8dFg),
-under the OVERNIGHT AUTONOMY order of 2026-09-23/24. Last event: **the Science row and label limbs
-landed** (overnight item 2). Lessons #658 merged as `e6f7fcc6`; Apps #174 as `d9b9966f`.
-Its publication, run 35810675683, succeeded, and main ran 10 of 10 runs green. The source-side served proof shows 0 changed in all three estates. Evidence: `_sx3/sequence_2026-09-22/S04_LIMBS.md`. Item 1 (the hub fold) is S03.
+under the OVERNIGHT AUTONOMY order of 2026-09-23/24. Last event: **the S3 tool landed** (overnight item 3). Lessons #660 merged as `d8acf3ac`; Apps #175 as
+`b694ffad`. Its publication, run 35814262000, succeeded. One live-origin 503 on the teaching-pack check was re-run once, as pre-granted, and passed (35815033808, attempts 1 and 2); main is green. Evidence: `_sx3/sequence_2026-09-22/S05_S3.md`. Items 1 and 2 are in S03 and
+S04.
 
 ## 1. The three mains
 
-Each read with `git ls-remote` before this docs PR, 2026-09-23 ~02:46Z.
+Each read with `git ls-remote` before this docs PR, 2026-09-23 ~03:50Z.
 
 | repo | main | what it is |
 |---|---|---|
-| Lessons | `e6f7fcc6da3e4d640cd22636249f0aea555fd89a` | #658, the Science row and label limbs. This docs PR's own squash merge follows it. |
+| Lessons | `d8acf3ac72b2f425a0c845609fa439466c147d1d` | #660, the S3 tool. This docs PR's own squash merge follows it. |
 | Site (`mattroper1977.github.io`) | `dd9831f3530336b4623fb666d6a0834725cea0ce` | #434, the EQUAL window. |
-| Apps (`Matt-s-Apps-`) | `d9b9966f70c51f3ca4b290097bca9fde49e95cc8` | #174, the gate-copy companion for #658. |
+| Apps (`Matt-s-Apps-`) | `b694ffad1e4cec0be7d3157af64962659ae93796` | #175, the gate-copy companion for #660. |
 
-Gate copies are byte-identical on both mains at `5b8c91491b46`. Lessons carrier: `uses:` and
+Gate copies are byte-identical on both mains at `cb53e71cd323`. Lessons carrier: `uses:` and
 `builder_ref` = Site `dd9831f3`. Site pins: Lessons `b1c70b0e` and Apps `7a69b63d`, both
 EQUAL-declared.
 
 ## 2. Open PRs and branches (every repo uses `claude/lessons-handoff-execution-34mw9j`)
 
-**No PR opened by this session is open.** The working branch in each repo:
+**Open:** Site #435 (batch 1's window). The working branch in each repo:
 
 | repo | branch head | state |
 |---|---|---|
 | Lessons | this docs PR's head | merges on green, served intersection 0 |
-| Site | `81f445fd` | the head of #434, merged. Nothing unmerged. |
-| Apps | `d07d640d` | the head of #174, merged. Nothing unmerged. |
+| Site | `2622f3ae` | **Site #435 OPEN**: batch 1's window (16 transition pairs). It waits on its CI, then merges; the Apps companion and the Lessons batch PR follow. |
+| Apps | `74b563b9` | the head of #175, merged. Nothing unmerged. |
 | Games, Games- | no branch | untouched |
 
 Open PRs that predate this session, untouched and not in the sequence:
@@ -48,27 +48,12 @@ ruling it implements (section 3).
 
 | draft | head (base) | what it holds |
 |---|---|---|
-| `wt/s3c` | `2cce541f` (on the limbs head `44f0c680`, tree = main `e6f7fcc6`) | S3: `admit_transaction` accepts `SHA256SUMS.txt` as a transaction member. It is the `d90e568a` draft stacked on the landed limbs (the only conflict, the two appended self-test blocks, kept as their union), plus the answers to its adversarial review (`wf_500b77a1-0ff`). See the list below. |
+| `wt/b1` | `f69400b3` (on main `d8acf3ac`) | **PASS C batch 1, in progress** (route C). It holds the split and transplant of the 11, all derivation writers and the `REVIEWED_PATHS` admission. See §3 Q3 for the state and the remaining steps. |
 | `wt/d3` | `c01e22f8` (on `f99d651d`) | D3: verify_loop row 48, "unbounded modelling" plus "I do 2 before I do", reported RED. |
 | `wt/w9l1` | `279d3930` (on `c01e22f8`) | W9L1: the declared eyebrow channel wins over the heading route. Stacked on D3. |
 | `wt/site-sw` | `f877b68` (on Site `acb7bfa`) | `serve-witness.yml:31` declared floating by design, scanner constant 1→2. |
 
-**The S3 review** (`wf_500b77a1-0ff`: two lenses and a critic, on `3e87952f`) confirmed two majors and seven minors. All are answered in `2cce541f`, and every guard is mutation-proved red.
-- **Majors:**
-  1. The "rows disagree → refused" proof stopped at the pure judge.
-  2. `derive()`'s S3 call sat outside the self-test.
-- **The fix:**
-  - `science_records_allowed` and `science_limb` take a `root`, so a temporary pack is judged through the real wiring;
-  - `derive()`'s limb choice is `strand_landable()` and its path filter `strand_kinds()` / `diff_statuses()`, all under the self-test.
-- **Minors, also fixed:**
-  - the byte-level re-cut check;
-  - the rename fallback to the base manifest;
-  - the "re-cut but refused" wording;
-  - the `D`-status, Classic and `pinned` proofs;
-  - `[FAIL] … path(s)`.
-- **Residual, recorded:**
-  - `derive()`'s git glue (the base-blob reader and the registry lookup) needs a git fixture to test;
-  - a Science `CHECKSUMS.sha256` would not be recognised (none exists today).
+**The S3 review** has landed with #660: three rounds, recorded in S05.
 
 The read-only batch-1 dry run (`wf_20c1bcae-fe1`, finished) stacked the limbs and S3 drafts on
 `b1c70b0e` and ran the whole batch-1 pipeline. Its findings feed the batch-1 PR and are not a
@@ -133,7 +118,7 @@ recorded here, not decided.
 > 5. Item 4: HUM-T P1 re-cut (the 24 decks with a Title panel). Held stays held. GPT-work items
 > (new science content; cybersecurity) are listed, never written."
 
-Items 1 and 2 are **done** (S03, S04).
+Items 1, 2 and 3 are **done** (S03, S04, S05).
 
 ### Q1 · Limbs PR — DONE (#658 `e6f7fcc6`, S04)
 > "RULING — batch 2 limbs: ADD BOTH, the Humanities Q1 shape. 1. Science ROW limb in
@@ -172,12 +157,49 @@ it.
 > planted-failure proof." Label limb: "keep it — it is the proof for decks without a row; its
 > self-test is the evidence it works."
 
-### Q2 · S3 tool — next
+### Q2 · S3 tool — DONE (#660 `d8acf3ac`, S05)
 > "S3 EXTEND admit_transaction's Science part to accept SHA256SUMS.txt as a transaction member
 > (derived digest of the re-cut manifest, pinned), red-proved: a manifest not in the transaction
 > → refused; a manifest whose rows disagree with member bytes → refused. No one-off declarer."
 
-### Q3 · PASS C Autumn 2 batch 1 (11 decks)
+### Q3 · PASS C Autumn 2 batch 1 (11 decks) — IN PROGRESS, next
+
+**Measured so far on `wt/b1`**, on main `d8acf3ac`, with the committed tools and the reconciled
+dry-run runbook:
+- **Split** of W9 Classic, W12 Classic and W13L2: 8 → 9 stages, digests `64a0e2c1`, `3359a88f`,
+  `5b32a37c`.
+- **Transplant of the 11:**
+  - 64 panels (GROW 5 each, LAUNCH 6 each), and row 45 equals the derived value on 11 of 11;
+  - 0 verify FAIL rows against the split bytes;
+  - against the pre-split originals, the 3 split decks each fail only row 13: the glued meta line
+    the ruled split separates, with 0 words missing.
+- **390 px render with axe:** 64 of 64 panels reached and disclosed, rows 38–40 all 64 of 64, 0
+  serious axe violations, 0 page errors.
+- **Shell-by-DOM:** PASS on 11 of 11, with JS off and on. Stripping the declared nodes returns each
+  body exactly, apart from 4 whitespace characters at the injection points.
+- **Limb:** token on 5, explicit cell on 6; the row and label limbs are not reached.
+- **Re-stamp:** 11 re-stamped, 0 held. `lesson-order.json` moves exactly 11 `sourceSha256` leaves.
+- **Spine:** 4 re-censused.
+- **Census:** exactly the 11 entries move (14 → 25 conforming).
+- **Sizes:** the 4 Classic rows move.
+- **Manifests:** 3 Launch manifests re-cut (all rows verify).
+- **Admission:** 4 records admitted.
+
+**Remaining, in order:**
+1. Cherry-pick onto the working branch after this docs PR merges.
+2. Pin and run PIN1.
+3. Declare the GLV3 transaction (`admit_transaction --strand Science`), then re-pin.
+4. Run the battery.
+5. Take the served moving set from built bytes: 16 pairs are expected.
+6. Site window (`[main-today, pending]`).
+7. Apps companion.
+8. Lessons batch PR, with the carrier bumped last.
+9. Publication.
+10. Site EQUAL window, carrying the hub follow-on's 3 pending pairs.
+11. Apps companion.
+12. The hub follow-on PR (`build_science_hub.py`, sizes, pins), which carries the carrier.
+13. Publication, EQUAL window, pure carrier.
+
 > "W9L1 is EXCLUDED from batch 1 (the one-exception hold helps no one). Batch 1 = 11 decks, zero
 > exceptions, pre-signed."
 
@@ -359,15 +381,31 @@ case-study decks.
 
 ## 7. The single next command
 
-**Cut the S3 PR from Lessons main `e6f7fcc6`+** (Q2):
-1. Copy `wt/s3c`'s `tools/hum/admit_transaction.py` (`2cce541f`) onto the working branch. If the
-   scratchpad is gone, stack `d90e568a`'s S3 limb on main, keep both self-test blocks, and
-   re-apply the review answers listed in §2.
-2. Re-pin both gate copies (`pin_catalogue_contract.py --lessons . --apps <Apps>`), then run
-   PIN1 `--check`.
-3. Land the Apps companion first.
-4. The S3 review is answered in `2cce541f`. Run one confirmatory adversarial pass on the final
-   diff before merging.
-5. Expect no served move: the tool is not served. Confirm it from built bytes.
+**Continue PASS C batch 1 on route C** (Q3). Cherry-pick `wt/b1`'s three commits
+(`bc106199..f69400b3`) onto the working branch after this docs PR merges.
 
-Then PASS C batch 1 on route C (§2).
+If the scratchpad is gone, rebuild the batch on the branch in this order:
+1. `tools/sx3/split_arrival_stage.py --write` on the 3 merged decks.
+2. `loop_adapter.adapt(bytes, PATHWAY, False)` on the 11, verified with `verify_loop.verify`
+   against the split or main bytes.
+3. `restamp_evidence_sha256.py --write --decks` with the 11 after-digests.
+4. `build_lesson_order.py`.
+5. `_sownb/vb/tools/recensus_existing_html.py --write` on W13L2 and W14L1–3.
+6. `tools/sci/chassis_census.py --write`.
+7. `tools/ux2/resource_sizes.py --write`.
+8. `refresh_pack_checksums.py` on the 7 non-Classics.
+9. `admit_batch.py` for the 3 manifests and the census.
+
+Then, on the branch:
+1. `pin_catalogue_contract.py --lessons . --apps <Apps>`, then `derive_triggers.py --write`.
+2. Commit. Run `admit_transaction.py --name 'PASS C Autumn 2 batch 1' --strand Science --base
+   origin/main` (without `--check`), then commit.
+3. Re-pin.
+4. Run the battery.
+5. Build Site `dd9831f3` + head + Apps `b694ffad` to take the moving set.
+6. Cut the Site window, land the Apps companion, then open the Lessons PR with the carrier bumped
+   last.
+
+The PR body carries the STOP-SIGN table: 11 rows with TERM+WEEK UNCHANGED, evidence sha == bytes,
+row 45 == derived, shell-by-DOM PASS, exceptions EMPTY and the limb column. On zero exceptions it
+reads "(pre-signed, zero exceptions)".
