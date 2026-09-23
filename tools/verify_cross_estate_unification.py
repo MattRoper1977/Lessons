@@ -595,6 +595,7 @@ CATALOGUE_PINS = {
         "Science_Teesside/Launch/W14-W15_2026-27/SHA256SUMS.txt": "4781617b66baec3fd3951ed417e7360a445bc3d64835e8647cd74c5537a99f8d",
         "Science_Teesside/Launch/W8-W13_2026-27/SHA256SUMS.txt": "694205a0dfeb831f096d9dad923aa5f83762ea36193808918a01e4b636428907",
         "tools/catalogue/SCIENCE_CHASSIS_CENSUS.json": "902688f3089e2278e1af356e1e4e5b8a86505cae59f95c9610498966a496914c",
+        "tools/rx3_recommended.py": "2478041ad7321f3a48ee18da8f447d273e9631b2c03369c8d0fd12167b535d1c",
         "assets/catalogue/science-download-bindings.json": "efb435f7e0dc4c9083050f5bb3e348494838422fe7de6e809fbdf8f877d9b10d",
         "Science_Teesside/Teaching_Packs/BUILD/BUILD_Science_Autumn1_W3-W7_Teaching_Guide.docx": "c4fd055acdb11a2310fe820b6f473733835dc4789b9151cd3377ec4d251f2196",
         "Science_Teesside/Teaching_Packs/BUILD/BUILD_Science_Autumn1_W3-W7_Teaching_Guide.pdf": "a479821f2de450e28bd414625f8066768d2c72423bd5ff76046536bf8f7a5d7a",
