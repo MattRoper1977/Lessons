@@ -47,7 +47,7 @@ MARK = 'data-hum-t'
 
 # Feedback & Marking Policy 2025/2026 (Pilot) Issue 1, BODY numbering.
 POLICY_MODALITIES = {
-    'BUILD':  'Point, sign, repeat after the adult, demonstrate, Earwig clip, choice board.',
+    'BUILD':  'Point, sign, repeat after the adult, demonstrate, evidence clip, choice board.',
     'GROW':   'Short edit in margin; verbal reply; tick off success criteria; student voice clip.',
     'LAUNCH': 'In-lesson edit; structured verbal response; for full essays, deferred edit.',
 }
@@ -62,7 +62,7 @@ POLICY_EARWIG = ('30-second clip, photo, or one-line context note. Central tags 
                  'Listen / look before tagging (Audience).')
 POLICY_CODES = [('VF', 'Verbal feedback given here'), ('WS', 'Worked with support'),
                 ('I', 'Independent'), ('NS +', 'Next step — one specific thing'),
-                ('E', 'Evidence on Earwig'), ('R', 'Responded — loop closed'),
+                ('E', "Evidence on the school's digital evidence platform"), ('R', 'Responded — loop closed'),
                 ('//', 'Self-edit point'), ('?', 'Read this back to me')]
 
 DEFAULT_LUNDY_SENTENCES = ['SPACE stays available.', 'VOICE is received.',
@@ -522,7 +522,7 @@ def ta_brief(is_exit: bool) -> str:
     """R2 + R4 (+ R3 at Exit) — staff layer only, never the pupil surface."""
     codes = ' · '.join('<b>%s</b> %s' % (esc(c), esc(m)) for c, m in POLICY_CODES)
     space = ''.join('<li>%s</li>' % esc(s) for s in POLICY_SPACE)
-    earwig = ('<p class="ta-earwig"><b>Earwig, lean capture (E):</b> %s</p>' % esc(POLICY_EARWIG)) if is_exit else ''
+    earwig = ((EVIDENCE_LABEL + ' %s</p>') % esc(POLICY_EARWIG)) if is_exit else ''
     return (
       '<div class="ta-card hum-t-ta" %s="1" data-mbm-guide="staff">'
       '<p><b>Feedback codes (staff):</b> %s</p>'
@@ -536,6 +536,47 @@ def ta_brief(is_exit: bool) -> str:
 
 class AlreadyAdapted(Exception):
     pass
+
+
+# No product name on any public page (ruling 2026-09-23, CX2-b §2). The TA layer is served on
+# madebymatt.uk, so it is public. Decks already transplanted cannot be re-run through adapt()
+# (AlreadyAdapted), and re-running from their pre-transplant bytes would drag in unrelated
+# drift, so retext() rewrites ONLY the strings this module itself emitted, in place: each retired
+# fragment is rebuilt exactly as the earlier ta_brief()/build_panel() wrote it (same esc()), and
+# replaced with what the current constants write. Nothing else in the deck is touched.
+EVIDENCE_LABEL = ('<p class="ta-evidence"><b>The school&#x27;s digital evidence platform, '
+                  'lean capture (E):</b>')
+PRODUCT_NAME_RX = re.compile(r'\bEarwig\b', re.I)
+RETIRED_TA_FRAGMENTS = [
+    # (name, old fragment as previously emitted, fragment the current constants emit)
+    ('code E', '<b>E</b> %s' % esc('Evidence on Earwig'),
+     '<b>E</b> %s' % esc(dict(POLICY_CODES)['E'])),
+    ('BUILD modality', esc('Point, sign, repeat after the adult, demonstrate, Earwig clip, choice board.'),
+     esc(POLICY_MODALITIES['BUILD'])),
+    ('evidence label', '<p class="ta-earwig"><b>Earwig, lean capture (E):</b>', EVIDENCE_LABEL),
+]
+
+
+class ProductNameRemains(Exception):
+    pass
+
+
+def retext(html: str):
+    """Pure. Rewrite this module's own retired TA-layer strings in an already-transplanted deck.
+    Returns (html, {fragment name: count}). Refuses a deck that is not transplanted, and refuses
+    if the product name survives anywhere after the rewrite -- a name this mode did not write is
+    reported, never silently left or silently edited."""
+    if MARK not in html:
+        raise ValueError('not a transplanted deck (no %s): retext only rewrites its own strings' % MARK)
+    counts = {}
+    for name, old, new in RETIRED_TA_FRAGMENTS:
+        counts[name] = html.count(old)
+        html = html.replace(old, new)
+    left = [m.start() for m in PRODUCT_NAME_RX.finditer(html)]
+    if left:
+        raise ProductNameRemains('%d product-name occurrence(s) not written by this module, first at %d: %r'
+                                 % (len(left), left[0], html[max(0, left[0] - 40):left[0] + 40]))
+    return html, counts
 
 
 def adapt(html: str, pathway: str, is_re: bool):
@@ -603,3 +644,47 @@ def adapt(html: str, pathway: str, is_re: bool):
                  'ribbons_removed': sum(1 for s in st for r in s.find(is_ribbon)
                                         if not r.attrs.get(MARK)
                                         and not any(a <= r.start and r.end <= b for a, b in dropped))}
+
+
+def _retext_self_test() -> int:
+    """RED and GREEN controls for retext(), run on a minimal transplanted deck."""
+    ok = True
+    def control(name, passed):
+        nonlocal ok; ok = ok and passed
+        print(('GREEN ' if passed else 'RED   ') + name)
+    old = ('<div %s="1"><p>%s</p>%s<p>%s</p></div>' % (MARK, RETIRED_TA_FRAGMENTS[0][1],
+           RETIRED_TA_FRAGMENTS[2][1], RETIRED_TA_FRAGMENTS[1][1]))
+    new, counts = retext(old)
+    control('every retired fragment is rewritten once', counts == {n: 1 for n, _, _ in RETIRED_TA_FRAGMENTS})
+    control('no product name survives', not PRODUCT_NAME_RX.search(new))
+    control('idempotent: a rewritten deck rewrites to itself', retext(new)[0] == new)
+    try:
+        retext(old + '<p>Upload it to Earwig later.</p>'); control('RED: a planted extra name is refused', False)
+    except ProductNameRemains:
+        control('RED: a planted extra name is refused', True)
+    try:
+        retext('<p>%s</p>' % RETIRED_TA_FRAGMENTS[0][1]); control('RED: a deck this module never transplanted is refused', False)
+    except ValueError:
+        control('RED: a deck this module never transplanted is refused', True)
+    return 0 if ok else 1
+
+
+if __name__ == '__main__':
+    import argparse
+    ap = argparse.ArgumentParser(description='loop_adapter in-place modes (the transplant itself runs via build_all.py)')
+    ap.add_argument('--retext', nargs='*', metavar='DECK', help='rewrite this module\'s retired TA-layer strings in place')
+    ap.add_argument('--retext-self-test', action='store_true')
+    a = ap.parse_args()
+    if a.retext_self_test:
+        sys.exit(_retext_self_test())
+    total = {}
+    for p in a.retext or []:
+        with open(p, encoding='utf-8', newline='') as fh:   # newline='': bytes other than the strings stay identical
+            src = fh.read()
+        out, counts = retext(src)
+        for k, v in counts.items():
+            total[k] = total.get(k, 0) + v
+        if out != src:
+            with open(p, 'w', encoding='utf-8', newline='') as fh:
+                fh.write(out)
+    print(json.dumps({'decks': len(a.retext or []), 'rewritten': total}))
