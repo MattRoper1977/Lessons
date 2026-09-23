@@ -40,6 +40,7 @@ import argparse
 import ast
 import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
@@ -175,13 +176,13 @@ class Refuse(Exception):
     """A condition that makes declaring unsafe. Never repaired."""
 
 
-def git(*args: str) -> str:
-    return subprocess.run(["git", *args], cwd=ROOT, capture_output=True, text=True,
+def git(*args: str, root=None) -> str:
+    return subprocess.run(["git", *args], cwd=root or ROOT, capture_output=True, text=True,
                           check=True).stdout
 
 
-def merge_base(base: str) -> str:
-    return git("merge-base", base, "HEAD").strip()
+def merge_base(base: str, root=None) -> str:
+    return git("merge-base", base, "HEAD", root=root).strip()
 
 
 def pins() -> dict:
@@ -203,8 +204,8 @@ def landable(revision: str) -> set:
     return {row["path"] for row in json.loads(out.stdout)["rows"] if row["landable"]}
 
 
-def blob_at(ref: str, rel: str) -> str:
-    out = git("ls-tree", ref, "--", rel).split()
+def blob_at(ref: str, rel: str, root=None) -> str:
+    out = git("ls-tree", ref, "--", rel, root=root).split()
     if len(out) < 3 or out[0] != "100644" or out[1] != "blob":
         raise Refuse(f"no regular-file blob at {ref} for {rel}")
     return out[2]
@@ -484,49 +485,238 @@ def science_allowed(paths) -> tuple[set, dict]:
     return ok, why
 
 
-def derive(base: str, strand: str = "Humanities", limb: str = "") -> tuple[str, dict]:
-    prefix = STRANDS[strand]
-    mb = merge_base(base)
-    # The explicit-tags limb also reads each pack's own two records, because a mark-up the
-    # record does not carry is a mark-up the pack cannot verify. Every other limb sees .html.
+# --- THE SCIENCE PACK-RECORD LIMB (Matt Roper, 2026-09-22, ruling S3 on the S02 STOP) ---------
+# "EXTEND admit_transaction's Science part to accept SHA256SUMS.txt as a transaction member
+# (derived digest of the re-cut manifest, pinned), red-proved: a manifest not in the transaction
+# -> refused; a manifest whose rows disagree with member bytes -> refused. No one-off declarer."
+#
+# A Science pack's SHA256SUMS.txt is declared in the SAME transaction as the decks it lists, and
+# only as the derivation of their re-cut bytes. The Humanities record limb above is the model,
+# with one ruled difference: a row that was ALREADY stale on main may be refreshed in the same
+# re-cut (D-1, admit_w8a_chassis.py, "rows that were already stale on main move with the
+# lesson's"), because the refresher cannot scope to one row. A row that moves for a file this
+# transaction does not declare is refused if it was fresh at the base, or if that file's bytes
+# moved since the base -- either way the file changed outside the transaction. And a re-cut must
+# be derived FROM the transaction: at least one declared deck of the pack must have a row in it.
+# A deck with no row (the five Classics) is not enrolled: "refresh the rows that exist, leave the
+# rest" (ruling 2026-09-23 §2, correction #32). Like every member, the manifest must carry a
+# CATALOGUE_PINS admission equal to its bytes (judge_member), so its derived digest is pinned.
+SCIENCE_RECORD = "SHA256SUMS.txt"
+
+
+def science_packs_of(rel: str) -> list:
+    """Every folder whose SHA256SUMS.txt could list this deck, nearest first: its own folder,
+    then each ancestor up to the Science root. The three Teaching_Packs manifests list their
+    decks one folder down (HTML/BUILD_Science_W6A.html), so the deck's own folder is not the
+    only place a row for it can live."""
+    parts = rel.split("/")
+    return ["/".join(parts[:i]) + "/" for i in range(len(parts) - 1, 0, -1)
+            if ("/".join(parts[:i]) + "/").startswith(SCIENCE_PREFIX)]
+
+
+def judge_science_record(rel: str, before: bytes, after: bytes, members: dict,
+                         disk_digest, base_digest):
+    """Pure. None when this Science manifest is the derived re-cut of this transaction's members.
+
+    members      {row name in this pack: {"after": bytes}} -- the decks of THIS pack the Science
+                 limb landed in this transaction
+    disk_digest  row name -> sha256 of that file on disk now, or None
+    base_digest  row name -> sha256 of that file at the merge base, or None"""
+    if not rel.startswith(SCIENCE_PREFIX) or not rel.endswith("/" + SCIENCE_RECORD):
+        return "only a Science pack's own SHA256SUMS.txt is a record member"
+    if not members:
+        return "a manifest re-cut for a pack this transaction does not touch: no deck of it is declared"
+    was_rows = sums_rows(before.decode("utf-8", "replace"))
+    now_rows = sums_rows(after.decode("utf-8", "replace"))
+    if [r for r, _ in was_rows] != [r for r, _ in now_rows]:
+        return "the SHA256SUMS row set moved: a re-cut changes digests, never rows"
+    # BYTES, not only parsed rows (review of the S3 PR): every line that changed must be the same
+    # row with only its digest replaced, so the manifest is exactly the refresher's in-place re-cut.
+    b_lines, a_lines = before.splitlines(keepends=True), after.splitlines(keepends=True)
+    if len(b_lines) != len(a_lines):
+        return "the re-cut changes lines, not only row digests"
+    for lb, la in zip(b_lines, a_lines):
+        if lb == la:
+            continue
+        rb = sums_rows(lb.decode("utf-8", "replace"))
+        ra = sums_rows(la.decode("utf-8", "replace"))
+        if (len(rb) != 1 or len(ra) != 1 or rb[0][0] != ra[0][0] or not rb[0][1] or not ra[0][1]
+                or la != lb.replace(rb[0][1].encode(), ra[0][1].encode())):
+            return "a re-cut line is not the same row with only its digest replaced"
+    now = dict(now_rows)
+    if not any(page in now for page in members):
+        return ("no declared deck of this pack has a row in it: the re-cut would not be derived "
+                "from this transaction")
+    for page in sorted(members):
+        if page not in now:
+            continue                      # no row: not enrolled (correction #32)
+        if now[page] != hashlib.sha256(members[page]["after"]).hexdigest():
+            return f"the manifest's row for {page} disagrees with the member's bytes"
+    for (row, d0), (_, d1) in zip(was_rows, now_rows):
+        if d0 == d1 or row in members:
+            continue
+        if d1 != disk_digest(row):
+            return f"a re-cut row for {row} is not the digest of the bytes on disk"
+        if d0 == base_digest(row):
+            return f"a SHA256SUMS row moved for {row}, which was fresh at the base and is not declared"
+        if d1 != base_digest(row):
+            return f"a SHA256SUMS row moved for {row}, whose file changed outside this transaction"
+    return None
+
+
+def science_records_allowed(statuses: dict, blob_reader, landed: set, root=None) -> tuple[set, dict]:
+    """The record limb over this branch's changed manifests, then the other half of the rule:
+    a landed deck whose pack manifest lists it must have that manifest re-cut IN this
+    transaction, or the deck is refused -- its row would be left disagreeing with its bytes.
+
+    root: the tree read for bytes on disk (default ROOT) -- the seam the self-test uses to judge a
+    real manifest through this wiring, not only through judge_science_record (review of the S3 PR).
+    blob_reader reads the MERGE BASE; a manifest's before-bytes come from it, never from disk."""
+    root = root or ROOT
+    ok, why = set(), {}
+    for rel, status in sorted(statuses.items()):
+        if not rel.endswith("/" + SCIENCE_RECORD):
+            continue
+        if status != "M":
+            why[rel] = "this transaction replaces landed records; this is not an 'M'"
+            continue
+        pack = rel[: -len(SCIENCE_RECORD)]
+        gone = sorted(r for r in landed if r.startswith(pack) and not (root / r).is_file())
+        if gone:
+            why[rel] = f"a declared deck of this pack is not a regular file: {gone[0]}"
+            continue
+        members = {r[len(pack):]: {"after": (root / r).read_bytes()}
+                   for r in landed if r.startswith(pack)}
+        disk = lambda row, pack=pack: (hashlib.sha256((root / pack / row).read_bytes()).hexdigest()
+                                       if (root / pack / row).is_file() else None)
+        def base(row, pack=pack):
+            data = blob_reader(pack + row)
+            return hashlib.sha256(data).hexdigest() if data else None
+        reason = judge_science_record(rel, blob_reader(rel), (root / rel).read_bytes(),
+                                      members, disk, base)
+        if reason:
+            why[rel] = reason
+        else:
+            ok.add(rel)
+    for deck in sorted(landed):
+        for pack in science_packs_of(deck):
+            manifest = root / pack / SCIENCE_RECORD
+            # The manifest as it stands, or as it stood at the merge base if this branch renamed or
+            # removed it: a deck its base manifest listed is not freed by moving the manifest away
+            # (review of the S3 PR: a rename slipped past this limb).
+            text = (manifest.read_bytes() if manifest.is_file() else blob_reader(pack + SCIENCE_RECORD) or b"")
+            if not text:
+                continue
+            rows = dict(sums_rows(text.decode("utf-8", "replace")))
+            if deck[len(pack):] not in rows:
+                continue                  # no row: not enrolled (correction #32)
+            if pack + SCIENCE_RECORD in why:
+                why[deck] = (f"its pack manifest {pack + SCIENCE_RECORD} is re-cut in this transaction "
+                             f"but refused: {why[pack + SCIENCE_RECORD]}")
+                break
+            if pack + SCIENCE_RECORD not in ok:
+                why[deck] = (f"its pack manifest {pack + SCIENCE_RECORD} lists it but is not re-cut "
+                             f"in this transaction: a manifest not in the transaction is refused")
+                break
+    return ok, why
+
+
+def science_limb(statuses: dict, blob_reader, deck_limb=None, root=None) -> tuple[set, dict, set]:
+    """derive()'s Science part: the ruled deck limb over the changed decks, the record limb over
+    the changed manifests, then the record limb's refusals taken OUT of the landable set.
+
+    Split out of derive() so the wiring is under the self-test and not only the judges: the
+    review of the first cut found the refusal of a deck whose manifest is not re-cut lived in one
+    line of derive() that no check reached. Returns (landable, reason per refused path, records).
+    """
+    decks = {r: s for r, s in statuses.items() if not r.endswith("/" + SCIENCE_RECORD)}
+    allowed, why = (deck_limb or science_allowed)(decks)
+    records, record_why = science_records_allowed(statuses, blob_reader, allowed, root)
+    for rel, reason in record_why.items():
+        allowed.discard(rel)
+        why[rel] = reason
+    return allowed | records, why, records
+
+
+def strand_kinds(strand: str, limb: str = "") -> tuple:
+    """The path endings derive() collects. The explicit-tags limb also reads each pack's own two
+    records, because a mark-up the record does not carry is a mark-up the pack cannot verify.
+    Ruling S3: a Science pack manifest rides as a member. Every other limb sees .html."""
     kinds = (".html",) + (SUMMER1_RECORDS if limb in ("explicit-tags", "responsive") else ())
+    if strand == "Science" and not limb:
+        kinds += ("/" + SCIENCE_RECORD,)
+    return kinds
+
+
+def diff_statuses(name_status: str, kinds: tuple) -> dict:
+    """{path: status letter} from `git diff --name-status` output, for the paths ending in kinds.
+    A rename or copy is keyed by its NEW path with status R/C, so a judge that requires 'M'
+    refuses it by name."""
     statuses = {}
-    for line in git("diff", "--name-status", f"{mb}..HEAD", "--", prefix).splitlines():
+    for line in name_status.splitlines():
         parts = line.split("\t")
         if len(parts) >= 2 and parts[-1].endswith(kinds):
             statuses[parts[-1]] = parts[0][0]
+    return statuses
+
+
+def strand_landable(strand: str, limb: str, statuses: dict, blob_reader, base: str = "",
+                    deck_limb=None, root=None) -> tuple[set, dict, set]:
+    """derive()'s choice of limb, pure over its inputs: (landable, reason per refused path,
+    derived records). Extracted so the self-test reaches the call derive() actually makes
+    (review of the S3 PR: putting back the pre-S3 Science call left every check green)."""
+    if limb == "responsive":
+        allowed, why = responsive_allowed(statuses, blob_reader)
+        return allowed, why, {r for r in allowed if r.endswith(SUMMER1_RECORDS)}
+    if limb == "explicit-tags":
+        allowed, why = explicit_tags_allowed(statuses, blob_reader)
+        return allowed, why, {r for r in allowed if r.endswith(SUMMER1_RECORDS)}
+    if strand == "Science":
+        return science_limb(statuses, blob_reader, deck_limb, root)
+    return landable(base), {}, set()
+
+
+def derive(base: str, strand: str = "Humanities", limb: str = "", *, root=None, registry=None,
+           deck_limb=None) -> tuple[str, dict]:
+    """root, registry, deck_limb: seams for the self-test, which runs THIS function against a
+    throwaway git repository (review of the S3 PR: putting back the pre-S3 call inside derive(),
+    reading the base from disk, or skipping the manifest's pin all left the self-test green).
+    Defaults: this repository, CATALOGUE_PINS from the gate copy, the ruled deck limbs."""
+    root = root or ROOT
+    prefix = STRANDS[strand]
+    mb = merge_base(base, root)
+    kinds = strand_kinds(strand, limb)
+    statuses = diff_statuses(git("diff", "--name-status", f"{mb}..HEAD", "--", prefix, root=root), kinds)
 
     print(f"SEARCH SCOPE: {len(statuses)} {strand} {' / '.join(kinds)} path(s) differing from "
           f"the merge base {mb[:12]} with {base}; blobs read from that merge base, digests from "
           f"the bytes on disk, pins from CATALOGUE_PINS in {GATE.relative_to(ROOT)}")
 
+    base_blob = lambda rel: subprocess.run(["git", "show", f"{mb}:{rel}"], cwd=root,
+                                           capture_output=True).stdout
+    allowed, science_why, records = strand_landable(strand, limb, statuses, base_blob, base,
+                                                    deck_limb, root)
     if limb == "responsive":
-        allowed, science_why = responsive_allowed(
-            statuses, lambda rel: subprocess.run(["git", "show", f"{mb}:{rel}"], cwd=ROOT,
-                                                 capture_output=True).stdout)
         pages = len([r for r in allowed if not r.endswith(SUMMER1_RECORDS)])
         print(f"  landable set from the ruled responsive limb (the reviewed writer reproduces "
               f"these bytes from the base): {pages} page(s) and {len(allowed) - pages} derived "
               f"pack record(s), {len(allowed)} of {len(statuses)} path(s)")
     elif limb == "explicit-tags":
-        allowed, science_why = explicit_tags_allowed(
-            statuses, lambda rel: subprocess.run(["git", "show", f"{mb}:{rel}"], cwd=ROOT,
-                                                 capture_output=True).stdout)
         pages = len([r for r in allowed if not r.endswith(SUMMER1_RECORDS)])
         print(f"  landable set from the ruled explicit-tags limb (DOM identical, the implied "
               f"tags written down): {pages} page(s) and {len(allowed) - pages} derived pack "
               f"record(s), {len(allowed)} of {len(statuses)} path(s)")
     elif strand == "Science":
-        allowed, science_why = science_allowed(statuses)
+        decks = sum(1 for r in statuses if not r.endswith("/" + SCIENCE_RECORD))
         print(f"  landable set from the ruled Science limb over "
-              f"{BINDINGS.relative_to(ROOT)}: {len(allowed)} of {len(statuses)} deck(s)")
+              f"{BINDINGS.relative_to(ROOT)}: {len(allowed) - len(records)} of {decks} deck(s), "
+              f"and {len(records)} pack manifest(s) re-cut from them (ruling S3)")
     else:
-        allowed, science_why = landable(base), {}
         print(f"  landable set from {CENSUS.relative_to(ROOT)}: {len(allowed)} deck(s)")
-    registry = pins()
+    registry = pins() if registry is None else registry
     files, refused = {}, []
     for rel, status in sorted(statuses.items()):
-        path = ROOT / rel
+        path = root / rel
         if path.is_symlink() or not path.is_file():
             refused.append((rel, "not a regular file in the tree"))
             continue
@@ -538,14 +728,14 @@ def derive(base: str, strand: str = "Humanities", limb: str = "") -> tuple[str, 
         if why:
             refused.append((rel, why))
             continue
-        files[rel] = {"beforeGitBlob": blob_at(mb, rel),
+        files[rel] = {"beforeGitBlob": blob_at(mb, rel, root),
                       "afterSha256": digest,
                       "bytes": len(data)}
 
     for rel, why in refused:
         print(f"  REFUSED {rel}: {why}")
     if refused:
-        raise Refuse(f"{len(refused)} deck(s) refused; nothing declared")
+        raise Refuse(f"{len(refused)} path(s) refused; nothing declared")
     if not files:
         raise Refuse("no member to declare")
     print(f"  derived {len(files)} member(s)")
@@ -836,6 +1026,211 @@ def self_test() -> int:
     w4a = "Science_Teesside/Build/v3_40min/SCI_B_W4A_Muscles_Explore.html"
     check("CLAIM, real tree (the wiring): science_allowed lands SCI_B_W4A, whose only Aut1\u00b7W3 is a recall line",
           w4a in science_allowed([w4a])[0])
+
+    # --- ruling S3: the Science pack-record limb, planted against the judge that decides ---
+    h = lambda b: hashlib.sha256(b).hexdigest()
+    man = "Science_Teesside/Launch/W8-W13_2026-27/SHA256SUMS.txt"
+    deck_b, deck_a, other, stale_base = b"<html>deck before</html>", b"<html>deck after</html>", b"other", b"old"
+    sums = lambda rows: "".join(f"{d}  {r}\n" for r, d in rows).encode()
+    before = sums([("A.html", h(deck_b)), ("B.html", h(other)), ("C.html", h(stale_base))])
+    after_ok = sums([("A.html", h(deck_a)), ("B.html", h(other)), ("C.html", h(other))])
+    disk = {"A.html": h(deck_a), "B.html": h(other), "C.html": h(other)}.get
+    base = {"A.html": h(deck_b), "B.html": h(other), "C.html": h(other)}.get
+    members = {"A.html": {"after": deck_a}}
+    check("S3: a manifest re-cut from its member's bytes is declared, a stale row riding along",
+          judge_science_record(man, before, after_ok, members, disk, base) is None)
+    check("S3 RED PROOF: a manifest whose row disagrees with the member's bytes is refused",
+          "disagrees with the member's bytes" in (judge_science_record(
+              man, before, sums([("A.html", h(deck_b)), ("B.html", h(other)), ("C.html", h(other))]),
+              members, disk, base) or ""))
+    w9l2 = "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9L2_Mitosis_Sequence_Explore.html"
+    check("S3 RED PROOF: a deck whose pack manifest is not in the transaction is refused",
+          (lambda ok_why: "not re-cut in this transaction" in ok_why[1].get("Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9L2_Mitosis_Sequence_Explore.html", ""))(
+              science_records_allowed({}, lambda rel: b"",
+                                      {"Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9L2_Mitosis_Sequence_Explore.html"})))
+    check("S3: a manifest re-cut for a pack no declared deck belongs to is refused",
+          "does not touch" in (judge_science_record(man, before, after_ok, {}, disk, base) or ""))
+    check("S3: a re-cut that adds or drops a row is refused (digests move, never rows)",
+          "row set moved" in (judge_science_record(
+              man, before, after_ok + f"{h(other)}  D.html\n".encode(), members, disk, base) or ""))
+    check("S3: a row that was FRESH at the base and moves for an undeclared file is refused",
+          "fresh at the base" in (judge_science_record(
+              man, before, sums([("A.html", h(deck_a)), ("B.html", h(b"new")), ("C.html", h(other))]),
+              members, {"A.html": h(deck_a), "B.html": h(b"new"), "C.html": h(other)}.get, base) or ""))
+    check("S3: a riding-along row that is not the digest on disk is refused",
+          "not the digest of the bytes on disk" in (judge_science_record(
+              man, before, sums([("A.html", h(deck_a)), ("B.html", h(other)), ("C.html", h(b"wrong"))]),
+              members, disk, base) or ""))
+    check("S3: a deck with no row (a Classic) is not enrolled and not refused",
+          judge_science_record(man, before, after_ok, {**members, "Z_Classic.html": {"after": b"x"}}, disk, base) is None)
+    # Second cut, after the adversarial review of the first.
+    check("S3 RED PROOF (the wiring): derive's Science limb takes a landable deck OUT when its pack "
+          "manifest lists it and is not re-cut",
+          (lambda r: w9l2 not in r[0] and "not re-cut in this transaction" in r[1].get(w9l2, ""))(
+              science_limb({w9l2: "M"}, lambda rel: b"", deck_limb=lambda p: (set(p), {}))))
+    check("S3 RED PROOF: a deck listed by an ANCESTOR pack manifest (Teaching_Packs/*/HTML/) is "
+          "refused when that manifest is not re-cut",
+          "Teaching_Packs/BUILD/SHA256SUMS.txt" in science_records_allowed({}, lambda rel: b"", {
+              "Science_Teesside/Teaching_Packs/BUILD/HTML/BUILD_Science_W6A.html"})[1].get(
+              "Science_Teesside/Teaching_Packs/BUILD/HTML/BUILD_Science_W6A.html", ""))
+    check("S3: a row that was stale at the base but whose FILE changed outside the transaction is "
+          "refused", "changed outside this transaction" in (judge_science_record(
+              man, before, sums([("A.html", h(deck_a)), ("B.html", h(other)), ("C.html", h(b"ed"))]),
+              members, {"A.html": h(deck_a), "B.html": h(other), "C.html": h(b"ed")}.get, base) or ""))
+    check("S3: a re-cut whose only declared deck has no row is refused -- not derived from it",
+          "not be derived from this transaction" in (judge_science_record(
+              man, before, after_ok, {"Z_Classic.html": {"after": b"x"}}, disk, base) or ""))
+    check("S3: a manifest whose declared deck is gone is refused by name, not by a traceback",
+          "not a regular file" in science_records_allowed(
+              {man: "M"}, lambda rel: before,
+              {"Science_Teesside/Launch/W8-W13_2026-27/NO_SUCH_DECK.html"})[1].get(man, ""))
+    check("S3: only a Science pack's own SHA256SUMS.txt is a record member",
+          "only a Science pack" in (judge_science_record(
+              "Humanities_Teesside/BUILD_W1-W8_2026-27/SHA256SUMS.txt", before, after_ok, members, disk, base) or ""))
+    # --- the S3 WIRING on a real (temporary) pack: science_records_allowed / science_limb /
+    # strand_landable read bytes from `root`, the merge base from the blob reader. Review of the S3
+    # PR: every refusal above was proved at the pure judge only, so removing the line that ACTS on
+    # its verdict, or putting back derive()'s pre-S3 call, left this self-test green.
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmp:
+        troot = Path(tmp)
+        pk = "Science_Teesside/Launch/TEST_pack/"
+        deck, readme, man = pk + "A.html", pk + "README.md", pk + "SHA256SUMS.txt"
+        base_files = {deck: b"<html>A before</html>", readme: b"readme", pk + "B.html": b"<html>B</html>"}
+        stale = h(b"<html>B stale</html>")                        # B's row is already stale at the base
+        base_man = (f"{h(base_files[deck])}  A.html\n{h(base_files[readme])}  README.md\n"
+                    f"{stale}  B.html\n").encode()
+        def lay(files):
+            for rel, data in files.items():
+                (troot / rel).parent.mkdir(parents=True, exist_ok=True)
+                (troot / rel).write_bytes(data)
+        after_deck = b"<html>A after</html>"
+        good_man = (f"{h(after_deck)}  A.html\n{h(base_files[readme])}  README.md\n"
+                    f"{h(base_files[pk + 'B.html'])}  B.html\n").encode()
+        lay({**base_files, deck: after_deck, man: good_man})
+        reader = {**base_files, man: base_man}.get
+        stub = lambda decks: (set(decks), {})
+        both = {deck: "M", man: "M"}
+        allowed, why, records = science_limb(both, reader, stub, troot)
+        check("S3 WIRING: a correct re-cut (a stale row riding along) lands deck AND manifest through science_limb",
+              allowed == {deck, man} and records == {man} and not why)
+        check("S3 WIRING: strand_landable -- the call derive() makes -- gives the same verdict",
+              strand_landable("Science", "", both, reader, deck_limb=stub, root=troot) == (allowed, why, records))
+        lay({man: good_man.replace(h(after_deck).encode(), h(b"not the bytes").encode())})
+        allowed, why, records = strand_landable("Science", "", both, reader, deck_limb=stub, root=troot)
+        check("S3 WIRING RED PROOF: a manifest whose row disagrees with the member's bytes is refused, and so is its deck",
+              "disagrees with the member's bytes" in why.get(man, "") and "re-cut in this transaction but refused" in why.get(deck, "")
+              and not allowed)
+        lay({man: good_man, readme: b"readme edited outside",
+             })
+        moved = good_man.replace(h(base_files[readme]).encode(), h(b"readme edited outside").encode())
+        lay({man: moved})
+        allowed, why, records = strand_landable("Science", "", both, reader, deck_limb=stub, root=troot)
+        check("S3 WIRING RED PROOF: a row FRESH at the base (read from the merge base, not disk) that moves for an undeclared file is refused",
+              "fresh at the base" in why.get(man, "") and man not in allowed)
+        lay({man: good_man, readme: base_files[readme]})
+        allowed, why, records = strand_landable("Science", "", {deck: "M"}, reader, deck_limb=stub, root=troot)
+        check("S3 WIRING RED PROOF: a deck whose pack manifest lists it but is not in the transaction is refused",
+              "not re-cut in this transaction" in why.get(deck, "") and not allowed)
+        lay({man: good_man.replace(b"  README.md\n", b"  README.md \n")})   # parses to the same rows
+        allowed, why, records = strand_landable("Science", "", both, reader, deck_limb=stub, root=troot)
+        check("S3 WIRING RED PROOF: a re-cut that rewrites a line beyond its digest is refused (bytes, not parsed rows)",
+              "not the same row with only its digest replaced" in why.get(man, ""))
+        (troot / man).unlink()
+        ok, rwhy = science_records_allowed({deck: "M"}, reader, {deck}, troot)
+        check("S3 WIRING RED PROOF: a manifest renamed or removed on the branch still binds the deck its base manifest lists",
+              "not re-cut in this transaction" in rwhy.get(deck, ""))
+        lay({man: good_man})
+        ok, rwhy = science_records_allowed({man: "D"}, reader, set(), troot)
+        check("S3 WIRING: a manifest that is not an 'M' is refused by name",
+              "not an 'M'" in rwhy.get(man, ""))
+        classic = pk + "C_Classic.html"
+        lay({classic: b"<html>C</html>"})
+        ok, rwhy = science_records_allowed({}, reader, {classic}, troot)
+        check("S3 WIRING: a deck with no manifest row (a Classic) is not enrolled and not refused (correction #32)",
+              classic not in rwhy)
+        lay({man: good_man + b"\n"})
+        allowed, why, records = strand_landable("Science", "", both, reader, deck_limb=stub, root=troot)
+        check("S3 WIRING RED PROOF: a re-cut that adds a line (here a blank one) is refused -- digests move, never lines",
+              "changes lines, not only row digests" in why.get(man, ""))
+
+    # --- derive() ITSELF, against a throwaway git repository (review of the S3 fix round: the
+    # seams above left derive()'s own call, its merge-base reader and its pin lookup untested).
+    # The throwaway repository must never touch the caller's: every git variable that could point
+    # at another repository or index is removed for the block, and nothing is signed (review of the
+    # S3 PR head: with GIT_DIR or GIT_INDEX_FILE exported, as a pre-commit hook does, the self-test
+    # committed into the caller's repository and still printed PASS).
+    import contextlib, io
+    leak = ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_OBJECT_DIRECTORY",
+            "GIT_ALTERNATE_OBJECT_DIRECTORIES", "GIT_COMMON_DIR", "GIT_NAMESPACE", "GIT_PREFIX")
+    saved = {k: os.environ.pop(k) for k in leak if k in os.environ}
+    try:
+      with tempfile.TemporaryDirectory() as tmp:
+        repo = Path(tmp)
+        g = lambda *a: subprocess.run(["git", "-c", "commit.gpgsign=false", "-c", "tag.gpgsign=false", *a],
+                                      cwd=repo, capture_output=True, text=True, check=True).stdout.strip()
+        g("init", "-q"); g("config", "user.email", "t@t"); g("config", "user.name", "t")
+        pk = "Science_Teesside/Launch/TEST_pack/"
+        deck, readme, man = pk + "A.html", pk + "README.md", pk + "SHA256SUMS.txt"
+        before = {deck: b"<html>A before</html>", readme: b"readme"}
+        man0 = f"{h(before[deck])}  A.html\n{h(before[readme])}  README.md\n".encode()
+        def put(files):
+            for rel, data in files.items():
+                (repo / rel).parent.mkdir(parents=True, exist_ok=True)
+                (repo / rel).write_bytes(data)
+        put({**before, man: man0}); g("add", "-A"); g("commit", "-qm", "base")
+        base_sha = g("rev-parse", "HEAD")
+        # The BASE the operator names is a side tip, so it differs from the merge base: derive()
+        # must read before-bytes and before-blobs at the merge base, never at the named base.
+        g("checkout", "-qb", "side"); side_readme = b"readme on the side"
+        put({readme: side_readme, man: man0.replace(h(before[readme]).encode(), h(side_readme).encode())})
+        g("add", "-A"); g("commit", "-qm", "side"); side_sha = g("rev-parse", "HEAD")
+        g("checkout", "-q", "-"); g("reset", "-q", "--hard", base_sha)
+        stub = lambda decks: (set(decks), {})
+        after = b"<html>A after</html>"
+        man1 = man0.replace(h(before[deck]).encode(), h(after).encode())
+        def run_case(files, pinned):
+            g("reset", "-q", "--hard", base_sha)
+            put(files); g("add", "-A"); g("commit", "-qm", "case")
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                mb = None
+                try:
+                    mb, got = derive(side_sha, "Science", root=repo, deck_limb=stub,
+                                     registry={r: h((repo / r).read_bytes()) for r in pinned})
+                except Refuse as why:
+                    return (None, mb), out.getvalue() + str(why)
+            return (got, mb), out.getvalue()
+        (got, mb), log = run_case({deck: after, man: man1}, [deck, man])
+        check("S3 DERIVE: a deck and its correctly re-cut, pinned manifest are declared together by derive() itself",
+              got is not None and set(got) == {deck, man} and mb == base_sha)
+        check("S3 DERIVE: each declared member's before-blob is the MERGE BASE's, and its after-digest the bytes on disk",
+              got is not None and all(got[r]["beforeGitBlob"] == g("rev-parse", f"{base_sha}:{r}")
+                                      and got[r]["afterSha256"] == h((repo / r).read_bytes()) for r in (deck, man)))
+        (got, _), log = run_case({deck: after}, [deck])
+        check("S3 DERIVE RED PROOF: derive() refuses a deck whose pack manifest is not re-cut",
+              got is None and "not re-cut in this transaction" in log)
+        (got, _), log = run_case({deck: after, readme: b"readme edited",
+                             man: man1.replace(h(before[readme]).encode(), h(b"readme edited").encode())}, [deck, man])
+        check("S3 DERIVE RED PROOF: derive() reads the manifest's before-bytes from the merge base (a fresh row moved for an undeclared file refuses)",
+              got is None and "fresh at the base" in log)
+        (got, _), log = run_case({deck: after, man: man1}, [deck])
+        check("S3 DERIVE RED PROOF: derive() refuses a re-cut manifest with no CATALOGUE_PINS admission",
+              got is None and "no CATALOGUE_PINS admission" in log)
+    finally:
+        os.environ.update(saved)
+
+    check("S3: derive() collects Science pack manifests as members, and only in the Science strand's own limb",
+          strand_kinds("Science") == (".html", "/" + SCIENCE_RECORD) and strand_kinds("Humanities") == (".html",)
+          and "/" + SCIENCE_RECORD not in strand_kinds("Science", "responsive"))
+    check("S3: a renamed manifest reaches the judges keyed by its new path with status R",
+          diff_statuses("M\tScience_Teesside/x/SHA256SUMS.txt\nR100\tScience_Teesside/o/SHA256SUMS.txt\tScience_Teesside/n/SHA256SUMS.txt\nM\ta.css\n",
+                        strand_kinds("Science")) == {"Science_Teesside/x/SHA256SUMS.txt": "M", "Science_Teesside/n/SHA256SUMS.txt": "R"})
+    check("S3: a Science manifest member with no CATALOGUE_PINS admission is refused (the 'pinned' clause)",
+          "no CATALOGUE_PINS admission" in (judge_member(man, "M", {man}, None, "a" * 64) or ""))
+    check("S3: a Science path that is not a manifest is not a record member",
+          "only a Science pack" in (judge_science_record("Science_Teesside/Launch/x/notes.txt", b"", b"", {"a": 1}, None, None) or ""))
+
     print("self-test " + ("PASS" if not bad else f"FAIL ({bad})"))
     return 1 if bad else 0
 
