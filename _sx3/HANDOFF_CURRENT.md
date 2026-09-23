@@ -257,6 +257,18 @@ HIGH, but **all 18 target decks are in the held-51** (row 48). Readback: Site `d
 - B1 Spring 1 (10), then Spring 2, Summer 1 and the Aut1 v3 sets.
 - Next-order items only once everything above is closed.
 
+## GPT lane
+
+**Standing rule (Matt, 2026-09-23):** AUTHORING of new science (especially biology), computing/coding
+and cyber-safety lessons and assemblies goes to GPT (the PACK-1R lane). Code lands and measures;
+Code does not author these. This supersedes the earlier "GPT work" wording in §5 rule 2 where they
+differ; the intake route is unchanged (hash on arrival, checks, table for Matt, standard landing).
+
+Open GPT jobs (specs in Lessons `docs/gpt-jobs/`, PR #668): JOB_9–18 re-author held set B;
+JOB_19–23 author the five missing GROW Do lessons (set D); JOB_24 the SCI_B_W12 teacher-only blocks
+(R-GAPS). Learning-walk jobs JOB_1–JOB_7 are held in `_incoming/lw1/` (LW-2); JOB_8 (QR posters)
+is awaited; JOB_3 (RE draft) is with Matt.
+
 ## 4. Held by name
 
 Held means listed, never forced: no transplant, re-cut or rename until a ruling releases it.
