@@ -32,3 +32,19 @@ landed copies change. 111 landed files; every other landed file is unchanged by 
 Job 9 `CODE_MAP.md` files carry no placeholder and are unchanged. Print: the six AfL sheets
 still render as one A4 page each; the briefing renders two pages, as before. No landed file is
 served (the `_staff` segment), so "Cypher" appears on no public route.
+
+## Job 10 pupil-voice pages: skip-link fix (accessibility; ruling 2026-09-23)
+
+Public pages under `find-out-more/pupil-voice/<pathway>/` (landed in the Job 8/10 public PR). The skip link sat at
+`left:-9999px`, which the PACK-1R 390/1280 harness reads as an element beyond the viewport (6 FAIL at 390). It now sits
+on-screen at `left:12px`, visually hidden with `clip-path:inset(50%)` until focused, where `clip-path:none` shows it.
+Harness 12/12 PASS; Tab focuses the link and it shows at left 12 px; still one A4 page each. CSS only; no text changed.
+
+| page | Job 10 delivered sha256 | landed sha256 | reason |
+|---|---|---|---|
+| `find-out-more/pupil-voice/build/BUILD_Six_Cards_A4.html` | `20c73211a2e854cc4ebae199a8213d0afd6894038252a51f00662ae7701cc896` | `586e14fac41b595e633b242e0aee01c8cbd96d941ae29daeacee54798f74a2cc` | skip-link |
+| `find-out-more/pupil-voice/build/BUILD_Wall_Poster_A4.html` | `5dd3e52ffdf72e6f5aea06ae3503a0772f0b96c53b706c1d65d0c4fe582bcd22` | `1095e5bb24c33910bcf0e617f411cdb2bf3c8eb3567c69f8e54202e05a08ae14` | skip-link |
+| `find-out-more/pupil-voice/grow/GROW_Six_Cards_A4.html` | `480268b4c6cdf9deda7a814938954f8f1186835548a68837d2cbe69421e29cfa` | `9a27d83f56292f158ebc3349ebccd4477054db8dcbbf4353e0684465065a81cc` | skip-link |
+| `find-out-more/pupil-voice/grow/GROW_Wall_Poster_A4.html` | `2022d7ba6c9151fe9573f0849becda3b68c065ec4d84dcc84237febb6e823594` | `432d4749755688af97f846bf1a09eac84b1036a85c4c39d8b472fec9238f4cf2` | skip-link |
+| `find-out-more/pupil-voice/launch/LAUNCH_Six_Cards_A4.html` | `7c747f5f346328d6922de72840cce76d07bb02f7893dc9b608f08c25eb245a31` | `4cb6d5c25c8abd5e99fd676172b129a7bb993c623b4fafd86b329cd5982ef7ad` | skip-link |
+| `find-out-more/pupil-voice/launch/LAUNCH_Wall_Poster_A4.html` | `55e815755378389364c7b637d151215ee6795d63638921e3a1717c43c939b224` | `e3ec1978801dd38ee92a9104c4e78c637b89a804913364e4a2c27e0a1168271d` | skip-link |
