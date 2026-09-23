@@ -11,8 +11,8 @@ entry. Every line below was re-read from the repos, the PRs and the CI runs, not
 full recovery readback is `docs/RECOVERY_READBACK_2026-09-23.md` in the Site repo (not the root: the root is served, and the admission gate refused it there).
 
 Last event (~10:50Z): **D3 and HUB1 v2 built, verified and opened as PRs; LW-2 intake held.** Nothing
-has merged since #664 (`e763a398`, publication 35834505142): Matt's school-day rule holds every merge
-until 15:30 UK (§5 rule 11).
+had merged since #664 (`e763a398`, publication 35834505142) when this was written; the merges are
+running now under HUB1 amendment A1 (§5 rule 11).
 
 ## 1. The three mains
 
@@ -48,7 +48,7 @@ No run was queued or in progress in any repo at ~08:45Z.
 main in Lessons, Site and Apps. Nothing on it is unmerged. The recovery session works on
 `claude/recovery-resume-2026-09-23-9mdd4q` in every repo.
 
-**Open PRs, recovery session (all green or running; none merges before 15:30 UK):**
+**Open PRs, recovery session (all green or running; merged in order, one at a time, when green):**
 
 | PR | branch | head | what / waits on |
 |---|---|---|---|
@@ -333,8 +333,8 @@ case-study decks.
       `education-pages.yml`.
     - Write "the publisher pin X -> Y", not a bare "X -> Y".
 
-11. **No merge 08:30–15:30 UK on a school day (Matt, HUB1 v2 §3.3).** Build, verify and open PRs
-    any time; merge at 15:30 unless Matt replies "merge now" for a named PR.
+11. **There is no merge window (Matt, HUB1 amendment A1, 2026-09-23).** "Build, verify, open the
+    PR; merge when green, publication by run id." One merge at a time, main read green before each.
 12. **Extra branches (Matt, 2026-09-23).** One branch per PR is permitted, so gated PRs never
     share a branch with a docs-only HANDOFF edit.
 13. **The Site root is served.** A root `.md` reaches `education-site` unless it is in
@@ -412,7 +412,7 @@ case-study decks.
 
 ## 7. The single next command
 
-**At 15:30 UK**, in order, each after reading main with `git ls-remote` and confirming green CI on
+**Now**, in order, each after reading main with `git ls-remote` and confirming green CI on
 the PR's current head:
 1. Lessons #665 and Site #439 (docs only).
 2. Apps #179, then Lessons #666 (D3); confirm its publication run.
