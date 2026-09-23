@@ -544,8 +544,8 @@ class AlreadyAdapted(Exception):
 # drift, so retext() rewrites ONLY the strings this module itself emitted, in place: each retired
 # fragment is rebuilt exactly as the earlier ta_brief()/build_panel() wrote it (same esc()), and
 # replaced with what the current constants write. Nothing else in the deck is touched.
-EVIDENCE_LABEL = ('<p class="ta-evidence"><b>The school&#x27;s digital evidence platform, '
-                  'lean capture (E):</b>')
+EVIDENCE_LABEL = ('<p class="ta-evidence"><b>Evidence capture (E) — the school&#x27;s digital evidence '
+                  'platform:</b>')
 PRODUCT_NAME_RX = re.compile(r'\bEarwig\b', re.I)
 RETIRED_TA_FRAGMENTS = [
     # (name, old fragment as previously emitted, fragment the current constants emit)
