@@ -10,9 +10,11 @@ out of credits after closing PASS C batch 1's fold and before it wrote this file
 entry. Every line below was re-read from the repos, the PRs and the CI runs, not from memory. The
 full recovery readback is `docs/RECOVERY_READBACK_2026-09-23.md` in the Site repo (not the root: the root is served, and the admission gate refused it there).
 
-Last event (~10:50Z): **D3 and HUB1 v2 built, verified and opened as PRs; LW-2 intake held.** Nothing
-had merged since #664 (`e763a398`, publication 35834505142) when this was written; the merges are
-running now under HUB1 amendment A1 (§5 rule 11).
+Last event (11:10Z): **merging under HUB1 amendment A1.** Merged so far: Site #439 `ccec5b74`, Lessons
+#665 `63885d63`, Site #441 `bc7cd715` (all docs). Next, one at a time: Apps #179 → Lessons #666 (D3;
+`browser-matrix` re-run in progress after a games-HUD timeout unrelated to the diff) → Site #440 →
+carrier bump on #667 → Apps #180 → Lessons #667 (HUB1 v2). Lessons #668 (SCI_JOB specs) is a DRAFT
+pending the donor.
 
 ## 1. The three mains
 
@@ -253,6 +255,23 @@ teacher note). Six zips held in `_incoming/lw1/` (untracked) with `SHA256_ON_ARR
 internal checksums pass; JOB_1/JOB_2 equal the hashes recorded for the lost copies. SCI_ map: 18/18
 HIGH, but **all 18 target decks are in the held-51** (row 48). Readback: Site `docs/LW2_READBACK.md`.
 
+### Q11 · R3 residue (Matt, 2026-09-23) — after HUB1, own PR, own readback
+"Your task · 1 of 2" in the five W8 decks' no-JS markup (GROW W8A/B, LAUNCH W8L1–3), and BUILD
+W11A/W11B "Week not bound" on the hub.
+
+### Rulings on the recovery readback (Matt, 2026-09-23)
+- SCI_ map **SIGNED**: "18/18 word-for-word against the workbook cells, single deck per
+  pathway-week, manifest agrees." (Site `docs/LW2_READBACK.md`)
+- Science side of LW-1/LW-2: **WAIT for the held-51 release.** "No staff-only route for lesson
+  decks — one chassis, no fork." Anything landing INSIDE a held deck (R2 line, R3/R4/R6
+  fragments) waits; staff-facing files BESIDE a deck (TA briefs, AfL sheets, code maps) may land
+  once their job is held and passed, held-51 or not.
+- LW-1 keeps its place (after D3, W9L1, batch 2, item 4). Its real gate is **Job 9** (GPT, in
+  progress): LW-3's R6 → R5 → R4 order needs Job 9's fragments. No LW-1 R-item starts before Job 9
+  is held and passed.
+- Readbacks live in Site `docs/` (accepted).
+- 15 Sep docs that still state the old merge window are dated records: leave them, no edits.
+
 ### Later in the autonomy order
 - B1 Spring 1 (10), then Spring 2, Summer 1 and the Aut1 v3 sets.
 - Next-order items only once everything above is closed.
@@ -264,10 +283,19 @@ and cyber-safety lessons and assemblies goes to GPT (the PACK-1R lane). Code lan
 Code does not author these. This supersedes the earlier "GPT work" wording in §5 rule 2 where they
 differ; the intake route is unchanged (hash on arrival, checks, table for Matt, standard landing).
 
-Open GPT jobs (specs in Lessons `docs/gpt-jobs/`, PR #668): JOB_9–18 re-author held set B;
-JOB_19–23 author the five missing GROW Do lessons (set D); JOB_24 the SCI_B_W12 teacher-only blocks
-(R-GAPS). Learning-walk jobs JOB_1–JOB_7 are held in `_incoming/lw1/` (LW-2); JOB_8 (QR posters)
-is awaited; JOB_3 (RE draft) is with Matt.
+**Two job series (ruling 2026-09-23):**
+- **Learning-walk lane, plain "Job N" (Jobs 1–9):** Jobs 1, 2, 4–7 held in `_incoming/lw1/`
+  (LW-2); Job 3 (RE draft) with Matt; Job 8 (QR posters) and Job 9 (walk-visible routines) in
+  flight in GPT's session. Jobs 1/2 have no spec file by design: the zip's brief is the spec.
+- **Code's content-held series, SCI_JOB_09–24** (Lessons `docs/gpt-jobs/`, PR #668, DRAFT):
+  SCI_JOB_09–18 re-author held set B; SCI_JOB_19–23 the five missing GROW Do lessons — **HOLD**
+  until Matt answers on 19 Oct whether a source exists (default: write them); SCI_JOB_24 the
+  SCI_B_W12 teacher-only blocks (cell C42 inferred from binding).
+- **Donor:** `c4cfa942` withdrawn (a publisher-pin merge). Proposed: `SCI_G_W9_Turn_Earth_explain_
+  the_sky_Classic.html` blob `9db52ce5f13e` at `be82fe86` (#662; publication 35823783961; census
+  CONFORMING; verify_loop 0 FAIL; not held). Awaiting Matt's confirmation; the specs are re-cut
+  from it.
+- Case-study decks: "held per 22 Sep ruling; reason text to be supplied".
 
 ## 4. Held by name
 
