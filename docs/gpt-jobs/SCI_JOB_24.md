@@ -1,4 +1,4 @@
-# GPT JOB 24 — SCI_B_W12_Give_a_rock_a_job_Classic
+# SCI_JOB_24 — SCI_B_W12_Give_a_rock_a_job_Classic
 
 Lane: GPT authors · Claude rules · Code lands and measures. Nothing lands without Matt.
 Standing rule (Matt, 2026-09-23): authoring new science, computing/coding and cyber-safety
@@ -9,10 +9,10 @@ lessons goes to GPT (PACK-1R lane). Code does not author this.
 | served deck | `Science_Teesside/Build/W8-W13_2026-27/SCI_B_W12_Give_a_rock_a_job_Classic.html` |
 | why held | R-GAPS row 30: .teacher-only blocks absent, no pack source; writing them is authoring (_sx3/RELEASE_LEDGER.md R-GAPS) |
 | pathway | BUILD |
-| SoW cell | Aut2·W4 · `'BUILD Weekly - Autumn'!C42` (the pathway cell for the deck's bound term·week (lesson-order.json)) |
+| SoW cell | Aut2·W4 · `'BUILD Weekly - Autumn'!C42` — **cell inferred from binding, not from deck records** (the pathway cell for the deck's bound term·week in `lesson-order.json`; accepted 2026-09-23) |
 | learning outcome (workbook, verbatim) | Identify everyday uses of different rocks (links D&T / Construction). |
 | shape | unchanged (existing Classic deck, Aut2·W4) |
-| chassis | donor `c4cfa942` (as ordered) + `_sownb/STYLE_CONTRACT_v2.json` |
+| chassis | **donor PENDING** — `c4cfa942` withdrawn (a publisher-pin merge, not a lesson donor; ruling 2026-09-23). Proposed donor awaiting Matt's confirmation; the spec is re-cut from it. Style: `_sownb/STYLE_CONTRACT_v2.json` |
 | reading-age band | Build: "Reading age significantly below chronological age (typically below 8 where measurable)" (Curriculum Policy §6.2, quoted in `docs/orders/LESSON_STANDARD_2026-27.md`) |
 | deliverable | zip of `teacher_only_blocks.html` (the two blocks) + `Editable_lesson_source.json` + `START_HERE.md` |
 

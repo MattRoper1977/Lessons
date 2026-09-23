@@ -1,4 +1,4 @@
-# GPT JOB 14 — SCI_G_W3_Friction
+# SCI_JOB_18 — SCI_G_W7_The_Moon
 
 Lane: GPT authors · Claude rules · Code lands and measures. Nothing lands without Matt.
 Standing rule (Matt, 2026-09-23): authoring new science, computing/coding and cyber-safety
@@ -6,13 +6,13 @@ lessons goes to GPT (PACK-1R lane). Code does not author this.
 
 | field | value |
 |---|---|
-| served deck | `Science_Teesside/Grow/SCI_G_W3_Friction.html` |
+| served deck | `Science_Teesside/Grow/SCI_G_W7_The_Moon.html` |
 | why held | Original Science stage contract: supply defect, queued for re-authoring (_sx3/HELD.md §B, ORDER SX3-M2 §4) |
 | pathway | GROW |
-| SoW cell | Aut1·W3 · `'GROW Weekly - Autumn'!C34` (the pack manifest / spine audit cites this cell) |
-| learning outcome (workbook, verbatim) | Explore friction and how it can be helpful or unhelpful. |
+| SoW cell | Aut1·W7 · `'GROW Weekly - Autumn'!C38` (the pack manifest / spine audit cites this cell) |
+| learning outcome (workbook, verbatim) | Describe the movement of the Moon around the Earth. |
 | shape | Explore (A) / Do (B), 40 minutes each |
-| chassis | donor `c4cfa942` (as ordered) + `_sownb/STYLE_CONTRACT_v2.json` |
+| chassis | **donor PENDING** — `c4cfa942` withdrawn (a publisher-pin merge, not a lesson donor; ruling 2026-09-23). Proposed donor awaiting Matt's confirmation; the spec is re-cut from it. Style: `_sownb/STYLE_CONTRACT_v2.json` |
 | reading-age band | Grow: "Reading age 8–11" (Curriculum Policy §6.2, quoted in `docs/orders/LESSON_STANDARD_2026-27.md`) |
 | deliverable | zip of `Lesson.html` + PPTX/DOCX/PDF + `Editable_lesson_source.json` + `START_HERE.md` |
 
@@ -27,5 +27,5 @@ Downloads only. Nothing is pushed to any repository. Matt hands the zip to Claud
 - PASS B chassis census (`tools/sci/chassis_census.py`).
 - D3 row 48 (`tools/hum/verify_loop.py`): modelling bounded, no third "I do"/"We do", no "2" before "1".
 - 40-minute timing per lesson (timer total 40).
-- The SoW cell above: the lesson's stated outcome equals the workbook cell, and its term·week is Aut1·W3.
+- The SoW cell above: the lesson's stated outcome equals the workbook cell, and its term·week is Aut1·W7.
 - 0 third-party loads (no http(s) script, link, font, image or fetch).
