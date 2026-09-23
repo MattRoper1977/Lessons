@@ -10,8 +10,9 @@ out of credits after closing PASS C batch 1's fold and before it wrote this file
 entry. Every line below was re-read from the repos, the PRs and the CI runs, not from memory. The
 full recovery readback is `docs/RECOVERY_READBACK_2026-09-23.md` in the Site repo (not the root: the root is served, and the admission gate refused it there).
 
-Last event: **PASS C Autumn 2 batch 1 is folded and published.** Lessons #664 (pure carrier)
-merged as `e763a398`; its publication, run 35834505142, succeeded.
+Last event (~10:50Z): **D3 and HUB1 v2 built, verified and opened as PRs; LW-2 intake held.** Nothing
+has merged since #664 (`e763a398`, publication 35834505142): Matt's school-day rule holds every merge
+until 15:30 UK (§5 rule 11).
 
 ## 1. The three mains
 
@@ -47,7 +48,19 @@ No run was queued or in progress in any repo at ~08:45Z.
 main in Lessons, Site and Apps. Nothing on it is unmerged. The recovery session works on
 `claude/recovery-resume-2026-09-23-9mdd4q` in every repo.
 
-**Open PRs from the overnight order:** none.
+**Open PRs, recovery session (all green or running; none merges before 15:30 UK):**
+
+| PR | branch | head | what / waits on |
+|---|---|---|---|
+| Lessons #665 | `claude/recovery-resume-…` | this file | docs only; merges first |
+| Site #439 | `claude/recovery-resume-…` | docs/ readbacks | docs only (`docs/` is never served) |
+| Apps #179 | `claude/recovery-resume-…` | `960e382` | D3 gate copy (`4912a794f366`); merges before #666 |
+| Lessons #666 | `claude/d3-row48` | `318caa21` | D3, row 48 (Q4) |
+| Site #440 | `claude/hub1-window` | `5e797c6` | HUB1 window, 6 transition pairs |
+| Apps #180 | `claude/hub1-badges-apps` | `ccb31ea` | HUB1 gate copy (`a21158d62c95`), stacked on #179 |
+| Lessons #667 (draft) | `claude/hub1-badges` | `ba426527` | HUB1 v2, stacked on #666; carrier bumped to #440's merge SHA as the last edit |
+
+Extra branches: permitted by Matt, 2026-09-23 ("Extra branches", one per PR).
 
 **The dead session's drafts are gone.** They lived in its scratchpad
 (`/tmp/claude-0/-home-user/73e01f17-…/scratchpad/wt/`), and that container was reclaimed. None of
@@ -184,7 +197,7 @@ TERM+WEEK UNCHANGED = YES, evidence sha == bytes, row 45 == derived expectation,
 PASS, exceptions EMPTY. "Row (identity-only)" in the limb column is not an exception. Any table
 with an exception HOLDS; batches behind it build and stage but do not merge."
 
-### Q4 · D3, then W9L1 (before batch 2)
+### Q4 · D3, then W9L1 (before batch 2) — D3 BUILT, PR #666
 > "1. Order: D3 (row 48) lands BEFORE the W9L1 declared-channel fix; the widened row 48 (I do 2
 > before I do → RED) accepted. The 51 held decks stay held on row 48; the 17 Build Spring/Summer
 > decks keeping their Lundy-loop stage is recorded."
@@ -222,6 +235,23 @@ Inputs are held and not landed (section 6). From the LW-1 inputs order:
   at the TEACHER_NOTE stage, via the adapter: inline, keyboard, no external loads, provenance.
   Re-measure rows 38–45, then one table for Matt's signature. Unflagged lessons are untouched.
 - Job 3 stays with Matt.
+
+### Q9 · ORDER HUB1 v2 (Matt, 2026-09-23) — BUILT, PRs #440 / #180 / #667
+Supersedes HUB1. "Queue: after D3 lands (Apps #179 → Lessons half), before W9L1 and batch 2."
+Rulings, verbatim in the order: R1 "Per cell, RECOMMENDED = the animated Explore/Introduce deck
+(A / L1)…"; R2 "Fix at the SOURCE OF TRUTH via the single writer + catalogue regeneration…add a
+gate"; R3 "BUILD W8A/W8B get their real cell (Aut1 · W8) from the spine; W8B's title comes from the
+deck's <title>/h1, not the stage label"; R4 "The hub PR is not re-done; #664 stands."
+3.4 "Batch 2 does not start until HUB1 is CLOSED and 1.5 says the recipe is fixed." 1.5 measured:
+pre-existing (identical at `dda76aa4`), not a batch-1 regression. Evidence: the #667 body.
+Readback owed at landing: Site `docs/HUB1_READBACK.md`, token, PR+SHA+run id, phone URL.
+
+### Q10 · ORDER LW-2 (Matt, 2026-09-23) — intake DONE, §1 map for signature
+Supersedes LW-1's intake lines; LW-1's R2/R3 stand; adds R4 (Job 4 into the existing
+support-and-stretch panel) and R5 (Job 6 briefs and Job 5 v2 cards as staff-only files beside the
+teacher note). Six zips held in `_incoming/lw1/` (untracked) with `SHA256_ON_ARRIVAL.txt`; all
+internal checksums pass; JOB_1/JOB_2 equal the hashes recorded for the lost copies. SCI_ map: 18/18
+HIGH, but **all 18 target decks are in the held-51** (row 48). Readback: Site `docs/LW2_READBACK.md`.
 
 ### Later in the autonomy order
 - B1 Spring 1 (10), then Spring 2, Summer 1 and the Aut1 v3 sets.
@@ -303,6 +333,13 @@ case-study decks.
       `education-pages.yml`.
     - Write "the publisher pin X -> Y", not a bare "X -> Y".
 
+11. **No merge 08:30–15:30 UK on a school day (Matt, HUB1 v2 §3.3).** Build, verify and open PRs
+    any time; merge at 15:30 unless Matt replies "merge now" for a named PR.
+12. **Extra branches (Matt, 2026-09-23).** One branch per PR is permitted, so gated PRs never
+    share a branch with a docs-only HANDOFF edit.
+13. **The Site root is served.** A root `.md` reaches `education-site` unless it is in
+    `SOURCE_ONLY`; readbacks go in Site `docs/` (never served).
+
 ## 6. Owed to Matt, and known reds
 
 - **NOAA 2025 value.** Still owed. Never source, estimate or insert it (427.35 ppm is
@@ -362,12 +399,27 @@ case-study decks.
      checks, so it never sees full green and fails by design. It predates the overnight order, which
      never touches Games; it was not in this file before. Not acted on: Matt's call.
 
+- **New from HUB1 / LW-2 (2026-09-23), not decided:**
+  1. **LW-2 §1 signature** on the SCI_ map (Site `docs/LW2_READBACK.md`), and the question it
+     raises: all 18 Science targets are held on row 48 — does LW Science wait for their release,
+     or is there a staff-only route?
+  2. **Where LW-1/LW-2 sit in the queue**: LW-1's own condition (after batch 1) is met; the
+     handoff queue puts it after D3, W9L1, batch 2 and item 4.
+  3. **"Your task · 1 of 2"** is in the five W8 decks' own no-JS markup (GROW W8A/B, LAUNCH
+     W8L1–3), not in the hub: owed under HUB1 R3 ("otherwise list as owed").
+  4. **BUILD W11A/W11B still read "Week not bound"** on the hub (Aut2); outside R3's scope.
+  5. **LW Job 3 (RE draft)** is with Matt, unread; Job 5 v2 and Job 8 posters are awaited.
+
 ## 7. The single next command
 
-**D3** (Q4): add the "unbounded modelling" result to `tools/hum/verify_loop.py`'s report as row
-48 (RED on a third), with "I do 2 before I do" reported RED, as its own small PR. Rebuild it from
-the ruling; the overnight draft `wt/d3` is gone. Pin it (both gate copies, Apps companion first),
-standard landing route.
+**At 15:30 UK**, in order, each after reading main with `git ls-remote` and confirming green CI on
+the PR's current head:
+1. Lessons #665 and Site #439 (docs only).
+2. Apps #179, then Lessons #666 (D3); confirm its publication run.
+3. Site #440 (HUB1 window); then bump the carrier on `claude/hub1-badges` to #440's merge SHA
+   (last edit), re-run the static contracts, and mark #667 ready.
+4. Apps #180, then Lessons #667 on green; publication by run id; the EQUAL window; the pure carrier.
+5. Write Site `docs/HUB1_READBACK.md` (≤25 lines) with the token.
 
-Then the W9L1 declared-channel fix (Q4), regenerate `PASSC_ROW45_DERIVED.json`, then batch 2
-(Q5) under the pre-signature.
+Then the W9L1 declared-channel fix (Q4), regenerate `PASSC_ROW45_DERIVED.json`, then batch 2 (Q5)
+under the pre-signature, once HUB1 is CLOSED (HUB1 3.4).
