@@ -88,22 +88,28 @@ def _science_cells(term):
         word = re.compile(r'(?<![A-Za-z])Classic(?![A-Za-z])')
         if any(isinstance(cfg.get(k), str) and word.search(cfg[k]) for k in ('key', 'prefix', 'title')): return True
         return any(isinstance(st, dict) and st.get('lesson') == 'Classic' for st in (cfg.get('stages') or []))
+    def part_from_title_text(text, first_kinds):
+        """The part a deck DECLARES on its own title slide -- "Week 9A", "LESSON A", "Lesson 2 of 2",
+        "Week 7 · Explore" -- read from that slide's rendered text, never from its path or file name
+        (g27: no week from a filename). The caller passes the text; this sees no path."""
+        m = re.search(r'\bWeek \d+([AB])\b', text)
+        if m: return ('first' if m.group(1).lower() in first_kinds else 'other'), 'title slide "Week n%s"' % m.group(1)
+        m = re.search(r'\bLESSON ([AB123])\b|\bLesson ([123]) of [23]\b', text)
+        if m:
+            tok = (m.group(1) or m.group(2)).lower()
+            return ('first' if tok in first_kinds else 'other'), 'title slide "LESSON %s"' % tok.upper()
+        m = re.search(r'\bWeek \d+\s*\u00b7\s*(Explore|Introduce|Do)\b', text)
+        if m: return ('first' if m.group(1).lower() in first_kinds else 'other'), 'title slide "%s"' % m.group(1)
+        return None
     def part_of(p, pathway, cell_members):
         # LAUNCH teaches three lessons a week and its first is the Introduce deck (L1); BUILD and GROW teach
         # two and their first is the Explore deck (A). R1 names both: "the animated Explore/Introduce deck (A / L1)".
         first_kinds = {'introduce', 'l1', 'lesson 1', '1'} if pathway == 'LAUNCH' else {'explore', 'a', 'lesson a'}
         if declared_classic(p): return 'classic', 'declares Classic (head title or lesson-config)'
-        ts = title_slide(p)
         k, order, mf = kinds.get(p, (None, None, None))
         if k: return ('first' if k.lower() in first_kinds else 'other'), 'manifest kind %r (%s)' % (k, os.path.relpath(mf, R))
-        m = re.search(r'\bWeek \d+([AB])\b', ts)
-        if m: return ('first' if m.group(1).lower() in first_kinds else 'other'), 'title slide "Week n%s"' % m.group(1)
-        m = re.search(r'\bLESSON ([AB123])\b|\bLesson ([123]) of [23]\b', ts)
-        if m:
-            tok = (m.group(1) or m.group(2)).lower()
-            return ('first' if tok in first_kinds else 'other'), 'title slide "LESSON %s"' % tok.upper()
-        m = re.search(r'\bWeek \d+\s*\u00b7\s*(Explore|Introduce|Do)\b', ts)
-        if m: return ('first' if m.group(1).lower() in first_kinds else 'other'), 'title slide "%s"' % m.group(1)
+        declared = part_from_title_text(title_slide(p), first_kinds)
+        if declared: return declared
         if order is not None:
             same = [q for q in cell_members if q in kinds and kinds[q][2] == mf]
             return ('first' if order == min(kinds[q][1] for q in same) else 'other'), 'manifest row order %d in %s' % (order, os.path.relpath(mf, R))
