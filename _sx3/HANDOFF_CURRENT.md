@@ -15,7 +15,7 @@ merged as `e763a398`; its publication, run 35834505142, succeeded.
 
 ## 1. The three mains
 
-Each read with `git ls-remote`, 2026-09-23 ~09:30Z.
+Each read with `git ls-remote`, 2026-09-23 ~08:45Z.
 
 | repo | main | what it is |
 |---|---|---|
@@ -38,7 +38,7 @@ Colour of each main, from its latest runs:
 - **Games: red on a scheduled workflow (new finding, §6).** Main `909c29c2` is untouched since 17
   Sep. **Games-:** `803e3bca`, untouched.
 
-No run was queued or in progress in any repo at ~09:30Z.
+No run was queued or in progress in any repo at ~08:45Z.
 
 ## 2. Open PRs and branches
 
