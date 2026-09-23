@@ -92,6 +92,21 @@ def self_test() -> int:
     check('(12) the task slide\'s heading is never returned when the title slide has one',
           title_slide_heading(DECK.format(opener='<h2>Heading two</h2>')) != 'Your task · 1 of 2')
 
+    # --- HUB1 R3: a stage label is not a title ---
+    labelled = ('<!doctype html><html><head><title>Body Science Checkpoint \u00b7 BUILD \u00b7 October review</title></head><body>'
+                '<section class="slide" id="slide-1" data-timer="0"><h2>Lesson overview</h2><h3>Learning objective</h3>'
+                '<h3>Success looks like</h3></section><section class="slide" id="slide-2" data-timer="5"><h2>Your task</h2></section></body></html>')
+    check('(13) R3 RED PROOF: a title slide that opens on the label "Lesson overview" is not listed as "Lesson overview"',
+          title_slide_heading(labelled) != 'Lesson overview')
+    check('(14) R3: with only labels on the title slide, the deck\'s own head <title> names it',
+          title_slide_heading(labelled) == 'Body Science Checkpoint')
+    check('(15) R3: a real heading after a label still wins over the head <title>',
+          title_slide_heading(labelled.replace('<h3>Learning objective</h3>', '<h2>Real deck title</h2>', 1)) == 'Real deck title')
+    w8b = ROOT / 'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html'
+    if w8b.is_file():
+        check('(16) R3 on the real deck: SCI_B_W8B lists "Body Science Checkpoint"',
+              title_slide_heading(w8b.read_text(encoding='utf-8', errors='replace')) == 'Body Science Checkpoint')
+
     print('self-test', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
 

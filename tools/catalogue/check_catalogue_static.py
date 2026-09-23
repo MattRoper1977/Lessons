@@ -4,8 +4,22 @@ from lxml import html
 from urllib.parse import urlsplit,unquote
 from pin_catalogue_contract import ORIGINAL_ROW_COUNT, ORIGINAL_ROWS_SHA256, preserved_rows_errors
 r=Path(__file__).resolve().parents[2]
-ap=argparse.ArgumentParser();ap.add_argument('--baseline-root',type=Path,default=r);args=ap.parse_args()
+ap=argparse.ArgumentParser();ap.add_argument('--baseline-root',type=Path,default=r);ap.add_argument('--self-test',action='store_true',help='HUB1 R2: red-prove the style vocabulary gate on planted rows and exit');args=ap.parse_args()
 rows=json.loads((r/'resources.json').read_text());proof=json.loads((r/'tools/catalogue/TERM_AND_STYLE_EVIDENCE.json').read_text())['entries'];science=json.loads((r/'assets/catalogue/science-shelf.json').read_text())['lessons']
+# HUB1 R2 (2026-09-23): any catalogue row whose style value is not in the vocabulary is RED. The hub
+# renders a style through the vocabulary map and a value the map lacks would print raw; the
+# catalogue.js fallback for an UNKNOWN row is 'earlier', which is how a taught deck can read as
+# 'Earlier retained versions'. Judged against the vocabulary the builder publishes, never a copy.
+STYLE_VOCABULARY=set(json.loads((r/'assets/catalogue/terms-and-styles.json').read_text())['styles'])
+def style_vocabulary_errors(entries,vocabulary):
+ return sorted('%s: style %r not in %s'%(p,m.get('style'),sorted(vocabulary)) for p,m in entries.items() if m.get('style') not in vocabulary)
+if args.self_test:
+ clean={'a.html':{'style':'recommended'},'b.html':{'style':'earlier'}}
+ assert style_vocabulary_errors(clean,STYLE_VOCABULARY)==[],'clean rows must pass'
+ planted=dict(clean,**{'c.html':{'style':'lundy-loop-v2'}});bad=style_vocabulary_errors(planted,STYLE_VOCABULARY)
+ assert bad==["c.html: style 'lundy-loop-v2' not in %s"%sorted(STYLE_VOCABULARY)],bad
+ assert style_vocabulary_errors({'d.html':{}},STYLE_VOCABULARY),'a row with no style is RED too'
+ print('style vocabulary gate: clean PASS / planted bogus value RED / missing style RED');raise SystemExit(0)
 checks=[]
 def check(name,condition):
  assert condition,name
@@ -13,6 +27,7 @@ def check(name,condition):
 base=(r/'resources.json').read_bytes()
 check('Original 734 resource rows remain unchanged and ordered, with only three reviewed hub rows appended',not preserved_rows_errors(rows))
 check('Every committed resource row has additive metadata',len(rows)>0 and all(x['file'] in proof for x in rows))
+check('Every catalogue style value is in the published vocabulary (HUB1 R2): '+', '.join(style_vocabulary_errors(proof,STYLE_VOCABULARY)[:3]),not style_vocabulary_errors(proof,STYLE_VOCABULARY))
 check('All 180 Science lessons remain available with a proven or explicitly unknown term',len(science)==180 and len({x['path'] for x in science})==180 and all((r/x['path']).is_file() and x['term'] in ['Aut1','Aut2','Spr1','Spr2','Sum1','Sum2','unspecified'] for x in science))
 # ORDER HUM-T STOP-T3 ruling Q1: every deck the projection proves through the strand record
 # must still satisfy the limb's three conditions on this tree, judged by the same function.
@@ -50,7 +65,15 @@ _rp=_order.get('scienceRowProofs',[]);_lp=_order.get('scienceLabelProofs',[])
 check('Science-row-proved decks (%d listed): re-derived from the evidence projection, stated weeks and title stage'%len(_rp),all(_row_holds(p) for p in _rp))
 check('Science-label-proved decks (%d listed): no projection, the deck\'s own label equals its pinned row, no stray title claim'%len(_lp),all(_label_holds(p) for p in _lp))
 check('Current content hashes match every hashed metadata entry',all(hashlib.sha256((r/p).read_bytes()).hexdigest()==v['sha256'] for p,v in proof.items() if 'sha256' in v))
-check('Recommended selection contains only the 15 selected LAUNCH Science routes',sum(x['style']=='recommended' for x in science)==15 and all(x['pathway']=='LAUNCH' for x in science if x['style']=='recommended'))
+# HUB1 R1 (2026-09-23) replaces the pre-R1 assertion "only the 15 selected LAUNCH Science routes are
+# recommended": the editorial selection is the ONLY route to 'recommended' for a Science route, and
+# every Autumn 2 cell in the hub bindings (BUILD, GROW and LAUNCH) carries exactly one recommended
+# member, the A / L1 deck the writer chose. The 15 LAUNCH W3-W7 routes stay recommended.
+_sel=json.loads((r/'tools/catalogue/SHELF_SELECTION.json').read_text());_rec={x['path'] for x in science if x['style']=='recommended'}
+check('Every recommended Science route is in the editorial selection, and every selected Science route is recommended',_rec==set(_sel['recommended'])&{x['path'] for x in science})
+_slots=[s_ for s_ in json.loads((r/'assets/catalogue/science-hub-bindings.json').read_text())['slots'] if s_['term']=='Aut2' and s_['week'] is not None]
+check('HUB1 R1: every Autumn 2 cell (%d, BUILD/GROW/LAUNCH) carries exactly one recommended member'%len(_slots),len(_slots)>0 and all(sum(c['path'] in _rec for c in s_['current'])==1 for s_ in _slots))
+check('The 15 pre-R1 LAUNCH W3-W7 routes stay recommended',sum(1 for x in science if x['style']=='recommended' and x['pathway']=='LAUNCH' and not any(c['path']==x['path'] for s_ in _slots for c in s_['current']))==15)
 for filename in ['index.html','Science_Teesside/index.html','Humanities_Teesside/index.html']:
  p=r/filename;doc=html.fromstring(p.read_text());ids=doc.xpath('//*[@id]/@id');check(filename+' has unique element IDs',len(ids)==len(set(ids)))
  missing=[]
