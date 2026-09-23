@@ -12,7 +12,7 @@ lessons goes to GPT (PACK-1R lane). Code does not author this.
 | SoW cell | Aut2·W3 · `'GROW Weekly - Autumn'!C41` (the pack manifest / spine audit cites this cell) |
 | learning outcome (workbook, verbatim) | Research and present findings about the Solar System (ICT). |
 | shape | the Do (B) half of: Explore (A) / Do (B), 40 minutes each |
-| chassis | **donor PENDING** — `c4cfa942` withdrawn (a publisher-pin merge, not a lesson donor; ruling 2026-09-23). Proposed donor awaiting Matt's confirmation; the spec is re-cut from it. Style: `_sownb/STYLE_CONTRACT_v2.json` |
+| chassis | **donor (confirmed by Matt, 2026-09-23):** `Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W9_Turn_Earth_explain_the_sky_Classic.html` — blob `9db52ce5f13e`, sha256 `4568d8d3e033b9f5…`, last changed by `be82fe86` (#662), published run 35823783961, D3 row 48 PASS, not held; unchanged on main `6d5a05ad`. Match its chassis: 7 stages — opening 2 · arrival 5 · starter 4 · I do 7 · We do 10 · independent 10 · exit 2 (timer total 40); 5 Lundy panels. The donor fixes the chassis only, never the content; the reading band follows this spec's pathway. Style: `_sownb/STYLE_CONTRACT_v2.json` |
 | reading-age band | Grow: "Reading age 8–11" (Curriculum Policy §6.2, quoted in `docs/orders/LESSON_STANDARD_2026-27.md`) |
 | deliverable | zip of `Lesson.html` + PPTX/DOCX/PDF + `Editable_lesson_source.json` + `START_HERE.md` |
 

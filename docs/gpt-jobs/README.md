@@ -6,7 +6,7 @@ does not author these. Each spec below is read-only: downloads only, nothing pus
 
 **Two series (ruling 2026-09-23).** The learning-walk lane keeps plain **Job N** (Jobs 1–9: Job 8 QR posters and Job 9 walk-visible routines are in flight in GPT's session). This set is the **SCI_JOB** series: SCI_JOB_09–24.
 
-**Status: DRAFT.** Donor `c4cfa942` is withdrawn (a publisher-pin merge, not a lesson donor). The specs are re-cut once Matt confirms the proposed donor.
+**Status: re-cut from the confirmed donor (ruling 2026-09-23).** Donor `c4cfa942` stays withdrawn (a publisher-pin merge, not a lesson donor). Every spec's chassis row now names the donor below.
 
 ## G1 · Every GPT-work item listed today
 
@@ -49,7 +49,7 @@ handoff's GPT row reads "0 so far".
 | SCI_JOB_24 | `SCI_B_W12_Give_a_rock_a_job_Classic.html` | R-GAPS · teacher-only blocks | Aut2·W4 · `'BUILD Weekly - Autumn'!C42` |
 
 Every spec names: pathway · SoW cell (term·week, cell ref) · the workbook outcome verbatim · the
-40-minute shape · chassis donor (PENDING Matt's confirmation) + `_sownb/STYLE_CONTRACT_v2.json` · the Curriculum
+40-minute shape · chassis donor (confirmed 2026-09-23) + `_sownb/STYLE_CONTRACT_v2.json` · the Curriculum
 Policy §6.2 reading-age band · the deliverable · the HARD STOP · the gates it is measured against on
 return (hashes, PASS B census, D3 row 48, 40 minutes, the cell, 0 third-party loads).
 
@@ -67,12 +67,12 @@ No spec file exists for either, **by design (ruling 2026-09-23): the zip's brief
 
 Both are held in `Lessons/_incoming/lw1/` (untracked), with JOB_4–JOB_7.
 
-## Proposed donor (awaiting Matt's confirmation)
+## Donor (confirmed by Matt, 2026-09-23)
 
 Rule applied: the most recent merged Science deck on the current chassis that passed every gate and
 is not held. Measured on Lessons main `e763a398`:
 
-- **Proposed: `Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W9_Turn_Earth_explain_the_sky_Classic.html`**,
+- **Donor: `Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W9_Turn_Earth_explain_the_sky_Classic.html`**,
   blob `9db52ce5f13e`, last changed by `be82fe86` (Lessons #662, PASS C Autumn 2 batch 1, merged
   2026-09-23 05:46Z). Gates: its #662 STOP-SIGN row (TERM+WEEK unchanged, evidence sha == bytes,
   row 45 == derived, shell-by-DOM PASS, exceptions none); publication run 35823783961 success;
@@ -81,7 +81,9 @@ is not held. Measured on Lessons main `e763a398`:
   W9–W14; set D: GROW W9B–W13B), and the one un-held BUILD candidate, `SCI_B_W11B`, fails 16
   `verify_loop` rows. The batch-1 decks are the newest conforming decks with a clean gate record, and
   this is the GROW one; the specs are BUILD and GROW.
-- **Open for Matt:** no un-held BUILD deck passes every gate, so the proposal uses this GROW deck for
-  the BUILD specs too (one chassis). The reading band still follows the pathway.
-- LAUNCH alternative, if wanted: `SCI_L_W14L1_Genetic_Condition_Research_Introduce.html`, blob
-  `011ebb99b5bd`, same commit and gates.
+- **Ruled (YES, 2026-09-23):** no un-held BUILD deck passes every gate, so this GROW deck is the donor
+  for the BUILD specs too (one chassis). The reading band still follows the pathway.
+- Re-measured on main `6d5a05ad`: blob unchanged (`9db52ce5f13ecf19…`), sha256 `4568d8d3e033b9f5a18ae695c0ebb37166872cb7aea393881db0e75f80fa03fc`;
+  7 stages (opening 2 · arrival 5 · starter 4 · I do 7 · We do 10 · independent 10 · exit 2 = 40 min), 5 Lundy panels.
+- Fallback, **recorded but unused** (ruling 2026-09-23): `SCI_L_W14L1_Genetic_Condition_Research_Introduce.html`,
+  blob `011ebb99b5bd`, same commit and gates.
