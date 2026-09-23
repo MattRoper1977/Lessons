@@ -36,6 +36,6 @@
 
 **HANDOFF at Exit:** Tell the teacher the deepest prompt level reached (self-scaffold, prompt, clue, model or correct), the independently demonstrated part of “I can start at the named place, follow each move and check the destination.”, and the next content barrier. Include the response mode and any access support.
 
-**E: evidence captured on {EVIDENCE_APP}** — tag only a relevant broad Job 2 area if actual evidence exists: communication & interaction; cognition & learning; SEMH. Source-linked behaviours: communication & interaction: Gives a partner one clear direction from the named start; cognition & learning: Follows the ordered directions to the correct destination; SEMH: Requests clarification when a route instruction is unclear
+**E: evidence captured on Cypher** — tag only a relevant broad Job 2 area if actual evidence exists: communication & interaction; cognition & learning; SEMH. Source-linked behaviours: communication & interaction: Gives a partner one clear direction from the named start; cognition & learning: Follows the ordered directions to the correct destination; SEMH: Requests clarification when a route instruction is unclear
 
 **Feedback loop:** At Review/Exit, an actual NS+ names one next step. At the next lesson Arrival, allow the pupil to respond; only then mark R after the adult has engaged with that response. `//` marks a pupil self-edit; `?` cues Read it back. Code actual events only.

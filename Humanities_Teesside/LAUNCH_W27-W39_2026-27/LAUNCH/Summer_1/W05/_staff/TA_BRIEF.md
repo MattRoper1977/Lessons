@@ -36,6 +36,6 @@
 
 **HANDOFF at Exit:** Tell the teacher the deepest prompt level reached (self-scaffold, prompt, clue, model or correct), the independently demonstrated part of “I can separate practice figures from real observations and explain a fair way to check an action.”, and the next content barrier. Include the response mode and any access support.
 
-**E: evidence captured on {EVIDENCE_APP}** — tag only a relevant broad Job 2 area if actual evidence exists: communication & interaction; cognition & learning; SEMH. Source-linked behaviours: communication & interaction: Explains a role contribution and how another person can check it; cognition & learning: Calculates the before/after difference while retaining the practice-data label; SEMH: Agrees a role boundary or change with a partner before the trial
+**E: evidence captured on Cypher** — tag only a relevant broad Job 2 area if actual evidence exists: communication & interaction; cognition & learning; SEMH. Source-linked behaviours: communication & interaction: Explains a role contribution and how another person can check it; cognition & learning: Calculates the before/after difference while retaining the practice-data label; SEMH: Agrees a role boundary or change with a partner before the trial
 
 **Feedback loop:** At Review/Exit, an actual NS+ names one next step. At the next lesson Arrival, allow the pupil to respond; only then mark R after the adult has engaged with that response. `//` marks a pupil self-edit; `?` cues Read it back. Code actual events only.

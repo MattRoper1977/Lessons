@@ -36,6 +36,6 @@
 
 **HANDOFF at Exit:** Tell the teacher the deepest prompt level reached (self-scaffold, prompt, clue, model or correct), the independently demonstrated part of “I can defend or revise a sustainability decision using evidence, a criterion and a limitation.”, and the next content barrier. Include the response mode and any access support.
 
-**E: evidence captured on {EVIDENCE_APP}** — tag only a relevant broad Job 2 area if actual evidence exists: communication & interaction; cognition & learning; SEMH. Source-linked behaviours: communication & interaction: Defends a provisional decision with a source and limitation; cognition & learning: Links a criterion score to a specific evidence note; SEMH: Uses the agreed review routine to respond to a challenge to the decision
+**E: evidence captured on Cypher** — tag only a relevant broad Job 2 area if actual evidence exists: communication & interaction; cognition & learning; SEMH. Source-linked behaviours: communication & interaction: Defends a provisional decision with a source and limitation; cognition & learning: Links a criterion score to a specific evidence note; SEMH: Uses the agreed review routine to respond to a challenge to the decision
 
 **Feedback loop:** At Review/Exit, an actual NS+ names one next step. At the next lesson Arrival, allow the pupil to respond; only then mark R after the adult has engaged with that response. `//` marks a pupil self-edit; `?` cues Read it back. Code actual events only.

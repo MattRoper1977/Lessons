@@ -2,7 +2,7 @@
 
 **Scheme objective:** Investigate festivals of light around the world with a Geography link.
 
-**Run it without a worksheet:** Display the poster and name the learning goal. Read one source chunk on the shared screen; learners find the three answers by speech, pointing, signing, symbol/AAC, drawing or writing. Use Read it back (?) on one sentence; let the pupil correct or extend an answer. Use the reading ruler or device text-to-speech when helpful. Staff device or projector only. An adult fades prompts as soon as the pupil can proceed.
+**Run it without a worksheet:** Display the poster and name the learning goal. Read one source chunk on the shared screen; learners find the three answers by speech, pointing, signing, symbol/AAC, drawing or writing. Use Read it back (?) on one sentence; let the pupil correct or extend an answer. Use the reading ruler or device text-to-speech when helpful. Staff device (school tablet) or projector only. An adult fades prompts as soon as the pupil can proceed.
 
 **Four pupil-voice answers this topic enables:**
 1. Learning: “I am learning to locate festival sources and compare where they are used.”
@@ -22,7 +22,7 @@
 - **WS:** Pupil works with the adult's reading or choice support; record the support used.
 - **I:** Pupil locates a source detail or answers without a content prompt.
 - **NS+:** Ask for one specific next step: find the source line for “What can a map locate accurately?” and add its detail.
-- **E:** E: evidence captured on {EVIDENCE_APP}
+- **E:** E: evidence captured on Cypher
 - **R:** Next lesson, receive and attend to the pupil's response to NS+ before marking the loop closed.
 - **//:** Mark the exact point in the existing response where the pupil self-edits.
 - **?:** Use Read it back; pupil reads, hears or indicates the highlighted sentence and checks their claim.

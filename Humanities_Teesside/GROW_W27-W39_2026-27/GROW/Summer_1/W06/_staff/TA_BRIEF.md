@@ -36,6 +36,6 @@
 
 **HANDOFF at Exit:** Tell the teacher the deepest prompt level reached (self-scaffold, prompt, clue, model or correct), the independently demonstrated part of “I can check my tally, display and conclusion against one another before submitting my own evidence.”, and the next content barrier. Include the response mode and any access support.
 
-**E: evidence captured on {EVIDENCE_APP}** — tag only a relevant broad Job 2 area if actual evidence exists: communication & interaction; cognition & learning; SEMH. Source-linked behaviours: communication & interaction: Gives their own conclusion to an adult or chosen audience; cognition & learning: Identifies a missing study section using the evidence checklist; SEMH: Selects a response format or agreed support before the individual review
+**E: evidence captured on Cypher** — tag only a relevant broad Job 2 area if actual evidence exists: communication & interaction; cognition & learning; SEMH. Source-linked behaviours: communication & interaction: Gives their own conclusion to an adult or chosen audience; cognition & learning: Identifies a missing study section using the evidence checklist; SEMH: Selects a response format or agreed support before the individual review
 
 **Feedback loop:** At Review/Exit, an actual NS+ names one next step. At the next lesson Arrival, allow the pupil to respond; only then mark R after the adult has engaged with that response. `//` marks a pupil self-edit; `?` cues Read it back. Code actual events only.

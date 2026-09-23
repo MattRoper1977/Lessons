@@ -2,7 +2,7 @@
 
 **Scheme objective:** Explore one festival of light and explain one meaning linked to it.
 
-**Run it without a worksheet:** Display the poster and name the learning goal. Read one source chunk on the shared screen; learners find the three answers by speech, pointing, signing, symbol/AAC, drawing or writing. Use Read it back (?) on one sentence; let the pupil correct or extend an answer. Use the reading ruler or device text-to-speech when helpful. Staff device or projector only. An adult fades prompts as soon as the pupil can proceed. In RE, report what the named religious and non-religious sources say; do not ask pupils what they believe.
+**Run it without a worksheet:** Display the poster and name the learning goal. Read one source chunk on the shared screen; learners find the three answers by speech, pointing, signing, symbol/AAC, drawing or writing. Use Read it back (?) on one sentence; let the pupil correct or extend an answer. Use the reading ruler or device text-to-speech when helpful. Staff device (school tablet) or projector only. An adult fades prompts as soon as the pupil can proceed. In RE, report what the named religious and non-religious sources say; do not ask pupils what they believe.
 
 **Four pupil-voice answers this topic enables:**
 1. Learning: “I am learning to report what a named source says about a festival of light.”
@@ -22,7 +22,7 @@
 - **WS:** Pupil works with the adult's reading or choice support; record the support used.
 - **I:** Pupil locates a source detail or answers without a content prompt.
 - **NS+:** Ask for one specific next step: find the source line for “What meaning does the source give light?” and add its detail.
-- **E:** E: evidence captured on {EVIDENCE_APP}
+- **E:** E: evidence captured on Cypher
 - **R:** Next lesson, receive and attend to the pupil's response to NS+ before marking the loop closed.
 - **//:** Mark the exact point in the existing response where the pupil self-edits.
 - **?:** Use Read it back; pupil reads, hears or indicates the highlighted sentence and checks their claim.

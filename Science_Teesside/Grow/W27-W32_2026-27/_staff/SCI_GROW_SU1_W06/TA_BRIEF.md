@@ -35,6 +35,6 @@
 
 **HANDOFF at Exit:** Tell the teacher the deepest prompt level reached (self-scaffold, prompt, clue, model or correct), the independently demonstrated part of “I can explain that burning or rusting forms new materials and compare this with a state change.”, and the next content barrier. Include the response mode and any access support.
 
-**E: evidence captured on {EVIDENCE_APP}** — tag only a relevant broad Job 2 area if actual evidence exists: communication & interaction; cognition & learning. Source-linked behaviours: communication & interaction: Explains a clue that a new material formed in a supplied example; cognition & learning: Distinguishes an irreversible-change example from a reversible one
+**E: evidence captured on Cypher** — tag only a relevant broad Job 2 area if actual evidence exists: communication & interaction; cognition & learning. Source-linked behaviours: communication & interaction: Explains a clue that a new material formed in a supplied example; cognition & learning: Distinguishes an irreversible-change example from a reversible one
 
 **Feedback loop:** At Review/Exit, an actual NS+ names one next step. At the next lesson Arrival, allow the pupil to respond; only then mark R after the adult has engaged with that response. `//` marks a pupil self-edit; `?` cues Read it back. Code actual events only.

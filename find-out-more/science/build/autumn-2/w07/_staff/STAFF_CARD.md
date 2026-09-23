@@ -2,7 +2,7 @@
 
 **Scheme objective:** Review and evidence learning on skeletons, nutrition & rocks (Entry Level Science / UAS).
 
-**Run it without a worksheet:** Display the poster and name the learning goal. Read one source chunk on the shared screen; learners find the three answers by speech, pointing, signing, symbol/AAC, drawing or writing. Use Read it back (?) on one sentence; let the pupil correct or extend an answer. Use the reading ruler or device text-to-speech when helpful. Staff device or projector only. An adult fades prompts as soon as the pupil can proceed. Use this source reading before or after the formal check; permitted access arrangements govern assessed work.
+**Run it without a worksheet:** Display the poster and name the learning goal. Read one source chunk on the shared screen; learners find the three answers by speech, pointing, signing, symbol/AAC, drawing or writing. Use Read it back (?) on one sentence; let the pupil correct or extend an answer. Use the reading ruler or device text-to-speech when helpful. Staff device (school tablet) or projector only. An adult fades prompts as soon as the pupil can proceed. Use this source reading before or after the formal check; permitted access arrangements govern assessed work.
 
 **Four pupil-voice answers this topic enables:**
 1. Learning: “I am learning to show what I know about bones, food and rocks.”
@@ -22,7 +22,7 @@
 - **WS:** Pupil works with the adult's reading or choice support; record the support used.
 - **I:** Pupil locates a source detail or answers without a content prompt.
 - **NS+:** Ask for one specific next step: find the source line for “What rock property can be tested?” and add its detail.
-- **E:** E: evidence captured on {EVIDENCE_APP}
+- **E:** E: evidence captured on Cypher
 - **R:** Next lesson, receive and attend to the pupil's response to NS+ before marking the loop closed.
 - **//:** Mark the exact point in the existing response where the pupil self-edits.
 - **?:** Use Read it back; pupil reads, hears or indicates the highlighted sentence and checks their claim.

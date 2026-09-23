@@ -36,6 +36,6 @@
 
 **HANDOFF at Exit:** Tell the teacher the deepest prompt level reached (self-scaffold, prompt, clue, model or correct), the independently demonstrated part of “In practice, I can read the command and source, give a relevant causal link and check it; the live assessment uses its own arrangements.”, and the next content barrier. Include the response mode and any access support.
 
-**E: evidence captured on {EVIDENCE_APP}** — tag only a relevant broad Job 2 area if actual evidence exists: communication & interaction; cognition & learning; SEMH. Source-linked behaviours: communication & interaction: Communicates a need for the agreed assessment access support without requesting the answer; cognition & learning: Applies a taught concept to an assessment item; SEMH: Uses an agreed pause-and-return routine during the assessment if needed
+**E: evidence captured on Cypher** — tag only a relevant broad Job 2 area if actual evidence exists: communication & interaction; cognition & learning; SEMH. Source-linked behaviours: communication & interaction: Communicates a need for the agreed assessment access support without requesting the answer; cognition & learning: Applies a taught concept to an assessment item; SEMH: Uses an agreed pause-and-return routine during the assessment if needed
 
 **Feedback loop:** At Review/Exit, an actual NS+ names one next step. At the next lesson Arrival, allow the pupil to respond; only then mark R after the adult has engaged with that response. `//` marks a pupil self-edit; `?` cues Read it back. Code actual events only.

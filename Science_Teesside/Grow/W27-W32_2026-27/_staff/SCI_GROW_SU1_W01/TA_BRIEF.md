@@ -35,6 +35,6 @@
 
 **HANDOFF at Exit:** Tell the teacher the deepest prompt level reached (self-scaffold, prompt, clue, model or correct), the independently demonstrated part of “I can order pollen transfer, fertilisation and seed formation, then explain the link.”, and the next content barrier. Include the response mode and any access support.
 
-**E: evidence captured on {EVIDENCE_APP}** — tag only a relevant broad Job 2 area if actual evidence exists: communication & interaction; cognition & learning. Source-linked behaviours: communication & interaction: Explains one link between pollination and seed formation; cognition & learning: Sequences the supplied plant-reproduction stages
+**E: evidence captured on Cypher** — tag only a relevant broad Job 2 area if actual evidence exists: communication & interaction; cognition & learning. Source-linked behaviours: communication & interaction: Explains one link between pollination and seed formation; cognition & learning: Sequences the supplied plant-reproduction stages
 
 **Feedback loop:** At Review/Exit, an actual NS+ names one next step. At the next lesson Arrival, allow the pupil to respond; only then mark R after the adult has engaged with that response. `//` marks a pupil self-edit; `?` cues Read it back. Code actual events only.

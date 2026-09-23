@@ -33,10 +33,12 @@ Job 9 contains proposed drop-ins. No existing lesson has been edited or landed. 
 | **WS** | Work completed with support in We-do or Independent; note the prompt level. |
 | **I** | The pupil’s own independent content decision in Independent. |
 | **NS+** | One specific next step given at Review or Exit, linked to the work. |
-| **E** | E: evidence captured on {EVIDENCE_APP} — at Independent or Exit, only for an observed action. |
+| **E** | E: evidence captured on Cypher — at Independent or Exit, only for an observed action. |
 | **R** | At the next Arrival, the pupil responds to NS+ and the adult engages with it; then close the loop. |
 | **//** | The point where the pupil actually self-edits after feedback at Review. |
 | **?** | The Exit “Read it back” cue; receive the pupil’s response by their agreed mode. |
+
+**Record on the paper grid or straight into Cypher on the tablet — one or the other, not both.**
 
 **Close the loop:** NS+ → pupil responds at a later opportunity (usually next Arrival) → adult engages with that response → R. `//` needs an actual self-edit. `?` needs a read-back response. E records actual evidence in the existing system.
 

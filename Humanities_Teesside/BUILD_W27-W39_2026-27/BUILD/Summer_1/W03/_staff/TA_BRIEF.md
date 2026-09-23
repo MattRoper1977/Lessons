@@ -35,6 +35,6 @@
 
 **HANDOFF at Exit:** Tell the teacher the deepest prompt level reached (self-scaffold, prompt, clue, model or correct), the independently demonstrated part of “I can compare the same feature in both checked sources and say what each shows.”, and the next content barrier. Include the response mode and any access support.
 
-**E: evidence captured on {EVIDENCE_APP}** — tag only a relevant broad Job 2 area if actual evidence exists: communication & interaction; cognition & learning. Source-linked behaviours: communication & interaction: Communicates one difference using a detail from each source; cognition & learning: Sorts a shared feature into the correct comparison category
+**E: evidence captured on Cypher** — tag only a relevant broad Job 2 area if actual evidence exists: communication & interaction; cognition & learning. Source-linked behaviours: communication & interaction: Communicates one difference using a detail from each source; cognition & learning: Sorts a shared feature into the correct comparison category
 
 **Feedback loop:** At Review/Exit, an actual NS+ names one next step. At the next lesson Arrival, allow the pupil to respond; only then mark R after the adult has engaged with that response. `//` marks a pupil self-edit; `?` cues Read it back. Code actual events only.

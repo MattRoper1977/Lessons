@@ -14,3 +14,21 @@ Source: Job 9 `JOB_9_Walk_Visible_Routines.zip`, sha256
 | `<P>_A4_Science_AfL_Quick_Record.html` (3, in the pathway folders) | per Job 9 SHA256SUMS | — | one token: `E EFL evidence` → `E {EVIDENCE_APP} evidence` | forbidden names; the ruled staff placeholder |
 
 Every other landed file is byte-identical to the delivered file.
+
+## {EVIDENCE_APP} = Cypher (ruling 2026-09-23) — every LW-4 staff file, all folders
+
+Recorded here for the whole LW-4 §1 landing (Humanities, Science and find-out-more `_staff/`
+folders alike). Held zips and their extractions in `_incoming/lw1/` stay as delivered; only the
+landed copies change. 111 landed files; every other landed file is unchanged by this ruling.
+
+| job | files | change |
+|---|---|---|
+| Job 9 | 36 `TA_BRIEF.md` | `{EVIDENCE_APP}` → `Cypher` ("E: evidence captured on Cypher") |
+| Job 9 | 3 `<P>_A4_Science_AfL_Quick_Record.html` | code key `E {EVIDENCE_APP} evidence` → `E evidence captured on Cypher`; one line added under "Quick record · week ____": "Record on the paper grid or straight into Cypher on the tablet — one or the other, not both." |
+| Job 5 v2 | 3 `<P>_A4_AfL_Quick_Record.html` | the same two changes as the Science sheets |
+| Job 10 | 3 `TA_Teacher_Briefing.md`, 3 `TA_Teacher_Briefing_A4.html` | `{EVIDENCE_APP}` → `Cypher`; the same grid line added after the feedback code map, before "Close the loop" |
+| Job 8 | 63 `STAFF_CARD.md` | `{EVIDENCE_APP}` → `Cypher`; "Staff device or projector" → "Staff device (school tablet) or projector" |
+
+Job 9 `CODE_MAP.md` files carry no placeholder and are unchanged. Print: the six AfL sheets
+still render as one A4 page each; the briefing renders two pages, as before. No landed file is
+served (the `_staff` segment), so "Cypher" appears on no public route.
