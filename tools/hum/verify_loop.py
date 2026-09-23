@@ -391,6 +391,26 @@ def verify(after_html: str, before_html: str, strand: str, science_panel_texts):
         PASS if not bad else FAIL,
         'bound=%d %s' % (len(title_stage), bad))
 
+    # 48 — D3 AS A REAL CHECK (ruled 2026-09-23): "add the 'unbounded modelling' result to
+    # verify_loop's report (RED on a third), so the 51 affected decks are reported, not silently
+    # passed", widened by ruling to "I do 2 before I do -> RED".
+    #
+    # eyebrow_names() already refuses those stages, but only by naming them 'unnamed', and nothing
+    # read that: measured in S02, 0 verdicts across the 51. This row reads it. A stage is counted
+    # here only when its eyebrow IS in the vocabulary and the route still refused it, which is
+    # exactly the ordinal refusals (a third bare "I do"/"We do", a second explicit "2", a "2"
+    # before its "1"). A label outside the vocabulary is a naming question for rows 2 and 14, not
+    # this one. The row reads the eyebrows whichever channel names the deck, because the bound is
+    # on what the deck DECLARES.
+    labels = [deck_dom.stage_eyebrow(s) for s in st]
+    names = deck_dom.eyebrow_names(st)
+    unbounded = ['%d:%s' % (i, lab) for i, (lab, nm) in enumerate(zip(labels, names))
+                 if lab and nm == 'unnamed'
+                 and deck_dom.EYEBROW_STAGE.get(lab.lower()) is not None]
+    row(48, 'modelling is bounded: at most two of each kind, and no "2" before its "1"',
+        PASS if not unbounded else FAIL,
+        ('unbounded modelling: %s' % unbounded) if unbounded else '')
+
     # 13 — nothing lost: every sentence of the source deck survives somewhere.
     # (Numbered in the adapter's own low range: 45 is the chassis loop row.)
     # The ribbon is REPLACED by ruling R1, so its own boilerplate is not "lost".
@@ -620,6 +640,31 @@ def self_test(root: Path):
                  _names(['We do', 'We do', 'We do']) == ['wedo', 'wedo2', 'unnamed']))
     pure.append(('D3 RED PROOF: a second explicit "I do 2" is RED too',
                  _names(['I do', 'I do 2', 'I do 2']) == ['ido', 'ido2', 'unnamed']))
+
+    # Row 48 -- D3 AS A REAL CHECK (ruled 2026-09-23). The name-level bound above refused the
+    # stage and no row ever said so. These pin the row, not the name.
+    def _deck(labels):
+        return _sci([(l, NEUTRAL, False) for l in labels])
+    pure.append(('row 48: two of each modelling kind is PASS',
+                 _row(_deck(['Arrival', 'I do', 'I do', 'We do', 'We do', 'Exit']), 48) == PASS))
+    pure.append(('row 48: "I do" then an explicit "I do 2" is PASS',
+                 _row(_deck(['Arrival', 'I do', 'I do 2', 'We do', 'Exit']), 48) == PASS))
+    pure.append(('row 48 RED PROOF: a third bare "I do" is RED "unbounded modelling"',
+                 _row(_deck(['Arrival', 'I do', 'I do', 'I do', 'Exit']), 48) == FAIL))
+    pure.append(('row 48 RED PROOF: a third bare "We do" is RED',
+                 _row(_deck(['Arrival', 'We do', 'We do', 'We do', 'Exit']), 48) == FAIL))
+    pure.append(('row 48 RED PROOF: a second explicit "I do 2" is RED',
+                 _row(_deck(['Arrival', 'I do', 'I do 2', 'I do 2', 'Exit']), 48) == FAIL))
+    pure.append(('row 48 RED PROOF (widened): "I do 2" before any "I do" is RED',
+                 _row(_deck(['Arrival', 'I do 2', 'I do', 'Exit']), 48) == FAIL))
+    pure.append(('row 48 RED PROOF (widened): "We do 2" before any "We do" is RED',
+                 _row(_deck(['Arrival', 'We do 2', 'We do', 'Exit']), 48) == FAIL))
+    pure.append(('row 48: a label outside the vocabulary is not "unbounded modelling"',
+                 _row(_deck(['Arrival', 'Something else', 'I do', 'Exit']), 48) == PASS))
+    _d48 = next(x['detail'] for x in verify(_deck(['I do', 'I do', 'I do']),
+                                            _deck(['I do', 'I do', 'I do']), '', set())
+                if x['row'] == 48)
+    pure.append(('row 48 names the refused stage and its label', _d48 == "unbounded modelling: ['2:I do']"))
 
     # E -- PASS C batch 1's adversarial review, 2026-09-23. Two adapter defects that every row
     # above passed over. The Science chassis names its meta line `science-meta` and its stage chip
