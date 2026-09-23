@@ -17,15 +17,15 @@ been named in a chat readback but never filed anywhere in the repository — the
 Term from `tools/catalogue/TERM_AND_STYLE_EVIDENCE.json` at `1ba289d6`; both are census class
 `no-furniture` in `tools/catalogue/SCIENCE_CHASSIS_CENSUS.json`.
 
-## Held pending a limb (1)
+## Released by a ruling (1)
 
-| deck | pathway · term · week | held because | leaves HELD when |
-|---|---|---|---|
-| `Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9L1_Cell_Cycle_Introduce.html` | LAUNCH · Aut2 · W1 (hub binding, `assets/catalogue/science-hub-bindings.json`) | "held pending the Science row limb" (Matt, 2026-09-23). The evidence re-stamp refuses it: no existing derive limb (token, label, explicit cell, preserved outcome, enrichment, approved sha) proves its week, because its week lives only in its catalogue row. | the Science row limb lands, in the same PR that adds that limb (ruled 2026-09-23). |
+A deck leaves this file when the ruling that held it is met. It is named here WITHOUT its
+backticked path: `tools/catalogue/restamp_evidence_sha256.py` derives the held set from every
+backticked Science deck path in this file, so a backticked path would keep it held.
 
-Ruling, verbatim: "W9L1: filed in _sci/HELD.md now as "held pending the Science row limb"; it
-leaves HELD when the limb lands." It is also out of PASS C batch 1 by the earlier ruling ("W9L1 is
-EXCLUDED from batch 1 … W9L1 joins batch 2 once its refusal is traced").
+| deck | was held because | released by |
+|---|---|---|
+| SCI_L_W9L1_Cell_Cycle_Introduce (LAUNCH · Aut2 · W1) | "held pending the Science row limb" (Matt, 2026-09-23) | the limbs PR that adds the Science row limb, per the same ruling: "it leaves HELD when the limb lands". The row limb proves it (Aut2·W1). |
 
 ## The other held-by-name sets, and where each is recorded
 
@@ -33,5 +33,5 @@ EXCLUDED from batch 1 … W9L1 joins batch 2 once its refusal is traced").
 |---|---|
 | Held A, Held B, parked C, the 5 GROW `_Do` decks (D) | `_sx3/HELD.md` |
 | 15 LAUNCH print | `_sx3/HELD.md`, `_sx3/CHASSIS_CONTRACT.md` |
-| 5 week-token disagreements | `_sci/WEEK_TOKEN_DISAGREEMENTS.md` (not `_sx3/RELEASE_LEDGER.md`, as the 2026-09-22 handoff said) |
+| 5 week-token disagreements, of which 1 is still held: SCI_G_W16B, refused for its title-stage claim. B_W4A–W7A were a reader defect and may join a batch (Matt, 2026-09-23, ruling 3 of the limbs second cut). | `_sci/WEEK_TOKEN_DISAGREEMENTS.md` (not `_sx3/RELEASE_LEDGER.md`, as the 2026-09-22 handoff said) |
 | the 51 unscoped science decks | `_sx3/handoff_2026-09-22/artefacts/SCI_51.md` |

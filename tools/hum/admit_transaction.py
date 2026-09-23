@@ -95,6 +95,19 @@ TERM_LABEL = {"Aut1": "Autumn 1", "Aut2": "Autumn 2", "Spr1": "Spring 1",
 STRANDS = {"Humanities": PREFIX, "Science": SCIENCE_PREFIX}
 
 
+def title_stage_text(data: bytes) -> str:
+    """What a Science deck CLAIMS about its own week: the visible text of its TITLE STAGE, the first
+    top-level slide (its meta line included), read through deck_dom -- the estate's one stage
+    reader -- with scripts and styles skipped. Ruled 2026-09-23 (Matt, on the limbs review): a
+    recall or review line on a later stage quotes another lesson's week and is not the deck's
+    claim; reading the whole deck is what refused SCI_B_W4A-W7A. build_lesson_order's
+    deck_statement_text reads the same stage for the same reason."""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import deck_dom
+    stages = deck_dom.stages(deck_dom.parse(data.decode("utf-8", "replace")))
+    return stages[0].inner_text() if stages else ""
+
+
 def flat_text(data: bytes) -> str:
     """The deck's visible text, tags stripped and whitespace flattened -- the same shape
     tools/sci/reprove_bindings.py reads a projection out of."""
@@ -144,10 +157,18 @@ def judge_science(rel, entry, record_ok, text, cells=frozenset(), spine=None, sp
     got = projected(text, set(cells), spine or {})
     if not got:
         return None  # form (iv): the deck states nothing, and the signed row proves it
-    if want <= got:
-        return None  # forms (i)-(iii): every bound week is one the deck states about itself
-    return ("the deck states %s about itself, which does not cover the record's term-week (%s)"
-            % (", ".join(sorted(got)), ", ".join(sorted(want))))
+    if not want <= got:
+        return ("the deck states %s about itself, which does not cover the record's term-week (%s)"
+                % (", ".join(sorted(got)), ", ".join(sorted(want))))
+    # Ruled 2026-09-23 (Matt, on SCI_G_W16B): a week the TITLE STAGE claims that the row does not
+    # bind is a refusal, whatever another form covers. Cover alone let W16B land: its label
+    # "Spring 1 · Week 16" is read as Spr1·W16, and its own lesson-config cell C29 (Spr1·W2) covered
+    # the row, so the wrong week a pupil reads on the title stage went unrefused.
+    stray = projected(text, set(), spine or {}) - want
+    if stray:
+        return ("the deck's title stage states %s, which its row (%s) does not bind"
+                % (", ".join(sorted(stray)), ", ".join(sorted(want))))
+    return None  # forms (i)-(iii): every bound week is one the deck states about itself
 
 
 class Refuse(Exception):
@@ -453,7 +474,7 @@ def science_allowed(paths) -> tuple[set, dict]:
     for rel in paths:
         path = ROOT / rel
         data = path.read_bytes() if path.is_file() and not path.is_symlink() else b""
-        text = flat_text(data) if data else ""
+        text = title_stage_text(data) if data else ""
         reason = judge_science(rel, entries.get(rel), record_ok, text,
                                config_cells(data), spine, spine_ok)
         if reason:
@@ -789,6 +810,32 @@ def self_test() -> int:
 
     check("the Humanities strand still maps to its own prefix, untouched",
           STRANDS["Humanities"] == PREFIX and STRANDS["Science"] == SCIENCE_PREFIX)
+
+    # --- ruling 3 on the limbs review (2026-09-23): the deck's claim is its TITLE STAGE ---
+    row4 = {"weeks": [{"key": "Aut1\u00b7W4"}]}
+    recall = (b'<section class="slide"><p>BUILD \xc2\xb7 Science \xc2\xb7 Week 4A</p></section>'
+              b'<section class="slide"><p>Retrieve the actual previous lesson: Aut1\xc2\xb7W3</p></section>')
+    check("CLAIM: a recall line on a later stage is not the deck's claim, so form (iv) lands it",
+          judge_science("Science_Teesside/B/x.html", row4, True, title_stage_text(recall)) is None)
+    wrong = (b'<section class="slide"><p>BUILD \xc2\xb7 Science \xc2\xb7 Aut1\xc2\xb7W3</p></section>'
+             b'<section class="slide"><p>body</p></section>')
+    check("CLAIM RED PROOF: a title stage claiming the wrong week still refuses",
+          "does not cover" in (judge_science("Science_Teesside/B/x.html", row4, True, title_stage_text(wrong)) or ""))
+    check("CLAIM RED PROOF: the same wrong week read over the WHOLE deck would have refused the recall deck",
+          "does not cover" in (judge_science("Science_Teesside/B/x.html", row4, True, flat_text(recall)) or ""))
+    w16b = "Science_Teesside/Grow/W15-W20_2026-27/SCI_G_W16B_Getting_The_Solid_Back_Do.html"
+    check("W16B RED PROOF, real tree: a title-stage week the row does not bind refuses, although the deck's own cell covers the row",
+          "title stage states Spr1\u00b7W16" in science_allowed([w16b])[1].get(w16b, ""))
+    row2 = {"weeks": [{"key": "Spr1\u00b7W2"}]}
+    check("W16B RED PROOF, pure: title claim Spr1\u00b7W16 plus a covering cell still refuses",
+          "does not bind" in (judge_science("Science_Teesside/G/x.html", row2, True, "Spring 1 \u00b7 Week 16",
+                                            {"C"}, {"C": {"termWeek": "Spr1\u00b7W2"}}) or ""))
+    check("and a title claim that IS the row, beside the same cell, still lands",
+          judge_science("Science_Teesside/G/x.html", row2, True, "Spring 1 \u00b7 Week 2",
+                        {"C"}, {"C": {"termWeek": "Spr1\u00b7W2"}}) is None)
+    w4a = "Science_Teesside/Build/v3_40min/SCI_B_W4A_Muscles_Explore.html"
+    check("CLAIM, real tree (the wiring): science_allowed lands SCI_B_W4A, whose only Aut1\u00b7W3 is a recall line",
+          w4a in science_allowed([w4a])[0])
     print("self-test " + ("PASS" if not bad else f"FAIL ({bad})"))
     return 1 if bad else 0
 
