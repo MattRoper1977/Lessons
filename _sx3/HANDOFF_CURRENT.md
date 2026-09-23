@@ -32,8 +32,9 @@ Colour of each main, from its latest runs:
   four Watch main reds between 08:10Z and 08:15Z fired while other runs were still in progress; the
   last verdict is PASS.
 - **Site: green apart from the known red.** Published Education completion 35834455992 failed on
-  the same cause as before (§6). Education publication 35833504734, Domain split 35833504729, live
-  verification 35834455930: success.
+  the same cause as before (§6). Education publication 35833504734 and live verification
+  35834455930: success. The long run the dead session was waiting on is Domain split publication
+  35833504729 (07:46Z → 08:18Z, 31 min): success. All 22 runs on `5251edc8` are complete.
 - **Apps: green.** Publication 35834500947, Verify OS 35835143691: success.
 - **Games: red on a scheduled workflow (new finding, §6).** Main `909c29c2` is untouched since 17
   Sep. **Games-:** `803e3bca`, untouched.
@@ -344,8 +345,11 @@ case-study decks.
   - Job 3 (the RE scheme draft) stays with Matt.
 
 - **New in the recovery (2026-09-23), not decided:**
-  1. **The S06 ledger entry for batch 1** is owed. Its evidence is the #662 body and the run ids in
-     §3 Q3.
+  1. **The S06 ledger entry for batch 1** is owed. The dead session's last message said it was
+     starting a docs PR, "S06 filled in" + "HANDOFF v4". Nothing of it reached origin: every ref in
+     all five repos was searched for an S06 file, and there is no open PR for it. By Matt's addendum
+     it is **not re-derived** here; it stays owed. This file is a fresh rewrite, since no v4
+     existed to land. Its evidence, when it is written, is the #662 body and the run ids in §3 Q3.
   2. **The flag correction #662 promised** ("that is corrected in the docs PR") never landed:
      `_sx3/SX3_PASSES_LEDGER.md:1703` still cites `build_science_hub.py --check`, a flag the tool
      does not have.
