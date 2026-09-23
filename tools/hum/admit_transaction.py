@@ -40,6 +40,7 @@ import argparse
 import ast
 import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
@@ -1155,10 +1156,19 @@ def self_test() -> int:
 
     # --- derive() ITSELF, against a throwaway git repository (review of the S3 fix round: the
     # seams above left derive()'s own call, its merge-base reader and its pin lookup untested).
+    # The throwaway repository must never touch the caller's: every git variable that could point
+    # at another repository or index is removed for the block, and nothing is signed (review of the
+    # S3 PR head: with GIT_DIR or GIT_INDEX_FILE exported, as a pre-commit hook does, the self-test
+    # committed into the caller's repository and still printed PASS).
     import contextlib, io
-    with tempfile.TemporaryDirectory() as tmp:
+    leak = ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_OBJECT_DIRECTORY",
+            "GIT_ALTERNATE_OBJECT_DIRECTORIES", "GIT_COMMON_DIR", "GIT_NAMESPACE", "GIT_PREFIX")
+    saved = {k: os.environ.pop(k) for k in leak if k in os.environ}
+    try:
+      with tempfile.TemporaryDirectory() as tmp:
         repo = Path(tmp)
-        g = lambda *a: subprocess.run(["git", *a], cwd=repo, capture_output=True, text=True, check=True).stdout.strip()
+        g = lambda *a: subprocess.run(["git", "-c", "commit.gpgsign=false", "-c", "tag.gpgsign=false", *a],
+                                      cwd=repo, capture_output=True, text=True, check=True).stdout.strip()
         g("init", "-q"); g("config", "user.email", "t@t"); g("config", "user.name", "t")
         pk = "Science_Teesside/Launch/TEST_pack/"
         deck, readme, man = pk + "A.html", pk + "README.md", pk + "SHA256SUMS.txt"
@@ -1170,6 +1180,12 @@ def self_test() -> int:
                 (repo / rel).write_bytes(data)
         put({**before, man: man0}); g("add", "-A"); g("commit", "-qm", "base")
         base_sha = g("rev-parse", "HEAD")
+        # The BASE the operator names is a side tip, so it differs from the merge base: derive()
+        # must read before-bytes and before-blobs at the merge base, never at the named base.
+        g("checkout", "-qb", "side"); side_readme = b"readme on the side"
+        put({readme: side_readme, man: man0.replace(h(before[readme]).encode(), h(side_readme).encode())})
+        g("add", "-A"); g("commit", "-qm", "side"); side_sha = g("rev-parse", "HEAD")
+        g("checkout", "-q", "-"); g("reset", "-q", "--hard", base_sha)
         stub = lambda decks: (set(decks), {})
         after = b"<html>A after</html>"
         man1 = man0.replace(h(before[deck]).encode(), h(after).encode())
@@ -1178,25 +1194,31 @@ def self_test() -> int:
             put(files); g("add", "-A"); g("commit", "-qm", "case")
             out = io.StringIO()
             with contextlib.redirect_stdout(out):
+                mb = None
                 try:
-                    _, got = derive(base_sha, "Science", root=repo, deck_limb=stub,
-                                    registry={r: h((repo / r).read_bytes()) for r in pinned})
+                    mb, got = derive(side_sha, "Science", root=repo, deck_limb=stub,
+                                     registry={r: h((repo / r).read_bytes()) for r in pinned})
                 except Refuse as why:
-                    return None, out.getvalue() + str(why)
-            return got, out.getvalue()
-        got, log = run_case({deck: after, man: man1}, [deck, man])
+                    return (None, mb), out.getvalue() + str(why)
+            return (got, mb), out.getvalue()
+        (got, mb), log = run_case({deck: after, man: man1}, [deck, man])
         check("S3 DERIVE: a deck and its correctly re-cut, pinned manifest are declared together by derive() itself",
-              got is not None and set(got) == {deck, man})
-        got, log = run_case({deck: after}, [deck])
+              got is not None and set(got) == {deck, man} and mb == base_sha)
+        check("S3 DERIVE: each declared member's before-blob is the MERGE BASE's, and its after-digest the bytes on disk",
+              got is not None and all(got[r]["beforeGitBlob"] == g("rev-parse", f"{base_sha}:{r}")
+                                      and got[r]["afterSha256"] == h((repo / r).read_bytes()) for r in (deck, man)))
+        (got, _), log = run_case({deck: after}, [deck])
         check("S3 DERIVE RED PROOF: derive() refuses a deck whose pack manifest is not re-cut",
               got is None and "not re-cut in this transaction" in log)
-        got, log = run_case({deck: after, readme: b"readme edited",
+        (got, _), log = run_case({deck: after, readme: b"readme edited",
                              man: man1.replace(h(before[readme]).encode(), h(b"readme edited").encode())}, [deck, man])
         check("S3 DERIVE RED PROOF: derive() reads the manifest's before-bytes from the merge base (a fresh row moved for an undeclared file refuses)",
               got is None and "fresh at the base" in log)
-        got, log = run_case({deck: after, man: man1}, [deck])
+        (got, _), log = run_case({deck: after, man: man1}, [deck])
         check("S3 DERIVE RED PROOF: derive() refuses a re-cut manifest with no CATALOGUE_PINS admission",
               got is None and "no CATALOGUE_PINS admission" in log)
+    finally:
+        os.environ.update(saved)
 
     check("S3: derive() collects Science pack manifests as members, and only in the Science strand's own limb",
           strand_kinds("Science") == (".html", "/" + SCIENCE_RECORD) and strand_kinds("Humanities") == (".html",)
