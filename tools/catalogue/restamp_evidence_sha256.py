@@ -491,10 +491,14 @@ def self_test():
     # Each deck's real bytes gain one comment in memory -- the tree is never written.
     w9l1 = 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9L1_Cell_Cycle_Introduce.html'
     w4a = 'Science_Teesside/Build/v3_40min/SCI_B_W4A_Muscles_Explore.html'
-    rel_fence = fence['released']['paths'][0]['path']
-    rel_week = fence['released']['paths'][0]['heldWeek']
-    still = fence['fenced'][0]['path']
-    probe = [w9l1, w4a, w16b, rel_fence, still, w14rel]
+    released_all = [(x['path'], x['heldWeek']) for x in fence['released']['paths']]
+    fenced_all = [x['path'] for x in fence['fenced']]
+    # The re-stamp expectation below uses the released deck no held record names: SCI_G_A2_W7A/W7B
+    # are listed in _sx3/HELD.md, which the held derivation does not read (a question for Matt), so
+    # a check must not entrench either answer. SCI_B_W13 is named by no held record.
+    rel_fence = next(x for x, _ in released_all if 'SCI_B_W13_Where_did_this_material' in x)
+    still = next(x for x in fenced_all if 'SCI_B_W11A_' in x)
+    probe = [w9l1, w4a, w16b, w14rel] + [x for x, _ in released_all] + fenced_all
     moved = {q: (ROOT / q).read_bytes() + b'\n<!-- restamp self-test: bytes moved -->\n' for q in probe}
     d = blo.derive(moved)
     rows_p, refused, unres = set(d.get('scienceRowProofs', [])), d.get('scienceRefusals', {}), set(d['unresolvedTiming'])
@@ -505,16 +509,19 @@ def self_test():
           w4a in rows_p and wk(w4a) == ['Aut1·W4'])
     check('WIRING RED PROOF, derive(): SCI_G_W16B on moved bytes is refused for its title-stage claim',
           w16b in unres and 'claim' in refused.get(w16b, {}) and w16b not in rows_p)
-    check('WIRING, derive(): the released fence deck on moved bytes holds the week the fence records',
-          rel_fence in rows_p and wk(rel_fence) == [rel_week])
-    check('WIRING RED PROOF, derive(): a deck still fenced is unresolved on moved bytes',
-          still in unres)
+    check('WIRING, derive(): every released fence deck on moved bytes holds the week the fence records (%d)'
+          % len(released_all), len(released_all) == 3 and all(x in rows_p and wk(x) == [w] for x, w in released_all))
+    check('WIRING RED PROOF, derive(): every deck still fenced is unresolved on moved bytes, refused by the row limb (%d)'
+          % len(fenced_all), len(fenced_all) == 3 and all(x in unres and 'row' in refused.get(x, {}) for x in fenced_all))
+    check('WIRING RED PROOF, derive(): SCI_B_W11A keeps its row reason AND gains its title-stage claim (merged, never overwritten)',
+          set(refused.get(still, {})) >= {'row', 'claim'})
     check('WIRING CONTROL, derive(): SCI_L_W14L1 on moved bytes is proved by its explicit cell, no Science limb',
           w14rel in d['refreshedSourceProofs'] and w14rel not in rows_p and w14rel not in refused)
-    digests = {q: hashlib.sha256(b).hexdigest() for q, b in moved.items()}
+    plan = [w9l1, w4a, w16b, rel_fence, still, w14rel]
+    digests = {q: hashlib.sha256(moved[q]).hexdigest() for q in plan}
     e, r, n = restamp_plan(evidence, digests, digests.get, set(d['refreshedSourceProofs']), bdoc['entries'],
                            fenced_paths(), refused, held_paths())
-    check('WIRING, restamp_plan on derive(): W9L1, B_W4A, the released fence deck and W14L1 are re-stamped',
+    check('WIRING, restamp_plan on derive(): W9L1, B_W4A, released SCI_B_W13 and W14L1 are re-stamped',
           {x[0] for x in r} == {w9l1, w4a, rel_fence, w14rel})
     check('WIRING RED PROOF, restamp_plan on derive(): W16B (its claim) and the fenced deck are refused, by name',
           len(e) == 2 and any('claim' in x and w16b in x for x in e) and any('fenced' in x and still in x for x in e))
