@@ -53,7 +53,7 @@ def science_row_keys(row):
  cannot parse, or a key that disagrees with the same week's own term / weekWithinTerm fields.
  An unreadable week is a refusal, never a week quietly dropped from the comparison."""
  keys=set()
- for w in (row or {}).get('weeks',[]):
+ for w in ((row or {}).get('weeks') or []):
   m=WEEK_KEY.match(w.get('key','')) if isinstance(w,dict) else None
   if not m or m[1]!=w.get('term') or int(m[2])!=w.get('weekWithinTerm'):return None
   keys.add(w['key'])
@@ -114,7 +114,10 @@ def science_limbs(path,rows,record_digest,pinned_digest,projected_keys,stated_ke
  it. Split out of derive() so the self-test plants against the wiring, not only the judges."""
  ok,why=science_row_proof(path,rows,record_digest,pinned_digest,projected_keys,stated_keys)
  if ok:return 'row',why
- if why!=NO_PROJECTION:return None,{'row':why,'label':'not tried: the evidence projects a week, so the row decides'}
+ # Gated on the projection ITSELF, not on the row limb's reason (review of the PR head: a row with no
+ # term·week refused first, and the label was recorded 'not tried: the evidence projects a week' for a
+ # deck whose evidence projects nothing). Outcome unchanged: the label limb refuses the same decks.
+ if sorted(set(projected_keys)):return None,{'row':why,'label':'not tried: the evidence projects a week, so the row decides'}
  ok,lwhy=science_label_proof(path,rows,record_digest,pinned_digest,said)
  if ok:return 'label',lwhy
  return None,{'row':why,'label':lwhy}
@@ -151,7 +154,12 @@ def strand_rows():
  raw=STRAND.read_bytes();doc=json.loads(raw)
  rows={r['path']:r for r in doc.get('lessons',[])}
  return rows,hashlib.sha256(raw).hexdigest(),catalogue_pin(STRAND)
-def derive():
+def derive(moved=None):
+ """moved: {path: bytes} read IN PLACE of the tree's bytes for those decks -- the seam the re-stamp
+ self-test uses to move real decks' bytes through this exact function (review of the limbs PR head:
+ the ruled W9L1, W16B, title-stage and fence proofs tested the pure helpers, never this wiring)."""
+ moved=moved or {}
+ def bytes_of(path):return moved[path] if path in moved else (ROOT/path).read_bytes()
  rows=read('resources.json'); known={r['file']:r for r in rows}; supplements=[]
  for filename,subject in [('science-shelf.json','Science'),('humanities-shelf.json','Humanities')]:
   for r in read('assets/catalogue/'+filename)['lessons']:
@@ -173,15 +181,15 @@ def derive():
  for ordinal,row in enumerate(rows):
   path=row['file'];m=metadata.get(path,{});e=evidence.get(path,{})
   info={'ordinal':ordinal,'canonical':path,'weeks':[]}
-  source=ROOT/path
   if e.get('sha256'):
-   digest=hashlib.sha256(source.read_bytes()).hexdigest()
+   digest=hashlib.sha256(bytes_of(path)).hexdigest()
    if digest!=e['sha256']:
     # These later accepted Science revisions keep their own explicit SoW quote.
-    text=norm(' '.join(html.fromstring(source.read_text()).itertext()))
+    page=bytes_of(path).decode('utf-8')
+    text=norm(' '.join(html.fromstring(page).itertext()))
     proofs=[p for p in e['evidence'] if p.get('method')=='own title slide declaration' and isinstance(p.get('quote'),str)]
     audit=science['entries'].get(path,{})
-    configs=html.fromstring(source.read_text()).xpath('//script[@id="lesson-config"]/text()')
+    configs=html.fromstring(page).xpath('//script[@id="lesson-config"]/text()')
     config=json.loads(configs[0]) if configs else {}
     declared=config.get('source',{})
     declared_ref="'"+declared.get('sheet','')+"'!"+declared.get('cell','')
@@ -209,7 +217,7 @@ def derive():
      # disagrees with the row is a refusal ("row week != projection -> refuse", ruled), and a
      # label must not rescue it (review of the first cut).
      projected=evidence_projection(e.get('evidence',[]),cells,m.get('terms',[]))
-     said=deck_statement_text(html.fromstring(source.read_text()))
+     said=deck_statement_text(html.fromstring(page))
      stated=set(week_keys(said))|({cells[declared_ref]['termWeek']} if declared_ref in cells and cells[declared_ref].get('termWeek') else set())
      limb,result=science_limbs(path,science['entries'],brecord,bpin,projected,stated,said)
      if limb=='row':proved=True;row_proved.append(path)
@@ -217,12 +225,12 @@ def derive():
      else:science_refused[path]=result
     if path in science['entries']:
      # Ruled on W16B: a title-stage week the row does not bind refuses, whichever limb proved it.
-     conflict=title_claim_conflict(science['entries'][path],week_keys(deck_statement_text(html.fromstring(source.read_text()))))
+     conflict=title_claim_conflict(science['entries'][path],week_keys(deck_statement_text(html.fromstring(page))))
      if conflict:
       proved=False
       for lst in (row_proved,label_proved):
        if path in lst:lst.remove(path)
-      science_refused[path]={'claim':conflict}
+      science_refused.setdefault(path,{})['claim']=conflict
     if proved:refreshed.append(path)
     else:
      assert m.get('style')!='recommended','Recommended source needs current proof: '+path
@@ -231,7 +239,7 @@ def derive():
   binding=science['entries'].get(path)
   if path in unresolved:pass
   elif binding:
-   assert info.get('sourceSha256') or hashlib.sha256(source.read_bytes()).hexdigest()==binding['sourceSha256'],path
+   assert info.get('sourceSha256') or hashlib.sha256(bytes_of(path)).hexdigest()==binding['sourceSha256'],path
    info['weeks']=[{'term':w['term'],'week':w['weekWithinTerm'],'label':w['label']} for w in binding['weeks']]
   else:
    for key in sorted(set(weeks_from(e.get('evidence',[])))):

@@ -39,6 +39,12 @@
 > Spr1·W16, which its row (Spr1·W2) does not bind". Across all 180 bound decks this refuses W16B and
 > no other deck; on moved bytes it is the only deck proved before and refused now.
 >
+> **Totals, measured** (`admit_transaction.science_allowed` over the 180 decks bound in
+> `SCIENCE_WEEK_BINDINGS.json`): Lessons main `f8cc300a` admits **172** and refuses 8 (the four no-week
+> BUILD decks W8A, W8B, W11A, W11B and B_W4A–W7A). After this PR it admits **175** and refuses **5**: the
+> same four no-week decks and SCI_G_W16B. The count table further down (171 landable) predates both
+> measurements.
+>
 > **Recorded for the transplant.** The visible label is wrong for pupils and teachers. When PASS C
 > re-cuts W16B, its title-stage token and label are DERIVED from the row (`Spr1·W2`, "Spring 1 ·
 > Week 2"), never typed.

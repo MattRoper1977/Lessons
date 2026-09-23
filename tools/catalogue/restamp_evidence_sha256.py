@@ -31,6 +31,10 @@ to act on judgement it has not been given:
     latent loss _sx3/FENCE.json exists to fence, so a fenced path is refused outright.
   * the entry's recorded term/weeks must still agree with SCIENCE_WEEK_BINDINGS, and style is
     never written.
+  * a deck HELD BY NAME (_sci/HELD.md, the R-GAPS rows of _sx3/RELEASE_LEDGER.md) is EXCLUDED from
+    the list by derivation and never re-stamped; the rest of the list proceeds (Matt, 2026-09-23:
+    "the re-stamp list excludes held decks BY DERIVATION ... never by hand"). restamp_plan still
+    refuses a held deck it is handed, so no caller can re-stamp one by skipping the exclusion.
 
 ONLY the sha256 field of a listed, moved, proved entry is rewritten. No other field, no other
 entry, no shelf, no lesson-order projection. After --write, run build_lesson_order.py to project
@@ -45,7 +49,9 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -88,6 +94,20 @@ def held_by_name(held_text, ledger_text):
             for p in DECK_PATH.findall(line):
                 out.setdefault(p, '_sx3/RELEASE_LEDGER.md R-GAPS')
     return out
+
+
+def exclude_held(reviewed, held):
+    """(kept, excluded) -- the --decks list with every held deck taken OUT by derivation. Pure.
+
+    excluded maps each dropped path to the record that holds it. Ruled 2026-09-23: the list
+    excludes held decks by derivation, never by hand, so a batch list naming a held deck is not
+    edited by hand and does not abort the run -- the held deck is named and left alone. If its
+    bytes moved anyway, --check (and check_catalogue_static) stays red on it: excluded is never
+    re-stamped."""
+    held = held or {}
+    kept = {p: d for p, d in reviewed.items() if p not in held}
+    excluded = {p: held[p] for p in sorted(reviewed) if p in held}
+    return kept, excluded
 
 
 def held_paths():
@@ -181,14 +201,18 @@ def run_check():
 def run_write(decks_path):
     entries_doc = json.loads(EVIDENCE.read_text())
     entries = entries_doc['entries']
-    reviewed = json.loads(Path(decks_path).read_text())
+    listed = json.loads(Path(decks_path).read_text())
+    held = held_paths()
+    reviewed, excluded = exclude_held(listed, held)
     bindings = json.loads(BINDINGS.read_text())['entries'] if BINDINGS.is_file() else {}
     proved, reasons = load_proofs()
     errors, restamps, noops = restamp_plan(entries, reviewed, digest_of_tree, proved, bindings, fenced_paths(),
-                                           reasons, held_paths())
-    print(f'SEARCH SCOPE: {len(reviewed)} reviewed deck(s) from {decks_path}, '
+                                           reasons, held)
+    print(f'SEARCH SCOPE: {len(listed)} reviewed deck(s) from {decks_path}, '
           f'against {EVIDENCE.relative_to(ROOT)}')
     print(f'  limb-proved decks available: {len(proved)}')
+    for path, record in excluded.items():
+        print(f'  [HELD] excluded by derivation ({record}), never re-stamped: {path}')
     for e in errors:
         print('  [REFUSED] ' + e)
     for path in noops:
@@ -206,22 +230,31 @@ def run_write(decks_path):
     changed = sum(1 for a, b in zip(before.splitlines(), after.splitlines()) if a != b)
     assert changed == len(restamps), f'rewrote {changed} lines for {len(restamps)} re-stamps'
     EVIDENCE.write_text(after)
-    print(f'[DONE] {len(restamps)} digest(s) re-stamped, {len(noops)} no-op, '
-          f'{changed} line(s) changed in the file')
+    print(f'[DONE] {len(restamps)} digest(s) re-stamped, {len(noops)} no-op, {len(excluded)} held and '
+          f'excluded, {changed} line(s) changed in the file')
     return 0
 
 
 def self_test():
-    # The failure counter is `bad`, never `ok`. It was `ok` until 2026-09-22, and the Q1 block's
-    # `ok, why = strand_proof(...)` rebound it to a bool: the last Q1 line leaves it False, so every
-    # failure counted before it was erased and the self-test printed PASS whatever had failed. Found
-    # by the adversarial trace of the W9L1 re-stamp refusal; red-proved in the PR that fixed it.
+    # CORRECTION #40 (ruled 2026-09-23: "correction numbered; the fix rides the limbs PR with its
+    # planted-failure proof"). The failure counter is `bad`, never `ok`. It was `ok` until 2026-09-22,
+    # and the Q1 block's `ok, why = strand_proof(...)` rebound it to a bool: the last Q1 line leaves it
+    # False, so every failure counted before it was erased and the self-test printed PASS whatever
+    # had failed. Found by the adversarial trace of the W9L1 re-stamp refusal. The planted-failure
+    # proof is COMMITTED, not a one-off: RESTAMP_SELFTEST_PLANT plants one false check here, BEFORE
+    # every rebinding, and the last check below runs this self-test in a child process with it set
+    # and requires 'self-test FAIL (1)' and exit 1. Put the counter back to `ok` and that last check
+    # goes red (the child prints PASS) -- measured when this was written.
     bad = 0
 
     def check(name, condition):
         nonlocal bad
         print(f'  [{"ok" if condition else "FAIL"}] {name}')
         bad += 0 if condition else 1
+
+    planted = bool(os.environ.get('RESTAMP_SELFTEST_PLANT'))
+    if planted:
+        check('PLANTED FAILURE (correction #40 control): false on purpose, before any `ok, why = ...`', False)
 
     entries = {
         'A.html': {'sha256': 'a' * 64, 'term': 'Aut1', 'terms': ['Aut1'], 'style': 'full-lundy'},
@@ -443,6 +476,67 @@ def self_test():
     cfg = json.loads(lhtml.fromstring(w14.read_text()).xpath('//script[@id="lesson-config"]/text()')[0])
     check('CONTROL, real tree: SCI_L_W14L1 is proved by its explicit cell, so no Science limb is reached',
           blo.explicit_cell_holds(cfg.get('source', {}), cells, evidence[w14rel]['evidence']))
+
+    # Ruling 4, the EXCLUSION (review of the PR head): a held deck on a batch list is taken out by
+    # derivation and the rest proceeds; the list is never edited by hand to make a run go through.
+    kept, excluded = exclude_held({'Science_Teesside/B/w12.html': '1' * 64, 'Science_Teesside/B/x.html': '2' * 64}, hb)
+    check('HELD: exclude_held drops exactly the held deck, names its record, and keeps the rest',
+          kept == {'Science_Teesside/B/x.html': '2' * 64}
+          and excluded == {'Science_Teesside/B/w12.html': '_sx3/RELEASE_LEDGER.md R-GAPS'})
+    check('HELD RED PROOF: with nothing held, nothing is excluded',
+          exclude_held({'Science_Teesside/B/w12.html': '1' * 64}, {}) == ({'Science_Teesside/B/w12.html': '1' * 64}, {}))
+
+    # THE WIRING, through derive() itself on moved bytes (review of the PR head: the W9L1, W16B,
+    # title-stage and fence proofs above test the pure helpers, and derive() is what decides).
+    # Each deck's real bytes gain one comment in memory -- the tree is never written.
+    w9l1 = 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9L1_Cell_Cycle_Introduce.html'
+    w4a = 'Science_Teesside/Build/v3_40min/SCI_B_W4A_Muscles_Explore.html'
+    rel_fence = fence['released']['paths'][0]['path']
+    rel_week = fence['released']['paths'][0]['heldWeek']
+    still = fence['fenced'][0]['path']
+    probe = [w9l1, w4a, w16b, rel_fence, still, w14rel]
+    moved = {q: (ROOT / q).read_bytes() + b'\n<!-- restamp self-test: bytes moved -->\n' for q in probe}
+    d = blo.derive(moved)
+    rows_p, refused, unres = set(d.get('scienceRowProofs', [])), d.get('scienceRefusals', {}), set(d['unresolvedTiming'])
+    wk = lambda q: ['%s·W%d' % (w['term'], w['week']) for w in d['entries'][q]['weeks']]
+    check('WIRING, derive(): SCI_L_W9L1 on moved bytes is proved by the Science row limb at Aut2·W1',
+          w9l1 in rows_p and wk(w9l1) == ['Aut2·W1'])
+    check('WIRING, derive(): SCI_B_W4A on moved bytes is proved by the row limb at Aut1·W4 (the title-stage reader)',
+          w4a in rows_p and wk(w4a) == ['Aut1·W4'])
+    check('WIRING RED PROOF, derive(): SCI_G_W16B on moved bytes is refused for its title-stage claim',
+          w16b in unres and 'claim' in refused.get(w16b, {}) and w16b not in rows_p)
+    check('WIRING, derive(): the released fence deck on moved bytes holds the week the fence records',
+          rel_fence in rows_p and wk(rel_fence) == [rel_week])
+    check('WIRING RED PROOF, derive(): a deck still fenced is unresolved on moved bytes',
+          still in unres)
+    check('WIRING CONTROL, derive(): SCI_L_W14L1 on moved bytes is proved by its explicit cell, no Science limb',
+          w14rel in d['refreshedSourceProofs'] and w14rel not in rows_p and w14rel not in refused)
+    digests = {q: hashlib.sha256(b).hexdigest() for q, b in moved.items()}
+    e, r, n = restamp_plan(evidence, digests, digests.get, set(d['refreshedSourceProofs']), bdoc['entries'],
+                           fenced_paths(), refused, held_paths())
+    check('WIRING, restamp_plan on derive(): W9L1, B_W4A, the released fence deck and W14L1 are re-stamped',
+          {x[0] for x in r} == {w9l1, w4a, rel_fence, w14rel})
+    check('WIRING RED PROOF, restamp_plan on derive(): W16B (its claim) and the fenced deck are refused, by name',
+          len(e) == 2 and any('claim' in x and w16b in x for x in e) and any('fenced' in x and still in x for x in e))
+
+    # The recorded reason, not only the outcome: a row with no term·week and an evidence record that
+    # projects nothing is refused by BOTH limbs, and the label limb is really tried (review of the PR
+    # head: it was recorded "not tried: the evidence projects a week" for decks projecting nothing).
+    limb, why = blo.science_limbs('S/a.html', {'S/a.html': {'weeks': []}}, 'd' * 64, 'd' * 64, [], set(),
+                                  'Autumn 1 · Week 8')
+    check('WIRING: with no projection the label limb is tried and says why it refuses, never "not tried"',
+          limb is None and 'not tried' not in why.get('label', '') and 'Aut1·W8' in why.get('label', ''))
+    check('and a null weeks field is an empty row, never a crash (science_row_keys)',
+          blo.science_row_keys({'weeks': None}) == [] and blo.title_claim_conflict({'weeks': None}, []) is None)
+
+    # CORRECTION #40, the committed planted-failure proof: last, so no rebinding can follow it.
+    if not planted:
+        child = subprocess.run([sys.executable, str(Path(__file__).resolve()), '--self-test'],
+                               env={**os.environ, 'RESTAMP_SELFTEST_PLANT': '1'},
+                               capture_output=True, text=True)
+        check('CORRECTION #40 CONTROL: a failure planted before every `ok, why = ...` still fails the '
+              'self-test (child: "self-test FAIL (1)", exit 1)',
+              child.returncode == 1 and 'self-test FAIL (1)' in child.stdout)
 
     print('self-test ' + ('PASS' if not bad else f'FAIL ({bad})'))
     return 1 if bad else 0

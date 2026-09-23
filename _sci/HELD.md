@@ -33,5 +33,5 @@ backticked Science deck path in this file, so a backticked path would keep it he
 |---|---|
 | Held A, Held B, parked C, the 5 GROW `_Do` decks (D) | `_sx3/HELD.md` |
 | 15 LAUNCH print | `_sx3/HELD.md`, `_sx3/CHASSIS_CONTRACT.md` |
-| 5 week-token disagreements | `_sci/WEEK_TOKEN_DISAGREEMENTS.md` (not `_sx3/RELEASE_LEDGER.md`, as the 2026-09-22 handoff said) |
+| 5 week-token disagreements, of which 1 is still held: SCI_G_W16B, refused for its title-stage claim. B_W4A–W7A were a reader defect and may join a batch (Matt, 2026-09-23, ruling 3 of the limbs second cut). | `_sci/WEEK_TOKEN_DISAGREEMENTS.md` (not `_sx3/RELEASE_LEDGER.md`, as the 2026-09-22 handoff said) |
 | the 51 unscoped science decks | `_sx3/handoff_2026-09-22/artefacts/SCI_51.md` |

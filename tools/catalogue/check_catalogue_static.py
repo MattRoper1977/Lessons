@@ -22,13 +22,33 @@ _order=json.loads((r/'assets/catalogue/lesson-order.json').read_text())
 _srows,_srecord,_spin=strand_rows()
 check('Strand-proved decks: row present, record digest == pin, row term·week == projection',all(strand_proof(p,_srows,_srecord,_spin,['%s·W%d'%(w['term'],w['week']) for w in _order['entries'][p]['weeks']])[0] for p in _order.get('strandProofs',[])))
 # Ruling on the batch-2 limbs (2026-09-22): the same re-check for the two Science limbs, judged by
-# the functions derive() calls, against the pinned SCIENCE_WEEK_BINDINGS record. Both lists are named
-# only while a moved deck awaits its re-stamp, so on a re-stamped tree there is nothing to re-check.
-from build_lesson_order import science_row_proof,science_label_proof,catalogue_pin,SCIENCE_BINDINGS,deck_statement_text
+# the functions derive() calls, against the pinned SCIENCE_WEEK_BINDINGS record, and RE-DERIVED from
+# the deck's evidence projection, its stated weeks and its title-stage claim exactly as derive() does
+# -- never from the order's own weeks, which derive() copies from the row (review of the PR head:
+# that made the row re-check circular). Both lists are named only while a moved deck awaits its
+# re-stamp, so on a re-stamped tree these two checks have nothing to re-check (they are vacuous
+# there, and say so); the ruled red proofs live in restamp_evidence_sha256.py --self-test.
+from build_lesson_order import (science_row_proof,science_label_proof,catalogue_pin,SCIENCE_BINDINGS,
+                                deck_statement_text,evidence_projection,title_claim_conflict,week_keys)
 from lxml import html as _lhtml
 _brows=json.loads(SCIENCE_BINDINGS.read_text())['entries'];_brec=hashlib.sha256(SCIENCE_BINDINGS.read_bytes()).hexdigest();_bpin=catalogue_pin(SCIENCE_BINDINGS)
-check('Science-row-proved decks: row present, record digest == pin, row term·week == the projected weeks',all(science_row_proof(p,_brows,_brec,_bpin,['%s·W%d'%(w['term'],w['week']) for w in _order['entries'][p]['weeks']])[0] for p in _order.get('scienceRowProofs',[])))
-check('Science-label-proved decks: the deck\'s own label still equals its pinned row',all(science_label_proof(p,_brows,_brec,_bpin,deck_statement_text(_lhtml.fromstring((r/p).read_text())))[0] for p in _order.get('scienceLabelProofs',[])))
+_cells={x['reference']:x for x in json.loads((r/'_sownb/CALENDAR_SPINE.json').read_text())['workbookCells']}
+_meta=json.loads((r/'assets/catalogue/terms-and-styles.json').read_text())['entries']
+def _claims(p):
+ doc=_lhtml.fromstring((r/p).read_text());said=deck_statement_text(doc)
+ cfg=doc.xpath('//script[@id="lesson-config"]/text()');src=(json.loads(cfg[0]) if cfg else {}).get('source',{})
+ ref="'"+src.get('sheet','')+"'!"+src.get('cell','')
+ return said,set(week_keys(said))|({_cells[ref]['termWeek']} if ref in _cells and _cells[ref].get('termWeek') else set())
+def _projected(p):return evidence_projection(proof.get(p,{}).get('evidence',[]),_cells,_meta.get(p,{}).get('terms',[]))
+def _row_holds(p):
+ said,stated=_claims(p)
+ return science_row_proof(p,_brows,_brec,_bpin,_projected(p),stated)[0] and not title_claim_conflict(_brows.get(p),week_keys(said))
+def _label_holds(p):
+ said,_=_claims(p)
+ return not _projected(p) and science_label_proof(p,_brows,_brec,_bpin,said)[0] and not title_claim_conflict(_brows.get(p),week_keys(said))
+_rp=_order.get('scienceRowProofs',[]);_lp=_order.get('scienceLabelProofs',[])
+check('Science-row-proved decks (%d listed): re-derived from the evidence projection, stated weeks and title stage'%len(_rp),all(_row_holds(p) for p in _rp))
+check('Science-label-proved decks (%d listed): no projection, the deck\'s own label equals its pinned row, no stray title claim'%len(_lp),all(_label_holds(p) for p in _lp))
 check('Current content hashes match every hashed metadata entry',all(hashlib.sha256((r/p).read_bytes()).hexdigest()==v['sha256'] for p,v in proof.items() if 'sha256' in v))
 check('Recommended selection contains only the 15 selected LAUNCH Science routes',sum(x['style']=='recommended' for x in science)==15 and all(x['pathway']=='LAUNCH' for x in science if x['style']=='recommended'))
 for filename in ['index.html','Science_Teesside/index.html','Humanities_Teesside/index.html']:
