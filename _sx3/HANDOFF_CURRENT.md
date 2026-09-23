@@ -5,22 +5,21 @@ every earlier version. The sequence ledger beside it (`_sx3/sequence_2026-09-22/
 the evidence for each closed item.
 
 Written 2026-09-23 by session `01Grmg9b` (https://claude.ai/code/session_01Grmg9bdXpQhYEj2CAZ8dFg),
-under the OVERNIGHT AUTONOMY order of 2026-09-23/24. Last event: **the Science hub fold closed**
-(overnight item 1). The pure carrier #656 merged as `dda76aa4`. Its publication, run 35802172279,
-succeeded. The source-side served proof shows 0 served bytes moved in all three estates. Evidence:
-`_sx3/sequence_2026-09-22/S03_HUB_ORDER_FOLD.md`.
+under the OVERNIGHT AUTONOMY order of 2026-09-23/24. Last event: **the Science row and label limbs
+landed** (overnight item 2). Lessons #658 merged as `e6f7fcc6`; Apps #174 as `d9b9966f`.
+Its publication, run 35810675683, succeeded, and main ran 10 of 10 runs green. The source-side served proof shows 0 changed in all three estates. Evidence: `_sx3/sequence_2026-09-22/S04_LIMBS.md`. Item 1 (the hub fold) is S03.
 
 ## 1. The three mains
 
-Each read with `git ls-remote`, 2026-09-23 ~00:30Z, before this docs PR.
+Each read with `git ls-remote` before this docs PR, 2026-09-23 ~02:46Z.
 
 | repo | main | what it is |
 |---|---|---|
-| Lessons | `dda76aa48a8bf8f48678a6d8e23e325e516ed02a` | #656, the pure carrier that closes the hub fold. This docs PR's own squash merge follows it. |
+| Lessons | `e6f7fcc6da3e4d640cd22636249f0aea555fd89a` | #658, the Science row and label limbs. This docs PR's own squash merge follows it. |
 | Site (`mattroper1977.github.io`) | `dd9831f3530336b4623fb666d6a0834725cea0ce` | #434, the EQUAL window. |
-| Apps (`Matt-s-Apps-`) | `1c3238dcc7a5f13604e5d336be43f92e0e13b69a` | #173, the gate-copy companion for #656. |
+| Apps (`Matt-s-Apps-`) | `d9b9966f70c51f3ca4b290097bca9fde49e95cc8` | #174, the gate-copy companion for #658. |
 
-Gate copies are byte-identical on both mains at `e90427cc9772`. Lessons carrier: `uses:` and
+Gate copies are byte-identical on both mains at `5b8c91491b46`. Lessons carrier: `uses:` and
 `builder_ref` = Site `dd9831f3`. Site pins: Lessons `b1c70b0e` and Apps `7a69b63d`, both
 EQUAL-declared.
 
@@ -32,7 +31,7 @@ EQUAL-declared.
 |---|---|---|
 | Lessons | this docs PR's head | merges on green, served intersection 0 |
 | Site | `81f445fd` | the head of #434, merged. Nothing unmerged. |
-| Apps | `c0c1cf2d` | the head of #173, merged. Nothing unmerged. |
+| Apps | `d07d640d` | the head of #174, merged. Nothing unmerged. |
 | Games, Games- | no branch | untouched |
 
 Open PRs that predate this session, untouched and not in the sequence:
@@ -49,16 +48,32 @@ ruling it implements (section 3).
 
 | draft | head (base) | what it holds |
 |---|---|---|
-| `wt/limbs` | `2c8ae8ca` (on `f99d651d`) | The Science ROW + LABEL limbs and the second-cut rulings 1–4. Also the W16B title-claim refusal and the re-stamp counter fix. `restamp --self-test` 52 PASS. |
-| `wt/s3` | `d90e568a` (on `f99d651d`) | S3: `admit_transaction` accepts `SHA256SUMS.txt` as a transaction member, red-proved. |
+| `wt/s3c` | `2cce541f` (on the limbs head `44f0c680`, tree = main `e6f7fcc6`) | S3: `admit_transaction` accepts `SHA256SUMS.txt` as a transaction member. It is the `d90e568a` draft stacked on the landed limbs (the only conflict, the two appended self-test blocks, kept as their union), plus the answers to its adversarial review (`wf_500b77a1-0ff`). See the list below. |
 | `wt/d3` | `c01e22f8` (on `f99d651d`) | D3: verify_loop row 48, "unbounded modelling" plus "I do 2 before I do", reported RED. |
 | `wt/w9l1` | `279d3930` (on `c01e22f8`) | W9L1: the declared eyebrow channel wins over the heading route. Stacked on D3. |
 | `wt/site-sw` | `f877b68` (on Site `acb7bfa`) | `serve-witness.yml:31` declared floating by design, scanner constant 1→2. |
 
-A read-only batch-1 dry-run workflow (`wf_20c1bcae-fe1`) stacks the limbs and S3 drafts on
-`b1c70b0e` and runs the whole batch-1 pipeline. Its findings feed the batch-1 PR and are not a
-ruling. Its reconciling critic was still running when this was written. Measured so far (to be
-re-measured on the real branch before they count):
+**The S3 review** (`wf_500b77a1-0ff`: two lenses and a critic, on `3e87952f`) confirmed two majors and seven minors. All are answered in `2cce541f`, and every guard is mutation-proved red.
+- **Majors:**
+  1. The "rows disagree → refused" proof stopped at the pure judge.
+  2. `derive()`'s S3 call sat outside the self-test.
+- **The fix:**
+  - `science_records_allowed` and `science_limb` take a `root`, so a temporary pack is judged through the real wiring;
+  - `derive()`'s limb choice is `strand_landable()` and its path filter `strand_kinds()` / `diff_statuses()`, all under the self-test.
+- **Minors, also fixed:**
+  - the byte-level re-cut check;
+  - the rename fallback to the base manifest;
+  - the "re-cut but refused" wording;
+  - the `D`-status, Classic and `pinned` proofs;
+  - `[FAIL] … path(s)`.
+- **Residual, recorded:**
+  - `derive()`'s git glue (the base-blob reader and the registry lookup) needs a git fixture to test;
+  - a Science `CHECKSUMS.sha256` would not be recognised (none exists today).
+
+The read-only batch-1 dry run (`wf_20c1bcae-fe1`, finished) stacked the limbs and S3 drafts on
+`b1c70b0e` and ran the whole batch-1 pipeline. Its findings feed the batch-1 PR and are not a
+ruling. Its results are in the scratchpad (`passc_dry_result.json`, not durable). They are to be
+re-measured on the real branch before they count:
 - **Stacking.** Limbs then S3 conflict only inside `admit_transaction.self_test()`, where both
   append checks. Keeping both blocks resolves it, and `--self-test` then gives PASS (71 checks).
 - **Split.** The ruled split of W9 Classic, W12 Classic and W13L2 takes each from 8 to 9 stages.
@@ -73,6 +88,25 @@ re-measured on the real branch before they count):
 - **S3.** Three Launch `SHA256SUMS.txt` manifests are re-cut, with stale rows riding along. The
   four Classics have no manifest row. The batch needs 4 `REVIEWED_PATHS` admissions: the 3
   manifests and `tools/catalogue/SCIENCE_CHASSIS_CENSUS.json`.
+- **The one blocker, and the route taken.** `admit_transaction --strand Science` refuses a branch
+  that also rebuilds `Science_Teesside/index.html`: the hub has no week row, and `derive()` sweeps
+  every Science `.html` in the diff.
+  - Route C needs no ruling. The batch PR carries the 11 decks, census, spine, evidence, order,
+    sizes, manifests and pins, with its own Site window (16 transition pairs, measured).
+  - A #655-shape hub follow-on PR then moves `Science_Teesside/index.html`, the bindings and the
+    hub's size row, with its own window (3 pairs).
+  - Between the two merges the hub under-claims NOT YET on 11 conforming decks.
+  - The alternative, the tool skipping the hub path, is a pinned-tool change not ruled, so it was
+    not taken.
+- **Style, a question for Matt.** L39 records Matt accepting the 31 re-deriving full-lundy →
+  earlier "(no Lundy furniture in their bytes; PASS C restores it)".
+  - The re-stamp never writes style, so batch 1 leaves the 7 non-Classic decks recorded
+    'earlier'.
+  - Measured on the dry run: a `build_catalogue.py` run moves only the 11 batch entries. It flips
+    the 7 styles to full-lundy and moves `terms-and-styles.json`, `science-shelf.json` and the hub
+    style badges (served).
+  - When PASS C restores style (in each batch, in the hub follow-on, or once at the end) is not
+    ruled. It is not a pre-signature column, so it holds nothing.
 
 ## 3. Ruled but not done, in the ruled order
 
@@ -99,9 +133,9 @@ recorded here, not decided.
 > 5. Item 4: HUM-T P1 re-cut (the 24 decks with a Title panel). Held stays held. GPT-work items
 > (new science content; cybersecurity) are listed, never written."
 
-Item 1 is **done** (S03).
+Items 1 and 2 are **done** (S03, S04).
 
-### Q1 · Limbs PR — next
+### Q1 · Limbs PR — DONE (#658 `e6f7fcc6`, S04)
 > "RULING — batch 2 limbs: ADD BOTH, the Humanities Q1 shape. 1. Science ROW limb in
 > build_lesson_order.derive(): a deck is proved when its SCIENCE_WEEK_BINDINGS row exists, the
 > record's digest equals its pin, and the row's term·week equals the evidence record's own
@@ -138,7 +172,7 @@ it.
 > planted-failure proof." Label limb: "keep it — it is the proof for decks without a row; its
 > self-test is the evidence it works."
 
-### Q2 · S3 tool
+### Q2 · S3 tool — next
 > "S3 EXTEND admit_transaction's Science part to accept SHA256SUMS.txt as a transaction member
 > (derived digest of the re-cut manifest, pinned), red-proved: a manifest not in the transaction
 > → refused; a manifest whose rows disagree with member bytes → refused. No one-off declarer."
@@ -209,16 +243,20 @@ Inputs are held and not landed (section 6). From the LW-1 inputs order:
 
 Held means listed, never forced: no transplant, re-cut or rename until a ruling releases it.
 
+Since #658 the re-stamp derives its held set from `_sci/HELD.md` (every backticked Science deck
+path) and the R-GAPS rows of `_sx3/RELEASE_LEDGER.md`. Today that set is SCI_B_W12 and the two
+case-study decks.
+
 | set | count | record |
 |---|---|---|
 | Held A, Held B, parked C, the 5 GROW `_Do` decks (D) | per record | `_sx3/HELD.md` |
 | 15 LAUNCH print | 15 | `_sx3/HELD.md`, `_sx3/CHASSIS_CONTRACT.md` |
-| 5 week-token disagreements (the B_W4A–W7A correction rides the limbs PR) | 5 | `_sci/WEEK_TOKEN_DISAGREEMENTS.md` |
+| week-token disagreements: 1 still held, SCI_G_W16B (refused for its title-stage claim). B_W4A–W7A were a reader defect and may join a batch (ruling 3, landed in #658). | 1 of 5 | `_sci/WEEK_TOKEN_DISAGREEMENTS.md` |
 | 2 case-study decks | 2 | `_sci/HELD.md` |
 | the 51 unscoped science decks (verify_loop row 48 reds all 51 once D3 lands) | 51 | `_sx3/handoff_2026-09-22/artefacts/SCI_51.md` |
-| SCI_L_W9L1: "held pending the Science row limb". It leaves HELD in the limbs PR. | 1 | `_sci/HELD.md` |
 | SCI_B_W12: held on its R-GAPS exception, out of every PASS C batch | 1 | `_sx3/RELEASE_LEDGER.md:1312` |
-| SCI_B_W16B: refused (title stage claims Spr1·W16). Its label is derived from the row (Spr1·W2) at PASS C, never typed. | 1 | `_sci/WEEK_TOKEN_DISAGREEMENTS.md` (corrected in the limbs PR) |
+| SCI_G_W16B: its label is derived from the row (Spr1·W2) when PASS C re-cuts it, never typed | (the row above) | `_sci/WEEK_TOKEN_DISAGREEMENTS.md` |
+| SCI_G_A2_W7A, SCI_G_A2_W7B: released from the fence by #658 (ruling 2), still listed in `_sx3/HELD.md` as excluded from the transplant. The held derivation does not read that file (question for Matt, §6). | 2 | `_sx3/HELD.md:197-198` |
 | decks or files needing GPT work (standing rule 2) | 0 so far | listed here when found |
 
 ## 5. Standing rules added this session
@@ -232,6 +270,9 @@ Held means listed, never forced: no transplant, re-cut or rename until a ruling 
      reaches the boundary gate.
    - Do not put it in a PR that does trigger the gate: a modified file outside the allowed sets
      reds the boundary.
+   - Since #658, `_sci/HELD.md`, `_sx3/RELEASE_LEDGER.md` and `_sci/WEEK_TOKEN_DISAGREEMENTS.md`
+     are pinned and are boundary-gate triggers. An edit to any of them is a gated PR with a
+     re-pin, never part of a docs-only HANDOFF PR.
 2. **GPT work (Matt, 2026-09-23; this final wording replaces the earlier two).** "Work that goes
    to GPT, never Code or Claude: 1. NEW lesson content in science: biology, chemistry and life
    sciences, and anything touching virology, toxicology or molecular design. 2. ANYTHING
@@ -293,6 +334,16 @@ Held means listed, never forced: no transplant, re-cut or rename until a ruling 
   - The lag control reads that pin as not declared EQUAL: its comment says "held equal to it" in
     lower case, and the control tests for the word `EQUAL`. So it was left.
   - Releasing it takes a ruling that declares that pin EQUAL.
+- **Questions from the limbs item (S04), not decided:**
+  1. Should `_sx3/HELD.md` feed the re-stamp's held derivation? SCI_G_A2_W7A and W7B left the
+     fence (ruling 2) but are listed there as excluded from the transplant. Neither is in the 31.
+  2. CI runs neither `restamp_evidence_sha256.py --self-test` nor `admit_transaction.py
+     --self-test`. This predates #658. Adding a step is a CI edit the limits reserve for a ruling.
+  3. Identity-only rows (14 of the 19 row-proved decks): "recorded against the evidence-model
+     finding" is owed at the S2 table (batch 2).
+  4. Style restoration (L39 "PASS C restores it"): when, and by which writer (§2, the dry run).
+- **Correction #40** (the re-stamp self-test's counter): recorded in S04, fixed and red-proved in
+  #658.
 - **Lag control C1 is fixed** (was red on Lessons main before the fold). After #656: "6 hex
   literals in the carrier, all named". The only red left is P0 `serve-witness.yml:31` (Q7).
 - **LW-1 inputs** (Matt, 2026-09-23). Held untracked in `_incoming/lw1/` (locally excluded) in the
@@ -308,15 +359,15 @@ Held means listed, never forced: no transplant, re-cut or rename until a ruling 
 
 ## 7. The single next command
 
-**Cut the limbs PR from post-fold Lessons main** (Q1). Stack the `wt/limbs` draft
-(`f99d651d..2c8ae8ca`) onto Lessons main, then in the same PR:
-1. Remove SCI_L_W9L1 from `_sci/HELD.md`.
-2. Admit `_sci/HELD.md`, `_sx3/RELEASE_LEDGER.md` and `_sci/WEEK_TOKEN_DISAGREEMENTS.md` to
-   `REVIEWED_PATHS` (the three records the re-stamp derives from).
-3. Re-pin `_sx3/FENCE.json` and the tools.
-4. Regenerate PIN1.
-5. Sync the gate copies and land the Apps companion first.
+**Cut the S3 PR from Lessons main `e6f7fcc6`+** (Q2):
+1. Copy `wt/s3c`'s `tools/hum/admit_transaction.py` (`2cce541f`) onto the working branch. If the
+   scratchpad is gone, stack `d90e568a`'s S3 limb on main, keep both self-test blocks, and
+   re-apply the review answers listed in §2.
+2. Re-pin both gate copies (`pin_catalogue_contract.py --lessons . --apps <Apps>`), then run
+   PIN1 `--check`.
+3. Land the Apps companion first.
+4. The S3 review is answered in `2cce541f`. Run one confirmatory adversarial pass on the final
+   diff before merging.
+5. Expect no served move: the tool is not served. Confirm it from built bytes.
 
-Then measure all 31 (expect 30 proved + SCI_B_W12 held), run the adversarial review, open the PR,
-wait for green and merge. `lesson-order.json` is expected unchanged, so no Site window is
-expected; confirm it from built bytes.
+Then PASS C batch 1 on route C (§2).
