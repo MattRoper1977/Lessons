@@ -7,6 +7,9 @@ does not author these. Each spec below is read-only: downloads only, nothing pus
 **Deliver text files with LF line endings** (ruling 2026-09-23): a CRLF file fails `git diff --check`
 (the cross-estate static contract) and has to be converted at landing, as Job 9's `Science_Hinges.csv` was.
 
+**No trailing whitespace** (ruling 2026-09-23): `git diff --check` refuses it too. In Markdown write a hard line
+break as a trailing backslash, not two spaces (Job 11's 36 regulation plans were trimmed at landing).
+
 **Two series (ruling 2026-09-23).** The learning-walk lane keeps plain **Job N** (Jobs 1–9: Job 8 QR posters and Job 9 walk-visible routines are in flight in GPT's session). This set is the **SCI_JOB** series: SCI_JOB_09–24.
 
 **Status: re-cut from the confirmed donor (ruling 2026-09-23).** Donor `c4cfa942` stays withdrawn (a publisher-pin merge, not a lesson donor). Every spec's chassis row now names the donor below.
