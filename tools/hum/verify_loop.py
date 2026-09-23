@@ -621,6 +621,38 @@ def self_test(root: Path):
     pure.append(('D3 RED PROOF: a second explicit "I do 2" is RED too',
                  _names(['I do', 'I do 2', 'I do 2']) == ['ido', 'ido2', 'unnamed']))
 
+    # E -- PASS C batch 1's adversarial review, 2026-09-23. Two adapter defects that every row
+    # above passed over. The Science chassis names its meta line `science-meta` and its stage chip
+    # `slide-tag`, and the adapter matches furniture by exact class name, so the deck-constant
+    # header was quoted as the stage's task on 59 of 64 panels (P1-4). The rows recompute the task
+    # with the same stage_task(), so they agreed with it; only these controls pin the boundary.
+    import loop_adapter
+    from loop_adapter import stage_task, LOOP_CSS
+    sci_stage = ('<html><body><section class="slide" data-timer="5">'
+                 '<span class="slide-tag tag-independent">You do</span>'
+                 '<p class="science-meta">LAUNCH · GCSE BIOLOGY FOUNDATION · W14 · '
+                 'LESSON 1 · 4 MINUTES</p><h2 id="title-e1">Independent</h2>'
+                 '<div class="task-box"><p>Give one suitable research question about the '
+                 'condition.</p></div></section></body></html>')
+    TASK = 'Give one suitable research question about the condition.'
+    pure.append(('E1: the Science meta line and stage chip are furniture, so the task is the task',
+                 stage_task(stages(parse(sci_stage))[0]) == TASK))
+    kept = loop_adapter.CONTROL_CLASSES
+    try:
+        loop_adapter.CONTROL_CLASSES = kept - {'science-meta', 'slide-tag'}
+        reverted = stage_task(stages(parse(sci_stage))[0])
+    finally:
+        loop_adapter.CONTROL_CLASSES = kept
+    pure.append(('E1 RED PROOF: without the two class names the header leads the task again',
+                 reverted != TASK and 'GCSE BIOLOGY FOUNDATION' in reverted))
+    # The done mark: in a non-raw Python string "\2713" is the octal escape "\271" plus "3", so
+    # the page showed " ¹3". The CSS must carry the five characters backslash-2-7-1-3.
+    pure.append(('E2: the done mark is the CSS escape for the tick, not an octal accident',
+                 'content:" \\2713"' in LOOP_CSS and '¹' not in LOOP_CSS))
+    # Red-proved by reverting the adapter to its first cut: E1 and E2 both FAIL, rc 1.
+    pure.append(('E2 (mechanism): in a Python string the single-backslash spelling is " ¹3"',
+                 '" \2713"' == '" ¹3"'))
+
     # --- SECOND FIXTURE, ruled 2026-09-21. The fixture-driven battery below takes its only
     # fixture from a NINE-stage deck that types its own stages
     # title/arrival/starter/ido/wedo/ido2/wedo2/independent/exit -- the single shape on which

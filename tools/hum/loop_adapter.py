@@ -142,9 +142,15 @@ def _staff_or_ribbon(n: Node) -> bool:
 
 
 # Furniture that is not the stage's task: controls, kickers, timers, chips.
+# 'science-meta' and 'slide-tag' are the Science chassis's own names for the meta line and the
+# stage chip. The match is on exact class names, so without them the deck-constant line
+# "GCSE BIOLOGY FOUNDATION · W14 · LESSON 1 · 4 MINUTES" (and the Grow "You do" chip) was read
+# as the stage's task on 61 of PASS C batch 1's 64 panels, and every VOICE control in a deck
+# named the same header instead of its stage's task (P1-4).
 CONTROL_TAGS = {'button', 'select', 'option', 'label', 'nav', 'svg', 'dialog', 'details'}
 CONTROL_CLASSES = {'kicker', 'chip', 'badge', 'chips', 'controls', 'control', 'timer',
-                   'tierbtn', 'tier', 'pill', 'tag', 'meta', 'slide-kicker', 'stage-kicker',
+                   'tierbtn', 'tier', 'pill', 'tag', 'slide-tag', 'meta', 'science-meta',
+                   'slide-kicker', 'stage-kicker',
                    'eyebrow', 'toolbar', 'btnrow', 'btn', 'ghost', 'progress'}
 
 
@@ -469,6 +475,8 @@ LOOP_SCRIPT = """
 </script>
 """
 
+# The CSS escape for the tick is written "\\2713" because this is a Python string: a single
+# backslash made "\\271" an octal escape, and the page showed " \u00b93" where the tick belongs.
 LOOP_CSS = """
 <style data-hum-t-loop-css="1">
 .hum-t-loop .loop-line{margin:8px 0}
@@ -479,7 +487,7 @@ LOOP_CSS = """
    fails colour contrast at 390px (measured 3.72 against the house panel). */
 .hum-t-loop .ls{font-weight:600}
 .hum-t-loop .ls[data-state="done"]{font-weight:900}
-.hum-t-loop .ls[data-state="done"]::after{content:" \2713"}
+.hum-t-loop .ls[data-state="done"]::after{content:" \\2713"}
 .hum-t-loop .ls[data-state="available"]{font-weight:800}
 .hum-t-loop .loop-defs{margin:6px 0 0;padding-left:1.1em}
 .hum-t-loop .loop-result{margin:6px 0 0;min-height:1.2em}
