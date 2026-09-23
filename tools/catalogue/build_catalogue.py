@@ -49,6 +49,10 @@ STYLE={'recommended':'Recommended · current chassis','current':'Current classro
 # value 'alternative'; the existing lesson keeps its own standing. Editorial data
 # only (SHELF_SELECTION.json); no timing, completion or coverage claim.
 ALTERNATIVE=set(SELECTION.get('alternative',[]))
+# HUB1 R1 (2026-09-23): a taught-from Do deck whose bytes do not yet earn 'full-lundy' is
+# 'current' (Current classroom series) by editorial selection, never 'earlier'. It sits BELOW
+# the bytes-derived full-lundy branch, so a transplant that lands the Lundy furniture wins.
+CURRENT_SERIES=set(SELECTION.get('currentSeries',[]))
 RECOMMENDED_BATCHES=SELECTION.get('recommendedBatches',{})
 MANIFESTS={}
 for mf in sorted(ROOT.rglob('manifest*.json')):
@@ -178,6 +182,8 @@ def classify(path,row=None):
   result['style']='alternative';result['batch']='Alternative version'
  elif len(loops)>=4:
   result['style']='full-lundy';result['batch']='Full Lundy Loop · repeated prompts'
+ elif path in CURRENT_SERIES:
+  result['style']='current';result['batch']='Current classroom series'
  elif config.get('artsAward'):
   result['style']='award';result['batch']='Arts Award · '+str(config.get('artsAward',{}).get('level','sequence') if isinstance(config.get('artsAward'),dict) else config['artsAward'])
  elif 'sci-lesson-payload' in raw or config.get('chassis')=='classic-v2' or 'data-main-session-plan' in raw:

@@ -21,11 +21,13 @@ Prints the per-cell table (cell · recommended · other · rule) and the numbers
 """
 import argparse, json, os, re, sys, datetime, glob, hashlib, pprint, html as H
 ap = argparse.ArgumentParser()
-ap.add_argument('--repo', required=True); ap.add_argument('--land', required=True); ap.add_argument('--pack', required=True)
+ap.add_argument('--repo', required=True); ap.add_argument('--land'); ap.add_argument('--pack')
 ap.add_argument('--apps'); ap.add_argument('--run-date', default='2026-09-07'); ap.add_argument('--dry', action='store_true')
+ap.add_argument('--science-cells', metavar='TERM', help='HUB1 R1: for every Science cell of TERM (BUILD, GROW and LAUNCH), the animated Explore/Introduce deck (A / L1) is recommended and each Classic is alternative; writes SHELF_SELECTION.json only, then the estate regenerates')
 ap.add_argument('--served', help='hub gate only: a published education-lessons tree; asserts exactly one recommended per cell from its own catalogue metadata and hub bytes, writes nothing')
 a = ap.parse_args(); R = a.repo; RUN = datetime.date.fromisoformat(a.run_date)
 if a.served: a.dry = True
+if not a.science_cells and not (a.land and a.pack): ap.error('--land and --pack are required unless --science-cells')
 
 def P(p): return os.path.join(R, p)
 def J(p): return json.load(open(P(p), encoding='utf-8'))
@@ -41,6 +43,117 @@ def title_slide(p):
     raw = open(P(p), encoding='utf-8').read()
     m = re.search(r'<section[^>]*class="[^"]*\bslide\b[^"]*"[^>]*>(.*?)</section>', raw, re.S)
     return re.sub(r'\s+', ' ', H.unescape(re.sub(r'<[^>]+>', ' ', m.group(1)))).strip() if m else ''
+
+# ------------------------------------------------------------------ HUB1 R1 (ruled 2026-09-23): one recommended per Science cell
+# "Per cell, RECOMMENDED = the animated Explore/Introduce deck (A / L1). Do decks (B / L2, L3) sit beside as
+# 'Full Lundy Loop'. Classics are 'Alternative version'. Nothing in an Aut2 cell that is taught from is ever
+# 'Earlier retained versions'. Applies to BUILD, GROW and LAUNCH Aut2 alike; GROW is the proof cell."
+#
+# Measured before this mode existed: every animated Explore/Introduce deck in Autumn 2 carried style 'earlier',
+# because build_catalogue.py derives style from BYTES (>= 4 Lundy panels -> full-lundy, chassis markers ->
+# current, else earlier) and the only editorial route to 'recommended' is SHELF_SELECTION.json, which this
+# writer had populated for FoodWise and LAUNCH W3-W7 only. The scope is widened here, as R2 says, rather than
+# a second writer being added. Do decks are NOT touched: 'Full Lundy Loop' is a claim about the deck's bytes
+# and the builder keeps deriving it from them.
+#
+# A deck's PART is read from what the deck or its pack DECLARES, never from its path: the pack manifest's
+# kind/phase, else the title slide ("Week 9A · Explore", "LESSON A", "Lesson 2 of 2 · Do", "LESSON 2"), else
+# the pack manifest's own row order (L1 first). A member whose part cannot be read is reported and the cell
+# is left alone, so a wrong guess is never written.
+def _science_cells(term):
+    sel = J('tools/catalogue/SHELF_SELECTION.json'); sel.setdefault('alternative', []); sel.setdefault('recommendedBatches', {})
+    TERM_LABEL = {'Aut1': 'Autumn 1', 'Aut2': 'Autumn 2', 'Spr1': 'Spring 1', 'Spr2': 'Spring 2', 'Sum1': 'Summer 1', 'Sum2': 'Summer 2'}
+    hub = J('assets/catalogue/science-hub-bindings.json')
+    kinds = {}
+    for mf in sorted(glob.glob(P('Science_Teesside/**/manifest*.json'), recursive=True)):
+        try: md = json.load(open(mf, encoding='utf-8'))
+        except ValueError: continue
+        rws = md if isinstance(md, list) else md.get('lessons', md.get('sequence', []))
+        order = 0
+        for row in rws:
+            if not isinstance(row, dict) or not isinstance(row.get('file'), str): continue
+            f = os.path.relpath(os.path.join(os.path.dirname(mf), row['file']), R); order += 1
+            k = row.get('kind') or row.get('phase')
+            kinds.setdefault(f, (k, order, mf))
+    def declared_classic(p):
+        # the hub's own rule (build_science_hub.declared_classic, which cannot be imported because that
+        # module builds as it imports): a 'Classic' segment in the head <title>, or lesson-config naming it
+        raw = open(P(p), encoding='utf-8', errors='replace').read()
+        m = re.search(r'<title>(.*?)</title>', raw, re.S)
+        if m and any(seg.strip().lower() == 'classic' for seg in H.unescape(m.group(1)).split('\u00b7')): return True
+        m = re.search(r'<script[^>]*id="lesson-config"[^>]*>(.*?)</script>', raw, re.S)
+        try: cfg = json.loads(m.group(1)) if m else None
+        except ValueError: cfg = None
+        if not isinstance(cfg, dict): return False
+        word = re.compile(r'(?<![A-Za-z])Classic(?![A-Za-z])')
+        if any(isinstance(cfg.get(k), str) and word.search(cfg[k]) for k in ('key', 'prefix', 'title')): return True
+        return any(isinstance(st, dict) and st.get('lesson') == 'Classic' for st in (cfg.get('stages') or []))
+    def part_from_title_text(text, first_kinds):
+        """The part a deck DECLARES on its own title slide -- "Week 9A", "LESSON A", "Lesson 2 of 2",
+        "Week 7 · Explore" -- read from that slide's rendered text, never from its path or file name
+        (g27: no week from a filename). The caller passes the text; this sees no path."""
+        m = re.search(r'\bWeek \d+([AB])\b', text)
+        if m: return ('first' if m.group(1).lower() in first_kinds else 'other'), 'title slide "Week n%s"' % m.group(1)
+        m = re.search(r'\bLESSON ([AB123])\b|\bLesson ([123]) of [23]\b', text)
+        if m:
+            tok = (m.group(1) or m.group(2)).lower()
+            return ('first' if tok in first_kinds else 'other'), 'title slide "LESSON %s"' % tok.upper()
+        m = re.search(r'\bWeek \d+\s*\u00b7\s*(Explore|Introduce|Do)\b', text)
+        if m: return ('first' if m.group(1).lower() in first_kinds else 'other'), 'title slide "%s"' % m.group(1)
+        return None
+    def part_of(p, pathway, cell_members):
+        # LAUNCH teaches three lessons a week and its first is the Introduce deck (L1); BUILD and GROW teach
+        # two and their first is the Explore deck (A). R1 names both: "the animated Explore/Introduce deck (A / L1)".
+        first_kinds = {'introduce', 'l1', 'lesson 1', '1'} if pathway == 'LAUNCH' else {'explore', 'a', 'lesson a'}
+        if declared_classic(p): return 'classic', 'declares Classic (head title or lesson-config)'
+        k, order, mf = kinds.get(p, (None, None, None))
+        if k: return ('first' if k.lower() in first_kinds else 'other'), 'manifest kind %r (%s)' % (k, os.path.relpath(mf, R))
+        declared = part_from_title_text(title_slide(p), first_kinds)
+        if declared: return declared
+        if order is not None:
+            same = [q for q in cell_members if q in kinds and kinds[q][2] == mf]
+            return ('first' if order == min(kinds[q][1] for q in same) else 'other'), 'manifest row order %d in %s' % (order, os.path.relpath(mf, R))
+        return None, 'no declaration found'
+    from lxml import html as _lhtml
+    def lundy_panels(p):
+        # the builder's own count (build_catalogue.py: >= 4 .lundy-grid / .lundy-loop nodes -> 'full-lundy'), read from bytes
+        doc = _lhtml.fromstring(open(P(p), 'rb').read())
+        return len(doc.xpath('//*[contains(concat(" ",normalize-space(@class)," ")," lundy-grid ") or contains(concat(" ",normalize-space(@class)," ")," lundy-loop ")]'))
+    rec_now = set(sel['recommended']); alt_now = set(sel['alternative']); cur_now = set(sel.setdefault('currentSeries', [])); report = []; unread = []
+    for slot in hub['slots']:
+        if slot['term'] != term or slot['week'] is None: continue
+        cell_members = [c['path'] for c in slot['current']]
+        parts = {p: part_of(p, slot['pathway'], cell_members) for p in cell_members}
+        if any(v[0] is None for v in parts.values()):
+            unread.append((slot['pathway'], slot['week'], [p for p, v in parts.items() if v[0] is None])); continue
+        firsts = [p for p, v in parts.items() if v[0] == 'first']; classics = [p for p, v in parts.items() if v[0] == 'classic']
+        if len(firsts) != 1:
+            unread.append((slot['pathway'], slot['week'], 'expected exactly one A / L1 deck, found %d: %s' % (len(firsts), firsts))); continue
+        rec = firsts[0]
+        for p in cell_members:
+            rec_now.discard(p); alt_now.discard(p); sel['recommendedBatches'].pop(p, None)
+        rec_now.add(rec); sel['recommendedBatches'][rec] = 'Science · %s · HUB1 R1: the A / L1 deck of the cell is recommended' % TERM_LABEL[term]
+        for p in classics: alt_now.add(p)
+        # R1: a Do deck (B / L2, L3) is 'Full Lundy Loop' when its bytes earn it (the builder derives that);
+        # until its transplant lands, it is 'Current classroom series' by selection, never 'Earlier retained'.
+        for p in cell_members:
+            if p == rec or p in classics: continue
+            if lundy_panels(p) >= 4: cur_now.discard(p)      # the bytes earn 'full-lundy'; the builder derives it
+            else: cur_now.add(p)
+        report.append((slot['pathway'], slot['week'], rec, parts[rec][1], classics, [p for p in cell_members if p != rec and p not in classics]))
+    sel['recommended'] = sorted(rec_now); sel['alternative'] = sorted(alt_now); sel['currentSeries'] = sorted(cur_now)
+    print('| pathway | week | recommended (A / L1) | read from | alternative (Classic) | beside (Do decks, style stays derived from bytes) |'); print('|---|---|---|---|---|---|')
+    for pw, wk, rec, how, cl, rest in sorted(report, key=lambda r: (['BUILD', 'GROW', 'LAUNCH'].index(r[0]), r[1])):
+        print('| %s | W%d | %s | %s | %s | %s |' % (pw, wk, rec.split('/')[-1], how, ', '.join(x.split('/')[-1] for x in cl) or '—', ', '.join(x.split('/')[-1] for x in rest) or '—'))
+    for u in unread: print('UNREAD cell, left alone:', u)
+    print('\nSHELF_SELECTION: recommended %d · alternative %d · currentSeries %d · cells written %d · cells left alone %d' % (len(sel['recommended']), len(sel['alternative']), len(sel['currentSeries']), len(report), len(unread)))
+    W('tools/catalogue/SHELF_SELECTION.json', sel)
+    json.dump({'term': term, 'cells': [{'pathway': pw, 'week': wk, 'recommended': rec, 'readFrom': how, 'alternative': cl, 'beside': rest} for pw, wk, rec, how, cl, rest in report], 'unread': unread,
+               'recommended': sel['recommended'], 'alternative': sel['alternative']}, open(os.environ.get('RX3_RECOMMENDED_OUT', '/tmp/rx3_recommended.json'), 'w'), indent=1)
+    return 1 if unread else 0
+
+if a.science_cells:
+    sys.exit(_science_cells(a.science_cells))
 
 land = json.load(open(a.land)); pack = json.load(open(a.pack)); pack = pack if isinstance(pack, list) else pack.get('lessons', pack)
 pack = {r['id']: r for r in pack}

@@ -44,10 +44,33 @@ def title_slide_heading(text: str) -> str | None:
             continue
         if node.tag in HEADINGS:
             heading = ' '.join(node.inner_text().split()).strip()
-            if heading:
+            if heading and heading.lower() not in STAGE_LABELS:
                 return heading
     declared = (slide.attrs.get('data-title') or '').strip()
-    return declared or None
+    if declared and declared.lower() not in STAGE_LABELS:     # W8B declares data-title="Lesson overview" too
+        return declared
+    return head_title_name(text)
+
+
+# HUB1 R3 (ruled 2026-09-23): "W8B's title comes from the deck's <title>/h1, not the stage label."
+# A heading that is the NAME OF A STAGE is not the deck's title. Measured over the 145 current
+# Science decks: exactly one title slide opens on a label -- SCI_B_W8B, whose title stage is
+# <h2>Lesson overview</h2>, <h3>Learning objective</h3>, <h3>Success looks like</h3> and no <h1>
+# anywhere -- and the hub listed it as "Do · Lesson overview". Labels are skipped, never guessed
+# past: with no real heading and no data-title, the deck's own head <title> names it.
+STAGE_LABELS = frozenset({'lesson overview', 'learning objective', 'success looks like'})
+
+
+def head_title_name(text: str) -> str | None:
+    """The deck's own name from its head <title>: the segment before the first ' · '. The rest of
+    that title is the deck's pathway and occasion ("Body Science Checkpoint · BUILD · October
+    review"), which the card already shows beside the name."""
+    import html as H, re
+    head = re.search(r'<head\b.*?</head>', text, re.S | re.I)          # the HEAD title: inline SVGs carry their own
+    m = re.search(r'<title[^>]*>(.*?)</title>', head.group(0) if head else '', re.S | re.I)
+    name = ' '.join(H.unescape(m.group(1)).split()).strip() if m else ''
+    name = name.split(' \u00b7 ')[0].strip()
+    return name or None
 
 
 def first_document_h1(text: str) -> str | None:
