@@ -25,9 +25,10 @@ ap.add_argument('--repo', required=True); ap.add_argument('--land'); ap.add_argu
 ap.add_argument('--apps'); ap.add_argument('--run-date', default='2026-09-07'); ap.add_argument('--dry', action='store_true')
 ap.add_argument('--science-cells', metavar='TERM', help='HUB1 R1: for every Science cell of TERM (BUILD, GROW and LAUNCH), the animated Explore/Introduce deck (A / L1) is recommended and each Classic is alternative; writes SHELF_SELECTION.json only, then the estate regenerates')
 ap.add_argument('--served', help='hub gate only: a published education-lessons tree; asserts exactly one recommended per cell from its own catalogue metadata and hub bytes, writes nothing')
+ap.add_argument('--land-a2', nargs='+', metavar='FOLDER', help='LAND-A2 R1/R3: the Autumn 2 Science lessons landed one per folder under each FOLDER are bound to their week from their own evidence, catalogued, and made the recommended lesson of their cell; the cell\'s previous recommended becomes alternative in place')
 a = ap.parse_args(); R = a.repo; RUN = datetime.date.fromisoformat(a.run_date)
 if a.served: a.dry = True
-if not a.science_cells and not (a.land and a.pack): ap.error('--land and --pack are required unless --science-cells')
+if not a.science_cells and not a.land_a2 and not (a.land and a.pack): ap.error('--land and --pack are required unless --science-cells or --land-a2')
 
 def P(p): return os.path.join(R, p)
 def J(p): return json.load(open(P(p), encoding='utf-8'))
@@ -154,6 +155,132 @@ def _science_cells(term):
 
 if a.science_cells:
     sys.exit(_science_cells(a.science_cells))
+
+
+# ------------------------------------------------------------------ LAND-A2 (Claude, rulings R1 and R3, 2026-09-25)
+# "Science hub: bind each new lesson to its Autumn 2 week from its own evidence (book header term/week,
+# LESSON_SOURCE.json), make it Recommended; prior Recommended -> Alternative, keeping order; estate lessons keep
+# their bindings; one Recommended per cell." The scope of THE ONE WRITER is widened again rather than a second
+# writer added. What it reads and why:
+#   * the lesson's OWN declarations, which must agree: its head <title> ("... · BUILD Science Autumn 2 W1"), its
+#     hero line ("BUILD · Science · Autumn 2 · Week 1"; LAUNCH W02-W07 write "LAUNCH Science Autumn 2 Wn") and
+#     its printed book header ("Science · BUILD · Autumn 2 · Week 01");
+#   * the delivery's lesson record, LESSON_SOURCE.json, which R1 moved to _land_a2/<ZIP stem>/ so that it is
+#     never served. Its id must equal the page's stem; its term and week must agree; its workbook cell must
+#     resolve in _sownb/CALENDAR_SPINE.json to the same Autumn 2 week. The record names the school's workbook,
+#     so the cell reference is written only into SCIENCE_WEEK_BINDINGS.json (tools/, never published) and never
+#     into a served file: no manifest.json is created for these folders.
+# Any disagreement is named and nothing is written. Rows are derived from the page's own hero (<h1> title,
+# "I am learning to…" line), never typed (the #638/#639 rule).
+def _land_a2(folders):
+    TERM_LABEL = {'Aut2': 'Autumn 2'}
+    spine = J('_sownb/CALENDAR_SPINE.json'); cells = {x['reference']: x for x in spine['workbookCells']}
+    cal = J('_sownb/CALENDAR_2026_27.json')
+    def abs_week(tw):
+        term, wk = tw.split('·'); n = int(wk[1:]); rule = cal['mapping'][term + '·Wn']
+        return n if rule == 'n' else int(rule.split('+')[0]) + n
+    records = {}
+    for rp in sorted(glob.glob(P('_land_a2/SCI_*/**/LESSON_SOURCE.json'), recursive=True)):
+        rec = json.load(open(rp, encoding='utf-8')); records.setdefault(rec['id'], []).append((os.path.relpath(rp, R), rec))
+    decl = re.compile(r'\b(BUILD|GROW|LAUNCH)\b(?:\s*·)?\s*Science\s*(?:·\s*)?Autumn\s*2\s*(?:·\s*)?(?:Week\s*|W)0*(\d+)\b')
+    book = re.compile(r'Science\s*·\s*(BUILD|GROW|LAUNCH)\s*·\s*Autumn 2\s*·\s*Week\s*0*(\d+)\b')
+    cellref = re.compile(r'\b(BUILD|GROW|LAUNCH) Weekly - Autumn!(?:[A-Z]+\d+:)?([A-Z]+\d+)$')
+    txt = lambda s: re.sub(r'\s+', ' ', H.unescape(re.sub(r'<[^>]+>', ' ', s))).strip()
+    landed, problems = [], []
+    for folder in folders:
+        for d in sorted(glob.glob(P(folder.rstrip('/') + '/*/'))):
+            stem = os.path.basename(os.path.normpath(d)); f = os.path.relpath(os.path.join(d, stem + '.html'), R)
+            if not os.path.isfile(P(f)): continue
+            raw = open(P(f), encoding='utf-8').read()
+            head = title_of(f)
+            # the page's first <header> is its hero (the printed book header before it is a div). Three shapes
+            # ship: <header class="hero"> with the declaration in a <p> or a <span class="badge"> just above the
+            # <h1>, and LAUNCH's <header> with <p class="goal">; the goal reads "I am learning to…", "…to:" or "…to".
+            hero = re.search(r'<header\b[^>]*>(.*?)</header>', raw, re.S)
+            hero = hero.group(1) if hero else ''
+            dm = re.search(r'<(p|span)\b[^>]*>((?:(?!</?\1\b).)*?)</\1>\s*<h1\b', hero, re.S)
+            hero_p = txt(dm.group(2)) if dm else ''
+            h1 = re.search(r'<h1[^>]*>(.*?)</h1>', hero, re.S); h1 = txt(h1.group(1)) if h1 else ''
+            goal = re.search(r'I am learning to(?:…|:)?\s*(?:</strong>)?(.*?)</p>', hero, re.S)
+            goal = txt(goal.group(1)) if goal else ''
+            said = {'head <title>': decl.search(head), 'hero line': decl.search(hero_p), 'book header': book.search(raw)}
+            recs = records.get(stem, [])
+            if len(recs) != 1: problems.append('%s: %d LESSON_SOURCE records carry id %s' % (f, len(recs), stem)); continue
+            rp, rec = recs[0]
+            wk_rec = int(str(rec.get('week', '')).lstrip('W') or 0)
+            m = cellref.search(rec.get('sow_cell', '').strip())
+            ref = "'%s Weekly - Autumn'!%s" % (m.group(1), m.group(2)) if m else None
+            c = cells.get(ref)
+            got = {k: (v.group(1), int(v.group(2))) if v else None for k, v in said.items()}
+            got['LESSON_SOURCE term/week'] = (rec.get('pathway'), wk_rec) if rec.get('term') == 'Autumn 2' else None
+            got['workbook cell ' + str(ref)] = (m.group(1), int(c['termWeek'].split('·W')[1])) if c and c['termWeek'].startswith('Aut2·W') else None
+            if None in got.values() or len(set(got.values())) != 1 or not h1:
+                problems.append('%s: its own evidence does not agree: %s%s' % (f, got, '' if h1 else ' (no <h1> in the hero)')); continue
+            pw, n = next(iter(got.values()))
+            landed.append({'path': f, 'pathway': pw, 'week': n, 'title': h1, 'goal': goal, 'head': head, 'hero': hero_p, 'record': rp, 'ref': ref})
+    if problems:
+        print('REFUSED, nothing written:'); [print('  ' + p) for p in problems]; return 1
+    # the cells: today's members from the hub's own record; the previous recommended in each becomes alternative
+    sel = J('tools/catalogue/SHELF_SELECTION.json'); sel.setdefault('alternative', []); sel.setdefault('recommendedBatches', {})
+    hub = J('assets/catalogue/science-hub-bindings.json')
+    members = {(s['pathway'], s['week']): [c['path'] for c in s['current']] for s in hub['slots'] if s['term'] == 'Aut2' and s['week'] is not None}
+    rec_now, alt_now = list(sel['recommended']), list(sel['alternative']); report = []
+    for L in sorted(landed, key=lambda L: (['BUILD', 'GROW', 'LAUNCH'].index(L['pathway']), L['week'])):
+        prior = [p for p in members.get((L['pathway'], L['week']), []) if p in rec_now and p != L['path']]
+        for p in prior:
+            rec_now.remove(p); sel['recommendedBatches'].pop(p, None)
+            if p not in alt_now: alt_now.append(p)
+        if L['path'] not in rec_now: rec_now.append(L['path'])
+        sel['recommendedBatches'][L['path']] = 'Science · Autumn 2 · LAND-A2: the landed lesson is recommended; the previous recommended is alternative'
+        report.append((L['pathway'], L['week'], L['path'], prior, [p for p in members.get((L['pathway'], L['week']), []) if p not in prior]))
+    sel['recommended'] = sorted(rec_now); sel['alternative'] = sorted(alt_now)
+    have = {x['path'] for x in sel['science']}
+    for L in landed:
+        if L['path'] not in have:
+            # exactly the shape build_catalogue.py emits for these pages (no slide; the head <title> declares the term)
+            sel['science'].append({'path': L['path'], 'classificationEvidence': [{'method': 'own title slide declaration', 'source': L['path'], 'quote': L['head']}]})
+    W('tools/catalogue/SHELF_SELECTION.json', sel)
+    wb = J('tools/catalogue/SCIENCE_WEEK_BINDINGS.json'); ent = wb['entries']
+    for L in landed:
+        tw = 'Aut2·W%d' % L['week']
+        ent[L['path']] = {'pathway': L['pathway'], 'style': 'recommended', 'title': '%s · %s' % (L['pathway'], L['title']),
+                          'weeks': [{'key': tw, 'term': 'Aut2', 'weekWithinTerm': L['week'], 'label': 'Autumn 2 · Week %d' % L['week'], 'ruledAbsoluteWeek': abs_week(tw)}],
+                          'sourceSha256': sha(L['path']), 'sourceProofUnchanged': True, 'status': 'set',
+                          'evidence': [{'method': 'own title slide declaration', 'source': L['path'], 'quote': L['hero'] or L['head']},
+                                       {'method': 'delivery lesson record, not served (workbook cell)', 'source': L['record'], 'refs': [L['ref']]}]}
+    # entries keep the record's own order (it is not sorted); the landed rows are appended after it
+    wb.setdefault('bindingRuns', []).append({'by': 'tools/rx3_recommended.py --land-a2', 'bound': len(landed), 'listed': sorted(L['path'] for L in landed)})
+    W('tools/catalogue/SCIENCE_WEEK_BINDINGS.json', wb, indent=1)   # the record's own shape (indent 1), so only the new rows move
+    # catalogue rows: after the reviewed appended rows, before the derived companion-pack tail
+    rows = J('resources.json'); files = {r['file'] for r in rows}
+    pc = 'tools/catalogue/pin_catalogue_contract.py'; src = open(P(pc), encoding='utf-8').read()
+    spec = __import__('importlib.util').util.spec_from_file_location('pcc', P(pc)); pcc = __import__('importlib.util').util.module_from_spec(spec); spec.loader.exec_module(pcc)
+    at = pcc.ORIGINAL_ROW_COUNT + len(pcc.SHELF_ROWS); new = []
+    slug = lambda s: re.sub(r'-+', '-', re.sub(r'[^a-z0-9]+', '-', s.lower())).strip('-')
+    for L in sorted(landed, key=lambda L: (['BUILD', 'GROW', 'LAUNCH'].index(L['pathway']), L['week'])):
+        if L['path'] in files: continue
+        words = [w for w in slug(L['title']).split('-') if len(w) > 2 and w not in ('and', 'the', 'for', 'use')]
+        new.append({'subject': 'Science · Teesside', 'title': '%s · %s' % (L['pathway'], L['title']), 'file': L['path'],
+                    'id': 'land-a2-sci-%s-a2-w%02d-%s' % (L['pathway'].lower(), L['week'], slug(L['title'])), 'type': 'lesson', 'family': 'Science Teesside',
+                    'keywords': [L['pathway'].lower(), 'science', 'autumn 2'] + words,
+                    'desc': '%s Science · Autumn 2 · Week %d. I am learning to %s' % (L['pathway'], L['week'], L['goal'][0].lower() + L['goal'][1:] if L['goal'] else L['title']),
+                    'added': a.run_date, 'new': True, 'year': '2026-27'})
+    rows[at:at] = new
+    if not a.dry:
+        open(P('resources.json'), 'w', encoding='utf-8').write(json.dumps(rows, ensure_ascii=False, indent=2) + '\n')
+        lines = src.rstrip('\n').split('\n'); last = max(i for i, l in enumerate(lines) if l.startswith('SHELF_ROWS.append('))
+        add = ['SHELF_ROWS.append(%r)' % r for r in new]
+        open(P(pc), 'w', encoding='utf-8').write('\n'.join(lines[:last + 1] + add + lines[last + 1:]) + '\n')
+    print('| pathway | week | landed (recommended) | previous recommended -> alternative | other cards, unchanged |'); print('|---|---|---|---|---|')
+    for pw, wk, f, prior, rest in report:
+        print('| %s | W%d | %s | %s | %s |' % (pw, wk, f.split('/')[-1], ', '.join(p.split('/')[-1] for p in prior) or '— (new cell)', ', '.join(p.split('/')[-1] for p in rest) or '—'))
+    print('\nLAND-A2: %d lessons bound from their own evidence · SHELF_SELECTION recommended %d, alternative %d, science %d · resources.json +%d rows at %d (%d total) · SCIENCE_WEEK_BINDINGS %d entries'
+          % (len(landed), len(sel['recommended']), len(sel['alternative']), len(sel['science']), len(new), at, len(rows), len(ent)))
+    return 0
+
+
+if a.land_a2:
+    sys.exit(_land_a2(a.land_a2))
 
 land = json.load(open(a.land)); pack = json.load(open(a.pack)); pack = pack if isinstance(pack, list) else pack.get('lessons', pack)
 pack = {r['id']: r for r in pack}

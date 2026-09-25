@@ -96,15 +96,24 @@ PART = {r['path']: part_of(ROOT / r['path']) for r in DATA['lessons']}
 OLDER_COPY_FOLDERS = ('v3_40min', 'Slideshows')
 OLDER_COPY_LABEL = {'v3_40min': '40-minute copy', 'Slideshows': 'Slideshows series'}
 DATED_FOLDER = re.compile(r'_\d{4}-\d{2}$')
-GENERATION_RANK = {'dated': 0, 'pathway': 1, 'older copy': 2}
+GENERATION_RANK = {'landed': 0, 'dated': 1, 'pathway': 2, 'older copy': 3}
 
 
 def generation(path: str) -> str:
-    """'dated' (a folder named _YYYY-YY), 'older copy' (v3_40min / Slideshows) or 'pathway' (the
-    pathway's own folder). Read off the folder each generation was filed in."""
-    folder = Path(path).parent.name
+    """'landed', 'dated' (a folder named _YYYY-YY), 'older copy' (v3_40min / Slideshows) or 'pathway'
+    (the pathway's own folder). Read off the folder each generation was filed in.
+
+    'landed' (LAND-A2, rulings R1/R3, 2026-09-25): a lesson filed in its own folder, named after the
+    lesson, inside a dated term folder -- Science_Teesside/<P>/Autumn_2_2026-27/<stem>/<stem>.html. It is
+    the newest generation: the landing ruled it the recommended lesson of its week, so it heads the row
+    and the hub note ("each week lists its newest lessons first") stays true. Measured before this rule:
+    no shelf route sat in a folder named after itself, so no existing order moves."""
+    p = Path(path)
+    folder = p.parent.name
     if folder in OLDER_COPY_FOLDERS:
         return 'older copy'
+    if folder == p.stem and DATED_FOLDER.search(p.parent.parent.name):
+        return 'landed'
     return 'dated' if DATED_FOLDER.search(folder) else 'pathway'
 
 
@@ -425,8 +434,12 @@ def c9_errors(current_page: str, slots: dict[tuple, list[str]], current: set, cl
         if not any(p in current for p in members):
             errs.append(f'C9 week left with no current lesson: {k}')
         if len(members) > 1:
+            # LAND-A2: an undeclared Classic may share its week only with NEWER generations, which head the
+            # row by generation alone; beside anything of its own or an older generation its place would
+            # rest on its file name, and that stays red.
             errs += [f'C9 a file named Classic that does not declare it shares its week: {p}'
-                     for p in members if Path(p).stem.endswith('_Classic') and not classic.get(p)]
+                     for p in members if Path(p).stem.endswith('_Classic') and not classic.get(p)
+                     and any(GENERATION_RANK[generation(q)] >= GENERATION_RANK[generation(p)] for q in members if q != p)]
     doc = lhtml.fromstring(f'<div>{current_page}</div>')
     for row in doc.xpath('//div[contains(concat(" ", normalize-space(@class), " "), " week-row ")]'):
         paths = [a.get('data-lesson-path') for a in row.xpath('.//article[@data-lesson-path]')]
@@ -461,18 +474,27 @@ def self_test() -> int:
     classic_path = next(L['path'] for L in g1 if CLASSIC[L['path']])
     classic_first = classic_first.replace(g1[0]['path'], classic_path, 1)
     checks = [
-        ('RED PROOF: before the ruling, GROW Aut2 W1 headlined its Classic', CLASSIC[old_order(g1)[0]['path']]),
+        # the replay is of the week as it stood before the ruling, so a lesson landed since (LAND-A2) is left out
+        ('RED PROOF: before the ruling, GROW Aut2 W1 headlined its Classic',
+         CLASSIC[old_order([L for L in g1 if generation(L['path']) != 'landed'])[0]['path']]),
         # Read off the RENDERED page, not from within_week(): the review of the first cut unhooked
         # the order and these checks, then calling the hook directly, stayed green.
-        ('GROW Aut2 W1 on the page headlines the dated folder\'s non-Classic, SCI_G_W8A_Day_And_Night_Explore',
-         ROWS.get(('GROW', 'Aut2', '1'), [''])[0].endswith('/SCI_G_W8A_Day_And_Night_Explore.html')),
+        # LAND-A2 (2026-09-25): the landed lesson is the newest generation and the cell's recommended, so it
+        # heads the row; the dated folder's non-Classic follows it, ahead of the Classic, exactly as before.
+        ('GROW Aut2 W1 on the page headlines the landed GROW_SCI_A2_W01, then the dated folder\'s non-Classic SCI_G_W8A_Day_And_Night_Explore',
+         ROWS.get(('GROW', 'Aut2', '1'), ['', ''])[0].endswith('/GROW_SCI_A2_W01.html')
+         and ROWS.get(('GROW', 'Aut2', '1'), ['', ''])[1].endswith('/SCI_G_W8A_Day_And_Night_Explore.html')),
         ('GROW Aut2 W1 on the page: the Classic comes after every non-Classic',
          [CLASSIC[p] for p in ROWS.get(('GROW', 'Aut2', '1'), [])] == sorted(CLASSIC[L['path']] for L in g1)
          and any(CLASSIC[L['path']] for L in g1)),
         # Matt's named check. It already held before the ruling -- the W9 Classic is bound to Aut2
         # W1, not W2 -- so it is kept as a control, and the W1 checks above are the red proof.
-        ("Matt's check, on the page: GROW Aut2 W2's headline is SCI_G_W9A_Spherical_Bodies_Explore, not a Classic",
-         ROWS.get(('GROW', 'Aut2', '2'), [''])[0].endswith('/SCI_G_W9A_Spherical_Bodies_Explore.html')),
+        # Its intent -- a Classic never headlines GROW Aut2 W2 -- is kept; since LAND-A2 the headline is the
+        # landed recommended lesson and SCI_G_W9A_Spherical_Bodies_Explore is the first card after it.
+        ("Matt's check, on the page: GROW Aut2 W2's headline is not a Classic: the landed GROW_SCI_A2_W02, then SCI_G_W9A_Spherical_Bodies_Explore",
+         ROWS.get(('GROW', 'Aut2', '2'), ['', ''])[0].endswith('/GROW_SCI_A2_W02.html')
+         and ROWS.get(('GROW', 'Aut2', '2'), ['', ''])[1].endswith('/SCI_G_W9A_Spherical_Bodies_Explore.html')
+         and not CLASSIC.get(ROWS.get(('GROW', 'Aut2', '2'), [''])[0], True)),
         ('RED PROOF: C9 reds a week row that renders the Classic first',
          any('out of generation order' in e for e in c9_errors(classic_first, {}, set(), CLASSIC))),
         ('RED PROOF: C9 reds a week row out of lesson order inside one generation',
@@ -498,6 +520,11 @@ def self_test() -> int:
          len(OLDER) == 35 and all(generation(p) == 'older copy' for p in OLDER)),
         ('no Classic is decided by its file name where it shares a week',
          not any('file named Classic' in e for e in c9_errors('', SLOTS, D['current'], CLASSIC))),
+        ('RED PROOF: C9 still reds an undeclared Classic beside a deck of its own generation',
+         any('file named Classic' in e for e in c9_errors('', {('BUILD', 'Aut2', 5): [dated + 'X_Classic.html', dated + 'X_Explore.html']}, {dated + 'X_Explore.html'}, {}))),
+        ('an undeclared Classic beside only a newer (landed) generation is not red, and the landed lesson heads it',
+         not any('file named Classic' in e for e in c9_errors('', {('BUILD', 'Aut2', 5): [dated + 'X_Classic.html', 'Science_Teesside/Build/Autumn_2_2026-27/Y/Y.html']}, {'Science_Teesside/Build/Autumn_2_2026-27/Y/Y.html'}, {}))
+         and generation('Science_Teesside/Build/Autumn_2_2026-27/Y/Y.html') == 'landed'),
         ('style and badge are not order keys: reversing every style leaves the order unchanged',
          [L['path'] for L in within_week(g1)] == [L['path'] for L in within_week([{**L, 'style': 'x' + L.get('style', ''), 'badges': ''} for L in reversed(g1)])]),
     ]
