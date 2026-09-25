@@ -541,7 +541,7 @@ output = '''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Science by pathway, term and week — Made by Matt</title><meta name="description" content="Find the current Science lesson for any week by BUILD, GROW and LAUNCH pathway, then packs and downloads, then earlier versions.">
 <meta name="theme-color" content="#161D3D"><link rel="icon" href="https://madebymatt.uk/favicon.svg">
-<style>''' + base_css + '''</style><link rel="stylesheet" href="../assets/mbm-platform.css"><link rel="stylesheet" href="../assets/mbm-hub.css"><link rel="stylesheet" href="../assets/catalogue/catalogue.css">
+<style>''' + base_css + '''</style><link rel="stylesheet" href="../assets/mbm-platform.css"><link rel="stylesheet" href="../assets/mbm-hub.css"><link rel="stylesheet" href="../assets/catalogue/catalogue.css"><link rel="stylesheet" href="../assets/catalogue/science-shelf.css">
 <script>try{var theme=localStorage.getItem('mbm_reading_theme');if(theme&&theme!=='cream')document.documentElement.setAttribute('data-theme',theme)}catch(e){}</script>
 </head><body class="mbm-hub mbm-hub-lessons hub-v2" data-mbm-estate="lessons" data-catalogue-subject="Science" data-catalogue-noun="teaching version"><a class="skip" href="#main">Skip to Science lessons</a>''' + header + '''
 <main id="main"><section class="hero hero-compact"><div class="hero-in"><nav class="lesson-breadcrumb" aria-label="Breadcrumb"><a href="/">Learning home</a><a href="../">All lessons</a></nav><p class="eyebrow">Science · Teesside</p><h1>Science by pathway, term and week</h1><p class="lede">The current lesson for each week first, then packs and downloads, then earlier versions.</p></div></section>

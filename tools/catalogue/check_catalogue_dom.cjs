@@ -178,6 +178,31 @@ function visibleScience(env){return [...env.document.querySelectorAll('[data-les
  check('Humanities Autumn shortcut selects by evidenced term only',()=>assert.equal(visibleScience(hu).length,humanities.lessons.filter(r=>r.term==='Aut1').length));
  const hs=visibleScience(hu)[0].closest('.science-pathway');hs.open=false;hu.window.dispatchEvent(new hu.window.Event('beforeprint'));
  check('Humanities print opens and restores a visible pathway',()=>{assert.equal(hs.open,true);hu.window.dispatchEvent(new hu.window.Event('afterprint'));assert.equal(hs.open,false);});
- const report={scope:'Static DOM and JavaScript checks using LinkeDOM; no browser rendering, keyboard hardware, touch hardware or print pagination was exercised.',resourceRows:rows.length,scienceRoutes:science.lessons.length,humanitiesResources:humanities.lessons.length,checks:reports};
+ // Q12 (ORDER RS1-G3, 2026-09-25): the start strip is laid out by science-shelf.css, and the Science
+ // hub writer stopped linking it at edb27b0c (#612) while Humanities kept it. LinkeDOM computes no
+ // styles, so this one check renders each hub in Chromium at 390 px and reads the COMPUTED display --
+ // not the presence of a <link>, which a stylesheet that fails to load would still pass. The same sheet
+ // orders the hub (catalogue.css makes main a flex column), so without it the filters render after the
+ // whole lesson list; isVisible() is true either way, so position is asserted instead. Humanities is
+ // the control: it never lost the link, so it proves the check can go green. Local-file bytes only;
+ // every non-file request is refused, so nothing external can change the answer.
+ const {chromium}=require('playwright');
+ const browser=await chromium.launch({executablePath:process.env.MBM_CHROMIUM_PATH||undefined});
+ try{
+  for(const file of ['Science_Teesside/index.html','Humanities_Teesside/index.html']){
+   const page=await browser.newPage({viewport:{width:390,height:844}});
+   await page.route(url=>url.protocol!=='file:',route=>route.abort());
+   await page.goto(require('node:url').pathToFileURL(path.join(root,file)).href,{waitUntil:'load'});
+   const m=await page.evaluate(()=>{const grid=document.querySelector('.start-grid'),top=e=>e.getBoundingClientRect().top+scrollY,list=document.querySelector('#science-lessons');
+    return {display:grid?getComputedStyle(grid).display:'(no .start-grid)',listTop:list?top(list):null,controls:[...document.querySelectorAll('.toolbar input,.toolbar select')].map(e=>{const b=e.getBoundingClientRect();return {id:e.id,top:Math.round(top(e)),left:b.left,right:b.right};})};});
+   check(`${file.split('_')[0]} hub .start-grid computes display:grid at 390 px (Chromium)`,()=>assert.equal(m.display,'grid',`${file} .start-grid computes display:${m.display} at 390 px`));
+   check(`${file.split('_')[0]} hub filter controls sit above the lesson list, inside 390 px (Chromium)`,()=>{
+    assert(m.controls.length>=5&&m.listTop!==null,`${file} has its toolbar controls and #science-lessons`);
+    for(const c of m.controls)assert(c.top<m.listTop&&c.left>=0&&c.right<=390,`${file} #${c.id} at y=${c.top}, x=${c.left}..${c.right}; the lesson list starts at y=${Math.round(m.listTop)}`);
+   });
+   await page.close();
+  }
+ }finally{await browser.close();}
+ const report={scope:'Static DOM and JavaScript checks using LinkeDOM, plus one Chromium render per hub at 390 px for the computed .start-grid display; no keyboard hardware, touch hardware or print pagination was exercised.',resourceRows:rows.length,scienceRoutes:science.lessons.length,humanitiesResources:humanities.lessons.length,checks:reports};
  fs.writeFileSync(path.join(root,'tools/catalogue/DOM_CHECK_RESULTS.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));
 })().catch(error=>{console.error(error);process.exitCode=1});
