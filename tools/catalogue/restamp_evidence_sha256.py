@@ -121,7 +121,7 @@ def fenced_paths():
     return {row['path'] for row in json.loads(FENCE.read_text()).get('fenced', [])}
 
 
-def restamp_plan(entries, reviewed, digest_of, proved, bindings, fenced, reasons=None, held=None):
+def restamp_plan(entries, reviewed, digest_of, proved, bindings, fenced, reasons=None, held=None, unbound=None):
     """Pure rule, so the self-test plants against the code the tree is judged by.
 
     Returns (errors, restamps, noops). `reviewed` maps path -> reviewed new digest. `reasons` maps
@@ -150,7 +150,7 @@ def restamp_plan(entries, reviewed, digest_of, proved, bindings, fenced, reasons
         if actual == meta['sha256']:
             noops.append(path)
             continue
-        if path not in proved:
+        if path not in proved and not (path in (unbound or ()) and names_no_week(meta) and path not in bindings):
             why = (reasons or {}).get(path)
             errors.append(('no limb proves the new bytes (%s): ' % '; '.join('%s -- %s' % kv for kv in sorted(why.items()))
                            if why else 'the narrowed token limb does not hold on the new bytes: ') + path)
@@ -163,6 +163,45 @@ def restamp_plan(entries, reviewed, digest_of, proved, bindings, fenced, reasons
                 continue
         restamps.append((path, meta['sha256'], actual))
     return errors, restamps, noops
+
+
+# The UNBOUND limb (Matt, 2026-09-23, ruling on C: "a record naming no term or week may be updated once
+# its structural evidence is re-measured on the new bytes"). The week limbs exist so a re-stamp never
+# freezes in a week binding nothing can demonstrate; a record that binds NO term and NO week has no such
+# binding to freeze, so they can never hold for it (the biology observation lesson, re-texted to take a
+# product name off a public page, was refused for exactly that). It is narrow on purpose:
+#   * the recorded entry names no term (absent or "unspecified"), no terms, and has no week binding;
+#   * the whole entry is RE-DERIVED from the new bytes by build_catalogue.classify() and must equal the
+#     recorded entry field for field, sha256 aside -- so style, batch, the structural evidence
+#     (repeated Lundy panels, chassis) and the absence of any term are all re-measured, not assumed.
+# The planner re-checks names_no_week() itself, so a caller cannot pass a week-bound deck through it.
+def names_no_week(meta):
+    return (meta.get('term') in (None, '', 'unspecified') and not meta.get('terms')
+            and not meta.get('weeks'))
+
+
+def unbound_structural_proofs(entries, paths, classify, bindings):
+    """Pure given `classify`: the listed paths whose unbound record re-derives unchanged from new bytes."""
+    out = set()
+    for path in paths:
+        meta = entries.get(path)
+        if not isinstance(meta, dict) or not names_no_week(meta) or path in bindings:
+            continue
+        fresh = classify(path)
+        if not isinstance(fresh, dict):
+            continue
+        strip = lambda d: {k: v for k, v in d.items() if k != 'sha256'}
+        if strip(fresh) == strip(meta):
+            out.add(path)
+    return out
+
+
+def classify_from_bytes():
+    """build_catalogue.classify on the working-tree bytes, fresh module (no cache)."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location('_bc_restamp', ROOT / 'tools/catalogue/build_catalogue.py')
+    mod = importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
+    return lambda path: mod.classify(path)
 
 
 def load_proved():
@@ -206,11 +245,13 @@ def run_write(decks_path):
     reviewed, excluded = exclude_held(listed, held)
     bindings = json.loads(BINDINGS.read_text())['entries'] if BINDINGS.is_file() else {}
     proved, reasons = load_proofs()
+    unbound = unbound_structural_proofs(entries, [p for p in reviewed if p not in proved], classify_from_bytes(),
+                                        bindings)
     errors, restamps, noops = restamp_plan(entries, reviewed, digest_of_tree, proved, bindings, fenced_paths(),
-                                           reasons, held)
+                                           reasons, held, unbound)
     print(f'SEARCH SCOPE: {len(listed)} reviewed deck(s) from {decks_path}, '
           f'against {EVIDENCE.relative_to(ROOT)}')
-    print(f'  limb-proved decks available: {len(proved)}')
+    print(f'  limb-proved decks available: {len(proved)}; unbound records re-derived unchanged: {len(unbound)}')
     for path, record in excluded.items():
         print(f'  [HELD] excluded by derivation ({record}), never re-stamped: {path}')
     for e in errors:
@@ -295,6 +336,32 @@ def self_test():
     e, r, n = restamp_plan(entries, {'A.html': '9' * 64}, d, proved, bindings, fenced)
     check('bytes that moved after the review are refused',
           len(e) == 1 and 'moved after the review' in e[0] and not r)
+
+    # The UNBOUND limb and its misuse controls (ruling 2026-09-23).
+    ub = {'N.html': {'sha256': 'n' * 64, 'term': 'unspecified', 'terms': [], 'style': 'earlier',
+                     'evidence': [{'method': 'current presentation structure', 'repeatedLundyPanels': 1}]}}
+    ub_tree = {'N.html': '6' * 64, 'U.html': '5' * 64}
+    same = lambda path: dict(ub['N.html'], sha256='6' * 64)
+    grew = lambda path: dict(ub['N.html'], sha256='6' * 64, evidence=[{'method': 'current presentation structure',
+                                                                         'repeatedLundyPanels': 4}])
+    termed = lambda path: dict(ub['N.html'], sha256='6' * 64, term='Aut1', terms=['Aut1'])
+    allents = dict(entries, **ub)
+    got = unbound_structural_proofs(allents, ['N.html'], same, bindings)
+    e, r, n = restamp_plan(allents, {'N.html': '6' * 64}, ub_tree.get, proved, bindings, fenced, unbound=got)
+    check('UNBOUND: a no-term record whose structure re-derives unchanged is re-stamped',
+          got == {'N.html'} and not e and [x[0] for x in r] == ['N.html'])
+    check('UNBOUND misuse: structure that changed on the new bytes is not proved',
+          unbound_structural_proofs(allents, ['N.html'], grew, bindings) == set())
+    check('UNBOUND misuse: new bytes that now claim a term are not proved',
+          unbound_structural_proofs(allents, ['N.html'], termed, bindings) == set())
+    check('UNBOUND misuse: a week-bound record is never offered to the limb',
+          unbound_structural_proofs(allents, ['U.html'], lambda p: dict(entries['U.html']), bindings) == set())
+    e, r, n = restamp_plan(allents, {'U.html': '5' * 64}, ub_tree.get, proved, bindings, fenced, unbound={'U.html'})
+    check('UNBOUND misuse: the planner refuses a week-bound deck even if a caller lists it as unbound',
+          len(e) == 1 and not r)
+    nb = dict(allents); nb_bind = dict(bindings, **{'N.html': {'weeks': [{'term': 'Aut1', 'key': 'Aut1·W1'}]}})
+    e, r, n = restamp_plan(nb, {'N.html': '6' * 64}, ub_tree.get, proved, nb_bind, fenced, unbound={'N.html'})
+    check('UNBOUND misuse: a record with a Science week binding is refused', len(e) == 1 and not r)
 
     e, r, n = restamp_plan(entries, {'Z.html': '1' * 64}, d, proved, bindings, fenced)
     check('a listed deck with no evidence entry is refused',
