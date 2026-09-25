@@ -1625,7 +1625,10 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # Re-cut 2026-09-25 (the pure carrier closing Q12's fold): the carrier moves to Site main
 # be9441d7, the squash merge of Site #445 (the EQUAL window). Digest derived with sha256 over the
 # edited file, never transcribed.
-    "lessons": "222f5e7f66bd2747c29d4c7aca1329731854fc42913e071c1bb0763b2c8a6361",
+# Re-cut 2026-09-25 (LAND-A2 Science): the carrier moves to Site main 214749c0, the squash merge of
+# Site #448 (window W1: the 21 lessons' rows and the fence's transition pair), bumped once and last.
+# Digest derived with sha256 over the edited file, never transcribed.
+    "lessons": "715248df8137efb15160d777c57d2519111f4319b6f7623172db50e741c20ea9",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.
