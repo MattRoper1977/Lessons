@@ -55,6 +55,16 @@ SUMMER1_PATHWAY_TREES = ('Humanities_Teesside/BUILD_W27-W39_2026-27/',
 PATHWAY_PARENTS = ('Science_Teesside/Build/START_HERE.html',
                    'Science_Teesside/Grow/START_HERE.html',
                    'Science_Teesside/Launch/START_HERE.html')
+# RULING LAND-A2 R3 §1 and R4 (Claude, 25 September 2026): the 21 Autumn 2 Science lessons land in
+# their own dated term folders. Science_Teesside is protected and the fence had no route for a brand-new
+# lesson file there -- SCIENCE_PACKS admits only Teaching_Packs/, a replacement member must be an 'M'
+# carrying a beforeGitBlob, and PATHWAY_PARENTS names three pages. Same shape as SUMMER1_PATHWAY_TREES
+# and no wider: status 'A' only, every file admitted by its own reviewed digest in CATALOGUE_PINS, the
+# prefix alone admits nothing, and a later 'M' or 'D' to a landed file falls through to the fence and is
+# rejected. The three prefixes are named, not matched by pattern.
+LAND_A2_SCIENCE_TERMS = ('Science_Teesside/Build/Autumn_2_2026-27/',
+                         'Science_Teesside/Grow/Autumn_2_2026-27/',
+                         'Science_Teesside/Launch/Autumn_2_2026-27/')
 SOURCE = 'tools/humanities_resources/SOURCE_MANIFEST.json'
 DOWNLOADS = 'tools/humanities_resources/DOWNLOAD_MANIFEST.json'
 LABEL_EDITS = 'tools/humanities_resources/PUBLIC_LABEL_CHANGES.json'
@@ -573,6 +583,11 @@ def judge(root, changes, base=None):
                 # pack clauses above -- an exact, individually pinned addition, never an edit.
                 if status != 'A' or not (root / rel).is_file() or pins[rel] != sha(root / rel):
                     errors.append('Summer 1 pathway tree must be an exact reviewed addition: ' + rel)
+            elif rel.startswith(LAND_A2_SCIENCE_TERMS) and rel in pins:
+                # LAND-A2 Science (2026-09-25). Same rule as the Summer 1 clause above -- an exact,
+                # individually pinned addition, never an edit or a deletion.
+                if status != 'A' or not (root / rel).is_file() or pins[rel] != sha(root / rel):
+                    errors.append('LAND-A2 Science lesson must be an exact reviewed addition: ' + rel)
             elif rel in PATHWAY_PARENTS:
                 # SX3-PASSES PASS 4 (3b). Additive only, and the bytes must equal the
                 # reviewed admission; the set alone never admits an edit or a deletion.
@@ -666,6 +681,30 @@ def controls(root):
         check('a Summer 1 file a declared transaction owns is NOT waved through the '
               'additive route: it is refused without the real comparison base',
               all(bool(judge(root, [('A', r)])) for r in owned))
+    # LAND-A2 Science red proofs for LAND_A2_SCIENCE_TERMS, the same four refusals as the Summer 1
+    # route above: the route is only as good as its refusals, so each is proved to go RED.
+    science_landed = sorted(r for r in pin_map(root)
+                            if r.startswith(LAND_A2_SCIENCE_TERMS) and (root / r).is_file()
+                            and r not in ALL_REPLACEMENTS)
+    check('the LAND-A2 Science term folders have landed files to judge', bool(science_landed))
+    if science_landed:
+        check('every pinned LAND-A2 Science file passes as an exact reviewed addition',
+              not judge(root, [('A', r) for r in science_landed]))
+        for prefix in LAND_A2_SCIENCE_TERMS:
+            check('an addition under ' + prefix + ' with no pin is rejected (the prefix alone admits nothing)',
+                  bool(judge(root, [('A', prefix + 'unreviewed.html')])))
+        check('a modification of a landed LAND-A2 Science file is rejected (additive only)',
+              bool(judge(root, [('M', science_landed[0])])))
+        check('a deletion of a landed LAND-A2 Science file is rejected',
+              bool(judge(root, [('D', science_landed[0])])))
+        disagree = dict(pin_map(root)); disagree[science_landed[0]] = '0' * 64
+        real = globals()['pin_map']
+        try:
+            globals()['pin_map'] = lambda _root: disagree
+            check('a LAND-A2 Science file whose reviewed pin disagrees with its bytes is rejected',
+                  bool(judge(root, [('A', science_landed[0])])))
+        finally:
+            globals()['pin_map'] = real
     # ORDER SX3-PASSES PASS 4 (3b) red proofs for PATHWAY_PARENTS. The set is only
     # as good as its refusals, so each of the three ways it could go wrong is proved
     # to go RED rather than assumed to.
