@@ -50,6 +50,15 @@ step-1 window admitted, verified as a set rather than a count. The whole-diff fo
 `tools/hum/check_carrier_pure.py` refuses step 2 by design and is not the test. Step 3 is
 the pure carrier, and there the whole-diff form applies unchanged.
 
+**AMENDMENT (2026-09-25, Correction #41; Site #446 `cc28d5c5`; Claude's note on RS1-G4 §1).** Steps
+1 and 3 above say "the four EQUAL pin lines". Since Site #446 the EQUAL set is **five lines in three
+Site workflow files**: the declared-EQUAL Lessons pin in `domain-split-verify.yml`,
+`education-publication.yml` and `published-completion-verify.yml`, and its Apps companion in
+`domain-split-verify.yml` and `education-publication.yml`. Every EQUAL window (step 3) discharges all
+five; step 1 leaves all five at current main. The text above stands as the record of the rule as it
+was; the full correction, with the five lines as measured on Site `d9cdceef`, is
+`_sx3/ROUTE_EQUAL_SET_2026-09-25.md`.
+
 ### STANDING RECORD 2 — pin before declaration
 
 The declaration refuses on a stale catalogue pin. **The pin moves first, then the
