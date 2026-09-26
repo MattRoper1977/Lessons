@@ -638,10 +638,286 @@ def science_limb(statuses: dict, blob_reader, deck_limb=None, root=None) -> tupl
     return allowed | records, why, records
 
 
+# --- THE DLG-1 LIMB (ruling LAND-A2 R8 §2, 26 September 2026) ---------------------------------
+# "the bytes on disk equal fix_dialog_audience.py applied to the base bytes; manifests may re-cut
+# digests only."
+#
+# DLG-1 (R5 §2) copies a dialog's own audience attributes onto the opening tag of the control that
+# opens it, on exactly the pages and controls the Chromium probe measured. Same shape as the
+# responsive limb (#647), and for the same reason: judged from the base bytes, never trusted.
+#
+#   PAGE    the fixer and the pairs record are the reviewed bytes, pinned below by digest, so a
+#           changed fixer or a widened record refuses EVERY member rather than admitting one; the
+#           page is named by tools/hum/DLG1_PAIRS.json (a page the record holds out by ruling --
+#           SCI_B_W8B, R8 §1 -- is refused by name); and the bytes on disk are exactly what the
+#           fixer's pure fix_text() produces from the bytes at the merge base under that page's
+#           recorded pairs.
+#   RECORD  a pack's SHA256SUMS.txt (or CHECKSUMS.sha256), or a JSON manifest named in
+#           DLG1_JSON_MANIFESTS (the Fallback pack's MANIFEST.json, R8 §5), is a member only as a
+#           digest re-cut: every line equal to the base except the digest of a row naming a page
+#           member of THIS transaction, and each such digest the sha256 of that page's bytes on
+#           disk. Row set, row order, every other digest -- a row already stale at the base
+#           included -- and every other byte stay as they were.
+#   BOTH    a page member that a manifest lists at the base must have that manifest re-cut in the
+#           same transaction, or the page is refused: its row would disagree with its bytes.
+#
+# ONE TRANSACTION, BOTH STRANDS. The record spans Humanities and Science, so the limb reads both
+# prefixes and declares one 'DLG-1' transaction. The Science pages are judged here, not by the
+# Science landability limb: that limb proves a deck's own week claim against the signed bindings,
+# which an attribute added to a <button> tag cannot move, and it bounds nothing about WHICH bytes
+# changed; its record rule (S3) lets a row stale at the base ride along, which R8 §2 does not. One
+# predicate, byte-exact, for all 192 members is the ruled rule with no second rule beside it.
+#
+# The GLV3 boundary does not take the declaration on trust either: it calls limb_verdicts() below on
+# every member of a transaction it lists as limb-judged, binding this file to its CATALOGUE_PINS
+# admission first. A DLG-1 claim on a path an earlier transaction declared counts only for a change
+# this limb judges its own; any other change to that path stays with the earlier transaction.
+DLG1_FIXER = "tools/hum/fix_dialog_audience.py"
+DLG1_PAIRS = "tools/hum/DLG1_PAIRS.json"
+DLG1_FIXER_SHA256 = "2670c6df1a40958c39cbf81e71de138c8a5fb1c5c02271fc13f12323842a6523"
+DLG1_PAIRS_SHA256 = "3e4cbb64a3b5e1b39549cd3da57845202c4fd6575aa738c60effd3df0ff0744d"
+DLG1_PREFIXES = (PREFIX, SCIENCE_PREFIX)
+DLG1_SUMS = ("SHA256SUMS.txt", "CHECKSUMS.sha256")
+# A JSON manifest is named, with the folder its keys are relative to; never matched by pattern.
+DLG1_JSON_MANIFESTS = {
+    "Humanities_Teesside/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/MANIFEST.json":
+        "Humanities_Teesside/Teaching_Packs/",
+}
+_DLG1_ROW = {
+    "sums": re.compile(r"^(?P<digest>[0-9a-f]{64})  (?P<name>[^\r\n]+?)\r?\n?$"),
+    "json": re.compile(r'^\s*"(?P<key>(?:[^"\\]|\\.)*)"\s*:\s*"(?P<digest>[0-9a-f]{64})"\s*,?\s*\r?\n?$'),
+}
+
+
+def dlg1_tools(root=None):
+    """(fixer module, {page: [(action, dialog)]}, {page: held-out row}), built from the bytes of
+    the fixer and the pairs record only after each is proved to be the reviewed bytes. The module
+    is compiled from the very bytes that were hashed, so nothing can change between the two."""
+    import types
+    root = root or ROOT
+    data = {}
+    for rel, pinned in ((DLG1_FIXER, DLG1_FIXER_SHA256), (DLG1_PAIRS, DLG1_PAIRS_SHA256)):
+        path = root / rel
+        if path.is_symlink() or not path.is_file():
+            raise Refuse(f"{rel} is not a regular file")
+        data[rel] = path.read_bytes()
+        digest = hashlib.sha256(data[rel]).hexdigest()
+        if digest != pinned:
+            raise Refuse(f"{rel} is not the reviewed bytes (sha256 {digest[:12]}, pinned "
+                         f"{pinned[:12]}): a changed fixer or pairs record cannot widen the limb")
+    F = types.ModuleType("fix_dialog_audience")
+    F.__file__ = str(root / DLG1_FIXER)
+    exec(compile(data[DLG1_FIXER], F.__file__, "exec"), F.__dict__)
+    try:
+        record = json.loads(data[DLG1_PAIRS])
+        return F, F.record_pairs(record), F.held_out(record)
+    except (ValueError, KeyError, TypeError, F.Refuse) as why:
+        raise Refuse(f"{DLG1_PAIRS} is not a pairs record: {why}")
+
+
+def judge_dlg1(rel: str, before: bytes, after: bytes, tools):
+    """Pure. None when this page is its own base bytes with its recorded controls given their
+    dialogs' audience by the reviewed fixer, else why not."""
+    F, pairs, held = tools
+    if rel in held:
+        return (f"held out of DLG-1 by ruling ({held[rel].get('ruling', '?')}; until "
+                f"{held[rel].get('until', '?')}): the pairs record names no pair for it")
+    if rel not in pairs:
+        return ("not a page the DLG-1 pairs record names; the probe measured no hidden-dialog "
+                "opener to fix here")
+    try:
+        base = before.decode("utf-8")
+    except UnicodeDecodeError:
+        return "the base bytes are not UTF-8, so the reviewed fixer cannot read them"
+    try:
+        want, edits = F.fix_text(base, pairs[rel])
+    except F.Refuse as why:
+        return "the reviewed fixer refuses this page: %s" % why
+    if not edits:
+        return "the base bytes already carry every recorded audience, so there is nothing to fix"
+    if after != want.encode("utf-8"):
+        return "the bytes on disk are not what the reviewed fixer produces from the base bytes"
+    return None
+
+
+def dlg1_manifest_kind(rel: str):
+    """'json' for a named JSON manifest, 'sums' for a pack checksum file, None for anything else."""
+    if rel in DLG1_JSON_MANIFESTS:
+        return "json"
+    if rel.startswith(DLG1_PREFIXES) and rel.rsplit("/", 1)[-1] in DLG1_SUMS:
+        return "sums"
+    return None
+
+
+def _dlg1_row(line: str, kind: str):
+    """(row name, digest, the line before the digest, the line after it), or None: not a row."""
+    m = _DLG1_ROW[kind].match(line)
+    if not m:
+        return None
+    try:
+        name = m.group("name") if kind == "sums" else json.loads('"%s"' % m.group("key"))
+    except ValueError:
+        return None
+    return name, m.group("digest"), line[:m.start("digest")], line[m.end("digest"):]
+
+
+def dlg1_rows(text: str, kind: str) -> dict:
+    """{row name: digest} for every row of a manifest."""
+    rows = {}
+    for line in text.splitlines(keepends=True):
+        row = _dlg1_row(line, kind)
+        if row:
+            rows[row[0]] = row[1]
+    return rows
+
+
+def dlg1_listing(page: str, read) -> list:
+    """[(manifest, row name)] for every manifest that lists this page as `read` (the merge base)
+    has it: a checksum file in the page's folder or any ancestor inside its strand, and each named
+    JSON manifest whose keys the page falls under."""
+    out, parts = [], page.split("/")
+    for i in range(len(parts) - 1, 0, -1):
+        folder = "/".join(parts[:i]) + "/"
+        for name in DLG1_SUMS:
+            text = read(folder + name)
+            if text and page[len(folder):] in dlg1_rows(text.decode("utf-8", "replace"), "sums"):
+                out.append((folder + name, page[len(folder):]))
+    for manifest, keyroot in DLG1_JSON_MANIFESTS.items():
+        if page.startswith(keyroot):
+            text = read(manifest)
+            if text and page[len(keyroot):] in dlg1_rows(text.decode("utf-8", "replace"), "json"):
+                out.append((manifest, page[len(keyroot):]))
+    return out
+
+
+def judge_dlg1_record(rel: str, before: bytes, after: bytes, members: dict):
+    """Pure. None when this manifest is its base bytes with exactly its page members' row digests
+    re-cut to their bytes on disk, else why not.
+
+    members  {row name: sha256 of that page's bytes on disk} -- the page members of THIS
+             transaction that this manifest lists at the base"""
+    kind = dlg1_manifest_kind(rel)
+    if kind is None:
+        return ("only a pack's SHA256SUMS.txt, or a JSON manifest the limb names (the Fallback "
+                "pack's MANIFEST.json), is a DLG-1 record member")
+    if not members:
+        return "a manifest re-cut for a pack this transaction does not touch: it lists no page member"
+    try:
+        b, a = before.decode("utf-8"), after.decode("utf-8")
+    except UnicodeDecodeError:
+        return "the manifest is not UTF-8"
+    b_lines, a_lines = b.splitlines(keepends=True), a.splitlines(keepends=True)
+    if len(b_lines) != len(a_lines):
+        return "the re-cut adds or drops a line: a re-cut changes digests, never rows"
+    moved = {}
+    for lb, la in zip(b_lines, a_lines):
+        if lb == la:
+            continue
+        rb, ra = _dlg1_row(lb, kind), _dlg1_row(la, kind)
+        if rb is None or ra is None or la != rb[2] + ra[1] + rb[3]:
+            return "a changed line is not the same row with only its digest replaced"
+        if rb[0] in moved:
+            return f"the row for {rb[0]} moved twice"
+        moved[rb[0]] = ra[1]
+    if kind == "json":
+        try:
+            same_keys = list(json.loads(a)) == list(json.loads(b))
+        except ValueError:
+            return "the manifest is not JSON"
+        if not same_keys:
+            return "the manifest's keys moved: a re-cut changes digests, never keys"
+    extra = sorted(set(moved) - set(members))
+    if extra:
+        return f"a digest moved for {extra[0]}, which is not a page member of this transaction"
+    still = sorted(set(members) - set(moved))
+    if still:
+        return f"a page member's row did not move, so it would disagree with its bytes: {still[0]}"
+    for row in sorted(moved):
+        if moved[row] != members.get(row):
+            return f"the re-cut digest for {row} is not the sha256 of its bytes on disk"
+    return None
+
+
+def dlg1_allowed(statuses, blob_reader, root=None) -> tuple[set, dict]:
+    """The ruled DLG-1 limb over the changed paths: pages first, then the manifests re-cut from
+    them, then each page whose listing manifest is not an admitted re-cut taken back out (and its
+    manifests judged again without it). `blob_reader` reads the merge base; bytes on disk are read
+    from `root` (default ROOT) -- the seam the boundary and the self-test use."""
+    root = root or ROOT
+    try:
+        tools = dlg1_tools(root)
+    except Refuse as why:
+        return set(), {rel: str(why) for rel in statuses}
+    cache = {}
+
+    def read(rel):
+        if rel not in cache:
+            cache[rel] = blob_reader(rel) or b""
+        return cache[rel]
+
+    pages, why, digest, records = set(), {}, {}, {}
+    for rel, status in sorted(statuses.items()):
+        path = root / rel
+        if status != "M" or path.is_symlink() or not path.is_file():
+            why[rel] = "this transaction replaces landed files; this is not an 'M' of a regular file"
+            continue
+        data = path.read_bytes()
+        if dlg1_manifest_kind(rel):
+            records[rel] = (read(rel), data)
+            continue
+        if not rel.endswith(".html"):
+            why[rel] = ("DLG-1 changes the pages its record names and the manifests that list "
+                        "them, nothing else")
+            continue
+        reason = judge_dlg1(rel, read(rel), data, tools)
+        if reason:
+            why[rel] = reason
+        else:
+            pages.add(rel)
+            digest[rel] = hashlib.sha256(data).hexdigest()
+    listed = {page: dlg1_listing(page, read) for page in pages}
+    while True:
+        admitted = set()
+        for rel, (before, after) in sorted(records.items()):
+            members = {row: digest[page] for page in pages for m, row in listed[page] if m == rel}
+            reason = judge_dlg1_record(rel, before, after, members)
+            if reason:
+                why.setdefault(rel, reason)   # the first cause, not the empty pack it leaves behind
+            else:
+                admitted.add(rel)
+                why.pop(rel, None)
+        dropped = set()
+        for page in sorted(pages):
+            missing = [m for m, _ in listed[page] if m not in admitted]
+            if missing:
+                m = missing[0]
+                why[page] = (f"its pack manifest {m} lists it but is "
+                             + (f"refused: {why[m]}" if m in records else "not re-cut in this transaction"))
+                dropped.add(page)
+        if not dropped:
+            return pages | admitted, why
+        pages -= dropped
+
+
+# The ruled limbs the GLV3 boundary may re-judge a declared transaction by, by --limb name.
+LIMB_WALKS = {"dlg-1": dlg1_allowed}
+
+
+def limb_verdicts(limb: str, paths, blob_reader, root=None) -> dict:
+    """{path: None, or the limb's reason}: a ruled limb's own verdict on each declared member,
+    for the GLV3 boundary, which re-judges a limb-declared transaction rather than trusting it."""
+    ok, why = LIMB_WALKS[limb]({rel: "M" for rel in paths}, blob_reader, root)
+    return {rel: (None if rel in ok else why.get(rel, "not admitted by the limb")) for rel in paths}
+
+
 def strand_kinds(strand: str, limb: str = "") -> tuple:
     """The path endings derive() collects. The explicit-tags limb also reads each pack's own two
     records, because a mark-up the record does not carry is a mark-up the pack cannot verify.
-    Ruling S3: a Science pack manifest rides as a member. Every other limb sees .html."""
+    Ruling S3: a Science pack manifest rides as a member. Every other limb sees .html.
+    Ruling R8 §2: the DLG-1 limb collects EVERY changed path under both strands ("" ends every
+    path), so a file it does not change is refused by name instead of left out of the declaration."""
+    if limb == "dlg-1":
+        return ("",)
     kinds = (".html",) + (SUMMER1_RECORDS if limb in ("explicit-tags", "responsive") else ())
     if strand == "Science" and not limb:
         kinds += ("/" + SCIENCE_RECORD,)
@@ -665,6 +941,9 @@ def strand_landable(strand: str, limb: str, statuses: dict, blob_reader, base: s
     """derive()'s choice of limb, pure over its inputs: (landable, reason per refused path,
     derived records). Extracted so the self-test reaches the call derive() actually makes
     (review of the S3 PR: putting back the pre-S3 Science call left every check green)."""
+    if limb == "dlg-1":
+        allowed, why = dlg1_allowed(statuses, blob_reader, root)
+        return allowed, why, {r for r in allowed if dlg1_manifest_kind(r)}
     if limb == "responsive":
         allowed, why = responsive_allowed(statuses, blob_reader)
         return allowed, why, {r for r in allowed if r.endswith(SUMMER1_RECORDS)}
@@ -683,12 +962,14 @@ def derive(base: str, strand: str = "Humanities", limb: str = "", *, root=None, 
     reading the base from disk, or skipping the manifest's pin all left the self-test green).
     Defaults: this repository, CATALOGUE_PINS from the gate copy, the ruled deck limbs."""
     root = root or ROOT
-    prefix = STRANDS[strand]
+    # R8 §2: the DLG-1 record spans both strands, so its limb reads both prefixes as one scope.
+    prefixes = DLG1_PREFIXES if limb == "dlg-1" else (STRANDS[strand],)
     mb = merge_base(base, root)
     kinds = strand_kinds(strand, limb)
-    statuses = diff_statuses(git("diff", "--name-status", f"{mb}..HEAD", "--", prefix, root=root), kinds)
+    statuses = diff_statuses(git("diff", "--name-status", f"{mb}..HEAD", "--", *prefixes, root=root), kinds)
 
-    print(f"SEARCH SCOPE: {len(statuses)} {strand} {' / '.join(kinds)} path(s) differing from "
+    scope = "Humanities + Science, every" if limb == "dlg-1" else f"{strand} {' / '.join(kinds)}"
+    print(f"SEARCH SCOPE: {len(statuses)} {scope} path(s) differing from "
           f"the merge base {mb[:12]} with {base}; blobs read from that merge base, digests from "
           f"the bytes on disk, pins from CATALOGUE_PINS in {GATE.relative_to(ROOT)}")
 
@@ -696,7 +977,12 @@ def derive(base: str, strand: str = "Humanities", limb: str = "", *, root=None, 
                                            capture_output=True).stdout
     allowed, science_why, records = strand_landable(strand, limb, statuses, base_blob, base,
                                                     deck_limb, root)
-    if limb == "responsive":
+    if limb == "dlg-1":
+        print(f"  landable set from the ruled DLG-1 limb (the reviewed fixer reproduces these "
+              f"bytes from the base under {DLG1_PAIRS}): {len(allowed) - len(records)} page(s) "
+              f"and {len(records)} manifest(s) re-cut from them, {len(allowed)} of "
+              f"{len(statuses)} path(s)")
+    elif limb == "responsive":
         pages = len([r for r in allowed if not r.endswith(SUMMER1_RECORDS)])
         print(f"  landable set from the ruled responsive limb (the reviewed writer reproduces "
               f"these bytes from the base): {pages} page(s) and {len(allowed) - pages} derived "
@@ -746,18 +1032,28 @@ def slug(name: str) -> str:
     return re.sub(r"[^A-Z0-9]+", "_", name.upper()).strip("_")
 
 
-def write(name: str, base_sha: str, files: dict, check: bool) -> bool:
+LIMB_NOTES = {
+    "dlg-1": ("# RULING LAND-A2 R8 §2 · {name}: each control given the audience of the dialog it opens,\n"
+              "# by tools/hum/fix_dialog_audience.py under tools/hum/DLG1_PAIRS.json, and the pack\n"
+              "# manifests re-cut for exactly those pages. One transaction, derived and written by\n"
+              "# tools/hum/admit_transaction.py --limb dlg-1; every member also carries a CATALOGUE_PINS\n"
+              "# admission, and LIMB_JUDGED_TRANSACTIONS has the boundary re-judge every member.\n"),
+}
+
+
+def write(name: str, base_sha: str, files: dict, check: bool, limb: str = "") -> bool:
     mark = slug(name)
     var, basevar = f"{mark}_REPLACEMENTS", f"{mark}_REVIEW_BASE"
     text = original = BOUNDARY.read_text()
     if f"{basevar} = " not in text:
-        text = text.replace(
-            "# BEGIN DECLARED TRANSACTIONS\n",
+        note = LIMB_NOTES[limb].format(name=name) if limb in LIMB_NOTES else (
             f"# ORDER HUM-T · {name}: this batch's transplanted decks, each stage carrying the\n"
             f"# science exemplar's loop panel. One transaction, derived and written by\n"
             f"# tools/hum/admit_transaction.py. Every member also carries a CATALOGUE_PINS\n"
-            f"# admission, which replacement_errors cross-checks.\n"
-            f"{basevar} = {base_sha!r}\n# BEGIN DECLARED TRANSACTIONS\n", 1)
+            f"# admission, which replacement_errors cross-checks.\n")
+        text = text.replace(
+            "# BEGIN DECLARED TRANSACTIONS\n",
+            note + f"{basevar} = {base_sha!r}\n# BEGIN DECLARED TRANSACTIONS\n", 1)
     block = f"# BEGIN {mark} REPLACEMENTS\n{var} = {files!r}\n# END {mark} REPLACEMENTS\n"
     pattern = rf"# BEGIN {re.escape(mark)} REPLACEMENTS\n.*?# END {re.escape(mark)} REPLACEMENTS\n"
     if re.search(pattern, text, flags=re.S):
@@ -1231,6 +1527,227 @@ def self_test() -> int:
     check("S3: a Science path that is not a manifest is not a record member",
           "only a Science pack" in (judge_science_record("Science_Teesside/Launch/x/notes.txt", b"", b"", {"a": 1}, None, None) or ""))
 
+    # --- RULING LAND-A2 R8 §2: the DLG-1 limb, with the refusals the ruling and its order name ---
+    D = dlg1_tools()
+    DF, dpairs, dheld = D
+    check("DLG-1: the fixer and the pairs record on disk are the reviewed bytes the limb pins",
+          h((ROOT / DLG1_FIXER).read_bytes()) == DLG1_FIXER_SHA256
+          and h((ROOT / DLG1_PAIRS).read_bytes()) == DLG1_PAIRS_SHA256)
+    w8b = "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html"
+    check("DLG-1 (R8 §1): SCI_B_W8B is held out by name, dated, with its measured pairs and no pair of its own",
+          w8b in dheld and w8b not in dpairs and dheld[w8b].get("until") and dheld[w8b].get("pairs"))
+    dpage = next(p for p in sorted(dpairs) if p.startswith(PREFIX) and dpairs[p] == [("cold-call", "cold-call-dialog")])
+    dsci = next(p for p in sorted(dpairs) if p.startswith(SCIENCE_PREFIX) and dpairs[p] == [("cold-call", "cold-call-dialog")])
+    plain_d = (b'<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><title>t</title></head><body>'
+               b'<button class="tool" data-action="cold-call" type="button">Cold Call</button>'
+               b'<dialog id="cold-call-dialog" data-audience="staff" data-mbm-guide="staff"><p>Who?</p></dialog>'
+               b'<script>document.querySelector("[data-action]");</script></body></html>')
+    fixed_d = DF.fix_text(plain_d.decode(), dpairs[dpage])[0].encode()
+    check("DLG-1: a recorded page the reviewed fixer produces from its base bytes is a member",
+          judge_dlg1(dpage, plain_d, fixed_d, D) is None)
+    check("DLG-1: the fixer adds exactly the dialog's own audience to the control's opening tag, nothing else",
+          fixed_d == plain_d.replace(b'type="button">', b'type="button" data-audience="staff" data-mbm-guide="staff">'))
+    check("RED PROOF (one extra byte): a page one byte beyond the fixer's output is refused",
+          "not what the reviewed fixer produces" in (judge_dlg1(dpage, plain_d, fixed_d + b"\n", D) or ""))
+    check("RED PROOF (a smuggled edit beside a correct fix): a moved byte elsewhere is refused",
+          "not what the reviewed fixer produces" in
+          (judge_dlg1(dpage, plain_d, fixed_d.replace(b"Who?", b"Who!"), D) or ""))
+    check("RED PROOF (a hand-written audience): an audience the dialog does not carry is refused",
+          judge_dlg1(dpage, plain_d, fixed_d.replace(b'data-audience="staff" data-mbm',
+                                                     b'data-audience="pupil" data-mbm'), D) is not None)
+    unrecorded = "Humanities_Teesside/BUILD_W1-W8_2026-27/NOT_IN_THE_DLG1_RECORD.html"
+    check("RED PROOF (not in the record): a page the fixer changes but the record does not name is refused",
+          unrecorded not in dpairs and "record names" in (judge_dlg1(unrecorded, plain_d, fixed_d, D) or ""))
+    w8b_base = (ROOT / w8b).read_bytes()
+    w8b_fixed = DF.fix_text(w8b_base.decode("utf-8"),
+                            [(p["action"], p["dialog"]) for p in dheld[w8b]["pairs"]])[0].encode()
+    check("RED PROOF (SCI_B_W8B, real bytes): W8B changed by the reviewed fixer itself is refused -- held out "
+          "by R8 §1, it is not in the record",
+          w8b_fixed != w8b_base and "held out of DLG-1 by ruling" in (judge_dlg1(w8b, w8b_base, w8b_fixed, D) or ""))
+    check("RED PROOF (already fixed): a page whose base bytes already carry the audience has nothing to fix",
+          "nothing to fix" in (judge_dlg1(dpage, fixed_d, fixed_d, D) or ""))
+    bare = plain_d.replace(b' data-audience="staff" data-mbm-guide="staff"><p>', b"><p>")
+    check("RED PROOF (the fixer's own refusal): a dialog with no audience to copy is refused",
+          "refuses this page" in (judge_dlg1(dpage, bare, bare, D) or ""))
+    check("RED PROOF (wrong limb): a DLG-1 page is not a responsive member",
+          judge_responsive(dpage, plain_d, fixed_d) is not None)
+    check("RED PROOF (wrong limb, the other way): a responsive page is not a DLG-1 member",
+          judge_dlg1(rpage, plain, served, D) is not None)
+
+    # The record clause: digests of this transaction's page members, and nothing else.
+    sums_rel = "Humanities_Teesside/Teaching_Packs/HUM_TEST_Reviewed/SHA256SUMS.txt"
+    row = "BUILD/Autumn_1/W01/BUILD_A1_W01_Lesson.html"
+    stale = "0" * 64
+    sums_b = (f"{h(plain_d)}  {row}\n{h(b'pdf')}  BUILD/Autumn_1/W01/Pupil.pdf\n{stale}  README.txt\n").encode()
+    sums_a = sums_b.replace(h(plain_d).encode(), h(fixed_d).encode())
+    mem = {row: h(fixed_d)}
+    J = judge_dlg1_record
+    check("DLG-1 record: a SHA256SUMS whose only change is its page member's digest, re-cut to the page's "
+          "bytes, is a member", J(sums_rel, sums_b, sums_a, mem) is None)
+    check("RED PROOF (a non-digest byte): a row renamed beside a correct re-cut is refused",
+          "only its digest replaced" in (J(sums_rel, sums_b, sums_a.replace(b"Pupil.pdf", b"Pupil2.pdf"), mem) or ""))
+    check("RED PROOF (a non-digest byte): whitespace added to the re-cut row itself is refused",
+          "only its digest replaced" in (J(sums_rel, sums_b, sums_a.replace(f"  {row}\n".encode(),
+                                                                            f"  {row} \n".encode()), mem) or ""))
+    check("RED PROOF (a line added): a re-cut that adds a line is refused",
+          "adds or drops a line" in (J(sums_rel, sums_b, sums_a + b"\n", mem) or ""))
+    swapped = b"".join([sums_a.splitlines(keepends=True)[i] for i in (1, 0, 2)])
+    check("RED PROOF (rows reordered): a re-cut that moves a row is refused",
+          "only its digest replaced" in (J(sums_rel, sums_b, swapped, mem) or ""))
+    check("RED PROOF (a digest that is not the bytes): a re-cut digest unequal to the member on disk is refused",
+          "not the sha256 of its bytes on disk" in
+          (J(sums_rel, sums_b, sums_b.replace(h(plain_d).encode(), h(b"other").encode()), mem) or ""))
+    check("RED PROOF (a stale row riding along): a digest moved for a file this transaction did not change is "
+          "refused, even a row already stale at the base",
+          "not a page member of this transaction" in
+          (J(sums_rel, sums_b, sums_a.replace(stale.encode(), h(b"readme").encode()), mem) or ""))
+    check("RED PROOF (a member left stale): a page member whose row did not move is refused",
+          "did not move" in (J(sums_rel, sums_b, sums_b, mem) or ""))
+    check("RED PROOF (an untouched pack): a manifest that lists no page member of the transaction is refused",
+          "lists no page member" in (J(sums_rel, sums_b, sums_a, {}) or ""))
+    check("RED PROOF (not a manifest): another file of the pack is not a record member",
+          "only a pack's" in (J(sums_rel.replace("SHA256SUMS.txt", "README.txt"), sums_b, sums_a, mem) or ""))
+    jrel = next(iter(DLG1_JSON_MANIFESTS))
+    jkey = "HUM_Autumn_1_BUILD_GROW_Fallback/BUILD/Autumn_1/W01/BUILD_A1_W01_Lesson.html"
+    jother = "HUM_Autumn_1_BUILD_GROW_Fallback/BUILD/Autumn_1/W01/BUILD_A1_W01_Knowledge_Organiser.pdf"
+    json_b = ('{\n"%s": "%s",\n"%s": "%s"\n}' % (jother, h(b"pdf"), jkey, h(plain_d))).encode()
+    json_a = json_b.replace(h(plain_d).encode(), h(fixed_d).encode())
+    jm = {jkey: h(fixed_d)}
+    check("DLG-1 record (R8 §5): the Fallback MANIFEST.json with only its page member's sha256 re-cut is a member",
+          J(jrel, json_b, json_a, jm) is None)
+    check("RED PROOF (R8 §5, another value): a MANIFEST.json sha256 other than a page member's changed is refused",
+          "not a page member of this transaction" in
+          (J(jrel, json_b, json_a.replace(h(b"pdf").encode(), h(b"pdf2").encode()), jm) or ""))
+    check("RED PROOF (R8 §5, a key renamed): a MANIFEST.json key changed beside the re-cut is refused",
+          "only its digest replaced" in (J(jrel, json_b, json_a.replace(b".pdf", b".PDF"), jm) or ""))
+    check("RED PROOF (R8 §5, the structure): a MANIFEST.json byte outside every row changed is refused",
+          "only its digest replaced" in (J(jrel, json_b, json_a.replace(b"{\n", b"{ \n"), jm) or ""))
+    check("RED PROOF (R8 §5, not the bytes): a MANIFEST.json sha256 unequal to its page on disk is refused",
+          "not the sha256 of its bytes on disk" in
+          (J(jrel, json_b, json_b.replace(h(plain_d).encode(), h(b"x").encode()), jm) or ""))
+    check("RED PROOF (an unnamed JSON manifest): a MANIFEST.json the limb does not name is not a record member",
+          "only a pack's" in (J("Humanities_Teesside/Teaching_Packs/OTHER/MANIFEST.json", json_b, json_a, jm) or ""))
+
+    # The pins on the fixer and the record: a changed tool or a widened record refuses the limb.
+    import shutil
+    with tempfile.TemporaryDirectory() as tmp:
+        troot = Path(tmp)
+        for rel in (DLG1_FIXER, DLG1_PAIRS):
+            (troot / rel).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(ROOT / rel, troot / rel)
+        check("DLG-1: a faithful copy of the fixer and the record loads the same pairs", dlg1_tools(troot)[1] == dpairs)
+        def refusal(root):
+            try:
+                dlg1_tools(root)
+            except Refuse as why:
+                return str(why)
+            return ""
+        (troot / DLG1_FIXER).write_bytes((ROOT / DLG1_FIXER).read_bytes() + b"\n")
+        check("RED PROOF (changed fixer): a fixer one byte from its pinned digest refuses the limb",
+              DLG1_FIXER in refusal(troot) and "cannot widen the limb" in refusal(troot))
+        ok, why = dlg1_allowed({dpage: "M"}, {dpage: plain_d}.get, troot)
+        check("RED PROOF (changed fixer, the wiring): every path is refused, not one admitted",
+              not ok and "cannot widen the limb" in why.get(dpage, ""))
+        shutil.copy2(ROOT / DLG1_FIXER, troot / DLG1_FIXER)
+        widened = json.loads((ROOT / DLG1_PAIRS).read_text())
+        widened["pairs"].append({"page": unrecorded, "action": "cold-call", "dialog": "cold-call-dialog"})
+        (troot / DLG1_PAIRS).write_text(json.dumps(widened))
+        check("RED PROOF (widened record): a pairs record naming one more page refuses the limb",
+              DLG1_PAIRS in refusal(troot) and "cannot widen the limb" in refusal(troot))
+
+    # --- the DLG-1 WIRING on a real (temporary) tree: dlg1_allowed / strand_landable read bytes from
+    # `root` and the merge base from the blob reader, with the real pinned fixer and record.
+    with tempfile.TemporaryDirectory() as tmp:
+        troot = Path(tmp)
+        def lay(files):
+            for rel, data in files.items():
+                (troot / rel).parent.mkdir(parents=True, exist_ok=True)
+                (troot / rel).write_bytes(data)
+        lay({rel: (ROOT / rel).read_bytes() for rel in (DLG1_FIXER, DLG1_PAIRS)})
+        parts = dpage.split("/")                             # a manifest up to two folders above the page
+        pack = "/".join(parts[:max(2, len(parts) - 3)]) + "/"
+        man = pack + "SHA256SUMS.txt"
+        base_man = f"{h(plain_d)}  {dpage[len(pack):]}\n{h(b'x')}  other.pdf\n".encode()
+        good_man = base_man.replace(h(plain_d).encode(), h(fixed_d).encode())
+        base_files = {dpage: plain_d, man: base_man, dsci: plain_d, w8b: w8b_base}
+        reader = base_files.get
+        lay({dpage: fixed_d, man: good_man, dsci: fixed_d})
+        both = {dpage: "M", man: "M", dsci: "M"}
+        ok, why = dlg1_allowed(both, reader, troot)
+        check("DLG-1 WIRING: a Humanities page, its re-cut ancestor manifest and a Science page are admitted as one "
+              "transaction", ok == {dpage, man, dsci} and not why)
+        check("DLG-1 WIRING: strand_landable -- the call derive() makes -- gives the same verdict, whatever the strand",
+              strand_landable("Science", "dlg-1", both, reader, root=troot) == (ok, why, {man})
+              and strand_landable("Humanities", "dlg-1", both, reader, root=troot) == (ok, why, {man}))
+        ok, why = dlg1_allowed({dpage: "M", dsci: "M"}, reader, troot)
+        check("DLG-1 WIRING RED PROOF: a page whose manifest lists it but is not re-cut is refused",
+              "not re-cut in this transaction" in why.get(dpage, "") and ok == {dsci})
+        lay({man: good_man.replace(b"other.pdf", b"other.PDF")})
+        ok, why = dlg1_allowed(both, reader, troot)
+        check("DLG-1 WIRING RED PROOF: a refused manifest takes its page out with it",
+              "only its digest replaced" in why.get(man, "") and "refused:" in why.get(dpage, "")
+              and dpage not in ok and man not in ok)
+        lay({man: good_man, pack + "notes.txt": b"n"})
+        ok, why = dlg1_allowed({**both, pack + "notes.txt": "M"}, {**base_files, pack + "notes.txt": b"m"}.get, troot)
+        check("DLG-1 WIRING RED PROOF: a changed file that is neither a recorded page nor a manifest is refused by name",
+              "nothing else" in why.get(pack + "notes.txt", "") and ok == {dpage, man, dsci})
+        ok, why = dlg1_allowed({dpage: "A", man: "M"}, reader, troot)
+        check("DLG-1 WIRING RED PROOF: an addition is not a member, and its manifest then re-cuts for no member",
+              "not an 'M'" in why.get(dpage, "") and "lists no page member" in why.get(man, "") and not ok)
+        lay({w8b: w8b_fixed})
+        ok, why = dlg1_allowed({**both, w8b: "M"}, reader, troot)
+        check("DLG-1 WIRING RED PROOF: SCI_B_W8B fixed and offered beside the 173 is refused by name",
+              "held out" in why.get(w8b, "") and w8b not in ok and ok == {dpage, man, dsci})
+        check("DLG-1: derive() collects every changed path of both strands for the limb",
+              strand_kinds("Humanities", "dlg-1") == ("",) and
+              diff_statuses("M\tHumanities_Teesside/a.html\nM\tScience_Teesside/b/notes.txt\n",
+                            strand_kinds("Science", "dlg-1")) == {"Humanities_Teesside/a.html": "M",
+                                                                   "Science_Teesside/b/notes.txt": "M"})
+        check("DLG-1: limb_verdicts -- the boundary's call -- agrees with the walk",
+              limb_verdicts("dlg-1", [dpage, man, dsci, w8b], reader, troot)
+              == {dpage: None, man: None, dsci: None, w8b: why[w8b]})
+
+    # --- derive() ITSELF with --limb dlg-1, against a throwaway git repository.
+    saved = {k: os.environ.pop(k) for k in leak if k in os.environ}
+    try:
+      with tempfile.TemporaryDirectory() as tmp:
+        repo = Path(tmp)
+        g = lambda *a: subprocess.run(["git", "-c", "commit.gpgsign=false", "-c", "tag.gpgsign=false", *a],
+                                      cwd=repo, capture_output=True, text=True, check=True).stdout.strip()
+        g("init", "-q"); g("config", "user.email", "t@t"); g("config", "user.name", "t")
+        put = lambda files: [((repo / r).parent.mkdir(parents=True, exist_ok=True), (repo / r).write_bytes(d))
+                             for r, d in files.items()]
+        put({rel: (ROOT / rel).read_bytes() for rel in (DLG1_FIXER, DLG1_PAIRS)})
+        put({dpage: plain_d, man: base_man, dsci: plain_d, w8b: w8b_base}); g("add", "-A"); g("commit", "-qm", "base")
+        base_sha = g("rev-parse", "HEAD")
+        def run_case(files):
+            g("reset", "-q", "--hard", base_sha)
+            put(files); g("add", "-A"); g("commit", "-qm", "case")
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                try:
+                    _, got = derive(base_sha, "Humanities", "dlg-1", root=repo,
+                                    registry={r: h((repo / r).read_bytes()) for r in files})
+                except Refuse as why:
+                    return None, out.getvalue() + str(why)
+            return got, out.getvalue()
+        got, log = run_case({dpage: fixed_d, man: good_man, dsci: fixed_d})
+        check("DLG-1 DERIVE: derive() declares a Humanities page, its re-cut manifest and a Science page as one "
+              "transaction, before-blobs from the merge base",
+              got is not None and set(got) == {dpage, man, dsci}
+              and all(got[r]["beforeGitBlob"] == g("rev-parse", f"{base_sha}:{r}") for r in got))
+        got, log = run_case({dpage: fixed_d + b"\n", man: base_man.replace(h(plain_d).encode(), h(fixed_d + b"\n").encode())})
+        check("DLG-1 DERIVE RED PROOF: one byte beyond the fixer output refuses the declaration",
+              got is None and "not what the reviewed fixer produces" in log)
+        got, log = run_case({dpage: fixed_d})
+        check("DLG-1 DERIVE RED PROOF: a page whose manifest is not re-cut refuses the declaration",
+              got is None and "not re-cut in this transaction" in log)
+        got, log = run_case({dpage: fixed_d, man: good_man, w8b: w8b_fixed})
+        check("DLG-1 DERIVE RED PROOF: SCI_B_W8B changed beside the others refuses the declaration",
+              got is None and "held out of DLG-1 by ruling" in log)
+    finally:
+        os.environ.update(saved)
+
     print("self-test " + ("PASS" if not bad else f"FAIL ({bad})"))
     return 1 if bad else 0
 
@@ -1240,8 +1757,9 @@ def main() -> int:
     parser.add_argument("--name", help="transaction name, e.g. 'HUM-T batch 1 BUILD'")
     parser.add_argument("--base", default="origin/main")
     parser.add_argument("--strand", default="Humanities", choices=sorted(STRANDS))
-    parser.add_argument("--limb", default="", choices=["", "explicit-tags", "responsive"],
-                        help="the ruled limb that decides the landable set")
+    parser.add_argument("--limb", default="", choices=["", "explicit-tags", "responsive", "dlg-1"],
+                        help="the ruled limb that decides the landable set (dlg-1 reads both "
+                             "strands; --strand is not consulted)")
     parser.add_argument("--check", action="store_true")
     parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args()
@@ -1254,7 +1772,7 @@ def main() -> int:
         for rel, entry in sorted(files.items()):
             print(f"     {entry['beforeGitBlob'][:12]} -> {entry['afterSha256'][:12]}  "
                   f"{entry['bytes']:>9,}  {rel.rsplit('/', 1)[1]}")
-        changed = write(args.name, base_sha, files, args.check)
+        changed = write(args.name, base_sha, files, args.check, args.limb)
     except (Refuse, subprocess.CalledProcessError) as exc:
         print(f"[FAIL] {exc}")
         return 1

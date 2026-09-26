@@ -11,12 +11,14 @@ import ast
 import hashlib
 import importlib.util
 import json
+import os
 from pathlib import Path, PurePosixPath
 import re
 import shutil
 import subprocess
 import sys
 import tempfile
+import types
 
 sys.dont_write_bytecode = True
 PROTECTED = ('Art_Teesside', 'GROW_ASDAN', 'LAUNCH_ASDAN', 'Grow/Slideshows',
@@ -302,6 +304,123 @@ REPLACEMENT_TRANSACTIONS = {
 ALL_REPLACEMENTS = {rel: name for name, (_, files) in REPLACEMENT_TRANSACTIONS.items() for rel in files}
 
 
+# RULING LAND-A2 R8 §2 (Claude, 26 September 2026): the DLG-1 limb. "the bytes on disk equal
+# fix_dialog_audience.py applied to the base bytes; manifests may re-cut digests only." A
+# transaction named here was declared by a ruled limb, and the boundary does not take that
+# declaration on trust: every member it owns is judged again by the limb, from the transaction's
+# own review base to the bytes on disk, and a member the limb refuses is rejected even when its
+# declared digest and its pin agree with it. The limb lives in tools/hum/admit_transaction.py,
+# bound to its CATALOGUE_PINS admission before it is imported; it in turn pins the fixer and the
+# pairs record by their own digests, so neither can change without that file changing too.
+#
+# JUDGED SUPERSESSION. Declaration order still decides ownership, narrowed for these transactions
+# only: a limb-judged transaction takes a path an EARLIER declaration names only when its limb
+# judges the change on that path its own. Any other change to that path stays with the earlier
+# transaction and is judged by it exactly as before. The three Summer 1 SHA256SUMS.txt the
+# responsive re-delivery declared pass to DLG-1 for their DLG-1 re-cut and for nothing else, and a
+# hand-widened declaration cannot lift a path out of the transaction that owns it.
+LIMB_JUDGED_TRANSACTIONS = {'DLG-1': 'dlg-1'}
+LIMB_JUDGE = 'tools/hum/admit_transaction.py'
+_LIMB_READERS = {}
+_LIMB_VERDICTS = {}
+
+
+def limb_judge(root):
+    """The limb module, compiled from the very bytes whose digest equals its CATALOGUE_PINS admission."""
+    path = root / LIMB_JUDGE
+    data = path.read_bytes() if path.is_file() and not path.is_symlink() else None
+    if data is None or pin_map(root).get(LIMB_JUDGE) != hashlib.sha256(data).hexdigest():
+        raise ValueError('unreviewed limb judge: ' + LIMB_JUDGE)
+    module = types.ModuleType('glv3_limb_judge')
+    module.__file__ = str(path)
+    exec(compile(data, str(path), 'exec'), module.__dict__)
+    return module
+
+
+def limb_reader(repo, ref):
+    """Bytes of a path at the merge base of `ref` with HEAD in `repo` (b'' when absent), cached per base."""
+    merge_base = subprocess.check_output(['git', 'merge-base', ref, 'HEAD'], cwd=repo).decode().strip()
+    key = (str(Path(repo).resolve()), merge_base)
+    if key not in _LIMB_READERS:
+        cache = {}
+        def read(rel):
+            if rel not in cache:
+                out = subprocess.run(['git', 'show', merge_base + ':' + rel], cwd=repo, capture_output=True)
+                cache[rel] = out.stdout if out.returncode == 0 else b''
+            return cache[rel]
+        _LIMB_READERS[key] = read
+    return _LIMB_READERS[key]
+
+
+def _identity(path):
+    try:
+        st = os.lstat(path)
+    except OSError:
+        return None
+    return (st.st_size, st.st_mtime_ns, st.st_ctime_ns, st.st_ino, st.st_mode)
+
+
+def limb_verdicts(root, name, repo=None, files=None):
+    """{member: None, or the ruled limb's reason} for a limb-judged transaction: judged from its own
+    review base in `repo` (default root) to the bytes in `root`. `files` replaces the declared
+    members, for the red proofs. Memoised on every file the verdict reads, so a sabotaged fixture
+    is always judged afresh."""
+    repo = repo or root
+    review_base, declared = REPLACEMENT_TRANSACTIONS[name]
+    files = declared if files is None else files
+    tools = sorted(p for p in (root / 'tools/hum').rglob('*') if p.is_file()) if (root / 'tools/hum').is_dir() else []
+    key = (str(root.resolve()), str(Path(repo).resolve()), name, review_base,
+           tuple((rel, _identity(root / rel)) for rel in sorted(files)),
+           tuple((str(p), _identity(p)) for p in tools),
+           _identity(root / 'tools/verify_cross_estate_unification.py'))
+    if key not in _LIMB_VERDICTS:
+        judge = limb_judge(root)
+        _LIMB_VERDICTS[key] = judge.limb_verdicts(LIMB_JUDGED_TRANSACTIONS[name], sorted(files),
+                                                  limb_reader(repo, review_base), root)
+    return _LIMB_VERDICTS[key]
+
+
+def judged_owners(root, repo=None, transactions=None):
+    """ALL_REPLACEMENTS, narrowed by JUDGED SUPERSESSION: a limb-judged transaction takes a path an
+    earlier declaration names only when its limb admits the change on that path."""
+    transactions = REPLACEMENT_TRANSACTIONS if transactions is None else transactions
+    owners = {}
+    for name, (_, files) in transactions.items():
+        contested = [rel for rel in files if rel in owners]
+        refused = set()
+        if contested and name in LIMB_JUDGED_TRANSACTIONS:
+            # A contested path that is not a regular file here is a change no limb can judge its own.
+            present = [rel for rel in contested if (root / rel).is_file() and not (root / rel).is_symlink()]
+            verdicts = limb_verdicts(root, name, repo, files) if present else {}
+            refused = {rel for rel in contested if rel not in verdicts or verdicts[rel] is not None}
+        for rel in files:
+            if rel not in refused:
+                owners[rel] = name
+    return owners
+
+
+def limb_errors(root, name, owned, repo=None, files=None):
+    """The ruled limb's refusals of the members this limb-judged transaction owns."""
+    if name not in LIMB_JUDGED_TRANSACTIONS or not owned:
+        return []
+    verdicts = limb_verdicts(root, name, repo, files)
+    return [name + ' limb refuses ' + rel + ': ' + (verdicts.get(rel) or 'no verdict')
+            for rel in sorted(owned) if rel not in verdicts or verdicts[rel] is not None]
+
+
+def memo_digest():
+    """sha() memoised on the file's identity (size, times, inode). The per-member controls judge the
+    same unchanged members hundreds of times; re-hashing a 192-member, 134 MB transaction on every
+    call would run for hours. Any write changes the identity, so sabotage is always re-hashed."""
+    seen = {}
+    def digest(path):
+        key = (str(path), _identity(path))
+        if key not in seen:
+            seen[key] = sha(path)
+        return seen[key]
+    return digest
+
+
 # ORDER FINISH-2, manifest-pin ruling (2026-09-20). The pack members are no longer
 # pinned one by one: 1750 per-file pins drove PIN1's derived trigger list to 534,033
 # bytes and GitHub refused to load the workflow at all, so the cross-estate gate never
@@ -359,7 +478,8 @@ def git_before_entries(root, base, paths=None):
     return result
 
 
-def replacement_errors(name, files, root, changes, pins, before_entries, owners=None):
+def replacement_errors(name, files, root, changes, pins, before_entries, owners=None, digest=None):
+    digest = digest or sha
     files = owned_members(name, files, owners)
     selected = [(status, rel) for status, rel in changes if rel in files]
     if not selected:
@@ -376,7 +496,7 @@ def replacement_errors(name, files, root, changes, pins, before_entries, owners=
             errors.append(name + ' previous file identity or mode differs: ' + rel)
         if path.is_symlink() or not path.is_file() or path.resolve().is_relative_to(root.resolve()) is False:
             errors.append(name + ' replacement must be a regular file inside the tree: ' + rel)
-        elif path.stat().st_size != reviewed['bytes'] or sha(path) != reviewed['afterSha256']:
+        elif path.stat().st_size != reviewed['bytes'] or digest(path) != reviewed['afterSha256']:
             errors.append(name + ' replacement bytes differ: ' + rel)
         if pins.get(rel) != reviewed['afterSha256']:
             errors.append(name + ' replacement lacks matching owner-reviewed catalogue admission: ' + rel)
@@ -400,10 +520,12 @@ def transaction_controls(root, name, proposed_pins=None):
     # exercise the proposed transaction before paired admissions are staged;
     # such a run is conditional evidence, never a production gate pass.
     base, files = REPLACEMENT_TRANSACTIONS[name]
-    files = owned_members(name, files)
+    owners = judged_owners(root)
+    files = owned_members(name, files, owners)
     if not files:
         return []
-    errors_for = lambda *a: replacement_errors(name, files, *a)
+    digest = memo_digest()
+    errors_for = lambda *a: replacement_errors(name, files, *a, owners=owners, digest=digest)
     pins = pin_map(root) if proposed_pins is None else proposed_pins
     changes = [('M', rel) for rel in sorted(files)]
     before = git_before_entries(root, base, files)
@@ -452,6 +574,11 @@ def transaction_controls(root, name, proposed_pins=None):
                 if path.is_symlink(): path.unlink()
                 path.write_bytes(original)
         check(name + ' all sabotage was restored', not errors_for(fixture, changes, pins, before))
+    if name in LIMB_JUDGED_TRANSACTIONS:
+        check(name + ': the ruled limb judges every member it owns its own, from its review base to the bytes on disk',
+              not limb_errors(root, name, files))
+        if name == 'DLG-1':
+            rows.extend(dlg1_controls(root, owners))
     return rows
 
 
@@ -539,12 +666,14 @@ def judge(root, changes, base=None):
     errors = []
     try:
         pins = pin_map(root)
+        owners = judged_owners(root) if any(path in ALL_REPLACEMENTS for _, path in relevant) else ALL_REPLACEMENTS
         for name, (_, files) in REPLACEMENT_TRANSACTIONS.items():
-            files = owned_members(name, files)
+            files = owned_members(name, files, owners)
             if any(path in files for _, path in relevant):
                 if base is None:
                     return [name + ' replacements require the actual comparison base']
-                errors.extend(replacement_errors(name, files, root, relevant, pins, git_before_entries(root, base, files)))
+                errors.extend(replacement_errors(name, files, root, relevant, pins, git_before_entries(root, base, files), owners))
+                errors.extend(limb_errors(root, name, files))
         if errors:
             return errors
         cover_paths = explicit_cover_paths(root)
@@ -869,6 +998,196 @@ def supersession_controls(root):
     wrong = {rel: dict(later[rel], afterSha256='0' * 64)}
     check('The later transaction still rejects bytes that differ from its review',
           bool(replacement_errors('Later', wrong, root, partial, pins_later, before, owners)))
+    return rows
+
+
+def dlg1_controls(root, owners):
+    # RULING LAND-A2 R8 §2 red proofs, on the declared DLG-1 transaction itself. The limb is only as
+    # good as its refusals, so each way it could be widened or bypassed is proved RED here rather
+    # than assumed to. Every proof reads the real review base; sabotage happens in a disposable copy.
+    # A later transaction may supersede DLG-1's members: each proof runs on what DLG-1 still owns,
+    # and a proof with nothing left to stand on is skipped, never passed vacuously.
+    rows = []
+    def check(label, condition):
+        if not condition:
+            raise AssertionError(label)
+        rows.append({'name': label, 'status': 'PASS'})
+    name, responsive = 'DLG-1', 'Summer 1 responsive re-delivery'
+    review_base, declared = REPLACEMENT_TRANSACTIONS[name]
+    names = list(REPLACEMENT_TRANSACTIONS)
+    earlier, later = {}, set()
+    for other in names:
+        files = REPLACEMENT_TRANSACTIONS[other][1]
+        if names.index(other) < names.index(name):
+            earlier.update({rel: other for rel in files if rel in declared})
+        elif other != name:
+            later.update(rel for rel in files if rel in declared)
+    owned = owned_members(name, declared, owners)
+    if not owned:
+        return rows
+    verdicts = limb_verdicts(root, name)
+    pins = pin_map(root)
+    judge_module = limb_judge(root)
+    fixer, _pairs, held = judge_module.dlg1_tools(root)
+    check('DLG-1 POSITIVE CONTROL: judge() admits every member DLG-1 owns as the change, from its review base',
+          not judge(root, [('M', rel) for rel in sorted(owned)], review_base))
+    contested = sorted(rel for rel in earlier if rel not in later)
+    if contested:
+        check('DLG-1: a path an earlier transaction declared passes to DLG-1 exactly when the limb admits its change',
+              all((owners.get(rel) == name) == (verdicts.get(rel, 'no verdict') is None) for rel in contested))
+    shared = [rel for rel in contested if earlier[rel] == responsive]
+    if shared:
+        check('DLG-1: the Summer 1 manifests the responsive re-delivery declared are admitted DLG-1 re-cuts, and pass to DLG-1',
+              all(owners.get(rel) == name for rel in shared))
+    resp_base, resp_declared = REPLACEMENT_TRANSACTIONS[responsive]
+    resp_only = sorted(rel for rel in resp_declared if owners.get(rel) == responsive)
+    if resp_only:
+        resp_owned = owned_members(responsive, resp_declared, owners)
+        errors = replacement_errors(responsive, resp_owned, root, [('M', resp_only[0])], pins,
+                                    git_before_entries(root, resp_base, resp_owned), owners)
+        check('RED PROOF (a responsive member DLG-1 does not declare): a change to it is still rejected by the '
+              'responsive re-delivery itself', bool(errors) and all(e.startswith(responsive) for e in errors))
+    page = next((rel for rel in sorted(owned) if rel.endswith('.html')), None)
+    sums = next((rel for rel in sorted(owned) if rel.endswith('/SHA256SUMS.txt') and rel not in shared), None)
+    json_manifests = sorted(rel for rel in owned if judge_module.dlg1_manifest_kind(rel) == 'json')
+    read = limb_reader(root, review_base)
+    with tempfile.TemporaryDirectory(prefix='dlg1-limb-proof-') as temp:
+        fixture = Path(temp)
+        for rel in {*declared, *held, 'tools/verify_cross_estate_unification.py'}:
+            if (root / rel).is_file():
+                target = fixture / rel; target.parent.mkdir(parents=True, exist_ok=True); shutil.copy2(root / rel, target)
+        shutil.copytree(root / 'tools/hum', fixture / 'tools/hum', dirs_exist_ok=True)
+        verdicts_on = lambda files=None: limb_verdicts(fixture, name, root, files)
+        check('DLG-1: the limb admits every member it owns in a faithful disposable copy',
+              all(verdicts_on().get(rel, 'no verdict') is None for rel in owned))
+        def sabotage(rel, change, label, refused, files=None):
+            path = fixture / rel; original = path.read_bytes()
+            try:
+                changed = change(original)
+                check(label + ' (sabotage changes bytes)', changed != original)
+                path.write_bytes(changed)
+                check(label, refused(verdicts_on(files)))
+            finally:
+                path.write_bytes(original)
+        if page:
+            # (1) one byte beyond the fixer's output. The digest rule would take it if the declaration and
+            # the pin were cut again for it; the limb is what refuses it.
+            path = fixture / page; original = path.read_bytes()
+            try:
+                path.write_bytes(original + b'\n')
+                redeclared = dict(owned); redeclared[page] = dict(owned[page], afterSha256=sha(path), bytes=path.stat().st_size)
+                repinned = dict(pins); repinned[page] = sha(path)
+                hash_only = replacement_errors(name, redeclared, fixture, [('M', rel) for rel in sorted(redeclared)], repinned,
+                                               git_before_entries(root, review_base, redeclared), owners, memo_digest())
+                refusal = limb_errors(fixture, name, redeclared, root)
+                check('RED PROOF (one extra byte): a page one byte beyond the fixer output is refused by the limb, even '
+                      're-declared and re-pinned, where the digest rule alone would admit it',
+                      not hash_only and any(page in e and 'not what the reviewed fixer produces' in e for e in refusal))
+            finally:
+                path.write_bytes(original)
+            # (2) a page the fixer changes but the record does not name, hand-declared into DLG-1.
+            stray = page.rsplit('/', 1)[0] + '/UNRECORDED_' + page.rsplit('/', 1)[1]
+            shutil.copy2(fixture / page, fixture / stray)
+            widened = dict(declared); widened[stray] = dict(declared[page])
+            check('RED PROOF (not in the record): a page changed by the fixer but not named by the pairs record is refused',
+                  'record names' in (verdicts_on(widened).get(stray) or ''))
+            (fixture / stray).unlink()
+        # (3) a page held out by ruling (SCI_B_W8B, R8 §1): changed by the fixer itself and hand-declared into DLG-1.
+        for held_page, row in sorted(held.items()):
+            base_bytes = read(held_page)
+            fixed = fixer.fix_text(base_bytes.decode('utf-8'), [(p['action'], p['dialog']) for p in row['pairs']])[0].encode()
+            (fixture / held_page).write_bytes(fixed)
+            widened = dict(declared)
+            widened[held_page] = {'beforeGitBlob': git_before_entries(root, review_base, [held_page])[held_page][2],
+                                  'afterSha256': hashlib.sha256(fixed).hexdigest(), 'bytes': len(fixed)}
+            table = dict(REPLACEMENT_TRANSACTIONS); table[name] = (review_base, widened)
+            owners_w = judged_owners(fixture, root, table)
+            keeper = owners_w.get(held_page)
+            # The transaction that declared it before DLG-1, if any, must keep it and reject the change.
+            before_dlg1 = [other for other in names[:names.index(name)] if held_page in REPLACEMENT_TRANSACTIONS[other][1]]
+            if before_dlg1:
+                kbase, kfiles = REPLACEMENT_TRANSACTIONS[keeper] if keeper in REPLACEMENT_TRANSACTIONS else (None, {})
+                kowned = owned_members(keeper, kfiles, owners_w)
+                errors = replacement_errors(keeper, kowned, fixture, [('M', held_page)], pins,
+                                            git_before_entries(root, kbase, kowned), owners_w) if kbase else []
+                kept = keeper == before_dlg1[-1] and bool(errors) and all(e.startswith(keeper) for e in errors)
+            else:
+                errors = limb_errors(fixture, name, widened, root, widened)
+                kept = keeper == name and bool(errors) and all(held_page in e for e in errors)
+            check('RED PROOF (' + held_page.rsplit('/', 1)[1] + ', held out by ' + row.get('ruling', 'ruling').split(':')[0]
+                  + '): changed by the fixer and hand-declared into DLG-1, it is refused by the limb and stays with '
+                  'its earlier transaction, which rejects the change',
+                  'held out of DLG-1 by ruling' in (verdicts_on(widened).get(held_page) or '') and kept)
+            (fixture / held_page).write_bytes(base_bytes)
+        if sums:
+            # (4) a manifest with a byte changed that is not a digest.
+            sabotage(sums, lambda b: b.replace(b'\n', b' \n', 1),
+                     'RED PROOF (a non-digest byte): a manifest with a byte outside its re-cut digests changed is refused',
+                     lambda v: 'only its digest replaced' in (v.get(sums) or ''))
+            # (5) a re-cut digest that is not the member's bytes on disk.
+            before_lines = read(sums).splitlines(keepends=True)
+            after_lines = (fixture / sums).read_bytes().splitlines(keepends=True)
+            recut = next(a for b, a in zip(before_lines, after_lines) if a != b)
+            sabotage(sums, lambda b: b.replace(recut, hashlib.sha256(b'not the bytes').hexdigest().encode() + recut[64:]),
+                     'RED PROOF (a digest that is not the bytes): a re-cut digest unequal to its member on disk is refused',
+                     lambda v: 'not the sha256 of its bytes on disk' in (v.get(sums) or ''))
+        # (6) R8 §5: the Fallback MANIFEST.json may re-cut its page members' sha256 values and nothing else.
+        for manifest in json_manifests:
+            lines = (fixture / manifest).read_bytes().splitlines(keepends=True)
+            base_lines = read(manifest).splitlines(keepends=True)
+            other = next(a for b, a in zip(base_lines, lines) if a == b and re.search(rb'"[0-9a-f]{64}"', a))
+            digest_at = re.search(rb'[0-9a-f]{64}', other)
+            sabotage(manifest, lambda b: b.replace(other, other[:digest_at.start()] + b'0' * 64 + other[digest_at.end():]),
+                     'RED PROOF (R8 §5): a MANIFEST.json value other than its page members\' sha256 changed is refused',
+                     lambda v: 'not a page member of this transaction' in (v.get(manifest) or ''))
+            sabotage(manifest, lambda b: b.replace(other, other.replace(b'/', b'//', 1)),
+                     'RED PROOF (R8 §5): a MANIFEST.json key renamed beside the re-cut is refused',
+                     lambda v: 'only its digest replaced' in (v.get(manifest) or ''))
+        # (7) the limb module itself is bound to its CATALOGUE_PINS admission before it is trusted.
+        judge_path = fixture / LIMB_JUDGE; original = judge_path.read_bytes()
+        try:
+            judge_path.write_bytes(original + b'\n# unreviewed\n')
+            try:
+                limb_verdicts(fixture, name, root); unbound = ''
+            except ValueError as exc:
+                unbound = str(exc)
+            check('RED PROOF (an unreviewed limb): a limb judge whose bytes differ from its CATALOGUE_PINS admission '
+                  'is not imported, so nothing is admitted by it', 'unreviewed limb judge' in unbound)
+        finally:
+            judge_path.write_bytes(original)
+        # (8) a changed fixer, and a widened record: every member refused, not one admitted.
+        sabotage(judge_module.DLG1_FIXER, lambda b: b + b'\n',
+                 'RED PROOF (changed fixer): a fixer one byte from its pinned digest refuses every member',
+                 lambda v: bool(v) and all('cannot widen the limb' in (r or '') for r in v.values()))
+        sabotage(judge_module.DLG1_PAIRS, lambda b: b.replace(b'"pairs": [\n', b'"pairs": [\n    {"page": '
+                                                              b'"Humanities_Teesside/UNRECORDED.html", "action": '
+                                                              b'"cold-call", "dialog": "cold-call-dialog"},\n', 1),
+                 'RED PROOF (widened record): a pairs record naming one more page refuses every member',
+                 lambda v: bool(v) and all('cannot widen the limb' in (r or '') for r in v.values()))
+        # (9) a Summer 1 manifest the responsive re-delivery declared, changed other than by the DLG-1 re-cut:
+        # the limb does not judge it its own, so it stays with the responsive re-delivery, which rejects it.
+        for manifest in shared[:1]:
+            path = fixture / manifest; original = path.read_bytes()
+            try:
+                base_lines = read(manifest).splitlines(keepends=True)
+                untouched = next(line for line in original.splitlines(keepends=True)
+                                 if line in base_lines and re.match(rb'[0-9a-f]{64}  ', line))
+                path.write_bytes(original.replace(untouched, b'0' * 64 + untouched[64:]))
+                owners_s = judged_owners(fixture, root)
+                resp_owned = owned_members(responsive, resp_declared, owners_s)
+                errors = replacement_errors(responsive, resp_owned, fixture, [('M', manifest)], pins,
+                                            git_before_entries(root, resp_base, resp_owned), owners_s)
+                check('RED PROOF (a responsive member changed other than by the DLG-1 judge): ' + manifest
+                      + ' stays with the responsive re-delivery, which rejects the change exactly',
+                      owners_s.get(manifest) == responsive and bool(errors) and all(e.startswith(responsive) for e in errors)
+                      and 'not a page member' in (verdicts_on().get(manifest) or ''))
+                # (10) a contested path missing from the tree is a change no limb judges its own.
+                path.unlink()
+                check('RED PROOF (a contested path gone): ' + manifest + ' missing from the tree stays with the '
+                      'responsive re-delivery', judged_owners(fixture, root).get(manifest) == responsive)
+            finally:
+                path.write_bytes(original)
+        check('DLG-1: all limb sabotage was restored', all(verdicts_on().get(rel, 'no verdict') is None for rel in owned))
     return rows
 
 
