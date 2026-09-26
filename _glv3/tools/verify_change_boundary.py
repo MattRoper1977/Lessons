@@ -329,10 +329,19 @@ ALL_REPLACEMENTS = {rel: name for name, (_, files) in REPLACEMENT_TRANSACTIONS.i
 # transaction and is judged by it exactly as before. The three Summer 1 SHA256SUMS.txt the
 # responsive re-delivery declared pass to DLG-1 for their DLG-1 re-cut and for nothing else, and a
 # hand-widened declaration cannot lift a path out of the transaction that owns it.
+#
+# THE REVIEW BASE IS BOUND. The limb judges from the blob at the transaction's review base, and
+# judge() binds each declared beforeGitBlob to the comparison base. The limb admits a member only
+# when its declared beforeGitBlob IS the blob at the review base it judged from, so the bytes the
+# limb judged from are the bytes the declaration says it replaces. Without this, a review base
+# moved to an older commit let the bare judge admit "the fixer applied to the older bytes": a
+# change wider than R8 §2's rule, which only the self-test's before-entry control caught (review
+# of this PR; the red proof is in dlg1_controls).
 LIMB_JUDGED_TRANSACTIONS = {'DLG-1': 'dlg-1'}
 LIMB_JUDGE = 'tools/hum/admit_transaction.py'
 _LIMB_READERS = {}
 _LIMB_VERDICTS = {}
+_LIMB_BASE_ENTRIES = {}
 
 
 def limb_judge(root):
@@ -370,13 +379,28 @@ def _identity(path):
     return (st.st_size, st.st_mtime_ns, st.st_ctime_ns, st.st_ino, st.st_mode)
 
 
-def limb_verdicts(root, name, repo=None, files=None):
+def limb_base_entries(repo, ref, paths):
+    """(merge base, {path: (mode, kind, blob) or None}) at the merge base of `ref` with HEAD in `repo`,
+    read by git_before_entries and cached per base (a commit's entries never change)."""
+    merge_base = subprocess.check_output(['git', 'merge-base', ref, 'HEAD'], cwd=repo).decode().strip()
+    cache = _LIMB_BASE_ENTRIES.setdefault((str(Path(repo).resolve()), merge_base), {})
+    wanted = sorted(set(paths) - set(cache))
+    if wanted:
+        found = git_before_entries(repo, merge_base, wanted)
+        cache.update({rel: found.get(rel) for rel in wanted})
+    return merge_base, {rel: cache[rel] for rel in paths}
+
+
+def limb_verdicts(root, name, repo=None, files=None, review_base=None):
     """{member: None, or the ruled limb's reason} for a limb-judged transaction: judged from its own
     review base in `repo` (default root) to the bytes in `root`. `files` replaces the declared
-    members, for the red proofs. Memoised on every file the verdict reads, so a sabotaged fixture
-    is always judged afresh."""
+    members and `review_base` the declared base, for the red proofs. Memoised on every file the
+    verdict reads, so a sabotaged fixture is always judged afresh. THE REVIEW BASE IS BOUND: a
+    member the limb admits whose declared beforeGitBlob is not the blob it was judged from is
+    refused (not memoised: it reads the declaration, which the red proofs vary)."""
     repo = repo or root
-    review_base, declared = REPLACEMENT_TRANSACTIONS[name]
+    declared_base, declared = REPLACEMENT_TRANSACTIONS[name]
+    review_base = declared_base if review_base is None else review_base
     files = declared if files is None else files
     tools = sorted(p for p in (root / 'tools/hum').rglob('*') if p.is_file()) if (root / 'tools/hum').is_dir() else []
     key = (str(root.resolve()), str(Path(repo).resolve()), name, review_base,
@@ -387,7 +411,17 @@ def limb_verdicts(root, name, repo=None, files=None):
         judge = limb_judge(root)
         _LIMB_VERDICTS[key] = judge.limb_verdicts(LIMB_JUDGED_TRANSACTIONS[name], sorted(files),
                                                   limb_reader(repo, review_base), root)
-    return _LIMB_VERDICTS[key]
+    verdicts = dict(_LIMB_VERDICTS[key])
+    merge_base, at_base = limb_base_entries(repo, review_base, sorted(files))
+    for rel in sorted(files):
+        entry = files[rel] if isinstance(files, dict) else declared.get(rel)
+        blob = entry.get('beforeGitBlob') if isinstance(entry, dict) else None
+        have = at_base.get(rel)
+        if verdicts.get(rel, 'no verdict') is None and have != ('100644', 'blob', blob):
+            verdicts[rel] = ('its declared beforeGitBlob ' + str(blob) + ' is not the blob the limb judged it from ('
+                             + (have[2] if have else 'absent') + ' at the review base ' + merge_base[:12]
+                             + '): the review base and the declaration must name the same bytes')
+    return verdicts
 
 
 def judged_owners(root, repo=None, transactions=None):
@@ -395,13 +429,13 @@ def judged_owners(root, repo=None, transactions=None):
     earlier declaration names only when its limb admits the change on that path."""
     transactions = REPLACEMENT_TRANSACTIONS if transactions is None else transactions
     owners = {}
-    for name, (_, files) in transactions.items():
+    for name, (review_base, files) in transactions.items():
         contested = [rel for rel in files if rel in owners]
         refused = set()
         if contested and name in LIMB_JUDGED_TRANSACTIONS:
             # A contested path that is not a regular file here is a change no limb can judge its own.
             present = [rel for rel in contested if (root / rel).is_file() and not (root / rel).is_symlink()]
-            verdicts = limb_verdicts(root, name, repo, files) if present else {}
+            verdicts = limb_verdicts(root, name, repo, files, review_base) if present else {}
             refused = {rel for rel in contested if rel not in verdicts or verdicts[rel] is not None}
         for rel in files:
             if rel not in refused:
@@ -409,11 +443,11 @@ def judged_owners(root, repo=None, transactions=None):
     return owners
 
 
-def limb_errors(root, name, owned, repo=None, files=None):
+def limb_errors(root, name, owned, repo=None, files=None, review_base=None):
     """The ruled limb's refusals of the members this limb-judged transaction owns."""
     if name not in LIMB_JUDGED_TRANSACTIONS or not owned:
         return []
-    verdicts = limb_verdicts(root, name, repo, files)
+    verdicts = limb_verdicts(root, name, repo, files, review_base)
     return [name + ' limb refuses ' + rel + ': ' + (verdicts.get(rel) or 'no verdict')
             for rel in sorted(owned) if rel not in verdicts or verdicts[rel] is not None]
 
@@ -669,6 +703,25 @@ def public_label_paths(root, pins):
     return expected
 
 
+def transaction_errors(root, relevant, base, pins, transactions=None, repo=None):
+    """judge()'s declared-transaction step: each transaction that owns a changed path is judged as one
+    exact replacement at the comparison base, and a limb-judged one by its limb as well. The red
+    proofs pass a varied `transactions` table and a disposable `root`, with git read in `repo`."""
+    transactions = REPLACEMENT_TRANSACTIONS if transactions is None else transactions
+    claimed = ALL_REPLACEMENTS if transactions is REPLACEMENT_TRANSACTIONS else {
+        rel: name for name, (_, files) in transactions.items() for rel in files}
+    owners = judged_owners(root, repo, transactions) if any(path in claimed for _, path in relevant) else claimed
+    errors = []
+    for name, (review_base, declared) in transactions.items():
+        files = owned_members(name, declared, owners)
+        if any(path in files for _, path in relevant):
+            if base is None:
+                return [name + ' replacements require the actual comparison base']
+            errors.extend(replacement_errors(name, files, root, relevant, pins, git_before_entries(repo or root, base, files), owners))
+            errors.extend(limb_errors(root, name, files, repo, declared, review_base))
+    return errors
+
+
 def judge(root, changes, base=None):
     relevant = [(status, path) for status, path in changes if protected(path)]
     if not relevant:
@@ -676,14 +729,7 @@ def judge(root, changes, base=None):
     errors = []
     try:
         pins = pin_map(root)
-        owners = judged_owners(root) if any(path in ALL_REPLACEMENTS for _, path in relevant) else ALL_REPLACEMENTS
-        for name, (_, files) in REPLACEMENT_TRANSACTIONS.items():
-            files = owned_members(name, files, owners)
-            if any(path in files for _, path in relevant):
-                if base is None:
-                    return [name + ' replacements require the actual comparison base']
-                errors.extend(replacement_errors(name, files, root, relevant, pins, git_before_entries(root, base, files), owners))
-                errors.extend(limb_errors(root, name, files))
+        errors = transaction_errors(root, relevant, base, pins)
         if errors:
             return errors
         cover_paths = explicit_cover_paths(root)
@@ -1038,7 +1084,7 @@ def dlg1_controls(root, owners):
     verdicts = limb_verdicts(root, name)
     pins = pin_map(root)
     judge_module = limb_judge(root)
-    fixer, _pairs, held = judge_module.dlg1_tools(root)
+    fixer, pairs, held = judge_module.dlg1_tools(root)
     check('DLG-1 POSITIVE CONTROL: judge() admits every member DLG-1 owns as the change, from its review base',
           not judge(root, [('M', rel) for rel in sorted(owned)], review_base))
     contested = sorted(rel for rel in earlier if rel not in later)
@@ -1197,6 +1243,76 @@ def dlg1_controls(root, owners):
                       'responsive re-delivery', judged_owners(fixture, root).get(manifest) == responsive)
             finally:
                 path.write_bytes(original)
+        # (11) A MOVED REVIEW BASE (review of this PR, repeated here as a red proof). DLG-1's review base
+        # is moved back to the latest earlier transaction's base that moves any member DLG-1 owns; each
+        # member that base moves is rewritten as the reviewed fixer (a page) and re-cut (a manifest)
+        # produce it from THAT base, which reverts the earlier transaction; the rewritten members are
+        # re-declared and re-pinned, with every beforeGitBlob left at the comparison base. The digest
+        # rule admits that, and so does the limb's own byte rule from the moved base; judge()'s
+        # transaction step must still FAIL, because the review base no longer names the bytes the
+        # declaration replaces. A base that moves nothing, or that the fixer cannot read, is no stand.
+        stand = None
+        for other in reversed(names[:names.index(name)]):
+            moved_base = REPLACEMENT_TRANSACTIONS[other][0]
+            if moved_base == review_base or subprocess.run(['git', 'merge-base', '--is-ancestor', moved_base, review_base],
+                                                           cwd=root, capture_output=True).returncode:
+                continue
+            _, at_moved = limb_base_entries(root, moved_base, sorted(owned))
+            moved = sorted(rel for rel in owned if at_moved[rel] != ('100644', 'blob', owned[rel]['beforeGitBlob']))
+            read_moved = limb_reader(root, moved_base)
+            rewritten = {}
+            for rel in moved:
+                old = read_moved(rel)
+                if rel.endswith('.html'):
+                    try:
+                        text, edits = fixer.fix_text(old.decode('utf-8'), pairs[rel])
+                    except (fixer.Refuse, KeyError, UnicodeDecodeError):
+                        break
+                    if not edits:
+                        break
+                    rewritten[rel] = text.encode('utf-8')
+                elif old:
+                    rewritten[rel] = old
+                else:
+                    break
+            if moved and len(rewritten) == len(moved) and any(rel.endswith('.html') for rel in moved):
+                stand = (other, moved_base, moved, rewritten, read_moved)
+                break
+        if stand:
+            other, moved_base, moved, rewritten, read_moved = stand
+            originals = {rel: (fixture / rel).read_bytes() for rel in owned}
+            try:
+                for rel, data in rewritten.items():
+                    (fixture / rel).write_bytes(data)
+                fixer.recut(fixture, sorted(rel for rel in owned if rel in pairs))
+                changed = sorted(rel for rel in owned if (fixture / rel).read_bytes() != originals[rel])
+                redeclared, repinned = dict(declared), dict(pins)
+                for rel in changed:
+                    data = (fixture / rel).read_bytes()
+                    redeclared[rel] = dict(declared[rel], afterSha256=hashlib.sha256(data).hexdigest(), bytes=len(data))
+                    repinned[rel] = redeclared[rel]['afterSha256']
+                changes = [('M', rel) for rel in sorted(declared)]
+                hash_only = replacement_errors(name, owned_members(name, redeclared, owners), fixture, changes, repinned,
+                                               git_before_entries(root, review_base, redeclared), owners, memo_digest())
+                unbound = judge_module.limb_verdicts(LIMB_JUDGED_TRANSACTIONS[name], sorted(redeclared), read_moved, fixture)
+                bound = limb_verdicts(fixture, name, root, redeclared, moved_base)
+                table = dict(REPLACEMENT_TRANSACTIONS); table[name] = (moved_base, redeclared)
+                owners_m = judged_owners(fixture, root, table)
+                errors = transaction_errors(fixture, changes, review_base, repinned, table, root)
+                check('RED PROOF (a moved review base): DLG-1 re-based on ' + other + ' (' + moved_base[:12] + '), the '
+                      + str(len(moved)) + ' member(s) that base moves rewritten from it by the fixer and the re-cut, '
+                      're-declared and re-pinned, beforeGitBlob left at the comparison base: the digest rule and '
+                      'the limb\'s byte rule both admit it, and judge()\'s transaction step still FAILS, each moved '
+                      'member refused because its beforeGitBlob is not the blob the limb judged from',
+                      bool(changed) and any(rel.endswith('.html') for rel in changed) and not hash_only
+                      and all(unbound.get(rel) is None for rel in changed)
+                      and all('beforeGitBlob' in (bound.get(rel) or '') for rel in moved)
+                      and all(bound.get(rel) is None for rel in redeclared if rel not in moved)
+                      and bool(errors) and all(any(rel in e for e in errors) for rel in moved)
+                      and all(owners_m.get(rel) == earlier[rel] for rel in moved if rel in earlier and rel not in later))
+            finally:
+                for rel, data in originals.items():
+                    (fixture / rel).write_bytes(data)
         check('DLG-1: all limb sabotage was restored', all(verdicts_on().get(rel, 'no verdict') is None for rel in owned))
     return rows
 
