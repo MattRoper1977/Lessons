@@ -11,12 +11,14 @@ import ast
 import hashlib
 import importlib.util
 import json
+import os
 from pathlib import Path, PurePosixPath
 import re
 import shutil
 import subprocess
 import sys
 import tempfile
+import types
 
 sys.dont_write_bytecode = True
 PROTECTED = ('Art_Teesside', 'GROW_ASDAN', 'LAUNCH_ASDAN', 'Grow/Slideshows',
@@ -188,6 +190,12 @@ SUMMER_1_RESPONSIVE_RE_DELIVERY_REVIEW_BASE = 'cbc61aca58804b61e5481121fed216d1f
 # tools/hum/admit_transaction.py. Every member also carries a CATALOGUE_PINS
 # admission, which replacement_errors cross-checks.
 PASS_C_AUTUMN_2_BATCH_1_REVIEW_BASE = '9f8716f2bb4beeed689580869b0cc89dc828e527'
+# RULING LAND-A2 R8 §2 · DLG-1: each control given the audience of the dialog it opens,
+# by tools/hum/fix_dialog_audience.py under tools/hum/DLG1_PAIRS.json, and the pack
+# manifests re-cut for exactly those pages. One transaction, derived and written by
+# tools/hum/admit_transaction.py --limb dlg-1; every member also carries a CATALOGUE_PINS
+# admission, and LIMB_JUDGED_TRANSACTIONS has the boundary re-judge every member.
+DLG_1_REVIEW_BASE = 'c527b7c14a508f167df5746cc4d9b32ea1f6f60d'
 # BEGIN DECLARED TRANSACTIONS
 # BEGIN S3 OFFLINE EDITION REPLACEMENTS
 CX2_S3_REPLACEMENTS = {'Science_Teesside/Teaching_Packs/web-slides.html': {'beforeGitBlob': '6596d65c7a9bd5bb1875c5b46bbc331df8652144', 'afterSha256': 'f31f09d03f5d8c417af1745b38309fa537afb8bb4c6a08f387db3349d9e1cba2', 'bytes': 18607}}
@@ -261,6 +269,9 @@ SUMMER_1_RESPONSIVE_RE_DELIVERY_REPLACEMENTS = {'Humanities_Teesside/BUILD_W27-W
 # BEGIN PASS_C_AUTUMN_2_BATCH_1 REPLACEMENTS
 PASS_C_AUTUMN_2_BATCH_1_REPLACEMENTS = {'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W12_Follow_the_warming_chain_Classic.html': {'beforeGitBlob': '8407910102f0f94b31f2dbde60f4ef8f920f3552', 'afterSha256': 'c7cca58d2e44d96bff35584a58112c2e1cf65355e4317a57c6e7c49909e9e9f9', 'bytes': 1200163}, 'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W9_Turn_Earth_explain_the_sky_Classic.html': {'beforeGitBlob': '48fe4b0fe35781bd82988d0c79586c1539759292', 'afterSha256': '4568d8d3e033b9f5a18ae695c0ebb37166872cb7aea393881db0e75f80fa03fc', 'bytes': 1275783}, 'Science_Teesside/Launch/Autumn2_W7_2026-27/SCI_L_A2_W7L1_Topics_2_3_Assessment_Introduce.html': {'beforeGitBlob': 'c7bfea943e437482b299b1d4a749215190114724', 'afterSha256': 'aedc03c500183da66e23d217f67ebbbd1227c66ca0f1b043304859c5b6175f9b', 'bytes': 651275}, 'Science_Teesside/Launch/Autumn2_W7_2026-27/SCI_L_A2_W7L2_Topics_2_3_Assessment_Explore.html': {'beforeGitBlob': 'a9ab7864737848911870faf0ec6374bebd299512', 'afterSha256': 'c8f4a39a7e4ca27a806ef317cb01d702ee61f5adb0d3ca3630af059f5a07d38f', 'bytes': 652408}, 'Science_Teesside/Launch/Autumn2_W7_2026-27/SCI_L_A2_W7L3_Topics_2_3_Assessment_Do.html': {'beforeGitBlob': '858d060a4133c137386b04b9888a8aacb3c43ef4', 'afterSha256': 'd7b1e0387c75b03cab9aa205b3795ff2be1cb60aee342a705d44becf2e8be595', 'bytes': 383033}, 'Science_Teesside/Launch/Autumn2_W7_2026-27/SHA256SUMS.txt': {'beforeGitBlob': '3691e540d0203c392c6336988504f8210f25643c', 'afterSha256': '4d2785f94e16255a8e75b5887ba0c7348d80c64d06cec9521113e00b3ee35412', 'bytes': 504}, 'Science_Teesside/Launch/W14-W15_2026-27/SCI_L_W14L1_Genetic_Condition_Research_Introduce.html': {'beforeGitBlob': 'e229772d7c59d1412523efcf1ae7cb740ad397f8', 'afterSha256': 'f56eb5b9bd6e7d946e3dfa642bbf2d5aa175b7d4c42c953955842c9ecd618bf2', 'bytes': 652400}, 'Science_Teesside/Launch/W14-W15_2026-27/SCI_L_W14L2_Genetic_Condition_Source_Evidence_Explore.html': {'beforeGitBlob': '93d35d7a17b11914417abb40382e0f4895595760', 'afterSha256': '59fbcd12d08909b36b07fa75110c3f85ff6b45553393c3338c8691ea814c145e', 'bytes': 653913}, 'Science_Teesside/Launch/W14-W15_2026-27/SCI_L_W14L3_Genetic_Condition_Presentation_Do.html': {'beforeGitBlob': 'fc0065fcc1237edb03a7a632ab9a75aa316dd580', 'afterSha256': '80743f2556a21d0e712e00a7d20519870b299fe6f324506c2da12d15b4056d95', 'bytes': 654669}, 'Science_Teesside/Launch/W14-W15_2026-27/SHA256SUMS.txt': {'beforeGitBlob': '9e6263453507c643ff05dc0804a17ddbc2525439', 'afterSha256': '4781617b66baec3fd3951ed417e7360a445bc3d64835e8647cd74c5537a99f8d', 'bytes': 524}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W12_Zoom_into_genetic_information_Classic.html': {'beforeGitBlob': 'e3416748f168aa224efac09f736cad35ce5efaf0', 'afterSha256': 'af1941cc3f804df97f4e4d849cf64e97e85fd926d902e5a911bcb6d54dd7b3ca', 'bytes': 717484}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W13L2_Punnett_Square_Explore.html': {'beforeGitBlob': 'becc1c7c15a80e895a5dfa78155a73b8a18af1d3', 'afterSha256': '29e777bc072ee5c27c89204b3a18d5eeeecdff77a2c16470ddbf218320310014', 'bytes': 594440}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9_Copy_separate_divide_Classic.html': {'beforeGitBlob': 'a7a53853b4e06f9032c22d1a0dbe28ffbad379e9', 'afterSha256': '56c176e483ba44e30455b206269e81afc2b32e93e2bcc9a640aeb8a53057ffef', 'bytes': 685695}, 'Science_Teesside/Launch/W8-W13_2026-27/SHA256SUMS.txt': {'beforeGitBlob': '6186a3b6fa17aa0340668f44fb9a27ec1f4418bf', 'afterSha256': '694205a0dfeb831f096d9dad923aa5f83762ea36193808918a01e4b636428907', 'bytes': 2590}}
 # END PASS_C_AUTUMN_2_BATCH_1 REPLACEMENTS
+# BEGIN DLG_1 REPLACEMENTS
+DLG_1_REPLACEMENTS = {'Humanities_Teesside/BUILD_W27-W39_2026-27/BUILD/Summer_1/W01/BUILD_SU1_W01_Lesson.html': {'beforeGitBlob': 'ae5b5cf0e09f1cbde362c5de000d62a00c4518f2', 'afterSha256': 'f9bdec1a3d49c8fb542f7b02cfa104141e2be8fb1f20bc33c8f6d55a155c4b61', 'bytes': 596583}, 'Humanities_Teesside/BUILD_W27-W39_2026-27/BUILD/Summer_1/W02/BUILD_SU1_W02_Lesson.html': {'beforeGitBlob': 'c76a2fd3c705f8c4848e250f24edb7271b3515d1', 'afterSha256': 'f5eea0753a495ae58ccff58e0735267213311a758ce88eef4c1e7658edd019df', 'bytes': 571970}, 'Humanities_Teesside/BUILD_W27-W39_2026-27/BUILD/Summer_1/W03/BUILD_SU1_W03_Lesson.html': {'beforeGitBlob': '21b96f19eb7162f76361a43d3b021386480e3839', 'afterSha256': '27d31db816e1182bacceb64617aa12c34a51fd5bd36352e8af20cff6625a37f8', 'bytes': 649905}, 'Humanities_Teesside/BUILD_W27-W39_2026-27/BUILD/Summer_1/W04/BUILD_SU1_W04_Lesson.html': {'beforeGitBlob': '0d6851a2ec50424fe18223ca325d20e758fb85a8', 'afterSha256': 'bb4774e6f3884bb28e60e04b53e389352d99676fa32be5f7c772920b445f15a3', 'bytes': 539597}, 'Humanities_Teesside/BUILD_W27-W39_2026-27/BUILD/Summer_1/W05/BUILD_SU1_W05_Lesson.html': {'beforeGitBlob': '71b09413e60a0d17a4af3ebd3b74772955e4fb8c', 'afterSha256': '7b8a8b230e7f14179dba20d940c77e62d21c3e5394cf1151bb519ce01d08fae9', 'bytes': 594075}, 'Humanities_Teesside/BUILD_W27-W39_2026-27/BUILD/Summer_1/W06/BUILD_SU1_W06_Lesson.html': {'beforeGitBlob': 'b812deee1b3f46c4ad25ddc8dc5b34ac724c8bb5', 'afterSha256': '75cea8d6a9ce58156a66638e390393c9fb652709daf9de4a6563e3c422936f55', 'bytes': 542086}, 'Humanities_Teesside/BUILD_W27-W39_2026-27/SHA256SUMS.txt': {'beforeGitBlob': 'd7c5e08c11c6fed3e7a093769427e9727592ead2', 'afterSha256': 'd20040b4ef79cf5d9630c6387c05240d1b66ec2d4a26526845697f08f872e643', 'bytes': 12002}, 'Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W01/GROW_SU1_W01_Lesson.html': {'beforeGitBlob': 'b8caac76b03ff07e545ff4f726b60b95a3cc6d0f', 'afterSha256': 'a786070e48b2c3fb8fd0fc976a9d690e13f68f431291e1bbed6fc387c85b2e67', 'bytes': 953411}, 'Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W02/GROW_SU1_W02_Lesson.html': {'beforeGitBlob': '9e27c25b13e6a098ce7844848c1810175c2c8f2e', 'afterSha256': 'cbdc67e1e498f464f65cb66a7343133a98822441f7068b355d81c9d7ae50ef14', 'bytes': 585472}, 'Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W03/GROW_SU1_W03_Lesson.html': {'beforeGitBlob': 'acc3d0de290c4646b04bd8c5b99943a56e355b2e', 'afterSha256': 'cf482ade46f87249adbab42b9e0a2998fea140179de1cff5f779466fdce3e5e6', 'bytes': 638733}, 'Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W04/GROW_SU1_W04_Lesson.html': {'beforeGitBlob': '302544b38fd5ddafc8cab6471fdcdf1991c80f91', 'afterSha256': '63ac556c4567a2188c253c8986448d0f2c762bf528880cbd2102d1acd4257c00', 'bytes': 525078}, 'Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W05/GROW_SU1_W05_Lesson.html': {'beforeGitBlob': '446dc0ded8fab18b840e2602d2f8f68969047e79', 'afterSha256': '0268feebdb8b404c16d392626ba2bb99d636f4f67f09ef68687079c085cee9af', 'bytes': 693256}, 'Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W06/GROW_SU1_W06_Lesson.html': {'beforeGitBlob': 'cf4bcf8eca586b9f5fcffdd6b9244dd87440fe69', 'afterSha256': '84cc8979fde68076a8254971942a8c43d60c61adde9cc0830466a976273cff0f', 'bytes': 779667}, 'Humanities_Teesside/GROW_W27-W39_2026-27/SHA256SUMS.txt': {'beforeGitBlob': 'ac8ee646ad1c1bdd433593136e5561f7964870d3', 'afterSha256': '7b59594b27b8d5369b90b726784f70275f2238130d8e10c3461c7f6abd5472f2', 'bytes': 11544}, 'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W01/LAUNCH_SU1_W01_Lesson.html': {'beforeGitBlob': 'a84549992bf03088ef324d42e082eb2a97e9d1fa', 'afterSha256': 'd688631fd70176aa795c40376add227c8c111ec64971b9031b6badaa8714e45d', 'bytes': 563168}, 'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W02/LAUNCH_SU1_W02_Lesson.html': {'beforeGitBlob': 'a39815c85c1ac15af8893b10ec33eb56a6f6000b', 'afterSha256': '466debb38ce5e6acdbcdc3a1d08f4189eb2f0b7b49d1555ab6c92cae41108289', 'bytes': 554232}, 'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W03/LAUNCH_SU1_W03_Lesson.html': {'beforeGitBlob': '762d26040b4720a9207454dd04b35e93cb8f308d', 'afterSha256': '14e6c922028e16b3aa377ca54ab1a83a308e7dca68a712891c285e7287bd2dff', 'bytes': 577206}, 'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W04/LAUNCH_SU1_W04_Lesson.html': {'beforeGitBlob': 'dea79e180ce22f20e9ea877d5f8806fbd76deecc', 'afterSha256': 'd5d9f406d55acd52662b011552ecba5ad560e75f7897111776c6b033dd525756', 'bytes': 588501}, 'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W05/LAUNCH_SU1_W05_Lesson.html': {'beforeGitBlob': 'e3f14aa926abd5cf1c40b0bce1c42877fb3ae2e8', 'afterSha256': '531974067ae1f24da64d629e96f1695c4d80e52e188a911c5d650d1523d367d9', 'bytes': 581226}, 'Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W06/LAUNCH_SU1_W06_Lesson.html': {'beforeGitBlob': '1a1c2cf00663f6476fa2f86d4e072c6eb76b8b43', 'afterSha256': '05b17089118b1e8d8d9491398f4477f224df4bbfd0b6c706aeac8be674140c97', 'bytes': 570949}, 'Humanities_Teesside/LAUNCH_W27-W39_2026-27/SHA256SUMS.txt': {'beforeGitBlob': '0708e018636282cedc2152fc219e9d765c87267b', 'afterSha256': 'fbb067847fa74fcf9160deec871d88fcaeefc91ed2368e44b70516cf141cae44', 'bytes': 12061}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/BUILD/Autumn_1/W01/BUILD_A1_W01_Lesson.html': {'beforeGitBlob': '49eb4ebe9d267dcc39ca922f2b90c5991b18acb7', 'afterSha256': '5e749fa9c031c862063a74868c2caf40159038d42d95762e5f921df02fcb86b6', 'bytes': 469537}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/BUILD/Autumn_1/W02/BUILD_A1_W02_Lesson.html': {'beforeGitBlob': '67ef1a2fa235fbd5301959255f51de715d380c57', 'afterSha256': 'aef101588154641db86f4727c82b56ae5b86fb647de5168c0c1cae4dd37d6cbc', 'bytes': 455513}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/BUILD/Autumn_1/W03/BUILD_A1_W03_Lesson.html': {'beforeGitBlob': '938a296340cd85637c7375d68579d78ef80d13bd', 'afterSha256': '11fab8a9f60ef8aab08c57bc24ed48022683843abd5f629f502ce4210617b165', 'bytes': 448317}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/BUILD/Autumn_1/W04/BUILD_A1_W04_Lesson.html': {'beforeGitBlob': '69005eb83844731f72fce3c3e25fa3d6adba1e5d', 'afterSha256': '65061c1794f886fdc85a5794679d7b97c02975ad4469a271e88187cba11dd35b', 'bytes': 1215356}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/BUILD/Autumn_1/W05/BUILD_A1_W05_Lesson.html': {'beforeGitBlob': '2888f5e4fab56841721762582376223bb0c6d815', 'afterSha256': '1343ec63debc307f4e4d6060bc8085b81cbd7c4d658e7fe2305ea8b61be64709', 'bytes': 448490}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/BUILD/Autumn_1/W06/BUILD_A1_W06_Lesson.html': {'beforeGitBlob': '7bf9ab80bcd7dd53dffe14fd3af460800d25c750', 'afterSha256': 'f45f74070d702d7a7c92f484dec07497292e1efe891eb972f932ad66899bdf73', 'bytes': 448412}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/BUILD/Autumn_1/W07/BUILD_A1_W07_Lesson.html': {'beforeGitBlob': '5eb80a888186d4770a4ac92078c7363a4984999f', 'afterSha256': '95606aed9b784c63b01be551b189c72f9d35acce5aeaeab80e986e835396e37a', 'bytes': 476876}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/GROW/Autumn_1/W01/GROW_A1_W01_Lesson.html': {'beforeGitBlob': 'a6d89765df98fe0072c709d26db19b23e67d8a96', 'afterSha256': '12547928b72ce39f01ebbd0b8a73845ea16ff6c4cea9e8f506a91283d0825e78', 'bytes': 425640}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/GROW/Autumn_1/W02/GROW_A1_W02_Lesson.html': {'beforeGitBlob': 'd563fe3a83bdec4114aa26c61245d39c5bd036e6', 'afterSha256': 'ea1d3168851dc8ee8de24a81d9461af1dfae6040a9f7f6b789f798fd0e43d20c', 'bytes': 454980}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/GROW/Autumn_1/W03/GROW_A1_W03_Lesson.html': {'beforeGitBlob': '89d8049e5ad7fb184455a55d4f529a63fe20ce77', 'afterSha256': 'f0438703d83f2cbb79cbab266060928237cc8f593cf65e5b80606f49c27112ac', 'bytes': 464956}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/GROW/Autumn_1/W04/GROW_A1_W04_Lesson.html': {'beforeGitBlob': 'd84130499c8f3bc37b5a990cde306528094691e1', 'afterSha256': 'c89846f9151e61fa2fd4528a7ca765c6566b06b2d02db19aa3a91ebd75b860cd', 'bytes': 444815}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/GROW/Autumn_1/W05/GROW_A1_W05_Lesson.html': {'beforeGitBlob': 'd75b0727b5df17c400039e016670fbe13c13c54e', 'afterSha256': 'a9be509c21d3c04540637e6ae9c1efd5b7a3e11c23c674f9bb78ed76f661ff4e', 'bytes': 457879}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/GROW/Autumn_1/W06/GROW_A1_W06_Lesson.html': {'beforeGitBlob': '5d3878c4db9cb430ce73c3192f5df66fa3210cfa', 'afterSha256': 'd87a3364f79087aa1d321b22473fb386e4b4ac8b6f2e1c168f37ce22abf8e0f8', 'bytes': 466077}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/GROW/Autumn_1/W07/GROW_A1_W07_Lesson.html': {'beforeGitBlob': 'fe52b0484c7b815f1520ce1c65e6512a2b77f1a7', 'afterSha256': '945762ea50fad2218df086d19473de3de4b4e6c146ab562e4b8d35e60b32fbd2', 'bytes': 476055}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/MANIFEST.json': {'beforeGitBlob': 'bd8f3c518cca38b32116469a67c2de042c3c46de', 'afterSha256': '6cd175cc1cc25fcc69dc579e7b1750545d7fcb1cac849196ca72134b8708b766', 'bytes': 19126}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_1_LAUNCH_Reviewed/LAUNCH/Autumn_1/W01/LAUNCH_A1_W01_Lesson.html': {'beforeGitBlob': '391e27b2fe617529ca8315157e9f922ed93d7a26', 'afterSha256': '5f1ab114ecaec7c7a8a56c576af7a8f14f70ff70866465926e55a4aa98ef87ae', 'bytes': 797605}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_1_LAUNCH_Reviewed/LAUNCH/Autumn_1/W02/LAUNCH_A1_W02_Lesson.html': {'beforeGitBlob': '42e4797e801aeb47abc28057ec2c186935382e5f', 'afterSha256': '9055d34c0069bfc0a19179370164133e4c35f5e50a5f5cf77e9ba18fe84666ac', 'bytes': 889975}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_1_LAUNCH_Reviewed/LAUNCH/Autumn_1/W03/LAUNCH_A1_W03_Lesson.html': {'beforeGitBlob': '64bcfa4f6ef5c7234fd0254ab71bcd4f3fab7936', 'afterSha256': 'b093859c48180274b680f1e35d4afb78a309d1099d48fe6fccd51b461d3e232c', 'bytes': 878904}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_1_LAUNCH_Reviewed/LAUNCH/Autumn_1/W04/LAUNCH_A1_W04_Lesson.html': {'beforeGitBlob': 'f937d0cb5b63748e95828f7b22492fa79da82fc6', 'afterSha256': 'bdfd44034f439ae5181c17bfe78e6747af340bb3d15fb0739e99c9de75aab49b', 'bytes': 827995}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_1_LAUNCH_Reviewed/LAUNCH/Autumn_1/W05/LAUNCH_A1_W05_Lesson.html': {'beforeGitBlob': '599b53efb572bc8f36f594dbd542dd7fa5d31f9d', 'afterSha256': 'f95a2eb84b151fe03a0a5fad3a98bcc5aafce8f83c7677b8c8681de3b5a0d7af', 'bytes': 731208}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_1_LAUNCH_Reviewed/LAUNCH/Autumn_1/W06/LAUNCH_A1_W06_Lesson.html': {'beforeGitBlob': '0d130c3e6ddbc2427bbe06943072a4b1154cb979', 'afterSha256': '35e73d60a56b324de4908b19b16522f39defcc8dfba5cb0d90abb2156bffe006', 'bytes': 838040}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_1_LAUNCH_Reviewed/LAUNCH/Autumn_1/W07/LAUNCH_A1_W07_Lesson.html': {'beforeGitBlob': '2859e8697180313fb0059cd3c74a6861d86f81f9', 'afterSha256': 'dbc6f3109dd6265e517cb0566e1f6de0bf5b784bbfea423df5384981059382de', 'bytes': 959111}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_1_LAUNCH_Reviewed/SHA256SUMS.txt': {'beforeGitBlob': '5495f17597916f59cfe1c6ed6ccefb17df02835a', 'afterSha256': '480587877c978b6792d8107131157de7264cfc8b38743ae3eba36abf36cc66c7', 'bytes': 11182}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_2_BUILD_Reviewed/BUILD/Autumn_2/W01/BUILD_A2_W01_Lesson.html': {'beforeGitBlob': 'd0b5cdca7c637c0f0fe79d9a6f6e24c6c02917bc', 'afterSha256': 'a1c16ce481a960e243e89371550357640648760cf1d6e5dd0d45b89be8d85bdf', 'bytes': 736893}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_2_BUILD_Reviewed/BUILD/Autumn_2/W02/BUILD_A2_W02_Lesson.html': {'beforeGitBlob': '31ed680a300d4eb57ca0047db9b642000d2b5f8e', 'afterSha256': '8e6b2f73511aaa359a5605929757ae19a078c6e01584ffdef7d4f77b68a88c9f', 'bytes': 1042595}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_2_BUILD_Reviewed/BUILD/Autumn_2/W03/BUILD_A2_W03_Lesson.html': {'beforeGitBlob': 'd58457e4bc6995e9243363ed4299e183527a5a4f', 'afterSha256': 'd40fe5863e5cdaaf70ab0ffdf9f4829377e2d35b74a9d5e455385e7a232bc9c8', 'bytes': 799805}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_2_BUILD_Reviewed/BUILD/Autumn_2/W04/BUILD_A2_W04_Lesson.html': {'beforeGitBlob': '66a0168256f8e1e08b093a71f7563a7aefd61172', 'afterSha256': '2b304ba13036e4d205e6cdaba6c7778e84b8ccbc42d0367ea75fe13db225e7a0', 'bytes': 756512}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_2_BUILD_Reviewed/BUILD/Autumn_2/W05/BUILD_A2_W05_Lesson.html': {'beforeGitBlob': '38daa2c3f7d53ba647b4fc840d9708a698aa64f8', 'afterSha256': '79900fa6d3f0d3821436e68baf359d47f039e7038e8ec8abe5b1ade0695a0ac4', 'bytes': 789834}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_2_BUILD_Reviewed/BUILD/Autumn_2/W06/BUILD_A2_W06_Lesson.html': {'beforeGitBlob': 'ac9d4894e56ba418e12e6d63a3b2254344d23b1f', 'afterSha256': 'bbbf137d46c3aac3fb11ac1b82f3bd425e949953d95e2184590b54a854db159f', 'bytes': 741147}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_2_BUILD_Reviewed/BUILD/Autumn_2/W07/BUILD_A2_W07_Lesson.html': {'beforeGitBlob': '5a7e4f00e5e3932ecb45aa57767f889dd13fd672', 'afterSha256': '495189e883e2a78a6e24fb3a8005aa4866f5e382fd0afa793d9b48e0b856fd4c', 'bytes': 861007}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_2_BUILD_Reviewed/SHA256SUMS.txt': {'beforeGitBlob': '9699be1d94695f5a8461f8e49d4a61dca61553be', 'afterSha256': 'e02a5e9c69a4f89c89db97f9cfc021f142ca391d7ea3ed063c597d9090c934db', 'bytes': 13652}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W01/GROW_A2_W01_Lesson.html': {'beforeGitBlob': 'c133a96fca38e84438e22b69ba68d5335f42851b', 'afterSha256': '15e63b281875f6d62636a9b619abd954526d6c31318687510dbab09271e91e39', 'bytes': 986561}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W02/GROW_A2_W02_Lesson.html': {'beforeGitBlob': '37e3ad40c15a243957317e50b131524079878cd9', 'afterSha256': '541f7d43d5ebf0cd057b78286ff682bcdc475cf44b216b0f2332d1f713e87cf9', 'bytes': 692389}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W03/GROW_A2_W03_Lesson.html': {'beforeGitBlob': '135848178608848a0c7e2332d4e71f50ed322a85', 'afterSha256': '663ff01c19bde7cce9cd46596b2b329e167501cdff570f9dbae6ca1fc9ee12b3', 'bytes': 914338}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W04/GROW_A2_W04_Lesson.html': {'beforeGitBlob': 'ac3ae7cd17d5e7d50ba3b4a18d70f5aca0279bbf', 'afterSha256': '0395590993c36cefd35e3f8ad9b1cb9220f60f09b9eebf3cabfeffcc64e5f735', 'bytes': 1075446}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W05/GROW_A2_W05_Lesson.html': {'beforeGitBlob': 'cf4d319324904a85a23b1970c3f5808ed71d5620', 'afterSha256': 'a2b7242f2c720312b8d75fd3bd3fbf61d5d79df41ef9aca03060e8e656cc621b', 'bytes': 1026463}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W06/GROW_A2_W06_Lesson.html': {'beforeGitBlob': '37c0497a8f897b417c760f995ec742c827d57b7f', 'afterSha256': 'a85daba32d269cfae3347c0a731a1778560bdcae0e0388538f88863ca2601a6e', 'bytes': 1210664}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W07/GROW_A2_W07_Lesson.html': {'beforeGitBlob': 'dcaec80f0c9e8439aea0d3f80ca87c81a25a8924', 'afterSha256': '5124e543efd5f8452ef18f7cba460aa230dd2d52681107de1e59f0ef8f6f7d65', 'bytes': 929253}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/SHA256SUMS.txt': {'beforeGitBlob': '16efdd085b39fd8292cf224e4031ac6e89f50f01', 'afterSha256': '3585f3c2b25a067ec757cdcc291a8c62971f5d6c3173f2dfb944de4525dd370c', 'bytes': 12330}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_2_LAUNCH_Reviewed/LAUNCH/Autumn_2/W01/LAUNCH_A2_W01_Lesson.html': {'beforeGitBlob': '4b089b60e1083be609c3e7769d7a006d6d47c061', 'afterSha256': '5dc5be4aee51879803a1da926b42b222d24c9993472128cd0c3d812ff32d5e9e', 'bytes': 786414}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_2_LAUNCH_Reviewed/LAUNCH/Autumn_2/W02/LAUNCH_A2_W02_Lesson.html': {'beforeGitBlob': 'f9f443c27a85577b6403e1883769252f5b556ca7', 'afterSha256': '6cf0bf848a2a0bab2581e86c1a0536a759713214799177947e59018a432fca46', 'bytes': 1159344}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_2_LAUNCH_Reviewed/LAUNCH/Autumn_2/W03/LAUNCH_A2_W03_Lesson.html': {'beforeGitBlob': 'b016851cf0e3b8b476c39cf93dd628d516c620e1', 'afterSha256': 'ed798926fc9029b1e89633cf6aef8ad0b539fd0f85e1bd46b14eaef6ab70816d', 'bytes': 903765}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_2_LAUNCH_Reviewed/LAUNCH/Autumn_2/W04/LAUNCH_A2_W04_Lesson.html': {'beforeGitBlob': '51cebe1920bfc24c426f083c3da777f20843df2c', 'afterSha256': '018a35512e73b58a24506983e7f33e502dc03740001f9c6fe07176fc2d62f1d4', 'bytes': 1047990}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_2_LAUNCH_Reviewed/LAUNCH/Autumn_2/W05/LAUNCH_A2_W05_Lesson.html': {'beforeGitBlob': 'e92b09bc92814516540ca3407ea8d28577c5b377', 'afterSha256': 'f292ac63fba414206333dffd3869de2657c37036bbfa757de2c9a0eee368760f', 'bytes': 911357}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_2_LAUNCH_Reviewed/LAUNCH/Autumn_2/W06/LAUNCH_A2_W06_Lesson.html': {'beforeGitBlob': '337b6727c10dcb80af1efe343b6c5d4e3b694c3e', 'afterSha256': '14727c333c6cefd5f7131733cefca33d66c78affec110830e2c42791f1c759f7', 'bytes': 1029380}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_2_LAUNCH_Reviewed/LAUNCH/Autumn_2/W07/LAUNCH_A2_W07_Lesson.html': {'beforeGitBlob': '0d08aae901c474d84c3aaf6e6185e869ba6e3eb2', 'afterSha256': 'facb9ac110bb65f343fda3d2f13bdf384272a40b3f8be62d96d135817b2b7e47', 'bytes': 836590}, 'Humanities_Teesside/Teaching_Packs/HUM_Autumn_2_LAUNCH_Reviewed/SHA256SUMS.txt': {'beforeGitBlob': 'e3beaf0200ffefb0118cdeeb553e956c064e0417', 'afterSha256': '7e3db22481967e3bf3f28f72e33e57abc67f11e3777e60f447151e3bf9f36ee0', 'bytes': 13133}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/BUILD/Spring_1/W01/BUILD_S1_W01_Lesson.html': {'beforeGitBlob': '53101d9086a4c284153f1ada3dc0bb92157685ec', 'afterSha256': 'c14a2be568718dfd1080a6bcf64cc0613734bf058f034cec5326e2ee64377e42', 'bytes': 671144}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/BUILD/Spring_1/W02/BUILD_S1_W02_Lesson.html': {'beforeGitBlob': '243fbbc48168bf73e2ecf3e9107b6a4705a45b66', 'afterSha256': '5e854d667a77bb6edce02396d0f541315dee5ca17e092e4b5f75657f2961d274', 'bytes': 745217}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/BUILD/Spring_1/W03/BUILD_S1_W03_Lesson.html': {'beforeGitBlob': '9aa735f68c74a6ae7eab843a4148b511db316595', 'afterSha256': '072dcebd5ed8117b4af623e280afdbebfebdbb8223ab4b8c4caf823e02200431', 'bytes': 1202441}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/BUILD/Spring_1/W04/BUILD_S1_W04_Lesson.html': {'beforeGitBlob': '869ea490d491b24b3f04469dc4540433f965c91e', 'afterSha256': '2e3d23014e4de69e482bae679a62d1697075d9eea49d13166dcc3251c195dca1', 'bytes': 1257784}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/BUILD/Spring_1/W05/BUILD_S1_W05_Lesson.html': {'beforeGitBlob': '585948b1c967cd10dbb5a3d4659ce83140b29e3b', 'afterSha256': 'd98b79c3b7e05c179c61fa5d58a0a48dbbb73d3ecc3118de2867a2bde935910c', 'bytes': 751111}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/BUILD/Spring_1/W06/BUILD_S1_W06_Lesson.html': {'beforeGitBlob': '5ee72511573e01307cb99f0123eaf226d2613193', 'afterSha256': '987557d14a2633201d21a15aac34f69adea668db851595ed32e2be24edd04201', 'bytes': 1320825}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/GROW/Spring_1/W01/GROW_S1_W01_Lesson.html': {'beforeGitBlob': 'a8fc160d7da33977ac1db0bc85697f46ddba0e66', 'afterSha256': '780dc8b6cc8e25609c53491d885bbf2a3c14d476f151483cd0aa62fcd8822fda', 'bytes': 966726}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/GROW/Spring_1/W02/GROW_S1_W02_Lesson.html': {'beforeGitBlob': 'd23259d167fd29198d6daec5fa1bee5280deef0c', 'afterSha256': '519c40e2567bee09bed0fb19edc0dd206570ca9d65e87ef4f2f32525dae5d1ab', 'bytes': 776216}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/GROW/Spring_1/W03/GROW_S1_W03_Lesson.html': {'beforeGitBlob': '58c6ea1aecebb7d4f690176d559955485a39f4d9', 'afterSha256': '1a0c31b74fa1ceeaeebff8ea10141c202bd34ebf9aefc68a281290ac4d742df9', 'bytes': 756164}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/GROW/Spring_1/W04/GROW_S1_W04_Lesson.html': {'beforeGitBlob': '312fc470ab9b039114f30ce8d75b424bd55002e1', 'afterSha256': '8b609a82bdcaeec34ed7e837af2466367450ff7ba4ce57e4b194b482cbe78458', 'bytes': 740957}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/GROW/Spring_1/W05/GROW_S1_W05_Lesson.html': {'beforeGitBlob': 'b18a0399faac2106830362322080a4b48c6c38e1', 'afterSha256': 'dda4d977e4499d9d6bc98b7ba1c3eb8a9463a1744ff3a0a81d9782c337a30169', 'bytes': 1027548}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/GROW/Spring_1/W06/GROW_S1_W06_Lesson.html': {'beforeGitBlob': 'e43447563dcf9e1e82676dd89c65e20b957fc4fb', 'afterSha256': '6222620e123c87e00fe1004cd2594c070e26364be0666096c4bb7997ebc03cb3', 'bytes': 746653}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/SHA256SUMS.txt': {'beforeGitBlob': 'ddcf1434c3b7834ea5a21bc92fce9a7dd9ba82df', 'afterSha256': '8fc70d36d275598845d5754a1e0973befa82012b39630ebbed2140e40309e553', 'bytes': 20838}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_1_LAUNCH_Reviewed/LAUNCH/Spring_1/W01/LAUNCH_S1_W01_Lesson.html': {'beforeGitBlob': 'd2658c6a32704659ab19f14ddee1ec01dc5d4aec', 'afterSha256': '55b570e7070c1f9af8b570cd5fd5d4613c7135d1d6c1bdf8066416799da003b2', 'bytes': 820898}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_1_LAUNCH_Reviewed/LAUNCH/Spring_1/W02/LAUNCH_S1_W02_Lesson.html': {'beforeGitBlob': '72b2805863f9423f9bb8a0bdc9fe2f39f2275c68', 'afterSha256': '2578e4873ac34d541c8269174c1dd84b7e11e928240115a778d5b01719f39bdc', 'bytes': 937005}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_1_LAUNCH_Reviewed/LAUNCH/Spring_1/W03/LAUNCH_S1_W03_Lesson.html': {'beforeGitBlob': 'f6ee8f93c178468c76ca1097db0a53c548425c10', 'afterSha256': '3300ac68f11af9cda9f161e02031f18c5737e0a06f453f29e2565ccca5c39c01', 'bytes': 824668}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_1_LAUNCH_Reviewed/LAUNCH/Spring_1/W04/LAUNCH_S1_W04_Lesson.html': {'beforeGitBlob': 'e8eec37975c5302f62d0eb4659e8cf0407c564aa', 'afterSha256': 'fb4904a633b51bd7e1b118415a373f241b2fd96e048c1c2dd0f4e51d6647f42e', 'bytes': 855751}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_1_LAUNCH_Reviewed/LAUNCH/Spring_1/W05/LAUNCH_S1_W05_Lesson.html': {'beforeGitBlob': 'c4d0fdf44de05f8b898237b84cf9e9d335d1a9c4', 'afterSha256': 'ba6e045a160aa8df7ef4cf2233d30451e725eba82b6eba3c5aa550d47372b863', 'bytes': 876030}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_1_LAUNCH_Reviewed/LAUNCH/Spring_1/W06/LAUNCH_S1_W06_Lesson.html': {'beforeGitBlob': '854d0ed1d46e86c7658d6a6a834dd4c96b678ba8', 'afterSha256': '226bcb9a46eefcc248521ae4b8ca8148bb1017dc335776b0656c054237129668', 'bytes': 1278263}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_1_LAUNCH_Reviewed/SHA256SUMS.txt': {'beforeGitBlob': '11c64abac04639ddfc643db1b44e8d20b7a15a64', 'afterSha256': 'bc16f31e639bf89b0c4bc14ae07439f5aacf0a646d7f4639a6d66e51bce86f9e', 'bytes': 9646}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_2_BUILD_GROW_Reviewed/BUILD/Spring_2/W01/BUILD_S2_W01_Lesson.html': {'beforeGitBlob': '2f7bddaea68f5b982e7cafb33dc2683d5e02288a', 'afterSha256': '5ca95456c016e586a970108fd53bbcfb0cf1724db1a7e11907b2c2451ad0a55e', 'bytes': 750377}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_2_BUILD_GROW_Reviewed/BUILD/Spring_2/W02/BUILD_S2_W02_Lesson.html': {'beforeGitBlob': '6565126d6400d030ecd2d6addbe4e5e426d185f2', 'afterSha256': '72590065a98eccc42d4123b2392c973472f095d87a584c6df0f76503fcadbc31', 'bytes': 763731}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_2_BUILD_GROW_Reviewed/BUILD/Spring_2/W03/BUILD_S2_W03_Lesson.html': {'beforeGitBlob': 'cb01d5e527fb55318cf3b70aa2cc44c637be3a77', 'afterSha256': '06d731dbc610e50e6b46dfe9f71385beb8e92a268be3bdf8d5399bffa64ae60d', 'bytes': 739767}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_2_BUILD_GROW_Reviewed/BUILD/Spring_2/W04/BUILD_S2_W04_Lesson.html': {'beforeGitBlob': '9a155a253d42cb7f93cf81b8ffa832a26f247905', 'afterSha256': '4de5f2ef8ff474334ec7ec48307704cc4468655f100a65bffc8b244ac7285219', 'bytes': 769810}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_2_BUILD_GROW_Reviewed/BUILD/Spring_2/W05/BUILD_S2_W05_Lesson.html': {'beforeGitBlob': '79977c1038d8bed686f4057389e74370cb0dcb68', 'afterSha256': 'db63df0d9e111332d9a6859ba5a8b5a1714ce724f1d847b1314efbd52e826085', 'bytes': 801422}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_2_BUILD_GROW_Reviewed/BUILD/Spring_2/W06/BUILD_S2_W06_Lesson.html': {'beforeGitBlob': '9950931f084531bfad67d3a7ad1f168809974789', 'afterSha256': '9b54d696d4de412fc6ad4ceabf8bc91b283a405acebf978a566652208d075ca5', 'bytes': 805231}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_2_BUILD_GROW_Reviewed/GROW/Spring_2/W01/GROW_S2_W01_Lesson.html': {'beforeGitBlob': '98080a030715bb67efc0605f06344558efbd82d4', 'afterSha256': '9d93b0de8ade11d33abea62f2766664ac7589418694403a2829d375411498d8f', 'bytes': 1120722}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_2_BUILD_GROW_Reviewed/GROW/Spring_2/W02/GROW_S2_W02_Lesson.html': {'beforeGitBlob': '76df5737ace615470ae7c8c8037ce00b0240e03b', 'afterSha256': '023ecca14955dfcbd1b13cd8d845ce54e98961add7f9bc104d8283107f5b1105', 'bytes': 888102}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_2_BUILD_GROW_Reviewed/GROW/Spring_2/W03/GROW_S2_W03_Lesson.html': {'beforeGitBlob': '693ed773858f5dda40a89a217d26128f6a29bd08', 'afterSha256': '7d95b4c0d60beede6d07eb3bc69570f6a0c020cf102f3f89d721bc24f216e8e7', 'bytes': 834233}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_2_BUILD_GROW_Reviewed/GROW/Spring_2/W04/GROW_S2_W04_Lesson.html': {'beforeGitBlob': '8f5a76dab7fb0fcb70dd5373c5f8fa3cebca70d4', 'afterSha256': 'dfa7b5383aaff4c49293fc503ab5a6ee370ce80065c6690ed72c349f8648343c', 'bytes': 970032}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_2_BUILD_GROW_Reviewed/GROW/Spring_2/W05/GROW_S2_W05_Lesson.html': {'beforeGitBlob': '83be7d9d1e0ea07d7b2ff32973ce91a39bdbdbc5', 'afterSha256': '698a6096c4c6bcd51bcd3c1066c2b8ad2ce6d6b93b8e45b0e55e8ed6319e3a33', 'bytes': 884242}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_2_BUILD_GROW_Reviewed/GROW/Spring_2/W06/GROW_S2_W06_Lesson.html': {'beforeGitBlob': '9b52bc7c539304d5b70803e5defaf411224f17d4', 'afterSha256': '0de35a96243bbad825f4291d4a28561dd14d863ceb5c92206537a58b23c26d15', 'bytes': 977690}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_2_BUILD_GROW_Reviewed/SHA256SUMS.txt': {'beforeGitBlob': 'ee887855da3bea1f9034829635716b5f97eb8856', 'afterSha256': '423cf78757820f83ea54bdb970d528649179a719d9fd75a3b059075dbaaeade0', 'bytes': 21890}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_2_LAUNCH_Reviewed/LAUNCH/Spring_2/W01/LAUNCH_S2_W01_Lesson.html': {'beforeGitBlob': 'd3962b9b2777872fa751b7b407e3a86768f609ec', 'afterSha256': 'dcf1838d414e806b84bcae5df533f9471d7a8b0be0cd2c0852349b64ab866622', 'bytes': 914022}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_2_LAUNCH_Reviewed/LAUNCH/Spring_2/W02/LAUNCH_S2_W02_Lesson.html': {'beforeGitBlob': 'b615d0488e81e5c6241b1cdf05428286c8040059', 'afterSha256': '6d85a5671d4c7ae280b59cf02cc2b8c593339350807e225d4b7714997b2e4039', 'bytes': 940668}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_2_LAUNCH_Reviewed/LAUNCH/Spring_2/W03/LAUNCH_S2_W03_Lesson.html': {'beforeGitBlob': '93cbe746667751dd31ccd20889a92bead09cdaf3', 'afterSha256': '8d266858aae0337432f84c456fb0c8a675de36fad06c25d03ee732941da48991', 'bytes': 899386}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_2_LAUNCH_Reviewed/LAUNCH/Spring_2/W04/LAUNCH_S2_W04_Lesson.html': {'beforeGitBlob': 'ed38decb9d7d38cf32ec58cf71af4f0b52c7e31c', 'afterSha256': '91baee0bb8cad5c48fac86615263c48173496d570df349252dea042463e9d93f', 'bytes': 1044077}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_2_LAUNCH_Reviewed/LAUNCH/Spring_2/W05/LAUNCH_S2_W05_Lesson.html': {'beforeGitBlob': '7a2130778a889081e1ef501d12409e1c9f46983c', 'afterSha256': 'e93fe22e4ee0db3d7fd05321521d804e3192d7f4f1299c14f42d523a00d284ea', 'bytes': 814857}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_2_LAUNCH_Reviewed/LAUNCH/Spring_2/W06/LAUNCH_S2_W06_Lesson.html': {'beforeGitBlob': '837d7c21f9d96c94f09ae6dc43eb825d8f0ed183', 'afterSha256': 'd10a5832ac7b86be298e4b08d83f3f426e6731a118287512aa94c2a187bb6475', 'bytes': 914768}, 'Humanities_Teesside/Teaching_Packs/HUM_Spring_2_LAUNCH_Reviewed/SHA256SUMS.txt': {'beforeGitBlob': '4fcd30d805d52243993da56da45adcf35c8fface', 'afterSha256': '50cb5d58839fc4942693a01850a137497a4361bb467a4ee3b658d86793ac74ca', 'bytes': 11818}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_1/W01/BUILD_RE_A1_W01_Lesson.html': {'beforeGitBlob': '0c12d04bdc0494b993115a219d09e7da80baeef0', 'afterSha256': '6120f11ef73139427c72d16455a1578bcd9d41fc758073c43a647322139e5e84', 'bytes': 715883}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_1/W02/BUILD_RE_A1_W02_Lesson.html': {'beforeGitBlob': '606e73b0d9cb0579e4263eff71e9c05c85253536', 'afterSha256': '32b655ec62d74cada8a009ddca5b0f4285abdb48e1c94eac598cb66d51267952', 'bytes': 760292}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_1/W03/BUILD_RE_A1_W03_Lesson.html': {'beforeGitBlob': 'e11408388acf47ae0af9ec039e6acef3f2341975', 'afterSha256': '6ca005d877400b6893caf1b7e793c73f9c206e2fa29b25abadfae9fb9baf9b67', 'bytes': 752348}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_1/W04/BUILD_RE_A1_W04_Lesson.html': {'beforeGitBlob': 'ff0946b7ad57f0cbe71c20fb131a2f5e5e730ebb', 'afterSha256': '90b96500f6edbb3b918b7bfaded3f9f363d63dd7b2e615ec40b7fbb47cae5592', 'bytes': 748781}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_1/W05/BUILD_RE_A1_W05_Lesson.html': {'beforeGitBlob': '7b7499f0763d52eadc598e892054e08e9cbbd87f', 'afterSha256': '8bfead9a8ccd03a143697e997fdb2e571b96573657b3dbc32890c01848c8d7a9', 'bytes': 952373}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_1/W06/BUILD_RE_A1_W06_Lesson.html': {'beforeGitBlob': 'a31d15c4986a47225295198ad823fd9be0f332da', 'afterSha256': '47503b698f9f8e3177adcf855442bd50636ed5c363f19456c22e0800236e5152', 'bytes': 734323}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_1/W07/BUILD_RE_A1_W07_Lesson.html': {'beforeGitBlob': 'dd8e880b4159e20bd4357264d1d2a65c1817f69d', 'afterSha256': 'c6e1debc5ebe82bc0d5e008cbbdac217cd5ffb7b045a6d4fa45d4bed74b0d62b', 'bytes': 931770}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_2/W01/BUILD_RE_A2_W01_Lesson.html': {'beforeGitBlob': '64efe1b6266cf8be7161288dac7bc7b8b124323c', 'afterSha256': '51d8023fe37567838c7ef5b0e377b227a52b0cebef8b3f07afbfb1fb1a69394d', 'bytes': 709000}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_2/W02/BUILD_RE_A2_W02_Lesson.html': {'beforeGitBlob': '70a6eb806a3702f66a98f940ca64f1df7921dca9', 'afterSha256': '52e8974f682baec2f8fb34ebf5d8087b95c03daffe82a1a2c2e7458b9e93bf28', 'bytes': 958825}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_2/W03/BUILD_RE_A2_W03_Lesson.html': {'beforeGitBlob': '8c8fd58dff8a0b082374f43d9bc84e98e595b3a1', 'afterSha256': '5e4d672e77b78ddaa0204dd6bf0e89078728a71de1afacc18fc278a59d65ad01', 'bytes': 686321}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_2/W04/BUILD_RE_A2_W04_Lesson.html': {'beforeGitBlob': '34e716be5c46a3a313590e6a72bb5c7549e6d133', 'afterSha256': 'c21d501faa52598a8fe87ae0c8ade2d6fdd273182cef2ae20df29ad2ba302d2f', 'bytes': 735898}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_2/W05/BUILD_RE_A2_W05_Lesson.html': {'beforeGitBlob': '5f624e79b8366e78ff9845f63235df8eec75c7da', 'afterSha256': '515595c44b56e584627f847a587e83243d8049fac9dd651ffd7795c320bba0d6', 'bytes': 734061}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_2/W06/BUILD_RE_A2_W06_Lesson.html': {'beforeGitBlob': '59b034408b260a09b49cfc404a80cea1c1e31e65', 'afterSha256': '789de9f9b1e1987b7b69eb7ad8751307b44108c6266a2954c198798d0fe41c7a', 'bytes': 693531}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_2/W07/BUILD_RE_A2_W07_Lesson.html': {'beforeGitBlob': 'ebdd1f2ec26d3c9d639277aefab8a126736874ae', 'afterSha256': '8f9bad8798406811142c11c57e3b4e7d8c19e13e8a1017274cfe2a735fe67a85', 'bytes': 752521}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_BUILD_Reviewed/SHA256SUMS.txt': {'beforeGitBlob': 'c29e6c3182d8263deba46fc7897b10d9d83bd206', 'afterSha256': '00224e890c02fccc7e40d1901daee6b769e5b18d5596b430bece015d5a23c835', 'bytes': 23726}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_1/W01/GROW_RE_A1_W01_Lesson.html': {'beforeGitBlob': '61692c4d76092192045c2f3c37da848ca4ff0c24', 'afterSha256': '107d230da08bde88fec3b03d6e29b40784c67e4f787adc9bf9c93e8f42a4eba2', 'bytes': 1003272}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_1/W02/GROW_RE_A1_W02_Lesson.html': {'beforeGitBlob': 'ae83ae12fb3ae0fc05c33622910271f98c5b545a', 'afterSha256': '40f2f7f7f235ac0d302e1ebe41e99470e6a1b27ae460c099a388994cfe78669c', 'bytes': 741072}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_1/W03/GROW_RE_A1_W03_Lesson.html': {'beforeGitBlob': '357fc19612082a3f4ab274d7c9fba6eb0cd6ac44', 'afterSha256': '96cdab5f4ee79e2a12ddd84f0178ed88cad0647d73fe361d584db43811f7f23a', 'bytes': 795966}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_1/W04/GROW_RE_A1_W04_Lesson.html': {'beforeGitBlob': '380fcb68857f639a9cf0dee3d3183516a4e515fc', 'afterSha256': 'fdfae07fe2feacf017787ccdf2feac14cc8fa621a1aa62604420d615f630f5f2', 'bytes': 945100}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_1/W05/GROW_RE_A1_W05_Lesson.html': {'beforeGitBlob': '8a0e5db9e7e247bd144eb0f8ac74a335b1e9ce63', 'afterSha256': 'd7761c238790e21249796574887cc4fecc01e4d52b5af4154266f972dc6fb37e', 'bytes': 728424}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_1/W06/GROW_RE_A1_W06_Lesson.html': {'beforeGitBlob': '97784661a704c5ec78dace74310e5b9340797541', 'afterSha256': 'fcbcef20ba801a22fe52ba8dc7eee9fafafc47182db8a40047908436d678f579', 'bytes': 826729}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_1/W07/GROW_RE_A1_W07_Lesson.html': {'beforeGitBlob': 'f95cd4aec1c4082f5cf401e51d20014215f6a180', 'afterSha256': 'b2d87e32fff13bcef7aa5e4048df815dd19865a6b54313ddc81eb5c85b947fb0', 'bytes': 983539}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_2/W01/GROW_RE_A2_W01_Lesson.html': {'beforeGitBlob': '33108a21fe33e94e41d18c60f88db1a1b61b8982', 'afterSha256': 'fb65f1586b54091998c873384d2220e350d6dd35996ab2e1c0ed2277b24e9cb0', 'bytes': 798171}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_2/W02/GROW_RE_A2_W02_Lesson.html': {'beforeGitBlob': '2ee8a1755c6743c226c5977a986674770f207b0f', 'afterSha256': 'f003b991143ed389fb6906ba86d6786e299110ae9392729f9f6b0c98fa7c5663', 'bytes': 766334}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_2/W03/GROW_RE_A2_W03_Lesson.html': {'beforeGitBlob': '8959a02da7acdf2cfeac8542cccfc6fd6e0da222', 'afterSha256': '236222756ee58317ec9682321380a991ef2023ec70d0b7c19b5923ff64f4b9af', 'bytes': 674554}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_2/W04/GROW_RE_A2_W04_Lesson.html': {'beforeGitBlob': '7e774c28deaf64b0191f7a2d3405036423349b0c', 'afterSha256': '35ebb0a72043e0e634770c57d62119786557985959dbb42f46363effa6df4fdf', 'bytes': 740956}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_2/W05/GROW_RE_A2_W05_Lesson.html': {'beforeGitBlob': '457d76b6060181c98b097dc3420209441f1098b5', 'afterSha256': 'f82948b1a1596dc0873fdb1304acf5b05e20a83d1724e94775d2fd79d23bb666', 'bytes': 795191}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_2/W06/GROW_RE_A2_W06_Lesson.html': {'beforeGitBlob': 'a6cba65be5a90eb4ed4404c3295ce103577ffa59', 'afterSha256': '2fb6439e5f500c59d62478aa533531ca17ac821fb18b67a0a1d78c24625d7269', 'bytes': 743715}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_2/W07/GROW_RE_A2_W07_Lesson.html': {'beforeGitBlob': '6d244b372f9794cc7bb08b42801e528e5ca8030e', 'afterSha256': 'bdea643384ee2df8e375fd793621bf391f0f428c0d4ff6b5dfb0cd3d7b304783', 'bytes': 745248}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_GROW_Reviewed/SHA256SUMS.txt': {'beforeGitBlob': '91b0f70c51bfd5d018dce201c4d223de14f411f5', 'afterSha256': '3936bfe7fbe4ee06327dcc78237e2c7b57ed33dc0496ac1ec217daa77726c8c6', 'bytes': 23376}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_1/W01/LAUNCH_RE_A1_W01_Lesson.html': {'beforeGitBlob': '7df05db2046198f883f898111d0231f1e8c9f715', 'afterSha256': '45ed365695f99c6965d56a00d1f007bfe90395ad03288cea0f7661cb84392472', 'bytes': 839467}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_1/W02/LAUNCH_RE_A1_W02_Lesson.html': {'beforeGitBlob': 'e6b504e3ac2b1820904cf058c0193e58665a4cda', 'afterSha256': 'd0e5863c27f12c9b252bce4b869c57fca10e85a23b0791949a6f9f29bed67a6e', 'bytes': 1165164}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_1/W03/LAUNCH_RE_A1_W03_Lesson.html': {'beforeGitBlob': '61b7bbb1d395e7ab83603be71920fa82e547b1e2', 'afterSha256': 'b1bad16ec2c426bb2a88b77df29cba5e2b94afb80d2d0e140975019487d1df86', 'bytes': 689630}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_1/W04/LAUNCH_RE_A1_W04_Lesson.html': {'beforeGitBlob': 'b41f65841896ee3d49dbd6a77414614631df419a', 'afterSha256': '240e61b9ceaca4ae77cd199a27297fdc810aaa736b3ad216b2250747440e5480', 'bytes': 1018076}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_1/W05/LAUNCH_RE_A1_W05_Lesson.html': {'beforeGitBlob': '893a068a0058ff0ae189f4822809733ace650df9', 'afterSha256': '681f3d41f7b37cae7bc4049d965c9f46c5e38cc619881abce403fb6fc1755cf8', 'bytes': 789535}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_1/W06/LAUNCH_RE_A1_W06_Lesson.html': {'beforeGitBlob': '6ac7f15cb8ce0a88b5d8b448fb8e9a93037fe151', 'afterSha256': '0d5a0a71d58a4715ed30b644c08ef7feaeb43aec99ae7ca593f096b6d347ba15', 'bytes': 1026500}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_1/W07/LAUNCH_RE_A1_W07_Lesson.html': {'beforeGitBlob': 'b67a05c6f79f22fa0014620ca6ab722a4f2c8533', 'afterSha256': '335041a08d4094428b755c4f70e37f2fa46e55254978d189bdcca2ffc99aef2d', 'bytes': 737251}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_2/W01/LAUNCH_RE_A2_W01_Lesson.html': {'beforeGitBlob': 'b015c4b3fa376d79364bacfde9e50fca19c6bbbb', 'afterSha256': '61d368e16d5848253677a554f1071084ea88407c40d4c8d3cd6c40501396ca8c', 'bytes': 985414}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_2/W02/LAUNCH_RE_A2_W02_Lesson.html': {'beforeGitBlob': '91239a745a7c2b70fbe5ac9f966161c883918fba', 'afterSha256': 'c70a5941a35f28d163a49286a1c93f72626c2afc9d74655833336b1fd9a40ae4', 'bytes': 819119}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_2/W03/LAUNCH_RE_A2_W03_Lesson.html': {'beforeGitBlob': '3945cdc61ddee98e594c1488da9d5b8c0e0bea80', 'afterSha256': '962dc70295083424236b16615432c7572ab34ed03e02eb477b6cf172d04af0b0', 'bytes': 684793}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_2/W04/LAUNCH_RE_A2_W04_Lesson.html': {'beforeGitBlob': '811c59bfcf181e1e15119a7b6beadc53764a9df7', 'afterSha256': 'fbdeafb79997d142e7cd004d9b21af62ea162df778b64c73ba0e290aa906512e', 'bytes': 838187}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_2/W05/LAUNCH_RE_A2_W05_Lesson.html': {'beforeGitBlob': '99a32b280c4e70c0198a467549612cf82b0b0b5f', 'afterSha256': '2ba488d168cdbb7efc50ad018590fd8bae1bd6af7ce83826ab039f82ef5e6651', 'bytes': 1151993}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_2/W06/LAUNCH_RE_A2_W06_Lesson.html': {'beforeGitBlob': '7058aae051a759d69e8d72fac1b3e4507409f408', 'afterSha256': 'ae521ec05c1d2422b1fc850d34d291c528632c67b10f705eb2af97a7a48ce84f', 'bytes': 700953}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_2/W07/LAUNCH_RE_A2_W07_Lesson.html': {'beforeGitBlob': '0d8804b055a8202807c5301e3e95f3e4107b0665', 'afterSha256': '79a92af856b83dd7961316d1f6a953b320c4689ed25d467e40128a89938c47a4', 'bytes': 751414}, 'Humanities_Teesside/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/SHA256SUMS.txt': {'beforeGitBlob': '209f29c6e5c920f3c18d4288c1e3afd835962bad', 'afterSha256': 'adb20fcd98a2548481bcd806cae147d30cc858a034798ec782a0f671f68bbcb0', 'bytes': 24076}, 'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W10A_Solar_System_Research_Explore.html': {'beforeGitBlob': 'f69dd81bf88f28003064004de185bf15385133eb', 'afterSha256': 'eae7aa0751ba8ffd84a27a316b9e9af1e6e56d94704097b8e5ec7cd0fcaf73a1', 'bytes': 1208846}, 'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W11A_Global_Warming_Explore.html': {'beforeGitBlob': '3a18f990fa1ea56846df14137c2747e6d59aec67', 'afterSha256': '5f9f9c657e4e28808275fc8dd0869224455cf21d2903ea377c3406b3cca7a8e7', 'bytes': 1250616}, 'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W12A_Science_Connections_Explore.html': {'beforeGitBlob': '375d6eb1fafc1446b7cd426d1e6143a3b88cd112', 'afterSha256': 'ca2448cb5fc5c946694e844298b53291dbc7872377c443afe90318b7d42ce944', 'bytes': 1192003}, 'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W12_Follow_the_warming_chain_Classic.html': {'beforeGitBlob': '4225fae965f29d3b9640f921ac2d42542782ba89', 'afterSha256': '0453527f763eeed83f1c45f9a53b02834b2700c12b373a6dad0db1b9269cb43e', 'bytes': 1200208}, 'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W13A_Rover_Rescue_Plan_Explore.html': {'beforeGitBlob': 'fbc554b497b28a4135f92c64bae245edd42ae0ff', 'afterSha256': '40d80695974510bc6d90a2daa6e25741780076cf43637d11f42b581b600c0ceb', 'bytes': 1080886}, 'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W8A_Day_And_Night_Explore.html': {'beforeGitBlob': '62ae05e6ef6d8a339ddca5143ba51dae1dda4165', 'afterSha256': 'a5c6fb99587b2d9d715b116cfe7b0c706abe186bd386cc23b72f4fb2b5984493', 'bytes': 291271}, 'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W8B_Day_And_Night_Do.html': {'beforeGitBlob': '462bbb5858480d97556db4e55290e659b8f525c3', 'afterSha256': '32c49a121b8d9ed7f2af13c038117bdf4fbb0e9f23232f91a0015040843d6a00', 'bytes': 284203}, 'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W9A_Spherical_Bodies_Explore.html': {'beforeGitBlob': 'a9e8b3ac9c554f3cd8bc241b3dff86b4f52dfc6c', 'afterSha256': '861655ebad796f048961dd3fbb7d7b37c4fa19b124b3b22dadb7b19b0d2facc0', 'bytes': 1183172}, 'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W9_Turn_Earth_explain_the_sky_Classic.html': {'beforeGitBlob': '9db52ce5f13ecf19e61485427de92c996ad33c5a', 'afterSha256': '178c695fe2dc166a80abfd26e41174e28ecfa39d4700db0870d7ee27bbffd6e8', 'bytes': 1275828}, 'Science_Teesside/Grow/W8-W13_2026-27/SHA256SUMS.txt': {'beforeGitBlob': 'b67cc1e6d11abd2f8dcbaa71210b1c3855db59e5', 'afterSha256': '3bd2c6ea90c2ee8071c6ae92ab8136be3541d05a16f4f94768431f819c5b152a', 'bytes': 1878}, 'Science_Teesside/Launch/Autumn2_W7_2026-27/SCI_L_A2_W7L1_Topics_2_3_Assessment_Introduce.html': {'beforeGitBlob': '5827b9b7f5bd711edaf2eecff99854899381dee2', 'afterSha256': '9130c85767d735e19fbc7b9e0dd1b314bd5db58f7e828f39bf35976f26741d7a', 'bytes': 651320}, 'Science_Teesside/Launch/Autumn2_W7_2026-27/SCI_L_A2_W7L2_Topics_2_3_Assessment_Explore.html': {'beforeGitBlob': 'd5f55ced716226291d218727b73b528cde3b2152', 'afterSha256': 'cae2d988234b575f7b9c97d0b6907dda83fcb513ed00e6a4e40ca23ee7ff59f5', 'bytes': 652453}, 'Science_Teesside/Launch/Autumn2_W7_2026-27/SCI_L_A2_W7L3_Topics_2_3_Assessment_Do.html': {'beforeGitBlob': 'a96e8e812e67fefb59edbe7ecf23aabe38200aa2', 'afterSha256': '45b168db37157559bd29fb8c0b89582d3db97e0772f7a64f6cca40ebd0466928', 'bytes': 383078}, 'Science_Teesside/Launch/Autumn2_W7_2026-27/SHA256SUMS.txt': {'beforeGitBlob': 'bf8ae0154270ef4d5d2b4b4f667317b8f98d584c', 'afterSha256': 'c03b36ddb50b9d4e626a13c67c33f7d399f6f8d9e94a94133b1efcb42af9bdd2', 'bytes': 504}, 'Science_Teesside/Launch/W14-W15_2026-27/SCI_L_W14L1_Genetic_Condition_Research_Introduce.html': {'beforeGitBlob': '011ebb99b5bd9897934d5362f5e2a8d5e4c1fd1d', 'afterSha256': '3026dec2f838802ce76cfecb2919dfc665f097b4e03e47f12bbfeb7c664258a2', 'bytes': 652445}, 'Science_Teesside/Launch/W14-W15_2026-27/SCI_L_W14L2_Genetic_Condition_Source_Evidence_Explore.html': {'beforeGitBlob': '352285f5234bbe0a741d54a581e9bd374532aaf6', 'afterSha256': 'e7d58d365b6f9e694f41d656602013715214ec66d097b2039e1fc5978b3afb30', 'bytes': 653958}, 'Science_Teesside/Launch/W14-W15_2026-27/SCI_L_W14L3_Genetic_Condition_Presentation_Do.html': {'beforeGitBlob': '2d025121326cd46e97aadb97ae49763888e94852', 'afterSha256': 'a87e9f650c2ab23de5361c97fdb6612817b793c7609392656255a7f3fd15cba0', 'bytes': 654714}, 'Science_Teesside/Launch/W14-W15_2026-27/SHA256SUMS.txt': {'beforeGitBlob': 'c4e18b85ff41de92e3c50e27c67748098a89d766', 'afterSha256': '0bb93ca935491473b9df0d0f5605f3ea67057c6a00eb78c4925e154b71c8d5eb', 'bytes': 524}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W10L1_Growth_And_Differentiation_Introduce.html': {'beforeGitBlob': '43eaf64cf994c5cb0b7c7faf1209e5e8ce5ea931', 'afterSha256': '340c86768c9f6fe8a0bfecb5082aae28710842b27ce302a655b8e6d34ea3e860', 'bytes': 581500}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W10L2_Stem_Cells_And_Meristems_Explore.html': {'beforeGitBlob': '7f03e444c2e775c27e7806c0ee590d1e7781bee6', 'afterSha256': '3f4955539b7f6861d6ac7388aaf06491e182e9c906d58d448cab5ce94b5a92c9', 'bytes': 586976}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W10L3_Growth_Stem_Cell_Data_Application_Do.html': {'beforeGitBlob': '0dc85a7e90c37d0870cda1878df877051ef1f1c3', 'afterSha256': '567e92ad6b30eef8c38d9ba34e125334b6c4b0580502341e940c74be2b74c6ef', 'bytes': 597869}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W11L1_Stem_Cell_Evidence_Introduce.html': {'beforeGitBlob': '657a69d3dd308740758d3166e97f26b25c8ab9b9', 'afterSha256': '39494550b4d70cb3b21c8c48439bc72f0d2d8b89190e4be6d2be3be6a19fcf38', 'bytes': 670202}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W11L2_Benefit_Risk_Uncertainty_Explore.html': {'beforeGitBlob': '6c671bed98d4e2a39a29ec40468bf174ac7ed58d', 'afterSha256': '3a8d4a33ae5aabe7d5acf1c4aca3d20de8927f6cccd8753818527f1d0f55dfd6', 'bytes': 666111}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W11L3_Stem_Cell_Discuss_Do.html': {'beforeGitBlob': 'f2061eba82b157cc12276b5d7f6d89c7b06ffe54', 'afterSha256': 'f349213fee22df9d180cf18a31b9b920d28cd4c6dba6e07ce906e85e15288e3d', 'bytes': 670347}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W12L1_DNA_Hierarchy_Introduce.html': {'beforeGitBlob': 'abc5474518729ed1d278fbbf0a17ad032a7ef184', 'afterSha256': 'f01bd523431528632da86bbd9c02c38c6edfe47bffd764f2c4c2c69411fb3752', 'bytes': 687547}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W12L2_DNA_Structure_Explore.html': {'beforeGitBlob': '6b19daa49958176a4780feef1a78b8d98cdac4d2', 'afterSha256': 'e7aca0789b0a111e0efc5631a6c1d9409ed2dcb2686693e3528a56d2154f99d1', 'bytes': 685219}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W12L3_Fruit_DNA_Evidence_Do.html': {'beforeGitBlob': '3c6f849c8cdca72d05a5b24185c46cb83191158e', 'afterSha256': '6e2fff14cfb09c791f80bda13d6386df6d447b3a754db3e2211556f2ba6dec8c', 'bytes': 608637}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W12_Zoom_into_genetic_information_Classic.html': {'beforeGitBlob': '60ddb723b3452c1dce4446586a53b13e3f0567dd', 'afterSha256': '058defef68f87f80bed2f6d41ec15fca48b9808021fde468606155cbf8c526a7', 'bytes': 717529}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W13L1_Alleles_Genotype_Phenotype_Introduce.html': {'beforeGitBlob': '1f5623cf33eb314c7e832fea9651c7efa0ecd7b5', 'afterSha256': '4d0c893510792f08f75472fce3c2ed234299cab1db4129d93861ec2b5322d61d', 'bytes': 565204}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W13L2_Punnett_Square_Explore.html': {'beforeGitBlob': '1494731dd4e4b5df97434cc8d0a232f2da216429', 'afterSha256': 'aba9608d6f10df7f63ae5a6bd0ce63af012dc6389f3708cf747ea19ea844ad12', 'bytes': 594485}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W13L3_Inheritance_Probability_Do.html': {'beforeGitBlob': '082b7a375499a8827774f16b94ef108226cb931b', 'afterSha256': '2e53abf3402d40c00e9931e97a498376689e092143def2b5ef9ac032b3434582', 'bytes': 567569}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L1_Enzyme_Action_Introduce.html': {'beforeGitBlob': '08c918220b221b85e176cd1592cb3ef3003b318c', 'afterSha256': '125bd365d7c46d62b3867ef226c3197e715d6d6834895ca1e228e5219d1dfa0c', 'bytes': 293833}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L2_Amylase_pH_Core_Practical_Explore.html': {'beforeGitBlob': '924ae981135a1f012cd0594aea223637c35bb99c', 'afterSha256': 'cd724ac40006a40abee3b6bc958f6fcdb3c44af017ad2564f4a601154c4a65c6', 'bytes': 289628}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L3_Amylase_Rate_And_Topic_1_Do.html': {'beforeGitBlob': '8611ab5f235b0be3e919390014720dac86406a39', 'afterSha256': 'd415a934d0ab0e0de37b8f75bcfc5a3c3410fb8cdaf8ff1b187400cd3d1f75c8', 'bytes': 301869}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9L1_Cell_Cycle_Introduce.html': {'beforeGitBlob': '727d7481b494925390d462e79c5b8d23b9d82e9f', 'afterSha256': 'c0b48159102b3cebf72fcd91deccaf49bd9a2083d49b3fc2e9df43892971a436', 'bytes': 655156}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9L2_Mitosis_Sequence_Explore.html': {'beforeGitBlob': '1ed71dcd623d6991a0d4d07f8fe8cb0e3479431e', 'afterSha256': '73b82303adacbbfd2f8945514a62fe09805b3cf7ab905a88b11900bd1abd6f78', 'bytes': 672642}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9L3_Identical_Daughter_Cells_Do.html': {'beforeGitBlob': 'a7451adfe345919c146248911f02af52d5083955', 'afterSha256': 'df5087e190937e8df9213f037023fc77d4c20f5b351ecbfb5884f1fcc90e9ea6', 'bytes': 658594}, 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9_Copy_separate_divide_Classic.html': {'beforeGitBlob': '0ff2b352b110ab4134f5bb5f8d6b1019ea651ae2', 'afterSha256': '280856e8f64319de2e19b0f7766ab954c7138adb27bd5678fa08a52899a42e33', 'bytes': 685740}, 'Science_Teesside/Launch/W8-W13_2026-27/SHA256SUMS.txt': {'beforeGitBlob': 'a779109e47f78d5d38f09be0e33d675fa6705eb9', 'afterSha256': 'e8c3db8150760d44c9dbac0472200ac8b4043771db89c92dd5665a0232a5c1e1', 'bytes': 2590}}
+# END DLG_1 REPLACEMENTS
 # END DECLARED TRANSACTIONS
 
 # Each transaction is judged on its own: every member present as exactly one
@@ -293,6 +304,7 @@ REPLACEMENT_TRANSACTIONS = {
     'ADDENDUM 3 v3 explicit tags': (ADDENDUM_3_V3_EXPLICIT_TAGS_REVIEW_BASE, ADDENDUM_3_V3_EXPLICIT_TAGS_REPLACEMENTS),
     'Summer 1 responsive re-delivery': (SUMMER_1_RESPONSIVE_RE_DELIVERY_REVIEW_BASE, SUMMER_1_RESPONSIVE_RE_DELIVERY_REPLACEMENTS),
     'PASS C Autumn 2 batch 1': (PASS_C_AUTUMN_2_BATCH_1_REVIEW_BASE, PASS_C_AUTUMN_2_BATCH_1_REPLACEMENTS),
+    'DLG-1': (DLG_1_REVIEW_BASE, DLG_1_REPLACEMENTS),
     # END DECLARED TRANSACTION ENTRIES
 }
 # Declaration order is review order: a later transaction that names a path
@@ -300,6 +312,157 @@ REPLACEMENT_TRANSACTIONS = {
 # reviewed edit of the same file is its own exact transaction). The map keeps
 # the last declaration for every path.
 ALL_REPLACEMENTS = {rel: name for name, (_, files) in REPLACEMENT_TRANSACTIONS.items() for rel in files}
+
+
+# RULING LAND-A2 R8 §2 (Claude, 26 September 2026): the DLG-1 limb. "the bytes on disk equal
+# fix_dialog_audience.py applied to the base bytes; manifests may re-cut digests only." A
+# transaction named here was declared by a ruled limb, and the boundary does not take that
+# declaration on trust: every member it owns is judged again by the limb, from the transaction's
+# own review base to the bytes on disk, and a member the limb refuses is rejected even when its
+# declared digest and its pin agree with it. The limb lives in tools/hum/admit_transaction.py,
+# bound to its CATALOGUE_PINS admission before it is imported; it in turn pins the fixer and the
+# pairs record by their own digests, so neither can change without that file changing too.
+#
+# JUDGED SUPERSESSION. Declaration order still decides ownership, narrowed for these transactions
+# only: a limb-judged transaction takes a path an EARLIER declaration names only when its limb
+# judges the change on that path its own. Any other change to that path stays with the earlier
+# transaction and is judged by it exactly as before. The three Summer 1 SHA256SUMS.txt the
+# responsive re-delivery declared pass to DLG-1 for their DLG-1 re-cut and for nothing else, and a
+# hand-widened declaration cannot lift a path out of the transaction that owns it.
+#
+# THE REVIEW BASE IS BOUND. The limb judges from the blob at the transaction's review base, and
+# judge() binds each declared beforeGitBlob to the comparison base. The limb admits a member only
+# when its declared beforeGitBlob IS the blob at the review base it judged from, so the bytes the
+# limb judged from are the bytes the declaration says it replaces. Without this, a review base
+# moved to an older commit let the bare judge admit "the fixer applied to the older bytes": a
+# change wider than R8 §2's rule, which only the self-test's before-entry control caught (review
+# of this PR; the red proof is in dlg1_controls).
+LIMB_JUDGED_TRANSACTIONS = {'DLG-1': 'dlg-1'}
+LIMB_JUDGE = 'tools/hum/admit_transaction.py'
+_LIMB_READERS = {}
+_LIMB_VERDICTS = {}
+_LIMB_BASE_ENTRIES = {}
+
+
+def limb_judge(root):
+    """The limb module, compiled from the very bytes whose digest equals its CATALOGUE_PINS admission."""
+    path = root / LIMB_JUDGE
+    data = path.read_bytes() if path.is_file() and not path.is_symlink() else None
+    if data is None or pin_map(root).get(LIMB_JUDGE) != hashlib.sha256(data).hexdigest():
+        raise ValueError('unreviewed limb judge: ' + LIMB_JUDGE)
+    module = types.ModuleType('glv3_limb_judge')
+    module.__file__ = str(path)
+    exec(compile(data, str(path), 'exec'), module.__dict__)
+    return module
+
+
+def limb_reader(repo, ref):
+    """Bytes of a path at the merge base of `ref` with HEAD in `repo` (b'' when absent), cached per base."""
+    merge_base = subprocess.check_output(['git', 'merge-base', ref, 'HEAD'], cwd=repo).decode().strip()
+    key = (str(Path(repo).resolve()), merge_base)
+    if key not in _LIMB_READERS:
+        cache = {}
+        def read(rel):
+            if rel not in cache:
+                out = subprocess.run(['git', 'show', merge_base + ':' + rel], cwd=repo, capture_output=True)
+                cache[rel] = out.stdout if out.returncode == 0 else b''
+            return cache[rel]
+        _LIMB_READERS[key] = read
+    return _LIMB_READERS[key]
+
+
+def _identity(path):
+    try:
+        st = os.lstat(path)
+    except OSError:
+        return None
+    return (st.st_size, st.st_mtime_ns, st.st_ctime_ns, st.st_ino, st.st_mode)
+
+
+def limb_base_entries(repo, ref, paths):
+    """(merge base, {path: (mode, kind, blob) or None}) at the merge base of `ref` with HEAD in `repo`,
+    read by git_before_entries and cached per base (a commit's entries never change)."""
+    merge_base = subprocess.check_output(['git', 'merge-base', ref, 'HEAD'], cwd=repo).decode().strip()
+    cache = _LIMB_BASE_ENTRIES.setdefault((str(Path(repo).resolve()), merge_base), {})
+    wanted = sorted(set(paths) - set(cache))
+    if wanted:
+        found = git_before_entries(repo, merge_base, wanted)
+        cache.update({rel: found.get(rel) for rel in wanted})
+    return merge_base, {rel: cache[rel] for rel in paths}
+
+
+def limb_verdicts(root, name, repo=None, files=None, review_base=None):
+    """{member: None, or the ruled limb's reason} for a limb-judged transaction: judged from its own
+    review base in `repo` (default root) to the bytes in `root`. `files` replaces the declared
+    members and `review_base` the declared base, for the red proofs. Memoised on every file the
+    verdict reads, so a sabotaged fixture is always judged afresh. THE REVIEW BASE IS BOUND: a
+    member the limb admits whose declared beforeGitBlob is not the blob it was judged from is
+    refused (not memoised: it reads the declaration, which the red proofs vary)."""
+    repo = repo or root
+    declared_base, declared = REPLACEMENT_TRANSACTIONS[name]
+    review_base = declared_base if review_base is None else review_base
+    files = declared if files is None else files
+    tools = sorted(p for p in (root / 'tools/hum').rglob('*') if p.is_file()) if (root / 'tools/hum').is_dir() else []
+    key = (str(root.resolve()), str(Path(repo).resolve()), name, review_base,
+           tuple((rel, _identity(root / rel)) for rel in sorted(files)),
+           tuple((str(p), _identity(p)) for p in tools),
+           _identity(root / 'tools/verify_cross_estate_unification.py'))
+    if key not in _LIMB_VERDICTS:
+        judge = limb_judge(root)
+        _LIMB_VERDICTS[key] = judge.limb_verdicts(LIMB_JUDGED_TRANSACTIONS[name], sorted(files),
+                                                  limb_reader(repo, review_base), root)
+    verdicts = dict(_LIMB_VERDICTS[key])
+    merge_base, at_base = limb_base_entries(repo, review_base, sorted(files))
+    for rel in sorted(files):
+        entry = files[rel] if isinstance(files, dict) else declared.get(rel)
+        blob = entry.get('beforeGitBlob') if isinstance(entry, dict) else None
+        have = at_base.get(rel)
+        if verdicts.get(rel, 'no verdict') is None and have != ('100644', 'blob', blob):
+            verdicts[rel] = ('its declared beforeGitBlob ' + str(blob) + ' is not the blob the limb judged it from ('
+                             + (have[2] if have else 'absent') + ' at the review base ' + merge_base[:12]
+                             + '): the review base and the declaration must name the same bytes')
+    return verdicts
+
+
+def judged_owners(root, repo=None, transactions=None):
+    """ALL_REPLACEMENTS, narrowed by JUDGED SUPERSESSION: a limb-judged transaction takes a path an
+    earlier declaration names only when its limb admits the change on that path."""
+    transactions = REPLACEMENT_TRANSACTIONS if transactions is None else transactions
+    owners = {}
+    for name, (review_base, files) in transactions.items():
+        contested = [rel for rel in files if rel in owners]
+        refused = set()
+        if contested and name in LIMB_JUDGED_TRANSACTIONS:
+            # A contested path that is not a regular file here is a change no limb can judge its own.
+            present = [rel for rel in contested if (root / rel).is_file() and not (root / rel).is_symlink()]
+            verdicts = limb_verdicts(root, name, repo, files, review_base) if present else {}
+            refused = {rel for rel in contested if rel not in verdicts or verdicts[rel] is not None}
+        for rel in files:
+            if rel not in refused:
+                owners[rel] = name
+    return owners
+
+
+def limb_errors(root, name, owned, repo=None, files=None, review_base=None):
+    """The ruled limb's refusals of the members this limb-judged transaction owns."""
+    if name not in LIMB_JUDGED_TRANSACTIONS or not owned:
+        return []
+    verdicts = limb_verdicts(root, name, repo, files, review_base)
+    return [name + ' limb refuses ' + rel + ': ' + (verdicts.get(rel) or 'no verdict')
+            for rel in sorted(owned) if rel not in verdicts or verdicts[rel] is not None]
+
+
+def memo_digest():
+    """sha() memoised on the file's identity (size, times, inode). The per-member controls judge the
+    same unchanged members hundreds of times; re-hashing a 192-member, 134 MB transaction on every
+    call would run for hours. Any write changes the identity, so sabotage is always re-hashed."""
+    seen = {}
+    def digest(path):
+        key = (str(path), _identity(path))
+        if key not in seen:
+            seen[key] = sha(path)
+        return seen[key]
+    return digest
 
 
 # ORDER FINISH-2, manifest-pin ruling (2026-09-20). The pack members are no longer
@@ -359,7 +522,8 @@ def git_before_entries(root, base, paths=None):
     return result
 
 
-def replacement_errors(name, files, root, changes, pins, before_entries, owners=None):
+def replacement_errors(name, files, root, changes, pins, before_entries, owners=None, digest=None):
+    digest = digest or sha
     files = owned_members(name, files, owners)
     selected = [(status, rel) for status, rel in changes if rel in files]
     if not selected:
@@ -376,7 +540,7 @@ def replacement_errors(name, files, root, changes, pins, before_entries, owners=
             errors.append(name + ' previous file identity or mode differs: ' + rel)
         if path.is_symlink() or not path.is_file() or path.resolve().is_relative_to(root.resolve()) is False:
             errors.append(name + ' replacement must be a regular file inside the tree: ' + rel)
-        elif path.stat().st_size != reviewed['bytes'] or sha(path) != reviewed['afterSha256']:
+        elif path.stat().st_size != reviewed['bytes'] or digest(path) != reviewed['afterSha256']:
             errors.append(name + ' replacement bytes differ: ' + rel)
         if pins.get(rel) != reviewed['afterSha256']:
             errors.append(name + ' replacement lacks matching owner-reviewed catalogue admission: ' + rel)
@@ -400,10 +564,12 @@ def transaction_controls(root, name, proposed_pins=None):
     # exercise the proposed transaction before paired admissions are staged;
     # such a run is conditional evidence, never a production gate pass.
     base, files = REPLACEMENT_TRANSACTIONS[name]
-    files = owned_members(name, files)
+    owners = judged_owners(root)
+    files = owned_members(name, files, owners)
     if not files:
         return []
-    errors_for = lambda *a: replacement_errors(name, files, *a)
+    digest = memo_digest()
+    errors_for = lambda *a: replacement_errors(name, files, *a, owners=owners, digest=digest)
     pins = pin_map(root) if proposed_pins is None else proposed_pins
     changes = [('M', rel) for rel in sorted(files)]
     before = git_before_entries(root, base, files)
@@ -452,6 +618,11 @@ def transaction_controls(root, name, proposed_pins=None):
                 if path.is_symlink(): path.unlink()
                 path.write_bytes(original)
         check(name + ' all sabotage was restored', not errors_for(fixture, changes, pins, before))
+    if name in LIMB_JUDGED_TRANSACTIONS:
+        check(name + ': the ruled limb judges every member it owns its own, from its review base to the bytes on disk',
+              not limb_errors(root, name, files))
+        if name == 'DLG-1':
+            rows.extend(dlg1_controls(root, owners))
     return rows
 
 
@@ -532,6 +703,25 @@ def public_label_paths(root, pins):
     return expected
 
 
+def transaction_errors(root, relevant, base, pins, transactions=None, repo=None):
+    """judge()'s declared-transaction step: each transaction that owns a changed path is judged as one
+    exact replacement at the comparison base, and a limb-judged one by its limb as well. The red
+    proofs pass a varied `transactions` table and a disposable `root`, with git read in `repo`."""
+    transactions = REPLACEMENT_TRANSACTIONS if transactions is None else transactions
+    claimed = ALL_REPLACEMENTS if transactions is REPLACEMENT_TRANSACTIONS else {
+        rel: name for name, (_, files) in transactions.items() for rel in files}
+    owners = judged_owners(root, repo, transactions) if any(path in claimed for _, path in relevant) else claimed
+    errors = []
+    for name, (review_base, declared) in transactions.items():
+        files = owned_members(name, declared, owners)
+        if any(path in files for _, path in relevant):
+            if base is None:
+                return [name + ' replacements require the actual comparison base']
+            errors.extend(replacement_errors(name, files, root, relevant, pins, git_before_entries(repo or root, base, files), owners))
+            errors.extend(limb_errors(root, name, files, repo, declared, review_base))
+    return errors
+
+
 def judge(root, changes, base=None):
     relevant = [(status, path) for status, path in changes if protected(path)]
     if not relevant:
@@ -539,12 +729,7 @@ def judge(root, changes, base=None):
     errors = []
     try:
         pins = pin_map(root)
-        for name, (_, files) in REPLACEMENT_TRANSACTIONS.items():
-            files = owned_members(name, files)
-            if any(path in files for _, path in relevant):
-                if base is None:
-                    return [name + ' replacements require the actual comparison base']
-                errors.extend(replacement_errors(name, files, root, relevant, pins, git_before_entries(root, base, files)))
+        errors = transaction_errors(root, relevant, base, pins)
         if errors:
             return errors
         cover_paths = explicit_cover_paths(root)
@@ -869,6 +1054,266 @@ def supersession_controls(root):
     wrong = {rel: dict(later[rel], afterSha256='0' * 64)}
     check('The later transaction still rejects bytes that differ from its review',
           bool(replacement_errors('Later', wrong, root, partial, pins_later, before, owners)))
+    return rows
+
+
+def dlg1_controls(root, owners):
+    # RULING LAND-A2 R8 §2 red proofs, on the declared DLG-1 transaction itself. The limb is only as
+    # good as its refusals, so each way it could be widened or bypassed is proved RED here rather
+    # than assumed to. Every proof reads the real review base; sabotage happens in a disposable copy.
+    # A later transaction may supersede DLG-1's members: each proof runs on what DLG-1 still owns,
+    # and a proof with nothing left to stand on is skipped, never passed vacuously.
+    rows = []
+    def check(label, condition):
+        if not condition:
+            raise AssertionError(label)
+        rows.append({'name': label, 'status': 'PASS'})
+    name, responsive = 'DLG-1', 'Summer 1 responsive re-delivery'
+    review_base, declared = REPLACEMENT_TRANSACTIONS[name]
+    names = list(REPLACEMENT_TRANSACTIONS)
+    earlier, later = {}, set()
+    for other in names:
+        files = REPLACEMENT_TRANSACTIONS[other][1]
+        if names.index(other) < names.index(name):
+            earlier.update({rel: other for rel in files if rel in declared})
+        elif other != name:
+            later.update(rel for rel in files if rel in declared)
+    owned = owned_members(name, declared, owners)
+    if not owned:
+        return rows
+    verdicts = limb_verdicts(root, name)
+    pins = pin_map(root)
+    judge_module = limb_judge(root)
+    fixer, pairs, held = judge_module.dlg1_tools(root)
+    check('DLG-1 POSITIVE CONTROL: judge() admits every member DLG-1 owns as the change, from its review base',
+          not judge(root, [('M', rel) for rel in sorted(owned)], review_base))
+    contested = sorted(rel for rel in earlier if rel not in later)
+    if contested:
+        check('DLG-1: a path an earlier transaction declared passes to DLG-1 exactly when the limb admits its change',
+              all((owners.get(rel) == name) == (verdicts.get(rel, 'no verdict') is None) for rel in contested))
+    shared = [rel for rel in contested if earlier[rel] == responsive]
+    if shared:
+        check('DLG-1: the Summer 1 manifests the responsive re-delivery declared are admitted DLG-1 re-cuts, and pass to DLG-1',
+              all(owners.get(rel) == name for rel in shared))
+    resp_base, resp_declared = REPLACEMENT_TRANSACTIONS[responsive]
+    resp_only = sorted(rel for rel in resp_declared if owners.get(rel) == responsive)
+    if resp_only:
+        resp_owned = owned_members(responsive, resp_declared, owners)
+        errors = replacement_errors(responsive, resp_owned, root, [('M', resp_only[0])], pins,
+                                    git_before_entries(root, resp_base, resp_owned), owners)
+        check('RED PROOF (a responsive member DLG-1 does not declare): a change to it is still rejected by the '
+              'responsive re-delivery itself', bool(errors) and all(e.startswith(responsive) for e in errors))
+    page = next((rel for rel in sorted(owned) if rel.endswith('.html')), None)
+    sums = next((rel for rel in sorted(owned) if rel.endswith('/SHA256SUMS.txt') and rel not in shared), None)
+    json_manifests = sorted(rel for rel in owned if judge_module.dlg1_manifest_kind(rel) == 'json')
+    read = limb_reader(root, review_base)
+    with tempfile.TemporaryDirectory(prefix='dlg1-limb-proof-') as temp:
+        fixture = Path(temp)
+        for rel in {*declared, *held, 'tools/verify_cross_estate_unification.py'}:
+            if (root / rel).is_file():
+                target = fixture / rel; target.parent.mkdir(parents=True, exist_ok=True); shutil.copy2(root / rel, target)
+        shutil.copytree(root / 'tools/hum', fixture / 'tools/hum', dirs_exist_ok=True)
+        verdicts_on = lambda files=None: limb_verdicts(fixture, name, root, files)
+        check('DLG-1: the limb admits every member it owns in a faithful disposable copy',
+              all(verdicts_on().get(rel, 'no verdict') is None for rel in owned))
+        def sabotage(rel, change, label, refused, files=None):
+            path = fixture / rel; original = path.read_bytes()
+            try:
+                changed = change(original)
+                check(label + ' (sabotage changes bytes)', changed != original)
+                path.write_bytes(changed)
+                check(label, refused(verdicts_on(files)))
+            finally:
+                path.write_bytes(original)
+        if page:
+            # (1) one byte beyond the fixer's output. The digest rule would take it if the declaration and
+            # the pin were cut again for it; the limb is what refuses it.
+            path = fixture / page; original = path.read_bytes()
+            try:
+                path.write_bytes(original + b'\n')
+                redeclared = dict(owned); redeclared[page] = dict(owned[page], afterSha256=sha(path), bytes=path.stat().st_size)
+                repinned = dict(pins); repinned[page] = sha(path)
+                hash_only = replacement_errors(name, redeclared, fixture, [('M', rel) for rel in sorted(redeclared)], repinned,
+                                               git_before_entries(root, review_base, redeclared), owners, memo_digest())
+                refusal = limb_errors(fixture, name, redeclared, root)
+                check('RED PROOF (one extra byte): a page one byte beyond the fixer output is refused by the limb, even '
+                      're-declared and re-pinned, where the digest rule alone would admit it',
+                      not hash_only and any(page in e and 'not what the reviewed fixer produces' in e for e in refusal))
+            finally:
+                path.write_bytes(original)
+            # (2) a page the fixer changes but the record does not name, hand-declared into DLG-1.
+            stray = page.rsplit('/', 1)[0] + '/UNRECORDED_' + page.rsplit('/', 1)[1]
+            shutil.copy2(fixture / page, fixture / stray)
+            widened = dict(declared); widened[stray] = dict(declared[page])
+            check('RED PROOF (not in the record): a page changed by the fixer but not named by the pairs record is refused',
+                  'record names' in (verdicts_on(widened).get(stray) or ''))
+            (fixture / stray).unlink()
+        # (3) a page held out by ruling (SCI_B_W8B, R8 §1): changed by the fixer itself and hand-declared into DLG-1.
+        for held_page, row in sorted(held.items()):
+            base_bytes = read(held_page)
+            fixed = fixer.fix_text(base_bytes.decode('utf-8'), [(p['action'], p['dialog']) for p in row['pairs']])[0].encode()
+            (fixture / held_page).write_bytes(fixed)
+            widened = dict(declared)
+            widened[held_page] = {'beforeGitBlob': git_before_entries(root, review_base, [held_page])[held_page][2],
+                                  'afterSha256': hashlib.sha256(fixed).hexdigest(), 'bytes': len(fixed)}
+            table = dict(REPLACEMENT_TRANSACTIONS); table[name] = (review_base, widened)
+            owners_w = judged_owners(fixture, root, table)
+            keeper = owners_w.get(held_page)
+            # The transaction that declared it before DLG-1, if any, must keep it and reject the change.
+            before_dlg1 = [other for other in names[:names.index(name)] if held_page in REPLACEMENT_TRANSACTIONS[other][1]]
+            if before_dlg1:
+                kbase, kfiles = REPLACEMENT_TRANSACTIONS[keeper] if keeper in REPLACEMENT_TRANSACTIONS else (None, {})
+                kowned = owned_members(keeper, kfiles, owners_w)
+                errors = replacement_errors(keeper, kowned, fixture, [('M', held_page)], pins,
+                                            git_before_entries(root, kbase, kowned), owners_w) if kbase else []
+                kept = keeper == before_dlg1[-1] and bool(errors) and all(e.startswith(keeper) for e in errors)
+            else:
+                errors = limb_errors(fixture, name, widened, root, widened)
+                kept = keeper == name and bool(errors) and all(held_page in e for e in errors)
+            check('RED PROOF (' + held_page.rsplit('/', 1)[1] + ', held out by ' + row.get('ruling', 'ruling').split(':')[0]
+                  + '): changed by the fixer and hand-declared into DLG-1, it is refused by the limb and stays with '
+                  'its earlier transaction, which rejects the change',
+                  'held out of DLG-1 by ruling' in (verdicts_on(widened).get(held_page) or '') and kept)
+            (fixture / held_page).write_bytes(base_bytes)
+        if sums:
+            # (4) a manifest with a byte changed that is not a digest.
+            sabotage(sums, lambda b: b.replace(b'\n', b' \n', 1),
+                     'RED PROOF (a non-digest byte): a manifest with a byte outside its re-cut digests changed is refused',
+                     lambda v: 'only its digest replaced' in (v.get(sums) or ''))
+            # (5) a re-cut digest that is not the member's bytes on disk.
+            before_lines = read(sums).splitlines(keepends=True)
+            after_lines = (fixture / sums).read_bytes().splitlines(keepends=True)
+            recut = next(a for b, a in zip(before_lines, after_lines) if a != b)
+            sabotage(sums, lambda b: b.replace(recut, hashlib.sha256(b'not the bytes').hexdigest().encode() + recut[64:]),
+                     'RED PROOF (a digest that is not the bytes): a re-cut digest unequal to its member on disk is refused',
+                     lambda v: 'not the sha256 of its bytes on disk' in (v.get(sums) or ''))
+        # (6) R8 §5: the Fallback MANIFEST.json may re-cut its page members' sha256 values and nothing else.
+        for manifest in json_manifests:
+            lines = (fixture / manifest).read_bytes().splitlines(keepends=True)
+            base_lines = read(manifest).splitlines(keepends=True)
+            other = next(a for b, a in zip(base_lines, lines) if a == b and re.search(rb'"[0-9a-f]{64}"', a))
+            digest_at = re.search(rb'[0-9a-f]{64}', other)
+            sabotage(manifest, lambda b: b.replace(other, other[:digest_at.start()] + b'0' * 64 + other[digest_at.end():]),
+                     'RED PROOF (R8 §5): a MANIFEST.json value other than its page members\' sha256 changed is refused',
+                     lambda v: 'not a page member of this transaction' in (v.get(manifest) or ''))
+            sabotage(manifest, lambda b: b.replace(other, other.replace(b'/', b'//', 1)),
+                     'RED PROOF (R8 §5): a MANIFEST.json key renamed beside the re-cut is refused',
+                     lambda v: 'only its digest replaced' in (v.get(manifest) or ''))
+        # (7) the limb module itself is bound to its CATALOGUE_PINS admission before it is trusted.
+        judge_path = fixture / LIMB_JUDGE; original = judge_path.read_bytes()
+        try:
+            judge_path.write_bytes(original + b'\n# unreviewed\n')
+            try:
+                limb_verdicts(fixture, name, root); unbound = ''
+            except ValueError as exc:
+                unbound = str(exc)
+            check('RED PROOF (an unreviewed limb): a limb judge whose bytes differ from its CATALOGUE_PINS admission '
+                  'is not imported, so nothing is admitted by it', 'unreviewed limb judge' in unbound)
+        finally:
+            judge_path.write_bytes(original)
+        # (8) a changed fixer, and a widened record: every member refused, not one admitted.
+        sabotage(judge_module.DLG1_FIXER, lambda b: b + b'\n',
+                 'RED PROOF (changed fixer): a fixer one byte from its pinned digest refuses every member',
+                 lambda v: bool(v) and all('cannot widen the limb' in (r or '') for r in v.values()))
+        sabotage(judge_module.DLG1_PAIRS, lambda b: b.replace(b'"pairs": [\n', b'"pairs": [\n    {"page": '
+                                                              b'"Humanities_Teesside/UNRECORDED.html", "action": '
+                                                              b'"cold-call", "dialog": "cold-call-dialog"},\n', 1),
+                 'RED PROOF (widened record): a pairs record naming one more page refuses every member',
+                 lambda v: bool(v) and all('cannot widen the limb' in (r or '') for r in v.values()))
+        # (9) a Summer 1 manifest the responsive re-delivery declared, changed other than by the DLG-1 re-cut:
+        # the limb does not judge it its own, so it stays with the responsive re-delivery, which rejects it.
+        for manifest in shared[:1]:
+            path = fixture / manifest; original = path.read_bytes()
+            try:
+                base_lines = read(manifest).splitlines(keepends=True)
+                untouched = next(line for line in original.splitlines(keepends=True)
+                                 if line in base_lines and re.match(rb'[0-9a-f]{64}  ', line))
+                path.write_bytes(original.replace(untouched, b'0' * 64 + untouched[64:]))
+                owners_s = judged_owners(fixture, root)
+                resp_owned = owned_members(responsive, resp_declared, owners_s)
+                errors = replacement_errors(responsive, resp_owned, fixture, [('M', manifest)], pins,
+                                            git_before_entries(root, resp_base, resp_owned), owners_s)
+                check('RED PROOF (a responsive member changed other than by the DLG-1 judge): ' + manifest
+                      + ' stays with the responsive re-delivery, which rejects the change exactly',
+                      owners_s.get(manifest) == responsive and bool(errors) and all(e.startswith(responsive) for e in errors)
+                      and 'not a page member' in (verdicts_on().get(manifest) or ''))
+                # (10) a contested path missing from the tree is a change no limb judges its own.
+                path.unlink()
+                check('RED PROOF (a contested path gone): ' + manifest + ' missing from the tree stays with the '
+                      'responsive re-delivery', judged_owners(fixture, root).get(manifest) == responsive)
+            finally:
+                path.write_bytes(original)
+        # (11) A MOVED REVIEW BASE (review of this PR, repeated here as a red proof). DLG-1's review base
+        # is moved back to the latest earlier transaction's base that moves any member DLG-1 owns; each
+        # member that base moves is rewritten as the reviewed fixer (a page) and re-cut (a manifest)
+        # produce it from THAT base, which reverts the earlier transaction; the rewritten members are
+        # re-declared and re-pinned, with every beforeGitBlob left at the comparison base. The digest
+        # rule admits that, and so does the limb's own byte rule from the moved base; judge()'s
+        # transaction step must still FAIL, because the review base no longer names the bytes the
+        # declaration replaces. A base that moves nothing, or that the fixer cannot read, is no stand.
+        stand = None
+        for other in reversed(names[:names.index(name)]):
+            moved_base = REPLACEMENT_TRANSACTIONS[other][0]
+            if moved_base == review_base or subprocess.run(['git', 'merge-base', '--is-ancestor', moved_base, review_base],
+                                                           cwd=root, capture_output=True).returncode:
+                continue
+            _, at_moved = limb_base_entries(root, moved_base, sorted(owned))
+            moved = sorted(rel for rel in owned if at_moved[rel] != ('100644', 'blob', owned[rel]['beforeGitBlob']))
+            read_moved = limb_reader(root, moved_base)
+            rewritten = {}
+            for rel in moved:
+                old = read_moved(rel)
+                if rel.endswith('.html'):
+                    try:
+                        text, edits = fixer.fix_text(old.decode('utf-8'), pairs[rel])
+                    except (fixer.Refuse, KeyError, UnicodeDecodeError):
+                        break
+                    if not edits:
+                        break
+                    rewritten[rel] = text.encode('utf-8')
+                elif old:
+                    rewritten[rel] = old
+                else:
+                    break
+            if moved and len(rewritten) == len(moved) and any(rel.endswith('.html') for rel in moved):
+                stand = (other, moved_base, moved, rewritten, read_moved)
+                break
+        if stand:
+            other, moved_base, moved, rewritten, read_moved = stand
+            originals = {rel: (fixture / rel).read_bytes() for rel in owned}
+            try:
+                for rel, data in rewritten.items():
+                    (fixture / rel).write_bytes(data)
+                fixer.recut(fixture, sorted(rel for rel in owned if rel in pairs))
+                changed = sorted(rel for rel in owned if (fixture / rel).read_bytes() != originals[rel])
+                redeclared, repinned = dict(declared), dict(pins)
+                for rel in changed:
+                    data = (fixture / rel).read_bytes()
+                    redeclared[rel] = dict(declared[rel], afterSha256=hashlib.sha256(data).hexdigest(), bytes=len(data))
+                    repinned[rel] = redeclared[rel]['afterSha256']
+                changes = [('M', rel) for rel in sorted(declared)]
+                hash_only = replacement_errors(name, owned_members(name, redeclared, owners), fixture, changes, repinned,
+                                               git_before_entries(root, review_base, redeclared), owners, memo_digest())
+                unbound = judge_module.limb_verdicts(LIMB_JUDGED_TRANSACTIONS[name], sorted(redeclared), read_moved, fixture)
+                bound = limb_verdicts(fixture, name, root, redeclared, moved_base)
+                table = dict(REPLACEMENT_TRANSACTIONS); table[name] = (moved_base, redeclared)
+                owners_m = judged_owners(fixture, root, table)
+                errors = transaction_errors(fixture, changes, review_base, repinned, table, root)
+                check('RED PROOF (a moved review base): DLG-1 re-based on ' + other + ' (' + moved_base[:12] + '), the '
+                      + str(len(moved)) + ' member(s) that base moves rewritten from it by the fixer and the re-cut, '
+                      're-declared and re-pinned, beforeGitBlob left at the comparison base: the digest rule and '
+                      'the limb\'s byte rule both admit it, and judge()\'s transaction step still FAILS, each moved '
+                      'member refused because its beforeGitBlob is not the blob the limb judged from',
+                      bool(changed) and any(rel.endswith('.html') for rel in changed) and not hash_only
+                      and all(unbound.get(rel) is None for rel in changed)
+                      and all('beforeGitBlob' in (bound.get(rel) or '') for rel in moved)
+                      and all(bound.get(rel) is None for rel in redeclared if rel not in moved)
+                      and bool(errors) and all(any(rel in e for e in errors) for rel in moved)
+                      and all(owners_m.get(rel) == earlier[rel] for rel in moved if rel in earlier and rel not in later))
+            finally:
+                for rel, data in originals.items():
+                    (fixture / rel).write_bytes(data)
+        check('DLG-1: all limb sabotage was restored', all(verdicts_on().get(rel, 'no verdict') is None for rel in owned))
     return rows
 
 
