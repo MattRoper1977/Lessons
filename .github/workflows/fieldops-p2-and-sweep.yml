@@ -631,3 +631,83 @@ jobs:
             ${{ runner.temp }}/vb-*.txt
             _sownb/vb/evidence/a2r/mechanism_battery_ci.json
           if-no-files-found: error
+
+  # LAND-A2 R2 H2, R5 §1-§2 and R8 §1, §3. HUM-D5 fixed the Humanities and RE lesson floor on the live
+  # lessons; a later pack delivery silently undid every fix and no check noticed. These three
+  # measure the served bytes, so the next delivery (or edit) cannot do it again:
+  #   check_lesson_floor.cjs     nine limbs on every Humanities/RE *_Lesson.html, in Chromium;
+  #                              pages named in lesson_floor_known_red.json must STILL fail
+  #                              the limbs they list, so a fixed page reds until its entry goes
+  #   check_arrival_surfaces.py  the "without previous learning" arrival line appears only in
+  #                              Week 1, on every served surface (HTML, PDF, DOCX, PPTX). A file's
+  #                              week is read from the label it prints, or from the week-stating
+  #                              page that links it, never from its path (R8 §3; VB-RUN13 R0,
+  #                              which g27 enforces). The pupil sheets that print no week are
+  #                              named in arrival_week_exceptions.json, which only shrinks: a
+  #                              listed sheet that prints its week reds until its entry goes
+  #   check_dialog_audience.cjs  DLG-1: no visible control opens a hidden dialog, in both
+  #                              staff-guide states, on every served Humanities/RE/Science page
+  #                              with a <dialog>; the opened dialog takes focus, Escape and
+  #                              Close both return focus to the opener. SCI_B_W8B is the one
+  #                              exception (R8 §1, dialog_audience_exceptions.json): it must fail
+  #                              exactly as listed, reds as stale once fixed, and from 2026-10-16
+  #                              reds with "STOP: ask for a release ruling"
+  # The two exception self-tests run first, so each rule is seen able to fail before the real
+  # runs rely on it. No path filter, like every job here: a gate nobody runs is not evidence.
+  lesson-floor:
+    name: Humanities lesson floor, Week 1 arrival surfaces, and dialog audience
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install the browser driver and the PDF reader
+        run: |
+          npm install --prefix "$RUNNER_TEMP/floor-browser" --no-save --no-package-lock playwright@1.56.1
+          "$RUNNER_TEMP/floor-browser/node_modules/.bin/playwright" install --with-deps chromium
+          python -m pip install --quiet pypdf
+      - name: The arrival guard can fail (self-test on fixtures)
+        run: python tools/hum/check_arrival_surfaces.py --self-test | tee "$RUNNER_TEMP/arrival-selftest.txt"
+      - name: The dialog exception rules can fail (self-test, no browser)
+        if: ${{ !cancelled() }}
+        run: node tools/hum/check_dialog_audience.cjs --self-test | tee "$RUNNER_TEMP/dialog-selftest.txt"
+      - name: Every Humanities and RE lesson holds the floor (LAND-A2 R2 H2)
+        if: ${{ !cancelled() }}
+        env:
+          NODE_PATH: ${{ runner.temp }}/floor-browser/node_modules
+        run: node tools/hum/check_lesson_floor.cjs --root . | tee "$RUNNER_TEMP/lesson-floor.txt"
+      - name: The arrival line only in Week 1, each week read from content (LAND-A2 R5 §1, R8 §3)
+        if: ${{ !cancelled() }}
+        run: python tools/hum/check_arrival_surfaces.py --root . | tee "$RUNNER_TEMP/arrival-surfaces.txt"
+      - name: No visible control opens a hidden dialog, SCI_B_W8B as ruled (LAND-A2 R5 §2, R8 §1)
+        if: ${{ !cancelled() }}
+        env:
+          NODE_PATH: ${{ runner.temp }}/floor-browser/node_modules
+        run: node tools/hum/check_dialog_audience.cjs --root . --json "$RUNNER_TEMP/dialog-audience.json" | tee "$RUNNER_TEMP/dialog-audience.txt"
+      - name: Result block
+        if: always()
+        run: |
+          { echo '## Humanities lesson floor, arrival surfaces, dialog audience'; echo '```';
+            tail -1 "$RUNNER_TEMP/arrival-selftest.txt" 2>/dev/null || echo '(arrival self-test did not run)';
+            tail -1 "$RUNNER_TEMP/dialog-selftest.txt" 2>/dev/null || echo '(dialog self-test did not run)';
+            tail -4 "$RUNNER_TEMP/lesson-floor.txt" 2>/dev/null || echo '(floor did not run)';
+            tail -2 "$RUNNER_TEMP/arrival-surfaces.txt" 2>/dev/null || echo '(arrival did not run)';
+            grep '^EXCEPTED ' "$RUNNER_TEMP/dialog-audience.txt" 2>/dev/null || true;
+            tail -2 "$RUNNER_TEMP/dialog-audience.txt" 2>/dev/null || echo '(dialog did not run)';
+            echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lesson-floor-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/arrival-selftest.txt
+            ${{ runner.temp }}/dialog-selftest.txt
+            ${{ runner.temp }}/lesson-floor.txt
+            ${{ runner.temp }}/arrival-surfaces.txt
+            ${{ runner.temp }}/dialog-audience.txt
+            ${{ runner.temp }}/dialog-audience.json
+          if-no-files-found: warn
+          retention-days: 14
