@@ -663,11 +663,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      # Both pinned, so the guards never red because a dependency moved under them: the arrival
+      # guard's PDF reading (the pupil-sheet PDFs that inherit their week, and the self-test's PDF
+      # fixtures) was measured on pypdf 6.19.0, the dialog and floor probes on playwright 1.56.1.
       - name: Install the browser driver and the PDF reader
         run: |
           npm install --prefix "$RUNNER_TEMP/floor-browser" --no-save --no-package-lock playwright@1.56.1
           "$RUNNER_TEMP/floor-browser/node_modules/.bin/playwright" install --with-deps chromium
-          python -m pip install --quiet pypdf
+          python -m pip install --quiet pypdf==6.19.0
       - name: The arrival guard can fail (self-test on fixtures)
         run: python tools/hum/check_arrival_surfaces.py --self-test | tee "$RUNNER_TEMP/arrival-selftest.txt"
       - name: The dialog exception rules can fail (self-test, no browser)
