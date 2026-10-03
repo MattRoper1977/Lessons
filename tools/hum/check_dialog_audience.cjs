@@ -28,7 +28,7 @@
 //   - the listed page must fail with EXACTLY the listed controls: any other failure on it, or a listed
 //     control that no longer fails, FAILS (remove what was fixed; nothing may be added);
 //   - a listed page that passes FAILS as a stale exception: remove it;
-//   - on or after the expiry date (16 Oct 2026; W8B is a return-week lesson for 19 Oct) the exception is
+//   - on or after the expiry date (20 Nov 2026; W8B is a return-week lesson for 19 Oct) the exception is
 //     not honoured, and the guard FAILS telling the reader to STOP and ask for a release ruling;
 //   - an entry for any other page, a second entry, a control or field beyond RULED, a later expiry, or a
 //     malformed list FAILS, and then no entry is honoured;
@@ -57,9 +57,9 @@ const W8B_HIDDEN = (control, dialog) => `hidden: "${control}" opens #${dialog}, 
 const RULED = Object.freeze({
   path: 'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html',
   reason: 'fenced by _sx3/FENCE.json (ORDER SX3-M4 §1(b)); held out of DLG-1 by LAND-A2 R8 §1',
-  ruling: 'LAND-A2 R8 §1',
+  ruling: 'LAND-A2 R8 §1, extended to 2026-11-20 by ea',
   added: '2026-09-26',
-  expires: '2026-10-16',
+  expires: '2026-11-20',
   leaves_when: 'its fallback limb lands',
   controls: [
     { state: 'guide-off', check: 'hidden', control: 'TA Brief', action: 'ta', dialog: 'ta-dialog', failure: W8B_HIDDEN('TA Brief', 'ta-dialog') },
@@ -384,20 +384,20 @@ function selfTest() {
   const cases = [
     // name, list text, rows, today, want failing?, substrings the failure lines must contain, want excepted pages
     ['matched exception passes (both listed controls fail, nothing else)', good, [row(W8B, [ta, q]), row(OTHER)], '2026-09-26', false, [], [W8B]],
-    ['the day before expiry still passes', good, [row(W8B, [q, ta])], '2026-10-15', false, [], [W8B]],
+    ['the day before expiry still passes', good, [row(W8B, [q, ta])], '2026-11-19', false, [], [W8B]],
     ['an extra failing control on the listed page FAILS', good, [row(W8B, [ta, q, word])], '2026-09-26', true, ['exception does not match', 'unlisted failure: guide-off hidden: "Word help"'], []],
     ['a listed control failing in the other staff-guide state FAILS', good, [row(W8B, [ta], [q])], '2026-09-26', true, ['unlisted failure: guide-on hidden: "Question"', 'listed control no longer fails'], []],
     ['a listed control that no longer fails FAILS (the exception must shrink)', good, [row(W8B, [ta])], '2026-09-26', true, ['listed control no longer fails, remove it from the exception: guide-off hidden: "Question"'], []],
     ['the listed page now passing FAILS as stale', good, [row(W8B)], '2026-09-26', true, ['stale exception: ' + W8B + ' passes in both staff-guide states; remove it'], []],
-    ['on the expiry date the exception FAILS: STOP and ask for a release ruling', good, [row(W8B, [ta, q])], '2026-10-16', true, ['exception expired', 'STOP: ask for a release ruling (LAND-A2 R8 §1'], []],
-    ['after the expiry date it still FAILS', good, [row(W8B, [ta, q])], '2026-11-02', true, ['exception expired'], []],
+    ['on the expiry date the exception FAILS: STOP and ask for a release ruling', good, [row(W8B, [ta, q])], '2026-11-20', true, ['exception expired', 'STOP: ask for a release ruling (LAND-A2 R8 §1'], []],
+    ['after the expiry date it still FAILS', good, [row(W8B, [ta, q])], '2026-12-07', true, ['exception expired'], []],
     ['an unlisted failing page FAILS as before', good, [row(W8B, [ta, q]), row(OTHER, [q])], '2026-09-26', true, [OTHER + '\n  guide-off hidden: "Question"'], [W8B]],
     ['with no list at all, the W8B failures FAIL', null, [row(W8B, [ta, q])], '2026-09-26', true, [W8B + '\n  guide-off hidden:'], []],
     ['the list shrunk to nothing: W8B fixed passes, nothing excepted', listText([]), [row(W8B), row(OTHER)], '2026-09-26', false, [], []],
     ['a second entry FAILS: the list may only shrink', listText([entry, { ...entry, path: OTHER }]), [row(W8B, [ta, q]), row(OTHER, [q])], '2026-09-26', true, ['exception list grows: 2 entries'], []],
     ['an entry for another page FAILS', listText([{ ...entry, path: OTHER }]), [row(OTHER, [q])], '2026-09-26', true, ['exception list grows: ' + OTHER + ' is not the page'], []],
-    ['a control beyond the ruled two FAILS', listText([{ ...entry, controls: [...entry.controls, { state: 'guide-off', ...word }] }]), [row(W8B, [ta, q, word])], '2026-09-26', true, ['lists a control LAND-A2 R8 §1 did not rule'], []],
-    ['an expiry later than the ruled 2026-10-16 FAILS', listText([{ ...entry, expires: '2026-10-30' }]), [row(W8B, [ta, q])], '2026-09-26', true, ['exception extended'], []],
+    ['a control beyond the ruled two FAILS', listText([{ ...entry, controls: [...entry.controls, { state: 'guide-off', ...word }] }]), [row(W8B, [ta, q, word])], '2026-09-26', true, ['lists a control LAND-A2 R8 §1, extended to 2026-11-20 by ea did not rule'], []],
+    ['an expiry later than the ruled 2026-11-20 FAILS', listText([{ ...entry, expires: '2026-12-04' }]), [row(W8B, [ta, q])], '2026-09-26', true, ['exception extended'], []],
     ['a malformed list FAILS', '{"exceptions": [', [row(W8B, [ta, q])], '2026-09-26', true, ['malformed exception list'], []],
     ['a field missing FAILS as malformed', listText([{ ...entry, leaves_when: undefined }]), [row(W8B, [ta, q])], '2026-09-26', true, ['malformed exception list'], []],
     ['a listed page not measured in a full run FAILS as stale', good, [row(OTHER)], '2026-09-26', true, ['stale exception: ' + W8B + ' is not a served page with a dialog'], []],
