@@ -330,6 +330,30 @@ def sow_unit_for_title(sow: dict, lane: str | None, title: str) -> tuple[str, st
     return None
 
 
+# RULED UNITS (DY-4 / SCI-56 D24 mechanism; rulings dy and eb EB-4 b, EB-5). Append-only data, never a hand edit
+# of resources.json: "same" copies the derived unit of the named lesson (a part takes its first part's unit, if it
+# has one); "none" records the owner's ruling that a lesson carries no unit even where a quote would derive one.
+RULED_UNITS = {
+    "Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P2.html":
+        ("same", "Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P1.html", "eb EB-5 / DY-4"),
+    "Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1.html": ("none", None, "eb EB-4 b"),
+    "Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L2.html": ("none", None, "eb EB-4 b"),
+    "Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L3.html": ("none", None, "eb EB-4 b"),
+}
+
+
+def apply_ruled_units(per_row: list[dict]) -> None:
+    by_file = {r["file"]: r for r in per_row}
+    for file_key, (kind, other, ruling) in RULED_UNITS.items():
+        rec = by_file.get(file_key)
+        if rec is None or rec["halfTerm"] not in IN_SCOPE:
+            continue
+        if kind == "none":
+            rec["unit"], rec["unitSource"], rec["worklist"] = None, None, "ruled: no unit (" + ruling + ")"
+        elif kind == "same" and other in by_file and by_file[other]["unit"]:
+            rec["unit"], rec["unitSource"], rec["worklist"] = by_file[other]["unit"], "ruled override (" + ruling + ")", None
+
+
 def derive(rows: list[dict]) -> dict:
     terms_and_styles = read_json(TERMS_AND_STYLES)["entries"]
     spine_terms = load_spine_terms()
@@ -391,6 +415,7 @@ def derive(rows: list[dict]) -> dict:
                     record["unit"], record["unitSource"] = sow_hit[0], "SoW verbatim (" + sow_hit[1] + ")"
         if record["unit"] is None:
             record["worklist"] = "half-term tagged; no source names a unit"
+    apply_ruled_units(per_row)
     return {"rows": per_row, "topics": topics, "packUnits": pack_units}
 
 
@@ -464,7 +489,7 @@ def verify_classes(rows: list[dict], derived: dict) -> dict:
 def apply(rows: list[dict], derived: dict, verdicts: dict) -> list[dict]:
     tagged = copy.deepcopy(rows)
     discard_units = {label.split(":")[1] for label, v in verdicts.items() if label.startswith("unit:") and not v["pass"]}
-    prefix_of = {"SoW verbatim outcome": "SoW-verbatim", "START_HERE": "START_HERE", "SoW verbatim": "SoW"}
+    prefix_of = {"SoW verbatim outcome": "SoW-verbatim", "START_HERE": "START_HERE", "SoW verbatim": "SoW", "ruled override": "ruled"}
     discard_half = not verdicts["halfTerm:terms-and-styles"]["pass"]
     for rec in derived["rows"]:
         row = tagged[rec["index"]]
@@ -552,6 +577,16 @@ def self_test() -> None:
     controls.append(("novel halfTerm label differs from the derivation", check_rows(novel, derived, verdicts) is not None))
     # 4. the derivation is deterministic
     controls.append(("derivation is deterministic", serialise(apply(rows, derive(rows), verdicts)) == serialise(tagged)))
+    # 5. ruled units: a "same" row carries its named lesson's unit, a "none" row carries no unit (rulings dy, eb)
+    recs = {r["file"]: r for r in derived["rows"]}
+    ok5 = all((recs[f]["unit"] is None) if k == "none" else (recs[f]["unit"] == recs[o]["unit"])
+              for f, (k, o, _r) in RULED_UNITS.items() if f in recs and recs[f]["halfTerm"] in IN_SCOPE)
+    planted = copy.deepcopy(tagged)
+    hit = next((i for i, r in enumerate(planted) if RULED_UNITS.get(r.get("file"), ("",))[0] == "none"), None)
+    if hit is not None:
+        planted[hit]["unit"] = "Planted unit"
+    controls.append(("ruled units applied, and a planted unit on a ruled-none row is refused by --check",
+                     ok5 and (hit is None or check_rows(planted, derived, verdicts) is not None)))
     for name, ok in controls:
         print(f"  {'PASS' if ok else 'FAIL'}  {name}")
     if not all(ok for _, ok in controls):

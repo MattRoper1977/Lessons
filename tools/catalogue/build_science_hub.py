@@ -112,7 +112,8 @@ def generation(path: str) -> str:
     folder = p.parent.name
     if folder in OLDER_COPY_FOLDERS:
         return 'older copy'
-    if folder == p.stem and DATED_FOLDER.search(p.parent.parent.name):
+    # DY-4 (stand-in for SCI-56 D27(2)): a lesson folder may hold its parts, <folder>_P1/_P2 or _L1.._L3
+    if (folder == p.stem or re.fullmatch(re.escape(folder) + r'_[PL]\d', p.stem)) and DATED_FOLDER.search(p.parent.parent.name):
         return 'landed'
     return 'dated' if DATED_FOLDER.search(folder) else 'pathway'
 
@@ -324,7 +325,7 @@ def download_link(path: str) -> str:
 S.CARD_DOWNLOAD_HOOK = download_link
 WEEK_MAX = max((w['weekWithinTerm'] for e in WEEKS.values() for w in e.get('weeks', [])), default=8)
 shortcuts = ('<div class="catalogue-links"><a href="?pathway=LAUNCH" data-shortcut="all-launch">All LAUNCH Science</a>'
-             '<a href="?pathway=LAUNCH&amp;term=Aut1&amp;style=recommended" data-shortcut="recommended">LAUNCH Science pack · Autumn 1 Weeks 3–7</a>'
+             '<a href="?pathway=LAUNCH&amp;term=Aut1&amp;style=recommended" data-shortcut="recommended">LAUNCH Science pack · Autumn 1 Weeks 3–8</a>'
              '<a href="?style=full-lundy" data-shortcut="full-lundy">Browse full Lundy Loop versions</a></div>')
 strip = S.render_start_strip('Science', blurb, start_hrefs) + shortcuts
 current_html, r1 = S.render_current(D, 'Science', href_of, pack_href, {'Science': 'Science'}, DATA['styles'])
@@ -525,6 +526,11 @@ def self_test() -> int:
         ('an undeclared Classic beside only a newer (landed) generation is not red, and the landed lesson heads it',
          not any('file named Classic' in e for e in c9_errors('', {('BUILD', 'Aut2', 5): [dated + 'X_Classic.html', 'Science_Teesside/Build/Autumn_2_2026-27/Y/Y.html']}, {'Science_Teesside/Build/Autumn_2_2026-27/Y/Y.html'}, {}))
          and generation('Science_Teesside/Build/Autumn_2_2026-27/Y/Y.html') == 'landed'),
+        ('DY-4: a part (<folder>_P2, _L3) in its own lesson folder in a dated term folder is landed; outside one it is not',
+         generation('Science_Teesside/Build/Autumn_1_2026-27/X_W08/X_W08_P2.html') == 'landed'
+         and generation('Science_Teesside/Launch/Autumn_1_2026-27/X_W08/X_W08_L3.html') == 'landed'
+         and generation('Science_Teesside/Build/X_W08/X_W08_P2.html') != 'landed'
+         and generation('Science_Teesside/Build/Autumn_1_2026-27/X_W08/Y_W08_P2.html') != 'landed'),
         ('style and badge are not order keys: reversing every style leaves the order unchanged',
          [L['path'] for L in within_week(g1)] == [L['path'] for L in within_week([{**L, 'style': 'x' + L.get('style', ''), 'badges': ''} for L in reversed(g1)])]),
     ]

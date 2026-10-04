@@ -66,7 +66,11 @@ PATHWAY_PARENTS = ('Science_Teesside/Build/START_HERE.html',
 # rejected. The three prefixes are named, not matched by pattern.
 LAND_A2_SCIENCE_TERMS = ('Science_Teesside/Build/Autumn_2_2026-27/',
                          'Science_Teesside/Grow/Autumn_2_2026-27/',
-                         'Science_Teesside/Launch/Autumn_2_2026-27/')
+                         'Science_Teesside/Launch/Autumn_2_2026-27/',
+                         # EE-5 (adopted by EO-1 a): the Science Autumn 1 Week 8 term folders, same rule.
+                         'Science_Teesside/Build/Autumn_1_2026-27/',
+                         'Science_Teesside/Grow/Autumn_1_2026-27/',
+                         'Science_Teesside/Launch/Autumn_1_2026-27/')
 SOURCE = 'tools/humanities_resources/SOURCE_MANIFEST.json'
 DOWNLOADS = 'tools/humanities_resources/DOWNLOAD_MANIFEST.json'
 LABEL_EDITS = 'tools/humanities_resources/PUBLIC_LABEL_CHANGES.json'
