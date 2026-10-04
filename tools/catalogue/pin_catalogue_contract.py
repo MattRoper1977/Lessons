@@ -1344,6 +1344,13 @@ SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · DNA, ge
 SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · A simple genetic cross', 'file': 'Science_Teesside/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W05/SCI_LAUNCH_A2_W05.html', 'id': 'land-a2-sci-launch-a2-w05-a-simple-genetic-cross', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'simple', 'genetic', 'cross'], 'desc': 'LAUNCH Science · Autumn 2 · Week 5. I am learning to calculate genetic probability with a Punnett square and evaluate its limits.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
 SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Researching a genetic condition', 'file': 'Science_Teesside/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W06/SCI_LAUNCH_A2_W06.html', 'id': 'land-a2-sci-launch-a2-w06-researching-a-genetic-condition', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'researching', 'genetic', 'condition'], 'desc': 'LAUNCH Science · Autumn 2 · Week 6. I am learning to use a named source to present careful facts about a genetic condition.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
 SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Cells and genetics check', 'file': 'Science_Teesside/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W07/SCI_LAUNCH_A2_W07.html', 'id': 'land-a2-sci-launch-a2-w07-cells-and-genetics-check', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'cells', 'genetics', 'check'], 'desc': 'LAUNCH Science · Autumn 2 · Week 7. I am learning to use cell and inheritance models to show what I know and choose one next step.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'BUILD · Animals get food by eating', 'file': 'Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P1.html', 'id': 'dy4-sci-build-a1-w08-p1-animals-get-food-by-eating', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 1', 'week 8', 'animals', 'get', 'food', 'eating'], 'desc': 'BUILD Science · Autumn 1 · Week 8. I can say that plants make their own food', 'added': '2026-10-03', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'BUILD · Show what you know about body science', 'file': 'Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P2.html', 'id': 'dy4-sci-build-a1-w08-p2-show-what-you-know-about-body-science', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 1', 'week 8', 'show', 'what', 'you', 'know', 'about', 'body', 'science'], 'desc': 'BUILD Science · Autumn 1 · Week 8. I can show an idea', 'added': '2026-10-03', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': "GROW · The Moon's Journey", 'file': 'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P1.html', 'id': 'dy4-sci-grow-a1-w08-p1-the-moon-s-journey', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 1', 'week 8', 'moon', 'journey'], 'desc': 'GROW Science · Autumn 1 · Week 8. I can state that the Moon orbits Earth in roughly a month', 'added': '2026-10-03', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'GROW · Autumn Science: Show Your Thinking', 'file': 'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P2.html', 'id': 'dy4-sci-grow-a1-w08-p2-autumn-science-show-your-thinking', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 1', 'week 8', 'autumn', 'science', 'show', 'your', 'thinking'], 'desc': 'GROW Science · Autumn 1 · Week 8. I can explain one helpful and one unhelpful friction example', 'added': '2026-10-03', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Enzyme Action: Preparing the pH Investigation', 'file': 'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1.html', 'id': 'dy4-sci-launch-a1-w08-l1-enzyme-action-preparing-the-ph-investigation', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 1', 'week 8', 'enzyme', 'action', 'preparing', 'investigation'], 'desc': 'LAUNCH Science · Autumn 1 · Week 8. I can use enzyme, substrate, active site and specificity accurately in an explanation', 'added': '2026-10-03', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Amylase and pH: Continuous-Sampling Investigation', 'file': 'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L2.html', 'id': 'dy4-sci-launch-a1-w08-l2-amylase-and-ph-continuous-sampling-investigation', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 1', 'week 8', 'amylase', 'continuous', 'sampling', 'investigation'], 'desc': 'LAUNCH Science · Autumn 1 · Week 8. I can order the preparation, timing and sampling steps, and justify one evidence decision', 'added': '2026-10-03', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Amylase Rate, Graph and Topic 1 Consolidation', 'file': 'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L3.html', 'id': 'dy4-sci-launch-a1-w08-l3-amylase-rate-graph-and-topic-1-consolidation', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 1', 'week 8', 'amylase', 'rate', 'graph', 'topic', 'consolidation'], 'desc': 'LAUNCH Science · Autumn 1 · Week 8. I can show relative-rate working using 1 ÷ time with the unit s⁻¹', 'added': '2026-10-03', 'new': True, 'year': '2026-27'})
 
 # Exact reviewed files, not patterns. A future new UI file requires an explicit
 # change here; a lesson cannot become permitted because it shares a directory.
@@ -2927,6 +2934,59 @@ REVIEWED_PATHS += (
     'Science_Teesside/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W07/SCI_LAUNCH_A2_W07_Teacher_Notes.pdf',
     'Science_Teesside/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W07/SCI_LAUNCH_A2_W07_Word_Page.pdf',
     'Science_Teesside/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W07/approved-mark.jpg',
+)
+
+# RULING EO-2 1 (Science Week 8) with EE-5 / EO-1 a: every served file of the 7 Science Autumn 1 Week 8 lessons,
+# pinned by its own bytes. These pins are what _glv3 LAND_A2_SCIENCE_TERMS (with its Autumn 1 term folders) admits
+# them by: the route admits an exact pinned addition and nothing else.
+REVIEWED_PATHS += (
+    'Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P1.html',
+    'Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P1_Editable_Pack.docx',
+    'Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P1_Knowledge_Organiser.pdf',
+    'Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P1_Pupil_Resources.pdf',
+    'Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P1_Word_Page.pdf',
+    'Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P2.html',
+    'Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P2_Editable_Pack.docx',
+    'Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P2_Knowledge_Organiser.pdf',
+    'Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P2_Pupil_Resources.pdf',
+    'Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P2_Word_Page.pdf',
+    'Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/approved-mark.jpg',
+    'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P1.html',
+    'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P1_Editable_Pack.docx',
+    'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P1_Knowledge_Organiser.pdf',
+    'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P1_LESSON_SOURCE.json',
+    'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P1_Pupil_Resources.pdf',
+    'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P1_TA_Brief.pdf',
+    'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P1_Word_Page.pdf',
+    'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P2.html',
+    'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P2_Editable_Pack.docx',
+    'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P2_Knowledge_Organiser.pdf',
+    'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P2_LESSON_SOURCE.json',
+    'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P2_Pupil_Resources.pdf',
+    'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P2_TA_Brief.pdf',
+    'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P2_Word_Page.pdf',
+    'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/approved-mark.jpg',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1.html',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1_Editable_Pack.docx',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1_Knowledge_Organiser.pdf',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1_Pupil_Resources.pdf',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1_TA_Brief.pdf',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1_Teacher_Notes.pdf',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1_Word_Page.pdf',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L2.html',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L2_Editable_Pack.docx',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L2_Knowledge_Organiser.pdf',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L2_Pupil_Resources.pdf',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L2_TA_Brief.pdf',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L2_Word_Page.pdf',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L3.html',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L3_Editable_Pack.docx',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L3_Knowledge_Organiser.pdf',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L3_Pupil_Resources.pdf',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L3_TA_Brief.pdf',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L3_Teacher_Notes.pdf',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L3_Word_Page.pdf',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/approved-mark.jpg',
 )
 
 # RULING LAND-A2 R3 §1 and R4 (Claude, 25 September 2026): the offline-download source census, which this
