@@ -1311,6 +1311,12 @@ def ey2_controls(root):
                   'diff is refused', bool(run(recut, edited, changes=(('M', rel),))))
             check(label + 'RED PROOF (not the ruled bytes): a START_HERE change other than the ruled one is refused '
                   'with the ruled digests in force', entry['ruling'] in (run(recut, edited, ruled=saved) or ''))
+            # The base binding alone refuses this one: the disk holds the ruled after-bytes and the list
+            # row is re-cut to them, but the comparison base did not hold the ruled before-bytes.
+            check(label + 'RED PROOF (not the ruled bytes at the base): the ruled START_HERE after-bytes on disk, '
+                  'the list row re-cut to them, but other START_HERE bytes than the ruled before-bytes at the '
+                  'comparison base, is refused', 'START_HERE at the comparison base' in (run(recut, edited, read_base=(
+                      lambda p: dict(base, **{start: base[start] + b' '}).get(p, b''))) or ''))
             check(label + 'RED PROOF (a row added): a list with one row more is refused',
                   'added or dropped' in (run(recut + lines[other], edited) or ''))
             check(label + 'RED PROOF (a row dropped): a list with one row fewer is refused',
@@ -1322,6 +1328,12 @@ def ey2_controls(root):
                   bool(run(with_row(hashlib.sha256(b'not the bytes').hexdigest().encode()), edited)))
             check(label + 'RED PROOF (more than the digest): a START_HERE row re-cut with any other byte of its '
                   'line changed is refused', 'other than its digest' in (run(recut.replace(new_digest + b'  ', new_digest + b' \t', 1), edited) or ''))
+            # Still a well-formed row, so only the line comparison refuses it: the right digest, another name.
+            row_name = ey2_row_name(rel).encode()
+            renamed = recut.replace(new_digest + b'  ' + row_name, new_digest + b'  ./' + row_name, 1)
+            check(label + 'RED PROOF (the row renamed): a START_HERE row re-cut to the right digest with its name '
+                  'changed (./' + row_name.decode() + ') is refused',
+                  renamed != recut and 'other than its digest' in (run(renamed, edited) or ''))
             check(label + 'RED PROOF (an unpinned list): a list whose bytes differ from its CATALOGUE_PINS '
                   'admission is refused', 'catalogue admission' in (run(recut, edited, pinned=dict(pins, **{
                       start: hashlib.sha256(edited).hexdigest(), rel: '0' * 64})) or ''))
