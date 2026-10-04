@@ -401,7 +401,9 @@ def limb_verdicts(root, name, repo=None, files=None, review_base=None):
     members and `review_base` the declared base, for the red proofs. Memoised on every file the
     verdict reads, so a sabotaged fixture is always judged afresh. THE REVIEW BASE IS BOUND: a
     member the limb admits whose declared beforeGitBlob is not the blob it was judged from is
-    refused (not memoised: it reads the declaration, which the red proofs vary)."""
+    refused (not memoised: it reads the declaration, which the red proofs vary). RULING ey 2: a
+    ruled list this transaction declared that carries an ey 2 START_HERE row is read by the limb
+    as its declared bytes (ey2_view); every other member is read from disk."""
     repo = repo or root
     declared_base, declared = REPLACEMENT_TRANSACTIONS[name]
     review_base = declared_base if review_base is None else review_base
@@ -410,11 +412,12 @@ def limb_verdicts(root, name, repo=None, files=None, review_base=None):
     key = (str(root.resolve()), str(Path(repo).resolve()), name, review_base,
            tuple((rel, _identity(root / rel)) for rel in sorted(files)),
            tuple((str(p), _identity(p)) for p in tools),
-           _identity(root / 'tools/verify_cross_estate_unification.py'))
+           _identity(root / 'tools/verify_cross_estate_unification.py'),
+           tuple((entry['startHere'], _identity(root / entry['startHere'])) for entry in EY2_PAIRS.values()))
     if key not in _LIMB_VERDICTS:
         judge = limb_judge(root)
         _LIMB_VERDICTS[key] = judge.limb_verdicts(LIMB_JUDGED_TRANSACTIONS[name], sorted(files),
-                                                  limb_reader(repo, review_base), root)
+                                                  limb_reader(repo, review_base), ey2_view(root, repo, name, files))
     verdicts = dict(_LIMB_VERDICTS[key])
     merge_base, at_base = limb_base_entries(repo, review_base, sorted(files))
     for rel in sorted(files):
@@ -430,7 +433,9 @@ def limb_verdicts(root, name, repo=None, files=None, review_base=None):
 
 def judged_owners(root, repo=None, transactions=None):
     """ALL_REPLACEMENTS, narrowed by JUDGED SUPERSESSION: a limb-judged transaction takes a path an
-    earlier declaration names only when its limb admits the change on that path."""
+    earlier declaration names only when its limb admits the change on that path. RULING ey 2: a ruled
+    list its real declared owner holds passes to EY2_RETIRED when it carries an ey 2 START_HERE row
+    on that owner's declared bytes (ey2_declared); judge() then admits it by the ey 2 rule or refuses it."""
     transactions = REPLACEMENT_TRANSACTIONS if transactions is None else transactions
     owners = {}
     for name, (review_base, files) in transactions.items():
@@ -444,6 +449,9 @@ def judged_owners(root, repo=None, transactions=None):
         for rel in files:
             if rel not in refused:
                 owners[rel] = name
+    for rel in EY2_PAIRS:
+        if rel in owners and owners[rel] == ALL_REPLACEMENTS.get(rel) and ey2_declared(root, repo, rel) is not None:
+            owners[rel] = EY2_RETIRED
     return owners
 
 
@@ -504,6 +512,206 @@ def pack_manifest(root, pins, rel):
         if name.strip() == member:
             return manifest_rel, member, checksum
     return None
+
+
+# RULING ey 2, point 1, option (a): "a narrow new limb in the boundary tool that admits a moved
+# START_HERE digest in a pack checksum list only where the ruled START_HERE file changed under ex 4
+# to 6 and the list's other rows are unchanged."
+#
+# THE RULED PAIRS are named, never matched by pattern: a pack checksum list and its START_HERE file,
+# with the START_HERE bytes the ruling changed it from and to (sha256 of the ruled commits' blobs).
+#   ex 4  the three RE Autumn packs, BUILD, GROW and LAUNCH (one Week 8 row each);
+#   ex 5  the Humanities Autumn 1 LAUNCH pack (its Week 8 row);
+#   ex 6  ADDS the BUILD/GROW fallback START_HERE. A new file moves no row (its pack lists files in a
+#         MANIFEST.json that names no START_HERE), and HUMANITIES_PACKS admits it as an exact pinned
+#         addition, so it has no pair here.
+#
+# THE RULE (judge(), against the actual comparison base). A ruled list and its START_HERE are admitted
+# together, as one pair, only when:
+#   (a) the list is a ruled list, changed in place ('M') exactly once, a regular file in the tree;
+#   (b) its START_HERE is changed in place ('M') exactly once in the same diff, a regular file, and the
+#       change is the ruled one: the ruled before-bytes at the comparison base, the ruled after-bytes on disk;
+#   (c) the list's START_HERE row digest is the sha256 of those START_HERE bytes on disk;
+#   (d) every other line of the list is its line at the comparison base, byte for byte: same rows, same
+#       digests, same order, same count, no line added or dropped; and the START_HERE row is that row
+#       with only its digest replaced;
+#   and both files' bytes equal their CATALOGUE_PINS admission, as on every route here.
+# The admitted pair leaves the declared-transaction step (it is no re-run of the list's owner) and is
+# admitted here. Anything else -- a ruled list changed in any other way, a START_HERE changed without its
+# list, a list not named here -- is not admitted by ey 2 and is judged by the existing routes as before.
+#
+# THE OWNER'S CLAIM. Each ruled list is a member of a declared transaction (DLG-1 re-cut it), whose
+# self-test re-verifies its declared bytes and whose limb re-judges every member from its review base to
+# the bytes on disk. With an ey 2 row in, the list is no longer the bytes its owner declared. So the owner
+# gives up that claim (judged_owners -> EY2_RETIRED) exactly when the list is the owner's declared bytes
+# with the START_HERE row alone moved to the ruled START_HERE on disk: put that row back to its digest at
+# the owner's review base and the sha256 is the owner's declared afterSha256 (ey2_declared). The owner's
+# limb then reads the list AS DECLARED, those proved bytes, and every other member from disk (ey2_view).
+# This admits nothing: a retired list changed in a diff must still pass the rule above, or judge()
+# refuses it by name.
+EY2_PAIRS = {
+    HUMANITIES_PACKS + 'RE_Autumn_BUILD_Reviewed/' + PACK_MANIFEST: {
+        'startHere': HUMANITIES_PACKS + 'RE_Autumn_BUILD_Reviewed/START_HERE.html', 'ruling': 'ex 4',
+        'beforeSha256': '2aa7709d2fd182634bfc39eb8699ef789f164aec9159150bfe7bf0671b46f91d',
+        'afterSha256': '4ea63a0c2de74e7d37f235b905229fd4e76702b6a058245b2fd8690b9f54b336', 'bytes': 12544},
+    HUMANITIES_PACKS + 'RE_Autumn_GROW_Reviewed/' + PACK_MANIFEST: {
+        'startHere': HUMANITIES_PACKS + 'RE_Autumn_GROW_Reviewed/START_HERE.html', 'ruling': 'ex 4',
+        'beforeSha256': 'a0d380d8704f9b90650c24c9d66856b98b5152b63bd5fac0d2f62870cdb093c0',
+        'afterSha256': '9ec66e89f1b09782117ba72578ba205e37b196ee6dbcb0b0de2741f0cafd30bd', 'bytes': 12532},
+    HUMANITIES_PACKS + 'RE_Autumn_LAUNCH_Reviewed/' + PACK_MANIFEST: {
+        'startHere': HUMANITIES_PACKS + 'RE_Autumn_LAUNCH_Reviewed/START_HERE.html', 'ruling': 'ex 4',
+        'beforeSha256': '7f766a100fb4698aed7a8fa7d7cf200d143aa0d1420dff10f81b2beecd1bd3b2',
+        'afterSha256': 'd8688b954279d1d83d9b915a7b59610e6c0b32003681d7bf3ba8d6d36f7065f2', 'bytes': 13135},
+    HUMANITIES_PACKS + 'HUM_Autumn_1_LAUNCH_Reviewed/' + PACK_MANIFEST: {
+        'startHere': HUMANITIES_PACKS + 'HUM_Autumn_1_LAUNCH_Reviewed/START_HERE.html', 'ruling': 'ex 5',
+        'beforeSha256': 'd1bfe78e81e93ec7b59841a85fdb50e7776944c687b940aeb750c1d47427ce3d',
+        'afterSha256': 'e8640c67f8693039105966d92f8d78a7a212883c6ded376b593cc3df3884955f', 'bytes': 7304},
+}
+EY2_RETIRED = 'ey 2'
+_EY2_ROW = re.compile(rb'(?P<digest>[0-9a-f]{64})  (?P<name>[^\r\n]+)(?P<end>\r?\n)?')
+
+
+def ey2_row_name(rel):
+    """The START_HERE row name in ruled list `rel`: its START_HERE path relative to the list's folder."""
+    return EY2_PAIRS[rel]['startHere'][len(rel) - len(PACK_MANIFEST):]
+
+
+def ey2_row(rel, data):
+    """(line index, match) of the one START_HERE row in list bytes `data`, or a str: why not."""
+    name = ey2_row_name(rel).encode()
+    found = [(i, m) for i, line in enumerate(data.splitlines(keepends=True))
+             for m in [_EY2_ROW.fullmatch(line)] if m and m.group('name') == name]
+    return found[0] if len(found) == 1 else ('the list carries ' + str(len(found)) + ' ' + name.decode() + ' rows, not one')
+
+
+def ey2_moved_row(rel, before, after):
+    """Pure. The START_HERE row's new digest when list bytes `after` are `before` with only that row's
+    digest replaced -- every other line byte-equal, in the same order, none added or dropped -- else
+    (None, why not)."""
+    b, a = before.splitlines(keepends=True), after.splitlines(keepends=True)
+    if len(b) != len(a):
+        return None, 'a row was added or dropped: ' + str(len(b)) + ' lines at the base, ' + str(len(a)) + ' now'
+    row = ey2_row(rel, before)
+    if isinstance(row, str):
+        return None, row + ' at the base'
+    i, mb = row
+    other = next((j for j, (x, y) in enumerate(zip(b, a)) if x != y and j != i), None)
+    if other is not None:
+        return None, 'a row other than ' + ey2_row_name(rel) + ' changed (line ' + str(other + 1) + ')'
+    if a[i] == b[i]:
+        return None, 'the ' + ey2_row_name(rel) + ' row did not move'
+    ma = _EY2_ROW.fullmatch(a[i])
+    if ma is None or a[i] != b[i][:mb.start('digest')] + ma.group('digest') + b[i][mb.end('digest'):]:
+        return None, 'the ' + ey2_row_name(rel) + ' line changed other than its digest'
+    return ma.group('digest').decode(), None
+
+
+def ey2_verdicts(root, relevant, base, pins, read_base=None):
+    """{ruled list: None, or why ey 2 does not admit it} for each ruled list changed in `relevant`,
+    judged by the ey 2 rule against the comparison base. `read_base` (rel -> bytes at the base, b''
+    when absent) is the seam the self-test uses; by default it reads the merge base of `base` with
+    HEAD, as git_changes does, and nothing is read unless a ruled list changed."""
+    seen = {}
+    for status, rel in relevant:
+        seen.setdefault(rel, []).append(status)
+    ruled = [rel for rel in EY2_PAIRS if rel in seen]
+    if not ruled:
+        return {}
+    if read_base is None and base is not None:
+        read_base = limb_reader(root, base)
+    out = {}
+    for rel in ruled:
+        entry, start = EY2_PAIRS[rel], EY2_PAIRS[rel]['startHere']
+        why = None
+        if read_base is None:
+            why = 'ey 2 judges a pair against the actual comparison base, and there is none'
+        elif seen[rel] != ['M']:
+            why = 'the list is not one in-place modification here (' + ' '.join(seen[rel]) + ')'
+        elif seen.get(start) != ['M']:
+            why = 'its START_HERE ' + start + ' is not one in-place modification in the same diff'
+        else:
+            for p in (rel, start):
+                path = root / p
+                if path.is_symlink() or not path.is_file() or not path.resolve().is_relative_to(root.resolve()):
+                    why = why or p + ' is not a regular file inside the tree'
+        if why is None:
+            sh_before, sh_after = read_base(start), (root / start).read_bytes()
+            if hashlib.sha256(sh_before).hexdigest() != entry['beforeSha256']:
+                why = 'its START_HERE at the comparison base is not the bytes ' + entry['ruling'] + ' changed'
+            elif hashlib.sha256(sh_after).hexdigest() != entry['afterSha256'] or len(sh_after) != entry['bytes']:
+                why = 'its START_HERE on disk is not the bytes ' + entry['ruling'] + ' ruled'
+        if why is None:
+            digest, why = ey2_moved_row(rel, read_base(rel), (root / rel).read_bytes())
+            if why is None and digest != entry['afterSha256']:
+                why = 'the ' + ey2_row_name(rel) + ' row digest is not the sha256 of the START_HERE bytes on disk'
+        if why is None:
+            for p in (rel, start):
+                if pins.get(p) != sha(root / p):
+                    why = why or p + ' lacks a matching owner-reviewed catalogue admission'
+        out[rel] = why
+    return out
+
+
+def ey2_declared(root, repo, rel):
+    """The bytes the real declared owner of ruled list `rel` declared for it, when `rel` in `root` is
+    exactly those bytes with its START_HERE row alone moved to the ruled START_HERE bytes in `root`;
+    None otherwise, and None when the list is still the owner's bytes (its claim stands as it is)."""
+    entry, owner = EY2_PAIRS.get(rel), ALL_REPLACEMENTS.get(rel)
+    if entry is None or owner is None or rel not in REPLACEMENT_TRANSACTIONS[owner][1]:
+        return None
+    review_base, declared = REPLACEMENT_TRANSACTIONS[owner]
+    want = declared[rel].get('afterSha256') if isinstance(declared[rel], dict) else None
+    path, start = root / rel, root / entry['startHere']
+    if want is None or any(p.is_symlink() or not p.is_file() for p in (path, start)):
+        return None
+    data = path.read_bytes()
+    if hashlib.sha256(data).hexdigest() == want or sha(start) != entry['afterSha256'] or start.stat().st_size != entry['bytes']:
+        return None
+    here, there = ey2_row(rel, data), ey2_row(rel, limb_reader(repo or root, review_base)(rel))
+    if isinstance(here, str) or isinstance(there, str) or here[1].group('digest').decode() != entry['afterSha256']:
+        return None
+    lines = data.splitlines(keepends=True)
+    i, m = here
+    lines[i] = lines[i][:m.start('digest')] + there[1].group('digest') + lines[i][m.end('digest'):]
+    candidate = b''.join(lines)
+    return candidate if hashlib.sha256(candidate).hexdigest() == want else None
+
+
+class _EY2Member:
+    """A ruled list as a limb walk reads it: the real file's kind, the owner's declared bytes."""
+    def __init__(self, path, data):
+        self.path, self.data = path, data
+    def is_symlink(self):
+        return self.path.is_symlink()
+    def is_file(self):
+        return self.path.is_file()
+    def read_bytes(self):
+        return self.data
+    def __str__(self):
+        return str(self.path)
+
+
+class _EY2View:
+    """`root` as a limb walk reads it (root / rel), except each ruled list in `declared` reads as those
+    bytes. A member offers only what the limb calls on it; anything else is an error, never a read."""
+    def __init__(self, root, declared):
+        self.root, self.declared = Path(root), dict(declared)
+    def __truediv__(self, rel):
+        return _EY2Member(self.root / rel, self.declared[rel]) if rel in self.declared else self.root / rel
+    def __str__(self):
+        return str(self.root)
+
+
+def ey2_view(root, repo, name, files):
+    """`root`, or an _EY2View of it when a ruled list transaction `name` really declared, among `files`,
+    carries an ey 2 START_HERE row on its declared bytes."""
+    declared = {}
+    for rel in sorted(files):
+        if rel in EY2_PAIRS and ALL_REPLACEMENTS.get(rel) == name:
+            data = ey2_declared(root, repo, rel)
+            if data is not None:
+                declared[rel] = data
+    return _EY2View(root, declared) if declared else root
 
 
 def owned_members(name, files, owners=None):
@@ -733,14 +941,24 @@ def judge(root, changes, base=None):
     errors = []
     try:
         pins = pin_map(root)
-        errors = transaction_errors(root, relevant, base, pins)
+        # RULING ey 2: a ruled list and its START_HERE, admitted as one pair against the comparison
+        # base, leave the declared-transaction step; every other change goes through it as before.
+        ey2 = ey2_verdicts(root, relevant, base, pins)
+        paired = {p for rel, why in ey2.items() if why is None for p in (rel, EY2_PAIRS[rel]['startHere'])}
+        errors = transaction_errors(root, [(s, p) for s, p in relevant if p not in paired], base, pins)
         if errors:
-            return errors
+            return errors + ['ey 2 limb does not admit ' + rel + ': ' + why for rel, why in sorted(ey2.items()) if why]
         cover_paths = explicit_cover_paths(root)
         label_paths = public_label_paths(root, pins)
         for status, rel in relevant:
             governed = pack_manifest(root, pins, rel)
-            if rel in SHELVES:
+            if rel in paired:
+                # RULING ey 2: admitted above, the pair as one.
+                pass
+            elif rel in ey2 and judged_owners(root).get(rel) == EY2_RETIRED:
+                # RULING ey 2: a ruled list its owner gave up is admitted by the ey 2 rule or not at all.
+                errors.append('ey 2 limb refuses ' + rel + ': ' + ey2[rel])
+            elif rel in SHELVES:
                 if status not in ('A', 'M') or not (root / rel).is_file() or pins.get(rel) != sha(root / rel):
                     errors.append('reviewed shelf bytes or change type differ: ' + rel)
             elif rel in ALL_REPLACEMENTS:
@@ -1024,6 +1242,140 @@ def controls(root):
     for name in REPLACEMENT_TRANSACTIONS:
         rows.extend(transaction_controls(root, name))
     rows.extend(supersession_controls(root))
+    rows.extend(ey2_controls(root))
+    return rows
+
+
+def ey2_controls(root):
+    # RULING ey 2 red proofs. The limb is only as good as its refusals, so each way it could be widened
+    # is proved RED here, on every ruled pair, in a disposable copy of its list and START_HERE. The tree's
+    # own bytes stand in for the comparison base; a synthetic START_HERE edit stands in for the ruled one,
+    # with the ruled digests swapped for the synthetic edit's for the proof only (as PATHWAY_PARENTS'
+    # proofs plant a path) and restored after; the list's START_HERE row is re-cut to it.
+    rows = []
+    def check(label, condition):
+        if not condition:
+            raise AssertionError(label)
+        rows.append({'name': label, 'status': 'PASS'})
+    pins = pin_map(root)
+    check('ey 2: every ruled list and START_HERE is a regular file in the tree, and every ruled list is a '
+          'declared member of a replacement transaction',
+          all((root / p).is_file() and not (root / p).is_symlink() for rel, e in EY2_PAIRS.items() for p in (rel, e['startHere']))
+          and all(rel in ALL_REPLACEMENTS for rel in EY2_PAIRS))
+    check('ey 2: every ruled list on disk is its declared owner\'s bytes, or those bytes with an ey 2 START_HERE row',
+          all(sha(root / rel) == REPLACEMENT_TRANSACTIONS[ALL_REPLACEMENTS[rel]][1][rel]['afterSha256']
+              or ey2_declared(root, root, rel) is not None for rel in EY2_PAIRS))
+    unruled = next((rel for rel in sorted(ALL_REPLACEMENTS) if rel.startswith(HUMANITIES_PACKS)
+                    and rel.endswith('/' + PACK_MANIFEST) and rel not in EY2_PAIRS and (root / rel).is_file()
+                    and b'  START_HERE.html\n' in (root / rel).read_bytes()), None)
+    saved = globals()['EY2_PAIRS']
+    with tempfile.TemporaryDirectory(prefix='ey2-limb-proof-') as temp:
+        fixture = Path(temp)
+        for rel, entry in sorted(saved.items()):
+            label = 'ey 2 (' + rel.split('/')[-2] + '): '
+            start = entry['startHere']
+            base = {rel: (root / rel).read_bytes(), start: (root / start).read_bytes()}
+            edited = base[start] + b'\n<!-- ey 2 self-test -->\n'
+            new_digest = hashlib.sha256(edited).hexdigest().encode()
+            i, m = ey2_row(rel, base[rel])
+            lines = base[rel].splitlines(keepends=True)
+            def with_row(digest, at=i, source=lines):
+                out = list(source); out[at] = out[at][:m.start('digest')] + digest + out[at][m.end('digest'):]
+                return b''.join(out)
+            recut = with_row(new_digest)
+            other = next(j for j, line in enumerate(lines) if j != i and _EY2_ROW.fullmatch(line))
+            synthetic = dict(saved)
+            synthetic[rel] = dict(entry, beforeSha256=hashlib.sha256(base[start]).hexdigest(),
+                                  afterSha256=new_digest.decode(), bytes=len(edited))
+            def run(list_bytes, start_bytes, changes=(('M', rel), ('M', start)), pinned=None, ruled=synthetic,
+                    read_base=lambda p: base.get(p, b'')):
+                for p, data in ((rel, list_bytes), (start, start_bytes)):
+                    (fixture / p).parent.mkdir(parents=True, exist_ok=True); (fixture / p).write_bytes(data)
+                pinned = dict(pins, **{rel: hashlib.sha256(list_bytes).hexdigest(),
+                                       start: hashlib.sha256(start_bytes).hexdigest()}) if pinned is None else pinned
+                globals()['EY2_PAIRS'] = ruled
+                try:
+                    return ey2_verdicts(fixture, list(changes), 'self-test', pinned, read_base).get(rel, 'not judged')
+                finally:
+                    globals()['EY2_PAIRS'] = saved
+            check(label + 'POSITIVE CONTROL: the ruled START_HERE change with its list row re-cut to it, every other '
+                  'row as at the base, is admitted', run(recut, edited) is None)
+            swapped = lines[other][:64].translate(bytes.maketrans(b'0123456789abcdef', b'123456789abcdef0'))
+            altered = with_row(swapped, at=other, source=recut.splitlines(keepends=True))
+            check(label + 'RED PROOF (one other row altered): a list whose START_HERE row is re-cut and one other '
+                  'row\'s digest is changed is refused, even pinned at its new bytes',
+                  'other than' in (run(altered, edited) or ''))
+            check(label + 'RED PROOF (START_HERE unchanged): the row moved but the START_HERE bytes are the base '
+                  'bytes is refused', bool(run(recut, base[start])))
+            check(label + 'RED PROOF (START_HERE not in the diff): the row moved with no START_HERE change in the '
+                  'diff is refused', bool(run(recut, edited, changes=(('M', rel),))))
+            check(label + 'RED PROOF (not the ruled bytes): a START_HERE change other than the ruled one is refused '
+                  'with the ruled digests in force', entry['ruling'] in (run(recut, edited, ruled=saved) or ''))
+            check(label + 'RED PROOF (a row added): a list with one row more is refused',
+                  'added or dropped' in (run(recut + lines[other], edited) or ''))
+            check(label + 'RED PROOF (a row dropped): a list with one row fewer is refused',
+                  'added or dropped' in (run(b''.join(l for j, l in enumerate(recut.splitlines(keepends=True)) if j != other), edited) or ''))
+            check(label + 'RED PROOF (rows re-ordered): the same rows in another order are refused',
+                  bool(run(b''.join(sorted(recut.splitlines(keepends=True), reverse=True)), edited)))
+            check(label + 'RED PROOF (a digest that is not the bytes): a START_HERE row re-cut to anything but the '
+                  'sha256 of the START_HERE on disk is refused',
+                  bool(run(with_row(hashlib.sha256(b'not the bytes').hexdigest().encode()), edited)))
+            check(label + 'RED PROOF (more than the digest): a START_HERE row re-cut with any other byte of its '
+                  'line changed is refused', 'other than its digest' in (run(recut.replace(new_digest + b'  ', new_digest + b' \t', 1), edited) or ''))
+            check(label + 'RED PROOF (an unpinned list): a list whose bytes differ from its CATALOGUE_PINS '
+                  'admission is refused', 'catalogue admission' in (run(recut, edited, pinned=dict(pins, **{
+                      start: hashlib.sha256(edited).hexdigest(), rel: '0' * 64})) or ''))
+            check(label + 'RED PROOF (an unpinned START_HERE): a START_HERE whose bytes differ from its '
+                  'CATALOGUE_PINS admission is refused', 'catalogue admission' in (run(recut, edited, pinned=dict(pins, **{
+                      rel: hashlib.sha256(recut).hexdigest(), start: '0' * 64})) or ''))
+            for status in ('A', 'D', 'T'):
+                check(label + 'RED PROOF (change type ' + status + '): the list as ' + status + ' is refused',
+                      bool(run(recut, edited, changes=((status, rel), ('M', start)))))
+                check(label + 'RED PROOF (change type ' + status + '): its START_HERE as ' + status + ' is refused',
+                      bool(run(recut, edited, changes=(('M', rel), (status, start)))))
+            check(label + 'RED PROOF (a duplicated change): the list twice in the diff is refused',
+                  bool(run(recut, edited, changes=(('M', rel), ('M', rel), ('M', start)))))
+            check(label + 'RED PROOF (no comparison base): with no base to judge against, nothing is admitted',
+                  'comparison base' in (ey2_verdicts(fixture, [('M', rel), ('M', start)], None, pins).get(rel) or ''))
+            # THE OWNER'S CLAIM: retired exactly when the list is the owner's declared bytes plus the ruled row.
+            owner = ALL_REPLACEMENTS[rel]
+            declared_bytes = ey2_declared(root, root, rel) or base[rel]
+            claim = with_row(new_digest, source=declared_bytes.splitlines(keepends=True))
+            def claimed(list_bytes, start_bytes, ruled=synthetic):
+                for p, data in ((rel, list_bytes), (start, start_bytes)):
+                    (fixture / p).write_bytes(data)
+                globals()['EY2_PAIRS'] = ruled
+                try:
+                    return ey2_declared(fixture, root, rel), judged_owners(fixture, root).get(rel)
+                finally:
+                    globals()['EY2_PAIRS'] = saved
+            got, holder = claimed(claim, edited)
+            check(label + 'the owner (' + owner + ') gives up its claim on a list that is its declared bytes with the '
+                  'ruled START_HERE row alone moved, and the limb would read those declared bytes',
+                  got is not None and hashlib.sha256(got).hexdigest()
+                  == REPLACEMENT_TRANSACTIONS[owner][1][rel]['afterSha256'] and holder == EY2_RETIRED
+                  and (_EY2View(fixture, {rel: got}) / rel).read_bytes() == got
+                  and isinstance(_EY2View(fixture, {rel: got}) / start, Path))
+            got, holder = claimed(with_row(swapped, at=other, source=claim.splitlines(keepends=True)), edited)
+            check(label + 'RED PROOF (owner\'s claim, one other row altered): the owner keeps its claim, so its own '
+                  'rule judges the list', got is None and holder == owner)
+            got, holder = claimed(claim, edited, ruled=saved)
+            check(label + 'RED PROOF (owner\'s claim, not the ruled bytes): the owner keeps its claim',
+                  got is None and holder == owner)
+            got, holder = claimed(declared_bytes, base[start] if declared_bytes == base[rel] else edited)
+            check(label + 'the owner keeps its claim on its own declared bytes (no row moved)',
+                  got is None and holder == owner)
+            for p in (rel, start):
+                (fixture / p).unlink()
+        if unruled:
+            data = (root / unruled).read_bytes()
+            check('RED PROOF (a list not ruled): ' + unruled.split('/')[-2] + '\'s list and its START_HERE, changed '
+                  'together, are never judged by ey 2, so the change stays with the list\'s owner ('
+                  + ALL_REPLACEMENTS[unruled] + ')',
+                  unruled not in ey2_verdicts(root, [('M', unruled), ('M', unruled[:-len(PACK_MANIFEST)] + 'START_HERE.html')],
+                                              'self-test', pins, lambda p: data)
+                  and judged_owners(root).get(unruled) == ALL_REPLACEMENTS[unruled])
+    check('ey 2: the ruled pairs were restored after the proofs', globals()['EY2_PAIRS'] is saved)
     return rows
 
 
@@ -1113,7 +1465,10 @@ def dlg1_controls(root, owners):
     read = limb_reader(root, review_base)
     with tempfile.TemporaryDirectory(prefix='dlg1-limb-proof-') as temp:
         fixture = Path(temp)
-        for rel in {*declared, *held, 'tools/verify_cross_estate_unification.py'}:
+        # RULING ey 2: the ruled START_HERE files too, so a list carrying an ey 2 row is read as declared
+        # in the copy exactly as in the tree (ey2_view); without one, the copy is not faithful.
+        for rel in {*declared, *held, 'tools/verify_cross_estate_unification.py',
+                    *(entry['startHere'] for entry in EY2_PAIRS.values())}:
             if (root / rel).is_file():
                 target = fixture / rel; target.parent.mkdir(parents=True, exist_ok=True); shutil.copy2(root / rel, target)
         shutil.copytree(root / 'tools/hum', fixture / 'tools/hum', dirs_exist_ok=True)
