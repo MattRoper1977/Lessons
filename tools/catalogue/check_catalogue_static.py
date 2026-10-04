@@ -28,7 +28,7 @@ base=(r/'resources.json').read_bytes()
 check('Original 734 resource rows remain unchanged and ordered, with only three reviewed hub rows appended',not preserved_rows_errors(rows))
 check('Every committed resource row has additive metadata',len(rows)>0 and all(x['file'] in proof for x in rows))
 check('Every catalogue style value is in the published vocabulary (HUB1 R2): '+', '.join(style_vocabulary_errors(proof,STYLE_VOCABULARY)[:3]),not style_vocabulary_errors(proof,STYLE_VOCABULARY))
-check('All 201 Science lessons remain available with a proven or explicitly unknown term',len(science)==201 and len({x['path'] for x in science})==201 and all((r/x['path']).is_file() and x['term'] in ['Aut1','Aut2','Spr1','Spr2','Sum1','Sum2','unspecified'] for x in science))
+check('All 208 Science lessons remain available with a proven or explicitly unknown term',len(science)==208 and len({x['path'] for x in science})==208 and all((r/x['path']).is_file() and x['term'] in ['Aut1','Aut2','Spr1','Spr2','Sum1','Sum2','unspecified'] for x in science))
 # ORDER HUM-T STOP-T3 ruling Q1: every deck the projection proves through the strand record
 # must still satisfy the limb's three conditions on this tree, judged by the same function.
 import sys as _sys;_sys.path.insert(0,str(r/'tools/catalogue'))
@@ -73,7 +73,14 @@ _sel=json.loads((r/'tools/catalogue/SHELF_SELECTION.json').read_text());_rec={x[
 check('Every recommended Science route is in the editorial selection, and every selected Science route is recommended',_rec==set(_sel['recommended'])&{x['path'] for x in science})
 _slots=[s_ for s_ in json.loads((r/'assets/catalogue/science-hub-bindings.json').read_text())['slots'] if s_['term']=='Aut2' and s_['week'] is not None]
 check('HUB1 R1: every Autumn 2 cell (%d, BUILD/GROW/LAUNCH) carries exactly one recommended member'%len(_slots),len(_slots)>0 and all(sum(c['path'] in _rec for c in s_['current'])==1 for s_ in _slots))
-check('The 15 pre-R1 LAUNCH W3-W7 routes stay recommended',sum(1 for x in science if x['style']=='recommended' and x['pathway']=='LAUNCH' and not any(c['path']==x['path'] for s_ in _slots for c in s_['current']))==15)
+# DY-4 (rulings dy, eb EB-5): the Autumn 1 Week 8 return-week lessons head their own cells, in lesson order, and the
+# live Week 8 lessons stay bound beside them; a lesson bound to the wrong week or cell fails here (SCI-56 D27 gap).
+_w8={s_['pathway']:[c['path'] for c in s_['current']] for s_ in json.loads((r/'assets/catalogue/science-hub-bindings.json').read_text())['slots'] if s_['term']=='Aut1' and s_['week']==8}
+_W8_HEAD={'BUILD':['Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P%d.html'%i for i in (1,2)],'GROW':['Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P%d.html'%i for i in (1,2)],'LAUNCH':['Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L%d.html'%i for i in (1,2,3)]}
+_W8_BESIDE={'BUILD':2,'GROW':0,'LAUNCH':3}
+check('DY-4: each Autumn 1 Week 8 cell is headed by its return-week lessons (2/2/3, all recommended) with the live Week 8 lessons beside them (2/0/3)',all(_w8.get(k,[])[:len(v)]==v and all(p in _rec for p in v) and len(_w8.get(k,[]))==len(v)+_W8_BESIDE[k] and not any(p in _rec for p in _w8[k][len(v):]) for k,v in _W8_HEAD.items()) and sum(p in q for q in _w8.values() for v in _W8_HEAD.values() for p in v)==7)
+_w8all={p for v in _w8.values() for p in v}
+check('The 15 pre-R1 LAUNCH W3-W7 routes stay recommended',sum(1 for x in science if x['style']=='recommended' and x['pathway']=='LAUNCH' and x['path'] not in _w8all and not any(c['path']==x['path'] for s_ in _slots for c in s_['current']))==15)
 for filename in ['index.html','Science_Teesside/index.html','Humanities_Teesside/index.html']:
  p=r/filename;doc=html.fromstring(p.read_text());ids=doc.xpath('//*[@id]/@id');check(filename+' has unique element IDs',len(ids)==len(set(ids)))
  missing=[]

@@ -128,7 +128,7 @@ function visibleScience(env){return [...env.document.querySelectorAll('[data-les
  event(sc,sc.document.querySelector('#science-clear'),'click');
  check('Science clear filters restores all alternatives',()=>{assert.equal(visibleScience(sc).length,scienceCards.length);assert.deepEqual(routesOf(visibleScience(sc)),scienceRoutes);});
  const rec=environment('Science_Teesside/index.html','?pathway=LAUNCH&term=Aut1&style=recommended');runFile(rec,'assets/catalogue/science-shelf.js');
- check('Recommended deep link selects correct pathway, term and all 15 lessons',()=>{assert.equal(visibleScience(rec).length,15);assert(visibleScience(rec).every(c=>c.dataset.style==='recommended'));});
+ check('Recommended deep link selects correct pathway, term and all 18 lessons',()=>{assert.equal(visibleScience(rec).length,18);assert(visibleScience(rec).every(c=>c.dataset.style==='recommended'));});
  const launch=environment('Science_Teesside/index.html','?pathway=LAUNCH');runFile(launch,'assets/catalogue/science-shelf.js');
  check(`All LAUNCH deep link exposes every preserved LAUNCH route across six terms (${launchRoutes.length} routes, ${launchCards.length} cards)`,()=>{assert.deepEqual(routesOf(visibleScience(launch)),launchRoutes);assert.equal(visibleScience(launch).length,launchCards.length);assert.deepEqual([...new Set(visibleScience(launch).map(c=>c.dataset.term))].sort(),['Aut1','Aut2','Spr1','Spr2','Sum1','Sum2']);});
  const launchWeek=environment('Science_Teesside/index.html','?pathway=LAUNCH&term=Aut2&week=1');runFile(launchWeek,'assets/catalogue/science-shelf.js');
