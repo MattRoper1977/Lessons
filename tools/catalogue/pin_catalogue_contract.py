@@ -2996,6 +2996,49 @@ REVIEWED_PATHS += (
     'tools/downloads/SOURCE_PLACEMENT.json',
 )
 
+# RULING EO-2 2 (RE Week 8): every served file of the 3 RE Autumn 1 Week 8 lessons, pinned by its own bytes
+# (the HUMANITIES_PACKS route admits an exact, individually pinned addition).
+REVIEWED_PATHS += (
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_1/W08/BUILD_RE_A1_W08_Captioned_Model.mp4',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_1/W08/BUILD_RE_A1_W08_Knowledge_Organiser.html',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_1/W08/BUILD_RE_A1_W08_Lesson.html',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_1/W08/BUILD_RE_A1_W08_Model_Transcript.txt',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_1/W08/BUILD_RE_A1_W08_Pupil_Resources.html',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_1/W08/BUILD_RE_A1_W08_Word_Page.html',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_1/W08/Object_Picture_Choices.png',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_1/W08/Object_Picture_Choices.svg',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_1/W08/Sources_and_checks.html',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_1/W08/approved-mark.jpg',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_1/W08/GROW_RE_A1_W08_Captioned_Model.mp4',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_1/W08/GROW_RE_A1_W08_Knowledge_Organiser.html',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_1/W08/GROW_RE_A1_W08_Lesson.html',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_1/W08/GROW_RE_A1_W08_Model_Transcript.txt',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_1/W08/GROW_RE_A1_W08_Pupil_Resources.html',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_1/W08/GROW_RE_A1_W08_Word_Page.html',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_1/W08/Object_Picture_Choices.png',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_1/W08/Object_Picture_Choices.svg',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_1/W08/Sources_and_checks.html',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_1/W08/approved-mark.jpg',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_1/W08/LAUNCH_RE_A1_W08_Captioned_Model.mp4',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_1/W08/LAUNCH_RE_A1_W08_Knowledge_Organiser.html',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_1/W08/LAUNCH_RE_A1_W08_Lesson.html',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_1/W08/LAUNCH_RE_A1_W08_Model_Transcript.txt',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_1/W08/LAUNCH_RE_A1_W08_Pupil_Resources.html',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_1/W08/LAUNCH_RE_A1_W08_Word_Page.html',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_1/W08/Object_Picture_Choices.png',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_1/W08/Object_Picture_Choices.svg',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_1/W08/Sources_and_checks.html',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_1/W08/approved-mark.jpg',
+)
+
+# RULING ex 4 (RE Week 8 START_HERE rows): the three RE Autumn pack START_HERE files, changed in place, pinned by their own bytes
+# (each pack SHA256SUMS.txt carries the re-cut digest and is pinned on main).
+REVIEWED_PATHS += (
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_BUILD_Reviewed/START_HERE.html',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_GROW_Reviewed/START_HERE.html',
+    'Humanities_Teesside/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/START_HERE.html',
+)
+
 
 def pack_rows_for(lessons: Path, rows: list) -> list:
     """UX2 D3 (2026-09-08): the companion-pack entries are the catalogue's tail,
