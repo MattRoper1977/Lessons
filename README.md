@@ -10,8 +10,8 @@ sensory need, scaffolds, EHCP outcomes, PfA focus, notes).
 
 - The **named** versions of every file live on the school network. They stay there.
 - `.gitignore` blocks the obvious offenders, but it is a safety net, not a check. Look before you push.
-- Deleting a file from a repo does **not** remove it from git history. If named data is ever
-  committed, the repo must be deleted and rebuilt — tell the DSL first.
+- Deleting a file from a repo does **not** remove it from git history.
+- First names only found in history: fix the served pages the same day and record the decision. Anything beyond first names (surnames, grades, any other personal data): tell the DSL first, then delete and rebuild the repository.
 
 ## Layout
 
