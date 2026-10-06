@@ -746,6 +746,7 @@ CATALOGUE_PINS = {
         "ASDAN/Consent_Aimee_La.html": "ea5cda64d44f7fd83ceeb8bc24e76a1f765d724a0a8b47cd9555345f4d19e78d",
         "ASDAN/Consent_Aimee_P2.html": "5aec50eb3cf27ddef231aefb989afd56aca4db617c6b05c0b352e8fef10f4daf",
         "5_6 Local Choice/Rivers/L1e_Final_Briefing.html": "08d9f10725c36db6cfd50955c6eb8687c8f46a5a9422b78e8c16076e000220b9",
+        "tools/liveteach/lt-pick.test.js": "2dc2ed2e3cd21c315f4dd3d7b9000cf6a4b05b299cba8941a5f64db138e76c98",
         "assets/catalogue/science-download-bindings.json": "efb435f7e0dc4c9083050f5bb3e348494838422fe7de6e809fbdf8f877d9b10d",
         "Science_Teesside/Teaching_Packs/BUILD/BUILD_Science_Autumn1_W3-W7_Teaching_Guide.docx": "c4fd055acdb11a2310fe820b6f473733835dc4789b9151cd3377ec4d251f2196",
         "Science_Teesside/Teaching_Packs/BUILD/BUILD_Science_Autumn1_W3-W7_Teaching_Guide.pdf": "a479821f2de450e28bd414625f8066768d2c72423bd5ff76046536bf8f7a5d7a",
