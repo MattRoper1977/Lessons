@@ -80,7 +80,7 @@ const BUS_TAP = `() => {
 }`;
 
 /* Distinctive names: a substring search for these must be conclusive. */
-const ROSTER = ['Zarnok', 'Quibbly', 'Vexlin', 'Marrowe', 'Thistlebee'];
+const ROSTER = ['Pupil A', 'Pupil B', 'Pupil C', 'Pupil D', 'Pupil E'];
 /* Kept under the engine's 32-character clamp on purpose: a truncated probe
    would prove nothing about how the surviving characters are rendered. */
 const MARKUP_NAME = '<img src=x>Ophira';
@@ -453,7 +453,7 @@ const MARKUP_NAME = '<img src=x>Ophira';
   /* The projector's own list is a single name from the small-room checks
      above; focus behaviour needs a second row to be meaningful. */
   await proj.click('#btnPickClear');
-  await proj.fill('#pickRoster', 'Ilse\nJoakim\nKlara');
+  await proj.fill('#pickRoster', 'Pupil F\nPupil G\nPupil H');
   await proj.click('#btnPickLoad');
   await proj.waitForTimeout(200);
   const projFocus = await proj.evaluate(() => {
@@ -568,7 +568,7 @@ const MARKUP_NAME = '<img src=x>Ophira';
   await hud.waitForTimeout(300);
 
   /* ====== the console: an explicit non-negotiable, now actually watched == */
-  const nameLeaks = consoleLog.filter(l => /Zarnok|Quibbly|Vexlin|Marrowe|Thistlebee|Ophira|Wraithe|Benedikt|Ferdinanda/.test(l));
+  const nameLeaks = consoleLog.filter(l => /Pupil A|Pupil B|Pupil C|Pupil D|Pupil E|Ophira|Wraithe|Benedikt|Ferdinanda/.test(l));
   check('no pupil name reached the console at ANY level, across both views', nameLeaks.length === 0, nameLeaks.slice(0, 2).join(' | '));
   check('the console listener is really capturing (it saw the page\'s own output)', consoleLog.length >= 0);
 
