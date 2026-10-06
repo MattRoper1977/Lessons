@@ -29,7 +29,7 @@ looked past the filename at the body text. The other eight `Consent_*` files
 are clean; the pattern appears nowhere else in the estate. It is one line,
 duplicated across the two files.
 
-**Record status: CLOSED 2026-08-26 — false positive.** The names in that note are invented worked exemplars (declared fiction), not learner data. Ruling: Matt, 2026-08-26.
+**Record status: CLOSED 2026-10-06 — names replaced (PF-4, ruling br).** Correction, 2026-10-06: the closure recorded on 2026-08-26 ("false positive … invented worked exemplars (declared fiction), not learner data"; the repository owner's ruling of that date) was wrong. The three pupil first names in the note were real: each is a whole entry of the real class list, checked by digest (PF-3, 2026-09-30). They are now replaced by `Pupil A`, `Pupil B` and `Pupil C` in both pages, and the hyphenated name's initial is removed. The named adult is now "the TA" everywhere it appeared: the six TA notes in the two pages, where it starts a sentence and so reads "The TA", and the TA Focus heading of `5_6 Local Choice/Rivers/L1e_Final_Briefing.html`. Git history (item C3) stays open: the names remain in this repo's history, which is not claimed clean.
 
 Left unfixed deliberately: this is a safeguarding change, and your rule is that
 safeguarding changes are not self-merged — the same rule that held C1 for a
@@ -37,11 +37,13 @@ year. It needs the same one word. The fix is the neutralisation LT1 already
 uses. **These two files are live on Pages**, which is why this is the first
 item in the readback rather than a footnote.
 
-**C2 — two strings in the site repo.**
+**C2 — two strings in the site repo. CLOSED 2026-10-06 (PF-4, ruling br).**
 `mattroper1977.github.io`: `uas/app.html:449` (a placeholder caption) and
 `asdan/moderation-lab/index.html:597` (a demo forename). Both read as demo data
 — surname "Demo", an "e.g." caption — but each first name coincides with a real
 class member. Outside this order's scope; worth a site-repo pass.
+
+Closed 2026-10-06: both are replaced in the Site repo in the same landing, in the Site change that merges after this one. The caption now reads "e.g. Pupil A's finished dish". The four moderation-lab demo forenames are now `Pupil A` to `Pupil D` with the surname "Demo" kept, and every row id, variable, record id and the two witness sentences that carried those names changed to match; each row id now ends "-d" (for Demo) in place of its old one-letter initial, and the demo internal verifier on the same page now reads "the IV". Git history is item C3, which stays open.
 
 **C3 — git history.**
 The names removed in LT1 remain in this public repo's history. Clearing them
