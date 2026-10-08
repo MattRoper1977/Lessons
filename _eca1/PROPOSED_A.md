@@ -1655,7 +1655,7 @@ Humanities / DT / Art-estate-docs findings appended when their audits complete.
 **XP37 · Humanities_Teesside/Pathway_Tracker.html** (D-alignment, doc; MISALIGNED)
 - Current: “Teesside &middot; Migration &amp; the Making of Modern Teesside &middot; Autumn 1, 2026&ndash;27”
 - Issue: The visible subtitle names the unit 'Migration & the Making of Modern Teesside' while this file's own <title>, all three SoWs, all three packs and the hub call it 'Teesside Migration & Identity'.
-- Proposed: "Teesside &middot; Migration &amp; Identity &middot; Autumn 1, 2026&ndash;27 &middot; Progress Schools Tees Valley"
+- Proposed: "Teesside &middot; Migration &amp; Identity &middot; Autumn 1, 2026&ndash;27"
 - Source: Pathway_Tracker.html line 3 <title> vs line 33; BUILD/GROW/LAUNCH SoW and pack titles.
 
 **XP38 · Build/Slideshows/BUILD_DT_W6_Handover.html** (D-alignment, screen; WRONG)
