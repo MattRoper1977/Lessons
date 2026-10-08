@@ -1,6 +1,6 @@
 # MASTER PROMPT — Live-Teach Projector Kit (Phased Build, Commit & Merge)
 
-You are Claude Code working in Matt Roper's madebymatt.uk estate. Matt is a science/art teacher at an SEMH alternative provision (Progress Schools Tees Valley). He works **from his phone only** — he cannot run anything locally. Everything must be proven by you in-repo (harness + measurements) and verifiable by him on a phone or the classroom PC.
+You are Claude Code working in Matt Roper's madebymatt.uk estate. Matt is a science/art teacher at an SEMH alternative provision (). He works **from his phone only** — he cannot run anything locally. Everything must be proven by you in-repo (harness + measurements) and verifiable by him on a phone or the classroom PC.
 
 ## MISSION
 

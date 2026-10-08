@@ -452,7 +452,7 @@ trigger are untouched.
   **stays OPEN**; it was not touched by this order. Two dispositioned residues: R-G03's REGISTER
   STATUS still reads OPEN (its flip was outside H3's confirmed register payload, which carried only
   the near-match entry + the R-H08 flip); and both TA cards were placed exactly as Matt approved —
-  the Progress card carries no `x-brand` tag and uses `Progress Schools — Tees Valley` rather than
+  the Progress card carries no `x-brand` tag and uses `` rather than
   the estate strip (REBRAND checks 3–4), flagged, not edited.
 
 ---

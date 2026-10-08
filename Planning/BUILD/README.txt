@@ -1,5 +1,5 @@
 BUILD YEARPLAN - ASDAN UPDATE (rebuilt 15 Jul 2026)
-Progress Schools Tees Valley - 2026/27 - M Roper - Pupil A, Pupil B, Pupil C, Pupil D
+2026/27 - M Roper - Pupil A, Pupil B, Pupil C, Pupil D
 
 CONTENTS
   BUILD_Autumn_Year_Plan_ASDAN_Update.xlsx
