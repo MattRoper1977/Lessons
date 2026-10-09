@@ -176,11 +176,11 @@ def build(progress):
                 "correction: its Digital-alternative column named each lesson's mission "
                 "title; every entry here names the specific interactive route verified "
                 "installed in that lesson. -->")
-    head = ('<header><div>PROGRESS SCHOOLS · TEES VALLEY</div>'
+    head = ('<header><div>Made by Matt</div>'
             '<div style="font-size:.8rem;opacity:.85">LAUNCH GCSE Biology · 2026–27 Aut 1</div>'
             if progress else
             '<header><div>Made by Matt · for Progress Schools · LAUNCH GCSE Biology · 2026–27 Aut 1</div>')
-    foot = ('Progress Schools · Tees Valley · staff use · LAUNCH GCSE Biology 40-minute '
+    foot = ('staff use · LAUNCH GCSE Biology 40-minute '
             'route (Aut 1 W3–W7). Source: v3+ equipment matrix (received 2026-08-12), '
             'digital column re-derived per lesson against the live route. '
             '<span style="opacity:.75">by madebymatt.uk</span>'
