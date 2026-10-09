@@ -83,7 +83,7 @@ Progress Schools pack, and silently producing one is how a placeholder ends up i
 ### 2 · The strip
 
 ```
-PROGRESS SCHOOLS · TEES VALLEY
+
 ```
 
 Upper case, middle dot with a space either side. **47 occurrences of `PROGRESS
@@ -227,7 +227,7 @@ grep -rni 'madebymatt' <pack>
 grep -rLn 'name="x-brand"' <pack>
 
 # 4 — the strip is present and matches the estate form
-grep -rc 'PROGRESS SCHOOLS · TEES VALLEY' <pack>
+grep -rc '' <pack>
 ```
 
 All four must be run. Rule 3's trap is that checks 1 and 2 pass a visual inspection

@@ -98,6 +98,15 @@ def expected_authored(base: bytes, rule: str) -> bytes:
             1,
             "R7 optional classroom discovery defer",
         )
+    if rule == "R4":
+        # Names fix PR 9 (rulings ky-1, kz-2): the organisation and region line takes the neutral label.
+        text = replace_exact(
+            text,
+            "<div class=\"eyebrow\">Progress Schools Tees Valley · Lundy Loop · Staff calibration</div>",
+            "<div class=\"eyebrow\">Lundy Loop · Staff calibration</div>",
+            1,
+            "R4 names fix (ruling ky-1)",
+        )
     if rule == "R2":
         font_links = (
             '<link rel="preconnect" href="https://fonts.googleapis.com">\n'

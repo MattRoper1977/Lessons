@@ -1,5 +1,5 @@
 LAUNCH - AUTUMN 1 WEEKLY PLANS (Science rebuilt)
-Progress Schools Tees Valley - 2026/27 - M Roper
+2026/27 - M Roper
 
 TERM CALENDAR  (Redcar & Cleveland 2026-27 DRAFT - reconfirm when the final publishes)
   Autumn term: Tue 1 Sep - Fri 18 Dec 2026.  Half term: 26-30 Oct.

@@ -1,5 +1,5 @@
 LUNDY LOOP MASTER PACK — VERSION 3.1 (JULY 2026)
-Matt Roper · Progress Schools Tees Valley · Feedback & Marking Policy 2025/26 (Pilot)
+Matt Roper · Feedback & Marking Policy 2025/26 (Pilot)
 
 START
 1. Extract the ZIP. 2. Open index.html in any browser. 3. Print any page to A4 via the browser's Print function.
