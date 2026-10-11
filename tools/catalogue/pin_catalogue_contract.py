@@ -15,8 +15,8 @@ from pathlib import Path
 import re
 
 GATE = "tools/verify_cross_estate_unification.py"
-ORIGINAL_ROW_COUNT = 734
-ORIGINAL_ROWS_SHA256 = "b8ffcb16f5fd2a413e8a0b06ad2d4b112f450364fa294377869dc32c8235bb2c"
+ORIGINAL_ROW_COUNT = 755   # ruling qp-2 (A-wide, os-4, 11 Oct 2026): 734 + the 21 reviewed catalogue rows the A19/A24 refresh interleaves
+ORIGINAL_ROWS_SHA256 = "790209ca7d07540b62a9749981dd639cdf0df79a285e568ceb0138fab8059cfd"
 SHELF_ROWS = [{'subject': 'Science · Teesside',
   'title': 'Science · browse by pathway, term and teaching version',
   'file': 'Science_Teesside/index.html',
@@ -3072,6 +3072,43 @@ REVIEWED_PATHS += (
     'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/approved-mark.jpg',
 )
 
+# RULING os-4 / qp-4 (11 Oct 2026), patch set A25: the files the A19/A21/A24 refresh changes outside the existing
+# pins -- the 31 Science decks (the START HERE removal) and the art hub -- each pinned by its own bytes.
+REVIEWED_PATHS += (
+    'Science_Teesside/Build/W18-W26_2026-27/SCI_B_S2_W6_The_Evidence_Museum.html',
+    'Science_Teesside/Build/W18-W26_2026-27/SCI_B_W18_Soil_What_Is_In_The_Mix.html',
+    'Science_Teesside/Build/W18-W26_2026-27/SCI_B_W19_Soil_Let_The_Water_Through.html',
+    'Science_Teesside/Build/W18-W26_2026-27/SCI_B_W20_Soil_Account_For_The_Water.html',
+    'Science_Teesside/Build/W18-W26_2026-27/SCI_B_W21_The_Blackout_Box_Mystery.html',
+    'Science_Teesside/Build/W18-W26_2026-27/SCI_B_W22_Light_Source_Detectives.html',
+    'Science_Teesside/Build/W18-W26_2026-27/SCI_B_W23_Sunlight_Make_A_Safer_Plan.html',
+    'Science_Teesside/Build/W18-W26_2026-27/SCI_B_W24_The_Shadow_Screen_Lab.html',
+    'Science_Teesside/Build/W18-W26_2026-27/SCI_B_W25_The_Shadow_Size_Studio.html',
+    'Science_Teesside/Build/W18-W26_2026-27/SCI_B_W26_The_Fair_Test_Repair_Lab.html',
+    'Science_Teesside/Grow/W18-W26_2026-27/SCI_G_S2_W6_The_Spring_Science_Evidence_Exchange.html',
+    'Science_Teesside/Grow/W18-W26_2026-27/SCI_G_W18A_The_Cold_Case.html',
+    'Science_Teesside/Grow/W18-W26_2026-27/SCI_G_W18B_Circuit_Fault_Clinic.html',
+    'Science_Teesside/Grow/W18-W26_2026-27/SCI_G_W19_The_Spill_Mat_Design_Lab.html',
+    'Science_Teesside/Grow/W18-W26_2026-27/SCI_G_W20_Body_Systems_The_Dispatch_Challenge.html',
+    'Science_Teesside/Grow/W18-W26_2026-27/SCI_G_W21_Heart_Route_Rescue.html',
+    'Science_Teesside/Grow/W18-W26_2026-27/SCI_G_W22_The_Health_Evidence_Advisers.html',
+    'Science_Teesside/Grow/W18-W26_2026-27/SCI_G_W23_The_Nutrient_Delivery_Investigation.html',
+    'Science_Teesside/Grow/W18-W26_2026-27/SCI_G_W24_The_Recovery_Research_Room.html',
+    'Science_Teesside/Grow/W18-W26_2026-27/SCI_G_W25_Life_Cycle_Archive.html',
+    'Science_Teesside/Grow/W18-W26_2026-27/SCI_G_W26_The_Life_Cycle_Comparison_Bureau.html',
+    'Science_Teesside/Launch/W17-W26_2026-27/SCI_L_S2_W6_Health_And_Plants_Evidence_Checkpoint.html',
+    'Science_Teesside/Launch/W17-W26_2026-27/SCI_L_W17_Evolution_Build_The_Evidence_Case.html',
+    'Science_Teesside/Launch/W17-W26_2026-27/SCI_L_W18L1_Selective_Breeding_Design_A_Resilient_Crop.html',
+    'Science_Teesside/Launch/W17-W26_2026-27/SCI_L_W18L2_Genetic_Engineering_Change_Test_Decide.html',
+    'Science_Teesside/Launch/W17-W26_2026-27/SCI_L_W21_Disease_Detectives_Follow_The_Cause.html',
+    'Science_Teesside/Launch/W17-W26_2026-27/SCI_L_W22_Immune_Memory_Recognise_Respond_Remember.html',
+    'Science_Teesside/Launch/W17-W26_2026-27/SCI_L_W23_Disease_Data_Newsroom_Make_The_Numbers_Fair.html',
+    'Science_Teesside/Launch/W17-W26_2026-27/SCI_L_W24_Photosynthesis_The_Light_Lab.html',
+    'Science_Teesside/Launch/W17-W26_2026-27/SCI_L_W25_Plant_Transport_Follow_The_Water_And_Sugar.html',
+    'Science_Teesside/Launch/W17-W26_2026-27/SCI_L_W26_Greenhouse_Challenge_Grow_More_With_A_Water_Budget.html',
+    'art_teesside.html',
+)
+
 # RULING LAND-A2 R3 §1 and R4 (Claude, 25 September 2026): the offline-download source census, which this
 # landing extends by the 21 lessons as retained alternatives (no offline pack's selection changes). Pinned
 # by its bytes, so the next change to the offline selection needs its own re-pin and review.
@@ -3152,7 +3189,7 @@ def preserved_rows_errors(rows: list, pack_rows: list | None = None) -> list[str
         pack_rows = pack_rows_for(Path(__file__).resolve().parents[2], rows)
     errors = []
     if len(rows) != ORIGINAL_ROW_COUNT + len(SHELF_ROWS) + len(pack_rows):
-        errors.append("catalogue must contain the original 734 rows plus exactly the reviewed hub rows and the derived companion-pack rows")
+        errors.append(f"catalogue must contain the original {ORIGINAL_ROW_COUNT} rows plus exactly the reviewed hub rows and the derived companion-pack rows")
     if row_digest(without_tags(rows[:ORIGINAL_ROW_COUNT])) != ORIGINAL_ROWS_SHA256:
         errors.append("an original catalogue row was removed, reordered or edited")
     shelf_end = ORIGINAL_ROW_COUNT + len(SHELF_ROWS)
