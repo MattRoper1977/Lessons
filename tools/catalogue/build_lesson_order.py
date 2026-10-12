@@ -16,7 +16,7 @@ WEEK_KEY=re.compile(r'^(Aut[12]|Spr[12]|Sum[12])·W(\d+)$')
 # "Autumn 2 · Week 1"): weeks_from_cells applies it to a recorded quote, and the Science label
 # limb applies the same expression to the deck's own text.
 WEEK_QUOTE=re.compile(r'\b(Aut|Spr|Sum)(?:umn|ing|mer)?\s*([12])\s*[·:—-]?\s*W(?:eek)?\s*(\d+)\b',re.I)
-def week_keys(s):return [a.title()+b+'·W'+w for a,b,w in WEEK_QUOTE.findall(s)]
+def week_keys(s):return [a.title()+b+'·W'+str(int(w)) for a,b,w in WEEK_QUOTE.findall(s)]   # qv-5 (vi-c) scratch: W08 -> W8, the written number kept, its zero padding dropped
 def strand_proof(path,rows,record_digest,pinned_digest,projected_keys):
  """ORDER HUM-T, STOP-T3 ruling Q1 (Matt Roper, 2026-09-20): the signed, digest-pinned
  strand record tools/catalogue/HUMANITIES_STRAND.json is an accepted binding source. A
