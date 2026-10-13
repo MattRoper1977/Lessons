@@ -4,8 +4,11 @@ on:
   # Callable so the same contract can be triggered by lesson-content PRs, which the
   # PIN1-derived path list below cannot cover: it is an exact-path registry of pinned
   # inputs and exact_path() refuses globs by design. Nothing else about this workflow
-  # changes - same jobs, same thresholds, same assertions. announce-live-run and
-  # live-proof stay skipped, because a called run keeps the caller's event name.
+  # changes - same jobs, same thresholds, same assertions. A called run keeps the
+  # caller's event name, so announce-live-run and live-proof are skipped on a called
+  # pull_request run and run on a called push run (cross-estate-on-content.yml on push
+  # to main); a push to main that fires both this file and that caller runs them in
+  # each of the two runs, which sit in separate concurrency groups (see below).
   workflow_call:
   pull_request:
     branches: [main]
@@ -3224,8 +3227,14 @@ permissions:
   issues: write
   pull-requests: write
 
+# One group per kind of run. cross-estate-on-content.yml calls this file, and a called
+# workflow evaluates this block in its CALLER's github context, so without the workflow
+# name the direct run and the called run of one PR or push resolved to one group and
+# cancel-in-progress cancelled one of them (Watch main then read NO VERDICT). github.workflow
+# is this file's name on a direct run and the caller's name on a called run; a newer push
+# still cancels the older run of the same kind.
 concurrency:
-  group: mbm-cross-estate-${{ github.repository }}-${{ github.event.pull_request.number || github.ref }}
+  group: mbm-cross-estate-${{ github.repository }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
