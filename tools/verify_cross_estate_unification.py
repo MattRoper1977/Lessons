@@ -2098,6 +2098,29 @@ ALLOWED_DIFF = {
     "Science_Teesside/Teaching_Packs/LAUNCH/SHA256SUMS.txt",
 }
 
+# rm-2 (13 Oct 2026; a red-first plan, local build): the ri-5 Group 1 scheme-source edits. These are
+# workbooks and their text dumps, not served files. Each path is admitted through the boundary only while its
+# bytes equal the sum below: no folder, no pattern, nothing else widened.
+SCHEME_SOURCE_EXACT_SHA256 = {
+    "Build/_Archive_VersionA_LivingIndependently/BUILD_SOW_2026-27_vA_with_LivingIndependently.xlsx": "b5cee8c3413e0487c630331057deb1b16c03805084e113e96094a3d2cadc397f",
+    "_authoring/science_2026-27/_toolchain/scheme_references/BUILD_SOW.xlsx": "b5abd199abfa8c3de4608533fcef9e917a61b148419a102dfff6708302139cd0",
+    "_authoring/science_2026-27/_toolchain/scheme_references/GROW_SOW.xlsx": "41ff0a4a4211da89466f5634f58a5074b6f4be6c7036118aab1e0e9d3145d7b3",
+    "_authoring/science_2026-27/_toolchain/scheme_references/LAUNCH_SOW.xlsx": "b8063b7d6b3989f71375b5f2c3a62b9ebcd3be1bb1933706a009473c7b19ee02",
+    "_passla/inputs/LAUNCH KS4 - 2026-27.xlsx": "92ceefa450b770af738a1a65797047555c796e890c19cb54286662968fde90a9",
+    "_passsb/inputs/Build SOW 2026-2027.xlsx": "b5abd199abfa8c3de4608533fcef9e917a61b148419a102dfff6708302139cd0",
+    "_passsg/inputs/GROW SOW 2026-27.xlsx": "41ff0a4a4211da89466f5634f58a5074b6f4be6c7036118aab1e0e9d3145d7b3",
+    "_passsl/inputs/LAUNCH KS4 - 2026-27.xlsx": "b8063b7d6b3989f71375b5f2c3a62b9ebcd3be1bb1933706a009473c7b19ee02",
+    "_sca1/inputs/BUILD_SOW.txt": "6491c014baba83b6091686a4e40156b94443341265432786db41c7c67a52df42",
+    "_sca1/inputs/GROW_SOW.txt": "e034ba648284b16ac3388b6e0ea441e34072ac30ab7286780b243f41ef7f39c6",
+    "_sca1/inputs/LAUNCH_KS4.xlsx": "92ceefa450b770af738a1a65797047555c796e890c19cb54286662968fde90a9",
+    "_sca1/inputs/LAUNCH_SOW.txt": "5881aaaedc0fcb238ccac9549b79176fcac4a5cbdd7c610cd1e77b0ee3c85d1d",
+}
+
+
+def exact_byte_admitted(root: Path, changed: set[str]) -> set[str]:
+    return {rel for rel in changed if rel in SCHEME_SOURCE_EXACT_SHA256 and (root / rel).is_file()
+            and digest(root / rel) == SCHEME_SOURCE_EXACT_SHA256[rel]}
+
 
 def digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -2658,7 +2681,7 @@ def run_checks(
             errors.append(f"git diff failed: {proc.stderr.strip()}")
         else:
             changed = {line.strip() for line in proc.stdout.splitlines() if line.strip()}
-            errors.extend(boundary_errors(changed, kind))
+            errors.extend(boundary_errors(changed - exact_byte_admitted(root, changed), kind))   # rm-2
             errors.extend(fence_errors(root, changed, kind))
             for manifest in ("resources.json", "apps.json"):
                 if manifest in changed and manifest not in MANIFEST_PINS:
