@@ -2102,6 +2102,9 @@ ALLOWED_DIFF = {
 # workbooks and their text dumps, not served files. Each path is admitted through the boundary only while its
 # bytes equal the sum below: no folder, no pattern, nothing else widened.
 SCHEME_SOURCE_EXACT_SHA256 = {
+    "_passpq/DECISIONS_YEAR2.md": "045146ae58357f4f92996be5d2f4a3c6e5293cffd19e1bd4d37e9064ea213461",   # rp-2 (a): Group 2 record line, not served
+    "_sownb/VB_STATE.json": "fd21c2f5a6affaf7b5f495af3b2e8831897493e361ed7de50ae57e5bb85eb01d",   # rp-2 (a): Group 2 record line, not served
+    "_sownb/vb/WRONG_BEFORE_RIGHT.md": "37adc9cf88a7f9832e8844e1f8681e9bfb76fb8866d6f53959a05add42b521bb",   # rp-2 (a): Group 2 record line, not served
     "Build/_Archive_VersionA_LivingIndependently/BUILD_SOW_2026-27_vA_with_LivingIndependently.xlsx": "b5cee8c3413e0487c630331057deb1b16c03805084e113e96094a3d2cadc397f",
     "_authoring/science_2026-27/_toolchain/scheme_references/BUILD_SOW.xlsx": "b5abd199abfa8c3de4608533fcef9e917a61b148419a102dfff6708302139cd0",
     "_authoring/science_2026-27/_toolchain/scheme_references/GROW_SOW.xlsx": "41ff0a4a4211da89466f5634f58a5074b6f4be6c7036118aab1e0e9d3145d7b3",
