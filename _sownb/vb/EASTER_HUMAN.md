@@ -173,7 +173,7 @@ clears five of the ten:
 | group | decks | ratio now | after dedupe | outcome |
 |---|---|---|---|---|
 | Science — Build/Grow/Launch, W7 and W14–W20 | 14 | ×1.28–1.78 | ×1.09–1.49 | every one PASSES; 5 reds cleared, 7 reach the 1.25 target |
-| ASDAN Spring1 W15/W16 — BUILD ×2, GROW ×2, LAUNCH ×1 | 5 | ×2.40–3.08 | ×1.97–2.57 | **still red** |
+| ASDAN Aut2 W7 + Spring1 W1 (abs W15/W16) — BUILD ×2, GROW ×2, LAUNCH ×1 | 5 | ×2.40–3.08 | ×1.97–2.57 | **still red** |
 
 Those ratios are measured, not calculated: `dedupe_sweep.py --project` copies
 each deck, dedupes the copy and re-runs g23. The repository is never written to,

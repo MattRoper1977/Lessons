@@ -215,7 +215,7 @@ five of the ten and brings seven decks to the 1.25 operative target:
 | group | decks | before | after | verdict |
 |---|---|---|---|---|
 | Science (Build/Grow/Launch, W7 + W14–W20) | 14 | ×1.28–1.78 | ×1.09–1.49 | all PASS; 5 reds cleared |
-| ASDAN Spring1 W15/W16 (BUILD ×2, GROW ×2, LAUNCH ×1) | 5 | ×2.40–3.08 | ×1.97–2.57 | **all STILL RED** |
+| ASDAN Aut2 W7 + Spring1 W1 (abs W15/W16) (BUILD ×2, GROW ×2, LAUNCH ×1) | 5 | ×2.40–3.08 | ×1.97–2.57 | **all STILL RED** |
 
 The five ASDAN decks are the useful negative result: their overload survives
 de-duplication, so it is real teaching content and belongs with A3-H2's split
@@ -306,7 +306,7 @@ would become five. Measured on the landed files, it is exactly that:
 | group | decks | before | after | outcome |
 |---|---|---|---|---|
 | Science — Build/Grow/Launch, W7 and W14–W20 | 14 | ×1.28–1.78 | ×1.09–1.49 | **14/14 PASS**, 5 reds cleared |
-| ASDAN Spring1 W15/W16 | 5 | ×2.40–3.08 | ×1.97–2.57 | 5 still RED → A3-H2 |
+| ASDAN Aut2 W7 + Spring1 W1 (abs W15/W16) | 5 | ×2.40–3.08 | ×1.97–2.57 | 5 still RED → A3-H2 |
 
 Ceiling reds across the nineteen: **10 → 5**. Seven decks now sit at or under
 the 1.25 operative target.

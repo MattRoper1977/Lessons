@@ -168,6 +168,6 @@ unit-GLH. The Certificate turns on the carryable slots; the year map names the c
 would close Launch's gap rather than quietly borrowing the hours.
 
 **A note on the weeks themselves.** Autumn is evidenced at 15 teaching weeks and the block labels
-match it. Spring and summer term dates are **not in the repository at all** — the timetable
+match it. Spring and summer term dates are **in the calendar spine (`data/calendar-spine.json`)** — the timetable
 workbooks are weekly, not annual — so those block lengths remain declared assumptions, tagged as
 such on the year map. It changes nothing you teach.
