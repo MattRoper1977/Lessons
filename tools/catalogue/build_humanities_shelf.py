@@ -24,6 +24,7 @@ import hub_sections as S
 ROOT = Path(__file__).resolve().parents[2]
 DATA = json.loads((ROOT / 'assets/catalogue/humanities-shelf.json').read_text())
 STRAND = json.loads((ROOT / 'tools/catalogue/HUMANITIES_STRAND.json').read_text())
+STRAND_PATHS = {r['path'] for r in STRAND['lessons']}
 PACKS = ROOT / 'Humanities_Teesside/Teaching_Packs'
 E = H.escape
 TERM_LABEL = DATA['terms']
@@ -72,6 +73,9 @@ def family(path: str) -> str:
         return 'Estate v3'
     if re.match(r'(Build|Grow|Launch)/Slideshows/', path):
         return 'Slideshows series'
+    # ro-2 (a), variant B: a reviewed Spring 1 pack lesson that the strand record carries is current.
+    if re.match(r'Humanities_[^/]+/Teaching_Packs/HUM_Spring_1_[A-Z_]+_Reviewed/', path) and path in STRAND_PATHS:
+        return 'current'
     return 'reference'
 
 

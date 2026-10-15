@@ -92,7 +92,7 @@ enumerated week by week in `BUILD_Autumn_Year_Plan_ASDAN_Update.xlsx [Autumn Ove
 The 7 + 7 = 14 in `BLOCKS` was the **placeholder shape the Planning READMEs declare dead**.
 
 ```
-BLOCKS  Aut1 W1-7  Aut2 W8-14  Spr1 W15-20  Spr2 W21-26  Sum1 W27-32  Sum2 W33-38
+BLOCKS  Aut1 W1-8  Aut2 W9-15  Spr1 W16-21  Spr2 W22-26  Sum1 W27-33  Sum2 W34-40
      →  Aut1 W1-8  Aut2 W9-15  Spr1 W16-21  Spr2 W22-27  Sum1 W28-33  Sum2 W34-38
 ```
 
