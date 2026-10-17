@@ -3175,6 +3175,16 @@ REVIEWED_PATHS += (
 )
 
 
+# RULING sq (A48 RE Spring 1 on its own roots, 17 Oct 2026): the three new pack manifests -- their members are
+# admitted through them -- and the Spring 1 RE scheme of work, pinned beside the Autumn one.
+REVIEWED_PATHS += (
+    'Humanities_Teesside/Teaching_Packs/RE_Spring_1_BUILD_Reviewed/SHA256SUMS.txt',
+    'Humanities_Teesside/Teaching_Packs/RE_Spring_1_GROW_Reviewed/SHA256SUMS.txt',
+    'Humanities_Teesside/Teaching_Packs/RE_Spring_1_LAUNCH_Reviewed/SHA256SUMS.txt',
+    'Humanities_Teesside/Teaching_Packs/HUM_00_SoW_and_Order/RE_Scheme_of_Work_Spring_1_2026.docx',
+    'Humanities_Teesside/Teaching_Packs/HUM_00_SoW_and_Order/RE_Scheme_of_Work_Spring_1_2026.html',
+)
+
 def pack_rows_for(lessons: Path, rows: list) -> list:
     """UX2 D3 (2026-09-08): the companion-pack entries are the catalogue's tail,
     after the reviewed hub rows. They are not a second hand-kept literal: they

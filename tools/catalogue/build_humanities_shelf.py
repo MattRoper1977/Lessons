@@ -95,17 +95,19 @@ def sow_slots() -> dict[str, set]:
         m = re.fullmatch(r'([1-9])[A-Z].{5,}', line)
         if m and cur:
             slots['Humanities'].add((cur[0], cur[1], int(m.group(1))))
-    t = (PACKS / 'HUM_00_SoW_and_Order/RE_Scheme_of_Work_Autumn_2026.html').read_text(encoding='utf-8', errors='replace')
-    t = H.unescape(re.sub(r'<[^>]+>', '\n', re.sub(r'<(script|style)[\s\S]*?</\1>', '', t)))
-    cur = None
-    for line in (l.strip() for l in t.split('\n') if l.strip()):
-        m = re.fullmatch(r'(BUILD|GROW|LAUNCH) · (Autumn [12])', line)
-        if m:
-            cur = (m.group(1), TERM_KEY[m.group(2)]); continue
-        m = re.fullmatch(r'Week (\d+) · .+', line)
-        if m and cur:
-            slots['RE'].add((cur[0], cur[1], int(m.group(1))))
-    assert len(slots['Humanities']) == 117 and len(slots['RE']) == 42, (len(slots['Humanities']), len(slots['RE']))
+    # The RE scheme is one file per term (Autumn; Spring 1 added by ruling sq), each read the same way.
+    for sow in ('RE_Scheme_of_Work_Autumn_2026.html', 'RE_Scheme_of_Work_Spring_1_2026.html'):
+        t = (PACKS / 'HUM_00_SoW_and_Order' / sow).read_text(encoding='utf-8', errors='replace')
+        t = H.unescape(re.sub(r'<[^>]+>', '\n', re.sub(r'<(script|style)[\s\S]*?</\1>', '', t)))
+        cur = None
+        for line in (l.strip() for l in t.split('\n') if l.strip()):
+            m = re.fullmatch(r'(BUILD|GROW|LAUNCH) · (Autumn [12]|Spring 1)', line)
+            if m:
+                cur = (m.group(1), TERM_KEY[m.group(2)]); continue
+            m = re.fullmatch(r'Week (\d+) · .+', line)
+            if m and cur:
+                slots['RE'].add((cur[0], cur[1], int(m.group(1))))
+    assert len(slots['Humanities']) == 117 and len(slots['RE']) == 60, (len(slots['Humanities']), len(slots['RE']))
     return slots
 
 
@@ -141,7 +143,7 @@ def pack_cards_and_lessons() -> tuple[list[dict], list[dict]]:
         # A lesson's directory is the download row's key; its label is the lesson's own week.
         lesson_dirs = {}
         for mem in members:
-            if mem.endswith('_Lesson.html'):
+            if mem.endswith('_Lesson.html') or re.fullmatch(r'(BUILD|GROW|LAUNCH)_RE_S1_W\d{2}\.html', Path(mem).name):
                 b = lesson_binding(pack / mem)
                 lesson_dirs[str(Path(mem).parent)] = b
                 lesson_count += 1
