@@ -133,7 +133,7 @@ CATALOGUE_PINS = {
         "tools/catalogue/build_lesson_order.py": "35a4c54779b800ae8bd949154d0d19fddb190f49ec18e62efdd86d03313f6180",
         "tools/ux2/hub_gates.mjs": "80ae8def49c49e549c8a2e6b65d521cfdaebb2b7d05f650fa6d5e436f2b6586d",
         "index.html": "389c3320b158e9bc472b4402d41d1d23e4bb2d78b54385884c0be6ca31f73309",
-        "Science_Teesside/index.html": "0abdf5ad7bc7f477e0b6a181a2a460735bf052eeb0736059e9a0f28797d00622",
+        "Science_Teesside/index.html": "9e8cab4db078b157918625d69ba5ccd598e6d7a3c5034a6003d5a32f6582b1fd",
         "Humanities_Teesside/index.html": "7a565b57a995f043410199e32dc33bd2031b8ac160fce6ba9d2b181d3f1be956",
         "humanities_teesside.html": "577740530e89ad174e6b2eb177fab2409ece9e142e4c68a91903b939f3721382",
         "pack.html": "c05cde1b83de3da3a292d150e7c400782719d30aec6a130fb4df158786993b65",
