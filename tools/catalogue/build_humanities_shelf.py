@@ -143,7 +143,7 @@ def pack_cards_and_lessons() -> tuple[list[dict], list[dict]]:
         # A lesson's directory is the download row's key; its label is the lesson's own week.
         lesson_dirs = {}
         for mem in members:
-            if mem.endswith('_Lesson.html') or re.fullmatch(r'(BUILD|GROW|LAUNCH)_RE_S1_W\d{2}\.html', Path(mem).name):
+            if mem.endswith('_Lesson.html') or (Path(mem).suffix == '.html' and Path(mem).stem.rsplit('_', 1)[0] in ('BUILD_RE_S1', 'GROW_RE_S1', 'LAUNCH_RE_S1')):
                 b = lesson_binding(pack / mem)
                 lesson_dirs[str(Path(mem).parent)] = b
                 lesson_count += 1
