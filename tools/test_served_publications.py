@@ -9,7 +9,8 @@ import zipfile
 import os
 from prepare_served_publications import (Inconclusive, Red, no_result, require,
                                         validate_artifact, publication_run_matches,
-                                         extract_archive, prepare_one, digest, select_artifact)
+                                         extract_archive, prepare_one, digest, select_artifact,
+                                         download_limit, DOWNLOAD_MARGIN_BYTES)
 import prepare_served_publications
 
 
@@ -110,17 +111,66 @@ class ProvenanceControls(unittest.TestCase):
             def read(self, route, raw=False):
                 if '/workflows/' in route: return {'workflow_runs': [outer.run]}
                 if '/jobs?' in route: return {'jobs': outer.jobs}
-                if '/artifacts?' in route: return {'artifacts': [{**outer.artifact, 'digest': digest(archive)}]}
-                if route.endswith('/zip'): return archive + (b'x' if self.mutate else b'')
-                raise AssertionError(route)
+                if '/artifacts?' in route: return {'artifacts': [{**outer.artifact, 'digest': digest(archive),
+                                                                  'size_in_bytes': len(archive)}]}
+                raise AssertionError('a publication archive is never read into memory: ' + route)
+            def download(self, route, path, limit):
+                assert route.endswith('/zip') and limit == len(archive) + DOWNLOAD_MARGIN_BYTES
+                data = archive + (b'x' if self.mutate else b'')
+                Path(path).write_bytes(data)
+                return digest(data)
         with tempfile.TemporaryDirectory() as temp:
             evidence = prepare_one('lessons', 'a'*40, Path(temp), GitHub())
             self.assertEqual(evidence['deployment'], 'success')
             self.assertEqual(Path(evidence['root'], 'index.html').read_bytes(), b'approved')
+            self.assertEqual(sorted(p.name for p in Path(temp).iterdir()), ['lessons'],
+                             'the downloaded archive is removed once extracted')
         with tempfile.TemporaryDirectory() as temp:
             bad = GitHub(); bad.mutate = True
             with self.assertRaises(Red): prepare_one('lessons', 'a'*40, Path(temp), bad)
 
+    # su-2. The download bound was a constant 1,000,000,000 B and the Lessons review
+    # archive grew past it (1,021,684,414 B at 5763eb1a): a correct publication read
+    # red. The bound is now the run's own archive size plus a stated margin.
+    def test_download_bound_is_the_runs_own_size_plus_the_margin(self):
+        grown = {'size_in_bytes': 1_021_684_414}
+        self.assertEqual(download_limit(grown, 'lessons'), 1_021_684_414 + DOWNLOAD_MARGIN_BYTES)
+        self.assertGreater(download_limit(grown, 'lessons'), 1_000_000_000)
+        self.assertEqual(DOWNLOAD_MARGIN_BYTES, 16 * 1024 * 1024)
+        for bad in [{}, {'size_in_bytes': 0}, {'size_in_bytes': -1}, {'size_in_bytes': True},
+                    {'size_in_bytes': '1021684414'}, {'size_in_bytes': None}]:
+            with self.assertRaises(Red): download_limit(bad, 'lessons')
+
+    def test_download_streams_to_disk_and_refuses_past_its_bound(self):
+        """The REAL download(), fed a fake response: it writes in chunks, returns the
+        digest of what it wrote, and on a stream past its bound raises Red and leaves
+        no partial file behind."""
+        payload = bytes(range(256)) * (3 * 4096 + 7)          # just over 3 MiB, several chunks
+        class Response(io.BytesIO):
+            def __enter__(self): return self
+            def __exit__(self, *exc): self.close()
+        previous = os.environ.get('GITHUB_TOKEN')
+        os.environ['GITHUB_TOKEN'] = 'token-for-this-test'
+        try:
+            client = prepare_served_publications.GitHub(time.monotonic() + 60)
+            client._open = lambda route: Response(payload)
+            with tempfile.TemporaryDirectory() as temp:
+                target = Path(temp)/'review.zip'
+                self.assertEqual(client.download('/zip', target, len(payload)), digest(payload))
+                self.assertEqual(target.read_bytes(), payload)
+                over = Path(temp)/'over.zip'
+                with self.assertRaises(Red) as caught:
+                    client.download('/zip', over, len(payload) - 1)
+                self.assertIn('larger than its bound', str(caught.exception))
+                self.assertFalse(over.exists(), 'a refused download leaves no partial file')
+                with self.assertRaises(Red):          # never overwrites an earlier archive
+                    client.download('/zip', target, len(payload))
+                self.assertEqual(target.read_bytes(), payload)
+        finally:
+            if previous is None:
+                del os.environ['GITHUB_TOKEN']
+            else:
+                os.environ['GITHUB_TOKEN'] = previous
 
 
     # GW1-C §1.2. Every assertion above says Red, and the rename is not the

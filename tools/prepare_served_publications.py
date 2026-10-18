@@ -32,6 +32,10 @@ WORKFLOWS = {'site': 'education-publication.yml', 'lessons': 'education-pages.ym
              'apps': 'education-pages.yml', 'games': 'play-domain-publication.yml'}
 ARTIFACTS = {'site': 'education-site-review', 'lessons': 'education-lessons-review',
              'apps': 'education-apps-review', 'games': 'standalone-games-review'}
+# su-2: the publication download is bounded by the run's own archive size plus this
+# margin (16 MiB), not by a constant. API responses are metadata, bounded on their own.
+DOWNLOAD_MARGIN_BYTES = 16 * 1024 * 1024
+API_RESPONSE_LIMIT = 64 * 1024 * 1024
 UPLOAD_STEPS = {'site': 'Save the reviewed education output',
                 'lessons': 'Save the reviewed education output',
                 'apps': 'Save the reviewed education output',
@@ -92,7 +96,7 @@ class GitHub:
     def waited(self):
         return int(time.monotonic() - self.started)
 
-    def read(self, route, raw=False):
+    def _open(self, route):
         if time.monotonic() >= self.deadline:
             no_result('no result: publication retrieval deadline reached, '
                       'waited %d seconds' % self.waited())
@@ -111,24 +115,66 @@ class GitHub:
                 return result
         opener = urllib.request.build_opener(ArtifactRedirect())
         timeout = max(1, min(35, self.deadline - time.monotonic()))
+        return opener.open(urllib.request.Request(url, headers=headers), timeout=timeout)
+
+    def _chunks(self, response, limit, what):
+        size = 0
+        while True:
+            if time.monotonic() >= self.deadline:
+                no_result('no result: publication download deadline reached, '
+                          'waited %d seconds' % self.waited())
+            chunk = response.read(1024 * 1024)
+            if not chunk:
+                return
+            size += len(chunk)
+            require(size <= limit, f'{what} is larger than its bound of {limit} bytes')
+            yield chunk
+
+    def read(self, route, raw=False):
+        """An API response, held in memory. Never a publication archive: see download()."""
         try:
-            with opener.open(urllib.request.Request(url, headers=headers), timeout=timeout) as response:
-                chunks = []
-                size = 0
-                while True:
-                    if time.monotonic() >= self.deadline:
-                        no_result('no result: publication download deadline reached, '
-                                  'waited %d seconds' % self.waited())
-                    chunk = response.read(1024 * 1024)
-                    if not chunk:
-                        break
-                    size += len(chunk)
-                    require(size <= 1_000_000_000, 'Publication download is unexpectedly large')
-                    chunks.append(chunk)
-                data = b''.join(chunks)
+            with self._open(route) as response:
+                data = b''.join(self._chunks(response, API_RESPONSE_LIMIT, 'GitHub API response'))
         except (urllib.error.URLError, TimeoutError) as exc:
             raise Inconclusive(f'GitHub {route}: {exc}') from exc
         return data if raw else json.loads(data)
+
+    def download(self, route, path, limit):
+        """Stream a publication archive to PATH, never into memory, refusing past LIMIT.
+        Returns its digest. A partial file is removed, whatever stopped it."""
+        try:
+            out = open(path, 'xb')
+        except FileExistsError:
+            require(False, f'Refusing to overwrite publication archive {path}')
+        hasher = hashlib.sha256()
+        try:
+            with out, self._open(route) as response:
+                for chunk in self._chunks(response, limit, 'Publication download'):
+                    hasher.update(chunk)
+                    out.write(chunk)
+        except (urllib.error.URLError, TimeoutError) as exc:
+            Path(path).unlink(missing_ok=True)
+            raise Inconclusive(f'GitHub {route}: {exc}') from exc
+        except BaseException:
+            Path(path).unlink(missing_ok=True)
+            raise
+        return 'sha256:' + hasher.hexdigest()
+
+
+def download_limit(artifact, kind):
+    """The download bound is the run's OWN published size plus a fixed margin.
+
+    It was a fixed 1,000,000,000 B. The Lessons review archive was 970,386,131 B at
+    5f798041 and 1,021,684,414 B at 5763eb1a, so the proof went red on a correct
+    publication: a constant measured against a size that grows with every landing.
+    The size comes from the same artifact record that supplies the digest the
+    download must match, so the bound moves with the publication and still refuses
+    a download that is not the one recorded. The margin is fixed and stated:
+    DOWNLOAD_MARGIN_BYTES."""
+    size = artifact.get('size_in_bytes')
+    require(isinstance(size, int) and not isinstance(size, bool) and size > 0,
+            f'{kind}: GitHub did not supply the publication archive size')
+    return size + DOWNLOAD_MARGIN_BYTES
 
 
 def publication_run_matches(kind, run, wanted, github):
@@ -205,9 +251,12 @@ def select_artifact(artifacts, run, jobs, kind):
                       'upload_completed_at': step['completed_at']}
 
 
-def extract_archive(data, destination):
+def extract_archive(source, destination):
+    """SOURCE is the downloaded archive's path (or, in the controls, its bytes)."""
     require(not destination.exists(), f'Refusing to overwrite publication directory {destination}')
-    with zipfile.ZipFile(io.BytesIO(data)) as archive:
+    if isinstance(source, (bytes, bytearray)):
+        source = io.BytesIO(source)
+    with zipfile.ZipFile(source) as archive:
         names = set()
         total = 0
         for item in archive.infolist():
@@ -249,11 +298,15 @@ def prepare_one(kind, wanted, output, github):
             continue
         artifacts = github.read(f'/repos/{repo}/actions/runs/{selected["id"]}/artifacts?per_page=100')['artifacts']
         artifact, attempt_evidence = select_artifact(artifacts, selected, jobs, kind)
-        print(f'FETCH {kind}: source {selected["head_sha"]}, deployment {selected["id"]}, artifact {artifact["id"]}', flush=True)
-        data = github.read(f'/repos/{repo}/actions/artifacts/{artifact["id"]}/zip', raw=True)
-        require(digest(data) == artifact['digest'], f'{kind}: downloaded artifact digest differs')
+        limit = download_limit(artifact, kind)
+        print(f'FETCH {kind}: source {selected["head_sha"]}, deployment {selected["id"]}, artifact {artifact["id"]}, '
+              f'{artifact["size_in_bytes"]} bytes (bound {limit})', flush=True)
+        archive = output / f'.{kind}-review.zip'
+        downloaded = github.download(f'/repos/{repo}/actions/artifacts/{artifact["id"]}/zip', archive, limit)
+        require(downloaded == artifact['digest'], f'{kind}: downloaded artifact digest differs')
         root = output / kind
-        extract_archive(data, root)
+        extract_archive(archive, root)
+        archive.unlink()
         return {'root': str(root.resolve()), 'source_sha': wanted, 'publication_sha': selected['head_sha'],
                 'run_id': selected['id'], 'run_url': selected['html_url'], 'artifact_id': artifact['id'],
                 'artifact_sha256': artifact['digest'], 'deployment': 'success', **attempt_evidence}
