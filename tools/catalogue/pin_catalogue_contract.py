@@ -3087,6 +3087,63 @@ REVIEWED_PATHS += (
     'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/approved-mark.jpg',
 )
 
+# RULING tk-2 (Sun 18 Oct 2026; sy-4 (i)): the 51 Week 8 Science pack members added beside their pages by the Week 8
+# landing of ruling sy, each pinned by its own bytes, as EO-2 1 pins the rest of the Week 8 set. These pins are what
+# _glv3 LAND_A2_SCIENCE_TERMS admits them by: an exact pinned addition and nothing else.
+REVIEWED_PATHS += (
+    'Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P1_Slides.pptx',
+    'Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P1_Staff_Answers.pdf',
+    'Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P1_TA_Brief.pdf',
+    'Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P1_Teacher_and_Cover_Plan.docx',
+    'Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P1_Teacher_and_Cover_Plan.pdf',
+    'Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P1_Tier_Pack_Standard.pdf',
+    'Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P1_Tier_Pack_Stretch.pdf',
+    'Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P1_Tier_Pack_Supported.pdf',
+    'Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P2_Slides.pptx',
+    'Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P2_Staff_Answers.pdf',
+    'Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P2_TA_Brief.pdf',
+    'Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P2_Teacher_and_Cover_Plan.docx',
+    'Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P2_Teacher_and_Cover_Plan.pdf',
+    'Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P2_Tier_Pack_Standard.pdf',
+    'Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P2_Tier_Pack_Stretch.pdf',
+    'Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P2_Tier_Pack_Supported.pdf',
+    'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P1_Slides.pptx',
+    'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P1_Staff_Answers.pdf',
+    'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P1_Teacher_and_Cover_Plan.docx',
+    'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P1_Teacher_and_Cover_Plan.pdf',
+    'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P1_Tier_Pack_Standard.pdf',
+    'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P1_Tier_Pack_Stretch.pdf',
+    'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P1_Tier_Pack_Supported.pdf',
+    'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P2_Slides.pptx',
+    'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P2_Staff_Answers.pdf',
+    'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P2_Teacher_and_Cover_Plan.docx',
+    'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P2_Teacher_and_Cover_Plan.pdf',
+    'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P2_Tier_Pack_Standard.pdf',
+    'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P2_Tier_Pack_Stretch.pdf',
+    'Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P2_Tier_Pack_Supported.pdf',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1_Slides.pptx',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1_Staff_Answers.pdf',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1_Teacher_and_Cover_Plan.docx',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1_Teacher_and_Cover_Plan.pdf',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1_Tier_Pack_Standard.pdf',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1_Tier_Pack_Stretch.pdf',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1_Tier_Pack_Supported.pdf',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L2_Slides.pptx',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L2_Staff_Answers.pdf',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L2_Teacher_and_Cover_Plan.docx',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L2_Teacher_and_Cover_Plan.pdf',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L2_Tier_Pack_Standard.pdf',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L2_Tier_Pack_Stretch.pdf',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L2_Tier_Pack_Supported.pdf',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L3_Slides.pptx',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L3_Staff_Answers.pdf',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L3_Teacher_and_Cover_Plan.docx',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L3_Teacher_and_Cover_Plan.pdf',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L3_Tier_Pack_Standard.pdf',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L3_Tier_Pack_Stretch.pdf',
+    'Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L3_Tier_Pack_Supported.pdf',
+)
+
 # RULING os-4 / qp-4 (11 Oct 2026), patch set A25: the files the A19/A21/A24 refresh changes outside the existing
 # pins -- the 31 Science decks (the START HERE removal) and the art hub -- each pinned by its own bytes.
 REVIEWED_PATHS += (
