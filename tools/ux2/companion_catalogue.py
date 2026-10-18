@@ -40,6 +40,9 @@ ROOT = Path(__file__).resolve().parents[2]
 CATALOGUE = ROOT / "resources.json"
 DEFAULT_MANIFEST = ROOT / "data/companion-packs.json"
 EVIDENCE = ROOT / "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json"
+# sy-5 (2026-10-18): a lesson the ruling side retires to Earlier collections takes its companion
+# pack with it, so the whole entry moves together. The selection is the catalogue builder's own.
+SELECTION = ROOT / "tools/catalogue/SHELF_SELECTION.json"
 HALF_TERMS = ("Autumn 1", "Autumn 2", "Spring 1", "Spring 2", "Summer 1", "Summer 2")
 ROLES = ("lesson", "teacher", "pupil", "slides")
 TYPES = ("pptx", "docx", "pdf")
@@ -155,6 +158,7 @@ def evidence_entries(packs: list[dict], manifest: dict, tree: Path) -> dict:
     re-verifies against the bytes on disk), and the method names the manifest.
     """
     by_id = {pack["id"].replace("_", "-"): pack for pack in manifest["packs"]}
+    earlier = set(read_json(SELECTION).get("earlier", [])) if SELECTION.is_file() else set()
     out = {}
     for row in packs:
         pack = by_id[row["id"]]
@@ -163,7 +167,7 @@ def evidence_entries(packs: list[dict], manifest: dict, tree: Path) -> dict:
         entry = {
             "term": row["halfTerm"],
             "terms": [row["halfTerm"]],
-            "style": "current",
+            "style": "earlier" if row["companionOf"] in earlier else "current",
             "pathway": pack["pathway"],
             "evidence": [{
                 "method": "companion pack placement manifest",

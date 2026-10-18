@@ -53,6 +53,10 @@ ALTERNATIVE=set(SELECTION.get('alternative',[]))
 # 'current' (Current classroom series) by editorial selection, never 'earlier'. It sits BELOW
 # the bytes-derived full-lundy branch, so a transplant that lands the Lundy furniture wins.
 CURRENT_SERIES=set(SELECTION.get('currentSeries',[]))
+# su-5 (2026-10-18): a lesson the ruling side retires to Earlier collections by editorial
+# selection. It sits with the other editorial decisions, ABOVE the chassis rule, because the
+# retired deck still carries the current chassis: its bytes alone would say 'current'.
+EARLIER=set(SELECTION.get('earlier',[]))
 RECOMMENDED_BATCHES=SELECTION.get('recommendedBatches',{})
 MANIFESTS={}
 for mf in sorted(ROOT.rglob('manifest*.json')):
@@ -180,6 +184,8 @@ def classify(path,row=None):
   result['style']='recommended';result['batch']=RECOMMENDED_BATCHES.get(path,'LAUNCH W3–W7 · integrated teaching pack')
  elif path in ALTERNATIVE:
   result['style']='alternative';result['batch']='Alternative version'
+ elif path in EARLIER:
+  result['style']='earlier';result['batch']='Earlier retained versions'
  elif len(loops)>=4:
   result['style']='full-lundy';result['batch']='Full Lundy Loop · repeated prompts'
  elif path in CURRENT_SERIES:
