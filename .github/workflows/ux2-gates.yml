@@ -24,6 +24,7 @@ on:
       - subject.html
       - resources.json
       - resources.schema.json
+      - 'Science_*/**/*_A1_W08/*.html'
       - assets/catalogue/**
       - data/**
       - tools/ux2/**
@@ -52,6 +53,7 @@ on:
       - subject.html
       - resources.json
       - resources.schema.json
+      - 'Science_*/**/*_A1_W08/*.html'
       - assets/catalogue/**
       - data/**
       - tools/ux2/**
@@ -93,6 +95,7 @@ jobs:
       tags: ${{ steps.tags.outcome }}
       contract: ${{ steps.contract.outcome }}
       companions: ${{ steps.companions.outcome }}
+      outcomes: ${{ steps.outcomes.outcome }}
     name: Catalogue schema, tags and contract (proven red first)
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -115,6 +118,11 @@ jobs:
       - name: The shared contract gate still catches every non-tag edit to an original row
         id: contract
         run: python3 tools/ux2/prove_catalogue_gate.py
+      - name: Every lesson outcome is present where its page states a goal, none is a placeholder, and Week 8 says what its page says
+        id: outcomes
+        # tm-4(b): the Science hub prints a row's desc as the lesson's outcome. Five plants go red.
+        if: ${{ !cancelled() }}
+        run: python3 tools/ux2/check_lesson_outcomes.py --self-test
       - name: The companion-pack entries equal their derivation, every file resolves once, and six plants go red
         id: companions
         # Collect the independent file/derivation proof even if admission fails.
