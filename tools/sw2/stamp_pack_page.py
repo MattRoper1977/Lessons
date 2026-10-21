@@ -9,7 +9,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-SITE_PIN = '6049e6f0b1bcefccf8d58ea911a5214e9474539b'
+SITE_PIN = 'cfc92e845b109459c6f384603f254ecdd26b6035'
 ROOT = Path(__file__).resolve().parents[2]
 
 
