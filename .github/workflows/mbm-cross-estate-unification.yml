@@ -3440,7 +3440,7 @@ jobs:
           retention-days: 14
 
   browser-matrix:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 25
     steps:
       - name: Check out exact branch under review
@@ -3532,7 +3532,7 @@ jobs:
     # rather than be swept in.
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     needs: [static-contract, browser-matrix]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 35
     steps:
       - name: Check out the merged source
