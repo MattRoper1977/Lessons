@@ -2035,7 +2035,7 @@ LUNDYLOOP_CI_PINS = {
     # (lessons "" 5c4e3ced, subject.html 93a071a8, apps "" f15bc17d), so the reviewed bytes
     # moved; digest taken from the edited file, never typed.
     "tools/sw2/check_tokens_inert.cjs": "c94361558f2a6e6696a493a476b07a7349d2877532138db28e60754d3750177e",
-    ".github/workflows/verify-lundyloop-professional-os.yml": "7e6cf886ff1af45cc3bcf255ee6a688b75dbb4034fce20b609fe0188a63c11ce",
+    ".github/workflows/verify-lundyloop-professional-os.yml": "db2f0404944884869d84349a68b80858f81af8dbfb7eb64ddec71151f7928256",
     "tools/lundyloop/verify_live_bytes.py": "a27f791633260e7e2d8ba7ca2abe5a35db105b9ccbf96d26205628dcc1e636ad",
     "tools/lundyloop/test_live_bytes.py": "972ca2ae06da44722bfd011fda03a361c6011c699f95bb6ce78bca95b71f2e77"
 }
