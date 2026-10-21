@@ -9,7 +9,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-SITE_PIN = '9829c4f2db37b7235d1918dbbb58c5a2e277d8af'
+SITE_PIN = 'cfc92e845b109459c6f384603f254ecdd26b6035'
 ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -17,7 +17,7 @@ def render(site):
     assert subprocess.check_output(['git','-C',str(site),'rev-parse','HEAD'],text=True).strip() == SITE_PIN
     sys.path.insert(0,str(site / 'domain-split'))
     from shared_navigation import header, audience_rows, chrome_template
-    head = header('/Lessons/pack.html', audience_rows(site), adult=True, theme=True)
+    head = header('/Lessons/pack.html', audience_rows(site), adult=False, theme=True)
     footer = chrome_template('footer.html','published-signoff',{}) + chrome_template('footer.html','published-links',{'contact_label':'Contact'})
     return '''<!doctype html>
 <html lang="en-GB"><head><meta charset="utf-8">

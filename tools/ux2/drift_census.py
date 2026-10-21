@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """PIN1 §2.2: report UX2's existing proof outcomes; never infer pin coverage.
 
-Exit 0: all nine proof steps and all three jobs succeeded.
+Exit 0: all ten proof steps and all three jobs succeeded.
 Exit 1: complete evidence contains a failure.
 Exit 2: evidence/context is missing, cancelled, skipped, malformed or unknown.
 Failure details remain in the original jobs; a failed job alone does not prove
@@ -17,7 +17,7 @@ from pathlib import Path
 import re
 
 PROOFS = {
-    "catalogue-contract": ("schema", "tags", "contract", "companions"),
+    "catalogue-contract": ("schema", "tags", "contract", "companions", "outcomes"),
     "derived-data": ("spine", "sizes"),
     "hub-and-subject": ("hub", "chips", "dom"),
 }
@@ -74,7 +74,7 @@ def markdown(report):
     lines = [f"# UX2 drift census: {report['verdict']}", "", report["scope"], "",
              f"Commit: `{ctx.get('sha', '')}`; event: `{ctx.get('event', '')}`; "
              f"run: `{ctx.get('run_id', '')}`; attempt: `{ctx.get('run_attempt', '')}`.", "",
-             "PASS means the nine existing UX2 proofs succeeded at this commit. "
+             "PASS means the ten existing UX2 proofs succeeded at this commit. "
              "FAIL includes assertion or execution failures; original job logs supply the diagnosis. "
              "UNMEASURED is never a pass. This is not a pinned-file trigger proof.", "",
              "| Job | Proof | Result |", "|---|---|---|"]
