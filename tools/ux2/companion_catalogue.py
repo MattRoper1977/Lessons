@@ -103,9 +103,14 @@ def derive(rows: list[dict], manifest: dict) -> tuple[list[dict], list[dict]]:
         if row_id in ids:
             problems.append({"id": pack["id"], "problem": "id collides with an existing catalogue row"})
             continue
-        files = [{"role": f["role"], "type": f["type"], "path": f["path"]} for f in pack["files"]]
+        # tq add.1 Q3: a file may carry an optional label, which the pack page shows first.
+        files = [{"role": f["role"], "type": f["type"], "path": f["path"], **({"label": f["label"]} if "label" in f else {})}
+                 for f in pack["files"]]
         if not files or any(f["role"] not in ROLES or f["type"] not in TYPES for f in files):
             problems.append({"id": pack["id"], "problem": "a file has a role or type outside the closed sets"})
+            continue
+        if any("label" in f and not (isinstance(f["label"], str) and 0 < len(f["label"].strip()) <= 60) for f in files):
+            problems.append({"id": pack["id"], "problem": "a file label is not a short non-empty text"})
             continue
         primary = next((f for f in files if f["role"] == "lesson"), files[0])
         host = by_file.get(lesson)
@@ -282,6 +287,7 @@ def self_test(rows: list[dict], manifest: dict, tree: Path) -> None:
     e[-1]["halfTerm"] = next(h for h in HALF_TERMS if h != e[-1].get("halfTerm"))
     plants.append(("a pack half-term that is not its derivation", e))
     f = copy.deepcopy(good); f.pop(); plants.append(("a dropped pack row", f))
+    g = copy.deepcopy(good); g[-1]["files"][0]["label"] = "a label the manifest does not give"; plants.append(("a file label that is not its derivation", g))
     for name, planted in plants:
         red = bool(check(planted, manifest, tree))
         print(f"  {'PASS' if red else 'FAIL'}  red on {name}")
