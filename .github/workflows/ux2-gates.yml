@@ -31,6 +31,7 @@ on:
       - tools/verify_lessons_chips.mjs
       - tools/verify_cross_estate_unification.py
       - tools/catalogue/pin_catalogue_contract.py
+      - tools/catalogue/check_pack_completeness.py
       - tools/catalogue/build_display_titles.py
       - tools/catalogue/check_display_titles.cjs
       - tools/catalogue/check_display_titles_browser.cjs
@@ -60,6 +61,7 @@ on:
       - tools/verify_lessons_chips.mjs
       - tools/verify_cross_estate_unification.py
       - tools/catalogue/pin_catalogue_contract.py
+      - tools/catalogue/check_pack_completeness.py
       - tools/catalogue/build_display_titles.py
       - tools/catalogue/check_display_titles.cjs
       - tools/catalogue/check_display_titles_browser.cjs
@@ -123,7 +125,7 @@ jobs:
         # tm-4(b): the Science hub prints a row's desc as the lesson's outcome. Five plants go red.
         if: ${{ !cancelled() }}
         run: python3 tools/ux2/check_lesson_outcomes.py --self-test
-      - name: The companion-pack entries equal their derivation, every file resolves once, and six plants go red
+      - name: The companion-pack entries equal their derivation, every file resolves once, and seven plants go red
         id: companions
         # Collect the independent file/derivation proof even if admission fails.
         # Earlier failures still fail the job; cancellation still stops it.
@@ -131,6 +133,13 @@ jobs:
         run: |
           python3 tools/ux2/companion_catalogue.py --self-test
           python3 tools/ux2/companion_catalogue.py --check
+      - name: Every Pack row lists its whole pack, and a page with its pack beside it links every member (tq-1, tq-2)
+        id: pack-completeness
+        # tq add.1: older pages reach their pack through the hub pack page and are reported hub-only.
+        if: ${{ !cancelled() }}
+        run: |
+          python3 tools/catalogue/check_pack_completeness.py --self-test
+          python3 tools/catalogue/check_pack_completeness.py
 
   derived-data:
     outputs:
