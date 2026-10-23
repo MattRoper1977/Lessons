@@ -1,0 +1,1 @@
+Public edition: use this deck, planner and public evidence sheet with the shared operational labels, feedback tally, recipes, role cards and vocabulary in the parent folder. Accreditation labels use [AWARD] and [QUAL]. The charity is named; its place is “our local hospice”. Do not publish filled learner evidence, school files, the internal ledger or Segment_A_Updates.
