@@ -1,0 +1,1 @@
+Public edition: use this PPTX, planner and public evidence sheet with the shared vocabulary mat and choice cards in the parent folder. Public accreditation labels use [AWARD] and [QUAL]. The charity is named; its place is “our local hospice”. Do not publish the school planner, school evidence sheet, catch-up record, filled learner evidence or internal provenance ledger.
