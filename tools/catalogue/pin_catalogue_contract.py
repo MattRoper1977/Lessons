@@ -3248,6 +3248,12 @@ REVIEWED_PATHS += (
     'Humanities_Teesside/Teaching_Packs/HUM_00_SoW_and_Order/RE_Scheme_of_Work_Spring_1_2026.html',
 )
 
+# RULING uj, uj add.1, uj add.2 (GROW Community Project, 23 Oct 2026): the project's START_HERE gains the
+# Lesson 3-5 cards (documents only, no lesson page) and keeps the six GCOMM cards under "Earlier versions".
+REVIEWED_PATHS += (
+    'GROW_ASDAN/Community_Project/START_HERE.html',
+)
+
 def pack_rows_for(lessons: Path, rows: list) -> list:
     """UX2 D3 (2026-09-08): the companion-pack entries are the catalogue's tail,
     after the reviewed hub rows. They are not a second hand-kept literal: they
