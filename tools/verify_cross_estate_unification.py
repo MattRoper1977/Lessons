@@ -173,7 +173,7 @@ CATALOGUE_PINS = {
         "Science_Teesside/Build/START_HERE.html": "acac26140f5aeef22292e6ce3831fa61aaf5e62432cc3998b340918c8bfaee7f",
         "Science_Teesside/Grow/START_HERE.html": "d2bec305dec3212215c6f599cad3925c571f9a34ca6e85268893c8ed142170dd",
         "Science_Teesside/Launch/START_HERE.html": "10b46e7cf26e3aa4b7f1fb4758a039bcbec7000bc2ec8d30dfe3ce0e0b966353",
-        "tools/catalogue/SHELF_SELECTION.json": "f5f5bd99f033d7c6c3ea2dbc1ca294a294cad58b25c7db22a983902e95466ba6",
+        "tools/catalogue/SHELF_SELECTION.json": "d5c21afba6ff55471d732c73cfdcf556a473fc37eeb91b146a3175d88d889929",
         "tools/catalogue/HUMANITIES_SELECTION.json": "6b80f3a1e84b9d26cdde4c61dc612dfe0543d04fd175252e8ebef582329ce8ed",
         "tools/easter/science_original_browser.cjs": "aae28a4166d41546cbe5b0acd0866eeaf5e6f47cd5b1949fc48ecb2d4c79a1ec",
         "tools/science_pack/browser_checks.cjs": "058c9bc1f06c876f2994a23d467d83fced683c6355eb92d0ef43986d3e28d72d",
