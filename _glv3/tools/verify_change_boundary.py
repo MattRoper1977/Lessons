@@ -372,6 +372,12 @@ REPLACEMENT_TRANSACTIONS = {
     'UM collections retired': (UM_COLLECTIONS_RETIRED_REVIEW_BASE, UM_COLLECTIONS_RETIRED_REPLACEMENTS),
     # END DECLARED TRANSACTION ENTRIES
 }
+# RULING um add.5 (24 Oct 2026): the retired member type is admitted only inside a transaction listed here against the
+# lettered ruling that retired it. Today that is um only. Any other transaction that carries a retired member fails
+# until this list is changed under a lettered ruling. The list is the ruling record; it is not derived.
+RETIREMENT_RULINGS = {
+    'UM collections retired': 'um',
+}
 # Declaration order is review order: a later transaction that names a path
 # supersedes the earlier claim on it (a merged transaction is history; a later
 # reviewed edit of the same file is its own exact transaction). The map keeps
@@ -809,6 +815,9 @@ def replacement_errors(name, files, root, changes, pins, before_entries, owners=
         path = root / rel
         if reviewed.get('retired') is True:
             # RULING um: a retired member is a ruled deletion of exactly its previous blob, nothing else.
+            # RULING um add.5: and only inside a transaction listed against the ruling that retired it.
+            if name not in RETIREMENT_RULINGS:
+                errors.append(name + ' retired member outside a transaction listed against its ruling: ' + rel)
             if status != 'D':
                 errors.append(name + ' retired member is not a deletion: ' + rel)
             if before_entries.get(rel) != ('100644', 'blob', reviewed['beforeGitBlob']):
@@ -1328,8 +1337,43 @@ def controls(root):
         mutate(sorted(retained)[0], lambda b: b + b'\n', 'Retained Humanities content drift is rejected even if omitted from the supplied diff')
     for name in REPLACEMENT_TRANSACTIONS:
         rows.extend(transaction_controls(root, name))
+    rows.extend(retirement_ruling_controls(root))
     rows.extend(supersession_controls(root))
     rows.extend(ey2_controls(root))
+    return rows
+
+
+def retirement_ruling_controls(root):
+    # RULING um add.5 red proofs. Every declared transaction that carries a retired member is listed against its
+    # ruling; every listed name is a declared transaction with retired members; and the same retired members judged
+    # under a transaction name that is not listed are rejected, though they pass every other retirement rule.
+    rows = []
+    def check(label, condition):
+        if not condition:
+            raise AssertionError(label)
+        rows.append({'name': label, 'status': 'PASS'})
+    owners = judged_owners(root)
+    pins = pin_map(root)
+    digest = memo_digest()
+    for name, (base, files) in REPLACEMENT_TRANSACTIONS.items():
+        members = owned_members(name, files, owners)
+        retired = {rel for rel, entry in members.items() if entry.get('retired') is True}
+        if not retired:
+            continue
+        check(name + ' retires members and is listed against its ruling', name in RETIREMENT_RULINGS)
+        changes = [('D' if rel in retired else 'M', rel) for rel in sorted(members)]
+        before = git_before_entries(root, base, members)
+        check(name + ' retired members pass under their listed transaction',
+              not replacement_errors(name, members, root, changes, pins, before, owners=owners, digest=digest))
+        unlisted = 'Unlisted retirement control'
+        borrowed = {rel: unlisted for rel in members}
+        errors = replacement_errors(unlisted, members, root, changes, pins, before, owners=borrowed, digest=digest)
+        for rel in sorted(retired):
+            check(name + ' retired member under an unlisted transaction rejected: ' + rel,
+                  unlisted + ' retired member outside a transaction listed against its ruling: ' + rel in errors)
+    for name in RETIREMENT_RULINGS:
+        _, files = REPLACEMENT_TRANSACTIONS.get(name, (None, {}))
+        check(name + ' is a declared transaction with retired members', any(e.get('retired') is True for e in files.values()))
     return rows
 
 
