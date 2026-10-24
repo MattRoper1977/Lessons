@@ -47,7 +47,7 @@ const load=filename=>JSON.parse(fs.readFileSync(filename,'utf8'));
       ||[...a.querySelectorAll('img[alt],[aria-label]')].some(e=>(e.getAttribute('alt')||e.getAttribute('aria-label')||'').trim()))).length,
    }));
    assert.equal(counts.overflow,false,'Horizontal overflow at '+width);
-   assert.equal(counts.lessons,35);assert.equal(counts.archives,62);assert.equal(counts.emptyLinks,0);
+   assert.equal(counts.lessons,35);assert.equal(counts.archives,Object.values(manifests).reduce((n,m)=>n+m.archives.length,0)); // ruling um: the hub links every archive its DOWNLOAD_INDEX records (62 before um, 56 after)assert.equal(counts.emptyLinks,0);
    // The geometry assertion must detect an actual planted overflow.
    await page.evaluate(()=>{const e=document.createElement('div');e.id='overflow-control';e.style.cssText='position:absolute;left:0;top:0;width:calc(100vw + 100px);height:1px';document.body.append(e)});
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),true,'Overflow rejection control');

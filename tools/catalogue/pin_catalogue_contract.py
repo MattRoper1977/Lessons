@@ -2473,9 +2473,6 @@ REVIEWED_PATHS += ('tools/humanities_resources/PUBLIC_LABEL_CHANGES.json', 'Huma
 # Existing routes are retained; this list grants no directory-wide exception.
 REVIEWED_PATHS += (
     'Science_Teesside/Teaching_Packs/BUILD/SOURCE_MAPPING.json',
-    'Science_Teesside/Teaching_Packs/BUILD/downloads/BUILD_Science_Autumn1_W3-W7_DOCX_Collection.zip',
-    'Science_Teesside/Teaching_Packs/BUILD/downloads/BUILD_Science_Autumn1_W3-W7_PDF_Collection.zip',
-    'Science_Teesside/Teaching_Packs/BUILD/downloads/BUILD_Science_Autumn1_W3-W7_PPTX_Collection.zip',
     'Science_Teesside/Teaching_Packs/GROW/downloads/GROW_Science_Autumn1_W3-W7_DOCX_Collection.zip',
     'Science_Teesside/Teaching_Packs/GROW/downloads/GROW_Science_Autumn1_W3-W7_PDF_Collection.zip',
     'Science_Teesside/Teaching_Packs/GROW/downloads/GROW_Science_Autumn1_W3-W7_PPTX_Collection.zip',
@@ -2604,9 +2601,6 @@ REVIEWED_PATHS += (
     'Science_Teesside/Teaching_Packs/LAUNCH/Week_7/W7_Weekly_Plan.pdf',
     'Science_Teesside/Teaching_Packs/LAUNCH/Weekly_Plans.pdf',
     'Science_Teesside/Teaching_Packs/LAUNCH/downloads/LAUNCH_Science_Autumn1_W3-W7_Complete_Pack.zip',
-    'Science_Teesside/Teaching_Packs/LAUNCH/downloads/LAUNCH_Science_Autumn1_W3-W7_DOCX_Collection.zip',
-    'Science_Teesside/Teaching_Packs/LAUNCH/downloads/LAUNCH_Science_Autumn1_W3-W7_PDF_Collection.zip',
-    'Science_Teesside/Teaching_Packs/LAUNCH/downloads/LAUNCH_Science_Autumn1_W3-W7_PPTX_Collection.zip',
     'Science_Teesside/Teaching_Packs/LAUNCH/downloads/LAUNCH_Science_Autumn1_W3L1_Lesson_Pack.zip',
     'Science_Teesside/Teaching_Packs/LAUNCH/downloads/LAUNCH_Science_Autumn1_W3L2_Lesson_Pack.zip',
     'Science_Teesside/Teaching_Packs/LAUNCH/downloads/LAUNCH_Science_Autumn1_W3L3_Lesson_Pack.zip',
@@ -3252,6 +3246,34 @@ REVIEWED_PATHS += (
 # Lesson 3-5 cards (documents only, no lesson page) and keeps the six GCOMM cards under "Earlier versions".
 REVIEWED_PATHS += (
     'GROW_ASDAN/Community_Project/START_HERE.html',
+)
+
+# RULING um, um add.1 (24 Oct 2026, reading (ii)): the hub pages, download lists and pack checksum lists edited when
+# the 42 format collections a unit zip fully contains were removed. Pinned by bytes, as START_HERE was under uj.
+REVIEWED_PATHS += (
+    'BUILD_ASDAN/FoodWise/Teaching_Packs/BUILD/SHA256SUMS.txt',
+    'BUILD_ASDAN/FoodWise/Teaching_Packs/DOWNLOADS_MANIFEST.json',
+    'BUILD_ASDAN/FoodWise/Teaching_Packs/index.html',
+    'Careers/Teaching_Packs/BUILD/SHA256SUMS.txt',
+    'Careers/Teaching_Packs/DOWNLOADS_MANIFEST.json',
+    'Careers/Teaching_Packs/GROW/SHA256SUMS.txt',
+    'Careers/Teaching_Packs/index.html',
+    'DT_Textiles/Teaching_Packs/BUILD/SHA256SUMS.txt',
+    'DT_Textiles/Teaching_Packs/DOWNLOADS_MANIFEST.json',
+    'DT_Textiles/Teaching_Packs/GROW/SHA256SUMS.txt',
+    'DT_Textiles/Teaching_Packs/index.html',
+    'GROW_FoodWise/Teaching_Packs/DOWNLOADS_MANIFEST.json',
+    'GROW_FoodWise/Teaching_Packs/GROW/SHA256SUMS.txt',
+    'GROW_FoodWise/Teaching_Packs/index.html',
+    'Humanities_Teesside/Teaching_Packs/DOWNLOADS_MANIFEST.json',
+    'Humanities_Teesside/Teaching_Packs/index.html',
+    'Humanities_Teesside/Teaching_Packs/SHA256SUMS.txt',
+    'ICT/Teaching_Packs/DOWNLOADS_MANIFEST.json',
+    'ICT/Teaching_Packs/GROW/SHA256SUMS.txt',
+    'ICT/Teaching_Packs/index.html',
+    'PSHE/Teaching_Packs/DOWNLOADS_MANIFEST.json',
+    'PSHE/Teaching_Packs/GROW/SHA256SUMS.txt',
+    'PSHE/Teaching_Packs/index.html',
 )
 
 def pack_rows_for(lessons: Path, rows: list) -> list:

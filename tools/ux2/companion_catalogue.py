@@ -31,8 +31,10 @@ from __future__ import annotations
 
 import argparse
 import copy
+import hashlib
 import json
 import os
+import re
 from collections import Counter
 from pathlib import Path
 
@@ -43,6 +45,9 @@ EVIDENCE = ROOT / "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json"
 # sy-5 (2026-10-18): a lesson the ruling side retires to Earlier collections takes its companion
 # pack with it, so the whole entry moves together. The selection is the catalogue builder's own.
 SELECTION = ROOT / "tools/catalogue/SHELF_SELECTION.json"
+# um-4 (a), um add.1 answer B (2026-10-24): earlier-version pack members stay in this repository
+# but leave the publication; each listed file is served from the repository at a pinned commit.
+ARCHIVE = ROOT / "tools/catalogue/PUBLICATION_ARCHIVE.json"
 HALF_TERMS = ("Autumn 1", "Autumn 2", "Spring 1", "Spring 2", "Summer 1", "Summer 2")
 ROLES = ("lesson", "teacher", "pupil", "slides")
 TYPES = ("pptx", "docx", "pdf")
@@ -81,8 +86,36 @@ def describe(files: list[dict]) -> str:
     return ", ".join(parts)
 
 
-def derive(rows: list[dict], manifest: dict) -> tuple[list[dict], list[dict]]:
+def read_archive(path: Path = ARCHIVE) -> dict:
+    """The publication archive: {base, commit, files: {path: sha256}}; empty when absent."""
+    if not path.is_file():
+        return {"base": "", "commit": "", "files": {}}
+    return read_json(path)
+
+
+def archive_errors(archive: dict, packs: list[dict], tree: Path) -> list[str]:
+    """Every archived file is one pack row's file, its bytes are the recorded ones, and the
+    download link is pinned to a full commit of this repository."""
+    errors = []
+    if not archive["files"]:
+        return errors
+    commit = archive.get("commit", "")
+    if not re.fullmatch(r"[0-9a-f]{40}", commit) or archive.get("base") != f"https://github.com/MattRoper1977/Lessons/raw/{commit}/":
+        errors.append("archive: base is not the repository's raw download at a full pinned commit")
+    members = {f["path"] for r in packs for f in r["files"]}
+    for path, digest in archive["files"].items():
+        if path not in members:
+            errors.append(f"archive: {path} is not a pack row's file")
+        elif not (tree / path).is_file():
+            errors.append(f"archive: missing on disk: {path}")
+        elif hashlib.sha256((tree / path).read_bytes()).hexdigest() != digest:
+            errors.append(f"archive: bytes differ from the record: {path}")
+    return errors
+
+
+def derive(rows: list[dict], manifest: dict, archive: dict | None = None) -> tuple[list[dict], list[dict]]:
     """Return (pack rows, problems). A pack with a problem is not landed."""
+    archive = read_archive() if archive is None else archive
     base = [r for r in rows if not is_pack(r)]
     by_file = {r["file"]: r for r in base}
     ids = {r["id"] for r in base}
@@ -104,7 +137,10 @@ def derive(rows: list[dict], manifest: dict) -> tuple[list[dict], list[dict]]:
             problems.append({"id": pack["id"], "problem": "id collides with an existing catalogue row"})
             continue
         # tq add.1 Q3: a file may carry an optional label, which the pack page shows first.
-        files = [{"role": f["role"], "type": f["type"], "path": f["path"], **({"label": f["label"]} if "label" in f else {})}
+        # um-4 (a): an archived file carries its download link, which the pack page uses instead of
+        # the published path.
+        files = [{"role": f["role"], "type": f["type"], "path": f["path"], **({"label": f["label"]} if "label" in f else {}),
+                  **({"download": archive["base"] + f["path"]} if f["path"] in archive["files"] else {})}
                  for f in pack["files"]]
         if not files or any(f["role"] not in ROLES or f["type"] not in TYPES for f in files):
             problems.append({"id": pack["id"], "problem": "a file has a role or type outside the closed sets"})
@@ -216,9 +252,11 @@ def write_evidence(packs: list[dict], manifest: dict, tree: Path) -> int:
     EVIDENCE.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n", "utf-8")
     return changed
 
-def check(rows: list[dict], manifest: dict, tree: Path) -> list[str]:
+def check(rows: list[dict], manifest: dict, tree: Path, archive: dict | None = None) -> list[str]:
     errors: list[str] = []
-    packs, problems = derive(rows, manifest)
+    archive = read_archive() if archive is None else archive
+    packs, problems = derive(rows, manifest, archive)
+    errors.extend(archive_errors(archive, packs, tree))
     for p in problems:
         errors.append(f"{p['id']}: {p['problem']}")
     have = [r for r in rows if is_pack(r)]
@@ -288,8 +326,24 @@ def self_test(rows: list[dict], manifest: dict, tree: Path) -> None:
     plants.append(("a pack half-term that is not its derivation", e))
     f = copy.deepcopy(good); f.pop(); plants.append(("a dropped pack row", f))
     g = copy.deepcopy(good); g[-1]["files"][0]["label"] = "a label the manifest does not give"; plants.append(("a file label that is not its derivation", g))
-    for name, planted in plants:
-        red = bool(check(planted, manifest, tree))
+    archive = read_archive()
+    plants = [(name, planted, archive) for name, planted in plants]
+    if archive["files"]:
+        # um-4 (a): an archived file that loses its download link, an archive entry whose bytes
+        # are not the file's, and a download base that is not pinned to a full commit.
+        first = next(iter(archive["files"]))
+        h = copy.deepcopy(good)
+        for r in h:
+            for f in r.get("files", []):
+                if f["path"] == first:
+                    f.pop("download", None)
+        plants.append(("an archived file without its download link", h, archive))
+        i = copy.deepcopy(archive); i["files"][first] = "0" * 64
+        plants.append(("an archive entry whose bytes differ", good, i))
+        j = copy.deepcopy(archive); j["base"] = "https://github.com/MattRoper1977/Lessons/raw/main/"
+        plants.append(("a download base on a moving branch", good, j))
+    for name, planted, arch in plants:
+        red = bool(check(planted, manifest, tree, arch))
         print(f"  {'PASS' if red else 'FAIL'}  red on {name}")
         if not red:
             raise SystemExit("[FAIL] companion catalogue self-test: a planted defect passed")

@@ -69,7 +69,12 @@ def check(root=ROOT):
         per_week = 3 if pathway == 'LAUNCH' else 2
         assert sorted(len(a['lessonIds']) for a in standard) == [1]*len(expected) + [per_week]*5 + [len(expected)]
         formats = [a for a in archives if a.get('kind') == 'format']
-        assert {a['format'] for a in formats} == {'PDF', 'PPTX', 'DOCX'}
+        # Ruling um (um-3, um add.1 reading (ii)): a pathway's three format collections are removed where its
+        # complete unit ZIP holds every member (the member check below proves it), so a pathway carries all
+        # three or none.
+        assert {a['format'] for a in formats} in ({'PDF', 'PPTX', 'DOCX'}, set())
+        if not formats:
+            assert any(len(a['lessonIds']) == len(expected) for a in standard), 'Format collections removed without a complete unit ZIP'
         for archive in archives:
             path = directory / archive['file']
             assert path.stat().st_size == archive['bytes'] and digest(path) == archive['sha256']
