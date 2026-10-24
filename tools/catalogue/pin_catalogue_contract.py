@@ -3248,6 +3248,33 @@ REVIEWED_PATHS += (
     'GROW_ASDAN/Community_Project/START_HERE.html',
 )
 
+# RULING um, um add.1 (24 Oct 2026, reading (ii)): the hub pages, download lists and pack checksum lists edited when
+# the 42 format collections a unit zip fully contains were removed. Pinned by bytes, as START_HERE was under uj.
+REVIEWED_PATHS += (
+    'BUILD_ASDAN/FoodWise/Teaching_Packs/BUILD/SHA256SUMS.txt',
+    'BUILD_ASDAN/FoodWise/Teaching_Packs/DOWNLOADS_MANIFEST.json',
+    'BUILD_ASDAN/FoodWise/Teaching_Packs/index.html',
+    'Careers/Teaching_Packs/BUILD/SHA256SUMS.txt',
+    'Careers/Teaching_Packs/DOWNLOADS_MANIFEST.json',
+    'Careers/Teaching_Packs/GROW/SHA256SUMS.txt',
+    'Careers/Teaching_Packs/index.html',
+    'DT_Textiles/Teaching_Packs/BUILD/SHA256SUMS.txt',
+    'DT_Textiles/Teaching_Packs/DOWNLOADS_MANIFEST.json',
+    'DT_Textiles/Teaching_Packs/GROW/SHA256SUMS.txt',
+    'DT_Textiles/Teaching_Packs/index.html',
+    'GROW_FoodWise/Teaching_Packs/DOWNLOADS_MANIFEST.json',
+    'GROW_FoodWise/Teaching_Packs/GROW/SHA256SUMS.txt',
+    'GROW_FoodWise/Teaching_Packs/index.html',
+    'Humanities_Teesside/Teaching_Packs/DOWNLOADS_MANIFEST.json',
+    'Humanities_Teesside/Teaching_Packs/index.html',
+    'ICT/Teaching_Packs/DOWNLOADS_MANIFEST.json',
+    'ICT/Teaching_Packs/GROW/SHA256SUMS.txt',
+    'ICT/Teaching_Packs/index.html',
+    'PSHE/Teaching_Packs/DOWNLOADS_MANIFEST.json',
+    'PSHE/Teaching_Packs/GROW/SHA256SUMS.txt',
+    'PSHE/Teaching_Packs/index.html',
+)
+
 def pack_rows_for(lessons: Path, rows: list) -> list:
     """UX2 D3 (2026-09-08): the companion-pack entries are the catalogue's tail,
     after the reviewed hub rows. They are not a second hand-kept literal: they
