@@ -3267,6 +3267,7 @@ REVIEWED_PATHS += (
     'GROW_FoodWise/Teaching_Packs/index.html',
     'Humanities_Teesside/Teaching_Packs/DOWNLOADS_MANIFEST.json',
     'Humanities_Teesside/Teaching_Packs/index.html',
+    'Humanities_Teesside/Teaching_Packs/SHA256SUMS.txt',
     'ICT/Teaching_Packs/DOWNLOADS_MANIFEST.json',
     'ICT/Teaching_Packs/GROW/SHA256SUMS.txt',
     'ICT/Teaching_Packs/index.html',
