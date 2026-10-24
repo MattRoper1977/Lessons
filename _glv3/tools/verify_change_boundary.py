@@ -815,6 +815,9 @@ def replacement_errors(name, files, root, changes, pins, before_entries, owners=
         path = root / rel
         if reviewed.get('retired') is True:
             # RULING um: a retired member is a ruled deletion of exactly its previous blob, nothing else.
+            # RULING um add.5: and only inside a transaction listed against the ruling that retired it.
+            if name not in RETIREMENT_RULINGS:
+                errors.append(name + ' retired member outside a transaction listed against its ruling: ' + rel)
             if status != 'D':
                 errors.append(name + ' retired member is not a deletion: ' + rel)
             if before_entries.get(rel) != ('100644', 'blob', reviewed['beforeGitBlob']):
