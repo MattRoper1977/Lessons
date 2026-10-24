@@ -26,7 +26,7 @@ function contrast(f,b){const l=s=>{const v=s.match(/[\d.]+/g).slice(0,3).map(Num
   const files=[...pack.files].sort((a,b)=>(rank(a)<0?99:rank(a))-(rank(b)<0?99:rank(b)));
   assert.equal(facts.rows.length,pack.files.length,pack.id+' count');
   assert.deepEqual(facts.rows.map(r=>r.path),files.map(f=>f.path),pack.id+' membership/order');
-  for(let i=0;i<files.length;i++){assert.equal(decodeURI(facts.rows[i].href),'/Lessons/'+files[i].path);assert.equal(facts.rows[i].download,!['pdf','html'].includes(files[i].type));}
+  for(let i=0;i<files.length;i++){assert.equal(decodeURI(facts.rows[i].href),files[i].download||'/Lessons/'+files[i].path);assert.equal(facts.rows[i].download,!!files[i].download||!['pdf','html'].includes(files[i].type));} // um-4 (a): an archived member links its pinned download
   assert.equal(decodeURI(facts.delivery),'/Lessons/'+pack.companionOf);
   assert.equal(facts.drift,!!pack.packRevisionDrift);assert.equal(facts.note,notes[pack.id]?.text||null);
   assert.deepEqual([...facts.badges].sort(),[...new Set(files.map(f=>f.type.toUpperCase()))].sort());
