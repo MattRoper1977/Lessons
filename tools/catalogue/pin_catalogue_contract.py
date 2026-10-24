@@ -3276,6 +3276,12 @@ REVIEWED_PATHS += (
     'PSHE/Teaching_Packs/index.html',
 )
 
+# RULING up add.4 (GROW Community Project lessons 6-9, 24 Oct 2026): the fixture-name check's allowlist gains two per-file
+# entries for the Lesson 7 stall-cards filename stem; the checker is admitted here so its reviewed bytes are pinned.
+REVIEWED_PATHS += (
+    'tools/verify_fixture_names.mjs',
+)
+
 def pack_rows_for(lessons: Path, rows: list) -> list:
     """UX2 D3 (2026-09-08): the companion-pack entries are the catalogue's tail,
     after the reviewed hub rows. They are not a second hand-kept literal: they

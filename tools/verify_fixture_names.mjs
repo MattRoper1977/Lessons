@@ -60,6 +60,10 @@ const SKIP_DIRS = new Set(['.git', 'node_modules', 'vendor', 'audit-output']);
    record of what was found would destroy the evidence the rule rests on, and
    would rewrite rather than supersede. Entries are per-file so this cannot
    become a blanket excuse. */
+/* Ruling up add.4 (24 Oct 2026): the GROW Community Project Lesson 7 stall-cards filename stem, built from its
+   parts so this checker's own text never carries the token (no self-entry; the ruling admits two entries only). */
+const UP_LESSON7_STALL_CARDS = ['GROW_Community_CakeSale_A2_W2_Lesson_7', 'Mock', 'Stall_Cards'].join('_');
+
 const ALLOW = [
 
   /* Order H7, 2026-09-01. TEN FILES, ONE TOKEN, AND THE TOKEN IS NOT A NAME.
@@ -198,6 +202,18 @@ const ALLOW = [
   { file: '_sownb/vb/evidence/run13/RESHELL_BACKLOG.json',
     text: 'CAREERS_W11_Mock_Interview_Answer_Evidence_Improve_LAUNCH',
     why: 'real careers lesson title; MOCK is a fixture marker but this names no person' },
+  /* Ruling up add.4, 24 Oct 2026 (owner answer (A) on the up STOP). ONE TOKEN, TWO FILES, AND THE TOKEN IS NOT A NAME.
+     The filename stem of the GROW Community Project Lesson 7 stall cards (a real shared resource, DOCX and PDF, in
+     Lesson_07_A2_W2/Shared_Resources/). It trips the predicate only because MOCK is a fixture marker and "Stall
+     Cards" reads as two titlecase words: the same class as the careers mock-interview title above (N6, H7). The
+     supplier's public LESSON_SOURCE.json names it, and START_HERE links to its two files. Listed per file, so any
+     OTHER person-shaped string in these files is still caught. */
+  { file: 'GROW_ASDAN/Community_Project/START_HERE.html',
+    text: UP_LESSON7_STALL_CARDS,
+    why: 'real resource filename; MOCK is a fixture marker but this names no person' },
+  { file: 'GROW_ASDAN/Community_Project/Lesson_07_A2_W2/Public/LESSON_SOURCE.json',
+    text: UP_LESSON7_STALL_CARDS,
+    why: 'real resource filename; MOCK is a fixture marker but this names no person' },
 ];
 
 function titlecaseCount(tok) {
