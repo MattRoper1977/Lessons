@@ -142,7 +142,7 @@ CATALOGUE_PINS = {
         "assets/catalogue/pack-notes.json": "c7c30351306a21f360190b202b98bf202fde02b8376a1a54886204e718850988",
         "tools/sw2/pack_notes.py": "a81a187002a69bcecca28c9c3130f546e1aae279d5af92cf750a6f9fb04c8fe6",
         "tools/sw2/stamp_pack_page.py": "7d751c25a0a00a1602388537df236c0f79dee6facd31be15fc6e7bce38512149",
-        "tools/sw2/check_pack_page.cjs": "fb093130e13b7e11e996f681f7845620b51e1a2802b6e7b80e8cf3eef92c5eff",
+        "tools/sw2/check_pack_page.cjs": "89f6a087381c5a34342dc5738f67ad0a3d9f4bc8cfb684da451125617a606235",
         "subject.html": "68937980cb0096e21cc5deb7eeaba7500803d4d712fcfb95a5ee364371224f18",
         "assets/catalogue/hub.js": "96e8fc4f644815cf3ebc63b79f807e54eb7f382cad917de317a6f267a9fb15fe",
         "assets/catalogue/hub.css": "603586d0668c39a2039891ab9f599cc234f65748a6794eee7fc65c334b5a23e5",
