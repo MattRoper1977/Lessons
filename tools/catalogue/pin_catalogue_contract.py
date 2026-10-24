@@ -3282,6 +3282,14 @@ REVIEWED_PATHS += (
     'tools/verify_fixture_names.mjs',
 )
 
+# RULING us, us add.1 and us add.2 (Autumn 2 Weeks 1-2 GROW PSHE, 24 Oct 2026): the GROW Autumn 2 tree's START_HERE
+# gains one section, and the START_HERE line of that tree's own checksum file is re-summed; the two modified
+# files are admitted here so their reviewed bytes are pinned.
+REVIEWED_PATHS += (
+    'GROW_ASDAN/Autumn2_W1-W6_2026-27/CHECKSUMS.sha256',
+    'GROW_ASDAN/Autumn2_W1-W6_2026-27/START_HERE.html',
+)
+
 def pack_rows_for(lessons: Path, rows: list) -> list:
     """UX2 D3 (2026-09-08): the companion-pack entries are the catalogue's tail,
     after the reviewed hub rows. They are not a second hand-kept literal: they
