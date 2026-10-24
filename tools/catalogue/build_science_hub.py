@@ -30,7 +30,7 @@ the ordering back from the RENDERED page, and fails while any control is red.
 from pathlib import Path
 import collections, hashlib, html as H, json, re, sys
 from lxml import html as lhtml
-from urllib.parse import urlsplit
+from urllib.parse import quote, urlsplit
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import hub_sections as S
 from title_slide import title_slide_heading   # RULING 2026-09-23 B.2, one definition
@@ -43,6 +43,11 @@ PACKS = ROOT / 'Science_Teesside/Teaching_Packs'
 DOWNLOADS = json.loads((ROOT / 'assets/catalogue/science-download-bindings.json').read_text())
 E = H.escape
 TERM_LABEL = DATA['terms']
+# um-4 (a), um add.1 answer B: earlier-version pack members are kept here but not published; the
+# card links each one to the repository download at the archive's pinned commit.
+ARCHIVE = json.loads((ROOT / 'tools/catalogue/PUBLICATION_ARCHIVE.json').read_text()) if (ROOT / 'tools/catalogue/PUBLICATION_ARCHIVE.json').is_file() else {'base': '', 'files': {}}
+SCIENCE_PREFIX = str(PACKS.parent.relative_to(ROOT)) + '/'
+archive_href = lambda repo_path: ARCHIVE['base'] + quote(repo_path) if repo_path in ARCHIVE['files'] else None
 DOWNLOAD_EXT = {'.pdf': 'PDF', '.docx': 'DOCX', '.pptx': 'PPTX', '.zip': 'ZIP', '.html': 'HTML', '.txt': 'TXT'}
 CONFORMING = set(CENSUS['conforming'])
 assert CENSUS.get('schema') == 'science-chassis-census/1' and CENSUS.get('routes') == len(DATA['lessons']), 'the census is not this shelf\'s'
@@ -237,19 +242,23 @@ def pack_cards() -> list[dict]:
             mem = by_id.get(L['id'])
             if mem:
                 week_rows.setdefault(f'W{L["week"]}', []).append((f'HTML · {L["title"]}', rel(base / mem)))
-        documents = []
+        documents, local_documents = [], []
         for mem in sorted(members, key=S.natural):
             if mem.startswith('HTML/') or mem.startswith('Resources/'):
                 continue
             ext = Path(mem).suffix.lower()
             if ext in DOWNLOAD_EXT and not mem.endswith('.json'):
-                documents.append((f'{DOWNLOAD_EXT[ext]} · ' + Path(mem).stem.replace('_', ' '), rel(base / mem)))
+                label = f'{DOWNLOAD_EXT[ext]} · ' + Path(mem).stem.replace('_', ' ')
+                local = rel(base / mem)
+                # C3 still resolves the file in this tree; the card links the archive download.
+                local_documents.append((label, local))
+                documents.append((label, archive_href(str((base / mem).relative_to(ROOT))) or local))
         start = PACKS / 'index.html'
         lesson_count = sum(len(v) for v in week_rows.values())
         cards.append({'id': f'{pathway}_Science_pack', 'pathway': pathway, 'pathway_label': pathway, 'term': 'Aut1', 'term_label': TERM_LABEL['Aut1'],
                       'strand': 'Science', 'title': f'{pathway} · Science teaching pack', 'start_here': rel(start), 'proofread': False,
                       'lesson_count': lesson_count, 'weeks': list(week_rows.items()), 'documents': documents,
-                      'links': [('start here', rel(start))] + [f for _, fs in week_rows.items() for f in fs] + documents})
+                      'links': [('start here', rel(start))] + [f for _, fs in week_rows.items() for f in fs] + local_documents})
     return cards
 
 
@@ -458,6 +467,30 @@ def c9_errors(current_page: str, slots: dict[tuple, list[str]], current: set, cl
 page_cards = current_html + packs_html + earlier_html
 errors += c6_errors(lessons) + c7_errors(page_cards, rendered) + c8_errors(lessons)
 errors += c9_errors(current_html, SLOTS, D['current'], CLASSIC)
+
+
+def c11_errors(page: str, cards: list[dict]) -> list[str]:
+    """C11 (um-4 a): an archived pack member is never linked at its unpublished path, and every
+    one a card lists links the archive download at the pinned commit."""
+    hrefs = set(H.unescape(h) for h in re.findall(r'href="([^"]+)"', page))
+    listed = {str((PACKS.parent / local).relative_to(ROOT)) for c in cards for _, local in c['links']}
+    errs = []
+    for repo_path in ARCHIVE['files']:
+        if repo_path.startswith(SCIENCE_PREFIX) and repo_path not in listed:
+            errs.append(f'C11 archived member no pack card lists: {repo_path[len(SCIENCE_PREFIX):]}')
+    for repo_path in ARCHIVE['files']:
+        if not repo_path.startswith(SCIENCE_PREFIX):
+            continue
+        local = repo_path[len(SCIENCE_PREFIX):]
+        if local in hrefs:
+            errs.append(f'C11 archived member linked at its unpublished path: {local}')
+        if archive_href(repo_path) not in hrefs:
+            errs.append(f'C11 archived member without its archive download link: {local}')
+    return errs
+
+
+errors += c11_errors(packs_html, cards)
+ARCHIVE_FIRST = next((p for p in ARCHIVE['files'] if p.startswith(SCIENCE_PREFIX)), '')
 ROWS = rendered_week_rows(current_html)
 
 
@@ -507,6 +540,14 @@ def self_test() -> int:
              '<div class="week-row"><article data-lesson-path="' + dated + 'X_Explore.html"></article>'
              '<article data-lesson-path="Science_Teesside/Grow/v3_40min/X_v3.html"></article></div>', {}, set(), {}))),
         ('the page as built passes every control, C1-C10: 0 errors', not errors),
+        ('RED PROOF: C11 reds an archived member linked at its unpublished path instead of its download',
+         bool(ARCHIVE_FIRST) and any('unpublished path' in e for e in c11_errors(
+             packs_html.replace(H.escape(archive_href(ARCHIVE_FIRST), quote=True), H.escape(ARCHIVE_FIRST[len(SCIENCE_PREFIX):], quote=True)), cards))
+         and any('without its archive download' in e for e in c11_errors(
+             packs_html.replace(H.escape(archive_href(ARCHIVE_FIRST), quote=True), H.escape(ARCHIVE_FIRST[len(SCIENCE_PREFIX):], quote=True)), cards))),
+        ('RED PROOF: C11 reds an archived member that no pack card lists',
+         bool(ARCHIVE_FIRST) and any('no pack card lists' in e for e in c11_errors(
+             packs_html, [dict(c, links=[l for l in c['links'] if str((PACKS.parent / l[1]).relative_to(ROOT)) != ARCHIVE_FIRST]) for c in cards]))),
         ('RED PROOF: an older copy beside a dated deck leaves current',
          older_copies(planted_slots) == {'Science_Teesside/Grow/v3_40min/X_v3.html': dated + 'X_Explore.html'}),
         ('an older copy that alone serves its week stays current (no week loses its lesson)',

@@ -103,7 +103,7 @@ MANIFEST_PINS = {
     # Ruled onto the pin 2026-08-12 (Ruling 3): the deck install is a
     # resources.json edit, and the blanket rule forbade it the same way it
     # once forbade studio adds. Same pattern, same tool, same commit rule.
-    "resources.json": "4549b7b45be290de5e41697d50d41bd01e6ca62816924d4cf320661c10769c87"
+    "resources.json": "b41bbe7e262cc9c5596920a613a22e31022356f6e04cf0643969acc773548c02"
 }
 PIN_COMMAND = "python3 tools/pin_manifests.py   (from either checkout — it writes both gate copies or neither)"
 
@@ -133,18 +133,18 @@ CATALOGUE_PINS = {
         "tools/catalogue/build_lesson_order.py": "35a4c54779b800ae8bd949154d0d19fddb190f49ec18e62efdd86d03313f6180",
         "tools/ux2/hub_gates.mjs": "3d3120df94b1789041370c4045fbcc983635af0b30a0705447f18371bed98944",
         "index.html": "389c3320b158e9bc472b4402d41d1d23e4bb2d78b54385884c0be6ca31f73309",
-        "Science_Teesside/index.html": "30b7c4b9efb68a34c32e0472bedcff25c90f5586a7abe224503de1448d8a52df",
+        "Science_Teesside/index.html": "d1a12841c30c305861f98dd1ba9b9fe7f9484aab74486c67d0b643fba5677950",
         "Humanities_Teesside/index.html": "841834da4bc45dd7cb06d10b4c0c6b940d2d516034ca27de3ab2e3079cb17cc8",
         "humanities_teesside.html": "577740530e89ad174e6b2eb177fab2409ece9e142e4c68a91903b939f3721382",
         "pack.html": "42935782c353525d28b9263a90a8c48e4b5ca764226444edfa68d6f664862be1",
-        "assets/catalogue/pack.js": "a61408f6e14671c828cee75edcfdb8040a2da5210ffd17113ba2aaba1e978aa0",
+        "assets/catalogue/pack.js": "da66512500cd92e7c7b2a58141ce98c903676b972ea71ba0723984eff12be7c6",
         "assets/catalogue/pack.css": "ba6c5c84bcff84c023f2f10ac345a159f48ea97b2e8eb542cb3e56435204d63a",
         "assets/catalogue/pack-notes.json": "c7c30351306a21f360190b202b98bf202fde02b8376a1a54886204e718850988",
         "tools/sw2/pack_notes.py": "a81a187002a69bcecca28c9c3130f546e1aae279d5af92cf750a6f9fb04c8fe6",
         "tools/sw2/stamp_pack_page.py": "7d751c25a0a00a1602388537df236c0f79dee6facd31be15fc6e7bce38512149",
         "tools/sw2/check_pack_page.cjs": "fb093130e13b7e11e996f681f7845620b51e1a2802b6e7b80e8cf3eef92c5eff",
         "subject.html": "68937980cb0096e21cc5deb7eeaba7500803d4d712fcfb95a5ee364371224f18",
-        "assets/catalogue/hub.js": "588f4c2dee4aa5030901f6d260f5dd160aaf306d4634732e99d38046d334e652",
+        "assets/catalogue/hub.js": "96e8fc4f644815cf3ebc63b79f807e54eb7f382cad917de317a6f267a9fb15fe",
         "assets/catalogue/hub.css": "603586d0668c39a2039891ab9f599cc234f65748a6794eee7fc65c334b5a23e5",
         "data/calendar-spine.json": "d199474b13c9d340add2c87165396d83712b0f1c9f8bd03b7b12e8fdf6af0d61",
         "Humanities_Teesside/David_Cover_Autumn1_W3-W7/index.html": "4e25eb9ca8f9f93c720d88d945f3d6d79580f3362a88698fe7af75d146f01e96",
@@ -159,7 +159,7 @@ CATALOGUE_PINS = {
         "tools/catalogue/build_catalogue.py": "4eff91f7ace9073a6612035c33e8556875d6165da83876ae5ec20a6ec11a15a8",
         "tools/catalogue/build_science_shelf.py": "396b6aeb7cb3cabe037b7af27877ae7a090e5aa1bce284409e400549d5204c24",
         "tools/catalogue/build_humanities_shelf.py": "3ccaec58fef083173d37d295d564c99799304e796b8b2a2ecf0ccaa01454928e",
-        "tools/catalogue/build_science_hub.py": "6982e3c6cb67c3a48dd075816b5e1ddb5597ab36b7e6961c509d3b353d6d71dc",
+        "tools/catalogue/build_science_hub.py": "fce0bacba013f60f99657f94f0a8f4a5146e74e5bcdbcb1b95ddbbea40ca226a",
         "assets/catalogue/science-hub-bindings.json": "360cc3da713df7308672cc1cb2bc096913f72d258ca57a3545034fc04f660588",
         "tools/catalogue/check_catalogue_static.py": "be992fedf091e50582c5e2f57f10a22f44b1ed975236b7ce7be2bbe870df6a83",
         "tools/catalogue/check_catalogue_dom.cjs": "077dd17ebc4dc0d2937ffdd2407c5110b107651d56c2d5c6e87800bd04690ac4",
@@ -1794,7 +1794,7 @@ CATALOGUE_SHELF_ROWS = 297
 # second set is empty and the allowance cannot launder a pre-existing value.
 CATALOGUE_ADDITIVE_TAG_KEYS = frozenset({"halfTerm", "unit"})
 CATALOGUE_ORIGINAL_KEYS_BEFORE_TAGS = frozenset()
-CATALOGUE_SHELF_ROWS_SHA256 = "ced025d3c88baaf0793f90cc102f6652fe62ea7b389db96fb9ca76f54f85d8b0"
+CATALOGUE_SHELF_ROWS_SHA256 = "41fe996ce3d0fecdbf26c6cd138c6cd6f55281b5b6887b6c874a09780e505942"
 
 # These named review records and review tools can change with their reviewed
 # transaction. Tools are not served assets; they are reviewed as executable
