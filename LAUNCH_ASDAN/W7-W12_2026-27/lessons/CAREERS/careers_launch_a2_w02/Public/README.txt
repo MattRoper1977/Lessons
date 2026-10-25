@@ -1,0 +1,2 @@
+Lesson resource · CC BY-NC-SA 4.0: free for classroom use, share and adapt with credit, no resale
+Public deck, planner, source and weekly plan row. Use the eight shared Evidence Sheet, Staff Answers, Support Cards and Vocabulary Mat files at the lesson root. No named school system or identifying names occur. The root School files use a different edition label; the current names rule is applied to both.
