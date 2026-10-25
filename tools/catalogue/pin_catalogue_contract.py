@@ -3297,6 +3297,17 @@ REVIEWED_PATHS += (
     'GROW_ASDAN/Autumn2_W1-W6_2026-27/index.html',
 )
 
+# RULING vb-7 (stage 6, Autumn 2 Public landing, 25 Oct 2026; lane decision L6-6 and the vd-3 placement steer):
+# the LAUNCH W7-W12 tree's START_HERE gains five Autumn 2 sections (D&T, PSHE/RSHE, Vocational, Careers, ICT) and
+# the START_HERE line of that tree's own checksum file is re-summed; the Art Build START_HERE gains the Creative
+# Arts Week 7 tiles. The three modified files are admitted here so their reviewed bytes are pinned. (The GROW
+# Autumn 2 START_HERE, index.html, checksum file and the Community_Project START_HERE are already admitted.)
+REVIEWED_PATHS += (
+    'Art_Teesside/Build/START_HERE.html',
+    'LAUNCH_ASDAN/W7-W12_2026-27/SHA256SUMS.txt',
+    'LAUNCH_ASDAN/W7-W12_2026-27/START_HERE.html',
+)
+
 def pack_rows_for(lessons: Path, rows: list) -> list:
     """UX2 D3 (2026-09-08): the companion-pack entries are the catalogue's tail,
     after the reviewed hub rows. They are not a second hand-kept literal: they
