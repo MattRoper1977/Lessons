@@ -28,6 +28,7 @@
 <p class="lead" id="lead">Pick a pathway, then a half-term. One pathway shows at a time.</p>
 <div class="sub-search" role="search" aria-label="Search this subject"><input id="search" type="search" placeholder="Search this subject…" autocomplete="off" aria-label="Search this subject"></div>
 </div>
+<div class="audience-doors" data-science-slot hidden><!-- MBM-AUDIENCE-DOORS --></div>
 <div class="chooser" id="chooser" hidden></div>
 <details class="browse-options subject-options"><summary>Teaching packs and collections</summary><div class="suites" id="suites" hidden></div></details>
 <div class="seg" id="seg" role="tablist" aria-label="Pathway" hidden></div>
@@ -37,6 +38,7 @@
 <p class="status" id="lesson-save-status" aria-live="polite" aria-atomic="true"></p>
 <nav class="term-nav" id="term-nav" aria-label="Terms"></nav>
 <div id="rows"></div>
+<div class="noscript-slot" data-science-slot><!-- MBM-NOSCRIPT-LESSON-INDEX: generator populates static lesson list from resources.json --></div>
 </main>
 <button id="to-top" type="button" aria-label="Back to top" hidden>↑</button>
 <footer class="footer"><div class="bar"><svg class="mono" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="47" fill="none" stroke="#B9E6CD" stroke-width="3.4"/><g transform="translate(0 2)"><path d="M28 71 L28 37 L50 59 L72 37 L72 71" fill="none" stroke="#E8E2D4" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M50 22.5 L51.48 28.52 L57.5 30 L51.48 31.48 L50 37.5 L48.52 31.48 L42.5 30 L48.52 28.52 Z" fill="#F2A24A"/></g></svg>
@@ -50,6 +52,9 @@
 const H=window.MBM_HUB,{$,$$,esc,safeHref,COPY,CARDS,ICONS,PATHWAYS,HALF_TERMS,chip,lessonRow}=H;
 const params=()=>new URLSearchParams(location.search);
 let CARD=null,ROWS=[],OPEN=new Set(),OPENED_FOR='',EXPANDED=new Set();
+// ug add.1 (h): everything J91 adds renders for ?subject=science only; the other cards are unchanged.
+const SCI=()=>!!CARD&&CARD.slug==='science';
+$$('[data-science-slot]').forEach(el=>{el.hidden=true;});
 function setParam(k,v){const p=params();if(v)p.set(k,v);else p.delete(k);try{history.replaceState(null,'',location.pathname+(p.toString()?'?'+p.toString():'')+location.hash)}catch(_){}}
 function chooser(cards){
   $('#sub-name').textContent='Choose a subject';$('#sub-icon').innerHTML='';$('#lead').textContent=COPY.S2;
@@ -57,13 +62,17 @@ function chooser(cards){
   $('#seg').hidden=true;$('#fchips').hidden=true;$('#rows').innerHTML='';$('#summary').textContent='';
 }
 function pathwayRows(p){return p==='ALL'?ROWS.filter(r=>!r._tier):ROWS.filter(r=>r._tier===p);}
-function population(){const p=params();const pw=currentPathway();let rows=pathwayRows(pw);if(p.get('unit'))rows=rows.filter(r=>r.unit===p.get('unit'));const f=p.get('format')||'';if(f)rows=rows.filter(r=>r._fmt===f||(r.files||[]).some(x=>(x.type==='pdf'?'pdf':'packs')===f));const q=(p.get('q')||'').toLowerCase().trim();if(q)rows=rows.filter(r=>[r.title,H.displayTitle(r),r.id,r._path,r.desc||r.description||'',r.family,r.unit,r.halfTerm,...(r.keywords||[])].join(' ').toLowerCase().includes(q));return rows;}
+function population(){const p=params();const pw=currentPathway();let rows=pathwayRows(pw);if(p.get('unit'))rows=rows.filter(r=>r.unit===p.get('unit'));const f=p.get('format')||'';if(f)rows=rows.filter(r=>r._fmt===f||(r.files||[]).some(x=>(x.type==='pdf'?'pdf':'packs')===f));if(SCI()){const wk=p.get('week')||'',sd=p.get('strand')||'';if(wk)rows=rows.filter(r=>H.weeksOf(r).some(w=>w.label===wk));if(sd)rows=rows.filter(r=>String(r.strand||'').trim()===sd);}const q=(p.get('q')||'').toLowerCase().trim();if(q)rows=SCI()?H.searchFilter(rows,q):rows.filter(r=>[r.title,H.displayTitle(r),r.id,r._path,r.desc||r.description||'',r.family,r.unit,r.halfTerm,...(r.keywords||[])].join(' ').toLowerCase().includes(q));return rows;}
 function segments(){const present=H.pathwaysPresent(ROWS);const unknowable=ROWS.some(r=>!r._tier);return unknowable?[...present,'ALL']:present;}
 function currentPathway(){const segs=segments();const want=(params().get('pathway')||'').toUpperCase();if(segs.includes(want))return want;return segs[0]||'ALL';}
+function pathwayTab(p,cur){
+  const pr=ROWS.filter(r=>r._tier===p),id='tab-'+p;
+  return `<button role="tab" class="${esc(p)} pw-card" id="${esc(id)}" aria-selected="${p===cur}" tabindex="${p===cur?0:-1}" data-pathway="${esc(p)}" aria-controls="rows" aria-labelledby="${esc(id)}-name" aria-describedby="${esc(id)}-detail"><span class="pw-art" aria-hidden="true">${H.pathwayArt(CARD.slug,p)}</span><span class="pw-body"><span class="chip tier ${esc(p)}" id="${esc(id)}-name">${esc(p)}</span><span class="sr-only"> · </span><span class="pw-detail" id="${esc(id)}-detail"><span class="pw-counts">${H.distinctLessons(pr)} lessons · ${pr.filter(r=>r.kind==='pack').length} ${esc(H.FORMAT_LABEL.packs)}</span><span class="pw-box">${H.pathwayBoxBadges(p,pr)}</span></span></span></button>`;
+}
 function renderSeg(){
   const segs=segments(),cur=currentPathway();const el=$('#seg');
   el.hidden=segs.length<=1&&segs[0]==='ALL';
-  el.innerHTML=segs.map(p=>`<button role="tab" class="${esc(p)}" id="tab-${esc(p)}" aria-selected="${p===cur}" tabindex="${p===cur?0:-1}" data-pathway="${esc(p)}" aria-controls="rows">${p==='ALL'?'All':esc(p)}</button>`).join('');
+  el.innerHTML=segs.map(p=>SCI()&&p!=='ALL'?pathwayTab(p,cur):`<button role="tab" class="${esc(p)}" id="tab-${esc(p)}" aria-selected="${p===cur}" tabindex="${p===cur?0:-1}" data-pathway="${esc(p)}" aria-controls="rows">${p==='ALL'?'All':esc(p)}</button>`).join('');
 }
 function renderChips(){
   const pw=currentPathway();const present=H.formatsPresent(pathwayRows(pw));const cur=params().get('format')||'';const el=$('#fchips');
@@ -105,12 +114,13 @@ function accordion(id,label,body,number,classes=''){
  return `<section class="${classes==='teaching-week'?'week-group':'acc'} ${classes}" data-group="${esc(id)}"><button type="button" aria-expanded="${open}" aria-controls="${pid}" data-toggle="${esc(id)}"><span class="chev" aria-hidden="true">▾</span><span>${esc(label)}</span>${number===undefined?'':`<span class="n">${number}</span>`}</button><div class="acc-body" id="${pid}"${open?'':' hidden'}>${body}</div></section>`;
 }
 function groupedCard(group){
+ const row=SCI()?x=>H.lessonCard(x,CARD.slug):lessonRow;
  const r=group.primary,rest=group.members.filter(x=>x!==r),weeks=H.weeksOf(r);
  const style=H.styleOf(r),label=H.state.meta?.styles?.[style]||'';
  const head=`<div class="lesson-position">${weeks.length?weeks.map(w=>esc(w.label)).join('; '):'Week not specified'}${H.recommended(r)?' · Recommended':''}</div>`;
  let extra='';
- if(rest.length){const id='versions|'+group.key;extra=accordion(id,'Downloads and alternative versions',`<ul class="lrows">${rest.map(lessonRow).join('')}</ul>`+planningLink({rows:rest}),rest.length,'lesson-alternatives');}
- return `<li class="lesson-group" data-lesson-identity="${esc(group.key)}">${head}<ul class="lrows">${lessonRow(r)}</ul>${extra}</li>`;
+ if(rest.length){const id='versions|'+group.key;extra=accordion(id,'Downloads and alternative versions',`<ul class="lrows">${rest.map(row).join('')}</ul>`+planningLink({rows:rest}),rest.length,'lesson-alternatives');}
+ return `<li class="lesson-group" data-lesson-identity="${esc(group.key)}">${head}<ul class="lrows">${row(r)}</ul>${extra}</li>`;
 }
 function groupBody(g){
  const cards=H.lessonGroups(g.rows),current=cards.filter(c=>['recommended','current','award'].includes(H.styleOf(c.primary))),other=cards.filter(c=>!current.includes(c));
@@ -124,11 +134,11 @@ function groupBody(g){
 }
 function renderRows(){
  const rows=population(),list=groups(rows);
- const popKey=currentPathway()+'|'+(params().get('format')||'')+'|'+(params().get('q')||'')+'|'+(params().get('unit')||'');
+ const popKey=currentPathway()+'|'+(params().get('format')||'')+'|'+(params().get('q')||'')+'|'+(params().get('unit')||'')+(SCI()?'|'+(params().get('week')||'')+'|'+(params().get('strand')||''):'');
  if(OPENED_FOR!==popKey){OPEN=new Set();const d=defaultOpen(list);if(d){OPEN.add(d);const g=list.find(x=>x.id===d),cards=H.lessonGroups(g.rows),first=cards.find(c=>['recommended','current','award'].includes(H.styleOf(c.primary)))||cards.find(c=>!['earlier','reference'].includes(H.styleOf(c.primary)));if(first){const label=H.weeksOf(first.primary).map(x=>x.label).join('; ')||'Week not specified';OPEN.add('week|'+g.id+'|'+label);}}OPENED_FOR=popKey;}
  const lessons=H.distinctLessons(rows);
  $('#summary').textContent=`${lessons} lessons · ${rows.length} resources and versions`;
- const p=params(),filtering=!!(p.get('q')||p.get('format')||p.get('unit'));
+ const p=params(),filtering=!!(p.get('q')||p.get('format')||p.get('unit')||(SCI()&&(p.get('week')||p.get('strand'))));
  const st=$('#status');st.replaceChildren();
  if(filtering){st.append(document.createTextNode(`Showing ${rows.length} matching resources.`));const b=document.createElement('button');b.type='button';b.className='btn';b.dataset.clearFilters='';b.textContent='Clear filters';st.appendChild(b);}
  $('#term-nav').innerHTML=list.filter(g=>g.halfTerm).map(g=>`<button type="button" data-term-open="${esc(g.id)}" aria-pressed="${OPEN.has(g.id)}">${esc(g.label)}</button>`).join('');
@@ -139,13 +149,27 @@ function renderSuites(){
   const hubs=ROWS.filter(r=>/^hub$/i.test(r.type));const el=$('#suites');
   el.hidden=!hubs.length;el.innerHTML=hubs.map(r=>`<a href="${esc(safeHref(r._path))}" data-resource-path="${esc(r._path)}">${esc(H.displayTitle(r))}</a>`).join('');
 }
-function render(){renderSeg();renderChips();renderRows();}
+function scienceShell(){
+  $('#seg').insertAdjacentHTML('afterend','<div class="recent sci-recent" id="sci-recent" hidden></div>');
+  $('#fchips').insertAdjacentHTML('afterend','<div class="fchips sci-strands" id="sci-strands" hidden></div><div class="fchips sci-weeks" id="sci-weeks" hidden></div>');
+}
+function renderScience(){
+  const rec=$('#sci-recent'),items=H.recentItems(ROWS,3);
+  rec.hidden=!items.length;
+  rec.innerHTML=items.length?`<h2>Recently opened</h2><div>${items.map(r=>`<a href="${esc(safeHref(H.rowHref(r)))}">${esc(H.displayTitle(r))}</a>`).join('')}</div>`:'';
+  const pool=pathwayRows(currentPathway()),p=params();
+  const list=(el,key,values)=>{const cur=p.get(key)||'';el.hidden=!values.length;el.innerHTML=values.length?[`<button type="button" data-${key}-filter="" aria-pressed="${!cur}">All</button>`,...values.map(v=>`<button type="button" data-${key}-filter="${esc(v)}" aria-pressed="${cur===v}">${esc(v)}</button>`)].join(''):'';};
+  list($('#sci-strands'),'strand',H.strandsPresent(pool));
+  list($('#sci-weeks'),'week',H.weeksPresent(pool));
+}
+function render(){renderSeg();renderChips();if(SCI())renderScience();renderRows();}
 function boot(){
   const cards=H.cardsFromRows(H.state.rows);
   const slug=H.slugForQuery(params().get('subject')||'');
   CARD=cards.find(c=>c.slug===slug)||null;
   if(!CARD){chooser(cards);return;}
   ROWS=CARD.rows;
+  if(SCI()){$$('[data-science-slot]').forEach(el=>{el.hidden=false;});scienceShell();}
   document.title=`${CARD.name} — Lessons — Made by Matt`;
   $('#sub-name').textContent=CARD.name;$('#sub-icon').innerHTML=ICONS[CARD.slug]||ICONS.extra;
   if(params().get('q'))$('#search').value=params().get('q');
@@ -156,17 +180,25 @@ function boot(){
   if(first&&!$('#seg').hidden)first.focus();else $('#search').focus();
 }
 document.addEventListener('click',e=>{
+  const sf=SCI()&&e.target.closest('#sci-weeks button,#sci-strands button');if(sf){const key=sf.hasAttribute('data-week-filter')?'week':'strand',v=sf.getAttribute('data-'+key+'-filter');setParam(key,v);renderScience();renderRows();const again=$$('#sci-'+key+'s button').find(x=>x.getAttribute('data-'+key+'-filter')===v);if(again)again.focus();return;}
   const term=e.target.closest('[data-term-open]');if(term){OPEN.add(term.dataset.termOpen);renderRows();const heading=$$('button[data-toggle]').find(b=>b.dataset.toggle===term.dataset.termOpen);if(heading){heading.focus();heading.scrollIntoView({block:'nearest'});}return;}
-  const tab=e.target.closest('#seg [role="tab"]');if(tab){setParam('pathway',tab.dataset.pathway==='ALL'?'ALL':tab.dataset.pathway);render();$('#seg [role="tab"][aria-selected="true"]').focus();return;}
+  const tab=e.target.closest('#seg [role="tab"]');if(tab){if(SCI())setParam('week','');setParam('pathway',tab.dataset.pathway==='ALL'?'ALL':tab.dataset.pathway);render();$('#seg [role="tab"][aria-selected="true"]').focus();return;}
   const fc=e.target.closest('#fchips button');if(fc){setParam('format',fc.dataset.format);render();$(`#fchips button[data-format="${fc.dataset.format}"]`).focus();return;}
   const tg=e.target.closest('button[data-toggle]');if(tg){const id=tg.dataset.toggle;if(OPEN.has(id))OPEN.delete(id);else OPEN.add(id);renderRows();const again=$$('button[data-toggle]').find(b=>b.dataset.toggle===id);if(again)again.focus();return;}
   const mo=e.target.closest('button[data-more]');if(mo){EXPANDED.add(mo.dataset.more);renderRows();const sec=$$('.acc').find(s=>s.dataset.group===mo.dataset.more);const panel=sec&&sec.querySelector('.lrows li:nth-child(4) a');if(panel)panel.focus();return;}
-  if(e.target.closest('[data-clear-filters]')){$('#search').value='';setParam('q','');setParam('format','');setParam('unit','');render();$('#search').focus();return;}
+  if(e.target.closest('[data-clear-filters]')){$('#search').value='';setParam('q','');setParam('format','');setParam('unit','');if(SCI()){setParam('week','');setParam('strand','');}render();$('#search').focus();return;}
 });
 $('#seg').addEventListener('keydown',e=>{
   const tabs=$$('#seg [role="tab"]');const i=tabs.indexOf(document.activeElement);if(i<0)return;
   let j=null;if(e.key==='ArrowRight')j=(i+1)%tabs.length;if(e.key==='ArrowLeft')j=(i-1+tabs.length)%tabs.length;if(e.key==='Home')j=0;if(e.key==='End')j=tabs.length-1;
   if(j===null)return;e.preventDefault();tabs[j].click();
+});
+document.addEventListener('keydown',e=>{
+  if(!SCI()||e.defaultPrevented||e.ctrlKey||e.metaKey||e.altKey)return;
+  const a=document.activeElement,s=$('#search'),sheet=$('#pack-sheet');
+  if((sheet&&sheet.open)||document.querySelector('.mbm-unified-menu[open],header details[open],#menu[aria-expanded="true"]'))return;
+  if(e.key==='/'){if(a&&(/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)||a.isContentEditable))return;e.preventDefault();s.focus();return;}
+  if(e.key==='Escape'&&a===s&&s.value){s.value='';setParam('q','');renderRows();}
 });
 $('#search').addEventListener('input',()=>{setParam('q',$('#search').value.trim());renderRows();});
 window.addEventListener('popstate',()=>{render();});
