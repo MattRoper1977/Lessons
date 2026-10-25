@@ -3290,6 +3290,13 @@ REVIEWED_PATHS += (
     'GROW_ASDAN/Autumn2_W1-W6_2026-27/START_HERE.html',
 )
 
+# RULING us add.4-2 (24 Oct 2026): that tree's index.html is regenerated as the byte-identical twin of its
+# START_HERE.html (the tree's own rule, manifest.json indexHtmlNote); the modified file is admitted here so its
+# reviewed bytes are pinned.
+REVIEWED_PATHS += (
+    'GROW_ASDAN/Autumn2_W1-W6_2026-27/index.html',
+)
+
 def pack_rows_for(lessons: Path, rows: list) -> list:
     """UX2 D3 (2026-09-08): the companion-pack entries are the catalogue's tail,
     after the reviewed hub rows. They are not a second hand-kept literal: they
