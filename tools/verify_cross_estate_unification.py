@@ -1747,7 +1747,7 @@ CATALOGUE_PINS = {
         "Humanities_Teesside/Teaching_Packs/RE_Spring_1_LAUNCH_Reviewed/SHA256SUMS.txt": "c4feb606541eff53b17a5e6d793f87d78c61d73caf6858944ffdb0db8d710d22",
         "Humanities_Teesside/Teaching_Packs/HUM_00_SoW_and_Order/RE_Scheme_of_Work_Spring_1_2026.docx": "7bb5fe5fc1c72b12b472e9a3019f1b7bad7109f701698acf5a413587e99ff70c",
         "Humanities_Teesside/Teaching_Packs/HUM_00_SoW_and_Order/RE_Scheme_of_Work_Spring_1_2026.html": "56943452b4251a77fe0ae565018bb47be65e6a5c8fa031baa5ba098fa7f5b94e",
-        "GROW_ASDAN/Community_Project/START_HERE.html": "76359b280163f3a7934111ca7bfe890247c4e31250b534fc54a1ff42ff3d9446",
+        "GROW_ASDAN/Community_Project/START_HERE.html": "1ca02932fbeafb09930d3dd68ea03248d39e58b4aa0b00cd18632c452c6c5801",
         "BUILD_ASDAN/FoodWise/Teaching_Packs/BUILD/SHA256SUMS.txt": "801425aa43631264b8e5288d7eabb3bff6f972c5e88263c57572ea97545633db",
         "BUILD_ASDAN/FoodWise/Teaching_Packs/DOWNLOADS_MANIFEST.json": "a913269f3d35d03f3c67eed19500da122937655e4956ce5c3b90af87076f4b30",
         "BUILD_ASDAN/FoodWise/Teaching_Packs/index.html": "43eb72c41a0789f3fd4a49d79e80e09eefd3220664b3810413df35ace5edd477",
@@ -1772,9 +1772,12 @@ CATALOGUE_PINS = {
         "PSHE/Teaching_Packs/GROW/SHA256SUMS.txt": "98623695f0133b6c0b8ef089d5bcd982e30d7029f1477b1adac54e25bd840973",
         "PSHE/Teaching_Packs/index.html": "cca42bc5e9d320c454195b098644d7f8e802c456996e46c478d44733d67a5d35",
         "tools/verify_fixture_names.mjs": "75417d083048ca425535807d2352163936fc22d18831997b5c2ce05c8e3dbe49",
-        "GROW_ASDAN/Autumn2_W1-W6_2026-27/CHECKSUMS.sha256": "4188b5308601aa8f0dfc8d87cb002f7980385bbc153da064af4c6e3d10703150",
-        "GROW_ASDAN/Autumn2_W1-W6_2026-27/START_HERE.html": "51286f963e0b61a888bd1c43e4110349864d95e88e95418e0c5b4ff05efb7312",
-        "GROW_ASDAN/Autumn2_W1-W6_2026-27/index.html": "51286f963e0b61a888bd1c43e4110349864d95e88e95418e0c5b4ff05efb7312"
+        "GROW_ASDAN/Autumn2_W1-W6_2026-27/CHECKSUMS.sha256": "f4d7069065920f008ea91e0a7ec08cf60f155728d7c17012479ee836678668ff",
+        "GROW_ASDAN/Autumn2_W1-W6_2026-27/START_HERE.html": "43a69f41d4a311147dfe89cb34b675f69890a60185219a2b53fbbef31aac1067",
+        "GROW_ASDAN/Autumn2_W1-W6_2026-27/index.html": "43a69f41d4a311147dfe89cb34b675f69890a60185219a2b53fbbef31aac1067",
+        "Art_Teesside/Build/START_HERE.html": "531c882e882f12320e272465f4e2f3f914c2a045ddd8ece1e6e1e8a5a1a81cb9",
+        "LAUNCH_ASDAN/W7-W12_2026-27/SHA256SUMS.txt": "a0ccbda2aa90745695f3be543358cf766cca177f61f837074a1d90cabdfabdfd",
+        "LAUNCH_ASDAN/W7-W12_2026-27/START_HERE.html": "be6dd5d67351481f53246bc686a2e90570df2aed9dc4ecbc6c31c014f8c63eb7"
     }
 }
 # END REVIEWED CATALOGUE PINS
