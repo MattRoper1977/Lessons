@@ -443,9 +443,11 @@ RENAME_MAP = ('tools/catalogue/M1_RENAME_MAP.json', 'c7b2c270072c06e8975a89efafb
 _RENAMES = {}
 
 
-def rename_map(repo):
-    """{old: new} from the bound rename map in `repo` ({} when the repository has none)."""
-    key = str(Path(repo).resolve())
+def rename_map(repo, history=False):
+    """{old: new} from the bound rename map in `repo` ({} when the repository has none). RULING wb-5: the moves are
+    'pairs' only. history=True adds 'historicalPairs' (paths deleted before the move), for reads by old path at an
+    earlier commit and nothing else; no move is ever resolved from them."""
+    key = (str(Path(repo).resolve()), bool(history))
     if key not in _RENAMES:
         path = Path(repo) / RENAME_MAP[0]
         if not path.is_file():
@@ -455,14 +457,13 @@ def rename_map(repo):
             if hashlib.sha256(data).hexdigest() != RENAME_MAP[1]:
                 raise ValueError('unreviewed rename map: ' + RENAME_MAP[0])
             declared = json.loads(data)
-            # historicalPairs: deleted before the move, read by old path only (never a move: no new path holds them).
-            _RENAMES[key] = {**declared.get('historicalPairs', {}), **declared['pairs']}
+            _RENAMES[key] = {**declared.get('historicalPairs', {}), **declared['pairs']} if history else dict(declared['pairs'])
     return _RENAMES[key]
 
 
-def renamed_from(repo):
-    """{new: old}, the rename map read backwards."""
-    return {new: old for old, new in rename_map(repo).items()}
+def renamed_from(repo, history=False):
+    """{new: old}, the rename map read backwards (history=True: reads by old path only, wb-5)."""
+    return {new: old for old, new in rename_map(repo, history).items()}
 
 
 def _ls_tree(repo, commit, paths):
@@ -500,7 +501,7 @@ def limb_reader(repo, ref):
         def read(rel):
             if rel not in cache:
                 out = subprocess.run(['git', 'show', merge_base + ':' + rel], cwd=repo, capture_output=True)
-                old = renamed_from(repo).get(rel) if out.returncode else None
+                old = renamed_from(repo, history=True).get(rel) if out.returncode else None
                 if old is not None:
                     # RULING vz-4: before the move this file lived at its old path.
                     out = subprocess.run(['git', 'show', merge_base + ':' + old], cwd=repo, capture_output=True)
@@ -867,7 +868,7 @@ def git_before_entries(root, base, paths=None):
         mode, kind, blob = fields.split()
         result[path] = (mode, kind, blob)
     # RULING vz-4: a path absent at that commit because it had not moved yet resolves through the map.
-    backwards = renamed_from(root)
+    backwards = renamed_from(root, history=True)
     pending = {rel: backwards[rel] for rel in (paths if paths is not None else SUGAR_REPLACEMENTS)
                if rel not in result and rel in backwards}
     if pending:
@@ -1233,6 +1234,10 @@ def controls(root):
     additions = [('A', p) for p in sorted(explicit_cover_paths(root))]
     reviewed = [('A', p) for p in SHELVES] + additions
     check('Exact reviewed shelves and all manifest-bound cover additions pass', not judge(root, reviewed))
+    # RULING wb-5: a historical pair of the rename map is never a move. Its addition stays an addition.
+    history = {k: v for k, v in rename_map(root, history=True).items() if k not in rename_map(root)}
+    check('Rename map: historical pairs are not moves', not set(history) & set(rename_map(root)) and all(
+        moved_rows(root, 'HEAD', [('D', old), ('A', new)]) == [('D', old), ('A', new)] for old, new in history.items()))
     check('An unrelated generated-tree change does not expand protected-path permissions', not judge(root, [('M', 'GROW_Estate_v3/index.html')]))
     source = json.loads((root / SOURCE).read_text())
     retained = {item['path'] for record in source['records'] for item in record['existing_routes']}
