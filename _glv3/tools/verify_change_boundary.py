@@ -418,7 +418,7 @@ _LIMB_BASE_ENTRIES = {}
 # the file still lived at its old path, resolves through the map. The map is bound by its digest: a
 # map whose bytes differ is refused, never read. It admits nothing: a moved file whose bytes changed
 # is a modification of its new path and goes through every route below like any other.
-RENAME_MAP = ('tools/catalogue/M1_RENAME_MAP.json', 'ed7cd837b227b033713779824f5e1d50fc5d3b1d69e4724877f740867d2ba565')
+RENAME_MAP = ('tools/catalogue/M1_RENAME_MAP.json', '99bad4e64092380ce0c467e0a905df6cdae6b74a32127b8907abd83e26baf2d2')
 _RENAMES = {}
 
 
