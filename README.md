@@ -27,7 +27,7 @@ The original three phase folders are still here and still hold the weekly plans:
 They are no longer the whole estate. The subject and pathway trees now carry
 most of it — 794 tracked `.html` in all:
 
-- `Science/` (80) · `Art/` (53) · `Humanities/` (25)
+- `Science_Teesside/` (80) · `Art_Teesside/` (53) · `Humanities_Teesside/` (25)
 - `BUILD_ASDAN/` (39) · `LAUNCH_ASDAN/` (38) · `GROW_ASDAN/` (35) — the ASDAN suites
 - `BUILD_Estate_v3/` (63) · `LAUNCH_Estate_v3/` (53) · `GROW_Estate_v3/` (41)
 - `primary/` (53) · `LundyLoop/` (33) · `Games/` (31) · `Tutor_Time/` (17)

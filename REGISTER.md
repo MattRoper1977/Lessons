@@ -98,8 +98,8 @@ obvious selector returns the wrong set.
 
   | | files | where |
   |---|---|---|
-  | **carry** the writing line | **48** | `GROW_ASDAN` 18 · `Art` 16 · `Grow` 7 · `Launch` 7 |
-  | **deliberately lack** it | **60** | `BUILD_ASDAN` 31 · `Art/Build` 15 · `Build` 14 |
+  | **carry** the writing line | **48** | `GROW_ASDAN` 18 · `Art_Teesside` 16 · `Grow` 7 · `Launch` 7 |
+  | **deliberately lack** it | **60** | `BUILD_ASDAN` 31 · `Art_Teesside/Build` 15 · `Build` 14 |
   | population | **108** | 48 + 60 = 108, cardinality asserted |
 
 - **Independent check:** zero files anywhere in the estate carry the marker from
@@ -860,7 +860,7 @@ building meant the whole episode cost zero repo changes.
 - **STATUS** CONVENTION · **VERIFIED** `0ec1da0`
 - **Once a predicate admits an exception it stops being a predicate and becomes an enumeration.**
   The containment scope was first a predicate (*session_0183 AND [R-A07 lundy OR benign BUILD_DT
-  edit]*); a commit fell outside it (`e3082d2`, Art reduced-motion), and the fix was to
+  edit]*); a commit fell outside it (`e3082d2`, Art_Teesside reduced-motion), and the fix was to
   **pin by SHA and re-enumerate on every tip move**, never widen the set by reasoning.
 - **Where the reversibility test points opposite ways for two commits in one scope, they are two
   rulings, not one scope.** The lundy adds pointed *in*; `e3082d2` (an accessibility rule —
@@ -947,7 +947,7 @@ building meant the whole episode cost zero repo changes.
   wrong tree.
 - **Control:** the "ATTACH THE LESSONS REPO BEFORE PASTING" warning stays in every future
   Lessons-repo brief, and a pass's **first act** is to verify the working tree
-  (`git remote -v` + presence of `resources.json`/`BUILD_ASDAN`/`Art`) before any
+  (`git remote -v` + presence of `resources.json`/`BUILD_ASDAN`/`Art_Teesside`) before any
   measurement. Pass SB caught it on the first act and stopped — that is the intended behaviour.
 
 ### R-SB02 · A session's harness configuration is a claim — verify it against the order's named target first
@@ -1285,7 +1285,7 @@ with §H and the R-H## rules.*
     (cdc9623 file states NOT reintroduced): predicate `GCSE Stretch` + `GCSE Art habit`
     **17 → 0** (`GCSE Stretch:`→`Bronze Stretch:` ×16; `Bronze / GCSE Art habit`→
     `Bronze Art habit` ×1). *(Master prompt predicted 0 in `Grow/Slideshows`; measured 17 —
-    the earlier forensic 0 read `Art/Grow`, the wrong tree.)*
+    the earlier forensic 0 read `Art_Teesside/Grow`, the wrong tree.)*
   - **Phase 3** — 8 LAUNCH Art slideshows `launch-art-aut1-w1..w8` subject `Art`→
     `Arts Award`, **re-derived** on main's current `resources.json` (main had advanced to
     **386** entries): total 386 unchanged, **Art 42→34, Arts Award 0→8**.
@@ -1299,7 +1299,7 @@ with §H and the R-H## rules.*
     No lesson/estate witness surface changed.
   - Residual whole-repo doubled-label count **1** = `_passpq/FINDINGS.md` quoting the defect
     name (documentation, not estate).
-  - **Protected verbatim** `Art/Grow/GROW_ART_W8…` blob **`4cf5d81e`** byte-identical
+  - **Protected verbatim** `Art_Teesside/Grow/GROW_ART_W8…` blob **`4cf5d81e`** byte-identical
     (24 occurrences of "Silver" across 16 lines — corrected F-11 units).
   - **EXCLUDED, untouched (await committed spec / Matt):** T2-2, T2-3, T2-4 learner-signature,
     Slideshows tiering rebuild.
@@ -1319,7 +1319,7 @@ with §H and the R-H## rules.*
 |---|---|---|
 | **SB** | ✓ | `4f5c6a4` ancestor; R-SB01 present; all 7 Careers files read `Week N of 7`, none `of 6` |
 | **PQ** | ✓ | `_passpq/` = 8 docs + `inputs/README`; R-D05 present; doubled `ASDAN Studio · ASDAN Studio` = **0 in the estate** (2 residual hits are documentation prose: `REGISTER.md` R-RL01 + `_passpq/FINDINGS.md`) |
-| **SG** | ✓ | `_passsg/` (3 files) incl. FINDINGS §11.8; `GCSE Stretch`/`GCSE Art habit` = 0 in the 8 GROW_ART Slideshows (2 non-predicate `GCSE` mentions remain, per R-RL01); `Art/Grow/GROW_ART_W8…` blob `4cf5d81e` byte-identical |
+| **SG** | ✓ | `_passsg/` (3 files) incl. FINDINGS §11.8; `GCSE Stretch`/`GCSE Art habit` = 0 in the 8 GROW_ART Slideshows (2 non-predicate `GCSE` mentions remain, per R-RL01); `Art_Teesside/Grow/GROW_ART_W8…` blob `4cf5d81e` byte-identical |
 | **P3** | ✓ | `resources.json`: total **386**, **Arts Award = 8**, Art = 34 (hub chip render was RL-jsdom-verified; content is ground truth here) |
 | **Q (KO)** | ✓ | `_passq/` (6 files) present; REGISTER carries `R-G05 · … REFUTED AT HEAD (Pass Q)` |
 | **E** | ✓ | 3 KO sheets four-surface green (W6 file = Week 7, W7 file = Week 6 — the deliberate swap); BUILD_HUM_W6 `Link` row present; R-E16/R-E17/R-E18 + renumber note; `_passe/` = **4 files** incl. `ASSESSED_RESIDUE_HELD.md` |
@@ -1395,7 +1395,7 @@ with §H and the R-H## rules.*
 
 ### R-E22 · A visibility gate hides with `visibility`, never with `opacity` alone
 - **STATUS** CONVENTION — read before adding an animation layer
-- **SELECTOR** `node Science/launch-engine/test/gate-shape.js`
+- **SELECTOR** `node Science_Teesside/launch-engine/test/gate-shape.js`
 - An `animation` carrying `fill-mode: both` or `forwards` applies its final
   keyframe in the **CSS animation origin**, which outranks every normal author
   declaration *regardless of selector specificity*. A keyframe ending at
@@ -1448,7 +1448,7 @@ with §H and the R-H## rules.*
 
 ### R-CL01 · Closure invariant corrected (CLOSE-1, 2026-07-30)
 - **loop-mark `ll-g:loop-mark v1` = 50 (BUILD only)** · **written-line `What I said, and what it changed` = 68 (GROW/LAUNCH)**; mutually exclusive by pathway, 0 carry both. Derive: `git grep -l '<marker>' -- '*.html' | wc -l`.
-- The 20 `Science/{Grow,Launch}/` decks were re-closed BUILD-ring → written-line; the 5 `Science/Build/` keep the ring (they are BUILD). Supersedes the pre-CLOSE-1 leak (loop-mark 70).
+- The 20 `Science_Teesside/{Grow,Launch}/` decks were re-closed BUILD-ring → written-line; the 5 `Science_Teesside/Build/` keep the ring (they are BUILD). Supersedes the pre-CLOSE-1 leak (loop-mark 70).
 - **Art divergence:** 18 `{Grow,Launch}/Slideshows/*_ART_*` + `Launch/Art_L*_v5` close via the **Arts Award evidence-capture flow** (authorship/witness/next-step) — DELIBERATE-DIVERGENCE (REGISTER P3), **not** a gap. Full record: `_passclose1/INVARIANT_CORRECTED.md`.
 - **Assessed pair** `GROW_HUM_W7`/`LAUNCH_HUM_W7`: neither marker, by supervised-assessment design; open question deferred to September day-close; proposed (unapplied) diff at `_passclose1/assessed_pair_proposed.diff`; R-A01 untouched.
 - **Standing debt:** B3 LAUNCH warrant step-up owed — moves the written-line wording, not its count.
@@ -1462,7 +1462,7 @@ with §H and the R-H## rules.*
 - **Chassis:** GROW v5 donor carried faithfully via a content-driven generator (`_passla/build/`: `gen.py` + `gen_entry.py` + `gen_resources.py` + `content_*.py` + `gates.py` + `boot.js`). Regenerable (Pathway-Tracker principle). Every lesson born with witness §4 (assessor) + §5 (learner, print-area only), 15 `.print-section`, SVG illuminator, Cold Call, Lundy, XP/confetti.
 - **Gates green** every commit (one per strand + entry + overviews): `node --check` per script block, jsdom boot, tag balance, `.print-section`=15, witness §4/§5, sentinel SET-invariance, zero-count asserts, claims census, FKGL ~7.5–8.5. Tip `daf28a6` live-verified via `raw.githubusercontent.com`.
 - **UNVERIFIED-AGAINST-SPEC:** the three official ASDAN PDFs were **absent** from `_passpq/inputs/`; every PEQ credit/unit/level fact derives from brief §2.2 + `_passpq/PEQ_PRIMER.md` + the Evidence Binder (Ofqual-URN corroborator). Reconcile at the PQ resume — see HANDOVER.
-- **No-touch respected:** science, D&T (incl. Foodwise), Art, `GROW_HUM_W7`/`LAUNCH_HUM_W7`, main — none modified. GROW touched only additively (a new sibling `Resources_and_Tools.html`; no existing GROW file edited).
+- **No-touch respected:** science, D&T (incl. Foodwise), Art_Teesside, `GROW_HUM_W7`/`LAUNCH_HUM_W7`, main — none modified. GROW touched only additively (a new sibling `Resources_and_Tools.html`; no existing GROW file edited).
 
 ### R-J01 · Pass LA-GO — merged Pass LA to main · published to madebymatt.uk · OneDrive drop-in (2026-07-30)
 - **Merge.** `pass-la-launch-asdan` (tip `5ce60e0`, 9 commits off BASE `6945c22`) merged `--no-ff` into main → **`3a74e3a`**. Byte-diff: exactly the 57 LA files, nothing else. Zero conflicts (main was a clean ancestor). All LA gates re-proven at merged tip (30/30 lessons: node --check, jsdom, `.print-section`=15, witness §4/§5). Rollback = `6945c22`.
@@ -1483,7 +1483,7 @@ with §H and the R-H## rules.*
 - **Manifest** mechanically derived from `build_staff_pack.in_scope()` + REBRAND scope: **259 files**, arithmetic closes (Σ areas = 259 = len(in_scope)); link-closure crawl = 0 missing (nothing to add).
 - **Rebrand via committed `rebrand()`:** 152 visible logos → typographic PS mark; 165 wordmark-text; 34 domain/contact; 175 hud loaders stripped; x-brand 258/258 (Network 259/259). 0 attribute residue, 0 domain residue in both Progress zips (derived at extract). Honest coverage: only the 152 pages that carried a visible logo gained a visible PS mark.
 - **R-J01 refinement (amendment A).** Committed `MARK_SVG` keys on `aria-label="Made by Matt"` and misses the aria-less "M"-mark. R-J01 recorded **7** LAUNCH entry docs; measuring by SVG geometry (`M28 71 L28 37 …`) over the whole pack scope finds **12** in-scope aria-less logos — **7 LAUNCH + 5 GROW** (GROW hub, `Scheme_and_Resources`, 3 START_HEREs); root `index.html` also carries it but is out of pack scope. All 12 swapped via a supplementary in-session PS_MARK pass; gate = **0 "M"-mark SVGs in either Progress zip, checked by content not attribute** → PASS. Committed `rebrand()`/`gen_entry` still **unreconciled** — hard precondition of the 29 Aug full rebuild (see HANDOVER).
-- **Sentinel at the pin.** `ll-g:loop-mark v1` (`*.html`) = **50**; raw and R-E08 forms coincide (`5_staff_training/` contributes 0); bare unscoped = 60 (10 non-html docs quote it). Matches R-J01's 50; 70→50 vs `210c669` is entirely Science 25→5 (the CLOSE-1 science re-close). Reported by derivation, not fixed.
+- **Sentinel at the pin.** `ll-g:loop-mark v1` (`*.html`) = **50**; raw and R-E08 forms coincide (`5_staff_training/` contributes 0); bare unscoped = 60 (10 non-html docs quote it). Matches R-J01's 50; 70→50 vs `210c669` is entirely Science_Teesside 25→5 (the CLOSE-1 science re-close). Reported by derivation, not fixed.
 - **Validation (all three zips, from the extracted archives):** `unzip -t` clean ×3 · 0 files without `</html>` · 0 empty · 515 inline-JS blocks `node --check` (temp files) = 0 syntax errors · 0 broken internal links · assessed conditions blocks (`GROW_HUM_W7`, `LAUNCH_HUM_W7`) byte-identical (R-A01) · 0 iframes / 0 video embeds in scope · offline index resolves 258/258 hrefs from inside the zip (urllib-quoted) · MBM copy: 0 x-brand, keeps Made by Matt (198 files), hud stripped. Gate: ALL PASS.
 - **Deliverables** returned as downloads with `README_FIRST.txt`, `CHANGES_SINCE.md`, `MANIFEST_derived.txt`, `VALIDATION_table.txt`. Layout caveat carried into README (repo structure ≠ reorganised drive; use the scoped LAUNCH drop-in to update the live drive surgically).
 - **Stamp:** term-start pack — rebuilds after merge day (29 Aug); `pass-sl-sow-launch`, `pass-sbx-art-a2`, `pass-art-a2b`, `pass-u-audit` all measured **unmerged** (not ancestors of `91778c3`).
@@ -1512,7 +1512,7 @@ with §H and the R-H## rules.*
 - **Held, NOT applied (pupil-facing, out of declared additive scope):** the **LAUNCH ComSk1 "~10-hour window" over-claim** (W4/W5) — spec imposes no 10-hour requirement on Communication; reframe awaits Matt (OPEN_ITEMS 9).
 - **Superseded stale note:** the audit's **T2-4 "no learner signature"** is **CLOSED** — the "5 · Learner confirmation" block is present in **all 79** ASDAN witness surfaces (merged 2026-07-29, R-E20/R-E21); RECONCILIATION/COMPLIANCE/PRIMER corrected to say so.
 - **Gates (asserted):** byte-diff **confinement proof** (strip-tokens residue identical pre/post) on all 14 files · `node --check` every touched inline script · **jsdom boot** per file · tag balance · **verified-codes-only** (only TmWkSk1/ThSk1 introduced, both spec-confirmed) · **reduced-motion** byte-identical · **sentinel** `ll-g:loop-mark v1` **= 50, SET-invariant** (derived, not assumed; no loop-mark file touched) · estate `_passla/build/gates.py` **full check PASS** on the touched LAUNCH W4 (print-section 15, 10 slides, witness §4/§5, banned strings clean, `_ccQuestions`). No pupil names introduced (confinement proves only the four declared strings added).
-- **Diff confinement (estate-level):** `git status` shows changes only under `_passpq/`, `GROW_ASDAN/`, `LAUNCH_ASDAN/`, `_close/OPEN_ITEMS.md`, `REGISTER.md`, `.gitignore` — nothing else. No-touch honoured: BUILD, science, D&T/Foodwise, Art, `GROW_HUM_W7`/`LAUNCH_HUM_W7`, main.
+- **Diff confinement (estate-level):** `git status` shows changes only under `_passpq/`, `GROW_ASDAN/`, `LAUNCH_ASDAN/`, `_close/OPEN_ITEMS.md`, `REGISTER.md`, `.gitignore` — nothing else. No-touch honoured: BUILD, science, D&T/Foodwise, Art_Teesside, `GROW_HUM_W7`/`LAUNCH_HUM_W7`, main.
 - **Optional deliverable (downloads only, NEVER committed):** two pre-filled **DRAFT** assessment plans (LAUNCH ComSk1 Autumn-1; GROW L1 set) built from the blank ASDAN template shape + real lesson activities, for Cheryl's meeting.
 
 
@@ -1615,7 +1615,7 @@ identity gate therefore failed on its own first clause in the correct repository
 
 **A brief's path map is a claim like any other and gets verified like one.** Four wrong
 in a single brief, caught only because the gate had a substance clause — four independent
-identifiers resolved (`b137a90`, `_passpq/`, `Art/HANDOVER.md`, the three
+identifiers resolved (`b137a90`, `_passpq/`, `Art_Teesside/HANDOVER.md`, the three
 `Slideshows/` directories), so identity was proven despite the map. A gate whose clauses
 are all paths would have stopped the pass dead in the right repo.
 
@@ -1634,7 +1634,7 @@ read. None does so. They are of three benign kinds:
 3. Pearson grade ranges (8939 E1–E3, 1BI0 F 1–5) printed *beside* a separate
    "AQA UAS science units" line.
 
-`Humanities/LAUNCH_Printable_Pack.html` already carries the corrective wording.
+`Humanities_Teesside/LAUNCH_Printable_Pack.html` already carries the corrective wording.
 **No edit is warranted and none was made.** Full evidence at
 `quality/QUALIFICATION_CLAIMS_REGISTRY.json` Q-002.
 
@@ -1829,7 +1829,7 @@ from `git merge-base` after deepening the history, every branch's **own** change
 `semh1-safeguarding` touches exactly one file (`Tutor_Time/WB_W7_Pressure_Points.html`, confirmed
 independently against the PR's own file list), `semh1-dt-semantic` eight, `semh1-art-runtime` 31,
 `tk1-access` eight, `pass-art-a2b` three — and `pass-art-a2b`'s apparent `HANDOVER.md` hit is
-`Art/HANDOVER.md`, a **subject-level** file, not the root ledger.
+`Art_Teesside/HANDOVER.md`, a **subject-level** file, not the root ledger.
 
 **Why it is the R-SEMH04 family.** There, a shallow clone made a branch enumeration return a
 structural false **zero**; here, a shallow two-tree diff made a disjointness test return structural
@@ -2173,7 +2173,7 @@ Base `84f4f31` (derived fresh at open; identity gate 5/5). Branch
   present exactly once at `84f4f31`). PENDING-LOCAL-APPROVAL intact.
 - **§5 PROPOSED ONLY, Matt reads:** (a) the TBC unit-code hide — the population re-derived at
   HEAD: tracked `unit code: TBC` = 30 files minus 5 documentation/tooling carriers = **25
-  Science lesson files** (Build 5 · Grow 5 · Launch 15, one instance each), matching
+  Science_Teesside lesson files** (Build 5 · Grow 5 · Launch 15, one instance each), matching
   SEMH-1's historical count by fresh derivation; the hide is a marked, byte-reversible HTML
   comment (`semh2-hide`), no layout break. (b) the constructed-source labels — derived over
   the seven non-assessed LAUNCH_HUM decks: **W1** (the seven-document teaching archive),
@@ -2709,8 +2709,8 @@ with class names (C2).
 
 **The roster register is stale against the code, recorded here rather than rewritten there.**
 R-B01 still names `ps_coldcall_roster` (×65 files) the estate-wide roster, but the living
-convention is **`mbm_cc_v1`** — ×175 files across Art, BUILD/GROW/LAUNCH_ASDAN,
-Science, the Build/Grow/Launch slideshows and Tutor_Time; object entries `{n,g}` /
+convention is **`mbm_cc_v1`** — ×175 files across Art_Teesside, BUILD/GROW/LAUNCH_ASDAN,
+Science_Teesside, the Build/Grow/Launch slideshows and Tutor_Time; object entries `{n,g}` /
 legacy `{n,b}` / union `{n,g,b}`; Tutor_Time names it the "estate-shared roster", one-way-migrates
 the legacy key into it, and time-boxes it (`mbm_cc_v1__stamp`, 14 days). R-B01's own entry is not
 edited — append-only — but any future reader of §B starts from this paragraph. The standing
@@ -2825,7 +2825,7 @@ re-derive it.
   gate 4 and each deck's own `storageKeys: []`. Toggle held on Matt's ruling; way-home and
   splash applied.
 - **N12's premise is refuted.** "Spring 2 is a placement error" fails against five committed
-  repo signals — `Art/Spring2_Scheme_of_Work.html` already exists with the same six
+  repo signals — `Art_Teesside/Spring2_Scheme_of_Work.html` already exists with the same six
   week rows and **verbatim-matching enquiry questions**, and the evidence pack's 18 lane/part
   cells match the packs 6/6. The packs were built *from* the repo's committed scheme.
 
@@ -3051,15 +3051,15 @@ decisions that *should* fail an additivity test. The 30 are the N3 print route, 
 a bare `<style id="n6-print-route">` with no comment marker, so no generic stripper can see
 it; **it should be given one.**
 
-**`ll-g:loop-mark` lives in 50 HTML surfaces, all in the pre-existing `Art`
+**`ll-g:loop-mark` lives in 50 HTML surfaces, all in the pre-existing `Art_Teesside`
 estate and none in the twelve new packs.** The per-pack SET-invariance result for the new
 packs is a vacuous `0 == 0`. Where the sentinel actually lives, none of the 50 changed.
 
 **N12 is CLOSED — REFUTED, and the three Art packs are landed at Spring 2** in
-`Art/{Build,Grow,Launch}/Spring2_2026-27/`, byte-for-byte with their own
+`Art_Teesside/{Build,Grow,Launch}/Spring2_2026-27/`, byte-for-byte with their own
 checksums re-verified in place. All six week enquiry questions in
-`Art/Spring2_Scheme_of_Work.html` appear **verbatim** in each pack; the packs were
-built from the committed scheme. No existing `Art` file was modified, so W8 Silver
+`Art_Teesside/Spring2_Scheme_of_Work.html` appear **verbatim** in each pack; the packs were
+built from the committed scheme. No existing `Art_Teesside` file was modified, so W8 Silver
 is untouched by construction.
 
 **The SoW matrix exists for the first time: 192/192 files carry a verdict.** §F0 found
@@ -3082,7 +3082,7 @@ they were given on 10 files** that a loose "Objective" match had mistyped as les
 
 **A pack can tell you which calendar it was built to, and one did.** The two readings put a
 lesson at estate week N against different SoW rows teaching different topics, so content
-decides what labels cannot. For `Science/Launch/W8-W13_2026-27`: **14 lessons match
+decides what labels cannot. For `Science_Teesside/Launch/W8-W13_2026-27`: **14 lessons match
 Aut1 = 8 (the LA dates), zero match Aut1 = 7 (the workbook)** — W9 mitosis → C39, W10 growth
 and stem cells → C40, W11 stem-cell ethics → C41, W12 DNA → C42, W13 Punnett → C43, each one
 week later than the workbook's grid puts it. Its estate-week-8 lessons teach enzymes, Topic

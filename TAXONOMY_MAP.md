@@ -9,63 +9,63 @@ Folder name `Humanities Lessons (Whiteboards and resources)` — **CONFIRMED BY 
 
 | repo path | OneDrive destination |
 |---|---|
-| `art.html` | `art.html` |
-| `Art/Arts_Partnership_Log.html` | `Art/Arts_Partnership_Log.html` |
-| `Art/Build/Autumn2_Printable_Weekly_Evidence_Pack.html` | `Art/Build/Autumn2_Printable_Weekly_Evidence_Pack.html` |
-| `Art/Build/Autumn2_Scheme_of_Work.html` | `Art/Build/Autumn2_Scheme_of_Work.html` |
-| `Art/Build/Autumn2_Studio_Session_Run_Sheets.html` | `Art/Build/Autumn2_Studio_Session_Run_Sheets.html` |
-| `Art/Build/BUILD_ART_A2_W1_Surface_Hunt.html` | `Art/Build/BUILD_ART_A2_W1_Surface_Hunt.html` |
-| `Art/Build/BUILD_ART_A2_W2_Arts_Inspiration.html` | `Art/Build/BUILD_ART_A2_W2_Arts_Inspiration.html` |
-| `Art/Build/BUILD_ART_A2_W3_Stencil_Lab.html` | `Art/Build/BUILD_ART_A2_W3_Stencil_Lab.html` |
-| `Art/Build/BUILD_ART_A2_W4_Audience_Week.html` | `Art/Build/BUILD_ART_A2_W4_Audience_Week.html` |
-| `Art/Build/BUILD_ART_A2_W5_Layer_and_Combine.html` | `Art/Build/BUILD_ART_A2_W5_Layer_and_Combine.html` |
-| `Art/Build/BUILD_ART_A2_W6_Resolve_and_Edition.html` | `Art/Build/BUILD_ART_A2_W6_Resolve_and_Edition.html` |
-| `Art/Build/BUILD_ART_A2_W7_Bank_It_and_Plan_the_Teach.html` | `Art/Build/BUILD_ART_A2_W7_Bank_It_and_Plan_the_Teach.html` |
-| `Art/Build/BUILD_ART_W1_The_Local_Canvas.html` | `Art/Build/BUILD_ART_W1_The_Local_Canvas.html` |
-| `Art/Build/BUILD_ART_W2_Artists_Makers_and_Connections.html` | `Art/Build/BUILD_ART_W2_Artists_Makers_and_Connections.html` |
-| `Art/Build/BUILD_ART_W3_Industrial_Surface_Skills_Lab.html` | `Art/Build/BUILD_ART_W3_Industrial_Surface_Skills_Lab.html` |
-| `Art/Build/BUILD_ART_W4_Build_the_Brief.html` | `Art/Build/BUILD_ART_W4_Build_the_Brief.html` |
-| `Art/Build/BUILD_ART_W5_Critique_Test_and_Redirect.html` | `Art/Build/BUILD_ART_W5_Critique_Test_and_Redirect.html` |
-| `Art/Build/BUILD_ART_W6_Resolve_the_Artwork.html` | `Art/Build/BUILD_ART_W6_Resolve_the_Artwork.html` |
-| `Art/Build/BUILD_ART_W7_Curate_the_Showcase.html` | `Art/Build/BUILD_ART_W7_Curate_the_Showcase.html` |
-| `Art/Build/BUILD_ART_W8_Share_Reflect_and_Close_the_Loop.html` | `Art/Build/BUILD_ART_W8_Share_Reflect_and_Close_the_Loop.html` |
-| `Art/Build/Printable_BUILD_Weekly_Evidence_Pack.html` | `Art/Build/Printable_BUILD_Weekly_Evidence_Pack.html` |
-| `Art/Build/Scheme_of_Work.html` | `Art/Build/Scheme_of_Work.html` |
-| `Art/Build/Spring1_Printable_Weekly_Evidence_Pack.html` | `Art/Build/Spring1_Printable_Weekly_Evidence_Pack.html` |
-| `Art/Build/Spring1_Scheme_of_Work.html` | `Art/Build/Spring1_Scheme_of_Work.html` |
-| `Art/Build/START_HERE.html` | `Art/Build/START_HERE.html` |
-| `Art/Grow/GROW_ART_W1_The_Local_Canvas.html` | `Art/Grow/GROW_ART_W1_The_Local_Canvas.html` |
-| `Art/Grow/GROW_ART_W2_Studio_Skills_and_Safe_Practice.html` | `Art/Grow/GROW_ART_W2_Studio_Skills_and_Safe_Practice.html` |
-| `Art/Grow/GROW_ART_W3_Independent_Studio_Challenge.html` | `Art/Grow/GROW_ART_W3_Independent_Studio_Challenge.html` |
-| `Art/Grow/GROW_ART_W4_Arts_Event_Attend_Capture_and_Review.html` | `Art/Grow/GROW_ART_W4_Arts_Event_Attend_Capture_and_Review.html` |
-| `Art/Grow/GROW_ART_W5_Practitioner_Career_and_Inspiration.html` | `Art/Grow/GROW_ART_W5_Practitioner_Career_and_Inspiration.html` |
-| `Art/Grow/GROW_ART_W6_Plan_and_Rehearse_the_Skill_Share.html` | `Art/Grow/GROW_ART_W6_Plan_and_Rehearse_the_Skill_Share.html` |
-| `Art/Grow/GROW_ART_W7_Deliver_the_Skill_Share_and_Curate.html` | `Art/Grow/GROW_ART_W7_Deliver_the_Skill_Share_and_Curate.html` |
-| `Art/Grow/GROW_ART_W8_Reflect_Audit_and_Close_the_Loop.html` | `Art/Grow/GROW_ART_W8_Reflect_Audit_and_Close_the_Loop.html` |
-| `Art/Grow/Printable_GROW_Evidence_Lundy_and_LAUNCH_Pack.html` | `Art/Grow/Printable_GROW_Evidence_Lundy_and_LAUNCH_Pack.html` |
-| `Art/Grow/Scheme_of_Work.html` | `Art/Grow/Scheme_of_Work.html` |
-| `Art/Grow/START_HERE.html` | `Art/Grow/START_HERE.html` |
-| `Art/House_Standard_and_Safety.html` | `Art/House_Standard_and_Safety.html` |
-| `Art/Launch/LAUNCH_ART_W1_Frame_the_Local_Challenge.html` | `Art/Launch/LAUNCH_ART_W1_Frame_the_Local_Challenge.html` |
-| `Art/Launch/LAUNCH_ART_W2_Practice_Careers_and_Pathways.html` | `Art/Launch/LAUNCH_ART_W2_Practice_Careers_and_Pathways.html` |
-| `Art/Launch/LAUNCH_ART_W3_Implement_and_Critically_Develop.html` | `Art/Launch/LAUNCH_ART_W3_Implement_and_Critically_Develop.html` |
-| `Art/Launch/LAUNCH_ART_W4_Arts_Experience_Attend_Analyse_and_Share.html` | `Art/Launch/LAUNCH_ART_W4_Arts_Experience_Attend_Analyse_and_Share.html` |
-| `Art/Launch/LAUNCH_ART_W5_Design_the_Leadership_Project.html` | `Art/Launch/LAUNCH_ART_W5_Design_the_Leadership_Project.html` |
-| `Art/Launch/LAUNCH_ART_W6_Pilot_Lead_and_Adapt.html` | `Art/Launch/LAUNCH_ART_W6_Pilot_Lead_and_Adapt.html` |
-| `Art/Launch/LAUNCH_ART_W7_Deliver_and_Curate_the_Arts_Project.html` | `Art/Launch/LAUNCH_ART_W7_Deliver_and_Curate_the_Arts_Project.html` |
-| `Art/Launch/LAUNCH_ART_W8_Review_Influence_and_Portfolio_Audit.html` | `Art/Launch/LAUNCH_ART_W8_Review_Influence_and_Portfolio_Audit.html` |
-| `Art/Launch/Printable_LAUNCH_Evidence_and_Lundy_Pack.html` | `Art/Launch/Printable_LAUNCH_Evidence_and_Lundy_Pack.html` |
-| `Art/Launch/Scheme_of_Work.html` | `Art/Launch/Scheme_of_Work.html` |
-| `Art/Launch/START_HERE.html` | `Art/Launch/START_HERE.html` |
-| `Art/Spring2_Printable_Weekly_Evidence_Pack.html` | `Art/Spring2_Printable_Weekly_Evidence_Pack.html` |
-| `Art/Spring2_Scheme_of_Work.html` | `Art/Spring2_Scheme_of_Work.html` |
-| `Art/Summer1_Printable_Weekly_Evidence_Pack.html` | `Art/Summer1_Printable_Weekly_Evidence_Pack.html` |
-| `Art/Summer1_Scheme_of_Work.html` | `Art/Summer1_Scheme_of_Work.html` |
-| `Art/Summer2_Printable_Weekly_Evidence_Pack.html` | `Art/Summer2_Printable_Weekly_Evidence_Pack.html` |
-| `Art/Summer2_Scheme_of_Work.html` | `Art/Summer2_Scheme_of_Work.html` |
-| `Art/visual-learning/art-visual-learning.css` | `Art/visual-learning/art-visual-learning.css` |
-| `Art/visual-learning/art-visual-learning.js` | `Art/visual-learning/art-visual-learning.js` |
-| `Art/visual-learning/art-visual-payloads.js` | `Art/visual-learning/art-visual-payloads.js` |
+| `art_teesside.html` | `art_teesside.html` |
+| `Art_Teesside/Arts_Partnership_Log.html` | `Art/Arts_Partnership_Log.html` |
+| `Art_Teesside/Build/Autumn2_Printable_Weekly_Evidence_Pack.html` | `Art/Build/Autumn2_Printable_Weekly_Evidence_Pack.html` |
+| `Art_Teesside/Build/Autumn2_Scheme_of_Work.html` | `Art/Build/Autumn2_Scheme_of_Work.html` |
+| `Art_Teesside/Build/Autumn2_Studio_Session_Run_Sheets.html` | `Art/Build/Autumn2_Studio_Session_Run_Sheets.html` |
+| `Art_Teesside/Build/BUILD_ART_A2_W1_Surface_Hunt.html` | `Art/Build/BUILD_ART_A2_W1_Surface_Hunt.html` |
+| `Art_Teesside/Build/BUILD_ART_A2_W2_Arts_Inspiration.html` | `Art/Build/BUILD_ART_A2_W2_Arts_Inspiration.html` |
+| `Art_Teesside/Build/BUILD_ART_A2_W3_Stencil_Lab.html` | `Art/Build/BUILD_ART_A2_W3_Stencil_Lab.html` |
+| `Art_Teesside/Build/BUILD_ART_A2_W4_Audience_Week.html` | `Art/Build/BUILD_ART_A2_W4_Audience_Week.html` |
+| `Art_Teesside/Build/BUILD_ART_A2_W5_Layer_and_Combine.html` | `Art/Build/BUILD_ART_A2_W5_Layer_and_Combine.html` |
+| `Art_Teesside/Build/BUILD_ART_A2_W6_Resolve_and_Edition.html` | `Art/Build/BUILD_ART_A2_W6_Resolve_and_Edition.html` |
+| `Art_Teesside/Build/BUILD_ART_A2_W7_Bank_It_and_Plan_the_Teach.html` | `Art/Build/BUILD_ART_A2_W7_Bank_It_and_Plan_the_Teach.html` |
+| `Art_Teesside/Build/BUILD_ART_W1_The_Local_Canvas.html` | `Art/Build/BUILD_ART_W1_The_Local_Canvas.html` |
+| `Art_Teesside/Build/BUILD_ART_W2_Artists_Makers_and_Teesside_Connections.html` | `Art/Build/BUILD_ART_W2_Artists_Makers_and_Teesside_Connections.html` |
+| `Art_Teesside/Build/BUILD_ART_W3_Industrial_Surface_Skills_Lab.html` | `Art/Build/BUILD_ART_W3_Industrial_Surface_Skills_Lab.html` |
+| `Art_Teesside/Build/BUILD_ART_W4_Build_the_Brief.html` | `Art/Build/BUILD_ART_W4_Build_the_Brief.html` |
+| `Art_Teesside/Build/BUILD_ART_W5_Critique_Test_and_Redirect.html` | `Art/Build/BUILD_ART_W5_Critique_Test_and_Redirect.html` |
+| `Art_Teesside/Build/BUILD_ART_W6_Resolve_the_Artwork.html` | `Art/Build/BUILD_ART_W6_Resolve_the_Artwork.html` |
+| `Art_Teesside/Build/BUILD_ART_W7_Curate_the_Showcase.html` | `Art/Build/BUILD_ART_W7_Curate_the_Showcase.html` |
+| `Art_Teesside/Build/BUILD_ART_W8_Share_Reflect_and_Close_the_Loop.html` | `Art/Build/BUILD_ART_W8_Share_Reflect_and_Close_the_Loop.html` |
+| `Art_Teesside/Build/Printable_BUILD_Weekly_Evidence_Pack.html` | `Art/Build/Printable_BUILD_Weekly_Evidence_Pack.html` |
+| `Art_Teesside/Build/Scheme_of_Work.html` | `Art/Build/Scheme_of_Work.html` |
+| `Art_Teesside/Build/Spring1_Printable_Weekly_Evidence_Pack.html` | `Art/Build/Spring1_Printable_Weekly_Evidence_Pack.html` |
+| `Art_Teesside/Build/Spring1_Scheme_of_Work.html` | `Art/Build/Spring1_Scheme_of_Work.html` |
+| `Art_Teesside/Build/START_HERE.html` | `Art/Build/START_HERE.html` |
+| `Art_Teesside/Grow/GROW_ART_W1_The_Local_Canvas.html` | `Art/Grow/GROW_ART_W1_The_Local_Canvas.html` |
+| `Art_Teesside/Grow/GROW_ART_W2_Studio_Skills_and_Safe_Practice.html` | `Art/Grow/GROW_ART_W2_Studio_Skills_and_Safe_Practice.html` |
+| `Art_Teesside/Grow/GROW_ART_W3_Independent_Studio_Challenge.html` | `Art/Grow/GROW_ART_W3_Independent_Studio_Challenge.html` |
+| `Art_Teesside/Grow/GROW_ART_W4_Arts_Event_Attend_Capture_and_Review.html` | `Art/Grow/GROW_ART_W4_Arts_Event_Attend_Capture_and_Review.html` |
+| `Art_Teesside/Grow/GROW_ART_W5_Practitioner_Career_and_Inspiration.html` | `Art/Grow/GROW_ART_W5_Practitioner_Career_and_Inspiration.html` |
+| `Art_Teesside/Grow/GROW_ART_W6_Plan_and_Rehearse_the_Skill_Share.html` | `Art/Grow/GROW_ART_W6_Plan_and_Rehearse_the_Skill_Share.html` |
+| `Art_Teesside/Grow/GROW_ART_W7_Deliver_the_Skill_Share_and_Curate.html` | `Art/Grow/GROW_ART_W7_Deliver_the_Skill_Share_and_Curate.html` |
+| `Art_Teesside/Grow/GROW_ART_W8_Reflect_Audit_and_Close_the_Loop.html` | `Art/Grow/GROW_ART_W8_Reflect_Audit_and_Close_the_Loop.html` |
+| `Art_Teesside/Grow/Printable_GROW_Evidence_Lundy_and_LAUNCH_Pack.html` | `Art/Grow/Printable_GROW_Evidence_Lundy_and_LAUNCH_Pack.html` |
+| `Art_Teesside/Grow/Scheme_of_Work.html` | `Art/Grow/Scheme_of_Work.html` |
+| `Art_Teesside/Grow/START_HERE.html` | `Art/Grow/START_HERE.html` |
+| `Art_Teesside/House_Standard_and_Safety.html` | `Art/House_Standard_and_Safety.html` |
+| `Art_Teesside/Launch/LAUNCH_ART_W1_Frame_the_Local_Challenge.html` | `Art/Launch/LAUNCH_ART_W1_Frame_the_Local_Challenge.html` |
+| `Art_Teesside/Launch/LAUNCH_ART_W2_Practice_Careers_and_Pathways.html` | `Art/Launch/LAUNCH_ART_W2_Practice_Careers_and_Pathways.html` |
+| `Art_Teesside/Launch/LAUNCH_ART_W3_Implement_and_Critically_Develop.html` | `Art/Launch/LAUNCH_ART_W3_Implement_and_Critically_Develop.html` |
+| `Art_Teesside/Launch/LAUNCH_ART_W4_Arts_Experience_Attend_Analyse_and_Share.html` | `Art/Launch/LAUNCH_ART_W4_Arts_Experience_Attend_Analyse_and_Share.html` |
+| `Art_Teesside/Launch/LAUNCH_ART_W5_Design_the_Leadership_Project.html` | `Art/Launch/LAUNCH_ART_W5_Design_the_Leadership_Project.html` |
+| `Art_Teesside/Launch/LAUNCH_ART_W6_Pilot_Lead_and_Adapt.html` | `Art/Launch/LAUNCH_ART_W6_Pilot_Lead_and_Adapt.html` |
+| `Art_Teesside/Launch/LAUNCH_ART_W7_Deliver_and_Curate_the_Arts_Project.html` | `Art/Launch/LAUNCH_ART_W7_Deliver_and_Curate_the_Arts_Project.html` |
+| `Art_Teesside/Launch/LAUNCH_ART_W8_Review_Influence_and_Portfolio_Audit.html` | `Art/Launch/LAUNCH_ART_W8_Review_Influence_and_Portfolio_Audit.html` |
+| `Art_Teesside/Launch/Printable_LAUNCH_Evidence_and_Lundy_Pack.html` | `Art/Launch/Printable_LAUNCH_Evidence_and_Lundy_Pack.html` |
+| `Art_Teesside/Launch/Scheme_of_Work.html` | `Art/Launch/Scheme_of_Work.html` |
+| `Art_Teesside/Launch/START_HERE.html` | `Art/Launch/START_HERE.html` |
+| `Art_Teesside/Spring2_Printable_Weekly_Evidence_Pack.html` | `Art/Spring2_Printable_Weekly_Evidence_Pack.html` |
+| `Art_Teesside/Spring2_Scheme_of_Work.html` | `Art/Spring2_Scheme_of_Work.html` |
+| `Art_Teesside/Summer1_Printable_Weekly_Evidence_Pack.html` | `Art/Summer1_Printable_Weekly_Evidence_Pack.html` |
+| `Art_Teesside/Summer1_Scheme_of_Work.html` | `Art/Summer1_Scheme_of_Work.html` |
+| `Art_Teesside/Summer2_Printable_Weekly_Evidence_Pack.html` | `Art/Summer2_Printable_Weekly_Evidence_Pack.html` |
+| `Art_Teesside/Summer2_Scheme_of_Work.html` | `Art/Summer2_Scheme_of_Work.html` |
+| `Art_Teesside/visual-learning/art-visual-learning.css` | `Art/visual-learning/art-visual-learning.css` |
+| `Art_Teesside/visual-learning/art-visual-learning.js` | `Art/visual-learning/art-visual-learning.js` |
+| `Art_Teesside/visual-learning/art-visual-payloads.js` | `Art/visual-learning/art-visual-payloads.js` |
 | `Build/Slideshows/BUILD_DT_W1_Workshop_Audit.html` | `ASDAN PEQ/Build/DT/BUILD_DT_W1_Workshop_Audit.html` |
 | `Build/Slideshows/BUILD_DT_W2_Blueprint.html` | `ASDAN PEQ/Build/DT/BUILD_DT_W2_Blueprint.html` |
 | `Build/Slideshows/BUILD_DT_W3_Core_Cut.html` | `ASDAN PEQ/Build/DT/BUILD_DT_W3_Core_Cut.html` |
@@ -169,34 +169,34 @@ Folder name `Humanities Lessons (Whiteboards and resources)` — **CONFIRMED BY 
 | `GROW_ASDAN/Scheme_and_Resources.html` | `ASDAN PEQ/Grow/Scheme_and_Resources.html` |
 | `GROW_ASDAN/visual-upgrade.css` | `ASDAN PEQ/Grow/visual-upgrade.css` |
 | `GROW_ASDAN/visual-upgrade.js` | `ASDAN PEQ/Grow/visual-upgrade.js` |
-| `humanities.html` | `humanities.html` |
-| `Humanities/BUILD_Printable_Pack.html` | `Humanities Lessons (Whiteboards and resources)/Build/BUILD_Printable_Pack.html` |
-| `Humanities/BUILD_Scheme_of_Work.html` | `Humanities Lessons (Whiteboards and resources)/Build/BUILD_Scheme_of_Work.html` |
-| `Humanities/GROW_Printable_Pack.html` | `Humanities Lessons (Whiteboards and resources)/Grow/GROW_Printable_Pack.html` |
-| `Humanities/GROW_Scheme_of_Work.html` | `Humanities Lessons (Whiteboards and resources)/Grow/GROW_Scheme_of_Work.html` |
-| `Humanities/LAUNCH_Printable_Pack.html` | `Humanities Lessons (Whiteboards and resources)/Launch/LAUNCH_Printable_Pack.html` |
-| `Humanities/LAUNCH_Scheme_of_Work.html` | `Humanities Lessons (Whiteboards and resources)/Launch/LAUNCH_Scheme_of_Work.html` |
-| `Humanities/Lundy_Humanities/15_MIN_TUTOR_TIME_REVIEW_OPTIONS.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/15_MIN_TUTOR_TIME_REVIEW_OPTIONS.html` |
-| `Humanities/Lundy_Humanities/CLAIM_EVIDENCE_REASONING_CARD.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/CLAIM_EVIDENCE_REASONING_CARD.html` |
-| `Humanities/Lundy_Humanities/HISTORICAL_HINGE_BANK.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/HISTORICAL_HINGE_BANK.html` |
-| `Humanities/Lundy_Humanities/HUMANITIES_MODERATION_TOOL.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/HUMANITIES_MODERATION_TOOL.html` |
-| `Humanities/Lundy_Humanities/INFLUENCE_REPORT_BACK_GUIDE.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/INFLUENCE_REPORT_BACK_GUIDE.html` |
-| `Humanities/Lundy_Humanities/MAP_AND_FIELDWORK_EVIDENCE_CARD.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/MAP_AND_FIELDWORK_EVIDENCE_CARD.html` |
-| `Humanities/Lundy_Humanities/REPRESENTATIVE_WORK_AND_CONSENT.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/REPRESENTATIVE_WORK_AND_CONSENT.html` |
-| `Humanities/Lundy_Humanities/SOURCE_PROVENANCE_REGISTER.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/SOURCE_PROVENANCE_REGISTER.html` |
-| `Humanities/Lundy_Humanities/SOURCE_PROVENANCE_TEMPLATE.csv` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/SOURCE_PROVENANCE_TEMPLATE.csv` |
-| `Humanities/Lundy_Humanities/specimens/BUILD_HUM_W2_overlay.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/Specimens/BUILD_HUM_W2_overlay.html` |
-| `Humanities/Lundy_Humanities/specimens/GROW_HUM_W3_overlay.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/Specimens/GROW_HUM_W3_overlay.html` |
-| `Humanities/Lundy_Humanities/specimens/LAUNCH_HUM_W1_overlay.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/Specimens/LAUNCH_HUM_W1_overlay.html` |
-| `Humanities/Lundy_Humanities/specimens/OBSERVATION_RECORD.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/Specimens/OBSERVATION_RECORD.html` |
-| `Humanities/Lundy_Humanities/specimens/SPECIMEN_ACCEPTANCE.md` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/Specimens/SPECIMEN_ACCEPTANCE.md` |
-| `Humanities/Lundy_Humanities/specimens/START_HERE.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/Specimens/START_HERE.html` |
-| `Humanities/Lundy_Humanities/STAFF_ROLES_RACI.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/STAFF_ROLES_RACI.html` |
-| `Humanities/Lundy_Humanities/START_HERE.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/START_HERE.html` |
-| `Humanities/Lundy_Humanities/TA_LISTENING_AND_AUTHORSHIP_CARD.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/TA_LISTENING_AND_AUTHORSHIP_CARD.html` |
-| `Humanities/Lundy_Humanities/TEACHER_DISCIPLINARY_DECISION_CARD.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/TEACHER_DISCIPLINARY_DECISION_CARD.html` |
-| `Humanities/Lundy_Humanities/UAS_ALIGNMENT_TOOL.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/UAS_ALIGNMENT_TOOL.html` |
-| `Humanities/Pathway_Tracker.html` | `Humanities Lessons (Whiteboards and resources)/Pathway_Tracker.html` |
+| `humanities_teesside.html` | `humanities_teesside.html` |
+| `Humanities_Teesside/BUILD_Printable_Pack.html` | `Humanities Lessons (Whiteboards and resources)/Build/BUILD_Printable_Pack.html` |
+| `Humanities_Teesside/BUILD_Scheme_of_Work.html` | `Humanities Lessons (Whiteboards and resources)/Build/BUILD_Scheme_of_Work.html` |
+| `Humanities_Teesside/GROW_Printable_Pack.html` | `Humanities Lessons (Whiteboards and resources)/Grow/GROW_Printable_Pack.html` |
+| `Humanities_Teesside/GROW_Scheme_of_Work.html` | `Humanities Lessons (Whiteboards and resources)/Grow/GROW_Scheme_of_Work.html` |
+| `Humanities_Teesside/LAUNCH_Printable_Pack.html` | `Humanities Lessons (Whiteboards and resources)/Launch/LAUNCH_Printable_Pack.html` |
+| `Humanities_Teesside/LAUNCH_Scheme_of_Work.html` | `Humanities Lessons (Whiteboards and resources)/Launch/LAUNCH_Scheme_of_Work.html` |
+| `Humanities_Teesside/Lundy_Humanities/15_MIN_TUTOR_TIME_REVIEW_OPTIONS.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/15_MIN_TUTOR_TIME_REVIEW_OPTIONS.html` |
+| `Humanities_Teesside/Lundy_Humanities/CLAIM_EVIDENCE_REASONING_CARD.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/CLAIM_EVIDENCE_REASONING_CARD.html` |
+| `Humanities_Teesside/Lundy_Humanities/HISTORICAL_HINGE_BANK.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/HISTORICAL_HINGE_BANK.html` |
+| `Humanities_Teesside/Lundy_Humanities/HUMANITIES_MODERATION_TOOL.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/HUMANITIES_MODERATION_TOOL.html` |
+| `Humanities_Teesside/Lundy_Humanities/INFLUENCE_REPORT_BACK_GUIDE.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/INFLUENCE_REPORT_BACK_GUIDE.html` |
+| `Humanities_Teesside/Lundy_Humanities/MAP_AND_FIELDWORK_EVIDENCE_CARD.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/MAP_AND_FIELDWORK_EVIDENCE_CARD.html` |
+| `Humanities_Teesside/Lundy_Humanities/REPRESENTATIVE_WORK_AND_CONSENT.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/REPRESENTATIVE_WORK_AND_CONSENT.html` |
+| `Humanities_Teesside/Lundy_Humanities/SOURCE_PROVENANCE_REGISTER.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/SOURCE_PROVENANCE_REGISTER.html` |
+| `Humanities_Teesside/Lundy_Humanities/SOURCE_PROVENANCE_TEMPLATE.csv` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/SOURCE_PROVENANCE_TEMPLATE.csv` |
+| `Humanities_Teesside/Lundy_Humanities/specimens/BUILD_HUM_W2_overlay.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/Specimens/BUILD_HUM_W2_overlay.html` |
+| `Humanities_Teesside/Lundy_Humanities/specimens/GROW_HUM_W3_overlay.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/Specimens/GROW_HUM_W3_overlay.html` |
+| `Humanities_Teesside/Lundy_Humanities/specimens/LAUNCH_HUM_W1_overlay.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/Specimens/LAUNCH_HUM_W1_overlay.html` |
+| `Humanities_Teesside/Lundy_Humanities/specimens/OBSERVATION_RECORD.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/Specimens/OBSERVATION_RECORD.html` |
+| `Humanities_Teesside/Lundy_Humanities/specimens/SPECIMEN_ACCEPTANCE.md` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/Specimens/SPECIMEN_ACCEPTANCE.md` |
+| `Humanities_Teesside/Lundy_Humanities/specimens/START_HERE.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/Specimens/START_HERE.html` |
+| `Humanities_Teesside/Lundy_Humanities/STAFF_ROLES_RACI.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/STAFF_ROLES_RACI.html` |
+| `Humanities_Teesside/Lundy_Humanities/START_HERE.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/START_HERE.html` |
+| `Humanities_Teesside/Lundy_Humanities/TA_LISTENING_AND_AUTHORSHIP_CARD.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/TA_LISTENING_AND_AUTHORSHIP_CARD.html` |
+| `Humanities_Teesside/Lundy_Humanities/TEACHER_DISCIPLINARY_DECISION_CARD.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/TEACHER_DISCIPLINARY_DECISION_CARD.html` |
+| `Humanities_Teesside/Lundy_Humanities/UAS_ALIGNMENT_TOOL.html` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/UAS_ALIGNMENT_TOOL.html` |
+| `Humanities_Teesside/Pathway_Tracker.html` | `Humanities Lessons (Whiteboards and resources)/Pathway_Tracker.html` |
 | `Launch/Art_L1_Colours_Lines_Like_Me_v5.html` | `Art/Launch/Art_L1_Colours_Lines_Like_Me_v5.html` |
 | `Launch/Art_L2_My_Identity_Picture_v5.html` | `Art/Launch/Art_L2_My_Identity_Picture_v5.html` |
 | `Launch/index.html` | `Art/Launch/index.html` |
@@ -259,31 +259,31 @@ Folder name `Humanities Lessons (Whiteboards and resources)` — **CONFIRMED BY 
 | `LundyLoop/5_staff_training/R_Gate_Calibration_Game.html` | `LundyLoop/5_staff_training/R_Gate_Calibration_Game.html` |
 | `LundyLoop/5_staff_training/Reading_the_Response_Card.html` | `LundyLoop/5_staff_training/Reading_the_Response_Card.html` |
 | `LundyLoop/assets/style.css` | `LundyLoop/assets/style.css` |
-| `Science/Build/SCI_B_W3_Backbones.html` | `Science/Build/SCI_B_W3_Backbones.html` |
-| `Science/Build/SCI_B_W4_Muscle_Pairs.html` | `Science/Build/SCI_B_W4_Muscle_Pairs.html` |
-| `Science/Build/SCI_B_W5_Right_Nutrition.html` | `Science/Build/SCI_B_W5_Right_Nutrition.html` |
-| `Science/Build/SCI_B_W6_Balanced_Plate.html` | `Science/Build/SCI_B_W6_Balanced_Plate.html` |
-| `Science/Build/SCI_B_W7_Where_Food_Comes_From.html` | `Science/Build/SCI_B_W7_Where_Food_Comes_From.html` |
-| `Science/Grow/SCI_G_W3_Friction.html` | `Science/Grow/SCI_G_W3_Friction.html` |
-| `Science/Grow/SCI_G_W4_Mechanisms.html` | `Science/Grow/SCI_G_W4_Mechanisms.html` |
-| `Science/Grow/SCI_G_W5_Fair_Test.html` | `Science/Grow/SCI_G_W5_Fair_Test.html` |
-| `Science/Grow/SCI_G_W6_Earth_And_Planets.html` | `Science/Grow/SCI_G_W6_Earth_And_Planets.html` |
-| `Science/Grow/SCI_G_W7_The_Moon.html` | `Science/Grow/SCI_G_W7_The_Moon.html` |
-| `Science/Launch/SCI_L_W3_L1_Microscopy.html` | `Science/Launch/SCI_L_W3_L1_Microscopy.html` |
-| `Science/Launch/SCI_L_W3_L2_Magnification.html` | `Science/Launch/SCI_L_W3_L2_Magnification.html` |
-| `Science/Launch/SCI_L_W3_L3_ExamSkills.html` | `Science/Launch/SCI_L_W3_L3_ExamSkills.html` |
-| `Science/Launch/SCI_L_W4_L1_Diffusion.html` | `Science/Launch/SCI_L_W4_L1_Diffusion.html` |
-| `Science/Launch/SCI_L_W4_L2_GasExchange.html` | `Science/Launch/SCI_L_W4_L2_GasExchange.html` |
-| `Science/Launch/SCI_L_W4_L3_ExamSkills.html` | `Science/Launch/SCI_L_W4_L3_ExamSkills.html` |
-| `Science/Launch/SCI_L_W5_L1_Osmosis.html` | `Science/Launch/SCI_L_W5_L1_Osmosis.html` |
-| `Science/Launch/SCI_L_W5_L2_OsmosisCP.html` | `Science/Launch/SCI_L_W5_L2_OsmosisCP.html` |
-| `Science/Launch/SCI_L_W5_L3_Evaluate.html` | `Science/Launch/SCI_L_W5_L3_Evaluate.html` |
-| `Science/Launch/SCI_L_W6_L1_ActiveTransport.html` | `Science/Launch/SCI_L_W6_L1_ActiveTransport.html` |
-| `Science/Launch/SCI_L_W6_L2_RootAndGut.html` | `Science/Launch/SCI_L_W6_L2_RootAndGut.html` |
-| `Science/Launch/SCI_L_W6_L3_Compare.html` | `Science/Launch/SCI_L_W6_L3_Compare.html` |
-| `Science/Launch/SCI_L_W7_L1_RoundUp.html` | `Science/Launch/SCI_L_W7_L1_RoundUp.html` |
-| `Science/Launch/SCI_L_W7_L2_CommandWords.html` | `Science/Launch/SCI_L_W7_L2_CommandWords.html` |
-| `Science/Launch/SCI_L_W7_L3_ExamPractice.html` | `Science/Launch/SCI_L_W7_L3_ExamPractice.html` |
+| `Science_Teesside/Build/SCI_B_W3_Backbones.html` | `Science_Teesside/Build/SCI_B_W3_Backbones.html` |
+| `Science_Teesside/Build/SCI_B_W4_Muscle_Pairs.html` | `Science_Teesside/Build/SCI_B_W4_Muscle_Pairs.html` |
+| `Science_Teesside/Build/SCI_B_W5_Right_Nutrition.html` | `Science_Teesside/Build/SCI_B_W5_Right_Nutrition.html` |
+| `Science_Teesside/Build/SCI_B_W6_Balanced_Plate.html` | `Science_Teesside/Build/SCI_B_W6_Balanced_Plate.html` |
+| `Science_Teesside/Build/SCI_B_W7_Where_Food_Comes_From.html` | `Science_Teesside/Build/SCI_B_W7_Where_Food_Comes_From.html` |
+| `Science_Teesside/Grow/SCI_G_W3_Friction.html` | `Science_Teesside/Grow/SCI_G_W3_Friction.html` |
+| `Science_Teesside/Grow/SCI_G_W4_Mechanisms.html` | `Science_Teesside/Grow/SCI_G_W4_Mechanisms.html` |
+| `Science_Teesside/Grow/SCI_G_W5_Fair_Test.html` | `Science_Teesside/Grow/SCI_G_W5_Fair_Test.html` |
+| `Science_Teesside/Grow/SCI_G_W6_Earth_And_Planets.html` | `Science_Teesside/Grow/SCI_G_W6_Earth_And_Planets.html` |
+| `Science_Teesside/Grow/SCI_G_W7_The_Moon.html` | `Science_Teesside/Grow/SCI_G_W7_The_Moon.html` |
+| `Science_Teesside/Launch/SCI_L_W3_L1_Microscopy.html` | `Science_Teesside/Launch/SCI_L_W3_L1_Microscopy.html` |
+| `Science_Teesside/Launch/SCI_L_W3_L2_Magnification.html` | `Science_Teesside/Launch/SCI_L_W3_L2_Magnification.html` |
+| `Science_Teesside/Launch/SCI_L_W3_L3_ExamSkills.html` | `Science_Teesside/Launch/SCI_L_W3_L3_ExamSkills.html` |
+| `Science_Teesside/Launch/SCI_L_W4_L1_Diffusion.html` | `Science_Teesside/Launch/SCI_L_W4_L1_Diffusion.html` |
+| `Science_Teesside/Launch/SCI_L_W4_L2_GasExchange.html` | `Science_Teesside/Launch/SCI_L_W4_L2_GasExchange.html` |
+| `Science_Teesside/Launch/SCI_L_W4_L3_ExamSkills.html` | `Science_Teesside/Launch/SCI_L_W4_L3_ExamSkills.html` |
+| `Science_Teesside/Launch/SCI_L_W5_L1_Osmosis.html` | `Science_Teesside/Launch/SCI_L_W5_L1_Osmosis.html` |
+| `Science_Teesside/Launch/SCI_L_W5_L2_OsmosisCP.html` | `Science_Teesside/Launch/SCI_L_W5_L2_OsmosisCP.html` |
+| `Science_Teesside/Launch/SCI_L_W5_L3_Evaluate.html` | `Science_Teesside/Launch/SCI_L_W5_L3_Evaluate.html` |
+| `Science_Teesside/Launch/SCI_L_W6_L1_ActiveTransport.html` | `Science_Teesside/Launch/SCI_L_W6_L1_ActiveTransport.html` |
+| `Science_Teesside/Launch/SCI_L_W6_L2_RootAndGut.html` | `Science_Teesside/Launch/SCI_L_W6_L2_RootAndGut.html` |
+| `Science_Teesside/Launch/SCI_L_W6_L3_Compare.html` | `Science_Teesside/Launch/SCI_L_W6_L3_Compare.html` |
+| `Science_Teesside/Launch/SCI_L_W7_L1_RoundUp.html` | `Science_Teesside/Launch/SCI_L_W7_L1_RoundUp.html` |
+| `Science_Teesside/Launch/SCI_L_W7_L2_CommandWords.html` | `Science_Teesside/Launch/SCI_L_W7_L2_CommandWords.html` |
+| `Science_Teesside/Launch/SCI_L_W7_L3_ExamPractice.html` | `Science_Teesside/Launch/SCI_L_W7_L3_ExamPractice.html` |
 | `Tutor_Time/Evidence_Tracker_Online.html` | `Tutor Time BF_BV_KCSIE/Evidence_Tracker_Online.html` |
 | `Tutor_Time/Evidence_Tracker_Paper.html` | `Tutor Time BF_BV_KCSIE/Evidence_Tracker_Paper.html` |
 | `Tutor_Time/KCSIE_Deepfakes_Screenshot_Culture.html` | `Tutor Time BF_BV_KCSIE/KCSIE_Deepfakes_Screenshot_Culture.html` |
@@ -313,11 +313,11 @@ Folder name `Humanities Lessons (Whiteboards and resources)` — **CONFIRMED BY 
 | `GROW_ASDAN/Community_Project/` | `ASDAN PEQ/Grow/Community Project/` | drive uses a space |
 | `GROW_ASDAN/PEQ/` | `ASDAN PEQ/Grow/Personal Effectiveness/` | drive uses the full unit name |
 | `DT_Community_Upcycling/` | `ASDAN PEQ/Build/DT/` | drive files it under BUILD |
-| `Humanities/` | `Humanities Lessons (Whiteboards and resources)/` | drive name, confirmed by Matt |
-| `Humanities/Lundy_Humanities/` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/` | drive name |
+| `Humanities_Teesside/` | `Humanities Lessons (Whiteboards and resources)/` | drive name, confirmed by Matt |
+| `Humanities_Teesside/Lundy_Humanities/` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/` | drive name |
 | `.../Lundy_Humanities/specimens/` | `Humanities Lessons (Whiteboards and resources)/LundyLoop/Specimens/` | capital S on the drive |
 | `Tutor_Time/` | `Tutor Time BF_BV_KCSIE/` | drive name |
-| `Art/` | `Art/` | drive name |
+| `Art_Teesside/` | `Art/` | drive name |
 
 ## LAUNCH_ASDAN is FLAT on the drive
 
@@ -347,10 +347,10 @@ Each renamed page has its own outbound lesson links rewritten to the flat names.
 
 | destination | result |
 |---|---|
-| `Art/art.html` | rebuilt at this depth, crawls clean in place |
+| `Art/art_teesside.html` | rebuilt at this depth, crawls clean in place |
 | `ASDAN PEQ/Build/build_asdan.html` | rebuilt at this depth, crawls clean in place |
 | `ASDAN PEQ/Build/DT/build_dt_upcycling.html` | rebuilt at this depth, crawls clean in place |
-| `Humanities Lessons (Whiteboards and resources)/humanities.html` | rebuilt at this depth, crawls clean in place |
+| `Humanities Lessons (Whiteboards and resources)/humanities_teesside.html` | rebuilt at this depth, crawls clean in place |
 
 ## Taxonomy folders with NO current repo content
 

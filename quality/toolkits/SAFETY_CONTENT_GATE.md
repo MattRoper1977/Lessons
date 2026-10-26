@@ -38,7 +38,7 @@ water read **cold**; the audit did not. Both are corrected. **Cold water and ice
 they can deepen the injury and cause harm to a child who is already shocked. The word is *cool*.
 
 Any "10 minutes" cooling instruction is wrong wherever it appears. Corrected at
-`Art/House_Standard_and_Safety.html` and `Art/Launch/Printable_LAUNCH_Evidence_and_Lundy_Pack.html`.
+`Art_Teesside/House_Standard_and_Safety.html` and `Art_Teesside/Launch/Printable_LAUNCH_Evidence_and_Lundy_Pack.html`.
 
 Source: NHS burns and scalds first aid, via brief §2. **Checked 2026-08-04. Review 1 Sep 2026. Owner: first-aid
 lead.** **PENDING-LOCAL-APPROVAL** — the escalation route is the centre's, not this file's.

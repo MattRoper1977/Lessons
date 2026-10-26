@@ -69,7 +69,7 @@ whose values are **true of that file on the day it was touched**, and no others 
 | debt | scope | why deferred |
 |---|---|---|
 | metadata rollout beyond the pilot | the rest of the support layer | each strip asserts facts about a file, and the facts have to be true of that file. Needs a pass that reads them. |
-| `Humanities` pack print units | 3 `WEEKS[]` generators | non-`pt` units; a separate measurement model from the eight Art packs |
+| `Humanities_Teesside` pack print units | 3 `WEEKS[]` generators | non-`pt` units; a separate measurement model from the eight Art packs |
 | primary lesson + unit-index Google Fonts | ~40 files | template-locked (§3); hub only was in scope |
 | `Tutor_Time` Google Fonts | 2 decks | outside §9's stated scope |
 | Progress-branded staff-pack zips | `build_staff_pack.py` scope | go stale after any merge; **`MARK_SVG`/`gen_entry` reconciliation is a hard precondition** of the next full rebuild (R-J01, R-K01, R-K02) |

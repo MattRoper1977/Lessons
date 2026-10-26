@@ -60,13 +60,13 @@ reader, and an environment with no emoji font.
 
 ### Measured at HEAD — the eleven `WEEKS[]` evidence-pack generators
 
-Eight `Art` packs carry an identical size ladder — they are clones of one generator:
+Eight `Art_Teesside` packs carry an identical size ladder — they are clones of one generator:
 
 ```
 6.6 · 6.8 · 7 · 7.2 · 7.4 · 7.6 · 7.8 · 8 · 8.2 · 8.4 · 8.6 · 9.4 · 9.6 · 12.5 pt
 ```
 
-**The floor is 6.6pt, not the audit's 7pt.** Three `Humanities` packs express sizes in non-`pt` units
+**The floor is 6.6pt, not the audit's 7pt.** Three `Humanities_Teesside` packs express sizes in non-`pt` units
 and are a separate model, unmeasured here.
 
 ### The honest remedy, and why the base size is not simply raised

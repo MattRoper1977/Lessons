@@ -20,7 +20,7 @@ workspace (**R-LLS07**) and is not restated here. Nothing below is presented as 
 
 Sets the conditions under which humanities Lundy material may be used, and the conditions under
 which more of it may be built. It governs the toolkit at
-`Humanities/Lundy_Humanities/`, which landed **held**, not live.
+`Humanities_Teesside/Lundy_Humanities/`, which landed **held**, not live.
 
 ## What this does not do
 

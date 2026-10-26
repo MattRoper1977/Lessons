@@ -78,7 +78,7 @@ motion the pupil has been reading since week one.
 ## Status
 
 All three pathways now carry an animation layer. Measured by rendering all 25
-Science decks headlessly and walking every slide:
+Science_Teesside decks headlessly and walking every slide:
 
 | pathway | decks | framework | animated nodes | speaks the shared `g-` language |
 |---|---|---|---|---|
@@ -106,7 +106,7 @@ scene speaks the shared language.
 
 ### Where each pathway sits against the table above
 
-- **LAUNCH** — built by this pass. `Science/launch-engine/`, 50
+- **LAUNCH** — built by this pass. `Science_Teesside/launch-engine/`, 50
   components across the fifteen decks.
 - **GROW** — `grow-anim/`, the ten-motion language plus layered assets for
   biology, chemistry and physics. Its stated aim, *"the animation is the

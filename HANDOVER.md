@@ -339,7 +339,7 @@ GROW→LAUNCH warrant step-up). Everything below flows from them.
 ### Added by Pass HU-CLOSE — one queue entry, with its trigger
 
 19. **The Humanities Lundy toolkit is landed and held; the day-close half is still not ours.**
-    27 of the 28 held pack files landed at `Humanities/Lundy_Humanities/` on the held
+    27 of the 28 held pack files landed at `Humanities_Teesside/Lundy_Humanities/` on the held
     branch `claude/hu-close-lundy`, plus four `quality/LUNDY_HUMANITIES_*` files **authored fresh**
     (the pack's own four were never received). One file — `PUPIL_HISTORIAN_CARDS.html` — was
     evaluated and **not shipped** (`_close/OPEN_ITEMS.md` #35). The 24 humanities lessons changed
@@ -367,7 +367,7 @@ GROW→LAUNCH warrant step-up). Everything below flows from them.
       Scope and detail: `_close/OPEN_ITEMS.md` #39.
       **One entry, one answer: this half is a build to run, not a state to verify.**
     - **Science half — VERIFY-ONLY.** The science visual-learning toolkit was recovered to
-      `Science/visual-learning/` on the held branch `claude/hu-close-science-visuals` and
+      `Science_Teesside/visual-learning/` on the held branch `claude/hu-close-science-visuals` and
       is **mounted in no lesson**, so the 25 science decks are byte-untouched. Estate Visuals must
       **derive that at HEAD** rather than assume, and must read `_close/OPEN_ITEMS.md` #37 first:
       the LAUNCH explanation lock has no adult route on screen, and no LAUNCH lesson mounts until
@@ -509,7 +509,7 @@ cloning, not by memory. All commits verified from fresh clones / live at pinned 
 | Include Lundy in printed pack, W1–W6 (per-deck) | `b1b7ee0` `4452e46` `9efbdc8` `cf53665` `26d2eb3` `7889055` | `16b5ea5` |
 | W1 title → "The Workshop Audit" (all surfaces) | `32d0f23` | `7889055` |
 | Stale week labels (W6 banner, Print-Tools ×5) | `9210562` | `32d0f23` |
-| RM: Art 31 | `e3082d2` | `9210562` |
+| RM: Art_Teesside 31 | `e3082d2` | `9210562` |
 | RM: BUILD_ASDAN 31 | `6816fc0` | `e3082d2` |
 | RM: GROW_ASDAN 18 | `cef0c73` | `6816fc0` |
 | RM: Build D&T 6 | `f1d85c0` | `cef0c73` |

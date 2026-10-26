@@ -67,7 +67,7 @@ Both were isolated by loading the deck at HEAD, unmounted, and observing identic
 | File | Bytes | SHA-256 | Origin |
 |---|---|---|---|
 | `art-visual-learning.css` | 16,977 | `0685aa7cc170f17b5bc809c4a0b3ead80892177185615f85ed2c39f227b34252` | `<style>` block [0] of the vendor demo |
-| `art-visual-payloads.js` | 45,445 | `11467c292aca0a85085226ee905ad2bc076d1f4f4c14b30708792cb29d52e1bb` | `<script>` block [0] — `window.ArtVisualPayloads` |
+| `art-visual-payloads.js` | 45,445 | `e3efa5a8d1abeb7ed0357f88caa4f90dab38d39294cf3cb05cce997b533526ae` | `<script>` block [0] — `window.ArtVisualPayloads` |
 | `art-visual-learning.js` | 75,820 | `f0db9ae1320bcec0624e735ba0b517cfc0f16ae874ad7e70472bd9523922b6e2` | `<script>` block [1] — engine IIFE, exports `window.ArtVisualLearning` |
 
 All three were **extracted byte-for-byte** from `Art_Visual_Learning_Demo.html` (147,045 b) and
@@ -89,7 +89,7 @@ Matt holds a 12-file re-compressed subset of the vendor pack. These parts of the
 **absent** and have deliberately **not** been simulated, reconstructed or stubbed:
 
 - both `.patch` files
-- the entire `repo-overlay/Art/visual-learning/` tree
+- the entire `repo-overlay/Art_Teesside/visual-learning/` tree
 - `inject.py`, `check.py`, `build_payloads.py`
 - the canonical `lesson-payloads.json` (the payloads here are the *generated* form)
 - the 15 SVGs as standalone files
@@ -221,8 +221,8 @@ level.**
 
 ## Scope, when this is eventually mounted
 
-Target set is the **31 pupil-facing lesson decks**, derived — not inherited — as *"an Art
-HTML file that requests `/hud.js`"*. That set is exactly 31 of the 53 Art HTML files, and it
+Target set is the **31 pupil-facing lesson decks**, derived — not inherited — as *"an Art_Teesside
+HTML file that requests `/hud.js`"*. That set is exactly 31 of the 53 Art_Teesside HTML files, and it
 is **identical, one for one, to the 31 lesson IDs in the payloads.** The 22 files it excludes are
 precisely the hubs, schemes of work, printable evidence packs, House Standard & Safety and the Arts
 Partnership Log — every one of which must receive **no panels.**

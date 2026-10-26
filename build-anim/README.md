@@ -235,9 +235,9 @@ Classroom laptops open lessons straight from a file or a USB stick, so the
 lessons stay single-file. `inject.py` keeps that true without copy-paste drift:
 
 ```bash
-python3 build-anim/inject.py Science/Build/SCI_B_W3_Backbones.html
-python3 build-anim/inject.py Science/Build/*.html      # several at once
-python3 build-anim/inject.py --check Science/Build/*.html   # CI-style check
+python3 build-anim/inject.py Science_Teesside/Build/SCI_B_W3_Backbones.html
+python3 build-anim/inject.py Science_Teesside/Build/*.html      # several at once
+python3 build-anim/inject.py --check Science_Teesside/Build/*.html   # CI-style check
 ```
 
 It replaces whatever sits between the `BUILD-ANIM:*:BEGIN/END` markers with the

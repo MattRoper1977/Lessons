@@ -1,6 +1,6 @@
 # LAUNCH Scientific Observation Layer
 
-The animation layer for `Science/Launch/`. It exists to make one
+The animation layer for `Science_Teesside/Launch/`. It exists to make one
 distinction real in the markup, not just in the scheme of work:
 
 | pathway | pupil's role | animation's role | teacher's role |
@@ -193,7 +193,7 @@ them is **invisible in a screenshot of the finished state**.
   printing as a broken widget, and that make locked content legible on paper.
 - **Existing slide markup.** The engine finds a slide by `data-title`, finds an
   anchor inside it, and inserts. It never rewrites markup it did not create.
-- **Assessed files.** There are none in `Science/` — the assessed
+- **Assessed files.** There are none in `Science_Teesside/` — the assessed
   quarantine is in Humanities.
 
 ## Honesty

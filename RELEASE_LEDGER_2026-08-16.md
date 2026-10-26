@@ -411,7 +411,7 @@ ruling. What is left is sequenced, not blocked:
    start rather than retrofitted, and #116's diff as the re-application
    reference.
 2. ~~The FieldOps placement~~ — **done.** The co-location path VCL cites is
-   **`Science/Build/v4_fieldops/`**, quoted here so the VSL order does
+   **`Science_Teesside/Build/v4_fieldops/`**, quoted here so the VSL order does
    not re-derive it.
 3. **Scrap Core P1–P5**, if placement is wanted.
 4. **Play them on the phone.** Scrap Core: one descent to a titan. Chemistry
@@ -435,7 +435,7 @@ record at run time and is proven red on each route individually.
 
 | half | repo · branch | path |
 |---|---|---|
-| labs 01–04 | Lessons · **`claude/close-order-seven-items-wdfhdf`** | `Science/Build/v4_fieldops/` |
+| labs 01–04 | Lessons · **`claude/close-order-seven-items-wdfhdf`** | `Science_Teesside/Build/v4_fieldops/` |
 | 00 Teacher Studio | `Matt-s-Apps-` · `claude/fieldops-teacher-studio` | `FieldOps_Teacher_Studio.html` |
 
 **Stated plainly because it was not planned: the labs went onto the ledger
@@ -895,13 +895,13 @@ was, twice:
 
 ## The VSL route ruling — approved, and not created
 
-**`Science/Build/virtual_science_lab/`**, against the landed FieldOps
-path `Science/Build/v4_fieldops/`. Four tests, run against the tree on
+**`Science_Teesside/Build/virtual_science_lab/`**, against the landed FieldOps
+path `Science_Teesside/Build/v4_fieldops/`. Four tests, run against the tree on
 main, all **PASS**:
 
 | test | result |
 |---|---|
-| **sibling, not tenant** | both under `Science/Build/`; the candidate is not inside `v4_fieldops/` |
+| **sibling, not tenant** | both under `Science_Teesside/Build/`; the candidate is not inside `v4_fieldops/` |
 | **named for the instrument, not the version** | no `v0_4`, no `PRO`, no date — versions live in the file and here |
 | **no collision** | 0 tracked files under the candidate; no root-level `virtual*`/`vsl*`/`vcl*` directory to shadow |
 | **no empty route** | v0.4.1 does not exist in the tree, so **the directory was not created** |
@@ -1193,7 +1193,7 @@ down where someone will see it next time they look" — which is better, and is
 | branch `claude/close-order-seven-items-wdfhdf` | **still present at `2f1fa87`. Delete refused: `HTTP 403`** — this session's credentials can push commits but not delete a ref. Content proven identical to main, so it is clutter and not risk | a delete from a session or account with ref-delete permission, or the repo's own auto-delete-on-merge setting |
 | nine declared zero-check PRs (of 21 open, 12 zero-check, 3 draft) | recorded and ratcheted, **not repaired** | its own pass: rebase the conflicted ones, give the rest a matching workflow |
 | B2 conformance | abandoned, no result survives, recorded as a gap in those words | re-running the conformance order |
-| VSL v0.4.1 | four tests recorded above; `Science/Build/virtual_science_lab` does not exist, 0 tracked files — correct | its own order. v0.4 still carries **V2: pupil name and notes in the Share URL, at an SEMH provision** |
+| VSL v0.4.1 | four tests recorded above; `Science_Teesside/Build/virtual_science_lab` does not exist, 0 tracked files — correct | its own order. v0.4 still carries **V2: pupil name and notes in the Share URL, at an SEMH provision** |
 | five declared-not-derived routes (`/`, `__FULL_HOME__`, `/games/`, `/site.json`, `/Games/games.json`) | inherited unchecked by the serve proof, named as such | extending the deriver, or a ruling that they stay out |
 | the watch's **human leg** | the in-repo legs are live; no notification reaches a person | enabling Actions-failure notifications on the account, which cannot be done from inside the repository |
 

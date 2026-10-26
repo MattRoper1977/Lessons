@@ -40,8 +40,8 @@ authorised by the Card.
 |---|---|---|
 | GROW | `Grow/Slideshows/GROW_HUM_W3_Cause_And_Consequence.html` | conditions, triggers, counterfactuals, decisive vs contributory causes |
 | LAUNCH | `Launch/Slideshows/LAUNCH_HUM_W1_Source_Investigation.html` | purpose/moment/distance used to judge source support, not a reliability label |
-| GROW | `Science/Grow/SCI_G_W5_Fair_Test.html` | variables, repeats, means, validity — and no leaderboard |
-| LAUNCH | `Art/Launch/LAUNCH_ART_W5_Design_the_Leadership_Project.html` | evidenced need, measurable aim, delegation, risk, pilot, pre-mortem |
+| GROW | `Science_Teesside/Grow/SCI_G_W5_Fair_Test.html` | variables, repeats, means, validity — and no leaderboard |
+| LAUNCH | `Art_Teesside/Launch/LAUNCH_ART_W5_Design_the_Leadership_Project.html` | evidenced need, measurable aim, delegation, risk, pilot, pre-mortem |
 | BUILD | `Build/Slideshows/BUILD_DT_W2_Blueprint.html` | Supported traces · Standard transfers accurately · Stretch diagnoses error and balances constraints |
 
 ## Guardrail
