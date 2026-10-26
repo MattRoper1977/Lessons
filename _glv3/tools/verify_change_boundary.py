@@ -338,12 +338,12 @@ UM_COLLECTIONS_RETIRED_REPLACEMENTS = {"Humanities/Teaching_Packs/BUILD/download
 # modification, previous identities from the actual merge base, exact bytes and
 # a matching owner-reviewed catalogue admission for every member.
 # RULING wa-2 (b) (26 Oct 2026): M1, the subject-folder rename, as ONE declared replacement transaction. Its
-# members are exactly the protected files whose bytes M1 changes; each entry names its old path (beforePath, read at the
-# review base through the rename map), its previous blob, its reviewed after digest and the reason (rename map rewrite
+# members are exactly the protected files whose bytes M1 changes; each entry (its old path is read at the review base
+# through the rename map) names its previous blob, its old sha256, its reviewed after digest and the reason (rename map rewrite
 # only, with any named edit). It is read from its own file, bound here by digest: a file whose bytes differ is refused,
 # never read. Declared last, so it supersedes the earlier transactions on the paths M1 rewrote (declaration order is
 # review order). Every member still needs its CATALOGUE_PINS admission, as for any replacement.
-M1_TRANSACTION = ('_glv3/M1_REPLACEMENT_TRANSACTION.json', '41ecd9a9b024c81512b7544787d86c12c7576ff7b5fc3a50df06496567fc75ad')
+M1_TRANSACTION = ('_glv3/M1_REPLACEMENT_TRANSACTION.json', 'a758969bf6288606973ce56bc0082b8e0982f3fef50c3305d4a0457547712131')
 
 
 def _m1_transaction():
