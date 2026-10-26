@@ -1,0 +1,1 @@
+Public deck, planner, weekly plan row and source record. Use these replacements with the eight neutral shared Evidence Sheet, Staff Answers, Support Cards and Vocabulary Mat files at the lesson root. No personal data or assessment outcomes are prefilled.
