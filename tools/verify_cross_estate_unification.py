@@ -235,7 +235,7 @@ CATALOGUE_PINS = {
         "Science/Grow/W8-W13_2026-27/SCI_G_W9_Turn_Earth_explain_the_sky_Classic.html": "178c695fe2dc166a80abfd26e41174e28ecfa39d4700db0870d7ee27bbffd6e8",
         "Science/Build/W8-W13_2026-27/SCI_B_W12_Give_a_rock_a_job_Classic.html": "509f38056bd09e903c70b0426ac55ab7ff73f7da10261a97eec11d49d7b27d1c",
         ".github/workflows/glv3-verify.yml": "4bf27ca7471a21359e35d1bc7277c5fa0adeb5f31a47c769f192165796037088",
-        "_glv3/tools/verify_change_boundary.py": "ab8ca9f5a57c17561f33a83d790d739ff24a7c50f93c8682fdbc75d41887ffca",
+        "_glv3/tools/verify_change_boundary.py": "93caf80153483c57973eba5fe41171e07e7d6f31937abbee99e8d2b0b87ee2c2",
         "_glv3/tools/browser_verify.mjs": "737ad30f297e061407161743f017614179cc6c56f1c9a3904bbe7c98df38c888",
         "_glv3/tools/chip_gate.mjs": "16cdd5c0ad3745c57340ed0ec6a208d221e4793bfc9b1cd9bc703a6c2613dd9a",
         "_glv3/tools/catalogue_membership.mjs": "4d7ab03e23ee0d3c3fc934f4f0a901afc61169754db099f4f5c24dd9cce058ec",
@@ -2673,7 +2673,7 @@ FENCE_PATH = "_sx3/FENCE.json"
 # its digest (a map whose bytes differ is refused, never read) and admits nothing by itself. A
 # repository without the file (the Apps copy of this gate) has no moves to resolve.
 RENAME_MAP_PATH = "tools/catalogue/M1_RENAME_MAP.json"
-RENAME_MAP_SHA256 = "99bad4e64092380ce0c467e0a905df6cdae6b74a32127b8907abd83e26baf2d2"
+RENAME_MAP_SHA256 = "c7b2c270072c06e8975a89efafbec315cdab3d254635a99e95b282ff249deaba"
 
 
 def rename_map(root: Path) -> dict[str, str]:
@@ -2683,7 +2683,9 @@ def rename_map(root: Path) -> dict[str, str]:
     data = path.read_bytes()
     if hashlib.sha256(data).hexdigest() != RENAME_MAP_SHA256:
         raise ValueError(f"unreviewed rename map: {RENAME_MAP_PATH}")
-    return json.loads(data)["pairs"]
+    declared = json.loads(data)
+    # historicalPairs: deleted before the move, read by old path only (never a move: no new path holds them).
+    return {**declared.get("historicalPairs", {}), **declared["pairs"]}
 
 
 def _tree_entries(root: Path, ref: str, paths: list[str]) -> dict[str, str]:

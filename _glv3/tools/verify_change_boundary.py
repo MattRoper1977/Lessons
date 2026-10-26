@@ -343,7 +343,7 @@ UM_COLLECTIONS_RETIRED_REPLACEMENTS = {"Humanities/Teaching_Packs/BUILD/download
 # only, with any named edit). It is read from its own file, bound here by digest: a file whose bytes differ is refused,
 # never read. Declared last, so it supersedes the earlier transactions on the paths M1 rewrote (declaration order is
 # review order). Every member still needs its CATALOGUE_PINS admission, as for any replacement.
-M1_TRANSACTION = ('_glv3/M1_REPLACEMENT_TRANSACTION.json', '99acd8c0f43d7861149c2355810e83cde591b02b5afe981d19f20ecfed8ae449')
+M1_TRANSACTION = ('_glv3/M1_REPLACEMENT_TRANSACTION.json', '41ecd9a9b024c81512b7544787d86c12c7576ff7b5fc3a50df06496567fc75ad')
 
 
 def _m1_transaction():
@@ -439,7 +439,7 @@ _LIMB_BASE_ENTRIES = {}
 # the file still lived at its old path, resolves through the map. The map is bound by its digest: a
 # map whose bytes differ is refused, never read. It admits nothing: a moved file whose bytes changed
 # is a modification of its new path and goes through every route below like any other.
-RENAME_MAP = ('tools/catalogue/M1_RENAME_MAP.json', '99bad4e64092380ce0c467e0a905df6cdae6b74a32127b8907abd83e26baf2d2')
+RENAME_MAP = ('tools/catalogue/M1_RENAME_MAP.json', 'c7b2c270072c06e8975a89efafbec315cdab3d254635a99e95b282ff249deaba')
 _RENAMES = {}
 
 
@@ -454,7 +454,9 @@ def rename_map(repo):
             data = path.read_bytes()
             if hashlib.sha256(data).hexdigest() != RENAME_MAP[1]:
                 raise ValueError('unreviewed rename map: ' + RENAME_MAP[0])
-            _RENAMES[key] = json.loads(data)['pairs']
+            declared = json.loads(data)
+            # historicalPairs: deleted before the move, read by old path only (never a move: no new path holds them).
+            _RENAMES[key] = {**declared.get('historicalPairs', {}), **declared['pairs']}
     return _RENAMES[key]
 
 
