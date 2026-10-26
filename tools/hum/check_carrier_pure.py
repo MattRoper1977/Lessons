@@ -91,14 +91,14 @@ def judge(changed: set, served: set) -> list:
 
 def self_test() -> int:
     served = {'assets/catalogue/lesson-order.json', 'data/resource-sizes.json',
-              'Humanities_Teesside/BUILD_W1-W8_2026-27/BUILD_HUM_W1_People_Special_To_Me.html'}
+              'Humanities/BUILD_W1-W8_2026-27/BUILD_HUM_W1_People_Special_To_Me.html'}
     red = [
         ('a moved lesson order is refused', {'assets/catalogue/lesson-order.json',
                                              '.github/workflows/education-pages.yml'},
          ['assets/catalogue/lesson-order.json']),
-        ('a moved deck is refused', {'Humanities_Teesside/BUILD_W1-W8_2026-27/'
+        ('a moved deck is refused', {'Humanities/BUILD_W1-W8_2026-27/'
                                      'BUILD_HUM_W1_People_Special_To_Me.html'},
-         ['Humanities_Teesside/BUILD_W1-W8_2026-27/BUILD_HUM_W1_People_Special_To_Me.html']),
+         ['Humanities/BUILD_W1-W8_2026-27/BUILD_HUM_W1_People_Special_To_Me.html']),
         ('a moved size table is refused', {'data/resource-sizes.json'}, ['data/resource-sizes.json']),
         ('two served files are both named', {'data/resource-sizes.json',
                                              'assets/catalogue/lesson-order.json'},
@@ -112,8 +112,8 @@ def self_test() -> int:
     ]
     added_red = [
         ('a new deck in a published folder is refused',
-         {'Humanities_Teesside/BUILD_W1-W8_2026-27/BUILD_HUM_W9_New.html'},
-         ['Humanities_Teesside/BUILD_W1-W8_2026-27/BUILD_HUM_W9_New.html']),
+         {'Humanities/BUILD_W1-W8_2026-27/BUILD_HUM_W9_New.html'},
+         ['Humanities/BUILD_W1-W8_2026-27/BUILD_HUM_W9_New.html']),
         ('a new catalogue asset is refused', {'assets/catalogue/new-record.json'},
          ['assets/catalogue/new-record.json']),
         ('a new tool in a folder the tree never draws from passes',

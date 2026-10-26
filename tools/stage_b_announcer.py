@@ -123,8 +123,8 @@ def in_scope() -> list[str]:
 
 def population_of(rel: str) -> str:
     head = rel.split(os.sep)[0]
-    if head == "Science_Teesside":
-        return "Science_Teesside/v3_40min" if "v3_40min" in rel else "Science_Teesside/other"
+    if head == "Science":
+        return "Science/v3_40min" if "v3_40min" in rel else "Science/other"
     return head
 
 

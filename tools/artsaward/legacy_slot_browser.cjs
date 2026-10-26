@@ -3,13 +3,13 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const {chromium} = require('playwright');
-const deckPath = process.argv[2] || path.resolve(__dirname,'../../Art_Teesside/Grow/GROW_ART_W4_Arts_Event_Attend_Capture_and_Review.html');
+const deckPath = process.argv[2] || path.resolve(__dirname,'../../Art/Grow/GROW_ART_W4_Arts_Event_Attend_Capture_and_Review.html');
 const html = fs.readFileSync(deckPath,'utf8');
 const baselinePath = process.argv[3];
 assert.ok(baselinePath, 'Supply the retained pre-correction baseline.');
 const baseline = fs.readFileSync(baselinePath,'utf8');
 assert.equal(require('node:crypto').createHash('sha256').update(baseline).digest('hex'), '7e7e84b3b4aea825ce9c832819250753212f4bdf612f4eebc210bd067a22a4cb');
-const route = '/Art_Teesside/Grow/GROW_ART_W4_Arts_Event_Attend_Capture_and_Review.html';
+const route = '/Art/Grow/GROW_ART_W4_Arts_Event_Attend_Capture_and_Review.html';
 const base = {schema:'arts-award-slots-v1',slots:{ORG_SLOT:{entries:[]},EVENT_SLOT:{entries:[]}}};
 const fixture = (org,event) => ({schema:base.schema,slots:{
   ORG_SLOT:{entries:org?[{name:org,route:'R3',status:'CONFIRMED'}]:[]},

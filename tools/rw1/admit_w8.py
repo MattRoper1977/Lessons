@@ -34,12 +34,12 @@ EVIDENCE = ROOT / 'tools/catalogue/TERM_AND_STYLE_EVIDENCE.json'
 REVIEW_BASE = 'ec7d34ab48eb290f9abb67b27c735b6e09b9930c'   # main after Sugar #547 merged (CX2 §4.8)
 
 LESSONS = {
-    'BUILD': ['Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html'],
-    'GROW': ['Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W8A_Day_And_Night_Explore.html',
-             'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W8B_Day_And_Night_Do.html'],
-    'LAUNCH': ['Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L1_Enzyme_Action_Introduce.html',
-               'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L2_Amylase_pH_Core_Practical_Explore.html',
-               'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L3_Amylase_Rate_And_Topic_1_Do.html'],
+    'BUILD': ['Science/Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html'],
+    'GROW': ['Science/Grow/W8-W13_2026-27/SCI_G_W8A_Day_And_Night_Explore.html',
+             'Science/Grow/W8-W13_2026-27/SCI_G_W8B_Day_And_Night_Do.html'],
+    'LAUNCH': ['Science/Launch/W8-W13_2026-27/SCI_L_W8L1_Enzyme_Action_Introduce.html',
+               'Science/Launch/W8-W13_2026-27/SCI_L_W8L2_Amylase_pH_Core_Practical_Explore.html',
+               'Science/Launch/W8-W13_2026-27/SCI_L_W8L3_Amylase_Rate_And_Topic_1_Do.html'],
 }
 
 

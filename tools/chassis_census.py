@@ -45,9 +45,9 @@ ROOT = Path(__file__).resolve().parents[1]
 RECORD = ROOT / 'data/chassis-census.json'
 
 DECLARED = {
-    'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html': 'BUILD',
-    'Science_Teesside/Grow/SCI_G_W3_Friction.html': 'GROW',
-    'Science_Teesside/Launch/SCI_L_W4_L1_Diffusion.html': 'LAUNCH',
+    'Science/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html': 'BUILD',
+    'Science/Grow/SCI_G_W3_Friction.html': 'GROW',
+    'Science/Launch/SCI_L_W4_L1_Diffusion.html': 'LAUNCH',
 }
 
 
@@ -82,7 +82,7 @@ def classify(raw: bytes):
 
 def census(root: Path) -> dict:
     rows = {}
-    for path in sorted((root / 'Science_Teesside').rglob('SCI_*.html')):
+    for path in sorted((root / 'Science').rglob('SCI_*.html')):
         rel = path.relative_to(root).as_posix()
         shell, marks = classify(path.read_bytes())
         rows[rel] = {'shell': shell, 'markers': marks,

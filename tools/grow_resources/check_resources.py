@@ -7,7 +7,7 @@ from lxml import html
 HERE=Path(__file__).resolve().parent
 
 def check(root):
-    dest=root/'Science_Teesside/Grow/resources'
+    dest=root/'Science/Grow/resources'
     lessons=json.loads((HERE/'CONTENT.json').read_text())
     sources=json.loads((HERE/'SOURCE_MANIFEST.json').read_text())
     results=[]

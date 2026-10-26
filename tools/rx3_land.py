@@ -8,7 +8,7 @@ Per lesson (verdict from the rx2 admission table; STOP rows are R3 ADD-BESIDE):
   ADD / ADD-BESIDE   → a new file beside the donor: <donor prefix up to the week token>_<Title_Slug>_Classic.html.
 Transformations (all measured and printed; every replacement must match exactly the expected count):
   R1  belonging: the photoreal composite becomes the flat SVG scene from tools/rx3_scenes.py (data URI ≤ 40 KB); alt = scene + decision.
-  3.3 art: Flow/Crossing become one external webp pair under Art_Teesside/assets/ (q82, ≤ 300 KB each), referenced relatively by both lessons.
+  3.3 art: Flow/Crossing become one external webp pair under Art/assets/ (q82, ≤ 300 KB each), referenced relatively by both lessons.
   3.2 NAV-1 way-home + splash (estate bytes from _next6/tools/n7_chassis_furniture.py / nav1_splash.html, print-hidden);
       PH-3 guidance: every .ta-section gains data-mbm-guide="staff" and the estate toggle (bytes read from _eca1/tools/guidepatch.js);
       canonical link; a single <h1> (the other two become <h2 class="slide-h1"> with the donor h1 rule copied); /hud.js by donor parity;
@@ -81,7 +81,7 @@ def land(lid):
         out=out.replace('Original teaching illustration; imagined groups.','Flat illustrated scenes; imagined groups, not real pupils.')
         rec['images']={'scene_uri_chars':len(uri),'alt_replaced':n}
     if e['subject']=='Art' and ('flow.png' in out or 'crossing.png' in out):
-        assets=os.path.join(REPO,'Art_Teesside/assets');os.makedirs(assets,exist_ok=True);rel=os.path.relpath(assets,os.path.join(REPO,fam_dir)).replace(os.sep,'/')
+        assets=os.path.join(REPO,'Art/assets');os.makedirs(assets,exist_ok=True);rel=os.path.relpath(assets,os.path.join(REPO,fam_dir)).replace(os.sep,'/')
         for name in ('flow','crossing'):
             wp=os.path.join(a.img,name+'.q82.webp');dst=os.path.join(assets,name+'.webp')
             if not a.dry and not os.path.exists(dst): shutil.copy(wp,dst)
@@ -188,7 +188,7 @@ def update_manifest(e,v,target,out,rec):
 def update_source_placement(recs):
     p=os.path.join(REPO,'tools/downloads/SOURCE_PLACEMENT.json');d=json.load(open(p,encoding='utf-8'));added=[]
     for r in recs:
-        if r['target'].startswith('Science_Teesside/') and r['verdict']!='REPLACE' and r['target'] not in d['retainedAlternatives'] and r['target'] not in {x['path'] for x in d['sources']}:
+        if r['target'].startswith('Science/') and r['verdict']!='REPLACE' and r['target'] not in d['retainedAlternatives'] and r['target'] not in {x['path'] for x in d['sources']}:
             d['retainedAlternatives'].append(r['target']);added.append(r['target'])
     if added and not a.dry: json.dump(d,open(p,'w',encoding='utf-8'),indent=2,ensure_ascii=False);open(p,'a').write('\n')
     return added

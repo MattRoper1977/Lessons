@@ -3,9 +3,9 @@ on:
   pull_request:
     branches: [main]
     paths:
-      - Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html
-      - Science_Teesside/Teaching_Packs/**
-      - Science_Teesside/index.html
+      - Science/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html
+      - Science/Teaching_Packs/**
+      - Science/index.html
       - assets/catalogue/science-download-bindings.json
       - tools/science_teaching_packs/**
       - .github/workflows/science-teaching-packs.yml
@@ -55,7 +55,7 @@ jobs:
           server=$!
           trap 'kill "$server" || true' EXIT
           for attempt in $(seq 1 30); do
-            if curl -fsS http://127.0.0.1:4187/Science_Teesside/Teaching_Packs/ >/dev/null; then break; fi
+            if curl -fsS http://127.0.0.1:4187/Science/Teaching_Packs/ >/dev/null; then break; fi
             sleep 1
           done
           node tools/science_teaching_packs/check_hub_browser.cjs
@@ -63,7 +63,7 @@ jobs:
       - name: Verify the published hub and all refreshed downloads
         if: github.event_name == 'workflow_run' || (github.event_name == 'workflow_dispatch' && inputs.verify_live)
         env:
-          SCIENCE_PACK_BASE_URL: https://madebymatt.uk/Lessons/Science_Teesside/Teaching_Packs/
+          SCIENCE_PACK_BASE_URL: https://madebymatt.uk/Lessons/Science/Teaching_Packs/
           SCIENCE_PACK_BROWSER_OUTPUT: audit-output/science-teaching-packs-live
         run: node tools/science_teaching_packs/check_hub_browser.cjs
       - uses: actions/upload-artifact@v4

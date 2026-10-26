@@ -50,7 +50,7 @@ def render(c,lessons):
 def build(root):
     lessons=json.loads((HERE/'CONTENT.json').read_text())
     manifest=json.loads((HERE/'SOURCE_MANIFEST.json').read_text())
-    dest=root/'Science_Teesside/Grow/resources';dest.mkdir(parents=True,exist_ok=True)
+    dest=root/'Science/Grow/resources';dest.mkdir(parents=True,exist_ok=True)
     for asset in manifest['dependencies']:
         p=dest/asset['target']
         assert p.is_file(),f'Missing dependency: {p}'

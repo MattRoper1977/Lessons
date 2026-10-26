@@ -9,7 +9,7 @@ from lxml import html
 import json,re,shutil,hashlib,subprocess
 
 REPO=Path(__file__).resolve().parents[2]
-DEST=REPO/'Science_Teesside/Launch/resources'
+DEST=REPO/'Science/Launch/resources'
 LESSONS=json.loads((Path(__file__).parent/'RESOURCE_CONTENT.json').read_text())
 ACT={c['id']:c['activity'] for c in LESSONS}
 H=lambda s:escape(str(s),quote=True)

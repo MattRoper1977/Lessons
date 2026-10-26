@@ -173,20 +173,20 @@ them must not be touched.
 The builder (`tools/build_staff_pack.py`) is the executable source of truth for scope; this
 section records it in prose. Scope is **complete-current**, never a git-diff.
 
-**IN:** `Art_Teesside` · `BUILD_ASDAN` · `GROW_ASDAN` · `LAUNCH_ASDAN` · `Humanities_Teesside` (docs) ·
+**IN:** `Art` · `BUILD_ASDAN` · `GROW_ASDAN` · `LAUNCH_ASDAN` · `Humanities` (docs) ·
 `Build/Slideshows/BUILD_DT_W*` · `Build/Slideshows/BUILD_HUM_W*` · `Grow/Slideshows` ·
-`Launch` · `Tutor_Time` · `DT_Community_Upcycling` · **`Science_Teesside`** (the current
-Teesside science suite, added PACK-1 v2) · root unit hubs (`art_teesside.html`,
-`build_asdan.html`, `build_dt_upcycling.html`, `humanities_teesside.html`) ·
+`Launch` · `Tutor_Time` · `DT_Community_Upcycling` · **`Science`** (the current
+Teesside science suite, added PACK-1 v2) · root unit hubs (`art.html`,
+`build_asdan.html`, `build_dt_upcycling.html`, `humanities.html`) ·
 `LundyLoop/assets/style.css` · **the three Art visual-learning runtime assets**
-(`Art_Teesside/visual-learning/art-visual-learning.css`,
+(`Art/visual-learning/art-visual-learning.css`,
 `art-visual-payloads.js`, `art-visual-learning.js`) · **the four GROW/LAUNCH ASDAN
 visual-upgrade runtime assets** (`GROW_ASDAN/visual-upgrade.css`, `GROW_ASDAN/visual-upgrade.js`,
 `LAUNCH_ASDAN/visual-upgrade.css`, `LAUNCH_ASDAN/visual-upgrade.js`), added PACK-2.
 
 **Why those three, and only those three.** Scope globs `*.html`, so a directory being IN
 does not carry its non-HTML assets — `LundyLoop/assets/style.css` is named individually for
-the same reason. All 31 Art_Teesside lesson decks now load these three files from inside an
+the same reason. All 31 Art lesson decks now load these three files from inside an
 `AVL-MOUNT` marker pair, by **relative** path (`../visual-learning/…`). Derived at
 `66428e3`: 31 decks, 3 distinct references, 31 uses each, **zero absolute or protocol-relative
 references**. If they do not ship, every staff copy carries a loader pointing at nothing and
@@ -203,7 +203,7 @@ what catches the difference, which is why it is run over the assembled pack and 
 
 **OUT:** `Games` and personal apps (dual-branding rule — Made-by-Matt only) · **frozen legacy
 science: `biology/`, `chemistry/`, `2 Physics 10/`** (these stay OUT even though
-`Science_Teesside/` is IN) · superseded legacy art tasters (`Build/Slideshows/BUILD_ART_W\d_`) ·
+`Science/` is IN) · superseded legacy art tasters (`Build/Slideshows/BUILD_ART_W\d_`) ·
 old `BUILD_L1_` / `FW_L1_` · site furniture (`404.html`, root `index.html`, `hub-health`) ·
 any pupil/student sheets or pupil data (never enter any zip) · **the visual-learning
 directory's non-runtime contents** — `README.md` and anything else there is recovery

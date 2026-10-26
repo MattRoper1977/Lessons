@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """SX3 · declare this branch's landing decks as a GLV3 replacement transaction.
 
-_glv3/tools/verify_change_boundary.py protects the whole `Science_Teesside`
+_glv3/tools/verify_change_boundary.py protects the whole `Science`
 prefix (PROTECTED, line 22). A modification to a lesson deck matches none of the
 four admitted cases and falls through to the fence at line 347:
 
@@ -50,17 +50,17 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 BOUNDARY = ROOT / "_glv3/tools/verify_change_boundary.py"
 GATE = ROOT / "tools/verify_cross_estate_unification.py"
-PREFIX = "Science_Teesside/"
+PREFIX = "Science/"
 
 # ORDER SX3-S2: the five GROW _Do decks held on body provenance. They sit at
 # main's bytes and so cannot appear as a modification, but they are named here
 # too: a hold that depends on a deck happening not to differ is not a hold.
 HELD = (
-    "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W9B_Spherical_Bodies_Do.html",
-    "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W10B_Solar_System_Presentation_Do.html",
-    "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W11B_Climate_Action_Do.html",
-    "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W12B_Science_Answer_Lab_Do.html",
-    "Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W13B_Rover_Rescue_Investigation_Do.html",
+    "Science/Grow/W8-W13_2026-27/SCI_G_W9B_Spherical_Bodies_Do.html",
+    "Science/Grow/W8-W13_2026-27/SCI_G_W10B_Solar_System_Presentation_Do.html",
+    "Science/Grow/W8-W13_2026-27/SCI_G_W11B_Climate_Action_Do.html",
+    "Science/Grow/W8-W13_2026-27/SCI_G_W12B_Science_Answer_Lab_Do.html",
+    "Science/Grow/W8-W13_2026-27/SCI_G_W13B_Rover_Rescue_Investigation_Do.html",
 )
 
 

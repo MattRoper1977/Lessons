@@ -19,7 +19,7 @@ import json, subprocess, sys, zipfile
 from copy import deepcopy
 
 ROOT = Path(__file__).resolve().parents[2]
-PACK = ROOT / 'Science_Teesside/Teaching_Packs/GROW'
+PACK = ROOT / 'Science/Teaching_Packs/GROW'
 REVISION = '2026-09-15'
 WEEK3 = {'W3A', 'W3B'}
 sys.path.insert(0, str(ROOT / 'tools/science_teaching_packs'))

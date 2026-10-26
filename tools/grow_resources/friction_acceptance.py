@@ -15,8 +15,8 @@ from playwright.sync_api import sync_playwright
 
 ROOT = Path(sys.argv[1]).resolve(); OUT = Path(sys.argv[2]).resolve(); OUT.mkdir(parents=True, exist_ok=True)
 AXE = Path(os.environ['NODE_PATH']) / 'axe-core/axe.min.js'
-REL = 'Science_Teesside/Grow/SCI_G_W3_Friction.html'
-RESOURCE_PAGES = ['Science_Teesside/Grow/resources/GS_W3A.html', 'Science_Teesside/Grow/resources/GS_W3B.html']
+REL = 'Science/Grow/SCI_G_W3_Friction.html'
+RESOURCE_PAGES = ['Science/Grow/resources/GS_W3A.html', 'Science/Grow/resources/GS_W3B.html']
 TIMERS = [1, 4, 2, 9, 10, 4, 10, 32, 4, 4]
 WIDTHS = [320, 390, 768, 1280]
 PRINT_SECTIONS = ['ko', 'intro', 'glance', 'arrival', 'arrival-answers', 'w3a-exit', 'w3a-exit-answers', 'wedo', 'exit',

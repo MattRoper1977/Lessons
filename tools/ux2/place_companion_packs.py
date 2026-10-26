@@ -5,11 +5,11 @@ This is the placement tool that produced the manifest the catalogue lane and
 ``tools/ux2/check_companion_packs.py`` read. It is deliberately explicit about
 its rulings so the manifest can be regenerated from the same intake:
 
-* Science packs land in ``Science_Teesside/Teaching_Packs/<PATHWAY>/lessons/<Wtoken>/``
+* Science packs land in ``Science/Teaching_Packs/<PATHWAY>/lessons/<Wtoken>/``
   for BUILD, GROW and LAUNCH alike (LAUNCH had no ``lessons/`` directory; its
   ``Week_n`` form would collide ``A2_W7*`` with Autumn 1 W7, so the subject's
   dominant convention is mirrored).
-* Humanities packs land in ``Humanities_Teesside/Teaching_Packs/<PATHWAY>/Week_<n>/``.
+* Humanities packs land in ``Humanities/Teaching_Packs/<PATHWAY>/Week_<n>/``.
 * File names are ``<PATHWAY>_<Subject>_<Term>_<Wtoken>_<TitleSlug>`` with the
   suffixes the subject's existing packs use: ``.pptx`` (lesson), ``.pdf``
   (slides), ``_Teacher.docx``, ``_Teacher.pdf``, ``_Pupil.docx``, ``_Pupil.pdf``.
@@ -106,10 +106,10 @@ def destination(root: Path, pl: dict) -> tuple[Path, str, str]:
     base = f'{pathway}_{subject}_{term}_{wtoken}_{slug}'
     if subject == 'Science':
         rel = f'lessons/{wtoken}'
-        return root / 'Science_Teesside/Teaching_Packs' / pathway / rel, base, rel
+        return root / 'Science/Teaching_Packs' / pathway / rel, base, rel
     if subject == 'Humanities':
         rel = f'{pathway}/Week_{humanities_week(wtoken)}'
-        return root / 'Humanities_Teesside/Teaching_Packs' / rel, base, rel
+        return root / 'Humanities/Teaching_Packs' / rel, base, rel
     raise SystemExit(f'STOP: no placement rule for subject {subject!r}')
 
 
@@ -226,9 +226,9 @@ def main() -> int:
     sums_written = {}
     for (subject, pathway), rows in sorted(sums_rows.items(), key=lambda kv: (kv[0][0], kv[0][1] or '')):
         if subject == 'Science':
-            sums = root / 'Science_Teesside/Teaching_Packs' / pathway / 'SHA256SUMS.txt'
+            sums = root / 'Science/Teaching_Packs' / pathway / 'SHA256SUMS.txt'
         else:
-            sums = root / 'Humanities_Teesside/Teaching_Packs/SHA256SUMS.txt'
+            sums = root / 'Humanities/Teaching_Packs/SHA256SUMS.txt'
         sums_written[sums.relative_to(root).as_posix()] = append_rows(sums, rows, dry)
 
     manifest = {
@@ -236,8 +236,8 @@ def main() -> int:
         'generated': dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace('+00:00', 'Z'),
         'intake': {'zips': zips, 'd0': {'packs': len(d0)}},
         'rulings': {
-            'science': 'Science_Teesside/Teaching_Packs/<PATHWAY>/lessons/<Wtoken>/ for BUILD, GROW and LAUNCH',
-            'humanities': 'Humanities_Teesside/Teaching_Packs/<PATHWAY>/Week_<n>/',
+            'science': 'Science/Teaching_Packs/<PATHWAY>/lessons/<Wtoken>/ for BUILD, GROW and LAUNCH',
+            'humanities': 'Humanities/Teaching_Packs/<PATHWAY>/Week_<n>/',
             'names': '<PATHWAY>_<Subject>_<Term>_<Wtoken>_<TitleSlug>{.pptx,.pdf,_Teacher.docx,_Teacher.pdf,_Pupil.docx,_Pupil.pdf}',
             'html': 'never placed; the deployed lesson (companionOf) is canonical',
             'holds': 'file-level: truncated Slides.pdf; docx/pdf whose body text carries OUTSTANDING_V4, _V3_1 or Download.rar',

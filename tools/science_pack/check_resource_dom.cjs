@@ -3,7 +3,7 @@ const fs=require('fs'),path=require('path'),vm=require('vm'),assert=require('nod
 const {parseHTML}=require('linkedom');
 const root=path.resolve(__dirname,'../..');
 const configs=JSON.parse(fs.readFileSync(path.join(__dirname,'RESOURCE_CONTENT.json'),'utf8'));
-const script=fs.readFileSync(path.join(root,'Science_Teesside/Launch/resources/pack.js'),'utf8');
+const script=fs.readFileSync(path.join(root,'Science/Launch/resources/pack.js'),'utf8');
 const report=[];
 for(const c of configs){
  const {document,window}=parseHTML(fs.readFileSync(path.join(root,c.online_path),'utf8'));

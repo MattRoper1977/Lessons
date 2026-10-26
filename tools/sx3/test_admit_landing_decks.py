@@ -130,7 +130,7 @@ class IdenticalToBase(unittest.TestCase):
 
     def _run(self, module):
         """Run module.main() over one deck whose bytes equal its base."""
-        rel = "Science_Teesside/Grow/W1_2026-27/SCI_G_W1_Held.html"
+        rel = "Science/Grow/W1_2026-27/SCI_G_W1_Held.html"
         root = Path(tempfile.mkdtemp())
         (root / rel).parent.mkdir(parents=True)
         (root / rel).write_text(self.PRETTY)

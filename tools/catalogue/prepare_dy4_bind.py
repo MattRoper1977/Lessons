@@ -26,13 +26,13 @@ sha = lambda p: hashlib.sha256(open(P(p), 'rb').read()).hexdigest()
 sys.path.insert(0, P('tools/catalogue')); from title_slide import title_slide_heading
 
 PAGES = [  # (path, pathway, part label for the id, record or None)
- ('Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P1.html', 'BUILD', 'p1', '_land_a2/SC3R/SCI_BUILD_A1_W08_P1/LESSON_SOURCE.json'),
- ('Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P2.html', 'BUILD', 'p2', '_land_a2/SC3R/SCI_BUILD_A1_W08_P2/LESSON_SOURCE.json'),
- ('Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P1.html', 'GROW', 'p1', '_land_a2/SC3R4/GROW_SCI_A1_W08_P1/LESSON_SOURCE.json'),
- ('Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P2.html', 'GROW', 'p2', '_land_a2/SC3R4/GROW_SCI_A1_W08_P2/LESSON_SOURCE.json'),
- ('Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1.html', 'LAUNCH', 'l1', None),
- ('Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L2.html', 'LAUNCH', 'l2', None),
- ('Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L3.html', 'LAUNCH', 'l3', None),
+ ('Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P1.html', 'BUILD', 'p1', '_land_a2/SC3R/SCI_BUILD_A1_W08_P1/LESSON_SOURCE.json'),
+ ('Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P2.html', 'BUILD', 'p2', '_land_a2/SC3R/SCI_BUILD_A1_W08_P2/LESSON_SOURCE.json'),
+ ('Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P1.html', 'GROW', 'p1', '_land_a2/SC3R4/GROW_SCI_A1_W08_P1/LESSON_SOURCE.json'),
+ ('Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P2.html', 'GROW', 'p2', '_land_a2/SC3R4/GROW_SCI_A1_W08_P2/LESSON_SOURCE.json'),
+ ('Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1.html', 'LAUNCH', 'l1', None),
+ ('Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L2.html', 'LAUNCH', 'l2', None),
+ ('Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L3.html', 'LAUNCH', 'l3', None),
 ]
 BOOK = re.compile(r'Science\s*·\s*(BUILD|GROW|LAUNCH)\s*·\s*Autumn 1\s*·\s*Week\s*0*(\d+)\b')
 txt = lambda s: re.sub(r'\s+', ' ', H.unescape(re.sub(r'<[^>]+>', ' ', s))).strip()

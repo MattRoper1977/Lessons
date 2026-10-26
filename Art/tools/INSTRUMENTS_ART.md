@@ -15,7 +15,7 @@ everything here being wrong, are indistinguishable from inside this file.
 ## AT-INST-01 — `assert_estate.py`
 
 - **Derives:** live (non-residual) counts for the six house assertions across every
-  tracked `*.html` file under `Art_Teesside/`, plus the declared-residual count
+  tracked `*.html` file under `Art/`, plus the declared-residual count
   each assertion is expected to tolerate, plus uncontested counts for tier
   vocabulary and attribution.
 - **Method:** **Literal** throughout. Every assertion is a regular expression over
@@ -53,7 +53,7 @@ D-PRESS-01 (31 — GROW W2 19, LAUNCH W6 6, GROW W3 4, GROW W6 2) plus D-PRESS-0
   press in order to refuse it and could defensibly be residuals. They are counted
   live deliberately: under-counting a banned string is the failure mode that
   matters, over-counting merely creates work.
-- **`*.html` only.** The staff-side `.md` files in `Art_Teesside/` quote banned
+- **`*.html` only.** The staff-side `.md` files in `Art/` quote banned
   strings in the course of describing them. Sweeping them would re-manufacture the
   false positives this estate has a documented history of.
 

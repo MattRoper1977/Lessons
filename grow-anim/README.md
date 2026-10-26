@@ -226,9 +226,9 @@ its stages, so a lesson taught twice in a day starts clean both times.
 ## Maintaining it
 
 ```bash
-python3 grow-anim/inject.py         Science_Teesside/Grow/*.html   # refresh the library
-python3 grow-anim/wire_lessons.py   Science_Teesside/Grow/*.html   # refresh the wiring
-python3 grow-anim/inject.py --check Science_Teesside/Grow/*.html   # CI / pre-commit
+python3 grow-anim/inject.py         Science/Grow/*.html   # refresh the library
+python3 grow-anim/wire_lessons.py   Science/Grow/*.html   # refresh the wiring
+python3 grow-anim/inject.py --check Science/Grow/*.html   # CI / pre-commit
 ```
 
 Both scripts are idempotent and marker-based: they replace what is between their

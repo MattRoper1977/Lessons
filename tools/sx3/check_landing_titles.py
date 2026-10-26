@@ -50,7 +50,7 @@ def run(*args: str) -> str:
 
 
 def landing_decks(base: str) -> list[str]:
-    out = run("git", "diff", "--name-only", f"{base}...HEAD", "--", "Science_Teesside/")
+    out = run("git", "diff", "--name-only", f"{base}...HEAD", "--", "Science/")
     return sorted(p for p in out.split() if p.endswith(".html"))
 
 

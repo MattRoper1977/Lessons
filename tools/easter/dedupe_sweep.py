@@ -139,9 +139,9 @@ FAMILY_LANES = ("BUILD", "GROW", "LAUNCH")
 
 
 def family_of(rel: str) -> str | None:
-    if rel.startswith("Science_Teesside/"):
+    if rel.startswith("Science/"):
         return f"{rel.split('/')[1].upper()} Science"
-    if rel.startswith("Humanities_Teesside/"):
+    if rel.startswith("Humanities/"):
         return f"{rel.split('/')[1].split('_')[0]} Humanities"
     for lane in FAMILY_LANES:
         if rel.startswith(f"{lane}_ASDAN/"):
@@ -310,7 +310,7 @@ def controls() -> list[dict]:
         # still fired green. The deck is now planted under a family-mapped path
         # so the apply is actually executed, and the mutation reds it.
         import hashlib
-        mapped = _plant(d, "Science_Teesside/Build/W1_2026-27/SCI_B_dup.html", 4)
+        mapped = _plant(d, "Science/Build/W1_2026-27/SCI_B_dup.html", 4)
         digest_before = hashlib.sha256(mapped.read_bytes()).hexdigest()
         pj = project(sweep(d), root=d)
         rec("projection-leaves-the-source-file-byte-unchanged",

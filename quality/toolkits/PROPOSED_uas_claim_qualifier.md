@@ -41,7 +41,7 @@ own specification and the dominant convention in every file edited.
 | reason | files | occurrences |
 |---|---:|---:|
 | Pupil-facing authoring — the 44 files below, still PROPOSED | 44 | 185 |
-| `Science_Teesside/` entirely — item 17 byte-pristine hold + its 38 variants | 63 | 63 files carrying `TBC (Cheryl)` |
+| `Science/` entirely — item 17 byte-pristine hold + its 38 variants | 63 | 63 files carrying `TBC (Cheryl)` |
 | Pupil-facing decks newly measured this pass (not in the 44) | 38 | 107 |
 | `*_Estate_v3/` self-identified test copies — OPEN_ITEMS item 43 | 91 | 191 |
 | Staff-facing but nothing asserted — NO-OP | 24 | 167 |
@@ -104,7 +104,7 @@ section immediately above.
 ### Corrections to this document's own measurements
 
 - Its T1 table records **12** distinct unit titles. A **13th**, `AQA UAS ‘History around
-  us’`, is asserted in the three `Humanities_Teesside/*_Scheme_of_Work.html` banners and
+  us’`, is asserted in the three `Humanities/*_Scheme_of_Work.html` banners and
   was never measured here — PEQ-YEAR-2 looked only at the three ASDAN lesson estates.
   All three sites are now qualified.
 
@@ -313,7 +313,7 @@ coordinator's entry record.
 
 ## Not in this proposal
 
-- The **63 `Science_Teesside/` surfaces** carrying `TBC (Cheryl)` — 25 held byte-pristine,
+- The **63 `Science/` surfaces** carrying `TBC (Cheryl)` — 25 held byte-pristine,
   38 variants outside that set. Reported against item 17; not edited, because correcting
   the variants while the sheets they mirror are frozen would diverge the two halves mid-hold.
 - The **ASDAN short-course module and challenge codes** (FoodWise / Living Independently /

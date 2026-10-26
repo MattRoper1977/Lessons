@@ -52,7 +52,7 @@ GETBY_CONCAT = re.compile(r"""getElementById\(\s*['"]print-['"]\s*\+\s*([A-Za-z_
 GETBY_LITERAL = re.compile(r"""getElementById\(\s*['"]print-([A-Za-z0-9_\-]+)['"]\s*\)""")
 PRINTPACK = re.compile(r"function\s+printPack\s*\(([^)]*)\)\s*\{(.{0,2600}?)\n(?=function|\Z)", re.S)
 # Level names are NOT a constant of the estate. v1 of this instrument hardcoded
-# ('foundation','middle','higher'); Art_Teesside uses ('supported','standard',
+# ('foundation','middle','higher'); Art uses ('supported','standard',
 # 'stretch') and reported 6 phantom absences per file — 691 estate-wide, all
 # false. Retired per standing rule 7. Levels are now derived literally, from
 # each file's own printPack(...) call sites. Standing rule 3: this derivation

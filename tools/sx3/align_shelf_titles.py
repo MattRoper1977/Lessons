@@ -110,7 +110,7 @@ def main() -> int:
                      if isinstance(row, dict) and "file" in row}
 
     diff = subprocess.run(["git", "diff", "--name-only", f"{args.base}...HEAD", "--",
-                           "Science_Teesside/"], cwd=ROOT, capture_output=True, text=True,
+                           "Science/"], cwd=ROOT, capture_output=True, text=True,
                           check=True).stdout.split()
     landing = {p for p in diff if p.endswith(".html")}
 

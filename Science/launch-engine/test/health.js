@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Health check — every Science_Teesside deck, all three pathways.
+   Health check — every Science deck, all three pathways.
    Renders each deck, walks every slide, and reports only what is actually
    broken. Findings are separated from observations: a deck that differs from
    its neighbours is not thereby faulty.
@@ -136,7 +136,7 @@ const IGNORE = /hud\.js|ERR_FILE_NOT_FOUND|favicon/;
 
   /* ---------------------------------------------------------------- report */
   const RED = [];
-  console.log('\n═══ DECK HEALTH · Science_Teesside ═══\n');
+  console.log('\n═══ DECK HEALTH · Science ═══\n');
   console.log('pathway file                              slides  svg  anim  xp   errors  overflow');
   console.log('─'.repeat(94));
   for (const r of rows) {

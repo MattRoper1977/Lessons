@@ -2,12 +2,12 @@ name: Cross-estate contract on lesson content
 
 # The cross-estate contract already guards the catalogue's lesson-order projection,
 # but it only ran on PR shapes that touch a PIN1-pinned path. A PR that changes only
-# Science_Teesside lesson content did not trigger it, so the projection could move -
+# Science lesson content did not trigger it, so the projection could move -
 # dropping a lesson's term and week binding - with every check on the PR green, and
 # the red would surface later on main's scheduled run. This fires the same contract
 # on those PRs. Trigger only: no job, threshold, scope or assertion is changed here.
 
-# ORDER FINISH-2, manifest-pin ruling (2026-09-20): Humanities_Teesside joins it.
+# ORDER FINISH-2, manifest-pin ruling (2026-09-20): Humanities joins it.
 # The HUM-D5 packs used to be watched by 1750 PIN1-derived exact paths, one per pinned
 # pack file. That list took the derived workflow to 534,033 bytes and GitHub refused to
 # load it - three push runs ended instantly with zero jobs and no pull_request run was
@@ -25,12 +25,12 @@ on:
   pull_request:
     branches: [main]
     paths:
-      - 'Science_Teesside/**'
-      - 'Humanities_Teesside/**'
+      - 'Science/**'
+      - 'Humanities/**'
   push:
     branches: [main]
     paths:
-      - 'Humanities_Teesside/**'
+      - 'Humanities/**'
 
 # A called workflow cannot be granted more than the caller holds, and the called workflow
 # declares contents: read, issues: write, pull-requests: write at workflow level. This caller

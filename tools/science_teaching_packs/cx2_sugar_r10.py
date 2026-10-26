@@ -3,12 +3,12 @@
 surface (ruling R10), and the BUILD checksum rows brought back to the bytes on disk.
 
 Edits, idempotently:
-  * Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html — three staff
+  * Science/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html — three staff
     sentences that named the evidence product now name the school's digital evidence
     platform (the same wording the Friction, Diffusion and return-week cards use);
   * .../W8A/BUILD_Science_Autumn1_W8A_Sugar_Evidence_Read_The_Label_Teacher.docx — the same
     three sentences; the Teacher PDF is re-rendered from it by LibreOffice;
-  * Science_Teesside/Teaching_Packs/BUILD/SHA256SUMS.txt — the six W8A rows recomputed
+  * Science/Teaching_Packs/BUILD/SHA256SUMS.txt — the six W8A rows recomputed
     (they were left at the pre-correction digests when the Sugar accessibility
     corrections landed; measured 2026-09-15: all six rows differed from disk);
   * _glv3/tools/verify_change_boundary.py — its own reviewed replacement transaction over
@@ -27,8 +27,8 @@ from pathlib import Path
 import argparse, hashlib, importlib, json, re, shutil, subprocess, sys, tempfile
 
 ROOT = Path(__file__).resolve().parents[2]
-LESSON = 'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html'
-PACK = 'Science_Teesside/Teaching_Packs/BUILD/'
+LESSON = 'Science/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html'
+PACK = 'Science/Teaching_Packs/BUILD/'
 STEM = PACK + 'lessons/W8A/BUILD_Science_Autumn1_W8A_Sugar_Evidence_Read_The_Label'
 TEACHER_DOCX = STEM + '_Teacher.docx'
 TEACHER_PDF = STEM + '_Teacher.pdf'

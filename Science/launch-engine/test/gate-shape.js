@@ -47,9 +47,9 @@ const GATES = [
   { file: 'build-anim/build-anim.css', sel: '.ba-stage [data-part].ba-hidden' },
   { file: 'build-anim/build-anim.css', sel: '[data-ba-step]' },
   { file: 'build-anim/build-anim.css', sel: '.ba-label' },
-  { file: 'Science_Teesside/launch-engine/sci-engine.css', sel: '.sci-label' },
-  { file: 'Science_Teesside/launch-engine/sci-engine.css', sel: '.sci-part' },
-  { file: 'Science_Teesside/launch-engine/sci-engine.css', sel: '.sci-spotmove' }
+  { file: 'Science/launch-engine/sci-engine.css', sel: '.sci-label' },
+  { file: 'Science/launch-engine/sci-engine.css', sel: '.sci-part' },
+  { file: 'Science/launch-engine/sci-engine.css', sel: '.sci-spotmove' }
 ];
 
 /* Opacity-only rules that are NOT gates. Each needs a reason, because "it is

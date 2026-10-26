@@ -19,7 +19,7 @@ inferred from a folder or filename:
 A row whose cell does not resolve is REFUSED and named; the run writes nothing.
 A route already selected is left as it is.
 
-  select_manifest_decks.py --folders Science_Teesside/Build/W18-W26_2026-27 ... [--write]
+  select_manifest_decks.py --folders Science/Build/W18-W26_2026-27 ... [--write]
   select_manifest_decks.py --self-test
 """
 from __future__ import annotations

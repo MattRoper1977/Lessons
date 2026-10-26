@@ -2,7 +2,7 @@
 /* ==========================================================================
    PRINT PACK — does each tier actually produce a handout?
 
-       node test/print-pack.js            all Science_Teesside decks
+       node test/print-pack.js            all Science decks
 
    WHY THIS SHAPE, AND NOT THE OBVIOUS ONE
    The previous attempt measured the rendered height of #print-area under print

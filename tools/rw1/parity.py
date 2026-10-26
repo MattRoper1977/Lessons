@@ -20,8 +20,8 @@ import lxml.html
 
 REPO = Path(__file__).resolve().parents[2]
 LIVE = {
-    'A': 'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html',
-    'B': 'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html',
+    'A': 'Science/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html',
+    'B': 'Science/Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html',
 }
 
 def cls(tag, name):

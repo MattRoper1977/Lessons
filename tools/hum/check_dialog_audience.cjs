@@ -49,13 +49,13 @@ const ROOT = path.resolve(arg('--root', '.'));
 const ONLY = arg('--only', '');
 const JSON_OUT = arg('--json', '');
 const EXCEPTIONS = path.resolve(arg('--exceptions', path.join(__dirname, 'dialog_audience_exceptions.json')));
-const TREES = ['Humanities_Teesside', 'Science_Teesside'];
+const TREES = ['Humanities', 'Science'];
 
 // ---------------------------------------------------------------------------------------- the exception
 
 const W8B_HIDDEN = (control, dialog) => `hidden: "${control}" opens #${dialog}, which does not show (display none, visibility visible, opacity 1, 0x0)`;
 const RULED = Object.freeze({
-  path: 'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html',
+  path: 'Science/Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html',
   reason: 'fenced by _sx3/FENCE.json (ORDER SX3-M4 §1(b)); held out of DLG-1 by LAND-A2 R8 §1',
   ruling: 'LAND-A2 R8 §1, extended to 2026-11-20 by ea',
   added: '2026-09-26',
@@ -370,7 +370,7 @@ async function main() {
 // ---------------------------------------------------------------------------------------- self-test
 
 function selfTest() {
-  const W8B = RULED.path, OTHER = 'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W9A_Fixture_Do.html';
+  const W8B = RULED.path, OTHER = 'Science/Build/W8-W13_2026-27/SCI_B_W9A_Fixture_Do.html';
   const f = c => ({ check: c.check, control: c.control, action: c.action, dialog: c.dialog, failure: c.failure });
   const row = (page, offFails = [], onFails = []) => ({ page, states: {
     'guide-off': { failures: offFails.map(f) }, 'guide-on': { failures: onFails.map(f) } } });

@@ -89,7 +89,7 @@ by misattribution, and a good idea wrongly attributed is still a phantom.
 
 ## The instruments
 
-All in `Art_Teesside/tools/`. Load `INSTRUMENTS_ART.md` before any measuring pass.
+All in `Art/tools/`. Load `INSTRUMENTS_ART.md` before any measuring pass.
 
 - **AT-INST-01** `assert_estate.py` — AO/grade/hours/tier/names. A8 retired here, superseded.
 - **AT-INST-02** `assert_cooccurrence.py` — C1–C6, the co-present contradictions. Self-tested at `6486176` where it must return non-zero.
@@ -243,10 +243,10 @@ Reasons for each are in `RATIFIED` in `assert_kit.py`. Anything new is a
 ## Running the instruments
 
 ```
-python3 Art_Teesside/tools/assert_kit.py [--verbose]        # closed kit, by category
-python3 Art_Teesside/tools/assert_estate.py                  # AO / grade / hours / names
-python3 Art_Teesside/tools/assert_cooccurrence.py            # C1-C6 contradictions
-node    Art_Teesside/tools/assert_print.js [--verbose]       # render, 55 sheets / 55 pages
+python3 Art/tools/assert_kit.py [--verbose]        # closed kit, by category
+python3 Art/tools/assert_estate.py                  # AO / grade / hours / names
+python3 Art/tools/assert_cooccurrence.py            # C1-C6 contradictions
+node    Art/tools/assert_print.js [--verbose]       # render, 55 sheets / 55 pages
 ```
 
 Each in **its own step**, exit code checked between it and any push (rule 16).
@@ -328,7 +328,7 @@ based on `main` at `a4b19e2`.
 
 The vendor's Art Visual-Learning pack survived only as a 12-file re-compressed subset plus a
 self-contained demo. Stage A recovers the toolkit from the demo **by byte-for-byte extraction**
-into `Art_Teesside/visual-learning/` — CSS 16,977 b, payloads 45,445 b, engine 75,820 b — and
+into `Art/visual-learning/` — CSS 16,977 b, payloads 45,445 b, engine 75,820 b — and
 lands it **mounted nowhere.** No lesson file loads it. Demo chrome and the demo bootstrap were
 discarded. No line was prose-reconstructed; every file was verified by `cmp` read-back after
 writing, and by a size read at origin separate from the push.
@@ -339,7 +339,7 @@ The mismatch proves nothing either way. Absence of a mismatch is not evidence of
 
 ### The target set is now derived, not inherited
 
-"Pupil-facing lesson deck" now has a derivable definition: **an `Art_Teesside` HTML file that
+"Pupil-facing lesson deck" now has a derivable definition: **an `Art` HTML file that
 requests `/hud.js`.** That is 31 of the 53 Art HTML files, and it is **identical, one for one,
 to the 31 lesson IDs in the vendor payloads** — the two sets were compared and the difference is
 empty in both directions, against a control that returns 22.
@@ -408,14 +408,14 @@ did. A zero that cannot be non-zero is still an unasked question.
 
 ### Estate Visuals run — VERIFY-ONLY
 
-The Estate Visuals run, sentinel `estate-visuals-2026-08-04`, claims Art_Teesside with a
-minimal-diff brief. **This pass takes ownership of Art_Teesside; that run's Art half is now
+The Estate Visuals run, sentinel `estate-visuals-2026-08-04`, claims Art with a
+minimal-diff brief. **This pass takes ownership of Art; that run's Art half is now
 VERIFY-ONLY.** No branch for it exists on the remote.
 
 ### Open, and Matt's
 
 Four rulings block Stage B, and they are recorded in full in
-`Art_Teesside/visual-learning/README.md`: the **clipboard capability** (ships disabled unless
+`Art/visual-learning/README.md`: the **clipboard capability** (ships disabled unless
 ruled otherwise), the **award-blind transfer task** (route into the weekly sheet, or declare it
 not-evidence — it must not become a third portfolio by drift), the unfed **`innerHTML`** branch,
 and the **reduced-motion listener**, which is computed once at load with no `change` listener.
@@ -446,7 +446,7 @@ debt actually outstanding are different things, and the difference is checkable.
 
 ### The derived target set is a derivation, not a constant
 
-**"An `Art_Teesside` HTML file that requests `/hud.js`"** — 31 files, identical to the
+**"An `Art` HTML file that requests `/hud.js`"** — 31 files, identical to the
 31 payload lesson IDs, excluding exactly the 22 hubs, schemes, printable packs, House
 Standard and Partnership Log.
 
@@ -490,7 +490,7 @@ source is evidence about the text, never about the runtime.**
 ### Four instrument instances worth keeping
 
 1. **The identity gate fired for the first time and was right.** The session opened on
-   `mattroper1977.github.io` — 0 of 5 signals, no `Art_Teesside/`, `12cb6d9` not a
+   `mattroper1977.github.io` — 0 of 5 signals, no `Art/`, `12cb6d9` not a
    valid object. Re-attached to Lessons: 5 of 5. **A `*.github.io` remote is the decoy
    the gate was written for, and it caught it before any write.**
 2. **A zero that could not be non-zero.** The first viewport gate reported "no
@@ -559,7 +559,7 @@ is a larger risk than an unused `@keyframes` block.
 
 ### Job 2 — the 29 Aug rebuild would have shipped 31 dead loaders
 
-`in_scope()` globs `*.html`, so `Art_Teesside` being an include directory never carried
+`in_scope()` globs `*.html`, so `Art` being an include directory never carried
 its non-HTML assets. The three runtime files are now named individually in `REBRAND.md`
 and the builder, the same way `LundyLoop/assets/style.css` always was. Without them,
 every staff copy would carry a loader pointing at nothing and the *We Do* panel would

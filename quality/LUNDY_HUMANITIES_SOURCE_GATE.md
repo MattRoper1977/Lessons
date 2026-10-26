@@ -14,7 +14,7 @@ rules live with the access work, not here. **This file has no sibling** — Scie
 not need one, because humanities is the subject whose raw material is other people's work.
 
 The toolkit instruments this file governs:
-`Humanities_Teesside/Lundy_Humanities/SOURCE_PROVENANCE_REGISTER.html`,
+`Humanities/Lundy_Humanities/SOURCE_PROVENANCE_REGISTER.html`,
 `SOURCE_PROVENANCE_TEMPLATE.csv`, `CONSTRUCTED_SOURCE_LABEL_STANDARD.md` and
 `ACCESSIBLE_SOURCE_PACK_STANDARD.md`.
 

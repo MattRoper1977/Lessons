@@ -35,7 +35,7 @@ from a reference set with a recorded digest, not drawn by hand — see
 | chassis | stripped from | margin |
 |---|---|---|
 | `BUILD_chassis.html` | `BUILD_ASDAN/Autumn1_W1-W7_2026-27/BUILD_ASDAN_W3_Cook_One_Snack_as_a_Team_from_a_Picture_Card.html` | 0.135 |
-| `GROW_chassis.html` | `Humanities_Teesside/GROW_W1-W8_2026-27/GROW_Humanities_W3_Match_the_Lamp_to_Its_Meaning.html` | 0.431 |
+| `GROW_chassis.html` | `Humanities/GROW_W1-W8_2026-27/GROW_Humanities_W3_Match_the_Lamp_to_Its_Meaning.html` | 0.431 |
 | `LAUNCH_chassis.html` | `LAUNCH_ASDAN/Autumn1_W1-W7_2026-27/LAUNCH_ASDAN_W1_Choose_Our_Community_Need_and_Launch_My_Challenge.html` | 0.194 |
 
 Each file records its own donor and that donor's sha256 inside its

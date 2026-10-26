@@ -106,7 +106,7 @@ def controls():
     results.append({'id':'all-original-guidance-identities-retained','pass':True})
     for name,changed in [
         ('missing-guidance-route-refused',identities[:-1]),
-        ('same-count-wrong-guidance-route-refused',identities[:-1]+['Science_Teesside/unreviewed.html']),
+        ('same-count-wrong-guidance-route-refused',identities[:-1]+['Science/unreviewed.html']),
         ('duplicate-guidance-route-refused',identities[:-1]+[identities[0]]),
     ]:
         try:validate_guidance_census(changed)

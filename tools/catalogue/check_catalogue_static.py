@@ -76,12 +76,12 @@ check('HUB1 R1: every Autumn 2 cell (%d, BUILD/GROW/LAUNCH) carries exactly one 
 # DY-4 (rulings dy, eb EB-5): the Autumn 1 Week 8 return-week lessons head their own cells, in lesson order, and the
 # live Week 8 lessons stay bound beside them; a lesson bound to the wrong week or cell fails here (SCI-56 D27 gap).
 _w8={s_['pathway']:[c['path'] for c in s_['current']] for s_ in json.loads((r/'assets/catalogue/science-hub-bindings.json').read_text())['slots'] if s_['term']=='Aut1' and s_['week']==8}
-_W8_HEAD={'BUILD':['Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P%d.html'%i for i in (1,2)],'GROW':['Science_Teesside/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P%d.html'%i for i in (1,2)],'LAUNCH':['Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L%d.html'%i for i in (1,2,3)]}
+_W8_HEAD={'BUILD':['Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P%d.html'%i for i in (1,2)],'GROW':['Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P%d.html'%i for i in (1,2)],'LAUNCH':['Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L%d.html'%i for i in (1,2,3)]}
 _W8_BESIDE={'BUILD':2,'GROW':0,'LAUNCH':3}
 check('DY-4: each Autumn 1 Week 8 cell is headed by its return-week lessons (2/2/3, all recommended) with the live Week 8 lessons beside them (2/0/3)',all(_w8.get(k,[])[:len(v)]==v and all(p in _rec for p in v) and len(_w8.get(k,[]))==len(v)+_W8_BESIDE[k] and not any(p in _rec for p in _w8[k][len(v):]) for k,v in _W8_HEAD.items()) and sum(p in q for q in _w8.values() for v in _W8_HEAD.values() for p in v)==7)
 _w8all={p for v in _w8.values() for p in v}
 check('The 15 pre-R1 LAUNCH W3-W7 routes stay recommended',sum(1 for x in science if x['style']=='recommended' and x['pathway']=='LAUNCH' and x['path'] not in _w8all and not any(c['path']==x['path'] for s_ in _slots for c in s_['current']))==15)
-for filename in ['index.html','Science_Teesside/index.html','Humanities_Teesside/index.html']:
+for filename in ['index.html','Science/index.html','Humanities/index.html']:
  p=r/filename;doc=html.fromstring(p.read_text());ids=doc.xpath('//*[@id]/@id');check(filename+' has unique element IDs',len(ids)==len(set(ids)))
  missing=[]
  for value in doc.xpath('//script[@src]/@src|//link[@rel="stylesheet"]/@href'):
@@ -90,9 +90,9 @@ for filename in ['index.html','Science_Teesside/index.html','Humanities_Teesside
   target=p.parent/unquote(url.path)
   if not target.is_file():missing.append(value)
  check(filename+' has resolvable local scripts and styles',not missing)
-science_doc=html.fromstring((r/'Science_Teesside/index.html').read_text())
-check('All static Science lesson URLs resolve locally',all((r/'Science_Teesside'/unquote(a)).is_file() for a in science_doc.xpath('//article[@data-lesson-path]/a[@class="go"]/@href')))
-check('No browser zoom restriction added',all('user-scalable=no' not in (r/p).read_text() and 'maximum-scale=1' not in (r/p).read_text() for p in ['index.html','Science_Teesside/index.html','Humanities_Teesside/index.html']))
+science_doc=html.fromstring((r/'Science/index.html').read_text())
+check('All static Science lesson URLs resolve locally',all((r/'Science'/unquote(a)).is_file() for a in science_doc.xpath('//article[@data-lesson-path]/a[@class="go"]/@href')))
+check('No browser zoom restriction added',all('user-scalable=no' not in (r/p).read_text() and 'maximum-scale=1' not in (r/p).read_text() for p in ['index.html','Science/index.html','Humanities/index.html']))
 humanities=json.loads((r/'assets/catalogue/humanities-shelf.json').read_text())['lessons']
 hselection=json.loads((r/'tools/catalogue/HUMANITIES_SELECTION.json').read_text())
 selected=hselection['lessons']
@@ -110,11 +110,11 @@ check('Humanities preserves every selected current and retained resource exactly
 check('Known subject terms have classification evidence, not just presentation style',all(x['term'] in ['any','unspecified','flexible'] or (x['term'] in proof[x['path']]['terms'] and any(e.get('method')!='current presentation structure' for e in proof[x['path']]['evidence'])) for x in science+humanities))
 reviewed_unknown={x['file'] for x in json.loads((r/'tools/catalogue/TERM_REVIEW.json').read_text())}
 check('Every unknown subject term remains visible in the review record',all(x['path'] in reviewed_unknown for x in science+humanities if x['term']=='unspecified'))
-check('Humanities shelf is discoverable from the main and existing Humanities hubs',all('Humanities_Teesside/index.html' in html.fromstring((r/name).read_text()).xpath('//a/@href') for name in ['index.html','humanities_teesside.html']))
-hdoc=html.fromstring((r/'Humanities_Teesside/index.html').read_text())
+check('Humanities shelf is discoverable from the main and existing Humanities hubs',all('Humanities/index.html' in html.fromstring((r/name).read_text()).xpath('//a/@href') for name in ['index.html','humanities.html']))
+hdoc=html.fromstring((r/'Humanities/index.html').read_text())
 check('All static Humanities resources are linked without JavaScript',set(hdoc.xpath('//article[@data-lesson-path]/@data-lesson-path'))==set(expected))
-check('All Humanities lesson and reference URLs resolve locally',all((r/'Humanities_Teesside'/unquote(a)).is_file() for a in hdoc.xpath('//article[@data-lesson-path]/a[@class="go"]/@href')))
-for filename in ['Science_Teesside/index.html','Humanities_Teesside/index.html']:
+check('All Humanities lesson and reference URLs resolve locally',all((r/'Humanities'/unquote(a)).is_file() for a in hdoc.xpath('//article[@data-lesson-path]/a[@class="go"]/@href')))
+for filename in ['Science/index.html','Humanities/index.html']:
  doc=html.fromstring((r/filename).read_text())
  check(filename+' keeps recreational games out of its learning header',all(urlsplit(a).path.rstrip('/').lower()!='/games' and 'madebymatt-play.uk' not in a for a in doc.xpath('//header//a/@href')))
 result={'baseline':subprocess.check_output(['git','rev-parse','HEAD'],cwd=args.baseline_root,text=True).strip(),'resourceSha256':hashlib.sha256(base).hexdigest(),'rootResourceTerms':dict(collections.Counter(proof[x['file']]['term'] for x in rows)),'scienceTerms':dict(collections.Counter(x['term'] for x in science)),'scienceStyles':dict(collections.Counter(x['style'] for x in science)),'humanitiesRows':len(humanities),'humanitiesTerms':dict(collections.Counter(x['term'] for x in humanities)),'humanitiesStyles':dict(collections.Counter(x['style'] for x in humanities)),'checks':checks,'limitations':['No real browser rendering or device interaction was performed.','Print expansion logic and print CSS are checked; page pagination remains unverified.','No publication, commit, push, pull request or deployment was performed.']}

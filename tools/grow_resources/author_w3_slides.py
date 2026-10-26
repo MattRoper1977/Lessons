@@ -20,7 +20,7 @@ from pptx.oxml.ns import qn
 
 BASE = '929cf731173aeca8c9941cecd76cb350387499d1'
 HERE = Path(__file__).resolve().parent
-PACK = 'Science_Teesside/Teaching_Packs/GROW/lessons/'
+PACK = 'Science/Teaching_Packs/GROW/lessons/'
 A_DECK = PACK + 'W3A/GROW_Science_Autumn1_W3A_Friction.pptx'
 B_DECK = PACK + 'W3B/GROW_Science_Autumn1_W3B_Friction_Test.pptx'
 ARRIVAL = json.loads((HERE / 'W3A_ARRIVAL.json').read_text())
@@ -29,14 +29,14 @@ FB = json.loads((HERE / 'W3_FEEDBACK.json').read_text())
 EMU = 914400
 A_NS = 'http://schemas.openxmlformats.org/drawingml/2006/main'
 SOURCES = ['[Sources]',
-           'https://github.com/MattRoper1977/Lessons/blob/main/Science_Teesside/Grow/SCI_G_W3_Friction.html',
+           'https://github.com/MattRoper1977/Lessons/blob/main/Science/Grow/SCI_G_W3_Friction.html',
            'Historical conversion source Git blob: 170d772a5e9d23909e95a534c5c1e16ee7df67c8 (read 6 September 2026). '
            'Revision 15 September 2026 aligns this deck with the canonical lesson’s four-question arrivals, '
            'knowledge organiser, two-check Lesson A exit and optional help prompt. Native editable diagrams are '
            'original explanatory models; no source publisher media copied.',
            '[/Sources]']
 B_SOURCES = ['[Sources]',
-             'https://github.com/MattRoper1977/Lessons/blob/main/Science_Teesside/Grow/SCI_G_W3_Friction.html',
+             'https://github.com/MattRoper1977/Lessons/blob/main/Science/Grow/SCI_G_W3_Friction.html',
              'Historical conversion source Git blob: 170d772a5e9d23909e95a534c5c1e16ee7df67c8. Revision 15 September '
              '2026: the four-minute review stage matches the canonical lesson’s Review the evidence and optional '
              'help prompt; no separate feedback form or standalone participation stage.',

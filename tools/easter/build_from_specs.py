@@ -156,9 +156,9 @@ def main():
     outdir = {"BUILD ASDAN": "BUILD_ASDAN/Autumn1_W1-W7_2026-27",
               "GROW ASDAN": "GROW_ASDAN/Autumn1_W1-W7_2026-27",
               "LAUNCH ASDAN": "LAUNCH_ASDAN/Autumn1_W1-W7_2026-27",
-              "BUILD Humanities": "Humanities_Teesside/BUILD_W1-W8_2026-27",
-              "GROW Humanities": "Humanities_Teesside/GROW_W1-W8_2026-27",
-              "LAUNCH Humanities": "Humanities_Teesside/LAUNCH_W1-W8_2026-27"}
+              "BUILD Humanities": "Humanities/BUILD_W1-W8_2026-27",
+              "GROW Humanities": "Humanities/GROW_W1-W8_2026-27",
+              "LAUNCH Humanities": "Humanities/LAUNCH_W1-W8_2026-27"}
     recs = []
     for spec in json.loads(Path(a.specs).read_text()):
         if spec["family"] not in outdir:

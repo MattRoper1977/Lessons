@@ -159,7 +159,7 @@ swap('T9', '03_Wilton_Carbon_Process_Control_Lab.html',
  * T13 — NAV-1, the way back to the Lessons catalogue.
  *
  * DERIVED, not invented. The eleven lesson files in the co-location target
- * (Science_Teesside/Build/v3_40min, merged at dcc23dc) carry this line
+ * (Science/Build/v3_40min, merged at dcc23dc) carry this line
  * byte-identically; the four that do not are the matrix, the guide and the
  * reflection window, which are not lessons. Same directory depth, so the same
  * relative href resolves.
@@ -171,7 +171,7 @@ const NAV1 = `<a class="mbmhome" href="../../../index.html" aria-label="Back to 
 /* The MARKUP alone is not the convention. The neighbours ship this rule with it,
    and it is what makes the control a 44px target, gives it a focus ring, and
    removes it from print. Lifted verbatim from
-   Science_Teesside/Build/v3_40min/SCI_B_W3A_Backbones_Explore.html — except
+   Science/Build/v3_40min/SCI_B_W3A_Backbones_Explore.html — except
    position, which is `fixed; top:6px; right:10px` there because those pages have
    no toolbar. These labs do, so the link sits inside it and keeps every other
    declaration byte-identical. That deviation is deliberate and declared. */
@@ -253,7 +253,7 @@ swap('T15', '03_Wilton_Carbon_Process_Control_Lab.html',
  *   - tools/verify_served.mjs:79  LESSONS_ORIGIN = 'https://madebymatt.uk/Lessons'
  *     (so Lessons is /Lessons-prefixed on the live origin, NOT root-mounted —
  *     corroborated by the recorded live pin of madebymatt.uk/Lessons/resources.json)
- *   - tools/verify_fieldops_served.mjs:74  PLACED = 'Science_Teesside/Build/v4_fieldops'
+ *   - tools/verify_fieldops_served.mjs:74  PLACED = 'Science/Build/v4_fieldops'
  * and verify_served.mjs builds exactly `${LESSONS_ORIGIN}/${PLACED}/${lab}`.
  * LAB_ORIGIN below is that concatenation. controls.mjs asserts the two files
  * still agree, so if the origin ever moves in one and not the other, that goes
@@ -263,7 +263,7 @@ swap('T15', '03_Wilton_Carbon_Process_Control_Lab.html',
  * + b64url(m)`, and a hash appends to an absolute URL exactly as it does to a
  * bare filename. `.file` has no other reader — grep says one use.
  * ===================================================================== */
-const LAB_ORIGIN = 'https://madebymatt.uk/Lessons/Science_Teesside/Build/v4_fieldops';
+const LAB_ORIGIN = 'https://madebymatt.uk/Lessons/Science/Build/v4_fieldops';
 for (const lab of LABS)
   swap('T16', STUDIO, `{file:'${lab}'`, `{file:'${LAB_ORIGIN}/${lab}'`);
 

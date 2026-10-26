@@ -20,7 +20,7 @@ Why this exists
 ---------------
 g18_content_floor.py describes itself as a "destination-relative pupil-word
 floor". It is not. Its BASELINE is hard-coded to
-Science_Teesside/Grow/W8-W13_2026-27, so it computes ONE global p25 (1638
+Science/Grow/W8-W13_2026-27, so it computes ONE global p25 (1638
 words) and applies it to every family in the estate. Families that teach
 shorter lessons by design -- the live LAUNCH Humanities pack runs 895-1007
 pupil words -- red against a floor imported from GROW Science.
@@ -109,18 +109,18 @@ _ms.loader.exec_module(_meas)
 # chassis generations, and BUILD's spread (878-1107) straddles them. The median
 # sits between the two clusters, which is what a median is for.
 #
-# The `Art_Teesside/<pathway>/W1-W8` copies of the same lessons measure ZERO
+# The `Art/<pathway>/W1-W8` copies of the same lessons measure ZERO
 # content words under this instrument and are excluded automatically by the
 # `if m["contentWords"]` filter in family_baseline. They are a duplication
 # question, not a measurement one, and are logged as such rather than patched
 # around here.
 EXTRA_BASELINES = {
-    "BUILD Art": ["BUILD_Estate_v3/Art_Teesside/BUILD_ART_W*.html",
-                  "Art_Teesside/Build/Spring2_2026-27/BUILD_ART_Spring2_W*_OUTSTANDING_V3.html"],
-    "GROW Art": ["GROW_Estate_v3/Art_Teesside/GROW_ART_W*.html",
-                 "Art_Teesside/Grow/Spring2_2026-27/GROW_ART_Spring2_W*_OUTSTANDING_V3.html"],
-    "LAUNCH Art": ["LAUNCH_Estate_v3/Art_Teesside/LAUNCH_ART_W*.html",
-                   "Art_Teesside/Launch/Spring2_2026-27/LAUNCH_ART_Spring2_W*_OUTSTANDING_V3.html"],
+    "BUILD Art": ["BUILD_Estate_v3/Art/BUILD_ART_W*.html",
+                  "Art/Build/Spring2_2026-27/BUILD_ART_Spring2_W*_OUTSTANDING_V3.html"],
+    "GROW Art": ["GROW_Estate_v3/Art/GROW_ART_W*.html",
+                 "Art/Grow/Spring2_2026-27/GROW_ART_Spring2_W*_OUTSTANDING_V3.html"],
+    "LAUNCH Art": ["LAUNCH_Estate_v3/Art/LAUNCH_ART_W*.html",
+                   "Art/Launch/Spring2_2026-27/LAUNCH_ART_Spring2_W*_OUTSTANDING_V3.html"],
 }
 
 

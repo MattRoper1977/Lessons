@@ -333,7 +333,7 @@ TAMPERS = [
     ("R2_poster_untouched", _touch("assets/video/poster-art.svg", "<svg/>")),
     # every occurrence, and the replacement must NOT contain the needle:
     # "g-mblurX" still contains "g-mblur", so that tamper defeated itself.
-    ("R3_gmblur_intact", _sub_all("Science_Teesside/Grow/SCI_G_W7_The_Moon.html", "g-mblur", "g-QQblur")),
+    ("R3_gmblur_intact", _sub_all("Science/Grow/SCI_G_W7_The_Moon.html", "g-mblur", "g-QQblur")),
     ("R6_assessed_pair_bytelocked", _append("Grow/Slideshows/GROW_HUM_W7_Write_The_Account.html", "\n<!-- x -->\n")),
     # the sentinel universe is the tracked *.html count -- so add a tracked file.
     ("sentinels_unmoved", _touch("review/estate-exec/_tamper_probe.html", "<html><body>x</body></html>\n")),

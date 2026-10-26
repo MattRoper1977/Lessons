@@ -9,7 +9,7 @@ lesson, in any week. They were never exports of the lesson, and no generator for
 exists in the repository or its history. Retiring Week 3 alone would have left eighteen
 pages in the same condition, so the hub names the set instead.
 
-The pack hub Science_Teesside/Teaching_Packs/web-slides.html is edited, idempotently:
+The pack hub Science/Teaching_Packs/web-slides.html is edited, idempotently:
 
   * each pathway's standing sentence becomes an explicit statement that these are a
     lightweight offline edition and not the full lesson;
@@ -26,7 +26,7 @@ from pathlib import Path
 import argparse, hashlib, html, importlib, json, re, shutil, subprocess, sys, tempfile
 
 ROOT = Path(__file__).resolve().parents[2]
-HUB = 'Science_Teesside/Teaching_Packs/web-slides.html'
+HUB = 'Science/Teaching_Packs/web-slides.html'
 BOUNDARY = ROOT / '_glv3/tools/verify_change_boundary.py'
 HELPER = ROOT / 'tools/catalogue/pin_catalogue_contract.py'
 GATE = ROOT / 'tools/verify_cross_estate_unification.py'
@@ -82,7 +82,7 @@ def rewrite(text):
         if MARKER in body:
             return match.group(0)
         target = CANONICAL[(pathway.lower(), int(week))]
-        assert (ROOT / 'Science_Teesside' / target).is_file(), target
+        assert (ROOT / 'Science' / target).is_file(), target
         link = ('<p class="canonical-lesson"><a href="../%s">Open the full online lesson</a> '
                 '&mdash; the current, complete version of this lesson.</p>' % html.escape(target))
         return head + body + link + tail

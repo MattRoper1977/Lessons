@@ -7,9 +7,9 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[2]
-PAGE = 'Science_Teesside/Build/SCI_B_W3_Backbones.html'
+PAGE = 'Science/Build/SCI_B_W3_Backbones.html'
 TARGETS = 'tools/easter/SCIENCE_ORIGINAL_TARGETS.json'
-MANIFEST = 'Science_Teesside/Teaching_Packs/BUILD/SOURCE_MANIFEST.json'
+MANIFEST = 'Science/Teaching_Packs/BUILD/SOURCE_MANIFEST.json'
 
 
 def overlay(source, destination, copies):

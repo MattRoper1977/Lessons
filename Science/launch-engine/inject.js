@@ -34,7 +34,7 @@ const VERSION = 'launch-sci-layer-v1';
    the sentinel — a sentinel that varies is a sentinel that fails to match. */
 const START = `<!-- ${VERSION} START -->`;
 const END = `<!-- ${VERSION} END -->`;
-const NOTE = `<!-- Minified build of Science_Teesside/launch-engine/. Readable source, and the reasoning behind every gate, are there.
+const NOTE = `<!-- Minified build of Science/launch-engine/. Readable source, and the reasoning behind every gate, are there.
      Edit the source, then: node build.js && node check.js && node inject.js. Edits made here are overwritten. -->`;
 
 const args = process.argv.slice(2);

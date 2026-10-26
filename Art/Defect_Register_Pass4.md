@@ -1,6 +1,6 @@
 # Art Teesside — defect register, re-derived from origin
 
-**Base:** `3b805af` (origin/main, 2026-07-26 09:39:04 +0000) · **Estate:** 53 HTML files under `Art_Teesside/`
+**Base:** `3b805af` (origin/main, 2026-07-26 09:39:04 +0000) · **Estate:** 53 HTML files under `Art/`
 **Status:** read-only. Nothing committed, edited or staged. **NOT PUSHED — no push credential in this session.**
 
 Built by re-deriving each named item from the files, not from the record. Three verdicts are used:

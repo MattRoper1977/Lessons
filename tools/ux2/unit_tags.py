@@ -38,7 +38,7 @@ WHAT EACH SOURCE IS HERE
              one lesson must agree on one unit. (The Science family manifests'
              `topic` field is a per-lesson topic, not a unit: measured
              2026-09-08, one topic per lesson, so it is not used as a unit.)
-    (b)      the pack index / START_HERE: Humanities_Teesside/Teaching_Packs/
+    (b)      the pack index / START_HERE: Humanities/Teaching_Packs/
              DOWNLOADS_MANIFEST_HTML.json lesson titles joined to a catalogue
              row whose own title ends with that lesson title verbatim, with the
              unit line read from the START_HERE_<PATHWAY>_Humanities_Autumn1
@@ -79,10 +79,10 @@ CATALOGUE = ROOT / "resources.json"
 TERMS_AND_STYLES = ROOT / "assets/catalogue/terms-and-styles.json"
 SPINE = ROOT / "_sownb/CALENDAR_SPINE.json"
 SOW_DIR = ROOT / "_next6/sow"
-HUM_PACK_INDEX = ROOT / "Humanities_Teesside/Teaching_Packs/DOWNLOADS_MANIFEST_HTML.json"
-HUM_PACK_DIR = ROOT / "Humanities_Teesside/Teaching_Packs"
-SCIENCE_MANIFESTS = ([ROOT / "Science_Teesside" / lane / "v3_40min/manifest-v3.json" for lane in ("Build", "Grow", "Launch")]
-                     + sorted(ROOT.glob("Science_Teesside/*/*/manifest.json")))
+HUM_PACK_INDEX = ROOT / "Humanities/Teaching_Packs/DOWNLOADS_MANIFEST_HTML.json"
+HUM_PACK_DIR = ROOT / "Humanities/Teaching_Packs"
+SCIENCE_MANIFESTS = ([ROOT / "Science" / lane / "v3_40min/manifest-v3.json" for lane in ("Build", "Grow", "Launch")]
+                     + sorted(ROOT.glob("Science/*/*/manifest.json")))
 
 EVIDENCE = ROOT / "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json"
 # The evidence methods of class (a) — the lesson's own declaration or manifest
@@ -334,11 +334,11 @@ def sow_unit_for_title(sow: dict, lane: str | None, title: str) -> tuple[str, st
 # of resources.json: "same" copies the derived unit of the named lesson (a part takes its first part's unit, if it
 # has one); "none" records the owner's ruling that a lesson carries no unit even where a quote would derive one.
 RULED_UNITS = {
-    "Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P2.html":
-        ("same", "Science_Teesside/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P1.html", "eb EB-5 / DY-4"),
-    "Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1.html": ("none", None, "eb EB-4 b"),
-    "Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L2.html": ("none", None, "eb EB-4 b"),
-    "Science_Teesside/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L3.html": ("none", None, "eb EB-4 b"),
+    "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P2.html":
+        ("same", "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P1.html", "eb EB-5 / DY-4"),
+    "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1.html": ("none", None, "eb EB-4 b"),
+    "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L2.html": ("none", None, "eb EB-4 b"),
+    "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L3.html": ("none", None, "eb EB-4 b"),
 }
 
 

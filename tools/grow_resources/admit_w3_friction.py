@@ -24,7 +24,7 @@ BASE = '929cf731173aeca8c9941cecd76cb350387499d1'
 BOUNDARY = ROOT / '_glv3/tools/verify_change_boundary.py'
 HELPER = ROOT / 'tools/catalogue/pin_catalogue_contract.py'
 GATE = ROOT / 'tools/verify_cross_estate_unification.py'
-PREFIXES = ('Science_Teesside/',)
+PREFIXES = ('Science/',)
 # Review records that move with the transaction but are not protected Science
 # payload: the original-targets ledger carries the patched lesson's SHA-256 and
 # the GROW resource content is the source the resource pages are built from.
@@ -48,7 +48,7 @@ def foreign_paths():
 
     This sweep takes every protected Science path that differs from the review
     base. That was safe while Friction was the only transaction over
-    Science_Teesside/, but the Lane D foundation added more, and a path changed
+    Science/, but the Lane D foundation added more, and a path changed
     by one of those still differs from this base. Claiming it here would both
     record a file Friction never touched and, under the declaration-order
     supersession rule, strip the real owner of its member."""

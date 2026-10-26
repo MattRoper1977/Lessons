@@ -5,7 +5,7 @@ proposal to change them. Matt rules on the exemption; this file only records
 what they do and do not inherit, so the next conformance sweep reads them as a
 declared position rather than as four regressions to quietly rewrite.**
 
-Subjects: `Science_Teesside/Build/v4_fieldops/01–04`, and their counterpart
+Subjects: `Science/Build/v4_fieldops/01–04`, and their counterpart
 `FieldOps_Teacher_Studio.html` in `Matt-s-Apps-`.
 
 ## What they are
@@ -71,7 +71,7 @@ future conformance sweep counts one missing, this line is the answer.
 
 **The Studio's launch links are absolute, and the prefix is derived.** Transform
 **T16** rewrites the four engine entries from bare filenames to
-`https://madebymatt.uk/Lessons/Science_Teesside/Build/v4_fieldops/<lab>`. Before
+`https://madebymatt.uk/Lessons/Science/Build/v4_fieldops/<lab>`. Before
 it, "Launch mission" on the Apps origin resolved to a path that exists only in
 Lessons and 404'd — the split's predicted failure, shipped. The prefix is not a
 constant anyone typed: it is `LESSONS_ORIGIN` (`tools/verify_served.mjs`) joined
@@ -90,7 +90,7 @@ mutated capsule must be refused by the same import path that accepts a good one.
 ## Addendum, 2026-08-19 (FIX-1) — the directory hub, and the third path this pass places
 
 **A fifth file is placed in `v4_fieldops/`, and it is not a lab.**
-`Science_Teesside/Build/v4_fieldops/index.html` is an authored hub: title, one line
+`Science/Build/v4_fieldops/index.html` is an authored hub: title, one line
 saying these are instruments and not lessons, and four links to the labs by relative
 filename. It carries the NAV-1 back-link and, per the ruling above, **no link to the
 Teacher Studio**.
@@ -98,7 +98,7 @@ Teacher Studio**.
 **Why it exists.** GitHub Pages serves no directory listing. A directory holding an
 `index.html` is served as that file; a directory without one is a 404. Until this
 addendum `v4_fieldops/` held only the four labs, so
-`https://madebymatt.uk/Lessons/Science_Teesside/Build/v4_fieldops/` was a **404 by
+`https://madebymatt.uk/Lessons/Science/Build/v4_fieldops/` was a **404 by
 construction** while every lab beneath it served — which is how the estate came to
 hold four instruments the owner could not open from the folder they live in. The
 exemption doc's subject list therefore now reads: the four labs, this hub, and the

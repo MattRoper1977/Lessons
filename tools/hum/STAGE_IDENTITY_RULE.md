@@ -107,7 +107,7 @@ battery therefore says nothing whatever about a change to the oracle, and it is 
 evidence for this one. What the measurement found instead is worse than the claim it removes.
 
 **The fixture-driven battery has been dark since #613.** `self_test` takes its fixture from
-`git show origin/main:Humanities_Teesside/GROW_W1-W8_2026-27/GROW_Humanities_W4_Explore_Hanukkah_And_The_Theme_Of_Light.html`
+`git show origin/main:Humanities/GROW_W1-W8_2026-27/GROW_Humanities_W4_Explore_Hanukkah_And_The_Theme_Of_Light.html`
 and skips everything downstream when that copy already carries the panel. #613 (`256e5331`,
 HUM-T batch 2) transplanted that very deck on main. So from the moment #613 merged, 29 of the
 self-test's 35 checks have not run — among them the row 14 red proof, the four row 16 proofs and
@@ -187,7 +187,7 @@ No fix, no re-stamp; the correct figure is **0**. The branch that would have cha
 refuses at the first deck:
 
 ```
-ValueError: Source changed: Art_Teesside/BUILD_BRONZE_W1-W7_2026-27/BUILD_Art_Bronze_W1_What_Getting_Better_Would_Look_Like.html
+ValueError: Source changed: Art/BUILD_BRONZE_W1-W7_2026-27/BUILD_Art_Bronze_W1_What_Getting_Better_Would_Look_Like.html
 ```
 
 The writer is unrunnable today — the same class of failure the shelf bindings had.
@@ -254,7 +254,7 @@ slides become eligible."** CONFIRMED, and it is 90, not 17.
 ## What the fixed oracle does to the Autumn 1 W3–W7 decks — nothing served, ruling wanted
 
 Measured over the fifteen `*_Humanities_W3..W7.html` decks in
-`Humanities_Teesside/Teaching_Packs/{BUILD,GROW,LAUNCH}/HTML/`, shipped oracle against fixed:
+`Humanities/Teaching_Packs/{BUILD,GROW,LAUNCH}/HTML/`, shipped oracle against fixed:
 
 ```
 stages whose NAME changes across the two oracles : 105 of 180

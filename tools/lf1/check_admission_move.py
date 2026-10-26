@@ -328,7 +328,7 @@ def self_test():
     # The blind spot itself, as an assertion: a path with no row in the registry
     # you happen to be holding is reported as "not served" -- which is true of
     # that file and false of the estate. This is why the source is now printed.
-    p, s = check(reg, [('M', 'Science_Teesside/Grow/W18-W26_2026-27/manifest.json')])
+    p, s = check(reg, [('M', 'Science/Grow/W18-W26_2026-27/manifest.json')])
     want('a MODIFIED path absent from THIS registry is silent -- hence --site',
          not p and not s)
 

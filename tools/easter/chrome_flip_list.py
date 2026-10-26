@@ -121,10 +121,10 @@ def scan(root: Path = ROOT) -> dict:
 
 
 def fam_of(rel: str) -> str | None:
-    if rel.startswith("Science_Teesside/"):
+    if rel.startswith("Science/"):
         parts = rel.split("/")
         return f"{parts[1].upper()} Science" if len(parts) > 2 else None
-    if rel.startswith("Humanities_Teesside/"):
+    if rel.startswith("Humanities/"):
         parts = rel.split("/")
         return f"{parts[1].split('_')[0]} Humanities" if len(parts) > 2 else None
     for lane in ("BUILD", "GROW", "LAUNCH"):

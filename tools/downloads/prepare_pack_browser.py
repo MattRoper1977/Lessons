@@ -20,7 +20,7 @@ PACKS = [
 # The census digest preserves all 47 original source identities (sorted, LF-joined)
 # from guidance_source_repair.json. No lesson may disappear by losing a marker.
 GUIDANCE_ROUTES_SHA256 = "a7f5c3473f78c0a3f5ec5048a92ae30bf93bccfd56a07f7699145a51db769a2b"
-SUGAR_GUIDANCE = "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html"
+SUGAR_GUIDANCE = "Science/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html"
 
 # SX3 moves ONE more BUILD route onto the classic chassis Sugar already sits on:
 # SCI_B_W12_Give_a_rock_a_job_Classic.html, the single deck this branch lands. The docked
@@ -48,7 +48,7 @@ SUGAR_GUIDANCE = "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_E
 # correctly rather than silently read as a docked route it no longer is.
 CLASSIC_CHASSIS_ROUTES = frozenset({
     SUGAR_GUIDANCE,
-    "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W12_Give_a_rock_a_job_Classic.html",
+    "Science/Build/W8-W13_2026-27/SCI_B_W12_Give_a_rock_a_job_Classic.html",
 })
 
 CLASSIC_NAVIGATION = (

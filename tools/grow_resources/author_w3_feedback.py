@@ -6,8 +6,8 @@ from docx import Document
 BASE='c7e64b2baf6a3f17f261fb001d416886d46fd32a'
 HERE=Path(__file__).resolve().parent
 ROOT=HERE.parents[1]
-REL='Science_Teesside/Grow/SCI_G_W3_Friction.html'
-PACK='Science_Teesside/Teaching_Packs/GROW/lessons/'
+REL='Science/Grow/SCI_G_W3_Friction.html'
+PACK='Science/Teaching_Packs/GROW/lessons/'
 D=json.loads((HERE/'W3_FEEDBACK.json').read_text())
 e=html.escape
 def baseline(path):return subprocess.check_output(['git','-C',str(ROOT),'show',BASE+':'+path])
@@ -77,7 +77,7 @@ for key,path in paths.items():
   replace(45,'Close Lesson A; retain the evidence')
   replace(46,'Feedback revision · 15 September 2026 · draft pilot')
   replace(48,'Stop after We Do 2 and its exit. Keep the prediction for Friction: test the surfaces: workshop 32 minutes, evidence review 4 minutes, exit 4 minutes. The investigation has its own Lesson B pack.')
-  replace(53,'Canonical lesson: Science_Teesside/Grow/SCI_G_W3_Friction.html. Lesson A companion: resources/GS_W3A.html. Historical conversion source: 5018839965d424afd31bc0ac1b74dc8f713ceca2.')
+  replace(53,'Canonical lesson: Science/Grow/SCI_G_W3_Friction.html. Lesson A companion: resources/GS_W3A.html. Historical conversion source: 5018839965d424afd31bc0ac1b74dc8f713ceca2.')
   replace(55,'The seven Lesson A timers and five helpful/unhelpful situations are retained. Tasks map to these stages; a chosen response page replaces lengthy copying. Lesson B’s results and exit stay in its own pack. Feedback guidance is on the final page.')
  elif key=='b_pupil':
   replace(5,"Use this sheet with your Lesson A prediction. You can test, observe, direct an adult, point or dictate. Keep real results even if they surprise you. Use model data only if a safe practical is unavailable.")

@@ -64,10 +64,10 @@ if(back.attrs.href!=='file:///tmp/extracted/Lessons/index.html')throw Error('off
 if(home.attrs.href!=='https://madebymatt.uk/for/pupils/'||!home.attrs['aria-label'].includes('needs internet'))throw Error('chosen home changed or unlabelled');
 const src=fs.readFileSync(process.argv[2],'utf8');
 const part=src.split('  /* ---------- styles ---------- */')[0]+'globalThis.classification={lesson:IS_LESSON,back:BACK}; }catch(e){throw e}})();';
-const context={window:{},location:{pathname:'/tmp/extracted/Lessons/Science_Teesside/Grow/lesson.html'},localStorage:{getItem(){return null;}}};
+const context={window:{},location:{pathname:'/tmp/extracted/Lessons/Science/Grow/lesson.html'},localStorage:{getItem(){return null;}}};
 vm.runInNewContext(part,context);
 if(!context.classification.lesson||context.classification.back.h!=='/Lessons/')throw Error('exact HUD lesson activation failed');
-const negative={window:{},location:{pathname:'/tmp/extracted/Science_Teesside/Grow/lesson.html'},localStorage:{getItem(){return null;}}};
+const negative={window:{},location:{pathname:'/tmp/extracted/Science/Grow/lesson.html'},localStorage:{getItem(){return null;}}};
 vm.runInNewContext(part,negative);
 if(negative.classification.lesson)throw Error('negative path control did not distinguish wrapper');
 console.log('adapter navigation and exact HUD path predicate passed');

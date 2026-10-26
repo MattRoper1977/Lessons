@@ -37,7 +37,7 @@ Added so the relationship to the scheme of work is on the record rather than inf
 
 Instrument: `_passsb/inputs/Build SOW 2026-2027.xlsx`
 
-The pack delivers a sculpture unit built from the repo's own `Art_Teesside/Spring2_Scheme_of_Work.html`. The SoW's Creative Arts block for this half term is drama and performance. The divergence is deliberate and declared here rather than left to be rediscovered.
+The pack delivers a sculpture unit built from the repo's own `Art/Spring2_Scheme_of_Work.html`. The SoW's Creative Arts block for this half term is drama and performance. The divergence is deliberate and declared here rather than left to be rediscovered.
 
 | SoW cell | week | outcome as written in the workbook |
 |---|---|---|

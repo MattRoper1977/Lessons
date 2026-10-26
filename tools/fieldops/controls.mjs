@@ -657,7 +657,7 @@ for (const tree of TREES) {
                  '03_Wilton_Carbon_Process_Control_Lab.html', '04_Tees_Bay_Wind_Operations_Lab.html'];
   const src = t => fs.readFileSync(path.resolve(ROOT, t, '00_BUILD_FieldOps_Teacher_Studio.html'), 'utf8');
   const [rel, pat] = [src('release'), src('staging')];
-  const absCount = s => LABS4.filter(l => s.includes(`{file:'https://madebymatt.uk/Lessons/Science_Teesside/Build/v4_fieldops/${l}'`)).length;
+  const absCount = s => LABS4.filter(l => s.includes(`{file:'https://madebymatt.uk/Lessons/Science/Build/v4_fieldops/${l}'`)).length;
   const bareCount = s => LABS4.filter(l => s.includes(`{file:'${l}'`)).length;
   pair('T16', 'every engine in the Studio names its lab by an absolute URL on the live Lessons origin',
     absCount(rel) === 4, absCount(pat) === 4,

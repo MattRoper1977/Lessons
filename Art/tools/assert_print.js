@@ -24,7 +24,7 @@
  *    and 0 overflows, which looks identical to a clean pass. Sheet COUNT is
  *    therefore asserted too, against EXPECT_SHEETS.
  *
- * Usage:  node Art_Teesside/tools/assert_print.js [--verbose]
+ * Usage:  node Art/tools/assert_print.js [--verbose]
  * Exit 0 = every sheet fits and counts match. Exit 1 = otherwise.
  */
 const { chromium } = require('playwright');

@@ -7,7 +7,7 @@ import author_deck as ad
 
 def create():
     folder = Path(tempfile.mkdtemp(prefix='award-browser-'))
-    donor = ad.ROOT / 'Art_Teesside/BUILD_W1-W8_2026-27/BUILD_Art_W3_Find_Out_About_An_Artist_Whose_Work.html'
+    donor = ad.ROOT / 'Art/BUILD_W1-W8_2026-27/BUILD_Art_W3_Find_Out_About_An_Artist_Whose_Work.html'
     content = {
         'id': 'AWARD_BROWSER_FIXTURE', 'title': 'Browser test fixture',
         'objective': 'Test interface behaviour; this is not learner evidence.',

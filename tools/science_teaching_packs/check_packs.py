@@ -8,7 +8,7 @@ import zipfile
 from lxml import html
 
 ROOT = Path(__file__).resolve().parents[2]
-PACK_REL = 'Science_Teesside/Teaching_Packs'
+PACK_REL = 'Science/Teaching_Packs'
 
 
 def digest(path):

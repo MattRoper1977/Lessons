@@ -31,19 +31,19 @@ from build_download_pack import lesson_label  # noqa: E402
 
 NEW = [
     {'id': 'pack-grow-science-w3a', 'folder': 'SCI_G_W3_Friction', 'subject': 'Science', 'pathway': 'GROW',
-     'wtoken': 'W3A', 'term': 'Autumn 1', 'companionOf': 'Science_Teesside/Grow/SCI_G_W3_Friction.html',
-     'files': [('lesson', 'pptx', 'Science_Teesside/Teaching_Packs/GROW/lessons/W3A/GROW_Science_Autumn1_W3A_Friction.pptx'),
-               ('slides', 'pdf', 'Science_Teesside/Teaching_Packs/GROW/lessons/W3A/GROW_Science_Autumn1_W3A_Friction.pdf'),
-               ('teacher', 'docx', 'Science_Teesside/Teaching_Packs/GROW/lessons/W3A/GROW_W3A_Friction_Teacher.docx'),
-               ('teacher', 'pdf', 'Science_Teesside/Teaching_Packs/GROW/lessons/W3A/GROW_W3A_Friction_Teacher.pdf'),
-               ('pupil', 'docx', 'Science_Teesside/Teaching_Packs/GROW/lessons/W3A/GROW_W3A_Friction_Pupil.docx'),
-               ('pupil', 'pdf', 'Science_Teesside/Teaching_Packs/GROW/lessons/W3A/GROW_W3A_Friction_Pupil.pdf')]},
+     'wtoken': 'W3A', 'term': 'Autumn 1', 'companionOf': 'Science/Grow/SCI_G_W3_Friction.html',
+     'files': [('lesson', 'pptx', 'Science/Teaching_Packs/GROW/lessons/W3A/GROW_Science_Autumn1_W3A_Friction.pptx'),
+               ('slides', 'pdf', 'Science/Teaching_Packs/GROW/lessons/W3A/GROW_Science_Autumn1_W3A_Friction.pdf'),
+               ('teacher', 'docx', 'Science/Teaching_Packs/GROW/lessons/W3A/GROW_W3A_Friction_Teacher.docx'),
+               ('teacher', 'pdf', 'Science/Teaching_Packs/GROW/lessons/W3A/GROW_W3A_Friction_Teacher.pdf'),
+               ('pupil', 'docx', 'Science/Teaching_Packs/GROW/lessons/W3A/GROW_W3A_Friction_Pupil.docx'),
+               ('pupil', 'pdf', 'Science/Teaching_Packs/GROW/lessons/W3A/GROW_W3A_Friction_Pupil.pdf')]},
     {'id': 'pack-launch-science-w4l1', 'folder': 'SCI_L_W4_L1_Diffusion', 'subject': 'Science', 'pathway': 'LAUNCH',
-     'wtoken': 'W4L1', 'term': 'Autumn 1', 'companionOf': 'Science_Teesside/Launch/SCI_L_W4_L1_Diffusion.html',
-     'files': [('lesson', 'pptx', 'Science_Teesside/Teaching_Packs/LAUNCH/Week_4/W4L1_Diffusion.pptx'),
-               ('slides', 'pdf', 'Science_Teesside/Teaching_Packs/LAUNCH/Week_4/W4L1_Diffusion.pdf'),
-               ('pupil', 'docx', 'Science_Teesside/Teaching_Packs/LAUNCH/Week_4/W4L1_Worksheet.docx'),
-               ('pupil', 'pdf', 'Science_Teesside/Teaching_Packs/LAUNCH/Week_4/W4L1_Worksheet.pdf')]},
+     'wtoken': 'W4L1', 'term': 'Autumn 1', 'companionOf': 'Science/Launch/SCI_L_W4_L1_Diffusion.html',
+     'files': [('lesson', 'pptx', 'Science/Teaching_Packs/LAUNCH/Week_4/W4L1_Diffusion.pptx'),
+               ('slides', 'pdf', 'Science/Teaching_Packs/LAUNCH/Week_4/W4L1_Diffusion.pdf'),
+               ('pupil', 'docx', 'Science/Teaching_Packs/LAUNCH/Week_4/W4L1_Worksheet.docx'),
+               ('pupil', 'pdf', 'Science/Teaching_Packs/LAUNCH/Week_4/W4L1_Worksheet.pdf')]},
 ]
 
 

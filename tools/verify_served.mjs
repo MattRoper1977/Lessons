@@ -20,7 +20,7 @@
  *   lessons   tools/fieldops/build.mjs LABS[] — the builder cannot emit a lab
  *             it does not name — plus the hub those labs' NAV-1 link resolves
  *             to, taken from the link rather than assumed.
- *             LAUNCH whole-lesson pages come from Science_Teesside/Launch/manifest.json.
+ *             LAUNCH whole-lesson pages come from Science/Launch/manifest.json.
  *   apps      the same builder's STUDIO.
  *
  * A group that yields nothing is INCONCLUSIVE for that group and the run exits
@@ -174,7 +174,7 @@ function fieldopsDecls() {
 /* The hub is read off the labs' own NAV-1 link rather than assumed. If the four
    labs disagree about where home is, that is a finding and not a default. */
 function hubFrom(labs) {
-  const dir = 'Science_Teesside/Build/v4_fieldops';
+  const dir = 'Science/Build/v4_fieldops';
   const targets = new Set();
   for (const l of labs) {
     const p = path.join(HERE, dir, l);
@@ -206,7 +206,7 @@ function siteRoutes() {
 /* S1-M: the whole-lesson manifest owns this population. A missing, empty,
    duplicated or escaping declaration must fail closed, never erase routes. */
 function launchSubjects(root = HERE, origin = LESSONS_ORIGIN) {
-  const directory = 'Science_Teesside/Launch';
+  const directory = 'Science/Launch';
   const manifest = `${directory}/manifest.json`;
   let declaration;
   try { declaration = JSON.parse(fs.readFileSync(path.join(root, manifest), 'utf8')); }
@@ -254,8 +254,8 @@ function subjects() {
 
   for (const l of LABS) {
     list.push({ group: 'lessons', name: l,
-      url: `${LESSONS_ORIGIN}/Science_Teesside/Build/v4_fieldops/${encodeURIComponent(l)}`,
-      blob: path.join(HERE, 'Science_Teesside/Build/v4_fieldops', l), type: 'text/html' });
+      url: `${LESSONS_ORIGIN}/Science/Build/v4_fieldops/${encodeURIComponent(l)}`,
+      blob: path.join(HERE, 'Science/Build/v4_fieldops', l), type: 'text/html' });
   }
   const hub = hubFrom(LABS);
   list.push({ group: 'lessons', name: `hub (${hub})`, url: `${LESSONS_ORIGIN}/`,

@@ -20,7 +20,7 @@ SAFEGUARDS (each one paid for by a previous failure):
     (REGISTER R-A01 — a conditions swap needs Matt's word, every time).
   * Link-crawl the ASSEMBLED pack and report anything the scope rules missed.
     Three real misses were invisible until a crawl ran (hubs, LundyLoop css, the fact
-    that BUILD/GROW humanities lessons do NOT live in Humanities_Teesside/).
+    that BUILD/GROW humanities lessons do NOT live in Humanities/).
   * Folder structure preserved EXACTLY — every hub links by relative path.
 """
 import re, os, shutil, zipfile, html, sys
@@ -33,20 +33,20 @@ STRIP = "PROGRESS SCHOOLS · TEES VALLEY"
 
 # ---------------------------------------------------------------- scope
 INCLUDE_DIRS = [
-    "Art_Teesside", "BUILD_ASDAN", "GROW_ASDAN", "LAUNCH_ASDAN", "Humanities_Teesside",
+    "Art", "BUILD_ASDAN", "GROW_ASDAN", "LAUNCH_ASDAN", "Humanities",
     "Grow/Slideshows", "Launch", "Tutor_Time", "DT_Community_Upcycling",
-    "Science_Teesside",   # PACK-1 v2: current science suite IN; frozen biology/chemistry/"2 Physics 10" stay OUT
+    "Science",   # PACK-1 v2: current science suite IN; frozen biology/chemistry/"2 Physics 10" stay OUT
 ]
 INCLUDE_GLOBS = [
     "Build/Slideshows/BUILD_DT_W*.html",
     "Build/Slideshows/BUILD_HUM_W*.html",
 ]
 INCLUDE_FILES = [
-    "art_teesside.html", "build_asdan.html", "build_dt_upcycling.html",
-    "humanities_teesside.html", "LundyLoop/assets/style.css",
+    "art.html", "build_asdan.html", "build_dt_upcycling.html",
+    "humanities.html", "LundyLoop/assets/style.css",
     # Art visual-learning runtime. in_scope() globs *.html, so a directory being in
     # INCLUDE_DIRS does NOT carry its non-HTML assets — same reason style.css above is
-    # named individually. All 31 Art_Teesside decks load these three by relative path
+    # named individually. All 31 Art decks load these three by relative path
     # from inside an AVL-MOUNT marker pair. Without them the loader points at nothing
     # and the We Do panel silently never mounts. README.md in that directory is repo
     # documentation and stays out: only what a deck actually loads ships.
@@ -58,9 +58,9 @@ INCLUDE_FILES = [
     # INCLUDE_DIRS does not carry files outside it, so they are named here.
     "LundyLoop/5_staff_training/Reading_the_Response_Card.html",
     "LundyLoop/5_staff_training/R_Gate_Calibration_Game.html",
-    "Art_Teesside/visual-learning/art-visual-learning.css",
-    "Art_Teesside/visual-learning/art-visual-payloads.js",
-    "Art_Teesside/visual-learning/art-visual-learning.js",
+    "Art/visual-learning/art-visual-learning.css",
+    "Art/visual-learning/art-visual-payloads.js",
+    "Art/visual-learning/art-visual-learning.js",
     # PACK-2: the GROW/LAUNCH ASDAN visual-upgrade runtime, added for exactly the
     # reason the Art three above were. The crawl over the assembled pack found 124
     # references to these four files from 62 decks that ship, resolving to nothing --
@@ -74,9 +74,9 @@ INCLUDE_FILES = [
     "LAUNCH_ASDAN/visual-upgrade.js",
     # PACK-2: two non-HTML siblings linked from Humanities pages that DO ship. Same
     # class as the runtime assets above -- a directory being IN does not carry them.
-    "Humanities_Teesside/Lundy_Humanities/SOURCE_PROVENANCE_TEMPLATE.csv",
-    "Humanities_Teesside/Lundy_Humanities/specimens/SPECIMEN_ACCEPTANCE.md",
-    # PACK-3: the four grow-anim runtime scripts. Five Science_Teesside/Build decks
+    "Humanities/Lundy_Humanities/SOURCE_PROVENANCE_TEMPLATE.csv",
+    "Humanities/Lundy_Humanities/specimens/SPECIMEN_ACCEPTANCE.md",
+    # PACK-3: the four grow-anim runtime scripts. Five Science/Build decks
     # load them. They were written ROOT-ABSOLUTE, so PACK-2 could not fix them by
     # scope alone and said so. The CI probe has since resolved them against the live
     # origin: in-repo YES, live 404 -- the path was broken in BOTH contexts, because
@@ -95,7 +95,7 @@ HUD_DYNAMIC = re.compile(
 # Deliberate exclusions (dual-branding rule + superseded sets)
 EXCLUDE_RE = re.compile(
     r"(^Games/)"                                   # games are Made by Matt only
-    r"|(^Build/Slideshows/BUILD_ART_W\d_)"         # legacy tasters ONLY - NOT Art_Teesside/Build/
+    r"|(^Build/Slideshows/BUILD_ART_W\d_)"         # legacy tasters ONLY - NOT Art/Build/
     r"|(BUILD_L1_)|(FW_L1_)"                       # superseded by BUILD_ASDAN/
     r"|(^ASDAN/)"                                  # consent forms, not lessons
     r"|(^404\.html)|(^index\.html)|(^hub-health)"  # site furniture
@@ -169,7 +169,7 @@ def rebrand(text, path):
     # 5 · strip the hud.js loader — only ever loads from the public origin
     text, k = re.subn(r'\s*<script[^>]*hud\.js[^>]*>\s*</script>', "", text, flags=re.I)
     # 5b · and the DYNAMIC loader, which the tag regex above cannot see. Five
-    # Science_Teesside/Grow decks carry <script id="grow-hud-loader"> whose whole body
+    # Science/Grow decks carry <script id="grow-hud-loader"> whose whole body
     # is document.createElement("script") + s.src="/hud.js" with a relative-path
     # onerror retry. It survived every previous pack build: the staff copies shipped
     # fetching hud.js at runtime, twice, from a machine that has neither. Found by
@@ -425,8 +425,8 @@ def dest_for(rel):
         return r
 
     # --- Art -------------------------------------------------------------
-    if r.startswith("Art_Teesside/"):
-        return "Art/" + r[len("Art_Teesside/"):]
+    if r.startswith("Art/"):
+        return "Art/" + r[len("Art/"):]
     if r.startswith("Grow/Slideshows/GROW_ART_"):
         return "Art/Grow/" + name
     if r.startswith("Launch/Slideshows/LAUNCH_ART_"):
@@ -441,11 +441,11 @@ def dest_for(rel):
         return f"{HUM}/Grow/" + name
     if r.startswith("Launch/Slideshows/LAUNCH_HUM_"):
         return f"{HUM}/Launch/" + name
-    if r.startswith("Humanities_Teesside/Lundy_Humanities/specimens/"):
+    if r.startswith("Humanities/Lundy_Humanities/specimens/"):
         return f"{HUM}/LundyLoop/Specimens/" + name
-    if r.startswith("Humanities_Teesside/Lundy_Humanities/"):
+    if r.startswith("Humanities/Lundy_Humanities/"):
         return f"{HUM}/LundyLoop/" + name
-    if r.startswith("Humanities_Teesside/"):
+    if r.startswith("Humanities/"):
         for pre, sub in (("BUILD_", "Build"), ("GROW_", "Grow"), ("LAUNCH_", "Launch")):
             if name.startswith(pre):
                 return f"{HUM}/{sub}/" + name
@@ -481,7 +481,7 @@ def dest_for(rel):
     # --- unchanged names --------------------------------------------------
     if r.startswith("Tutor_Time/"):
         return "Tutor Time BF_BV_KCSIE/" + r[len("Tutor_Time/"):]
-    if r.startswith(("Science_Teesside/", "grow-anim/", "LundyLoop/")):
+    if r.startswith(("Science/", "grow-anim/", "LundyLoop/")):
         return r
     raise AssertionError(f"dest_for: no rule for {r}")
 
@@ -1083,11 +1083,11 @@ def write_docs(pack, keep, fwd, back, clashes, logo_pages, rewrites, crawl_miss,
           "| `GROW_ASDAN/Community_Project/` | `ASDAN PEQ/Grow/Community Project/` | drive uses a space |",
           "| `GROW_ASDAN/PEQ/` | `ASDAN PEQ/Grow/Personal Effectiveness/` | drive uses the full unit name |",
           "| `DT_Community_Upcycling/` | `ASDAN PEQ/Build/DT/` | drive files it under BUILD |",
-          f"| `Humanities_Teesside/` | `{HUM}/` | drive name, confirmed by Matt |",
-          f"| `Humanities_Teesside/Lundy_Humanities/` | `{HUM}/LundyLoop/` | drive name |",
+          f"| `Humanities/` | `{HUM}/` | drive name, confirmed by Matt |",
+          f"| `Humanities/Lundy_Humanities/` | `{HUM}/LundyLoop/` | drive name |",
           f"| `.../Lundy_Humanities/specimens/` | `{HUM}/LundyLoop/Specimens/` | capital S on the drive |",
           "| `Tutor_Time/` | `Tutor Time BF_BV_KCSIE/` | drive name |",
-          "| `Art_Teesside/` | `Art/` | drive name |", "",
+          "| `Art/` | `Art/` | drive name |", "",
           "## LAUNCH_ASDAN is FLAT on the drive", "",
           "The repo keeps five subfolders; the drive holds every deck directly in",
           "`ASDAN PEQ/Launch/`. A census of basenames repeated across the five strands returns",
@@ -1499,10 +1499,10 @@ named after its strand and this page points at all five.</div>
 # strictly worse than an unbranded hub that works. Each copy is emitted at its
 # own depth instead, and gated by a crawl FROM ITS OWN LOCATION.
 IN_FOLDER_HUBS = {
-    "art_teesside.html":       "Art/art_teesside.html",
+    "art.html":       "Art/art.html",
     "build_asdan.html":        "ASDAN PEQ/Build/build_asdan.html",
     "build_dt_upcycling.html": "ASDAN PEQ/Build/DT/build_dt_upcycling.html",
-    "humanities_teesside.html": HUM + "/humanities_teesside.html",
+    "humanities.html": HUM + "/humanities.html",
 }
 
 

@@ -2,8 +2,8 @@
 """
 AT-INST-01 - Art Teesside estate assertions.
 
-Runs the house assertion set across every tracked HTML file under Art_Teesside/
-and reports counts. Read Art_Teesside/tools/INSTRUMENTS_ART.md before quoting a
+Runs the house assertion set across every tracked HTML file under Art/
+and reports counts. Read Art/tools/INSTRUMENTS_ART.md before quoting a
 number from this.
 
 WHAT THIS STRUCTURALLY CANNOT DETECT
@@ -28,7 +28,7 @@ instrument was trusted. Recorded so they are not reintroduced:
     names their own PROTECT"). Replaced with a search for actual name-collection
     FIELDS, of which the estate has none.
   * "working at" matched ordinary prose. Removed.
-Scope note: this globs *.html only. The staff-side .md files in Art_Teesside/
+Scope note: this globs *.html only. The staff-side .md files in Art/
 quote banned strings when describing them and must never be swept.
 """
 import re, sys, glob, os, collections
