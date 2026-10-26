@@ -337,6 +337,26 @@ UM_COLLECTIONS_RETIRED_REPLACEMENTS = {"Humanities/Teaching_Packs/BUILD/download
 # Each transaction is judged on its own: every member present as exactly one
 # modification, previous identities from the actual merge base, exact bytes and
 # a matching owner-reviewed catalogue admission for every member.
+# RULING wa-2 (b) (26 Oct 2026): M1, the subject-folder rename, as ONE declared replacement transaction. Its
+# members are exactly the protected files whose bytes M1 changes; each entry names its old path (beforePath, read at the
+# review base through the rename map), its previous blob, its reviewed after digest and the reason (rename map rewrite
+# only, with any named edit). It is read from its own file, bound here by digest: a file whose bytes differ is refused,
+# never read. Declared last, so it supersedes the earlier transactions on the paths M1 rewrote (declaration order is
+# review order). Every member still needs its CATALOGUE_PINS admission, as for any replacement.
+M1_TRANSACTION = ('_glv3/M1_REPLACEMENT_TRANSACTION.json', '99acd8c0f43d7861149c2355810e83cde591b02b5afe981d19f20ecfed8ae449')
+
+
+def _m1_transaction():
+    path = Path(__file__).resolve().parents[2] / M1_TRANSACTION[0]
+    data = path.read_bytes()
+    if hashlib.sha256(data).hexdigest() != M1_TRANSACTION[1]:
+        raise ValueError('unreviewed M1 replacement transaction: ' + M1_TRANSACTION[0])
+    declared = json.loads(data)
+    return declared['reviewBase'], {rel: {'beforeGitBlob': row['beforeGitBlob'], 'afterSha256': row['afterSha256'],
+                                          'bytes': row['bytes']} for rel, row in declared['files'].items()}
+
+
+M1_REVIEW_BASE, M1_REPLACEMENTS = _m1_transaction()
 REPLACEMENT_TRANSACTIONS = {
     'Sugar': (SUGAR_REVIEW_BASE, SUGAR_REPLACEMENTS),
     # BEGIN DECLARED TRANSACTION ENTRIES
@@ -370,6 +390,7 @@ REPLACEMENT_TRANSACTIONS = {
     'SY Week 8 corrections': (SY_WEEK_8_CORRECTIONS_REVIEW_BASE, SY_WEEK_8_CORRECTIONS_REPLACEMENTS),
     'TQ Week 8 pack reachability': (TQ_WEEK_8_PACK_REACHABILITY_REVIEW_BASE, TQ_WEEK_8_PACK_REACHABILITY_REPLACEMENTS),
     'UM collections retired': (UM_COLLECTIONS_RETIRED_REVIEW_BASE, UM_COLLECTIONS_RETIRED_REPLACEMENTS),
+    'M1 rename map rewrite': (M1_REVIEW_BASE, M1_REPLACEMENTS),
     # END DECLARED TRANSACTION ENTRIES
 }
 # RULING um add.5 (24 Oct 2026): the retired member type is admitted only inside a transaction listed here against the

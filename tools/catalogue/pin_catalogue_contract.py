@@ -3308,6 +3308,52 @@ REVIEWED_PATHS += (
     'LAUNCH_ASDAN/W7-W12_2026-27/START_HERE.html',
 )
 
+# RULING wa-2 (b) (26 Oct 2026): M1, the subject-folder rename. The members of the one M1 replacement transaction
+# (_glv3/M1_REPLACEMENT_TRANSACTION.json) that had no catalogue admission are admitted here, so each replacement carries
+# its matching admission as every replacement must. Their bytes are the rename map rewrite of their previous bytes.
+REVIEWED_PATHS += (
+    'Art/BUILD_W1-W8_2026-27/BUILD_Art_W11_Light_on_a_dark_page_Classic.html',
+    'Art/BUILD_W1-W8_2026-27/BUILD_Art_W1_Explore_Drawing_Colour_And_Technique_To_Show.html',
+    'Art/GROW_W1-W8_2026-27/GROW_Art_W11_Design_a_light_festival_panel_Classic.html',
+    'Art/tools/assert_estate.py',
+    'Art/tools/assert_print.js',
+    'Art/visual-learning/art-visual-learning.css',
+    'Art/visual-learning/art-visual-payloads.js',
+    'BUILD_Estate_v3/Art/index.html',
+    'BUILD_Estate_v3/Art/manifest-v3.json',
+    'BUILD_Estate_v3/Humanities/index.html',
+    'BUILD_Estate_v3/index.html',
+    'Humanities/BUILD_W14-W20_2026-27/BUILD_HUM_W12_A_celebration_in_order_Classic.html',
+    'Humanities/BUILD_W14-W20_2026-27/BUILD_HUM_W14_A_fair_chance_to_join_in_Classic.html',
+    'Humanities/GROW_W9-W14_2026-27/GROW_HUM_W12_Festival_lights_across_places_Classic.html',
+    'Humanities/GROW_W9-W14_2026-27/GROW_HUM_W13_Compare_celebrations_with_care_Classic.html',
+    'Humanities/GROW_W9-W14_2026-27/SHA256SUMS.txt',
+    'Humanities/GROW_W9-W14_2026-27/START_HERE_GROW_HUMANITIES_W9-W14.html',
+    'Humanities/GROW_W9-W14_2026-27/manifest-v3.1.json',
+    'Humanities/LAUNCH_W9-W14_2026-27/LAUNCH_HUM_W11_A_growing_town_an_urbanising_region_Classic.html',
+    'Humanities/Teaching_Packs/BUILD/SHA256SUMS.txt',
+    'Humanities/Teaching_Packs/BUILD/Teacher_Notes.html',
+    'Humanities/Teaching_Packs/GROW/SHA256SUMS.txt',
+    'Humanities/Teaching_Packs/GROW/Teacher_Notes.html',
+    'Humanities/Teaching_Packs/LAUNCH/SHA256SUMS.txt',
+    'Humanities/Teaching_Packs/LAUNCH/Teacher_Notes.html',
+    'Humanities/Teaching_Packs/web-slides.html',
+    'Launch/Slideshows/LAUNCH_ART_W8_Complete_The_Review.html',
+    'Science/Build/W8-W13_2026-27/SCI_B_W11A_Rock_Permeability_Explore.html',
+    'Science/Build/W8-W13_2026-27/SCI_B_W13_Where_did_this_material_come_from_Classic.html',
+    'Science/Build/v3_40min/manifest-v3.json',
+    'Science/Grow/v3_40min/SCI_G_W3A_Friction_Explore.html',
+    'Science/Launch/v3_40min/manifest-v3.json',
+    'Science/Teaching_Packs/BUILD/Teacher_Notes.html',
+    'Science/Teaching_Packs/GROW/Teacher_Notes.html',
+    'Science/launch-engine/inject.js',
+    'Science/launch-engine/test/gate-shape.js',
+    'Science/launch-engine/test/health.js',
+    'Science/launch-engine/test/print-pack.js',
+    'Science/visual-learning/science-visual-learning.css',
+    'Science/visual-learning/science-visual-payloads.js',
+)
+
 def pack_rows_for(lessons: Path, rows: list) -> list:
     """UX2 D3 (2026-09-08): the companion-pack entries are the catalogue's tail,
     after the reviewed hub rows. They are not a second hand-kept literal: they
