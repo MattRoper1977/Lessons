@@ -63,7 +63,7 @@ FENCE = ROOT / '_sx3/FENCE.json'
 # limbs ruling 4). The held-by-name record, and the R-GAPS section of the release ledger.
 HELD = ROOT / '_sci/HELD.md'
 RELEASE_LEDGER = ROOT / '_sx3/RELEASE_LEDGER.md'
-DECK_PATH = re.compile(r'`(Science_Teesside/[^`]+\.html)`')
+DECK_PATH = re.compile(r'`(Science/[^`]+\.html)`')
 
 
 def moved_entries(entries, digest_of):
@@ -395,14 +395,14 @@ def self_test():
     evidence = json.loads(EVIDENCE.read_text())['entries']
     terms = json.loads((ROOT / 'assets/catalogue/terms-and-styles.json').read_text())['entries']
     check('the real SCIENCE_WEEK_BINDINGS record equals its CATALOGUE_PINS digest', bpin == brecord)
-    w9l1 = 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9L1_Cell_Cycle_Introduce.html'
+    w9l1 = 'Science/Launch/W8-W13_2026-27/SCI_L_W9L1_Cell_Cycle_Introduce.html'
     ok, why = science_row_proof(w9l1, bdoc['entries'], brecord, bpin,
                                 blo.evidence_projection(evidence[w9l1]['evidence'], cells, terms[w9l1]['terms']))
     check('ROW, real tree: SCI_L_W9L1 is proved by its pinned row (Aut2·W1)', ok and why == 'Aut2·W1')
     # The five GROW *A decks of the SX3 31, named rather than globbed (W8A beside them is an
     # exemplar that writes no label at all). In derive() the ROW limb proves them first, because
     # their evidence projects their week; this proves the label limb would hold on them too.
-    grow_a = ['Science_Teesside/Grow/W8-W13_2026-27/' + f for f in (
+    grow_a = ['Science/Grow/W8-W13_2026-27/' + f for f in (
         'SCI_G_W9A_Spherical_Bodies_Explore.html', 'SCI_G_W10A_Solar_System_Research_Explore.html',
         'SCI_G_W11A_Global_Warming_Explore.html', 'SCI_G_W12A_Science_Connections_Explore.html',
         'SCI_G_W13A_Rover_Rescue_Plan_Explore.html')]
@@ -413,26 +413,26 @@ def self_test():
     check('LABEL, real tree: the 5 GROW *A Explore decks are each proved by their own label',
           all((ROOT / p).is_file() for p in grow_a) and all(label_ok))
     # Ruling 4 (2026-09-23): held decks leave the re-stamp by DERIVATION, never by hand.
-    held_md = '| `Science_Teesside/G/x.html` | GROW |\nsee `_sx3/HELD.md`\n'
+    held_md = '| `Science/G/x.html` | GROW |\nsee `_sx3/HELD.md`\n'
     ledger = ('## R-GAPS — gaps\n| row | gap | decks | ruling |\n|---|---|---|---|\n'
-              '| 30 | teacher-only | 1 of 36, `Science_Teesside/B/w12.html` | **R-GAPS**, named |\n'
-              '| 31 | reveal | `Science_Teesside/B/other.html` | **R-SR**: no dressing |\n## Next\n'
-              '| 9 | x | `Science_Teesside/B/after.html` | **R-GAPS** |\n')
+              '| 30 | teacher-only | 1 of 36, `Science/B/w12.html` | **R-GAPS**, named |\n'
+              '| 31 | reveal | `Science/B/other.html` | **R-SR**: no dressing |\n## Next\n'
+              '| 9 | x | `Science/B/after.html` | **R-GAPS** |\n')
     hb = held_by_name(held_md, ledger)
     check('HELD: derived from _sci/HELD.md and the R-GAPS rows, nothing else',
-          hb == {'Science_Teesside/G/x.html': '_sci/HELD.md', 'Science_Teesside/B/w12.html': '_sx3/RELEASE_LEDGER.md R-GAPS'})
-    e, r, n = restamp_plan({'Science_Teesside/B/w12.html': {'sha256': 'a' * 64, 'terms': ['Aut2']}},
-                           {'Science_Teesside/B/w12.html': '1' * 64}, lambda p: '1' * 64,
-                           {'Science_Teesside/B/w12.html'}, {}, set(), None, hb)
+          hb == {'Science/G/x.html': '_sci/HELD.md', 'Science/B/w12.html': '_sx3/RELEASE_LEDGER.md R-GAPS'})
+    e, r, n = restamp_plan({'Science/B/w12.html': {'sha256': 'a' * 64, 'terms': ['Aut2']}},
+                           {'Science/B/w12.html': '1' * 64}, lambda p: '1' * 64,
+                           {'Science/B/w12.html'}, {}, set(), None, hb)
     check('HELD RED PROOF: a held deck on the --decks list is refused by name, even though a limb proves it',
           len(e) == 1 and 'held by name (_sx3/RELEASE_LEDGER.md R-GAPS)' in e[0] and not r)
     real = held_paths()
     check('HELD, real tree: SCI_B_W12 is held by its R-GAPS row, derived from the ledger',
-          real.get('Science_Teesside/Build/W8-W13_2026-27/SCI_B_W12_Give_a_rock_a_job_Classic.html')
+          real.get('Science/Build/W8-W13_2026-27/SCI_B_W12_Give_a_rock_a_job_Classic.html')
           == '_sx3/RELEASE_LEDGER.md R-GAPS')
     check('HELD, real tree: the two case-study decks are held, derived from _sci/HELD.md',
-          real.get('Science_Teesside/Grow/W18-W26_2026-27/SCI_G_W18A_The_Cold_Case.html') == '_sci/HELD.md'
-          and real.get('Science_Teesside/Launch/W17-W26_2026-27/SCI_L_W17_Evolution_Build_The_Evidence_Case.html')
+          real.get('Science/Grow/W18-W26_2026-27/SCI_G_W18A_The_Cold_Case.html') == '_sci/HELD.md'
+          and real.get('Science/Launch/W17-W26_2026-27/SCI_L_W17_Evolution_Build_The_Evidence_Case.html')
           == '_sci/HELD.md')
 
     # Ruling 3 (2026-09-23): only the title stage is the deck's claim; a recall line is not.
@@ -461,7 +461,7 @@ def self_test():
 
     # Ruled 2026-09-23 on SCI_G_W16B: a title-stage week the row does not bind refuses, whichever
     # limb would prove the deck. Its own cell (C29, Spr1·W2) covers the row; its title says Week 16.
-    w16b = 'Science_Teesside/Grow/W15-W20_2026-27/SCI_G_W16B_Getting_The_Solid_Back_Do.html'
+    w16b = 'Science/Grow/W15-W20_2026-27/SCI_G_W16B_Getting_The_Solid_Back_Do.html'
     w16b_claims = week_keys(blo.deck_statement_text(lhtml.fromstring((ROOT / w16b).read_text())))
     check('W16B RED PROOF, real tree: its title-stage "Spring 1 · Week 16" is a claim its row (Spr1·W2) does not bind',
           (blo.title_claim_conflict(bdoc['entries'][w16b], w16b_claims) or '').startswith(
@@ -471,7 +471,7 @@ def self_test():
 
     # W14L1 -> unchanged (the ruling's control): its own lesson-config names its spine cell, so
     # derive() proves it by the explicit-cell deck limb before any Science limb is tried.
-    w14 = next((ROOT / 'Science_Teesside/Launch/W14-W15_2026-27').glob('SCI_L_W14L1_*.html'))
+    w14 = next((ROOT / 'Science/Launch/W14-W15_2026-27').glob('SCI_L_W14L1_*.html'))
     w14rel = w14.relative_to(ROOT).as_posix()
     cfg = json.loads(lhtml.fromstring(w14.read_text()).xpath('//script[@id="lesson-config"]/text()')[0])
     check('CONTROL, real tree: SCI_L_W14L1 is proved by its explicit cell, so no Science limb is reached',
@@ -479,18 +479,18 @@ def self_test():
 
     # Ruling 4, the EXCLUSION (review of the PR head): a held deck on a batch list is taken out by
     # derivation and the rest proceeds; the list is never edited by hand to make a run go through.
-    kept, excluded = exclude_held({'Science_Teesside/B/w12.html': '1' * 64, 'Science_Teesside/B/x.html': '2' * 64}, hb)
+    kept, excluded = exclude_held({'Science/B/w12.html': '1' * 64, 'Science/B/x.html': '2' * 64}, hb)
     check('HELD: exclude_held drops exactly the held deck, names its record, and keeps the rest',
-          kept == {'Science_Teesside/B/x.html': '2' * 64}
-          and excluded == {'Science_Teesside/B/w12.html': '_sx3/RELEASE_LEDGER.md R-GAPS'})
+          kept == {'Science/B/x.html': '2' * 64}
+          and excluded == {'Science/B/w12.html': '_sx3/RELEASE_LEDGER.md R-GAPS'})
     check('HELD RED PROOF: with nothing held, nothing is excluded',
-          exclude_held({'Science_Teesside/B/w12.html': '1' * 64}, {}) == ({'Science_Teesside/B/w12.html': '1' * 64}, {}))
+          exclude_held({'Science/B/w12.html': '1' * 64}, {}) == ({'Science/B/w12.html': '1' * 64}, {}))
 
     # THE WIRING, through derive() itself on moved bytes (review of the PR head: the W9L1, W16B,
     # title-stage and fence proofs above test the pure helpers, and derive() is what decides).
     # Each deck's real bytes gain one comment in memory -- the tree is never written.
-    w9l1 = 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9L1_Cell_Cycle_Introduce.html'
-    w4a = 'Science_Teesside/Build/v3_40min/SCI_B_W4A_Muscles_Explore.html'
+    w9l1 = 'Science/Launch/W8-W13_2026-27/SCI_L_W9L1_Cell_Cycle_Introduce.html'
+    w4a = 'Science/Build/v3_40min/SCI_B_W4A_Muscles_Explore.html'
     released_all = [(x['path'], x['heldWeek']) for x in fence['released']['paths']]
     fenced_all = [x['path'] for x in fence['fenced']]
     # The re-stamp expectation below uses the released deck no held record names: SCI_G_A2_W7A/W7B

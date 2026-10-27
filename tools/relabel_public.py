@@ -775,7 +775,7 @@ def self_test():
               'after :' in r.stdout and 'Lesson 2' in r.stdout)
 
         # ---- the live regression itself, when the repo is present
-        live = os.path.join(ROOT, 'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html')
+        live = os.path.join(ROOT, 'Science/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html')
         if os.path.exists(live):
             src = open(live, encoding='utf-8').read()
             rev, _ = walk(src, live, 'revert')            # the pre-relabel bytes, from the file's own store

@@ -10,8 +10,8 @@ from docx.oxml.ns import qn
 import fitz
 BASE='194075db287e091a1f1fc1020c5873a00cdb1447'
 HERE=Path(__file__).resolve().parent
-REL='Science_Teesside/Grow/SCI_G_W3_Friction.html'
-PACK='Science_Teesside/Teaching_Packs/GROW/lessons/W3A/'
+REL='Science/Grow/SCI_G_W3_Friction.html'
+PACK='Science/Teaching_Packs/GROW/lessons/W3A/'
 
 def main(root):
  d=json.loads((HERE/'W3A_ORGANISER_EXIT.json').read_text());e=html.escape

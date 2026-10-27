@@ -33,13 +33,13 @@ const MIN = 4.5;
 function lessonPages() {
   let files;
   try {
-    files = cp.execFileSync('git', ['-C', ROOT, 'ls-files', '-z', '--', 'Humanities_Teesside'], { encoding: 'utf8', maxBuffer: 1 << 28 }).split('\0');
+    files = cp.execFileSync('git', ['-C', ROOT, 'ls-files', '-z', '--', 'Humanities'], { encoding: 'utf8', maxBuffer: 1 << 28 }).split('\0');
   } catch (_) { files = []; }
   if (!files.filter(Boolean).length) {
     files = [];
     const walk = d => { for (const e of fs.readdirSync(path.join(ROOT, d), { withFileTypes: true })) {
       const r = path.join(d, e.name); if (e.isDirectory()) walk(r); else files.push(r); } };
-    walk('Humanities_Teesside');
+    walk('Humanities');
   }
   return files.filter(f => /_Lesson\.html$/.test(f) && !f.split('/').some(p => p.startsWith('_') || p.startsWith('.'))).sort();
 }
@@ -48,7 +48,7 @@ const md5 = b => crypto.createHash('md5').update(b).digest('hex');
 function sourcesFor(page) {
   // the page's own folder first, then each parent up to the pack root
   let d = path.dirname(path.join(ROOT, page));
-  while (d.startsWith(path.join(ROOT, 'Humanities_Teesside'))) {
+  while (d.startsWith(path.join(ROOT, 'Humanities'))) {
     const f = path.join(d, 'Sources_and_checks.html');
     if (fs.existsSync(f)) return f;
     d = path.dirname(d);
@@ -216,25 +216,25 @@ function rowsOf(file) {
   // taken on Lessons main 55eb2bd1. The list only shrinks: an entry leaves when its pack is rebuilt, and a path or a
   // limb that is not in this dated baseline fails here however the JSON is edited.
   const KNOWN_RED_BASELINE = {
-    "Humanities_Teesside/BUILD_W27-W39_2026-27/BUILD/Summer_1/W01/BUILD_SU1_W01_Lesson.html": ["ribbon", "timer"],
-    "Humanities_Teesside/BUILD_W27-W39_2026-27/BUILD/Summer_1/W02/BUILD_SU1_W02_Lesson.html": ["ribbon", "timer"],
-    "Humanities_Teesside/BUILD_W27-W39_2026-27/BUILD/Summer_1/W03/BUILD_SU1_W03_Lesson.html": ["ribbon", "timer"],
-    "Humanities_Teesside/BUILD_W27-W39_2026-27/BUILD/Summer_1/W04/BUILD_SU1_W04_Lesson.html": ["ribbon", "timer"],
-    "Humanities_Teesside/BUILD_W27-W39_2026-27/BUILD/Summer_1/W05/BUILD_SU1_W05_Lesson.html": ["arrival", "ribbon", "timer"],
-    "Humanities_Teesside/BUILD_W27-W39_2026-27/BUILD/Summer_1/W06/BUILD_SU1_W06_Lesson.html": ["ribbon", "timer"],
-    "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W01/GROW_SU1_W01_Lesson.html": ["ribbon", "svg", "timer"],
-    "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W02/GROW_SU1_W02_Lesson.html": ["ribbon", "svg", "timer"],
-    "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W03/GROW_SU1_W03_Lesson.html": ["ribbon", "svg", "timer"],
-    "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W04/GROW_SU1_W04_Lesson.html": ["ribbon", "svg", "timer"],
-    "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W05/GROW_SU1_W05_Lesson.html": ["ribbon", "svg", "timer"],
-    "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W06/GROW_SU1_W06_Lesson.html": ["ribbon", "svg", "timer"],
-    "Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W01/LAUNCH_SU1_W01_Lesson.html": ["button", "ribbon"],
-    "Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W02/LAUNCH_SU1_W02_Lesson.html": ["button", "ribbon"],
-    "Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W03/LAUNCH_SU1_W03_Lesson.html": ["button", "ribbon"],
-    "Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W04/LAUNCH_SU1_W04_Lesson.html": ["button", "ribbon"],
-    "Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W05/LAUNCH_SU1_W05_Lesson.html": ["button", "ribbon"],
-    "Humanities_Teesside/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W06/LAUNCH_SU1_W06_Lesson.html": ["button", "ribbon"],
-    "Humanities_Teesside/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/BUILD/Autumn_1/W04/BUILD_A1_W04_Lesson.html": ["credit"]
+    "Humanities/BUILD_W27-W39_2026-27/BUILD/Summer_1/W01/BUILD_SU1_W01_Lesson.html": ["ribbon", "timer"],
+    "Humanities/BUILD_W27-W39_2026-27/BUILD/Summer_1/W02/BUILD_SU1_W02_Lesson.html": ["ribbon", "timer"],
+    "Humanities/BUILD_W27-W39_2026-27/BUILD/Summer_1/W03/BUILD_SU1_W03_Lesson.html": ["ribbon", "timer"],
+    "Humanities/BUILD_W27-W39_2026-27/BUILD/Summer_1/W04/BUILD_SU1_W04_Lesson.html": ["ribbon", "timer"],
+    "Humanities/BUILD_W27-W39_2026-27/BUILD/Summer_1/W05/BUILD_SU1_W05_Lesson.html": ["arrival", "ribbon", "timer"],
+    "Humanities/BUILD_W27-W39_2026-27/BUILD/Summer_1/W06/BUILD_SU1_W06_Lesson.html": ["ribbon", "timer"],
+    "Humanities/GROW_W27-W39_2026-27/GROW/Summer_1/W01/GROW_SU1_W01_Lesson.html": ["ribbon", "svg", "timer"],
+    "Humanities/GROW_W27-W39_2026-27/GROW/Summer_1/W02/GROW_SU1_W02_Lesson.html": ["ribbon", "svg", "timer"],
+    "Humanities/GROW_W27-W39_2026-27/GROW/Summer_1/W03/GROW_SU1_W03_Lesson.html": ["ribbon", "svg", "timer"],
+    "Humanities/GROW_W27-W39_2026-27/GROW/Summer_1/W04/GROW_SU1_W04_Lesson.html": ["ribbon", "svg", "timer"],
+    "Humanities/GROW_W27-W39_2026-27/GROW/Summer_1/W05/GROW_SU1_W05_Lesson.html": ["ribbon", "svg", "timer"],
+    "Humanities/GROW_W27-W39_2026-27/GROW/Summer_1/W06/GROW_SU1_W06_Lesson.html": ["ribbon", "svg", "timer"],
+    "Humanities/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W01/LAUNCH_SU1_W01_Lesson.html": ["button", "ribbon"],
+    "Humanities/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W02/LAUNCH_SU1_W02_Lesson.html": ["button", "ribbon"],
+    "Humanities/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W03/LAUNCH_SU1_W03_Lesson.html": ["button", "ribbon"],
+    "Humanities/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W04/LAUNCH_SU1_W04_Lesson.html": ["button", "ribbon"],
+    "Humanities/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W05/LAUNCH_SU1_W05_Lesson.html": ["button", "ribbon"],
+    "Humanities/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W06/LAUNCH_SU1_W06_Lesson.html": ["button", "ribbon"],
+    "Humanities/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/BUILD/Autumn_1/W04/BUILD_A1_W04_Lesson.html": ["credit"]
   };
   const listGrew = [];
   for (const e of known) {

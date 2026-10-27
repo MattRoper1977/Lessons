@@ -9,7 +9,7 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const digest = data => crypto.createHash('sha256').update(data).digest('hex');
 const origin = 'http://science-original.test';
-const base = 'Humanities_Teesside/David_Cover_Autumn1_W3-W7';
+const base = 'Humanities/David_Cover_Autumn1_W3-W7';
 const printSentinel = 'HUMANITIES_TEACHER_KEY_MUST_NOT_PRINT';
 
 async function run({browser, root, out, configure, measured, report}) {

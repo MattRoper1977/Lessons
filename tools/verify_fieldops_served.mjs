@@ -81,7 +81,7 @@ import { fileURLToPath } from 'node:url';
 const HERE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ARGS = new Set(process.argv.slice(2));
 
-const PLACED = 'Science_Teesside/Build/v4_fieldops';
+const PLACED = 'Science/Build/v4_fieldops';
 const STUDIO_REF = 'tools/fieldops/staging/00_BUILD_FieldOps_Teacher_Studio.html';
 
 /* The placed directory also carries one authored file the builder does not emit.

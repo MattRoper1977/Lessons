@@ -5,7 +5,7 @@ what it says, never from where it sits (rulings LAND-A2 R5 §1 and R8 §3; ORDER
 v9 printed "You can begin without previous learning. Word help — X: …" at the start of every lesson,
 and from Week 2 on that word help stated the answer to arrival question 2 (R3). v10 keeps the line in
 Week 1 only, where HUM-D5 holds it by design. This check holds every later week to that on every served
-surface a pupil or TA can see under Humanities_Teesside: the lesson and pupil pages (HTML), their PDFs,
+surface a pupil or TA can see under Humanities: the lesson and pupil pages (HTML), their PDFs,
 and the editable Word and PowerPoint files. Served = git ls-files, dropping any path with a part that
 starts with '_' or '.', which the publisher does not copy. Text is extracted from the file's own bytes
 (HTML without tags, scripts or styles; PDF by pypdf; DOCX/PPTX from their XML parts) and whitespace is
@@ -48,7 +48,7 @@ reason, the ruling, the date it was added and when it leaves. The list only shri
   - a malformed list FAILS, and then no entry is honoured.
 A missing list file means no exceptions.
 
-  check_arrival_surfaces.py [--root DIR] [--tree Humanities_Teesside] [--exceptions FILE] [--verbose]
+  check_arrival_surfaces.py [--root DIR] [--tree Humanities] [--exceptions FILE] [--verbose]
   check_arrival_surfaces.py --self-test      fixtures in a temporary directory; no repository needed
 Exit 1 on any failure. Needs pypdf.
 """
@@ -70,7 +70,7 @@ ENTRY_KEYS = {'path', 'reason', 'ruling', 'added', 'leaves_when'}
 TOP_KEYS = {'about', 'exceptions'}
 # The files R8 §3 ruled onto the list. The list may be any subset of these and nothing else: an entry
 # leaves when its sheet prints its week, and no entry is added without a new ruling (and a change here).
-_T = 'Humanities_Teesside/Teaching_Packs/'
+_T = 'Humanities/Teaching_Packs/'
 RULED_R8_S3 = frozenset(_T + s for s in (
     'HUM_Autumn_1_LAUNCH_Reviewed/LAUNCH/Autumn_1/W01/LAUNCH_A1_W01_Pupil_Resources.html',
     'HUM_Autumn_2_BUILD_Reviewed/BUILD/Autumn_2/W01/BUILD_A2_W01_Pupil_Resources.html',
@@ -361,7 +361,7 @@ def _sheet(extra=ARRIVE):
 
 
 def self_test():
-    T = 'Humanities_Teesside'
+    T = 'Humanities'
     d1 = f'{T}/P/X/Autumn_2/W01'
     d2 = f'{T}/P/X/Autumn_2/W02'
     base = {
@@ -458,7 +458,7 @@ def self_test():
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     ap.add_argument('--root', type=Path, default=Path('.'))
-    ap.add_argument('--tree', default='Humanities_Teesside')
+    ap.add_argument('--tree', default='Humanities')
     ap.add_argument('--exceptions', type=Path, default=EXCEPTIONS)
     ap.add_argument('--verbose', action='store_true', help='print every file carrying the line and where its week came from')
     ap.add_argument('--self-test', action='store_true')

@@ -27,13 +27,13 @@ SCRATCH = ROOT / "_sownb/vb/evidence/run13/attribution_control_scratch.json"
 RECORD = {
     "gate": "g16-v2-frozen",
     "family": "BUILD Humanities",
-    "candidate": "Humanities_Teesside/BUILD_W1-W8_2026-27/BUILD_HUM_W4_Then_And_Now.html",
+    "candidate": "Humanities/BUILD_W1-W8_2026-27/BUILD_HUM_W4_Then_And_Now.html",
     "frozenRowCount": 1,
     "passed": 1,
     "failed": 0,
     "firingControl": {"fired": True},
     "status": "PASS",
-    "file": "Humanities_Teesside/BUILD_W1-W8_2026-27/BUILD_HUM_W4_Then_And_Now.html",
+    "file": "Humanities/BUILD_W1-W8_2026-27/BUILD_HUM_W4_Then_And_Now.html",
     "subject": "attribution control scratch record; deleted by the tool that wrote it",
 }
 

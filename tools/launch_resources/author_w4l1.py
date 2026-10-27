@@ -34,7 +34,7 @@ from pathlib import Path
 import argparse, hashlib, html, json, re, subprocess
 
 BASE = '3a14e9c4d57832fed87ed588ef6f0ae4fd3d6064'
-REL = 'Science_Teesside/Launch/SCI_L_W4_L1_Diffusion.html'
+REL = 'Science/Launch/SCI_L_W4_L1_Diffusion.html'
 HERE = Path(__file__).resolve().parent
 esc = html.escape
 

@@ -23,12 +23,12 @@ import argparse, re, sys
 
 ROOT = Path(__file__).resolve().parents[2]
 LESSONS = (
-    'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html',
-    'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W8A_Day_And_Night_Explore.html',
-    'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W8B_Day_And_Night_Do.html',
-    'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L1_Enzyme_Action_Introduce.html',
-    'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L2_Amylase_pH_Core_Practical_Explore.html',
-    'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L3_Amylase_Rate_And_Topic_1_Do.html',
+    'Science/Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html',
+    'Science/Grow/W8-W13_2026-27/SCI_G_W8A_Day_And_Night_Explore.html',
+    'Science/Grow/W8-W13_2026-27/SCI_G_W8B_Day_And_Night_Do.html',
+    'Science/Launch/W8-W13_2026-27/SCI_L_W8L1_Enzyme_Action_Introduce.html',
+    'Science/Launch/W8-W13_2026-27/SCI_L_W8L2_Amylase_pH_Core_Practical_Explore.html',
+    'Science/Launch/W8-W13_2026-27/SCI_L_W8L3_Amylase_Rate_And_Topic_1_Do.html',
 )
 BAR = re.compile(r'<div class="controls">(?!\s*<div class="left">)')
 HOST = '<div class="controls"><div class="left"></div>'

@@ -101,12 +101,12 @@ def controls():
     from lxml import html
     source_root=Path(__file__).resolve().parents[2]
     census=json.loads((source_root/'_sownb/vb/evidence/download_packs/guidance_source_repair.json').read_text())
-    identities=[row['file'] for row in census['rows']]
+    moves=json.loads((source_root/'tools/catalogue/M1_RENAME_MAP.json').read_text())['pairs']; identities=[moves.get(row['file'],row['file']) for row in census['rows']]  # the census is a historical record: read it through the M1 rename map (ruling we-2)
     validate_guidance_census(identities)
     results.append({'id':'all-original-guidance-identities-retained','pass':True})
     for name,changed in [
         ('missing-guidance-route-refused',identities[:-1]),
-        ('same-count-wrong-guidance-route-refused',identities[:-1]+['Science_Teesside/unreviewed.html']),
+        ('same-count-wrong-guidance-route-refused',identities[:-1]+['Science/unreviewed.html']),
         ('duplicate-guidance-route-refused',identities[:-1]+[identities[0]]),
     ]:
         try:validate_guidance_census(changed)

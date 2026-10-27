@@ -217,7 +217,7 @@ def _selector_probes():
 
     def manifest_rows():
         ms = load("manifest_sequence", "tools/easter/manifest_sequence.py")
-        pack = ROOT / "Humanities_Teesside/BUILD_W1-W8_2026-27"
+        pack = ROOT / "Humanities/BUILD_W1-W8_2026-27"
         rep = ms.plan(pack, only=set())
         dropped = rep.get("refused", []) + [{"why": "unlisted, not added by this run"}
                                             for _ in rep.get("unlistedNotAdded", [])]

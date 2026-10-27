@@ -73,7 +73,7 @@ def case_preserve():
 
 def case_refuse():
     """Plant a rich record on a path the builder CAN read and classifies as a stub."""
-    candidates = [p for p in ROOT.rglob('Science_Teesside/**/*.html')]
+    candidates = [p for p in ROOT.rglob('Science/**/*.html')]
     planted = None
     before = PROOF.read_text()
     data = json.loads(before)

@@ -64,7 +64,7 @@ twelve-agent design's area 5 port strategy — CHOOSE B, re-dress in place):
             the BUILD donor; the build asserts they did not move and that no GROW value
             (#3F7D6E, #215E53, pathway-grow) entered the file.
   hud       <script defer src="/hud.js"></script> as the last body script -- the exact tag
-            form carried by 72 lesson files in Science_Teesside, 16 of them in Build/. It is
+            form carried by 72 lesson files in Science, 16 of them in Build/. It is
             root-absolute on purpose: the dock is served at /hud.js on the Lessons origin and
             exists nowhere else, so opening any classroom lesson from file:// costs one
             console error, "file:///hud.js net::ERR_FILE_NOT_FOUND", and no page error.
@@ -87,7 +87,7 @@ import argparse, hashlib, html as htmlmod, re, subprocess, sys
 
 BASE = '9f08cc72aadc12b2480ea8c1104e0118c7335ce087446308d39336c79379e96f'   # sha256 of the source bytes
 BASE_BLOB = '1035792c9d9a95865d16b7e829d9704014a53e42'                        # the git blob carrying them
-REL = 'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html'
+REL = 'Science/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html'
 esc = htmlmod.escape
 
 

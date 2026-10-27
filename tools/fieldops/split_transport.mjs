@@ -4,7 +4,7 @@
  * consumes it. The split is the likeliest thing to break that, because after it
  * the two halves live in different repositories at different depths:
  *
- *   labs   ->  Lessons        Science_Teesside/Build/v4_fieldops/
+ *   labs   ->  Lessons        Science/Build/v4_fieldops/
  *   Studio ->  Matt-s-Apps-   FieldOps_Teacher_Studio.html   (repo root)
  *
  * PROVENANCE, and this is the single most important honesty requirement in P2:
@@ -20,7 +20,7 @@ const chromium = _pw.chromium || _pw.default.chromium;
 
 const LESSONS = process.env.P2_LESSONS || '/home/user/Lessons';
 const APPS = process.env.P2_APPS || '/workspace/matt-s-apps-';
-const LAB_DIR = path.join(LESSONS, 'Science_Teesside/Build/v4_fieldops');
+const LAB_DIR = path.join(LESSONS, 'Science/Build/v4_fieldops');
 const STUDIO = path.join(APPS, 'FieldOps_Teacher_Studio.html');
 const WILTON = path.join(LAB_DIR, '03_Wilton_Carbon_Process_Control_Lab.html');
 const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'p2split-'));
@@ -263,7 +263,7 @@ if (capsule && fs.existsSync(capsule)) {
     !!target && fs.existsSync(target),
     target ? `${m[1]} -> ${target.replace(LESSONS + '/', '')} (exists: ${fs.existsSync(target)})` : 'no NAV-1 link found');
   /* and it is the same target the eleven neighbours point at */
-  const nb = path.join(LESSONS, 'Science_Teesside/Build/v3_40min/SCI_B_W3A_Backbones_Explore.html');
+  const nb = path.join(LESSONS, 'Science/Build/v3_40min/SCI_B_W3A_Backbones_Explore.html');
   const nm = fs.existsSync(nb) ? (fs.readFileSync(nb, 'utf8').match(/<a class="mbmhome" href="([^"]+)"/) || [])[1] : null;
   row('S3b', 'and it is the identical href its co-located neighbours use',
     !!nm && !!m && nm === m[1], `neighbour "${nm}" vs placed "${m && m[1]}"`);

@@ -43,8 +43,8 @@ BUILD = {
     # return week; LAUNCH runs three. Nothing downstream may assume two.
     'lessons': ('A', 'B'),
     'live': {
-        'A': 'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html',
-        'B': 'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html',
+        'A': 'Science/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html',
+        'B': 'Science/Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html',
     },
     'pack': {
         'A': 'Lesson_A_Sugar_Evidence/BUILD_W8A_Interactive.html',
@@ -104,8 +104,8 @@ GROW = {
     'name': 'GROW',
     'lessons': ('A', 'B'),
     'live': {
-        'A': 'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W8A_Day_And_Night_Explore.html',
-        'B': 'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W8B_Day_And_Night_Do.html',
+        'A': 'Science/Grow/W8-W13_2026-27/SCI_G_W8A_Day_And_Night_Explore.html',
+        'B': 'Science/Grow/W8-W13_2026-27/SCI_G_W8B_Day_And_Night_Do.html',
     },
     'pack': {
         'A': 'Lesson_A_Sky_Shift/SCI_G_W8A_Day_And_Night_Explore.html',
@@ -155,12 +155,12 @@ LAUNCH = {
     'name': 'LAUNCH',
     'lessons': ('L1', 'L2', 'L3'),
     # Derived from the estate, not assumed (LW1 §0.2): all three routes exist on
-    # origin/main under Science_Teesside/Launch/W8-W13_2026-27/, so all three are
+    # origin/main under Science/Launch/W8-W13_2026-27/, so all three are
     # REPLACEs and none takes the admission path. Filenames preserved exactly.
     'live': {
-        'L1': 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L1_Enzyme_Action_Introduce.html',
-        'L2': 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L2_Amylase_pH_Core_Practical_Explore.html',
-        'L3': 'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L3_Amylase_Rate_And_Topic_1_Do.html',
+        'L1': 'Science/Launch/W8-W13_2026-27/SCI_L_W8L1_Enzyme_Action_Introduce.html',
+        'L2': 'Science/Launch/W8-W13_2026-27/SCI_L_W8L2_Amylase_pH_Core_Practical_Explore.html',
+        'L3': 'Science/Launch/W8-W13_2026-27/SCI_L_W8L3_Amylase_Rate_And_Topic_1_Do.html',
     },
     'pack': {
         'L1': 'Lesson_1_Enzyme_Action/SCI_L_W8L1_Enzyme_Action_Introduce.html',

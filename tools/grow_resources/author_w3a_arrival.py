@@ -7,8 +7,8 @@ import argparse,json,subprocess,io,html
 from docx import Document
 from docx.shared import Pt
 BASE='74929d1b1eadf66f4caaa4f98e1ec65cd009c112'
-REL='Science_Teesside/Grow/SCI_G_W3_Friction.html'
-PACK='Science_Teesside/Teaching_Packs/GROW/lessons/W3A/'
+REL='Science/Grow/SCI_G_W3_Friction.html'
+PACK='Science/Teaching_Packs/GROW/lessons/W3A/'
 HERE=Path(__file__).resolve().parent
 
 def main(root):

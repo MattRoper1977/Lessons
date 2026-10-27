@@ -6,7 +6,7 @@ const path=require('node:path');
 const crypto=require('node:crypto');
 const {execFileSync}=require('node:child_process');
 const root=path.resolve(__dirname,'../..');
-const rel='Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html';
+const rel='Science/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html';
 const url=new URL(rel,process.env.EDU_Q1_BASE_URL||'http://127.0.0.1:4187/').href;
 const out=path.join(root,'audit-output/science-teaching-packs-edu-q1');
 fs.mkdirSync(out,{recursive:true});

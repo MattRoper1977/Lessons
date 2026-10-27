@@ -178,11 +178,11 @@ filled in with an authored stand-in.
 
 | half | repo | path |
 |---|---|---|
-| labs 01–04 | Lessons | **`Science_Teesside/Build/v4_fieldops/`** |
+| labs 01–04 | Lessons | **`Science/Build/v4_fieldops/`** |
 | 00 Teacher Studio | `Matt-s-Apps-` | **`FieldOps_Teacher_Studio.html`** (repo root, matching the 36 flat `*_Studio.html`) |
 
 **The merged Lessons path, quoted so the VSL order can cite it rather than
-re-derive it: `Science_Teesside/Build/v4_fieldops/`.** It is a sibling of
+re-derive it: `Science/Build/v4_fieldops/`.** It is a sibling of
 `v3_40min`, at the same depth, which is why the NAV-1 href resolves identically.
 
 `tools/fieldops/split_transport.mjs` proves transport across it **both
@@ -246,7 +246,7 @@ saying otherwise would be overstating it.
 
 ## dcc23dc, stated precisely
 
-**This work touches zero files under `Science_Teesside/Build/v3_40min`** — the
+**This work touches zero files under `Science/Build/v3_40min`** — the
 hard stop is honoured, and `git show --stat --name-only HEAD` is where to check it.
 
 The tree there is **not** byte-identical to `dcc23dc`, and it was not before this

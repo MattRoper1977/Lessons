@@ -17,15 +17,15 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from title_slide import title_slide_heading, first_document_h1
 
 ROOT = Path(__file__).resolve().parents[2]
-W8A = ROOT / 'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W8A_Day_And_Night_Explore.html'
+W8A = ROOT / 'Science/Grow/W8-W13_2026-27/SCI_G_W8A_Day_And_Night_Explore.html'
 
 # The five W8 exemplars whose listed title read "Your task * 1 of 2" on main before this fix.
 EXEMPLARS = [
-    'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W8A_Day_And_Night_Explore.html',
-    'Science_Teesside/Grow/W8-W13_2026-27/SCI_G_W8B_Day_And_Night_Do.html',
-    'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L1_Enzyme_Action_Introduce.html',
-    'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L2_Amylase_pH_Core_Practical_Explore.html',
-    'Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W8L3_Amylase_Rate_And_Topic_1_Do.html',
+    'Science/Grow/W8-W13_2026-27/SCI_G_W8A_Day_And_Night_Explore.html',
+    'Science/Grow/W8-W13_2026-27/SCI_G_W8B_Day_And_Night_Do.html',
+    'Science/Launch/W8-W13_2026-27/SCI_L_W8L1_Enzyme_Action_Introduce.html',
+    'Science/Launch/W8-W13_2026-27/SCI_L_W8L2_Amylase_pH_Core_Practical_Explore.html',
+    'Science/Launch/W8-W13_2026-27/SCI_L_W8L3_Amylase_Rate_And_Topic_1_Do.html',
 ]
 
 DECK = ('<!doctype html><html lang="en-GB"><head><title>Doc title</title></head><body>'
@@ -102,7 +102,7 @@ def self_test() -> int:
           title_slide_heading(labelled) == 'Body Science Checkpoint')
     check('(15) R3: a real heading after a label still wins over the head <title>',
           title_slide_heading(labelled.replace('<h3>Learning objective</h3>', '<h2>Real deck title</h2>', 1)) == 'Real deck title')
-    w8b = ROOT / 'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html'
+    w8b = ROOT / 'Science/Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html'
     if w8b.is_file():
         check('(16) R3 on the real deck: SCI_B_W8B lists "Body Science Checkpoint"',
               title_slide_heading(w8b.read_text(encoding='utf-8', errors='replace')) == 'Body Science Checkpoint')

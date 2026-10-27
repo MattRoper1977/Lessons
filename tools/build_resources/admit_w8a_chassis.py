@@ -43,8 +43,8 @@ GATE_REL = 'tools/verify_cross_estate_unification.py'
 GATE = ROOT / GATE_REL
 EVIDENCE = ROOT / 'tools/catalogue/TERM_AND_STYLE_EVIDENCE.json'
 REVIEW_BASE = '48c2ecb9ab19f238cdbe5443196935a5c45f375b'   # main after #563 (R10 estate sweep), the D-1 branch point
-PREFIXES = ('Science_Teesside/',)
-LESSON = 'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html'
+PREFIXES = ('Science/',)
+LESSON = 'Science/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html'
 # The chassis census record moves with this transaction and had no admission anywhere: it was ADDED
 # by 03c46e53 and never modified since, and --diff-filter=MRD cannot see an addition, so this branch
 # is the first change the cross-estate boundary can see. Admitting it as a REVIEWED path is what the

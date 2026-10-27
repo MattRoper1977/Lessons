@@ -66,7 +66,7 @@ V1_FIXTURE = "_sownb/vb/evidence/a2r/fixtures/classic_v2_v1_base.html"
 V1_BYTES_COMMIT = "cdc14919efc819ed56b3c2cdd97a0c567fd96e79"
 FIXTURES = (
     ("v1", V1_FIXTURE),
-    ("v2", "Humanities_Teesside/BUILD_W1-W8_2026-27/BUILD_HUM_W3_Places_In_My_Community.html"),
+    ("v2", "Humanities/BUILD_W1-W8_2026-27/BUILD_HUM_W3_Places_In_My_Community.html"),
 )
 # A fixture that is a snapshot takes its minutes from the deck the bytes came from; its own
 # path has no history to walk. The minutes stay KEYED TO THE FIXTURE, as ruled.

@@ -17,7 +17,7 @@ from collections import defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SOW = ROOT / 'Humanities_Teesside/Teaching_Packs/HUM_00_SoW_and_Order'
+SOW = ROOT / 'Humanities/Teaching_Packs/HUM_00_SoW_and_Order'
 OUT = Path(__file__).resolve().parent
 import lxml.html as lh
 
@@ -100,7 +100,7 @@ def existing_surfaces():
     UNDERIVED rather than guessed."""
     files = subprocess.run(['git', 'ls-files'], cwd=ROOT, capture_output=True, text=True).stdout.split('\n')
     keep = [f for f in files if f.endswith('.html') and re.match(
-        r'^(Humanities_Teesside|Build|Grow|Launch|LAUNCH_Estate_v3)/', f)]
+        r'^(Humanities|Build|Grow|Launch|LAUNCH_Estate_v3)/', f)]
     rows = []
     for rel in keep:
         p = ROOT / rel

@@ -7,9 +7,9 @@ single self-contained file. This keeps that true without copy-paste drift: the
 canonical library lives in grow-anim/, and this script pushes it into every
 lesson.
 
-    python3 grow-anim/inject.py Science_Teesside/Grow/*.html
-    python3 grow-anim/inject.py --check Science_Teesside/Grow/*.html
-    python3 grow-anim/inject.py --no-polish Science_Teesside/Grow/*.html
+    python3 grow-anim/inject.py Science/Grow/*.html
+    python3 grow-anim/inject.py --check Science/Grow/*.html
+    python3 grow-anim/inject.py --no-polish Science/Grow/*.html
 
 The first run on a lesson INSTALLS the marker blocks (CSS before </head>, JS
 before </body>). Every run after that just refreshes what is between the

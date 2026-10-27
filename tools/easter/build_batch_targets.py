@@ -47,10 +47,10 @@ SUBJECT_ORDER = {"ASDAN": 0, "Science": 1, "Humanities": 2, "Art": 3}
 LANE_ORDER = {"BUILD": 0, "GROW": 1, "LAUNCH": 2}
 
 ROUTE = {
-    "Art": "Art_Teesside/{lane}_W1-W8_2026-27/{lane}_Art_W{week}_{slug}.html",
-    "Humanities": "Humanities_Teesside/{lane}_W1-W8_2026-27/{lane}_Humanities_W{week}_{slug}.html",
+    "Art": "Art/{lane}_W1-W8_2026-27/{lane}_Art_W{week}_{slug}.html",
+    "Humanities": "Humanities/{lane}_W1-W8_2026-27/{lane}_Humanities_W{week}_{slug}.html",
     "ASDAN": "{lane}_ASDAN/Autumn1_W1-W7_2026-27/{lane}_ASDAN_W{week}_{slug}.html",
-    "Science": "Science_Teesside/{Lane}/W1-W8_2026-27/SCI_{L}_W{week}_{slug}.html",
+    "Science": "Science/{Lane}/W1-W8_2026-27/SCI_{L}_W{week}_{slug}.html",
 }
 NO_NEW_CONTENT = re.compile(r"no new science content", re.I)
 

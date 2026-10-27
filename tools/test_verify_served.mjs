@@ -123,12 +123,12 @@ try {
   });
 
   const lessonRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-  const launchManifest = 'Science_Teesside/Launch/manifest.json';
+  const launchManifest = 'Science/Launch/manifest.json';
   const declaredLaunch = JSON.parse(fs.readFileSync(path.join(lessonRoot, launchManifest), 'utf8')).lessons;
   let selectedLaunch;
   await check('S1-M every real LAUNCH manifest member is in the composed serve set', () => {
     const actual = subjects().list.filter(entry => entry.source_manifest === launchManifest);
-    const expected = declaredLaunch.map(entry => `Science_Teesside/Launch/${entry.file}`);
+    const expected = declaredLaunch.map(entry => `Science/Launch/${entry.file}`);
     assert(expected.length > 0);
     assert.equal(actual.length, expected.length);
     assert.deepEqual(new Set(actual.map(entry => entry.name)), new Set(expected));
@@ -147,7 +147,7 @@ try {
     fs.writeFileSync(declarationFile, JSON.stringify({ lessons: [...declaredLaunch, extra] }));
     const derived = launchSubjects(declarationRoot, 'https://madebymatt.uk/Lessons');
     assert.equal(derived.length, declaredLaunch.length + 1);
-    assert.equal(derived.at(-1).url, 'https://madebymatt.uk/Lessons/Science_Teesside/Launch/future%20lesson%20%26%20(class)/new%20lesson.html');
+    assert.equal(derived.at(-1).url, 'https://madebymatt.uk/Lessons/Science/Launch/future%20lesson%20%26%20(class)/new%20lesson.html');
   });
   await check('S1-M empty, malformed, duplicate and escaping LAUNCH declarations fail closed', () => {
     const invalid = [null, {}, { lessons: [] }, { lessons: [null] },

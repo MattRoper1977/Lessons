@@ -12,7 +12,7 @@ import shutil
 import zipfile
 
 HERE = Path(__file__).resolve().parent
-DEST = Path('Humanities_Teesside/David_Cover_Autumn1_W3-W7')
+DEST = Path('Humanities/David_Cover_Autumn1_W3-W7')
 PATHWAYS = ('BUILD', 'GROW', 'LAUNCH')
 NATIVE_ROOT = 'David_Humanities_RE_OneDrive_Pack/'
 PHASES = ['Arrive', 'Read the source', 'Watch a model', 'Choose', 'Check', 'Your evidence', 'Improve', 'Reflect']
@@ -98,8 +98,8 @@ def render(c, lessons, mapping):
     paths=native_paths(c)
     peers=[x for x in lessons if x['lane']==c['lane'] and x['subject']==c['subject']]
     adjacent=''.join(f'<a href="{H(x["id"])}.html"'+(' aria-current="page"' if x['id']==c['id'] else '')+f'>Week {x["week"]}</a>' for x in peers)
-    route_links=''.join('<li><a href="../../'+H(item['path'].removeprefix('Humanities_Teesside/'))+'">'+('Full Humanities lesson' if '_HUM_' in item['path'] else 'Full RE lesson')+'</a></li>' for item in mapping['existing_routes'])
-    # Resource page -> parent Humanities_Teesside -> lane directory.
+    route_links=''.join('<li><a href="../../'+H(item['path'].removeprefix('Humanities/'))+'">'+('Full Humanities lesson' if '_HUM_' in item['path'] else 'Full RE lesson')+'</a></li>' for item in mapping['existing_routes'])
+    # Resource page -> parent Humanities -> lane directory.
     route_links=route_links.replace('href="../../','href="../')
     re_board=''
     if c.get('re_source_lines'):

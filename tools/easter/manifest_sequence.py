@@ -329,7 +329,7 @@ def controls() -> list[dict]:
 
     # The round trip, on every real manifest of this schema. A file that does
     # NOT round-trip is not a failure of this control -- it is the case the
-    # control exists to prove is handled. Science_Teesside/Launch/W14-W15 keeps
+    # control exists to prove is handled. Science/Launch/W14-W15 keeps
     # its `cadence` array on one hand-formatted line, which no json.dumps with
     # indentation reproduces, and this tool must refuse it rather than reflow
     # somebody else's file. Both halves are asserted.
@@ -376,10 +376,10 @@ def controls() -> list[dict]:
     # Constant-key detection: a key that varies must not be copied.
     # The false-refusal this tool shipped once: a deck whose week really is the
     # template row's week must not read as unfilled.
-    r0, f0 = deck_row(next(ROOT.glob("Humanities_Teesside/BUILD_W1-W8_2026-27/BUILD_Humanities_W1_*.html")),
+    r0, f0 = deck_row(next(ROOT.glob("Humanities/BUILD_W1-W8_2026-27/BUILD_Humanities_W1_*.html")),
                       {"id": "", "week": 1, "kind": "HUM", "file": "", "title": "",
                        "outcome": "", "cell": "", "minutes": 40, "weDoType": "", "term": ""}) \
-        if any(ROOT.glob("Humanities_Teesside/BUILD_W1-W8_2026-27/BUILD_Humanities_W1_*.html")) else ({}, set())
+        if any(ROOT.glob("Humanities/BUILD_W1-W8_2026-27/BUILD_Humanities_W1_*.html")) else ({}, set())
     rec("a-value-that-matches-the-template-is-still-filled",
         "a deck whose week is 1, like the template's, is not reported as unfilled",
         True, "week" in f0 and "weDoType" in f0)
@@ -389,7 +389,7 @@ def controls() -> list[dict]:
     # from the evidence file and calls a deck that exists STALE. Both halves
     # asserted: the row goes in with a filename and comes out with a path, and
     # the path is one that resolves from the repository root.
-    probe = {"pack": "Humanities_Teesside/BUILD_W1-W8_2026-27",
+    probe = {"pack": "Humanities/BUILD_W1-W8_2026-27",
              "added": [{"file": "BUILD_Humanities_W1_Pick_a_card_and_say_why_you_picked_it.html"}],
              "refused": [{"file": "BUILD_HUM_W2_A_Special_Book_A_Special_Place.html",
                           "why": "probe"}],

@@ -66,7 +66,7 @@ def _science_cells(term):
     TERM_LABEL = {'Aut1': 'Autumn 1', 'Aut2': 'Autumn 2', 'Spr1': 'Spring 1', 'Spr2': 'Spring 2', 'Sum1': 'Summer 1', 'Sum2': 'Summer 2'}
     hub = J('assets/catalogue/science-hub-bindings.json')
     kinds = {}
-    for mf in sorted(glob.glob(P('Science_Teesside/**/manifest*.json'), recursive=True)):
+    for mf in sorted(glob.glob(P('Science/**/manifest*.json'), recursive=True)):
         try: md = json.load(open(mf, encoding='utf-8'))
         except ValueError: continue
         rws = md if isinstance(md, list) else md.get('lessons', md.get('sequence', []))
@@ -303,9 +303,9 @@ def add_row(row):
 # ------------------------------------------------------------------ subject / family conventions (measured from catalogued siblings)
 def subject_family(path):
     top = path.split('/')[0]
-    if top == 'Science_Teesside': return 'Science · Teesside', 'Science Teesside'
-    if top == 'Humanities_Teesside': return 'Humanities', 'Humanities Teesside'
-    if top == 'Art_Teesside': return 'Art · Teesside Studio Suite', 'Art Teesside'
+    if top == 'Science': return 'Science · Teesside', 'Science Teesside'
+    if top == 'Humanities': return 'Humanities', 'Humanities Teesside'
+    if top == 'Art': return 'Art · Teesside Studio Suite', 'Art Teesside'
     if top == 'BUILD_ASDAN': return 'BUILD Vocational & PfA', 'BUILD ASDAN · FoodWise' if '/FoodWise/' in path else 'BUILD ASDAN · Autumn 2'
     if top == 'GROW_ASDAN': return 'GROW Vocational & PfA', 'GROW ASDAN · Autumn 2'
     if top == 'LAUNCH_ASDAN': return 'LAUNCH Vocational & PfA', 'LAUNCH ASDAN · Personal Effectiveness'
@@ -388,7 +388,7 @@ for r in land:
         add_row({"id": "classic-33-" + pid.replace('_', '-'), "subject": s, "type": "lesson", "title": title_of(f), "file": f, "family": fam, "added": a.run_date,
                  "desc": "Classic-chassis lesson from the reviewed 33-pack (%s · %s), served beside the existing lesson for the same week; the existing lesson keeps its standing." % (p['pathway'], p['period']),
                  "keywords": ["classic chassis", "33-pack", p['pathway'].lower(), p['subject'].lower(), p['period'].lower()], "year": "2026-27"})
-        if f.startswith('Science_Teesside/'):
+        if f.startswith('Science/'):
             science_new.append({'path': f, 'classificationEvidence': [{'method': 'own current title-slide SoW declaration', 'source': f, 'quote': title_slide(f)[:300]}]})
     if r['verdict'].startswith('ADD-BESIDE('):
         refs, ex = same_cell_existing(pid); why = r['verdict'][len('ADD-BESIDE('):-1]
@@ -402,7 +402,7 @@ W('tools/catalogue/SHELF_SELECTION.json', sel)
 wb = J('tools/catalogue/SCIENCE_WEEK_BINDINGS.json'); ent = wb['entries']
 for r in land:
     f = r['target']
-    if not f.startswith('Science_Teesside/'): continue
+    if not f.startswith('Science/'): continue
     if r['verdict'] == 'REPLACE':
         e = ent[f]; e['sourceSha256'] = sha(f); e['reviewed'] = {'date': a.run_date, 'reason': 'RX3 re-cut (REPLACE) from the reviewed 33-pack; the calendar binding is unchanged'}
     else:

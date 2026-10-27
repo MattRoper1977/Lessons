@@ -4,11 +4,11 @@ Inputs, every one a pinned record or a pack manifest:
   assets/catalogue/science-shelf.json              the 180 shelf rows (card population)
   tools/catalogue/SCIENCE_WEEK_BINDINGS.json       pathway, term, week per route (bound from the spine)
   tools/catalogue/SCIENCE_CHASSIS_CENSUS.json      PASS B: which routes carry the exemplar chassis
-  Science_Teesside/Teaching_Packs/**               each pathway's SHA256SUMS.txt is the ONLY source of
+  Science/Teaching_Packs/**               each pathway's SHA256SUMS.txt is the ONLY source of
                                                    download links; DOWNLOADS_MANIFEST_HTML.json names weeks
   every current deck's own lesson-config           its part (kind: Explore / Do) -- never a filename
 Outputs:
-  Science_Teesside/index.html
+  Science/index.html
   assets/catalogue/science-hub-bindings.json       the derivation: population, families, slots (in
                                                    rendered order), earlier counts, packs
 "current" = THE SERVED LESSON FOR EACH WEEK (ORDER SCI-COMPLETE, ruling of 2026-09-22 on
@@ -39,7 +39,7 @@ ROOT = Path(__file__).resolve().parents[2]
 DATA = json.loads((ROOT / 'assets/catalogue/science-shelf.json').read_text())
 WEEKS = json.loads((ROOT / 'tools/catalogue/SCIENCE_WEEK_BINDINGS.json').read_text())['entries']
 CENSUS = json.loads((ROOT / 'tools/catalogue/SCIENCE_CHASSIS_CENSUS.json').read_text())
-PACKS = ROOT / 'Science_Teesside/Teaching_Packs'
+PACKS = ROOT / 'Science/Teaching_Packs'
 DOWNLOADS = json.loads((ROOT / 'assets/catalogue/science-download-bindings.json').read_text())
 E = H.escape
 TERM_LABEL = DATA['terms']
@@ -109,7 +109,7 @@ def generation(path: str) -> str:
     (the pathway's own folder). Read off the folder each generation was filed in.
 
     'landed' (LAND-A2, rulings R1/R3, 2026-09-25): a lesson filed in its own folder, named after the
-    lesson, inside a dated term folder -- Science_Teesside/<P>/Autumn_2_2026-27/<stem>/<stem>.html. It is
+    lesson, inside a dated term folder -- Science/<P>/Autumn_2_2026-27/<stem>/<stem>.html. It is
     the newest generation: the landing ruled it the recommended lesson of its week, so it heads the row
     and the hub note ("each week lists its newest lessons first") stays true. Measured before this rule:
     no shelf route sat in a folder named after itself, so no existing order moves."""
@@ -225,7 +225,7 @@ def manifest_members(pack: Path) -> list[str]:
 
 def pack_cards() -> list[dict]:
     dm = json.loads((PACKS / 'DOWNLOADS_MANIFEST_HTML.json').read_text())['pathways']
-    rel = lambda p: str(p.relative_to(ROOT / 'Science_Teesside'))
+    rel = lambda p: str(p.relative_to(ROOT / 'Science'))
     cards = []
     for pathway in S.PATHWAYS:
         base = PACKS / pathway
@@ -266,7 +266,7 @@ def pack_cards() -> list[dict]:
 lessons = strand_rows()
 cards = pack_cards()
 D = S.derive(DATA['lessons'], lessons, [], {}, FAMILIES, TERM_LABEL)
-errors = S.c1_errors(D) + S.c2_errors(D, FAMILIES) + S.c3_errors(ROOT / 'Science_Teesside', cards)
+errors = S.c1_errors(D) + S.c2_errors(D, FAMILIES) + S.c3_errors(ROOT / 'Science', cards)
 
 
 def c5_errors(d: dict, conforming: set, older: dict[str, str], rows: list[dict]) -> list[str]:
@@ -288,10 +288,10 @@ def c5_errors(d: dict, conforming: set, older: dict[str, str], rows: list[dict])
 
 errors += c5_errors(D, CONFORMING, OLDER, lessons)
 href_of = lambda path: '../' + path
-pack_href = lambda path: path.removeprefix('Science_Teesside/')
+pack_href = lambda path: path.removeprefix('Science/')
 blurb, start_hrefs = {}, {}
 for pw in S.PATHWAYS:
-    sh = ROOT / 'Science_Teesside' / pw.capitalize() / 'START_HERE.html'
+    sh = ROOT / 'Science' / pw.capitalize() / 'START_HERE.html'
     assert sh.is_file(), f'no START_HERE page for {pw}'
     blurb[pw] = h1_of(sh)
     start_hrefs[pw] = f'{pw.capitalize()}/START_HERE.html'
@@ -499,9 +499,9 @@ def self_test() -> int:
     week = lambda pw, t, n: [L for L in lessons if L['pathway'] == pw and L['term'] == t and L['week'] == n]
     old_order = lambda rows: sorted(rows, key=lambda L: L.get('part') or '')   # hub_sections' default before the hook
     g1, g2 = week('GROW', 'Aut2', 1), week('GROW', 'Aut2', 2)
-    dated = 'Science_Teesside/Grow/W8-W13_2026-27/'
-    planted_slots = {('GROW', 'Aut2', 1): [dated + 'X_Explore.html', 'Science_Teesside/Grow/v3_40min/X_v3.html']}
-    two_dated = {('GROW', 'Aut2', 1): [dated + 'X.html', 'Science_Teesside/Grow/W14-W20_2026-27/Y.html']}
+    dated = 'Science/Grow/W8-W13_2026-27/'
+    planted_slots = {('GROW', 'Aut2', 1): [dated + 'X_Explore.html', 'Science/Grow/v3_40min/X_v3.html']}
+    two_dated = {('GROW', 'Aut2', 1): [dated + 'X.html', 'Science/Grow/W14-W20_2026-27/Y.html']}
     classic_first = ('<div class="week-row" data-week="1"><article data-lesson-path="' + g1[0]['path'] + '"></article>'
                      + ''.join(f'<article data-lesson-path="{L["path"]}"></article>' for L in g1 if not CLASSIC[L['path']])
                      + '</div>')
@@ -538,7 +538,7 @@ def self_test() -> int:
         ('RED PROOF: C10 reds an older copy rendered beside a newer generation, read from its folder alone',
          any(e.startswith('C10 ') for e in c9_errors(
              '<div class="week-row"><article data-lesson-path="' + dated + 'X_Explore.html"></article>'
-             '<article data-lesson-path="Science_Teesside/Grow/v3_40min/X_v3.html"></article></div>', {}, set(), {}))),
+             '<article data-lesson-path="Science/Grow/v3_40min/X_v3.html"></article></div>', {}, set(), {}))),
         ('the page as built passes every control, C1-C10: 0 errors', not errors),
         ('RED PROOF: C11 reds an archived member linked at its unpublished path instead of its download',
          bool(ARCHIVE_FIRST) and any('unpublished path' in e for e in c11_errors(
@@ -549,13 +549,13 @@ def self_test() -> int:
          bool(ARCHIVE_FIRST) and any('no pack card lists' in e for e in c11_errors(
              packs_html, [dict(c, links=[l for l in c['links'] if str((PACKS.parent / l[1]).relative_to(ROOT)) != ARCHIVE_FIRST]) for c in cards]))),
         ('RED PROOF: an older copy beside a dated deck leaves current',
-         older_copies(planted_slots) == {'Science_Teesside/Grow/v3_40min/X_v3.html': dated + 'X_Explore.html'}),
+         older_copies(planted_slots) == {'Science/Grow/v3_40min/X_v3.html': dated + 'X_Explore.html'}),
         ('an older copy that alone serves its week stays current (no week loses its lesson)',
-         older_copies({('GROW', 'Aut2', 1): ['Science_Teesside/Grow/v3_40min/X_v3.html']}) == {}),
+         older_copies({('GROW', 'Aut2', 1): ['Science/Grow/v3_40min/X_v3.html']}) == {}),
         ('RED PROOF: C5 reds an older copy still rendered current',
-         any('older copy still rendered current' in e for e in c5_errors({'current': {'Science_Teesside/Grow/v3_40min/X_v3.html'}}, set(), {'Science_Teesside/Grow/v3_40min/X_v3.html': 'x'}, []))),
+         any('older copy still rendered current' in e for e in c5_errors({'current': {'Science/Grow/v3_40min/X_v3.html'}}, set(), {'Science/Grow/v3_40min/X_v3.html': 'x'}, []))),
         ('RED PROOF: C9 reds a week served by two dated folders',
-         any('two dated folders' in e for e in c9_errors('', two_dated, {'Science_Teesside/Grow/W14-W20_2026-27/Y.html'}, {}))),
+         any('two dated folders' in e for e in c9_errors('', two_dated, {'Science/Grow/W14-W20_2026-27/Y.html'}, {}))),
         ('RED PROOF: C9 reds a week with no current lesson',
          any('no current lesson' in e for e in c9_errors('', planted_slots, set(), {}))),
         ('every v3_40min copy on the shelf leaves current (measured 35)',
@@ -565,13 +565,13 @@ def self_test() -> int:
         ('RED PROOF: C9 still reds an undeclared Classic beside a deck of its own generation',
          any('file named Classic' in e for e in c9_errors('', {('BUILD', 'Aut2', 5): [dated + 'X_Classic.html', dated + 'X_Explore.html']}, {dated + 'X_Explore.html'}, {}))),
         ('an undeclared Classic beside only a newer (landed) generation is not red, and the landed lesson heads it',
-         not any('file named Classic' in e for e in c9_errors('', {('BUILD', 'Aut2', 5): [dated + 'X_Classic.html', 'Science_Teesside/Build/Autumn_2_2026-27/Y/Y.html']}, {'Science_Teesside/Build/Autumn_2_2026-27/Y/Y.html'}, {}))
-         and generation('Science_Teesside/Build/Autumn_2_2026-27/Y/Y.html') == 'landed'),
+         not any('file named Classic' in e for e in c9_errors('', {('BUILD', 'Aut2', 5): [dated + 'X_Classic.html', 'Science/Build/Autumn_2_2026-27/Y/Y.html']}, {'Science/Build/Autumn_2_2026-27/Y/Y.html'}, {}))
+         and generation('Science/Build/Autumn_2_2026-27/Y/Y.html') == 'landed'),
         ('DY-4: a part (<folder>_P2, _L3) in its own lesson folder in a dated term folder is landed; outside one it is not',
-         generation('Science_Teesside/Build/Autumn_1_2026-27/X_W08/X_W08_P2.html') == 'landed'
-         and generation('Science_Teesside/Launch/Autumn_1_2026-27/X_W08/X_W08_L3.html') == 'landed'
-         and generation('Science_Teesside/Build/X_W08/X_W08_P2.html') != 'landed'
-         and generation('Science_Teesside/Build/Autumn_1_2026-27/X_W08/Y_W08_P2.html') != 'landed'),
+         generation('Science/Build/Autumn_1_2026-27/X_W08/X_W08_P2.html') == 'landed'
+         and generation('Science/Launch/Autumn_1_2026-27/X_W08/X_W08_L3.html') == 'landed'
+         and generation('Science/Build/X_W08/X_W08_P2.html') != 'landed'
+         and generation('Science/Build/Autumn_1_2026-27/X_W08/Y_W08_P2.html') != 'landed'),
         ('style and badge are not order keys: reversing every style leaves the order unchanged',
          [L['path'] for L in within_week(g1)] == [L['path'] for L in within_week([{**L, 'style': 'x' + L.get('style', ''), 'badges': ''} for L in reversed(g1)])]),
     ]
@@ -628,7 +628,7 @@ output = '''<!doctype html>
 <script src="../assets/catalogue/science-shelf.js"></script><script defer src="../assets/mbm-theme.js"></script><script defer src="../assets/mbm-platform.js"></script><script defer src="/hud.js"></script>
 </body></html>
 '''
-(ROOT / 'Science_Teesside/index.html').write_text(output)
+(ROOT / 'Science/index.html').write_text(output)
 bindings = {
     'schema': 'science-hub-bindings/1', 'order': 'SCI-COMPLETE PASS F',
     'censusSha256': hashlib.sha256((ROOT / 'tools/catalogue/SCIENCE_CHASSIS_CENSUS.json').read_bytes()).hexdigest(),

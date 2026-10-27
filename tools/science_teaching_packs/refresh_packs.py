@@ -14,7 +14,7 @@ import subprocess
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[2]
-PACKS = ROOT / 'Science_Teesside/Teaching_Packs'
+PACKS = ROOT / 'Science/Teaching_Packs'
 REVISION = '2026-09-06'
 NATIVE = {'.pptx', '.docx', '.pdf', '.xlsx', '.txt'}
 
@@ -91,7 +91,7 @@ def create_launch(slides, documents):
                 target.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copyfile(path, target)
     lessons = []
-    sources = ROOT / 'Science_Teesside/Launch'
+    sources = ROOT / 'Science/Launch'
     for week in range(3, 8):
         for part in range(1, 4):
             code = f'W{week}L{part}'

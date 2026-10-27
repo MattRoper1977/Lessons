@@ -9,7 +9,7 @@ const path = require('node:path');
 const http = require('node:http');
 const {pathToFileURL} = require('node:url');
 const {chromium} = require('playwright');
-const source = 'Science_Teesside/Grow/SCI_G_W3_Friction.html';
+const source = 'Science/Grow/SCI_G_W3_Friction.html';
 
 async function run(root, out) {
   fs.mkdirSync(out, {recursive:true});

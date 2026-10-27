@@ -7,7 +7,7 @@ Art has 71 plans in EASTER_TARGETS.json, 19 of them cover-taught, and no
 gate-readable deck of its own. Every Art deck in the estate is one of two
 shapes, and a control below asserts it rather than assuming it:
 
-  * an 11-stage classic deck with no `id="lesson-config"` (Art_Teesside/*,
+  * an 11-stage classic deck with no `id="lesson-config"` (Art/*,
     *_Estate_v3/Art_Teesside/*), so the week is not readable and g19/g16 have
     nothing to bind to;
   * a 9-stage OUTSTANDING_V3 Spring2 deck, which has per-stage data-min but
@@ -379,7 +379,7 @@ def controls(reference_paths: list[str] | None = None) -> list[dict]:
     # The durable claim is the one underneath it: every gate-readable Art deck
     # in this estate is one THIS campaign authored, and so still no PRE-EXISTING
     # Art deck could have served as the donor.
-    art = sorted(ROOT.glob("Art_Teesside/**/*.html")) + \
+    art = sorted(ROOT.glob("Art/**/*.html")) + \
         sorted(ROOT.glob("*_Estate_v3/Art_Teesside/*.html"))
     readable = [p for p in art if 'id="lesson-config"'
                 in p.read_text(encoding="utf-8", errors="replace")]
@@ -406,7 +406,7 @@ def controls(reference_paths: list[str] | None = None) -> list[dict]:
     # no future edit can exclude them again without this control saying so, and
     # so that whatever reason IS given for them has to be a fact about the file.
     eighteen = sorted(_rel(q) for q in ROOT.glob(
-        "Art_Teesside/*/Spring2_2026-27/*_OUTSTANDING_V3.html"))
+        "Art/*/Spring2_2026-27/*_OUTSTANDING_V3.html"))
     bad = []
     for relp in eighteen:
         raw = (ROOT / relp).read_text(encoding="utf-8", errors="replace")

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """ORDER HUM-T · declare this batch's transplanted decks as a GLV3 replacement transaction.
 
-_glv3/tools/verify_change_boundary.py protects the whole `Humanities_Teesside`
+_glv3/tools/verify_change_boundary.py protects the whole `Humanities`
 prefix. A modification to a lesson deck matches none of its admitted cases and
 falls through to the fence:
 
@@ -50,10 +50,10 @@ ROOT = Path(__file__).resolve().parents[2]
 BOUNDARY = ROOT / "_glv3/tools/verify_change_boundary.py"
 GATE = ROOT / "tools/verify_cross_estate_unification.py"
 CENSUS = ROOT / "tools/hum/evidence_limb_census.py"
-PREFIX = "Humanities_Teesside/"
+PREFIX = "Humanities/"
 
 # --- SCIENCE LANDABILITY LIMB (Matt Roper, 2026-09-22, ruling on STOP-B2) -------------------
-# _glv3 protects Science_Teesside exactly as it protects Humanities_Teesside, so a transplanted
+# _glv3 protects Science exactly as it protects Humanities, so a transplanted
 # Science deck needs a declared transaction too -- but the Humanities landable census measures the
 # two HUMANITIES digest fences and knows no Science route, so it could only ever answer "no member
 # to declare". The ruled Science limb, in the Q1 shape:
@@ -66,7 +66,7 @@ PREFIX = "Humanities_Teesside/"
 # reprove_bindings.py already accepts as a deck stating its own binding -- the week key token
 # (Spr1-W3) or the label (Spring 1 - Week 3). The quote limb is an evidence sentence rather than a
 # term-week projection, so it is not one of the two here.
-SCIENCE_PREFIX = "Science_Teesside/"
+SCIENCE_PREFIX = "Science/"
 BINDINGS = ROOT / "tools/catalogue/SCIENCE_WEEK_BINDINGS.json"
 BINDINGS_PIN_KEY = "tools/catalogue/SCIENCE_WEEK_BINDINGS.json"
 # STOP-B3 (Matt Roper, 2026-09-22). The limb as first ruled accepted two forms of projection,
@@ -237,9 +237,9 @@ def judge_member(rel, status, allowed, pinned, digest):
 # undoes the recorded insertions and demands the original back -- passes. Anything else is
 # refused by name. The packs' own SHA256SUMS.txt and CHANGELOG.txt ride in the same one declared
 # transaction, derived from the page members, as every landed Science transaction already does.
-SUMMER1_TREES = ("Humanities_Teesside/BUILD_W27-W39_2026-27/",
-                 "Humanities_Teesside/GROW_W27-W39_2026-27/",
-                 "Humanities_Teesside/LAUNCH_W27-W39_2026-27/")
+SUMMER1_TREES = ("Humanities/BUILD_W27-W39_2026-27/",
+                 "Humanities/GROW_W27-W39_2026-27/",
+                 "Humanities/LAUNCH_W27-W39_2026-27/")
 SUMMER1_RECORDS = ("SHA256SUMS.txt", "CHANGELOG.txt")
 _TABLE_ROW = re.compile(
     r"^\s+(\S+\.html)\s+([0-9a-f]{12}) -> ([0-9a-f]{12})\s+([\d,]+) -> \s*([\d,]+)\s*$")
@@ -674,14 +674,14 @@ def science_limb(statuses: dict, blob_reader, deck_limb=None, root=None) -> tupl
 # this limb judges its own; any other change to that path stays with the earlier transaction.
 DLG1_FIXER = "tools/hum/fix_dialog_audience.py"
 DLG1_PAIRS = "tools/hum/DLG1_PAIRS.json"
-DLG1_FIXER_SHA256 = "2670c6df1a40958c39cbf81e71de138c8a5fb1c5c02271fc13f12323842a6523"
-DLG1_PAIRS_SHA256 = "3e4cbb64a3b5e1b39549cd3da57845202c4fd6575aa738c60effd3df0ff0744d"
+DLG1_FIXER_SHA256 = "ebe88f05eb8cc8ee4ff7214e720e33ac1c4f2bdfcdc1d8f05876b7a868222f36"
+DLG1_PAIRS_SHA256 = "dd4c854af722e969c4261e748942a20f8f4db8ade44649538df0b0e16f8a1618"
 DLG1_PREFIXES = (PREFIX, SCIENCE_PREFIX)
 DLG1_SUMS = ("SHA256SUMS.txt", "CHECKSUMS.sha256")
 # A JSON manifest is named, with the folder its keys are relative to; never matched by pattern.
 DLG1_JSON_MANIFESTS = {
-    "Humanities_Teesside/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/MANIFEST.json":
-        "Humanities_Teesside/Teaching_Packs/",
+    "Humanities/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/MANIFEST.json":
+        "Humanities/Teaching_Packs/",
 }
 _DLG1_ROW = {
     "sums": re.compile(r"^(?P<digest>[0-9a-f]{64})  (?P<name>[^\r\n]+?)\r?\n?$"),
@@ -1088,29 +1088,29 @@ def self_test() -> int:
         print(f'  [{"ok" if cond else "FAIL"}] {name}')
         bad += 0 if cond else 1
 
-    allowed = {"Humanities_Teesside/a.html"}
+    allowed = {"Humanities/a.html"}
     d = "a" * 64
     check("a landable, pinned modification is declared",
-          judge_member("Humanities_Teesside/a.html", "M", allowed, d, d) is None)
+          judge_member("Humanities/a.html", "M", allowed, d, d) is None)
     check("a deck outside the landable set is refused",
           "outside the landable set" in
-          judge_member("Humanities_Teesside/z.html", "M", allowed, d, d))
+          judge_member("Humanities/z.html", "M", allowed, d, d))
     check("an addition is refused, the transaction replaces and never adds",
           "not a modification" in
-          judge_member("Humanities_Teesside/a.html", "A", allowed, d, d))
+          judge_member("Humanities/a.html", "A", allowed, d, d))
     check("a deletion is refused",
           "not a modification" in
-          judge_member("Humanities_Teesside/a.html", "D", allowed, d, d))
+          judge_member("Humanities/a.html", "D", allowed, d, d))
     check("an unpinned deck is refused",
           "no CATALOGUE_PINS admission" in
-          judge_member("Humanities_Teesside/a.html", "M", allowed, None, d))
+          judge_member("Humanities/a.html", "M", allowed, None, d))
     check("a pin disagreeing with the bytes is refused",
           "disagrees with the bytes" in
-          judge_member("Humanities_Teesside/a.html", "M", allowed, "b" * 64, d))
+          judge_member("Humanities/a.html", "M", allowed, "b" * 64, d))
     check("the slug is stable and file-safe", slug("HUM-T batch 1 (BUILD)") == "HUM_T_BATCH_1_BUILD")
 
     # --- the ruled Science limb, with the three red proofs the ruling names
-    rel = "Science_Teesside/Grow/W18-W26_2026-27/SCI_G_W18A_The_Cold_Case.html"
+    rel = "Science/Grow/W18-W26_2026-27/SCI_G_W18A_The_Cold_Case.html"
     entry = {"weeks": [{"key": "Spr1\u00b7W3", "term": "Spr1", "weekWithinTerm": 3,
                         "label": "Spring 1 \u00b7 Week 3"}]}
     token_text = "... the cold case Spr1\u00b7W3 lesson ..."
@@ -1157,7 +1157,7 @@ def self_test() -> int:
                                          "label": "Spring 1 \u00b7 Week 4"}]}, True, token_text) is not None)
     # STOP-R2 option (a): the explicit-tags limb, with the refusals the ruling implies.
     T = _tagger()
-    page = "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W03/Sources_and_checks.html"
+    page = "Humanities/GROW_W27-W39_2026-27/GROW/Summer_1/W03/Sources_and_checks.html"
     implied = (b'<!doctype html><html lang="en-GB"><meta charset="utf-8">'
                b'<title>Sources</title><style>p{}</style><h2>Where this came from</h2>'
                b'<p>Ordnance Survey.</p></html>')
@@ -1166,7 +1166,7 @@ def self_test() -> int:
           judge_explicit_tags(page, implied, marked) is None)
     check("RED PROOF (outside the fifty): a page outside the Summer 1 trees is refused",
           "not a Summer 1 pathway page" in
-          judge_explicit_tags("Humanities_Teesside/GROW_W1-W8_2026-27/x.html", implied, marked))
+          judge_explicit_tags("Humanities/GROW_W1-W8_2026-27/x.html", implied, marked))
     check("RED PROOF (already explicit): a page that wrote its tags down is refused",
           "already wrote head and body down" in judge_explicit_tags(page, marked, marked))
     check("RED PROOF (content edited): a mark-up that moves a byte is refused",
@@ -1179,7 +1179,7 @@ def self_test() -> int:
           "refuses this page" in judge_explicit_tags(page, b"<h2>bare</h2>", b"<h2>bare</h2>"))
 
     # The pack record clause, derived from the page members.
-    tree = "Humanities_Teesside/GROW_W27-W39_2026-27/"
+    tree = "Humanities/GROW_W27-W39_2026-27/"
     rel = "GROW/Summer_1/W03/Sources_and_checks.html"
     members = {rel: {"before": implied, "after": marked}}
     d0, d1 = hashlib.sha256(implied).hexdigest(), hashlib.sha256(marked).hexdigest()
@@ -1243,7 +1243,7 @@ def self_test() -> int:
                                      sums_after.replace(d_log.encode(), b"a" * 64), members, disk))
     check("RED PROOF (a record outside the trees): another pack's record is refused",
           "not a Summer 1 pathway record" in
-          judge_explicit_tags_record("Humanities_Teesside/GROW_W1-W8_2026-27/SHA256SUMS.txt",
+          judge_explicit_tags_record("Humanities/GROW_W1-W8_2026-27/SHA256SUMS.txt",
                                      sums_before, sums_after, members, disk))
     check("RED PROOF (another file in the pack root): only the two records are members",
           "only a pack's own" in
@@ -1253,7 +1253,7 @@ def self_test() -> int:
           judge_explicit_tags_record(tree + "CHANGELOG.txt", log_before, log_after, {}, disk))
     # RULING 2026-09-23 §4: the responsive limb, with the refusals its shape implies.
     R = _responsive()
-    rpage = "Humanities_Teesside/GROW_W27-W39_2026-27/GROW/Summer_1/W03/GROW_SU1_W03_Pupil_Resources.html"
+    rpage = "Humanities/GROW_W27-W39_2026-27/GROW/Summer_1/W03/GROW_SU1_W03_Pupil_Resources.html"
     plain = (b'<!doctype html><html lang="en-GB"><head><meta charset="utf-8">'
              b'<title>Pupil resources</title><style>body{max-width:180mm}</style></head>'
              b'<body><h1>Sheet</h1><table><tr><td>x</td></tr></table></body></html>')
@@ -1262,7 +1262,7 @@ def self_test() -> int:
           judge_responsive(rpage, plain, served) is None)
     check("RED PROOF (outside the trees): a page outside the Summer 1 trees is refused",
           "not a Summer 1 pathway page" in
-          judge_responsive("Humanities_Teesside/GROW_W1-W8_2026-27/x.html", plain, served))
+          judge_responsive("Humanities/GROW_W1-W8_2026-27/x.html", plain, served))
     check("RED PROOF (already responsive): a page that already carries the block is refused",
           "already carry the responsive furniture" in judge_responsive(rpage, served, served))
     check("RED PROOF (content edited beside correct furniture): a smuggled edit is refused",
@@ -1302,30 +1302,30 @@ def self_test() -> int:
     recall = (b'<section class="slide"><p>BUILD \xc2\xb7 Science \xc2\xb7 Week 4A</p></section>'
               b'<section class="slide"><p>Retrieve the actual previous lesson: Aut1\xc2\xb7W3</p></section>')
     check("CLAIM: a recall line on a later stage is not the deck's claim, so form (iv) lands it",
-          judge_science("Science_Teesside/B/x.html", row4, True, title_stage_text(recall)) is None)
+          judge_science("Science/B/x.html", row4, True, title_stage_text(recall)) is None)
     wrong = (b'<section class="slide"><p>BUILD \xc2\xb7 Science \xc2\xb7 Aut1\xc2\xb7W3</p></section>'
              b'<section class="slide"><p>body</p></section>')
     check("CLAIM RED PROOF: a title stage claiming the wrong week still refuses",
-          "does not cover" in (judge_science("Science_Teesside/B/x.html", row4, True, title_stage_text(wrong)) or ""))
+          "does not cover" in (judge_science("Science/B/x.html", row4, True, title_stage_text(wrong)) or ""))
     check("CLAIM RED PROOF: the same wrong week read over the WHOLE deck would have refused the recall deck",
-          "does not cover" in (judge_science("Science_Teesside/B/x.html", row4, True, flat_text(recall)) or ""))
-    w16b = "Science_Teesside/Grow/W15-W20_2026-27/SCI_G_W16B_Getting_The_Solid_Back_Do.html"
+          "does not cover" in (judge_science("Science/B/x.html", row4, True, flat_text(recall)) or ""))
+    w16b = "Science/Grow/W15-W20_2026-27/SCI_G_W16B_Getting_The_Solid_Back_Do.html"
     check("W16B RED PROOF, real tree: a title-stage week the row does not bind refuses, although the deck's own cell covers the row",
           "title stage states Spr1\u00b7W16" in science_allowed([w16b])[1].get(w16b, ""))
     row2 = {"weeks": [{"key": "Spr1\u00b7W2"}]}
     check("W16B RED PROOF, pure: title claim Spr1\u00b7W16 plus a covering cell still refuses",
-          "does not bind" in (judge_science("Science_Teesside/G/x.html", row2, True, "Spring 1 \u00b7 Week 16",
+          "does not bind" in (judge_science("Science/G/x.html", row2, True, "Spring 1 \u00b7 Week 16",
                                             {"C"}, {"C": {"termWeek": "Spr1\u00b7W2"}}) or ""))
     check("and a title claim that IS the row, beside the same cell, still lands",
-          judge_science("Science_Teesside/G/x.html", row2, True, "Spring 1 \u00b7 Week 2",
+          judge_science("Science/G/x.html", row2, True, "Spring 1 \u00b7 Week 2",
                         {"C"}, {"C": {"termWeek": "Spr1\u00b7W2"}}) is None)
-    w4a = "Science_Teesside/Build/v3_40min/SCI_B_W4A_Muscles_Explore.html"
+    w4a = "Science/Build/v3_40min/SCI_B_W4A_Muscles_Explore.html"
     check("CLAIM, real tree (the wiring): science_allowed lands SCI_B_W4A, whose only Aut1\u00b7W3 is a recall line",
           w4a in science_allowed([w4a])[0])
 
     # --- ruling S3: the Science pack-record limb, planted against the judge that decides ---
     h = lambda b: hashlib.sha256(b).hexdigest()
-    man = "Science_Teesside/Launch/W8-W13_2026-27/SHA256SUMS.txt"
+    man = "Science/Launch/W8-W13_2026-27/SHA256SUMS.txt"
     deck_b, deck_a, other, stale_base = b"<html>deck before</html>", b"<html>deck after</html>", b"other", b"old"
     sums = lambda rows: "".join(f"{d}  {r}\n" for r, d in rows).encode()
     before = sums([("A.html", h(deck_b)), ("B.html", h(other)), ("C.html", h(stale_base))])
@@ -1339,11 +1339,11 @@ def self_test() -> int:
           "disagrees with the member's bytes" in (judge_science_record(
               man, before, sums([("A.html", h(deck_b)), ("B.html", h(other)), ("C.html", h(other))]),
               members, disk, base) or ""))
-    w9l2 = "Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9L2_Mitosis_Sequence_Explore.html"
+    w9l2 = "Science/Launch/W8-W13_2026-27/SCI_L_W9L2_Mitosis_Sequence_Explore.html"
     check("S3 RED PROOF: a deck whose pack manifest is not in the transaction is refused",
-          (lambda ok_why: "not re-cut in this transaction" in ok_why[1].get("Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9L2_Mitosis_Sequence_Explore.html", ""))(
+          (lambda ok_why: "not re-cut in this transaction" in ok_why[1].get("Science/Launch/W8-W13_2026-27/SCI_L_W9L2_Mitosis_Sequence_Explore.html", ""))(
               science_records_allowed({}, lambda rel: b"",
-                                      {"Science_Teesside/Launch/W8-W13_2026-27/SCI_L_W9L2_Mitosis_Sequence_Explore.html"})))
+                                      {"Science/Launch/W8-W13_2026-27/SCI_L_W9L2_Mitosis_Sequence_Explore.html"})))
     check("S3: a manifest re-cut for a pack no declared deck belongs to is refused",
           "does not touch" in (judge_science_record(man, before, after_ok, {}, disk, base) or ""))
     check("S3: a re-cut that adds or drops a row is refused (digests move, never rows)",
@@ -1367,8 +1367,8 @@ def self_test() -> int:
     check("S3 RED PROOF: a deck listed by an ANCESTOR pack manifest (Teaching_Packs/*/HTML/) is "
           "refused when that manifest is not re-cut",
           "Teaching_Packs/BUILD/SHA256SUMS.txt" in science_records_allowed({}, lambda rel: b"", {
-              "Science_Teesside/Teaching_Packs/BUILD/HTML/BUILD_Science_W6A.html"})[1].get(
-              "Science_Teesside/Teaching_Packs/BUILD/HTML/BUILD_Science_W6A.html", ""))
+              "Science/Teaching_Packs/BUILD/HTML/BUILD_Science_W6A.html"})[1].get(
+              "Science/Teaching_Packs/BUILD/HTML/BUILD_Science_W6A.html", ""))
     check("S3: a row that was stale at the base but whose FILE changed outside the transaction is "
           "refused", "changed outside this transaction" in (judge_science_record(
               man, before, sums([("A.html", h(deck_a)), ("B.html", h(other)), ("C.html", h(b"ed"))]),
@@ -1379,10 +1379,10 @@ def self_test() -> int:
     check("S3: a manifest whose declared deck is gone is refused by name, not by a traceback",
           "not a regular file" in science_records_allowed(
               {man: "M"}, lambda rel: before,
-              {"Science_Teesside/Launch/W8-W13_2026-27/NO_SUCH_DECK.html"})[1].get(man, ""))
+              {"Science/Launch/W8-W13_2026-27/NO_SUCH_DECK.html"})[1].get(man, ""))
     check("S3: only a Science pack's own SHA256SUMS.txt is a record member",
           "only a Science pack" in (judge_science_record(
-              "Humanities_Teesside/BUILD_W1-W8_2026-27/SHA256SUMS.txt", before, after_ok, members, disk, base) or ""))
+              "Humanities/BUILD_W1-W8_2026-27/SHA256SUMS.txt", before, after_ok, members, disk, base) or ""))
     # --- the S3 WIRING on a real (temporary) pack: science_records_allowed / science_limb /
     # strand_landable read bytes from `root`, the merge base from the blob reader. Review of the S3
     # PR: every refusal above was proved at the pure judge only, so removing the line that ACTS on
@@ -1390,7 +1390,7 @@ def self_test() -> int:
     import tempfile
     with tempfile.TemporaryDirectory() as tmp:
         troot = Path(tmp)
-        pk = "Science_Teesside/Launch/TEST_pack/"
+        pk = "Science/Launch/TEST_pack/"
         deck, readme, man = pk + "A.html", pk + "README.md", pk + "SHA256SUMS.txt"
         base_files = {deck: b"<html>A before</html>", readme: b"readme", pk + "B.html": b"<html>B</html>"}
         stale = h(b"<html>B stale</html>")                        # B's row is already stale at the base
@@ -1466,7 +1466,7 @@ def self_test() -> int:
         g = lambda *a: subprocess.run(["git", "-c", "commit.gpgsign=false", "-c", "tag.gpgsign=false", *a],
                                       cwd=repo, capture_output=True, text=True, check=True).stdout.strip()
         g("init", "-q"); g("config", "user.email", "t@t"); g("config", "user.name", "t")
-        pk = "Science_Teesside/Launch/TEST_pack/"
+        pk = "Science/Launch/TEST_pack/"
         deck, readme, man = pk + "A.html", pk + "README.md", pk + "SHA256SUMS.txt"
         before = {deck: b"<html>A before</html>", readme: b"readme"}
         man0 = f"{h(before[deck])}  A.html\n{h(before[readme])}  README.md\n".encode()
@@ -1521,11 +1521,11 @@ def self_test() -> int:
           and "/" + SCIENCE_RECORD not in strand_kinds("Science", "responsive"))
     check("S3: a renamed manifest reaches the judges keyed by its new path with status R",
           diff_statuses("M\tScience_Teesside/x/SHA256SUMS.txt\nR100\tScience_Teesside/o/SHA256SUMS.txt\tScience_Teesside/n/SHA256SUMS.txt\nM\ta.css\n",
-                        strand_kinds("Science")) == {"Science_Teesside/x/SHA256SUMS.txt": "M", "Science_Teesside/n/SHA256SUMS.txt": "R"})
+                        strand_kinds("Science")) == {"Science/x/SHA256SUMS.txt": "M", "Science/n/SHA256SUMS.txt": "R"})
     check("S3: a Science manifest member with no CATALOGUE_PINS admission is refused (the 'pinned' clause)",
           "no CATALOGUE_PINS admission" in (judge_member(man, "M", {man}, None, "a" * 64) or ""))
     check("S3: a Science path that is not a manifest is not a record member",
-          "only a Science pack" in (judge_science_record("Science_Teesside/Launch/x/notes.txt", b"", b"", {"a": 1}, None, None) or ""))
+          "only a Science pack" in (judge_science_record("Science/Launch/x/notes.txt", b"", b"", {"a": 1}, None, None) or ""))
 
     # --- RULING LAND-A2 R8 §2: the DLG-1 limb, with the refusals the ruling and its order name ---
     D = dlg1_tools()
@@ -1533,7 +1533,7 @@ def self_test() -> int:
     check("DLG-1: the fixer and the pairs record on disk are the reviewed bytes the limb pins",
           h((ROOT / DLG1_FIXER).read_bytes()) == DLG1_FIXER_SHA256
           and h((ROOT / DLG1_PAIRS).read_bytes()) == DLG1_PAIRS_SHA256)
-    w8b = "Science_Teesside/Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html"
+    w8b = "Science/Build/W8-W13_2026-27/SCI_B_W8B_Autumn_Science_Checkpoint_Do.html"
     check("DLG-1 (R8 §1): SCI_B_W8B is held out by name, dated, with its measured pairs and no pair of its own",
           w8b in dheld and w8b not in dpairs and dheld[w8b].get("until") and dheld[w8b].get("pairs"))
     dpage = next(p for p in sorted(dpairs) if p.startswith(PREFIX) and dpairs[p] == [("cold-call", "cold-call-dialog")])
@@ -1555,7 +1555,7 @@ def self_test() -> int:
     check("RED PROOF (a hand-written audience): an audience the dialog does not carry is refused",
           judge_dlg1(dpage, plain_d, fixed_d.replace(b'data-audience="staff" data-mbm',
                                                      b'data-audience="pupil" data-mbm'), D) is not None)
-    unrecorded = "Humanities_Teesside/BUILD_W1-W8_2026-27/NOT_IN_THE_DLG1_RECORD.html"
+    unrecorded = "Humanities/BUILD_W1-W8_2026-27/NOT_IN_THE_DLG1_RECORD.html"
     check("RED PROOF (not in the record): a page the fixer changes but the record does not name is refused",
           unrecorded not in dpairs and "record names" in (judge_dlg1(unrecorded, plain_d, fixed_d, D) or ""))
     w8b_base = (ROOT / w8b).read_bytes()
@@ -1575,7 +1575,7 @@ def self_test() -> int:
           judge_dlg1(rpage, plain, served, D) is not None)
 
     # The record clause: digests of this transaction's page members, and nothing else.
-    sums_rel = "Humanities_Teesside/Teaching_Packs/HUM_TEST_Reviewed/SHA256SUMS.txt"
+    sums_rel = "Humanities/Teaching_Packs/HUM_TEST_Reviewed/SHA256SUMS.txt"
     row = "BUILD/Autumn_1/W01/BUILD_A1_W01_Lesson.html"
     stale = "0" * 64
     sums_b = (f"{h(plain_d)}  {row}\n{h(b'pdf')}  BUILD/Autumn_1/W01/Pupil.pdf\n{stale}  README.txt\n").encode()
@@ -1626,7 +1626,7 @@ def self_test() -> int:
           "not the sha256 of its bytes on disk" in
           (J(jrel, json_b, json_b.replace(h(plain_d).encode(), h(b"x").encode()), jm) or ""))
     check("RED PROOF (an unnamed JSON manifest): a MANIFEST.json the limb does not name is not a record member",
-          "only a pack's" in (J("Humanities_Teesside/Teaching_Packs/OTHER/MANIFEST.json", json_b, json_a, jm) or ""))
+          "only a pack's" in (J("Humanities/Teaching_Packs/OTHER/MANIFEST.json", json_b, json_a, jm) or ""))
 
     # The pins on the fixer and the record: a changed tool or a widened record refuses the limb.
     import shutil
@@ -1701,8 +1701,8 @@ def self_test() -> int:
         check("DLG-1: derive() collects every changed path of both strands for the limb",
               strand_kinds("Humanities", "dlg-1") == ("",) and
               diff_statuses("M\tHumanities_Teesside/a.html\nM\tScience_Teesside/b/notes.txt\n",
-                            strand_kinds("Science", "dlg-1")) == {"Humanities_Teesside/a.html": "M",
-                                                                   "Science_Teesside/b/notes.txt": "M"})
+                            strand_kinds("Science", "dlg-1")) == {"Humanities/a.html": "M",
+                                                                   "Science/b/notes.txt": "M"})
         check("DLG-1: limb_verdicts -- the boundary's call -- agrees with the walk",
               limb_verdicts("dlg-1", [dpage, man, dsci, w8b], reader, troot)
               == {dpage: None, man: None, dsci: None, w8b: why[w8b]})

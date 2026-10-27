@@ -456,7 +456,7 @@ def verify(after_html: str, before_html: str, strand: str, science_panel_texts):
 
 def science_texts(root: Path):
     out = set()
-    p = root / 'Science_Teesside/Build/W8-W13_2026-27/SCI_B_W9A_Rock_Evidence_Explore.html'
+    p = root / 'Science/Build/W8-W13_2026-27/SCI_B_W9A_Rock_Evidence_Explore.html'
     if p.exists():
         for n in panels(parse(p.read_text(errors='replace'))):
             out.add(re.sub(r'\s+', ' ', n.inner_text()).strip())
@@ -768,7 +768,7 @@ def self_test(root: Path):
         print(('  PASS ' if good else '  FAIL ') + name)
 
     rec = json.loads((root / 'tools/catalogue/HUMANITIES_STRAND.json').read_text())
-    rel = 'Humanities_Teesside/GROW_W1-W8_2026-27/GROW_Humanities_W4_Explore_Hanukkah_And_The_Theme_Of_Light.html'
+    rel = 'Humanities/GROW_W1-W8_2026-27/GROW_Humanities_W4_Explore_Hanukkah_And_The_Theme_Of_Light.html'
     src = root / rel
     r = next(x for x in rec['lessons'] if x['path'].endswith(src.name))
     # The fixture must be the UNTRANSPLANTED deck. Once a build has run, the

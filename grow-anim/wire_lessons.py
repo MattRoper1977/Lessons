@@ -6,8 +6,8 @@ the story spine, the motion key, the progressive-reveal stage, the We-Do frame,
 the misconception engine and the retrieval animation — each on the slide where
 it belongs.
 
-    python3 grow-anim/wire_lessons.py Science_Teesside/Grow/*.html
-    python3 grow-anim/wire_lessons.py --check Science_Teesside/Grow/*.html
+    python3 grow-anim/wire_lessons.py Science/Grow/*.html
+    python3 grow-anim/wire_lessons.py --check Science/Grow/*.html
     python3 grow-anim/wire_lessons.py --patch-only <any lesson>.html
 
 Everything inserted is wrapped in <!-- GROW-ANIM:WIRE:<slot>:BEGIN/END -->, so

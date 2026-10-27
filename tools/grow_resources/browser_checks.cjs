@@ -88,7 +88,7 @@ async function run({browser,root,out,configure,measured,report,advanceStage,curr
                 else{await link.focus();assert.equal(await link.evaluate(n=>document.activeElement===n),true);}
                 await snapshot(page,id+'-'+period+'-entry-'+entry);
                 if(mobile)await link.tap();else await link.press('Enter');
-                await page.waitForURL(origin+'/Lessons/Science_Teesside/Grow/resources/'+expected.id+'.html');
+                await page.waitForURL(origin+'/Lessons/Science/Grow/resources/'+expected.id+'.html');
                 assert.equal((await page.locator('.hero h1').innerText()).trim(),expected.title);
                 await page.getByRole('link',{name:'Return to the lesson',exact:true}).click();
                 await page.waitForURL(url);assert.equal(await page.locator('.slide.active').getAttribute('data-title'),'Title');
@@ -116,7 +116,7 @@ async function run({browser,root,out,configure,measured,report,advanceStage,curr
             await noOverflow(page);await loadedImage(page.locator('.model img'));
             for(const link of await page.locator('.period-nav a,.downloads a').all())if(mobile)await targetSize(link,viewport);
             const pdf=await page.locator('.downloads a').getAttribute('href');assert.equal(pdf,c.worksheet_pdf);
-            assert.ok(fs.statSync(path.join(root,'Science_Teesside/Grow/resources',pdf)).size>0);
+            assert.ok(fs.statSync(path.join(root,'Science/Grow/resources',pdf)).size>0);
             await snapshot(page,id+'-screen');
           });
           await check(id+'/keyboard-first-reason-and-answer',async()=>{

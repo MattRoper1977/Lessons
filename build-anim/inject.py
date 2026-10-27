@@ -6,9 +6,9 @@ lessons have to stay self-contained.  This keeps that true without copy-paste
 drift: the canonical library lives in build-anim/, and this script pushes it
 into every lesson that carries the marker comments.
 
-    python3 build-anim/inject.py Science_Teesside/Build/SCI_B_W3_Backbones.html
-    python3 build-anim/inject.py Science_Teesside/Build/*.html
-    python3 build-anim/inject.py --check Science_Teesside/Build/*.html
+    python3 build-anim/inject.py Science/Build/SCI_B_W3_Backbones.html
+    python3 build-anim/inject.py Science/Build/*.html
+    python3 build-anim/inject.py --check Science/Build/*.html
 
 --check writes nothing and exits 1 if any lesson is out of date, so it can run
 in a pre-commit hook or a build step.

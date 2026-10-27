@@ -14,7 +14,7 @@ async def main():
  async with async_playwright() as p:
   browser=await p.chromium.launch(headless=True)
   try:
-   rel='Science_Teesside/Grow/SCI_G_W3_Friction.html'
+   rel='Science/Grow/SCI_G_W3_Friction.html'
    for mode,url in [('standalone',(ROOT/rel).as_uri()),('http',f'http://127.0.0.1:{server.server_port}/{rel}')]:
     for width in [320,390,768,1280]:
      ctx=await browser.new_context(viewport={'width':width,'height':900},reduced_motion='reduce');page=await ctx.new_page();page.set_default_timeout(5000)

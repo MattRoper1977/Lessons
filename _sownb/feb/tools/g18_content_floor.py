@@ -15,7 +15,7 @@ from lxml import html
 
 
 ROOT = Path(__file__).resolve().parents[3]
-BASELINE = ROOT / "Science_Teesside/Grow/W8-W13_2026-27"
+BASELINE = ROOT / "Science/Grow/W8-W13_2026-27"
 WORD = re.compile(r"[A-Za-z0-9]+(?:['’-][A-Za-z0-9]+)*")
 BLANK_CHARS = 40
 BLANK_INK = 0.004

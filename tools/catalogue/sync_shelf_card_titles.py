@@ -3,7 +3,7 @@
 
     sync_shelf_card_titles.py --check | --write | --self-test [--root .]
 
-Science_Teesside/index.html is a derived file: tools/catalogue/build_science_shelf.py
+Science/index.html is a derived file: tools/catalogue/build_science_shelf.py
 writes it from assets/catalogue/science-shelf.json. That builder cannot currently run
 -- it asserts on tools/catalogue/SCIENCE_WEEK_BINDINGS.json, of which 77 of 129 entries
 are stale -- so the composite has been frozen while the shelf JSON moved underneath it.
@@ -35,7 +35,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-COMPOSITE = 'Science_Teesside/index.html'
+COMPOSITE = 'Science/index.html'
 SHELF = 'assets/catalogue/science-shelf.json'
 
 # build_science_shelf.py drops the duration suffix before it writes the card.

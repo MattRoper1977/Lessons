@@ -60,7 +60,7 @@ def git_text(ref: str, path: str) -> str | None:
 
 def changed_science(base: str) -> list[str]:
     proc = subprocess.run(
-        ["git", "diff", "--name-only", f"{base}...HEAD", "--", "Science_Teesside/"],
+        ["git", "diff", "--name-only", f"{base}...HEAD", "--", "Science/"],
         cwd=ROOT, capture_output=True, text=True, check=True)
     return sorted(p for p in proc.stdout.split() if p.endswith(".html"))
 

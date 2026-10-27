@@ -43,8 +43,8 @@ RECORD_SCHEMA = 'dlg1-pairs/1'
 SUMS_NAMES = ('SHA256SUMS.txt', 'CHECKSUMS.sha256')
 # A JSON manifest is named, with the folder its keys are relative to, never found by pattern.
 JSON_MANIFESTS = {
-    'Humanities_Teesside/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/MANIFEST.json':
-        'Humanities_Teesside/Teaching_Packs/',
+    'Humanities/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/MANIFEST.json':
+        'Humanities/Teaching_Packs/',
 }
 HEX64 = re.compile(r'[0-9a-f]{64}')
 _SUMS_ROW = re.compile(r'^(?P<digest>[0-9a-f]{64})(?P<rest>  (?P<name>[^\r\n]+?)(?P<eol>\r?\n?))$')

@@ -138,7 +138,7 @@ def run(lessons: Path, apps: Path, canonical: Path) -> list[dict]:
         check("A committed standalone lesson modification fails the real Git boundary", any("retained-standalone-lesson.html" in e for e in errors))
         check("A game payload is outside both estate boundaries", bool(gate.boundary_errors({"Games/ApexKick/index.html"}, "lessons")) and bool(gate.boundary_errors({"Games/ApexKick/index.html"}, "apps")))
         check("A modified unlisted catalogue path is still outside the boundary", bool(gate.boundary_errors({"assets/catalogue/unreviewed.js"}, "lessons")))
-        check("A catalogue file does not become allowed in Apps", bool(gate.boundary_errors({"humanities_teesside.html"}, "apps")))
+        check("A catalogue file does not become allowed in Apps", bool(gate.boundary_errors({"humanities.html"}, "apps")))
 
         # Re-pinning cannot bless an edited original row, and failure writes
         # neither gate. Likewise divergent gate logic must be reconciled first.

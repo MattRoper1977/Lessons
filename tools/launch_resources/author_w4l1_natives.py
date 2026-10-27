@@ -35,7 +35,7 @@ from pptx.oxml.ns import qn
 
 BASE = '3a14e9c4d57832fed87ed588ef6f0ae4fd3d6064'   # Lessons main after #539; the pack bytes at review
 HERE = Path(__file__).resolve().parent
-PACK = 'Science_Teesside/Teaching_Packs/LAUNCH/'
+PACK = 'Science/Teaching_Packs/LAUNCH/'
 DECK = PACK + 'Week_4/W4L1_Diffusion.pptx'
 SHEET = PACK + 'Week_4/W4L1_Worksheet.docx'
 GUIDE = PACK + 'Teacher_Guide_And_Answers.docx'

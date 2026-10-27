@@ -34,8 +34,8 @@ HELPER = ROOT / 'tools/catalogue/pin_catalogue_contract.py'
 GATE = ROOT / 'tools/verify_cross_estate_unification.py'
 EVIDENCE = ROOT / 'tools/catalogue/TERM_AND_STYLE_EVIDENCE.json'
 REVIEW_BASE = 'acae624f34ab4b2a88903cb6ea528976b5a1e210'   # main after Friction #538 merged (CX2 §2)
-PREFIXES = ('Science_Teesside/',)
-LESSON = 'Science_Teesside/Launch/SCI_L_W4_L1_Diffusion.html'
+PREFIXES = ('Science/',)
+LESSON = 'Science/Launch/SCI_L_W4_L1_Diffusion.html'
 # Review records that move with the transaction but are not protected Science payload.
 RECORDS = ('tools/easter/SCIENCE_ORIGINAL_TARGETS.json',)
 VAR, NAME, MARK = 'CX2_W4L1_REPLACEMENTS', 'Diffusion W4L1', 'DIFFUSION W4L1'
@@ -53,7 +53,7 @@ def foreign_paths():
     """Paths another declared transaction already owns (the shape
     tools/grow_resources/admit_w3_friction.py established). The sweep takes every
     protected Science path that differs from the review base; once main carries other
-    transactions over Science_Teesside/ (S3's web-slides.html), a path one of those
+    transactions over Science/ (S3's web-slides.html), a path one of those
     changed still differs from this base, and claiming it here would both record a file
     W4L1 never touched and, under the declaration-order supersession rule, strip the
     real owner of its member."""

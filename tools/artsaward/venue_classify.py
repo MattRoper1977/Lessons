@@ -117,7 +117,7 @@ def scan(files: list[Path] | None = None) -> dict:
 # The conversions this scan calls for, written out as pairs so they are
 # reviewable and so --apply cannot do anything the classification did not name.
 CONVERSIONS = [
-    {"file": "Art_Teesside/Grow/GROW_ART_W4_Arts_Event_Attend_Capture_and_Review.html",
+    {"file": "Art/Grow/GROW_ART_W4_Arts_Event_Attend_Capture_and_Review.html",
      "from": ">MIMA · GALLERY · SHOW<",
      "to": ">GALLERY · SHOW<",
      "why": ("the venue is lettered on a ticket graphic in a deck about attending an "

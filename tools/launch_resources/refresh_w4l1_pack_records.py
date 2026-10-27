@@ -23,7 +23,7 @@ import json, sys, zipfile
 from copy import deepcopy
 
 ROOT = Path(__file__).resolve().parents[2]
-PACK = ROOT / 'Science_Teesside/Teaching_Packs/LAUNCH'
+PACK = ROOT / 'Science/Teaching_Packs/LAUNCH'
 REVISION = '2026-09-15'
 LESSON = 'W4L1'
 PACK_FILES = {'Pupil_Worksheets.pdf', 'Teacher_Guide_And_Answers.docx', 'Teacher_Guide_And_Answers.pdf'}

@@ -4,13 +4,13 @@ Inputs, every one of them a pinned record or a pinned pack member:
   assets/catalogue/humanities-shelf.json           the 142 shelf rows (card population)
   tools/catalogue/HUMANITIES_STRAND.json           the signed strand record: term, week,
                                                    strand, h1, alternative per lesson card
-  Humanities_Teesside/Teaching_Packs/**            the pack tree: SHA256SUMS.txt /
+  Humanities/Teaching_Packs/**            the pack tree: SHA256SUMS.txt /
                                                    MANIFEST.json / DOWNLOADS_MANIFEST.json
                                                    are the ONLY source of download links
   HUM_00_SoW_and_Order/{Humanities_Scheme_of_Work_2026-27.docx, RE_Scheme_of_Work_Autumn_2026.html}
                                                    the planned slots (for the gap note)
 Outputs:
-  Humanities_Teesside/index.html
+  Humanities/index.html
   assets/catalogue/humanities-hub-bindings.json    the derivation: slots, gaps, packs
 The writer refuses to write while any C1-C4 control is red.
 """
@@ -25,7 +25,7 @@ ROOT = Path(__file__).resolve().parents[2]
 DATA = json.loads((ROOT / 'assets/catalogue/humanities-shelf.json').read_text())
 STRAND = json.loads((ROOT / 'tools/catalogue/HUMANITIES_STRAND.json').read_text())
 STRAND_PATHS = {r['path'] for r in STRAND['lessons']}
-PACKS = ROOT / 'Humanities_Teesside/Teaching_Packs'
+PACKS = ROOT / 'Humanities/Teaching_Packs'
 E = H.escape
 TERM_LABEL = DATA['terms']
 TERM_KEY = {'Autumn_1': 'Aut1', 'Autumn_2': 'Aut2', 'Spring_1': 'Spr1', 'Spring_2': 'Spr2', 'Summer_1': 'Sum1', 'Summer_2': 'Sum2',
@@ -67,14 +67,14 @@ def lesson_binding(path: Path) -> dict:
 def family(path: str) -> str:
     """M2 ruling: the family IS the marking. Dated folder = current; Estate_v3 and the
     Slideshows series are earlier; everything else is reference."""
-    if re.match(r'Humanities_Teesside/(BUILD|GROW|LAUNCH)_W', path):
+    if re.match(r'Humanities/(BUILD|GROW|LAUNCH)_W', path):
         return 'reference' if 'START_HERE' in Path(path).name else 'current'
     if '_Estate_v3/' in path:
         return 'Estate v3'
     if re.match(r'(Build|Grow|Launch)/Slideshows/', path):
         return 'Slideshows series'
     # ro-2 (a), variant B: a reviewed Spring 1 pack lesson that the strand record carries is current.
-    if re.match(r'Humanities_[^/]+/Teaching_Packs/HUM_Spring_1_[A-Z_]+_Reviewed/', path) and path in STRAND_PATHS:
+    if re.match(r'Humanities/Teaching_Packs/HUM_Spring_1_[A-Z_]+_Reviewed/', path) and path in STRAND_PATHS:
         return 'current'
     return 'reference'
 
@@ -129,7 +129,7 @@ def download_label(mem: str) -> str:
 
 def pack_cards_and_lessons() -> tuple[list[dict], list[dict]]:
     cards, lessons = [], []
-    rel = lambda p: str(p.relative_to(ROOT / 'Humanities_Teesside'))
+    rel = lambda p: str(p.relative_to(ROOT / 'Humanities'))
     for pack in sorted(p for p in PACKS.iterdir() if p.is_dir() and (p.name.endswith('_Reviewed') or p.name.endswith('_Fallback'))):
         m = re.fullmatch(r'(HUM|RE)_(Autumn|Spring)(?:_(\d))?_([A-Z_]+?)_(Reviewed|Fallback)', pack.name)
         strand = 'RE' if m.group(1) == 'RE' else 'Humanities'
@@ -171,7 +171,7 @@ def pack_cards_and_lessons() -> tuple[list[dict], list[dict]]:
         week_rows = [((f'{b["pathway"]} · {TERM_LABEL[b["term"]]} · W{b["week"]}' if multi else f'W{b["week"]}'), weeks[d])
                      for d, b in sorted(lesson_dirs.items(), key=lambda kv: (kv[1]['pathway'], kv[1]['term'], kv[1]['week'])) if weeks.get(d)]
         title = f'{" & ".join(pathways)} · {TERM_LABEL[term] if half else "Autumn 1 & 2"} · {STRAND_LABEL[strand]} pack' + (' (fallback)' if pack.name.endswith('_Fallback') else '')
-        card_lessons = [('lesson', L['path'].removeprefix('Humanities_Teesside/')) for L in lessons if L['pack'] == pack.name]
+        card_lessons = [('lesson', L['path'].removeprefix('Humanities/')) for L in lessons if L['pack'] == pack.name]
         cards.append({'id': pack.name, 'pathway': pathways[0] if len(pathways) == 1 else 'OTHER', 'pathway_label': ' & '.join(pathways),
                       'term': term, 'term_label': TERM_LABEL[term] if half else 'Autumn 1 & 2', 'strand': strand, 'title': title,
                       'start_here': rel(start), 'proofread': proofread, 'lesson_count': lesson_count,
@@ -203,9 +203,9 @@ lessons = STRAND['lessons']
 pack_cards, pack_lessons = pack_cards_and_lessons()
 SOW = sow_slots()
 D = S.derive(DATA['lessons'], lessons, pack_lessons, SOW, FAMILIES, TERM_LABEL)
-errors = S.c1_errors(D) + S.c2_errors(D, FAMILIES) + S.c3_errors(ROOT / 'Humanities_Teesside', pack_cards)
+errors = S.c1_errors(D) + S.c2_errors(D, FAMILIES) + S.c3_errors(ROOT / 'Humanities', pack_cards)
 href_of = lambda path: '../' + path
-pack_href = lambda path: path.removeprefix('Humanities_Teesside/')
+pack_href = lambda path: path.removeprefix('Humanities/')
 strip = S.render_start_strip('Humanities', {
     'BUILD': 'People, places, festivals and the Tees', 'GROW': 'Migration, belonging and belief', 'LAUNCH': 'Migration, identity and the twentieth century'})
 current_html, r1 = S.render_current(D, 'Humanities', href_of, pack_href, STRAND_LABEL, DATA['styles'])
@@ -253,7 +253,7 @@ output = '''<!doctype html>
 <script src="../assets/catalogue/science-shelf.js"></script><script defer src="../assets/mbm-theme.js"></script><script defer src="../assets/mbm-platform.js"></script><script defer src="/hud.js"></script>
 </body></html>
 '''
-(ROOT / 'Humanities_Teesside/index.html').write_text(output)
+(ROOT / 'Humanities/index.html').write_text(output)
 bindings = {
     'schema': 'humanities-hub-bindings/1', 'order': 'HUB-1',
     'strandRecordSha256': hashlib.sha256((ROOT / 'tools/catalogue/HUMANITIES_STRAND.json').read_bytes()).hexdigest(),

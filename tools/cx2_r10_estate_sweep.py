@@ -41,9 +41,9 @@ PAIRS = [
      'curriculum, qualification or EFL value.', 'curriculum, qualification or digital evidence value.'),
     ('LundyLoop/3_subject_guides/science.html',
      'qualification or EFL value.', 'qualification or digital evidence value.'),
-    ('Science_Teesside/Grow/v3_40min/LUNDY_DAILY_REFLECTION_EVIDENCE_WINDOW.html',
+    ('Science/Grow/v3_40min/LUNDY_DAILY_REFLECTION_EVIDENCE_WINDOW.html',
      'lean digital/Earwig capture approach', 'lean digital capture approach'),
-    ('Science_Teesside/Grow/v3_40min/LUNDY_DAILY_REFLECTION_EVIDENCE_WINDOW.html',
+    ('Science/Grow/v3_40min/LUNDY_DAILY_REFLECTION_EVIDENCE_WINDOW.html',
      'the school’s authorised evidence/Earwig workflow', 'the school’s authorised digital evidence workflow'),
 ]
 # The ten v3_40min lessons carry one identical chip each.
@@ -51,7 +51,7 @@ for _lesson in ('SCI_G_W3B_Friction_Do', 'SCI_G_W4A_Mechanisms_Explore', 'SCI_G_
                 'SCI_G_W5A_Fair_Test_Explore', 'SCI_G_W5B_Fair_Test_Do',
                 'SCI_G_W6A_Earth_And_Planets_Explore', 'SCI_G_W6B_Earth_And_Planets_Do',
                 'SCI_G_W7A_The_Moon_Explore', 'SCI_G_W7B_The_Moon_Do'):
-    PAIRS.append(('Science_Teesside/Grow/v3_40min/%s.html' % _lesson,
+    PAIRS.append(('Science/Grow/v3_40min/%s.html' % _lesson,
                   'E · evidence on Earwig', 'E · evidence on the school’s platform'))
 
 HELD = ('biology/Testing Breath - FINAL Observation Lesson (1).html',

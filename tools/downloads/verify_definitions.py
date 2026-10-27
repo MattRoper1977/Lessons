@@ -19,7 +19,7 @@ import cell_coverage
 def verify():
     placement = json.loads((BASE/'SOURCE_PLACEMENT.json').read_text())
     cells, listing, claims, _ = cell_coverage.load()
-    actual_science = {p for p in listing if p.startswith('Science_Teesside/') and cell_coverage.is_lesson(p,(ROOT/p).read_text())}
+    actual_science = {p for p in listing if p.startswith('Science/') and cell_coverage.is_lesson(p,(ROOT/p).read_text())}
     recorded_main = {r['path'] for r in placement['sources']}
     alternatives = placement['retainedAlternatives']
     if len(alternatives)!=len(set(alternatives)) or recorded_main.intersection(alternatives) or actual_science != recorded_main.union(alternatives):

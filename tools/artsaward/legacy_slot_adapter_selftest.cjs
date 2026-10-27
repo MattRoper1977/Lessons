@@ -5,7 +5,7 @@ const vm = require('node:vm');
 
 const root = path.resolve(__dirname, '../..');
 const here = __dirname;
-const html = fs.readFileSync(path.join(root, 'Art_Teesside/Grow/GROW_ART_W4_Arts_Event_Attend_Capture_and_Review.html'), 'utf8');
+const html = fs.readFileSync(path.join(root, 'Art/Grow/GROW_ART_W4_Arts_Event_Attend_Capture_and_Review.html'), 'utf8');
 const sourceReader = fs.readFileSync(path.join(root, 'tools/artsaward/slot_reader.js'), 'utf8');
 const embedded = html.match(/<script data-award-slot-reader[^>]*>\n([\s\S]*?)\n<\/script>/)[1];
 const adapter = html.match(/<script data-legacy-award-slots>\n([\s\S]*?)<\/script>/)[1];
@@ -59,7 +59,7 @@ function ok(id, fn) { fn(); rows.push({id, verdict:'PASS'}); }
     assert.equal(calls[0].url, '../../tools/artsaward/SLOTS.json');
     assert.equal(calls[0].options.cache, 'no-store');
     assert.equal(calls[0].options.credentials, 'same-origin');
-    assert.equal(path.resolve(root,'Art_Teesside/Grow',calls[0].url),path.join(root,'tools/artsaward/SLOTS.json'));
+    assert.equal(path.resolve(root,'Art/Grow',calls[0].url),path.join(root,'tools/artsaward/SLOTS.json'));
   });
   current = fixture('Fixture organisation only', null);
   app = setup(fetcher); await settle();
@@ -110,7 +110,7 @@ function ok(id, fn) { fn(); rows.push({id, verdict:'PASS'}); }
   await app.upload(JSON.stringify(fixture('Local wins','Local event wins')));
   release({ok:true,json:async()=>fixture('Late remote','Late event')}); await settle();
   ok('late-hosted-response-does-not-overwrite-a-selected-file', () => assert.match(app.items()[0], /Local wins/));
-  const report = {file:'Art_Teesside/Grow/GROW_ART_W4_Arts_Event_Attend_Capture_and_Review.html', instrument:'tools/artsaward/legacy_slot_adapter_selftest.cjs', scope:'Node VM integration using exact embedded source and adapter; this is not a Chromium rendering result', controls:rows, passed:rows.length};
+  const report = {file:'Art/Grow/GROW_ART_W4_Arts_Event_Attend_Capture_and_Review.html', instrument:'tools/artsaward/legacy_slot_adapter_selftest.cjs', scope:'Node VM integration using exact embedded source and adapter; this is not a Chromium rendering result', controls:rows, passed:rows.length};
   if (process.argv[2]) fs.writeFileSync(process.argv[2],JSON.stringify(report,null,1)+'\n');
   process.stdout.write(JSON.stringify(report,null,1)+'\n');
 })().catch(error=>{ console.error(error);process.exit(1); });

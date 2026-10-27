@@ -66,8 +66,8 @@ TERM_OFFSET = {"Aut1": 0, "Aut2": 8, "Spr1": 15, "Spr2": 21, "Sum1": 26, "Sum2":
 # and collides with Summer 1 week 1.
 NOT_TIMETABLED = {"Spr2·W6"}
 
-ROOTS = ["BUILD_ASDAN", "GROW_ASDAN", "LAUNCH_ASDAN", "Science_Teesside",
-         "Humanities_Teesside", "Art_Teesside", "Build/Slideshows", "Grow/Slideshows", "Launch/Slideshows"]
+ROOTS = ["BUILD_ASDAN", "GROW_ASDAN", "LAUNCH_ASDAN", "Science",
+         "Humanities", "Art", "Build/Slideshows", "Grow/Slideshows", "Launch/Slideshows"]
 REF = re.compile(r"'(?:BUILD|GROW|LAUNCH) Weekly - (?:Autumn|Spring|Summer)'!C\d+")
 SCRIPT = re.compile(r"<(script|style|svg)\b.*?</\1>", re.S | re.I)
 TAG = re.compile(r"<[^>]+>")
