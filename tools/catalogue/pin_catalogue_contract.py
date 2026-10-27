@@ -3380,7 +3380,10 @@ def preserved_rows_errors(rows: list, pack_rows: list | None = None) -> list[str
     # as an unreviewed append. An explicit list still wins, and a checkout without
     # the manifest still derives the empty tail.
     if pack_rows is None:
-        pack_rows = pack_rows_for(Path(__file__).resolve().parents[2], rows)
+        try:
+            pack_rows = pack_rows_for(Path(__file__).resolve().parents[2], rows)
+        except ValueError as error:  # a catalogue the packs cannot be derived from is rejected, not a crash (ruling wf-2)
+            return [str(error)]
     errors = []
     if len(rows) != ORIGINAL_ROW_COUNT + len(SHELF_ROWS) + len(pack_rows):
         errors.append(f"catalogue must contain the original {ORIGINAL_ROW_COUNT} rows plus exactly the reviewed hub rows and the derived companion-pack rows")
