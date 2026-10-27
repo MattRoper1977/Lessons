@@ -9,15 +9,15 @@ from pypdf import PdfReader
 
 ROOT=Path(__file__).resolve().parents[3]
 BASELINES={
- "BUILD Science":["Science_Teesside/Build/W8-W13_2026-27/SCI_*.html"],
- "BUILD Humanities":["Humanities_Teesside/BUILD_W9-W14_2026-27/BUILD_HUM_*.html"],
+ "BUILD Science":["Science/Build/W8-W13_2026-27/SCI_*.html"],
+ "BUILD Humanities":["Humanities/BUILD_W9-W14_2026-27/BUILD_HUM_*.html"],
  "BUILD ASDAN":["BUILD_ASDAN/Autumn2_W1-W6_2026-27/BUILD_ASDAN_A2_*.html"],
- "GROW Science":["Science_Teesside/Grow/W8-W13_2026-27/SCI_*.html"],
+ "GROW Science":["Science/Grow/W8-W13_2026-27/SCI_*.html"],
  "GROW ASDAN":["GROW_ASDAN/Autumn2_W1-W6_2026-27/*.html"],
  "LAUNCH ASDAN":["LAUNCH_ASDAN/W7-W12_2026-27/lessons/**/*.html"],
- "LAUNCH Science":["Science_Teesside/Launch/W8-W13_2026-27/SCI_*.html"],
- "GROW Humanities":["Humanities_Teesside/GROW_W9-W14_2026-27/GROW_HUM_*.html"],
- "LAUNCH Humanities":["Humanities_Teesside/LAUNCH_W9-W14_2026-27/LAUNCH_HUM_*.html"],
+ "LAUNCH Science":["Science/Launch/W8-W13_2026-27/SCI_*.html"],
+ "GROW Humanities":["Humanities/GROW_W9-W14_2026-27/GROW_HUM_*.html"],
+ "LAUNCH Humanities":["Humanities/LAUNCH_W9-W14_2026-27/LAUNCH_HUM_*.html"],
 }
 WORD=re.compile(r"[A-Za-z0-9]+(?:['’-][A-Za-z0-9]+)*")
 LIG=str.maketrans({'ﬁ':'fi','ﬂ':'fl','ﬀ':'ff','ﬃ':'ffi','ﬄ':'ffl'})

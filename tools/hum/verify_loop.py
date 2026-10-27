@@ -712,7 +712,7 @@ def self_test(root: Path):
     # the claim is auditable rather than asserted -- re-checked on every run, not at pin time:
     #     git show AUT1_BYTES_COMMIT:AUT1_DECK | sha256sum   ==   AUT1_SHA256
     AUT1_FIXTURE = 'tools/hum/fixtures/aut1_twelve_stage_v1_base.html'
-    AUT1_DECK = 'Humanities/Teaching_Packs/BUILD/HTML/BUILD_Humanities_W3.html'
+    AUT1_DECK = 'Humanities_Teesside/Teaching_Packs/BUILD/HTML/BUILD_Humanities_W3.html'
     AUT1_BYTES_COMMIT = 'aed400da53a7e85b7e501b78e1e9c564bab24bad'
     AUT1_SHA256 = 'ab9f6abd62ef33df3bad621267aec70a5ccad6f765de71d623e55f13f0a5e2c5'
     import hashlib, subprocess

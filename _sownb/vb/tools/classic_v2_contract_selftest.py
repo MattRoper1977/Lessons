@@ -61,7 +61,7 @@ _spec.loader.exec_module(contract)
 #     git show <bytesFrom.commit>:<bytesFrom.deck> | sha256sum
 # must equal the recorded digest, which --rebase verifies against git and every run checks.
 # Freezing the live lesson as a fixture was refused; so was retiring the route.
-V1_DECK = "Humanities/BUILD_W14-W20_2026-27/BUILD_HUM_W16_Then_And_Now_And_What_Is_Fair.html"
+V1_DECK = "Humanities_Teesside/BUILD_W14-W20_2026-27/BUILD_HUM_W16_Then_And_Now_And_What_Is_Fair.html"
 V1_FIXTURE = "_sownb/vb/evidence/a2r/fixtures/classic_v2_v1_base.html"
 V1_BYTES_COMMIT = "cdc14919efc819ed56b3c2cdd97a0c567fd96e79"
 FIXTURES = (

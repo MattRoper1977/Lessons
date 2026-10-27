@@ -19,7 +19,7 @@ PACKS = [
 # EDU-Q1 changes Sugar's guidance presentation, not its navigation coverage.
 # The census digest preserves all 47 original source identities (sorted, LF-joined)
 # from guidance_source_repair.json. No lesson may disappear by losing a marker.
-GUIDANCE_ROUTES_SHA256 = "a7f5c3473f78c0a3f5ec5048a92ae30bf93bccfd56a07f7699145a51db769a2b"
+GUIDANCE_ROUTES_SHA256 = "08d31416cc06418d3ac9174a9101c98f7e563a0b5998863d42013dd7b4301861"
 SUGAR_GUIDANCE = "Science/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html"
 
 # SX3 moves ONE more BUILD route onto the classic chassis Sugar already sits on:

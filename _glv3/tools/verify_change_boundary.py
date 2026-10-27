@@ -343,7 +343,7 @@ UM_COLLECTIONS_RETIRED_REPLACEMENTS = {"Humanities/Teaching_Packs/BUILD/download
 # only, with any named edit). It is read from its own file, bound here by digest: a file whose bytes differ is refused,
 # never read. Declared last, so it supersedes the earlier transactions on the paths M1 rewrote (declaration order is
 # review order). Every member still needs its CATALOGUE_PINS admission, as for any replacement.
-M1_TRANSACTION = ('_glv3/M1_REPLACEMENT_TRANSACTION.json', 'a758969bf6288606973ce56bc0082b8e0982f3fef50c3305d4a0457547712131')
+M1_TRANSACTION = ('_glv3/M1_REPLACEMENT_TRANSACTION.json', 'c508f9b3471df8462761136d198f332349a71f756b76709e5afa5545ea0b2268')
 
 
 def _m1_transaction():
