@@ -3354,6 +3354,15 @@ REVIEWED_PATHS += (
     'Science/visual-learning/science-visual-payloads.js',
 )
 
+# RULING wl-1.6 (28 Oct 2026, the Careers, RSHE and Vocational landing letter DRAFT; the placement extends the
+# us add.1 (A) form to the BUILD tree, a lane decision for the ruling side): the BUILD Autumn 2 folder's START_HERE
+# gains three sections (Careers, RSHE, Vocational) and the START_HERE line of that folder's own checksum file is
+# re-summed. The two modified files are admitted here so their reviewed bytes are pinned.
+REVIEWED_PATHS += (
+    'BUILD_ASDAN/Autumn2_W1-W6_2026-27/SHA256SUMS.txt',
+    'BUILD_ASDAN/Autumn2_W1-W6_2026-27/START_HERE_BUILD_ASDAN_AUT2.html',
+)
+
 def pack_rows_for(lessons: Path, rows: list) -> list:
     """UX2 D3 (2026-09-08): the companion-pack entries are the catalogue's tail,
     after the reviewed hub rows. They are not a second hand-kept literal: they
