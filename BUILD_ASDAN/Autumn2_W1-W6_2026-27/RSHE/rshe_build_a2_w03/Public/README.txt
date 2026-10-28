@@ -1,0 +1,1 @@
+Public replacement Slides, Planner, Weekly Plan Row and source record. Use with the eight neutral shared Evidence Sheet, Staff Answers, Support Cards and Vocabulary Mat files at the lesson root. All roles and settings are fictional. No outcomes are prefilled. Only the Public edition is eligible for publication; School edition files stay in store.
