@@ -1,0 +1,11 @@
+Kind and respectful relationships
+BUILD RSHE · Autumn 2 · Year A · Week 5
+Year A. Autumn 2 Week 5: 30 November–4 December 2026. One 40-minute RSHE lesson. No day or clock slot is inferred. This lesson is formative. Week 7 is the assessing lesson.
+Term theme: Identity & Belonging
+Thread tags: SMSC S/M/So (C: none); British Values IL/MR (D/RL/T: none).
+Careers: This helps me recognise respectful teamwork and seek support when behaviour is wrong.
+
+Use these Public replacements with the eight shared Evidence Sheet, Staff Answers, Support Cards and Vocabulary Mat files at the parent lesson folder. Keep those shared files with the Public teaching set.
+School edition stays in store. Only the Public edition with shared resources is eligible for publication. No publication is performed by this delivery. Every teaching case is fictional and unnamed. No scripts included.
+
+Lesson resource · CC BY-NC-SA 4.0: free for classroom use, share and adapt with credit, no resale
