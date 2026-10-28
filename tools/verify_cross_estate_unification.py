@@ -1818,8 +1818,8 @@ CATALOGUE_PINS = {
         "Science/launch-engine/test/print-pack.js": "b3bc74a66cb7057dad9d5f3face9ec24028978e5b85ca0bd5d883709e529fc99",
         "Science/visual-learning/science-visual-learning.css": "94cff82726164d7b1ef7315868ff8cb51eae0bf83bcf5590c838f509ee4e1a93",
         "Science/visual-learning/science-visual-payloads.js": "3f607c6cab15c006a5ac5d74821e01f0edd60c2e081fa1bcaad531ff765a16a0",
-        "BUILD_ASDAN/Autumn2_W1-W6_2026-27/SHA256SUMS.txt": "ed46274134ad226e899419192846819ba576b8d7f6f591f47f00a5b24bb34056",
-        "BUILD_ASDAN/Autumn2_W1-W6_2026-27/START_HERE_BUILD_ASDAN_AUT2.html": "ce0988ad3218b29e1fc7abba99afa055b1844bd2bfa80b73771ca6577b0f4a00"
+        "BUILD_ASDAN/Autumn2_W1-W6_2026-27/SHA256SUMS.txt": "7750dabdca405db8c0f2dec8345d5a9fa732145c254b831b508d28a2363550c1",
+        "BUILD_ASDAN/Autumn2_W1-W6_2026-27/START_HERE_BUILD_ASDAN_AUT2.html": "e6b87106f11b914e0d1cd7a9e247c8ab662fd410e662fc277dfb4b4e7124919a"
     }
 }
 # END REVIEWED CATALOGUE PINS
