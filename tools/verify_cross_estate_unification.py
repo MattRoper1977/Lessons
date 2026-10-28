@@ -1818,8 +1818,8 @@ CATALOGUE_PINS = {
         "Science/launch-engine/test/print-pack.js": "b3bc74a66cb7057dad9d5f3face9ec24028978e5b85ca0bd5d883709e529fc99",
         "Science/visual-learning/science-visual-learning.css": "94cff82726164d7b1ef7315868ff8cb51eae0bf83bcf5590c838f509ee4e1a93",
         "Science/visual-learning/science-visual-payloads.js": "3f607c6cab15c006a5ac5d74821e01f0edd60c2e081fa1bcaad531ff765a16a0",
-        "BUILD_ASDAN/Autumn2_W1-W6_2026-27/SHA256SUMS.txt": "7750dabdca405db8c0f2dec8345d5a9fa732145c254b831b508d28a2363550c1",
-        "BUILD_ASDAN/Autumn2_W1-W6_2026-27/START_HERE_BUILD_ASDAN_AUT2.html": "e6b87106f11b914e0d1cd7a9e247c8ab662fd410e662fc277dfb4b4e7124919a"
+        "BUILD_ASDAN/Autumn2_W1-W6_2026-27/SHA256SUMS.txt": "6d070a8df204e105490e30e6e9016d1dd41cc961bdac58233bc434af20c9b8d3",
+        "BUILD_ASDAN/Autumn2_W1-W6_2026-27/START_HERE_BUILD_ASDAN_AUT2.html": "2347c9535c45aaacd967d0409d3a3a3fbd93bc5ccb6fd8eb2ed8a04b5eb416ef"
     }
 }
 # END REVIEWED CATALOGUE PINS
