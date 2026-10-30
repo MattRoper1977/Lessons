@@ -2475,8 +2475,23 @@ WA3_EXACT_SHA256 = {
 }
 
 
+# RULING yq-1 (30 Oct 2026): the Maker splash re-stamp of the six Play-served Lessons routes (the generated region
+# only, from the Site generator at the splash PR head) and the v6fin workflow whose pins follow that head, by exact
+# digest; nothing else widened.
+SPLASH_RESTAMP_EXACT_SHA256 = {
+    ".github/workflows/v6fin-w7-r1-r7.yml": "bf3e716888c7c9939a477870f961a5887fec81cfb11227824e67d2277c8fdadc",
+    "2 Physics 10/current_rush.html": "e1ff45336bb91dd7d95d00c47fff9795821f53946934398eb759bf57d94c9b80",
+    "5 Intervention 10/InterventionA_Battle_Arena (1).html": "b88a0f9e4c8a40f8f2a7dd1190be77ddfd2b827dde33d99784a39c3bf6ffc8a0",
+    "5 Intervention 10/InterventionB_Escape_Room.html": "dff40a1715d981f48c7cd588cdd214ae800c84be9630a663d4ddb418afd14c1a",
+    "5 Intervention 10/L8a_Powerhouse_Arena_TeamQuiz.html": "a3f0bb213abfedc2380e2cf7f94e6547ccb90ee303308765e70f5a9f4abd1ef8",
+    "5 Intervention 10/Lesson_VIR_Pupil_App.html": "d856b5dceafd9419fc19877f8b5d9674e57059a950eeefe2890341b3695ccfad",
+    "Summer Term Fun/Kids_vs_Staff_Studio_Game_Show_v8_Autopilot.html": "4cb52560f2e072c7effe6588d27c1d2965cf0aee32822a3dbc29a23ed45236cb"
+}
+
+
 def exact_byte_admitted(root: Path, changed: set[str]) -> set[str]:
-    exact = {**SCHEME_SOURCE_EXACT_SHA256, **M1_RENAME_EXACT_SHA256, **WB1_MOVED_EXACT_SHA256, **WA3_EXACT_SHA256}
+    exact = {**SCHEME_SOURCE_EXACT_SHA256, **M1_RENAME_EXACT_SHA256, **WB1_MOVED_EXACT_SHA256, **WA3_EXACT_SHA256,
+             **SPLASH_RESTAMP_EXACT_SHA256}
     return {rel for rel in changed if rel in exact and (root / rel).is_file()
             and digest(root / rel) == exact[rel]}
 
