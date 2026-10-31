@@ -61,7 +61,7 @@ function render(){
  +'  <p style="margin-top:8px;"><strong>'+L.evidence.p1Label+'</strong><br><textarea id="ev-p1" rows="2" style="width:100%;font-size:1.1rem;padding:6px;"></textarea></p>'
  +'  <p style="margin-top:8px;"><strong>'+L.evidence.p2Label+'</strong><br><textarea id="ev-p2" rows="2" style="width:100%;font-size:1.1rem;padding:6px;"></textarea></p>'
  +'  <p style="margin-top:8px;"><strong>Skills I used today (tick with your TA):</strong> '+L.evidence.skillsLine+'</p></div>'
- +' <div class="box tip-box"><strong>Feedback loop:</strong> your teacher will deep-mark <em>one</em> part of this in dark green and draw a <strong>Yellow Box</strong>. Next lesson you respond inside it in a coloured pen of your choice.</div>'
+ +' <div class="box tip-box"><strong>Feedback loop:</strong> your teacher will give one precise <strong>NS+</strong> next step on one part of this. Next lesson you respond in the same colour, on the same page or usual mode.</div>'
  +' <button class="act" onclick="BE.printEvidence()">\ud83d\udda8\ufe0f Print my evidence sheet</button></section>'
  +'<section class="slide bt-exit"><div class="tag">EXIT TICKET</div><h2>Show what you know</h2>'
  + mcqs(L.mcqs)
@@ -232,15 +232,15 @@ function printEvidence(){
  row('Skills used (tick): '+L.evidence.skillsLine+'   \u00b7   Independence stage (circle): 1 joined in \u00b7 2 with help \u00b7 3 with prompts \u00b7 4 myself \u00b7 5 somewhere new');
  row('Evidence ref: '+L.evidence.ref+'   \u00b7   Programme: '+(L.evidence.programme||'\u2014')+'   \u00b7   Criterion: '+(L.evidence.criterion||'TBC \u2014 not portfolio-ready')+'   \u00b7   Verified by: ________________');
  var yb=document.createElement('div'); yb.className='ybox';
- yb.textContent='YELLOW BOX \u2014 teacher deep-marks ONE section (dark green pen). Pupil improvement/redraft goes here:';
+ yb.textContent='NS+ NEXT STEP \u2014 teacher gives ONE precise next step. Pupil response (in the same colour, on the same page or usual mode) goes here:';
  pa.appendChild(yb);
  row('WWW (What Went Well): ______________________________________________');
  row('EBI (Even Better If): _______________________________________________');
  row('Next Steps: ________________________________________________________');
- row('My response (coloured pen of my choice): ____________________________');
+ row('My response (in the same colour, on the same page or usual mode): ____________________________');
  row('Formative judgement (circle one): Emerging \u00b7 Developing \u00b7 Secure \u00b7 Exceeding   \u2192   recorded on Arbor formative tab');
  var foot=document.createElement('div'); foot.className='small';
- foot.textContent='Literacy codes (dark green, in margin): Sp spelling \u00b7 P punctuation \u00b7 Cap capital letter \u00b7 T tense \u00b7 // new paragraph \u00b7 ^ missing word. Portfolio evidence: upload to Teams/ItsLearning for IQA.';
+ foot.textContent='Literacy codes (in margin): Sp spelling \u00b7 P punctuation \u00b7 Cap capital letter \u00b7 T tense \u00b7 // new paragraph \u00b7 ^ missing word. Portfolio evidence: upload to Teams/ItsLearning for IQA.';
  pa.appendChild(foot);
  window.print();
 }

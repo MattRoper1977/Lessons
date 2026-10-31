@@ -212,7 +212,7 @@ ul.tick li::before{content:'▢';position:absolute;left:0;color:#f97316;font-wei
 .ag-arrow{font-size:26px;color:#94a3b8;align-self:center;padding-bottom:24px}
 .ag-cap{flex-basis:100%;font-size:12px;color:#64748b;margin-top:6px}
 .pred-guide{font-size:12.5px;color:#334155;background:#eef2ff;border-radius:6px;padding:4px 8px;margin-bottom:5px;display:inline-block}
-/* --- conclusion redesign: verbal model + yellow box + feedback loop --- */
+/* --- conclusion redesign: verbal model + NS+ next step + feedback loop --- */
 .concl-frames{display:grid;gap:8px;margin:2px 0 10px}
 .cframe{border:2px solid;border-radius:12px;padding:9px 12px;cursor:pointer;background:#fff;transition:.15s}
 .cframe:hover{box-shadow:0 2px 8px rgba(0,0,0,.08)}
@@ -608,7 +608,7 @@ ul.tick li::before{content:'▢';position:absolute;left:0;color:#f97316;font-wei
       </div>
     </div>
     <div class="ybox">
-      <h4>🟡 Yellow Box — live next step <span style="font-weight:400;color:#a16207">(tap to push a pupil up a level)</span></h4>
+      <h4>🟡 NS+ — live next step <span style="font-weight:400;color:#a16207">(tap to push a pupil up a level)</span></h4>
       <div class="ns-chips">
         <button class="ns-chip" onclick="setNS(this,'Say it again using the word respiration.')">Say it using <i>respiration</i></button>
         <button class="ns-chip" onclick="setNS(this,'Add the word equation: glucose + oxygen → carbon dioxide + water.')">Add the word equation</button>
@@ -923,7 +923,7 @@ function predResultLine(p){
   const dirTxt=dir==null?'no readings yet':(p.rest+'→'+p.active+' ('+({more:'cloudier',less:'less cloudy',same:'no change'})[dir]+')');
   return 'Predicted <b>'+pw+'</b> → result '+dirTxt;
 }
-/* ---------- conclusion: verbal shared model + yellow box ---------- */
+/* ---------- conclusion: verbal shared model + NS+ next step ---------- */
 function confirmFrame(el){const on=el.classList.toggle('confirmed');beep(on?720:360);}
 function setNS(btn,txt){
   const chips=[...document.querySelectorAll('.ns-chip')];

@@ -25,7 +25,7 @@ The loop closes when the pupil **writes** the line (GROW's own theory: *"writing
 ## 1 · Why the pupil, not an adult — from measurement
 
 - **B1.4 / R-H07:** GROW closure is *pupil-writes* by design; there is no adult R and none is wanted. "0 of 8" was BUILD-blindness (a gate keying on adult receipt), not a gap.
-- **B2.0 F2:** the line has adult responders to the *work* (Yellow-Box/DIRT, the Feedback Sheet's *"my next step"*, the ASDAN Assessor Witness) but **no reader of the line itself.** An adult reader as *verifier* would rebuild BUILD's received-R on the wrong pathway — the species change R-A09 forbids and R-H08 warns TAs are primed to attempt.
+- **B2.0 F2:** the line has adult responders to the *work* (NS+/DIRT, the Feedback Sheet's *"my next step"*, the ASDAN Assessor Witness) but **no reader of the line itself.** An adult reader as *verifier* would rebuild BUILD's received-R on the wrong pathway — the species change R-A09 forbids and R-H08 warns TAs are primed to attempt.
 - So the reader is **the pupil**, the adult stays **audience**. A **connection**, not authoring: the pupil already writes the line.
 
 ---

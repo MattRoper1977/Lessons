@@ -214,7 +214,7 @@ ul.tick li::before{content:'▢';position:absolute;left:0;color:#f97316;font-wei
 .ag-arrow{font-size:26px;color:#94a3b8;align-self:center;padding-bottom:24px}
 .ag-cap{flex-basis:100%;font-size:12px;color:#64748b;margin-top:6px}
 .pred-guide{font-size:12.5px;color:#334155;background:#eef2ff;border-radius:6px;padding:4px 8px;margin-bottom:5px;display:inline-block}
-/* --- conclusion redesign: verbal model + yellow box + feedback loop --- */
+/* --- conclusion redesign: verbal model + NS+ next step + feedback loop --- */
 .concl-frames{display:grid;gap:8px;margin:2px 0 10px}
 .cframe{border:2px solid;border-radius:12px;padding:9px 12px;cursor:pointer;background:#fff;transition:.15s}
 .cframe:hover{box-shadow:0 2px 8px rgba(0,0,0,.08)}
@@ -741,7 +741,7 @@ body.calm .calm-tag{display:block}
       </div>
     </div>
     <div class="ybox">
-      <h4>🟡 Yellow Box — live next step <span style="font-weight:400;color:#a16207">(tap to push a pupil up a level)</span></h4>
+      <h4>🟡 NS+ — live next step <span style="font-weight:400;color:#a16207">(tap to push a pupil up a level)</span></h4>
       <div class="ns-chips">
         <button class="ns-chip" onclick="setNS(this,'Say it again using the word respiration.')">Say it using <i>respiration</i></button>
         <button class="ns-chip" onclick="setNS(this,'Add the word equation: glucose + oxygen → carbon dioxide + water.')">Add the word equation</button>
@@ -777,7 +777,7 @@ body.calm .calm-tag{display:block}
 
   <div class="end-actions">
    <h3>🖨 End-of-lesson book evidence</h3>
-   <p>Creates <b>one separate evidence sheet per pupil</b>, each beginning on a new page. The sheet includes their prediction, results, practical evidence, question level, own-colour response space, <b>I / WS · VF · NS+ · // / ? · R · E</b>, response modality, Audience and the <b>Influence on next learning</b>.</p>
+   <p>Creates <b>one separate evidence sheet per pupil</b>, each beginning on a new page. The sheet includes their prediction, results, practical evidence, question level, response space (in the same colour, on the same page or usual mode), <b>I / WS · VF · NS+ · // / ? · R · E</b>, response modality, Audience and the <b>Influence on next learning</b>.</p>
    <button class="btn" onclick="printIndividualEvidence()">🖨 Print all individual pupil evidence sheets</button>
    <select class="print-select" id="singlePupilSelect" aria-label="Choose one pupil to print"></select>
    <button class="btn ghost" onclick="printOnePupil()">Print selected pupil only</button>
@@ -1100,7 +1100,7 @@ function predResultLine(p){
   const dirTxt=dir==null?'no readings yet':(p.rest+'→'+p.active+' ('+({more:'cloudier',less:'less cloudy',same:'no change'})[dir]+')');
   return 'Predicted <b>'+pw+'</b> → result '+dirTxt;
 }
-/* ---------- conclusion: verbal shared model + yellow box ---------- */
+/* ---------- conclusion: verbal shared model + NS+ next step ---------- */
 function confirmFrame(el){const on=el.classList.toggle('confirmed');beep(on?720:360);}
 function setNS(btn,txt){
   const chips=[...document.querySelectorAll('.ns-chip')];
@@ -1199,7 +1199,7 @@ function pupilCard(p,d){
     (p.photo?'<div class="pc-sec story"><span class="lab">Photo — my beakers / result:</span><div class="pc-photo"><img src="'+p.photo+'"></div></div>':'')+
     '<div class="pc-sec story"><span class="lab">Result summary:</span> '+pupilStory(p)+'</div>'+
     '<div class="pc-sec story pc-q"><b>The question you were asked ('+tn+'):</b><br>'+q+'</div>'+
-    '<div class="pc-sec"><span class="lab">Respond in your own colour:</span> <span style="font-size:11.5px;color:#555">this is the meaningful book artefact; improve it after live feedback</span>'+
+    '<div class="pc-sec"><span class="lab">Respond in the same colour, on the same page or usual mode:</span> <span style="font-size:11.5px;color:#555">this is the meaningful book artefact; improve it after live feedback</span>'+
       '<div class="write-lines"></div><div class="write-lines"></div></div>'+
     '<div class="pc-sec story pc-model"><b>Model for comparison after your response:</b> '+a+'</div>'+
     '<div class="pc-sec policy-strip"><b>Live-loop codes (not a comment count):</b><br>'+codeSummary(p)+'</div>'+
