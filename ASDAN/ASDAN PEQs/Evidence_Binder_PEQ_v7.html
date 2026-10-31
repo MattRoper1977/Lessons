@@ -376,6 +376,14 @@ input[type=text],textarea,select{font-family:inherit;font-size:15px;border:2px s
     <button id="bakB" class="big gold">💾 Backup this binder (.zip)</button>
     <button id="restB" class="big">📂 Restore from backup</button>
    </div>
+   <div class="acts" style="margin-top:10px">
+    <button type="button" id="wipeDeviceB" class="warn">Delete all data on this device</button>
+   </div>
+   <div class="acts hidden" id="wipeDeviceBar" style="margin-top:8px">
+    <span class="note" style="color:#b91c1c;font-weight:700">Delete every binder, pupil, unit and evidence item from this browser?</span>
+    <button type="button" id="wipeDeviceYes" class="warn">Confirm delete all data</button>
+    <button type="button" id="wipeDeviceNo">Cancel</button>
+   </div>
    <div class="note" id="storeNote">Everything lives in this browser on this device. Back up weekly and after big capture sessions — each .zip holds one binder’s photos and tags. Old (v1) backups restore as their own binder.</div>
   </div>
  </div>
@@ -663,6 +671,7 @@ function canvasJpeg(c){
 /* ===================== IndexedDB ===================== */
 var DBP=null;
 function db(){
+ if(window.name==="mbm_wiped_evbinder_peq")return Promise.resolve(null);
  if(DBP)return DBP;
  DBP=new Promise(function(res){
   if(typeof indexedDB==="undefined"){res(null);return;}
@@ -2006,6 +2015,22 @@ function init(){
  $("bakB").onclick=doBackup;
  $("restB").onclick=function(){$("zipFile").click();};
  $("zipFile").addEventListener("change",function(){if(this.files.length)doRestore(this.files[0]);this.value="";});
+ $("wipeDeviceB").onclick=function(){$("wipeDeviceBar").classList.remove("hidden");$("wipeDeviceYes").focus();};
+ $("wipeDeviceNo").onclick=function(){$("wipeDeviceBar").classList.add("hidden");$("wipeDeviceB").focus();};
+ $("wipeDeviceYes").onclick=async function(){
+  URLS.forEach(function(u){URL.revokeObjectURL(u);});URLS.clear();
+  PEND.forEach(function(p){if(p.thumbUrl)URL.revokeObjectURL(p.thumbUrl);});PEND=[];
+  META={v:2,binders:[],active:""};ITEMS=[];
+  try{localStorage.clear();}catch(e){}
+  try{sessionStorage.clear();}catch(e){}
+  try{if(window.caches&&typeof caches.keys==="function"){var ks=await caches.keys();await Promise.all(ks.map(function(k){return caches.delete(k);}));}}catch(e){}
+  if(DBP){try{var d=await DBP;if(d)d.close();}catch(e){}DBP=null;}
+  var dbs=new Set(["evbinderPEQ"]);
+  try{if(indexedDB.databases){var list=await indexedDB.databases();list.forEach(function(x){if(x&&x.name)dbs.add(x.name);});}}catch(e){}
+  for(var n of dbs){await new Promise(function(r){try{var rq=indexedDB.deleteDatabase(n);rq.onsuccess=rq.onerror=rq.onblocked=function(){r();};}catch(e){r();}});}
+  window.name="mbm_wiped_evbinder_peq";
+  location.reload();
+ };
  $("nagGoB").onclick=function(){setTab("Setup");doBackup();};
  $("nagLaterB").onclick=function(){$("nag").classList.remove("open");};
  $("evClose").onclick=closeEv;
@@ -2019,6 +2044,13 @@ function init(){
    if(e.target===this){if(id==="evModal")closeEv();else this.classList.remove("open");}
   });
  });
+ if(window.name==="mbm_wiped_evbinder_peq"){
+  var emptyB=newBinderObj("");emptyB.units=[];emptyB.pupils=[];
+  META={v:2,binders:[emptyB],active:emptyB.id};ITEMS=[];
+  renderBinderBar();renderSetup();renderTagCard();
+  setTimeout(function(){if(window.name==="mbm_wiped_evbinder_peq")window.name="";},50);
+  return;
+ }
  if(navigator.storage&&navigator.storage.persist){
   navigator.storage.persist().catch(function(){});
  }
