@@ -1168,6 +1168,10 @@ try{observer.observe(document.documentElement,{childList:true,subtree:true});var
                  (with a classroom server, YOU open sections instead)
    TIP: type the teacher code into the NAME box to put a device
    into Board Mode — free navigation for the big screen.
+   CLASSROOM SERVER: sync starts only when the app is opened with
+   ?classroom (or #classroom) in its address, e.g. sharing the link
+   ...Lesson_VIR_Pupil_App.html?classroom with pupils. Without it the
+   app runs standalone and makes no sync requests.
    ============================================================ */
 var TEACHER_CODE = '5543';  /* unlock / review code */
 var TOTAL    = 40 * 60;     /* whole-lesson clock (seconds) */
@@ -1474,7 +1478,9 @@ function updateHold(at,cdId,okId,sOpen,secName){
 
 /* ---- CLASSROOM MODE (optional teacher server) ---- */
 var SYNC_EPS=['sync.php','/sync'], epi=0, ep=null; /* auto-detect PHP hosting or local python server */
-function startNet(){ if(location.protocol==='file:') return; syncOnce(); }
+/* opt-in: a static host has no sync endpoint, so probing for one there logged a 404 every few seconds */
+function classroomAsked(){ return /(^|&)classroom(=|&|$)/.test(location.search.replace(/^\?/,'')) || /(^|&)classroom(=|&|$)/.test(location.hash.replace(/^#/,'')); }
+function startNet(){ if(location.protocol==='file:' || !classroomAsked()) return; syncOnce(); }
 function syncOnce(){
   var url=ep||SYNC_EPS[epi];
   var payload={name:review?'':(document.getElementById('pname').value||'').trim(),tier:tier||'',screen:cur+1,total:screens.length,score:score().ok,started:!!startMs,work:buildWork()};
