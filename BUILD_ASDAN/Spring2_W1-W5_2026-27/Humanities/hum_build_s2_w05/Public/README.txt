@@ -1,0 +1,1 @@
+Public edition. Use Task_Sheets,Evidence_Sheet and Slides with ../Shared_Resources. Adult guidance is ../Planner.pdf and ../Shared_Resources/Staff_Answers.pdf. Evidence_Sheet includes the six-outcome blank tick/comment closure and checklist. Keep root assets. No actual result or pupil information is prefilled.

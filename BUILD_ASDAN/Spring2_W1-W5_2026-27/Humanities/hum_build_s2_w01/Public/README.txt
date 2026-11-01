@@ -1,0 +1,1 @@
+Public edition. Use Task_Sheets, Evidence_Sheet and Slides with the original story, picture sequence, talk frame and word mat in ../Shared_Resources. Adult guidance is in ../Planner.pdf and ../Shared_Resources/Staff_Answers.pdf. Keep the root assets folder with the lesson. No pupil names or actual results are prefilled.
