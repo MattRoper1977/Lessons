@@ -40,7 +40,7 @@ DT_LAUNCH_S2_W02_Cutting_and_Measuring_Card.docx with matching PDF
 DT_LAUNCH_S2_W02_Evidence_Sheet.docx with matching PDF
 DT_LAUNCH_S2_W02_Knowledge_Organiser.docx with matching PDF
 DT_LAUNCH_S2_W02_Material_Properties_Card.docx with matching PDF
-DT_LAUNCH_S2_W02_Mockup_Check_Record.docx with matching PDF
+DT_LAUNCH_S2_W02_Mockup_Check.docx with matching PDF
 DT_LAUNCH_S2_W02_Pupil_Resources.docx with matching PDF
 DT_LAUNCH_S2_W02_Staff_Answers.docx with matching PDF
 DT_LAUNCH_S2_W02_TA_Brief.docx with matching PDF
