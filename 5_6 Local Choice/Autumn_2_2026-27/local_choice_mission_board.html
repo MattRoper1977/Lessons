@@ -1,0 +1,639 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Local Choice · Mission Board</title>
+<meta name="description" content="Whole-class interactive whiteboard board for Thursday afternoon Local Choice sessions: teams, timer, mission brief, quiz, price hunt, photo wall and evidence lines. Runs offline; nothing leaves this computer.">
+<style>
+:root{
+  --bg:#f7f7f4; --panel:#ffffff; --ink:#1b1f24; --muted:#5b6470; --line:#d9dde3;
+  --accent:#0b5fa5; --accent-ink:#ffffff; --good:#1d7a4a; --warn:#b4540a;
+  --t1:#2b6cb0; --t2:#b7791f; --t3:#2f855a;
+  --radius:18px; --gap:16px; --fs:clamp(18px,1.6vw,26px);
+  --font:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;
+}
+:root[data-tint="blue"]{--bg:#e6f0f8;--panel:#f2f7fb}
+:root[data-tint="pink"]{--bg:#f8e8ee;--panel:#fbf1f5}
+:root[data-tint="dark"]{--bg:#14181d;--panel:#1f252c;--ink:#f2f4f7;--muted:#aab3bf;--line:#3a434d;--accent:#6fb1ff;--accent-ink:#0b1220}
+:root[data-contrast="high"]{--line:#000;--muted:#222;--accent:#003f7f}
+:root[data-contrast="high"][data-tint="dark"]{--line:#fff;--muted:#eee;--accent:#9fd0ff}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:var(--font);font-size:var(--fs);line-height:1.45;color:var(--ink);background:var(--bg);letter-spacing:.01em;word-spacing:.06em}
+button{font:inherit;color:inherit;cursor:pointer;border-radius:12px;border:2px solid var(--line);background:var(--panel);padding:.45em .9em;min-height:48px;min-width:48px}
+button:hover{border-color:var(--accent)}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+button.big{font-size:1.3em;padding:.6em 1.2em}
+input,textarea,select{font:inherit;color:var(--ink);background:var(--panel);border:2px solid var(--line);border-radius:10px;padding:.4em .6em;min-height:48px;width:100%}
+textarea{min-height:120px}
+header{display:flex;flex-wrap:wrap;gap:var(--gap);align-items:center;padding:12px 16px;min-width:0;border-bottom:2px solid var(--line);background:var(--panel);position:sticky;top:0;z-index:5}
+header h1{font-size:1.15em;margin:0;flex:1 1 220px}
+header h1 small{display:block;font-weight:400;color:var(--muted);font-size:.7em}
+nav{display:flex;flex-wrap:wrap;gap:8px}
+nav button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+main{padding:16px;max-width:1600px;margin:0 auto;min-width:0}
+.card{min-width:0}
+table{table-layout:fixed}
+td,th{overflow-wrap:anywhere}
+section[hidden]{display:none}
+.grid{display:grid;gap:var(--gap)}
+.cols-3{grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr))}
+.cols-2{grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr))}
+.card{background:var(--panel);border:2px solid var(--line);border-radius:var(--radius);padding:20px}
+.card h2{margin:0 0 .4em;font-size:1.25em}
+.muted{color:var(--muted)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.team{border-width:3px}
+.team .mark{font-size:2.2em;line-height:1}
+.team .pts{font-size:3.2em;font-weight:700;text-align:center;margin:.1em 0}
+.team[data-n="1"]{border-color:var(--t1)} .team[data-n="2"]{border-color:var(--t2)} .team[data-n="3"]{border-color:var(--t3)}
+.team input{font-size:1.2em;font-weight:600}
+.timerwrap{display:grid;grid-template-columns:minmax(min(220px,100%),320px) minmax(0,1fr);gap:var(--gap);align-items:center}
+@media (max-width:700px){.timerwrap{grid-template-columns:1fr}.ring{max-width:260px;margin:0 auto}}
+.ring{width:100%;aspect-ratio:1;border-radius:50%;background:conic-gradient(var(--accent) var(--deg,0deg),var(--line) 0);display:grid;place-items:center}
+.ring>div{width:82%;aspect-ratio:1;border-radius:50%;background:var(--panel);display:grid;place-items:center;font-size:clamp(40px,6vw,88px);font-weight:700;font-variant-numeric:tabular-nums}
+.slide{min-height:52vh;display:flex;flex-direction:column;justify-content:center;gap:.6em}
+.slide .kicker{color:var(--muted);text-transform:uppercase;letter-spacing:.12em;font-size:.75em}
+.slide h3{font-size:clamp(28px,4.2vw,64px);margin:0;line-height:1.1}
+.slide ul{font-size:1.25em;margin:.2em 0 0 1em;padding:0}
+.slide li{margin:.25em 0}
+.pill{display:inline-block;border:2px solid var(--line);border-radius:999px;padding:.15em .8em;font-size:.85em}
+.q{font-size:clamp(26px,3.4vw,52px);line-height:1.2;margin:.2em 0 .5em}
+.answer{font-size:clamp(24px,3vw,44px);padding:.5em .8em;border-radius:14px;background:var(--bg);border:2px dashed var(--line);min-height:2.4em}
+.answer[data-hidden="true"]{color:transparent;user-select:none}
+.answer[data-hidden="true"]::after{content:"Tap Reveal";color:var(--muted);font-size:.6em;position:absolute}
+.answer{position:relative}
+table{width:100%;border-collapse:collapse}
+th,td{border-bottom:1px solid var(--line);padding:.5em .4em;text-align:left;vertical-align:top}
+td input{min-height:44px}
+.total{font-size:1.6em;font-weight:700}
+.wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.wall figure{margin:0;background:var(--bg);border:2px solid var(--line);border-radius:14px;overflow:hidden}
+.wall img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+.wall figcaption{padding:.4em .6em;font-size:.8em}
+.joke{font-size:clamp(28px,3.6vw,56px);min-height:3em;display:grid;place-items:center;text-align:center;padding:.5em}
+.sr{position:absolute;left:-9999px}
+.notice{font-size:.85em;color:var(--muted)}
+.evidence td:first-child{font-weight:700;white-space:nowrap}
+.help{font-size:.85em}
+kbd{border:1px solid var(--line);border-bottom-width:3px;border-radius:6px;padding:0 .4em;font-family:inherit;font-size:.85em}
+@media (prefers-reduced-motion:no-preference){ .ring{transition:background .4s linear} .answer{transition:color .25s} }
+@media print{
+  header,nav,.noprint{display:none!important}
+  body{background:#fff;color:#000;font-size:14pt}
+  .card{border-color:#000;break-inside:avoid}
+  section[hidden]{display:none}
+  #satellite{display:block!important}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Local Choice · Mission Board <small id="weekLabel">Week 1 · Thursday 5 November 2026</small></h1>
+  <label class="row" style="gap:6px;flex:1 1 260px;min-width:0"><span class="sr">Week</span>
+    <select id="weekSelect" aria-label="Choose the week"></select>
+  </label>
+  <nav aria-label="Board sections">
+    <button data-tab="teams" aria-pressed="true">Teams</button>
+    <button data-tab="timer" aria-pressed="false">Timer</button>
+    <button data-tab="brief" aria-pressed="false">Brief</button>
+    <button data-tab="quiz" aria-pressed="false">Quiz</button>
+    <button data-tab="hunt" aria-pressed="false">Price Hunt</button>
+    <button data-tab="wall" aria-pressed="false">Photo Wall</button>
+    <button data-tab="evidence" aria-pressed="false">Evidence</button>
+    <button data-tab="jokes" aria-pressed="false">Jokes</button>
+    <button data-tab="satellite" aria-pressed="false">Satellite</button>
+    <button data-tab="settings" aria-pressed="false">Settings</button>
+  </nav>
+</header>
+
+<main>
+<!-- TEAMS -->
+<section id="teams" aria-labelledby="teamsH">
+  <h2 id="teamsH" class="sr">Teams</h2>
+  <div class="grid cols-3" id="teamGrid"></div>
+  <div class="card" style="margin-top:var(--gap)">
+    <div class="row">
+      <button class="primary big" id="allFinished">Everyone finished · +5 to every team</button>
+      <button id="resetPoints">Reset points</button>
+      <span class="notice">Team points only. Nobody is scored on their own, nothing is ranked, every team scores for finishing. Keys: <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> add a point.</span>
+    </div>
+  </div>
+</section>
+
+<!-- TIMER -->
+<section id="timer" hidden aria-labelledby="timerH">
+  <div class="card timerwrap">
+    <div class="ring" id="ring"><div id="clock" aria-live="polite">10:00</div></div>
+    <div>
+      <h2 id="timerH">Countdown</h2>
+      <div class="row">
+        <button data-min="2">2 min</button><button data-min="5">5 min</button><button data-min="10">10 min</button>
+        <button data-min="15">15 min</button><button data-min="20">20 min</button><button data-min="25">25 min</button>
+      </div>
+      <div class="row" style="margin-top:12px">
+        <button class="primary big" id="startPause">Start</button>
+        <button id="resetTimer">Reset</button>
+        <label class="row" style="width:auto"><input type="checkbox" id="beep" style="width:28px;height:28px;min-height:0"> soft beep at the end</label>
+      </div>
+      <p class="notice">Space bar starts and pauses. The ring empties as time passes; at two minutes left the clock turns amber.</p>
+    </div>
+  </div>
+</section>
+
+<!-- BRIEF -->
+<section id="brief" hidden aria-labelledby="briefH">
+  <h2 id="briefH" class="sr">Mission brief</h2>
+  <div class="card slide" id="slide"></div>
+  <div class="row noprint" style="margin-top:12px">
+    <button id="prevSlide">◀ Back</button>
+    <span id="slideNo" class="pill">1 / 5</span>
+    <button class="primary" id="nextSlide">Next ▶</button>
+    <span class="notice">Five slides, about a minute each. <kbd>←</kbd> <kbd>→</kbd> move.</span>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz" hidden aria-labelledby="quizH">
+  <div class="card">
+    <div class="row" style="justify-content:space-between">
+      <h2 id="quizH" style="margin:0">Team quiz</h2>
+      <span class="pill" id="qNo">Question 1 of 8</span>
+    </div>
+    <p class="q" id="qText"></p>
+    <div class="answer" id="qAnswer" data-hidden="true"></div>
+    <div class="row" style="margin-top:14px">
+      <button id="qPrev">◀</button>
+      <button class="primary big" id="qReveal">Reveal</button>
+      <button id="qNext">▶</button>
+      <span class="muted" style="flex:1 1 200px">Teams write on mini-whiteboards and hold them up together on "3, 2, 1, show". A point to every team that has it; a point for a good try too.</span>
+    </div>
+    <div class="row" style="margin-top:14px" id="qPoints"></div>
+  </div>
+</section>
+
+<!-- PRICE HUNT -->
+<section id="hunt" hidden aria-labelledby="huntH">
+  <div class="grid cols-2">
+    <div class="card">
+      <h2 id="huntH">Price Hunt · what might the day out cost?</h2>
+      <p class="muted">Cost cards are hidden round the grounds and the rec. Each team brings back figures; type them in as they arrive. Practice allowances from the plan, not quotes. Buying nothing in the shop is a fine choice.</p>
+      <table>
+        <thead><tr><th>Item</th><th>How many</th><th>Each (£)</th><th>Line (£)</th></tr></thead>
+        <tbody id="huntRows"></tbody>
+      </table>
+      <div class="row" style="margin-top:12px">
+        <label style="flex:1 1 220px">Transport<select id="transport">
+          <option value="150">Our own minibus · £150</option>
+          <option value="450">Hired minibus · £450</option>
+          <option value="650">Hired coach · £650</option>
+          <option value="0">Walk or public transport · enter below</option></select></label>
+        <label style="flex:1 1 160px">Other transport (£)<input type="number" id="transportOther" value="0" min="0"></label>
+        <label style="flex:1 1 160px">Contingency (%)<input type="number" id="contingency" value="10" min="0" max="50"></label>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Running total</h2>
+      <table>
+        <tr><td>Before transport</td><td class="total" id="subTotal">£0</td></tr>
+        <tr><td>Transport</td><td class="total" id="transTotal">£0</td></tr>
+        <tr><td>Contingency</td><td class="total" id="contTotal">£0</td></tr>
+        <tr><td><strong>Whole day</strong></td><td class="total" id="grandTotal">£0</td></tr>
+        <tr><td>Per pupil place (÷ <span id="divisor">10</span>)</td><td class="total" id="perPupil">£0</td></tr>
+      </table>
+      <p class="notice">A planning allocation, not a charge to anyone. Teams pitch one line each: "We'd choose … because …".</p>
+      <div class="row"><button id="huntReset">Clear figures</button><button id="huntModel">Show the modelled answer</button></div>
+      <p id="huntModelText" class="muted" hidden>Modelled: £150 pupil entry + £80 adult entry + £84 lunch and drink + £50 shop reserve = £364 before transport. Then add the transport you chose and 10% on top, and share it across ten pupil places.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PHOTO WALL -->
+<section id="wall" hidden aria-labelledby="wallH">
+  <div class="card">
+    <div class="row" style="justify-content:space-between">
+      <h2 id="wallH" style="margin:0">Photo wall</h2>
+      <div class="row">
+        <label class="primary" style="display:inline-block"><input type="file" id="photoIn" accept="image/*" multiple class="sr">
+          <span role="button" tabindex="0" id="photoBtn" class="pill" style="border-color:var(--accent);padding:.5em 1em">Add photos</span></label>
+        <button id="wallClear">Clear this week's photos</button>
+      </div>
+    </div>
+    <p class="notice">Photos are kept only on this computer, shrunk for the board, and never uploaded anywhere. Save the originals to the school system as usual. Captions: what the team did, never who.</p>
+    <div class="wall" id="wallGrid"></div>
+  </div>
+</section>
+
+<!-- EVIDENCE -->
+<section id="evidence" hidden aria-labelledby="evH">
+  <div class="card">
+    <div class="row" style="justify-content:space-between">
+      <h2 id="evH" style="margin:0">Evidence lines · one per pupil code</h2>
+      <div class="row"><button id="evCopy">Copy as text</button><button id="evClear">Clear this week</button></div>
+    </div>
+    <p class="notice">Codes only, never names. The line is the pupil's own words or a scribed line, with the help actually given. A team plan or a group photo does not show everyone's learning on its own.</p>
+    <table class="evidence">
+      <thead><tr><th>Code</th><th>Own words / scribed line</th><th>Help given</th><th>Photo or work ref</th><th>Banked</th></tr></thead>
+      <tbody id="evRows"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- JOKES -->
+<section id="jokes" hidden aria-labelledby="jokesH">
+  <div class="card">
+    <h2 id="jokesH">The dad-joke slot</h2>
+    <div class="joke" id="jokeText">Ready when you are.</div>
+    <div class="row"><button class="primary big" id="tellJoke">Tell one</button><span class="notice">Add your own in Settings. Groans count as engagement.</span></div>
+  </div>
+</section>
+
+<!-- SATELLITE -->
+<section id="satellite" hidden aria-labelledby="satH">
+  <div class="card">
+    <h2 id="satH">Satellite mission · the same task, out of the room</h2>
+    <p class="notice noprint">For two or three pupils with one TA in the quiet room. Print this page (the header is hidden when printing) or read it from a laptop. Same mission, same evidence line, no catching up afterwards.</p>
+    <div id="satBody"></div>
+  </div>
+</section>
+
+<!-- SETTINGS -->
+<section id="settings" hidden aria-labelledby="setH">
+  <div class="grid cols-2">
+    <div class="card">
+      <h2 id="setH">Display</h2>
+      <div class="row">
+        <label style="flex:1 1 200px">Background tint<select id="tint"><option value="">White</option><option value="blue">Pale blue</option><option value="pink">Pale pink</option><option value="dark">Dark</option></select></label>
+        <label style="flex:1 1 200px">Contrast<select id="contrast"><option value="">Normal</option><option value="high">High</option></select></label>
+        <label style="flex:1 1 200px">Text size<select id="size"><option value="">Normal</option><option value="big">Big</option><option value="huge">Huge</option></select></label>
+      </div>
+      <p class="notice">Team markers use a shape and a number as well as a colour, so colour alone never carries meaning.</p>
+      <h2 style="margin-top:1em">Your jokes</h2>
+      <textarea id="jokesEdit" aria-label="One joke per line"></textarea>
+      <div class="row" style="margin-top:8px"><button id="saveJokes">Save jokes</button></div>
+    </div>
+    <div class="card">
+      <h2>Weeks, slides and quiz questions</h2>
+      <p class="notice">Edit the text and press Save. Keep it names-free: no pupils, staff, places or venues. If the text will not save, the shape is wrong — press Restore to get the built-in version back.</p>
+      <textarea id="dataEdit" style="min-height:360px;font-family:ui-monospace,Consolas,monospace;font-size:.75em" aria-label="Week data as JSON"></textarea>
+      <div class="row" style="margin-top:8px"><button class="primary" id="saveData">Save</button><button id="restoreData">Restore built-in</button><button id="wipeAll">Wipe everything on this computer</button></div>
+      <p id="saveMsg" class="notice" aria-live="polite"></p>
+      <h2 style="margin-top:1em">Hosting</h2>
+      <p class="notice">This is one file with no server and no outside requests. Open it from the laptop, or upload it as a static file to your usual hosting; it behaves the same. Points, evidence lines and small photo copies are saved only in this browser.</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<script>
+(function(){
+'use strict';
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+const store={
+  get(k,d){try{const v=localStorage.getItem('lcmb:'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},
+  set(k,v){try{localStorage.setItem('lcmb:'+k,JSON.stringify(v));return true}catch(e){return false}},
+  del(k){try{localStorage.removeItem('lcmb:'+k)}catch(e){}}
+};
+
+/* ---------- built-in data: seven Thursdays, Autumn 2 2026 ---------- */
+const BUILTIN={
+ teams:[{name:"Team Triangle",mark:"▲"},{name:"Team Circle",mark:"●"},{name:"Team Square",mark:"■"}],
+ weeks:[
+ {label:"Week 1 · Thursday 5 November 2026",title:"Plan the day out",
+  slides:[
+   {kicker:"Local Choice · Week 1",h:"Plan the day out",bullets:["A full day out next term — you plan it","Today: find out, choose, pitch","Second half: Price Hunt round the grounds"],foot:"Evidence: one line each — what I found out or chose"},
+   {kicker:"Teams",h:"Three teams, four jobs",bullets:["Navigator · Recorder · Photographer · Kit lead","Two people can share a job","Pass on speaking any time — show your work instead"],foot:""},
+   {kicker:"The mission",h:"What would make the day brilliant?",bullets:["Pick a theme: money then and now · work and industry · home life","One question you want answered on the day","One thing to see, one thing to try"],foot:""},
+   {kicker:"Price Hunt",h:"Then we find out what it costs",bullets:["Cost cards are hidden outside and in the rec","Bring back the figures, we add them up on the board","Buying nothing in the shop is a real choice"],foot:""},
+   {kicker:"How we finish",h:"14:00 — evidence",bullets:["Photo wall: what your team did","One line each in your own words","A TA can write it for you"],foot:"Reset at 13:25: tools down, keep your plan."}],
+  quiz:[
+   {q:"A day out needs a plan. Name one thing you must know before you go.",a:"Where, when, how we get there, what it costs, who is coming (any of these)"},
+   {q:"Ten pupils at £15 entry each. How much is that?",a:"£150"},
+   {q:"Four adults at £20 each. Add it to the £150.",a:"£80, so £230 so far"},
+   {q:"Lunch and a drink is £6 for each of 14 people. Total?",a:"£84"},
+   {q:"True or false: you must spend your £5 in the shop.",a:"False — buying nothing is a fine choice"},
+   {q:"What does 'then and now' mean in a museum?",a:"Comparing how people lived or worked in the past with today"},
+   {q:"Give one job a team needs on a day out.",a:"Navigator, recorder, photographer, kit lead, timekeeper…"},
+   {q:"Why do we add 10% on top of the total?",a:"Contingency — a bit spare in case something costs more"}],
+  satellite:"<h3>Satellite · Plan the day out</h3><p><strong>Same mission:</strong> choose one theme (money then and now · work and industry · home life), write or say one question you'd want answered on the day, and one thing to see or try.</p><p><strong>Then:</strong> three cost cards come to you instead of you going to them. Add them up with a calculator: pupil entry, adult entry, lunch. Say which transport you'd pick and why.</p><p><strong>Evidence line:</strong> 'I found out…' or 'I would choose… because…'. A TA can scribe. Photo of the plan sheet, not the person.</p>"},
+ {label:"Week 2 · Thursday 12 November 2026",title:"Bake, taste, book",
+  slides:[
+   {kicker:"Local Choice · Week 2",h:"Bake, taste, book",bullets:["One team bakes to the plan","Everyone else is the taste panel — honest and kind","Then we practise asking a venue a question"],foot:"Evidence: one line — my feedback or my enquiry"},
+   {kicker:"Taste panel",h:"Three words, one score, one tip",bullets:["Look · smell · taste","Score 1 to 5 as a team","One thing to keep, one thing to change"],foot:""},
+   {kicker:"Booking enquiry",h:"How do you ask a venue?",bullets:["Who we are · how many · when","Three questions we need answered","Polite start, polite finish"],foot:""},
+   {kicker:"Customer game",h:"In the rec: serve and be served",bullets:["Order, pay, check your change","Switch roles on the whistle","Points for manners, not speed"],foot:""},
+   {kicker:"How we finish",h:"14:00 — evidence",bullets:["Photo of the tally or the enquiry","One line each","Tools down, kitchen clear"],foot:""}],
+  quiz:[
+   {q:"Name one thing a taste panel judges besides taste.",a:"Look, smell, texture, size, price"},
+   {q:"You pay £2 with a £5 note. Change?",a:"£3"},
+   {q:"Give one polite way to start an enquiry.",a:"'Good morning, I'm asking on behalf of our group…'"},
+   {q:"How many people are we booking for?",a:"Ten pupils and the adults with us"},
+   {q:"True or false: a venue needs to know the date we want.",a:"True"},
+   {q:"What should a team do if the bake goes wrong?",a:"Say what happened, fix what you can, write it down — that's still evidence"}],
+  satellite:"<h3>Satellite · Bake, taste, book</h3><p>Taste-panel cards come to you: score as a pair, one keep, one change. Then write or say the three questions you'd ask a venue. Evidence line: 'My feedback was…' or 'I would ask…'.</p>"},
+ {label:"Week 3 · Thursday 19 November 2026",title:"Then-and-now detectives",
+  slides:[
+   {kicker:"Local Choice · Week 3",h:"Then-and-now detectives",bullets:["Design the frame for your team's exhibit","What was it like then? What is it like now?","Outside: photo trail of school and the patch"],foot:"Evidence: one line — one change I spotted"},
+   {kicker:"Exhibit frame",h:"Object · caption · question",bullets:["One object or scene","A 'then' caption and a 'now' caption","One question you still have"],foot:""},
+   {kicker:"Spot the hazard",h:"Help write the risk assessment",bullets:["Where could someone slip, trip or get lost?","What would keep everyone safe?","Your lines go into the real paperwork"],foot:""},
+   {kicker:"Photo trail",h:"Out on the patch",bullets:["Find five 'then and now' spots","Photograph the place, not the people","Back for 13:55"],foot:""},
+   {kicker:"How we finish",h:"14:00 — evidence",bullets:["Pick the team's best then-and-now pair","One line each","Frames in the folder"],foot:""}],
+  quiz:[
+   {q:"Give one thing that has changed about shops in the last fifty years.",a:"Self-service, card payment, online shopping, opening hours…"},
+   {q:"What is a hazard?",a:"Something that could cause harm"},
+   {q:"Name one hazard on a walk and one way to manage it.",a:"Traffic — cross at the crossing; wet leaves — walk, don't run…"},
+   {q:"What two captions does a then-and-now exhibit need?",a:"'Then' and 'now'"},
+   {q:"Why photograph the place and not the people?",a:"Privacy — the place tells the story"},
+   {q:"What question is left when you've compared then and now?",a:"Usually 'why did it change?'"}],
+  satellite:"<h3>Satellite · Then-and-now detectives</h3><p>Design one exhibit frame on paper: object, 'then' caption, 'now' caption, one question. Then two hazard cards: what's the risk, what keeps us safe. Evidence line: 'One change I spotted was…'.</p>"},
+ {label:"Week 4 · Thursday 26 November 2026",title:"Kit, conduct and the trail",
+  slides:[
+   {kicker:"Local Choice · Week 4",h:"Kit, conduct and the trail",bullets:["Team quiz: what to bring, how we behave out and about","Agree our conduct code","Outside: the trail round the site"],foot:"Evidence: one line — one rule I agree with and why"},
+   {kicker:"Kit",h:"What goes in the bag?",bullets:["Weather · food · the plan","One thing each team always forgets","Kit lead checks everyone"],foot:""},
+   {kicker:"Conduct code",h:"Our rules, our words",bullets:["Five lines everyone can keep","Written by the teams, not the teacher","Signed by the team marks"],foot:""},
+   {kicker:"The trail",h:"Find the markers, answer the clue",bullets:["Stay with your team and your adult","Points for every marker found","Back at the whistle"],foot:""},
+   {kicker:"How we finish",h:"14:00 — evidence",bullets:["Conduct code on the wall","One line each","Kit list to the folder"],foot:""}],
+  quiz:[
+   {q:"Name three things to pack for a winter day out.",a:"Coat, lunch, water, gloves, the plan, a charged phone for the adult…"},
+   {q:"Which way is north on most maps?",a:"Up (the top of the map)"},
+   {q:"What does this map symbol usually mean: a cross on a square?",a:"A place of worship with a tower"},
+   {q:"Give one line for our conduct code.",a:"Stay with your team; speak kindly; ask before you touch…"},
+   {q:"If you are separated from your team, what do you do?",a:"Stop, stay where you are, wait for your adult"},
+   {q:"How many markers did your team find? (Count together.)",a:"Teams report — a point for each"}],
+  satellite:"<h3>Satellite · Kit, conduct and the trail</h3><p>Pack a bag on paper: five items, say why. Write two conduct-code lines. Trail clue cards come to you: match the symbol to its meaning. Evidence line: 'One rule I agree with is… because…'.</p>"},
+ {label:"Week 5 · Thursday 3 December 2026",title:"Sale day",
+  slides:[
+   {kicker:"Local Choice · Week 5",h:"Sale day",bullets:["One team runs the stall","Everyone else has a money task as customers","Staff are invited at 13:30"],foot:"Evidence: one line — what I bought or sold and how I checked"},
+   {kicker:"Set up",h:"Labels, prices, float, display",bullets:["Every item labelled and priced","Float counted twice","Display from the photo wall"],foot:""},
+   {kicker:"Customers",h:"Budget, choose, pay, check",bullets:["You have a practice budget","Pick, pay, count your change","Say thank you"],foot:""},
+   {kicker:"Sellers",h:"Greet, serve, count, record",bullets:["One speaks, one handles money, one records","Stock count at the end","Takings counted with an adult"],foot:""},
+   {kicker:"How we finish",h:"13:55 close · 14:00 evidence",bullets:["Stall cleared","One line each","Takings sealed and signed"],foot:""}],
+  quiz:[
+   {q:"Two cakes at 60p each. Total?",a:"£1.20"},
+   {q:"You pay £1.20 with a £2 coin. Change?",a:"80p"},
+   {q:"Why do we count the float twice?",a:"So we know exactly what we started with"},
+   {q:"Name one job on a stall.",a:"Greeter, server, money handler, recorder, restocker"},
+   {q:"What makes a label good?",a:"Clear name, clear price, big enough to read"},
+   {q:"How do we know how much we raised?",a:"Takings at the end minus the float we started with"}],
+  satellite:"<h3>Satellite · Sale day</h3><p>Be the first customers: budget card, choose two items, pay, check change with a TA. Or be the counting team: count the float twice and record it. Evidence line: 'I bought… and my change was…' or 'We counted…'.</p>"},
+ {label:"Week 6 · Thursday 10 December 2026",title:"Count it, give back",
+  slides:[
+   {kicker:"Local Choice · Week 6",h:"Count it, give back",bullets:["Count and check the total — everyone watches the numbers","Plan how we give back","Outside: a job on the patch"],foot:"Evidence: one line — what we raised or what I did to help"},
+   {kicker:"The count",h:"Takings minus float",bullets:["Two counts, two people","Recorder writes both","Agree the figure together"],foot:""},
+   {kicker:"Give back",h:"Who does this help, and how?",bullets:["One sentence from each team","Thank-you cards","Impact display for the wall"],foot:""},
+   {kicker:"On the patch",h:"Leave it better than we found it",bullets:["Gloves on, bags out, adults with each team","Photograph the before and after","Back at the whistle"],foot:"Indoor fallback: cards and the impact display."},
+   {kicker:"How we finish",h:"14:00 — evidence",bullets:["Before-and-after photos up","One line each","Cards in the envelope"],foot:""}],
+  quiz:[
+   {q:"Takings £63.40, float £10. How much did we raise?",a:"£53.40"},
+   {q:"Why do two people count separately?",a:"To catch mistakes — if the counts match, it's right"},
+   {q:"What is a thank-you card for?",a:"To tell people their help mattered"},
+   {q:"Name one way a group can give back locally.",a:"Litter pick, planting, a thank-you visit, a display…"},
+   {q:"Why photograph before and after?",a:"It shows the difference we made"},
+   {q:"Who should hear about what we raised?",a:"The people we helped, the school, the people who bought"}],
+  satellite:"<h3>Satellite · Count it, give back</h3><p>Count the practice takings with a TA (two counts). Write one thank-you card. Evidence line: 'We raised…' or 'I helped by…'.</p>"},
+ {label:"Week 7 · Thursday 17 December 2026",title:"Grand Quiz and celebration",
+  slides:[
+   {kicker:"Local Choice · Week 7",h:"Grand Quiz",bullets:["Seven weeks of photos — which week was this?","Every team scores for every round","Awards for every job"],foot:"Evidence: one line — the best thing I did this half-term"},
+   {kicker:"Round 1",h:"Photo round",bullets:["Which week? What were we doing?","Mini-whiteboards up together","Points for every right answer"],foot:""},
+   {kicker:"Round 2",h:"Numbers round",bullets:["What did the day cost per place?","What did we raise?","Nearest team wins the round — all teams score"],foot:""},
+   {kicker:"Round 3",h:"Our exhibits",bullets:["Each team shows its then-and-now frame","Pass on speaking if you like — the frame speaks","One question from another team"],foot:""},
+   {kicker:"How we finish",h:"Awards and the Spring announcement",bullets:["An award for every job","Evidence sheets signed","Next term: the day out we planned"],foot:""}],
+  quiz:[
+   {q:"Which week did we hide cost cards round the grounds?",a:"Week 1"},
+   {q:"What did the taste panel score?",a:"Teams remember — any honest answer scores"},
+   {q:"What was our conduct code's first line?",a:"Read it from the wall together"},
+   {q:"What did we raise on sale day?",a:"The agreed figure from Week 6"},
+   {q:"Name all four team jobs.",a:"Navigator, recorder, photographer, kit lead"},
+   {q:"What are we doing next term?",a:"The day out we planned — a whole day"}],
+  satellite:"<h3>Satellite · Grand Quiz</h3><p>Photo cards come to you: which week, what were we doing? Numbers round on paper. Evidence line: 'The best thing I did was…'.</p>"}
+ ],
+ jokes:[
+  "Why did the scarecrow win an award? He was outstanding in his field.",
+  "I told my team a joke about a budget. It didn't add up.",
+  "Why can't you trust an atom? They make up everything.",
+  "What do you call cheese that isn't yours? Nacho cheese.",
+  "Why did the map get a detention? It kept pointing the wrong way.",
+  "I'm reading a book about anti-gravity. Impossible to put down.",
+  "How does a penguin build its house? Igloos it together.",
+  "Why did the bicycle fall over? It was two tired.",
+  "What's a cake's favourite lesson? Baking… and maths, because it's all about the slices.",
+  "I asked the museum if the dinosaur skeleton was real. They said it was tyranno-sure."
+ ]
+};
+
+/* ---------- state ---------- */
+let data=store.get('data',null)||JSON.parse(JSON.stringify(BUILTIN));
+let week=store.get('week',0);
+let points=store.get('points',[0,0,0]);
+let teams=store.get('teams',null)||JSON.parse(JSON.stringify(BUILTIN.teams));
+let slideIx=0, qIx=0;
+
+/* ---------- tabs ---------- */
+$$('nav button').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+function showTab(id){
+  $$('main > section').forEach(s=>s.hidden=(s.id!==id));
+  $$('nav button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.tab===id)));
+  if(id==='hunt')renderHunt(); if(id==='evidence')renderEvidence(); if(id==='wall')renderWall(); if(id==='satellite')renderSat();
+}
+
+/* ---------- week ---------- */
+function renderWeekSelect(){
+  const sel=$('#weekSelect'); sel.innerHTML='';
+  data.weeks.forEach((w,i)=>{const o=document.createElement('option');o.value=i;o.textContent=w.label+' — '+w.title;sel.appendChild(o)});
+  sel.value=week; $('#weekLabel').textContent=data.weeks[week].label;
+}
+$('#weekSelect').addEventListener('change',e=>{week=+e.target.value;store.set('week',week);slideIx=0;qIx=0;renderAll()});
+
+/* ---------- teams ---------- */
+function renderTeams(){
+  const g=$('#teamGrid'); g.innerHTML='';
+  teams.forEach((t,i)=>{
+    const c=document.createElement('div'); c.className='card team'; c.dataset.n=i+1;
+    c.innerHTML=`<div class="row" style="justify-content:space-between"><span class="mark" aria-hidden="true">${t.mark}</span><span class="pill">Team ${i+1}</span></div>
+      <input aria-label="Team ${i+1} name" value="${esc(t.name)}">
+      <div class="pts" aria-live="polite">${points[i]}</div>
+      <div class="row" style="justify-content:center"><button data-add="1">+1</button><button data-add="2">+2</button><button data-add="5">+5</button><button data-add="-1" aria-label="Take one point back">−1</button></div>`;
+    c.querySelector('input').addEventListener('change',e=>{teams[i].name=e.target.value.slice(0,40);store.set('teams',teams)});
+    c.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',()=>addPoints(i,+b.dataset.add)));
+    g.appendChild(c);
+  });
+}
+function addPoints(i,n){points[i]=Math.max(0,points[i]+n);store.set('points',points);renderTeams();renderQuizPoints()}
+$('#allFinished').addEventListener('click',()=>{points=points.map(p=>p+5);store.set('points',points);renderTeams()});
+$('#resetPoints').addEventListener('click',()=>{if(confirm('Reset all team points to zero?')){points=[0,0,0];store.set('points',points);renderTeams()}});
+
+/* ---------- timer ---------- */
+let total=600, left=600, running=false, tick=null, audio=null;
+function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function drawTimer(){
+  $('#clock').textContent=fmt(left);
+  $('#ring').style.setProperty('--deg',(360*left/total)+'deg');
+  $('#clock').style.color=left<=120&&left>0?'var(--warn)':'';
+  $('#startPause').textContent=running?'Pause':(left===total?'Start':'Resume');
+}
+function setTimer(min){total=left=min*60;stopTimer();drawTimer()}
+function stopTimer(){running=false;clearInterval(tick);tick=null}
+function startPause(){
+  if(running){stopTimer();drawTimer();return}
+  if(left<=0){left=total}
+  running=true; drawTimer();
+  tick=setInterval(()=>{left--;if(left<=0){left=0;stopTimer();if($('#beep').checked)beep()}drawTimer()},1000);
+}
+function beep(){try{audio=audio||new (window.AudioContext||window.webkitAudioContext)();const o=audio.createOscillator(),g=audio.createGain();o.frequency.value=660;g.gain.value=.08;o.connect(g);g.connect(audio.destination);o.start();o.stop(audio.currentTime+.6)}catch(e){}}
+$$('#timer [data-min]').forEach(b=>b.addEventListener('click',()=>setTimer(+b.dataset.min)));
+$('#startPause').addEventListener('click',startPause);
+$('#resetTimer').addEventListener('click',()=>{stopTimer();left=total;drawTimer()});
+
+/* ---------- brief ---------- */
+function renderSlide(){
+  const w=data.weeks[week], s=w.slides[slideIx];
+  $('#slide').innerHTML=`<div class="kicker">${esc(s.kicker||'')}</div><h3>${esc(s.h)}</h3><ul>${(s.bullets||[]).map(b=>`<li>${esc(b)}</li>`).join('')}</ul>${s.foot?`<p class="pill">${esc(s.foot)}</p>`:''}`;
+  $('#slideNo').textContent=(slideIx+1)+' / '+w.slides.length;
+}
+$('#prevSlide').addEventListener('click',()=>{slideIx=Math.max(0,slideIx-1);renderSlide()});
+$('#nextSlide').addEventListener('click',()=>{slideIx=Math.min(data.weeks[week].slides.length-1,slideIx+1);renderSlide()});
+
+/* ---------- quiz ---------- */
+function renderQuiz(){
+  const qs=data.weeks[week].quiz, q=qs[qIx];
+  $('#qNo').textContent=`Question ${qIx+1} of ${qs.length}`;
+  $('#qText').textContent=q.q; const a=$('#qAnswer'); a.textContent=q.a; a.dataset.hidden='true';
+  $('#qReveal').textContent='Reveal'; renderQuizPoints();
+}
+function renderQuizPoints(){
+  $('#qPoints').innerHTML=teams.map((t,i)=>`<button data-qp="${i}"><span aria-hidden="true">${t.mark}</span> ${esc(t.name)} +1 <span class="pill">${points[i]}</span></button>`).join('');
+  $$('#qPoints [data-qp]').forEach(b=>b.addEventListener('click',()=>addPoints(+b.dataset.qp,1)));
+}
+function reveal(){const a=$('#qAnswer');const h=a.dataset.hidden==='true';a.dataset.hidden=String(!h);$('#qReveal').textContent=h?'Hide':'Reveal'}
+$('#qReveal').addEventListener('click',reveal);
+$('#qPrev').addEventListener('click',()=>{qIx=Math.max(0,qIx-1);renderQuiz()});
+$('#qNext').addEventListener('click',()=>{qIx=Math.min(data.weeks[week].quiz.length-1,qIx+1);renderQuiz()});
+
+/* ---------- price hunt ---------- */
+const HUNT_DEFAULT=[{item:"Pupil entry",n:10,each:15},{item:"Adult entry",n:4,each:20},{item:"Lunch and a drink",n:14,each:6},{item:"Shop reserve (max £5 each)",n:10,each:5}];
+let hunt=store.get('hunt',null)||{rows:JSON.parse(JSON.stringify(HUNT_DEFAULT)),transport:"150",other:0,cont:10};
+function renderHunt(){
+  const tb=$('#huntRows'); tb.innerHTML='';
+  hunt.rows.forEach((r,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td><input aria-label="Item ${i+1}" value="${esc(r.item)}"></td><td><input type="number" min="0" aria-label="How many" value="${r.n}"></td><td><input type="number" min="0" step="0.5" aria-label="Each in pounds" value="${r.each}"></td><td class="total" data-line>£0</td>`;
+    const [a,b,c]=tr.querySelectorAll('input');
+    a.addEventListener('change',e=>{r.item=e.target.value;save()}); b.addEventListener('input',e=>{r.n=+e.target.value||0;calc()}); c.addEventListener('input',e=>{r.each=+e.target.value||0;calc()});
+    tb.appendChild(tr);
+  });
+  $('#transport').value=hunt.transport; $('#transportOther').value=hunt.other; $('#contingency').value=hunt.cont; calc();
+  function save(){store.set('hunt',hunt)}
+}
+function calc(){
+  let sub=0; $$('#huntRows tr').forEach((tr,i)=>{const line=hunt.rows[i].n*hunt.rows[i].each;sub+=line;tr.querySelector('[data-line]').textContent=money(line)});
+  const trans=hunt.transport==="0"?(+hunt.other||0):+hunt.transport; const cont=(sub+trans)*(hunt.cont/100); const grand=sub+trans+cont;
+  $('#subTotal').textContent=money(sub); $('#transTotal').textContent=money(trans); $('#contTotal').textContent=money(cont); $('#grandTotal').textContent=money(grand);
+  const div=Math.max(1,hunt.rows[0]?.n||10); $('#divisor').textContent=div; $('#perPupil').textContent=money(grand/div);
+  store.set('hunt',hunt);
+}
+function money(v){return '£'+(Math.round(v*100)/100).toLocaleString('en-GB',{minimumFractionDigits:v%1?2:0,maximumFractionDigits:2})}
+$('#transport').addEventListener('change',e=>{hunt.transport=e.target.value;calc()});
+$('#transportOther').addEventListener('input',e=>{hunt.other=+e.target.value||0;calc()});
+$('#contingency').addEventListener('input',e=>{hunt.cont=+e.target.value||0;calc()});
+$('#huntReset').addEventListener('click',()=>{hunt.rows.forEach(r=>{r.n=0;r.each=0});hunt.other=0;renderHunt()});
+$('#huntModel').addEventListener('click',()=>{const p=$('#huntModelText');p.hidden=!p.hidden});
+
+/* ---------- photo wall (thumbnails only, this browser only) ---------- */
+function wallKey(){return 'wall:'+week}
+function renderWall(){
+  const g=$('#wallGrid'); g.innerHTML=''; const items=store.get(wallKey(),[]);
+  if(!items.length){g.innerHTML='<p class="muted">No photos yet this week. Add some from the camera or the folder; they appear here as small copies.</p>';return}
+  items.forEach((it,i)=>{
+    const f=document.createElement('figure');
+    f.innerHTML=`<img src="${it.src}" alt="Week photo ${i+1}"><figcaption><input aria-label="Caption" placeholder="What the team did…" value="${esc(it.cap||'')}"></figcaption>`;
+    f.querySelector('input').addEventListener('change',e=>{it.cap=e.target.value.slice(0,120);store.set(wallKey(),items)});
+    g.appendChild(f);
+  });
+}
+$('#photoBtn').addEventListener('click',()=>$('#photoIn').click());
+$('#photoBtn').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();$('#photoIn').click()}});
+$('#photoIn').addEventListener('change',async e=>{
+  const items=store.get(wallKey(),[]);
+  for(const file of Array.from(e.target.files||[])){
+    try{const src=await shrink(file,360);items.push({src,cap:''})}catch(err){}
+  }
+  if(!store.set(wallKey(),items))alert('This browser is out of room for photo copies. Clear an earlier week in the Photo Wall, or keep photos in the school folder only.');
+  e.target.value=''; renderWall();
+});
+function shrink(file,max){return new Promise((res,rej)=>{const img=new Image();const url=URL.createObjectURL(file);img.onload=()=>{const r=Math.min(1,max/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*r);c.height=Math.round(img.height*r);c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(url);res(c.toDataURL('image/jpeg',.7))};img.onerror=rej;img.src=url})}
+$('#wallClear').addEventListener('click',()=>{if(confirm("Remove this week's photo copies from this computer?")){store.del(wallKey());renderWall()}});
+
+/* ---------- evidence ---------- */
+function evKey(){return 'ev:'+week}
+function renderEvidence(){
+  const rows=store.get(evKey(),null)||Array.from({length:10},(_,i)=>({code:'P'+String(i+1).padStart(2,'0'),line:'',help:'',ref:'',banked:false}));
+  const tb=$('#evRows'); tb.innerHTML='';
+  rows.forEach(r=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${r.code}</td><td><input aria-label="${r.code} line" value="${esc(r.line)}"></td>
+      <td><select aria-label="${r.code} help"><option value="">—</option><option>None</option><option>Prompted</option><option>Scribed</option><option>Satellite</option></select></td>
+      <td><input aria-label="${r.code} reference" value="${esc(r.ref)}" placeholder="photo 3 / plan sheet"></td>
+      <td><input type="checkbox" aria-label="${r.code} banked" style="width:32px;height:32px;min-height:0" ${r.banked?'checked':''}></td>`;
+    const [line,help,ref,bank]=tr.querySelectorAll('input,select');
+    help.value=r.help;
+    line.addEventListener('change',e=>{r.line=e.target.value;store.set(evKey(),rows)});
+    help.addEventListener('change',e=>{r.help=e.target.value;store.set(evKey(),rows)});
+    ref.addEventListener('change',e=>{r.ref=e.target.value;store.set(evKey(),rows)});
+    bank.addEventListener('change',e=>{r.banked=e.target.checked;store.set(evKey(),rows)});
+    tb.appendChild(tr);
+  });
+}
+$('#evCopy').addEventListener('click',async()=>{
+  const rows=store.get(evKey(),[]); const w=data.weeks[week];
+  const txt=[w.label+' — '+w.title,...rows.map(r=>`${r.code}\t${r.line}\t${r.help}\t${r.ref}\t${r.banked?'banked':''}`)].join('\n');
+  try{await navigator.clipboard.writeText(txt);toast('Copied — paste into the evidence sheet.')}catch(e){prompt('Copy this text:',txt)}
+});
+$('#evClear').addEventListener('click',()=>{if(confirm("Clear this week's evidence lines?")){store.del(evKey());renderEvidence()}});
+
+/* ---------- jokes ---------- */
+let lastJoke=-1;
+$('#tellJoke').addEventListener('click',()=>{const j=data.jokes||[];if(!j.length){$('#jokeText').textContent='Add a joke in Settings first.';return}let i;do{i=Math.floor(Math.random()*j.length)}while(j.length>1&&i===lastJoke);lastJoke=i;$('#jokeText').textContent=j[i]});
+
+/* ---------- satellite ---------- */
+function renderSat(){$('#satBody').innerHTML=data.weeks[week].satellite||'<p>No satellite text for this week yet — add it in Settings.</p>'}
+
+/* ---------- settings ---------- */
+function applyDisplay(){
+  const d=store.get('display',{});
+  document.documentElement.dataset.tint=d.tint||''; document.documentElement.dataset.contrast=d.contrast||'';
+  document.documentElement.style.setProperty('--fs',d.size==='huge'?'clamp(24px,2.2vw,34px)':d.size==='big'?'clamp(21px,1.9vw,30px)':'clamp(18px,1.6vw,26px)');
+  $('#tint').value=d.tint||''; $('#contrast').value=d.contrast||''; $('#size').value=d.size||'';
+}
+['tint','contrast','size'].forEach(k=>$('#'+k).addEventListener('change',e=>{const d=store.get('display',{});d[k]=e.target.value;store.set('display',d);applyDisplay()}));
+$('#saveJokes').addEventListener('click',()=>{data.jokes=$('#jokesEdit').value.split('\n').map(s=>s.trim()).filter(Boolean);store.set('data',data);toast('Jokes saved.')});
+$('#saveData').addEventListener('click',()=>{
+  try{const d=JSON.parse($('#dataEdit').value);
+    if(!Array.isArray(d.weeks)||!d.weeks.length||!d.weeks.every(w=>w.label&&w.title&&Array.isArray(w.slides)&&Array.isArray(w.quiz)))throw new Error('shape');
+    d.jokes=d.jokes||data.jokes; data=d; store.set('data',data); week=Math.min(week,data.weeks.length-1); slideIx=0;qIx=0; renderAll(); toast('Saved.');
+  }catch(e){toast('Not saved — the shape is wrong. Check the brackets and commas, or press Restore.')}
+});
+$('#restoreData').addEventListener('click',()=>{if(confirm('Put the built-in weeks, slides, quiz and jokes back?')){data=JSON.parse(JSON.stringify(BUILTIN));store.set('data',data);week=0;slideIx=0;qIx=0;renderAll();toast('Restored.')}});
+$('#wipeAll').addEventListener('click',()=>{if(confirm('Remove everything this board has saved on this computer: points, team names, evidence lines, photo copies and edits?')){try{Object.keys(localStorage).filter(k=>k.startsWith('lcmb:')).forEach(k=>localStorage.removeItem(k))}catch(e){}location.reload()}});
+function toast(m){$('#saveMsg').textContent=m;setTimeout(()=>{if($('#saveMsg').textContent===m)$('#saveMsg').textContent=''},4000)}
+
+/* ---------- keyboard ---------- */
+document.addEventListener('keydown',e=>{
+  const tag=(e.target.tagName||'').toLowerCase(); if(tag==='input'||tag==='textarea'||tag==='select')return;
+  const tab=$$('nav button').find(b=>b.getAttribute('aria-pressed')==='true')?.dataset.tab;
+  if(e.key===' '){e.preventDefault();startPause()}
+  else if(e.key==='1'||e.key==='2'||e.key==='3'){addPoints(+e.key-1,1)}
+  else if(e.key==='ArrowRight'){if(tab==='brief')$('#nextSlide').click();else if(tab==='quiz')$('#qNext').click()}
+  else if(e.key==='ArrowLeft'){if(tab==='brief')$('#prevSlide').click();else if(tab==='quiz')$('#qPrev').click()}
+  else if(e.key==='r'||e.key==='R'){if(tab==='quiz')reveal()}
+});
+
+/* ---------- init ---------- */
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function renderAll(){renderWeekSelect();renderTeams();renderSlide();renderQuiz();renderSat();$('#dataEdit').value=JSON.stringify({weeks:data.weeks,jokes:data.jokes},null,1);$('#jokesEdit').value=(data.jokes||[]).join('\n')}
+applyDisplay(); drawTimer(); renderAll(); showTab('teams');
+})();
+</script>
+</body>
+</html>
