@@ -1,0 +1,1 @@
+Public edition. Use Task_Sheets, Evidence_Sheet and Slides with ../Shared_Resources. Adult guidance is ../Planner.pdf and ../Shared_Resources/Staff_Answers.pdf. Keep root assets with the lesson. No real pupil information or actual outcomes are prefilled.

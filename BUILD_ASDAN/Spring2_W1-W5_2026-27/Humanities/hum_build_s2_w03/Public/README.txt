@@ -1,0 +1,1 @@
+Public edition. Use Task_Sheets, Evidence_Sheet and Slides with ../Shared_Resources caring scenes, action cards, support frame and words. Adult guidance is in ../Planner.pdf and ../Shared_Resources/Staff_Answers.pdf. Keep the root assets folder with the lesson. Actual pupil results remain blank. Plan ONE class action for later; do not execute it in this lesson.
