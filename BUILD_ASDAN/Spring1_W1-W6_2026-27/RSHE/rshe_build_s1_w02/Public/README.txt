@@ -5,6 +5,8 @@ Year A. Spring 1 Week 2, 11–15 January 2027. Wednesday 13 January 2027, P1. On
 Exact outcome: Name a big feeling and a way to manage it.
 Theme: Resilience & Change.
 
+C65 outcome retained verbatim. Inherited named source programmes, resources and accredited units in A64/D64/E64/F64 replaced with generic feelings scenarios, familiar school-agreed help and evidence-record wording. Four original unnamed fictional cases and original four-picture bank. Word banks, starters and visible models retained on all seven tasks. No medical, diagnostic, therapeutic or accredited-outcome claim. No personal account required; first-person sentence frame is practice using fictional or picked words.
+
 What this lesson teaches
 Name cross, sad, worried or excited in calm invented scenes. Use a stated feeling rather than diagnosing a face/body clue. Choose a safe, already familiar school help step. Match by possibility, not one fixed pair. Practise “When I feel… I can…” with a fictional scene or picked words, not a personal disclosure.
 
@@ -83,6 +85,9 @@ Evidence Sheet page 1 is a book-task reference; page 2 private staff record with
 Continuity
 Spring 1 Week 2 is formative; Week 6 assessing. Builds on recognising that change can feel hard by naming a big feeling and safe familiar help. No clinical advice, treatment claim, promised emotional outcome or requirement to demonstrate coping.
 
+Scope
+Only BUILD RSHE Spring 1 Week 2 authored. No later weeks or separate RSE content. Pause for Downloaded.
+
 Three chunks of 12, 13 and 15 minutes. Resets 11–12 and 24–25 are already inside the 40 minutes. All seven task stages retain a word bank, sentence starter and visible model. Supported / Independent / Aspire all retain these Level 2 aids. No public questions or unsupported memory demand. Book first; cards are references, not write-on worksheets. Story drawing, pointing, voice, aid, typing or faithful scribe valid. Plan in any language.
 
 Four invented stories state cross, sad, worried and excited. Four original unnamed portrait cards have native crops from one picture bank, with editable labels. Face/body clues may go with feelings but never prove them. Use the story words. Four help options are breathe, move, tell someone and take space, using only familiar school-agreed versions. Prepared pairs are examples; more than one safe strategy can fit. No compulsory breath or movement practice, diagnosis or promise a feeling will vanish.
@@ -95,6 +100,12 @@ Keep any private concern out of shared work and public evidence. No personal acc
 
 Keep a dated individual feeling/help response and first thinking, access and content cues, one NS and reply. A pass is unobserved; do not grade a feeling, drawing quality or real-life coping. E only actual banked work; R after Voice, Audience, NS and reply. Offer to the Communication portfolio; staff confirm any accredited mapping. Evidence Sheet has an initially blank private staff record.
 
+School Planner, Slides and Weekly Plan Row at lesson root; Public replacements; four DOCX/PDF pairs in Shared_Resources; one picture bank in assets. CORE_PACK_MANIFEST.json retains twelve core members and weekly-row additions. Preserve relative paths. Six recursive SHA256SUMS exclude themselves; parents include child manifests. No standalone scripts or live addresses. Standard file-format namespaces retained.
+
+Only Week 2 authored. Later scheme rows are generic sequence context only, with identifying labels omitted. Further lessons await their own brief after Downloaded.
+
 Public teaching matches School apart from edition labels. Shared resources use ../Shared_Resources.
 
 Lesson resource · CC BY-NC-SA 4.0: free for classroom use, share and adapt with credit, no resale
+
+Correction re-issue CORR1: this bundle supersedes the original RSHE_BUILD_S1_W02_BUNDLE.zip. All existing filenames, lesson id, dates, period and outcomes are retained.

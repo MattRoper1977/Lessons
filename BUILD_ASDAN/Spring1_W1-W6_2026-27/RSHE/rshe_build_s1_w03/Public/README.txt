@@ -5,6 +5,8 @@ Year A. Spring 1 Week 3, 18–22 January 2027. Wednesday 20 January 2027, P1. On
 Exact outcome: Use a calming strategy independently.
 Theme: Resilience & Change.
 
+C66 outcome retained verbatim. Inherited identifying source programmes/resources in A64/D64/E64/F64 rendered generically. Three authored low-pressure classroom routines from the owner brief and familiar school-agreed versions, not clinical treatment protocols. A maximum thirty-second practice timer is not a breath-rate demand. Independence means actual routine use with retained card/model/usual aids and no adult next-step content cues after the general task cue. Pupil helpfulness report is separate from observed independence. No distress induction, personal trigger account or guarantee of calming.
+
 What this lesson teaches
 Teach three short, school-agreed routines: soft breath, look and count, small hand move. Learner chooses one, tries the steps with usual access after a general cue, and gives their own Did it help? feedback. Independence means no adult next-step content prompts, not removal of a card or aids. A pass/stop/switch is respected and recorded honestly.
 
@@ -83,6 +85,9 @@ Evidence Sheet page 1 is pupil guidance; page 2 private staff record with fourte
 Continuity
 Week 3 formative; Week 6 assessing. Builds on naming feelings/help by teaching and observing a chosen routine, without requiring distress. Existing school-agreed routines and access only; no treatment or guaranteed calming claim.
 
+Scope
+Only BUILD RSHE Spring 1 Week 3 authored. No later weeks or separate RSE content. Pause for Downloaded.
+
 Three chunks of 12, 13 and 15 minutes. Resets 11–12 and 24–25 are already inside the 40 minutes. All seven task stages retain a word bank, sentence starter and visible model. Supported / Independent / Aspire all retain Level 2 aids. Book first; a dedicated choice card is kept in the book or usual accessible place. Plan in any language. No public questions or personal triggers.
 
 Three authored school-agreed routine choices: soft breath with IN/OUT own-pace cue and no holds; look and count, noticing three seen things, two safe points of touch and one sound with usual access or alternative; small hand move, softly opening/closing then resting with no force or performance target. Teach and check access before practice. Calm invented scenes are context only; never induce distress or require a big feeling.
@@ -107,6 +112,12 @@ Keep concerns outside shared work/public evidence. No personal history, named se
 
 Keep actual chosen routine, observed use, normal access, adult step prompts, independent/prompted/unobserved state, own help tick, first thinking, one NS and reply. A pass or no collected practice is unobserved, not fabricated independence. E actual banked work; R after Voice, Audience, NS and reply. Offer to the Communication portfolio; staff confirm any accredited mapping.
 
+School Planner, Slides and Weekly Plan Row at lesson root; Public replacements; four DOCX/PDF pairs in Shared_Resources; one breathing cue PNG in assets. CORE_PACK_MANIFEST.json retains twelve core members and weekly-row additions. Six recursive SHA256SUMS exclude themselves; parents include child manifests. No standalone scripts or live addresses. Standard file-format namespaces retained.
+
+Only Week 3 authored. Later scheme rows are generic context only, with identifying labels omitted. Further lessons await their own brief after Downloaded.
+
 Public teaching matches School apart from edition labels. Shared resources use ../Shared_Resources.
 
 Lesson resource · CC BY-NC-SA 4.0: free for classroom use, share and adapt with credit, no resale
+
+Correction re-issue CORR1: this bundle supersedes the original RSHE_BUILD_S1_W03_BUNDLE.zip. All existing filenames, lesson id, dates, period and outcomes are retained.
