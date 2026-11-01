@@ -4,3 +4,5 @@ Evaluate the significance of a person who created change.
 
 Open Slides.pptx or HUM_GROW_S1_W04.html. Use ../Shared_Resources for Evidence_Cards, Evaluation_Grid_and_Paragraph and Significance_Criteria. Adult preparation and supervision are required: read the parent Teacher_and_Cover_Plan and Staff_Answers. Choose one route and white/pink paper. Keep your own scored grid and paragraph in books, typed or exactly scribed as directed. Notes, hidden slide 12, source JSON and adult evidence records are staff-facing. No web access required.
 Made by Matt
+
+Correction re-issue CORR1: this bundle supersedes the original HUM_GROW_S1_W04_BUNDLE.zip. All existing filenames, lesson id, dates, period and curriculum outcomes are retained; award wording is standardised to the unit award.
