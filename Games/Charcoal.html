@@ -142,7 +142,7 @@ canvas{display:block}
 .ctH canvas{width:64px;height:64px}
 .ctH .who b{font-size:18px;letter-spacing:.04em;color:var(--gold)}
 .ctH .who span{display:block;font-size:12.5px;color:rgba(232,226,212,.7);margin-top:2px}
-.claraSay{max-width:520px;font-size:13.5px;line-height:1.5;color:rgba(232,226,212,.85);background:rgba(217,180,74,.08);border:1.5px solid rgba(217,180,74,.35);border-radius:14px;padding:11px 14px;margin:10px 0 6px;font-style:italic}
+.counterSay{max-width:520px;font-size:13.5px;line-height:1.5;color:rgba(232,226,212,.85);background:rgba(217,180,74,.08);border:1.5px solid rgba(217,180,74,.35);border-radius:14px;padding:11px 14px;margin:10px 0 6px;font-style:italic}
 .ctBank{display:flex;gap:16px;font-size:13px;letter-spacing:.05em;margin:8px 0 14px;flex-wrap:wrap;justify-content:center}
 .ctBank b{color:var(--gold)}
 .pity{font-size:12px;letter-spacing:.05em;color:var(--mint);margin-bottom:14px}
@@ -244,7 +244,6 @@ button,[role="button"],canvas[tabindex]{min-width:44px;min-height:44px}
   </div>
   <h1>CHAR<span class="c">COAL</span></h1>
   <p class="strap">One stick of charcoal. One can of fixative. Keep the studio inked.</p>
-  <p class="dedic">Made with love for my sweet, adorable niece Clara ♥</p>
   <p class="rota" id="rotaLine">Next round: you carry the can.</p>
   <div class="modes">
     <button class="mode" id="btnPlay">
@@ -254,8 +253,8 @@ button,[role="button"],canvas[tabindex]{min-width:44px;min-height:44px}
       <span class="best" id="bestLine"></span>
     </button>
     <button class="mode g" id="btnCounter">
-      <h2>🎁 Clara's counter</h2>
-      <p>Bank your ink drops, open a Sketch Box, and fill the Collection Wall. Every duplicate becomes shards you can spend on the exact piece you want — and there's a guaranteed upgrade always in view. Clara sets one favourite aside each day.</p>
+      <h2>🎁 Studio counter</h2>
+      <p>Bank your ink drops, open a Sketch Box, and fill the Collection Wall. Every duplicate becomes shards you can spend on the exact piece you want — and there's a guaranteed upgrade always in view. One favourite is set aside each day.</p>
       <span class="go gold">Visit the counter →</span>
       <span class="best" id="ownedLine"></span>
     </button>
@@ -305,10 +304,10 @@ button,[role="button"],canvas[tabindex]{min-width:44px;min-height:44px}
 <!-- ============ COUNTER ============ -->
 <div class="scr" id="scrCounter">
   <div class="ctH">
-    <canvas id="claraAv" width="64" height="64" aria-hidden="true"></canvas>
-    <div class="who"><b>Clara's counter</b><span>She opens your boxes, keeps the wall, and takes your shards.</span></div>
+    <canvas id="counterAv" width="64" height="64" aria-hidden="true"></canvas>
+    <div class="who"><b>Studio counter</b><span>Open your boxes, fill the wall, and spend your shards.</span></div>
   </div>
-  <p class="claraSay" id="claraSay"></p>
+  <p class="counterSay" id="counterSay"></p>
   <div class="ctBank">
     <span>Ink drops: <b id="bankDrops">0</b></span>
     <span>Shards: <b id="bankShards">0</b></span>
@@ -318,7 +317,7 @@ button,[role="button"],canvas[tabindex]{min-width:44px;min-height:44px}
   <div class="ctGrid">
     <div class="ctCard">
       <h4>🎁 Sketch Box</h4>
-      <p>Costs 20 drops. Clara inks the piece in stroke by stroke. Duplicates always become shards — a box is never wasted.</p>
+      <p>Costs 20 drops. Each piece is inked in stroke by stroke. Duplicates always become shards — a box is never wasted.</p>
       <button class="go" id="btnBuyBox">Open a box · 20</button>
     </div>
     <div class="ctCard">
@@ -327,8 +326,8 @@ button,[role="button"],canvas[tabindex]{min-width:44px;min-height:44px}
       <button class="go" id="btnWall">Open the wall</button>
     </div>
     <div class="ctCard" id="pickCard">
-      <h4>⭐ Clara's Pick</h4>
-      <p id="pickBlurb">Clara's favourite today, set aside at a discount.</p>
+      <h4>⭐ Daily Pick</h4>
+      <p id="pickBlurb">Today's featured piece, set aside at a discount.</p>
       <div class="ctPickItem" id="pickItem"></div>
       <button class="go gold" id="btnPick">—</button>
     </div>
@@ -363,7 +362,7 @@ button,[role="button"],canvas[tabindex]{min-width:44px;min-height:44px}
   <div class="earned" id="endEarned"></div>
   <div class="prow">
     <button class="pbtn" id="btnNext">Next round →</button>
-    <button class="pbtn gold" id="btnToCounter">Clara's counter</button>
+    <button class="pbtn gold" id="btnToCounter">Studio counter</button>
     <button class="pbtn ghost" id="btnEndTitle">Title</button>
   </div>
 </div></div>
@@ -1057,7 +1056,7 @@ function spend(i){
 /* Work lamps are genuine safe areas. Cast restore them; the Smudge can erase
    a lamp by remaining at its desk, leaving visible dust as the price. */
 var EXHIBITION=[
- {name:'The Unfinished Exhibition',line:'Clara left three work lamps burning. Restore the light before the opening.'},
+ {name:'The Unfinished Exhibition',line:'Three work lamps were left burning. Restore the light before the opening.'},
  {name:'The Long Way Back',line:'A drawing can survive a mistake. On the bench, a little light gives everyone time.'},
  {name:'The First Mark',line:'The final sheet is still blank. Keep the room together; the exhibition belongs to all six of you.'}
 ];
@@ -1328,7 +1327,7 @@ function showSummary(kind,reward){
   SAVE.stars=(SAVE.stars||0)+stars;SAVE.xp=clamp((SAVE.xp||0)+stars*7,0,100);
   SAVE.rotation=((SAVE.rotation||0)+1)%ROLE_ROTATION.length;
   store();
-  $('endEarned').innerHTML='You banked <b>'+reward.drops+' ink drops</b> — spend them at Clara\'s counter. Next round you\'ll be <b>'+({fixer:'the Fixer',smudge:'the Smudge',cast:'the Cast'})[playerRoleForRound()]+'</b>.';
+  $('endEarned').innerHTML='You banked <b>'+reward.drops+' ink drops</b> — spend them at the Studio counter. Next round you\'ll be <b>'+({fixer:'the Fixer',smudge:'the Smudge',cast:'the Cast'})[playerRoleForRound()]+'</b>.';
   showOvl('ovlEnd');
 }
 
@@ -1354,7 +1353,7 @@ function paintTitle(){
   $('xpMenu').style.width=(SAVE.xp||0)+'%';
   $('bestLine').textContent=SAVE.rounds?('Rounds played: '+SAVE.rounds+' · kept inked '+SAVE.wins):'No rounds yet — the Gallery is a gentle place to start.';
   $('ownedLine').textContent='Drops banked: '+(SAVE.drops||0)+' · '+ownedCount()+'/'+ITEMS.length+' collected';
-  $('verLine').textContent='v'+GAME_VERSION+' · The Gallery · The Long Bench · The Plan Chest · charcoal & paper · for Clara ♥';
+  $('verLine').textContent='v'+GAME_VERSION+' · The Gallery · The Long Bench · The Plan Chest · charcoal & paper';
 }
 function ownedCount(){var n=0;for(var k in SAVE.owned)if(SAVE.owned[k])n++;return n;}
 
@@ -1416,7 +1415,7 @@ var HOWBODY='<b>Charcoal</b> is a short round in the Made by Matt studio. Six sh
  +'<b>You rotate through all three roles.</b> A smudge only lands when no inked shape can see the target — so pillars, boards and angles matter. Every smudge leaves <b>charcoal dust</b> on the floor for a few seconds: the fair, visible tell.<br><br>'
  +'<b>The can holds one spray.</b> Aim the short cone; seal the charcoal and the round is won for everyone. Spray the wrong shape and the can drops where you stood — anyone can pick it up. The shape you sprayed is completely fine.<br><br>'
  +'<b>Ink drops buy agency:</b> a Blot absorbs one smudge, a Trace points to the freshest dust, the Studio lights reveal the whole room for two seconds. Two of the Cast beside a rough shape ink it back in.<br><br>'
- +'A smudged shape is a dashed pencil sketch of itself — <b>unfinished, never gone.</b> Losing just means the work went back to rough. Everything is reversible, and the round always ends gently. Made with love for Clara ♥ — the steering fix in our last studio game was her call.';
+ +'A smudged shape is a dashed pencil sketch of itself — <b>unfinished, never gone.</b> Losing just means the work went back to rough. Everything is reversible, and the round always ends gently.';
 function showHow(){$('howBody').innerHTML=HOWBODY;showOvl('ovlHow');}
 
 /* ================= difficulty ui ================= */
@@ -1439,7 +1438,7 @@ function toCounter(){
   $('scrCounter').classList.add('on');
   ensureDailyPick();
   paintCounter();
-  var av=$('claraAv');if(av&&av.getContext){var g=av.getContext('2d');g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,64,64);g.save();g.translate(32,44);g.scale(1.28,1.28);drawClara(g,0);g.restore();}
+  var av=$('counterAv');if(av&&av.getContext){var g=av.getContext('2d');g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,64,64);drawMenuShape(g,CAST[0],32,36,0);}
 }
 function paintCounter(){
   $('bankDrops').textContent=SAVE.drops||0;
@@ -1447,7 +1446,7 @@ function paintCounter(){
   $('bankOwned').textContent=ownedCount()+'/'+ITEMS.length;
   var need=PITY_AT-((SAVE.pity||0)%PITY_AT);
   $('pityLine').textContent='Guaranteed upgrade: a Wash piece or better in '+need+' box'+(need===1?'':'es')+'.';
-  $('claraSay').textContent=claraLine();
+  $('counterSay').textContent=counterLine();
   $('btnBuyBox').setAttribute('aria-disabled',String((SAVE.drops||0)<BOX_COST));
   $('btnBuyBox').textContent='Open a box · '+BOX_COST;
   // pick card
@@ -1464,7 +1463,7 @@ function paintCounter(){
     $('btnPick').setAttribute('aria-disabled',String(owned||(SAVE.drops||0)<SAVE.pick.cost));
   }
 }
-function claraLine(){
+function counterLine(){
   var lines=['Welcome back. The wall missed you.','I kept the good box aside — have a look.','Every duplicate is shards now, so nothing you open is ever a waste.','Take your time. The gaps on the wall are half the fun.'];
   var seed=dateSeed();return lines[seed%lines.length];
 }
@@ -1474,7 +1473,7 @@ function ensureDailyPick(){
   var today=String(dateSeed());
   if(SAVE.pickDate===today&&SAVE.pick)return;
   var save=rndState;rseed(dateSeed());
-  /* Clara sets aside one piece a day, date-seeded and fully offline. */
+  /* Sets aside one piece a day, date-seeded and fully offline. */
   var tier=pick(['ink','wash','wash','gouache','gilded']);
   var pool=itemsOfRarity(tier);var it=pool[Math.floor(srnd()*pool.length)];
   var blurbs=['I love how this one catches the light.','This finish is my favourite — trust me.','I set this one aside the moment I saw it.','A quiet piece, but it grows on you.'];
@@ -1484,13 +1483,13 @@ function ensureDailyPick(){
 function buyPick(){
   var pk=SAVE.pick;if(!pk)return;var it=itemById(pk.id);
   if(SAVE.owned[it.id]){toast2('You already own that one.');return;}
-  if((SAVE.drops||0)<pk.cost){toast2('Not enough drops for Clara\'s Pick.');return;}
+  if((SAVE.drops||0)<pk.cost){toast2('Not enough drops for the Daily Pick.');return;}
   SAVE.drops-=pk.cost;grantItem(it.id);store();paintCounter();
   boxRevealPanel(it,false,0);
 }
 /* toast on counter uses a transient overlay-free message via the box panel; keep simple */
 function toast2(m){alert2(m);}
-function alert2(m){var e=$('claraSay');if(e){e.textContent=m;}}
+function alert2(m){var e=$('counterSay');if(e){e.textContent=m;}}
 
 /* ----- box opening ----- */
 function rollRarity(){
@@ -1624,33 +1623,14 @@ function renderWall(){
   });
 }
 
-/* ================= Clara avatar (menu + counter) ================= */
-var CLARA={id:'clara',name:'Clara',shape:'clara',hue:'#D9B44A'};
-function drawClara(g,t){
-  g.save();
-  g.font='700 10px Poppins,system-ui,sans-serif';g.textAlign='center';
-  g.fillStyle='#D9B44A';g.fillText('Clara ♥',0,-26);
-  g.fillStyle='#F0D48A';g.beginPath();g.arc(-9,-12,4.4,0,7);g.fill();g.beginPath();g.arc(9,-12,4.4,0,7);g.fill();
-  g.fillStyle='#F6D7B8';g.beginPath();g.arc(0,-11,6.5,0,7);g.fill();
-  g.fillStyle='#F0D48A';g.beginPath();g.arc(0,-13,6.6,Math.PI,0);g.fill();
-  var blink=!RM&&(((t*0.42)+7)%3.1<0.1);
-  if(blink){g.strokeStyle='#161D3D';g.lineWidth=1.4;g.beginPath();g.moveTo(-3.6,-11);g.lineTo(-1.4,-11);g.moveTo(1.4,-11);g.lineTo(3.6,-11);g.stroke();}
-  else{g.fillStyle='#161D3D';g.beginPath();g.arc(-2.4,-11,1.1,0,7);g.fill();g.beginPath();g.arc(2.4,-11,1.1,0,7);g.fill();}
-  g.strokeStyle='#161D3D';g.lineWidth=1.2;g.beginPath();g.arc(0,-9.4,2.6,0.25*Math.PI,0.75*Math.PI);g.stroke();
-  g.fillStyle='#B9E6CD';g.beginPath();g.moveTo(-4,-5);g.lineTo(4,-5);g.lineTo(8,9);g.lineTo(-8,9);g.closePath();g.fill();
-  g.strokeStyle='#F6D7B8';g.lineWidth=2.2;g.beginPath();g.moveTo(-4,-3);g.lineTo(-9,3);g.moveTo(4,-3);g.lineTo(9,3);g.stroke();
-  g.strokeStyle='#F6D7B8';g.lineWidth=2.4;g.beginPath();g.moveTo(-3,9);g.lineTo(-3,15);g.moveTo(3,9);g.lineTo(3,15);g.stroke();
-  g.restore();
-}
-/* menu parade — Clara walks as guest of honour; never in the round cast */
-var PARADE=CAST.concat([CLARA]);
+/* menu parade — the six studio shapes */
+var PARADE=CAST.slice();
 var menuRaf=0,menuT=0;
 function drawMenuShape(g,c,x,y,t){
   g.save();g.translate(x,y);
   var bob=RM?0:Math.abs(Math.sin(t*5.5+seedOf(c)))*-4;
   g.fillStyle='rgba(0,0,0,.28)';g.beginPath();g.ellipse(0,17,12,4,0,0,7);g.fill();
   g.translate(0,bob);
-  if(c.shape==='clara'){drawClara(g,t);g.restore();return;}
   drawShape(g,c.shape,c.hue);
   var blink=!RM&&(((t*0.42)+seedOf(c)*0.13)%3.1<0.1);
   var gap=c.shape==='dot'?4:5;
@@ -1754,7 +1734,7 @@ if(typeof window!=='undefined'){
     stepWorklamps:stepWorklamps,spend:spend,doAction:doAction,computeReward:computeReward,studioLightsOn:studioLightsOn,
     newRound:newRound,tick:tick,witnesses:witnesses,losBlocked:losBlocked,seesTarget:seesTarget,
     doSmudge:doSmudge,fixerSpray:fixerSpray,inkedCount:inkedCount,suspectRank:suspectRank,charById:charById,
-    draw:draw,fitCanvas:fitCanvas,bakeFloor:bakeFloor,drawClara:drawClara,drawItem:drawItem,
+    draw:draw,fitCanvas:fitCanvas,bakeFloor:bakeFloor,drawItem:drawItem,
     openBox:openBox,rollRarity:rollRarity,ensureDailyPick:ensureDailyPick,loadSave:loadSave,store:store,
     setRM:function(v){RM=v;},get RM(){return RM;},
     /* headless full round for Monte-Carlo; returns measurements, never touches the DOM */
