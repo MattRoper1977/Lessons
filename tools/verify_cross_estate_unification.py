@@ -2088,7 +2088,7 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # (window W1: 4 ARRIVING rows, 9 pairs; the usage fence for uf's flight), bumped once and last. Digest derived with sha256
 # over the edited file, never transcribed.
 # Re-cut 2026-11-01 (Merge Letters A1-A6, LD28 standing step): the carrier moves to Site main e25aa76a, the squash merge of Site #533.
-    "lessons": "25db94b9b4fbcb515b91d3b9e0a017fbe556357489c68ff6d23d1994386cdacf",
+    "lessons": "219bfd551349a0d28bdf007a7895a3839df9b6b3cbcc0e271e166ca54f61bed7",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.
