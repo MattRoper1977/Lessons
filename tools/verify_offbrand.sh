@@ -63,13 +63,13 @@ ok "syntax: $COUNT inline script block(s) pass node --check"
 # ===========================================================================
 grep -qE "GAME_VERSION='[0-9]" "$TARGET" || fail "identity: GAME_VERSION marker missing (or not a digit version)"
 for pat in \
-  "niece Clara" \
-  "suggested by Clara" \
-  "PARADE=CAST.concat([CLARA])" \
-  "id:'g_clara'" ; do
+  "function route(from,to)" \
+  "PARADE=CAST.slice()" \
+  "nobody is ever voted out" \
+  "id:'g_shapes'" ; do
   grep -qF -- "$pat" "$TARGET" || fail "identity marker missing: $pat"
 done
-ok "identity markers present (version, dedication, credit, parade, guide entry)"
+ok "identity markers present (version, deterministic route, six-shape parade, gentle rule, guide entry)"
 
 # ===========================================================================
 # 3 · SAFEGUARDING CONTRACT — no identifying details on the public file
@@ -78,19 +78,9 @@ grep -iqE 'years? old' "$TARGET" && fail "safeguarding: file contains an age ('y
 grep -iqwF 'London'    "$TARGET" && fail "safeguarding: file contains the city 'London'"    || true
 grep -iqwE 'address|birthday' "$TARGET" && fail "safeguarding: file contains 'address'/'birthday'" || true
 
-# No written-out child age *inside the g_clara guide entry text*
-# (a whole-file search would false-match 'listen', 'height', etc.)
-GCLARA="$(grep -oE "\{id:'g_clara'[^}]*\}" "$TARGET" || true)"
-# Herestring, not a pipe: a printf that died of a broken pipe would make this
-# safeguarding check pass without having read the entry.
-if [ -z "$GCLARA" ]; then
-  # An entry that was never found cannot be clean. Saying "clean" here would be
-  # a safeguarding claim about text nobody read.
-  fail "safeguarding: MEASUREMENT INVALID - no g_clara entry found to check"
-elif grep -iqwE 'eight|nine|ten|eleven|twelve' <<<"$GCLARA"; then
-  fail "safeguarding: g_clara entry contains a written-out age"
-fi
-ok "safeguarding: no age / city / address / birthday; g_clara entry clean"
+# No personal dedication entry or real first name anywhere on the public file.
+grep -iqE '<p class="dedic"|g_c[l]ara|\b(n[i]ece|c[l]ara)\b' "$TARGET" && fail "safeguarding: personal dedication or first name present" || true
+ok "safeguarding: no age / city / address / birthday / personal name"
 
 # ===========================================================================
 # 4 · HOUSE PROMISES — offline-first, Made-by-Matt-only, gentle vocabulary
