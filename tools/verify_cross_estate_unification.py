@@ -103,7 +103,7 @@ MANIFEST_PINS = {
     # Ruled onto the pin 2026-08-12 (Ruling 3): the deck install is a
     # resources.json edit, and the blanket rule forbade it the same way it
     # once forbade studio adds. Same pattern, same tool, same commit rule.
-    "resources.json": "d57a1183764d7fb9ddb35d6571935df99f8537bdd1ab1c1bf85b0057db586d54"
+    "resources.json": "c612eff501ea810876eb0e08ffd9c03975b9c6a09bce6dabf40bf02bf7bc59bd"
 }
 PIN_COMMAND = "python3 tools/pin_manifests.py   (from either checkout — it writes both gate copies or neither)"
 
@@ -123,17 +123,17 @@ CATALOGUE_PINS = {
         "_sownb/CALENDAR_SPINE.json": "607ebb2e358b4c872de473444bdee1cd112677759af392e68137ecfb7023e489",
         "_sx3/SX3_PASSES_LEDGER.md": "5ea492a8cbc2d6f1108ceedeec6d0b80bc662467183f30e69850e7cfd2c0cc25",
         "tools/sx3/pre_ci_catalogue_sweep.sh": "9848b9e4e9ccab0bd8225d26d7ffa4683c59c249bff688f33c5d665671d9f818",
-        "assets/catalogue/display-titles.json": "a5a827c4408302313fd926670235521d5dbf8309c7dd3ce3746a48295986a6cc",
+        "assets/catalogue/display-titles.json": "9fa50d65862bffb37039793a25b3d8ef14c7277e32e9b87e175525bf399cf01c",
         "tools/catalogue/build_display_titles.py": "4256ab6b07420af4ef090e57d32b8f29fcae88d9075d64750e52f17947dbd8a1",
         "tools/catalogue/check_display_titles.cjs": "5d06689114a69124a2d7f59d644a85775756eadd2b470df01e066c2202df681b",
         "tools/catalogue/check_display_titles_browser.cjs": "5662cdb93c7796ead4fb9bb69ce94ac65fe1e29e103f00c65bd07a4d5129a7cd",
         "tools/verify_lessons_chips.mjs": "e417afd94ae4f3a450caab2edf4b6c41d14e4588f070d0ad822263e30a86cf39",
         "tools/sw2/check_tokens_inert.cjs": "30e997c71a97df341093958790c290f2be4a17a386bb9a8820c5b52a0d514bfa",
-        "assets/catalogue/lesson-order.json": "3c300acd7060f567e8ef1ede608fb2c74d2fc71417fbaca451fa6c5f2f25c7aa",
+        "assets/catalogue/lesson-order.json": "05e52eb0361aa4031addefa419260c6522c97c378e42c421c56a7a3ef242019d",
         "tools/catalogue/build_lesson_order.py": "35a4c54779b800ae8bd949154d0d19fddb190f49ec18e62efdd86d03313f6180",
         "tools/ux2/hub_gates.mjs": "3d3120df94b1789041370c4045fbcc983635af0b30a0705447f18371bed98944",
         "index.html": "bdca62dc5f92062c975287eb4be29314eab55dff7991bdba83c8e24840f805db",
-        "Science/index.html": "e2cebaef3285983b5f7be71ddd61b1cb0a2a992e7e10b64701f8cae2144e7da8",
+        "Science/index.html": "1f7e3ff6f61a2aa6bfd805c140cb3b37ffee731d6419d448812c393f90782b50",
         "Humanities/index.html": "3a259413d5ae49e77be383222e1ad8cbdf1a9099bc3a681442faee0ec877944c",
         "humanities.html": "e6260e205216c2e9c19fca3edd07bcdf6716349e8b9dd8e78c6005d0ead73391",
         "pack.html": "42935782c353525d28b9263a90a8c48e4b5ca764226444edfa68d6f664862be1",
@@ -153,14 +153,14 @@ CATALOGUE_PINS = {
         "assets/catalogue/lesson-navigation.js": "42e579bbef3940c24ca4360319290820305a777330b8bff79152b2cb6aa077e3",
         "assets/catalogue/science-shelf.css": "b2b1eb328662d841add139ccfff107f985f17373f1ee82b8762475663097ab60",
         "assets/catalogue/science-shelf.js": "a59fe0c988a5de7d614afc6a36d7dacf14c6e3fa92c732740442e4914d00f356",
-        "assets/catalogue/terms-and-styles.json": "74de5a2d9f6632107018f47c5d69f1a931c3fe02b28c435473d224568d31f5b0",
-        "assets/catalogue/science-shelf.json": "ff4641feadfbd0f9c14332d981e38944bac344d0f913a85ed84ef28c3c7c3c5a",
+        "assets/catalogue/terms-and-styles.json": "b0be28c968f3bd1167e147839ea6a67d1e33c2601b40f366ce3c241dae125eed",
+        "assets/catalogue/science-shelf.json": "42512f618307fae1d634459eae77738262135fdca420f96b63bd9ead55ea69f5",
         "assets/catalogue/humanities-shelf.json": "854262fe068a6af362fbc35effbff335c24c15e03d6b8faa6519c45eac7f6e55",
         "tools/catalogue/build_catalogue.py": "4eff91f7ace9073a6612035c33e8556875d6165da83876ae5ec20a6ec11a15a8",
         "tools/catalogue/build_science_shelf.py": "396b6aeb7cb3cabe037b7af27877ae7a090e5aa1bce284409e400549d5204c24",
         "tools/catalogue/build_humanities_shelf.py": "922cbd53c03ed90628936bcf6a02b8c480275ef1b4286fe064d62b38158703c2",
         "tools/catalogue/build_science_hub.py": "b00b55dead2cc5566515259b2dbd0b082365823fc29bf10ba40c887256b8d5db",
-        "assets/catalogue/science-hub-bindings.json": "bd83cfefad2ff14debb885e0d92fe0329006e1d51b59f2f3e7c0a1d0d743f9e8",
+        "assets/catalogue/science-hub-bindings.json": "79cf063b05c8f85997d17b166f822da4737c311d8ca7d2f9255ec99cab65d31c",
         "tools/catalogue/check_catalogue_static.py": "d087681d477bb9ac7408cedd953651326f9cbb9bf27f1837b94895c7c7ced9bc",
         "tools/catalogue/check_catalogue_dom.cjs": "f47ab3196b125f123761de5c5781b57554b72355d3ecc44dc6499d6562e11af0",
         "tools/catalogue/verify_education_navigation.cjs": "48d00d8c490157059b6f21664c1b06e8c5af215575ee207040ee0c83c37d168f",
@@ -173,7 +173,7 @@ CATALOGUE_PINS = {
         "Science/Build/START_HERE.html": "acac26140f5aeef22292e6ce3831fa61aaf5e62432cc3998b340918c8bfaee7f",
         "Science/Grow/START_HERE.html": "d2bec305dec3212215c6f599cad3925c571f9a34ca6e85268893c8ed142170dd",
         "Science/Launch/START_HERE.html": "10b46e7cf26e3aa4b7f1fb4758a039bcbec7000bc2ec8d30dfe3ce0e0b966353",
-        "tools/catalogue/SHELF_SELECTION.json": "c3d6165e9e410d29751f376523a4c128f6bd10dc230db5a13295e10a38dd1633",
+        "tools/catalogue/SHELF_SELECTION.json": "3e9556d780c7c7d29e262c31e896ba102a9be5cc13374fe2559cbc8c2635fd76",
         "tools/catalogue/HUMANITIES_SELECTION.json": "ad0655d36dc619bcd646af55ac59d657b0f8c742c1ef5bc82b55428351f7796c",
         "tools/easter/science_original_browser.cjs": "aae28a4166d41546cbe5b0acd0866eeaf5e6f47cd5b1949fc48ecb2d4c79a1ec",
         "tools/science_pack/browser_checks.cjs": "058c9bc1f06c876f2994a23d467d83fced683c6355eb92d0ef43986d3e28d72d",
@@ -247,9 +247,9 @@ CATALOGUE_PINS = {
         "tools/humanities_resources/check_resources.py": "ec5383e3a34cbff999f190b0014a4a73e00a3a29e2714498f7620fd638dc2aa5",
         "tools/humanities_resources/resource.css": "1aed9aaca0d73a4b200c4e5d0977e73f4e906c747d7340c7a62f4197a8344bae",
         "tools/humanities_resources/resource.js": "ad40afed95490bfcce92dc062da46e1b27bcb96bdc80e37eabdfe02bf6ffc446",
-        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "7be5da76eec7aee6a9a243f2bf95e67f7b4068c5371a8908e58082011a2392ab",
+        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "9a2aff634e6f6c3c84bbc56b29cf25e7948fc4cb34a2c510bb4888a026cdadf9",
         "tools/catalogue/TERM_REVIEW.json": "32e658adcd1c60a79c61663658eaff7b09d65be933d1deba97b502b36278b2a7",
-        "tools/catalogue/SCIENCE_WEEK_BINDINGS.json": "fad73262b65e266242917df8d80012cc5951750d7af29ee5e4a5eb42cbe79913",
+        "tools/catalogue/SCIENCE_WEEK_BINDINGS.json": "2470b9ea3f42d7f0033859c41e979ccc39acd29ce76867e6b6fb113c293463e2",
         "primary/year5/science/autumn/forces/Lesson8_ExploreGravity.html": "20047720bf1d309055abdf232d341b6fd99b833631efa0bcbfb3dabed9671196",
         "primary/year5/science/autumn/forces/Y5_Forces_SoW_and_Plans.docx": "ca36cfd92f1c768ea66f0eb748d47e6227f67569f77b5472d0da13d03f92f2e6",
         "Humanities/BUILD_W1-W8_2026-27/BUILD_HUM_W1_People_Special_To_Me.html": "030be544f76147106e1a7f817ddca11142fcbaef168c28ef2397316a069f384a",
@@ -594,8 +594,8 @@ CATALOGUE_PINS = {
         "Science/Launch/Autumn2_W7_2026-27/SHA256SUMS.txt": "c03b36ddb50b9d4e626a13c67c33f7d399f6f8d9e94a94133b1efcb42af9bdd2",
         "Science/Launch/W14-W15_2026-27/SHA256SUMS.txt": "0bb93ca935491473b9df0d0f5605f3ea67057c6a00eb78c4925e154b71c8d5eb",
         "Science/Launch/W8-W13_2026-27/SHA256SUMS.txt": "e8c3db8150760d44c9dbac0472200ac8b4043771db89c92dd5665a0232a5c1e1",
-        "tools/catalogue/SCIENCE_CHASSIS_CENSUS.json": "831fc0f2ea3a6e5616045e724a47c5271696d5dcc831ec59e9f1045c8009571d",
-        "tools/rx3_recommended.py": "5de45415af878c41ab923209fd991f1186e6f87c138ee91f838f9fb8426be3b9",
+        "tools/catalogue/SCIENCE_CHASSIS_CENSUS.json": "3b76600343487cbed43d5917f175212ae29aae3aacea72185658ff7c8fe56617",
+        "tools/rx3_recommended.py": "2e2e43f99ab8d9a4b7bf3e59426f24b1ee5590edaa6e42f1b538f76ceb665449",
         "tools/catalogue/check_title_slide.py": "49815bce6b54d97aed864e403d10bd49d19d886bf5a39cbe7583375ee47ab77e",
         "tools/catalogue/title_slide.py": "3e4e7e8dfa590f3e0a8e24f49939edd9be2d59e4f955aea0935caa003f104788",
         "tools/public_surface_census.py": "310af4565b6b6998e33911352bfbaf37d65497b94d0f03a752d38277f7cdbf0d",
@@ -1363,7 +1363,7 @@ CATALOGUE_PINS = {
         "Science/Grow/v3_40min/SCI_G_W7A_The_Moon_Explore.html": "2b54a5399c6422873be70b5ab43ea271112f54ae1401d990705b19a2f75030b4",
         "Science/Grow/v3_40min/SCI_G_W7B_The_Moon_Do.html": "85c9c9c7d4a12fa67fe6a098960aef0e880a3b7bf217667e39dad570bac11ebc",
         "Science/Build/W8-W13_2026-27/SHA256SUMS.txt": "28c48fd2644c70cee9e36b95981c25b08f9bd5693c9f43a7f73138f113aecf04",
-        "data/chassis-census.json": "326a66efe84b86ecfb24a6497ed717551d28d74838cf6d50577121bd08b76c88",
+        "data/chassis-census.json": "3ce49f8e8c48e6635694209c02a75babbd44c11a120968ee8725ec1e697e0659",
         "tools/downloads/definitions/launch-science-aut1-main.json": "b42288f072512eaa9e0e954a6927d1247640dfbf6daac31fcfec4b80b59cb0c6",
         "tools/launch_resources/lesson_acceptance.py": "bbebaeb821f32c04eb1b2e01e819795ffa97cd851f33d7c22fec0b0505a9fe21",
         "tools/easter/refresh_pack_checksums.py": "7248b8424c6435f3637a7e3414e38fbab9f67e6b2a0f6f34fc8a586dc4e9c126",
@@ -1708,7 +1708,7 @@ CATALOGUE_PINS = {
         "Science/Launch/W17-W26_2026-27/SCI_L_W25_Plant_Transport_Follow_The_Water_And_Sugar.html": "6b12ed852e131a63bd7b13fb1aa07535dbd942b4d849b4bb2b54cf97a5289e55",
         "Science/Launch/W17-W26_2026-27/SCI_L_W26_Greenhouse_Challenge_Grow_More_With_A_Water_Budget.html": "f65c036a80029e775b40e1de07e3d86fde36571658abc499a8809a95d2d91a2b",
         "art.html": "066d4bdd3107ae7105d2930352b48e8b848f53a402874e3ed432ac7eb0db41bf",
-        "tools/downloads/SOURCE_PLACEMENT.json": "a9265b003dfa20989fdf6954974adca57383171551c579212ace61ad32433fdf",
+        "tools/downloads/SOURCE_PLACEMENT.json": "eb8d4cdf88c2bdc66c843e4fe3cc8f2ba4ad87ab638ea439ebc4f17aca747c5a",
         "Humanities/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_1/W08/BUILD_RE_A1_W08_Captioned_Model.mp4": "3ab4e04878f4f32431990301f4efcd6d13622f00b4c8d8614a55ccd7d5da6f5f",
         "Humanities/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_1/W08/BUILD_RE_A1_W08_Knowledge_Organiser.html": "a66d638003a6a58250154c3744099d04780e20051c7e5455e3c3a98144bb1391",
         "Humanities/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_1/W08/BUILD_RE_A1_W08_Lesson.html": "8b29ccf42a1a5137da2337594cd86f9116ed166113edaaa5a8b87efbc8248ff0",
@@ -1819,7 +1819,72 @@ CATALOGUE_PINS = {
         "Science/visual-learning/science-visual-learning.css": "94cff82726164d7b1ef7315868ff8cb51eae0bf83bcf5590c838f509ee4e1a93",
         "Science/visual-learning/science-visual-payloads.js": "3f607c6cab15c006a5ac5d74821e01f0edd60c2e081fa1bcaad531ff765a16a0",
         "BUILD_ASDAN/Autumn2_W1-W6_2026-27/SHA256SUMS.txt": "211b71462d1e9d0907f7ee6adf1d00c49622ed814fb03eb1c15713e1a3c11a06",
-        "BUILD_ASDAN/Autumn2_W1-W6_2026-27/START_HERE_BUILD_ASDAN_AUT2.html": "a319d8f005c7185e5aace0adfa34ceebb9212623bb73719850cbad46deffe7a8"
+        "BUILD_ASDAN/Autumn2_W1-W6_2026-27/START_HERE_BUILD_ASDAN_AUT2.html": "a319d8f005c7185e5aace0adfa34ceebb9212623bb73719850cbad46deffe7a8",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1.html": "fb8fd0a8090d664f48493f83394d7cabf4f8646c406c534e26e07eb42c5cc69f",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1_Editable_Pack.docx": "e41672e317239ffdeed16a146eb72a4832739438af1a1df9c162fbf06367f74d",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1_Knowledge_Organiser.pdf": "3b892cec24415a3fdba586dd95e4bcd326e21ca29bd88efaf70467f5f49ccbca",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1_Pupil_Resources.pdf": "27efe3df2e0214e4cf8778de80f0b2473e5929fbc6c68a9ab7545d7ff557f722",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1_Slides.pptx": "fa7db8ab17949a64438c26ca3fd57ee5bad7aafa4e0c1f71e09659e2d15f05e3",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1_Staff_Answers.pdf": "3718efd6904c935798eded49d1fc8f586ffa686c2fe96e2034d012040150c360",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1_TA_Brief.pdf": "ef579e9f9015968ccff8750a628496f041a9954a6a95dd7817bcf6e655dc2b34",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1_Teacher_and_Cover_Plan.docx": "9d93eda404057ba9d16de44ee8a2862390858c78165a183f9af454d52511a586",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1_Teacher_and_Cover_Plan.pdf": "a7c4999f91d52f2065f86f80e6ca0917b7c72d45b54649023e395da063d3a41f",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1_Tier_Pack_Standard.pdf": "7c670901067900d91a02871ac57e901b8e4f89d6f59ab890139d524b7e0e2d47",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1_Tier_Pack_Stretch.pdf": "b1215cbc71b0db52f18bf808f5d0ccd899ecf7b516d1dafc5835fe11386a57e0",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1_Tier_Pack_Supported.pdf": "879552e2c64d2bc772ab41e907482aa198c8de2c05b6c336a324adcaa1c71ea0",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1_Word_Page.pdf": "97d33f05486290595a848f104368cfd01e7ada2c5fb0b50bcf79bad8812b8647",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1.html": "c96f6607f102cd1cd8c7f81fb6dc8942133c27ddd9c8754051409b9309078de3",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1_Editable_Pack.docx": "c5a5432eb56778d41fdd16b1678779be2214f1bc2d04a9523f28a4966298018d",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1_Knowledge_Organiser.pdf": "480e4788fff7d2201a193fc8a8efc50330f0505235a7af55fe2fba0c95c2d503",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1_Pupil_Resources.pdf": "c914cee6977ea527f0532ebe0497f1dbe6c49d33f503319e53b1ae2b8195637b",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1_Slides.pptx": "6e138b00b3450c8764ee0a202cc972578f666e07d1b93fa2646e0bdf68de5370",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1_Staff_Answers.pdf": "80c849e175f3c539b3cb2cd2396618657d28e86b311ab18a1f8b73f2be0b85a5",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1_TA_Brief.pdf": "968e5012f3c82b9b5013b00af7a101873125c6051156dab8e87ac7de2e6403da",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1_Teacher_and_Cover_Plan.docx": "79d9b0fbb89ad942266b0324bfac882941c8b8af11f066f5b21a5b06296f7b5b",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1_Teacher_and_Cover_Plan.pdf": "aebcab34d3af004b298c2f69f95aabe5c941e6d11b38780a3131619c3d50df7d",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1_Tier_Pack_Standard.pdf": "c641af592ec3dbb0e7e277cc9869f9376feab3c6c2c11bc7e284f79c60efd770",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1_Tier_Pack_Stretch.pdf": "57931d1876e3f4510cc1b719fca251cd1b18902f7f46cedf4abd980609c3cfcb",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1_Tier_Pack_Supported.pdf": "82e077f1998323a85bc22973a0c329929489aa3d6fe50e102418727bcd3f7b7e",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1_Word_Page.pdf": "cf0f98c20cf1e17d16ef12db25abeb68b0664353d4a775e37c4249ec1761bd97",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1.html": "75814fd18a3e4e7eb7a8f2372f89568da23e395583abad241c5297185d89a5e5",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1_Editable_Pack.docx": "43a8847cc5425c2af2f55d78ea8c525bdac5d25dd8f1f61165414c32ac1571f4",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1_Knowledge_Organiser.pdf": "0c061b94e5c1614133d919a1110ca2e64f28da039ae186e3160594e042d256b0",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1_Pupil_Resources.pdf": "cc4721421d98923a66f999b2ca10b5407be07aaa16ec0535245541c6559959c0",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1_Slides.pptx": "0b2703496a932d68f590429c6104cd1b1ae8f7f3ab3519d6529bcd98ad63d692",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1_Staff_Answers.pdf": "e5f39cdc94464ef3d2e2f732f648156d9c84635d2f70b3849c4fc6822b8d5165",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1_TA_Brief.pdf": "8d23774f77d160bb5693fde217611eb13c87a05aaec7f63583c4d79f3018b72a",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1_Teacher_and_Cover_Plan.docx": "1562c73c613a9b949408484ae7172347c6d55411f27b534f230af189022005df",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1_Teacher_and_Cover_Plan.pdf": "d331567fbf24c7093f053b626fbca73a40846df56cec678031932efb44547f15",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1_Tier_Pack_Standard.pdf": "620661d41e86ef2f7610f2814bf266ae6b402a79aa95145f36a54506caed507f",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1_Tier_Pack_Stretch.pdf": "437123cda91a7862c1f7e1483ed3a907c587c31a88bec0ba717bb9eaa20a4370",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1_Tier_Pack_Supported.pdf": "52a43301c9e061dcf49a3ee303e1025d6de65c7078a85e1e3b5adf9472547511",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1_Word_Page.pdf": "f293d12990d5b0efebed9bf78941df9f2751c8d49f1b87b515f94f92393d3667",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1.html": "ec917cd238c05873dfdaf5e8b976abfceda03b16061a80a9e08e402ba684a0e3",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1_Editable_Pack.docx": "161a196fdeef87f10ebe8258d22393b01434b6fe0d9e7f87219a92766b6748a6",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1_Knowledge_Organiser.pdf": "d76fc1644bb27618cb8b476940163e6ecfccaa68328f3faff17d0f49bec0c962",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1_Pupil_Resources.pdf": "73aec819175bfc54d6034274e8180015abb38340785d4dfb769937ab05335344",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1_Slides.pptx": "e5d4876bfe676118151fe74172993b16fcfa2cc4ec016d48d4da4d35b34176dc",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1_Staff_Answers.pdf": "ce5e21d6c5411b1dc40a5dd919250501b57121ac91e216d3e05ce603214968f3",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1_TA_Brief.pdf": "89821aced631a0876263477526c4c1d045c585f1f0f0eba68f193acc91a462a1",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1_Teacher_and_Cover_Plan.docx": "e856301da239f0f6dd70a4a3e30efdf32ea12477ad53f25b4473f0cf35f761f4",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1_Teacher_and_Cover_Plan.pdf": "43ad66360f78c47c8aab5036f1fdb7d5e64ff5d28efe57d4a2e0f475141ffab2",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1_Tier_Pack_Standard.pdf": "95e74e8083b03ba1d54f5c69b86f4a647165beebcce69adf75fb764b4b3ca62c",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1_Tier_Pack_Stretch.pdf": "c06333b87fc2f55df5eeb61d51bff6c0d91c2d40cfc4e0ac55554b8cffe5fc41",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1_Tier_Pack_Supported.pdf": "471c8152e3e37ede1baa35e5008c9c5f07c641c3203fb0b6092ac760e1cc6c74",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1_Word_Page.pdf": "ad7fa49073044c4b266a0afa46d3cff292c6e3794f5db1d0a78f222c00f0a1d0",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1.html": "0fb16aa4dbc204e8d10a335c5f7c59aeaaebe23e0b538ab4c93b1cf8b74c0ac9",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1_Editable_Pack.docx": "21879b146e6359a49e140787424ae09a721b253fce8d72eada87173b501f29a3",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1_Knowledge_Organiser.pdf": "10e8d2dc5c10155055d60249f58551a9a938111837b334ab6599e25be1698330",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1_Pupil_Resources.pdf": "389cce675caa0598e187602156ed2f3bfb73ad9ed4b9491b0947ace6e29c1f4f",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1_Slides.pptx": "5468352fa5702b8f4eed4273647f49a52be012d33eb37229b0ea1c17b7ec0d28",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1_Staff_Answers.pdf": "fc40e389728c045c405cd2c343d81ca275cc4b1ff5f83611ed41d7e2b1402c92",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1_TA_Brief.pdf": "408c2e0a0205d0426dd14eb91de625a2514ff64944afa5dc633b772a0b114c03",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1_Teacher_and_Cover_Plan.docx": "66ddb1a4e860b7a0425dcabbc7deebb18a3ce3041208e22211e75a9d12d82251",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1_Teacher_and_Cover_Plan.pdf": "b31cdfb01a01be657a729ee831124bbbc65db03b4eb93ce6e9b3b1f744aa45bc",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1_Tier_Pack_Standard.pdf": "39cac309180dfa2eb1de05c22fe7a329b50e3f717e17e3842a9acf90f3c4fc5b",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1_Tier_Pack_Stretch.pdf": "fc64c33d872be4d694e080727cd64d95f595fb2784799ea76bbafd587915733d",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1_Tier_Pack_Supported.pdf": "78e8c40c64e98eb06f42c115767cb5a89230cf0dfe93e837fb7adc1c2e1cb9a9",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1_Word_Page.pdf": "7ce220bbb1a1bbf992314b6a47ea13221bc082eae19b13d409ba3ad970c27c24"
     }
 }
 # END REVIEWED CATALOGUE PINS
@@ -1837,14 +1902,14 @@ CATALOGUE_ORIGINAL_ROWS_SHA256 = "d4714b20bc0de0732d1dd33e449280b8b42fd0a033b830
 # digest below are re-cut by tools/catalogue/pin_catalogue_contract.py from
 # rows it has verified against that derivation; an edit to any appended row,
 # a removed pack row or an extra lesson row still reds here.
-CATALOGUE_SHELF_ROWS = 303
+CATALOGUE_SHELF_ROWS = 308
 # UX2 A1: keys that may be appended to an original row without moving its
 # digest (see catalogue_errors). Nothing else is additive. No original row
 # carried either key before the ruling (measured 2026-09-08: 0 of 734), so the
 # second set is empty and the allowance cannot launder a pre-existing value.
 CATALOGUE_ADDITIVE_TAG_KEYS = frozenset({"halfTerm", "unit"})
 CATALOGUE_ORIGINAL_KEYS_BEFORE_TAGS = frozenset()
-CATALOGUE_SHELF_ROWS_SHA256 = "ef4def254999b48d5ce982169fcb02aca7837d2a50dd657b524b9316f2aaf8a8"
+CATALOGUE_SHELF_ROWS_SHA256 = "6964ec2349229a79be3f1cff17292f59e8496a8aa636e1b7826aa1dda97630ae"
 
 # These named review records and review tools can change with their reviewed
 # transaction. Tools are not served assets; they are reviewed as executable

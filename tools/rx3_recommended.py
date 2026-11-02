@@ -69,8 +69,14 @@ def _science_cells(term):
     # member that LAND-A2 itself recorded as a landed Autumn 2 lesson (the bindingRuns row this writer wrote
     # with --land-a2) is read as part 'landed'. It is never the A / L1 deck; it stands beside the cell as
     # 'Alternative version' with its pack, and the original interactive deck is recommended again (R1 as ruled).
-    landed = {p for run in J('tools/catalogue/SCIENCE_WEEK_BINDINGS.json').get('bindingRuns', [])
+    wb_doc = J('tools/catalogue/SCIENCE_WEEK_BINDINGS.json')
+    landed = {p for run in wb_doc.get('bindingRuns', [])
               if str(run.get('by', '')).endswith('--land-a2') for p in run.get('listed', [])}
+    # N-4-3 (2 Nov 2026): where a Week 8 layout page is bound in SCIENCE_WEEK_BINDINGS, its Lesson/Period 1
+    # page is the cell's Recommended 'Open lesson', while today's original deck and the generated pack page
+    # sit beside it as Alternative. Uncovered weeks fall through to R-A2-ORIG unchanged.
+    w8_landed = {p for run in wb_doc.get('bindingRuns', [])
+                 if 'Science Autumn 2 Week 8 layout' in str(run.get('by', '')) for p in run.get('listed', [])}
     kinds = {}
     for mf in sorted(glob.glob(P('Science/**/manifest*.json'), recursive=True)):
         try: md = json.load(open(mf, encoding='utf-8'))
@@ -113,6 +119,11 @@ def _science_cells(term):
         # two and their first is the Explore deck (A). R1 names both: "the animated Explore/Introduce deck (A / L1)".
         first_kinds = {'introduce', 'l1', 'lesson 1', '1'} if pathway == 'LAUNCH' else {'explore', 'a', 'lesson a'}
         if declared_classic(p): return 'classic', 'declares Classic (head title or lesson-config)'
+        if p in w8_landed:
+            ruling_str = ' '.join(str(e.get('ruling', '')) for e in wb_doc.get('entries', {}).get(p, {}).get('evidence', []))
+            if re.search(r'\b(?:Lesson|Period) 1\b', ruling_str):
+                return 'w8_first', 'Week 8 layout record (SCIENCE_WEEK_BINDINGS Lesson/Period 1)'
+            return 'w8_other', 'Week 8 layout record (SCIENCE_WEEK_BINDINGS Lesson/Period 2+)'
         if p in landed: return 'landed', 'LAND-A2 record (SCIENCE_WEEK_BINDINGS bindingRuns, tools/rx3_recommended.py --land-a2)'
         k, order, mf = kinds.get(p, (None, None, None))
         if k: return ('first' if k.lower() in first_kinds else 'other'), 'manifest kind %r (%s)' % (k, os.path.relpath(mf, R))
@@ -132,10 +143,30 @@ def _science_cells(term):
         if slot['term'] != term or slot['week'] is None: continue
         cell_members = [c['path'] for c in slot['current']]
         parts = {p: part_of(p, slot['pathway'], cell_members) for p in cell_members}
-        if any(v[0] is None for v in parts.values()):
-            unread.append((slot['pathway'], slot['week'], [p for p, v in parts.items() if v[0] is None])); continue
         firsts = [p for p, v in parts.items() if v[0] == 'first']; classics = [p for p, v in parts.items() if v[0] == 'classic']
         landed_here = [p for p, v in parts.items() if v[0] == 'landed']
+        w8_firsts = [p for p, v in parts.items() if v[0] == 'w8_first']; w8_others = [p for p, v in parts.items() if v[0] == 'w8_other']
+        if w8_firsts:
+            if len(w8_firsts) != 1:
+                unread.append((slot['pathway'], slot['week'], 'expected one Week 8 layout Lesson/Period 1 deck, found %d: %s' % (len(w8_firsts), w8_firsts))); continue
+            rec = w8_firsts[0]
+            batch_n4 = 'Science · %s · N-4 (2 Nov 2026): the Week 8 layout lesson is recommended; the original interactive deck and landed pack page are alternative' % TERM_LABEL[term]
+            prior_alts = [p for p, v in parts.items() if p not in w8_firsts and p not in w8_others and p not in landed_here and v[0] != 'other']
+            for p in cell_members:
+                rec_now.discard(p); alt_now.discard(p); sel['recommendedBatches'].pop(p, None)
+            rec_now.add(rec); sel['recommendedBatches'][rec] = batch_n4
+            for p in prior_alts + landed_here:
+                alt_now.add(p); cur_now.discard(p)
+                if p in landed_here: sel['recommendedBatches'][p] = batch_n4
+            for p in cell_members:
+                if p == rec or p in prior_alts or p in landed_here: continue
+                if p in w8_others: cur_now.add(p)
+                elif lundy_panels(p) >= 4: cur_now.discard(p)
+                else: cur_now.add(p)
+            report.append((slot['pathway'], slot['week'], rec, parts[rec][1], prior_alts + landed_here, [p for p in cell_members if p != rec and p not in prior_alts and p not in landed_here]))
+            continue
+        if any(v[0] is None for v in parts.values()):
+            unread.append((slot['pathway'], slot['week'], [p for p, v in parts.items() if v[0] is None])); continue
         if len(firsts) != 1:
             unread.append((slot['pathway'], slot['week'], 'expected exactly one A / L1 deck, found %d: %s' % (len(firsts), firsts))); continue
         rec = firsts[0]
