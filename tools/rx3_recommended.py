@@ -65,6 +65,12 @@ def _science_cells(term):
     sel = J('tools/catalogue/SHELF_SELECTION.json'); sel.setdefault('alternative', []); sel.setdefault('recommendedBatches', {})
     TERM_LABEL = {'Aut1': 'Autumn 1', 'Aut2': 'Autumn 2', 'Spr1': 'Spring 1', 'Spr2': 'Spring 2', 'Sum1': 'Summer 1', 'Sum2': 'Summer 2'}
     hub = J('assets/catalogue/science-hub-bindings.json')
+    # R-A2-ORIG (Matt, 2 Nov 2026: "the live lesson should be the original lessons that were there"): a cell
+    # member that LAND-A2 itself recorded as a landed Autumn 2 lesson (the bindingRuns row this writer wrote
+    # with --land-a2) is read as part 'landed'. It is never the A / L1 deck; it stands beside the cell as
+    # 'Alternative version' with its pack, and the original interactive deck is recommended again (R1 as ruled).
+    landed = {p for run in J('tools/catalogue/SCIENCE_WEEK_BINDINGS.json').get('bindingRuns', [])
+              if str(run.get('by', '')).endswith('--land-a2') for p in run.get('listed', [])}
     kinds = {}
     for mf in sorted(glob.glob(P('Science/**/manifest*.json'), recursive=True)):
         try: md = json.load(open(mf, encoding='utf-8'))
@@ -107,6 +113,7 @@ def _science_cells(term):
         # two and their first is the Explore deck (A). R1 names both: "the animated Explore/Introduce deck (A / L1)".
         first_kinds = {'introduce', 'l1', 'lesson 1', '1'} if pathway == 'LAUNCH' else {'explore', 'a', 'lesson a'}
         if declared_classic(p): return 'classic', 'declares Classic (head title or lesson-config)'
+        if p in landed: return 'landed', 'LAND-A2 record (SCIENCE_WEEK_BINDINGS bindingRuns, tools/rx3_recommended.py --land-a2)'
         k, order, mf = kinds.get(p, (None, None, None))
         if k: return ('first' if k.lower() in first_kinds else 'other'), 'manifest kind %r (%s)' % (k, os.path.relpath(mf, R))
         declared = part_from_title_text(title_slide(p), first_kinds)
@@ -128,6 +135,7 @@ def _science_cells(term):
         if any(v[0] is None for v in parts.values()):
             unread.append((slot['pathway'], slot['week'], [p for p, v in parts.items() if v[0] is None])); continue
         firsts = [p for p, v in parts.items() if v[0] == 'first']; classics = [p for p, v in parts.items() if v[0] == 'classic']
+        landed_here = [p for p, v in parts.items() if v[0] == 'landed']
         if len(firsts) != 1:
             unread.append((slot['pathway'], slot['week'], 'expected exactly one A / L1 deck, found %d: %s' % (len(firsts), firsts))); continue
         rec = firsts[0]
@@ -135,15 +143,18 @@ def _science_cells(term):
             rec_now.discard(p); alt_now.discard(p); sel['recommendedBatches'].pop(p, None)
         rec_now.add(rec); sel['recommendedBatches'][rec] = 'Science · %s · HUB1 R1: the A / L1 deck of the cell is recommended' % TERM_LABEL[term]
         for p in classics: alt_now.add(p)
+        for p in landed_here:
+            alt_now.add(p); sel['recommendedBatches'][p] = 'Science · %s · R-A2-ORIG (2 Nov 2026): the original interactive deck is recommended again; the landed lesson is alternative beside it with its pack' % TERM_LABEL[term]
         # R1: a Do deck (B / L2, L3) is 'Full Lundy Loop' when its bytes earn it (the builder derives that);
         # until its transplant lands, it is 'Current classroom series' by selection, never 'Earlier retained'.
         for p in cell_members:
-            if p == rec or p in classics: continue
+            if p == rec or p in classics or p in landed_here: continue
             if lundy_panels(p) >= 4: cur_now.discard(p)      # the bytes earn 'full-lundy'; the builder derives it
             else: cur_now.add(p)
-        report.append((slot['pathway'], slot['week'], rec, parts[rec][1], classics, [p for p in cell_members if p != rec and p not in classics]))
+        for p in landed_here: cur_now.discard(p)
+        report.append((slot['pathway'], slot['week'], rec, parts[rec][1], classics + landed_here, [p for p in cell_members if p != rec and p not in classics and p not in landed_here]))
     sel['recommended'] = sorted(rec_now); sel['alternative'] = sorted(alt_now); sel['currentSeries'] = sorted(cur_now)
-    print('| pathway | week | recommended (A / L1) | read from | alternative (Classic) | beside (Do decks, style stays derived from bytes) |'); print('|---|---|---|---|---|---|')
+    print('| pathway | week | recommended (A / L1) | read from | alternative (Classic, landed A2 lesson) | beside (Do decks, style stays derived from bytes) |'); print('|---|---|---|---|---|---|')
     for pw, wk, rec, how, cl, rest in sorted(report, key=lambda r: (['BUILD', 'GROW', 'LAUNCH'].index(r[0]), r[1])):
         print('| %s | W%d | %s | %s | %s | %s |' % (pw, wk, rec.split('/')[-1], how, ', '.join(x.split('/')[-1] for x in cl) or '—', ', '.join(x.split('/')[-1] for x in rest) or '—'))
     for u in unread: print('UNREAD cell, left alone:', u)
