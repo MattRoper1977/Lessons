@@ -12,7 +12,7 @@ button.t.on{background:#3f9d78;color:#08251a;border-color:#3f9d78}
 .btn{font:inherit;font-weight:700;background:#B05C7E;color:#140a10;border:none;border-radius:9px;padding:8px 14px;cursor:pointer}
 .note{color:#b9c2cb;font-size:12.5px;margin-top:12px}</style></head><body>
 <h1>Tutor Time — Evidence Tracker</h1><p class="sub">Made by Matt · BV · Behaviour Focus · KCSIE · saves on this device</p>
-<div class="top"><label>Tutor group <input id="grp" placeholder="e.g. B1"></label><button class="btn" onclick="window.print()">Print</button><button class="btn" onclick="resetAll()">Reset sheet</button></div>
+<div class="top"><label>Tutor group <input id="grp" placeholder="e.g. B1"></label><button class="btn" onclick="window.print()">Print</button><button type="button" class="btn" id="wipe-btn">Delete all data on this device</button><span id="wipe-confirm" style="display:none;gap:8px;align-items:center"><button type="button" class="btn" id="wipe-yes">Confirm delete all data</button><button type="button" class="btn" id="wipe-no">Cancel</button></span></div>
 <div class="bar"><div class="fill" id="fill"></div></div><div id="pct" class="sub"></div>
 <table id="tbl"><tr><th>Wk</th><th>Strand</th><th>Session</th><th>Date</th><th>Photo</th><th>Caption</th><th>Captain role</th><th>S</th><th>V</th><th>A</th><th>I</th><th>Launch</th><th>Staff initials</th></tr></table>
 <p class="note">Photos show work, not faces, unless consent is filed. Evidence is filed in the school's evidence system, tagged strand + tutor group. KCSIE disclosures follow the school safeguarding procedure. Data stays in this browser only.</p>
@@ -33,6 +33,8 @@ tbl.addEventListener('click',function(e){var b=e.target;if(!b.classList||!b.clas
 tbl.addEventListener('input',function(e){var b=e.target;if(b.tagName!=='INPUT')return;var id=b.dataset.id;st[id]=st[id]||{};st[id][b.dataset.k]=b.value;save();});
 document.getElementById('grp').addEventListener('input',function(e){st._grp=e.target.value;save()});
 function prog(){var done=0;ROWS.forEach(function(r){var s=st[r.n]||{};if(s.photo&&s.cap)done++;});var p=Math.round(done/ROWS.length*100);document.getElementById('fill').style.width=p+'%';document.getElementById('pct').textContent=done+' of '+ROWS.length+' sessions evidenced ('+p+'%)';}
-function resetAll(){if(confirm('Clear this sheet?')){st={};localStorage.removeItem(KEY);location.reload();}}
+document.getElementById('wipe-btn').addEventListener('click',function(){var c=document.getElementById('wipe-confirm');c.style.display='inline-flex';document.getElementById('wipe-yes').focus();});
+document.getElementById('wipe-no').addEventListener('click',function(){document.getElementById('wipe-confirm').style.display='none';document.getElementById('wipe-btn').focus();});
+document.getElementById('wipe-yes').addEventListener('click',async function(){st={};try{localStorage.removeItem(KEY);localStorage.removeItem('tt_tracker_v1');localStorage.clear();}catch(e){}try{sessionStorage.clear();}catch(e){}try{if(window.caches&&typeof caches.keys==='function'){var ks=await caches.keys();await Promise.all(ks.map(function(k){return caches.delete(k);}));}}catch(e){}try{if(window.indexedDB&&indexedDB.databases){var dbs=await indexedDB.databases();for(var i=0;i<dbs.length;i++){if(dbs[i]&&dbs[i].name){await new Promise(function(r){var rq=indexedDB.deleteDatabase(dbs[i].name);rq.onsuccess=rq.onerror=rq.onblocked=function(){r();};});}}}}catch(e){}location.reload();});
 prog();
 </script><p class="note"><b>Lundy Loop keys:</b> S = Space (safe, supported chance to form a view) · V = Voice (expressed it) · A = Audience (heard by someone who can act) · I = Influence (it changed something)</p></body></html>

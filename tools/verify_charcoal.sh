@@ -68,21 +68,20 @@ ok "syntax: $COUNT inline script block(s) pass node --check"
 # 2 · IDENTITY MARKERS
 #     Anchored to things that cannot survive deletion of what they guard:
 #       - the two-exclusion witness signature IS the carried-trap fix
-#       - PARADE=CAST.concat([CLARA]) is the only way Clara joins the parade
-#         yet stays out of the round cast
+#       - PARADE=CAST.slice() keeps the menu parade strictly to the six studio
+#         shapes with no personal-name avatar
 #       - the version marker matches any leading digit, so it survives a
 #         major bump (Off-Brand's was pinned to '3.' and would break at v4)
 # ===========================================================================
 grep -qE "GAME_VERSION='[0-9]" "$TARGET" || fail "identity: GAME_VERSION marker missing (or not a digit version)"
 for pat in \
   "function witnesses(p,exclActor,exclTarget)" \
-  "niece Clara" \
-  "PARADE=CAST.concat([CLARA])" \
-  "was her call" \
-  "Clara ♥" ; do
+  "PARADE=CAST.slice()" \
+  "Studio counter" \
+  "Daily Pick" ; do
   grep -qF -- "$pat" "$TARGET" || fail "identity marker missing: $pat"
 done
-ok "identity markers present (version, two-exclusion witness, dedication, parade, credit, nameplate)"
+ok "identity markers present (version, two-exclusion witness, six-shape parade, studio counter, daily pick)"
 
 # ===========================================================================
 # 3 · SAFEGUARDING CONTRACT — no identifying details on the public file
@@ -97,9 +96,9 @@ grep -iqwF 'school'    "$TARGET" && fail "safeguarding: file contains 'school'" 
 if grep -iqwE 'eight|nine|ten|eleven|twelve' "$TARGET"; then
   fail "safeguarding: file contains a written-out age word"
 fi
-# No surname following the first name.
-grep -qE 'Clara [A-Z][a-z]' "$TARGET" && fail "safeguarding: a capitalised word follows 'Clara' (possible surname)" || true
-ok "safeguarding: no age / city / school / address / birthday / surname; first name only"
+# No personal dedication or real first name on the public file.
+grep -iqE '<p class="dedic"|\b(n[i]ece|c[l]ara)\b' "$TARGET" && fail "safeguarding: personal dedication or first name present" || true
+ok "safeguarding: no age / city / school / address / birthday / surname / personal name"
 
 # ===========================================================================
 # 4 · HOUSE PROMISES — offline, no audio, Made-by-Matt-only, gentle vocabulary

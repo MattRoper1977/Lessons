@@ -1340,25 +1340,9 @@ SHELF_ROWS.append({'id': 'pack1r-su1-launch-w05-a-measurable-community-contribut
 SHELF_ROWS.append({'id': 'pack1r-su1-launch-w06-our-sustainability-decision-report', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Our sustainability decision report · LAUNCH Humanities', 'file': 'Humanities/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W06/LAUNCH_SU1_W06_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'LAUNCH Humanities · Summer 1 · Week 6 (PACK-1R). Learning goal: Complete a sustainability decision report.', 'keywords': ['humanities', 'launch', 'summer 1 · week 6', 'pack-1r', 'sustainability', 'decision', 'report']})
 SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'BUILD · Use less, use again, sort waste', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W01/SCI_BUILD_A2_W01.html', 'id': 'land-a2-sci-build-a2-w01-use-less-use-again-sort-waste', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 2', 'less', 'again', 'sort', 'waste'], 'desc': 'BUILD Science · Autumn 2 · Week 1. I am learning to choose ways to care for a place.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
 SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'BUILD · Look closely at rocks', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W02/SCI_BUILD_A2_W02.html', 'id': 'land-a2-sci-build-a2-w02-look-closely-at-rocks', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 2', 'look', 'closely', 'rocks'], 'desc': 'BUILD Science · Autumn 2 · Week 2. I am learning to look at rocks and sort them.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'BUILD · Test rock hardness and water', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03.html', 'id': 'land-a2-sci-build-a2-w03-test-rock-hardness-and-water', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 2', 'test', 'rock', 'hardness', 'water'], 'desc': 'BUILD Science · Autumn 2 · Week 3. I am learning to test a rock in two ways.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'BUILD · Choose a rock for a job', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04.html', 'id': 'land-a2-sci-build-a2-w04-choose-a-rock-for-a-job', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 2', 'choose', 'rock', 'job'], 'desc': 'BUILD Science · Autumn 2 · Week 4. I am learning to match a rock to a job.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'BUILD · Natural and made materials', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05.html', 'id': 'land-a2-sci-build-a2-w05-natural-and-made-materials', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 2', 'natural', 'made', 'materials'], 'desc': 'BUILD Science · Autumn 2 · Week 5. I am learning to sort things from nature and things people make.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'BUILD · Keep a rock test fair', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06.html', 'id': 'land-a2-sci-build-a2-w06-keep-a-rock-test-fair', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 2', 'keep', 'rock', 'test', 'fair'], 'desc': 'BUILD Science · Autumn 2 · Week 6. I am learning to keep a rock test the same each time.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'BUILD · Show what we know about bodies and rocks', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07.html', 'id': 'land-a2-sci-build-a2-w07-show-what-we-know-about-bodies-and-rocks', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 2', 'show', 'what', 'know', 'about', 'bodies', 'rocks'], 'desc': 'BUILD Science · Autumn 2 · Week 7. I am learning to show a fact about bodies, food and rocks.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
 SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'GROW · Why day turns to night', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W01/GROW_SCI_A2_W01.html', 'id': 'land-a2-sci-grow-a2-w01-why-day-turns-to-night', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 2', 'why', 'day', 'turns', 'night'], 'desc': 'GROW Science · Autumn 2 · Week 1. I am learning to show why day turns to night and why the Sun seems to move.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
 SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'GROW · The shapes of Sun, Earth and Moon', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W02/GROW_SCI_A2_W02.html', 'id': 'land-a2-sci-grow-a2-w02-the-shapes-of-sun-earth-and-moon', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 2', 'shapes', 'sun', 'earth', 'moon'], 'desc': 'GROW Science · Autumn 2 · Week 2. I am learning to show how a ball models the Sun, Earth and Moon.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'GROW · Researching the Solar System', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03.html', 'id': 'land-a2-sci-grow-a2-w03-researching-the-solar-system', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 2', 'researching', 'solar', 'system'], 'desc': 'GROW Science · Autumn 2 · Week 3. I am learning to check a source and share a fact about the Solar System.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'GROW · Global warming and choices', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04.html', 'id': 'land-a2-sci-grow-a2-w04-global-warming-and-choices', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 2', 'global', 'warming', 'choices'], 'desc': 'GROW Science · Autumn 2 · Week 4. I am learning to explain a cause and an effect of global warming, then compare two kinds of action.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'GROW · Forces, space and climate questions', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05.html', 'id': 'land-a2-sci-grow-a2-w05-forces-space-and-climate-questions', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 2', 'forces', 'space', 'climate', 'questions'], 'desc': 'GROW Science · Autumn 2 · Week 5. I am learning to choose a model that fits a science question and use a matching clue.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'GROW · Investigating a science question', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06.html', 'id': 'land-a2-sci-grow-a2-w06-investigating-a-science-question', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 2', 'investigating', 'science', 'question'], 'desc': 'GROW Science · Autumn 2 · Week 6. I am learning to plan a fair investigation, record a result and explain a limit.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'GROW · Autumn science review and evidence', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07.html', 'id': 'land-a2-sci-grow-a2-w07-autumn-science-review-and-evidence', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 2', 'autumn', 'science', 'review', 'evidence'], 'desc': 'GROW Science · Autumn 2 · Week 7. I am learning to use a model and a matching clue to show what you know in science.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
 SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Mitosis and the cell cycle', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W01/SCI_LAUNCH_A2_W01.html', 'id': 'land-a2-sci-launch-a2-w01-mitosis-and-the-cell-cycle', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'mitosis', 'cell', 'cycle'], 'desc': 'LAUNCH Science · Autumn 2 · Week 1. I am learning to order the cell cycle and explain why a cell makes two matching cells.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Growth and stem cells', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W02/SCI_LAUNCH_A2_W02.html', 'id': 'land-a2-sci-launch-a2-w02-growth-and-stem-cells', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'growth', 'stem', 'cells'], 'desc': 'LAUNCH Science · Autumn 2 · Week 2. I am learning to explain how cells divide and then take on different jobs for growth and repair.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Stem-cell decisions', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W03/SCI_LAUNCH_A2_W03.html', 'id': 'land-a2-sci-launch-a2-w03-stem-cell-decisions', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'stem', 'cell', 'decisions'], 'desc': 'LAUNCH Science · Autumn 2 · Week 3. I am learning to weigh a possible benefit and risk of stem-cell research using evidence.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · DNA, genes and chromosomes', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W04/SCI_LAUNCH_A2_W04.html', 'id': 'land-a2-sci-launch-a2-w04-dna-genes-and-chromosomes', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'dna', 'genes', 'chromosomes'], 'desc': 'LAUNCH Science · Autumn 2 · Week 4. I am learning to show how a gene is part of DNA and how DNA is packed into chromosomes.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · A simple genetic cross', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W05/SCI_LAUNCH_A2_W05.html', 'id': 'land-a2-sci-launch-a2-w05-a-simple-genetic-cross', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'simple', 'genetic', 'cross'], 'desc': 'LAUNCH Science · Autumn 2 · Week 5. I am learning to calculate genetic probability with a Punnett square and evaluate its limits.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Researching a genetic condition', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W06/SCI_LAUNCH_A2_W06.html', 'id': 'land-a2-sci-launch-a2-w06-researching-a-genetic-condition', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'researching', 'genetic', 'condition'], 'desc': 'LAUNCH Science · Autumn 2 · Week 6. I am learning to use a named source to present careful facts about a genetic condition.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Cells and genetics check', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W07/SCI_LAUNCH_A2_W07.html', 'id': 'land-a2-sci-launch-a2-w07-cells-and-genetics-check', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'cells', 'genetics', 'check'], 'desc': 'LAUNCH Science · Autumn 2 · Week 7. I am learning to use cell and inheritance models to show what I know and choose one next step.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
 # RULING tm add.2 (19 Oct 2026): the seven Week 8 entries below carry their pages' learning-goal lines as
 # their desc, the same correction made to resources.json; tools/ux2/check_lesson_outcomes.py proves it (O4).
 SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'BUILD · Animals get food by eating', 'file': 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P1.html', 'id': 'dy4-sci-build-a1-w08-p1-animals-get-food-by-eating', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 1', 'week 8', 'animals', 'get', 'food', 'eating'], 'desc': 'BUILD Science · Autumn 1 · Week 8. I can explain that animals get food by eating, and plants can make their own food.', 'added': '2026-10-03', 'new': True, 'year': '2026-27'})
@@ -1372,19 +1356,28 @@ SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Amylase
 # Title is the page's own label (lesson_label), desc its own meta description; no halfTerm tag.
 SHELF_ROWS.append({'subject': 'Assembly', 'title': 'The rule of law', 'file': 'Assembly/British Value/Assembly_Rule_of_Law_SEMH-1.html', 'added': '2026-10-23', 'id': 'assembly-rule-of-law', 'type': 'lesson', 'family': 'British Values · Rule of Law', 'keywords': ['assembly', 'british', 'law', 'rule', 'values'], 'desc': 'Fair rules. Fair process. A voice for everyone. A 20-minute interactive assembly for secondary pupils.', 'year': '2026-27'})
 SHELF_ROWS.append({'subject': 'Assembly', 'title': 'Following instructions', 'file': 'Assembly/Behaviour Focus/Assembly_Work_Hard_Stay_Safe_SEMH-1.html', 'added': '2026-10-23', 'id': 'assembly-following-instructions', 'type': 'lesson', 'family': 'Behaviour · Following Instructions', 'keywords': ['assembly', 'behaviour', 'following', 'instructions'], 'desc': 'Pause. Listen. Check. Start. A 20-minute interactive assembly for secondary pupils.', 'year': '2026-27'})
+SHELF_ROWS.append({'id': 'catalogue-2026-27-local-choice-autumn2-w1-w2-pack', 'subject': 'Local Choice', 'type': 'teacher', 'title': 'Local Choice · Autumn 2 · Weeks 1–2 · Plan the day out and review', 'file': '5_6 Local Choice/Autumn_2_2026-27/START_HERE.html', 'family': 'Local Choice', 'added': '2026-11-01', 'year': '2026-27', 'desc': 'Start page for the Local Choice Autumn 2 Weeks 1 and 2 lessons (Plan the day out; Try, review and plan the visit), linking the public briefing slides, White/Blue/Pink pupil task and evidence sheets, and shared station resources.', 'keywords': ['local choice', 'autumn 2', 'weeks 1–2', 'open-air museum', 'visit planning', 'start here']})
+SHELF_ROWS.append({'subject': 'Assembly', 'title': 'Remembrance', 'file': 'Assembly/Remembrance/Assembly_A2_W02_Remembrance.html', 'added': '2026-11-01', 'id': 'assembly-a2-w02-remembrance', 'type': 'lesson', 'family': 'SMSC · Remembrance', 'keywords': ['assembly', 'autumn 2', 'week 2', 'remembrance', 'service', 'community', 'silence'], 'desc': 'Wednesday 11 November. A time to pause and remember. Whole-school assembly for Autumn 2 Week 2 with slides, presenter guide and corridor poster.', 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Assembly', 'title': 'Everyone belongs', 'file': 'Assembly/Anti-Bullying Week/Assembly_A2_W02_Anti_Bullying_Week.html', 'added': '2026-11-01', 'id': 'assembly-a2-w02-anti-bullying-week', 'type': 'lesson', 'family': 'Behaviour · Anti-Bullying Week', 'keywords': ['assembly', 'autumn 2', 'week 2', 'anti-bullying', 'respect', 'kindness', 'belonging'], 'desc': 'Different socks. Equal respect. Whole-school Anti-Bullying Week assembly for Autumn 2 Week 2 with slides, presenter guide and corridor poster.', 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Assembly', 'title': 'Democracy and our voice', 'file': 'Assembly/Parliament Week/Assembly_A2_W02_Parliament_Week.html', 'added': '2026-11-01', 'id': 'assembly-a2-w02-parliament-week', 'type': 'lesson', 'family': 'British Values · Parliament Week', 'keywords': ['assembly', 'autumn 2', 'week 2', 'parliament', 'democracy', 'representation', 'voice'], 'desc': 'A voice. A choice. A fair process. Whole-school Parliament Week assembly for Autumn 2 Week 2 with slides, presenter guide and corridor poster.', 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'GROW Vocational & PfA', 'title': 'Add and reset two score variables', 'file': 'ICT/Teaching_Packs/GROW_Computing_Autumn2/GROW_ICT_A2_W01/Public/ICT_GROW_A2_W01.html', 'added': '2026-11-02', 'id': 'grow-ict-a2-w01-add-and-reset-two-score-variables', 'type': 'lesson', 'family': 'ICT', 'keywords': ['ict', 'computing', 'grow', 'autumn 2', 'week 1', 'maze', 'variables', 'score', 'initialise', 'reset'], 'desc': 'GROW ICT · Autumn 2 · Week 1. Create two named score variables in the maze project and initialise both to zero on start.', 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'GROW Vocational & PfA', 'title': 'Update scores from two game events', 'file': 'ICT/Teaching_Packs/GROW_Computing_Autumn2/GROW_ICT_A2_W02/Public/ICT_GROW_A2_W02.html', 'added': '2026-11-02', 'id': 'grow-ict-a2-w02-update-scores-from-two-game-events', 'type': 'lesson', 'family': 'ICT', 'keywords': ['ict', 'computing', 'grow', 'autumn 2', 'week 2', 'maze', 'variables', 'score', 'events', 'touching'], 'desc': 'GROW ICT · Autumn 2 · Week 2. Trigger distinct score changes on item pickup and on hazard contact while keeping start resets at zero.', 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'BUILD · Test rock hardness and water', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1.html', 'id': 'a2w8-sci-build-a2-w03-l1-test-rock-hardness-and-water', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 2', 'week 3', 'test', 'rock', 'hardness', 'water'], 'desc': 'BUILD Science · Autumn 2 · Week 3 · Lesson 1 · Monday P3. I am learning to test a rock in two ways.', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'BUILD · Choose a rock for a job', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1.html', 'id': 'a2w8-sci-build-a2-w04-l1-choose-a-rock-for-a-job', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 2', 'week 4', 'choose', 'rock', 'job'], 'desc': 'BUILD Science · Autumn 2 · Week 4 · Lesson 1 · Monday P3. I am learning to match a rock to a job.', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'BUILD · Natural and made materials', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1.html', 'id': 'a2w8-sci-build-a2-w05-l1-natural-and-made-materials', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 2', 'week 5', 'natural', 'made', 'materials'], 'desc': 'BUILD Science · Autumn 2 · Week 5 · Lesson 1 · Monday P3. I am learning to sort things from nature and things people make.', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'BUILD · Keep a rock test fair', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1.html', 'id': 'a2w8-sci-build-a2-w06-l1-keep-a-rock-test-fair', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 2', 'week 6', 'keep', 'rock', 'test', 'fair'], 'desc': 'BUILD Science · Autumn 2 · Week 6 · Lesson 1 · Monday P3. I am learning to keep a rock test the same each time.', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'BUILD · Show what we know about bodies and rocks', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1.html', 'id': 'a2w8-sci-build-a2-w07-l1-show-what-we-know-about-bodies-and-rocks', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 2', 'week 7', 'show', 'what', 'know', 'about', 'bodies', 'rocks'], 'desc': 'BUILD Science · Autumn 2 · Week 7 · Lesson 1 · Monday P3. I am learning to show a fact about bodies, food and rocks.', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'GROW · Researching the Solar System', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P1.html', 'id': 'a2w8-sci-grow-a2-w03-p1-researching-the-solar-system', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 2', 'week 3', 'researching', 'solar', 'system'], 'desc': 'GROW Science · Autumn 2 · Week 3 · Period 1. Researching the Solar System', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'GROW · Global warming and choices', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P1.html', 'id': 'a2w8-sci-grow-a2-w04-p1-global-warming-and-choices', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 2', 'week 4', 'global', 'warming', 'choices'], 'desc': 'GROW Science · Autumn 2 · Week 4 · Period 1. Global warming and choices', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'GROW · Forces, space and climate questions', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P1.html', 'id': 'a2w8-sci-grow-a2-w05-p1-forces-space-and-climate-questions', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 2', 'week 5', 'forces', 'space', 'climate', 'questions'], 'desc': 'GROW Science · Autumn 2 · Week 5 · Period 1. I am learning to… choose a model that fits a science question and use a matching clue.', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'GROW · Investigating a science question', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P1.html', 'id': 'a2w8-sci-grow-a2-w06-p1-investigating-a-science-question', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 2', 'week 6', 'investigating', 'science', 'question'], 'desc': 'GROW Science · Autumn 2 · Week 6 · Period 1. I am learning to… plan a fair investigation, record a result and explain a limit.', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'GROW · Autumn science review and evidence', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P1.html', 'id': 'a2w8-sci-grow-a2-w07-p1-autumn-science-review-and-evidence', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 2', 'week 7', 'autumn', 'science', 'review', 'evidence'], 'desc': 'GROW Science · Autumn 2 · Week 7 · Period 1. I am learning to… use a model and a matching clue to show what you know in science.', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
 SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Growth and stem cells', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W02/SCI_LAUNCH_A2_W02_L1.html', 'id': 'a2w8-sci-launch-a2-w02-l1-growth-and-stem-cells', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 2', 'growth', 'stem', 'cells'], 'desc': 'LAUNCH Science · Autumn 2 · Week 2 · Lesson 1. Growth and stem cells', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
 SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Stem-cell decisions', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W03/SCI_LAUNCH_A2_W03_L1.html', 'id': 'a2w8-sci-launch-a2-w03-l1-stem-cell-decisions', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 3', 'stem', 'cell', 'decisions'], 'desc': 'LAUNCH Science · Autumn 2 · Week 3 · Lesson 1. I am learning to weigh a possible benefit and risk of stem-cell research using evidence.', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
 SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · DNA, genes and chromosomes', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W04/SCI_LAUNCH_A2_W04_L1.html', 'id': 'a2w8-sci-launch-a2-w04-l1-dna-genes-and-chromosomes', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 4', 'dna', 'genes', 'chromosomes'], 'desc': 'LAUNCH Science · Autumn 2 · Week 4 · Lesson 1. I am learning to show how a gene is part of DNA and how DNA is packed into chromosomes.', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Fruit DNA: extract, observe, evaluate', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W04/SCI_LAUNCH_A2_W04_L3.html', 'id': 'a2w8-sci-launch-a2-w04-l3-fruit-dna-extract-observe-evaluate', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 4', 'fruit', 'dna', 'extract', 'observe', 'evaluate'], 'desc': 'LAUNCH Science · Autumn 2 · Week 4 · Lesson 3. Explain the roles of extraction steps and distinguish an observation of a crude extract from a claim about purity.', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
 SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · A simple genetic cross', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W05/SCI_LAUNCH_A2_W05_L1.html', 'id': 'a2w8-sci-launch-a2-w05-l1-a-simple-genetic-cross', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 5', 'simple', 'genetic', 'cross'], 'desc': 'LAUNCH Science · Autumn 2 · Week 5 · Lesson 1. I am learning to calculate genetic probability with a Punnett square and evaluate its limits.', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Punnett squares: construct the prediction', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W05/SCI_LAUNCH_A2_W05_L2.html', 'id': 'a2w8-sci-launch-a2-w05-l2-punnett-squares-construct-the-prediction', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 5', 'punnett', 'squares', 'construct', 'prediction'], 'desc': 'LAUNCH Science · Autumn 2 · Week 5 · Lesson 2. Construct a monohybrid Punnett square and explain how gametes combine to predict offspring genotypes.', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Inheritance probability: predict and evaluate', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W05/SCI_LAUNCH_A2_W05_L3.html', 'id': 'a2w8-sci-launch-a2-w05-l3-inheritance-probability-predict-and-evaluate', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 5', 'inheritance', 'probability', 'predict', 'evaluate'], 'desc': 'LAUNCH Science · Autumn 2 · Week 5 · Lesson 3. Convert genetic probabilities between fractions, ratios and percentages, and explain why observations vary.', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
 SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Researching a genetic condition', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W06/SCI_LAUNCH_A2_W06_L1.html', 'id': 'a2w8-sci-launch-a2-w06-l1-researching-a-genetic-condition', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 6', 'researching', 'genetic', 'condition'], 'desc': 'LAUNCH Science · Autumn 2 · Week 6 · Lesson 1. I am learning to use a named source to present careful facts about a genetic condition.', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Source evidence: trace every claim', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W06/SCI_LAUNCH_A2_W06_L2.html', 'id': 'a2w8-sci-launch-a2-w06-l2-source-evidence-trace-every-claim', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 6', 'source', 'evidence', 'trace', 'every', 'claim'], 'desc': 'LAUNCH Science · Autumn 2 · Week 6 · Lesson 2. Paraphrase and compare source evidence, keeping supported claims separate from inference and uncertainty.', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Present a genetic condition with care', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W06/SCI_LAUNCH_A2_W06_L3.html', 'id': 'a2w8-sci-launch-a2-w06-l3-present-a-genetic-condition-with-care', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 6', 'present', 'genetic', 'condition', 'with', 'care'], 'desc': 'LAUNCH Science · Autumn 2 · Week 6 · Lesson 3. Present an accurate, source-linked explanation and respond to a question without exceeding the evidence.', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
 SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Cells and genetics check', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W07/SCI_LAUNCH_A2_W07_L1.html', 'id': 'a2w8-sci-launch-a2-w07-l1-cells-and-genetics-check', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 7', 'cells', 'genetics', 'check'], 'desc': 'LAUNCH Science · Autumn 2 · Week 7 · Lesson 1. I am learning to use cell and inheritance models to show what I know and choose one next step.', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Exam-style reasoning: evidence to explanation', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W07/SCI_LAUNCH_A2_W07_L2.html', 'id': 'a2w8-sci-launch-a2-w07-l2-exam-style-reasoning-evidence-to-explanation', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 7', 'exam', 'style', 'reasoning', 'evidence', 'explanation'], 'desc': 'LAUNCH Science · Autumn 2 · Week 7 · Lesson 2. Use command words, selected evidence and a clear scientific link to improve exam-style responses.', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Autumn 2 checkpoint: show and review', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W07/SCI_LAUNCH_A2_W07_L3.html', 'id': 'a2w8-sci-launch-a2-w07-l3-autumn-2-checkpoint-show-and-review', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 7', 'autumn', 'checkpoint', 'show', 'review'], 'desc': 'LAUNCH Science · Autumn 2 · Week 7 · Lesson 3. Show current understanding of the taught Autumn 2 content, then choose a precise next learning step.', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
 
 # Exact reviewed files, not patterns. A future new UI file requires an explicit
 # change here; a lesson cannot become permitted because it shares a directory.
@@ -3374,6 +3367,213 @@ REVIEWED_PATHS += (
 REVIEWED_PATHS += (
     'BUILD_ASDAN/Autumn2_W1-W6_2026-27/SHA256SUMS.txt',
     'BUILD_ASDAN/Autumn2_W1-W6_2026-27/START_HERE_BUILD_ASDAN_AUT2.html',
+)
+
+# RULING Science Autumn 2 Week 8 layout (1 Nov 2026), BUILD: the 5 BUILD lessons landed beside the Autumn 2 summary pages in
+# the Week 8 layout (one full page per lesson, its 12-member pack beside it), each file pinned by its own bytes.
+# These pins are what _glv3 LAND_A2_SCIENCE_TERMS admits them by: an exact pinned addition and nothing else.
+REVIEWED_PATHS += (
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1.html',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1_Editable_Pack.docx',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1_Knowledge_Organiser.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1_Pupil_Resources.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1_Slides.pptx',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1_Staff_Answers.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1_TA_Brief.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1_Teacher_and_Cover_Plan.docx',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1_Teacher_and_Cover_Plan.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1_Tier_Pack_Standard.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1_Tier_Pack_Stretch.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1_Tier_Pack_Supported.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1_Word_Page.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1.html',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1_Editable_Pack.docx',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1_Knowledge_Organiser.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1_Pupil_Resources.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1_Slides.pptx',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1_Staff_Answers.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1_TA_Brief.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1_Teacher_and_Cover_Plan.docx',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1_Teacher_and_Cover_Plan.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1_Tier_Pack_Standard.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1_Tier_Pack_Stretch.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1_Tier_Pack_Supported.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1_Word_Page.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1.html',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1_Editable_Pack.docx',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1_Knowledge_Organiser.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1_Pupil_Resources.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1_Slides.pptx',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1_Staff_Answers.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1_TA_Brief.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1_Teacher_and_Cover_Plan.docx',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1_Teacher_and_Cover_Plan.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1_Tier_Pack_Standard.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1_Tier_Pack_Stretch.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1_Tier_Pack_Supported.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1_Word_Page.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1.html',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1_Editable_Pack.docx',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1_Knowledge_Organiser.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1_Pupil_Resources.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1_Slides.pptx',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1_Staff_Answers.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1_TA_Brief.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1_Teacher_and_Cover_Plan.docx',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1_Teacher_and_Cover_Plan.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1_Tier_Pack_Standard.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1_Tier_Pack_Stretch.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1_Tier_Pack_Supported.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1_Word_Page.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1.html',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1_Editable_Pack.docx',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1_Knowledge_Organiser.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1_Pupil_Resources.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1_Slides.pptx',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1_Staff_Answers.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1_TA_Brief.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1_Teacher_and_Cover_Plan.docx',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1_Teacher_and_Cover_Plan.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1_Tier_Pack_Standard.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1_Tier_Pack_Stretch.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1_Tier_Pack_Supported.pdf',
+    'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1_Word_Page.pdf',
+)
+
+# RULING Science Autumn 2 Week 8 layout (1 Nov 2026), GROW: the 10 GROW lessons landed beside the Autumn 2 summary pages in
+# the Week 8 layout (one full page per lesson, its 12-member pack beside it), each file pinned by its own bytes.
+# These pins are what _glv3 LAND_A2_SCIENCE_TERMS admits them by: an exact pinned addition and nothing else.
+REVIEWED_PATHS += (
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P1.html',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P1_Editable_Pack.docx',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P1_Knowledge_Organiser.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P1_Pupil_Resources.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P1_Slides.pptx',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P1_Staff_Answers.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P1_TA_Brief.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P1_Teacher_and_Cover_Plan.docx',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P1_Teacher_and_Cover_Plan.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P1_Tier_Pack_Standard.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P1_Tier_Pack_Stretch.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P1_Tier_Pack_Supported.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P1_Word_Page.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P2.html',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P2_Editable_Pack.docx',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P2_Knowledge_Organiser.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P2_Pupil_Resources.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P2_Slides.pptx',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P2_Staff_Answers.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P2_TA_Brief.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P2_Teacher_and_Cover_Plan.docx',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P2_Teacher_and_Cover_Plan.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P2_Tier_Pack_Standard.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P2_Tier_Pack_Stretch.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P2_Tier_Pack_Supported.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P2_Word_Page.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P1.html',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P1_Editable_Pack.docx',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P1_Knowledge_Organiser.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P1_Pupil_Resources.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P1_Slides.pptx',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P1_Staff_Answers.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P1_TA_Brief.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P1_Teacher_and_Cover_Plan.docx',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P1_Teacher_and_Cover_Plan.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P1_Tier_Pack_Standard.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P1_Tier_Pack_Stretch.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P1_Tier_Pack_Supported.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P1_Word_Page.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P2.html',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P2_Editable_Pack.docx',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P2_Knowledge_Organiser.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P2_Pupil_Resources.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P2_Slides.pptx',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P2_Staff_Answers.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P2_TA_Brief.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P2_Teacher_and_Cover_Plan.docx',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P2_Teacher_and_Cover_Plan.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P2_Tier_Pack_Standard.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P2_Tier_Pack_Stretch.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P2_Tier_Pack_Supported.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P2_Word_Page.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P1.html',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P1_Editable_Pack.docx',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P1_Knowledge_Organiser.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P1_Pupil_Resources.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P1_Slides.pptx',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P1_Staff_Answers.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P1_TA_Brief.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P1_Teacher_and_Cover_Plan.docx',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P1_Teacher_and_Cover_Plan.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P1_Tier_Pack_Standard.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P1_Tier_Pack_Stretch.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P1_Tier_Pack_Supported.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P1_Word_Page.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P2.html',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P2_Editable_Pack.docx',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P2_Knowledge_Organiser.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P2_Pupil_Resources.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P2_Slides.pptx',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P2_Staff_Answers.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P2_TA_Brief.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P2_Teacher_and_Cover_Plan.docx',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P2_Teacher_and_Cover_Plan.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P2_Tier_Pack_Standard.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P2_Tier_Pack_Stretch.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P2_Tier_Pack_Supported.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P2_Word_Page.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P1.html',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P1_Editable_Pack.docx',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P1_Knowledge_Organiser.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P1_Pupil_Resources.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P1_Slides.pptx',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P1_Staff_Answers.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P1_TA_Brief.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P1_Teacher_and_Cover_Plan.docx',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P1_Teacher_and_Cover_Plan.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P1_Tier_Pack_Standard.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P1_Tier_Pack_Stretch.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P1_Tier_Pack_Supported.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P1_Word_Page.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P2.html',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P2_Editable_Pack.docx',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P2_Knowledge_Organiser.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P2_Pupil_Resources.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P2_Slides.pptx',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P2_Staff_Answers.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P2_TA_Brief.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P2_Teacher_and_Cover_Plan.docx',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P2_Teacher_and_Cover_Plan.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P2_Tier_Pack_Standard.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P2_Tier_Pack_Stretch.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P2_Tier_Pack_Supported.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P2_Word_Page.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P1.html',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P1_Editable_Pack.docx',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P1_Knowledge_Organiser.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P1_Pupil_Resources.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P1_Slides.pptx',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P1_Staff_Answers.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P1_TA_Brief.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P1_Teacher_and_Cover_Plan.docx',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P1_Teacher_and_Cover_Plan.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P1_Tier_Pack_Standard.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P1_Tier_Pack_Stretch.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P1_Tier_Pack_Supported.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P1_Word_Page.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P2.html',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P2_Editable_Pack.docx',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P2_Knowledge_Organiser.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P2_Pupil_Resources.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P2_Slides.pptx',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P2_Staff_Answers.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P2_TA_Brief.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P2_Teacher_and_Cover_Plan.docx',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P2_Teacher_and_Cover_Plan.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P2_Tier_Pack_Standard.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P2_Tier_Pack_Stretch.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P2_Tier_Pack_Supported.pdf',
+    'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P2_Word_Page.pdf',
 )
 
 # RULING Science Autumn 2 Week 8 layout (1 Nov 2026), LAUNCH: the 13 LAUNCH lessons landed beside the Autumn 2 summary pages in
