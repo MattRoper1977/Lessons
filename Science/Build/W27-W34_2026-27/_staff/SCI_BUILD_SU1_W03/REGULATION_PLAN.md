@@ -1,6 +1,6 @@
 # SCI_BUILD_SU1_W03 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Science · BUILD**\
+**the school staff-facing · review copy · Science · BUILD**\
 **Learning objective:** Identify what plants need to grow well (light, water, warmth, nutrients).
 
 ## Set up before pupils arrive
@@ -40,4 +40,4 @@ At a calm key-adult check-in, ask: “What was the first body or task signal tha
 - **Job 2 observable link for SCI_BUILD_SU1_W03:** Only tag a broad area when its behaviour actually occurs:
 - **communication & interaction:** Communicates one condition needed for plant growth.
 - **cognition & learning:** Selects a relevant growth condition from the supplied options.
-- **E: evidence captured on Cypher** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.
+- **E: evidence captured on the evidence app** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.

@@ -1,6 +1,6 @@
 # LAUNCH_SU1_W03 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Humanities · LAUNCH**\
+**the school staff-facing · review copy · Humanities · LAUNCH**\
 **Learning objective:** Make a reasoned geographical decision.
 
 ## Set up before pupils arrive
@@ -41,4 +41,4 @@ At a calm key-adult check-in, ask: “What was the first body or task signal tha
 - **communication & interaction:** States how the group’s chosen priority affects a decision.
 - **cognition & learning:** Compares both options against the same named criterion.
 - **SEMH:** Revises or maintains a choice after a partner challenge and explains the reason.
-- **E: evidence captured on Cypher** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.
+- **E: evidence captured on the evidence app** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.

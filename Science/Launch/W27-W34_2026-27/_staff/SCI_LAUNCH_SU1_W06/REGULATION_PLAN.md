@@ -1,6 +1,6 @@
 # SCI_LAUNCH_SU1_W06 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Science · LAUNCH**\
+**the school staff-facing · review copy · Science · LAUNCH**\
 **Learning objective:** Paper 2 topic assessment.
 
 ## Set up before pupils arrive
@@ -41,4 +41,4 @@ At a calm key-adult check-in, ask: “What was the first body or task signal tha
 - **communication & interaction:** Communicates a need for the agreed assessment access support without requesting the answer.
 - **cognition & learning:** Applies a taught concept to an assessment item.
 - **SEMH:** Uses an agreed pause-and-return routine during the assessment if needed.
-- **E: evidence captured on Cypher** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.
+- **E: evidence captured on the evidence app** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.

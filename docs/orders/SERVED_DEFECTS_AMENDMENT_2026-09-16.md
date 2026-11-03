@@ -113,7 +113,7 @@ definition - maybe under the writing on the pic - explaining what each pathway m
 
 **Why it is a defect and not a nicety.** The pills are the only place on the public front door
 where the estate's organising idea is named, and they are the label a visitor meets before any
-lesson. A parent, a commissioner or a teacher who does not already work at Progress Schools
+lesson. A parent, a commissioner or a teacher who does not already work at the school
 cannot tell from the word BUILD whether it means a construction course, a beginner tier or a
 key stage. The band therefore states a structure and withholds its meaning. Worse, the three
 words are load-bearing everywhere else on the estate — subject chips, catalogue rows, the
@@ -121,7 +121,7 @@ teaching packs, the lesson shells — so the front door is the one surface that 
 them, and it is the one surface that does not.
 
 **The source, and it is not to be invented.** Matt supplied the authority on 16 September:
-*Progress Schools Curriculum Policy 2026/27, Issue 2, §5.3 "Pathways"* (page 13 of the supplied
+*the school Curriculum Policy 2026/27, Issue 2, §5.3 "Pathways"* (page 13 of the supplied
 PDF), which describes four pathways in summary — Build, Grow, Launch and Reintegration — and
 §3.2, which states the stage-not-age principle the band is expressing. No blurb may be written
 from memory, from the mockup, or from what the lessons appear to do. Every clause traces to

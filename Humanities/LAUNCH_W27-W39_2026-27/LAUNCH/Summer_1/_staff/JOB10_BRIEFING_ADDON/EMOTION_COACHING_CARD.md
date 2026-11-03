@@ -1,6 +1,6 @@
 # Emotion coaching card · staff pocket copy
 
-**Progress Schools staff-facing · print two A5 copies on one A4**
+**the school staff-facing · print two A5 copies on one A4**
 
 1. **Notice.** See the change in pace, posture, voice or participation; adult steadies voice and pace first.
 2. **Name plainly.** Say what you see in a few words; use a body signal if an emotion label does not land.

@@ -1,4 +1,4 @@
-# LAUNCH_RE_A2_W03 · Progress Schools staff card
+# LAUNCH_RE_A2_W03 · the school staff card
 
 **Scheme objective:** Describe a rite of passage and explain how it can connect a person to a community.
 
@@ -22,7 +22,7 @@
 - **WS:** Pupil works with the adult's reading or choice support; record the support used.
 - **I:** Pupil locates a source detail or answers without a content prompt.
 - **NS+:** Ask for one specific next step: find the source line for “What shared community action can be observed?” and add its detail.
-- **E:** E: evidence captured on Cypher
+- **E:** E: evidence captured on the evidence app
 - **R:** Next lesson, receive and attend to the pupil's response to NS+ before marking the loop closed.
 - **//:** Mark the exact point in the existing response where the pupil self-edits.
 - **?:** Use Read it back; pupil reads, hears or indicates the highlighted sentence and checks their claim.

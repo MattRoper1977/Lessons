@@ -1,4 +1,4 @@
-# BUILD_SCI_A2_W05 · Progress Schools staff card
+# BUILD_SCI_A2_W05 · the school staff card
 
 **Scheme objective:** Group natural and human-made materials; record results in a table (ICT).
 
@@ -22,7 +22,7 @@
 - **WS:** Pupil works with the adult's reading or choice support; record the support used.
 - **I:** Pupil locates a source detail or answers without a content prompt.
 - **NS+:** Ask for one specific next step: find the source line for “What makes a table useful?” and add its detail.
-- **E:** E: evidence captured on Cypher
+- **E:** E: evidence captured on the evidence app
 - **R:** Next lesson, receive and attend to the pupil's response to NS+ before marking the loop closed.
 - **//:** Mark the exact point in the existing response where the pupil self-edits.
 - **?:** Use Read it back; pupil reads, hears or indicates the highlighted sentence and checks their claim.

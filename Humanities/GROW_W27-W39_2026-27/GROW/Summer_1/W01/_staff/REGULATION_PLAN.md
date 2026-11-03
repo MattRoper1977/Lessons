@@ -1,6 +1,6 @@
 # GROW_SU1_W01 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Humanities · GROW**\
+**the school staff-facing · review copy · Humanities · GROW**\
 **Learning objective:** Locate my place the UK and the wider world on maps.
 
 ## Set up before pupils arrive
@@ -40,4 +40,4 @@ At a calm key-adult check-in, ask: “What was the first body or task signal tha
 - **Job 2 observable link for GROW_SU1_W01:** Only tag a broad area when its behaviour actually occurs:
 - **communication & interaction:** Explains a map choice for the entrance question.
 - **cognition & learning:** Selects the map scale that can show the required detail.
-- **E: evidence captured on Cypher** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.
+- **E: evidence captured on the evidence app** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.

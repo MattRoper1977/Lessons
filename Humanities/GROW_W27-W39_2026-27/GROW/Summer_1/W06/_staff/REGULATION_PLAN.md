@@ -1,6 +1,6 @@
 # GROW_SU1_W06 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Humanities · GROW**\
+**the school staff-facing · review copy · Humanities · GROW**\
 **Learning objective:** Complete a fieldwork and locality study and bank UAS evidence.
 
 ## Set up before pupils arrive
@@ -41,4 +41,4 @@ At a calm key-adult check-in, ask: “What was the first body or task signal tha
 - **communication & interaction:** Gives their own conclusion to an adult or chosen audience.
 - **cognition & learning:** Identifies a missing study section using the evidence checklist.
 - **SEMH:** Selects a response format or agreed support before the individual review.
-- **E: evidence captured on Cypher** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.
+- **E: evidence captured on the evidence app** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.

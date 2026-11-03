@@ -21,7 +21,7 @@ moved, not the property.
 | `<input>` | 0 | **0** | ✅ |
 | `<textarea>` | 0 | **0** | ✅ |
 | duplicate ids | 0 | **0** | ✅ |
-| Progress Schools branding | 0 | **0** | ✅ |
+| the school branding | 0 | **0** | ✅ |
 | `<iframe>` per deck | 0 | **0** | ✅ |
 | **YouTube** | **0** | **2** | ⚠ see below |
 

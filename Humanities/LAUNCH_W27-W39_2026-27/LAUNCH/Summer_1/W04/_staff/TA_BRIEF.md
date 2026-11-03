@@ -31,7 +31,7 @@
 **Regulation break:** Offer the pre-agreed help/pause signal without asking for a public explanation. Follow the pupil's existing plan for place, adult and length; retain supervision. On return, point to the last completed step, offer a small re-entry choice, and note access/support factually. Do not create a difficulty to elicit evidence.
 
 **Regulation:** Follow `REGULATION_PLAN.md` (beside this brief) for the check-ins, transition recovery and agreed pause/re-entry route.
-**Regulation handoff:** At Exit, pass the prompt level and independent step to the teacher; next lesson, rehearse the response to NS+ before R. E: evidence captured on Cypher only if the linked Job 2 behaviour occurred.
+**Regulation handoff:** At Exit, pass the prompt level and independent step to the teacher; next lesson, rehearse the response to NS+ before R. E: evidence captured on the evidence app only if the linked Job 2 behaviour occurred.
 
 ## Teacher time and handoff
 
@@ -39,6 +39,6 @@
 
 **HANDOFF at Exit:** Tell the teacher the deepest prompt level reached (self-scaffold, prompt, clue, model or correct), the independently demonstrated part of “I can make an action and its evidence clear for the intended campaign audience.”, and the next content barrier. Include the response mode and any access support.
 
-**E: evidence captured on Cypher** — tag only a relevant broad Job 2 area if actual evidence exists: communication & interaction; cognition & learning; SEMH. Source-linked behaviours: communication & interaction: Adapts the action message for its stated school audience; cognition & learning: Removes an unsupported result claim from the draft; SEMH: Requests a private or paired feedback route before reviewing the message
+**E: evidence captured on the evidence app** — tag only a relevant broad Job 2 area if actual evidence exists: communication & interaction; cognition & learning; SEMH. Source-linked behaviours: communication & interaction: Adapts the action message for its stated school audience; cognition & learning: Removes an unsupported result claim from the draft; SEMH: Requests a private or paired feedback route before reviewing the message
 
 **Feedback loop:** At Review/Exit, an actual NS+ names one next step. At the next lesson Arrival, allow the pupil to respond; only then mark R after the adult has engaged with that response. `//` marks a pupil self-edit; `?` cues Read it back. Code actual events only.

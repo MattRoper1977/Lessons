@@ -1,6 +1,6 @@
 # LAUNCH_SU1_W01 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Humanities · LAUNCH**\
+**the school staff-facing · review copy · Humanities · LAUNCH**\
 **Learning objective:** Explain resource use and climate change using online data.
 
 ## Set up before pupils arrive
@@ -40,4 +40,4 @@ At a calm key-adult check-in, ask: “What was the first body or task signal tha
 - **Job 2 observable link for LAUNCH_SU1_W01:** Only tag a broad area when its behaviour actually occurs:
 - **communication & interaction:** Explains the resource-use link while identifying the relevant source.
 - **cognition & learning:** Distinguishes a concentration value in ppm from a temperature reading.
-- **E: evidence captured on Cypher** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.
+- **E: evidence captured on the evidence app** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.

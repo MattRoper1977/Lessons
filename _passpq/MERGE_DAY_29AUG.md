@@ -131,7 +131,7 @@ itself.
 
 1. **The staff pack — unblocked at PEQ-YEAR-3.** `tools/build_staff_pack.py --mirror` hard-stops
    without `--logo`: *"There is no fallback to the typographic mark … a pack built without the
-   real lockup is not a Progress Schools pack."* It verifies the image by SHA-256, and the binary
+   real lockup is not a the school pack."* It verifies the image by SHA-256, and the binary
    is deliberately **not in git**. That was a genuine block for two passes. **The owner has now
    supplied the lockup**, so the pack is **Stage 2 of this pass**, not a waiting line. The rule
    that made it a block stands unchanged: no logo binary enters git, ever, and a pack without the

@@ -1,6 +1,6 @@
 # GROW_SU1_W05 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Humanities · GROW**\
+**the school staff-facing · review copy · Humanities · GROW**\
 **Learning objective:** Compare my locality with a contrasting place.
 
 ## Set up before pupils arrive
@@ -40,4 +40,4 @@ At a calm key-adult check-in, ask: “What was the first body or task signal tha
 - **Job 2 observable link for GROW_SU1_W05:** Only tag a broad area when its behaviour actually occurs:
 - **communication & interaction:** Gives a comparison using a source detail for both places.
 - **cognition & learning:** Uses the same criterion for both columns of the comparison.
-- **E: evidence captured on Cypher** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.
+- **E: evidence captured on the evidence app** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.

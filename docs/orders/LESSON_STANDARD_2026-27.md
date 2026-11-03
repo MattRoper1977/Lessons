@@ -16,7 +16,7 @@ that every later lesson inherits unchanged. Part D is the acceptance checklist.
 | Source | Identity | Where it is |
 |---|---|---|
 | Master order §25.1–§25.5 (Lessons reference standard) | text as supplied to this session on 15 September 2026; the master order is not committed in this repository | quoted verbatim in Part A |
-| Progress Schools Curriculum Policy 2026/2027, Issue 2 (August 2026) | `PS_Curriculum_Policy_-_2026_2027.pdf`, 444,764 bytes, 41 pages, SHA-256 `593ab59361d1f1d22360a0ba12bdb96e08dcd94404a07368c09768414e982aed` | supplied by Matt in this session; not committed |
+| the school Curriculum Policy 2026/2027, Issue 2 (August 2026) | `PS_Curriculum_Policy_-_2026_2027.pdf`, 444,764 bytes, 41 pages, SHA-256 `593ab59361d1f1d22360a0ba12bdb96e08dcd94404a07368c09768414e982aed` | supplied by Matt in this session; not committed |
 | Feedback & Marking Policy 2025/2026 (Pilot), Issue 1, May 2026 — master-order reference copy, 16 pages | `Feedback_Policy_2025-2026_-_Pilot.pdf`, 208,449 bytes, SHA-256 `41046284a00c9218679b946134cbc6e53c1897aad28b15fc4bd4aa963720ff3b` | supplied by Matt in this session; Drive `1D8lpR-_1uQc2ND5C02T7BUfM8myBrC6M`; not committed |
 | Same policy, Issue 1, second copy, 13 pages | `Feedback_Policy_-_2025_2026_Pilot.pdf`, 204,058 bytes, SHA-256 `aa41d67963846cf35e9bb6e53e708c7b46725c2d5cef432c2e1994a78e434e53` | supplied by Matt in this session; Drive `15hGPn0lGji4WRt-A_L2_19nidpP6XMRb`; not committed |
 | Feedback & Marking Policy Issue 2 | **not found** — session uploads, all repository history, Drive titles and full text searched (`CX2_CHECKPOINT.md` §1). Issue 1 remains the code source (R9). | — |

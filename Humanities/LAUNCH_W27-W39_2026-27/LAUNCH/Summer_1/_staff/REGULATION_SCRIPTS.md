@@ -1,6 +1,6 @@
 # Shared regulation scripts
 
-**Progress Schools staff-facing · adapt the response mode to the pupil’s existing plan.**
+**the school staff-facing · adapt the response mode to the pupil’s existing plan.**
 
 Use a low voice, one step at a time and the agreed visual. Pause for processing; a repeated script is a cue, not a demand for speech. A pupil may need supervised space instead of closeness. Keep corrections private and leave problem-solving until regulated.
 
@@ -17,4 +17,4 @@ Use a low voice, one step at a time and the agreed visual. Pause for processing;
 | Read it back after a break | “When you are ready, point to or read one sentence back. What does it tell you?” | [Widgit slot: ______] |
 | End-of-lesson check-out | “Show me one part you completed. Which small step will help next time?” | [Widgit slot: ______] |
 
-**Next lesson:** Rehearse the pause signal and re-entry choice calmly. If NS+ was set, hear and respond to the pupil’s attempt before R. Record WS/I and prompt level only for actual work; E: evidence captured on Cypher only when a Job 2 observable behaviour occurs.
+**Next lesson:** Rehearse the pause signal and re-entry choice calmly. If NS+ was set, hear and respond to the pupil’s attempt before R. Record WS/I and prompt level only for actual work; E: evidence captured on the evidence app only when a Job 2 observable behaviour occurs.

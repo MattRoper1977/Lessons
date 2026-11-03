@@ -1,6 +1,6 @@
 # BUILD_SU1_W03 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Humanities · BUILD**\
+**the school staff-facing · review copy · Humanities · BUILD**\
 **Learning objective:** Compare my place with a contrasting place.
 
 ## Set up before pupils arrive
@@ -40,4 +40,4 @@ At a calm key-adult check-in, ask: “What was the first body or task signal tha
 - **Job 2 observable link for BUILD_SU1_W03:** Only tag a broad area when its behaviour actually occurs:
 - **communication & interaction:** Communicates one difference using a detail from each source.
 - **cognition & learning:** Sorts a shared feature into the correct comparison category.
-- **E: evidence captured on Cypher** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.
+- **E: evidence captured on the evidence app** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.

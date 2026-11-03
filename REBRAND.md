@@ -1,4 +1,4 @@
-# REBRAND — Made by Matt → Progress Schools
+# REBRAND — Made by Matt → the school
 
 **The procedure for producing a staff-facing pack from an estate file.**
 
@@ -20,7 +20,7 @@ existed nowhere in either repository. It lived in one person's head.
 |---|---|
 | contain `Made by Matt` | **271** |
 | contain `madebymatt` (any case) | **44** |
-| already name `Progress Schools` | **55** |
+| already name `the school` | **55** |
 | carry an `x-brand` meta tag | **0** |
 
 Forms the wordmark takes — **this is the list that gets missed**:
@@ -49,7 +49,7 @@ changed. If a visual mark is genuinely required, it comes from Progress
 Schools — it is not produced here.
 
 **What changed:** the last clause finally happened. Matt supplied the real
-Progress Schools lockup (the P mark + wordmark), so the placeholder is retired
+the school lockup (the P mark + wordmark), so the placeholder is retired
 and the trademark replaces the Made-by-Matt mark directly. The rule's *purpose*
 is unchanged and now binds harder:
 
@@ -61,7 +61,7 @@ is unchanged and now binds harder:
   base64 data URI per page. No external asset file — a pack that ships an
   `images/` folder breaks the moment a page is moved, and these pages get moved.
 - Where only the 64×64 mark footprint exists, crop to the P mark alone with
-  `alt="Progress Schools"` and the wordmark as adjacent text.
+  `alt="the school"` and the wordmark as adjacent text.
 
 The strip (rule 2) is still required alongside the logo. The lockup shows the
 wordmark, but the strip is a separate estate convention with occurrences to match.
@@ -71,12 +71,12 @@ cannot be rebuilt from the repo plus a recorded hash is not reproducible:
 
 ```
 logo  SHA-256  b112fd98e3368f73df4da5588a04238ee4a816b56007ba60e2e63d0286cbdb04
-      225x225 PNG, the P mark + "Progress Schools" wordmark lockup
+      225x225 PNG, the P mark + "the school" wordmark lockup
 ```
 
 The builder asserts this hash before it uses the file. **Absent `--logo` is a hard stop** —
 there is no fallback to the typographic mark. A pack built without the real lockup is not a
-Progress Schools pack, and silently producing one is how a placeholder ends up in a school.
+the school pack, and silently producing one is how a placeholder ends up in a school.
 
 `tools/build_staff_pack.py --mirror --logo PATH` implements all of this.
 
@@ -150,7 +150,7 @@ Corollary: **it must be added only when the rebrand is actually complete in that
 file.** A tag asserting a state the file isn't in is the failure mode this estate has
 paid for repeatedly. See `REGISTER.md` on declarations that point outward.
 
-### 6 · "Progress Schools" as plain text is fine in staff-facing content
+### 6 · "the school" as plain text is fine in staff-facing content
 
 Naming the organisation in prose needs no mark, no strip and no styling. Rule 1
 constrains the *mark*, not the *name*.
@@ -295,7 +295,7 @@ Three rules learned building the first one:
    and crawl it **from its own location**.
 2. **Flattening collides filenames.** Census every basename repeated across the folders being
    flattened *before* assembling. Renaming is reversible; overwriting is not.
-3. **A page the pack authors or re-emits is a Progress Schools page.** "Only pages that
+3. **A page the pack authors or re-emits is a the school page.** "Only pages that
    previously carried a mark" is a rule against inventing branding on someone else's page. It
    does not cover a page this build writes, nor a hub re-emitted at a new path — those carry
    the lockup. Brand the root original too, or the two copies of a hub disagree.
@@ -308,7 +308,7 @@ Three rules learned building the first one:
 ## What this recipe cannot tell you
 
 - Whether a given file *should* be in a staff pack at all. That is a content decision.
-- Whether Progress Schools' own brand guidance has changed. This records the estate's
+- Whether the school' own brand guidance has changed. This records the estate's
   practice, not their policy — if the two ever conflict, theirs wins and this file is
   the thing that is wrong.
 - Anything about pupil-facing material. This is a staff-pack procedure only.

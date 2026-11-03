@@ -1,6 +1,6 @@
 # SCI_LAUNCH_SU1_W01 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Science · LAUNCH**\
+**the school staff-facing · review copy · Science · LAUNCH**\
 **Learning objective:** Describe hormonal coordination & homeostasis.
 
 ## Set up before pupils arrive
@@ -40,4 +40,4 @@ At a calm key-adult check-in, ask: “What was the first body or task signal tha
 - **Job 2 observable link for SCI_LAUNCH_SU1_W01:** Only tag a broad area when its behaviour actually occurs:
 - **communication & interaction:** Explains a hormonal-control sequence using a labelled model.
 - **cognition & learning:** Connects a stimulus, signal and response in the model.
-- **E: evidence captured on Cypher** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.
+- **E: evidence captured on the evidence app** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.
