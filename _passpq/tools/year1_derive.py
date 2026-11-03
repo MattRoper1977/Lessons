@@ -25,9 +25,9 @@ ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
 OUT = os.path.join(ROOT, "_passpq", "inputs", "year1_timetable_evidence.json")
 
 LANES = {
-    "BUILD":  "Planning/BUILD/Progress_Tees_Valley_BUILD_Weekly_Plan_Week*.xlsx",
-    "GROW":   "Planning/GROW/Progress_Tees_Valley_GROW_Weekly_Plan_Week*.xlsx",
-    "LAUNCH": "Planning/LAUNCH/Progress_Tees_Valley_Weekly_Plan_Week*.xlsx",
+    "BUILD":  "Planning/BUILD/the_school_the_region_BUILD_Weekly_Plan_Week*.xlsx",
+    "GROW":   "Planning/GROW/the_school_the_region_GROW_Weekly_Plan_Week*.xlsx",
+    "LAUNCH": "Planning/LAUNCH/the_school_the_region_Weekly_Plan_Week*.xlsx",
 }
 # Rows that are subject teaching, never PEQ. Matched on the row's column-A label.
 NOT_PEQ = re.compile(r'^(English|Maths|Science|PSHE|RE$|RE\b|Humanities|Arts|PE$)', re.I)

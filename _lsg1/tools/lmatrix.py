@@ -166,8 +166,8 @@ COLS = [("Lesson", "k"), ("Investigation", "inv"), ("Equipment (per group)", "eq
 
 
 def build(progress):
-    brand = '<meta name="x-brand" content="progress-schools">' if progress else ""
-    comment = ("<!-- Progress Schools staff variant · " if progress
+    brand = '' if progress else ""
+    comment = ("<!-- the school staff variant · " if progress
                else "<!-- Made by Matt · ")
     comment += ("LAUNCH GCSE Biology v3 40-minute route — practicals & equipment matrix. "
                 "Staff-facing artefact. Derived from the v3+ review-pack equipment matrix, "
@@ -179,13 +179,13 @@ def build(progress):
     head = ('<header><div>Made by Matt</div>'
             '<div style="font-size:.8rem;opacity:.85">LAUNCH GCSE Biology · 2026–27 Aut 1</div>'
             if progress else
-            '<header><div>Made by Matt · for Progress Schools · LAUNCH GCSE Biology · 2026–27 Aut 1</div>')
+            '<header><div>Made by Matt · for the school · LAUNCH GCSE Biology · 2026–27 Aut 1</div>')
     foot = ('staff use · LAUNCH GCSE Biology 40-minute '
             'route (Aut 1 W3–W7). Source: v3+ equipment matrix (received 2026-08-12), '
             'digital column re-derived per lesson against the live route. '
             '<span style="opacity:.75">by madebymatt.uk</span>'
             if progress else
-            'Made by Matt · prepared for Progress Schools staff use · LAUNCH GCSE Biology '
+            'Made by Matt · prepared for the school staff use · LAUNCH GCSE Biology '
             '40-minute route (Aut 1 W3–W7). Source: v3+ equipment matrix (received '
             '2026-08-12), digital column re-derived per lesson against the live route.')
     rows = ""

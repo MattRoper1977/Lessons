@@ -85,7 +85,7 @@ EXPECTED = {
     "A6_no_pupil_names": 24,
 }
 COUNTED = {"tier_supported": r"\bSupported\b", "tier_standard": r"\bStandard\b", "tier_stretch": r"\bStretch\b",
-           "attrib_made_by_matt": r"Made by Matt", "attrib_progress_schools": r"Progress Schools"}
+           "attrib_made_by_matt": r"Made by Matt", "attrib_the_school": r"the school"}
 
 
 def main():

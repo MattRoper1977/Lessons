@@ -45,8 +45,7 @@ reader still announces the wrong organisation.
 **Original rule, kept because it explains the one below:** set the mark as
 **text**. Do not draw a logo, do not generate an SVG mark, do not approximate one
 from memory, and do not carry over the Made by Matt logo geometry with the letters
-changed. If a visual mark is genuinely required, it comes from Progress
-Schools — it is not produced here.
+changed. If a visual mark is genuinely required, it comes from the school — it is not produced here.
 
 **What changed:** the last clause finally happened. Matt supplied the real
 the school lockup (the P mark + wordmark), so the placeholder is retired
@@ -86,8 +85,7 @@ the school pack, and silently producing one is how a placeholder ends up in a sc
 
 ```
 
-Upper case, middle dot with a space either side. **47 occurrences of `PROGRESS
-SCHOOLS` already exist** in the estate (45 bare, 2 as `PROGRESS SCHOOLS — Studio
+Upper case, middle dot with a space either side. **47 occurrences of `THE SCHOOL` already exist** in the estate (45 bare, 2 as `THE SCHOOL — Studio
 Board`) — match them rather than inventing a variant.
 
 ### 3 · Replace every form of the wordmark, attributes included
@@ -139,7 +137,6 @@ spelling the sweep has always caught. Adding the next form is a one-line change.
 ### 5 · The `x-brand` meta tag
 
 ```html
-<meta name="x-brand" content="progress-schools">
 ```
 
 Add to the `<head>` of every rebranded file. **Zero files carry it today**, so it is
