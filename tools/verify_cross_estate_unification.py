@@ -751,7 +751,7 @@ CATALOGUE_PINS = {
         "LIVETEACH_RESIDUE.md": "5a18069638e4bbfb6a4da111f68e4ac3a17f5de4c8aead731d718f794d89e400",
         "404.html": "5b909c127d34c2151c58a95455cbe4706b0f3a946f7b7187029ee0181a858a63",
         "Build/README.txt": "84aa743004ececee3d3e9aedc295f0afc0f686124dd1b2f2f422b38c7b282a61",
-        "Games/WorldCup_ThreeLions_Final.html": "d10990c9de767912c5e4fd7f6a7e0ae6f1ab622b4aa0ed58a8219d1ae542f8fc",
+        "Games/WorldCup_ThreeLions_Final.html": "ca6281bf6ac5e0d9eb1d7d10b14ceb75b38f07fece140a6523b24ea070f3f581",
         "Grow/README.txt": "9c2c46c4ebfb56c1ae99c7c20ee2bb73a623a3525c8f3daedf718599b7e7cfc6",
         "HANDOVER.md": "fb6353d366583b2c73164b651a349dd0b6c821f5338c2c89538dd6ccdd68c0bf",
         "Humanities/BUILD_Scheme_of_Work.html": "2c66d10240492b848d6242d261f1e7a9cdc1f8b756c718f27ad4fbdabce64a31",
