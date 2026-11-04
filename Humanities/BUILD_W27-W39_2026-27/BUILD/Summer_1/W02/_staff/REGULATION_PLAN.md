@@ -1,6 +1,6 @@
 # BUILD_SU1_W02 · Regulation plan
 
-**Staff-facing · review copy · Humanities · BUILD**\
+**Progress Schools staff-facing · review copy · Humanities · BUILD**\
 **Learning objective:** Use a simple map or plan of a familiar place.
 
 ## Set up before pupils arrive

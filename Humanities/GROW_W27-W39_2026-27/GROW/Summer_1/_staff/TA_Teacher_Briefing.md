@@ -1,4 +1,4 @@
-# Job 10 · TA / teacher briefing (Staff-facing)
+# Job 10 · TA / teacher briefing (Progress Schools staff-facing)
 
 **10 minutes · review-only Job 9 routines · 36 Summer 1 Humanities / core Science ids**
 

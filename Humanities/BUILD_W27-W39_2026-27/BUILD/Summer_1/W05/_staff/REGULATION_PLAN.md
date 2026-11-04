@@ -1,6 +1,6 @@
 # BUILD_SU1_W05 · Regulation plan
 
-**Staff-facing · review copy · Humanities · BUILD**\
+**Progress Schools staff-facing · review copy · Humanities · BUILD**\
 **Learning objective:** Talk about the wider world using continents and oceans.
 
 ## Set up before pupils arrive

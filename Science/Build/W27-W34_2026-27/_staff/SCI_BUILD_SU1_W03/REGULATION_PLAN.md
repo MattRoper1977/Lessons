@@ -1,6 +1,6 @@
 # SCI_BUILD_SU1_W03 · Regulation plan
 
-**Staff-facing · review copy · Science · BUILD**\
+**Progress Schools staff-facing · review copy · Science · BUILD**\
 **Learning objective:** Identify what plants need to grow well (light, water, warmth, nutrients).
 
 ## Set up before pupils arrive

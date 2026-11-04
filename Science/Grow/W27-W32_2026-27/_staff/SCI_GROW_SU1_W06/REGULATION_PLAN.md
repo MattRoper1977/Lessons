@@ -1,6 +1,6 @@
 # SCI_GROW_SU1_W06 · Regulation plan
 
-**Staff-facing · review copy · Science · GROW**\
+**Progress Schools staff-facing · review copy · Science · GROW**\
 **Learning objective:** Describe irreversible changes (burning, rusting, new materials formed).
 
 ## Set up before pupils arrive

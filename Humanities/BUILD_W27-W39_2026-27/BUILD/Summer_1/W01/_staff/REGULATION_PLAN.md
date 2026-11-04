@@ -1,6 +1,6 @@
 # BUILD_SU1_W01 · Regulation plan
 
-**Staff-facing · review copy · Humanities · BUILD**\
+**Progress Schools staff-facing · review copy · Humanities · BUILD**\
 **Learning objective:** Name and locate my school and local features.
 
 ## Set up before pupils arrive

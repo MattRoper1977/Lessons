@@ -1,6 +1,6 @@
 # GROW_SU1_W02 · Regulation plan
 
-**Staff-facing · review copy · Humanities · GROW**\
+**Progress Schools staff-facing · review copy · Humanities · GROW**\
 **Learning objective:** Use atlases grid references and digital maps.
 
 ## Set up before pupils arrive

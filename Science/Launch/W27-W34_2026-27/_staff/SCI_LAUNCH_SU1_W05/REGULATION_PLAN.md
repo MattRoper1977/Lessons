@@ -1,6 +1,6 @@
 # SCI_LAUNCH_SU1_W05 · Regulation plan
 
-**Staff-facing · review copy · Science · LAUNCH**\
+**Progress Schools staff-facing · review copy · Science · LAUNCH**\
 **Learning objective:** Apply Topics 7 to 8 to unfamiliar contexts.
 
 ## Set up before pupils arrive

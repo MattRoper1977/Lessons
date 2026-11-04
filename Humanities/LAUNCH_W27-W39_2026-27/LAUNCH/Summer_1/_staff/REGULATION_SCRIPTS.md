@@ -1,6 +1,6 @@
 # Shared regulation scripts
 
-**Staff-facing · adapt the response mode to the pupil’s existing plan.**
+**Progress Schools staff-facing · adapt the response mode to the pupil’s existing plan.**
 
 Use a low voice, one step at a time and the agreed visual. Pause for processing; a repeated script is a cue, not a demand for speech. A pupil may need supervised space instead of closeness. Keep corrections private and leave problem-solving until regulated.
 

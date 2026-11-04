@@ -1,6 +1,6 @@
 # SCI_BUILD_SU1_W02 · Regulation plan
 
-**Staff-facing · review copy · Science · BUILD**\
+**Progress Schools staff-facing · review copy · Science · BUILD**\
 **Learning objective:** Describe the job of each part of a plant.
 
 ## Set up before pupils arrive

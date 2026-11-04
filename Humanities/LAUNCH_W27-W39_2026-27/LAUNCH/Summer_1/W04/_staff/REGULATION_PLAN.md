@@ -1,6 +1,6 @@
 # LAUNCH_SU1_W04 · Regulation plan
 
-**Staff-facing · review copy · Humanities · LAUNCH**\
+**Progress Schools staff-facing · review copy · Humanities · LAUNCH**\
 **Learning objective:** Create a digital sustainability campaign linked to Earth Day.
 
 ## Set up before pupils arrive

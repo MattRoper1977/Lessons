@@ -1,6 +1,6 @@
 # SCI_GROW_SU1_W01 · Regulation plan
 
-**Staff-facing · review copy · Science · GROW**\
+**Progress Schools staff-facing · review copy · Science · GROW**\
 **Learning objective:** Describe reproduction in plants (pollination, seed formation).
 
 ## Set up before pupils arrive

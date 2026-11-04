@@ -1,6 +1,6 @@
 # BUILD_SU1_W03 · Regulation plan
 
-**Staff-facing · review copy · Humanities · BUILD**\
+**Progress Schools staff-facing · review copy · Humanities · BUILD**\
 **Learning objective:** Compare my place with a contrasting place.
 
 ## Set up before pupils arrive

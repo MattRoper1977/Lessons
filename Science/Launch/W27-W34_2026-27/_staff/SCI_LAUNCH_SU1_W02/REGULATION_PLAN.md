@@ -1,6 +1,6 @@
 # SCI_LAUNCH_SU1_W02 · Regulation plan
 
-**Staff-facing · review copy · Science · LAUNCH**\
+**Progress Schools staff-facing · review copy · Science · LAUNCH**\
 **Learning objective:** Model blood-glucose control (interactive software).
 
 ## Set up before pupils arrive

@@ -1,6 +1,6 @@
 # LAUNCH_SU1_W03 · Regulation plan
 
-**Staff-facing · review copy · Humanities · LAUNCH**\
+**Progress Schools staff-facing · review copy · Humanities · LAUNCH**\
 **Learning objective:** Make a reasoned geographical decision.
 
 ## Set up before pupils arrive

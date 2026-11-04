@@ -1,6 +1,6 @@
 # BUILD_SU1_W04 · Regulation plan
 
-**Staff-facing · review copy · Humanities · BUILD**\
+**Progress Schools staff-facing · review copy · Humanities · BUILD**\
 **Learning objective:** Carry out simple fieldwork in the grounds.
 
 ## Set up before pupils arrive

@@ -1,6 +1,6 @@
 # SCI_BUILD_SU1_W05 · Regulation plan
 
-**Staff-facing · review copy · Science · BUILD**\
+**Progress Schools staff-facing · review copy · Science · BUILD**\
 **Learning objective:** Set up and observe a plant-growth investigation over time (ICT to record).
 
 ## Set up before pupils arrive

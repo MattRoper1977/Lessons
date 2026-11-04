@@ -1,6 +1,6 @@
 # SCI_GROW_SU1_W03 · Regulation plan
 
-**Staff-facing · review copy · Science · GROW**\
+**Progress Schools staff-facing · review copy · Science · GROW**\
 **Learning objective:** Investigate how seeds are dispersed.
 
 ## Set up before pupils arrive

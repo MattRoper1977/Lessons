@@ -1,6 +1,6 @@
 # LAUNCH_SU1_W02 · Regulation plan
 
-**Staff-facing · review copy · Humanities · LAUNCH**\
+**Progress Schools staff-facing · review copy · Humanities · LAUNCH**\
 **Learning objective:** Evaluate responses to climate change.
 
 ## Set up before pupils arrive

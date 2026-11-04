@@ -1,6 +1,6 @@
 # LAUNCH_SU1_W06 · Regulation plan
 
-**Staff-facing · review copy · Humanities · LAUNCH**\
+**Progress Schools staff-facing · review copy · Humanities · LAUNCH**\
 **Learning objective:** Complete a sustainability decision report.
 
 ## Set up before pupils arrive

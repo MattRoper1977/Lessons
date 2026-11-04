@@ -1,6 +1,6 @@
 # SCI_BUILD_SU1_W04 · Regulation plan
 
-**Staff-facing · review copy · Science · BUILD**\
+**Progress Schools staff-facing · review copy · Science · BUILD**\
 **Learning objective:** Plan an investigation into what plants need (links ASDAN allotment).
 
 ## Set up before pupils arrive
