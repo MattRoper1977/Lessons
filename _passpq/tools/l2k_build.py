@@ -328,7 +328,7 @@ teaches the cooking slot(s) in September.</b></p>""")
 <li><a href="Assessor_Checklists.html">Assessor criteria checklists</a> — tick-per-AC with the lane's own minima printed</li>
 <li><a href="Plan_Hours_Grid.html">Plan-hours tracking grid</a> — the five 10-hour windows, lane column</li>
 <li><a href="Staff_Kitchen_Guide.html">Staff guide</a> — the Level-2 route on one page, progression ladder, budget bands, kit, safety, safeguarding</li></ul>""")
-    S.append(f"""<div class="note"><b>Registration and claims stay centre-side.</b> Every pupil is <b>working towards</b> these units; the coordinator registers learners before any assessment (spec &sect;14 p20), decides unit and level attribution, and confirms names &asymp;4 weeks before the EQA sampling date. Data twin for this page (for the office): <code>_passpq/inputs/PEQ_L2K_YearPlan_2026-27.xlsx</code>, built from the same proven ledger.</div>
+    S.append(f"""<div class="note"><b>Registration and claims stay centre-side.</b> Every pupil is <b>working towards</b> these units; the coordinator registers learners before any assessment (spec &sect;14 p20), decides unit and level attribution, and confirms names &asymp;4 weeks before the EQA sampling date. A spreadsheet copy of this page, built from the same ledger, is kept with the staff hours ledger.</div>
 {FACTS_PANEL}""")
     return page("Made by Matt · GROW ASDAN · Kitchen Programme PEQ Year Map · 2026–27",
                 "Kitchen Programme · PEQ Year Map &amp; Scheme of Work",
