@@ -1,6 +1,6 @@
 # LAUNCH_SU1_W01 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Humanities · LAUNCH**\
+**Staff-facing · review copy · Humanities · LAUNCH**\
 **Learning objective:** Explain resource use and climate change using online data.
 
 ## Set up before pupils arrive

@@ -1,6 +1,6 @@
 # BUILD_SU1_W06 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Humanities · BUILD**\
+**Staff-facing · review copy · Humanities · BUILD**\
 **Learning objective:** Record local features on a class map.
 
 ## Set up before pupils arrive

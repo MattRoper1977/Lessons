@@ -1,4 +1,4 @@
-# LAUNCH_SCI_A2_W03 · Progress Schools staff card
+# LAUNCH_SCI_A2_W03 · staff card
 
 **Scheme objective:** Stem-cell ethics discussion (links RE/PSHE).
 

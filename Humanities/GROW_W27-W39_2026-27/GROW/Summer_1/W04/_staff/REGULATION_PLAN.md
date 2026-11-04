@@ -1,6 +1,6 @@
 # GROW_SU1_W04 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Humanities · GROW**\
+**Staff-facing · review copy · Humanities · GROW**\
 **Learning objective:** Describe physical and human features of a place.
 
 ## Set up before pupils arrive

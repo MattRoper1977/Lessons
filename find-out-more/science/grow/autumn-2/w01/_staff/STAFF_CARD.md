@@ -1,4 +1,4 @@
-# GROW_SCI_A2_W01 · Progress Schools staff card
+# GROW_SCI_A2_W01 · staff card
 
 **Scheme objective:** Explain day and night and the apparent movement of the Sun.
 

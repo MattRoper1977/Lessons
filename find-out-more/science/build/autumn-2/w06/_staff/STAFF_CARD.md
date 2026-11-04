@@ -1,4 +1,4 @@
-# BUILD_SCI_A2_W06 · Progress Schools staff card
+# BUILD_SCI_A2_W06 · staff card
 
 **Scheme objective:** Plan and carry out a simple fair test on rocks.
 

@@ -1,4 +1,4 @@
-# LAUNCH_HUM_A2_W05 · Progress Schools staff card
+# LAUNCH_HUM_A2_W05 · staff card
 
 **Scheme objective:** Record fieldwork in a spreadsheet and graph it.
 

@@ -1,4 +1,4 @@
-# GROW_RE_A2_W02 · Progress Schools staff card
+# GROW_RE_A2_W02 · staff card
 
 **Scheme objective:** Identify key features of a place of worship and explain one purpose.
 

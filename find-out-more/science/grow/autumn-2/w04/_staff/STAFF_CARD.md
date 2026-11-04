@@ -1,4 +1,4 @@
-# GROW_SCI_A2_W04 · Progress Schools staff card
+# GROW_SCI_A2_W04 · staff card
 
 **Scheme objective:** Describe causes and effects of global warming and how to reduce our impact.
 

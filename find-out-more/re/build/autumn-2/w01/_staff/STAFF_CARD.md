@@ -1,4 +1,4 @@
-# BUILD_RE_A2_W01 · Progress Schools staff card
+# BUILD_RE_A2_W01 · staff card
 
 **Scheme objective:** Explore one festival of light and explain one meaning linked to it.
 

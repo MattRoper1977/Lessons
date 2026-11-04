@@ -1,6 +1,6 @@
 # SCI_GROW_SU1_W05 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Science · GROW**\
+**Staff-facing · review copy · Science · GROW**\
 **Learning objective:** Investigate recovering substances from reversible changes.
 
 ## Set up before pupils arrive

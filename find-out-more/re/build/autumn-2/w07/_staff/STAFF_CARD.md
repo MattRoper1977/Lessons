@@ -1,4 +1,4 @@
-# BUILD_RE_A2_W07 · Progress Schools staff card
+# BUILD_RE_A2_W07 · staff card
 
 **Scheme objective:** Make a simple festival reflection page showing what I have learned.
 

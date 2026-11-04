@@ -1,4 +1,4 @@
-# GROW_RE_A2_W01 · Progress Schools staff card
+# GROW_RE_A2_W01 · staff card
 
 **Scheme objective:** Describe what belonging can mean in two faith or worldview communities.
 

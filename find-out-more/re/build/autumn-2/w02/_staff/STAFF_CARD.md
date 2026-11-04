@@ -1,4 +1,4 @@
-# BUILD_RE_A2_W02 · Progress Schools staff card
+# BUILD_RE_A2_W02 · staff card
 
 **Scheme objective:** Identify one similarity between how light is used in two celebrations.
 

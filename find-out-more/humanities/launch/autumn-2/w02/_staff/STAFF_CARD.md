@@ -1,4 +1,4 @@
-# LAUNCH_HUM_A2_W02 · Progress Schools staff card
+# LAUNCH_HUM_A2_W02 · staff card
 
 **Scheme objective:** Use digital mapping or GIS to describe a place.
 

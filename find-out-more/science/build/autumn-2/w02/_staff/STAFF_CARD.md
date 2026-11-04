@@ -1,4 +1,4 @@
-# BUILD_SCI_A2_W02 · Progress Schools staff card
+# BUILD_SCI_A2_W02 · staff card
 
 **Scheme objective:** Compare and group rocks by their appearance and simple properties.
 

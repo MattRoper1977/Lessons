@@ -1,4 +1,4 @@
-# GROW_HUM_A2_W01 · Progress Schools staff card
+# GROW_HUM_A2_W01 · staff card
 
 **Scheme objective:** Locate countries continents and oceans using maps and atlases.
 

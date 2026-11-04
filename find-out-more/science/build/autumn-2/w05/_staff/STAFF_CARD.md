@@ -1,4 +1,4 @@
-# BUILD_SCI_A2_W05 · Progress Schools staff card
+# BUILD_SCI_A2_W05 · staff card
 
 **Scheme objective:** Group natural and human-made materials; record results in a table (ICT).
 

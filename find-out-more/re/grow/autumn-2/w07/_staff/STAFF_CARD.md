@@ -1,4 +1,4 @@
-# GROW_RE_A2_W07 · Progress Schools staff card
+# GROW_RE_A2_W07 · staff card
 
 **Scheme objective:** Show understanding of beliefs, festivals, belonging and respect using evidence from the term.
 

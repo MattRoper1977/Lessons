@@ -1,6 +1,6 @@
 # GROW_SU1_W01 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Humanities · GROW**\
+**Staff-facing · review copy · Humanities · GROW**\
 **Learning objective:** Locate my place the UK and the wider world on maps.
 
 ## Set up before pupils arrive

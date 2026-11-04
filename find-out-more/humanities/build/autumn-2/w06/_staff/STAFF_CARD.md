@@ -1,4 +1,4 @@
-# BUILD_HUM_A2_W06 · Progress Schools staff card
+# BUILD_HUM_A2_W06 · staff card
 
 **Scheme objective:** Talk about fairness and rights.
 

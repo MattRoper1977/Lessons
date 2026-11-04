@@ -1,4 +1,4 @@
-# GROW_HUM_A2_W04 · Progress Schools staff card
+# GROW_HUM_A2_W04 · staff card
 
 **Scheme objective:** Investigate festivals of light around the world with a Geography link.
 

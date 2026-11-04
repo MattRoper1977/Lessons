@@ -1,4 +1,4 @@
-# GROW_HUM_A2_W02 · Progress Schools staff card
+# GROW_HUM_A2_W02 · staff card
 
 **Scheme objective:** Use an atlas and grid references to describe location.
 

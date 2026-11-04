@@ -1,6 +1,6 @@
 # SCI_LAUNCH_SU1_W03 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Science · LAUNCH**\
+**Staff-facing · review copy · Science · LAUNCH**\
 **Learning objective:** Describe the heart & circulation.
 
 ## Set up before pupils arrive

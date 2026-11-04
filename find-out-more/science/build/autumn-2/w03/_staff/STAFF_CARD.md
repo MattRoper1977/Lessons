@@ -1,4 +1,4 @@
-# BUILD_SCI_A2_W03 · Progress Schools staff card
+# BUILD_SCI_A2_W03 · staff card
 
 **Scheme objective:** Test rocks for hardness and whether they let water through.
 

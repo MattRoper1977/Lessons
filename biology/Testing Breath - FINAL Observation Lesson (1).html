@@ -387,7 +387,7 @@ body.calm .calm-tag{display:block}
 <div class="phase-timer" id="phaseTimer" onclick="toggleLessonTimer()" title="Space or tap: start / pause">⏱ Press SPACE to start</div>
 <div class="logo">
   <svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#4338ca"/><path d="M7 13l3 3 7-8" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  Progress Schools
+  Made by Matt
 </div>
 
 <div class="stage" id="stage">
@@ -1234,7 +1234,7 @@ function buildPrint(){
   const cards=list.map(p=>pupilCard(p,d)).join('');
   document.getElementById('print-area').innerHTML=
   '<div class="p-sec"><h3>Class Knowledge Organiser — CO₂ in your breath</h3>'+
-    '<p style="font-size:11px;color:#555;margin:-2px 0 4px">Created by Matt Roper · Progress Schools</p>'+
+    '<p style="font-size:11px;color:#555;margin:-2px 0 4px">Created by Matt Roper · Made by Matt</p>'+
     '<p><b>Learning objectives:</b> use limewater safely · measure CO₂ at rest &amp; after exercise · explain results with respiration.</p>'+
     '<table><tr><th>Key term</th><th>Meaning</th></tr>'+
       '<tr><td>Respiration</td><td>Releasing energy: glucose + oxygen → carbon dioxide + water</td></tr>'+
@@ -1259,7 +1259,7 @@ function selectRoute(el,lvl){
 }
 function activePupils(){let list=breathData.filter((p,i)=>used(p,i));return list.length?list:breathData.slice();}
 function populatePupilPrintSelect(){const e=document.getElementById('singlePupilSelect');if(!e)return;const old=e.value;e.innerHTML='';breathData.forEach((p,i)=>{const o=document.createElement('option');o.value=i;o.textContent=p.name||('Pupil '+(i+1));e.appendChild(o);});if(old)e.value=old;}
-function evidenceCover(){return '<div class="print-cover pupil-card"><h2>Testing Breath — class evidence</h2><div class="pc-sec"><b>Created by:</b> Matt Roper · Progress Schools</div><div class="pc-sec"><b>Lesson:</b> pupil-influenced practical investigation of respiration and carbon dioxide</div><div class="pc-sec"><b>Lundy Loop:</b> Space → Voice → Audience → Influence</div><div class="pc-sec"><b>Practical R-gate:</b> the pupil changed or improved the next attempt; an adult watched and received that response.</div><div class="pc-sec"><b>Codes:</b> I independent · WS with support · VF verbal feedback · NS+ next step · // self-edit · ? read/check · R response received and loop closed · E evidence on EFL.</div><div class="pc-sec"><b>QA:</b> each following page is an individual pupil sheet. R is shown only where Voice and Audience were recorded.</div></div>';}
+function evidenceCover(){return '<div class="print-cover pupil-card"><h2>Testing Breath — class evidence</h2><div class="pc-sec"><b>Created by:</b> Matt Roper · Made by Matt</div><div class="pc-sec"><b>Lesson:</b> pupil-influenced practical investigation of respiration and carbon dioxide</div><div class="pc-sec"><b>Lundy Loop:</b> Space → Voice → Audience → Influence</div><div class="pc-sec"><b>Practical R-gate:</b> the pupil changed or improved the next attempt; an adult watched and received that response.</div><div class="pc-sec"><b>Codes:</b> I independent · WS with support · VF verbal feedback · NS+ next step · // self-edit · ? read/check · R response received and loop closed · E evidence on EFL.</div><div class="pc-sec"><b>QA:</b> each following page is an individual pupil sheet. R is shown only where Voice and Audience were recorded.</div></div>';}
 function printIndividualEvidence(){
  const d=new Date().toLocaleDateString('en-GB'),list=activePupils();
  document.getElementById('print-area').innerHTML=evidenceCover()+list.map(p=>pupilCard(p,d)).join('');

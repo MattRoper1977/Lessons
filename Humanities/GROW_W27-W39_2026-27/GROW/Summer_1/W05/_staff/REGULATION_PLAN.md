@@ -1,6 +1,6 @@
 # GROW_SU1_W05 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Humanities · GROW**\
+**Staff-facing · review copy · Humanities · GROW**\
 **Learning objective:** Compare my locality with a contrasting place.
 
 ## Set up before pupils arrive

@@ -1,6 +1,6 @@
 # GROW_SU1_W03 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Humanities · GROW**\
+**Staff-facing · review copy · Humanities · GROW**\
 **Learning objective:** Carry out simple fieldwork about my local area.
 
 ## Set up before pupils arrive

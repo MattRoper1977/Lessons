@@ -1,4 +1,4 @@
-# LAUNCH_RE_A2_W03 · Progress Schools staff card
+# LAUNCH_RE_A2_W03 · staff card
 
 **Scheme objective:** Describe a rite of passage and explain how it can connect a person to a community.
 

@@ -1,6 +1,6 @@
 # GROW_SU1_W06 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Humanities · GROW**\
+**Staff-facing · review copy · Humanities · GROW**\
 **Learning objective:** Complete a fieldwork and locality study and bank UAS evidence.
 
 ## Set up before pupils arrive

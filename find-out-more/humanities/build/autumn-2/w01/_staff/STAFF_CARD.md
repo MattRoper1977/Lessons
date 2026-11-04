@@ -1,4 +1,4 @@
-# BUILD_HUM_A2_W01 · Progress Schools staff card
+# BUILD_HUM_A2_W01 · staff card
 
 **Scheme objective:** Explore a festival of light and why it matters.
 

@@ -1,6 +1,6 @@
 # SCI_BUILD_SU1_W06 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Science · BUILD**\
+**Staff-facing · review copy · Science · BUILD**\
 **Learning objective:** Explain how water travels through a plant.
 
 ## Set up before pupils arrive

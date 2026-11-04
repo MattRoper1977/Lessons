@@ -1,4 +1,4 @@
-# LAUNCH_RE_A2_W06 · Progress Schools staff card
+# LAUNCH_RE_A2_W06 · staff card
 
 **Scheme objective:** Produce a structured comparison using evidence from two worldviews.
 

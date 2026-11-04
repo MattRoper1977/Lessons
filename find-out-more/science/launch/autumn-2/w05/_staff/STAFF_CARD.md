@@ -1,4 +1,4 @@
-# LAUNCH_SCI_A2_W05 · Progress Schools staff card
+# LAUNCH_SCI_A2_W05 · staff card
 
 **Scheme objective:** Complete a genetic cross (digital Punnett square).
 

@@ -1,6 +1,6 @@
 # SCI_BUILD_SU1_W01 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Science · BUILD**\
+**Staff-facing · review copy · Science · BUILD**\
 **Learning objective:** Identify the parts of a flowering plant (roots, stem, leaves, flower).
 
 ## Set up before pupils arrive

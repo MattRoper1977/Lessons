@@ -1,4 +1,4 @@
-# LAUNCH_RE_A2_W07 · Progress Schools staff card
+# LAUNCH_RE_A2_W07 · staff card
 
 **Scheme objective:** Use evidence to show understanding of beliefs, practices and their meanings across two worldviews.
 

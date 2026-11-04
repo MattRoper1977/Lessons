@@ -1,4 +1,4 @@
-# BUILD_HUM_A2_W07 · Progress Schools staff card
+# BUILD_HUM_A2_W07 · staff card
 
 **Scheme objective:** Make a festivals display and gather UAS evidence.
 
