@@ -112,7 +112,7 @@ every live lesson: supported 21 · standard 17 · stretch 17 · scaffold 12.
 - **Digital alternative column**: the pack names its own labs; the estate's
   real digital alternatives are the live We Do 2 widgets, so the column names
   those instead. (If the A6 specimen ships, W4A's row stays true either way.)
-- **AMBER — Progress Schools lockup**: the real logo binary is deliberately
+- **AMBER — the school lockup**: the real logo binary is deliberately
   out of git (SHA in REBRAND.md). The PS variant ships with the strip and text
   branding only; the lockup must be added from Matt's recorded asset before
   the file leaves the estate. No placeholder logo was drawn (REBRAND rule 1).
@@ -304,7 +304,7 @@ meaningless (failure #13). Plain-text before/after prose diffs per file in
 ### Staff-pack rebuild (AMBER)
 
 Content changed, so the OneDrive staff-pack rebuild is automatic policy — but
-`tools/build_staff_pack.py` hard-stops without the real Progress Schools
+`tools/build_staff_pack.py` hard-stops without the real the school
 lockup (`--logo`), whose binary is deliberately kept out of git (REBRAND.md;
 SHA recorded there). The rebuild therefore **cannot run in this session** and
 is flagged AMBER by name rather than skipped silently: Matt (or any holder of

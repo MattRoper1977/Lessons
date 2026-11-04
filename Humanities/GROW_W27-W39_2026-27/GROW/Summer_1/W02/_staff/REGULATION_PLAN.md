@@ -1,6 +1,6 @@
 # GROW_SU1_W02 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Humanities · GROW**\
+**the school staff-facing · review copy · Humanities · GROW**\
 **Learning objective:** Use atlases grid references and digital maps.
 
 ## Set up before pupils arrive
@@ -41,4 +41,4 @@ At a calm key-adult check-in, ask: “What was the first body or task signal tha
 - **communication & interaction:** Gives a partner a feature-reference challenge and responds to their check.
 - **cognition & learning:** Reads eastings before northings to identify a square.
 - **SEMH:** Asks for the grid-reading prompt when a reference is confusing.
-- **E: evidence captured on Cypher** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.
+- **E: evidence captured on the evidence app** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.

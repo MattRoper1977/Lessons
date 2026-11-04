@@ -15,7 +15,7 @@ It is the one artefact here with no history worth reading.
 | document | what it holds |
 |---|---|
 | [`/REGISTER.md`](REGISTER.md) | Estate conventions, deliberate absences, selectors, storage keys, deletion records with restore SHAs, cached-claims enumeration. **31 entries.** |
-| [`/REBRAND.md`](REBRAND.md) | The Made by Matt → Progress Schools procedure. Governs every staff pack. |
+| [`/REBRAND.md`](REBRAND.md) | The Made by Matt → the school procedure. Governs every staff pack. |
 | [`/LundyLoop/tools/INSTRUMENTS.md`](LundyLoop/tools/INSTRUMENTS.md) | The eight instruments, what each cannot detect, the blind-twin table, and the standing rules that govern instruments. |
 | [`/LundyLoop/tools/`](LundyLoop/tools/) | The instruments themselves. Run them; do not rebuild them. |
 
@@ -196,7 +196,7 @@ gets forgotten, or gets restarted by someone who does not know why it stopped.
    An instrument must not be modified in the pass it is measuring (**R-E09**). Until
    then the 45 new candidates are an expected artefact, not forty-five stale organisers.
 
-10. **The TA card, both brandings — LANDED (H-series Route U · H1 `9af1e63`).** Progress Schools variant into the staff pack;
+10. **The TA card, both brandings — LANDED (H-series Route U · H1 `9af1e63`).** the school variant into the staff pack;
     Made by Matt variant onto the site. One page each, already built and gate-checked
     (REBRAND rules 1–5 clean; ~10 lines of headroom at 110% zoom with the estate font
     substituted).

@@ -1,6 +1,6 @@
 # SCI_BUILD_SU1_W05 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Science · BUILD**\
+**the school staff-facing · review copy · Science · BUILD**\
 **Learning objective:** Set up and observe a plant-growth investigation over time (ICT to record).
 
 ## Set up before pupils arrive
@@ -42,4 +42,4 @@ At a calm key-adult check-in, ask: “What was the first body or task signal tha
 - **cognition & learning:** Records a comparable observation at the agreed interval.
 - **SEMH:** Requests help or an agreed pause during the practical recording task.
 - **sensory & physical:** Uses an adapted grip, scoop or watering aid to complete an agreed setup step.
-- **E: evidence captured on Cypher** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.
+- **E: evidence captured on the evidence app** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.

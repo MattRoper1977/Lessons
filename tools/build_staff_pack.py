@@ -5,8 +5,8 @@ build_staff_pack.py — rebuild of the pack builder that was never committed (40
 Built FROM REBRAND.md at repo root, not from memory.
 
 Produces three zips:
-  1. Progress_Schools_Term_1_1.zip        — OneDrive shared drive (Progress branded)
-  2. Progress_Schools_Network_Library.zip — school share + generated offline index
+  1. the_school_Term_1_1.zip        — OneDrive shared drive (school branded)
+  2. the_school_Network_Library.zip — school share + generated offline index
   3. MadeByMatt_Term_1_1_Offline.zip      — unbranded offline copy, hud.js stripped
 
 SAFEGUARDS (each one paid for by a previous failure):
@@ -25,11 +25,28 @@ SAFEGUARDS (each one paid for by a previous failure):
 """
 import re, os, shutil, zipfile, html, sys
 from pathlib import Path
+
+def _load_held_names() -> tuple[str, str]:
+    held = Path(__file__).resolve().parents[1] / "_glv3" / ".contact_tmp" / "held_names.json"
+    if not held.is_file():
+        held = Path(__file__).resolve().parents[2] / "_glv3" / ".contact_tmp" / "held_names.json"
+    if held.is_file():
+        try:
+            import json as _json
+            data = _json.loads(held.read_text(encoding="utf-8"))
+            return str(data.get("school", "the school")), str(data.get("region", "the region"))
+        except Exception:
+            pass
+    return "the school", "the region"
+
+SCHOOL_NAME, REGION_NAME = _load_held_names()
+SCHOOL_REGION = f"{SCHOOL_NAME} {REGION_NAME}"
+
 from urllib.parse import urlparse, unquote
 
 REPO = Path(os.environ.get("PACK_REPO", "/home/claude/repo"))
 OUT  = Path(os.environ.get("PACK_OUT", "/home/claude/pack"))
-STRIP = "PROGRESS SCHOOLS · TEES VALLEY"
+STRIP = f"{SCHOOL_NAME.upper()} · {REGION_NAME.upper()}"
 
 # ---------------------------------------------------------------- scope
 INCLUDE_DIRS = [
@@ -121,12 +138,12 @@ def in_scope():
 # ---------------------------------------------------------------- rebrand
 MARK_SVG = re.compile(r'<svg[^>]*aria-label="Made by Matt"[^>]*>.*?</svg>', re.S | re.I)
 PS_MARK = (
-    '<span aria-label="Progress Schools Tees Valley" role="img" '
+    '<span aria-label="' + SCHOOL_REGION + '" role="img" '
     'style="display:inline-flex;align-items:center;justify-content:center;'
     'width:64px;height:64px;border:2px solid currentColor;border-radius:8px;'
     'font:700 26px/1 system-ui,sans-serif;letter-spacing:1px">PS</span>'
     '<span style="margin-left:.6rem;font:600 11px/1 system-ui,sans-serif;'
-    'letter-spacing:.08em;white-space:nowrap">' + "PROGRESS SCHOOLS \u00b7 TEES VALLEY" + '</span>'
+    'letter-spacing:.08em;white-space:nowrap">' + STRIP + '</span>'
 )
 
 def rebrand(text, path):
@@ -142,7 +159,7 @@ def rebrand(text, path):
     k = 0
     for attr in ("aria-label", "alt", "title", "content"):
         pat = re.compile(rf'({attr}=")([^"]*?)Made by Matt([^"]*?)(")', re.I)
-        text, n = pat.subn(lambda m: m.group(1) + m.group(2) + "Progress Schools" + m.group(3) + m.group(4), text)
+        text, n = pat.subn(lambda m: m.group(1) + m.group(2) + SCHOOL_NAME + m.group(3) + m.group(4), text)
         k += n
     log["attr_wordmarks"] = k
 
@@ -153,18 +170,18 @@ def rebrand(text, path):
     # ("Lesson Hub" buttons in Art/Launch/index.html). REBRAND.md rule 4 is about
     # sending staff to a personal public site, not about one spelling of it.
     text, k4 = re.subn(PERSONAL_ORIGINS, "#", text)
-    text, k2 = re.subn(r'contactmadebymatt@gmail\.com', "your Progress Schools science lead", text)
-    text, k3 = re.subn(r'madebymatt\.uk', "Progress Schools Tees Valley", text, flags=re.I)
+    text, k2 = re.subn(r'contactmadebymatt@gmail\.com', "your the school science lead", text)
+    text, k3 = re.subn(r'madebymatt\.uk', SCHOOL_REGION, text, flags=re.I)
     log["domain"] = k1 + k2 + k3
 
     # 4 · remaining visible wordmark, including the UPPERCASE form Tutor Time uses
-    text, k1 = re.subn(r'MADE BY MATT', "PROGRESS SCHOOLS", text)
-    text, k2 = re.subn(r'Made by Matt', "Progress Schools", text)
+    text, k1 = re.subn(r'MADE BY MATT', SCHOOL_NAME.upper(), text)
+    text, k2 = re.subn(r'Made by Matt', SCHOOL_NAME, text)
     log["wordmark_text"] = k1 + k2
     # dedupe the name+domain side-by-side double-replace (recorded trap)
-    text = re.sub(r'Progress Schools\s*[·\-–—|]\s*Progress Schools Tees Valley',
-                  "Progress Schools Tees Valley", text)
-    text = re.sub(r'(Progress Schools Tees Valley)(\s*\1)+', r'\1', text)
+    text = re.sub(rf'{re.escape(SCHOOL_NAME)}\s*[·\-–—|]\s*{re.escape(SCHOOL_REGION)}',
+                  SCHOOL_REGION, text)
+    text = re.sub(rf'({re.escape(SCHOOL_REGION)})(\s*\1)+', r'\1', text)
 
     # 5 · strip the hud.js loader — only ever loads from the public origin
     text, k = re.subn(r'\s*<script[^>]*hud\.js[^>]*>\s*</script>', "", text, flags=re.I)
@@ -179,7 +196,7 @@ def rebrand(text, path):
 
     # 6 · x-brand marker, added last and only if the rebrand actually completed here
     if 'name="x-brand"' not in text:
-        text, k = re.subn(r'(<head[^>]*>)', r'\1\n<meta name="x-brand" content="progress-schools">',
+        text, k = re.subn(r'(<head[^>]*>)', r'\1\n',
                           text, count=1, flags=re.I)
         log["xbrand"] = k
     log["delta"] = len(text) - n0
@@ -286,7 +303,7 @@ def verify(pack: Path, branded: bool):
         if a: fails.append(f"REBRAND check 1 FAILED: {a} files with wordmark in an attribute")
         if b: fails.append(f"REBRAND check 2 FAILED: {b} files still name the domain")
         if c: fails.append(f"REBRAND check 3 FAILED: {c} files missing the x-brand marker")
-        if d == 0: fails.append("REBRAND check 4 FAILED: no file carries the TEES VALLEY strip")
+        if d == 0: fails.append("REBRAND check 4 FAILED: no file carries the THE REGION strip")
     return fails, notes
 
 # ---------------------------------------------------------------- main
@@ -295,7 +312,7 @@ def main():
     print(f"scope: {len(keep)} files in, {len(dropped)} deliberately excluded")
 
     if OUT.exists(): shutil.rmtree(OUT)
-    ps  = OUT / "Progress_Schools_Term_1_1"
+    ps  = OUT / "the_school_Term_1_1"
     mbm = OUT / "MadeByMatt_Term_1_1_Offline"
 
     # capture the assessed-file conditions blocks BEFORE anything is touched
@@ -366,7 +383,7 @@ def main():
 
     fails, notes = verify(ps, branded=True)
     fails = fails + avl_fails
-    print("\nVERIFY (Progress pack):", notes)
+    print("\nVERIFY (school pack):", notes)
     for f in fails[:20]: print("  FAIL:", f)
     if not fails: print("  all REBRAND.md checks pass")
     return ps, mbm, keep, dropped, miss, fails
@@ -535,7 +552,7 @@ def rewrite_links(text, src_rel, fwd, dest_override=None):
 
 # ---------------------------------------------------------------- the logo
 # REBRAND.md rule 1 said the mark is typographic and never drawn. Matt has
-# since supplied the real Progress Schools lockup, which SUPERSEDES that rule:
+# since supplied the real the school lockup, which SUPERSEDES that rule:
 # the trademark now replaces the Made-by-Matt mark directly. What does not
 # change is that it is never recoloured, restyled, stretched or redrawn --
 # it is embedded as-is, and only ever scaled by width with height:auto so the
@@ -568,7 +585,7 @@ def load_logo(path):
     got = hashlib.sha256(Path(path).read_bytes()).hexdigest()
     assert got == LOGO_SHA, (
         f"logo SHA mismatch\n  expected {LOGO_SHA}\n  got      {got}\n"
-        "Refusing to build: this is not the supplied Progress Schools lockup.")
+        "Refusing to build: this is not the supplied the school lockup.")
     im = Image.open(path).convert("RGBA")
     flat = Image.new("RGB", im.size, (255, 255, 255))
     flat.paste(im, mask=im.split()[3])
@@ -612,7 +629,7 @@ def logo_html(lock_uri, lock_size):
     return (
         '<span class="ps-logo" style="display:inline-block;background:#fff;'
         'border-radius:8px;padding:6px 10px;line-height:0">'
-        f'<img src="{lock_uri}" width="{w}" height="{h}" alt="Progress Schools" '
+        f'<img src="{lock_uri}" width="{w}" height="{h}" alt="the school" '
         'style="width:92px;height:auto;display:block">'
         '</span>'
         '<span style="display:block;margin-top:.45rem;font:600 11px/1 system-ui,sans-serif;'
@@ -647,7 +664,7 @@ def brand_header(text, mark_html):
 
     Used for the hubs and for pages this build authors. Inserted as the first
     thing in <body> so it sits above whatever heading the page already has."""
-    if 'alt="Progress Schools"' in text:
+    if 'alt="the school"' in text:
         return text, 0
     block = ('<div style="text-align:center;margin:14px 0 4px">' + mark_html + "</div>")
     new, n = re.subn(r'(<body[^>]*>)', r'\1\n' + block.replace("\\", "\\\\"), text,
@@ -664,7 +681,7 @@ def mirror_rebrand(text, rel, mark_html):
     k = 0
     for attr in ("aria-label", "alt", "title", "content"):
         pat = re.compile(rf'({attr}=")([^"]*?)Made by Matt([^"]*?)(")', re.I)
-        text, n = pat.subn(lambda m: m.group(1) + m.group(2) + "Progress Schools" + m.group(3) + m.group(4), text)
+        text, n = pat.subn(lambda m: m.group(1) + m.group(2) + SCHOOL_NAME + m.group(3) + m.group(4), text)
         k += n
     log["attr_wordmarks"] = k
     text, k1 = re.subn(r'https?://(www\.)?madebymatt\.uk[^\s"\'<>)]*', "#", text)
@@ -673,24 +690,24 @@ def mirror_rebrand(text, rel, mark_html):
     # ("Lesson Hub" buttons in Art/Launch/index.html). REBRAND.md rule 4 is about
     # sending staff to a personal public site, not about one spelling of it.
     text, k4 = re.subn(PERSONAL_ORIGINS, "#", text)
-    text, k2 = re.subn(r'contactmadebymatt@gmail\.com', "your Progress Schools science lead", text)
-    text, k3 = re.subn(r'madebymatt\.uk', "Progress Schools Tees Valley", text, flags=re.I)
+    text, k2 = re.subn(r'contactmadebymatt@gmail\.com', "your the school science lead", text)
+    text, k3 = re.subn(r'madebymatt\.uk', SCHOOL_REGION, text, flags=re.I)
     log["domain"] = k1 + k2 + k3 + k4
-    text, k1 = re.subn(r'MADE BY MATT', "PROGRESS SCHOOLS", text)
-    text, k2 = re.subn(r'Made by Matt', "Progress Schools", text)
+    text, k1 = re.subn(r'MADE BY MATT', SCHOOL_NAME.upper(), text)
+    text, k2 = re.subn(r'Made by Matt', SCHOOL_NAME, text)
     log["wordmark_text"] = k1 + k2
-    text = re.sub(r'Progress Schools\s*[·\-–—|]\s*Progress Schools Tees Valley',
-                  "Progress Schools Tees Valley", text)
-    text = re.sub(r'(Progress Schools Tees Valley)(\s*\1)+', r'\1', text)
+    text = re.sub(rf'{re.escape(SCHOOL_NAME)}\s*[·\-–—|]\s*{re.escape(SCHOOL_REGION)}',
+                  SCHOOL_REGION, text)
+    text = re.sub(rf'({re.escape(SCHOOL_REGION)})(\s*\1)+', r'\1', text)
     text, k = re.subn(r'\s*<script[^>]*hud\.js[^>]*>\s*</script>', "", text, flags=re.I)
     text, k2 = re.subn(HUD_DYNAMIC, "", text)
     log["hud_stripped"] = k + k2
     if 'name="x-brand"' not in text:
-        text, k = re.subn(r'(<head[^>]*>)', r'\1\n<meta name="x-brand" content="progress-schools">',
+        text, k = re.subn(r'(<head[^>]*>)', r'\1\n',
                           text, count=1, flags=re.I)
         log["xbrand"] = k
     # the credit goes in LAST, after the domain sweep above has run, or it
-    # would be rewritten into "Progress Schools Tees Valley" like any other
+    # would be rewritten into SCHOOL_REGION like any other
     # mention of the domain.
     if CREDIT not in text:
         text = insert_credit(text)
@@ -793,7 +810,7 @@ def build_mirror(logo_path, out_root):
     LOGO_URI[:] = [lock_uri, lock_size]
     LOGO_HTML[0] = mark_html
 
-    pack = out_root / "Progress_Schools_OneDrive_Mirror"
+    pack = out_root / "the_school_OneDrive_Mirror"
     if out_root.exists(): shutil.rmtree(out_root)
     pack.mkdir(parents=True)
 
@@ -857,7 +874,7 @@ def build_mirror(logo_path, out_root):
     # the Careers week-order note travels INTO the folder it warns about
     (pack / "ASDAN PEQ/Build/Careers/0_WEEK_ORDER.txt").write_text(WEEK_ORDER_NOTE, encoding="utf-8")
 
-    # ---- C2: a Progress-branded page at every bare name the flattening orphaned
+    # ---- C2: a school-branded page at every bare name the flattening orphaned
     orphans = bare_name_census(fwd)
     for bare_path, strands in sorted(orphans.items()):
         folder = os.path.dirname(bare_path)
@@ -872,7 +889,7 @@ def build_mirror(logo_path, out_root):
     for src_rel, dest_rel in sorted(IN_FOLDER_HUBS.items()):
         raw = (REPO / src_rel).read_text(encoding="utf-8", errors="ignore")
         new_t, _log = mirror_rebrand(raw, src_rel, mark_html)
-        new_t, _b = brand_header(new_t, mark_html)      # D2: hubs are Progress pages
+        new_t, _b = brand_header(new_t, mark_html)      # D2: hubs are school pages
         new_t, _n = rewrite_links(new_t, src_rel, fwd, dest_override=dest_rel)
         write_guarded(raw, new_t, pack / dest_rel)
         miss = crawl_one(pack, dest_rel)
@@ -938,7 +955,7 @@ def mirror_verify(pack):
     if attr:        fails.append(f"REBRAND check 1 FAILED: {attr} files with wordmark in an attribute")
     if dom:         fails.append(f"REBRAND check 2 FAILED: {dom} files carry non-whitelisted madebymatt text")
     if noxb:        fails.append(f"REBRAND check 3 FAILED: {noxb} files missing the x-brand marker")
-    if not strip:   fails.append("REBRAND check 4 FAILED: no file carries the TEES VALLEY strip")
+    if not strip:   fails.append("REBRAND check 4 FAILED: no file carries the THE REGION strip")
     if nocredit:    fails.append(f"CREDIT FAILED: {nocredit} files missing '{CREDIT}'")
     if multicredit: fails.append(f"CREDIT FAILED: {multicredit} files carry it more than once")
     if tiny:        fails.append(f"{tiny} files are truncated or empty")
@@ -968,7 +985,7 @@ def write_docs(pack, keep, fwd, back, clashes, logo_pages, rewrites, crawl_miss,
                hub_results, orphans, manifest_total):
     global HONESTY_LINE
     HONESTY_LINE = (
-        f"The Progress Schools logo is on {logo_pages} of "
+        f"The the school logo is on {logo_pages} of "
         f"{len(list(pack.rglob('*.html')))} pages. Those are every page that previously\n"
         "  carried a visible mark, plus the pages this build authors or re-emits (the strand\n"
         "  chooser, the changes page, and the four hubs at both their root and in-folder\n"
@@ -1030,7 +1047,7 @@ def write_docs(pack, keep, fwd, back, clashes, logo_pages, rewrites, crawl_miss,
           "          say no.",
           "  KEEP    Every _Legacy_2025-26/ folder. The pack never writes into or",
           "          beside one.",
-          "  KEEP    ASDAN PEQ/Launch/START_HERE.html - now REPLACED by a Progress-branded",
+          "  KEEP    ASDAN PEQ/Launch/START_HERE.html - now REPLACED by a school-branded",
           "          chooser page pointing at the five strands. Keep the new one.",
           "  DELETE  Nothing else is required. If you want to tidy, the only safe",
           "          deletions are duplicates this pack has already replaced in place.",
@@ -1098,7 +1115,7 @@ def write_docs(pack, keep, fwd, back, clashes, logo_pages, rewrites, crawl_miss,
     m += ["", "Each renamed page has its own outbound lesson links rewritten to the flat names.", "",
           "## NEW - things this pack adds that the screenshots do NOT show", ""]
     for o, strands in sorted(orphans.items()):
-        m.append(f"- `{o}` — Progress-branded chooser page. The drive's bare-named file at this")
+        m.append(f"- `{o}` — school-branded chooser page. The drive's bare-named file at this")
         m.append(f"  path is Made-by-Matt branded and would otherwise survive the merge as an")
         m.append(f"  orphan carrying the name staff know. Links to: {', '.join(strands)}.")
     m += ["- `ASDAN PEQ/Build/Careers/0_WEEK_ORDER.txt` — the W6/W7 slide-vs-filename warning.",
@@ -1125,9 +1142,9 @@ def write_docs(pack, keep, fwd, back, clashes, logo_pages, rewrites, crawl_miss,
     (notes / "TAXONOMY_MAP.md").write_text("\n".join(m) + "\n", encoding="utf-8")
 
     # ---- README_FIRST.txt (staff-facing, merges to the drive root)
-    r = ["README_FIRST - Progress Schools lessons", "=" * 74, "",
+    r = ["README_FIRST - the school lessons", "=" * 74, "",
          "WHAT THIS IS",
-         "  A Progress Schools-branded copy of the in-scope lessons, in a folder tree that",
+         "  A the school-branded copy of the in-scope lessons, in a folder tree that",
          "  mirrors this drive exactly. Drag each top-level folder onto its twin and choose",
          "  merge. See _Pack_Notes/PLACEMENT_GUIDE.txt for the one-line-per-folder version.", "",
          "-" * 74, "CAREERS WEEKS 6 AND 7 - GO BY THE SLIDE, NEVER THE FILENAME",
@@ -1149,7 +1166,7 @@ def write_docs(pack, keep, fwd, back, clashes, logo_pages, rewrites, crawl_miss,
          "  Tutor Time for anything that has to survive.",
          "  No pupil data of any kind is in this pack, and none ever will be.", "",
          "-" * 74, "BRANDING CHANGELOG",
-         "  * The REAL Progress Schools logo replaces the typographic placeholder, embedded",
+         "  * The REAL the school logo replaces the typographic placeholder, embedded",
          "    per page as a data URI so it survives a file being moved and works offline.",
          "    Never recoloured, restyled, stretched or redrawn; on a white chip so a dark",
          "    header cannot force a change to the trademark's colours.",
@@ -1209,8 +1226,7 @@ def write_offline_index(pack, fwd, logo_uri, logo_size):
     doc = f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="x-brand" content="progress-schools">
-<title>Progress Schools \u00b7 Offline Lesson Library</title>
+<title>the school \u00b7 Offline Lesson Library</title>
 <style>
 :root{{color-scheme:light dark;--bg:#fbfbfc;--fg:#1a1a1e;--mut:#63636e;--line:#e3e3e8;--card:#fff;--acc:#E5007D}}
 @media(prefers-color-scheme:dark){{:root{{--bg:#131317;--fg:#ececf1;--mut:#9a9aa6;--line:#2a2a32;--card:#1c1c22}}}}
@@ -1235,7 +1251,7 @@ a:hover{{color:var(--acc);text-decoration:underline}}
 footer{{text-align:center;color:var(--mut);font-size:.7rem;padding:18px}}
 </style></head><body>
 <header>
-<span class="chip"><img src="{logo_uri}" width="{w}" height="{h}" alt="Progress Schools"></span>
+<span class="chip"><img src="{logo_uri}" width="{w}" height="{h}" alt="the school"></span>
 <div class="strip">{STRIP}</div>
 <h1>Offline Lesson Library</h1>
 <p class="sub">{sum(len(v) for v in groups.values())} pages \u00b7 works from a network share or from file:// \u00b7 nothing loads from the internet</p>
@@ -1287,7 +1303,7 @@ def mirror_main(logo, out):
     # Made-by-Matt marks replaced; the pages this build authors carry one too, and a
     # guide that quotes the subtotal understates its own pack.
     disk_logos = sum(1 for f in pack.rglob("*.html")
-                     if 'alt="Progress Schools"' in f.read_text(encoding="utf-8", errors="ignore"))
+                     if 'alt="the school"' in f.read_text(encoding="utf-8", errors="ignore"))
     write_docs(pack, keep, fwd, back, clashes, disk_logos, rewrites, miss,
                hub_results, orphans, 0)
     total, by_ext, by_top = write_manifest(pack)
@@ -1319,18 +1335,18 @@ def mirror_main(logo, out):
     # ---- package. Nothing ships if anything above failed.
     assert not all_fails, f"{len(all_fails)} checks failed - refusing to package"
     zips = []
-    n, sz = zip_tree(pack, out / "Progress_Schools_OneDrive_Mirror.zip",
-                     "Progress_Schools_OneDrive_Mirror")
-    zips.append(("Progress_Schools_OneDrive_Mirror.zip", n, sz))
+    n, sz = zip_tree(pack, out / "the_school_OneDrive_Mirror.zip",
+                     "the_school_OneDrive_Mirror")
+    zips.append(("the_school_OneDrive_Mirror.zip", n, sz))
 
     # optional: same tree + a generated offline index, for the network share
-    lib = out / "Progress_Schools_Network_Library"
+    lib = out / "the_school_Network_Library"
     shutil.copytree(pack, lib)
     shutil.rmtree(lib / "_Pack_Notes")   # placement + build notes are a OneDrive concern only
     pages = write_offline_index(lib, fwd, LOGO_URI[0], LOGO_URI[1])
-    n, sz = zip_tree(lib, out / "Progress_Schools_Network_Library.zip",
-                     "Progress_Schools_Network_Library")
-    zips.append(("Progress_Schools_Network_Library.zip", n, sz))
+    n, sz = zip_tree(lib, out / "the_school_Network_Library.zip",
+                     "the_school_Network_Library")
+    zips.append(("the_school_Network_Library.zip", n, sz))
     print(f"\nofflineibrary index: {pages} pages listed".replace("ibrary","  library"))
     for nm, c, s in zips:
         print(f"PACKAGED {nm}: {c} entries, {s/1024/1024:.1f} MB")
@@ -1447,7 +1463,7 @@ def bare_name_census(fwd):
 
 
 def chooser_page(folder, bare, strands, mark_html):
-    """A Progress-branded page at the orphaned bare name.
+    """A school-branded page at the orphaned bare name.
 
     Same-folder links only -- no '../' -- because the folder is flat on the
     drive and this page must work wherever it is opened from."""
@@ -1457,7 +1473,6 @@ def chooser_page(folder, bare, strands, mark_html):
     return f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="x-brand" content="progress-schools">
 <title>Start Here \\u00b7 {html.escape(os.path.basename(folder))}</title>
 <style>
 body{{margin:0;background:#fbfbfc;color:#1a1a1e;font:16px/1.6 system-ui,-apple-system,sans-serif}}
@@ -1495,7 +1510,7 @@ named after its strand and this page points at all five.</div>
 # The drive keeps a second copy of each root hub inside the folder it serves.
 # Telling Matt to "copy the rebranded root version over each by hand" was wrong
 # advice: after a mirror rewrite the root copy's hrefs are written for depth 0,
-# so dropping it into Art/ yields a Progress-branded hub with dead links --
+# so dropping it into Art/ yields a school-branded hub with dead links --
 # strictly worse than an unbranded hub that works. Each copy is emitted at its
 # own depth instead, and gated by a crawl FROM ITS OWN LOCATION.
 IN_FOLDER_HUBS = {
@@ -1562,8 +1577,7 @@ def write_changes_since(pack, counts, mark_html):
     doc = f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="x-brand" content="progress-schools">
-<title>What changed \\u00b7 Progress Schools lessons</title>
+<title>What changed \\u00b7 the school lessons</title>
 <style>
 body{{margin:0;background:#fbfbfc;color:#1a1a1e;font:16px/1.65 system-ui,-apple-system,sans-serif}}
 .wrap{{max-width:720px;margin:0 auto;padding:32px 20px}}
@@ -1598,7 +1612,7 @@ organisers, receipt packs, role cards, consent logs and moderation guides were m
 cannot be regenerated. This update ships nothing with those names and does not touch them.</div>
 
 <h2>Branding</h2>
-<div class="card">Every page now carries the real Progress Schools logo instead of the placeholder
+<div class="card">Every page now carries the real the school logo instead of the placeholder
 mark, embedded in the page itself so it still shows when a file is moved or opened offline.</div>
 
 <h2>Structure</h2>
@@ -1677,7 +1691,7 @@ def vendor_fonts(text, cache):
             blocks.append(blk.replace(
                 m.group(1), "data:font/woff2;base64," + base64.b64encode(woff).decode()))
     assert blocks, f"font vendoring produced nothing for {hrefs[:1]}"
-    style = ("\n<style data-vendored-fonts=\"progress-schools\">\n/* "
+    style = ("\n<style data-vendored-fonts=\"the-school\">\n/* "
              + ", ".join(sorted(families)) + " -- vendored from Google Fonts under the\n"
              "   SIL Open Font License 1.1. Full licence text: FONT_LICENCES.txt at the pack root.\n"
              "   Inlined so this pack makes no network request. */\n"
@@ -1691,7 +1705,7 @@ def vendor_fonts(text, cache):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--logo", help="Progress Schools logo PNG; enables mirror-pack mode")
+    ap.add_argument("--logo", help="the school logo PNG; enables mirror-pack mode")
     ap.add_argument("--mirror", action="store_true", help="assemble in the OneDrive taxonomy")
     ap.add_argument("--out", default=str(OUT))
     a = ap.parse_args()
@@ -1699,7 +1713,7 @@ if __name__ == "__main__":
         if not a.logo:
             sys.exit("HARD STOP: --mirror requires --logo. There is no fallback to the "
                      "typographic mark - REBRAND.md rule 1 is superseded and a pack built "
-                     "without the real lockup is not a Progress Schools pack.")
+                     "without the real lockup is not a the school pack.")
         mirror_main(a.logo, a.out)
     else:
         main()

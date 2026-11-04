@@ -220,7 +220,7 @@ the per-phase entries that follow)*
 | **Its single `#printSheet` as the print story** | Not installed. It could only ever land as ONE additional section beside the full pack, never instead of it; the full pack is intact. |
 | **The pack's seven-rung prompt ladder** (`WAIT / SELF-PROMPT / VISUAL CUE / GENERAL VERBAL / SPECIFIC VERBAL / MODEL / DIRECT SUPPORT`) | **RED.** A seventh wording of the WT-DS least-prompt ladder. Six exist; queue-16 owns reconciliation. Found on the pack's W4A We Do while quarrying for A6 and deliberately left behind. |
 | **Copy-pasting any pack markup** | The pack carries 20 bare `matchMedia` against an estate standard of zero (AMBER-INPUT-1). Every graft is hand-written. |
-| **Sourcing the Progress Schools lockup** | Human-only. The `--mirror` build hard-stops without it; reported, not worked around. |
+| **Sourcing the the school lockup** | Human-only. The `--mirror` build hard-stops without it; reported, not worked around. |
 
 ---
 
@@ -282,7 +282,7 @@ Lower in **10/10** files and on **every** measured surface (arrival, starter, I 
 | AMBER-A6-CONTRAST | The specimen's buttons rendered **white-on-white** — the chassis carries a bare `button{color:#fff}` rule and the specimen set a white background without restating colour. Caught by rendering, not by a static gate. Fixed and re-rendered. | A6 |
 | AMBER-A7-MATRIX | The pack's equipment matrix carries **three degenerate columns** (Preparation, Reusable/consumable, Setup time — identical in all ten rows) and a Digital-alternative column naming **ten labs that are not installed**. Same class of defect BSG-1 found in the BUILD matrix, and worse. All four columns re-derived per lesson. | A7 |
 | AMBER-CRAWL | The staff-pack crawl reports **5 missing internal targets** (`Baseline_Weeks/index.html` ×3 and two `_sciv3` policy docs). **Pre-existing at the rollback SHA** — verified, not introduced here. Baseline lives on PythonAnywhere by design. | A7 |
-| AMBER-LOCKUP | `build_staff_pack.py --mirror` **hard-stops** for want of the real Progress Schools lockup. Expected, reported, **not worked around** — the binary is human-only and was not sourced. The non-mirror pack builds clean: 340 files, all REBRAND checks pass. | A7 |
+| AMBER-LOCKUP | `build_staff_pack.py --mirror` **hard-stops** for want of the real the school lockup. Expected, reported, **not worked around** — the binary is human-only and was not sourced. The non-mirror pack builds clean: 340 files, all REBRAND checks pass. | A7 |
 
 ---
 

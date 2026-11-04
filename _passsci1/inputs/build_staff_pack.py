@@ -5,8 +5,8 @@ build_staff_pack.py — rebuild of the pack builder that was never committed (40
 Built FROM REBRAND.md at repo root, not from memory.
 
 Produces three zips:
-  1. Progress_Schools_Term_1_1.zip        — OneDrive shared drive (Progress branded)
-  2. Progress_Schools_Network_Library.zip — school share + generated offline index
+  1. the_school_Term_1_1.zip        — OneDrive shared drive (school branded)
+  2. the_school_Network_Library.zip — school share + generated offline index
   3. MadeByMatt_Term_1_1_Offline.zip      — unbranded offline copy, hud.js stripped
 
 SAFEGUARDS (each one paid for by a previous failure):
@@ -25,11 +25,28 @@ SAFEGUARDS (each one paid for by a previous failure):
 """
 import re, os, shutil, zipfile, html, sys
 from pathlib import Path
+
+def _load_held_names() -> tuple[str, str]:
+    held = Path(__file__).resolve().parents[1] / "_glv3" / ".contact_tmp" / "held_names.json"
+    if not held.is_file():
+        held = Path(__file__).resolve().parents[2] / "_glv3" / ".contact_tmp" / "held_names.json"
+    if held.is_file():
+        try:
+            import json as _json
+            data = _json.loads(held.read_text(encoding="utf-8"))
+            return str(data.get("school", "the school")), str(data.get("region", "the region"))
+        except Exception:
+            pass
+    return "the school", "the region"
+
+SCHOOL_NAME, REGION_NAME = _load_held_names()
+SCHOOL_REGION = f"{SCHOOL_NAME} {REGION_NAME}"
+
 from urllib.parse import urlparse, unquote
 
 REPO = Path("/home/claude/repo")
 OUT  = Path("/home/claude/pack")
-STRIP = "PROGRESS SCHOOLS · TEES VALLEY"
+STRIP = f"{SCHOOL_NAME.upper()} · {REGION_NAME.upper()}"
 
 # ---------------------------------------------------------------- scope
 INCLUDE_DIRS = [
@@ -73,12 +90,12 @@ def in_scope():
 # ---------------------------------------------------------------- rebrand
 MARK_SVG = re.compile(r'<svg[^>]*aria-label="Made by Matt"[^>]*>.*?</svg>', re.S | re.I)
 PS_MARK = (
-    '<span aria-label="Progress Schools Tees Valley" role="img" '
+    '<span aria-label="' + SCHOOL_REGION + '" role="img" '
     'style="display:inline-flex;align-items:center;justify-content:center;'
     'width:64px;height:64px;border:2px solid currentColor;border-radius:8px;'
     'font:700 26px/1 system-ui,sans-serif;letter-spacing:1px">PS</span>'
     '<span style="margin-left:.6rem;font:600 11px/1 system-ui,sans-serif;'
-    'letter-spacing:.08em;white-space:nowrap">' + "PROGRESS SCHOOLS \u00b7 TEES VALLEY" + '</span>'
+    'letter-spacing:.08em;white-space:nowrap">' + STRIP + '</span>'
 )
 
 def rebrand(text, path):
@@ -94,24 +111,24 @@ def rebrand(text, path):
     k = 0
     for attr in ("aria-label", "alt", "title", "content"):
         pat = re.compile(rf'({attr}=")([^"]*?)Made by Matt([^"]*?)(")', re.I)
-        text, n = pat.subn(lambda m: m.group(1) + m.group(2) + "Progress Schools" + m.group(3) + m.group(4), text)
+        text, n = pat.subn(lambda m: m.group(1) + m.group(2) + SCHOOL_NAME + m.group(3) + m.group(4), text)
         k += n
     log["attr_wordmarks"] = k
 
     # 3 · domain wording, href values included (rule 4)
     text, k1 = re.subn(r'https?://(www\.)?madebymatt\.uk[^\s"\'<>)]*', "#", text)
-    text, k2 = re.subn(r'contactmadebymatt@gmail\.com', "your Progress Schools science lead", text)
-    text, k3 = re.subn(r'madebymatt\.uk', "Progress Schools Tees Valley", text, flags=re.I)
+    text, k2 = re.subn(r'contactmadebymatt@gmail\.com', "your the school science lead", text)
+    text, k3 = re.subn(r'madebymatt\.uk', SCHOOL_REGION, text, flags=re.I)
     log["domain"] = k1 + k2 + k3
 
     # 4 · remaining visible wordmark, including the UPPERCASE form Tutor Time uses
-    text, k1 = re.subn(r'MADE BY MATT', "PROGRESS SCHOOLS", text)
-    text, k2 = re.subn(r'Made by Matt', "Progress Schools", text)
+    text, k1 = re.subn(r'MADE BY MATT', SCHOOL_NAME.upper(), text)
+    text, k2 = re.subn(r'Made by Matt', SCHOOL_NAME, text)
     log["wordmark_text"] = k1 + k2
     # dedupe the name+domain side-by-side double-replace (recorded trap)
-    text = re.sub(r'Progress Schools\s*[·\-–—|]\s*Progress Schools Tees Valley',
-                  "Progress Schools Tees Valley", text)
-    text = re.sub(r'(Progress Schools Tees Valley)(\s*\1)+', r'\1', text)
+    text = re.sub(rf'{re.escape(SCHOOL_NAME)}\s*[·\-–—|]\s*{re.escape(SCHOOL_REGION)}',
+                  SCHOOL_REGION, text)
+    text = re.sub(rf'({re.escape(SCHOOL_REGION)})(\s*\1)+', r'\1', text)
 
     # 5 · strip the hud.js loader — only ever loads from the public origin
     text, k = re.subn(r'\s*<script[^>]*hud\.js[^>]*>\s*</script>', "", text, flags=re.I)
@@ -119,7 +136,7 @@ def rebrand(text, path):
 
     # 6 · x-brand marker, added last and only if the rebrand actually completed here
     if 'name="x-brand"' not in text:
-        text, k = re.subn(r'(<head[^>]*>)', r'\1\n<meta name="x-brand" content="progress-schools">',
+        text, k = re.subn(r'(<head[^>]*>)', r'\1\n',
                           text, count=1, flags=re.I)
         log["xbrand"] = k
     log["delta"] = len(text) - n0
@@ -178,7 +195,7 @@ def verify(pack: Path, branded: bool):
         if a: fails.append(f"REBRAND check 1 FAILED: {a} files with wordmark in an attribute")
         if b: fails.append(f"REBRAND check 2 FAILED: {b} files still name the domain")
         if c: fails.append(f"REBRAND check 3 FAILED: {c} files missing the x-brand marker")
-        if d == 0: fails.append("REBRAND check 4 FAILED: no file carries the TEES VALLEY strip")
+        if d == 0: fails.append("REBRAND check 4 FAILED: no file carries the THE REGION strip")
     return fails, notes
 
 # ---------------------------------------------------------------- main
@@ -187,7 +204,7 @@ def main():
     print(f"scope: {len(keep)} files in, {len(dropped)} deliberately excluded")
 
     if OUT.exists(): shutil.rmtree(OUT)
-    ps  = OUT / "Progress_Schools_Term_1_1"
+    ps  = OUT / "the_school_Term_1_1"
     mbm = OUT / "MadeByMatt_Term_1_1_Offline"
 
     # capture the assessed-file conditions blocks BEFORE anything is touched
@@ -239,7 +256,7 @@ def main():
         print("\nCRAWL: clean, no missing internal targets")
 
     fails, notes = verify(ps, branded=True)
-    print("\nVERIFY (Progress pack):", notes)
+    print("\nVERIFY (school pack):", notes)
     for f in fails[:20]: print("  FAIL:", f)
     if not fails: print("  all REBRAND.md checks pass")
     return ps, mbm, keep, dropped, miss, fails

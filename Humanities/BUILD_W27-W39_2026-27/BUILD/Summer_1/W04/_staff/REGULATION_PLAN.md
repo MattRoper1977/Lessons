@@ -1,6 +1,6 @@
 # BUILD_SU1_W04 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Humanities · BUILD**\
+**the school staff-facing · review copy · Humanities · BUILD**\
 **Learning objective:** Carry out simple fieldwork in the grounds.
 
 ## Set up before pupils arrive
@@ -42,4 +42,4 @@ At a calm key-adult check-in, ask: “What was the first body or task signal tha
 - **cognition & learning:** Makes one tally mark for each counted object.
 - **SEMH:** Uses the agreed help or pause signal during the supervised observation if needed.
 - **sensory & physical:** Uses the agreed accessible observation position and pointing/recording aid to count a feature.
-- **E: evidence captured on Cypher** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.
+- **E: evidence captured on the evidence app** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.

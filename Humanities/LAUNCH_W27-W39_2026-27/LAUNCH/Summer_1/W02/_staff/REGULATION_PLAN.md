@@ -1,6 +1,6 @@
 # LAUNCH_SU1_W02 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Humanities · LAUNCH**\
+**the school staff-facing · review copy · Humanities · LAUNCH**\
 **Learning objective:** Evaluate responses to climate change.
 
 ## Set up before pupils arrive
@@ -41,4 +41,4 @@ At a calm key-adult check-in, ask: “What was the first body or task signal tha
 - **communication & interaction:** Explains a preferred climate response with a benefit and limit.
 - **cognition & learning:** Classifies the response as addressing causes or impacts.
 - **SEMH:** Acknowledges an alternative response before giving an evidence-based reason.
-- **E: evidence captured on Cypher** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.
+- **E: evidence captured on the evidence app** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.

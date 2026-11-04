@@ -69,6 +69,17 @@ AUTHORISED_BEYOND_R1_R7 = ()
 AUTHORED_BASE = "178912c57583a1152be0dfa711fa3f652cb3b993"
 
 
+def _load_held_names() -> tuple[str, str]:
+    held = Path(__file__).resolve().parents[1] / "_glv3" / ".contact_tmp" / "held_names.json"
+    if held.is_file():
+        try:
+            data = json.loads(held.read_text(encoding="utf-8"))
+            return str(data.get("school", "the school")), str(data.get("region", "the region"))
+        except Exception:
+            pass
+    return "the school", "the region"
+
+
 def sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
@@ -100,13 +111,24 @@ def expected_authored(base: bytes, rule: str) -> bytes:
         )
     if rule == "R4":
         # Names fix PR 9 (rulings ky-1, kz-2): the organisation and region line takes the neutral label.
-        text = replace_exact(
-            text,
-            "<div class=\"eyebrow\">Progress Schools Tees Valley · Lundy Loop · Staff calibration</div>",
-            "<div class=\"eyebrow\">Lundy Loop · Staff calibration</div>",
-            1,
-            "R4 names fix (ruling ky-1)",
-        )
+        school, region = _load_held_names()
+        target = f'<div class="eyebrow">{school} {region} · Lundy Loop · Staff calibration</div>'
+        if target in text:
+            text = replace_exact(
+                text,
+                target,
+                '<div class="eyebrow">Lundy Loop · Staff calibration</div>',
+                1,
+                "R4 names fix (ruling ky-1)",
+            )
+        else:
+            text, count = re.subn(
+                r'<div class="eyebrow">[^<\n]+ · Lundy Loop · Staff calibration</div>',
+                '<div class="eyebrow">Lundy Loop · Staff calibration</div>',
+                text,
+            )
+            if count != 1:
+                raise ValueError(f"R4 names fix (ruling ky-1): expected 1 replacement, got {count}")
     if rule == "R2":
         font_links = (
             '<link rel="preconnect" href="https://fonts.googleapis.com">\n'

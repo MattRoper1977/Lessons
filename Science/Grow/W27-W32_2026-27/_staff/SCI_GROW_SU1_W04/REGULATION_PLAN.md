@@ -1,6 +1,6 @@
 # SCI_GROW_SU1_W04 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Science · GROW**\
+**the school staff-facing · review copy · Science · GROW**\
 **Learning objective:** Describe reversible changes (dissolving, melting, freezing).
 
 ## Set up before pupils arrive
@@ -40,4 +40,4 @@ At a calm key-adult check-in, ask: “What was the first body or task signal tha
 - **Job 2 observable link for SCI_GROW_SU1_W04:** Only tag a broad area when its behaviour actually occurs:
 - **communication & interaction:** Describes an observed reversible change using the correct term.
 - **cognition & learning:** Matches a change with a method that reverses it.
-- **E: evidence captured on Cypher** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.
+- **E: evidence captured on the evidence app** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.

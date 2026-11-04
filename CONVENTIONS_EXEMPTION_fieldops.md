@@ -28,7 +28,7 @@ blobs rather than inherited:
 | `<h1>` per page | 1, corrected | **1** each | **inherited** |
 | back link (NAV-1) | 0 `<a>`, so none | **1** `<a>` each — `<a class="mbmhome" href="../../../index.html" aria-label="Back to the Lessons catalogue">← Lessons</a>` | **inherited** (transform T13, with its 44 px target, focus ring and `print:none` rule asserted) |
 | "Made by Matt" | 0 | **1** each — `Made by Matt · Science Teesside · BUILD v4 FieldOps` | **inherited** (transform T14) |
-| "Progress Schools" | 0 | **0** | **exempt** — these carry no partner attribution, and none was ever authored |
+| "the school" | 0 | **0** | **exempt** — these carry no partner attribution, and none was ever authored |
 | `mbm_reading_theme` | 0 | **0** | **exempt** — see below |
 | tier vocabulary | Guided/Core/Stretch | **Guided / Core / Stretch** | **exempt** — see below |
 

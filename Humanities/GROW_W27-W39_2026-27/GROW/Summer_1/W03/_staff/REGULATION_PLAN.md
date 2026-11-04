@@ -1,6 +1,6 @@
 # GROW_SU1_W03 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Humanities · GROW**\
+**the school staff-facing · review copy · Humanities · GROW**\
 **Learning objective:** Carry out simple fieldwork about my local area.
 
 ## Set up before pupils arrive
@@ -42,4 +42,4 @@ At a calm key-adult check-in, ask: “What was the first body or task signal tha
 - **cognition & learning:** Checks a tally total against the plotted value.
 - **SEMH:** Communicates a need to pause or change role during the agreed fieldwork routine.
 - **sensory & physical:** Uses the agreed accessible route or equivalent observation position to record a feature.
-- **E: evidence captured on Cypher** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.
+- **E: evidence captured on the evidence app** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.

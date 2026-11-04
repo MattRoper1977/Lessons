@@ -1,6 +1,6 @@
 # SCI_LAUNCH_SU1_W05 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Science · LAUNCH**\
+**the school staff-facing · review copy · Science · LAUNCH**\
 **Learning objective:** Apply Topics 7 to 8 to unfamiliar contexts.
 
 ## Set up before pupils arrive
@@ -41,4 +41,4 @@ At a calm key-adult check-in, ask: “What was the first body or task signal tha
 - **communication & interaction:** Explains which taught idea applies to an unfamiliar source.
 - **cognition & learning:** Selects a relevant principle from Topics 7–8 for the new context.
 - **SEMH:** Requests the agreed access support before attempting an unfamiliar question.
-- **E: evidence captured on Cypher** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.
+- **E: evidence captured on the evidence app** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.

@@ -32,7 +32,7 @@
 **Regulation break:** Offer the pre-agreed help/pause signal without a public explanation. Follow the pupil’s existing plan for place, adult and length; retain supervision. On return, point to the last completed step, give a small re-entry choice and record access/support factually.
 
 **Regulation:** Follow `REGULATION_PLAN.md` (beside this brief) for the check-ins, transition recovery and agreed pause/re-entry route.
-**Regulation handoff:** At Exit, pass the prompt level and independent step to the teacher; next lesson, rehearse the response to NS+ before R. E: evidence captured on Cypher only if the linked Job 2 behaviour occurred.
+**Regulation handoff:** At Exit, pass the prompt level and independent step to the teacher; next lesson, rehearse the response to NS+ before R. E: evidence captured on the evidence app only if the linked Job 2 behaviour occurred.
 
 ## Teacher time and handoff
 
@@ -40,6 +40,6 @@
 
 **HANDOFF at Exit:** Tell the teacher the deepest prompt level reached (self-scaffold, prompt, clue, model or correct), the independently demonstrated part of “I can choose a recovery method that fits an insoluble solid, a solution or a melted solid.”, and the next content barrier. Include the response mode and any access support.
 
-**E: evidence captured on Cypher** — tag only a relevant broad Job 2 area if actual evidence exists: communication & interaction; cognition & learning; SEMH; sensory & physical. Source-linked behaviours: communication & interaction: Explains the purpose of a recovery step; cognition & learning: Chooses an appropriate recovery method for the specified mixture; SEMH: Requests help before continuing an uncertain practical step; sensory & physical: Uses adapted equipment to complete a teacher-approved, unheated recovery step
+**E: evidence captured on the evidence app** — tag only a relevant broad Job 2 area if actual evidence exists: communication & interaction; cognition & learning; SEMH; sensory & physical. Source-linked behaviours: communication & interaction: Explains the purpose of a recovery step; cognition & learning: Chooses an appropriate recovery method for the specified mixture; SEMH: Requests help before continuing an uncertain practical step; sensory & physical: Uses adapted equipment to complete a teacher-approved, unheated recovery step
 
 **Feedback loop:** At Review/Exit, an actual NS+ names one next step. At the next lesson Arrival, allow the pupil to respond; only then mark R after the adult has engaged with that response. `//` marks a pupil self-edit; `?` cues Read it back. Code actual events only.

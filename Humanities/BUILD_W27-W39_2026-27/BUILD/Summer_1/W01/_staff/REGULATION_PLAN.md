@@ -1,6 +1,6 @@
 # BUILD_SU1_W01 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Humanities · BUILD**\
+**the school staff-facing · review copy · Humanities · BUILD**\
 **Learning objective:** Name and locate my school and local features.
 
 ## Set up before pupils arrive
@@ -40,4 +40,4 @@ At a calm key-adult check-in, ask: “What was the first body or task signal tha
 - **Job 2 observable link for BUILD_SU1_W01:** Only tag a broad area when its behaviour actually occurs:
 - **communication & interaction:** Names or indicates a local feature to an adult using the agreed communication mode.
 - **cognition & learning:** Uses the key to locate the school without a content prompt.
-- **E: evidence captured on Cypher** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.
+- **E: evidence captured on the evidence app** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.

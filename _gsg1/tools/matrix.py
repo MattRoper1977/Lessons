@@ -127,8 +127,8 @@ COLS = [("Lesson", "k"), ("Investigation", "inv"), ("Equipment (per group)", "eq
 
 
 def build(progress):
-    brand_meta = ('<meta name="x-brand" content="progress-schools">' if progress else "")
-    comment = ("<!-- Progress Schools staff variant · GROW Science v3 40-minute route — "
+    brand_meta = ('' if progress else "")
+    comment = ("<!-- the school staff variant · GROW Science v3 40-minute route — "
                if progress else
                "<!-- Made by Matt · GROW Science v3 40-minute route — ")
     comment += ("practicals & equipment matrix. Staff-facing artefact. Derived from the v3+ "
@@ -140,12 +140,12 @@ def build(progress):
     head = ('<header><div>Made by Matt</div>'
             '<div style="font-size:.8rem;opacity:.85">GROW Science · 2026–27 Aut 1</div>'
             if progress else
-            '<header><div>Made by Matt · for Progress Schools · GROW Science · 2026–27 Aut 1</div>')
+            '<header><div>Made by Matt · for the school · GROW Science · 2026–27 Aut 1</div>')
     foot = ('staff use · GROW Science 40-minute route '
             '(Aut 1 W3–W7). Source: v3+ equipment matrix (received 2026-08-12), corrected '
             'per lesson against the live route. <span style="opacity:.75">by madebymatt.uk</span>'
             if progress else
-            'Made by Matt · prepared for Progress Schools staff use · GROW Science '
+            'Made by Matt · prepared for the school staff use · GROW Science '
             '40-minute route (Aut 1 W3–W7). Source: v3+ equipment matrix (received '
             '2026-08-12), corrected per lesson against the live route.')
 

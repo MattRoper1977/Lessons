@@ -245,7 +245,7 @@ which drives the real `index.html` in a browser rather than replicating its filt
 ## D15 · Phase E and §8 — not started
 
 No trigger was given for any of: BUILD slide reading load, GROW slide reading load, LAUNCH slide
-reading load, Progress Schools-branded variants, the evidence-window promotion, the prompt-ladder
+reading load, the school-branded variants, the evidence-window promotion, the prompt-ladder
 reconciliation, the 5-vs-10 ruling, or the pathway entry bands. Nothing was built for any of them.
 
 ---

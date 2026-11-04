@@ -1,6 +1,6 @@
 # LAUNCH_SU1_W06 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Humanities · LAUNCH**\
+**the school staff-facing · review copy · Humanities · LAUNCH**\
 **Learning objective:** Complete a sustainability decision report.
 
 ## Set up before pupils arrive
@@ -41,4 +41,4 @@ At a calm key-adult check-in, ask: “What was the first body or task signal tha
 - **communication & interaction:** Defends a provisional decision with a source and limitation.
 - **cognition & learning:** Links a criterion score to a specific evidence note.
 - **SEMH:** Uses the agreed review routine to respond to a challenge to the decision.
-- **E: evidence captured on Cypher** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.
+- **E: evidence captured on the evidence app** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.

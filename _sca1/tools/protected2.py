@@ -20,7 +20,7 @@ FAM=[
  ("word-bank",          r'[Ww]ord bank'),
  ("answer-key-data",    r'data-(?:correct|c|e|h|m|fix)="[^"]*"'),
  ("markscheme-caution", r'mark scheme|mark-scheme'),
- ("brand",              r'Made by Matt|Progress Schools'),
+ ("brand",              r'Made by Matt|the school'),
 ]
 W=25  # tight: detects edits to the protected string and its immediate delimiters,
       # NOT unrelated prose elsewhere on the same (single-line) file. See _sca1/G4_NOTE.md

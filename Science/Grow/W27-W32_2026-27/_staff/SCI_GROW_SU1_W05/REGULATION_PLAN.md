@@ -1,6 +1,6 @@
 # SCI_GROW_SU1_W05 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Science · GROW**\
+**the school staff-facing · review copy · Science · GROW**\
 **Learning objective:** Investigate recovering substances from reversible changes.
 
 ## Set up before pupils arrive
@@ -42,4 +42,4 @@ At a calm key-adult check-in, ask: “What was the first body or task signal tha
 - **cognition & learning:** Chooses an appropriate recovery method for the specified mixture.
 - **SEMH:** Requests help before continuing an uncertain practical step.
 - **sensory & physical:** Uses adapted equipment to complete a teacher-approved, unheated recovery step.
-- **E: evidence captured on Cypher** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.
+- **E: evidence captured on the evidence app** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.

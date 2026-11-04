@@ -1,6 +1,6 @@
 # SCI_LAUNCH_SU1_W02 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Science · LAUNCH**\
+**the school staff-facing · review copy · Science · LAUNCH**\
 **Learning objective:** Model blood-glucose control (interactive software).
 
 ## Set up before pupils arrive
@@ -41,4 +41,4 @@ At a calm key-adult check-in, ask: “What was the first body or task signal tha
 - **communication & interaction:** Explains a change observed in the blood-glucose model.
 - **cognition & learning:** Predicts the model’s response to the changed input.
 - **SEMH:** Uses the agreed help prompt to restart an unsuccessful model attempt.
-- **E: evidence captured on Cypher** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.
+- **E: evidence captured on the evidence app** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.

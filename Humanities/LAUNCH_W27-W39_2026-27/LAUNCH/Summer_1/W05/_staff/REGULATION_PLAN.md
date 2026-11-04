@@ -1,6 +1,6 @@
 # LAUNCH_SU1_W05 · Regulation plan
 
-**Progress Schools staff-facing · review copy · Humanities · LAUNCH**\
+**the school staff-facing · review copy · Humanities · LAUNCH**\
 **Learning objective:** Link learning to local action with Community Project links.
 
 ## Set up before pupils arrive
@@ -41,4 +41,4 @@ At a calm key-adult check-in, ask: “What was the first body or task signal tha
 - **communication & interaction:** Explains a role contribution and how another person can check it.
 - **cognition & learning:** Calculates the before/after difference while retaining the practice-data label.
 - **SEMH:** Agrees a role boundary or change with a partner before the trial.
-- **E: evidence captured on Cypher** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.
+- **E: evidence captured on the evidence app** — only if one of the observable behaviours above occurred. Use the existing recording route; never invent an EHCP outcome or unit code, and never arrange distress to obtain E.

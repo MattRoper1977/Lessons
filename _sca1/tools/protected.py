@@ -22,7 +22,7 @@ FAM=[
  ("answer-key-data",    r'data-correct="[^"]*"|data-fix="[^"]*"|data-c="[^"]*"|data-e="[^"]*"|data-h="[^"]*"|data-m="[^"]*"'),
  ("seed",               r'\bseed\b|seeded'),
  ("markscheme-caution", r'mark scheme|mark-scheme|markscheme'),
- ("brand",              r'Made by Matt|Progress Schools'),
+ ("brand",              r'Made by Matt|the school'),
 ]
 # LAUNCH RED patterns: forbidden on pupil/print surfaces
 RED=[("marks-alloc", r'\[\s*\d+\s*marks?\s*\]|\(\s*\d+\s*marks?\s*\)|\b\d+\s*marks\b'),
