@@ -67,6 +67,7 @@ from __future__ import annotations
 import argparse
 import copy
 import html as html_module
+import html.parser as html_parser
 import json
 import random
 import re
@@ -419,20 +420,95 @@ def derive(rows: list[dict]) -> dict:
     return {"rows": per_row, "topics": topics, "packUnits": pack_units}
 
 
+# The label-map limb (ruling thread, 2026-11-04, _sx3/DECISION_label_map_limb.md), restated here with
+# the standard library only: this tool's CI job has no lxml, so build_lesson_order is NOT imported. The
+# three expressions below are the same as build_lesson_order's (LABEL_WORD, CALENDAR_WORD, WEEK_QUOTE).
+LABEL_MAP = ROOT / "tools/catalogue/LABEL_MAP.json"
+LABEL_WORD = re.compile(r"^[A-Za-z][A-Za-z&' -]*[A-Za-z]$")
+CALENDAR_WORD = re.compile(r"\b(?:Aut(?:umn)?|Spr(?:ing)?|Sum(?:mer)?|W(?:eek)?)\b", re.I)
+WEEK_QUOTE = re.compile(r"\b(Aut|Spr|Sum)(?:umn|ing|mer)?\s*([12])\s*[·:—-]?\s*W(?:eek)?\s*(\d+)\b", re.I)
+
+
+def load_label_map(location: Path = LABEL_MAP) -> list[tuple[str, str]]:
+    """The one committed word map as [(from, to)], [] when absent; an entry that could touch a calendar
+    binding (a digit, a season or week word, from == to, a word mapped twice) is refused by assertion."""
+    if not location.is_file():
+        return []
+    pairs: list[tuple[str, str]] = []
+    for row in json.loads(location.read_bytes()).get("map", []):
+        src, dst = row.get("from"), row.get("to")
+        assert isinstance(src, str) and isinstance(dst, str) and LABEL_WORD.match(src) and LABEL_WORD.match(dst) and src != dst, "LABEL_MAP entry refused: %r" % row
+        assert not CALENDAR_WORD.search(src) and not CALENDAR_WORD.search(dst), "LABEL_MAP entry names a season or week word: %r" % row
+        assert src not in dict(pairs), "LABEL_MAP maps one word twice: %r" % src
+        pairs.append((src, dst))
+    return pairs
+
+
+def map_labels(quote: str, word_map) -> str:
+    """Whole-word replacement in ONE pass, applied to the quote only; an unmapped word is never touched."""
+    if not word_map:
+        return quote
+    table = dict(word_map)
+    return re.sub("|".join(r"(?<![A-Za-z])" + re.escape(s) + r"(?![A-Za-z])" for s in table), lambda m: table[m.group(0)], quote)
+
+
+class _VisibleText(html_parser.HTMLParser):
+    """Every text node outside <script>, <style> and <template> (comments excluded), as lxml's
+    //text()[not(ancestor::script|style|template)] reads it."""
+    SKIP = {"script", "style", "template"}
+
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.parts, self.depth = [], 0
+
+    def handle_starttag(self, tag, attrs):
+        if tag in self.SKIP:
+            self.depth += 1
+
+    def handle_endtag(self, tag):
+        if tag in self.SKIP and self.depth:
+            self.depth -= 1
+
+    def handle_data(self, data):
+        if not self.depth:
+            self.parts.append(data)
+
+
+def visible_text(raw: str) -> str:
+    parser = _VisibleText()
+    parser.feed(raw)
+    parser.close()
+    return re.sub(r"\s+", " ", " ".join(parser.parts)).strip()
+
+
+def label_map_proof(quotes, text: str, word_map) -> bool:
+    """build_lesson_order.label_map_proof restated: every recorded title-slide quote, after the map, is
+    verbatim (whitespace-normalised) in the page's visible text, still naming the half-terms and term·week
+    keys it was recorded with; a quote naming no half-term proves nothing. (The Science row-token condition
+    is derive()'s; this reading proves a half-term tag, which is what verify_classes samples.)"""
+    quotes = [q for q in quotes if isinstance(q, str)]
+    if not quotes:
+        return False
+    for q in quotes:
+        if not HALF_TERM_TOKEN.search(q):
+            return False
+        mapped = map_labels(q, word_map)
+        if HALF_TERM_TOKEN.findall(mapped) != HALF_TERM_TOKEN.findall(q) or WEEK_QUOTE.findall(mapped) != WEEK_QUOTE.findall(q):
+            return False
+        if re.sub(r"\s+", " ", mapped).strip() not in text:
+            return False
+    return True
+
+
 def label_map_reproves(entry: dict, location: Path, word_map=None) -> bool:
-    """The label-map limb (ruling thread, 2026-11-04, _sx3/DECISION_label_map_limb.md), judged by
-    build_lesson_order.label_map_proof: a hashed entry whose bytes moved still counts as re-proved
-    against the file's CURRENT bytes when every recorded title-slide quote, after the one committed
-    word map, sits verbatim in the page's visible text. The map is applied to the quote only and can
-    never write a digit, so a page whose half-term or week moved is never re-proved this way."""
+    """A hashed entry whose bytes moved still counts as re-proved against the file's CURRENT bytes when
+    label_map_proof holds on its visible text. The map is applied to the quote only and can never write a
+    digit, so a page whose half-term or week moved is never re-proved this way."""
     quotes = [e.get("quote") for e in entry.get("evidence", []) if e.get("method") == "own title slide declaration" and isinstance(e.get("quote"), str)]
     if not quotes or not entry.get("sha256") or not location.is_file():
         return False
-    sys.path.insert(0, str(ROOT / "tools/catalogue"))
-    import build_lesson_order as blo
-    from lxml import html as lhtml
-    text = blo.visible_text(lhtml.fromstring(location.read_bytes().decode("utf-8", errors="replace")))
-    return blo.label_map_proof(quotes, text, blo.load_label_map() if word_map is None else word_map)[0]
+    text = visible_text(location.read_bytes().decode("utf-8", errors="replace"))
+    return label_map_proof(quotes, text, load_label_map() if word_map is None else word_map)
 
 
 def verify_classes(rows: list[dict], derived: dict) -> dict:
