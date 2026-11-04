@@ -124,6 +124,7 @@ def unit_of(lane, sk): return LED["units"][lane][sk]
 
 # ------------------------------------------------------------------ A1: SoW --
 def build_sow():
+    LEDGER.clear()
     S = []
     S.append("""<div class="note"><b>The design in one paragraph.</b> The Kitchen Programme is a full 38-week year in which one mixed class cooks, plans, decides, investigates and evaluates its way through the ASDAN Personal Effectiveness Qualifications at three levels at once — the cohort at <b>Entry 3</b>, a small group at <b>Level 1</b>, and a directed few at <b>Level 2</b>. The kitchen is the shared vehicle (spec &sect;9 p16 explicitly permits mixed-level groups with differentiated demand): an E3 pupil, an L1 pupil and an L2 pupil cook in the same session and bank TmWkSkE3, TmWkSk1 and TmWkSk2 respectively — one level per skill per qualification (barred combinations, &sect;6.5), carried by the witness sheet's Level tick and the per-level minima on the evidence sheets. Every surface says <b>working towards</b>: registration and unit/level attribution are centre-coordinator decisions, and nothing on these pages promises a certificate. Food content is cooking skill, budget, teamwork and enjoyment — no diet, calorie, weight or body framing anywhere in this programme.</div>""")
 
@@ -142,6 +143,9 @@ def build_sow():
     # the honest GLH statement + method
     S.append(f"""<h2>The hours, stated honestly</h2>
 <p class="bank"><b>The live 12-week deck suite is the knowledge-and-assessment spine, not the hours.</b> Measured, it contributes <b>8.0 GLH</b>: {esc(LED["deck_method"])} Against that: ComSkE3 alone is <b>30 GLH</b>, and the smallest qualification (the E3 Award) is <b>40 GLH</b>. The guided hours therefore come from the planned year — the kitchen practicals, the challenge blocks, supervised tutor-time application — because GLH counts <em>any</em> taught or supervised time toward the unit, including assessment by the centre assessor (spec &sect;9 p16, &sect;5.1 p9).</p>
+<p><b>Where the weekly hours come from.</b> The hours behind this year map are counted from the setting's own timetable. That working is kept in the staff hours ledger, which is not published. Check the figures against your own timetable before you plan.</p>""")
+    # AB-1: the timetable working moved to the staff hours ledger (not published)
+    LEDGER.append(f"""<h2>The hours, stated honestly</h2>
 <p><b>Weekly PEQ hours &mdash; MEASURED from the school's own 2026-27 timetable.</b> This is no longer derived from planners and no longer chosen by ruling: the owner supplied the real timetable, and it supersedes both. Every figure below cites a workbook cell in <code>_passpq/TIMETABLE_2026-27.md</code>. The period unit is <b>40 minutes</b>, read off the timetable's own time column; check-in, daily reading, break, lunch and check-out are not guided slots, which is what the workbooks' own note says too.</p>
 <p><b>The classification rule, printed so it can be argued with.</b> <b>(a)</b> a slot whose label literally says <b>ASDAN</b> or <b>PEQ</b> &mdash; the floor. <b>(b)</b> <b>carryable</b>: PfA, Community/enterprise, Careers, Vocational/practical, Enrichment/outdoor, Catch-up &mdash; the ceiling. <b>(c)</b> English, Maths, Science, PE, Behaviour Intervention, RE/Humanities/Citizenship/Creative arts/ICT/PSHE/RSHE, which bank their own subjects. A slot that reads plausibly as both, or on which the two workbooks disagree, is <b>owner-decision</b> and is counted in <em>neither</em> figure.</p>
 <div class="note"><b>Measured, per room.</b> The three rooms are equal on (a)+(b) <em>because the timetable makes them equal</em> &mdash; each independently has eight carryable slots &mdash; not because one figure was copied onto the others. They differ sharply on the floor, and that is the number that matters if the carryable slots are ever disallowed.
@@ -168,7 +172,7 @@ def build_sow():
                      + f"</td><td rowspan=\"3\" class=\"num\"{mark}>{'%g' % cell['year_glh']}</td>"
                      if i == 0 else "")
             rows.append(f"<tr class=\"lane-{lane}\">{first}<td><b>{LANE_NAME[lane]}</b></td>{cells}</tr>")
-    S.append(f"""<h3>Sensitivity: what each weekly commitment can honestly deliver (38 weeks)</h3>
+    LEDGER.append(f"""<h3>Sensitivity: what each weekly commitment can honestly deliver (38 weeks)</h3>
 <p style="font-size:.9rem">Every row is a whole count of the school's <b>real 40-minute timetabled slots</b>, across the band the timetable actually supports (<b>1&ndash;8 slots</b>). The shaded row is the <b>measured</b> rate &mdash; the eight carryable slots each room independently has. This table is what a change to the timetable is read off: lose two slots and the row two above is the honest answer.</p>
 <table><tr><th>Supervised h/wk</th><th>Year GLH</th><th>Lane</th><th>Award</th><th>Extended Award</th><th>Certificate</th></tr>
 {''.join(rows)}</table>
@@ -192,7 +196,6 @@ def build_sow():
 <li><b>Level&nbsp;1 lane:</b> {esc(LED["orchestration"]["l1_lane"])}.</li>
 <li><b>Barred combinations:</b> {esc(LED["orchestration"]["barred_combinations"])}</li>
 <li><b>The LAUNCH room:</b> {esc(LED["orchestration"]["launch_room"])}</li>
-<li><b>Lane targets:</b> {esc(LED["orchestration"]["lane_targets"])}</li>
 </ul></div>
 <p class="bank"><b>Thinking vs Critical thinking — the lane split.</b> The E3 and L1 lanes plan <b>ThSkE3 / ThSk1</b> (Thinking skills); only the L2 lane plans <b>CrThSk2</b> (Critical thinking skills) — the unit changes name, code and demand at Level 2 (spec pp11&ndash;13). The shared summer investigation runs at three demands: E3/L1 pupils work their Thinking plan; the L2 pupil assesses sources for credibility, accuracy and bias across &ge;2 sources, primary vs secondary (the blind taste test is the primary source).</p>""")
 
@@ -205,8 +208,8 @@ def build_sow():
                if t["evidenced"] else
                '<br><span style="font-size:.78rem;color:#92400e"><b>assumption</b></span>')
         return f"<td><b>{b}</b></td><td>W{a}&ndash;{z}<br><span style=\"font-size:.78rem;color:#475569\">{z-a+1} wks</span>{tag}</td>"
-    S.append(f"""<div class="note"><b>GROW and LAUNCH are now measured &mdash; the open question is closed by evidence.</b> Pass PEQ-YEAR-2 recorded that GROW and LAUNCH could not be established from the weekly planners, and lodged &ldquo;confirm from the September timetable&rdquo;. The owner has supplied it, so that question is <b>CLOSED</b>: all three rooms are measured above, from the timetable itself, with a source cell per row. The earlier &ldquo;measured band + owner ruling&rdquo; provenance is retired with it &mdash; nothing on this page now rests on a band or a ruling. Reproduce with <code>python3 _passpq/tools/timetable_extract.py &lt;Timetables.xlsx&gt; &lt;Colour_coded&hellip;.xlsx&gt;</code>.</div>
-
+    LEDGER.append(f"""<div class="note"><b>GROW and LAUNCH are now measured &mdash; the open question is closed by evidence.</b> Pass PEQ-YEAR-2 recorded that GROW and LAUNCH could not be established from the weekly planners, and lodged &ldquo;confirm from the September timetable&rdquo;. The owner has supplied it, so that question is <b>CLOSED</b>: all three rooms are measured above, from the timetable itself, with a source cell per row. The earlier &ldquo;measured band + owner ruling&rdquo; provenance is retired with it &mdash; nothing on this page now rests on a band or a ruling. Reproduce with <code>python3 _passpq/tools/timetable_extract.py &lt;Timetables.xlsx&gt; &lt;Colour_coded&hellip;.xlsx&gt;</code>.</div>""")
+    S.append(f"""
 <h2>The six blocks &mdash; one spine, three demands</h2>
 <div class="note"><b>Which of these weeks are real, and which are assumed.</b> {esc(LED["calendar_note"])}</div>
 <table><tr><th>Block</th><th>Weeks</th><th>Delivers</th><th>Plan windows and review points</th></tr>""")
@@ -247,7 +250,7 @@ def build_sow():
             f"<td class=\"num\">{k['n_slots']}</td><td class=\"num\">{k['h_per_week']}</td>"
             f"<td class=\"num\">{k['year_glh']}</td><td>{named}</td></tr>")
     KITROWS = "".join(krows)
-    S.append(f"""<h2>What each room's real hours can reach</h2>
+    LEDGER.append(f"""<h2>What each room's real hours can reach</h2>
 <p>Read each cell as <b>floor&nbsp;/&nbsp;ceiling</b>: the first mark is the room's
 <b>explicitly ASDAN-labelled</b> slots alone, the second adds the <b>carryable</b> ones. The test
 is the stricter of the two the spec carries &mdash; the sum of the constituent <em>units'</em>
@@ -285,7 +288,7 @@ teaches the cooking slot(s) in September.</b></p>""")
 
     # per-lane weekly ledgers
     S.append("""<h2>The GLH ledger — every week &times; lane, minutes per unit</h2>
-<p>Times are <b>h:mm of supervised time</b> attributed per unit (spec &sect;9 p16). <b>Physical</b> is the timetabled 5:20 (eight 40-minute periods). A <b>co-delivered</b> entry is the same physical session banked to a second unit, declared here and justified above; the unit columns include it, the physical column does not. <b>QA</b> is supervised portfolio/IQA/EQA time not attributed to a unit (L2 lane headroom).</p>""")
+<p>Times are <b>h:mm of supervised time</b> attributed per unit (spec &sect;9 p16). <b>Physical</b> is the timetabled 5:20 (eight 40-minute periods). A <b>co-delivered</b> entry is the same physical session banked to a second unit, declared here and justified in the staff hours ledger; the unit columns include it, the physical column does not. <b>QA</b> is supervised portfolio/IQA/EQA time not attributed to a unit (L2 lane headroom).</p>""")
     for lane in LANES:
         L = LED["lanes"][lane]
         head = ("<tr><th>Wk</th><th>Blk</th><th>Live deck</th><th>Focus (shared vehicle)</th>"
@@ -372,6 +375,9 @@ UNIT_BY = {("E3", "Com"): "ComSkE3", ("E3", "DecMk"): "DecMkSkE3", ("E3", "LSk")
            ("L2", "Com"): "ComSk2", ("L2", "DecMk"): "DecMkSk2", ("L2", "LSk"): "LSk2",
            ("L2", "TmWk"): "TmWkSk2", ("L2", "Th"): "CrThSk2", ("L2", "Wellb"): "WellbLe2"}
 
+LEDGER = []          # AB-1: staff-only hours working, written outside the published folder
+LEDGER_HAND = []
+
 def build_matrix():
     plant = os.environ.get("L2K_PLANT_GAP") == "1"
     S = ["""<div class="note"><b>The contract of this page.</b> Every assessment criterion of all eighteen units (six skills &times; three levels) maps to the week(s) that evidence it and the named artefact that holds the evidence. <b>A gap is a red gate</b>: the page builder refuses to emit this file if any criterion is unmapped. Criteria wording is condensed (facts with citations, spec v1.2 &sect;17); the authoritative wording is the spec and the member-gated unit assessment booklets.</div>"""]
@@ -404,8 +410,7 @@ def build_matrix():
             S.append(f"<h3>{code} — {esc(u['title'])} ({u['credits']} cr / {u['glh']} GLH, spec pp{u['pages']})</h3>"
                      f"<table><tr><th>AC</th><th>Demand (condensed) + minima</th><th>Week(s)</th><th>Artefact</th></tr>{''.join(rows)}</table>{notes}")
     S.append(f"<div class=\"note\"><b>Coverage proven at build time:</b> {total} criteria mapped, 0 gaps. "
-             "Rebuild check: <code>python3 _passpq/tools/l2k_build.py</code>; planted-gap control: "
-             "<code>L2K_PLANT_GAP=1</code> makes the same build refuse (red).</div>")
+             "A planted gap makes the same build refuse (red).</div>")
     assert total == sum(len(AC[UNIT_BY[(l, s)]]["acs"]) for l in LANES for s in SKILLS), "matrix count drift"
     return page("Made by Matt · GROW ASDAN · Kitchen Programme PEQ Criteria Coverage Matrix",
                 "Kitchen Programme · Criteria Coverage Matrix",
@@ -714,7 +719,10 @@ that is how you think &mdash; then open that week's shell and check the criteria
 carry. If a criterion has no natural home in what you have chosen, change the task slightly
 rather than the criterion. The criteria are fixed by the awarding body; the food is not.</p>
 
-<h2>The hours &mdash; measured from the school's own timetable</h2>
+""")
+    # AB-1: timetable slots and staffing moved to the staff hours ledger (not published)
+    LEDGER_HAND.clear()
+    LEDGER_HAND.append(f"""<h2>The hours &mdash; measured from the school's own timetable</h2>
 <p>The owner supplied the real 2026-27 timetable, so nothing here is inferred any more. Every
 figure below cites a workbook cell in <code>_passpq/TIMETABLE_2026-27.md</code>. The period unit
 is <b>40 minutes</b>.</p>
@@ -741,6 +749,10 @@ Certificate. The year map carries the full table.</p>
 block labels match it. Spring and summer term dates are <b>not in the repository at all</b>
 &mdash; the timetable workbooks are weekly, not annual &mdash; so those block lengths remain
 <b>declared assumptions</b>, tagged as such on the year map. It changes nothing you teach.</p>
+
+""")
+    S.append(f"""<h2>The hours</h2>
+<p>Your weekly kitchen sessions, and how the hours are counted, are in the staff hours ledger, which is not published. Ask the course coordinator for it.</p>
 
 <h2>Where to ask</h2>
 <p>Anything about <b>criteria wording, levels, minima, plans or evidence</b> &mdash; the
@@ -888,6 +900,19 @@ def main():
         with open(os.path.join(OUT, name), "w", encoding="utf-8") as f:
             f.write(content)
         print(f"wrote {name} ({len(content)} bytes)")
+    # AB-1: the hours working and the named timetable slots are staff-only. They are
+    # written outside the published folder, so the public pages carry no timetable,
+    # staffing or decision notes.
+    led_out = os.environ.get("L2K_LEDGER_OUT", os.path.join(ROOT, "_passpq", "staff"))
+    os.makedirs(led_out, exist_ok=True)
+    ledger = page("Staff only · Kitchen Programme · Hours Ledger",
+                  "Kitchen Programme &middot; Staff Hours Ledger",
+                  "Not published. The timetable working behind the year map and the cooking handover.",
+                  "<h2>Year map: the hours working</h2>\n" + "\n".join(LEDGER)
+                  + "\n<h2>Cooking handover: hours and slots</h2>\n" + "\n".join(LEDGER_HAND))
+    with open(os.path.join(led_out, "Kitchen_Hours_Ledger.html"), "w", encoding="utf-8") as f:
+        f.write(ledger)
+    print(f"wrote staff ledger ({len(ledger)} bytes)")
 
 if __name__ == "__main__":
     main()
