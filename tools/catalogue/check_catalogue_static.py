@@ -64,6 +64,13 @@ def _label_holds(p):
 _rp=_order.get('scienceRowProofs',[]);_lp=_order.get('scienceLabelProofs',[])
 check('Science-row-proved decks (%d listed): re-derived from the evidence projection, stated weeks and title stage'%len(_rp),all(_row_holds(p) for p in _rp))
 check('Science-label-proved decks (%d listed): no projection, the deck\'s own label equals its pinned row, no stray title claim'%len(_lp),all(_label_holds(p) for p in _lp))
+# Label-map limb (ruling thread, 2026-11-04): every page the projection proves through it must still carry its
+# recorded title-slide quote, mapped through the one committed map, verbatim in its visible text on this tree.
+from build_lesson_order import label_map_proof,load_label_map,visible_text
+_wmap=load_label_map();_lm=_order.get('labelMapProofs',[])
+def _labelmap_holds(p):
+ return label_map_proof([x['quote'] for x in proof[p]['evidence'] if x.get('method')=='own title slide declaration' and isinstance(x.get('quote'),str)],visible_text(_lhtml.fromstring((r/p).read_text())),_wmap,{w['key'] for w in _brows.get(p,{}).get('weeks',[])})[0]
+check('Label-map-proved pages (%d listed): the mapped quote is verbatim in the visible text, every row token present'%len(_lm),all(_labelmap_holds(p) for p in _lm))
 check('Current content hashes match every hashed metadata entry',all(hashlib.sha256((r/p).read_bytes()).hexdigest()==v['sha256'] for p,v in proof.items() if 'sha256' in v))
 # HUB1 R1 (2026-09-23) replaces the pre-R1 assertion "only the 15 selected LAUNCH Science routes are
 # recommended": the editorial selection is the ONLY route to 'recommended' for a Science route, and

@@ -419,6 +419,22 @@ def derive(rows: list[dict]) -> dict:
     return {"rows": per_row, "topics": topics, "packUnits": pack_units}
 
 
+def label_map_reproves(entry: dict, location: Path, word_map=None) -> bool:
+    """The label-map limb (ruling thread, 2026-11-04, _sx3/DECISION_label_map_limb.md), judged by
+    build_lesson_order.label_map_proof: a hashed entry whose bytes moved still counts as re-proved
+    against the file's CURRENT bytes when every recorded title-slide quote, after the one committed
+    word map, sits verbatim in the page's visible text. The map is applied to the quote only and can
+    never write a digit, so a page whose half-term or week moved is never re-proved this way."""
+    quotes = [e.get("quote") for e in entry.get("evidence", []) if e.get("method") == "own title slide declaration" and isinstance(e.get("quote"), str)]
+    if not quotes or not entry.get("sha256") or not location.is_file():
+        return False
+    sys.path.insert(0, str(ROOT / "tools/catalogue"))
+    import build_lesson_order as blo
+    from lxml import html as lhtml
+    text = blo.visible_text(lhtml.fromstring(location.read_bytes().decode("utf-8", errors="replace")))
+    return blo.label_map_proof(quotes, text, blo.load_label_map() if word_map is None else word_map)[0]
+
+
 def verify_classes(rows: list[dict], derived: dict) -> dict:
     """20-row samples per source class against an independent reading. <18/20 discards the class."""
     rng = random.Random(SAMPLE_SEED)
@@ -439,7 +455,7 @@ def verify_classes(rows: list[dict], derived: dict) -> dict:
         independent = half_terms_in_text(text)
         reproved = False
         entry = evidence.get(rec["file"]) or {}
-        if entry and location.is_file() and entry.get("sha256") == sha256_of(location):
+        if entry and location.is_file() and (entry.get("sha256") == sha256_of(location) or label_map_reproves(entry, location)):
             methods = [e.get("method") for e in entry.get("evidence", [])]
             quotes = " ".join(e.get("quote") or "" for e in entry.get("evidence", []))
             quoted = half_terms_in_text(quotes)
@@ -587,6 +603,24 @@ def self_test() -> None:
         planted[hit]["unit"] = "Planted unit"
     controls.append(("ruled units applied, and a planted unit on a ruled-none row is refused by --check",
                      ok5 and (hit is None or check_rows(planted, derived, verdicts) is not None)))
+    # 6. the label-map limb in the re-proof branch: a planted copy of a hashed page, relabelled through
+    # the map, is re-proved; the same copy with its half-term moved is not; an empty map re-proves nothing
+    # relabelled; a word the map does not name never applies. The tree is never written.
+    import tempfile
+    planted_page = "Build/Slideshows/BUILD_HUM_W1_Human_Timeline.html"
+    entry = (read_json(EVIDENCE)["entries"] if EVIDENCE.is_file() else {}).get(planted_page) or {}
+    raw = (ROOT / planted_page).read_text("utf-8") if entry.get("sha256") else ""
+    with tempfile.TemporaryDirectory() as scratch:
+        copy_at = Path(scratch) / "page.html"
+        pw = [("BUILD", "BASE"), ("GROW", "TRACK"), ("LAUNCH", "SUMMIT")]
+        relabelled = raw.replace("<title>BUILD", "<title>BASE", 1)
+        relabelled = re.sub(r'(class="sow-strip">[^<]*?)BUILD', r"\1BASE", relabelled, count=1)
+        copy_at.write_text(relabelled, "utf-8")
+        ok6 = bool(raw) and relabelled != raw and label_map_reproves(entry, copy_at, pw) and not label_map_reproves(entry, copy_at, []) \
+            and not label_map_reproves(entry, copy_at, [("GROW", "TRACK")])
+        copy_at.write_text(re.sub(r'(class="sow-strip">[^<]*?)Aut\s1', r"\1Aut 2", raw, count=1), "utf-8")
+        ok6 = ok6 and copy_at.read_text("utf-8") != raw and not label_map_reproves(entry, copy_at, pw)
+    controls.append(("label-map re-proof: a relabelled copy is re-proved; a moved half-term, an empty map and an unmapped word are refused", ok6))
     for name, ok in controls:
         print(f"  {'PASS' if ok else 'FAIL'}  {name}")
     if not all(ok for _, ok in controls):
