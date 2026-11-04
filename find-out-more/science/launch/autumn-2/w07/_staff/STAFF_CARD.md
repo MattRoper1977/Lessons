@@ -1,4 +1,4 @@
-# LAUNCH_SCI_A2_W07 · Progress Schools staff card
+# LAUNCH_SCI_A2_W07 · staff card
 
 **Scheme objective:** Topics 2 to 3 assessment (Dec).
 

@@ -1,4 +1,4 @@
-# GROW_SCI_A2_W05 · Progress Schools staff card
+# GROW_SCI_A2_W05 · staff card
 
 **Scheme objective:** Consolidate forces, space and climate; answer scientific questions.
 

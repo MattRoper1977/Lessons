@@ -1,4 +1,4 @@
-# LAUNCH_RE_A2_W02 · Progress Schools staff card
+# LAUNCH_RE_A2_W02 · staff card
 
 **Scheme objective:** Explain why a sacred place or pilgrimage can be important to a believer.
 

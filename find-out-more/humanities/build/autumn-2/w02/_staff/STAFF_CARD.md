@@ -1,4 +1,4 @@
-# BUILD_HUM_A2_W02 · Progress Schools staff card
+# BUILD_HUM_A2_W02 · staff card
 
 **Scheme objective:** Compare how different communities celebrate.
 

@@ -1,4 +1,4 @@
-# LAUNCH_HUM_A2_W06 · Progress Schools staff card
+# LAUNCH_HUM_A2_W06 · staff card
 
 **Scheme objective:** Compare the local area with a contrasting place using online evidence.
 

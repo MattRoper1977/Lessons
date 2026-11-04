@@ -1,4 +1,4 @@
-# GROW_HUM_A2_W03 · Progress Schools staff card
+# GROW_HUM_A2_W03 · staff card
 
 **Scheme objective:** Describe how communities are connected across the world.
 

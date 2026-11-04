@@ -1,4 +1,4 @@
-# BUILD_SCI_A2_W04 · Progress Schools staff card
+# BUILD_SCI_A2_W04 · staff card
 
 **Scheme objective:** Identify everyday uses of different rocks (links D&T / Construction).
 

@@ -1,4 +1,4 @@
-# LAUNCH_SCI_A2_W06 · Progress Schools staff card
+# LAUNCH_SCI_A2_W06 · staff card
 
 **Scheme objective:** Research a genetic condition online; present.
 

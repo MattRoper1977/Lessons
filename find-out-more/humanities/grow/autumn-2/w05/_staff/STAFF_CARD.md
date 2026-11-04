@@ -1,4 +1,4 @@
-# GROW_HUM_A2_W05 · Progress Schools staff card
+# GROW_HUM_A2_W05 · staff card
 
 **Scheme objective:** Compare how two communities celebrate with an RE link.
 

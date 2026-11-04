@@ -1,4 +1,4 @@
-# GROW_RE_A2_W03 · Progress Schools staff card
+# GROW_RE_A2_W03 · staff card
 
 **Scheme objective:** Use accurate RE vocabulary to describe one religious practice.
 

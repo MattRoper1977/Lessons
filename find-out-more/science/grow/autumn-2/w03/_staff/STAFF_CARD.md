@@ -1,4 +1,4 @@
-# GROW_SCI_A2_W03 · Progress Schools staff card
+# GROW_SCI_A2_W03 · staff card
 
 **Scheme objective:** Research and present findings about the Solar System (ICT).
 

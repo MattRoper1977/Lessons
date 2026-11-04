@@ -1,4 +1,4 @@
-# BUILD_RE_A2_W04 · Progress Schools staff card
+# BUILD_RE_A2_W04 · staff card
 
 **Scheme objective:** Take part respectfully in a classroom celebration activity.
 

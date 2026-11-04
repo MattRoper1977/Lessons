@@ -1,4 +1,4 @@
-# GROW_HUM_A2_W06 · Progress Schools staff card
+# GROW_HUM_A2_W06 · staff card
 
 **Scheme objective:** Present findings on belief and belonging.
 

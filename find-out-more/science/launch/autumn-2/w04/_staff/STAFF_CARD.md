@@ -1,4 +1,4 @@
-# LAUNCH_SCI_A2_W04 · Progress Schools staff card
+# LAUNCH_SCI_A2_W04 · staff card
 
 **Scheme objective:** Describe DNA, genes & chromosomes.
 

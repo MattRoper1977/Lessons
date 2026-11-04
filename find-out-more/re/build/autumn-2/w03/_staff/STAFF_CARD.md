@@ -1,4 +1,4 @@
-# BUILD_RE_A2_W03 · Progress Schools staff card
+# BUILD_RE_A2_W03 · staff card
 
 **Scheme objective:** Retell a festival story in the correct order using symbols or pictures.
 

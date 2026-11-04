@@ -1,4 +1,4 @@
-# LAUNCH_SCI_A2_W02 · Progress Schools staff card
+# LAUNCH_SCI_A2_W02 · staff card
 
 **Scheme objective:** Explain growth & stem cells.
 

@@ -1,4 +1,4 @@
-# LAUNCH_RE_A2_W04 · Progress Schools staff card
+# LAUNCH_RE_A2_W04 · staff card
 
 **Scheme objective:** Apply a moral teaching or principle from two worldviews to an everyday dilemma.
 

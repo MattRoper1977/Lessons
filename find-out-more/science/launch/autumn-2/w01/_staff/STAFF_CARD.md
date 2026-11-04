@@ -1,4 +1,4 @@
-# LAUNCH_SCI_A2_W01 · Progress Schools staff card
+# LAUNCH_SCI_A2_W01 · staff card
 
 **Scheme objective:** Describe mitosis & the cell cycle (animation).
 

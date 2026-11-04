@@ -1,4 +1,4 @@
-# GROW_RE_A2_W04 · Progress Schools staff card
+# GROW_RE_A2_W04 · staff card
 
 **Scheme objective:** Discuss a big question about identity respectfully and give a reason for a viewpoint.
 

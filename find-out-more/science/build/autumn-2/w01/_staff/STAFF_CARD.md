@@ -1,4 +1,4 @@
-# BUILD_SCI_A2_W01 · Progress Schools staff card
+# BUILD_SCI_A2_W01 · staff card
 
 **Scheme objective:** Describe how we can care for our environment: reduce, reuse and recycle (sustainability).
 

@@ -1,4 +1,4 @@
-# GROW_SCI_A2_W06 · Progress Schools staff card
+# GROW_SCI_A2_W06 · staff card
 
 **Scheme objective:** Consolidate and revisit key ideas through investigation.
 

@@ -1,4 +1,4 @@
-# GROW_SCI_A2_W07 · Progress Schools staff card
+# GROW_SCI_A2_W07 · staff card
 
 **Scheme objective:** Review and evidence autumn science (Entry Level Science / UAS).
 

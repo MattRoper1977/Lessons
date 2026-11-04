@@ -1,4 +1,4 @@
-# LAUNCH_RE_A2_W01 · Progress Schools staff card
+# LAUNCH_RE_A2_W01 · staff card
 
 **Scheme objective:** Describe one form of worship, prayer or reflection and explain its purpose.
 

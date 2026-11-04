@@ -1,4 +1,4 @@
-# BUILD_HUM_A2_W05 · Progress Schools staff card
+# BUILD_HUM_A2_W05 · staff card
 
 **Scheme objective:** Reflect on peace and remembrance.
 

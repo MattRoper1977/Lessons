@@ -1,4 +1,4 @@
-# GROW_SCI_A2_W02 · Progress Schools staff card
+# GROW_SCI_A2_W02 · staff card
 
 **Scheme objective:** Describe the Sun, Earth and Moon as approximately spherical bodies.
 

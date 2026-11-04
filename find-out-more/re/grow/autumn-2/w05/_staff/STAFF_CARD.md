@@ -1,4 +1,4 @@
-# GROW_RE_A2_W05 · Progress Schools staff card
+# GROW_RE_A2_W05 · staff card
 
 **Scheme objective:** Ask or answer a respectful question and record one thing learned from a faith or belief visitor.
 

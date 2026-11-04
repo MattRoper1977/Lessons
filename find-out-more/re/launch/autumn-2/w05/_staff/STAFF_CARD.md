@@ -1,4 +1,4 @@
-# LAUNCH_RE_A2_W05 · Progress Schools staff card
+# LAUNCH_RE_A2_W05 · staff card
 
 **Scheme objective:** Compare how two worldviews respond to one important life question.
 

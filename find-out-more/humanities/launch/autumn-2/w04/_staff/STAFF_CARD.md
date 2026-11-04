@@ -1,4 +1,4 @@
-# LAUNCH_HUM_A2_W04 · Progress Schools staff card
+# LAUNCH_HUM_A2_W04 · staff card
 
 **Scheme objective:** Conduct local area fieldwork and collect data.
 

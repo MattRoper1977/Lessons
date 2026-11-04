@@ -1,4 +1,4 @@
-# BUILD_RE_A2_W05 · Progress Schools staff card
+# BUILD_RE_A2_W05 · staff card
 
 **Scheme objective:** Reflect on one way light or remembrance can represent hope.
 

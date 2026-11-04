@@ -1,4 +1,4 @@
-# BUILD_SCI_A2_W07 · Progress Schools staff card
+# BUILD_SCI_A2_W07 · staff card
 
 **Scheme objective:** Review and evidence learning on skeletons, nutrition & rocks (Entry Level Science / UAS).
 

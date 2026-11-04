@@ -1,4 +1,4 @@
-# GROW_RE_A2_W06 · Progress Schools staff card
+# GROW_RE_A2_W06 · staff card
 
 **Scheme objective:** Identify a value that matters to a person and explain how respecting different values supports community.
 

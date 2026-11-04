@@ -1,4 +1,4 @@
-# LAUNCH_HUM_A2_W07 · Progress Schools staff card
+# LAUNCH_HUM_A2_W07 · staff card
 
 **Scheme objective:** Complete a fieldwork enquiry write up.
 

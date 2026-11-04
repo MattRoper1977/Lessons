@@ -1,4 +1,4 @@
-# BUILD_RE_A2_W06 · Progress Schools staff card
+# BUILD_RE_A2_W06 · staff card
 
 **Scheme objective:** Give a simple response to a big question using one reason.
 
