@@ -571,6 +571,7 @@ function setCalm(on){ state.calm=on; document.body.classList.toggle("calm",on);
 
 /* ================= KEYS ================= */
 document.addEventListener("keydown",e=>{
+ if(e.repeat)return;
  const tag=(e.target&&e.target.tagName)||"";
  if(tag==="INPUT"||tag==="TEXTAREA"||tag==="SELECT")return;
  if(state.phase==="setup")return;
