@@ -33,7 +33,7 @@
 <details class="browse-options subject-options"><summary>Teaching packs and collections</summary><div class="suites" id="suites" hidden></div></details>
 <div class="seg" id="seg" role="tablist" aria-label="Pathway" hidden></div>
 <div class="fchips" id="fchips" role="group" aria-label="Format" hidden></div>
-<p class="summary" id="summary" aria-live="polite" aria-atomic="true"></p>
+<p class="summary" id="summary" aria-live="polite" aria-atomic="true">Loading lessons…</p>
 <p class="status" id="status" aria-live="polite" aria-atomic="true"></p>
 <p class="status" id="lesson-save-status" aria-live="polite" aria-atomic="true"></p>
 <nav class="term-nav" id="term-nav" aria-label="Terms"></nav>
@@ -134,6 +134,7 @@ function groupBody(g){
  return content+planningLink(g);
 }
 function renderRows(){
+ if(!CARD)return;
  const rows=population(),list=groups(rows);
  const popKey=currentPathway()+'|'+(params().get('format')||'')+'|'+(params().get('q')||'')+'|'+(params().get('unit')||'')+'|'+(params().get('week')||'')+'|'+(params().get('strand')||'');
  if(OPENED_FOR!==popKey){OPEN=new Set();const d=defaultOpen(list);if(d){OPEN.add(d);const g=list.find(x=>x.id===d),cards=H.lessonGroups(g.rows),first=cards.find(c=>['recommended','current','award'].includes(H.styleOf(c.primary)))||cards.find(c=>!['earlier','reference'].includes(H.styleOf(c.primary)));if(first){const label=H.weeksOf(first.primary).map(x=>x.label).join('; ')||'Week not specified';OPEN.add('week|'+g.id+'|'+label);}}OPENED_FOR=popKey;}
@@ -142,6 +143,7 @@ function renderRows(){
  const p=params(),filtering=!!(p.get('q')||p.get('format')||p.get('unit')||p.get('week')||p.get('strand'));
  const st=$('#status');st.replaceChildren();
  if(filtering){st.append(document.createTextNode(`Showing ${rows.length} matching resources.`));const b=document.createElement('button');b.type='button';b.className='btn';b.dataset.clearFilters='';b.textContent='Clear filters';st.appendChild(b);}
+ if(H.state.orderWarning)st.append(document.createTextNode(' '+H.state.orderWarning));
  $('#term-nav').innerHTML=list.filter(g=>g.halfTerm).map(g=>`<button type="button" data-term-open="${esc(g.id)}" aria-pressed="${OPEN.has(g.id)}">${esc(g.label)}</button>`).join('');
  $('#rows').innerHTML=list.map(g=>accordion(g.id,g.label,groupBody(g),H.distinctLessons(g.rows),'term-group')).join('')||'<p class="status">No matches — try fewer words or clear a filter.</p>';
  $$('.acc-body[hidden] a,.acc-body[hidden] button').forEach(el=>el.setAttribute('tabindex','-1'));
@@ -163,7 +165,7 @@ function renderScience(){
   list($('#sci-strands'),'strand',H.strandsPresent(pool));
   list($('#sci-weeks'),'week',H.weeksPresent(pool));
 }
-function render(){renderSeg();renderChips();renderScience();renderRows();}
+function render(){if(!CARD)return;renderSeg();renderChips();renderScience();renderRows();}
 function boot(){
   const cards=H.cardsFromRows(H.state.rows);
   const slug=H.slugForQuery(params().get('subject')||'');
@@ -179,7 +181,7 @@ function boot(){
   document.body.insertAdjacentHTML('beforeend',H.packSheetHtml());H.wirePackSheet(document);
   render();
   const first=$('#seg [role="tab"][aria-selected="true"]');
-  if(first&&!$('#seg').hidden)first.focus();else $('#search').focus();
+  if(first&&!$('#seg').hidden)first.focus({preventScroll:true});else $('#search').focus({preventScroll:true});
 }
 document.addEventListener('click',e=>{
   const sf=e.target.closest('#sci-weeks button,#sci-strands button');if(sf){const key=sf.hasAttribute('data-week-filter')?'week':'strand',v=sf.getAttribute('data-'+key+'-filter');setParam(key,v);renderScience();renderRows();const again=$$('#sci-'+key+'s button').find(x=>x.getAttribute('data-'+key+'-filter')===v);if(again)again.focus();return;}
