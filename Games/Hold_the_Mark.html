@@ -80,6 +80,7 @@ button{font-family:inherit;cursor:pointer}
   border-radius:999px;min-width:19px;height:19px;font-size:11.5px;font-weight:800;
   display:flex;align-items:center;justify-content:center;padding:0 4px}
 #ctrl{display:flex;gap:7px;margin-left:auto}
+@media(max-width:500px){#rowB,#ctrl{flex-wrap:wrap}}
 #waveBtn{background:var(--amber);color:var(--ink);font-weight:800;border:0;
   border-radius:14px;min-height:50px;padding:0 16px;font-size:14.5px;white-space:nowrap}
 #waveBtn:disabled{background:rgba(246,173,85,.28);color:rgba(255,247,232,.7)}
@@ -688,7 +689,7 @@ function computeLayout(){
   const wasPortrait=L.portrait,hadLayout=L._init;L.portrait=H>W;L._init=true;
   L.cols=L.portrait?GRID.ROWS:GRID.COLS;
   L.rows=L.portrait?GRID.COLS:GRID.ROWS;
-  const padTop=W<500?110:72,padBot=pressOn()?230:174,padSide=6;
+  const padTop=W<500?110:72,padBot=W<=500?(pressOn()?286:230):(pressOn()?230:174),padSide=6;
   L.cell=Math.min((W-padSide*2)/L.cols,(H-padTop-padBot)/L.rows);
   L.ox=(W-L.cell*L.cols)/2;
   L.oy=padTop+((H-padTop-padBot)-L.cell*L.rows)/2;
@@ -1618,6 +1619,7 @@ function handleKey(key){
 }
 function bindKeys(){
   window.addEventListener('keydown',e=>{
+    if(e.repeat&&!/^Arrow/.test(e.key))return;
     if(e.target&&e.target.tagName==='BUTTON'&&(e.key===' '||e.key==='Enter'))return;
     if(handleKey(e.key)&&e.preventDefault)e.preventDefault();
   });
@@ -2559,7 +2561,7 @@ function bindUI(){
   });
   $('pauseBtn').addEventListener('click',openPause);
   $('btnResume').addEventListener('click',()=>{S.mode='play';show(null);lastT=performance.now()});
-  $('btnRestart').addEventListener('click',()=>startLevel(S.level));
+  $('btnRestart').addEventListener('click',()=>S.daily?startDaily():startLevel(S.level));
   $('btnQuit').addEventListener('click',e=>armConfirm(e.currentTarget,
     'Level progress is lost \u2014 tap again',()=>{S.mode='title';show('scrTitle')}));
   $('btnRetry').addEventListener('click',retryWave);
