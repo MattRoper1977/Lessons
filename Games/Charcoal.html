@@ -56,7 +56,7 @@ h1 .c{color:var(--gold)}
 /* ---------- game ---------- */
 #scrGame{padding:0;justify-content:flex-start}
 #wrap{position:fixed;inset:0;display:flex;flex-direction:column}
-#topbar{display:flex;align-items:center;gap:10px;padding:8px 12px 6px;background:rgba(15,20,48,.92);border-bottom:1px solid var(--line);z-index:5}
+#topbar{display:flex;align-items:center;gap:10px;padding:8px 12px 6px 108px;background:rgba(15,20,48,.92);border-bottom:1px solid var(--line);z-index:5}
 #roundChip{font-size:12.5px;letter-spacing:.1em;color:var(--mint);white-space:nowrap}
 #roleChip{font-size:11px;letter-spacing:.08em;padding:3px 10px;border-radius:999px;white-space:nowrap;font-weight:700}
 #roleChip.cast{background:rgba(185,230,205,.18);color:var(--mint)}
@@ -210,6 +210,7 @@ button,[role="button"],canvas[tabindex]{min-width:44px;min-height:44px}
 }
 @media (prefers-reduced-motion:reduce){#scrGame.v6-fly #cvwrap,.v6spark,#v6clutch.on{animation:none!important}#v6clutch.on{opacity:1}}
 .rm #scrGame.v6-fly #cvwrap,.rm .v6spark,.rm #v6clutch.on{animation:none!important}
+@media(max-width:540px){#topbar{flex-wrap:wrap}#roundChip{white-space:normal;flex:1 1 180px}}
 </style>
 <style>#exhibitionGoal{position:absolute;left:16px;top:66px;color:#272e44;background:rgba(237,230,212,.94);padding:7px 12px;border-radius:8px;font:600 13px system-ui;pointer-events:none;max-width:75vw}#scrTitle{background:linear-gradient(90deg,rgba(15,20,48,.92),rgba(15,20,48,.78)),url(assets/charcoal.webp) center/cover}button:focus-visible{outline:3px solid #fff;outline-offset:3px}</style></head>
 <body>
@@ -774,7 +775,7 @@ function inCone(from,dir,p,len,half){
 function fixerSpray(fx){
   if(!S.fixerCharge)return;
   S.fixerCharge=false;S.sealTried=true;
-  var dir={x:fx._fx||0,y:fx._fy||1};
+  var dir={x:fx._fx,y:fx._fy};
   var hit=null,hd=1e9;
   for(var i=0;i<S.chars.length;i++){var c=S.chars[i];
     if(c===fx||c.smudged)continue;
@@ -1209,7 +1210,7 @@ function drawDust(){
 }
 function drawParts(){for(var i=0;i<PARTS.length;i++){var q=PARTS[i],a=q.life/q.max;ctx.globalAlpha=a*0.9;ctx.fillStyle=q.col;ctx.beginPath();ctx.arc(q.x,q.y,q.sz*(0.5+a*0.5),0,7);ctx.fill();}ctx.globalAlpha=1;}
 function drawCone(fx){
-  var dir={x:fx._fx||0,y:fx._fy||1},ang=Math.atan2(dir.y,dir.x);
+  var dir={x:fx._fx,y:fx._fy},ang=Math.atan2(dir.y,dir.x);
   ctx.save();ctx.translate(fx.x,fx.y);ctx.rotate(ang);
   var gr=ctx.createLinearGradient(0,0,TUNE.sprayLen,0);gr.addColorStop(0,'rgba(217,180,74,.28)');gr.addColorStop(1,'rgba(217,180,74,0)');
   ctx.fillStyle=gr;ctx.beginPath();ctx.moveTo(0,0);
@@ -1712,7 +1713,9 @@ function boot(){
   // canvas input
   cv.addEventListener('pointerdown',function(e){var r=cv.getBoundingClientRect(),p=s2w(e.clientX-r.left,e.clientY-r.top);if(p.x<0||p.y<0||p.x>W||p.y>H)return;tapWorld(p.x,p.y);});
   window.addEventListener('resize',fitCanvas);
+  window.addEventListener('blur',function(){if(S&&!S.over&&!S.paused&&$('scrGame').classList.contains('on'))$('btnPause').click();});
   window.addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&e.repeat)return;
     if(e.key==='Escape'&&cineCb){cineEnd();return;}
     if(!S)return;
     if(e.key===' '&&!e.repeat&&!/INPUT|TEXTAREA|BUTTON|SELECT/.test(e.target&&e.target.tagName||'')){e.preventDefault();if($('btnAct').classList.contains('hid')===false)doAction();}

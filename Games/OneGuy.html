@@ -172,9 +172,10 @@
 /* Last Signal: readable story and objective at every viewport. */
 .tag,.byline,.seedchip,.tog,.card h3,#v6Mark,#v6RibbonText,.v6mini,.v6jump,.hint,.splashhint{font-size:14px}
 #signalStory{max-width:560px;margin:10px 16px;color:#bfd8e8;font-size:16px;line-height:1.5;text-align:center}
-#signalObjective{position:fixed;top:110px;left:50%;transform:translateX(-50%);z-index:6;width:max-content;max-width:calc(100vw - 24px);padding:10px 14px;border:1px solid #38bdf8;border-radius:12px;background:#091326ed;color:#e0faff;font-size:14px;line-height:1.4;text-align:center;pointer-events:none}
-#scrTitle{overflow-y:auto;justify-content:safe center;padding-top:56px;padding-bottom:24px}#scrTitle>*{flex-shrink:0}
-@media(max-width:600px){#v6Mark{display:none}#signalObjective{top:110px}.codebox{width:calc(100vw - 30px)}.codebox input{min-width:0}.row{gap:6px}}
+#signalObjective{position:fixed;top:156px;left:50%;transform:translateX(-50%);z-index:6;width:max-content;max-width:calc(100vw - 24px);padding:10px 14px;border:1px solid #38bdf8;border-radius:12px;background:#091326ed;color:#e0faff;font-size:14px;line-height:1.4;text-align:center;pointer-events:none}
+#scrTitle,#scrDeath{overflow-y:auto;justify-content:safe center;padding-top:56px;padding-bottom:24px;touch-action:pan-y}#scrTitle>*,#scrDeath>*{flex-shrink:0}
+#hud{flex-wrap:wrap;padding:0 12px 0 58px}
+@media(max-width:600px){#v6Mark{display:none}#signalObjective{top:156px}#v6Ribbon{top:calc(58px + env(safe-area-inset-top))}#v6Cinema{top:calc(90px + env(safe-area-inset-top));min-width:min(380px,92vw)}.hudchip{padding:5px 10px;font-size:13px}.codebox{width:calc(100vw - 30px)}.codebox input{min-width:0}.row{gap:6px}}
 </style>
 </head>
 <body>
@@ -599,15 +600,15 @@ function v6StartIntro(done){
   if(V6_REDUCED||calmOn){done();return;}G.v6Intro={start:performance.now(),duration:1650,done};
   const el=document.getElementById('v6Cinema');el.classList.remove('hidden');v6Announce('Orbital track fly-in. Activate skip to run immediately.');
 }
-function v6SkipIntro(){if(!G.v6Intro)return;const d=G.v6Intro;G.v6Intro=null;document.getElementById('v6Cinema').classList.add('hidden');if(d.done)d.done();}
+function v6SkipIntro(){if(!G.v6Intro||G.v6Paused)return;const d=G.v6Intro;G.v6Intro=null;document.getElementById('v6Cinema').classList.add('hidden');if(d.done)d.done();}
 function v6StartAscent(zone){
   G.v6Ascent={start:performance.now(),duration:900,zone:zone|0,sparks:Array.from({length:10},(_,i)=>({a:i*.628,r:36+i*8}))};
 }
 function v6Pause(toggle){
   if(G.ended||G.mode!=='play')return;
   signalRelease();
-  if(toggle===false||G.v6Paused){G.v6Paused=false;G.mode='play';G.lastT=0;document.getElementById('v6Pause').textContent='PAUSE';document.getElementById('v6Pause').setAttribute('aria-pressed','false');G.raf=requestAnimationFrame(loop);v6Announce('Run resumed.');}
-  else{G.v6Paused=true;cancelAnimationFrame(G.raf);document.getElementById('v6Pause').textContent='RESUME';document.getElementById('v6Pause').setAttribute('aria-pressed','true');draw();v6Announce('Run paused.');}
+  if(toggle===false||G.v6Paused){G.v6Paused=false;G.mode='play';G.lastT=0;if(G.v6Intro){if(G.v6Intro.pausedAt){G.v6Intro.start+=performance.now()-G.v6Intro.pausedAt;G.v6Intro.pausedAt=0;}document.getElementById('v6Cinema').classList.remove('hidden');}document.getElementById('v6Pause').textContent='PAUSE';document.getElementById('v6Pause').setAttribute('aria-pressed','false');G.raf=requestAnimationFrame(loop);v6Announce('Run resumed.');}
+  else{G.v6Paused=true;if(G.v6Intro){G.v6Intro.pausedAt=performance.now();document.getElementById('v6Cinema').classList.add('hidden');}cancelAnimationFrame(G.raf);document.getElementById('v6Pause').textContent='RESUME';document.getElementById('v6Pause').setAttribute('aria-pressed','true');draw();v6Announce('Run paused.');}
 }
 
 window.__MBM_V6_RELEASE__={
@@ -656,7 +657,7 @@ function v6DrawJumpArc(camX){
   if(grounded){vy=JUMP_V;grounded=false;holding=true;}
   ctx.save();ctx.strokeStyle='rgba(165,243,252,.72)';ctx.lineWidth=1.8;ctx.setLineDash([5,6]);ctx.beginPath();ctx.moveTo(PLAYER_X,y);
   for(let n=1;n<=42;n++){
-    const f=G.frame+n,wx=worldXAt(f)+PLAYER_X,g=Math.min(groundTop(wx+PW/2),groundTop(wx-PW/2));
+    const f=G.frame+n,wx=worldXAt(f)+PLAYER_X,g=Math.min(groundTop(wx+PW/2,r,f),groundTop(wx-PW/2,r,f));
     if(!grounded){vy+=(holding&&vy<0)?GRAV_HOLD:GRAV;if(vy>MAX_FALL)vy=MAX_FALL;y+=vy;if(vy>=0&&g!==Infinity&&y>=g){y=g;grounded=true;}}
     const sx=worldXAt(f)+PLAYER_X-camX;if(n%3===0)ctx.lineTo(sx,y);
     if(grounded&&n>4)break;
@@ -687,7 +688,7 @@ function draw(){
   let shx=0,shy=0;
   if(G.shake>0&&!calmOn){shx=(Math.random()-0.5)*G.shake;shy=(Math.random()-0.5)*G.shake;}
   if(G.shake>0)G.shake*=0.85;
-  if(G.v6Intro&&performance.now()-G.v6Intro.start>=G.v6Intro.duration)v6SkipIntro();
+  if(G.v6Intro&&!G.v6Paused&&performance.now()-G.v6Intro.start>=G.v6Intro.duration)v6SkipIntro();
   V6Camera.targetZoom=G.v6Intro?1.14:(performance.now()<G.v6ClutchUntil?1.11:1);
   V6Camera.zoom+= (V6Camera.targetZoom-V6Camera.zoom)*.14;
   if(V6Camera.shake>0&&!calmOn){shx+=(Math.random()-.5)*V6Camera.shake;shy+=(Math.random()-.5)*V6Camera.shake;V6Camera.shake*=.82;}
@@ -1221,9 +1222,7 @@ function endRun(){
   const gd=G.ghostData;
   const myCode=encodeGhost({seed:trackSeed,deathFrame:G.frame,events:G.events.filter(e=>e.f<=G.frame),chapter:signalMode?'last-signal':null});
   G.lastCode=myCode;
-  let win=false;
-  if(!gd){ win=true; }
-  else if(dist>gd.dist){ win=true; }
+  let win=signalMode?!!G.signalWon:(!gd||dist>gd.dist);
   G.lastWin=win;
   /* stats + unlock detection (before/after diff) */
   const before=unlockedIds();
@@ -1238,7 +1237,7 @@ function endRun(){
   if(win){
     signalStore.setItem(signalGhostKey(),myCode);
     signalStore.setItem(LSK.seed,String(trackSeed));
-    sfx('win');
+    if(!G.signalWon)sfx('win');
     const pal=skinPal();
     if(!calmOn)for(let i=0;i<40;i++)burst([pal.main,'#e879f9','#fbbf24'][i%3],PLAYER_X,G.player.y-30,1);
   }
@@ -1250,6 +1249,7 @@ function endRun(){
    observe state transitions only after the original routines return. */
 const V6_AUTHORITY={loop,startRun,endRun,bossStep};
 loop=function(t){
+  if(G.mode==='ending'){draw();G.raf=requestAnimationFrame(loop);return;}
   if(G.v6Intro){G.acc=0;G.v6Alpha=1;draw();updateHud();G.raf=requestAnimationFrame(loop);return;}
   V6_AUTHORITY.loop(t);
 };
@@ -1268,6 +1268,7 @@ bossStep=function(f){
 endRun=function(){
   V6_AUTHORITY.endRun();
   if(G.lastWin&&!G._v6FinishAscent){G._v6FinishAscent=true;const z=zoneOfTile(Math.floor((worldXAt(G.frame)+PLAYER_X)/TILE));v6StartAscent(z);}
+  cancelAnimationFrame(G.raf);G.raf=requestAnimationFrame(loop);
 };
 function showDeath(){
   const dV=document.getElementById('dVerdict'), dD=document.getElementById('dDist'),
@@ -1374,7 +1375,7 @@ function onRelease(e){signalRelease();}
 /* ---------- UI ---------- */
 function show(mode){
   G.mode=mode;
-  if(mode!=='play')document.getElementById('signalObjective').classList.add('hidden');
+  if(mode!=='play'){cancelAnimationFrame(G.raf);G.v6Intro=null;document.getElementById('v6Cinema').classList.add('hidden');document.getElementById('signalObjective').classList.add('hidden');}
   const title=document.getElementById('scrTitle'),death=document.getElementById('scrDeath');
   title.classList.toggle('hidden',mode!=='title');death.classList.toggle('hidden',mode!=='dead');
   title.setAttribute('aria-hidden',mode==='title'?'false':'true');death.setAttribute('aria-hidden',mode==='dead'?'false':'true');
@@ -1434,7 +1435,7 @@ function fallbackCopy(txt,done){
   document.body.removeChild(ta);
 }
 function challengeLink(code){
-  const base=location.origin+location.pathname;
+  const base=(location.origin&&location.origin!=='null')?location.origin+location.pathname:location.href.split(/[?#]/)[0];
   return base+'?g='+code;
 }
 
@@ -1489,7 +1490,7 @@ function boot(){
   window.addEventListener('pointerup',signalUp);
   window.addEventListener('keydown',e=>{
     if(e.repeat)return;
-    if(e.key==='Escape'&&(G.mode==='play'||G.v6Paused)){e.preventDefault();v6Pause();return;}
+    if(e.key==='Escape'){if(!document.getElementById('scrLocker').classList.contains('hidden')){e.preventDefault();v6Panel('scrLocker',false);return;}if(!document.getElementById('scrHelp').classList.contains('hidden')){e.preventDefault();v6Panel('scrHelp',false);return;}if(G.mode==='play'||G.v6Paused){e.preventDefault();v6Pause();return;}}
     if(e.target&&/INPUT|TEXTAREA|SELECT|BUTTON/.test(e.target.tagName))return;
     if(e.code==='Space'||e.code==='ArrowUp')signalDown(e);
     if(e.code==='Enter'&&G.mode==='dead')startRun();
@@ -1519,7 +1520,7 @@ function boot(){
   document.getElementById('btnLoad').addEventListener('click',(e)=>{
     e.stopPropagation();
     const v=document.getElementById('codeIn').value.trim();
-    if(v){ if(adoptCode(v.includes('?g=')?v.split('?g=')[1]:v,false))document.getElementById('codeIn').value=''; }
+    if(v){ if(adoptCode(v.includes('?g=')?v.split('?g=')[1].split(/[&#]/)[0]:v,false))document.getElementById('codeIn').value=''; }
   });
   document.getElementById('btnCopyGhost').addEventListener('click',(e)=>{
     e.stopPropagation();

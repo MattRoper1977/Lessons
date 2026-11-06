@@ -353,8 +353,8 @@ function update(dt){if(!started||ended||game.debugFreeze||game.paused||game.dawn
     game.angle+=angleDiff(game.targetAngle,game.angle)*Math.min(1,lag*dt);
     if(game.mechanismState==='FAILING'&&game.lampOn&&Math.random()<dt*1.2){game.stutterT=.15;fizz(.16,.13,'lowpass',320);}}
   let wd=0;if(game.lampOn){const drain=game.lens==='wide'?1.28:.68;game.power=clamp(game.power-drain*dt,0,100);wd=mechanismWearRate();game.currentRest=0;game.alignment=clamp(game.alignment-dt*(game.lens==='focus'?.008:.004),.35,1)}else{const r=REST_MODES[game.restMode],repair=curvedRepairRate(game.wear)*r.wear;game.power=clamp(game.power+4*r.power*dt,0,100);wd=mechanismWearRate();game.alignment=clamp(game.alignment+dt*.16*r.align,0,1);game.currentRest+=dt;game.longestRest=Math.max(game.longestRest,game.currentRest)}game.wear=clamp(game.wear+wd*dt,0,100);game.wearPeak=Math.max(game.wearPeak,game.wear);updateMechanismState();updateDouseBtn();
-  if(!game.firstStrain&&game.wear>35){game.firstStrain=true;msg("SHE'S STRAINING — LISTEN TO HER",'#ffd27c');}
-  if(!game.firstFail&&game.wear>65){game.firstFail=true;msg('THE MECHANISM IS FAILING — REST HER SOON','#ff7885');}
+  if(!game.firstStrain&&game.wear>=45){game.firstStrain=true;msg("SHE'S STRAINING — LISTEN TO HER",'#ffd27c');}
+  if(!game.firstFail&&game.wear>=70){game.firstFail=true;msg('THE MECHANISM IS FAILING — REST HER SOON','#ff7885');}
   // flicker: strained lamps blink, failing lamps black out
   game.dim=Math.max(0,game.dim-dt*3.5);
   const fr=game.mechanismState==='FAILING'?2.2:game.mechanismState==='STRAINED'?.55:game.mechanismState==='WARM'?.08:0;
@@ -363,7 +363,7 @@ function update(dt){if(!started||ended||game.debugFreeze||game.paused||game.dawn
   if(settings.autoSafety&&game.lampOn&&game.wear>=88&&!game.autoSafetyTriggered){game.autoSafetyTriggered=true;game.lampOn=false;game.shutdownCause='planned';updateDouseBtn();updateMechanismState();msg('AUTO-SAFETY · LAMP DOUSED BEFORE SEIZURE','#83e6d0');caption('SAFETY SHUTTER · AUTOMATIC DOUSE','good',2)}
   if(game.wear<70)game.autoSafetyTriggered=false;
   // seize at the limit
-  if(game.seizeT>0){game.seizeT-=dt;game.wear=clamp(game.wear-2.2*dt,0,100);if(game.seizeT<=0){msg('THE GEARS RELEASE','#83e6d0');caption('GRINDING STOPS · GEARS RELEASE','good',1.8);}}
+  if(game.seizeT>0){game.seizeT-=dt;game.wear=clamp(game.wear-2.2*dt,0,100);if(game.seizeT<=0){game.shutdownCause='planned';msg('THE GEARS RELEASE','#83e6d0');caption('GRINDING STOPS · GEARS RELEASE','good',1.8);}}
   if(game.wear>=90&&game.lampOn){game.lampOn=false;game.shutdownCause='seized';game.seizeT=4;if(game.telemetry)game.telemetry.seizures++;Events.emit('mechanism:seized',{wear:game.wear});updateDouseBtn();updateMechanismState();msg('THE MECHANISM SEIZES — COOLING (E) SPEEDS REPAIR','#ff7885');tone(120,.9,'sawtooth',.12,58);fizz(.35,.15,'lowpass',260);}
   if(game.power<=0&&game.lampOn){game.lampOn=false;game.shutdownCause='power';updateDouseBtn();updateMechanismState();msg('THE LAMP GUTTERS OUT — POWER RECOVERY','#ff7885');tone(150,.5,'sine',.1,80);}
   // foghorn keeps her voice on the water
@@ -610,7 +610,7 @@ addEventListener('keydown',e=>{if(editableTarget(e)||gameplayDialog()||!started|
   if(e.code==='Space')game.painting=true;
   if(e.code==='Digit1')setLens('wide');if(e.code==='Digit2')setLens('focus');
   if(e.code==='KeyQ'&&!e.repeat)toggleDouse();
-  if(e.code==='KeyR'){resetWorld(true);resetSessionState();game.difficultyProfile=DIFFICULTIES[game.difficulty]||DIFFICULTIES.STANDARD;reefSeenVal=0;started=true;game.paused=false;document.getElementById('pauseScreen').classList.remove('on')}});
+  if(e.code==='KeyR'&&!e.repeat){const guided=!!game.tutorial;resetWorld(true);resetSessionState();game.difficultyProfile=DIFFICULTIES[game.difficulty]||DIFFICULTIES.STANDARD;game.nightProfile=NIGHT_PROFILES[game.night];document.getElementById('nightHud').textContent=game.night;reefSeenVal=0;started=true;game.paused=false;document.getElementById('pauseScreen').classList.remove('on');document.getElementById('actLabel').textContent=ACTS[0].name;document.getElementById('objectiveText').textContent=ACTS[0].text;document.getElementById('actHud').textContent='I';document.querySelectorAll('#actTrack i').forEach((x,i)=>x.classList.toggle('on',i===0));game.tutorial=guided;game.trainingSafe=guided;document.body.classList.toggle('training-safe',guided);game.lesson=0;game.lessonT=0;showLesson()}});
 addEventListener('keyup',e=>{keys[e.code]=false;if(e.code==='Space')game.painting=false});
 document.querySelectorAll('.lens[data-lens]').forEach(b=>b.onclick=()=>setLens(b.dataset.lens));
 document.getElementById('douseBtn').onclick=toggleDouse;document.getElementById('signal-assist').onclick=signalAssist;Events.on('vessel:reef',()=>crewMessage(vName(),'We felt the reef. Focus a steady beam; Signal assist can give us breathing room.'));Events.on('vessel:launched',()=>crewMessage('THE TERN','Mara is home. We are still out here, Keeper.'));Events.on('watch:act',d=>{const lines=['The watch begins.','A patient light is better than a bright panic.','The stones remember where you have been.','Stay with us through the worst of it.','Another lamp is answering from the east.'];crewMessage('KEEPER LOG',lines[d.act]||lines[0]);});

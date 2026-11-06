@@ -101,6 +101,14 @@ canvas.a-canvas{touch-action:none!important}
 @keyframes sHop{0%,100%{transform:translateY(0)}40%{transform:translateY(-9px)}}
 @keyframes splashOut{to{opacity:0;visibility:hidden}}
 #splash.skipped{animation:splashOut .35s ease forwards}
+@media(max-width:600px){
+  #hotbar-wrap{top:calc(env(safe-area-inset-top,0px) + 68px);max-width:calc(100vw - 78px);left:8px;transform:none}
+  #hotbar{box-sizing:border-box;width:100%;gap:3px;padding:4px}
+  .slot{width:30px;height:30px}
+  #btn-fly{top:70px} #btn-save{top:122px} #btn-menu{top:174px}
+  #active-name{max-width:100%;box-sizing:border-box;text-align:center}
+  #toast{top:340px;max-width:90vw;box-sizing:border-box;white-space:normal;text-align:center}
+}
 </style>
 
 <!-- ===== reduced-motion v1 =====================================================
@@ -238,6 +246,9 @@ canvas.a-canvas{touch-action:none!important}
 /* ---------- Simplex noise (compact) ---------- */
 (function(){var F2=.5*(Math.sqrt(3)-1),G2=(3-Math.sqrt(3))/6;function N(r){if(!r)r=Math.random;this.p=new Uint8Array(256);this.perm=new Uint8Array(512);this.permMod12=new Uint8Array(512);for(var i=0;i<256;i++)this.p[i]=i;for(var i=0;i<255;i++){var rr=i+~~(r()*(256-i)),a=this.p[i];this.p[i]=this.p[rr];this.p[rr]=a}for(var i=0;i<512;i++){this.perm[i]=this.p[i&255];this.permMod12[i]=this.perm[i]%12}}N.prototype.grad3=new Float32Array([1,1,0,-1,1,0,1,-1,0,-1,-1,0,1,0,1,-1,0,1,1,0,-1,-1,0,-1,0,1,1,0,-1,1,0,1,-1,0,-1,-1]);N.prototype.noise2D=function(xin,yin){var n0=0,n1=0,n2=0,s=(xin+yin)*F2,i=Math.floor(xin+s),j=Math.floor(yin+s),t=(i+j)*G2,X0=i-t,Y0=j-t,x0=xin-X0,y0=yin-Y0,i1,j1;if(x0>y0){i1=1;j1=0}else{i1=0;j1=1}var x1=x0-i1+G2,y1=y0-j1+G2,x2=x0-1+2*G2,y2=y0-1+2*G2,ii=i&255,jj=j&255,gi0=this.permMod12[ii+this.perm[jj]],gi1=this.permMod12[ii+i1+this.perm[jj+j1]],gi2=this.permMod12[ii+1+this.perm[jj+1]];var t0=.5-x0*x0-y0*y0;if(t0>=0){t0*=t0;n0=t0*t0*(this.grad3[gi0*3]*x0+this.grad3[gi0*3+1]*y0)}var t1=.5-x1*x1-y1*y1;if(t1>=0){t1*=t1;n1=t1*t1*(this.grad3[gi1*3]*x1+this.grad3[gi1*3+1]*y1)}var t2=.5-x2*x2-y2*y2;if(t2>=0){t2*=t2;n2=t2*t2*(this.grad3[gi2*3]*x2+this.grad3[gi2*3+1]*y2)}return 70*(n0+n1+n2)};window.SimplexNoise=N})();
 
+function readStored(k){ try{return localStorage.getItem(k);}catch(e){return null;} }
+function removeStored(k){ try{localStorage.removeItem(k);}catch(e){} }
+
 /* ---------- Block definitions. Atlas = 8x8 tiles of 16px ---------- */
 const ATLAS_N=8, TILE_PX=16;
 const BLOCKS={
@@ -272,9 +283,9 @@ const BLOCKS={
 const BLOCK_IDS=Object.keys(BLOCKS);
 
 /* ===== SURVIVAL CORE: finite blocks, tools, recipes ===== */
-let mode = localStorage.getItem('voxelcraft:mode') || 'creative';
+let mode = readStored('voxelcraft:mode') || 'creative';
 let inv = {};
-try { const _i = localStorage.getItem('voxelcraft:inv'); if (_i) inv = JSON.parse(_i); } catch(e){}
+try { const _i = readStored('voxelcraft:inv'); if (_i) inv = JSON.parse(_i); } catch(e){}
 function saveInv(){ try { localStorage.setItem('voxelcraft:inv', JSON.stringify(inv)); } catch(e){} }
 function survivalOn(){ return mode === 'survival' && !arcade.active; }
 function invCount(id){ return inv[id] || 0; }
@@ -371,6 +382,7 @@ function sweep(){
   spawnPlayer();
 }
 function stormTick(){
+  if(gameplayBlocked())return;
   if (mode !== 'survival' || arcade.active) {
     const hud = document.getElementById('storm-hud'); if (hud) hud.classList.remove('on');
     return;   // cycle pauses in Creative and Arcade
@@ -865,7 +877,7 @@ AFRAME.registerComponent('player-controller', {
       return { x:e.clientX, y:e.clientY };
     };
     const start = (e) => {
-      if (touchId !== null) return;
+      if (gameplayBlocked() || touchId !== null) return;
       if (e.changedTouches) touchId = e.changedTouches[0].identifier;
       else touchId = 'mouse';
       updateCenter();
@@ -891,6 +903,7 @@ AFRAME.registerComponent('player-controller', {
       touchId = null; s.active = false; s.x = s.y = 0;
       knob.style.transform = 'translate(-50%, -50%)';
     };
+    this._resetJoystick=()=>end({});
     joy.addEventListener('touchstart', start, { passive:false });
     window.addEventListener('touchmove', move, { passive:false });
     window.addEventListener('touchend', end);
@@ -904,6 +917,7 @@ AFRAME.registerComponent('player-controller', {
     const HOTBAR = ['1','2','3','4','5','6','7','8','9','0'];
     const self = this;
     window.addEventListener('keydown', (e) => {
+      if(gameplayBlocked())return;
       const k = (e.key || '').toLowerCase();
       if (MOVE.includes(k)) {
         self.keys[k] = true;
@@ -961,6 +975,7 @@ AFRAME.registerComponent('player-controller', {
     return false;
   },
   tick: function(t, dtMs){
+    if(gameplayBlocked())return;
     const dt = Math.min(dtMs/1000, 0.05);
     const pos = this.el.object3D.position;
     const camEl = this.el.querySelector('[camera]');
@@ -1056,7 +1071,7 @@ AFRAME.registerComponent('touch-look', {
     };
 
     const start = (e) => {
-      if (this.touchId !== null) return;
+      if (gameplayBlocked() || this.touchId !== null) return;
       const pt = e.changedTouches ? e.changedTouches[0] : e;
       const tgt = pt.target || e.target;
       if (isUIBlocking(tgt)) return;
@@ -1070,7 +1085,7 @@ AFRAME.registerComponent('touch-look', {
       this.touchId = e.changedTouches ? pt.identifier : 'mouse';
     };
     const move = (e) => {
-      if (!this.active) return;
+      if (gameplayBlocked() || !this.active) return;
       let pt = null;
       if (e.touches) {
         for (const t of e.touches) if (t.identifier === this.touchId) { pt = t; break; }
@@ -1101,7 +1116,7 @@ AFRAME.registerComponent('touch-look', {
         if (gone) return; // our touch wasn't in this batch
       } else if (this.touchId !== 'mouse') return;
       // Tap-vs-drag for mouse: small movement = action click
-      if (this.touchId === 'mouse' && this.totalDrag < 6) {
+      if (!gameplayBlocked() && this.touchId === 'mouse' && this.totalDrag < 6) {
         if (this.mouseButton === 0) doBreak();
         else if (this.mouseButton === 2) doPlace();
       }
@@ -1138,7 +1153,7 @@ const THEMES = {
   Snow:   { sky:'#d8e8f0', fog:'#e8f0ff', near:18, far:42, amb:0.75, ambC:'#ffffff', dir:0.85, dirC:'#e8f0ff' },
   Nether: { sky:'#4a1a0a', fog:'#2a0a05', near:10, far:26, amb:0.55, ambC:'#ff8866', dir:0.7,  dirC:'#ff8844' },
 };
-let currentTheme = localStorage.getItem('voxelcraft:theme') || 'Day';
+let currentTheme = readStored('voxelcraft:theme') || 'Day';
 function applyTheme(name){
   const t = THEMES[name]; if (!t) return;
   currentTheme = name;
@@ -1243,6 +1258,7 @@ function placeTemplate(template, ox, oy, oz){
       for (let x = 0; x < row.length; x++){
         const type = T_LEGEND[row[x]];
         if (type === undefined || type === null) continue;
+        arcadeOres.delete(key(ox+x, oy+y, oz+z));
         world.set(key(ox+x, oy+y, oz+z), type);
       }
     });
@@ -1273,12 +1289,15 @@ function placeAtPlayer(template){
 /* ---------- Arcade mode ---------- */
 const arcade = {
   active: false, timeLeft: 0, score: 0, timer: null,
-  highScore: parseInt(localStorage.getItem('voxelcraft:arcadeHigh') || '0', 10)
+  highScore: parseInt(readStored('voxelcraft:arcadeHigh') || '0', 10)
 };
+let sandboxBackup=null;
+const arcadeOres=new Set();
 const ARCADE_DURATION = 60;
 const ARCADE_SCORES = { COAL_ORE:1, IRON_ORE:3, GOLD_ORE:5, OBSIDIAN:8, DIAMOND_ORE:10 };
 
 function generateArcadeWorld(){
+  arcadeOres.clear();
   world.clear();
   const n = new SimplexNoise(Math.random);
   for (let x=-WORLD_R; x<=WORLD_R; x++) {
@@ -1302,6 +1321,7 @@ function generateArcadeWorld(){
     else if (r < 0.14)  world.set(k, 'GOLD_ORE');
     else if (r < 0.155) world.set(k, 'DIAMOND_ORE');
     else if (r < 0.16)  world.set(k, 'OBSIDIAN');
+    if(ARCADE_SCORES[world.get(k)])arcadeOres.add(k);
   }
 }
 function showArcadeConfirm(){
@@ -1312,7 +1332,10 @@ function startArcade(){
   closeModal('arcade-confirm');
   closeModal('arcade-end');
   // Back up the sandbox world before clobbering it
-  try { localStorage.setItem('voxelcraft:world', JSON.stringify([...world])); } catch(e){}
+  if(sandboxBackup===null){
+    sandboxBackup=[...world];
+    try { localStorage.setItem('voxelcraft:world', JSON.stringify(sandboxBackup)); } catch(e){}
+  }
   arcade.active = true;
   if (mode === 'survival') applyStormSky(0);   // arcade always plays in daylight
   arcade.score = 0;
@@ -1325,6 +1348,7 @@ function startArcade(){
   document.getElementById('arcade-hud').classList.add('on');
   if (arcade.timer) clearInterval(arcade.timer);
   arcade.timer = setInterval(() => {
+    if(gameplayBlocked())return;
     arcade.timeLeft--;
     document.getElementById('arcade-time').textContent = arcade.timeLeft;
     if (arcade.timeLeft <= 0) endArcade();
@@ -1350,7 +1374,8 @@ function exitArcade(){
   arcade.active = false;
   document.getElementById('arcade-hud').classList.remove('on');
   // Restore saved sandbox world
-  const saved = localStorage.getItem('voxelcraft:world');
+  const saved = sandboxBackup===null ? readStored('voxelcraft:world') : JSON.stringify(sandboxBackup);
+  sandboxBackup=null;
   if (saved) {
     try {
       const arr = JSON.parse(saved); world.clear();
@@ -1363,11 +1388,26 @@ function exitArcade(){
 }
 
 /* ---------- Modal helpers ---------- */
-function openModal(id){ const m = document.getElementById(id); if (m) m.classList.add('open'); }
+let gameSuspended=false;
+const actionStops=[];
+function gameplayBlocked(){
+  return gameSuspended||document.hidden||!!document.querySelector('.modal.open')||document.getElementById('intro').style.display!=='none';
+}
+function clearControls(){
+  actionStops.forEach(stop=>stop());
+  const pc=document.getElementById('player')?.components?.['player-controller'];
+  if(pc){ pc.keys={}; pc.jumpRequested=false; pc._resetJoystick?.(); }
+  const look=document.querySelector('#player [camera]')?.components?.['touch-look'];
+  if(look){look.active=false;look.touchId=null;}
+}
+window.addEventListener('blur',()=>{gameSuspended=true;clearControls();});
+window.addEventListener('focus',()=>{gameSuspended=false;});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)clearControls();});
+function openModal(id){ clearControls(); const m = document.getElementById(id); if (m) m.classList.add('open'); }
 function closeModal(id){ const m = document.getElementById(id); if (m) m.classList.remove('open'); }
 
 let selectedIndex = (() => {
-  const saved = parseInt(localStorage.getItem('voxelcraft:slot'), 10);
+  const saved = parseInt(readStored('voxelcraft:slot'), 10);
   return Number.isFinite(saved) && saved >= 0 && saved < 30 ? saved : 0;
 })();
 
@@ -1421,6 +1461,7 @@ function getCameraRay(){
 }
 
 function doBreak(){
+  if(gameplayBlocked())return;
   const { origin, dir } = getCameraRay();
   const hit = voxelRaycast(origin, dir, 8);
   if (!hit) { toast('Nothing in range'); return; }
@@ -1430,7 +1471,7 @@ function doBreak(){
     const need = TIER[type] || 0;
     if (toolTier() < need) { toast('You need ' + TIER_LABEL[need] + ' to mine ' + BLOCKS[type].name); return; }
   }
-  if (arcade.active && ARCADE_SCORES[type]) {
+  if (arcade.active && arcadeOres.delete(key(hit.x,hit.y,hit.z)) && ARCADE_SCORES[type]) {
     arcade.score += ARCADE_SCORES[type];
     document.getElementById('arcade-score').textContent = arcade.score;
     toast('+' + ARCADE_SCORES[type] + ' ' + BLOCKS[type].name);
@@ -1441,6 +1482,7 @@ function doBreak(){
   playSound('break');
 }
 function doPlace(){
+  if(gameplayBlocked())return;
   const { origin, dir } = getCameraRay();
   const hit = voxelRaycast(origin, dir, 8);
   if (!hit) { toast('Aim at a block'); return; }
@@ -1450,6 +1492,7 @@ function doPlace(){
   if (survivalOn() && invCount(placeId) < 1) { toast('No ' + BLOCKS[placeId].name + ' — mine or craft some first'); return; }
   const ppos = document.getElementById('player').object3D.position;
   const pc = document.getElementById('player').components['player-controller'];
+  arcadeOres.delete(key(px,py,pz));
   world.set(key(px,py,pz), BLOCK_IDS[selectedIndex]);
   if (pc && pc.collides(ppos.x, ppos.y, ppos.z)) { world.delete(key(px,py,pz)); toast("You're in the way"); return; }
   if (survivalOn()) { invTake(placeId, 1); updateHotbar(); }
@@ -1457,13 +1500,13 @@ function doPlace(){
   playSound('place');
 }
 function saveWorld(){
-  try { localStorage.setItem('voxelcraft:world', JSON.stringify([...world])); toast('World saved'); }
+  try { localStorage.setItem('voxelcraft:world', JSON.stringify(sandboxBackup===null?[...world]:sandboxBackup)); toast('World saved'); }
   catch(e){ toast('Save failed'); }
 }
 function resetWorld(){
   if (!confirm('Generate a new world? Current progress will be lost.')) return;
   generateTerrain(); buildWorldMesh(); spawnPlayer();
-  localStorage.removeItem('voxelcraft:world');
+  removeStored('voxelcraft:world');
   if (mode === 'survival') { inv = {}; saveInv(); updateHotbar(); toast('New world — fresh start, empty pockets'); }
   else toast('New world generated');
 }
@@ -1535,7 +1578,7 @@ function startHighlightLoop(){
 
 /* ---------- Init ---------- */
 function initGame(){
-  const saved = localStorage.getItem('voxelcraft:world');
+  const saved = readStored('voxelcraft:world');
   let loaded = false;
   if (saved) {
     try {
@@ -1563,11 +1606,17 @@ function initGame(){
     const el = document.getElementById(id);
     let timer = null;
     const stop = () => { if (timer) { clearTimeout(timer); timer = null; } };
+    actionStops.push(stop);
+    window.addEventListener('mouseup',stop);
+    window.addEventListener('touchend',stop);
+    window.addEventListener('touchcancel',stop);
     const press = (e) => {
       e.preventDefault(); e.stopPropagation();
+      if(gameplayBlocked() && !['btn-menu','btn-save'].includes(id))return;
+      stop();
       fn();                           // fire immediately — fixes the "tap does nothing" bug
       if (repeatable) {
-        const tick = () => { fn(); timer = setTimeout(tick, 160); };
+        const tick = () => { if(gameplayBlocked()){stop();return;} fn(); timer = setTimeout(tick, 160); };
         timer = setTimeout(tick, 380); // initial hold delay, then rapid-fire
       }
     };
@@ -1666,7 +1715,7 @@ function initGame(){
     if (!confirm("Load today's Daily World? Everyone in class gets the SAME map today. Your current world will be replaced.")) return;
     generateTerrain(mulberry32(todaySeed()));
     buildWorldMesh(); spawnPlayer();
-    localStorage.removeItem('voxelcraft:world');
+    removeStored('voxelcraft:world');
     if (mode === 'survival') { inv = {}; saveInv(); updateHotbar(); startStormCycle(); }
     toast('🗓 THE ' + todayName().toUpperCase() + ' WORLD — same map for everyone today');
   });
@@ -1723,6 +1772,7 @@ function loadScript(src){
   });
 }
 async function loadAframe(){
+  if(window.AFRAME)return true;
   const urls = [
     'vendor/aframe-1.7.1/aframe-master.min.js',
     'https://aframe.io/releases/1.7.1/aframe.min.js',
