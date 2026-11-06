@@ -1363,7 +1363,7 @@ CATALOGUE_PINS = {
         "Science/Grow/v3_40min/SCI_G_W7A_The_Moon_Explore.html": "2b54a5399c6422873be70b5ab43ea271112f54ae1401d990705b19a2f75030b4",
         "Science/Grow/v3_40min/SCI_G_W7B_The_Moon_Do.html": "85c9c9c7d4a12fa67fe6a098960aef0e880a3b7bf217667e39dad570bac11ebc",
         "Science/Build/W8-W13_2026-27/SHA256SUMS.txt": "28c48fd2644c70cee9e36b95981c25b08f9bd5693c9f43a7f73138f113aecf04",
-        "data/chassis-census.json": "1d09ca284de430221aaba7e4dbb03908a7f19e28dced6bdc5833fa3526c3d023",
+        "data/chassis-census.json": "c6cb579e980bd4f0c881d46474a286d3d69cfccf2af483ec7ffdd7c4c314199e",
         "tools/downloads/definitions/launch-science-aut1-main.json": "b42288f072512eaa9e0e954a6927d1247640dfbf6daac31fcfec4b80b59cb0c6",
         "tools/launch_resources/lesson_acceptance.py": "bbebaeb821f32c04eb1b2e01e819795ffa97cd851f33d7c22fec0b0505a9fe21",
         "tools/easter/refresh_pack_checksums.py": "7248b8424c6435f3637a7e3414e38fbab9f67e6b2a0f6f34fc8a586dc4e9c126",
