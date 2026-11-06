@@ -2785,7 +2785,7 @@ CATALOGUE_PINS = {
         "Games/voxelcraft.html": "fa31992db8bf3d3a77a23740e2554d880b960146fcc3d594bee2714e04ba6a76",
         "Games/Match_Director.html": "cf114ae9313c06c4b555fcfff4a49e2fc919dafbbde5a1c34f9474889ca28f74",
         "Games/Cup_Showdown.html": "07796c9e918a214234cee74fdddc15449097f881a7816b144f874b730570bed0",
-        "Games/Block_Builder.html": "eb715339f3de1048672742fb55254bf9249babe72a270f75b19a82cb43a50509"
+        "Games/Block_Builder.html": "6241089e5c0f2071faa3729323edad42183144943468a8c8e0a67bad563fc409"
     }
 }
 # END REVIEWED CATALOGUE PINS

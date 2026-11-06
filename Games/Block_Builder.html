@@ -80,7 +80,8 @@ canvas.a-canvas{touch-action:none!important}
 #intro .ctrl{display:grid;grid-template-columns:1fr 1fr;gap:3px 10px;text-align:left;font-size:11.5px;line-height:1.45;color:#b9c6da;background:rgba(0,0,0,.28);border-radius:9px;padding:9px 11px;margin:0 0 10px}
 #intro .ctrl b{color:#fff}
 #intro p{margin:6px 0;font-size:12px;line-height:1.5;opacity:.9}
-#intro .tap{margin-top:12px;padding:13px 34px;background:linear-gradient(100deg,#2f9e44,#28848f);color:#fff;border-radius:10px;font-weight:800;font-size:16px;letter-spacing:1px;display:inline-block;cursor:pointer;box-shadow:0 4px 16px rgba(47,158,68,.4);animation:tapPulse 1.8s ease-in-out infinite}
+#intro .tap:focus-visible{outline:3px solid #fff;outline-offset:4px}
+#intro .tap{margin-top:12px;padding:13px 34px;background:linear-gradient(100deg,#17572b,#15525a);color:#fff;border:0;font-family:inherit;border-radius:10px;font-weight:800;font-size:16px;letter-spacing:1px;display:inline-block;cursor:pointer;box-shadow:0 4px 16px rgba(47,158,68,.4);animation:tapPulse 1.8s ease-in-out infinite}
 @keyframes tapPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
 #intro .credit{margin-top:10px;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,.4);text-transform:uppercase}
 /* Made by Matt splash — plays above the title, then fades to reveal it. Tap to skip. */
@@ -221,7 +222,7 @@ canvas.a-canvas{touch-action:none!important}
         <span><b>Dig</b> DIG / click</span><span><b>Place</b> PLACE / right-click</span>
         <span><b>Jump</b> JUMP / Space</span><span><b>Hotbar</b> tap · 1–0 · Q/E</span>
       </div>
-      <div class="tap" id="intro-start">⛏️ TAP TO PLAY</div>
+      <button type="button" class="tap" id="intro-start">⛏️ TAP TO PLAY</button>
       <p class="credit">A Made by Matt Production</p>
     </div>
   </div>
@@ -1799,7 +1800,7 @@ function showIntroError(msg){
   const card = document.querySelector('#intro .card');
   card.innerHTML = '<h1 style="color:#ff8080">CAN\'T LOAD</h1>' +
     '<p>' + msg + '</p>' +
-    '<p style="font-size:11px;opacity:.7">If you opened this file by tapping it directly, try hosting it on a local server or uploading to a site like Glitch / Neocities. A-Frame needs a real URL — file:// URLs can block CDN scripts on mobile.</p>';
+    '<p style="font-size:11px;opacity:.7">Open the game from its usual game page so its local renderer can load.</p>';
 }
 
 document.getElementById('intro-start').addEventListener('click', async () => {
@@ -1808,7 +1809,7 @@ document.getElementById('intro-start').addEventListener('click', async () => {
   startBtn.style.pointerEvents = 'none';
 
   const ok = await loadAframe();
-  if (!ok) { showIntroError('Could not reach the A-Frame library.'); return; }
+  if (!ok) { showIntroError('Could not load the rendering library.'); return; }
 
   // A-Frame loaded — now we can register components and build the scene
   try {
