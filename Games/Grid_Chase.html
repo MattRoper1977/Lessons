@@ -111,7 +111,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #fff;outline-offset:3
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
 </style>
-<style>#signal-button{position:fixed;left:16px;bottom:18px;min-height:48px;z-index:10;padding:12px 16px;border:1px solid #72e5ff;background:#0b253b;color:#fff;border-radius:12px;font:700 13px system-ui}#signal-button:disabled{opacity:.55}#circuit-status{position:fixed;left:16px;top:75px;z-index:5;font:600 13px system-ui;color:#b8ddff;pointer-events:none}#circuit-story{font:14px/1.55 system-ui;color:#b8ddff;padding:12px;border-left:2px solid #78e2e9;margin:12px 0}#v6-badge,#v6-intel{display:none}button:focus-visible{outline:3px solid #fff;outline-offset:3px}@media(pointer:coarse) and (orientation:portrait){#signal-button{bottom:18px;left:12px;max-width:104px;font-size:12px}#circuit-status{top:68px;font-size:12px;max-width:80vw}}</style><style>#circuit-story{position:fixed;left:14px;right:14px;bottom:75px;z-index:6;max-width:680px;margin:0 auto;padding:8px 12px;background:#071223e8;border-radius:8px;pointer-events:none;font-size:12px}@media(pointer:coarse) and (orientation:portrait){#circuit-story{bottom:182px;left:8px;right:8px;font-size:11px;line-height:1.35}}</style></head>
+<style>#hud{padding-left:calc(var(--safe-l) + 52px)}#hud .grp{gap:10px;flex-wrap:wrap}#bossbar{top:42px;width:min(420px,88vw)}#bossbar .bn{letter-spacing:2px;font-size:11px}#signal-button{position:fixed;left:16px;bottom:14px;min-height:48px;z-index:10;padding:10px 14px;border:1px solid #72e5ff;background:#0b253b;color:#fff;border-radius:12px;font:700 13px system-ui}#signal-button:disabled{opacity:.55}#circuit-status{position:fixed;left:16px;top:98px;z-index:5;font:600 12px system-ui;color:#b8ddff;pointer-events:none}#circuit-story{font:14px/1.55 system-ui;color:#b8ddff;padding:12px;border-left:2px solid #78e2e9;margin:12px 0}#v6-badge,#v6-intel{display:none}button:focus-visible{outline:3px solid #fff;outline-offset:3px}@media(pointer:coarse) and (orientation:portrait){#signal-button{bottom:calc(var(--safe-b) + 8px);left:max(12px,var(--safe-l));max-width:132px;min-height:48px;padding:8px 10px;font-size:11px}#v6-evade{left:max(12px,var(--safe-l));bottom:calc(var(--safe-b) + 64px);min-height:48px}#circuit-status{top:106px;left:12px;font-size:11px;max-width:calc(100vw - 24px)}}</style><style>#circuit-story{position:fixed;left:160px;right:14px;bottom:14px;z-index:6;max-width:560px;margin:0 auto;padding:6px 10px;background:#071223e8;border-radius:8px;pointer-events:none;font-size:11px;line-height:1.3}@media(pointer:coarse) and (orientation:portrait){#circuit-story{bottom:calc(var(--safe-b) + 118px);left:12px;right:170px;font-size:10px;line-height:1.25;padding:5px 8px}}</style></head>
 <body><button id="signal-button" type="button">DECOY [F] · 1</button><div id="circuit-status"></div><div id="circuit-story" role="status">NIX: Recover relay keys. Press F or Decoy to leave a false signal and draw the hunters away.</div>
 <div id="boot"><div class="t">GRID CHASE</div><div class="b"></div><div class="small">powering the grid…</div></div>
 <canvas id="game"></canvas>
@@ -144,7 +144,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #fff;outline-offset:3
     <div class="row"><span>Clear the pips</span><span style="color:var(--amber)">boss fight begins</span></div>
     <div class="row"><span>Warden core glows cyan</span><span style="color:var(--magenta)">RAM IT ×3 to win</span></div>
   </div>
-  <input type="number" id="seed-input" placeholder="seed" aria-label="Seed number">
+  <input type="text" inputmode="numeric" id="seed-input" placeholder="seed" aria-label="Seed number">
   <div class="note" id="seed-note">Today's grid — same for everyone.</div>
   <div class="note" id="best-note"></div>
   <button class="btn primary" id="start-btn">START</button>
@@ -415,7 +415,7 @@ function hexA(hex,a){const n=parseInt(hex.slice(1),16);return `rgba(${n>>16&255}
 
 /* ============================ GAME SETUP ============================ */
 function todaySeed(){const d=new Date();return parseInt(""+d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0"));}
-function newRun(){AU.init();AU.resume();level=1;score=0;lives=settings.relaxed?99:3;bestChain=0;newLevel();}
+function newRun(){AU.init();AU.resume();skipBanner=false;intermission=0;level=1;score=0;lives=settings.relaxed?99:3;bestChain=0;newLevel();}
 function newLevel(){
   maze=genMaze(seed+level*101);gameRandom=mulberry((seed+level*7919)>>>0);intermission=0;circuitClock=0;signal=null;signalEnergy=1;signalCooldown=0;relayCount=0;placeRelays();
   const story=$('circuit-story');if(story)story.textContent=district().line;
@@ -433,7 +433,7 @@ function newLevel(){
       state:"pen",wait:i*1.1,scatter:i,
       speed:HUNTER_BASE*(0.86+level*0.05)});
   }
-  state="RUN";updateHUD();bossUI(false);
+  state="RUN";updateHUD();updateSignalHUD();bossUI(false);
   if(!skipBanner)banner("LEVEL "+level,"var(--cyan)",n+" hunters · "+pipsTotal+" pips");
   skipBanner=false;
 }
@@ -691,7 +691,7 @@ function bossDown(){
 
 /* ============================ GAME OVER / BOARDS ============================ */
 function gameOver(){
-  state="OVER";AU.over();bossUI(false);
+  state="OVER";boss=null;shockwaves=[];hazards=[];updateSignalHUD();AU.over();bossUI(false);
   quest.plays=(quest.plays||0)+1;
   const prev=quest.bestBySeed[seed],isBest=prev===void 0||score>prev;
   if(isBest)quest.bestBySeed[seed]=score;
@@ -1053,7 +1053,7 @@ function update(dt){
   updatePlayer(dt);
   for(const h of hunters)updateHunter(h,dt);
   if(state==="RUN"){checkHunterHits();updateGem(dt);}
-  if(state==="BOSS"&&boss){updateBoss(dt);if(boss)updateShockwaves(dt);}
+  if(state==="BOSS"&&boss){updateBoss(dt);if(state==="BOSS"&&boss)updateShockwaves(dt);}
   updateParticles(dt);
 }
 
@@ -1066,7 +1066,7 @@ function setDir(d){
 window.addEventListener("keydown",e=>{
   const t=e.target;if(t&&(t.tagName==="INPUT"||t.tagName==="TEXTAREA"||t.tagName==="SELECT"))return;
   if(e.code==="KeyF"&&!e.repeat){e.preventDefault();signalDecoy();return;}
-  if(e.code==="KeyP"||e.code==="Escape"){togglePause();return;}
+  if(e.code==="KeyP"||e.code==="Escape"){if(e.repeat)return;if(e.code==="Escape"&&!$("board").classList.contains("hidden")){showPanel(state==="OVER"?"results":"menu");return;}togglePause();return;}
   const map={ArrowRight:0,KeyD:0,ArrowDown:1,KeyS:1,ArrowLeft:2,KeyA:2,ArrowUp:3,KeyW:3};
   if(map[e.code]!==void 0){setDir(map[e.code]);e.preventDefault();}
 });
@@ -1089,11 +1089,11 @@ window.addEventListener("keydown",e=>{
 /* ============================ UI WIRING ============================ */
 function showPanel(id){["menu","pause","results","board"].forEach(p=>{const el=$(p);el.classList.add("hidden");el.setAttribute("aria-hidden","true");el.inert=true;});if(id){const el=$(id);el.classList.remove("hidden");el.setAttribute("aria-hidden","false");el.inert=false;setTimeout(()=>{const f=el.querySelector("button:not([disabled]),input:not([disabled])");if(f)f.focus();},0);}}
 function togglePause(){
-  if(state==="RUN"||state==="BOSS"){state=(state==="BOSS")?"PAUSE_B":"PAUSE";showPanel("pause");}
-  else if(state==="PAUSE"||state==="PAUSE_B"){state=(state==="PAUSE_B")?"BOSS":"RUN";showPanel(null);}
+  if(state==="RUN"||state==="BOSS"){state=(state==="BOSS")?"PAUSE_B":"PAUSE";updateSignalHUD();showPanel("pause");}
+  else if(state==="PAUSE"||state==="PAUSE_B"){state=(state==="PAUSE_B")?"BOSS":"RUN";updateSignalHUD();showPanel(null);}
 }
-function toMenu(){state="MENU";boss=null;bossUI(false);showPanel("menu");refreshBest();}
-function readSeed(){const v=parseInt($("seed-input").value);if(!isNaN(v)&&v>0)seed=v>>>0;}
+function toMenu(){state="MENU";skipBanner=false;intermission=0;boss=null;shockwaves=[];hazards=[];bossUI(false);updateSignalHUD();showPanel("menu");refreshBest();}
+function readSeed(){const el=$("seed-input"),raw=String(el.value||""),m=raw.match(/seed\s+(\d+)/i)||raw.match(/(\d+)/),v=m?parseInt(m[1],10):NaN;if(!isNaN(v)&&v>0){seed=(v>>>0)||1;if(String(el.value)!==String(seed))el.value=seed;}}
 function refreshBest(){const b=quest.bestBySeed[seed];
   $("best-note").textContent=b!==void 0?"Your best on seed "+seed+": "+b+" pts":"No score on seed "+seed+" yet.";}
 function refreshSettingsUI(){
