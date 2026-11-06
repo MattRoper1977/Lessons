@@ -193,7 +193,7 @@
         .setting-row { display: flex; justify-content: space-between; width: 450px; max-width: 90%; margin: 8px 0; align-items: center; color: white; font-size: 16px;}
         input[type="color"] { width: 50px; height: 30px; border: none; cursor: pointer; background: none;}
 
-        .skin-container { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; width: 450px; }
+        .skin-container { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; width: 450px; max-width:90%; }
         .skin-btn {
             background: rgba(255,255,255,0.1); color: #aaa; border: 1px solid #444; padding: 8px 12px; cursor: pointer;
             transition: all 0.2s; font-size: 12px; min-width: 80px; clip-path: polygon(10% 0, 100% 0, 100% 100%, 0 100%);
@@ -201,6 +201,10 @@
         .skin-btn.active { background: #00d4ff; border-color: #00d4ff; color: black; font-weight: bold; box-shadow: 0 0 10px rgba(0,212,255,0.5); }
         .skin-btn:disabled { opacity: 0.3; cursor: not-allowed; border-style: dashed; }
 
+        @media (max-width:400px) {
+            #top-bar { top:calc(78px + env(safe-area-inset-top)); }
+            #combo-box { top:calc(198px + env(safe-area-inset-top)); }
+        }
         /* LEADERBOARD UI */
         #leaderboard-screen { z-index: 102; }
         #leaderboard-list {
@@ -368,6 +372,13 @@
         .badge .b-desc { font-size:11px; color:#94a3b8; margin-top:4px; line-height:1.25; }
         @media (max-width:560px){
 #instructions-box{box-sizing:border-box} #challenge-grid { grid-template-columns:repeat(2,1fr); width:96%; } }
+    @media (max-width:400px) {
+            .control-btn { width:54px; height:54px; font-size:22px; }
+            .control-group { gap:9px; }
+            #mobile-controls { height:140px; padding-left:6px; padding-right:6px; }
+        }
+        #relay-result>div { box-sizing:border-box; }
+        #relay-result .btn { width:100%; max-width:320px; }
     /* Tier 1 §2.5: 44px minimum touch targets (measured 51x42 and 36x41 at 390x844) */
 #audio-toggle,#touch-pause{min-width:44px;min-height:44px}
 </style>
@@ -893,6 +904,7 @@
             applyCalm();    // honour saved Calm Mode preference
             applyLegTheme(1); // set the opening (Eston Rec) atmosphere
 
+            window.addEventListener('blur', () => { clearControls(); if(['RUNNING','BOSS','WARNING','BOSS_WRECK'].includes(gameState)) togglePause(); });
             window.addEventListener('resize', onResize); window.addEventListener('keydown', handleInput); window.addEventListener('keyup', handleInput);
             if('ontouchstart' in window || navigator.maxTouchPoints > 0) {
                 document.getElementById('mobile-controls').style.display = 'flex'; setupTouch();

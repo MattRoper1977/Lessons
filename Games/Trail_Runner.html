@@ -191,7 +191,7 @@
         .setting-row { display: flex; justify-content: space-between; width: 450px; max-width: 90%; margin: 8px 0; align-items: center; color: white; font-size: 16px;}
         input[type="color"] { width: 50px; height: 30px; border: none; cursor: pointer; background: none;}
 
-        .skin-container { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; width: 450px; }
+        .skin-container { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; width: 450px; max-width:90%; }
         .skin-btn {
             background: rgba(255,255,255,0.1); color: #aaa; border: 1px solid #444; padding: 8px 12px; cursor: pointer;
             transition: all 0.2s; font-size: 12px; min-width: 80px; clip-path: polygon(10% 0, 100% 0, 100% 100%, 0 100%);
@@ -199,6 +199,10 @@
         .skin-btn.active { background: #00d4ff; border-color: #00d4ff; color: black; font-weight: bold; box-shadow: 0 0 10px rgba(0,212,255,0.5); }
         .skin-btn:disabled { opacity: 0.3; cursor: not-allowed; border-style: dashed; }
 
+        @media (max-width:400px) {
+            #top-bar { top:calc(78px + env(safe-area-inset-top)); }
+            #combo-box { top:calc(168px + env(safe-area-inset-top)); }
+        }
         /* LEADERBOARD UI */
         #leaderboard-screen { z-index: 102; }
         #leaderboard-list {
@@ -936,6 +940,7 @@
         let sunHaloMat, sunCoreMat, seaPlane, moonMesh;
         let legTarget = null;   // target colours the scene eases toward on a leg change
 
+        let resumeState = 'RUNNING', warningTicks = 0;
         let lives = 5, score = 0, levelScore = 0, level = 1, speed = BASE_SPEED, frame = 0, gameState = 'MENU';
         // Checkpoint: banked after every other leg (start of legs 3,5,7…) so a wipe
         // resumes from there instead of Leg 1. checkpointScore is the score baseline
@@ -1136,12 +1141,12 @@
             document.addEventListener('visibilitychange', () => {
                 if (document.hidden) {
                     clearTouchState();
-                    if (gameState === 'RUNNING' || gameState === 'BOSS' || gameState === 'BOSS_WRECK') togglePause();
+                    if (touchLive()) togglePause();
                 }
             });
             window.addEventListener('blur', () => {
                 clearTouchState();
-                if (gameState === 'RUNNING' || gameState === 'BOSS' || gameState === 'BOSS_WRECK') togglePause();
+                if (touchLive()) togglePause();
             });
 
             // Scene is ready: fade the boot screen out and play the menu title sequence.
@@ -1456,7 +1461,7 @@
             document.getElementById('restart-btn').onclick = () => { countTrek(); resetGame(); };
             document.getElementById('continue-btn').onclick = () => continueFromCheckpoint();
             document.getElementById('resume-btn').onclick = () => togglePause();
-            document.getElementById('pause-to-menu-btn').onclick = () => returnToMenu();
+            document.getElementById('pause-to-menu-btn').onclick = () => { countTrek(); returnToMenu(); };
             document.getElementById('gameover-to-menu-btn').onclick = () => { countTrek(); returnToMenu(); };
             const audioBtn = document.getElementById('audio-toggle');
             // Reflect any saved audio preference in the button on load.
@@ -1595,7 +1600,7 @@
 
             if (event.type === 'keydown') {
                 keys[code] = true;
-                if (code === keyConfig.pause) togglePause();
+                if (code === keyConfig.pause) { if (!event.repeat) togglePause(); return; }
                 if (gameState !== 'PAUSED') {
                     if (code === keyConfig.left) changeLane(-1);
                     else if (code === keyConfig.right) changeLane(1);
@@ -1716,6 +1721,10 @@
         function showFloatingText(pos, text, color) { const div = document.createElement('div'); div.className = 'float-text'; div.style.color = color || '#fff'; div.innerText = text; const vec = pos.clone(); vec.project(camera); const x = (vec.x * .5 + .5) * window.innerWidth; const y = (-(vec.y * .5) + .5) * window.innerHeight; div.style.left = `${x}px`; div.style.top = `${y}px`; document.body.appendChild(div); setTimeout(() => { div.remove(); }, 800); }
 
         function startGame() {
+            clearTouchState(); warningTicks = 0; currentLane = 0; targetX = 0; frame = 0;
+            isSpinning = false; spinTimer = 0; shootCooldown = 0;
+            playerMesh.rotation.set(0, 0, 0); playerMesh.scale.set(1, 1, 1);
+            _acc = 0; _lastT = performance.now();
             document.getElementById('start-screen').classList.add('hidden'); document.getElementById('pause-screen').classList.add('hidden'); document.getElementById('game-over-screen').classList.add('hidden'); document.getElementById('leaderboard-screen').classList.add('hidden'); document.getElementById('challenges-screen').classList.add('hidden'); document.getElementById('board-screen').classList.add('hidden');
             if (lives <= 0) lives = 5; player.visible = true; player.position.set(0, 0.4, 2); gameState = 'RUNNING'; scoreSubmitted = false;
             bonusActive = false; bonusTimer = 0; runCompass = 0; runBonusGrabs = 0; runPaceMax = 1; livesAtBossStart = lives;
@@ -1736,6 +1745,7 @@
             document.getElementById('combo-box').style.display = 'block';
         }
         function returnToMenu() {
+            warningTicks = 0; clearTouchState();
             lives = 5; score = 0; levelScore = 0; level = 1; speed = BASE_SPEED;
             if (ghostMesh) ghostMesh.visible = false;
             checkpointLeg = 0; checkpointScore = 0; trekCounted = false; // brand-new trek
@@ -1799,9 +1809,18 @@
             FX.milestone('⛺ Back on the trail — Leg ' + level);
             gameState = 'RUNNING';
         }
-        function togglePause() { if (gameState === 'RUNNING' || gameState === 'BOSS' || gameState === 'BOSS_WRECK') { gameState = 'PAUSED'; document.getElementById('pause-screen').classList.remove('hidden'); } else if (gameState === 'PAUSED') { document.getElementById('pause-screen').classList.add('hidden'); gameState = boss.userData.isWreck ? 'BOSS_WRECK' : (boss.visible ? 'BOSS' : 'RUNNING'); } }
+        function togglePause() {
+            if (touchLive()) { resumeState = gameState; gameState = 'PAUSED'; document.getElementById('pause-screen').classList.remove('hidden'); }
+            else if (gameState === 'PAUSED') { document.getElementById('pause-screen').classList.add('hidden'); gameState = resumeState; }
+            _acc = 0; _lastT = performance.now();
+        }
 
         function updateGameLogic() {
+            if (gameState === 'WARNING' && --warningTicks <= 0) {
+                document.getElementById('boss-warning').style.display = 'none';
+                document.getElementById('boss-ui').style.display = 'flex';
+                gameState = 'BOSS'; boss.position.set(0, 3, -20);
+            }
             if(gameState === 'RUNNING') {
                 if (bonusActive) {
                     score += speed * 5 * comboMultiplier;
@@ -1929,11 +1948,7 @@
             document.getElementById('boss-warning').style.display = 'block';
             playerGun.visible = true; boss.visible = true;
             objects.forEach(o => { scene.remove(o.mesh); }); objects = [];
-            setTimeout(() => {
-                document.getElementById('boss-warning').style.display = 'none';
-                document.getElementById('boss-ui').style.display = 'flex';
-                gameState = 'BOSS'; boss.position.set(0, 3, -20);
-            }, 2500);
+            warningTicks = 150;
         }
 
         function updateBoss() {
