@@ -16,7 +16,7 @@ import re
 
 GATE = "tools/verify_cross_estate_unification.py"
 ORIGINAL_ROW_COUNT = 755   # ruling qp-2 (A-wide, os-4, 11 Oct 2026): 734 + the 21 reviewed catalogue rows the A19/A24 refresh interleaves
-ORIGINAL_ROWS_SHA256 = "d4714b20bc0de0732d1dd33e449280b8b42fd0a033b830c7b169b7f538430717"  # M1 (vr, vt, vt add.1, vu): re-cut below for the same 755 rows with the folder paths renamed and the archive downloads re-pinned; every difference is the rename map (790209ca before)
+ORIGINAL_ROWS_SHA256 = "431354c16974f70317db728a2f5de209ec4fc54762fc1ec0da57242ceb2efea7"  # M1 (vr, vt, vt add.1, vu): re-cut below for the same 755 rows with the folder paths renamed and the archive downloads re-pinned; every difference is the rename map (790209ca before)
 SHELF_ROWS = [{'subject': 'Science · Teesside',
   'title': 'Science · browse by pathway, term and teaching version',
   'file': 'Science/index.html',
@@ -2276,7 +2276,7 @@ REVIEWED_PATHS += (
 REVIEWED_PATHS += (
     '404.html',
     'Build/README.txt',
-    'Games/WorldCup_ThreeLions_Final.html',
+    'Games/Cup_Final.html',
     'Grow/README.txt',
     'HANDOVER.md',
     'Humanities/BUILD_Scheme_of_Work.html',
@@ -4498,6 +4498,9 @@ def manifest_admitted(lessons: Path) -> set[str]:
             if member.is_file() and hashlib.sha256(member.read_bytes()).hexdigest() == checksum:
                 admitted.add(base + name)
     return admitted
+
+
+REVIEWED_PATHS = tuple(dict.fromkeys(REVIEWED_PATHS + ('Games/WorldCup_ThreeLions_Final.html', 'Games/WorldCup_v3_MatchDirector.html', 'Games/WorldCup_v5_Showdown.html', 'Games/voxelcraft.html', 'Games/Cup_Final.html', 'Games/Match_Director.html', 'Games/Cup_Showdown.html', 'Games/Block_Builder.html')))
 
 
 def pin(lessons: Path, apps: Path, *, check: bool) -> dict:

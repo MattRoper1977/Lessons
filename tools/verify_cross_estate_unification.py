@@ -103,7 +103,7 @@ MANIFEST_PINS = {
     # Ruled onto the pin 2026-08-12 (Ruling 3): the deck install is a
     # resources.json edit, and the blanket rule forbade it the same way it
     # once forbade studio adds. Same pattern, same tool, same commit rule.
-    "resources.json": "56a2f63c13df8bf7b5ebb3acd1ded8109f1252c93b9f28e6653d31b3b46626de"
+    "resources.json": "e7ac6bdb77461887a59a160a6b6fcf7a3627d7781da43fab061a51eafa04fa66"
 }
 PIN_COMMAND = "python3 tools/pin_manifests.py   (from either checkout — it writes both gate copies or neither)"
 
@@ -128,8 +128,8 @@ CATALOGUE_PINS = {
         "tools/catalogue/check_display_titles.cjs": "5d06689114a69124a2d7f59d644a85775756eadd2b470df01e066c2202df681b",
         "tools/catalogue/check_display_titles_browser.cjs": "5662cdb93c7796ead4fb9bb69ce94ac65fe1e29e103f00c65bd07a4d5129a7cd",
         "tools/verify_lessons_chips.mjs": "e417afd94ae4f3a450caab2edf4b6c41d14e4588f070d0ad822263e30a86cf39",
-        "tools/sw2/check_tokens_inert.cjs": "30e997c71a97df341093958790c290f2be4a17a386bb9a8820c5b52a0d514bfa",
-        "assets/catalogue/lesson-order.json": "3874d630de86aee7be6397139b40f4bb048b8268960769e3484e2e2ec1074153",
+        "tools/sw2/check_tokens_inert.cjs": "a1ed7820af20a85d7f89f1d5d03d0de0b6f269f6012a8a760630deb63fbb16cb",
+        "assets/catalogue/lesson-order.json": "1b3132fae7e0ee9c77186624d4b5b39a59c6c219e2ffb4423a2be81ebbc17318",
         "tools/catalogue/build_lesson_order.py": "35a4c54779b800ae8bd949154d0d19fddb190f49ec18e62efdd86d03313f6180",
         "tools/ux2/hub_gates.mjs": "3d3120df94b1789041370c4045fbcc983635af0b30a0705447f18371bed98944",
         "index.html": "bdca62dc5f92062c975287eb4be29314eab55dff7991bdba83c8e24840f805db",
@@ -153,7 +153,7 @@ CATALOGUE_PINS = {
         "assets/catalogue/lesson-navigation.js": "42e579bbef3940c24ca4360319290820305a777330b8bff79152b2cb6aa077e3",
         "assets/catalogue/science-shelf.css": "b2b1eb328662d841add139ccfff107f985f17373f1ee82b8762475663097ab60",
         "assets/catalogue/science-shelf.js": "a59fe0c988a5de7d614afc6a36d7dacf14c6e3fa92c732740442e4914d00f356",
-        "assets/catalogue/terms-and-styles.json": "2bd8025a39580b77439245578df9e58bcdf4de6b51395af5633ea031255e50c4",
+        "assets/catalogue/terms-and-styles.json": "e70070f52424155b4fc9bfbac287ddd55a9773ba4ace0e3923fe37cf92c91b56",
         "assets/catalogue/science-shelf.json": "6bfcac8579a72f8413e158b49460a8b853f284b8dc64bd4da4442c37e92edadf",
         "assets/catalogue/humanities-shelf.json": "a92102640be91f62d2cba36fe68cd712273e804108cf8311b1d87ba1d0d038c5",
         "tools/catalogue/build_catalogue.py": "4eff91f7ace9073a6612035c33e8556875d6165da83876ae5ec20a6ec11a15a8",
@@ -184,13 +184,13 @@ CATALOGUE_PINS = {
         "_sx2/DECISIONS.md": "98959aafb9360877134158427865aabf69aeab094b499b58c31451fec9aca93e",
         "tools/ux2/resource_sizes.py": "2e8d36613fb39e3114c2006337771ddc9c724f9b6333a6e05cfed4e646e4224b",
         "tools/ux2/s1m_published_input_proof.py": "95b82480a9fdbb607fcaf3077d1e58dc1e9a5eafd96581fdbec281c979de1d10",
-        ".github/workflows/s1m-published-input-proof.yml": "fcc9f4c6b6a550873bda92346bb73e47d9ec0cfe95664a8eec66d0e7947dfb76",
-        ".github/workflows/watch-main.yml": "9a468937b9eefbcdb010f9eed9a2b48f4111761202932fadad680cc3b477f3b6",
+        ".github/workflows/s1m-published-input-proof.yml": "5bfbf9e9df144c61b938855b12f1bc78299c699bb6a48f595767a5e140f4a9ec",
+        ".github/workflows/watch-main.yml": "cadf3ae228058ca677591c68593774e9c928d9fbc8e4d3f992806915201df133",
         "tools/verify_v6fin_w7_r1_r7.py": "73fc89a3f9c034ce8ad45b22b443b7bfe0da448ee1fff02c46c62e07790822ff",
         "_sx3/FENCE.json": "03541f944d0ea861a32c476034553b4ce3d43acf89edc5264f3808b4079e9c5a",
         "_sci/HELD.md": "2443f349c9cf1784e1e91ed1e93851e04cd50795403a5c1310c07946aeedd07e",
         "_sx3/RELEASE_LEDGER.md": "85605383b75547480a21388ed9003ac2ccde89b34373a45454595c2d9e0102a1",
-        "_sci/WEEK_TOKEN_DISAGREEMENTS.md": "2ece32469fe9212d22dad5cfe7741b7f6cd06bba5429cbe74cb52185161c2858",
+        "_sci/WEEK_TOKEN_DISAGREEMENTS.md": "8a64eab2a11719f4a1dff80587470b6d18237f29643da3c304fa8a234f1e086d",
         "_passhumd5/CHECKS.md": "53128441515e578baf2e756bf9e49186d0ad95ddc44675f8f02104d393a79d83",
         "_passhumd5/build_text_index.py": "6239cbfed4f5a6b239655de67bd20aa4bd377205806ab479a23578a85b5eacd0",
         "_passhumd5/scan_gvocab.py": "01baaadc2d96cc06e7b458dc19b9734d96d84291e2d1b5c8ab43b08ec43edb58",
@@ -234,7 +234,7 @@ CATALOGUE_PINS = {
         "Science/Grow/W8-W13_2026-27/SCI_G_W9B_Spherical_Bodies_Do.html": "4ad909faa2bc690cdb530cdd02555b2c216c27d5a4a8f2986e4e29814dbce984",
         "Science/Grow/W8-W13_2026-27/SCI_G_W9_Turn_Earth_explain_the_sky_Classic.html": "178c695fe2dc166a80abfd26e41174e28ecfa39d4700db0870d7ee27bbffd6e8",
         "Science/Build/W8-W13_2026-27/SCI_B_W12_Give_a_rock_a_job_Classic.html": "509f38056bd09e903c70b0426ac55ab7ff73f7da10261a97eec11d49d7b27d1c",
-        ".github/workflows/glv3-verify.yml": "4bf27ca7471a21359e35d1bc7277c5fa0adeb5f31a47c769f192165796037088",
+        ".github/workflows/glv3-verify.yml": "d6a1e7c450bfefc7e1fe98e35b41055c89015257e03cc445781184d25f6c8d70",
         "_glv3/tools/verify_change_boundary.py": "cb6bb570d9562d53a5cc0df7db25e6b6101ef23d3df652fe0c2f66796623bc15",
         "_glv3/tools/browser_verify.mjs": "737ad30f297e061407161743f017614179cc6c56f1c9a3904bbe7c98df38c888",
         "_glv3/tools/chip_gate.mjs": "16cdd5c0ad3745c57340ed0ec6a208d221e4793bfc9b1cd9bc703a6c2613dd9a",
@@ -247,7 +247,7 @@ CATALOGUE_PINS = {
         "tools/humanities_resources/check_resources.py": "ec5383e3a34cbff999f190b0014a4a73e00a3a29e2714498f7620fd638dc2aa5",
         "tools/humanities_resources/resource.css": "1aed9aaca0d73a4b200c4e5d0977e73f4e906c747d7340c7a62f4197a8344bae",
         "tools/humanities_resources/resource.js": "ad40afed95490bfcce92dc062da46e1b27bcb96bdc80e37eabdfe02bf6ffc446",
-        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "c61f84cbcb3e7d4bb02041cf47562ec5212b629736376648e70b5d0be217d87b",
+        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "77e194683d9d76fcdfc2335c46163850b77ad62299dfa8bdd8809a5155a9da41",
         "tools/catalogue/TERM_REVIEW.json": "9395de4c2803a7bc2a679cf0659c9df3c41c01e5ac60c0a2d39249414bc12de8",
         "tools/catalogue/SCIENCE_WEEK_BINDINGS.json": "9fa98ad78b0bd3c3f3ee15f88a7b2fd40eea810e6c9fb65ee93b3c5192888071",
         "primary/year5/science/autumn/forces/Lesson8_ExploreGravity.html": "20047720bf1d309055abdf232d341b6fd99b833631efa0bcbfb3dabed9671196",
@@ -751,7 +751,7 @@ CATALOGUE_PINS = {
         "LIVETEACH_RESIDUE.md": "5a18069638e4bbfb6a4da111f68e4ac3a17f5de4c8aead731d718f794d89e400",
         "404.html": "e899e06d5908fd29dbf3a1011f8e7e7c5c46b216a73a19835c4197b6431c58cc",
         "Build/README.txt": "84aa743004ececee3d3e9aedc295f0afc0f686124dd1b2f2f422b38c7b282a61",
-        "Games/WorldCup_ThreeLions_Final.html": "ca6281bf6ac5e0d9eb1d7d10b14ceb75b38f07fece140a6523b24ea070f3f581",
+        "Games/Cup_Final.html": "b8093ca2cd17e44c282a9595d411e232e2019f5451cad0ddf54926a2fad40106",
         "Grow/README.txt": "9c2c46c4ebfb56c1ae99c7c20ee2bb73a623a3525c8f3daedf718599b7e7cfc6",
         "HANDOVER.md": "b2e4979f17db2ac9dcf2ed8eeb3461ffbdba19ad8713a40b33388132c18381ce",
         "Humanities/BUILD_Scheme_of_Work.html": "2c66d10240492b848d6242d261f1e7a9cdc1f8b756c718f27ad4fbdabce64a31",
@@ -1134,7 +1134,7 @@ CATALOGUE_PINS = {
         "Humanities/Teaching_Packs/RE_Autumn_BUILD_Reviewed/SHA256SUMS.txt": "ccc10683c49aaaf9fc3e57b34f6e1a90d77ef3eeb72c9bd716fcc40a8cf00cd9",
         "Humanities/Teaching_Packs/RE_Autumn_GROW_Reviewed/SHA256SUMS.txt": "871fa30a1d1355372c39218f3794a082a8823a5003fcde28c2683ccf5ce3c343",
         "Humanities/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/SHA256SUMS.txt": "1aef26713d7bb00458ed20e3b76c5ccecdf3ba703786cfef073b7893c3a1d913",
-        ".github/workflows/cross-estate-on-content.yml": "ead3d793110db61b5dc7b905beaac57ab5bee446ff4d18039f17382256ad2f1e",
+        ".github/workflows/cross-estate-on-content.yml": "1f4e26305b2532ab928440f9918aeb3e881da84d3b6d1040d8579d1b04d9f810",
         "tools/humanities_resources/PUBLIC_LABEL_CHANGES.json": "1054940b3c20ab2c084965a4ae11c8827867267e119df6d8e65f717d7e22adf5",
         "Humanities/David_Cover_Autumn1_W3-W7/BH_W3.html": "3cb06cdadc3af0b852e54192a10203295be12c6139601e98e86c9496478a79f0",
         "Humanities/David_Cover_Autumn1_W3-W7/BH_W4.html": "ad5f0adbe53b57189e3c9958ec5e79d3f9b91018e6fc85001140141284e5c387",
@@ -1315,7 +1315,7 @@ CATALOGUE_PINS = {
         "Science/Teaching_Packs/GROW/Image_Credits.pdf": "651dcd9f749c6cfb5ffccd73eb9ffb14a57f8ff8a8860f348969b34114396f86",
         "tools/science_teaching_packs/check_hub_browser.cjs": "9323d0a64514970426bf30c8b281f99d100a8849d087d8f4354c78f3fe5022f4",
         "tools/science_teaching_packs/VISUAL_REFRESH_QA.json": "3ce5b90abaf89fc5a2a4085791bb16e09667545cf489a985c1c525bd7698fc80",
-        ".github/workflows/science-teaching-packs.yml": "f3bd379cc5f1ebcb296f4819a8e2f6f7a488a4b5bd2955d409f8a7ee626715ff",
+        ".github/workflows/science-teaching-packs.yml": "75b2f7ea0764657011298988e0752a29edcedf5ca4fc4a5d2089054bb714571f",
         "tools/stale_evidence_sweep.mjs": "17813c59e3752fb9843374a302895d0d4710fb2c749d29af81a77873ff9d3677",
         "Science/Build/W8-W13_2026-27/SCI_B_W8A_Sugar_Labels_Explore.html": "74d17d4e0f6873f094691daa753539f8a351887160beea6a8a8d727bba864d2d",
         "Science/Teaching_Packs/BUILD/lessons/W8A/BUILD_Science_Autumn1_W8A_Sugar_Evidence_Read_The_Label.pdf": "fc9ba726c94177000d872c28e3c7db3812c268d6552e936a316c38654a95a0dd",
@@ -2778,7 +2778,14 @@ CATALOGUE_PINS = {
         "Humanities/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_2/W05/LAUNCH_RE_A2_W05.html": "7790fa407df7c999a939fe91bb093f2935a4ce3daa80a842041cb85a2c70010b",
         "Humanities/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_2/W06/LAUNCH_RE_A2_W06.html": "f26724d7522985b26703c21d2e05f0faa725f3067d0afb456715bc61ff7a4be0",
         "Humanities/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_2/W07/LAUNCH_RE_A2_W07.html": "301b959f01570f7fdf12a6060a18da609243a0bfbb904cae980eb294232e8fa5",
-        "Humanities/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/approved-mark.jpg": "f1095531d88d17f20c7464c62887703321a0872f108d3fb78a4afc0226dac2a7"
+        "Humanities/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/approved-mark.jpg": "f1095531d88d17f20c7464c62887703321a0872f108d3fb78a4afc0226dac2a7",
+        "Games/WorldCup_ThreeLions_Final.html": "59db6f0836e8742f340809e4ad9c3356945dbacf576fb574ef48f6965539171e",
+        "Games/WorldCup_v3_MatchDirector.html": "3bb61364be4958141b6037eeb5836eb35977b3c3df2224b140db43a03fa30599",
+        "Games/WorldCup_v5_Showdown.html": "83dd41c8867ddf24781b3c8a090ac238139199ea1d3955cfa891f87e55ccda5a",
+        "Games/voxelcraft.html": "fa31992db8bf3d3a77a23740e2554d880b960146fcc3d594bee2714e04ba6a76",
+        "Games/Match_Director.html": "250951c40dc767c2d77bae841f0c983a6bb79e425501f0d45b67a88fa704a30c",
+        "Games/Cup_Showdown.html": "50bc99f7c2c78aece52d307eca9cd481497c61640cb64227183bd586fa6fd203",
+        "Games/Block_Builder.html": "15023c59218bc23150319bedd13d36d5a119e6574a7fc68eae85b6fc8edfd3e2"
     }
 }
 # END REVIEWED CATALOGUE PINS
@@ -2789,7 +2796,7 @@ CATALOGUE_PINS = {
 # Ruling qp-2 (A-wide, os-4, 11 Oct 2026): the original rows are 734 plus the 21 reviewed rows the A19/A24
 # catalogue refresh interleaves (additive: with them taken out, the 734 are in their reviewed order, unedited).
 CATALOGUE_ORIGINAL_ROWS = 755
-CATALOGUE_ORIGINAL_ROWS_SHA256 = "d4714b20bc0de0732d1dd33e449280b8b42fd0a033b830c7b169b7f538430717"
+CATALOGUE_ORIGINAL_ROWS_SHA256 = "431354c16974f70317db728a2f5de209ec4fc54762fc1ec0da57242ceb2efea7"
 # The appended rows are the 49 reviewed hub rows followed, since UX2 D3
 # (2026-09-08), by the companion-pack entries DERIVED from
 # data/companion-packs.json by tools/ux2/companion_catalogue.py. The count and
