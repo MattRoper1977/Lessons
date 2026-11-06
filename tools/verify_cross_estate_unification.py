@@ -751,7 +751,7 @@ CATALOGUE_PINS = {
         "LIVETEACH_RESIDUE.md": "5a18069638e4bbfb6a4da111f68e4ac3a17f5de4c8aead731d718f794d89e400",
         "404.html": "e899e06d5908fd29dbf3a1011f8e7e7c5c46b216a73a19835c4197b6431c58cc",
         "Build/README.txt": "84aa743004ececee3d3e9aedc295f0afc0f686124dd1b2f2f422b38c7b282a61",
-        "Games/Cup_Final.html": "591eec5137fc0ea7f766362d88a37f8631dfe657e803378eee42c082917b08b0",
+        "Games/Cup_Final.html": "ba96143c03cde6a4b6c0e54b7e0b478877fde1070ef03051c7965c5dc6d1aa68",
         "Grow/README.txt": "9c2c46c4ebfb56c1ae99c7c20ee2bb73a623a3525c8f3daedf718599b7e7cfc6",
         "HANDOVER.md": "b2e4979f17db2ac9dcf2ed8eeb3461ffbdba19ad8713a40b33388132c18381ce",
         "Humanities/BUILD_Scheme_of_Work.html": "2c66d10240492b848d6242d261f1e7a9cdc1f8b756c718f27ad4fbdabce64a31",
@@ -2783,9 +2783,9 @@ CATALOGUE_PINS = {
         "Games/WorldCup_v3_MatchDirector.html": "3bb61364be4958141b6037eeb5836eb35977b3c3df2224b140db43a03fa30599",
         "Games/WorldCup_v5_Showdown.html": "83dd41c8867ddf24781b3c8a090ac238139199ea1d3955cfa891f87e55ccda5a",
         "Games/voxelcraft.html": "fa31992db8bf3d3a77a23740e2554d880b960146fcc3d594bee2714e04ba6a76",
-        "Games/Match_Director.html": "45fc56d0bb0fb6aebef4e1598839f690ca337515d4b55a02976f85ce085b99f6",
-        "Games/Cup_Showdown.html": "fceda62c7ba93c703dff7d42db365764f687b4a9b21ec086c2e60a88a4a55b36",
-        "Games/Block_Builder.html": "fea3c7015c37f8f61fbd3ebe4668e8270cbf371d3afb307fecad625a3f397955"
+        "Games/Match_Director.html": "cf114ae9313c06c4b555fcfff4a49e2fc919dafbbde5a1c34f9474889ca28f74",
+        "Games/Cup_Showdown.html": "07796c9e918a214234cee74fdddc15449097f881a7816b144f874b730570bed0",
+        "Games/Block_Builder.html": "eb715339f3de1048672742fb55254bf9249babe72a270f75b19a82cb43a50509"
     }
 }
 # END REVIEWED CATALOGUE PINS
