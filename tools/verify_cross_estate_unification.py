@@ -129,7 +129,7 @@ CATALOGUE_PINS = {
         "tools/catalogue/check_display_titles_browser.cjs": "5662cdb93c7796ead4fb9bb69ce94ac65fe1e29e103f00c65bd07a4d5129a7cd",
         "tools/verify_lessons_chips.mjs": "e417afd94ae4f3a450caab2edf4b6c41d14e4588f070d0ad822263e30a86cf39",
         "tools/sw2/check_tokens_inert.cjs": "a1ed7820af20a85d7f89f1d5d03d0de0b6f269f6012a8a760630deb63fbb16cb",
-        "assets/catalogue/lesson-order.json": "1b3132fae7e0ee9c77186624d4b5b39a59c6c219e2ffb4423a2be81ebbc17318",
+        "assets/catalogue/lesson-order.json": "c7ba687fa6b7fa97a7b3595a1fa508b2a21476f36959802c26f95103bb7e0b44",
         "tools/catalogue/build_lesson_order.py": "35a4c54779b800ae8bd949154d0d19fddb190f49ec18e62efdd86d03313f6180",
         "tools/ux2/hub_gates.mjs": "3d3120df94b1789041370c4045fbcc983635af0b30a0705447f18371bed98944",
         "index.html": "bdca62dc5f92062c975287eb4be29314eab55dff7991bdba83c8e24840f805db",
