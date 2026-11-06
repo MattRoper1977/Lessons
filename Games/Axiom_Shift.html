@@ -804,6 +804,7 @@ if (typeof document !== 'undefined') {
   // ---- screen routing -----------------------------------------------------
   var SCREENS = ['splash', 'menu', 'levels', 'settings', 'guide', 'howto', 'pause', 'clear'];
   function show(id) {
+    if (id !== 'game') V6.ascent = null;
     for (var i = 0; i < SCREENS.length; i++) {
       var screen=$(SCREENS[i]),active=SCREENS[i]===id;screen.classList.toggle('show',active);screen.setAttribute('aria-hidden',active?'false':'true');
       if('inert' in screen)screen.inert=!active;
@@ -842,7 +843,7 @@ if (typeof document !== 'undefined') {
     return {
       level: level, tier: tier, bps: A.TEMPOS[tier] / 60, st: st,
       running: true, last: 0, hw: st.songBeat, trail: [], blot: 0,
-      wantTap: false, wantTapAt: 0, leftGroundAt: 0, wasGrounded: true,
+      beatCarry: 0, wantTap: false, wantTapAt: 0, leftGroundAt: 0, wasGrounded: true,
       practiceAt: (opts.fromBeat != null ? opts.fromBeat : null),
       beatFlash: 0, secsClearedMax: 0, gateWarned: -1,
       prevY:st.y, renderAlpha:1
@@ -903,9 +904,10 @@ if (typeof document !== 'undefined') {
     play.prevY = st.y;
 
     consumeTap(now);
-    var target = st.songBeat + play.bps * dtSec;
+    var target = st.songBeat + play.bps * dtSec + play.beatCarry;
     var guard = A.SUB * (play.level.endBeat + 8) * 60;
     A.runToBeat(st, [], target, st.steps + Math.ceil(play.bps * .05 * A.SUB) + 2, true); // bounded live frame; yield immediately after rewind
+    play.beatCarry = st.smudges > beforeSmudge ? 0 : target - st.songBeat;
     play.renderAlpha = Math.max(0,Math.min(1,(target-beforeBeat)/Math.max(A.DBEAT,st.songBeat-beforeBeat)));
 
     // ground-edge tracking for coyote time
@@ -1086,7 +1088,7 @@ if (typeof document !== 'undefined') {
     var clean = play.st.smudges === 0;
     var stars = 1 + (clean ? 1 : 0) + (Object.keys(play.st.drops).length >= 3 ? 1 : 0);
     // Practice never banks stars or progress into the real save; nor does Daily.
-    if (lvl.id !== 'daily' && play.practiceAt == null) {
+    if (lvl.id !== 'daily' && play.practiceAt == null && play.st.practiceFrom == null) {
       save.best[lvl.id] = 100;
       save.stars[lvl.id] = Math.max(save.stars[lvl.id] || 0, stars);
       persist();
