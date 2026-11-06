@@ -211,6 +211,8 @@ R_RAISE_SCIENCE_A2_REBUILD_REVIEW_BASE = 'a427dedf7b543cca2cbbe0dbd944101c728b22
 # chassis, one transaction, derived and written by
 # tools/build_resources/admit_sx3_release.py. Every member also carries a
 # CATALOGUE_PINS admission, which replacement_errors cross-checks.
+# REVIEW: signed off by Matt Roper 2026-11-06 18:15Z ("signed off humanities"; ruling R-RAISE: every Autumn 2 Humanities and RE
+#   lesson rebuilt on the Autumn 1 Week 8 model as the main card, no arc word; 3 members replace the W01 pages in place).
 R_RAISE_HUMANITIES_RE_A2_REBUILD_REVIEW_BASE = 'cd1101b037bdc1db847bc69531d5e954edbd4575'
 # BEGIN DECLARED TRANSACTIONS
 # BEGIN S3 OFFLINE EDITION REPLACEMENTS
