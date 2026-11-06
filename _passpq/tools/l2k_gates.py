@@ -62,7 +62,7 @@ env = dict(os.environ); env.pop("L2K_PLANT_GAP", None)
 r = subprocess.run([sys.executable, os.path.join(ROOT, "_passpq", "tools", "l2k_build.py")],
                    cwd=ROOT, env={**env, "L2K_OUT": tmp}, capture_output=True, text=True)
 # l2k_build writes into the repo; instead verify by re-running and diffing git status
-r2 = subprocess.run(["git", "status", "--porcelain", "GROW_ASDAN/PEQ_L2_Kitchen"],
+r2 = subprocess.run(["git", "status", "--porcelain", "GROW_ASDAN/PEQ_L2_Kitchen", "_passpq/staff"],
                     cwd=ROOT, capture_output=True, text=True)
 gate("G2 committed pages match a fresh build (no drift after rebuild)",
      r.returncode == 0 and r2.stdout.strip() == "", r2.stdout.strip()[:200])
@@ -147,24 +147,42 @@ checks = {
 import re as _re
 _flat = lambda t: _re.sub(r"\s+", " ", t)
 sow_f = _flat(sow)
-missing = [k for k, v in checks.items() if _flat(v) not in sow_f]
+# AB-1 (Nov 2026): the timetable working, named slots and staffing notes left the
+# published pages for the staff hours ledger under _passpq/staff/, which is not
+# served. Every statement this gate required still has to exist, word for word; it
+# is now required where it lives. The public pages must instead point to the ledger.
+LEDGER_KEYS = ['sensitivity table', 'measured from the timetable', 'classification rule printed', 'per-room table present', "no lane inherits another's rate", "Build's zero floor stated", 'reachability at floor and ceiling', 'the unreachable stated, not implied', 'cooking capacity stated', 'kitchen slots named per lane', 'teacher attribution not assumed', 'GROW/LAUNCH question closed by evidence', 'co-delivery still withdrawn', 'QA headroom declared, not claimed']
+ledger_path = os.path.join(ROOT, "_passpq", "staff", "Kitchen_Hours_Ledger.html")
+led_f = _flat(open(ledger_path, encoding="utf-8").read()) if os.path.exists(ledger_path) else ""
+missing = [k for k, v in checks.items()
+           if _flat(v) not in (led_f if k in LEDGER_KEYS else sow_f)]
+if "staff hours ledger" not in sow_f: missing.append("year map points to the staff hours ledger")
+for _k in LEDGER_KEYS:
+    if _k in checks and _flat(checks[_k]) in sow_f:
+        missing.append(f"published year map still carries ledger-only text: {_k}")
 # PEQ-YEAR-2 §4: G5 read only the year map, so the handover and the ledger could
 # drift from it unwatched -- and did (the handover's hours section carried no
 # measured-vs-ruled split at all, and the generated HTML had no hours section
 # while the markdown promised "same content"). Gate all three.
 hand_md = open(os.path.join(KIT, "COOKING_HANDOVER.md"), encoding="utf-8").read()
 hand_html = open(os.path.join(KIT, "Cooking_Handover.html"), encoding="utf-8").read()
+_hand_ledger = {"measured from the timetable": "measured from the school's own timetable",
+                "slot table present": "Your slots, named",
+                "cooking slot teacher lodged": "confirm who teaches the cooking slot",
+                "the cooking slot named": "PfA / cooking"}
+for k, v in _hand_ledger.items():
+    if _flat(v) not in led_f:
+        missing.append(f"staff ledger: {k}")
 for label, text in (("handover .md", hand_md), ("handover .html", hand_html)):
-    for k, v in {"measured from the timetable": "measured from the school's own timetable",
-                 "slot table present": "Your slots, named",
-                 "cooking slot teacher lodged": "confirm who teaches the cooking slot",
-                 "the cooking slot named": "PfA / cooking"}.items():
-        if _flat(v) not in _flat(text):
-            missing.append(f"{label}: {k}")
-for k, v in {"source cell cited on kitchen slots": "[Build Timetable]!D11",
-             "owner-decision slots not absorbed": "owner-decision",
-             "calendar evidence split": "Spring and summer have NO term dates"}.items():
-    if _flat(v) not in sow_f:
+    if "staff hours ledger" not in _flat(text):
+        missing.append(f"{label}: points to the staff hours ledger")
+    for k, v in _hand_ledger.items():
+        if _flat(v) in _flat(text):
+            missing.append(f"{label}: still publishes ledger-only text: {k}")
+for k, v, where in (("source cell cited on kitchen slots", "[Build Timetable]!D11", led_f),
+                    ("owner-decision slots not absorbed", "owner-decision", led_f),
+                    ("calendar evidence split", "Spring and summer have NO term dates", sow_f)):
+    if _flat(v) not in where:
         missing.append(k)
 mtx = open(os.path.join(KIT, "Criteria_Coverage_Matrix.html"), encoding="utf-8").read()
 if "174 criteria mapped, 0 gaps" not in mtx: missing.append("matrix zero-gap line")
