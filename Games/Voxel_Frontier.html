@@ -119,7 +119,7 @@
   #d-up{left:51px;top:0}#d-down{left:51px;bottom:0}#d-left{left:0;top:51px}#d-right{right:0;top:51px}
   #act{position:absolute;right:16px;bottom:16px;width:150px;height:150px}
   #act .btn{width:64px;height:64px;position:absolute}
-  #b-jump{right:0;bottom:60px}#b-break{left:0;bottom:0}#b-place{right:0;bottom:0;background:rgba(56,189,248,.35)}
+  #b-jump{right:0;bottom:68px}#b-break{left:0;bottom:0}#b-place{right:0;bottom:0;background:rgba(56,189,248,.35)}
   #dpad #b-fly{left:0;top:0;width:46px;height:46px;font-size:13px}
   body.mobile #touch{display:block}
   @media(max-width:520px){
@@ -131,6 +131,10 @@
   }
   /* Nine slots at 34px came to 350px, so the hotbar hung off both edges of a
      320px screen and took the page with it. */
+  @media(max-width:340px){
+    #dpad{left:8px;width:140px} #act{right:8px;width:140px}
+    #d-up,#d-down{left:46px} #d-left,#d-right{top:51px}
+  }
   @media(max-width:365px){
     .slot{width:28px;height:28px;border-radius:5px}
     .swatch{width:17px;height:17px}
@@ -192,6 +196,7 @@
 <div id="hotbar"></div>
 
 <div id="touch">
+  <button class="btn" id="b-pause" style="top:12px;right:12px;min-width:64px;min-height:44px;font-size:13px">Pause</button>
   <div id="dpad">
     <div class="btn" id="d-up">▲</div><div class="btn" id="d-down">▼</div>
     <div class="btn" id="d-left">◀</div><div class="btn" id="d-right">▶</div>
@@ -314,9 +319,9 @@ try{ const v=localStorage.getItem(LAST_KEY); if(v!==null&&isFinite(parseInt(v,10
 const legacy=readJSON(SAVE_BASE);
 if(legacy&&Number.isFinite(legacy.seed)){
   const k=SAVE_PREFIX+(legacy.seed|0);
-  if(!readJSON(k))lsSet(k,JSON.stringify(legacy));
+  const migrated=!!readJSON(k)||lsSet(k,JSON.stringify(legacy));
   if(lastSeed===null)lastSeed=legacy.seed|0;
-  lsDel(SAVE_BASE);
+  if(migrated)lsDel(SAVE_BASE);
 }
 
 const SEED = urlSeed!==null && urlSeed!=='' && isFinite(parseInt(urlSeed,10))
@@ -1119,6 +1124,7 @@ const waterTint=document.getElementById('water-tint');
 function requestLock(){
   audioInit();
   if(!started){startGame();return;}
+  if(isTouch){ running=true; overlay.style.display='none'; prev=performance.now(); return; }
   if(canvas.requestPointerLock)canvas.requestPointerLock();
 }
 startBtn.addEventListener('click',e=>{e.stopPropagation();requestLock();});
@@ -1129,15 +1135,20 @@ overlay.addEventListener('click',e=>{
   requestLock();
 });
 
+function clearInput(){
+  for(const k in keys)keys[k]=false;
+  touchMove.f=0; touchMove.s=0; touchJump=false;
+}
 function showPause(msg){
-  if(!started)return;
+  if(!started||!running)return;
+  running=false; clearInput(); saveWorld(true);
   tagEl.textContent=msg||'Paused — your world is saved automatically.';
   startBtn.textContent='Resume';
   overlay.style.display='flex';
 }
 document.addEventListener('pointerlockchange',()=>{
   locked=(document.pointerLockElement===canvas);
-  if(locked){ overlay.style.display='none'; }
+  if(locked){ running=true; overlay.style.display='none'; prev=performance.now(); }
   else if(started){ showPause(); saveWorld(true); }
 });
 // If the browser refuses the lock (e.g. too soon after Esc) the player would
@@ -1160,6 +1171,7 @@ function toggleFly(){
   toast(fly?'Fly mode ON — Space up, Shift down':'Fly mode OFF',1.6);
 }
 addEventListener('keydown',e=>{
+  if(e.code==='Escape'&&isTouch){showPause();return;}
   if(e.repeat){keys[e.code]=true;return;}
   keys[e.code]=true;
   if(e.code==='KeyF')toggleFly();
@@ -1179,9 +1191,9 @@ addEventListener('resize',()=>{
   camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();
   renderer.setSize(innerWidth,innerHeight);
 });
-addEventListener('blur',()=>{ for(const k in keys)keys[k]=false; touchMove.f=0; touchMove.s=0; touchJump=false; });
+addEventListener('blur',()=>{ clearInput(); showPause(); });
 addEventListener('beforeunload',()=>{ if(started)saveWorld(true); });
-document.addEventListener('visibilitychange',()=>{ if(document.hidden&&started)saveWorld(true); });
+document.addEventListener('visibilitychange',()=>{ if(document.hidden&&started){clearInput();showPause();saveWorld(true);} });
 
 // Overlay buttons
 function updateMuteBtn(){document.getElementById('mutebtn').textContent='Sound: '+(muted?'off':'on');}
@@ -1219,6 +1231,7 @@ if(isTouch){
   bind('b-break',()=>breakBlock());
   bind('b-place',()=>placeBlock());
   bind('b-fly',()=>toggleFly());
+  document.getElementById('b-pause').addEventListener('click',()=>showPause());
   let lookId=null,lastT=null;
   canvas.addEventListener('touchstart',ev=>{
     if(lookId!==null)return;
@@ -1306,7 +1319,7 @@ function loop(now){
 
   // Paused (pointer lock released) must genuinely stop the world — otherwise a
   // held key keeps walking the player around behind the "Paused" menu.
-  const active = running && (locked||isTouch);
+  const active = running && !document.hidden && (locked||isTouch);
   if(running&&!active){ hl.visible=false; frames=0; fpsT=0; }
   if(active){
     updatePhysics(dt);
