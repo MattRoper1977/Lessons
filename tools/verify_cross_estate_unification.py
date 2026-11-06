@@ -103,7 +103,7 @@ MANIFEST_PINS = {
     # Ruled onto the pin 2026-08-12 (Ruling 3): the deck install is a
     # resources.json edit, and the blanket rule forbade it the same way it
     # once forbade studio adds. Same pattern, same tool, same commit rule.
-    "resources.json": "4d0967d0e207461b26d4cb1ad9511bea5d552374bf5c97f6dadd4e25b597cb8c"
+    "resources.json": "56a2f63c13df8bf7b5ebb3acd1ded8109f1252c93b9f28e6653d31b3b46626de"
 }
 PIN_COMMAND = "python3 tools/pin_manifests.py   (from either checkout — it writes both gate copies or neither)"
 
@@ -129,12 +129,12 @@ CATALOGUE_PINS = {
         "tools/catalogue/check_display_titles_browser.cjs": "5662cdb93c7796ead4fb9bb69ce94ac65fe1e29e103f00c65bd07a4d5129a7cd",
         "tools/verify_lessons_chips.mjs": "e417afd94ae4f3a450caab2edf4b6c41d14e4588f070d0ad822263e30a86cf39",
         "tools/sw2/check_tokens_inert.cjs": "30e997c71a97df341093958790c290f2be4a17a386bb9a8820c5b52a0d514bfa",
-        "assets/catalogue/lesson-order.json": "6f3b86ebc73917d4d2587e800b507262f55b6103d50b2e53d4d837679abf4f0d",
+        "assets/catalogue/lesson-order.json": "2bd82b4e51be55514a63e067190f8c123af969bf8aff33cea436e09fc9c13de3",
         "tools/catalogue/build_lesson_order.py": "35a4c54779b800ae8bd949154d0d19fddb190f49ec18e62efdd86d03313f6180",
         "tools/ux2/hub_gates.mjs": "3d3120df94b1789041370c4045fbcc983635af0b30a0705447f18371bed98944",
         "index.html": "bdca62dc5f92062c975287eb4be29314eab55dff7991bdba83c8e24840f805db",
         "Science/index.html": "34fbe6ad5d02f887a430c3f822ff0c41b5442797d945e924b5d3259bd40adfcd",
-        "Humanities/index.html": "0502ee722629dbc35a5016cf2663715199bafbbd8a532356ceee6cfa587a2b53",
+        "Humanities/index.html": "0c09eb593bd4cef6723de80d31d3c2fdd9a36e3c82ed420f4745bc58e07843be",
         "humanities.html": "e6260e205216c2e9c19fca3edd07bcdf6716349e8b9dd8e78c6005d0ead73391",
         "pack.html": "42935782c353525d28b9263a90a8c48e4b5ca764226444edfa68d6f664862be1",
         "assets/catalogue/pack.js": "da66512500cd92e7c7b2a58141ce98c903676b972ea71ba0723984eff12be7c6",
@@ -153,9 +153,9 @@ CATALOGUE_PINS = {
         "assets/catalogue/lesson-navigation.js": "42e579bbef3940c24ca4360319290820305a777330b8bff79152b2cb6aa077e3",
         "assets/catalogue/science-shelf.css": "b2b1eb328662d841add139ccfff107f985f17373f1ee82b8762475663097ab60",
         "assets/catalogue/science-shelf.js": "a59fe0c988a5de7d614afc6a36d7dacf14c6e3fa92c732740442e4914d00f356",
-        "assets/catalogue/terms-and-styles.json": "826c1c4be512f9810abb6cba50fbb45bb1ed91022e181b4f4e1cfaef92137394",
+        "assets/catalogue/terms-and-styles.json": "2bd8025a39580b77439245578df9e58bcdf4de6b51395af5633ea031255e50c4",
         "assets/catalogue/science-shelf.json": "6bfcac8579a72f8413e158b49460a8b853f284b8dc64bd4da4442c37e92edadf",
-        "assets/catalogue/humanities-shelf.json": "04dbfd77622660e1f907b52c36f098d1e7f08b10575a9585af949853022f8e3d",
+        "assets/catalogue/humanities-shelf.json": "a92102640be91f62d2cba36fe68cd712273e804108cf8311b1d87ba1d0d038c5",
         "tools/catalogue/build_catalogue.py": "4eff91f7ace9073a6612035c33e8556875d6165da83876ae5ec20a6ec11a15a8",
         "tools/catalogue/build_science_shelf.py": "396b6aeb7cb3cabe037b7af27877ae7a090e5aa1bce284409e400549d5204c24",
         "tools/catalogue/build_humanities_shelf.py": "0d58e1dd47c9c806b7fefc42437b47947853760e785eb3ed34b35148eea874cc",
@@ -165,16 +165,16 @@ CATALOGUE_PINS = {
         "tools/catalogue/check_catalogue_dom.cjs": "8be29d42ca073a0afef5cf5d7dc59f0ed7af2797028b98997f48814e14a5c403",
         "tools/catalogue/verify_education_navigation.cjs": "48d00d8c490157059b6f21664c1b06e8c5af215575ee207040ee0c83c37d168f",
         "tools/catalogue/sync_shelf_card_titles.py": "d5e8fd850e5ac6340f0d1550ea2992fc03ef1fff8deeec144c73685042feaf7f",
-        "tools/catalogue/HUMANITIES_STRAND.json": "da95e0b1d6cf00c9dfbe145456059508dbf5f44f32d60cf6d99ce94923982a32",
+        "tools/catalogue/HUMANITIES_STRAND.json": "d2d239ce547e15f39d7776e5de99c0436eebc274a4077f5f627b9f893ee435a3",
         "tools/catalogue/hub_sections.py": "3b201e96e05a124d47c6b5b1063c0df25d2b5c5cf4505aad7494663c7e92a90e",
         "assets/catalogue/shelf-base.css": "15d7b64ad06b9b27c5f03e91da30ba35c4ca01c1b12b1208b06bfefe5e6ff4e0",
-        "assets/catalogue/humanities-hub-bindings.json": "e44362bfe20c5040552fb5096e350454d6e5e796b30134949f32f45baec71f87",
+        "assets/catalogue/humanities-hub-bindings.json": "cd199564a8c38fdae7425bc99d4d32ae523966ed9e491a590757b3951cd6d5b3",
         "tools/catalogue/restamp_evidence_sha256.py": "bfa35a1f979746d471d5af08152e20017bb20a1655490340c74ff6209652827a",
         "Science/Build/START_HERE.html": "acac26140f5aeef22292e6ce3831fa61aaf5e62432cc3998b340918c8bfaee7f",
         "Science/Grow/START_HERE.html": "d2bec305dec3212215c6f599cad3925c571f9a34ca6e85268893c8ed142170dd",
         "Science/Launch/START_HERE.html": "10b46e7cf26e3aa4b7f1fb4758a039bcbec7000bc2ec8d30dfe3ce0e0b966353",
         "tools/catalogue/SHELF_SELECTION.json": "1426fbbdbf01f1af3b67475430e95327a8d2891e794896fe36443d3f982d33f7",
-        "tools/catalogue/HUMANITIES_SELECTION.json": "7884f1680fcff62cd728a1cbc471ac4833e57fa1cee0d5a91df28298013960ec",
+        "tools/catalogue/HUMANITIES_SELECTION.json": "8bc58e21f2a3483d97eaf64dbfdc1bbbfeb3599b6bc0693377800a0054fcdf0f",
         "tools/easter/science_original_browser.cjs": "aae28a4166d41546cbe5b0acd0866eeaf5e6f47cd5b1949fc48ecb2d4c79a1ec",
         "tools/science_pack/browser_checks.cjs": "058c9bc1f06c876f2994a23d467d83fced683c6355eb92d0ef43986d3e28d72d",
         "tools/prepare_served_publications.py": "c52ffe6cbbc7bb6e056eb3eb27f0bb9a36bb34d2aa86e5d3e02a63aa3653d3a1",
@@ -247,8 +247,8 @@ CATALOGUE_PINS = {
         "tools/humanities_resources/check_resources.py": "ec5383e3a34cbff999f190b0014a4a73e00a3a29e2714498f7620fd638dc2aa5",
         "tools/humanities_resources/resource.css": "1aed9aaca0d73a4b200c4e5d0977e73f4e906c747d7340c7a62f4197a8344bae",
         "tools/humanities_resources/resource.js": "ad40afed95490bfcce92dc062da46e1b27bcb96bdc80e37eabdfe02bf6ffc446",
-        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "8b3f92ede525cf75332976d01ce33a96544e633e111dabc03cef0dea7799a0a4",
-        "tools/catalogue/TERM_REVIEW.json": "3d7483420456807d95f63079b981a566b73bee585cb0cded7fa5b1e9d7c78fe9",
+        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "a32f346d024911c4ee59be90c97e4f53713e26c472a75dc34489aa5cbf349bc6",
+        "tools/catalogue/TERM_REVIEW.json": "9395de4c2803a7bc2a679cf0659c9df3c41c01e5ac60c0a2d39249414bc12de8",
         "tools/catalogue/SCIENCE_WEEK_BINDINGS.json": "9fa98ad78b0bd3c3f3ee15f88a7b2fd40eea810e6c9fb65ee93b3c5192888071",
         "primary/year5/science/autumn/forces/Lesson8_ExploreGravity.html": "20047720bf1d309055abdf232d341b6fd99b833631efa0bcbfb3dabed9671196",
         "primary/year5/science/autumn/forces/Y5_Forces_SoW_and_Plans.docx": "ca36cfd92f1c768ea66f0eb748d47e6227f67569f77b5472d0da13d03f92f2e6",
@@ -2508,14 +2508,14 @@ CATALOGUE_ORIGINAL_ROWS_SHA256 = "d4714b20bc0de0732d1dd33e449280b8b42fd0a033b830
 # digest below are re-cut by tools/catalogue/pin_catalogue_contract.py from
 # rows it has verified against that derivation; an edit to any appended row,
 # a removed pack row or an extra lesson row still reds here.
-CATALOGUE_SHELF_ROWS = 375
+CATALOGUE_SHELF_ROWS = 378
 # UX2 A1: keys that may be appended to an original row without moving its
 # digest (see catalogue_errors). Nothing else is additive. No original row
 # carried either key before the ruling (measured 2026-09-08: 0 of 734), so the
 # second set is empty and the allowance cannot launder a pre-existing value.
 CATALOGUE_ADDITIVE_TAG_KEYS = frozenset({"halfTerm", "unit"})
 CATALOGUE_ORIGINAL_KEYS_BEFORE_TAGS = frozenset()
-CATALOGUE_SHELF_ROWS_SHA256 = "12348e9076ae1e041b206b491b34be27f8a1b7b173fbdfcdada33b59d99ece47"
+CATALOGUE_SHELF_ROWS_SHA256 = "c6a9acc775c93bca0394e5e6aa06ecf2f8c5c8f46bc4861f64a99d2181b657d8"
 
 # These named review records and review tools can change with their reviewed
 # transaction. Tools are not served assets; they are reviewed as executable
