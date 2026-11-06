@@ -150,8 +150,11 @@ def _science_cells(term):
             if len(w8_firsts) != 1:
                 unread.append((slot['pathway'], slot['week'], 'expected one Week 8 layout Lesson/Period 1 deck, found %d: %s' % (len(w8_firsts), w8_firsts))); continue
             rec = w8_firsts[0]
-            batch_n4 = 'Science · %s · N-4 (2 Nov 2026): the Week 8 layout lesson is recommended; the original interactive deck and landed pack page are alternative' % TERM_LABEL[term]
-            prior_alts = [p for p, v in parts.items() if p not in w8_firsts and p not in w8_others and p not in landed_here and v[0] != 'other']
+            batch_n4 = 'Science · %s · N-4 (2 Nov 2026), R-RAISE (6 Nov 2026): the Week 8 layout lessons are the current cards; every original deck and landed pack page is alternative' % TERM_LABEL[term]
+            # R-RAISE (Matt, 6 Nov 2026: the Autumn 1 Week 8 lessons are the standard and "nothing else" is
+            # correct): in a cell served by Week 8 layout lessons, every other deck -- the original Do decks
+            # included -- is an alternative version, so the cell's current cards are its Week 8 lessons only.
+            prior_alts = [p for p, v in parts.items() if p not in w8_firsts and p not in w8_others and p not in landed_here]
             for p in cell_members:
                 rec_now.discard(p); alt_now.discard(p); sel['recommendedBatches'].pop(p, None)
             rec_now.add(rec); sel['recommendedBatches'][rec] = batch_n4
