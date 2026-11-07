@@ -76,6 +76,11 @@ def family(path: str) -> str:
     # ro-2 (a), variant B: a reviewed Spring 1 pack lesson that the strand record carries is current.
     if re.match(r'Humanities/Teaching_Packs/HUM_Spring_1_[A-Z_]+_Reviewed/', path) and path in STRAND_PATHS:
         return 'current'
+    # R-RAISE (owner ruling 2026-11-06): an Autumn 2 reviewed pack lesson rebuilt on the Week 8
+    # model page (HUM_<PW>_A2_Wnn.html or <PW>_RE_A2_Wnn.html) that the strand record carries is current.
+    if re.match(r'Humanities/Teaching_Packs/(HUM_Autumn_2|RE_Autumn)_[A-Z_]+_Reviewed/', path) \
+            and re.fullmatch(r'(HUM_(BUILD|GROW|LAUNCH)|(BUILD|GROW|LAUNCH)_RE)_A2_W0\d\.html', Path(path).name) and path in STRAND_PATHS:
+        return 'current'
     return 'reference'
 
 

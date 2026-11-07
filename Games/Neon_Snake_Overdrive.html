@@ -387,7 +387,7 @@ function animate() {
     if (p.userData.life <= 0) { scene.remove(p); particles.splice(i, 1); }
   }
 
-  if(gameState==='playing')FX.update();
+  FX.update();
   renderer.render(scene, camera);
 }
 
@@ -444,7 +444,7 @@ const sfxLevel = () => { tone(520, 0.06, 'triangle', 0.1); setTimeout(() => tone
 /* ============================================================
    HIGH SCORES
    ============================================================ */
-function loadScores() { try { const v=JSON.parse(localStorage.getItem(SCORE_KEY));return Array.isArray(v)?v.filter(s=>s&&typeof s.name==='string'&&Number.isFinite(s.score)&&s.score>=0).slice(-100):[]; } catch(e){return [];} }
+function loadScores() { try { const v=JSON.parse(localStorage.getItem(SCORE_KEY));return Array.isArray(v)?v.filter(s=>s&&typeof s.name==='string'&&Number.isFinite(s.score)&&s.score>=0).sort((a,b)=>b.score-a.score).slice(0,100):[]; } catch(e){return [];} }
 function saveScores(l) { try { localStorage.setItem(SCORE_KEY, JSON.stringify(l)); } catch (e) {} }
 function topScores() { return loadScores().sort((a, b) => b.score - a.score).slice(0, 5); }
 function bestScore() { const t = topScores(); return t.length ? t[0].score : 0; }
@@ -620,7 +620,7 @@ function endGame(reason) {
   gameState = 'over';turnQueue=[];updateHUD(); clearInterval(tickTimer); clearInterval(clockTimer);
   FX.shake(0.9); FX.flash('#ffffff', 0.6); sfxDie(); haptic([80, 40, 120]);
   best = bestScore();
-  const isBest = score > 0 && score >= best;
+  const isBest = score > 0 && score > best;
   document.getElementById('over-score').innerText = score;
   document.getElementById('over-reason').innerText = reason;
   window.__mbmAnnounce('Game over: ' + reason + '. Score ' + score + (isBest ? ', a new best.' : '.'));

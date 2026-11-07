@@ -1120,7 +1120,7 @@ function startRace(rungIdx, rematch, dailyDate, s2, opts){
   $('hud').style.display='block'; $('countdown').style.display='block';
   $('lobby-hint').style.display='none'; $('lobby-title').style.display='none'; $('lobby-scrap').style.display='none';
   $('pos-total').textContent='/'+state.cars.length;
-  $('daily-btn').style.display='none';
+  $('daily-btn').style.display='none';$('gaunt-btn').style.display='none';
   showScreen(null);
   if(COND[state.cond].label)setTimeout(()=>banner(COND[state.cond].label,1800,'#7dd3fc'),state.challenge?4400:2300);
   if(dailyDate){ banner('🔆 DAILY SPRINT · '+prettyDay(dailyDate), 2100, '#ffd700');
@@ -1162,6 +1162,7 @@ function updateRanks(){
   });
   const newRank=order.indexOf(state.player)+1;
   if(newRank<state.playerRank&&state.mode==='RACE'&&state.raceT>2){
+    for(let pass=0;pass<state.playerRank-newRank;pass++){
     state.overtakes++; state.combo++; state.comboT=6;
     let bonus=10*state.combo;
     if(state.slingT>0){ bonus+=15; state.slingT=0;
@@ -1169,6 +1170,7 @@ function updateRanks(){
     else popup('OVERTAKE! +'+bonus+' 🔩'+(state.combo>1?'  x'+state.combo:''),'#ffd700');
     state.scrapPend+=bonus;
     AudioSys.ding(Math.min(state.combo-1,4));
+    }
   }else if(newRank>state.playerRank&&state.mode==='RACE'&&state.raceT>2){
     state.combo=0; popup('repassed — tuck in and re-charge','#94a3b8');
   }
@@ -1370,6 +1372,7 @@ function finishCar(c){
 /* ================= FINISH / RESULTS ================= */
 function finishRace(){
   if(state.mode==='FINISH')return;
+  AudioSys.setEngine(0,false);AudioSys.setWind(0);
   heatSaveRace();
   if(state.isDaily)return finishDaily();
   if(state.isGauntlet){ state.mode='FINISH'; const order=updateRanks(); return finishGauntlet(order,state.playerRank); }
@@ -1620,6 +1623,7 @@ $('p-quit').onclick=()=>{ state.paused=false; enterLobby(); };
 
 /* ================= LOBBY UPDATE ================= */
 function updateLobby(dt){
+  if(document.querySelector(".screen:not(.hidden)"))return;
   const L=state.lobby;
   const steer=inputSteer(), thr=(inputMode==='touch')?(touch.brake?0.1:0.8):(inputThrottle()-inputBrake()*0.6);
   L.v+=thr*22*dt-L.v*1.5*dt; L.v=clamp(L.v,-9,24);
@@ -1859,10 +1863,10 @@ loop();
   if(ch){ const p=ch.split('-'); const raw=Math.min(Math.max(parseInt(p[0],10)||0,0),RIVALS.length*2-1);
     const s2=raw>=RIVALS.length, idx=raw%RIVALS.length;
     if(p.length>2){ sc=p[1]; by=p.slice(2).join('-'); }
-    if(sc)state.challenge={sc:(parseInt(sc,10)||0)/10, by:decodeURIComponent(by||'A rival').slice(0,12)};
+    if(sc)state.challenge={sc:(parseInt(sc,10)||0)/10, by:(by||'A rival').slice(0,12)};
     startRace(idx, s2?profile.s2.includes(idx):profile.defeated.includes(idx), null, s2);
   } else if(day&&/^\d{8}$/.test(day)){
-    if(sc)state.challenge={sc:(parseInt(sc,10)||0)/10, by:decodeURIComponent(by||'A rival').slice(0,12)};
+    if(sc)state.challenge={sc:(parseInt(sc,10)||0)/10, by:(by||'A rival').slice(0,12)};
     startRace(0,false,day);
   }
 })();
