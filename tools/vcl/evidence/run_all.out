@@ -1,0 +1,235 @@
+
+[1m== build  release/ -> staging/[0m
+built /workspace/vcl/tools/vcl/staging/Virtual_Chemistry_Lab_PRO_Spatial_v0_3.html
+  X1a
+  X1b
+  X1c
+  X2a
+  X2d
+  X3c
+  X3e
+  X3d
+  X2b
+  X2c
+  X3a
+  X3b
+  X4
+  X5a
+  X5b
+  X6c
+  X6d1
+  X6d3
+  X6d2
+
+[1m== controls  every fix red on release, green on staging[0m
+id                   release   staging   verdict
+------------------------------------------------------------------------------------
+V1 chloride correct  true      true      ALREADY CORRECT ON RELEASE
+    chloride: acid then reagent still gives the clean positive
+    release "Observation: A white silver chloride precipitate forms." -> staging "Observation: A white silver chloride precipitate forms."
+V1 chloride reversed false     true      MATCHED PAIR
+    chloride: reagent BEFORE the acid is not rewarded, and is warned about
+    release "Observation: A white silver chloride precipitate forms." (warned false) -> staging "Observation: A pale precipitate forms, but the silver nitrate went in before the nitric acid. Carbonate, sulfi" (warned true)
+V1 bromide correct   true      true      ALREADY CORRECT ON RELEASE
+    bromide: acid then reagent still gives the clean positive
+    release "Observation: A cream silver bromide precipitate forms." -> staging "Observation: A cream silver bromide precipitate forms."
+V1 bromide reversed  false     true      MATCHED PAIR
+    bromide: reagent BEFORE the acid is not rewarded, and is warned about
+    release "Observation: A cream silver bromide precipitate forms." (warned false) -> staging "Observation: A pale precipitate forms, but the silver nitrate went in before the nitric acid. Carbonate, sulfi" (warned true)
+V1 iodide correct    true      true      ALREADY CORRECT ON RELEASE
+    iodide: acid then reagent still gives the clean positive
+    release "Observation: A yellow silver iodide precipitate forms." -> staging "Observation: A yellow silver iodide precipitate forms."
+V1 iodide reversed   false     true      MATCHED PAIR
+    iodide: reagent BEFORE the acid is not rewarded, and is warned about
+    release "Observation: A yellow silver iodide precipitate forms." (warned false) -> staging "Observation: A pale precipitate forms, but the silver nitrate went in before the nitric acid. Carbonate, sulfi" (warned true)
+V1 sulfate correct   true      true      ALREADY CORRECT ON RELEASE
+    sulfate: acid then reagent still gives the clean positive
+    release "Observation: A dense white barium sulfate precipitate forms." -> staging "Observation: A dense white barium sulfate precipitate forms."
+V1 sulfate reversed  false     true      MATCHED PAIR
+    sulfate: reagent BEFORE the acid is not rewarded, and is warned about
+    release "Observation: A dense white barium sulfate precipitate forms." (warned false) -> staging "Observation: A white precipitate forms, but the barium chloride went in before the hydrochloric acid. Carbonat" (warned true)
+V2a                  false     true      MATCHED PAIR
+    the pupil name is absent from the state URL, as its caption promises
+    caption "Name for print/export only" · release name-in-hash=true -> staging name-in-hash=false
+V2b                  true      true      ALREADY CORRECT ON RELEASE — asserted so the V2 fix cannot quietly take it away
+    the name is still in print and in Export JSON, which is what the caption offers
+    release export=true print=true -> staging export=true print=true
+V2c                  null      null      MEASURED
+    the evidence note is deliberately KEPT in the hash
+    release note-in-hash=true -> staging note-in-hash=true. This app has zero localStorage, so the hash is its only persistence: dropping the note would destroy pupil writing on reload. The Share help card and the note's own label are corrected instead (X2b, X2c).
+V3                   false     true      MATCHED PAIR
+    a realistic 40-minute session URL stays under the 2048-character ceiling
+    realistic session: release 8094 chars -> staging 1486 chars (bound 2048)
+V3-detail            null      null      MEASURED
+    hash length, fresh and per untouched bench
+    fresh: release 3814 -> staging 26 · spatial 3837->81 · microscale 3841->109 · rates 3834->102 · titration 3839->107 · gastest 3837->105
+V3-roundtrip         true      true      ALREADY CORRECT ON RELEASE — asserted so the V3 shrink cannot silently break resume
+    a shared link restores wells, observations, the event log, the note and the written answer
+    release url 5509 chars {"bench":"microscale","wellC1":"Well A3, A white silver chloride precipitate forms.","wellB2":"Well B2, A red-brown precipitate forms.","note":"ROUNDTRIP-NOTE","answer":"ROUNDTRIP-ANSWER","eventRows":5,"eventsHaveObservation":true,"perMoment":true} -> staging url 656 chars {"bench":"microscale","wellC1":"Well A3, A white silver chloride precipitate forms.","wellB2":"Well B2, A red-brown precipitate forms.","note":"ROUNDTRIP-NOTE","answer":"ROUNDTRIP-ANSWER","eventRows":5,"eventsHaveObservation":true,"perMoment":true}
+V3-legacy            null      null      ASSERTED
+    a link minted by the RELEASE build still opens in the patched build
+    old-format hash 4729 chars -> {"bench":"microscale","well":"Well A2, A white silver chloride precipitate forms."} errs 0
+V4 @390px            false     true      MATCHED PAIR
+    adjacent drop pills are separated by a non-zero horizontal gap at 390px
+    release 2 pills, min gap 0 -> staging 2 pills, min gap 6 · "1× FeCl₃ · 0.10 M|1× NaOH · 0.40 M"
+V4 @1440px           false     true      MATCHED PAIR
+    adjacent drop pills are separated by a non-zero horizontal gap at 1440px
+    release 2 pills, min gap 0 -> staging 2 pills, min gap 6 · "1× FeCl₃ · 0.10 M|1× NaOH · 0.40 M"
+V5                   false     true      MATCHED PAIR
+    no negated near-miss is called correct
+    release marks 6/8 negated answers CORRECT [titration-0,gastest-0,spatial-0,microscale-0,microscale-2,rates-0] -> staging marks 0/8
+V5b                  false     true      MATCHED PAIR
+    the keyword items pronounce no verdict at all, right answer or wrong
+    release: 8/8 still pronounce · staging: 0/8
+V5-detail            null      null      MEASURED
+    one item, both variants, both trees
+    release negated gastest-0: [feedback good] "✓ Correct: oxygen relights a glowing splint." || staging negated gastest-0: [feedback] "Your answer mentions the glowing splint, what the splint does. It covers every idea the model answer uses — read both and decide whether yours says the same thi"
+V5-button            null      null      MEASURED
+    the button label
+    release "Check" -> staging "Compare"
+V6.4a                false     true      MATCHED PAIR
+    the JS layer reads prefers-reduced-motion, not only the CSS blanket rule
+    matchMedia('(prefers-reduced-motion: reduce)') present: release false -> staging true
+V6.4b                false     true      MATCHED PAIR
+    booting under prefers-reduced-motion seeds calm mode
+    release {"pressed":"btn-ghost","bodyCalm":false,"matchMediaUsed":null} -> staging {"pressed":"btn-ghost","bodyCalm":true,"matchMediaUsed":null}
+V6.5                 false     true      MATCHED PAIR
+    every control on every bench has an accessible name
+    predicate: aria-label / aria-labelledby / label[for] / wrapping label / title / button text; a placeholder is NOT counted. release 17 unnamed [spatial:select#spatialMission, spatial:input#phase-spatial-0, spatial:input#phase-spatial-1, spatial:input#phase-spatial-2, microscale:input#phase-microscale-0, microscale:input#phase-microscale-1, microscale:input#phase-microscale-2, rates:input#phase-rates-0, rates:input#phase-rates-1, rates:input#phase-rates-2, titration:input#phase-titration-0, titration:input#phase-titration-1, titration:input#phase-titration-2, gastest:select#gasIdentity, gastest:input#phase-gastest-0, gastest:input#phase-gastest-1, gastest:input#phase-gastest-2] -> staging 0 unnamed []
+V0                   null      null      ASSERTED UNCHANGED
+    the frozen engine, pH model, mystery hash and teaching copy are byte-identical
+    the pH model · the deterministic mystery hash · the Cu / Fe2 / Fe3 / Al3 / Ca2 hydroxide chain · the sequencing teaching copy
+
+0 failure(s); 0 unreachable
+
+[1m== assert-unchanged  the V0 freeze held[0m
+id                                             verdict
+------------------------------------------------------------------------------
+U1                                             UNCHANGED
+    with all transforms dropped the builder reproduces release byte for byte
+    19 transforms dropped
+U2 pH model (both passes)                      UNCHANGED
+    frozen: pH model (both passes)
+    249 chars identical
+U2 deterministic mystery hash                  UNCHANGED
+    frozen: deterministic mystery hash
+    157 chars identical
+U2 hydroxide chain Cu/Fe2/Fe3/Al3/Ca2          UNCHANGED
+    frozen: hydroxide chain Cu/Fe2/Fe3/Al3/Ca2
+    1318 chars identical
+U2 carbonate effervescence                     UNCHANGED
+    frozen: carbonate effervescence
+    147 chars identical
+U2 sequencing teaching copy                    UNCHANGED
+    frozen: sequencing teaching copy
+    240 chars identical
+U2 safety / virtual-practical boundary         UNCHANGED
+    frozen: safety / virtual-practical boundary
+    122 chars identical
+U2s "time:"0–10""                              UNCHANGED
+    frozen observation/warning string survives verbatim, same count
+    release 5 -> staging 5
+U2s "time:"10–25""                             UNCHANGED
+    frozen observation/warning string survives verbatim, same count
+    release 5 -> staging 5
+U2s "time:"25–40""                             UNCHANGED
+    frozen observation/warning string survives verbatim, same count
+    release 5 -> staging 5
+U2s "title:"Introduce"                         UNCHANGED
+    frozen observation/warning string survives verbatim, same count
+    release 5 -> staging 5
+U2s "title:"Explore"                           UNCHANGED
+    frozen observation/warning string survives verbatim, same count
+    release 5 -> staging 5
+U2s "title:"Do "                               UNCHANGED
+    frozen observation/warning string survives verbatim, same count
+    release 5 -> staging 5
+U2s "A white silver chloride precipitate forms." UNCHANGED
+    frozen observation/warning string survives verbatim, same count
+    release 1 -> staging 1
+U2s "A cream silver bromide precipitate forms." UNCHANGED
+    frozen observation/warning string survives verbatim, same count
+    release 1 -> staging 1
+U2s "A yellow silver iodide precipitate forms." UNCHANGED
+    frozen observation/warning string survives verbatim, same count
+    release 1 -> staging 1
+U2s "A dense white barium sulfate precipitate for" UNCHANGED
+    frozen observation/warning string survives verbatim, same count
+    release 1 -> staging 1
+U2s "A pale yellow carbonate interference forms b" UNCHANGED
+    frozen observation/warning string survives verbatim, same count
+    release 1 -> staging 1
+U2s "Acidify a fresh portion with nitric acid bef" UNCHANGED
+    frozen observation/warning string survives verbatim, same count
+    release 1 -> staging 1
+U2s "The halide test should use a fresh portion a" UNCHANGED
+    frozen observation/warning string survives verbatim, same count
+    release 1 -> staging 1
+U2s "For the sulfate test, acidify a fresh portio" UNCHANGED
+    frozen observation/warning string survives verbatim, same count
+    release 1 -> staging 1
+U2s "A light blue precipitate forms."          UNCHANGED
+    frozen observation/warning string survives verbatim, same count
+    release 1 -> staging 1
+U2s "A dirty green precipitate forms; it may brow" UNCHANGED
+    frozen observation/warning string survives verbatim, same count
+    release 1 -> staging 1
+U2s "A red-brown precipitate forms."           UNCHANGED
+    frozen observation/warning string survives verbatim, same count
+    release 1 -> staging 1
+U2s "The white precipitate redissolves in excess " UNCHANGED
+    frozen observation/warning string survives verbatim, same count
+    release 1 -> staging 1
+U2s "A white precipitate forms and remains in exc" UNCHANGED
+    frozen observation/warning string survives verbatim, same count
+    release 1 -> staging 1
+U2s "Effervescence: bubbles of carbon dioxide are" UNCHANGED
+    frozen observation/warning string survives verbatim, same count
+    release 1 -> staging 1
+U3                                             UNCHANGED
+    no external subresource was introduced
+    the only absolute URLs are the XHTML and SVG namespace URIs, as on release
+U4a                                            UNCHANGED
+    localStorage usage is unchanged (release 0)
+    release 0 -> staging 0
+U4b                                            UNCHANGED
+    sessionStorage usage is unchanged (release 0)
+    release 0 -> staging 0
+U4c                                            UNCHANGED
+    indexedDB usage is unchanged (release 0)
+    release 0 -> staging 0
+U5                                             UNCHANGED
+    the viewport meta is untouched (it was already correct)
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+0 unexpected change(s)
+
+[1m== removal matrix  drop each transform, the gates must notice[0m
+baseline: 0 failure(s); 0 unreachable
+
+  X1a    watched      V1->CONTROL V1->CONTROL 
+  X1b    watched      V1->CONTROL 
+  X1c    watched      V1->REGRESSION V1->CONTROL V1->REGRESSION V1->CONTROL V1->REGRESSION V1->CONTROL V1->REGRESSION V1->CONTROL V3-roundtrip->REGRESSION V3-legacy->BROKEN V4->CONTROL V4->CONTROL 
+  X2a    watched      V2a->CONTROL 
+  X2b    UNWATCHED    verdict set identical to baseline
+  X2c    UNWATCHED    verdict set identical to baseline
+  X2d    watched      V2b->REGRESSION 
+  X3a    watched      V3->CONTROL V3-roundtrip->REGRESSION V3-legacy->BROKEN 
+  X3b    UNWATCHED    verdict set identical to baseline
+  X3c    watched      V3->CONTROL 
+  X3d    watched      V3-roundtrip->REGRESSION 
+  X3e    watched      V3-roundtrip->REGRESSION 
+  X4     watched      V2d->PAIR V2e->PAIR V2f->MEASURED V4->CONTROL V4->CONTROL 
+  X5a    watched      V2d->PAIR V2e->PAIR V2f->MEASURED V3-roundtrip->REGRESSION V3-legacy->BROKEN V6.4b->CONTROL 
+  X5b    UNWATCHED    verdict set identical to baseline
+  X6c    watched      V6.4a->CONTROL V6.4b->CONTROL 
+  X6d1   watched      V6.5->CONTROL 
+  X6d2   watched      V6.5->CONTROL 
+  X6d3   watched      V6.5->CONTROL 
+
+AT LEAST ONE TRANSFORM IS UNWATCHED
+
+[1m== worst exit: 1[0m
+WATCHED
+
+[1m== worst exit: 1[0m
