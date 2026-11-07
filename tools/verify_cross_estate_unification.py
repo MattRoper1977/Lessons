@@ -4137,6 +4137,17 @@ def publication_trigger_errors(root: Path) -> list[str]:
             event_lines.append(line)
         paths = [i for i, line in enumerate(event_lines) if line == "    paths:"]
         if len(paths) != 1:
+            # 2026-11-07: a push event with no path filter at all watches every path,
+            # the publisher caller included. The Lessons guard runs unfiltered on push
+            # because the PIN1-derived list on both events took the file past GitHub's
+            # 512 KiB workflow limit and every direct run died at startup. Accepted only
+            # as the exact unfiltered form: branches: [main], no paths, no paths-ignore.
+            # A paths-ignore, or any other branch filter, is still a red.
+            unfiltered = (event == "push" and not paths
+                          and "    branches: [main]" in event_lines
+                          and not any(line.startswith("    paths-ignore:") for line in event_lines))
+            if unfiltered:
+                continue
             errors.append("education publisher guard lacks explicit " + event + " paths")
             continue
         values = []
