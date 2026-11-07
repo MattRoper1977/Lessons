@@ -24,7 +24,15 @@ CHECKER_PATHS = {
     # D-1: the shell census gate runs in this workflow, so an edit to the checker fires it.
     'tools/chassis_census.py',
 }
-EVENTS = ('pull_request', 'push')
+# 2026-11-07: GitHub refuses to load a workflow file over 512 KiB (it did so
+# again at 567,566 bytes once the award-family pins landed: every direct run of
+# the derived workflow ended at startup with zero jobs). The exact derived path
+# list now lives on pull_request only. The push event runs unfiltered on main -
+# a strict superset of the derived list, never narrower - so the file halves and
+# the contract still fires on every main push. --check refuses a push event that
+# carries any paths filter, so coverage cannot be quietly narrowed again.
+EVENTS = ('pull_request',)
+UNFILTERED_EVENTS = ('push',)
 BEGIN = '      # BEGIN PIN1 DERIVED PATHS'
 END = '      # END PIN1 DERIVED PATHS'
 
@@ -87,9 +95,9 @@ def inventory(root: Path, gate=None) -> dict:
     }
 
 
-def event_paths_span(text: str, event: str) -> tuple[int, int]:
-    # Restrict the edit to a single paths block under one top-level event. Refuse
-    # ambiguous/alternate YAML forms instead of rewriting unrelated settings.
+def event_block(text: str, event: str) -> tuple[int, str]:
+    # Locate one top-level event under the single on block. Refuse ambiguous or
+    # alternate YAML forms instead of reading unrelated settings.
     on = re.search(r'^on:\n(?P<body>(?:[ \t].*\n|\n|#.*\n)*)', text, re.M)
     if not on:
         raise ValueError('one explicit top-level on block required')
@@ -103,7 +111,25 @@ def event_paths_span(text: str, event: str) -> tuple[int, int]:
     tail = body[start:]
     next_event = re.search(r'^  [^ #\s][^\n]*:', tail, re.M)
     stop = start + (next_event.start() if next_event else len(tail))
-    block = body[start:stop]
+    return on.start('body') + start, body[start:stop]
+
+
+def unfiltered_errors(text: str, event: str) -> list[str]:
+    # The unfiltered event must keep its branch filter and carry no path filter
+    # at all: an unfiltered run is the superset that replaced the derived list.
+    _, block = event_block(text, event)
+    errors = []
+    if re.search(r'^    paths(-ignore)?:', block, re.M):
+        errors.append(f'{event}: must stay unfiltered (no paths/paths-ignore); '
+                      'the derived list is pull_request-only to keep the workflow file under 512 KiB')
+    if not re.search(r'^    branches: \[main\]$', block, re.M):
+        errors.append(f'{event}: branches: [main] required')
+    return errors
+
+
+def event_paths_span(text: str, event: str) -> tuple[int, int]:
+    # Restrict the edit to a single paths block under one top-level event.
+    offset, block = event_block(text, event)
     if 'paths-ignore:' in block:
         raise ValueError(f'{event}: paths-ignore not supported')
     paths = list(re.finditer(r'^    paths:\n', block, re.M))
@@ -119,7 +145,6 @@ def event_paths_span(text: str, event: str) -> tuple[int, int]:
         cursor += len(line)
     if cursor == content_start:
         raise ValueError(f'{event}: empty paths block')
-    offset = on.start('body') + start
     return offset + content_start, offset + cursor
 
 
@@ -170,6 +195,9 @@ def check(root: Path, text: str, report: dict) -> list[str]:
         if actual != expected or len(actual_list) != len(actual):
             errors.append(f'{event}: trigger set differs from registry/checker dependencies; '
                           f'missing={sorted(expected - actual)!r}; unexpected={unexpected!r}')
+    for event in UNFILTERED_EVENTS:
+        report['events'][event] = {'unfiltered': True}
+        errors.extend(unfiltered_errors(text, event))
     if text != render(text, report['expected_triggers']):
         errors.append('generated paths are stale; run python3 tools/pin1/derive_triggers.py --write')
     if report['missing_asserted_files']:
