@@ -121,6 +121,52 @@ def science_limbs(path,rows,record_digest,pinned_digest,projected_keys,stated_ke
  ok,lwhy=science_label_proof(path,rows,record_digest,pinned_digest,said)
  if ok:return 'label',lwhy
  return None,{'row':why,'label':lwhy}
+LABEL_MAP=ROOT/'tools/catalogue/LABEL_MAP.json'
+# A map entry is letters only (spaces, hyphens, apostrophes and ampersands allowed inside): it can never
+# write a digit, so it can never write a week or a half-term; and no season or week word is allowed either.
+LABEL_WORD=re.compile(r"^[A-Za-z][A-Za-z&' -]*[A-Za-z]$")
+CALENDAR_WORD=re.compile(r'\b(?:Aut(?:umn)?|Spr(?:ing)?|Sum(?:mer)?|W(?:eek)?)\b',re.I)
+HALF_TERM=re.compile(r'\b(Aut|Spr|Sum)(?:umn|ing|mer)?\s*[·\-]?\s*([12])\b',re.I)
+def half_terms(s):return [a.title()+b for a,b in HALF_TERM.findall(s)]
+def load_label_map(path=LABEL_MAP):
+ """The one committed word map, as [(from, to)] -- [] when the file is absent. An entry that could
+ touch a calendar binding is refused here, before any quote is read (label-map limb, ruling thread
+ 2026-11-04, _sx3/DECISION_label_map_limb.md)."""
+ if not path.is_file():return []
+ pairs=[]
+ for row in json.loads(path.read_bytes()).get('map',[]):
+  src,dst=row.get('from'),row.get('to')
+  assert isinstance(src,str) and isinstance(dst,str) and LABEL_WORD.match(src) and LABEL_WORD.match(dst) and src!=dst,'LABEL_MAP entry refused (letters only, from != to): %r'%row
+  assert not CALENDAR_WORD.search(src) and not CALENDAR_WORD.search(dst),'LABEL_MAP entry names a season or week word: %r'%row
+  assert src not in dict(pairs),'LABEL_MAP maps one word twice: %r'%src
+  pairs.append((src,dst))
+ return pairs
+def map_labels(quote,word_map):
+ """The quote with every whole-word `from` replaced by its `to`, in ONE pass: no entry's output is
+ read by another, and a word the map does not name is never touched. Applied to the quote only."""
+ if not word_map:return quote
+ table=dict(word_map)
+ return re.sub('|'.join(r'(?<![A-Za-z])'+re.escape(s)+r'(?![A-Za-z])' for s in table),lambda m:table[m.group(0)],quote)
+def label_map_proof(quotes,text,word_map,tokens=()):
+ """The label-map limb, pure. (True, why) when every recorded title-slide quote, after the word map,
+ is present verbatim (whitespace-normalised) in the page's current VISIBLE text, each quote still
+ carries the same half-terms and term·week keys it was recorded with, and every term·week token the
+ page's Science row binds is still in that text. Anything else is a refusal, by name: a quote that
+ names no half-term proves nothing about timing, and a page whose week moved no longer carries the
+ recorded quote, mapped or not, because the map cannot write a digit."""
+ quotes=[q for q in quotes if isinstance(q,str)]
+ if not quotes:return False,'no recorded title-slide quote'
+ for q in quotes:
+  if not half_terms(q):return False,'the recorded quote names no half-term, so it carries no calendar binding to re-prove'
+  mapped=map_labels(q,word_map)
+  if half_terms(mapped)!=half_terms(q) or week_keys(mapped)!=week_keys(q):return False,'the map changed the quote\'s calendar binding'
+  if norm(mapped) not in text:return False,'the mapped quote is not in the current visible text'
+ missing=[k for k in sorted(set(tokens)) if k not in text]
+ if missing:return False,'term·week token %s absent from the current text'%missing
+ return True,'quote re-proved through the label map%s'%(' (%d entries)'%len(word_map) if word_map else ' (empty map: verbatim)')
+def visible_text(doc):
+ """The page's visible text: every text node outside <script>, <style> and <template>, normalised."""
+ return norm(' '.join(doc.xpath('//text()[not(ancestor::script) and not(ancestor::style) and not(ancestor::template)]')))
 def explicit_cell_holds(declared,cells,evidence):
  """The explicit-cell deck limb: the deck's own lesson-config names a spine cell, quotes that
  cell's outcome verbatim, and the evidence record cites the same cell."""
@@ -173,6 +219,7 @@ def derive(moved=None):
  cells={r['reference']:r for r in read('_sownb/CALENDAR_SPINE.json')['workbookCells']}
  terms=read('assets/catalogue/terms-and-styles.json')['terms']
  entries={}; refreshed=[]; unresolved=[]; strand_proved=[]; row_proved=[]; label_proved=[]; science_refused={}
+ labelmap_proved=[]; labelmap_refused={}; word_map=load_label_map()
  srows,srecord,spin=strand_rows()
  # The Science record, digested from the bytes read above and judged against its own pin.
  brecord=hashlib.sha256(SCIENCE_BINDINGS.read_bytes()).hexdigest();bpin=catalogue_pin(SCIENCE_BINDINGS)
@@ -223,12 +270,21 @@ def derive(moved=None):
      if limb=='row':proved=True;row_proved.append(path)
      elif limb=='label':proved=True;label_proved.append(path)
      else:science_refused[path]=result
+    if not proved and proofs:
+     # Label-map limb (ruling thread, 2026-11-04, _sx3/DECISION_label_map_limb.md): tried LAST, only
+     # where a title-slide quote is recorded and no other limb proves the page. The recorded quote,
+     # after the one committed word map (tools/catalogue/LABEL_MAP.json, applied to the quote and
+     # never to the page), must sit verbatim in the page's visible text, and a Science row's every
+     # term·week token must still be present. The title-stage claim check below still outranks it.
+     ok,why=label_map_proof([p['quote'] for p in proofs],visible_text(html.fromstring(page)),word_map,tokens)
+     if ok:proved=True;labelmap_proved.append(path)
+     else:labelmap_refused[path]=why
     if path in science['entries']:
      # Ruled on W16B: a title-stage week the row does not bind refuses, whichever limb proved it.
      conflict=title_claim_conflict(science['entries'][path],week_keys(deck_statement_text(html.fromstring(page))))
      if conflict:
       proved=False
-      for lst in (row_proved,label_proved):
+      for lst in (row_proved,label_proved,labelmap_proved):
        if path in lst:lst.remove(path)
       science_refused.setdefault(path,{})['claim']=conflict
     if proved:refreshed.append(path)
@@ -275,6 +331,10 @@ def derive(moved=None):
  # Why each moved Science deck no limb proves was refused, per limb -- so a refusal is HELD by
  # name with the limb that refuses (ruling), not reported as "the narrowed token limb".
  if science_refused:out['scienceRefusals']=science_refused
+ # The label-map limb, likewise named only while a moved page awaits its re-stamp; a refusal is
+ # recorded only where the limb was tried (a title-slide quote is recorded), with its reason.
+ if labelmap_proved:out['labelMapProofs']=labelmap_proved
+ if labelmap_refused:out['labelMapRefusals']=labelmap_refused
  return out
 def main():
  p=argparse.ArgumentParser();p.add_argument('--check',action='store_true');args=p.parse_args()
