@@ -2,7 +2,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="mbm-platform-version" content="mbm-cross-estate-unification-lessons-apps-2026-08-08">
 <title>Subject — Lessons — Made by Matt</title>
-<meta name="description" content="One subject, one pathway at a time: the lessons and editable packs for BUILD, GROW and LAUNCH, grouped by half-term and unit.">
+<meta name="description" content="One subject, one pathway at a time: the lessons and editable packs for BASE, TRACK and SUMMIT, grouped by half-term and unit.">
 <meta name="theme-color" content="#161D3D">
 <link rel="icon" href="https://madebymatt.uk/favicon.svg">
 <link rel="stylesheet" href="assets/mbm-platform.css">
@@ -65,10 +65,10 @@ function chooser(cards){
 function pathwayRows(p){return p==='ALL'?ROWS.filter(r=>!r._tier):ROWS.filter(r=>r._tier===p);}
 function population(){const p=params();const pw=currentPathway();let rows=pathwayRows(pw);if(p.get('unit'))rows=rows.filter(r=>r.unit===p.get('unit'));const f=p.get('format')||'';if(f)rows=rows.filter(r=>r._fmt===f||(r.files||[]).some(x=>(x.type==='pdf'?'pdf':'packs')===f));const wk=p.get('week')||'',sd=p.get('strand')||'';if(wk)rows=rows.filter(r=>H.weeksOf(r).some(w=>w.label===wk));if(sd)rows=rows.filter(r=>String(r.strand||'').trim()===sd);const q=(p.get('q')||'').toLowerCase().trim();if(q)rows=H.searchFilter(rows,q);return rows;}
 function segments(){const present=H.pathwaysPresent(ROWS);const unknowable=ROWS.some(r=>!r._tier);return unknowable?[...present,'ALL']:present;}
-function currentPathway(){const segs=segments();const want=(params().get('pathway')||'').toUpperCase();if(segs.includes(want))return want;return segs[0]||'ALL';}
+function currentPathway(){const segs=segments();const want=H.pathwayKey(params().get('pathway')||'');if(segs.includes(want))return want;return segs[0]||'ALL';}
 function pathwayTab(p,cur){
   const pr=ROWS.filter(r=>r._tier===p),id='tab-'+p;
-  return `<button role="tab" class="${esc(p)} pw-card" id="${esc(id)}" aria-selected="${p===cur}" tabindex="${p===cur?0:-1}" data-pathway="${esc(p)}" aria-controls="rows" aria-labelledby="${esc(id)}-name" aria-describedby="${esc(id)}-detail"><span class="pw-art" aria-hidden="true">${H.pathwayArt(CARD.slug,p)}</span><span class="pw-body"><span class="chip tier ${esc(p)}" id="${esc(id)}-name">${esc(p)}</span><span class="sr-only"> · </span><span class="pw-detail" id="${esc(id)}-detail"><span class="pw-counts">${H.distinctLessons(pr)} lessons · ${pr.filter(r=>r.kind==='pack').length} ${esc(H.FORMAT_LABEL.packs)}</span><span class="pw-box">${H.pathwayBoxBadges(p,pr)}</span></span></span></button>`;
+  return `<button role="tab" class="${esc(p)} pw-card" id="${esc(id)}" aria-selected="${p===cur}" tabindex="${p===cur?0:-1}" data-pathway="${esc(p)}" aria-controls="rows" aria-labelledby="${esc(id)}-name" aria-describedby="${esc(id)}-detail"><span class="pw-art" aria-hidden="true">${H.pathwayArt(CARD.slug,p)}</span><span class="pw-body"><span class="chip tier ${esc(p)}" id="${esc(id)}-name">${esc(H.pathwayLabel(p))}</span><span class="sr-only"> · </span><span class="pw-detail" id="${esc(id)}-detail"><span class="pw-counts">${H.distinctLessons(pr)} lessons · ${pr.filter(r=>r.kind==='pack').length} ${esc(H.FORMAT_LABEL.packs)}</span><span class="pw-box">${H.pathwayBoxBadges(p,pr)}</span></span></span></button>`;
 }
 function renderSeg(){
   const segs=segments(),cur=currentPathway();const el=$('#seg');

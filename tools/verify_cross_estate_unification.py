@@ -118,7 +118,7 @@ APPS_HUB_REVIEWED_WORDING_SHA256 = "9e5a4ac6c1e9bfb04a1c0186a82fce96aa03565a02dc
 
 # BEGIN REVIEWED CATALOGUE PINS
 CATALOGUE_PINS = {
-    "visible_body_sha256": "9961e6f6c4627d644a364dedef7b37b1731cf8508e0ec85909f070a328bec187",
+    "visible_body_sha256": "204ce8e89ab6d0299e38e0d291417a1f8b539d7c2dc982edac7d41edfb14b2cd",
     "files": {
         "_sownb/CALENDAR_SPINE.json": "607ebb2e358b4c872de473444bdee1cd112677759af392e68137ecfb7023e489",
         "_sx3/SX3_PASSES_LEDGER.md": "5ea492a8cbc2d6f1108ceedeec6d0b80bc662467183f30e69850e7cfd2c0cc25",
@@ -132,10 +132,10 @@ CATALOGUE_PINS = {
         "assets/catalogue/lesson-order.json": "dbca76eb0f8b4b60c79b02ba7727d78c4313dfb3a41872406f79bad5fbee170f",
         "tools/catalogue/build_lesson_order.py": "35a4c54779b800ae8bd949154d0d19fddb190f49ec18e62efdd86d03313f6180",
         "tools/ux2/hub_gates.mjs": "3d3120df94b1789041370c4045fbcc983635af0b30a0705447f18371bed98944",
-        "index.html": "bdca62dc5f92062c975287eb4be29314eab55dff7991bdba83c8e24840f805db",
+        "index.html": "798d5572afecb8db10a516f9a0ed57d54b7d1dc5e220077a6be85d5f046b555e",
         "Science/index.html": "34fbe6ad5d02f887a430c3f822ff0c41b5442797d945e924b5d3259bd40adfcd",
         "Humanities/index.html": "497e5b88cf8c85f449a3fe81d2553c42e320e07e12cdaa0e6e4c393b3a18c1d3",
-        "humanities.html": "e6260e205216c2e9c19fca3edd07bcdf6716349e8b9dd8e78c6005d0ead73391",
+        "humanities.html": "bfb8f9383680b9c6d849931652db29289b92d5ed18c5f9616cfc0ede0614fa5c",
         "pack.html": "42935782c353525d28b9263a90a8c48e4b5ca764226444edfa68d6f664862be1",
         "assets/catalogue/pack.js": "da66512500cd92e7c7b2a58141ce98c903676b972ea71ba0723984eff12be7c6",
         "assets/catalogue/pack.css": "ba6c5c84bcff84c023f2f10ac345a159f48ea97b2e8eb542cb3e56435204d63a",
@@ -143,8 +143,8 @@ CATALOGUE_PINS = {
         "tools/sw2/pack_notes.py": "a81a187002a69bcecca28c9c3130f546e1aae279d5af92cf750a6f9fb04c8fe6",
         "tools/sw2/stamp_pack_page.py": "7d751c25a0a00a1602388537df236c0f79dee6facd31be15fc6e7bce38512149",
         "tools/sw2/check_pack_page.cjs": "89f6a087381c5a34342dc5738f67ad0a3d9f4bc8cfb684da451125617a606235",
-        "subject.html": "68516fcba874a3751b8825455c57de185ac5a90fb0d77eb99becfea23d808ff9",
-        "assets/catalogue/hub.js": "c8b4d0c04678ae527a339ce6ad1b7f4db58b4d5d16d110e2ad94c8fe7d47f9ac",
+        "subject.html": "c70ef79bd0090c069167e1a2308baae69f89dc206783befede5baac84561b1d8",
+        "assets/catalogue/hub.js": "cf8a420b8940af1e226d93eefd14e49a37899a99ccf5724137654de3774862da",
         "assets/catalogue/hub.css": "4bbfa8cb449ee9e022fe70df48b4d15cf1faab7e81bb09e8f6985a65a91fded6",
         "data/calendar-spine.json": "d199474b13c9d340add2c87165396d83712b0f1c9f8bd03b7b12e8fdf6af0d61",
         "Humanities/David_Cover_Autumn1_W3-W7/index.html": "4e25eb9ca8f9f93c720d88d945f3d6d79580f3362a88698fe7af75d146f01e96",
