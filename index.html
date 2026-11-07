@@ -47,7 +47,7 @@
 <button class="pill" type="button" id="view-recommended" data-view="recommended" aria-pressed="false">Recommended</button>
 </div></div>
 
-<span class="count" id="count" aria-live="polite" aria-atomic="true">Loading…</span>
+<span class="count" id="count" aria-live="polite" aria-atomic="true">Loading lessons…</span>
 <p class="status" id="status" aria-live="polite" aria-atomic="true"></p>
 <p class="status" id="lesson-save-status" aria-live="polite" aria-atomic="true"></p>
 <section id="browse" aria-label="Browse the lessons">
@@ -115,9 +115,12 @@ function renderFlat(p){
   $$('.hub-bar .pill').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.view===view)));
   if(p.get('q')!==null)$('#search').value=p.get('q');
 }
+let READY=false;
 function render(){
+  if(!READY)return;
   const p=params();
   if(H.isFlat(p))renderFlat(p);else{$('#browse').hidden=false;$('#results').hidden=true;$('#status').replaceChildren();$$('.hub-bar .pill').forEach(x=>x.setAttribute('aria-pressed','false'));renderHub();}
+  if(H.state.orderWarning)$('#status').append(document.createTextNode(' '+H.state.orderWarning));
   $$('[data-saved-count]').forEach(el=>{el.textContent=String(H.savedCount());});
 }
 function setParams(mutate){const p=params();mutate(p);try{history.replaceState(null,'',location.pathname+(p.toString()?'?'+p.toString():'')+location.hash)}catch(_){}render();}
@@ -130,7 +133,7 @@ document.addEventListener('click',e=>{
 window.addEventListener('popstate',render);
 document.addEventListener('mbm:saved-changed',()=>{if(params().get('view')==='saved')render();});
 H.wireSaveAndRecent(document);
-H.loadAll().then(()=>{document.body.insertAdjacentHTML('beforeend',H.packSheetHtml());H.wirePackSheet(document);render();const first=H.isFlat(params())?($('#cards a[href]')||$('[data-clear-filters]')):$('#search');if(first)first.focus({preventScroll:true});}).catch(()=>{$('#count').textContent="Couldn't load resources.json";});
+H.loadAll().then(()=>{READY=true;document.body.insertAdjacentHTML('beforeend',H.packSheetHtml());H.wirePackSheet(document);render();const first=H.isFlat(params())?($('#cards a[href]')||$('[data-clear-filters]')):$('#search');if(first)first.focus({preventScroll:true});}).catch(()=>{$('#count').textContent="Couldn't load resources.json";});
 })();</script>
 <script defer src="assets/mbm-theme.js"></script><script defer src="assets/mbm-platform.js"></script><script defer src="assets/catalogue/lesson-navigation.js"></script>
 </body></html>
