@@ -95,7 +95,7 @@ const TARGETS = [
   { file: 'Wrecking_Crew.html',                      start: /start|play|begin|shift/i },
   { file: 'Slipstream_GP.html',                      start: /race|start|play|go/i },
   { file: 'Neon_Snake_Overdrive.html',               start: /start|play/i, global: 'THREE', keys: ['ArrowUp', 'Space'] },
-  { file: 'voxelcraft.html',                         selector: '#intro-start', global: 'AFRAME', settleMs: 4000, afterMs: 14000, acceptGlobalOnly: true },
+  { file: 'Block_Builder.html',                         selector: '#intro-start', global: 'AFRAME', settleMs: 4000, afterMs: 14000, acceptGlobalOnly: true },
   { file: 'Orbital_source.html',                     start: /start|play|launch/i },
 ];
 
