@@ -128,7 +128,9 @@ CATALOGUE_PINS = {
         "tools/catalogue/check_display_titles.cjs": "ef27c6fabcafd05015ba988ee99b0906cabe1a519c1049635ee92b7e7c361ce1",
         "tools/catalogue/check_display_titles_browser.cjs": "5662cdb93c7796ead4fb9bb69ce94ac65fe1e29e103f00c65bd07a4d5129a7cd",
         "tools/verify_lessons_chips.mjs": "e417afd94ae4f3a450caab2edf4b6c41d14e4588f070d0ad822263e30a86cf39",
-        "tools/sw2/check_tokens_inert.cjs": "30e997c71a97df341093958790c290f2be4a17a386bb9a8820c5b52a0d514bfa",
+        # Re-cut 2026-11-07: PUBLISHED re-derived by pin_published_digests.py from the Site 8ee4d3e6 registry
+        # (lessons "" c0487bd8, subject.html f2c3c36d) after the pathway-labels release; digest from the edited file.
+        "tools/sw2/check_tokens_inert.cjs": "a8258b89b5dd00147a0c8b18488a2dcf8102bc20d2ddf2fa1aa0863d25454674",
         "assets/catalogue/lesson-order.json": "dbca76eb0f8b4b60c79b02ba7727d78c4313dfb3a41872406f79bad5fbee170f",
         "tools/catalogue/build_lesson_order.py": "35a4c54779b800ae8bd949154d0d19fddb190f49ec18e62efdd86d03313f6180",
         "tools/ux2/hub_gates.mjs": "3d3120df94b1789041370c4045fbcc983635af0b30a0705447f18371bed98944",
