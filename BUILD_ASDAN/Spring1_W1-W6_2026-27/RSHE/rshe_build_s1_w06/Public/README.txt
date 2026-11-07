@@ -1,0 +1,9 @@
+Public edition replacements
+Use these slides/planner/weekly row/source with ../Shared_Resources. Assessing week.
+Show a coping strategy in a real situation.
+Wednesday 10 February 2027 · P1 · Year A.
+Six verbatim outcomes, initially unticked, with tick choices for Shown / With help / Not seen and a comment field for date, context, what was actually seen, access/prompts and source of earlier evidence. Do not tick all six from one performance. Prior evidence must be a specific dated record, never invented. Week3 independent requirement and Week6 real-situation requirement need explicit evidence in their comments; if absent, mark Not seen for that requirement and describe supported/simulation progress. A pass is not failure. No personal worry, private card contents or names.
+If a pupil cannot identify a trusted adult or safe support, support privately and do not press. Offer a familiar school role and help make contact through the school route; accept a blank card or pass. Any disclosure goes to the safeguarding lead through school procedure. Listen calmly, reassure, do not probe or promise secrecy. Follow urgent school procedures where needed. Do not write disclosure details in this pack, a pupil card, book task or shared learning evidence. Private pupil cards are not collected, photographed or displayed for assessment. Staff support a card only with pupil agreement; pupil keeps it.
+Lesson resource · CC BY-NC-SA 4.0: free for classroom use, share and adapt with credit, no resale
+
+Correction re-issue CORR1: this bundle supersedes the original RSHE_BUILD_S1_W06_BUNDLE.zip. All existing filenames, lesson id, dates, period and outcomes are retained.
