@@ -2396,7 +2396,8 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # Re-cut 2026-11-07 (owner pin edit on main, owner approved the merge): the carrier moves to Site main fba8a87f, the merge of Site #610 (the reviewed-title Humanities and RE pack pages admission).
 # Re-cut 2026-11-07 (owner pin edit on main): the carrier moves to Site main 027fe921, the merge of Site #612 (the 41 pack manifests Lessons #816 publishes).
 # Re-cut 2026-11-07 (owner pin edit on the pathway-labels branch): the carrier moves to Site main 3a89a748, the merge of Site #613 (the pathway-labels phase 1 admission rows).
-    "lessons": "fd7e5d0d6e312f4c8db323b25c6ede43c4528b4cca7edd0e6f008767f5d5c544",
+# Re-cut 2026-11-07 (owner pin edit on the subject-page pathway-labels branch): the carrier moves to Site main 8ee4d3e6, the merge of Site #614 (admission rows for the four relabelled catalogue files).
+    "lessons": "3133c7f349cdb18f7cceee99c31f87bc9f3cb08705509bf8719b651366816467",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.
