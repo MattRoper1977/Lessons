@@ -2,8 +2,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="mbm-platform-version" content="mbm-cross-estate-unification-lessons-apps-2026-08-08">
 <title>Lessons — Made by Matt</title>
-<meta name="description" content="Interactive lessons and editable packs for the BUILD, GROW and LAUNCH pathways, made by a teacher.">
-<meta name="theme-color" content="#161D3D"><meta property="og:title" content="Lessons — Made by Matt"><meta property="og:description" content="Interactive lessons and editable packs for the BUILD, GROW and LAUNCH pathways, made by a teacher."><meta property="og:url" content="https://madebymatt.uk/Lessons/"><meta property="og:type" content="website"><meta property="og:site_name" content="Made by Matt"><meta property="og:image" content="https://madebymatt.uk/assets/og-cover.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://madebymatt.uk/assets/og-cover.png">
+<meta name="description" content="Interactive lessons and editable packs for the BASE, TRACK and SUMMIT pathways, made by a teacher.">
+<meta name="theme-color" content="#161D3D"><meta property="og:title" content="Lessons — Made by Matt"><meta property="og:description" content="Interactive lessons and editable packs for the BASE, TRACK and SUMMIT pathways, made by a teacher."><meta property="og:url" content="https://madebymatt.uk/Lessons/"><meta property="og:type" content="website"><meta property="og:site_name" content="Made by Matt"><meta property="og:image" content="https://madebymatt.uk/assets/og-cover.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://madebymatt.uk/assets/og-cover.png">
 <link rel="icon" href="https://madebymatt.uk/favicon.svg">
 <link rel="stylesheet" href="assets/mbm-platform.css">
 <link rel="stylesheet" href="assets/mbm-hub.css">
@@ -40,7 +40,7 @@
 <main id="main" class="wrap l-hub">
 <nav class="lesson-breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><span>Lessons</span></nav>
 <h1>Lessons</h1>
-<p class="lead" id="lead">Lessons for BUILD, GROW and LAUNCH pathways.</p>
+<p class="lead" id="lead">Lessons for BASE, TRACK and SUMMIT pathways.</p>
 <div class="hub-bar" role="search" aria-label="Search the lessons"><div class="wrap">
 <label for="search">Search<input id="search" type="search" placeholder="Topic, title or week…" autocomplete="off"></label>
 <button class="pill" type="button" id="view-saved" data-view="saved" aria-pressed="false">Saved <b data-saved-count></b></button>
@@ -76,9 +76,9 @@ function subjectCard(c){
   const rows=c.rows,fixed=CARDS[c.slug];
   const pathways=H.pathwaysPresent(rows);
   const chips=[];
-  pathways.forEach(p=>chips.push(chip(p,'tier '+p)));
+  pathways.forEach(p=>chips.push(chip(H.pathwayLabel(p),'tier '+p)));
   if(c.slug==='art-studio'){if(rows.some(r=>/Art Teesside/i.test(r.family)))chips.push(chip('TEESSIDE STUDIO'));if(rows.some(r=>/arts award/i.test(r.family+' '+r.subject)))chips.push(chip('ARTS AWARD'));}
-  if(c.slug==='lifeskills'){[...new Set(rows.map(r=>String(r.subject)))].sort().forEach(s=>chips.push(chip(s)));}
+  if(c.slug==='lifeskills'){[...new Set(rows.map(r=>String(r.subject)))].sort().forEach(s=>chips.push(chip(H.relabel(s))));}
   const badges=H.formatsPresent(rows).map(badge).join('');
   let desc='';
   if(c.slug==='science')desc=pathways.length===3?fixed.desc3:fixed.descShort;else if(fixed)desc=fixed.desc;

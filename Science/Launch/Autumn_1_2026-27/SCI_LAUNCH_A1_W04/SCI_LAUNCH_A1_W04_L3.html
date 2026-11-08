@@ -1,0 +1,1331 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Lesson resource">
+  <title>Explaining diffusion in the exam: causal chains and command words · SCI_LAUNCH_A1_W04_L3</title>
+  <style>
+:root {
+  --bg: #F7F4FA;
+  --surface: #FFFFFF;
+  --surface-tint: #ECE5F6;
+  --surface-warm: #FFF6D5;
+  --surface-green: #EDF5E8;
+  --surface-blue: #E6F2FA;
+  --ink: #111827;
+  --ink-secondary: #172033;
+  --accent: #3B2854;
+  --accent-border: #5B417A;
+  --pathway: #7A5C9E;
+}
+* { box-sizing: border-box; max-width: 100%; overflow-wrap: anywhere; }
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #F7F4FA;
+  color: #111827;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 24px;
+  line-height: 1.45;
+  overflow-x: hidden;
+}
+body.calm-view {
+  background-color: #FFFFFF;
+}
+body.high-contrast {
+  --bg: #FFFFFF;
+  --surface: #FFFFFF;
+  --surface-tint: #F3F5F7;
+  --surface-warm: #FFFFFF;
+  --surface-green: #FFFFFF;
+  --surface-blue: #FFFFFF;
+  --ink: #000000;
+  --ink-secondary: #000000;
+  --accent: #000000;
+  --accent-border: #000000;
+}
+a {
+  color: #111827;
+  background-color: #ECE5F6;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-weight: 700;
+  text-decoration: underline;
+}
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 8px;
+  background-color: #111827;
+  color: #FFFFFF;
+  padding: 10px 16px;
+  font-size: 24px;
+  z-index: 1000;
+}
+.skip-link:focus { left: 12px; }
+.lesson-topbar {
+  background-color: #FFFFFF;
+  color: #111827;
+  border-bottom: 4px solid #5B417A;
+  padding: 14px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.brand-cluster {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.brand-logo {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  border: 2px solid #5B417A;
+  border-radius: 8px;
+  background-color: #FFFFFF;
+}
+.pathway-pill {
+  background-color: #3B2854;
+  color: #FFFFFF;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 24px;
+  font-weight: 700;
+}
+.controls-bar {
+  background-color: #ECE5F6;
+  color: #111827;
+  border-bottom: 3px solid #5B417A;
+  padding: 12px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+button, select, textarea, input {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 24px;
+  line-height: 1.35;
+  color: #111827;
+  background-color: #FFFFFF;
+  border: 3px solid #3B2854;
+  border-radius: 10px;
+  padding: 8px 16px;
+}
+button {
+  cursor: pointer;
+  font-weight: 700;
+}
+button:hover, button:focus-visible {
+  background-color: #ECE5F6;
+  color: #111827;
+  outline: 3px solid #111827;
+}
+button[aria-pressed="true"], button.active-route {
+  background-color: #3B2854;
+  color: #FFFFFF;
+}
+.slide-deck {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 20px;
+}
+.slide {
+  display: none;
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 4px solid #5B417A;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.slide.active {
+  display: block;
+}
+.stage-pill {
+  display: inline-block;
+  background-color: #ECE5F6;
+  color: #111827;
+  border: 2px solid #5B417A;
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+h1, h2, h3, h4, p, li, th, td, summary, label, span, div {
+  font-size: 24px;
+  color: #111827;
+}
+h1 {
+  font-size: 36px;
+  margin: 8px 0 14px 0;
+  color: #111827;
+}
+h2 {
+  font-size: 30px;
+  margin: 12px 0;
+  color: #111827;
+}
+h3 {
+  font-size: 26px;
+  margin: 10px 0;
+  color: #111827;
+}
+.card, .ca-act, .task-box, .model-frame {
+  background-color: #F7F4FA;
+  color: #111827;
+  border: 3px solid #5B417A;
+  border-radius: 14px;
+  padding: 18px;
+  margin: 16px 0;
+}
+.card-warm {
+  background-color: #FFF6D5;
+  color: #111827;
+  border: 3px solid #5B417A;
+  border-radius: 14px;
+  padding: 18px;
+  margin: 16px 0;
+}
+.card-green {
+  background-color: #EDF5E8;
+  color: #111827;
+  border: 3px solid #3B2854;
+  border-radius: 14px;
+  padding: 18px;
+  margin: 16px 0;
+}
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 18px;
+}
+.ca-pic {
+  width: 100%;
+  max-width: 920px;
+  height: auto;
+  display: block;
+  margin: 12px auto;
+  background-color: #FFFFFF;
+  border-radius: 12px;
+}
+.ca-beatbox {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: 12px;
+  margin: 14px 0;
+}
+.ca-light {
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 3px solid #5B417A;
+  border-radius: 12px;
+  padding: 14px;
+}
+.ca-light.lit {
+  background-color: #FFF6D5;
+  color: #111827;
+  border-color: #111827;
+  border-width: 4px;
+}
+.status-box {
+  background-color: #ECE5F6;
+  color: #111827;
+  border: 3px solid #3B2854;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-top: 12px;
+  font-weight: 700;
+}
+.route-panel {
+  display: none;
+}
+.route-panel.active-panel {
+  display: block;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0;
+  background-color: #FFFFFF;
+  color: #111827;
+}
+th, td {
+  border: 2px solid #3B2854;
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 24px;
+  color: #111827;
+  background-color: #FFFFFF;
+}
+th {
+  background-color: #ECE5F6;
+  color: #111827;
+  font-weight: 700;
+}
+details {
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 2px solid #5B417A;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin: 10px 0;
+}
+summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: #111827;
+}
+textarea {
+  width: 100%;
+  margin-top: 8px;
+}
+.slide-footer {
+  margin-top: 20px;
+  padding-top: 12px;
+  border-top: 2px solid #5B417A;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-weight: 700;
+  color: #111827;
+}
+dialog {
+  max-width: 1100px;
+  width: 92vw;
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 4px solid #3B2854;
+  border-radius: 16px;
+  padding: 24px;
+}
+.print-section {
+  display: none;
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 3px solid #3B2854;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 1200px;
+}
+.print-section.visible {
+  display: block;
+}
+@media (max-width: 640px) {
+  .lesson-topbar, .controls-bar, .slide-deck {
+    padding: 10px;
+  }
+  .slide {
+    padding: 14px;
+  }
+  button, select {
+    width: 100%;
+  }
+}
+</style>
+</head>
+<body>
+  <a class="skip-link" href="#lessonDeck">Skip to lesson stage</a>
+  <header class="lesson-topbar">
+    <div class="brand-cluster">
+      <img src="approved-mark.jpg" alt="Made by Matt approved mark" class="brand-logo">
+      <div>
+        <span class="pathway-pill">SUMMIT · SCIENCE</span>
+        <span style="margin-left:10px;font-weight:700;">Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W04_L3)</span>
+      </div>
+    </div>
+    <div><strong>Made by Matt</strong></div>
+  </header>
+  <nav class="controls-bar" aria-label="Lesson controls">
+    <button type="button" id="prev-btn">◀ Previous</button>
+    <button type="button" id="next-btn">Next ▶</button>
+    <label for="stage-picker">Stage</label>
+    <select id="stage-picker"><option value="0">1. Opening</option><option value="1">2. Arrival task</option><option value="2">3. Starter</option><option value="3">4. I do 1</option><option value="4">5. We do 1</option><option value="5">6. I do 2</option><option value="6">7. We do 2</option><option value="7">8. You do</option><option value="8">9. Review and improve</option><option value="9">10. Exit ticket</option></select>
+    <button type="button" data-open-dialog="pause-dialog">Pause</button>
+    <button type="button" data-toggle="calm" aria-pressed="false">Calm view</button>
+    <button type="button" data-toggle="high-contrast" aria-pressed="false">High contrast</button>
+    <button type="button" data-toggle="reduce-motion" aria-pressed="false">Reduce motion</button>
+    <button type="button" data-open-dialog="ta-dialog" data-action="ta">TA brief</button>
+    <button type="button" data-open-dialog="guidance-dialog" id="sc1-guidance">Guidance</button>
+    <button type="button" data-print-btn="supported">Print Supported</button>
+    <button type="button" data-print-btn="independent">Print Independent</button>
+    <button type="button" data-print-btn="aspire">Print Aspire</button>
+  </nav>
+  <p id="stage-status" role="status" style="padding:4px 20px;margin:0;font-weight:700;">Stage 1 of 10: Opening</p>
+  <main id="lessonDeck" class="slide-deck" tabindex="-1">
+
+        <section class="slide active" id="slide-1" data-stage="Opening" aria-hidden="false">
+          <span class="stage-pill">Stage 1 · Opening</span>
+          <h1>Explaining diffusion in the exam: causal chains and command words</h1>
+
+    <div class="grid-2">
+      <div class="card">
+        <p><strong>Learning intention:</strong> Answer exam-style diffusion questions independently by matching the command word (describe vs explain) and building a three-part causal chain (direction, gradient, adaptation).</p>
+        <h3>Today I can</h3>
+        <ul>
+          <li>I can tell &quot;describe&quot; (what happens / pattern) and &quot;explain&quot; (why it happens using because/so) apart.</li><li>I can build a 3-mark diffusion explanation linking concentration comparison, random crossings both ways, and net direction.</li><li>I can audit and repair a weak exam answer by adding the missing causal link.</li>
+        </ul>
+        <p><strong>Work in your book first.</strong> Point, speak, sign, draw, type, write or direct an adult. You may pass.</p>
+      </div>
+      <div class="card">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" class="ca-pic" role="img" aria-labelledby="svg-opening-all-title svg-opening-all-desc"><title id="svg-opening-all-title">Three-panel exam explanation model: Describe vs Explain command words, the 3-step causal chain (WHAT -&gt; BECAUSE -&gt; SO), and model patch surface-area data.</title><desc id="svg-opening-all-desc">High-contrast teaching diagram with three labelled panels.</desc><rect x="0" y="0" width="960" height="300" fill="#ffffff" stroke="#5B417A" stroke-width="4" rx="14"/><rect x="24" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="168" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 1 · Command word</text><rect x="98" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><circle cx="118" cy="110" r="7" fill="#3B2854"/><circle cx="133" cy="130" r="7" fill="#3B2854"/><circle cx="120" cy="150" r="7" fill="#3B2854"/><circle cx="143" cy="115" r="7" fill="#3B2854"/><circle cx="148" cy="145" r="7" fill="#3B2854"/><circle cx="203" cy="120" r="7" fill="#3B2854"/><circle cx="216" cy="145" r="7" fill="#3B2854"/><line x1="163" y1="130" x2="193" y2="130" stroke="#111827" stroke-width="4"/><polygon points="193,122 205,130 193,138" fill="#111827"/><text x="168" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Describe = WHAT happens</text><text x="168" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Explain = WHY (because)</text><rect x="336" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="480" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 2 · 3-part chain</text><rect x="410" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><line x1="480" y1="90" x2="480" y2="170" stroke="#3B2854" stroke-width="4" stroke-dasharray="8 6"/><circle cx="435" cy="112" r="6" fill="#111827"/><circle cx="455" cy="130" r="6" fill="#111827"/><circle cx="440" cy="150" r="6" fill="#111827"/><circle cx="460" cy="108" r="6" fill="#111827"/><circle cx="515" cy="115" r="6" fill="#111827"/><circle cx="505" cy="148" r="6" fill="#111827"/><circle cx="510" cy="130" r="12" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="480" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">1. Higher conc in air</text><text x="480" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">2. Random · 3. Net flow</text><rect x="648" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="792" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 3 · Patch data</text><rect x="727" y="90" width="130" height="80" rx="14" fill="#ffffff" stroke="#111827" stroke-width="4"/><circle cx="772" cy="130" r="18" fill="#3B2854"/><ellipse cx="817" cy="135" rx="22" ry="14" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="792" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Area 10 -&gt; 4 units/min</text><text x="792" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Area 20 -&gt; 8 units/min</text></svg>
+        <p><strong>Model clue:</strong> Three-panel exam explanation model: Describe vs Explain command words, the 3-step causal chain (WHAT -&gt; BECAUSE -&gt; SO), and model patch surface-area data.</p>
+      </div>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W04_L3)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-2" data-stage="Arrival task" aria-hidden="true">
+          <span class="stage-pill">Stage 2 · Arrival task</span>
+          <h2>Arrival recall and picture check</h2>
+
+    <div class="card">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" class="ca-pic" role="img" aria-labelledby="svg-arrival-0-title svg-arrival-0-desc"><title id="svg-arrival-0-title">Arrival picture clue: Panel 1 contrasts Describe (what) with Explain (why/because); Panel 2 shows the 3-point causal chain.</title><desc id="svg-arrival-0-desc">High-contrast teaching diagram with three labelled panels.</desc><rect x="0" y="0" width="960" height="300" fill="#ffffff" stroke="#5B417A" stroke-width="4" rx="14"/><rect x="24" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="168" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 1 · Command word</text><rect x="98" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><circle cx="118" cy="110" r="7" fill="#3B2854"/><circle cx="133" cy="130" r="7" fill="#3B2854"/><circle cx="120" cy="150" r="7" fill="#3B2854"/><circle cx="143" cy="115" r="7" fill="#3B2854"/><circle cx="148" cy="145" r="7" fill="#3B2854"/><circle cx="203" cy="120" r="7" fill="#3B2854"/><circle cx="216" cy="145" r="7" fill="#3B2854"/><line x1="163" y1="130" x2="193" y2="130" stroke="#111827" stroke-width="4"/><polygon points="193,122 205,130 193,138" fill="#111827"/><text x="168" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Describe = WHAT happens</text><text x="168" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Explain = WHY (because)</text><rect x="336" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="480" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 2 · 3-part chain</text><rect x="410" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><line x1="480" y1="90" x2="480" y2="170" stroke="#3B2854" stroke-width="4" stroke-dasharray="8 6"/><circle cx="435" cy="112" r="6" fill="#111827"/><circle cx="455" cy="130" r="6" fill="#111827"/><circle cx="440" cy="150" r="6" fill="#111827"/><circle cx="460" cy="108" r="6" fill="#111827"/><circle cx="515" cy="115" r="6" fill="#111827"/><circle cx="505" cy="148" r="6" fill="#111827"/><circle cx="510" cy="130" r="12" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="480" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">1. Higher conc in air</text><text x="480" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">2. Random · 3. Net flow</text><rect x="648" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="792" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 3 · Patch data</text><rect x="727" y="90" width="130" height="80" rx="14" fill="#ffffff" stroke="#111827" stroke-width="4"/><circle cx="772" cy="130" r="18" fill="#3B2854"/><ellipse cx="817" cy="135" rx="22" ry="14" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="792" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Area 10 -&gt; 4 units/min</text><text x="792" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Area 20 -&gt; 8 units/min</text></svg>
+      <p>Use the picture first. Question 1 works directly from the picture labels above.</p>
+    </div>
+
+        <div class="ca-act" data-quiz data-correct="0" data-explain="Panel 1 shows Describe asks WHAT happens, whereas Explain asks WHY it happens (a causal link).">
+          <p><strong>Arrival check 1:</strong> Look at Panel 1. What must an &quot;Explain&quot; answer contain that a &quot;Describe&quot; answer does not?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">A scientific reason (cause and effect, using &quot;because&quot; or &quot;so&quot;)</button><button type="button" data-option="1">Only a single word with no reason</button><button type="button" data-option="2">A drawing of a microscope</button></div>
+          <p class="status-box" role="status">Choose an option to check your recall.</p>
+        </div>
+
+        <div class="ca-act" data-quiz data-correct="0" data-explain="A one-cell-thick alveolar wall shortens the diffusion distance, increasing the rate of diffusion.">
+          <p><strong>Arrival check 2:</strong> Recall from Lesson 2: name one structural adaptation of an alveolus and state what it does.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">One-cell-thick wall — provides a short diffusion distance so gas exchange is faster</button><button type="button" data-option="1">Thick muscular wall — stops gases crossing</button><button type="button" data-option="2">Chloroplasts — make oxygen by photosynthesis</button></div>
+          <p class="status-box" role="status">Choose an option to check your recall.</p>
+        </div>
+
+        <div class="ca-act" data-quiz data-correct="0" data-explain="Diffusion is the net passive movement of particles from higher to lower concentration down a concentration gradient.">
+          <p><strong>Arrival check 3:</strong> Recall from Lesson 1: define diffusion using the words &quot;net movement&quot; and &quot;concentration gradient&quot;.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">Net passive movement of particles from higher to lower concentration down a concentration gradient</button><button type="button" data-option="1">Movement of water only from low to high concentration using ATP</button><button type="button" data-option="2">Magnification divided by actual size</button></div>
+          <p class="status-box" role="status">Choose an option to check your recall.</p>
+        </div>
+
+    <div class="route-group">
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;"><button type="button" class="route-btn active-route" data-route-btn="supported" aria-pressed="true">Supported</button><button type="button" class="route-btn" data-route-btn="independent" aria-pressed="false">Independent</button><button type="button" class="route-btn" data-route-btn="aspire" aria-pressed="false">Aspire</button></div>
+      <div class="route-panel active-panel" data-route-panel="supported" id="arrival-supported"><h3>Supported route</h3>
+            <div class="task-box">
+              <p><strong>1. Look at Panel 1. Which command word asks you to say WHAT happens?</strong></p>
+              <details><summary>Help with this question</summary><p>Read the first line of Panel 1.</p></details>
+              <button type="button" data-reveal="arr-supported-1">Reveal answer after responding</button>
+              <p id="arr-supported-1" hidden><strong>Check:</strong> Describe.</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>2. Look at Panel 1. Which command word asks you to say WHY it happens (using &quot;because&quot;)?</strong></p>
+              <details><summary>Help with this question</summary><p>Read the second line of Panel 1.</p></details>
+              <button type="button" data-reveal="arr-supported-2">Reveal answer after responding</button>
+              <p id="arr-supported-2" hidden><strong>Check:</strong> Explain.</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>3. Recall from Lesson 2: which gas diffuses from the alveolus into the blood?</strong></p>
+              <details><summary>Help with this question</summary><p>Inhaled air has high oxygen.</p></details>
+              <button type="button" data-reveal="arr-supported-3">Reveal answer after responding</button>
+              <p id="arr-supported-3" hidden><strong>Check:</strong> Oxygen (O2).</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>4. Look at Panel 2. Which has a higher oxygen concentration: alveolar air or arriving blood?</strong></p>
+              <details><summary>Help with this question</summary><p>Read line 1 of Panel 2.</p></details>
+              <button type="button" data-reveal="arr-supported-4">Reveal answer after responding</button>
+              <p id="arr-supported-4" hidden><strong>Check:</strong> Alveolar air.</p>
+            </div>
+            </div><div class="route-panel" data-route-panel="independent" id="arrival-independent"><h3>Independent route</h3>
+            <div class="task-box">
+              <p><strong>1. Last lesson you applied diffusion to the lungs. Name one adaptation of an alveolus and state how it speeds up diffusion.</strong></p>
+              <details><summary>Help with this question</summary><p>Link structure to rate factor.</p></details>
+              <button type="button" data-reveal="arr-independent-1">Reveal answer after responding</button>
+              <p id="arr-independent-1" hidden><strong>Check:</strong> One-cell-thick wall gives a short diffusion distance (or large surface area gives more room to cross; or rich blood supply keeps the gradient steep).</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>2. Define diffusion using the words &quot;net movement&quot; and &quot;concentration gradient&quot;.</strong></p>
+              <details><summary>Help with this question</summary><p>Prior lesson retrieval.</p></details>
+              <button type="button" data-reveal="arr-independent-2">Reveal answer after responding</button>
+              <p id="arr-independent-2" hidden><strong>Check:</strong> Diffusion is the net movement of particles from higher concentration to lower concentration down a concentration gradient.</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>3. Write what an &quot;Explain&quot; answer must contain that a &quot;Describe&quot; answer does not.</strong></p>
+              <details><summary>Help with this question</summary><p>Contrast Describe and Explain.</p></details>
+              <button type="button" data-reveal="arr-independent-3">Reveal answer after responding</button>
+              <p id="arr-independent-3" hidden><strong>Check:</strong> A scientific reason (cause-and-effect link using &quot;because&quot; or &quot;so&quot;) rather than just stating what happens.</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>4. Recall from microscopy: why are cells and alveolar wall thicknesses measured in micrometres (µm)?</strong></p>
+              <details><summary>Help with this question</summary><p>1 mm = 1000 µm.</p></details>
+              <button type="button" data-reveal="arr-independent-4">Reveal answer after responding</button>
+              <p id="arr-independent-4" hidden><strong>Check:</strong> Because cells and membranes are microscopic (thousandths of a millimetre), so µm gives manageable numbers.</p>
+            </div>
+            </div><div class="route-panel" data-route-panel="aspire" id="arrival-aspire"><h3>Aspire route</h3>
+            <div class="task-box">
+              <p><strong>1. Explain how the three alveolar adaptations (large surface area, one-cell-thick walls, good blood supply) act together on the rate of diffusion.</strong></p>
+              <details><summary>Help with this question</summary><p>Combine all three factors.</p></details>
+              <button type="button" data-reveal="arr-aspire-1">Reveal answer after responding</button>
+              <p id="arr-aspire-1" hidden><strong>Check:</strong> Large surface area lets many molecules cross at once; one-cell-thick walls minimise the diffusion path; continuous blood flow maintains a steep concentration gradient.</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>2. A 3-mark exam question asks: &quot;Explain why oxygen diffuses from alveolar air into arriving blood. [3]&quot; List the three distinct points needed.</strong></p>
+              <details><summary>Help with this question</summary><p>Check Panel 2.</p></details>
+              <button type="button" data-reveal="arr-aspire-2">Reveal answer after responding</button>
+              <p id="arr-aspire-2" hidden><strong>Check:</strong> (1) Oxygen concentration is higher in alveolar air than in arriving blood; (2) oxygen molecules move randomly in both directions; (3) more cross from air to blood than back, giving net movement down the gradient.</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>3. Why does writing a very long paragraph that repeats the question score fewer marks than three short, linked scientific points?</strong></p>
+              <details><summary>Help with this question</summary><p>Quality and causal links earn credit.</p></details>
+              <button type="button" data-reveal="arr-aspire-3">Reveal answer after responding</button>
+              <p id="arr-aspire-3" hidden><strong>Check:</strong> Marks are awarded for distinct scientific reasoning steps (criteria), not word count or restating the question.</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>4. Look at Panel 3 (Patch A: 10 cm² -&gt; 4 units/min; Patch B: 20 cm² -&gt; 8 units/min). Separate the &quot;Describe&quot; statement from the &quot;Explain&quot; statement.</strong></p>
+              <details><summary>Help with this question</summary><p>Separate pattern from mechanism.</p></details>
+              <button type="button" data-reveal="arr-aspire-4">Reveal answer after responding</button>
+              <p id="arr-aspire-4" hidden><strong>Check:</strong> Describe: doubling area from 10 to 20 cm² doubles transfer from 4 to 8 units/min. Explain: twice the surface area provides twice as much membrane space for particles to cross at the same time.</p>
+            </div>
+            </div>
+    </div>
+    <div class="card-green">
+      <p><strong>Regulation check:</strong> choose a word or colour.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;">
+        <button type="button" data-regulation="Green · ready">Green · ready</button>
+        <button type="button" data-regulation="Amber · need an adjustment">Amber · need an adjustment</button>
+        <button type="button" data-regulation="Red · need a quiet pause">Red · need a quiet pause</button>
+      </div>
+      <p id="regulation-status" class="status-box" role="status">A private response or pass is welcome.</p>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W04_L3)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-3" data-stage="Starter" aria-hidden="true">
+          <span class="stage-pill">Stage 3 · Starter</span>
+          <h2>Starter · 4-beat model and retrieval</h2>
+
+    <div class="ca-act" data-beat>
+      <h3>Whiteboard 4-beat sequence</h3>
+      <div class="ca-beatbox"><div class="ca-light"><strong>Beat 1:</strong> Beat 1 · Read the command word: Describe = WHAT happens; Explain = WHY (because/so).</div><div class="ca-light"><strong>Beat 2:</strong> Beat 2 · Check the question focus: is it asking about net DIRECTION or about RATE?</div><div class="ca-light"><strong>Beat 3:</strong> Beat 3 · Build the 3-link chain: WHAT moves -&gt; BECAUSE of the gradient -&gt; SO adaptation speeds it up.</div><div class="ca-light"><strong>Beat 4:</strong> Beat 4 · Audit and edit: replace vague words (&quot;wants to&quot;, &quot;goes in&quot;) with particle-level causes.</div></div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;">
+        <button type="button" data-beat-next>Next beat</button>
+        <button type="button" data-beat-all>Show all 4 beats</button>
+        <button type="button" data-beat-reset>Reset beats</button>
+      </div>
+      <p class="status-box beat-status" role="status">Ready: step 0 of 4</p>
+    </div>
+    <div class="ca-act ca-vote" data-quiz data-correct="0" data-explain="Naming &quot;diffusion&quot; does not explain WHY net movement goes into the blood (higher O2 concentration in alveolar air) or WHY it is fast (large surface area, short distance, steep gradient).">
+      <h3>Class fingers or thumbs vote</h3>
+      <p><strong>An exam question asks: &quot;Explain why oxygen enters the blood quickly in the lungs.&quot; Why is the answer &quot;Because it diffuses&quot; not enough for full marks?</strong></p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">1. It only names the process; it does not state the concentration gradient or link an adaptation (like thin walls) to the fast rate.</button><button type="button" data-option="1">2. It is too long and uses too many scientific words.</button><button type="button" data-option="2">3. Oxygen actually enters the blood by osmosis, not diffusion.</button><button type="button" data-option="3">4. The lungs pump oxygen using ATP.</button></div>
+      <p class="status-box" role="status">Hold up 1, 2, 3 or 4 fingers (or point), then tap to check.</p>
+    </div>
+
+        <div class="task-box">
+          <p><strong>Retrieval 1:</strong> What turns a description (&quot;Oxygen moves into the blood&quot;) into an explanation?</p>
+          <details><summary>Clue</summary><p>Link WHAT to BECAUSE.</p></details>
+          <button type="button" data-reveal="starter-rev-1">Reveal answer</button>
+          <p id="starter-rev-1" hidden><strong>Answer:</strong> Adding the causal link (&quot;because oxygen concentration is higher in the alveolus than in the arriving blood&quot;).</p>
+        </div>
+
+        <div class="task-box">
+          <p><strong>Retrieval 2:</strong> Why is the statement &quot;The oxygen spreads out because it wants to reach the blood&quot; scientifically wrong?</p>
+          <details><summary>Clue</summary><p>Never give particles human feelings.</p></details>
+          <button type="button" data-reveal="starter-rev-2">Reveal answer</button>
+          <p id="starter-rev-2" hidden><strong>Answer:</strong> Particles cannot think or &quot;want&quot; anything; they move randomly, and net movement happens because more particles start on the high-concentration side.</p>
+        </div>
+
+        <div class="task-box">
+          <p><strong>Retrieval 3:</strong> Look at Panel 3. When model patch area doubles from 10 cm² to 20 cm², what happens to the transfer rate?</p>
+          <details><summary>Clue</summary><p>Doubling surface area doubles the rate.</p></details>
+          <button type="button" data-reveal="starter-rev-3">Reveal answer</button>
+          <p id="starter-rev-3" hidden><strong>Answer:</strong> It doubles from 4 units per minute to 8 units per minute.</p>
+        </div>
+
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W04_L3)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-4" data-stage="I do 1" aria-hidden="true">
+          <span class="stage-pill">Stage 4 · I do 1</span>
+          <h2>I do 1 · Answering a 3-mark &quot;Explain net direction&quot; question</h2>
+
+    <div class="card">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" class="ca-pic" role="img" aria-labelledby="svg-ido1-1-title svg-ido1-1-desc"><title id="svg-ido1-1-title">I do 1 · Answering a 3-mark &quot;Explain net direction&quot; question</title><desc id="svg-ido1-1-desc">High-contrast teaching diagram with three labelled panels.</desc><rect x="0" y="0" width="960" height="300" fill="#ffffff" stroke="#5B417A" stroke-width="4" rx="14"/><rect x="24" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="168" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 1 · Command word</text><rect x="98" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><circle cx="118" cy="110" r="7" fill="#3B2854"/><circle cx="133" cy="130" r="7" fill="#3B2854"/><circle cx="120" cy="150" r="7" fill="#3B2854"/><circle cx="143" cy="115" r="7" fill="#3B2854"/><circle cx="148" cy="145" r="7" fill="#3B2854"/><circle cx="203" cy="120" r="7" fill="#3B2854"/><circle cx="216" cy="145" r="7" fill="#3B2854"/><line x1="163" y1="130" x2="193" y2="130" stroke="#111827" stroke-width="4"/><polygon points="193,122 205,130 193,138" fill="#111827"/><text x="168" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Describe = WHAT happens</text><text x="168" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Explain = WHY (because)</text><rect x="336" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="480" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 2 · 3-part chain</text><rect x="410" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><line x1="480" y1="90" x2="480" y2="170" stroke="#3B2854" stroke-width="4" stroke-dasharray="8 6"/><circle cx="435" cy="112" r="6" fill="#111827"/><circle cx="455" cy="130" r="6" fill="#111827"/><circle cx="440" cy="150" r="6" fill="#111827"/><circle cx="460" cy="108" r="6" fill="#111827"/><circle cx="515" cy="115" r="6" fill="#111827"/><circle cx="505" cy="148" r="6" fill="#111827"/><circle cx="510" cy="130" r="12" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="480" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">1. Higher conc in air</text><text x="480" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">2. Random · 3. Net flow</text><rect x="648" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="792" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 3 · Patch data</text><rect x="727" y="90" width="130" height="80" rx="14" fill="#ffffff" stroke="#111827" stroke-width="4"/><circle cx="772" cy="130" r="18" fill="#3B2854"/><ellipse cx="817" cy="135" rx="22" ry="14" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="792" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Area 10 -&gt; 4 units/min</text><text x="792" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Area 20 -&gt; 8 units/min</text></svg>
+    </div>
+    <div class="model-frame" id="model-1" data-step-model data-steps="[&quot;Read the exact question: \&quot;Explain the initial net movement of oxygen from alveolar air into arriving blood. [3 marks]\&quot;&quot;, &quot;Point 1 (Concentration comparison): Alveolar air has a higher oxygen concentration than the arriving deoxygenated blood (1 mark).&quot;, &quot;Point 2 (Random particle motion): Oxygen molecules move randomly and cross the membrane in both directions (1 mark).&quot;, &quot;Point 3 (Net imbalance): More oxygen molecules cross from air to blood than from blood to air initially, so net movement is into the blood down the concentration gradient (1 mark).&quot;]">
+      <h3>I do 1 · Answering a 3-mark &quot;Explain net direction&quot; question</h3>
+      <p class="status-box model-caption" role="status">Step 1: Read the exact question: &quot;Explain the initial net movement of oxygen from alveolar air into arriving blood. [3 marks]&quot;</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin:10px 0;">
+        <button type="button" data-step-next>Show next step</button>
+        <button type="button" data-step-reset>Reset model</button>
+      </div>
+      <ol><li class="v5-step" ><strong>Step 1:</strong> Read the exact question: &quot;Explain the initial net movement of oxygen from alveolar air into arriving blood. [3 marks]&quot;</li><li class="v5-step" hidden><strong>Step 2:</strong> Point 1 (Concentration comparison): Alveolar air has a higher oxygen concentration than the arriving deoxygenated blood (1 mark).</li><li class="v5-step" hidden><strong>Step 3:</strong> Point 2 (Random particle motion): Oxygen molecules move randomly and cross the membrane in both directions (1 mark).</li><li class="v5-step" hidden><strong>Step 4:</strong> Point 3 (Net imbalance): More oxygen molecules cross from air to blood than from blood to air initially, so net movement is into the blood down the concentration gradient (1 mark).</li></ol>
+    </div>
+    <div class="card-warm">
+      <h3>Worked example 1</h3>
+      <p>Worked example 1: Question — &quot;Explain the initial net movement of oxygen from alveolar air into arriving blood. [3 marks]&quot; Model Answer: (1) Alveolar air has a higher concentration of oxygen than the arriving blood. (2) Oxygen molecules move randomly in all directions and cross the walls both ways. (3) Because more oxygen molecules start on the alveolar side, more cross from air to blood than back each second, giving a net movement into the blood down the concentration gradient.</p>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W04_L3)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-5" data-stage="We do 1" aria-hidden="true">
+          <span class="stage-pill">Stage 5 · We do 1</span>
+          <h2>We do 1 · team sort and scientific reason</h2>
+
+    <div class="ca-act" data-sort>
+      <h3>Shared sort and reason challenge</h3>
+      <p><strong>Point rule:</strong> 1 point for an accurate match, plus 1 bonus point for a clear scientific reason.</p>
+
+        <div class="task-box">
+          <label for="sort-sel-0"><strong>1. &quot;It spreads out.&quot; (for a 3-mark Explain diffusion question)</strong></label>
+          <select id="sort-sel-0" data-expected="MISSING: net movement, high-to-low concentration gradient, and direction"><option value="">Choose matching statement...</option><option value="MISSING: net movement, high-to-low concentration gradient, and direction">MISSING: net movement, high-to-low concentration gradient, and direction</option><option value="MISSING: concentration comparison and random crossings both ways">MISSING: concentration comparison and random crossings both ways</option><option value="MISSING: so the diffusion distance is short and the rate is higher">MISSING: so the diffusion distance is short and the rate is higher</option><option value="COMPLETE: concentration comparison, random motion, and net result all linked">COMPLETE: concentration comparison, random motion, and net result all linked</option></select>
+        </div>
+
+        <div class="task-box">
+          <label for="sort-sel-1"><strong>2. &quot;Oxygen goes in.&quot; (for a 3-mark Explain net direction question)</strong></label>
+          <select id="sort-sel-1" data-expected="MISSING: concentration comparison and random crossings both ways"><option value="">Choose matching statement...</option><option value="MISSING: net movement, high-to-low concentration gradient, and direction">MISSING: net movement, high-to-low concentration gradient, and direction</option><option value="MISSING: concentration comparison and random crossings both ways">MISSING: concentration comparison and random crossings both ways</option><option value="MISSING: so the diffusion distance is short and the rate is higher">MISSING: so the diffusion distance is short and the rate is higher</option><option value="COMPLETE: concentration comparison, random motion, and net result all linked">COMPLETE: concentration comparison, random motion, and net result all linked</option></select>
+        </div>
+
+        <div class="task-box">
+          <label for="sort-sel-2"><strong>3. &quot;The wall is thin.&quot; (for a 2-mark Explain fast diffusion question)</strong></label>
+          <select id="sort-sel-2" data-expected="MISSING: so the diffusion distance is short and the rate is higher"><option value="">Choose matching statement...</option><option value="MISSING: net movement, high-to-low concentration gradient, and direction">MISSING: net movement, high-to-low concentration gradient, and direction</option><option value="MISSING: concentration comparison and random crossings both ways">MISSING: concentration comparison and random crossings both ways</option><option value="MISSING: so the diffusion distance is short and the rate is higher">MISSING: so the diffusion distance is short and the rate is higher</option><option value="COMPLETE: concentration comparison, random motion, and net result all linked">COMPLETE: concentration comparison, random motion, and net result all linked</option></select>
+        </div>
+
+        <div class="task-box">
+          <label for="sort-sel-3"><strong>4. &quot;Higher O2 in alveolar air; random crossings both ways; more cross air to blood.&quot;</strong></label>
+          <select id="sort-sel-3" data-expected="COMPLETE: concentration comparison, random motion, and net result all linked"><option value="">Choose matching statement...</option><option value="MISSING: net movement, high-to-low concentration gradient, and direction">MISSING: net movement, high-to-low concentration gradient, and direction</option><option value="MISSING: concentration comparison and random crossings both ways">MISSING: concentration comparison and random crossings both ways</option><option value="MISSING: so the diffusion distance is short and the rate is higher">MISSING: so the diffusion distance is short and the rate is higher</option><option value="COMPLETE: concentration comparison, random motion, and net result all linked">COMPLETE: concentration comparison, random motion, and net result all linked</option></select>
+        </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;">
+        <button type="button" data-sort-check>Check matches</button>
+        <button type="button" data-sort-reset>Reset matches</button>
+      </div>
+      <p class="status-box sort-status" role="status">Match each term to its scientific explanation.</p>
+    </div>
+    <div class="card" id="ca-points-modal">
+      <h3>Four-team points board</h3>
+      <div class="grid-2">
+        <div class="card" style="margin:0;">
+          <h4>Circles: <span id="score-0">0</span> pts</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <button type="button" data-team-add="0" data-pts="1">+1 Match</button>
+            <button type="button" data-team-add="0" data-pts="1">+1 Reason</button>
+            <button type="button" data-team-add="0" data-pts="-1">-1</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin:0;">
+          <h4>Squares: <span id="score-1">0</span> pts</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <button type="button" data-team-add="1" data-pts="1">+1 Match</button>
+            <button type="button" data-team-add="1" data-pts="1">+1 Reason</button>
+            <button type="button" data-team-add="1" data-pts="-1">-1</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin:0;">
+          <h4>Triangles: <span id="score-2">0</span> pts</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <button type="button" data-team-add="2" data-pts="1">+1 Match</button>
+            <button type="button" data-team-add="2" data-pts="1">+1 Reason</button>
+            <button type="button" data-team-add="2" data-pts="-1">-1</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin:0;">
+          <h4>Diamonds: <span id="score-3">0</span> pts</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <button type="button" data-team-add="3" data-pts="1">+1 Match</button>
+            <button type="button" data-team-add="3" data-pts="1">+1 Reason</button>
+            <button type="button" data-team-add="3" data-pts="-1">-1</button>
+          </div>
+        </div>
+        </div>
+      <button type="button" id="reset-points" style="margin-top:12px;">Reset points board</button>
+    </div>
+    <details class="participation-loop">
+      <summary>Where what you say changes something · optional</summary>
+      <p>Point, sign, say or show an observation, question or access need. You may pass or speak privately.</p>
+      <p>The adult says what can change, makes one agreed adjustment if possible, and checks whether it helped.</p>
+    </details>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W04_L3)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-6" data-stage="I do 2" aria-hidden="true">
+          <span class="stage-pill">Stage 6 · I do 2</span>
+          <h2>I do 2 · Repairing weak answers and transferring to new data</h2>
+
+    <div class="card">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" class="ca-pic" role="img" aria-labelledby="svg-ido2-2-title svg-ido2-2-desc"><title id="svg-ido2-2-title">I do 2 · Repairing weak answers and transferring to new data</title><desc id="svg-ido2-2-desc">High-contrast teaching diagram with three labelled panels.</desc><rect x="0" y="0" width="960" height="300" fill="#ffffff" stroke="#5B417A" stroke-width="4" rx="14"/><rect x="24" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="168" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 1 · Command word</text><rect x="98" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><circle cx="118" cy="110" r="7" fill="#3B2854"/><circle cx="133" cy="130" r="7" fill="#3B2854"/><circle cx="120" cy="150" r="7" fill="#3B2854"/><circle cx="143" cy="115" r="7" fill="#3B2854"/><circle cx="148" cy="145" r="7" fill="#3B2854"/><circle cx="203" cy="120" r="7" fill="#3B2854"/><circle cx="216" cy="145" r="7" fill="#3B2854"/><line x1="163" y1="130" x2="193" y2="130" stroke="#111827" stroke-width="4"/><polygon points="193,122 205,130 193,138" fill="#111827"/><text x="168" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Describe = WHAT happens</text><text x="168" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Explain = WHY (because)</text><rect x="336" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="480" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 2 · 3-part chain</text><rect x="410" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><line x1="480" y1="90" x2="480" y2="170" stroke="#3B2854" stroke-width="4" stroke-dasharray="8 6"/><circle cx="435" cy="112" r="6" fill="#111827"/><circle cx="455" cy="130" r="6" fill="#111827"/><circle cx="440" cy="150" r="6" fill="#111827"/><circle cx="460" cy="108" r="6" fill="#111827"/><circle cx="515" cy="115" r="6" fill="#111827"/><circle cx="505" cy="148" r="6" fill="#111827"/><circle cx="510" cy="130" r="12" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="480" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">1. Higher conc in air</text><text x="480" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">2. Random · 3. Net flow</text><rect x="648" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="792" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 3 · Patch data</text><rect x="727" y="90" width="130" height="80" rx="14" fill="#ffffff" stroke="#111827" stroke-width="4"/><circle cx="772" cy="130" r="18" fill="#3B2854"/><ellipse cx="817" cy="135" rx="22" ry="14" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="792" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Area 10 -&gt; 4 units/min</text><text x="792" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Area 20 -&gt; 8 units/min</text></svg>
+    </div>
+    <div class="model-frame" id="model-2" data-step-model data-steps="[&quot;Audit a weak student draft: \&quot;The alveolus wall is thin.\&quot; Ask: did the student explain HOW that speeds up diffusion?&quot;, &quot;Add the physical mechanism with \&quot;so\&quot;: \&quot;The alveolus wall is one cell thick, SO the diffusion distance is very short, which increases the rate of diffusion.\&quot;&quot;, &quot;Transfer to unfamiliar table data (Model Patch A = 10 cm\u00b2, 4 units/min; Patch B = 20 cm\u00b2, 8 units/min): first DESCRIBE the pattern (area doubles, rate doubles).&quot;, &quot;Then EXPLAIN the pattern (twice the surface area allows twice as many particles to cross the membrane at the same time) and state one model limit.&quot;]">
+      <h3>I do 2 · Repairing weak answers and transferring to new data</h3>
+      <p class="status-box model-caption" role="status">Step 1: Audit a weak student draft: &quot;The alveolus wall is thin.&quot; Ask: did the student explain HOW that speeds up diffusion?</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin:10px 0;">
+        <button type="button" data-step-next>Show next step</button>
+        <button type="button" data-step-reset>Reset model</button>
+      </div>
+      <ol><li class="v5-step" ><strong>Step 1:</strong> Audit a weak student draft: &quot;The alveolus wall is thin.&quot; Ask: did the student explain HOW that speeds up diffusion?</li><li class="v5-step" hidden><strong>Step 2:</strong> Add the physical mechanism with &quot;so&quot;: &quot;The alveolus wall is one cell thick, SO the diffusion distance is very short, which increases the rate of diffusion.&quot;</li><li class="v5-step" hidden><strong>Step 3:</strong> Transfer to unfamiliar table data (Model Patch A = 10 cm², 4 units/min; Patch B = 20 cm², 8 units/min): first DESCRIBE the pattern (area doubles, rate doubles).</li><li class="v5-step" hidden><strong>Step 4:</strong> Then EXPLAIN the pattern (twice the surface area allows twice as many particles to cross the membrane at the same time) and state one model limit.</li></ol>
+    </div>
+    <div class="card-warm">
+      <h3>Worked example 2</h3>
+      <p>Worked example 2 (Repairing &amp; Transferring): Weak answer to &quot;Explain why a thick membrane slows diffusion [2]&quot;: &quot;Because it is thick.&quot; Repaired 2-mark answer: &quot;A thick membrane increases the diffusion distance (1), so particles have to travel further to cross and the rate of diffusion is lower (1).&quot; Notice how naming the factor (diffusion distance) + the effect on rate earns both marks.</p>
+    </div>
+    <div class="ca-act" data-check data-quiz data-correct="0" data-explain="Particles have no intentions; explanations must use concentration differences and random particle motion down a concentration gradient.">
+      <h3>Single-decision hinge check</h3>
+      <p><strong>A student writes: &quot;Oxygen moves into the blood because it wants to help the body respire.&quot; How do you repair this into a GCSE explanation?</strong></p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">A. Replace &quot;wants to&quot; with &quot;because oxygen is at a higher concentration in the alveolus than in the blood, so net random movement is down the concentration gradient.&quot;</button><button type="button" data-option="1">B. Keep &quot;wants to&quot; and add &quot;very quickly&quot;.</button><button type="button" data-option="2">C. Change &quot;oxygen&quot; to &quot;nitrogen&quot;.</button></div>
+      <p class="status-box" role="status">Choose the scientifically accurate statement before moving on.</p>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W04_L3)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-7" data-stage="We do 2" aria-hidden="true">
+          <span class="stage-pill">Stage 7 · We do 2</span>
+          <h2>We do 2 · method order and data table</h2>
+
+    <div class="ca-act" data-sequence>
+      <h3>Order the scientific method or reasoning steps</h3>
+      <ol>
+        <li data-order="1" style="margin-bottom:10px;">
+          <span>State the WHAT sentence (direction of movement or pattern in the data table).</span>
+          <button type="button" data-move-up>Move up</button>
+          <button type="button" data-move-down>Move down</button>
+        </li>
+
+        <li data-order="0" style="margin-bottom:10px;">
+          <span>Read the command word (Describe vs Explain) and check whether the question asks about net direction or diffusion rate.</span>
+          <button type="button" data-move-up>Move up</button>
+          <button type="button" data-move-down>Move down</button>
+        </li>
+
+        <li data-order="2" style="margin-bottom:10px;">
+          <span>Add the BECAUSE sentence (comparing higher and lower concentration across the barrier).</span>
+          <button type="button" data-move-up>Move up</button>
+          <button type="button" data-move-down>Move down</button>
+        </li>
+
+        <li data-order="3" style="margin-bottom:10px;">
+          <span>Add the SO sentence (linking the structural adaptation or factor to diffusion distance, surface area, or gradient steepness).</span>
+          <button type="button" data-move-up>Move up</button>
+          <button type="button" data-move-down>Move down</button>
+        </li>
+        </ol>
+      <button type="button" data-seq-check>Check order</button>
+      <p class="status-box seq-status" role="status">Use move up and Move down to place the steps in order, then check.</p>
+    </div>
+    <div class="card">
+      <h3>Exam answer repair clinic &amp; Model Patch transfer data</h3>
+      <table>
+        <thead><tr><th scope="col">Exam prompt / Data</th><th scope="col">Flawed or partial student draft</th><th scope="col">What is missing?</th><th scope="col">Full-mark repaired answer</th></tr></thead>
+        <tbody><tr><td>Explain why O2 enters blood [3]</td><td>&quot;Oxygen goes in.&quot;</td><td>Gradient &amp; random crossings</td><td>Higher O2 in air (1); random motion both ways (1); net flow air -&gt; blood down gradient (1)</td></tr><tr><td>Explain why thin walls speed diffusion [2]</td><td>&quot;The wall is thin.&quot;</td><td>Effect on distance &amp; rate</td><td>One-cell-thick wall gives a short diffusion distance (1), so particles cross in less time (1)</td></tr><tr><td>Patch A (10 cm²): 4 u/min; Patch B (20 cm²): 8 u/min</td><td>&quot;Patch B is better.&quot;</td><td>Numbers &amp; surface area link</td><td>Doubling area from 10 to 20 cm² doubles rate from 4 to 8 u/min (1) as more cross at once (1)</td></tr><tr><td>Explain diffusion of dye in water [2]</td><td>&quot;Particles want to spread out.&quot;</td><td>Passive random motion</td><td>Particles move randomly from higher to lower concentration (1) down a gradient (1)</td></tr></tbody>
+      </table>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W04_L3)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-8" data-stage="You do" aria-hidden="true">
+          <span class="stage-pill">Stage 8 · You do</span>
+          <h2>You do · independent tiered practice</h2>
+
+    <div class="card">
+      <p><strong>Work in your book first.</strong> Choose your route with an adult. Staff mark actual <strong>I · S · C</strong> beside each task.</p>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" class="ca-pic" role="img" aria-labelledby="svg-youdo-3-title svg-youdo-3-desc"><title id="svg-youdo-3-title">Three-panel exam explanation model: Describe vs Explain command words, the 3-step causal chain (WHAT -&gt; BECAUSE -&gt; SO), and model patch surface-area data.</title><desc id="svg-youdo-3-desc">High-contrast teaching diagram with three labelled panels.</desc><rect x="0" y="0" width="960" height="300" fill="#ffffff" stroke="#5B417A" stroke-width="4" rx="14"/><rect x="24" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="168" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 1 · Command word</text><rect x="98" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><circle cx="118" cy="110" r="7" fill="#3B2854"/><circle cx="133" cy="130" r="7" fill="#3B2854"/><circle cx="120" cy="150" r="7" fill="#3B2854"/><circle cx="143" cy="115" r="7" fill="#3B2854"/><circle cx="148" cy="145" r="7" fill="#3B2854"/><circle cx="203" cy="120" r="7" fill="#3B2854"/><circle cx="216" cy="145" r="7" fill="#3B2854"/><line x1="163" y1="130" x2="193" y2="130" stroke="#111827" stroke-width="4"/><polygon points="193,122 205,130 193,138" fill="#111827"/><text x="168" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Describe = WHAT happens</text><text x="168" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Explain = WHY (because)</text><rect x="336" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="480" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 2 · 3-part chain</text><rect x="410" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><line x1="480" y1="90" x2="480" y2="170" stroke="#3B2854" stroke-width="4" stroke-dasharray="8 6"/><circle cx="435" cy="112" r="6" fill="#111827"/><circle cx="455" cy="130" r="6" fill="#111827"/><circle cx="440" cy="150" r="6" fill="#111827"/><circle cx="460" cy="108" r="6" fill="#111827"/><circle cx="515" cy="115" r="6" fill="#111827"/><circle cx="505" cy="148" r="6" fill="#111827"/><circle cx="510" cy="130" r="12" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="480" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">1. Higher conc in air</text><text x="480" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">2. Random · 3. Net flow</text><rect x="648" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="792" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 3 · Patch data</text><rect x="727" y="90" width="130" height="80" rx="14" fill="#ffffff" stroke="#111827" stroke-width="4"/><circle cx="772" cy="130" r="18" fill="#3B2854"/><ellipse cx="817" cy="135" rx="22" ry="14" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="792" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Area 10 -&gt; 4 units/min</text><text x="792" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Area 20 -&gt; 8 units/min</text></svg>
+    </div>
+    <div class="route-group">
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;"><button type="button" class="route-btn active-route" data-route-btn="supported" aria-pressed="true">Supported</button><button type="button" class="route-btn" data-route-btn="independent" aria-pressed="false">Independent</button><button type="button" class="route-btn" data-route-btn="choice" aria-pressed="false">Choice</button><button type="button" class="route-btn" data-route-btn="aspire" aria-pressed="false">Aspire</button></div>
+
+        <div class="route-panel active-panel" data-route-panel="supported" id="task-supported">
+          <h3>Supported route</h3>
+
+            <div class="task-box">
+              <p><strong>Task 1 (2 marks):</strong> Match each command word to its job: (a) Describe, (b) Explain [2 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Use panel 1: which one asks WHAT and which asks WHY?</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-supported-1">Your answer</label><textarea id="yd-supported-1" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 2 (2 marks):</strong> Complete this 2-mark explanation: &quot;A thin alveolus wall speeds up diffusion because it gives a short diffusion ___, so particles cross in less ___.&quot; [2 marks]</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Word bank: distance, time.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-supported-2">Your answer</label><textarea id="yd-supported-2" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 3 (1 marks):</strong> Look at the Patch table (Patch A: 10 cm² -&gt; 4 units/min; Patch B: 20 cm² -&gt; 8 units/min). Describe what happens to the transfer rate when area doubles [1 mark].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>State what happens to the numbers.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-supported-3">Your answer</label><textarea id="yd-supported-3" rows="3"></textarea></details>
+            </div>
+
+          <details class="ca-make-tier">
+            <summary>Optional hands-on make-it choice (Supported)</summary>
+            <p>Link the 3 colour-coded sentence cards ([WHAT: Oxygen moves into blood] -&gt; [BECAUSE: Higher O2 in air than blood] -&gt; [SO: Thin wall gives short path]) in order on your desk.</p>
+          </details>
+        </div>
+
+        <div class="route-panel" data-route-panel="independent" id="task-independent">
+          <h3>Independent route</h3>
+
+            <div class="task-box">
+              <p><strong>Task 1 (4 marks):</strong> Describe what happens to the net movement of oxygen at the alveolus, and then explain why this happens [4 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Give 1 mark for the Describe direction, and 3 marks for the Explain chain (concentration comparison, random motion, net flow).</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-independent-1">Your answer</label><textarea id="yd-independent-1" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 2 (3 marks):</strong> Look at the Model Patch data (Patch A: 10 cm², 4 units/min; Patch B: 20 cm², 8 units/min). (a) Describe the pattern shown by the data [1 mark]. (b) Explain why this happens using the particle model [2 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Quote the numbers for (a), and use membrane surface area for (b).</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-independent-2">Your answer</label><textarea id="yd-independent-2" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 3 (2 marks):</strong> Repair this weak student answer to &quot;Explain why a thick membrane slows down diffusion [2]&quot;: Student wrote &quot;Because the wall is thick.&quot; [2 marks]</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Add what a thick wall does to diffusion distance and crossing time.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-independent-3">Your answer</label><textarea id="yd-independent-3" rows="3"></textarea></details>
+            </div>
+
+          <details class="ca-make-tier">
+            <summary>Optional hands-on make-it choice (Independent)</summary>
+            <p>Take two of your own written answers, tick each criterion met (concentration comparison, random motion, net flow / distance), and add one // self-edit improvement line.</p>
+          </details>
+        </div>
+
+        <div class="route-panel" data-route-panel="choice" id="task-choice">
+          <h3>Choice route</h3>
+
+            <div class="task-box">
+              <p><strong>Task 1 (3 marks):</strong> Build a 3-link causal chain (WHAT -&gt; BECAUSE -&gt; SO) to explain why carbon dioxide diffuses out of the blood into the alveolus [3 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Remember arriving blood has high CO2 from respiration.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-choice-1">Your answer</label><textarea id="yd-choice-1" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 2 (3 marks):</strong> Audit three flawed exam answers from the table and write the missing &quot;because&quot; or &quot;so&quot; clause for each one [3 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Check rows 1, 2 and 4 of the data table.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-choice-2">Your answer</label><textarea id="yd-choice-2" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 3 (2 marks):</strong> Use the Model Patch table (10 cm² -&gt; 4 units/min; 20 cm² -&gt; 8 units/min) to write one Describe sentence and one Explain sentence [2 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Separate what the numbers do from why they do it.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-choice-3">Your answer</label><textarea id="yd-choice-3" rows="3"></textarea></details>
+            </div>
+
+          <details class="ca-make-tier">
+            <summary>Optional hands-on make-it choice (Choice)</summary>
+            <p>Sort the 6 sample student answers into &quot;Earned full marks&quot; vs &quot;Needs a causal repair&quot; and write the repair on the back of each flawed card.</p>
+          </details>
+        </div>
+
+        <div class="route-panel" data-route-panel="aspire" id="task-aspire">
+          <h3>Aspire route</h3>
+
+            <div class="task-box">
+              <p><strong>Task 1 (3 marks):</strong> Root hair cells in plants and microvilli in the human small intestine both have long, folded projections. Explain how this shared adaptation affects the rate of diffusion of dissolved substances into these cells [3 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Transfer the surface-area causal chain to an unfamiliar context.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-aspire-1">Your answer</label><textarea id="yd-aspire-1" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 2 (4 marks):</strong> In a hospital, a patient with fluid build-up in their lungs (pulmonary oedema) has a much thicker barrier between alveolar air and capillary blood, and doctors give them oxygen-enriched air to breathe. Explain: (a) why the fluid slows oxygen uptake, and (b) how oxygen-enriched air helps compensate [4 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Link fluid -&gt; diffusion distance; link enriched air -&gt; steeper concentration gradient.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-aspire-2">Your answer</label><textarea id="yd-aspire-2" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 3 (1 marks):</strong> Evaluate the classroom demonstration where purple dye spreads faster in hot water than cold water: state one reason why this is not a pure test of diffusion alone [1 mark].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Think about how hot water moves in a beaker.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-aspire-3">Your answer</label><textarea id="yd-aspire-3" rows="3"></textarea></details>
+            </div>
+
+          <details class="ca-make-tier">
+            <summary>Optional hands-on make-it choice (Aspire)</summary>
+            <p>Write a 4-mark exam question on gas exchange in fish gills (lamellae with thin walls and blood flow) and draft the 4-point mark scheme.</p>
+          </details>
+        </div>
+
+    </div>
+    <div class="card ca-make-overview">
+      <h3>Optional make-it station</h3>
+      <p>If writing is a barrier or after completing your book task, build the physical desk model using labelled cards, counters or arrows and explain it to an adult.</p>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W04_L3)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-9" data-stage="Review and improve" aria-hidden="true">
+          <span class="stage-pill">Stage 9 · Review and improve</span>
+          <h2>Review and improve · same-colour edit</h2>
+
+    <div class="card">
+      <h3>Check your work against the mark scheme</h3>
+      <p>Keep your original response visible. Tick each scientific point you included, then make one <strong>//</strong> edit in the same colour on the same page.</p>
+
+        <details>
+          <summary>Supported mark scheme</summary>
+          <table>
+            <thead><tr><th scope="col">Task</th><th scope="col">Creditworthy points</th><th scope="col">Marks</th></tr></thead>
+            <tbody><tr><td>1</td><td>Describe = state what happens / the pattern (1); Explain = give the scientific reason why using because/so (1).</td><td>2</td></tr><tr><td>2</td><td>Short diffusion distance (1); cross in less time / faster rate (1).</td><td>2</td></tr><tr><td>3</td><td>When the area doubles from 10 to 20 cm², the transfer rate doubles from 4 to 8 units per minute (1).</td><td>1</td></tr></tbody>
+          </table>
+        </details>
+
+        <details>
+          <summary>Independent mark scheme</summary>
+          <table>
+            <thead><tr><th scope="col">Task</th><th scope="col">Creditworthy points</th><th scope="col">Marks</th></tr></thead>
+            <tbody><tr><td>1</td><td>Describe: Net movement of oxygen is from alveolar air into the blood (1). Explain: Oxygen concentration is higher in alveolar air than in arriving blood (1); molecules move randomly in both directions (1); more cross from air to blood than back, so net movement is down the gradient (1).</td><td>4</td></tr><tr><td>2</td><td>(a) Doubling the area from 10 to 20 cm² doubles the transfer rate from 4 to 8 units/min (1). (b) A larger surface area provides more membrane space (1), so more particles can diffuse across at the same time (1).</td><td>3</td></tr><tr><td>3</td><td>A thick membrane increases the diffusion distance (1), so particles must travel further and cross more slowly (1).</td><td>2</td></tr></tbody>
+          </table>
+        </details>
+
+        <details>
+          <summary>Aspire mark scheme</summary>
+          <table>
+            <thead><tr><th scope="col">Task</th><th scope="col">Creditworthy points</th><th scope="col">Marks</th></tr></thead>
+            <tbody><tr><td>1</td><td>The projections/folds greatly increase the surface area of the cell membrane (1), providing more membrane room for particles to cross at the same time (1), which increases the rate of diffusion down the concentration gradient (1).</td><td>3</td></tr><tr><td>2</td><td>(a) Fluid increases the diffusion distance between air and blood (1), slowing the rate of oxygen diffusion (1). (b) Oxygen-enriched air increases the oxygen concentration in the alveoli (1), making the concentration gradient steeper so net diffusion speeds up (1).</td><td>4</td></tr><tr><td>3</td><td>Convection currents in warm water also carry the dye in bulk flow, so the spreading is not caused by diffusion alone (1).</td><td>1</td></tr></tbody>
+          </table>
+        </details>
+
+    </div>
+    <div class="card-green">
+      <h3>Three-step review checklist</h3>
+      <ol>
+        <li>Check that you used the accurate scientific term from the word list.</li>
+        <li>Link your statement to a measurement, calculation or diagram detail.</li>
+        <li>Write <strong>//</strong> and add one missing detail or unit in the same colour on the same page.</li>
+      </ol>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W04_L3)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-10" data-stage="Exit ticket" aria-hidden="true">
+          <span class="stage-pill">Stage 10 · Exit ticket</span>
+          <h2>Exit ticket · evidence check</h2>
+
+
+        <div class="ca-act" data-quiz data-correct="0" data-explain="Describe asks WHAT happens; Explain requires the scientific reason WHY it happens.">
+          <p><strong>Exit check 1:</strong> What must an &quot;Explain&quot; answer contain that a &quot;Describe&quot; answer does not?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">A scientific reason linking cause to effect (using &quot;because&quot; or &quot;so&quot;)</button><button type="button" data-option="1">Only the numbers from the table with no reason</button><button type="button" data-option="2">A list of equipment</button></div>
+          <p class="status-box" role="status">Select an option to check today's key learning.</p>
+        </div>
+
+        <div class="ca-act" data-quiz data-correct="0" data-explain="Comparing the concentrations on both sides provides the causal reason for the net direction of diffusion.">
+          <p><strong>Exit check 2:</strong> Which clause best completes an Explain answer starting &quot;Oxygen diffuses from the alveolus into the blood...&quot;?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">...because oxygen concentration is higher in the alveolus than in the arriving blood, so net movement is down the gradient.</button><button type="button" data-option="1">...because the oxygen molecules want to help the cells.</button><button type="button" data-option="2">...because the alveolus is in the chest.</button></div>
+          <p class="status-box" role="status">Select an option to check today's key learning.</p>
+        </div>
+
+        <div class="ca-act" data-quiz data-correct="0" data-explain="A thin wall shortens the diffusion distance, so gas molecules cross the barrier faster.">
+          <p><strong>Exit check 3:</strong> Why does a thin alveolar wall speed up the rate of diffusion?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">It provides a short diffusion distance, so particles cross in less time</button><button type="button" data-option="1">It increases the temperature of the air</button><button type="button" data-option="2">It manufactures extra oxygen molecules</button></div>
+          <p class="status-box" role="status">Select an option to check today's key learning.</p>
+        </div>
+
+    <div class="route-group">
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;"><button type="button" class="route-btn active-route" data-route-btn="supported" aria-pressed="true">Supported</button><button type="button" class="route-btn" data-route-btn="independent" aria-pressed="false">Independent</button><button type="button" class="route-btn" data-route-btn="aspire" aria-pressed="false">Aspire</button></div>
+      <div class="route-panel active-panel" data-route-panel="supported" id="exit-supported"><h3>Supported exit ticket</h3><div class="task-box"><p><strong>1. What must an &quot;explain&quot; answer contain that a &quot;describe&quot; answer does not?</strong></p><details><summary>Expected point</summary><p>A scientific reason — why it happens (using &quot;because&quot;), not just what happens.</p></details></div><div class="task-box"><p><strong>2. Complete the repair: &quot;A thin wall speeds up diffusion because the diffusion distance is ___.&quot;</strong></p><details><summary>Expected point</summary><p>Short (shorter).</p></details></div></div><div class="route-panel" data-route-panel="independent" id="exit-independent"><h3>Independent exit ticket</h3><div class="task-box"><p><strong>1. Write one complete causal sentence explaining why oxygen diffuses from the alveolus into the blood.</strong></p><details><summary>Expected point</summary><p>Oxygen diffuses from the alveolus into the blood because oxygen concentration is higher in alveolar air than in arriving blood.</p></details></div><div class="task-box"><p><strong>2. Write a full-mark 2-point explanation for why a thin alveolus wall speeds up diffusion.</strong></p><details><summary>Expected point</summary><p>A one-cell-thick wall provides a short diffusion distance (1), so gas molecules cross in less time and the rate of diffusion is higher (1).</p></details></div></div><div class="route-panel" data-route-panel="aspire" id="exit-aspire"><h3>Aspire exit ticket</h3><div class="task-box"><p><strong>1. Explain the effect of reduced alveolar surface area on a person&#x27;s ability to exercise.</strong></p><details><summary>Expected point</summary><p>Less surface area means fewer oxygen molecules can diffuse into the blood per second, reducing oxygen delivery to respiring muscle cells and causing breathlessness/fatigue.</p></details></div><div class="task-box"><p><strong>2. Why is it important to check whether an Explain question asks about net DIRECTION or about RATE before writing your answer?</strong></p><details><summary>Expected point</summary><p>Direction requires comparing concentrations across the barrier; rate requires linking adaptations (area, distance, blood flow, temperature) to crossing speed.</p></details></div></div>
+    </div>
+    <div class="card">
+      <p><strong>Response modes:</strong> verbal · written · drawn · signed · symbol / choice-selected · demonstrated / re-attempt · adult-scribed. You may pass.</p>
+      <p><strong>Next lesson:</strong> Lesson 1 (SCI_LAUNCH_A1_W05_L1): Osmosis — net movement of water across a partially permeable membrane.</p>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W04_L3)</span>
+          </footer>
+        </section>
+
+  </main>
+
+        <section class="print-section" id="print-supported" data-print-route="supported">
+          <h2>Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W04_L3) · Supported print pack</h2>
+          <p><strong>Learning intention:</strong> Answer exam-style diffusion questions independently by matching the command word (describe vs explain) and building a three-part causal chain (direction, gradient, adaptation).</p>
+          <p><strong>1. Match each command word to its job: (a) Describe, (b) Explain [2 marks]. (2 marks)</strong> — Cue: Use Panel 1: which one asks WHAT and which asks WHY?</p><p><strong>2. Complete this 2-mark explanation: &quot;A thin alveolus wall speeds up diffusion because it gives a short diffusion ___, so particles cross in less ___.&quot; [2 marks] (2 marks)</strong> — Cue: Word bank: distance, time.</p><p><strong>3. Look at the Patch table (Patch A: 10 cm² -&gt; 4 units/min; Patch B: 20 cm² -&gt; 8 units/min). Describe what happens to the transfer rate when area doubles [1 mark]. (1 marks)</strong> — Cue: State what happens to the numbers.</p>
+          <p>Made by Matt</p>
+        </section>
+
+        <section class="print-section" id="print-independent" data-print-route="independent">
+          <h2>Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W04_L3) · Independent print pack</h2>
+          <p><strong>Learning intention:</strong> Answer exam-style diffusion questions independently by matching the command word (describe vs explain) and building a three-part causal chain (direction, gradient, adaptation).</p>
+          <p><strong>1. Describe what happens to the net movement of oxygen at the alveolus, and then explain why this happens [4 marks]. (4 marks)</strong> — Cue: Give 1 mark for the Describe direction, and 3 marks for the Explain chain (concentration comparison, random motion, net flow).</p><p><strong>2. Look at the Model Patch data (Patch A: 10 cm², 4 units/min; Patch B: 20 cm², 8 units/min). (a) Describe the pattern shown by the data [1 mark]. (b) Explain why this happens using the particle model [2 marks]. (3 marks)</strong> — Cue: Quote the numbers for (a), and use membrane surface area for (b).</p><p><strong>3. Repair this weak student answer to &quot;Explain why a thick membrane slows down diffusion [2]&quot;: Student wrote &quot;Because the wall is thick.&quot; [2 marks] (2 marks)</strong> — Cue: Add what a thick wall does to diffusion distance and crossing time.</p>
+          <p>Made by Matt</p>
+        </section>
+
+        <section class="print-section" id="print-aspire" data-print-route="aspire">
+          <h2>Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W04_L3) · Aspire print pack</h2>
+          <p><strong>Learning intention:</strong> Answer exam-style diffusion questions independently by matching the command word (describe vs explain) and building a three-part causal chain (direction, gradient, adaptation).</p>
+          <p><strong>1. Root hair cells in plants and microvilli in the human small intestine both have long, folded projections. Explain how this shared adaptation affects the rate of diffusion of dissolved substances into these cells [3 marks]. (3 marks)</strong> — Cue: Transfer the surface-area causal chain to an unfamiliar context.</p><p><strong>2. In a hospital, a patient with fluid build-up in their lungs (pulmonary oedema) has a much thicker barrier between alveolar air and capillary blood, and doctors give them oxygen-enriched air to breathe. Explain: (a) why the fluid slows oxygen uptake, and (b) how oxygen-enriched air helps compensate [4 marks]. (4 marks)</strong> — Cue: Link fluid -&gt; diffusion distance; link enriched air -&gt; steeper concentration gradient.</p><p><strong>3. Evaluate the classroom demonstration where purple dye spreads faster in hot water than cold water: state one reason why this is not a pure test of diffusion alone [1 mark]. (1 marks)</strong> — Cue: Think about how hot water moves in a beaker.</p>
+          <p>Made by Matt</p>
+        </section>
+
+
+    <dialog id="ta-dialog" aria-labelledby="ta-dialog-title">
+      <h2 id="ta-dialog-title">TA Brief · Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W04_L3)</h2>
+      <p><strong>Learning intention:</strong> Answer exam-style diffusion questions independently by matching the command word (describe vs explain) and building a three-part causal chain (direction, gradient, adaptation).</p>
+      <p><strong>At check-out, record E for today's lesson against each pupil's target on the evidence app.</strong></p>
+      <p class="ca-watch-staff"><strong>Watch (staff preview first): <a href="https://www.bbc.co.uk/bitesize/guides/zs63tv4/revision/3" target="_blank" rel="noopener noreferrer">Revision guide — Writing explanations for diffusion and exchange surfaces</a></strong></p>
+      <h3>Adult deployment and access support</h3>
+      <ul>
+        <li>Rehearse the three-panel picture at Arrival before independent tasks.</li>
+        <li>Invite a response in the learner's usual mode (verbal · written · drawn · signed · symbol / choice-selected · demonstrated / re-attempt · adult-scribed). Allow a pass.</li>
+        <li>Wait, point to the diagram detail, and rephrase before offering a content cue.</li>
+        <li>Record actual <strong>I · S · C</strong> beside each task in the book or sheet.</li>
+      </ul>
+      <p>Made by Matt</p>
+      <button type="button" data-close-dialog>Close TA brief</button>
+    </dialog>
+
+
+    <dialog id="guidance-dialog" aria-labelledby="guidance-dialog-title">
+      <h2 id="guidance-dialog-title">Teacher, Cover and SLT Guidance · Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W04_L3)</h2>
+      <p><strong>Scheme alignment:</strong> Row 37 · Topic 1 Key Concepts in Biology: Construct GCSE diffusion explanations linking direction, gradient and adaptations.</p>
+      <p><strong>At check-out, record E for today's lesson against each pupil's target on the evidence app.</strong></p>
+      <p class="ca-watch-staff"><strong>Watch (staff preview first): <a href="https://www.bbc.co.uk/bitesize/guides/zs63tv4/revision/3" target="_blank" rel="noopener noreferrer">Revision guide — Writing explanations for diffusion and exchange surfaces</a></strong></p>
+      <h3>Practical apparatus and safety</h3>
+      <p>Paper, diagram and data-analysis exam workshop; no chemical or biological hazard. Emphasise that exam practice in class is low-stakes skill-building where self-editing with // is celebrated.</p>
+      <h3>P17 · Planned adaptations</h3>
+      <ul>
+        <li><strong>Cognition and learning:</strong> Rehearse one worked step at a time and fade one cue before the independent check.</li>
+        <li><strong>Communication and interaction:</strong> Accept pointing, signing, choice selection or adult scribing.</li>
+        <li><strong>Regulation:</strong> Use the quiet pause option and return to the last secure step.</li>
+        <li><strong>Sensory and physical:</strong> Offer high-contrast print cards and seated or adult-directed apparatus handling.</li>
+      </ul>
+      <h3>Key vocabulary</h3>
+      <table>
+        <thead><tr><th scope="col">Tier</th><th scope="col">Term</th><th scope="col">Meaning</th><th scope="col">Example</th></tr></thead>
+        <tbody><tr><td>Tier 2</td><td><strong>Describe</strong></td><td>State what happens or state the pattern shown by the data, without needing to explain why.</td><td>Describe how the transfer rate changes when patch area doubles.</td></tr><tr><td>Tier 2</td><td><strong>Explain</strong></td><td>Give the scientific reason why or how something happens, linking cause to effect with &quot;because&quot; or &quot;so&quot;.</td><td>Explain why oxygen diffuses into the blood by comparing concentrations.</td></tr><tr><td>Tier 2</td><td><strong>Causal link</strong></td><td>A connecting step that shows how a scientific cause produces an effect.</td><td>Use &quot;because&quot; and &quot;so&quot; to build a clear causal link in your explanation.</td></tr><tr><td>Tier 3</td><td><strong>Concentration gradient</strong></td><td>The difference in concentration between two regions that drives net diffusion.</td><td>Net diffusion occurs down a concentration gradient from high to low.</td></tr><tr><td>Tier 3</td><td><strong>Diffusion distance</strong></td><td>The thickness of the barrier that diffusing particles must travel across.</td><td>A one-cell-thick alveolar wall provides a very short diffusion distance.</td></tr><tr><td>Tier 3</td><td><strong>Net movement</strong></td><td>The overall directional flow resulting from more random crossings one way than the other.</td><td>At the alveolus, net movement of oxygen is from air into the blood.</td></tr></tbody>
+      </table>
+      <p>Made by Matt</p>
+      <button type="button" data-close-dialog>Close guidance</button>
+    </dialog>
+
+
+    <dialog id="pause-dialog" aria-labelledby="pause-dialog-title">
+      <h2 id="pause-dialog-title">Quiet pause</h2>
+      <p>Take a quiet pause. Your work is kept safe on this page. Return to the last secure step and one small choice when you are ready.</p>
+      <p>Made by Matt</p>
+      <button type="button" data-close-dialog>Close and return to lesson</button>
+    </dialog>
+
+  <script>
+(function() {
+  window.classicCurrentSlide = 0;
+  window.soundEnabled = false;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.body.classList.add('no-motion');
+  }
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const picker = document.getElementById('stage-picker');
+  const statusEl = document.getElementById('stage-status');
+
+  window.showSlide = function(idx) {
+    const n = Math.max(0, Math.min(slides.length - 1, Number(idx) || 0));
+    window.classicCurrentSlide = n;
+    slides.forEach((s, i) => {
+      if (i === n) {
+        s.classList.add('active');
+        s.setAttribute('aria-hidden', 'false');
+      } else {
+        s.classList.remove('active');
+        s.setAttribute('aria-hidden', 'true');
+      }
+    });
+    if (picker) picker.value = String(n);
+    if (statusEl && slides[n]) {
+      statusEl.textContent = 'Stage ' + (n + 1) + ' of ' + slides.length + ': ' + (slides[n].getAttribute('data-stage') || '');
+    }
+  };
+
+  window.SCI_PROOF = function() {
+    return {
+      slideCount: slides.length,
+      currentSlide: window.classicCurrentSlide,
+      sound: window.soundEnabled
+    };
+  };
+
+  document.getElementById('prev-btn')?.addEventListener('click', () => window.showSlide(window.classicCurrentSlide - 1));
+  document.getElementById('next-btn')?.addEventListener('click', () => window.showSlide(window.classicCurrentSlide + 1));
+  picker?.addEventListener('change', (e) => window.showSlide(Number(e.target.value)));
+
+  document.addEventListener('keydown', (e) => {
+    const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+    if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+    if (e.key === 'ArrowRight') window.showSlide(window.classicCurrentSlide + 1);
+    if (e.key === 'ArrowLeft') window.showSlide(window.classicCurrentSlide - 1);
+    if (e.key === 'Escape') {
+      document.querySelectorAll('dialog[open]').forEach(d => d.close());
+    }
+  });
+
+  // View toggles
+  document.querySelectorAll('[data-toggle]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const mode = btn.getAttribute('data-toggle');
+      const pressed = btn.getAttribute('aria-pressed') === 'true';
+      btn.setAttribute('aria-pressed', String(!pressed));
+      if (mode === 'calm') document.body.classList.toggle('calm-view', !pressed);
+      if (mode === 'high-contrast') document.body.classList.toggle('high-contrast', !pressed);
+      if (mode === 'reduce-motion') document.body.classList.toggle('no-motion', !pressed);
+    });
+  });
+
+  // Dialog controls
+  document.querySelectorAll('[data-open-dialog]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const d = document.getElementById(btn.getAttribute('data-open-dialog'));
+      if (d && typeof d.showModal === 'function') d.showModal();
+      else if (d) d.setAttribute('open', '');
+    });
+  });
+  document.querySelectorAll('[data-close-dialog]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const d = btn.closest('dialog');
+      if (d && typeof d.close === 'function') d.close();
+      else if (d) d.removeAttribute('open');
+    });
+  });
+
+  // Reveal buttons
+  document.querySelectorAll('[data-reveal]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = document.getElementById(btn.getAttribute('data-reveal'));
+      if (target) {
+        const isHidden = target.hasAttribute('hidden');
+        if (isHidden) target.removeAttribute('hidden');
+        else target.setAttribute('hidden', '');
+      }
+    });
+  });
+
+  // Regulation check
+  document.querySelectorAll('[data-regulation]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const st = document.getElementById('regulation-status');
+      if (st) st.textContent = 'Logged: ' + btn.getAttribute('data-regulation') + '. Speak privately or pass at any time.';
+    });
+  });
+
+  // Route tabs (Arrival, You do, Exit)
+  document.querySelectorAll('.route-group').forEach(group => {
+    const buttons = group.querySelectorAll('[data-route-btn]');
+    const panels = group.querySelectorAll('.route-panel');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const r = btn.getAttribute('data-route-btn');
+        buttons.forEach(b => {
+          const match = b.getAttribute('data-route-btn') === r;
+          b.classList.toggle('active-route', match);
+          b.setAttribute('aria-pressed', String(match));
+        });
+        panels.forEach(p => {
+          p.classList.toggle('active-panel', p.getAttribute('data-route-panel') === r);
+        });
+      });
+    });
+  });
+
+  // Tap quizzes (Arrival & Exit)
+  document.querySelectorAll('[data-quiz]').forEach(quiz => {
+    const right = quiz.getAttribute('data-correct');
+    const explain = quiz.getAttribute('data-explain') || '';
+    const status = quiz.querySelector('[role="status"]');
+    quiz.querySelectorAll('[data-option]').forEach(opt => {
+      opt.addEventListener('click', () => {
+        const chosen = opt.getAttribute('data-option');
+        if (chosen === right) {
+          status.textContent = 'Yes. ' + explain;
+        } else {
+          status.textContent = 'Try again. Check the diagram clue and choose another option.';
+        }
+      });
+    });
+  });
+
+  // Starter 4-step beatbox + vote
+  document.querySelectorAll('[data-beat]').forEach(box => {
+    let idx = 0;
+    const lights = Array.from(box.querySelectorAll('.ca-light'));
+    const status = box.querySelector('.beat-status');
+    function render(n) {
+      lights.forEach((l, i) => l.classList.toggle('lit', i < n));
+      if (status) status.textContent = n === 0 ? 'Ready: step 0 of ' + lights.length : 'Showing step ' + n + ' of ' + lights.length;
+    }
+    box.querySelector('[data-beat-next]')?.addEventListener('click', () => {
+      idx = Math.min(lights.length, idx + 1);
+      render(idx);
+    });
+    box.querySelector('[data-beat-all]')?.addEventListener('click', () => {
+      idx = lights.length;
+      render(idx);
+    });
+    box.querySelector('[data-beat-reset]')?.addEventListener('click', () => {
+      idx = 0;
+      render(idx);
+    });
+  });
+
+  // Step models (I do 1 & I do 2)
+  document.querySelectorAll('[data-step-model]').forEach(model => {
+    const steps = JSON.parse(model.getAttribute('data-steps') || '[]');
+    let cur = 0;
+    const cap = model.querySelector('.model-caption');
+    const items = Array.from(model.querySelectorAll('.v5-step'));
+    function update() {
+      if (cap && steps[cur]) cap.textContent = 'Step ' + (cur + 1) + ': ' + steps[cur];
+      items.forEach((el, i) => {
+        if (i <= cur) el.removeAttribute('hidden');
+        else el.setAttribute('hidden', '');
+      });
+    }
+    model.querySelector('[data-step-next]')?.addEventListener('click', () => {
+      cur = Math.min(steps.length - 1, cur + 1);
+      update();
+    });
+    model.querySelector('[data-step-reset]')?.addEventListener('click', () => {
+      cur = 0;
+      items.forEach((el, i) => {
+        if (i === 0) el.removeAttribute('hidden');
+        else el.setAttribute('hidden', '');
+      });
+      if (cap && steps[0]) cap.textContent = 'Step 1: ' + steps[0];
+    });
+  });
+
+  // We do 1 sort/match + 4-team points board
+  const scores = [0, 0, 0, 0];
+  function renderScores() {
+    scores.forEach((val, i) => {
+      const el = document.getElementById('score-' + i);
+      if (el) el.textContent = String(val);
+    });
+  }
+  document.querySelectorAll('[data-team-add]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const t = Number(btn.getAttribute('data-team-add'));
+      const pts = Number(btn.getAttribute('data-pts') || '1');
+      scores[t] = Math.max(0, scores[t] + pts);
+      renderScores();
+    });
+  });
+  document.getElementById('reset-points')?.addEventListener('click', () => {
+    for (let i = 0; i < 4; i++) scores[i] = 0;
+    renderScores();
+  });
+
+  document.querySelectorAll('[data-sort]').forEach(sortBox => {
+    const status = sortBox.querySelector('.sort-status');
+    sortBox.querySelector('[data-sort-check]')?.addEventListener('click', () => {
+      const selects = Array.from(sortBox.querySelectorAll('select[data-expected]'));
+      let rightCount = 0;
+      selects.forEach(s => {
+        if (s.value === s.getAttribute('data-expected')) rightCount++;
+      });
+      if (status) {
+        status.textContent = rightCount === selects.length
+          ? 'Yes. All ' + rightCount + ' matches are accurate. Award 1 point and ask for a scientific reason for +1 bonus point.'
+          : 'Try again. ' + rightCount + ' of ' + selects.length + ' matched so far.';
+      }
+    });
+    sortBox.querySelector('[data-sort-reset]')?.addEventListener('click', () => {
+      sortBox.querySelectorAll('select').forEach(s => { s.value = ''; });
+      if (status) status.textContent = 'Reset complete. Match each item and explain why.';
+    });
+  });
+
+  // We do 2 sequence ordering
+  document.querySelectorAll('[data-sequence]').forEach(seqBox => {
+    const list = seqBox.querySelector('ol');
+    const status = seqBox.querySelector('.seq-status');
+    seqBox.addEventListener('click', (e) => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      const li = btn.closest('li');
+      if (btn.hasAttribute('data-move-up') && li && li.previousElementSibling) {
+        list.insertBefore(li, li.previousElementSibling);
+      } else if (btn.hasAttribute('data-move-down') && li && li.nextElementSibling) {
+        list.insertBefore(li.nextElementSibling, li);
+      } else if (btn.hasAttribute('data-seq-check')) {
+        const items = Array.from(list.querySelectorAll('li'));
+        const ok = items.every((el, idx) => Number(el.getAttribute('data-order')) === idx);
+        if (status) {
+          status.textContent = ok
+            ? 'Yes. The sequence is in the right scientific order.'
+            : 'Try again. Check which step must happen first.';
+        }
+      }
+    });
+  });
+
+  // Print arming
+  window.printArm = function(route) {
+    document.querySelectorAll('.print-section').forEach(sec => {
+      sec.classList.toggle('visible', sec.getAttribute('data-print-route') === route);
+    });
+  };
+  document.querySelectorAll('[data-print-btn]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      window.printArm(btn.getAttribute('data-print-btn'));
+    });
+  });
+
+  window.showSlide(0);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1331 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Lesson resource">
+  <title>Comparing diffusion, osmosis, and active transport: decision lab and compare answers · SCI_LAUNCH_A1_W06_L3</title>
+  <style>
+:root {
+  --bg: #F7F4FA;
+  --surface: #FFFFFF;
+  --surface-tint: #ECE5F6;
+  --surface-warm: #FFF6D5;
+  --surface-green: #EDF5E8;
+  --surface-blue: #E6F2FA;
+  --ink: #111827;
+  --ink-secondary: #172033;
+  --accent: #3B2854;
+  --accent-border: #5B417A;
+  --pathway: #7A5C9E;
+}
+* { box-sizing: border-box; max-width: 100%; overflow-wrap: anywhere; }
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #F7F4FA;
+  color: #111827;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 24px;
+  line-height: 1.45;
+  overflow-x: hidden;
+}
+body.calm-view {
+  background-color: #FFFFFF;
+}
+body.high-contrast {
+  --bg: #FFFFFF;
+  --surface: #FFFFFF;
+  --surface-tint: #F3F5F7;
+  --surface-warm: #FFFFFF;
+  --surface-green: #FFFFFF;
+  --surface-blue: #FFFFFF;
+  --ink: #000000;
+  --ink-secondary: #000000;
+  --accent: #000000;
+  --accent-border: #000000;
+}
+a {
+  color: #111827;
+  background-color: #ECE5F6;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-weight: 700;
+  text-decoration: underline;
+}
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 8px;
+  background-color: #111827;
+  color: #FFFFFF;
+  padding: 10px 16px;
+  font-size: 24px;
+  z-index: 1000;
+}
+.skip-link:focus { left: 12px; }
+.lesson-topbar {
+  background-color: #FFFFFF;
+  color: #111827;
+  border-bottom: 4px solid #5B417A;
+  padding: 14px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.brand-cluster {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.brand-logo {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  border: 2px solid #5B417A;
+  border-radius: 8px;
+  background-color: #FFFFFF;
+}
+.pathway-pill {
+  background-color: #3B2854;
+  color: #FFFFFF;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 24px;
+  font-weight: 700;
+}
+.controls-bar {
+  background-color: #ECE5F6;
+  color: #111827;
+  border-bottom: 3px solid #5B417A;
+  padding: 12px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+button, select, textarea, input {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 24px;
+  line-height: 1.35;
+  color: #111827;
+  background-color: #FFFFFF;
+  border: 3px solid #3B2854;
+  border-radius: 10px;
+  padding: 8px 16px;
+}
+button {
+  cursor: pointer;
+  font-weight: 700;
+}
+button:hover, button:focus-visible {
+  background-color: #ECE5F6;
+  color: #111827;
+  outline: 3px solid #111827;
+}
+button[aria-pressed="true"], button.active-route {
+  background-color: #3B2854;
+  color: #FFFFFF;
+}
+.slide-deck {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 20px;
+}
+.slide {
+  display: none;
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 4px solid #5B417A;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.slide.active {
+  display: block;
+}
+.stage-pill {
+  display: inline-block;
+  background-color: #ECE5F6;
+  color: #111827;
+  border: 2px solid #5B417A;
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+h1, h2, h3, h4, p, li, th, td, summary, label, span, div {
+  font-size: 24px;
+  color: #111827;
+}
+h1 {
+  font-size: 36px;
+  margin: 8px 0 14px 0;
+  color: #111827;
+}
+h2 {
+  font-size: 30px;
+  margin: 12px 0;
+  color: #111827;
+}
+h3 {
+  font-size: 26px;
+  margin: 10px 0;
+  color: #111827;
+}
+.card, .ca-act, .task-box, .model-frame {
+  background-color: #F7F4FA;
+  color: #111827;
+  border: 3px solid #5B417A;
+  border-radius: 14px;
+  padding: 18px;
+  margin: 16px 0;
+}
+.card-warm {
+  background-color: #FFF6D5;
+  color: #111827;
+  border: 3px solid #5B417A;
+  border-radius: 14px;
+  padding: 18px;
+  margin: 16px 0;
+}
+.card-green {
+  background-color: #EDF5E8;
+  color: #111827;
+  border: 3px solid #3B2854;
+  border-radius: 14px;
+  padding: 18px;
+  margin: 16px 0;
+}
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 18px;
+}
+.ca-pic {
+  width: 100%;
+  max-width: 920px;
+  height: auto;
+  display: block;
+  margin: 12px auto;
+  background-color: #FFFFFF;
+  border-radius: 12px;
+}
+.ca-beatbox {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: 12px;
+  margin: 14px 0;
+}
+.ca-light {
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 3px solid #5B417A;
+  border-radius: 12px;
+  padding: 14px;
+}
+.ca-light.lit {
+  background-color: #FFF6D5;
+  color: #111827;
+  border-color: #111827;
+  border-width: 4px;
+}
+.status-box {
+  background-color: #ECE5F6;
+  color: #111827;
+  border: 3px solid #3B2854;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-top: 12px;
+  font-weight: 700;
+}
+.route-panel {
+  display: none;
+}
+.route-panel.active-panel {
+  display: block;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0;
+  background-color: #FFFFFF;
+  color: #111827;
+}
+th, td {
+  border: 2px solid #3B2854;
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 24px;
+  color: #111827;
+  background-color: #FFFFFF;
+}
+th {
+  background-color: #ECE5F6;
+  color: #111827;
+  font-weight: 700;
+}
+details {
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 2px solid #5B417A;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin: 10px 0;
+}
+summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: #111827;
+}
+textarea {
+  width: 100%;
+  margin-top: 8px;
+}
+.slide-footer {
+  margin-top: 20px;
+  padding-top: 12px;
+  border-top: 2px solid #5B417A;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-weight: 700;
+  color: #111827;
+}
+dialog {
+  max-width: 1100px;
+  width: 92vw;
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 4px solid #3B2854;
+  border-radius: 16px;
+  padding: 24px;
+}
+.print-section {
+  display: none;
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 3px solid #3B2854;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 1200px;
+}
+.print-section.visible {
+  display: block;
+}
+@media (max-width: 640px) {
+  .lesson-topbar, .controls-bar, .slide-deck {
+    padding: 10px;
+  }
+  .slide {
+    padding: 14px;
+  }
+  button, select {
+    width: 100%;
+  }
+}
+</style>
+</head>
+<body>
+  <a class="skip-link" href="#lessonDeck">Skip to lesson stage</a>
+  <header class="lesson-topbar">
+    <div class="brand-cluster">
+      <img src="approved-mark.jpg" alt="Made by Matt approved mark" class="brand-logo">
+      <div>
+        <span class="pathway-pill">SUMMIT · SCIENCE</span>
+        <span style="margin-left:10px;font-weight:700;">Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W06_L3)</span>
+      </div>
+    </div>
+    <div><strong>Made by Matt</strong></div>
+  </header>
+  <nav class="controls-bar" aria-label="Lesson controls">
+    <button type="button" id="prev-btn">◀ Previous</button>
+    <button type="button" id="next-btn">Next ▶</button>
+    <label for="stage-picker">Stage</label>
+    <select id="stage-picker"><option value="0">1. Opening</option><option value="1">2. Arrival task</option><option value="2">3. Starter</option><option value="3">4. I do 1</option><option value="4">5. We do 1</option><option value="5">6. I do 2</option><option value="6">7. We do 2</option><option value="7">8. You do</option><option value="8">9. Review and improve</option><option value="9">10. Exit ticket</option></select>
+    <button type="button" data-open-dialog="pause-dialog">Pause</button>
+    <button type="button" data-toggle="calm" aria-pressed="false">Calm view</button>
+    <button type="button" data-toggle="high-contrast" aria-pressed="false">High contrast</button>
+    <button type="button" data-toggle="reduce-motion" aria-pressed="false">Reduce motion</button>
+    <button type="button" data-open-dialog="ta-dialog" data-action="ta">TA brief</button>
+    <button type="button" data-open-dialog="guidance-dialog" id="sc1-guidance">Guidance</button>
+    <button type="button" data-print-btn="supported">Print Supported</button>
+    <button type="button" data-print-btn="independent">Print Independent</button>
+    <button type="button" data-print-btn="aspire">Print Aspire</button>
+  </nav>
+  <p id="stage-status" role="status" style="padding:4px 20px;margin:0;font-weight:700;">Stage 1 of 10: Opening</p>
+  <main id="lessonDeck" class="slide-deck" tabindex="-1">
+
+        <section class="slide active" id="slide-1" data-stage="Opening" aria-hidden="false">
+          <span class="stage-pill">Stage 1 · Opening</span>
+          <h1>Comparing diffusion, osmosis, and active transport: decision lab and compare answers</h1>
+
+    <div class="grid-2">
+      <div class="card">
+        <p><strong>Learning intention:</strong> Compare diffusion, osmosis, and active transport by stating both similarities and differences across direction, substance, membrane, and energy, and classify unfamiliar transport scenarios from evidence.</p>
+        <h3>Today I can</h3>
+        <ul>
+          <li>I can state what the command word &quot;compare&quot; requires — both sides named, with similarities AND differences.</li><li>I can compare any two (or all three) transport processes using direction, substance moved, membrane, and energy from respiration.</li><li>I can classify unfamiliar biological scenarios into diffusion, osmosis, or active transport using a 3-question decision rule.</li>
+        </ul>
+        <p><strong>Work in your book first.</strong> Point, speak, sign, draw, type, write or direct an adult. You may pass.</p>
+      </div>
+      <div class="card">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" class="ca-pic" role="img" aria-labelledby="svg-opening-all-title svg-opening-all-desc"><title id="svg-opening-all-title">Three-panel Transport decision &amp; Compare studio: 3-column comparison matrix (Diffusion · Osmosis · Active transport), the &quot;Compare = Similarities + Differences&quot; command card, and the 3-step Decision lab.</title><desc id="svg-opening-all-desc">High-contrast teaching diagram with three labelled panels.</desc><rect x="0" y="0" width="960" height="300" fill="#ffffff" stroke="#5B417A" stroke-width="4" rx="14"/><rect x="24" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="168" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 1 · Three processes</text><rect x="98" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><circle cx="118" cy="110" r="7" fill="#3B2854"/><circle cx="133" cy="130" r="7" fill="#3B2854"/><circle cx="120" cy="150" r="7" fill="#3B2854"/><circle cx="143" cy="115" r="7" fill="#3B2854"/><circle cx="148" cy="145" r="7" fill="#3B2854"/><circle cx="203" cy="120" r="7" fill="#3B2854"/><circle cx="216" cy="145" r="7" fill="#3B2854"/><line x1="163" y1="130" x2="193" y2="130" stroke="#111827" stroke-width="4"/><polygon points="193,122 205,130 193,138" fill="#111827"/><text x="168" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Diffusion (↓) · Osmosis (💧↓)</text><text x="168" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Active transport (⚡↑)</text><rect x="336" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="480" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 2 · Command word</text><rect x="410" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><line x1="480" y1="90" x2="480" y2="170" stroke="#3B2854" stroke-width="4" stroke-dasharray="8 6"/><circle cx="435" cy="112" r="6" fill="#111827"/><circle cx="455" cy="130" r="6" fill="#111827"/><circle cx="440" cy="150" r="6" fill="#111827"/><circle cx="460" cy="108" r="6" fill="#111827"/><circle cx="515" cy="115" r="6" fill="#111827"/><circle cx="505" cy="148" r="6" fill="#111827"/><circle cx="510" cy="130" r="12" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="480" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">COMPARE = Both sides</text><text x="480" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Similarities AND differences</text><rect x="648" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="792" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 3 · Decision lab</text><rect x="727" y="90" width="130" height="80" rx="14" fill="#ffffff" stroke="#111827" stroke-width="4"/><circle cx="772" cy="130" r="18" fill="#3B2854"/><ellipse cx="817" cy="135" rx="22" ry="14" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="792" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">1. Water? · 2. Direction?</text><text x="792" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">3. Energy from respiration?</text></svg>
+        <p><strong>Model clue:</strong> Three-panel Transport decision &amp; Compare studio: 3-column comparison matrix (Diffusion · Osmosis · Active transport), the &quot;Compare = Similarities + Differences&quot; command card, and the 3-step Decision lab.</p>
+      </div>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W06_L3)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-2" data-stage="Arrival task" aria-hidden="true">
+          <span class="stage-pill">Stage 2 · Arrival task</span>
+          <h2>Arrival recall and picture check</h2>
+
+    <div class="card">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" class="ca-pic" role="img" aria-labelledby="svg-arrival-0-title svg-arrival-0-desc"><title id="svg-arrival-0-title">Arrival picture clue: Panel 1 shows Downhill (Diffusion/Osmosis) vs Uphill (Active transport); Panel 2 shows the COMPARE = Similarities + Differences checklist.</title><desc id="svg-arrival-0-desc">High-contrast teaching diagram with three labelled panels.</desc><rect x="0" y="0" width="960" height="300" fill="#ffffff" stroke="#5B417A" stroke-width="4" rx="14"/><rect x="24" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="168" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 1 · Three processes</text><rect x="98" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><circle cx="118" cy="110" r="7" fill="#3B2854"/><circle cx="133" cy="130" r="7" fill="#3B2854"/><circle cx="120" cy="150" r="7" fill="#3B2854"/><circle cx="143" cy="115" r="7" fill="#3B2854"/><circle cx="148" cy="145" r="7" fill="#3B2854"/><circle cx="203" cy="120" r="7" fill="#3B2854"/><circle cx="216" cy="145" r="7" fill="#3B2854"/><line x1="163" y1="130" x2="193" y2="130" stroke="#111827" stroke-width="4"/><polygon points="193,122 205,130 193,138" fill="#111827"/><text x="168" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Diffusion (↓) · Osmosis (💧↓)</text><text x="168" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Active transport (⚡↑)</text><rect x="336" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="480" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 2 · Command word</text><rect x="410" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><line x1="480" y1="90" x2="480" y2="170" stroke="#3B2854" stroke-width="4" stroke-dasharray="8 6"/><circle cx="435" cy="112" r="6" fill="#111827"/><circle cx="455" cy="130" r="6" fill="#111827"/><circle cx="440" cy="150" r="6" fill="#111827"/><circle cx="460" cy="108" r="6" fill="#111827"/><circle cx="515" cy="115" r="6" fill="#111827"/><circle cx="505" cy="148" r="6" fill="#111827"/><circle cx="510" cy="130" r="12" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="480" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">COMPARE = Both sides</text><text x="480" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Similarities AND differences</text><rect x="648" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="792" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 3 · Decision lab</text><rect x="727" y="90" width="130" height="80" rx="14" fill="#ffffff" stroke="#111827" stroke-width="4"/><circle cx="772" cy="130" r="18" fill="#3B2854"/><ellipse cx="817" cy="135" rx="22" ry="14" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="792" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">1. Water? · 2. Direction?</text><text x="792" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">3. Energy from respiration?</text></svg>
+      <p>Use the picture first. Question 1 works directly from the picture labels above.</p>
+    </div>
+
+        <div class="ca-act" data-quiz data-correct="0" data-explain="Only active transport moves substances from low to high concentration (against the gradient) using energy from cellular respiration.">
+          <p><strong>Arrival check 1:</strong> Look at Panel 1. Which transport process moves particles UP (against) the concentration gradient using energy from respiration?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">Active transport</button><button type="button" data-option="1">Diffusion</button><button type="button" data-option="2">Osmosis</button></div>
+          <p class="status-box" role="status">Choose an option to check your recall.</p>
+        </div>
+
+        <div class="ca-act" data-quiz data-correct="0" data-explain="Osmosis is the net movement of water molecules from a dilute solution to a concentrated solution across a partially permeable membrane.">
+          <p><strong>Arrival check 2:</strong> Recall from osmosis: which transport process moves WATER ONLY across a partially permeable membrane?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">Osmosis</button><button type="button" data-option="1">Active transport</button><button type="button" data-option="2">Aerobic respiration</button></div>
+          <p class="status-box" role="status">Choose an option to check your recall.</p>
+        </div>
+
+        <div class="ca-act" data-quiz data-correct="0" data-explain="&quot;Compare&quot; requires both sides: at least one clear similarity and clear paired differences naming both processes.">
+          <p><strong>Arrival check 3:</strong> Look at Panel 2. What must you include when an exam question starts with the command word &quot;Compare&quot;?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">Both similarities AND differences, naming both processes on each point</button><button type="button" data-option="1">A paragraph about only one of the processes</button><button type="button" data-option="2">Only differences with no mention of what they share</button></div>
+          <p class="status-box" role="status">Choose an option to check your recall.</p>
+        </div>
+
+    <div class="route-group">
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;"><button type="button" class="route-btn active-route" data-route-btn="supported" aria-pressed="true">Supported</button><button type="button" class="route-btn" data-route-btn="independent" aria-pressed="false">Independent</button><button type="button" class="route-btn" data-route-btn="aspire" aria-pressed="false">Aspire</button></div>
+      <div class="route-panel active-panel" data-route-panel="supported" id="arrival-supported"><h3>Supported route</h3>
+            <div class="task-box">
+              <p><strong>1. Match the process to its direction: which goes DOWN the gradient and which goes UP (against) the gradient — diffusion or active transport?</strong></p>
+              <details><summary>Help with this question</summary><p>Look at the arrows in Panel 1.</p></details>
+              <button type="button" data-reveal="arr-supported-1">Reveal answer after responding</button>
+              <p id="arr-supported-1" hidden><strong>Check:</strong> Diffusion goes DOWN the gradient; active transport goes UP (against) the gradient.</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>2. From Lesson 2: which organelle in root hair and gut cells supplies energy for active transport?</strong></p>
+              <details><summary>Help with this question</summary><p>Prior lesson retrieval.</p></details>
+              <button type="button" data-reveal="arr-supported-2">Reveal answer after responding</button>
+              <p id="arr-supported-2" hidden><strong>Check:</strong> Mitochondria (by respiration).</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>3. From osmosis: which process moves water only across a partially permeable membrane?</strong></p>
+              <details><summary>Help with this question</summary><p>Prior topic retrieval.</p></details>
+              <button type="button" data-reveal="arr-supported-3">Reveal answer after responding</button>
+              <p id="arr-supported-3" hidden><strong>Check:</strong> Osmosis.</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>4. Look at Panel 2. What two things must a &quot;Compare&quot; answer include?</strong></p>
+              <details><summary>Help with this question</summary><p>Read panel 2.</p></details>
+              <button type="button" data-reveal="arr-supported-4">Reveal answer after responding</button>
+              <p id="arr-supported-4" hidden><strong>Check:</strong> Similarities AND differences (both sides).</p>
+            </div>
+            </div><div class="route-panel" data-route-panel="independent" id="arrival-independent"><h3>Independent route</h3>
+            <div class="task-box">
+              <p><strong>1. Last lesson you applied active transport to root hairs and gut villi. What did the oxygen–uptake graph prove about active transport?</strong></p>
+              <details><summary>Help with this question</summary><p>Prior lesson retrieval.</p></details>
+              <button type="button" data-reveal="arr-independent-1">Reveal answer after responding</button>
+              <p id="arr-independent-1" hidden><strong>Check:</strong> That mineral uptake falls when oxygen is removed, proving active transport depends on energy released by aerobic respiration.</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>2. From Lesson 1: define active transport using the words &quot;gradient&quot; and &quot;energy&quot;.</strong></p>
+              <details><summary>Help with this question</summary><p>Prior lesson retrieval.</p></details>
+              <button type="button" data-reveal="arr-independent-2">Reveal answer after responding</button>
+              <p id="arr-independent-2" hidden><strong>Check:</strong> Active transport is the movement of particles from low to high concentration against a concentration gradient using energy from cellular respiration.</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>3. From osmosis: define osmosis and state one thing it shares with diffusion.</strong></p>
+              <details><summary>Help with this question</summary><p>Prior topic retrieval.</p></details>
+              <button type="button" data-reveal="arr-independent-3">Reveal answer after responding</button>
+              <p id="arr-independent-3" hidden><strong>Check:</strong> Osmosis is the net movement of water from a dilute to a concentrated solution across a partially permeable membrane; like diffusion, it is passive and goes down a gradient.</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>4. Today you compare all three transport processes. Write one similarity and one difference between diffusion and active transport.</strong></p>
+              <details><summary>Help with this question</summary><p>Bridge into Compare.</p></details>
+              <button type="button" data-reveal="arr-independent-4">Reveal answer after responding</button>
+              <p id="arr-independent-4" hidden><strong>Check:</strong> Similarity: both move substances across a cell membrane. Difference: diffusion goes down the gradient passively, whereas active transport goes against the gradient using energy from respiration.</p>
+            </div>
+            </div><div class="route-panel" data-route-panel="aspire" id="arrival-aspire"><h3>Aspire route</h3>
+            <div class="task-box">
+              <p><strong>1. Last lesson: mineral uptake fell sharply without oxygen. Explain how that experimental evidence rules out simple diffusion.</strong></p>
+              <details><summary>Help with this question</summary><p>Prior lesson retrieval.</p></details>
+              <button type="button" data-reveal="arr-aspire-1">Reveal answer after responding</button>
+              <p id="arr-aspire-1" hidden><strong>Check:</strong> Simple diffusion is passive and does not require energy from aerobic respiration, so removing oxygen would not stop diffusion; the drop proves energy is being spent on active transport.</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>2. Explain why active transport is the only one of the three processes that can move particles uphill against a concentration gradient.</strong></p>
+              <details><summary>Help with this question</summary><p>Thermodynamic distinction.</p></details>
+              <button type="button" data-reveal="arr-aspire-2">Reveal answer after responding</button>
+              <p id="arr-aspire-2" hidden><strong>Check:</strong> Because random thermal motion always produces net movement down a gradient; moving uphill requires external metabolic energy from respiration to drive carrier proteins.</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>3. Explain what osmosis and simple diffusion share, and state the two criteria that make osmosis a special case.</strong></p>
+              <details><summary>Help with this question</summary><p>Osmosis as special case of diffusion.</p></details>
+              <button type="button" data-reveal="arr-aspire-3">Reveal answer after responding</button>
+              <p id="arr-aspire-3" hidden><strong>Check:</strong> Both are passive processes moving particles down a gradient without respiratory energy; osmosis specifically moves water molecules only and must cross a partially permeable membrane.</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>4. Given an unfamiliar cell scenario, state the three-question decision rule that settles whether it is diffusion, osmosis, or active transport.</strong></p>
+              <details><summary>Help with this question</summary><p>Decision rule.</p></details>
+              <button type="button" data-reveal="arr-aspire-4">Reveal answer after responding</button>
+              <p id="arr-aspire-4" hidden><strong>Check:</strong> 1. Is the substance water crossing a partially permeable membrane down its gradient? (-&gt; Osmosis). 2. Is movement against the gradient using energy? (-&gt; Active transport). 3. Is a solute/gas moving down its gradient with no energy spent? (-&gt; Diffusion).</p>
+            </div>
+            </div>
+    </div>
+    <div class="card-green">
+      <p><strong>Regulation check:</strong> choose a word or colour.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;">
+        <button type="button" data-regulation="Green · ready">Green · ready</button>
+        <button type="button" data-regulation="Amber · need an adjustment">Amber · need an adjustment</button>
+        <button type="button" data-regulation="Red · need a quiet pause">Red · need a quiet pause</button>
+      </div>
+      <p id="regulation-status" class="status-box" role="status">A private response or pass is welcome.</p>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W06_L3)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-3" data-stage="Starter" aria-hidden="true">
+          <span class="stage-pill">Stage 3 · Starter</span>
+          <h2>Starter · 4-beat model and retrieval</h2>
+
+    <div class="ca-act" data-beat>
+      <h3>Whiteboard 4-beat sequence</h3>
+      <div class="ca-beatbox"><div class="ca-light"><strong>Beat 1:</strong> Beat 1 · Command word COMPARE = Similarities + Differences (both processes named on every contrast).</div><div class="ca-light"><strong>Beat 2:</strong> Beat 2 · Four discriminators: (1) What moves? (2) Which direction? (3) Membrane / carrier proteins? (4) Energy from respiration?</div><div class="ca-light"><strong>Beat 3:</strong> Beat 3 · Decision lab rule: Water + membrane + down = Osmosis; Against gradient + energy = Active transport; Solute/gas + down + no energy = Diffusion.</div><div class="ca-light"><strong>Beat 4:</strong> Beat 4 · Glitch-buster: &quot;If a substance crosses a membrane, that is osmosis&quot; is FALSE — CO₂ and O₂ cross membranes by diffusion, and ions cross by active transport!</div></div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;">
+        <button type="button" data-beat-next>Next beat</button>
+        <button type="button" data-beat-all>Show all 4 beats</button>
+        <button type="button" data-beat-reset>Reset beats</button>
+      </div>
+      <p class="status-box beat-status" role="status">Ready: step 0 of 4</p>
+    </div>
+    <div class="ca-act ca-vote" data-quiz data-correct="0" data-explain="A one-sided answer cannot earn full comparison marks. Always state what both processes share (&quot;Both...&quot;) and contrast both sides (&quot;Diffusion..., whereas active transport...&quot;).">
+      <h3>Class fingers or thumbs vote</h3>
+      <p><strong>A 4-mark question asks: &quot;Compare diffusion and active transport.&quot; A student writes four accurate sentences all about diffusion and never mentions active transport. Why does this score low marks?</strong></p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">1. Because &quot;Compare&quot; requires BOTH sides — you must state at least one similarity and paired differences that name both diffusion and active transport.</button><button type="button" data-option="1">2. Because diffusion is not taught in GCSE Biology.</button><button type="button" data-option="2">3. Because compare answers must be drawn as a bar chart.</button><button type="button" data-option="3">4. Because diffusion and active transport are identical in every way.</button></div>
+      <p class="status-box" role="status">Hold up 1, 2, 3 or 4 fingers (or point), then tap to check.</p>
+    </div>
+
+        <div class="task-box">
+          <p><strong>Retrieval 1:</strong> Why does writing &quot;They are both types of movement&quot; often fail to score a similarity mark in a GCSE compare question?</p>
+          <details><summary>Clue</summary><p>Be specific in similarities.</p></details>
+          <button type="button" data-reveal="starter-rev-1">Reveal answer</button>
+          <p id="starter-rev-1" hidden><strong>Answer:</strong> It is too vague (simply repeating the question stem); a mark-earning similarity names a specific biological feature they share, such as &quot;Both move substances across a cell membrane&quot; or &quot;Both diffusion and osmosis are passive processes that move particles down a gradient.&quot;</p>
+        </div>
+
+        <div class="task-box">
+          <p><strong>Retrieval 2:</strong> Which single question separates active transport from BOTH diffusion and osmosis?</p>
+          <details><summary>Clue</summary><p>Key separator.</p></details>
+          <button type="button" data-reveal="starter-rev-2">Reveal answer</button>
+          <p id="starter-rev-2" hidden><strong>Answer:</strong> &quot;Does it move particles against the concentration gradient using energy from cellular respiration?&quot; (Yes = Active transport; No = Diffusion and Osmosis).</p>
+        </div>
+
+        <div class="task-box">
+          <p><strong>Retrieval 3:</strong> Why is &quot;If a substance crosses a membrane, it must be osmosis&quot; a dangerous exam trap?</p>
+          <details><summary>Clue</summary><p>Science Glitch repaired.</p></details>
+          <button type="button" data-reveal="starter-rev-3">Reveal answer</button>
+          <p id="starter-rev-3" hidden><strong>Answer:</strong> Because all three processes cross cell membranes! Only the net movement of WATER down a water gradient across a partially permeable membrane is osmosis.</p>
+        </div>
+
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W06_L3)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-4" data-stage="I do 1" aria-hidden="true">
+          <span class="stage-pill">Stage 4 · I do 1</span>
+          <h2>I do 1 · Answering a 4-mark &quot;Compare&quot; question (Similarities + Paired differences)</h2>
+
+    <div class="card">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" class="ca-pic" role="img" aria-labelledby="svg-ido1-1-title svg-ido1-1-desc"><title id="svg-ido1-1-title">I do 1 · Answering a 4-mark &quot;Compare&quot; question (Similarities + Paired differences)</title><desc id="svg-ido1-1-desc">High-contrast teaching diagram with three labelled panels.</desc><rect x="0" y="0" width="960" height="300" fill="#ffffff" stroke="#5B417A" stroke-width="4" rx="14"/><rect x="24" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="168" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 1 · Three processes</text><rect x="98" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><circle cx="118" cy="110" r="7" fill="#3B2854"/><circle cx="133" cy="130" r="7" fill="#3B2854"/><circle cx="120" cy="150" r="7" fill="#3B2854"/><circle cx="143" cy="115" r="7" fill="#3B2854"/><circle cx="148" cy="145" r="7" fill="#3B2854"/><circle cx="203" cy="120" r="7" fill="#3B2854"/><circle cx="216" cy="145" r="7" fill="#3B2854"/><line x1="163" y1="130" x2="193" y2="130" stroke="#111827" stroke-width="4"/><polygon points="193,122 205,130 193,138" fill="#111827"/><text x="168" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Diffusion (↓) · Osmosis (💧↓)</text><text x="168" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Active transport (⚡↑)</text><rect x="336" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="480" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 2 · Command word</text><rect x="410" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><line x1="480" y1="90" x2="480" y2="170" stroke="#3B2854" stroke-width="4" stroke-dasharray="8 6"/><circle cx="435" cy="112" r="6" fill="#111827"/><circle cx="455" cy="130" r="6" fill="#111827"/><circle cx="440" cy="150" r="6" fill="#111827"/><circle cx="460" cy="108" r="6" fill="#111827"/><circle cx="515" cy="115" r="6" fill="#111827"/><circle cx="505" cy="148" r="6" fill="#111827"/><circle cx="510" cy="130" r="12" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="480" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">COMPARE = Both sides</text><text x="480" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Similarities AND differences</text><rect x="648" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="792" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 3 · Decision lab</text><rect x="727" y="90" width="130" height="80" rx="14" fill="#ffffff" stroke="#111827" stroke-width="4"/><circle cx="772" cy="130" r="18" fill="#3B2854"/><ellipse cx="817" cy="135" rx="22" ry="14" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="792" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">1. Water? · 2. Direction?</text><text x="792" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">3. Energy from respiration?</text></svg>
+    </div>
+    <div class="model-frame" id="model-1" data-step-model data-steps="[&quot;Read the command word and mark allocation: \&quot;Compare diffusion and active transport [4 marks]\&quot; -&gt; needs 1 specific similarity + 3 clear differences (or 2 similarities + 2 differences) naming BOTH processes.&quot;, &quot;Write similarity 1 (\&quot;Both...\&quot;): \&quot;Both diffusion and active transport move dissolved substances across a cell membrane (1).\&quot;&quot;, &quot;Write difference 1 (Direction) with \&quot;whereas\&quot;: \&quot;Diffusion moves particles DOWN a concentration gradient (high to low), whereas active transport moves particles AGAINST a concentration gradient (low to high) (1).\&quot;&quot;, &quot;Write difference 2 (Energy) &amp; Difference 3 (Carriers): \&quot;Diffusion is passive and needs no energy from respiration (1), whereas active transport requires energy from cellular respiration and carrier proteins in the membrane (1).\&quot;&quot;]">
+      <h3>I do 1 · Answering a 4-mark &quot;Compare&quot; question (Similarities + Paired differences)</h3>
+      <p class="status-box model-caption" role="status">Step 1: Read the command word and mark allocation: &quot;Compare diffusion and active transport [4 marks]&quot; -&gt; needs 1 specific similarity + 3 clear differences (or 2 similarities + 2 differences) naming BOTH processes.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin:10px 0;">
+        <button type="button" data-step-next>Show next step</button>
+        <button type="button" data-step-reset>Reset model</button>
+      </div>
+      <ol><li class="v5-step" ><strong>Step 1:</strong> Read the command word and mark allocation: &quot;Compare diffusion and active transport [4 marks]&quot; -&gt; needs 1 specific similarity + 3 clear differences (or 2 similarities + 2 differences) naming BOTH processes.</li><li class="v5-step" hidden><strong>Step 2:</strong> Write similarity 1 (&quot;Both...&quot;): &quot;Both diffusion and active transport move dissolved substances across a cell membrane (1).&quot;</li><li class="v5-step" hidden><strong>Step 3:</strong> Write difference 1 (Direction) with &quot;whereas&quot;: &quot;Diffusion moves particles DOWN a concentration gradient (high to low), whereas active transport moves particles AGAINST a concentration gradient (low to high) (1).&quot;</li><li class="v5-step" hidden><strong>Step 4:</strong> Write difference 2 (Energy) &amp; Difference 3 (Carriers): &quot;Diffusion is passive and needs no energy from respiration (1), whereas active transport requires energy from cellular respiration and carrier proteins in the membrane (1).&quot;</li></ol>
+    </div>
+    <div class="card-warm">
+      <h3>Worked example 1</h3>
+      <p>Worked example 1 (4-Mark compare WAGOLL): &quot;Compare diffusion and active transport. [4 marks]&quot; -&gt; Both processes move substances across a cell membrane (1). Diffusion moves particles down the concentration gradient (from high to low concentration), whereas active transport moves particles against the concentration gradient (from low to high concentration) (1). Diffusion is a passive process that needs no energy supplied by cellular respiration (1), whereas active transport requires energy transferred from cellular respiration (and uses membrane carrier proteins) (1).</p>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W06_L3)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-5" data-stage="We do 1" aria-hidden="true">
+          <span class="stage-pill">Stage 5 · We do 1</span>
+          <h2>We do 1 · team sort and scientific reason</h2>
+
+    <div class="ca-act" data-sort>
+      <h3>Shared sort and reason challenge</h3>
+      <p><strong>Point rule:</strong> 1 point for an accurate match, plus 1 bonus point for a clear scientific reason.</p>
+
+        <div class="task-box">
+          <label for="sort-sel-0"><strong>1. &quot;Both move substances across a cell membrane.&quot;</strong></label>
+          <select id="sort-sel-0" data-expected="VALID SIMILARITY: specific shared biological feature"><option value="">Choose matching statement...</option><option value="VALID SIMILARITY: specific shared biological feature">VALID SIMILARITY: specific shared biological feature</option><option value="VALID DIFFERENCE (Direction): names both sides clearly">VALID DIFFERENCE (Direction): names both sides clearly</option><option value="VALID DIFFERENCE (Energy): contrasts both processes">VALID DIFFERENCE (Energy): contrasts both processes</option><option value="INCOMPLETE COMPARE: missing the second process (one-sided)">INCOMPLETE COMPARE: missing the second process (one-sided)</option></select>
+        </div>
+
+        <div class="task-box">
+          <label for="sort-sel-1"><strong>2. &quot;Diffusion goes down the gradient, whereas active transport goes against it.&quot;</strong></label>
+          <select id="sort-sel-1" data-expected="VALID DIFFERENCE (Direction): names both sides clearly"><option value="">Choose matching statement...</option><option value="VALID SIMILARITY: specific shared biological feature">VALID SIMILARITY: specific shared biological feature</option><option value="VALID DIFFERENCE (Direction): names both sides clearly">VALID DIFFERENCE (Direction): names both sides clearly</option><option value="VALID DIFFERENCE (Energy): contrasts both processes">VALID DIFFERENCE (Energy): contrasts both processes</option><option value="INCOMPLETE COMPARE: missing the second process (one-sided)">INCOMPLETE COMPARE: missing the second process (one-sided)</option></select>
+        </div>
+
+        <div class="task-box">
+          <label for="sort-sel-2"><strong>3. &quot;Diffusion is passive, whereas active transport uses energy from respiration.&quot;</strong></label>
+          <select id="sort-sel-2" data-expected="VALID DIFFERENCE (Energy): contrasts both processes"><option value="">Choose matching statement...</option><option value="VALID SIMILARITY: specific shared biological feature">VALID SIMILARITY: specific shared biological feature</option><option value="VALID DIFFERENCE (Direction): names both sides clearly">VALID DIFFERENCE (Direction): names both sides clearly</option><option value="VALID DIFFERENCE (Energy): contrasts both processes">VALID DIFFERENCE (Energy): contrasts both processes</option><option value="INCOMPLETE COMPARE: missing the second process (one-sided)">INCOMPLETE COMPARE: missing the second process (one-sided)</option></select>
+        </div>
+
+        <div class="task-box">
+          <label for="sort-sel-3"><strong>4. A paragraph that describes only diffusion and never mentions active transport</strong></label>
+          <select id="sort-sel-3" data-expected="INCOMPLETE COMPARE: missing the second process (one-sided)"><option value="">Choose matching statement...</option><option value="VALID SIMILARITY: specific shared biological feature">VALID SIMILARITY: specific shared biological feature</option><option value="VALID DIFFERENCE (Direction): names both sides clearly">VALID DIFFERENCE (Direction): names both sides clearly</option><option value="VALID DIFFERENCE (Energy): contrasts both processes">VALID DIFFERENCE (Energy): contrasts both processes</option><option value="INCOMPLETE COMPARE: missing the second process (one-sided)">INCOMPLETE COMPARE: missing the second process (one-sided)</option></select>
+        </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;">
+        <button type="button" data-sort-check>Check matches</button>
+        <button type="button" data-sort-reset>Reset matches</button>
+      </div>
+      <p class="status-box sort-status" role="status">Match each term to its scientific explanation.</p>
+    </div>
+    <div class="card" id="ca-points-modal">
+      <h3>Four-team points board</h3>
+      <div class="grid-2">
+        <div class="card" style="margin:0;">
+          <h4>Circles: <span id="score-0">0</span> pts</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <button type="button" data-team-add="0" data-pts="1">+1 Match</button>
+            <button type="button" data-team-add="0" data-pts="1">+1 Reason</button>
+            <button type="button" data-team-add="0" data-pts="-1">-1</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin:0;">
+          <h4>Squares: <span id="score-1">0</span> pts</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <button type="button" data-team-add="1" data-pts="1">+1 Match</button>
+            <button type="button" data-team-add="1" data-pts="1">+1 Reason</button>
+            <button type="button" data-team-add="1" data-pts="-1">-1</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin:0;">
+          <h4>Triangles: <span id="score-2">0</span> pts</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <button type="button" data-team-add="2" data-pts="1">+1 Match</button>
+            <button type="button" data-team-add="2" data-pts="1">+1 Reason</button>
+            <button type="button" data-team-add="2" data-pts="-1">-1</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin:0;">
+          <h4>Diamonds: <span id="score-3">0</span> pts</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <button type="button" data-team-add="3" data-pts="1">+1 Match</button>
+            <button type="button" data-team-add="3" data-pts="1">+1 Reason</button>
+            <button type="button" data-team-add="3" data-pts="-1">-1</button>
+          </div>
+        </div>
+        </div>
+      <button type="button" id="reset-points" style="margin-top:12px;">Reset points board</button>
+    </div>
+    <details class="participation-loop">
+      <summary>Where what you say changes something · optional</summary>
+      <p>Point, sign, say or show an observation, question or access need. You may pass or speak privately.</p>
+      <p>The adult says what can change, makes one agreed adjustment if possible, and checks whether it helped.</p>
+    </details>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W06_L3)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-6" data-stage="I do 2" aria-hidden="true">
+          <span class="stage-pill">Stage 6 · I do 2</span>
+          <h2>I do 2 · The transport Decision lab — Classifying unfamiliar scenarios from evidence</h2>
+
+    <div class="card">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" class="ca-pic" role="img" aria-labelledby="svg-ido2-2-title svg-ido2-2-desc"><title id="svg-ido2-2-title">I do 2 · The transport Decision lab — Classifying unfamiliar scenarios from evidence</title><desc id="svg-ido2-2-desc">High-contrast teaching diagram with three labelled panels.</desc><rect x="0" y="0" width="960" height="300" fill="#ffffff" stroke="#5B417A" stroke-width="4" rx="14"/><rect x="24" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="168" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 1 · Three processes</text><rect x="98" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><circle cx="118" cy="110" r="7" fill="#3B2854"/><circle cx="133" cy="130" r="7" fill="#3B2854"/><circle cx="120" cy="150" r="7" fill="#3B2854"/><circle cx="143" cy="115" r="7" fill="#3B2854"/><circle cx="148" cy="145" r="7" fill="#3B2854"/><circle cx="203" cy="120" r="7" fill="#3B2854"/><circle cx="216" cy="145" r="7" fill="#3B2854"/><line x1="163" y1="130" x2="193" y2="130" stroke="#111827" stroke-width="4"/><polygon points="193,122 205,130 193,138" fill="#111827"/><text x="168" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Diffusion (↓) · Osmosis (💧↓)</text><text x="168" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Active transport (⚡↑)</text><rect x="336" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="480" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 2 · Command word</text><rect x="410" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><line x1="480" y1="90" x2="480" y2="170" stroke="#3B2854" stroke-width="4" stroke-dasharray="8 6"/><circle cx="435" cy="112" r="6" fill="#111827"/><circle cx="455" cy="130" r="6" fill="#111827"/><circle cx="440" cy="150" r="6" fill="#111827"/><circle cx="460" cy="108" r="6" fill="#111827"/><circle cx="515" cy="115" r="6" fill="#111827"/><circle cx="505" cy="148" r="6" fill="#111827"/><circle cx="510" cy="130" r="12" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="480" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">COMPARE = Both sides</text><text x="480" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Similarities AND differences</text><rect x="648" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="792" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 3 · Decision lab</text><rect x="727" y="90" width="130" height="80" rx="14" fill="#ffffff" stroke="#111827" stroke-width="4"/><circle cx="772" cy="130" r="18" fill="#3B2854"/><ellipse cx="817" cy="135" rx="22" ry="14" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="792" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">1. Water? · 2. Direction?</text><text x="792" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">3. Energy from respiration?</text></svg>
+    </div>
+    <div class="model-frame" id="model-2" data-step-model data-steps="[&quot;Scenario 1 (Seaweed &amp; Iodide): Seaweed cells pump iodide ions in from seawater where iodide is 1,000\u00d7 more dilute, using energy from respiration -&gt; Against gradient + Energy = ACTIVE TRANSPORT.&quot;, &quot;Scenario 2 (Muscle &amp; Carbon dioxide): A respiring muscle cell has high CO\u2082 inside and low CO\u2082 in the blood; CO\u2082 crosses the membrane without using cellular energy -&gt; Gas + Down gradient + No energy = DIFFUSION.&quot;, &quot;Scenario 3 (Raisin in Water): A dried raisin swells in pure water as water crosses its skin (partially permeable membrane) into the sugary inside without metabolic energy -&gt; Water + Membrane + Down gradient = OSMOSIS.&quot;, &quot;Self-Edit audit: Check your compare answer against the 3-box checklist: [\u2713 Similarity stated?] [\u2713 At least two differences?] [\u2713 Both processes named on each point?].&quot;]">
+      <h3>I do 2 · The transport Decision lab — Classifying unfamiliar scenarios from evidence</h3>
+      <p class="status-box model-caption" role="status">Step 1: Scenario 1 (Seaweed &amp; Iodide): Seaweed cells pump iodide ions in from seawater where iodide is 1,000× more dilute, using energy from respiration -&gt; Against gradient + Energy = ACTIVE TRANSPORT.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin:10px 0;">
+        <button type="button" data-step-next>Show next step</button>
+        <button type="button" data-step-reset>Reset model</button>
+      </div>
+      <ol><li class="v5-step" ><strong>Step 1:</strong> Scenario 1 (Seaweed &amp; Iodide): Seaweed cells pump iodide ions in from seawater where iodide is 1,000× more dilute, using energy from respiration -&gt; Against gradient + Energy = ACTIVE TRANSPORT.</li><li class="v5-step" hidden><strong>Step 2:</strong> Scenario 2 (Muscle &amp; Carbon dioxide): A respiring muscle cell has high CO₂ inside and low CO₂ in the blood; CO₂ crosses the membrane without using cellular energy -&gt; Gas + Down gradient + No energy = DIFFUSION.</li><li class="v5-step" hidden><strong>Step 3:</strong> Scenario 3 (Raisin in Water): A dried raisin swells in pure water as water crosses its skin (partially permeable membrane) into the sugary inside without metabolic energy -&gt; Water + Membrane + Down gradient = OSMOSIS.</li><li class="v5-step" hidden><strong>Step 4:</strong> Self-Edit audit: Check your compare answer against the 3-box checklist: [✓ Similarity stated?] [✓ At least two differences?] [✓ Both processes named on each point?].</li></ol>
+    </div>
+    <div class="card-warm">
+      <h3>Worked example 2</h3>
+      <p>Worked example 2 (Comparing osmosis and Active transport [4 marks]): (1) Similarity: Both osmosis and active transport involve the movement of substances across a selectively/partially permeable cell membrane (1). (2) Difference in substance: Osmosis moves water molecules only, whereas active transport moves dissolved mineral ions or molecules such as glucose (1). (3) Difference in direction: Osmosis moves water down its water gradient (from dilute to concentrated), whereas active transport moves solutes against their concentration gradient (low to high) (1). (4) Difference in energy: Osmosis is passive (no energy from respiration), whereas active transport requires energy from cellular respiration (1).</p>
+    </div>
+    <div class="ca-act" data-check data-quiz data-correct="0" data-explain="Crossing a membrane does NOT make every process osmosis! Because the substance is carbon dioxide (not water) moving down its gradient with no energy spent, it is diffusion.">
+      <h3>Single-decision hinge check</h3>
+      <p><strong>A working muscle cell produces carbon dioxide, so CO₂ concentration is higher inside the muscle cell than in the blood. CO₂ crosses the cell membrane into the blood without using respiratory energy. Which process is this?</strong></p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">A. Diffusion — because a dissolved gas (CO₂, not water) moves down its concentration gradient with no energy spent.</button><button type="button" data-option="1">B. Osmosis — because it crossed a cell membrane.</button><button type="button" data-option="2">C. Active transport — because muscle cells contain mitochondria.</button></div>
+      <p class="status-box" role="status">Choose the scientifically accurate statement before moving on.</p>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W06_L3)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-7" data-stage="We do 2" aria-hidden="true">
+          <span class="stage-pill">Stage 7 · We do 2</span>
+          <h2>We do 2 · method order and data table</h2>
+
+    <div class="ca-act" data-sequence>
+      <h3>Order the scientific method or reasoning steps</h3>
+      <ol>
+        <li data-order="1" style="margin-bottom:10px;">
+          <span>Check the direction and energy: if particles move from LOW to HIGH concentration (against the gradient) using energy from respiration, classify as ACTIVE TRANSPORT.</span>
+          <button type="button" data-move-up>Move up</button>
+          <button type="button" data-move-down>Move down</button>
+        </li>
+
+        <li data-order="0" style="margin-bottom:10px;">
+          <span>Check what substance is moving: if it is WATER crossing a partially permeable membrane down its water gradient, classify as OSMOSIS.</span>
+          <button type="button" data-move-up>Move up</button>
+          <button type="button" data-move-down>Move down</button>
+        </li>
+
+        <li data-order="2" style="margin-bottom:10px;">
+          <span>If a solute or gas moves from HIGH to LOW concentration (down the gradient) with no respiratory energy spent, classify as DIFFUSION.</span>
+          <button type="button" data-move-up>Move up</button>
+          <button type="button" data-move-down>Move down</button>
+        </li>
+
+        <li data-order="3" style="margin-bottom:10px;">
+          <span>When writing a &quot;Compare&quot; answer, use &quot;Both...&quot; for a similarity and &quot;...whereas...&quot; to contrast both processes on direction, substance, and energy.</span>
+          <button type="button" data-move-up>Move up</button>
+          <button type="button" data-move-down>Move down</button>
+        </li>
+        </ol>
+      <button type="button" data-seq-check>Check order</button>
+      <p class="status-box seq-status" role="status">Use move up and Move down to place the steps in order, then check.</p>
+    </div>
+    <div class="card">
+      <h3>Three-Process master Comparison matrix &amp; Transport decision Lab</h3>
+      <table>
+        <thead><tr><th scope="col">Feature / Scenario</th><th scope="col">Diffusion</th><th scope="col">Osmosis</th><th scope="col">Active transport</th></tr></thead>
+        <tbody><tr><td>What substance moves?</td><td>Any dissolved solute (e.g. glucose) or gas (O₂, CO₂)</td><td>WATER molecules only</td><td>Specific dissolved ions (NO₃⁻, I⁻) or molecules (glucose)</td></tr><tr><td>Direction of net movement</td><td>High -&gt; Low (DOWN concentration gradient)</td><td>Dilute -&gt; Concentrated (DOWN water gradient)</td><td>Low -&gt; High (AGAINST / UP concentration gradient)</td></tr><tr><td>Membrane &amp; carrier proteins</td><td>Across membrane or in fluid/gas; no pump needed</td><td>Must cross a partially permeable membrane</td><td>Must cross cell membrane via specific carrier proteins</td></tr><tr><td>Needs energy from respiration?</td><td>No — passive (random kinetic motion)</td><td>No — passive (random kinetic motion)</td><td>Yes — active (energy from respiration in mitochondria)</td></tr><tr><td>Decision lab example</td><td>CO₂ leaving muscle cell; O₂ in alveoli</td><td>Raisin swelling in water; water into root hair</td><td>Seaweed hoarding iodide; nitrate into root hair; gut glucose</td></tr></tbody>
+      </table>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W06_L3)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-8" data-stage="You do" aria-hidden="true">
+          <span class="stage-pill">Stage 8 · You do</span>
+          <h2>You do · independent tiered practice</h2>
+
+    <div class="card">
+      <p><strong>Work in your book first.</strong> Choose your route with an adult. Staff mark actual <strong>I · S · C</strong> beside each task.</p>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" class="ca-pic" role="img" aria-labelledby="svg-youdo-3-title svg-youdo-3-desc"><title id="svg-youdo-3-title">Three-panel Transport decision &amp; Compare studio: 3-column comparison matrix (Diffusion · Osmosis · Active transport), the &quot;Compare = Similarities + Differences&quot; command card, and the 3-step Decision lab.</title><desc id="svg-youdo-3-desc">High-contrast teaching diagram with three labelled panels.</desc><rect x="0" y="0" width="960" height="300" fill="#ffffff" stroke="#5B417A" stroke-width="4" rx="14"/><rect x="24" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="168" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 1 · Three processes</text><rect x="98" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><circle cx="118" cy="110" r="7" fill="#3B2854"/><circle cx="133" cy="130" r="7" fill="#3B2854"/><circle cx="120" cy="150" r="7" fill="#3B2854"/><circle cx="143" cy="115" r="7" fill="#3B2854"/><circle cx="148" cy="145" r="7" fill="#3B2854"/><circle cx="203" cy="120" r="7" fill="#3B2854"/><circle cx="216" cy="145" r="7" fill="#3B2854"/><line x1="163" y1="130" x2="193" y2="130" stroke="#111827" stroke-width="4"/><polygon points="193,122 205,130 193,138" fill="#111827"/><text x="168" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Diffusion (↓) · Osmosis (💧↓)</text><text x="168" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Active transport (⚡↑)</text><rect x="336" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="480" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 2 · Command word</text><rect x="410" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><line x1="480" y1="90" x2="480" y2="170" stroke="#3B2854" stroke-width="4" stroke-dasharray="8 6"/><circle cx="435" cy="112" r="6" fill="#111827"/><circle cx="455" cy="130" r="6" fill="#111827"/><circle cx="440" cy="150" r="6" fill="#111827"/><circle cx="460" cy="108" r="6" fill="#111827"/><circle cx="515" cy="115" r="6" fill="#111827"/><circle cx="505" cy="148" r="6" fill="#111827"/><circle cx="510" cy="130" r="12" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="480" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">COMPARE = Both sides</text><text x="480" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Similarities AND differences</text><rect x="648" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="792" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 3 · Decision lab</text><rect x="727" y="90" width="130" height="80" rx="14" fill="#ffffff" stroke="#111827" stroke-width="4"/><circle cx="772" cy="130" r="18" fill="#3B2854"/><ellipse cx="817" cy="135" rx="22" ry="14" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="792" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">1. Water? · 2. Direction?</text><text x="792" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">3. Energy from respiration?</text></svg>
+    </div>
+    <div class="route-group">
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;"><button type="button" class="route-btn active-route" data-route-btn="supported" aria-pressed="true">Supported</button><button type="button" class="route-btn" data-route-btn="independent" aria-pressed="false">Independent</button><button type="button" class="route-btn" data-route-btn="choice" aria-pressed="false">Choice</button><button type="button" class="route-btn" data-route-btn="aspire" aria-pressed="false">Aspire</button></div>
+
+        <div class="route-panel active-panel" data-route-panel="supported" id="task-supported">
+          <h3>Supported route</h3>
+
+            <div class="task-box">
+              <p><strong>Task 1 (2 marks):</strong> What two things must every &quot;Compare&quot; answer include? [2 marks]</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Think: what is the same and what is not the same.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-supported-1">Your answer</label><textarea id="yd-supported-1" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 2 (2 marks):</strong> Use the Master comparison Matrix to classify each scenario as Diffusion, Osmosis, or Active transport: (a) Water entering a raisin; (b) Carbon dioxide leaving a muscle cell; (c) Seaweed pumping iodide in against a gradient [2 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Check water vs gas vs against gradient.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-supported-2">Your answer</label><textarea id="yd-supported-2" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 3 (2 marks):</strong> Complete this compare sentence using the word bank (membrane, down, against): &quot;Both diffusion and active transport cross a cell ___, but diffusion goes ___ the gradient whereas active transport goes ___ it.&quot; [2 marks]</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Fill in the three blanks.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-supported-3">Your answer</label><textarea id="yd-supported-3" rows="3"></textarea></details>
+            </div>
+
+          <details class="ca-make-tier">
+            <summary>Optional hands-on make-it choice (Supported)</summary>
+            <p>Complete the 2-column Compare builder Strip: stick a gold &quot;BOTH cross a cell membrane&quot; banner across the top, then place &quot;DOWN gradient / NO energy&quot; under Diffusion and &quot;UP gradient / YES energy&quot; under Active transport.</p>
+          </details>
+        </div>
+
+        <div class="route-panel" data-route-panel="independent" id="task-independent">
+          <h3>Independent route</h3>
+
+            <div class="task-box">
+              <p><strong>Task 1 (4 marks):</strong> Compare diffusion and active transport [4 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Give 1 specific similarity (&quot;Both...&quot;) and 3 clear differences using &quot;whereas&quot;.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-independent-1">Your answer</label><textarea id="yd-independent-1" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 2 (4 marks):</strong> Compare osmosis and active transport [4 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Contrast substance moved, direction, energy, and state one similarity.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-independent-2">Your answer</label><textarea id="yd-independent-2" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 3 (2 marks):</strong> Read this answer to &quot;Compare diffusion and osmosis [3 marks]&quot;: &quot;Osmosis moves water through a partially permeable membrane from dilute to concentrated.&quot; Explain why it drops marks and fix it [2 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Why is it one-sided?</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-independent-3">Your answer</label><textarea id="yd-independent-3" rows="3"></textarea></details>
+            </div>
+
+          <details class="ca-make-tier">
+            <summary>Optional hands-on make-it choice (Independent)</summary>
+            <p>Run the 3-box Self-Edit audit on your written compare answer: highlight your Similarity in yellow, underline &quot;whereas&quot; in every Difference, and tick that both processes are named.</p>
+          </details>
+        </div>
+
+        <div class="route-panel" data-route-panel="choice" id="task-choice">
+          <h3>Choice route</h3>
+
+            <div class="task-box">
+              <p><strong>Task 1 (4 marks):</strong> Complete all 12 cells of the blank 3-column Master comparison Matrix (Substance, Direction, Membrane/Carriers, Energy from respiration) for Diffusion, Osmosis, and Active transport [4 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Check each row against Panel 1 and the studio table.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-choice-1">Your answer</label><textarea id="yd-choice-1" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 2 (3 marks):</strong> Classify these 4 scenarios and state the clue: (1) Seaweed absorbing iodide; (2) O₂ from alveolus into blood; (3) Potato gaining mass in pure water; (4) Gut villi absorbing glucose against gradient [3 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Name the process + the deciding clue.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-choice-2">Your answer</label><textarea id="yd-choice-2" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 3 (2 marks):</strong> Audit the 6 student cards from We do 2 and repair the two weakest answers (&quot;Active transport is different&quot; and &quot;They are both types of movement&quot;) into full mark-earning sentences [2 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Make both sides explicit and specific.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-choice-3">Your answer</label><textarea id="yd-choice-3" rows="3"></textarea></details>
+            </div>
+
+          <details class="ca-make-tier">
+            <summary>Optional hands-on make-it choice (Choice)</summary>
+            <p>Build the 3-step Transport decision Tree card ([Q1: Is it WATER crossing a membrane down its gradient? -&gt; YES = Osmosis] -&gt; [Q2: Is it moving AGAINST the gradient using energy? -&gt; YES = Active transport] -&gt; [Otherwise -&gt; Diffusion]).</p>
+          </details>
+        </div>
+
+        <div class="route-panel" data-route-panel="aspire" id="task-aspire">
+          <h3>Aspire route</h3>
+
+            <div class="task-box">
+              <p><strong>Task 1 (4 marks):</strong> A single plant root hair cell in moist, aerated soil simultaneously carries out diffusion, osmosis, and active transport. Identify one substance moving by each process in that cell [4 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Think about water, oxygen, and nitrate ions in the same root hair cell.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-aspire-1">Your answer</label><textarea id="yd-aspire-1" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 2 (3 marks):</strong> Marine fish gill chloride cells pump excess salt ions OUT into salty seawater (where salt concentration is higher than in blood). State the transport process and predict two cell features [3 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Pumping from lower blood salt to higher ocean salt = which direction?</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-aspire-2">Your answer</label><textarea id="yd-aspire-2" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 3 (2 marks):</strong> Critique the statement: &quot;Osmosis and active transport are complete opposites, whereas diffusion and osmosis are identical.&quot; [2 marks]</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>What do osmosis and active transport share, and how do diffusion and osmosis differ?</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-aspire-3">Your answer</label><textarea id="yd-aspire-3" rows="3"></textarea></details>
+            </div>
+
+          <details class="ca-make-tier">
+            <summary>Optional hands-on make-it choice (Aspire)</summary>
+            <p>Annotate the &quot;One root Hair cell, Three processes&quot; diagram showing O₂ entering by diffusion, H₂O entering by osmosis, and NO₃⁻ entering by active transport across the same membrane.</p>
+          </details>
+        </div>
+
+    </div>
+    <div class="card ca-make-overview">
+      <h3>Optional make-it station</h3>
+      <p>If writing is a barrier or after completing your book task, build the physical desk model using labelled cards, counters or arrows and explain it to an adult.</p>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W06_L3)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-9" data-stage="Review and improve" aria-hidden="true">
+          <span class="stage-pill">Stage 9 · Review and improve</span>
+          <h2>Review and improve · same-colour edit</h2>
+
+    <div class="card">
+      <h3>Check your work against the mark scheme</h3>
+      <p>Keep your original response visible. Tick each scientific point you included, then make one <strong>//</strong> edit in the same colour on the same page.</p>
+
+        <details>
+          <summary>Supported mark scheme</summary>
+          <table>
+            <thead><tr><th scope="col">Task</th><th scope="col">Creditworthy points</th><th scope="col">Marks</th></tr></thead>
+            <tbody><tr><td>1</td><td>At least one similarity (what is the same) (1) and at least one difference (naming both processes) (1).</td><td>2</td></tr><tr><td>2</td><td>(a) Osmosis; (b) Diffusion; (c) Active transport (all 3 correct = 2 marks; 2 correct = 1 mark).</td><td>2</td></tr><tr><td>3</td><td>Membrane; down; against (all 3 correct = 2 marks; 2 correct = 1 mark).</td><td>2</td></tr></tbody>
+          </table>
+        </details>
+
+        <details>
+          <summary>Independent mark scheme</summary>
+          <table>
+            <thead><tr><th scope="col">Task</th><th scope="col">Creditworthy points</th><th scope="col">Marks</th></tr></thead>
+            <tbody><tr><td>1</td><td>Both move substances across a cell membrane (1). Diffusion moves down a gradient (high to low) whereas active transport moves against it (low to high) (1). Diffusion is passive whereas active transport uses energy from respiration (1) and carrier proteins (1).</td><td>4</td></tr><tr><td>2</td><td>Both cross a selectively permeable membrane (1). Osmosis moves water only whereas active transport moves solutes/ions (1). Osmosis goes down a water gradient whereas active transport goes against a gradient (1). Osmosis is passive whereas active transport uses respiration energy (1).</td><td>4</td></tr><tr><td>3</td><td>It describes only osmosis (one-sided) (1). Fix: Both are passive movements down a gradient, but osmosis moves water only across a partially permeable membrane whereas diffusion moves any gas or solute (1).</td><td>2</td></tr></tbody>
+          </table>
+        </details>
+
+        <details>
+          <summary>Aspire mark scheme</summary>
+          <table>
+            <thead><tr><th scope="col">Task</th><th scope="col">Creditworthy points</th><th scope="col">Marks</th></tr></thead>
+            <tbody><tr><td>1</td><td>O₂ enters by passive diffusion down its gradient (1); water enters by passive osmosis down its water gradient across the membrane (1); nitrate ions enter by active transport against their gradient using carrier proteins and energy from respiration (1); all three cross the same membrane simultaneously (1).</td><td>4</td></tr><tr><td>2</td><td>Active transport against the gradient (1); many mitochondria to release energy by respiration (1) and folded membranes packed with carrier proteins (1).</td><td>3</td></tr><tr><td>3</td><td>Osmosis and active transport both cross a selectively permeable cell membrane (1); diffusion and osmosis differ because osmosis moves water only across a membrane whereas diffusion moves any solute/gas (1).</td><td>2</td></tr></tbody>
+          </table>
+        </details>
+
+    </div>
+    <div class="card-green">
+      <h3>Three-step review checklist</h3>
+      <ol>
+        <li>Check that you used the accurate scientific term from the word list.</li>
+        <li>Link your statement to a measurement, calculation or diagram detail.</li>
+        <li>Write <strong>//</strong> and add one missing detail or unit in the same colour on the same page.</li>
+      </ol>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W06_L3)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-10" data-stage="Exit ticket" aria-hidden="true">
+          <span class="stage-pill">Stage 10 · Exit ticket</span>
+          <h2>Exit ticket · evidence check</h2>
+
+
+        <div class="ca-act" data-quiz data-correct="0" data-explain="&quot;Compare&quot; always requires both sides: similarities and differences with both processes named.">
+          <p><strong>Exit check 1:</strong> What must you include when answering a GCSE Biology question that starts with the command word &quot;Compare&quot;?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">At least one similarity AND clear differences, naming both processes</button><button type="button" data-option="1">Only a description of the first process</button><button type="button" data-option="2">Only differences, without saying what is the same</button></div>
+          <p class="status-box" role="status">Select an option to check today's key learning.</p>
+        </div>
+
+        <div class="ca-act" data-quiz data-correct="0" data-explain="Both cross a cell membrane, but osmosis is passive movement of water down its gradient whereas active transport pumps solutes against their gradient using respiratory energy.">
+          <p><strong>Exit check 2:</strong> Which row correctly compares osmosis and active transport?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">Similarity: both cross a cell membrane · Difference: osmosis moves water down a gradient passively, whereas active transport moves ions/solutes against a gradient using energy from respiration</button><button type="button" data-option="1">Similarity: both require energy from mitochondria · Difference: osmosis only moves nitrate ions</button><button type="button" data-option="2">Similarity: both move against the concentration gradient · Difference: active transport only moves water</button></div>
+          <p class="status-box" role="status">Select an option to check today's key learning.</p>
+        </div>
+
+        <div class="ca-act" data-quiz data-correct="0" data-explain="Moving iodide ions from a low external concentration to a 1,000× higher internal concentration is against the gradient and requires active transport.">
+          <p><strong>Exit check 3:</strong> Seaweed cells absorb iodide ions from seawater even though iodide concentration is already 1,000 times higher inside the seaweed cells than in the sea. Which process is this?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">Active transport (moving ions against the concentration gradient using energy from respiration)</button><button type="button" data-option="1">Osmosis (moving water down its gradient)</button><button type="button" data-option="2">Passive diffusion (moving down the concentration gradient)</button></div>
+          <p class="status-box" role="status">Select an option to check today's key learning.</p>
+        </div>
+
+    <div class="route-group">
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;"><button type="button" class="route-btn active-route" data-route-btn="supported" aria-pressed="true">Supported</button><button type="button" class="route-btn" data-route-btn="independent" aria-pressed="false">Independent</button><button type="button" class="route-btn" data-route-btn="aspire" aria-pressed="false">Aspire</button></div>
+      <div class="route-panel active-panel" data-route-panel="supported" id="exit-supported"><h3>Supported exit ticket</h3><div class="task-box"><p><strong>1. What two things must a &quot;Compare&quot; answer include?</strong></p><details><summary>Expected point</summary><p>Similarities AND differences (both sides).</p></details></div><div class="task-box"><p><strong>2. Which of the three processes moves WATER ONLY across a partially permeable membrane?</strong></p><details><summary>Expected point</summary><p>Osmosis.</p></details></div></div><div class="route-panel" data-route-panel="independent" id="exit-independent"><h3>Independent exit ticket</h3><div class="task-box"><p><strong>1. Write one similarity and one difference between osmosis and active transport.</strong></p><details><summary>Expected point</summary><p>Similarity: Both move substances across a cell membrane. Difference: Osmosis moves water down its gradient passively (no energy), whereas active transport moves solutes against their gradient using energy from respiration.</p></details></div><div class="task-box"><p><strong>2. Write one similarity and one difference between diffusion and osmosis.</strong></p><details><summary>Expected point</summary><p>Similarity: Both are passive processes that move particles down a concentration/water gradient without energy from respiration. Difference: Osmosis moves water only across a partially permeable membrane, whereas diffusion moves any dissolved solute or gas.</p></details></div></div><div class="route-panel" data-route-panel="aspire" id="exit-aspire"><h3>Aspire exit ticket</h3><div class="task-box"><p><strong>1. Compare diffusion, osmosis, and active transport in a complete 4-point summary covering shared features, substance, direction, and energy.</strong></p><details><summary>Expected point</summary><p>1. Shared: All three transport substances across cell membranes; diffusion and osmosis are both passive. 2. Substance: Osmosis moves water only; diffusion and active transport move solutes (and diffusion also moves gases). 3. Direction: Diffusion and osmosis move down a gradient (high -&gt; low); active transport moves against a gradient (low -&gt; high). 4. Energy: Only active transport requires energy from cellular respiration and carrier proteins.</p></details></div><div class="task-box"><p><strong>2. Explain how to fix a student compare answer that describes diffusion accurately for four lines but never mentions the second process.</strong></p><details><summary>Expected point</summary><p>Add a &quot;Both...&quot; sentence stating a shared feature (both cross a cell membrane) and link each diffusion point with &quot;whereas active transport...&quot; so both sides of every contrast are explicit.</p></details></div></div>
+    </div>
+    <div class="card">
+      <p><strong>Response modes:</strong> verbal · written · drawn · signed · symbol / choice-selected · demonstrated / re-attempt · adult-scribed. You may pass.</p>
+      <p><strong>Next lesson:</strong> Lesson 1 (SCI_LAUNCH_A1_W07_L1): Topic 1 Key Concepts in Biology round-Up — linking cells, microscopy, and transport.</p>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W06_L3)</span>
+          </footer>
+        </section>
+
+  </main>
+
+        <section class="print-section" id="print-supported" data-print-route="supported">
+          <h2>Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W06_L3) · Supported print pack</h2>
+          <p><strong>Learning intention:</strong> Compare diffusion, osmosis, and active transport by stating both similarities and differences across direction, substance, membrane, and energy, and classify unfamiliar transport scenarios from evidence.</p>
+          <p><strong>1. What two things must every &quot;Compare&quot; answer include? [2 marks] (2 marks)</strong> — Cue: Think: what is the same and what is not the same.</p><p><strong>2. Use the Master Comparison Matrix to classify each scenario as Diffusion, Osmosis, or Active Transport: (a) Water entering a raisin; (b) Carbon dioxide leaving a muscle cell; (c) Seaweed pumping iodide in against a gradient [2 marks]. (2 marks)</strong> — Cue: Check water vs gas vs against gradient.</p><p><strong>3. Complete this compare sentence using the word bank (membrane, down, against): &quot;Both diffusion and active transport cross a cell ___, but diffusion goes ___ the gradient whereas active transport goes ___ it.&quot; [2 marks] (2 marks)</strong> — Cue: Fill in the three blanks.</p>
+          <p>Made by Matt</p>
+        </section>
+
+        <section class="print-section" id="print-independent" data-print-route="independent">
+          <h2>Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W06_L3) · Independent print pack</h2>
+          <p><strong>Learning intention:</strong> Compare diffusion, osmosis, and active transport by stating both similarities and differences across direction, substance, membrane, and energy, and classify unfamiliar transport scenarios from evidence.</p>
+          <p><strong>1. Compare diffusion and active transport [4 marks]. (4 marks)</strong> — Cue: Give 1 specific similarity (&quot;Both...&quot;) and 3 clear differences using &quot;whereas&quot;.</p><p><strong>2. Compare osmosis and active transport [4 marks]. (4 marks)</strong> — Cue: Contrast substance moved, direction, energy, and state one similarity.</p><p><strong>3. Read this answer to &quot;Compare diffusion and osmosis [3 marks]&quot;: &quot;Osmosis moves water through a partially permeable membrane from dilute to concentrated.&quot; Explain why it drops marks and fix it [2 marks]. (2 marks)</strong> — Cue: Why is it one-sided?</p>
+          <p>Made by Matt</p>
+        </section>
+
+        <section class="print-section" id="print-aspire" data-print-route="aspire">
+          <h2>Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W06_L3) · Aspire print pack</h2>
+          <p><strong>Learning intention:</strong> Compare diffusion, osmosis, and active transport by stating both similarities and differences across direction, substance, membrane, and energy, and classify unfamiliar transport scenarios from evidence.</p>
+          <p><strong>1. A single plant root hair cell in moist, aerated soil simultaneously carries out diffusion, osmosis, and active transport. Identify one substance moving by each process in that cell [4 marks]. (4 marks)</strong> — Cue: Think about water, oxygen, and nitrate ions in the same root hair cell.</p><p><strong>2. Marine fish gill chloride cells pump excess salt ions OUT into salty seawater (where salt concentration is higher than in blood). State the transport process and predict two cell features [3 marks]. (3 marks)</strong> — Cue: Pumping from lower blood salt to higher ocean salt = which direction?</p><p><strong>3. Critique the statement: &quot;Osmosis and active transport are complete opposites, whereas diffusion and osmosis are identical.&quot; [2 marks] (2 marks)</strong> — Cue: What do osmosis and active transport share, and how do diffusion and osmosis differ?</p>
+          <p>Made by Matt</p>
+        </section>
+
+
+    <dialog id="ta-dialog" aria-labelledby="ta-dialog-title">
+      <h2 id="ta-dialog-title">TA Brief · Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W06_L3)</h2>
+      <p><strong>Learning intention:</strong> Compare diffusion, osmosis, and active transport by stating both similarities and differences across direction, substance, membrane, and energy, and classify unfamiliar transport scenarios from evidence.</p>
+      <p><strong>At check-out, record E for today's lesson against each pupil's target on the evidence app.</strong></p>
+      <p class="ca-watch-staff"><strong>Watch (staff preview first): <a href="https://www.bbc.co.uk/bitesize/guides/zs63tv4/revision/6" target="_blank" rel="noopener noreferrer">Revision guide — Comparing diffusion, osmosis, and active transport</a></strong></p>
+      <h3>Adult deployment and access support</h3>
+      <ul>
+        <li>Rehearse the three-panel picture at Arrival before independent tasks.</li>
+        <li>Invite a response in the learner's usual mode (verbal · written · drawn · signed · symbol / choice-selected · demonstrated / re-attempt · adult-scribed). Allow a pass.</li>
+        <li>Wait, point to the diagram detail, and rephrase before offering a content cue.</li>
+        <li>Record actual <strong>I · S · C</strong> beside each task in the book or sheet.</li>
+      </ul>
+      <p>Made by Matt</p>
+      <button type="button" data-close-dialog>Close TA brief</button>
+    </dialog>
+
+
+    <dialog id="guidance-dialog" aria-labelledby="guidance-dialog-title">
+      <h2 id="guidance-dialog-title">Teacher, Cover and SLT Guidance · Science · SUMMIT · Lesson 3 (SCI_LAUNCH_A1_W06_L3)</h2>
+      <p><strong>Scheme alignment:</strong> Row 44 · Topic 1 Key Concepts in Biology: Compare diffusion, osmosis, and active transport using direction, substance, membrane, and energy, and classify unfamiliar biological scenarios.</p>
+      <p><strong>At check-out, record E for today's lesson against each pupil's target on the evidence app.</strong></p>
+      <p class="ca-watch-staff"><strong>Watch (staff preview first): <a href="https://www.bbc.co.uk/bitesize/guides/zs63tv4/revision/6" target="_blank" rel="noopener noreferrer">Revision guide — Comparing diffusion, osmosis, and active transport</a></strong></p>
+      <h3>Practical apparatus and safety</h3>
+      <p>Classroom comparison, scenario classification, and self-assessment session — no chemical or biological hazard. Emphasise that exam-style compare practice is low-stakes skill building and that editing a missing side in green pen is visible learning.</p>
+      <h3>P17 · Planned adaptations</h3>
+      <ul>
+        <li><strong>Cognition and learning:</strong> Rehearse one worked step at a time and fade one cue before the independent check.</li>
+        <li><strong>Communication and interaction:</strong> Accept pointing, signing, choice selection or adult scribing.</li>
+        <li><strong>Regulation:</strong> Use the quiet pause option and return to the last secure step.</li>
+        <li><strong>Sensory and physical:</strong> Offer high-contrast print cards and seated or adult-directed apparatus handling.</li>
+      </ul>
+      <h3>Key vocabulary</h3>
+      <table>
+        <thead><tr><th scope="col">Tier</th><th scope="col">Term</th><th scope="col">Meaning</th><th scope="col">Example</th></tr></thead>
+        <tbody><tr><td>Tier 2</td><td><strong>Compare</strong></td><td>A GCSE command word asking for both similarities and differences, with both processes named.</td><td>When asked to compare diffusion and active transport, state one similarity and at least two differences.</td></tr><tr><td>Tier 2</td><td><strong>Similarity</strong></td><td>A specific biological feature that two or more processes share.</td><td>A key similarity is that all three processes move substances across a cell membrane.</td></tr><tr><td>Tier 2</td><td><strong>Difference</strong></td><td>A specific feature that contrasts one process with another (linked with &quot;whereas&quot; or &quot;while&quot;).</td><td>A key difference is that diffusion is passive, whereas active transport uses energy from respiration.</td></tr><tr><td>Tier 3</td><td><strong>Diffusion</strong></td><td>The passive net movement of particles from a higher concentration to a lower concentration down a concentration gradient.</td><td>Carbon dioxide leaves a respiring muscle cell by diffusion.</td></tr><tr><td>Tier 3</td><td><strong>Osmosis</strong></td><td>The passive net movement of water molecules from a dilute solution to a concentrated solution across a partially permeable membrane.</td><td>Water enters a raisin or plant root hair cell by osmosis.</td></tr><tr><td>Tier 3</td><td><strong>Active transport</strong></td><td>The movement of particles from a lower concentration to a higher concentration (against the gradient) using carrier proteins and energy from respiration.</td><td>Seaweed cells hoard iodide ions from seawater by active transport.</td></tr></tbody>
+      </table>
+      <p>Made by Matt</p>
+      <button type="button" data-close-dialog>Close guidance</button>
+    </dialog>
+
+
+    <dialog id="pause-dialog" aria-labelledby="pause-dialog-title">
+      <h2 id="pause-dialog-title">Quiet pause</h2>
+      <p>Take a quiet pause. Your work is kept safe on this page. Return to the last secure step and one small choice when you are ready.</p>
+      <p>Made by Matt</p>
+      <button type="button" data-close-dialog>Close and return to lesson</button>
+    </dialog>
+
+  <script>
+(function() {
+  window.classicCurrentSlide = 0;
+  window.soundEnabled = false;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.body.classList.add('no-motion');
+  }
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const picker = document.getElementById('stage-picker');
+  const statusEl = document.getElementById('stage-status');
+
+  window.showSlide = function(idx) {
+    const n = Math.max(0, Math.min(slides.length - 1, Number(idx) || 0));
+    window.classicCurrentSlide = n;
+    slides.forEach((s, i) => {
+      if (i === n) {
+        s.classList.add('active');
+        s.setAttribute('aria-hidden', 'false');
+      } else {
+        s.classList.remove('active');
+        s.setAttribute('aria-hidden', 'true');
+      }
+    });
+    if (picker) picker.value = String(n);
+    if (statusEl && slides[n]) {
+      statusEl.textContent = 'Stage ' + (n + 1) + ' of ' + slides.length + ': ' + (slides[n].getAttribute('data-stage') || '');
+    }
+  };
+
+  window.SCI_PROOF = function() {
+    return {
+      slideCount: slides.length,
+      currentSlide: window.classicCurrentSlide,
+      sound: window.soundEnabled
+    };
+  };
+
+  document.getElementById('prev-btn')?.addEventListener('click', () => window.showSlide(window.classicCurrentSlide - 1));
+  document.getElementById('next-btn')?.addEventListener('click', () => window.showSlide(window.classicCurrentSlide + 1));
+  picker?.addEventListener('change', (e) => window.showSlide(Number(e.target.value)));
+
+  document.addEventListener('keydown', (e) => {
+    const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+    if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+    if (e.key === 'ArrowRight') window.showSlide(window.classicCurrentSlide + 1);
+    if (e.key === 'ArrowLeft') window.showSlide(window.classicCurrentSlide - 1);
+    if (e.key === 'Escape') {
+      document.querySelectorAll('dialog[open]').forEach(d => d.close());
+    }
+  });
+
+  // View toggles
+  document.querySelectorAll('[data-toggle]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const mode = btn.getAttribute('data-toggle');
+      const pressed = btn.getAttribute('aria-pressed') === 'true';
+      btn.setAttribute('aria-pressed', String(!pressed));
+      if (mode === 'calm') document.body.classList.toggle('calm-view', !pressed);
+      if (mode === 'high-contrast') document.body.classList.toggle('high-contrast', !pressed);
+      if (mode === 'reduce-motion') document.body.classList.toggle('no-motion', !pressed);
+    });
+  });
+
+  // Dialog controls
+  document.querySelectorAll('[data-open-dialog]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const d = document.getElementById(btn.getAttribute('data-open-dialog'));
+      if (d && typeof d.showModal === 'function') d.showModal();
+      else if (d) d.setAttribute('open', '');
+    });
+  });
+  document.querySelectorAll('[data-close-dialog]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const d = btn.closest('dialog');
+      if (d && typeof d.close === 'function') d.close();
+      else if (d) d.removeAttribute('open');
+    });
+  });
+
+  // Reveal buttons
+  document.querySelectorAll('[data-reveal]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = document.getElementById(btn.getAttribute('data-reveal'));
+      if (target) {
+        const isHidden = target.hasAttribute('hidden');
+        if (isHidden) target.removeAttribute('hidden');
+        else target.setAttribute('hidden', '');
+      }
+    });
+  });
+
+  // Regulation check
+  document.querySelectorAll('[data-regulation]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const st = document.getElementById('regulation-status');
+      if (st) st.textContent = 'Logged: ' + btn.getAttribute('data-regulation') + '. Speak privately or pass at any time.';
+    });
+  });
+
+  // Route tabs (Arrival, You do, Exit)
+  document.querySelectorAll('.route-group').forEach(group => {
+    const buttons = group.querySelectorAll('[data-route-btn]');
+    const panels = group.querySelectorAll('.route-panel');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const r = btn.getAttribute('data-route-btn');
+        buttons.forEach(b => {
+          const match = b.getAttribute('data-route-btn') === r;
+          b.classList.toggle('active-route', match);
+          b.setAttribute('aria-pressed', String(match));
+        });
+        panels.forEach(p => {
+          p.classList.toggle('active-panel', p.getAttribute('data-route-panel') === r);
+        });
+      });
+    });
+  });
+
+  // Tap quizzes (Arrival & Exit)
+  document.querySelectorAll('[data-quiz]').forEach(quiz => {
+    const right = quiz.getAttribute('data-correct');
+    const explain = quiz.getAttribute('data-explain') || '';
+    const status = quiz.querySelector('[role="status"]');
+    quiz.querySelectorAll('[data-option]').forEach(opt => {
+      opt.addEventListener('click', () => {
+        const chosen = opt.getAttribute('data-option');
+        if (chosen === right) {
+          status.textContent = 'Yes. ' + explain;
+        } else {
+          status.textContent = 'Try again. Check the diagram clue and choose another option.';
+        }
+      });
+    });
+  });
+
+  // Starter 4-step beatbox + vote
+  document.querySelectorAll('[data-beat]').forEach(box => {
+    let idx = 0;
+    const lights = Array.from(box.querySelectorAll('.ca-light'));
+    const status = box.querySelector('.beat-status');
+    function render(n) {
+      lights.forEach((l, i) => l.classList.toggle('lit', i < n));
+      if (status) status.textContent = n === 0 ? 'Ready: step 0 of ' + lights.length : 'Showing step ' + n + ' of ' + lights.length;
+    }
+    box.querySelector('[data-beat-next]')?.addEventListener('click', () => {
+      idx = Math.min(lights.length, idx + 1);
+      render(idx);
+    });
+    box.querySelector('[data-beat-all]')?.addEventListener('click', () => {
+      idx = lights.length;
+      render(idx);
+    });
+    box.querySelector('[data-beat-reset]')?.addEventListener('click', () => {
+      idx = 0;
+      render(idx);
+    });
+  });
+
+  // Step models (I do 1 & I do 2)
+  document.querySelectorAll('[data-step-model]').forEach(model => {
+    const steps = JSON.parse(model.getAttribute('data-steps') || '[]');
+    let cur = 0;
+    const cap = model.querySelector('.model-caption');
+    const items = Array.from(model.querySelectorAll('.v5-step'));
+    function update() {
+      if (cap && steps[cur]) cap.textContent = 'Step ' + (cur + 1) + ': ' + steps[cur];
+      items.forEach((el, i) => {
+        if (i <= cur) el.removeAttribute('hidden');
+        else el.setAttribute('hidden', '');
+      });
+    }
+    model.querySelector('[data-step-next]')?.addEventListener('click', () => {
+      cur = Math.min(steps.length - 1, cur + 1);
+      update();
+    });
+    model.querySelector('[data-step-reset]')?.addEventListener('click', () => {
+      cur = 0;
+      items.forEach((el, i) => {
+        if (i === 0) el.removeAttribute('hidden');
+        else el.setAttribute('hidden', '');
+      });
+      if (cap && steps[0]) cap.textContent = 'Step 1: ' + steps[0];
+    });
+  });
+
+  // We do 1 sort/match + 4-team points board
+  const scores = [0, 0, 0, 0];
+  function renderScores() {
+    scores.forEach((val, i) => {
+      const el = document.getElementById('score-' + i);
+      if (el) el.textContent = String(val);
+    });
+  }
+  document.querySelectorAll('[data-team-add]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const t = Number(btn.getAttribute('data-team-add'));
+      const pts = Number(btn.getAttribute('data-pts') || '1');
+      scores[t] = Math.max(0, scores[t] + pts);
+      renderScores();
+    });
+  });
+  document.getElementById('reset-points')?.addEventListener('click', () => {
+    for (let i = 0; i < 4; i++) scores[i] = 0;
+    renderScores();
+  });
+
+  document.querySelectorAll('[data-sort]').forEach(sortBox => {
+    const status = sortBox.querySelector('.sort-status');
+    sortBox.querySelector('[data-sort-check]')?.addEventListener('click', () => {
+      const selects = Array.from(sortBox.querySelectorAll('select[data-expected]'));
+      let rightCount = 0;
+      selects.forEach(s => {
+        if (s.value === s.getAttribute('data-expected')) rightCount++;
+      });
+      if (status) {
+        status.textContent = rightCount === selects.length
+          ? 'Yes. All ' + rightCount + ' matches are accurate. Award 1 point and ask for a scientific reason for +1 bonus point.'
+          : 'Try again. ' + rightCount + ' of ' + selects.length + ' matched so far.';
+      }
+    });
+    sortBox.querySelector('[data-sort-reset]')?.addEventListener('click', () => {
+      sortBox.querySelectorAll('select').forEach(s => { s.value = ''; });
+      if (status) status.textContent = 'Reset complete. Match each item and explain why.';
+    });
+  });
+
+  // We do 2 sequence ordering
+  document.querySelectorAll('[data-sequence]').forEach(seqBox => {
+    const list = seqBox.querySelector('ol');
+    const status = seqBox.querySelector('.seq-status');
+    seqBox.addEventListener('click', (e) => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      const li = btn.closest('li');
+      if (btn.hasAttribute('data-move-up') && li && li.previousElementSibling) {
+        list.insertBefore(li, li.previousElementSibling);
+      } else if (btn.hasAttribute('data-move-down') && li && li.nextElementSibling) {
+        list.insertBefore(li.nextElementSibling, li);
+      } else if (btn.hasAttribute('data-seq-check')) {
+        const items = Array.from(list.querySelectorAll('li'));
+        const ok = items.every((el, idx) => Number(el.getAttribute('data-order')) === idx);
+        if (status) {
+          status.textContent = ok
+            ? 'Yes. The sequence is in the right scientific order.'
+            : 'Try again. Check which step must happen first.';
+        }
+      }
+    });
+  });
+
+  // Print arming
+  window.printArm = function(route) {
+    document.querySelectorAll('.print-section').forEach(sec => {
+      sec.classList.toggle('visible', sec.getAttribute('data-print-route') === route);
+    });
+  };
+  document.querySelectorAll('[data-print-btn]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      window.printArm(btn.getAttribute('data-print-btn'));
+    });
+  });
+
+  window.showSlide(0);
+})();
+</script>
+</body>
+</html>

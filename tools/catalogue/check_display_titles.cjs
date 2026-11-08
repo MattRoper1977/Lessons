@@ -31,7 +31,8 @@ async function hub(mode) {
   for (const [file, entry] of Object.entries(map.entries)) {
     const row = H.state.rows.find(r => r._path === file);
     assert.ok(row, file);
-    assert.equal(H.displayTitle(row), entry.displayTitle, file);
+    // Public pathway names (BASE/TRACK/SUMMIT) are shown for the stored BUILD/GROW/LAUNCH words.
+    assert.equal(H.displayTitle(row), H.relabel(entry.displayTitle), file);
     assert.equal(row.title, entry.originalTitle, 'Original title must survive');
     for (const q of [entry.displayTitle, entry.originalTitle, file]) {
       assert.ok(H.flatFilter(new URLSearchParams({q}), H.state.rows).some(r => r._path === file), q);
@@ -41,7 +42,7 @@ async function hub(mode) {
   }
   for (const mode of ['missing', 'stale']) {
     const fallback = await hub(mode);
-    for (const r of fallback.state.rows) assert.equal(fallback.displayTitle(r), r.title || '', mode);
+    for (const r of fallback.state.rows) assert.equal(fallback.displayTitle(r), fallback.relabel(r.title || ''), mode);
   }
   assert.equal(H.flatFilter(new URLSearchParams({q:'edud2-no-such-topic-9af68'}), H.state.rows).length, 0);
   console.log('PASS: ' + Object.keys(map.entries).length + ' titles for ' + pairs + ' companion pairs, topic/original/path search, canonical links, reference details, missing/stale map fallback and empty results.');
