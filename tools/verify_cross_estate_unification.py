@@ -3321,8 +3321,8 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # Re-cut 2026-11-08 (owner pin edit on the Autumn 1 AAA lesson branch): the carrier moves to Site main 1b215d2d, the merge of Site #616 (admission of the files Lessons #822 adds and changes). Re-cut from the caller bytes.
 # Re-cut 2026-11-08 (owner pin edit cc40d39c on the Science Autumn 1 list-fix branch): the carrier moves to Site main 0ac6944b, the merge of Site #617 (admission of the list fix: subject.html, terms-and-styles.json, the 15 unlisted SUMMIT pages).
 # Re-cut 2026-11-08 (owner pin edit b91dcad6 on the Week 2 QR-page branch): the carrier moves to Site main 5d40754c, the merge of Site #619 (admission of the Week 2 QR-page edits); the caller digest is re-cut from those bytes.
-# Re-cut 2026-11-08 (owner pin edit on this branch): the carrier moves to Site main 85b7bb5c, the merge of Site #621 (registry baseline for the Autumn 2 landing and the scheme-of-work label admission, after Site #620 admitted the Autumn 2 pages); the caller digest is re-cut from the bytes with both pin lines moved.
-    "lessons": "9c6e3a4d9a8fc47c0d1645ffe343e4e9a548359fe4dc2f077192dcf2b36ca0ad",
+# Re-cut 2026-11-08 (owner pin edit on this branch): the carrier moves to Site main 85b7bb5c, the merge of Site #621 (registry baseline for the Autumn 2 landing and the scheme-of-work label admission, after Site #620 admitted the Autumn 2 pages); the caller digest is re-cut from the owner's committed bytes (both pin lines moved, one trailing blank line).
+    "lessons": "bfb65d6c6877572a57547dcf845621fa1d41e06504c88001a368b602bbe4c656",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.
