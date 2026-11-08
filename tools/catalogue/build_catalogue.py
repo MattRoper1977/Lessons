@@ -66,8 +66,10 @@ for mf in sorted(ROOT.rglob('manifest*.json')):
  rows=data if isinstance(data,list) else data.get('lessons',data.get('sequence',[])) if isinstance(data,dict) else []
  for item in rows:
   if not isinstance(item,dict) or not isinstance(item.get('file'),str):continue
-  candidate=mf.parent/item['file']
-  if candidate.is_file():MANIFESTS.setdefault(str(candidate.relative_to(ROOT)),[]).append((str(mf.relative_to(ROOT)),item))
+  # A2-LIST (8 Nov 2026): a catalogue-side manifest (tools/catalogue/manifest_*.json) may name a
+  # page outside its own folder, so the member path is resolved before it is keyed.
+  candidate=(mf.parent/item['file']).resolve()
+  if candidate.is_file():MANIFESTS.setdefault(str(candidate.relative_to(ROOT.resolve())),[]).append((str(mf.relative_to(ROOT)),item))
 CACHE={}
 
 def norm(s):return re.sub(r'\s+',' ',s).strip()

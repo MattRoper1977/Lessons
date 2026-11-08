@@ -156,7 +156,7 @@ CATALOGUE_PINS = {
         "assets/catalogue/terms-and-styles.json": "666af9c5312c6796465781c466a1d02b430f587b6d68e5f2cc476bd4fae54da6",
         "assets/catalogue/science-shelf.json": "6bfcac8579a72f8413e158b49460a8b853f284b8dc64bd4da4442c37e92edadf",
         "assets/catalogue/humanities-shelf.json": "3f6a3583f3658b79a544aeef27a778a283069e4842d763cb95728a703669d9a7",
-        "tools/catalogue/build_catalogue.py": "4479666e404c7d0e564d6ea9cbea0efba706453a8fb66cf12ba8a52bb21a0cde",
+        "tools/catalogue/build_catalogue.py": "249e82b795e0fa5f1eaeb7afd00883a963d63742b50b783fa88f808737ab230d",
         "tools/catalogue/build_science_shelf.py": "396b6aeb7cb3cabe037b7af27877ae7a090e5aa1bce284409e400549d5204c24",
         "tools/catalogue/build_humanities_shelf.py": "0d58e1dd47c9c806b7fefc42437b47947853760e785eb3ed34b35148eea874cc",
         "tools/catalogue/build_science_hub.py": "b00b55dead2cc5566515259b2dbd0b082365823fc29bf10ba40c887256b8d5db",
@@ -247,7 +247,7 @@ CATALOGUE_PINS = {
         "tools/humanities_resources/check_resources.py": "ec5383e3a34cbff999f190b0014a4a73e00a3a29e2714498f7620fd638dc2aa5",
         "tools/humanities_resources/resource.css": "1aed9aaca0d73a4b200c4e5d0977e73f4e906c747d7340c7a62f4197a8344bae",
         "tools/humanities_resources/resource.js": "ad40afed95490bfcce92dc062da46e1b27bcb96bdc80e37eabdfe02bf6ffc446",
-        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "a1bef9fc79b4f74292bfcf35fde891d1d52d6779f1176a3219dd48f930e73af6",
+        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "1c8a2cfdb1aef5dfee66a437bb5a91500c261ff6934bd58097eec5552e22cc81",
         "tools/catalogue/TERM_REVIEW.json": "9395de4c2803a7bc2a679cf0659c9df3c41c01e5ac60c0a2d39249414bc12de8",
         "tools/catalogue/SCIENCE_WEEK_BINDINGS.json": "9fa98ad78b0bd3c3f3ee15f88a7b2fd40eea810e6c9fb65ee93b3c5192888071",
         "primary/year5/science/autumn/forces/Lesson8_ExploreGravity.html": "20047720bf1d309055abdf232d341b6fd99b833631efa0bcbfb3dabed9671196",
@@ -3020,7 +3020,11 @@ CATALOGUE_RECORD_PATHS = {
     "tools/catalogue/verify_catalogue_contract_controls.py",
     # UX2 A1 (2026-09-08): the record's schema travels with the record. It is
     # data, not a lesson payload; it is enforced by tools/ux2/check_catalogue_schema.py.
-    "resources.schema.json"
+    "resources.schema.json",
+    # A2-LIST (2026-11-08): a catalogue-side manifest states term and week for a
+    # protected pack folder whose own manifest may not change. It is data read by
+    # tools/catalogue/build_catalogue.py, not a lesson payload.
+    "tools/catalogue/manifest_humanities_build_w9-w14_terms.json"
 }
 
 # The education publisher is executable release configuration, not a hub asset.
