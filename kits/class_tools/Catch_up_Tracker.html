@@ -1,0 +1,768 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Catch-up and Assessment Tracker</title>
+<style>
+:root{
+  --bg:#f7f7f4;--card:#fff;--ink:#14171a;--muted:#3d4650;--line:#c9ced3;
+  --build:#2f5d7c;--grow:#2a6355;--launch:#5f4585;
+  --miss:#8a1c1c;--missbg:#fbe9e9;
+  --part:#1e466e;--partbg:#e6f0fa;
+  --more:#7c3a0a;--morebg:#fff1e0;
+  --done:#1d5a2e;--donebg:#e6f3e8;
+  --focus:#0b57d0
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#121416;--card:#1c1f22;--ink:#f1f3f5;--muted:#c3cad1;--line:#3a4148;
+    --build:#9cc3e0;--grow:#93d1bd;--launch:#cdb6ef;
+    --miss:#ffb4b4;--missbg:#3a1717;
+    --part:#9cd0ff;--partbg:#152c44;
+    --more:#ffc999;--morebg:#3d220a;
+    --done:#a6e3b5;--donebg:#16301c;
+    --focus:#8ab4f8
+  }
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{background:var(--bg)}
+body{margin:0;font:20px/1.45 "Segoe UI",system-ui,sans-serif;color:var(--ink);background:var(--bg);padding-bottom:70px}
+header{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:2px solid var(--line);padding:10px 16px;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+h1{font:700 24px/1.2 Georgia,serif;margin:0 auto 0 0}
+main{max-width:1180px;margin:0 auto;padding:16px}
+button,select,textarea,input,.btnlink{font:inherit;color:inherit}
+button,select,.btnlink{min-height:44px;padding:6px 14px;border:2px solid var(--line);border-radius:10px;background:var(--card);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+button:hover,.btnlink:hover{border-color:var(--ink)}
+.smbtn{min-height:40px;padding:4px 10px;font-size:17px;border-radius:8px}
+.xsbtn{min-height:32px;padding:2px 8px;font-size:15px;border-radius:6px;border-width:1px}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.tabs button[aria-pressed="true"],.pillbar button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.badge{display:inline-block;padding:0 7px;border-radius:999px;font-size:15px;font-weight:700;background:var(--missbg);color:var(--miss);border:1px solid var(--miss)}
+.tabs button[aria-pressed="true"] .badge{background:var(--bg);color:var(--ink);border-color:var(--bg)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px}
+.lesson{background:var(--card);border:2px solid var(--line);border-left-width:10px;border-radius:12px;padding:12px 14px;margin:0 0 14px}
+.lesson.BUILD{border-left-color:var(--build)}.lesson.GROW{border-left-color:var(--grow)}.lesson.LAUNCH{border-left-color:var(--launch)}.lesson.ALL{border-left-color:var(--muted)}
+.lesson-head{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;margin-bottom:4px}
+.lesson h2{font-size:21px;margin:0}
+.tag{display:inline-block;font-size:17px;font-weight:700;padding:1px 8px;border-radius:6px;border:2px solid currentColor;margin-right:6px}
+.tag.BUILD{color:var(--build)}.tag.GROW{color:var(--grow)}.tag.LAUNCH{color:var(--launch)}.tag.ALL{color:var(--muted)}
+.hint{color:var(--muted);font-size:18px;margin:2px 0 8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-width:44px}
+.chip.st-missed{background:var(--missbg);color:var(--miss);border-color:var(--miss);font-weight:700}
+.chip.st-missed::before{content:"✗ "}
+.chip.st-partial{background:var(--partbg);color:var(--part);border-color:var(--part);font-weight:700}
+.chip.st-partial::before{content:"◐ "}
+.chip.st-more{background:var(--morebg);color:var(--more);border-color:var(--more);font-weight:700}
+.chip.st-more::before{content:"↻ "}
+.chip.st-done{background:var(--donebg);color:var(--done);border-color:var(--done);font-weight:700}
+.chip.st-done::before{content:"✓ "}
+.statebtn{font-weight:700}
+.statebtn.st-missed{background:var(--missbg);color:var(--miss);border-color:var(--miss)}
+.statebtn.st-partial{background:var(--partbg);color:var(--part);border-color:var(--part)}
+.statebtn.st-more{background:var(--morebg);color:var(--more);border-color:var(--more)}
+.statebtn.st-done{background:var(--donebg);color:var(--done);border-color:var(--done)}
+#table,#atable{overflow-x:auto}
+table{width:100%;border-collapse:collapse;background:var(--card)}
+td{overflow-wrap:anywhere}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--bg)}
+@media (max-width:650px){thead{display:none}table,tbody,tr,td{display:block}tr{border:2px solid var(--line);border-radius:10px;margin:0 0 10px;padding:4px}td{border:0;padding:4px 8px}}
+tr.st-done td{background:var(--donebg);color:var(--done)}
+tr.st-partial td{background:var(--partbg);color:var(--part)}
+tr.st-more td{background:var(--morebg);color:var(--more)}
+tr.just-done{opacity:0.72}
+.chipwrap{display:inline-flex;flex-wrap:wrap;gap:4px;align-items:center}
+textarea{width:100%;min-height:130px;border:2px solid var(--line);border-radius:10px;padding:8px;background:var(--card)}
+.noteinput{width:100%;min-width:160px;min-height:42px;padding:6px 8px;font-size:17px;border:2px solid var(--line);border-radius:8px;background:var(--card)}
+.textin{min-height:44px;padding:6px 10px;border:2px solid var(--line);border-radius:10px;background:var(--card);min-width:240px}
+.panel{background:var(--card);border:2px solid var(--line);border-radius:12px;padding:14px;margin:0 0 14px}
+.note{font-size:18px;color:var(--muted)}
+.acct-pill{font-size:15px;padding:3px 10px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--muted)}
+.acct-pill.warn{background:var(--morebg);color:var(--more);border-color:var(--more);font-weight:700}
+.toast{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:20;background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:12px;display:flex;align-items:center;gap:10px;box-shadow:0 4px 16px rgba(0,0,0,.35);font-size:18px}
+.toast button{background:var(--bg);color:var(--ink);min-height:36px;padding:2px 10px;font-weight:700}
+.modal-bg{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:var(--card);color:var(--ink);border:2px solid var(--line);border-radius:16px;max-width:560px;width:100%;padding:18px;max-height:92vh;overflow-y:auto}
+.qr-stage{background:#fff;padding:16px;border-radius:12px;border:2px solid var(--line);display:flex;justify-content:center;align-items:center;margin:12px 0}
+.qr-stage svg{width:min(300px,72vw);height:min(300px,72vw);display:block}
+.print-only{display:none}
+.print-qr svg{width:96px;height:96px;display:block;background:#fff;padding:3px;border:1px solid #000}
+footer{max-width:1180px;margin:0 auto;padding:8px 16px 24px;color:var(--muted);font-size:18px}
+@media (max-width:600px){header{position:static}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media print{
+  header,.noprint,.toast,.modal-bg,footer{display:none!important}
+  body{background:#fff;color:#000;font-size:13pt;padding:0}
+  main{max-width:100%;padding:0}
+  .print-only{display:block!important}
+  .print-banner{border-bottom:2px solid #000;padding-bottom:6px;margin-bottom:10px}
+  thead{display:table-header-group!important}
+  table{display:table!important;width:100%!important;border-collapse:collapse!important}
+  tbody{display:table-row-group!important}
+  tr{display:table-row!important;border:1px solid #000!important;page-break-inside:avoid}
+  th,td{display:table-cell!important;border:1px solid #000!important;padding:6px 8px!important;color:#000!important;background:#fff!important}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Catch-up Tracker</h1>
+  <span class="acct-pill noprint" id="acctBadge" hidden></span>
+  <span class="acct-pill noprint" id="backupBadge" hidden></span>
+  <button type="button" class="smbtn noprint" id="openCustomQr">📱 QR Board</button>
+  <nav class="tabs row" aria-label="Views" style="margin:0">
+    <button data-view="today" aria-pressed="true">Mark a lesson</button>
+    <button data-view="list" aria-pressed="false">Who needs catch-up <span id="openCountBadge" class="badge" hidden>0</span></button>
+    <button data-view="assess" aria-pressed="false">Ready for assessment</button>
+    <button data-view="setup" aria-pressed="false">Set up</button>
+  </nav>
+</header>
+<main>
+  <section id="today">
+    <div class="row noprint">
+      <label>Week <select id="week"></select></label>
+      <label>Day <select id="day"></select></label>
+      <button type="button" class="smbtn" id="jumpToday">📅 Today</button>
+      <div class="row pillbar" id="pathFilter" role="group" aria-label="Filter group" style="margin:0">
+        <button type="button" class="smbtn" data-path="" aria-pressed="true">All groups</button>
+        <button type="button" class="smbtn" data-path="BUILD" aria-pressed="false">BUILD</button>
+        <button type="button" class="smbtn" data-path="GROW" aria-pressed="false">GROW</button>
+        <button type="button" class="smbtn" data-path="LAUNCH" aria-pressed="false">LAUNCH</button>
+      </div>
+    </div>
+    <div class="panel noprint" id="dayAbsentBox" style="padding:10px 14px">
+      <div class="row" style="margin:0;justify-content:space-between">
+        <strong>Absent all day (1-tap mark across every lesson today):</strong>
+        <span class="note" id="daySummaryText"></span>
+      </div>
+      <div class="chips" id="dayAbsentChips" style="margin-top:8px"></div>
+    </div>
+    <p class="hint">Tap a pupil who was not in. Then tap their status to move it on: <strong>Needs catch-up → Partly done → More needed → Done</strong>.</p>
+    <div id="lessons"></div>
+  </section>
+
+  <section id="list" hidden>
+    <div class="row noprint">
+      <label>Show <select id="filter">
+        <option value="open">Still open (needs, partly, more)</option>
+        <option value="missed">Needs catch-up (not started)</option>
+        <option value="partial">Partly done</option>
+        <option value="more">More needed</option>
+        <option value="done">Done</option>
+        <option value="all">Everything</option>
+      </select></label>
+      <label>Group <select id="lpath">
+        <option value="">All groups</option><option value="BUILD">BUILD</option><option value="GROW">GROW</option><option value="LAUNCH">LAUNCH</option>
+      </select></label>
+      <label>Pupil <select id="pfilter"><option value="">Everyone</option></select></label>
+      <button type="button" id="print">🖨️ Print list / QR sheet</button>
+      <button type="button" id="csv">💾 Save CSV</button>
+      <button type="button" id="copyListTsv">📋 Copy for Sheets</button>
+    </div>
+    <div id="printHeaderList" class="print-only print-banner"></div>
+    <p class="hint noprint">Each row names the catch-up sheet (<strong>Pathway › Week beginning › Subject › Catch-up</strong>). Notes save automatically as you type.</p>
+    <div id="table"></div>
+  </section>
+
+  <section id="assess" hidden>
+    <div class="row noprint">
+      <label>Pathway <select id="apath">
+        <option value="">All pathways</option><option value="BUILD">BUILD</option><option value="GROW">GROW</option><option value="LAUNCH">LAUNCH</option>
+      </select></label>
+      <label>Subject <select id="asubj"><option value="">All subjects</option></select></label>
+      <label>Show <select id="aready">
+        <option value="all">Everyone</option><option value="ready">Ready</option><option value="hold">On hold (catch-up open)</option><option value="passed">Assessment done</option>
+      </select></label>
+      <button type="button" id="assessMatrixBtn" aria-pressed="false">📊 Matrix grid</button>
+      <button type="button" id="printAssess">🖨️ Print</button>
+      <button type="button" id="csvAssess">💾 Save CSV</button>
+      <button type="button" id="copyAssessTsv">📋 Copy for Sheets</button>
+    </div>
+    <div id="printHeaderAssess" class="print-only print-banner"></div>
+    <p class="hint noprint">A pupil is <strong>Ready</strong> for a subject's check when none of its catch-ups are still open. Use <em>Ready anyway</em> if you covered the gap another way.</p>
+    <div id="atable"></div>
+  </section>
+
+  <section id="setup" hidden>
+    <div class="panel">
+      <h2 style="margin-top:0">Pupils in each group</h2>
+      <p class="note">One pupil per line. Use initials or codes if you prefer. If you fix a spelling or move a pupil between groups, their marks move with them automatically.</p>
+      <label for="pBUILD"><span class="tag BUILD">BUILD</span> group</label><textarea id="pBUILD"></textarea>
+      <label for="pGROW"><span class="tag GROW">GROW</span> group</label><textarea id="pGROW"></textarea>
+      <label for="pLAUNCH"><span class="tag LAUNCH">LAUNCH</span> group</label><textarea id="pLAUNCH"></textarea>
+      <div class="row" style="margin-top:10px"><button type="button" id="savep">Save pupils</button><span id="saved" class="note" role="status"></span></div>
+    </div>
+    <div class="panel">
+      <h2 style="margin-top:0">Drive &amp; Pinned QR Links</h2>
+      <p class="note">If you sign in to more than one Google account, type the one that holds your lessons. You can also save pinned links (like a shared Drive folder or custom activity link) for quick classroom QR projection.</p>
+      <div class="row">
+        <label>Google account <input type="email" id="driveEmail" class="textin" placeholder="name@example.com" autocomplete="off"></label>
+        <button type="button" id="saveDrive">Save account</button>
+        <a id="openDriveHome" class="btnlink" target="_blank" rel="noopener" href="https://drive.google.com/drive/my-drive">Open my Drive</a>
+      </div>
+      <hr style="border:0;border-top:1px solid var(--line);margin:12px 0">
+      <div class="row">
+        <input type="text" id="pinTitle" class="textin" placeholder="Link label (e.g. Science Folder)" style="min-width:200px">
+        <input type="url" id="pinUrl" class="textin" placeholder="https://drive.google.com/..." style="flex:1">
+        <button type="button" id="addPinBtn">➕ Pin QR link</button>
+      </div>
+      <div id="pinnedLinksList" class="chips"></div>
+    </div>
+    <div class="panel">
+      <h2 style="margin-top:0">Back up or move to another computer</h2>
+      <p class="note">Backups are automatically dated and hold pupils, marks, notes, pinned links and assessment ticks.</p>
+      <div class="row">
+        <button type="button" id="backup">💾 Save dated backup (.json)</button>
+        <label class="row" style="margin:0">Load backup <input type="file" id="restore" accept=".json"></label>
+      </div>
+      <div class="row"><button type="button" id="wipe">Clear all marks (keeps pupils and links)</button></div>
+    </div>
+  </section>
+</main>
+
+<div id="qrModal" class="modal-bg noprint" hidden role="dialog" aria-modal="true" aria-labelledby="qrModalTitle">
+  <div class="modal">
+    <div class="row" style="justify-content:space-between;margin-top:0">
+      <h2 id="qrModalTitle" style="margin:0;font-size:22px">Scan QR Code</h2>
+      <button type="button" class="smbtn" id="qrCloseBtn">✕ Close</button>
+    </div>
+    <p id="qrSubTitle" class="note" style="margin:4px 0 8px"></p>
+    <div class="row" id="qrCustomRow">
+      <input type="url" id="qrCustomInput" class="textin" style="flex:1" placeholder="Paste any Drive or web link (https://...)">
+      <select id="qrPinSelect" style="max-width:210px"><option value="">📌 Pinned links…</option></select>
+    </div>
+    <div class="qr-stage" id="qrSvgBox"></div>
+    <div class="row" style="justify-content:space-between;margin:8px 0 0">
+      <label class="note" style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="qrIncludeAcct"> Include Google account hint</label>
+      <div class="chipwrap">
+        <button type="button" class="smbtn" id="qrCopyUrlBtn">📋 Copy link</button>
+        <a id="qrOpenUrlBtn" class="btnlink smbtn" target="_blank" rel="noopener" href="#">🔗 Open link</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast noprint" hidden role="status" aria-live="polite">
+  <span id="toastMsg"></span>
+  <button type="button" id="toastUndoBtn" hidden>Undo</button>
+  <button type="button" id="toastCloseBtn" aria-label="Dismiss">✕</button>
+</div>
+
+<footer>Made by Matt · Works offline in any browser · Everything is saved in this browser on this computer.</footer>
+<script>
+(function(){
+"use strict";
+var KEY="mbm_catchup_tracker_v1";
+var WEEKS=[["1","02 Nov"],["2","09 Nov"],["3","16 Nov"],["4","23 Nov"],["5","30 Nov"],["6","07 Dec"],["7","14 Dec"]];
+var DAYS=["Monday","Tuesday","Wednesday","Thursday","Friday"];
+var TT={
+ Monday:[[1,"LAUNCH","Vocational"],[2,"GROW","Science"],[3,"BUILD","Science"],[4,"LAUNCH","Science"],[5,"BUILD","Creative Arts"],[6,"GROW","Creative Arts"]],
+ Tuesday:[[1,"BUILD","Creative Arts"],[2,"LAUNCH","Humanities"],[3,"BUILD","Careers"],[4,"GROW","Science"],[5,"BUILD","RE"],[6,"LAUNCH","ICT"]],
+ Wednesday:[[1,"BUILD","RSHE"],[2,"LAUNCH","Science"],[3,"GROW","PSHE"],[4,"BUILD","Science"],[5,"GROW","Creative Arts"],[6,"LAUNCH","Vocational"]],
+ Thursday:[[1,"LAUNCH","DT"],[2,"GROW","RE"],[3,"BUILD","Humanities"],[4,"LAUNCH","RSE"],[5,"ALL","Community Projects"]],
+ Friday:[[1,"LAUNCH","Careers"],[2,"GROW","Humanities"],[3,"BUILD","Vocational"],[4,"LAUNCH","Science"]]
+};
+// Ready-made catch-up links, filled in as the sheets are filed: "week|PATHWAY|Subject|lesson" -> link
+var PRELOAD={"1|BUILD|Careers|1":"https://drive.google.com/file/d/1PiNei2czWTcaMhM0jOqaJUI7XGf8DfGW/view","1|BUILD|Community Projects|1":"https://drive.google.com/file/d/1jH389gTFiATAgd9GRrzpENyCSPG8J-pI/view","1|BUILD|Creative Arts|2":"https://drive.google.com/file/d/1SydDviWTGOAkK3c-_HuA1alFqNm8PArK/view","1|BUILD|Humanities|1":"https://drive.google.com/file/d/15bvXThlsAkCuGr4c6Z8J6c7Ihn5gyqsp/view","1|BUILD|RE|1":"https://drive.google.com/file/d/1o-RQgyGvEolPu3KJdLsGOewy4BucTCqf/view","1|BUILD|RSHE|1":"https://drive.google.com/file/d/15Rpe_xUsZyglfHzNYvJ9YrgPWE9CP8Hb/view","1|BUILD|Science|2":"https://drive.google.com/file/d/1IrfEAe0DokvhMc2oZCf-hKtTbLVy_kBU/view","1|BUILD|Vocational|1":"https://drive.google.com/file/d/1MJwu6OO7Kxa-yxqOHOKoIMBpBqb8Td6M/view","1|GROW|Community Projects|1":"https://drive.google.com/file/d/1ueUBqf1zdTcMKVgUvvmlxhs-Bc8M0pqf/view","1|GROW|Creative Arts|2":"https://drive.google.com/file/d/1Aj-9poE1MjGBVQ-aQAt9OkG0qzZC8pAs/view","1|GROW|Humanities|1":"https://drive.google.com/file/d/1FPRP8b5HM1Z5C8uCC_ldiYO-yDhWzBkr/view","1|GROW|PSHE|1":"https://drive.google.com/file/d/11EqNfTC3hPiqG7I3NtncdjxLst9J5Rra/view","1|GROW|RE|1":"https://drive.google.com/file/d/1fSGUrPIda1kK1A-rVU9p7o7cScDyBzRN/view","1|GROW|Science|2":"https://drive.google.com/file/d/1eQVazxvzRYI2-0bCkz4nZYfI9apwJHb1/view","1|LAUNCH|Careers|1":"https://drive.google.com/file/d/1-ZqmACOU53jw5aNfX1Uv2XOuoi5oSVJS/view","1|LAUNCH|Community Projects|1":"https://drive.google.com/file/d/1-lvMPvju6JVDYfgYS8iHqgvhHukBDQjZ/view","1|LAUNCH|DT|1":"https://drive.google.com/file/d/1n2_3ZkWSgZc0Xl4gNG0xuoazPjzWDsWp/view","1|LAUNCH|Humanities|1":"https://drive.google.com/file/d/1Bmot9RHihW9fWVoxtl7XKeUlXDSqLKKf/view","1|LAUNCH|ICT|1":"https://drive.google.com/file/d/1fOhmMuQSKrhMyUnVqmvSbv8hMCxeDi18/view","1|LAUNCH|RSE|1":"https://drive.google.com/file/d/1Gv1FOjKQIqzCJ0t2zyRWlKndesqmBrdi/view","1|LAUNCH|Science|2":"https://drive.google.com/file/d/1Jw6Jv_4szTJjhSgfz39g5i3PUDNqaew1/view","1|LAUNCH|Science|3":"https://drive.google.com/file/d/1uhbYMLdeaXqJ0_E9U55e7I5Ab6VmL_eu/view","1|LAUNCH|Vocational|2":"https://drive.google.com/file/d/1vrOSGvIGwkKVy0vFHEAmf6jC_s4QLyhu/view","2|BUILD|Careers|1":"https://drive.google.com/file/d/1i5wgQhVwnvdjWk8TO-5Kb1kOV2OtuZ_i/view","2|BUILD|Community Projects|1":"https://drive.google.com/file/d/1jH389gTFiATAgd9GRrzpENyCSPG8J-pI/view","2|BUILD|Creative Arts|1":"https://drive.google.com/file/d/14BMvx44YdSE9EmQn3B8K4hSXy-iKBRKo/view","2|BUILD|Creative Arts|2":"https://drive.google.com/file/d/1TIS-zVU5Q1F6GneuDIUoyjjpAyyHFxsy/view","2|BUILD|Humanities|1":"https://drive.google.com/file/d/1Eee5jltgbbQOfT3tG9PU6rc7R7A9PKnG/view","2|BUILD|RE|1":"https://drive.google.com/file/d/1BgGKYchb5Xj4nEBgUW-hLiGpgRUE7tst/view","2|BUILD|RSHE|1":"https://drive.google.com/file/d/1H5chTYaGGxTD8ZLvU5WrCt5BnEkmG9Xn/view","2|BUILD|Science|1":"https://drive.google.com/file/d/1dXKlXq2r6bXtYg8bhhj3Xgjd3_-thhRR/view","2|BUILD|Science|2":"https://drive.google.com/file/d/1mKY53oX6OfvQRQuZUaRBt6I-IxV1J8Oy/view","2|BUILD|Vocational|1":"https://drive.google.com/file/d/1aVBzN8Xu3H3PVomzlqDnbdSuPQiIEbVy/view","2|GROW|Community Projects|1":"https://drive.google.com/file/d/1ueUBqf1zdTcMKVgUvvmlxhs-Bc8M0pqf/view","2|GROW|Creative Arts|1":"https://drive.google.com/file/d/1MiytfhVwSmcYqh1fHNlThA8VJjeRiNrF/view","2|GROW|Creative Arts|2":"https://drive.google.com/file/d/19pJIlJKJxwht2-dZUpGVa-68hlsviS6V/view","2|GROW|Humanities|1":"https://drive.google.com/file/d/1hRh3k2_gXnPxcsrfFGm4IoqRywMHQvMw/view","2|GROW|PSHE|1":"https://drive.google.com/file/d/1I3CvaArxSJU3obuOzRtj1fkroqLGqzss/view","2|GROW|RE|1":"https://drive.google.com/file/d/1k2ja_KYCFYhD6WleOhMGNNsvAgZ1sGww/view","2|GROW|Science|1":"https://drive.google.com/file/d/1EGimJLoQD04qe4K04gsv3JTNVz9pnRVf/view","2|GROW|Science|2":"https://drive.google.com/file/d/1jMbdQakiSxJOjcz6o23vAFLNzNUcik-4/view","2|LAUNCH|Careers|1":"https://drive.google.com/file/d/13uE_HpLe_PcRHNmqokRjzo_J2v5ozfdK/view","2|LAUNCH|Community Projects|1":"https://drive.google.com/file/d/1-lvMPvju6JVDYfgYS8iHqgvhHukBDQjZ/view","2|LAUNCH|DT|1":"https://drive.google.com/file/d/1Qsx__vhqUTilRZw-CiDBUfSCz1G9P3RI/view","2|LAUNCH|Humanities|1":"https://drive.google.com/file/d/1tE3xvUa3LHHGxdkv2brH9PEL0BpLxgAe/view","2|LAUNCH|ICT|1":"https://drive.google.com/file/d/1nmbBdsVfO10KDki9Jq0roQeUFbepa1RV/view","2|LAUNCH|RSE|1":"https://drive.google.com/file/d/1pV4g8yeQpVJft8t513yXacq-42CgpfTC/view","2|LAUNCH|Science|1":"https://drive.google.com/file/d/1cC8Vtc5lHn1qwY0APKJo6EvDZqMiXJgC/view","2|LAUNCH|Science|2":"https://drive.google.com/file/d/19QTxa5bsEFz2ovGJGFbboBdVY27sOdHW/view","2|LAUNCH|Science|3":"https://drive.google.com/file/d/18ZVhD-0NsvTwbPWl15pdp3gPWYr42lMK/view","2|LAUNCH|Vocational|1":"https://drive.google.com/file/d/1ZMcel1bK45gX_D-f8KZv5FhhPMZWWD75/view","2|LAUNCH|Vocational|2":"https://drive.google.com/file/d/1Go5lqbnnqgJCxpu0WL9H6qQ4jQvq8bzK/view","3|BUILD|Careers|1":"https://drive.google.com/file/d/1maFx9I3WKu_wktlq7Vn3SBnqCYvzhoQT/view","3|BUILD|Community Projects|1":"https://drive.google.com/file/d/1o1rouS4PRuVRLttVabPtXweQfbWL-YNi/view","3|BUILD|Creative Arts|1":"https://drive.google.com/file/d/1qD2m0tUW3h3Zfwb8DZw74YgtLUT8MG_k/view","3|BUILD|Creative Arts|2":"https://drive.google.com/file/d/1dZ2oscq2hWOdGvA0j8W_Pf9xwrAY1j0U/view","3|BUILD|Humanities|1":"https://drive.google.com/file/d/1b5VE3LOa_Fm05ctyNhqqeJfEWwCk7_86/view","3|BUILD|RE|1":"https://drive.google.com/file/d/1OMdt_QcZNnjjqpkb9lYDvZqH5NwtLSCp/view","3|BUILD|RSHE|1":"https://drive.google.com/file/d/1L3Eq0rhWGm6joDV3oacf6iYTP_TrVeX7/view","3|BUILD|Science|1":"https://drive.google.com/file/d/1bxBg0u7oay9ivlM6FRk6USUpbK1Qinh9/view","3|BUILD|Science|2":"https://drive.google.com/file/d/1Jc8Fl5jAM42i6-Xf6-QPHTiov3vIIvgF/view","3|BUILD|Vocational|1":"https://drive.google.com/file/d/1uaw79HK7Qoa3Wm5hwW4vG0TTlFKgOt0Q/view","3|GROW|Community Projects|1":"https://drive.google.com/file/d/1aCN7oGCrnILLh84NdcMyxpkKnnRTLtbn/view","3|GROW|Creative Arts|1":"https://drive.google.com/file/d/1k96N7A07GpCANKmvOwFRI_LqF0_UKehO/view","3|GROW|Creative Arts|2":"https://drive.google.com/file/d/1rqIU6y-CF7FSkzINAMt9QmczFgzUad4w/view","3|GROW|Humanities|1":"https://drive.google.com/file/d/17z6ZUP2c8gzAnhIKHx_ZhvKT5EEd8T1_/view","3|GROW|PSHE|1":"https://drive.google.com/file/d/1XiJFOCVW4yA-LrmsdO2YkBdoiyKVKXgB/view","3|GROW|RE|1":"https://drive.google.com/file/d/1LpbbUNeMq43g4KaSuCs_KstsJvenQOXn/view","3|GROW|Science|1":"https://drive.google.com/file/d/1qA2W5RRysbRmRb7JqUXBfqhxrHs68HRA/view","3|GROW|Science|2":"https://drive.google.com/file/d/1rw9TakLPtLbs_-5ccPUjmTCqUHT6GSIp/view","3|LAUNCH|Careers|1":"https://drive.google.com/file/d/1z6ql-4drvMZ88xfh-Vr3bgvxnZlXXF8r/view","3|LAUNCH|Community Projects|1":"https://drive.google.com/file/d/148UMdq_tfJ4xi3W2faprgfpJqIXLjJyN/view","3|LAUNCH|DT|1":"https://drive.google.com/file/d/1tt6MZRjQA24L6nghlSPgF1p0tkIJhO6b/view","3|LAUNCH|Humanities|1":"https://drive.google.com/file/d/1OFG75pGK9q_T4km-Xv2Bneu7Up8c1ER2/view","3|LAUNCH|ICT|1":"https://drive.google.com/file/d/1oCTdhhF0a3pDP7nxIxxfVo0r97jIg0Xi/view","3|LAUNCH|RSE|1":"https://drive.google.com/file/d/1Lu-Bbfz-93cgEJaUbrSOhDA0ub9JHlnD/view","3|LAUNCH|Science|1":"https://drive.google.com/file/d/1mVxlthB-6lCleILLrp6awjHA4P-JKev5/view","3|LAUNCH|Science|2":"https://drive.google.com/file/d/11FaMGPcDa582nK8T4nlwk6fLSxLxr2rI/view","3|LAUNCH|Science|3":"https://drive.google.com/file/d/1tATZeeWt_5DzempHqwJ6COfIn3hZqmrA/view","3|LAUNCH|Vocational|1":"https://drive.google.com/file/d/1Y0BVgCyt7AKQErd0k4FQruXWE2_UB8ho/view","3|LAUNCH|Vocational|2":"https://drive.google.com/file/d/1J5a4NQozc0Yx_tCH6PQ-8s-nORzztAA9/view","4|BUILD|Careers|1":"https://drive.google.com/file/d/1UdcU-1i7nKXY8POk4Jg01PGAEbOWRcF0/view","4|BUILD|Community Projects|2":"https://drive.google.com/file/d/1nGGjjuA3kFMsCtYmoLFdlaM8JpWAhLD0/view","4|GROW|Community Projects|2":"https://drive.google.com/file/d/1LB8WpJW7z26EjR7Gacb3sIaEBvXv3fJ-/view","4|LAUNCH|Community Projects|2":"https://drive.google.com/file/d/1gsHvwzz2LRugSb0sb4zKggemJ9RNE4jO/view","4|BUILD|Community Projects|1":"https://drive.google.com/file/d/1KJYfYLD74GlHJLXmn-WuCiKSzM8Pg2R2/view","4|BUILD|Creative Arts|1":"https://drive.google.com/file/d/1fI4hCJhP5Wts_3XhpE7NI2bKW1b0Idml/view","4|BUILD|Creative Arts|2":"https://drive.google.com/file/d/1fw5oStGx9XXHlM_Ii6Cbp5J-yhrXxjE_/view","4|BUILD|Humanities|1":"https://drive.google.com/file/d/1viBOfYQTwSJ00FLazDd39nPPAuOn4leU/view","4|BUILD|RE|1":"https://drive.google.com/file/d/1xPy6sX3vStQKDv3XLyL4ZcrMgWe6FRlr/view","4|BUILD|RSHE|1":"https://drive.google.com/file/d/1B54U-744ddd5BtQTcgBOBy7c3n7TOuas/view","4|BUILD|Science|1":"https://drive.google.com/file/d/1Lm7AGAtELkQHgrccw2an2gOqJb27k5yY/view","4|BUILD|Science|2":"https://drive.google.com/file/d/107NmvDp_uTQ_4sLwsaCzi27T7W7BNGID/view","4|BUILD|Vocational|1":"https://drive.google.com/file/d/1b-N34Kj5RhyV-H-BLE7AoFN3JlTEmtAt/view","4|GROW|Community Projects|1":"https://drive.google.com/file/d/14k_VpZ9sjRZGwUyhTod_DqF08i0qSCss/view","4|GROW|Creative Arts|1":"https://drive.google.com/file/d/1pyJcrCiYmi8H_N6FDat1_1RDe09MRsBm/view","4|GROW|Creative Arts|2":"https://drive.google.com/file/d/1H8iF_6dIdHQ3FJhkzTdsW5QRBtjMzYB1/view","4|GROW|Humanities|1":"https://drive.google.com/file/d/1SXRtMo0h3oh_8ezAsEucWPM3WSxPHWbY/view","4|GROW|PSHE|1":"https://drive.google.com/file/d/1iar_GQ2fLsEELEfiCdyb3T3_pB76KfCo/view","4|GROW|RE|1":"https://drive.google.com/file/d/1TMxpPrAec8QyflDPPm96IGxClD4eftlX/view","4|GROW|Science|1":"https://drive.google.com/file/d/1uYTcnrR7Xd_DC3XeiWYRoZkwqtv6Mgad/view","4|GROW|Science|2":"https://drive.google.com/file/d/1muJ8gbWpjmOof3JMIidOsk6l7QyMlBMf/view","4|LAUNCH|Careers|1":"https://drive.google.com/file/d/1UdFsAbq8RfWGcviwDtDAJvT3yaeZYJKa/view","4|LAUNCH|Community Projects|1":"https://drive.google.com/file/d/13UCD5qFb8LiY70ReeuU8jar0ykLjz9ma/view","4|LAUNCH|DT|1":"https://drive.google.com/file/d/1lDTY9ajkCCqmhYWmn-EmwGpPhIjRDlHh/view","4|LAUNCH|Humanities|1":"https://drive.google.com/file/d/1uLjrSGxGELWZjMmxQZG2anp9c5C3k3Kc/view","4|LAUNCH|ICT|1":"https://drive.google.com/file/d/1QeJTdc9kV4_A32xRbQkj9TLzqtrIKfrS/view","4|LAUNCH|RSE|1":"https://drive.google.com/file/d/1Evsijt6z21KJkuavL_Ri_GVIR4Aw4LFc/view","4|LAUNCH|Science|1":"https://drive.google.com/file/d/1Q-LTuSHxvu2NP3Y55gKI24ixhocO5ezV/view","4|LAUNCH|Science|2":"https://drive.google.com/file/d/1rO1DUUMeDWeJ4E3hLFz-NhPjhLRDEy1t/view","4|LAUNCH|Science|3":"https://drive.google.com/file/d/1Bhpu4nX2ewYzG8bB0T5Uk--kvMWC8T5v/view","4|LAUNCH|Vocational|1":"https://drive.google.com/file/d/1pbd7-_ItqNf7-1L7QlpAMq7PUAa5xgej/view","4|LAUNCH|Vocational|2":"https://drive.google.com/file/d/1rw4kaImUCwHuFNu4IEjiU-sHfWjWsZST/view","5|BUILD|Careers|1":"https://drive.google.com/file/d/1157g_qetY4SjvEJWNeLSsHsJRlOhygbj/view","5|BUILD|Community Projects|1":"https://drive.google.com/file/d/1GIgDVaUPPV2UIjCVRqedrtjhGotfRIVf/view","5|BUILD|Creative Arts|1":"https://drive.google.com/file/d/1PG6_8oaCJhCSgYptg7oA9rmNU4Dvspfq/view","5|BUILD|Creative Arts|2":"https://drive.google.com/file/d/1JQLskjdbcF2AuM9wdk3XA8Oe7eF02SWO/view","5|BUILD|Humanities|1":"https://drive.google.com/file/d/1Ymw2zmTKqQZsMNK5UzEFqOn1XWztA6pb/view","5|BUILD|RE|1":"https://drive.google.com/file/d/16dOFDp4Mz0G9yBuBunQn0Ww7EwJUOlll/view","5|BUILD|RSHE|1":"https://drive.google.com/file/d/16jkeWgZKLRHVHsEPx2rvC9hZDVZ32dDc/view","5|BUILD|Science|1":"https://drive.google.com/file/d/1Zypxn0Z85zBLqsQhnzpn7yjv0XBsbpXy/view","5|BUILD|Science|2":"https://drive.google.com/file/d/1ntonGiXWkHDfYlqbW4ZLZBxn1tiyouw_/view","5|BUILD|Vocational|1":"https://drive.google.com/file/d/1X2-ET7S1GPW0LbZF73jDEdpGzhXdxxiO/view","5|GROW|Community Projects|1":"https://drive.google.com/file/d/1UJqjlxVFPKDUB6eSHSvot3Vx-7NaLhPF/view","5|GROW|Creative Arts|1":"https://drive.google.com/file/d/1jsBT4bSNSXuWIGz2k53U2INLOZxthV-y/view","5|GROW|Creative Arts|2":"https://drive.google.com/file/d/14BiKcesNnxWSEBwhTe3PGk_n4cyzlKFQ/view","5|GROW|Humanities|1":"https://drive.google.com/file/d/1GJBkdxLrBbZu6Rl1yWqOFDowURtEZXko/view","5|GROW|PSHE|1":"https://drive.google.com/file/d/14NKjhXHeoQyINzo9OWrEjayk9waZ8QtK/view","5|GROW|RE|1":"https://drive.google.com/file/d/1H4Ald_LpYUdQRLHpE3_r60naAMwEyAho/view","5|GROW|Science|1":"https://drive.google.com/file/d/1f9TS4YWRkMaP2bpHrteyvyOYdcZZf2Fm/view","5|GROW|Science|2":"https://drive.google.com/file/d/1Z9mtzQ-blz2oyZyqgGOWhsSh6nZJx4MV/view","5|LAUNCH|Careers|1":"https://drive.google.com/file/d/1LjvkvAadA0zOPvDbHj3jBbi8CEmV5fY0/view","5|LAUNCH|Community Projects|1":"https://drive.google.com/file/d/1_58jEIVTUaqFLVLpK2oMJNcQKBMual1H/view","5|LAUNCH|DT|1":"https://drive.google.com/file/d/17do7dzKylvdWZKkVQBn4bOCReYd7n1_M/view","5|LAUNCH|Humanities|1":"https://drive.google.com/file/d/17GvVj3wiElIey7ILDIbS7DtHk386PAvx/view","5|LAUNCH|ICT|1":"https://drive.google.com/file/d/12ODlBsxAo33uSqD6e8otx1PFhAsGpT0d/view","5|LAUNCH|RSE|1":"https://drive.google.com/file/d/19XzDcClO03YnhVTPFL_1_luJgz0jeSwq/view","5|LAUNCH|Science|1":"https://drive.google.com/file/d/1BQnE1XwA57wf_n7Rhczmg-HLcanGjT4O/view","5|LAUNCH|Science|2":"https://drive.google.com/file/d/11AAar565LQvzN0B4jixQdghiee9mZhYp/view","5|LAUNCH|Science|3":"https://drive.google.com/file/d/1XAp_ZWwpDcI2xVjix60Hsfw5p8914Gg6/view","5|LAUNCH|Vocational|1":"https://drive.google.com/file/d/1QX-6qF8NnT1N3Mlq-V8Ht7j9w193HbyI/view","5|LAUNCH|Vocational|2":"https://drive.google.com/file/d/1Xcfo2g4yq8inwmlg3fAFZRT9vl_ujMEV/view","6|BUILD|Careers|1":"https://drive.google.com/file/d/10-OtNKIO4xI_mhLES3pPl9tebIDIkiIL/view","6|BUILD|Community Projects|1":"https://drive.google.com/file/d/10r-PuofzP8ZnlkvWsERBTjqJKK5_jLcT/view","6|BUILD|Creative Arts|1":"https://drive.google.com/file/d/1K-Z7UXW3PR1ZvyGQbLSXHxVugcgbjUlG/view","6|BUILD|Creative Arts|2":"https://drive.google.com/file/d/15kkVDAYt7cDBHbaWTZAs1bhx_oQGHQ-I/view","6|BUILD|Humanities|1":"https://drive.google.com/file/d/1FQCrGNKuvbzLmSjDBOh5BDxnCKF6OwMW/view","6|BUILD|RE|1":"https://drive.google.com/file/d/1bO4idiZOnZzsDgvhUBwkOL7_aQ1mb0PP/view","6|BUILD|RSHE|1":"https://drive.google.com/file/d/1BWlxxA3Zp9cCnMtilbsfg2iJMbeocugF/view","6|BUILD|Science|1":"https://drive.google.com/file/d/169y8M1yU37Sy61mMetc1nr93c7Gy7UK2/view","6|BUILD|Science|2":"https://drive.google.com/file/d/1z_5dTsOQRVhJpUUHGZKDN_CxholcNLYj/view","6|BUILD|Vocational|1":"https://drive.google.com/file/d/1KSPk5lBSQMCOBmKFDyqBiNbjkVpuyX2A/view","6|GROW|Community Projects|1":"https://drive.google.com/file/d/16QAk-1oq2nzG1Y56ErukKUGndmWduJTl/view","6|GROW|Creative Arts|1":"https://drive.google.com/file/d/1JdofsttnxiRCoWtuA3-I0v97Z0A1e2KR/view","6|GROW|Creative Arts|2":"https://drive.google.com/file/d/1pnn1bC0-Y4JZ9frSO__zmEs1n7saGZ4D/view","6|GROW|Humanities|1":"https://drive.google.com/file/d/1c32yZiOAQqRHexZcHtDrtwP3Uu_56R4Q/view","6|GROW|PSHE|1":"https://drive.google.com/file/d/1rqYE2mNefjNRz6FeXGKiO9dJdgZOca9k/view","6|GROW|RE|1":"https://drive.google.com/file/d/1UUp0cvp7vzt2Mo09VkXrS5NPf3WDA3vB/view","6|GROW|Science|1":"https://drive.google.com/file/d/18MnYCbo02xndcfwKKbQcFj1nj8KUMRs_/view","6|GROW|Science|2":"https://drive.google.com/file/d/1FHD4B23HPfl0QVtzXufL-wmrEchXkhL9/view","6|LAUNCH|Careers|1":"https://drive.google.com/file/d/10NOX2vrD67rOO9k2nmF-PVVnnDue2JKD/view","6|LAUNCH|Community Projects|1":"https://drive.google.com/file/d/1BFkREe-I3YejKQEgOo6oNkfewC4jOQRJ/view","6|LAUNCH|DT|1":"https://drive.google.com/file/d/1uLywnPcBQyc_rM7rP_7RVAXfuPyGxZ8o/view","6|LAUNCH|Humanities|1":"https://drive.google.com/file/d/1yhKGtH8XLLQKp9QcDmhRke4FC3qSJWUN/view","6|LAUNCH|ICT|1":"https://drive.google.com/file/d/1k7-MGbC_j6tN8mMeLHltnNVJX3cvOSBG/view","6|LAUNCH|RSE|1":"https://drive.google.com/file/d/1EgYOJZRzkdo13lmIwVZmrQQjlRusd9rg/view","6|LAUNCH|Science|1":"https://drive.google.com/file/d/19512FOpgp7elLuz6z6ZLFzqX0uxId-lI/view","6|LAUNCH|Science|2":"https://drive.google.com/file/d/17E27IlWQUH84HDOxC1JMRHV4eSZizzoy/view","6|LAUNCH|Science|3":"https://drive.google.com/file/d/1k-1QaSS6zO7f8X8YqSQXAhF2sAQqvRO5/view","6|LAUNCH|Vocational|1":"https://drive.google.com/file/d/1rg3FZ0wnmeVB3wQKksMXHmUIxXNexpb0/view","6|LAUNCH|Vocational|2":"https://drive.google.com/file/d/1KjIE4gZ3BGRI6V4AFEWIzcSNUSCzBJjG/view","7|BUILD|Careers|1":"https://drive.google.com/file/d/14raKHWeWcAs8B4Pl3IdqVINPoRujWaM6/view","7|BUILD|Community Projects|1":"https://drive.google.com/file/d/1wtoWcSE93tktDA9opCBFz1GD77prelyt/view","7|BUILD|Creative Arts|1":"https://drive.google.com/file/d/14MuFFCeoHPbKb7PyxBW-5TQ7HUcCZP55/view","7|BUILD|Creative Arts|2":"https://drive.google.com/file/d/13jIjuev5nxA-VCJ0mqsiWn_EaFC0DjRz/view","7|BUILD|Humanities|1":"https://drive.google.com/file/d/1c-J899-8stRTaq4kUrwuPFUSXcxZG4KB/view","7|BUILD|RE|1":"https://drive.google.com/file/d/1Gvdur0QIKgw1ADhbJd4ipr4mVGCYrtOx/view","7|BUILD|RSHE|1":"https://drive.google.com/file/d/1UAL573vfL03LcXGZ8kR3ccMv8-LEsEGd/view","7|BUILD|Science|1":"https://drive.google.com/file/d/1r33yFsj4CvC3OAncVSqhOZVG--K9jd0z/view","7|BUILD|Science|2":"https://drive.google.com/file/d/1c9BcBQSStnR43zLJ0vF4XRVusKp3LS7O/view","7|BUILD|Vocational|1":"https://drive.google.com/file/d/1E1yI8b0ANOgUCQHyeZhhGL0xk0yrV2_Z/view","7|GROW|Community Projects|1":"https://drive.google.com/file/d/1QDyILKTT-MR0UqQ5SSc0lR7rlCpC5aVT/view","7|GROW|Creative Arts|1":"https://drive.google.com/file/d/141Y6-HGdUD2ITmSxSQmBX5-e77n8RwzA/view","7|GROW|Creative Arts|2":"https://drive.google.com/file/d/1ZXduvQDU90tGv9StSVM5o8_Nl5a-e6qD/view","7|GROW|Humanities|1":"https://drive.google.com/file/d/1D_pL3aKG77h0DNwSvR8RbUmpuX0y-h2X/view","7|GROW|PSHE|1":"https://drive.google.com/file/d/18cLgx8euQHfl_qkrIPjvfBM0tx1OJHe-/view","7|GROW|RE|1":"https://drive.google.com/file/d/1_I1H2STAg9mTAeHjnKYVs7ie3ep37uDw/view","7|GROW|Science|1":"https://drive.google.com/file/d/1f-yUIEg4Fges72VqAJKg812uDqBSASRQ/view","7|GROW|Science|2":"https://drive.google.com/file/d/1WH1bIckQb9OO5P0bNn75wjXl8sA8gy-5/view","7|LAUNCH|Careers|1":"https://drive.google.com/file/d/1r-8bJprMQI_ZWlYHTpgg-yMv1f9nEvhA/view","7|LAUNCH|Community Projects|1":"https://drive.google.com/file/d/1RmxvrSMx6t9I1Jjxek5zx36iPmr1KRlB/view","7|LAUNCH|DT|1":"https://drive.google.com/file/d/1CO-UjHierAjcSjU99B3yvOFd6VpC2i3p/view","7|LAUNCH|Humanities|1":"https://drive.google.com/file/d/1A6gn1z4hL5qzkizXLxOe2sdJSgCP2u3G/view","7|LAUNCH|ICT|1":"https://drive.google.com/file/d/1exUfNEGsm53X344LnmWxraxeejJlvavO/view","7|LAUNCH|RSE|1":"https://drive.google.com/file/d/12zNn0UQbn94-Fw6UebSfohlYYvgNkrEe/view","7|LAUNCH|Science|1":"https://drive.google.com/file/d/1LxjpMYd-pFLVqwllg2HR4w05ImUx-2zr/view","7|LAUNCH|Science|2":"https://drive.google.com/file/d/1Z-tu5gK4aNLl7HfjgHK8vkCQNXnyKDM2/view","7|LAUNCH|Science|3":"https://drive.google.com/file/d/1CfJSJTBXh6HJBGfTzX8D-0mJT9xKb3OQ/view","7|LAUNCH|Vocational|1":"https://drive.google.com/file/d/1eVZxTIIj1rF7wPmtk2yt5UDqlPT56uHT/view","7|LAUNCH|Vocational|2":"https://drive.google.com/file/d/1IDnMcG85qiNmWKdzuMKZXYmQI5movvKc/view"};
+var LN={};(function(){var c={};DAYS.forEach(function(d){TT[d].forEach(function(l){var k=l[1]+"|"+l[2];c[k]=(c[k]||0)+1;LN[d+"|"+l[0]]=c[k];});});})();
+var STATES=["missed","partial","more","done"];
+var LABEL={missed:"Needs catch-up",partial:"Partly done",more:"More needed",done:"Done"};
+
+// --- Zero-Dependency SVG QR Code Generator (ISO 18004 V1-V9 Level L) ---
+var QR=(function(){
+ var EXP=new Uint8Array(512),LOG=new Uint8Array(256),p=1;
+ for(var i=0;i<255;i++){EXP[i]=EXP[i+255]=p;LOG[p]=i;p=(p<<1)^(p&128?285:0);}
+ function rs(data,ecLen){
+  var g=[1];for(var i=0;i<ecLen;i++){var ng=new Array(g.length+1).fill(0);for(var j=0;j<g.length;j++){ng[j]^=g[j];ng[j+1]^=g[j]?EXP[LOG[g[j]]+i]:0;}g=ng;}
+  var rem=new Array(ecLen).fill(0);
+  for(var i=0;i<data.length;i++){var f=data[i]^rem.shift();rem.push(0);if(f)for(var j=0;j<ecLen;j++)rem[j]^=g[j+1]?EXP[LOG[g[j+1]]+LOG[f]]:0;}
+  return rem;
+ }
+ var VCFG=[[0],[19,7,1,[]],[34,10,1,[6,18]],[55,15,1,[6,22]],[80,20,1,[6,26]],[108,26,1,[6,30]],[136,18,2,[6,34]],[156,20,2,[6,22,38],0x07C94],[194,24,2,[6,24,42],0x085BC],[232,30,2,[6,26,46],0x09A99]];
+ return function(text){
+  var bytes=new TextEncoder().encode(String(text||"")),ver=1;
+  while(ver<=9&&bytes.length>VCFG[ver][0]-2)ver++;
+  if(ver>9)return null;
+  var cfg=VCFG[ver],dc=cfg[0],ec=cfg[1],blks=cfg[2],al=cfg[3],sz=ver*4+17;
+  var bits=[];function push(v,n){for(var i=n-1;i>=0;i--)bits.push((v>>i)&1);}
+  push(4,4);push(bytes.length,8);for(var i=0;i<bytes.length;i++)push(bytes[i],8);
+  for(var i=0;i<4&&bits.length<dc*8;i++)bits.push(0);
+  while(bits.length%8)bits.push(0);
+  var cw=[];for(var i=0;i<bits.length;i+=8){var b=0;for(var j=0;j<8;j++)b=(b<<1)|bits[i+j];cw.push(b);}
+  for(var p=0;cw.length<dc;p++)cw.push(p&1?17:236);
+  var dBlks=[],eBlks=[],bLen=dc/blks;
+  for(var b=0;b<blks;b++){var sl=cw.slice(b*bLen,(b+1)*bLen);dBlks.push(sl);eBlks.push(rs(sl,ec));}
+  var out=[];for(var i=0;i<bLen;i++)for(var b=0;b<blks;b++)out.push(dBlks[b][i]);
+  for(var i=0;i<ec;i++)for(var b=0;b<blks;b++)out.push(eBlks[b][i]);
+  var M=Array.from({length:sz},function(){return new Array(sz).fill(null);});
+  function finder(r,c){for(var y=-1;y<=7;y++)for(var x=-1;x<=7;x++)if(r+y>=0&&r+y<sz&&c+x>=0&&c+x<sz)M[r+y][c+x]=(y>=0&&y<=6&&(x===0||x===6))||(x>=0&&x<=6&&(y===0||y===6))||(y>=2&&y<=4&&x>=2&&x<=4)?1:0;}
+  finder(0,0);finder(0,sz-7);finder(sz-7,0);
+  for(var i=8;i<sz-8;i++)M[6][i]=M[i][6]=(i%2===0)?1:0;
+  var aL=al[al.length-1];al.forEach(function(r){al.forEach(function(c){if((r===6&&c===6)||(r===6&&c===aL)||(r===aL&&c===6))return;for(var y=-2;y<=2;y++)for(var x=-2;x<=2;x++)M[r+y][c+x]=(Math.abs(y)===2||Math.abs(x)===2||(y===0&&x===0))?1:0;});});
+  for(var i=0;i<9;i++){if(M[8][i]===null)M[8][i]=0;if(M[i][8]===null)M[i][8]=0;}
+  for(var i=0;i<8;i++){if(M[8][sz-1-i]===null)M[8][sz-1-i]=0;if(M[sz-1-i][8]===null)M[sz-1-i][8]=0;}
+  M[sz-8][8]=1;
+  if(cfg[4]){for(var i=0;i<18;i++){var bit=(cfg[4]>>i)&1,r=Math.floor(i/3),c=sz-11+i%3;M[r][c]=M[c][r]=bit;}}
+  var bi=0,up=true;
+  for(var c=sz-1;c>0;c-=2){if(c===6)c--;for(var s=0;s<sz;s++){var r=up?sz-1-s:s;for(var dx=0;dx<2;dx++){var x=c-dx;if(M[r][x]===null){var v=bi<out.length*8?((out[bi>>3]>>(7-(bi&7)))&1):0;bi++;if((r+x)%2===0)v^=1;M[r][x]=v;}}}up=!up;}
+  var fmt=0x77C4;
+  for(var i=0;i<15;i++){var bit=(fmt>>i)&1;if(i<6)M[i][8]=bit;else if(i<8)M[i+1][8]=bit;else M[sz-15+i][8]=bit;if(i<8)M[8][sz-1-i]=bit;else if(i<9)M[8][15-i]=bit;else M[8][14-i]=bit;}
+  var d="";for(var r=0;r<sz;r++)for(var c=0;c<sz;c++)if(M[r][c])d+="M"+(c+2)+","+(r+2)+"h1v1h-1z";
+  var svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+  svg.setAttribute("viewBox","0 0 "+(sz+4)+" "+(sz+4));svg.setAttribute("aria-hidden","true");
+  var bg=document.createElementNS("http://www.w3.org/2000/svg","rect");bg.setAttribute("width",sz+4);bg.setAttribute("height",sz+4);bg.setAttribute("fill","#fff");svg.appendChild(bg);
+  var path=document.createElementNS("http://www.w3.org/2000/svg","path");path.setAttribute("d",d);path.setAttribute("fill","#000");svg.appendChild(path);
+  return svg;
+ };
+})();
+
+var S=load(),pathView="",assessMatrix=false,justDoneKeys={},toastTimer=null,lastQrRawUrl="";
+function load(){
+ var s=null;try{s=JSON.parse(localStorage.getItem(KEY));}catch(e){}
+ if(!s||!s.pupils||!s.marks)s={pupils:{BUILD:[],GROW:[],LAUNCH:[]},marks:{}};
+ if(s.driveEmail==null)s.driveEmail="";
+ s.links=s.links||{};s.assessMarks=s.assessMarks||{};s.pins=s.pins||[];
+ s.dirtySinceBackup=!!s.dirtySinceBackup;s.lastBackup=s.lastBackup||"";
+ for(var k in s.marks){var m=s.marks[k];if(!m.state)m.state=m.done?"done":"missed";m.done=m.state==="done";if(m.note==null)m.note="";}
+ return s;
+}
+function save(cleanBackup){
+ if(!cleanBackup)S.dirtySinceBackup=true;
+ try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){alert("This browser would not save. Use Save backup file in Set up.");}
+ syncBadge();
+}
+function $(id){return document.getElementById(id);}
+function el(t,a,txt){var e=document.createElement(t);if(a)for(var k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;return e;}
+function mkey(w,d,p,pupil){return w+"|"+d+"|"+p+"|"+pupil;}
+function lkey(w,path,subj,lesson){return w+"|"+path+"|"+subj+"|"+lesson;}
+function wb(w){return WEEKS[+w-1][1];}
+function pupilsFor(path){return path==="ALL"?[].concat(S.pupils.BUILD.map(function(n){return [n,"BUILD"]}),S.pupils.GROW.map(function(n){return [n,"GROW"]}),S.pupils.LAUNCH.map(function(n){return [n,"LAUNCH"]})):S.pupils[path].map(function(n){return [n,path]});}
+function linkFor(lk){var a=lk.split("|");var all=a[2]==="Community Projects"?a[0]+"|ALL|"+a[2]+"|1":"";return S.links[lk]||PRELOAD[lk]||(all&&S.links[all])||"";}
+function withAccount(url,forceClean){
+ if(!url||forceClean||!S.driveEmail||!/^https:\/\/(drive|docs)\.google\.com\//.test(url)||/authuser=/.test(url))return url;
+ return url+(url.indexOf("?")<0?"?":"&")+"authuser="+encodeURIComponent(S.driveEmail);
+}
+function searchUrl(q){return withAccount("https://drive.google.com/drive/search?q="+encodeURIComponent(q));}
+function syncBadge(){
+ var b=$("acctBadge");b.hidden=!S.driveEmail;b.textContent="Drive: "+S.driveEmail;
+ $("openDriveHome").href=withAccount("https://drive.google.com/drive/my-drive");
+ var openCnt=0;for(var k in S.marks)if(S.marks[k].state!=="done")openCnt++;
+ var ob=$("openCountBadge");ob.hidden=openCnt===0;ob.textContent=String(openCnt);
+ var bb=$("backupBadge");
+ if(S.dirtySinceBackup&&Object.keys(S.marks).length){bb.hidden=false;bb.className="acct-pill warn noprint";bb.textContent="Unsaved backup changes";}
+ else if(S.lastBackup){bb.hidden=false;bb.className="acct-pill noprint";bb.textContent="Backed up "+S.lastBackup;}
+ else bb.hidden=true;
+}
+function next(st){return STATES[(STATES.indexOf(st)+1)%STATES.length];}
+function showToast(msg,undoFn){
+ if(toastTimer)clearTimeout(toastTimer);
+ $("toastMsg").textContent=msg;
+ var ub=$("toastUndoBtn");ub.hidden=!undoFn;
+ ub.onclick=function(){if(undoFn)undoFn();$("toast").hidden=true;};
+ $("toast").hidden=false;
+ toastTimer=setTimeout(function(){$("toast").hidden=true;},5500);
+}
+$("toastCloseBtn").onclick=function(){$("toast").hidden=true;};
+
+function openQrModal(title,rawUrl,customMode){
+ lastQrRawUrl=rawUrl||"";
+ $("qrModalTitle").textContent=customMode?"Classroom QR Board":"Catch-up Sheet QR";
+ $("qrSubTitle").textContent=title||"Scan with a camera or tablet to open";
+ $("qrCustomRow").hidden=!customMode;
+ if(customMode)$("qrCustomInput").value=lastQrRawUrl;
+ $("qrIncludeAcct").checked=false;
+ renderQrStage();
+ $("qrModal").hidden=false;
+}
+function renderQrStage(){
+ var box=$("qrSvgBox");box.textContent="";
+ var u=withAccount(lastQrRawUrl,!$("qrIncludeAcct").checked);
+ $("qrOpenUrlBtn").href=u||"#";
+ if(!u){box.appendChild(el("p",{"class":"note"},"Paste or choose a link above to generate a QR code."));return;}
+ var svg=QR(u);
+ if(!svg){box.appendChild(el("p",{"class":"note"},"Link is too long for an offline QR code. Use a shorter Drive link."));return;}
+ box.appendChild(svg);
+}
+$("qrCloseBtn").onclick=function(){$("qrModal").hidden=true;};
+$("qrIncludeAcct").onchange=renderQrStage;
+$("qrCustomInput").oninput=function(){lastQrRawUrl=$("qrCustomInput").value.trim();renderQrStage();};
+$("qrPinSelect").onchange=function(){if($("qrPinSelect").value){lastQrRawUrl=$("qrPinSelect").value;$("qrCustomInput").value=lastQrRawUrl;renderQrStage();}};
+$("qrCopyUrlBtn").onclick=function(){
+ var u=withAccount(lastQrRawUrl,!$("qrIncludeAcct").checked);
+ if(u&&navigator.clipboard){navigator.clipboard.writeText(u);showToast("Link copied to clipboard");}
+};
+$("openCustomQr").onclick=function(){
+ syncPinDropdown();
+ var def=S.pins.length?S.pins[0].url:"https://drive.google.com/drive/my-drive";
+ openQrModal("Paste any link or pick a pinned classroom link",def,true);
+};
+
+function setLink(title,lk,after){var v=prompt("Paste the Drive link for "+title+" (leave empty to clear):",S.links[lk]||"");if(v===null)return;v=v.trim();if(v&&!/^https:\/\//.test(v)){alert("Please paste a full link starting https://");return;}if(v)S.links[lk]=v;else delete S.links[lk];save();after();}
+
+// Fixes Thursday P5 "ALL" Community Projects by exposing BUILD/GROW/LAUNCH sheets directly
+function driveButtons(title,lk,query,after){
+ var wrap=el("div",{"class":"chipwrap noprint"}),a=lk.split("|");
+ if(a[1]==="ALL"&&!S.links[lk]){
+  ["BUILD","GROW","LAUNCH"].forEach(function(p){
+   if(pathView&&pathView!==p)return;
+   var plk=lkey(a[0],p,a[2],a[3]),u=linkFor(plk);
+   if(u){
+    wrap.appendChild(el("a",{"class":"btnlink smbtn",href:withAccount(u),target:"_blank",rel:"noopener"},"📄 "+p));
+    var qb=el("button",{"class":"smbtn",type:"button","aria-label":"QR code for "+p+" "+a[2]},"📱");
+    qb.onclick=function(){openQrModal(p+" › w/b "+wb(a[0])+" › "+a[2]+" (Lesson "+a[3]+")",u,false);};
+    wrap.appendChild(qb);
+   }
+   // Merged sessions (Week 4 Community = Part 1 + Part 2): show the Part 2 sheet too
+   var u2=a[3]==="1"?linkFor(lkey(a[0],p,a[2],"2")):"";
+   if(u2){
+    wrap.appendChild(el("a",{"class":"btnlink smbtn",href:withAccount(u2),target:"_blank",rel:"noopener"},"📄 "+p+" Part 2"));
+    var qb3=el("button",{"class":"smbtn",type:"button","aria-label":"QR code for "+p+" "+a[2]+" Part 2"},"📱");
+    qb3.onclick=function(){openQrModal(p+" › w/b "+wb(a[0])+" › "+a[2]+" (Part 2)",u2,false);};
+    wrap.appendChild(qb3);
+   }
+  });
+ }else{
+  var saved=linkFor(lk);
+  if(saved){
+   wrap.appendChild(el("a",{"class":"btnlink smbtn",href:withAccount(saved),target:"_blank",rel:"noopener"},"📄 Open catch-up"));
+   var qb2=el("button",{"class":"smbtn",type:"button"}, "📱 QR");
+   qb2.onclick=function(){openQrModal(title,saved,false);};
+   wrap.appendChild(qb2);
+  }
+ }
+ wrap.appendChild(el("a",{"class":"btnlink smbtn",href:searchUrl(query),target:"_blank",rel:"noopener"},"🔍 Drive"));
+ var b=el("button",{"class":"smbtn",type:"button"},S.links[lk]?"🔗 Edit link":"🔗 Custom link");
+ b.onclick=function(){setLink(title,lk,after);};wrap.appendChild(b);return wrap;
+}
+
+function jumpToToday(){
+ var t=new Date(),dn=t.getDay();if(dn>=1&&dn<=5)$("day").value=DAYS[dn-1];
+ var starts=[[2026,10,2],[2026,10,9],[2026,10,16],[2026,10,23],[2026,10,30],[2026,11,7],[2026,11,14]];
+ for(var i=starts.length-1;i>=0;i--){if(t>=new Date(starts[i][0],starts[i][1],starts[i][2])){$("week").value=String(i+1);break;}}
+}
+WEEKS.forEach(function(w){$("week").appendChild(el("option",{value:w[0]},"Week "+w[0]+" (w/b "+w[1]+")"));});
+DAYS.forEach(function(d){$("day").appendChild(el("option",{value:d},d));});
+(function(){
+ var subjs={};DAYS.forEach(function(d){TT[d].forEach(function(l){subjs[l[2]]=1;});});
+ Object.keys(subjs).sort().forEach(function(s){$("asubj").appendChild(el("option",{value:s},s));});
+ jumpToToday();
+ try{var v=JSON.parse(sessionStorage.getItem(KEY+"_view"));if(v){$("week").value=v.w;$("day").value=v.d;}}catch(e){}
+})();
+syncBadge();
+
+$("jumpToday").onclick=function(){jumpToToday();renderToday();};
+Array.prototype.forEach.call(document.querySelectorAll("#pathFilter button"),function(b){
+ b.onclick=function(){
+  pathView=b.getAttribute("data-path")||"";
+  Array.prototype.forEach.call(document.querySelectorAll("#pathFilter button"),function(x){x.setAttribute("aria-pressed",x===b?"true":"false");});
+  renderToday();
+ };
+});
+
+function renderToday(){
+ var w=$("week").value,d=$("day").value,box=$("lessons"),absBox=$("dayAbsentBox"),absChips=$("dayAbsentChips");
+ box.textContent="";absChips.textContent="";
+ try{sessionStorage.setItem(KEY+"_view",JSON.stringify({w:w,d:d}));}catch(e){}
+ if(w==="1"&&d==="Monday"){absBox.hidden=true;box.appendChild(el("p",{"class":"panel"},"Training day: no lessons."));return;}
+ var totalPupils=S.pupils.BUILD.length+S.pupils.GROW.length+S.pupils.LAUNCH.length;
+ if(!totalPupils){absBox.hidden=true;var p=el("p",{"class":"panel"},"Add your pupils first in ");var b=el("button",{},"Set up");b.onclick=function(){show("setup");};p.appendChild(b);box.appendChild(p);return;}
+ absBox.hidden=false;
+
+ // Build 1-tap "Absent all day" chips
+ var allP=pathView?pupilsFor(pathView):pupilsFor("ALL"),dayMissCount=0;
+ allP.forEach(function(pp){
+  var name=pp[0],pgrp=pp[1],relLessons=[];
+  TT[d].forEach(function(l){if(l[1]===pgrp||l[1]==="ALL")relLessons.push(l);});
+  if(!relLessons.length)return;
+  var markedAll=relLessons.every(function(l){return !!S.marks[mkey(w,d,l[0],name)];});
+  if(markedAll)dayMissCount++;
+  var ab=el("button",{"class":"chip smbtn"+(markedAll?" st-missed":""),"aria-pressed":markedAll?"true":"false"},name+" ("+pgrp[0]+")");
+  ab.onclick=function(){
+   var snap={};
+   relLessons.forEach(function(l){
+    var k=mkey(w,d,l[0],name),les=l[1]==="ALL"?1:LN[d+"|"+l[0]];
+    snap[k]=S.marks[k]?JSON.parse(JSON.stringify(S.marks[k])):null;
+    if(markedAll)delete S.marks[k];
+    else if(!S.marks[k])S.marks[k]={path:pgrp,subj:l[2],lesson:les,state:"missed",done:false,note:""};
+   });
+   save();renderToday();
+   showToast(markedAll?"Cleared "+name+" for "+d:"Marked "+name+" absent for all "+relLessons.length+" lessons on "+d,function(){
+    for(var k in snap){if(snap[k])S.marks[k]=snap[k];else delete S.marks[k];}save();renderToday();
+   });
+  };
+  absChips.appendChild(ab);
+ });
+ $("daySummaryText").textContent=dayMissCount?dayMissCount+" marked absent all day":"Tap a pupil to mark all their lessons today";
+
+ TT[d].forEach(function(l){
+  var per=l[0],path=l[1],subj=l[2],les=path==="ALL"?1:LN[d+"|"+per],lk=lkey(w,path,subj,les);
+  if(pathView&&path!=="ALL"&&path!==pathView)return;
+  var card=el("article",{"class":"lesson "+path,"aria-labelledby":"h"+per}),head=el("div",{"class":"lesson-head"}),h=el("h2",{id:"h"+per});
+  h.appendChild(el("span",{"class":"tag "+path},path==="ALL"?"ALL GROUPS":path));
+  h.appendChild(document.createTextNode("P"+per+" · "+subj+(path==="ALL"?" (double)":" · Lesson "+les)));
+  head.appendChild(h);
+  head.appendChild(driveButtons((path==="ALL"?"":path+" ")+subj+", week beginning "+wb(w)+", lesson "+les,lk,"Catch up "+subj+" "+(path==="ALL"?"":path),renderToday));
+  card.appendChild(head);
+  var chips=el("div",{"class":"chips",role:"group","aria-label":"Pupils who missed "+subj}),c={missed:0,partial:0,more:0,done:0},n=0;
+  var pList=(path==="ALL"&&pathView)?pupilsFor(pathView):pupilsFor(path);
+  pList.forEach(function(pp){
+   var k=mkey(w,d,per,pp[0]),m=S.marks[k],st=m?m.state:"";if(m){c[st]++;n++;}
+   var wrap=el("span",{"class":"chipwrap"});
+   var b=el("button",{"class":"chip"+(m?" st-"+st:""),"aria-pressed":m?"true":"false","aria-label":pp[0]+(m?", missed: "+LABEL[st]+". Press to remove the mark":", in. Press if missed")},pp[0]);
+   b.onclick=function(){
+    if(S.marks[k]){
+     var old=JSON.parse(JSON.stringify(S.marks[k]));
+     delete S.marks[k];save();renderToday();
+     showToast("Removed mark for "+pp[0]+" ("+subj+")",function(){S.marks[k]=old;save();renderToday();});
+    }else{
+     S.marks[k]={path:pp[1],subj:subj,lesson:les,state:"missed",done:false,note:""};save();renderToday();
+    }
+   };
+   wrap.appendChild(b);
+   if(m){var sb=el("button",{"class":"statebtn st-"+st,"aria-label":"Status for "+pp[0]+": "+LABEL[st]+". Press to move on"},LABEL[st]);
+    sb.onclick=function(){var nx=next(st);S.marks[k].state=nx;S.marks[k].done=nx==="done";save();renderToday();};wrap.appendChild(sb);}
+   chips.appendChild(wrap);
+  });
+  card.appendChild(el("p",{"class":"hint"},n?n+" missed: "+c.missed+" need catch-up · "+c.partial+" partly · "+c.more+" more needed · "+c.done+" done":"Everyone in (tap anyone who was not)"));
+  card.appendChild(chips);box.appendChild(card);
+ });
+}
+
+function rows(){
+ var out=[];for(var k in S.marks){var p=k.split("|"),m=S.marks[k];out.push({w:p[0],d:p[1],per:+p[2],pupil:p[3],path:m.path,subj:m.subj,lesson:m.lesson,state:m.state,note:m.note||"",k:k});}
+ out.sort(function(a,b){return a.pupil.localeCompare(b.pupil)||a.w-b.w||DAYS.indexOf(a.d)-DAYS.indexOf(b.d)||a.per-b.per;});return out;
+}
+function lessonPath(r){return r.path;}
+function todayIso(){return new Date().toISOString().slice(0,10);}
+
+function getFilteredList(){
+ var f=$("filter").value,lp=$("lpath").value,all=rows(),names={};
+ all.forEach(function(r){if(!lp||r.path===lp)names[r.pupil]=1;});
+ var sel=$("pfilter"),cur=sel.value;sel.textContent="";sel.appendChild(el("option",{value:""},"Everyone"));
+ Object.keys(names).sort().forEach(function(n){sel.appendChild(el("option",{value:n},n));});
+ sel.value=names[cur]?cur:"";var pf=sel.value;
+ return all.filter(function(r){
+  if(lp&&r.path!==lp)return false;
+  if(pf&&r.pupil!==pf)return false;
+  if(f==="all")return true;
+  if(f==="open")return r.state!=="done"||!!justDoneKeys[r.k];
+  return r.state===f;
+ });
+}
+
+var NOTE_PRESETS=["1:1 done","Printed","Sent home","Verbal check"];
+function renderList(){
+ var box=$("table");box.textContent="";
+ var list=getFilteredList(),f=$("filter").value,pf=$("pfilter").value,lp=$("lpath").value;
+ $("printHeaderList").textContent=(pf?"Catch-up Passport: "+pf:"Catch-up Tracker List")+" · Printed "+todayIso()+(lp?" · Group: "+lp:"")+" · "+list.length+" item(s)";
+ if(!list.length){box.appendChild(el("p",{"class":"panel"},f==="open"?"Nobody has open catch-up work right now.":"Nothing to show."));return;}
+ var t=el("table"),hd=el("tr");
+ ["Pupil","Missed","Catch-up sheet & QR","Note","Status"].forEach(function(x){hd.appendChild(el("th",{scope:"col"},x));});
+ hd.appendChild(el("th",{scope:"col","class":"print-only"},"Sign / Date"));
+ var th=el("thead");th.appendChild(hd);t.appendChild(th);var tb=el("tbody");
+ list.forEach(function(r){
+  var tr=el("tr",{"class":"st-"+r.state+(justDoneKeys[r.k]?" just-done":"")});
+  tr.appendChild(el("td",{},r.pupil+" ("+r.path+")"));
+  tr.appendChild(el("td",{},r.subj+", Wk "+r.w+" "+r.d+" P"+r.per));
+  var td=el("td"),folder=r.path+" › w/b "+wb(r.w)+" › "+r.subj+" › Catch-up (Lesson "+r.lesson+")",lk=lkey(r.w,lessonPath(r),r.subj,r.lesson),u=linkFor(lk);
+  td.appendChild(el("div",{},folder));
+  td.appendChild(driveButtons(folder,lk,"Catch up "+r.subj+" "+r.path,renderList));
+  if(u){var qwrap=el("div",{"class":"print-only print-qr"}),qsvg=QR(u);if(qsvg){qwrap.appendChild(qsvg);td.appendChild(qwrap);}}
+  tr.appendChild(td);
+  var tn=el("td"),inp=el("input",{"class":"noteinput noprint",type:"text","aria-label":"Note for "+r.pupil+", "+r.subj,placeholder:"e.g. Q1–3 done"}),pnote=el("div",{"class":"print-only"},r.note);
+  inp.value=r.note;
+  inp.oninput=function(){S.marks[r.k].note=inp.value;pnote.textContent=inp.value;save();};
+  tn.appendChild(inp);tn.appendChild(pnote);
+  var pchip=el("div",{"class":"chipwrap noprint",style:"margin-top:4px"});
+  NOTE_PRESETS.forEach(function(pr){
+   var pb=el("button",{"class":"xsbtn",type:"button"},"+ "+pr);
+   pb.onclick=function(){var cur=inp.value.trim();inp.value=cur?(cur+" · "+pr):pr;inp.oninput();};
+   pchip.appendChild(pb);
+  });
+  tn.appendChild(pchip);tr.appendChild(tn);
+  var ts=el("td"),b=el("button",{"class":"statebtn st-"+r.state,"aria-label":"Status: "+LABEL[r.state]+". Press to move on"},LABEL[r.state]);
+  b.onclick=function(){
+   var nx=next(r.state);S.marks[r.k].state=nx;S.marks[r.k].done=nx==="done";
+   if(nx==="done")justDoneKeys[r.k]=1;else delete justDoneKeys[r.k];
+   save();renderList();
+  };
+  ts.appendChild(b);tr.appendChild(ts);
+  tr.appendChild(el("td",{"class":"print-only"},"⬜ __________"));
+  tb.appendChild(tr);
+ });
+ t.appendChild(tb);box.appendChild(t);
+}
+
+function subjectsFor(path){var s={};DAYS.forEach(function(d){TT[d].forEach(function(l){if(l[1]===path||l[1]==="ALL")s[l[2]]=1;});});return Object.keys(s).sort();}
+function getAssessRecs(){
+ var pf=$("apath").value,sf=$("asubj").value,rf=$("aready").value,all=rows(),recs=[];
+ ["BUILD","GROW","LAUNCH"].forEach(function(path){
+  if(pf&&path!==pf)return;
+  S.pupils[path].forEach(function(pupil){
+   subjectsFor(path).forEach(function(subj){
+    if(sf&&subj!==sf)return;
+    var c={missed:0,partial:0,more:0,done:0};
+    all.forEach(function(m){if(m.pupil===pupil&&m.subj===subj&&m.path===path)c[m.state]++;});
+    var open=c.missed+c.partial+c.more,ak=path+"|"+subj+"|"+pupil,am=S.assessMarks[ak]||{},ready=!!(am.passed||am.override||open===0);
+    var key=am.passed?"passed":(ready?"ready":"hold");if(rf!=="all"&&key!==rf)return;
+    recs.push({pupil:pupil,path:path,subj:subj,c:c,open:open,ready:ready,am:am,ak:ak});
+   });
+  });
+ });
+ return recs;
+}
+
+function renderAssess(){
+ var box=$("atable");box.textContent="";
+ var recs=getAssessRecs();
+ $("printHeaderAssess").textContent="Assessment Readiness · Printed "+todayIso()+" · "+recs.length+" record(s)";
+ if(!recs.length){box.appendChild(el("p",{"class":"panel"},"Nothing to show. Add pupils in Set up."));return;}
+ if(assessMatrix){
+  var subjs={},pMap={},pOrder=[];
+  recs.forEach(function(r){subjs[r.subj]=1;var pk=r.path+"|"+r.pupil;if(!pMap[pk]){pMap[pk]={pupil:r.pupil,path:r.path,cells:{}};pOrder.push(pk);}pMap[pk].cells[r.subj]=r;});
+  var sCols=Object.keys(subjs).sort(),mt=el("table"),mhd=el("tr");
+  mhd.appendChild(el("th",{scope:"col"},"Pupil"));
+  sCols.forEach(function(s){mhd.appendChild(el("th",{scope:"col"},s));});
+  var mth=el("thead");mth.appendChild(mhd);mt.appendChild(mth);var mtb=el("tbody");
+  pOrder.forEach(function(pk){
+   var row=pMap[pk],tr=el("tr");
+   var tp=el("td");tp.appendChild(el("span",{"class":"tag "+row.path},row.path));tp.appendChild(document.createTextNode(row.pupil));tr.appendChild(tp);
+   sCols.forEach(function(s){
+    var r=row.cells[s];if(!r){tr.appendChild(el("td",{},"—"));return;}
+    var statusTxt=r.am.passed?"✓ Passed":(r.ready?(r.open?"★ Ready ("+r.open+")":"✓ Ready"):"⏳ Hold ("+r.open+")");
+    var td=el("td",{"class":r.am.passed?"st-done":(r.ready?"":"st-more")});
+    var btn=el("button",{"class":"xsbtn",type:"button"},statusTxt);
+    btn.onclick=function(){var a=S.assessMarks[r.ak]||{};a.passed=!a.passed;S.assessMarks[r.ak]=a;save();renderAssess();};
+    td.appendChild(btn);tr.appendChild(td);
+   });
+   mtb.appendChild(tr);
+  });
+  mt.appendChild(mtb);box.appendChild(mt);return;
+ }
+ var t=el("table"),hd=el("tr");["Pupil","Subject","Catch-ups","Assessment"].forEach(function(x){hd.appendChild(el("th",{scope:"col"},x));});
+ var th=el("thead");th.appendChild(hd);t.appendChild(th);var tb=el("tbody");
+ recs.forEach(function(r){
+  var tr=el("tr",{"class":r.am.passed?"st-done":(r.ready?"":"st-more")});
+  tr.appendChild(el("td",{},r.pupil));
+  var ts=el("td");ts.appendChild(el("span",{"class":"tag "+r.path},r.path));ts.appendChild(document.createTextNode(r.subj));tr.appendChild(ts);
+  var tot=r.open+r.c.done;
+  tr.appendChild(el("td",{},tot===0?"Missed nothing":(r.open===0?"All "+r.c.done+" caught up":r.open+" still open ("+r.c.missed+" not started · "+r.c.partial+" partly · "+r.c.more+" more needed)")));
+  var ta=el("td");
+  ta.appendChild(el("div",{style:"font-weight:700;margin-bottom:6px"},r.am.passed?"✓ Assessment done":(r.ready?(r.am.override&&r.open?"★ Ready (your call)":"✓ Ready"):"⏳ On hold: "+r.open+" catch-up"+(r.open>1?"s":"")+" open")));
+  var cw=el("div",{"class":"chipwrap noprint"});
+  if(!r.am.passed&&r.open>0){var ob=el("button",{"class":"smbtn",type:"button"},r.am.override?"Undo ready anyway":"Ready anyway");ob.onclick=function(){var a=S.assessMarks[r.ak]||{};a.override=!a.override;S.assessMarks[r.ak]=a;save();renderAssess();};cw.appendChild(ob);}
+  var pb=el("button",{"class":"smbtn",type:"button"},r.am.passed?"Undo done":"Mark assessment done");pb.onclick=function(){var a=S.assessMarks[r.ak]||{};a.passed=!a.passed;S.assessMarks[r.ak]=a;save();renderAssess();};cw.appendChild(pb);
+  ta.appendChild(cw);tr.appendChild(ta);tb.appendChild(tr);
+ });
+ t.appendChild(tb);box.appendChild(t);
+}
+
+$("assessMatrixBtn").onclick=function(){assessMatrix=!assessMatrix;$("assessMatrixBtn").setAttribute("aria-pressed",assessMatrix?"true":"false");renderAssess();};
+
+function show(v){
+ justDoneKeys={};
+ ["today","list","assess","setup"].forEach(function(x){$(x).hidden=x!==v;});
+ Array.prototype.forEach.call(document.querySelectorAll(".tabs button"),function(b){b.setAttribute("aria-pressed",b.dataset.view===v?"true":"false");});
+ if(v==="today")renderToday();if(v==="list")renderList();if(v==="assess")renderAssess();if(v==="setup")fillSetup();
+}
+Array.prototype.forEach.call(document.querySelectorAll(".tabs button"),function(b){b.onclick=function(){show(b.dataset.view);};});
+$("week").onchange=renderToday;$("day").onchange=renderToday;
+$("filter").onchange=function(){justDoneKeys={};renderList();};$("lpath").onchange=function(){justDoneKeys={};renderList();};$("pfilter").onchange=function(){justDoneKeys={};renderList();};
+$("apath").onchange=renderAssess;$("asubj").onchange=renderAssess;$("aready").onchange=renderAssess;
+$("print").onclick=function(){window.print();};$("printAssess").onclick=function(){window.print();};
+
+function syncPinDropdown(){
+ var sel=$("qrPinSelect");sel.textContent="";sel.appendChild(el("option",{value:""},"📌 Pinned links…"));
+ S.pins.forEach(function(p){sel.appendChild(el("option",{value:p.url},p.title));});
+}
+function renderPins(){
+ var box=$("pinnedLinksList");box.textContent="";
+ S.pins.forEach(function(p,idx){
+  var wrap=el("span",{"class":"chipwrap"});
+  var qb=el("button",{"class":"smbtn",type:"button"},"📱 "+p.title);
+  qb.onclick=function(){syncPinDropdown();openQrModal(p.title,p.url,false);};
+  var db=el("button",{"class":"xsbtn",type:"button","aria-label":"Remove "+p.title},"✕");
+  db.onclick=function(){S.pins.splice(idx,1);save();renderPins();};
+  wrap.appendChild(qb);wrap.appendChild(db);box.appendChild(wrap);
+ });
+}
+$("addPinBtn").onclick=function(){
+ var t=$("pinTitle").value.trim(),u=$("pinUrl").value.trim();
+ if(!t||!/^https:\/\//.test(u)){alert("Enter a label and a full link starting https://");return;}
+ S.pins.push({title:t,url:u});$("pinTitle").value="";$("pinUrl").value="";save();renderPins();
+};
+
+function fillSetup(){["BUILD","GROW","LAUNCH"].forEach(function(g){$("p"+g).value=S.pupils[g].join("\n");});$("driveEmail").value=S.driveEmail;$("saved").textContent="";renderPins();}
+$("savep").onclick=function(){
+ var oldP=JSON.parse(JSON.stringify(S.pupils)),newP={},renames={},groupMoves={};
+ ["BUILD","GROW","LAUNCH"].forEach(function(g){
+  var seen={};newP[g]=$("p"+g).value.split(/\r?\n/).map(function(s){return s.trim();}).filter(function(s){if(!s||seen[s])return false;seen[s]=1;return true;});
+  // Safer rename: only when exactly ONE name in the group changed in place, and the teacher confirms.
+  if(oldP[g]&&oldP[g].length===newP[g].length){
+   var diff=[];oldP[g].forEach(function(oname,i){var nname=newP[g][i];if(oname!==nname&&newP[g].indexOf(oname)<0&&oldP[g].indexOf(nname)<0)diff.push([oname,nname]);});
+   var changed=oldP[g].filter(function(n,i){return n!==newP[g][i];}).length;
+   if(diff.length===1&&changed===1&&confirm(g+": rename \u201c"+diff[0][0]+"\u201d to \u201c"+diff[0][1]+"\u201d and keep their marks?\n\nChoose Cancel if this is a different pupil."))renames[g+"|"+diff[0][0]]=diff[0][1];
+  }
+ });
+ ["BUILD","GROW","LAUNCH"].forEach(function(og){
+  (oldP[og]||[]).forEach(function(oname){
+   if(newP[og].indexOf(oname)<0){
+    ["BUILD","GROW","LAUNCH"].forEach(function(ng){if(ng!==og&&newP[ng].indexOf(oname)>=0)groupMoves[oname]={from:og,to:ng};});
+   }
+  });
+ });
+ var migrated=0,nextMarks={},nextAssess={};
+ for(var k in S.marks){
+  var p=k.split("|"),m=S.marks[k],pup=p[3],rn=renames[m.path+"|"+pup];
+  if(rn){pup=rn;migrated++;}
+  if(groupMoves[pup]&&m.path===groupMoves[pup].from){m.path=groupMoves[pup].to;migrated++;}
+  nextMarks[mkey(p[0],p[1],p[2],pup)]=m;
+ }
+ for(var ak in S.assessMarks){
+  var ap=ak.split("|"),apath=ap[0],asubj=ap[1],apup=ap[2],rn2=renames[apath+"|"+apup];
+  if(rn2){apup=rn2;migrated++;}
+  if(groupMoves[apup]&&apath===groupMoves[apup].from){apath=groupMoves[apup].to;migrated++;}
+  nextAssess[apath+"|"+asubj+"|"+apup]=S.assessMarks[ak];
+ }
+ S.pupils=newP;S.marks=nextMarks;S.assessMarks=nextAssess;save();
+ $("saved").textContent=migrated?"Saved (migrated "+migrated+" mark record(s)).":"Saved.";
+};
+$("saveDrive").onclick=function(){S.driveEmail=$("driveEmail").value.trim();save();showToast(S.driveEmail?"Drive account saved":"Drive account cleared");};
+
+function download(name,text,type){var a=el("a",{download:name});a.href=URL.createObjectURL(new Blob([text],{type:type}));document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},500);}
+function buildListMatrixRows(){
+ var hdr=["Pupil","Pathway","Subject","Week","Week beginning","Day","Period","Lesson","Catch-up folder","Status","Note","Link"],out=[hdr];
+ getFilteredList().forEach(function(r){out.push([r.pupil,r.path,r.subj,r.w,wb(r.w),r.d,r.per,r.lesson,r.path+" / w/b "+wb(r.w)+" / "+r.subj+" / Catch-up",LABEL[r.state],r.note,linkFor(lkey(r.w,lessonPath(r),r.subj,r.lesson))]);});
+ return out;
+}
+function buildAssessMatrixRows(){
+ var hdr=["Pupil","Pathway","Subject","Open catch-ups","Missed","Partly done","More needed","Completed catch-ups","Status"],out=[hdr];
+ getAssessRecs().forEach(function(r){
+  var st=r.am.passed?"Assessment done":(r.ready?(r.am.override&&r.open?"Ready (override)":"Ready"):"On hold");
+  out.push([r.pupil,r.path,r.subj,r.open,r.c.missed,r.c.partial,r.c.more,r.c.done,st]);
+ });
+ return out;
+}
+function toCsv(aoa){var q=function(s){return '"'+String(s==null?"":s).replace(/"/g,'""')+'"';};return "\uFEFF"+aoa.map(function(r){return r.map(q).join(",");}).join("\r\n");}
+function toTsv(aoa){return aoa.map(function(r){return r.map(function(c){return String(c==null?"":c).replace(/[\t\r\n]+/g," ");}).join("\t");}).join("\r\n");}
+
+$("csv").onclick=function(){download("catch_up_list_"+todayIso()+".csv",toCsv(buildListMatrixRows()),"text/csv");};
+$("copyListTsv").onclick=function(){if(navigator.clipboard){navigator.clipboard.writeText(toTsv(buildListMatrixRows()));showToast("Copied table for Google Sheets / Excel");}};
+$("csvAssess").onclick=function(){download("assessment_readiness_"+todayIso()+".csv",toCsv(buildAssessMatrixRows()),"text/csv");};
+$("copyAssessTsv").onclick=function(){if(navigator.clipboard){navigator.clipboard.writeText(toTsv(buildAssessMatrixRows()));showToast("Copied assessment table for Sheets / Excel");}};
+
+$("backup").onclick=function(){
+ S.lastBackup=todayIso();S.dirtySinceBackup=false;save(true);
+ download("catch_up_tracker_"+todayIso()+".json",JSON.stringify(S,null,2),"application/json");
+};
+$("restore").onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var s=JSON.parse(r.result);if(!s.pupils||!s.marks)throw 0;if(confirm("Replace what is on this computer with the backup?")){localStorage.setItem(KEY,JSON.stringify(s));S=load();syncBadge();show("today");showToast("Backup restored");}}catch(x){alert("That file is not a tracker backup.");}};r.readAsText(f);};
+$("wipe").onclick=function(){if(confirm("Clear every missed mark and assessment tick? Pupils and links stay.")){S.marks={};S.assessMarks={};save();showToast("All marks cleared");}};
+
+renderToday();
+})();
+</script>
+</body>
+</html>
