@@ -103,7 +103,7 @@ MANIFEST_PINS = {
     # Ruled onto the pin 2026-08-12 (Ruling 3): the deck install is a
     # resources.json edit, and the blanket rule forbade it the same way it
     # once forbade studio adds. Same pattern, same tool, same commit rule.
-    "resources.json": "a15ddbb03f97137dcf7d684af74516613edd3c251bbdba2f1291cc7cbb0b15a9"
+    "resources.json": "48cf98f8c28526bb1f1dafb29e76a7d22a5d34a115703b8398b4c72c8b8be1ab"
 }
 PIN_COMMAND = "python3 tools/pin_manifests.py   (from either checkout — it writes both gate copies or neither)"
 
@@ -123,13 +123,13 @@ CATALOGUE_PINS = {
         "_sownb/CALENDAR_SPINE.json": "607ebb2e358b4c872de473444bdee1cd112677759af392e68137ecfb7023e489",
         "_sx3/SX3_PASSES_LEDGER.md": "5ea492a8cbc2d6f1108ceedeec6d0b80bc662467183f30e69850e7cfd2c0cc25",
         "tools/sx3/pre_ci_catalogue_sweep.sh": "9848b9e4e9ccab0bd8225d26d7ffa4683c59c249bff688f33c5d665671d9f818",
-        "assets/catalogue/display-titles.json": "eeba20ae90f2627dbb00e4287caabeb58e9568c8d9eedbd7f8118eeeed3310a5",
+        "assets/catalogue/display-titles.json": "c1eff9b8e82fdb59ffef55d8fc48e7a466b4f1a8142702922ec718a4e0badce7",
         "tools/catalogue/build_display_titles.py": "4256ab6b07420af4ef090e57d32b8f29fcae88d9075d64750e52f17947dbd8a1",
         "tools/catalogue/check_display_titles.cjs": "ef27c6fabcafd05015ba988ee99b0906cabe1a519c1049635ee92b7e7c361ce1",
         "tools/catalogue/check_display_titles_browser.cjs": "5662cdb93c7796ead4fb9bb69ce94ac65fe1e29e103f00c65bd07a4d5129a7cd",
         "tools/verify_lessons_chips.mjs": "e417afd94ae4f3a450caab2edf4b6c41d14e4588f070d0ad822263e30a86cf39",
         "tools/sw2/check_tokens_inert.cjs": "a8258b89b5dd00147a0c8b18488a2dcf8102bc20d2ddf2fa1aa0863d25454674",
-        "assets/catalogue/lesson-order.json": "29ec8a258fc484b5fec4f3a521bf5e81a33107fbe4898addd87ba46f97ca7942",
+        "assets/catalogue/lesson-order.json": "0c06164c3e9e54f3fbc2fb6920e57d4a08937fe1bddda88e46b8f4945071fb38",
         "tools/catalogue/build_lesson_order.py": "35a4c54779b800ae8bd949154d0d19fddb190f49ec18e62efdd86d03313f6180",
         "tools/ux2/hub_gates.mjs": "3d3120df94b1789041370c4045fbcc983635af0b30a0705447f18371bed98944",
         "index.html": "798d5572afecb8db10a516f9a0ed57d54b7d1dc5e220077a6be85d5f046b555e",
@@ -247,7 +247,7 @@ CATALOGUE_PINS = {
         "tools/humanities_resources/check_resources.py": "ec5383e3a34cbff999f190b0014a4a73e00a3a29e2714498f7620fd638dc2aa5",
         "tools/humanities_resources/resource.css": "1aed9aaca0d73a4b200c4e5d0977e73f4e906c747d7340c7a62f4197a8344bae",
         "tools/humanities_resources/resource.js": "ad40afed95490bfcce92dc062da46e1b27bcb96bdc80e37eabdfe02bf6ffc446",
-        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "7773a25c0ab2eac49b9fe1d65227cd6994218f9756045bb360153698fd2ea925",
+        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "3758c550fe139e0132164c0dceb5cdbd1ec2c7bdde4a18cc2c2ec3bc102585a3",
         "tools/catalogue/TERM_REVIEW.json": "9395de4c2803a7bc2a679cf0659c9df3c41c01e5ac60c0a2d39249414bc12de8",
         "tools/catalogue/SCIENCE_WEEK_BINDINGS.json": "9fa98ad78b0bd3c3f3ee15f88a7b2fd40eea810e6c9fb65ee93b3c5192888071",
         "primary/year5/science/autumn/forces/Lesson8_ExploreGravity.html": "20047720bf1d309055abdf232d341b6fd99b833631efa0bcbfb3dabed9671196",
@@ -2254,14 +2254,14 @@ CATALOGUE_ORIGINAL_ROWS_SHA256 = "d4714b20bc0de0732d1dd33e449280b8b42fd0a033b830
 # digest below are re-cut by tools/catalogue/pin_catalogue_contract.py from
 # rows it has verified against that derivation; an edit to any appended row,
 # a removed pack row or an extra lesson row still reds here.
-CATALOGUE_SHELF_ROWS = 502
+CATALOGUE_SHELF_ROWS = 561
 # UX2 A1: keys that may be appended to an original row without moving its
 # digest (see catalogue_errors). Nothing else is additive. No original row
 # carried either key before the ruling (measured 2026-09-08: 0 of 734), so the
 # second set is empty and the allowance cannot launder a pre-existing value.
 CATALOGUE_ADDITIVE_TAG_KEYS = frozenset({"halfTerm", "unit"})
 CATALOGUE_ORIGINAL_KEYS_BEFORE_TAGS = frozenset()
-CATALOGUE_SHELF_ROWS_SHA256 = "e1cadcb073378ecae6bfc3d70036e5de1ccb0d8c25b90916744ee5e5c76474ce"
+CATALOGUE_SHELF_ROWS_SHA256 = "8fc702fdd98b12fe0e42f81d26b1a4819415ecea2c2ceee9ef0d9cc0fe8e98da"
 
 # These named review records and review tools can change with their reviewed
 # transaction. Tools are not served assets; they are reviewed as executable
