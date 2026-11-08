@@ -917,14 +917,79 @@ class _EY2View:
 
 def ey2_view(root, repo, name, files):
     """`root`, or an _EY2View of it when a ruled list transaction `name` really declared, among `files`,
-    carries an ey 2 START_HERE row on its declared bytes."""
+    carries an ey 2 START_HERE row on its declared bytes. W2 QR: DLG-1 also reads the members it gave
+    up to the W2 QR transaction AS IT DECLARED THEM (w2qr_declared)."""
     declared = {}
     for rel in sorted(files):
         if rel in EY2_PAIRS and ALL_REPLACEMENTS.get(rel) == name:
             data = ey2_declared(root, repo, rel)
             if data is not None:
                 declared[rel] = data
+    if name == W2QR_PRIOR_OWNER:
+        declared.update(w2qr_declared(root, repo, files))
     return _EY2View(root, declared) if declared else root
+
+
+# W2 QR (owner approval 8 Nov 2026, protected-page edits card "Yes, all six"; ruled on the ey 2 precedent
+# and no wider): the transaction 'W2 QR pages names and dates' re-cuts two Humanities Autumn 2 pack
+# checksum lists that DLG-1 also declared, moving ONLY the rows of its own listed W02 members. DLG-1 still
+# owns the other weeks' pages in those packs, and its limb re-judges every member through the list, so the
+# moved W02 rows would refuse every other week. So DLG-1 gives up its claim on exactly those rows, and on
+# the W02 pages the two transactions both declare, and keeps judging every other row as before:
+#   (a) KEYED TO THE DECLARED BYTES. A list is read as DLG-1 declared it only when its bytes on disk are the
+#       afterSha256 the W2 QR transaction declares for it. Any other list bytes fall back to the old rule.
+#   (b) THE TRANSACTION'S OWN LIST, never a pattern: only a row naming a member the W2 QR transaction
+#       declares is put back, to its digest at the W2 QR review base. Every other row is read from disk.
+#   (c) PROVED, NOT ASSUMED. The rebuilt list must hash to DLG-1's own declared afterSha256, and a shared
+#       page is read at the W2 QR review base only when that is DLG-1's declared afterSha256 too and the page
+#       on disk is the W2 QR declared bytes. Otherwise nothing is substituted and the old rule refuses.
+# A moved row for any member the W2 QR transaction does not declare makes the list differ from its declared
+# bytes, so (a) fails and DLG-1 refuses it as before. Red proofs in w2qr_controls.
+W2QR_TRANSACTION = 'W2 QR pages names and dates'
+W2QR_PRIOR_OWNER = 'DLG-1'
+
+
+def w2qr_declared(root, repo, files):
+    """{path: the bytes DLG-1 declared for it} for each list and page among `files` that DLG-1 and the
+    W2 QR transaction both declare, when (a) to (c) above hold; {} otherwise."""
+    if W2QR_TRANSACTION not in REPLACEMENT_TRANSACTIONS:
+        return {}
+    w_base, w_files = REPLACEMENT_TRANSACTIONS[W2QR_TRANSACTION]
+    _, d_files = REPLACEMENT_TRANSACTIONS[W2QR_PRIOR_OWNER]
+    shared = sorted(rel for rel in files if rel in w_files and rel in d_files)
+    if not shared:
+        return {}
+    read_base = limb_reader(repo or root, w_base)
+    out, proved_lists = {}, set()
+    for rel in shared:
+        if rel.rsplit('/', 1)[-1] != PACK_MANIFEST:
+            continue
+        path = root / rel
+        if path.is_symlink() or not path.is_file() or sha(path) != w_files[rel]['afterSha256']:
+            continue
+        folder = rel[: -len(PACK_MANIFEST)]
+        there = {}
+        for line in read_base(rel).splitlines(keepends=True):
+            m = _EY2_ROW.fullmatch(line)
+            if m:
+                there[m.group('name').decode()] = m.group('digest')
+        lines = path.read_bytes().splitlines(keepends=True)
+        for i, line in enumerate(lines):
+            m = _EY2_ROW.fullmatch(line)
+            if m and folder + m.group('name').decode() in w_files and m.group('name').decode() in there:
+                lines[i] = line[:m.start('digest')] + there[m.group('name').decode()] + line[m.end('digest'):]
+        candidate = b''.join(lines)
+        if hashlib.sha256(candidate).hexdigest() == d_files[rel]['afterSha256']:
+            out[rel] = candidate
+            proved_lists.add(folder)
+    for rel in shared:
+        if rel in out or not any(rel.startswith(folder) for folder in proved_lists):
+            continue
+        path, data = root / rel, read_base(rel)
+        if (not path.is_symlink() and path.is_file() and sha(path) == w_files[rel]['afterSha256']
+                and hashlib.sha256(data).hexdigest() == d_files[rel]['afterSha256']):
+            out[rel] = data
+    return out
 
 
 def owned_members(name, files, owners=None):
@@ -1554,6 +1619,7 @@ def controls(root):
     rows.extend(retirement_ruling_controls(root))
     rows.extend(supersession_controls(root))
     rows.extend(ey2_controls(root))
+    rows.extend(w2qr_controls(root))
     rows.extend(manifest_pin_controls())
     return rows
 
@@ -1809,6 +1875,77 @@ def supersession_controls(root):
     wrong = {rel: dict(later[rel], afterSha256='0' * 64)}
     check('The later transaction still rejects bytes that differ from its review',
           bool(replacement_errors('Later', wrong, root, partial, pins_later, before, owners)))
+    return rows
+
+
+def w2qr_controls(root):
+    # W2 QR red proofs (ruled on the ey 2 precedent). DLG-1 gives up only the rows of the W2 QR
+    # transaction's own listed members, and only on the list bytes that transaction declares. Each way
+    # that could be widened is proved RED here, in a disposable copy, on each list the two share.
+    rows = []
+    def check(label, condition):
+        if not condition:
+            raise AssertionError(label)
+        rows.append({'name': label, 'status': 'PASS'})
+    if W2QR_TRANSACTION not in REPLACEMENT_TRANSACTIONS:
+        return rows
+    name = W2QR_PRIOR_OWNER
+    _, declared = REPLACEMENT_TRANSACTIONS[name]
+    _, w_files = REPLACEMENT_TRANSACTIONS[W2QR_TRANSACTION]
+    lists = sorted(rel for rel in w_files if rel in declared and rel.rsplit('/', 1)[-1] == PACK_MANIFEST)
+    if not lists:
+        return rows
+    owners = judged_owners(root)
+    owned = owned_members(name, declared, owners)
+    check('W2 QR: every list the two transactions share passes to the W2 QR transaction, and DLG-1 reads it '
+          'as it declared it', all(owners.get(rel) == W2QR_TRANSACTION for rel in lists)
+          and set(lists) <= set(w2qr_declared(root, root, declared)))
+    judge_module = limb_judge(root)
+    _, _, held = judge_module.dlg1_tools(root)
+    with tempfile.TemporaryDirectory(prefix='w2qr-limb-proof-') as temp:
+        fixture = Path(temp)
+        for rel in {*declared, *w_files, *held, 'tools/verify_cross_estate_unification.py',
+                    *(entry['startHere'] for entry in EY2_PAIRS.values())}:
+            if (root / rel).is_file():
+                target = fixture / rel; target.parent.mkdir(parents=True, exist_ok=True); shutil.copy2(root / rel, target)
+        shutil.copytree(root / 'tools/hum', fixture / 'tools/hum', dirs_exist_ok=True)
+        for rel in lists:
+            folder = rel[: -len(PACK_MANIFEST)]
+            pages = sorted(p for p in owned if p.startswith(folder) and p.endswith('.html'))
+            if not pages:
+                continue
+            label = 'W2 QR ' + rel + ': '
+            check(label + 'POSITIVE CONTROL: with the list as the W2 QR transaction declared it, DLG-1 admits '
+                  'every page it still owns in that pack', all(limb_verdicts(fixture, name, root).get(p, 'no verdict') is None
+                                                              for p in pages))
+            path = fixture / rel; original = path.read_bytes()
+            lines = original.splitlines(keepends=True)
+            def row_index(predicate):
+                for i, line in enumerate(lines):
+                    m = _EY2_ROW.fullmatch(line)
+                    if m and predicate(folder + m.group('name').decode()):
+                        return i, m
+                return None
+            def flipped(i, m):
+                digest = m.group('digest').translate(bytes.maketrans(b'0123456789abcdef', b'123456789abcdef0'))
+                out = list(lines); out[i] = lines[i][:m.start('digest')] + digest + lines[i][m.end('digest'):]
+                return b''.join(out)
+            other = row_index(lambda member: member in pages)
+            mine = row_index(lambda member: member in w_files)
+            check(label + 'the list names a page DLG-1 still owns and a member of the W2 QR transaction',
+                  other is not None and mine is not None)
+            for proof, (i, m) in (('a non-W02 row moved, the W2 QR transaction present', other),
+                                  ('a W02 row moved to bytes that are not the declared list', mine)):
+                try:
+                    path.write_bytes(flipped(i, m))
+                    check(label + 'RED PROOF (' + proof + '): the list is not read as declared',
+                          rel not in w2qr_declared(fixture, root, declared))
+                    verdicts = limb_verdicts(fixture, name, root)
+                    check(label + 'RED PROOF (' + proof + '): DLG-1 still refuses the pages it owns there',
+                          all(verdicts.get(p, 'no verdict') is not None for p in pages))
+                finally:
+                    path.write_bytes(original)
+            check(label + 'all sabotage was restored', sha(path) == w_files[rel]['afterSha256'])
     return rows
 
 
