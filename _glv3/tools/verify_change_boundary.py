@@ -576,10 +576,10 @@ REPLACEMENT_TRANSACTIONS = {
     'Pathway labels phase 1': (PATHWAY_LABELS_PHASE_1_REVIEW_BASE, PATHWAY_LABELS_PHASE_1_REPLACEMENTS),
     'W2 QR pages names and dates': (W2_QR_PAGES_NAMES_AND_DATES_REVIEW_BASE, W2_QR_PAGES_NAMES_AND_DATES_REPLACEMENTS),
     'Broken links repair': (BROKEN_LINKS_REPAIR_REVIEW_BASE, BROKEN_LINKS_REPAIR_REPLACEMENTS),
-    'Pathway labels phase 2': (PATHWAY_LABELS_PHASE_2_REVIEW_BASE, PATHWAY_LABELS_PHASE_2_REPLACEMENTS),
     # END DECLARED TRANSACTION ENTRIES
     'AAA small subjects Art and ICT': (AAA_SMALL_REVIEW_BASE, AAA_SMALL_REPLACEMENTS),
     'RE scheme-of-work reviewed download labels': (RE_SOW_LABELS_REVIEW_BASE, RE_SOW_LABELS_REPLACEMENTS),
+    'Pathway labels phase 2': (PATHWAY_LABELS_PHASE_2_REVIEW_BASE, PATHWAY_LABELS_PHASE_2_REPLACEMENTS),
 }
 # RULING um add.5 (24 Oct 2026): the retired member type is admitted only inside a transaction listed here against the
 # lettered ruling that retired it. Today that is um only. Any other transaction that carries a retired member fails
