@@ -5604,6 +5604,11 @@ REVIEWED_PATHS += ('Art/Build/CREATIVE_ARTS_A2_W03/Public/ART_BUILD_A2_W03_P1.ht
  'Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W08_L2/VOC_LAUNCH_A2_W08_L2.html')
 
 
+# TRACKER (8 Nov 2026, owner ask 18:27Z: the catch-up tracker reachable at a private link on his own site): two
+# staff tool pages (tracker, class-names editor), reviewed and pinned, with no catalogue row, so they are published but never listed.
+REVIEWED_PATHS += ('kits/class_tools/Catch_up_Tracker.html', 'kits/class_tools/Class_names.html', 'kits/class_tools/My_tools.html', 'kits/class_tools/Practical_log.html', 'kits/class_tools/Requests.html')
+
+
 def pack_rows_for(lessons: Path, rows: list) -> list:
     """UX2 D3 (2026-09-08): the companion-pack entries are the catalogue's tail,
     after the reviewed hub rows. They are not a second hand-kept literal: they

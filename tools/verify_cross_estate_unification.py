@@ -235,7 +235,7 @@ CATALOGUE_PINS = {
         "Science/Grow/W8-W13_2026-27/SCI_G_W9_Turn_Earth_explain_the_sky_Classic.html": "178c695fe2dc166a80abfd26e41174e28ecfa39d4700db0870d7ee27bbffd6e8",
         "Science/Build/W8-W13_2026-27/SCI_B_W12_Give_a_rock_a_job_Classic.html": "509f38056bd09e903c70b0426ac55ab7ff73f7da10261a97eec11d49d7b27d1c",
         ".github/workflows/glv3-verify.yml": "4bf27ca7471a21359e35d1bc7277c5fa0adeb5f31a47c769f192165796037088",
-        "_glv3/tools/verify_change_boundary.py": "15f50ccbadd3b0f476f6804ab64fa9dbaab2956ce6fac30e30cf0685963fa159",
+        "_glv3/tools/verify_change_boundary.py": "fff8255953b08d1d82bc95f4918ebd23930845e1ea7411a228034e7d851dc1a5",
         "_glv3/tools/browser_verify.mjs": "737ad30f297e061407161743f017614179cc6c56f1c9a3904bbe7c98df38c888",
         "_glv3/tools/chip_gate.mjs": "16cdd5c0ad3745c57340ed0ec6a208d221e4793bfc9b1cd9bc703a6c2613dd9a",
         "_glv3/tools/catalogue_membership.mjs": "4d7ab03e23ee0d3c3fc934f4f0a901afc61169754db099f4f5c24dd9cce058ec",
@@ -3027,7 +3027,12 @@ CATALOGUE_PINS = {
         "Vocational/Build/Autumn_2_2026-27/VOC_BUILD_A2_W08/VOC_BUILD_A2_W08.html": "d0bfe5c4d82cdbf7fb49b4b0eea033c4cbe65e1d7defd5bd29f4a58a93274c67",
         "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W07/VOC_LAUNCH_A2_W07.html": "d4c2573cfb24eff1a92b172514f475b1aea64268de4b2d7f4f632c4a9fbad524",
         "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W08_L1/VOC_LAUNCH_A2_W08_L1.html": "f36d7fb4e5819639767cd627a1779709d3d7f00152c668d39c6462e44788065a",
-        "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W08_L2/VOC_LAUNCH_A2_W08_L2.html": "a75a50b647563adb992d86017284ba4999be3d2f3452661f57a6a27b182e0dc8"
+        "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W08_L2/VOC_LAUNCH_A2_W08_L2.html": "a75a50b647563adb992d86017284ba4999be3d2f3452661f57a6a27b182e0dc8",
+        "kits/class_tools/Catch_up_Tracker.html": "9810f412b1f81fce0465e0cbdec4c3c0e34475642be2f0f76f44411ceed71f28",
+        "kits/class_tools/Class_names.html": "9dd07df35df72997823126c4b99499fddea98dbe78b4b34b223c1ea5dde31000",
+        "kits/class_tools/My_tools.html": "9dadc768e06329ca54908a09d0f6ef18be7de4c0548229bd9c9e8e888652511a",
+        "kits/class_tools/Practical_log.html": "56cb7d7a6f847cec2ab69700137501589dd32710650ea2c6e9b5cfbab17911fd",
+        "kits/class_tools/Requests.html": "c6f34336c15a5692ff6186bb2d0c26090b0c3593f8556496837ec1a437cb4f82"
     }
 }
 # END REVIEWED CATALOGUE PINS

@@ -77,6 +77,8 @@ LAND_A2_SCIENCE_TERMS += ('Art/Build/ART_BUILD_A2_W05_P1/Public/', 'Art/Build/AR
 # Autumn 1 AAA (Lessons #822, owner-approved 8 Nov 2026): the three Art Autumn 1 term folders, the same
 # rule as the Science Autumn 1 folders above -- status 'A' only, every file admitted by its own CATALOGUE_PINS digest.
 LAND_A2_SCIENCE_TERMS += ('Art/Build/Autumn_1_2026-27/', 'Art/Grow/Autumn_1_2026-27/', 'Art/Launch/Autumn_1_2026-27/')
+# AAA-SMALL (8 Nov 2026): the Creative Arts Weeks 3-4 lesson folders and the ICT Week 8 folder, same rule.
+LAND_A2_SCIENCE_TERMS += ('Art/Build/CREATIVE_ARTS_A2_W03/Public/', 'Art/Build/CREATIVE_ARTS_A2_W04/Public/', 'Art/Grow/CREATIVE_ARTS_A2_W03/Public/', 'Art/Grow/CREATIVE_ARTS_A2_W04/Public/', 'LAUNCH_ASDAN/W7-W12_2026-27/lessons/ICT/LAUNCH_ICT_A2_W08/Public/')
 SOURCE = 'tools/humanities_resources/SOURCE_MANIFEST.json'
 DOWNLOADS = 'tools/humanities_resources/DOWNLOAD_MANIFEST.json'
 LABEL_EDITS = 'tools/humanities_resources/PUBLIC_LABEL_CHANGES.json'
@@ -427,6 +429,7 @@ def _m1_transaction():
 
 
 M1_REVIEW_BASE, M1_REPLACEMENTS = _m1_transaction()
+
 # AAA-SMALL (8 Nov 2026, owner ask 16:24-16:32Z): the Creative Arts and ICT Autumn 2 lesson pages rebuilt to the
 # Science/Humanities standard (Next buttons, fixed card, timer) replace the landed pages at their own paths, one
 # transaction, derived from the bytes on disk and the merge base by the ruling thread's transaction script.
