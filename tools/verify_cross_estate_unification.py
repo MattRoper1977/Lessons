@@ -651,14 +651,14 @@ CATALOGUE_PINS = {
         "Humanities/Teaching_Packs/HUM_Autumn_2_BUILD_Reviewed/BUILD/Autumn_2/W06/BUILD_A2_W06_Lesson.html": "bbbf137d46c3aac3fb11ac1b82f3bd425e949953d95e2184590b54a854db159f",
         "Humanities/Teaching_Packs/HUM_Autumn_2_BUILD_Reviewed/BUILD/Autumn_2/W07/BUILD_A2_W07_Lesson.html": "495189e883e2a78a6e24fb3a8005aa4866f5e382fd0afa793d9b48e0b856fd4c",
         "Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W01/GROW_A2_W01_Lesson.html": "15e63b281875f6d62636a9b619abd954526d6c31318687510dbab09271e91e39",
-        "Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W02/GROW_A2_W02_Lesson.html": "541f7d43d5ebf0cd057b78286ff682bcdc475cf44b216b0f2332d1f713e87cf9",
+        "Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W02/GROW_A2_W02_Lesson.html": "d4027f9992d0c3f7413e8741916d43159c074f712a79dd04bdd1613f800ca556",
         "Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W03/GROW_A2_W03_Lesson.html": "663ff01c19bde7cce9cd46596b2b329e167501cdff570f9dbae6ca1fc9ee12b3",
         "Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W04/GROW_A2_W04_Lesson.html": "0395590993c36cefd35e3f8ad9b1cb9220f60f09b9eebf3cabfeffcc64e5f735",
         "Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W05/GROW_A2_W05_Lesson.html": "a2b7242f2c720312b8d75fd3bd3fbf61d5d79df41ef9aca03060e8e656cc621b",
         "Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W06/GROW_A2_W06_Lesson.html": "a85daba32d269cfae3347c0a731a1778560bdcae0e0388538f88863ca2601a6e",
         "Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W07/GROW_A2_W07_Lesson.html": "5124e543efd5f8452ef18f7cba460aa230dd2d52681107de1e59f0ef8f6f7d65",
         "Humanities/Teaching_Packs/HUM_Autumn_2_LAUNCH_Reviewed/LAUNCH/Autumn_2/W01/LAUNCH_A2_W01_Lesson.html": "5dc5be4aee51879803a1da926b42b222d24c9993472128cd0c3d812ff32d5e9e",
-        "Humanities/Teaching_Packs/HUM_Autumn_2_LAUNCH_Reviewed/LAUNCH/Autumn_2/W02/LAUNCH_A2_W02_Lesson.html": "6cf0bf848a2a0bab2581e86c1a0536a759713214799177947e59018a432fca46",
+        "Humanities/Teaching_Packs/HUM_Autumn_2_LAUNCH_Reviewed/LAUNCH/Autumn_2/W02/LAUNCH_A2_W02_Lesson.html": "3ab7cd756a478bafcae91b0144e2b5478e48c8f4af14a292c204defe140970f2",
         "Humanities/Teaching_Packs/HUM_Autumn_2_LAUNCH_Reviewed/LAUNCH/Autumn_2/W03/LAUNCH_A2_W03_Lesson.html": "ed798926fc9029b1e89633cf6aef8ad0b539fd0f85e1bd46b14eaef6ab70816d",
         "Humanities/Teaching_Packs/HUM_Autumn_2_LAUNCH_Reviewed/LAUNCH/Autumn_2/W04/LAUNCH_A2_W04_Lesson.html": "018a35512e73b58a24506983e7f33e502dc03740001f9c6fe07176fc2d62f1d4",
         "Humanities/Teaching_Packs/HUM_Autumn_2_LAUNCH_Reviewed/LAUNCH/Autumn_2/W05/LAUNCH_A2_W05_Lesson.html": "f292ac63fba414206333dffd3869de2657c37036bbfa757de2c9a0eee368760f",
@@ -1125,8 +1125,8 @@ CATALOGUE_PINS = {
         "Humanities/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/READ_ME_FALLBACK.txt": "be8efb425b2248d5b755d816383d8854e0fed26d99b108bbf898b5f68d96695b",
         "Humanities/Teaching_Packs/HUM_Autumn_1_LAUNCH_Reviewed/SHA256SUMS.txt": "480587877c978b6792d8107131157de7264cfc8b38743ae3eba36abf36cc66c7",
         "Humanities/Teaching_Packs/HUM_Autumn_2_BUILD_Reviewed/SHA256SUMS.txt": "e02a5e9c69a4f89c89db97f9cfc021f142ca391d7ea3ed063c597d9090c934db",
-        "Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/SHA256SUMS.txt": "3585f3c2b25a067ec757cdcc291a8c62971f5d6c3173f2dfb944de4525dd370c",
-        "Humanities/Teaching_Packs/HUM_Autumn_2_LAUNCH_Reviewed/SHA256SUMS.txt": "7e3db22481967e3bf3f28f72e33e57abc67f11e3777e60f447151e3bf9f36ee0",
+        "Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/SHA256SUMS.txt": "2b4b67ace56960017c5f7128de2489a9eb78187c3d62b773cf343c0bdf6aac0d",
+        "Humanities/Teaching_Packs/HUM_Autumn_2_LAUNCH_Reviewed/SHA256SUMS.txt": "f274ad67757070e6417a75b44785903f6577398bb59fa455012c586ed5f206b5",
         "Humanities/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/SHA256SUMS.txt": "2f6c77dc0572c988281792b3c0f5285fc03d802bfe28033ee6a9c4ae7e61912d",
         "Humanities/Teaching_Packs/HUM_Spring_1_LAUNCH_Reviewed/SHA256SUMS.txt": "bc16f31e639bf89b0c4bc14ae07439f5aacf0a646d7f4639a6d66e51bce86f9e",
         "Humanities/Teaching_Packs/HUM_Spring_2_BUILD_GROW_Reviewed/SHA256SUMS.txt": "423cf78757820f83ea54bdb970d528649179a719d9fd75a3b059075dbaaeade0",
@@ -2236,7 +2236,11 @@ CATALOGUE_PINS = {
         "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W07/approved-mark.jpg": "f1095531d88d17f20c7464c62887703321a0872f108d3fb78a4afc0226dac2a7",
         "Art/Build/Autumn_1_2026-27/manifest_a1_aaa.json": "0f0b7eec6daeda548c3ddef439afa5d4740a2dbe172fc45495feeefb9071fb5f",
         "Art/Grow/Autumn_1_2026-27/manifest_a1_aaa.json": "e033e3045b2ba8250e891fe287eec6784bb96156b2b0adb39886cc2fe2590885",
-        "Art/Launch/Autumn_1_2026-27/manifest_a1_aaa.json": "d42816956781ac206a57e208e1aa2a736d365e36176b2c306992566e3ac4ef62"
+        "Art/Launch/Autumn_1_2026-27/manifest_a1_aaa.json": "d42816956781ac206a57e208e1aa2a736d365e36176b2c306992566e3ac4ef62",
+        "Art/Build/CREATIVE_ARTS_A2_W02/Public/ART_BUILD_A2_W02_P1.html": "08bf28af7edb4b94b6749295afa34e7cb66709c2e032935cdfd9d5845df4bc0d",
+        "Art/Build/CREATIVE_ARTS_A2_W02/Public/ART_BUILD_A2_W02_P2.html": "0adbbd1b403e06708ad19018f1a11b42fa4d16a5af751c28b9100a48381f1e85",
+        "Art/Grow/CREATIVE_ARTS_A2_W02/Public/ART_GROW_A2_W02_P1.html": "e5ff7d1ae01e6c0819c28e69eff5118c05b5290230063bfb34e4b958e6e299b1",
+        "Art/Grow/CREATIVE_ARTS_A2_W02/Public/ART_GROW_A2_W02_P2.html": "07da23b83a2926e8cdf8ccf2cabf6c7006389dc2d34a30f62bee1260a3fb1be5"
     }
 }
 # END REVIEWED CATALOGUE PINS
