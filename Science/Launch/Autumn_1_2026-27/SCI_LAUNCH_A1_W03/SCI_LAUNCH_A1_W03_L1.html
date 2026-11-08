@@ -1,0 +1,1331 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Lesson resource">
+  <title>Microscopy and total magnification · SCI_LAUNCH_A1_W03_L1</title>
+  <style>
+:root {
+  --bg: #F7F4FA;
+  --surface: #FFFFFF;
+  --surface-tint: #ECE5F6;
+  --surface-warm: #FFF6D5;
+  --surface-green: #EDF5E8;
+  --surface-blue: #E6F2FA;
+  --ink: #111827;
+  --ink-secondary: #172033;
+  --accent: #3B2854;
+  --accent-border: #5B417A;
+  --pathway: #7A5C9E;
+}
+* { box-sizing: border-box; max-width: 100%; overflow-wrap: anywhere; }
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #F7F4FA;
+  color: #111827;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 24px;
+  line-height: 1.45;
+  overflow-x: hidden;
+}
+body.calm-view {
+  background-color: #FFFFFF;
+}
+body.high-contrast {
+  --bg: #FFFFFF;
+  --surface: #FFFFFF;
+  --surface-tint: #F3F5F7;
+  --surface-warm: #FFFFFF;
+  --surface-green: #FFFFFF;
+  --surface-blue: #FFFFFF;
+  --ink: #000000;
+  --ink-secondary: #000000;
+  --accent: #000000;
+  --accent-border: #000000;
+}
+a {
+  color: #111827;
+  background-color: #ECE5F6;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-weight: 700;
+  text-decoration: underline;
+}
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 8px;
+  background-color: #111827;
+  color: #FFFFFF;
+  padding: 10px 16px;
+  font-size: 24px;
+  z-index: 1000;
+}
+.skip-link:focus { left: 12px; }
+.lesson-topbar {
+  background-color: #FFFFFF;
+  color: #111827;
+  border-bottom: 4px solid #5B417A;
+  padding: 14px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.brand-cluster {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.brand-logo {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  border: 2px solid #5B417A;
+  border-radius: 8px;
+  background-color: #FFFFFF;
+}
+.pathway-pill {
+  background-color: #3B2854;
+  color: #FFFFFF;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 24px;
+  font-weight: 700;
+}
+.controls-bar {
+  background-color: #ECE5F6;
+  color: #111827;
+  border-bottom: 3px solid #5B417A;
+  padding: 12px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+button, select, textarea, input {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 24px;
+  line-height: 1.35;
+  color: #111827;
+  background-color: #FFFFFF;
+  border: 3px solid #3B2854;
+  border-radius: 10px;
+  padding: 8px 16px;
+}
+button {
+  cursor: pointer;
+  font-weight: 700;
+}
+button:hover, button:focus-visible {
+  background-color: #ECE5F6;
+  color: #111827;
+  outline: 3px solid #111827;
+}
+button[aria-pressed="true"], button.active-route {
+  background-color: #3B2854;
+  color: #FFFFFF;
+}
+.slide-deck {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 20px;
+}
+.slide {
+  display: none;
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 4px solid #5B417A;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.slide.active {
+  display: block;
+}
+.stage-pill {
+  display: inline-block;
+  background-color: #ECE5F6;
+  color: #111827;
+  border: 2px solid #5B417A;
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+h1, h2, h3, h4, p, li, th, td, summary, label, span, div {
+  font-size: 24px;
+  color: #111827;
+}
+h1 {
+  font-size: 36px;
+  margin: 8px 0 14px 0;
+  color: #111827;
+}
+h2 {
+  font-size: 30px;
+  margin: 12px 0;
+  color: #111827;
+}
+h3 {
+  font-size: 26px;
+  margin: 10px 0;
+  color: #111827;
+}
+.card, .ca-act, .task-box, .model-frame {
+  background-color: #F7F4FA;
+  color: #111827;
+  border: 3px solid #5B417A;
+  border-radius: 14px;
+  padding: 18px;
+  margin: 16px 0;
+}
+.card-warm {
+  background-color: #FFF6D5;
+  color: #111827;
+  border: 3px solid #5B417A;
+  border-radius: 14px;
+  padding: 18px;
+  margin: 16px 0;
+}
+.card-green {
+  background-color: #EDF5E8;
+  color: #111827;
+  border: 3px solid #3B2854;
+  border-radius: 14px;
+  padding: 18px;
+  margin: 16px 0;
+}
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 18px;
+}
+.ca-pic {
+  width: 100%;
+  max-width: 920px;
+  height: auto;
+  display: block;
+  margin: 12px auto;
+  background-color: #FFFFFF;
+  border-radius: 12px;
+}
+.ca-beatbox {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: 12px;
+  margin: 14px 0;
+}
+.ca-light {
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 3px solid #5B417A;
+  border-radius: 12px;
+  padding: 14px;
+}
+.ca-light.lit {
+  background-color: #FFF6D5;
+  color: #111827;
+  border-color: #111827;
+  border-width: 4px;
+}
+.status-box {
+  background-color: #ECE5F6;
+  color: #111827;
+  border: 3px solid #3B2854;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-top: 12px;
+  font-weight: 700;
+}
+.route-panel {
+  display: none;
+}
+.route-panel.active-panel {
+  display: block;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0;
+  background-color: #FFFFFF;
+  color: #111827;
+}
+th, td {
+  border: 2px solid #3B2854;
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 24px;
+  color: #111827;
+  background-color: #FFFFFF;
+}
+th {
+  background-color: #ECE5F6;
+  color: #111827;
+  font-weight: 700;
+}
+details {
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 2px solid #5B417A;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin: 10px 0;
+}
+summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: #111827;
+}
+textarea {
+  width: 100%;
+  margin-top: 8px;
+}
+.slide-footer {
+  margin-top: 20px;
+  padding-top: 12px;
+  border-top: 2px solid #5B417A;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-weight: 700;
+  color: #111827;
+}
+dialog {
+  max-width: 1100px;
+  width: 92vw;
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 4px solid #3B2854;
+  border-radius: 16px;
+  padding: 24px;
+}
+.print-section {
+  display: none;
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 3px solid #3B2854;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 1200px;
+}
+.print-section.visible {
+  display: block;
+}
+@media (max-width: 640px) {
+  .lesson-topbar, .controls-bar, .slide-deck {
+    padding: 10px;
+  }
+  .slide {
+    padding: 14px;
+  }
+  button, select {
+    width: 100%;
+  }
+}
+</style>
+</head>
+<body>
+  <a class="skip-link" href="#lessonDeck">Skip to lesson stage</a>
+  <header class="lesson-topbar">
+    <div class="brand-cluster">
+      <img src="approved-mark.jpg" alt="Made by Matt approved mark" class="brand-logo">
+      <div>
+        <span class="pathway-pill">SUMMIT · SCIENCE</span>
+        <span style="margin-left:10px;font-weight:700;">Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W03_L1)</span>
+      </div>
+    </div>
+    <div><strong>Made by Matt</strong></div>
+  </header>
+  <nav class="controls-bar" aria-label="Lesson controls">
+    <button type="button" id="prev-btn">◀ Previous</button>
+    <button type="button" id="next-btn">Next ▶</button>
+    <label for="stage-picker">Stage</label>
+    <select id="stage-picker"><option value="0">1. Opening</option><option value="1">2. Arrival task</option><option value="2">3. Starter</option><option value="3">4. I do 1</option><option value="4">5. We do 1</option><option value="5">6. I do 2</option><option value="6">7. We do 2</option><option value="7">8. You do</option><option value="8">9. Review and improve</option><option value="9">10. Exit ticket</option></select>
+    <button type="button" data-open-dialog="pause-dialog">Pause</button>
+    <button type="button" data-toggle="calm" aria-pressed="false">Calm view</button>
+    <button type="button" data-toggle="high-contrast" aria-pressed="false">High contrast</button>
+    <button type="button" data-toggle="reduce-motion" aria-pressed="false">Reduce motion</button>
+    <button type="button" data-open-dialog="ta-dialog" data-action="ta">TA brief</button>
+    <button type="button" data-open-dialog="guidance-dialog" id="sc1-guidance">Guidance</button>
+    <button type="button" data-print-btn="supported">Print Supported</button>
+    <button type="button" data-print-btn="independent">Print Independent</button>
+    <button type="button" data-print-btn="aspire">Print Aspire</button>
+  </nav>
+  <p id="stage-status" role="status" style="padding:4px 20px;margin:0;font-weight:700;">Stage 1 of 10: Opening</p>
+  <main id="lessonDeck" class="slide-deck" tabindex="-1">
+    
+        <section class="slide active" id="slide-1" data-stage="Opening" aria-hidden="false">
+          <span class="stage-pill">Stage 1 · Opening</span>
+          <h1>Microscopy and total magnification</h1>
+          
+    <div class="grid-2">
+      <div class="card">
+        <p><strong>Learning intention:</strong> Identify the key parts of a light microscope, compare magnification and resolution, and calculate total magnification using eyepiece and objective lenses.</p>
+        <h3>Today I can</h3>
+        <ul>
+          <li>I can name the eyepiece, objective lenses, stage, light source, coarse focus and fine focus on a light microscope.</li><li>I can explain the difference between magnification (making an image look bigger) and resolution (distinguishing two close points as separate).</li><li>I can calculate total magnification by multiplying eyepiece magnification by objective magnification.</li>
+        </ul>
+        <p><strong>Work in your book first.</strong> Point, speak, sign, draw, type, write or direct an adult. You may pass.</p>
+      </div>
+      <div class="card">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" class="ca-pic" role="img" aria-labelledby="svg-opening-all-title svg-opening-all-desc"><title id="svg-opening-all-title">Three-panel model: light microscope parts, total magnification formula, and light versus electron resolution.</title><desc id="svg-opening-all-desc">High-contrast teaching diagram with three labelled panels.</desc><rect x="0" y="0" width="960" height="300" fill="#ffffff" stroke="#5B417A" stroke-width="4" rx="14"/><rect x="24" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="168" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 1 · Microscope</text><rect x="133" y="88" width="70" height="22" rx="4" fill="#ffffff" stroke="#111827" stroke-width="3"/><line x1="168" y1="110" x2="168" y2="150" stroke="#111827" stroke-width="6"/><rect x="113" y="150" width="110" height="14" fill="#3B2854"/><circle cx="168" cy="172" r="10" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="168" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Eyepiece ×10 at top</text><text x="168" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Objectives ×4, ×10, ×40</text><rect x="336" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="480" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 2 · Total mag</text><polygon points="480,85 415,172 545,172" fill="#ffffff" stroke="#111827" stroke-width="4"/><line x1="447" y1="130" x2="513" y2="130" stroke="#111827" stroke-width="3"/><line x1="480" y1="130" x2="480" y2="172" stroke="#111827" stroke-width="3"/><text x="480" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">I</text><text x="458" y="162" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">A</text><text x="502" y="162" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">M</text><text x="480" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Eyepiece × Objective</text><text x="480" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">10 × 40 = ×400</text><rect x="648" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="792" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 3 · Resolution</text><rect x="727" y="90" width="130" height="80" rx="14" fill="#ffffff" stroke="#111827" stroke-width="4"/><circle cx="772" cy="130" r="18" fill="#3B2854"/><ellipse cx="817" cy="135" rx="22" ry="14" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="792" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Light limit: ~200 nm</text><text x="792" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Electron limit: ~0.2 nm</text></svg>
+        <p><strong>Model clue:</strong> Three-panel model: light microscope parts, total magnification formula, and light versus electron resolution.</p>
+      </div>
+    </div>
+    
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W03_L1)</span>
+          </footer>
+        </section>
+        
+        <section class="slide" id="slide-2" data-stage="Arrival task" aria-hidden="true">
+          <span class="stage-pill">Stage 2 · Arrival task</span>
+          <h2>Arrival recall and picture check</h2>
+          
+    <div class="card">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" class="ca-pic" role="img" aria-labelledby="svg-arrival-0-title svg-arrival-0-desc"><title id="svg-arrival-0-title">Arrival picture clue: Panel 1 shows a ×10 eyepiece and ×4, ×10, ×40 objectives; Panel 2 shows ×10 × ×40 = ×400.</title><desc id="svg-arrival-0-desc">High-contrast teaching diagram with three labelled panels.</desc><rect x="0" y="0" width="960" height="300" fill="#ffffff" stroke="#5B417A" stroke-width="4" rx="14"/><rect x="24" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="168" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 1 · Microscope</text><rect x="133" y="88" width="70" height="22" rx="4" fill="#ffffff" stroke="#111827" stroke-width="3"/><line x1="168" y1="110" x2="168" y2="150" stroke="#111827" stroke-width="6"/><rect x="113" y="150" width="110" height="14" fill="#3B2854"/><circle cx="168" cy="172" r="10" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="168" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Eyepiece ×10 at top</text><text x="168" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Objectives ×4, ×10, ×40</text><rect x="336" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="480" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 2 · Total mag</text><polygon points="480,85 415,172 545,172" fill="#ffffff" stroke="#111827" stroke-width="4"/><line x1="447" y1="130" x2="513" y2="130" stroke="#111827" stroke-width="3"/><line x1="480" y1="130" x2="480" y2="172" stroke="#111827" stroke-width="3"/><text x="480" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">I</text><text x="458" y="162" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">A</text><text x="502" y="162" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">M</text><text x="480" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Eyepiece × Objective</text><text x="480" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">10 × 40 = ×400</text><rect x="648" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="792" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 3 · Resolution</text><rect x="727" y="90" width="130" height="80" rx="14" fill="#ffffff" stroke="#111827" stroke-width="4"/><circle cx="772" cy="130" r="18" fill="#3B2854"/><ellipse cx="817" cy="135" rx="22" ry="14" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="792" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Light limit: ~200 nm</text><text x="792" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Electron limit: ~0.2 nm</text></svg>
+      <p>Use the picture first. Question 1 works directly from the picture labels above.</p>
+    </div>
+    
+        <div class="ca-act" data-quiz data-correct="0" data-explain="Panel 1 shows the eyepiece lens at the top has a magnification of ×10.">
+          <p><strong>Arrival check 1:</strong> Look at Panel 1 of the diagram. What is the magnification of the eyepiece lens at the top?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">×10</button><button type="button" data-option="1">×400</button><button type="button" data-option="2">×0.2</button></div>
+          <p class="status-box" role="status">Choose an option to check your recall.</p>
+        </div>
+        
+        <div class="ca-act" data-quiz data-correct="1" data-explain="The nucleus encloses the chromosomal DNA in plant and animal cells.">
+          <p><strong>Arrival check 2:</strong> Recall from cell biology: which organelle contains the genetic material (DNA) in a eukaryotic cell?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">Cell wall</button><button type="button" data-option="1">Nucleus</button><button type="button" data-option="2">Ribosome</button></div>
+          <p class="status-box" role="status">Choose an option to check your recall.</p>
+        </div>
+        
+        <div class="ca-act" data-quiz data-correct="2" data-explain="Plant cells and bacterial cells have a supporting cell wall outside the cell membrane; animal cells do not.">
+          <p><strong>Arrival check 3:</strong> Recall from cell biology: which structure is present in plant cells and bacterial cells, but absent in animal cells?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">Cell membrane</button><button type="button" data-option="1">Cytoplasm</button><button type="button" data-option="2">Cell wall</button></div>
+          <p class="status-box" role="status">Choose an option to check your recall.</p>
+        </div>
+        
+    <div class="route-group">
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;"><button type="button" class="route-btn active-route" data-route-btn="supported" aria-pressed="true">Supported</button><button type="button" class="route-btn" data-route-btn="independent" aria-pressed="false">Independent</button><button type="button" class="route-btn" data-route-btn="aspire" aria-pressed="false">Aspire</button></div>
+      <div class="route-panel active-panel" data-route-panel="supported" id="arrival-supported"><h3>Supported route</h3>
+            <div class="task-box">
+              <p><strong>1. Look at Panel 1. Which lens is at the top of the microscope?</strong></p>
+              <details><summary>Help with this question</summary><p>Read the top label in Panel 1.</p></details>
+              <button type="button" data-reveal="arr-supported-1">Reveal answer after responding</button>
+              <p id="arr-supported-1" hidden><strong>Check:</strong> The eyepiece lens (×10).</p>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>2. Look at Panel 2. What do you multiply to find total magnification?</strong></p>
+              <details><summary>Help with this question</summary><p>Check the formula in Panel 2.</p></details>
+              <button type="button" data-reveal="arr-supported-2">Reveal answer after responding</button>
+              <p id="arr-supported-2" hidden><strong>Check:</strong> Eyepiece magnification × objective magnification.</p>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>3. Which organelle releases energy by aerobic respiration?</strong></p>
+              <details><summary>Help with this question</summary><p>Think of the powerhouse of the cell from cell structure.</p></details>
+              <button type="button" data-reveal="arr-supported-3">Reveal answer after responding</button>
+              <p id="arr-supported-3" hidden><strong>Check:</strong> Mitochondria.</p>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>4. Why can we not see individual cells with the unaided eye?</strong></p>
+              <details><summary>Help with this question</summary><p>Cells are smaller than the human eye can resolve.</p></details>
+              <button type="button" data-reveal="arr-supported-4">Reveal answer after responding</button>
+              <p id="arr-supported-4" hidden><strong>Check:</strong> Most cells are too small (around 10 to 100 µm).</p>
+            </div>
+            </div><div class="route-panel" data-route-panel="independent" id="arrival-independent"><h3>Independent route</h3>
+            <div class="task-box">
+              <p><strong>1. Using panel 1 and Panel 2, calculate the total magnification when a ×10 eyepiece is used with the ×4 objective.</strong></p>
+              <details><summary>Help with this question</summary><p>Multiply eyepiece by objective.</p></details>
+              <button type="button" data-reveal="arr-independent-1">Reveal answer after responding</button>
+              <p id="arr-independent-1" hidden><strong>Check:</strong> 10 × 4 = ×40 total magnification.</p>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>2. State the function of ribosomes in a cell.</strong></p>
+              <details><summary>Help with this question</summary><p>Recall sub-cellular structures.</p></details>
+              <button type="button" data-reveal="arr-independent-2">Reveal answer after responding</button>
+              <p id="arr-independent-2" hidden><strong>Check:</strong> Protein synthesis (making proteins).</p>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>3. Compare the genetic material of a bacterial cell with that of an animal cell.</strong></p>
+              <details><summary>Help with this question</summary><p>Think of prokaryotic versus eukaryotic cells.</p></details>
+              <button type="button" data-reveal="arr-independent-3">Reveal answer after responding</button>
+              <p id="arr-independent-3" hidden><strong>Check:</strong> Bacteria have a circular chromosomal DNA loop and plasmids with no nucleus; animal cells have linear chromosomes inside a nucleus.</p>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>4. Look at Panel 3. Which microscope has the smaller (better) resolution limit?</strong></p>
+              <details><summary>Help with this question</summary><p>A smaller distance resolved means higher detail.</p></details>
+              <button type="button" data-reveal="arr-independent-4">Reveal answer after responding</button>
+              <p id="arr-independent-4" hidden><strong>Check:</strong> The electron microscope (~0.2 nm compared with ~200 nm for light).</p>
+            </div>
+            </div><div class="route-panel" data-route-panel="aspire" id="arrival-aspire"><h3>Aspire route</h3>
+            <div class="task-box">
+              <p><strong>1. A student switches from the ×4 objective to the ×40 objective with a ×10 eyepiece. By what factor does total magnification increase?</strong></p>
+              <details><summary>Help with this question</summary><p>Compare 400 with 40.</p></details>
+              <button type="button" data-reveal="arr-aspire-1">Reveal answer after responding</button>
+              <p id="arr-aspire-1" hidden><strong>Check:</strong> It increases by a factor of 10 (from ×40 to ×400).</p>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>2. Why does zooming in on a blurry light microscope photo not reveal ribosomes?</strong></p>
+              <details><summary>Help with this question</summary><p>Link ribosome size (25 nm) to the 200 nm resolution limit.</p></details>
+              <button type="button" data-reveal="arr-aspire-2">Reveal answer after responding</button>
+              <p id="arr-aspire-2" hidden><strong>Check:</strong> Because the light microscope resolution limit is ~200 nm, and ribosomes are ~25 nm; magnification without resolution only enlarges the blur.</p>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>3. Explain one advantage of a light microscope over an electron microscope in a school laboratory.</strong></p>
+              <details><summary>Help with this question</summary><p>Electron microscopes require a vacuum, which kills cells.</p></details>
+              <button type="button" data-reveal="arr-aspire-3">Reveal answer after responding</button>
+              <p id="arr-aspire-3" hidden><strong>Check:</strong> Light microscopes can view living cells in natural colour and are small and inexpensive.</p>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>4. Calculate the eyepiece magnification if the objective is ×40 and total magnification is ×600.</strong></p>
+              <details><summary>Help with this question</summary><p>Rearrange total = Eyepiece × Objective.</p></details>
+              <button type="button" data-reveal="arr-aspire-4">Reveal answer after responding</button>
+              <p id="arr-aspire-4" hidden><strong>Check:</strong> 600 ÷ 40 = ×15 eyepiece.</p>
+            </div>
+            </div>
+    </div>
+    <div class="card-green">
+      <p><strong>Regulation check:</strong> choose a word or colour.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;">
+        <button type="button" data-regulation="Green · ready">Green · ready</button>
+        <button type="button" data-regulation="Amber · need an adjustment">Amber · need an adjustment</button>
+        <button type="button" data-regulation="Red · need a quiet pause">Red · need a quiet pause</button>
+      </div>
+      <p id="regulation-status" class="status-box" role="status">A private response or pass is welcome.</p>
+    </div>
+    
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W03_L1)</span>
+          </footer>
+        </section>
+        
+        <section class="slide" id="slide-3" data-stage="Starter" aria-hidden="true">
+          <span class="stage-pill">Stage 3 · Starter</span>
+          <h2>Starter · 4-beat model and retrieval</h2>
+          
+    <div class="ca-act" data-beat>
+      <h3>Whiteboard 4-beat sequence</h3>
+      <div class="ca-beatbox"><div class="ca-light"><strong>Beat 1:</strong> Clip the prepared slide onto the stage and switch on the light source.</div><div class="ca-light"><strong>Beat 2:</strong> Select the lowest-power objective lens (×4) first for the widest field of view.</div><div class="ca-light"><strong>Beat 3:</strong> Turn the coarse focus knob slowly until the image comes into view.</div><div class="ca-light"><strong>Beat 4:</strong> Turn the fine focus knob to sharpen the detail, then rotate to ×10 or ×40.</div></div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;">
+        <button type="button" data-beat-next>Next beat</button>
+        <button type="button" data-beat-all>Show all 4 beats</button>
+        <button type="button" data-beat-reset>Reset beats</button>
+      </div>
+      <p class="status-box beat-status" role="status">Ready: step 0 of 4</p>
+    </div>
+    <div class="ca-act ca-vote" data-quiz data-correct="0" data-explain="Low power (×4) gives the widest field of view to locate the specimen and leaves a safe gap between the lens and glass slide.">
+      <h3>Class fingers or thumbs vote</h3>
+      <p><strong>Why must you always start focusing with the ×4 low-power objective lens rather than the ×40 high-power lens?</strong></p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">1. It gives the widest field of view and prevents the long high-power lens from smashing the glass slide.</button><button type="button" data-option="1">2. The ×4 lens has higher resolution than an electron microscope.</button><button type="button" data-option="2">3. The fine focus knob only works when the ×4 lens is selected.</button><button type="button" data-option="3">4. The ×4 lens stains the specimen automatically.</button></div>
+      <p class="status-box" role="status">Hold up 1, 2, 3 or 4 fingers (or point), then tap to check.</p>
+    </div>
+    
+        <div class="task-box">
+          <p><strong>Retrieval 1:</strong> Name the three objective lens magnifications on a standard school light microscope.</p>
+          <details><summary>Clue</summary><p>Check Panel 1 of the diagram.</p></details>
+          <button type="button" data-reveal="starter-rev-1">Reveal answer</button>
+          <p id="starter-rev-1" hidden><strong>Answer:</strong> ×4 (low power), ×10 (medium power), and ×40 (high power).</p>
+        </div>
+        
+        <div class="task-box">
+          <p><strong>Retrieval 2:</strong> What is the role of iodine solution or methylene blue when preparing a microscope slide?</p>
+          <details><summary>Clue</summary><p>Cytoplasm and nuclei are mostly colourless without stain.</p></details>
+          <button type="button" data-reveal="starter-rev-2">Reveal answer</button>
+          <p id="starter-rev-2" hidden><strong>Answer:</strong> It is a stain that adds contrast so transparent cell structures such as the nucleus become visible.</p>
+        </div>
+        
+        <div class="task-box">
+          <p><strong>Retrieval 3:</strong> Why do we lower the thin glass coverslip onto the specimen at an angle using a mounted needle?</p>
+          <details><summary>Clue</summary><p>Air bubbles look like dark rings that block the view of cells.</p></details>
+          <button type="button" data-reveal="starter-rev-3">Reveal answer</button>
+          <p id="starter-rev-3" hidden><strong>Answer:</strong> To push air out steadily and avoid trapping air bubbles under the coverslip.</p>
+        </div>
+        
+    
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W03_L1)</span>
+          </footer>
+        </section>
+        
+        <section class="slide" id="slide-4" data-stage="I do 1" aria-hidden="true">
+          <span class="stage-pill">Stage 4 · I do 1</span>
+          <h2>I do 1 · Light microscope parts and total magnification</h2>
+          
+    <div class="card">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" class="ca-pic" role="img" aria-labelledby="svg-ido1-1-title svg-ido1-1-desc"><title id="svg-ido1-1-title">I do 1 · Light microscope parts and total magnification</title><desc id="svg-ido1-1-desc">High-contrast teaching diagram with three labelled panels.</desc><rect x="0" y="0" width="960" height="300" fill="#ffffff" stroke="#5B417A" stroke-width="4" rx="14"/><rect x="24" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="168" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 1 · Microscope</text><rect x="133" y="88" width="70" height="22" rx="4" fill="#ffffff" stroke="#111827" stroke-width="3"/><line x1="168" y1="110" x2="168" y2="150" stroke="#111827" stroke-width="6"/><rect x="113" y="150" width="110" height="14" fill="#3B2854"/><circle cx="168" cy="172" r="10" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="168" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Eyepiece ×10 at top</text><text x="168" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Objectives ×4, ×10, ×40</text><rect x="336" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="480" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 2 · Total mag</text><polygon points="480,85 415,172 545,172" fill="#ffffff" stroke="#111827" stroke-width="4"/><line x1="447" y1="130" x2="513" y2="130" stroke="#111827" stroke-width="3"/><line x1="480" y1="130" x2="480" y2="172" stroke="#111827" stroke-width="3"/><text x="480" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">I</text><text x="458" y="162" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">A</text><text x="502" y="162" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">M</text><text x="480" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Eyepiece × Objective</text><text x="480" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">10 × 40 = ×400</text><rect x="648" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="792" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 3 · Resolution</text><rect x="727" y="90" width="130" height="80" rx="14" fill="#ffffff" stroke="#111827" stroke-width="4"/><circle cx="772" cy="130" r="18" fill="#3B2854"/><ellipse cx="817" cy="135" rx="22" ry="14" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="792" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Light limit: ~200 nm</text><text x="792" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Electron limit: ~0.2 nm</text></svg>
+    </div>
+    <div class="model-frame" id="model-1" data-step-model data-steps="[&quot;Locate the two lenses in the light path: the eyepiece lens at the top (usually \u00d710) and the rotating objective lens above the stage (\u00d74, \u00d710 or \u00d740).&quot;, &quot;Write the rule: Total magnification = Eyepiece magnification \u00d7 Objective magnification.&quot;, &quot;Substitute the lens values: for a \u00d710 eyepiece and \u00d740 objective, Total = 10 \u00d7 40 = \u00d7400.&quot;, &quot;Include the \u00d7 symbol before the number to show it is a magnification factor (no length units).&quot;]">
+      <h3>I do 1 · Light microscope parts and total magnification</h3>
+      <p class="status-box model-caption" role="status">Step 1: Locate the two lenses in the light path: the eyepiece lens at the top (usually ×10) and the rotating objective lens above the stage (×4, ×10 or ×40).</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin:10px 0;">
+        <button type="button" data-step-next>Show next step</button>
+        <button type="button" data-step-reset>Reset model</button>
+      </div>
+      <ol><li class="v5-step" ><strong>Step 1:</strong> Locate the two lenses in the light path: the eyepiece lens at the top (usually ×10) and the rotating objective lens above the stage (×4, ×10 or ×40).</li><li class="v5-step" hidden><strong>Step 2:</strong> Write the rule: Total magnification = Eyepiece magnification × Objective magnification.</li><li class="v5-step" hidden><strong>Step 3:</strong> Substitute the lens values: for a ×10 eyepiece and ×40 objective, Total = 10 × 40 = ×400.</li><li class="v5-step" hidden><strong>Step 4:</strong> Include the × symbol before the number to show it is a magnification factor (no length units).</li></ol>
+    </div>
+    <div class="card-warm">
+      <h3>Worked example 1</h3>
+      <p>Worked example 1: A student views onion epidermal cells using a ×10 eyepiece lens and a ×40 high-power objective lens. Total magnification = eyepiece × objective = 10 × 40 = ×400. If the student instead knows the total magnification is ×400 and the eyepiece is ×10, they rearrange: Objective = Total ÷ Eyepiece = 400 ÷ 10 = ×40.</p>
+    </div>
+    
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W03_L1)</span>
+          </footer>
+        </section>
+        
+        <section class="slide" id="slide-5" data-stage="We do 1" aria-hidden="true">
+          <span class="stage-pill">Stage 5 · We do 1</span>
+          <h2>We do 1 · team sort and scientific reason</h2>
+          
+    <div class="ca-act" data-sort>
+      <h3>Shared sort and reason challenge</h3>
+      <p><strong>Point rule:</strong> 1 point for an accurate match, plus 1 bonus point for a clear scientific reason.</p>
+      
+        <div class="task-box">
+          <label for="sort-sel-0"><strong>1. Eyepiece and objective lenses</strong></label>
+          <select id="sort-sel-0" data-expected="Multiply their powers together to find total magnification"><option value="">Choose matching statement...</option><option value="Multiply their powers together to find total magnification">Multiply their powers together to find total magnification</option><option value="Moves the stage a large distance to bring the low-power image into rough focus">Moves the stage a large distance to bring the low-power image into rough focus</option><option value="Makes tiny adjustments to sharpen cell detail at medium and high power">Makes tiny adjustments to sharpen cell detail at medium and high power</option><option value="Smallest distance between two points that can still be seen as separate">Smallest distance between two points that can still be seen as separate</option></select>
+        </div>
+        
+        <div class="task-box">
+          <label for="sort-sel-1"><strong>2. Coarse focus knob</strong></label>
+          <select id="sort-sel-1" data-expected="Moves the stage a large distance to bring the low-power image into rough focus"><option value="">Choose matching statement...</option><option value="Multiply their powers together to find total magnification">Multiply their powers together to find total magnification</option><option value="Moves the stage a large distance to bring the low-power image into rough focus">Moves the stage a large distance to bring the low-power image into rough focus</option><option value="Makes tiny adjustments to sharpen cell detail at medium and high power">Makes tiny adjustments to sharpen cell detail at medium and high power</option><option value="Smallest distance between two points that can still be seen as separate">Smallest distance between two points that can still be seen as separate</option></select>
+        </div>
+        
+        <div class="task-box">
+          <label for="sort-sel-2"><strong>3. Fine focus knob</strong></label>
+          <select id="sort-sel-2" data-expected="Makes tiny adjustments to sharpen cell detail at medium and high power"><option value="">Choose matching statement...</option><option value="Multiply their powers together to find total magnification">Multiply their powers together to find total magnification</option><option value="Moves the stage a large distance to bring the low-power image into rough focus">Moves the stage a large distance to bring the low-power image into rough focus</option><option value="Makes tiny adjustments to sharpen cell detail at medium and high power">Makes tiny adjustments to sharpen cell detail at medium and high power</option><option value="Smallest distance between two points that can still be seen as separate">Smallest distance between two points that can still be seen as separate</option></select>
+        </div>
+        
+        <div class="task-box">
+          <label for="sort-sel-3"><strong>4. Resolution</strong></label>
+          <select id="sort-sel-3" data-expected="Smallest distance between two points that can still be seen as separate"><option value="">Choose matching statement...</option><option value="Multiply their powers together to find total magnification">Multiply their powers together to find total magnification</option><option value="Moves the stage a large distance to bring the low-power image into rough focus">Moves the stage a large distance to bring the low-power image into rough focus</option><option value="Makes tiny adjustments to sharpen cell detail at medium and high power">Makes tiny adjustments to sharpen cell detail at medium and high power</option><option value="Smallest distance between two points that can still be seen as separate">Smallest distance between two points that can still be seen as separate</option></select>
+        </div>
+        
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;">
+        <button type="button" data-sort-check>Check matches</button>
+        <button type="button" data-sort-reset>Reset matches</button>
+      </div>
+      <p class="status-box sort-status" role="status">Match each term to its scientific explanation.</p>
+    </div>
+    <div class="card" id="ca-points-modal">
+      <h3>Four-team points board</h3>
+      <div class="grid-2">
+        <div class="card" style="margin:0;">
+          <h4>Circles: <span id="score-0">0</span> pts</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <button type="button" data-team-add="0" data-pts="1">+1 Match</button>
+            <button type="button" data-team-add="0" data-pts="1">+1 Reason</button>
+            <button type="button" data-team-add="0" data-pts="-1">-1</button>
+          </div>
+        </div>
+        
+        <div class="card" style="margin:0;">
+          <h4>Squares: <span id="score-1">0</span> pts</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <button type="button" data-team-add="1" data-pts="1">+1 Match</button>
+            <button type="button" data-team-add="1" data-pts="1">+1 Reason</button>
+            <button type="button" data-team-add="1" data-pts="-1">-1</button>
+          </div>
+        </div>
+        
+        <div class="card" style="margin:0;">
+          <h4>Triangles: <span id="score-2">0</span> pts</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <button type="button" data-team-add="2" data-pts="1">+1 Match</button>
+            <button type="button" data-team-add="2" data-pts="1">+1 Reason</button>
+            <button type="button" data-team-add="2" data-pts="-1">-1</button>
+          </div>
+        </div>
+        
+        <div class="card" style="margin:0;">
+          <h4>Diamonds: <span id="score-3">0</span> pts</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <button type="button" data-team-add="3" data-pts="1">+1 Match</button>
+            <button type="button" data-team-add="3" data-pts="1">+1 Reason</button>
+            <button type="button" data-team-add="3" data-pts="-1">-1</button>
+          </div>
+        </div>
+        </div>
+      <button type="button" id="reset-points" style="margin-top:12px;">Reset points board</button>
+    </div>
+    <details class="participation-loop">
+      <summary>Where what you say changes something · optional</summary>
+      <p>Point, sign, say or show an observation, question or access need. You may pass or speak privately.</p>
+      <p>The adult says what can change, makes one agreed adjustment if possible, and checks whether it helped.</p>
+    </details>
+    
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W03_L1)</span>
+          </footer>
+        </section>
+        
+        <section class="slide" id="slide-6" data-stage="I do 2" aria-hidden="true">
+          <span class="stage-pill">Stage 6 · I do 2</span>
+          <h2>I do 2 · Magnification versus resolution and electron microscopes</h2>
+          
+    <div class="card">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" class="ca-pic" role="img" aria-labelledby="svg-ido2-2-title svg-ido2-2-desc"><title id="svg-ido2-2-title">I do 2 · Magnification versus resolution and electron microscopes</title><desc id="svg-ido2-2-desc">High-contrast teaching diagram with three labelled panels.</desc><rect x="0" y="0" width="960" height="300" fill="#ffffff" stroke="#5B417A" stroke-width="4" rx="14"/><rect x="24" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="168" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 1 · Microscope</text><rect x="133" y="88" width="70" height="22" rx="4" fill="#ffffff" stroke="#111827" stroke-width="3"/><line x1="168" y1="110" x2="168" y2="150" stroke="#111827" stroke-width="6"/><rect x="113" y="150" width="110" height="14" fill="#3B2854"/><circle cx="168" cy="172" r="10" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="168" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Eyepiece ×10 at top</text><text x="168" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Objectives ×4, ×10, ×40</text><rect x="336" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="480" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 2 · Total mag</text><polygon points="480,85 415,172 545,172" fill="#ffffff" stroke="#111827" stroke-width="4"/><line x1="447" y1="130" x2="513" y2="130" stroke="#111827" stroke-width="3"/><line x1="480" y1="130" x2="480" y2="172" stroke="#111827" stroke-width="3"/><text x="480" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">I</text><text x="458" y="162" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">A</text><text x="502" y="162" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">M</text><text x="480" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Eyepiece × Objective</text><text x="480" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">10 × 40 = ×400</text><rect x="648" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="792" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 3 · Resolution</text><rect x="727" y="90" width="130" height="80" rx="14" fill="#ffffff" stroke="#111827" stroke-width="4"/><circle cx="772" cy="130" r="18" fill="#3B2854"/><ellipse cx="817" cy="135" rx="22" ry="14" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="792" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Light limit: ~200 nm</text><text x="792" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Electron limit: ~0.2 nm</text></svg>
+    </div>
+    <div class="model-frame" id="model-2" data-step-model data-steps="[&quot;Define magnification: how many times larger the image appears compared with the actual object.&quot;, &quot;Define resolution: the smallest distance between two points that can still be distinguished as two separate points.&quot;, &quot;Compare light microscopes (max magnification ~\u00d71500, resolution ~200 nm, can view living cells) with electron microscopes (max magnification ~\u00d72,000,000, resolution ~0.2 nm, dead specimens in a vacuum).&quot;, &quot;Explain the biological impact: electron microscopes have higher magnification AND higher resolution, allowing scientists to see ribosomes and internal mitochondrial membranes.&quot;]">
+      <h3>I do 2 · Magnification versus resolution and electron microscopes</h3>
+      <p class="status-box model-caption" role="status">Step 1: Define magnification: how many times larger the image appears compared with the actual object.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin:10px 0;">
+        <button type="button" data-step-next>Show next step</button>
+        <button type="button" data-step-reset>Reset model</button>
+      </div>
+      <ol><li class="v5-step" ><strong>Step 1:</strong> Define magnification: how many times larger the image appears compared with the actual object.</li><li class="v5-step" hidden><strong>Step 2:</strong> Define resolution: the smallest distance between two points that can still be distinguished as two separate points.</li><li class="v5-step" hidden><strong>Step 3:</strong> Compare light microscopes (max magnification ~×1500, resolution ~200 nm, can view living cells) with electron microscopes (max magnification ~×2,000,000, resolution ~0.2 nm, dead specimens in a vacuum).</li><li class="v5-step" hidden><strong>Step 4:</strong> Explain the biological impact: electron microscopes have higher magnification AND higher resolution, allowing scientists to see ribosomes and internal mitochondrial membranes.</li></ol>
+    </div>
+    <div class="card-warm">
+      <h3>Worked example 2</h3>
+      <p>Worked example 2: Exam question — &quot;Explain why ribosomes can be seen with an electron microscope but not with a light microscope (2 marks).&quot; Model answer: Ribosomes are around 25 nm wide, which is smaller than the ~200 nm resolution limit of a light microscope (1). An electron microscope has a much higher resolution (~0.2 nm), so it can distinguish ribosomes as separate structures (1).</p>
+    </div>
+    <div class="ca-act" data-check data-quiz data-correct="0" data-explain="Magnification only makes the image larger; without higher resolution (~0.2 nm from an electron microscope), objects smaller than 200 nm remain blurred.">
+      <h3>Single-decision hinge check</h3>
+      <p><strong>A student enlarges a light microscope photograph on a computer screen by 10 times to try to see ribosomes clearly. Why does this not work?</strong></p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">A. Increasing magnification on a screen does not improve the resolution limit (~200 nm) of the light microscope.</button><button type="button" data-option="1">B. Computer screens reduce the eyepiece magnification to zero.</button><button type="button" data-option="2">C. Ribosomes are larger than the whole cell so they do not fit on the screen.</button></div>
+      <p class="status-box" role="status">Choose the scientifically accurate statement before moving on.</p>
+    </div>
+    
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W03_L1)</span>
+          </footer>
+        </section>
+        
+        <section class="slide" id="slide-7" data-stage="We do 2" aria-hidden="true">
+          <span class="stage-pill">Stage 7 · We do 2</span>
+          <h2>We do 2 · method order and data table</h2>
+          
+    <div class="ca-act" data-sequence>
+      <h3>Order the scientific method or reasoning steps</h3>
+      <ol>
+        <li data-order="1" style="margin-bottom:10px;">
+          <span>Clip the slide onto the stage and select the lowest-power (×4) objective lens.</span>
+          <button type="button" data-move-up>Move up</button>
+          <button type="button" data-move-down>Move down</button>
+        </li>
+        
+        <li data-order="0" style="margin-bottom:10px;">
+          <span>Place a thin layer of specimen on the slide, add one drop of stain, and lower the coverslip at an angle.</span>
+          <button type="button" data-move-up>Move up</button>
+          <button type="button" data-move-down>Move down</button>
+        </li>
+        
+        <li data-order="2" style="margin-bottom:10px;">
+          <span>Use the coarse focus knob to locate the cells, then use the fine focus knob to sharpen the image.</span>
+          <button type="button" data-move-up>Move up</button>
+          <button type="button" data-move-down>Move down</button>
+        </li>
+        
+        <li data-order="3" style="margin-bottom:10px;">
+          <span>Rotate the nosepiece to the ×10 or ×40 objective lens and readjust with the fine focus knob only.</span>
+          <button type="button" data-move-up>Move up</button>
+          <button type="button" data-move-down>Move down</button>
+        </li>
+        </ol>
+      <button type="button" data-seq-check>Check order</button>
+      <p class="status-box seq-status" role="status">Use move up and Move down to place the steps in order, then check.</p>
+    </div>
+    <div class="card">
+      <h3>Microscope lens combinations and light versus electron comparison</h3>
+      <table>
+        <thead><tr><th scope="col">Setup or feature</th><th scope="col">Eyepiece / Light microscope</th><th scope="col">Objective / Electron microscope</th><th scope="col">Result or comparison</th></tr></thead>
+        <tbody><tr><td>Low power setup</td><td>×10 eyepiece</td><td>×4 objective</td><td>Total magnification = ×40</td></tr><tr><td>Medium power setup</td><td>×10 eyepiece</td><td>×10 objective</td><td>Total magnification = ×100</td></tr><tr><td>High power setup</td><td>×10 eyepiece</td><td>×40 objective</td><td>Total magnification = ×400</td></tr><tr><td>Maximum magnification</td><td>Light: ~×1,500</td><td>Electron: ~×2,000,000</td><td>Electron magnifies &gt;1,000× more</td></tr><tr><td>Maximum resolution</td><td>Light: ~200 nm (0.2 µm)</td><td>Electron: ~0.2 nm</td><td>Electron resolves ribosomes &amp; cristae</td></tr><tr><td>Specimen state</td><td>Light: living or dead, colour</td><td>Electron: dead in vacuum, false colour</td><td>Light views live cell processes</td></tr></tbody>
+      </table>
+    </div>
+    
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W03_L1)</span>
+          </footer>
+        </section>
+        
+        <section class="slide" id="slide-8" data-stage="You do" aria-hidden="true">
+          <span class="stage-pill">Stage 8 · You do</span>
+          <h2>You do · independent tiered practice</h2>
+          
+    <div class="card">
+      <p><strong>Work in your book first.</strong> Choose your route with an adult. Staff mark actual <strong>I · S · C</strong> beside each task.</p>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" class="ca-pic" role="img" aria-labelledby="svg-youdo-3-title svg-youdo-3-desc"><title id="svg-youdo-3-title">Three-panel model: light microscope parts, total magnification formula, and light versus electron resolution.</title><desc id="svg-youdo-3-desc">High-contrast teaching diagram with three labelled panels.</desc><rect x="0" y="0" width="960" height="300" fill="#ffffff" stroke="#5B417A" stroke-width="4" rx="14"/><rect x="24" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="168" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 1 · Microscope</text><rect x="133" y="88" width="70" height="22" rx="4" fill="#ffffff" stroke="#111827" stroke-width="3"/><line x1="168" y1="110" x2="168" y2="150" stroke="#111827" stroke-width="6"/><rect x="113" y="150" width="110" height="14" fill="#3B2854"/><circle cx="168" cy="172" r="10" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="168" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Eyepiece ×10 at top</text><text x="168" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Objectives ×4, ×10, ×40</text><rect x="336" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="480" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 2 · Total mag</text><polygon points="480,85 415,172 545,172" fill="#ffffff" stroke="#111827" stroke-width="4"/><line x1="447" y1="130" x2="513" y2="130" stroke="#111827" stroke-width="3"/><line x1="480" y1="130" x2="480" y2="172" stroke="#111827" stroke-width="3"/><text x="480" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">I</text><text x="458" y="162" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">A</text><text x="502" y="162" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">M</text><text x="480" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Eyepiece × Objective</text><text x="480" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">10 × 40 = ×400</text><rect x="648" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="792" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 3 · Resolution</text><rect x="727" y="90" width="130" height="80" rx="14" fill="#ffffff" stroke="#111827" stroke-width="4"/><circle cx="772" cy="130" r="18" fill="#3B2854"/><ellipse cx="817" cy="135" rx="22" ry="14" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="792" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Light limit: ~200 nm</text><text x="792" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Electron limit: ~0.2 nm</text></svg>
+    </div>
+    <div class="route-group">
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;"><button type="button" class="route-btn active-route" data-route-btn="supported" aria-pressed="true">Supported</button><button type="button" class="route-btn" data-route-btn="independent" aria-pressed="false">Independent</button><button type="button" class="route-btn" data-route-btn="choice" aria-pressed="false">Choice</button><button type="button" class="route-btn" data-route-btn="aspire" aria-pressed="false">Aspire</button></div>
+      
+        <div class="route-panel active-panel" data-route-panel="supported" id="task-supported">
+          <h3>Supported route</h3>
+          
+            <div class="task-box">
+              <p><strong>Task 1 (2 marks):</strong> Complete the formula: Total magnification = __________ magnification × __________ magnification. Then calculate total magnification for a ×10 eyepiece and ×10 objective.</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Use panel 2: Eyepiece × Objective = 10 × 10.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-supported-1">Your answer</label><textarea id="yd-supported-1" rows="3"></textarea></details>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>Task 2 (2 marks):</strong> State which objective lens (×4, ×10 or ×40) you must select first when focusing a slide, and name the focus knob used first.</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Check Starter Beat 2 and Beat 3.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-supported-2">Your answer</label><textarea id="yd-supported-2" rows="3"></textarea></details>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>Task 3 (2 marks):</strong> State whether a light microscope or an electron microscope has higher resolution, and name one tiny cell structure only visible with an electron microscope.</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Check Panel 3 (ribosomes or internal mitochondrial membranes).</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-supported-3">Your answer</label><textarea id="yd-supported-3" rows="3"></textarea></details>
+            </div>
+            
+          <details class="ca-make-tier">
+            <summary>Optional hands-on make-it choice (Supported)</summary>
+            <p>Arrange the microscope label cards (eyepiece ×10, objective ×4/×10/×40, stage, coarse focus, fine focus, light source) in the correct order along the light path from top to bottom.</p>
+          </details>
+        </div>
+        
+        <div class="route-panel" data-route-panel="independent" id="task-independent">
+          <h3>Independent route</h3>
+          
+            <div class="task-box">
+              <p><strong>Task 1 (3 marks):</strong> Calculate the total magnification for: (a) ×10 eyepiece and ×4 objective; (b) ×10 eyepiece and ×40 objective; (c) find the objective lens used if a ×15 eyepiece gives a total magnification of ×600.</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Use total = Eyepiece × Objective and Objective = Total ÷ Eyepiece.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-independent-1">Your answer</label><textarea id="yd-independent-1" rows="3"></textarea></details>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>Task 2 (2 marks):</strong> Explain the difference between magnification and resolution (2 marks).</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Define what each term does to an image.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-independent-2">Your answer</label><textarea id="yd-independent-2" rows="3"></textarea></details>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>Task 3 (3 marks):</strong> Explain how the development of the electron microscope improved our understanding of sub-cellular structures (3 marks).</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>State both magnification and resolution and give a named organelle detail.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-independent-3">Your answer</label><textarea id="yd-independent-3" rows="3"></textarea></details>
+            </div>
+            
+          <details class="ca-make-tier">
+            <summary>Optional hands-on make-it choice (Independent)</summary>
+            <p>Build a two-column comparison mat on your desk sorting 8 property cards into Light microscope versus Electron microscope, then explain one card from each column.</p>
+          </details>
+        </div>
+        
+        <div class="route-panel" data-route-panel="choice" id="task-choice">
+          <h3>Choice route</h3>
+          
+            <div class="task-box">
+              <p><strong>Task 1 (2 marks):</strong> Calculate the total magnification when a ×10 eyepiece is used with a ×4, ×10 and ×40 objective lens.</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Multiply each objective power by 10.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-choice-1">Your answer</label><textarea id="yd-choice-1" rows="3"></textarea></details>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>Task 2 (3 marks):</strong> Write a 4-step method for focusing a prepared slide safely from low power to high power.</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Include ×4 objective, coarse focus, fine focus, and rotating to ×40.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-choice-2">Your answer</label><textarea id="yd-choice-2" rows="3"></textarea></details>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>Task 3 (2 marks):</strong> Compare a light microscope and an electron microscope using two advantages of each.</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Think about living cells/cost versus magnification/resolution.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-choice-3">Your answer</label><textarea id="yd-choice-3" rows="3"></textarea></details>
+            </div>
+            
+          <details class="ca-make-tier">
+            <summary>Optional hands-on make-it choice (Choice)</summary>
+            <p>Construct a step-by-step slide-preparation storyboard using 4 cards (specimen, stain drop, angled coverslip, ×4 coarse focus) and demonstrate the sequence.</p>
+          </details>
+        </div>
+        
+        <div class="route-panel" data-route-panel="aspire" id="task-aspire">
+          <h3>Aspire route</h3>
+          
+            <div class="task-box">
+              <p><strong>Task 1 (2 marks):</strong> A light microscope has a resolution limit of 200 nm. Explain why two protein filaments separated by 50 nm appear as a single blurred line under this microscope, even at ×1500 magnification (2 marks).</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Compare 50 nm with the 200 nm resolution limit.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-aspire-1">Your answer</label><textarea id="yd-aspire-1" rows="3"></textarea></details>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>Task 2 (3 marks):</strong> Why must specimens be dead when viewed in a transmission or scanning electron microscope, and why is an angled coverslip used on a wet-mount light microscope slide? (3 marks)</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Link electron beams to vacuum, and angled coverslips to air bubbles.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-aspire-2">Your answer</label><textarea id="yd-aspire-2" rows="3"></textarea></details>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>Task 3 (3 marks):</strong> A student switches from a ×4 objective to a ×40 objective (with a ×10 eyepiece). Explain what happens to: (a) total magnification, (b) the diameter of the field of view, and (c) why only the fine focus knob should now be turned (3 marks).</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Compare ×40 and ×400, field width, and slide clearance.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-aspire-3">Your answer</label><textarea id="yd-aspire-3" rows="3"></textarea></details>
+            </div>
+            
+          <details class="ca-make-tier">
+            <summary>Optional hands-on make-it choice (Aspire)</summary>
+            <p>Use a millimetre ruler on a 10 cm model cell drawing to demonstrate how switching from ×40 to ×400 changes both apparent image size and field-of-view width.</p>
+          </details>
+        </div>
+        
+    </div>
+    <div class="card ca-make-overview">
+      <h3>Optional make-it station</h3>
+      <p>If writing is a barrier or after completing your book task, build the physical desk model using labelled cards, counters or arrows and explain it to an adult.</p>
+    </div>
+    
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W03_L1)</span>
+          </footer>
+        </section>
+        
+        <section class="slide" id="slide-9" data-stage="Review and improve" aria-hidden="true">
+          <span class="stage-pill">Stage 9 · Review and improve</span>
+          <h2>Review and improve · same-colour edit</h2>
+          
+    <div class="card">
+      <h3>Check your work against the mark scheme</h3>
+      <p>Keep your original response visible. Tick each scientific point you included, then make one <strong>//</strong> edit in the same colour on the same page.</p>
+      
+        <details>
+          <summary>Supported mark scheme</summary>
+          <table>
+            <thead><tr><th scope="col">Task</th><th scope="col">Creditworthy points</th><th scope="col">Marks</th></tr></thead>
+            <tbody><tr><td>1</td><td>Eyepiece magnification × Objective magnification (1). 10 × 10 = ×100 (1).</td><td>2</td></tr><tr><td>2</td><td>Select the ×4 low-power objective first (1) and turn the coarse focus knob (1).</td><td>2</td></tr><tr><td>3</td><td>Electron microscope has higher resolution (1); it reveals ribosomes or internal mitochondrial membranes (1).</td><td>2</td></tr></tbody>
+          </table>
+        </details>
+        
+        <details>
+          <summary>Independent mark scheme</summary>
+          <table>
+            <thead><tr><th scope="col">Task</th><th scope="col">Creditworthy points</th><th scope="col">Marks</th></tr></thead>
+            <tbody><tr><td>1</td><td>(a) ×40 (1); (b) ×400 (1); (c) 600 ÷ 15 = ×40 objective (1).</td><td>3</td></tr><tr><td>2</td><td>Magnification is how many times larger an image appears than the real object (1); resolution is the smallest distance between two points that can still be seen as separate (1).</td><td>2</td></tr><tr><td>3</td><td>Electron microscopes have higher magnification and higher resolution than light microscopes (1), resolving down to ~0.2 nm instead of ~200 nm (1), so scientists could see ribosomes, plasmids and internal structures of mitochondria and chloroplasts (1).</td><td>3</td></tr></tbody>
+          </table>
+        </details>
+        
+        <details>
+          <summary>Aspire mark scheme</summary>
+          <table>
+            <thead><tr><th scope="col">Task</th><th scope="col">Creditworthy points</th><th scope="col">Marks</th></tr></thead>
+            <tbody><tr><td>1</td><td>50 nm is smaller than the 200 nm minimum distance the light microscope can resolve (1), so light waves diffract and the two filaments cannot be distinguished as separate points regardless of magnification (1).</td><td>2</td></tr><tr><td>2</td><td>Electron microscopes require a vacuum so air molecules do not scatter electrons (1), which dehydrates and kills cells (1). Lowering a coverslip at an angle prevents trapped air bubbles from obscuring the specimen (1).</td><td>3</td></tr><tr><td>3</td><td>(a) Total magnification increases 10-fold from ×40 to ×400 (1); (b) the field of view diameter decreases to one-tenth (1); (c) the ×40 lens is very close to the glass slide so coarse focus could crack the slide or damage the lens (1).</td><td>3</td></tr></tbody>
+          </table>
+        </details>
+        
+    </div>
+    <div class="card-green">
+      <h3>Three-step review checklist</h3>
+      <ol>
+        <li>Check that you used the accurate scientific term from the word list.</li>
+        <li>Link your statement to a measurement, calculation or diagram detail.</li>
+        <li>Write <strong>//</strong> and add one missing detail or unit in the same colour on the same page.</li>
+      </ol>
+    </div>
+    
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W03_L1)</span>
+          </footer>
+        </section>
+        
+        <section class="slide" id="slide-10" data-stage="Exit ticket" aria-hidden="true">
+          <span class="stage-pill">Stage 10 · Exit ticket</span>
+          <h2>Exit ticket · evidence check</h2>
+          
+    
+        <div class="ca-act" data-quiz data-correct="1" data-explain="Total magnification = 10 × 40 = ×400.">
+          <p><strong>Exit check 1:</strong> What is the total magnification when using a ×10 eyepiece lens and a ×40 objective lens?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">×50</button><button type="button" data-option="1">×400</button><button type="button" data-option="2">×4</button></div>
+          <p class="status-box" role="status">Select an option to check today's key learning.</p>
+        </div>
+        
+        <div class="ca-act" data-quiz data-correct="2" data-explain="Resolution is the ability to distinguish two close points as separate details.">
+          <p><strong>Exit check 2:</strong> Which term means the smallest distance between two points that can still be seen as separate?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">Magnification</button><button type="button" data-option="1">Staining</button><button type="button" data-option="2">Resolution</button></div>
+          <p class="status-box" role="status">Select an option to check today's key learning.</p>
+        </div>
+        
+        <div class="ca-act" data-quiz data-correct="0" data-explain="Electron microscopes have a resolution of ~0.2 nm, revealing tiny sub-cellular structures.">
+          <p><strong>Exit check 3:</strong> Which microscope allows scientists to see ribosomes and internal membranes of mitochondria?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">Electron microscope</button><button type="button" data-option="1">Hand lens</button><button type="button" data-option="2">Light microscope</button></div>
+          <p class="status-box" role="status">Select an option to check today's key learning.</p>
+        </div>
+        
+    <div class="route-group">
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;"><button type="button" class="route-btn active-route" data-route-btn="supported" aria-pressed="true">Supported</button><button type="button" class="route-btn" data-route-btn="independent" aria-pressed="false">Independent</button><button type="button" class="route-btn" data-route-btn="aspire" aria-pressed="false">Aspire</button></div>
+      <div class="route-panel active-panel" data-route-panel="supported" id="exit-supported"><h3>Supported exit ticket</h3><div class="task-box"><p><strong>1. Calculate the total magnification for a ×10 eyepiece and ×4 objective lens.</strong></p><details><summary>Expected point</summary><p>10 × 4 = ×40.</p></details></div><div class="task-box"><p><strong>2. Does magnification or resolution mean making an image look bigger?</strong></p><details><summary>Expected point</summary><p>Magnification.</p></details></div></div><div class="route-panel" data-route-panel="independent" id="exit-independent"><h3>Independent exit ticket</h3><div class="task-box"><p><strong>1. A microscope has a ×10 eyepiece and gives ×400 total magnification. What is the objective lens magnification?</strong></p><details><summary>Expected point</summary><p>400 ÷ 10 = ×40.</p></details></div><div class="task-box"><p><strong>2. Give one reason why electron microscopes gave scientists a better understanding of cells than light microscopes.</strong></p><details><summary>Expected point</summary><p>They have higher magnification and higher resolution (~0.2 nm), revealing ribosomes and internal organelle detail.</p></details></div></div><div class="route-panel" data-route-panel="aspire" id="exit-aspire"><h3>Aspire exit ticket</h3><div class="task-box"><p><strong>1. Explain why increasing magnification alone does not make a blurry image clearer.</strong></p><details><summary>Expected point</summary><p>Clarity depends on resolution (distinguishing close points); enlarging an image below the resolution limit only enlarges the blur.</p></details></div><div class="task-box"><p><strong>2. State one advantage of a light microscope over an electron microscope.</strong></p><details><summary>Expected point</summary><p>Can observe living cells in colour without needing a vacuum.</p></details></div></div>
+    </div>
+    <div class="card">
+      <p><strong>Response modes:</strong> verbal · written · drawn · signed · symbol / choice-selected · demonstrated / re-attempt · adult-scribed. You may pass.</p>
+      <p><strong>Next lesson:</strong> Lesson 2 (SCI_LAUNCH_A1_W03_L2): Calculating magnification, actual size (I = A × M) and unit conversions (mm, µm, nm).</p>
+    </div>
+    
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W03_L1)</span>
+          </footer>
+        </section>
+        
+  </main>
+  
+        <section class="print-section" id="print-supported" data-print-route="supported">
+          <h2>Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W03_L1) · Supported print pack</h2>
+          <p><strong>Learning intention:</strong> Identify the key parts of a light microscope, compare magnification and resolution, and calculate total magnification using eyepiece and objective lenses.</p>
+          <p><strong>1. Complete the formula: Total magnification = __________ magnification × __________ magnification. Then calculate total magnification for a ×10 eyepiece and ×10 objective. (2 marks)</strong> — Cue: Use Panel 2: Eyepiece × Objective = 10 × 10.</p><p><strong>2. State which objective lens (×4, ×10 or ×40) you must select first when focusing a slide, and name the focus knob used first. (2 marks)</strong> — Cue: Check Starter Beat 2 and Beat 3.</p><p><strong>3. State whether a light microscope or an electron microscope has higher resolution, and name one tiny cell structure only visible with an electron microscope. (2 marks)</strong> — Cue: Check Panel 3 (ribosomes or internal mitochondrial membranes).</p>
+          <p>Made by Matt</p>
+        </section>
+        
+        <section class="print-section" id="print-independent" data-print-route="independent">
+          <h2>Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W03_L1) · Independent print pack</h2>
+          <p><strong>Learning intention:</strong> Identify the key parts of a light microscope, compare magnification and resolution, and calculate total magnification using eyepiece and objective lenses.</p>
+          <p><strong>1. Calculate the total magnification for: (a) ×10 eyepiece and ×4 objective; (b) ×10 eyepiece and ×40 objective; (c) find the objective lens used if a ×15 eyepiece gives a total magnification of ×600. (3 marks)</strong> — Cue: Use Total = Eyepiece × Objective and Objective = Total ÷ Eyepiece.</p><p><strong>2. Explain the difference between magnification and resolution (2 marks). (2 marks)</strong> — Cue: Define what each term does to an image.</p><p><strong>3. Explain how the development of the electron microscope improved our understanding of sub-cellular structures (3 marks). (3 marks)</strong> — Cue: State both magnification and resolution and give a named organelle detail.</p>
+          <p>Made by Matt</p>
+        </section>
+        
+        <section class="print-section" id="print-aspire" data-print-route="aspire">
+          <h2>Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W03_L1) · Aspire print pack</h2>
+          <p><strong>Learning intention:</strong> Identify the key parts of a light microscope, compare magnification and resolution, and calculate total magnification using eyepiece and objective lenses.</p>
+          <p><strong>1. A light microscope has a resolution limit of 200 nm. Explain why two protein filaments separated by 50 nm appear as a single blurred line under this microscope, even at ×1500 magnification (2 marks). (2 marks)</strong> — Cue: Compare 50 nm with the 200 nm resolution limit.</p><p><strong>2. Why must specimens be dead when viewed in a transmission or scanning electron microscope, and why is an angled coverslip used on a wet-mount light microscope slide? (3 marks) (3 marks)</strong> — Cue: Link electron beams to vacuum, and angled coverslips to air bubbles.</p><p><strong>3. A student switches from a ×4 objective to a ×40 objective (with a ×10 eyepiece). Explain what happens to: (a) total magnification, (b) the diameter of the field of view, and (c) why only the fine focus knob should now be turned (3 marks). (3 marks)</strong> — Cue: Compare ×40 and ×400, field width, and slide clearance.</p>
+          <p>Made by Matt</p>
+        </section>
+        
+  
+    <dialog id="ta-dialog" aria-labelledby="ta-dialog-title">
+      <h2 id="ta-dialog-title">TA Brief · Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W03_L1)</h2>
+      <p><strong>Learning intention:</strong> Identify the key parts of a light microscope, compare magnification and resolution, and calculate total magnification using eyepiece and objective lenses.</p>
+      <p><strong>At check-out, record E for today's lesson against each pupil's target on the evidence app.</strong></p>
+      <p class="ca-watch-staff"><strong>Watch (staff preview first): <a href="https://www.stem.org.uk/resources" target="_blank" rel="noopener noreferrer">Light microscope setup, slide staining and total magnification demonstration</a></strong></p>
+      <h3>Adult deployment and access support</h3>
+      <ul>
+        <li>Rehearse the three-panel picture at Arrival before independent tasks.</li>
+        <li>Invite a response in the learner's usual mode (verbal · written · drawn · signed · symbol / choice-selected · demonstrated / re-attempt · adult-scribed). Allow a pass.</li>
+        <li>Wait, point to the diagram detail, and rephrase before offering a content cue.</li>
+        <li>Record actual <strong>I · S · C</strong> beside each task in the book or sheet.</li>
+      </ul>
+      <p>Made by Matt</p>
+      <button type="button" data-close-dialog>Close TA brief</button>
+    </dialog>
+    
+  
+    <dialog id="guidance-dialog" aria-labelledby="guidance-dialog-title">
+      <h2 id="guidance-dialog-title">Teacher, Cover and SLT Guidance · Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W03_L1)</h2>
+      <p><strong>Scheme alignment:</strong> Row 34 · Topic 1 Key Concepts in Biology: Microscopy core practical; magnification = image / actual; unit conversions (mm, µm, nm).</p>
+      <p><strong>At check-out, record E for today's lesson against each pupil's target on the evidence app.</strong></p>
+      <p class="ca-watch-staff"><strong>Watch (staff preview first): <a href="https://www.stem.org.uk/resources" target="_blank" rel="noopener noreferrer">Light microscope setup, slide staining and total magnification demonstration</a></strong></p>
+      <h3>Practical apparatus and safety</h3>
+      <p>Carry the light microscope with two hands (one holding the arm, one supporting the base). Keep lamps and leads away from water. Handle glass slides and thin coverslips carefully over the bench; report any cracked or broken glass to an adult immediately. Wash hands after using biological stains such as iodine or methylene blue.</p>
+      <h3>P17 · Planned adaptations</h3>
+      <ul>
+        <li><strong>Cognition and learning:</strong> Rehearse one worked step at a time and fade one cue before the independent check.</li>
+        <li><strong>Communication and interaction:</strong> Accept pointing, signing, choice selection or adult scribing.</li>
+        <li><strong>Regulation:</strong> Use the quiet pause option and return to the last secure step.</li>
+        <li><strong>Sensory and physical:</strong> Offer high-contrast print cards and seated or adult-directed apparatus handling.</li>
+      </ul>
+      <h3>Key vocabulary</h3>
+      <table>
+        <thead><tr><th scope="col">Tier</th><th scope="col">Term</th><th scope="col">Meaning</th><th scope="col">Example</th></tr></thead>
+        <tbody><tr><td>Tier 2</td><td><strong>Distinguish</strong></td><td>To tell two things apart clearly as separate items.</td><td>High resolution lets us distinguish two close points inside a cell.</td></tr><tr><td>Tier 2</td><td><strong>Contrast</strong></td><td>A clear visual difference between light and dark areas.</td><td>Adding iodine stain increases contrast so the nucleus stands out.</td></tr><tr><td>Tier 3</td><td><strong>Magnification</strong></td><td>How many times larger an image appears compared with the real object.</td><td>A ×10 eyepiece and ×40 objective give a total magnification of ×400.</td></tr><tr><td>Tier 3</td><td><strong>Resolution</strong></td><td>The smallest distance between two points that can still be seen as separate.</td><td>An electron microscope has a resolution of about 0.2 nm.</td></tr><tr><td>Tier 3</td><td><strong>Objective lens</strong></td><td>The lens closest to the specimen on the rotating nosepiece (×4, ×10, ×40).</td><td>Always start focusing with the ×4 low-power objective lens.</td></tr><tr><td>Tier 3</td><td><strong>Eyepiece lens</strong></td><td>The lens at the top of the microscope that you look through (usually ×10).</td><td>Multiply the eyepiece power by the objective power to find total magnification.</td></tr></tbody>
+      </table>
+      <p>Made by Matt</p>
+      <button type="button" data-close-dialog>Close guidance</button>
+    </dialog>
+    
+  
+    <dialog id="pause-dialog" aria-labelledby="pause-dialog-title">
+      <h2 id="pause-dialog-title">Quiet pause</h2>
+      <p>Take a quiet pause. Your work is kept safe on this page. Return to the last secure step and one small choice when you are ready.</p>
+      <p>Made by Matt</p>
+      <button type="button" data-close-dialog>Return to lesson</button>
+    </dialog>
+    
+  <script>
+(function() {
+  window.classicCurrentSlide = 0;
+  window.soundEnabled = false;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.body.classList.add('no-motion');
+  }
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const picker = document.getElementById('stage-picker');
+  const statusEl = document.getElementById('stage-status');
+
+  window.showSlide = function(idx) {
+    const n = Math.max(0, Math.min(slides.length - 1, Number(idx) || 0));
+    window.classicCurrentSlide = n;
+    slides.forEach((s, i) => {
+      if (i === n) {
+        s.classList.add('active');
+        s.setAttribute('aria-hidden', 'false');
+      } else {
+        s.classList.remove('active');
+        s.setAttribute('aria-hidden', 'true');
+      }
+    });
+    if (picker) picker.value = String(n);
+    if (statusEl && slides[n]) {
+      statusEl.textContent = 'Stage ' + (n + 1) + ' of ' + slides.length + ': ' + (slides[n].getAttribute('data-stage') || '');
+    }
+  };
+
+  window.SCI_PROOF = function() {
+    return {
+      slideCount: slides.length,
+      currentSlide: window.classicCurrentSlide,
+      sound: window.soundEnabled
+    };
+  };
+
+  document.getElementById('prev-btn')?.addEventListener('click', () => window.showSlide(window.classicCurrentSlide - 1));
+  document.getElementById('next-btn')?.addEventListener('click', () => window.showSlide(window.classicCurrentSlide + 1));
+  picker?.addEventListener('change', (e) => window.showSlide(Number(e.target.value)));
+
+  document.addEventListener('keydown', (e) => {
+    const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+    if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+    if (e.key === 'ArrowRight') window.showSlide(window.classicCurrentSlide + 1);
+    if (e.key === 'ArrowLeft') window.showSlide(window.classicCurrentSlide - 1);
+    if (e.key === 'Escape') {
+      document.querySelectorAll('dialog[open]').forEach(d => d.close());
+    }
+  });
+
+  // View toggles
+  document.querySelectorAll('[data-toggle]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const mode = btn.getAttribute('data-toggle');
+      const pressed = btn.getAttribute('aria-pressed') === 'true';
+      btn.setAttribute('aria-pressed', String(!pressed));
+      if (mode === 'calm') document.body.classList.toggle('calm-view', !pressed);
+      if (mode === 'high-contrast') document.body.classList.toggle('high-contrast', !pressed);
+      if (mode === 'reduce-motion') document.body.classList.toggle('no-motion', !pressed);
+    });
+  });
+
+  // Dialog controls
+  document.querySelectorAll('[data-open-dialog]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const d = document.getElementById(btn.getAttribute('data-open-dialog'));
+      if (d && typeof d.showModal === 'function') d.showModal();
+      else if (d) d.setAttribute('open', '');
+    });
+  });
+  document.querySelectorAll('[data-close-dialog]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const d = btn.closest('dialog');
+      if (d && typeof d.close === 'function') d.close();
+      else if (d) d.removeAttribute('open');
+    });
+  });
+
+  // Reveal buttons
+  document.querySelectorAll('[data-reveal]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = document.getElementById(btn.getAttribute('data-reveal'));
+      if (target) {
+        const isHidden = target.hasAttribute('hidden');
+        if (isHidden) target.removeAttribute('hidden');
+        else target.setAttribute('hidden', '');
+      }
+    });
+  });
+
+  // Regulation check
+  document.querySelectorAll('[data-regulation]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const st = document.getElementById('regulation-status');
+      if (st) st.textContent = 'Logged: ' + btn.getAttribute('data-regulation') + '. Speak privately or pass at any time.';
+    });
+  });
+
+  // Route tabs (Arrival, You do, Exit)
+  document.querySelectorAll('.route-group').forEach(group => {
+    const buttons = group.querySelectorAll('[data-route-btn]');
+    const panels = group.querySelectorAll('.route-panel');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const r = btn.getAttribute('data-route-btn');
+        buttons.forEach(b => {
+          const match = b.getAttribute('data-route-btn') === r;
+          b.classList.toggle('active-route', match);
+          b.setAttribute('aria-pressed', String(match));
+        });
+        panels.forEach(p => {
+          p.classList.toggle('active-panel', p.getAttribute('data-route-panel') === r);
+        });
+      });
+    });
+  });
+
+  // Tap quizzes (Arrival & Exit)
+  document.querySelectorAll('[data-quiz]').forEach(quiz => {
+    const right = quiz.getAttribute('data-correct');
+    const explain = quiz.getAttribute('data-explain') || '';
+    const status = quiz.querySelector('[role="status"]');
+    quiz.querySelectorAll('[data-option]').forEach(opt => {
+      opt.addEventListener('click', () => {
+        const chosen = opt.getAttribute('data-option');
+        if (chosen === right) {
+          status.textContent = 'Yes. ' + explain;
+        } else {
+          status.textContent = 'Try again. Check the diagram clue and choose another option.';
+        }
+      });
+    });
+  });
+
+  // Starter 4-step beatbox + vote
+  document.querySelectorAll('[data-beat]').forEach(box => {
+    let idx = 0;
+    const lights = Array.from(box.querySelectorAll('.ca-light'));
+    const status = box.querySelector('.beat-status');
+    function render(n) {
+      lights.forEach((l, i) => l.classList.toggle('lit', i < n));
+      if (status) status.textContent = n === 0 ? 'Ready: step 0 of ' + lights.length : 'Showing step ' + n + ' of ' + lights.length;
+    }
+    box.querySelector('[data-beat-next]')?.addEventListener('click', () => {
+      idx = Math.min(lights.length, idx + 1);
+      render(idx);
+    });
+    box.querySelector('[data-beat-all]')?.addEventListener('click', () => {
+      idx = lights.length;
+      render(idx);
+    });
+    box.querySelector('[data-beat-reset]')?.addEventListener('click', () => {
+      idx = 0;
+      render(idx);
+    });
+  });
+
+  // Step models (I do 1 & I do 2)
+  document.querySelectorAll('[data-step-model]').forEach(model => {
+    const steps = JSON.parse(model.getAttribute('data-steps') || '[]');
+    let cur = 0;
+    const cap = model.querySelector('.model-caption');
+    const items = Array.from(model.querySelectorAll('.v5-step'));
+    function update() {
+      if (cap && steps[cur]) cap.textContent = 'Step ' + (cur + 1) + ': ' + steps[cur];
+      items.forEach((el, i) => {
+        if (i <= cur) el.removeAttribute('hidden');
+        else el.setAttribute('hidden', '');
+      });
+    }
+    model.querySelector('[data-step-next]')?.addEventListener('click', () => {
+      cur = Math.min(steps.length - 1, cur + 1);
+      update();
+    });
+    model.querySelector('[data-step-reset]')?.addEventListener('click', () => {
+      cur = 0;
+      items.forEach((el, i) => {
+        if (i === 0) el.removeAttribute('hidden');
+        else el.setAttribute('hidden', '');
+      });
+      if (cap && steps[0]) cap.textContent = 'Step 1: ' + steps[0];
+    });
+  });
+
+  // We do 1 sort/match + 4-team points board
+  const scores = [0, 0, 0, 0];
+  function renderScores() {
+    scores.forEach((val, i) => {
+      const el = document.getElementById('score-' + i);
+      if (el) el.textContent = String(val);
+    });
+  }
+  document.querySelectorAll('[data-team-add]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const t = Number(btn.getAttribute('data-team-add'));
+      const pts = Number(btn.getAttribute('data-pts') || '1');
+      scores[t] = Math.max(0, scores[t] + pts);
+      renderScores();
+    });
+  });
+  document.getElementById('reset-points')?.addEventListener('click', () => {
+    for (let i = 0; i < 4; i++) scores[i] = 0;
+    renderScores();
+  });
+
+  document.querySelectorAll('[data-sort]').forEach(sortBox => {
+    const status = sortBox.querySelector('.sort-status');
+    sortBox.querySelector('[data-sort-check]')?.addEventListener('click', () => {
+      const selects = Array.from(sortBox.querySelectorAll('select[data-expected]'));
+      let rightCount = 0;
+      selects.forEach(s => {
+        if (s.value === s.getAttribute('data-expected')) rightCount++;
+      });
+      if (status) {
+        status.textContent = rightCount === selects.length
+          ? 'Yes. All ' + rightCount + ' matches are accurate. Award 1 point and ask for a scientific reason for +1 bonus point.'
+          : 'Try again. ' + rightCount + ' of ' + selects.length + ' matched so far.';
+      }
+    });
+    sortBox.querySelector('[data-sort-reset]')?.addEventListener('click', () => {
+      sortBox.querySelectorAll('select').forEach(s => { s.value = ''; });
+      if (status) status.textContent = 'Reset complete. Match each item and explain why.';
+    });
+  });
+
+  // We do 2 sequence ordering
+  document.querySelectorAll('[data-sequence]').forEach(seqBox => {
+    const list = seqBox.querySelector('ol');
+    const status = seqBox.querySelector('.seq-status');
+    seqBox.addEventListener('click', (e) => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      const li = btn.closest('li');
+      if (btn.hasAttribute('data-move-up') && li && li.previousElementSibling) {
+        list.insertBefore(li, li.previousElementSibling);
+      } else if (btn.hasAttribute('data-move-down') && li && li.nextElementSibling) {
+        list.insertBefore(li.nextElementSibling, li);
+      } else if (btn.hasAttribute('data-seq-check')) {
+        const items = Array.from(list.querySelectorAll('li'));
+        const ok = items.every((el, idx) => Number(el.getAttribute('data-order')) === idx);
+        if (status) {
+          status.textContent = ok
+            ? 'Yes. The sequence is in the right scientific order.'
+            : 'Try again. Check which step must happen first.';
+        }
+      }
+    });
+  });
+
+  // Print arming
+  window.printArm = function(route) {
+    document.querySelectorAll('.print-section').forEach(sec => {
+      sec.classList.toggle('visible', sec.getAttribute('data-print-route') === route);
+    });
+  };
+  document.querySelectorAll('[data-print-btn]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      window.printArm(btn.getAttribute('data-print-btn'));
+    });
+  });
+
+  window.showSlide(0);
+})();
+</script>
+</body>
+</html>

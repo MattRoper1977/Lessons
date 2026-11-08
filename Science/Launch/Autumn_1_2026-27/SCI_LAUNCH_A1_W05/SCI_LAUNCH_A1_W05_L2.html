@@ -1,0 +1,1331 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Lesson resource">
+  <title>Osmosis core practical: potato cylinders and percentage change in mass · SCI_LAUNCH_A1_W05_L2</title>
+  <style>
+:root {
+  --bg: #F7F4FA;
+  --surface: #FFFFFF;
+  --surface-tint: #ECE5F6;
+  --surface-warm: #FFF6D5;
+  --surface-green: #EDF5E8;
+  --surface-blue: #E6F2FA;
+  --ink: #111827;
+  --ink-secondary: #172033;
+  --accent: #3B2854;
+  --accent-border: #5B417A;
+  --pathway: #7A5C9E;
+}
+* { box-sizing: border-box; max-width: 100%; overflow-wrap: anywhere; }
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #F7F4FA;
+  color: #111827;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 24px;
+  line-height: 1.45;
+  overflow-x: hidden;
+}
+body.calm-view {
+  background-color: #FFFFFF;
+}
+body.high-contrast {
+  --bg: #FFFFFF;
+  --surface: #FFFFFF;
+  --surface-tint: #F3F5F7;
+  --surface-warm: #FFFFFF;
+  --surface-green: #FFFFFF;
+  --surface-blue: #FFFFFF;
+  --ink: #000000;
+  --ink-secondary: #000000;
+  --accent: #000000;
+  --accent-border: #000000;
+}
+a {
+  color: #111827;
+  background-color: #ECE5F6;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-weight: 700;
+  text-decoration: underline;
+}
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 8px;
+  background-color: #111827;
+  color: #FFFFFF;
+  padding: 10px 16px;
+  font-size: 24px;
+  z-index: 1000;
+}
+.skip-link:focus { left: 12px; }
+.lesson-topbar {
+  background-color: #FFFFFF;
+  color: #111827;
+  border-bottom: 4px solid #5B417A;
+  padding: 14px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.brand-cluster {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.brand-logo {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  border: 2px solid #5B417A;
+  border-radius: 8px;
+  background-color: #FFFFFF;
+}
+.pathway-pill {
+  background-color: #3B2854;
+  color: #FFFFFF;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 24px;
+  font-weight: 700;
+}
+.controls-bar {
+  background-color: #ECE5F6;
+  color: #111827;
+  border-bottom: 3px solid #5B417A;
+  padding: 12px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+button, select, textarea, input {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 24px;
+  line-height: 1.35;
+  color: #111827;
+  background-color: #FFFFFF;
+  border: 3px solid #3B2854;
+  border-radius: 10px;
+  padding: 8px 16px;
+}
+button {
+  cursor: pointer;
+  font-weight: 700;
+}
+button:hover, button:focus-visible {
+  background-color: #ECE5F6;
+  color: #111827;
+  outline: 3px solid #111827;
+}
+button[aria-pressed="true"], button.active-route {
+  background-color: #3B2854;
+  color: #FFFFFF;
+}
+.slide-deck {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 20px;
+}
+.slide {
+  display: none;
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 4px solid #5B417A;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.slide.active {
+  display: block;
+}
+.stage-pill {
+  display: inline-block;
+  background-color: #ECE5F6;
+  color: #111827;
+  border: 2px solid #5B417A;
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+h1, h2, h3, h4, p, li, th, td, summary, label, span, div {
+  font-size: 24px;
+  color: #111827;
+}
+h1 {
+  font-size: 36px;
+  margin: 8px 0 14px 0;
+  color: #111827;
+}
+h2 {
+  font-size: 30px;
+  margin: 12px 0;
+  color: #111827;
+}
+h3 {
+  font-size: 26px;
+  margin: 10px 0;
+  color: #111827;
+}
+.card, .ca-act, .task-box, .model-frame {
+  background-color: #F7F4FA;
+  color: #111827;
+  border: 3px solid #5B417A;
+  border-radius: 14px;
+  padding: 18px;
+  margin: 16px 0;
+}
+.card-warm {
+  background-color: #FFF6D5;
+  color: #111827;
+  border: 3px solid #5B417A;
+  border-radius: 14px;
+  padding: 18px;
+  margin: 16px 0;
+}
+.card-green {
+  background-color: #EDF5E8;
+  color: #111827;
+  border: 3px solid #3B2854;
+  border-radius: 14px;
+  padding: 18px;
+  margin: 16px 0;
+}
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 18px;
+}
+.ca-pic {
+  width: 100%;
+  max-width: 920px;
+  height: auto;
+  display: block;
+  margin: 12px auto;
+  background-color: #FFFFFF;
+  border-radius: 12px;
+}
+.ca-beatbox {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: 12px;
+  margin: 14px 0;
+}
+.ca-light {
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 3px solid #5B417A;
+  border-radius: 12px;
+  padding: 14px;
+}
+.ca-light.lit {
+  background-color: #FFF6D5;
+  color: #111827;
+  border-color: #111827;
+  border-width: 4px;
+}
+.status-box {
+  background-color: #ECE5F6;
+  color: #111827;
+  border: 3px solid #3B2854;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-top: 12px;
+  font-weight: 700;
+}
+.route-panel {
+  display: none;
+}
+.route-panel.active-panel {
+  display: block;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0;
+  background-color: #FFFFFF;
+  color: #111827;
+}
+th, td {
+  border: 2px solid #3B2854;
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 24px;
+  color: #111827;
+  background-color: #FFFFFF;
+}
+th {
+  background-color: #ECE5F6;
+  color: #111827;
+  font-weight: 700;
+}
+details {
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 2px solid #5B417A;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin: 10px 0;
+}
+summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: #111827;
+}
+textarea {
+  width: 100%;
+  margin-top: 8px;
+}
+.slide-footer {
+  margin-top: 20px;
+  padding-top: 12px;
+  border-top: 2px solid #5B417A;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-weight: 700;
+  color: #111827;
+}
+dialog {
+  max-width: 1100px;
+  width: 92vw;
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 4px solid #3B2854;
+  border-radius: 16px;
+  padding: 24px;
+}
+.print-section {
+  display: none;
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 3px solid #3B2854;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 1200px;
+}
+.print-section.visible {
+  display: block;
+}
+@media (max-width: 640px) {
+  .lesson-topbar, .controls-bar, .slide-deck {
+    padding: 10px;
+  }
+  .slide {
+    padding: 14px;
+  }
+  button, select {
+    width: 100%;
+  }
+}
+</style>
+</head>
+<body>
+  <a class="skip-link" href="#lessonDeck">Skip to lesson stage</a>
+  <header class="lesson-topbar">
+    <div class="brand-cluster">
+      <img src="approved-mark.jpg" alt="Made by Matt approved mark" class="brand-logo">
+      <div>
+        <span class="pathway-pill">SUMMIT · SCIENCE</span>
+        <span style="margin-left:10px;font-weight:700;">Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W05_L2)</span>
+      </div>
+    </div>
+    <div><strong>Made by Matt</strong></div>
+  </header>
+  <nav class="controls-bar" aria-label="Lesson controls">
+    <button type="button" id="prev-btn">◀ Previous</button>
+    <button type="button" id="next-btn">Next ▶</button>
+    <label for="stage-picker">Stage</label>
+    <select id="stage-picker"><option value="0">1. Opening</option><option value="1">2. Arrival task</option><option value="2">3. Starter</option><option value="3">4. I do 1</option><option value="4">5. We do 1</option><option value="5">6. I do 2</option><option value="6">7. We do 2</option><option value="7">8. You do</option><option value="8">9. Review and improve</option><option value="9">10. Exit ticket</option></select>
+    <button type="button" data-open-dialog="pause-dialog">Pause</button>
+    <button type="button" data-toggle="calm" aria-pressed="false">Calm view</button>
+    <button type="button" data-toggle="high-contrast" aria-pressed="false">High contrast</button>
+    <button type="button" data-toggle="reduce-motion" aria-pressed="false">Reduce motion</button>
+    <button type="button" data-open-dialog="ta-dialog" data-action="ta">TA brief</button>
+    <button type="button" data-open-dialog="guidance-dialog" id="sc1-guidance">Guidance</button>
+    <button type="button" data-print-btn="supported">Print Supported</button>
+    <button type="button" data-print-btn="independent">Print Independent</button>
+    <button type="button" data-print-btn="aspire">Print Aspire</button>
+  </nav>
+  <p id="stage-status" role="status" style="padding:4px 20px;margin:0;font-weight:700;">Stage 1 of 10: Opening</p>
+  <main id="lessonDeck" class="slide-deck" tabindex="-1">
+    
+        <section class="slide active" id="slide-1" data-stage="Opening" aria-hidden="false">
+          <span class="stage-pill">Stage 1 · Opening</span>
+          <h1>Osmosis core practical: potato cylinders and percentage change in mass</h1>
+          
+    <div class="grid-2">
+      <div class="card">
+        <p><strong>Learning intention:</strong> Carry out or analyse the potato osmosis core practical, control the key variables, and calculate signed percentage change in mass dividing by the initial mass.</p>
+        <h3>Today I can</h3>
+        <ul>
+          <li>I can name the independent, dependent, and control variables in the potato osmosis core practical.</li><li>I can calculate signed percentage change in mass by dividing the change by the INITIAL mass.</li><li>I can explain why potato cylinders gain mass in water and lose mass in concentrated sucrose solution.</li>
+        </ul>
+        <p><strong>Work in your book first.</strong> Point, speak, sign, draw, type, write or direct an adult. You may pass.</p>
+      </div>
+      <div class="card">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" class="ca-pic" role="img" aria-labelledby="svg-opening-all-title svg-opening-all-desc"><title id="svg-opening-all-title">Three-panel osmosis core practical model: Method &amp; control variables, potato cylinders in 0.0 / 0.4 / 0.8 mol/dm³ sucrose, and the signed percentage-change equation.</title><desc id="svg-opening-all-desc">High-contrast teaching diagram with three labelled panels.</desc><rect x="0" y="0" width="960" height="300" fill="#ffffff" stroke="#5B417A" stroke-width="4" rx="14"/><rect x="24" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="168" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 1 · Fair method</text><rect x="103" y="90" width="130" height="80" rx="14" fill="#ffffff" stroke="#111827" stroke-width="4"/><circle cx="148" cy="130" r="18" fill="#3B2854"/><ellipse cx="193" cy="135" rx="22" ry="14" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="168" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Same size · time · blot</text><text x="168" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Record initial mass first</text><rect x="336" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="480" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 2 · 3 solutions</text><rect x="410" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><line x1="480" y1="90" x2="480" y2="170" stroke="#3B2854" stroke-width="4" stroke-dasharray="8 6"/><circle cx="435" cy="112" r="6" fill="#111827"/><circle cx="455" cy="130" r="6" fill="#111827"/><circle cx="440" cy="150" r="6" fill="#111827"/><circle cx="460" cy="108" r="6" fill="#111827"/><circle cx="515" cy="115" r="6" fill="#111827"/><circle cx="505" cy="148" r="6" fill="#111827"/><circle cx="510" cy="130" r="12" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="480" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">0.0 gains · 0.4 same</text><text x="480" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">0.8 loses mass (water out)</text><rect x="648" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="792" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 3 · % change</text><rect x="722" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><circle cx="742" cy="110" r="7" fill="#3B2854"/><circle cx="757" cy="130" r="7" fill="#3B2854"/><circle cx="744" cy="150" r="7" fill="#3B2854"/><circle cx="767" cy="115" r="7" fill="#3B2854"/><circle cx="772" cy="145" r="7" fill="#3B2854"/><circle cx="827" cy="120" r="7" fill="#3B2854"/><circle cx="840" cy="145" r="7" fill="#3B2854"/><line x1="787" y1="130" x2="817" y2="130" stroke="#111827" stroke-width="4"/><polygon points="817,122 829,130 817,138" fill="#111827"/><text x="792" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">(Final - Initial) / Initial</text><text x="792" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Multiply by 100 · Keep +/-</text></svg>
+        <p><strong>Model clue:</strong> Three-panel osmosis core practical model: Method &amp; control variables, potato cylinders in 0.0 / 0.4 / 0.8 mol/dm³ sucrose, and the signed percentage-change equation.</p>
+      </div>
+    </div>
+    
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W05_L2)</span>
+          </footer>
+        </section>
+        
+        <section class="slide" id="slide-2" data-stage="Arrival task" aria-hidden="true">
+          <span class="stage-pill">Stage 2 · Arrival task</span>
+          <h2>Arrival recall and picture check</h2>
+          
+    <div class="card">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" class="ca-pic" role="img" aria-labelledby="svg-arrival-0-title svg-arrival-0-desc"><title id="svg-arrival-0-title">Arrival picture clue: Panel 1 shows equal potato cylinders, balance and blotting towel; Panel 2 shows 0.0 (swells), 0.4 (no change), and 0.8 mol/dm³ (shrinks).</title><desc id="svg-arrival-0-desc">High-contrast teaching diagram with three labelled panels.</desc><rect x="0" y="0" width="960" height="300" fill="#ffffff" stroke="#5B417A" stroke-width="4" rx="14"/><rect x="24" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="168" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 1 · Fair method</text><rect x="103" y="90" width="130" height="80" rx="14" fill="#ffffff" stroke="#111827" stroke-width="4"/><circle cx="148" cy="130" r="18" fill="#3B2854"/><ellipse cx="193" cy="135" rx="22" ry="14" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="168" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Same size · time · blot</text><text x="168" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Record initial mass first</text><rect x="336" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="480" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 2 · 3 solutions</text><rect x="410" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><line x1="480" y1="90" x2="480" y2="170" stroke="#3B2854" stroke-width="4" stroke-dasharray="8 6"/><circle cx="435" cy="112" r="6" fill="#111827"/><circle cx="455" cy="130" r="6" fill="#111827"/><circle cx="440" cy="150" r="6" fill="#111827"/><circle cx="460" cy="108" r="6" fill="#111827"/><circle cx="515" cy="115" r="6" fill="#111827"/><circle cx="505" cy="148" r="6" fill="#111827"/><circle cx="510" cy="130" r="12" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="480" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">0.0 gains · 0.4 same</text><text x="480" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">0.8 loses mass (water out)</text><rect x="648" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="792" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 3 · % change</text><rect x="722" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><circle cx="742" cy="110" r="7" fill="#3B2854"/><circle cx="757" cy="130" r="7" fill="#3B2854"/><circle cx="744" cy="150" r="7" fill="#3B2854"/><circle cx="767" cy="115" r="7" fill="#3B2854"/><circle cx="772" cy="145" r="7" fill="#3B2854"/><circle cx="827" cy="120" r="7" fill="#3B2854"/><circle cx="840" cy="145" r="7" fill="#3B2854"/><line x1="787" y1="130" x2="817" y2="130" stroke="#111827" stroke-width="4"/><polygon points="817,122 829,130 817,138" fill="#111827"/><text x="792" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">(Final - Initial) / Initial</text><text x="792" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Multiply by 100 · Keep +/-</text></svg>
+      <p>Use the picture first. Question 1 works directly from the picture labels above.</p>
+    </div>
+    
+        <div class="ca-act" data-quiz data-correct="0" data-explain="Osmosis is the net movement of water from a dilute solution to a concentrated solution across a partially permeable membrane.">
+          <p><strong>Arrival check 1:</strong> Recall from Lesson 1: which way does net water movement go across a partially permeable membrane?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">From a dilute solution (more water) to a concentrated solution (less water)</button><button type="button" data-option="1">From a concentrated solution to a dilute solution</button><button type="button" data-option="2">Large sugar molecules cross instead of water</button></div>
+          <p class="status-box" role="status">Choose an option to check your recall.</p>
+        </div>
+        
+        <div class="ca-act" data-quiz data-correct="0" data-explain="We test different concentrations of sucrose solution while keeping potato type, cylinder size, time, and blotting the same.">
+          <p><strong>Arrival check 2:</strong> Look at Panel 1. What is the ONE variable we deliberately change (independent variable) between the boiling tubes in this core practical?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">The concentration of the sucrose (sugar) solution</button><button type="button" data-option="1">The species of vegetable in every tube</button><button type="button" data-option="2">The room temperature of each tube</button></div>
+          <p class="status-box" role="status">Choose an option to check your recall.</p>
+        </div>
+        
+        <div class="ca-act" data-quiz data-correct="0" data-explain="Percentage change = (final mass − initial mass) ÷ INITIAL mass × 100.">
+          <p><strong>Arrival check 3:</strong> Look at Panel 3. Which mass must you ALWAYS divide by when calculating percentage change in mass?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">The initial (starting) mass</button><button type="button" data-option="1">The final mass</button><button type="button" data-option="2">The mass of the glass beaker</button></div>
+          <p class="status-box" role="status">Choose an option to check your recall.</p>
+        </div>
+        
+    <div class="route-group">
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;"><button type="button" class="route-btn active-route" data-route-btn="supported" aria-pressed="true">Supported</button><button type="button" class="route-btn" data-route-btn="independent" aria-pressed="false">Independent</button><button type="button" class="route-btn" data-route-btn="aspire" aria-pressed="false">Aspire</button></div>
+      <div class="route-panel active-panel" data-route-panel="supported" id="arrival-supported"><h3>Supported route</h3>
+            <div class="task-box">
+              <p><strong>1. Look at Panel 1. Which piece of equipment is used to measure the mass of the potato cylinder in grams?</strong></p>
+              <details><summary>Help with this question</summary><p>Check Panel 1.</p></details>
+              <button type="button" data-reveal="arr-supported-1">Reveal answer after responding</button>
+              <p id="arr-supported-1" hidden><strong>Check:</strong> The electronic balance.</p>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>2. From Lesson 1: does water move from dilute to concentrated, or concentrated to dilute?</strong></p>
+              <details><summary>Help with this question</summary><p>Dilute has more water.</p></details>
+              <button type="button" data-reveal="arr-supported-2">Reveal answer after responding</button>
+              <p id="arr-supported-2" hidden><strong>Check:</strong> From dilute to concentrated.</p>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>3. Look at Panel 2. What is the one thing we deliberately change between the tubes (0.0, 0.4, 0.8 mol/dm³)?</strong></p>
+              <details><summary>Help with this question</summary><p>Read the numbers on the tubes.</p></details>
+              <button type="button" data-reveal="arr-supported-3">Reveal answer after responding</button>
+              <p id="arr-supported-3" hidden><strong>Check:</strong> The sugar (sucrose) concentration.</p>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>4. Look at Panel 3. Do you divide by the initial mass or the final mass?</strong></p>
+              <details><summary>Help with this question</summary><p>Always divide by where it started.</p></details>
+              <button type="button" data-reveal="arr-supported-4">Reveal answer after responding</button>
+              <p id="arr-supported-4" hidden><strong>Check:</strong> The initial (starting) mass.</p>
+            </div>
+            </div><div class="route-panel" data-route-panel="independent" id="arrival-independent"><h3>Independent route</h3>
+            <div class="task-box">
+              <p><strong>1. Last lesson you defined osmosis. Which way does water move overall, and what must the membrane be?</strong></p>
+              <details><summary>Help with this question</summary><p>Prior lesson retrieval.</p></details>
+              <button type="button" data-reveal="arr-independent-1">Reveal answer after responding</button>
+              <p id="arr-independent-1" hidden><strong>Check:</strong> Water moves from a dilute solution to a concentrated solution across a partially permeable membrane.</p>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>2. Name two control variables we must keep the same in the potato osmosis core practical.</strong></p>
+              <details><summary>Help with this question</summary><p>Keep the comparison fair.</p></details>
+              <button type="button" data-reveal="arr-independent-2">Reveal answer after responding</button>
+              <p id="arr-independent-2" hidden><strong>Check:</strong> Any two from: same potato/tissue, same cylinder length/diameter, same soak time, same temperature, same blotting technique.</p>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>3. Recall from microscopy: why must units match before you carry out a calculation?</strong></p>
+              <details><summary>Help with this question</summary><p>Prior lesson retrieval.</p></details>
+              <button type="button" data-reveal="arr-independent-3">Reveal answer after responding</button>
+              <p id="arr-independent-3" hidden><strong>Check:</strong> Combining different units (such as mm and µm, or g and kg) produces a calculation error by a factor of 1000.</p>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>4. Today we measure potato mass before and after soaking. Why do we calculate percentage change in mass rather than just using raw change in grams?</strong></p>
+              <details><summary>Help with this question</summary><p>Normalises for starting mass.</p></details>
+              <button type="button" data-reveal="arr-independent-4">Reveal answer after responding</button>
+              <p id="arr-independent-4" hidden><strong>Check:</strong> Because cylinders do not start at the exact same initial mass, so percentage change allows a fair comparison between them.</p>
+            </div>
+            </div><div class="route-panel" data-route-panel="aspire" id="arrival-aspire"><h3>Aspire route</h3>
+            <div class="task-box">
+              <p><strong>1. Write the percentage change in mass equation and explain why dividing by the final mass loses the mark.</strong></p>
+              <details><summary>Help with this question</summary><p>Compare change to starting value.</p></details>
+              <button type="button" data-reveal="arr-aspire-1">Reveal answer after responding</button>
+              <p id="arr-aspire-1" hidden><strong>Check:</strong> Percentage change = (final − initial) ÷ initial × 100. Dividing by final mass compares the change to the altered end state rather than the original starting mass.</p>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>2. Recall from diffusion: explain why osmosis is a special case of diffusion rather than a completely separate mechanism.</strong></p>
+              <details><summary>Help with this question</summary><p>Connect diffusion and osmosis.</p></details>
+              <button type="button" data-reveal="arr-aspire-2">Reveal answer after responding</button>
+              <p id="arr-aspire-2" hidden><strong>Check:</strong> Osmosis is simply the passive diffusion of water molecules down their own water concentration gradient across a partially permeable membrane.</p>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>3. Different potato cylinders start at slightly different masses (e.g. 4.10 g vs 4.45 g). Explain mathematically how percentage change makes them comparable.</strong></p>
+              <details><summary>Help with this question</summary><p>Proportional comparison.</p></details>
+              <button type="button" data-reveal="arr-aspire-3">Reveal answer after responding</button>
+              <p id="arr-aspire-3" hidden><strong>Check:</strong> Dividing each mass change by its own initial mass expresses the gain or loss per 100 g of starting tissue, removing starting-size bias.</p>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>4. Predict what a percentage change of 0.0% tells you about the sucrose solution outside the potato compared with the cytoplasm inside.</strong></p>
+              <details><summary>Help with this question</summary><p>Isotonic / matching point.</p></details>
+              <button type="button" data-reveal="arr-aspire-4">Reveal answer after responding</button>
+              <p id="arr-aspire-4" hidden><strong>Check:</strong> The external sucrose solution has the same water/solute concentration as the potato cells, so water crosses both ways at equal rates (no net movement).</p>
+            </div>
+            </div>
+    </div>
+    <div class="card-green">
+      <p><strong>Regulation check:</strong> choose a word or colour.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;">
+        <button type="button" data-regulation="Green · ready">Green · ready</button>
+        <button type="button" data-regulation="Amber · need an adjustment">Amber · need an adjustment</button>
+        <button type="button" data-regulation="Red · need a quiet pause">Red · need a quiet pause</button>
+      </div>
+      <p id="regulation-status" class="status-box" role="status">A private response or pass is welcome.</p>
+    </div>
+    
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W05_L2)</span>
+          </footer>
+        </section>
+        
+        <section class="slide" id="slide-3" data-stage="Starter" aria-hidden="true">
+          <span class="stage-pill">Stage 3 · Starter</span>
+          <h2>Starter · 4-beat model and retrieval</h2>
+          
+    <div class="ca-act" data-beat>
+      <h3>Whiteboard 4-beat sequence</h3>
+      <div class="ca-beatbox"><div class="ca-light"><strong>Beat 1:</strong> Beat 1 · Set the controls: same potato, equal cylinder size, same soak time, same blotting — only sucrose concentration changes.</div><div class="ca-light"><strong>Beat 2:</strong> Beat 2 · Weigh BEFORE soaking: once a dry-blotted cylinder enters the tube, you can never go back and get its initial mass.</div><div class="ca-light"><strong>Beat 3:</strong> Beat 3 · Blot gently and consistently after soaking: surface liquid clinging to the outside is not water that crossed membranes.</div><div class="ca-light"><strong>Beat 4:</strong> Beat 4 · Calculate signed % change: (final − initial) ÷ INITIAL × 100 — keep the + or − sign!</div></div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;">
+        <button type="button" data-beat-next>Next beat</button>
+        <button type="button" data-beat-all>Show all 4 beats</button>
+        <button type="button" data-beat-reset>Reset beats</button>
+      </div>
+      <p class="status-box beat-status" role="status">Ready: step 0 of 4</p>
+    </div>
+    <div class="ca-act ca-vote" data-quiz data-correct="0" data-explain="You need both initial mass and final mass for every cylinder. Once a cylinder enters the solution, water starts moving in or out immediately.">
+      <h3>Class fingers or thumbs vote</h3>
+      <p><strong>Before we put any potato cylinder into a test tube, why is it essential to blot and weigh each cylinder FIRST and label its tube?</strong></p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">1. Because once the potato touches the solution, osmosis begins immediately and you can never recover its starting (initial) mass.</button><button type="button" data-option="1">2. Because weighing it first makes osmosis happen faster.</button><button type="button" data-option="2">3. Because the balance only works on dry mornings.</button><button type="button" data-option="3">4. Because we divide by the final mass anyway.</button></div>
+      <p class="status-box" role="status">Hold up 1, 2, 3 or 4 fingers (or point), then tap to check.</p>
+    </div>
+    
+        <div class="task-box">
+          <p><strong>Retrieval 1:</strong> Two identical potato cylinders start at 4.00 g. One goes into pure water (becomes 4.40 g); one goes into 0.8 mol/dm³ sucrose (becomes 3.60 g). What convinces you water moved?</p>
+          <details><summary>Clue</summary><p>Compare final mass with initial mass.</p></details>
+          <button type="button" data-reveal="starter-rev-1">Reveal answer</button>
+          <p id="starter-rev-1" hidden><strong>Answer:</strong> The cylinder in pure water gained 0.40 g (+10%) as water entered by osmosis, while the cylinder in strong sucrose lost 0.40 g (−10%) as water left.</p>
+        </div>
+        
+        <div class="task-box">
+          <p><strong>Retrieval 2:</strong> Why must we blot every cylinder the same way on paper towel before reweighing?</p>
+          <details><summary>Clue</summary><p>Surface droplets distort final mass.</p></details>
+          <button type="button" data-reveal="starter-rev-2">Reveal answer</button>
+          <p id="starter-rev-2" hidden><strong>Answer:</strong> To remove excess surface liquid clinging to the outside without squeezing water out of the cells, so only water inside the tissue is weighed.</p>
+        </div>
+        
+        <div class="task-box">
+          <p><strong>Retrieval 3:</strong> What does a minus sign (e.g. −10.0%) in your percentage change column mean?</p>
+          <details><summary>Clue</summary><p>Keep the + or − sign.</p></details>
+          <button type="button" data-reveal="starter-rev-3">Reveal answer</button>
+          <p id="starter-rev-3" hidden><strong>Answer:</strong> It means the final mass was lower than the initial mass — the potato cylinder lost mass because net water movement was OUT of the cells.</p>
+        </div>
+        
+    
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W05_L2)</span>
+          </footer>
+        </section>
+        
+        <section class="slide" id="slide-4" data-stage="I do 1" aria-hidden="true">
+          <span class="stage-pill">Stage 4 · I do 1</span>
+          <h2>I do 1 · Setting up the core practical method and control variables</h2>
+          
+    <div class="card">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" class="ca-pic" role="img" aria-labelledby="svg-ido1-1-title svg-ido1-1-desc"><title id="svg-ido1-1-title">I do 1 · Setting up the core practical method and control variables</title><desc id="svg-ido1-1-desc">High-contrast teaching diagram with three labelled panels.</desc><rect x="0" y="0" width="960" height="300" fill="#ffffff" stroke="#5B417A" stroke-width="4" rx="14"/><rect x="24" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="168" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 1 · Fair method</text><rect x="103" y="90" width="130" height="80" rx="14" fill="#ffffff" stroke="#111827" stroke-width="4"/><circle cx="148" cy="130" r="18" fill="#3B2854"/><ellipse cx="193" cy="135" rx="22" ry="14" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="168" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Same size · time · blot</text><text x="168" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Record initial mass first</text><rect x="336" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="480" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 2 · 3 solutions</text><rect x="410" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><line x1="480" y1="90" x2="480" y2="170" stroke="#3B2854" stroke-width="4" stroke-dasharray="8 6"/><circle cx="435" cy="112" r="6" fill="#111827"/><circle cx="455" cy="130" r="6" fill="#111827"/><circle cx="440" cy="150" r="6" fill="#111827"/><circle cx="460" cy="108" r="6" fill="#111827"/><circle cx="515" cy="115" r="6" fill="#111827"/><circle cx="505" cy="148" r="6" fill="#111827"/><circle cx="510" cy="130" r="12" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="480" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">0.0 gains · 0.4 same</text><text x="480" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">0.8 loses mass (water out)</text><rect x="648" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="792" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 3 · % change</text><rect x="722" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><circle cx="742" cy="110" r="7" fill="#3B2854"/><circle cx="757" cy="130" r="7" fill="#3B2854"/><circle cx="744" cy="150" r="7" fill="#3B2854"/><circle cx="767" cy="115" r="7" fill="#3B2854"/><circle cx="772" cy="145" r="7" fill="#3B2854"/><circle cx="827" cy="120" r="7" fill="#3B2854"/><circle cx="840" cy="145" r="7" fill="#3B2854"/><line x1="787" y1="130" x2="817" y2="130" stroke="#111827" stroke-width="4"/><polygon points="817,122 829,130 817,138" fill="#111827"/><text x="792" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">(Final - Initial) / Initial</text><text x="792" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Multiply by 100 · Keep +/-</text></svg>
+    </div>
+    <div class="model-frame" id="model-1" data-step-model data-steps="[&quot;Step 1 (Cut equal cylinders): Cut potato cylinders of the same diameter and length so surface area and diffusion distance are controlled.&quot;, &quot;Step 2 (Blot, weigh, label): Gently blot each cylinder, weigh its INITIAL mass in grams on a balance, and place it into a labelled tube (0.0 to 1.0 mol/dm\u00b3 sucrose).&quot;, &quot;Step 3 (Control the soak): Leave all cylinders for the same time at the same temperature in the same volume of solution. Only sucrose concentration differs.&quot;, &quot;Step 4 (Blot and reweigh): Remove each cylinder, blot consistently the same way on paper towel to remove surface droplets, and record its FINAL mass.&quot;]">
+      <h3>I do 1 · Setting up the core practical method and control variables</h3>
+      <p class="status-box model-caption" role="status">Step 1: Step 1 (Cut equal cylinders): Cut potato cylinders of the same diameter and length so surface area and diffusion distance are controlled.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin:10px 0;">
+        <button type="button" data-step-next>Show next step</button>
+        <button type="button" data-step-reset>Reset model</button>
+      </div>
+      <ol><li class="v5-step" ><strong>Step 1:</strong> Step 1 (Cut equal cylinders): Cut potato cylinders of the same diameter and length so surface area and diffusion distance are controlled.</li><li class="v5-step" hidden><strong>Step 2:</strong> Step 2 (Blot, weigh, label): Gently blot each cylinder, weigh its INITIAL mass in grams on a balance, and place it into a labelled tube (0.0 to 1.0 mol/dm³ sucrose).</li><li class="v5-step" hidden><strong>Step 3:</strong> Step 3 (Control the soak): Leave all cylinders for the same time at the same temperature in the same volume of solution. Only sucrose concentration differs.</li><li class="v5-step" hidden><strong>Step 4:</strong> Step 4 (Blot and reweigh): Remove each cylinder, blot consistently the same way on paper towel to remove surface droplets, and record its FINAL mass.</li></ol>
+    </div>
+    <div class="card-warm">
+      <h3>Worked example 1</h3>
+      <p>Worked example 1 (Variables &amp; Method): Independent variable (what we change) = concentration of sucrose solution (mol/dm³). Dependent variable (what we measure/calculate) = change in mass / percentage change in mass (%). Control variables (kept the same) = cylinder length/surface area, same potato variety, soak time, temperature, and consistent blotting.</p>
+    </div>
+    
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W05_L2)</span>
+          </footer>
+        </section>
+        
+        <section class="slide" id="slide-5" data-stage="We do 1" aria-hidden="true">
+          <span class="stage-pill">Stage 5 · We do 1</span>
+          <h2>We do 1 · team sort and scientific reason</h2>
+          
+    <div class="ca-act" data-sort>
+      <h3>Shared sort and reason challenge</h3>
+      <p><strong>Point rule:</strong> 1 point for an accurate match, plus 1 bonus point for a clear scientific reason.</p>
+      
+        <div class="task-box">
+          <label for="sort-sel-0"><strong>1. Independent variable (changed on purpose)</strong></label>
+          <select id="sort-sel-0" data-expected="Concentration of sucrose solution (0.0 to 1.0 mol/dm³)"><option value="">Choose matching statement...</option><option value="Concentration of sucrose solution (0.0 to 1.0 mol/dm³)">Concentration of sucrose solution (0.0 to 1.0 mol/dm³)</option><option value="Percentage change in mass of the potato cylinder (%)">Percentage change in mass of the potato cylinder (%)</option><option value="Same potato, cylinder size, soak time, temperature, and blotting">Same potato, cylinder size, soak time, temperature, and blotting</option><option value="Removes extra surface liquid so only water inside the tissue is weighed">Removes extra surface liquid so only water inside the tissue is weighed</option></select>
+        </div>
+        
+        <div class="task-box">
+          <label for="sort-sel-1"><strong>2. Dependent variable (measured outcome)</strong></label>
+          <select id="sort-sel-1" data-expected="Percentage change in mass of the potato cylinder (%)"><option value="">Choose matching statement...</option><option value="Concentration of sucrose solution (0.0 to 1.0 mol/dm³)">Concentration of sucrose solution (0.0 to 1.0 mol/dm³)</option><option value="Percentage change in mass of the potato cylinder (%)">Percentage change in mass of the potato cylinder (%)</option><option value="Same potato, cylinder size, soak time, temperature, and blotting">Same potato, cylinder size, soak time, temperature, and blotting</option><option value="Removes extra surface liquid so only water inside the tissue is weighed">Removes extra surface liquid so only water inside the tissue is weighed</option></select>
+        </div>
+        
+        <div class="task-box">
+          <label for="sort-sel-2"><strong>3. Control variables (kept the same)</strong></label>
+          <select id="sort-sel-2" data-expected="Same potato, cylinder size, soak time, temperature, and blotting"><option value="">Choose matching statement...</option><option value="Concentration of sucrose solution (0.0 to 1.0 mol/dm³)">Concentration of sucrose solution (0.0 to 1.0 mol/dm³)</option><option value="Percentage change in mass of the potato cylinder (%)">Percentage change in mass of the potato cylinder (%)</option><option value="Same potato, cylinder size, soak time, temperature, and blotting">Same potato, cylinder size, soak time, temperature, and blotting</option><option value="Removes extra surface liquid so only water inside the tissue is weighed">Removes extra surface liquid so only water inside the tissue is weighed</option></select>
+        </div>
+        
+        <div class="task-box">
+          <label for="sort-sel-3"><strong>4. Why blot before reweighing?</strong></label>
+          <select id="sort-sel-3" data-expected="Removes extra surface liquid so only water inside the tissue is weighed"><option value="">Choose matching statement...</option><option value="Concentration of sucrose solution (0.0 to 1.0 mol/dm³)">Concentration of sucrose solution (0.0 to 1.0 mol/dm³)</option><option value="Percentage change in mass of the potato cylinder (%)">Percentage change in mass of the potato cylinder (%)</option><option value="Same potato, cylinder size, soak time, temperature, and blotting">Same potato, cylinder size, soak time, temperature, and blotting</option><option value="Removes extra surface liquid so only water inside the tissue is weighed">Removes extra surface liquid so only water inside the tissue is weighed</option></select>
+        </div>
+        
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;">
+        <button type="button" data-sort-check>Check matches</button>
+        <button type="button" data-sort-reset>Reset matches</button>
+      </div>
+      <p class="status-box sort-status" role="status">Match each term to its scientific explanation.</p>
+    </div>
+    <div class="card" id="ca-points-modal">
+      <h3>Four-team points board</h3>
+      <div class="grid-2">
+        <div class="card" style="margin:0;">
+          <h4>Circles: <span id="score-0">0</span> pts</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <button type="button" data-team-add="0" data-pts="1">+1 Match</button>
+            <button type="button" data-team-add="0" data-pts="1">+1 Reason</button>
+            <button type="button" data-team-add="0" data-pts="-1">-1</button>
+          </div>
+        </div>
+        
+        <div class="card" style="margin:0;">
+          <h4>Squares: <span id="score-1">0</span> pts</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <button type="button" data-team-add="1" data-pts="1">+1 Match</button>
+            <button type="button" data-team-add="1" data-pts="1">+1 Reason</button>
+            <button type="button" data-team-add="1" data-pts="-1">-1</button>
+          </div>
+        </div>
+        
+        <div class="card" style="margin:0;">
+          <h4>Triangles: <span id="score-2">0</span> pts</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <button type="button" data-team-add="2" data-pts="1">+1 Match</button>
+            <button type="button" data-team-add="2" data-pts="1">+1 Reason</button>
+            <button type="button" data-team-add="2" data-pts="-1">-1</button>
+          </div>
+        </div>
+        
+        <div class="card" style="margin:0;">
+          <h4>Diamonds: <span id="score-3">0</span> pts</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <button type="button" data-team-add="3" data-pts="1">+1 Match</button>
+            <button type="button" data-team-add="3" data-pts="1">+1 Reason</button>
+            <button type="button" data-team-add="3" data-pts="-1">-1</button>
+          </div>
+        </div>
+        </div>
+      <button type="button" id="reset-points" style="margin-top:12px;">Reset points board</button>
+    </div>
+    <details class="participation-loop">
+      <summary>Where what you say changes something · optional</summary>
+      <p>Point, sign, say or show an observation, question or access need. You may pass or speak privately.</p>
+      <p>The adult says what can change, makes one agreed adjustment if possible, and checks whether it helped.</p>
+    </details>
+    
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W05_L2)</span>
+          </footer>
+        </section>
+        
+        <section class="slide" id="slide-6" data-stage="I do 2" aria-hidden="true">
+          <span class="stage-pill">Stage 6 · I do 2</span>
+          <h2>I do 2 · Calculating signed percentage change in mass and explaining the trend</h2>
+          
+    <div class="card">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" class="ca-pic" role="img" aria-labelledby="svg-ido2-2-title svg-ido2-2-desc"><title id="svg-ido2-2-title">I do 2 · Calculating signed percentage change in mass and explaining the trend</title><desc id="svg-ido2-2-desc">High-contrast teaching diagram with three labelled panels.</desc><rect x="0" y="0" width="960" height="300" fill="#ffffff" stroke="#5B417A" stroke-width="4" rx="14"/><rect x="24" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="168" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 1 · Fair method</text><rect x="103" y="90" width="130" height="80" rx="14" fill="#ffffff" stroke="#111827" stroke-width="4"/><circle cx="148" cy="130" r="18" fill="#3B2854"/><ellipse cx="193" cy="135" rx="22" ry="14" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="168" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Same size · time · blot</text><text x="168" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Record initial mass first</text><rect x="336" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="480" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 2 · 3 solutions</text><rect x="410" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><line x1="480" y1="90" x2="480" y2="170" stroke="#3B2854" stroke-width="4" stroke-dasharray="8 6"/><circle cx="435" cy="112" r="6" fill="#111827"/><circle cx="455" cy="130" r="6" fill="#111827"/><circle cx="440" cy="150" r="6" fill="#111827"/><circle cx="460" cy="108" r="6" fill="#111827"/><circle cx="515" cy="115" r="6" fill="#111827"/><circle cx="505" cy="148" r="6" fill="#111827"/><circle cx="510" cy="130" r="12" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="480" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">0.0 gains · 0.4 same</text><text x="480" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">0.8 loses mass (water out)</text><rect x="648" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="792" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 3 · % change</text><rect x="722" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><circle cx="742" cy="110" r="7" fill="#3B2854"/><circle cx="757" cy="130" r="7" fill="#3B2854"/><circle cx="744" cy="150" r="7" fill="#3B2854"/><circle cx="767" cy="115" r="7" fill="#3B2854"/><circle cx="772" cy="145" r="7" fill="#3B2854"/><circle cx="827" cy="120" r="7" fill="#3B2854"/><circle cx="840" cy="145" r="7" fill="#3B2854"/><line x1="787" y1="130" x2="817" y2="130" stroke="#111827" stroke-width="4"/><polygon points="817,122 829,130 817,138" fill="#111827"/><text x="792" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">(Final - Initial) / Initial</text><text x="792" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Multiply by 100 · Keep +/-</text></svg>
+    </div>
+    <div class="model-frame" id="model-2" data-step-model data-steps="[&quot;Write the formula: Percentage change = (final mass \u2212 initial mass) \u00f7 INITIAL mass \u00d7 100.&quot;, &quot;Worked calculation (Gain in pure water): Initial = 4.20 g, Final = 4.62 g. Change = 4.62 \u2212 4.20 = +0.42 g. % change = (+0.42 \u00f7 4.20) \u00d7 100 = +10.0%.&quot;, &quot;Worked calculation (Loss in 0.8 mol/dm\u00b3 sucrose): Initial = 4.00 g, Final = 3.60 g. Change = 3.60 \u2212 4.00 = \u22120.40 g. % change = (\u22120.40 \u00f7 4.00) \u00d7 100 = \u221210.0%.&quot;, &quot;Link sign to osmosis: + means net water moved IN (outside more dilute); \u2212 means net water moved OUT (outside more concentrated); 0% means matching concentration.&quot;]">
+      <h3>I do 2 · Calculating signed percentage change in mass and explaining the trend</h3>
+      <p class="status-box model-caption" role="status">Step 1: Write the formula: Percentage change = (final mass − initial mass) ÷ INITIAL mass × 100.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin:10px 0;">
+        <button type="button" data-step-next>Show next step</button>
+        <button type="button" data-step-reset>Reset model</button>
+      </div>
+      <ol><li class="v5-step" ><strong>Step 1:</strong> Write the formula: Percentage change = (final mass − initial mass) ÷ INITIAL mass × 100.</li><li class="v5-step" hidden><strong>Step 2:</strong> Worked calculation (Gain in pure water): Initial = 4.20 g, Final = 4.62 g. Change = 4.62 − 4.20 = +0.42 g. % change = (+0.42 ÷ 4.20) × 100 = +10.0%.</li><li class="v5-step" hidden><strong>Step 3:</strong> Worked calculation (Loss in 0.8 mol/dm³ sucrose): Initial = 4.00 g, Final = 3.60 g. Change = 3.60 − 4.00 = −0.40 g. % change = (−0.40 ÷ 4.00) × 100 = −10.0%.</li><li class="v5-step" hidden><strong>Step 4:</strong> Link sign to osmosis: + means net water moved IN (outside more dilute); − means net water moved OUT (outside more concentrated); 0% means matching concentration.</li></ol>
+    </div>
+    <div class="card-warm">
+      <h3>Worked example 2</h3>
+      <p>Worked example 2 (Signed % Change): A cylinder in 0.8 mol/dm³ sucrose starts at 4.00 g and finishes at 3.60 g. Step 1: Change = 3.60 − 4.00 = −0.40 g (keep the minus sign!). Step 2: Divide by INITIAL mass (4.00 g): −0.40 ÷ 4.00 = −0.10. Step 3: Multiply by 100 = −10.0%. Biological meaning: the external solution was more concentrated than the cell cytoplasm, so water left the cells by osmosis.</p>
+    </div>
+    <div class="ca-act" data-check data-quiz data-correct="0" data-explain="Always divide by the INITIAL mass — percentage change compares the mass change with what the cylinder started at.">
+      <h3>Single-decision hinge check</h3>
+      <p><strong>In the equation Percentage change = (final mass − initial mass) ÷ ___ × 100, which value goes on the bottom of the division?</strong></p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">A. Initial mass (the starting mass recorded before soaking)</button><button type="button" data-option="1">B. Final mass (the mass recorded after soaking)</button><button type="button" data-option="2">C. The concentration of the sugar solution</button></div>
+      <p class="status-box" role="status">Choose the scientifically accurate statement before moving on.</p>
+    </div>
+    
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W05_L2)</span>
+          </footer>
+        </section>
+        
+        <section class="slide" id="slide-7" data-stage="We do 2" aria-hidden="true">
+          <span class="stage-pill">Stage 7 · We do 2</span>
+          <h2>We do 2 · method order and data table</h2>
+          
+    <div class="ca-act" data-sequence>
+      <h3>Order the scientific method or reasoning steps</h3>
+      <ol>
+        <li data-order="1" style="margin-bottom:10px;">
+          <span>Divide that mass change by the INITIAL mass (never the final mass).</span>
+          <button type="button" data-move-up>Move up</button>
+          <button type="button" data-move-down>Move down</button>
+        </li>
+        
+        <li data-order="0" style="margin-bottom:10px;">
+          <span>Subtract the initial mass from the final mass (final − initial) and write the + or − sign clearly.</span>
+          <button type="button" data-move-up>Move up</button>
+          <button type="button" data-move-down>Move down</button>
+        </li>
+        
+        <li data-order="2" style="margin-bottom:10px;">
+          <span>Multiply by 100 to convert to a signed percentage (+% for gain, −% for loss) and round to 1 decimal place.</span>
+          <button type="button" data-move-up>Move up</button>
+          <button type="button" data-move-down>Move down</button>
+        </li>
+        
+        <li data-order="3" style="margin-bottom:10px;">
+          <span>Explain the result using osmosis: state which side was more dilute and which way net water moved across the partially permeable cell membranes.</span>
+          <button type="button" data-move-up>Move up</button>
+          <button type="button" data-move-down>Move down</button>
+        </li>
+        </ol>
+      <button type="button" data-seq-check>Check order</button>
+      <p class="status-box seq-status" role="status">Use move up and Move down to place the steps in order, then check.</p>
+    </div>
+    <div class="card">
+      <h3>Osmosis core Practical — Sample potato cylinder data across sucrose concentrations</h3>
+      <table>
+        <thead><tr><th scope="col">Sucrose conc. (mol/dm³)</th><th scope="col">Initial mass (g)</th><th scope="col">Final mass (g)</th><th scope="col">Signed % change &amp; osmosis explanation</th></tr></thead>
+        <tbody><tr><td>0.0 (Pure water)</td><td>4.20</td><td>4.62</td><td>+10.0% · Outside more dilute; net water IN by osmosis</td></tr><tr><td>0.2</td><td>4.00</td><td>4.14</td><td>+3.5% · Outside slightly more dilute; small net water IN</td></tr><tr><td>0.4 (Matching)</td><td>4.00</td><td>4.00</td><td>0.0% · Equal water concentration; crossings in = crossings out</td></tr><tr><td>0.8 (Concentrated)</td><td>4.00</td><td>3.60</td><td>−10.0% · Outside more concentrated; net water OUT by osmosis</td></tr></tbody>
+      </table>
+    </div>
+    
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W05_L2)</span>
+          </footer>
+        </section>
+        
+        <section class="slide" id="slide-8" data-stage="You do" aria-hidden="true">
+          <span class="stage-pill">Stage 8 · You do</span>
+          <h2>You do · independent tiered practice</h2>
+          
+    <div class="card">
+      <p><strong>Work in your book first.</strong> Choose your route with an adult. Staff mark actual <strong>I · S · C</strong> beside each task.</p>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" class="ca-pic" role="img" aria-labelledby="svg-youdo-3-title svg-youdo-3-desc"><title id="svg-youdo-3-title">Three-panel osmosis core practical model: Method &amp; control variables, potato cylinders in 0.0 / 0.4 / 0.8 mol/dm³ sucrose, and the signed percentage-change equation.</title><desc id="svg-youdo-3-desc">High-contrast teaching diagram with three labelled panels.</desc><rect x="0" y="0" width="960" height="300" fill="#ffffff" stroke="#5B417A" stroke-width="4" rx="14"/><rect x="24" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="168" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 1 · Fair method</text><rect x="103" y="90" width="130" height="80" rx="14" fill="#ffffff" stroke="#111827" stroke-width="4"/><circle cx="148" cy="130" r="18" fill="#3B2854"/><ellipse cx="193" cy="135" rx="22" ry="14" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="168" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Same size · time · blot</text><text x="168" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Record initial mass first</text><rect x="336" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="480" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 2 · 3 solutions</text><rect x="410" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><line x1="480" y1="90" x2="480" y2="170" stroke="#3B2854" stroke-width="4" stroke-dasharray="8 6"/><circle cx="435" cy="112" r="6" fill="#111827"/><circle cx="455" cy="130" r="6" fill="#111827"/><circle cx="440" cy="150" r="6" fill="#111827"/><circle cx="460" cy="108" r="6" fill="#111827"/><circle cx="515" cy="115" r="6" fill="#111827"/><circle cx="505" cy="148" r="6" fill="#111827"/><circle cx="510" cy="130" r="12" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="480" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">0.0 gains · 0.4 same</text><text x="480" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">0.8 loses mass (water out)</text><rect x="648" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="792" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 3 · % change</text><rect x="722" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><circle cx="742" cy="110" r="7" fill="#3B2854"/><circle cx="757" cy="130" r="7" fill="#3B2854"/><circle cx="744" cy="150" r="7" fill="#3B2854"/><circle cx="767" cy="115" r="7" fill="#3B2854"/><circle cx="772" cy="145" r="7" fill="#3B2854"/><circle cx="827" cy="120" r="7" fill="#3B2854"/><circle cx="840" cy="145" r="7" fill="#3B2854"/><line x1="787" y1="130" x2="817" y2="130" stroke="#111827" stroke-width="4"/><polygon points="817,122 829,130 817,138" fill="#111827"/><text x="792" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">(Final - Initial) / Initial</text><text x="792" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Multiply by 100 · Keep +/-</text></svg>
+    </div>
+    <div class="route-group">
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;"><button type="button" class="route-btn active-route" data-route-btn="supported" aria-pressed="true">Supported</button><button type="button" class="route-btn" data-route-btn="independent" aria-pressed="false">Independent</button><button type="button" class="route-btn" data-route-btn="choice" aria-pressed="false">Choice</button><button type="button" class="route-btn" data-route-btn="aspire" aria-pressed="false">Aspire</button></div>
+      
+        <div class="route-panel active-panel" data-route-panel="supported" id="task-supported">
+          <h3>Supported route</h3>
+          
+            <div class="task-box">
+              <p><strong>Task 1 (2 marks):</strong> Look at the data table. For 0.0 mol/dm³ (Pure water: Initial 4.20 g, Final 4.62 g), state whether the potato cylinder gained or lost mass and write its percentage change [2 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Read row 1 of the table.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-supported-1">Your answer</label><textarea id="yd-supported-1" rows="3"></textarea></details>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>Task 2 (2 marks):</strong> Calculate the percentage change for a potato cylinder in water that starts at 4.00 g and finishes at 4.40 g. Use: (4.40 − 4.00) ÷ 4.00 × 100 [2 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>0.40 ÷ 4.00 × 100.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-supported-2">Your answer</label><textarea id="yd-supported-2" rows="3"></textarea></details>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>Task 3 (1 marks):</strong> Circle the correct word: &quot;In pure water, the potato gains mass because ___ (water / sugar) moves into the cells across the partially permeable membrane.&quot; [1 mark]</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Sugar is too large to cross the membrane.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-supported-3">Your answer</label><textarea id="yd-supported-3" rows="3"></textarea></details>
+            </div>
+            
+          <details class="ca-make-tier">
+            <summary>Optional hands-on make-it choice (Supported)</summary>
+            <p>Carry out your practical station role (blotting, reading the balance to 2 decimal places, or recording in the pre-drawn 2-row table) and check the + or − sign with your partner.</p>
+          </details>
+        </div>
+        
+        <div class="route-panel" data-route-panel="independent" id="task-independent">
+          <h3>Independent route</h3>
+          
+            <div class="task-box">
+              <p><strong>Task 1 (4 marks):</strong> Name the independent variable, the dependent variable, and two control variables in the potato osmosis core practical [4 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>What do we change, what do we measure, and what do we keep the same?</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-independent-1">Your answer</label><textarea id="yd-independent-1" rows="3"></textarea></details>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>Task 2 (2 marks):</strong> A potato cylinder in 0.8 mol/dm³ sucrose has an initial mass of 4.00 g and a final mass of 3.60 g. Calculate its signed percentage change in mass, showing your working [2 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Use (final − initial) ÷ initial × 100 and keep the minus sign.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-independent-2">Your answer</label><textarea id="yd-independent-2" rows="3"></textarea></details>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>Task 3 (3 marks):</strong> Explain why the potato cylinder in 0.8 mol/dm³ sucrose lost mass, using the terms &quot;dilute&quot;, &quot;concentrated&quot;, and &quot;partially permeable membrane&quot; [3 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Compare the cytoplasm inside the cells with the 0.8 mol/dm³ solution outside.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-independent-3">Your answer</label><textarea id="yd-independent-3" rows="3"></textarea></details>
+            </div>
+            
+          <details class="ca-make-tier">
+            <summary>Optional hands-on make-it choice (Independent)</summary>
+            <p>Sort the 6 method &amp; error cards (Gained mass in water / Lost mass in strong sugar / Dividing by final mass / Dropping the minus sign / Sugar moved into potato / No net change at matching conc.) into &quot;Valid osmosis Science&quot; vs &quot;Common practical Trap&quot;.</p>
+          </details>
+        </div>
+        
+        <div class="route-panel" data-route-panel="choice" id="task-choice">
+          <h3>Choice route</h3>
+          
+            <div class="task-box">
+              <p><strong>Task 1 (3 marks):</strong> Complete the calculations for all rows of the sample table (0.0, 0.2, 0.4, 0.8 mol/dm³) and write one sentence explaining what 0.0% change at 0.4 mol/dm³ means [3 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Check Row 3 of the data table.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-choice-1">Your answer</label><textarea id="yd-choice-1" rows="3"></textarea></details>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>Task 2 (2 marks):</strong> A student claims: &quot;The potato cylinder in pure water gained mass because sugar moved into it.&quot; Repair this claim using your knowledge of membrane pores [2 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>First, is there any sugar in pure water? Second, can sugar cross the membrane?</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-choice-2">Your answer</label><textarea id="yd-choice-2" rows="3"></textarea></details>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>Task 3 (3 marks):</strong> Write a 4-step numbered method for the potato osmosis core practical that another pupil could follow safely [3 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Include cutting/weighing, soaking with controls, blotting/reweighing, and calculating % change.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-choice-3">Your answer</label><textarea id="yd-choice-3" rows="3"></textarea></details>
+            </div>
+            
+          <details class="ca-make-tier">
+            <summary>Optional hands-on make-it choice (Choice)</summary>
+            <p>Use the balance record sheet to verify that every sample has an initial mass, a consistent blot check-tick, a final mass, and a signed percentage change.</p>
+          </details>
+        </div>
+        
+        <div class="route-panel" data-route-panel="aspire" id="task-aspire">
+          <h3>Aspire route</h3>
+          
+            <div class="task-box">
+              <p><strong>Task 1 (2 marks):</strong> Explain why calculating percentage change in mass is essential when comparing potato cylinders that started at 4.20 g, 3.85 g, and 4.55 g [2 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>What would happen if you only compared raw mass changes in grams?</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-aspire-1">Your answer</label><textarea id="yd-aspire-1" rows="3"></textarea></details>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>Task 2 (3 marks):</strong> A pupil forgets to blot the cylinder taken out of 0.8 mol/dm³ sucrose before reweighing it. Predict and explain how this error affects the recorded final mass and the calculated percentage change [3 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Remember the cylinder actually lost mass (negative % change). What does extra liquid on the outside do?</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-aspire-2">Your answer</label><textarea id="yd-aspire-2" rows="3"></textarea></details>
+            </div>
+            
+            <div class="task-box">
+              <p><strong>Task 3 (2 marks):</strong> Using the sample table (0.2 mol/dm³ -&gt; +3.5%; 0.4 mol/dm³ -&gt; 0.0%; 0.8 mol/dm³ -&gt; −10.0%), predict the sign and approximate size of the percentage change at 0.6 mol/dm³ and justify your prediction [2 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>0.6 mol/dm³ lies halfway between 0.4 (0.0%) and 0.8 (−10.0%).</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-aspire-3">Your answer</label><textarea id="yd-aspire-3" rows="3"></textarea></details>
+            </div>
+            
+          <details class="ca-make-tier">
+            <summary>Optional hands-on make-it choice (Aspire)</summary>
+            <p>Prepare the axes of a percentage-change graph (x-axis: Sucrose concentration in mol/dm³; y-axis: Signed percentage change in mass from −15% to +15% with a dashed 0% line) ready for Lesson 3.</p>
+          </details>
+        </div>
+        
+    </div>
+    <div class="card ca-make-overview">
+      <h3>Optional make-it station</h3>
+      <p>If writing is a barrier or after completing your book task, build the physical desk model using labelled cards, counters or arrows and explain it to an adult.</p>
+    </div>
+    
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W05_L2)</span>
+          </footer>
+        </section>
+        
+        <section class="slide" id="slide-9" data-stage="Review and improve" aria-hidden="true">
+          <span class="stage-pill">Stage 9 · Review and improve</span>
+          <h2>Review and improve · same-colour edit</h2>
+          
+    <div class="card">
+      <h3>Check your work against the mark scheme</h3>
+      <p>Keep your original response visible. Tick each scientific point you included, then make one <strong>//</strong> edit in the same colour on the same page.</p>
+      
+        <details>
+          <summary>Supported mark scheme</summary>
+          <table>
+            <thead><tr><th scope="col">Task</th><th scope="col">Creditworthy points</th><th scope="col">Marks</th></tr></thead>
+            <tbody><tr><td>1</td><td>It gained mass (+0.42 g) (1); percentage change = +10.0% (1).</td><td>2</td></tr><tr><td>2</td><td>Change = +0.40 g (1); percentage change = +10.0% (1).</td><td>2</td></tr><tr><td>3</td><td>Water (1).</td><td>1</td></tr></tbody>
+          </table>
+        </details>
+        
+        <details>
+          <summary>Independent mark scheme</summary>
+          <table>
+            <thead><tr><th scope="col">Task</th><th scope="col">Creditworthy points</th><th scope="col">Marks</th></tr></thead>
+            <tbody><tr><td>1</td><td>Independent: sucrose concentration (1). Dependent: change / percentage change in mass (1). Controls (any two): cylinder size/length, same potato, soak time, temperature, consistent blotting (2).</td><td>4</td></tr><tr><td>2</td><td>(3.60 − 4.00) ÷ 4.00 × 100 = −0.40 ÷ 4.00 × 100 (1) = −10.0% (1).</td><td>2</td></tr><tr><td>3</td><td>The cytoplasm inside the potato cells is more dilute (higher water concentration) than the concentrated 0.8 mol/dm³ sucrose solution outside (1). Water molecules move across the partially permeable cell membranes in both directions (1), with net movement of water out of the cells into the solution (1).</td><td>3</td></tr></tbody>
+          </table>
+        </details>
+        
+        <details>
+          <summary>Aspire mark scheme</summary>
+          <table>
+            <thead><tr><th scope="col">Task</th><th scope="col">Creditworthy points</th><th scope="col">Marks</th></tr></thead>
+            <tbody><tr><td>1</td><td>A heavier cylinder has more cells/surface area and will gain or lose more raw grams for the same concentration difference (1); dividing by initial mass expresses the change proportionally per 100 g of starting tissue so the cylinders can be compared fairly (1).</td><td>2</td></tr><tr><td>2</td><td>Extra drops of solution clinging to the surface make the recorded final mass artificially higher (heavier) than the true tissue mass (1), which makes the calculated mass loss look smaller (less negative) than it really was (1), reducing the validity/accuracy of that data point (1).</td><td>3</td></tr><tr><td>3</td><td>Approximately −5% (negative) (1), because 0.6 mol/dm³ is more concentrated than the potato tissue (0.4 mol/dm³) so net water moves out, halfway between 0.0% and −10.0% (1).</td><td>2</td></tr></tbody>
+          </table>
+        </details>
+        
+    </div>
+    <div class="card-green">
+      <h3>Three-step review checklist</h3>
+      <ol>
+        <li>Check that you used the accurate scientific term from the word list.</li>
+        <li>Link your statement to a measurement, calculation or diagram detail.</li>
+        <li>Write <strong>//</strong> and add one missing detail or unit in the same colour on the same page.</li>
+      </ol>
+    </div>
+    
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W05_L2)</span>
+          </footer>
+        </section>
+        
+        <section class="slide" id="slide-10" data-stage="Exit ticket" aria-hidden="true">
+          <span class="stage-pill">Stage 10 · Exit ticket</span>
+          <h2>Exit ticket · evidence check</h2>
+          
+    
+        <div class="ca-act" data-quiz data-correct="0" data-explain="Percentage change = (final mass − initial mass) ÷ INITIAL mass × 100. Dividing by final mass is the #1 dropped mark.">
+          <p><strong>Exit check 1:</strong> Which mass do you divide by to find the percentage change in mass?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">The initial (starting) mass</button><button type="button" data-option="1">The final mass</button><button type="button" data-option="2">The average mass of the beaker</button></div>
+          <p class="status-box" role="status">Select an option to check today's key learning.</p>
+        </div>
+        
+        <div class="ca-act" data-quiz data-correct="0" data-explain="Change = 4.50 − 5.00 = −0.50 g. (−0.50 ÷ 5.00) × 100 = −10%.">
+          <p><strong>Exit check 2:</strong> A potato cylinder starts at 5.00 g and finishes at 4.50 g after soaking in concentrated sucrose solution. What is its percentage change in mass?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">−10% (or −10.0%)</button><button type="button" data-option="1">+10%</button><button type="button" data-option="2">−0.5%</button></div>
+          <p class="status-box" role="status">Select an option to check today's key learning.</p>
+        </div>
+        
+        <div class="ca-act" data-quiz data-correct="0" data-explain="The external solution is more concentrated (less water) than the cell cytoplasm, so water moves out by osmosis.">
+          <p><strong>Exit check 3:</strong> Why does a potato cylinder in concentrated sugar solution lose mass?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">Water concentration outside is lower than inside the cells, so net water leaves the cells by osmosis through the partially permeable membrane</button><button type="button" data-option="1">Sugar leaves the potato cells into the beaker</button><button type="button" data-option="2">The sugar solution dissolves the cell walls</button></div>
+          <p class="status-box" role="status">Select an option to check today's key learning.</p>
+        </div>
+        
+    <div class="route-group">
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;"><button type="button" class="route-btn active-route" data-route-btn="supported" aria-pressed="true">Supported</button><button type="button" class="route-btn" data-route-btn="independent" aria-pressed="false">Independent</button><button type="button" class="route-btn" data-route-btn="aspire" aria-pressed="false">Aspire</button></div>
+      <div class="route-panel active-panel" data-route-panel="supported" id="exit-supported"><h3>Supported exit ticket</h3><div class="task-box"><p><strong>1. Which mass do you divide by to find percentage change: initial mass or final mass?</strong></p><details><summary>Expected point</summary><p>The initial (starting) mass.</p></details></div><div class="task-box"><p><strong>2. What does a negative percentage change (like −10%) mean happened to the potato&#x27;s mass?</strong></p><details><summary>Expected point</summary><p>It lost mass (water moved out of the potato).</p></details></div></div><div class="route-panel" data-route-panel="independent" id="exit-independent"><h3>Independent exit ticket</h3><div class="task-box"><p><strong>1. A potato cylinder goes from 5.00 g to 4.50 g. Calculate the percentage change in mass, including the sign.</strong></p><details><summary>Expected point</summary><p>(4.50 − 5.00) ÷ 5.00 × 100 = −0.50 ÷ 5.00 × 100 = −10%.</p></details></div><div class="task-box"><p><strong>2. Name two control variables that must be kept the same in the osmosis core practical.</strong></p><details><summary>Expected point</summary><p>Any two from: cylinder size/length, same potato, soak time, temperature, consistent blotting.</p></details></div></div><div class="route-panel" data-route-panel="aspire" id="exit-aspire"><h3>Aspire exit ticket</h3><div class="task-box"><p><strong>1. Explain why a potato cylinder in concentrated sugar solution loses mass.</strong></p><details><summary>Expected point</summary><p>The water concentration outside is lower than inside the potato cells, so net water leaves the cells by osmosis through their partially permeable membranes.</p></details></div><div class="task-box"><p><strong>2. Why can inconsistent blotting between cylinders ruin the validity of the percentage change results?</strong></p><details><summary>Expected point</summary><p>Leaving extra surface droplets adds unmeasured liquid mass to the final reading, while squeezing too hard removes intracellular water, distorting the true osmotic mass change.</p></details></div></div>
+    </div>
+    <div class="card">
+      <p><strong>Response modes:</strong> verbal · written · drawn · signed · symbol / choice-selected · demonstrated / re-attempt · adult-scribed. You may pass.</p>
+      <p><strong>Next lesson:</strong> Lesson 3 (SCI_LAUNCH_A1_W05_L3): Analysing and evaluating the osmosis practical — plotting zero-crossings and spotting anomalies.</p>
+    </div>
+    
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W05_L2)</span>
+          </footer>
+        </section>
+        
+  </main>
+  
+        <section class="print-section" id="print-supported" data-print-route="supported">
+          <h2>Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W05_L2) · Supported print pack</h2>
+          <p><strong>Learning intention:</strong> Carry out or analyse the potato osmosis core practical, control the key variables, and calculate signed percentage change in mass dividing by the initial mass.</p>
+          <p><strong>1. Look at the data table. For 0.0 mol/dm³ (Pure water: Initial 4.20 g, Final 4.62 g), state whether the potato cylinder gained or lost mass and write its percentage change [2 marks]. (2 marks)</strong> — Cue: Read Row 1 of the table.</p><p><strong>2. Calculate the percentage change for a potato cylinder in water that starts at 4.00 g and finishes at 4.40 g. Use: (4.40 − 4.00) ÷ 4.00 × 100 [2 marks]. (2 marks)</strong> — Cue: 0.40 ÷ 4.00 × 100.</p><p><strong>3. Circle the correct word: &quot;In pure water, the potato gains mass because ___ (water / sugar) moves into the cells across the partially permeable membrane.&quot; [1 mark] (1 marks)</strong> — Cue: Sugar is too large to cross the membrane.</p>
+          <p>Made by Matt</p>
+        </section>
+        
+        <section class="print-section" id="print-independent" data-print-route="independent">
+          <h2>Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W05_L2) · Independent print pack</h2>
+          <p><strong>Learning intention:</strong> Carry out or analyse the potato osmosis core practical, control the key variables, and calculate signed percentage change in mass dividing by the initial mass.</p>
+          <p><strong>1. Name the independent variable, the dependent variable, and two control variables in the potato osmosis core practical [4 marks]. (4 marks)</strong> — Cue: What do we change, what do we measure, and what do we keep the same?</p><p><strong>2. A potato cylinder in 0.8 mol/dm³ sucrose has an initial mass of 4.00 g and a final mass of 3.60 g. Calculate its signed percentage change in mass, showing your working [2 marks]. (2 marks)</strong> — Cue: Use (final − initial) ÷ initial × 100 and keep the minus sign.</p><p><strong>3. Explain why the potato cylinder in 0.8 mol/dm³ sucrose lost mass, using the terms &quot;dilute&quot;, &quot;concentrated&quot;, and &quot;partially permeable membrane&quot; [3 marks]. (3 marks)</strong> — Cue: Compare the cytoplasm inside the cells with the 0.8 mol/dm³ solution outside.</p>
+          <p>Made by Matt</p>
+        </section>
+        
+        <section class="print-section" id="print-aspire" data-print-route="aspire">
+          <h2>Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W05_L2) · Aspire print pack</h2>
+          <p><strong>Learning intention:</strong> Carry out or analyse the potato osmosis core practical, control the key variables, and calculate signed percentage change in mass dividing by the initial mass.</p>
+          <p><strong>1. Explain why calculating percentage change in mass is essential when comparing potato cylinders that started at 4.20 g, 3.85 g, and 4.55 g [2 marks]. (2 marks)</strong> — Cue: What would happen if you only compared raw mass changes in grams?</p><p><strong>2. A pupil forgets to blot the cylinder taken out of 0.8 mol/dm³ sucrose before reweighing it. Predict and explain how this error affects the recorded final mass and the calculated percentage change [3 marks]. (3 marks)</strong> — Cue: Remember the cylinder actually lost mass (negative % change). What does extra liquid on the outside do?</p><p><strong>3. Using the sample table (0.2 mol/dm³ -&gt; +3.5%; 0.4 mol/dm³ -&gt; 0.0%; 0.8 mol/dm³ -&gt; −10.0%), predict the sign and approximate size of the percentage change at 0.6 mol/dm³ and justify your prediction [2 marks]. (2 marks)</strong> — Cue: 0.6 mol/dm³ lies halfway between 0.4 (0.0%) and 0.8 (−10.0%).</p>
+          <p>Made by Matt</p>
+        </section>
+        
+  
+    <dialog id="ta-dialog" aria-labelledby="ta-dialog-title">
+      <h2 id="ta-dialog-title">TA Brief · Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W05_L2)</h2>
+      <p><strong>Learning intention:</strong> Carry out or analyse the potato osmosis core practical, control the key variables, and calculate signed percentage change in mass dividing by the initial mass.</p>
+      <p><strong>At check-out, record E for today's lesson against each pupil's target on the evidence app.</strong></p>
+      <p class="ca-watch-staff"><strong>Watch (staff preview first): <a href="https://www.bbc.co.uk/bitesize/guides/zs63tv4/revision/5" target="_blank" rel="noopener noreferrer">Revision guide — Osmosis required practical (potato cylinders in sugar solutions)</a></strong></p>
+      <h3>Adult deployment and access support</h3>
+      <ul>
+        <li>Rehearse the three-panel picture at Arrival before independent tasks.</li>
+        <li>Invite a response in the learner's usual mode (verbal · written · drawn · signed · symbol / choice-selected · demonstrated / re-attempt · adult-scribed). Allow a pass.</li>
+        <li>Wait, point to the diagram detail, and rephrase before offering a content cue.</li>
+        <li>Record actual <strong>I · S · C</strong> beside each task in the book or sheet.</li>
+      </ul>
+      <p>Made by Matt</p>
+      <button type="button" data-close-dialog>Close TA brief</button>
+    </dialog>
+    
+  
+    <dialog id="guidance-dialog" aria-labelledby="guidance-dialog-title">
+      <h2 id="guidance-dialog-title">Teacher, Cover and SLT Guidance · Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W05_L2)</h2>
+      <p><strong>Scheme alignment:</strong> Row 39 · Topic 1 Key Concepts in Biology: Core practical — Investigate osmosis in potato tissue and calculate percentage change in mass.</p>
+      <p><strong>At check-out, record E for today's lesson against each pupil's target on the evidence app.</strong></p>
+      <p class="ca-watch-staff"><strong>Watch (staff preview first): <a href="https://www.bbc.co.uk/bitesize/guides/zs63tv4/revision/5" target="_blank" rel="noopener noreferrer">Revision guide — Osmosis required practical (potato cylinders in sugar solutions)</a></strong></p>
+      <h3>Practical apparatus and safety</h3>
+      <p>Core practical safety: cork borers and scalpels are sharp — pre-cut cylinders or adult-supervised cutting under local risk assessment; cut away from fingers on a white tile. Mop up any spilled sucrose solution immediately to prevent slip hazards. Weighing, timing, blotting, recording, and calculating are full GCSE practical roles.</p>
+      <h3>P17 · Planned adaptations</h3>
+      <ul>
+        <li><strong>Cognition and learning:</strong> Rehearse one worked step at a time and fade one cue before the independent check.</li>
+        <li><strong>Communication and interaction:</strong> Accept pointing, signing, choice selection or adult scribing.</li>
+        <li><strong>Regulation:</strong> Use the quiet pause option and return to the last secure step.</li>
+        <li><strong>Sensory and physical:</strong> Offer high-contrast print cards and seated or adult-directed apparatus handling.</li>
+      </ul>
+      <h3>Key vocabulary</h3>
+      <table>
+        <thead><tr><th scope="col">Tier</th><th scope="col">Term</th><th scope="col">Meaning</th><th scope="col">Example</th></tr></thead>
+        <tbody><tr><td>Tier 3</td><td><strong>Core practical</strong></td><td>A required GCSE experiment whose method, variables, and calculations you must be able to use and evaluate.</td><td>The potato osmosis investigation is a GCSE Biology core practical.</td></tr><tr><td>Tier 2</td><td><strong>Initial mass</strong></td><td>The starting mass of the potato cylinder recorded BEFORE it is placed into the solution.</td><td>Always divide the mass change by the initial mass.</td></tr><tr><td>Tier 2</td><td><strong>Percentage change</strong></td><td>The change in mass divided by the initial mass, multiplied by 100, keeping the + or − sign.</td><td>Using percentage change lets us compare cylinders that started at different masses.</td></tr><tr><td>Tier 2</td><td><strong>Control variable</strong></td><td>A variable kept constant across all tubes so that only the independent variable affects the dependent variable.</td><td>Cylinder length, soak time, and blotting method are key control variables.</td></tr><tr><td>Tier 2</td><td><strong>Blot</strong></td><td>To dab the cylinder gently and consistently on paper towel to remove surface liquid before weighing.</td><td>Blot every cylinder the same way so surface water does not distort the final mass.</td></tr><tr><td>Tier 3</td><td><strong>Sucrose</strong></td><td>The soluble sugar used to make solutions of different concentrations in the osmosis core practical.</td><td>Sucrose molecules are too large to pass through the partially permeable cell membrane.</td></tr></tbody>
+      </table>
+      <p>Made by Matt</p>
+      <button type="button" data-close-dialog>Close guidance</button>
+    </dialog>
+    
+  
+    <dialog id="pause-dialog" aria-labelledby="pause-dialog-title">
+      <h2 id="pause-dialog-title">Quiet pause</h2>
+      <p>Take a quiet pause. Your work is kept safe on this page. Return to the last secure step and one small choice when you are ready.</p>
+      <p>Made by Matt</p>
+      <button type="button" data-close-dialog>Return to lesson</button>
+    </dialog>
+    
+  <script>
+(function() {
+  window.classicCurrentSlide = 0;
+  window.soundEnabled = false;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.body.classList.add('no-motion');
+  }
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const picker = document.getElementById('stage-picker');
+  const statusEl = document.getElementById('stage-status');
+
+  window.showSlide = function(idx) {
+    const n = Math.max(0, Math.min(slides.length - 1, Number(idx) || 0));
+    window.classicCurrentSlide = n;
+    slides.forEach((s, i) => {
+      if (i === n) {
+        s.classList.add('active');
+        s.setAttribute('aria-hidden', 'false');
+      } else {
+        s.classList.remove('active');
+        s.setAttribute('aria-hidden', 'true');
+      }
+    });
+    if (picker) picker.value = String(n);
+    if (statusEl && slides[n]) {
+      statusEl.textContent = 'Stage ' + (n + 1) + ' of ' + slides.length + ': ' + (slides[n].getAttribute('data-stage') || '');
+    }
+  };
+
+  window.SCI_PROOF = function() {
+    return {
+      slideCount: slides.length,
+      currentSlide: window.classicCurrentSlide,
+      sound: window.soundEnabled
+    };
+  };
+
+  document.getElementById('prev-btn')?.addEventListener('click', () => window.showSlide(window.classicCurrentSlide - 1));
+  document.getElementById('next-btn')?.addEventListener('click', () => window.showSlide(window.classicCurrentSlide + 1));
+  picker?.addEventListener('change', (e) => window.showSlide(Number(e.target.value)));
+
+  document.addEventListener('keydown', (e) => {
+    const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+    if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+    if (e.key === 'ArrowRight') window.showSlide(window.classicCurrentSlide + 1);
+    if (e.key === 'ArrowLeft') window.showSlide(window.classicCurrentSlide - 1);
+    if (e.key === 'Escape') {
+      document.querySelectorAll('dialog[open]').forEach(d => d.close());
+    }
+  });
+
+  // View toggles
+  document.querySelectorAll('[data-toggle]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const mode = btn.getAttribute('data-toggle');
+      const pressed = btn.getAttribute('aria-pressed') === 'true';
+      btn.setAttribute('aria-pressed', String(!pressed));
+      if (mode === 'calm') document.body.classList.toggle('calm-view', !pressed);
+      if (mode === 'high-contrast') document.body.classList.toggle('high-contrast', !pressed);
+      if (mode === 'reduce-motion') document.body.classList.toggle('no-motion', !pressed);
+    });
+  });
+
+  // Dialog controls
+  document.querySelectorAll('[data-open-dialog]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const d = document.getElementById(btn.getAttribute('data-open-dialog'));
+      if (d && typeof d.showModal === 'function') d.showModal();
+      else if (d) d.setAttribute('open', '');
+    });
+  });
+  document.querySelectorAll('[data-close-dialog]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const d = btn.closest('dialog');
+      if (d && typeof d.close === 'function') d.close();
+      else if (d) d.removeAttribute('open');
+    });
+  });
+
+  // Reveal buttons
+  document.querySelectorAll('[data-reveal]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = document.getElementById(btn.getAttribute('data-reveal'));
+      if (target) {
+        const isHidden = target.hasAttribute('hidden');
+        if (isHidden) target.removeAttribute('hidden');
+        else target.setAttribute('hidden', '');
+      }
+    });
+  });
+
+  // Regulation check
+  document.querySelectorAll('[data-regulation]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const st = document.getElementById('regulation-status');
+      if (st) st.textContent = 'Logged: ' + btn.getAttribute('data-regulation') + '. Speak privately or pass at any time.';
+    });
+  });
+
+  // Route tabs (Arrival, You do, Exit)
+  document.querySelectorAll('.route-group').forEach(group => {
+    const buttons = group.querySelectorAll('[data-route-btn]');
+    const panels = group.querySelectorAll('.route-panel');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const r = btn.getAttribute('data-route-btn');
+        buttons.forEach(b => {
+          const match = b.getAttribute('data-route-btn') === r;
+          b.classList.toggle('active-route', match);
+          b.setAttribute('aria-pressed', String(match));
+        });
+        panels.forEach(p => {
+          p.classList.toggle('active-panel', p.getAttribute('data-route-panel') === r);
+        });
+      });
+    });
+  });
+
+  // Tap quizzes (Arrival & Exit)
+  document.querySelectorAll('[data-quiz]').forEach(quiz => {
+    const right = quiz.getAttribute('data-correct');
+    const explain = quiz.getAttribute('data-explain') || '';
+    const status = quiz.querySelector('[role="status"]');
+    quiz.querySelectorAll('[data-option]').forEach(opt => {
+      opt.addEventListener('click', () => {
+        const chosen = opt.getAttribute('data-option');
+        if (chosen === right) {
+          status.textContent = 'Yes. ' + explain;
+        } else {
+          status.textContent = 'Try again. Check the diagram clue and choose another option.';
+        }
+      });
+    });
+  });
+
+  // Starter 4-step beatbox + vote
+  document.querySelectorAll('[data-beat]').forEach(box => {
+    let idx = 0;
+    const lights = Array.from(box.querySelectorAll('.ca-light'));
+    const status = box.querySelector('.beat-status');
+    function render(n) {
+      lights.forEach((l, i) => l.classList.toggle('lit', i < n));
+      if (status) status.textContent = n === 0 ? 'Ready: step 0 of ' + lights.length : 'Showing step ' + n + ' of ' + lights.length;
+    }
+    box.querySelector('[data-beat-next]')?.addEventListener('click', () => {
+      idx = Math.min(lights.length, idx + 1);
+      render(idx);
+    });
+    box.querySelector('[data-beat-all]')?.addEventListener('click', () => {
+      idx = lights.length;
+      render(idx);
+    });
+    box.querySelector('[data-beat-reset]')?.addEventListener('click', () => {
+      idx = 0;
+      render(idx);
+    });
+  });
+
+  // Step models (I do 1 & I do 2)
+  document.querySelectorAll('[data-step-model]').forEach(model => {
+    const steps = JSON.parse(model.getAttribute('data-steps') || '[]');
+    let cur = 0;
+    const cap = model.querySelector('.model-caption');
+    const items = Array.from(model.querySelectorAll('.v5-step'));
+    function update() {
+      if (cap && steps[cur]) cap.textContent = 'Step ' + (cur + 1) + ': ' + steps[cur];
+      items.forEach((el, i) => {
+        if (i <= cur) el.removeAttribute('hidden');
+        else el.setAttribute('hidden', '');
+      });
+    }
+    model.querySelector('[data-step-next]')?.addEventListener('click', () => {
+      cur = Math.min(steps.length - 1, cur + 1);
+      update();
+    });
+    model.querySelector('[data-step-reset]')?.addEventListener('click', () => {
+      cur = 0;
+      items.forEach((el, i) => {
+        if (i === 0) el.removeAttribute('hidden');
+        else el.setAttribute('hidden', '');
+      });
+      if (cap && steps[0]) cap.textContent = 'Step 1: ' + steps[0];
+    });
+  });
+
+  // We do 1 sort/match + 4-team points board
+  const scores = [0, 0, 0, 0];
+  function renderScores() {
+    scores.forEach((val, i) => {
+      const el = document.getElementById('score-' + i);
+      if (el) el.textContent = String(val);
+    });
+  }
+  document.querySelectorAll('[data-team-add]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const t = Number(btn.getAttribute('data-team-add'));
+      const pts = Number(btn.getAttribute('data-pts') || '1');
+      scores[t] = Math.max(0, scores[t] + pts);
+      renderScores();
+    });
+  });
+  document.getElementById('reset-points')?.addEventListener('click', () => {
+    for (let i = 0; i < 4; i++) scores[i] = 0;
+    renderScores();
+  });
+
+  document.querySelectorAll('[data-sort]').forEach(sortBox => {
+    const status = sortBox.querySelector('.sort-status');
+    sortBox.querySelector('[data-sort-check]')?.addEventListener('click', () => {
+      const selects = Array.from(sortBox.querySelectorAll('select[data-expected]'));
+      let rightCount = 0;
+      selects.forEach(s => {
+        if (s.value === s.getAttribute('data-expected')) rightCount++;
+      });
+      if (status) {
+        status.textContent = rightCount === selects.length
+          ? 'Yes. All ' + rightCount + ' matches are accurate. Award 1 point and ask for a scientific reason for +1 bonus point.'
+          : 'Try again. ' + rightCount + ' of ' + selects.length + ' matched so far.';
+      }
+    });
+    sortBox.querySelector('[data-sort-reset]')?.addEventListener('click', () => {
+      sortBox.querySelectorAll('select').forEach(s => { s.value = ''; });
+      if (status) status.textContent = 'Reset complete. Match each item and explain why.';
+    });
+  });
+
+  // We do 2 sequence ordering
+  document.querySelectorAll('[data-sequence]').forEach(seqBox => {
+    const list = seqBox.querySelector('ol');
+    const status = seqBox.querySelector('.seq-status');
+    seqBox.addEventListener('click', (e) => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      const li = btn.closest('li');
+      if (btn.hasAttribute('data-move-up') && li && li.previousElementSibling) {
+        list.insertBefore(li, li.previousElementSibling);
+      } else if (btn.hasAttribute('data-move-down') && li && li.nextElementSibling) {
+        list.insertBefore(li.nextElementSibling, li);
+      } else if (btn.hasAttribute('data-seq-check')) {
+        const items = Array.from(list.querySelectorAll('li'));
+        const ok = items.every((el, idx) => Number(el.getAttribute('data-order')) === idx);
+        if (status) {
+          status.textContent = ok
+            ? 'Yes. The sequence is in the right scientific order.'
+            : 'Try again. Check which step must happen first.';
+        }
+      }
+    });
+  });
+
+  // Print arming
+  window.printArm = function(route) {
+    document.querySelectorAll('.print-section').forEach(sec => {
+      sec.classList.toggle('visible', sec.getAttribute('data-print-route') === route);
+    });
+  };
+  document.querySelectorAll('[data-print-btn]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      window.printArm(btn.getAttribute('data-print-btn'));
+    });
+  });
+
+  window.showSlide(0);
+})();
+</script>
+</body>
+</html>
