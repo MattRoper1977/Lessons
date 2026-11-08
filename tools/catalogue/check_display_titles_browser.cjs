@@ -9,7 +9,12 @@ exports.verify = async ({page, origin, root, out}) => {
   const pair = manifest.find(p => rows.some(r => r.file === p.companionOf && r.unit));
   assert(pair, 'A mapped lesson with verified unit metadata is required');
   const row = rows.find(r => r.file === pair.companionOf);
-  const expected = pair.title.trim();
+  // A2-LIST (8 Nov 2026, owner ask): the host lesson card keeps its full pathway title
+  // (public pathway words shown); the reviewed topic title heads the pack page and the
+  // pack row only, so the host card carries no "Original reference" expander.
+  const topic = pair.title.trim();
+  const expected = String(row.title).replace(/\b(BUILD|GROW|LAUNCH)\b/g, m => ({BUILD:'BASE',GROW:'TRACK',LAUNCH:'SUMMIT'})[m]);
+  assert(row.title.includes(topic), 'topic title is verbatim within the host title');
   // The source catalogue deliberately keeps relative href attributes. Verify
   // both that literal contract and the browser's resolved canonical destination.
   const href = encodeURI(row.file);
@@ -21,20 +26,12 @@ exports.verify = async ({page, origin, root, out}) => {
     await card.waitFor();
     assert.equal(await card.locator('h3 a').evaluate(a=>a.href),destination);
     assert.equal(await card.locator('h3 a').innerText(),expected);
-    assert.equal(await card.locator('details').evaluate(e=>e.open),false);
-    await card.locator('summary').focus();
-    await page.keyboard.press('Enter');
-    assert.equal(await card.locator('details span').innerText(),row.title);
-    assert(await card.locator('details span').isVisible());
-    await page.keyboard.press('Enter');
-    assert.equal(await card.locator('details').evaluate(e=>e.open),false);
-    assert(await card.locator('summary').evaluate(e=>e===document.activeElement));
-    assert(await card.locator('summary').evaluate(e=>e.getBoundingClientRect().height>=44));
+    assert.equal(await card.locator('details.title-reference').count(),0,'host card shows its own title, no reference expander');
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
     fs.mkdirSync(out,{recursive:true});
     await page.screenshot({path:path.join(out,'titles-'+width+'.png'),fullPage:true});
   }
-  for (const q of [expected,row.id,row.file]) {
+  for (const q of [expected,topic,row.id,row.file]) {
     await page.goto(origin+'/Lessons/?q='+encodeURIComponent(q));
     await page.locator('#cards h3 a[href="'+href+'"]').waitFor();
     assert.equal(await page.locator('#cards h3 a[href="'+href+'"]').evaluate(a=>a.href),destination);
@@ -60,5 +57,11 @@ exports.verify = async ({page, origin, root, out}) => {
   await page.locator('[data-clear-filters]').click();
   assert.equal(new URL(page.url()).searchParams.get('unit'),null);
   assert(await page.locator('#search').evaluate(e=>e===document.activeElement));
-  return {widths:[320,390,900,1280],lesson:row.file,originalReference:true,legacySearch:true,unitIntersection:true};
+  // The reviewed topic title still heads the pack page (pack.js), independently of the card.
+  const packRow = rows.find(r => r.kind === 'pack' && r.companionOf === row.file);
+  assert(packRow, 'companion pack row');
+  await page.goto(origin+'/Lessons/pack.html?id='+encodeURIComponent(packRow.id));
+  await page.waitForFunction(id=>document.querySelector('#pack-content')?.dataset.ready===id,packRow.id);
+  assert.equal(await page.locator('#pack-content h1').innerText(),topic);
+  return {widths:[320,390,900,1280],lesson:row.file,fullTitleOnCard:true,topicOnPackPage:true,legacySearch:true,unitIntersection:true};
 };
