@@ -237,7 +237,7 @@ CATALOGUE_PINS = {
         ".github/workflows/glv3-verify.yml": "4bf27ca7471a21359e35d1bc7277c5fa0adeb5f31a47c769f192165796037088",
         "_glv3/tools/verify_change_boundary.py": "ef6a0ce28055d069be0a5a212450f4f4318083d58b87b24aeccf494b098815a4",
         "_glv3/tools/browser_verify.mjs": "737ad30f297e061407161743f017614179cc6c56f1c9a3904bbe7c98df38c888",
-        "_glv3/tools/chip_gate.mjs": "16cdd5c0ad3745c57340ed0ec6a208d221e4793bfc9b1cd9bc703a6c2613dd9a",
+        "_glv3/tools/chip_gate.mjs": "6e5d07c0c4a4855442c09c4c6ae259acfbbe123c8bbb9e643eb21c980c562a67",
         "_glv3/tools/catalogue_membership.mjs": "4d7ab03e23ee0d3c3fc934f4f0a901afc61169754db099f4f5c24dd9cce058ec",
         "tools/humanities_resources/SOURCE_MANIFEST.json": "9d2972aa39fe12220de92aea2230fd8bdf7bef765d5b7cf2227c440026f546a1",
         "tools/humanities_resources/DOWNLOAD_MANIFEST.json": "fd0a9349db9824e2d03fa816d96a8eae2c974c22e33c03223dd72e85e17f2190",
