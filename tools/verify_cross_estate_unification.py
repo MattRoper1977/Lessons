@@ -103,7 +103,7 @@ MANIFEST_PINS = {
     # Ruled onto the pin 2026-08-12 (Ruling 3): the deck install is a
     # resources.json edit, and the blanket rule forbade it the same way it
     # once forbade studio adds. Same pattern, same tool, same commit rule.
-    "resources.json": "2ece30b8cd226ac9359d015629aaafcf3164e5974c67e3f9ab21566b9acf05ff"
+    "resources.json": "f3a04d655ee57ef422baa70126fa02df02ac1c8d2983fd64eceda810089d8972"
 }
 PIN_COMMAND = "python3 tools/pin_manifests.py   (from either checkout — it writes both gate copies or neither)"
 
@@ -129,7 +129,7 @@ CATALOGUE_PINS = {
         "tools/catalogue/check_display_titles_browser.cjs": "5662cdb93c7796ead4fb9bb69ce94ac65fe1e29e103f00c65bd07a4d5129a7cd",
         "tools/verify_lessons_chips.mjs": "e417afd94ae4f3a450caab2edf4b6c41d14e4588f070d0ad822263e30a86cf39",
         "tools/sw2/check_tokens_inert.cjs": "a8258b89b5dd00147a0c8b18488a2dcf8102bc20d2ddf2fa1aa0863d25454674",
-        "assets/catalogue/lesson-order.json": "03e5e6f1ee70012a7e46c0268a49667e48c736976f9d5cd09554cf28ee9f23d1",
+        "assets/catalogue/lesson-order.json": "f86ea9504f1d1a70e8062fd11b67deedce96b18b2c7696d3c192cd45eee53583",
         "tools/catalogue/build_lesson_order.py": "35a4c54779b800ae8bd949154d0d19fddb190f49ec18e62efdd86d03313f6180",
         "tools/ux2/hub_gates.mjs": "3d3120df94b1789041370c4045fbcc983635af0b30a0705447f18371bed98944",
         "index.html": "798d5572afecb8db10a516f9a0ed57d54b7d1dc5e220077a6be85d5f046b555e",
@@ -153,7 +153,7 @@ CATALOGUE_PINS = {
         "assets/catalogue/lesson-navigation.js": "42e579bbef3940c24ca4360319290820305a777330b8bff79152b2cb6aa077e3",
         "assets/catalogue/science-shelf.css": "b2b1eb328662d841add139ccfff107f985f17373f1ee82b8762475663097ab60",
         "assets/catalogue/science-shelf.js": "a59fe0c988a5de7d614afc6a36d7dacf14c6e3fa92c732740442e4914d00f356",
-        "assets/catalogue/terms-and-styles.json": "1a049c56c53d587c134767c2b689822e0e4bd85e3a0c545aa2c80a9c60e335d2",
+        "assets/catalogue/terms-and-styles.json": "b357a5f985a5aee4ce9cad257446e1d524df40983865e8d9592fd8d695983214",
         "assets/catalogue/science-shelf.json": "6bfcac8579a72f8413e158b49460a8b853f284b8dc64bd4da4442c37e92edadf",
         "assets/catalogue/humanities-shelf.json": "3f6a3583f3658b79a544aeef27a778a283069e4842d763cb95728a703669d9a7",
         "tools/catalogue/build_catalogue.py": "4eff91f7ace9073a6612035c33e8556875d6165da83876ae5ec20a6ec11a15a8",
@@ -173,7 +173,7 @@ CATALOGUE_PINS = {
         "Science/Build/START_HERE.html": "acac26140f5aeef22292e6ce3831fa61aaf5e62432cc3998b340918c8bfaee7f",
         "Science/Grow/START_HERE.html": "d2bec305dec3212215c6f599cad3925c571f9a34ca6e85268893c8ed142170dd",
         "Science/Launch/START_HERE.html": "10b46e7cf26e3aa4b7f1fb4758a039bcbec7000bc2ec8d30dfe3ce0e0b966353",
-        "tools/catalogue/SHELF_SELECTION.json": "944ade0d498c34e3b7c57da06f1e21fccb5753aea3d864786f8b372eb009419e",
+        "tools/catalogue/SHELF_SELECTION.json": "c9922d5737fbb8f856c1892e4a77d29d12da695ae438d67d0b8fcbd1b2d4959d",
         "tools/catalogue/HUMANITIES_SELECTION.json": "8bc58e21f2a3483d97eaf64dbfdc1bbbfeb3599b6bc0693377800a0054fcdf0f",
         "tools/easter/science_original_browser.cjs": "aae28a4166d41546cbe5b0acd0866eeaf5e6f47cd5b1949fc48ecb2d4c79a1ec",
         "tools/science_pack/browser_checks.cjs": "058c9bc1f06c876f2994a23d467d83fced683c6355eb92d0ef43986d3e28d72d",
@@ -247,7 +247,7 @@ CATALOGUE_PINS = {
         "tools/humanities_resources/check_resources.py": "ec5383e3a34cbff999f190b0014a4a73e00a3a29e2714498f7620fd638dc2aa5",
         "tools/humanities_resources/resource.css": "1aed9aaca0d73a4b200c4e5d0977e73f4e906c747d7340c7a62f4197a8344bae",
         "tools/humanities_resources/resource.js": "ad40afed95490bfcce92dc062da46e1b27bcb96bdc80e37eabdfe02bf6ffc446",
-        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "581b328b6e582ff1b140fe09ca731a94c0c91dd06f2d3fb3aa59b0d7c7ba9ae7",
+        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "492649e4006866b75a06f55b35b35b72771b8f95bdceb0602e3c8329fb6125cb",
         "tools/catalogue/TERM_REVIEW.json": "9395de4c2803a7bc2a679cf0659c9df3c41c01e5ac60c0a2d39249414bc12de8",
         "tools/catalogue/SCIENCE_WEEK_BINDINGS.json": "9fa98ad78b0bd3c3f3ee15f88a7b2fd40eea810e6c9fb65ee93b3c5192888071",
         "primary/year5/science/autumn/forces/Lesson8_ExploreGravity.html": "20047720bf1d309055abdf232d341b6fd99b833631efa0bcbfb3dabed9671196",
@@ -2170,7 +2170,73 @@ CATALOGUE_PINS = {
         "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W07/approved-mark.jpg": "f1095531d88d17f20c7464c62887703321a0872f108d3fb78a4afc0226dac2a7",
         "Science/Build/Autumn_1_2026-27/manifest_a1_aaa.json": "e3ad81b46033d79b6b34dc9e8e0c67722cf49b5f7612757445c9a4299d317e8c",
         "Science/Grow/Autumn_1_2026-27/manifest_a1_aaa.json": "797cfd06e0de9914fc12b0e30acbcb00d144af38116f0d6f02a99e2cea87b6b1",
-        "Science/Launch/Autumn_1_2026-27/manifest_a1_aaa.json": "5174186fc3bf0f8a3e3b09e1b01e93d526dec53700fa6761b76cb1a9a133dbb7"
+        "Science/Launch/Autumn_1_2026-27/manifest_a1_aaa.json": "5174186fc3bf0f8a3e3b09e1b01e93d526dec53700fa6761b76cb1a9a133dbb7",
+        "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W01/ART_BUILD_A1_W01_P1.html": "c57a1edadfe954a94a9424e3632640fb3a21a3712cca61b3343e4286f7313f12",
+        "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W01/ART_BUILD_A1_W01_P2.html": "7d502ab42ce7ff1836b1e5ece948bf30ddcbdf930b355313a53e0f96fa3b03c1",
+        "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W02/ART_BUILD_A1_W02_P1.html": "f3b9165aa2eacd50b13ccb6b63ccc0d94caf596ad556eadfbe75bf6414c35dd5",
+        "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W02/ART_BUILD_A1_W02_P2.html": "95b8072123472698d4faca8fa1ebca037a008111ef437d161f2d695242e77ecb",
+        "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W03/ART_BUILD_A1_W03_P1.html": "1a6490a581a56a13a56659983ee50aa1bd6e51d90f3f3b1256f29840682ea3cd",
+        "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W03/ART_BUILD_A1_W03_P2.html": "413a5201307ee0c9029d431467d8536c098f41027025f9a7ff8be3fd97771b79",
+        "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W04/ART_BUILD_A1_W04_P1.html": "a56cd6b2b9391fb8499dc6881da30a872fdaf97395a167b87c958c7d1e9b2e31",
+        "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W04/ART_BUILD_A1_W04_P2.html": "c774eaf44efd849640a22090e6e01defe7e0db577d5623a9a385d8c907c83a81",
+        "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W05/ART_BUILD_A1_W05_P1.html": "d8907b597f9b53ebda9c6c083a738ed9cb3aeb877744132f4154109093e8eaea",
+        "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W05/ART_BUILD_A1_W05_P2.html": "5e9935dbc5a36e9cc265d7d7ef1fdf08ebaaac7e985ec69883d83f7c26998f36",
+        "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W06/ART_BUILD_A1_W06_P1.html": "cf2abb344a7a8f78c7da80b86005dd0b6930c5524dcb46b939706282a548e0a1",
+        "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W06/ART_BUILD_A1_W06_P2.html": "9a8beff1ae94a2ae91a49d816ba786c9b014388157c4d946bf568a382ea82de6",
+        "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W07/ART_BUILD_A1_W07_P1.html": "638ae23ccbd45e8172d976e370b29c42cef3b2845188fb0632ff7f1cc5567646",
+        "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W07/ART_BUILD_A1_W07_P2.html": "ead6ea9a910f60225cbecc02b6a5f38752e34255de96d1744561a77efb6f244f",
+        "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W01/ART_GROW_A1_W01_P1.html": "e9739ef97075210c612bbc1667a1990b80cad8238873fd630928b99d539fc3b4",
+        "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W01/ART_GROW_A1_W01_P2.html": "477cf8d2dccc5cb126e8255a8d223064aa6728004836569ab59ea627a8898e6a",
+        "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W02/ART_GROW_A1_W02_P1.html": "f2e598e894117d4ea355953f1f90ce3d0a7e2816d400b971c0e3ed0e5fa78f71",
+        "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W02/ART_GROW_A1_W02_P2.html": "059dc38a6805c8df3ee2ca1e7810de98f512e480c3f246c7a8715bd5ef28be19",
+        "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W03/ART_GROW_A1_W03_P1.html": "a93acd12abed3ea439ff99f25235111469765578039f6e2fcedaad2a6f9693a1",
+        "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W03/ART_GROW_A1_W03_P2.html": "a04f64d3376674aff9309850415903084673a43eada00604de155b7afde5d3c4",
+        "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W04/ART_GROW_A1_W04_P1.html": "f72e7c48c30e627aa8e764a550a24da34f787d5a8c357ddf492f1c05260e58aa",
+        "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W04/ART_GROW_A1_W04_P2.html": "4803a9ae15d54fb8dc0645ccb0b2f33df51e1845124d953a61ae2d47c0b13cf4",
+        "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W05/ART_GROW_A1_W05_P1.html": "732acdc5f9d0f4a502602d7b53ce090c213faa7254c40ca54496da35dcfd4a1e",
+        "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W05/ART_GROW_A1_W05_P2.html": "d5386df21659bb9a876397da2be6067d8ce5ee6aee662fd36c57a1da239b3531",
+        "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W06/ART_GROW_A1_W06_P1.html": "1c0fdcebe45b0f5968bc97a9174739bd5dc56e0bfc8d96b7a59157d92157f7de",
+        "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W06/ART_GROW_A1_W06_P2.html": "ad9efefbb4565d3199a567e89166fbc07ac6cb339cf1e0d91b53e7417ba9dd0f",
+        "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W07/ART_GROW_A1_W07_P1.html": "9b9a779817c900f098e81c82fe9360df4af1d775a7cca81c12b5c85475ea5c53",
+        "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W07/ART_GROW_A1_W07_P2.html": "93a0219951b1d952a57fb02dcb5cb6ca4db9be64499b0308e3da22ad4f890553",
+        "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W01/ART_LAUNCH_A1_W01_P1.html": "860231d849af5c35dfd8f23a59f8f3dcf6e922fc4f42bc51568bfe2984dee9bf",
+        "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W01/ART_LAUNCH_A1_W01_P2.html": "e2b0011214fda1e2b7fcc5c99e5a12566d2378aea13fc91cffa2b18fe7498fa6",
+        "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W02/ART_LAUNCH_A1_W02_P1.html": "a291d47fb380462c5f3ae80bde87c874b41de399761fc203958ab5c3c870f5af",
+        "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W02/ART_LAUNCH_A1_W02_P2.html": "6372fc72a97fa06a05e5536a074826121c9ac7b93fc32301a743b6818d657ee7",
+        "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W03/ART_LAUNCH_A1_W03_P1.html": "39226190780b4811df275ce03f9152a597530823403884f1c10b1bb97441498b",
+        "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W03/ART_LAUNCH_A1_W03_P2.html": "9a527655faef4e594733aa238e22e83e0ad818bd48b6c32981c480207a137c7c",
+        "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W04/ART_LAUNCH_A1_W04_P1.html": "10f19b227eb75a8e1f0d3b55ec1f169d164fd533c3c54dfbdee582daea267652",
+        "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W04/ART_LAUNCH_A1_W04_P2.html": "08fb59969f312effa6dd49bca937cb3ee14e576c8da4d87669ba25bc3164de57",
+        "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W05/ART_LAUNCH_A1_W05_P1.html": "c0c6bddad5cf6bade5e7c31b259a72ed5af5d3401c1dca7cbbfe8b746ae5b448",
+        "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W05/ART_LAUNCH_A1_W05_P2.html": "539a6c99ddd1a9ba44c362351317cb8b6e5dc06f492429e190050481a63b34c2",
+        "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W06/ART_LAUNCH_A1_W06_P1.html": "31136147988b3530dda339b8abdd6f1d73622dae3bb0201b491d4bb90932a022",
+        "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W06/ART_LAUNCH_A1_W06_P2.html": "f91577f585a0da52473c93800c064446639a2796dccf2f37abf27a2901e398a7",
+        "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W07/ART_LAUNCH_A1_W07_P1.html": "ed263ef77d04c3d44ed69c2073d5895ce706c73222f1110f7c295f84228c38dc",
+        "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W07/ART_LAUNCH_A1_W07_P2.html": "93686eb83b9725c8ddf5e55394f9a5f15e1dd63d81594ac7cae6830e238b2161",
+        "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W01/approved-mark.jpg": "f1095531d88d17f20c7464c62887703321a0872f108d3fb78a4afc0226dac2a7",
+        "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W02/approved-mark.jpg": "f1095531d88d17f20c7464c62887703321a0872f108d3fb78a4afc0226dac2a7",
+        "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W03/approved-mark.jpg": "f1095531d88d17f20c7464c62887703321a0872f108d3fb78a4afc0226dac2a7",
+        "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W04/approved-mark.jpg": "f1095531d88d17f20c7464c62887703321a0872f108d3fb78a4afc0226dac2a7",
+        "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W05/approved-mark.jpg": "f1095531d88d17f20c7464c62887703321a0872f108d3fb78a4afc0226dac2a7",
+        "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W06/approved-mark.jpg": "f1095531d88d17f20c7464c62887703321a0872f108d3fb78a4afc0226dac2a7",
+        "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W07/approved-mark.jpg": "f1095531d88d17f20c7464c62887703321a0872f108d3fb78a4afc0226dac2a7",
+        "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W01/approved-mark.jpg": "f1095531d88d17f20c7464c62887703321a0872f108d3fb78a4afc0226dac2a7",
+        "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W02/approved-mark.jpg": "f1095531d88d17f20c7464c62887703321a0872f108d3fb78a4afc0226dac2a7",
+        "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W03/approved-mark.jpg": "f1095531d88d17f20c7464c62887703321a0872f108d3fb78a4afc0226dac2a7",
+        "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W04/approved-mark.jpg": "f1095531d88d17f20c7464c62887703321a0872f108d3fb78a4afc0226dac2a7",
+        "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W05/approved-mark.jpg": "f1095531d88d17f20c7464c62887703321a0872f108d3fb78a4afc0226dac2a7",
+        "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W06/approved-mark.jpg": "f1095531d88d17f20c7464c62887703321a0872f108d3fb78a4afc0226dac2a7",
+        "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W07/approved-mark.jpg": "f1095531d88d17f20c7464c62887703321a0872f108d3fb78a4afc0226dac2a7",
+        "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W01/approved-mark.jpg": "f1095531d88d17f20c7464c62887703321a0872f108d3fb78a4afc0226dac2a7",
+        "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W02/approved-mark.jpg": "f1095531d88d17f20c7464c62887703321a0872f108d3fb78a4afc0226dac2a7",
+        "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W03/approved-mark.jpg": "f1095531d88d17f20c7464c62887703321a0872f108d3fb78a4afc0226dac2a7",
+        "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W04/approved-mark.jpg": "f1095531d88d17f20c7464c62887703321a0872f108d3fb78a4afc0226dac2a7",
+        "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W05/approved-mark.jpg": "f1095531d88d17f20c7464c62887703321a0872f108d3fb78a4afc0226dac2a7",
+        "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W06/approved-mark.jpg": "f1095531d88d17f20c7464c62887703321a0872f108d3fb78a4afc0226dac2a7",
+        "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W07/approved-mark.jpg": "f1095531d88d17f20c7464c62887703321a0872f108d3fb78a4afc0226dac2a7",
+        "Art/Build/Autumn_1_2026-27/manifest_a1_aaa.json": "0f0b7eec6daeda548c3ddef439afa5d4740a2dbe172fc45495feeefb9071fb5f",
+        "Art/Grow/Autumn_1_2026-27/manifest_a1_aaa.json": "e033e3045b2ba8250e891fe287eec6784bb96156b2b0adb39886cc2fe2590885",
+        "Art/Launch/Autumn_1_2026-27/manifest_a1_aaa.json": "d42816956781ac206a57e208e1aa2a736d365e36176b2c306992566e3ac4ef62"
     }
 }
 # END REVIEWED CATALOGUE PINS
@@ -2188,14 +2254,14 @@ CATALOGUE_ORIGINAL_ROWS_SHA256 = "d4714b20bc0de0732d1dd33e449280b8b42fd0a033b830
 # digest below are re-cut by tools/catalogue/pin_catalogue_contract.py from
 # rows it has verified against that derivation; an edit to any appended row,
 # a removed pack row or an extra lesson row still reds here.
-CATALOGUE_SHELF_ROWS = 475
+CATALOGUE_SHELF_ROWS = 517
 # UX2 A1: keys that may be appended to an original row without moving its
 # digest (see catalogue_errors). Nothing else is additive. No original row
 # carried either key before the ruling (measured 2026-09-08: 0 of 734), so the
 # second set is empty and the allowance cannot launder a pre-existing value.
 CATALOGUE_ADDITIVE_TAG_KEYS = frozenset({"halfTerm", "unit"})
 CATALOGUE_ORIGINAL_KEYS_BEFORE_TAGS = frozenset()
-CATALOGUE_SHELF_ROWS_SHA256 = "c90546ebde8630d18a8d326bb608802f9279cae8433a2a873a07c72d69257f24"
+CATALOGUE_SHELF_ROWS_SHA256 = "71aab31d0efde38048de27dc60adfe19028fc5ae184ef02d225991a17c18e6bf"
 
 # These named review records and review tools can change with their reviewed
 # transaction. Tools are not served assets; they are reviewed as executable

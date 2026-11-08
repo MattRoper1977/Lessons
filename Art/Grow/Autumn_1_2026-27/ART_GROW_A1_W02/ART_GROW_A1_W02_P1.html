@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Lesson resource">
+  <meta name="creator" content="Lesson resource">
+  <meta name="publisher" content="Lesson resource">
+  <title>ART_GROW_A1_W02_P1 · Week 2 Part 1 · TRACK · One skill, three tries, one log entry · Made by Matt</title>
+  <style>
+    :root {
+      --pw-accent: #3F7D6E;
+      --pw-dark: #153830;
+      --pw-tint: #EDF6F3;
+      --pw-chip: #D9EFE9;
+      --ink: #101820;
+      --paper: #FFFFFF;
+      --surface: #F8FAFC;
+      --ok-bg: #DCFCE7;
+      --ok-ink: #064E3B;
+      --warn-bg: #FEF3C7;
+      --warn-ink: #78350F;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 24px;
+      line-height: 1.45;
+      color: #101820;
+      background-color: #F8FAFC;
+    }
+    a {
+      color: #101820;
+      background-color: #FFFFFF;
+      text-decoration: underline;
+      font-weight: bold;
+    }
+    button, input, select {
+      font-family: inherit;
+      font-size: 24px;
+      line-height: 1.35;
+      min-width: 0;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+    button:focus-visible, a:focus-visible, input:focus-visible, summary:focus-visible {
+      outline: 4px solid #101820;
+      outline-offset: 3px;
+    }
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: 8px;
+      padding: 10px 18px;
+      color: #FFFFFF;
+      background-color: #101820;
+      z-index: 1000;
+    }
+    .skip-link:focus {
+      left: 12px;
+    }
+    .top-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 20px;
+      color: #FFFFFF;
+      background-color: #153830;
+      border-bottom: 6px solid #3F7D6E;
+    }
+    .brand-cluster {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .logo {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+      border-radius: 8px;
+      background-color: #FFFFFF;
+      padding: 3px;
+      border: 2px solid #3F7D6E;
+    }
+    .brand-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #FFFFFF;
+      background-color: #153830;
+    }
+    .pathway-pill {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #101820;
+      background-color: #D9EFE9;
+      border: 2px solid #FFFFFF;
+    }
+    .toolbar-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+    .tool-btn {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 2px solid #FFFFFF;
+      color: #101820;
+      background-color: #FFFFFF;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .tool-btn:hover {
+      background-color: #D9EFE9;
+      color: #101820;
+    }
+    .tool-btn[aria-pressed="true"] {
+      color: #FFFFFF;
+      background-color: #101820;
+      border-color: #FFFFFF;
+    }
+    .timer-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      color: #101820;
+      background-color: #FFFFFF;
+      border: 2px solid #3F7D6E;
+      font-weight: bold;
+    }
+    .stage-nav {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 10px 20px;
+      color: #101820;
+      background-color: #EDF6F3;
+      border-bottom: 3px solid #3F7D6E;
+    }
+    .stage-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .stage-pill {
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 2px solid #153830;
+      color: #101820;
+      background-color: #FFFFFF;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .stage-pill[aria-current="step"] {
+      color: #FFFFFF;
+      background-color: #153830;
+      border-color: #101820;
+    }
+    .progress-track {
+      width: 100%;
+      height: 12px;
+      background-color: #FFFFFF;
+      border-bottom: 2px solid #153830;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 14.28%;
+      background-color: #3F7D6E;
+      transition: width 0.2s ease;
+    }
+    main {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .slide {
+      display: none;
+      padding: 24px;
+      border-radius: 14px;
+      color: #101820;
+      background-color: #FFFFFF;
+      border: 3px solid #3F7D6E;
+      box-shadow: 0 4px 12px rgba(16, 24, 32, 0.08);
+    }
+    .slide[data-active="true"] {
+      display: block;
+    }
+    .slide-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 12px;
+      margin-bottom: 18px;
+      border-bottom: 4px solid #3F7D6E;
+    }
+    .stage-tag {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 8px;
+      color: #FFFFFF;
+      background-color: #153830;
+      font-weight: bold;
+    }
+    h1 {
+      font-size: 36px;
+      line-height: 1.25;
+      margin: 8px 0 12px 0;
+      color: #101820;
+      background-color: #FFFFFF;
+    }
+    h2 {
+      font-size: 30px;
+      line-height: 1.3;
+      margin: 10px 0;
+      color: #101820;
+      background-color: #FFFFFF;
+    }
+    h3 {
+      font-size: 26px;
+      line-height: 1.35;
+      margin: 8px 0;
+      color: #101820;
+      background-color: transparent;
+    }
+    p, li {
+      font-size: 24px;
+      line-height: 1.45;
+    }
+    .two-col {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 20px;
+      align-items: start;
+    }
+    @media (max-width: 960px) {
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+    }
+    .card-box {
+      padding: 18px;
+      border-radius: 12px;
+      color: #101820;
+      background-color: #EDF6F3;
+      border: 2px solid #3F7D6E;
+      margin-bottom: 16px;
+    }
+    .studio-svg {
+      width: 100%;
+      height: auto;
+      max-height: 340px;
+      display: block;
+      border-radius: 10px;
+      background-color: #FFFFFF;
+      border: 2px solid #153830;
+    }
+    .choice-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 12px 0;
+    }
+    .choice-btn {
+      text-align: left;
+      padding: 12px 18px;
+      border-radius: 10px;
+      border: 3px solid #153830;
+      color: #101820;
+      background-color: #FFFFFF;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .choice-btn:hover {
+      background-color: #D9EFE9;
+      color: #101820;
+    }
+    .choice-btn[data-state="correct"] {
+      color: #064E3B;
+      background-color: #DCFCE7;
+      border-color: #064E3B;
+    }
+    .choice-btn[data-state="wrong"] {
+      color: #78350F;
+      background-color: #FEF3C7;
+      border-color: #78350F;
+    }
+    .feedback-box {
+      padding: 14px 18px;
+      border-radius: 10px;
+      color: #101820;
+      background-color: #EDF6F3;
+      border: 2px solid #153830;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .vocab-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+      gap: 14px;
+      margin: 16px 0;
+      min-width: 0;
+      max-width: 100%;
+    }
+    .vocab-card {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      padding: 16px;
+      border-radius: 10px;
+      border: 3px solid #153830;
+      color: #101820;
+      background-color: #FFFFFF;
+      cursor: pointer;
+      min-width: 0;
+      max-width: 100%;
+      width: 100%;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+    .vocab-card[aria-pressed="true"] {
+      color: #101820;
+      background-color: #D9EFE9;
+      border-color: #3F7D6E;
+    }
+    .vocab-term {
+      font-size: 26px;
+      font-weight: bold;
+      margin-bottom: 6px;
+      color: #101820;
+      background-color: transparent;
+      min-width: 0;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+    .vocab-defn {
+      font-size: 24px;
+      color: #101820;
+      background-color: transparent;
+      min-width: 0;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+    .ido-step {
+      padding: 16px;
+      border-radius: 10px;
+      border: 3px solid #153830;
+      color: #101820;
+      background-color: #EDF6F3;
+      margin-bottom: 12px;
+    }
+    .ido-step[data-revealed="false"] {
+      opacity: 0.35;
+    }
+    .team-board {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    @media (max-width: 800px) {
+      .team-board {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    .team-card {
+      padding: 12px;
+      border-radius: 10px;
+      border: 3px solid #153830;
+      color: #101820;
+      background-color: #EDF6F3;
+      text-align: center;
+    }
+    .team-score {
+      font-size: 32px;
+      font-weight: bold;
+      margin: 6px 0;
+      color: #101820;
+      background-color: transparent;
+    }
+    .wedo-card {
+      padding: 16px;
+      border-radius: 10px;
+      border: 2px solid #3F7D6E;
+      color: #101820;
+      background-color: #FFFFFF;
+      margin-bottom: 14px;
+    }
+    .tier-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .tier-tab {
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: 3px solid #153830;
+      color: #101820;
+      background-color: #FFFFFF;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .tier-tab[aria-selected="true"] {
+      color: #FFFFFF;
+      background-color: #153830;
+    }
+    .tier-panel {
+      display: none;
+      padding: 20px;
+      border-radius: 12px;
+      border: 3px solid #3F7D6E;
+      color: #101820;
+      background-color: #EDF6F3;
+      margin-bottom: 18px;
+    }
+    .tier-panel[data-active="true"] {
+      display: block;
+    }
+    .check-banner {
+      padding: 12px 16px;
+      border-radius: 8px;
+      color: #064E3B;
+      background-color: #DCFCE7;
+      border: 2px solid #064E3B;
+      margin-top: 12px;
+    }
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 8px 0 14px 0;
+    }
+    .chip-btn {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 2px solid #153830;
+      color: #101820;
+      background-color: #FFFFFF;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .chip-btn[aria-pressed="true"] {
+      color: #FFFFFF;
+      background-color: #153830;
+    }
+    .check-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px;
+      border-radius: 8px;
+      color: #101820;
+      background-color: #FFFFFF;
+      border: 2px solid #153830;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+    .check-row input[type="checkbox"] {
+      width: 28px;
+      height: 28px;
+    }
+    .slide-footer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 20px;
+      padding-top: 14px;
+      border-top: 3px solid #3F7D6E;
+      color: #101820;
+      background-color: #FFFFFF;
+    }
+    .footer-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: bold;
+      color: #101820;
+      background-color: #FFFFFF;
+    }
+    .footer-brand img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+    }
+    dialog {
+      max-width: 780px;
+      width: 92%;
+      padding: 24px;
+      border-radius: 14px;
+      border: 4px solid #153830;
+      color: #101820;
+      background-color: #FFFFFF;
+    }
+    dialog::backdrop {
+      background-color: rgba(16, 24, 32, 0.65);
+    }
+    body[data-calm="true"] {
+      background-color: #FFFFFF;
+    }
+    body[data-calm="true"] .slide {
+      box-shadow: none;
+    }
+    .print-sheets {
+      display: none;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+    @media print {
+      .top-bar, .stage-nav, .progress-track, main, dialog {
+        display: none !important;
+      }
+      .print-sheets {
+        display: block !important;
+        color: #101820;
+        background-color: #FFFFFF;
+      }
+      .print-page {
+        page-break-after: always;
+        padding: 20px;
+        border: 2px solid #101820;
+        margin-bottom: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-stage">Skip to lesson stage</a>
+
+  <header class="top-bar">
+    <div class="brand-cluster">
+      <img class="logo" src="approved-mark.jpg" alt="Made by Matt approved mark">
+      <div>
+        <span class="brand-title">Made by Matt · Art · Week 2 Part 1</span>
+        <span class="pathway-pill">TRACK</span>
+      </div>
+    </div>
+    <div class="toolbar-controls" role="toolbar" aria-label="Lesson tools">
+      <div class="timer-box" aria-label="Stage timer">
+        <span id="timer-display">05:00</span>
+        <button type="button" class="tool-btn" onclick="toggleTimer()" id="timer-btn">Start</button>
+        <button type="button" class="tool-btn" onclick="resetTimer()">Reset</button>
+      </div>
+      <button type="button" class="tool-btn" onclick="openDialog('dlg-words')">Word help</button>
+      <button type="button" class="tool-btn" onclick="openDialog('dlg-ta')">TA brief</button>
+      <button type="button" class="tool-btn" onclick="openDialog('dlg-coldcall')">Cold call</button>
+      <button type="button" class="tool-btn" id="btn-calm" aria-pressed="false" onclick="toggleCalm(this)">Calm view</button>
+      <button type="button" class="tool-btn" id="btn-sound" aria-pressed="false" onclick="toggleSound(this)">Sound off</button>
+      <button type="button" class="tool-btn" onclick="openDialog('dlg-pack')">Tools &amp; print</button>
+    </div>
+  </header>
+
+  <nav class="stage-nav" aria-label="Lesson stages">
+    <div class="stage-pills" role="tablist">
+      <button type="button" class="stage-pill" onclick="goSlide(0)" aria-current="step">1. Start here</button>
+      <button type="button" class="stage-pill" onclick="goSlide(1)">2. Key words</button>
+      <button type="button" class="stage-pill" onclick="goSlide(2)">3. Starter</button>
+      <button type="button" class="stage-pill" onclick="goSlide(3)">4. I do</button>
+      <button type="button" class="stage-pill" onclick="goSlide(4)">5. We do</button>
+      <button type="button" class="stage-pill" onclick="goSlide(5)">6. You do</button>
+      <button type="button" class="stage-pill" onclick="goSlide(6)">7. Exit check</button>
+    </div>
+    <div>
+      <button type="button" class="tool-btn" onclick="stepSlide(-1)" id="btn-prev">◀ Back</button>
+      <span id="slide-counter" style="font-weight:bold; padding:0 10px;">Stage 1 of 7</span>
+      <button type="button" class="tool-btn" onclick="stepSlide(1)" id="btn-next">Next ▶</button>
+    </div>
+  </nav>
+  <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progress-fill"></div></div>
+
+  <main id="main-stage">
+    <!-- SLIDE 1: START HERE & ARRIVAL -->
+    <section class="slide" data-active="true" aria-label="Start here">
+      <div class="slide-header">
+        <span class="stage-tag">Stage 1 · Start here · TRACK</span>
+        <span>ART_GROW_A1_W02_P1 · Identity and studio log</span>
+      </div>
+      <h1>One skill, three tries, one log entry</h1>
+      <p><strong>Big question:</strong> How does repeating one studio skill across three controlled trials build measurable control?</p>
+      <div class="two-col">
+        <div>
+          <div class="card-box">
+            <h2>Learning goals for today</h2>
+            <ul><li>Select one target skill from Week 1 (tonal shading, cross-hatching, or ink gradation).</li>
+<li>Complete three progressive trials (Trial 1 baseline, Trial 2 pressure adjustment, Trial 3 refined control).</li>
+<li>Record a clear studio log entry explaining what changed between Trial 1 and Trial 3.</li></ul>
+            <p><strong>Studio kit:</strong> Three-trial progression sheets, 2B/4B/6B pencils, fineliners, ink wash brushes, blending stumps, studio log frames</p>
+          </div>
+          <div class="card-box">
+            <h2>Arrival check</h2>
+            <p>Think about learning a sport or instrument. Why is trying a skill three times in a row better than trying it once?</p>
+            <div class="choice-stack"><button type="button" class="choice-btn arrival-btn" data-feedback="Exactly. Trial 2 fixes Trial 1, and Trial 3 locks in control." onclick="pickArrival(this)">1. Each try lets you fix one small mistake from the try before</button>
+<button type="button" class="choice-btn arrival-btn" data-feedback="Spot on. Muscle memory comes from deliberate repetition." onclick="pickArrival(this)">2. You learn how much hand pressure gives the smoothest tone</button>
+<button type="button" class="choice-btn arrival-btn" data-feedback="Yes. Three boxes in a row make your improvement obvious." onclick="pickArrival(this)">3. You can see real visual proof of progress side by side</button></div>
+            <div id="arrival-fb" class="feedback-box" role="status" aria-live="polite">Tap one choice above to begin.</div>
+          </div>
+        </div>
+        <div>
+          <svg class="studio-svg" viewBox="0 0 800 360" role="img" aria-label="Art diagram for ART_GROW_A1_W02_P1 One skill, three tries, one log entry"><title>Art diagram for ART_GROW_A1_W02_P1 One skill, three tries, one log entry</title>
+        <rect x="20" y="20" width="760" height="320" rx="14" fill="#EDF6F3" stroke="#3F7D6E" stroke-width="4"/>
+        <rect x="45" y="45" width="340" height="125" rx="8" fill="#FFFFFF" stroke="#153830" stroke-width="3"/>
+        <text x="65" y="85" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#101820">1. Contour line</text>
+        <polygon points="310,65 322,95 352,95 327,112 336,142 310,124 284,142 293,112 268,95 298,95" fill="none" stroke="#101820" stroke-width="4"/>
+        <rect x="415" y="45" width="340" height="125" rx="8" fill="#FFFFFF" stroke="#153830" stroke-width="3"/>
+        <text x="435" y="85" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#101820">2. Graded tone</text>
+        <circle cx="675" cy="108" r="40" fill="#153830"/>
+        <circle cx="663" cy="96" r="16" fill="#FFFFFF"/>
+        <rect x="45" y="190" width="340" height="125" rx="8" fill="#FFFFFF" stroke="#153830" stroke-width="3"/>
+        <text x="65" y="230" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#101820">3. Stipple &amp; hatch</text>
+        <line x1="265" y1="215" x2="345" y2="295" stroke="#101820" stroke-width="4"/>
+        <line x1="285" y1="215" x2="355" y2="285" stroke="#101820" stroke-width="4"/>
+        <line x1="345" y1="215" x2="265" y2="295" stroke="#101820" stroke-width="4"/>
+        <rect x="415" y="190" width="340" height="125" rx="8" fill="#153830" stroke="#3F7D6E" stroke-width="3"/>
+        <text x="435" y="230" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#FFFFFF">4. Wash &amp; resist</text>
+        <path d="M620,275 Q665,215 715,275" fill="none" stroke="#FFFFFF" stroke-width="6"/>
+        </svg>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span class="footer-brand"><img src="approved-mark.jpg" alt="Made by Matt approved mark"> Made by Matt · TRACK Art</span>
+        <span>Use left and right arrow keys or Next ▶ to move through the lesson</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 2: KEY WORDS -->
+    <section class="slide" data-active="false" aria-label="Key words">
+      <div class="slide-header">
+        <span class="stage-tag">Stage 2 · Key words · TRACK</span>
+        <span>Tap any card to highlight the studio term</span>
+      </div>
+      <h1>Key words for today's studio work</h1>
+      <div class="vocab-grid"><button type="button" class="vocab-card" onclick="toggleCard(this)" aria-pressed="false">
+<span class="vocab-term">trial</span>
+<span class="vocab-defn">A deliberate practice attempt focused on improving one specific technique.</span>
+</button>
+<button type="button" class="vocab-card" onclick="toggleCard(this)" aria-pressed="false">
+<span class="vocab-term">pressure</span>
+<span class="vocab-defn">How firmly or lightly you press the tool onto the paper surface.</span>
+</button>
+<button type="button" class="vocab-card" onclick="toggleCard(this)" aria-pressed="false">
+<span class="vocab-term">cross-hatching</span>
+<span class="vocab-defn">Building dark tone by layering intersecting sets of parallel lines.</span>
+</button>
+<button type="button" class="vocab-card" onclick="toggleCard(this)" aria-pressed="false">
+<span class="vocab-term">control</span>
+<span class="vocab-defn">Making the tool produce the exact tone and edge you intend.</span>
+</button>
+<button type="button" class="vocab-card" onclick="toggleCard(this)" aria-pressed="false">
+<span class="vocab-term">progression</span>
+<span class="vocab-defn">Visible step-by-step improvement across consecutive attempts.</span>
+</button></div>
+      <div class="card-box">
+        <h2>Visual studio guide</h2>
+        <svg class="studio-svg" viewBox="0 0 800 360" role="img" aria-label="Studio visual step guide for ART_GROW_A1_W02_P1"><title>Studio visual step guide for ART_GROW_A1_W02_P1</title>
+        <rect x="20" y="20" width="760" height="320" rx="14" fill="#EDF6F3" stroke="#3F7D6E" stroke-width="4"/>
+        <rect x="45" y="45" width="340" height="125" rx="8" fill="#FFFFFF" stroke="#153830" stroke-width="3"/>
+        <text x="65" y="85" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#101820">1. Contour line</text>
+        <polygon points="310,65 322,95 352,95 327,112 336,142 310,124 284,142 293,112 268,95 298,95" fill="none" stroke="#101820" stroke-width="4"/>
+        <rect x="415" y="45" width="340" height="125" rx="8" fill="#FFFFFF" stroke="#153830" stroke-width="3"/>
+        <text x="435" y="85" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#101820">2. Graded tone</text>
+        <circle cx="675" cy="108" r="40" fill="#153830"/>
+        <circle cx="663" cy="96" r="16" fill="#FFFFFF"/>
+        <rect x="45" y="190" width="340" height="125" rx="8" fill="#FFFFFF" stroke="#153830" stroke-width="3"/>
+        <text x="65" y="230" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#101820">3. Stipple &amp; hatch</text>
+        <line x1="265" y1="215" x2="345" y2="295" stroke="#101820" stroke-width="4"/>
+        <line x1="285" y1="215" x2="355" y2="285" stroke="#101820" stroke-width="4"/>
+        <line x1="345" y1="215" x2="265" y2="295" stroke="#101820" stroke-width="4"/>
+        <rect x="415" y="190" width="340" height="125" rx="8" fill="#153830" stroke="#3F7D6E" stroke-width="3"/>
+        <text x="435" y="230" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#FFFFFF">4. Wash &amp; resist</text>
+        <path d="M620,275 Q665,215 715,275" fill="none" stroke="#FFFFFF" stroke-width="6"/>
+        </svg>
+      </div>
+      <footer class="slide-footer">
+        <span class="footer-brand"><img src="approved-mark.jpg" alt="Made by Matt approved mark"> Made by Matt · TRACK Art</span>
+        <span>Stage 2 of 7</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 3: STARTER -->
+    <section class="slide" data-active="false" aria-label="Starter activity">
+      <div class="slide-header">
+        <span class="stage-tag">Stage 3 · Starter activity · TRACK</span>
+        <span>Look closely and vote together</span>
+      </div>
+      <h1>Starter: spot the visual clues</h1>
+      <div class="two-col">
+        <div class="card-box">
+          <h2>Visual cues to spot</h2>
+          <p>Look at the three-box progression strip on screen showing Trial 1, Trial 2, and Trial 3 of a shaded sphere.</p>
+          <ul><li class="cue-item" data-cue="0">Trial 1: Heavy outline, sudden jump from dark black to white paper, visible scratch lines.</li>
+<li class="cue-item" data-cue="1">Adjustment note: Use the side of the 4B pencil and lighten pressure in the middle zone.</li>
+<li class="cue-item" data-cue="2">Trial 2: Smoother mid-tone transition, cleaner outer contour.</li>
+<li class="cue-item" data-cue="3">Trial 3: Full five-step tonal range with a crisp highlight and cast shadow.</li></ul>
+        </div>
+        <div class="card-box">
+          <h2>Class vote question</h2>
+          <p><strong>What is the most important step between finishing Trial 1 and starting Trial 2?</strong></p>
+          <div class="choice-stack"><button type="button" class="choice-btn starter-choice" data-correct="true" data-feedback="Yes. Naming the adjustment turns repetition into deliberate practice." onclick="checkQuizBtn(this, 'starter-fb')">A. Pausing for ten seconds to name ONE specific adjustment you will test next</button>
+<button type="button" class="choice-btn starter-choice" data-correct="false" data-feedback="Never erase Trial 1! Keeping it shows how much you improved by Trial 3." onclick="checkQuizBtn(this, 'starter-fb')">B. Erasing trial 1 so nobody sees it</button>
+<button type="button" class="choice-btn starter-choice" data-correct="false" data-feedback="Keep the same skill and form so the three trials compare fairly." onclick="checkQuizBtn(this, 'starter-fb')">C. Changing to a completely different subject and tool</button></div>
+          <div id="starter-fb" class="feedback-box" role="status" aria-live="polite">Tap an option above to check the answer.</div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span class="footer-brand"><img src="approved-mark.jpg" alt="Made by Matt approved mark"> Made by Matt · TRACK Art</span>
+        <span>Stage 3 of 7</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 4: I DO (TEACHER MODEL) -->
+    <section class="slide" data-active="false" aria-label="Teacher model">
+      <div class="slide-header">
+        <span class="stage-tag">Stage 4 · Teacher model (I do) · TRACK</span>
+        <div>
+          <button type="button" class="tool-btn" onclick="revealIdoStep(0)">Step 1</button>
+          <button type="button" class="tool-btn" onclick="revealIdoStep(1)">Step 2</button>
+          <button type="button" class="tool-btn" onclick="revealIdoStep(2)">Step 3</button>
+          <button type="button" class="tool-btn" onclick="revealAllIdo()">Show all steps</button>
+        </div>
+      </div>
+      <h1>Watch the three-step studio demonstration</h1>
+      <div class="two-col">
+        <div><div class="ido-step" id="ido-step-0" data-revealed="true">
+<h3>Step 1: Complete trial 1 (6-minute baseline)</h3>
+<p>I draw my identity form in Box 1 using cross-hatching and stop to check where the tone looks patchy.</p>
+</div>
+<div class="ido-step" id="ido-step-1" data-revealed="false">
+<h3>Step 2: Adjust angle and pressure in Trial 2</h3>
+<p>I write &#x27;closer line spacing&#x27; under Box 1, then complete Box 2 with tighter, steadier strokes.</p>
+</div>
+<div class="ido-step" id="ido-step-2" data-revealed="false">
+<h3>Step 3: Resolve trial 3 and write the log note</h3>
+<p>I complete Box 3 with three smooth tonal layers and write my reflection comparing Box 1 and Box 3.</p>
+</div></div>
+        <div><svg class="studio-svg" viewBox="0 0 800 360" role="img" aria-label="Art diagram for ART_GROW_A1_W02_P1 One skill, three tries, one log entry"><title>Art diagram for ART_GROW_A1_W02_P1 One skill, three tries, one log entry</title>
+        <rect x="20" y="20" width="760" height="320" rx="14" fill="#EDF6F3" stroke="#3F7D6E" stroke-width="4"/>
+        <rect x="45" y="45" width="340" height="125" rx="8" fill="#FFFFFF" stroke="#153830" stroke-width="3"/>
+        <text x="65" y="85" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#101820">1. Contour line</text>
+        <polygon points="310,65 322,95 352,95 327,112 336,142 310,124 284,142 293,112 268,95 298,95" fill="none" stroke="#101820" stroke-width="4"/>
+        <rect x="415" y="45" width="340" height="125" rx="8" fill="#FFFFFF" stroke="#153830" stroke-width="3"/>
+        <text x="435" y="85" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#101820">2. Graded tone</text>
+        <circle cx="675" cy="108" r="40" fill="#153830"/>
+        <circle cx="663" cy="96" r="16" fill="#FFFFFF"/>
+        <rect x="45" y="190" width="340" height="125" rx="8" fill="#FFFFFF" stroke="#153830" stroke-width="3"/>
+        <text x="65" y="230" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#101820">3. Stipple &amp; hatch</text>
+        <line x1="265" y1="215" x2="345" y2="295" stroke="#101820" stroke-width="4"/>
+        <line x1="285" y1="215" x2="355" y2="285" stroke="#101820" stroke-width="4"/>
+        <line x1="345" y1="215" x2="265" y2="295" stroke="#101820" stroke-width="4"/>
+        <rect x="415" y="190" width="340" height="125" rx="8" fill="#153830" stroke="#3F7D6E" stroke-width="3"/>
+        <text x="435" y="230" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#FFFFFF">4. Wash &amp; resist</text>
+        <path d="M620,275 Q665,215 715,275" fill="none" stroke="#FFFFFF" stroke-width="6"/>
+        </svg></div>
+      </div>
+      <footer class="slide-footer">
+        <span class="footer-brand"><img src="approved-mark.jpg" alt="Made by Matt approved mark"> Made by Matt · TRACK Art</span>
+        <span>Stage 4 of 7</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 5: WE DO (TEAM STUDIO GAME) -->
+    <section class="slide" data-active="false" aria-label="Team studio game">
+      <div class="slide-header">
+        <span class="stage-tag">Stage 5 · Guided studio check (We do) · TRACK</span>
+        <button type="button" class="tool-btn" onclick="resetTeams()">Reset team points</button>
+      </div>
+      <h1>Team studio check</h1>
+      <div class="team-board" aria-label="Team scoreboard">
+        <div class="team-card">
+          <div><strong>● Circle group</strong></div>
+          <div class="team-score" id="score-0">0</div>
+          <button type="button" class="tool-btn" onclick="addPoint(0)">+1 point</button>
+        </div>
+        <div class="team-card">
+          <div><strong>■ Square group</strong></div>
+          <div class="team-score" id="score-1">0</div>
+          <button type="button" class="tool-btn" onclick="addPoint(1)">+1 point</button>
+        </div>
+        <div class="team-card">
+          <div><strong>▲ Triangle group</strong></div>
+          <div class="team-score" id="score-2">0</div>
+          <button type="button" class="tool-btn" onclick="addPoint(2)">+1 point</button>
+        </div>
+        <div class="team-card">
+          <div><strong>◆ Diamond group</strong></div>
+          <div class="team-score" id="score-3">0</div>
+          <button type="button" class="tool-btn" onclick="addPoint(3)">+1 point</button>
+        </div>
+      </div>
+      <div class="wedo-card">
+<h3>Question 1: Why must we keep Trial 1 visible on our studio sheet even if it looks rough?</h3>
+<div class="choice-stack">
+<button type="button" class="choice-btn wedo-opt" data-correct="true" data-feedback="Correct. Studio logs value honest progression over hiding early attempts." onclick="checkQuizBtn(this, 'wedo-fb-0')">A. Trial 1 is the baseline evidence that proves how much your control grew by Trial 3</button>
+<button type="button" class="choice-btn wedo-opt" data-correct="false" data-feedback="It is kept intentionally as baseline evidence." onclick="checkQuizBtn(this, 'wedo-fb-0')">B. Because rubbers are banned in art</button>
+<button type="button" class="choice-btn wedo-opt" data-correct="false" data-feedback="It documents your starting point." onclick="checkQuizBtn(this, 'wedo-fb-0')">C. To fill up space</button>
+</div>
+<div id="wedo-fb-0" class="feedback-box" role="status" aria-live="polite">
+Select an answer above to check your team point.
+</div>
+</div>
+<div class="wedo-card">
+<h3>Question 2: When building tone with cross-hatching, how do you make an area darker without tearing the paper?</h3>
+<div class="choice-stack">
+<button type="button" class="choice-btn wedo-opt" data-correct="true" data-feedback="Yes. Layered cross-hatching builds rich darks safely." onclick="checkQuizBtn(this, 'wedo-fb-1')">A. Add another layer of closely spaced lines at a slight angle rather than gouging hard</button>
+<button type="button" class="choice-btn wedo-opt" data-correct="false" data-feedback="Heavy gouging damages the paper tooth." onclick="checkQuizBtn(this, 'wedo-fb-1')">B. Dig the sharp tip into the page until it rips</button>
+<button type="button" class="choice-btn wedo-opt" data-correct="false" data-feedback="Layering line sets is the core skill of hatching." onclick="checkQuizBtn(this, 'wedo-fb-1')">C. Use a wet sponge on dry pen</button>
+</div>
+<div id="wedo-fb-1" class="feedback-box" role="status" aria-live="polite">
+Select an answer above to check your team point.
+</div>
+</div>
+<div class="wedo-card">
+<h3>Question 3: What makes a studio log comment useful for your next lesson?</h3>
+<div class="choice-stack">
+<button type="button" class="choice-btn wedo-opt" data-correct="true" data-feedback="Spot on. Specific technical notes act as a recipe you can use again." onclick="checkQuizBtn(this, 'wedo-fb-2')">A. Naming the exact hand adjustment that worked (e.g. &#x27;Holding the pencil further back gave smoother mid-tones&#x27;)</button>
+<button type="button" class="choice-btn wedo-opt" data-correct="false" data-feedback="Be specific about HOW you made Trial 3 better." onclick="checkQuizBtn(this, 'wedo-fb-2')">B. Writing &#x27;Trial 3 is good&#x27;</button>
+<button type="button" class="choice-btn wedo-opt" data-correct="false" data-feedback="Always capture the technical takeaway." onclick="checkQuizBtn(this, 'wedo-fb-2')">C. Leaving the comment box blank</button>
+</div>
+<div id="wedo-fb-2" class="feedback-box" role="status" aria-live="polite">
+Select an answer above to check your team point.
+</div>
+</div>
+      <footer class="slide-footer">
+        <span class="footer-brand"><img src="approved-mark.jpg" alt="Made by Matt approved mark"> Made by Matt · TRACK Art</span>
+        <span>Stage 5 of 7</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 6: YOU DO (PRACTICE TIERS & MAKE-IT PLANNER) -->
+    <section class="slide" data-active="false" aria-label="Practice tiers">
+      <div class="slide-header">
+        <span class="stage-tag">Stage 6 · Independent studio practice (You do) · TRACK</span>
+        <span>Pick your route: Supported · Independent · Aspire</span>
+      </div>
+      <h1>Choose your studio route and create</h1>
+      <div class="tier-tabs" role="tablist" aria-label="Practice tier routes">
+        <button type="button" class="tier-tab" id="tab-supported" role="tab" aria-selected="false" onclick="selectTier('supported')">Supported route</button>
+        <button type="button" class="tier-tab" id="tab-independent" role="tab" aria-selected="true" onclick="selectTier('independent')">Independent route</button>
+        <button type="button" class="tier-tab" id="tab-aspire" role="tab" aria-selected="false" onclick="selectTier('aspire')">Aspire route</button>
+      </div>
+      <div class="tier-panel" id="tier-supported" data-active="false" role="region" aria-label="Supported route">
+<h3>Supported route: three-box tonal ladder and guided reflection</h3>
+<ol class="step-list">
+<li>Pick one studio skill (pencil shading or pen hatching) and use the printed form outline in Boxes 1, 2, and 3.</li>
+<li>Complete box 1, then tick one adjustment target (&#x27;press lighter in the middle&#x27; or &#x27;keep lines closer&#x27;).</li>
+<li>Complete box 2 and Box 3 applying your ticked adjustment.</li>
+<li>Fill in the log stem: &#x27;From trial 1 to Trial 3, my ___ became more ___.&#x27;</li>
+</ol>
+<div class="check-banner"><strong>Success check:</strong> Three progressive trials completed with ticked adjustment and reflection stem.</div>
+</div>
+<div class="tier-panel" id="tier-independent" data-active="true" role="region" aria-label="Independent route">
+<h3>Independent route: three timed skill trials on an identity form</h3>
+<ol class="step-list">
+<li>Draw your chosen identity symbol in all three progression boxes.</li>
+<li>Complete trial 1, write a one-line diagnostic target beneath it, and apply that fix in Trial 2.</li>
+<li>Refine full tonal range (highlight, mid-tone, core shadow) in Trial 3.</li>
+<li>Write a three-sentence studio log entry explaining how you adjusted pressure, angle, or dilution.</li>
+</ol>
+<div class="check-banner"><strong>Success check:</strong> Three progressive trials with intermediate targets and a three-sentence technical log entry.</div>
+</div>
+<div class="tier-panel" id="tier-aspire" data-active="false" role="region" aria-label="Aspire route">
+<h3>Aspire route: three-trial progression plus surface-transfer test</h3>
+<ol class="step-list">
+<li>Complete all three progressive trials showing five-value tonal control on cartridge paper.</li>
+<li>Execute a fourth transfer trial applying the mastered skill onto toned or textured ground.</li>
+<li>Write a critical evaluation comparing how paper tooth affected your control.</li>
+</ol>
+<div class="check-banner"><strong>Success check:</strong> Three progression trials, fourth toned-ground trial, and surface evaluation.</div>
+</div>
+
+      <div class="card-box">
+        <h2>Interactive make-it studio planner</h2>
+        <p>Select your focus skill, adjustment target, and log takeaway.</p>
+        <div><strong>1. Pick your shape or focus:</strong></div>
+        <div class="chip-row" data-group="shape"><button type="button" class="chip-btn" onclick="pickMake('shape', this)">Shaded 3D emblem</button>
+<button type="button" class="chip-btn" onclick="pickMake('shape', this)">Cross-hatched motif</button>
+<button type="button" class="chip-btn" onclick="pickMake('shape', this)">Graded ink wash form</button>
+<button type="button" class="chip-btn" onclick="pickMake('shape', this)">Layered pastel symbol</button></div>
+        <div><strong>2. Pick your tool or method:</strong></div>
+        <div class="chip-row" data-group="tool"><button type="button" class="chip-btn" onclick="pickMake('tool', this)">Lighten mid-tone pressure</button>
+<button type="button" class="chip-btn" onclick="pickMake('tool', this)">Tighten hatch spacing</button>
+<button type="button" class="chip-btn" onclick="pickMake('tool', this)">Control brush water load</button>
+<button type="button" class="chip-btn" onclick="pickMake('tool', this)">Sharpen outer contour</button></div>
+        <div><strong>3. Pick your look or finish:</strong></div>
+        <div class="chip-row" data-group="mood"><button type="button" class="chip-btn" onclick="pickMake('mood', this)">Smooth five-step tone</button>
+<button type="button" class="chip-btn" onclick="pickMake('mood', this)">Crisp directional shadow</button>
+<button type="button" class="chip-btn" onclick="pickMake('mood', this)">Clean highlight edge</button>
+<button type="button" class="chip-btn" onclick="pickMake('mood', this)">Steady mark rhythm</button></div>
+        <div id="make-it-preview" class="feedback-box" role="status" aria-live="polite">
+          Your studio plan: tap one choice from each row above to build your plan card.
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span class="footer-brand"><img src="approved-mark.jpg" alt="Made by Matt approved mark"> Made by Matt · TRACK Art</span>
+        <span>Stage 6 of 7</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 7: REVIEW, PUPIL VOICE & EXIT CHECK -->
+    <section class="slide" data-active="false" aria-label="Review and exit check">
+      <div class="slide-header">
+        <span class="stage-tag">Stage 7 · Review &amp; exit check · TRACK</span>
+        <span id="review-counter">0 of 3 checks ticked</span>
+      </div>
+      <h1>Review your artwork and exit check</h1>
+      <div class="two-col">
+        <div>
+          <div class="card-box">
+            <h2>Studio review checklist</h2>
+            <label class="check-row"><input type="checkbox" onchange="updateReviewCount()"> <span>Point to the exact spot in Trial 3 that shows stronger control than Trial 1.</span></label>
+<label class="check-row"><input type="checkbox" onchange="updateReviewCount()"> <span>Check that your short adjustment note sits clearly under Trial 1 and Trial 2.</span></label>
+<label class="check-row"><input type="checkbox" onchange="updateReviewCount()"> <span>File your progression sheet neatly in your studio log.</span></label>
+          </div>
+          <div class="card-box">
+            <h2>Pupil voice: how did today's studio work feel?</h2>
+            <div class="chip-row">
+              <button type="button" class="chip-btn" onclick="pickVoice(this, 'Proud and ready to show my work.')">Proud and ready to share</button>
+              <button type="button" class="chip-btn" onclick="pickVoice(this, 'Steady control of the tools today.')">Steady tool control</button>
+              <button type="button" class="chip-btn" onclick="pickVoice(this, 'I want one more practice try next time.')">Want more practice next time</button>
+            </div>
+            <div id="voice-fb" class="feedback-box" role="status" aria-live="polite">Tap a reflection button above.</div>
+          </div>
+        </div>
+        <div class="card-box">
+          <h2>Exit ticket question</h2>
+          <p><strong>Why do we write a quick adjustment note between Trial 1 and Trial 2?</strong></p>
+          <div class="choice-stack"><button type="button" class="choice-btn exit-choice" data-correct="true" data-feedback="Yes. Naming the fix before you start Trial 2 builds rapid control." onclick="checkQuizBtn(this, 'exit-fb')">A. So we know exactly what change in pressure or spacing we are testing in the next box</button>
+<button type="button" class="choice-btn exit-choice" data-correct="false" data-feedback="A ten-second note makes the next six minutes count." onclick="checkQuizBtn(this, 'exit-fb')">B. To waste drawing time</button>
+<button type="button" class="choice-btn exit-choice" data-correct="false" data-feedback="Trial 1 is the starting baseline." onclick="checkQuizBtn(this, 'exit-fb')">C. Because trial 1 is the final piece</button></div>
+          <div id="exit-fb" class="feedback-box" role="status" aria-live="polite">Tap your final answer above.</div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span class="footer-brand"><img src="approved-mark.jpg" alt="Made by Matt approved mark"> Made by Matt · TRACK Art</span>
+        <span>Stage 7 of 7</span>
+      </footer>
+    </section>
+  </main>
+
+  <!-- DIALOGS -->
+  <dialog id="dlg-words" aria-label="Word help">
+    <h2>Key words and definitions (TRACK)</h2>
+    <ul>
+      <li><strong>trial:</strong> A deliberate practice attempt focused on improving one specific technique.</li><li><strong>pressure:</strong> How firmly or lightly you press the tool onto the paper surface.</li><li><strong>cross-hatching:</strong> Building dark tone by layering intersecting sets of parallel lines.</li><li><strong>control:</strong> Making the tool produce the exact tone and edge you intend.</li><li><strong>progression:</strong> Visible step-by-step improvement across consecutive attempts.</li>
+    </ul>
+    <button type="button" class="tool-btn" onclick="closeDialog('dlg-words')">Close word help</button>
+  </dialog>
+
+  <dialog id="dlg-ta" aria-label="TA and teacher brief">
+    <h2>Teacher and TA studio brief · ART_GROW_A1_W02_P1</h2>
+    <p><strong>Pathway:</strong> TRACK · Week 2 Part 1</p>
+    <p><strong>Big question:</strong> How does repeating one studio skill across three controlled trials build measurable control?</p>
+    <p><strong>TA support focus:</strong> Use a visible 6-minute timer for each of the three trials so pupils pace their practice evenly across all three boxes.</p>
+    <p><strong>Staff preparation note:</strong> Staff preparation only: review a short clip on running timed three-trial deliberate practice strips in the art studio.</p>
+    <button type="button" class="tool-btn" onclick="closeDialog('dlg-ta')">Close brief</button>
+  </dialog>
+
+  <dialog id="dlg-coldcall" aria-label="Safe cold call selector">
+    <h2>Table &amp; shape prompt selector</h2>
+    <p>Pick a safe table group or studio role prompt (never singles out a pupil by name):</p>
+    <div id="coldcall-display" class="feedback-box">Tap the button below to pick a table prompt.</div>
+    <div style="margin-top:14px; display:flex; gap:10px;">
+      <button type="button" class="tool-btn" onclick="spinColdCall()">Pick table prompt</button>
+      <button type="button" class="tool-btn" onclick="closeDialog('dlg-coldcall')">Close</button>
+    </div>
+  </dialog>
+
+  <dialog id="dlg-pack" aria-label="Companion pack and print tools">
+    <h2>Companion files &amp; print sheets · ART_GROW_A1_W02_P1</h2>
+    <p>Download any file from this lesson pack or print the worksheet pages directly:</p>
+    <ul><li><a href="ART_GROW_A1_W02_P1_Slides.pptx" download>Slide deck (.pptx)</a></li>
+<li><a href="ART_GROW_A1_W02_P1_Teacher_and_Cover_Plan.docx" download>Teacher and cover plan (.docx)</a></li>
+<li><a href="ART_GROW_A1_W02_P1_Teacher_and_Cover_Plan.pdf" download>Teacher and cover plan (.pdf)</a></li>
+<li><a href="ART_GROW_A1_W02_P1_TA_Brief.pdf" download>TA brief (.pdf)</a></li>
+<li><a href="ART_GROW_A1_W02_P1_Tier_Pack_Supported.pdf" download>Tier pack: Supported (.pdf)</a></li>
+<li><a href="ART_GROW_A1_W02_P1_Tier_Pack_Standard.pdf" download>Tier pack: Independent (.pdf)</a></li>
+<li><a href="ART_GROW_A1_W02_P1_Tier_Pack_Stretch.pdf" download>Tier pack: Aspire (.pdf)</a></li>
+<li><a href="ART_GROW_A1_W02_P1_Pupil_Resources.pdf" download>Pupil resources (.pdf)</a></li>
+<li><a href="ART_GROW_A1_W02_P1_Knowledge_Organiser.pdf" download>Knowledge organiser (.pdf)</a></li>
+<li><a href="ART_GROW_A1_W02_P1_Staff_Answers.pdf" download>Staff answers (.pdf)</a></li>
+<li><a href="ART_GROW_A1_W02_P1_Word_Page.pdf" download>Key words page (.pdf)</a></li>
+<li><a href="ART_GROW_A1_W02_P1_Editable_Pack.docx" download>Editable pack (.docx)</a></li></ul>
+    <div style="margin-top:14px; display:flex; gap:10px;">
+      <button type="button" class="tool-btn" onclick="window.print()">Print worksheet pages</button>
+      <button type="button" class="tool-btn" onclick="closeDialog('dlg-pack')">Close</button>
+    </div>
+  </dialog>
+
+  <!-- PRINTABLE WORKSHEET PAGES -->
+  <section class="print-sheets" aria-label="Printable worksheet pack">
+    <div class="print-page">
+      <p><strong>Made by Matt · ART_GROW_A1_W02_P1 · TRACK Art · Week 2 Part 1</strong></p>
+      <h2>One skill, three tries, one log entry — studio worksheet</h2>
+      <p><strong>Big question:</strong> How does repeating one studio skill across three controlled trials build measurable control?</p>
+      <h3>Key words</h3>
+      <ul><li><strong>trial:</strong> A deliberate practice attempt focused on improving one specific technique.</li><li><strong>pressure:</strong> How firmly or lightly you press the tool onto the paper surface.</li><li><strong>cross-hatching:</strong> Building dark tone by layering intersecting sets of parallel lines.</li><li><strong>control:</strong> Making the tool produce the exact tone and edge you intend.</li><li><strong>progression:</strong> Visible step-by-step improvement across consecutive attempts.</li></ul>
+      <h3>Supported, Independent, and Aspire studio tasks</h3>
+      <p><strong>Supported:</strong> Pick one studio skill (pencil shading or pen hatching) and use the printed form outline in Boxes 1, 2, and 3. Complete box 1, then tick one adjustment target (&#x27;press lighter in the middle&#x27; or &#x27;keep lines closer&#x27;). Complete box 2 and Box 3 applying your ticked adjustment. Fill in the log stem: &#x27;From trial 1 to Trial 3, my ___ became more ___.&#x27;</p>
+      <p><strong>Independent:</strong> Draw your chosen identity symbol in all three progression boxes. Complete trial 1, write a one-line diagnostic target beneath it, and apply that fix in Trial 2. Refine full tonal range (highlight, mid-tone, core shadow) in Trial 3. Write a three-sentence studio log entry explaining how you adjusted pressure, angle, or dilution.</p>
+      <p><strong>Aspire:</strong> Complete all three progressive trials showing five-value tonal control on cartridge paper. Execute a fourth transfer trial applying the mastered skill onto toned or textured ground. Write a critical evaluation comparing how paper tooth affected your control.</p>
+      <p><strong>Exit check:</strong> Why do we write a quick adjustment note between Trial 1 and Trial 2?</p>
+    </div>
+  </section>
+
+  <script>
+    var currentSlide = 0;
+    var totalSlides = 7;
+    var soundEnabled = false;
+    var timerSeconds = 300;
+    var timerHandle = null;
+    var teamScores = [0, 0, 0, 0];
+    var makePlan = { shape: "None yet", tool: "None yet", mood: "None yet" };
+    var coldPrompts = [
+      "● Circle group: point to the darkest tone on screen.",
+      "■ Square group: name one tool from today's studio kit.",
+      "▲ Triangle group: read the first key word aloud together.",
+      "◆ Diamond group: share which practice route you will pick."
+    ];
+
+    function playChime() {
+      if (!soundEnabled) return;
+      try {
+        var ctx = new (window.AudioContext || window.webkitAudioContext)();
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.value = 520;
+        gain.gain.value = 0.04;
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.08);
+      } catch (e) {}
+    }
+
+    function goSlide(idx) {
+      if (idx < 0 || idx >= totalSlides) return;
+      currentSlide = idx;
+      var slides = document.querySelectorAll(".slide");
+      var pills = document.querySelectorAll(".stage-pill");
+      for (var i = 0; i < slides.length; i++) {
+        slides[i].setAttribute("data-active", i === currentSlide ? "true" : "false");
+      }
+      for (var j = 0; j < pills.length; j++) {
+        if (j === currentSlide) {
+          pills[j].setAttribute("aria-current", "step");
+        } else {
+          pills[j].removeAttribute("aria-current");
+        }
+      }
+      document.getElementById("slide-counter").textContent = "Stage " + (currentSlide + 1) + " of " + totalSlides;
+      document.getElementById("progress-fill").style.width = (((currentSlide + 1) / totalSlides) * 100).toFixed(2) + "%";
+      playChime();
+    }
+
+    function stepSlide(delta) {
+      goSlide(currentSlide + delta);
+    }
+
+    document.addEventListener("keydown", function(e) {
+      if (e.target && (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA")) return;
+      if (e.key === "ArrowRight") stepSlide(1);
+      if (e.key === "ArrowLeft") stepSlide(-1);
+    });
+
+    function pickArrival(btn) {
+      var all = btn.parentElement.querySelectorAll(".arrival-btn");
+      for (var i = 0; i < all.length; i++) all[i].removeAttribute("data-state");
+      btn.setAttribute("data-state", "correct");
+      document.getElementById("arrival-fb").textContent = btn.getAttribute("data-feedback");
+      playChime();
+    }
+
+    function toggleCard(btn) {
+      var p = btn.getAttribute("aria-pressed") === "true";
+      btn.setAttribute("aria-pressed", p ? "false" : "true");
+      playChime();
+    }
+
+    function checkQuizBtn(btn, fbId) {
+      var stack = btn.parentElement.querySelectorAll(".choice-btn");
+      for (var i = 0; i < stack.length; i++) stack[i].removeAttribute("data-state");
+      var ok = btn.getAttribute("data-correct") === "true";
+      btn.setAttribute("data-state", ok ? "correct" : "wrong");
+      var fb = document.getElementById(fbId);
+      if (fb) fb.textContent = btn.getAttribute("data-feedback");
+      playChime();
+    }
+
+    function revealIdoStep(idx) {
+      var el = document.getElementById("ido-step-" + idx);
+      if (el) el.setAttribute("data-revealed", "true");
+      playChime();
+    }
+
+    function revealAllIdo() {
+      for (var i = 0; i < 3; i++) revealIdoStep(i);
+    }
+
+    function addPoint(teamIdx) {
+      teamScores[teamIdx] += 1;
+      document.getElementById("score-" + teamIdx).textContent = String(teamScores[teamIdx]);
+      playChime();
+    }
+
+    function resetTeams() {
+      for (var i = 0; i < 4; i++) {
+        teamScores[i] = 0;
+        document.getElementById("score-" + i).textContent = "0";
+      }
+    }
+
+    function selectTier(tierKey) {
+      var keys = ["supported", "independent", "aspire"];
+      for (var i = 0; i < keys.length; i++) {
+        var k = keys[i];
+        var panel = document.getElementById("tier-" + k);
+        var tab = document.getElementById("tab-" + k);
+        if (panel) panel.setAttribute("data-active", k === tierKey ? "true" : "false");
+        if (tab) tab.setAttribute("aria-selected", k === tierKey ? "true" : "false");
+      }
+      playChime();
+    }
+
+    function pickMake(slot, btn) {
+      var row = btn.parentElement.querySelectorAll(".chip-btn");
+      for (var i = 0; i < row.length; i++) row[i].setAttribute("aria-pressed", "false");
+      btn.setAttribute("aria-pressed", "true");
+      makePlan[slot] = btn.textContent;
+      document.getElementById("make-it-preview").textContent =
+        "Your studio plan -> Shape/Focus: " + makePlan.shape +
+        " | Tool/Method: " + makePlan.tool +
+        " | Look/Finish: " + makePlan.mood;
+      playChime();
+    }
+
+    function updateReviewCount() {
+      var boxes = document.querySelectorAll(".check-row input[type='checkbox']");
+      var count = 0;
+      for (var i = 0; i < boxes.length; i++) {
+        if (boxes[i].checked) count++;
+      }
+      document.getElementById("review-counter").textContent = count + " of " + boxes.length + " checks ticked";
+    }
+
+    function pickVoice(btn, msg) {
+      var row = btn.parentElement.querySelectorAll(".chip-btn");
+      for (var i = 0; i < row.length; i++) row[i].setAttribute("aria-pressed", "false");
+      btn.setAttribute("aria-pressed", "true");
+      document.getElementById("voice-fb").textContent = msg;
+      playChime();
+    }
+
+    function formatTime(sec) {
+      var m = Math.floor(sec / 60);
+      var s = sec % 60;
+      return (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
+    }
+
+    function toggleTimer() {
+      var btn = document.getElementById("timer-btn");
+      if (timerHandle) {
+        clearInterval(timerHandle);
+        timerHandle = null;
+        btn.textContent = "Start";
+      } else {
+        btn.textContent = "Pause";
+        timerHandle = setInterval(function() {
+          if (timerSeconds > 0) {
+            timerSeconds--;
+            document.getElementById("timer-display").textContent = formatTime(timerSeconds);
+          } else {
+            clearInterval(timerHandle);
+            timerHandle = null;
+            btn.textContent = "Start";
+            playChime();
+          }
+        }, 1000);
+      }
+    }
+
+    function resetTimer() {
+      if (timerHandle) {
+        clearInterval(timerHandle);
+        timerHandle = null;
+      }
+      timerSeconds = 300;
+      document.getElementById("timer-display").textContent = "05:00";
+      document.getElementById("timer-btn").textContent = "Start";
+    }
+
+    function toggleCalm(btn) {
+      var on = document.body.getAttribute("data-calm") === "true";
+      document.body.setAttribute("data-calm", on ? "false" : "true");
+      btn.setAttribute("aria-pressed", on ? "false" : "true");
+    }
+
+    function toggleSound(btn) {
+      soundEnabled = !soundEnabled;
+      btn.setAttribute("aria-pressed", soundEnabled ? "true" : "false");
+      btn.textContent = soundEnabled ? "Sound on" : "Sound off";
+      if (soundEnabled) playChime();
+    }
+
+    function openDialog(id) {
+      var d = document.getElementById(id);
+      if (d && d.showModal) d.showModal();
+    }
+
+    function closeDialog(id) {
+      var d = document.getElementById(id);
+      if (d && d.close) d.close();
+    }
+
+    function spinColdCall() {
+      var pick = coldPrompts[Math.floor(Math.random() * coldPrompts.length)];
+      document.getElementById("coldcall-display").textContent = pick;
+      playChime();
+    }
+  </script>
+</body>
+</html>
