@@ -164,7 +164,7 @@ def derive(moved=None):
  for filename,subject in [('science-shelf.json','Science'),('humanities-shelf.json','Humanities')]:
   for r in read('assets/catalogue/'+filename)['lessons']:
    if r['path'] not in known:
-    item={'file':r['path'],'title':r['title'],'subject':subject,'type':r.get('resourceType','lesson'),'family':subject+' Teesside','_shelfPathway':r['pathway']}
+    item={'file':r['path'],'title':r['title'],'subject':subject,'type':r.get('resourceType','lesson'),'family':subject,'_shelfPathway':r['pathway']}
     supplements.append(item);known[r['path']]=item
  rows=rows+supplements
  metadata=read('assets/catalogue/terms-and-styles.json')['entries']
