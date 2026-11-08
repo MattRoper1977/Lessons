@@ -1,0 +1,1331 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Lesson resource">
+  <title>Diffusion: net movement down a concentration gradient · SCI_LAUNCH_A1_W04_L1</title>
+  <style>
+:root {
+  --bg: #F7F4FA;
+  --surface: #FFFFFF;
+  --surface-tint: #ECE5F6;
+  --surface-warm: #FFF6D5;
+  --surface-green: #EDF5E8;
+  --surface-blue: #E6F2FA;
+  --ink: #111827;
+  --ink-secondary: #172033;
+  --accent: #3B2854;
+  --accent-border: #5B417A;
+  --pathway: #7A5C9E;
+}
+* { box-sizing: border-box; max-width: 100%; overflow-wrap: anywhere; }
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #F7F4FA;
+  color: #111827;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 24px;
+  line-height: 1.45;
+  overflow-x: hidden;
+}
+body.calm-view {
+  background-color: #FFFFFF;
+}
+body.high-contrast {
+  --bg: #FFFFFF;
+  --surface: #FFFFFF;
+  --surface-tint: #F3F5F7;
+  --surface-warm: #FFFFFF;
+  --surface-green: #FFFFFF;
+  --surface-blue: #FFFFFF;
+  --ink: #000000;
+  --ink-secondary: #000000;
+  --accent: #000000;
+  --accent-border: #000000;
+}
+a {
+  color: #111827;
+  background-color: #ECE5F6;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-weight: 700;
+  text-decoration: underline;
+}
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 8px;
+  background-color: #111827;
+  color: #FFFFFF;
+  padding: 10px 16px;
+  font-size: 24px;
+  z-index: 1000;
+}
+.skip-link:focus { left: 12px; }
+.lesson-topbar {
+  background-color: #FFFFFF;
+  color: #111827;
+  border-bottom: 4px solid #5B417A;
+  padding: 14px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.brand-cluster {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.brand-logo {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  border: 2px solid #5B417A;
+  border-radius: 8px;
+  background-color: #FFFFFF;
+}
+.pathway-pill {
+  background-color: #3B2854;
+  color: #FFFFFF;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 24px;
+  font-weight: 700;
+}
+.controls-bar {
+  background-color: #ECE5F6;
+  color: #111827;
+  border-bottom: 3px solid #5B417A;
+  padding: 12px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+button, select, textarea, input {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 24px;
+  line-height: 1.35;
+  color: #111827;
+  background-color: #FFFFFF;
+  border: 3px solid #3B2854;
+  border-radius: 10px;
+  padding: 8px 16px;
+}
+button {
+  cursor: pointer;
+  font-weight: 700;
+}
+button:hover, button:focus-visible {
+  background-color: #ECE5F6;
+  color: #111827;
+  outline: 3px solid #111827;
+}
+button[aria-pressed="true"], button.active-route {
+  background-color: #3B2854;
+  color: #FFFFFF;
+}
+.slide-deck {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 20px;
+}
+.slide {
+  display: none;
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 4px solid #5B417A;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.slide.active {
+  display: block;
+}
+.stage-pill {
+  display: inline-block;
+  background-color: #ECE5F6;
+  color: #111827;
+  border: 2px solid #5B417A;
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+h1, h2, h3, h4, p, li, th, td, summary, label, span, div {
+  font-size: 24px;
+  color: #111827;
+}
+h1 {
+  font-size: 36px;
+  margin: 8px 0 14px 0;
+  color: #111827;
+}
+h2 {
+  font-size: 30px;
+  margin: 12px 0;
+  color: #111827;
+}
+h3 {
+  font-size: 26px;
+  margin: 10px 0;
+  color: #111827;
+}
+.card, .ca-act, .task-box, .model-frame {
+  background-color: #F7F4FA;
+  color: #111827;
+  border: 3px solid #5B417A;
+  border-radius: 14px;
+  padding: 18px;
+  margin: 16px 0;
+}
+.card-warm {
+  background-color: #FFF6D5;
+  color: #111827;
+  border: 3px solid #5B417A;
+  border-radius: 14px;
+  padding: 18px;
+  margin: 16px 0;
+}
+.card-green {
+  background-color: #EDF5E8;
+  color: #111827;
+  border: 3px solid #3B2854;
+  border-radius: 14px;
+  padding: 18px;
+  margin: 16px 0;
+}
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 18px;
+}
+.ca-pic {
+  width: 100%;
+  max-width: 920px;
+  height: auto;
+  display: block;
+  margin: 12px auto;
+  background-color: #FFFFFF;
+  border-radius: 12px;
+}
+.ca-beatbox {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: 12px;
+  margin: 14px 0;
+}
+.ca-light {
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 3px solid #5B417A;
+  border-radius: 12px;
+  padding: 14px;
+}
+.ca-light.lit {
+  background-color: #FFF6D5;
+  color: #111827;
+  border-color: #111827;
+  border-width: 4px;
+}
+.status-box {
+  background-color: #ECE5F6;
+  color: #111827;
+  border: 3px solid #3B2854;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-top: 12px;
+  font-weight: 700;
+}
+.route-panel {
+  display: none;
+}
+.route-panel.active-panel {
+  display: block;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0;
+  background-color: #FFFFFF;
+  color: #111827;
+}
+th, td {
+  border: 2px solid #3B2854;
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 24px;
+  color: #111827;
+  background-color: #FFFFFF;
+}
+th {
+  background-color: #ECE5F6;
+  color: #111827;
+  font-weight: 700;
+}
+details {
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 2px solid #5B417A;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin: 10px 0;
+}
+summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: #111827;
+}
+textarea {
+  width: 100%;
+  margin-top: 8px;
+}
+.slide-footer {
+  margin-top: 20px;
+  padding-top: 12px;
+  border-top: 2px solid #5B417A;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-weight: 700;
+  color: #111827;
+}
+dialog {
+  max-width: 1100px;
+  width: 92vw;
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 4px solid #3B2854;
+  border-radius: 16px;
+  padding: 24px;
+}
+.print-section {
+  display: none;
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 3px solid #3B2854;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 1200px;
+}
+.print-section.visible {
+  display: block;
+}
+@media (max-width: 640px) {
+  .lesson-topbar, .controls-bar, .slide-deck {
+    padding: 10px;
+  }
+  .slide {
+    padding: 14px;
+  }
+  button, select {
+    width: 100%;
+  }
+}
+</style>
+</head>
+<body>
+  <a class="skip-link" href="#lessonDeck">Skip to lesson stage</a>
+  <header class="lesson-topbar">
+    <div class="brand-cluster">
+      <img src="approved-mark.jpg" alt="Made by Matt approved mark" class="brand-logo">
+      <div>
+        <span class="pathway-pill">SUMMIT · SCIENCE</span>
+        <span style="margin-left:10px;font-weight:700;">Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W04_L1)</span>
+      </div>
+    </div>
+    <div><strong>Made by Matt</strong></div>
+  </header>
+  <nav class="controls-bar" aria-label="Lesson controls">
+    <button type="button" id="prev-btn">◀ Previous</button>
+    <button type="button" id="next-btn">Next ▶</button>
+    <label for="stage-picker">Stage</label>
+    <select id="stage-picker"><option value="0">1. Opening</option><option value="1">2. Arrival task</option><option value="2">3. Starter</option><option value="3">4. I do 1</option><option value="4">5. We do 1</option><option value="5">6. I do 2</option><option value="6">7. We do 2</option><option value="7">8. You do</option><option value="8">9. Review and improve</option><option value="9">10. Exit ticket</option></select>
+    <button type="button" data-open-dialog="pause-dialog">Pause</button>
+    <button type="button" data-toggle="calm" aria-pressed="false">Calm view</button>
+    <button type="button" data-toggle="high-contrast" aria-pressed="false">High contrast</button>
+    <button type="button" data-toggle="reduce-motion" aria-pressed="false">Reduce motion</button>
+    <button type="button" data-open-dialog="ta-dialog" data-action="ta">TA brief</button>
+    <button type="button" data-open-dialog="guidance-dialog" id="sc1-guidance">Guidance</button>
+    <button type="button" data-print-btn="supported">Print Supported</button>
+    <button type="button" data-print-btn="independent">Print Independent</button>
+    <button type="button" data-print-btn="aspire">Print Aspire</button>
+  </nav>
+  <p id="stage-status" role="status" style="padding:4px 20px;margin:0;font-weight:700;">Stage 1 of 10: Opening</p>
+  <main id="lessonDeck" class="slide-deck" tabindex="-1">
+
+        <section class="slide active" id="slide-1" data-stage="Opening" aria-hidden="false">
+          <span class="stage-pill">Stage 1 · Opening</span>
+          <h1>Diffusion: net movement down a concentration gradient</h1>
+
+    <div class="grid-2">
+      <div class="card">
+        <p><strong>Learning intention:</strong> Define diffusion as the net passive movement of particles down a concentration gradient and explain how gradient, temperature, surface area and distance affect its rate.</p>
+        <h3>Today I can</h3>
+        <ul>
+          <li>I can state the definition of diffusion using net movement, high to low concentration, and passive (no cellular ATP needed).</li><li>I can explain why particles still move randomly in all directions at equilibrium even when net movement is zero.</li><li>I can explain how concentration gradient, temperature, surface area, and diffusion distance change the rate of diffusion.</li>
+        </ul>
+        <p><strong>Work in your book first.</strong> Point, speak, sign, draw, type, write or direct an adult. You may pass.</p>
+      </div>
+      <div class="card">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" class="ca-pic" role="img" aria-labelledby="svg-opening-all-title svg-opening-all-desc"><title id="svg-opening-all-title">Three-panel particle model of diffusion: high concentration on Left (10 particles) to low on Right (2 particles), net movement arrow, and dynamic equilibrium.</title><desc id="svg-opening-all-desc">High-contrast teaching diagram with three labelled panels.</desc><rect x="0" y="0" width="960" height="300" fill="#ffffff" stroke="#5B417A" stroke-width="4" rx="14"/><rect x="24" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="168" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 1 · Start</text><rect x="98" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><circle cx="118" cy="110" r="7" fill="#3B2854"/><circle cx="133" cy="130" r="7" fill="#3B2854"/><circle cx="120" cy="150" r="7" fill="#3B2854"/><circle cx="143" cy="115" r="7" fill="#3B2854"/><circle cx="148" cy="145" r="7" fill="#3B2854"/><circle cx="203" cy="120" r="7" fill="#3B2854"/><circle cx="216" cy="145" r="7" fill="#3B2854"/><line x1="163" y1="130" x2="193" y2="130" stroke="#111827" stroke-width="4"/><polygon points="193,122 205,130 193,138" fill="#111827"/><text x="168" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Left: 10 · Right: 2</text><text x="168" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Steep gradient</text><rect x="336" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="480" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 2 · Net flow</text><rect x="410" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><line x1="480" y1="90" x2="480" y2="170" stroke="#3B2854" stroke-width="4" stroke-dasharray="8 6"/><circle cx="435" cy="112" r="6" fill="#111827"/><circle cx="455" cy="130" r="6" fill="#111827"/><circle cx="440" cy="150" r="6" fill="#111827"/><circle cx="460" cy="108" r="6" fill="#111827"/><circle cx="515" cy="115" r="6" fill="#111827"/><circle cx="505" cy="148" r="6" fill="#111827"/><circle cx="510" cy="130" r="12" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="480" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Net movement L -&gt; R</text><text x="480" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Passive (kinetic energy)</text><rect x="648" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="792" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 3 · Equilibrium</text><rect x="727" y="90" width="130" height="80" rx="14" fill="#ffffff" stroke="#111827" stroke-width="4"/><circle cx="772" cy="130" r="18" fill="#3B2854"/><ellipse cx="817" cy="135" rx="22" ry="14" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="792" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Left: 6 · Right: 6</text><text x="792" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Equal flow both ways</text></svg>
+        <p><strong>Model clue:</strong> Three-panel particle model of diffusion: high concentration on Left (10 particles) to low on Right (2 particles), net movement arrow, and dynamic equilibrium.</p>
+      </div>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W04_L1)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-2" data-stage="Arrival task" aria-hidden="true">
+          <span class="stage-pill">Stage 2 · Arrival task</span>
+          <h2>Arrival recall and picture check</h2>
+
+    <div class="card">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" class="ca-pic" role="img" aria-labelledby="svg-arrival-0-title svg-arrival-0-desc"><title id="svg-arrival-0-title">Arrival picture clue: Panel 1 shows 10 particles on Left and 2 on Right; Panel 2 shows net arrow Left to Right.</title><desc id="svg-arrival-0-desc">High-contrast teaching diagram with three labelled panels.</desc><rect x="0" y="0" width="960" height="300" fill="#ffffff" stroke="#5B417A" stroke-width="4" rx="14"/><rect x="24" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="168" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 1 · Start</text><rect x="98" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><circle cx="118" cy="110" r="7" fill="#3B2854"/><circle cx="133" cy="130" r="7" fill="#3B2854"/><circle cx="120" cy="150" r="7" fill="#3B2854"/><circle cx="143" cy="115" r="7" fill="#3B2854"/><circle cx="148" cy="145" r="7" fill="#3B2854"/><circle cx="203" cy="120" r="7" fill="#3B2854"/><circle cx="216" cy="145" r="7" fill="#3B2854"/><line x1="163" y1="130" x2="193" y2="130" stroke="#111827" stroke-width="4"/><polygon points="193,122 205,130 193,138" fill="#111827"/><text x="168" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Left: 10 · Right: 2</text><text x="168" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Steep gradient</text><rect x="336" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="480" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 2 · Net flow</text><rect x="410" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><line x1="480" y1="90" x2="480" y2="170" stroke="#3B2854" stroke-width="4" stroke-dasharray="8 6"/><circle cx="435" cy="112" r="6" fill="#111827"/><circle cx="455" cy="130" r="6" fill="#111827"/><circle cx="440" cy="150" r="6" fill="#111827"/><circle cx="460" cy="108" r="6" fill="#111827"/><circle cx="515" cy="115" r="6" fill="#111827"/><circle cx="505" cy="148" r="6" fill="#111827"/><circle cx="510" cy="130" r="12" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="480" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Net movement L -&gt; R</text><text x="480" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Passive (kinetic energy)</text><rect x="648" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="792" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 3 · Equilibrium</text><rect x="727" y="90" width="130" height="80" rx="14" fill="#ffffff" stroke="#111827" stroke-width="4"/><circle cx="772" cy="130" r="18" fill="#3B2854"/><ellipse cx="817" cy="135" rx="22" ry="14" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="792" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Left: 6 · Right: 6</text><text x="792" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Equal flow both ways</text></svg>
+      <p>Use the picture first. Question 1 works directly from the picture labels above.</p>
+    </div>
+
+        <div class="ca-act" data-quiz data-correct="0" data-explain="Panel 1 shows 10 particles on the Left and 2 on the Right, so the Left side has the higher concentration.">
+          <p><strong>Arrival check 1:</strong> Look at Panel 1. Which side has the higher concentration of particles at the start?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">The left side (10 particles vs 2 on the Right)</button><button type="button" data-option="1">The right side (2 particles)</button><button type="button" data-option="2">Both sides are equal</button></div>
+          <p class="status-box" role="status">Choose an option to check your recall.</p>
+        </div>
+
+        <div class="ca-act" data-quiz data-correct="1" data-explain="Net movement is down the concentration gradient: from Left (10 particles, high) to Right (2 particles, low).">
+          <p><strong>Arrival check 2:</strong> Look at Panel 2. In which direction is the net (overall) movement of particles?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">From right (low) to Left (high)</button><button type="button" data-option="1">From left (high) to Right (low)</button><button type="button" data-option="2">No particles cross the line</button></div>
+          <p class="status-box" role="status">Choose an option to check your recall.</p>
+        </div>
+
+        <div class="ca-act" data-quiz data-correct="0" data-explain="40 mm = 40,000 µm; Magnification = 40,000 µm ÷ 80 µm = ×500 (no length unit).">
+          <p><strong>Arrival check 3:</strong> Recall from Lesson 3: if an image of a cell is 40 mm wide and its actual width is 80 µm, what is the magnification?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">×500</button><button type="button" data-option="1">×0.5</button><button type="button" data-option="2">500 mm</button></div>
+          <p class="status-box" role="status">Choose an option to check your recall.</p>
+        </div>
+
+    <div class="route-group">
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;"><button type="button" class="route-btn active-route" data-route-btn="supported" aria-pressed="true">Supported</button><button type="button" class="route-btn" data-route-btn="independent" aria-pressed="false">Independent</button><button type="button" class="route-btn" data-route-btn="aspire" aria-pressed="false">Aspire</button></div>
+      <div class="route-panel active-panel" data-route-panel="supported" id="arrival-supported"><h3>Supported route</h3>
+            <div class="task-box">
+              <p><strong>1. Look at Panel 1. Count the particles: how many are on the Left and how many on the Right?</strong></p>
+              <details><summary>Help with this question</summary><p>Read the text under Panel 1.</p></details>
+              <button type="button" data-reveal="arr-supported-1">Reveal answer after responding</button>
+              <p id="arr-supported-1" hidden><strong>Check:</strong> 10 on the Left and 2 on the Right.</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>2. Which side has the higher concentration at the start?</strong></p>
+              <details><summary>Help with this question</summary><p>Higher concentration means more particles in the same volume.</p></details>
+              <button type="button" data-reveal="arr-supported-2">Reveal answer after responding</button>
+              <p id="arr-supported-2" hidden><strong>Check:</strong> The left side.</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>3. Look at Panel 2. Which way does the net movement arrow point?</strong></p>
+              <details><summary>Help with this question</summary><p>Follow the arrow in Panel 2.</p></details>
+              <button type="button" data-reveal="arr-supported-3">Reveal answer after responding</button>
+              <p id="arr-supported-3" hidden><strong>Check:</strong> From left to Right (high to low concentration).</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>4. Does diffusion need extra energy from cell respiration (ATP)?</strong></p>
+              <details><summary>Help with this question</summary><p>Particles move using their own random kinetic energy.</p></details>
+              <button type="button" data-reveal="arr-supported-4">Reveal answer after responding</button>
+              <p id="arr-supported-4" hidden><strong>Check:</strong> No — it is a passive process.</p>
+            </div>
+            </div><div class="route-panel" data-route-panel="independent" id="arrival-independent"><h3>Independent route</h3>
+            <div class="task-box">
+              <p><strong>1. Describe the concentration difference between Left and Right in Panel 1 and state the direction of net movement.</strong></p>
+              <details><summary>Help with this question</summary><p>Link high-to-low concentration to net flow.</p></details>
+              <button type="button" data-reveal="arr-independent-1">Reveal answer after responding</button>
+              <p id="arr-independent-1" hidden><strong>Check:</strong> Left has a high concentration (10) and Right has a low concentration (2); net movement is Left to Right.</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>2. Explain why some individual particles still move from Right to Left even while net movement is Left to Right.</strong></p>
+              <details><summary>Help with this question</summary><p>Random motion happens on both sides.</p></details>
+              <button type="button" data-reveal="arr-independent-2">Reveal answer after responding</button>
+              <p id="arr-independent-2" hidden><strong>Check:</strong> Every particle moves randomly in all directions; more move L-&gt;R than R-&gt;L simply because more start on the Left.</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>3. Look at Panel 3 (6 on Left, 6 on Right). What do we call this state, and have the particles stopped moving?</strong></p>
+              <details><summary>Help with this question</summary><p>Equal rates in both directions.</p></details>
+              <button type="button" data-reveal="arr-independent-3">Reveal answer after responding</button>
+              <p id="arr-independent-3" hidden><strong>Check:</strong> Dynamic equilibrium; particles keep moving randomly, but equal numbers cross each way so net movement is zero.</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>4. Recall from microscopy: convert 0.08 mm into micrometres (µm).</strong></p>
+              <details><summary>Help with this question</summary><p>Multiply mm by 1000.</p></details>
+              <button type="button" data-reveal="arr-independent-4">Reveal answer after responding</button>
+              <p id="arr-independent-4" hidden><strong>Check:</strong> 0.08 × 1000 = 80 µm.</p>
+            </div>
+            </div><div class="route-panel" data-route-panel="aspire" id="arrival-aspire"><h3>Aspire route</h3>
+            <div class="task-box">
+              <p><strong>1. Write a precise one-sentence exam definition of diffusion using the terms &quot;net movement&quot;, &quot;concentration gradient&quot;, and &quot;passive&quot;.</strong></p>
+              <details><summary>Help with this question</summary><p>Include net, high to low, down a gradient, and passive.</p></details>
+              <button type="button" data-reveal="arr-aspire-1">Reveal answer after responding</button>
+              <p id="arr-aspire-1" hidden><strong>Check:</strong> Diffusion is the net passive movement of particles from a region of higher concentration to a region of lower concentration down a concentration gradient.</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>2. Explain why the phrase &quot;net movement&quot; is essential in the definition of diffusion.</strong></p>
+              <details><summary>Help with this question</summary><p>Contrast individual random motion with overall net flow.</p></details>
+              <button type="button" data-reveal="arr-aspire-2">Reveal answer after responding</button>
+              <p id="arr-aspire-2" hidden><strong>Check:</strong> Because individual particles move randomly in all directions; only the overall difference between forward and reverse crossings goes from high to low.</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>3. Compare the steepness of the concentration gradient between (10 Left, 2 Right) and (7 Left, 5 Right). Which gives a faster initial rate of diffusion and why?</strong></p>
+              <details><summary>Help with this question</summary><p>Steeper gradient = faster net rate.</p></details>
+              <button type="button" data-reveal="arr-aspire-3">Reveal answer after responding</button>
+              <p id="arr-aspire-3" hidden><strong>Check:</strong> (10, 2) has a difference of 8 vs 2 for (7, 5); the steeper gradient produces a larger imbalance in random crossings per second.</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>4. State what happens to the rate of net diffusion as the system approaches Panel 3 (6 Left, 6 Right).</strong></p>
+              <details><summary>Help with this question</summary><p>Rate decreases as gradient flattens.</p></details>
+              <button type="button" data-reveal="arr-aspire-4">Reveal answer after responding</button>
+              <p id="arr-aspire-4" hidden><strong>Check:</strong> The concentration gradient becomes shallower, so the rate of net diffusion slows down until it reaches zero at equilibrium.</p>
+            </div>
+            </div>
+    </div>
+    <div class="card-green">
+      <p><strong>Regulation check:</strong> choose a word or colour.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;">
+        <button type="button" data-regulation="Green · ready">Green · ready</button>
+        <button type="button" data-regulation="Amber · need an adjustment">Amber · need an adjustment</button>
+        <button type="button" data-regulation="Red · need a quiet pause">Red · need a quiet pause</button>
+      </div>
+      <p id="regulation-status" class="status-box" role="status">A private response or pass is welcome.</p>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W04_L1)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-3" data-stage="Starter" aria-hidden="true">
+          <span class="stage-pill">Stage 3 · Starter</span>
+          <h2>Starter · 4-beat model and retrieval</h2>
+
+    <div class="ca-act" data-beat>
+      <h3>Whiteboard 4-beat sequence</h3>
+      <div class="ca-beatbox"><div class="ca-light"><strong>Beat 1:</strong> Beat 1 · Spot the gradient: high concentration (crowded) to low concentration (spread out).</div><div class="ca-light"><strong>Beat 2:</strong> Beat 2 · Say &quot;net movement&quot;: individual particles move randomly, overall flow goes high -&gt; low.</div><div class="ca-light"><strong>Beat 3:</strong> Beat 3 · Remember it is passive: driven by particles&#x27; own kinetic energy, no ATP required.</div><div class="ca-light"><strong>Beat 4:</strong> Beat 4 · Link the 4 rate factors: steeper gradient, higher temperature, larger surface area, shorter distance.</div></div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;">
+        <button type="button" data-beat-next>Next beat</button>
+        <button type="button" data-beat-all>Show all 4 beats</button>
+        <button type="button" data-beat-reset>Reset beats</button>
+      </div>
+      <p class="status-box beat-status" role="status">Ready: step 0 of 4</p>
+    </div>
+    <div class="ca-act ca-vote" data-quiz data-correct="0" data-explain="At equilibrium, particles still have kinetic energy and move randomly in all directions, but equal numbers move each way so net movement is zero.">
+      <h3>Class fingers or thumbs vote</h3>
+      <p><strong>A drop of purple food dye spreads through a beaker of still water until the water is evenly pale purple. Which statement is true once it looks evenly purple?</strong></p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">1. The dye particles keep moving randomly in all directions, with zero net movement.</button><button type="button" data-option="1">2. The dye particles freeze in place and stop moving.</button><button type="button" data-option="2">3. Respiration in the water pushes the dye particles apart.</button><button type="button" data-option="3">4. All dye particles move back into the original drop.</button></div>
+      <p class="status-box" role="status">Hold up 1, 2, 3 or 4 fingers (or point), then tap to check.</p>
+    </div>
+
+        <div class="task-box">
+          <p><strong>Retrieval 1:</strong> Why does a spray of perfume in one corner of a room eventually reach the back of the room without anyone fanning the air?</p>
+          <details><summary>Clue</summary><p>High concentration to low concentration.</p></details>
+          <button type="button" data-reveal="starter-rev-1">Reveal answer</button>
+          <p id="starter-rev-1" hidden><strong>Answer:</strong> Perfume gas particles move randomly and collide with air particles, diffusing down the concentration gradient from high (near the bottle) to low.</p>
+        </div>
+
+        <div class="task-box">
+          <p><strong>Retrieval 2:</strong> Does diffusion happen in solids, or only in liquids and gases? Explain why.</p>
+          <details><summary>Clue</summary><p>Particles in solids only vibrate in fixed positions.</p></details>
+          <button type="button" data-reveal="starter-rev-2">Reveal answer</button>
+          <p id="starter-rev-2" hidden><strong>Answer:</strong> In liquids and gases, because their particles are free to move past one another randomly.</p>
+        </div>
+
+        <div class="task-box">
+          <p><strong>Retrieval 3:</strong> Why does food colouring spread out much faster in hot water (60 °C) than in iced water (5 °C)?</p>
+          <details><summary>Clue</summary><p>Higher temperature -&gt; more kinetic energy -&gt; faster diffusion.</p></details>
+          <button type="button" data-reveal="starter-rev-3">Reveal answer</button>
+          <p id="starter-rev-3" hidden><strong>Answer:</strong> At higher temperature, particles have more kinetic energy and move faster, colliding and spreading more rapidly.</p>
+        </div>
+
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W04_L1)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-4" data-stage="I do 1" aria-hidden="true">
+          <span class="stage-pill">Stage 4 · I do 1</span>
+          <h2>I do 1 · Defining diffusion and dynamic equilibrium</h2>
+
+    <div class="card">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" class="ca-pic" role="img" aria-labelledby="svg-ido1-1-title svg-ido1-1-desc"><title id="svg-ido1-1-title">I do 1 · Defining diffusion and dynamic equilibrium</title><desc id="svg-ido1-1-desc">High-contrast teaching diagram with three labelled panels.</desc><rect x="0" y="0" width="960" height="300" fill="#ffffff" stroke="#5B417A" stroke-width="4" rx="14"/><rect x="24" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="168" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 1 · Start</text><rect x="98" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><circle cx="118" cy="110" r="7" fill="#3B2854"/><circle cx="133" cy="130" r="7" fill="#3B2854"/><circle cx="120" cy="150" r="7" fill="#3B2854"/><circle cx="143" cy="115" r="7" fill="#3B2854"/><circle cx="148" cy="145" r="7" fill="#3B2854"/><circle cx="203" cy="120" r="7" fill="#3B2854"/><circle cx="216" cy="145" r="7" fill="#3B2854"/><line x1="163" y1="130" x2="193" y2="130" stroke="#111827" stroke-width="4"/><polygon points="193,122 205,130 193,138" fill="#111827"/><text x="168" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Left: 10 · Right: 2</text><text x="168" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Steep gradient</text><rect x="336" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="480" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 2 · Net flow</text><rect x="410" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><line x1="480" y1="90" x2="480" y2="170" stroke="#3B2854" stroke-width="4" stroke-dasharray="8 6"/><circle cx="435" cy="112" r="6" fill="#111827"/><circle cx="455" cy="130" r="6" fill="#111827"/><circle cx="440" cy="150" r="6" fill="#111827"/><circle cx="460" cy="108" r="6" fill="#111827"/><circle cx="515" cy="115" r="6" fill="#111827"/><circle cx="505" cy="148" r="6" fill="#111827"/><circle cx="510" cy="130" r="12" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="480" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Net movement L -&gt; R</text><text x="480" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Passive (kinetic energy)</text><rect x="648" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="792" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 3 · Equilibrium</text><rect x="727" y="90" width="130" height="80" rx="14" fill="#ffffff" stroke="#111827" stroke-width="4"/><circle cx="772" cy="130" r="18" fill="#3B2854"/><ellipse cx="817" cy="135" rx="22" ry="14" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="792" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Left: 6 · Right: 6</text><text x="792" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Equal flow both ways</text></svg>
+    </div>
+    <div class="model-frame" id="model-1" data-step-model data-steps="[&quot;Identify the concentration difference: more dissolved or gaseous particles in a given volume = higher concentration.&quot;, &quot;State the direction: net movement is from higher concentration to lower concentration (down the concentration gradient).&quot;, &quot;State the energy source: diffusion is passive \u2014 it relies on the random kinetic energy of particles, not metabolic energy (ATP).&quot;, &quot;Describe equilibrium: when concentrations are equal on both sides, random motion continues in both directions at equal rates, so net movement is zero.&quot;]">
+      <h3>I do 1 · Defining diffusion and dynamic equilibrium</h3>
+      <p class="status-box model-caption" role="status">Step 1: Identify the concentration difference: more dissolved or gaseous particles in a given volume = higher concentration.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin:10px 0;">
+        <button type="button" data-step-next>Show next step</button>
+        <button type="button" data-step-reset>Reset model</button>
+      </div>
+      <ol><li class="v5-step" ><strong>Step 1:</strong> Identify the concentration difference: more dissolved or gaseous particles in a given volume = higher concentration.</li><li class="v5-step" hidden><strong>Step 2:</strong> State the direction: net movement is from higher concentration to lower concentration (down the concentration gradient).</li><li class="v5-step" hidden><strong>Step 3:</strong> State the energy source: diffusion is passive — it relies on the random kinetic energy of particles, not metabolic energy (ATP).</li><li class="v5-step" hidden><strong>Step 4:</strong> Describe equilibrium: when concentrations are equal on both sides, random motion continues in both directions at equal rates, so net movement is zero.</li></ol>
+    </div>
+    <div class="card-warm">
+      <h3>Worked example 1</h3>
+      <p>Worked example 1: Why oxygen diffuses into a respiring animal cell. Inside the cell, respiration continuously uses up oxygen, keeping internal oxygen concentration low. Outside in the tissue fluid, oxygen concentration is high. Because particles move randomly, more oxygen molecules cross the cell membrane from outside (high) to inside (low) than the other way. Therefore, there is a net passive movement of oxygen into the cell down its concentration gradient.</p>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W04_L1)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-5" data-stage="We do 1" aria-hidden="true">
+          <span class="stage-pill">Stage 5 · We do 1</span>
+          <h2>We do 1 · team sort and scientific reason</h2>
+
+    <div class="ca-act" data-sort>
+      <h3>Shared sort and reason challenge</h3>
+      <p><strong>Point rule:</strong> 1 point for an accurate match, plus 1 bonus point for a clear scientific reason.</p>
+
+        <div class="task-box">
+          <label for="sort-sel-0"><strong>1. Net movement</strong></label>
+          <select id="sort-sel-0" data-expected="Overall difference between particles moving one way and the opposite way"><option value="">Choose matching statement...</option><option value="Overall difference between particles moving one way and the opposite way">Overall difference between particles moving one way and the opposite way</option><option value="From a region of higher concentration to a region of lower concentration">From a region of higher concentration to a region of lower concentration</option><option value="Does not require metabolic energy (ATP) from cellular respiration">Does not require metabolic energy (ATP) from cellular respiration</option><option value="Equal concentration on both sides; particles still move randomly with zero net flow">Equal concentration on both sides; particles still move randomly with zero net flow</option></select>
+        </div>
+
+        <div class="task-box">
+          <label for="sort-sel-1"><strong>2. Down a concentration gradient</strong></label>
+          <select id="sort-sel-1" data-expected="From a region of higher concentration to a region of lower concentration"><option value="">Choose matching statement...</option><option value="Overall difference between particles moving one way and the opposite way">Overall difference between particles moving one way and the opposite way</option><option value="From a region of higher concentration to a region of lower concentration">From a region of higher concentration to a region of lower concentration</option><option value="Does not require metabolic energy (ATP) from cellular respiration">Does not require metabolic energy (ATP) from cellular respiration</option><option value="Equal concentration on both sides; particles still move randomly with zero net flow">Equal concentration on both sides; particles still move randomly with zero net flow</option></select>
+        </div>
+
+        <div class="task-box">
+          <label for="sort-sel-2"><strong>3. Passive process</strong></label>
+          <select id="sort-sel-2" data-expected="Does not require metabolic energy (ATP) from cellular respiration"><option value="">Choose matching statement...</option><option value="Overall difference between particles moving one way and the opposite way">Overall difference between particles moving one way and the opposite way</option><option value="From a region of higher concentration to a region of lower concentration">From a region of higher concentration to a region of lower concentration</option><option value="Does not require metabolic energy (ATP) from cellular respiration">Does not require metabolic energy (ATP) from cellular respiration</option><option value="Equal concentration on both sides; particles still move randomly with zero net flow">Equal concentration on both sides; particles still move randomly with zero net flow</option></select>
+        </div>
+
+        <div class="task-box">
+          <label for="sort-sel-3"><strong>4. Dynamic equilibrium</strong></label>
+          <select id="sort-sel-3" data-expected="Equal concentration on both sides; particles still move randomly with zero net flow"><option value="">Choose matching statement...</option><option value="Overall difference between particles moving one way and the opposite way">Overall difference between particles moving one way and the opposite way</option><option value="From a region of higher concentration to a region of lower concentration">From a region of higher concentration to a region of lower concentration</option><option value="Does not require metabolic energy (ATP) from cellular respiration">Does not require metabolic energy (ATP) from cellular respiration</option><option value="Equal concentration on both sides; particles still move randomly with zero net flow">Equal concentration on both sides; particles still move randomly with zero net flow</option></select>
+        </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;">
+        <button type="button" data-sort-check>Check matches</button>
+        <button type="button" data-sort-reset>Reset matches</button>
+      </div>
+      <p class="status-box sort-status" role="status">Match each term to its scientific explanation.</p>
+    </div>
+    <div class="card" id="ca-points-modal">
+      <h3>Four-team points board</h3>
+      <div class="grid-2">
+        <div class="card" style="margin:0;">
+          <h4>Circles: <span id="score-0">0</span> pts</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <button type="button" data-team-add="0" data-pts="1">+1 Match</button>
+            <button type="button" data-team-add="0" data-pts="1">+1 Reason</button>
+            <button type="button" data-team-add="0" data-pts="-1">-1</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin:0;">
+          <h4>Squares: <span id="score-1">0</span> pts</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <button type="button" data-team-add="1" data-pts="1">+1 Match</button>
+            <button type="button" data-team-add="1" data-pts="1">+1 Reason</button>
+            <button type="button" data-team-add="1" data-pts="-1">-1</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin:0;">
+          <h4>Triangles: <span id="score-2">0</span> pts</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <button type="button" data-team-add="2" data-pts="1">+1 Match</button>
+            <button type="button" data-team-add="2" data-pts="1">+1 Reason</button>
+            <button type="button" data-team-add="2" data-pts="-1">-1</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin:0;">
+          <h4>Diamonds: <span id="score-3">0</span> pts</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <button type="button" data-team-add="3" data-pts="1">+1 Match</button>
+            <button type="button" data-team-add="3" data-pts="1">+1 Reason</button>
+            <button type="button" data-team-add="3" data-pts="-1">-1</button>
+          </div>
+        </div>
+        </div>
+      <button type="button" id="reset-points" style="margin-top:12px;">Reset points board</button>
+    </div>
+    <details class="participation-loop">
+      <summary>Where what you say changes something · optional</summary>
+      <p>Point, sign, say or show an observation, question or access need. You may pass or speak privately.</p>
+      <p>The adult says what can change, makes one agreed adjustment if possible, and checks whether it helped.</p>
+    </details>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W04_L1)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-6" data-stage="I do 2" aria-hidden="true">
+          <span class="stage-pill">Stage 6 · I do 2</span>
+          <h2>I do 2 · Four factors that control the rate of diffusion</h2>
+
+    <div class="card">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" class="ca-pic" role="img" aria-labelledby="svg-ido2-2-title svg-ido2-2-desc"><title id="svg-ido2-2-title">I do 2 · Four factors that control the rate of diffusion</title><desc id="svg-ido2-2-desc">High-contrast teaching diagram with three labelled panels.</desc><rect x="0" y="0" width="960" height="300" fill="#ffffff" stroke="#5B417A" stroke-width="4" rx="14"/><rect x="24" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="168" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 1 · Start</text><rect x="98" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><circle cx="118" cy="110" r="7" fill="#3B2854"/><circle cx="133" cy="130" r="7" fill="#3B2854"/><circle cx="120" cy="150" r="7" fill="#3B2854"/><circle cx="143" cy="115" r="7" fill="#3B2854"/><circle cx="148" cy="145" r="7" fill="#3B2854"/><circle cx="203" cy="120" r="7" fill="#3B2854"/><circle cx="216" cy="145" r="7" fill="#3B2854"/><line x1="163" y1="130" x2="193" y2="130" stroke="#111827" stroke-width="4"/><polygon points="193,122 205,130 193,138" fill="#111827"/><text x="168" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Left: 10 · Right: 2</text><text x="168" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Steep gradient</text><rect x="336" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="480" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 2 · Net flow</text><rect x="410" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><line x1="480" y1="90" x2="480" y2="170" stroke="#3B2854" stroke-width="4" stroke-dasharray="8 6"/><circle cx="435" cy="112" r="6" fill="#111827"/><circle cx="455" cy="130" r="6" fill="#111827"/><circle cx="440" cy="150" r="6" fill="#111827"/><circle cx="460" cy="108" r="6" fill="#111827"/><circle cx="515" cy="115" r="6" fill="#111827"/><circle cx="505" cy="148" r="6" fill="#111827"/><circle cx="510" cy="130" r="12" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="480" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Net movement L -&gt; R</text><text x="480" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Passive (kinetic energy)</text><rect x="648" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="792" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 3 · Equilibrium</text><rect x="727" y="90" width="130" height="80" rx="14" fill="#ffffff" stroke="#111827" stroke-width="4"/><circle cx="772" cy="130" r="18" fill="#3B2854"/><ellipse cx="817" cy="135" rx="22" ry="14" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="792" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Left: 6 · Right: 6</text><text x="792" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Equal flow both ways</text></svg>
+    </div>
+    <div class="model-frame" id="model-2" data-step-model data-steps="[&quot;Concentration gradient: a steeper difference between high and low concentration increases the net rate of diffusion.&quot;, &quot;Temperature: higher temperature gives particles more kinetic energy so they move and collide faster, increasing the rate.&quot;, &quot;Surface area: a larger membrane surface area (e.g. folded microvilli or many alveoli) gives more space for particles to cross at once.&quot;, &quot;Diffusion distance: a thinner barrier (e.g. a one-cell-thick capillary wall) shortens the path, increasing the rate of diffusion.&quot;]">
+      <h3>I do 2 · Four factors that control the rate of diffusion</h3>
+      <p class="status-box model-caption" role="status">Step 1: Concentration gradient: a steeper difference between high and low concentration increases the net rate of diffusion.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin:10px 0;">
+        <button type="button" data-step-next>Show next step</button>
+        <button type="button" data-step-reset>Reset model</button>
+      </div>
+      <ol><li class="v5-step" ><strong>Step 1:</strong> Concentration gradient: a steeper difference between high and low concentration increases the net rate of diffusion.</li><li class="v5-step" hidden><strong>Step 2:</strong> Temperature: higher temperature gives particles more kinetic energy so they move and collide faster, increasing the rate.</li><li class="v5-step" hidden><strong>Step 3:</strong> Surface area: a larger membrane surface area (e.g. folded microvilli or many alveoli) gives more space for particles to cross at once.</li><li class="v5-step" hidden><strong>Step 4:</strong> Diffusion distance: a thinner barrier (e.g. a one-cell-thick capillary wall) shortens the path, increasing the rate of diffusion.</li></ol>
+    </div>
+    <div class="card-warm">
+      <h3>Worked example 2</h3>
+      <p>Worked example 2 (Comparing two cells): Cell A has a smooth membrane with surface area 100 µm² and membrane thickness 2 µm at 20 °C. Cell B has a folded membrane with surface area 600 µm² and thickness 0.5 µm at 37 °C. Cell B absorbs glucose by diffusion much faster because: (1) its surface area is 6× larger so more particles cross simultaneously, (2) its diffusion path is 4× shorter, and (3) at 37 °C particles have more kinetic energy.</p>
+    </div>
+    <div class="ca-act" data-check data-quiz data-correct="0" data-explain="Particles in liquids and gases never stop moving at room or body temperature; at equilibrium, forward and reverse crossing rates are equal.">
+      <h3>Single-decision hinge check</h3>
+      <p><strong>A student writes: &quot;Once oxygen concentration is equal inside and outside a cell, the oxygen molecules stop moving across the membrane.&quot; Which repair is scientifically accurate?</strong></p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">A. Oxygen molecules keep moving randomly across the membrane in both directions at equal rates, so net movement is zero.</button><button type="button" data-option="1">B. Oxygen molecules stop moving because the cell runs out of ATP.</button><button type="button" data-option="2">C. Oxygen molecules only move out of the cell once concentrations are equal.</button></div>
+      <p class="status-box" role="status">Choose the scientifically accurate statement before moving on.</p>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W04_L1)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-7" data-stage="We do 2" aria-hidden="true">
+          <span class="stage-pill">Stage 7 · We do 2</span>
+          <h2>We do 2 · method order and data table</h2>
+
+    <div class="ca-act" data-sequence>
+      <h3>Order the scientific method or reasoning steps</h3>
+      <ol>
+        <li data-order="1" style="margin-bottom:10px;">
+          <span>State that particles move randomly in all directions due to their kinetic energy.</span>
+          <button type="button" data-move-up>Move up</button>
+          <button type="button" data-move-down>Move down</button>
+        </li>
+
+        <li data-order="0" style="margin-bottom:10px;">
+          <span>Compare the concentration of particles in Region A (high) and Region B (low) to identify the concentration gradient.</span>
+          <button type="button" data-move-up>Move up</button>
+          <button type="button" data-move-down>Move down</button>
+        </li>
+
+        <li data-order="2" style="margin-bottom:10px;">
+          <span>State that net passive movement occurs from higher concentration to lower concentration down the gradient.</span>
+          <button type="button" data-move-up>Move up</button>
+          <button type="button" data-move-down>Move down</button>
+        </li>
+
+        <li data-order="3" style="margin-bottom:10px;">
+          <span>Link rate changes to gradient steepness, temperature, surface area, or diffusion distance.</span>
+          <button type="button" data-move-up>Move up</button>
+          <button type="button" data-move-down>Move down</button>
+        </li>
+        </ol>
+      <button type="button" data-seq-check>Check order</button>
+      <p class="status-box seq-status" role="status">Use move up and Move down to place the steps in order, then check.</p>
+    </div>
+    <div class="card">
+      <h3>How the four physical factors affect the rate of diffusion</h3>
+      <table>
+        <thead><tr><th scope="col">Factor changed</th><th scope="col">Change made</th><th scope="col">Effect on rate of diffusion</th><th scope="col">Particle-level reason</th></tr></thead>
+        <tbody><tr><td>Concentration gradient</td><td>Made steeper (bigger difference)</td><td>Rate increases</td><td>Greater imbalance between forward and reverse crossings</td></tr><tr><td>Temperature</td><td>Increased (warmer)</td><td>Rate increases</td><td>Particles have more kinetic energy and move faster</td></tr><tr><td>Surface area of membrane</td><td>Increased (folded)</td><td>Rate increases</td><td>More membrane space for particles to cross at the same time</td></tr><tr><td>Diffusion distance</td><td>Increased (thicker wall)</td><td>Rate decreases</td><td>Particles must travel further across the barrier</td></tr></tbody>
+      </table>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W04_L1)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-8" data-stage="You do" aria-hidden="true">
+          <span class="stage-pill">Stage 8 · You do</span>
+          <h2>You do · independent tiered practice</h2>
+
+    <div class="card">
+      <p><strong>Work in your book first.</strong> Choose your route with an adult. Staff mark actual <strong>I · S · C</strong> beside each task.</p>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" class="ca-pic" role="img" aria-labelledby="svg-youdo-3-title svg-youdo-3-desc"><title id="svg-youdo-3-title">Three-panel particle model of diffusion: high concentration on Left (10 particles) to low on Right (2 particles), net movement arrow, and dynamic equilibrium.</title><desc id="svg-youdo-3-desc">High-contrast teaching diagram with three labelled panels.</desc><rect x="0" y="0" width="960" height="300" fill="#ffffff" stroke="#5B417A" stroke-width="4" rx="14"/><rect x="24" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="168" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 1 · Start</text><rect x="98" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><circle cx="118" cy="110" r="7" fill="#3B2854"/><circle cx="133" cy="130" r="7" fill="#3B2854"/><circle cx="120" cy="150" r="7" fill="#3B2854"/><circle cx="143" cy="115" r="7" fill="#3B2854"/><circle cx="148" cy="145" r="7" fill="#3B2854"/><circle cx="203" cy="120" r="7" fill="#3B2854"/><circle cx="216" cy="145" r="7" fill="#3B2854"/><line x1="163" y1="130" x2="193" y2="130" stroke="#111827" stroke-width="4"/><polygon points="193,122 205,130 193,138" fill="#111827"/><text x="168" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Left: 10 · Right: 2</text><text x="168" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Steep gradient</text><rect x="336" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="480" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 2 · Net flow</text><rect x="410" y="90" width="140" height="80" fill="#ffffff" stroke="#111827" stroke-width="3"/><line x1="480" y1="90" x2="480" y2="170" stroke="#3B2854" stroke-width="4" stroke-dasharray="8 6"/><circle cx="435" cy="112" r="6" fill="#111827"/><circle cx="455" cy="130" r="6" fill="#111827"/><circle cx="440" cy="150" r="6" fill="#111827"/><circle cx="460" cy="108" r="6" fill="#111827"/><circle cx="515" cy="115" r="6" fill="#111827"/><circle cx="505" cy="148" r="6" fill="#111827"/><circle cx="510" cy="130" r="12" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="480" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Net movement L -&gt; R</text><text x="480" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Passive (kinetic energy)</text><rect x="648" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="792" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 3 · Equilibrium</text><rect x="727" y="90" width="130" height="80" rx="14" fill="#ffffff" stroke="#111827" stroke-width="4"/><circle cx="772" cy="130" r="18" fill="#3B2854"/><ellipse cx="817" cy="135" rx="22" ry="14" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="792" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Left: 6 · Right: 6</text><text x="792" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Equal flow both ways</text></svg>
+    </div>
+    <div class="route-group">
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;"><button type="button" class="route-btn active-route" data-route-btn="supported" aria-pressed="true">Supported</button><button type="button" class="route-btn" data-route-btn="independent" aria-pressed="false">Independent</button><button type="button" class="route-btn" data-route-btn="choice" aria-pressed="false">Choice</button><button type="button" class="route-btn" data-route-btn="aspire" aria-pressed="false">Aspire</button></div>
+
+        <div class="route-panel active-panel" data-route-panel="supported" id="task-supported">
+          <h3>Supported route</h3>
+
+            <div class="task-box">
+              <p><strong>Task 1 (2 marks):</strong> Complete the definition: &quot;Diffusion is the ___ movement of particles from a region of ___ concentration to a region of ___ concentration.&quot; [2 marks]</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Use the words: net, higher, lower.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-supported-1">Your answer</label><textarea id="yd-supported-1" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 2 (2 marks):</strong> State whether diffusion is an active or a passive process, and what this means about cellular energy [2 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Check Beat 3.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-supported-2">Your answer</label><textarea id="yd-supported-2" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 3 (1 marks):</strong> State what happens to the rate of diffusion when the temperature is increased [1 mark].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Do warmer particles move faster or slower?</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-supported-3">Your answer</label><textarea id="yd-supported-3" rows="3"></textarea></details>
+            </div>
+
+          <details class="ca-make-tier">
+            <summary>Optional hands-on make-it choice (Supported)</summary>
+            <p>Place 10 counters on the Left of the dashed line and 2 on the Right; move 4 counters across to model net diffusion until 6 sit on each side.</p>
+          </details>
+        </div>
+
+        <div class="route-panel" data-route-panel="independent" id="task-independent">
+          <h3>Independent route</h3>
+
+            <div class="task-box">
+              <p><strong>Task 1 (3 marks):</strong> Define diffusion and explain why it is described as a passive process [3 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Include net movement, high to low concentration (down a gradient), and random kinetic energy rather than ATP.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-independent-1">Your answer</label><textarea id="yd-independent-1" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 2 (4 marks):</strong> Explain how increasing temperature and increasing membrane surface area each affect the rate of diffusion into a cell [4 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Give the effect and the particle reason for each factor.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-independent-2">Your answer</label><textarea id="yd-independent-2" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 3 (1 marks):</strong> Why does increasing the thickness of a membrane slow down diffusion [1 mark]?</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Think about the distance particles travel.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-independent-3">Your answer</label><textarea id="yd-independent-3" rows="3"></textarea></details>
+            </div>
+
+          <details class="ca-make-tier">
+            <summary>Optional hands-on make-it choice (Independent)</summary>
+            <p>Match the 4 factor cards (Steeper gradient, Higher temperature, Larger surface area, Shorter distance) to their particle-level explanation cards.</p>
+          </details>
+        </div>
+
+        <div class="route-panel" data-route-panel="choice" id="task-choice">
+          <h3>Choice route</h3>
+
+            <div class="task-box">
+              <p><strong>Task 1 (3 marks):</strong> Write a 3-point bullet summary defining diffusion (direction, gradient, energy).</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Use high -&gt; low, down a concentration gradient, passive.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-choice-1">Your answer</label><textarea id="yd-choice-1" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 2 (3 marks):</strong> Complete a 4-row factor table showing what happens to diffusion rate when gradient, temperature, surface area, and distance increase.</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Careful with the fourth factor (distance)!</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-choice-2">Your answer</label><textarea id="yd-choice-2" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 3 (2 marks):</strong> Correct this flawed statement: &quot;At equilibrium, particles stop moving.&quot; [2 marks]</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Explain what is actually zero at equilibrium.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-choice-3">Your answer</label><textarea id="yd-choice-3" rows="3"></textarea></details>
+            </div>
+
+          <details class="ca-make-tier">
+            <summary>Optional hands-on make-it choice (Choice)</summary>
+            <p>Sketch a before-and-after particle box diagram for purple dye in water and annotate the net movement arrow and equilibrium box.</p>
+          </details>
+        </div>
+
+        <div class="route-panel" data-route-panel="aspire" id="task-aspire">
+          <h3>Aspire route</h3>
+
+            <div class="task-box">
+              <p><strong>Task 1 (3 marks):</strong> Using the particle model, explain why a steeper concentration gradient produces a faster rate of net diffusion even though individual particles have no sense of direction [3 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Compare the number of random collisions per second on the crowded side versus the sparse side.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-aspire-1">Your answer</label><textarea id="yd-aspire-1" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 2 (4 marks):</strong> A cell lining the small intestine has millions of microscopic folds called microvilli and a membrane only one molecule-bilayer thick, kept at 37 °C. Explain how all three features work together to maximise glucose diffusion right after a meal [4 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Link microvilli -&gt; surface area, thin membrane -&gt; short distance, 37 °C -&gt; kinetic energy, and meal -&gt; steep gradient.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-aspire-2">Your answer</label><textarea id="yd-aspire-2" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 3 (2 marks):</strong> Predict and explain what happens to the rate of net diffusion of oxygen into a cell if cellular respiration suddenly stops [2 marks].</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Think about what happens to internal oxygen concentration if oxygen is no longer used up.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-aspire-3">Your answer</label><textarea id="yd-aspire-3" rows="3"></textarea></details>
+            </div>
+
+          <details class="ca-make-tier">
+            <summary>Optional hands-on make-it choice (Aspire)</summary>
+            <p>Sketch a rate-of-diffusion vs concentration-gradient graph and annotate how increasing temperature shifts the slope steeper.</p>
+          </details>
+        </div>
+
+    </div>
+    <div class="card ca-make-overview">
+      <h3>Optional make-it station</h3>
+      <p>If writing is a barrier or after completing your book task, build the physical desk model using labelled cards, counters or arrows and explain it to an adult.</p>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W04_L1)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-9" data-stage="Review and improve" aria-hidden="true">
+          <span class="stage-pill">Stage 9 · Review and improve</span>
+          <h2>Review and improve · same-colour edit</h2>
+
+    <div class="card">
+      <h3>Check your work against the mark scheme</h3>
+      <p>Keep your original response visible. Tick each scientific point you included, then make one <strong>//</strong> edit in the same colour on the same page.</p>
+
+        <details>
+          <summary>Supported mark scheme</summary>
+          <table>
+            <thead><tr><th scope="col">Task</th><th scope="col">Creditworthy points</th><th scope="col">Marks</th></tr></thead>
+            <tbody><tr><td>1</td><td>Net movement (1) from higher concentration to lower concentration (1).</td><td>2</td></tr><tr><td>2</td><td>Passive (1); it does not require cellular energy / ATP from respiration (1).</td><td>2</td></tr><tr><td>3</td><td>The rate of diffusion increases (1).</td><td>1</td></tr></tbody>
+          </table>
+        </details>
+
+        <details>
+          <summary>Independent mark scheme</summary>
+          <table>
+            <thead><tr><th scope="col">Task</th><th scope="col">Creditworthy points</th><th scope="col">Marks</th></tr></thead>
+            <tbody><tr><td>1</td><td>Net movement of particles from higher to lower concentration / down a concentration gradient (2); passive because it relies on random kinetic energy of particles with no ATP needed (1).</td><td>3</td></tr><tr><td>2</td><td>Higher temperature increases kinetic energy so particles move faster, increasing rate (2); larger surface area allows more particles to cross the membrane at the same time, increasing rate (2).</td><td>4</td></tr><tr><td>3</td><td>It increases the diffusion distance so particles take longer to cross (1).</td><td>1</td></tr></tbody>
+          </table>
+        </details>
+
+        <details>
+          <summary>Aspire mark scheme</summary>
+          <table>
+            <thead><tr><th scope="col">Task</th><th scope="col">Creditworthy points</th><th scope="col">Marks</th></tr></thead>
+            <tbody><tr><td>1</td><td>Individual particles move randomly in all directions (1); with a steeper gradient, far more particles per unit volume are on the high side, so many more cross from high to low per second than from low to high (1), giving a larger net rate (1).</td><td>3</td></tr><tr><td>2</td><td>Microvilli provide a huge surface area so more glucose molecules cross at once (1); thin membrane gives a very short diffusion distance (1); 37 °C provides kinetic energy for rapid particle movement (1); high glucose after a meal maintains a steep concentration gradient (1).</td><td>4</td></tr><tr><td>3</td><td>Internal oxygen concentration rises until it equals external concentration (1), flattening the concentration gradient so net diffusion falls to zero (1).</td><td>2</td></tr></tbody>
+          </table>
+        </details>
+
+    </div>
+    <div class="card-green">
+      <h3>Three-step review checklist</h3>
+      <ol>
+        <li>Check that you used the accurate scientific term from the word list.</li>
+        <li>Link your statement to a measurement, calculation or diagram detail.</li>
+        <li>Write <strong>//</strong> and add one missing detail or unit in the same colour on the same page.</li>
+      </ol>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W04_L1)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-10" data-stage="Exit ticket" aria-hidden="true">
+          <span class="stage-pill">Stage 10 · Exit ticket</span>
+          <h2>Exit ticket · evidence check</h2>
+
+
+        <div class="ca-act" data-quiz data-correct="0" data-explain="Diffusion is the net passive movement of particles down a concentration gradient (high to low).">
+          <p><strong>Exit check 1:</strong> Which is the complete definition of diffusion?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">The net passive movement of particles from higher concentration to lower concentration down a concentration gradient</button><button type="button" data-option="1">The movement of particles from low to high concentration using ATP</button><button type="button" data-option="2">The movement of water only through a cell wall</button></div>
+          <p class="status-box" role="status">Select an option to check today's key learning.</p>
+        </div>
+
+        <div class="ca-act" data-quiz data-correct="1" data-explain="A thicker barrier increases the diffusion distance, slowing down the rate at which particles cross.">
+          <p><strong>Exit check 2:</strong> Which change will DECREASE (slow down) the rate of diffusion across a membrane?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">Increasing the temperature</button><button type="button" data-option="1">Increasing the diffusion distance (a thicker barrier)</button><button type="button" data-option="2">Increasing the surface area of the membrane</button></div>
+          <p class="status-box" role="status">Select an option to check today's key learning.</p>
+        </div>
+
+        <div class="ca-act" data-quiz data-correct="1" data-explain="At equilibrium, random particle motion continues at equal rates in both directions, giving zero net movement.">
+          <p><strong>Exit check 3:</strong> What is true when a diffusing substance reaches dynamic equilibrium?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">All particles stop moving completely</button><button type="button" data-option="1">Particles keep moving randomly in both directions at equal rates, so net movement is zero</button><button type="button" data-option="2">Particles only move from low to high concentration</button></div>
+          <p class="status-box" role="status">Select an option to check today's key learning.</p>
+        </div>
+
+    <div class="route-group">
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;"><button type="button" class="route-btn active-route" data-route-btn="supported" aria-pressed="true">Supported</button><button type="button" class="route-btn" data-route-btn="independent" aria-pressed="false">Independent</button><button type="button" class="route-btn" data-route-btn="aspire" aria-pressed="false">Aspire</button></div>
+      <div class="route-panel active-panel" data-route-panel="supported" id="exit-supported"><h3>Supported exit ticket</h3><div class="task-box"><p><strong>1. In which direction is the net movement of particles during diffusion: high-to-low or low-to-high?</strong></p><details><summary>Expected point</summary><p>From higher concentration to lower concentration (high to low).</p></details></div><div class="task-box"><p><strong>2. Does diffusion require cellular energy (ATP)?</strong></p><details><summary>Expected point</summary><p>No — it is passive.</p></details></div></div><div class="route-panel" data-route-panel="independent" id="exit-independent"><h3>Independent exit ticket</h3><div class="task-box"><p><strong>1. State three changes that increase the rate of diffusion across a cell membrane.</strong></p><details><summary>Expected point</summary><p>Steeper concentration gradient, higher temperature, larger surface area (or shorter diffusion distance).</p></details></div><div class="task-box"><p><strong>2. Explain why particles still cross a membrane at equilibrium even though concentrations do not change.</strong></p><details><summary>Expected point</summary><p>Particles move randomly in both directions at equal rates, so there is zero net change.</p></details></div></div><div class="route-panel" data-route-panel="aspire" id="exit-aspire"><h3>Aspire exit ticket</h3><div class="task-box"><p><strong>1. Explain using kinetic theory why heating a liquid from 20 °C to 50 °C increases the rate of diffusion.</strong></p><details><summary>Expected point</summary><p>Particles gain kinetic energy and move at higher average speeds, colliding and spreading down the concentration gradient more rapidly.</p></details></div><div class="task-box"><p><strong>2. Why must a gas exchange membrane be thin as well as having a large surface area?</strong></p><details><summary>Expected point</summary><p>A thin membrane minimises the diffusion distance so each particle crosses in less time, maximising the net rate.</p></details></div></div>
+    </div>
+    <div class="card">
+      <p><strong>Response modes:</strong> verbal · written · drawn · signed · symbol / choice-selected · demonstrated / re-attempt · adult-scribed. You may pass.</p>
+      <p><strong>Next lesson:</strong> Lesson 2 (SCI_LAUNCH_A1_W04_L2): Gas exchange in the lungs — how alveoli are adapted to maximise diffusion of oxygen and carbon dioxide.</p>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W04_L1)</span>
+          </footer>
+        </section>
+
+  </main>
+
+        <section class="print-section" id="print-supported" data-print-route="supported">
+          <h2>Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W04_L1) · Supported print pack</h2>
+          <p><strong>Learning intention:</strong> Define diffusion as the net passive movement of particles down a concentration gradient and explain how gradient, temperature, surface area and distance affect its rate.</p>
+          <p><strong>1. Complete the definition: &quot;Diffusion is the ___ movement of particles from a region of ___ concentration to a region of ___ concentration.&quot; [2 marks] (2 marks)</strong> — Cue: Use the words: net, higher, lower.</p><p><strong>2. State whether diffusion is an active or a passive process, and what this means about cellular energy [2 marks]. (2 marks)</strong> — Cue: Check Beat 3.</p><p><strong>3. State what happens to the rate of diffusion when the temperature is increased [1 mark]. (1 marks)</strong> — Cue: Do warmer particles move faster or slower?</p>
+          <p>Made by Matt</p>
+        </section>
+
+        <section class="print-section" id="print-independent" data-print-route="independent">
+          <h2>Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W04_L1) · Independent print pack</h2>
+          <p><strong>Learning intention:</strong> Define diffusion as the net passive movement of particles down a concentration gradient and explain how gradient, temperature, surface area and distance affect its rate.</p>
+          <p><strong>1. Define diffusion and explain why it is described as a passive process [3 marks]. (3 marks)</strong> — Cue: Include net movement, high to low concentration (down a gradient), and random kinetic energy rather than ATP.</p><p><strong>2. Explain how increasing temperature and increasing membrane surface area each affect the rate of diffusion into a cell [4 marks]. (4 marks)</strong> — Cue: Give the effect and the particle reason for each factor.</p><p><strong>3. Why does increasing the thickness of a membrane slow down diffusion [1 mark]? (1 marks)</strong> — Cue: Think about the distance particles travel.</p>
+          <p>Made by Matt</p>
+        </section>
+
+        <section class="print-section" id="print-aspire" data-print-route="aspire">
+          <h2>Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W04_L1) · Aspire print pack</h2>
+          <p><strong>Learning intention:</strong> Define diffusion as the net passive movement of particles down a concentration gradient and explain how gradient, temperature, surface area and distance affect its rate.</p>
+          <p><strong>1. Using the particle model, explain why a steeper concentration gradient produces a faster rate of net diffusion even though individual particles have no sense of direction [3 marks]. (3 marks)</strong> — Cue: Compare the number of random collisions per second on the crowded side versus the sparse side.</p><p><strong>2. A cell lining the small intestine has millions of microscopic folds called microvilli and a membrane only one molecule-bilayer thick, kept at 37 °C. Explain how all three features work together to maximise glucose diffusion right after a meal [4 marks]. (4 marks)</strong> — Cue: Link microvilli -&gt; surface area, thin membrane -&gt; short distance, 37 °C -&gt; kinetic energy, and meal -&gt; steep gradient.</p><p><strong>3. Predict and explain what happens to the rate of net diffusion of oxygen into a cell if cellular respiration suddenly stops [2 marks]. (2 marks)</strong> — Cue: Think about what happens to internal oxygen concentration if oxygen is no longer used up.</p>
+          <p>Made by Matt</p>
+        </section>
+
+
+    <dialog id="ta-dialog" aria-labelledby="ta-dialog-title">
+      <h2 id="ta-dialog-title">TA Brief · Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W04_L1)</h2>
+      <p><strong>Learning intention:</strong> Define diffusion as the net passive movement of particles down a concentration gradient and explain how gradient, temperature, surface area and distance affect its rate.</p>
+      <p><strong>At check-out, record E for today's lesson against each pupil's target on the evidence app.</strong></p>
+      <p class="ca-watch-staff"><strong>Watch (staff preview first): <a href="https://www.bbc.co.uk/bitesize/guides/zs63tv4/revision/1" target="_blank" rel="noopener noreferrer">Revision guide — Diffusion in cells and factors affecting rate</a></strong></p>
+      <h3>Adult deployment and access support</h3>
+      <ul>
+        <li>Rehearse the three-panel picture at Arrival before independent tasks.</li>
+        <li>Invite a response in the learner's usual mode (verbal · written · drawn · signed · symbol / choice-selected · demonstrated / re-attempt · adult-scribed). Allow a pass.</li>
+        <li>Wait, point to the diagram detail, and rephrase before offering a content cue.</li>
+        <li>Record actual <strong>I · S · C</strong> beside each task in the book or sheet.</li>
+      </ul>
+      <p>Made by Matt</p>
+      <button type="button" data-close-dialog>Close TA brief</button>
+    </dialog>
+
+
+    <dialog id="guidance-dialog" aria-labelledby="guidance-dialog-title">
+      <h2 id="guidance-dialog-title">Teacher, Cover and SLT Guidance · Science · SUMMIT · Lesson 1 (SCI_LAUNCH_A1_W04_L1)</h2>
+      <p><strong>Scheme alignment:</strong> Row 35 · Topic 1 Key Concepts in Biology: Explain how substances are transported into and out of cells by diffusion.</p>
+      <p><strong>At check-out, record E for today's lesson against each pupil's target on the evidence app.</strong></p>
+      <p class="ca-watch-staff"><strong>Watch (staff preview first): <a href="https://www.bbc.co.uk/bitesize/guides/zs63tv4/revision/1" target="_blank" rel="noopener noreferrer">Revision guide — Diffusion in cells and factors affecting rate</a></strong></p>
+      <h3>Practical apparatus and safety</h3>
+      <p>Classroom demonstration (if used: potassium permanganate or food colouring in warm/cold water) uses dilute food dye in stable beakers; wipe spills immediately to prevent slip hazards.</p>
+      <h3>P17 · Planned adaptations</h3>
+      <ul>
+        <li><strong>Cognition and learning:</strong> Rehearse one worked step at a time and fade one cue before the independent check.</li>
+        <li><strong>Communication and interaction:</strong> Accept pointing, signing, choice selection or adult scribing.</li>
+        <li><strong>Regulation:</strong> Use the quiet pause option and return to the last secure step.</li>
+        <li><strong>Sensory and physical:</strong> Offer high-contrast print cards and seated or adult-directed apparatus handling.</li>
+      </ul>
+      <h3>Key vocabulary</h3>
+      <table>
+        <thead><tr><th scope="col">Tier</th><th scope="col">Term</th><th scope="col">Meaning</th><th scope="col">Example</th></tr></thead>
+        <tbody><tr><td>Tier 2</td><td><strong>Net movement</strong></td><td>The overall movement left over when reverse movements are subtracted from forward movements.</td><td>Net movement of particles goes from high concentration to low concentration.</td></tr><tr><td>Tier 2</td><td><strong>Passive</strong></td><td>Happening without needing extra cellular energy (ATP) from respiration.</td><td>Diffusion is a passive process powered by particles&#x27; own kinetic energy.</td></tr><tr><td>Tier 2</td><td><strong>Equilibrium</strong></td><td>A balanced state where concentrations are equal and forward and reverse rates match.</td><td>At dynamic equilibrium, particles keep moving randomly but net movement is zero.</td></tr><tr><td>Tier 3</td><td><strong>Diffusion</strong></td><td>The net passive movement of particles from higher concentration to lower concentration.</td><td>Oxygen enters respiring cells by diffusion across the cell membrane.</td></tr><tr><td>Tier 3</td><td><strong>Concentration gradient</strong></td><td>The difference in concentration between two regions across a distance.</td><td>A steeper concentration gradient produces a faster rate of diffusion.</td></tr><tr><td>Tier 3</td><td><strong>Surface area</strong></td><td>The total area of membrane exposed for particles to cross.</td><td>Folding a cell membrane increases its surface area and speeds up diffusion.</td></tr></tbody>
+      </table>
+      <p>Made by Matt</p>
+      <button type="button" data-close-dialog>Close guidance</button>
+    </dialog>
+
+
+    <dialog id="pause-dialog" aria-labelledby="pause-dialog-title">
+      <h2 id="pause-dialog-title">Quiet pause</h2>
+      <p>Take a quiet pause. Your work is kept safe on this page. Return to the last secure step and one small choice when you are ready.</p>
+      <p>Made by Matt</p>
+      <button type="button" data-close-dialog>Close and return to lesson</button>
+    </dialog>
+
+  <script>
+(function() {
+  window.classicCurrentSlide = 0;
+  window.soundEnabled = false;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.body.classList.add('no-motion');
+  }
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const picker = document.getElementById('stage-picker');
+  const statusEl = document.getElementById('stage-status');
+
+  window.showSlide = function(idx) {
+    const n = Math.max(0, Math.min(slides.length - 1, Number(idx) || 0));
+    window.classicCurrentSlide = n;
+    slides.forEach((s, i) => {
+      if (i === n) {
+        s.classList.add('active');
+        s.setAttribute('aria-hidden', 'false');
+      } else {
+        s.classList.remove('active');
+        s.setAttribute('aria-hidden', 'true');
+      }
+    });
+    if (picker) picker.value = String(n);
+    if (statusEl && slides[n]) {
+      statusEl.textContent = 'Stage ' + (n + 1) + ' of ' + slides.length + ': ' + (slides[n].getAttribute('data-stage') || '');
+    }
+  };
+
+  window.SCI_PROOF = function() {
+    return {
+      slideCount: slides.length,
+      currentSlide: window.classicCurrentSlide,
+      sound: window.soundEnabled
+    };
+  };
+
+  document.getElementById('prev-btn')?.addEventListener('click', () => window.showSlide(window.classicCurrentSlide - 1));
+  document.getElementById('next-btn')?.addEventListener('click', () => window.showSlide(window.classicCurrentSlide + 1));
+  picker?.addEventListener('change', (e) => window.showSlide(Number(e.target.value)));
+
+  document.addEventListener('keydown', (e) => {
+    const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+    if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+    if (e.key === 'ArrowRight') window.showSlide(window.classicCurrentSlide + 1);
+    if (e.key === 'ArrowLeft') window.showSlide(window.classicCurrentSlide - 1);
+    if (e.key === 'Escape') {
+      document.querySelectorAll('dialog[open]').forEach(d => d.close());
+    }
+  });
+
+  // View toggles
+  document.querySelectorAll('[data-toggle]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const mode = btn.getAttribute('data-toggle');
+      const pressed = btn.getAttribute('aria-pressed') === 'true';
+      btn.setAttribute('aria-pressed', String(!pressed));
+      if (mode === 'calm') document.body.classList.toggle('calm-view', !pressed);
+      if (mode === 'high-contrast') document.body.classList.toggle('high-contrast', !pressed);
+      if (mode === 'reduce-motion') document.body.classList.toggle('no-motion', !pressed);
+    });
+  });
+
+  // Dialog controls
+  document.querySelectorAll('[data-open-dialog]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const d = document.getElementById(btn.getAttribute('data-open-dialog'));
+      if (d && typeof d.showModal === 'function') d.showModal();
+      else if (d) d.setAttribute('open', '');
+    });
+  });
+  document.querySelectorAll('[data-close-dialog]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const d = btn.closest('dialog');
+      if (d && typeof d.close === 'function') d.close();
+      else if (d) d.removeAttribute('open');
+    });
+  });
+
+  // Reveal buttons
+  document.querySelectorAll('[data-reveal]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = document.getElementById(btn.getAttribute('data-reveal'));
+      if (target) {
+        const isHidden = target.hasAttribute('hidden');
+        if (isHidden) target.removeAttribute('hidden');
+        else target.setAttribute('hidden', '');
+      }
+    });
+  });
+
+  // Regulation check
+  document.querySelectorAll('[data-regulation]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const st = document.getElementById('regulation-status');
+      if (st) st.textContent = 'Logged: ' + btn.getAttribute('data-regulation') + '. Speak privately or pass at any time.';
+    });
+  });
+
+  // Route tabs (Arrival, You do, Exit)
+  document.querySelectorAll('.route-group').forEach(group => {
+    const buttons = group.querySelectorAll('[data-route-btn]');
+    const panels = group.querySelectorAll('.route-panel');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const r = btn.getAttribute('data-route-btn');
+        buttons.forEach(b => {
+          const match = b.getAttribute('data-route-btn') === r;
+          b.classList.toggle('active-route', match);
+          b.setAttribute('aria-pressed', String(match));
+        });
+        panels.forEach(p => {
+          p.classList.toggle('active-panel', p.getAttribute('data-route-panel') === r);
+        });
+      });
+    });
+  });
+
+  // Tap quizzes (Arrival & Exit)
+  document.querySelectorAll('[data-quiz]').forEach(quiz => {
+    const right = quiz.getAttribute('data-correct');
+    const explain = quiz.getAttribute('data-explain') || '';
+    const status = quiz.querySelector('[role="status"]');
+    quiz.querySelectorAll('[data-option]').forEach(opt => {
+      opt.addEventListener('click', () => {
+        const chosen = opt.getAttribute('data-option');
+        if (chosen === right) {
+          status.textContent = 'Yes. ' + explain;
+        } else {
+          status.textContent = 'Try again. Check the diagram clue and choose another option.';
+        }
+      });
+    });
+  });
+
+  // Starter 4-step beatbox + vote
+  document.querySelectorAll('[data-beat]').forEach(box => {
+    let idx = 0;
+    const lights = Array.from(box.querySelectorAll('.ca-light'));
+    const status = box.querySelector('.beat-status');
+    function render(n) {
+      lights.forEach((l, i) => l.classList.toggle('lit', i < n));
+      if (status) status.textContent = n === 0 ? 'Ready: step 0 of ' + lights.length : 'Showing step ' + n + ' of ' + lights.length;
+    }
+    box.querySelector('[data-beat-next]')?.addEventListener('click', () => {
+      idx = Math.min(lights.length, idx + 1);
+      render(idx);
+    });
+    box.querySelector('[data-beat-all]')?.addEventListener('click', () => {
+      idx = lights.length;
+      render(idx);
+    });
+    box.querySelector('[data-beat-reset]')?.addEventListener('click', () => {
+      idx = 0;
+      render(idx);
+    });
+  });
+
+  // Step models (I do 1 & I do 2)
+  document.querySelectorAll('[data-step-model]').forEach(model => {
+    const steps = JSON.parse(model.getAttribute('data-steps') || '[]');
+    let cur = 0;
+    const cap = model.querySelector('.model-caption');
+    const items = Array.from(model.querySelectorAll('.v5-step'));
+    function update() {
+      if (cap && steps[cur]) cap.textContent = 'Step ' + (cur + 1) + ': ' + steps[cur];
+      items.forEach((el, i) => {
+        if (i <= cur) el.removeAttribute('hidden');
+        else el.setAttribute('hidden', '');
+      });
+    }
+    model.querySelector('[data-step-next]')?.addEventListener('click', () => {
+      cur = Math.min(steps.length - 1, cur + 1);
+      update();
+    });
+    model.querySelector('[data-step-reset]')?.addEventListener('click', () => {
+      cur = 0;
+      items.forEach((el, i) => {
+        if (i === 0) el.removeAttribute('hidden');
+        else el.setAttribute('hidden', '');
+      });
+      if (cap && steps[0]) cap.textContent = 'Step 1: ' + steps[0];
+    });
+  });
+
+  // We do 1 sort/match + 4-team points board
+  const scores = [0, 0, 0, 0];
+  function renderScores() {
+    scores.forEach((val, i) => {
+      const el = document.getElementById('score-' + i);
+      if (el) el.textContent = String(val);
+    });
+  }
+  document.querySelectorAll('[data-team-add]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const t = Number(btn.getAttribute('data-team-add'));
+      const pts = Number(btn.getAttribute('data-pts') || '1');
+      scores[t] = Math.max(0, scores[t] + pts);
+      renderScores();
+    });
+  });
+  document.getElementById('reset-points')?.addEventListener('click', () => {
+    for (let i = 0; i < 4; i++) scores[i] = 0;
+    renderScores();
+  });
+
+  document.querySelectorAll('[data-sort]').forEach(sortBox => {
+    const status = sortBox.querySelector('.sort-status');
+    sortBox.querySelector('[data-sort-check]')?.addEventListener('click', () => {
+      const selects = Array.from(sortBox.querySelectorAll('select[data-expected]'));
+      let rightCount = 0;
+      selects.forEach(s => {
+        if (s.value === s.getAttribute('data-expected')) rightCount++;
+      });
+      if (status) {
+        status.textContent = rightCount === selects.length
+          ? 'Yes. All ' + rightCount + ' matches are accurate. Award 1 point and ask for a scientific reason for +1 bonus point.'
+          : 'Try again. ' + rightCount + ' of ' + selects.length + ' matched so far.';
+      }
+    });
+    sortBox.querySelector('[data-sort-reset]')?.addEventListener('click', () => {
+      sortBox.querySelectorAll('select').forEach(s => { s.value = ''; });
+      if (status) status.textContent = 'Reset complete. Match each item and explain why.';
+    });
+  });
+
+  // We do 2 sequence ordering
+  document.querySelectorAll('[data-sequence]').forEach(seqBox => {
+    const list = seqBox.querySelector('ol');
+    const status = seqBox.querySelector('.seq-status');
+    seqBox.addEventListener('click', (e) => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      const li = btn.closest('li');
+      if (btn.hasAttribute('data-move-up') && li && li.previousElementSibling) {
+        list.insertBefore(li, li.previousElementSibling);
+      } else if (btn.hasAttribute('data-move-down') && li && li.nextElementSibling) {
+        list.insertBefore(li.nextElementSibling, li);
+      } else if (btn.hasAttribute('data-seq-check')) {
+        const items = Array.from(list.querySelectorAll('li'));
+        const ok = items.every((el, idx) => Number(el.getAttribute('data-order')) === idx);
+        if (status) {
+          status.textContent = ok
+            ? 'Yes. The sequence is in the right scientific order.'
+            : 'Try again. Check which step must happen first.';
+        }
+      }
+    });
+  });
+
+  // Print arming
+  window.printArm = function(route) {
+    document.querySelectorAll('.print-section').forEach(sec => {
+      sec.classList.toggle('visible', sec.getAttribute('data-print-route') === route);
+    });
+  };
+  document.querySelectorAll('[data-print-btn]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      window.printArm(btn.getAttribute('data-print-btn'));
+    });
+  });
+
+  window.showSlide(0);
+})();
+</script>
+</body>
+</html>

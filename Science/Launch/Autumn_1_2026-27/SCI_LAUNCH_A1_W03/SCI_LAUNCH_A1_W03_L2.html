@@ -1,0 +1,1331 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Lesson resource">
+  <title>Calculating magnification and unit conversions · SCI_LAUNCH_A1_W03_L2</title>
+  <style>
+:root {
+  --bg: #F7F4FA;
+  --surface: #FFFFFF;
+  --surface-tint: #ECE5F6;
+  --surface-warm: #FFF6D5;
+  --surface-green: #EDF5E8;
+  --surface-blue: #E6F2FA;
+  --ink: #111827;
+  --ink-secondary: #172033;
+  --accent: #3B2854;
+  --accent-border: #5B417A;
+  --pathway: #7A5C9E;
+}
+* { box-sizing: border-box; max-width: 100%; overflow-wrap: anywhere; }
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #F7F4FA;
+  color: #111827;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 24px;
+  line-height: 1.45;
+  overflow-x: hidden;
+}
+body.calm-view {
+  background-color: #FFFFFF;
+}
+body.high-contrast {
+  --bg: #FFFFFF;
+  --surface: #FFFFFF;
+  --surface-tint: #F3F5F7;
+  --surface-warm: #FFFFFF;
+  --surface-green: #FFFFFF;
+  --surface-blue: #FFFFFF;
+  --ink: #000000;
+  --ink-secondary: #000000;
+  --accent: #000000;
+  --accent-border: #000000;
+}
+a {
+  color: #111827;
+  background-color: #ECE5F6;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-weight: 700;
+  text-decoration: underline;
+}
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 8px;
+  background-color: #111827;
+  color: #FFFFFF;
+  padding: 10px 16px;
+  font-size: 24px;
+  z-index: 1000;
+}
+.skip-link:focus { left: 12px; }
+.lesson-topbar {
+  background-color: #FFFFFF;
+  color: #111827;
+  border-bottom: 4px solid #5B417A;
+  padding: 14px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.brand-cluster {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.brand-logo {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  border: 2px solid #5B417A;
+  border-radius: 8px;
+  background-color: #FFFFFF;
+}
+.pathway-pill {
+  background-color: #3B2854;
+  color: #FFFFFF;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 24px;
+  font-weight: 700;
+}
+.controls-bar {
+  background-color: #ECE5F6;
+  color: #111827;
+  border-bottom: 3px solid #5B417A;
+  padding: 12px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+button, select, textarea, input {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 24px;
+  line-height: 1.35;
+  color: #111827;
+  background-color: #FFFFFF;
+  border: 3px solid #3B2854;
+  border-radius: 10px;
+  padding: 8px 16px;
+}
+button {
+  cursor: pointer;
+  font-weight: 700;
+}
+button:hover, button:focus-visible {
+  background-color: #ECE5F6;
+  color: #111827;
+  outline: 3px solid #111827;
+}
+button[aria-pressed="true"], button.active-route {
+  background-color: #3B2854;
+  color: #FFFFFF;
+}
+.slide-deck {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 20px;
+}
+.slide {
+  display: none;
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 4px solid #5B417A;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.slide.active {
+  display: block;
+}
+.stage-pill {
+  display: inline-block;
+  background-color: #ECE5F6;
+  color: #111827;
+  border: 2px solid #5B417A;
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+h1, h2, h3, h4, p, li, th, td, summary, label, span, div {
+  font-size: 24px;
+  color: #111827;
+}
+h1 {
+  font-size: 36px;
+  margin: 8px 0 14px 0;
+  color: #111827;
+}
+h2 {
+  font-size: 30px;
+  margin: 12px 0;
+  color: #111827;
+}
+h3 {
+  font-size: 26px;
+  margin: 10px 0;
+  color: #111827;
+}
+.card, .ca-act, .task-box, .model-frame {
+  background-color: #F7F4FA;
+  color: #111827;
+  border: 3px solid #5B417A;
+  border-radius: 14px;
+  padding: 18px;
+  margin: 16px 0;
+}
+.card-warm {
+  background-color: #FFF6D5;
+  color: #111827;
+  border: 3px solid #5B417A;
+  border-radius: 14px;
+  padding: 18px;
+  margin: 16px 0;
+}
+.card-green {
+  background-color: #EDF5E8;
+  color: #111827;
+  border: 3px solid #3B2854;
+  border-radius: 14px;
+  padding: 18px;
+  margin: 16px 0;
+}
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 18px;
+}
+.ca-pic {
+  width: 100%;
+  max-width: 920px;
+  height: auto;
+  display: block;
+  margin: 12px auto;
+  background-color: #FFFFFF;
+  border-radius: 12px;
+}
+.ca-beatbox {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: 12px;
+  margin: 14px 0;
+}
+.ca-light {
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 3px solid #5B417A;
+  border-radius: 12px;
+  padding: 14px;
+}
+.ca-light.lit {
+  background-color: #FFF6D5;
+  color: #111827;
+  border-color: #111827;
+  border-width: 4px;
+}
+.status-box {
+  background-color: #ECE5F6;
+  color: #111827;
+  border: 3px solid #3B2854;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-top: 12px;
+  font-weight: 700;
+}
+.route-panel {
+  display: none;
+}
+.route-panel.active-panel {
+  display: block;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0;
+  background-color: #FFFFFF;
+  color: #111827;
+}
+th, td {
+  border: 2px solid #3B2854;
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 24px;
+  color: #111827;
+  background-color: #FFFFFF;
+}
+th {
+  background-color: #ECE5F6;
+  color: #111827;
+  font-weight: 700;
+}
+details {
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 2px solid #5B417A;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin: 10px 0;
+}
+summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: #111827;
+}
+textarea {
+  width: 100%;
+  margin-top: 8px;
+}
+.slide-footer {
+  margin-top: 20px;
+  padding-top: 12px;
+  border-top: 2px solid #5B417A;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-weight: 700;
+  color: #111827;
+}
+dialog {
+  max-width: 1100px;
+  width: 92vw;
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 4px solid #3B2854;
+  border-radius: 16px;
+  padding: 24px;
+}
+.print-section {
+  display: none;
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 3px solid #3B2854;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 1200px;
+}
+.print-section.visible {
+  display: block;
+}
+@media (max-width: 640px) {
+  .lesson-topbar, .controls-bar, .slide-deck {
+    padding: 10px;
+  }
+  .slide {
+    padding: 14px;
+  }
+  button, select {
+    width: 100%;
+  }
+}
+</style>
+</head>
+<body>
+  <a class="skip-link" href="#lessonDeck">Skip to lesson stage</a>
+  <header class="lesson-topbar">
+    <div class="brand-cluster">
+      <img src="approved-mark.jpg" alt="Made by Matt approved mark" class="brand-logo">
+      <div>
+        <span class="pathway-pill">SUMMIT · SCIENCE</span>
+        <span style="margin-left:10px;font-weight:700;">Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W03_L2)</span>
+      </div>
+    </div>
+    <div><strong>Made by Matt</strong></div>
+  </header>
+  <nav class="controls-bar" aria-label="Lesson controls">
+    <button type="button" id="prev-btn">◀ Previous</button>
+    <button type="button" id="next-btn">Next ▶</button>
+    <label for="stage-picker">Stage</label>
+    <select id="stage-picker"><option value="0">1. Opening</option><option value="1">2. Arrival task</option><option value="2">3. Starter</option><option value="3">4. I do 1</option><option value="4">5. We do 1</option><option value="5">6. I do 2</option><option value="6">7. We do 2</option><option value="7">8. You do</option><option value="8">9. Review and improve</option><option value="9">10. Exit ticket</option></select>
+    <button type="button" data-open-dialog="pause-dialog">Pause</button>
+    <button type="button" data-toggle="calm" aria-pressed="false">Calm view</button>
+    <button type="button" data-toggle="high-contrast" aria-pressed="false">High contrast</button>
+    <button type="button" data-toggle="reduce-motion" aria-pressed="false">Reduce motion</button>
+    <button type="button" data-open-dialog="ta-dialog" data-action="ta">TA brief</button>
+    <button type="button" data-open-dialog="guidance-dialog" id="sc1-guidance">Guidance</button>
+    <button type="button" data-print-btn="supported">Print Supported</button>
+    <button type="button" data-print-btn="independent">Print Independent</button>
+    <button type="button" data-print-btn="aspire">Print Aspire</button>
+  </nav>
+  <p id="stage-status" role="status" style="padding:4px 20px;margin:0;font-weight:700;">Stage 1 of 10: Opening</p>
+  <main id="lessonDeck" class="slide-deck" tabindex="-1">
+
+        <section class="slide active" id="slide-1" data-stage="Opening" aria-hidden="false">
+          <span class="stage-pill">Stage 1 · Opening</span>
+          <h1>Calculating magnification and unit conversions</h1>
+
+    <div class="grid-2">
+      <div class="card">
+        <p><strong>Learning intention:</strong> Calculate magnification, image size and actual size using the magnification equation and convert accurately between millimetres (mm) and micrometres (µm).</p>
+        <h3>Today I can</h3>
+        <ul>
+          <li>I can state and rearrange the magnification equation (Magnification = Image size ÷ Actual size).</li><li>I can convert between millimetres (mm) and micrometres (µm) using ×1000 and ÷1000 before dividing.</li><li>I can set out a four-line calculation and record lens, image and actual sizes in a structured data table.</li>
+        </ul>
+        <p><strong>Work in your book first.</strong> Point, speak, sign, draw, type, write or direct an adult. You may pass.</p>
+      </div>
+      <div class="card">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" class="ca-pic" role="img" aria-labelledby="svg-opening-all-title svg-opening-all-desc"><title id="svg-opening-all-title">Three-panel model: magnification formula triangle (I = A × M), unit conversion bridge (1 mm = 1000 µm), and 4-line working.</title><desc id="svg-opening-all-desc">High-contrast teaching diagram with three labelled panels.</desc><rect x="0" y="0" width="960" height="300" fill="#ffffff" stroke="#5B417A" stroke-width="4" rx="14"/><rect x="24" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="168" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 1 · Formula</text><polygon points="168,85 103,172 233,172" fill="#ffffff" stroke="#111827" stroke-width="4"/><line x1="135" y1="130" x2="201" y2="130" stroke="#111827" stroke-width="3"/><line x1="168" y1="130" x2="168" y2="172" stroke="#111827" stroke-width="3"/><text x="168" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">I</text><text x="146" y="162" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">A</text><text x="190" y="162" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">M</text><text x="168" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Image = Actual × Mag</text><text x="168" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Mag = Image ÷ Actual</text><rect x="336" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="480" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 2 · Unit bridge</text><rect x="415" y="90" width="130" height="80" rx="14" fill="#ffffff" stroke="#111827" stroke-width="4"/><circle cx="460" cy="130" r="18" fill="#3B2854"/><ellipse cx="505" cy="135" rx="22" ry="14" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="480" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">1 mm = 1000 µm</text><text x="480" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">mm × 1000 -&gt; µm</text><rect x="648" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="792" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 3 · 4-line work</text><rect x="757" y="88" width="70" height="22" rx="4" fill="#ffffff" stroke="#111827" stroke-width="3"/><line x1="792" y1="110" x2="792" y2="150" stroke="#111827" stroke-width="6"/><rect x="737" y="150" width="110" height="14" fill="#3B2854"/><circle cx="792" cy="172" r="10" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="792" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">40 mm ÷ 0.1 mm = ×400</text><text x="792" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">No unit on magnification</text></svg>
+        <p><strong>Model clue:</strong> Three-panel model: magnification formula triangle (I = A × M), unit conversion bridge (1 mm = 1000 µm), and 4-line working.</p>
+      </div>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W03_L2)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-2" data-stage="Arrival task" aria-hidden="true">
+          <span class="stage-pill">Stage 2 · Arrival task</span>
+          <h2>Arrival recall and picture check</h2>
+
+    <div class="card">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" class="ca-pic" role="img" aria-labelledby="svg-arrival-0-title svg-arrival-0-desc"><title id="svg-arrival-0-title">Arrival picture clue: Panel 1 shows Image size on top of the triangle; Panel 2 shows 1 mm × 1000 = 1000 µm.</title><desc id="svg-arrival-0-desc">High-contrast teaching diagram with three labelled panels.</desc><rect x="0" y="0" width="960" height="300" fill="#ffffff" stroke="#5B417A" stroke-width="4" rx="14"/><rect x="24" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="168" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 1 · Formula</text><polygon points="168,85 103,172 233,172" fill="#ffffff" stroke="#111827" stroke-width="4"/><line x1="135" y1="130" x2="201" y2="130" stroke="#111827" stroke-width="3"/><line x1="168" y1="130" x2="168" y2="172" stroke="#111827" stroke-width="3"/><text x="168" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">I</text><text x="146" y="162" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">A</text><text x="190" y="162" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">M</text><text x="168" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Image = Actual × Mag</text><text x="168" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Mag = Image ÷ Actual</text><rect x="336" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="480" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 2 · Unit bridge</text><rect x="415" y="90" width="130" height="80" rx="14" fill="#ffffff" stroke="#111827" stroke-width="4"/><circle cx="460" cy="130" r="18" fill="#3B2854"/><ellipse cx="505" cy="135" rx="22" ry="14" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="480" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">1 mm = 1000 µm</text><text x="480" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">mm × 1000 -&gt; µm</text><rect x="648" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="792" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 3 · 4-line work</text><rect x="757" y="88" width="70" height="22" rx="4" fill="#ffffff" stroke="#111827" stroke-width="3"/><line x1="792" y1="110" x2="792" y2="150" stroke="#111827" stroke-width="6"/><rect x="737" y="150" width="110" height="14" fill="#3B2854"/><circle cx="792" cy="172" r="10" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="792" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">40 mm ÷ 0.1 mm = ×400</text><text x="792" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">No unit on magnification</text></svg>
+      <p>Use the picture first. Question 1 works directly from the picture labels above.</p>
+    </div>
+
+        <div class="ca-act" data-quiz data-correct="2" data-explain="Panel 2 shows 1 mm = 1000 µm (multiply millimetres by 1000 to convert to micrometres).">
+          <p><strong>Arrival check 1:</strong> Look at Panel 2 of the diagram. How many micrometres (µm) are in 1 millimetre (mm)?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">10 µm</button><button type="button" data-option="1">100 µm</button><button type="button" data-option="2">1000 µm</button></div>
+          <p class="status-box" role="status">Choose an option to check your recall.</p>
+        </div>
+
+        <div class="ca-act" data-quiz data-correct="0" data-explain="Total magnification = eyepiece × objective = 10 × 40 = ×400.">
+          <p><strong>Arrival check 2:</strong> Recall from Lesson 1: what is the total magnification when a ×10 eyepiece lens is used with a ×40 objective lens?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">×400</button><button type="button" data-option="1">×50</button><button type="button" data-option="2">×4</button></div>
+          <p class="status-box" role="status">Choose an option to check your recall.</p>
+        </div>
+
+        <div class="ca-act" data-quiz data-correct="0" data-explain="Magnification enlarges the image; resolution is the smallest distance between two points that can still be seen as separate.">
+          <p><strong>Arrival check 3:</strong> Recall from Lesson 1: what is the difference between magnification and resolution?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">Magnification makes an image larger; resolution distinguishes two close points as separate.</button><button type="button" data-option="1">Magnification adds colour stain; resolution moves the stage.</button><button type="button" data-option="2">Magnification and resolution mean the exact same thing.</button></div>
+          <p class="status-box" role="status">Choose an option to check your recall.</p>
+        </div>
+
+    <div class="route-group">
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;"><button type="button" class="route-btn active-route" data-route-btn="supported" aria-pressed="true">Supported</button><button type="button" class="route-btn" data-route-btn="independent" aria-pressed="false">Independent</button><button type="button" class="route-btn" data-route-btn="aspire" aria-pressed="false">Aspire</button></div>
+      <div class="route-panel active-panel" data-route-panel="supported" id="arrival-supported"><h3>Supported route</h3>
+            <div class="task-box">
+              <p><strong>1. Look at Panel 1. Which quantity is at the top of the formula triangle?</strong></p>
+              <details><summary>Help with this question</summary><p>Read the top letter in the Panel 1 triangle.</p></details>
+              <button type="button" data-reveal="arr-supported-1">Reveal answer after responding</button>
+              <p id="arr-supported-1" hidden><strong>Check:</strong> Image size (I).</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>2. Look at Panel 2. Do you multiply or divide by 1000 to change mm into µm?</strong></p>
+              <details><summary>Help with this question</summary><p>Follow the top arrow in Panel 2.</p></details>
+              <button type="button" data-reveal="arr-supported-2">Reveal answer after responding</button>
+              <p id="arr-supported-2" hidden><strong>Check:</strong> Multiply by 1000 (×1000).</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>3. Recall Lesson 1: which objective lens (×4, ×10 or ×40) do you use first?</strong></p>
+              <details><summary>Help with this question</summary><p>Low power gives the widest field of view.</p></details>
+              <button type="button" data-reveal="arr-supported-3">Reveal answer after responding</button>
+              <p id="arr-supported-3" hidden><strong>Check:</strong> The ×4 low-power objective lens.</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>4. If a drawing is 10 times bigger than the real cell, is the drawing larger or smaller than the real cell?</strong></p>
+              <details><summary>Help with this question</summary><p>Magnification &gt; ×1 makes the image larger than life.</p></details>
+              <button type="button" data-reveal="arr-supported-4">Reveal answer after responding</button>
+              <p id="arr-supported-4" hidden><strong>Check:</strong> Larger.</p>
+            </div>
+            </div><div class="route-panel" data-route-panel="independent" id="arrival-independent"><h3>Independent route</h3>
+            <div class="task-box">
+              <p><strong>1. Write the equation linking magnification, image size and actual size, then rearrange it to find actual size.</strong></p>
+              <details><summary>Help with this question</summary><p>Use panel 1.</p></details>
+              <button type="button" data-reveal="arr-independent-1">Reveal answer after responding</button>
+              <p id="arr-independent-1" hidden><strong>Check:</strong> Magnification = Image size ÷ Actual size; Actual size = Image size ÷ Magnification.</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>2. Convert 36 mm into micrometres (µm), and convert 90 µm into millimetres (mm).</strong></p>
+              <details><summary>Help with this question</summary><p>Use ×1000 and ÷1000.</p></details>
+              <button type="button" data-reveal="arr-independent-2">Reveal answer after responding</button>
+              <p id="arr-independent-2" hidden><strong>Check:</strong> 36 mm × 1000 = 36,000 µm; 90 µm ÷ 1000 = 0.09 mm.</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>3. Why does a magnification calculation go wrong if image size is in mm and actual size is in µm?</strong></p>
+              <details><summary>Help with this question</summary><p>Both lengths must be in the same unit before dividing.</p></details>
+              <button type="button" data-reveal="arr-independent-3">Reveal answer after responding</button>
+              <p id="arr-independent-3" hidden><strong>Check:</strong> Because you are dividing two different units; one length is 1000 times larger per unit than the other.</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>4. Look at Panel 3. Why does the answer ×400 have no mm or µm unit?</strong></p>
+              <details><summary>Help with this question</summary><p>mm ÷ mm cancels.</p></details>
+              <button type="button" data-reveal="arr-independent-4">Reveal answer after responding</button>
+              <p id="arr-independent-4" hidden><strong>Check:</strong> Magnification is a ratio of two lengths in the same unit, so the length units cancel out.</p>
+            </div>
+            </div><div class="route-panel" data-route-panel="aspire" id="arrival-aspire"><h3>Aspire route</h3>
+            <div class="task-box">
+              <p><strong>1. Convert 0.05 mm into micrometres (µm), and convert 250 nm into micrometres (µm) given 1 µm = 1000 nm.</strong></p>
+              <details><summary>Help with this question</summary><p>Each step down the metric scale (mm -&gt; µm -&gt; nm) multiplies by 1000.</p></details>
+              <button type="button" data-reveal="arr-aspire-1">Reveal answer after responding</button>
+              <p id="arr-aspire-1" hidden><strong>Check:</strong> 0.05 mm × 1000 = 50 µm; 250 nm ÷ 1000 = 0.25 µm.</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>2. A student claims &quot;50 mm ÷ 50 µm = ×1 because 50 ÷ 50 = 1.&quot; Spot the error and calculate the true magnification.</strong></p>
+              <details><summary>Help with this question</summary><p>Convert 50 mm to µm first.</p></details>
+              <button type="button" data-reveal="arr-aspire-2">Reveal answer after responding</button>
+              <p id="arr-aspire-2" hidden><strong>Check:</strong> The units do not match. 50 mm = 50,000 µm, so 50,000 µm ÷ 50 µm = ×1000.</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>3. Rearrange I = A × M to make (a) A the subject and (b) I the subject, and state the unit of each when I is measured in µm.</strong></p>
+              <details><summary>Help with this question</summary><p>Cover the unknown in the triangle.</p></details>
+              <button type="button" data-reveal="arr-aspire-3">Reveal answer after responding</button>
+              <p id="arr-aspire-3" hidden><strong>Check:</strong> (a) A = I ÷ M (in µm); (b) I = A × M (in µm).</p>
+            </div>
+
+            <div class="task-box">
+              <p><strong>4. An image is 45 mm wide at ×900 magnification. Calculate the actual size in µm.</strong></p>
+              <details><summary>Help with this question</summary><p>Convert mm to µm before or after dividing by 900.</p></details>
+              <button type="button" data-reveal="arr-aspire-4">Reveal answer after responding</button>
+              <p id="arr-aspire-4" hidden><strong>Check:</strong> 45 mm = 45,000 µm; 45,000 ÷ 900 = 50 µm (or 45 ÷ 900 = 0.05 mm = 50 µm).</p>
+            </div>
+            </div>
+    </div>
+    <div class="card-green">
+      <p><strong>Regulation check:</strong> choose a word or colour.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;">
+        <button type="button" data-regulation="Green · ready">Green · ready</button>
+        <button type="button" data-regulation="Amber · need an adjustment">Amber · need an adjustment</button>
+        <button type="button" data-regulation="Red · need a quiet pause">Red · need a quiet pause</button>
+      </div>
+      <p id="regulation-status" class="status-box" role="status">A private response or pass is welcome.</p>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W03_L2)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-3" data-stage="Starter" aria-hidden="true">
+          <span class="stage-pill">Stage 3 · Starter</span>
+          <h2>Starter · 4-beat model and retrieval</h2>
+
+    <div class="ca-act" data-beat>
+      <h3>Whiteboard 4-beat sequence</h3>
+      <div class="ca-beatbox"><div class="ca-light"><strong>Beat 1:</strong> Beat 1 · Identify the quantities: write down I (image size), A (actual size) and M (magnification).</div><div class="ca-light"><strong>Beat 2:</strong> Beat 2 · Match the units: convert mm to µm (×1000) so both lengths share the exact same unit.</div><div class="ca-light"><strong>Beat 3:</strong> Beat 3 · Substitute and calculate: divide or multiply using the formula triangle (M = I ÷ A or A = I ÷ M).</div><div class="ca-light"><strong>Beat 4:</strong> Beat 4 · Check unit and plausibility: magnification has a × sign and NO length unit; actual cell size needs mm or µm.</div></div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;">
+        <button type="button" data-beat-next>Next beat</button>
+        <button type="button" data-beat-all>Show all 4 beats</button>
+        <button type="button" data-beat-reset>Reset beats</button>
+      </div>
+      <p class="status-box beat-status" role="status">Ready: step 0 of 4</p>
+    </div>
+    <div class="ca-act ca-vote" data-quiz data-correct="0" data-explain="Magnification = Image size ÷ Actual size = 30 mm ÷ 0.15 mm = ×200, with no length unit.">
+      <h3>Class fingers or thumbs vote</h3>
+      <p><strong>An image of a cell is 30 mm across, and the actual cell is 0.15 mm across. What is the magnification?</strong></p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">1. ×200 (because 30 ÷ 0.15 = 200, with no length unit)</button><button type="button" data-option="1">2. 200 mm (because both measurements were in mm)</button><button type="button" data-option="2">3. ×4.5 (because 30 × 0.15 = 4.5)</button><button type="button" data-option="3">4. ×0.005 (because 0.15 ÷ 30 = 0.005)</button></div>
+      <p class="status-box" role="status">Hold up 1, 2, 3 or 4 fingers (or point), then tap to check.</p>
+    </div>
+
+        <div class="task-box">
+          <p><strong>Retrieval 1:</strong> How do you convert millimetres (mm) into micrometres (µm)?</p>
+          <details><summary>Clue</summary><p>1 mm = 1000 µm.</p></details>
+          <button type="button" data-reveal="starter-rev-1">Reveal answer</button>
+          <p id="starter-rev-1" hidden><strong>Answer:</strong> Multiply by 1000 (×1000).</p>
+        </div>
+
+        <div class="task-box">
+          <p><strong>Retrieval 2:</strong> How do you convert micrometres (µm) back into millimetres (mm)?</p>
+          <details><summary>Clue</summary><p>1000 µm = 1 mm.</p></details>
+          <button type="button" data-reveal="starter-rev-2">Reveal answer</button>
+          <p id="starter-rev-2" hidden><strong>Answer:</strong> Divide by 1000 (÷1000).</p>
+        </div>
+
+        <div class="task-box">
+          <p><strong>Retrieval 3:</strong> If you know the image size (I) and the magnification (M), how do you calculate the actual size (A)?</p>
+          <details><summary>Clue</summary><p>Cover A in the formula triangle.</p></details>
+          <button type="button" data-reveal="starter-rev-3">Reveal answer</button>
+          <p id="starter-rev-3" hidden><strong>Answer:</strong> Actual size = Image size ÷ Magnification (A = I ÷ M).</p>
+        </div>
+
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W03_L2)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-4" data-stage="I do 1" aria-hidden="true">
+          <span class="stage-pill">Stage 4 · I do 1</span>
+          <h2>I do 1 · Calculating magnification when units already match</h2>
+
+    <div class="card">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" class="ca-pic" role="img" aria-labelledby="svg-ido1-1-title svg-ido1-1-desc"><title id="svg-ido1-1-title">I do 1 · Calculating magnification when units already match</title><desc id="svg-ido1-1-desc">High-contrast teaching diagram with three labelled panels.</desc><rect x="0" y="0" width="960" height="300" fill="#ffffff" stroke="#5B417A" stroke-width="4" rx="14"/><rect x="24" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="168" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 1 · Formula</text><polygon points="168,85 103,172 233,172" fill="#ffffff" stroke="#111827" stroke-width="4"/><line x1="135" y1="130" x2="201" y2="130" stroke="#111827" stroke-width="3"/><line x1="168" y1="130" x2="168" y2="172" stroke="#111827" stroke-width="3"/><text x="168" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">I</text><text x="146" y="162" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">A</text><text x="190" y="162" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">M</text><text x="168" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Image = Actual × Mag</text><text x="168" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Mag = Image ÷ Actual</text><rect x="336" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="480" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 2 · Unit bridge</text><rect x="415" y="90" width="130" height="80" rx="14" fill="#ffffff" stroke="#111827" stroke-width="4"/><circle cx="460" cy="130" r="18" fill="#3B2854"/><ellipse cx="505" cy="135" rx="22" ry="14" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="480" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">1 mm = 1000 µm</text><text x="480" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">mm × 1000 -&gt; µm</text><rect x="648" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="792" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 3 · 4-line work</text><rect x="757" y="88" width="70" height="22" rx="4" fill="#ffffff" stroke="#111827" stroke-width="3"/><line x1="792" y1="110" x2="792" y2="150" stroke="#111827" stroke-width="6"/><rect x="737" y="150" width="110" height="14" fill="#3B2854"/><circle cx="792" cy="172" r="10" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="792" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">40 mm ÷ 0.1 mm = ×400</text><text x="792" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">No unit on magnification</text></svg>
+    </div>
+    <div class="model-frame" id="model-1" data-step-model data-steps="[&quot;Write the equation first: Magnification = Image size \u00f7 Actual size (M = I \u00f7 A).&quot;, &quot;Check the units of both lengths: Image size = 40 mm and Actual size = 0.10 mm (both are in mm, so no conversion is needed).&quot;, &quot;Substitute the numbers into the equation: Magnification = 40 \u00f7 0.10 = 400.&quot;, &quot;Write the final answer with a multiplication sign and no length unit: \u00d7400 (never 400 mm).&quot;]">
+      <h3>I do 1 · Calculating magnification when units already match</h3>
+      <p class="status-box model-caption" role="status">Step 1: Write the equation first: Magnification = Image size ÷ Actual size (M = I ÷ A).</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin:10px 0;">
+        <button type="button" data-step-next>Show next step</button>
+        <button type="button" data-step-reset>Reset model</button>
+      </div>
+      <ol><li class="v5-step" ><strong>Step 1:</strong> Write the equation first: Magnification = Image size ÷ Actual size (M = I ÷ A).</li><li class="v5-step" hidden><strong>Step 2:</strong> Check the units of both lengths: Image size = 40 mm and Actual size = 0.10 mm (both are in mm, so no conversion is needed).</li><li class="v5-step" hidden><strong>Step 3:</strong> Substitute the numbers into the equation: Magnification = 40 ÷ 0.10 = 400.</li><li class="v5-step" hidden><strong>Step 4:</strong> Write the final answer with a multiplication sign and no length unit: ×400 (never 400 mm).</li></ol>
+    </div>
+    <div class="card-warm">
+      <h3>Worked example 1</h3>
+      <p>Worked example 1 (Matched units): A photograph of a cheek cell measures 40 mm across. The actual cell is 0.10 mm across. Line 1 (Equation): Magnification = Image size ÷ Actual size. Line 2 (Units): Both values are in mm. Line 3 (Substitution): Magnification = 40 ÷ 0.10. Line 4 (Answer): ×400. Common mistake to avoid: never write &quot;400 mm&quot; for magnification, because the length units cancel out.</p>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W03_L2)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-5" data-stage="We do 1" aria-hidden="true">
+          <span class="stage-pill">Stage 5 · We do 1</span>
+          <h2>We do 1 · team sort and scientific reason</h2>
+
+    <div class="ca-act" data-sort>
+      <h3>Shared sort and reason challenge</h3>
+      <p><strong>Point rule:</strong> 1 point for an accurate match, plus 1 bonus point for a clear scientific reason.</p>
+
+        <div class="task-box">
+          <label for="sort-sel-0"><strong>1. Convert 0.02 mm to µm</strong></label>
+          <select id="sort-sel-0" data-expected="0.02 × 1000 = 20 µm"><option value="">Choose matching statement...</option><option value="0.02 × 1000 = 20 µm">0.02 × 1000 = 20 µm</option><option value="750 ÷ 1000 = 0.75 mm">750 ÷ 1000 = 0.75 mm</option><option value="Magnification = 30 ÷ 0.15 = ×200">Magnification = 30 ÷ 0.15 = ×200</option><option value="Actual size = 25,000 ÷ 500 = 50 µm (0.05 mm)">Actual size = 25,000 ÷ 500 = 50 µm (0.05 mm)</option></select>
+        </div>
+
+        <div class="task-box">
+          <label for="sort-sel-1"><strong>2. Convert 750 µm to mm</strong></label>
+          <select id="sort-sel-1" data-expected="750 ÷ 1000 = 0.75 mm"><option value="">Choose matching statement...</option><option value="0.02 × 1000 = 20 µm">0.02 × 1000 = 20 µm</option><option value="750 ÷ 1000 = 0.75 mm">750 ÷ 1000 = 0.75 mm</option><option value="Magnification = 30 ÷ 0.15 = ×200">Magnification = 30 ÷ 0.15 = ×200</option><option value="Actual size = 25,000 ÷ 500 = 50 µm (0.05 mm)">Actual size = 25,000 ÷ 500 = 50 µm (0.05 mm)</option></select>
+        </div>
+
+        <div class="task-box">
+          <label for="sort-sel-2"><strong>3. Image 30 mm, actual 0.15 mm</strong></label>
+          <select id="sort-sel-2" data-expected="Magnification = 30 ÷ 0.15 = ×200"><option value="">Choose matching statement...</option><option value="0.02 × 1000 = 20 µm">0.02 × 1000 = 20 µm</option><option value="750 ÷ 1000 = 0.75 mm">750 ÷ 1000 = 0.75 mm</option><option value="Magnification = 30 ÷ 0.15 = ×200">Magnification = 30 ÷ 0.15 = ×200</option><option value="Actual size = 25,000 ÷ 500 = 50 µm (0.05 mm)">Actual size = 25,000 ÷ 500 = 50 µm (0.05 mm)</option></select>
+        </div>
+
+        <div class="task-box">
+          <label for="sort-sel-3"><strong>4. Image 25 mm (25,000 µm), magnification ×500</strong></label>
+          <select id="sort-sel-3" data-expected="Actual size = 25,000 ÷ 500 = 50 µm (0.05 mm)"><option value="">Choose matching statement...</option><option value="0.02 × 1000 = 20 µm">0.02 × 1000 = 20 µm</option><option value="750 ÷ 1000 = 0.75 mm">750 ÷ 1000 = 0.75 mm</option><option value="Magnification = 30 ÷ 0.15 = ×200">Magnification = 30 ÷ 0.15 = ×200</option><option value="Actual size = 25,000 ÷ 500 = 50 µm (0.05 mm)">Actual size = 25,000 ÷ 500 = 50 µm (0.05 mm)</option></select>
+        </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;">
+        <button type="button" data-sort-check>Check matches</button>
+        <button type="button" data-sort-reset>Reset matches</button>
+      </div>
+      <p class="status-box sort-status" role="status">Match each term to its scientific explanation.</p>
+    </div>
+    <div class="card" id="ca-points-modal">
+      <h3>Four-team points board</h3>
+      <div class="grid-2">
+        <div class="card" style="margin:0;">
+          <h4>Circles: <span id="score-0">0</span> pts</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <button type="button" data-team-add="0" data-pts="1">+1 Match</button>
+            <button type="button" data-team-add="0" data-pts="1">+1 Reason</button>
+            <button type="button" data-team-add="0" data-pts="-1">-1</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin:0;">
+          <h4>Squares: <span id="score-1">0</span> pts</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <button type="button" data-team-add="1" data-pts="1">+1 Match</button>
+            <button type="button" data-team-add="1" data-pts="1">+1 Reason</button>
+            <button type="button" data-team-add="1" data-pts="-1">-1</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin:0;">
+          <h4>Triangles: <span id="score-2">0</span> pts</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <button type="button" data-team-add="2" data-pts="1">+1 Match</button>
+            <button type="button" data-team-add="2" data-pts="1">+1 Reason</button>
+            <button type="button" data-team-add="2" data-pts="-1">-1</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin:0;">
+          <h4>Diamonds: <span id="score-3">0</span> pts</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <button type="button" data-team-add="3" data-pts="1">+1 Match</button>
+            <button type="button" data-team-add="3" data-pts="1">+1 Reason</button>
+            <button type="button" data-team-add="3" data-pts="-1">-1</button>
+          </div>
+        </div>
+        </div>
+      <button type="button" id="reset-points" style="margin-top:12px;">Reset points board</button>
+    </div>
+    <details class="participation-loop">
+      <summary>Where what you say changes something · optional</summary>
+      <p>Point, sign, say or show an observation, question or access need. You may pass or speak privately.</p>
+      <p>The adult says what can change, makes one agreed adjustment if possible, and checks whether it helped.</p>
+    </details>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W03_L2)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-6" data-stage="I do 2" aria-hidden="true">
+          <span class="stage-pill">Stage 6 · I do 2</span>
+          <h2>I do 2 · Converting mixed units (mm and µm) and rearranging for actual size</h2>
+
+    <div class="card">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" class="ca-pic" role="img" aria-labelledby="svg-ido2-2-title svg-ido2-2-desc"><title id="svg-ido2-2-title">I do 2 · Converting mixed units (mm and µm) and rearranging for actual size</title><desc id="svg-ido2-2-desc">High-contrast teaching diagram with three labelled panels.</desc><rect x="0" y="0" width="960" height="300" fill="#ffffff" stroke="#5B417A" stroke-width="4" rx="14"/><rect x="24" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="168" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 1 · Formula</text><polygon points="168,85 103,172 233,172" fill="#ffffff" stroke="#111827" stroke-width="4"/><line x1="135" y1="130" x2="201" y2="130" stroke="#111827" stroke-width="3"/><line x1="168" y1="130" x2="168" y2="172" stroke="#111827" stroke-width="3"/><text x="168" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">I</text><text x="146" y="162" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">A</text><text x="190" y="162" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">M</text><text x="168" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Image = Actual × Mag</text><text x="168" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Mag = Image ÷ Actual</text><rect x="336" y="22" width="288" height="256" rx="12" fill="#F7F4FA" stroke="#5B417A" stroke-width="3"/><text x="480" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 2 · Unit bridge</text><rect x="415" y="90" width="130" height="80" rx="14" fill="#ffffff" stroke="#111827" stroke-width="4"/><circle cx="460" cy="130" r="18" fill="#3B2854"/><ellipse cx="505" cy="135" rx="22" ry="14" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="480" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">1 mm = 1000 µm</text><text x="480" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">mm × 1000 -&gt; µm</text><rect x="648" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="792" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 3 · 4-line work</text><rect x="757" y="88" width="70" height="22" rx="4" fill="#ffffff" stroke="#111827" stroke-width="3"/><line x1="792" y1="110" x2="792" y2="150" stroke="#111827" stroke-width="6"/><rect x="737" y="150" width="110" height="14" fill="#3B2854"/><circle cx="792" cy="172" r="10" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="792" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">40 mm ÷ 0.1 mm = ×400</text><text x="792" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">No unit on magnification</text></svg>
+    </div>
+    <div class="model-frame" id="model-2" data-step-model data-steps="[&quot;Spot mixed units before touching the calculator: e.g. Image size = 50 mm, Actual size = 50 \u00b5m.&quot;, &quot;Convert the larger unit (mm) into the smaller unit (\u00b5m) by multiplying by 1000: 50 mm \u00d7 1000 = 50,000 \u00b5m.&quot;, &quot;Substitute matched units into M = I \u00f7 A: Magnification = 50,000 \u00b5m \u00f7 50 \u00b5m = \u00d71000.&quot;, &quot;When finding Actual size (A = I \u00f7 M), convert I into \u00b5m first so your answer comes out directly in \u00b5m.&quot;]">
+      <h3>I do 2 · Converting mixed units (mm and µm) and rearranging for actual size</h3>
+      <p class="status-box model-caption" role="status">Step 1: Spot mixed units before touching the calculator: e.g. Image size = 50 mm, Actual size = 50 µm.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin:10px 0;">
+        <button type="button" data-step-next>Show next step</button>
+        <button type="button" data-step-reset>Reset model</button>
+      </div>
+      <ol><li class="v5-step" ><strong>Step 1:</strong> Spot mixed units before touching the calculator: e.g. Image size = 50 mm, Actual size = 50 µm.</li><li class="v5-step" hidden><strong>Step 2:</strong> Convert the larger unit (mm) into the smaller unit (µm) by multiplying by 1000: 50 mm × 1000 = 50,000 µm.</li><li class="v5-step" hidden><strong>Step 3:</strong> Substitute matched units into M = I ÷ A: Magnification = 50,000 µm ÷ 50 µm = ×1000.</li><li class="v5-step" hidden><strong>Step 4:</strong> When finding Actual size (A = I ÷ M), convert I into µm first so your answer comes out directly in µm.</li></ol>
+    </div>
+    <div class="card-warm">
+      <h3>Worked example 2</h3>
+      <p>Worked example 2 (Mixed units + rearrangement): A student measures an onion cell image as 45 mm wide at a total magnification of ×900. Find the actual width of the cell in micrometres (µm). Line 1 (Equation): Actual size = Image size ÷ Magnification. Line 2 (Unit conversion): 45 mm × 1000 = 45,000 µm. Line 3 (Substitution): Actual size = 45,000 µm ÷ 900. Line 4 (Answer): 50 µm.</p>
+    </div>
+    <div class="ca-act" data-check data-quiz data-correct="0" data-explain="Card A is an error because 40 mm must be converted to 40,000 µm before dividing by 100 µm; the true magnification is ×400.">
+      <h3>Single-decision hinge check</h3>
+      <p><strong>Which of these four cards contains a scientific calculation error?</strong></p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">A. 40 mm ÷ 100 µm = ×0.4 (dividing millimetres by micrometres without converting units first)</button><button type="button" data-option="1">B. 40 mm = 40,000 µm, then 40,000 µm ÷ 100 µm = ×400</button><button type="button" data-option="2">C. Actual size = Image size ÷ Magnification</button></div>
+      <p class="status-box" role="status">Choose the scientifically accurate statement before moving on.</p>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W03_L2)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-7" data-stage="We do 2" aria-hidden="true">
+          <span class="stage-pill">Stage 7 · We do 2</span>
+          <h2>We do 2 · method order and data table</h2>
+
+    <div class="ca-act" data-sequence>
+      <h3>Order the scientific method or reasoning steps</h3>
+      <ol>
+        <li data-order="1" style="margin-bottom:10px;">
+          <span>Line 2 · Check the units and convert mm to µm (×1000) so both lengths match.</span>
+          <button type="button" data-move-up>Move up</button>
+          <button type="button" data-move-down>Move down</button>
+        </li>
+
+        <li data-order="0" style="margin-bottom:10px;">
+          <span>Line 1 · Write the correct equation (M = I ÷ A, A = I ÷ M, or I = A × M).</span>
+          <button type="button" data-move-up>Move up</button>
+          <button type="button" data-move-down>Move down</button>
+        </li>
+
+        <li data-order="2" style="margin-bottom:10px;">
+          <span>Line 3 · Substitute the matched numbers into the equation and calculate.</span>
+          <button type="button" data-move-up>Move up</button>
+          <button type="button" data-move-down>Move down</button>
+        </li>
+
+        <li data-order="3" style="margin-bottom:10px;">
+          <span>Line 4 · Write the final answer with × for magnification or µm/mm for length, and check plausibility.</span>
+          <button type="button" data-move-up>Move up</button>
+          <button type="button" data-move-down>Move down</button>
+        </li>
+        </ol>
+      <button type="button" data-seq-check>Check order</button>
+      <p class="status-box seq-status" role="status">Use move up and Move down to place the steps in order, then check.</p>
+    </div>
+    <div class="card">
+      <h3>Cell scale spreadsheet: lens pairs, image size, actual size and magnification</h3>
+      <table>
+        <thead><tr><th scope="col">Specimen</th><th scope="col">Eyepiece × Objective</th><th scope="col">Total mag (M)</th><th scope="col">Image size (I)</th><th scope="col">Actual size (A)</th></tr></thead>
+        <tbody><tr><td>Cheek cell A</td><td>×10 × ×40</td><td>×400</td><td>24 mm (24,000 µm)</td><td>60 µm (0.06 mm)</td></tr><tr><td>Onion epidermal cell</td><td>×10 × ×10</td><td>×100</td><td>25 mm (25,000 µm)</td><td>250 µm (0.25 mm)</td></tr><tr><td>Red blood cell</td><td>×10 × ×40</td><td>×400</td><td>3.2 mm (3,200 µm)</td><td>8 µm (0.008 mm)</td></tr><tr><td>Palisade mesophyll cell</td><td>×10 × ×40</td><td>×400</td><td>32 mm (32,000 µm)</td><td>80 µm (0.08 mm)</td></tr><tr><td>Bacterial cell (electron)</td><td>Electron micrograph</td><td>×10,000</td><td>20 mm (20,000 µm)</td><td>2 µm (0.002 mm)</td></tr></tbody>
+      </table>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W03_L2)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-8" data-stage="You do" aria-hidden="true">
+          <span class="stage-pill">Stage 8 · You do</span>
+          <h2>You do · independent tiered practice</h2>
+
+    <div class="card">
+      <p><strong>Work in your book first.</strong> Choose your route with an adult. Staff mark actual <strong>I · S · C</strong> beside each task.</p>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" class="ca-pic" role="img" aria-labelledby="svg-youdo-3-title svg-youdo-3-desc"><title id="svg-youdo-3-title">Three-panel model: magnification formula triangle (I = A × M), unit conversion bridge (1 mm = 1000 µm), and 4-line working.</title><desc id="svg-youdo-3-desc">High-contrast teaching diagram with three labelled panels.</desc><rect x="0" y="0" width="960" height="300" fill="#ffffff" stroke="#5B417A" stroke-width="4" rx="14"/><rect x="24" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="168" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 1 · Formula</text><polygon points="168,85 103,172 233,172" fill="#ffffff" stroke="#111827" stroke-width="4"/><line x1="135" y1="130" x2="201" y2="130" stroke="#111827" stroke-width="3"/><line x1="168" y1="130" x2="168" y2="172" stroke="#111827" stroke-width="3"/><text x="168" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">I</text><text x="146" y="162" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">A</text><text x="190" y="162" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">M</text><text x="168" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">Image = Actual × Mag</text><text x="168" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Mag = Image ÷ Actual</text><rect x="336" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="480" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 2 · Unit bridge</text><rect x="415" y="90" width="130" height="80" rx="14" fill="#ffffff" stroke="#111827" stroke-width="4"/><circle cx="460" cy="130" r="18" fill="#3B2854"/><ellipse cx="505" cy="135" rx="22" ry="14" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="480" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">1 mm = 1000 µm</text><text x="480" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">mm × 1000 -&gt; µm</text><rect x="648" y="22" width="288" height="256" rx="12" fill="#ECE5F6" stroke="#3B2854" stroke-width="5"/><text x="792" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Panel 3 · 4-line work</text><rect x="757" y="88" width="70" height="22" rx="4" fill="#ffffff" stroke="#111827" stroke-width="3"/><line x1="792" y1="110" x2="792" y2="150" stroke="#111827" stroke-width="6"/><rect x="737" y="150" width="110" height="14" fill="#3B2854"/><circle cx="792" cy="172" r="10" fill="#ECE5F6" stroke="#111827" stroke-width="3"/><text x="792" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#111827">40 mm ÷ 0.1 mm = ×400</text><text x="792" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">No unit on magnification</text></svg>
+    </div>
+    <div class="route-group">
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;"><button type="button" class="route-btn active-route" data-route-btn="supported" aria-pressed="true">Supported</button><button type="button" class="route-btn" data-route-btn="independent" aria-pressed="false">Independent</button><button type="button" class="route-btn" data-route-btn="choice" aria-pressed="false">Choice</button><button type="button" class="route-btn" data-route-btn="aspire" aria-pressed="false">Aspire</button></div>
+
+        <div class="route-panel active-panel" data-route-panel="supported" id="task-supported">
+          <h3>Supported route</h3>
+
+            <div class="task-box">
+              <p><strong>Task 1 (2 marks):</strong> Use magnification = Image size ÷ Actual size to calculate the magnification when: (a) Image = 40 mm, Actual = 0.2 mm; (b) Image = 60 mm, Actual = 0.3 mm.</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Both pairs are already in mm. Divide image by Actual and put a × sign.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-supported-1">Your answer</label><textarea id="yd-supported-1" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 2 (2 marks):</strong> Convert these lengths into micrometres (µm) by multiplying by 1000: (a) 5 mm; (b) 0.08 mm.</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Multiply each number by 1000.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-supported-2">Your answer</label><textarea id="yd-supported-2" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 3 (2 marks):</strong> Use actual size = Image size ÷ Magnification to find the actual size when an image is 24,000 µm wide at ×400 magnification.</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Divide 24,000 by 400 and include the unit µm.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-supported-3">Your answer</label><textarea id="yd-supported-3" rows="3"></textarea></details>
+            </div>
+
+          <details class="ca-make-tier">
+            <summary>Optional hands-on make-it choice (Supported)</summary>
+            <p>Use the physical 3-piece formula triangle card on your desk: cover the unknown letter (I, A or M) with a counter and read the calculation aloud to an adult.</p>
+          </details>
+        </div>
+
+        <div class="route-panel" data-route-panel="independent" id="task-independent">
+          <h3>Independent route</h3>
+
+            <div class="task-box">
+              <p><strong>Task 1 (3 marks):</strong> Set out four-line working to calculate the magnification of a palisade cell whose image is 32 mm long and whose actual length is 80 µm (3 marks).</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Convert 32 mm to 32,000 µm first, then divide by 80 µm.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-independent-1">Your answer</label><textarea id="yd-independent-1" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 2 (3 marks):</strong> A red blood cell image measures 3.2 mm across at a total magnification of ×400. Calculate the actual diameter of the red blood cell in µm (3 marks).</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Convert 3.2 mm to 3,200 µm, then rearrange A = I ÷ M.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-independent-2">Your answer</label><textarea id="yd-independent-2" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 3 (2 marks):</strong> A mitochondrion has an actual length of 2 µm and is viewed at ×15,000 magnification. Calculate the image length in µm and convert your answer to millimetres (mm) (2 marks).</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Use image size = Actual size × Magnification, then ÷1000 for mm.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-independent-3">Your answer</label><textarea id="yd-independent-3" rows="3"></textarea></details>
+            </div>
+
+          <details class="ca-make-tier">
+            <summary>Optional hands-on make-it choice (Independent)</summary>
+            <p>Measure 3 printed cell diagrams in millimetres with a ruler, convert each measurement to micrometres on a mini card, and calculate the actual cell size using the stated magnification.</p>
+          </details>
+        </div>
+
+        <div class="route-panel" data-route-panel="choice" id="task-choice">
+          <h3>Choice route</h3>
+
+            <div class="task-box">
+              <p><strong>Task 1 (2 marks):</strong> Complete three conversions: (a) 12 mm to µm; (b) 0.06 mm to µm; (c) 450 µm to mm.</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Use ×1000 for mm -&gt; µm and ÷1000 for µm -&gt; mm.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-choice-1">Your answer</label><textarea id="yd-choice-1" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 2 (3 marks):</strong> Calculate the actual size in µm of an onion cell whose image is 25 mm long under a ×10 eyepiece and ×10 objective lens.</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Find total magnification (10 × 10 = ×100), convert 25 mm to 25,000 µm, then divide.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-choice-2">Your answer</label><textarea id="yd-choice-2" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 3 (2 marks):</strong> Explain why writing &quot;Magnification = 400 mm&quot; loses a mark in an exam, and state how to write it properly.</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Think about what happens to units when you divide mm by mm.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-choice-3">Your answer</label><textarea id="yd-choice-3" rows="3"></textarea></details>
+            </div>
+
+          <details class="ca-make-tier">
+            <summary>Optional hands-on make-it choice (Choice)</summary>
+            <p>Sort the 6 calculation cards into two piles on your desk (Correct working versus Unit/Formula error) and write a 1-line correction for one error card.</p>
+          </details>
+        </div>
+
+        <div class="route-panel" data-route-panel="aspire" id="task-aspire">
+          <h3>Aspire route</h3>
+
+            <div class="task-box">
+              <p><strong>Task 1 (3 marks):</strong> A student views a cell using a ×10 eyepiece and a ×40 objective lens. The image measures 28 mm across. Calculate the actual size of the cell in micrometres (µm), showing all four lines of working (3 marks).</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>First calculate total magnification = 10 × 40 = ×400, convert 28 mm to 28,000 µm, then divide.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-aspire-1">Your answer</label><textarea id="yd-aspire-1" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 2 (3 marks):</strong> An electron micrograph shows a ribosome with an actual diameter of 25 nm (0.025 µm) magnified ×400,000. Calculate the diameter of the ribosome image in millimetres (mm) (3 marks).</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Use I = A × M in µm, then divide by 1000 to convert µm to mm.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-aspire-2">Your answer</label><textarea id="yd-aspire-2" rows="3"></textarea></details>
+            </div>
+
+            <div class="task-box">
+              <p><strong>Task 3 (2 marks):</strong> Complete a 3-row spreadsheet table for three specimens by checking that every row satisfies Total mag = Eyepiece × Objective and I (µm) = A (µm) × M, and explain how to spot a unit-mismatch error in a spreadsheet column (2 marks).</p>
+              <p><span>Staff I ☐ S ☐ C ☐</span></p>
+              <details><summary>Support cue</summary><p>Check that I ÷ A equals M when both are in µm.</p></details>
+              <details><summary>Optional typed response</summary><label for="yd-aspire-3">Your answer</label><textarea id="yd-aspire-3" rows="3"></textarea></details>
+            </div>
+
+          <details class="ca-make-tier">
+            <summary>Optional hands-on make-it choice (Aspire)</summary>
+            <p>Draw a scaled 5 cm cell diagram in your book with a 20 µm scale bar and calculate the exact magnification of your scale bar.</p>
+          </details>
+        </div>
+
+    </div>
+    <div class="card ca-make-overview">
+      <h3>Optional make-it station</h3>
+      <p>If writing is a barrier or after completing your book task, build the physical desk model using labelled cards, counters or arrows and explain it to an adult.</p>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W03_L2)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-9" data-stage="Review and improve" aria-hidden="true">
+          <span class="stage-pill">Stage 9 · Review and improve</span>
+          <h2>Review and improve · same-colour edit</h2>
+
+    <div class="card">
+      <h3>Check your work against the mark scheme</h3>
+      <p>Keep your original response visible. Tick each scientific point you included, then make one <strong>//</strong> edit in the same colour on the same page.</p>
+
+        <details>
+          <summary>Supported mark scheme</summary>
+          <table>
+            <thead><tr><th scope="col">Task</th><th scope="col">Creditworthy points</th><th scope="col">Marks</th></tr></thead>
+            <tbody><tr><td>1</td><td>(a) 40 ÷ 0.2 = ×200 (1); (b) 60 ÷ 0.3 = ×200 (1).</td><td>2</td></tr><tr><td>2</td><td>(a) 5,000 µm (1); (b) 80 µm (1).</td><td>2</td></tr><tr><td>3</td><td>24,000 ÷ 400 = 60 µm (2).</td><td>2</td></tr></tbody>
+          </table>
+        </details>
+
+        <details>
+          <summary>Independent mark scheme</summary>
+          <table>
+            <thead><tr><th scope="col">Task</th><th scope="col">Creditworthy points</th><th scope="col">Marks</th></tr></thead>
+            <tbody><tr><td>1</td><td>32 mm × 1000 = 32,000 µm (1); Magnification = 32,000 ÷ 80 (1); = ×400 with no unit (1).</td><td>3</td></tr><tr><td>2</td><td>3.2 mm × 1000 = 3,200 µm (1); Actual size = 3,200 ÷ 400 (1); = 8 µm (1).</td><td>3</td></tr><tr><td>3</td><td>Image size = 2 µm × 15,000 = 30,000 µm (1); 30,000 ÷ 1000 = 30 mm (1).</td><td>2</td></tr></tbody>
+          </table>
+        </details>
+
+        <details>
+          <summary>Aspire mark scheme</summary>
+          <table>
+            <thead><tr><th scope="col">Task</th><th scope="col">Creditworthy points</th><th scope="col">Marks</th></tr></thead>
+            <tbody><tr><td>1</td><td>Total magnification = 10 × 40 = ×400 (1); 28 mm = 28,000 µm (1); Actual size = 28,000 ÷ 400 = 70 µm (1).</td><td>3</td></tr><tr><td>2</td><td>Image size = 0.025 µm × 400,000 = 10,000 µm (2); 10,000 ÷ 1000 = 10 mm (1).</td><td>3</td></tr><tr><td>3</td><td>Verify all three rows satisfy M = I(µm) ÷ A(µm) (1); a result 1000× too small indicates mm was divided by µm without multiplying by 1000 (1).</td><td>2</td></tr></tbody>
+          </table>
+        </details>
+
+    </div>
+    <div class="card-green">
+      <h3>Three-step review checklist</h3>
+      <ol>
+        <li>Check that you used the accurate scientific term from the word list.</li>
+        <li>Link your statement to a measurement, calculation or diagram detail.</li>
+        <li>Write <strong>//</strong> and add one missing detail or unit in the same colour on the same page.</li>
+      </ol>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W03_L2)</span>
+          </footer>
+        </section>
+
+        <section class="slide" id="slide-10" data-stage="Exit ticket" aria-hidden="true">
+          <span class="stage-pill">Stage 10 · Exit ticket</span>
+          <h2>Exit ticket · evidence check</h2>
+
+
+        <div class="ca-act" data-quiz data-correct="0" data-explain="There are 1000 micrometres in 1 millimetre, so multiply mm by 1000.">
+          <p><strong>Exit check 1:</strong> How do you convert a measurement from millimetres (mm) to micrometres (µm)?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">Multiply by 1000 (×1000)</button><button type="button" data-option="1">Divide by 1000 (÷1000)</button><button type="button" data-option="2">Add 1000</button></div>
+          <p class="status-box" role="status">Select an option to check today's key learning.</p>
+        </div>
+
+        <div class="ca-act" data-quiz data-correct="1" data-explain="Magnification = 60 mm ÷ 0.2 mm = ×300 (with a × sign and no length unit).">
+          <p><strong>Exit check 2:</strong> A cell is 0.2 mm wide and its image is 60 mm wide. What is the magnification?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">300 mm</button><button type="button" data-option="1">×300</button><button type="button" data-option="2">×12</button></div>
+          <p class="status-box" role="status">Select an option to check today's key learning.</p>
+        </div>
+
+        <div class="ca-act" data-quiz data-correct="0" data-explain="Actual size = Image size ÷ Magnification = 45,000 µm ÷ 900 = 50 µm.">
+          <p><strong>Exit check 3:</strong> An image is 45 mm (45,000 µm) wide at ×900 magnification. What is the actual size in µm?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;"><button type="button" data-option="0">50 µm</button><button type="button" data-option="1">40,500 µm</button><button type="button" data-option="2">0.05 µm</button></div>
+          <p class="status-box" role="status">Select an option to check today's key learning.</p>
+        </div>
+
+    <div class="route-group">
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;"><button type="button" class="route-btn active-route" data-route-btn="supported" aria-pressed="true">Supported</button><button type="button" class="route-btn" data-route-btn="independent" aria-pressed="false">Independent</button><button type="button" class="route-btn" data-route-btn="aspire" aria-pressed="false">Aspire</button></div>
+      <div class="route-panel active-panel" data-route-panel="supported" id="exit-supported"><h3>Supported exit ticket</h3><div class="task-box"><p><strong>1. Write the magnification equation linking magnification, image size and actual size.</strong></p><details><summary>Expected point</summary><p>Magnification = Image size ÷ Actual size.</p></details></div><div class="task-box"><p><strong>2. Does magnification have a length unit (such as mm or µm)?</strong></p><details><summary>Expected point</summary><p>No — it is written with a × symbol (e.g. ×400).</p></details></div></div><div class="route-panel" data-route-panel="independent" id="exit-independent"><h3>Independent exit ticket</h3><div class="task-box"><p><strong>1. A cell is 0.2 mm wide and its image is 60 mm wide. Calculate the magnification.</strong></p><details><summary>Expected point</summary><p>60 ÷ 0.2 = ×300.</p></details></div><div class="task-box"><p><strong>2. Rearrange the magnification equation to make actual size the subject.</strong></p><details><summary>Expected point</summary><p>Actual size = Image size ÷ Magnification.</p></details></div></div><div class="route-panel" data-route-panel="aspire" id="exit-aspire"><h3>Aspire exit ticket</h3><div class="task-box"><p><strong>1. An image is 45 mm wide at ×900 magnification. Calculate the actual size in µm.</strong></p><details><summary>Expected point</summary><p>45 mm = 45,000 µm; 45,000 ÷ 900 = 50 µm.</p></details></div><div class="task-box"><p><strong>2. Explain why mixed mm and µm units must be converted before dividing.</strong></p><details><summary>Expected point</summary><p>Because 1 mm is 1000 times larger than 1 µm; dividing without converting makes the answer out by a factor of 1000.</p></details></div></div>
+    </div>
+    <div class="card">
+      <p><strong>Response modes:</strong> verbal · written · drawn · signed · symbol / choice-selected · demonstrated / re-attempt · adult-scribed. You may pass.</p>
+      <p><strong>Next lesson:</strong> Lesson 3 (SCI_LAUNCH_A1_W03_L3): Microscopy core practical lab, scale drawings and 6-mark exam skills.</p>
+    </div>
+
+          <footer class="slide-footer">
+            <span>Made by Matt</span>
+            <span>Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W03_L2)</span>
+          </footer>
+        </section>
+
+  </main>
+
+        <section class="print-section" id="print-supported" data-print-route="supported">
+          <h2>Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W03_L2) · Supported print pack</h2>
+          <p><strong>Learning intention:</strong> Calculate magnification, image size and actual size using the magnification equation and convert accurately between millimetres (mm) and micrometres (µm).</p>
+          <p><strong>1. Use Magnification = Image size ÷ Actual size to calculate the magnification when: (a) Image = 40 mm, Actual = 0.2 mm; (b) Image = 60 mm, Actual = 0.3 mm. (2 marks)</strong> — Cue: Both pairs are already in mm. Divide Image by Actual and put a × sign.</p><p><strong>2. Convert these lengths into micrometres (µm) by multiplying by 1000: (a) 5 mm; (b) 0.08 mm. (2 marks)</strong> — Cue: Multiply each number by 1000.</p><p><strong>3. Use Actual size = Image size ÷ Magnification to find the actual size when an image is 24,000 µm wide at ×400 magnification. (2 marks)</strong> — Cue: Divide 24,000 by 400 and include the unit µm.</p>
+          <p>Made by Matt</p>
+        </section>
+
+        <section class="print-section" id="print-independent" data-print-route="independent">
+          <h2>Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W03_L2) · Independent print pack</h2>
+          <p><strong>Learning intention:</strong> Calculate magnification, image size and actual size using the magnification equation and convert accurately between millimetres (mm) and micrometres (µm).</p>
+          <p><strong>1. Set out four-line working to calculate the magnification of a palisade cell whose image is 32 mm long and whose actual length is 80 µm (3 marks). (3 marks)</strong> — Cue: Convert 32 mm to 32,000 µm first, then divide by 80 µm.</p><p><strong>2. A red blood cell image measures 3.2 mm across at a total magnification of ×400. Calculate the actual diameter of the red blood cell in µm (3 marks). (3 marks)</strong> — Cue: Convert 3.2 mm to 3,200 µm, then rearrange A = I ÷ M.</p><p><strong>3. A mitochondrion has an actual length of 2 µm and is viewed at ×15,000 magnification. Calculate the image length in µm and convert your answer to millimetres (mm) (2 marks). (2 marks)</strong> — Cue: Use Image size = Actual size × Magnification, then ÷1000 for mm.</p>
+          <p>Made by Matt</p>
+        </section>
+
+        <section class="print-section" id="print-aspire" data-print-route="aspire">
+          <h2>Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W03_L2) · Aspire print pack</h2>
+          <p><strong>Learning intention:</strong> Calculate magnification, image size and actual size using the magnification equation and convert accurately between millimetres (mm) and micrometres (µm).</p>
+          <p><strong>1. A student views a cell using a ×10 eyepiece and a ×40 objective lens. The image measures 28 mm across. Calculate the actual size of the cell in micrometres (µm), showing all four lines of working (3 marks). (3 marks)</strong> — Cue: First calculate total magnification = 10 × 40 = ×400, convert 28 mm to 28,000 µm, then divide.</p><p><strong>2. An electron micrograph shows a ribosome with an actual diameter of 25 nm (0.025 µm) magnified ×400,000. Calculate the diameter of the ribosome image in millimetres (mm) (3 marks). (3 marks)</strong> — Cue: Use I = A × M in µm, then divide by 1000 to convert µm to mm.</p><p><strong>3. Complete a 3-row spreadsheet table for three specimens by checking that every row satisfies Total Mag = Eyepiece × Objective and I (µm) = A (µm) × M, and explain how to spot a unit-mismatch error in a spreadsheet column (2 marks). (2 marks)</strong> — Cue: Check that I ÷ A equals M when both are in µm.</p>
+          <p>Made by Matt</p>
+        </section>
+
+
+    <dialog id="ta-dialog" aria-labelledby="ta-dialog-title">
+      <h2 id="ta-dialog-title">TA Brief · Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W03_L2)</h2>
+      <p><strong>Learning intention:</strong> Calculate magnification, image size and actual size using the magnification equation and convert accurately between millimetres (mm) and micrometres (µm).</p>
+      <p><strong>At check-out, record E for today's lesson against each pupil's target on the evidence app.</strong></p>
+      <p class="ca-watch-staff"><strong>Watch (staff preview first): <a href="https://www.stem.org.uk/resources" target="_blank" rel="noopener noreferrer">Worked examples of I = A × M calculations and mm to µm conversions</a></strong></p>
+      <h3>Adult deployment and access support</h3>
+      <ul>
+        <li>Rehearse the three-panel picture at Arrival before independent tasks.</li>
+        <li>Invite a response in the learner's usual mode (verbal · written · drawn · signed · symbol / choice-selected · demonstrated / re-attempt · adult-scribed). Allow a pass.</li>
+        <li>Wait, point to the diagram detail, and rephrase before offering a content cue.</li>
+        <li>Record actual <strong>I · S · C</strong> beside each task in the book or sheet.</li>
+      </ul>
+      <p>Made by Matt</p>
+      <button type="button" data-close-dialog>Close TA brief</button>
+    </dialog>
+
+
+    <dialog id="guidance-dialog" aria-labelledby="guidance-dialog-title">
+      <h2 id="guidance-dialog-title">Teacher, Cover and SLT Guidance · Science · SUMMIT · Lesson 2 (SCI_LAUNCH_A1_W03_L2)</h2>
+      <p><strong>Scheme alignment:</strong> Row 34 · Topic 1 Key Concepts in Biology: Calculate magnification (I = A × M); links Maths; convert mm and µm; record in spreadsheet.</p>
+      <p><strong>At check-out, record E for today's lesson against each pupil's target on the evidence app.</strong></p>
+      <p class="ca-watch-staff"><strong>Watch (staff preview first): <a href="https://www.stem.org.uk/resources" target="_blank" rel="noopener noreferrer">Worked examples of I = A × M calculations and mm to µm conversions</a></strong></p>
+      <h3>Practical apparatus and safety</h3>
+      <p>Desk-based calculation and ruler measurement session; no chemical or biological hazard. Keep the magnification formula triangle and mm ↔ µm unit conversion bridge visible throughout the lesson as an access scaffold.</p>
+      <h3>P17 · Planned adaptations</h3>
+      <ul>
+        <li><strong>Cognition and learning:</strong> Rehearse one worked step at a time and fade one cue before the independent check.</li>
+        <li><strong>Communication and interaction:</strong> Accept pointing, signing, choice selection or adult scribing.</li>
+        <li><strong>Regulation:</strong> Use the quiet pause option and return to the last secure step.</li>
+        <li><strong>Sensory and physical:</strong> Offer high-contrast print cards and seated or adult-directed apparatus handling.</li>
+      </ul>
+      <h3>Key vocabulary</h3>
+      <table>
+        <thead><tr><th scope="col">Tier</th><th scope="col">Term</th><th scope="col">Meaning</th><th scope="col">Example</th></tr></thead>
+        <tbody><tr><td>Tier 2</td><td><strong>Rearrange</strong></td><td>Change the subject of an equation so the unknown quantity is on its own.</td><td>Rearrange M = I ÷ A to get Actual size = Image size ÷ Magnification.</td></tr><tr><td>Tier 2</td><td><strong>Consistent</strong></td><td>Using the same unit of measurement throughout a calculation.</td><td>Convert mm to µm so your units are consistent before dividing.</td></tr><tr><td>Tier 3</td><td><strong>Image size</strong></td><td>The measured size of a specimen on a drawing or photograph (usually measured in mm with a ruler).</td><td>Measure the image size in millimetres, then multiply by 1000 to get micrometres.</td></tr><tr><td>Tier 3</td><td><strong>Actual size</strong></td><td>The real-life size of the biological cell or organelle (usually expressed in µm).</td><td>Actual size = Image size ÷ Magnification.</td></tr><tr><td>Tier 3</td><td><strong>Micrometre (µm)</strong></td><td>One thousandth of a millimetre (1 mm = 1000 µm; 1 µm = 0.001 mm).</td><td>Most plant and animal cells are between 10 µm and 100 µm wide.</td></tr><tr><td>Tier 3</td><td><strong>Nanometre (nm)</strong></td><td>One thousandth of a micrometre (1 µm = 1000 nm).</td><td>Ribosomes are around 25 nm in diameter.</td></tr></tbody>
+      </table>
+      <p>Made by Matt</p>
+      <button type="button" data-close-dialog>Close guidance</button>
+    </dialog>
+
+
+    <dialog id="pause-dialog" aria-labelledby="pause-dialog-title">
+      <h2 id="pause-dialog-title">Quiet pause</h2>
+      <p>Take a quiet pause. Your work is kept safe on this page. Return to the last secure step and one small choice when you are ready.</p>
+      <p>Made by Matt</p>
+      <button type="button" data-close-dialog>Close and return to lesson</button>
+    </dialog>
+
+  <script>
+(function() {
+  window.classicCurrentSlide = 0;
+  window.soundEnabled = false;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.body.classList.add('no-motion');
+  }
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const picker = document.getElementById('stage-picker');
+  const statusEl = document.getElementById('stage-status');
+
+  window.showSlide = function(idx) {
+    const n = Math.max(0, Math.min(slides.length - 1, Number(idx) || 0));
+    window.classicCurrentSlide = n;
+    slides.forEach((s, i) => {
+      if (i === n) {
+        s.classList.add('active');
+        s.setAttribute('aria-hidden', 'false');
+      } else {
+        s.classList.remove('active');
+        s.setAttribute('aria-hidden', 'true');
+      }
+    });
+    if (picker) picker.value = String(n);
+    if (statusEl && slides[n]) {
+      statusEl.textContent = 'Stage ' + (n + 1) + ' of ' + slides.length + ': ' + (slides[n].getAttribute('data-stage') || '');
+    }
+  };
+
+  window.SCI_PROOF = function() {
+    return {
+      slideCount: slides.length,
+      currentSlide: window.classicCurrentSlide,
+      sound: window.soundEnabled
+    };
+  };
+
+  document.getElementById('prev-btn')?.addEventListener('click', () => window.showSlide(window.classicCurrentSlide - 1));
+  document.getElementById('next-btn')?.addEventListener('click', () => window.showSlide(window.classicCurrentSlide + 1));
+  picker?.addEventListener('change', (e) => window.showSlide(Number(e.target.value)));
+
+  document.addEventListener('keydown', (e) => {
+    const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+    if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+    if (e.key === 'ArrowRight') window.showSlide(window.classicCurrentSlide + 1);
+    if (e.key === 'ArrowLeft') window.showSlide(window.classicCurrentSlide - 1);
+    if (e.key === 'Escape') {
+      document.querySelectorAll('dialog[open]').forEach(d => d.close());
+    }
+  });
+
+  // View toggles
+  document.querySelectorAll('[data-toggle]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const mode = btn.getAttribute('data-toggle');
+      const pressed = btn.getAttribute('aria-pressed') === 'true';
+      btn.setAttribute('aria-pressed', String(!pressed));
+      if (mode === 'calm') document.body.classList.toggle('calm-view', !pressed);
+      if (mode === 'high-contrast') document.body.classList.toggle('high-contrast', !pressed);
+      if (mode === 'reduce-motion') document.body.classList.toggle('no-motion', !pressed);
+    });
+  });
+
+  // Dialog controls
+  document.querySelectorAll('[data-open-dialog]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const d = document.getElementById(btn.getAttribute('data-open-dialog'));
+      if (d && typeof d.showModal === 'function') d.showModal();
+      else if (d) d.setAttribute('open', '');
+    });
+  });
+  document.querySelectorAll('[data-close-dialog]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const d = btn.closest('dialog');
+      if (d && typeof d.close === 'function') d.close();
+      else if (d) d.removeAttribute('open');
+    });
+  });
+
+  // Reveal buttons
+  document.querySelectorAll('[data-reveal]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = document.getElementById(btn.getAttribute('data-reveal'));
+      if (target) {
+        const isHidden = target.hasAttribute('hidden');
+        if (isHidden) target.removeAttribute('hidden');
+        else target.setAttribute('hidden', '');
+      }
+    });
+  });
+
+  // Regulation check
+  document.querySelectorAll('[data-regulation]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const st = document.getElementById('regulation-status');
+      if (st) st.textContent = 'Logged: ' + btn.getAttribute('data-regulation') + '. Speak privately or pass at any time.';
+    });
+  });
+
+  // Route tabs (Arrival, You do, Exit)
+  document.querySelectorAll('.route-group').forEach(group => {
+    const buttons = group.querySelectorAll('[data-route-btn]');
+    const panels = group.querySelectorAll('.route-panel');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const r = btn.getAttribute('data-route-btn');
+        buttons.forEach(b => {
+          const match = b.getAttribute('data-route-btn') === r;
+          b.classList.toggle('active-route', match);
+          b.setAttribute('aria-pressed', String(match));
+        });
+        panels.forEach(p => {
+          p.classList.toggle('active-panel', p.getAttribute('data-route-panel') === r);
+        });
+      });
+    });
+  });
+
+  // Tap quizzes (Arrival & Exit)
+  document.querySelectorAll('[data-quiz]').forEach(quiz => {
+    const right = quiz.getAttribute('data-correct');
+    const explain = quiz.getAttribute('data-explain') || '';
+    const status = quiz.querySelector('[role="status"]');
+    quiz.querySelectorAll('[data-option]').forEach(opt => {
+      opt.addEventListener('click', () => {
+        const chosen = opt.getAttribute('data-option');
+        if (chosen === right) {
+          status.textContent = 'Yes. ' + explain;
+        } else {
+          status.textContent = 'Try again. Check the diagram clue and choose another option.';
+        }
+      });
+    });
+  });
+
+  // Starter 4-step beatbox + vote
+  document.querySelectorAll('[data-beat]').forEach(box => {
+    let idx = 0;
+    const lights = Array.from(box.querySelectorAll('.ca-light'));
+    const status = box.querySelector('.beat-status');
+    function render(n) {
+      lights.forEach((l, i) => l.classList.toggle('lit', i < n));
+      if (status) status.textContent = n === 0 ? 'Ready: step 0 of ' + lights.length : 'Showing step ' + n + ' of ' + lights.length;
+    }
+    box.querySelector('[data-beat-next]')?.addEventListener('click', () => {
+      idx = Math.min(lights.length, idx + 1);
+      render(idx);
+    });
+    box.querySelector('[data-beat-all]')?.addEventListener('click', () => {
+      idx = lights.length;
+      render(idx);
+    });
+    box.querySelector('[data-beat-reset]')?.addEventListener('click', () => {
+      idx = 0;
+      render(idx);
+    });
+  });
+
+  // Step models (I do 1 & I do 2)
+  document.querySelectorAll('[data-step-model]').forEach(model => {
+    const steps = JSON.parse(model.getAttribute('data-steps') || '[]');
+    let cur = 0;
+    const cap = model.querySelector('.model-caption');
+    const items = Array.from(model.querySelectorAll('.v5-step'));
+    function update() {
+      if (cap && steps[cur]) cap.textContent = 'Step ' + (cur + 1) + ': ' + steps[cur];
+      items.forEach((el, i) => {
+        if (i <= cur) el.removeAttribute('hidden');
+        else el.setAttribute('hidden', '');
+      });
+    }
+    model.querySelector('[data-step-next]')?.addEventListener('click', () => {
+      cur = Math.min(steps.length - 1, cur + 1);
+      update();
+    });
+    model.querySelector('[data-step-reset]')?.addEventListener('click', () => {
+      cur = 0;
+      items.forEach((el, i) => {
+        if (i === 0) el.removeAttribute('hidden');
+        else el.setAttribute('hidden', '');
+      });
+      if (cap && steps[0]) cap.textContent = 'Step 1: ' + steps[0];
+    });
+  });
+
+  // We do 1 sort/match + 4-team points board
+  const scores = [0, 0, 0, 0];
+  function renderScores() {
+    scores.forEach((val, i) => {
+      const el = document.getElementById('score-' + i);
+      if (el) el.textContent = String(val);
+    });
+  }
+  document.querySelectorAll('[data-team-add]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const t = Number(btn.getAttribute('data-team-add'));
+      const pts = Number(btn.getAttribute('data-pts') || '1');
+      scores[t] = Math.max(0, scores[t] + pts);
+      renderScores();
+    });
+  });
+  document.getElementById('reset-points')?.addEventListener('click', () => {
+    for (let i = 0; i < 4; i++) scores[i] = 0;
+    renderScores();
+  });
+
+  document.querySelectorAll('[data-sort]').forEach(sortBox => {
+    const status = sortBox.querySelector('.sort-status');
+    sortBox.querySelector('[data-sort-check]')?.addEventListener('click', () => {
+      const selects = Array.from(sortBox.querySelectorAll('select[data-expected]'));
+      let rightCount = 0;
+      selects.forEach(s => {
+        if (s.value === s.getAttribute('data-expected')) rightCount++;
+      });
+      if (status) {
+        status.textContent = rightCount === selects.length
+          ? 'Yes. All ' + rightCount + ' matches are accurate. Award 1 point and ask for a scientific reason for +1 bonus point.'
+          : 'Try again. ' + rightCount + ' of ' + selects.length + ' matched so far.';
+      }
+    });
+    sortBox.querySelector('[data-sort-reset]')?.addEventListener('click', () => {
+      sortBox.querySelectorAll('select').forEach(s => { s.value = ''; });
+      if (status) status.textContent = 'Reset complete. Match each item and explain why.';
+    });
+  });
+
+  // We do 2 sequence ordering
+  document.querySelectorAll('[data-sequence]').forEach(seqBox => {
+    const list = seqBox.querySelector('ol');
+    const status = seqBox.querySelector('.seq-status');
+    seqBox.addEventListener('click', (e) => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      const li = btn.closest('li');
+      if (btn.hasAttribute('data-move-up') && li && li.previousElementSibling) {
+        list.insertBefore(li, li.previousElementSibling);
+      } else if (btn.hasAttribute('data-move-down') && li && li.nextElementSibling) {
+        list.insertBefore(li.nextElementSibling, li);
+      } else if (btn.hasAttribute('data-seq-check')) {
+        const items = Array.from(list.querySelectorAll('li'));
+        const ok = items.every((el, idx) => Number(el.getAttribute('data-order')) === idx);
+        if (status) {
+          status.textContent = ok
+            ? 'Yes. The sequence is in the right scientific order.'
+            : 'Try again. Check which step must happen first.';
+        }
+      }
+    });
+  });
+
+  // Print arming
+  window.printArm = function(route) {
+    document.querySelectorAll('.print-section').forEach(sec => {
+      sec.classList.toggle('visible', sec.getAttribute('data-print-route') === route);
+    });
+  };
+  document.querySelectorAll('[data-print-btn]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      window.printArm(btn.getAttribute('data-print-btn'));
+    });
+  });
+
+  window.showSlide(0);
+})();
+</script>
+</body>
+</html>

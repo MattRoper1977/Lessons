@@ -74,6 +74,9 @@ LAND_A2_SCIENCE_TERMS = ('Science/Build/Autumn_2_2026-27/',
 # Exact new Public pack folders; the existing additive rule still requires each file pin.
 LAND_A2_SCIENCE_TERMS += ('Art/Build/ART_BUILD_A2_W05_P1/Public/', 'Art/Build/ART_BUILD_A2_W05_P2/Public/', 'Art/Build/ART_BUILD_A2_W06_P1/Public/', 'Art/Build/ART_BUILD_A2_W06_P2/Public/', 'Art/Grow/ART_GROW_A2_W05_P1/Public/', 'Art/Grow/ART_GROW_A2_W05_P2/Public/', 'Art/Grow/ART_GROW_A2_W06_P1/Public/', 'Art/Grow/ART_GROW_A2_W06_P2/Public/', 'Art/Grow/ART_GROW_A2_W07_P1/Public/', 'Art/Grow/ART_GROW_A2_W07_P2/Public/')
 
+# Autumn 1 AAA (Lessons #822, owner-approved 8 Nov 2026): the three Art Autumn 1 term folders, the same
+# rule as the Science Autumn 1 folders above -- status 'A' only, every file admitted by its own CATALOGUE_PINS digest.
+LAND_A2_SCIENCE_TERMS += ('Art/Build/Autumn_1_2026-27/', 'Art/Grow/Autumn_1_2026-27/', 'Art/Launch/Autumn_1_2026-27/')
 SOURCE = 'tools/humanities_resources/SOURCE_MANIFEST.json'
 DOWNLOADS = 'tools/humanities_resources/DOWNLOAD_MANIFEST.json'
 LABEL_EDITS = 'tools/humanities_resources/PUBLIC_LABEL_CHANGES.json'
