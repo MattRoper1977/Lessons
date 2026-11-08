@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="Lesson resource">
+<meta name="creator" content="Lesson resource">
+<meta name="mbm-edition" content="site">
+<title>Community Projects · All groups · Autumn 2 · Week 1 · COMMUNITY_A2_W01 · Plan the day out</title>
+<style>
+/* AAA shell · BUILD donor chassis (Science BUILD A2 W02 L1) re-pathed for Community Projects (all groups).
+   Values lifted from the donor's computed styles: page #f5f8fa, ink #1f2937, steel blue #4E7A9B,
+   timer amber #C9803B, way-home navy #161d3d, tool buttons #e2e8f0/#172033, card radius 20, 10px top rule. */
+:root{
+  --pathway:#4E7A9B; --pathway-dark:#2f5068; --navy:#161d3d; --ink:#1f2937; --muted:#475569;
+  --page:#f5f8fa; --card:#ffffff; --line:#d8e0e8; --tool:#e2e8f0; --tool-ink:#172033;
+  --timer:#C9803B;
+  --lo-bg:#e6f0e6; --lo-border:#4E7A9B;
+  --ido-bg:#f3e6da; --ido-border:#C9803B;
+  --wedo-bg:#e4edf2; --wedo-border:#4D82A0;
+  --task-bg:#f8f1d9; --task-border:#D8A63B;
+  --sc-bg:#faf4dd; --sc-border:#D8A63B;
+  --scaffold-bg:#e0f2fe; --scaffold-border:#38bdf8;
+  --fs:19px; --fit:1;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden}
+body{font-family:"Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--page);font-size:16px;line-height:1.36}
+.skip{position:absolute;left:-9999px;top:0}
+.skip:focus{left:8px;top:8px;z-index:9999;background:#fff;padding:8px 12px;border:3px solid var(--navy);border-radius:8px}
+button,select{font:inherit}
+:focus-visible{outline:4px solid var(--navy);outline-offset:2px}
+main.deck:focus,main.deck:focus-visible,.slide:focus{outline:none}
+
+/* ---------- timer pill (donor #auto-timer) ---------- */
+#auto-timer{position:fixed;top:10px;left:16px;height:48px;display:flex;align-items:center;gap:8px;padding:0 6px 0 12px;
+  background:#fff;border:2px solid var(--timer);border-radius:999px;box-shadow:0 4px 14px rgba(0,0,0,.12);color:var(--timer);font-weight:900;z-index:20}
+#auto-timer-display{font-size:1.1rem;min-width:54px;font-variant-numeric:tabular-nums}
+.at-btn{width:44px;height:44px;border:0;background:transparent;color:var(--timer);font-weight:700;font-size:16px;border-radius:10px;cursor:pointer}
+.at-btn:hover{background:#fbf1e6}
+#auto-timer.running{background:#fff8ef}
+#auto-timer.done{border-color:#b45309;color:#b45309}
+
+/* ---------- top bar (donor .review-top) ---------- */
+.review-top{position:fixed;top:10px;right:14px;display:flex;gap:7px;z-index:20;align-items:center}
+body.has-school-badge .review-top{right:270px}
+.review-top a,.review-top button{display:flex;align-items:center;height:44px;padding:9px 13px;border:0;border-radius:10px;font-weight:700;font-size:16px;
+  background:var(--tool);color:var(--tool-ink);box-shadow:0 4px 6px rgba(0,0,0,.12);cursor:pointer;text-decoration:none;white-space:nowrap}
+.review-top a.way-home{background:var(--navy);color:#fff}
+.review-top button:hover{background:#cbd5e1}
+
+/* ---------- deck + card (donor section.slide) ---------- */
+main.deck{position:fixed;top:68px;bottom:76px;left:50px;right:50px;max-width:1240px;margin:0 auto}
+.slide{display:none}
+.slide.active{display:flex;flex-direction:column;height:100%;background:var(--card);border-top:10px solid var(--pathway);border-radius:20px;
+  box-shadow:0 20px 50px rgba(0,0,0,.15);padding:10px 30px 12px;overflow:auto;font-size:calc(var(--fs) * var(--fit))}
+.slide[data-type=arrival]{border-top-color:#4e7a9b}
+.slide[data-type=starter]{border-top-color:#4d82a0}
+.slide[data-type=ido]{border-top-color:var(--ido-border)}
+.slide[data-type=wedo]{border-top-color:var(--wedo-border)}
+.slide[data-type=youdo]{border-top-color:var(--task-border)}
+.slide[data-type=review]{border-top-color:var(--sc-border)}
+.slide[data-type=exit]{border-top-color:#f97316}
+.slide[data-type=tools]{border-top-color:var(--navy)}
+.slide-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 2px}
+.slide-tag{display:inline-block;padding:3px 11px;border-radius:8px;font-size:12px;font-weight:900;letter-spacing:1px;text-transform:uppercase}
+.tag-lo{background:var(--lo-bg);color:var(--pathway-dark)}
+.tag-arrival{background:#fef3c7;color:#92400e}
+.tag-starter{background:#dbeafe;color:#1e40af}
+.tag-ido{background:var(--ido-bg);color:#8a4b12}
+.tag-wedo{background:var(--wedo-bg);color:#1f4d68}
+.tag-youdo{background:var(--task-bg);color:#7a5408}
+.tag-review{background:var(--sc-bg);color:#7a5408}
+.tag-exit{background:#ffedd5;color:#9a3412}
+.tag-tools{background:#e2e8f0;color:var(--navy)}
+.brandline{font-weight:900;color:var(--pathway-dark);letter-spacing:.08em;text-transform:uppercase;font-size:12.5px;margin:0}
+.stage-meta{margin-left:auto;font-size:12.5px;color:var(--muted);text-align:right}
+.slide h1{font-size:1.75em;line-height:1.15;margin:4px 0 8px;padding-bottom:6px;border-bottom:3px solid var(--pathway)}
+.slide h2{font-size:1.45em;line-height:1.2;margin:2px 0 8px;padding-bottom:4px;border-bottom:2px solid var(--line)}
+.slide h2 .part{font-size:.62em;font-weight:700;color:var(--muted);margin-left:10px;letter-spacing:.02em}
+.slide h3{font-size:1.08em;margin:0 0 6px}
+.slide p{margin:.3em 0}
+.slide ul,.slide ol{margin:.25em 0;padding-left:1.35em}
+.slide li{margin:.18em 0}
+.slide .lead{font-size:1.02em}
+.slide .modes{color:var(--muted);font-size:.92em;margin-top:auto;padding-top:6px}
+.slide svg{display:block;width:100%;height:auto}
+
+/* teaching-stage boxes */
+.box{border-radius:12px;padding:10px 15px;margin:6px 0;border-left:6px solid}
+.box>h3:first-child,.box>p:first-child{margin-top:0}
+.box-lo{background:var(--lo-bg);border-color:var(--lo-border)}
+.box-ido{background:var(--ido-bg);border-color:var(--ido-border)}
+.box-wedo{background:var(--wedo-bg);border-color:var(--wedo-border)}
+.box-task{background:var(--task-bg);border-color:var(--task-border)}
+.box-sc{background:var(--sc-bg);border-color:var(--sc-border)}
+.box-calm{background:var(--scaffold-bg);border-color:var(--scaffold-border)}
+.box-plain{background:#f8fafc;border-color:#94a3b8}
+.box-label{display:inline-block;font-size:.68em;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+
+.cols{display:grid;gap:12px;align-items:start}
+.cols-2{grid-template-columns:1fr 1fr}
+.cols-2w{grid-template-columns:1.15fr 1fr}
+.cols-4{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.cols>*{min-width:0}
+
+/* question cards + reveals */
+.slide ol.qlist,ol.qlist{list-style:none;padding:0;margin:0}
+.question-card{background:#fff;border:2px solid var(--line);border-radius:10px;padding:7px 11px;margin:0 0 7px}
+.question-card>p{margin:0 0 4px}
+.reveal-row{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.answer-reveal-btn,.act-btn,.route-controls button,.inline-tools button{min-height:40px;padding:6px 14px;border:2px solid var(--pathway);background:#fff;color:var(--pathway-dark);
+  border-radius:10px;font-weight:700;cursor:pointer;font-size:.86em}
+.answer-reveal-btn[aria-expanded=true]{background:var(--wedo-bg)}
+.answer-reveal{margin:0;padding:4px 10px;background:#eaf8ef;border-left:5px solid #16a34a;border-radius:8px;flex:1 1 14em}
+.answer-reveal[hidden]{display:none}
+.route-controls{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 8px;align-items:center}
+.route-controls .rc-label{font-weight:700;margin-right:4px}
+.route-controls button[aria-pressed=true]{background:var(--pathway);color:#fff}
+.route-panel[hidden]{display:none}
+.route-card{border-radius:12px;padding:9px 12px;border:2px solid var(--task-border);background:var(--task-bg)}
+.route-card h3{display:flex;align-items:center;gap:6px}
+.route-card ul,.route-card ol{padding-left:1.15em}
+.route-card .book-first-tag{font-size:.88em}
+.route-card .modes-in{font-size:.86em;color:var(--muted)}
+.route-sym{font-size:.9em}
+
+/* We do decision checkpoint */
+.decision label{font-weight:700;display:block;margin:6px 0 4px}
+.decision select{width:100%;min-height:44px;font-size:.9em;padding:6px 8px;border:2px solid #94a3b8;border-radius:8px;background:#fff}
+.decision .act-row{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 4px}
+#decision-feedback{font-weight:700;padding:5px 10px;border-radius:8px;background:#f1f5f9;border-left:4px solid var(--pathway);margin:4px 0}
+#decision-feedback.ok{background:#eaf8ef;border-left-color:#16a34a}
+#decision-feedback.retry{background:#fff7d6;border-left-color:#b45309}
+.options-list li{margin:.28em 0}
+
+/* group cards (keep the lesson's own pathway borders) */
+.group-card{border-radius:12px;padding:10px 14px;background:#fff}
+.group-card .pathway-badge{margin:0 0 6px}
+.group-card .gc-parts{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.group-card .gc-parts>div{min-width:0}
+.group-card ul{padding-left:1.15em}
+
+table{border-collapse:collapse;width:100%;font-size:.95em}
+th,td{border:1px solid #94a3b8;padding:6px 10px;text-align:left;vertical-align:top}
+thead th{background:var(--wedo-bg)}
+tbody th{background:#f8fafc}
+
+.inline-tools{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+
+/* staff layer: hidden until g */
+[data-mbm-guide]{display:none}
+html.mbm-guide-on [data-mbm-guide]{display:block}
+.staff-strip{margin-top:6px;padding:6px 10px;border:2px dashed #64748b;border-radius:8px;background:#f8fafc;font-size:.8em;color:#334155}
+
+/* ---------- bottom bar (donor .controls) ---------- */
+.controls{position:fixed;bottom:16px;right:18px;display:flex;gap:10px;align-items:center;z-index:20}
+.controls button{height:46px;padding:10px 18px;border:0;border-radius:10px;background:var(--pathway);color:#fff;font-weight:700;font-size:16px;box-shadow:0 4px 6px rgba(0,0,0,.12);cursor:pointer}
+.controls button:hover{background:#3f6684}
+.controls button:disabled{opacity:.5;cursor:default}
+#next-slide{height:48px}
+.stage-count{font-weight:700;color:var(--muted);min-width:64px;text-align:center}
+.brand-chip{position:fixed;left:16px;bottom:22px;display:flex;align-items:center;gap:8px;font-weight:800;color:var(--navy);font-size:15px;z-index:19}
+.brand-chip img{width:34px;height:34px;border-radius:8px}
+.progress-wrap{position:fixed;left:0;right:0;bottom:0;height:10px;background:rgba(15,23,42,.12);z-index:21}
+.progress-bar{height:100%;width:0;background:var(--pathway);transition:width .25s}
+
+/* ---------- dialogs ---------- */
+dialog{border:0;border-radius:16px;padding:0;max-width:min(1100px,94vw);width:auto;max-height:88vh;box-shadow:0 20px 60px rgba(0,0,0,.35);color:var(--ink)}
+dialog::backdrop{background:rgba(15,23,42,.45)}
+.dialog-head{position:sticky;top:0;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 18px;background:#fff;border-bottom:3px solid var(--pathway);z-index:1}
+.dialog-head h2{margin:0;font-size:1.2rem}
+.dialog-body{padding:14px 18px 18px;font-size:17px}
+.dialog-body .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.dialog-body .group-card .gc-parts{grid-template-columns:1fr}
+dialog button,.dialog-body button{min-height:44px;padding:8px 14px;border-radius:10px;border:0;background:var(--pathway);color:#fff;font-weight:700;cursor:pointer}
+dialog .tool-grid{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 12px}
+dialog .tool-grid button.secondary{background:var(--tool);color:var(--tool-ink)}
+dialog select{min-height:44px;font-size:16px;padding:6px;border-radius:8px;border:2px solid #94a3b8;max-width:100%}
+.cc-question{font-size:1.25rem;font-weight:700;padding:10px 14px;border-left:6px solid var(--pathway);background:var(--wedo-bg);border-radius:10px;margin:10px 0}
+.scaffold-box{background:var(--scaffold-bg);border-left:6px solid var(--scaffold-border);border-radius:10px;padding:8px 14px;margin:8px 0}
+
+/* ---------- views ---------- */
+html.calm .slide.active{box-shadow:none}
+html.calm .box,html.calm .route-card{background:#fff}
+html.calm *{animation:none!important;transition:none!important}
+html.large .slide.active{--fit:1.22!important}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* narrow screens */
+@media (max-width:900px){
+  main.deck{left:8px;right:8px;top:118px;bottom:80px}
+  .review-top{left:8px;right:8px;top:62px;flex-wrap:wrap}
+  body.has-school-badge .review-top{right:8px}
+  .review-top a,.review-top button{height:40px;padding:6px 10px;font-size:14px}
+  .cols-2,.cols-2w,.cols-4,.group-card .gc-parts{grid-template-columns:1fr}
+  .controls{right:8px;left:8px;flex-wrap:wrap;justify-content:flex-end}
+  .controls button{padding:8px 10px;font-size:14px;height:42px}
+  .brand-chip{display:none}
+  .slide.active{padding:8px 14px}
+}
+
+/* ---------- print: every stage, one after another ---------- */
+@media print{
+  html,body{height:auto;overflow:visible;background:#fff}
+  #auto-timer,.review-top,.controls,.progress-wrap,.brand-chip,.school-badge,.route-controls,.answer-reveal-btn,.act-btn,.inline-tools,dialog{display:none!important}
+  main.deck{position:static}
+  .slide,.slide.active{display:block!important;height:auto;overflow:visible;box-shadow:none;border:1px solid #94a3b8;border-top:6px solid var(--pathway);page-break-after:always;margin:0 0 6mm}
+
+  .route-panel[hidden]{display:block!important}
+}
+
+.cols-3{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.blank{letter-spacing:-1px;color:#64748b}.steps-big li{font-size:1.08em;margin:.3em 0}.file-links{columns:2;padding-left:1.1em}.file-links a{color:var(--pathway-dark);font-weight:700}@media (max-width:900px){.cols-3{grid-template-columns:1fr}.file-links{columns:1}}html.print-one .slide:not(.active){display:none!important}
+</style>
+</head>
+<body data-pathway="ALL" data-lesson-id="COMMUNITY_A2_W01">
+<a class="skip" href="#lessonDeck">Skip to lesson content</a>
+<div id="auto-timer" aria-label="Stage timer"><span aria-hidden="true">◷</span><span id="auto-timer-display">00:00</span><button class="at-btn" id="auto-timer-toggle" type="button" aria-label="Start stage timer">▶</button><button class="at-btn" id="auto-timer-reset" type="button" aria-label="Reset stage timer">↺</button></div>
+<nav class="review-top" aria-label="Lesson tools"><a href="../../../index.html" class="way-home">← Lessons</a><button type="button" data-open="resource-words">Word help</button><button type="button" data-open="resource-calm">Pause</button><button type="button" data-open="resource-evidence">Evidence sheet</button><button type="button" data-open="tools-dialog">Tools &amp; print</button></nav>
+<main id="lessonDeck" class="deck" aria-label="Community Projects · All groups · Autumn 2 · Week 1 · COMMUNITY_A2_W01">
+<section class="slide active" id="s-title" data-type="lo" data-title="Plan the day out" data-stage-key="brief" data-min="10" data-timing="Briefing · 10 min (settle, then five one-minute slides)" data-prompt="Choose what you want to see or check." aria-label="Plan the day out"><div class="slide-head"><span class="slide-tag tag-lo">Briefing</span><p class="brandline">ALL · Community Projects</p><span class="stage-meta">Briefing · 10 min (settle, then five one-minute slides) · Community Projects · All groups · Autumn 2 · Week 1 · COMMUNITY_A2_W01</span></div><h2>Plan the day out</h2><div class="box box-lo"><span class="box-label">Today</span><h3>Plan the day out</h3><p><strong>Full-day visit:</strong> a full day next term (date to be confirmed)</p><p>the open-air museum</p><p>Owner to fill by hand: <span class="blank">________</span></p></div><div class="cols cols-2w"><div class="box box-plain"><p class="lead"><strong>80-minute session</strong></p><ol><li>Settle and briefing</li><li>P5 · Our team plan</li><li>Reset</li><li>P6 · The trip cost challenge</li><li>Individual evidence and finish</li></ol></div><div><div class="box box-calm"><p>No cold calling. You can pass on a public pitch and share quietly, point, draw or direct a scribe.</p></div><div class="inline-tools"><button type="button" data-open="resource-words">Word help</button><button type="button" data-open="resource-groups">Task sheets</button><button type="button" data-open="resource-evidence">Evidence sheet</button></div></div></div><div class="staff-strip" data-mbm-guide="staff"><strong>Staff · </strong>Introduce the 80-minute session and the planned full-day visit next term (date to be confirmed). The venue stays “the open-air museum” in all generic resources; the owner fills the marked blank by hand on the store copy. Explain one shared task in each period.</div></section>
+<section class="slide" id="s-p5-intro" data-type="wedo" data-title="P5 · Our team plan 2 / 5" data-stage-key="brief" data-min="10" data-timing="Briefing · 10 min (settle, then five one-minute slides)" data-prompt="Pick a then and now question for your exhibit." aria-label="P5 · Our team plan 2 / 5"><div class="slide-head"><span class="slide-tag tag-wedo">Briefing</span><p class="brandline">ALL · Community Projects</p><span class="stage-meta">Briefing · 10 min (settle, then five one-minute slides) · Community Projects · All groups · Autumn 2 · Week 1 · COMMUNITY_A2_W01</span></div><h2>P5 · Our team plan<span class="part">2 / 5</span></h2><div class="box box-wedo"><ol class="steps-big"><li>Read the research cards with your team.</li><li>Choose what you want to see or check.</li><li>Pick a then and now question for your exhibit.</li><li>Agree the jobs and one reason for your plan.</li></ol></div><div class="box box-sc"><p><strong>FINISH:</strong> one short team pitch, aloud or quietly.</p></div><div class="staff-strip" data-mbm-guide="staff"><strong>Staff · </strong>Three mixed teams complete the same P5 task. Give each team the research cards, role cards and its chosen route sheet. The research cards suggest themes and questions, not confirmed exhibits or venue facilities; use owner-approved unnamed extracts where available. Keep what the source says separate from what still needs checking. A quiet seated role is available.</div></section>
+<section class="slide" id="s-jobs" data-type="ido" data-title="Jobs we can share 3 / 5" data-stage-key="brief" data-min="10" data-timing="Briefing · 10 min (settle, then five one-minute slides)" data-prompt="Each pupil has a job or a shared part. A pair can share one job." aria-label="Jobs we can share 3 / 5"><div class="slide-head"><span class="slide-tag tag-ido">Briefing</span><p class="brandline">ALL · Community Projects</p><span class="stage-meta">Briefing · 10 min (settle, then five one-minute slides) · Community Projects · All groups · Autumn 2 · Week 1 · COMMUNITY_A2_W01</span></div><h2>Jobs we can share<span class="part">3 / 5</span></h2><div class="cols cols-2"><div class="box box-ido"><h3>Navigator</h3><p>Follow the agreed route with an adult.</p></div><div class="box box-ido"><h3>Recorder</h3><p>Keep a short note or draw a finding.</p></div><div class="box box-ido"><h3>Photographer</h3><p>Check permission before each photo.</p></div><div class="box box-ido"><h3>Kit lead</h3><p>Check the list and tell an adult of a gap.</p></div></div><div class="box box-plain"><p>A pair can share one job. Adults keep supervision.</p></div><div class="box box-sc"><p><strong>FINISH:</strong> each pupil has a job or a shared part.</p></div><div class="staff-strip" data-mbm-guide="staff"><strong>Staff · </strong>Model the four job cards. Double a role when a pair wants to share one. The navigator never leads a group away from an adult. The photographer asks the adult before any image and follows venue and individual consent rules; a drawing is a valid alternative. The kit lead uses a list and reports gaps rather than handling restricted items. Roles are learning responsibilities, not adult supervision or safeguarding duties. Supported, Independent and Aspire are offered by current need, not fixed to pathway or age.</div></section>
+<section class="slide" id="s-p6-intro" data-type="youdo" data-title="P6 · The trip cost challenge 4 / 5" data-stage-key="brief" data-min="10" data-timing="Briefing · 10 min (settle, then five one-minute slides)" data-prompt="Add one return transport option." aria-label="P6 · The trip cost challenge 4 / 5"><div class="slide-head"><span class="slide-tag tag-youdo">Briefing</span><p class="brandline">ALL · Community Projects</p><span class="stage-meta">Briefing · 10 min (settle, then five one-minute slides) · Community Projects · All groups · Autumn 2 · Week 1 · COMMUNITY_A2_W01</span></div><h2>P6 · The trip cost challenge<span class="part">4 / 5</span></h2><p class="lead"><strong>PRACTICE ALLOWANCES · These are not real quotes.</strong></p><div class="cols cols-2"><div><table><thead><tr><th scope="col">Practice cost</th><th scope="col">Whole group</th></tr></thead><tbody><tr><th scope="row">Entry and lunch</th><td>£314</td></tr><tr><th scope="row">Shop reserve</th><td>£50</td></tr><tr><th scope="row">Common cost</th><td>£364</td></tr><tr><th scope="row">Existing minibus</th><td>£150 return</td></tr><tr><th scope="row">Hired minibus</th><td>£450 return</td></tr><tr><th scope="row">Hired coach</th><td>£650 return</td></tr></tbody></table></div><div class="box box-task"><ul><li>10 pupils and 4 adults: 14 people.</li><li>Add one return transport option.</li><li>Use the sheet to add 10% contingency.</li><li>£5 per pupil is a shop limit.</li><li>Buying nothing is valid.</li></ul><p><strong>FINISH:</strong> one team budget pitch.</p></div></div><p class="modes">Real cost, access and capacity checks stay with the owner.</p><div class="staff-strip" data-mbm-guide="staff"><strong>Staff · </strong>These are practice allowances for ten pupils and four supervising adults, not real quotes. No booking, payment, publication or external contact is performed. Model totals are in the Guidance box.</div></section>
+<section class="slide" id="s-reset-rehearse" data-type="review" data-title="Reset and finish 5 / 5" data-stage-key="brief" data-min="10" data-timing="Briefing · 10 min (settle, then five one-minute slides)" data-prompt="Stop. Put work in your team tray." aria-label="Reset and finish 5 / 5"><div class="slide-head"><span class="slide-tag tag-review">Briefing</span><p class="brandline">ALL · Community Projects</p><span class="stage-meta">Briefing · 10 min (settle, then five one-minute slides) · Community Projects · All groups · Autumn 2 · Week 1 · COMMUNITY_A2_W01</span></div><h2>Reset and finish<span class="part">5 / 5</span></h2><div class="box box-calm"><ul><li><strong>After P5:</strong> Stop. Put work in your team tray.</li><li>Clear the table, then take a quiet seated reset.</li><li><strong>After the reset:</strong> Begin the shared trip cost task.</li><li><strong>Last 10 minutes:</strong> Keep your own photo reference and sentence.</li></ul></div><div class="box box-sc"><p>Point, speak, draw, write or use a scribe.</p><p><strong>FINISH:</strong> one evidence line for each pupil code.</p></div><p class="modes">You may pass on a public share and speak quietly.</p><div class="staff-strip" data-mbm-guide="staff"><strong>Staff · </strong>Rehearse the reset signal before work begins: stop tools, return materials, team work in the labelled tray, clear hands and work surface, calm seated reset, listen for the next instruction. Keep access routes clear.</div></section>
+<section class="slide" id="s-p5-routes" data-type="youdo" data-title="P5 · Our team plan 1 / 2" data-stage-key="p5" data-min="25" data-timing="P5 · 25 min · same task for three mixed teams" data-prompt="What was this used for? How is it different now?" aria-label="P5 · Our team plan 1 / 2"><div class="slide-head"><span class="slide-tag tag-youdo">P5</span><p class="brandline">ALL · Community Projects</p><span class="stage-meta">P5 · 25 min · same task for three mixed teams · Community Projects · All groups · Autumn 2 · Week 1 · COMMUNITY_A2_W01</span></div><h2>P5 · Our team plan<span class="part">1 / 2</span></h2><p class="lead">We plan a full day next term (date to be confirmed) at the open-air museum. Point, speak, draw, write or use a scribe.</p><div class="route-controls" aria-label="Pick your route"><span class="rc-label">Pick your route:</span><button type="button" data-route="Supported" aria-pressed="true">Supported</button><button type="button" data-route="Independent" aria-pressed="true">Independent</button><button type="button" data-route="Aspire" aria-pressed="true">Aspire</button></div><div class="cols cols-3"><div class="route-panel route-card" data-route="Supported"><h3>Supported</h3><ol><li>Read or hear one research card. Point to what you want to see. It still needs a venue check.</li><li>Choose a question: What was this used for? How is it different now? Tell or show your own idea.</li><li>Choose a job. Put two codes by a shared job if needed. Ask for help with any unfilled job.</li></ol><p class="modes-in">Point, speak, draw, write or use a scribe.</p></div><div class="route-panel route-card" data-route="Independent"><h3>Independent</h3><ol><li>Read a research card or an adult-approved extract. Choose what your team wants to see and give a reason.</li><li>Write or say a then-and-now question. Mark one idea the source supports and one thing to check at the venue.</li><li>Agree the four jobs. Pair up to share a job or combine manageable roles. Keep each person’s own part clear.</li></ol><p class="modes-in">Point, speak, draw, write or use a scribe.</p></div><div class="route-panel route-card" data-route="Aspire"><h3>Aspire</h3><ol><li>Compare two research themes. Choose the stronger enquiry for a small tabletop exhibit and explain why.</li><li>Write an evidence question and a then-and-now comparison. Flag any claim the source cannot support.</li><li>Plan a compact shared route and doubled jobs. Explain how every pupil can contribute without separate walks.</li></ol><p class="modes-in">Point, speak, draw, write or use a scribe.</p></div></div><div class="inline-tools"><button type="button" data-open="resource-groups">Task sheets (White · Blue · Pink paper)</button></div><div class="staff-strip" data-mbm-guide="staff"><strong>Staff · </strong>Same task and finish on every route. Teacher leads; three TAs support hands-on. No learner is questioned publicly without choosing to share.</div></section>
+<section class="slide" id="s-p5-plan" data-type="youdo" data-title="P5 · Our team plan 2 / 2" data-stage-key="p5" data-min="25" data-timing="P5 · 25 min · same task for three mixed teams" data-prompt="What was your own part in the team plan?" aria-label="P5 · Our team plan 2 / 2"><div class="slide-head"><span class="slide-tag tag-youdo">P5</span><p class="brandline">ALL · Community Projects</p><span class="stage-meta">P5 · 25 min · same task for three mixed teams · Community Projects · All groups · Autumn 2 · Week 1 · COMMUNITY_A2_W01</span></div><h2>P5 · Our team plan<span class="part">2 / 2</span></h2><div class="box box-task"><span class="box-label">Our team plan</span><p>We want to see <span class="blank">________</span> (check availability).</p><p>Our then-and-now question is <span class="blank">________</span>.</p><p>Our source or check needed is <span class="blank">________</span>.</p><p>Jobs and codes: navigator <span class="blank">________</span> / <span class="blank">________</span>; recorder <span class="blank">________</span> / <span class="blank">________</span>; photographer <span class="blank">________</span> / <span class="blank">________</span>; kit lead <span class="blank">________</span> / <span class="blank">________</span>. Adults keep responsibility for routes, photos and safety.</p></div><div class="box box-ido"><p><strong>Tabletop exhibit plan:</strong> one object sketch or permitted photo, a then-and-now caption with a source, and one open question.</p></div><div class="box box-sc"><span class="box-label">Finish</span><p>Show one team plan with a visit choice, question and jobs. Pitch briefly, show it or share quietly. You may pass on speaking. My own part was <span class="blank">________</span>.</p></div><div class="staff-strip" data-mbm-guide="staff"><strong>Staff · </strong>Keep what the source says separate from what still needs a venue check.</div></section>
+<section class="slide" id="s-reset" data-type="review" data-title="Reset" data-stage-key="reset" data-min="10" data-timing="Reset · 10 min" data-prompt="Clear the table, then take a quiet seated reset." aria-label="Reset"><div class="slide-head"><span class="slide-tag tag-review">Reset</span><p class="brandline">ALL · Community Projects</p><span class="stage-meta">Reset · 10 min · Community Projects · All groups · Autumn 2 · Week 1 · COMMUNITY_A2_W01</span></div><h2>Reset</h2><div class="box box-calm"><ul class="steps-big"><li>Stop. Put work in your team tray.</li><li>Clear the table, then take a quiet seated reset.</li><li>Listen for the next instruction.</li></ul></div><p class="modes">You may pass on a public share and speak quietly.</p><div class="staff-strip" data-mbm-guide="staff"><strong>Staff · </strong>Stop tools, return materials, place team work in the labelled tray, clear hands and work surface, calm seated reset, listen to the teacher’s next instruction. Keep access routes clear.</div></section>
+<section class="slide" id="s-p6-routes" data-type="youdo" data-title="P6 · The trip cost challenge 1 / 2" data-stage-key="p6" data-min="25" data-timing="P6 · 25 min · shared trip cost task" data-prompt="Which return transport option will your team choose, and why?" aria-label="P6 · The trip cost challenge 1 / 2"><div class="slide-head"><span class="slide-tag tag-youdo">P6</span><p class="brandline">ALL · Community Projects</p><span class="stage-meta">P6 · 25 min · shared trip cost task · Community Projects · All groups · Autumn 2 · Week 1 · COMMUNITY_A2_W01</span></div><h2>P6 · The trip cost challenge<span class="part">1 / 2</span></h2><p class="lead"><strong>PRACTICE ALLOWANCES ONLY.</strong> Ten pupils and four adults. No quote or payment. Use the cost cards. Point, speak, draw, write or use a scribe.</p><div class="route-controls" aria-label="Pick your route"><span class="rc-label">Pick your route:</span><button type="button" data-route="Supported" aria-pressed="true">Supported</button><button type="button" data-route="Independent" aria-pressed="true">Independent</button><button type="button" data-route="Aspire" aria-pressed="true">Aspire</button></div><div class="cols cols-3"><div class="route-panel route-card" data-route="Supported"><h3>Supported</h3><ol><li>Use the common total £364. Choose a practice transport card with an adult. Add its return cost.</li><li>Find 10% by dividing that total by 10. Add this extra amount. Use a calculator or ask for one step at a time.</li><li>Divide the plan total by 10 pupil places. Say or point to your cost and a reason for the team choice.</li></ol><p class="modes-in">Point, speak, draw, write or use a scribe.</p></div><div class="route-panel route-card" data-route="Independent"><h3>Independent</h3><ol><li>Check the common subtotal on the cost card. Compare at least two return transport allowances.</li><li>Add transport to £364, then add 10% contingency. Divide the final planning total by 10 pupil places.</li><li>Check a partner’s sum. Give a reason for the choice and name an owner check still needed.</li></ol><p class="modes-in">Point, speak, draw, write or use a scribe.</p></div><div class="route-panel route-card" data-route="Aspire"><h3>Aspire</h3><ol><li>Compare all three return transport allowances. Check the £364 common cost and 10% contingency.</li><li>Calculate cost per pupil place using 10. Compare cost per traveller using 14 and explain why the answers differ.</li><li>Test a no-purchase budget by removing the £50 reserve before contingency. Explain a useful trade-off and an unconfirmed cost.</li></ol><p class="modes-in">Point, speak, draw, write or use a scribe.</p></div></div><div class="staff-strip" data-mbm-guide="staff"><strong>Staff · </strong>Teacher coordinates the three team cost tasks; one TA runs the decision station (station D) in short slots, other TAs support the shared task. Follow the owner run-sheet for the exact station arrangement.</div></section>
+<section class="slide" id="s-p6-check" data-type="youdo" data-title="P6 · The trip cost challenge 2 / 2" data-stage-key="p6" data-min="25" data-timing="P6 · 25 min · shared trip cost task" data-prompt="We choose ___ because ___. What do we still need to check?" aria-label="P6 · The trip cost challenge 2 / 2"><div class="slide-head"><span class="slide-tag tag-youdo">P6</span><p class="brandline">ALL · Community Projects</p><span class="stage-meta">P6 · 25 min · shared trip cost task · Community Projects · All groups · Autumn 2 · Week 1 · COMMUNITY_A2_W01</span></div><h2>P6 · The trip cost challenge<span class="part">2 / 2</span></h2><div class="cols cols-2"><div class="box box-plain"><p><strong>Common cost:</strong> pupil entry £150 + adult entry £80 + lunch/drink £84 + pupil shop reserve £50 = £364.</p><p><strong>Return transport:</strong> existing minibus £150; hired minibus £450; hired coach £650. Owner must check capacity, access, drivers and all costs.</p></div><div class="box box-task"><span class="box-label">My check</span><p>£364 + transport £<span class="blank">________</span> = £<span class="blank">________</span>.</p><p>10% contingency £<span class="blank">________</span>. Planning total £<span class="blank">________</span>.</p><p>Divide by 10 pupil places = £<span class="blank">________</span> each. This is a cost allocation, not a charge to families.</p></div></div><div class="box box-ido"><p><strong>Shop:</strong> up to £5 per pupil. Buying nothing is valid. Spend £<span class="blank">________</span>; money left £<span class="blank">________</span>. Adult shopping is outside this model.</p></div><div class="box box-sc"><span class="box-label">Finish</span><p>Give one checked cost and one team budget line: “We choose <span class="blank">________</span> because <span class="blank">________</span>. Total £<span class="blank">________</span>, or £<span class="blank">________</span> per pupil place. We still need to check <span class="blank">________</span>.” Show, say or share quietly. Keep your own calculation even if you visit station D.</p></div><div class="staff-strip" data-mbm-guide="staff"><strong>Staff · </strong>Model totals (practice only): transport £150 / £450 / £650 gives £514 / £814 / £1014 before contingency; +10% = £51.40 / £81.40 / £101.40; planning totals £565.40 / £895.40 / £1115.40; per pupil place (÷10) £56.54 / £89.54 / £111.54 — a model allocation, not a charge.</div></section>
+<section class="slide" id="s-evidence" data-type="exit" data-title="Individual evidence" data-stage-key="evidence" data-min="10" data-timing="Individual evidence · 10 min · finish and pack away" data-prompt="Keep your own photo reference and sentence. My own part was ___." aria-label="Individual evidence"><div class="slide-head"><span class="slide-tag tag-exit">Evidence</span><p class="brandline">ALL · Community Projects</p><span class="stage-meta">Individual evidence · 10 min · finish and pack away · Community Projects · All groups · Autumn 2 · Week 1 · COMMUNITY_A2_W01</span></div><h2>Individual evidence</h2><div class="box box-sc"><ul class="steps-big"><li>Keep your own photo reference and sentence.</li><li>Point, speak, draw, write or use a scribe.</li><li><strong>FINISH:</strong> one evidence line for each pupil code.</li></ul></div><div class="box box-plain"><p>Each code keeps one actual own-action line. Link a permitted photo of the work plus the sentence or exact scribed words. If a photo is unsuitable, use a work/observation reference. Do not infer learning from a group photo.</p></div><div class="inline-tools"><button type="button" data-open="resource-evidence">Evidence sheet (White · Blue · Pink paper)</button></div><p class="modes">You may pass on a public share and speak quietly.</p><div class="staff-strip" data-mbm-guide="staff"><strong>Staff · </strong>Record one individual evidence line for each pupil code, with a permitted photo reference or drawing/observation alternative, the pupil’s own sentence or exact scribed words and actual support. Keep outcomes blank until observed. Record E only for actual banking; R only after the learner responds. Finish and pack away by the end of the session.</div></section>
+<section class="slide" id="s-tools" data-type="tools" data-title="Tools &amp; print" data-stage-key="tools" data-min="0" data-timing="Tools &amp; print" data-prompt="White, Blue and Pink are paper versions of the same task and finish." aria-label="Tools &amp; print"><div class="slide-head"><span class="slide-tag tag-tools">Tools &amp; print</span><p class="brandline">ALL · Community Projects</p><span class="stage-meta">Tools &amp; print · Community Projects · All groups · Autumn 2 · Week 1 · COMMUNITY_A2_W01</span></div><h2>Tools &amp; print</h2><div class="cols cols-2"><div class="box box-lo"><span class="box-label">Lesson files (in this lesson folder)</span><p>The briefing slides, task sheets and evidence sheets are printed for the session and kept in the lesson folder.</p></div><div><div class="box box-plain"><p>White, Blue and Pink are paper versions of the same task and finish.</p></div><div class="inline-tools"><button type="button" data-open="resource-words">Word help</button><button type="button" data-open="resource-groups">Task sheets</button><button type="button" data-open="resource-evidence">Evidence sheet</button><button type="button" data-open="tools-dialog">Tools &amp; print</button></div></div></div><div class="staff-strip" data-mbm-guide="staff"><strong>Staff · </strong>Tools &amp; print</div></section>
+</main>
+<div class="brand-chip"><img src="data:image/jpeg;base64,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" alt="" width="34" height="34">Made by Matt</div>
+<nav class="controls" aria-label="Stage controls"><button type="button" data-open="guidance-dialog">Guidance</button><button type="button" id="previous-slide" disabled>◀ Previous</button><button type="button" data-open="ta-dialog">TA Brief</button><button type="button" data-open="cold-call-dialog">Question</button><button type="button" id="next-slide">Next ▶</button><span class="stage-count" id="stage-count" aria-live="polite">1 / 12</span></nav>
+<div class="progress-wrap" id="classic-progress" role="progressbar" aria-label="Lesson progress" aria-valuemin="1" aria-valuemax="12" aria-valuenow="1"><div class="progress-bar" id="progressBar" style="width:8.33%"></div></div>
+<dialog id="resource-calm" aria-labelledby="resource-calm-t"><div class="dialog-head"><h2 id="resource-calm-t">Reset · Community Projects · All groups · Autumn 2 · Week 1</h2><button type="button" data-close>Close</button></div><div class="dialog-body"><div class="scaffold-box"><p>Stop. Put work in your team tray.</p><p>Clear the table, then take a quiet seated reset.</p></div><p>You may pass on a public share and speak quietly.</p><p>Point, speak, draw, write or use a scribe.</p><p>Made by Matt</p></div></dialog><dialog id="resource-words" aria-labelledby="resource-words-t"><div class="dialog-head"><h2 id="resource-words-t">Word help · Community Projects · All groups · Autumn 2 · Week 1</h2><button type="button" data-close>Close</button></div><div class="dialog-body"><table><thead><tr><th scope="col">Word</th><th scope="col">Meaning</th></tr></thead><tbody><tr><th scope="row">navigator</th><td>Follow the agreed route with an adult.</td></tr><tr><th scope="row">recorder</th><td>Keep a short note or draw a finding.</td></tr><tr><th scope="row">photographer</th><td>Check permission before each photo.</td></tr><tr><th scope="row">kit lead</th><td>Check the list and tell an adult of a gap.</td></tr><tr><th scope="row">then-and-now question</th><td>What was this used for? How is it different now?</td></tr><tr><th scope="row">tabletop exhibit</th><td>One object sketch or permitted photo, a then-and-now caption with a source, and one open question.</td></tr><tr><th scope="row">common cost</th><td>Pupil entry £150 + adult entry £80 + lunch/drink £84 + pupil shop reserve £50 = £364.</td></tr><tr><th scope="row">10% contingency</th><td>Find 10% by dividing that total by 10. Add this extra amount.</td></tr><tr><th scope="row">cost per pupil place</th><td>Divide the plan total by 10 pupil places. This is a cost share, not a charge to families.</td></tr></tbody></table><p>Made by Matt</p></div></dialog><dialog id="resource-groups" aria-labelledby="resource-groups-t"><div class="dialog-head"><h2 id="resource-groups-t">Task sheets · Community Projects · All groups · Autumn 2 · Week 1</h2><button type="button" data-close>Close</button></div><div class="dialog-body"><p>Same task and finish on every paper version. Point, speak, draw, write or use a scribe.</p><p>The briefing slides, task sheets and evidence sheets are printed for the session and kept in the lesson folder.</p><p>Each sheet has Supported, Independent and Aspire pages. Offer routes by current need.</p><p>Made by Matt</p></div></dialog><dialog id="resource-evidence" aria-labelledby="resource-evidence-t"><div class="dialog-head"><h2 id="resource-evidence-t">Evidence sheet · Community Projects · All groups · Autumn 2 · Week 1</h2><button type="button" data-close>Close</button></div><div class="dialog-body"><p>Each code keeps one actual own-action line. Link a permitted photo of the work plus the sentence or exact scribed words. If a photo is unsuitable, use a work/observation reference. Do not infer learning from a group photo.</p><p><strong>Each line:</strong> Photo/work reference · Actual help · My own sentence or exact scribed line.</p><p><strong>Adult:</strong> mark absence or pending honestly. Store identity mapping separately. No achievement, response or banking is prefilled.</p><p>The briefing slides, task sheets and evidence sheets are printed for the session and kept in the lesson folder.</p><p>Made by Matt</p></div></dialog><dialog id="guidance-dialog" aria-labelledby="guidance-dialog-t"><div class="dialog-head"><h2 id="guidance-dialog-t">Guidance · Community Projects · All groups · Autumn 2 · Week 1 · COMMUNITY_A2_W01</h2><button type="button" data-close>Close</button></div><div class="dialog-body"><p><strong>Now:</strong> <span class="current-stage-name"></span> · <span class="current-stage-time"></span></p><h3>Session plan (80 minutes)</h3><table><thead><tr><th scope="col">Stage</th><th scope="col">Time</th></tr></thead><tbody><tr><th scope="row">Briefing</th><td>10 min</td></tr><tr><th scope="row">P5 · Our team plan</th><td>25 min</td></tr><tr><th scope="row">Reset</th><td>10 min</td></tr><tr><th scope="row">P6 · The trip cost challenge</th><td>25 min</td></tr><tr><th scope="row">Individual evidence</th><td>10 min</td></tr></tbody></table><h3>Practice cost model (not real quotes)</h3><ul><li>Pupil entry 10 × £15 = £150; adult entry 4 × £20 = £80; lunch and drink 14 × £6 = £84; optional pupil shop reserve 10 × £5 = £50 (adult shopping excluded). Common cost £364.</li><li>Return transport: £150 existing minibus, £450 hired minibus with driver, £650 hired coach with driver.</li><li>Totals before contingency £514 / £814 / £1014; +10% £51.40 / £81.40 / £101.40; planning totals £565.40 / £895.40 / £1115.40.</li><li>Per pupil place (all adult costs allocated across ten pupils): £56.54 / £89.54 / £111.54 — a model allocation, not a charge. The worksheets also compare cost per traveller across fourteen people.</li><li>Buying nothing means actual shop spending can be zero and unused reserve remains unspent. The hired driver’s cost is in the transport allowance; the model does not add that driver’s entry or lunch. An adult driving an existing vehicle cannot supervise pupils while driving.</li><li>Verify real admission, concessions, access, capacity, return quote and food arrangements separately. No booking, payment, publication or external contact is performed.</li></ul><h3>Feedback and evidence</h3><p>Codes VF · WS · I · NS · E · R · // · ?. At check-out, record E against each pupil’s target on the evidence app. Keep the learner’s idea, adult reply, one next-step prompt and response in the same colour, on the same page, or usual mode before recording R; record E only for actual banking. A group photograph alone does not prove every pupil’s contribution.</p><p>Previous / Next or the ← → keys move one screen. Press g for the staff notes strip on each screen.</p></div></dialog><dialog id="ta-dialog" aria-labelledby="ta-dialog-t"><div class="dialog-head"><h2 id="ta-dialog-t">TA Brief · Community Projects · All groups · Autumn 2 · Week 1 · COMMUNITY_A2_W01</h2><button type="button" data-close>Close</button></div><div class="dialog-body"><p><strong>Now:</strong> <span class="current-stage-name"></span> · <span class="current-stage-time"></span></p><ul><li>The teacher leads every task. Three TAs support hands-on.</li><li>During P6 one TA runs the decision station (station D) in short slots; other TAs support the shared task. Follow the owner run-sheet for the exact arrangement.</li><li>No cold calling. Pupils can pass on a public pitch and share quietly, point, draw or direct a scribe. Scribe exact words.</li><li>Support may read, ask for one step at a time or offer a calculator; keep each pupil’s own part clear.</li><li>Photos only with adult permission and venue and individual consent rules; a drawing is a valid alternative.</li><li>Last 10 minutes: one evidence line per pupil with photo/work reference, own sentence or exact scribed words and actual help.</li></ul><div class="tool-grid"><button type="button" data-open="resource-groups">Task sheets</button><button type="button" data-open="resource-evidence">Evidence sheet</button></div></div></dialog><dialog id="cold-call-dialog" aria-labelledby="cold-call-dialog-t"><div class="dialog-head"><h2 id="cold-call-dialog-t">Invite a response</h2><button type="button" data-close>Close</button></div><div class="dialog-body"><p>No cold calling; nobody is asked to read difficult text aloud.</p><div class="cc-question" id="cold-call-question"></div><div class="scaffold-box"><p>Give thinking time. Invite a response by voice, pointing or showing work. A pupil can pass and share quietly.</p></div><p>Point, speak, draw, write or use a scribe.</p></div></dialog><dialog id="tools-dialog" aria-labelledby="tools-dialog-t"><div class="dialog-head"><h2 id="tools-dialog-t">Tools &amp; print</h2><button type="button" data-close>Close</button></div><div class="dialog-body"><label for="slide-picker"><strong>Go to a stage</strong></label><div class="tool-grid"><select id="slide-picker"></select><button type="button" id="slide-go">Go to stage</button></div><h3>Lesson resources</h3><div class="tool-grid"><button type="button" data-open="resource-groups">Task sheets</button><button type="button" data-open="resource-evidence">Evidence sheet</button><button type="button" data-open="resource-words">Word help</button><button type="button" data-open="resource-calm">Reset</button></div><h3>Print</h3><div class="tool-grid"><button type="button" id="print-stage">Print this screen</button><button type="button" id="print-all">Print all stages</button></div><h3>View</h3><div class="tool-grid"><button type="button" class="secondary" id="calm-toggle" aria-pressed="false">Calm view</button><button type="button" class="secondary" id="large-toggle" aria-pressed="false">Large text</button><button type="button" class="secondary" id="guide-toggle" aria-pressed="false">Staff notes (g)</button></div></div></dialog>
+<footer class="page-footer" hidden>Community Projects · All groups · Autumn 2 · Week 1 · Made by Matt</footer>
+<script>
+/* AAA shell controls · BUILD donor behaviour (Previous/Next, arrow keys, stage timer, progress, dialogs, g staff layer). Offline. */
+(function(){
+  var root=document.documentElement;
+  var slides=[].slice.call(document.querySelectorAll('main.deck > section.slide'));
+  if(!slides.length) return;
+  var idx=0, timerLeft=0, timerUp=false, timerOn=false, tick=null, timerStage=null;
+  var prev=document.getElementById('previous-slide'), next=document.getElementById('next-slide');
+  var bar=document.getElementById('progressBar'), wrap=document.getElementById('classic-progress');
+  var count=document.getElementById('stage-count'), disp=document.getElementById('auto-timer-display'), pill=document.getElementById('auto-timer');
+  var picker=document.getElementById('slide-picker');
+  function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v);}catch(e){return null;}}
+
+  /* fit: shrink type a little if a screen would overflow its card (never below 84%) */
+  function fit(s){
+    if(root.classList.contains('large')){s.style.removeProperty('--fit');return;}
+    var f=1; s.style.setProperty('--fit','1');
+    while(s.scrollHeight>s.clientHeight+1 && f>0.84){f=Math.round((f-0.02)*100)/100; s.style.setProperty('--fit',String(f));}
+  }
+  function fmt(n){n=Math.max(0,n);var m=Math.floor(n/60),s=n%60;return (m<10?'0':'')+m+':'+(s<10?'0':'')+s;}
+  function paint(){disp.textContent=fmt(timerLeft);}
+  function stopTimer(){timerOn=false;clearInterval(tick);tick=null;pill.classList.remove('running');
+    var b=document.getElementById('auto-timer-toggle');b.textContent='▶';b.setAttribute('aria-label','Start stage timer');}
+  function resetTimer(){stopTimer();var m=+(slides[idx].getAttribute('data-min')||0);timerUp=(m===0);timerLeft=timerUp?0:m*60;pill.classList.remove('done');paint();}
+  function toggleTimer(){
+    if(timerOn){stopTimer();return;}
+    timerOn=true;pill.classList.add('running');
+    var b=document.getElementById('auto-timer-toggle');b.textContent='⏸';b.setAttribute('aria-label','Pause stage timer');
+    tick=setInterval(function(){
+      if(timerUp){timerLeft++;}else{timerLeft--; if(timerLeft<=0){timerLeft=0;stopTimer();pill.classList.add('done');}}
+      paint();},1000);
+  }
+  function show(n){
+    n=Math.max(0,Math.min(slides.length-1,n));
+    slides[idx].classList.remove('active');slides[idx].setAttribute('aria-hidden','true');
+    idx=n; var s=slides[idx];
+    s.classList.add('active');s.setAttribute('aria-hidden','false');
+    prev.disabled=(idx===0); next.disabled=(idx===slides.length-1);
+    count.textContent=(idx+1)+' / '+slides.length;
+    bar.style.width=((idx+1)/slides.length*100)+'%'; wrap.setAttribute('aria-valuenow',idx+1);
+    if(picker) picker.value=String(idx);
+    var st=s.getAttribute('data-stage-key');
+    if(st!==timerStage){timerStage=st;resetTimer();}
+    fit(s); s.scrollTop=0;
+    try{history.replaceState(null,'','#'+s.id);}catch(e){}
+  }
+  prev.addEventListener('click',function(){show(idx-1);});
+  next.addEventListener('click',function(){show(idx+1);});
+  document.getElementById('auto-timer-toggle').addEventListener('click',toggleTimer);
+  document.getElementById('auto-timer-reset').addEventListener('click',resetTimer);
+
+  /* dialogs */
+  function openD(id){var d=document.getElementById(id);if(d&&d.showModal&&!d.open){d.showModal();}}
+  document.querySelectorAll('[data-open]').forEach(function(b){b.addEventListener('click',function(){
+    var o=document.querySelector('dialog[open]'); if(o&&o.id!==b.getAttribute('data-open')) o.close();
+    if(b.getAttribute('data-open')==='cold-call-dialog'){document.getElementById('cold-call-question').textContent=slides[idx].getAttribute('data-prompt')||'';}
+    if(b.getAttribute('data-open')==='ta-dialog'||b.getAttribute('data-open')==='guidance-dialog'){
+      document.querySelectorAll('.current-stage-name').forEach(function(e){e.textContent=slides[idx].getAttribute('data-title');});
+      document.querySelectorAll('.current-stage-time').forEach(function(e){e.textContent=slides[idx].getAttribute('data-timing')||'';});}
+    openD(b.getAttribute('data-open'));});});
+  document.querySelectorAll('[data-close]').forEach(function(b){b.addEventListener('click',function(){var d=b.closest('dialog');if(d)d.close();});});
+
+  /* answer reveals (source behaviour: toggle) */
+  document.querySelectorAll('[data-reveal]').forEach(function(btn){
+    btn.setAttribute('aria-expanded','false');
+    btn.addEventListener('click',function(){var t=document.getElementById(btn.getAttribute('data-reveal'));
+      if(t){t.hidden=!t.hidden;btn.setAttribute('aria-expanded',String(!t.hidden));}
+      fit(slides[idx]);});
+  });
+
+  /* We do decision checkpoint (source logic: Option A, value 0) */
+  var cb=document.getElementById('check-decision-btn'),sel=document.getElementById('decision-select'),fb=document.getElementById('decision-feedback'),ans=document.getElementById('decision-answer');
+  if(cb&&sel&&fb){cb.addEventListener('click',function(){
+    if(sel.value===cb.getAttribute('data-correct')){fb.textContent=cb.getAttribute('data-right');fb.className='ok';if(ans)ans.hidden=false;
+      var rb=document.getElementById('reveal-decision-btn');if(rb)rb.setAttribute('aria-expanded','true');}
+    else{fb.textContent=cb.getAttribute('data-wrong');fb.className='retry';}
+    fit(slides[idx]);});}
+
+  /* route pickers: toggle a route card on or off on this screen */
+  document.querySelectorAll('.route-controls button[data-route]').forEach(function(b){
+    b.addEventListener('click',function(){
+      var on=b.getAttribute('aria-pressed')!=='true'; b.setAttribute('aria-pressed',String(on));
+      var scope=b.closest('.slide'); scope.querySelectorAll('.route-panel[data-route="'+b.getAttribute('data-route')+'"]').forEach(function(p){p.hidden=!on;});
+      fit(scope);});
+  });
+
+  /* tools */
+  if(picker){slides.forEach(function(s,i){var o=document.createElement('option');o.value=String(i);o.textContent=(i+1)+'. '+s.getAttribute('data-title');picker.appendChild(o);});
+    document.getElementById('slide-go').addEventListener('click',function(){show(+picker.value);var d=picker.closest('dialog');if(d)d.close();});}
+  function flag(cls,btn,key){var on=!root.classList.contains(cls);root.classList.toggle(cls,on);if(btn)btn.setAttribute('aria-pressed',String(on));store(key,on?'1':'0');fit(slides[idx]);}
+  var calmB=document.getElementById('calm-toggle'),largeB=document.getElementById('large-toggle'),guideB=document.getElementById('guide-toggle');
+  if(calmB)calmB.addEventListener('click',function(){flag('calm',calmB,'mbm_calm_v1');});
+  if(largeB)largeB.addEventListener('click',function(){flag('large',largeB,'mbm_large_v1');});
+  if(guideB)guideB.addEventListener('click',function(){flag('mbm-guide-on',guideB,'mbm_guide_v1');});
+  if(store('mbm_calm_v1')==='1'){root.classList.add('calm');if(calmB)calmB.setAttribute('aria-pressed','true');}
+  if(store('mbm_large_v1')==='1'){root.classList.add('large');if(largeB)largeB.setAttribute('aria-pressed','true');}
+  if(store('mbm_guide_v1')==='1'){root.classList.add('mbm-guide-on');if(guideB)guideB.setAttribute('aria-pressed','true');}
+  var ps=document.getElementById('print-stage'),pa=document.getElementById('print-all');
+  if(ps)ps.addEventListener('click',function(){var d=ps.closest('dialog');if(d)d.close();root.classList.add('print-one');window.print();root.classList.remove('print-one');});
+  if(pa)pa.addEventListener('click',function(){var d=pa.closest('dialog');if(d)d.close();window.print();});
+
+  /* keys: arrows move stages, g toggles the staff layer */
+  document.addEventListener('keydown',function(e){
+    if(document.querySelector('dialog[open]'))return;
+    var t=e.target&&e.target.tagName; if(t==='SELECT'||t==='INPUT'||t==='TEXTAREA')return;
+    if(e.altKey||e.ctrlKey||e.metaKey)return;
+    if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();show(idx+1);}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(idx-1);}
+    else if(e.key==='g'||e.key==='G'){flag('mbm-guide-on',guideB,'mbm_guide_v1');}
+  });
+  window.addEventListener('resize',function(){fit(slides[idx]);});
+
+  var start=0,h=(location.hash||'').slice(1);
+  slides.forEach(function(s,i){if(s.id===h)start=i;});
+  slides.forEach(function(s){s.setAttribute('aria-hidden','true');});
+  slides[0].classList.remove('active'); idx=0; show(start);
+})();
+
+</script>
+</body>
+</html>

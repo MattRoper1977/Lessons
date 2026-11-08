@@ -77,6 +77,8 @@ LAND_A2_SCIENCE_TERMS += ('Art/Build/ART_BUILD_A2_W05_P1/Public/', 'Art/Build/AR
 # Autumn 1 AAA (Lessons #822, owner-approved 8 Nov 2026): the three Art Autumn 1 term folders, the same
 # rule as the Science Autumn 1 folders above -- status 'A' only, every file admitted by its own CATALOGUE_PINS digest.
 LAND_A2_SCIENCE_TERMS += ('Art/Build/Autumn_1_2026-27/', 'Art/Grow/Autumn_1_2026-27/', 'Art/Launch/Autumn_1_2026-27/')
+# AAA-SMALL (8 Nov 2026): the Creative Arts Weeks 3-4 lesson folders and the ICT Week 8 folder, same rule.
+LAND_A2_SCIENCE_TERMS += ('Art/Build/CREATIVE_ARTS_A2_W03/Public/', 'Art/Build/CREATIVE_ARTS_A2_W04/Public/', 'Art/Grow/CREATIVE_ARTS_A2_W03/Public/', 'Art/Grow/CREATIVE_ARTS_A2_W04/Public/', 'LAUNCH_ASDAN/W7-W12_2026-27/lessons/ICT/LAUNCH_ICT_A2_W08/Public/')
 SOURCE = 'tools/humanities_resources/SOURCE_MANIFEST.json'
 DOWNLOADS = 'tools/humanities_resources/DOWNLOAD_MANIFEST.json'
 LABEL_EDITS = 'tools/humanities_resources/PUBLIC_LABEL_CHANGES.json'
@@ -435,6 +437,79 @@ def _m1_transaction():
 
 
 M1_REVIEW_BASE, M1_REPLACEMENTS = _m1_transaction()
+
+# AAA-SMALL (8 Nov 2026, owner ask 16:24-16:32Z): the Creative Arts and ICT Autumn 2 lesson pages rebuilt to the
+# Science/Humanities standard (Next buttons, fixed card, timer) replace the landed pages at their own paths, one
+# transaction, derived from the bytes on disk and the merge base by the ruling thread's transaction script.
+# Every member also carries a CATALOGUE_PINS admission, which replacement_errors cross-checks.
+AAA_SMALL_REVIEW_BASE = '81858b3c38e5304321e30a722de7f7e2c519d0c8'
+AAA_SMALL_REPLACEMENTS = {'Art/Build/CREATIVE_ARTS_A2_W02/Public/ART_BUILD_A2_W02_P1.html': {'beforeGitBlob': 'e7659cdd42ba90ab536be4c7a203fdaa2b27fe09',
+                                                                    'afterSha256': '74706462e2d2d534e0eca66555e821ae73bdb6d73ff1bae2728655ee99d2493d',
+                                                                    'bytes': 477872},
+ 'Art/Build/CREATIVE_ARTS_A2_W02/Public/ART_BUILD_A2_W02_P2.html': {'beforeGitBlob': '4fc438d5e11397698bbe1875144e91404f1e21af',
+                                                                    'afterSha256': '4c477e2e8043fbc3dab9543f9cca98639a9b727ee670dbcfea16e9eeb8746573',
+                                                                    'bytes': 474903},
+ 'Art/Build/ART_BUILD_A2_W05_P1/Public/ART_BUILD_A2_W05_P1.html': {'beforeGitBlob': '1772e74084d43003f156ce421ea348f794a9d761',
+                                                                   'afterSha256': '7197445af32da2c554d76525a5bccdf5c1d7908dcf943709d2e98aadd80ba6cf',
+                                                                   'bytes': 254997},
+ 'Art/Build/ART_BUILD_A2_W05_P2/Public/ART_BUILD_A2_W05_P2.html': {'beforeGitBlob': '3b794fc8ee66df29ef0ab7e5ad668451eab90db4',
+                                                                   'afterSha256': '22968efc0739249b4878c999fada37c67cdbcd7384f98d1c46cd1ca98ae187d8',
+                                                                   'bytes': 255438},
+ 'Art/Build/ART_BUILD_A2_W06_P1/Public/ART_BUILD_A2_W06_P1.html': {'beforeGitBlob': '50088d69cd3e5bc70bec72925d35106dae01bad0',
+                                                                   'afterSha256': '400e078c44f38c87c1ff489cf668d0e6ba6d1a410bb16a8038d8062127678c80',
+                                                                   'bytes': 243027},
+ 'Art/Build/ART_BUILD_A2_W06_P2/Public/ART_BUILD_A2_W06_P2.html': {'beforeGitBlob': '3c63df2d4e5e2a85c63afe081803f1c089bbd2ab',
+                                                                   'afterSha256': '5eb9a85a8789adb1240a210cbb60c074ff014a0806dca05ce29ddd18c1fb283a',
+                                                                   'bytes': 243748},
+ 'Art/Build/CREATIVE_ARTS_A2_W07/Public/ART_BUILD_A2_W07_P1.html': {'beforeGitBlob': 'a1bc9c65762babf9f2fa3c7cff459716724dc5c7',
+                                                                    'afterSha256': '591f07facff93cda103358bda773ddbc672c17135d77d69097b88f04d2902225',
+                                                                    'bytes': 244227},
+ 'Art/Build/CREATIVE_ARTS_A2_W07/Public/ART_BUILD_A2_W07_P2.html': {'beforeGitBlob': '176425e1072dc1677e68684dc49b3e82ae29e6a1',
+                                                                    'afterSha256': '7d09ad1531ff6a8763ca33af8fdd3a35e6955941ffc675d07fbe1d15f16bfe9e',
+                                                                    'bytes': 244662},
+ 'Art/Grow/CREATIVE_ARTS_A2_W02/Public/ART_GROW_A2_W02_P1.html': {'beforeGitBlob': 'a80d848e4e0b34b1fd833ffc18648a0c3ab171fd',
+                                                                  'afterSha256': '622ea8ae9fb341dafa81c11342c7b2cd683f287f8feed1d1c68242cd1168d3c3',
+                                                                  'bytes': 508737},
+ 'Art/Grow/CREATIVE_ARTS_A2_W02/Public/ART_GROW_A2_W02_P2.html': {'beforeGitBlob': '7b1045ac00482c4865cfa498d3195a494118faf9',
+                                                                  'afterSha256': '7682e8254eff47f426f74941f1de57e258796fb6308570fcf77200a3ffc60083',
+                                                                  'bytes': 452304},
+ 'Art/Grow/ART_GROW_A2_W05_P1/Public/ART_GROW_A2_W05_P1.html': {'beforeGitBlob': '79f8857bcdae6d6abc9ed370012389b2e2370cfc',
+                                                                'afterSha256': '447bbfd6bfe35d6ba4ba18a6ea1fd30f624beabfea496d11c61fcbb002a52a2b',
+                                                                'bytes': 265749},
+ 'Art/Grow/ART_GROW_A2_W05_P2/Public/ART_GROW_A2_W05_P2.html': {'beforeGitBlob': 'a2f7f60ba0cacd418a62f14bfa215f79fb54f237',
+                                                                'afterSha256': '5495f61689c95dd0c775b6795a6d482e20075c45ace28e14a1a1e8ecd9d5f897',
+                                                                'bytes': 266611},
+ 'Art/Grow/ART_GROW_A2_W06_P1/Public/ART_GROW_A2_W06_P1.html': {'beforeGitBlob': '99cf9a83a15cbb3cdc7573e51e3de529f862c374',
+                                                                'afterSha256': 'a536fd13469754e946cf3589bb1e6b05502f381aa8c7e6b4349e4461049dbefe',
+                                                                'bytes': 253935},
+ 'Art/Grow/ART_GROW_A2_W06_P2/Public/ART_GROW_A2_W06_P2.html': {'beforeGitBlob': '98f164d30f75eb70ca74b502be037c0de45b7d21',
+                                                                'afterSha256': 'ed19ee82063bbc14f96784f6119c021fc220c4a302e5d36f79b2808304afad2d',
+                                                                'bytes': 254751},
+ 'Art/Grow/ART_GROW_A2_W07_P1/Public/ART_GROW_A2_W07_P1.html': {'beforeGitBlob': 'b7987320f54aebb9a29109ed84a7e0d67372f155',
+                                                                'afterSha256': 'b1b6215bbc73066ae9ed75fd37fa45a02bd02f199072d9e4523b4b630f85c7a4',
+                                                                'bytes': 255708},
+ 'Art/Grow/ART_GROW_A2_W07_P2/Public/ART_GROW_A2_W07_P2.html': {'beforeGitBlob': 'd0334bb4eafcc0e14c66dc86a5051ef233d28e57',
+                                                                'afterSha256': 'a8ec8d3e8c1ebea6ad9e0a1b206365d76507171418008bca2001fb77ac89da7a',
+                                                                'bytes': 256100},
+ 'LAUNCH_ASDAN/W7-W12_2026-27/lessons/ICT/LAUNCH_ICT_A2_W02/Public/ICT_LAUNCH_A2_W02.html': {'beforeGitBlob': 'be181d3f79559c34e5f29272674004247f70c297',
+                                                                                             'afterSha256': '6204bbb1dbc3aa44500f188e44272b78dcd01cc6b1d555cfaeb656b71afb1997',
+                                                                                             'bytes': 287675},
+ 'LAUNCH_ASDAN/W7-W12_2026-27/lessons/ICT/LAUNCH_ICT_A2_W03/Public/ICT_LAUNCH_A2_W03.html': {'beforeGitBlob': 'c970cc3620849baa142e99f6b3dccd5a3ccc5421',
+                                                                                             'afterSha256': '6eabd3e33790ad50fa5989bf4696f21990ebc0592bd772b93792edb62fa062d3',
+                                                                                             'bytes': 295082},
+ 'LAUNCH_ASDAN/W7-W12_2026-27/lessons/ICT/LAUNCH_ICT_A2_W04/Public/ICT_LAUNCH_A2_W04.html': {'beforeGitBlob': '4c3e084b04fa072f7f5c1f699a31417bcc4fdb05',
+                                                                                             'afterSha256': '3c16ecdf53711da8fdb7e5a14f30a87c9248c7b96ad9c3532fd55a055890a02c',
+                                                                                             'bytes': 295355},
+ 'LAUNCH_ASDAN/W7-W12_2026-27/lessons/ICT/LAUNCH_ICT_A2_W05/Public/ICT_LAUNCH_A2_W05.html': {'beforeGitBlob': 'e6cdf823442092b5a043519e2ce558fc39924bea',
+                                                                                             'afterSha256': '7ef4d34679509bf350e0e859177deebcbae8ece5697fb7c700813bdf79f55eb9',
+                                                                                             'bytes': 298238},
+ 'LAUNCH_ASDAN/W7-W12_2026-27/lessons/ICT/LAUNCH_ICT_A2_W06/Public/ICT_LAUNCH_A2_W06.html': {'beforeGitBlob': '40c476dad49e1b64663b7e8b4067900dccfdcab2',
+                                                                                             'afterSha256': '4096fb881f9cd0e6a9d2025fdbc5f9c180a750af1e1ae0651bceb69f3258e67f',
+                                                                                             'bytes': 301719},
+ 'LAUNCH_ASDAN/W7-W12_2026-27/lessons/ICT/LAUNCH_ICT_A2_W07/Public/ICT_LAUNCH_A2_W07.html': {'beforeGitBlob': 'bb3b5df101ed869b5a7b116a67d7cc9210e496c1',
+                                                                                             'afterSha256': '88340c00c505ceca94c29e7510a34d23cd746e3b2f975cd4498083535f1e8b1f',
+                                                                                             'bytes': 302742}}
+
 REPLACEMENT_TRANSACTIONS = {
     'Sugar': (SUGAR_REVIEW_BASE, SUGAR_REPLACEMENTS),
     # BEGIN DECLARED TRANSACTION ENTRIES
@@ -478,6 +553,7 @@ REPLACEMENT_TRANSACTIONS = {
     'W2 QR pages names and dates': (W2_QR_PAGES_NAMES_AND_DATES_REVIEW_BASE, W2_QR_PAGES_NAMES_AND_DATES_REPLACEMENTS),
     'Broken links repair': (BROKEN_LINKS_REPAIR_REVIEW_BASE, BROKEN_LINKS_REPAIR_REPLACEMENTS),
     # END DECLARED TRANSACTION ENTRIES
+    'AAA small subjects Art and ICT': (AAA_SMALL_REVIEW_BASE, AAA_SMALL_REPLACEMENTS),
 }
 # RULING um add.5 (24 Oct 2026): the retired member type is admitted only inside a transaction listed here against the
 # lettered ruling that retired it. Today that is um only. Any other transaction that carries a retired member fails

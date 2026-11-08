@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Practical log</title>
+<style>
+:root{--ink:#1d2433;--accent:#1f5fa8;--soft:#eef3fa;--line:#c9d3e3;--ok:#178841;--warn:#b36205;--bg:#ffffff}
+@media (prefers-color-scheme: dark){:root{--ink:#e8edf5;--accent:#8db8f0;--soft:#1c2433;--line:#3a4658;--ok:#5fd08a;--warn:#f0b060;--bg:#11161f}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.5 "Segoe UI",Arial,sans-serif}
+main{max-width:640px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:24px;margin:0 0 4px;color:var(--accent)}
+p{margin:8px 0}
+.note{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:16px}
+textarea{width:100%;min-height:300px;font:18px/1.6 inherit;padding:10px;border:2px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
+button,label.btn{font:inherit;font-size:17px;padding:12px 16px;border-radius:10px;border:2px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer}
+button.ghost,label.btn{background:transparent;color:var(--accent)}
+input[type=file]{display:none}
+#msg{min-height:1.5em;font-weight:600}
+.ok{color:var(--ok)}.warn{color:var(--warn)}
+ol{padding-left:22px}li{margin:4px 0}
+
+select,input[type=text],input[type=date]{font:inherit;font-size:17px;padding:8px;border:2px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);max-width:100%}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media (max-width:520px){.grid{grid-template-columns:1fr}}
+.field label{display:block;font-size:15px;font-weight:600;margin-bottom:2px}
+table{border-collapse:collapse;width:100%;font-size:16px}td,th{border:1px solid var(--line);padding:6px;text-align:left}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:12px 0}
+.tile{display:block;padding:14px;border:2px solid var(--line);border-radius:12px;text-decoration:none;color:var(--ink);background:var(--soft)}
+.tile b{display:block;color:var(--accent);font-size:19px}.tile span{font-size:15px}
+h2{font-size:20px;margin-top:22px}
+</style>
+</head>
+<body>
+<main>
+<h1>Practical log</h1>
+<p class="note">Pupil codes only (Pupil 1 to Pupil 12). Never type a name here. Entries stay on this device until you save the file.</p>
+<div class="grid">
+ <div class="field"><label for="date">Date</label><input type="date" id="date"></div>
+ <div class="field"><label for="path">Pathway</label><select id="path"><option>BASE</option><option>TRACK</option><option>SUMMIT</option><option>ALL</option></select></div>
+ <div class="field"><label for="subj">Subject</label><input type="text" id="subj" value="Science"></div>
+ <div class="field"><label for="lesson">Lesson code or title</label><input type="text" id="lesson" placeholder="e.g. week 2 lesson 1"></div>
+</div>
+<div class="field" style="margin-top:10px"><label for="prac">Practical / experiment</label><input type="text" id="prac" style="width:100%" placeholder="e.g. Testing magnets"></div>
+<h2>Skills shown</h2>
+<p><label><input type="checkbox" class="sk" value="Safety"> Safety</label> &nbsp; <label><input type="checkbox" class="sk" value="Measuring"> Measuring</label> &nbsp; <label><input type="checkbox" class="sk" value="Recording"> Recording</label> &nbsp; <label><input type="checkbox" class="sk" value="Explaining"> Explaining</label></p>
+<h2>Who did it</h2>
+<p class="row" style="margin:6px 0"><button class="ghost" id="allDid">Everyone: Did it</button></p>
+<table><tr><td>Pupil 1</td><td><select data-p="Pupil 1"><option value="">-</option><option>Did it</option><option>Partly</option><option>Watched</option><option>Absent</option></select></td></tr><tr><td>Pupil 2</td><td><select data-p="Pupil 2"><option value="">-</option><option>Did it</option><option>Partly</option><option>Watched</option><option>Absent</option></select></td></tr><tr><td>Pupil 3</td><td><select data-p="Pupil 3"><option value="">-</option><option>Did it</option><option>Partly</option><option>Watched</option><option>Absent</option></select></td></tr><tr><td>Pupil 4</td><td><select data-p="Pupil 4"><option value="">-</option><option>Did it</option><option>Partly</option><option>Watched</option><option>Absent</option></select></td></tr><tr><td>Pupil 5</td><td><select data-p="Pupil 5"><option value="">-</option><option>Did it</option><option>Partly</option><option>Watched</option><option>Absent</option></select></td></tr><tr><td>Pupil 6</td><td><select data-p="Pupil 6"><option value="">-</option><option>Did it</option><option>Partly</option><option>Watched</option><option>Absent</option></select></td></tr><tr><td>Pupil 7</td><td><select data-p="Pupil 7"><option value="">-</option><option>Did it</option><option>Partly</option><option>Watched</option><option>Absent</option></select></td></tr><tr><td>Pupil 8</td><td><select data-p="Pupil 8"><option value="">-</option><option>Did it</option><option>Partly</option><option>Watched</option><option>Absent</option></select></td></tr><tr><td>Pupil 9</td><td><select data-p="Pupil 9"><option value="">-</option><option>Did it</option><option>Partly</option><option>Watched</option><option>Absent</option></select></td></tr><tr><td>Pupil 10</td><td><select data-p="Pupil 10"><option value="">-</option><option>Did it</option><option>Partly</option><option>Watched</option><option>Absent</option></select></td></tr><tr><td>Pupil 11</td><td><select data-p="Pupil 11"><option value="">-</option><option>Did it</option><option>Partly</option><option>Watched</option><option>Absent</option></select></td></tr><tr><td>Pupil 12</td><td><select data-p="Pupil 12"><option value="">-</option><option>Did it</option><option>Partly</option><option>Watched</option><option>Absent</option></select></td></tr></table>
+<div class="field" style="margin-top:10px"><label for="note">Note (no names)</label><input type="text" id="note" style="width:100%"></div>
+<div class="row"><button id="add">Add to list</button><button class="ghost" id="save">Save file for Drive</button><button class="ghost" id="clear">Clear list</button></div>
+<p id="msg" aria-live="polite"></p>
+<h2>Waiting to save (<span id="n">0</span>)</h2>
+<div id="list"></div>
+<h2>Then</h2>
+<ol><li>Press <b>Save file for Drive</b>.</li><li>Put the file in Drive › <b>_INBOX › Practicals</b>.</li><li>The home laptop adds it to your private practical record and per-pupil counts.</li></ol>
+</main>
+<script>
+(function(){"use strict";
+var KEY="mbm_practical_log_v1",$=function(i){return document.getElementById(i);},rows=[];
+try{rows=JSON.parse(localStorage.getItem(KEY))||[];}catch(e){rows=[];}
+$("date").value=new Date().toISOString().slice(0,10);
+function say(t,c){$("msg").textContent=t;$("msg").className=c||"";}
+function store(){try{localStorage.setItem(KEY,JSON.stringify(rows));}catch(e){}}
+function draw(){$("n").textContent=rows.length;var h="";var seen={};rows.forEach(function(r){var k=r.date+" · "+r.pathway+" · "+r.practical;seen[k]=(seen[k]||0)+1;});
+Object.keys(seen).forEach(function(k){h+="<p>"+k.replace(/[<&]/g,"")+": "+seen[k]+" pupil(s)</p>";});$("list").innerHTML=h||"<p>Nothing yet.</p>";}
+function looksLikeName(t){return /\b[A-Z][a-z]+ [A-Z][a-z]+\b/.test(t);}
+$("allDid").onclick=function(){document.querySelectorAll("select[data-p]").forEach(function(s){s.value="Did it";});};
+$("add").onclick=function(){
+ var prac=$("prac").value.trim(),note=$("note").value.trim();
+ if(!prac){say("Type the practical first.","warn");return;}
+ if(looksLikeName(note)&&!confirm("The note might have a name in it. Pupil codes only, please. Keep it anyway?"))return;
+ var skills=[].slice.call(document.querySelectorAll(".sk:checked")).map(function(c){return c.value;}).join("; "),added=0;
+ document.querySelectorAll("select[data-p]").forEach(function(s){if(s.value){rows.push({date:$("date").value,pathway:$("path").value,subject:$("subj").value.trim(),lesson:$("lesson").value.trim(),practical:prac,pupil:s.getAttribute("data-p"),result:s.value,skills:skills,note:note});added++;s.value="";}});
+ if(!added){say("Choose at least one pupil.","warn");return;}
+ store();draw();say("Added "+added+" pupil(s).","ok");};
+function csv(v){v=String(v==null?"":v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
+$("save").onclick=function(){
+ if(!rows.length){say("Nothing to save yet.","warn");return;}
+ var cols=["date","pathway","subject","lesson","practical","pupil","result","skills","note"];
+ var body=cols.join(",")+"\r\n"+rows.map(function(r){return cols.map(function(c){return csv(r[c]);}).join(",");}).join("\r\n")+"\r\n";
+ var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([body],{type:"text/csv"}));
+ a.download="practical_log_"+new Date().toISOString().slice(0,16).replace(/[:T]/g,"-")+".csv";document.body.appendChild(a);a.click();
+ setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},1000);
+ say("Saved. Put it in Drive: _INBOX › Practicals. Then press Clear list.","ok");};
+$("clear").onclick=function(){if(rows.length&&!confirm("Clear the list on this device? (Save the file first.)"))return;rows=[];store();draw();say("Cleared.","ok");};
+draw();})();
+</script>
+</body>
+</html>
