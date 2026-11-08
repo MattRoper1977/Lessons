@@ -239,6 +239,14 @@ HUM_RE_REVIEWED_DOWNLOAD_TITLES_REVIEW_BASE = 'f26ddafdc2066368bf59de397341fbabb
 # declaration supersedes earlier claims on the same paths (RR4-O8 on the Spring 1 manifest).
 # The three Science pathway landing pages (PATHWAY_PARENTS) are additive-only and stay for phase 2.
 PATHWAY_LABELS_PHASE_1_REVIEW_BASE = 'f78880688e52c7e7b9e4dcd3f4d0540d7ac4a311'
+# W2 QR pages names and dates (Lessons #827; owner approval 8 Nov 2026, protected-page edits
+# card, "Yes, all six"): this week's Humanities GROW/LAUNCH Autumn 2 Week 2 QR-target pages lose the
+# local place name and landmark (word swaps only), and the four Creative Arts Autumn 2 Week 2 pages
+# lose the calendar date on the pupil-screen brandline. Same paths. The two pack manifests carry the
+# moved member digests. Base is the merge base with main; blobs read there, written with
+# admit_sx3_release.write(). This later declaration supersedes earlier claims on the same paths.
+# Every member also carries a CATALOGUE_PINS admission, which replacement_errors cross-checks.
+W2_QR_PAGES_NAMES_AND_DATES_REVIEW_BASE = 'c4f9ad593d7d5b0dd921fc89fc80f10b691caa9f'
 # BEGIN DECLARED TRANSACTIONS
 # BEGIN S3 OFFLINE EDITION REPLACEMENTS
 CX2_S3_REPLACEMENTS = {'Science/Teaching_Packs/web-slides.html': {'beforeGitBlob': '6596d65c7a9bd5bb1875c5b46bbc331df8652144', 'afterSha256': 'f31f09d03f5d8c417af1745b38309fa537afb8bb4c6a08f387db3349d9e1cba2', 'bytes': 18607}}
@@ -391,6 +399,9 @@ HUM_RE_REVIEWED_DOWNLOAD_TITLES_REPLACEMENTS = {'Humanities/Teaching_Packs/HUM_A
 # BEGIN PATHWAY_LABELS_PHASE_1 REPLACEMENTS
 PATHWAY_LABELS_PHASE_1_REPLACEMENTS = {'GROW_ASDAN/Autumn2_W1-W6_2026-27/CHECKSUMS.sha256': {'beforeGitBlob': '85bdc8762e034b0966f47a6d4c2949b7d4eb34ad', 'afterSha256': '711cf723430c8520914327bb9cd8d9276fbb4285185e68792803987cdbca20bd', 'bytes': 2832}, 'GROW_ASDAN/Autumn2_W1-W6_2026-27/START_HERE.html': {'beforeGitBlob': 'c0721958f1704ed7dc0d28efa5f3f6e6146e3e64', 'afterSha256': '27bdd6886e7ac0a3cf4c21baa86f3c27fe3e800866693fd8bab38f9857cb0db5', 'bytes': 28956}, 'GROW_ASDAN/Autumn2_W1-W6_2026-27/index.html': {'beforeGitBlob': 'c0721958f1704ed7dc0d28efa5f3f6e6146e3e64', 'afterSha256': '27bdd6886e7ac0a3cf4c21baa86f3c27fe3e800866693fd8bab38f9857cb0db5', 'bytes': 28956}, 'Humanities/Teaching_Packs/HUM_00_SoW_and_Order/RE_Scheme_of_Work_Spring_1_2026.html': {'beforeGitBlob': '309a16a507951f1a1b2ac58b692ac706d8df2118', 'afterSha256': 'd1364ad885299eabe43d28b54839d5cbe6ac8342158bc47d496c76e18a7ff2e4', 'bytes': 35842}, 'Humanities/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/BUILD/Spring_1/W01/BUILD_S1_W01_Lesson.html': {'beforeGitBlob': '076a1fd1565b0317dc76b658ec2b155ae3f59acf', 'afterSha256': '2482e33c71758259071faccb8a86bf92a16b7479d52dd455e5be825bc8e30832', 'bytes': 671143}, 'Humanities/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/GROW/Spring_1/W01/GROW_S1_W01_Lesson.html': {'beforeGitBlob': '742a286053d23468e377f28cb18e8bca5f328c44', 'afterSha256': 'f2e5f4ad118f8b8ce7a17cdbaffd012de098b4f5f7b429513e48bc715fa17fb8', 'bytes': 966727}, 'Humanities/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/SHA256SUMS.txt': {'beforeGitBlob': '6b4fe0dcad329c8cec4e3e2708366eb4ad541f39', 'afterSha256': '2f6c77dc0572c988281792b3c0f5285fc03d802bfe28033ee6a9c4ae7e61912d', 'bytes': 20838}, 'LAUNCH_ASDAN/W7-W12_2026-27/SHA256SUMS.txt': {'beforeGitBlob': '7765b9c9f00d6fa102ff7c59aa06a89ab9bc94ff', 'afterSha256': '2d22a8b2b0c8a39fd5e9a034469826c58593f8064f191b150c441618d53c3582', 'bytes': 4837}, 'LAUNCH_ASDAN/W7-W12_2026-27/START_HERE.html': {'beforeGitBlob': '3daa84ff1a022b9bc0e984f9f8ee69034b13fffd', 'afterSha256': '0339b378fcb15e98689e74415ec4c55e5f3f5fce3372f4306778e4c9921efb98', 'bytes': 134777}, 'Science/Build/v3_40min/BUILD_SCIENCE_PRACTICALS_MATRIX_PROGRESS_SCHOOLS.html': {'beforeGitBlob': 'fbbef977d919849fe8d4b50412aeb4e331d90e8f', 'afterSha256': 'bf7e040bd47cb2921b92545c6b4b76a81e3dd643734353bdae49490499d2d83a', 'bytes': 11343}, 'Science/Grow/v3_40min/GROW_SCIENCE_PRACTICALS_MATRIX_PROGRESS_SCHOOLS.html': {'beforeGitBlob': 'dc1a771c3c826221879961a97e151516d3211575', 'afterSha256': '613e2d77e367617fc252b43007603f4cf8d96f903f196d56831e0308c8454aa1', 'bytes': 15493}, 'Science/Grow/v3_40min/LUNDY_DAILY_REFLECTION_EVIDENCE_WINDOW.html': {'beforeGitBlob': '255b8332f3e96d65d06246680f4431e02853a869', 'afterSha256': '8a110cc1db2527e2e1a7d95e506fdb99d085a543453ca305aaf46fdd3f792a2a', 'bytes': 5917}}
 # END PATHWAY_LABELS_PHASE_1 REPLACEMENTS
+# BEGIN W2_QR_PAGES_NAMES_AND_DATES REPLACEMENTS
+W2_QR_PAGES_NAMES_AND_DATES_REPLACEMENTS = {'Art/Build/CREATIVE_ARTS_A2_W02/Public/ART_BUILD_A2_W02_P1.html': {'beforeGitBlob': '74471dbe898a7f728ba2239b7cc88d3b500e1976', 'afterSha256': '08bf28af7edb4b94b6749295afa34e7cb66709c2e032935cdfd9d5845df4bc0d', 'bytes': 56177}, 'Art/Build/CREATIVE_ARTS_A2_W02/Public/ART_BUILD_A2_W02_P2.html': {'beforeGitBlob': 'a0752fb67e529287a742d7256148e68dbe489168', 'afterSha256': '0adbbd1b403e06708ad19018f1a11b42fa4d16a5af751c28b9100a48381f1e85', 'bytes': 56872}, 'Art/Grow/CREATIVE_ARTS_A2_W02/Public/ART_GROW_A2_W02_P1.html': {'beforeGitBlob': '58d2714e8e13c0ef8c9e5da51a32187e281d44bf', 'afterSha256': 'e5ff7d1ae01e6c0819c28e69eff5118c05b5290230063bfb34e4b958e6e299b1', 'bytes': 56153}, 'Art/Grow/CREATIVE_ARTS_A2_W02/Public/ART_GROW_A2_W02_P2.html': {'beforeGitBlob': '4e7d631d9768cbe397b45233dda3ddbf096ffd20', 'afterSha256': '07da23b83a2926e8cdf8ccf2cabf6c7006389dc2d34a30f62bee1260a3fb1be5', 'bytes': 56856}, 'Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W02/GROW_A2_W02_Knowledge_Organiser.html': {'beforeGitBlob': '4b2e53c22a5cd24b86ed2f04c388a6fdfdcdb023', 'afterSha256': '1e3fbe313eeacabd4ae52029e8d46eb95b64f4a95b2fdd7b95da4712aab73d9d', 'bytes': 2696}, 'Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W02/GROW_A2_W02_Lesson.html': {'beforeGitBlob': '9b9d3d3bef2c8a3484816b1e7971b0b8804b473b', 'afterSha256': 'd4027f9992d0c3f7413e8741916d43159c074f712a79dd04bdd1613f800ca556', 'bytes': 692260}, 'Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W02/GROW_A2_W02_Model_Transcript.txt': {'beforeGitBlob': '4b2d989935889558591da10b1476ba6da9a6db46', 'afterSha256': 'bc1ff074a178966b13ebd461b7bfbcb23fef49f56b7a9817f2942575f3e9c03d', 'bytes': 818}, 'Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W02/GROW_A2_W02_Pupil_Resources.html': {'beforeGitBlob': '601abceaed2e875d92319f86ef919c95c82765d9', 'afterSha256': 'd7371ae139cd65d66fe9d82ad6dcdda72b860e142221f446a04ad1c0717a99cb', 'bytes': 8220}, 'Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/SHA256SUMS.txt': {'beforeGitBlob': '1c88c7b1396894140b0c6659a8051f2e096a55ee', 'afterSha256': '2b4b67ace56960017c5f7128de2489a9eb78187c3d62b773cf343c0bdf6aac0d', 'bytes': 12330}, 'Humanities/Teaching_Packs/HUM_Autumn_2_LAUNCH_Reviewed/LAUNCH/Autumn_2/W02/LAUNCH_A2_W02_Knowledge_Organiser.html': {'beforeGitBlob': '79dc69462e86d744c8e237dd1c7c8653448550ae', 'afterSha256': '790f3feeaec2c80e05cd1abe3aba9ea8f50c22b86bc590780a5580b32294cdb8', 'bytes': 2761}, 'Humanities/Teaching_Packs/HUM_Autumn_2_LAUNCH_Reviewed/LAUNCH/Autumn_2/W02/LAUNCH_A2_W02_Lesson.html': {'beforeGitBlob': '6dffc494cacff2b36c3812a347d1ddc5fd088bd6', 'afterSha256': '3ab7cd756a478bafcae91b0144e2b5478e48c8f4af14a292c204defe140970f2', 'bytes': 1159137}, 'Humanities/Teaching_Packs/HUM_Autumn_2_LAUNCH_Reviewed/LAUNCH/Autumn_2/W02/LAUNCH_A2_W02_Model_Transcript.txt': {'beforeGitBlob': '32bd912f024e3032206174eee7a5fedbe56cb568', 'afterSha256': 'b9a55ab1ad4d79c280ce3f8425755d84d863e59dba4b2f423de7e73897aac818', 'bytes': 956}, 'Humanities/Teaching_Packs/HUM_Autumn_2_LAUNCH_Reviewed/LAUNCH/Autumn_2/W02/LAUNCH_A2_W02_Pupil_Resources.html': {'beforeGitBlob': 'aa15c8365177c6d3baa154eb37bbcecee2015969', 'afterSha256': 'f493d509fc989946df982b61c734103ff17eaeca32fee845089880d11c64df22', 'bytes': 8321}, 'Humanities/Teaching_Packs/HUM_Autumn_2_LAUNCH_Reviewed/LAUNCH/Autumn_2/W02/Teaching_Visual_1.svg': {'beforeGitBlob': 'f0387f1a4b2cf7cd0ea4cb275225445e9f3fd517', 'afterSha256': '0bab17c7a2ea500fe2868748cec341bc6bc2e094c621800a6400fa4dc9f89b0c', 'bytes': 119150}, 'Humanities/Teaching_Packs/HUM_Autumn_2_LAUNCH_Reviewed/SHA256SUMS.txt': {'beforeGitBlob': '0bc382ccb21f8e99e40194bf29818af71dda8465', 'afterSha256': 'f274ad67757070e6417a75b44785903f6577398bb59fa455012c586ed5f206b5', 'bytes': 13133}}
+# END W2_QR_PAGES_NAMES_AND_DATES REPLACEMENTS
 # END DECLARED TRANSACTIONS
 
 # Each transaction is judged on its own: every member present as exactly one
@@ -456,6 +467,7 @@ REPLACEMENT_TRANSACTIONS = {
     'Gated lesson editions': (GATED_LESSON_EDITIONS_REVIEW_BASE, GATED_LESSON_EDITIONS_REPLACEMENTS),
     'Hum RE reviewed download titles': (HUM_RE_REVIEWED_DOWNLOAD_TITLES_REVIEW_BASE, HUM_RE_REVIEWED_DOWNLOAD_TITLES_REPLACEMENTS),
     'Pathway labels phase 1': (PATHWAY_LABELS_PHASE_1_REVIEW_BASE, PATHWAY_LABELS_PHASE_1_REPLACEMENTS),
+    'W2 QR pages names and dates': (W2_QR_PAGES_NAMES_AND_DATES_REVIEW_BASE, W2_QR_PAGES_NAMES_AND_DATES_REPLACEMENTS),
     # END DECLARED TRANSACTION ENTRIES
 }
 # RULING um add.5 (24 Oct 2026): the retired member type is admitted only inside a transaction listed here against the
@@ -905,14 +917,79 @@ class _EY2View:
 
 def ey2_view(root, repo, name, files):
     """`root`, or an _EY2View of it when a ruled list transaction `name` really declared, among `files`,
-    carries an ey 2 START_HERE row on its declared bytes."""
+    carries an ey 2 START_HERE row on its declared bytes. W2 QR: DLG-1 also reads the members it gave
+    up to the W2 QR transaction AS IT DECLARED THEM (w2qr_declared)."""
     declared = {}
     for rel in sorted(files):
         if rel in EY2_PAIRS and ALL_REPLACEMENTS.get(rel) == name:
             data = ey2_declared(root, repo, rel)
             if data is not None:
                 declared[rel] = data
+    if name == W2QR_PRIOR_OWNER:
+        declared.update(w2qr_declared(root, repo, files))
     return _EY2View(root, declared) if declared else root
+
+
+# W2 QR (owner approval 8 Nov 2026, protected-page edits card "Yes, all six"; ruled on the ey 2 precedent
+# and no wider): the transaction 'W2 QR pages names and dates' re-cuts two Humanities Autumn 2 pack
+# checksum lists that DLG-1 also declared, moving ONLY the rows of its own listed W02 members. DLG-1 still
+# owns the other weeks' pages in those packs, and its limb re-judges every member through the list, so the
+# moved W02 rows would refuse every other week. So DLG-1 gives up its claim on exactly those rows, and on
+# the W02 pages the two transactions both declare, and keeps judging every other row as before:
+#   (a) KEYED TO THE DECLARED BYTES. A list is read as DLG-1 declared it only when its bytes on disk are the
+#       afterSha256 the W2 QR transaction declares for it. Any other list bytes fall back to the old rule.
+#   (b) THE TRANSACTION'S OWN LIST, never a pattern: only a row naming a member the W2 QR transaction
+#       declares is put back, to its digest at the W2 QR review base. Every other row is read from disk.
+#   (c) PROVED, NOT ASSUMED. The rebuilt list must hash to DLG-1's own declared afterSha256, and a shared
+#       page is read at the W2 QR review base only when that is DLG-1's declared afterSha256 too and the page
+#       on disk is the W2 QR declared bytes. Otherwise nothing is substituted and the old rule refuses.
+# A moved row for any member the W2 QR transaction does not declare makes the list differ from its declared
+# bytes, so (a) fails and DLG-1 refuses it as before. Red proofs in w2qr_controls.
+W2QR_TRANSACTION = 'W2 QR pages names and dates'
+W2QR_PRIOR_OWNER = 'DLG-1'
+
+
+def w2qr_declared(root, repo, files):
+    """{path: the bytes DLG-1 declared for it} for each list and page among `files` that DLG-1 and the
+    W2 QR transaction both declare, when (a) to (c) above hold; {} otherwise."""
+    if W2QR_TRANSACTION not in REPLACEMENT_TRANSACTIONS:
+        return {}
+    w_base, w_files = REPLACEMENT_TRANSACTIONS[W2QR_TRANSACTION]
+    _, d_files = REPLACEMENT_TRANSACTIONS[W2QR_PRIOR_OWNER]
+    shared = sorted(rel for rel in files if rel in w_files and rel in d_files)
+    if not shared:
+        return {}
+    read_base = limb_reader(repo or root, w_base)
+    out, proved_lists = {}, set()
+    for rel in shared:
+        if rel.rsplit('/', 1)[-1] != PACK_MANIFEST:
+            continue
+        path = root / rel
+        if path.is_symlink() or not path.is_file() or sha(path) != w_files[rel]['afterSha256']:
+            continue
+        folder = rel[: -len(PACK_MANIFEST)]
+        there = {}
+        for line in read_base(rel).splitlines(keepends=True):
+            m = _EY2_ROW.fullmatch(line)
+            if m:
+                there[m.group('name').decode()] = m.group('digest')
+        lines = path.read_bytes().splitlines(keepends=True)
+        for i, line in enumerate(lines):
+            m = _EY2_ROW.fullmatch(line)
+            if m and folder + m.group('name').decode() in w_files and m.group('name').decode() in there:
+                lines[i] = line[:m.start('digest')] + there[m.group('name').decode()] + line[m.end('digest'):]
+        candidate = b''.join(lines)
+        if hashlib.sha256(candidate).hexdigest() == d_files[rel]['afterSha256']:
+            out[rel] = candidate
+            proved_lists.add(folder)
+    for rel in shared:
+        if rel in out or not any(rel.startswith(folder) for folder in proved_lists):
+            continue
+        path, data = root / rel, read_base(rel)
+        if (not path.is_symlink() and path.is_file() and sha(path) == w_files[rel]['afterSha256']
+                and hashlib.sha256(data).hexdigest() == d_files[rel]['afterSha256']):
+            out[rel] = data
+    return out
 
 
 def owned_members(name, files, owners=None):
@@ -1542,6 +1619,7 @@ def controls(root):
     rows.extend(retirement_ruling_controls(root))
     rows.extend(supersession_controls(root))
     rows.extend(ey2_controls(root))
+    rows.extend(w2qr_controls(root))
     rows.extend(manifest_pin_controls())
     return rows
 
@@ -1797,6 +1875,77 @@ def supersession_controls(root):
     wrong = {rel: dict(later[rel], afterSha256='0' * 64)}
     check('The later transaction still rejects bytes that differ from its review',
           bool(replacement_errors('Later', wrong, root, partial, pins_later, before, owners)))
+    return rows
+
+
+def w2qr_controls(root):
+    # W2 QR red proofs (ruled on the ey 2 precedent). DLG-1 gives up only the rows of the W2 QR
+    # transaction's own listed members, and only on the list bytes that transaction declares. Each way
+    # that could be widened is proved RED here, in a disposable copy, on each list the two share.
+    rows = []
+    def check(label, condition):
+        if not condition:
+            raise AssertionError(label)
+        rows.append({'name': label, 'status': 'PASS'})
+    if W2QR_TRANSACTION not in REPLACEMENT_TRANSACTIONS:
+        return rows
+    name = W2QR_PRIOR_OWNER
+    _, declared = REPLACEMENT_TRANSACTIONS[name]
+    _, w_files = REPLACEMENT_TRANSACTIONS[W2QR_TRANSACTION]
+    lists = sorted(rel for rel in w_files if rel in declared and rel.rsplit('/', 1)[-1] == PACK_MANIFEST)
+    if not lists:
+        return rows
+    owners = judged_owners(root)
+    owned = owned_members(name, declared, owners)
+    check('W2 QR: every list the two transactions share passes to the W2 QR transaction, and DLG-1 reads it '
+          'as it declared it', all(owners.get(rel) == W2QR_TRANSACTION for rel in lists)
+          and set(lists) <= set(w2qr_declared(root, root, declared)))
+    judge_module = limb_judge(root)
+    _, _, held = judge_module.dlg1_tools(root)
+    with tempfile.TemporaryDirectory(prefix='w2qr-limb-proof-') as temp:
+        fixture = Path(temp)
+        for rel in {*declared, *w_files, *held, 'tools/verify_cross_estate_unification.py',
+                    *(entry['startHere'] for entry in EY2_PAIRS.values())}:
+            if (root / rel).is_file():
+                target = fixture / rel; target.parent.mkdir(parents=True, exist_ok=True); shutil.copy2(root / rel, target)
+        shutil.copytree(root / 'tools/hum', fixture / 'tools/hum', dirs_exist_ok=True)
+        for rel in lists:
+            folder = rel[: -len(PACK_MANIFEST)]
+            pages = sorted(p for p in owned if p.startswith(folder) and p.endswith('.html'))
+            if not pages:
+                continue
+            label = 'W2 QR ' + rel + ': '
+            check(label + 'POSITIVE CONTROL: with the list as the W2 QR transaction declared it, DLG-1 admits '
+                  'every page it still owns in that pack', all(limb_verdicts(fixture, name, root).get(p, 'no verdict') is None
+                                                              for p in pages))
+            path = fixture / rel; original = path.read_bytes()
+            lines = original.splitlines(keepends=True)
+            def row_index(predicate):
+                for i, line in enumerate(lines):
+                    m = _EY2_ROW.fullmatch(line)
+                    if m and predicate(folder + m.group('name').decode()):
+                        return i, m
+                return None
+            def flipped(i, m):
+                digest = m.group('digest').translate(bytes.maketrans(b'0123456789abcdef', b'123456789abcdef0'))
+                out = list(lines); out[i] = lines[i][:m.start('digest')] + digest + lines[i][m.end('digest'):]
+                return b''.join(out)
+            other = row_index(lambda member: member in pages)
+            mine = row_index(lambda member: member in w_files)
+            check(label + 'the list names a page DLG-1 still owns and a member of the W2 QR transaction',
+                  other is not None and mine is not None)
+            for proof, (i, m) in (('a non-W02 row moved, the W2 QR transaction present', other),
+                                  ('a W02 row moved to bytes that are not the declared list', mine)):
+                try:
+                    path.write_bytes(flipped(i, m))
+                    check(label + 'RED PROOF (' + proof + '): the list is not read as declared',
+                          rel not in w2qr_declared(fixture, root, declared))
+                    verdicts = limb_verdicts(fixture, name, root)
+                    check(label + 'RED PROOF (' + proof + '): DLG-1 still refuses the pages it owns there',
+                          all(verdicts.get(p, 'no verdict') is not None for p in pages))
+                finally:
+                    path.write_bytes(original)
+            check(label + 'all sabotage was restored', sha(path) == w_files[rel]['afterSha256'])
     return rows
 
 
