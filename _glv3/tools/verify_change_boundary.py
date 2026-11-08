@@ -510,6 +510,17 @@ AAA_SMALL_REPLACEMENTS = {'Art/Build/CREATIVE_ARTS_A2_W02/Public/ART_BUILD_A2_W0
                                                                                              'afterSha256': '88340c00c505ceca94c29e7510a34d23cd746e3b2f975cd4498083535f1e8b1f',
                                                                                              'bytes': 302742}}
 
+# RE-SOW-LABELS (8 Nov 2026, publication pre-flight): the two RE scheme-of-work pages gain an aria-label on each of the
+# 180 download links the broken-link repair (#825) made resolvable, carrying the reviewed download title the Site's
+# usage register pins, so the register keeps naming those files as reviewed. No visible text, link or file changes.
+RE_SOW_LABELS_REVIEW_BASE = '7c4f9474d78ad935ee5317e257811069bfa65562'
+RE_SOW_LABELS_REPLACEMENTS = {'Humanities/Teaching_Packs/HUM_00_SoW_and_Order/RE_Scheme_of_Work_Autumn_2026.html': {'beforeGitBlob': 'b07ade1dcc7512a984f942d989a38bb5201a8b8d',
+                                                                                       'afterSha256': '774b57b7f0bd57b7382a9f30da10d4d77b93953ff91d79d64548dd6a0fb906d9',
+                                                                                       'bytes': 86160},
+ 'Humanities/Teaching_Packs/HUM_00_SoW_and_Order/RE_Scheme_of_Work_Spring_1_2026.html': {'beforeGitBlob': 'ed22e0019589801f31e4c583edb551a376e48d27',
+                                                                                         'afterSha256': 'ee4e98a047de8ae7eadd7de1e254ef83ea811e0fb4c95dd313b683c5e9906e7d',
+                                                                                         'bytes': 39496}}
+
 REPLACEMENT_TRANSACTIONS = {
     'Sugar': (SUGAR_REVIEW_BASE, SUGAR_REPLACEMENTS),
     # BEGIN DECLARED TRANSACTION ENTRIES
@@ -554,6 +565,7 @@ REPLACEMENT_TRANSACTIONS = {
     'Broken links repair': (BROKEN_LINKS_REPAIR_REVIEW_BASE, BROKEN_LINKS_REPAIR_REPLACEMENTS),
     # END DECLARED TRANSACTION ENTRIES
     'AAA small subjects Art and ICT': (AAA_SMALL_REVIEW_BASE, AAA_SMALL_REPLACEMENTS),
+    'RE scheme-of-work reviewed download labels': (RE_SOW_LABELS_REVIEW_BASE, RE_SOW_LABELS_REPLACEMENTS),
 }
 # RULING um add.5 (24 Oct 2026): the retired member type is admitted only inside a transaction listed here against the
 # lettered ruling that retired it. Today that is um only. Any other transaction that carries a retired member fails
