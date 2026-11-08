@@ -2268,7 +2268,7 @@ CATALOGUE_PINS = {
 # Ruling qp-2 (A-wide, os-4, 11 Oct 2026): the original rows are 734 plus the 21 reviewed rows the A19/A24
 # catalogue refresh interleaves (additive: with them taken out, the 734 are in their reviewed order, unedited).
 CATALOGUE_ORIGINAL_ROWS = 755
-CATALOGUE_ORIGINAL_ROWS_SHA256 = "d4714b20bc0de0732d1dd33e449280b8b42fd0a033b830c7b169b7f538430717"
+CATALOGUE_ORIGINAL_ROWS_SHA256 = "431354c16974f70317db728a2f5de209ec4fc54762fc1ec0da57242ceb2efea7"
 # The appended rows are the 49 reviewed hub rows followed, since UX2 D3
 # (2026-09-08), by the companion-pack entries DERIVED from
 # data/companion-packs.json by tools/ux2/companion_catalogue.py. The count and
