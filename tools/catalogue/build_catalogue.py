@@ -66,8 +66,10 @@ for mf in sorted(ROOT.rglob('manifest*.json')):
  rows=data if isinstance(data,list) else data.get('lessons',data.get('sequence',[])) if isinstance(data,dict) else []
  for item in rows:
   if not isinstance(item,dict) or not isinstance(item.get('file'),str):continue
-  candidate=mf.parent/item['file']
-  if candidate.is_file():MANIFESTS.setdefault(str(candidate.relative_to(ROOT)),[]).append((str(mf.relative_to(ROOT)),item))
+  # A2-LIST (8 Nov 2026): a catalogue-side manifest (tools/catalogue/manifest_*.json) may name a
+  # page outside its own folder, so the member path is resolved before it is keyed.
+  candidate=(mf.parent/item['file']).resolve()
+  if candidate.is_file():MANIFESTS.setdefault(str(candidate.relative_to(ROOT.resolve())),[]).append((str(mf.relative_to(ROOT)),item))
 CACHE={}
 
 def norm(s):return re.sub(r'\s+',' ',s).strip()
@@ -139,6 +141,17 @@ def classify(path,row=None):
   if not terms and result['term']!='flexible':
    terms=term_codes(title_slide or own_title)
    if terms:result['evidence'].append({'method':'own title slide declaration','source':path,'quote':title_slide[:1200] or own_title})
+  # A2-LIST (8 Nov 2026): a deck whose first slide carries no term may still declare it
+  # verbatim in its own brandline or printed book header ("Humanities · GROW · Autumn 2 ·
+  # Week 01 · HUM-GROW-A2-W01"). Read the first such node, exactly as the deck prints it;
+  # never a filename or folder.
+  if not terms and result['term']!='flexible':
+   for cls in ('brandline','p16-book-header'):
+    nodes=doc.xpath('//*[contains(concat(" ",normalize-space(@class)," ")," '+cls+' ")]')
+    if not nodes:continue
+    header=norm(' '.join(nodes[0].itertext()))
+    if term_codes(header):
+     terms=term_codes(header);result['evidence'].append({'method':'own book header declaration','source':path,'quote':header[:400]});break
   # Re-prove a census binding against the current content or unchanged bytes.
   if not terms and path in EXISTING:
    refs=EXISTING[path].get('contentCellReferences',[])
