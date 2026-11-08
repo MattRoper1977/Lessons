@@ -103,7 +103,7 @@ MANIFEST_PINS = {
     # Ruled onto the pin 2026-08-12 (Ruling 3): the deck install is a
     # resources.json edit, and the blanket rule forbade it the same way it
     # once forbade studio adds. Same pattern, same tool, same commit rule.
-    "resources.json": "2f78e01c1b9053153f35d53fd585cb879392a478b42d10b8bd26cd89262e1fb1"
+    "resources.json": "955b4b8c370adebe2bf97d1af45502f5b7b9f28ebc19d0d39dd1c5c4a4dd4946"
 }
 PIN_COMMAND = "python3 tools/pin_manifests.py   (from either checkout — it writes both gate copies or neither)"
 
@@ -129,7 +129,7 @@ CATALOGUE_PINS = {
         "tools/catalogue/check_display_titles_browser.cjs": "0c193780f901cf4d3b7013819a7488567bf7ce40a75d05dbe43c7a6971877344",
         "tools/verify_lessons_chips.mjs": "e417afd94ae4f3a450caab2edf4b6c41d14e4588f070d0ad822263e30a86cf39",
         "tools/sw2/check_tokens_inert.cjs": "a8258b89b5dd00147a0c8b18488a2dcf8102bc20d2ddf2fa1aa0863d25454674",
-        "assets/catalogue/lesson-order.json": "3adb3f6ed3274b3b9ac16a0cb7813f63b71882ab838813fd381cd60cd3707119",
+        "assets/catalogue/lesson-order.json": "91ec69317f990ff56754f0bf15beadc04807673650df1584a13e59a3b165773d",
         "tools/catalogue/build_lesson_order.py": "35a4c54779b800ae8bd949154d0d19fddb190f49ec18e62efdd86d03313f6180",
         "tools/ux2/hub_gates.mjs": "3d3120df94b1789041370c4045fbcc983635af0b30a0705447f18371bed98944",
         "index.html": "798d5572afecb8db10a516f9a0ed57d54b7d1dc5e220077a6be85d5f046b555e",
@@ -153,7 +153,7 @@ CATALOGUE_PINS = {
         "assets/catalogue/lesson-navigation.js": "42e579bbef3940c24ca4360319290820305a777330b8bff79152b2cb6aa077e3",
         "assets/catalogue/science-shelf.css": "b2b1eb328662d841add139ccfff107f985f17373f1ee82b8762475663097ab60",
         "assets/catalogue/science-shelf.js": "a59fe0c988a5de7d614afc6a36d7dacf14c6e3fa92c732740442e4914d00f356",
-        "assets/catalogue/terms-and-styles.json": "d51046ce7937b70a1ae2d1053037e46774e0ed3f7343e5f6ab31738c08006f36",
+        "assets/catalogue/terms-and-styles.json": "571097489d3fc713876a90638eaf075db899f17dcf2ef7372f7a872305066e99",
         "assets/catalogue/science-shelf.json": "6bfcac8579a72f8413e158b49460a8b853f284b8dc64bd4da4442c37e92edadf",
         "assets/catalogue/humanities-shelf.json": "3f6a3583f3658b79a544aeef27a778a283069e4842d763cb95728a703669d9a7",
         "tools/catalogue/build_catalogue.py": "249e82b795e0fa5f1eaeb7afd00883a963d63742b50b783fa88f808737ab230d",
@@ -173,7 +173,7 @@ CATALOGUE_PINS = {
         "Science/Build/START_HERE.html": "acac26140f5aeef22292e6ce3831fa61aaf5e62432cc3998b340918c8bfaee7f",
         "Science/Grow/START_HERE.html": "d2bec305dec3212215c6f599cad3925c571f9a34ca6e85268893c8ed142170dd",
         "Science/Launch/START_HERE.html": "10b46e7cf26e3aa4b7f1fb4758a039bcbec7000bc2ec8d30dfe3ce0e0b966353",
-        "tools/catalogue/SHELF_SELECTION.json": "bfc221a2ddea3dcd9ef5718bacc03deef3fb9968bdcfddc2242b16ec6e31fd07",
+        "tools/catalogue/SHELF_SELECTION.json": "7cd1fde39dcce60d60bb98571e469dd2f1716ab7c8e2254a306c997341f90419",
         "tools/catalogue/HUMANITIES_SELECTION.json": "8bc58e21f2a3483d97eaf64dbfdc1bbbfeb3599b6bc0693377800a0054fcdf0f",
         "tools/easter/science_original_browser.cjs": "aae28a4166d41546cbe5b0acd0866eeaf5e6f47cd5b1949fc48ecb2d4c79a1ec",
         "tools/science_pack/browser_checks.cjs": "058c9bc1f06c876f2994a23d467d83fced683c6355eb92d0ef43986d3e28d72d",
@@ -247,8 +247,8 @@ CATALOGUE_PINS = {
         "tools/humanities_resources/check_resources.py": "ec5383e3a34cbff999f190b0014a4a73e00a3a29e2714498f7620fd638dc2aa5",
         "tools/humanities_resources/resource.css": "1aed9aaca0d73a4b200c4e5d0977e73f4e906c747d7340c7a62f4197a8344bae",
         "tools/humanities_resources/resource.js": "ad40afed95490bfcce92dc062da46e1b27bcb96bdc80e37eabdfe02bf6ffc446",
-        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "f519d116a73b5f2d99902e4f6b2e9ad050d0672b675d627789ea8f3f811b95d8",
-        "tools/catalogue/TERM_REVIEW.json": "9395de4c2803a7bc2a679cf0659c9df3c41c01e5ac60c0a2d39249414bc12de8",
+        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "8fb763137c46efe0b609bd13ec056760da6a03177f274da3f035073f37286490",
+        "tools/catalogue/TERM_REVIEW.json": "280f8113f04ac103e5d5c4cebcdfce707bb36adfeb63a3564c5d80a450a69666",
         "tools/catalogue/SCIENCE_WEEK_BINDINGS.json": "9fa98ad78b0bd3c3f3ee15f88a7b2fd40eea810e6c9fb65ee93b3c5192888071",
         "primary/year5/science/autumn/forces/Lesson8_ExploreGravity.html": "20047720bf1d309055abdf232d341b6fd99b833631efa0bcbfb3dabed9671196",
         "primary/year5/science/autumn/forces/Y5_Forces_SoW_and_Plans.docx": "ca36cfd92f1c768ea66f0eb748d47e6227f67569f77b5472d0da13d03f92f2e6",
@@ -3032,7 +3032,31 @@ CATALOGUE_PINS = {
         "kits/class_tools/Class_names.html": "9dd07df35df72997823126c4b99499fddea98dbe78b4b34b223c1ea5dde31000",
         "kits/class_tools/My_tools.html": "9dadc768e06329ca54908a09d0f6ef18be7de4c0548229bd9c9e8e888652511a",
         "kits/class_tools/Practical_log.html": "56cb7d7a6f847cec2ab69700137501589dd32710650ea2c6e9b5cfbab17911fd",
-        "kits/class_tools/Requests.html": "c6f34336c15a5692ff6186bb2d0c26090b0c3593f8556496837ec1a437cb4f82"
+        "kits/class_tools/Requests.html": "c6f34336c15a5692ff6186bb2d0c26090b0c3593f8556496837ec1a437cb4f82",
+        "Tutor_Time/Autumn_2_2026-27/TT_A2_W02_Behaviour.html": "e41021b59fea32e60b9a6fd6d20225a09d2530368a54dad71dc1abda68c14659",
+        "Tutor_Time/Autumn_2_2026-27/TT_A2_W02_KCSIE.html": "f7477fb24cb3b14d9302df55aa4308445c662d688be30a85c5c0e92fb933229b",
+        "Tutor_Time/Autumn_2_2026-27/TT_A2_W02_Safeguarding.html": "fe55e3a0ae9b334c61ae4a1d7bbb5f8bdb1618662df4696a39b873027f00cd85",
+        "Tutor_Time/Autumn_2_2026-27/TT_A2_W02_Values.html": "a2c5196f18d3836be806f4ff0637bd88a300abf622b6630ce1e0cc17418b885a",
+        "Tutor_Time/Autumn_2_2026-27/TT_A2_W03_Behaviour.html": "3ad3a3d70af1331c0a7acc04849aaafdac6794659cdc4c77d3124dd0ddfd4085",
+        "Tutor_Time/Autumn_2_2026-27/TT_A2_W03_Safeguarding.html": "2996e85d701f9324dd03dcc664957eaf0d14d934accf129f4f7d6e2435d19c11",
+        "Tutor_Time/Autumn_2_2026-27/TT_A2_W03_Values.html": "0431e6f1d334bdd760ded644957d9256fb35ad73afcc6cc37eb7d86b2ae66e6e",
+        "Tutor_Time/Autumn_2_2026-27/TT_A2_W04_Behaviour.html": "998c4b0a953802fc233efc2199d0bc88ca3ef000371dd21c70cf82e2e3552c83",
+        "Tutor_Time/Autumn_2_2026-27/TT_A2_W04_Safeguarding.html": "02930eddd7884ed17d8b4219e6432de4dc3051a498ad30cf3f8bd67c87681e7f",
+        "Tutor_Time/Autumn_2_2026-27/TT_A2_W04_Values.html": "73973286dcc48388f48213e8ed6cad60c97f1bfdf6f956dee541cc6a27b74094",
+        "Tutor_Time/Autumn_2_2026-27/TT_A2_W05_Behaviour.html": "d81bc2adcb4d87b639f3f1490ff0e4b81e0e9b991c0f6418f112b27f888f2567",
+        "Tutor_Time/Autumn_2_2026-27/TT_A2_W05_Safeguarding.html": "83ea6170413a94fd712f405288366bab20f473c0bc3d02b1e3510aca5274db49",
+        "Tutor_Time/Autumn_2_2026-27/TT_A2_W05_Values.html": "677621da130abaa8287521574ddfd48af374135553abeb52ed573338860ebcdf",
+        "Tutor_Time/Autumn_2_2026-27/TT_A2_W06_Behaviour.html": "15e45310c53cc64d6530daf0ed310003ea151f0e911a700cb96441afc93a1291",
+        "Tutor_Time/Autumn_2_2026-27/TT_A2_W06_KCSIE.html": "8839d69dd4a86f7b6125d9b54e4c38d81f1efa6c73575a4c25a423b4ba9151c0",
+        "Tutor_Time/Autumn_2_2026-27/TT_A2_W06_Safeguarding.html": "cfbafddc189d8e1ce670fbb35fb841a7d798887ab98290bedd10c636ba791e60",
+        "Tutor_Time/Autumn_2_2026-27/TT_A2_W06_Values.html": "208154a4f2a01904648778820d5fe9a98fdda31decd50425bfa7f3cea7fa3e5c",
+        "Tutor_Time/Autumn_2_2026-27/TT_A2_W07_Behaviour.html": "2b5d08e59f4afccd1f8818acc0c7566ba661c4edbc0c44156b8293fbc64da1a2",
+        "Tutor_Time/Autumn_2_2026-27/TT_A2_W07_KCSIE.html": "3fa8e087203c08369efe1d4bbf8f5d47e9bec6b4f17106410b07473d2d35726e",
+        "Tutor_Time/Autumn_2_2026-27/TT_A2_W07_Safeguarding.html": "a4c30d616395ea535566a1fd163a0566556d59bc5344bed48f9825041bce98f9",
+        "Tutor_Time/Autumn_2_2026-27/TT_A2_W07_Values.html": "7984f7e968f5e6ee8a0120aac0778944e29540a3f6c99d2e25a4d55ee810ad2f",
+        "Tutor_Time/Autumn_2_2026-27/START_HERE.html": "b62860d7ef6ca89919f28d1f5e7427ad14147e73435ad98839808fc33dcb09f9",
+        "Tutor_Time/Autumn_2_2026-27/Scheme_of_Work.html": "9376cd89e11706db3ac215dcf0ab6054238eeb83ed993dbb2fb34b3a229d84c8",
+        "tools/catalogue/manifest_tutor_time_a2_terms.json": "4f42c543f1de5a7226c5e8dc8b99f6c03655d03867a60c78e18353c4d9db8ef3"
     }
 }
 # END REVIEWED CATALOGUE PINS
@@ -3050,14 +3074,14 @@ CATALOGUE_ORIGINAL_ROWS_SHA256 = "d4714b20bc0de0732d1dd33e449280b8b42fd0a033b830
 # digest below are re-cut by tools/catalogue/pin_catalogue_contract.py from
 # rows it has verified against that derivation; an edit to any appended row,
 # a removed pack row or an extra lesson row still reds here.
-CATALOGUE_SHELF_ROWS = 633
+CATALOGUE_SHELF_ROWS = 656
 # UX2 A1: keys that may be appended to an original row without moving its
 # digest (see catalogue_errors). Nothing else is additive. No original row
 # carried either key before the ruling (measured 2026-09-08: 0 of 734), so the
 # second set is empty and the allowance cannot launder a pre-existing value.
 CATALOGUE_ADDITIVE_TAG_KEYS = frozenset({"halfTerm", "unit"})
 CATALOGUE_ORIGINAL_KEYS_BEFORE_TAGS = frozenset()
-CATALOGUE_SHELF_ROWS_SHA256 = "2313e761d5a1e10efe631e5c0dba7a20a47ad986bd8a69e12a5a0cfbdaa535da"
+CATALOGUE_SHELF_ROWS_SHA256 = "a09669725ea0ca202e7a60b6d228daa8c2954fd0cb9808f75d79bb91bb5b2e0f"
 
 # These named review records and review tools can change with their reviewed
 # transaction. Tools are not served assets; they are reviewed as executable
@@ -3077,7 +3101,9 @@ CATALOGUE_RECORD_PATHS = {
     # protected pack folder whose own manifest may not change. It is data read by
     # tools/catalogue/build_catalogue.py, not a lesson payload.
     "tools/catalogue/manifest_humanities_build_w9-w14_terms.json",
-    "tools/catalogue/manifest_aaa_small_subjects_terms.json"
+    "tools/catalogue/manifest_aaa_small_subjects_terms.json",
+    # Tutor time Autumn 2 (8 Nov 2026): delivery weeks of the gated session pages.
+    "tools/catalogue/manifest_tutor_time_a2_terms.json"
 }
 
 # The education publisher is executable release configuration, not a hub asset.
