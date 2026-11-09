@@ -5607,6 +5607,8 @@ REVIEWED_PATHS += ('Art/Build/CREATIVE_ARTS_A2_W03/Public/ART_BUILD_A2_W03_P1.ht
 # TRACKER (8 Nov 2026, owner ask 18:27Z: the catch-up tracker reachable at a private link on his own site): two
 # staff tool pages (tracker, class-names editor), reviewed and pinned, with no catalogue row, so they are published but never listed.
 REVIEWED_PATHS += ('kits/class_tools/Catch_up_Tracker.html', 'kits/class_tools/Class_names.html', 'kits/class_tools/My_tools.html', 'kits/class_tools/Practical_log.html', 'kits/class_tools/Requests.html')
+# 2026-11-09: the missed-last-week catch-up page joins the private staff pages (unlisted, noindex, no names, ticks in localStorage only).
+REVIEWED_PATHS += ('kits/class_tools/Missed_last_week.html',)
 
 
 # Pathway labels phase 2 (Lessons #824, owner approval 8 Nov 2026 14:34Z): the relabelled lesson pages and the
