@@ -305,8 +305,8 @@ def _land_a2(folders):
     for L in sorted(landed, key=lambda L: (['BUILD', 'GROW', 'LAUNCH'].index(L['pathway']), L['week'])):
         if L['path'] in files: continue
         words = [w for w in slug(L['title']).split('-') if len(w) > 2 and w not in ('and', 'the', 'for', 'use')]
-        new.append({'subject': 'Science · Teesside', 'title': '%s · %s' % (L['pathway'], L['title']), 'file': L['path'],
-                    'id': 'land-a2-sci-%s-a2-w%02d-%s' % (L['pathway'].lower(), L['week'], slug(L['title'])), 'type': 'lesson', 'family': 'Science Teesside',
+        new.append({'subject': 'Science', 'title': '%s · %s' % (L['pathway'], L['title']), 'file': L['path'],
+                    'id': 'land-a2-sci-%s-a2-w%02d-%s' % (L['pathway'].lower(), L['week'], slug(L['title'])), 'type': 'lesson', 'family': 'Science',
                     'keywords': [L['pathway'].lower(), 'science', 'autumn 2'] + words,
                     'desc': '%s Science · Autumn 2 · Week %d. I am learning to %s' % (L['pathway'], L['week'], L['goal'][0].lower() + L['goal'][1:] if L['goal'] else L['title']),
                     'added': a.run_date, 'new': True, 'year': '2026-27'})
@@ -348,9 +348,9 @@ def add_row(row):
 # ------------------------------------------------------------------ subject / family conventions (measured from catalogued siblings)
 def subject_family(path):
     top = path.split('/')[0]
-    if top == 'Science': return 'Science · Teesside', 'Science Teesside'
-    if top == 'Humanities': return 'Humanities', 'Humanities Teesside'
-    if top == 'Art': return 'Art · Teesside Studio Suite', 'Art Teesside'
+    if top == 'Science': return 'Science', 'Science'
+    if top == 'Humanities': return 'Humanities', 'Humanities'
+    if top == 'Art': return 'Art', 'Art'
     if top == 'BUILD_ASDAN': return 'BUILD Vocational & PfA', 'BUILD ASDAN · FoodWise' if '/FoodWise/' in path else 'BUILD ASDAN · Autumn 2'
     if top == 'GROW_ASDAN': return 'GROW Vocational & PfA', 'GROW ASDAN · Autumn 2'
     if top == 'LAUNCH_ASDAN': return 'LAUNCH Vocational & PfA', 'LAUNCH ASDAN · Personal Effectiveness'

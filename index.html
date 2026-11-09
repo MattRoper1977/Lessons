@@ -77,7 +77,7 @@ function subjectCard(c){
   const pathways=H.pathwaysPresent(rows);
   const chips=[];
   pathways.forEach(p=>chips.push(chip(H.pathwayLabel(p),'tier '+p)));
-  if(c.slug==='art-studio'){if(rows.some(r=>/Art Teesside/i.test(r.family)))chips.push(chip('TEESSIDE STUDIO'));if(rows.some(r=>/arts award/i.test(r.family+' '+r.subject)))chips.push(chip('ARTS AWARD'));}
+  if(c.slug==='art-studio'){if(rows.some(r=>/^Art$/i.test(r.family)))chips.push(chip('ART STUDIO'));if(rows.some(r=>/arts award/i.test(r.family+' '+r.subject)))chips.push(chip('ARTS AWARD'));}
   if(c.slug==='lifeskills'){[...new Set(rows.map(r=>String(r.subject)))].sort().forEach(s=>chips.push(chip(H.relabel(s))));}
   const badges=H.formatsPresent(rows).map(badge).join('');
   let desc='';

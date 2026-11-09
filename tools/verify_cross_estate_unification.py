@@ -103,7 +103,7 @@ MANIFEST_PINS = {
     # Ruled onto the pin 2026-08-12 (Ruling 3): the deck install is a
     # resources.json edit, and the blanket rule forbade it the same way it
     # once forbade studio adds. Same pattern, same tool, same commit rule.
-    "resources.json": "955b4b8c370adebe2bf97d1af45502f5b7b9f28ebc19d0d39dd1c5c4a4dd4946"
+    "resources.json": "d5e23308af6d7c05e356eb4280969f9600dca507a96f55fde0a033a3a1466678"
 }
 PIN_COMMAND = "python3 tools/pin_manifests.py   (from either checkout — it writes both gate copies or neither)"
 
@@ -129,12 +129,12 @@ CATALOGUE_PINS = {
         "tools/catalogue/check_display_titles_browser.cjs": "0c193780f901cf4d3b7013819a7488567bf7ce40a75d05dbe43c7a6971877344",
         "tools/verify_lessons_chips.mjs": "e417afd94ae4f3a450caab2edf4b6c41d14e4588f070d0ad822263e30a86cf39",
         "tools/sw2/check_tokens_inert.cjs": "a8258b89b5dd00147a0c8b18488a2dcf8102bc20d2ddf2fa1aa0863d25454674",
-        "assets/catalogue/lesson-order.json": "92825a000a87be8f256d665b6b09a1ce3a3df636749e8c4ab4edc2a00c11197a",
-        "tools/catalogue/build_lesson_order.py": "35a4c54779b800ae8bd949154d0d19fddb190f49ec18e62efdd86d03313f6180",
+        "assets/catalogue/lesson-order.json": "9be0c8746f6edd2a63b3aa9454fcb76d1f126732584699490c3bfa3ba157eaf3",
+        "tools/catalogue/build_lesson_order.py": "67358d5f5852f2085e3fda5baaa53328ddb176fe0bc7545b161172b79049ed14",
         "tools/ux2/hub_gates.mjs": "3d3120df94b1789041370c4045fbcc983635af0b30a0705447f18371bed98944",
-        "index.html": "798d5572afecb8db10a516f9a0ed57d54b7d1dc5e220077a6be85d5f046b555e",
-        "Science/index.html": "34fbe6ad5d02f887a430c3f822ff0c41b5442797d945e924b5d3259bd40adfcd",
-        "Humanities/index.html": "497e5b88cf8c85f449a3fe81d2553c42e320e07e12cdaa0e6e4c393b3a18c1d3",
+        "index.html": "d5c71fc47cf00bb42c01d0e7d949224587d2e22405e1ec160404572db83ef396",
+        "Science/index.html": "ea568633299e42a45340143d5eeaab2de179e95a04ed43d5515ae870dbb3344a",
+        "Humanities/index.html": "7af3bee2b76bfe3b8e64277252d7f024fe16ca831fc18b25ae50c204bf91b5cd",
         "humanities.html": "bfb8f9383680b9c6d849931652db29289b92d5ed18c5f9616cfc0ede0614fa5c",
         "pack.html": "42935782c353525d28b9263a90a8c48e4b5ca764226444edfa68d6f664862be1",
         "assets/catalogue/pack.js": "48396bdf604a2eeb3e63f5ab18988fb2c87d0260586a18dd2f53824af3cd03de",
@@ -155,15 +155,15 @@ CATALOGUE_PINS = {
         "assets/catalogue/science-shelf.js": "a59fe0c988a5de7d614afc6a36d7dacf14c6e3fa92c732740442e4914d00f356",
         "assets/catalogue/terms-and-styles.json": "2c8662c4d9ead15c916bd1c3bb7fdd335e16211b8bb3ef1143dc1e382483cf04",
         "assets/catalogue/science-shelf.json": "6bfcac8579a72f8413e158b49460a8b853f284b8dc64bd4da4442c37e92edadf",
-        "assets/catalogue/humanities-shelf.json": "3f6a3583f3658b79a544aeef27a778a283069e4842d763cb95728a703669d9a7",
+        "assets/catalogue/humanities-shelf.json": "d755c471c2116ebc973f3446e2521e2db658008cdd83d551e753326b71a9039d",
         "tools/catalogue/build_catalogue.py": "249e82b795e0fa5f1eaeb7afd00883a963d63742b50b783fa88f808737ab230d",
         "tools/catalogue/build_science_shelf.py": "396b6aeb7cb3cabe037b7af27877ae7a090e5aa1bce284409e400549d5204c24",
         "tools/catalogue/build_humanities_shelf.py": "0d58e1dd47c9c806b7fefc42437b47947853760e785eb3ed34b35148eea874cc",
-        "tools/catalogue/build_science_hub.py": "b00b55dead2cc5566515259b2dbd0b082365823fc29bf10ba40c887256b8d5db",
+        "tools/catalogue/build_science_hub.py": "ad43fcd8ee20d3ac66c3724432b5077bd3e4140893a9ffcb4509542d8e9d6a5a",
         "assets/catalogue/science-hub-bindings.json": "510e1a73fbb2f914d6373442300a3671b4a008c664582e3abd22517fdebf27e2",
         "tools/catalogue/check_catalogue_static.py": "5eb7b3ebd11fbfceb9f8c812ec8b7dc5a02b3b162c0f78982f4e7afb6f4eb589",
         "tools/catalogue/check_catalogue_dom.cjs": "877ab8515ba5cbcbd8be32c52cfed067707b675d239250bdf2a68134382798c8",
-        "tools/catalogue/verify_education_navigation.cjs": "48d00d8c490157059b6f21664c1b06e8c5af215575ee207040ee0c83c37d168f",
+        "tools/catalogue/verify_education_navigation.cjs": "0479adfa36d2af88f61e51fc76a3b8b2c863648d3399048f053fd1be38607e55",
         "tools/catalogue/sync_shelf_card_titles.py": "d5e8fd850e5ac6340f0d1550ea2992fc03ef1fff8deeec144c73685042feaf7f",
         "tools/catalogue/HUMANITIES_STRAND.json": "d2d239ce547e15f39d7776e5de99c0436eebc274a4077f5f627b9f893ee435a3",
         "tools/catalogue/hub_sections.py": "3b201e96e05a124d47c6b5b1063c0df25d2b5c5cf4505aad7494663c7e92a90e",
@@ -237,7 +237,7 @@ CATALOGUE_PINS = {
         ".github/workflows/glv3-verify.yml": "4bf27ca7471a21359e35d1bc7277c5fa0adeb5f31a47c769f192165796037088",
         "_glv3/tools/verify_change_boundary.py": "ef6a0ce28055d069be0a5a212450f4f4318083d58b87b24aeccf494b098815a4",
         "_glv3/tools/browser_verify.mjs": "737ad30f297e061407161743f017614179cc6c56f1c9a3904bbe7c98df38c888",
-        "_glv3/tools/chip_gate.mjs": "16cdd5c0ad3745c57340ed0ec6a208d221e4793bfc9b1cd9bc703a6c2613dd9a",
+        "_glv3/tools/chip_gate.mjs": "6e5d07c0c4a4855442c09c4c6ae259acfbbe123c8bbb9e643eb21c980c562a67",
         "_glv3/tools/catalogue_membership.mjs": "4d7ab03e23ee0d3c3fc934f4f0a901afc61169754db099f4f5c24dd9cce058ec",
         "tools/humanities_resources/SOURCE_MANIFEST.json": "9d2972aa39fe12220de92aea2230fd8bdf7bef765d5b7cf2227c440026f546a1",
         "tools/humanities_resources/DOWNLOAD_MANIFEST.json": "fd0a9349db9824e2d03fa816d96a8eae2c974c22e33c03223dd72e85e17f2190",
@@ -247,7 +247,7 @@ CATALOGUE_PINS = {
         "tools/humanities_resources/check_resources.py": "ec5383e3a34cbff999f190b0014a4a73e00a3a29e2714498f7620fd638dc2aa5",
         "tools/humanities_resources/resource.css": "1aed9aaca0d73a4b200c4e5d0977e73f4e906c747d7340c7a62f4197a8344bae",
         "tools/humanities_resources/resource.js": "ad40afed95490bfcce92dc062da46e1b27bcb96bdc80e37eabdfe02bf6ffc446",
-        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "3d4fbf78903daa79ead703c18fbdadb167e29be728d17762a86fab934e06745c",
+        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "67a6e06cee1b39f431428d8c38b615bfc5da6a23878813f9ec763af606544160",
         "tools/catalogue/TERM_REVIEW.json": "202e6fb09a1b163114d806f085e4712f9bfde4d1a55a89fcef4392d24a366847",
         "tools/catalogue/SCIENCE_WEEK_BINDINGS.json": "9fa98ad78b0bd3c3f3ee15f88a7b2fd40eea810e6c9fb65ee93b3c5192888071",
         "primary/year5/science/autumn/forces/Lesson8_ExploreGravity.html": "20047720bf1d309055abdf232d341b6fd99b833631efa0bcbfb3dabed9671196",
@@ -595,7 +595,7 @@ CATALOGUE_PINS = {
         "Science/Launch/W14-W15_2026-27/SHA256SUMS.txt": "0bb93ca935491473b9df0d0f5605f3ea67057c6a00eb78c4925e154b71c8d5eb",
         "Science/Launch/W8-W13_2026-27/SHA256SUMS.txt": "e8c3db8150760d44c9dbac0472200ac8b4043771db89c92dd5665a0232a5c1e1",
         "tools/catalogue/SCIENCE_CHASSIS_CENSUS.json": "fcfcd48429be2577039b8275f732eb04dbce95aef4c9e32b27620abedf98a30b",
-        "tools/rx3_recommended.py": "b4a079a865d6ea956f1a7cb7a4837071db6e96c886565670d1d4a55c661fc150",
+        "tools/rx3_recommended.py": "5f3d591ecc376f43ed82b4f759155df5fdc85ba315bd9e60c11439cf92c564d7",
         "tools/catalogue/check_title_slide.py": "49815bce6b54d97aed864e403d10bd49d19d886bf5a39cbe7583375ee47ab77e",
         "tools/catalogue/title_slide.py": "3e4e7e8dfa590f3e0a8e24f49939edd9be2d59e4f955aea0935caa003f104788",
         "tools/public_surface_census.py": "310af4565b6b6998e33911352bfbaf37d65497b94d0f03a752d38277f7cdbf0d",
@@ -3402,7 +3402,8 @@ CATALOGUE_PINS = {
 # Ruling qp-2 (A-wide, os-4, 11 Oct 2026): the original rows are 734 plus the 21 reviewed rows the A19/A24
 # catalogue refresh interleaves (additive: with them taken out, the 734 are in their reviewed order, unedited).
 CATALOGUE_ORIGINAL_ROWS = 755
-CATALOGUE_ORIGINAL_ROWS_SHA256 = "d4714b20bc0de0732d1dd33e449280b8b42fd0a033b830c7b169b7f538430717"
+# Re-cut 2026-11-08 (ruling thread, label rule): the same 755 rows with the place word removed from their subject, family, title and desc values; no row added, removed or reordered. Previous digest d4714b20.
+CATALOGUE_ORIGINAL_ROWS_SHA256 = "e7f6181ba7af4e93f8360f6b6255ba911204d026c93ede8161cc2c84a2c625d6"
 # The appended rows are the 49 reviewed hub rows followed, since UX2 D3
 # (2026-09-08), by the companion-pack entries DERIVED from
 # data/companion-packs.json by tools/ux2/companion_catalogue.py. The count and
@@ -3416,7 +3417,7 @@ CATALOGUE_SHELF_ROWS = 656
 # second set is empty and the allowance cannot launder a pre-existing value.
 CATALOGUE_ADDITIVE_TAG_KEYS = frozenset({"halfTerm", "unit"})
 CATALOGUE_ORIGINAL_KEYS_BEFORE_TAGS = frozenset()
-CATALOGUE_SHELF_ROWS_SHA256 = "a09669725ea0ca202e7a60b6d228daa8c2954fd0cb9808f75d79bb91bb5b2e0f"
+CATALOGUE_SHELF_ROWS_SHA256 = "cd22ca8f715d235513d101e3705336111985fd2f1034a304d0efe2e6df11fe3a"
 
 # These named review records and review tools can change with their reviewed
 # transaction. Tools are not served assets; they are reviewed as executable

@@ -16,25 +16,25 @@ import re
 
 GATE = "tools/verify_cross_estate_unification.py"
 ORIGINAL_ROW_COUNT = 755   # ruling qp-2 (A-wide, os-4, 11 Oct 2026): 734 + the 21 reviewed catalogue rows the A19/A24 refresh interleaves
-ORIGINAL_ROWS_SHA256 = "d4714b20bc0de0732d1dd33e449280b8b42fd0a033b830c7b169b7f538430717"  # M1 (vr, vt, vt add.1, vu): re-cut below for the same 755 rows with the folder paths renamed and the archive downloads re-pinned; every difference is the rename map (790209ca before)
-SHELF_ROWS = [{'subject': 'Science · Teesside',
+ORIGINAL_ROWS_SHA256 = "e7f6181ba7af4e93f8360f6b6255ba911204d026c93ede8161cc2c84a2c625d6"  # M1 (vr, vt, vt add.1, vu): re-cut below for the same 755 rows with the folder paths renamed and the archive downloads re-pinned; every difference is the rename map (790209ca before)  # Re-cut 2026-11-08 (ruling thread, label rule): the same 755 rows with the place word removed from subject, family, title and desc values; no row added, removed or reordered.
+SHELF_ROWS = [{'subject': 'Science',
   'title': 'Science · browse by pathway, term and teaching version',
   'file': 'Science/index.html',
   'id': 'science-pathway-term-hub',
   'type': 'hub',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['science', 'build', 'grow', 'launch', 'pathway', 'term', 'lesson hub'],
   'desc': 'Choose a Science pathway and term, then browse the recommended sequence and retained teaching '
           'versions.',
   'added': '2026-09-05',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Humanities · Teesside',
+ {'subject': 'Humanities',
   'title': 'Humanities · browse by pathway, term and teaching version',
   'file': 'Humanities/index.html',
   'id': 'humanities-pathway-term-hub',
   'type': 'hub',
-  'family': 'Humanities Teesside',
+  'family': 'Humanities',
   'keywords': ['humanities',
                'religious education',
                'build',
@@ -48,12 +48,12 @@ SHELF_ROWS = [{'subject': 'Science · Teesside',
   'added': '2026-09-05',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Humanities · Teesside',
+ {'subject': 'Humanities',
   'title': 'Humanities and RE cover pack · Autumn 1 Weeks 3–7',
   'file': 'Humanities/David_Cover_Autumn1_W3-W7/index.html',
   'id': 'david-humanities-re-cover-hub',
   'type': 'hub',
-  'family': 'Humanities Teesside',
+  'family': 'Humanities',
   'keywords': ['humanities',
                'religious education',
                'david',
@@ -69,12 +69,12 @@ SHELF_ROWS = [{'subject': 'Science · Teesside',
   'added': '2026-09-05',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Humanities · Teesside',
+ {'subject': 'Humanities',
   'title': 'BUILD Humanities teaching pack · Autumn 1 Weeks 3–7 · World About Me',
   'file': 'Humanities/Teaching_Packs/index.html#build',
   'id': 'humanities-teaching-pack-build-autumn1',
   'type': 'hub',
-  'family': 'Humanities Teesside',
+  'family': 'Humanities',
   'keywords': ['humanities',
                'build',
                'teaching pack',
@@ -89,12 +89,12 @@ SHELF_ROWS = [{'subject': 'Science · Teesside',
   'added': '2026-09-07',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Humanities · Teesside',
+ {'subject': 'Humanities',
   'title': 'GROW Humanities teaching pack · Autumn 1 Weeks 3–7 · Black British History',
   'file': 'Humanities/Teaching_Packs/index.html#grow',
   'id': 'humanities-teaching-pack-grow-autumn1',
   'type': 'hub',
-  'family': 'Humanities Teesside',
+  'family': 'Humanities',
   'keywords': ['humanities',
                'grow',
                'teaching pack',
@@ -109,12 +109,12 @@ SHELF_ROWS = [{'subject': 'Science · Teesside',
   'added': '2026-09-07',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Humanities · Teesside',
+ {'subject': 'Humanities',
   'title': 'LAUNCH Humanities teaching pack · Autumn 1 Weeks 3–7 · Britain in the Twentieth Century',
   'file': 'Humanities/Teaching_Packs/index.html#launch',
   'id': 'humanities-teaching-pack-launch-autumn1',
   'type': 'hub',
-  'family': 'Humanities Teesside',
+  'family': 'Humanities',
   'keywords': ['humanities',
                'launch',
                'teaching pack',
@@ -129,36 +129,36 @@ SHELF_ROWS = [{'subject': 'Science · Teesside',
   'added': '2026-09-07',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'BUILD Science teaching pack · Autumn 1 Weeks 3–7',
   'file': 'Science/Teaching_Packs/index.html#build',
   'id': 'science-teaching-pack-build-autumn1',
   'type': 'hub',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['science', 'build', 'teaching pack', 'powerpoint', 'word', 'pdf', 'autumn 1'],
   'desc': 'Editable BUILD Science lessons for Autumn 1 Weeks 3–7: PowerPoint decks, pupil resources and '
           'teacher guidance as PowerPoint, Word and PDF downloads.',
   'added': '2026-09-07',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'GROW Science teaching pack · Autumn 1 Weeks 3–7',
   'file': 'Science/Teaching_Packs/index.html#grow',
   'id': 'science-teaching-pack-grow-autumn1',
   'type': 'hub',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['science', 'grow', 'teaching pack', 'powerpoint', 'word', 'pdf', 'autumn 1'],
   'desc': 'Editable GROW Science lessons for Autumn 1 Weeks 3–7: PowerPoint decks, pupil resources and '
           'teacher guidance as PowerPoint, Word and PDF downloads.',
   'added': '2026-09-07',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'LAUNCH Science teaching pack · Autumn 1 Weeks 3–7',
   'file': 'Science/Teaching_Packs/index.html#launch',
   'id': 'science-teaching-pack-launch-autumn1',
   'type': 'hub',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['science', 'launch', 'teaching pack', 'powerpoint', 'word', 'pdf', 'autumn 1'],
   'desc': 'Editable LAUNCH Science lessons for Autumn 1 Weeks 3–7: PowerPoint decks, pupil resources and '
           'teacher guidance as PowerPoint, Word and PDF downloads.',
@@ -411,66 +411,66 @@ SHELF_ROWS = [{'subject': 'Science · Teesside',
   'keywords': ['asdan', 'foodwise', 'build', 'week 6', 'classic chassis'],
   'year': '2026-27'},
  {'id': 'classic-33-b2-build-science-materials',
-  'subject': 'Science · Teesside',
+  'subject': 'Science',
   'type': 'lesson',
   'title': 'Where did this material come from? · BUILD Science',
   'file': 'Science/Build/W8-W13_2026-27/SCI_B_W13_Where_did_this_material_come_from_Classic.html',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'added': '2026-09-07',
   'desc': 'Classic-chassis lesson from the reviewed 33-pack (BUILD · Autumn 2 · Week 5), served beside the '
           'existing lesson for the same week; the existing lesson keeps its standing.',
   'keywords': ['classic chassis', '33-pack', 'build', 'science', 'autumn 2 · week 5'],
   'year': '2026-27'},
  {'id': 'classic-33-b2-build-science-rock-uses',
-  'subject': 'Science · Teesside',
+  'subject': 'Science',
   'type': 'lesson',
   'title': 'Give a rock a job · BUILD Science',
   'file': 'Science/Build/W8-W13_2026-27/SCI_B_W12_Give_a_rock_a_job_Classic.html',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'added': '2026-09-07',
   'desc': 'Classic-chassis lesson from the reviewed 33-pack (BUILD · Autumn 2 · Week 4), served beside the '
           'existing lesson for the same week; the existing lesson keeps its standing.',
   'keywords': ['classic chassis', '33-pack', 'build', 'science', 'autumn 2 · week 4'],
   'year': '2026-27'},
  {'id': 'classic-33-b2-grow-science-climate',
-  'subject': 'Science · Teesside',
+  'subject': 'Science',
   'type': 'lesson',
   'title': 'Follow the warming chain · GROW Science',
   'file': 'Science/Grow/W8-W13_2026-27/SCI_G_W12_Follow_the_warming_chain_Classic.html',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'added': '2026-09-07',
   'desc': 'Classic-chassis lesson from the reviewed 33-pack (GROW · Autumn 2 · Week 4), served beside the '
           'existing lesson for the same week; the existing lesson keeps its standing.',
   'keywords': ['classic chassis', '33-pack', 'grow', 'science', 'autumn 2 · week 4'],
   'year': '2026-27'},
  {'id': 'classic-33-b2-grow-science-day-night',
-  'subject': 'Science · Teesside',
+  'subject': 'Science',
   'type': 'lesson',
   'title': 'Turn Earth, explain the sky · GROW Science',
   'file': 'Science/Grow/W8-W13_2026-27/SCI_G_W9_Turn_Earth_explain_the_sky_Classic.html',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'added': '2026-09-07',
   'desc': 'Classic-chassis lesson from the reviewed 33-pack (GROW · Autumn 2 · Week 1), served beside the '
           'existing lesson for the same week; the existing lesson keeps its standing.',
   'keywords': ['classic chassis', '33-pack', 'grow', 'science', 'autumn 2 · week 1'],
   'year': '2026-27'},
  {'id': 'classic-33-b2-launch-science-dna',
-  'subject': 'Science · Teesside',
+  'subject': 'Science',
   'type': 'lesson',
   'title': 'Zoom into genetic information · LAUNCH Science',
   'file': 'Science/Launch/W8-W13_2026-27/SCI_L_W12_Zoom_into_genetic_information_Classic.html',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'added': '2026-09-07',
   'desc': 'Classic-chassis lesson from the reviewed 33-pack (LAUNCH · Autumn 2 · Week 4), served beside the '
           'existing lesson for the same week; the existing lesson keeps its standing.',
   'keywords': ['classic chassis', '33-pack', 'launch', 'science', 'autumn 2 · week 4'],
   'year': '2026-27'},
  {'id': 'classic-33-b2-launch-science-mitosis',
-  'subject': 'Science · Teesside',
+  'subject': 'Science',
   'type': 'lesson',
   'title': 'Copy, separate, divide · LAUNCH Science',
   'file': 'Science/Launch/W8-W13_2026-27/SCI_L_W9_Copy_separate_divide_Classic.html',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'added': '2026-09-07',
   'desc': 'Classic-chassis lesson from the reviewed 33-pack (LAUNCH · Autumn 2 · Week 1), served beside the '
           'existing lesson for the same week; the existing lesson keeps its standing.',
@@ -481,7 +481,7 @@ SHELF_ROWS = [{'subject': 'Science · Teesside',
   'type': 'lesson',
   'title': 'A place in the group · BUILD Humanities',
   'file': 'Humanities/BUILD_W1-W8_2026-27/BUILD_HUM_W7_A_place_in_the_group_Classic.html',
-  'family': 'Humanities Teesside',
+  'family': 'Humanities',
   'added': '2026-09-07',
   'desc': 'Classic-chassis lesson from the reviewed 33-pack (BUILD · Autumn 1 · Week 7), served beside the '
           'existing lesson for the same week; the existing lesson keeps its standing.',
@@ -492,7 +492,7 @@ SHELF_ROWS = [{'subject': 'Science · Teesside',
   'type': 'lesson',
   'title': 'A celebration in order · BUILD Humanities',
   'file': 'Humanities/BUILD_W14-W20_2026-27/BUILD_HUM_W12_A_celebration_in_order_Classic.html',
-  'family': 'Humanities Teesside',
+  'family': 'Humanities',
   'added': '2026-09-07',
   'desc': 'Classic-chassis lesson from the reviewed 33-pack (BUILD · Autumn 2 · Week 4), served beside the '
           'existing lesson for the same week; the existing lesson keeps its standing.',
@@ -503,7 +503,7 @@ SHELF_ROWS = [{'subject': 'Science · Teesside',
   'type': 'lesson',
   'title': 'A fair chance to join in · BUILD Humanities',
   'file': 'Humanities/BUILD_W14-W20_2026-27/BUILD_HUM_W14_A_fair_chance_to_join_in_Classic.html',
-  'family': 'Humanities Teesside',
+  'family': 'Humanities',
   'added': '2026-09-07',
   'desc': 'Classic-chassis lesson from the reviewed 33-pack (BUILD · Autumn 2 · Week 6), served beside the '
           'existing lesson for the same week; the existing lesson keeps its standing.',
@@ -514,7 +514,7 @@ SHELF_ROWS = [{'subject': 'Science · Teesside',
   'type': 'lesson',
   'title': 'Compare celebrations with care · GROW Humanities',
   'file': 'Humanities/GROW_W9-W14_2026-27/GROW_HUM_W13_Compare_celebrations_with_care_Classic.html',
-  'family': 'Humanities Teesside',
+  'family': 'Humanities',
   'added': '2026-09-07',
   'desc': 'Classic-chassis lesson from the reviewed 33-pack (GROW · Autumn 2 · Week 5), served beside the '
           'existing lesson for the same week; the existing lesson keeps its standing.',
@@ -525,7 +525,7 @@ SHELF_ROWS = [{'subject': 'Science · Teesside',
   'type': 'lesson',
   'title': 'Festival lights across places · GROW Humanities',
   'file': 'Humanities/GROW_W9-W14_2026-27/GROW_HUM_W12_Festival_lights_across_places_Classic.html',
-  'family': 'Humanities Teesside',
+  'family': 'Humanities',
   'added': '2026-09-07',
   'desc': 'Classic-chassis lesson from the reviewed 33-pack (GROW · Autumn 2 · Week 4), served beside the '
           'existing lesson for the same week; the existing lesson keeps its standing.',
@@ -536,7 +536,7 @@ SHELF_ROWS = [{'subject': 'Science · Teesside',
   'type': 'lesson',
   'title': 'Can this record prove it? · LAUNCH Humanities',
   'file': 'Humanities/LAUNCH_W1-W8_2026-27/LAUNCH_HUM_W3_Can_this_record_prove_it_Classic.html',
-  'family': 'Humanities Teesside',
+  'family': 'Humanities',
   'added': '2026-09-07',
   'desc': 'Classic-chassis lesson from the reviewed 33-pack (LAUNCH · Autumn 1 · Week 3), served beside the '
           'existing lesson for the same week; the existing lesson keeps its standing.',
@@ -547,7 +547,7 @@ SHELF_ROWS = [{'subject': 'Science · Teesside',
   'type': 'lesson',
   'title': 'A growing town, an urbanising region? · LAUNCH Humanities',
   'file': 'Humanities/LAUNCH_W9-W14_2026-27/LAUNCH_HUM_W11_A_growing_town_an_urbanising_region_Classic.html',
-  'family': 'Humanities Teesside',
+  'family': 'Humanities',
   'added': '2026-09-07',
   'desc': 'Classic-chassis lesson from the reviewed 33-pack (LAUNCH · Autumn 2 · Week 3), served beside the '
           'existing lesson for the same week; the existing lesson keeps its standing.',
@@ -565,11 +565,11 @@ SHELF_ROWS = [{'subject': 'Science · Teesside',
   'keywords': ['classic chassis', '33-pack', 'launch', 'humanities', 'autumn 2 · week 1'],
   'year': '2026-27'},
  {'id': 'classic-33-b2-build-art-light-study',
-  'subject': 'Art · Teesside Studio Suite',
+  'subject': 'Art',
   'type': 'lesson',
   'title': 'Light on a dark page · BUILD Creative Arts',
   'file': 'Art/BUILD_W1-W8_2026-27/BUILD_Art_W11_Light_on_a_dark_page_Classic.html',
-  'family': 'Art Teesside',
+  'family': 'Art',
   'added': '2026-09-07',
   'desc': 'Classic-chassis lesson from the reviewed 33-pack (BUILD · Autumn 2 · Week 3), served beside the '
           'existing lesson for the same week; the existing lesson keeps its standing.',
@@ -598,11 +598,11 @@ SHELF_ROWS = [{'subject': 'Science · Teesside',
   'keywords': ['classic chassis', '33-pack', 'grow', 'creative arts', 'autumn 2 · week 2'],
   'year': '2026-27'},
  {'id': 'classic-33-b2-grow-art-light-study',
-  'subject': 'Art · Teesside Studio Suite',
+  'subject': 'Art',
   'type': 'lesson',
   'title': 'Design a light festival panel · GROW Creative Arts',
   'file': 'Art/GROW_W1-W8_2026-27/GROW_Art_W11_Design_a_light_festival_panel_Classic.html',
-  'family': 'Art Teesside',
+  'family': 'Art',
   'added': '2026-09-07',
   'desc': 'Classic-chassis lesson from the reviewed 33-pack (GROW · Autumn 2 · Week 3), served beside the '
           'existing lesson for the same week; the existing lesson keeps its standing.',
@@ -696,587 +696,587 @@ SHELF_ROWS = [{'subject': 'Science · Teesside',
           'existing lesson for the same week; the existing lesson keeps its standing.',
   'keywords': ['classic chassis', '33-pack', 'launch', 'asdan', 'autumn 2 · week 2'],
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'BUILD · Soil: what is in the mix?',
   'file': 'Science/Build/W18-W26_2026-27/SCI_B_W18_Soil_What_Is_In_The_Mix.html',
   'id': 'sci-tees-b-w18-soil-what-is-in-the-mix',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['build', 'science', 'spring 1', 'soil', 'what'],
   'desc': 'Use evidence to show that soil contains rock material and organic matter.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'BUILD · Soil: let the water through',
   'file': 'Science/Build/W18-W26_2026-27/SCI_B_W19_Soil_Let_The_Water_Through.html',
   'id': 'sci-tees-b-w19-soil-let-the-water-through',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['build', 'science', 'spring 1', 'soil', 'water', 'through'],
   'desc': 'Compare how much water passes through different soils in the same time.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'BUILD · Soil: account for the water',
   'file': 'Science/Build/W18-W26_2026-27/SCI_B_W20_Soil_Account_For_The_Water.html',
   'id': 'sci-tees-b-w20-soil-account-for-the-water',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['build', 'science', 'spring 1', 'soil', 'account', 'water'],
   'desc': 'Use input minus collected water to estimate and compare water remaining after drainage.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'LAUNCH · Evolution: build the evidence case',
   'file': 'Science/Launch/W17-W26_2026-27/SCI_L_W17_Evolution_Build_The_Evidence_Case.html',
   'id': 'sci-tees-l-w17-evolution-build-the-evidence-case',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['launch', 'science', 'spring 1', 'evolution', 'build', 'evidence', 'case'],
   'desc': 'Interpret fossil, anatomical and DNA evidence to justify a claim about evolution and state a '
           'limitation.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'LAUNCH · Genetic engineering: change, test, decide',
   'file': 'Science/Launch/W17-W26_2026-27/SCI_L_W18L2_Genetic_Engineering_Change_Test_Decide.html',
   'id': 'sci-tees-l-w18l2-genetic-engineering-change-test-decide',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['launch', 'science', 'spring 1', 'genetic', 'engineering', 'change', 'test', 'decide'],
   'desc': 'Describe genetic engineering and use evidence to weigh a specific benefit, a risk and an '
           'unanswered question.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'LAUNCH · Selective breeding: design a resilient crop',
   'file': 'Science/Launch/W17-W26_2026-27/SCI_L_W18L1_Selective_Breeding_Design_A_Resilient_Crop.html',
   'id': 'sci-tees-l-w18l1-selective-breeding-design-a-resilient-',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['launch', 'science', 'spring 1', 'selective', 'breeding', 'design', 'resilient', 'crop'],
   'desc': 'Explain selective breeding and justify a breeding plan using inherited traits, performance '
           'evidence and genetic diversity.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'GROW · The flower-to-seed investigation',
   'file': 'Science/Grow/W27-W32_2026-27/SCI_G_W27_The_Flower_To_Seed_Investigation.html',
   'id': 'sci-tees-g-w27-the-flower-to-seed-investigation',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['grow', 'science', 'summer 1', 'flower', 'seed', 'investigation'],
   'desc': 'Describe pollination, fertilisation and seed formation as different connected processes.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'GROW · Change detectives: what became something new?',
   'file': 'Science/Grow/W27-W32_2026-27/SCI_G_W32_Change_Detectives_What_Became_Something_New.html',
   'id': 'sci-tees-g-w32-change-detectives-what-became-something-',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['grow', 'science', 'summer 1', 'change', 'detectives', 'what', 'became', 'something'],
   'desc': 'Describe burning and rusting as changes that form new materials, and distinguish them from a '
           'change of state.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'GROW · The life-cycle comparison bureau',
   'file': 'Science/Grow/W18-W26_2026-27/SCI_G_W26_The_Life_Cycle_Comparison_Bureau.html',
   'id': 'sci-tees-g-w26-the-life-cycle-comparison-bureau',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['grow', 'science', 'spring 2', 'life', 'cycle', 'comparison', 'bureau'],
   'desc': 'Compare named animal life cycles using similarities, differences and a valid counterexample.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'GROW · The plant reproduction strategy studio',
   'file': 'Science/Grow/W27-W32_2026-27/SCI_G_W28_The_Plant_Reproduction_Strategy_Studio.html',
   'id': 'sci-tees-g-w28-the-plant-reproduction-strategy-studio',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['grow', 'science', 'summer 1', 'plant', 'reproduction', 'strategy', 'studio'],
   'desc': 'Distinguish sexual and asexual plant reproduction using process evidence rather than the number '
           'of visible parent plants.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'GROW · The recovery methods workshop',
   'file': 'Science/Grow/W27-W32_2026-27/SCI_G_W31_The_Recovery_Methods_Workshop.html',
   'id': 'sci-tees-g-w31-the-recovery-methods-workshop',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['grow', 'science', 'summer 1', 'recovery', 'methods', 'workshop'],
   'desc': 'Choose and justify filtration, evaporation or evaporation with condensation for a stated recovery '
           'target.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'GROW · Reversible change detectives',
   'file': 'Science/Grow/W27-W32_2026-27/SCI_G_W30_Reversible_Change_Detectives.html',
   'id': 'sci-tees-g-w30-reversible-change-detectives',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['grow', 'science', 'summer 1', 'reversible', 'change', 'detectives'],
   'desc': 'Describe melting, freezing and dissolving and explain how the starting substances can be '
           'recovered in these examples.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'GROW · The seed dispersal design lab',
   'file': 'Science/Grow/W27-W32_2026-27/SCI_G_W29_The_Seed_Dispersal_Design_Lab.html',
   'id': 'sci-tees-g-w29-the-seed-dispersal-design-lab',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['grow', 'science', 'summer 1', 'seed', 'dispersal', 'design'],
   'desc': 'Explain how seed or fruit structures can aid dispersal and evaluate a controlled paper model.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'GROW · The spring science evidence exchange',
   'file': 'Science/Grow/W18-W26_2026-27/SCI_G_S2_W6_The_Spring_Science_Evidence_Exchange.html',
   'id': 'sci-tees-g-s2-w6-the-spring-science-evidence-exchange',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['grow', 'science', 'spring 2', 'spring', 'science', 'evidence', 'exchange'],
   'desc': 'Use evidence to explain life cycles and apply selected spring science ideas in a teacher-authored '
           'checkpoint.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'GROW · Circuit fault clinic',
   'file': 'Science/Grow/W18-W26_2026-27/SCI_G_W18B_Circuit_Fault_Clinic.html',
   'id': 'sci-tees-g-w18b-circuit-fault-clinic',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['grow', 'science', 'spring 1', 'circuit', 'fault', 'clinic'],
   'desc': 'Use a checked low-voltage circuit to compare electrical conductors and insulators.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'GROW · The spill-mat design lab',
   'file': 'Science/Grow/W18-W26_2026-27/SCI_G_W19_The_Spill_Mat_Design_Lab.html',
   'id': 'sci-tees-g-w19-the-spill-mat-design-lab',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['grow', 'science', 'spring 1', 'spill', 'design'],
   'desc': 'Plan a fair material comparison, record water-retention results and justify a product choice.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'GROW · The cold case',
   'file': 'Science/Grow/W18-W26_2026-27/SCI_G_W18A_The_Cold_Case.html',
   'id': 'sci-tees-g-w18a-the-cold-case',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['grow', 'science', 'spring 1', 'cold', 'case'],
   'desc': 'Use evidence to explain thermal conduction and select insulation for a cold container.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'BUILD · The evidence museum',
   'file': 'Science/Build/W18-W26_2026-27/SCI_B_S2_W6_The_Evidence_Museum.html',
   'id': 'sci-tees-b-s2-w6-the-evidence-museum',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['build', 'science', 'spring 2', 'evidence', 'museum'],
   'desc': 'Use evidence to correct museum labels about fossils, soils and light.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'BUILD · The friction surface lab',
   'file': 'Science/Build/W27-W34_2026-27/SCI_B_W34_The_Friction_Surface_Lab.html',
   'id': 'sci-tees-b-w34-the-friction-surface-lab',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['build', 'science', 'summer 2', 'friction', 'surface'],
   'desc': 'Compare a sliding block’s movement on different surfaces and explain the effect of friction using '
           'a controlled test.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'BUILD · The growth-needs clinic',
   'file': 'Science/Build/W27-W34_2026-27/SCI_B_W29_The_Growth_Needs_Clinic.html',
   'id': 'sci-tees-b-w29-the-growth-needs-clinic',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['build', 'science', 'summer 1', 'growth', 'needs', 'clinic'],
   'desc': 'Identify requirements for healthy plant growth and use height plus leaf evidence to evaluate a '
           'care claim.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'BUILD · The growth-record studio',
   'file': 'Science/Build/W27-W34_2026-27/SCI_B_W31_The_Growth_Record_Studio.html',
   'id': 'sci-tees-b-w31-the-growth-record-studio',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['build', 'science', 'summer 1', 'growth', 'record', 'studio'],
   'desc': 'Set up a consistent growth record and use dated repeated measurements to describe change over '
           'time.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'BUILD · The plant-parts atlas',
   'file': 'Science/Build/W27-W34_2026-27/SCI_B_W27_The_Plant_Parts_Atlas.html',
   'id': 'sci-tees-b-w27-the-plant-parts-atlas',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['build', 'science', 'summer 1', 'plant', 'parts', 'atlas'],
   'desc': 'Identify roots, stem, leaves and flower from plant structures, while distinguishing hidden from '
           'absent.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'BUILD · The plant-system service desk',
   'file': 'Science/Build/W27-W34_2026-27/SCI_B_W28_The_Plant_System_Service_Desk.html',
   'id': 'sci-tees-b-w28-the-plant-system-service-desk',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['build', 'science', 'summer 1', 'plant', 'system', 'service', 'desk'],
   'desc': 'Explain how roots, stem, leaves and flowers contribute to the life of a flowering plant.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'BUILD · The water-path detectives',
   'file': 'Science/Build/W27-W34_2026-27/SCI_B_W32_The_Water_Path_Detectives.html',
   'id': 'sci-tees-b-w32-the-water-path-detectives',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['build', 'science', 'summer 1', 'water', 'path', 'detectives'],
   'desc': 'Explain the root–stem–leaf water pathway and use dye evidence to identify internal transport in a '
           'cut shoot.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'BUILD · The water-trial planning board',
   'file': 'Science/Build/W27-W34_2026-27/SCI_B_W30_The_Water_Trial_Planning_Board.html',
   'id': 'sci-tees-b-w30-the-water-trial-planning-board',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['build', 'science', 'summer 1', 'water', 'trial', 'planning', 'board'],
   'desc': 'Plan a controlled comparison of water amount and plant growth, with repeated plants and '
           'consistent records.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'LAUNCH · Animal systems: the evidence challenge',
   'file': 'Science/Launch/W27-W34_2026-27/SCI_L_W31_Animal_Systems_The_Evidence_Challenge.html',
   'id': 'sci-tees-l-w31-animal-systems-the-evidence-challenge',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['launch', 'science', 'summer 1', 'animal', 'systems', 'evidence', 'challenge'],
   'desc': 'Use evidence about control, circulation and gas exchange to judge claims in an unfamiliar model.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'LAUNCH · Blood glucose: build the control model',
   'file': 'Science/Launch/W27-W34_2026-27/SCI_L_W28_Blood_Glucose_Build_The_Control_Model.html',
   'id': 'sci-tees-l-w28-blood-glucose-build-the-control-model',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['launch', 'science', 'summer 1', 'blood', 'glucose', 'build', 'control', 'model'],
   'desc': 'Explain the insulin response to raised blood glucose using a qualitative, controllable model.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'LAUNCH · Double circulation: engineer the route',
   'file': 'Science/Launch/W27-W34_2026-27/SCI_L_W29_Double_Circulation_Engineer_The_Route.html',
   'id': 'sci-tees-l-w29-double-circulation-engineer-the-route',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['launch', 'science', 'summer 1', 'double', 'circulation', 'engineer', 'route'],
   'desc': 'Explain how heart structure supports double circulation and calculate cardiac output from '
           'supplied data.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'LAUNCH · The border brief: an ecosystem evidence web',
   'file': 'Science/Launch/W27-W34_2026-27/SCI_L_W34_The_Border_Brief_An_Ecosystem_Evidence_Web.html',
   'id': 'sci-tees-l-w34-the-border-brief-an-ecosystem-evidence-w',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['launch', 'science', 'summer 2', 'border', 'brief', 'ecosystem', 'evidence'],
   'desc': 'Describe an ecosystem and biodiversity, then use a food web and sample counts to support a '
           'cautious recommendation.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'LAUNCH · Exchange and ventilation: two linked jobs',
   'file': 'Science/Launch/W27-W34_2026-27/SCI_L_W30_Exchange_And_Ventilation_Two_Linked_Jobs.html',
   'id': 'sci-tees-l-w30-exchange-and-ventilation-two-linked-jobs',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['launch', 'science', 'summer 1', 'exchange', 'ventilation', 'linked', 'jobs'],
   'desc': 'Explain how ventilation and alveolar structure support gas exchange, using an idealised '
           'comparison model.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'LAUNCH · Health and plants: evidence checkpoint',
   'file': 'Science/Launch/W17-W26_2026-27/SCI_L_S2_W6_Health_And_Plants_Evidence_Checkpoint.html',
   'id': 'sci-tees-l-s2-w6-health-and-plants-evidence-checkpoint',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['launch', 'science', 'spring 2', 'health', 'plants', 'evidence', 'checkpoint'],
   'desc': 'Apply taught disease, immunity and plant concepts in an original diagnostic checkpoint.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'LAUNCH · Hormone messages: the control room',
   'file': 'Science/Launch/W27-W34_2026-27/SCI_L_W27_Hormone_Messages_The_Control_Room.html',
   'id': 'sci-tees-l-w27-hormone-messages-the-control-room',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['launch', 'science', 'summer 1', 'hormone', 'messages', 'control', 'room'],
   'desc': 'Describe endocrine signalling and explain why suitable internal conditions matter.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'LAUNCH · Topics 7–8: mechanisms checkpoint',
   'file': 'Science/Launch/W27-W34_2026-27/SCI_L_W32_Topics_7_8_Mechanisms_Checkpoint.html',
   'id': 'sci-tees-l-w32-topics-7-8-mechanisms-checkpoint',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['launch', 'science', 'summer 1', 'topics', 'mechanisms', 'checkpoint'],
   'desc': 'Apply selected ideas about hormonal control, circulation and exchange, then use evidence to '
           'choose a precise next step.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'BUILD · The blackout-box mystery',
   'file': 'Science/Build/W18-W26_2026-27/SCI_B_W21_The_Blackout_Box_Mystery.html',
   'id': 'sci-tees-b-w21-the-blackout-box-mystery',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['build', 'science', 'spring 1', 'blackout', 'mystery'],
   'desc': 'Explain why an object needs light reaching it and then the eye to be seen.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'BUILD · Light-source detectives',
   'file': 'Science/Build/W18-W26_2026-27/SCI_B_W22_Light_Source_Detectives.html',
   'id': 'sci-tees-b-w22-light-source-detectives',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['build', 'science', 'spring 2', 'light', 'source', 'detectives'],
   'desc': 'Distinguish objects that give out their own light from surfaces that reflect light.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'BUILD · The fair-test repair lab',
   'file': 'Science/Build/W18-W26_2026-27/SCI_B_W26_The_Fair_Test_Repair_Lab.html',
   'id': 'sci-tees-b-w26-the-fair-test-repair-lab',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['build', 'science', 'spring 2', 'fair', 'test', 'repair'],
   'desc': 'Plan and use a fair test of how card height affects shadow height.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'BUILD · The shadow-screen lab',
   'file': 'Science/Build/W18-W26_2026-27/SCI_B_W24_The_Shadow_Screen_Lab.html',
   'id': 'sci-tees-b-w24-the-shadow-screen-lab',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['build', 'science', 'spring 2', 'shadow', 'screen'],
   'desc': 'Explain that a shadow forms where an object blocks light from a source.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'BUILD · The shadow-size studio',
   'file': 'Science/Build/W18-W26_2026-27/SCI_B_W25_The_Shadow_Size_Studio.html',
   'id': 'sci-tees-b-w25-the-shadow-size-studio',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['build', 'science', 'spring 2', 'shadow', 'size', 'studio'],
   'desc': 'Describe how moving an opaque card changes its shadow size when the source and screen stay fixed.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'BUILD · Sunlight: make a safer plan',
   'file': 'Science/Build/W18-W26_2026-27/SCI_B_W23_Sunlight_Make_A_Safer_Plan.html',
   'id': 'sci-tees-b-w23-sunlight-make-a-safer-plan',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['build', 'science', 'spring 2', 'sunlight', 'safer', 'plan'],
   'desc': 'Explain why sunlight can harm eyes and choose sensible ways to reduce exposure.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'LAUNCH · Disease data newsroom: make the numbers fair',
   'file': 'Science/Launch/W17-W26_2026-27/SCI_L_W23_Disease_Data_Newsroom_Make_The_Numbers_Fair.html',
   'id': 'sci-tees-l-w23-disease-data-newsroom-make-the-numbers-f',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['launch', 'science', 'spring 2', 'disease', 'data', 'newsroom', 'numbers', 'fair'],
   'desc': 'Create an accurate disease-data infographic using a checked source, comparable population '
           'measures and a cautious conclusion.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'LAUNCH · Disease detectives: follow the cause',
   'file': 'Science/Launch/W17-W26_2026-27/SCI_L_W21_Disease_Detectives_Follow_The_Cause.html',
   'id': 'sci-tees-l-w21-disease-detectives-follow-the-cause',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['launch', 'science', 'spring 1', 'disease', 'detectives', 'follow', 'cause'],
   'desc': 'Distinguish communicable and non-communicable disease using cause and transmission evidence.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'LAUNCH · Greenhouse challenge: grow more with a water budget',
   'file': 'Science/Launch/W17-W26_2026-27/SCI_L_W26_Greenhouse_Challenge_Grow_More_With_A_Water_Budget.html',
   'id': 'sci-tees-l-w26-greenhouse-challenge-grow-more-with-a-wa',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['launch', 'science', 'spring 2', 'greenhouse', 'challenge', 'grow', 'water', 'budget'],
   'desc': 'Apply plant biology to unfamiliar growth data and justify a plan using evidence and its '
           'limitations.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'LAUNCH · Immune memory: recognise, respond, remember',
   'file': 'Science/Launch/W17-W26_2026-27/SCI_L_W22_Immune_Memory_Recognise_Respond_Remember.html',
   'id': 'sci-tees-l-w22-immune-memory-recognise-respond-remember',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['launch', 'science', 'spring 2', 'immune', 'memory', 'recognise', 'respond', 'remember'],
   'desc': 'Explain how barriers and the specific immune response protect the body, including memory after '
           'immunisation.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'LAUNCH · Photosynthesis: the light lab',
   'file': 'Science/Launch/W17-W26_2026-27/SCI_L_W24_Photosynthesis_The_Light_Lab.html',
   'id': 'sci-tees-l-w24-photosynthesis-the-light-lab',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['launch', 'science', 'spring 2', 'photosynthesis', 'light'],
   'desc': 'Describe photosynthesis and investigate how light intensity affects a measured proxy for its '
           'rate.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'LAUNCH · Plant transport: follow the water and sugar',
   'file': 'Science/Launch/W17-W26_2026-27/SCI_L_W25_Plant_Transport_Follow_The_Water_And_Sugar.html',
   'id': 'sci-tees-l-w25-plant-transport-follow-the-water-and-sug',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['launch', 'science', 'spring 2', 'plant', 'transport', 'follow', 'water', 'sugar'],
   'desc': 'Explain plant transport and use potometer evidence to infer how air movement affects water '
           'uptake.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'GROW · Body systems: the dispatch challenge',
   'file': 'Science/Grow/W18-W26_2026-27/SCI_G_W20_Body_Systems_The_Dispatch_Challenge.html',
   'id': 'sci-tees-g-w20-body-systems-the-dispatch-challenge',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['grow', 'science', 'spring 1', 'body', 'systems', 'dispatch', 'challenge'],
   'desc': 'Describe digestion and circulation, then explain how they work together.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'GROW · The health evidence advisers',
   'file': 'Science/Grow/W18-W26_2026-27/SCI_G_W22_The_Health_Evidence_Advisers.html',
   'id': 'sci-tees-g-w22-the-health-evidence-advisers',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['grow', 'science', 'spring 2', 'health', 'evidence', 'advisers'],
   'desc': 'Explain how diet, activity, drugs and daily routines can affect the body using a fictional club '
           'plan.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'GROW · Heart route rescue',
   'file': 'Science/Grow/W18-W26_2026-27/SCI_G_W21_Heart_Route_Rescue.html',
   'id': 'sci-tees-g-w21-heart-route-rescue',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['grow', 'science', 'spring 1', 'heart', 'route', 'rescue'],
   'desc': 'Trace blood through the heart, lungs and body and explain the heart’s pumping job.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'GROW · Life cycle archive',
   'file': 'Science/Grow/W18-W26_2026-27/SCI_G_W25_Life_Cycle_Archive.html',
   'id': 'sci-tees-g-w25-life-cycle-archive',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['grow', 'science', 'spring 2', 'life', 'cycle', 'archive'],
   'desc': 'Describe the life cycles of a mammal, an amphibian, an insect and a bird using named examples.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'GROW · The nutrient delivery investigation',
   'file': 'Science/Grow/W18-W26_2026-27/SCI_G_W23_The_Nutrient_Delivery_Investigation.html',
   'id': 'sci-tees-g-w23-the-nutrient-delivery-investigation',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['grow', 'science', 'spring 2', 'nutrient', 'delivery', 'investigation'],
   'desc': 'Describe how absorbed nutrients and water reach body tissues and distinguish this from the waste '
           'route.',
   'added': '2026-09-09',
   'new': True,
   'year': '2026-27'},
- {'subject': 'Science · Teesside',
+ {'subject': 'Science',
   'title': 'GROW · The recovery research room',
   'file': 'Science/Grow/W18-W26_2026-27/SCI_G_W24_The_Recovery_Research_Room.html',
   'id': 'sci-tees-g-w24-the-recovery-research-room',
   'type': 'lesson',
-  'family': 'Science Teesside',
+  'family': 'Science',
   'keywords': ['grow', 'science', 'spring 2', 'recovery', 'research', 'room'],
   'desc': 'Use supplied sources and repeated sample data to present a cautious explanation of heart-rate '
           'recovery.',
@@ -1290,68 +1290,68 @@ SHELF_ROWS.append({'subject': 'GROW Vocational & PfA', 'title': 'GROW Computing 
 # ORDER SX3-PASSES 3b: the three Science pathway PARENT start pages. They are
 # navigation for teachers -- type 'teacher' -- and carry NO shelf entry: the
 # shelf lists lessons, and a parent index is not one.
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'BUILD Science · five-week lesson pack', 'file': 'Science/Build/START_HERE.html', 'id': 'catalogue-2026-27-science-build-w3-w7-pack', 'type': 'teacher', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'weeks 3–7', 'five-week pack', 'start here', 'skeletons', 'nutrition'], 'desc': 'BUILD · Weeks 3–7. Backbones and no backbones, muscles working in pairs, what a body needs, building a balanced plate, and where animal food comes from.', 'added': '2026-09-19', 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'GROW Science · five-week lesson pack', 'file': 'Science/Grow/START_HERE.html', 'id': 'catalogue-2026-27-science-grow-w3-w7-pack', 'type': 'teacher', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'weeks 3–7', 'five-week pack', 'start here', 'forces', 'space'], 'desc': "GROW · Weeks 3–7. Friction as friend and enemy, levers, pulleys and gears, planning a fair test, Earth and the planets, and the Moon's journey.", 'added': '2026-09-19', 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH GCSE Biology · five-week lesson pack', 'file': 'Science/Launch/START_HERE.html', 'id': 'catalogue-2026-27-science-launch-w3-w7-pack', 'type': 'teacher', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'gcse biology', 'weeks 3–7', 'five-week pack', 'start here', 'cell transport'], 'desc': 'LAUNCH · Weeks 3–7, fifteen lessons in Discover / Use / Master triplets: microscopy and magnification, diffusion and gas exchange, osmosis and its core practical, active transport, and a Topic 1 round-up with exam practice.', 'added': '2026-09-19', 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'BUILD Science · five-week lesson pack', 'file': 'Science/Build/START_HERE.html', 'id': 'catalogue-2026-27-science-build-w3-w7-pack', 'type': 'teacher', 'family': 'Science', 'keywords': ['build', 'science', 'weeks 3–7', 'five-week pack', 'start here', 'skeletons', 'nutrition'], 'desc': 'BUILD · Weeks 3–7. Backbones and no backbones, muscles working in pairs, what a body needs, building a balanced plate, and where animal food comes from.', 'added': '2026-09-19', 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'GROW Science · five-week lesson pack', 'file': 'Science/Grow/START_HERE.html', 'id': 'catalogue-2026-27-science-grow-w3-w7-pack', 'type': 'teacher', 'family': 'Science', 'keywords': ['grow', 'science', 'weeks 3–7', 'five-week pack', 'start here', 'forces', 'space'], 'desc': "GROW · Weeks 3–7. Friction as friend and enemy, levers, pulleys and gears, planning a fair test, Earth and the planets, and the Moon's journey.", 'added': '2026-09-19', 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'LAUNCH GCSE Biology · five-week lesson pack', 'file': 'Science/Launch/START_HERE.html', 'id': 'catalogue-2026-27-science-launch-w3-w7-pack', 'type': 'teacher', 'family': 'Science', 'keywords': ['launch', 'science', 'gcse biology', 'weeks 3–7', 'five-week pack', 'start here', 'cell transport'], 'desc': 'LAUNCH · Weeks 3–7, fifteen lessons in Discover / Use / Master triplets: microscopy and magnification, diffusion and gas exchange, osmosis and its core practical, active transport, and a Topic 1 round-up with exam practice.', 'added': '2026-09-19', 'year': '2026-27'})
 # ORDER HUM-D5 ADDENDUM 3 v3, signed by Matt Roper 2026-09-22 and landed under the
 # STOP-L1 ruling: the Summer 1 PACK-1R routes. Every field is derived from the lesson
 # deck's own opening slide -- its brandline (pathway, term, week), its <h1> and its
 # Learning goal box -- and the catalogue row and this reviewed literal are written from
 # that one reading, so the record and its admission cannot drift. halfTerm is an additive
 # tag, carried by the catalogue row and not by the literal.
-SHELF_ROWS.append({'id': 'hum-sp1-build-w02-old-and-new-objects', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Old and new objects · BUILD Humanities', 'file': 'Humanities/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/BUILD/Spring_1/W02/BUILD_S1_W02_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-10-14', 'year': '2026-27', 'desc': 'BUILD Humanities · Spring 1 · Week 2. Learning goal: Compare old and new objects.', 'keywords': ['humanities', 'build', 'spring 1 · week 2', 'objects']})
-SHELF_ROWS.append({'id': 'hum-sp1-build-w03-pictures-on-a-timeline', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Pictures on a timeline · BUILD Humanities', 'file': 'Humanities/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/BUILD/Spring_1/W03/BUILD_S1_W03_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-10-14', 'year': '2026-27', 'desc': 'BUILD Humanities · Spring 1 · Week 3. Learning goal: Order pictures on a simple timeline.', 'keywords': ['humanities', 'build', 'spring 1 · week 3', 'pictures', 'timeline']})
-SHELF_ROWS.append({'id': 'hum-sp1-build-w04-how-a-local-place-changes', 'subject': 'Humanities', 'type': 'lesson', 'title': 'How a local place changes · BUILD Humanities', 'file': 'Humanities/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/BUILD/Spring_1/W04/BUILD_S1_W04_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-10-14', 'year': '2026-27', 'desc': 'BUILD Humanities · Spring 1 · Week 4. Learning goal: Talk about how my local area has changed.', 'keywords': ['humanities', 'build', 'spring 1 · week 4', 'local', 'place', 'changes']})
-SHELF_ROWS.append({'id': 'hum-sp1-build-w05-a-question-about-the-past', 'subject': 'Humanities', 'type': 'lesson', 'title': 'A question about the past · BUILD Humanities', 'file': 'Humanities/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/BUILD/Spring_1/W05/BUILD_S1_W05_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-10-14', 'year': '2026-27', 'desc': 'BUILD Humanities · Spring 1 · Week 5. Learning goal: Ask a question about the past.', 'keywords': ['humanities', 'build', 'spring 1 · week 5', 'question', 'about', 'past']})
-SHELF_ROWS.append({'id': 'hum-sp1-build-w06-then-and-now-evidence-record', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Then and now evidence record · BUILD Humanities', 'file': 'Humanities/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/BUILD/Spring_1/W06/BUILD_S1_W06_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-10-14', 'year': '2026-27', 'desc': 'BUILD Humanities · Spring 1 · Week 6. Learning goal: Record then and now with photos and captions.', 'keywords': ['humanities', 'build', 'spring 1 · week 6', 'then', 'evidence', 'record']})
-SHELF_ROWS.append({'id': 'hum-sp1-grow-w02-investigating-a-rights-campaign', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Investigating a rights campaign · GROW Humanities', 'file': 'Humanities/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/GROW/Spring_1/W02/GROW_S1_W02_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-10-14', 'year': '2026-27', 'desc': 'GROW Humanities · Spring 1 · Week 2. Learning goal: Use sources to investigate a campaign for rights and change.', 'keywords': ['humanities', 'grow', 'spring 1 · week 2', 'investigating', 'rights', 'campaign']})
-SHELF_ROWS.append({'id': 'hum-sp1-grow-w03-causes-and-consequences-of-protest', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Causes and consequences of protest · GROW Humanities', 'file': 'Humanities/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/GROW/Spring_1/W03/GROW_S1_W03_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-10-14', 'year': '2026-27', 'desc': 'GROW Humanities · Spring 1 · Week 3. Learning goal: Explain causes and consequences of a protest movement.', 'keywords': ['humanities', 'grow', 'spring 1 · week 3', 'causes', 'consequences', 'protest']})
-SHELF_ROWS.append({'id': 'hum-sp1-grow-w04-judging-a-person-s-significance', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Judging a person’s significance · GROW Humanities', 'file': 'Humanities/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/GROW/Spring_1/W04/GROW_S1_W04_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-10-14', 'year': '2026-27', 'desc': 'GROW Humanities · Spring 1 · Week 4. Learning goal: Evaluate the significance of a person who created change.', 'keywords': ['humanities', 'grow', 'spring 1 · week 4', 'judging', 'person', 'significance']})
-SHELF_ROWS.append({'id': 'hum-sp1-grow-w05-writing-an-account-of-change', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Writing an account of change · GROW Humanities', 'file': 'Humanities/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/GROW/Spring_1/W05/GROW_S1_W05_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-10-14', 'year': '2026-27', 'desc': 'GROW Humanities · Spring 1 · Week 5. Learning goal: Plan and write a structured historical account.', 'keywords': ['humanities', 'grow', 'spring 1 · week 5', 'writing', 'account', 'change']})
-SHELF_ROWS.append({'id': 'hum-sp1-grow-w06-account-and-source-evaluation', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Account and source evaluation · GROW Humanities', 'file': 'Humanities/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/GROW/Spring_1/W06/GROW_S1_W06_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-10-14', 'year': '2026-27', 'desc': 'GROW Humanities · Spring 1 · Week 6. Learning goal: Complete a structured account and source evaluation.', 'keywords': ['humanities', 'grow', 'spring 1 · week 6', 'account', 'source', 'evaluation']})
-SHELF_ROWS.append({'id': 'hum-sp1-launch-w02-understanding-the-holocaust-respectfully', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Understanding the Holocaust respectfully · LAUNCH Humanities', 'file': 'Humanities/Teaching_Packs/HUM_Spring_1_LAUNCH_Reviewed/LAUNCH/Spring_1/W02/LAUNCH_S1_W02_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-10-14', 'year': '2026-27', 'desc': 'LAUNCH Humanities · Spring 1 · Week 2. Learning goal: Study the Holocaust sensitively linked to Holocaust Memorial Day.', 'keywords': ['humanities', 'launch', 'spring 1 · week 2', 'understanding', 'holocaust', 'respectfully']})
-SHELF_ROWS.append({'id': 'hum-sp1-launch-w03-evaluating-survivor-testimony', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Evaluating survivor testimony · LAUNCH Humanities', 'file': 'Humanities/Teaching_Packs/HUM_Spring_1_LAUNCH_Reviewed/LAUNCH/Spring_1/W03/LAUNCH_S1_W03_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-10-14', 'year': '2026-27', 'desc': 'LAUNCH Humanities · Spring 1 · Week 3. Learning goal: Evaluate survivor testimony from a curated online archive.', 'keywords': ['humanities', 'launch', 'spring 1 · week 3', 'evaluating', 'survivor', 'testimony']})
-SHELF_ROWS.append({'id': 'hum-sp1-launch-w04-why-remembrance-matters', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Why remembrance matters · LAUNCH Humanities', 'file': 'Humanities/Teaching_Packs/HUM_Spring_1_LAUNCH_Reviewed/LAUNCH/Spring_1/W04/LAUNCH_S1_W04_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-10-14', 'year': '2026-27', 'desc': 'LAUNCH Humanities · Spring 1 · Week 4. Learning goal: Explain the significance of remembrance.', 'keywords': ['humanities', 'launch', 'spring 1 · week 4', 'remembrance', 'matters']})
-SHELF_ROWS.append({'id': 'hum-sp1-launch-w05-creating-a-digital-memorial', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Creating a digital memorial · LAUNCH Humanities', 'file': 'Humanities/Teaching_Packs/HUM_Spring_1_LAUNCH_Reviewed/LAUNCH/Spring_1/W05/LAUNCH_S1_W05_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-10-14', 'year': '2026-27', 'desc': 'LAUNCH Humanities · Spring 1 · Week 5. Learning goal: Create a respectful digital memorial.', 'keywords': ['humanities', 'launch', 'spring 1 · week 5', 'creating', 'digital', 'memorial']})
-SHELF_ROWS.append({'id': 'hum-sp1-launch-w06-evaluating-causes-and-consequences', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Evaluating causes and consequences · LAUNCH Humanities', 'file': 'Humanities/Teaching_Packs/HUM_Spring_1_LAUNCH_Reviewed/LAUNCH/Spring_1/W06/LAUNCH_S1_W06_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-10-14', 'year': '2026-27', 'desc': 'LAUNCH Humanities · Spring 1 · Week 6. Learning goal: Complete a structured evaluation of causes and consequences.', 'keywords': ['humanities', 'launch', 'spring 1 · week 6', 'evaluating', 'causes', 'consequences']})
-SHELF_ROWS.append({'id': 'catalogue-2026-27-humanities-build-w27-w39-pack1r', 'subject': 'Humanities', 'type': 'teacher', 'title': 'BUILD Humanities · Summer 1 · My local place and the wider world', 'file': 'Humanities/BUILD_W27-W39_2026-27/START_HERE.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': "Start page for the six BUILD Humanities lessons of Summer 1, weeks 1-6, with each lesson's knowledge organiser, pupil resources, editable pack, slides and teacher notes beside it.", 'keywords': ['humanities', 'build', 'summer 1', 'start here', 'pack-1r']})
-SHELF_ROWS.append({'id': 'pack1r-su1-build-w01-our-school-and-local-features', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Our school and local features · BUILD Humanities', 'file': 'Humanities/BUILD_W27-W39_2026-27/BUILD/Summer_1/W01/BUILD_SU1_W01_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'BUILD Humanities · Summer 1 · Week 1 (PACK-1R). Learning goal: Name and locate my school and local features.', 'keywords': ['humanities', 'build', 'summer 1 · week 1', 'pack-1r', 'school', 'local', 'features']})
-SHELF_ROWS.append({'id': 'pack1r-su1-build-w02-routes-on-a-familiar-plan', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Routes on a familiar plan · BUILD Humanities', 'file': 'Humanities/BUILD_W27-W39_2026-27/BUILD/Summer_1/W02/BUILD_SU1_W02_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'BUILD Humanities · Summer 1 · Week 2 (PACK-1R). Learning goal: Use a simple map or plan of a familiar place.', 'keywords': ['humanities', 'build', 'summer 1 · week 2', 'pack-1r', 'routes', 'familiar', 'plan']})
-SHELF_ROWS.append({'id': 'pack1r-su1-build-w03-comparing-two-places', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Comparing two places · BUILD Humanities', 'file': 'Humanities/BUILD_W27-W39_2026-27/BUILD/Summer_1/W03/BUILD_SU1_W03_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'BUILD Humanities · Summer 1 · Week 3 (PACK-1R). Learning goal: Compare my place with a contrasting place.', 'keywords': ['humanities', 'build', 'summer 1 · week 3', 'pack-1r', 'comparing', 'places']})
-SHELF_ROWS.append({'id': 'pack1r-su1-build-w04-fieldwork-in-our-grounds', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Fieldwork in our grounds · BUILD Humanities', 'file': 'Humanities/BUILD_W27-W39_2026-27/BUILD/Summer_1/W04/BUILD_SU1_W04_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'BUILD Humanities · Summer 1 · Week 4 (PACK-1R). Learning goal: Carry out simple fieldwork in the grounds.', 'keywords': ['humanities', 'build', 'summer 1 · week 4', 'pack-1r', 'fieldwork', 'grounds']})
-SHELF_ROWS.append({'id': 'pack1r-su1-build-w05-continents-and-oceans', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Continents and oceans · BUILD Humanities', 'file': 'Humanities/BUILD_W27-W39_2026-27/BUILD/Summer_1/W05/BUILD_SU1_W05_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'BUILD Humanities · Summer 1 · Week 5 (PACK-1R). Learning goal: Talk about the wider world using continents and oceans.', 'keywords': ['humanities', 'build', 'summer 1 · week 5', 'pack-1r', 'continents', 'oceans']})
-SHELF_ROWS.append({'id': 'pack1r-su1-build-w06-our-class-map', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Our class map · BUILD Humanities', 'file': 'Humanities/BUILD_W27-W39_2026-27/BUILD/Summer_1/W06/BUILD_SU1_W06_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'BUILD Humanities · Summer 1 · Week 6 (PACK-1R). Learning goal: Record local features on a class map.', 'keywords': ['humanities', 'build', 'summer 1 · week 6', 'pack-1r', 'class']})
-SHELF_ROWS.append({'id': 'catalogue-2026-27-humanities-grow-w27-w39-pack1r', 'subject': 'Humanities', 'type': 'teacher', 'title': 'GROW Humanities — Summer 1, Weeks 1–6', 'file': 'Humanities/GROW_W27-W39_2026-27/START_HERE.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': "Start page for the six GROW Humanities lessons of Summer 1, weeks 1-6, with each lesson's knowledge organiser, pupil resources, editable pack, slides and teacher notes beside it.", 'keywords': ['humanities', 'grow', 'summer 1', 'start here', 'pack-1r']})
-SHELF_ROWS.append({'id': 'pack1r-su1-grow-w01-our-place-in-the-wider-world', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Our place in the wider world · GROW Humanities', 'file': 'Humanities/GROW_W27-W39_2026-27/GROW/Summer_1/W01/GROW_SU1_W01_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'GROW Humanities · Summer 1 · Week 1 (PACK-1R). Learning goal: Locate my place the UK and the wider world on maps.', 'keywords': ['humanities', 'grow', 'summer 1 · week 1', 'pack-1r', 'place', 'wider', 'world']})
-SHELF_ROWS.append({'id': 'pack1r-su1-grow-w02-atlases-grid-references-and-digital-maps', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Atlases grid references and digital maps · GROW Humanities', 'file': 'Humanities/GROW_W27-W39_2026-27/GROW/Summer_1/W02/GROW_SU1_W02_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'GROW Humanities · Summer 1 · Week 2 (PACK-1R). Learning goal: Use atlases grid references and digital maps.', 'keywords': ['humanities', 'grow', 'summer 1 · week 2', 'pack-1r', 'atlases', 'grid', 'references', 'digital', 'maps']})
-SHELF_ROWS.append({'id': 'pack1r-su1-grow-w03-our-school-route-fieldwork', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Our school route fieldwork · GROW Humanities', 'file': 'Humanities/GROW_W27-W39_2026-27/GROW/Summer_1/W03/GROW_SU1_W03_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'GROW Humanities · Summer 1 · Week 3 (PACK-1R). Learning goal: Carry out simple fieldwork about my local area.', 'keywords': ['humanities', 'grow', 'summer 1 · week 3', 'pack-1r', 'school', 'route', 'fieldwork']})
-SHELF_ROWS.append({'id': 'pack1r-su1-grow-w04-physical-and-human-features', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Physical and human features · GROW Humanities', 'file': 'Humanities/GROW_W27-W39_2026-27/GROW/Summer_1/W04/GROW_SU1_W04_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'GROW Humanities · Summer 1 · Week 4 (PACK-1R). Learning goal: Describe physical and human features of a place.', 'keywords': ['humanities', 'grow', 'summer 1 · week 4', 'pack-1r', 'physical', 'human', 'features']})
-SHELF_ROWS.append({'id': 'pack1r-su1-grow-w05-middlesbrough-and-helmsley', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Middlesbrough and Helmsley · GROW Humanities', 'file': 'Humanities/GROW_W27-W39_2026-27/GROW/Summer_1/W05/GROW_SU1_W05_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'GROW Humanities · Summer 1 · Week 5 (PACK-1R). Learning goal: Compare my locality with a contrasting place.', 'keywords': ['humanities', 'grow', 'summer 1 · week 5', 'pack-1r', 'middlesbrough', 'helmsley']})
-SHELF_ROWS.append({'id': 'pack1r-su1-grow-w06-our-locality-study-and-evidence', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Our locality study and evidence · GROW Humanities', 'file': 'Humanities/GROW_W27-W39_2026-27/GROW/Summer_1/W06/GROW_SU1_W06_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'GROW Humanities · Summer 1 · Week 6 (PACK-1R). Learning goal: Complete a fieldwork and locality study and bank UAS evidence.', 'keywords': ['humanities', 'grow', 'summer 1 · week 6', 'pack-1r', 'locality', 'study', 'evidence']})
+SHELF_ROWS.append({'id': 'hum-sp1-build-w02-old-and-new-objects', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Old and new objects · BUILD Humanities', 'file': 'Humanities/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/BUILD/Spring_1/W02/BUILD_S1_W02_Lesson.html', 'family': 'Humanities', 'added': '2026-10-14', 'year': '2026-27', 'desc': 'BUILD Humanities · Spring 1 · Week 2. Learning goal: Compare old and new objects.', 'keywords': ['humanities', 'build', 'spring 1 · week 2', 'objects']})
+SHELF_ROWS.append({'id': 'hum-sp1-build-w03-pictures-on-a-timeline', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Pictures on a timeline · BUILD Humanities', 'file': 'Humanities/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/BUILD/Spring_1/W03/BUILD_S1_W03_Lesson.html', 'family': 'Humanities', 'added': '2026-10-14', 'year': '2026-27', 'desc': 'BUILD Humanities · Spring 1 · Week 3. Learning goal: Order pictures on a simple timeline.', 'keywords': ['humanities', 'build', 'spring 1 · week 3', 'pictures', 'timeline']})
+SHELF_ROWS.append({'id': 'hum-sp1-build-w04-how-a-local-place-changes', 'subject': 'Humanities', 'type': 'lesson', 'title': 'How a local place changes · BUILD Humanities', 'file': 'Humanities/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/BUILD/Spring_1/W04/BUILD_S1_W04_Lesson.html', 'family': 'Humanities', 'added': '2026-10-14', 'year': '2026-27', 'desc': 'BUILD Humanities · Spring 1 · Week 4. Learning goal: Talk about how my local area has changed.', 'keywords': ['humanities', 'build', 'spring 1 · week 4', 'local', 'place', 'changes']})
+SHELF_ROWS.append({'id': 'hum-sp1-build-w05-a-question-about-the-past', 'subject': 'Humanities', 'type': 'lesson', 'title': 'A question about the past · BUILD Humanities', 'file': 'Humanities/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/BUILD/Spring_1/W05/BUILD_S1_W05_Lesson.html', 'family': 'Humanities', 'added': '2026-10-14', 'year': '2026-27', 'desc': 'BUILD Humanities · Spring 1 · Week 5. Learning goal: Ask a question about the past.', 'keywords': ['humanities', 'build', 'spring 1 · week 5', 'question', 'about', 'past']})
+SHELF_ROWS.append({'id': 'hum-sp1-build-w06-then-and-now-evidence-record', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Then and now evidence record · BUILD Humanities', 'file': 'Humanities/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/BUILD/Spring_1/W06/BUILD_S1_W06_Lesson.html', 'family': 'Humanities', 'added': '2026-10-14', 'year': '2026-27', 'desc': 'BUILD Humanities · Spring 1 · Week 6. Learning goal: Record then and now with photos and captions.', 'keywords': ['humanities', 'build', 'spring 1 · week 6', 'then', 'evidence', 'record']})
+SHELF_ROWS.append({'id': 'hum-sp1-grow-w02-investigating-a-rights-campaign', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Investigating a rights campaign · GROW Humanities', 'file': 'Humanities/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/GROW/Spring_1/W02/GROW_S1_W02_Lesson.html', 'family': 'Humanities', 'added': '2026-10-14', 'year': '2026-27', 'desc': 'GROW Humanities · Spring 1 · Week 2. Learning goal: Use sources to investigate a campaign for rights and change.', 'keywords': ['humanities', 'grow', 'spring 1 · week 2', 'investigating', 'rights', 'campaign']})
+SHELF_ROWS.append({'id': 'hum-sp1-grow-w03-causes-and-consequences-of-protest', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Causes and consequences of protest · GROW Humanities', 'file': 'Humanities/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/GROW/Spring_1/W03/GROW_S1_W03_Lesson.html', 'family': 'Humanities', 'added': '2026-10-14', 'year': '2026-27', 'desc': 'GROW Humanities · Spring 1 · Week 3. Learning goal: Explain causes and consequences of a protest movement.', 'keywords': ['humanities', 'grow', 'spring 1 · week 3', 'causes', 'consequences', 'protest']})
+SHELF_ROWS.append({'id': 'hum-sp1-grow-w04-judging-a-person-s-significance', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Judging a person’s significance · GROW Humanities', 'file': 'Humanities/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/GROW/Spring_1/W04/GROW_S1_W04_Lesson.html', 'family': 'Humanities', 'added': '2026-10-14', 'year': '2026-27', 'desc': 'GROW Humanities · Spring 1 · Week 4. Learning goal: Evaluate the significance of a person who created change.', 'keywords': ['humanities', 'grow', 'spring 1 · week 4', 'judging', 'person', 'significance']})
+SHELF_ROWS.append({'id': 'hum-sp1-grow-w05-writing-an-account-of-change', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Writing an account of change · GROW Humanities', 'file': 'Humanities/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/GROW/Spring_1/W05/GROW_S1_W05_Lesson.html', 'family': 'Humanities', 'added': '2026-10-14', 'year': '2026-27', 'desc': 'GROW Humanities · Spring 1 · Week 5. Learning goal: Plan and write a structured historical account.', 'keywords': ['humanities', 'grow', 'spring 1 · week 5', 'writing', 'account', 'change']})
+SHELF_ROWS.append({'id': 'hum-sp1-grow-w06-account-and-source-evaluation', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Account and source evaluation · GROW Humanities', 'file': 'Humanities/Teaching_Packs/HUM_Spring_1_BUILD_GROW_Reviewed/GROW/Spring_1/W06/GROW_S1_W06_Lesson.html', 'family': 'Humanities', 'added': '2026-10-14', 'year': '2026-27', 'desc': 'GROW Humanities · Spring 1 · Week 6. Learning goal: Complete a structured account and source evaluation.', 'keywords': ['humanities', 'grow', 'spring 1 · week 6', 'account', 'source', 'evaluation']})
+SHELF_ROWS.append({'id': 'hum-sp1-launch-w02-understanding-the-holocaust-respectfully', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Understanding the Holocaust respectfully · LAUNCH Humanities', 'file': 'Humanities/Teaching_Packs/HUM_Spring_1_LAUNCH_Reviewed/LAUNCH/Spring_1/W02/LAUNCH_S1_W02_Lesson.html', 'family': 'Humanities', 'added': '2026-10-14', 'year': '2026-27', 'desc': 'LAUNCH Humanities · Spring 1 · Week 2. Learning goal: Study the Holocaust sensitively linked to Holocaust Memorial Day.', 'keywords': ['humanities', 'launch', 'spring 1 · week 2', 'understanding', 'holocaust', 'respectfully']})
+SHELF_ROWS.append({'id': 'hum-sp1-launch-w03-evaluating-survivor-testimony', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Evaluating survivor testimony · LAUNCH Humanities', 'file': 'Humanities/Teaching_Packs/HUM_Spring_1_LAUNCH_Reviewed/LAUNCH/Spring_1/W03/LAUNCH_S1_W03_Lesson.html', 'family': 'Humanities', 'added': '2026-10-14', 'year': '2026-27', 'desc': 'LAUNCH Humanities · Spring 1 · Week 3. Learning goal: Evaluate survivor testimony from a curated online archive.', 'keywords': ['humanities', 'launch', 'spring 1 · week 3', 'evaluating', 'survivor', 'testimony']})
+SHELF_ROWS.append({'id': 'hum-sp1-launch-w04-why-remembrance-matters', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Why remembrance matters · LAUNCH Humanities', 'file': 'Humanities/Teaching_Packs/HUM_Spring_1_LAUNCH_Reviewed/LAUNCH/Spring_1/W04/LAUNCH_S1_W04_Lesson.html', 'family': 'Humanities', 'added': '2026-10-14', 'year': '2026-27', 'desc': 'LAUNCH Humanities · Spring 1 · Week 4. Learning goal: Explain the significance of remembrance.', 'keywords': ['humanities', 'launch', 'spring 1 · week 4', 'remembrance', 'matters']})
+SHELF_ROWS.append({'id': 'hum-sp1-launch-w05-creating-a-digital-memorial', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Creating a digital memorial · LAUNCH Humanities', 'file': 'Humanities/Teaching_Packs/HUM_Spring_1_LAUNCH_Reviewed/LAUNCH/Spring_1/W05/LAUNCH_S1_W05_Lesson.html', 'family': 'Humanities', 'added': '2026-10-14', 'year': '2026-27', 'desc': 'LAUNCH Humanities · Spring 1 · Week 5. Learning goal: Create a respectful digital memorial.', 'keywords': ['humanities', 'launch', 'spring 1 · week 5', 'creating', 'digital', 'memorial']})
+SHELF_ROWS.append({'id': 'hum-sp1-launch-w06-evaluating-causes-and-consequences', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Evaluating causes and consequences · LAUNCH Humanities', 'file': 'Humanities/Teaching_Packs/HUM_Spring_1_LAUNCH_Reviewed/LAUNCH/Spring_1/W06/LAUNCH_S1_W06_Lesson.html', 'family': 'Humanities', 'added': '2026-10-14', 'year': '2026-27', 'desc': 'LAUNCH Humanities · Spring 1 · Week 6. Learning goal: Complete a structured evaluation of causes and consequences.', 'keywords': ['humanities', 'launch', 'spring 1 · week 6', 'evaluating', 'causes', 'consequences']})
+SHELF_ROWS.append({'id': 'catalogue-2026-27-humanities-build-w27-w39-pack1r', 'subject': 'Humanities', 'type': 'teacher', 'title': 'BUILD Humanities · Summer 1 · My local place and the wider world', 'file': 'Humanities/BUILD_W27-W39_2026-27/START_HERE.html', 'family': 'Humanities', 'added': '2026-09-21', 'year': '2026-27', 'desc': "Start page for the six BUILD Humanities lessons of Summer 1, weeks 1-6, with each lesson's knowledge organiser, pupil resources, editable pack, slides and teacher notes beside it.", 'keywords': ['humanities', 'build', 'summer 1', 'start here', 'pack-1r']})
+SHELF_ROWS.append({'id': 'pack1r-su1-build-w01-our-school-and-local-features', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Our school and local features · BUILD Humanities', 'file': 'Humanities/BUILD_W27-W39_2026-27/BUILD/Summer_1/W01/BUILD_SU1_W01_Lesson.html', 'family': 'Humanities', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'BUILD Humanities · Summer 1 · Week 1 (PACK-1R). Learning goal: Name and locate my school and local features.', 'keywords': ['humanities', 'build', 'summer 1 · week 1', 'pack-1r', 'school', 'local', 'features']})
+SHELF_ROWS.append({'id': 'pack1r-su1-build-w02-routes-on-a-familiar-plan', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Routes on a familiar plan · BUILD Humanities', 'file': 'Humanities/BUILD_W27-W39_2026-27/BUILD/Summer_1/W02/BUILD_SU1_W02_Lesson.html', 'family': 'Humanities', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'BUILD Humanities · Summer 1 · Week 2 (PACK-1R). Learning goal: Use a simple map or plan of a familiar place.', 'keywords': ['humanities', 'build', 'summer 1 · week 2', 'pack-1r', 'routes', 'familiar', 'plan']})
+SHELF_ROWS.append({'id': 'pack1r-su1-build-w03-comparing-two-places', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Comparing two places · BUILD Humanities', 'file': 'Humanities/BUILD_W27-W39_2026-27/BUILD/Summer_1/W03/BUILD_SU1_W03_Lesson.html', 'family': 'Humanities', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'BUILD Humanities · Summer 1 · Week 3 (PACK-1R). Learning goal: Compare my place with a contrasting place.', 'keywords': ['humanities', 'build', 'summer 1 · week 3', 'pack-1r', 'comparing', 'places']})
+SHELF_ROWS.append({'id': 'pack1r-su1-build-w04-fieldwork-in-our-grounds', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Fieldwork in our grounds · BUILD Humanities', 'file': 'Humanities/BUILD_W27-W39_2026-27/BUILD/Summer_1/W04/BUILD_SU1_W04_Lesson.html', 'family': 'Humanities', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'BUILD Humanities · Summer 1 · Week 4 (PACK-1R). Learning goal: Carry out simple fieldwork in the grounds.', 'keywords': ['humanities', 'build', 'summer 1 · week 4', 'pack-1r', 'fieldwork', 'grounds']})
+SHELF_ROWS.append({'id': 'pack1r-su1-build-w05-continents-and-oceans', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Continents and oceans · BUILD Humanities', 'file': 'Humanities/BUILD_W27-W39_2026-27/BUILD/Summer_1/W05/BUILD_SU1_W05_Lesson.html', 'family': 'Humanities', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'BUILD Humanities · Summer 1 · Week 5 (PACK-1R). Learning goal: Talk about the wider world using continents and oceans.', 'keywords': ['humanities', 'build', 'summer 1 · week 5', 'pack-1r', 'continents', 'oceans']})
+SHELF_ROWS.append({'id': 'pack1r-su1-build-w06-our-class-map', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Our class map · BUILD Humanities', 'file': 'Humanities/BUILD_W27-W39_2026-27/BUILD/Summer_1/W06/BUILD_SU1_W06_Lesson.html', 'family': 'Humanities', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'BUILD Humanities · Summer 1 · Week 6 (PACK-1R). Learning goal: Record local features on a class map.', 'keywords': ['humanities', 'build', 'summer 1 · week 6', 'pack-1r', 'class']})
+SHELF_ROWS.append({'id': 'catalogue-2026-27-humanities-grow-w27-w39-pack1r', 'subject': 'Humanities', 'type': 'teacher', 'title': 'GROW Humanities — Summer 1, Weeks 1–6', 'file': 'Humanities/GROW_W27-W39_2026-27/START_HERE.html', 'family': 'Humanities', 'added': '2026-09-21', 'year': '2026-27', 'desc': "Start page for the six GROW Humanities lessons of Summer 1, weeks 1-6, with each lesson's knowledge organiser, pupil resources, editable pack, slides and teacher notes beside it.", 'keywords': ['humanities', 'grow', 'summer 1', 'start here', 'pack-1r']})
+SHELF_ROWS.append({'id': 'pack1r-su1-grow-w01-our-place-in-the-wider-world', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Our place in the wider world · GROW Humanities', 'file': 'Humanities/GROW_W27-W39_2026-27/GROW/Summer_1/W01/GROW_SU1_W01_Lesson.html', 'family': 'Humanities', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'GROW Humanities · Summer 1 · Week 1 (PACK-1R). Learning goal: Locate my place the UK and the wider world on maps.', 'keywords': ['humanities', 'grow', 'summer 1 · week 1', 'pack-1r', 'place', 'wider', 'world']})
+SHELF_ROWS.append({'id': 'pack1r-su1-grow-w02-atlases-grid-references-and-digital-maps', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Atlases grid references and digital maps · GROW Humanities', 'file': 'Humanities/GROW_W27-W39_2026-27/GROW/Summer_1/W02/GROW_SU1_W02_Lesson.html', 'family': 'Humanities', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'GROW Humanities · Summer 1 · Week 2 (PACK-1R). Learning goal: Use atlases grid references and digital maps.', 'keywords': ['humanities', 'grow', 'summer 1 · week 2', 'pack-1r', 'atlases', 'grid', 'references', 'digital', 'maps']})
+SHELF_ROWS.append({'id': 'pack1r-su1-grow-w03-our-school-route-fieldwork', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Our school route fieldwork · GROW Humanities', 'file': 'Humanities/GROW_W27-W39_2026-27/GROW/Summer_1/W03/GROW_SU1_W03_Lesson.html', 'family': 'Humanities', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'GROW Humanities · Summer 1 · Week 3 (PACK-1R). Learning goal: Carry out simple fieldwork about my local area.', 'keywords': ['humanities', 'grow', 'summer 1 · week 3', 'pack-1r', 'school', 'route', 'fieldwork']})
+SHELF_ROWS.append({'id': 'pack1r-su1-grow-w04-physical-and-human-features', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Physical and human features · GROW Humanities', 'file': 'Humanities/GROW_W27-W39_2026-27/GROW/Summer_1/W04/GROW_SU1_W04_Lesson.html', 'family': 'Humanities', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'GROW Humanities · Summer 1 · Week 4 (PACK-1R). Learning goal: Describe physical and human features of a place.', 'keywords': ['humanities', 'grow', 'summer 1 · week 4', 'pack-1r', 'physical', 'human', 'features']})
+SHELF_ROWS.append({'id': 'pack1r-su1-grow-w05-middlesbrough-and-helmsley', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Middlesbrough and Helmsley · GROW Humanities', 'file': 'Humanities/GROW_W27-W39_2026-27/GROW/Summer_1/W05/GROW_SU1_W05_Lesson.html', 'family': 'Humanities', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'GROW Humanities · Summer 1 · Week 5 (PACK-1R). Learning goal: Compare my locality with a contrasting place.', 'keywords': ['humanities', 'grow', 'summer 1 · week 5', 'pack-1r', 'middlesbrough', 'helmsley']})
+SHELF_ROWS.append({'id': 'pack1r-su1-grow-w06-our-locality-study-and-evidence', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Our locality study and evidence · GROW Humanities', 'file': 'Humanities/GROW_W27-W39_2026-27/GROW/Summer_1/W06/GROW_SU1_W06_Lesson.html', 'family': 'Humanities', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'GROW Humanities · Summer 1 · Week 6 (PACK-1R). Learning goal: Complete a fieldwork and locality study and bank UAS evidence.', 'keywords': ['humanities', 'grow', 'summer 1 · week 6', 'pack-1r', 'locality', 'study', 'evidence']})
 # The LAUNCH rows of the same landing, appended AFTER the BUILD and GROW rows already on
 # main so the reviewed literals stay in the order resources.json carries them: the
 # contract compares the two sequences position by position.
-SHELF_ROWS.append({'id': 'catalogue-2026-27-humanities-launch-w27-w39-pack1r', 'subject': 'Humanities', 'type': 'teacher', 'title': 'LAUNCH · Humanities · Summer 1', 'file': 'Humanities/LAUNCH_W27-W39_2026-27/START_HERE.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': "Start page for the six LAUNCH Humanities lessons of Summer 1, weeks 1-6, with each lesson's knowledge organiser, pupil resources, editable pack, slides and teacher notes beside it.", 'keywords': ['humanities', 'launch', 'summer 1', 'start here', 'pack-1r']})
-SHELF_ROWS.append({'id': 'pack1r-su1-launch-w01-resource-use-and-carbon-dioxide', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Resource use and carbon dioxide · LAUNCH Humanities', 'file': 'Humanities/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W01/LAUNCH_SU1_W01_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'LAUNCH Humanities · Summer 1 · Week 1 (PACK-1R). Learning goal: Explain resource use and climate change using online data.', 'keywords': ['humanities', 'launch', 'summer 1 · week 1', 'pack-1r', 'resource', 'carbon', 'dioxide']})
-SHELF_ROWS.append({'id': 'pack1r-su1-launch-w02-judging-climate-responses', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Judging climate responses · LAUNCH Humanities', 'file': 'Humanities/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W02/LAUNCH_SU1_W02_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'LAUNCH Humanities · Summer 1 · Week 2 (PACK-1R). Learning goal: Evaluate responses to climate change.', 'keywords': ['humanities', 'launch', 'summer 1 · week 2', 'pack-1r', 'judging', 'climate', 'responses']})
-SHELF_ROWS.append({'id': 'pack1r-su1-launch-w03-choosing-a-school-sustainability-option', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Choosing a school sustainability option · LAUNCH Humanities', 'file': 'Humanities/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W03/LAUNCH_SU1_W03_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'LAUNCH Humanities · Summer 1 · Week 3 (PACK-1R). Learning goal: Make a reasoned geographical decision.', 'keywords': ['humanities', 'launch', 'summer 1 · week 3', 'pack-1r', 'choosing', 'school', 'sustainability', 'option']})
-SHELF_ROWS.append({'id': 'pack1r-su1-launch-w04-an-accurate-earth-day-campaign', 'subject': 'Humanities', 'type': 'lesson', 'title': 'An accurate Earth Day campaign · LAUNCH Humanities', 'file': 'Humanities/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W04/LAUNCH_SU1_W04_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'LAUNCH Humanities · Summer 1 · Week 4 (PACK-1R). Learning goal: Create a digital sustainability campaign linked to Earth Day.', 'keywords': ['humanities', 'launch', 'summer 1 · week 4', 'pack-1r', 'accurate', 'earth', 'campaign']})
-SHELF_ROWS.append({'id': 'pack1r-su1-launch-w05-a-measurable-community-contribution', 'subject': 'Humanities', 'type': 'lesson', 'title': 'A measurable community contribution · LAUNCH Humanities', 'file': 'Humanities/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W05/LAUNCH_SU1_W05_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'LAUNCH Humanities · Summer 1 · Week 5 (PACK-1R). Learning goal: Link learning to local action with Community Project links.', 'keywords': ['humanities', 'launch', 'summer 1 · week 5', 'pack-1r', 'measurable', 'community', 'contribution']})
-SHELF_ROWS.append({'id': 'pack1r-su1-launch-w06-our-sustainability-decision-report', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Our sustainability decision report · LAUNCH Humanities', 'file': 'Humanities/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W06/LAUNCH_SU1_W06_Lesson.html', 'family': 'Humanities Teesside', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'LAUNCH Humanities · Summer 1 · Week 6 (PACK-1R). Learning goal: Complete a sustainability decision report.', 'keywords': ['humanities', 'launch', 'summer 1 · week 6', 'pack-1r', 'sustainability', 'decision', 'report']})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'BUILD · Use less, use again, sort waste', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W01/SCI_BUILD_A2_W01.html', 'id': 'land-a2-sci-build-a2-w01-use-less-use-again-sort-waste', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 2', 'less', 'again', 'sort', 'waste'], 'desc': 'BUILD Science · Autumn 2 · Week 1. I am learning to choose ways to care for a place.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'BUILD · Look closely at rocks', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W02/SCI_BUILD_A2_W02.html', 'id': 'land-a2-sci-build-a2-w02-look-closely-at-rocks', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 2', 'look', 'closely', 'rocks'], 'desc': 'BUILD Science · Autumn 2 · Week 2. I am learning to look at rocks and sort them.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'GROW · Why day turns to night', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W01/GROW_SCI_A2_W01.html', 'id': 'land-a2-sci-grow-a2-w01-why-day-turns-to-night', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 2', 'why', 'day', 'turns', 'night'], 'desc': 'GROW Science · Autumn 2 · Week 1. I am learning to show why day turns to night and why the Sun seems to move.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'GROW · The shapes of Sun, Earth and Moon', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W02/GROW_SCI_A2_W02.html', 'id': 'land-a2-sci-grow-a2-w02-the-shapes-of-sun-earth-and-moon', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 2', 'shapes', 'sun', 'earth', 'moon'], 'desc': 'GROW Science · Autumn 2 · Week 2. I am learning to show how a ball models the Sun, Earth and Moon.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Mitosis and the cell cycle', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W01/SCI_LAUNCH_A2_W01.html', 'id': 'land-a2-sci-launch-a2-w01-mitosis-and-the-cell-cycle', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'mitosis', 'cell', 'cycle'], 'desc': 'LAUNCH Science · Autumn 2 · Week 1. I am learning to order the cell cycle and explain why a cell makes two matching cells.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'id': 'catalogue-2026-27-humanities-launch-w27-w39-pack1r', 'subject': 'Humanities', 'type': 'teacher', 'title': 'LAUNCH · Humanities · Summer 1', 'file': 'Humanities/LAUNCH_W27-W39_2026-27/START_HERE.html', 'family': 'Humanities', 'added': '2026-09-21', 'year': '2026-27', 'desc': "Start page for the six LAUNCH Humanities lessons of Summer 1, weeks 1-6, with each lesson's knowledge organiser, pupil resources, editable pack, slides and teacher notes beside it.", 'keywords': ['humanities', 'launch', 'summer 1', 'start here', 'pack-1r']})
+SHELF_ROWS.append({'id': 'pack1r-su1-launch-w01-resource-use-and-carbon-dioxide', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Resource use and carbon dioxide · LAUNCH Humanities', 'file': 'Humanities/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W01/LAUNCH_SU1_W01_Lesson.html', 'family': 'Humanities', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'LAUNCH Humanities · Summer 1 · Week 1 (PACK-1R). Learning goal: Explain resource use and climate change using online data.', 'keywords': ['humanities', 'launch', 'summer 1 · week 1', 'pack-1r', 'resource', 'carbon', 'dioxide']})
+SHELF_ROWS.append({'id': 'pack1r-su1-launch-w02-judging-climate-responses', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Judging climate responses · LAUNCH Humanities', 'file': 'Humanities/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W02/LAUNCH_SU1_W02_Lesson.html', 'family': 'Humanities', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'LAUNCH Humanities · Summer 1 · Week 2 (PACK-1R). Learning goal: Evaluate responses to climate change.', 'keywords': ['humanities', 'launch', 'summer 1 · week 2', 'pack-1r', 'judging', 'climate', 'responses']})
+SHELF_ROWS.append({'id': 'pack1r-su1-launch-w03-choosing-a-school-sustainability-option', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Choosing a school sustainability option · LAUNCH Humanities', 'file': 'Humanities/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W03/LAUNCH_SU1_W03_Lesson.html', 'family': 'Humanities', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'LAUNCH Humanities · Summer 1 · Week 3 (PACK-1R). Learning goal: Make a reasoned geographical decision.', 'keywords': ['humanities', 'launch', 'summer 1 · week 3', 'pack-1r', 'choosing', 'school', 'sustainability', 'option']})
+SHELF_ROWS.append({'id': 'pack1r-su1-launch-w04-an-accurate-earth-day-campaign', 'subject': 'Humanities', 'type': 'lesson', 'title': 'An accurate Earth Day campaign · LAUNCH Humanities', 'file': 'Humanities/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W04/LAUNCH_SU1_W04_Lesson.html', 'family': 'Humanities', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'LAUNCH Humanities · Summer 1 · Week 4 (PACK-1R). Learning goal: Create a digital sustainability campaign linked to Earth Day.', 'keywords': ['humanities', 'launch', 'summer 1 · week 4', 'pack-1r', 'accurate', 'earth', 'campaign']})
+SHELF_ROWS.append({'id': 'pack1r-su1-launch-w05-a-measurable-community-contribution', 'subject': 'Humanities', 'type': 'lesson', 'title': 'A measurable community contribution · LAUNCH Humanities', 'file': 'Humanities/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W05/LAUNCH_SU1_W05_Lesson.html', 'family': 'Humanities', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'LAUNCH Humanities · Summer 1 · Week 5 (PACK-1R). Learning goal: Link learning to local action with Community Project links.', 'keywords': ['humanities', 'launch', 'summer 1 · week 5', 'pack-1r', 'measurable', 'community', 'contribution']})
+SHELF_ROWS.append({'id': 'pack1r-su1-launch-w06-our-sustainability-decision-report', 'subject': 'Humanities', 'type': 'lesson', 'title': 'Our sustainability decision report · LAUNCH Humanities', 'file': 'Humanities/LAUNCH_W27-W39_2026-27/LAUNCH/Summer_1/W06/LAUNCH_SU1_W06_Lesson.html', 'family': 'Humanities', 'added': '2026-09-21', 'year': '2026-27', 'desc': 'LAUNCH Humanities · Summer 1 · Week 6 (PACK-1R). Learning goal: Complete a sustainability decision report.', 'keywords': ['humanities', 'launch', 'summer 1 · week 6', 'pack-1r', 'sustainability', 'decision', 'report']})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'BUILD · Use less, use again, sort waste', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W01/SCI_BUILD_A2_W01.html', 'id': 'land-a2-sci-build-a2-w01-use-less-use-again-sort-waste', 'type': 'lesson', 'family': 'Science', 'keywords': ['build', 'science', 'autumn 2', 'less', 'again', 'sort', 'waste'], 'desc': 'BUILD Science · Autumn 2 · Week 1. I am learning to choose ways to care for a place.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'BUILD · Look closely at rocks', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W02/SCI_BUILD_A2_W02.html', 'id': 'land-a2-sci-build-a2-w02-look-closely-at-rocks', 'type': 'lesson', 'family': 'Science', 'keywords': ['build', 'science', 'autumn 2', 'look', 'closely', 'rocks'], 'desc': 'BUILD Science · Autumn 2 · Week 2. I am learning to look at rocks and sort them.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'GROW · Why day turns to night', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W01/GROW_SCI_A2_W01.html', 'id': 'land-a2-sci-grow-a2-w01-why-day-turns-to-night', 'type': 'lesson', 'family': 'Science', 'keywords': ['grow', 'science', 'autumn 2', 'why', 'day', 'turns', 'night'], 'desc': 'GROW Science · Autumn 2 · Week 1. I am learning to show why day turns to night and why the Sun seems to move.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'GROW · The shapes of Sun, Earth and Moon', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W02/GROW_SCI_A2_W02.html', 'id': 'land-a2-sci-grow-a2-w02-the-shapes-of-sun-earth-and-moon', 'type': 'lesson', 'family': 'Science', 'keywords': ['grow', 'science', 'autumn 2', 'shapes', 'sun', 'earth', 'moon'], 'desc': 'GROW Science · Autumn 2 · Week 2. I am learning to show how a ball models the Sun, Earth and Moon.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'LAUNCH · Mitosis and the cell cycle', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W01/SCI_LAUNCH_A2_W01.html', 'id': 'land-a2-sci-launch-a2-w01-mitosis-and-the-cell-cycle', 'type': 'lesson', 'family': 'Science', 'keywords': ['launch', 'science', 'autumn 2', 'mitosis', 'cell', 'cycle'], 'desc': 'LAUNCH Science · Autumn 2 · Week 1. I am learning to order the cell cycle and explain why a cell makes two matching cells.', 'added': '2026-09-25', 'new': True, 'year': '2026-27'})
 # RULING tm add.2 (19 Oct 2026): the seven Week 8 entries below carry their pages' learning-goal lines as
 # their desc, the same correction made to resources.json; tools/ux2/check_lesson_outcomes.py proves it (O4).
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'BUILD · Discover: Animals get food by eating', 'file': 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P1.html', 'id': 'dy4-sci-build-a1-w08-p1-animals-get-food-by-eating', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 1', 'week 8', 'animals', 'get', 'food', 'eating'], 'desc': 'BUILD Science · Autumn 1 · Week 8. I can explain that animals get food by eating, and plants can make their own food.', 'added': '2026-10-03', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'BUILD · Use: Show what you know about body science', 'file': 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P2.html', 'id': 'dy4-sci-build-a1-w08-p2-show-what-you-know-about-body-science', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 1', 'week 8', 'show', 'what', 'you', 'know', 'about', 'body', 'science'], 'desc': 'BUILD Science · Autumn 1 · Week 8. I can use models and evidence. I can show what I know about skeletons, muscle pairs, nutrition, balance and food.', 'added': '2026-10-03', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': "GROW · Discover: The Moon's Journey", 'file': 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P1.html', 'id': 'dy4-sci-grow-a1-w08-p1-the-moon-s-journey', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 1', 'week 8', 'moon', 'journey'], 'desc': 'GROW Science · Autumn 1 · Week 8. I can explain why the Moon appears to change shape as it orbits Earth.', 'added': '2026-10-03', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'GROW · Use: Autumn Science: Show Your Thinking', 'file': 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P2.html', 'id': 'dy4-sci-grow-a1-w08-p2-autumn-science-show-your-thinking', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 1', 'week 8', 'autumn', 'science', 'show', 'your', 'thinking'], 'desc': 'GROW Science · Autumn 1 · Week 8. I can explain familiar science using an observation, model or genuine piece of work.', 'added': '2026-10-03', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Discover: Enzyme Action: Preparing the pH Investigation', 'file': 'Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1.html', 'id': 'dy4-sci-launch-a1-w08-l1-enzyme-action-preparing-the-ph-investigation', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 1', 'week 8', 'enzyme', 'action', 'preparing', 'investigation'], 'desc': 'LAUNCH Science · Autumn 1 · Week 8. I can explain enzyme specificity and denaturation, then identify the variables and evidence needed to investigate the effect of pH on amylase safely.', 'added': '2026-10-03', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Use: Amylase and pH: Continuous-Sampling Investigation', 'file': 'Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L2.html', 'id': 'dy4-sci-launch-a1-w08-l2-amylase-and-ph-continuous-sampling-investigation', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 1', 'week 8', 'amylase', 'continuous', 'sampling', 'investigation'], 'desc': 'LAUNCH Science · Autumn 1 · Week 8. I can use continuous-sampling evidence to investigate how pH affects amylase activity.', 'added': '2026-10-03', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Master: Amylase Rate, Graph and Topic 1 Consolidation', 'file': 'Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L3.html', 'id': 'dy4-sci-launch-a1-w08-l3-amylase-rate-graph-and-topic-1-consolidation', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 1', 'week 8', 'amylase', 'rate', 'graph', 'topic', 'consolidation'], 'desc': 'LAUNCH Science · Autumn 1 · Week 8. I can calculate and graph relative amylase rates, judge what the evidence supports, and use enzyme and transport ideas in an exam-style explanation.', 'added': '2026-10-03', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'BUILD · Discover: Animals get food by eating', 'file': 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P1.html', 'id': 'dy4-sci-build-a1-w08-p1-animals-get-food-by-eating', 'type': 'lesson', 'family': 'Science', 'keywords': ['build', 'science', 'autumn 1', 'week 8', 'animals', 'get', 'food', 'eating'], 'desc': 'BUILD Science · Autumn 1 · Week 8. I can explain that animals get food by eating, and plants can make their own food.', 'added': '2026-10-03', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'BUILD · Use: Show what you know about body science', 'file': 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P2.html', 'id': 'dy4-sci-build-a1-w08-p2-show-what-you-know-about-body-science', 'type': 'lesson', 'family': 'Science', 'keywords': ['build', 'science', 'autumn 1', 'week 8', 'show', 'what', 'you', 'know', 'about', 'body', 'science'], 'desc': 'BUILD Science · Autumn 1 · Week 8. I can use models and evidence. I can show what I know about skeletons, muscle pairs, nutrition, balance and food.', 'added': '2026-10-03', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': "GROW · Discover: The Moon's Journey", 'file': 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P1.html', 'id': 'dy4-sci-grow-a1-w08-p1-the-moon-s-journey', 'type': 'lesson', 'family': 'Science', 'keywords': ['grow', 'science', 'autumn 1', 'week 8', 'moon', 'journey'], 'desc': 'GROW Science · Autumn 1 · Week 8. I can explain why the Moon appears to change shape as it orbits Earth.', 'added': '2026-10-03', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'GROW · Use: Autumn Science: Show Your Thinking', 'file': 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P2.html', 'id': 'dy4-sci-grow-a1-w08-p2-autumn-science-show-your-thinking', 'type': 'lesson', 'family': 'Science', 'keywords': ['grow', 'science', 'autumn 1', 'week 8', 'autumn', 'science', 'show', 'your', 'thinking'], 'desc': 'GROW Science · Autumn 1 · Week 8. I can explain familiar science using an observation, model or genuine piece of work.', 'added': '2026-10-03', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'LAUNCH · Discover: Enzyme Action: Preparing the pH Investigation', 'file': 'Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1.html', 'id': 'dy4-sci-launch-a1-w08-l1-enzyme-action-preparing-the-ph-investigation', 'type': 'lesson', 'family': 'Science', 'keywords': ['launch', 'science', 'autumn 1', 'week 8', 'enzyme', 'action', 'preparing', 'investigation'], 'desc': 'LAUNCH Science · Autumn 1 · Week 8. I can explain enzyme specificity and denaturation, then identify the variables and evidence needed to investigate the effect of pH on amylase safely.', 'added': '2026-10-03', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'LAUNCH · Use: Amylase and pH: Continuous-Sampling Investigation', 'file': 'Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L2.html', 'id': 'dy4-sci-launch-a1-w08-l2-amylase-and-ph-continuous-sampling-investigation', 'type': 'lesson', 'family': 'Science', 'keywords': ['launch', 'science', 'autumn 1', 'week 8', 'amylase', 'continuous', 'sampling', 'investigation'], 'desc': 'LAUNCH Science · Autumn 1 · Week 8. I can use continuous-sampling evidence to investigate how pH affects amylase activity.', 'added': '2026-10-03', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'LAUNCH · Master: Amylase Rate, Graph and Topic 1 Consolidation', 'file': 'Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L3.html', 'id': 'dy4-sci-launch-a1-w08-l3-amylase-rate-graph-and-topic-1-consolidation', 'type': 'lesson', 'family': 'Science', 'keywords': ['launch', 'science', 'autumn 1', 'week 8', 'amylase', 'rate', 'graph', 'topic', 'consolidation'], 'desc': 'LAUNCH Science · Autumn 1 · Week 8. I can calculate and graph relative amylase rates, judge what the evidence supports, and use enzyme and transport ideas in an exam-style explanation.', 'added': '2026-10-03', 'new': True, 'year': '2026-27'})
 # uf, uh (2026-10-23): the two Assembly pages, beside the collection's existing rows in Assembly/.
 # Title is the page's own label (lesson_label), desc its own meta description; no halfTerm tag.
 SHELF_ROWS.append({'subject': 'Assembly', 'title': 'The rule of law', 'file': 'Assembly/British Value/Assembly_Rule_of_Law_SEMH-1.html', 'added': '2026-10-23', 'id': 'assembly-rule-of-law', 'type': 'lesson', 'family': 'British Values · Rule of Law', 'keywords': ['assembly', 'british', 'law', 'rule', 'values'], 'desc': 'Fair rules. Fair process. A voice for everyone. A 20-minute interactive assembly for secondary pupils.', 'year': '2026-27'})
@@ -1362,27 +1362,27 @@ SHELF_ROWS.append({'subject': 'Assembly', 'title': 'Everyone belongs', 'file': '
 SHELF_ROWS.append({'subject': 'Assembly', 'title': 'Democracy and our voice', 'file': 'Assembly/Parliament Week/Assembly_A2_W02_Parliament_Week.html', 'added': '2026-11-01', 'id': 'assembly-a2-w02-parliament-week', 'type': 'lesson', 'family': 'British Values · Parliament Week', 'keywords': ['assembly', 'autumn 2', 'week 2', 'parliament', 'democracy', 'representation', 'voice'], 'desc': 'A voice. A choice. A fair process. Whole-school Parliament Week assembly for Autumn 2 Week 2 with slides, presenter guide and corridor poster.', 'year': '2026-27'})
 SHELF_ROWS.append({'subject': 'GROW Vocational & PfA', 'title': 'Add and reset two score variables', 'file': 'ICT/Teaching_Packs/GROW_Computing_Autumn2/GROW_ICT_A2_W01/Public/ICT_GROW_A2_W01.html', 'added': '2026-11-02', 'id': 'grow-ict-a2-w01-add-and-reset-two-score-variables', 'type': 'lesson', 'family': 'ICT', 'keywords': ['ict', 'computing', 'grow', 'autumn 2', 'week 1', 'maze', 'variables', 'score', 'initialise', 'reset'], 'desc': 'GROW ICT · Autumn 2 · Week 1. Create two named score variables in the maze project and initialise both to zero on start.', 'year': '2026-27'})
 SHELF_ROWS.append({'subject': 'GROW Vocational & PfA', 'title': 'Update scores from two game events', 'file': 'ICT/Teaching_Packs/GROW_Computing_Autumn2/GROW_ICT_A2_W02/Public/ICT_GROW_A2_W02.html', 'added': '2026-11-02', 'id': 'grow-ict-a2-w02-update-scores-from-two-game-events', 'type': 'lesson', 'family': 'ICT', 'keywords': ['ict', 'computing', 'grow', 'autumn 2', 'week 2', 'maze', 'variables', 'score', 'events', 'touching'], 'desc': 'GROW ICT · Autumn 2 · Week 2. Trigger distinct score changes on item pickup and on hazard contact while keeping start resets at zero.', 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'BUILD · Discover: Test rock hardness and water', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1.html', 'id': 'a2w8-sci-build-a2-w03-l1-test-rock-hardness-and-water', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 2', 'week 3', 'test', 'rock', 'hardness', 'water'], 'desc': 'BUILD Science · Autumn 2 · Week 3 · Lesson 1. Discover: Test rock hardness and water', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'BUILD · Discover: Choose a rock for a job', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1.html', 'id': 'a2w8-sci-build-a2-w04-l1-choose-a-rock-for-a-job', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 2', 'week 4', 'choose', 'rock', 'job'], 'desc': 'BUILD Science · Autumn 2 · Week 4 · Lesson 1. Discover: Choose a rock for a job', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'BUILD · Discover: Natural and made things: introduce and explore', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1.html', 'id': 'a2w8-sci-build-a2-w05-l1-natural-and-made-materials', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 2', 'week 5', 'natural', 'made', 'materials'], 'desc': 'BUILD Science · Autumn 2 · Week 5 · Lesson 1. Discover: Natural and made things: introduce and explore', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'BUILD · Discover: Keep a rock test fair', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1.html', 'id': 'a2w8-sci-build-a2-w06-l1-keep-a-rock-test-fair', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 2', 'week 6', 'keep', 'rock', 'test', 'fair'], 'desc': 'BUILD Science · Autumn 2 · Week 6 · Lesson 1. Discover: Keep a rock test fair', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'BUILD · Discover: Bodies, food and rocks: introduce and explore', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1.html', 'id': 'a2w8-sci-build-a2-w07-l1-show-what-we-know-about-bodies-and-rocks', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 2', 'week 7', 'show', 'what', 'know', 'about', 'bodies', 'rocks'], 'desc': 'BUILD Science · Autumn 2 · Week 7 · Lesson 1. Discover: Bodies, food and rocks: introduce and explore', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'GROW · Discover: Researching the Solar System', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P1.html', 'id': 'a2w8-sci-grow-a2-w03-p1-researching-the-solar-system', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 2', 'week 3', 'researching', 'solar', 'system'], 'desc': 'GROW Science · Autumn 2 · Week 3 · Period 1. Discover: Researching the Solar System', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'GROW · Discover: Global warming and choices', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P1.html', 'id': 'a2w8-sci-grow-a2-w04-p1-global-warming-and-choices', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 2', 'week 4', 'global', 'warming', 'choices'], 'desc': 'GROW Science · Autumn 2 · Week 4 · Period 1. Discover: Global warming and choices', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'GROW · Discover: Forces, space and climate questions', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P1.html', 'id': 'a2w8-sci-grow-a2-w05-p1-forces-space-and-climate-questions', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 2', 'week 5', 'forces', 'space', 'climate', 'questions'], 'desc': 'GROW Science · Autumn 2 · Week 5 · Period 1. Discover: Forces, space and climate questions', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'GROW · Discover: Investigating a science question: introduce and explore', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P1.html', 'id': 'a2w8-sci-grow-a2-w06-p1-investigating-a-science-question', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 2', 'week 6', 'investigating', 'science', 'question'], 'desc': 'GROW Science · Autumn 2 · Week 6 · Period 1. Discover: Investigating a science question: introduce and explore', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'GROW · Discover: Autumn science recap and evidence', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P1.html', 'id': 'a2w8-sci-grow-a2-w07-p1-autumn-science-review-and-evidence', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 2', 'week 7', 'autumn', 'science', 'review', 'evidence'], 'desc': 'GROW Science · Autumn 2 · Week 7 · Period 1. Discover: Autumn science recap and evidence', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Discover: Growth and stem cells', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W02/SCI_LAUNCH_A2_W02_L1.html', 'id': 'a2w8-sci-launch-a2-w02-l1-growth-and-stem-cells', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 2', 'growth', 'stem', 'cells'], 'desc': 'LAUNCH Science · Autumn 2 · Week 2 · Lesson 1. Discover: Growth and stem cells', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Discover: Stem-cell ethics', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W03/SCI_LAUNCH_A2_W03_L1.html', 'id': 'a2w8-sci-launch-a2-w03-l1-stem-cell-decisions', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 3', 'stem', 'cell', 'decisions'], 'desc': 'LAUNCH Science · Autumn 2 · Week 3 · Lesson 1. Discover: Stem-cell ethics', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Discover: DNA, genes and chromosomes', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W04/SCI_LAUNCH_A2_W04_L1.html', 'id': 'a2w8-sci-launch-a2-w04-l1-dna-genes-and-chromosomes', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 4', 'dna', 'genes', 'chromosomes'], 'desc': 'LAUNCH Science · Autumn 2 · Week 4 · Lesson 1. Discover: DNA, genes and chromosomes', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Discover: A simple genetic cross', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W05/SCI_LAUNCH_A2_W05_L1.html', 'id': 'a2w8-sci-launch-a2-w05-l1-a-simple-genetic-cross', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 5', 'simple', 'genetic', 'cross'], 'desc': 'LAUNCH Science · Autumn 2 · Week 5 · Lesson 1. Discover: A simple genetic cross', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Discover: Researching a genetic condition', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W06/SCI_LAUNCH_A2_W06_L1.html', 'id': 'a2w8-sci-launch-a2-w06-l1-researching-a-genetic-condition', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 6', 'researching', 'genetic', 'condition'], 'desc': 'LAUNCH Science · Autumn 2 · Week 6 · Lesson 1. Discover: Researching a genetic condition', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Discover: Topics 2–3 checkpoint', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W07/SCI_LAUNCH_A2_W07_L1.html', 'id': 'a2w8-sci-launch-a2-w07-l1-cells-and-genetics-check', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 7', 'cells', 'genetics', 'check'], 'desc': 'LAUNCH Science · Autumn 2 · Week 7 · Lesson 1. Discover: Topics 2–3 checkpoint', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'BUILD · Discover: Use less, use again, sort waste', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W01/SCI_BUILD_A2_W01_L1.html', 'id': 'a2w8-sci-build-a2-w01-l1-discover-use-less-use-again-sort-waste', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 2', 'week 1', 'discover', 'less', 'again', 'sort'], 'desc': 'BUILD Science · Autumn 2 · Week 1 · Lesson 1. Discover: Use less, use again, sort waste', 'added': '2026-11-06', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'BUILD · Discover: Look closely at rocks', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W02/SCI_BUILD_A2_W02_L1.html', 'id': 'a2w8-sci-build-a2-w02-l1-discover-look-closely-at-rocks', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 2', 'week 2', 'discover', 'look', 'closely', 'rocks'], 'desc': 'BUILD Science · Autumn 2 · Week 2 · Lesson 1. Discover: Look closely at rocks', 'added': '2026-11-06', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'GROW · Discover: Day and night', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W01/GROW_SCI_A2_W01_P1.html', 'id': 'a2w8-sci-grow-a2-w01-p1-discover-day-and-night', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 2', 'week 1', 'discover', 'night'], 'desc': 'GROW Science · Autumn 2 · Week 1 · Period 1. Discover: Day and night', 'added': '2026-11-06', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'GROW · Discover: Spherical bodies', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W02/GROW_SCI_A2_W02_P1.html', 'id': 'a2w8-sci-grow-a2-w02-p1-discover-spherical-bodies', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 2', 'week 2', 'discover', 'spherical', 'bodies'], 'desc': 'GROW Science · Autumn 2 · Week 2 · Period 1. Discover: Spherical bodies', 'added': '2026-11-06', 'new': True, 'year': '2026-27'})
-SHELF_ROWS.append({'subject': 'Science · Teesside', 'title': 'LAUNCH · Discover: The cell cycle', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W01/SCI_LAUNCH_A2_W01_L1.html', 'id': 'a2w8-sci-launch-a2-w01-l1-discover-the-cell-cycle', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 1', 'discover', 'cell', 'cycle'], 'desc': 'LAUNCH Science · Autumn 2 · Week 1 · Lesson 1. Discover: The cell cycle', 'added': '2026-11-06', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'BUILD · Discover: Test rock hardness and water', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1.html', 'id': 'a2w8-sci-build-a2-w03-l1-test-rock-hardness-and-water', 'type': 'lesson', 'family': 'Science', 'keywords': ['build', 'science', 'autumn 2', 'week 3', 'test', 'rock', 'hardness', 'water'], 'desc': 'BUILD Science · Autumn 2 · Week 3 · Lesson 1. Discover: Test rock hardness and water', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'BUILD · Discover: Choose a rock for a job', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1.html', 'id': 'a2w8-sci-build-a2-w04-l1-choose-a-rock-for-a-job', 'type': 'lesson', 'family': 'Science', 'keywords': ['build', 'science', 'autumn 2', 'week 4', 'choose', 'rock', 'job'], 'desc': 'BUILD Science · Autumn 2 · Week 4 · Lesson 1. Discover: Choose a rock for a job', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'BUILD · Discover: Natural and made things: introduce and explore', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1.html', 'id': 'a2w8-sci-build-a2-w05-l1-natural-and-made-materials', 'type': 'lesson', 'family': 'Science', 'keywords': ['build', 'science', 'autumn 2', 'week 5', 'natural', 'made', 'materials'], 'desc': 'BUILD Science · Autumn 2 · Week 5 · Lesson 1. Discover: Natural and made things: introduce and explore', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'BUILD · Discover: Keep a rock test fair', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1.html', 'id': 'a2w8-sci-build-a2-w06-l1-keep-a-rock-test-fair', 'type': 'lesson', 'family': 'Science', 'keywords': ['build', 'science', 'autumn 2', 'week 6', 'keep', 'rock', 'test', 'fair'], 'desc': 'BUILD Science · Autumn 2 · Week 6 · Lesson 1. Discover: Keep a rock test fair', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'BUILD · Discover: Bodies, food and rocks: introduce and explore', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1.html', 'id': 'a2w8-sci-build-a2-w07-l1-show-what-we-know-about-bodies-and-rocks', 'type': 'lesson', 'family': 'Science', 'keywords': ['build', 'science', 'autumn 2', 'week 7', 'show', 'what', 'know', 'about', 'bodies', 'rocks'], 'desc': 'BUILD Science · Autumn 2 · Week 7 · Lesson 1. Discover: Bodies, food and rocks: introduce and explore', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'GROW · Discover: Researching the Solar System', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P1.html', 'id': 'a2w8-sci-grow-a2-w03-p1-researching-the-solar-system', 'type': 'lesson', 'family': 'Science', 'keywords': ['grow', 'science', 'autumn 2', 'week 3', 'researching', 'solar', 'system'], 'desc': 'GROW Science · Autumn 2 · Week 3 · Period 1. Discover: Researching the Solar System', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'GROW · Discover: Global warming and choices', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P1.html', 'id': 'a2w8-sci-grow-a2-w04-p1-global-warming-and-choices', 'type': 'lesson', 'family': 'Science', 'keywords': ['grow', 'science', 'autumn 2', 'week 4', 'global', 'warming', 'choices'], 'desc': 'GROW Science · Autumn 2 · Week 4 · Period 1. Discover: Global warming and choices', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'GROW · Discover: Forces, space and climate questions', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P1.html', 'id': 'a2w8-sci-grow-a2-w05-p1-forces-space-and-climate-questions', 'type': 'lesson', 'family': 'Science', 'keywords': ['grow', 'science', 'autumn 2', 'week 5', 'forces', 'space', 'climate', 'questions'], 'desc': 'GROW Science · Autumn 2 · Week 5 · Period 1. Discover: Forces, space and climate questions', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'GROW · Discover: Investigating a science question: introduce and explore', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P1.html', 'id': 'a2w8-sci-grow-a2-w06-p1-investigating-a-science-question', 'type': 'lesson', 'family': 'Science', 'keywords': ['grow', 'science', 'autumn 2', 'week 6', 'investigating', 'science', 'question'], 'desc': 'GROW Science · Autumn 2 · Week 6 · Period 1. Discover: Investigating a science question: introduce and explore', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'GROW · Discover: Autumn science recap and evidence', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P1.html', 'id': 'a2w8-sci-grow-a2-w07-p1-autumn-science-review-and-evidence', 'type': 'lesson', 'family': 'Science', 'keywords': ['grow', 'science', 'autumn 2', 'week 7', 'autumn', 'science', 'review', 'evidence'], 'desc': 'GROW Science · Autumn 2 · Week 7 · Period 1. Discover: Autumn science recap and evidence', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'LAUNCH · Discover: Growth and stem cells', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W02/SCI_LAUNCH_A2_W02_L1.html', 'id': 'a2w8-sci-launch-a2-w02-l1-growth-and-stem-cells', 'type': 'lesson', 'family': 'Science', 'keywords': ['launch', 'science', 'autumn 2', 'week 2', 'growth', 'stem', 'cells'], 'desc': 'LAUNCH Science · Autumn 2 · Week 2 · Lesson 1. Discover: Growth and stem cells', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'LAUNCH · Discover: Stem-cell ethics', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W03/SCI_LAUNCH_A2_W03_L1.html', 'id': 'a2w8-sci-launch-a2-w03-l1-stem-cell-decisions', 'type': 'lesson', 'family': 'Science', 'keywords': ['launch', 'science', 'autumn 2', 'week 3', 'stem', 'cell', 'decisions'], 'desc': 'LAUNCH Science · Autumn 2 · Week 3 · Lesson 1. Discover: Stem-cell ethics', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'LAUNCH · Discover: DNA, genes and chromosomes', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W04/SCI_LAUNCH_A2_W04_L1.html', 'id': 'a2w8-sci-launch-a2-w04-l1-dna-genes-and-chromosomes', 'type': 'lesson', 'family': 'Science', 'keywords': ['launch', 'science', 'autumn 2', 'week 4', 'dna', 'genes', 'chromosomes'], 'desc': 'LAUNCH Science · Autumn 2 · Week 4 · Lesson 1. Discover: DNA, genes and chromosomes', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'LAUNCH · Discover: A simple genetic cross', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W05/SCI_LAUNCH_A2_W05_L1.html', 'id': 'a2w8-sci-launch-a2-w05-l1-a-simple-genetic-cross', 'type': 'lesson', 'family': 'Science', 'keywords': ['launch', 'science', 'autumn 2', 'week 5', 'simple', 'genetic', 'cross'], 'desc': 'LAUNCH Science · Autumn 2 · Week 5 · Lesson 1. Discover: A simple genetic cross', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'LAUNCH · Discover: Researching a genetic condition', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W06/SCI_LAUNCH_A2_W06_L1.html', 'id': 'a2w8-sci-launch-a2-w06-l1-researching-a-genetic-condition', 'type': 'lesson', 'family': 'Science', 'keywords': ['launch', 'science', 'autumn 2', 'week 6', 'researching', 'genetic', 'condition'], 'desc': 'LAUNCH Science · Autumn 2 · Week 6 · Lesson 1. Discover: Researching a genetic condition', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'LAUNCH · Discover: Topics 2–3 checkpoint', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W07/SCI_LAUNCH_A2_W07_L1.html', 'id': 'a2w8-sci-launch-a2-w07-l1-cells-and-genetics-check', 'type': 'lesson', 'family': 'Science', 'keywords': ['launch', 'science', 'autumn 2', 'week 7', 'cells', 'genetics', 'check'], 'desc': 'LAUNCH Science · Autumn 2 · Week 7 · Lesson 1. Discover: Topics 2–3 checkpoint', 'added': '2026-11-01', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'BUILD · Discover: Use less, use again, sort waste', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W01/SCI_BUILD_A2_W01_L1.html', 'id': 'a2w8-sci-build-a2-w01-l1-discover-use-less-use-again-sort-waste', 'type': 'lesson', 'family': 'Science', 'keywords': ['build', 'science', 'autumn 2', 'week 1', 'discover', 'less', 'again', 'sort'], 'desc': 'BUILD Science · Autumn 2 · Week 1 · Lesson 1. Discover: Use less, use again, sort waste', 'added': '2026-11-06', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'BUILD · Discover: Look closely at rocks', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W02/SCI_BUILD_A2_W02_L1.html', 'id': 'a2w8-sci-build-a2-w02-l1-discover-look-closely-at-rocks', 'type': 'lesson', 'family': 'Science', 'keywords': ['build', 'science', 'autumn 2', 'week 2', 'discover', 'look', 'closely', 'rocks'], 'desc': 'BUILD Science · Autumn 2 · Week 2 · Lesson 1. Discover: Look closely at rocks', 'added': '2026-11-06', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'GROW · Discover: Day and night', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W01/GROW_SCI_A2_W01_P1.html', 'id': 'a2w8-sci-grow-a2-w01-p1-discover-day-and-night', 'type': 'lesson', 'family': 'Science', 'keywords': ['grow', 'science', 'autumn 2', 'week 1', 'discover', 'night'], 'desc': 'GROW Science · Autumn 2 · Week 1 · Period 1. Discover: Day and night', 'added': '2026-11-06', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'GROW · Discover: Spherical bodies', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W02/GROW_SCI_A2_W02_P1.html', 'id': 'a2w8-sci-grow-a2-w02-p1-discover-spherical-bodies', 'type': 'lesson', 'family': 'Science', 'keywords': ['grow', 'science', 'autumn 2', 'week 2', 'discover', 'spherical', 'bodies'], 'desc': 'GROW Science · Autumn 2 · Week 2 · Period 1. Discover: Spherical bodies', 'added': '2026-11-06', 'new': True, 'year': '2026-27'})
+SHELF_ROWS.append({'subject': 'Science', 'title': 'LAUNCH · Discover: The cell cycle', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W01/SCI_LAUNCH_A2_W01_L1.html', 'id': 'a2w8-sci-launch-a2-w01-l1-discover-the-cell-cycle', 'type': 'lesson', 'family': 'Science', 'keywords': ['launch', 'science', 'autumn 2', 'week 1', 'discover', 'cell', 'cycle'], 'desc': 'LAUNCH Science · Autumn 2 · Week 1 · Lesson 1. Discover: The cell cycle', 'added': '2026-11-06', 'new': True, 'year': '2026-27'})
 SHELF_ROWS.append({'subject': 'Humanities', 'title': 'BUILD RE · A festival of light: Diwali', 'file': 'Humanities/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_2/W01/BUILD_RE_A2_W01.html', 'id': 'a2-re-build-w01-a-festival-of-light-diwali', 'type': 'lesson', 'family': 'Humanities', 'keywords': ['build', 're', 'autumn 2', 'week 1', 'festival', 'light', 'diwali'], 'desc': 'BUILD RE · Autumn 2 · Week 1. A festival of light: Diwali', 'added': '2026-11-06', 'new': True, 'year': '2026-27'})
 SHELF_ROWS.append({'subject': 'Humanities', 'title': 'BUILD RE · Comparing light in celebrations', 'file': 'Humanities/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_2/W02/BUILD_RE_A2_W02.html', 'id': 'a2-re-build-w02-comparing-light-in-celebrations', 'type': 'lesson', 'family': 'Humanities', 'keywords': ['build', 're', 'autumn 2', 'week 2', 'comparing', 'light', 'celebrations'], 'desc': 'BUILD RE · Autumn 2 · Week 2. Comparing light in celebrations', 'added': '2026-11-06', 'new': True, 'year': '2026-27'})
 SHELF_ROWS.append({'subject': 'Humanities', 'title': 'BUILD RE · Tell a story of light in order', 'file': 'Humanities/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_2/W03/BUILD_RE_A2_W03.html', 'id': 'a2-re-build-w03-tell-a-story-of-light-in-order', 'type': 'lesson', 'family': 'Humanities', 'keywords': ['build', 're', 'autumn 2', 'week 3', 'tell', 'story', 'light', 'order'], 'desc': 'BUILD RE · Autumn 2 · Week 3. Tell a story of light in order', 'added': '2026-11-06', 'new': True, 'year': '2026-27'})
@@ -4395,7 +4395,7 @@ SHELF_ROWS.extend([{'subject': 'Art',
 
 # A1-AAA (8 Nov 2026, owner ask: raise Autumn 1 to AAA and put it on the website): Science Weeks 3-7 at new
 # Autumn 1 term-folder paths. Older Week 3-7 pages keep their routes and bytes (QR-safe).
-SHELF_ROWS.extend([{'subject': 'Science · Teesside', 'title': 'BUILD · Explore: Backbones and No Backbones', 'file': 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W03/SCI_BUILD_A1_W03_P1.html', 'id': 'a1aaa-sci-build-a1-w03-p1-explore-backbones-and-no-backbones', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 1', 'week 3', 'backbones'], 'desc': 'BUILD Science · Autumn 1 · Week 3. I can point to a backbone on an inside picture.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'BUILD · Use: Backbone Detectives', 'file': 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W03/SCI_BUILD_A1_W03_P2.html', 'id': 'a1aaa-sci-build-a1-w03-p2-use-backbone-detectives', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 1', 'week 3', 'backbone', 'detectives'], 'desc': 'BUILD Science · Autumn 1 · Week 3. I can check inside clues instead of guessing from legs or wings.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'BUILD · Explore: Muscle Pairs', 'file': 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W04/SCI_BUILD_A1_W04_P1.html', 'id': 'a1aaa-sci-build-a1-w04-p1-explore-muscle-pairs', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 1', 'week 4', 'muscle', 'pairs'], 'desc': 'BUILD Science · Autumn 1 · Week 4. I can point to the top and back muscles in an arm.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'BUILD · Use: Muscle Model', 'file': 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W04/SCI_BUILD_A1_W04_P2.html', 'id': 'a1aaa-sci-build-a1-w04-p2-use-muscle-model', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 1', 'week 4', 'muscle', 'model'], 'desc': 'BUILD Science · Autumn 1 · Week 4. I can say which real body part each part of the model stands for.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'BUILD · Explore: Body Needs', 'file': 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W05/SCI_BUILD_A1_W05_P1.html', 'id': 'a1aaa-sci-build-a1-w05-p1-explore-body-needs', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 1', 'week 5', 'body', 'needs'], 'desc': 'BUILD Science · Autumn 1 · Week 5. I can say that plants make food using light, while animals must eat.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'BUILD · Use: Food Jobs Mission', 'file': 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W05/SCI_BUILD_A1_W05_P2.html', 'id': 'a1aaa-sci-build-a1-w05-p2-use-food-jobs-mission', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 1', 'week 5', 'food', 'jobs', 'mission'], 'desc': 'BUILD Science · Autumn 1 · Week 5. I can sort food cards into Go (energy), Grow (mend), and Keep well.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'BUILD · Explore: Balanced Plate', 'file': 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W06/SCI_BUILD_A1_W06_P1.html', 'id': 'a1aaa-sci-build-a1-w06-p1-explore-balanced-plate', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 1', 'week 6', 'balanced', 'plate'], 'desc': 'BUILD Science · Autumn 1 · Week 6. I can point to the two biggest parts on the plate guide.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'BUILD · Use: Model Plate Comparison', 'file': 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W06/SCI_BUILD_A1_W06_P2.html', 'id': 'a1aaa-sci-build-a1-w06-p2-use-model-plate-comparison', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 1', 'week 6', 'model', 'plate', 'comparison'], 'desc': 'BUILD Science · Autumn 1 · Week 6. I can check Plate A and Plate B against the balanced plate guide.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'BUILD · Explore: Food Sources', 'file': 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W07/SCI_BUILD_A1_W07_P1.html', 'id': 'a1aaa-sci-build-a1-w07-p1-explore-food-sources', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 1', 'week 7', 'food', 'sources'], 'desc': 'BUILD Science · Autumn 1 · Week 7. I can sort foods into plant source and animal source.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'BUILD · Use: Food Chain Investigation', 'file': 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W07/SCI_BUILD_A1_W07_P2.html', 'id': 'a1aaa-sci-build-a1-w07-p2-use-food-chain-investigation', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 1', 'week 7', 'food', 'chain', 'investigation'], 'desc': 'BUILD Science · Autumn 1 · Week 7. I can start a food chain with a green plant (producer).', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'GROW · Explore: Grip or glide? The surface challenge', 'file': 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W03/GROW_SCI_A1_W03_P1.html', 'id': 'a1aaa-grow-sci-a1-w03-p1-explore-grip-or-glide-the-surface-challenge', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 1', 'week 3', 'grip', 'glide', 'surface', 'challenge'], 'desc': 'GROW Science · Autumn 1 · Week 3. I can identify the two touching surfaces where friction acts.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'GROW · Use: Friction: Test the Surfaces', 'file': 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W03/GROW_SCI_A1_W03_P2.html', 'id': 'a1aaa-grow-sci-a1-w03-p2-use-friction-test-the-surfaces', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 1', 'week 3', 'friction', 'test', 'surfaces'], 'desc': 'GROW Science · Autumn 1 · Week 3. I can keep the block, ramp height, and release point the same.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'GROW · Explore: Mechanisms', 'file': 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W04/GROW_SCI_A1_W04_P1.html', 'id': 'a1aaa-grow-sci-a1-w04-p1-explore-mechanisms', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 1', 'week 4', 'mechanisms'], 'desc': 'GROW Science · Autumn 1 · Week 4. I can label the pivot, effort, and load on a simple lever diagram.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'GROW · Use: Lever Test', 'file': 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W04/GROW_SCI_A1_W04_P2.html', 'id': 'a1aaa-grow-sci-a1-w04-p2-use-lever-test', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 1', 'week 4', 'lever', 'test'], 'desc': 'GROW Science · Autumn 1 · Week 4. I can keep the load and pivot position the same while changing the effort distance.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'GROW · Explore: Fair Test', 'file': 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W05/GROW_SCI_A1_W05_P1.html', 'id': 'a1aaa-grow-sci-a1-w05-p1-explore-fair-test', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 1', 'week 5', 'fair', 'test'], 'desc': 'GROW Science · Autumn 1 · Week 5. I can turn a science question into a testable plan.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'GROW · Use: Fair Test Practical', 'file': 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W05/GROW_SCI_A1_W05_P2.html', 'id': 'a1aaa-grow-sci-a1-w05-p2-use-fair-test-practical', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 1', 'week 5', 'fair', 'test', 'practical'], 'desc': 'GROW Science · Autumn 1 · Week 5. I can follow our fair-test plan and record three trials for each parachute size.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'GROW · Explore: Earth and Planets', 'file': 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W06/GROW_SCI_A1_W06_P1.html', 'id': 'a1aaa-grow-sci-a1-w06-p1-explore-earth-and-planets', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 1', 'week 6', 'earth', 'planets'], 'desc': 'GROW Science · Autumn 1 · Week 6. I can state that the Sun, Earth, and Moon are approximately spherical bodies.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'GROW · Use: Solar System Models', 'file': 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W06/GROW_SCI_A1_W06_P2.html', 'id': 'a1aaa-grow-sci-a1-w06-p2-use-solar-system-models', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 1', 'week 6', 'solar', 'system', 'models'], 'desc': 'GROW Science · Autumn 1 · Week 6. I can read planet distance and orbit time from a solar system data table.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'GROW · Explore: The Moon', 'file': 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W07/GROW_SCI_A1_W07_P1.html', 'id': 'a1aaa-grow-sci-a1-w07-p1-explore-the-moon', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 1', 'week 7', 'moon'], 'desc': 'GROW Science · Autumn 1 · Week 7. I can state that the Moon is a rocky sphere that orbits the Earth in about 28 days.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'GROW · Use: Modelling Moon Phases', 'file': 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W07/GROW_SCI_A1_W07_P2.html', 'id': 'a1aaa-grow-sci-a1-w07-p2-use-modelling-moon-phases', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 1', 'week 7', 'modelling', 'moon', 'phases'], 'desc': 'GROW Science · Autumn 1 · Week 7. I can map each part of the torch, observer, and ball model to the Sun, Earth, and Moon.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}])
+SHELF_ROWS.extend([{'subject': 'Science', 'title': 'BUILD · Explore: Backbones and No Backbones', 'file': 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W03/SCI_BUILD_A1_W03_P1.html', 'id': 'a1aaa-sci-build-a1-w03-p1-explore-backbones-and-no-backbones', 'type': 'lesson', 'family': 'Science', 'keywords': ['build', 'science', 'autumn 1', 'week 3', 'backbones'], 'desc': 'BUILD Science · Autumn 1 · Week 3. I can point to a backbone on an inside picture.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'BUILD · Use: Backbone Detectives', 'file': 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W03/SCI_BUILD_A1_W03_P2.html', 'id': 'a1aaa-sci-build-a1-w03-p2-use-backbone-detectives', 'type': 'lesson', 'family': 'Science', 'keywords': ['build', 'science', 'autumn 1', 'week 3', 'backbone', 'detectives'], 'desc': 'BUILD Science · Autumn 1 · Week 3. I can check inside clues instead of guessing from legs or wings.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'BUILD · Explore: Muscle Pairs', 'file': 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W04/SCI_BUILD_A1_W04_P1.html', 'id': 'a1aaa-sci-build-a1-w04-p1-explore-muscle-pairs', 'type': 'lesson', 'family': 'Science', 'keywords': ['build', 'science', 'autumn 1', 'week 4', 'muscle', 'pairs'], 'desc': 'BUILD Science · Autumn 1 · Week 4. I can point to the top and back muscles in an arm.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'BUILD · Use: Muscle Model', 'file': 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W04/SCI_BUILD_A1_W04_P2.html', 'id': 'a1aaa-sci-build-a1-w04-p2-use-muscle-model', 'type': 'lesson', 'family': 'Science', 'keywords': ['build', 'science', 'autumn 1', 'week 4', 'muscle', 'model'], 'desc': 'BUILD Science · Autumn 1 · Week 4. I can say which real body part each part of the model stands for.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'BUILD · Explore: Body Needs', 'file': 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W05/SCI_BUILD_A1_W05_P1.html', 'id': 'a1aaa-sci-build-a1-w05-p1-explore-body-needs', 'type': 'lesson', 'family': 'Science', 'keywords': ['build', 'science', 'autumn 1', 'week 5', 'body', 'needs'], 'desc': 'BUILD Science · Autumn 1 · Week 5. I can say that plants make food using light, while animals must eat.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'BUILD · Use: Food Jobs Mission', 'file': 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W05/SCI_BUILD_A1_W05_P2.html', 'id': 'a1aaa-sci-build-a1-w05-p2-use-food-jobs-mission', 'type': 'lesson', 'family': 'Science', 'keywords': ['build', 'science', 'autumn 1', 'week 5', 'food', 'jobs', 'mission'], 'desc': 'BUILD Science · Autumn 1 · Week 5. I can sort food cards into Go (energy), Grow (mend), and Keep well.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'BUILD · Explore: Balanced Plate', 'file': 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W06/SCI_BUILD_A1_W06_P1.html', 'id': 'a1aaa-sci-build-a1-w06-p1-explore-balanced-plate', 'type': 'lesson', 'family': 'Science', 'keywords': ['build', 'science', 'autumn 1', 'week 6', 'balanced', 'plate'], 'desc': 'BUILD Science · Autumn 1 · Week 6. I can point to the two biggest parts on the plate guide.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'BUILD · Use: Model Plate Comparison', 'file': 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W06/SCI_BUILD_A1_W06_P2.html', 'id': 'a1aaa-sci-build-a1-w06-p2-use-model-plate-comparison', 'type': 'lesson', 'family': 'Science', 'keywords': ['build', 'science', 'autumn 1', 'week 6', 'model', 'plate', 'comparison'], 'desc': 'BUILD Science · Autumn 1 · Week 6. I can check Plate A and Plate B against the balanced plate guide.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'BUILD · Explore: Food Sources', 'file': 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W07/SCI_BUILD_A1_W07_P1.html', 'id': 'a1aaa-sci-build-a1-w07-p1-explore-food-sources', 'type': 'lesson', 'family': 'Science', 'keywords': ['build', 'science', 'autumn 1', 'week 7', 'food', 'sources'], 'desc': 'BUILD Science · Autumn 1 · Week 7. I can sort foods into plant source and animal source.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'BUILD · Use: Food Chain Investigation', 'file': 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W07/SCI_BUILD_A1_W07_P2.html', 'id': 'a1aaa-sci-build-a1-w07-p2-use-food-chain-investigation', 'type': 'lesson', 'family': 'Science', 'keywords': ['build', 'science', 'autumn 1', 'week 7', 'food', 'chain', 'investigation'], 'desc': 'BUILD Science · Autumn 1 · Week 7. I can start a food chain with a green plant (producer).', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'GROW · Explore: Grip or glide? The surface challenge', 'file': 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W03/GROW_SCI_A1_W03_P1.html', 'id': 'a1aaa-grow-sci-a1-w03-p1-explore-grip-or-glide-the-surface-challenge', 'type': 'lesson', 'family': 'Science', 'keywords': ['grow', 'science', 'autumn 1', 'week 3', 'grip', 'glide', 'surface', 'challenge'], 'desc': 'GROW Science · Autumn 1 · Week 3. I can identify the two touching surfaces where friction acts.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'GROW · Use: Friction: Test the Surfaces', 'file': 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W03/GROW_SCI_A1_W03_P2.html', 'id': 'a1aaa-grow-sci-a1-w03-p2-use-friction-test-the-surfaces', 'type': 'lesson', 'family': 'Science', 'keywords': ['grow', 'science', 'autumn 1', 'week 3', 'friction', 'test', 'surfaces'], 'desc': 'GROW Science · Autumn 1 · Week 3. I can keep the block, ramp height, and release point the same.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'GROW · Explore: Mechanisms', 'file': 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W04/GROW_SCI_A1_W04_P1.html', 'id': 'a1aaa-grow-sci-a1-w04-p1-explore-mechanisms', 'type': 'lesson', 'family': 'Science', 'keywords': ['grow', 'science', 'autumn 1', 'week 4', 'mechanisms'], 'desc': 'GROW Science · Autumn 1 · Week 4. I can label the pivot, effort, and load on a simple lever diagram.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'GROW · Use: Lever Test', 'file': 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W04/GROW_SCI_A1_W04_P2.html', 'id': 'a1aaa-grow-sci-a1-w04-p2-use-lever-test', 'type': 'lesson', 'family': 'Science', 'keywords': ['grow', 'science', 'autumn 1', 'week 4', 'lever', 'test'], 'desc': 'GROW Science · Autumn 1 · Week 4. I can keep the load and pivot position the same while changing the effort distance.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'GROW · Explore: Fair Test', 'file': 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W05/GROW_SCI_A1_W05_P1.html', 'id': 'a1aaa-grow-sci-a1-w05-p1-explore-fair-test', 'type': 'lesson', 'family': 'Science', 'keywords': ['grow', 'science', 'autumn 1', 'week 5', 'fair', 'test'], 'desc': 'GROW Science · Autumn 1 · Week 5. I can turn a science question into a testable plan.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'GROW · Use: Fair Test Practical', 'file': 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W05/GROW_SCI_A1_W05_P2.html', 'id': 'a1aaa-grow-sci-a1-w05-p2-use-fair-test-practical', 'type': 'lesson', 'family': 'Science', 'keywords': ['grow', 'science', 'autumn 1', 'week 5', 'fair', 'test', 'practical'], 'desc': 'GROW Science · Autumn 1 · Week 5. I can follow our fair-test plan and record three trials for each parachute size.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'GROW · Explore: Earth and Planets', 'file': 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W06/GROW_SCI_A1_W06_P1.html', 'id': 'a1aaa-grow-sci-a1-w06-p1-explore-earth-and-planets', 'type': 'lesson', 'family': 'Science', 'keywords': ['grow', 'science', 'autumn 1', 'week 6', 'earth', 'planets'], 'desc': 'GROW Science · Autumn 1 · Week 6. I can state that the Sun, Earth, and Moon are approximately spherical bodies.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'GROW · Use: Solar System Models', 'file': 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W06/GROW_SCI_A1_W06_P2.html', 'id': 'a1aaa-grow-sci-a1-w06-p2-use-solar-system-models', 'type': 'lesson', 'family': 'Science', 'keywords': ['grow', 'science', 'autumn 1', 'week 6', 'solar', 'system', 'models'], 'desc': 'GROW Science · Autumn 1 · Week 6. I can read planet distance and orbit time from a solar system data table.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'GROW · Explore: The Moon', 'file': 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W07/GROW_SCI_A1_W07_P1.html', 'id': 'a1aaa-grow-sci-a1-w07-p1-explore-the-moon', 'type': 'lesson', 'family': 'Science', 'keywords': ['grow', 'science', 'autumn 1', 'week 7', 'moon'], 'desc': 'GROW Science · Autumn 1 · Week 7. I can state that the Moon is a rocky sphere that orbits the Earth in about 28 days.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'GROW · Use: Modelling Moon Phases', 'file': 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W07/GROW_SCI_A1_W07_P2.html', 'id': 'a1aaa-grow-sci-a1-w07-p2-use-modelling-moon-phases', 'type': 'lesson', 'family': 'Science', 'keywords': ['grow', 'science', 'autumn 1', 'week 7', 'modelling', 'moon', 'phases'], 'desc': 'GROW Science · Autumn 1 · Week 7. I can map each part of the torch, observer, and ball model to the Sun, Earth, and Moon.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}])
 REVIEWED_PATHS += ('Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W03/SCI_BUILD_A1_W03_P1.html', 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W03/SCI_BUILD_A1_W03_P2.html', 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W04/SCI_BUILD_A1_W04_P1.html', 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W04/SCI_BUILD_A1_W04_P2.html', 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W05/SCI_BUILD_A1_W05_P1.html', 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W05/SCI_BUILD_A1_W05_P2.html', 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W06/SCI_BUILD_A1_W06_P1.html', 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W06/SCI_BUILD_A1_W06_P2.html', 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W07/SCI_BUILD_A1_W07_P1.html', 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W07/SCI_BUILD_A1_W07_P2.html', 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W03/GROW_SCI_A1_W03_P1.html', 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W03/GROW_SCI_A1_W03_P2.html', 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W04/GROW_SCI_A1_W04_P1.html', 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W04/GROW_SCI_A1_W04_P2.html', 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W05/GROW_SCI_A1_W05_P1.html', 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W05/GROW_SCI_A1_W05_P2.html', 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W06/GROW_SCI_A1_W06_P1.html', 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W06/GROW_SCI_A1_W06_P2.html', 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W07/GROW_SCI_A1_W07_P1.html', 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W07/GROW_SCI_A1_W07_P2.html', 'Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W03/SCI_LAUNCH_A1_W03_L1.html', 'Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W03/SCI_LAUNCH_A1_W03_L2.html', 'Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W03/SCI_LAUNCH_A1_W03_L3.html', 'Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W04/SCI_LAUNCH_A1_W04_L1.html', 'Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W04/SCI_LAUNCH_A1_W04_L2.html', 'Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W04/SCI_LAUNCH_A1_W04_L3.html', 'Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W05/SCI_LAUNCH_A1_W05_L1.html', 'Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W05/SCI_LAUNCH_A1_W05_L2.html', 'Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W05/SCI_LAUNCH_A1_W05_L3.html', 'Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W06/SCI_LAUNCH_A1_W06_L1.html', 'Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W06/SCI_LAUNCH_A1_W06_L2.html', 'Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W06/SCI_LAUNCH_A1_W06_L3.html', 'Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W07/SCI_LAUNCH_A1_W07_L1.html', 'Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W07/SCI_LAUNCH_A1_W07_L2.html', 'Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W07/SCI_LAUNCH_A1_W07_L3.html', 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W03/approved-mark.jpg', 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W04/approved-mark.jpg', 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W05/approved-mark.jpg', 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W06/approved-mark.jpg', 'Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W07/approved-mark.jpg', 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W03/approved-mark.jpg', 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W04/approved-mark.jpg', 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W05/approved-mark.jpg', 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W06/approved-mark.jpg', 'Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W07/approved-mark.jpg', 'Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W03/approved-mark.jpg', 'Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W04/approved-mark.jpg', 'Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W05/approved-mark.jpg', 'Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W06/approved-mark.jpg', 'Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W07/approved-mark.jpg', 'Science/Build/Autumn_1_2026-27/manifest_a1_aaa.json', 'Science/Grow/Autumn_1_2026-27/manifest_a1_aaa.json', 'Science/Launch/Autumn_1_2026-27/manifest_a1_aaa.json')
 
 # A1-AAA Art (8 Nov 2026, owner ask: raise Autumn 1 to AAA and put it on the website): new Autumn 1
@@ -5161,7 +5161,7 @@ REVIEWED_PATHS += (
 
 # A2-LIST (8 Nov 2026, owner ask: Autumn 2 lists for Science, Humanities/RE and Art): rows for the
 # 27 Science Autumn 2 Use/Master pages and the 9 Art Autumn 2 Week 1–2 pages that had none.
-SHELF_ROWS.extend([{'subject': 'Science · Teesside', 'title': 'BUILD · Use: Look closely at rocks: show your sorting rule', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W02/SCI_BUILD_A2_W02_L2.html', 'id': 'a2w8-sci-build-a2-w02-l2-use-look-closely-at-rocks-show-your-sorting-rule', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 2', 'week 2', 'use', 'look', 'closely'], 'desc': 'BUILD Science · Autumn 2 · Week 2 · Lesson 2. Use: Look closely at rocks: show your sorting rule', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'BUILD · Use: Test rocks: show what you know', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L2.html', 'id': 'a2w8-sci-build-a2-w03-l2-use-test-rocks-show-what-you-know', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 2', 'week 3', 'use', 'test', 'rocks'], 'desc': 'BUILD Science · Autumn 2 · Week 3 · Lesson 2. Use: Test rocks: show what you know', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'BUILD · Use: Choose a rock for a job: show what you know', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L2.html', 'id': 'a2w8-sci-build-a2-w04-l2-use-choose-a-rock-for-a-job-show-what-you-know', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 2', 'week 4', 'use', 'choose', 'rock'], 'desc': 'BUILD Science · Autumn 2 · Week 4 · Lesson 2. Use: Choose a rock for a job: show what you know', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'BUILD · Use: Natural and made things: show what you know', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L2.html', 'id': 'a2w8-sci-build-a2-w05-l2-use-natural-and-made-things-show-what-you-know', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 2', 'week 5', 'use', 'natural', 'made'], 'desc': 'BUILD Science · Autumn 2 · Week 5 · Lesson 2. Use: Natural and made things: show what you know', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'BUILD · Use: Keep a rock test fair', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L2.html', 'id': 'a2w8-sci-build-a2-w06-l2-use-keep-a-rock-test-fair', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 2', 'week 6', 'use', 'keep', 'rock'], 'desc': 'BUILD Science · Autumn 2 · Week 6 · Lesson 2. Use: Keep a rock test fair', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'BUILD · Master: Show what we know about bodies and rocks', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L2.html', 'id': 'a2w8-sci-build-a2-w07-l2-master-show-what-we-know-about-bodies-and-rocks', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['build', 'science', 'autumn 2', 'week 7', 'master', 'about', 'bodies'], 'desc': 'BUILD Science · Autumn 2 · Week 7 · Lesson 2. Master: Show what we know about bodies and rocks', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'GROW · Master: Day and night: show what you know', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W01/GROW_SCI_A2_W01_P2.html', 'id': 'a2w8-sci-grow-a2-w01-p2-master-day-and-night-show-what-you-know', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 2', 'week 1', 'master', 'night'], 'desc': 'GROW Science · Autumn 2 · Week 1 · Period 2. Master: Day and night: show what you know', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'GROW · Master: How do we know the Earth is round?', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W02/GROW_SCI_A2_W02_P2.html', 'id': 'a2w8-sci-grow-a2-w02-p2-master-how-do-we-know-the-earth-is-round', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 2', 'week 2', 'master', 'earth', 'round'], 'desc': 'GROW Science · Autumn 2 · Week 2 · Period 2. Master: How do we know the Earth is round?', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'GROW · Master: Researching the Solar System: show what you know', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P2.html', 'id': 'a2w8-sci-grow-a2-w03-p2-master-researching-the-solar-system-show-what-you-know', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 2', 'week 3', 'master', 'researching', 'solar'], 'desc': 'GROW Science · Autumn 2 · Week 3 · Period 2. Master: Researching the Solar System: show what you know', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'GROW · Master: Global warming and choices', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P2.html', 'id': 'a2w8-sci-grow-a2-w04-p2-master-global-warming-and-choices', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 2', 'week 4', 'master', 'global', 'warming'], 'desc': 'GROW Science · Autumn 2 · Week 4 · Period 2. Master: Global warming and choices', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'GROW · Master: Answer Lab: say it, support it, improve it', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P2.html', 'id': 'a2w8-sci-grow-a2-w05-p2-master-answer-lab-say-it-support-it-improve-it', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 2', 'week 5', 'master', 'answer', 'support'], 'desc': 'GROW Science · Autumn 2 · Week 5 · Period 2. Master: Answer Lab: say it, support it, improve it', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'GROW · Master: Investigating a science question: show what you know', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P2.html', 'id': 'a2w8-sci-grow-a2-w06-p2-master-investigating-a-science-question-show-what-you-know', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 2', 'week 6', 'master', 'investigating', 'science'], 'desc': 'GROW Science · Autumn 2 · Week 6 · Period 2. Master: Investigating a science question: show what you know', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'GROW · Master: Autumn science evidence and revision', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P2.html', 'id': 'a2w8-sci-grow-a2-w07-p2-master-autumn-science-evidence-and-revision', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['grow', 'science', 'autumn 2', 'week 7', 'master', 'autumn', 'science'], 'desc': 'GROW Science · Autumn 2 · Week 7 · Period 2. Master: Autumn science evidence and revision', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'LAUNCH · Use: Mitosis in sequence', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W01/SCI_LAUNCH_A2_W01_L2.html', 'id': 'a2w8-sci-launch-a2-w01-l2-use-mitosis-in-sequence', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 1', 'use', 'mitosis', 'sequence'], 'desc': 'LAUNCH Science · Autumn 2 · Week 1 · Lesson 2. Use: Mitosis in sequence', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'LAUNCH · Master: Matching chromosome sets and repair', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W01/SCI_LAUNCH_A2_W01_L3.html', 'id': 'a2w8-sci-launch-a2-w01-l3-master-matching-chromosome-sets-and-repair', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 1', 'master', 'matching', 'chromosome'], 'desc': 'LAUNCH Science · Autumn 2 · Week 1 · Lesson 3. Master: Matching chromosome sets and repair', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'LAUNCH · Use: How stem cells become specialised cells', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W02/SCI_LAUNCH_A2_W02_L2.html', 'id': 'a2w8-sci-launch-a2-w02-l2-use-how-stem-cells-become-specialised-cells', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 2', 'use', 'stem', 'cells'], 'desc': 'LAUNCH Science · Autumn 2 · Week 2 · Lesson 2. Use: How stem cells become specialised cells', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'LAUNCH · Master: Growth, differentiation and stem-cell evidence', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W02/SCI_LAUNCH_A2_W02_L3.html', 'id': 'a2w8-sci-launch-a2-w02-l3-master-growth-differentiation-and-stem-cell-evidence', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 2', 'master', 'growth', 'differentiation'], 'desc': 'LAUNCH Science · Autumn 2 · Week 2 · Lesson 3. Master: Growth, differentiation and stem-cell evidence', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'LAUNCH · Use: Weigh a stem-cell case', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W03/SCI_LAUNCH_A2_W03_L2.html', 'id': 'a2w8-sci-launch-a2-w03-l2-use-weigh-a-stem-cell-case', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 3', 'use', 'weigh', 'stem'], 'desc': 'LAUNCH Science · Autumn 2 · Week 3 · Lesson 2. Use: Weigh a stem-cell case', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'LAUNCH · Master: A reasoned written judgement', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W03/SCI_LAUNCH_A2_W03_L3.html', 'id': 'a2w8-sci-launch-a2-w03-l3-master-a-reasoned-written-judgement', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 3', 'master', 'reasoned', 'written'], 'desc': 'LAUNCH Science · Autumn 2 · Week 3 · Lesson 3. Master: A reasoned written judgement', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'LAUNCH · Use: From chromosome to gene to base', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W04/SCI_LAUNCH_A2_W04_L2.html', 'id': 'a2w8-sci-launch-a2-w04-l2-use-from-chromosome-to-gene-to-base', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 4', 'use', 'chromosome', 'gene'], 'desc': 'LAUNCH Science · Autumn 2 · Week 4 · Lesson 2. Use: From chromosome to gene to base', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'LAUNCH · Master: Match DNA structures to their functions', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W04/SCI_LAUNCH_A2_W04_L3.html', 'id': 'a2w8-sci-launch-a2-w04-l3-master-match-dna-structures-to-their-functions', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 4', 'master', 'match', 'structures'], 'desc': 'LAUNCH Science · Autumn 2 · Week 4 · Lesson 3. Master: Match DNA structures to their functions', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'LAUNCH · Use: Predict and check a genetic cross', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W05/SCI_LAUNCH_A2_W05_L2.html', 'id': 'a2w8-sci-launch-a2-w05-l2-use-predict-and-check-a-genetic-cross', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 5', 'use', 'predict', 'check'], 'desc': 'LAUNCH Science · Autumn 2 · Week 5 · Lesson 2. Use: Predict and check a genetic cross', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'LAUNCH · Master: Evaluate a prediction against real counts', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W05/SCI_LAUNCH_A2_W05_L3.html', 'id': 'a2w8-sci-launch-a2-w05-l3-master-evaluate-a-prediction-against-real-counts', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 5', 'master', 'evaluate', 'prediction'], 'desc': 'LAUNCH Science · Autumn 2 · Week 5 · Lesson 3. Master: Evaluate a prediction against real counts', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'LAUNCH · Use: Build a sourced presentation plan', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W06/SCI_LAUNCH_A2_W06_L2.html', 'id': 'a2w8-sci-launch-a2-w06-l2-use-build-a-sourced-presentation-plan', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 6', 'use', 'build', 'sourced'], 'desc': 'LAUNCH Science · Autumn 2 · Week 6 · Lesson 2. Use: Build a sourced presentation plan', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'LAUNCH · Master: Present and peer-mark sourced facts', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W06/SCI_LAUNCH_A2_W06_L3.html', 'id': 'a2w8-sci-launch-a2-w06-l3-master-present-and-peer-mark-sourced-facts', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 6', 'master', 'present', 'peer'], 'desc': 'LAUNCH Science · Autumn 2 · Week 6 · Lesson 3. Master: Present and peer-mark sourced facts', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'LAUNCH · Use: Reason through an assessment question', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W07/SCI_LAUNCH_A2_W07_L2.html', 'id': 'a2w8-sci-launch-a2-w07-l2-use-reason-through-an-assessment-question', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 7', 'use', 'reason', 'through'], 'desc': 'LAUNCH Science · Autumn 2 · Week 7 · Lesson 2. Use: Reason through an assessment question', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science · Teesside', 'title': 'LAUNCH · Master: Mark your own paper and choose a next step', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W07/SCI_LAUNCH_A2_W07_L3.html', 'id': 'a2w8-sci-launch-a2-w07-l3-master-mark-your-own-paper-and-choose-a-next-step', 'type': 'lesson', 'family': 'Science Teesside', 'keywords': ['launch', 'science', 'autumn 2', 'week 7', 'master', 'mark', 'paper'], 'desc': 'LAUNCH Science · Autumn 2 · Week 7 · Lesson 3. Master: Mark your own paper and choose a next step', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Art', 'title': 'BUILD · Explore — Festival light patterns', 'file': 'Art/Build/ART_BUILD_A2_W01_P1.html', 'id': 'a2list-art-build-a2-w01-p1-explore-festival-light-patterns', 'type': 'lesson', 'family': 'Art', 'keywords': ['build', 'art', 'autumn 2', 'week 1'], 'desc': 'BUILD Art · Autumn 2 · Week 1 · Part 1. Explore — Festival light patterns.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Art', 'title': 'BUILD · Make — My festival light pattern', 'file': 'Art/Build/ART_BUILD_A2_W01_P2.html', 'id': 'a2list-art-build-a2-w01-p2-make-my-festival-light-pattern', 'type': 'lesson', 'family': 'Art', 'keywords': ['build', 'art', 'autumn 2', 'week 1'], 'desc': 'BUILD Art · Autumn 2 · Week 1 · Part 2. Make — My festival light pattern.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Art', 'title': 'BUILD · Keep four even beats', 'file': 'Art/Build/CREATIVE_ARTS_A2_W02/Public/ART_BUILD_A2_W02_P1.html', 'id': 'a2list-art-build-a2-w02-p1-keep-four-even-beats', 'type': 'lesson', 'family': 'Art', 'keywords': ['build', 'art', 'autumn 2', 'week 2'], 'desc': 'BUILD Art · Autumn 2 · Week 2 · Part 1. Keep four even beats.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Art', 'title': 'BUILD · Join our group part', 'file': 'Art/Build/CREATIVE_ARTS_A2_W02/Public/ART_BUILD_A2_W02_P2.html', 'id': 'a2list-art-build-a2-w02-p2-join-our-group-part', 'type': 'lesson', 'family': 'Art', 'keywords': ['build', 'art', 'autumn 2', 'week 2'], 'desc': 'BUILD Art · Autumn 2 · Week 2 · Part 2. Join our group part.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Art', 'title': 'GROW · Explore — Light and colour in festival art', 'file': 'Art/Grow/ART_GROW_A2_W01_P1.html', 'id': 'a2list-art-grow-a2-w01-p1-explore-light-and-colour-in-festival-art', 'type': 'lesson', 'family': 'Art', 'keywords': ['grow', 'art', 'autumn 2', 'week 1'], 'desc': 'GROW Art · Autumn 2 · Week 1 · Part 1. Explore — Light and colour in festival art.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Art', 'title': 'GROW · Make — A small light artwork', 'file': 'Art/Grow/ART_GROW_A2_W01_P2.html', 'id': 'a2list-art-grow-a2-w01-p2-make-a-small-light-artwork', 'type': 'lesson', 'family': 'Art', 'keywords': ['grow', 'art', 'autumn 2', 'week 1'], 'desc': 'GROW Art · Autumn 2 · Week 1 · Part 2. Make — A small light artwork.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Art', 'title': 'GROW · Learn and keep your part', 'file': 'Art/Grow/CREATIVE_ARTS_A2_W02/Public/ART_GROW_A2_W02_P1.html', 'id': 'a2list-art-grow-a2-w02-p1-learn-and-keep-your-part', 'type': 'lesson', 'family': 'Art', 'keywords': ['grow', 'art', 'autumn 2', 'week 2'], 'desc': 'GROW Art · Autumn 2 · Week 2 · Part 1. Learn and keep your part.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Art', 'title': 'GROW · Join parts and improve together', 'file': 'Art/Grow/CREATIVE_ARTS_A2_W02/Public/ART_GROW_A2_W02_P2.html', 'id': 'a2list-art-grow-a2-w02-p2-join-parts-and-improve-together', 'type': 'lesson', 'family': 'Art', 'keywords': ['grow', 'art', 'autumn 2', 'week 2'], 'desc': 'GROW Art · Autumn 2 · Week 2 · Part 2. Join parts and improve together.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Art', 'title': 'LAUNCH · A review with evidence', 'file': 'Art/Launch/ART_LAUNCH_A2_W01.html', 'id': 'a2list-art-launch-a2-w01-p1-a-review-with-evidence', 'type': 'lesson', 'family': 'Art', 'keywords': ['launch', 'art', 'autumn 2', 'week 1'], 'desc': 'LAUNCH Art · Autumn 2 · Week 1 · Part 1. A review with evidence.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}])
+SHELF_ROWS.extend([{'subject': 'Science', 'title': 'BUILD · Use: Look closely at rocks: show your sorting rule', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W02/SCI_BUILD_A2_W02_L2.html', 'id': 'a2w8-sci-build-a2-w02-l2-use-look-closely-at-rocks-show-your-sorting-rule', 'type': 'lesson', 'family': 'Science', 'keywords': ['build', 'science', 'autumn 2', 'week 2', 'use', 'look', 'closely'], 'desc': 'BUILD Science · Autumn 2 · Week 2 · Lesson 2. Use: Look closely at rocks: show your sorting rule', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'BUILD · Use: Test rocks: show what you know', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L2.html', 'id': 'a2w8-sci-build-a2-w03-l2-use-test-rocks-show-what-you-know', 'type': 'lesson', 'family': 'Science', 'keywords': ['build', 'science', 'autumn 2', 'week 3', 'use', 'test', 'rocks'], 'desc': 'BUILD Science · Autumn 2 · Week 3 · Lesson 2. Use: Test rocks: show what you know', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'BUILD · Use: Choose a rock for a job: show what you know', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L2.html', 'id': 'a2w8-sci-build-a2-w04-l2-use-choose-a-rock-for-a-job-show-what-you-know', 'type': 'lesson', 'family': 'Science', 'keywords': ['build', 'science', 'autumn 2', 'week 4', 'use', 'choose', 'rock'], 'desc': 'BUILD Science · Autumn 2 · Week 4 · Lesson 2. Use: Choose a rock for a job: show what you know', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'BUILD · Use: Natural and made things: show what you know', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L2.html', 'id': 'a2w8-sci-build-a2-w05-l2-use-natural-and-made-things-show-what-you-know', 'type': 'lesson', 'family': 'Science', 'keywords': ['build', 'science', 'autumn 2', 'week 5', 'use', 'natural', 'made'], 'desc': 'BUILD Science · Autumn 2 · Week 5 · Lesson 2. Use: Natural and made things: show what you know', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'BUILD · Use: Keep a rock test fair', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L2.html', 'id': 'a2w8-sci-build-a2-w06-l2-use-keep-a-rock-test-fair', 'type': 'lesson', 'family': 'Science', 'keywords': ['build', 'science', 'autumn 2', 'week 6', 'use', 'keep', 'rock'], 'desc': 'BUILD Science · Autumn 2 · Week 6 · Lesson 2. Use: Keep a rock test fair', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'BUILD · Master: Show what we know about bodies and rocks', 'file': 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L2.html', 'id': 'a2w8-sci-build-a2-w07-l2-master-show-what-we-know-about-bodies-and-rocks', 'type': 'lesson', 'family': 'Science', 'keywords': ['build', 'science', 'autumn 2', 'week 7', 'master', 'about', 'bodies'], 'desc': 'BUILD Science · Autumn 2 · Week 7 · Lesson 2. Master: Show what we know about bodies and rocks', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'GROW · Master: Day and night: show what you know', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W01/GROW_SCI_A2_W01_P2.html', 'id': 'a2w8-sci-grow-a2-w01-p2-master-day-and-night-show-what-you-know', 'type': 'lesson', 'family': 'Science', 'keywords': ['grow', 'science', 'autumn 2', 'week 1', 'master', 'night'], 'desc': 'GROW Science · Autumn 2 · Week 1 · Period 2. Master: Day and night: show what you know', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'GROW · Master: How do we know the Earth is round?', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W02/GROW_SCI_A2_W02_P2.html', 'id': 'a2w8-sci-grow-a2-w02-p2-master-how-do-we-know-the-earth-is-round', 'type': 'lesson', 'family': 'Science', 'keywords': ['grow', 'science', 'autumn 2', 'week 2', 'master', 'earth', 'round'], 'desc': 'GROW Science · Autumn 2 · Week 2 · Period 2. Master: How do we know the Earth is round?', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'GROW · Master: Researching the Solar System: show what you know', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P2.html', 'id': 'a2w8-sci-grow-a2-w03-p2-master-researching-the-solar-system-show-what-you-know', 'type': 'lesson', 'family': 'Science', 'keywords': ['grow', 'science', 'autumn 2', 'week 3', 'master', 'researching', 'solar'], 'desc': 'GROW Science · Autumn 2 · Week 3 · Period 2. Master: Researching the Solar System: show what you know', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'GROW · Master: Global warming and choices', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P2.html', 'id': 'a2w8-sci-grow-a2-w04-p2-master-global-warming-and-choices', 'type': 'lesson', 'family': 'Science', 'keywords': ['grow', 'science', 'autumn 2', 'week 4', 'master', 'global', 'warming'], 'desc': 'GROW Science · Autumn 2 · Week 4 · Period 2. Master: Global warming and choices', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'GROW · Master: Answer Lab: say it, support it, improve it', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P2.html', 'id': 'a2w8-sci-grow-a2-w05-p2-master-answer-lab-say-it-support-it-improve-it', 'type': 'lesson', 'family': 'Science', 'keywords': ['grow', 'science', 'autumn 2', 'week 5', 'master', 'answer', 'support'], 'desc': 'GROW Science · Autumn 2 · Week 5 · Period 2. Master: Answer Lab: say it, support it, improve it', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'GROW · Master: Investigating a science question: show what you know', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P2.html', 'id': 'a2w8-sci-grow-a2-w06-p2-master-investigating-a-science-question-show-what-you-know', 'type': 'lesson', 'family': 'Science', 'keywords': ['grow', 'science', 'autumn 2', 'week 6', 'master', 'investigating', 'science'], 'desc': 'GROW Science · Autumn 2 · Week 6 · Period 2. Master: Investigating a science question: show what you know', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'GROW · Master: Autumn science evidence and revision', 'file': 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P2.html', 'id': 'a2w8-sci-grow-a2-w07-p2-master-autumn-science-evidence-and-revision', 'type': 'lesson', 'family': 'Science', 'keywords': ['grow', 'science', 'autumn 2', 'week 7', 'master', 'autumn', 'science'], 'desc': 'GROW Science · Autumn 2 · Week 7 · Period 2. Master: Autumn science evidence and revision', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'LAUNCH · Use: Mitosis in sequence', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W01/SCI_LAUNCH_A2_W01_L2.html', 'id': 'a2w8-sci-launch-a2-w01-l2-use-mitosis-in-sequence', 'type': 'lesson', 'family': 'Science', 'keywords': ['launch', 'science', 'autumn 2', 'week 1', 'use', 'mitosis', 'sequence'], 'desc': 'LAUNCH Science · Autumn 2 · Week 1 · Lesson 2. Use: Mitosis in sequence', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'LAUNCH · Master: Matching chromosome sets and repair', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W01/SCI_LAUNCH_A2_W01_L3.html', 'id': 'a2w8-sci-launch-a2-w01-l3-master-matching-chromosome-sets-and-repair', 'type': 'lesson', 'family': 'Science', 'keywords': ['launch', 'science', 'autumn 2', 'week 1', 'master', 'matching', 'chromosome'], 'desc': 'LAUNCH Science · Autumn 2 · Week 1 · Lesson 3. Master: Matching chromosome sets and repair', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'LAUNCH · Use: How stem cells become specialised cells', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W02/SCI_LAUNCH_A2_W02_L2.html', 'id': 'a2w8-sci-launch-a2-w02-l2-use-how-stem-cells-become-specialised-cells', 'type': 'lesson', 'family': 'Science', 'keywords': ['launch', 'science', 'autumn 2', 'week 2', 'use', 'stem', 'cells'], 'desc': 'LAUNCH Science · Autumn 2 · Week 2 · Lesson 2. Use: How stem cells become specialised cells', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'LAUNCH · Master: Growth, differentiation and stem-cell evidence', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W02/SCI_LAUNCH_A2_W02_L3.html', 'id': 'a2w8-sci-launch-a2-w02-l3-master-growth-differentiation-and-stem-cell-evidence', 'type': 'lesson', 'family': 'Science', 'keywords': ['launch', 'science', 'autumn 2', 'week 2', 'master', 'growth', 'differentiation'], 'desc': 'LAUNCH Science · Autumn 2 · Week 2 · Lesson 3. Master: Growth, differentiation and stem-cell evidence', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'LAUNCH · Use: Weigh a stem-cell case', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W03/SCI_LAUNCH_A2_W03_L2.html', 'id': 'a2w8-sci-launch-a2-w03-l2-use-weigh-a-stem-cell-case', 'type': 'lesson', 'family': 'Science', 'keywords': ['launch', 'science', 'autumn 2', 'week 3', 'use', 'weigh', 'stem'], 'desc': 'LAUNCH Science · Autumn 2 · Week 3 · Lesson 2. Use: Weigh a stem-cell case', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'LAUNCH · Master: A reasoned written judgement', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W03/SCI_LAUNCH_A2_W03_L3.html', 'id': 'a2w8-sci-launch-a2-w03-l3-master-a-reasoned-written-judgement', 'type': 'lesson', 'family': 'Science', 'keywords': ['launch', 'science', 'autumn 2', 'week 3', 'master', 'reasoned', 'written'], 'desc': 'LAUNCH Science · Autumn 2 · Week 3 · Lesson 3. Master: A reasoned written judgement', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'LAUNCH · Use: From chromosome to gene to base', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W04/SCI_LAUNCH_A2_W04_L2.html', 'id': 'a2w8-sci-launch-a2-w04-l2-use-from-chromosome-to-gene-to-base', 'type': 'lesson', 'family': 'Science', 'keywords': ['launch', 'science', 'autumn 2', 'week 4', 'use', 'chromosome', 'gene'], 'desc': 'LAUNCH Science · Autumn 2 · Week 4 · Lesson 2. Use: From chromosome to gene to base', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'LAUNCH · Master: Match DNA structures to their functions', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W04/SCI_LAUNCH_A2_W04_L3.html', 'id': 'a2w8-sci-launch-a2-w04-l3-master-match-dna-structures-to-their-functions', 'type': 'lesson', 'family': 'Science', 'keywords': ['launch', 'science', 'autumn 2', 'week 4', 'master', 'match', 'structures'], 'desc': 'LAUNCH Science · Autumn 2 · Week 4 · Lesson 3. Master: Match DNA structures to their functions', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'LAUNCH · Use: Predict and check a genetic cross', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W05/SCI_LAUNCH_A2_W05_L2.html', 'id': 'a2w8-sci-launch-a2-w05-l2-use-predict-and-check-a-genetic-cross', 'type': 'lesson', 'family': 'Science', 'keywords': ['launch', 'science', 'autumn 2', 'week 5', 'use', 'predict', 'check'], 'desc': 'LAUNCH Science · Autumn 2 · Week 5 · Lesson 2. Use: Predict and check a genetic cross', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'LAUNCH · Master: Evaluate a prediction against real counts', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W05/SCI_LAUNCH_A2_W05_L3.html', 'id': 'a2w8-sci-launch-a2-w05-l3-master-evaluate-a-prediction-against-real-counts', 'type': 'lesson', 'family': 'Science', 'keywords': ['launch', 'science', 'autumn 2', 'week 5', 'master', 'evaluate', 'prediction'], 'desc': 'LAUNCH Science · Autumn 2 · Week 5 · Lesson 3. Master: Evaluate a prediction against real counts', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'LAUNCH · Use: Build a sourced presentation plan', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W06/SCI_LAUNCH_A2_W06_L2.html', 'id': 'a2w8-sci-launch-a2-w06-l2-use-build-a-sourced-presentation-plan', 'type': 'lesson', 'family': 'Science', 'keywords': ['launch', 'science', 'autumn 2', 'week 6', 'use', 'build', 'sourced'], 'desc': 'LAUNCH Science · Autumn 2 · Week 6 · Lesson 2. Use: Build a sourced presentation plan', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'LAUNCH · Master: Present and peer-mark sourced facts', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W06/SCI_LAUNCH_A2_W06_L3.html', 'id': 'a2w8-sci-launch-a2-w06-l3-master-present-and-peer-mark-sourced-facts', 'type': 'lesson', 'family': 'Science', 'keywords': ['launch', 'science', 'autumn 2', 'week 6', 'master', 'present', 'peer'], 'desc': 'LAUNCH Science · Autumn 2 · Week 6 · Lesson 3. Master: Present and peer-mark sourced facts', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'LAUNCH · Use: Reason through an assessment question', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W07/SCI_LAUNCH_A2_W07_L2.html', 'id': 'a2w8-sci-launch-a2-w07-l2-use-reason-through-an-assessment-question', 'type': 'lesson', 'family': 'Science', 'keywords': ['launch', 'science', 'autumn 2', 'week 7', 'use', 'reason', 'through'], 'desc': 'LAUNCH Science · Autumn 2 · Week 7 · Lesson 2. Use: Reason through an assessment question', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Science', 'title': 'LAUNCH · Master: Mark your own paper and choose a next step', 'file': 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W07/SCI_LAUNCH_A2_W07_L3.html', 'id': 'a2w8-sci-launch-a2-w07-l3-master-mark-your-own-paper-and-choose-a-next-step', 'type': 'lesson', 'family': 'Science', 'keywords': ['launch', 'science', 'autumn 2', 'week 7', 'master', 'mark', 'paper'], 'desc': 'LAUNCH Science · Autumn 2 · Week 7 · Lesson 3. Master: Mark your own paper and choose a next step', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Art', 'title': 'BUILD · Explore — Festival light patterns', 'file': 'Art/Build/ART_BUILD_A2_W01_P1.html', 'id': 'a2list-art-build-a2-w01-p1-explore-festival-light-patterns', 'type': 'lesson', 'family': 'Art', 'keywords': ['build', 'art', 'autumn 2', 'week 1'], 'desc': 'BUILD Art · Autumn 2 · Week 1 · Part 1. Explore — Festival light patterns.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Art', 'title': 'BUILD · Make — My festival light pattern', 'file': 'Art/Build/ART_BUILD_A2_W01_P2.html', 'id': 'a2list-art-build-a2-w01-p2-make-my-festival-light-pattern', 'type': 'lesson', 'family': 'Art', 'keywords': ['build', 'art', 'autumn 2', 'week 1'], 'desc': 'BUILD Art · Autumn 2 · Week 1 · Part 2. Make — My festival light pattern.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Art', 'title': 'BUILD · Keep four even beats', 'file': 'Art/Build/CREATIVE_ARTS_A2_W02/Public/ART_BUILD_A2_W02_P1.html', 'id': 'a2list-art-build-a2-w02-p1-keep-four-even-beats', 'type': 'lesson', 'family': 'Art', 'keywords': ['build', 'art', 'autumn 2', 'week 2'], 'desc': 'BUILD Art · Autumn 2 · Week 2 · Part 1. Keep four even beats.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Art', 'title': 'BUILD · Join our group part', 'file': 'Art/Build/CREATIVE_ARTS_A2_W02/Public/ART_BUILD_A2_W02_P2.html', 'id': 'a2list-art-build-a2-w02-p2-join-our-group-part', 'type': 'lesson', 'family': 'Art', 'keywords': ['build', 'art', 'autumn 2', 'week 2'], 'desc': 'BUILD Art · Autumn 2 · Week 2 · Part 2. Join our group part.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Art', 'title': 'GROW · Explore — Light and colour in festival art', 'file': 'Art/Grow/ART_GROW_A2_W01_P1.html', 'id': 'a2list-art-grow-a2-w01-p1-explore-light-and-colour-in-festival-art', 'type': 'lesson', 'family': 'Art', 'keywords': ['grow', 'art', 'autumn 2', 'week 1'], 'desc': 'GROW Art · Autumn 2 · Week 1 · Part 1. Explore — Light and colour in festival art.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Art', 'title': 'GROW · Make — A small light artwork', 'file': 'Art/Grow/ART_GROW_A2_W01_P2.html', 'id': 'a2list-art-grow-a2-w01-p2-make-a-small-light-artwork', 'type': 'lesson', 'family': 'Art', 'keywords': ['grow', 'art', 'autumn 2', 'week 1'], 'desc': 'GROW Art · Autumn 2 · Week 1 · Part 2. Make — A small light artwork.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Art', 'title': 'GROW · Learn and keep your part', 'file': 'Art/Grow/CREATIVE_ARTS_A2_W02/Public/ART_GROW_A2_W02_P1.html', 'id': 'a2list-art-grow-a2-w02-p1-learn-and-keep-your-part', 'type': 'lesson', 'family': 'Art', 'keywords': ['grow', 'art', 'autumn 2', 'week 2'], 'desc': 'GROW Art · Autumn 2 · Week 2 · Part 1. Learn and keep your part.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Art', 'title': 'GROW · Join parts and improve together', 'file': 'Art/Grow/CREATIVE_ARTS_A2_W02/Public/ART_GROW_A2_W02_P2.html', 'id': 'a2list-art-grow-a2-w02-p2-join-parts-and-improve-together', 'type': 'lesson', 'family': 'Art', 'keywords': ['grow', 'art', 'autumn 2', 'week 2'], 'desc': 'GROW Art · Autumn 2 · Week 2 · Part 2. Join parts and improve together.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}, {'subject': 'Art', 'title': 'LAUNCH · A review with evidence', 'file': 'Art/Launch/ART_LAUNCH_A2_W01.html', 'id': 'a2list-art-launch-a2-w01-p1-a-review-with-evidence', 'type': 'lesson', 'family': 'Art', 'keywords': ['launch', 'art', 'autumn 2', 'week 1'], 'desc': 'LAUNCH Art · Autumn 2 · Week 1 · Part 1. A review with evidence.', 'added': '2026-11-08', 'new': True, 'year': '2026-27'}])
 
 
 # AAA-SMALL (8 Nov 2026, owner ask 16:24-16:32Z: the Careers, Vocational, Creative Arts, ICT, RSHE, PSHE, D&T, RSE and
