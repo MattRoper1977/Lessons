@@ -3685,7 +3685,8 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # Re-cut 2026-11-08 (owner pin edit b91dcad6 on the Week 2 QR-page branch): the carrier moves to Site main 5d40754c, the merge of Site #619 (admission of the Week 2 QR-page edits); the caller digest is re-cut from those bytes.
 # Re-cut 2026-11-08 (owner pin edit on this branch): the carrier moves to Site main 85b7bb5c, the merge of Site #621 (registry baseline for the Autumn 2 landing and the scheme-of-work label admission, after Site #620 admitted the Autumn 2 pages); the caller digest is re-cut from the owner's committed bytes (both pin lines moved, one trailing blank line).
 # Pre-cut 2026-11-08 (owner pin edit on this branch): the carrier moves to Site 4288540e, the head of Site #622 (the publisher build job timeout raised from 15 to 30 minutes, the only change on top of Site main 85b7bb5c); the Autumn 2 publication run was cancelled twice by the 15-minute limit while its admission proof was passing. Pre-cut for both pin lines moved and nothing else changed; re-cut from the owner's committed bytes if they differ.
-    "lessons": "7a7167cfb533961cfe2ad4e677378393abcda9fc1de7b6916b521289046a91ad",
+# Pre-cut 2026-11-09 (owner pin edit on this branch): the carrier moves to Site main 54c5c443, the merge of Site #623 (admission of the Tutor Time Autumn 2 landing, the pathway relabel and the plain catalogue labels, with the registry fence re-frozen) on top of Site #622 (the 30-minute publisher build job). The digest is cut from the caller with its two 4288540e lines (uses@ and builder_ref) replaced by 54c5c443 and nothing else changed.
+    "lessons": "6ff3fe6d72cab5cfc7d3d29208b6098574d5c6e868f1c54ac33efd972331e30c",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.
