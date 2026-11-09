@@ -93,6 +93,25 @@ textarea{width:100%;min-height:130px;border:2px solid var(--line);border-radius:
 footer{max-width:1180px;margin:0 auto;padding:8px 16px 24px;color:var(--muted);font-size:18px}
 @media (max-width:600px){header{position:static}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+#labelSheet{display:none}
+.adapt-row{border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin:8px 0}
+.adapt-row b{display:block;margin-bottom:4px}
+.adapt-row label{display:inline-flex;align-items:center;gap:6px;margin:3px 12px 3px 0;font-size:16px}
+.adapt-row input[type=checkbox]{width:22px;height:22px}
+.adapt-row input[type=text]{width:100%;margin-top:4px}
+@media print{
+  body.printing-labels > *:not(#labelSheet){display:none!important}
+  body.printing-labels #labelSheet{display:block!important}
+  .plabel{border:3px solid #000;border-radius:10px;padding:10px 14px;margin:0 0 10mm;page-break-inside:avoid;break-inside:avoid;display:flex;gap:14px;font-size:14pt;color:#000}
+  .plabel .lq svg{width:110px;height:110px;display:block}
+  .plabel .lt{flex:1}
+  .plabel .brand{font-weight:700;font-size:11pt;letter-spacing:.05em}
+  .plabel h2{margin:2px 0 4px;font-size:22pt}
+  .plabel ul{margin:4px 0 0;padding-left:20px}
+  .plabel li{margin:2px 0}
+  .plabel .sign{margin-top:6px;font-size:12pt}
+}
 @media print{
   header,.noprint,.toast,.modal-bg,footer{display:none!important}
   body{background:#fff;color:#000;font-size:13pt;padding:0}
@@ -159,6 +178,7 @@ footer{max-width:1180px;margin:0 auto;padding:8px 16px 24px;color:var(--muted);f
       </select></label>
       <label>Pupil <select id="pfilter"><option value="">Everyone</option></select></label>
       <button type="button" id="print">🖨️ Print list / QR sheet</button>
+      <button type="button" id="printLabels">🏷️ Print a label for each sheet</button>
       <button type="button" id="csv">💾 Save CSV</button>
       <button type="button" id="copyListTsv">📋 Copy for Sheets</button>
     </div>
@@ -194,6 +214,11 @@ footer{max-width:1180px;margin:0 auto;padding:8px 16px 24px;color:var(--muted);f
       <label for="pGROW"><span class="tag GROW">GROW</span> group</label><textarea id="pGROW"></textarea>
       <label for="pLAUNCH"><span class="tag LAUNCH">LAUNCH</span> group</label><textarea id="pLAUNCH"></textarea>
       <div class="row" style="margin-top:10px"><button type="button" id="savep">Save pupils</button><span id="saved" class="note" role="status"></span></div>
+    </div>
+    <div class="panel">
+      <h2 style="margin-top:0">Adaptations for each pupil (private)</h2>
+      <p class="note">Tick what helps each pupil. It is printed on their catch-up label with a short "how to" for each one. Saved on this device only, like everything else here.</p>
+      <div id="adaptList"></div>
     </div>
     <div class="panel">
       <h2 style="margin-top:0">Drive &amp; Pinned QR Links</h2>
@@ -324,7 +349,7 @@ function load(){
  var s=null;try{s=JSON.parse(localStorage.getItem(KEY));}catch(e){}
  if(!s||!s.pupils||!s.marks)s={pupils:{BUILD:[],GROW:[],LAUNCH:[]},marks:{}};
  if(s.driveEmail==null)s.driveEmail="";
- s.links=s.links||{};s.assessMarks=s.assessMarks||{};s.pins=s.pins||[];
+ s.links=s.links||{};s.assessMarks=s.assessMarks||{};s.pins=s.pins||[];s.adapt=s.adapt||{};
  s.dirtySinceBackup=!!s.dirtySinceBackup;s.lastBackup=s.lastBackup||"";
  for(var k in s.marks){var m=s.marks[k];if(!m.state)m.state=m.done?"done":"missed";m.done=m.state==="done";if(m.note==null)m.note="";}
  return s;
@@ -523,7 +548,8 @@ function renderToday(){
    };
    wrap.appendChild(b);
    if(m){var sb=el("button",{"class":"statebtn st-"+st,"aria-label":"Status for "+pp[0]+": "+LABEL[st]+". Press to move on"},LABEL[st]);
-    sb.onclick=function(){var nx=next(st);S.marks[k].state=nx;S.marks[k].done=nx==="done";save();renderToday();};wrap.appendChild(sb);}
+    sb.onclick=function(){var nx=next(st);S.marks[k].state=nx;S.marks[k].done=nx==="done";save();renderToday();};wrap.appendChild(sb);
+    wrap.appendChild(labelBtn({pupil:pp[0],path:pp[1],subj:subj,w:w,d:d,per:per,lesson:les,url:linkFor(lkey(w,pp[1],subj,les))}));}
    chips.appendChild(wrap);
   });
   card.appendChild(el("p",{"class":"hint"},n?n+" missed: "+c.missed+" need catch-up · "+c.partial+" partly · "+c.more+" more needed · "+c.done+" done":"Everyone in (tap anyone who was not)"));
@@ -565,7 +591,7 @@ function renderList(){
  var th=el("thead");th.appendChild(hd);t.appendChild(th);var tb=el("tbody");
  list.forEach(function(r){
   var tr=el("tr",{"class":"st-"+r.state+(justDoneKeys[r.k]?" just-done":"")});
-  tr.appendChild(el("td",{},r.pupil+" ("+r.path+")"));
+  var tdp=el("td",{},r.pupil+" ("+r.path+")");tdp.appendChild(el("br"));tdp.appendChild(labelBtn(labelItem(r)));tr.appendChild(tdp);
   tr.appendChild(el("td",{},r.subj+", Wk "+r.w+" "+r.d+" P"+r.per));
   var td=el("td"),folder=r.path+" › w/b "+wb(r.w)+" › "+r.subj+" › Catch-up (Lesson "+r.lesson+")",lk=lkey(r.w,lessonPath(r),r.subj,r.lesson),u=linkFor(lk);
   td.appendChild(el("div",{},folder));
@@ -663,16 +689,72 @@ function renderAssess(){
 $("assessMatrixBtn").onclick=function(){assessMatrix=!assessMatrix;$("assessMatrixBtn").setAttribute("aria-pressed",assessMatrix?"true":"false");renderAssess();};
 
 function show(v){
- justDoneKeys={};
+ justDoneKeys={};document.body.classList.remove("printing-labels");
  ["today","list","assess","setup"].forEach(function(x){$(x).hidden=x!==v;});
  Array.prototype.forEach.call(document.querySelectorAll(".tabs button"),function(b){b.setAttribute("aria-pressed",b.dataset.view===v?"true":"false");});
- if(v==="today")renderToday();if(v==="list")renderList();if(v==="assess")renderAssess();if(v==="setup")fillSetup();
+ if(v==="today")renderToday();if(v==="list")renderList();if(v==="assess")renderAssess();if(v==="setup"){fillSetup();renderAdapt();}
 }
 Array.prototype.forEach.call(document.querySelectorAll(".tabs button"),function(b){b.onclick=function(){show(b.dataset.view);};});
 $("week").onchange=renderToday;$("day").onchange=renderToday;
 $("filter").onchange=function(){justDoneKeys={};renderList();};$("lpath").onchange=function(){justDoneKeys={};renderList();};$("pfilter").onchange=function(){justDoneKeys={};renderList();};
 $("apath").onchange=renderAssess;$("asubj").onchange=renderAssess;$("aready").onchange=renderAssess;
-$("print").onclick=function(){window.print();};$("printAssess").onclick=function(){window.print();};
+
+// ---- Pupil catch-up labels (name + adaptations), printed in the browser only ----
+var ADAPT=[["large_print","Large print","Print the sheet bigger (A3) or zoom it on screen."],
+ ["chunked","One task at a time","Fold or cover the sheet so only one task shows."],
+ ["sentence_starters","Sentence starters","Give the starter: I think… because…"],
+ ["word_bank","Word bank","Point out the key words before they start."],
+ ["fewer_questions","Fewer questions","Tasks 1 to 3 and the Show me question only."],
+ ["read_aloud","Read aloud","Read each task aloud. Let them say the answer before writing."],
+ ["extra_space","Extra time and space","Allow extra time. Lined paper for longer answers."],
+ ["visual_steps","Visual steps","Number the steps and tick each one when done."]];
+var SHOWN={BUILD:"BASE",GROW:"TRACK",LAUNCH:"SUMMIT",ALL:"ALL"};
+S.adapt=S.adapt||{};
+function renderAdapt(){
+ var box=$("adaptList");if(!box)return;box.textContent="";
+ var all=pupilsFor("ALL");
+ if(!all.length){box.appendChild(el("p",{"class":"note"},"Add pupils above first."));return;}
+ all.forEach(function(pp){
+  var name=pp[0],a=S.adapt[name]||{t:[],note:""},row=el("div",{"class":"adapt-row"});
+  row.appendChild(el("b",{},name+" ("+SHOWN[pp[1]]+")"));
+  ADAPT.forEach(function(x){
+   var lab=el("label"),cb=el("input",{type:"checkbox"});cb.checked=a.t.indexOf(x[0])>=0;
+   cb.onchange=function(){var c=S.adapt[name]||{t:[],note:""};c.t=c.t.filter(function(v){return v!==x[0];});if(cb.checked)c.t.push(x[0]);S.adapt[name]=c;save();};
+   lab.appendChild(cb);lab.appendChild(document.createTextNode(x[1]));row.appendChild(lab);
+  });
+  var nt=el("input",{type:"text","class":"textin",placeholder:"Anything else (e.g. sit near the front)","aria-label":"Other adaptation for "+name});
+  nt.value=a.note||"";nt.oninput=function(){var c=S.adapt[name]||{t:[],note:""};c.note=nt.value;S.adapt[name]=c;save();};
+  row.appendChild(nt);box.appendChild(row);
+ });
+}
+function labelItem(r){return {pupil:r.pupil,path:r.path,subj:r.subj,w:r.w,d:r.d,per:r.per,lesson:r.lesson,url:linkFor(lkey(r.w,r.path,r.subj,r.lesson))};}
+function printLabels(items){
+ if(!items.length){showToast("No catch-up sheets to label");return;}
+ var box=$("labelSheet");box.textContent="";
+ items.forEach(function(it){
+  var a=S.adapt[it.pupil]||{t:[],note:""},card=el("section",{"class":"plabel"}),t=el("div",{"class":"lt"});
+  t.appendChild(el("div",{"class":"brand"},"MADE BY MATT · CATCH-UP"));
+  t.appendChild(el("h2",{},it.pupil));
+  t.appendChild(el("div",{},SHOWN[it.path]+" · "+it.subj+" · missed "+it.d+" P"+it.per+" (week of "+wb(it.w)+")"));
+  var ul=el("ul"),n=0;
+  ADAPT.forEach(function(x){if(a.t.indexOf(x[0])>=0){var li=el("li");li.appendChild(el("b",{},x[1]+": "));li.appendChild(document.createTextNode(x[2]));ul.appendChild(li);n++;}});
+  if(a.note){ul.appendChild(el("li",{},a.note));n++;}
+  if(!n)ul.appendChild(el("li",{},"No adaptations set."));
+  t.appendChild(ul);
+  t.appendChild(el("div",{"class":"sign"},"Done: ⬜   Checked by: __________   Date: ________"));
+  card.appendChild(t);
+  if(it.url){var q=QR(it.url);if(q){var qd=el("div",{"class":"lq"});qd.appendChild(q);card.appendChild(qd);}}
+  box.appendChild(card);
+ });
+ document.body.classList.add("printing-labels");
+ var done=function(){document.body.classList.remove("printing-labels");window.removeEventListener("afterprint",done);};
+ window.addEventListener("afterprint",done);
+ window.print();
+}
+function labelBtn(it){var b=el("button",{"class":"xsbtn noprint",type:"button","aria-label":"Print catch-up label for "+it.pupil+", "+it.subj},"🏷️ Label");b.onclick=function(){printLabels([it]);};return b;}
+$("printLabels").onclick=function(){printLabels(getFilteredList().filter(function(r){return r.state!=="done";}).map(labelItem));};
+function plainPrint(){document.body.classList.remove("printing-labels");window.print();}
+$("print").onclick=plainPrint;$("printAssess").onclick=plainPrint;
 
 function syncPinDropdown(){
  var sel=$("qrPinSelect");sel.textContent="";sel.appendChild(el("option",{value:""},"📌 Pinned links…"));
@@ -727,7 +809,8 @@ $("savep").onclick=function(){
   if(groupMoves[apup]&&apath===groupMoves[apup].from){apath=groupMoves[apup].to;migrated++;}
   nextAssess[apath+"|"+asubj+"|"+apup]=S.assessMarks[ak];
  }
- S.pupils=newP;S.marks=nextMarks;S.assessMarks=nextAssess;save();
+ S.adapt=S.adapt||{};for(var rk in renames){var on=rk.split("|").slice(1).join("|");if(S.adapt[on]&&!S.adapt[renames[rk]]){S.adapt[renames[rk]]=S.adapt[on];delete S.adapt[on];}}
+ S.pupils=newP;S.marks=nextMarks;S.assessMarks=nextAssess;save();if(typeof renderAdapt==="function")renderAdapt();
  $("saved").textContent=migrated?"Saved (migrated "+migrated+" mark record(s)).":"Saved.";
 };
 $("saveDrive").onclick=function(){S.driveEmail=$("driveEmail").value.trim();save();showToast(S.driveEmail?"Drive account saved":"Drive account cleared");};
@@ -764,5 +847,6 @@ $("wipe").onclick=function(){if(confirm("Clear every missed mark and assessment 
 renderToday();
 })();
 </script>
+<div id="labelSheet" aria-hidden="true"></div>
 </body>
 </html>
