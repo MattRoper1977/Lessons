@@ -16,7 +16,7 @@ import re
 
 GATE = "tools/verify_cross_estate_unification.py"
 ORIGINAL_ROW_COUNT = 755   # ruling qp-2 (A-wide, os-4, 11 Oct 2026): 734 + the 21 reviewed catalogue rows the A19/A24 refresh interleaves
-ORIGINAL_ROWS_SHA256 = "e7f6181ba7af4e93f8360f6b6255ba911204d026c93ede8161cc2c84a2c625d6"  # M1 (vr, vt, vt add.1, vu): re-cut below for the same 755 rows with the folder paths renamed and the archive downloads re-pinned; every difference is the rename map (790209ca before)  # Re-cut 2026-11-08 (ruling thread, label rule): the same 755 rows with the place word removed from subject, family, title and desc values; no row added, removed or reordered.
+ORIGINAL_ROWS_SHA256 = "15150552200dcf96089afd27ec81b5712a63aef929d07e62544dda6fa53b703b"  # M1 (vr, vt, vt add.1, vu): re-cut below for the same 755 rows with the folder paths renamed and the archive downloads re-pinned; every difference is the rename map (790209ca before)  # Re-cut 2026-11-08 (ruling thread, label rule): the same 755 rows with the place word removed from subject, family, title and desc values; no row added, removed or reordered.
 SHELF_ROWS = [{'subject': 'Science',
   'title': 'Science · browse by pathway, term and teaching version',
   'file': 'Science/index.html',
@@ -2276,7 +2276,7 @@ REVIEWED_PATHS += (
 REVIEWED_PATHS += (
     '404.html',
     'Build/README.txt',
-    'Games/WorldCup_ThreeLions_Final.html',
+    'Games/Cup_Final.html',
     'Grow/README.txt',
     'HANDOVER.md',
     'Humanities/BUILD_Scheme_of_Work.html',
@@ -6016,6 +6016,9 @@ def manifest_admitted(lessons: Path) -> set[str]:
             if member.is_file() and hashlib.sha256(member.read_bytes()).hexdigest() == checksum:
                 admitted.add(base + name)
     return admitted
+
+
+REVIEWED_PATHS = tuple(dict.fromkeys(REVIEWED_PATHS + ('Games/WorldCup_ThreeLions_Final.html', 'Games/WorldCup_v3_MatchDirector.html', 'Games/WorldCup_v5_Showdown.html', 'Games/voxelcraft.html', 'Games/Cup_Final.html', 'Games/Match_Director.html', 'Games/Cup_Showdown.html', 'Games/Block_Builder.html', '5_6 Local Choice/index.html', 'tools/verify_games_offline_runtime.mjs', 'tools/verify_playable.mjs')))
 
 
 def pin(lessons: Path, apps: Path, *, check: bool) -> dict:
