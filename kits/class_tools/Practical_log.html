@@ -4,89 +4,356 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; img-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>Practical log</title>
 <style>
-:root{--ink:#1d2433;--accent:#1f5fa8;--soft:#eef3fa;--line:#c9d3e3;--ok:#178841;--warn:#b36205;--bg:#ffffff}
-@media (prefers-color-scheme: dark){:root{--ink:#e8edf5;--accent:#8db8f0;--soft:#1c2433;--line:#3a4658;--ok:#5fd08a;--warn:#f0b060;--bg:#11161f}}
+:root{--ink:#1d2433;--accent:#163e70;--soft:#eef3fa;--line:#c9d3e3;--ok:#174d2b;--warn:#703600;--bg:#ffffff;--focus:#073d83}
+@media (prefers-color-scheme: dark){:root{--ink:#e8edf5;--accent:#bedaff;--soft:#1c2433;--line:#3a4658;--ok:#a9e9bf;--warn:#ffdaaa;--bg:#11161f;--focus:#bedaff}}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.5 "Segoe UI",Arial,sans-serif}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.5 "Segoe UI",Arial,sans-serif;overflow-wrap: break-word}
+main,section,div,header,nav,.row>*{min-width:0}
 main{max-width:640px;margin:0 auto;padding:20px 16px 40px}
 h1{font-size:24px;margin:0 0 4px;color:var(--accent)}
+h2{font-size:20px;margin-top:22px}
 p{margin:8px 0}
-.note{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:16px}
-textarea{width:100%;min-height:300px;font:18px/1.6 inherit;padding:10px;border:2px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
-.row{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
-button,label.btn{font:inherit;font-size:17px;padding:12px 16px;border-radius:10px;border:2px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer}
+.note{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:17px}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0;align-items:center}
+button,label.btn,select,input[type=text],input[type=date]{font:inherit;font-size:17px;min-height:48px;min-width:48px;max-width:100%}
+button,label.btn{padding:12px 16px;border-radius:10px;border:2px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;white-space:normal}
 button.ghost,label.btn{background:transparent;color:var(--accent)}
+select,input[type=text],input[type=date]{width:100%;padding:10px;border:2px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+a{color:var(--accent);display:inline-flex;align-items:center;min-height:48px;min-width:48px;font-weight:600}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
 input[type=file]{display:none}
 #msg{min-height:1.5em;font-weight:600}
 .ok{color:var(--ok)}.warn{color:var(--warn)}
 ol{padding-left:22px}li{margin:4px 0}
-
-select,input[type=text],input[type=date]{font:inherit;font-size:17px;padding:8px;border:2px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);max-width:100%}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media (max-width:520px){.grid{grid-template-columns:1fr}}
-.field label{display:block;font-size:15px;font-weight:600;margin-bottom:2px}
-table{border-collapse:collapse;width:100%;font-size:16px}td,th{border:1px solid var(--line);padding:6px;text-align:left}
-.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:12px 0}
-.tile{display:block;padding:14px;border:2px solid var(--line);border-radius:12px;text-decoration:none;color:var(--ink);background:var(--soft)}
-.tile b{display:block;color:var(--accent);font-size:19px}.tile span{font-size:15px}
-h2{font-size:20px;margin-top:22px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:520px){.grid{grid-template-columns:1fr}}
+.field label{display:block;font-size:17px;font-weight:600;margin-bottom:4px}
+.skills-row{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0}
+.skill-check{display:inline-flex;align-items:center;gap:8px;min-height:48px;min-width:48px;padding:8px 12px;border:2px solid var(--line);border-radius:10px;background:var(--soft);cursor:pointer;font-size:17px;font-weight:600}
+.skill-check input[type=checkbox]{width:24px;height:24px;min-width:24px;min-height:24px;margin:0;flex:none}
+table{border-collapse:collapse;width:100%;font-size:17px}
+td,th{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:middle}
+.profilebar{margin:10px 0;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.profilebar label{display:inline-flex;align-items:center;gap:8px;font-weight:600}
+.profilebar select{width:auto}
+@media (max-width:520px){.profilebar select{width:100%}}
+@media print{.noprint,.private-tag{display:none!important}body{background:#fff;color:#000}main{max-width:none;padding:0}}
 </style>
 </head>
 <body>
 <main>
+<p class="noprint"><a href="My_tools.html">&larr; My tools</a></p>
 <h1>Practical log</h1>
-<p class="note">Pupil codes only (Pupil 1 to Pupil 12). Never type a name here. Entries stay on this device until you save the file.</p>
+<p class="note">Pupil codes only (Pupil 1 to Pupil 20). Never type a name here. Entries stay on this device until you save the file.</p>
+<div class="profilebar noprint">
+  <label for="showTags">Show: <select id="showTags"><option value="initials">Initials</option><option value="first">First name</option><option value="number">Number</option></select></label>
+</div>
 <div class="grid">
  <div class="field"><label for="date">Date</label><input type="date" id="date"></div>
- <div class="field"><label for="path">Pathway</label><select id="path"><option>BASE</option><option>TRACK</option><option>SUMMIT</option><option>ALL</option></select></div>
+ <div class="field"><label for="path">Pathway</label><select id="path"><option>BUILD</option><option>GROW</option><option>LAUNCH</option><option>ALL</option></select></div>
  <div class="field"><label for="subj">Subject</label><input type="text" id="subj" value="Science"></div>
  <div class="field"><label for="lesson">Lesson code or title</label><input type="text" id="lesson" placeholder="e.g. week 2 lesson 1"></div>
 </div>
 <div class="field" style="margin-top:10px"><label for="prac">Practical / experiment</label><input type="text" id="prac" style="width:100%" placeholder="e.g. Testing magnets"></div>
 <h2>Skills shown</h2>
-<p><label><input type="checkbox" class="sk" value="Safety"> Safety</label> &nbsp; <label><input type="checkbox" class="sk" value="Measuring"> Measuring</label> &nbsp; <label><input type="checkbox" class="sk" value="Recording"> Recording</label> &nbsp; <label><input type="checkbox" class="sk" value="Explaining"> Explaining</label></p>
+<div class="skills-row">
+  <label class="skill-check"><input type="checkbox" class="sk" value="Safety"> Safety</label>
+  <label class="skill-check"><input type="checkbox" class="sk" value="Measuring"> Measuring</label>
+  <label class="skill-check"><input type="checkbox" class="sk" value="Recording"> Recording</label>
+  <label class="skill-check"><input type="checkbox" class="sk" value="Explaining"> Explaining</label>
+</div>
 <h2>Who did it</h2>
-<p class="row" style="margin:6px 0"><button class="ghost" id="allDid">Everyone: Did it</button></p>
-<table><tr><td>Pupil 1</td><td><select data-p="Pupil 1"><option value="">-</option><option>Did it</option><option>Partly</option><option>Watched</option><option>Absent</option></select></td></tr><tr><td>Pupil 2</td><td><select data-p="Pupil 2"><option value="">-</option><option>Did it</option><option>Partly</option><option>Watched</option><option>Absent</option></select></td></tr><tr><td>Pupil 3</td><td><select data-p="Pupil 3"><option value="">-</option><option>Did it</option><option>Partly</option><option>Watched</option><option>Absent</option></select></td></tr><tr><td>Pupil 4</td><td><select data-p="Pupil 4"><option value="">-</option><option>Did it</option><option>Partly</option><option>Watched</option><option>Absent</option></select></td></tr><tr><td>Pupil 5</td><td><select data-p="Pupil 5"><option value="">-</option><option>Did it</option><option>Partly</option><option>Watched</option><option>Absent</option></select></td></tr><tr><td>Pupil 6</td><td><select data-p="Pupil 6"><option value="">-</option><option>Did it</option><option>Partly</option><option>Watched</option><option>Absent</option></select></td></tr><tr><td>Pupil 7</td><td><select data-p="Pupil 7"><option value="">-</option><option>Did it</option><option>Partly</option><option>Watched</option><option>Absent</option></select></td></tr><tr><td>Pupil 8</td><td><select data-p="Pupil 8"><option value="">-</option><option>Did it</option><option>Partly</option><option>Watched</option><option>Absent</option></select></td></tr><tr><td>Pupil 9</td><td><select data-p="Pupil 9"><option value="">-</option><option>Did it</option><option>Partly</option><option>Watched</option><option>Absent</option></select></td></tr><tr><td>Pupil 10</td><td><select data-p="Pupil 10"><option value="">-</option><option>Did it</option><option>Partly</option><option>Watched</option><option>Absent</option></select></td></tr><tr><td>Pupil 11</td><td><select data-p="Pupil 11"><option value="">-</option><option>Did it</option><option>Partly</option><option>Watched</option><option>Absent</option></select></td></tr><tr><td>Pupil 12</td><td><select data-p="Pupil 12"><option value="">-</option><option>Did it</option><option>Partly</option><option>Watched</option><option>Absent</option></select></td></tr></table>
+<p class="row" style="margin:6px 0"><button type="button" class="ghost" id="allDid">Everyone: Did it</button></p>
+<table><tbody id="pupilRows"></tbody></table>
 <div class="field" style="margin-top:10px"><label for="note">Note (no names)</label><input type="text" id="note" style="width:100%"></div>
-<div class="row"><button id="add">Add to list</button><button class="ghost" id="save">Save file for Drive</button><button class="ghost" id="clear">Clear list</button></div>
-<p id="msg" aria-live="polite"></p>
+<div class="row"><button type="button" id="add">Add to list</button><button type="button" class="ghost" id="save">Save file for Drive</button><button type="button" class="ghost" id="clear">Clear list</button></div>
+<p id="msg" role="status" aria-live="polite"></p>
 <h2>Waiting to save (<span id="n">0</span>)</h2>
 <div id="list"></div>
 <h2>Then</h2>
-<ol><li>Press <b>Save file for Drive</b>.</li><li>Put the file in Drive › <b>_INBOX › Practicals</b>.</li><li>The home laptop adds it to your private practical record and per-pupil counts.</li></ol>
+<ol><li>Press <b>Save file for Drive</b>.</li><li>Put the file in Drive &rsaquo; <b>_INBOX &rsaquo; Practicals</b>.</li><li>The home laptop adds it to your private practical record and per-pupil counts.</li></ol>
 </main>
 <script>
 (function(){"use strict";
 var KEY="mbm_practical_log_v1",$=function(i){return document.getElementById(i);},rows=[];
-try{rows=JSON.parse(localStorage.getItem(KEY))||[];}catch(e){rows=[];}
+var SAFE_CAP_WORDS={BUILD:1,GROW:1,LAUNCH:1,ALL:1,SCIENCE:1,HUMANITIES:1,CAREERS:1,VOCATIONAL:1,RE:1,ICT:1,DT:1,RSHE:1,PSHE:1,RSE:1,CREATIVE:1,ARTS:1,COMMUNITY:1,PROJECTS:1,MONDAY:1,TUESDAY:1,WEDNESDAY:1,THURSDAY:1,FRIDAY:1,PUPIL:1,WEEK:1,LESSON:1};
+
+function pupilKey(){
+ var out={};
+ try{
+  var raw=JSON.parse(localStorage.getItem("mbm_pupil_key_v1")||"{}");
+  if(raw&&typeof raw==="object"){
+   Object.keys(raw).forEach(function(k){
+    var m=String(k).match(/^(?:Pupil\s*|P)?(\d{1,2})$/i);
+    if(m&&+m[1]>=1&&+m[1]<=20&&typeof raw[k]==="string"&&raw[k].trim())out[+m[1]]=raw[k].trim();
+   });
+  }
+ }catch(e){}
+ try{
+  var tr=JSON.parse(localStorage.getItem("mbm_catchup_tracker_v1")||"{}");
+  if(tr&&tr.pupils&&typeof tr.pupils==="object"){
+   var all=[].concat(tr.pupils.BUILD||[],tr.pupils.GROW||[],tr.pupils.LAUNCH||[]);
+   var defOrder=[4,7,9,12,1,3,5,8,11,2,6,10];
+   all.forEach(function(s,idx){
+    var lbl=String(s||"").trim();
+    if(!lbl||/^(?:Pupil\s*|P)?\d+$/i.test(lbl))return;
+    var n=all.length===12&&defOrder[idx]?defOrder[idx]:(idx+1);
+    if(n>=1&&n<=20&&!out[n])out[n]=lbl;
+   });
+  }
+ }catch(e){}
+ try{
+  var cn=localStorage.getItem("mbm_class_names_v1")||"";
+  if(cn){
+   var lines=cn.split(/\r?\n/).map(function(s){return s.trim();}).filter(Boolean);
+   lines.forEach(function(lbl,idx){
+    var n=idx+1;
+    if(n>=1&&n<=20&&!out[n]&&!/^(?:Pupil\s*|P)?\d+$/i.test(lbl))out[n]=lbl;
+   });
+  }
+ }catch(e){}
+ return out;
+}
+
+function pupilProfile(){
+ try{
+  var v=JSON.parse(localStorage.getItem("mbm_pupil_profile_v1")||"{}");
+  return v&&v.version===1?v:{version:1,show:"initials",pupils:{}};
+ }catch(e){return {version:1,show:"initials",pupils:{}};}
+}
+
+function setShow(mode){
+ var p=pupilProfile();p.show=mode;
+ try{localStorage.setItem("mbm_pupil_profile_v1",JSON.stringify(p));return true;}catch(e){return false;}
+}
+
+function pupilTag(n,form){
+ var key=pupilKey(),mode=form||pupilProfile().show||"initials",label=String(key[n]||"").trim();
+ if(!label||mode==="number")return "P"+n;
+ var words=function(s){return String(s).trim().split(/\s+/).filter(Boolean);};
+ if(mode==="first")return words(label)[0];
+ var base=function(s){return words(s).map(function(w){return Array.from(w)[0];}).join("").toLocaleUpperCase("en-GB").slice(0,3);};
+ var b=base(label),peers=Object.keys(key).filter(function(k){return String(key[k]||"").trim()&&base(key[k])===b;}),extra=0;
+ var tag=function(k,x){var w=words(key[k]),last=Array.from(w[w.length-1].toLocaleUpperCase("en-GB"));return b+last.slice(1,1+x).join("");};
+ var max=Math.max.apply(null,[0].concat(peers.map(function(k){var w=words(key[k]);return Array.from(w[w.length-1]).length;})));
+ while(extra<max&&peers.some(function(k){return k!==String(n)&&tag(k,extra)===tag(String(n),extra);}))extra++;
+ var t=tag(String(n),extra);
+ if(peers.some(function(k){return k!==String(n)&&tag(k,extra)===t;}))t+="·"+n;
+ return t;
+}
+
+function activePupilCount(){
+ var max=12,key=pupilKey();
+ Object.keys(key).forEach(function(k){if(+k>max&&+k<=20)max=+k;});
+ var prof=pupilProfile();
+ if(prof&&prof.pupils){Object.keys(prof.pupils).forEach(function(k){if(+k>max&&+k<=20)max=+k;});}
+ try{
+  var tr=JSON.parse(localStorage.getItem("mbm_catchup_tracker_v1")||"{}");
+  if(tr&&tr.pupils){
+   var total=[].concat(tr.pupils.BUILD||[],tr.pupils.GROW||[],tr.pupils.LAUNCH||[]).length;
+   if(total>max)max=Math.min(20,total);
+  }
+ }catch(e){}
+ rows.forEach(function(r){
+  var m=String(r&&r.pupil||"").match(/(\d{1,2})/);
+  if(m&&+m[1]>max&&+m[1]<=20)max=+m[1];
+ });
+ return Math.min(20,Math.max(12,max));
+}
+
+function escapeRegExp(s){return s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");}
+
+function redactText(text){
+ var s=String(text==null?"":text);
+ if(!s)return "";
+ var key=pupilKey(),pairs=[],upperOnly={};
+ Object.keys(key).forEach(function(n){
+  var full=String(key[n]||"").trim();
+  if(!full)return;
+  var rep="Pupil "+n;
+  pairs.push([full,rep,false]);
+  full.split(/\s+/).forEach(function(w){
+   var cleanW=w.replace(/^[^A-Za-zÀ-ɏ]+|[^A-Za-zÀ-ɏ]+$/g,"");
+   if(cleanW.length>=2&&!SAFE_CAP_WORDS[cleanW.toUpperCase()])pairs.push([cleanW,rep,false]);
+  });
+  var ini=pupilTag(n,"initials");
+  if(ini&&ini.length>=2&&!/^P\d+$/i.test(ini)&&!SAFE_CAP_WORDS[ini.toUpperCase()]){
+   pairs.push([ini,rep,true]);
+   upperOnly[ini]=1;
+  }
+ });
+ try{
+  var nl=JSON.parse(localStorage.getItem("mbm_names_list_v1")||"[]");
+  if(Array.isArray(nl)){
+   nl.forEach(function(w){
+    var cw=String(w||"").trim();
+    if(cw.length>=2&&!SAFE_CAP_WORDS[cw.toUpperCase()])pairs.push([cw,"[name]",false]);
+   });
+  }
+ }catch(e){}
+ pairs.sort(function(a,b){return b[0].length-a[0].length;});
+ var slots=[];
+ pairs.forEach(function(p){
+  var label=p[0],rep=p[1],caseSens=p[2];
+  var re=new RegExp("(^|[^A-Za-zÀ-ɏ0-9_])("+escapeRegExp(label)+")(?:['’]s)?(?=$|[^A-Za-zÀ-ɏ0-9_])",caseSens?"g":"gi");
+  s=s.replace(re,function(_,pre){
+   var idx=slots.push(rep)-1;
+   return pre+"\u0001"+idx+"\u0002";
+  });
+ });
+ s=s.replace(/\b([A-Z][a-z]{1,25})\s+([A-Z][a-z]{1,25})\b/g,function(m,w1,w2){
+  if(SAFE_CAP_WORDS[w1.toUpperCase()]||SAFE_CAP_WORDS[w2.toUpperCase()])return m;
+  var idx=slots.push("[name]")-1;
+  return "\u0001"+idx+"\u0002";
+ });
+ return s.replace(/\u0001(\d+)\u0002/g,function(_,i){return slots[+i];});
+}
+
+function renderPupilTable(){
+ var tbody=$("pupilRows"),current={};
+ document.querySelectorAll("select[data-p]").forEach(function(s){current[s.getAttribute("data-p")]=s.value;});
+ tbody.textContent="";
+ var count=activePupilCount();
+ for(var n=1;n<=count;n++){
+  var pCode="Pupil "+n;
+  var tr=document.createElement("tr");
+  var td1=document.createElement("td");
+  var span=document.createElement("span");
+  span.textContent=pCode;
+  td1.appendChild(span);
+  var tag=document.createElement("strong");
+  tag.className="private-tag noprint";
+  tag.textContent=" · "+pupilTag(n);
+  td1.appendChild(tag);
+  var td2=document.createElement("td");
+  var sel=document.createElement("select");
+  sel.setAttribute("data-p",pCode);
+  sel.setAttribute("aria-label","Result for "+pCode+" ("+pupilTag(n)+")");
+  [["","-"],["Did it","Did it"],["Partly","Partly"],["Watched","Watched"],["Absent","Absent"]].forEach(function(opt){
+   var o=document.createElement("option");
+   o.value=opt[0];o.textContent=opt[1];
+   sel.appendChild(o);
+  });
+  if(current[pCode])sel.value=current[pCode];
+  td2.appendChild(sel);
+  tr.appendChild(td1);
+  tr.appendChild(td2);
+  tbody.appendChild(tr);
+ }
+}
+
+try{
+ var loaded=JSON.parse(localStorage.getItem(KEY))||[];
+ rows=Array.isArray(loaded)?loaded.map(function(r){
+  return {
+   date:r.date||"",
+   pathway:(r.pathway==="BASE"?"BUILD":r.pathway==="TRACK"?"GROW":r.pathway==="SUMMIT"?"LAUNCH":r.pathway)||"BUILD",
+   subject:redactText(r.subject||""),
+   lesson:redactText(r.lesson||""),
+   practical:redactText(r.practical||""),
+   pupil:/^Pupil\s+\d{1,2}$/.test(String(r.pupil||""))?r.pupil:"Pupil 1",
+   result:r.result||"Did it",
+   skills:redactText(r.skills||""),
+   note:redactText(r.note||"")
+  };
+ }):[];
+}catch(e){rows=[];}
+
 $("date").value=new Date().toISOString().slice(0,10);
+$("showTags").value=pupilProfile().show||"initials";
+$("showTags").onchange=function(){setShow(this.value);renderPupilTable();};
+
 function say(t,c){$("msg").textContent=t;$("msg").className=c||"";}
 function store(){try{localStorage.setItem(KEY,JSON.stringify(rows));}catch(e){}}
-function draw(){$("n").textContent=rows.length;var h="";var seen={};rows.forEach(function(r){var k=r.date+" · "+r.pathway+" · "+r.practical;seen[k]=(seen[k]||0)+1;});
-Object.keys(seen).forEach(function(k){h+="<p>"+k.replace(/[<&]/g,"")+": "+seen[k]+" pupil(s)</p>";});$("list").innerHTML=h||"<p>Nothing yet.</p>";}
-function looksLikeName(t){return /\b[A-Z][a-z]+ [A-Z][a-z]+\b/.test(t);}
-$("allDid").onclick=function(){document.querySelectorAll("select[data-p]").forEach(function(s){s.value="Did it";});};
+function draw(){
+ $("n").textContent=rows.length;
+ var h="",seen={};
+ rows.forEach(function(r){
+  var k=r.date+" · "+r.pathway+" · "+redactText(r.practical);
+  seen[k]=(seen[k]||0)+1;
+ });
+ Object.keys(seen).forEach(function(k){
+  h+="<p>"+k.replace(/[<&]/g,"")+": "+seen[k]+" pupil(s)</p>";
+ });
+ $("list").innerHTML=h||"<p>Nothing yet.</p>";
+}
+
+$("allDid").onclick=function(){
+ document.querySelectorAll("select[data-p]").forEach(function(s){s.value="Did it";});
+ say("All pupils set to Did it.","ok");
+};
+
 $("add").onclick=function(){
- var prac=$("prac").value.trim(),note=$("note").value.trim();
- if(!prac){say("Type the practical first.","warn");return;}
- if(looksLikeName(note)&&!confirm("The note might have a name in it. Pupil codes only, please. Keep it anyway?"))return;
+ var rawPrac=$("prac").value.trim(),rawNote=$("note").value.trim(),rawSubj=$("subj").value.trim(),rawLesson=$("lesson").value.trim();
+ if(!rawPrac){say("Type the practical first.","warn");return;}
+ var prac=redactText(rawPrac),note=redactText(rawNote),subj=redactText(rawSubj),lesson=redactText(rawLesson);
+ var redactedAny=(prac!==rawPrac||note!==rawNote||subj!==rawSubj||lesson!==rawLesson);
+ if(redactedAny){
+  $("prac").value=prac;$("note").value=note;$("subj").value=subj;$("lesson").value=lesson;
+ }
  var skills=[].slice.call(document.querySelectorAll(".sk:checked")).map(function(c){return c.value;}).join("; "),added=0;
- document.querySelectorAll("select[data-p]").forEach(function(s){if(s.value){rows.push({date:$("date").value,pathway:$("path").value,subject:$("subj").value.trim(),lesson:$("lesson").value.trim(),practical:prac,pupil:s.getAttribute("data-p"),result:s.value,skills:skills,note:note});added++;s.value="";}});
+ document.querySelectorAll("select[data-p]").forEach(function(s){
+  if(s.value){
+   rows.push({
+    date:$("date").value,
+    pathway:$("path").value,
+    subject:subj,
+    lesson:lesson,
+    practical:prac,
+    pupil:s.getAttribute("data-p"),
+    result:s.value,
+    skills:skills,
+    note:note
+   });
+   added++;
+   s.value="";
+  }
+ });
  if(!added){say("Choose at least one pupil.","warn");return;}
- store();draw();say("Added "+added+" pupil(s).","ok");};
-function csv(v){v=String(v==null?"":v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
+ store();draw();
+ say("Added "+added+" pupil(s)."+(redactedAny?" Replaced pupil names with Pupil codes.":""),"ok");
+};
+
+function csv(v){v=String(v==null?"":v);return /[",\n\r]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
+
 $("save").onclick=function(){
  if(!rows.length){say("Nothing to save yet.","warn");return;}
  var cols=["date","pathway","subject","lesson","practical","pupil","result","skills","note"];
- var body=cols.join(",")+"\r\n"+rows.map(function(r){return cols.map(function(c){return csv(r[c]);}).join(",");}).join("\r\n")+"\r\n";
- var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([body],{type:"text/csv"}));
- a.download="practical_log_"+new Date().toISOString().slice(0,16).replace(/[:T]/g,"-")+".csv";document.body.appendChild(a);a.click();
- setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},1000);
- say("Saved. Put it in Drive: _INBOX › Practicals. Then press Clear list.","ok");};
-$("clear").onclick=function(){if(rows.length&&!confirm("Clear the list on this device? (Save the file first.)"))return;rows=[];store();draw();say("Cleared.","ok");};
-draw();})();
+ var body=cols.join(",")+"\r\n"+rows.map(function(r){
+  return cols.map(function(c){
+   var val=c==="pupil"?r[c]:redactText(r[c]);
+   return csv(val);
+  }).join(",");
+ }).join("\r\n")+"\r\n";
+ var a=document.createElement("a");a.style.display="none";
+ a.href=URL.createObjectURL(new Blob([body],{type:"text/csv"}));
+ a.download="practical_log_"+new Date().toISOString().slice(0,16).replace(/[:T]/g,"-")+".csv";
+ document.body.appendChild(a);a.click();a.remove();
+ setTimeout(function(){URL.revokeObjectURL(a.href);},1000);
+ say("Saved. Put it in Drive: _INBOX › Practicals. Then press Clear list.","ok");
+};
+
+$("clear").onclick=function(){
+ if(rows.length&&!confirm("Clear the list on this device? (Save the file first.)"))return;
+ rows=[];store();draw();say("Cleared.","ok");
+};
+
+window.addEventListener("beforeprint",function(){
+ ["prac","note","subj","lesson"].forEach(function(id){$(id).value=redactText($(id).value);});
+});
+
+window.addEventListener("storage",function(){
+ $("showTags").value=pupilProfile().show||"initials";
+ renderPupilTable();
+ draw();
+});
+
+renderPupilTable();
+draw();
+})();
 </script>
 </body>
 </html>

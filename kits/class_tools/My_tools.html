@@ -30,7 +30,7 @@ input::placeholder,textarea::placeholder{color:var(--ink);opacity:1}.tile{-webki
 <div id="sharedPath" hidden><label for="nowPath">Choose a group for this shared lesson</label><select id="nowPath"><option>BUILD</option><option>GROW</option><option>LAUNCH</option></select></div>
 <div class="now-actions"><a class="btn primary" id="nowCapture" href="Quick_capture.html?now=1">Quick capture</a><a class="btn" id="nowExtras" href="Lesson_extras.html">Lesson extras</a><a class="btn" id="nowTracker" href="Catch_up_Tracker.html">Catch-up tracker</a></div>
 <p id="nextLesson" class="hint"></p>
-<details><summary>Check period times</summary><p class="hint">Use this device's clock. Each lesson ends at the next start time. The last one ends after 50 minutes.</p><form id="timesForm"><div id="timesInputs" class="time-grid"></div><div class="row"><button type="submit">Save period times</button></div></form><p id="timeStatus" role="status"></p></details>
+<details><summary>Check period times</summary><p class="hint">Start and end times use this device's clock. Break and lunch are not lessons.</p><form id="timesForm"><div id="timesInputs" class="time-grid"></div><div class="row"><button type="submit">Save period times</button><button id="resetSchoolTimes" type="button">Reset to school day</button></div></form><p id="timeStatus" role="status"></p></details>
 </section>
 <div class="search"><label for="toolSearch">Find a tool</label><input type="search" id="toolSearch" placeholder="Type a tool or a task" autocomplete="off"><p class="hint" id="searchStatus" role="status"></p></div>
 <section id="pinnedSection" aria-labelledby="pinnedTitle"><h2 id="pinnedTitle">Pinned</h2><p class="hint" id="pinHelp">Tap a star, or hold a tile, to keep it here.</p><div id="pinnedTiles" class="tiles"></div></section>
@@ -116,24 +116,64 @@ function notice(text){$('homeStatus').textContent=text;}
 function read(key,fallback){try{const raw=localStorage.getItem(key);return raw===null?fallback:JSON.parse(raw);}catch(e){notice('This device could not read saved settings. They have been kept.');return fallback;}}
 function write(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true;}catch(e){notice('Your change works for this visit. This device could not save it.');return false;}}
 function pad(n){return String(n).padStart(2,'0');}
-const DEFAULT_TIMES=['09:00','09:50','11:00','11:50','13:30','14:20'];
-let times=read(TIMES,{}),timesValid=false;
-function validTimes(v){return v&&Array.isArray(v.starts)&&v.starts.length===6&&v.starts.every((t,i)=>typeof t==='string'&&/^([01]\d|2[0-3]):[0-5]\d$/.test(t)&&(!i||t>v.starts[i-1]));}
-timesValid=validTimes(times);if(!timesValid)times={starts:DEFAULT_TIMES,confirmed:false};
-const minute=t=>{const a=t.split(':').map(Number);return a[0]*60+a[1];};
-function weekOf(date){return 1+Math.round((Date.UTC(date.getFullYear(),date.getMonth(),date.getDate()-(date.getDay()+6)%7)-Date.UTC(2026,10,2))/604800000);}
-function slotsFor(date){const w=weekOf(date),day=DAYS[date.getDay()-1];if(w<2||w>7||!day)return [];return TT[day].map(row=>{const start=new Date(date.getFullYear(),date.getMonth(),date.getDate(),0,minute(times.starts[row[0]-1])),end=new Date(start);end.setMinutes(end.getMinutes()+(row[0]<6?minute(times.starts[row[0]])-minute(times.starts[row[0]-1]):50));if(row===TT[day].at(-1))end.setTime(start.getTime()+50*60000);return {w,day,p:row[0],path:row[1],subject:row[2],lesson:LN[day+'|'+row[0]],start,end};});}
-function nowContext(now=new Date()){
-  const candidates=[];for(let offset=0;offset<11;offset++){const d=new Date(now.getFullYear(),now.getMonth(),now.getDate()+offset);candidates.push(...slotsFor(d));}
-  const current=candidates.find(s=>now>=s.start&&now<s.end),upcoming=candidates.filter(s=>s.start>now),slot=current||upcoming[0]||null;
-  return {slot,current:!!current,next:current?upcoming[0]:upcoming[1]};
+// Shared school-day table and clock rules. Identical in both pages.
+const SCHOOL_DAY=[
+ {label:'Check-in and reading',start:'09:00',end:'09:30'},
+ {p:1,start:'09:30',end:'10:10'},
+ {p:2,start:'10:10',end:'10:50'},
+ {label:'Break',start:'10:50',end:'11:00'},
+ {p:3,start:'11:00',end:'11:40'},
+ {p:4,start:'11:40',end:'12:20'},
+ {label:'Lunch',start:'12:20',end:'12:50'},
+ {p:5,start:'12:50',end:'13:30'},
+ {p:6,start:'13:30',end:'14:10'},
+ {label:'Check-out',start:'14:10',end:'14:30'}
+];
+function schoolTimes(){return {v:2,starts:SCHOOL_DAY.filter(s=>s.p).map(s=>s.start),ends:SCHOOL_DAY.filter(s=>s.p).map(s=>s.end),confirmed:true};}
+function validSchoolTimes(value){
+ const format=t=>typeof t==='string'&&/^([01]\d|2[0-3]):[0-5]\d$/.test(t);
+ return !!value&&value.v===2&&Array.isArray(value.starts)&&Array.isArray(value.ends)&&value.starts.length===6&&value.ends.length===6&&value.starts.every((start,i)=>format(start)&&format(value.ends[i])&&value.ends[i]>start&&(!i||start>=value.ends[i-1]));
 }
+function schoolWeek(date){return 1+Math.round((Date.UTC(date.getFullYear(),date.getMonth(),date.getDate()-(date.getDay()+6)%7)-Date.UTC(2026,10,2))/604800000);}
+function schoolSlots(date,times){
+ const w=schoolWeek(date),day=['Monday','Tuesday','Wednesday','Thursday','Friday'][date.getDay()-1];if(w<2||w>7||!day)return [];
+ const clock=text=>{const [h,m]=text.split(':').map(Number);return new Date(date.getFullYear(),date.getMonth(),date.getDate(),h,m);};
+ return TT[day].map(row=>({w,day,p:row[0],path:row[1],subject:row[2],lesson:LN[day+'|'+row[0]],start:clock(times.starts[row[0]-1]),end:clock(times.ends[row[0]-1])}));
+}
+function schoolContext(now,times){
+ const candidates=[];for(let offset=0;offset<11;offset++)candidates.push(...schoolSlots(new Date(now.getFullYear(),now.getMonth(),now.getDate()+offset),times));
+ const current=candidates.find(s=>now>=s.start&&now<s.end),upcoming=candidates.filter(s=>s.start>now),slot=current||upcoming[0]||null;
+ return {slot,current:!!current,next:current?upcoming[0]:upcoming[1]};
+}
+function schoolSlotText(slot,times){return slot.day+' · Period '+slot.p+', '+times.starts[slot.p-1]+' to '+times.ends[slot.p-1]+', '+(slot.path==='ALL'?'All groups':slot.path)+' '+slot.subject;}
+function schoolNowText(context,times,now){
+ if(!context.slot)return 'No lesson in the saved timetable';
+ const minute=now.getHours()*60+now.getMinutes(),checkIn=now.getDay()>0&&now.getDay()<6&&minute>=540&&minute<570;
+ return (checkIn?'Check-in and reading, then ':context.current?'Now: ':'Next: ')+schoolSlotText(context.slot,times);
+}
+
+const DEFAULT_TIMES=schoolTimes().starts;
+let times=read(TIMES,{}),timesMigrated=false;
+function validTimes(value){return validSchoolTimes(value);}
+if(times.v!==2){times=schoolTimes();write(TIMES,times);timesMigrated=true;$('timeStatus').textContent='Period times set to your school day';}
+else if(!validTimes(times)){notice('Saved period times need a check. They have been kept.');times=schoolTimes();}
+function weekOf(date){return schoolWeek(date);}
+function slotsFor(date){return schoolSlots(date,times);}
+function nowContext(now=new Date()){return schoolContext(now,times);}
+
 function extrasLink(s,path){return 'Lesson_extras.html#'+new URLSearchParams({week:String(s.w),path:path||s.path,subject:s.subject,lesson:String(s.lesson),view:'visitor'}).toString();}
-function shortSlot(s){return s.start.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})+' · '+times.starts[s.p-1]+' · Period '+s.p+' · '+(s.path==='ALL'?'All groups':s.path)+' · '+s.subject;}
+function shortSlot(s){return schoolSlotText(s,times);}
 let sharedPath=read('mbm_tools_path_v1','BUILD');if(!['BUILD','GROW','LAUNCH'].includes(sharedPath))sharedPath='BUILD';$('nowPath').value=sharedPath;
-function renderNow(){const c=nowContext(),s=c.slot;$('nowCapture').href='Quick_capture.html?now=1';$('nowCapture').dataset.toolId='Quick_capture.html';$('nowExtras').dataset.toolId='Lesson_extras.html';$('nowTracker').dataset.toolId='Catch_up_Tracker.html';if(!s){$('nowState').textContent='No lesson';$('nowWhen').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});$('nowLesson').textContent='No lesson in the saved timetable';$('nowCode').textContent='';$('nowHint').textContent='This timetable covers Weeks 2 to 7, starting 9 November 2026. Choose a lesson inside Quick capture.';$('nowExtras').href='Lesson_extras.html';$('nextLesson').textContent='';$('sharedPath').hidden=true;return;}$('nowState').textContent=c.current?'In lesson':'Next lesson';$('nowWhen').textContent=shortSlot(s)+' · Week '+s.w;$('nowLesson').textContent=s.subject+' · '+(s.path==='ALL'?'All groups':s.path);$('nowCode').textContent=lessonCode(s.w,s.path==='ALL'?sharedPath:s.path,s.subject,s.lesson);$('nowExtras').href=extrasLink(s,s.path==='ALL'?sharedPath:s.path);$('sharedPath').hidden=s.path!=='ALL';$('nowHint').textContent=(!times.confirmed?'Suggested times: check your period times below. ':'')+(c.current?'Ready for this lesson.':'Ready for the next lesson.');$('nextLesson').textContent=c.next?'Next: '+shortSlot(c.next):'No later lesson in this timetable.';}
-for(let i=0;i<6;i++){const label=document.createElement('label');label.textContent='Period '+(i+1);const input=document.createElement('input');input.type='time';input.id='time-'+i;input.required=true;input.value=times.starts[i];label.append(input);$('timesInputs').append(label);}
-$('timesForm').onsubmit=e=>{e.preventDefault();const next={...times,starts:Array.from({length:6},(_,i)=>$('time-'+i).value),confirmed:true};if(!validTimes(next)){$('timeStatus').textContent='Use six start times in order, from early to late.';return;}times=next;const ok=write(TIMES,times);$('timeStatus').textContent=ok?'✓ Times saved on this device.':'Times used for this visit. Could not save on this device.';renderNow();};
+function renderNow(){
+ const now=new Date(),c=nowContext(now),s=c.slot;$('nowCapture').href='Quick_capture.html?now=1';$('nowCapture').dataset.toolId='Quick_capture.html';$('nowExtras').dataset.toolId='Lesson_extras.html';$('nowTracker').dataset.toolId='Catch_up_Tracker.html';
+ if(!s){$('nowState').textContent='No lesson';$('nowWhen').textContent='';$('nowLesson').textContent='No lesson in the saved timetable';$('nowCode').textContent='';$('nowHint').textContent='Choose a lesson inside Quick capture.';$('nowExtras').href='Lesson_extras.html';$('nextLesson').textContent='';$('sharedPath').hidden=true;return;}
+ $('nowState').textContent=c.current?'Now':'Next';$('nowWhen').textContent=schoolNowText(c,times,now)+' · Week '+s.w;$('nowLesson').textContent=s.subject+' · '+(s.path==='ALL'?'All groups':s.path);$('nowCode').textContent=lessonCode(s.w,s.path==='ALL'?sharedPath:s.path,s.subject,s.lesson);$('nowExtras').href=extrasLink(s,s.path==='ALL'?sharedPath:s.path);$('sharedPath').hidden=s.path!=='ALL';$('nowHint').textContent=(timesMigrated?'Period times set to your school day. ':'')+(c.current?'Ready for this lesson.':'Ready for the next lesson.');$('nextLesson').textContent=c.next?'Next: '+shortSlot(c.next):'No later lesson in this timetable.';
+}
+function fillTimeInputs(){for(let i=0;i<6;i++){$('time-'+i).value=times.starts[i];$('end-'+i).value=times.ends[i];}}
+for(let i=0;i<6;i++){const group=document.createElement('div'),heading=document.createElement('strong');heading.textContent='Period '+(i+1);group.append(heading);for(const [name,id,value] of [['Start','time-',times.starts[i]],['End','end-',times.ends[i]]]){const label=document.createElement('label');label.textContent=name;const input=document.createElement('input');input.type='time';input.id=id+i;input.required=true;input.value=value;label.append(input);group.append(label);}$('timesInputs').append(group);}
+$('timesForm').onsubmit=e=>{e.preventDefault();const next={...times,v:2,starts:Array.from({length:6},(_,i)=>$('time-'+i).value),ends:Array.from({length:6},(_,i)=>$('end-'+i).value),confirmed:true};if(!validTimes(next)){$('timeStatus').textContent='Use a start and end for each period. Periods must not overlap.';return;}times=next;timesMigrated=false;const ok=write(TIMES,times);$('timeStatus').textContent=ok?'✓ Times saved on this device.':'Times used for this visit. Could not save on this device.';renderNow();};
+$('resetSchoolTimes').onclick=()=>{times=schoolTimes();timesMigrated=true;write(TIMES,times);fillTimeInputs();$('timeStatus').textContent='Period times set to your school day';renderNow();};
+
 $('nowPath').onchange=()=>{sharedPath=$('nowPath').value;write('mbm_tools_path_v1',sharedPath);renderNow();};
 const originals=[...document.querySelectorAll('.tool-group a.tile')], tools=new Map();
 originals.forEach((a,i)=>{const href=a.getAttribute('href'),id=tools.has(href)?href+'::'+i:href;a.dataset.toolId=id;const wrap=document.createElement('div');wrap.className='tool';a.parentNode.insertBefore(wrap,a);wrap.append(a);const title=a.querySelector('b').textContent;tools.set(id,{id,a,wrap,title,search:(a.textContent+' '+a.closest('.tool-group').querySelector('h2').textContent).toLocaleLowerCase('en-GB')});});
@@ -152,7 +192,7 @@ document.addEventListener('pointermove',e=>{if(heldLink&&Math.hypot(e.clientX-he
 document.addEventListener('contextmenu',e=>{if(e.target.closest('a[data-tool-id]')&&(heldLink||suppress&&Date.now()<suppress.until))e.preventDefault();});
 document.addEventListener('click',e=>{if(suppress&&Date.now()<suppress.until){e.preventDefault();suppress=null;return;}suppress=null;const a=e.target.closest('a[data-tool-id]');if(!a)return;const id=a.dataset.toolId;if(tools.has(id)){recent=[id,...recent.filter(v=>v!==id)].slice(0,3);write(RECENT,recent);refreshRows();}});
 window.addEventListener('pageshow',()=>{const saved=read(RECENT,[]);if(Array.isArray(saved))recent=[...new Set(saved.filter(id=>tools.has(id)))].slice(0,3);refreshRows();renderNow();});
-window.addEventListener('storage',e=>{if(e.key===TIMES){const v=read(TIMES,{});if(validTimes(v)){times=v;for(let i=0;i<6;i++)$('time-'+i).value=times.starts[i];renderNow();}}});
+window.addEventListener('storage',e=>{if(e.key===TIMES){const v=read(TIMES,{});if(validTimes(v)){times=v;fillTimeInputs();renderNow();}}});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)renderNow();});
 refreshRows();renderNow();setInterval(renderNow,30000);
 const icon='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="38" fill="#153e64"/><g fill="#fff"><rect x="40" y="40" width="48" height="48" rx="10"/><rect x="104" y="40" width="48" height="48" rx="10"/><rect x="40" y="104" width="48" height="48" rx="10"/><rect x="104" y="104" width="48" height="48" rx="10"/></g></svg>');
