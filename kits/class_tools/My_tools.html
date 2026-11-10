@@ -43,7 +43,7 @@ input::placeholder,textarea::placeholder{color:var(--ink);opacity:1}.tile{-webki
 <section class="tool-group"><h2>This week</h2><div class="tiles"><a class="tile" href="Catch_up_Tracker.html"><b>Catch-up tracker</b><span>Who missed what, and the right catch-up sheet.</span></a><a class="tile" href="Quick_capture.html#absence-panel"><b>Absent catch-up</b><span>Preview missed lessons and save a catch-up request.</span></a><a class="tile" href="Missed_last_week.html"><b>Missed last week</b><span>Catch-up sheets for the lessons that did not run, and when to use them.</span></a></div></section>
 <section class="tool-group"><h2>Private</h2><div class="tiles"><a class="tile" href="Class_names.html"><b>Class names</b><span>Your private names list for the laptop.</span></a><a class="tile" href="https://drive.google.com/drive/search?q=MBM%20private%20tracker" target="_blank" rel="noopener"><b>Private folder</b><span>Tracker, targets text, practical record. Never share.</span></a></div></section>
 <section class="tool-group"><h2>Checks</h2><div class="tiles"><a class="tile" href="https://drive.google.com/file/d/1kTMwsY6UbhZ9VVeHnc0igVMLYgqKI4Iw/view" target="_blank" rel="noopener"><b>STATUS note</b><span>Is the home laptop on? What ran?</span></a><a class="tile" href="https://drive.google.com/drive/folders/1pgldy4cT0lPRb_SAU_bniaXwfudyamg5" target="_blank" rel="noopener"><b>Stale files</b><span>Open STALE.txt in _AUTOMATION: all clear, or things to tidy.</span></a></div></section>
-<section class="tool-group"><h2>Drive</h2><div class="tiles"><a class="tile" href="https://drive.google.com/drive/folders/1fJ6_MWEbk_d-8jhmquDG5IGoUU1YjIRd" target="_blank" rel="noopener"><b>_INBOX</b><span>Drop Slides, plans, exports here.</span></a><a class="tile" href="https://drive.google.com/drive/folders/1fFDSTdnqlVkJD6EupgrjTq6YBkuIRMro" target="_blank" rel="noopener"><b>_OUTBOX</b><span>copies come back here.</span></a><a class="tile" href="https://drive.google.com/drive/folders/1pgldy4cT0lPRb_SAU_bniaXwfudyamg5" target="_blank" rel="noopener"><b>_AUTOMATION</b><span>STATUS, Sunday checks, what changed, requests.</span></a><a class="tile" href="https://drive.google.com/drive/folders/1qdF0cYMipiMnMon_63NYTalz-WhlDaVE" target="_blank" rel="noopener"><b>All lessons</b><span>Your lessons folder.</span></a></div></section>
+<section class="tool-group"><h2>Drive</h2><div class="tiles"><a class="tile" href="https://drive.google.com/drive/folders/1fJ6_MWEbk_d-8jhmquDG5IGoUU1YjIRd" target="_blank" rel="noopener"><b>_INBOX</b><span>Drop Slides, plans, exports here.</span></a><a class="tile" href="https://drive.google.com/drive/folders/1fFDSTdnqlVkJD6EupgrjTq6YBkuIRMro" target="_blank" rel="noopener"><b>_OUTBOX</b><span>Copies come back here.</span></a><a class="tile" href="https://drive.google.com/drive/folders/1pgldy4cT0lPRb_SAU_bniaXwfudyamg5" target="_blank" rel="noopener"><b>_AUTOMATION</b><span>STATUS, Sunday checks, what changed, requests.</span></a><a class="tile" href="https://drive.google.com/drive/folders/1qdF0cYMipiMnMon_63NYTalz-WhlDaVE" target="_blank" rel="noopener"><b>All lessons</b><span>Your lessons folder.</span></a></div></section>
 <p class="note">How it works: a tool saves a small file, you put it in the right Drive folder, and the home laptop does the rest within 15 minutes. Results appear in Drive.</p>
 <section class="tool-group"><h2>New tools</h2><p class="hint">Home sheets, report drafts and the look ahead are made on your laptop and wait in your Drive outbox.</p><div class="tiles"><a class="tile" href="Retrieval_builder.html"><b>Retrieval builder</b><span>Make quick questions to help pupils remember.</span><span class="badge">New</span></a><a class="tile" href="Coverage_map.html"><b>Coverage map</b><span>See what has been taught.</span><span class="badge">New</span></a></div></section>
 </main>
@@ -101,7 +101,7 @@ function lessonCode(w,path,subj,n,part=1){
     W5->W05, W6->W06, W7->W07. File names alone replace the space with _.
  */
  const week='A2_W'+pad(w);
- if(subj==='Community Projects'){const cw=+w===4?(+part===2?4:3):(+w<4?+w-1:+w);return 'COMMUNITY_A2_W'+pad(cw);}
+ if(subj==='Community Projects'){const cw=+w===4?(+part===2?4:3):(+w<4?Math.max(1,+w-1):+w);return 'COMMUNITY_A2_W'+pad(cw);}
  if(subj==='Science')return path==='GROW'?'GROW_SCI_'+week+'_P'+n:'SCI_'+path+'_'+week+'_L'+n;
  if(subj==='Creative Arts')return 'ART_'+path+'_'+week+'_P'+n;
  if(subj==='RE')return path+'_RE_'+week;
@@ -136,7 +136,7 @@ function validSchoolTimes(value){
 }
 function schoolWeek(date){return 1+Math.round((Date.UTC(date.getFullYear(),date.getMonth(),date.getDate()-(date.getDay()+6)%7)-Date.UTC(2026,10,2))/604800000);}
 function schoolSlots(date,times){
- const w=schoolWeek(date),day=['Monday','Tuesday','Wednesday','Thursday','Friday'][date.getDay()-1];if(w<2||w>7||!day)return [];
+ const w=schoolWeek(date),day=['Monday','Tuesday','Wednesday','Thursday','Friday'][date.getDay()-1];if(w<1||w>7||!day||(w===1&&day==='Monday'))return [];
  const clock=text=>{const [h,m]=text.split(':').map(Number);return new Date(date.getFullYear(),date.getMonth(),date.getDate(),h,m);};
  return TT[day].map(row=>({w,day,p:row[0],path:row[1],subject:row[2],lesson:LN[day+'|'+row[0]],start:clock(times.starts[row[0]-1]),end:clock(times.ends[row[0]-1])}));
 }
@@ -148,7 +148,7 @@ function schoolContext(now,times){
 function schoolSlotText(slot,times){return slot.day+' · Period '+slot.p+', '+times.starts[slot.p-1]+' to '+times.ends[slot.p-1]+', '+(slot.path==='ALL'?'All groups':slot.path)+' '+slot.subject;}
 function schoolNowText(context,times,now){
  if(!context.slot)return 'No lesson in the saved timetable';
- const minute=now.getHours()*60+now.getMinutes(),checkIn=now.getDay()>0&&now.getDay()<6&&minute>=540&&minute<570;
+ const minute=now.getHours()*60+now.getMinutes(),checkIn=now.getDay()>0&&now.getDay()<6&&minute>=540&&minute<570&&schoolSlots(now,times).length>0;
  return (checkIn?'Check-in and reading, then ':context.current?'Now: ':'Next: ')+schoolSlotText(context.slot,times);
 }
 
@@ -176,7 +176,7 @@ $('resetSchoolTimes').onclick=()=>{times=schoolTimes();timesMigrated=true;write(
 
 $('nowPath').onchange=()=>{sharedPath=$('nowPath').value;write('mbm_tools_path_v1',sharedPath);renderNow();};
 const originals=[...document.querySelectorAll('.tool-group a.tile')], tools=new Map();
-originals.forEach((a,i)=>{const href=a.getAttribute('href'),id=tools.has(href)?href+'::'+i:href;a.dataset.toolId=id;const wrap=document.createElement('div');wrap.className='tool';a.parentNode.insertBefore(wrap,a);wrap.append(a);const title=a.querySelector('b').textContent;tools.set(id,{id,a,wrap,title,search:(a.textContent+' '+a.closest('.tool-group').querySelector('h2').textContent).toLocaleLowerCase('en-GB')});});
+originals.forEach((a,i)=>{const href=a.getAttribute('href'),id=tools.has(href)?href+'::'+i:href;a.dataset.toolId=id;const wrap=document.createElement('div');wrap.className='tool';a.parentNode.insertBefore(wrap,a);wrap.append(a);const title=a.querySelector('b').textContent;tools.set(id,{id,a,wrap,title,search:([...a.children].map(node=>node.textContent).join(' ')+' '+a.closest('.tool-group').querySelector('h2').textContent).toLocaleLowerCase('en-GB')});});
 let pins=read(PINS,[]),recent=read(RECENT,[]);pins=Array.isArray(pins)?[...new Set(pins.filter(id=>typeof id==='string'&&tools.has(id)))]:[];recent=Array.isArray(recent)?[...new Set(recent.filter(id=>typeof id==='string'&&tools.has(id)))].slice(0,3):[];
 function pinButton(id){const b=document.createElement('button');b.className='pin';b.type='button';b.dataset.pinId=id;b.onclick=()=>togglePin(id);return b;}
 originals.forEach(a=>a.parentNode.append(pinButton(a.dataset.toolId)));

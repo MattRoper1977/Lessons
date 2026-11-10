@@ -128,7 +128,7 @@ $('loadCopy').onchange=()=>fileText($('loadCopy'),text=>{let v;try{v=JSON.parse(
 const ta=$('names'),rem=$('remember');
 function lines(){return ta.value.split(/\r?\n/).map(s=>s.trim()).filter(s=>s&&s.charAt(0)!=='#');}
 function say(t){$('msg').textContent=t;}
-function update(){const n=lines(),bad=n.filter(s=>!/^[A-Za-zÀ-ɏ' .-]{2,60}$/.test(s));$('count').textContent=n.length+' name'+(n.length===1?'':'s')+(bad.length?' · '+bad.length+' line(s) look unusual (numbers or symbols)':'');if(rem.checked)put(KEYS.names,ta.value);}
+function update(){const n=lines(),bad=n.filter(s=>!/^[\p{L}\p{M}'’ .\-‐‑]{2,100}$/u.test(s));$('count').textContent=n.length+' name'+(n.length===1?'':'s')+(bad.length?' · '+bad.length+' line(s) look unusual (numbers or symbols)':'');if(rem.checked)put(KEYS.names,ta.value);}
 const saved=read(KEYS.names,null,false);if(saved!==null){ta.value=saved;rem.checked=true;}
 ta.oninput=update;rem.onchange=()=>{if(rem.checked){update();say('Remembered on this device only.');}else{try{localStorage.removeItem(KEYS.names);say('Forgotten on this device.');}catch(e){say('This device could not forget the list.');}}};
 $('save').onclick=()=>{const n=lines();if(!n.length){say('There are no names to save yet.');return;}download('names.txt',NAMES_HEADER+n.join('\r\n')+'\r\n');say('Saved names.txt ('+n.length+' names). Put it in your private Names inbox.');};
