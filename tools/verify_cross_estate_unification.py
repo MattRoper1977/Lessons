@@ -3705,7 +3705,8 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # Re-cut 2026-11-09 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 332c7c19, the merge of Site #627 (the education Pages deploy step waits 30 minutes instead of the default 10, after three green builds timed out at the upload) on top of Site #625. The digest is cut from the caller with its two 33b5bf93 lines (uses@ and builder_ref) replaced by 332c7c19 and nothing else changed.
 # Re-cut 2026-11-10 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 511cdc84, the merge of Site #628 (admission of the staff pages from Lessons #839: the grouped tools page, the tracker buttons, quick capture and lesson extras).
 # Re-cut 2026-11-10 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 5c7fa466, the merge of Site #629 (admission of the round-two staff pages from Lessons #841: tracker, tools page, class names and missed-last-week take new built digests; retrieval builder and coverage map arrive).
-    "lessons": "c918a7cb6f18d543c135530c2719c8f88d33f4712b5c8781f2b45559eb50aff2",
+# Re-cut 2026-11-10 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 9338868c, the merge of Site #630 (admission of quick capture v2 and the class names note carried by this same change).
+    "lessons": "d4a899acea3f5bacd968cf6795d2b309e15e20c5ff0f6742263ef10626bcff54",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.
