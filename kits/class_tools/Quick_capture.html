@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Quick capture</title>
+<style>
+:root{--navy:#0f2a4d;--bg:#f7f7f4;--ink:#14171a;--muted:#3d4650;--line:#c9ced3;--build:#2f5d7c;--grow:#2a6355;--launch:#5f4585;--focus:#0b57d0}
+*{box-sizing:border-box} [hidden]{display:none!important} body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.45 "Segoe UI",system-ui,sans-serif} button,input,select,textarea{font:inherit;color:inherit} button,a,select,input,textarea{touch-action:manipulation} button,.button,select,input{min-height:48px} button,.button{border:2px solid var(--line);border-radius:10px;padding:9px 12px;background:white;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;color:var(--navy)} button:disabled{opacity:.5;cursor:default} button:hover:not(:disabled),a.button:hover{border-color:var(--navy)} .primary,button[aria-pressed=true],.tabs button[aria-selected=true]{background:var(--navy);border-color:var(--navy);color:white} :focus-visible{outline:3px solid var(--focus);outline-offset:3px} header{background:var(--navy);color:white;padding:14px 16px} .head{max-width:1100px;margin:auto;display:flex;flex-wrap:wrap;align-items:center;gap:12px} h1{font-size:26px;margin:0 auto 0 0} header a{color:white;min-height:48px;display:inline-flex;align-items:center} header button{font-size:16px} main,footer{max-width:1100px;margin:auto;padding:16px} h2{font-size:23px;margin:0 0 12px} h3{font-size:19px;margin:0 0 8px} p{margin:6px 0 12px} .small,.hint{font-size:16px;color:var(--muted)} .panel,.pupil-row{padding:16px;border:2px solid var(--line);border-radius:12px;background:white;margin-bottom:14px} .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap} .row>*{min-width:0} .spread{justify-content:space-between} label.field{display:block;flex:1;min-width:100px} label.field>span{display:block;font-size:15px;font-weight:700;margin-bottom:4px} select,input,textarea{width:100%;border:2px solid var(--line);border-radius:8px;padding:9px;background:white} input[type=checkbox]{width:24px;height:24px;min-height:24px} textarea{min-height:160px;resize:vertical} input[type=file]{min-height:48px} .tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:16px} .tabs button{padding:10px 4px} .lesson{border-left:8px solid var(--launch)} .lesson.BUILD{border-left-color:var(--build)} .lesson.GROW{border-left-color:var(--grow)} .lesson.LAUNCH{border-left-color:var(--launch)} .tag{font-size:15px;font-weight:700;border:1px solid currentColor;border-radius:6px;padding:2px 7px} code{font:700 17px/1.5 ui-monospace,Consolas,monospace;overflow-wrap:anywhere} #lessonDate{margin:6px 0;color:var(--muted);font-size:16px} .period-nav{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px} .states{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0} .states button{min-height:56px;line-height:1.2;font-size:17px;padding:8px 4px} .states [data-state=got][aria-pressed=true]{background:#1d5a2e;border-color:#1d5a2e} .states [data-state=nearly][aria-pressed=true]{background:#1e466e;border-color:#1e466e} .states [data-state=again][aria-pressed=true]{background:#7c3a0a;border-color:#7c3a0a} .states [data-state=absent][aria-pressed=true]{background:#8a1c1c;border-color:#8a1c1c} .pupil-row h3{margin:0} .pupils{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0} .pupils button{flex:1 1 125px;text-align:left;justify-content:flex-start;overflow-wrap:anywhere} .callout{background:#eef3fa;border-left:4px solid var(--navy);padding:12px;border-radius:8px;margin:12px 0;font-size:16px} .warning{background:#fff1e0;color:#663006;border-color:#a0510d} #storageWarning{margin:0 0 12px} #status{white-space:pre-wrap;overflow-wrap:anywhere;font-weight:600;min-height:28px} .counts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px} .count{padding:8px 10px;border:1px solid var(--line);border-radius:8px} .count b{display:block;overflow-wrap:anywhere} .count span{font-size:15px} .tags{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0} .tags button{min-width:58px} .pending{border-top:1px solid var(--line);padding:12px 0} .pending img,#iedpPreview{display:block;max-width:100%;max-height:220px;margin:8px 0;border-radius:8px} .safe{white-space:pre-wrap;overflow-wrap:anywhere;min-height:80px;border:2px solid var(--line);padding:12px;border-radius:8px} mark{background:#e6f3e8;color:#164625;border-radius:3px;padding:0 2px} .check-word{display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line);padding:6px 0} .check-word span{overflow-wrap:anywhere} .target{display:flex;align-items:flex-start;gap:12px;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line)} .target p{white-space:pre-wrap;overflow-wrap:anywhere;min-width:0} .target button{flex-shrink:0} .key-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px} fieldset{border:1px solid var(--line);border-radius:10px;min-width:0;padding:12px} legend{font-weight:700} fieldset label{display:block;margin:8px 0} fieldset label span{font-size:15px} dialog{border:2px solid var(--navy);border-radius:14px;width:min(840px,calc(100% - 24px));max-height:92vh;overflow-y:auto;padding:18px;color:var(--ink)} dialog::backdrop{background:#0f2a4dbb} .times{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px} .times label{font-size:15px} .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0} details summary{min-height:48px;cursor:pointer;display:flex;align-items:center;font-weight:700} footer{font-size:15px;color:var(--muted);padding-top:0} .error{color:#8a1c1c;font-weight:700} noscript{display:block;padding:16px} @media(max-width:500px){main{padding:12px}.panel,.pupil-row{padding:12px}.states{grid-template-columns:1fr 1fr}.key-grid{grid-template-columns:1fr}.times{grid-template-columns:1fr 1fr}.head{gap:8px}.head h1{width:100%} .tabs{gap:4px}.tabs button{font-size:17px} .row.actions>*{flex:1 1 135px} } @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+/* Keep the selected lesson compact enough to reach the first tally on a phone. */
+#status:empty{display:none}.head h1{width:auto}.head #openKey{min-height:48px;background:transparent;border-color:transparent;color:white;text-decoration:underline;padding:8px 4px}.lesson-fields{display:grid;grid-template-columns:1fr 1.25fr .9fr;gap:8px;align-items:end}.lesson-fields label.field{min-width:0}.period-nav button{font-size:16px;padding:8px 4px}.lesson-actions>*{flex:1 1 100px!important}.lesson-fields select{padding:8px 4px}.lesson-fields label.field>span{font-size:14px}
+/* CORR1: five closed-note tally rows fit the 360 x 740 staff view. */
+header{padding:2px 10px}h1{font-size:23px}main{padding:8px}.tabs{margin-bottom:8px}.panel.lesson{padding:8px;margin-bottom:8px}.lesson-fields{grid-template-columns:1.25fr 1.4fr .75fr;gap:5px}.lesson-fields label.field>span{font-size:12px}.lesson-fields select{font-size:16px;padding:6px 3px}#lessonDate{font-size:12px;margin:3px 0}.lesson>.row:not(.lesson-fields){margin:0}.lesson strong{font-size:17px}.lesson code{font-size:15px}.lesson .tag{font-size:12px}.lesson-footer{display:grid;grid-template-columns:1fr 1fr .8fr 1.15fr;gap:5px;margin-top:5px}.lesson-footer .period-nav,.lesson-footer .lesson-actions{display:contents}.lesson-footer button,.lesson-footer a{font-size:13px;padding:4px 2px}#tallyHeading{margin-bottom:3px!important}#tallyHeading h2{font-size:20px}#allGot{font-size:15px;padding:4px 10px}#tallyHint{font-size:12px;margin:0 0 5px}.pupil-row{display:grid;grid-template-columns:64px minmax(0,1fr);gap:4px;align-items:center;padding:3px;border-radius:8px;margin:0 0 4px}.pupil-row .states{grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;margin:0}.pupil-row .states button{min-height:48px;font-size:12px;padding:2px 0;gap:0;white-space:nowrap;border-radius:7px}.pupil-row .states button::before{content:'✓';visibility:hidden;font-weight:900;display:inline-block;width:10px;font-size:12px}.pupil-row .states button[aria-pressed=true]::before{visibility:visible}.note-toggle{display:flex;flex-direction:column;min-width:0;gap:1px;padding:2px;width:100%;min-height:48px;font-size:12px;line-height:1.2}.note-toggle strong{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px}.note-toggle span{font-size:11px;text-decoration:underline}.tally-note{grid-column:1/-1}#tallySendPanel{padding:6px 8px;margin:5px 0 10px}#tallySendPanel .hint{margin:5px 0 0;font-size:13px}#sendTally{width:100%}#status{font-size:13px;min-height:0;margin:0 0 4px}#sharedOptions{margin-top:4px;gap:5px}#sharedOptions label{min-width:0}#sharedOptions label span{font-size:12px}#sharedOptions select{font-size:15px;padding:5px}.review-confirm{display:flex;gap:10px;align-items:center;min-height:48px;padding:8px;border:2px solid var(--line);border-radius:8px;margin-bottom:10px}.review-confirm input{flex:0 0 24px}.review-confirm:has(input:checked){border-color:#1d5a2e;background:#e6f3e8}#evidenceShareNotice{white-space:pre-wrap;font-weight:600}
+.pupil-row{padding:1px;margin-bottom:2px}.tabs{margin-bottom:4px}.panel.lesson{padding:6px}#sharedOptions label>span{display:none}#sharedOptions{display:grid;grid-template-columns:80px minmax(0,1fr);gap:5px}#sharedOptions select{font-size:14px}
+body[data-capture-tab=tally] #status:not(:empty){position:fixed;top:4px;left:8px;right:8px;z-index:20;background:#fff;border:2px solid var(--navy);border-radius:8px;padding:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none;box-shadow:0 2px 8px #0003}
+</style>
+</head>
+<body data-capture-tab="tally">
+<header><div class="head"><h1>Quick capture</h1><button id="openKey" type="button">Pupil key</button></div></header>
+<noscript>This staff tool needs JavaScript enabled. It runs entirely on this device.</noscript>
+<main>
+<div id="storageWarning" class="callout warning" role="alert" hidden></div>
+<p id="status" role="status" aria-live="polite"></p>
+<nav class="tabs" role="tablist" aria-label="Capture tools"><button id="tab-tally" role="tab" aria-controls="tally" aria-selected="true" tabindex="0" data-tab="tally">Exit tally</button><button id="tab-evidence" role="tab" aria-controls="evidence" aria-selected="false" tabindex="-1" data-tab="evidence">Evidence</button><button id="tab-iedp" role="tab" aria-controls="iedp" aria-selected="false" tabindex="-1" data-tab="iedp">IEDP</button></nav>
+<section id="lessonPanel" class="panel lesson" aria-label="Selected lesson">
+<div class="row lesson-fields"><label class="field"><span>Autumn 2 week</span><select id="week" aria-label="Autumn 2 week"></select></label><label class="field"><span>Day</span><select id="day" aria-label="Day"></select></label><label class="field"><span>Period</span><select id="period" aria-label="Period"></select></label></div>
+<p id="lessonDate"></p><div class="row"><strong id="lessonName"></strong><span id="pathTag" class="tag"></span></div><code id="lessonCode"></code>
+<div id="sharedOptions" class="row" hidden><label id="sharedPath" class="field"><span>Pathway</span><select id="pathway" aria-label="Community Projects pathway"><option>BUILD</option><option>GROW</option><option>LAUNCH</option></select></label><label id="communityPartField" class="field" hidden><span>Two-part session</span><select id="communityPart" aria-label="Community Projects part"><option value="1">Part 1 · W03</option><option value="2">Part 2 · W04</option></select></label></div>
+<div class="lesson-footer"><div class="period-nav"><button id="prevPeriod" aria-label="Previous period">Previous</button><button id="nextPeriod" aria-label="Next period">Next</button></div>
+<div class="row actions lesson-actions"><button id="today" aria-label="Today / latest lesson">Today</button><a class="button" href="Catch_up_Tracker.html">Open tracker</a></div></div>
+</section>
+<section id="tally" role="tabpanel" aria-labelledby="tab-tally">
+<div id="tallyHeading" class="row spread"><h2 style="margin:0">Exit tally</h2><button id="allGot">All got it</button></div>
+<p id="tallyHint" class="hint">Tap again to clear · Tap Note to add a note · Saved here</p>
+<div id="tallyRows"></div><div id="tallySendPanel" class="panel"><button class="primary" id="sendTally">Send tally</button><p class="hint">Save in <b>_INBOX / Tally</b>. Numbered pupils; known names removed.</p></div>
+<section class="panel" aria-labelledby="weeklyTitle"><h2 id="weeklyTitle">This week</h2><p class="hint">All subjects in the selected week. Counts are Got it / Nearly / Another go.</p><div id="weekCounts" class="counts"></div></section>
+</section>
+<section id="evidence" role="tabpanel" aria-labelledby="tab-evidence" hidden>
+<h2>Evidence snap</h2><p class="hint">Choose a pupil. Tags and the note apply to the next photo.</p><div id="evidencePupils" class="pupils" aria-label="Evidence pupil"></div>
+<div class="panel"><div class="tags" id="evidenceTags" aria-label="Feedback loop tags"></div><label class="field"><span>One-line evidence note (optional)</span><input id="evidenceNote" type="text" maxlength="1500"></label><button class="primary" id="takePhoto" style="width:100%;margin-top:12px">Take photo</button><input id="evidenceInput" class="sr-only" tabindex="-1" aria-label="Take or choose evidence photo" type="file" accept="image/*" capture="environment"><p id="photoBusy" class="hint" role="status"></p></div>
+<div class="callout warning">Photos may show labels on books. Send photos and their text sidecars only to <b>MBM private tracker (do not share) / Evidence inbox</b>. Choose that private folder in the share sheet. Downloads contain a ZIP to extract into that folder.</div>
+<section class="panel"><h3>Ready to send</h3><p class="hint">Photos stay in memory until handed off or removed. Closing this page loses unsent photos.</p><div id="evidenceQueue"></div><p id="evidenceShareNotice" role="status"></p><div class="row actions"><button id="sendEvidence" class="primary" disabled>Send photos and sidecars</button><button id="splitEvidence" disabled>Send photos, then text</button></div></section>
+<section class="panel"><h3>Evidence for this lesson</h3><p class="hint">Counts show photos handed off from this device. Check Drive for successful upload.</p><div id="evidenceCounts" class="counts"></div></section>
+</section>
+<section id="iedp" role="tabpanel" aria-labelledby="tab-iedp" hidden>
+<h2>IEDP helper</h2><label class="field"><span>Pupil for IEDP and targets</span><select id="iedpPupil"></select></label>
+<section class="panel" style="margin-top:14px"><h3>1. Paste or type</h3><label for="iedpRaw" class="hint">Private text stays on this device. Known names come from the pupil key and the saved Class names list.</label><textarea id="iedpRaw" placeholder="Paste the IEDP text here…"></textarea><button id="removeNames" class="primary">Remove names</button><p class="hint" style="margin-top:10px">Known labels are replaced below. Green highlights show replacements. Check the whole result, including words at the start of a sentence.</p><div id="safeOutput" class="safe" aria-label="Text with names removed"></div><h3 style="margin-top:14px">Check these words</h3><p class="hint">Capitalised words within sentences that were not replaced. Tap to hide any that identify someone.</p><div id="checkWords"></div></section>
+<section class="panel"><h3>2. Use the safe text</h3><label class="review-confirm"><input id="safeReviewed" type="checkbox" disabled><span>I have checked no name is left</span></label><div class="row actions"><button id="copySafe" disabled>Copy safe text</button><button id="saveSafe" class="primary" disabled>Save safe file</button></div><p class="hint" style="margin-top:10px">Save the numbered text file in <b>_INBOX / IEDP</b>. Nothing is sent while you remove names or check words.</p></section>
+<section class="panel"><h3>Photo of the IEDP</h3><div class="callout warning">Send this photo only to <b>MBM private tracker (do not share) / IEDP photo inbox</b>. The home laptop reads the photo, removes the names and puts a safe text copy in <b>_INBOX / IEDP</b>; the photo itself never leaves the private folder. The laptop photo job must be installed separately.</div><button id="takeIedpPhoto">Photo of the IEDP</button><input id="iedpPhotoInput" class="sr-only" tabindex="-1" aria-label="Take or choose IEDP photo" type="file" accept="image/*" capture="environment"><img id="iedpPreview" alt="IEDP photo ready for private hand-off" hidden><p id="iedpPhotoStatus" class="hint" role="status"></p><div class="row actions"><button id="sendIedpPhoto" class="primary" disabled>Send IEDP photo privately</button><button id="discardIedpPhoto" disabled>Remove photo</button></div></section>
+<section class="panel"><h3>3. Targets</h3><label for="targets" class="hint">Paste suggested targets back here, one target per line. Saved by pupil number on this device.</label><textarea id="targets" placeholder="One suggested target per line…"></textarea><div id="targetCards"></div></section>
+</section>
+</main>
+<style>
+#absence-panel{font-family:system-ui,sans-serif;color:#0f2a4d;background:white;border:1px solid #b4c1cf;border-radius:14px;padding:16px;margin:16px 0;overflow-wrap:anywhere}
+#absence-panel summary{min-height:48px;display:flex;align-items:center;font-size:1.25rem;font-weight:750;cursor:pointer}
+#absence-panel .absence-pickers{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+#absence-panel label{display:block;font-weight:650;min-width:0}
+#absence-panel select,#absence-panel button{font:inherit;min-height:48px;border-radius:9px;border:1px solid #8397ae;padding:10px;width:100%;box-sizing:border-box}
+#absence-panel select{margin-top:6px;background:white;color:#0f2a4d}
+#absence-panel button{background:#0f2a4d;color:white;font-weight:700;cursor:pointer}
+#absence-panel button.secondary{background:white;color:#0f2a4d;margin:12px 0}
+#absence-panel button:disabled{opacity:.55;cursor:default}
+#absence-panel :focus-visible{outline:3px solid #d17a00;outline-offset:3px}
+#absence-panel ol{padding-left:24px}#absence-panel li{margin:12px 0}
+#absence-panel code{font-size:.9em;overflow-wrap:anywhere;white-space:normal}
+#absence-panel .absence-hint{font-size:.95rem;line-height:1.5}
+#absence-panel .absence-note{background:#edf3f9;padding:12px;border-radius:9px;line-height:1.5}
+#absence-panel [role=status]{min-height:24px;line-height:1.5}
+@media(max-width:380px){#absence-panel{padding:12px}#absence-panel .absence-pickers{gap:8px}}
+</style>
+<details id="absence-panel">
+  <summary>Absent</summary>
+  <p class="absence-hint">Choose a pupil number and week to preview their catch-up bundle. This preview reads the exit tally on this device.</p>
+  <div class="absence-pickers">
+    <label for="absence-pupil">Pupil<select id="absence-pupil"></select></label>
+    <label for="absence-week">Week<select id="absence-week"></select></label>
+  </div>
+  <p id="absence-count" role="status" aria-live="polite"></p>
+  <ol id="absence-lessons"></ol>
+  <p class="absence-note">Each missed lesson includes its knowledge organiser (07), task cards (05), and arrival and exit sheet (06). A matching catch-up sheet goes first when available. The laptop adds a cover sheet and one combined PDF in the private tracker folder.</p>
+  <button type="button" id="absence-refresh" class="secondary">Refresh preview</button>
+  <p class="absence-hint">Send the latest tally or tracker export first. Save the request in <strong>_INBOX / Requests</strong>. The laptop checks those saved records on its next 15-minute run. Tracker records can add lessons that are not shown in this preview.</p>
+  <button type="button" id="absence-save">Save catch-up request</button>
+  <p id="absence-status" role="status" aria-live="polite"></p>
+</details>
+<script>
+(() => {
+  'use strict';
+  const panel=document.getElementById('absence-panel');
+  const pupil=document.getElementById('absence-pupil'),week=document.getElementById('absence-week');
+  const count=document.getElementById('absence-count'),list=document.getElementById('absence-lessons');
+  const status=document.getElementById('absence-status'),save=document.getElementById('absence-save');
+  const days=['Monday','Tuesday','Wednesday','Thursday','Friday'];
+  let busy=false;
+  for(let n=1;n<=12;n++){const option=document.createElement('option');option.value=n;option.textContent='Pupil '+n;pupil.append(option);}
+  for(let n=2;n<=7;n++){const option=document.createElement('option');option.value=n;option.textContent='Week '+n;week.append(option);}
+  const now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  week.value=Math.max(2,Math.min(7,Math.floor((today-new Date(2026,10,2))/604800000)+1));
+  function preview(){
+    list.replaceChildren();
+    let tally;
+    try{const raw=localStorage.getItem('mbm_exit_tally_v1');tally=raw===null?{}:JSON.parse(raw);if(!tally||typeof tally!=='object'||Array.isArray(tally))throw Error();}
+    catch(error){count.textContent='The saved tally cannot be read. It has been kept unchanged. Check the tally before saving a request.';save.disabled=true;return null;}
+    const lessons=[];let invalid=0;
+    Object.entries(tally).forEach(([key,record])=>{
+      const bits=key.split('|');
+      if(bits.length!==4||bits[0]!==week.value||bits[3]!==pupil.value||!record||record.state!=='absent')return;
+      if(!days.includes(bits[1])||! /^[1-6]$/.test(bits[2])||typeof record.code!=='string'
+          ||record.code.length>80||! /^[A-Z][A-Z0-9_]*(?: L[1-6])?$/.test(record.code)||! /_A2_W\d{2}/.test(record.code)){invalid++;return;}
+      lessons.push({day:bits[1],period:Number(bits[2]),code:record.code});
+    });
+    lessons.sort((a,b)=>days.indexOf(a.day)-days.indexOf(b.day)||a.period-b.period||a.code.localeCompare(b.code));
+    const seen=new Set(),unique=lessons.filter(r=>{if(seen.has(r.code))return false;seen.add(r.code);return true;});
+    for(const lesson of unique){
+      const item=document.createElement('li'),label=document.createElement('strong'),code=document.createElement('code');
+      label.textContent=lesson.day+' · Period '+lesson.period;code.textContent=lesson.code;
+      item.append(label,document.createElement('br'),code);list.append(item);
+    }
+    count.textContent=unique.length+' missed lesson'+(unique.length===1?'':'s')+' in this device’s tally.'
+      +(unique.length?' The laptop checks the current lesson PDFs.':' The laptop can still check missed lessons in the saved tracker export.')
+      +(invalid?' Some tally entries need checking; refresh them in Exit tally.':'');
+    save.disabled=busy||invalid>0;
+    return invalid?null:unique;
+  }
+  pupil.addEventListener('change',preview);week.addEventListener('change',preview);
+  document.getElementById('absence-refresh').addEventListener('click',preview);
+  panel.addEventListener('toggle',()=>{if(panel.open)preview();});
+  window.addEventListener('focus',preview);
+  window.addEventListener('storage',event=>{if(event.key==='mbm_exit_tally_v1')preview();});
+  document.addEventListener('click',event=>{if(!panel.contains(event.target)&&panel.open)setTimeout(preview,0);});
+  save.addEventListener('click',async()=>{
+    if(busy||preview()===null)return;
+    const n=Number(pupil.value),w=Number(week.value);
+    if(!Number.isInteger(n)||n<1||n>12||!Number.isInteger(w)||w<2||w>7)return;
+    const text='absence-v1\npupil=Pupil '+n+'\nweek='+w+'\ncreated='+new Date().toISOString()+'\n';
+    const name='ABSENT_P'+n+'_W'+String(w).padStart(2,'0')+'.txt';
+    const file=new File([text],name,{type:'text/plain;charset=utf-8'});
+    busy=true;save.disabled=true;status.textContent='Preparing the numbered request…';
+    try{
+      if(navigator.share&&(!navigator.canShare||navigator.canShare({files:[file]}))){
+        try{await navigator.share({files:[file]});status.textContent='Request handed off. Check it is saved in _INBOX / Requests.';return;}
+        catch(error){if(error.name==='AbortError'){status.textContent='Sharing cancelled. The request has not been downloaded.';return;}}
+      }
+      const url=URL.createObjectURL(file),link=document.createElement('a');
+      link.href=url;link.download=name;document.body.append(link);link.click();link.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),1000);
+      status.textContent='Request downloaded. Save '+name+' in _INBOX / Requests for the laptop’s next run.';
+    }catch(error){status.textContent='The request could not be saved. Your tally is unchanged; try again.';}
+    finally{busy=false;preview();}
+  });
+  if(location.hash==='#absence-panel')panel.open=true;
+  preview();
+})();
+</script>
+
+<footer><p id="clockHint" class="hint"></p><a class="button" href="My_tools.html">My tools</a><p style="margin-top:12px">Staff tools · Offline after opening · No online storage or automatic uploads. File sharing opens your device’s share sheet; you choose the folder. Keep these pages and the tracker on the same origin for shared browser storage.</p></footer>
+<dialog id="keyDialog" aria-labelledby="keyTitle"><div class="row spread"><h2 id="keyTitle">Pupil key</h2><button id="closeKey">Close</button></div><p class="hint">Labels appear only on this device. Leave a box empty to show Pupil N. Groups stay fixed by number. Use a different label for every pupil.</p><form id="keyForm"><div id="keyGroups" class="key-grid"></div><div class="row actions" style="margin-top:14px"><button type="submit" class="primary">Save key on this device</button><button type="button" id="saveKeyFile">Save key file</button></div></form><p id="keyStatus" role="status" class="hint"></p><div class="callout warning"><b>pupil_key.txt contains the private labels.</b> Save it only in <b>MBM private tracker (do not share) / Names inbox</b>. This is the one private key file; do not put it in a shared inbox.</div><details><summary>Other names to remove</summary><p class="hint">The saved Class names list is read automatically. Choose an extra names.txt file for other words to hide. These extra words stay in this browser and become [name]. The supplied fixture contains placeholders only.</p><input id="namesFile" type="file" accept=".txt,text/plain" aria-label="Load local names.txt"><p id="namesStatus" class="hint"></p></details><details><summary>Period start times</summary><p class="hint">The reference timetable has no start times. Confirm these suggested times for “Today / latest lesson”. Times use this device’s local clock.</p><div class="times" id="periodTimes"></div><button id="saveTimes" style="margin-top:10px">Save period times</button></details></dialog>
+<script>
+(function(){
+'use strict';
+const GROUPS={BUILD:[4,7,9,12],GROW:[1,3,5,8,11],LAUNCH:[2,6,10]};
+const DAYS=['Monday','Tuesday','Wednesday','Thursday','Friday'];
+// Copied from Catch_up_Tracker.html. Lesson numbers count occurrences per pathway/subject in week order.
+var TT={
+ Monday:[[1,"LAUNCH","Vocational"],[2,"GROW","Science"],[3,"BUILD","Science"],[4,"LAUNCH","Science"],[5,"BUILD","Creative Arts"],[6,"GROW","Creative Arts"]],
+ Tuesday:[[1,"BUILD","Creative Arts"],[2,"LAUNCH","Humanities"],[3,"BUILD","Careers"],[4,"GROW","Science"],[5,"BUILD","RE"],[6,"LAUNCH","ICT"]],
+ Wednesday:[[1,"BUILD","RSHE"],[2,"LAUNCH","Science"],[3,"GROW","PSHE"],[4,"BUILD","Science"],[5,"GROW","Creative Arts"],[6,"LAUNCH","Vocational"]],
+ Thursday:[[1,"LAUNCH","DT"],[2,"GROW","RE"],[3,"BUILD","Humanities"],[4,"LAUNCH","RSE"],[5,"ALL","Community Projects"]],
+ Friday:[[1,"LAUNCH","Careers"],[2,"GROW","Humanities"],[3,"BUILD","Vocational"],[4,"LAUNCH","Science"]]
+};
+const PREFIX={Science:'SCI',Vocational:'VOC','Creative Arts':'ART',Humanities:'HUM',Careers:'CAREERS',RE:'RE',ICT:'ICT',RSHE:'RSHE',PSHE:'PSHE',DT:'DT',RSE:'RSE','Community Projects':'COMM'};
+const LN={};{const c={};DAYS.forEach(d=>TT[d].forEach(l=>{const k=l[1]+'|'+l[2];LN[d+'|'+l[0]]=c[k]=(c[k]||0)+1;}));}
+const KEYS={key:'mbm_pupil_key_v1',tally:'mbm_exit_tally_v1',tracker:'mbm_catchup_tracker_v1',counts:'mbm_evidence_counts_v1',targets:'mbm_iedp_targets_v1',names:'mbm_names_list_v1',classNames:'mbm_class_names_v1',times:'mbm_period_times_v1'};
+const $=id=>document.getElementById(id), blocked=new Set();
+function el(tag,attrs={},text){const node=document.createElement(tag);Object.entries(attrs).forEach(([k,v])=>node.setAttribute(k,v));if(text!==undefined)node.textContent=text;return node;}
+function warn(){ $('storageWarning').hidden=false;$('storageWarning').textContent='Some browser storage is unavailable or unreadable. Changes may not survive closing this page. Existing unreadable data has been kept. Use exports, and check the browser’s storage settings.'; }
+function read(name,fallback){try{const raw=localStorage.getItem(name);if(raw===null)return fallback;const v=JSON.parse(raw);if(!v||typeof v!=='object'||Array.isArray(v)!==Array.isArray(fallback))throw Error('Invalid storage');return v;}catch(e){blocked.add(name);warn();return fallback;}}
+function write(name,value){if(blocked.has(name)){warn();return false;}try{localStorage.setItem(name,JSON.stringify(value));return true;}catch(e){warn();return false;}}
+function status(text){$('status').textContent=text;if(/^(Tally handed off|All marked Got it)/.test(text))setTimeout(()=>{if($('status').textContent===text)$('status').textContent='';},5000);}
+let pupilKey=read(KEYS.key,{}),tallies=read(KEYS.tally,{}),counts=read(KEYS.counts,{}),targets=read(KEYS.targets,{}),names=read(KEYS.names,[]),times=read(KEYS.times,{});
+// The Class names page owns this key. Accept its plain text or JSON list; never write it.
+function readClassNames(){try{const raw=localStorage.getItem(KEYS.classNames);if(!raw)return [];let value;try{value=JSON.parse(raw);}catch(e){value=raw;}const lines=[];function collect(v){if(typeof v==='string')lines.push(...v.split(/[\r\n]+/));else if(Array.isArray(v))v.forEach(collect);else if(v&&typeof v==='object')Object.values(v).forEach(collect);}collect(value);return [...new Set(lines.map(s=>s.trim()).filter(s=>s&&!s.startsWith('#')).flatMap(s=>[s,...s.split(/\s+/)]))];}catch(e){warn();return [];}}
+let classNames=readClassNames();
+const DEFAULT_TIMES=['09:00','09:50','11:00','11:50','13:30','14:20'];
+if(times.starts&&(!Array.isArray(times.starts)||times.starts.length!==6||times.starts.some((t,i)=>typeof t!=='string'||!/^([01]\d|2[0-3]):[0-5]\d$/.test(t)||(i&&t<=times.starts[i-1])))){blocked.add(KEYS.times);times={};warn();}
+let evidencePupil=2,iedpPupil=1,queue=[],photoInFlight=false,sending=false,evidenceStage=null,iedpPhoto=null,lastPhotoSecond=0,safeReady=false,hiddenWords=[];
+function label(n){return String(pupilKey[n]||'Pupil '+n);}
+function group(n){return Object.keys(GROUPS).find(p=>GROUPS[p].includes(+n));}
+function pad(n){return String(n).padStart(2,'0');}
+function dateISO(d=new Date()){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
+function dateStamp(d=new Date()){return dateISO(d).replace(/-/g,'');}
+function timeStamp(d=new Date()){return pad(d.getHours())+pad(d.getMinutes())+pad(d.getSeconds());}
+function lessonDate(w,d){return new Date(2026,10,2+(+w-1)*7+DAYS.indexOf(d),12);}
+function lessonCode(w,path,subj,n,part=1){
+ /* Sticker table (school week w is two digits):
+    Science GROW: GROW_SCI_A2_Wnn_Pn; BUILD/LAUNCH: SCI_PATH_A2_Wnn_Ln.
+    Creative Arts: ART_PATH_A2_Wnn_Pn. RE: PATH_RE_A2_Wnn.
+    Humanities/Careers/Vocational/ICT/DT/RSHE/PSHE/RSE: PREFIX_PATH_A2_Wnn.
+    Exception: LAUNCH Vocational W07 uses a literal space, then L1 or L2.
+    Community, every pathway: school W2->W01, W3->W02, W4->W03/W04,
+    W5->W05, W6->W06, W7->W07. File names alone replace the space with _.
+ */
+ const week='A2_W'+pad(w);
+ if(subj==='Community Projects'){const cw=+w===4?(+part===2?4:3):(+w<4?+w-1:+w);return 'COMMUNITY_A2_W'+pad(cw);}
+ if(subj==='Science')return path==='GROW'?'GROW_SCI_'+week+'_P'+n:'SCI_'+path+'_'+week+'_L'+n;
+ if(subj==='Creative Arts')return 'ART_'+path+'_'+week+'_P'+n;
+ if(subj==='RE')return path+'_RE_'+week;
+ const base=PREFIX[subj]+'_'+path+'_'+week;
+ return subj==='Vocational'&&path==='LAUNCH'&&+w===7?base+' L'+n:base;
+}
+function fileCode(code){return code.replace(/ /g,'_');}
+function context(){const w=+$('week').value,d=$('day').value,p=+$('period').value,l=TT[d].find(x=>x[0]===p),path=l[1]==='ALL'?$('pathway').value:l[1],lesson=LN[d+'|'+p];return {w,d,p,path,subj:l[2],lesson,code:lessonCode(w,path,l[2],lesson,+$('communityPart').value),date:lessonDate(w,d)};}
+function tallyKey(c,n){return [c.w,c.d,c.p,n].join('|');}
+function escapeRE(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
+function redaction(text,extra=[]){
+ text=String(text);const dict=new Map();
+ Object.entries(pupilKey).forEach(([n,v])=>{if(/^(?:[1-9]|1[0-2])$/.test(n)&&String(v).trim())dict.set(String(v).trim().toLocaleLowerCase('en-GB'),'Pupil '+n);});
+ classNames.concat(names,extra).forEach(v=>{v=String(v).trim();if(v&&!dict.has(v.toLocaleLowerCase('en-GB')))dict.set(v.toLocaleLowerCase('en-GB'),'[name]');});
+ const terms=[...dict.keys()].sort((a,b)=>b.length-a.length),parts=[],ranges=[];if(!terms.length)return {text,parts:[{text,replaced:false}],ranges};
+ const re=new RegExp('(^|[^\\p{L}\\p{N}_])('+terms.map(escapeRE).join('|')+')(?:([\u0027\u2019]s))?(?=$|[^\\p{L}\\p{N}_])','giu');let last=0;
+ for(const m of text.matchAll(re)){const start=m.index+m[1].length,end=m.index+m[0].length,replacement=dict.get(m[2].toLocaleLowerCase('en-GB'))+(m[3]||'');parts.push({text:text.slice(last,start),replaced:false},{text:replacement,replaced:true});ranges.push([start,end]);last=end;}
+ parts.push({text:text.slice(last),replaced:false});return {text:parts.map(p=>p.text).join(''),parts,ranges};
+}
+function redact(text){return redaction(text).text;}
+function uncertainWords(raw,result){const found=new Set();for(const m of raw.matchAll(/(^|[^\p{L}\p{N}_])(\p{Lu}[\p{L}\p{M}'’\-]*)/gu)){const index=m.index+m[1].length;if(result.ranges.some(([a,b])=>index>=a&&index<b))continue;const before=raw.slice(0,index);if(!before.trim()||/[.!?]\s*["'“‘(]*$/.test(before)||/\n\s*$/.test(before))continue;found.add(m[2]);}return [...found];}
+function csvCell(s){s=String(s??'');if(/^[\s]*[=+@-]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"';}
+function tallyCSV(c){const rows=[['date','week','day','period','pathway','subject','code','pupil','state','note']];GROUPS[c.path].forEach(n=>{const r=tallies[tallyKey(c,n)];if(r&&['got','nearly','again','absent'].includes(r.state))rows.push([dateISO(c.date),c.w,c.d,c.p,c.path,c.subj,c.code,'Pupil '+n,r.state,redact(r.note||'')]);});return '\uFEFF'+rows.map(r=>r.map(csvCell).join(',')).join('\r\n')+'\r\n';}
+function same(a,b){return JSON.stringify(a)===JSON.stringify(b);}
+function syncTracker(c,n,record){
+ let s;try{const raw=localStorage.getItem(KEYS.tracker);if(!raw)return; s=JSON.parse(raw);if(!s||!s.pupils||!s.marks||typeof s.marks!=='object'||Array.isArray(s.marks))return;}catch(e){return;}
+ const ownership=record.tracker;
+ if(ownership&&(!record.state||record.state==='got')){
+  if(same(s.marks[ownership.key],ownership.written)){if(ownership.before===null)delete s.marks[ownership.key];else s.marks[ownership.key]=ownership.before;if(!write(KEYS.tracker,s))return;}
+  delete record.tracker;return;
+ }
+ const state={absent:'missed',again:'more',nearly:'partial'}[record.state];if(!state)return;
+ const pupilLabel=label(n),list=s.pupils[c.path];if(!Array.isArray(list)||!list.includes(pupilLabel))return;
+ const key=[c.w,c.d,c.p,pupilLabel].join('|'),existing=s.marks[key],owned=ownership&&ownership.key===key&&same(existing,ownership.written);
+ const before=owned?ownership.before:(existing===undefined?null:structuredClone(existing));
+ const mark={...(existing||{}),path:c.path,subj:c.subj,lesson:c.lesson,state,done:false,note:record.note||''};
+ s.marks[key]=mark;if(write(KEYS.tracker,s))record.tracker={key,before,written:structuredClone(mark)};
+}
+function setTally(n,state,note){const c=context(),k=tallyKey(c,n),r={...(tallies[k]||{}),code:c.code,path:c.path,subj:c.subj,note:note??tallies[k]?.note??'',ts:new Date().toISOString()};if(state!==undefined){if(state)r.state=state;else delete r.state;}tallies[k]=r;if(write(KEYS.tally,tallies)){syncTracker(c,n,r);write(KEYS.tally,tallies);}renderWeekCounts();}
+function renderTallies(){const c=context(),box=$('tallyRows');box.replaceChildren();GROUPS[c.path].forEach(n=>{const r=tallies[tallyKey(c,n)]||{},row=el('article',{class:'pupil-row','data-pupil':n}),toggle=el('button',{class:'note-toggle','aria-label':'Note for '+label(n),'aria-expanded':'false','aria-controls':'tally-note-'+n});toggle.append(el('strong',{title:label(n)},label(n)),el('span',{},r.note?'Note ·':'Note'));const states=el('div',{class:'states','aria-label':'Result for '+label(n)});[['got','Got it'],['nearly','Nearly'],['again','Again'],['absent','Absent']].forEach(([v,t])=>{const b=el('button',{'data-state':v,'aria-pressed':String(r.state===v),'aria-label':(v==='again'?'Another go':t)+' for '+label(n)},t);b.onclick=()=>{const selected=tallies[tallyKey(context(),n)]?.state===v?'':v;setTally(n,selected);states.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.state===selected)));};states.append(b);});const field=el('label',{class:'field tally-note',id:'tally-note-'+n});field.hidden=true;field.append(el('span',{},'One-line note (optional)'));const input=el('input',{type:'text',maxlength:'1500','aria-label':'Tally note for '+label(n)});input.value=r.note||'';input.oninput=()=>{setTally(n,undefined,input.value);toggle.querySelector('span').textContent=input.value?'Note ·':'Note';};field.append(input);toggle.onclick=()=>{field.hidden=!field.hidden;toggle.setAttribute('aria-expanded',String(!field.hidden));if(!field.hidden)input.focus();};row.append(toggle,states,field);box.append(row);});renderWeekCounts();}
+function renderWeekCounts(){const c=context(),box=$('weekCounts');box.replaceChildren();GROUPS[c.path].forEach(n=>{const sum={got:0,nearly:0,again:0};Object.entries(tallies).forEach(([k,r])=>{const bits=k.split('|');if(r&&+bits[0]===c.w&&+bits[3]===n&&Object.hasOwn(sum,r.state))sum[r.state]++;});const item=el('div',{class:'count'});item.append(el('b',{},label(n)),el('span',{},sum.got+' got · '+sum.nearly+' nearly · '+sum.again+' another go'));box.append(item);});}
+function selectPeriods(preferred){const box=$('period');box.replaceChildren();TT[$('day').value].forEach(l=>box.append(el('option',{value:l[0]},'P'+l[0])));box.value=String(preferred||TT[$('day').value][0][0]);if(!box.value)box.selectedIndex=box.options.length-1;}
+function allSlots(){const a=[];for(let w=2;w<=7;w++)DAYS.forEach(d=>TT[d].forEach(l=>a.push({w,d,p:l[0]})));return a;}
+function renderLesson(){const c=context();status('');$('lessonPanel').className='panel lesson '+c.path;$('sharedOptions').hidden=c.subj!=='Community Projects';$('communityPartField').hidden=c.subj!=='Community Projects'||c.w!==4;$('pathTag').textContent=c.path;$('lessonName').textContent=c.subj+(c.subj==='Community Projects'?'':' · Lesson '+c.lesson);$('lessonCode').textContent=c.code;$('lessonDate').textContent=c.date.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});const slots=allSlots(),i=slots.findIndex(x=>x.w===c.w&&x.d===c.d&&x.p===c.p);$('prevPeriod').disabled=i===0;$('nextPeriod').disabled=i===slots.length-1;if(!GROUPS[c.path].includes(evidencePupil))evidencePupil=GROUPS[c.path][0];renderTallies();renderEvidence();}
+function movePeriod(delta,c=context()){const slots=allSlots(),i=slots.findIndex(x=>x.w===c.w&&x.d===c.d&&x.p===c.p),next=slots[i+delta];if(!next)return false;$('week').value=next.w;$('day').value=next.d;selectPeriods(next.p);$('communityPart').value='1';renderLesson();return true;}
+function today(now=new Date()){
+ const day=new Date(now);if(day.getDay()===0)day.setDate(day.getDate()-2);if(day.getDay()===6)day.setDate(day.getDate()-1);
+ const monday=new Date(day.getFullYear(),day.getMonth(),day.getDate());monday.setDate(monday.getDate()-(monday.getDay()+6)%7);const week=1+Math.round((Date.UTC(monday.getFullYear(),monday.getMonth(),monday.getDate())-Date.UTC(2026,10,2))/(7*86400000));
+ $('week').value=String(Math.max(2,Math.min(7,week)));$('day').value=DAYS[day.getDay()-1];let p=1;const minutes=now.getHours()*60+now.getMinutes();
+ if(dateISO(day)!==dateISO(now))p=TT[$('day').value].at(-1)[0];else TT[$('day').value].forEach(l=>{const [h,m]=(times.starts||DEFAULT_TIMES)[l[0]-1].split(':').map(Number);if(h*60+m<=minutes)p=l[0];});
+ selectPeriods(p);$('clockHint').textContent=(week<2||week>7?'Today is outside Autumn 2 Weeks 2–7. The nearest available week is selected. ':'')+(!times.confirmed?'Confirm period start times in Pupil key.':'');renderLesson();
+}
+function showTab(name){document.body.dataset.captureTab=name;document.querySelectorAll('[role=tab]').forEach(b=>{const active=b.dataset.tab===name;b.setAttribute('aria-selected',String(active));b.tabIndex=active?0:-1;});['tally','evidence','iedp'].forEach(id=>$(id).hidden=id!==name);$('lessonPanel').hidden=name==='iedp';}
+function renderEvidence(){const c=context(),box=$('evidencePupils');box.replaceChildren();GROUPS[c.path].forEach(n=>{const b=el('button',{'aria-pressed':String(n===evidencePupil),'data-pupil':n},label(n));b.onclick=()=>{evidencePupil=n;renderEvidence();};box.append(b);});renderEvidenceCounts();}
+function renderEvidenceCounts(){const c=context(),box=$('evidenceCounts');box.replaceChildren();GROUPS[c.path].forEach(n=>{const sent=+counts[c.code+'|'+n]||0,pending=queue.filter(q=>q.code===c.code&&q.n===n).length,item=el('div',{class:'count'});item.append(el('b',{},label(n)),el('span',{},sent+' handed off · '+pending+' pending'+(!sent&&!pending?' · No evidence yet':'')));box.append(item);});}
+function renderQueue(){const box=$('evidenceQueue');box.replaceChildren();if(!queue.length)box.append(el('p',{class:'hint'},'No photos waiting.'));queue.forEach((q,i)=>{const row=el('div',{class:'pending'}),b=el('button',{'aria-label':'Remove pending photo '+(i+1)},'Remove photo');b.disabled=sending||!!evidenceStage;b.onclick=()=>{URL.revokeObjectURL(q.preview);queue.splice(i,1);renderQueue();};row.append(el('b',{},'Pupil '+q.n+' · '+q.code),el('img',{src:q.preview,alt:'Pending evidence photo '+(i+1)}),el('p',{class:'hint'},(q.tags.join(', ')||'No tags')+' · '+redact(q.note)),b);box.append(row);});$('sendEvidence').disabled=!queue.length||sending||photoInFlight;$('sendEvidence').textContent=evidenceStage?(evidenceStage.phase==='photos'?'Send photos first':'Send text files'):'Send photos and sidecars';$('splitEvidence').hidden=!!evidenceStage;$('splitEvidence').disabled=!queue.length||sending||photoInFlight;$('takePhoto').disabled=sending||!!evidenceStage||photoInFlight;renderEvidenceCounts();}
+function photoDate(){const ms=Math.max(Math.floor(Date.now()/1000)*1000,lastPhotoSecond+1000);lastPhotoSecond=ms;return new Date(ms);}
+async function jpeg(file){if(!file||!file.type.startsWith('image/'))throw Error('Choose an image file.');const url=URL.createObjectURL(file),img=new Image();try{await new Promise((ok,fail)=>{img.onload=ok;img.onerror=()=>fail(Error('This image could not be opened. Try a JPEG photo.'));img.src=url;});const scale=Math.min(1,1600/Math.max(img.naturalWidth,img.naturalHeight)),canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(img.naturalWidth*scale));canvas.height=Math.max(1,Math.round(img.naturalHeight*scale));const ctx=canvas.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0,canvas.width,canvas.height);return await new Promise((ok,fail)=>canvas.toBlob(b=>b?ok(b):fail(Error('This image could not be converted.')),'image/jpeg',.88));}finally{URL.revokeObjectURL(url);}}
+function evidenceFiles(q){const stem='EV_'+fileCode(q.code)+'_P'+q.n+'_'+dateStamp(q.at)+'_'+timeStamp(q.at);return [new File([q.blob],stem+'.jpg',{type:'image/jpeg'}),new File(['code\t'+q.code+'\npupil\tPupil '+q.n+'\ntags\t'+q.tags.join(',')+'\nnote\t'+redact(q.note).replace(/[\r\n\t]+/g,' ')+'\n'],stem+'.txt',{type:'text/plain'})];}
+// Small store-only ZIP writer: one ordinary offline download keeps each JPEG with its sidecar.
+const CRC_TABLE=Uint32Array.from({length:256},(_,n)=>{for(let j=0;j<8;j++)n=n&1?0xedb88320^(n>>>1):n>>>1;return n>>>0;});
+function crc32(bytes){let n=0xffffffff;for(const b of bytes)n=CRC_TABLE[(n^b)&255]^(n>>>8);return (n^0xffffffff)>>>0;}
+function zipHeader(length){const b=new Uint8Array(length);return {b,v:new DataView(b.buffer)};}
+async function zip(files,name){const chunks=[],central=[];let offset=0;for(const file of files){const data=new Uint8Array(await file.arrayBuffer()),filename=new TextEncoder().encode(file.name),crc=crc32(data),h=zipHeader(30),c=zipHeader(46);h.v.setUint32(0,0x04034b50,true);h.v.setUint16(4,20,true);h.v.setUint16(6,0x800,true);h.v.setUint32(14,crc,true);h.v.setUint32(18,data.length,true);h.v.setUint32(22,data.length,true);h.v.setUint16(26,filename.length,true);c.v.setUint32(0,0x02014b50,true);c.v.setUint16(4,20,true);c.v.setUint16(6,20,true);c.v.setUint16(8,0x800,true);c.v.setUint32(16,crc,true);c.v.setUint32(20,data.length,true);c.v.setUint32(24,data.length,true);c.v.setUint16(28,filename.length,true);c.v.setUint32(42,offset,true);chunks.push(h.b,filename,data);central.push(c.b,filename);offset+=h.b.length+filename.length+data.length;}const size=central.reduce((n,a)=>n+a.length,0),end=zipHeader(22);end.v.setUint32(0,0x06054b50,true);end.v.setUint16(8,files.length,true);end.v.setUint16(10,files.length,true);end.v.setUint32(12,size,true);end.v.setUint32(16,offset,true);return new File([...chunks,...central,end.b],name,{type:'application/zip'});}
+function download(file){const url=URL.createObjectURL(file),a=el('a',{href:url,download:file.name});document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);}
+async function handOff(files,folder,bundleName){
+ if(navigator.share){let supported=true;try{supported=!navigator.canShare||navigator.canShare({files});}catch(e){supported=false;}if(supported){try{await navigator.share({files});status('Handed off. Check the chosen folder: '+folder);return true;}catch(e){if(e.name==='AbortError'){status('Share cancelled. Nothing has been cleared; you can try again.');return false;}}}}
+ const file=files.length===1?files[0]:await zip(files,bundleName);download(file);status('Download prepared: '+file.name+'\nSave '+(files.length>1?'and extract it':'it')+' in '+folder+'. Check that the download completed.');return true;
+}
+function canShareFiles(files){try{return !!navigator.share&&(!navigator.canShare||navigator.canShare({files}));}catch(e){return false;}}
+function finishEvidence(batch){batch.forEach(q=>{counts[q.code+'|'+q.n]=(+counts[q.code+'|'+q.n]||0)+1;URL.revokeObjectURL(q.preview);});write(KEYS.counts,counts);queue=queue.filter(q=>!batch.includes(q));evidenceStage=null;$('evidenceShareNotice').textContent='Photos and text files handed off. Check the private Evidence inbox.';}
+async function sendEvidence(split=false){
+ if(!queue.length||sending||photoInFlight)return;sending=true;renderQueue();
+ const folder='MBM private tracker (do not share) / Evidence inbox',batch=evidenceStage?evidenceStage.batch:queue.slice(),files=batch.flatMap(evidenceFiles),photos=files.filter(f=>f.type==='image/jpeg'),texts=files.filter(f=>f.type==='text/plain'),at=new Date(),bundle='EVIDENCE_'+dateStamp(at)+'_'+timeStamp(at);
+ try{
+  if(split&&!evidenceStage)evidenceStage={batch,phase:'photos'};
+  if(!evidenceStage&&navigator.share&&canShareFiles(files)){
+   try{await navigator.share({files});finishEvidence(batch);status('Evidence handed off. Check the private Evidence inbox.');return;}
+   catch(e){if(e.name==='AbortError'){status('Share cancelled. Photos and text files are still waiting.');return;}
+    // share() consumes the tap. A fresh tap starts the separate photo share.
+    evidenceStage={batch,phase:'photos'};$('evidenceShareNotice').textContent='This share did not accept photos and text together. Tap Send photos first. Then send the text files to the same private Evidence inbox.';status('Mixed-file share failed. Photos and text are kept for separate sharing.');return;}
+  }
+  if(!evidenceStage&&navigator.share&&canShareFiles(photos))evidenceStage={batch,phase:'photos'};
+  if(evidenceStage){
+   const phase=evidenceStage.phase,ok=await handOff(phase==='photos'?photos:texts,folder,bundle+'_'+phase+'.zip');if(!ok)return;
+   if(phase==='photos'){evidenceStage.phase='texts';$('evidenceShareNotice').textContent='Photos handed off. Now tap Send text files and choose the same private Evidence inbox. The text files have the matching photo names.';status('Photos handed off · Next: send text files.');}
+   else{finishEvidence(batch);status('Photos and text files handed off. Check the private Evidence inbox.');}
+  }else if(await handOff(files,folder,bundle+'.zip'))finishEvidence(batch);
+ }catch(e){status('The hand-off failed. Unfinished files are still waiting on this page.');}
+ finally{sending=false;renderQueue();}
+}
+async function copyText(text){try{if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(text);status('Copied.');return;}}catch(e){}const t=el('textarea',{'aria-label':'Text ready to copy',readonly:'readonly'});t.value=text;document.body.append(t);t.select();let ok=false;try{ok=document.execCommand('copy');}catch(e){}if(ok){t.remove();status('Copied.');}else{t.style.position='fixed';t.style.inset='10%';t.style.width='80%';t.style.height='60%';t.focus();status('Select and copy the text in the temporary box, then tap outside it.');t.onblur=()=>t.remove();}}
+function safeApproved(){return safeReady&&$('safeReviewed').checked;}
+function updateSafeActions(){$('copySafe').disabled=$('saveSafe').disabled=!safeApproved();}
+function invalidateSafe(){safeReady=false;$('safeReviewed').checked=false;$('safeReviewed').disabled=true;updateSafeActions();$('safeOutput').replaceChildren();$('checkWords').replaceChildren();}
+function removeNames(){const raw=$('iedpRaw').value,result=redaction(raw,hiddenWords),out=$('safeOutput');out.replaceChildren();result.parts.forEach(p=>out.append(p.replaced?el('mark',{},p.text):document.createTextNode(p.text)));const box=$('checkWords');box.replaceChildren();const words=uncertainWords(raw,result);words.forEach(word=>{const r=el('div',{class:'check-word'}),b=el('button',{},'Hide this too');b.setAttribute('aria-label','Hide '+word+' too');b.onclick=()=>{hiddenWords.push(word);removeNames();};r.append(el('span',{},word),b);box.append(r);});if(!words.length)box.append(el('p',{class:'hint'},'No additional capitalised words found. Still check the whole text.'));safeReady=!!raw.trim();$('safeReviewed').checked=false;$('safeReviewed').disabled=!safeReady;updateSafeActions();}
+function safeText(){return redaction($('iedpRaw').value,hiddenWords).text;}
+function renderTargets(){const box=$('targetCards');box.replaceChildren();$('targets').value=String(targets[iedpPupil]||'');$('targets').value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean).forEach((target,i)=>{const row=el('div',{class:'target'}),b=el('button',{'aria-label':'Copy target '+(i+1)},'Copy');b.onclick=()=>copyText(redact(target));row.append(el('p',{},target),b);box.append(row);});}
+function refreshLabels(){renderLesson();const sel=$('iedpPupil');sel.replaceChildren();for(let n=1;n<=12;n++)sel.append(el('option',{value:n},'Pupil '+n+(pupilKey[n]?' · '+label(n):'')+' · '+group(n)));sel.value=iedpPupil;invalidateSafe();renderQueue();}
+function saveKey(){const next={},seen=new Set();for(let n=1;n<=12;n++){const value=$('key-'+n).value.trim();if(/[\r\n\t|]/.test(value)){$('keyStatus').textContent='Use a single label without tabs, line breaks or |.';return false;}if(value){const lower=value.toLocaleLowerCase('en-GB');if(seen.has(lower)){$('keyStatus').textContent='Each pupil needs a different label.';return false;}seen.add(lower);next[n]=value;}}pupilKey=next;const saved=write(KEYS.key,pupilKey);$('keyStatus').textContent=saved?'Key saved on this device.':'Key is in memory only. Browser storage did not save it.';refreshLabels();return true;}
+function keyFile(){let text='';for(let n=1;n<=12;n++)text+=n+'\t'+label(n)+'\r\n';return new File([text],'pupil_key.txt',{type:'text/plain'});}
+for(let w=2;w<=7;w++)$('week').append(el('option',{value:w},'Week '+w));DAYS.forEach(d=>$('day').append(el('option',{value:d},d)));
+Object.entries(GROUPS).forEach(([path,ns])=>{const set=el('fieldset');set.append(el('legend',{},path));ns.forEach(n=>{const l=el('label'),i=el('input',{id:'key-'+n,type:'text',maxlength:'100',autocomplete:'off'});i.value=String(pupilKey[n]||'');l.append(el('span',{},'Pupil '+n),i);set.append(l);});$('keyGroups').append(set);});
+DEFAULT_TIMES.forEach((t,i)=>{const l=el('label');l.append(document.createTextNode('Period '+(i+1)),el('input',{type:'time',id:'time-'+i,value:(times.starts||DEFAULT_TIMES)[i]}));$('periodTimes').append(l);});
+['VF','WS','I','NS+','E','R'].forEach(tag=>{const b=el('button',{'aria-pressed':'false','data-tag':tag},tag);b.onclick=()=>b.setAttribute('aria-pressed',String(b.getAttribute('aria-pressed')!=='true'));$('evidenceTags').append(b);});
+document.querySelectorAll('[role=tab]').forEach((b,i)=>{b.onclick=()=>showTab(b.dataset.tab);b.onkeydown=e=>{let j;if(e.key==='ArrowRight')j=(i+1)%3;else if(e.key==='ArrowLeft')j=(i+2)%3;else if(e.key==='Home')j=0;else if(e.key==='End')j=2;else return;e.preventDefault();const next=document.querySelectorAll('[role=tab]')[j];showTab(next.dataset.tab);next.focus();};});
+$('week').onchange=()=>{$('communityPart').value='1';renderLesson();};$('day').onchange=()=>{selectPeriods(+$('period').value);$('communityPart').value='1';renderLesson();};$('period').onchange=()=>{$('communityPart').value='1';renderLesson();};$('pathway').onchange=renderLesson;$('communityPart').onchange=renderLesson;$('prevPeriod').onclick=()=>movePeriod(-1);$('nextPeriod').onclick=()=>movePeriod(1);$('today').onclick=()=>today();
+$('allGot').onclick=()=>{GROUPS[context().path].forEach(n=>setTally(n,'got'));renderTallies();status('All marked Got it. Adjust any exceptions below.');};
+$('sendTally').onclick=async()=>{const c=context();if(!GROUPS[c.path].some(n=>tallies[tallyKey(c,n)]?.state)){status('Choose at least one result before sending.');return;}$('sendTally').disabled=true;try{const ok=await handOff([new File([tallyCSV(c)],'TALLY_'+dateStamp(c.date)+'_'+fileCode(c.code)+'.csv',{type:'text/csv'})],'_INBOX / Tally');if(ok){const moved=movePeriod(1,c),next=context();status('Tally handed off · '+(moved?'Next: '+next.d+' P'+next.p:'Last timetable period.'));}}catch(e){status('Could not prepare the tally. Your saved results are still on this device.');}finally{$('sendTally').disabled=false;}};
+$('openKey').onclick=()=>{$('keyDialog').showModal();$('namesStatus').textContent=names.length+' extra words loaded on this device.';};$('closeKey').onclick=()=>$('keyDialog').close();$('keyForm').onsubmit=e=>{e.preventDefault();saveKey();};$('saveKeyFile').onclick=async()=>{if(saveKey())await handOff([keyFile()],'MBM private tracker (do not share) / Names inbox');};
+$('namesFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const raw=await f.text();names=[...new Set(raw.split(/\r?\n/).filter(s=>!s.trim().startsWith('#')).flatMap(s=>s.trim().split(/\s+/)).filter(Boolean))];const saved=write(KEYS.names,names);$('namesStatus').textContent=names.length+' extra words loaded'+(saved?' on this device.':' in memory only.');invalidateSafe();}catch(err){$('namesStatus').textContent='The names file could not be read.';}e.target.value='';};
+$('saveTimes').onclick=()=>{const starts=DEFAULT_TIMES.map((_,i)=>$('time-'+i).value);if(starts.some(t=>!/^\d{2}:\d{2}$/.test(t))||starts.some((t,i)=>i&&t<=starts[i-1])){status('Use six period times in increasing order.');return;}times={starts,confirmed:true};const saved=write(KEYS.times,times);$('clockHint').textContent='Period times set. Tap Today / latest lesson to apply them.';$('keyStatus').textContent=saved?'Period times saved.':'Period times set for this visit only. Browser storage did not save them.';};
+$('takePhoto').onclick=()=>$('evidenceInput').click();
+$('evidenceInput').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f||photoInFlight)return;const c=context(),n=evidencePupil,tags=[...$('evidenceTags').querySelectorAll('[aria-pressed=true]')].map(x=>x.dataset.tag),note=$('evidenceNote').value;photoInFlight=true;$('takePhoto').disabled=true;$('photoBusy').textContent='Preparing JPEG on this device…';renderQueue();try{const blob=await jpeg(f);queue.push({blob,preview:URL.createObjectURL(blob),code:c.code,n,tags,note,at:photoDate()});$('photoBusy').textContent='Photo ready for private hand-off.';}catch(err){$('photoBusy').textContent=err.message;}finally{photoInFlight=false;$('takePhoto').disabled=false;renderQueue();}};
+$('sendEvidence').onclick=()=>sendEvidence();$('splitEvidence').onclick=()=>sendEvidence(true);
+$('iedpPupil').onchange=()=>{iedpPupil=+$('iedpPupil').value;$('iedpRaw').value='';hiddenWords=[];invalidateSafe();renderTargets();};$('iedpRaw').oninput=()=>{hiddenWords=[];invalidateSafe();};$('removeNames').onclick=removeNames;$('safeReviewed').onchange=updateSafeActions;$('copySafe').onclick=()=>{if(safeApproved())copyText(safeText());};$('saveSafe').onclick=async()=>{if(safeApproved())await handOff([new File([safeText()+'\n'],'IEDP_P'+iedpPupil+'_'+dateStamp()+'.txt',{type:'text/plain'})],'_INBOX / IEDP');};
+$('targets').oninput=()=>{const value=$('targets').value,start=$('targets').selectionStart,end=$('targets').selectionEnd;targets[iedpPupil]=value;write(KEYS.targets,targets);renderTargets();$('targets').setSelectionRange(start,end);};
+function discardIedp(){if(iedpPhoto)URL.revokeObjectURL(iedpPhoto.preview);iedpPhoto=null;$('iedpPreview').hidden=true;$('iedpPreview').removeAttribute('src');$('sendIedpPhoto').disabled=$('discardIedpPhoto').disabled=true;}
+$('takeIedpPhoto').onclick=()=>$('iedpPhotoInput').click();$('discardIedpPhoto').onclick=()=>{discardIedp();$('iedpPhotoStatus').textContent='Photo removed from memory.';};
+$('iedpPhotoInput').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;const n=iedpPupil;$('takeIedpPhoto').disabled=true;$('iedpPhotoStatus').textContent='Preparing the private photo…';try{const blob=await jpeg(f);discardIedp();const at=photoDate();iedpPhoto={file:new File([blob],'IEDPPHOTO_P'+n+'_'+dateStamp(at)+'_'+timeStamp(at)+'.jpg',{type:'image/jpeg'}),preview:URL.createObjectURL(blob),n};$('iedpPreview').src=iedpPhoto.preview;$('iedpPreview').hidden=false;$('sendIedpPhoto').disabled=$('discardIedpPhoto').disabled=false;$('iedpPhotoStatus').textContent='Pupil '+n+' photo ready. It is kept in memory only.';}catch(err){$('iedpPhotoStatus').textContent=err.message;}finally{$('takeIedpPhoto').disabled=false;}};
+$('sendIedpPhoto').onclick=async()=>{if(!iedpPhoto)return;const snapshot=iedpPhoto;$('sendIedpPhoto').disabled=$('discardIedpPhoto').disabled=$('takeIedpPhoto').disabled=true;try{if(await handOff([snapshot.file],'MBM private tracker (do not share) / IEDP photo inbox')){discardIedp();$('iedpPhotoStatus').textContent='Photo handed off. Check the private folder.';}}catch(e){status('The hand-off failed. The photo is still waiting.');}finally{$('takeIedpPhoto').disabled=false;$('sendIedpPhoto').disabled=$('discardIedpPhoto').disabled=!iedpPhoto;}};
+window.addEventListener('storage',e=>{if(e.key===KEYS.tally){tallies=read(KEYS.tally,{});renderTallies();}if(e.key===KEYS.counts){counts=read(KEYS.counts,{});renderEvidenceCounts();}if(e.key===KEYS.key){pupilKey=read(KEYS.key,{});for(let n=1;n<=12;n++)$('key-'+n).value=String(pupilKey[n]||'');refreshLabels();}if(e.key===KEYS.names){names=read(KEYS.names,[]);invalidateSafe();}if(e.key===KEYS.classNames){classNames=readClassNames();invalidateSafe();}if(e.key===KEYS.targets){targets=read(KEYS.targets,{});renderTargets();}});
+window.addEventListener('beforeunload',e=>{if(queue.length||iedpPhoto||photoInFlight){e.preventDefault();e.returnValue='';}});
+// Exposes pure helpers for the supplied same-origin fixture checks; no network calls.
+window.PhoneTools=Object.freeze({TT,LN,GROUPS,PREFIX,lessonCode,fileCode,redaction,redact,uncertainWords,context,tallyCSV,evidenceFiles,jpeg,zip,crc32,dateISO,dateStamp,timeStamp,lessonDate,today,setTally,keyFile});
+$('day').value='Monday';selectPeriods(1);refreshLabels();renderTargets();today();renderQueue();
+})();
+</script>
+</body>
+</html>
