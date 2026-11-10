@@ -430,6 +430,13 @@ function setLink(title,lk,after){var v=prompt("Paste the Drive link for "+title+
 // Fixes Thursday P5 "ALL" Community Projects by exposing BUILD/GROW/LAUNCH sheets directly
 function driveButtons(title,lk,query,after){
  var wrap=el("div",{"class":"chipwrap noprint"}),a=lk.split("|");
+ ["visitor","cover"].forEach(function(view){
+  var q=new URLSearchParams({week:a[0],path:a[1],subject:a[2],lesson:a[3],view:view});
+  wrap.appendChild(el("a",{
+   "class":"btnlink noprint",href:"Lesson_extras.html#"+q.toString(),
+   target:"_blank",rel:"noopener",style:"min-height:48px;min-width:48px"
+  },view==="visitor"?"Visitor sheet":"Cover pack"));
+ });
  if(a[1]==="ALL"&&!S.links[lk]){
   ["BUILD","GROW","LAUNCH"].forEach(function(p){
    if(pathView&&pathView!==p)return;

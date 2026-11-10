@@ -5609,6 +5609,8 @@ REVIEWED_PATHS += ('Art/Build/CREATIVE_ARTS_A2_W03/Public/ART_BUILD_A2_W03_P1.ht
 REVIEWED_PATHS += ('kits/class_tools/Catch_up_Tracker.html', 'kits/class_tools/Class_names.html', 'kits/class_tools/My_tools.html', 'kits/class_tools/Practical_log.html', 'kits/class_tools/Requests.html')
 # 2026-11-09: the missed-last-week catch-up page joins the private staff pages (unlisted, noindex, no names, ticks in localStorage only).
 REVIEWED_PATHS += ('kits/class_tools/Missed_last_week.html',)
+# 2026-11-10: quick capture (exit tally, evidence, IEDP helper, absent panel) and lesson extras (visitor sheet, cover pack) join the private staff pages (unlisted, noindex, no names, no network; device storage only).
+REVIEWED_PATHS += ('kits/class_tools/Quick_capture.html', 'kits/class_tools/Lesson_extras.html')
 
 
 # Pathway labels phase 2 (Lessons #824, owner approval 8 Nov 2026 14:34Z): the relabelled lesson pages and the
