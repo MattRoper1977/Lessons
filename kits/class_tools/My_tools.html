@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
+<meta name="author" content="Lesson resource">
+<meta name="creator" content="Lesson resource">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; manifest-src data:; connect-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>My tools</title>
 <meta name="theme-color" content="#153e64">
 <meta name="mobile-web-app-capable" content="yes">
@@ -13,25 +16,200 @@
 <link id="manifest" rel="manifest">
 <link id="appIcon" rel="icon" type="image/svg+xml">
 <link id="touchIcon" rel="apple-touch-icon">
-<style>
-:root{color-scheme:light dark;--ink:#18283b;--accent:#153e64;--soft:#edf3f7;--line:#52677c;--bg:#fff;--focus:#713600}
-@media(prefers-color-scheme:dark){:root{--ink:#f4f7fb;--accent:#c6e2ff;--soft:#1b2a3d;--line:#a9bdd2;--bg:#101b29;--focus:#ffd4a8}}
-*{box-sizing:border-box}html{scroll-padding:20px}body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.5 system-ui,sans-serif;overflow-wrap:anywhere}main{max-width:1000px;margin:auto;padding:22px 16px 48px}h1{font-size:30px;margin:0 0 6px}h2{font-size:24px;margin:24px 0 10px}h3{font-size:20px;margin:0 0 8px}p{margin:8px 0 14px}a{color:var(--accent)}button,input,textarea,select{font:inherit;color:inherit}button,.btn,select,input:not([type=checkbox]),summary{min-height:48px}button,.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border:2px solid var(--accent);border-radius:10px;background:var(--bg);color:var(--accent);font-size:18px;text-decoration:none;cursor:pointer}button.primary,.btn.primary{background:var(--accent);color:var(--bg)}button[aria-pressed=true]{background:var(--accent);color:var(--bg)}button:disabled{cursor:default}input:not([type=checkbox]),textarea,select{width:100%;max-width:100%;padding:10px;border:2px solid var(--line);border-radius:8px;background:var(--bg)}input[type=checkbox]{width:24px;height:24px;flex:none;margin:0}textarea{min-height:200px}label{display:block}summary{display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:650}summary::before{content:'+';font-size:24px}details[open]>summary::before{content:'−'}:focus-visible{outline:3px solid var(--focus);outline-offset:4px}button:focus-visible,.btn:focus-visible{position:relative;z-index:1}.note,.panel{padding:16px;border:2px solid var(--line);border-radius:14px;background:var(--soft);margin:14px 0}.row{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}.row>*{max-width:100%;min-width:0}.small,.hint{font-size:17px}.status{min-height:1.5em;font-weight:650}.check{display:flex;gap:12px;align-items:center;min-height:48px}.file{position:absolute;width:1px!important;height:1px!important;min-height:0!important;opacity:0;overflow:hidden;padding:0!important;border:0!important}.file:focus-visible+.btn{outline:3px solid var(--focus);outline-offset:4px}[hidden]{display:none!important}.badge{display:inline-block;border:2px solid currentColor;border-radius:8px;padding:1px 8px;font-size:17px;font-weight:650}.section-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.section-head h2{margin-bottom:0}.empty{padding:12px 0;font-size:17px}ol{padding-left:24px}li{margin:8px 0}@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}@media print{body>main{display:none!important}body::before{content:'Private: keep this copy. Print is turned off here to keep pupil labels private.';font:18px/1.5 sans-serif;color:#000}}
-input::placeholder,textarea::placeholder{color:var(--ink);opacity:1}.tile{-webkit-touch-callout:none;touch-action:manipulation}.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:12px;margin:12px 0}.tool{position:relative;min-width:0;display:flex;gap:6px;border:2px solid var(--line);border-radius:12px;background:var(--soft)}.tile{display:flex;flex-direction:column;gap:6px;flex:1;min-width:0;padding:14px;text-decoration:none;color:var(--ink);border-radius:10px}.tile b{color:var(--accent);font-size:20px}.tile span{font-size:17px}.tile .badge{align-self:flex-start}.pin{flex:none;width:48px;min-width:48px;height:48px;padding:0;margin:6px 6px 0 0;font-size:26px}.now{margin-top:18px}.now h2{margin-top:0}.now-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.now-actions .btn{min-height:60px}.code{font-size:20px;font-weight:700;overflow-wrap:anywhere}.time-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.search{margin-top:24px}@media(max-width:580px){.now-actions{grid-template-columns:1fr}.time-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}</style>
+<style id="mainStyle">
+:root{color-scheme:light dark;--ink:#18283b;--accent:#153e64;--soft:#edf3f7;--line:#52677c;--bg:#fff;--focus:#713600;--ok:#155724;--ok-bg:#e3f4e8;--warn:#6b3a00;--warn-bg:#fff2dc;--miss:#7a1c1c;--miss-bg:#fdeaea;--build:#21465f;--grow:#174d3d;--launch:#50336f}
+@media(prefers-color-scheme:dark){:root{--ink:#f4f7fb;--accent:#c6e2ff;--soft:#1b2a3d;--line:#a9bdd2;--bg:#101b29;--focus:#ffd4a8;--ok:#a8edb9;--ok-bg:#163522;--warn:#ffd79e;--warn-bg:#3b2608;--miss:#ffb8b8;--miss-bg:#3c1818;--build:#b9dcf5;--grow:#a8e4ce;--launch:#e0cafa}}
+*{box-sizing:border-box}html{scroll-padding:20px}body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.45 system-ui,sans-serif;overflow-wrap:anywhere}main{max-width:1000px;margin:auto;padding:16px 14px 48px}h1{font-size:28px;margin:0}h2{font-size:23px;margin:22px 0 10px}h3{font-size:19px;margin:0 0 6px}p{margin:6px 0 10px}a{color:var(--accent)}button,input,textarea,select{font:inherit;color:inherit}button,.btn,select,input:not([type=checkbox]),summary{min-height:48px;min-width:48px}button,.btn{display:inline-flex;align-items:center;justify-content:center;padding:8px 12px;border:2px solid var(--accent);border-radius:10px;background:var(--bg);color:var(--accent);font-size:17px;font-weight:600;text-decoration:none;cursor:pointer;text-align:center;touch-action:manipulation}button.primary,.btn.primary{background:var(--accent);color:var(--bg)}button[aria-pressed=true]{background:var(--accent);color:var(--bg)}button:disabled{opacity:.55;cursor:default}input:not([type=checkbox]),textarea,select{width:100%;max-width:100%;padding:8px 10px;border:2px solid var(--line);border-radius:8px;background:var(--bg)}input[type=checkbox]{width:24px;height:24px;flex:none;margin:0}textarea{min-height:140px}label{display:block;font-weight:600}summary{display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:650;padding:4px 2px}summary::before{content:'+';font-size:22px;line-height:1;flex:none}details[open]>summary::before{content:'−'}:focus-visible{outline:3px solid var(--focus);outline-offset:3px}button:focus-visible,.btn:focus-visible{position:relative;z-index:1}.note,.panel{padding:12px 14px;border:2px solid var(--line);border-radius:14px;background:var(--soft);margin:12px 0}.row{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0;align-items:center}.row>*{max-width:100%;min-width:0}.small,.hint{font-size:16px}.status{min-height:1.4em;font-weight:650}.check{display:flex;gap:12px;align-items:center;min-height:48px}.file{position:absolute;width:1px!important;height:1px!important;min-height:0!important;opacity:0;overflow:hidden;padding:0!important;border:0!important}.file:focus-visible+.btn{outline:3px solid var(--focus);outline-offset:4px}[hidden]{display:none!important}.badge{display:inline-block;border:2px solid currentColor;border-radius:8px;padding:1px 8px;font-size:16px;font-weight:650}.section-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}.section-head h2{margin:0}.empty{padding:8px 0;font-size:16px}ol{padding-left:24px}li{margin:6px 0}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.top-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:0 0 8px}.show-wrap{display:flex;align-items:center;gap:6px;min-width:0}.show-wrap label{white-space:nowrap;font-size:16px;margin:0}.show-wrap select{width:auto;min-width:128px;padding:6px 8px}
+input::placeholder,textarea::placeholder{color:var(--ink);opacity:.8}.tile{-webkit-touch-callout:none;touch-action:manipulation}.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:12px;margin:12px 0}.tool{position:relative;min-width:0;display:flex;gap:6px;border:2px solid var(--line);border-radius:12px;background:var(--soft)}.tile{display:flex;flex-direction:column;gap:6px;flex:1;min-width:0;padding:14px;text-decoration:none;color:var(--ink);border-radius:10px}.tile b{color:var(--accent);font-size:20px}.tile span{font-size:16px}.tile .badge{align-self:flex-start}.pin{flex:none;width:48px;min-width:48px;height:48px;padding:0;margin:6px 6px 0 0;font-size:24px}
+.now{margin-top:4px}.now h2{margin-top:0}.now p{margin:3px 0}.now-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:8px 0}.now-actions .btn{min-height:52px}.code{font-size:18px;font-weight:700;overflow-wrap:anywhere;margin:2px 0}.time-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.slot-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:8px 0}.search{margin-top:18px}
+.now details{border-top:1px solid var(--line);margin-top:6px;padding-top:2px}
+.brief-stats{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:14.5px;font-weight:650;border:1px solid currentColor;background:var(--bg)}
+.pill.warn{background:var(--warn-bg);color:var(--warn);border-color:var(--warn)}
+.pill.miss{background:var(--miss-bg);color:var(--miss);border-color:var(--miss)}
+.pill.ok{background:var(--ok-bg);color:var(--ok);border-color:var(--ok)}
+.pill.path-BUILD{border-color:var(--build);color:var(--build)}
+.pill.path-GROW{border-color:var(--grow);color:var(--grow)}
+.pill.path-LAUNCH{border-color:var(--launch);color:var(--launch)}
+.brief-pupils{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:8px 0}
+.brief-card{background:var(--bg);border:2px solid var(--line);border-left-width:7px;border-radius:12px;padding:10px;min-width:0;display:flex;flex-direction:column;gap:6px}
+.brief-card.BUILD{border-left-color:var(--build)}
+.brief-card.GROW{border-left-color:var(--grow)}
+.brief-card.LAUNCH{border-left-color:var(--launch)}
+.brief-card.is-out{opacity:.86;background:var(--miss-bg)}
+.brief-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px}
+.pupil-title{font-size:17px;font-weight:700}
+.brief-signals,.adapt-list{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.adapt-chip{font-size:14.5px;padding:2px 8px;border-radius:8px;border:1px solid var(--line);background:var(--soft)}
+.target-line{font-size:15px;margin:0;padding:5px 8px;border-radius:8px;background:var(--soft);border-left:3px solid var(--accent)}
+.pupil-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:auto}
+.pupil-actions button{width:100%;padding:8px 6px;font-size:15.5px}
+.undo-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border:2px solid var(--accent);border-radius:10px;background:var(--bg);margin:8px 0}
+.handover-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0}
+.preview-sheet{background:#fff;color:#14243a;border:2px solid var(--line);border-radius:12px;padding:14px;margin:10px 0}
+.sheet-doc{font:15px/1.4 system-ui,sans-serif;color:#14243a}
+.sheet-doc h2{color:#0f2a4d;font-size:21px;margin:0 0 4px;border-bottom:2px solid #0f2a4d;padding-bottom:5px}
+.sheet-doc h3{color:#0f2a4d;font-size:16.5px;margin:10px 0 4px}
+.sheet-doc p,.sheet-doc li{font-size:14.5px;margin:4px 0}
+.sheet-doc table{width:100%;border-collapse:collapse;margin:8px 0;font-size:14px}
+.sheet-doc th,.sheet-doc td{border:1px solid #8da0b5;padding:5px 7px;text-align:left;vertical-align:top}
+.sheet-doc th{background:#edf3f7;color:#0f2a4d}
+.private-banner{display:inline-block;border:2px solid #14243a;padding:4px 8px;font-weight:700;margin-bottom:8px}
+.roll-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));gap:8px;margin:8px 0}
+.roll-row,.stack-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.stack-list{display:flex;flex-direction:column;gap:8px;margin:8px 0}
+.stack-meta{flex:1 1 200px;min-width:0}
+.stack-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+#printObserverSheet,#printPrivateSlip{display:none}
+@media(max-width:680px){
+  .brief-pupils,.handover-grid,.slot-grid{grid-template-columns:1fr}
+  .sheet-doc thead{display:none}
+  .sheet-doc table,.sheet-doc tbody,.sheet-doc tr,.sheet-doc td{display:block;width:100%}
+  .sheet-doc tr{border:1px solid #8da0b5;border-radius:8px;margin-bottom:8px;padding:4px}
+  .sheet-doc td{border:0;padding:4px 6px}
+}
+@media(max-width:580px){
+  main{padding:8px 10px 40px}
+  h1{font-size:24px}
+  .now{padding:10px 12px;margin:0 0 10px}
+  .now h2{font-size:21px}
+  .now h3{font-size:18px;margin:0 0 2px}
+  .now .hint{font-size:15px;line-height:1.3}
+  .code{font-size:16.5px}
+  .now-actions{grid-template-columns:1fr 1fr;gap:8px;margin:6px 0}
+  #nowCapture{grid-column:1/-1}
+  .now-actions .btn{min-height:48px;padding:6px 8px;font-size:16px}
+  .time-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+@page{size:A4;margin:12mm}
+@media print{
+  body{background:#fff!important;color:#000!important;margin:0;padding:0}
+  body>main{display:none!important}
+  .private-tag,.noprint{display:none!important}
+  body.print-observer-sheet #printObserverSheet{display:block!important}
+  body.print-private-slip #printPrivateSlip{display:block!important}
+  body:not(.print-observer-sheet):not(.print-private-slip)::before{content:'Private: keep this copy. Print is turned off here to keep pupil labels private.';font:18px/1.5 sans-serif;color:#000}
+  .sheet-doc{color:#000!important;font-size:11pt;line-height:1.35}
+  .sheet-doc h2{font-size:18pt;color:#000!important;border-bottom:2px solid #000}
+  .sheet-doc h3{font-size:13pt;color:#000!important}
+  .sheet-doc thead{display:table-header-group!important}
+  .sheet-doc table{display:table!important;width:100%!important;border-collapse:collapse!important}
+  .sheet-doc tbody{display:table-row-group!important}
+  .sheet-doc tr{display:table-row!important;border:1px solid #000!important;break-inside:avoid}
+  .sheet-doc th,.sheet-doc td{display:table-cell!important;border:1px solid #000!important;padding:5px 7px!important;color:#000!important;background:#fff!important}
+}
+</style>
 </head>
 <body>
 <main>
-<h1>My tools</h1>
+<div class="top-bar">
+  <h1>My tools</h1>
+  <div class="show-wrap">
+    <label for="showTags">Show</label>
+    <select id="showTags" aria-label="Show pupils on screen as">
+      <option value="initials">Initials</option>
+      <option value="first">First name</option>
+      <option value="number">Number</option>
+    </select>
+  </div>
+</div>
 
-<section class="now panel" aria-labelledby="nowTitle">
+<section class="now panel" id="nowCard" aria-labelledby="nowTitle">
 <div class="section-head"><h2 id="nowTitle">Now</h2><span id="nowState" class="badge">Checking clock</span></div>
 <p id="nowWhen" class="hint"></p><h3 id="nowLesson"></h3><p id="nowCode" class="code"></p>
 <p id="nowHint" class="hint"></p>
 <div id="sharedPath" hidden><label for="nowPath">Choose a group for this shared lesson</label><select id="nowPath"><option>BUILD</option><option>GROW</option><option>LAUNCH</option></select></div>
 <div class="now-actions"><a class="btn primary" id="nowCapture" href="Quick_capture.html?now=1">Quick capture</a><a class="btn" id="nowExtras" href="Lesson_extras.html">Lesson extras</a><a class="btn" id="nowTracker" href="Catch_up_Tracker.html">Catch-up tracker</a></div>
 <p id="nextLesson" class="hint"></p>
-<details><summary>Check period times</summary><p class="hint">Start and end times use this device's clock. Break and lunch are not lessons.</p><form id="timesForm"><div id="timesInputs" class="time-grid"></div><div class="row"><button type="submit">Save period times</button><button id="resetSchoolTimes" type="button">Reset to school day</button></div></form><p id="timeStatus" role="status"></p></details>
+
+<details id="roomBriefDetails">
+  <summary id="roomBriefSummary">Room brief · 0 pupils, 0 out, 0 to watch</summary>
+  <div id="briefStats" class="brief-stats" aria-live="polite"></div>
+  <div id="briefUndoBar" class="undo-bar" hidden role="status">
+    <span id="briefUndoText">Attendance updated</span>
+    <button type="button" id="briefUndoBtn">Undo</button>
+  </div>
+  <div class="row">
+    <button type="button" id="suggestTaBtn">Suggest TA focus</button>
+    <button type="button" id="clearTaBtn">Clear TA focus</button>
+  </div>
+  <div id="briefPupils" class="brief-pupils" role="region" aria-label="Pupils in this lesson"></div>
+  <div>
+    <label for="briefFocusNote">Supporting adult / lesson focus note (optional)</label>
+    <input type="text" id="briefFocusNote" maxlength="220" autocomplete="off" placeholder="e.g. Prompt verbal rehearsal before writing">
+    <p class="hint">Names typed here stay on this device: observer copies use Pupil N, and the private TA slip uses initials.</p>
+  </div>
+  <div class="handover-grid" role="group" aria-label="Observer and TA handover actions">
+    <button type="button" class="primary" id="saveObserverHtml">Save observer HTML</button>
+    <button type="button" id="saveObserverTxt">Save observer text</button>
+    <button type="button" id="copyObserverTxt">Copy observer summary</button>
+    <button type="button" id="toggleObserverPreview" aria-expanded="false">Preview observer sheet</button>
+    <button type="button" id="printObserverBtn">Print observer sheet</button>
+    <button type="button" id="toggleTaPreview" aria-expanded="false">Preview private TA slip</button>
+    <button type="button" id="printTaSlipBtn">Print private TA slip</button>
+  </div>
+  <p id="briefStatus" class="status" role="status" aria-live="polite"></p>
+  <div id="observerPreviewBox" class="preview-sheet" hidden aria-label="Observer sheet preview"></div>
+  <div id="taSlipPreviewBox" class="preview-sheet" hidden aria-label="Private TA slip preview"></div>
+  <details id="slotPickerDetails">
+    <summary>Preview another lesson this term</summary>
+    <p class="hint">Pick any lesson this half-term to check starting points, set TA focus, or save its observer sheet.</p>
+    <div class="slot-grid">
+      <div><label for="pickWeek">Week</label><select id="pickWeek"></select></div>
+      <div><label for="pickDay">Day</label><select id="pickDay"></select></div>
+      <div><label for="pickPeriod">Period</label><select id="pickPeriod"></select></div>
+    </div>
+    <div class="row">
+      <button type="button" class="primary" id="applyPreviewBtn">Preview chosen lesson</button>
+      <button type="button" id="useLiveClockBtn">Back to live clock</button>
+    </div>
+  </details>
+</details>
+
+<details id="periodTimesDetails"><summary id="period-times">Check period times</summary><p class="hint">Start and end times use this device's clock. Break and lunch are not lessons.</p><form id="timesForm"><div id="timesInputs" class="time-grid"></div><div class="row"><button type="submit">Save period times</button><button id="resetSchoolTimes" type="button">Reset to school day</button></div></form><p id="timeStatus" role="status"></p></details>
 </section>
+
+<details id="morningCheckinDetails" class="panel">
+  <summary id="morningSummary">Morning check-in · 0 in, 0 out · 0 catch-up ready</summary>
+  <p class="hint">09:00 to 09:30 check-in and reading. Mark anyone off sick once for the day; tap Back in now if a pupil arrives late.</p>
+  <div id="morningUndoBar" class="undo-bar" hidden role="status">
+    <span id="morningUndoText">Updated</span>
+    <button type="button" id="morningUndoBtn">Undo</button>
+  </div>
+  <div id="morningRollList" class="roll-grid" role="region" aria-label="Morning attendance roll"></div>
+  <h3 style="margin-top:12px">Catch-up ready now</h3>
+  <p class="hint" id="morningReadyHint">Open catch-ups for pupils who are in today, oldest first.</p>
+  <div id="morningReadyList" class="stack-list"></div>
+</details>
+
+<details id="endOfDayDetails" class="panel">
+  <summary id="eodSummary">End-of-day pack · 0 of 0 lessons tallied</summary>
+  <p class="hint">Check today's lessons, tap All got it on any routine lesson not tallied yet (absent pupils are never overwritten), then save one pack for Drive. No photos are included in this pack.</p>
+  <div id="eodUndoBar" class="undo-bar" hidden role="status">
+    <span id="eodUndoText">Updated</span>
+    <button type="button" id="eodUndoBtn">Undo</button>
+  </div>
+  <div id="eodChecklist" class="stack-list" role="region" aria-label="Today's lessons checklist"></div>
+  <p id="eodMeta" class="hint"></p>
+  <div class="row">
+    <button type="button" class="primary" id="saveDayPackBtn">Save today's pack</button>
+  </div>
+  <p id="eodStatus" class="status" role="status" aria-live="polite"></p>
+</details>
+
+<details id="tomorrowDrawer" class="panel">
+  <summary id="tomorrowSummary">Tomorrow's copier and reteach</summary>
+  <p class="hint" id="tomorrowSubhead">Copy counts from class profile and reteach counts from last exit tally.</p>
+  <div id="tomorrowList" class="stack-list"></div>
+  <div class="row">
+    <button type="button" class="primary" id="copyCopierBtn">Copy copier list</button>
+    <a class="btn" id="tomorrowDrawerFolderLink" href="https://drive.google.com/drive/u/0/search?q=type%3Afolder%20Tomorrow" target="_blank" rel="noopener">Open Tomorrow folder</a>
+  </div>
+  <p id="copierStatus" class="status" role="status" aria-live="polite"></p>
+</details>
+
 <div class="search"><label for="toolSearch">Find a tool</label><input type="search" id="toolSearch" placeholder="Type a tool or a task" autocomplete="off"><p class="hint" id="searchStatus" role="status"></p></div>
 <section id="pinnedSection" aria-labelledby="pinnedTitle"><h2 id="pinnedTitle">Pinned</h2><p class="hint" id="pinHelp">Tap a star, or hold a tile, to keep it here.</p><div id="pinnedTiles" class="tiles"></div></section>
 <section id="recentSection" aria-labelledby="recentTitle"><h2 id="recentTitle">Last used</h2><p class="hint" id="recentHelp">Your last three tools will appear here.</p><div id="recentTiles" class="tiles"></div></section>
@@ -42,168 +220,1630 @@ input::placeholder,textarea::placeholder{color:var(--ink);opacity:1}.tile{-webki
 <details class="note"><summary>Set Tomorrow folder link</summary><p>The direct Tomorrow folder link was not available in the reference. Until set, the tile searches Drive for folders called Tomorrow. Choose the one inside _OUTBOX.</p><form id="tomorrowForm"><label for="tomorrowUrl">Paste the Drive _OUTBOX / Tomorrow folder link</label><input id="tomorrowUrl" type="url" placeholder="https://drive.google.com/drive/folders/…" autocomplete="off"><div class="row"><button type="submit">Save folder link</button></div></form><p id="folderStatus" role="status"></p></details>
 <section class="tool-group"><h2>This week</h2><div class="tiles"><a class="tile" href="Catch_up_Tracker.html"><b>Catch-up tracker</b><span>Who missed what, and the right catch-up sheet.</span></a><a class="tile" href="Quick_capture.html#absence-panel"><b>Absent catch-up</b><span>Preview missed lessons and save a catch-up request.</span></a><a class="tile" href="Missed_last_week.html"><b>Missed last week</b><span>Catch-up sheets for the lessons that did not run, and when to use them.</span></a></div></section>
 <section class="tool-group"><h2>Private</h2><div class="tiles"><a class="tile" href="Class_names.html"><b>Class names</b><span>Your private names list for the laptop.</span></a><a class="tile" href="https://drive.google.com/drive/search?q=MBM%20private%20tracker" target="_blank" rel="noopener"><b>Private folder</b><span>Tracker, targets text, practical record. Never share.</span></a></div></section>
-<section class="tool-group"><h2>Checks</h2><div class="tiles"><a class="tile" href="https://drive.google.com/file/d/1kTMwsY6UbhZ9VVeHnc0igVMLYgqKI4Iw/view" target="_blank" rel="noopener"><b>STATUS note</b><span>Is the home laptop on? What ran?</span></a><a class="tile" href="https://drive.google.com/drive/folders/1pgldy4cT0lPRb_SAU_bniaXwfudyamg5" target="_blank" rel="noopener"><b>Stale files</b><span>Open STALE.txt in _AUTOMATION: all clear, or things to tidy.</span></a></div></section>
-<section class="tool-group"><h2>Drive</h2><div class="tiles"><a class="tile" href="https://drive.google.com/drive/folders/1fJ6_MWEbk_d-8jhmquDG5IGoUU1YjIRd" target="_blank" rel="noopener"><b>_INBOX</b><span>Drop Slides, plans, exports here.</span></a><a class="tile" href="https://drive.google.com/drive/folders/1fFDSTdnqlVkJD6EupgrjTq6YBkuIRMro" target="_blank" rel="noopener"><b>_OUTBOX</b><span>Copies come back here.</span></a><a class="tile" href="https://drive.google.com/drive/folders/1pgldy4cT0lPRb_SAU_bniaXwfudyamg5" target="_blank" rel="noopener"><b>_AUTOMATION</b><span>STATUS, Sunday checks, what changed, requests.</span></a><a class="tile" href="https://drive.google.com/drive/folders/1qdF0cYMipiMnMon_63NYTalz-WhlDaVE" target="_blank" rel="noopener"><b>All lessons</b><span>Your lessons folder.</span></a></div></section>
+
+<section class="tool-group" id="driveChecksSection">
+  <details id="driveChecksDrawer" class="note">
+    <summary>Drive folders and checks</summary>
+    <h2 class="sr-only">Drive folders and checks</h2>
+    <div class="tiles">
+      <a class="tile" href="https://drive.google.com/file/d/1kTMwsY6UbhZ9VVeHnc0igVMLYgqKI4Iw/view" target="_blank" rel="noopener"><b>STATUS note</b><span>Is the home laptop on? What ran?</span></a>
+      <a class="tile" href="https://drive.google.com/drive/folders/1pgldy4cT0lPRb_SAU_bniaXwfudyamg5" target="_blank" rel="noopener"><b>Stale files</b><span>Open STALE.txt in _AUTOMATION: all clear, or things to tidy.</span></a>
+      <a class="tile" href="https://drive.google.com/drive/folders/1fJ6_MWEbk_d-8jhmquDG5IGoUU1YjIRd" target="_blank" rel="noopener"><b>_INBOX</b><span>Drop Slides, plans, exports here.</span></a>
+      <a class="tile" href="https://drive.google.com/drive/folders/1fFDSTdnqlVkJD6EupgrjTq6YBkuIRMro" target="_blank" rel="noopener"><b>_OUTBOX</b><span>Copies come back here.</span></a>
+      <a class="tile" href="https://drive.google.com/drive/folders/1pgldy4cT0lPRb_SAU_bniaXwfudyamg5" target="_blank" rel="noopener"><b>_AUTOMATION</b><span>STATUS, Sunday checks, what changed, requests.</span></a>
+      <a class="tile" href="https://drive.google.com/drive/folders/1qdF0cYMipiMnMon_63NYTalz-WhlDaVE" target="_blank" rel="noopener"><b>All lessons</b><span>Your lessons folder.</span></a>
+    </div>
+  </details>
+</section>
+
 <p class="note">How it works: a tool saves a small file, you put it in the right Drive folder, and the home laptop does the rest within 15 minutes. Results appear in Drive.</p>
 <section class="tool-group"><h2>New tools</h2><p class="hint">Home sheets, report drafts and the look ahead are made on your laptop and wait in your Drive outbox.</p><div class="tiles"><a class="tile" href="Retrieval_builder.html"><b>Retrieval builder</b><span>Make quick questions to help pupils remember.</span><span class="badge">New</span></a><a class="tile" href="Coverage_map.html"><b>Coverage map</b><span>See what has been taught.</span><span class="badge">New</span></a></div></section>
 </main>
+<section id="printObserverSheet" aria-hidden="true"></section>
+<section id="printPrivateSlip" aria-hidden="true"></section>
 <script>
+'use strict';
+const $ = id => document.getElementById(id);
+const PINS = 'mbm_tools_pins_v1', RECENT = 'mbm_tools_recent_v1', TIMES = 'mbm_period_times_v1';
+const KEYS = {
+  pins: PINS,
+  recent: RECENT,
+  times: TIMES,
+  sharedPath: 'mbm_tools_path_v1',
+  tomorrow: 'mbm_tomorrow_folder_v1',
+  pupilKey: 'mbm_pupil_key_v1',
+  profile: 'mbm_pupil_profile_v1',
+  showLegacy: 'mbm_qc_show_as_v1',
+  classNames: 'mbm_class_names_v1',
+  extraNames: 'mbm_names_list_v1',
+  tally: 'mbm_exit_tally_v1',
+  qcQueue: 'mbm_qc_queue_v1',
+  tracker: 'mbm_catchup_tracker_v1',
+  covAbs: 'mbm_coverage_absences_v1',
+  targets: 'mbm_iedp_targets_v1',
+  practical: 'mbm_practical_log_v1',
+  brief: 'mbm_room_brief_v1'
+};
 
-function pupilTag(n) {
-  let key = {}, profile = {};
-  try { key = JSON.parse(localStorage.getItem('mbm_pupil_key_v1') || '{}') || {}; } catch (e) {}
-  try { profile = JSON.parse(localStorage.getItem('mbm_pupil_profile_v1') || '{}') || {}; } catch (e) {}
-  const words = value => String(value || '').trim().split(/\s+/).map(w => Array.from(w.replace(/[^\p{L}\p{M}]/gu, '').toLocaleUpperCase('en-GB'))).filter(w => w.length);
-  const own = words(key[n]);
-  if (!own.length || profile.show === 'number') return 'P' + n;
-  if (profile.show === 'first') return String(key[n]).trim().split(/\s+/)[0];
-  const rows = Object.keys(key).filter(k => /^\d+$/.test(k)).map(k => {
-    const w = words(key[k]);
-    return { n: k, tag: w.slice(0, 3).map(x => x[0]).join(''), last: w.length ? w[w.length - 1] : [], at: 1 };
-  }).filter(r => r.tag);
-  for (let step = 0; step < 102; step++) {
-    const counts = new Map();
-    rows.forEach(r => counts.set(r.tag, (counts.get(r.tag) || 0) + 1));
-    const collisions = rows.filter(r => counts.get(r.tag) > 1);
-    if (!collisions.length) break;
-    collisions.forEach(r => { r.tag += r.at < r.last.length ? r.last[r.at++] : r.n; });
-  }
-  return (rows.find(r => r.n === String(n)) || {}).tag || 'P' + n;
+const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+const WEEKS = [[1,'02 Nov'],[2,'09 Nov'],[3,'16 Nov'],[4,'23 Nov'],[5,'30 Nov'],[6,'07 Dec'],[7,'14 Dec']];
+const PATHWAYS = ['BUILD', 'GROW', 'LAUNCH'];
+const DEFAULT_GROUPS = { BUILD: [4, 7, 9, 12], GROW: [1, 3, 5, 8, 11], LAUNCH: [2, 6, 10] };
+
+var TT = {
+  Monday:    [[1,'LAUNCH','Vocational'],[2,'GROW','Science'],[3,'BUILD','Science'],[4,'LAUNCH','Science'],[5,'BUILD','Creative Arts'],[6,'GROW','Creative Arts']],
+  Tuesday:   [[1,'BUILD','Creative Arts'],[2,'LAUNCH','Humanities'],[3,'BUILD','Careers'],[4,'GROW','Science'],[5,'BUILD','RE'],[6,'LAUNCH','ICT']],
+  Wednesday: [[1,'BUILD','RSHE'],[2,'LAUNCH','Science'],[3,'GROW','PSHE'],[4,'BUILD','Science'],[5,'GROW','Creative Arts'],[6,'LAUNCH','Vocational']],
+  Thursday:  [[1,'LAUNCH','DT'],[2,'GROW','RE'],[3,'BUILD','Humanities'],[4,'LAUNCH','RSE'],[5,'ALL','Community Projects']],
+  Friday:    [[1,'LAUNCH','Careers'],[2,'GROW','Humanities'],[3,'BUILD','Vocational'],[4,'LAUNCH','Science']]
+};
+const PREFIX = { Science:'SCI', Vocational:'VOC', 'Creative Arts':'ART', Humanities:'HUM', Careers:'CAREERS', RE:'RE', ICT:'ICT', RSHE:'RSHE', PSHE:'PSHE', DT:'DT', RSE:'RSE', 'Community Projects':'COMM' };
+const LN = {};
+{ const c = {}; DAYS.forEach(d => TT[d].forEach(l => { const k = l[1] + '|' + l[2]; LN[d + '|' + l[0]] = c[k] = (c[k] || 0) + 1; })); }
+
+var PRELOAD={"1|BUILD|Careers|1":"https://drive.google.com/file/d/1PiNei2czWTcaMhM0jOqaJUI7XGf8DfGW/view","1|BUILD|Community Projects|1":"https://drive.google.com/file/d/1jH389gTFiATAgd9GRrzpENyCSPG8J-pI/view","1|BUILD|Creative Arts|2":"https://drive.google.com/file/d/1SydDviWTGOAkK3c-_HuA1alFqNm8PArK/view","1|BUILD|Humanities|1":"https://drive.google.com/file/d/15bvXThlsAkCuGr4c6Z8J6c7Ihn5gyqsp/view","1|BUILD|RE|1":"https://drive.google.com/file/d/1o-RQgyGvEolPu3KJdLsGOewy4BucTCqf/view","1|BUILD|RSHE|1":"https://drive.google.com/file/d/15Rpe_xUsZyglfHzNYvJ9YrgPWE9CP8Hb/view","1|BUILD|Science|2":"https://drive.google.com/file/d/1IrfEAe0DokvhMc2oZCf-hKtTbLVy_kBU/view","1|BUILD|Vocational|1":"https://drive.google.com/file/d/1MJwu6OO7Kxa-yxqOHOKoIMBpBqb8Td6M/view","1|GROW|Community Projects|1":"https://drive.google.com/file/d/1ueUBqf1zdTcMKVgUvvmlxhs-Bc8M0pqf/view","1|GROW|Creative Arts|2":"https://drive.google.com/file/d/1Aj-9poE1MjGBVQ-aQAt9OkG0qzZC8pAs/view","1|GROW|Humanities|1":"https://drive.google.com/file/d/1FPRP8b5HM1Z5C8uCC_ldiYO-yDhWzBkr/view","1|GROW|PSHE|1":"https://drive.google.com/file/d/11EqNfTC3hPiqG7I3NtncdjxLst9J5Rra/view","1|GROW|RE|1":"https://drive.google.com/file/d/1fSGUrPIda1kK1A-rVU9p7o7cScDyBzRN/view","1|GROW|Science|2":"https://drive.google.com/file/d/1eQVazxvzRYI2-0bCkz4nZYfI9apwJHb1/view","1|LAUNCH|Careers|1":"https://drive.google.com/file/d/1-ZqmACOU53jw5aNfX1Uv2XOuoi5oSVJS/view","1|LAUNCH|Community Projects|1":"https://drive.google.com/file/d/1-lvMPvju6JVDYfgYS8iHqgvhHukBDQjZ/view","1|LAUNCH|DT|1":"https://drive.google.com/file/d/1n2_3ZkWSgZc0Xl4gNG0xuoazPjzWDsWp/view","1|LAUNCH|Humanities|1":"https://drive.google.com/file/d/1Bmot9RHihW9fWVoxtl7XKeUlXDSqLKKf/view","1|LAUNCH|ICT|1":"https://drive.google.com/file/d/1fOhmMuQSKrhMyUnVqmvSbv8hMCxeDi18/view","1|LAUNCH|RSE|1":"https://drive.google.com/file/d/1Gv1FOjKQIqzCJ0t2zyRWlKndesqmBrdi/view","1|LAUNCH|Science|2":"https://drive.google.com/file/d/1Jw6Jv_4szTJjhSgfz39g5i3PUDNqaew1/view","1|LAUNCH|Science|3":"https://drive.google.com/file/d/1uhbYMLdeaXqJ0_E9U55e7I5Ab6VmL_eu/view","1|LAUNCH|Vocational|2":"https://drive.google.com/file/d/1vrOSGvIGwkKVy0vFHEAmf6jC_s4QLyhu/view","2|BUILD|Careers|1":"https://drive.google.com/file/d/1i5wgQhVwnvdjWk8TO-5Kb1kOV2OtuZ_i/view","2|BUILD|Community Projects|1":"https://drive.google.com/file/d/1jH389gTFiATAgd9GRrzpENyCSPG8J-pI/view","2|BUILD|Creative Arts|1":"https://drive.google.com/file/d/14BMvx44YdSE9EmQn3B8K4hSXy-iKBRKo/view","2|BUILD|Creative Arts|2":"https://drive.google.com/file/d/1TIS-zVU5Q1F6GneuDIUoyjjpAyyHFxsy/view","2|BUILD|Humanities|1":"https://drive.google.com/file/d/1Eee5jltgbbQOfT3tG9PU6rc7R7A9PKnG/view","2|BUILD|RE|1":"https://drive.google.com/file/d/1BgGKYchb5Xj4nEBgUW-hLiGpgRUE7tst/view","2|BUILD|RSHE|1":"https://drive.google.com/file/d/1H5chTYaGGxTD8ZLvU5WrCt5BnEkmG9Xn/view","2|BUILD|Science|1":"https://drive.google.com/file/d/1dXKlXq2r6bXtYg8bhhj3Xgjd3_-thhRR/view","2|BUILD|Science|2":"https://drive.google.com/file/d/1mKY53oX6OfvQRQuZUaRBt6I-IxV1J8Oy/view","2|BUILD|Vocational|1":"https://drive.google.com/file/d/1aVBzN8Xu3H3PVomzlqDnbdSuPQiIEbVy/view","2|GROW|Community Projects|1":"https://drive.google.com/file/d/1ueUBqf1zdTcMKVgUvvmlxhs-Bc8M0pqf/view","2|GROW|Creative Arts|1":"https://drive.google.com/file/d/1MiytfhVwSmcYqh1fHNlThA8VJjeRiNrF/view","2|GROW|Creative Arts|2":"https://drive.google.com/file/d/19pJIlJKJxwht2-dZUpGVa-68hlsviS6V/view","2|GROW|Humanities|1":"https://drive.google.com/file/d/1hRh3k2_gXnPxcsrfFGm4IoqRywMHQvMw/view","2|GROW|PSHE|1":"https://drive.google.com/file/d/1I3CvaArxSJU3obuOzRtj1fkroqLGqzss/view","2|GROW|RE|1":"https://drive.google.com/file/d/1k2ja_KYCFYhD6WleOhMGNNsvAgZ1sGww/view","2|GROW|Science|1":"https://drive.google.com/file/d/1EGimJLoQD04qe4K04gsv3JTNVz9pnRVf/view","2|GROW|Science|2":"https://drive.google.com/file/d/1jMbdQakiSxJOjcz6o23vAFLNzNUcik-4/view","2|LAUNCH|Careers|1":"https://drive.google.com/file/d/13uE_HpLe_PcRHNmqokRjzo_J2v5ozfdK/view","2|LAUNCH|Community Projects|1":"https://drive.google.com/file/d/1-lvMPvju6JVDYfgYS8iHqgvhHukBDQjZ/view","2|LAUNCH|DT|1":"https://drive.google.com/file/d/1Qsx__vhqUTilRZw-CiDBUfSCz1G9P3RI/view","2|LAUNCH|Humanities|1":"https://drive.google.com/file/d/1tE3xvUa3LHHGxdkv2brH9PEL0BpLxgAe/view","2|LAUNCH|ICT|1":"https://drive.google.com/file/d/1nmbBdsVfO10KDki9Jq0roQeUFbepa1RV/view","2|LAUNCH|RSE|1":"https://drive.google.com/file/d/1pV4g8yeQpVJft8t513yXacq-42CgpfTC/view","2|LAUNCH|Science|1":"https://drive.google.com/file/d/1cC8Vtc5lHn1qwY0APKJo6EvDZqMiXJgC/view","2|LAUNCH|Science|2":"https://drive.google.com/file/d/19QTxa5bsEFz2ovGJGFbboBdVY27sOdHW/view","2|LAUNCH|Science|3":"https://drive.google.com/file/d/18ZVhD-0NsvTwbPWl15pdp3gPWYr42lMK/view","2|LAUNCH|Vocational|1":"https://drive.google.com/file/d/1ZMcel1bK45gX_D-f8KZv5FhhPMZWWD75/view","2|LAUNCH|Vocational|2":"https://drive.google.com/file/d/1Go5lqbnnqgJCxpu0WL9H6qQ4jQvq8bzK/view","3|BUILD|Careers|1":"https://drive.google.com/file/d/1maFx9I3WKu_wktlq7Vn3SBnqCYvzhoQT/view","3|BUILD|Community Projects|1":"https://drive.google.com/file/d/1o1rouS4PRuVRLttVabPtXweQfbWL-YNi/view","3|BUILD|Creative Arts|1":"https://drive.google.com/file/d/1qD2m0tUW3h3Zfwb8DZw74YgtLUT8MG_k/view","3|BUILD|Creative Arts|2":"https://drive.google.com/file/d/1dZ2oscq2hWOdGvA0j8W_Pf9xwrAY1j0U/view","3|BUILD|Humanities|1":"https://drive.google.com/file/d/1b5VE3LOa_Fm05ctyNhqqeJfEWwCk7_86/view","3|BUILD|RE|1":"https://drive.google.com/file/d/1OMdt_QcZNnjjqpkb9lYDvZqH5NwtLSCp/view","3|BUILD|RSHE|1":"https://drive.google.com/file/d/1L3Eq0rhWGm6joDV3oacf6iYTP_TrVeX7/view","3|BUILD|Science|1":"https://drive.google.com/file/d/1bxBg0u7oay9ivlM6FRk6USUpbK1Qinh9/view","3|BUILD|Science|2":"https://drive.google.com/file/d/1Jc8Fl5jAM42i6-Xf6-QPHTiov3vIIvgF/view","3|BUILD|Vocational|1":"https://drive.google.com/file/d/1uaw79HK7Qoa3Wm5hwW4vG0TTlFKgOt0Q/view","3|GROW|Community Projects|1":"https://drive.google.com/file/d/1aCN7oGCrnILLh84NdcMyxpkKnnRTLtbn/view","3|GROW|Creative Arts|1":"https://drive.google.com/file/d/1k96N7A07GpCANKmvOwFRI_LqF0_UKehO/view","3|GROW|Creative Arts|2":"https://drive.google.com/file/d/1rqIU6y-CF7FSkzINAMt9QmczFgzUad4w/view","3|GROW|Humanities|1":"https://drive.google.com/file/d/17z6ZUP2c8gzAnhIKHx_ZhvKT5EEd8T1_/view","3|GROW|PSHE|1":"https://drive.google.com/file/d/1XiJFOCVW4yA-LrmsdO2YkBdoiyKVKXgB/view","3|GROW|RE|1":"https://drive.google.com/file/d/1LpbbUNeMq43g4KaSuCs_KstsJvenQOXn/view","3|GROW|Science|1":"https://drive.google.com/file/d/1qA2W5RRysbRmRb7JqUXBfqhxrHs68HRA/view","3|GROW|Science|2":"https://drive.google.com/file/d/1rw9TakLPtLbs_-5ccPUjmTCqUHT6GSIp/view","3|LAUNCH|Careers|1":"https://drive.google.com/file/d/1z6ql-4drvMZ88xfh-Vr3bgvxnZlXXF8r/view","3|LAUNCH|Community Projects|1":"https://drive.google.com/file/d/148UMdq_tfJ4xi3W2faprgfpJqIXLjJyN/view","3|LAUNCH|DT|1":"https://drive.google.com/file/d/1tt6MZRjQA24L6nghlSPgF1p0tkIJhO6b/view","3|LAUNCH|Humanities|1":"https://drive.google.com/file/d/1OFG75pGK9q_T4km-Xv2Bneu7Up8c1ER2/view","3|LAUNCH|ICT|1":"https://drive.google.com/file/d/1oCTdhhF0a3pDP7nxIxxfVo0r97jIg0Xi/view","3|LAUNCH|RSE|1":"https://drive.google.com/file/d/1Lu-Bbfz-93cgEJaUbrSOhDA0ub9JHlnD/view","3|LAUNCH|Science|1":"https://drive.google.com/file/d/1mVxlthB-6lCleILLrp6awjHA4P-JKev5/view","3|LAUNCH|Science|2":"https://drive.google.com/file/d/11FaMGPcDa582nK8T4nlwk6fLSxLxr2rI/view","3|LAUNCH|Science|3":"https://drive.google.com/file/d/1tATZeeWt_5DzempHqwJ6COfIn3hZqmrA/view","3|LAUNCH|Vocational|1":"https://drive.google.com/file/d/1Y0BVgCyt7AKQErd0k4FQruXWE2_UB8ho/view","3|LAUNCH|Vocational|2":"https://drive.google.com/file/d/1J5a4NQozc0Yx_tCH6PQ-8s-nORzztAA9/view","4|BUILD|Careers|1":"https://drive.google.com/file/d/1UdcU-1i7nKXY8POk4Jg01PGAEbOWRcF0/view","4|BUILD|Community Projects|2":"https://drive.google.com/file/d/1nGGjjuA3kFMsCtYmoLFdlaM8JpWAhLD0/view","4|GROW|Community Projects|2":"https://drive.google.com/file/d/1LB8WpJW7z26EjR7Gacb3sIaEBvXv3fJ-/view","4|LAUNCH|Community Projects|2":"https://drive.google.com/file/d/1gsHvwzz2LRugSb0sb4zKggemJ9RNE4jO/view","4|BUILD|Community Projects|1":"https://drive.google.com/file/d/1KJYfYLD74GlHJLXmn-WuCiKSzM8Pg2R2/view","4|BUILD|Creative Arts|1":"https://drive.google.com/file/d/1fI4hCJhP5Wts_3XhpE7NI2bKW1b0Idml/view","4|BUILD|Creative Arts|2":"https://drive.google.com/file/d/1fw5oStGx9XXHlM_Ii6Cbp5J-yhrXxjE_/view","4|BUILD|Humanities|1":"https://drive.google.com/file/d/1viBOfYQTwSJ00FLazDd39nPPAuOn4leU/view","4|BUILD|RE|1":"https://drive.google.com/file/d/1xPy6sX3vStQKDv3XLyL4ZcrMgWe6FRlr/view","4|BUILD|RSHE|1":"https://drive.google.com/file/d/1B54U-744ddd5BtQTcgBOBy7c3n7TOuas/view","4|BUILD|Science|1":"https://drive.google.com/file/d/1Lm7AGAtELkQHgrccw2an2gOqJb27k5yY/view","4|BUILD|Science|2":"https://drive.google.com/file/d/107NmvDp_uTQ_4sLwsaCzi27T7W7BNGID/view","4|BUILD|Vocational|1":"https://drive.google.com/file/d/1b-N34Kj5RhyV-H-BLE7AoFN3JlTEmtAt/view","4|GROW|Community Projects|1":"https://drive.google.com/file/d/14k_VpZ9sjRZGwUyhTod_DqF08i0qSCss/view","4|GROW|Creative Arts|1":"https://drive.google.com/file/d/1pyJcrCiYmi8H_N6FDat1_1RDe09MRsBm/view","4|GROW|Creative Arts|2":"https://drive.google.com/file/d/1H8iF_6dIdHQ3FJhkzTdsW5QRBtjMzYB1/view","4|GROW|Humanities|1":"https://drive.google.com/file/d/1SXRtMo0h3oh_8ezAsEucWPM3WSxPHWbY/view","4|GROW|PSHE|1":"https://drive.google.com/file/d/1iar_GQ2fLsEELEfiCdyb3T3_pB76KfCo/view","4|GROW|RE|1":"https://drive.google.com/file/d/1TMxpPrAec8QyflDPPm96IGxClD4eftlX/view","4|GROW|Science|1":"https://drive.google.com/file/d/1uYTcnrR7Xd_DC3XeiWYRoZkwqtv6Mgad/view","4|GROW|Science|2":"https://drive.google.com/file/d/1muJ8gbWpjmOof3JMIidOsk6l7QyMlBMf/view","4|LAUNCH|Careers|1":"https://drive.google.com/file/d/1UdFsAbq8RfWGcviwDtDAJvT3yaeZYJKa/view","4|LAUNCH|Community Projects|1":"https://drive.google.com/file/d/13UCD5qFb8LiY70ReeuU8jar0ykLjz9ma/view","4|LAUNCH|DT|1":"https://drive.google.com/file/d/1lDTY9ajkCCqmhYWmn-EmwGpPhIjRDlHh/view","4|LAUNCH|Humanities|1":"https://drive.google.com/file/d/1uLjrSGxGELWZjMmxQZG2anp9c5C3k3Kc/view","4|LAUNCH|ICT|1":"https://drive.google.com/file/d/1QeJTdc9kV4_A32xRbQkj9TLzqtrIKfrS/view","4|LAUNCH|RSE|1":"https://drive.google.com/file/d/1Evsijt6z21KJkuavL_Ri_GVIR4Aw4LFc/view","4|LAUNCH|Science|1":"https://drive.google.com/file/d/1Q-LTuSHxvu2NP3Y55gKI24ixhocO5ezV/view","4|LAUNCH|Science|2":"https://drive.google.com/file/d/1rO1DUUMeDWeJ4E3hLFz-NhPjhLRDEy1t/view","4|LAUNCH|Science|3":"https://drive.google.com/file/d/1Bhpu4nX2ewYzG8bB0T5Uk--kvMWC8T5v/view","4|LAUNCH|Vocational|1":"https://drive.google.com/file/d/1pbd7-_ItqNf7-1L7QlpAMq7PUAa5xgej/view","4|LAUNCH|Vocational|2":"https://drive.google.com/file/d/1rw4kaImUCwHuFNu4IEjiU-sHfWjWsZST/view","5|BUILD|Careers|1":"https://drive.google.com/file/d/1157g_qetY4SjvEJWNeLSsHsJRlOhygbj/view","5|BUILD|Community Projects|1":"https://drive.google.com/file/d/1GIgDVaUPPV2UIjCVRqedrtjhGotfRIVf/view","5|BUILD|Creative Arts|1":"https://drive.google.com/file/d/1PG6_8oaCJhCSgYptg7oA9rmNU4Dvspfq/view","5|BUILD|Creative Arts|2":"https://drive.google.com/file/d/1JQLskjdbcF2AuM9wdk3XA8Oe7eF02SWO/view","5|BUILD|Humanities|1":"https://drive.google.com/file/d/1Ymw2zmTKqQZsMNK5UzEFqOn1XWztA6pb/view","5|BUILD|RE|1":"https://drive.google.com/file/d/16dOFDp4Mz0G9yBuBunQn0Ww7EwJUOlll/view","5|BUILD|RSHE|1":"https://drive.google.com/file/d/16jkeWgZKLRHVHsEPx2rvC9hZDVZ32dDc/view","5|BUILD|Science|1":"https://drive.google.com/file/d/1Zypxn0Z85zBLqsQhnzpn7yjv0XBsbpXy/view","5|BUILD|Science|2":"https://drive.google.com/file/d/1ntonGiXWkHDfYlqbW4ZLZBxn1tiyouw_/view","5|BUILD|Vocational|1":"https://drive.google.com/file/d/1X2-ET7S1GPW0LbZF73jDEdpGzhXdxxiO/view","5|GROW|Community Projects|1":"https://drive.google.com/file/d/1UJqjlxVFPKDUB6eSHSvot3Vx-7NaLhPF/view","5|GROW|Creative Arts|1":"https://drive.google.com/file/d/1jsBT4bSNSXuWIGz2k53U2INLOZxthV-y/view","5|GROW|Creative Arts|2":"https://drive.google.com/file/d/14BiKcesNnxWSEBwhTe3PGk_n4cyzlKFQ/view","5|GROW|Humanities|1":"https://drive.google.com/file/d/1GJBkdxLrBbZu6Rl1yWqOFDowURtEZXko/view","5|GROW|PSHE|1":"https://drive.google.com/file/d/14NKjhXHeoQyINzo9OWrEjayk9waZ8QtK/view","5|GROW|RE|1":"https://drive.google.com/file/d/1H4Ald_LpYUdQRLHpE3_r60naAMwEyAho/view","5|GROW|Science|1":"https://drive.google.com/file/d/1f9TS4YWRkMaP2bpHrteyvyOYdcZZf2Fm/view","5|GROW|Science|2":"https://drive.google.com/file/d/1Z9mtzQ-blz2oyZyqgGOWhsSh6nZJx4MV/view","5|LAUNCH|Careers|1":"https://drive.google.com/file/d/1LjvkvAadA0zOPvDbHj3jBbi8CEmV5fY0/view","5|LAUNCH|Community Projects|1":"https://drive.google.com/file/d/1_58jEIVTUaqFLVLpK2oMJNcQKBMual1H/view","5|LAUNCH|DT|1":"https://drive.google.com/file/d/17do7dzKylvdWZKkVQBn4bOCReYd7n1_M/view","5|LAUNCH|Humanities|1":"https://drive.google.com/file/d/17GvVj3wiElIey7ILDIbS7DtHk386PAvx/view","5|LAUNCH|ICT|1":"https://drive.google.com/file/d/12ODlBsxAo33uSqD6e8otx1PFhAsGpT0d/view","5|LAUNCH|RSE|1":"https://drive.google.com/file/d/19XzDcClO03YnhVTPFL_1_luJgz0jeSwq/view","5|LAUNCH|Science|1":"https://drive.google.com/file/d/1BQnE1XwA57wf_n7Rhczmg-HLcanGjT4O/view","5|LAUNCH|Science|2":"https://drive.google.com/file/d/11AAar565LQvzN0B4jixQdghiee9mZhYp/view","5|LAUNCH|Science|3":"https://drive.google.com/file/d/1XAp_ZWwpDcI2xVjix60Hsfw5p8914Gg6/view","5|LAUNCH|Vocational|1":"https://drive.google.com/file/d/1QX-6qF8NnT1N3Mlq-V8Ht7j9w193HbyI/view","5|LAUNCH|Vocational|2":"https://drive.google.com/file/d/1Xcfo2g4yq8inwmlg3fAFZRT9vl_ujMEV/view","6|BUILD|Careers|1":"https://drive.google.com/file/d/10-OtNKIO4xI_mhLES3pPl9tebIDIkiIL/view","6|BUILD|Community Projects|1":"https://drive.google.com/file/d/10r-PuofzP8ZnlkvWsERBTjqJKK5_jLcT/view","6|BUILD|Creative Arts|1":"https://drive.google.com/file/d/1K-Z7UXW3PR1ZvyGQbLSXHxVugcgbjUlG/view","6|BUILD|Creative Arts|2":"https://drive.google.com/file/d/15kkVDAYt7cDBHbaWTZAs1bhx_oQGHQ-I/view","6|BUILD|Humanities|1":"https://drive.google.com/file/d/1FQCrGNKuvbzLmSjDBOh5BDxnCKF6OwMW/view","6|BUILD|RE|1":"https://drive.google.com/file/d/1bO4idiZOnZzsDgvhUBwkOL7_aQ1mb0PP/view","6|BUILD|RSHE|1":"https://drive.google.com/file/d/1BWlxxA3Zp9cCnMtilbsfg2iJMbeocugF/view","6|BUILD|Science|1":"https://drive.google.com/file/d/169y8M1yU37Sy61mMetc1nr93c7Gy7UK2/view","6|BUILD|Science|2":"https://drive.google.com/file/d/1z_5dTsOQRVhJpUUHGZKDN_CxholcNLYj/view","6|BUILD|Vocational|1":"https://drive.google.com/file/d/1KSPk5lBSQMCOBmKFDyqBiNbjkVpuyX2A/view","6|GROW|Community Projects|1":"https://drive.google.com/file/d/16QAk-1oq2nzG1Y56ErukKUGndmWduJTl/view","6|GROW|Creative Arts|1":"https://drive.google.com/file/d/1JdofsttnxiRCoWtuA3-I0v97Z0A1e2KR/view","6|GROW|Creative Arts|2":"https://drive.google.com/file/d/1pnn1bC0-Y4JZ9frSO__zmEs1n7saGZ4D/view","6|GROW|Humanities|1":"https://drive.google.com/file/d/1c32yZiOAQqRHexZcHtDrtwP3Uu_56R4Q/view","6|GROW|PSHE|1":"https://drive.google.com/file/d/1rqYE2mNefjNRz6FeXGKiO9dJdgZOca9k/view","6|GROW|RE|1":"https://drive.google.com/file/d/1UUp0cvp7vzt2Mo09VkXrS5NPf3WDA3vB/view","6|GROW|Science|1":"https://drive.google.com/file/d/18MnYCbo02xndcfwKKbQcFj1nj8KUMRs_/view","6|GROW|Science|2":"https://drive.google.com/file/d/1FHD4B23HPfl0QVtzXufL-wmrEchXkhL9/view","6|LAUNCH|Careers|1":"https://drive.google.com/file/d/10NOX2vrD67rOO9k2nmF-PVVnnDue2JKD/view","6|LAUNCH|Community Projects|1":"https://drive.google.com/file/d/1BFkREe-I3YejKQEgOo6oNkfewC4jOQRJ/view","6|LAUNCH|DT|1":"https://drive.google.com/file/d/1uLywnPcBQyc_rM7rP_7RVAXfuPyGxZ8o/view","6|LAUNCH|Humanities|1":"https://drive.google.com/file/d/1yhKGtH8XLLQKp9QcDmhRke4FC3qSJWUN/view","6|LAUNCH|ICT|1":"https://drive.google.com/file/d/1k7-MGbC_j6tN8mMeLHltnNVJX3cvOSBG/view","6|LAUNCH|RSE|1":"https://drive.google.com/file/d/1EgYOJZRzkdo13lmIwVZmrQQjlRusd9rg/view","6|LAUNCH|Science|1":"https://drive.google.com/file/d/19512FOpgp7elLuz6z6ZLFzqX0uxId-lI/view","6|LAUNCH|Science|2":"https://drive.google.com/file/d/17E27IlWQUH84HDOxC1JMRHV4eSZizzoy/view","6|LAUNCH|Science|3":"https://drive.google.com/file/d/1k-1QaSS6zO7f8X8YqSQXAhF2sAQqvRO5/view","6|LAUNCH|Vocational|1":"https://drive.google.com/file/d/1rg3FZ0wnmeVB3wQKksMXHmUIxXNexpb0/view","6|LAUNCH|Vocational|2":"https://drive.google.com/file/d/1KjIE4gZ3BGRI6V4AFEWIzcSNUSCzBJjG/view","7|BUILD|Careers|1":"https://drive.google.com/file/d/14raKHWeWcAs8B4Pl3IdqVINPoRujWaM6/view","7|BUILD|Community Projects|1":"https://drive.google.com/file/d/1wtoWcSE93tktDA9opCBFz1GD77prelyt/view","7|BUILD|Creative Arts|1":"https://drive.google.com/file/d/14MuFFCeoHPbKb7PyxBW-5TQ7HUcCZP55/view","7|BUILD|Creative Arts|2":"https://drive.google.com/file/d/13jIjuev5nxA-VCJ0mqsiWn_EaFC0DjRz/view","7|BUILD|Humanities|1":"https://drive.google.com/file/d/1c-J899-8stRTaq4kUrwuPFUSXcxZG4KB/view","7|BUILD|RE|1":"https://drive.google.com/file/d/1Gvdur0QIKgw1ADhbJd4ipr4mVGCYrtOx/view","7|BUILD|RSHE|1":"https://drive.google.com/file/d/1UAL573vfL03LcXGZ8kR3ccMv8-LEsEGd/view","7|BUILD|Science|1":"https://drive.google.com/file/d/1r33yFsj4CvC3OAncVSqhOZVG--K9jd0z/view","7|BUILD|Science|2":"https://drive.google.com/file/d/1c9BcBQSStnR43zLJ0vF4XRVusKp3LS7O/view","7|BUILD|Vocational|1":"https://drive.google.com/file/d/1E1yI8b0ANOgUCQHyeZhhGL0xk0yrV2_Z/view","7|GROW|Community Projects|1":"https://drive.google.com/file/d/1QDyILKTT-MR0UqQ5SSc0lR7rlCpC5aVT/view","7|GROW|Creative Arts|1":"https://drive.google.com/file/d/141Y6-HGdUD2ITmSxSQmBX5-e77n8RwzA/view","7|GROW|Creative Arts|2":"https://drive.google.com/file/d/1ZXduvQDU90tGv9StSVM5o8_Nl5a-e6qD/view","7|GROW|Humanities|1":"https://drive.google.com/file/d/1D_pL3aKG77h0DNwSvR8RbUmpuX0y-h2X/view","7|GROW|PSHE|1":"https://drive.google.com/file/d/18cLgx8euQHfl_qkrIPjvfBM0tx1OJHe-/view","7|GROW|RE|1":"https://drive.google.com/file/d/1_I1H2STAg9mTAeHjnKYVs7ie3ep37uDw/view","7|GROW|Science|1":"https://drive.google.com/file/d/1f-yUIEg4Fges72VqAJKg812uDqBSASRQ/view","7|GROW|Science|2":"https://drive.google.com/file/d/1WH1bIckQb9OO5P0bNn75wjXl8sA8gy-5/view","7|LAUNCH|Careers|1":"https://drive.google.com/file/d/1r-8bJprMQI_ZWlYHTpgg-yMv1f9nEvhA/view","7|LAUNCH|Community Projects|1":"https://drive.google.com/file/d/1RmxvrSMx6t9I1Jjxek5zx36iPmr1KRlB/view","7|LAUNCH|DT|1":"https://drive.google.com/file/d/1CO-UjHierAjcSjU99B3yvOFd6VpC2i3p/view","7|LAUNCH|Humanities|1":"https://drive.google.com/file/d/1A6gn1z4hL5qzkizXLxOe2sdJSgCP2u3G/view","7|LAUNCH|ICT|1":"https://drive.google.com/file/d/1exUfNEGsm53X344LnmWxraxeejJlvavO/view","7|LAUNCH|RSE|1":"https://drive.google.com/file/d/12zNn0UQbn94-Fw6UebSfohlYYvgNkrEe/view","7|LAUNCH|Science|1":"https://drive.google.com/file/d/1LxjpMYd-pFLVqwllg2HR4w05ImUx-2zr/view","7|LAUNCH|Science|2":"https://drive.google.com/file/d/1Z-tu5gK4aNLl7HfjgHK8vkCQNXnyKDM2/view","7|LAUNCH|Science|3":"https://drive.google.com/file/d/1CfJSJTBXh6HJBGfTzX8D-0mJT9xKb3OQ/view","7|LAUNCH|Vocational|1":"https://drive.google.com/file/d/1eVZxTIIj1rF7wPmtk2yt5UDqlPT56uHT/view","7|LAUNCH|Vocational|2":"https://drive.google.com/file/d/1IDnMcG85qiNmWKdzuMKZXYmQI5movvKc/view"};
+
+const SAFE_WORDS = new Set([
+  'BUILD','GROW','LAUNCH','ALL','SCI','VOC','ART','HUM','CAREERS','RE','ICT','RSHE','PSHE','DT','RSE','COMM',
+  'SCIENCE','HUMANITIES','VOCATIONAL','CREATIVE','ARTS','COMMUNITY','PROJECTS','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY',
+  'PUPIL','WEEK','LESSON','PERIOD','TA','QR','UK','A1','A2','A3','A4','AM','PM','WB','IEDP','SEND','HTML','CSV','PDF','JSON',
+  'MR','MRS','MS','MISS','MX','DR',
+  'AN','AS','AT','BE','BY','DO','GO','HE','IF','IN','IS','IT','ME','MY','NO','OF','OK','ON','OR','SO','TO','UP','US','WE'
+]);
+const LEGACY_ADAPT = {
+  large_print:'Large print', chunked:'One task at a time', sentence_starters:'Sentence starters',
+  word_bank:'Word bank', fewer_questions:'Fewer questions', read_aloud:'Read aloud',
+  extra_space:'Extra time and space', visual_steps:'Visual steps'
+};
+
+function notice(text){ $('homeStatus').textContent = text; }
+function read(key, fallback){ try{ const raw = localStorage.getItem(key); return raw === null ? fallback : JSON.parse(raw); }catch(e){ notice('This device could not read saved settings. They have been kept.'); return fallback; } }
+function write(key, value){ try{ localStorage.setItem(key, JSON.stringify(value)); return true; }catch(e){ notice('Your change works for this visit. This device could not save it.'); return false; } }
+function pad(n){ return String(n).padStart(2, '0'); }
+function dateISO(d = new Date()){ return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+function dateStamp(d = new Date()){ return dateISO(d).replace(/-/g, ''); }
+function lessonDate(w, d){ return new Date(2026, 10, 2 + (+w - 1) * 7 + DAYS.indexOf(d), 12); }
+function escapeHTML(s){ return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function escapeRE(s){ return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+function el(tag, attrs = {}, text){
+  const node = document.createElement(tag);
+  Object.entries(attrs).forEach(([k, v]) => { if (v !== undefined && v !== null) node.setAttribute(k, String(v)); });
+  if (text !== undefined) node.textContent = text;
+  return node;
 }
-function pupilAdapt(n) {
+
+function lessonCode(w, path, subj, n, part = 1){
+  const week = 'A2_W' + pad(w);
+  if (subj === 'Community Projects'){ const cw = +w === 4 ? (+part === 2 ? 4 : 3) : (+w < 4 ? Math.max(1, +w - 1) : +w); return 'COMMUNITY_A2_W' + pad(cw); }
+  if (subj === 'Science') return path === 'GROW' ? 'GROW_SCI_' + week + '_P' + n : 'SCI_' + path + '_' + week + '_L' + n;
+  if (subj === 'Creative Arts') return 'ART_' + path + '_' + week + '_P' + n;
+  if (subj === 'RE') return path + '_RE_' + week;
+  const base = PREFIX[subj] + '_' + path + '_' + week;
+  return subj === 'Vocational' && path === 'LAUNCH' && +w === 7 ? base + ' L' + n : base;
+}
+function fileCode(code){ return String(code || 'LESSON').replace(/ /g, '_').replace(/[^A-Za-z0-9_-]+/g, '_'); }
+
+const SCHOOL_DAY = [
+  {label:'Check-in and reading',start:'09:00',end:'09:30'},
+  {p:1,start:'09:30',end:'10:10'},
+  {p:2,start:'10:10',end:'10:50'},
+  {label:'Break',start:'10:50',end:'11:00'},
+  {p:3,start:'11:00',end:'11:40'},
+  {p:4,start:'11:40',end:'12:20'},
+  {label:'Lunch',start:'12:20',end:'12:50'},
+  {p:5,start:'12:50',end:'13:30'},
+  {p:6,start:'13:30',end:'14:10'},
+  {label:'Check-out',start:'14:10',end:'14:30'}
+];
+function schoolTimes(){ return {v:2, starts:SCHOOL_DAY.filter(s=>s.p).map(s=>s.start), ends:SCHOOL_DAY.filter(s=>s.p).map(s=>s.end), confirmed:true}; }
+function validSchoolTimes(value){
+  const format = t => typeof t === 'string' && /^([01]\d|2[0-3]):[0-5]\d$/.test(t);
+  return !!value && value.v === 2 && Array.isArray(value.starts) && Array.isArray(value.ends) && value.starts.length === 6 && value.ends.length === 6 && value.starts.every((start, i) => format(start) && format(value.ends[i]) && value.ends[i] > start && (!i || start >= value.ends[i - 1]));
+}
+function schoolWeek(date){ return 1 + Math.round((Date.UTC(date.getFullYear(), date.getMonth(), date.getDate() - (date.getDay() + 6) % 7) - Date.UTC(2026, 10, 2)) / 604800000); }
+function schoolSlots(date, times){
+  const w = schoolWeek(date), day = DAYS[date.getDay() - 1];
+  if (w < 1 || w > 7 || !day || (w === 1 && day === 'Monday')) return [];
+  const clock = text => { const [h, m] = text.split(':').map(Number); return new Date(date.getFullYear(), date.getMonth(), date.getDate(), h, m); };
+  return TT[day].map(row => ({ w, day, p: row[0], path: row[1], subject: row[2], lesson: LN[day + '|' + row[0]], start: clock(times.starts[row[0] - 1]), end: clock(times.ends[row[0] - 1]) }));
+}
+function schoolContext(now, times){
+  const candidates = [];
+  for (let offset = 0; offset < 11; offset++) candidates.push(...schoolSlots(new Date(now.getFullYear(), now.getMonth(), now.getDate() + offset), times));
+  const current = candidates.find(s => now >= s.start && now < s.end), upcoming = candidates.filter(s => s.start > now), slot = current || upcoming[0] || null;
+  return { slot, current: !!current, next: current ? upcoming[0] : upcoming[1] };
+}
+function schoolSlotText(slot, times){ return slot.day + ' · Period ' + slot.p + ', ' + times.starts[slot.p - 1] + ' to ' + times.ends[slot.p - 1] + ', ' + (slot.path === 'ALL' ? 'All groups' : slot.path) + ' ' + slot.subject; }
+function schoolNowText(context, times, now){
+  if (!context.slot) return 'No lesson in the saved timetable';
+  const minute = now.getHours() * 60 + now.getMinutes(), checkIn = now.getDay() > 0 && now.getDay() < 6 && minute >= 540 && minute < 570 && schoolSlots(now, times).length > 0;
+  return (checkIn ? 'Check-in and reading, then ' : context.current ? 'Now: ' : 'Next: ') + schoolSlotText(context.slot, times);
+}
+
+// --- Roster, Initials, Show Mode & Redaction (1..20 pupils; private .note NEVER read) ---
+function normLabel(v){ return String(v || '').trim().replace(/\s+/g, ' ').toLocaleLowerCase('en-GB'); }
+
+function readClassNamesLines(){
   try {
-    const p = JSON.parse(localStorage.getItem('mbm_pupil_profile_v1') || '{}');
-    const lines = p && p.pupils && p.pupils[n] && p.pupils[n].adapt;
-    return Array.isArray(lines) ? lines.filter(x => typeof x === 'string' && x.trim()).slice(0, 4).map(x => x.trim().slice(0, 80)) : [];
+    const raw = localStorage.getItem(KEYS.classNames);
+    if (!raw) return [];
+    let val; try { val = JSON.parse(raw); } catch(e) { val = raw; }
+    const out = [];
+    const collect = x => {
+      if (typeof x === 'string') out.push(...x.split(/\r?\n/));
+      else if (Array.isArray(x)) x.forEach(collect);
+      else if (x && typeof x === 'object') Object.values(x).forEach(collect);
+    };
+    collect(val);
+    return [...new Set(out.map(s => s.trim()).filter(s => s && !s.startsWith('#')))];
   } catch (e) { return []; }
 }
 
-// Timetable, lesson counts and lessonCode copied from round-two source Quick_capture.html.
-const DAYS=['Monday','Tuesday','Wednesday','Thursday','Friday'];
-// Copied from Catch_up_Tracker.html. Lesson numbers count occurrences per pathway/subject in week order.
-var TT={
- Monday:[[1,"LAUNCH","Vocational"],[2,"GROW","Science"],[3,"BUILD","Science"],[4,"LAUNCH","Science"],[5,"BUILD","Creative Arts"],[6,"GROW","Creative Arts"]],
- Tuesday:[[1,"BUILD","Creative Arts"],[2,"LAUNCH","Humanities"],[3,"BUILD","Careers"],[4,"GROW","Science"],[5,"BUILD","RE"],[6,"LAUNCH","ICT"]],
- Wednesday:[[1,"BUILD","RSHE"],[2,"LAUNCH","Science"],[3,"GROW","PSHE"],[4,"BUILD","Science"],[5,"GROW","Creative Arts"],[6,"LAUNCH","Vocational"]],
- Thursday:[[1,"LAUNCH","DT"],[2,"GROW","RE"],[3,"BUILD","Humanities"],[4,"LAUNCH","RSE"],[5,"ALL","Community Projects"]],
- Friday:[[1,"LAUNCH","Careers"],[2,"GROW","Humanities"],[3,"BUILD","Vocational"],[4,"LAUNCH","Science"]]
+function buildRoster(){
+  let rawKey = {}, profile = {}, tracker = {}, extraNames = [];
+  try { rawKey = JSON.parse(localStorage.getItem(KEYS.pupilKey) || '{}') || {}; } catch(e){}
+  try { profile = JSON.parse(localStorage.getItem(KEYS.profile) || '{}') || {}; } catch(e){}
+  try { tracker = JSON.parse(localStorage.getItem(KEYS.tracker) || '{}') || {}; } catch(e){}
+  try { const n = JSON.parse(localStorage.getItem(KEYS.extraNames) || '[]'); if (Array.isArray(n)) extraNames = n.filter(x => typeof x === 'string' && x.trim()); } catch(e){}
+
+  const keyByNum = {};
+  for (let n = 1; n <= 20; n++) {
+    const v = rawKey[String(n)] ?? rawKey[n] ?? '';
+    if (typeof v === 'string' && v.trim()) keyByNum[n] = v.trim();
+  }
+  const classLines = readClassNamesLines();
+  if (!Object.keys(keyByNum).length) {
+    classLines.forEach((line, idx) => {
+      const n = idx + 1;
+      if (n >= 1 && n <= 20 && !keyByNum[n] && !/^(?:Pupil\s*|P)?\d+$/i.test(line)) keyByNum[n] = line;
+    });
+  }
+
+  const groups = { BUILD: [], GROW: [], LAUNCH: [] };
+  const assigned = new Set();
+  const trackerRefByNum = {};
+  const trPupils = tracker && tracker.pupils && typeof tracker.pupils === 'object' ? tracker.pupils : null;
+  const trEntries = trPupils ? PATHWAYS.flatMap(p => (Array.isArray(trPupils[p]) ? trPupils[p] : []).map(lbl => ({ path: p, label: String(lbl || '').trim() })).filter(r => r.label)) : [];
+
+  if (trEntries.length) {
+    trEntries.forEach((row, idx) => {
+      const low = normLabel(row.label), exp = low.match(/^(?:pupil\s*|p)?(\d+)$/i);
+      const full = Object.keys(keyByNum).filter(n => normLabel(keyByNum[n]) === low);
+      const first = Object.keys(keyByNum).filter(n => normLabel(keyByNum[n]).split(' ')[0] === low);
+      let n = exp ? +exp[1] : (full.length === 1 ? +full[0] : (first.length === 1 ? +first[0] : idx + 1));
+      if (n >= 1 && n <= 20 && !assigned.has(n)) {
+        groups[row.path].push(n);
+        assigned.add(n);
+        trackerRefByNum[n] = row.label;
+        if (!keyByNum[n] && !/^(?:Pupil\s*|P)?\d+$/i.test(row.label)) keyByNum[n] = row.label;
+      }
+    });
+  } else {
+    let anyProfGroup = false;
+    for (let n = 1; n <= 20; n++) if (PATHWAYS.includes(profile?.pupils?.[n]?.group)) anyProfGroup = true;
+    if (!anyProfGroup) {
+      PATHWAYS.forEach(p => DEFAULT_GROUPS[p].forEach(n => { groups[p].push(n); assigned.add(n); }));
+    }
+  }
+
+  for (let n = 1; n <= 20; n++) {
+    if (assigned.has(n)) continue;
+    const g = profile?.pupils?.[n]?.group;
+    if (PATHWAYS.includes(g)) { groups[g].push(n); assigned.add(n); }
+  }
+  PATHWAYS.forEach(p => groups[p].sort((a, b) => a - b));
+
+  const groupByNum = {};
+  PATHWAYS.forEach(p => groups[p].forEach(n => { groupByNum[n] = p; }));
+
+  // Collision-resolved initials for 1..20
+  const initRows = Object.entries(keyByNum).filter(([, v]) => String(v).trim()).map(([id, v]) => {
+    const words = String(v).trim().split(/\s+/).map(w => Array.from(w.replace(/[^\p{L}\p{M}]/gu, '').toLocaleUpperCase('en-GB'))).filter(w => w.length);
+    return { n: +id, tag: words.slice(0, 3).map(x => x[0]).join(''), last: words.length ? words[words.length - 1] : [], at: 1 };
+  }).filter(r => r.tag);
+  for (let step = 0; step < 105; step++) {
+    const counts = new Map();
+    initRows.forEach(r => counts.set(r.tag, (counts.get(r.tag) || 0) + 1));
+    const clashes = initRows.filter(r => counts.get(r.tag) > 1);
+    if (!clashes.length) break;
+    clashes.forEach(r => { r.tag += r.at < r.last.length ? r.last[r.at++] : String(r.n); });
+  }
+  const initialsByNum = {};
+  for (let n = 1; n <= 20; n++) initialsByNum[n] = (initRows.find(r => r.n === n) || {}).tag || ('P' + n);
+
+  let legacyShow = 'initials';
+  try { const ls = JSON.parse(localStorage.getItem(KEYS.showLegacy) || '"initials"'); if (['initials','first','number'].includes(ls)) legacyShow = ls; } catch(e){}
+  const show = ['initials', 'first', 'number'].includes(profile.show) ? profile.show : legacyShow;
+
+  const activeSet = new Set([...groups.BUILD, ...groups.GROW, ...groups.LAUNCH]);
+  Object.keys(keyByNum).forEach(k => { if (+k >= 1 && +k <= 20) activeSet.add(+k); });
+  Object.keys(profile?.pupils || {}).forEach(k => { if (+k >= 1 && +k <= 20 && (profile.pupils[k]?.group || (Array.isArray(profile.pupils[k]?.adapt) && profile.pupils[k].adapt.length))) activeSet.add(+k); });
+  const allPupils = [...activeSet].sort((a, b) => a - b);
+
+  return { keyByNum, profile, tracker, classLines, extraNames, groups, groupByNum, trackerRefByNum, initialsByNum, show, allPupils };
+}
+
+function pupilTag(n, roster = buildRoster()){
+  const label = String(roster.keyByNum[n] || '').trim();
+  if (!label || roster.show === 'number') return 'P' + n;
+  if (roster.show === 'first') return label.split(/\s+/)[0];
+  return roster.initialsByNum[n] || ('P' + n);
+}
+
+function pupilAdapt(n, roster = buildRoster()){
+  // Strictly read profile.pupils[n].adapt only — NEVER read private .note!
+  const pLines = Array.isArray(roster.profile?.pupils?.[n]?.adapt)
+    ? roster.profile.pupils[n].adapt.filter(x => typeof x === 'string' && x.trim()).slice(0, 4).map(x => x.trim().slice(0, 90))
+    : [];
+  const ref = roster.trackerRefByNum[n] || roster.keyByNum[n] || ('Pupil ' + n);
+  const legTags = Array.isArray(roster.tracker?.adapt?.[ref]?.t) ? roster.tracker.adapt[ref].t.map(k => LEGACY_ADAPT[k] || k) : [];
+  return [...new Set([...pLines, ...legTags])].slice(0, 4);
+}
+
+function setShowMode(mode){
+  if (!['initials', 'first', 'number'].includes(mode)) return;
+  let p = {};
+  try { p = JSON.parse(localStorage.getItem(KEYS.profile) || '{}') || {}; } catch(e){}
+  write(KEYS.profile, { ...p, version: 1, show: mode, pupils: p.pupils || {} });
+  write(KEYS.showLegacy, mode);
+  renderAll();
+}
+
+function runDictionaryRedaction(text, mode, roster = buildRoster()){
+  let s = String(text ?? '');
+  if (!s) return '';
+  if (mode === 'private') {
+    s = s.replace(/\bPupil\s+([1-9]|1\d|20)\b/gi, (_, num) => roster.initialsByNum[+num] || ('P' + (+num)));
+  }
+  const dict = new Map();
+  const add = (val, rep, kind) => {
+    val = String(val || '').trim();
+    if (!val) return;
+    const k = val.toLocaleLowerCase('en-GB');
+    if (!dict.has(k)) dict.set(k, { rep, kind });
+  };
+  for (let n = 1; n <= 20; n++) {
+    const full = roster.keyByNum[n];
+    if (!full) continue;
+    const rep = mode === 'private' ? (roster.initialsByNum[n] || ('P' + n)) : ('Pupil ' + n);
+    add(full, rep, 'full');
+  }
+  for (let n = 1; n <= 20; n++) {
+    const full = roster.keyByNum[n];
+    if (!full) continue;
+    const rep = mode === 'private' ? (roster.initialsByNum[n] || ('P' + n)) : ('Pupil ' + n);
+    [...full.split(/\s+/), ...full.split(/[\s\-]+/)].forEach(w => {
+      const cw = w.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, '');
+      if (cw.length >= 2 && !SAFE_WORDS.has(cw.toUpperCase())) add(cw, rep, 'part');
+    });
+    if (mode === 'public') {
+      const ini = roster.initialsByNum[n];
+      if (ini && ini.length >= 2 && !/^P\d+$/i.test(ini) && !SAFE_WORDS.has(ini.toUpperCase())) add(ini, 'Pupil ' + n, 'initials');
+    }
+  }
+  [...roster.classLines, ...roster.extraNames].forEach(val => {
+    add(val, '[name]', 'full');
+    String(val).split(/\s+/).forEach(w => {
+      const cw = w.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, '');
+      if (cw.length >= 2 && !SAFE_WORDS.has(cw.toUpperCase())) add(cw, '[name]', 'part');
+    });
+  });
+  const terms = [...dict.keys()].sort((a, b) => b.length - a.length);
+  if (!terms.length) return s;
+  const re = new RegExp('(^|[^\\p{L}\\p{N}_])(' + terms.map(escapeRE).join('|') + ')(?:([\u0027\u2019]s))?(?=$|[^\\p{L}\\p{N}_])', 'giu');
+  let last = 0, out = '';
+  for (const m of s.matchAll(re)) {
+    const entry = dict.get(m[2].toLocaleLowerCase('en-GB'));
+    if (entry.kind === 'initials' && m[2] !== m[2].toLocaleUpperCase('en-GB')) continue;
+    if (entry.kind === 'part' && m[2].length <= 2 && !/^\p{Lu}/u.test(m[2])) continue;
+    const start = m.index + m[1].length, end = m.index + m[0].length;
+    out += s.slice(last, start) + entry.rep + (m[3] || '');
+    last = end;
+  }
+  return out + s.slice(last);
+}
+
+function redactPublic(text, roster = buildRoster()){ return runDictionaryRedaction(text, 'public', roster); }
+function redactPrivateInitials(text, roster = buildRoster()){ return runDictionaryRedaction(text, 'private', roster); }
+
+// --- Store-only ZIP writer, download & clipboard helpers ---
+const CRC_TABLE = Uint32Array.from({length: 256}, (_, n) => { for (let j = 0; j < 8; j++) n = n & 1 ? 0xedb88320 ^ (n >>> 1) : n >>> 1; return n >>> 0; });
+function crc32(bytes){ let n = 0xffffffff; for (const b of bytes) n = CRC_TABLE[(n ^ b) & 255] ^ (n >>> 8); return (n ^ 0xffffffff) >>> 0; }
+function zipHeader(length){ const b = new Uint8Array(length); return { b, v: new DataView(b.buffer) }; }
+async function makeZip(files, name){
+  const chunks = [], central = [];
+  let offset = 0;
+  for (const file of files) {
+    const data = new Uint8Array(await file.arrayBuffer()), filename = new TextEncoder().encode(file.name), crc = crc32(data), h = zipHeader(30), c = zipHeader(46);
+    h.v.setUint32(0, 0x04034b50, true); h.v.setUint16(4, 20, true); h.v.setUint16(6, 0x800, true); h.v.setUint32(14, crc, true); h.v.setUint32(18, data.length, true); h.v.setUint32(22, data.length, true); h.v.setUint16(26, filename.length, true);
+    c.v.setUint32(0, 0x02014b50, true); c.v.setUint16(4, 20, true); c.v.setUint16(6, 20, true); c.v.setUint16(8, 0x800, true); c.v.setUint32(16, crc, true); c.v.setUint32(20, data.length, true); c.v.setUint32(24, data.length, true); c.v.setUint16(28, filename.length, true); c.v.setUint32(42, offset, true);
+    chunks.push(h.b, filename, data); central.push(c.b, filename); offset += h.b.length + filename.length + data.length;
+  }
+  const size = central.reduce((n, a) => n + a.length, 0), end = zipHeader(22);
+  end.v.setUint32(0, 0x06054b50, true); end.v.setUint16(8, files.length, true); end.v.setUint16(10, files.length, true); end.v.setUint32(12, size, true); end.v.setUint32(16, offset, true);
+  return new File([...chunks, ...central, end.b], name, { type: 'application/zip' });
+}
+function downloadFile(file){
+  const url = URL.createObjectURL(file), a = el('a', { href: url, download: file.name });
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 40000);
+}
+async function copyText(text, statusEl, msg = 'Copied to clipboard.'){
+  try {
+    if (navigator.clipboard?.writeText) { await navigator.clipboard.writeText(text); if (statusEl) statusEl.textContent = msg; return true; }
+  } catch (e) {}
+  const t = el('textarea', { readonly: 'readonly', 'aria-label': 'Copy text' });
+  t.value = text; t.style.position = 'fixed'; t.style.left = '-9999px';
+  document.body.append(t); t.select();
+  let ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+  t.remove();
+  if (statusEl) statusEl.textContent = ok ? msg : 'Clipboard unavailable on this browser.';
+  return ok;
+}
+
+// --- Shared Tracker & Tally Matching Helpers ---
+function matchTrackerPupilNumber(rawWho, tracker, roster){
+  const txt = normLabel(rawWho), num = txt.match(/^(?:pupil\s*|p)?(\d+)$/i);
+  if (num && +num[1] >= 1 && +num[1] <= 20) return +num[1];
+  const full = Object.keys(roster.keyByNum).filter(n => normLabel(roster.keyByNum[n]) === txt);
+  if (full.length === 1) return +full[0];
+  const first = Object.keys(roster.keyByNum).filter(n => normLabel(roster.keyByNum[n]).split(' ')[0] === txt);
+  if (first.length === 1) return +first[0];
+  const ini = Object.keys(roster.initialsByNum).filter(n => roster.initialsByNum[n] === String(rawWho || '').trim());
+  if (ini.length === 1) return +ini[0];
+  const trRef = Object.keys(roster.trackerRefByNum).filter(n => normLabel(roster.trackerRefByNum[n]) === txt);
+  return trRef.length === 1 ? +trRef[0] : 0;
+}
+
+function ensureTrackerState(roster){
+  const s = read(KEYS.tracker, null);
+  if (s && s.pupils && s.marks && typeof s.marks === 'object' && !Array.isArray(s.marks)) {
+    s.links = s.links || {}; s.assessMarks = s.assessMarks || {}; s.pins = s.pins || []; s.adapt = s.adapt || {};
+    return s;
+  }
+  return {
+    pupils: {
+      BUILD: roster.groups.BUILD.map(n => 'Pupil ' + n),
+      GROW: roster.groups.GROW.map(n => 'Pupil ' + n),
+      LAUNCH: roster.groups.LAUNCH.map(n => 'Pupil ' + n)
+    },
+    marks: {}, links: {}, assessMarks: {}, pins: [], adapt: {}, dirtySinceBackup: false, lastBackup: ''
+  };
+}
+
+function trackerRowKeyFor(s, w, day, p, n, grp, roster){
+  const prefix = [w, day, p].join('|') + '|';
+  const existingKeys = Object.keys(s.marks || {}).filter(k => k.startsWith(prefix) && matchTrackerPupilNumber(k.slice(prefix.length), s, roster) === +n);
+  const numbered = existingKeys.find(k => /^(?:Pupil\s*|P)?\d+$/i.test(k.slice(prefix.length)));
+  if (numbered) return numbered;
+  if (existingKeys[0]) return existingKeys[0];
+  const ref = roster.trackerRefByNum[n] || ('Pupil ' + n);
+  return prefix + ref;
+}
+
+function queueIDFor(w, d, p, path, code){ return [w, d, p, path, code].join('|'); }
+function enqueueLessonInQC(sendQueue, w, d, p, path, subj, lesson, code){
+  const id = queueIDFor(w, d, p, path, code), existing = sendQueue[id] || {};
+  sendQueue[id] = {
+    ...existing,
+    c: { w: +w, d, p: +p, path, subj, lesson: +lesson, code, date: dateISO(lessonDate(w, d)) },
+    changed: new Date().toISOString()
+  };
+}
+
+// --- Undo Stack for Attendance, Catch-up Done, and End-of-day All Got It ---
+let lastUndo = null;
+function saveUndoSnapshot(kind, labelText){
+  lastUndo = {
+    kind,
+    labelText,
+    tallyRaw: localStorage.getItem(KEYS.tally),
+    trackerRaw: localStorage.getItem(KEYS.tracker),
+    queueRaw: localStorage.getItem(KEYS.qcQueue),
+    covRaw: localStorage.getItem(KEYS.covAbs)
+  };
+  ['brief', 'morning', 'eod'].forEach(prefix => {
+    const bar = $(prefix + 'UndoBar'), txt = $(prefix + 'UndoText');
+    if (!bar || !txt) return;
+    if (prefix === kind) { txt.textContent = labelText; bar.hidden = false; }
+    else bar.hidden = true;
+  });
+}
+function restoreRawKey(key, raw){
+  try { if (raw === null) localStorage.removeItem(key); else localStorage.setItem(key, raw); } catch(e){}
+}
+function runUndo(){
+  if (!lastUndo) return;
+  const u = lastUndo; lastUndo = null;
+  restoreRawKey(KEYS.tally, u.tallyRaw);
+  restoreRawKey(KEYS.tracker, u.trackerRaw);
+  restoreRawKey(KEYS.qcQueue, u.queueRaw);
+  restoreRawKey(KEYS.covAbs, u.covRaw);
+  ['briefUndoBar', 'morningUndoBar', 'eodUndoBar'].forEach(id => { if ($(id)) $(id).hidden = true; });
+  renderAll();
+}
+$('briefUndoBtn').onclick = runUndo;
+$('morningUndoBtn').onclick = runUndo;
+$('eodUndoBtn').onclick = runUndo;
+
+// --- Shared Attendance Marks ("Out today" & "Back in now" identical across A and B) ---
+function slotsOnDay(w, day, timesObj){
+  if (!DAYS.includes(day) || w < 1 || w > 7 || (w === 1 && day === 'Monday')) return [];
+  const baseDate = lessonDate(w, day);
+  const clock = text => { const [h, m] = text.split(':').map(Number); return new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate(), h, m); };
+  return TT[day].map(row => ({
+    w: +w, day, p: row[0], path: row[1], subject: row[2], lesson: LN[day + '|' + row[0]],
+    start: clock(timesObj.starts[row[0] - 1]), end: clock(timesObj.ends[row[0] - 1])
+  }));
+}
+
+function pupilSlotsForDay(n, w, day, timesObj, roster = buildRoster()){
+  const grp = roster.groupByNum[n];
+  if (!grp) return [];
+  return slotsOnDay(w, day, timesObj).filter(s => s.path === grp || s.path === 'ALL');
+}
+
+function isPupilAbsentInSlot(n, w, day, p, tallies, tracker, roster){
+  const tk = [w, day, p, n].join('|');
+  if (tallies[tk]?.state === 'absent') return true;
+  if (tallies[tk] && ['got', 'nearly', 'again'].includes(tallies[tk].state)) return false;
+  const prefix = [w, day, p].join('|') + '|';
+  return Object.entries(tracker?.marks || {}).some(([k, m]) => k.startsWith(prefix) && m && !m.done && (m.state || 'missed') === 'missed' && matchTrackerPupilNumber(k.slice(prefix.length), tracker, roster) === +n);
+}
+
+function markPupilOutToday(n, w, day, sourceKind = 'brief'){
+  const roster = buildRoster(), grp = roster.groupByNum[n];
+  if (!grp) return;
+  const pSlots = pupilSlotsForDay(n, w, day, times, roster);
+  if (!pSlots.length) return;
+  saveUndoSnapshot(sourceKind, pupilTag(n, roster) + ' marked Out today');
+  const tallies = read(KEYS.tally, {}) || {};
+  const tracker = ensureTrackerState(roster);
+  const sendQueue = read(KEYS.qcQueue, {}) || {};
+  const now = new Date();
+  const sameCalendarDay = dateISO(now) === dateISO(lessonDate(w, day));
+
+  pSlots.forEach(s => {
+    const tk = [s.w, s.day, s.p, n].join('|');
+    const existingTally = tallies[tk];
+    // Preserve an earlier completed period if pupil was marked Got it/Partly/Not yet before leaving mid-day
+    if (sameCalendarDay && now >= s.end && existingTally && ['got', 'nearly', 'again'].includes(existingTally.state)) return;
+    const code = lessonCode(s.w, grp, s.subject, s.lesson);
+    const mk = trackerRowKeyFor(tracker, s.w, s.day, s.p, n, grp, roster);
+    const prevMark = tracker.marks[mk];
+    const before = prevMark === undefined ? null : structuredClone(prevMark);
+    if (!prevMark || (!prevMark.done && prevMark.state !== 'done')) {
+      const written = { ...(prevMark || {}), path: grp, subj: s.subject, lesson: s.lesson, state: 'missed', done: false, note: prevMark?.note || '' };
+      tracker.marks[mk] = written;
+      tallies[tk] = { ...(existingTally || {}), code, path: grp, subj: s.subject, state: 'absent', note: existingTally?.note || '', ts: now.toISOString(), tracker: { key: mk, before, written: structuredClone(written) } };
+    } else {
+      tallies[tk] = { ...(existingTally || {}), code, path: grp, subj: s.subject, state: 'absent', note: existingTally?.note || '', ts: now.toISOString() };
+    }
+    enqueueLessonInQC(sendQueue, s.w, s.day, s.p, grp, s.subject, s.lesson, code);
+  });
+
+  tracker.dirtySinceBackup = true;
+  write(KEYS.tracker, tracker);
+  write(KEYS.tally, tallies);
+  write(KEYS.qcQueue, sendQueue);
+  renderAll();
+}
+
+function markPupilBackInNow(n, w, day, sourceKind = 'brief'){
+  const roster = buildRoster(), grp = roster.groupByNum[n];
+  if (!grp) return;
+  const pSlots = pupilSlotsForDay(n, w, day, times, roster);
+  if (!pSlots.length) return;
+  saveUndoSnapshot(sourceKind, pupilTag(n, roster) + ' marked Back in now');
+  const tallies = read(KEYS.tally, {}) || {};
+  const tracker = ensureTrackerState(roster);
+  const sendQueue = read(KEYS.qcQueue, {}) || {};
+  const now = new Date();
+  const dayDateISO = dateISO(lessonDate(w, day));
+  const onSameDay = dateISO(now) === dayDateISO;
+  // On the live school day, clear current and remaining periods (end > now), keeping already-ended missed periods!
+  // If tapped after the last period has ended (or on a previewed date), clear all absent marks for that day.
+  let targetSlots = onSameDay ? pSlots.filter(s => s.end > now) : pSlots;
+  if (!targetSlots.length) targetSlots = pSlots;
+
+  targetSlots.forEach(s => {
+    const tk = [s.w, s.day, s.p, n].join('|');
+    if (tallies[tk]?.state === 'absent') {
+      if (tallies[tk].note) { delete tallies[tk].state; delete tallies[tk].tracker; }
+      else delete tallies[tk];
+    }
+    const prefix = [s.w, s.day, s.p].join('|') + '|';
+    Object.keys(tracker.marks || {}).forEach(k => {
+      if (!k.startsWith(prefix)) return;
+      if (matchTrackerPupilNumber(k.slice(prefix.length), tracker, roster) !== +n) return;
+      const m = tracker.marks[k];
+      if (m && !m.done && (m.state || 'missed') === 'missed') delete tracker.marks[k];
+    });
+    const code = lessonCode(s.w, grp, s.subject, s.lesson);
+    const qid = queueIDFor(s.w, s.day, s.p, grp, code);
+    const anyLeft = (roster.groups[grp] || []).some(pn => tallies[[s.w, s.day, s.p, pn].join('|')]?.state);
+    if (!anyLeft && sendQueue[qid] && !sendQueue[qid].sentCSV) delete sendQueue[qid];
+  });
+
+  tracker.dirtySinceBackup = true;
+  write(KEYS.tracker, tracker);
+  write(KEYS.tally, tallies);
+  write(KEYS.qcQueue, sendQueue);
+  renderAll();
+}
+
+function pupilTodayAttendance(n, w, day, now, tallies, tracker, roster){
+  const pSlots = pupilSlotsForDay(n, w, day, times, roster);
+  if (!pSlots.length) return { outNow: false, lateBackIn: false, missedEarlier: [] };
+  const onSameDay = dateISO(now) === dateISO(lessonDate(w, day));
+  const remaining = onSameDay ? pSlots.filter(s => s.end > now) : pSlots;
+  const checkSlots = remaining.length ? remaining : pSlots;
+  const outNow = checkSlots.every(s => isPupilAbsentInSlot(n, w, day, s.p, tallies, tracker, roster));
+  const earlierEnded = onSameDay ? pSlots.filter(s => s.end <= now && isPupilAbsentInSlot(n, w, day, s.p, tallies, tracker, roster)) : [];
+  const lateBackIn = !outNow && earlierEnded.length > 0;
+  return { outNow, lateBackIn, missedEarlier: earlierEnded.map(s => 'P' + s.p) };
+}
+
+// --- Coverage Sync Helper (LAUNCH Science Done <-> mbm_coverage_absences_v1) ---
+function coverageCodeForMark(w, d, per, path, subj, lesson){
+  const normPath = path === 'SUMMIT' ? 'LAUNCH' : path;
+  if (normPath !== 'LAUNCH' || String(subj || '').toLowerCase() !== 'science') return '';
+  const wNum = +w; if (wNum < 1 || wNum > 7) return '';
+  const lnum = (d === 'Monday' && +per === 4) ? 1 : ((d === 'Wednesday' && +per === 2) ? 2 : ((d === 'Friday' && +per === 4) ? 3 : (+lesson >= 1 && +lesson <= 3 ? +lesson : 0)));
+  return lnum ? 'SCI_LAUNCH_A2_W' + pad(wNum) + '_L' + lnum : '';
+}
+
+function syncCoverageDone(pupilNum, w, d, per, path, subj, lesson, isDone){
+  const code = coverageCodeForMark(w, d, per, path, subj, lesson);
+  if (!code || !pupilNum) return;
+  const cov = read(KEYS.covAbs, {}) || {};
+  const pk = String(pupilNum);
+  if (isDone) {
+    cov[pk] = cov[pk] || {};
+    cov[pk][code] = { cleared: true, source: 'tracker_sync' };
+    write(KEYS.covAbs, cov);
+  } else if (cov[pk]?.[code]?.source === 'tracker_sync') {
+    delete cov[pk][code];
+    if (!Object.keys(cov[pk]).length) delete cov[pk];
+    write(KEYS.covAbs, cov);
+  }
+}
+
+// --- Feature A: Room Brief State (mbm_room_brief_v1 holds pupil numbers ONLY) ---
+let previewOverride = null; // { w, day, p } or null for live clock
+
+function readBriefFocusMap(){
+  const raw = read(KEYS.brief, {});
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return {};
+  const clean = {};
+  Object.entries(raw).forEach(([k, arr]) => {
+    if (Array.isArray(arr)) {
+      const nums = [...new Set(arr.map(Number).filter(n => Number.isInteger(n) && n >= 1 && n <= 20))];
+      if (nums.length) clean[k] = nums;
+    }
+  });
+  return clean;
+}
+function writeBriefFocusSlot(slotKey, nums){
+  const map = readBriefFocusMap();
+  const cleanNums = [...new Set(nums.map(Number).filter(n => Number.isInteger(n) && n >= 1 && n <= 20))].sort((a, b) => a - b);
+  if (cleanNums.length) map[slotKey] = cleanNums;
+  else delete map[slotKey];
+  write(KEYS.brief, map);
+}
+
+function lastSubjectTallyForPupil(n, grp, subj, beforeW, beforeDay, beforeP, tallies){
+  const bDayIdx = DAYS.indexOf(beforeDay);
+  const candidates = [];
+  Object.entries(tallies).forEach(([k, r]) => {
+    if (!r || !r.state) return;
+    const [w, d, p, pn] = k.split('|');
+    if (+pn !== +n) return;
+    if (r.subj && r.subj !== subj) return;
+    const dIdx = DAYS.indexOf(d);
+    if (+w < beforeW || (+w === beforeW && (dIdx < bDayIdx || (dIdx === bDayIdx && +p < beforeP)))) {
+      candidates.push({ w: +w, dIdx, p: +p, state: r.state, code: r.code || '', note: r.note || '' });
+    }
+  });
+  candidates.sort((a, b) => b.w - a.w || b.dIdx - a.dIdx || b.p - a.p);
+  return candidates[0] || null;
+}
+
+function openCatchupsForPupil(n, tracker, roster){
+  const out = [];
+  Object.entries(tracker?.marks || {}).forEach(([k, m]) => {
+    if (!m || m.done || m.state === 'done') return;
+    const [w, d, p, ...who] = k.split('|');
+    if (matchTrackerPupilNumber(who.join('|'), tracker, roster) !== +n) return;
+    out.push({ key: k, w: +w, d, p: +p, path: m.path || roster.groupByNum[n] || 'BUILD', subj: m.subj || '', lesson: m.lesson || LN[d + '|' + p] || 1, state: m.state || 'missed', note: m.note || '' });
+  });
+  out.sort((a, b) => a.w - b.w || DAYS.indexOf(a.d) - DAYS.indexOf(b.d) || a.p - b.p);
+  return out;
+}
+
+function nextSlotTextFor(path, subj, now){
+  const normPath = path === 'SUMMIT' ? 'LAUNCH' : path;
+  const search = matchSubj => {
+    for (let offset = 0; offset <= 14; offset++) {
+      const cand = new Date(now.getFullYear(), now.getMonth(), now.getDate() + offset), dow = cand.getDay();
+      if (dow < 1 || dow > 5) continue;
+      const dName = DAYS[dow - 1], wk = schoolWeek(cand);
+      if (wk === 1 && dName === 'Monday') continue;
+      for (const [per, sPath, sSubj] of (TT[dName] || [])) {
+        if (sPath !== normPath && sPath !== 'ALL') continue;
+        if (matchSubj && sSubj !== subj) continue;
+        const st = times.starts[per - 1] || '09:30', [hh, mm] = st.split(':').map(Number);
+        const slotTime = new Date(cand.getFullYear(), cand.getMonth(), cand.getDate(), hh, mm);
+        if (offset === 0 && slotTime <= now) continue;
+        return 'Next ' + normPath + ' ' + (matchSubj ? subj : sSubj) + ': ' + (offset === 0 ? 'Today P' + per + ' (' + st + ')' : dName.slice(0, 3) + ' P' + per + ' (' + st + ')');
+      }
+    }
+    return '';
+  };
+  return search(true) || search(false);
+}
+
+function currentActiveSlot(now = new Date()){
+  if (previewOverride) {
+    const { w, day, p } = previewOverride;
+    const row = (TT[day] || []).find(r => r[0] === +p);
+    if (row) {
+      const d = lessonDate(w, day);
+      const mk = txt => { const [h, m] = txt.split(':').map(Number); return new Date(d.getFullYear(), d.getMonth(), d.getDate(), h, m); };
+      return { slot: { w: +w, day, p: +p, path: row[1], subject: row[2], lesson: LN[day + '|' + p], start: mk(times.starts[p - 1]), end: mk(times.ends[p - 1]) }, current: false, next: null, isPreview: true };
+    }
+  }
+  const c = schoolContext(now, times);
+  return { ...c, isPreview: false };
+}
+
+function buildBriefModel(slot, roster = buildRoster()){
+  if (!slot) return null;
+  const effPath = slot.path === 'ALL' ? sharedPath : slot.path;
+  const code = lessonCode(slot.w, effPath, slot.subject, slot.lesson);
+  const slotKey = [slot.w, slot.day, slot.p, effPath].join('|');
+  const tallies = read(KEYS.tally, {}) || {};
+  const tracker = ensureTrackerState(roster);
+  const targets = read(KEYS.targets, {}) || {};
+  const focusList = readBriefFocusMap()[slotKey] || [];
+  const pupils = (roster.groups[effPath] || []).slice();
+
+  const rows = pupils.map(n => {
+    const out = isPupilAbsentInSlot(n, slot.w, slot.day, slot.p, tallies, tracker, roster);
+    const last = lastSubjectTallyForPupil(n, effPath, slot.subject, slot.w, slot.day, slot.p, tallies);
+    const catchups = openCatchupsForPupil(n, tracker, roster);
+    const subjCatchups = catchups.filter(c => c.subj === slot.subject);
+    const adapts = pupilAdapt(n, roster);
+    const firstTarget = String(targets[n] || '').split(/\r?\n/).map(s => s.trim()).find(Boolean) || '';
+    const taFocus = focusList.includes(n);
+    const watch = !out && (taFocus || (last && ['again', 'nearly'].includes(last.state)) || subjCatchups.length > 0);
+    return { n, grp: effPath, out, last, catchups, subjCatchups, adapts, firstTarget, taFocus, watch };
+  });
+
+  const outCount = rows.filter(r => r.out).length;
+  const watchCount = rows.filter(r => r.watch).length;
+  return { slot, effPath, code, slotKey, rows, outCount, watchCount, focusList, roster };
+}
+
+function stateLabel(st){ return ({ got: 'Got it', nearly: 'Partly', again: 'Not yet', absent: 'Absent' })[st] || 'No prior tally'; }
+
+function buildObserverHTMLFragment(m){
+  const focusNote = redactPublic($('briefFocusNote').value.trim(), m.roster);
+  const presentRows = m.rows.filter(r => !r.out);
+  const outRows = m.rows.filter(r => r.out);
+  let html = '<article class="sheet-doc"><h2>Lesson Context &amp; Responsive Teaching Brief</h2>';
+  html += '<p><b>Lesson:</b> ' + escapeHTML(m.slot.day + ' Period ' + m.slot.p + ' (' + times.starts[m.slot.p - 1] + '–' + times.ends[m.slot.p - 1] + ') · Week ' + m.slot.w + ' · ' + m.effPath + ' ' + m.slot.subject + ' · ' + m.code) + '</p>';
+  html += '<p><b>Cohort summary:</b> ' + m.rows.length + ' pupil(s) in group · ' + presentRows.length + ' expected in room · ' + outRows.length + ' absent' + (outRows.length ? ' (' + outRows.map(r => 'Pupil ' + r.n).join(', ') + ')' : '') + ' · ' + m.watchCount + ' priority check(s).</p>';
+  const taPupils = m.rows.filter(r => r.taFocus && !r.out).map(r => 'Pupil ' + r.n);
+  if (taPupils.length || focusNote) {
+    html += '<p><b>Supporting adult deployment:</b> ' + escapeHTML((taPupils.length ? 'Focus with ' + taPupils.join(', ') + '. ' : '') + focusNote) + '</p>';
+  }
+  html += '<table><thead><tr><th>Pupil code</th><th>Attendance &amp; prior starting point</th><th>Planned adaptations &amp; active target</th></tr></thead><tbody>';
+  m.rows.forEach(r => {
+    const startBits = [];
+    if (r.out) startBits.push('Absent today');
+    if (r.last) startBits.push('Last ' + m.slot.subject + ': ' + stateLabel(r.last.state));
+    else startBits.push('No prior ' + m.slot.subject + ' tally');
+    if (r.subjCatchups.length) startBits.push(r.subjCatchups.length + ' open ' + m.slot.subject + ' catch-up(s)');
+    if (r.taFocus && !r.out) startBits.push('TA focus');
+    const helpBits = r.adapts.map(a => redactPublic(a, m.roster));
+    if (r.firstTarget) helpBits.push('Target: ' + redactPublic(r.firstTarget, m.roster));
+    html += '<tr><td><b>Pupil ' + r.n + '</b></td><td>' + escapeHTML(startBits.join(' · ')) + '</td><td>' + escapeHTML(helpBits.join('; ') || 'Standard scaffolded pathway resources') + '</td></tr>';
+  });
+  html += '</tbody></table><p class="hint">Prepared offline on this device. Pupil codes only (Pupil 1 to Pupil 20); no names or initials appear on this sheet.</p></article>';
+  return html;
+}
+
+function buildObserverPlainText(m){
+  const focusNote = redactPublic($('briefFocusNote').value.trim(), m.roster);
+  const lines = [
+    'LESSON CONTEXT & RESPONSIVE TEACHING BRIEF',
+    m.slot.day + ' Period ' + m.slot.p + ' (' + times.starts[m.slot.p - 1] + '-' + times.ends[m.slot.p - 1] + ') · Week ' + m.slot.w + ' · ' + m.effPath + ' ' + m.slot.subject + ' · ' + m.code,
+    'Group: ' + m.rows.length + ' pupils (' + (m.rows.length - m.outCount) + ' in, ' + m.outCount + ' out, ' + m.watchCount + ' to watch)'
+  ];
+  const taPupils = m.rows.filter(r => r.taFocus && !r.out).map(r => 'Pupil ' + r.n);
+  if (taPupils.length || focusNote) lines.push('Supporting adult focus: ' + (taPupils.length ? taPupils.join(', ') : 'General') + (focusNote ? ' — ' + focusNote : ''));
+  lines.push('');
+  m.rows.forEach(r => {
+    const st = (r.out ? 'Absent today; ' : '') + (r.last ? 'Last ' + m.slot.subject + ': ' + stateLabel(r.last.state) : 'No prior tally') + (r.taFocus && !r.out ? '; TA focus' : '');
+    const hp = [...r.adapts.map(a => redactPublic(a, m.roster)), ...(r.firstTarget ? ['Target: ' + redactPublic(r.firstTarget, m.roster)] : [])].join('; ') || 'Standard pathway support';
+    lines.push('- Pupil ' + r.n + ': ' + st + ' | ' + hp);
+  });
+  return lines.join('\n') + '\n';
+}
+
+function buildPrivateTaSlipHTMLFragment(m){
+  const focusNote = redactPrivateInitials($('briefFocusNote').value.trim(), m.roster);
+  const presentRows = m.rows.filter(r => !r.out);
+  const focusRows = presentRows.filter(r => r.taFocus);
+  const shownRows = focusRows.length ? focusRows : presentRows;
+  let html = '<article class="sheet-doc"><div class="private-banner">Private: keep this copy</div>';
+  html += '<h2>Supporting Adult Brief (Initials Only)</h2>';
+  html += '<p><b>' + escapeHTML(m.slot.day + ' P' + m.slot.p + ' (' + times.starts[m.slot.p - 1] + '–' + times.ends[m.slot.p - 1] + ') · ' + m.effPath + ' ' + m.slot.subject + ' · ' + m.code) + '</b></p>';
+  if (focusNote) html += '<p><b>Lesson focus:</b> ' + escapeHTML(focusNote) + '</p>';
+  if (m.outCount) html += '<p><b>Out today:</b> ' + escapeHTML(m.rows.filter(r => r.out).map(r => m.roster.initialsByNum[r.n]).join(', ')) + '</p>';
+  html += '<table><thead><tr><th>Initials</th><th>Starting point</th><th>Help lines &amp; target</th></tr></thead><tbody>';
+  shownRows.forEach(r => {
+    const ini = m.roster.initialsByNum[r.n] || ('P' + r.n);
+    const sig = [];
+    if (r.taFocus) sig.push('TA focus');
+    if (r.last) sig.push('Last time: ' + stateLabel(r.last.state));
+    if (r.subjCatchups.length) sig.push(r.subjCatchups.length + ' catch-up owed');
+    const helps = r.adapts.map(a => redactPrivateInitials(a, m.roster));
+    if (r.firstTarget) helps.push('Target: ' + redactPrivateInitials(r.firstTarget, m.roster));
+    html += '<tr><td><b>' + escapeHTML(ini) + '</b></td><td>' + escapeHTML(sig.join(' · ') || 'Ready') + '</td><td>' + escapeHTML(helps.join('; ') || 'Standard support') + '</td></tr>';
+  });
+  html += '</tbody></table></article>';
+  return html;
+}
+
+function refreshBriefPreviews(m){
+  if (!$('observerPreviewBox').hidden && m) $('observerPreviewBox').innerHTML = buildObserverHTMLFragment(m);
+  if (!$('taSlipPreviewBox').hidden && m) $('taSlipPreviewBox').innerHTML = buildPrivateTaSlipHTMLFragment(m);
+}
+
+function renderRoomBrief(activeCtx, roster = buildRoster()){
+  const slot = activeCtx?.slot;
+  if (!slot) {
+    $('roomBriefSummary').textContent = 'Room brief · No scheduled lesson';
+    $('briefStats').replaceChildren();
+    $('briefPupils').replaceChildren(el('p', { class: 'hint' }, 'Use Preview another lesson below to inspect a timetabled group.'));
+    return;
+  }
+  const m = buildBriefModel(slot, roster);
+  $('roomBriefSummary').textContent = 'Room brief · ' + m.rows.length + ' pupil' + (m.rows.length === 1 ? '' : 's') + ', ' + m.outCount + ' out, ' + m.watchCount + ' to watch';
+
+  const stats = $('briefStats');
+  stats.replaceChildren(
+    el('span', { class: 'pill path-' + m.effPath }, m.effPath + ' · ' + m.rows.length + ' pupils'),
+    el('span', { class: m.outCount ? 'pill miss' : 'pill ok' }, m.outCount + ' out'),
+    el('span', { class: m.watchCount ? 'pill warn' : 'pill ok' }, m.watchCount + ' to watch'),
+    el('span', { class: 'pill' }, m.focusList.length + ' TA focus')
+  );
+
+  const box = $('briefPupils');
+  box.replaceChildren();
+  m.rows.forEach(r => {
+    const card = el('article', { class: 'brief-card ' + m.effPath + (r.out ? ' is-out' : ''), 'data-pupil': r.n });
+    const head = el('div', { class: 'brief-head' });
+    const tagText = pupilTag(r.n, roster);
+    head.append(
+      el('span', { class: 'pupil-title' }, tagText + (tagText === 'P' + r.n ? '' : ' · P' + r.n)),
+      el('span', { class: 'pill path-' + m.effPath }, m.effPath)
+    );
+    card.append(head);
+
+    const sigs = el('div', { class: 'brief-signals' });
+    if (r.out) sigs.append(el('span', { class: 'pill miss' }, 'Out today'));
+    if (r.taFocus && !r.out) sigs.append(el('span', { class: 'pill warn' }, 'TA focus'));
+    if (r.last) {
+      const cls = ['again', 'nearly'].includes(r.last.state) ? 'pill warn' : (r.last.state === 'got' ? 'pill ok' : 'pill');
+      sigs.append(el('span', { class: cls }, 'Last ' + slot.subject + ': ' + stateLabel(r.last.state)));
+    } else {
+      sigs.append(el('span', { class: 'pill' }, 'No prior ' + slot.subject + ' tally'));
+    }
+    if (r.catchups.length) {
+      sigs.append(el('span', { class: 'pill warn' }, r.catchups.length + ' catch-up' + (r.catchups.length === 1 ? '' : 's') + (r.subjCatchups.length ? ' (' + r.subjCatchups.length + ' ' + slot.subject + ')' : '')));
+    }
+    card.append(sigs);
+
+    if (r.adapts.length) {
+      const aWrap = el('div', { class: 'adapt-list' });
+      r.adapts.forEach(line => {
+        const cleanLine = roster.show === 'number' ? redactPublic(line, roster) : redactPrivateInitials(line, roster);
+        aWrap.append(el('span', { class: 'adapt-chip' }, cleanLine));
+      });
+      card.append(aWrap);
+    }
+    if (r.firstTarget) {
+      const cleanT = roster.show === 'number' ? redactPublic(r.firstTarget, roster) : redactPrivateInitials(r.firstTarget, roster);
+      card.append(el('p', { class: 'target-line' }, 'Target: ' + (cleanT.length > 78 ? cleanT.slice(0, 75) + '…' : cleanT)));
+    }
+
+    const actions = el('div', { class: 'pupil-actions' });
+    const outBtn = el('button', { type: 'button', 'aria-pressed': String(r.out), 'data-brief-out': r.n }, r.out ? 'Back in now' : 'Out today');
+    outBtn.onclick = () => {
+      if (r.out) markPupilBackInNow(r.n, slot.w, slot.day, 'brief');
+      else markPupilOutToday(r.n, slot.w, slot.day, 'brief');
+    };
+    const taBtn = el('button', { type: 'button', 'aria-pressed': String(r.taFocus), 'data-brief-ta': r.n }, 'TA focus');
+    taBtn.onclick = () => {
+      const next = r.taFocus ? m.focusList.filter(x => x !== r.n) : [...m.focusList, r.n];
+      writeBriefFocusSlot(m.slotKey, next);
+      renderAll();
+    };
+    actions.append(outBtn, taBtn);
+    card.append(actions);
+    box.append(card);
+  });
+
+  refreshBriefPreviews(m);
+}
+// --- Room Brief Actions & Preview Picker ---
+function standaloneObserverHTML(m){
+  const body = buildObserverHTMLFragment(m);
+  return '<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex, nofollow"><meta name="author" content="Lesson resource"><meta name="creator" content="Lesson resource"><meta http-equiv="Content-Security-Policy" content="default-src \'none\'; style-src \'unsafe-inline\'; base-uri \'none\'; form-action \'none\'"><title>Observer brief · ' + escapeHTML(m.code) + '</title><style>body{margin:0;padding:18px;background:#fff;color:#14243a;font:15px/1.45 system-ui,sans-serif}.sheet-doc{max-width:190mm;margin:auto}.sheet-doc h2{color:#0f2a4d;font-size:22px;margin:0 0 6px;border-bottom:2px solid #0f2a4d;padding-bottom:6px}.sheet-doc p{margin:6px 0}.sheet-doc table{width:100%;border-collapse:collapse;margin:10px 0;font-size:14px}.sheet-doc th,.sheet-doc td{border:1px solid #52677c;padding:6px 8px;text-align:left;vertical-align:top}.sheet-doc th{background:#edf3f7;color:#0f2a4d}.hint{font-size:13px;color:#41536a}@page{size:A4;margin:12mm}</style></head><body>' + body + '</body></html>';
+}
+
+$('suggestTaBtn').onclick = () => {
+  const c = currentActiveSlot(new Date());
+  if (!c.slot) return;
+  const m = buildBriefModel(c.slot);
+  const scored = m.rows.filter(r => !r.out).map(r => {
+    let score = 0;
+    if (r.last?.state === 'again') score += 8;
+    else if (r.last?.state === 'nearly') score += 5;
+    score += r.subjCatchups.length * 4 + r.catchups.length * 2;
+    if (r.adapts.length) score += 2;
+    if (r.firstTarget) score += 1;
+    return { n: r.n, score };
+  }).sort((a, b) => b.score - a.score || a.n - b.n);
+  const picked = scored.slice(0, Math.min(2, scored.length)).map(x => x.n);
+  writeBriefFocusSlot(m.slotKey, picked);
+  $('briefStatus').textContent = picked.length ? 'TA focus suggested (' + picked.length + ' pupil' + (picked.length === 1 ? '' : 's') + ').' : 'No present pupils to assign.';
+  renderAll();
 };
-const PREFIX={Science:'SCI',Vocational:'VOC','Creative Arts':'ART',Humanities:'HUM',Careers:'CAREERS',RE:'RE',ICT:'ICT',RSHE:'RSHE',PSHE:'PSHE',DT:'DT',RSE:'RSE','Community Projects':'COMM'};
-const LN={};{const c={};DAYS.forEach(d=>TT[d].forEach(l=>{const k=l[1]+'|'+l[2];LN[d+'|'+l[0]]=c[k]=(c[k]||0)+1;}));}
 
-function lessonCode(w,path,subj,n,part=1){
- /* Sticker table (school week w is two digits):
-    Science GROW: GROW_SCI_A2_Wnn_Pn; BUILD/LAUNCH: SCI_PATH_A2_Wnn_Ln.
-    Creative Arts: ART_PATH_A2_Wnn_Pn. RE: PATH_RE_A2_Wnn.
-    Humanities/Careers/Vocational/ICT/DT/RSHE/PSHE/RSE: PREFIX_PATH_A2_Wnn.
-    Exception: LAUNCH Vocational W07 uses a literal space, then L1 or L2.
-    Community, every pathway: school W2->W01, W3->W02, W4->W03/W04,
-    W5->W05, W6->W06, W7->W07. File names alone replace the space with _.
- */
- const week='A2_W'+pad(w);
- if(subj==='Community Projects'){const cw=+w===4?(+part===2?4:3):(+w<4?Math.max(1,+w-1):+w);return 'COMMUNITY_A2_W'+pad(cw);}
- if(subj==='Science')return path==='GROW'?'GROW_SCI_'+week+'_P'+n:'SCI_'+path+'_'+week+'_L'+n;
- if(subj==='Creative Arts')return 'ART_'+path+'_'+week+'_P'+n;
- if(subj==='RE')return path+'_RE_'+week;
- const base=PREFIX[subj]+'_'+path+'_'+week;
- return subj==='Vocational'&&path==='LAUNCH'&&+w===7?base+' L'+n:base;
+$('clearTaBtn').onclick = () => {
+  const c = currentActiveSlot(new Date());
+  if (!c.slot) return;
+  const m = buildBriefModel(c.slot);
+  writeBriefFocusSlot(m.slotKey, []);
+  $('briefStatus').textContent = 'TA focus cleared for this lesson.';
+  renderAll();
+};
+
+$('briefFocusNote').oninput = () => {
+  const c = currentActiveSlot(new Date());
+  if (c.slot) refreshBriefPreviews(buildBriefModel(c.slot));
+};
+
+$('saveObserverHtml').onclick = () => {
+  const c = currentActiveSlot(new Date());
+  if (!c.slot) return;
+  const m = buildBriefModel(c.slot);
+  const file = new File([standaloneObserverHTML(m)], 'OBSERVER_' + fileCode(m.code) + '_' + dateStamp(new Date()) + '.html', { type: 'text/html;charset=utf-8' });
+  downloadFile(file);
+  $('briefStatus').textContent = 'Saved ' + file.name + ' (Pupil N codes only).';
+};
+
+$('saveObserverTxt').onclick = () => {
+  const c = currentActiveSlot(new Date());
+  if (!c.slot) return;
+  const m = buildBriefModel(c.slot);
+  const file = new File([buildObserverPlainText(m)], 'OBSERVER_' + fileCode(m.code) + '_' + dateStamp(new Date()) + '.txt', { type: 'text/plain;charset=utf-8' });
+  downloadFile(file);
+  $('briefStatus').textContent = 'Saved ' + file.name + ' (Pupil N codes only).';
+};
+
+$('copyObserverTxt').onclick = () => {
+  const c = currentActiveSlot(new Date());
+  if (!c.slot) return;
+  const m = buildBriefModel(c.slot);
+  copyText(buildObserverPlainText(m), $('briefStatus'), 'Observer summary copied (Pupil N codes only).');
+};
+
+$('toggleObserverPreview').onclick = () => {
+  const box = $('observerPreviewBox'), open = box.hidden;
+  box.hidden = !open;
+  $('toggleObserverPreview').setAttribute('aria-expanded', String(open));
+  if (open) {
+    const c = currentActiveSlot(new Date());
+    if (c.slot) box.innerHTML = buildObserverHTMLFragment(buildBriefModel(c.slot));
+  }
+};
+
+$('toggleTaPreview').onclick = () => {
+  const box = $('taSlipPreviewBox'), open = box.hidden;
+  box.hidden = !open;
+  $('toggleTaPreview').setAttribute('aria-expanded', String(open));
+  if (open) {
+    const c = currentActiveSlot(new Date());
+    if (c.slot) box.innerHTML = buildPrivateTaSlipHTMLFragment(buildBriefModel(c.slot));
+  }
+};
+
+function printBriefSheet(privateSlip){
+  const c = currentActiveSlot(new Date());
+  if (!c.slot) return;
+  const m = buildBriefModel(c.slot);
+  $('printObserverSheet').innerHTML = privateSlip ? '' : buildObserverHTMLFragment(m);
+  $('printPrivateSlip').innerHTML = privateSlip ? buildPrivateTaSlipHTMLFragment(m) : '';
+  document.body.classList.toggle('print-observer-sheet', !privateSlip);
+  document.body.classList.toggle('print-private-slip', !!privateSlip);
+  window.print();
+}
+window.addEventListener('afterprint', () => {
+  document.body.classList.remove('print-observer-sheet', 'print-private-slip');
+  $('printObserverSheet').innerHTML = '';
+  $('printPrivateSlip').innerHTML = '';
+});
+$('printObserverBtn').onclick = () => printBriefSheet(false);
+$('printTaSlipBtn').onclick = () => printBriefSheet(true);
+
+// Populate slot picker
+WEEKS.forEach(([w, dt]) => $('pickWeek').append(el('option', { value: w }, 'Week ' + w + ' (' + dt + ')')));
+function populatePickDays(pref){
+  const w = +$('pickWeek').value || 2, sel = $('pickDay');
+  sel.replaceChildren();
+  (w === 1 ? DAYS.slice(1) : DAYS).forEach(d => sel.append(el('option', { value: d }, d)));
+  if (pref && [...sel.options].some(o => o.value === pref)) sel.value = pref;
+}
+function populatePickPeriods(pref){
+  const d = $('pickDay').value || 'Wednesday', sel = $('pickPeriod');
+  sel.replaceChildren();
+  (TT[d] || []).forEach(r => sel.append(el('option', { value: r[0] }, 'P' + r[0] + ' · ' + r[1] + ' ' + r[2])));
+  if (pref && [...sel.options].some(o => o.value === String(pref))) sel.value = String(pref);
+}
+$('pickWeek').value = '2'; populatePickDays('Wednesday'); populatePickPeriods(1);
+$('pickWeek').onchange = () => { populatePickDays($('pickDay').value); populatePickPeriods($('pickPeriod').value); };
+$('pickDay').onchange = () => populatePickPeriods($('pickPeriod').value);
+$('applyPreviewBtn').onclick = () => {
+  previewOverride = { w: +$('pickWeek').value, day: $('pickDay').value, p: +$('pickPeriod').value };
+  $('briefStatus').textContent = 'Previewing Week ' + previewOverride.w + ' ' + previewOverride.day + ' Period ' + previewOverride.p + '.';
+  renderAll();
+};
+$('useLiveClockBtn').onclick = () => {
+  previewOverride = null;
+  $('briefStatus').textContent = 'Returned to live school clock.';
+  renderAll();
+};
+
+// --- Feature B: Morning Check-in Roll & Catch-up Ready Now ---
+let userToggledMorning = false;
+$('morningCheckinDetails').querySelector('summary').addEventListener('click', () => { userToggledMorning = true; });
+
+function safeCatchupSheetUrl(w, path, subj, lesson, tracker){
+  const lk = [w, path, subj, lesson].join('|');
+  const raw = tracker?.links?.[lk] || PRELOAD[lk] || '';
+  if (!raw) return '';
+  try {
+    const u = new URL(raw, location.href);
+    return !u.username && !u.password && ['https:', 'file:'].includes(u.protocol) ? u.href : '';
+  } catch (e) { return ''; }
 }
 
-
-'use strict';
-const $=id=>document.getElementById(id), PINS='mbm_tools_pins_v1',RECENT='mbm_tools_recent_v1',TIMES='mbm_period_times_v1';
-function notice(text){$('homeStatus').textContent=text;}
-function read(key,fallback){try{const raw=localStorage.getItem(key);return raw===null?fallback:JSON.parse(raw);}catch(e){notice('This device could not read saved settings. They have been kept.');return fallback;}}
-function write(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true;}catch(e){notice('Your change works for this visit. This device could not save it.');return false;}}
-function pad(n){return String(n).padStart(2,'0');}
-// Shared school-day table and clock rules. Identical in both pages.
-const SCHOOL_DAY=[
- {label:'Check-in and reading',start:'09:00',end:'09:30'},
- {p:1,start:'09:30',end:'10:10'},
- {p:2,start:'10:10',end:'10:50'},
- {label:'Break',start:'10:50',end:'11:00'},
- {p:3,start:'11:00',end:'11:40'},
- {p:4,start:'11:40',end:'12:20'},
- {label:'Lunch',start:'12:20',end:'12:50'},
- {p:5,start:'12:50',end:'13:30'},
- {p:6,start:'13:30',end:'14:10'},
- {label:'Check-out',start:'14:10',end:'14:30'}
-];
-function schoolTimes(){return {v:2,starts:SCHOOL_DAY.filter(s=>s.p).map(s=>s.start),ends:SCHOOL_DAY.filter(s=>s.p).map(s=>s.end),confirmed:true};}
-function validSchoolTimes(value){
- const format=t=>typeof t==='string'&&/^([01]\d|2[0-3]):[0-5]\d$/.test(t);
- return !!value&&value.v===2&&Array.isArray(value.starts)&&Array.isArray(value.ends)&&value.starts.length===6&&value.ends.length===6&&value.starts.every((start,i)=>format(start)&&format(value.ends[i])&&value.ends[i]>start&&(!i||start>=value.ends[i-1]));
-}
-function schoolWeek(date){return 1+Math.round((Date.UTC(date.getFullYear(),date.getMonth(),date.getDate()-(date.getDay()+6)%7)-Date.UTC(2026,10,2))/604800000);}
-function schoolSlots(date,times){
- const w=schoolWeek(date),day=['Monday','Tuesday','Wednesday','Thursday','Friday'][date.getDay()-1];if(w<1||w>7||!day||(w===1&&day==='Monday'))return [];
- const clock=text=>{const [h,m]=text.split(':').map(Number);return new Date(date.getFullYear(),date.getMonth(),date.getDate(),h,m);};
- return TT[day].map(row=>({w,day,p:row[0],path:row[1],subject:row[2],lesson:LN[day+'|'+row[0]],start:clock(times.starts[row[0]-1]),end:clock(times.ends[row[0]-1])}));
-}
-function schoolContext(now,times){
- const candidates=[];for(let offset=0;offset<11;offset++)candidates.push(...schoolSlots(new Date(now.getFullYear(),now.getMonth(),now.getDate()+offset),times));
- const current=candidates.find(s=>now>=s.start&&now<s.end),upcoming=candidates.filter(s=>s.start>now),slot=current||upcoming[0]||null;
- return {slot,current:!!current,next:current?upcoming[0]:upcoming[1]};
-}
-function schoolSlotText(slot,times){return slot.day+' · Period '+slot.p+', '+times.starts[slot.p-1]+' to '+times.ends[slot.p-1]+', '+(slot.path==='ALL'?'All groups':slot.path)+' '+slot.subject;}
-function schoolNowText(context,times,now){
- if(!context.slot)return 'No lesson in the saved timetable';
- const minute=now.getHours()*60+now.getMinutes(),checkIn=now.getDay()>0&&now.getDay()<6&&minute>=540&&minute<570&&schoolSlots(now,times).length>0;
- return (checkIn?'Check-in and reading, then ':context.current?'Now: ':'Next: ')+schoolSlotText(context.slot,times);
+function markCatchupDoneFromMorning(markKey, rowInfo){
+  saveUndoSnapshot('morning', 'Marked catch-up Done for ' + pupilTag(rowInfo.n));
+  const roster = buildRoster();
+  const tracker = ensureTrackerState(roster);
+  if (tracker.marks[markKey]) {
+    tracker.marks[markKey] = { ...tracker.marks[markKey], state: 'done', done: true };
+    tracker.dirtySinceBackup = true;
+    write(KEYS.tracker, tracker);
+    syncCoverageDone(rowInfo.n, rowInfo.w, rowInfo.d, rowInfo.p, rowInfo.path, rowInfo.subj, rowInfo.lesson, true);
+  }
+  renderAll();
 }
 
-const DEFAULT_TIMES=schoolTimes().starts;
-let times=read(TIMES,{}),timesMigrated=false;
-function validTimes(value){return validSchoolTimes(value);}
-if(times.v!==2){times=schoolTimes();write(TIMES,times);timesMigrated=true;$('timeStatus').textContent='Period times set to your school day';}
-else if(!validTimes(times)){notice('Saved period times need a check. They have been kept.');times=schoolTimes();}
-function weekOf(date){return schoolWeek(date);}
-function slotsFor(date){return schoolSlots(date,times);}
-function nowContext(now=new Date()){return schoolContext(now,times);}
+function renderMorningCheckin(now = new Date(), roster = buildRoster()){
+  const liveSlots = schoolSlots(now, times);
+  const minute = now.getHours() * 60 + now.getMinutes();
+  const inCheckinWindow = liveSlots.length > 0 && minute >= 540 && minute < 570;
+  if (!userToggledMorning) $('morningCheckinDetails').open = inCheckinWindow;
 
-function extrasLink(s,path){return 'Lesson_extras.html#'+new URLSearchParams({week:String(s.w),path:path||s.path,subject:s.subject,lesson:String(s.lesson),view:'visitor'}).toString();}
-function shortSlot(s){return schoolSlotText(s,times);}
-let sharedPath=read('mbm_tools_path_v1','BUILD');if(!['BUILD','GROW','LAUNCH'].includes(sharedPath))sharedPath='BUILD';$('nowPath').value=sharedPath;
-function renderNow(){
- const now=new Date(),c=nowContext(now),s=c.slot;$('nowCapture').href='Quick_capture.html?now=1';$('nowCapture').dataset.toolId='Quick_capture.html';$('nowExtras').dataset.toolId='Lesson_extras.html';$('nowTracker').dataset.toolId='Catch_up_Tracker.html';
- if(!s){$('nowState').textContent='No lesson';$('nowWhen').textContent='';$('nowLesson').textContent='No lesson in the saved timetable';$('nowCode').textContent='';$('nowHint').textContent='Choose a lesson inside Quick capture.';$('nowExtras').href='Lesson_extras.html';$('nextLesson').textContent='';$('sharedPath').hidden=true;return;}
- $('nowState').textContent=c.current?'Now':'Next';$('nowWhen').textContent=schoolNowText(c,times,now)+' · Week '+s.w;$('nowLesson').textContent=s.subject+' · '+(s.path==='ALL'?'All groups':s.path);$('nowCode').textContent=lessonCode(s.w,s.path==='ALL'?sharedPath:s.path,s.subject,s.lesson);$('nowExtras').href=extrasLink(s,s.path==='ALL'?sharedPath:s.path);$('sharedPath').hidden=s.path!=='ALL';$('nowHint').textContent=(timesMigrated?'Period times set to your school day. ':'')+(c.current?'Ready for this lesson.':'Ready for the next lesson.');$('nextLesson').textContent=c.next?'Next: '+shortSlot(c.next):'No later lesson in this timetable.';
+  const fallbackSlot = currentActiveSlot(now).slot;
+  const targetW = liveSlots[0]?.w || fallbackSlot?.w || 2;
+  const targetDay = liveSlots[0]?.day || fallbackSlot?.day || 'Wednesday';
+  const tallies = read(KEYS.tally, {}) || {};
+  const tracker = ensureTrackerState(roster);
+
+  const rollPupils = PATHWAYS.flatMap(p => roster.groups[p] || []);
+  let inCount = 0, outCount = 0;
+  const rollBox = $('morningRollList');
+  rollBox.replaceChildren();
+  const presentSet = new Set();
+
+  rollPupils.forEach(n => {
+    const grp = roster.groupByNum[n] || 'BUILD';
+    const att = pupilTodayAttendance(n, targetW, targetDay, now, tallies, tracker, roster);
+    if (att.outNow) outCount++;
+    else { inCount++; presentSet.add(n); }
+
+    const row = el('div', { class: 'roll-row', 'data-roll-pupil': n });
+    const left = el('div', { class: 'stack-meta' });
+    const tag = pupilTag(n, roster);
+    left.append(el('strong', {}, tag + (tag === 'P' + n ? '' : ' · P' + n) + ' '), el('span', { class: 'pill path-' + grp }, grp));
+    if (att.outNow) left.append(document.createTextNode(' '), el('span', { class: 'pill miss' }, 'Out today'));
+    else if (att.lateBackIn) left.append(document.createTextNode(' '), el('span', { class: 'pill warn' }, 'Back in (missed ' + att.missedEarlier.join(', ') + ')'));
+    else left.append(document.createTextNode(' '), el('span', { class: 'pill ok' }, 'In'));
+
+    const btn = el('button', {
+      type: 'button',
+      class: att.outNow ? 'primary' : '',
+      'data-morning-att': n,
+      'aria-label': (att.outNow ? 'Back in now · ' : 'Out today · ') + 'Pupil ' + n
+    }, att.outNow ? 'Back in now' : 'Out today');
+    btn.onclick = () => {
+      if (att.outNow) markPupilBackInNow(n, targetW, targetDay, 'morning');
+      else markPupilOutToday(n, targetW, targetDay, 'morning');
+    };
+    row.append(left, btn);
+    rollBox.append(row);
+  });
+
+  // Catch-up ready now: open catch-up rows for pupils present today, oldest first
+  const readyRows = [];
+  presentSet.forEach(n => {
+    openCatchupsForPupil(n, tracker, roster).forEach(item => {
+      readyRows.push({ ...item, n });
+    });
+  });
+  readyRows.sort((a, b) => a.w - b.w || DAYS.indexOf(a.d) - DAYS.indexOf(b.d) || a.p - b.p || a.n - b.n);
+
+  $('morningSummary').textContent = 'Morning check-in · ' + inCount + ' in, ' + outCount + ' out · ' + readyRows.length + ' catch-up ready';
+
+  const readyBox = $('morningReadyList');
+  readyBox.replaceChildren();
+  if (!readyRows.length) {
+    readyBox.append(el('p', { class: 'hint' }, 'No open catch-ups owed by pupils in the room right now.'));
+    return;
+  }
+  const labelMap = { missed: 'Needs catch-up', partial: 'Partly done', more: 'More needed' };
+  readyRows.forEach(item => {
+    const r = el('div', { class: 'stack-row', 'data-ready-pupil': item.n });
+    const meta = el('div', { class: 'stack-meta' });
+    const tag = pupilTag(item.n, roster);
+    meta.append(
+      el('strong', {}, tag + (tag === 'P' + item.n ? '' : ' · P' + item.n) + ' · W' + item.w + ' ' + item.d.slice(0, 3) + ' P' + item.p + ' ' + item.subj + ' L' + item.lesson + ' '),
+      el('span', { class: 'pill warn' }, labelMap[item.state] || 'Needs catch-up')
+    );
+    const ns = nextSlotTextFor(item.path, item.subj, now);
+    if (ns) meta.append(el('div', { class: 'hint' }, ns));
+
+    const acts = el('div', { class: 'stack-actions' });
+    const url = safeCatchupSheetUrl(item.w, item.path, item.subj, item.lesson, tracker);
+    if (url) acts.append(el('a', { class: 'btn', href: url, target: '_blank', rel: 'noopener' }, 'Open sheet'));
+    const doneBtn = el('button', { type: 'button', class: 'primary', 'data-ready-done': item.key }, 'Done');
+    doneBtn.onclick = () => markCatchupDoneFromMorning(item.key, item);
+    acts.append(doneBtn);
+    r.append(meta, acts);
+    readyBox.append(r);
+  });
 }
-function fillTimeInputs(){for(let i=0;i<6;i++){$('time-'+i).value=times.starts[i];$('end-'+i).value=times.ends[i];}}
-for(let i=0;i<6;i++){const group=document.createElement('div'),heading=document.createElement('strong');heading.textContent='Period '+(i+1);group.append(heading);for(const [name,id,value] of [['Start','time-',times.starts[i]],['End','end-',times.ends[i]]]){const label=document.createElement('label');label.textContent=name;const input=document.createElement('input');input.type='time';input.id=id+i;input.required=true;input.value=value;label.append(input);group.append(label);}$('timesInputs').append(group);}
-$('timesForm').onsubmit=e=>{e.preventDefault();const next={...times,v:2,starts:Array.from({length:6},(_,i)=>$('time-'+i).value),ends:Array.from({length:6},(_,i)=>$('end-'+i).value),confirmed:true};if(!validTimes(next)){$('timeStatus').textContent='Use a start and end for each period. Periods must not overlap.';return;}times=next;timesMigrated=false;const ok=write(TIMES,times);$('timeStatus').textContent=ok?'✓ Times saved on this device.':'Times used for this visit. Could not save on this device.';renderNow();};
-$('resetSchoolTimes').onclick=()=>{times=schoolTimes();timesMigrated=true;write(TIMES,times);fillTimeInputs();$('timeStatus').textContent='Period times set to your school day';renderNow();};
 
-$('nowPath').onchange=()=>{sharedPath=$('nowPath').value;write('mbm_tools_path_v1',sharedPath);renderNow();};
-const originals=[...document.querySelectorAll('.tool-group a.tile')], tools=new Map();
-originals.forEach((a,i)=>{const href=a.getAttribute('href'),id=tools.has(href)?href+'::'+i:href;a.dataset.toolId=id;const wrap=document.createElement('div');wrap.className='tool';a.parentNode.insertBefore(wrap,a);wrap.append(a);const title=a.querySelector('b').textContent;tools.set(id,{id,a,wrap,title,search:([...a.children].map(node=>node.textContent).join(' ')+' '+a.closest('.tool-group').querySelector('h2').textContent).toLocaleLowerCase('en-GB')});});
-let pins=read(PINS,[]),recent=read(RECENT,[]);pins=Array.isArray(pins)?[...new Set(pins.filter(id=>typeof id==='string'&&tools.has(id)))]:[];recent=Array.isArray(recent)?[...new Set(recent.filter(id=>typeof id==='string'&&tools.has(id)))].slice(0,3):[];
-function pinButton(id){const b=document.createElement('button');b.className='pin';b.type='button';b.dataset.pinId=id;b.onclick=()=>togglePin(id);return b;}
-originals.forEach(a=>a.parentNode.append(pinButton(a.dataset.toolId)));
-function togglePin(id){pins=pins.includes(id)?pins.filter(v=>v!==id):[...pins,id];write(PINS,pins);refreshRows();notice((pins.includes(id)?'Pinned ':'Unpinned ')+tools.get(id).title+'.');}
-function row(box,ids){box.replaceChildren();ids.forEach(id=>{const t=tools.get(id),wrap=document.createElement('div');wrap.className='tool';const a=t.a.cloneNode(true);a.removeAttribute('id');a.querySelectorAll('[id]').forEach(n=>n.removeAttribute('id'));wrap.append(a,pinButton(id));box.append(wrap);});}
-function refreshRows(){const active=document.activeElement,focusId=active&&active.dataset.pinId,focusRow=active&&active.closest('section')&&active.closest('section').id;row($('pinnedTiles'),pins);row($('recentTiles'),recent);$('pinHelp').hidden=!!pins.length;$('recentHelp').hidden=!!recent.length;document.querySelectorAll('[data-pin-id]').forEach(b=>{const is=pins.includes(b.dataset.pinId);b.textContent=is?'★':'☆';b.setAttribute('aria-pressed',String(is));b.setAttribute('aria-label',(is?'Unpin ':'Pin ')+tools.get(b.dataset.pinId).title);b.title=b.getAttribute('aria-label');});filter();if(focusId&&focusRow){const target=[...$(focusRow).querySelectorAll('[data-pin-id]')].find(b=>b.dataset.pinId===focusId)||[...document.querySelectorAll('.tool-group [data-pin-id]')].find(b=>b.dataset.pinId===focusId);if(target)target.focus();}}
-function filter(){const q=$('toolSearch').value.trim().toLocaleLowerCase('en-GB');let matches=0;tools.forEach(t=>{const match=t.search.includes(q);t.wrap.hidden=!match;if(match)matches++;});document.querySelectorAll('.tool-group').forEach(g=>g.hidden=![...g.querySelectorAll('.tool')].some(t=>!t.hidden));['pinnedTiles','recentTiles'].forEach(id=>{for(const t of $(id).children)t.hidden=!tools.get(t.querySelector('a').dataset.toolId).search.includes(q);});$('searchStatus').textContent=q?(matches?matches+' tools found.':'No tools found. Try a shorter word.'):'Tap a star to pin a tool. Hold a tile to pin it too.';$('pinnedSection').hidden=!!q&&![...$('pinnedTiles').children].some(t=>!t.hidden);$('recentSection').hidden=!!q&&![...$('recentTiles').children].some(t=>!t.hidden);}
-$('toolSearch').oninput=filter;
-let hold=null,heldLink=null,suppress=null;
-document.addEventListener('pointerdown',e=>{const a=e.target.closest('a[data-tool-id]');if(!a||!tools.has(a.dataset.toolId)||e.button!==0)return;clearTimeout(hold);heldLink={a,x:e.clientX,y:e.clientY};hold=setTimeout(()=>{togglePin(a.dataset.toolId);suppress={a,until:Date.now()+1500};heldLink=null;},650);});
-document.addEventListener('pointermove',e=>{if(heldLink&&Math.hypot(e.clientX-heldLink.x,e.clientY-heldLink.y)>12){clearTimeout(hold);heldLink=null;}});
-['pointerup','pointercancel','scroll'].forEach(name=>document.addEventListener(name,()=>{clearTimeout(hold);heldLink=null;},true));
-document.addEventListener('contextmenu',e=>{if(e.target.closest('a[data-tool-id]')&&(heldLink||suppress&&Date.now()<suppress.until))e.preventDefault();});
-document.addEventListener('click',e=>{if(suppress&&Date.now()<suppress.until){e.preventDefault();suppress=null;return;}suppress=null;const a=e.target.closest('a[data-tool-id]');if(!a)return;const id=a.dataset.toolId;if(tools.has(id)){recent=[id,...recent.filter(v=>v!==id)].slice(0,3);write(RECENT,recent);refreshRows();}});
-window.addEventListener('pageshow',()=>{const saved=read(RECENT,[]);if(Array.isArray(saved))recent=[...new Set(saved.filter(id=>tools.has(id)))].slice(0,3);refreshRows();renderNow();});
-window.addEventListener('storage',e=>{if(e.key===TIMES){const v=read(TIMES,{});if(validTimes(v)){times=v;fillTimeInputs();renderNow();}}});
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)renderNow();});
-refreshRows();renderNow();setInterval(renderNow,30000);
-const icon='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="38" fill="#153e64"/><g fill="#fff"><rect x="40" y="40" width="48" height="48" rx="10"/><rect x="104" y="40" width="48" height="48" rx="10"/><rect x="40" y="104" width="48" height="48" rx="10"/><rect x="104" y="104" width="48" height="48" rx="10"/></g></svg>');
-const start=new URL('My_tools.html',location.href).href;
-$('manifest').href='data:application/manifest+json,'+encodeURIComponent(JSON.stringify({name:'My tools',short_name:'My tools',id:start,start_url:start,scope:new URL('.',start).href,display:'fullscreen',background_color:'#ffffff',theme_color:'#153e64',icons:[{src:icon,sizes:'any',type:'image/svg+xml',purpose:'any maskable'}]}));$('appIcon').href=icon;$('touchIcon').href=icon;
+// --- Feature C: End-of-Day Pack (Checklist, Safe "All got it", One-Tap ZIP without photos) ---
+let userToggledEod = false;
+$('endOfDayDetails').querySelector('summary').addEventListener('click', () => { userToggledEod = true; });
 
+function csvCell(s){
+  s = String(s ?? '');
+  if (/^[\s]*[=+@-]/.test(s)) s = "'" + s;
+  return '"' + s.replace(/"/g, '""') + '"';
+}
+
+function buildLessonTallyCSV(c, tallies, roster){
+  const rows = [['date','week','day','period','pathway','subject','code','pupil','state','note']];
+  const groupNums = (roster.groups[c.path] || []).slice();
+  // Also include any pupil 1..20 with an explicit tally record in this slot+path
+  Object.entries(tallies).forEach(([k, rec]) => {
+    const [w, d, p, pn] = k.split('|');
+    if (+w === +c.w && d === c.d && +p === +c.p && rec?.path === c.path && !groupNums.includes(+pn) && +pn >= 1 && +pn <= 20) groupNums.push(+pn);
+  });
+  groupNums.sort((a, b) => a - b);
+  groupNums.forEach(n => {
+    const r = tallies[[c.w, c.d, c.p, n].join('|')];
+    if (r && ['got','nearly','again','absent'].includes(r.state)) {
+      rows.push([c.date, c.w, c.d, c.p, c.path, c.subj, c.code, 'Pupil ' + n, r.state, redactPublic(r.note || '', roster)]);
+    }
+  });
+  return '\uFEFF' + rows.map(r => r.map(csvCell).join(',')).join('\r\n') + '\r\n';
+}
+
+function todayExpandedLessons(now = new Date()){
+  let baseSlots = schoolSlots(now, times);
+  if (!baseSlots.length) {
+    const fb = currentActiveSlot(now).slot;
+    if (fb) baseSlots = slotsOnDay(fb.w, fb.day, times);
+  }
+  const out = [];
+  baseSlots.forEach(s => {
+    const paths = s.path === 'ALL' ? PATHWAYS : [s.path];
+    paths.forEach(path => {
+      const code = lessonCode(s.w, path, s.subject, s.lesson);
+      out.push({ w: s.w, d: s.day, p: s.p, path, subj: s.subject, lesson: s.lesson, code, date: dateISO(lessonDate(s.w, s.day)) });
+    });
+  });
+  return out;
+}
+
+function markLessonSafeAllGotIt(c){
+  const roster = buildRoster();
+  const pupils = roster.groups[c.path] || [];
+  if (!pupils.length) return;
+  saveUndoSnapshot('eod', 'Marked ' + c.d.slice(0, 3) + ' P' + c.p + ' ' + c.path + ' All got it (absent kept)');
+  const tallies = read(KEYS.tally, {}) || {};
+  const tracker = ensureTrackerState(roster);
+  const sendQueue = read(KEYS.qcQueue, {}) || {};
+  const nowIso = new Date().toISOString();
+
+  pupils.forEach(n => {
+    const tk = [c.w, c.d, c.p, n].join('|');
+    const absent = isPupilAbsentInSlot(n, c.w, c.d, c.p, tallies, tracker, roster);
+    if (absent) {
+      // NEVER overwrite an absent pupil! Ensure tally reflects absent so CSV is complete.
+      tallies[tk] = { ...(tallies[tk] || {}), code: c.code, path: c.path, subj: c.subj, state: 'absent', note: tallies[tk]?.note || '', ts: nowIso };
+    } else {
+      const prev = tallies[tk];
+      // Clear owned tracker mark if previously marked nearly/again via tally
+      if (prev?.tracker && tracker.marks?.[prev.tracker.key]) {
+        if (prev.tracker.before === null) delete tracker.marks[prev.tracker.key];
+        else tracker.marks[prev.tracker.key] = prev.tracker.before;
+      }
+      const nextRec = { ...(prev || {}), code: c.code, path: c.path, subj: c.subj, state: 'got', note: prev?.note || '', ts: nowIso };
+      delete nextRec.tracker;
+      tallies[tk] = nextRec;
+    }
+  });
+
+  enqueueLessonInQC(sendQueue, c.w, c.d, c.p, c.path, c.subj, c.lesson, c.code);
+  write(KEYS.tracker, tracker);
+  write(KEYS.tally, tallies);
+  write(KEYS.qcQueue, sendQueue);
+  renderAll();
+}
+
+function buildPublicTrackerBackupObject(tracker, roster){
+  const b = JSON.parse(JSON.stringify(tracker || {}));
+  b.pupils = {
+    BUILD: (roster.groups.BUILD || []).map(n => 'Pupil ' + n),
+    GROW: (roster.groups.GROW || []).map(n => 'Pupil ' + n),
+    LAUNCH: (roster.groups.LAUNCH || []).map(n => 'Pupil ' + n)
+  };
+  const marks = {}, assess = {};
+  Object.entries(b.marks || {}).forEach(([k, m]) => {
+    const parts = k.split('|');
+    const n = matchTrackerPupilNumber(parts.slice(3).join('|'), tracker, roster) || 1;
+    const cleanMark = { ...m };
+    if (typeof cleanMark.note === 'string') cleanMark.note = redactPublic(cleanMark.note, roster);
+    marks[[parts[0], parts[1], parts[2], 'Pupil ' + n].join('|')] = cleanMark;
+  });
+  Object.entries(b.assessMarks || {}).forEach(([k, v]) => {
+    const parts = k.split('|');
+    const n = matchTrackerPupilNumber(parts.slice(2).join('|'), tracker, roster) || 1;
+    assess[[parts[0], parts[1], 'Pupil ' + n].join('|')] = v;
+  });
+  b.marks = marks;
+  b.assessMarks = assess;
+  b.adapt = {};
+  b.links = b.links || {};
+  Object.keys(b.links).forEach(k => { b.links[k] = redactPublic(b.links[k], roster); });
+  b.pins = Array.isArray(b.pins) ? b.pins.map(pin => ({ ...pin, title: redactPublic(pin.title || '', roster), url: redactPublic(pin.url || '', roster) })) : [];
+  b.dirtySinceBackup = false;
+  b.lastBackup = dateISO(new Date());
+  return b;
+}
+
+async function saveTodaysPack(){
+  const now = new Date(), roster = buildRoster();
+  const tallies = read(KEYS.tally, {}) || {};
+  const sendQueue = read(KEYS.qcQueue, {}) || {};
+  const tracker = ensureTrackerState(roster);
+  const practicalRows = read(KEYS.practical, []) || [];
+  const todayLessons = todayExpandedLessons(now);
+  const files = [];
+
+  // 1. Unsent queued tallies + any tallied lessons from today
+  const tallyMap = new Map();
+  Object.entries(sendQueue).forEach(([id, entry]) => {
+    if (!entry?.c || !PATHWAYS.includes(entry.c.path)) return;
+    const csv = buildLessonTallyCSV(entry.c, tallies, roster);
+    const hasRows = csv.trim().split(/\r?\n/).length > 1;
+    if (hasRows && entry.sentCSV !== csv) tallyMap.set(id, { id, c: entry.c, csv });
+  });
+  todayLessons.forEach(c => {
+    const id = queueIDFor(c.w, c.d, c.p, c.path, c.code);
+    const csv = buildLessonTallyCSV(c, tallies, roster);
+    const hasRows = csv.trim().split(/\r?\n/).length > 1;
+    if (hasRows && sendQueue[id]?.sentCSV !== csv) tallyMap.set(id, { id, c, csv });
+  });
+
+  let tallyCount = 0;
+  tallyMap.forEach(({ id, c, csv }) => {
+    const stamp = String(c.date || dateISO(now)).replace(/-/g, '');
+    files.push(new File([csv], '_INBOX_Tally/TALLY_' + stamp + '_' + fileCode(c.code) + '.csv', { type: 'text/csv;charset=utf-8' }));
+    sendQueue[id] = { ...(sendQueue[id] || {}), c, sentCSV: csv, sentAt: now.toISOString() };
+    tallyCount++;
+  });
+
+  // 2. Absence bundle request files for pupils absent today
+  let absCount = 0;
+  if (todayLessons.length) {
+    const w = todayLessons[0].w, day = todayLessons[0].d;
+    const absentPupils = new Set();
+    PATHWAYS.flatMap(p => roster.groups[p] || []).forEach(n => {
+      const pSlots = pupilSlotsForDay(n, w, day, times, roster);
+      if (pSlots.some(s => isPupilAbsentInSlot(n, w, day, s.p, tallies, tracker, roster))) absentPupils.add(n);
+    });
+    [...absentPupils].sort((a, b) => a - b).forEach(n => {
+      const reqTxt = 'absence-v1\npupil=Pupil ' + n + '\nweek=' + w + '\ncreated=' + now.toISOString() + '\n';
+      files.push(new File([reqTxt], '_INBOX_Requests/ABSENT_P' + n + '_W' + pad(w) + '.txt', { type: 'text/plain;charset=utf-8' }));
+      absCount++;
+    });
+  }
+
+  // 3. Queued practical log CSV (Pupil N only)
+  let pracCount = 0;
+  if (Array.isArray(practicalRows) && practicalRows.length > 0) {
+    const cols = ['date','pathway','subject','lesson','practical','pupil','result','skills','note'];
+    const pCsvCell = v => { v = String(v ?? ''); return /[",\n\r]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+    const body = cols.join(',') + '\r\n' + practicalRows.map(r => cols.map(col => {
+      if (col === 'pupil') {
+        const m = String(r.pupil || '').match(/(\d{1,2})/);
+        return pCsvCell(m && +m[1] >= 1 && +m[1] <= 20 ? 'Pupil ' + (+m[1]) : 'Pupil 1');
+      }
+      return pCsvCell(redactPublic(r[col] || '', roster));
+    }).join(',')).join('\r\n') + '\r\n';
+    files.push(new File([body], '_INBOX_Practicals/practical_log_' + dateISO(now) + '.csv', { type: 'text/csv;charset=utf-8' }));
+    pracCount = 1;
+  }
+
+  // 4. Dated clean tracker JSON backup (Pupil N only; zero photos in pack)
+  const cleanBackup = buildPublicTrackerBackupObject(tracker, roster);
+  files.push(new File([JSON.stringify(cleanBackup, null, 2) + '\n'], 'Backup/catch_up_tracker_' + dateISO(now) + '.json', { type: 'application/json;charset=utf-8' }));
+
+  const packDate = todayLessons[0]?.date ? todayLessons[0].date.replace(/-/g, '') : dateStamp(now);
+  const zipFile = await makeZip(files, 'DAY_PACK_' + packDate + '.zip');
+  downloadFile(zipFile);
+
+  tracker.dirtySinceBackup = false;
+  tracker.lastBackup = dateISO(now);
+  write(KEYS.tracker, tracker);
+  write(KEYS.qcQueue, sendQueue);
+
+  $('eodStatus').textContent = 'Saved ' + zipFile.name + ' (' + tallyCount + ' tally CSV' + (tallyCount === 1 ? '' : 's') + ', ' + absCount + ' absence request' + (absCount === 1 ? '' : 's') + (pracCount ? ', 1 practical CSV' : '') + ', 1 tracker backup). No photos included.';
+  renderAll();
+}
+$('saveDayPackBtn').onclick = () => saveTodaysPack().catch(() => { $('eodStatus').textContent = 'Could not prepare pack. Try again.'; });
+
+function renderEndOfDayPack(now = new Date(), roster = buildRoster()){
+  const liveSlots = schoolSlots(now, times);
+  const minute = now.getHours() * 60 + now.getMinutes();
+  const after1330 = liveSlots.length > 0 && minute >= 810;
+  if (!userToggledEod) $('endOfDayDetails').open = after1330;
+
+  const lessons = todayExpandedLessons(now);
+  const tallies = read(KEYS.tally, {}) || {};
+  const tracker = ensureTrackerState(roster);
+  const practicalRows = read(KEYS.practical, []) || [];
+
+  let completeCount = 0;
+  const box = $('eodChecklist');
+  box.replaceChildren();
+
+  lessons.forEach(c => {
+    const pupils = roster.groups[c.path] || [];
+    let marked = 0, got = 0, absent = 0, other = 0;
+    pupils.forEach(n => {
+      const st = tallies[[c.w, c.d, c.p, n].join('|')]?.state;
+      if (['got','nearly','again','absent'].includes(st)) {
+        marked++;
+        if (st === 'got') got++;
+        else if (st === 'absent') absent++;
+        else other++;
+      } else if (isPupilAbsentInSlot(n, c.w, c.d, c.p, tallies, tracker, roster)) {
+        absent++;
+      }
+    });
+    const isComplete = pupils.length > 0 && marked === pupils.length;
+    if (isComplete) completeCount++;
+
+    const row = el('div', { class: 'stack-row', 'data-eod-code': c.code });
+    const meta = el('div', { class: 'stack-meta' });
+    meta.append(
+      el('strong', {}, 'P' + c.p + ' · ' + c.path + ' ' + c.subj + ' '),
+      el('span', { class: isComplete ? 'pill ok' : (marked ? 'pill warn' : 'pill') },
+        isComplete ? ('✓ All ' + pupils.length + ' tallied' + (absent ? ' (' + absent + ' absent)' : ''))
+                   : (marked + ' of ' + pupils.length + ' tallied' + (absent ? ' · ' + absent + ' out' : '')))
+    );
+    meta.append(el('div', { class: 'hint' }, c.code));
+
+    const acts = el('div', { class: 'stack-actions' });
+    const allGotBtn = el('button', {
+      type: 'button',
+      'data-eod-allgot': [c.w, c.d, c.p, c.path].join('|'),
+      'aria-label': 'All got it for Period ' + c.p + ' ' + c.path + ' ' + c.subj
+    }, 'All got it');
+    allGotBtn.onclick = () => markLessonSafeAllGotIt(c);
+    acts.append(allGotBtn);
+    row.append(meta, acts);
+    box.append(row);
+  });
+
+  const pracNote = Array.isArray(practicalRows) && practicalRows.length ? (' · ' + practicalRows.length + ' practical row(s) queued') : '';
+  const dirtyNote = tracker.dirtySinceBackup ? ' · Tracker backup needed' : ' · Tracker backed up';
+  $('eodSummary').textContent = 'End-of-day pack · ' + completeCount + ' of ' + lessons.length + ' lessons tallied';
+  $('eodMeta').textContent = completeCount + ' of ' + lessons.length + ' lessons tallied today' + pracNote + dirtyNote + '. Book photos stay in Quick capture › Photo (never in this pack).';
+}
+
+// --- Feature E: Tomorrow's Copier and Reteach Drawer (Counts ONLY on Copy Copier List) ---
+let latestCopierText = '';
+
+function findNextSchoolDaySlots(now = new Date()){
+  for (let offset = 1; offset <= 10; offset++) {
+    const cand = new Date(now.getFullYear(), now.getMonth(), now.getDate() + offset);
+    const s = schoolSlots(cand, times);
+    if (s.length) return { date: cand, slots: s };
+  }
+  return null;
+}
+
+function renderTomorrowDrawer(now = new Date(), roster = buildRoster()){
+  const nextDay = findNextSchoolDaySlots(now);
+  const box = $('tomorrowList');
+  box.replaceChildren();
+  const folderHref = $('tomorrowTile')?.href || 'https://drive.google.com/drive/u/0/search?q=type%3Afolder%20Tomorrow';
+  $('tomorrowDrawerFolderLink').href = folderHref;
+
+  if (!nextDay) {
+    $('tomorrowSummary').textContent = "Tomorrow's copier and reteach · End of saved timetable";
+    $('tomorrowSubhead').textContent = 'No further school days in the saved 7-week timetable.';
+    latestCopierText = 'No further school days in the saved timetable.\n';
+    return;
+  }
+
+  const { slots } = nextDay;
+  const dayName = slots[0].day, w = slots[0].w;
+  const tallies = read(KEYS.tally, {}) || {};
+  let totalCopies = 0, totalEnlarged = 0, totalWordBank = 0;
+  const copierLines = ['Copier list for ' + dayName + ' · Week ' + w + ' (' + slots.length + ' lessons)'];
+
+  slots.forEach(s => {
+    const pupils = s.path === 'ALL' ? PATHWAYS.flatMap(p => roster.groups[p] || []) : (roster.groups[s.path] || []);
+    const copies = pupils.length;
+    let enlarged = 0, wordBank = 0;
+    pupils.forEach(n => {
+      const ad = pupilAdapt(n, roster);
+      if (ad.some(x => /\b(enlarged|large\s*print|16\s*pt|18\s*pt|a3)\b/i.test(x))) enlarged++;
+      if (ad.some(x => /\bword\s*bank\b/i.test(x))) wordBank++;
+    });
+    totalCopies += copies; totalEnlarged += enlarged; totalWordBank += wordBank;
+
+    // Reteach count from latest prior tally for this pathway & subject (counts only!)
+    let reteachCount = 0, hasPrior = false;
+    const pathsToCheck = s.path === 'ALL' ? PATHWAYS : [s.path];
+    pathsToCheck.forEach(pth => {
+      (roster.groups[pth] || []).forEach(n => {
+        const last = lastSubjectTallyForPupil(n, pth, s.subject, w, dayName, s.p, tallies);
+        if (last) {
+          hasPrior = true;
+          if (['again', 'nearly'].includes(last.state)) reteachCount++;
+        }
+      });
+    });
+
+    const code = lessonCode(w, s.path === 'ALL' ? sharedPath : s.path, s.subject, s.lesson);
+    const timeRange = times.starts[s.p - 1] + '–' + times.ends[s.p - 1];
+    const printParts = [];
+    if (enlarged) printParts.push(enlarged + ' enlarged print');
+    if (wordBank) printParts.push(wordBank + ' word bank');
+    const copyDesc = copies + ' cop' + (copies === 1 ? 'y' : 'ies') + (printParts.length ? ' (' + printParts.join(', ') + ')' : ' (standard print)');
+    const reteachDesc = hasPrior ? (reteachCount + ' reteach from last tally') : '0 prior tallies';
+
+    copierLines.push('- Period ' + s.p + ' (' + timeRange + ') · ' + (s.path === 'ALL' ? 'All groups' : s.path) + ' ' + s.subject + ' · ' + code + ' · ' + copyDesc + ' · ' + reteachDesc);
+
+    const row = el('div', { class: 'stack-row' });
+    const meta = el('div', { class: 'stack-meta' });
+    meta.append(
+      el('strong', {}, 'Period ' + s.p + ' (' + timeRange + ') · ' + (s.path === 'ALL' ? 'All groups' : s.path) + ' ' + s.subject + ' '),
+      el('span', { class: 'pill' }, copyDesc)
+    );
+    if (reteachCount > 0) meta.append(document.createTextNode(' '), el('span', { class: 'pill warn' }, reteachCount + ' reteach'));
+    meta.append(el('div', { class: 'hint' }, code));
+
+    const acts = el('div', { class: 'stack-actions' });
+    acts.append(el('a', { class: 'btn', href: extrasLink(s, s.path === 'ALL' ? 'ALL' : s.path) }, 'Lesson extras'));
+    row.append(meta, acts);
+    box.append(row);
+  });
+
+  copierLines.push('Total copies: ' + totalCopies + ' (including ' + totalEnlarged + ' enlarged print, ' + totalWordBank + ' word bank)');
+  latestCopierText = copierLines.join('\n') + '\n';
+
+  $('tomorrowSummary').textContent = "Tomorrow's copier and reteach · " + dayName + ' (' + slots.length + ' lessons, ' + totalCopies + ' copies)';
+  $('tomorrowSubhead').textContent = dayName + ' · Week ' + w + ' · ' + totalCopies + ' total copies (' + totalEnlarged + ' enlarged print, ' + totalWordBank + ' word bank).';
+}
+
+$('copyCopierBtn').onclick = () => {
+  copyText(latestCopierText, $('copierStatus'), 'Copier list copied (counts only, no pupil identifiers).');
+};
+
+// --- Core Now Card, Period Times, Search, Pinned & Recent Tiles ---
+let times = read(TIMES, {}), timesMigrated = false;
+function validTimes(value){ return validSchoolTimes(value); }
+if (times.v !== 2) { times = schoolTimes(); write(TIMES, times); timesMigrated = true; $('timeStatus').textContent = 'Period times set to your school day'; }
+else if (!validTimes(times)) { notice('Saved period times need a check. They have been kept.'); times = schoolTimes(); }
+function weekOf(date){ return schoolWeek(date); }
+function slotsFor(date){ return schoolSlots(date, times); }
+function nowContext(now = new Date()){ return schoolContext(now, times); }
+
+function extrasLink(s, path){ return 'Lesson_extras.html#' + new URLSearchParams({ week: String(s.w), path: path || s.path, subject: s.subject, lesson: String(s.lesson), view: 'visitor' }).toString(); }
+function shortSlot(s){ return schoolSlotText(s, times); }
+let sharedPath = read(KEYS.sharedPath, 'BUILD');
+if (!PATHWAYS.includes(sharedPath)) sharedPath = 'BUILD';
+$('nowPath').value = sharedPath;
+
+function renderNow(now = new Date(), roster = buildRoster()){
+  $('showTags').value = roster.show;
+  const active = currentActiveSlot(now);
+  const c = active.isPreview ? active : nowContext(now);
+  const s = active.slot;
+  $('nowCapture').href = 'Quick_capture.html?now=1';
+  $('nowCapture').dataset.toolId = 'Quick_capture.html';
+  $('nowExtras').dataset.toolId = 'Lesson_extras.html';
+  $('nowTracker').dataset.toolId = 'Catch_up_Tracker.html';
+
+  if (!s) {
+    $('nowState').textContent = 'No lesson';
+    $('nowWhen').textContent = '';
+    $('nowLesson').textContent = 'No lesson in the saved timetable';
+    $('nowCode').textContent = '';
+    $('nowHint').textContent = 'Choose a lesson inside Quick capture.';
+    $('nowExtras').href = 'Lesson_extras.html';
+    $('nextLesson').textContent = '';
+    $('sharedPath').hidden = true;
+    renderRoomBrief(active, roster);
+    return;
+  }
+  $('nowState').textContent = active.isPreview ? 'Preview' : (c.current ? 'Now' : 'Next');
+  $('nowWhen').textContent = (active.isPreview ? ('Preview: ' + schoolSlotText(s, times)) : schoolNowText(c, times, now)) + ' · Week ' + s.w;
+  $('nowLesson').textContent = s.subject + ' · ' + (s.path === 'ALL' ? 'All groups' : s.path);
+  $('nowCode').textContent = lessonCode(s.w, s.path === 'ALL' ? sharedPath : s.path, s.subject, s.lesson);
+  $('nowExtras').href = extrasLink(s, s.path === 'ALL' ? sharedPath : s.path);
+  $('sharedPath').hidden = s.path !== 'ALL';
+  $('nowHint').textContent = (timesMigrated ? 'Period times set to your school day. ' : '') + (active.isPreview ? 'Previewing chosen lesson.' : (c.current ? 'Ready for this lesson.' : 'Ready for the next lesson.'));
+  $('nextLesson').textContent = active.isPreview ? 'Tap Back to live clock inside Room brief when finished.' : (c.next ? 'Next: ' + shortSlot(c.next) : 'No later lesson in this timetable.');
+  renderRoomBrief(active, roster);
+}
+
+function renderAll(){
+  const now = new Date(), roster = buildRoster();
+  renderNow(now, roster);
+  renderMorningCheckin(now, roster);
+  renderEndOfDayPack(now, roster);
+  renderTomorrowDrawer(now, roster);
+}
+
+$('showTags').onchange = e => setShowMode(e.target.value);
+
+function fillTimeInputs(){ for (let i = 0; i < 6; i++) { $('time-' + i).value = times.starts[i]; $('end-' + i).value = times.ends[i]; } }
+for (let i = 0; i < 6; i++) {
+  const group = document.createElement('div'), heading = document.createElement('strong');
+  heading.textContent = 'Period ' + (i + 1);
+  group.append(heading);
+  for (const [name, id, value] of [['Start','time-',times.starts[i]],['End','end-',times.ends[i]]]) {
+    const label = document.createElement('label'); label.textContent = name;
+    const input = document.createElement('input'); input.type = 'time'; input.id = id + i; input.required = true; input.value = value;
+    label.append(input); group.append(label);
+  }
+  $('timesInputs').append(group);
+}
+$('timesForm').onsubmit = e => {
+  e.preventDefault();
+  const next = { ...times, v: 2, starts: Array.from({ length: 6 }, (_, i) => $('time-' + i).value), ends: Array.from({ length: 6 }, (_, i) => $('end-' + i).value), confirmed: true };
+  if (!validTimes(next)) { $('timeStatus').textContent = 'Use a start and end for each period. Periods must not overlap.'; return; }
+  times = next; timesMigrated = false;
+  const ok = write(TIMES, times);
+  $('timeStatus').textContent = ok ? '✓ Times saved on this device.' : 'Times used for this visit. Could not save on this device.';
+  renderAll();
+};
+$('resetSchoolTimes').onclick = () => {
+  times = schoolTimes(); timesMigrated = true; write(TIMES, times); fillTimeInputs();
+  $('timeStatus').textContent = 'Period times set to your school day';
+  renderAll();
+};
+$('nowPath').onchange = () => { sharedPath = $('nowPath').value; write(KEYS.sharedPath, sharedPath); renderAll(); };
+
+function checkHashTarget(){
+  if (location.hash === '#period-times') {
+    $('periodTimesDetails').open = true;
+    $('periodTimesDetails').scrollIntoView();
+  }
+}
+window.addEventListener('hashchange', checkHashTarget);
+
+// --- Launcher Tiles, Pins, Recents & Search (including H2 Drive folders and checks drawer) ---
+let driveDrawerUserOpen = false;
+$('driveChecksDrawer').querySelector('summary').addEventListener('click', () => {
+  requestAnimationFrame(() => { if (!$('toolSearch').value.trim()) driveDrawerUserOpen = $('driveChecksDrawer').open; });
+});
+
+const originals = [...document.querySelectorAll('.tool-group a.tile')], tools = new Map();
+originals.forEach((a, i) => {
+  const href = a.getAttribute('href'), id = tools.has(href) ? href + '::' + i : href;
+  a.dataset.toolId = id;
+  const wrap = document.createElement('div'); wrap.className = 'tool';
+  a.parentNode.insertBefore(wrap, a); wrap.append(a);
+  const title = a.querySelector('b').textContent;
+  tools.set(id, { id, a, wrap, title, search: ([...a.children].map(node => node.textContent).join(' ') + ' ' + a.closest('.tool-group').querySelector('h2').textContent).toLocaleLowerCase('en-GB') });
+});
+let pins = read(PINS, []), recent = read(RECENT, []);
+pins = Array.isArray(pins) ? [...new Set(pins.filter(id => typeof id === 'string' && tools.has(id)))] : [];
+recent = Array.isArray(recent) ? [...new Set(recent.filter(id => typeof id === 'string' && tools.has(id)))].slice(0, 3) : [];
+function pinButton(id){ const b = document.createElement('button'); b.className = 'pin'; b.type = 'button'; b.dataset.pinId = id; b.onclick = () => togglePin(id); return b; }
+originals.forEach(a => a.parentNode.append(pinButton(a.dataset.toolId)));
+function togglePin(id){ pins = pins.includes(id) ? pins.filter(v => v !== id) : [...pins, id]; write(PINS, pins); refreshRows(); notice((pins.includes(id) ? 'Pinned ' : 'Unpinned ') + tools.get(id).title + '.'); }
+function row(box, ids){ box.replaceChildren(); ids.forEach(id => { const t = tools.get(id), wrap = document.createElement('div'); wrap.className = 'tool'; const a = t.a.cloneNode(true); a.removeAttribute('id'); a.querySelectorAll('[id]').forEach(n => n.removeAttribute('id')); wrap.append(a, pinButton(id)); box.append(wrap); }); }
+function refreshRows(){
+  const active = document.activeElement, focusId = active && active.dataset.pinId, focusRow = active && active.closest('section') && active.closest('section').id;
+  row($('pinnedTiles'), pins); row($('recentTiles'), recent);
+  $('pinHelp').hidden = !!pins.length; $('recentHelp').hidden = !!recent.length;
+  document.querySelectorAll('[data-pin-id]').forEach(b => {
+    const is = pins.includes(b.dataset.pinId);
+    b.textContent = is ? '★' : '☆'; b.setAttribute('aria-pressed', String(is));
+    b.setAttribute('aria-label', (is ? 'Unpin ' : 'Pin ') + tools.get(b.dataset.pinId).title);
+    b.title = b.getAttribute('aria-label');
+  });
+  filter();
+  if (focusId && focusRow) {
+    const target = [...$(focusRow).querySelectorAll('[data-pin-id]')].find(b => b.dataset.pinId === focusId) || [...document.querySelectorAll('.tool-group [data-pin-id]')].find(b => b.dataset.pinId === focusId);
+    if (target) target.focus();
+  }
+}
+function filter(){
+  const q = $('toolSearch').value.trim().toLocaleLowerCase('en-GB');
+  let matches = 0;
+  tools.forEach(t => { const match = t.search.includes(q); t.wrap.hidden = !match; if (match) matches++; });
+  document.querySelectorAll('.tool-group').forEach(g => { g.hidden = ![...g.querySelectorAll('.tool')].some(t => !t.hidden); });
+  if (q) {
+    const anyDriveMatch = [...$('driveChecksDrawer').querySelectorAll('.tool')].some(t => !t.hidden);
+    if (anyDriveMatch) $('driveChecksDrawer').open = true;
+  } else {
+    $('driveChecksDrawer').open = driveDrawerUserOpen;
+  }
+  ['pinnedTiles', 'recentTiles'].forEach(id => { for (const t of $(id).children) t.hidden = !tools.get(t.querySelector('a').dataset.toolId).search.includes(q); });
+  $('searchStatus').textContent = q ? (matches ? matches + ' tools found.' : 'No tools found. Try a shorter word.') : 'Tap a star to pin a tool. Hold a tile to pin it too.';
+  $('pinnedSection').hidden = !!q && ![...$('pinnedTiles').children].some(t => !t.hidden);
+  $('recentSection').hidden = !!q && ![...$('recentTiles').children].some(t => !t.hidden);
+}
+$('toolSearch').oninput = filter;
+
+let hold = null, heldLink = null, suppress = null;
+document.addEventListener('pointerdown', e => { const a = e.target.closest('a[data-tool-id]'); if (!a || !tools.has(a.dataset.toolId) || e.button !== 0) return; clearTimeout(hold); heldLink = { a, x: e.clientX, y: e.clientY }; hold = setTimeout(() => { togglePin(a.dataset.toolId); suppress = { a, until: Date.now() + 1500 }; heldLink = null; }, 650); });
+document.addEventListener('pointermove', e => { if (heldLink && Math.hypot(e.clientX - heldLink.x, e.clientY - heldLink.y) > 12) { clearTimeout(hold); heldLink = null; } });
+['pointerup', 'pointercancel', 'scroll'].forEach(name => document.addEventListener(name, () => { clearTimeout(hold); heldLink = null; }, true));
+document.addEventListener('contextmenu', e => { if (e.target.closest('a[data-tool-id]') && (heldLink || suppress && Date.now() < suppress.until)) e.preventDefault(); });
+document.addEventListener('click', e => { if (suppress && Date.now() < suppress.until) { e.preventDefault(); suppress = null; return; } suppress = null; const a = e.target.closest('a[data-tool-id]'); if (!a) return; const id = a.dataset.toolId; if (tools.has(id)) { recent = [id, ...recent.filter(v => v !== id)].slice(0, 3); write(RECENT, recent); refreshRows(); } });
+window.addEventListener('pageshow', () => { const saved = read(RECENT, []); if (Array.isArray(saved)) recent = [...new Set(saved.filter(id => tools.has(id)))].slice(0, 3); refreshRows(); renderAll(); });
+window.addEventListener('storage', e => {
+  if (e.key === TIMES) { const v = read(TIMES, {}); if (validTimes(v)) { times = v; fillTimeInputs(); } }
+  renderAll();
+});
+document.addEventListener('visibilitychange', () => { if (!document.hidden) renderAll(); });
+
+refreshRows();
+renderAll();
+checkHashTarget();
+setInterval(renderAll, 30000);
+
+const icon = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="38" fill="#153e64"/><g fill="#fff"><rect x="40" y="40" width="48" height="48" rx="10"/><rect x="104" y="40" width="48" height="48" rx="10"/><rect x="40" y="104" width="48" height="48" rx="10"/><rect x="104" y="104" width="48" height="48" rx="10"/></g></svg>');
+const start = new URL('My_tools.html', location.href).href;
+$('manifest').href = 'data:application/manifest+json,' + encodeURIComponent(JSON.stringify({ name: 'My tools', short_name: 'My tools', id: start, start_url: start, scope: new URL('.', start).href, display: 'fullscreen', background_color: '#ffffff', theme_color: '#153e64', icons: [{ src: icon, sizes: 'any', type: 'image/svg+xml', purpose: 'any maskable' }] }));
+$('appIcon').href = icon;
+$('touchIcon').href = icon;
 </script>
 <script>
-
-(function(){'use strict';const KEY='mbm_tomorrow_folder_v1',tile=document.getElementById('tomorrowTile'),input=document.getElementById('tomorrowUrl'),hint=document.getElementById('tomorrowHint'),message=document.getElementById('folderStatus');function valid(value){try{const u=new URL(value);return u.protocol==='https:'&&u.hostname==='drive.google.com'&&/^\/drive\/(?:u\/\d+\/)?folders\/[A-Za-z0-9_-]+\/?$/.test(u.pathname);}catch(e){return false;}}function apply(value){if(!valid(value))return;tile.href=value;input.value=value;hint.textContent='_OUTBOX / Tomorrow · Open the print pack folder.';refreshRows();}try{apply(localStorage.getItem(KEY)||'');}catch(e){message.textContent='Browser storage is unavailable. The Drive search link still works.';}document.getElementById('tomorrowForm').onsubmit=function(e){e.preventDefault();const value=input.value.trim();if(!valid(value)){message.textContent='Paste a full HTTPS Drive folder link.';return;}apply(value);try{localStorage.setItem(KEY,value);message.textContent='Folder link saved on this device.';}catch(err){message.textContent='Folder link works for this visit. Browser storage could not save it.';}};})();
-
+(function(){'use strict';const KEY='mbm_tomorrow_folder_v1',tile=document.getElementById('tomorrowTile'),drawerLink=document.getElementById('tomorrowDrawerFolderLink'),input=document.getElementById('tomorrowUrl'),hint=document.getElementById('tomorrowHint'),message=document.getElementById('folderStatus');function valid(value){try{const u=new URL(value);return u.protocol==='https:'&&u.hostname==='drive.google.com'&&/^\/drive\/(?:u\/\d+\/)?folders\/[A-Za-z0-9_-]+\/?$/.test(u.pathname);}catch(e){return false;}}function apply(value){if(!valid(value))return;tile.href=value;if(drawerLink)drawerLink.href=value;input.value=value;hint.textContent='_OUTBOX / Tomorrow · Open the print pack folder.';refreshRows();}try{apply(localStorage.getItem(KEY)||'');}catch(e){message.textContent='Browser storage is unavailable. The Drive search link still works.';}document.getElementById('tomorrowForm').onsubmit=function(e){e.preventDefault();const value=input.value.trim();if(!valid(value)){message.textContent='Paste a full HTTPS Drive folder link.';return;}apply(value);try{localStorage.setItem(KEY,value);message.textContent='Folder link saved on this device.';}catch(err){message.textContent='Folder link works for this visit. Browser storage could not save it.';}};})();
 </script>
 </body>
 </html>
