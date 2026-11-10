@@ -72,12 +72,29 @@
 
 
 <footer><p id="clockHint" class="hint"></p><a class="button" href="My_tools.html">My tools</a><p style="margin-top:12px">Staff tools · Offline after opening · No online storage or automatic uploads. File sharing opens your device’s share sheet; you choose the folder. Keep these pages and the tracker on the same origin for shared browser storage.</p></footer></div>
-<dialog id="keyDialog" aria-labelledby="keyTitle"><div class="row spread"><h2 id="keyTitle">Pupil key</h2><button id="closeKey">Close</button></div><p class="hint">Labels appear only on this device. Leave a box empty to show its number. Groups stay fixed by number. Use a different label for every pupil.</p><button id="fillClass">Fill from my class list</button><div id="classProposal" hidden></div><form id="keyForm"><div id="keyGroups" class="key-grid"></div><div class="row actions" style="margin-top:14px"><button type="submit" class="primary">Save key on this device</button></div></form><p id="keyStatus" role="status" class="hint"></p><p class="callout">For the laptop, open <a class="button" id="privateProfileLink" href="Class_names.html">Class names</a> and choose <b>Save private copy</b> (profile.txt). Save it only in your private folder.</p><details><summary>Other names to remove</summary><p class="hint">The saved Class names list is read automatically. Choose an extra names.txt file for other words to hide. These extra words stay in this browser and become [name]. The supplied fixture contains placeholders only.</p><input id="namesFile" type="file" accept=".txt,text/plain" aria-label="Load local names.txt"><p id="namesStatus" class="hint"></p></details><details><summary>Period start times</summary><p class="hint">The reference timetable has no start times. Confirm these suggested times for “Today / latest lesson”. Times use this device’s local clock.</p><div class="times" id="periodTimes"></div><button id="saveTimes" style="margin-top:10px">Save period times</button></details></dialog>
+<dialog id="keyDialog" aria-labelledby="keyTitle"><div class="row spread"><h2 id="keyTitle">Pupil key</h2><button id="closeKey">Close</button></div><p class="hint">Labels appear only on this device. Leave a box empty to show its number. Groups use the saved tracker list. Pupil numbers stay the same. Use a different label for every pupil.</p><button id="fillClass">Fill from my class list</button><div id="classProposal" hidden></div><form id="keyForm"><div id="keyGroups" class="key-grid"></div><div class="row actions" style="margin-top:14px"><button type="submit" class="primary">Save key on this device</button></div></form><p id="keyStatus" role="status" class="hint"></p><p class="callout">For the laptop, open <a class="button" id="privateProfileLink" href="Class_names.html">Class names</a> and choose <b>Save private copy</b> (profile.txt). Save it only in your private folder.</p><details><summary>Other names to remove</summary><p class="hint">The saved Class names list is read automatically. Choose an extra names.txt file for other words to hide. These extra words stay in this browser and become [name]. The supplied fixture contains placeholders only.</p><input id="namesFile" type="file" accept=".txt,text/plain" aria-label="Load local names.txt"><p id="namesStatus" class="hint"></p></details><details><summary>Check period times</summary><p class="hint">Start and end times use this device’s clock. Break and lunch are not lessons.</p><div class="times" id="periodTimes"></div><button id="saveTimes" style="margin-top:10px">Save period times</button><button id="resetSchoolTimes" type="button">Reset to school day</button></details></dialog>
 
 <div id="undoBar" hidden role="status"><span id="undoText">Result saved</span><button id="undo">Undo</button></div><dialog id="choiceDialog" aria-label="Choose result"><h2 id="choiceTitle">Choose result</h2><div id="directChoices" class="choice-grid"></div><button id="choiceNote">Add a note</button><button id="closeChoice">Close</button></dialog><dialog id="adaptDialog" aria-label="Adaptations"><h2 id="adaptTitle">Adaptations</h2><ul id="adaptLines"></ul><button id="closeAdapt">Close</button></dialog><dialog id="settingsDialog" aria-label="Settings"><div class="row spread"><h2>Settings</h2><button id="closeSettings">Close</button></div><label>Show pupils as<select id="showAs"><option value="initials">Initials</option><option value="first">First name</option><option value="number">Number</option></select></label><p class="lock-line">Names stay on this phone. Files say Pupil N.</p><p id="headerQueue">0 lessons to send</p><p id="keyPrompt" hidden>Add your class once: <button id="promptKey">Pupil key</button></p><h3>Quick notes</h3><div id="noteSettings"></div><label class="check"><input id="vibration" type="checkbox"> Vibration on tap</label><button id="settingsTimes">Period times</button><button id="clearPhone">Clear this phone</button><p id="clearHint" role="status"></p></dialog><dialog id="slipDialog" aria-label="Private catch-up slip"><h2>Private: keep this copy</h2><label for="slipCopy">Copy</label><select id="slipCopy"><option value="initials">Initials and adaptations</option><option value="number">Number only (Pupil N, no adaptations)</option></select><div id="slipPreview"></div><p>Keep this copy for yourself. Files and shared copies use Pupil N.</p><button id="printSlip">Print private slip</button><button id="closeSlip">Close</button></dialog><div id="printSheet"></div><script>
 (function(){
 'use strict';
 const GROUPS={BUILD:[4,7,9,12],GROW:[1,3,5,8,11],LAUNCH:[2,6,10]};
+function normalLabel(value){return String(value||'').trim().replace(/\s+/g,' ').toLocaleLowerCase('en-GB');}
+function numberedPupils(groups,key){
+ var all=['BUILD','GROW','LAUNCH'].flatMap(function(path){return (groups[path]||[]).map(function(label){return {path:path,label:label};});});
+ return all.map(function(row,i){
+  var value=normalLabel(row.label),explicit=value.match(/^(?:pupil\s*|p)?(\d+)$/i),full=Object.keys(key).filter(function(n){return normalLabel(key[n])===value;}),first=Object.keys(key).filter(function(n){return normalLabel(key[n]).split(' ')[0]===value;});
+  row.n=explicit?+explicit[1]:(full.length===1?+full[0]:(first.length===1?+first[0]:i+1));return row;
+ });
+}
+function applyPupilCapacity(){
+ let saved={},labels={};try{saved=JSON.parse(localStorage.getItem('mbm_catchup_tracker_v1')||'{}');labels=JSON.parse(localStorage.getItem('mbm_pupil_key_v1')||'{}');}catch(e){}
+ const entries=numberedPupils(saved.pupils||{},labels),assigned=new Set();
+ if(entries.length){Object.keys(GROUPS).forEach(path=>GROUPS[path]=[]);entries.forEach(row=>{if(row.n>=1&&row.n<=20&&!assigned.has(row.n)){GROUPS[row.path].push(row.n);assigned.add(row.n);}});}
+ // Extra labels without a saved group use BUILD; empty capacity stays out of the tally.
+ const size=Math.min(20,Math.max(12,...Object.keys(labels).map(Number),...entries.map(row=>row.n)));
+ for(let n=1;n<=size;n++)if(!Object.values(GROUPS).some(ns=>ns.includes(n)))GROUPS.BUILD.push(n);
+}
+
 const DAYS=['Monday','Tuesday','Wednesday','Thursday','Friday'];
 // Copied from Catch_up_Tracker.html. Lesson numbers count occurrences per pathway/subject in week order.
 var TT={
@@ -97,11 +114,49 @@ function read(name,fallback){try{const raw=localStorage.getItem(name);if(raw===n
 function write(name,value){if(blocked.has(name)){warn();return false;}try{localStorage.setItem(name,JSON.stringify(value));return true;}catch(e){warn();return false;}}
 function status(text){$('status').textContent=text;if(/^(Tally handed off|All marked Got it)/.test(text))setTimeout(()=>{if($('status').textContent===text)$('status').textContent='';},5000);}
 let pupilKey=read(KEYS.key,{}),tallies=read(KEYS.tally,{}),counts=read(KEYS.counts,{}),targets=read(KEYS.targets,{}),names=read(KEYS.names,[]),times=read(KEYS.times,{});
+applyPupilCapacity();
 // The Class names page owns this key. Accept its plain text or JSON list; never write it.
 function readClassNames(){try{const raw=localStorage.getItem(KEYS.classNames);if(!raw)return [];let value;try{value=JSON.parse(raw);}catch(e){value=raw;}const lines=[];function collect(v){if(typeof v==='string')lines.push(...v.split(/[\r\n]+/));else if(Array.isArray(v))v.forEach(collect);else if(v&&typeof v==='object')Object.values(v).forEach(collect);}collect(value);return [...new Set(lines.map(s=>s.trim()).filter(s=>s&&!s.startsWith('#')).flatMap(s=>[s,...s.split(/\s+/)]))];}catch(e){warn();return [];}}
 let classNames=readClassNames();
-const DEFAULT_TIMES=['09:00','09:50','11:00','11:50','13:30','14:20'];
-if(times.starts&&(!Array.isArray(times.starts)||times.starts.length!==6||times.starts.some((t,i)=>typeof t!=='string'||!/^([01]\d|2[0-3]):[0-5]\d$/.test(t)||(i&&t<=times.starts[i-1])))){blocked.add(KEYS.times);times={};warn();}
+// Shared school-day table and clock rules. Identical in both pages.
+const SCHOOL_DAY=[
+ {label:'Check-in and reading',start:'09:00',end:'09:30'},
+ {p:1,start:'09:30',end:'10:10'},
+ {p:2,start:'10:10',end:'10:50'},
+ {label:'Break',start:'10:50',end:'11:00'},
+ {p:3,start:'11:00',end:'11:40'},
+ {p:4,start:'11:40',end:'12:20'},
+ {label:'Lunch',start:'12:20',end:'12:50'},
+ {p:5,start:'12:50',end:'13:30'},
+ {p:6,start:'13:30',end:'14:10'},
+ {label:'Check-out',start:'14:10',end:'14:30'}
+];
+function schoolTimes(){return {v:2,starts:SCHOOL_DAY.filter(s=>s.p).map(s=>s.start),ends:SCHOOL_DAY.filter(s=>s.p).map(s=>s.end),confirmed:true};}
+function validSchoolTimes(value){
+ const format=t=>typeof t==='string'&&/^([01]\d|2[0-3]):[0-5]\d$/.test(t);
+ return !!value&&value.v===2&&Array.isArray(value.starts)&&Array.isArray(value.ends)&&value.starts.length===6&&value.ends.length===6&&value.starts.every((start,i)=>format(start)&&format(value.ends[i])&&value.ends[i]>start&&(!i||start>=value.ends[i-1]));
+}
+function schoolWeek(date){return 1+Math.round((Date.UTC(date.getFullYear(),date.getMonth(),date.getDate()-(date.getDay()+6)%7)-Date.UTC(2026,10,2))/604800000);}
+function schoolSlots(date,times){
+ const w=schoolWeek(date),day=['Monday','Tuesday','Wednesday','Thursday','Friday'][date.getDay()-1];if(w<2||w>7||!day)return [];
+ const clock=text=>{const [h,m]=text.split(':').map(Number);return new Date(date.getFullYear(),date.getMonth(),date.getDate(),h,m);};
+ return TT[day].map(row=>({w,day,p:row[0],path:row[1],subject:row[2],lesson:LN[day+'|'+row[0]],start:clock(times.starts[row[0]-1]),end:clock(times.ends[row[0]-1])}));
+}
+function schoolContext(now,times){
+ const candidates=[];for(let offset=0;offset<11;offset++)candidates.push(...schoolSlots(new Date(now.getFullYear(),now.getMonth(),now.getDate()+offset),times));
+ const current=candidates.find(s=>now>=s.start&&now<s.end),upcoming=candidates.filter(s=>s.start>now),slot=current||upcoming[0]||null;
+ return {slot,current:!!current,next:current?upcoming[0]:upcoming[1]};
+}
+function schoolSlotText(slot,times){return slot.day+' · Period '+slot.p+', '+times.starts[slot.p-1]+' to '+times.ends[slot.p-1]+', '+(slot.path==='ALL'?'All groups':slot.path)+' '+slot.subject;}
+function schoolNowText(context,times,now){
+ if(!context.slot)return 'No lesson in the saved timetable';
+ const minute=now.getHours()*60+now.getMinutes(),checkIn=now.getDay()>0&&now.getDay()<6&&minute>=540&&minute<570;
+ return (checkIn?'Check-in and reading, then ':context.current?'Now: ':'Next: ')+schoolSlotText(context.slot,times);
+}
+
+const DEFAULT_TIMES=schoolTimes().starts;let timesMigrated=false;
+if(times.v!==2){times=schoolTimes();blocked.delete(KEYS.times);write(KEYS.times,times);timesMigrated=true;$('keyStatus').textContent='Period times set to your school day';}
+else if(!validSchoolTimes(times)){blocked.add(KEYS.times);warn();times=schoolTimes();}
 let evidencePupil=2,iedpPupil=1,queue=[],photoInFlight=false,sending=false,evidenceStage=null,iedpPhoto=null,lastPhotoSecond=0,safeReady=false,hiddenWords=[];
 const V2={profile:'mbm_pupil_profile_v1',show:'mbm_qc_show_as_v1',queue:'mbm_qc_queue_v1',prefs:'mbm_qc_settings_v1',help:'mbm_qc_help_v1',view:'mbm_qc_view_v1'};
 let sendQueue=read(V2.queue,{}),prefs=read(V2.prefs,{}),help=read(V2.help,{}),view=read(V2.view,{});
@@ -112,13 +167,13 @@ function pupilTag(n){
  let key={},profile={},legacy='';try{key=JSON.parse(localStorage.getItem('mbm_pupil_key_v1')||'{}')||{};profile=JSON.parse(localStorage.getItem('mbm_pupil_profile_v1')||'{}')||{};legacy=JSON.parse(localStorage.getItem('mbm_qc_show_as_v1')||'"initials"');}catch(e){}
  const mode=['initials','first','number'].includes(profile.show)?profile.show:(['initials','first','number'].includes(legacy)?legacy:'initials');
  const label=String(key[n]||'').trim();if(!label||mode==='number')return 'P'+n;if(mode==='first')return label.split(/\s+/)[0];
- const rows=Object.entries(key).filter(([id,v])=>/^(?:[1-9]|1[0-2])$/.test(id)&&String(v).trim()).map(([id,v])=>{const words=String(v).trim().toLocaleUpperCase('en-GB').split(/\s+/);return {id,base:words.map(w=>Array.from(w)[0]).join('').slice(0,3),last:Array.from(words.at(-1)),extra:0};});
+ const rows=Object.entries(key).filter(([id,v])=>/^(?:[1-9]|1[0-9]|20)$/.test(id)&&String(v).trim()).map(([id,v])=>{const words=String(v).trim().toLocaleUpperCase('en-GB').split(/\s+/);return {id,base:words.map(w=>Array.from(w)[0]).join('').slice(0,3),last:Array.from(words.at(-1)),extra:0};});
  const tag=r=>r.base+r.last.slice(1,1+r.extra).join('')+(r.extra>=r.last.length?r.id:'');
  for(let pass=0;pass<110;pass++){const clashes=rows.filter(r=>rows.some(s=>s!==r&&tag(s)===tag(r)));if(!clashes.length)break;clashes.forEach(r=>r.extra++);}
  return rows.find(r=>r.id===String(n))?tag(rows.find(r=>r.id===String(n))):'P'+n;
 }
 function pupilInitials(n){
- const rows=Object.entries(pupilKey).filter(([id,v])=>/^(?:[1-9]|1[0-2])$/.test(id)&&String(v).trim()).map(([id,v])=>{const words=String(v).trim().toLocaleUpperCase('en-GB').split(/\s+/);return {id,base:words.map(w=>Array.from(w)[0]).join('').slice(0,3),last:Array.from(words.at(-1)),extra:0};});
+ const rows=Object.entries(pupilKey).filter(([id,v])=>/^(?:[1-9]|1[0-9]|20)$/.test(id)&&String(v).trim()).map(([id,v])=>{const words=String(v).trim().toLocaleUpperCase('en-GB').split(/\s+/);return {id,base:words.map(w=>Array.from(w)[0]).join('').slice(0,3),last:Array.from(words.at(-1)),extra:0};});
  const tag=r=>r.base+r.last.slice(1,1+r.extra).join('')+(r.extra>=r.last.length?r.id:'');for(let pass=0;pass<110;pass++){const clashes=rows.filter(r=>rows.some(s=>s!==r&&tag(s)===tag(r)));if(!clashes.length)break;clashes.forEach(r=>r.extra++);}const row=rows.find(r=>r.id===String(n));return row?tag(row):'P'+n;
 }
 function pupilAdapt(n){try{const p=JSON.parse(localStorage.getItem('mbm_pupil_profile_v1')||'{}');return Array.isArray(p?.pupils?.[n]?.adapt)?p.pupils[n].adapt.filter(s=>typeof s==='string'&&s.trim()).slice(0,4):[];}catch(e){return [];}}
@@ -165,7 +220,7 @@ function escapeRE(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
 function redaction(text,extra=[]){
  text=String(text);const dict=new Map();
  function add(value,replacement,kind){value=String(value).trim();const key=value.toLocaleLowerCase('en-GB');if(value&&!dict.has(key))dict.set(key,{replacement,kind});}
- Object.entries(pupilKey).forEach(([n,value])=>{if(/^(?:[1-9]|1[0-2])$/.test(n)&&String(value).trim())add(value,'Pupil '+n,'full');});
+ Object.entries(pupilKey).forEach(([n,value])=>{if(/^(?:[1-9]|1[0-9]|20)$/.test(n)&&String(value).trim())add(value,'Pupil '+n,'full');});
  const classLabels=classListLabels();classLabels.concat(names,extra).forEach(value=>add(value,'[name]','full'));
  Object.entries(pupilKey).forEach(([n,value])=>{String(value).trim().split(/\s+/).forEach(word=>add(word,'Pupil '+n,'component'));});
  classLabels.forEach(value=>value.split(/\s+/).forEach(word=>add(word,'[name]','component')));
@@ -219,17 +274,13 @@ function renderTallies(){
 function renderWeekCounts(){const c=context(),box=$('weekCounts');box.replaceChildren();GROUPS[c.path].forEach(n=>{const sum={got:0,nearly:0,again:0};Object.entries(tallies).forEach(([k,r])=>{const bits=k.split('|');if(r&&+bits[0]===c.w&&+bits[3]===n&&Object.hasOwn(sum,r.state))sum[r.state]++;});const item=el('div',{class:'count'});item.append(el('b',tagAttrs(n),pupilTag(n)),el('span',{},sum.got+' got it · '+sum.nearly+' partly · '+sum.again+' not yet'));box.append(item);});}
 function selectPeriods(preferred){const box=$('period');box.replaceChildren();TT[$('day').value].forEach(l=>box.append(el('option',{value:l[0]},'P'+l[0])));box.value=String(preferred||TT[$('day').value][0][0]);if(!box.value)box.selectedIndex=box.options.length-1;}
 function allSlots(){const a=[];for(let w=2;w<=7;w++)DAYS.forEach(d=>TT[d].forEach(l=>a.push({w,d,p:l[0]})));return a;}
-function renderLesson(){const c=context();status('');$('lessonPanel').className='panel lesson '+c.path;$('sharedOptions').hidden=c.subj!=='Community Projects';$('communityPartField').hidden=c.subj!=='Community Projects'||c.w!==4;$('pathTag').textContent=c.path;$('lessonName').textContent=c.subj+(c.subj==='Community Projects'?'':' · Lesson '+c.lesson);$('lessonCode').textContent=c.code;$('lessonDate').textContent=c.date.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});const slots=allSlots(),i=slots.findIndex(x=>x.w===c.w&&x.d===c.d&&x.p===c.p);$('prevPeriod').disabled=i===0;$('nextPeriod').disabled=i===slots.length-1;if(!GROUPS[c.path].includes(evidencePupil))evidencePupil=GROUPS[c.path][0];renderTallies();renderEvidence();$('lessonSummary').textContent=c.d+' P'+c.p+' · '+c.path+' · '+c.subj;renderSendQueue();$('finishResult').hidden=true;}
+function renderLesson(){const c=context();status('');$('lessonPanel').className='panel lesson '+c.path;$('sharedOptions').hidden=c.subj!=='Community Projects';$('communityPartField').hidden=c.subj!=='Community Projects'||c.w!==4;$('pathTag').textContent=c.path;$('lessonName').textContent=c.subj+(c.subj==='Community Projects'?'':' · Lesson '+c.lesson);$('lessonCode').textContent=c.code;$('lessonDate').textContent=c.d+' · '+times.starts[c.p-1]+' to '+times.ends[c.p-1];const slots=allSlots(),i=slots.findIndex(x=>x.w===c.w&&x.d===c.d&&x.p===c.p);$('prevPeriod').disabled=i===0;$('nextPeriod').disabled=i===slots.length-1;if(!GROUPS[c.path].includes(evidencePupil))evidencePupil=GROUPS[c.path][0];renderTallies();renderEvidence();$('lessonSummary').textContent=c.d+' P'+c.p+' · '+c.path+' · '+c.subj;renderSendQueue();$('finishResult').hidden=true;}
 function movePeriod(delta,c=context()){const slots=allSlots(),i=slots.findIndex(x=>x.w===c.w&&x.d===c.d&&x.p===c.p),next=slots[i+delta];if(!next)return false;$('week').value=next.w;$('day').value=next.d;selectPeriods(next.p);$('communityPart').value='1';renderLesson();return true;}
 function today(now=new Date()){
- const day=new Date(now);if(day.getDay()===0)day.setDate(day.getDate()-2);if(day.getDay()===6)day.setDate(day.getDate()-1);
- const monday=new Date(day.getFullYear(),day.getMonth(),day.getDate());monday.setDate(monday.getDate()-(monday.getDay()+6)%7);const week=1+Math.round((Date.UTC(monday.getFullYear(),monday.getMonth(),monday.getDate())-Date.UTC(2026,10,2))/(7*86400000));
- $('week').value=String(Math.max(2,Math.min(7,week)));$('day').value=DAYS[day.getDay()-1];let p=1;const minutes=now.getHours()*60+now.getMinutes();
- if(dateISO(day)!==dateISO(now))p=TT[$('day').value].at(-1)[0];else TT[$('day').value].forEach(l=>{const [h,m]=(times.starts||DEFAULT_TIMES)[l[0]-1].split(':').map(Number);if(h*60+m<=minutes)p=l[0];});
- selectPeriods(p);$('clockHint').textContent=(week<2||week>7?'Choose the week and lesson. This date is outside the saved timetable. ':'')+(!times.confirmed?'Confirm your period times in Settings.':'');renderLesson();
- const stored=read('mbm_qc_lesson_v1',{}),uncertain=week<2||week>7||!times.confirmed;
- if(uncertain&&new URLSearchParams(location.search).get('now')!=='1'&&stored.date===dateISO(now)&&stored.confirmed&&stored.w>=2&&stored.w<=7&&DAYS.includes(stored.d)&&TT[stored.d].some(l=>l[0]===stored.p)){$('week').value=stored.w;$('day').value=stored.d;selectPeriods(stored.p);$('pathway').value=stored.path||'BUILD';$('communityPart').value=stored.part||'1';renderLesson();}
- else if(uncertain&&!$('lessonDialog').open){$('lessonDialog').showModal();status('Check this lesson once, then tap Done.');}renderHelp();
+ const chosen=schoolContext(now,times),slot=chosen.slot;
+ if(slot){$('week').value=String(slot.w);$('day').value=slot.day;selectPeriods(slot.p);$('clockHint').textContent=schoolNowText(chosen,times,now)+(timesMigrated?' · Period times set to your school day':'');renderLesson();}
+ else{const week=Math.max(2,Math.min(7,schoolWeek(now)));$('week').value=String(week);$('day').value=DAYS[Math.max(0,Math.min(4,now.getDay()-1))];selectPeriods(1);$('clockHint').textContent='Choose the week and lesson. This date is outside the saved timetable.';renderLesson();const stored=read('mbm_qc_lesson_v1',{});if(new URLSearchParams(location.search).get('now')!=='1'&&stored.date===dateISO(now)&&stored.confirmed&&stored.w>=2&&stored.w<=7&&DAYS.includes(stored.d)&&TT[stored.d].some(l=>l[0]===stored.p)){$('week').value=stored.w;$('day').value=stored.d;selectPeriods(stored.p);$('pathway').value=stored.path||'BUILD';$('communityPart').value=stored.part||'1';renderLesson();}else if(!$('lessonDialog').open){$('lessonDialog').showModal();status('Check this lesson once, then tap Done.');}}
+ renderHelp();
 }
 
 function showTab(name){
@@ -293,12 +344,12 @@ function removeNames(){const raw=$('iedpRaw').value,result=redaction(raw,hiddenW
 function safeText(){return redaction($('iedpRaw').value,hiddenWords).text;}
 function renderTargets(){const box=$('targetCards');box.replaceChildren();$('targets').value=String(targets[iedpPupil]||'');$('targets').value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean).forEach((target,i)=>{const row=el('div',{class:'target'}),b=el('button',{'aria-label':'Copy target '+(i+1)},'Copy');b.onclick=()=>copyText(redact(target));row.append(el('p',{},target),b);box.append(row);});}
 function refreshLabels(){
- renderLesson();const sel=$('iedpPupil');sel.replaceChildren();for(let n=1;n<=12;n++)sel.append(el('option',{value:n,...tagAttrs(n)},pupilTag(n)+' · Pupil '+n+' · '+group(n)));sel.value=iedpPupil;
- const abs=$('absence-pupil'),selected=abs.value;abs.replaceChildren();for(let n=1;n<=12;n++)abs.append(el('option',{value:n,...tagAttrs(n)},pupilTag(n)+' · Pupil '+n));abs.value=selected||'1';
+ renderLesson();const sel=$('iedpPupil');sel.replaceChildren();for(let n=1;n<=20;n++)sel.append(el('option',{value:n,...tagAttrs(n)},pupilTag(n)+' · Pupil '+n+' · '+group(n)));sel.value=iedpPupil;
+ const abs=$('absence-pupil'),selected=abs.value;abs.replaceChildren();for(let n=1;n<=20;n++)abs.append(el('option',{value:n,...tagAttrs(n)},pupilTag(n)+' · Pupil '+n));abs.value=selected||'1';
  $('keyPrompt').hidden=Object.values(pupilKey).some(v=>String(v).trim());$('showAs').value=currentMode();$('showAs').value=currentMode();invalidateSafe();renderQueue();renderAbsence();renderHelp();
 }
 
-function saveKey(){const next={},seen=new Set();for(let n=1;n<=12;n++){const value=$('key-'+n).value.trim();if(/[\r\n\t|]/.test(value)){$('keyStatus').textContent='Use a single label without tabs, line breaks or |.';return false;}if(value){const lower=value.toLocaleLowerCase('en-GB');if(seen.has(lower)){$('keyStatus').textContent='Each pupil needs a different label.';return false;}seen.add(lower);next[n]=value;}}pupilKey=next;const saved=write(KEYS.key,pupilKey);$('keyStatus').textContent=saved?'Key saved on this device.':'Key is in memory only. Browser storage did not save it.';refreshLabels();return true;}
+function saveKey(){const next={},seen=new Set();for(let n=1;n<=20;n++){const value=$('key-'+n).value.trim();if(/[\r\n\t|]/.test(value)){$('keyStatus').textContent='Use a single label without tabs, line breaks or |.';return false;}if(value){const lower=value.toLocaleLowerCase('en-GB');if(seen.has(lower)){$('keyStatus').textContent='Each pupil needs a different label.';return false;}seen.add(lower);next[n]=value;}}pupilKey=next;const saved=write(KEYS.key,pupilKey);applyPupilCapacity();$('keyStatus').textContent=saved?'Key saved on this device.':'Key is in memory only. Browser storage did not save it.';refreshLabels();return true;}
 function keyFile(){throw Error('Use Save private copy on Class names (profile.txt).');}
 function currentMode(){try{const p=JSON.parse(localStorage.getItem(V2.profile)||'{}');if(['initials','first','number'].includes(p.show))return p.show;const s=JSON.parse(localStorage.getItem(V2.show)||'"initials"');return ['initials','first','number'].includes(s)?s:'initials';}catch(e){return 'initials';}}
 function chooseMode(mode){const p=read(V2.profile,{});write(V2.profile,{...p,version:1,show:mode,pupils:p.pupils||{}});write(V2.show,mode);refreshLabels();}
@@ -355,7 +406,7 @@ function safeSheetURL(value){if(!value)return '';try{const u=new URL(value,locat
 function renderAbsence(){
  const selectedWeek=+$('absence-week').value||context().w,selectedPupil=+$('absence-pupil').value||1,preview=missedLessons(selectedPupil,selectedWeek);$('absence-lessons').replaceChildren(...preview.map(r=>el('li',{},r.day+' P'+r.p+' · '+r.code)));$('absence-count').textContent=preview.length?preview.length+' missed lessons for '+pupilInitials(selectedPupil)+' · Pupil '+selectedPupil:'No missed lessons for this pupil and week. The laptop can check its saved records.';
  const box=$('absenceCards');box.replaceChildren();
- for(let week=7;week>=2;week--)for(let pupil=1;pupil<=12;pupil++){
+ for(let week=7;week>=2;week--)for(let pupil=1;pupil<=20;pupil++){
   const lessons=missedLessons(pupil,week);if(!lessons.length)continue;const card=el('article',{class:'panel','data-pupil':pupil,'data-week':week}),heading=el('div',{class:'absence-heading'});heading.append(el('h3',{'aria-label':'Pupil '+pupil+' · '+pupilInitials(pupil)},pupilInitials(pupil)+' · Pupil '+pupil+' · Week '+week));
   const lines=adaptations(pupil);if(lines.length){const list=el('ul',{class:'adapt-lines','aria-label':'Adaptations'});lines.forEach(text=>list.append(el('li',{},text)));heading.append(list);}else heading.append(el('p',{},'No adaptations saved.'));card.append(heading);
   const list=el('ol');lessons.forEach(r=>{const li=el('li',{},r.day+' P'+r.p+' · '+r.subj+' · '+r.code),url=safeSheetURL(r.url);if(url){const b=el('button',{},'Open sheet');b.onclick=()=>{location.href=url;};li.append(b,el('span',{},' Open the saved sheet from the tracker.'));}list.append(li);});card.append(list);
@@ -367,10 +418,10 @@ function renderAbsence(){
 let slipContext=null;
 function openSlip(n,w,lessons){slipContext={n,w,lessons};$('slipCopy').value='initials';renderSlip();$('slipDialog').showModal();}
 function renderSlip(){
- if(!slipContext)return;const {n,w,lessons}=slipContext,number=$('slipCopy').value==='number',content=el('section');content.append(el('p',{class:'private'},'Private: keep this copy'),el('h1',{},'Catch-up for '+(number?'Pupil '+n:pupilInitials(n))),el('p',{},dateISO()+' · Week '+w),el('h2',{},'Start here'),el('p',{},'Do the first lesson. Tick it when you finish.'));const list=el('ol');lessons.forEach(r=>list.append(el('li',{},'☐ '+r.day+' P'+r.p+' · '+r.subj+' · '+r.code)));content.append(list);if(!number)content.append(el('p',{},'For the adult · Adaptations: '+(adaptations(n).join('; ')||'None saved.')));$('slipPreview').replaceChildren(content);$('printSheet').replaceChildren(content.cloneNode(true));
+ if(!slipContext)return;const {n,w,lessons}=slipContext,number=$('slipCopy').value==='number',content=el('section');content.append(el('p',{class:'private'},'Private: keep this copy'),el('h1',{},'Catch-up for '+(number?'Pupil '+n:pupilInitials(n))),el('p',{},'Week '+w),el('h2',{},'Start here'),el('p',{},'Do the first lesson. Tick it when you finish.'));const list=el('ol');lessons.forEach(r=>list.append(el('li',{},'☐ '+r.day+' P'+r.p+' · '+r.subj+' · '+r.code)));content.append(list);if(!number)content.append(el('p',{},'For the adult · Adaptations: '+(adaptations(n).join('; ')||'None saved.')));$('slipPreview').replaceChildren(content);$('printSheet').replaceChildren(content.cloneNode(true));
 }
 
-async function absenceRequest(n=+$('absence-pupil').value,w=+$('absence-week').value){if(!Number.isInteger(n)||n<1||n>12||!Number.isInteger(w)||w<2||w>7)return;const text='absence-v1\npupil=Pupil '+n+'\nweek='+w+'\ncreated='+new Date().toISOString()+'\n';await handOff([new File([text],'ABSENT_P'+n+'_W'+pad(w)+'.txt',{type:'text/plain;charset=utf-8'})],'_INBOX / Requests');}
+async function absenceRequest(n=+$('absence-pupil').value,w=+$('absence-week').value){if(!Number.isInteger(n)||n<1||n>20||!Number.isInteger(w)||w<2||w>7)return;const text='absence-v1\npupil=Pupil '+n+'\nweek='+w+'\ncreated='+new Date().toISOString()+'\n';await handOff([new File([text],'ABSENT_P'+n+'_W'+pad(w)+'.txt',{type:'text/plain;charset=utf-8'})],'_INBOX / Requests');}
 
 function classListLabels(){try{const raw=localStorage.getItem(KEYS.classNames)||'';let value;try{value=JSON.parse(raw);}catch(e){value=raw;}const lines=[];function collect(v){if(typeof v==='string')lines.push(...v.split(/\r?\n/));else if(Array.isArray(v))v.forEach(collect);else if(v&&typeof v==='object')Object.values(v).forEach(collect);}collect(value);return [...new Set(lines.map(s=>s.trim()).filter(s=>s&&!s.startsWith('#')))];}catch(e){return [];}}
 function fillClass(){const s=trackerData(),available=classListLabels();proposal={};Object.entries(GROUPS).forEach(([path,ns])=>{proposal[path]=ns.map((n,i)=>String(s.pupils?.[path]?.[i]||pupilKey[n]||available[n-1]||''));});renderProposal();}
@@ -381,7 +432,9 @@ function openSettings(){const box=$('noteSettings');box.replaceChildren();noteCh
 
 for(let w=2;w<=7;w++)$('week').append(el('option',{value:w},'Week '+w));DAYS.forEach(d=>$('day').append(el('option',{value:d},d)));
 Object.entries(GROUPS).forEach(([path,ns])=>{const set=el('fieldset');set.append(el('legend',{},path));ns.forEach(n=>{const l=el('label'),i=el('input',{id:'key-'+n,type:'text',maxlength:'100',autocomplete:'off'});i.value=String(pupilKey[n]||'');l.append(el('span',{},'Pupil '+n),i);set.append(l);});$('keyGroups').append(set);});
-DEFAULT_TIMES.forEach((t,i)=>{const l=el('label');l.append(document.createTextNode('Period '+(i+1)),el('input',{type:'time',id:'time-'+i,value:(times.starts||DEFAULT_TIMES)[i]}));$('periodTimes').append(l);});
+DEFAULT_TIMES.forEach((t,i)=>{const group=el('div');group.append(el('strong',{},'Period '+(i+1)));for(const [name,id,value] of [['Start','time-',times.starts[i]],['End','end-',times.ends[i]]]){const label=el('label',{},name);label.append(el('input',{type:'time',id:id+i,value}));group.append(label);}$('periodTimes').append(group);});
+
+{const more=el('fieldset');more.append(el('legend',{},'More pupils, up to 20'));for(let n=1;n<=20;n++)if(!$('key-'+n)){const label=el('label',{},'Pupil '+n),input=el('input',{id:'key-'+n,type:'text',maxlength:'100',autocomplete:'off'});input.value=String(pupilKey[n]||'');label.append(input);more.append(label);}if(more.children.length>1)$('keyGroups').append(more);}
 ['VF','WS','I','NS+','E','R'].forEach(tag=>{const b=el('button',{'aria-pressed':'false','data-tag':tag},tag);b.onclick=()=>b.setAttribute('aria-pressed',String(b.getAttribute('aria-pressed')!=='true'));$('evidenceTags').append(b);});
 document.querySelectorAll('[role=tab]').forEach((b,i)=>{b.onclick=()=>showTab(b.dataset.tab);b.onkeydown=e=>{let j;if(e.key==='ArrowRight')j=(i+1)%3;else if(e.key==='ArrowLeft')j=(i+2)%3;else if(e.key==='Home')j=0;else if(e.key==='End')j=2;else return;e.preventDefault();const next=document.querySelectorAll('[role=tab]')[j];showTab(next.dataset.tab);next.focus();};});
 $('week').onchange=()=>{$('communityPart').value='1';renderLesson();};$('day').onchange=()=>{selectPeriods(+$('period').value);$('communityPart').value='1';renderLesson();};$('period').onchange=()=>{$('communityPart').value='1';renderLesson();};$('pathway').onchange=renderLesson;$('communityPart').onchange=renderLesson;$('prevPeriod').onclick=()=>movePeriod(-1);$('nextPeriod').onclick=()=>movePeriod(1);$('today').onclick=()=>today();
@@ -389,7 +442,12 @@ $('allGot').onclick=()=>{GROUPS[context().path].forEach(n=>setTally(n,'got'));re
 $('sendTally').onclick=async()=>{const c=context();if(!GROUPS[c.path].some(n=>tallies[tallyKey(c,n)]?.state)){status('Choose at least one result before sending.');return;}$('sendTally').disabled=true;try{const ok=await handOff([new File([tallyCSV(c)],'TALLY_'+dateStamp(c.date)+'_'+fileCode(c.code)+'.csv',{type:'text/csv'})],'_INBOX / Tally');if(ok){const moved=movePeriod(1,c),next=context();status('Tally handed off · '+(moved?'Next: '+next.d+' P'+next.p:'Last timetable period.'));}}catch(e){status('Could not prepare the tally. Your saved results are still on this device.');}finally{$('sendTally').disabled=false;}};
 $('openKey').onclick=()=>{$('keyDialog').showModal();$('namesStatus').textContent=names.length+' extra words loaded on this device.';};$('closeKey').onclick=()=>$('keyDialog').close();$('keyForm').onsubmit=e=>{e.preventDefault();saveKey();};
 $('namesFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const raw=await f.text();names=[...new Set(raw.split(/\r?\n/).filter(s=>!s.trim().startsWith('#')).flatMap(s=>s.trim().split(/\s+/)).filter(Boolean))];const saved=write(KEYS.names,names);$('namesStatus').textContent=names.length+' extra words loaded'+(saved?' on this device.':' in memory only.');invalidateSafe();}catch(err){$('namesStatus').textContent='The names file could not be read.';}e.target.value='';};
-$('saveTimes').onclick=()=>{const starts=DEFAULT_TIMES.map((_,i)=>$('time-'+i).value);if(starts.some(t=>!/^\d{2}:\d{2}$/.test(t))||starts.some((t,i)=>i&&t<=starts[i-1])){status('Use six period times in increasing order.');return;}times={starts,confirmed:true};const saved=write(KEYS.times,times);$('clockHint').textContent='Period times set. Tap Today / latest lesson to apply them.';$('keyStatus').textContent=saved?'Period times saved.':'Period times set for this visit only. Browser storage did not save them.';};
+$('saveTimes').onclick=()=>{
+ const next={...times,v:2,starts:DEFAULT_TIMES.map((_,i)=>$('time-'+i).value),ends:DEFAULT_TIMES.map((_,i)=>$('end-'+i).value),confirmed:true};
+ if(!validSchoolTimes(next)){status('Use a start and end for each period. Periods must not overlap.');return;}times=next;timesMigrated=false;const saved=write(KEYS.times,times);$('keyStatus').textContent=saved?'Period times saved.':'Period times set for this visit only. Browser storage did not save them.';today();
+};
+$('resetSchoolTimes').onclick=()=>{times=schoolTimes();timesMigrated=true;write(KEYS.times,times);for(let i=0;i<6;i++){$('time-'+i).value=times.starts[i];$('end-'+i).value=times.ends[i];}$('keyStatus').textContent='Period times set to your school day';today();};
+
 $('takePhoto').onclick=()=>$('evidenceInput').click();
 $('evidenceInput').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f||photoInFlight)return;const c=context(),n=evidencePupil,tags=[...$('evidenceTags').querySelectorAll('[aria-pressed=true]')].map(x=>x.dataset.tag),note=$('evidenceNote').value;photoInFlight=true;$('takePhoto').disabled=true;$('photoBusy').textContent='Preparing JPEG on this device…';renderQueue();try{const blob=await jpeg(f);queue.push({blob,preview:URL.createObjectURL(blob),code:c.code,n,tags,note,at:photoDate()});$('photoBusy').textContent='Photo ready for private hand-off.';}catch(err){$('photoBusy').textContent=err.message;}finally{photoInFlight=false;$('takePhoto').disabled=false;renderQueue();}};
 $('sendEvidence').onclick=()=>sendEvidence();$('splitEvidence').onclick=()=>sendEvidence(true);
@@ -399,7 +457,7 @@ function discardIedp(){if(iedpPhoto)URL.revokeObjectURL(iedpPhoto.preview);iedpP
 $('takeIedpPhoto').onclick=()=>$('iedpPhotoInput').click();$('discardIedpPhoto').onclick=()=>{discardIedp();$('iedpPhotoStatus').textContent='Photo removed from memory.';};
 $('iedpPhotoInput').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;const n=iedpPupil;$('takeIedpPhoto').disabled=true;$('iedpPhotoStatus').textContent='Preparing the private photo…';try{const blob=await jpeg(f);discardIedp();const at=photoDate();iedpPhoto={file:new File([blob],'IEDPPHOTO_P'+n+'_'+dateStamp(at)+'_'+timeStamp(at)+'.jpg',{type:'image/jpeg'}),preview:URL.createObjectURL(blob),n};$('iedpPreview').src=iedpPhoto.preview;$('iedpPreview').hidden=false;$('sendIedpPhoto').disabled=$('discardIedpPhoto').disabled=false;$('iedpPhotoStatus').textContent='Pupil '+n+' photo ready. It is kept in memory only.';}catch(err){$('iedpPhotoStatus').textContent=err.message;}finally{$('takeIedpPhoto').disabled=false;}};
 $('sendIedpPhoto').onclick=async()=>{if(!iedpPhoto)return;const snapshot=iedpPhoto;$('sendIedpPhoto').disabled=$('discardIedpPhoto').disabled=$('takeIedpPhoto').disabled=true;try{if(await handOff([snapshot.file],'MBM private tracker (do not share) / IEDP photo inbox')){discardIedp();$('iedpPhotoStatus').textContent='Photo handed off. Check the private folder.';}}catch(e){status('The hand-off failed. The photo is still waiting.');}finally{$('takeIedpPhoto').disabled=false;$('sendIedpPhoto').disabled=$('discardIedpPhoto').disabled=!iedpPhoto;}};
-window.addEventListener('storage',e=>{if(e.key===KEYS.tally){tallies=read(KEYS.tally,{});renderTallies();}if(e.key===KEYS.counts){counts=read(KEYS.counts,{});renderEvidenceCounts();}if(e.key===KEYS.key){pupilKey=read(KEYS.key,{});for(let n=1;n<=12;n++)$('key-'+n).value=String(pupilKey[n]||'');refreshLabels();}if(e.key===KEYS.names){names=read(KEYS.names,[]);invalidateSafe();}if(e.key===KEYS.classNames){classNames=readClassNames();invalidateSafe();}if(e.key===KEYS.targets){targets=read(KEYS.targets,{});renderTargets();}});
+window.addEventListener('storage',e=>{if(e.key===KEYS.tally){tallies=read(KEYS.tally,{});renderTallies();}if(e.key===KEYS.counts){counts=read(KEYS.counts,{});renderEvidenceCounts();}if(e.key===KEYS.key){pupilKey=read(KEYS.key,{});for(let n=1;n<=20;n++)$('key-'+n).value=String(pupilKey[n]||'');refreshLabels();}if(e.key===KEYS.names){names=read(KEYS.names,[]);invalidateSafe();}if(e.key===KEYS.classNames){classNames=readClassNames();invalidateSafe();}if(e.key===KEYS.targets){targets=read(KEYS.targets,{});renderTargets();}});
 window.addEventListener('beforeunload',e=>{if(queue.length||iedpPhoto||photoInFlight){e.preventDefault();e.returnValue='';}});
 // Exposes pure helpers for the supplied same-origin fixture checks; no network calls.
 $('allGot').onclick=()=>batchResults('got');$('allHere').onclick=()=>batchResults('here');$('undo').onclick=undoLast;
@@ -408,7 +466,7 @@ $('sendTally').onclick=()=>{enqueue(context());sendOne(queueID(context())).catch
 $('showAs').onchange=e=>chooseMode(e.target.value);$('showAs').onchange=e=>chooseMode(e.target.value);
 $('openSettings').onclick=openSettings;$('closeSettings').onclick=()=>$('settingsDialog').close();$('vibration').onchange=e=>{prefs.vibration=e.target.checked;write(V2.prefs,prefs);};
 $('changeLesson').onclick=()=>{$('lessonDialog').showModal();renderHelp();};$('closeLesson').onclick=()=>{write('mbm_qc_lesson_v1',{...storedContext(context()),date:dateISO(),part:$('communityPart').value,confirmed:true});$('lessonDialog').close();status('');renderHelp();};
-$('settingsTimes').onclick=()=>{$('settingsDialog').close();$('keyDialog').showModal();$('periodTimes').closest('details').open=true;$('periodTimes').scrollIntoView();};
+$('settingsTimes').onclick=()=>{$('settingsDialog').close();$('keyDialog').showModal();$('periodTimes').closest('details').open=false;$('periodTimes').scrollIntoView();};
 const originalSaveTimes=$('saveTimes').onclick;$('saveTimes').onclick=()=>{originalSaveTimes();if(times.confirmed)today();};
 $('closeChoice').onclick=()=>$('choiceDialog').close();$('choiceNote').onclick=()=>{$('choiceDialog').close();const b=document.querySelector('.pupil-row[data-pupil="'+choicePupil+'"] .note-button');b?.click();};$('closeAdapt').onclick=()=>$('adaptDialog').close();
 $('promptKey').onclick=()=>{$('settingsDialog').close();$('openKey').click();};$('fillClass').onclick=fillClass;$('dismissHelp').onclick=()=>{help.dismissed=true;write(V2.help,help);renderHelp();};$('dismissHome').onclick=()=>{help.home=true;write(V2.help,help);renderHelp();};

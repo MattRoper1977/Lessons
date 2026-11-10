@@ -140,6 +140,12 @@ html,body{overflow-wrap:anywhere}main,section,div,header,nav,.row>*{min-width:0}
 @media(max-width:650px){.sheet-lessons{grid-template-columns:1fr}.sheet-link{flex-wrap:wrap}}
 @page{size:A4;margin:10mm}
 @media print{body.printing-catchup>*:not(#catchupPreview){display:none!important}body.printing-catchup #catchupPreview{display:block!important;margin:0;padding:0;max-width:none}#catchupPreview .sheet-tools{display:none!important}#catchupPages{display:block}.catch-sheet{width:190mm;height:276mm;border:0;padding:0;margin:0;break-after:page;page-break-after:always;overflow:visible}.catch-sheet:last-child{break-after:auto;page-break-after:auto}.sheet-inner{transform-origin:top left;transform:none;zoom:var(--sheet-scale,1);width:190mm}.sheet-lessons{grid-template-columns:repeat(var(--sheet-cols,2),minmax(0,1fr))}.sheet-link a{display:block;min-width:0;min-height:0}.sheet-link svg{width:64px;height:64px}.catch-sheet h1{font-size:28px}.catch-sheet h2{font-size:19px}.sheet-lesson{break-inside:avoid}.sheet-private-adapt{display:block!important}body:not(.printing-catchup) #catchupPreview{display:none!important}body{color:#000}body:not(.printing-catchup) .pupil-label{color:#000}}
+/* Correction: slim common controls, separate tabs and readable table columns. */
+.profilebar{align-items:center;gap:8px;margin-bottom:10px}.profilebar label{display:inline-flex;align-items:center;gap:6px}.profilebar select{width:auto;max-width:155px}.profilebar .btnlink{padding:6px 10px}.tab-heading{font-size:24px;margin:8px 0 12px;scroll-margin-top:190px}.numbered-lines{list-style:none;margin:4px 0 16px;padding:0;font-size:17px}.numbered-lines li{padding:2px 0}#numberWarning{font-weight:700;width:100%}.today-strip{padding:10px;margin-bottom:10px}.today-strip h3{margin:0;font-size:21px}.today-strip>.note{margin:2px 0;font-size:17px}.today-item{padding:6px 0}.today-line{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.today-line .owed-count{flex:1;font-size:17px}.today-line .smbtn{margin-left:auto}.today-item .adapt-chips{margin:0}.help-fold summary{padding:2px 8px;font-size:17px;border-width:1px}.help-chip-list{display:flex;gap:6px;flex-wrap:wrap;max-width:100%;max-height:106px;overflow:hidden}.adapt-chips{display:block}.adapt-chip{min-height:48px;font-size:17px;max-width:100%;padding:4px 8px;overflow-wrap:normal;word-break:normal}.help-fold .adapt-chip,.more-help .adapt-chip{margin:4px}.more-help summary{padding:4px 8px;border-width:1px}.help-choice{min-height:48px}.adapt-row>summary{width:100%}.adapt-row input[type=text]{min-width:0}.lesson-links{display:flex;flex-flow:row wrap;gap:6px}.lesson-links .btnlink,.lesson-links button{width:auto;flex:0 0 auto}.statebtn{white-space:nowrap;overflow-wrap:normal;word-break:normal}.chip.st-missed::before,.chip.st-partial::before,.chip.st-more::before,.chip.st-done::before{flex:none}#table table{table-layout:fixed}#table th:nth-child(1){width:17%}#table th:nth-child(2){width:17%}#table th:nth-child(3){width:30%}#table th:nth-child(4){width:20%}#table th:nth-child(5){width:16%}#table td:nth-child(2){min-width:170px;overflow-wrap:normal;word-break:normal}#table td:nth-child(5){min-width:170px;overflow-wrap:normal;word-break:normal}#table .noteinput{min-width:0}#table .xsbtn{font-size:17px}.chip:has(.pupil-label){flex-wrap:wrap}.chip .pupil-label{font-size:17px}.chip .pupil-label strong{font-size:21px}.tabs{margin:0}input[type=file]{min-height:48px}
+.help-chip-list>.adapt-chip{display:block;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-width:100%}
+@media(max-width:650px){#table table{table-layout:auto}#table td{width:100%;min-width:0!important}#table .lesson-links{display:flex}.today-line .owed-count{flex-basis:45%}.today-line .smbtn{margin-left:0}.tab-heading{scroll-margin-top:12px}.profilebar{flex-wrap:nowrap}.profilebar label{flex:1;min-width:0}.profilebar select{max-width:100%;min-width:0}.profilebar .btnlink{flex:none}.statebtn{max-width:100%}}
+@media print{.help-fold,.more-help,.numbered-lines{display:none!important}#table table{table-layout:fixed}#table th:nth-child(1){width:14%}#table th:nth-child(2){width:18%}#table th:nth-child(3){width:25%}#table th:nth-child(4){width:16%}#table th:nth-child(5){width:17%}#table th:nth-child(6){width:10%}#table th,#table td{overflow-wrap:normal;word-break:normal;min-width:0}#table .statebtn{font-size:13pt;white-space:normal;overflow-wrap:normal;border:0;background:none;padding:0;min-height:0;min-width:0;text-align:left}.tab-heading{display:none}}
+
 </style>
 </head>
 <body>
@@ -156,10 +162,11 @@ html,body{overflow-wrap:anywhere}main,section,div,header,nav,.row>*{min-width:0}
   </nav>
 </header>
 <main>
-  <div class="profilebar noprint"><a class="btnlink" href="My_tools.html">My tools</a><label>Show: <select id="showTags"><option value="initials">Initials</option><option value="first">First name</option><option value="number">Number</option></select></label><span class="private-note">Labels and help notes stay on this device.</span></div>
-  <section id="todayStrip" class="today-strip noprint" aria-labelledby="todayTitle"></section>
-  <div class="row noprint"><button id="printAllOwed" type="button">Print all owed</button></div>
+  <div class="profilebar noprint"><a class="btnlink" href="My_tools.html">My tools</a><label>Show: <select id="showTags"><option value="initials">Initials</option><option value="first">First name</option><option value="number">Number</option></select></label></div>
   <section id="today">
+    <h2 id="heading-today" class="tab-heading" tabindex="-1">Mark a lesson</h2>
+    <section id="todayStrip" class="today-strip noprint" aria-labelledby="todayTitle"></section>
+    <div class="row noprint"><button id="printAllOwed" type="button">Print all owed</button></div>
     <details class="noprint"><summary>Filter</summary><div class="row">
       <label>Week <select id="week"></select></label>
       <label>Day <select id="day"></select></label>
@@ -184,6 +191,7 @@ html,body{overflow-wrap:anywhere}main,section,div,header,nav,.row>*{min-width:0}
   </section>
 
   <section id="list" hidden>
+    <h2 id="heading-list" class="tab-heading" tabindex="-1">Who needs catch-up</h2>
     <details class="noprint"><summary>Filter</summary><div class="row">
       <label>Show <select id="filter">
         <option value="open">Still open (needs, partly, more)</option>
@@ -209,6 +217,7 @@ html,body{overflow-wrap:anywhere}main,section,div,header,nav,.row>*{min-width:0}
   </section>
 
   <section id="assess" hidden>
+    <h2 id="heading-assess" class="tab-heading" tabindex="-1">Ready for assessment</h2>
     <details class="noprint"><summary>Filter</summary><div class="row">
       <label>Pathway <select id="apath">
         <option value="">All pathways</option><option value="BUILD">BUILD</option><option value="GROW">GROW</option><option value="LAUNCH">LAUNCH</option>
@@ -229,18 +238,19 @@ html,body{overflow-wrap:anywhere}main,section,div,header,nav,.row>*{min-width:0}
   </section>
 
   <section id="setup" hidden>
+    <h2 id="heading-setup" class="tab-heading" tabindex="-1">Set up</h2>
     <div class="panel">
       <h2 style="margin-top:0">Pupils in each group</h2>
-      <p class="note">One pupil per line: Pupil 1, Pupil 2 and so on. Set private labels and help notes in Class names. Group moves keep the saved marks.</p>
-      <label for="pBUILD"><span class="tag BUILD">BUILD</span> group</label><textarea id="pBUILD"></textarea>
-      <label for="pGROW"><span class="tag GROW">GROW</span> group</label><textarea id="pGROW"></textarea>
-      <label for="pLAUNCH"><span class="tag LAUNCH">LAUNCH</span> group</label><textarea id="pLAUNCH"></textarea>
-      <div class="row" style="margin-top:10px"><button type="button" id="savep">Save pupils</button><span id="saved" class="note" role="status"></span></div>
+      <p class="note">One pupil per line, up to 20 pupils. Use names or Pupil N. The list below each box shows each pupil number. Group moves keep saved marks.</p>
+      <label for="pBUILD"><span class="tag BUILD">BUILD</span> group</label><textarea id="pBUILD"></textarea><ol class="numbered-lines" id="numbersBUILD" aria-label="Pupil numbers in BUILD"></ol>
+      <label for="pGROW"><span class="tag GROW">GROW</span> group</label><textarea id="pGROW"></textarea><ol class="numbered-lines" id="numbersGROW" aria-label="Pupil numbers in GROW"></ol>
+      <label for="pLAUNCH"><span class="tag LAUNCH">LAUNCH</span> group</label><textarea id="pLAUNCH"></textarea><ol class="numbered-lines" id="numbersLAUNCH" aria-label="Pupil numbers in LAUNCH"></ol>
+      <div class="row" style="margin-top:10px"><button type="button" id="savep">Save pupils</button><button type="button" id="linkNames">Use these names in all my tools</button><span id="numberWarning" role="alert"></span><span id="saved" class="note" role="status"></span></div>
     </div>
     <div class="panel">
       <h2 style="margin-top:0">Adaptations for each pupil (private)</h2>
-      <p class="note">Help from the shared pupil profile is shown first. These older choices still work on this device. Private sheets include help; number-only copies leave it out.</p>
-      <div id="adaptList"></div>
+      <p class="note">These help lines are shared with Class names. Choose up to four for each pupil. Private notes stay in Class names.</p>
+      <p id="helpMoved" role="status"></p><div id="adaptList"></div>
     </div>
     <div class="panel">
       <h2 style="margin-top:0">Drive &amp; Pinned QR Links</h2>
@@ -306,22 +316,40 @@ html,body{overflow-wrap:anywhere}main,section,div,header,nav,.row>*{min-width:0}
 // Shared on-device pupil profile. Keep this block identical on both pages.
 function pupilKey(){try{var v=JSON.parse(localStorage.getItem("mbm_pupil_key_v1")||"{}");return v&&typeof v==="object"?v:{};}catch(e){return {};}}
 function pupilProfile(){try{var v=JSON.parse(localStorage.getItem("mbm_pupil_profile_v1")||"{}");return v&&v.version===1?v:{version:1,show:"initials",pupils:{}};}catch(e){return {version:1,show:"initials",pupils:{}};}}
-function pupilTag(n,form){
- var key=pupilKey(),mode=form||pupilProfile().show||"initials",label=String(key[n]||"").trim();
- if(!label||mode==="number")return "P"+n;
- var words=function(s){return String(s).trim().split(/\s+/).filter(Boolean);};
- if(mode==="first")return words(label)[0];
- var base=function(s){return words(s).map(function(w){return Array.from(w)[0];}).join("").toLocaleUpperCase("en-GB").slice(0,3);};
- var b=base(label),peers=Object.keys(key).filter(function(k){return String(key[k]||"").trim()&&base(key[k])===b;}),extra=0;
- var tag=function(k,x){var w=words(key[k]),last=Array.from(w[w.length-1].toLocaleUpperCase("en-GB"));return b+last.slice(1,1+x).join("");};
- var max=Math.max.apply(null,peers.map(function(k){var w=words(key[k]);return Array.from(w[w.length-1]).length;}));
- while(extra<max&&peers.some(function(k){return k!==String(n)&&tag(k,extra)===tag(String(n),extra);}))extra++;
- var t=tag(String(n),extra);
- if(peers.some(function(k){return k!==String(n)&&tag(k,extra)===t;}))t+="·"+n;
- return t;
+function normalLabel(value){return String(value||'').trim().replace(/\s+/g,' ').toLocaleLowerCase('en-GB');}
+function numberedPupils(groups,key){
+ var all=['BUILD','GROW','LAUNCH'].flatMap(function(path){return (groups[path]||[]).map(function(label){return {path:path,label:label};});});
+ return all.map(function(row,i){
+  var value=normalLabel(row.label),explicit=value.match(/^(?:pupil\s*|p)?(\d+)$/i),full=Object.keys(key).filter(function(n){return normalLabel(key[n])===value;}),first=Object.keys(key).filter(function(n){return normalLabel(key[n]).split(' ')[0]===value;});
+  row.n=explicit?+explicit[1]:(full.length===1?+full[0]:(first.length===1?+first[0]:i+1));return row;
+ });
 }
+function trackerEntries(){return numberedPupils(S&&S.pupils||{},pupilKey());}
+function pupilNumber(value){
+ var explicit=normalLabel(value).match(/^(?:pupil\s*|p)?(\d+)$/i);if(explicit)return +explicit[1];
+ var key=pupilKey(),full=Object.keys(key).filter(function(n){return normalLabel(key[n])===normalLabel(value);});if(full.length===1)return +full[0];
+ var first=Object.keys(key).filter(function(n){return normalLabel(key[n]).split(' ')[0]===normalLabel(value);});if(first.length===1)return +first[0];
+ var entry=trackerEntries().find(function(row){return normalLabel(row.label)===normalLabel(value);});return entry?entry.n:1;
+}
+function displayKey(){
+ var key=Object.assign({},pupilKey());trackerEntries().forEach(function(row){if(!String(key[row.n]||'').trim()&&!/^(?:pupil\s*|p)?\d+$/i.test(normalLabel(row.label)))key[row.n]=row.label;});return key;
+}
+function pupilTag(n,form){
+ var key=displayKey(),mode=form||pupilProfile().show||'initials',label=String(key[n]||'').trim();if(!label||mode==='number')return 'P'+n;if(mode==='first')return label.split(/\s+/)[0];
+ var words=function(s){return String(s).trim().split(/\s+/).map(function(w){return Array.from(w.replace(/[^\p{L}\p{M}]/gu,'').toLocaleUpperCase('en-GB'));}).filter(function(w){return w.length;});};
+ var rows=Object.keys(key).map(function(id){var w=words(key[id]);return {id:id,tag:w.slice(0,3).map(function(a){return a[0];}).join(''),last:w.at(-1)||[],at:1};}).filter(function(r){return r.tag;});
+ for(var step=0;step<102;step++){var counts={};rows.forEach(function(r){counts[r.tag]=(counts[r.tag]||0)+1;});var coll=rows.filter(function(r){return counts[r.tag]>1;});if(!coll.length)break;coll.forEach(function(r){r.tag+=r.at<r.last.length?r.last[r.at++]:r.id;});}
+ return (rows.find(function(r){return r.id===String(n);})||{}).tag||'P'+n;
+}
+function cleanPupilText(text,privateCopy){
+ var key=displayKey(),pairs=[];Object.keys(key).forEach(function(n){var value=String(key[n]||'').trim(),replacement=privateCopy?pupilTag(n,'initials'):'Pupil '+n;if(!value)return;[value].concat(value.split(/\s+/),pupilTag(n,'initials')).forEach(function(label){if(label&&label!=='P'+n)pairs.push([label,replacement]);});});
+ pairs.sort(function(a,b){return b[0].length-a[0].length;});var result=String(text==null?'':text),slots=[];
+ pairs.forEach(function(pair){[pair[0],encodeURIComponent(pair[0])].forEach(function(label){var lower=result.toLocaleLowerCase('en-GB'),needle=label.toLocaleLowerCase('en-GB'),from=0,at,parts=[];while((at=lower.indexOf(needle,from))>=0){var end=at+needle.length,word=/[\p{L}\p{N}_]/u;if((label.length===1&&/https?:\/\/[^\s\"<>]*$/i.test(result.slice(0,at)))||(at&&word.test(result[at-1]))||(end<result.length&&word.test(result[end]))){parts.push(result.slice(from,end));from=end;continue;}parts.push(result.slice(from,at),'\u0001'+slots.length+'\u0002');slots.push(pair[1]);from=end;}parts.push(result.slice(from));result=parts.join('');});});
+ return result.replace(/\u0001(\d+)\u0002/g,function(_,n){return slots[+n];});
+}
+function redacted(text){return cleanPupilText(text,false);}
+
 function pupilAdapt(n){var p=pupilProfile(),r=p.pupils&&p.pupils[n];return r&&Array.isArray(r.adapt)?r.adapt.filter(function(s){return typeof s==="string"&&s.trim();}).slice(0,4):[];}
-function pupilNumber(value){var m=String(value).match(/^(?:Pupil\s*|P)?(\d+)$/i);if(m)return +m[1];var key=pupilKey(),hit=Object.keys(key).find(function(k){return key[k]===value;});if(hit)return +hit;var all=typeof S!=="undefined"&&S&&S.pupils?[].concat(S.pupils.BUILD||[],S.pupils.GROW||[],S.pupils.LAUNCH||[]):[];return Math.max(1,all.indexOf(value)+1);}
 function publicPupil(value){return "Pupil "+pupilNumber(value);}
 function pupilCaption(value){var n=pupilNumber(value);return "Pupil "+n+" · "+pupilTag(n);}
 function pupilNode(value){var n=pupilNumber(value),s=document.createElement("span");s.className="pupil-label";s.title=s.getAttribute("aria-label")||pupilCaption(value);s.setAttribute("aria-label",pupilCaption(value));var a=document.createElement("span");a.textContent="Pupil "+n;s.appendChild(a);var b=document.createElement("strong");b.className="private-tag noprint";b.textContent=" · "+pupilTag(n);s.appendChild(b);return s;}
@@ -329,21 +357,7 @@ function tagControl(node,value){node.title=pupilCaption(value);node.setAttribute
 function setShow(mode){var p=pupilProfile();p.show=mode;try{localStorage.setItem("mbm_pupil_profile_v1",JSON.stringify(p));return true;}catch(e){return false;}}
 function lastSchoolDay(){var d=new Date();d.setHours(12,0,0,0);do{d.setDate(d.getDate()-1);}while(d.getDay()===0||d.getDay()===6);return d;}
 function markDate(r){return new Date(2026,10,2+(+r.w-1)*7+["Monday","Tuesday","Wednesday","Thursday","Friday"].indexOf(r.d),12);}
-function redacted(text){
- var key=pupilKey(),pairs=[];
- Object.keys(key).forEach(function(n){var s=String(key[n]||"").trim();if(s){pairs.push([s,"Pupil "+n]);s.split(/\s+/).forEach(function(w){if(w.length>1)pairs.push([w,"Pupil "+n]);});[pupilTag(n,"initials"),pupilTag(n,"first")].forEach(function(t){if(t.length>1)pairs.push([t,"Pupil "+n]);});}});
- if(typeof S!=="undefined"&&S&&S.pupils)Object.keys(S.pupils).forEach(function(g){S.pupils[g].forEach(function(s){if(!/^(?:Pupil\s*|P)?\d+$/i.test(s))pairs.push([s,publicPupil(s)]);});});
- pairs.sort(function(a,b){return b[0].length-a[0].length;});
- var result=String(text==null?"":text),slots=[];
- pairs.forEach(function(p){[p[0],encodeURIComponent(p[0])].forEach(function(label){
-  var lower=result.toLocaleLowerCase("en-GB"),needle=label.toLocaleLowerCase("en-GB"),from=0,at,parts=[];
-  while((at=lower.indexOf(needle,from))>=0){var end=at+needle.length,word=/[\p{L}\p{N}_]/u;
-   if((at>0&&word.test(result[at-1]))||(end<result.length&&word.test(result[end]))){parts.push(result.slice(from,end));from=end;continue;}
-   parts.push(result.slice(from,at),"\u0001"+slots.length+"\u0002");slots.push(p[1]);from=end;
-  }parts.push(result.slice(from));result=parts.join("");
- });});
- return result.replace(/\u0001(\d+)\u0002/g,function(_,n){return slots[+n];});
-}
+
 
 var KEY="mbm_catchup_tracker_v1";
 var WEEKS=[["1","02 Nov"],["2","09 Nov"],["3","16 Nov"],["4","23 Nov"],["5","30 Nov"],["6","07 Dec"],["7","14 Dec"]];
@@ -443,7 +457,7 @@ function syncBadge(){
  var ob=$("openCountBadge");ob.hidden=openCnt===0;ob.textContent=String(openCnt);
  var bb=$("backupBadge");
  if(S.dirtySinceBackup&&Object.keys(S.marks).length){bb.hidden=false;bb.className="acct-pill warn noprint";bb.textContent="Unsaved backup changes";}
- else if(S.lastBackup){bb.hidden=false;bb.className="acct-pill noprint";bb.textContent="Backed up "+S.lastBackup;}
+ else if(S.lastBackup){bb.hidden=false;bb.className="acct-pill noprint";bb.textContent="Backed up on this device";}
  else bb.hidden=true;
 }
 function next(st){return STATES[(STATES.indexOf(st)+1)%STATES.length];}
@@ -482,7 +496,7 @@ $("qrCustomInput").oninput=function(){lastQrRawUrl=$("qrCustomInput").value.trim
 $("qrPinSelect").onchange=function(){if($("qrPinSelect").value){lastQrRawUrl=$("qrPinSelect").value;$("qrCustomInput").value=lastQrRawUrl;renderQrStage();}};
 $("qrCopyUrlBtn").onclick=function(){
  var u=withAccount(lastQrRawUrl,!$("qrIncludeAcct").checked);
- if(u&&navigator.clipboard){navigator.clipboard.writeText(redacted(u));showToast("Link copied to clipboard");}
+ if(u)copyOutput(u,"Link copied to clipboard");
 };
 $("openCustomQr").onclick=function(){
  syncPinDropdown();
@@ -494,7 +508,7 @@ function setLink(title,lk,after){var v=prompt("Paste the Drive link for "+title+
 
 // Fixes Thursday P5 "ALL" Community Projects by exposing BUILD/GROW/LAUNCH sheets directly
 function driveButtons(title,lk,query,after){
- var wrap=el("div",{"class":"chipwrap noprint"}),a=lk.split("|");
+ var wrap=el("div",{"class":"chipwrap lesson-links noprint"}),a=lk.split("|");
  ["visitor","cover"].forEach(function(view){
   var q=new URLSearchParams({week:a[0],path:a[1],subject:a[2],lesson:a[3],view:view});
   wrap.appendChild(el("a",{
@@ -509,7 +523,7 @@ function driveButtons(title,lk,query,after){
    if(u){
     wrap.appendChild(el("a",{"class":"btnlink smbtn",href:withAccount(u),target:"_blank",rel:"noopener"},"📄 "+p));
     var qb=el("button",{"class":"smbtn",type:"button","aria-label":"QR code for "+p+" "+a[2]},"📱");
-    qb.onclick=function(){openQrModal(p+" › w/b "+wb(a[0])+" › "+a[2]+" (Lesson "+a[3]+")",u,false);};
+    qb.onclick=function(){openQrModal(p+" › week "+a[0]+" › "+a[2]+" (Lesson "+a[3]+")",u,false);};
     wrap.appendChild(qb);
    }
    // Merged sessions (Week 4 Community = Part 1 + Part 2): show the Part 2 sheet too
@@ -517,7 +531,7 @@ function driveButtons(title,lk,query,after){
    if(u2){
     wrap.appendChild(el("a",{"class":"btnlink smbtn",href:withAccount(u2),target:"_blank",rel:"noopener"},"📄 "+p+" Part 2"));
     var qb3=el("button",{"class":"smbtn",type:"button","aria-label":"QR code for "+p+" "+a[2]+" Part 2"},"📱");
-    qb3.onclick=function(){openQrModal(p+" › w/b "+wb(a[0])+" › "+a[2]+" (Part 2)",u2,false);};
+    qb3.onclick=function(){openQrModal(p+" › week "+a[0]+" › "+a[2]+" (Part 2)",u2,false);};
     wrap.appendChild(qb3);
    }
   });
@@ -540,7 +554,7 @@ function jumpToToday(){
  var starts=[[2026,10,2],[2026,10,9],[2026,10,16],[2026,10,23],[2026,10,30],[2026,11,7],[2026,11,14]];
  for(var i=starts.length-1;i>=0;i--){if(t>=new Date(starts[i][0],starts[i][1],starts[i][2])){$("week").value=String(i+1);break;}}
 }
-WEEKS.forEach(function(w){$("week").appendChild(el("option",{value:w[0]},"Week "+w[0]+" (w/b "+w[1]+")"));});
+WEEKS.forEach(function(w){$("week").appendChild(el("option",{value:w[0]},"Week "+w[0]));});
 DAYS.forEach(function(d){$("day").appendChild(el("option",{value:d},d));});
 (function(){
  var subjs={};DAYS.forEach(function(d){TT[d].forEach(function(l){subjs[l[2]]=1;});});
@@ -576,7 +590,7 @@ function renderToday(){
   if(!relLessons.length)return;
   var markedAll=relLessons.every(function(l){return !!S.marks[mkey(w,d,l[0],name)];});
   if(markedAll)dayMissCount++;
-  var ab=el("button",{"class":"chip smbtn"+(markedAll?" st-missed":""),"aria-pressed":markedAll?"true":"false"},"");ab.appendChild(pupilNode(name));ab.appendChild(document.createTextNode(" ("+pgrp[0]+")"));tagControl(ab,name);
+  var ab=el("button",{"class":"chip smbtn"+(markedAll?" st-missed":""),"aria-pressed":markedAll?"true":"false"},"");ab.appendChild(pupilNode(name));ab.appendChild(document.createTextNode(" · "+pgrp));tagControl(ab,name);
   ab.onclick=function(){
    var snap={};
    relLessons.forEach(function(l){
@@ -601,7 +615,7 @@ function renderToday(){
   h.appendChild(el("span",{"class":"tag "+path},path==="ALL"?"ALL GROUPS":path));
   h.appendChild(document.createTextNode("P"+per+" · "+subj+(path==="ALL"?" (double)":" · Lesson "+les)));
   head.appendChild(h);
-  head.appendChild(driveButtons((path==="ALL"?"":path+" ")+subj+", week beginning "+wb(w)+", lesson "+les,lk,"Catch up "+subj+" "+(path==="ALL"?"":path),renderToday));
+  head.appendChild(driveButtons((path==="ALL"?"":path+" ")+subj+", week "+w+", lesson "+les,lk,"Catch up "+subj+" "+(path==="ALL"?"":path),renderToday));
   card.appendChild(head);
   var chips=el("div",{"class":"chips",role:"group","aria-label":"Pupils who missed "+subj}),c={missed:0,partial:0,more:0,done:0},n=0;
   var pList=(path==="ALL"&&pathView)?pupilsFor(pathView):pupilsFor(path);
@@ -647,7 +661,7 @@ function getFilteredList(){
   if(lp&&r.path!==lp)return false;
   if(pf&&r.pupil!==pf)return false;
   if(f==="all")return true;
-  if(f==="open")return r.state!=="done"||!!justDoneKeys[r.k];
+  if(f==="open")return r.state!=="done";
   return r.state===f;
  });
 }
@@ -655,8 +669,8 @@ function getFilteredList(){
 var NOTE_PRESETS=["1:1 done","Printed","Sent home","Verbal check"];
 function renderList(){
  var box=$("table");box.textContent="";
- var list=getFilteredList(),f=$("filter").value,pf=$("pfilter").value,lp=$("lpath").value;
- $("printHeaderList").textContent=(pf?"Catch-up Passport: "+publicPupil(pf):"Catch-up Tracker List")+" · Printed "+todayIso()+(lp?" · Group: "+lp:"")+" · "+list.length+" item(s)";
+ var list=getFilteredList(),f=$("filter").value,pf=$("pfilter").value,lp=$("lpath").value;var open=list.filter(function(r){return r.state!=="done";}).length;$("openCountBadge").textContent=String(open);$("openCountBadge").hidden=open===0;
+ $("printHeaderList").textContent=(pf?"Catch-up Passport: "+publicPupil(pf):"Catch-up Tracker List")+""+(lp?" · Group: "+lp:"")+" · "+list.length+" item(s)";
  if(!list.length){box.appendChild(el("p",{"class":"panel"},f==="open"?"No catch-up work is owed. You are up to date.":"No lessons match. Try a different filter."));return;}
  var t=el("table"),hd=el("tr");
  ["Pupil","Missed","Catch-up sheet & QR","Note","Status"].forEach(function(x){hd.appendChild(el("th",{scope:"col"},x));});
@@ -666,7 +680,7 @@ function renderList(){
   var tr=el("tr",{"class":"st-"+r.state+(justDoneKeys[r.k]?" just-done":"")});
   var tdp=el("td");tdp.appendChild(pupilNode(r.pupil));tdp.appendChild(document.createTextNode(" ("+r.path+")"));if(r.state!=="done")addAdaptChips(tdp,r.pupil);tdp.appendChild(el("br"));tdp.appendChild(labelBtn(labelItem(r)));tr.appendChild(tdp);
   tr.appendChild(el("td",{},r.subj+", Wk "+r.w+" "+r.d+" P"+r.per));
-  var td=el("td"),folder=r.path+" › w/b "+wb(r.w)+" › "+r.subj+" › Catch-up (Lesson "+r.lesson+")",lk=lkey(r.w,lessonPath(r),r.subj,r.lesson),u=linkFor(lk);
+  var td=el("td"),folder=r.path+" › week "+r.w+" › "+r.subj+" › Catch-up (Lesson "+r.lesson+")",lk=lkey(r.w,lessonPath(r),r.subj,r.lesson),u=linkFor(lk);
   td.appendChild(el("div",{},folder));
   td.appendChild(driveButtons(folder,lk,"Catch up "+r.subj+" "+r.path,renderList));
   if(u){var qwrap=el("div",{"class":"print-only print-qr"}),qsvg=QR(redacted(u));if(qsvg){qwrap.appendChild(qsvg);td.appendChild(qwrap);}}
@@ -717,7 +731,7 @@ function getAssessRecs(){
 function renderAssess(){
  var box=$("atable");box.textContent="";
  var recs=getAssessRecs();
- $("printHeaderAssess").textContent="Assessment Readiness · Printed "+todayIso()+" · "+recs.length+" record(s)";
+ $("printHeaderAssess").textContent="Assessment Readiness · "+recs.length+" record(s)";
  if(!recs.length){box.appendChild(el("p",{"class":"panel"},"Nothing to show. Add pupils in Set up."));return;}
  if(assessMatrix){
   var subjs={},pMap={},pOrder=[];
@@ -765,7 +779,8 @@ function show(v){
  justDoneKeys={};document.body.classList.remove("printing-labels");
  ["today","list","assess","setup"].forEach(function(x){$(x).hidden=x!==v;});
  Array.prototype.forEach.call(document.querySelectorAll(".tabs button"),function(b){b.setAttribute("aria-pressed",b.dataset.view===v?"true":"false");});
- if(v==="today")renderToday();if(v==="list")renderList();if(v==="assess")renderAssess();if(v==="setup"){fillSetup();renderAdapt();}
+ syncBadge();if(v==="today")renderToday();if(v==="list")renderList();if(v==="assess")renderAssess();if(v==="setup"){fillSetup();renderAdapt();}
+ var heading=$("heading-"+v);heading.focus({preventScroll:true});window.scrollTo({top:0,behavior:"instant"});
 }
 Array.prototype.forEach.call(document.querySelectorAll(".tabs button"),function(b){b.onclick=function(){show(b.dataset.view);};});
 $("week").onchange=renderToday;$("day").onchange=renderToday;
@@ -781,25 +796,8 @@ var ADAPT=[["large_print","Large print","Print the sheet bigger (A3) or zoom it 
  ["read_aloud","Read aloud","Read each task aloud. Let them say the answer before writing."],
  ["extra_space","Extra time and space","Allow extra time. Lined paper for longer answers."],
  ["visual_steps","Visual steps","Number the steps and tick each one when done."]];
-var SHOWN={BUILD:"BASE",GROW:"TRACK",LAUNCH:"SUMMIT",ALL:"ALL"};
+
 S.adapt=S.adapt||{};
-function renderAdapt(){
- var box=$("adaptList");if(!box)return;box.textContent="";
- var all=pupilsFor("ALL");
- if(!all.length){box.appendChild(el("p",{"class":"note"},"Add pupils above first."));return;}
- all.forEach(function(pp){
-  var name=pp[0],a=S.adapt[name]||{t:[],note:""},row=el("div",{"class":"adapt-row"});
-  var ph=el("b");ph.appendChild(pupilNode(name));ph.appendChild(document.createTextNode(" ("+SHOWN[pp[1]]+")"));row.appendChild(ph);addAdaptChips(row,name);
-  ADAPT.forEach(function(x){
-   var lab=el("label"),cb=el("input",{type:"checkbox"});cb.checked=a.t.indexOf(x[0])>=0;
-   cb.onchange=function(){var c=S.adapt[name]||{t:[],note:""};c.t=c.t.filter(function(v){return v!==x[0];});if(cb.checked)c.t.push(x[0]);S.adapt[name]=c;save();};
-   lab.appendChild(cb);lab.appendChild(document.createTextNode(x[1]));row.appendChild(lab);
-  });
-  var nt=el("input",{type:"text","class":"textin",placeholder:"Anything else (e.g. sit near the front)","aria-label":"Other adaptation for "+name});
-  nt.value=a.note||"";nt.oninput=function(){var c=S.adapt[name]||{t:[],note:""};c.note=nt.value;S.adapt[name]=c;save();};
-  row.appendChild(nt);box.appendChild(row);
- });
-}
 function labelItem(r){return {pupil:r.pupil,path:r.path,subj:r.subj,w:r.w,d:r.d,per:r.per,lesson:r.lesson,url:linkFor(lkey(r.w,r.path,r.subj,r.lesson))};}
 function printLabels(items){
  if(!items.length){showToast("No catch-up sheets to label");return;}
@@ -808,7 +806,7 @@ function printLabels(items){
   var a=S.adapt[it.pupil]||{t:[],note:""},card=el("section",{"class":"plabel"}),t=el("div",{"class":"lt"});
   t.appendChild(el("div",{"class":"brand"},"CATCH-UP"));
   t.appendChild(el("h2",{},publicPupil(it.pupil)));
-  t.appendChild(el("div",{},SHOWN[it.path]+" · "+it.subj+" · missed "+it.d+" P"+it.per+" (week of "+wb(it.w)+")"));
+  t.appendChild(el("div",{},it.path+" · "+it.subj+" · missed "+it.d+" P"+it.per+" (week "+it.w+")"));
   var ul=el("ul"),n=0;
   ul.appendChild(el("li",{},"Number-only copy. Ask for help if you need it."));
   t.appendChild(ul);
@@ -848,8 +846,9 @@ $("addPinBtn").onclick=function(){
  S.pins.push({title:t,url:u});$("pinTitle").value="";$("pinUrl").value="";save();renderPins();
 };
 
-function fillSetup(){["BUILD","GROW","LAUNCH"].forEach(function(g){$("p"+g).value=S.pupils[g].join("\n");});$("driveEmail").value=S.driveEmail;$("saved").textContent="";renderPins();}
+function fillSetup(){["BUILD","GROW","LAUNCH"].forEach(function(g){$("p"+g).value=S.pupils[g].join("\n");});$("driveEmail").value=S.driveEmail;$("saved").textContent="";renderPins();renderPupilNumbers();}
 $("savep").onclick=function(){
+ if(!renderPupilNumbers()){showToast("Check the pupil numbers first.");return;}
  var oldP=JSON.parse(JSON.stringify(S.pupils)),newP={},renames={},groupMoves={};
  ["BUILD","GROW","LAUNCH"].forEach(function(g){
   var seen={};newP[g]=$("p"+g).value.split(/\r?\n/).map(function(s){return s.trim();}).filter(function(s){if(!s||seen[s])return false;seen[s]=1;return true;});
@@ -881,7 +880,7 @@ $("savep").onclick=function(){
   nextAssess[apath+"|"+asubj+"|"+apup]=S.assessMarks[ak];
  }
  S.adapt=S.adapt||{};for(var rk in renames){var on=rk.split("|").slice(1).join("|");if(S.adapt[on]&&!S.adapt[renames[rk]]){S.adapt[renames[rk]]=S.adapt[on];delete S.adapt[on];}}
- S.pupils=newP;S.marks=nextMarks;S.assessMarks=nextAssess;save();if(typeof renderAdapt==="function")renderAdapt();
+ S.pupils=newP;S.marks=nextMarks;S.assessMarks=nextAssess;save();supplyTrackerGroups();renderPupilNumbers();if(typeof renderAdapt==="function")renderAdapt();
  $("saved").textContent=migrated?"Saved (migrated "+migrated+" mark record(s)).":"Saved.";
 };
 $("saveDrive").onclick=function(){S.driveEmail=$("driveEmail").value.trim();save();showToast(S.driveEmail?"Drive account saved":"Drive account cleared");};
@@ -904,9 +903,9 @@ function toCsv(aoa){var q=function(s){return '"'+String(s==null?"":s).replace(/"
 function toTsv(aoa){return aoa.map(function(r){return r.map(function(c){return String(c==null?"":c).replace(/[\t\r\n]+/g," ");}).join("\t");}).join("\r\n");}
 
 $("csv").onclick=function(){download("catch_up_list_"+todayIso()+".csv",toCsv(buildListMatrixRows()),"text/csv");};
-$("copyListTsv").onclick=function(){if(navigator.clipboard){navigator.clipboard.writeText(redacted(toTsv(buildListMatrixRows())));showToast("Copied table for a table");}};
+$("copyListTsv").onclick=function(){copyOutput(toTsv(buildListMatrixRows()),"Table copied");};
 $("csvAssess").onclick=function(){download("assessment_readiness_"+todayIso()+".csv",toCsv(buildAssessMatrixRows()),"text/csv");};
-$("copyAssessTsv").onclick=function(){if(navigator.clipboard){navigator.clipboard.writeText(redacted(toTsv(buildAssessMatrixRows())));showToast("Copied assessment table for a table");}};
+$("copyAssessTsv").onclick=function(){copyOutput(toTsv(buildAssessMatrixRows()),"Assessment table copied");};
 
 $("backup").onclick=function(){
  S.lastBackup=todayIso();S.dirtySinceBackup=false;save(true);
@@ -915,31 +914,7 @@ $("backup").onclick=function(){
 $("restore").onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var s=JSON.parse(r.result);if(!s.pupils||!s.marks)throw 0;if(confirm("Replace what is on this computer with the backup?")){localStorage.setItem(KEY,JSON.stringify(s));S=load();syncBadge();show("today");showToast("Backup restored");}}catch(x){alert("That file is not a tracker backup.");}};r.readAsText(f);};
 $("wipe").onclick=function(){if(confirm("Clear every missed mark and assessment tick? Pupils and links stay.")){S.marks={};S.assessMarks={};save();showToast("All marks cleared");}};
 
-function effectiveAdapt(pupil){
- var shared=pupilAdapt(pupilNumber(pupil));if(shared.length)return shared;
- var a=S.adapt[pupil]||{t:[],note:""},lines=[];
- ADAPT.forEach(function(x){if((a.t||[]).indexOf(x[0])>=0)lines.push(x[1]+": "+x[2]);});
- if(a.note)lines.push(a.note);return lines;
-}
-function addAdaptChips(parent,pupil){
- var lines=effectiveAdapt(pupil);if(!lines.length)return;
- var wrap=el("div",{"class":"adapt-chips noprint","aria-label":"Help for "+pupilCaption(pupil)});
- lines.forEach(function(s){wrap.appendChild(el("span",{"class":"adapt-chip"},"Help: "+s));});parent.appendChild(wrap);
-}
 function owedRows(pupil){return rows().filter(function(r){return r.state!=="done"&&(pupil==null||r.pupil===pupil);});}
-function renderTodayStrip(){
- var box=$("todayStrip");if(!box)return;box.textContent="";
- var last=lastSchoolDay(),owed=owedRows().filter(function(r){return +markDate(r)===+last;}),grouped={};
- box.appendChild(el("h2",{id:"todayTitle"},"Today"));
- box.appendChild(el("p",{"class":"note"},"Catch-up from "+last.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"short"})));
- if(!owed.length){box.appendChild(el("p",{},"No catch-up is owed from the last school day."));return;}
- owed.forEach(function(r){(grouped[r.pupil]||(grouped[r.pupil]=[])).push(r);});
- Object.keys(grouped).sort(function(a,b){return pupilNumber(a)-pupilNumber(b);}).forEach(function(p){
-  var item=el("div",{"class":"today-item"});item.appendChild(pupilNode(p));
-  item.appendChild(el("p",{},grouped[p].map(function(r){return r.subj+" (lesson "+r.lesson+", period "+r.per+")";}).join(" · ")));
-  addAdaptChips(item,p);var b=tagControl(el("button",{type:"button","class":"smbtn"},"Catch-up sheet"),p);b.onclick=function(){openSheets(p,false);};item.appendChild(b);box.appendChild(item);
- });
-}
 function publicBackup(){
  var b=JSON.parse(JSON.stringify(S)),marks={},assess={};
  Object.keys(b.pupils).forEach(function(g){b.pupils[g]=S.pupils[g].map(publicPupil);});
@@ -961,7 +936,7 @@ var sheetPupils=[],sheetReturnFocus=null;
 function sheetLesson(r,part){
  var card=el("article",{"class":"sheet-lesson"}),num=part===2?2:r.lesson;
  card.appendChild(el("h3",{},r.subj+" · Lesson "+num));card.appendChild(el("code",{},lessonCodeFor(r,part)));
- card.appendChild(el("p",{"class":"sheet-meta"},r.path+" · "+r.d+" · period "+r.per+" · week of "+wb(r.w)));
+ card.appendChild(el("p",{"class":"sheet-meta"},r.path+" · "+r.d+" · period "+r.per+" · week "+r.w));
  var url=redacted(linkFor(lkey(r.w,r.path,r.subj,num))),line=el("div",{"class":"sheet-link"});
  if(url){var qr=QR(url);if(qr){qr.setAttribute("role","img");qr.setAttribute("aria-label","Scan to open this lesson");line.appendChild(qr);}line.appendChild(el("a",{href:url,target:"_blank",rel:"noopener",title:url},"Open lesson"));}
  else line.appendChild(el("p",{},"No lesson link saved. Ask for the sheet."));
@@ -976,12 +951,12 @@ function buildSheets(){
   inner.appendChild(el("p",{},"Tick each lesson when it is done. Ask for help when you need it."));
   if(privateCopy){
    inner.appendChild(el("h2",{},"How this work is set up for you"));var help=effectiveAdapt(p),ul=el("ul",{"class":"sheet-adapt sheet-private-adapt"});
-   (help.length?help:["Ask for the help you need."]).forEach(function(s){ul.appendChild(el("li",{},redacted(s)));});inner.appendChild(ul);
+   (help.length?help:["Ask for the help you need."]).forEach(function(s){ul.appendChild(el("li",{},cleanPupilText(s,true)));});inner.appendChild(ul);
   }
   inner.appendChild(el("h2",{},rs.length+" lesson"+(rs.length===1?"":"s")+" to catch up"));
   var grid=el("div",{"class":"sheet-lessons"});if(rs.length>8)grid.style.setProperty("--sheet-cols","3");
   rs.forEach(function(r){grid.appendChild(sheetLesson(r,1));if(r.subj==="Community Projects"&&+r.w===4&&+r.lesson===1&&linkFor(lkey(r.w,r.path,r.subj,2)))grid.appendChild(sheetLesson(r,2));});
-  inner.appendChild(grid);inner.appendChild(el("p",{"class":"sheet-meta"},"Printed "+todayIso()+" · Check with your teacher when you finish."));page.appendChild(inner);box.appendChild(page);
+  inner.appendChild(grid);inner.appendChild(el("p",{"class":"sheet-meta"},"Check with your teacher when you finish."));page.appendChild(inner);box.appendChild(page);
  });
  $("printAndGo").disabled=!sheetPupils.length;
  if(!sheetPupils.length)box.appendChild(el("p",{"class":"panel"},"No catch-up work is owed. You are up to date."));
@@ -1016,11 +991,72 @@ $("printAllOwed").onclick=function(){openSheets(null,false);};
 window.addEventListener("beforeprint",function(){if(!$("catchupPreview").hidden&&!document.body.classList.contains("printing-labels")){fitSheets();document.body.classList.add("printing-catchup");}});
 window.addEventListener("afterprint",function(){document.body.classList.remove("printing-catchup","printing-labels");});
 $("showTags").value=pupilProfile().show||"initials";
-$("showTags").onchange=function(){if(!setShow(this.value))showToast("This browser could not save the Show choice.");renderToday();renderList();renderAssess();renderAdapt();renderTodayStrip();};
-window.addEventListener("storage",function(e){if(e.key==="mbm_pupil_key_v1"||e.key==="mbm_pupil_profile_v1"){ $("showTags").value=pupilProfile().show||"initials";renderToday();renderList();renderAssess();renderTodayStrip();if(!$("catchupPreview").hidden)buildSheets();}});
+$("showTags").onchange=function(){if(!setShow(this.value))showToast("This browser could not save the Show choice.");refreshTags();};
+window.addEventListener("storage",function(e){if(e.key==="mbm_pupil_key_v1"||e.key==="mbm_pupil_profile_v1"){ $("showTags").value=pupilProfile().show||"initials";refreshTags();}});
 document.addEventListener("keydown",function(e){if(e.key==="Escape"){if(!$("catchupPreview").hidden)closeSheets();if(!$("qrModal").hidden){$("qrModal").hidden=true;$("openCustomQr").focus();}}});
 
-renderToday();renderTodayStrip();
+var HELP_CHOICES=['Enlarged print','Now and next card','Extra time','Reader','Movement break','Word bank','Sit near front'];
+var LEGACY_HELP={large_print:'Enlarged print',chunked:'One task at a time',sentence_starters:'Sentence starters',word_bank:'Word bank',fewer_questions:'Fewer questions',read_aloud:'Reader',extra_space:'Extra time',visual_steps:'Visual steps'};
+function putProfile(profile){try{localStorage.setItem('mbm_pupil_profile_v1',JSON.stringify(profile));return true;}catch(e){showToast('Help could not be saved. Keep this page open and try again.');return false;}}
+function migrateHelp(){
+ if(!Object.keys(S.adapt||{}).length)return;
+ var profile=pupilProfile();profile.pupils=profile.pupils||{};
+ Object.keys(S.adapt).forEach(function(label){var n=pupilNumber(label),old=S.adapt[label]||{},p=profile.pupils[n]||{adapt:[],note:''},all=[].concat(p.adapt||[],(old.t||[]).map(function(k){return LEGACY_HELP[k]||k;}),old.note?[old.note]:[]),seen=new Set(),lines=[];
+ all.forEach(function(s){s=String(s).trim();if(s&&!seen.has(normalLabel(s))){seen.add(normalLabel(s));lines.push(s);}});
+ var extra=lines.slice(4);p.adapt=lines.slice(0,4).map(function(s){if(s.length>80)extra.push(s);return s.slice(0,80);});if(extra.length)p.note=(p.note?p.note+'\n':'')+'Other saved help: '+extra.join('; ');profile.pupils[n]=p;});
+ if(putProfile(profile)){S.adapt={};try{localStorage.setItem(KEY,JSON.stringify(S));showToast('Help lines moved to Class names.');$('helpMoved').textContent='Help lines moved to Class names.';}catch(e){showToast('Help lines copied. The old choices could not be cleared yet.');}}
+}
+function effectiveAdapt(pupil){return pupilAdapt(pupilNumber(pupil));}
+function shortHelp(line){var known=HELP_CHOICES.concat(Object.values(LEGACY_HELP)).find(function(s){return line===s||line.startsWith(s+':');});if(known)return known;var words=line.split(/\s+/),short='';for(var i=0;i<words.length;i++){if((short+' '+words[i]).trim().length>28)break;short+=(short?' ':'')+words[i];}return short+(short!==line?'…':'');}
+function helpButton(line){var b=el('button',{type:'button','class':'adapt-chip',title:line,'aria-label':line},shortHelp(line));b.onclick=function(){showToast(line);};return b;}
+function addAdaptChips(parent,pupil,fold){
+ var lines=effectiveAdapt(pupil);if(!lines.length)return;
+ var wrap=el('div',{'class':'adapt-chips noprint'});
+ if(fold){var details=el('details',{'class':'help-fold'});details.appendChild(el('summary',{},'Help ('+lines.length+')'));lines.forEach(function(line){details.appendChild(helpButton(line));});wrap.appendChild(details);}
+ else{var first=el('div',{'class':'help-chip-list'});lines.slice(0,2).forEach(function(line){first.appendChild(helpButton(line));});wrap.appendChild(first);if(lines.length>2){var rest=el('details',{'class':'more-help'});rest.appendChild(el('summary',{},'+'+(lines.length-2)+' more'));lines.slice(2).forEach(function(line){rest.appendChild(helpButton(line));});wrap.appendChild(rest);}}
+ parent.appendChild(wrap);
+}
+function renderAdapt(){
+ var box=$('adaptList');box.textContent='';if(!trackerEntries().length){box.appendChild(el('p',{'class':'note'},'Add pupils above first.'));return;}
+ trackerEntries().forEach(function(row){var section=el('details',{'class':'adapt-row'}),summary=el('summary');summary.appendChild(pupilNode(row.label));summary.appendChild(document.createTextNode(' · '+row.path+' · Help ('+pupilAdapt(row.n).length+'/4)'));section.appendChild(summary);
+ function store(lines){var profile=pupilProfile();profile.pupils=profile.pupils||{};var old=profile.pupils[row.n]||{note:''};profile.pupils[row.n]=Object.assign({},old,{adapt:lines});if(putProfile(profile)){summary.lastChild.textContent=' · '+row.path+' · Help ('+lines.length+'/4)';renderToday();renderList();renderAssess();renderTodayStrip();return true;}return false;}
+ HELP_CHOICES.forEach(function(word){var lab=el('label',{'class':'help-choice'}),cb=el('input',{type:'checkbox','data-pupil':row.n,'data-help':word});cb.checked=pupilAdapt(row.n).includes(word);cb.onchange=function(){var lines=pupilAdapt(row.n).filter(function(s){return s!==word;});if(cb.checked){if(lines.length===4){cb.checked=false;showToast('There are four help lines already. Clear one first.');return;}lines.push(word);}if(store(lines)){fields.forEach(function(f,i){f.value=pupilAdapt(row.n)[i]||'';});}};lab.appendChild(cb);lab.appendChild(document.createTextNode(word));section.appendChild(lab);});
+ var fields=[];for(var i=0;i<4;i++){var label=el('label',{},'Help line '+(i+1)),field=el('input',{type:'text',maxlength:80,'aria-label':'Help line '+(i+1)+' for Pupil '+row.n});field.value=pupilAdapt(row.n)[i]||'';label.appendChild(field);fields.push(field);section.appendChild(label);}
+ var button=el('button',{type:'button'},'Save help lines');button.onclick=function(){var lines=Array.from(new Set(fields.map(function(f){return f.value.trim();}).filter(Boolean)));if(store(lines)){section.querySelectorAll('input[type=checkbox]').forEach(function(cb){cb.checked=lines.includes(cb.dataset.help);});showToast('Help lines saved. Class names uses the same lines.');}};section.appendChild(button);box.appendChild(section);
+ });
+}
+function draftGroups(){var groups={};['BUILD','GROW','LAUNCH'].forEach(function(path){groups[path]=$('p'+path).value.split(/\r?\n/).map(function(s){return s.trim();}).filter(Boolean);});return groups;}
+function renderPupilNumbers(){
+ var groups=draftGroups(),entries=numberedPupils(groups,pupilKey()),counts={};entries.forEach(function(row){counts[row.n]=(counts[row.n]||0)+1;});
+ ['BUILD','GROW','LAUNCH'].forEach(function(path){var list=$('numbers'+path);list.textContent='';entries.filter(function(row){return row.path===path;}).forEach(function(row){list.appendChild(el('li',{},row.n+'  '+row.label));});});
+ var duplicate=Object.keys(counts).some(function(n){return counts[n]>1;});$('numberWarning').textContent=entries.length>20?'Use 20 pupils or fewer.':duplicate?'Two pupils have the same number. Check the numbered lines before linking the names.':'';return !duplicate&&entries.length<=20&&entries.every(function(row){return row.n>=1&&row.n<=20;});
+}
+function linkTrackerNames(){
+ if(!renderPupilNumbers()){showToast('Check the pupil numbers first.');return;}
+ $('savep').onclick();var key=Object.assign({},pupilKey()),count=0;trackerEntries().forEach(function(row){if(!/^(?:pupil\s*|p)?\d+$/i.test(normalLabel(row.label))){key[row.n]=row.label;count++;}});
+ try{localStorage.setItem('mbm_pupil_key_v1',JSON.stringify(key));refreshTags();showToast('Saved. '+count+' labels are now used by all your tools.');$('saved').textContent='Saved. '+count+' labels are now used by all your tools.';}catch(e){showToast('The labels could not be saved. Try again.');}
+}
+function supplyTrackerGroups(){
+ var profile=pupilProfile(),changed=false;profile.pupils=profile.pupils||{};
+ trackerEntries().forEach(function(row){var pupil=profile.pupils[row.n]||{adapt:[],note:''};if(!Object.prototype.hasOwnProperty.call(pupil,'group')){profile.pupils[row.n]=Object.assign({},pupil,{group:row.path});changed=true;}});
+ if(changed)putProfile(profile);
+}
+var todayExpanded=false;
+function renderTodayStrip(){
+ var box=$('todayStrip');if(!box)return;box.textContent='';var last=lastSchoolDay(),grouped={};owedRows().filter(function(r){return +markDate(r)===+last;}).forEach(function(r){(grouped[r.pupil]||(grouped[r.pupil]=[])).push(r);});
+ box.appendChild(el('h3',{id:'todayTitle'},'Today'));box.appendChild(el('p',{'class':'note'},'Catch-up from the last school day'));
+ var pupils=Object.keys(grouped).sort(function(a,b){return pupilNumber(a)-pupilNumber(b);});if(!pupils.length){box.appendChild(el('p',{},'No catch-up is owed from the last school day.'));return;}
+ (todayExpanded?pupils:pupils.slice(0,3)).forEach(function(pupil){var item=el('div',{'class':'today-item'}),line=el('div',{'class':'today-line'});line.appendChild(pupilNode(pupil));line.appendChild(el('span',{'class':'owed-count'},grouped[pupil].map(function(r){return r.subj+' (P'+r.per+')';}).join(' · ')));var button=tagControl(el('button',{type:'button','class':'smbtn'},'Catch-up sheet'),pupil);button.onclick=function(){openSheets(pupil,false);};line.appendChild(button);item.appendChild(line);addAdaptChips(item,pupil,true);box.appendChild(item);});
+ if(pupils.length>3){var all=el('button',{type:'button',id:'showAllToday','aria-expanded':String(todayExpanded)},todayExpanded?'Show fewer':'Show all ('+pupils.length+')');all.onclick=function(){todayExpanded=!todayExpanded;renderTodayStrip();};box.appendChild(all);}
+}
+function refreshTags(){renderToday();renderList();renderAssess();renderAdapt();renderTodayStrip();renderPupilNumbers();if(!$('catchupPreview').hidden)buildSheets();}
+async function copyOutput(text,message){
+ text=redacted(text);try{if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(text);showToast(message);return;}}catch(e){}
+ var previous=document.activeElement,field=el('textarea',{readonly:'readonly','aria-label':'Number-only text to copy','class':'noprint'});field.value=text;field.style.cssText='position:fixed;top:0;left:0;opacity:0';document.body.appendChild(field);field.focus();field.select();var copied=false;try{copied=document.execCommand('copy');}catch(e){}field.remove();if(previous&&previous.isConnected)previous.focus({preventScroll:true});showToast(copied?message:'This browser could not copy. Use Save CSV or open the link instead.');
+}
+
+["BUILD","GROW","LAUNCH"].forEach(function(group){$("p"+group).oninput=renderPupilNumbers;});$("linkNames").onclick=linkTrackerNames;
+fillSetup();migrateHelp();renderToday();renderTodayStrip();
 })();
 </script>
 <div id="labelSheet" aria-hidden="true"></div>

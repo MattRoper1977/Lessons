@@ -3028,16 +3028,16 @@ CATALOGUE_PINS = {
         "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W07/VOC_LAUNCH_A2_W07.html": "d4c2573cfb24eff1a92b172514f475b1aea64268de4b2d7f4f632c4a9fbad524",
         "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W08_L1/VOC_LAUNCH_A2_W08_L1.html": "f36d7fb4e5819639767cd627a1779709d3d7f00152c668d39c6462e44788065a",
         "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W08_L2/VOC_LAUNCH_A2_W08_L2.html": "a75a50b647563adb992d86017284ba4999be3d2f3452661f57a6a27b182e0dc8",
-        "kits/class_tools/Catch_up_Tracker.html": "6657a40b5021004bce00dfa6a06f727e11b8c32ee3609f6c760e204ff49a356f",
-        "kits/class_tools/Class_names.html": "124e7275e9143650b4eac843d03103a091c0fc2d1fc1adfab1b14193511db859",
-        "kits/class_tools/My_tools.html": "8dfd0bd20b21aae64dec539b4f8d9d4bbfd88bc460fec91fe3e5c8163319598f",
-        "kits/class_tools/Practical_log.html": "56cb7d7a6f847cec2ab69700137501589dd32710650ea2c6e9b5cfbab17911fd",
-        "kits/class_tools/Requests.html": "c6f34336c15a5692ff6186bb2d0c26090b0c3593f8556496837ec1a437cb4f82",
-        "kits/class_tools/Missed_last_week.html": "0c26efbd7d0e9a08a2b967a8029233b857e152e7a266a40826f2574bf2477035",
-        "kits/class_tools/Quick_capture.html": "4292f57cebfd1607a5e12f59178caeeaa01a3f46ddc907e110490c449cb80d66",
-        "kits/class_tools/Lesson_extras.html": "fee824e5858ae9b5bd56b9446fa1f340bce05ba6ae9f078b985beaa04937ae4a",
-        "kits/class_tools/Retrieval_builder.html": "f178b9ab5008d00076c4db12556433d1094e935d927dea5eed3d336a289c9d87",
-        "kits/class_tools/Coverage_map.html": "1fe6ee4e141fb5c9dbb4d080abd94632a3d01276076b9d6ab231ca713ecbd886",
+        "kits/class_tools/Catch_up_Tracker.html": "e251c0b41c082c40eda40744bf8f9333a500c37ebf6d4ef0bda1a02287d2caf8",
+        "kits/class_tools/Class_names.html": "e77d479e2909f7704a5f43eecfe58c3ff1a2d25b0d0da48c26cf067117faa601",
+        "kits/class_tools/My_tools.html": "5b6d57c2e7216412396330b3517df5ef674151afef17d87ec61e869c38cb752c",
+        "kits/class_tools/Practical_log.html": "9a46404708efa5cadf802c44bc9b0f12728bfb70aec811d524668b4ac0004024",
+        "kits/class_tools/Requests.html": "ab84f625d0d8c927a2528dac0791f743f214550b3c334917d23bced1f35e3f9e",
+        "kits/class_tools/Missed_last_week.html": "eae521ae7b0d9edade064035ca76b4587461d531ceaceab186b8104f5b058f2b",
+        "kits/class_tools/Quick_capture.html": "31438a5589e51bca5f868add31e51ef1f03d98e88877c3ca7e2fb883d1d1dc09",
+        "kits/class_tools/Lesson_extras.html": "25163f5488e79360d6f10707e74d4613e798604d1a0462801b8dea7f01f8f8af",
+        "kits/class_tools/Retrieval_builder.html": "83c1559ba255e6a77b177c2ca07d1e6ca71d9f4ed8ab8a9fdd29e6de2b845842",
+        "kits/class_tools/Coverage_map.html": "52433ad7a71caf22dad5ad38fc642d8dddf168a21d26696ec9089d46b479b09b",
         "2 Physics 10/L2c_Ohms_Law_PhET_Take2 (1).html": "48e12e89b4377bae06c64543bc687068c9c9fab44aeb8df5ad5492237aa63098",
         "5_6 Local Choice/Rivers/L1b_Your_River_Your_Home.html": "0214768965079f1687ab605f90f41489223201cea3d79b5301ecf99f1641c573",
         "Art/BUILD_BRONZE_W1-W7_2026-27/BUILD_Art_Bronze_W1_What_Getting_Better_Would_Look_Like.html": "b6d37613e4ec6e4f5a763b19a3038624cb704a91f24c444c6a790b83de7230a6",
@@ -3706,7 +3706,8 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # Re-cut 2026-11-10 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 511cdc84, the merge of Site #628 (admission of the staff pages from Lessons #839: the grouped tools page, the tracker buttons, quick capture and lesson extras).
 # Re-cut 2026-11-10 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 5c7fa466, the merge of Site #629 (admission of the round-two staff pages from Lessons #841: tracker, tools page, class names and missed-last-week take new built digests; retrieval builder and coverage map arrive).
 # Re-cut 2026-11-10 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 9338868c, the merge of Site #630 (admission of quick capture v2 and the class names note carried by this same change).
-    "lessons": "d4a899acea3f5bacd968cf6795d2b309e15e20c5ff0f6742263ef10626bcff54",
+# Re-cut 2026-11-10 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 3ee9d28f, the merge of Site #631 (admission of the ten corrected class tools pages); no other line of the caller changes.
+    "lessons": "3071892cd0806f27bfec401bd40416066de4f34dd6acfc7cadbddd1acd0e569e",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.

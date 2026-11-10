@@ -34,7 +34,7 @@ html, body {
   color: var(--ink);
   font: 17px/1.45 "Segoe UI", system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 header {
   background: var(--navy);
@@ -267,6 +267,15 @@ footer {
   margin-top: 16px;
   padding-top: 12px;
 }
+@media print {
+  .noprint, .private-tag, header .btn, .tabs, .action-row, .filter-row, details {
+    display: none !important;
+  }
+  body {
+    background: #ffffff;
+    color: #000000;
+  }
+}
 </style>
 </head>
 <body>
@@ -276,37 +285,31 @@ footer {
       <h1>Coverage map · Exam science (LAUNCH)</h1>
       <p class="sub" id="autoDateBanner">Calculating date automatically…</p>
     </div>
-    <a class="btn" href="My_tools.html">My tools</a>
+    <a class="btn noprint" href="My_tools.html">My tools</a>
   </div>
 </header>
 <main>
   <p id="statusBanner" role="status" aria-live="polite" hidden></p>
 
-  <nav class="tabs" role="tablist" aria-label="Coverage map views">
+  <nav class="tabs noprint" role="tablist" aria-label="Coverage map views">
     <button id="tabBtnSpec" role="tab" aria-selected="true" aria-controls="panelSpec" data-tab="spec" type="button">Spec points</button>
-    <button id="tabBtnPupils" role="tab" aria-selected="false" aria-controls="panelPupils" data-tab="pupils" type="button">By pupil (1–12)</button>
+    <button id="tabBtnPupils" role="tab" aria-selected="false" aria-controls="panelPupils" data-tab="pupils" type="button">By pupil</button>
     <button id="tabBtnGaps" role="tab" aria-selected="false" aria-controls="panelGaps" data-tab="gaps" type="button">Gaps &amp; files</button>
   </nav>
-
-  <section class="card" aria-label="Summary and exports">
-    <div class="stats" id="summaryStats"></div>
-    <div class="action-row">
-      <button type="button" id="btnExportCsv" class="primary">Export coverage.csv</button>
-      <button type="button" id="btnExportGaps">Export gaps.txt</button>
-      <label class="btn" for="fileTallyInput">Load tally / tracker file</label>
-      <input id="fileTallyInput" type="file" accept=".csv,.json,text/csv,application/json">
-    </div>
-    <details>
-      <summary>Automatic date &amp; school week view</summary>
-      <p class="hint">Date is calculated automatically from this device's clock and the Autumn 2 timetable (Week 1 Monday: 02 Nov 2026). Use the buttons below to preview coverage at the end of any school week without typing dates.</p>
-      <div class="filter-row" id="weekPresetRow"></div>
-    </details>
-  </section>
 
   <section id="panelSpec" role="tabpanel" aria-labelledby="tabBtnSpec">
     <div class="card">
       <h2>Specification points</h2>
-      <div class="filter-row" id="specFilterRow">
+      <div class="stats" id="summaryStats"></div>
+      <div class="action-row noprint">
+        <button type="button" id="btnExportCsv" class="primary">Export coverage.csv</button>
+      </div>
+      <details class="noprint">
+        <summary>Automatic date &amp; school week view</summary>
+        <p class="hint">Date is calculated automatically from this device's clock and the Autumn 2 timetable (Week 1 Monday: 02 Nov 2026). Use the buttons below to preview coverage at the end of any school week without typing dates.</p>
+        <div class="filter-row" id="weekPresetRow"></div>
+      </details>
+      <div class="filter-row noprint" id="specFilterRow">
         <button type="button" data-filter="all" aria-pressed="true">All points</button>
         <button type="button" data-filter="taught" aria-pressed="false">Taught</button>
         <button type="button" data-filter="partly" aria-pressed="false">Partly</button>
@@ -320,7 +323,12 @@ footer {
     <div class="card">
       <h2>Missed specification points by pupil</h2>
       <p class="hint">Reads <code>tally_record.csv</code> and local device storage (<code>mbm_exit_tally_v1</code>, <code>mbm_catchup_tracker_v1</code>, <code>mbm_pupil_key_v1</code>). Screen labels stay on this device only; every copied list and exported file uses <b>Pupil N</b> only.</p>
-      <div class="filter-row">
+      <div class="action-row noprint">
+        <label for="showTags" style="display:inline-flex;align-items:center;gap:8px;font-weight:600">Show: <select id="showTags"><option value="initials">Initials</option><option value="first">First name</option><option value="number">Number</option></select></label>
+        <label class="btn" for="fileTallyInput">Load tally / tracker file</label>
+        <input id="fileTallyInput" type="file" accept=".csv,.json,text/csv,application/json">
+      </div>
+      <div class="filter-row noprint">
         <button type="button" id="btnFilterLaunchPupils" aria-pressed="true">Exam science group · LAUNCH (Pupil 2, 6, 10)</button>
         <button type="button" id="btnFilterAllPupils" aria-pressed="false">All pupils (Pupil 1 to Pupil 12)</button>
       </div>
@@ -331,7 +339,8 @@ footer {
   <section id="panelGaps" role="tabpanel" aria-labelledby="tabBtnGaps" hidden>
     <div class="card">
       <h2>Gaps &amp; scheme sources</h2>
-      <div class="action-row">
+      <div class="action-row noprint">
+        <button type="button" id="btnExportGaps" class="primary">Export gaps.txt</button>
         <button type="button" id="btnCopyGaps">Copy gaps report</button>
       </div>
       <div id="gapsContent"></div>
@@ -409,6 +418,129 @@ footer {
   // Merge embedded absences with localStorage exit tally and catch-up tracker
   let pupilKey = safeReadStorage(KEYS.key, {});
   let customAbsences = safeReadStorage(KEYS.covAbsences, {});
+  const SAFE_WORDS = new Set(['BUILD','GROW','LAUNCH','ALL','SCIENCE','HUMANITIES','CAREERS','VOCATIONAL','RE','ICT','DT','RSHE','PSHE','RSE','CREATIVE','ARTS','COMMUNITY','PROJECTS','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','PUPIL','WEEK','LESSON']);
+
+  function norm(s) {
+    return String(s || '').trim().replace(/\s+/g, ' ').toLocaleLowerCase('en-GB');
+  }
+  function words(s) {
+    return String(s || '').trim().split(/\s+/).filter(Boolean);
+  }
+
+  function combinedPupilKey() {
+    const out = {};
+    const rawKey = safeReadStorage(KEYS.key, {});
+    Object.entries(rawKey).forEach(([k, v]) => {
+      const m = String(k).match(/^(?:Pupil\s*|P)?(\d{1,2})$/i);
+      if (m && +m[1] >= 1 && +m[1] <= 20 && typeof v === 'string' && v.trim()) {
+        out[+m[1]] = v.trim();
+      }
+    });
+    try {
+      const cRaw = localStorage.getItem('mbm_class_names_v1') || '';
+      if (cRaw) {
+        let lines = [];
+        try {
+          const parsed = JSON.parse(cRaw);
+          if (Array.isArray(parsed)) lines = parsed;
+          else if (typeof parsed === 'string') lines = parsed.split(/[\r\n]+/);
+        } catch (e) {
+          lines = cRaw.split(/[\r\n]+/);
+        }
+        lines.map(s => String(s || '').trim()).filter(Boolean).forEach((lbl, idx) => {
+          const n = idx + 1;
+          if (n >= 1 && n <= 20 && !out[n] && !/^(?:Pupil\s*|P)?\d+$/i.test(lbl)) {
+            out[n] = lbl;
+          }
+        });
+      }
+    } catch (e) {}
+    const tr = safeReadStorage(KEYS.tracker, {});
+    if (tr && tr.pupils && typeof tr.pupils === 'object') {
+      const all = [...(tr.pupils.BUILD || []), ...(tr.pupils.GROW || []), ...(tr.pupils.LAUNCH || [])];
+      const defOrder = [4, 7, 9, 12, 1, 3, 5, 8, 11, 2, 6, 10];
+      const known = new Set(Object.values(out).map(norm));
+      all.forEach((raw, idx) => {
+        const lbl = String(raw || '').trim();
+        if (!lbl || /^(?:Pupil\s*|P)?\d+$/i.test(lbl) || known.has(norm(lbl))) return;
+        let slot = (all.length === 12 && defOrder[idx] && !out[defOrder[idx]]) ? defOrder[idx] : (idx + 1);
+        while (slot <= 20 && out[slot]) slot++;
+        if (slot >= 1 && slot <= 20) {
+          out[slot] = lbl;
+          known.add(norm(lbl));
+        }
+      });
+    }
+    return out;
+  }
+
+  function pupilProfile() {
+    try {
+      const v = JSON.parse(localStorage.getItem('mbm_pupil_profile_v1') || '{}');
+      return v && v.version === 1 ? v : { version: 1, show: 'initials', pupils: {} };
+    } catch (e) {
+      return { version: 1, show: 'initials', pupils: {} };
+    }
+  }
+
+  function setShow(mode) {
+    const p = pupilProfile();
+    p.show = mode;
+    try {
+      localStorage.setItem('mbm_pupil_profile_v1', JSON.stringify(p));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function pupilTag(n, form) {
+    const key = combinedPupilKey();
+    const mode = form || pupilProfile().show || 'initials';
+    const label = String(key[n] || '').trim();
+    if (!label || mode === 'number') return 'P' + n;
+    if (mode === 'first') return words(label)[0];
+    const base = s => words(s).map(w => Array.from(w)[0]).join('').toLocaleUpperCase('en-GB').slice(0, 3);
+    const b = base(label);
+    const peers = Object.keys(key).filter(k => String(key[k] || '').trim() && base(key[k]) === b);
+    let extra = 0;
+    const tag = (k, x) => {
+      const w = words(key[k]);
+      const last = Array.from(w[w.length - 1].toLocaleUpperCase('en-GB'));
+      return b + last.slice(1, 1 + x).join('');
+    };
+    const max = Math.max(0, ...peers.map(k => {
+      const w = words(key[k]);
+      return Array.from(w[w.length - 1]).length;
+    }));
+    while (extra < max && peers.some(k => k !== String(n) && tag(k, extra) === tag(String(n), extra))) extra++;
+    let t = tag(String(n), extra);
+    if (peers.some(k => k !== String(n) && tag(k, extra) === t)) t += '·' + n;
+    return t;
+  }
+
+  function resolvePupilNumber(value) {
+    const m = String(value || '').trim().match(/^(?:Pupil\s*|P)?(\d{1,2})$/i);
+    if (m) return Number(m[1]);
+    const target = norm(value);
+    if (!target) return 0;
+    const key = combinedPupilKey();
+    const hit = Object.keys(key).find(k => norm(key[k]) === target);
+    if (hit) return Number(hit);
+    const firstWord = words(target)[0];
+    const firstHits = Object.keys(key).filter(k => words(norm(key[k]))[0] === firstWord);
+    if (firstHits.length === 1) return Number(firstHits[0]);
+    const tr = safeReadStorage(KEYS.tracker, {});
+    if (tr && tr.pupils && typeof tr.pupils === 'object') {
+      const all = [...(tr.pupils.BUILD || []), ...(tr.pupils.GROW || []), ...(tr.pupils.LAUNCH || [])];
+      const idx = all.findIndex(s => norm(s) === target);
+      if (idx >= 0) {
+        const defOrder = [4, 7, 9, 12, 1, 3, 5, 8, 11, 2, 6, 10];
+        return all.length === 12 && defOrder[idx] ? defOrder[idx] : (idx + 1);
+      }
+    }
+    return 0;
+  }
 
   function readExtraNames() {
     const out = [];
@@ -438,28 +570,94 @@ footer {
   function redactNote(text) {
     let out = String(text || '');
     if (!out) return '';
-    const dict = new Map();
-    Object.entries(pupilKey).forEach(([k, v]) => {
-      const m = String(k).match(/(\d{1,2})/);
+    const pairs = [];
+    const key = combinedPupilKey();
+    Object.entries(key).forEach(([k, v]) => {
       const lbl = String(v || '').trim();
-      if (m && lbl) dict.set(lbl.toLowerCase(), 'Pupil ' + m[1]);
+      if (!lbl) return;
+      const rep = 'Pupil ' + k;
+      pairs.push([lbl, rep, false]);
+      words(lbl).forEach(w => {
+        const cw = w.replace(/^[^A-Za-zÀ-ɏ]+|[^A-Za-zÀ-ɏ]+$/g, '');
+        if (cw.length >= 2 && !SAFE_WORDS.has(cw.toUpperCase())) pairs.push([cw, rep, false]);
+      });
+      const ini = pupilTag(k, 'initials');
+      if (ini && ini.length >= 2 && !/^P\d+$/i.test(ini) && !SAFE_WORDS.has(ini.toUpperCase())) {
+        pairs.push([ini, rep, true]);
+      }
     });
     readExtraNames().forEach(w => {
-      const k = w.toLowerCase();
-      if (k && !dict.has(k)) dict.set(k, '[name]');
+      const cw = String(w || '').trim();
+      if (cw.length >= 2 && !SAFE_WORDS.has(cw.toUpperCase()) && !pairs.some(p => norm(p[0]) === norm(cw))) {
+        pairs.push([cw, '[name]', false]);
+      }
     });
-    const terms = [...dict.keys()].sort((a, b) => b.length - a.length);
-    if (!terms.length) return out;
-    const re = new RegExp('(?<![A-Za-z0-9])(' + terms.map(escapeRegExp).join('|') + ')(?:[\u0027\u2019]s)?(?![A-Za-z0-9])', 'gi');
-    return out.replace(re, (_, matched) => dict.get(matched.toLowerCase()) || '[name]');
+    pairs.sort((a, b) => b[0].length - a[0].length);
+    const slots = [];
+    pairs.forEach(([label, rep, caseSens]) => {
+      const re = new RegExp('(?<![A-Za-zÀ-ɏ0-9_])(' + escapeRegExp(label) + ')(?:[\u0027\u2019]s)?(?![A-Za-zÀ-ɏ0-9_])', caseSens ? 'g' : 'gi');
+      out = out.replace(re, () => {
+        const idx = slots.push(rep) - 1;
+        return '\u0001' + idx + '\u0002';
+      });
+    });
+    return out.replace(/\u0001(\d+)\u0002/g, (_, i) => slots[Number(i)]);
   }
 
-  function pupilScreenName(n) {
-    const lbl = pupilKey[n] || pupilKey['Pupil ' + n];
-    return lbl ? ('Pupil ' + n + ' · ' + String(lbl)) : ('Pupil ' + n);
+  function pupilHeadingNode(n) {
+    const h3 = el('h3', {});
+    h3.append(el('span', {}, 'Pupil ' + n));
+    const tag = el('strong', { class: 'private-tag noprint' }, ' · ' + pupilTag(n));
+    h3.append(tag);
+    return h3;
+  }
+
+  function maxActivePupil() {
+    let max = 12;
+    const key = combinedPupilKey();
+    Object.keys(key).forEach(k => { if (+k > max && +k <= 20) max = +k; });
+    const prof = pupilProfile();
+    if (prof && prof.pupils) {
+      Object.keys(prof.pupils).forEach(k => { if (+k > max && +k <= 20) max = +k; });
+    }
+    Object.keys(customAbsences || {}).forEach(k => { if (+k > max && +k <= 20) max = +k; });
+    const tallies = safeReadStorage(KEYS.tally, {});
+    Object.keys(tallies).forEach(k => {
+      const p = k.split('|');
+      if (p.length === 4 && +p[3] > max && +p[3] <= 20) max = +p[3];
+    });
+    return Math.min(20, Math.max(12, max));
+  }
+
+  function launchPupilNumbers() {
+    const set = new Set(DATA.groups.LAUNCH || [2, 6, 10]);
+    const tr = safeReadStorage(KEYS.tracker, {});
+    if (tr && tr.pupils && Array.isArray(tr.pupils.LAUNCH)) {
+      tr.pupils.LAUNCH.forEach(s => {
+        const num = resolvePupilNumber(s);
+        if (num >= 1 && num <= 20) set.add(num);
+      });
+    }
+    const max = maxActivePupil();
+    for (let n = 13; n <= max; n++) {
+      let inOther = false;
+      if (tr && tr.pupils) {
+        const bList = (tr.pupils.BUILD || []).map(resolvePupilNumber);
+        const gList = (tr.pupils.GROW || []).map(resolvePupilNumber);
+        if (bList.includes(n) || gList.includes(n)) inOther = true;
+      }
+      if (!inOther) set.add(n);
+    }
+    return [...set].sort((a, b) => a - b);
   }
 
   function pupilGroup(n) {
+    const tr = safeReadStorage(KEYS.tracker, {});
+    if (tr && tr.pupils && typeof tr.pupils === 'object') {
+      for (const grp of ['BUILD', 'GROW', 'LAUNCH']) {
+        if ((tr.pupils[grp] || []).some(s => resolvePupilNumber(s) === Number(n))) return grp;
+      }
+    }
     for (const [grp, list] of Object.entries(DATA.groups)) {
       if (list.includes(Number(n))) return grp;
     }
@@ -520,28 +718,40 @@ footer {
       }
     });
 
-    // Read mbm_catchup_tracker_v1 from Catch_up_Tracker.html
+    // Read mbm_catchup_tracker_v1 from Catch_up_Tracker.html (4-part or 6-part keys)
     const tracker = safeReadStorage(KEYS.tracker, {});
     const marks = (tracker && tracker.marks && typeof tracker.marks === 'object') ? tracker.marks : {};
     Object.entries(marks).forEach(([k, rec]) => {
       if (!rec || typeof rec !== 'object') return;
       const parts = k.split('|');
+      let wStr = '', dName = '', pStr = '', pathStr = '', subjStr = '', pupStr = '';
       if (parts.length >= 6) {
-        const [wStr, dName, pStr, pathStr, subjStr, pupStr] = parts;
-        if (pathStr === 'LAUNCH' && subjStr === 'Science' && Number(pupStr) === Number(n)) {
-          const lnum = Object.keys(SLOTS).find(
-            ln => SLOTS[ln].day === dName && SLOTS[ln].period === Number(pStr)
-          );
-          if (lnum) {
-            const code = 'SCI_LAUNCH_A2_W' + pad(Number(wStr)) + '_L' + lnum;
-            if ((rec.st === 'missed' || rec.state === 'missed') && rec.cst !== 'done' && !rec.done) {
-              missed.set(code, {
-                code,
-                note: rec.note || '',
-                source: 'Catch-up tracker',
-                status: 'Needs catch-up'
-              });
-            }
+        [wStr, dName, pStr, pathStr, subjStr, pupStr] = parts;
+      } else if (parts.length === 4) {
+        [wStr, dName, pStr, pupStr] = parts;
+        pathStr = rec.path || '';
+        subjStr = rec.subj || '';
+      } else {
+        return;
+      }
+      const normPath = pathStr === 'SUMMIT' ? 'LAUNCH' : pathStr;
+      if (normPath === 'LAUNCH' && String(subjStr).toLowerCase() === 'science' && resolvePupilNumber(pupStr) === Number(n)) {
+        const lnum = Object.keys(SLOTS).find(
+          ln => SLOTS[ln].day === dName && SLOTS[ln].period === Number(pStr)
+        ) || (rec.lesson >= 1 && rec.lesson <= 3 ? rec.lesson : null);
+        const wNum = Number(wStr);
+        if (lnum && wNum >= 1 && wNum <= 7) {
+          const code = 'SCI_LAUNCH_A2_W' + pad(wNum) + '_L' + lnum;
+          const st = rec.st || rec.state || (rec.done ? 'done' : 'missed');
+          if (st !== 'done' && rec.cst !== 'done' && !rec.done) {
+            missed.set(code, {
+              code,
+              note: rec.note || '',
+              source: 'Catch-up tracker',
+              status: 'Needs catch-up'
+            });
+          } else if (st === 'done' || rec.cst === 'done' || rec.done) {
+            missed.delete(code);
           }
         }
       }
@@ -824,12 +1034,18 @@ footer {
       specBox.append(card);
     });
 
-    // 3. Pupil cards (Pupil 1 to Pupil 12)
+    // 3. Pupil cards (Pupil 1 to Pupil N)
     const pupilBox = $('pupilList');
     pupilBox.replaceChildren();
-    const pupilOrder = showAllPupils
-      ? [2, 6, 10, 1, 3, 4, 5, 7, 8, 9, 11, 12]
-      : [2, 6, 10];
+    const launchNums = launchPupilNumbers();
+    const maxP = maxActivePupil();
+    const allNums = [...launchNums];
+    for (let i = 1; i <= maxP; i++) {
+      if (!allNums.includes(i)) allNums.push(i);
+    }
+    $('btnFilterLaunchPupils').textContent = 'Exam science group · LAUNCH (Pupil ' + launchNums.join(', ') + ')';
+    $('btnFilterAllPupils').textContent = 'All pupils (Pupil 1 to Pupil ' + maxP + ')';
+    const pupilOrder = showAllPupils ? allNums : launchNums;
 
     pupilOrder.forEach(n => {
       const missedMap = collectAbsencesForPupil(n);
@@ -837,7 +1053,7 @@ footer {
       const card = el('article', { class: 'card pupil-card' + (missedCodes.length ? ' has-missed' : ''), 'data-pupil': 'Pupil ' + n });
       const head = el('div', { class: 'spec-head' });
       head.append(
-        el('h3', {}, pupilScreenName(n)),
+        pupilHeadingNode(n),
         el('span', { class: 'badge ' + (missedCodes.length ? 'partly' : 'taught') },
            pupilGroup(n) + ' · ' + (missedCodes.length ? (missedCodes.length + ' lesson(s) missed') : 'No missed lessons'))
       );
@@ -992,6 +1208,12 @@ footer {
     return out;
   }
 
+  $('showTags').value = pupilProfile().show || 'initials';
+  $('showTags').onchange = () => {
+    setShow($('showTags').value);
+    renderAll();
+  };
+
   $('fileTallyInput').onchange = async e => {
     const f = e.target.files[0];
     e.target.value = '';
@@ -1003,15 +1225,28 @@ footer {
         const data = JSON.parse(raw);
         const marks = data.marks || data;
         Object.entries(marks).forEach(([k, v]) => {
+          if (!v || typeof v !== 'object') return;
           const parts = k.split('|');
-          if (parts.length >= 6 && parts[3] === 'LAUNCH' && parts[4] === 'Science') {
-            const n = Number(parts[5]);
-            const w = Number(parts[0]);
-            const lnum = Object.keys(SLOTS).find(ln => SLOTS[ln].day === parts[1] && SLOTS[ln].period === Number(parts[2])) || 1;
+          let wStr = '', dName = '', pStr = '', pathStr = '', subjStr = '', pupStr = '';
+          if (parts.length >= 6) {
+            [wStr, dName, pStr, pathStr, subjStr, pupStr] = parts;
+          } else if (parts.length === 4) {
+            [wStr, dName, pStr, pupStr] = parts;
+            pathStr = v.path || '';
+            subjStr = v.subj || '';
+          } else {
+            return;
+          }
+          const normPath = pathStr === 'SUMMIT' ? 'LAUNCH' : pathStr;
+          const n = resolvePupilNumber(pupStr);
+          const w = Number(wStr);
+          if (normPath === 'LAUNCH' && String(subjStr).toLowerCase() === 'science' && n >= 1 && n <= 20 && w >= 1 && w <= 7) {
+            const lnum = Object.keys(SLOTS).find(ln => SLOTS[ln].day === dName && SLOTS[ln].period === Number(pStr)) || (v.lesson >= 1 && v.lesson <= 3 ? v.lesson : 1);
             const code = 'SCI_LAUNCH_A2_W' + pad(w) + '_L' + lnum;
-            if ((v.st === 'missed' || v.state === 'missed') && v.cst !== 'done') {
+            const st = v.st || v.state || (v.done ? 'done' : 'missed');
+            if (st !== 'done' && v.cst !== 'done' && !v.done) {
               if (!customAbsences[String(n)]) customAbsences[String(n)] = {};
-              customAbsences[String(n)][code] = { code, note: v.note || '', source: f.name, status: 'Needs catch-up' };
+              customAbsences[String(n)][code] = { code, note: redactNote(v.note || ''), source: f.name, status: 'Needs catch-up' };
               count++;
             }
           }
@@ -1024,10 +1259,8 @@ footer {
             const cols = parseCsvLine(lines[i]);
             const row = {};
             headers.forEach((h, idx) => row[h] = cols[idx] || '');
-            const pupMatch = String(row.pupil || '').match(/(\d{1,2})/);
-            if (!pupMatch) continue;
-            const n = Number(pupMatch[1]);
-            if (n < 1 || n > 12) continue;
+            const n = resolvePupilNumber(row.pupil || '');
+            if (n < 1 || n > 20) continue;
             let code = String(row.code || row.lesson || '').toUpperCase();
             if (!code.startsWith('SCI_LAUNCH_') && String(row.pathway || '').toUpperCase() === 'LAUNCH' && String(row.subject || '').toLowerCase() === 'science') {
               const w = Number((String(row.week || '').match(/(\d)/) || [])[1] || 0);
@@ -1038,7 +1271,7 @@ footer {
             const st = String(row.state || row.status || '').toLowerCase();
             if (!customAbsences[String(n)]) customAbsences[String(n)] = {};
             if (st === 'absent' || st === 'needs catch-up' || st === 'partly done' || st === 'more needed' || st === 'missed') {
-              customAbsences[String(n)][code] = { code, note: row.note || '', source: f.name, status: row.state || row.status || 'Absent' };
+              customAbsences[String(n)][code] = { code, note: redactNote(row.note || ''), source: f.name, status: row.state || row.status || 'Absent' };
               count++;
             } else if (['got', 'nearly', 'again', 'done'].includes(st)) {
               customAbsences[String(n)][code] = { cleared: true };
@@ -1057,6 +1290,7 @@ footer {
   window.addEventListener('storage', () => {
     pupilKey = safeReadStorage(KEYS.key, {});
     customAbsences = safeReadStorage(KEYS.covAbsences, {});
+    $('showTags').value = pupilProfile().show || 'initials';
     renderAll();
   });
 
