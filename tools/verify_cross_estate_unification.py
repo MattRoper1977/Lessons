@@ -133,7 +133,7 @@ CATALOGUE_PINS = {
         "tools/catalogue/build_lesson_order.py": "67358d5f5852f2085e3fda5baaa53328ddb176fe0bc7545b161172b79049ed14",
         "tools/ux2/hub_gates.mjs": "3d3120df94b1789041370c4045fbcc983635af0b30a0705447f18371bed98944",
         "index.html": "d5c71fc47cf00bb42c01d0e7d949224587d2e22405e1ec160404572db83ef396",
-        "Science/index.html": "ea568633299e42a45340143d5eeaab2de179e95a04ed43d5515ae870dbb3344a",
+        "Science/index.html": "9c2652675a1388a1ba2bd6fdd24391f971dab3cf42d5937c2228c5be53ee7dc8",  # Re-cut 2026-11-10 (ruling thread, site slimming): 56 Science pack ZIPs held out of the publication under um-4 (a); their links now point at the pinned archive download. No pack byte changed.
         "Humanities/index.html": "7af3bee2b76bfe3b8e64277252d7f024fe16ca831fc18b25ae50c204bf91b5cd",
         "humanities.html": "bfb8f9383680b9c6d849931652db29289b92d5ed18c5f9616cfc0ede0614fa5c",
         "pack.html": "42935782c353525d28b9263a90a8c48e4b5ca764226444edfa68d6f664862be1",
@@ -159,8 +159,8 @@ CATALOGUE_PINS = {
         "tools/catalogue/build_catalogue.py": "249e82b795e0fa5f1eaeb7afd00883a963d63742b50b783fa88f808737ab230d",
         "tools/catalogue/build_science_shelf.py": "396b6aeb7cb3cabe037b7af27877ae7a090e5aa1bce284409e400549d5204c24",
         "tools/catalogue/build_humanities_shelf.py": "0d58e1dd47c9c806b7fefc42437b47947853760e785eb3ed34b35148eea874cc",
-        "tools/catalogue/build_science_hub.py": "ad43fcd8ee20d3ac66c3724432b5077bd3e4140893a9ffcb4509542d8e9d6a5a",
-        "assets/catalogue/science-hub-bindings.json": "510e1a73fbb2f914d6373442300a3671b4a008c664582e3abd22517fdebf27e2",
+        "tools/catalogue/build_science_hub.py": "ab99a487078a6cf20ce6d1384d901ce4eb442645ece761ebfaaa5d0d2530d516",  # Re-cut 2026-11-10 (ruling thread, site slimming): 56 Science pack ZIPs held out of the publication under um-4 (a); their links now point at the pinned archive download. No pack byte changed.
+        "assets/catalogue/science-hub-bindings.json": "e56372cdb2d2efeebd83f5343c553ea3c5bcd081b39eb3a803d99833846a1bef",  # Re-cut 2026-11-10 (ruling thread, site slimming): 56 Science pack ZIPs held out of the publication under um-4 (a); their links now point at the pinned archive download. No pack byte changed.
         "tools/catalogue/check_catalogue_static.py": "5eb7b3ebd11fbfceb9f8c812ec8b7dc5a02b3b162c0f78982f4e7afb6f4eb589",
         "tools/catalogue/check_catalogue_dom.cjs": "877ab8515ba5cbcbd8be32c52cfed067707b675d239250bdf2a68134382798c8",
         "tools/catalogue/verify_education_navigation.cjs": "0479adfa36d2af88f61e51fc76a3b8b2c863648d3399048f053fd1be38607e55",
@@ -982,7 +982,7 @@ CATALOGUE_PINS = {
         "Science/Teaching_Packs/GROW/lessons/W7B/GROW_Science_Autumn1_W7B_The_Moon_Teacher.docx": "1d026a3de59ada343c814e3ed895368d5aa9292244ca569a66ba7a53f3cf126c",
         "Science/Teaching_Packs/GROW/lessons/W7B/GROW_Science_Autumn1_W7B_The_Moon_Teacher.pdf": "ff0c970316fa22f34c67fe22f8b0365b3bba423fef0aefb0e63cbc5a01070f19",
         "Science/Teaching_Packs/GROW/lessons/W7B/START_HERE.txt": "10d6ba34be76c3a7d82a346e83a65c86612ecd95505e63fc797a091bed945ee6",
-        "Science/Teaching_Packs/index.html": "7cd0206831e3cb49209eb97471344a04220efb527914f27532deb20be93e8ce8",
+        "Science/Teaching_Packs/index.html": "d87a19266b31296e1066682d76b3d3eaa398a0f92253786dbae2cf632f5fac44",  # Re-cut 2026-11-10 (ruling thread, site slimming): 56 Science pack ZIPs held out of the publication under um-4 (a); their links now point at the pinned archive download. No pack byte changed.
         "Science/Teaching_Packs/packs.css": "70ca73b323e5cabf05b1f5f9f8107694cfcecf4ddf8043f342049ee4c797ce59",
         "tools/science_teaching_packs/BUILD_QA.json": "d5ee55a25c15ca86dbd6324b417c70d672e1d0c19a1fa6462f35cc620927a2ff",
         "tools/science_teaching_packs/BUILD_SOURCE_PROVENANCE.json": "a61bafa6e47477ba5f3d6428908aab7cdaca979a947ef71880160dfc0b8f09c6",
@@ -3991,7 +3991,7 @@ M1_RENAME_EXACT_SHA256 = {
     "tools/build_resources/admit_w8a_chassis.py": "69ec305cb48ff64f232be7ee67dbd9bef8be789271d22a8b0e78bd97805d7c2c",
     "tools/build_resources/author_w8a_chassis.py": "88a3cefc8e7a6930d65afbe22d818008c9838347681622e7fe16c381e410acf4",
     "tools/build_staff_pack.py": "2e7d2063e10018004aad5c4439584377ef8316d5c48ba52d8280cf9c6a0d1cae",
-    "tools/catalogue/PUBLICATION_ARCHIVE.json": "54f917e15f56f3988fed321e5696bc61ecaa234123599e539abf3863f909a729",
+    "tools/catalogue/PUBLICATION_ARCHIVE.json": "d92137458ae614ee4d16e225f50d8240ef4484f8a9f05f4933e4f5313f8b1a14",  # Re-cut 2026-11-10 (ruling thread, site slimming): 56 Science pack ZIPs held out of the publication under um-4 (a); their links now point at the pinned archive download. No pack byte changed.
     "tools/catalogue/prepare_dy4_bind.py": "1dc4bccf7d53f042beaa6d42af638e25a6a17e121c309660ae1b1afcc19e273d",
     "tools/catalogue/test_build_catalogue_merge.py": "a059308af1159a27fcd66c88b3fd164122d918f82b3eb63ae22402ba9a5f7285",
     "tools/chassis_census.py": "6f32664de6cc0ed489b1298c552cd98c2b9adc5ec22467c48655af1cd55c932f",
