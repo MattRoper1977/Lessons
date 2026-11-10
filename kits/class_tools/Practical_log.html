@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
+<meta name="author" content="Lesson resource">
+<meta name="creator" content="Lesson resource">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; img-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>Practical log</title>
 <style>
@@ -66,6 +68,7 @@ td,th{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-alig
   <label class="skill-check"><input type="checkbox" class="sk" value="Explaining"> Explaining</label>
 </div>
 <h2>Who did it</h2>
+<p id="prefillPrompt" class="note warn noprint" role="status" hidden></p>
 <p class="row" style="margin:6px 0"><button type="button" class="ghost" id="allDid">Everyone: Did it</button></p>
 <table><tbody id="pupilRows"></tbody></table>
 <div class="field" style="margin-top:10px"><label for="note">Note (no names)</label><input type="text" id="note" style="width:100%"></div>
@@ -161,6 +164,13 @@ function activePupilCount(){
   var m=String(r&&r.pupil||"").match(/(\d{1,2})/);
   if(m&&+m[1]>max&&+m[1]<=20)max=+m[1];
  });
+ try{
+  var hp=new URLSearchParams((location.hash||"").replace(/^#/,""));
+  (hp.get("results")||"").split(",").forEach(function(item){
+   var m=item.match(/^(\d{1,2}):/);
+   if(m&&+m[1]>max&&+m[1]<=20)max=+m[1];
+  });
+ }catch(e){}
  return Math.min(20,Math.max(12,max));
 }
 
@@ -175,7 +185,7 @@ function redactText(text){
   if(!full)return;
   var rep="Pupil "+n;
   pairs.push([full,rep,false]);
-  full.split(/\s+/).forEach(function(w){
+  full.split(/\s+/).concat(full.split(/[\s\-]+/)).forEach(function(w){
    var cleanW=w.replace(/^[^A-Za-zÀ-ɏ]+|[^A-Za-zÀ-ɏ]+$/g,"");
    if(cleanW.length>=2&&!SAFE_CAP_WORDS[cleanW.toUpperCase()])pairs.push([cleanW,rep,false]);
   });
@@ -313,6 +323,7 @@ $("add").onclick=function(){
   }
  });
  if(!added){say("Choose at least one pupil.","warn");return;}
+ $("prefillPrompt").hidden=true;
  store();draw();
  say("Added "+added+" pupil(s)."+(redactedAny?" Replaced pupil names with Pupil codes.":""),"ok");
 };
@@ -351,8 +362,39 @@ window.addEventListener("storage",function(){
  draw();
 });
 
+function applyHashPrefill(){
+ var rawHash=(location.hash||"").replace(/^#/,"");
+ if(!rawHash)return;
+ var params;
+ try{params=new URLSearchParams(rawHash);}catch(e){return;}
+ if(params.get("from")!=="tally")return;
+ var d=params.get("date")||"";
+ if(/^\d{4}-\d{2}-\d{2}$/.test(d))$("date").value=d;
+ var p=params.get("path")||"";
+ if(["BUILD","GROW","LAUNCH","ALL"].indexOf(p)!==-1)$("path").value=p;
+ if(params.get("subj"))$("subj").value=redactText(params.get("subj"));
+ if(params.get("lesson"))$("lesson").value=redactText(params.get("lesson"));
+ document.querySelectorAll("select[data-p]").forEach(function(s){s.value="";});
+ renderPupilTable();
+ (params.get("results")||"").split(",").forEach(function(item){
+  var m=item.match(/^(\d{1,2}):(Did it|Partly|Watched|Absent)$/);
+  if(!m)return;
+  var n=+m[1];
+  if(n<1||n>20)return;
+  var sel=document.querySelector('select[data-p="Pupil '+n+'"]');
+  if(sel)sel.value=m[2];
+ });
+ var promptText="Pre-filled from exit tally — adjust anyone who watched before tapping Add to list.";
+ $("prefillPrompt").textContent=promptText;
+ $("prefillPrompt").hidden=false;
+ say(promptText,"warn");
+}
+
+window.addEventListener("hashchange",applyHashPrefill);
+
 renderPupilTable();
 draw();
+applyHashPrefill();
 })();
 </script>
 </body>

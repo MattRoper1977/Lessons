@@ -6,6 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="author" content="Lesson resource">
 <meta name="creator" content="Lesson resource">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; img-src data:; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>Coverage map · Exam science (LAUNCH)</title>
 <style>
 :root {
@@ -629,37 +630,63 @@ footer {
     return Math.min(20, Math.max(12, max));
   }
 
-  function launchPupilNumbers() {
-    const set = new Set(DATA.groups.LAUNCH || [2, 6, 10]);
+  function resolvedGroups() {
+    const groups = { BUILD: [], GROW: [], LAUNCH: [] };
+    const assigned = new Set();
     const tr = safeReadStorage(KEYS.tracker, {});
-    if (tr && tr.pupils && Array.isArray(tr.pupils.LAUNCH)) {
-      tr.pupils.LAUNCH.forEach(s => {
-        const num = resolvePupilNumber(s);
-        if (num >= 1 && num <= 20) set.add(num);
+    const prof = pupilProfile();
+    let anyConfigured = false;
+    if (tr && tr.pupils && typeof tr.pupils === 'object') {
+      for (const grp of ['BUILD', 'GROW', 'LAUNCH']) {
+        if (Array.isArray(tr.pupils[grp]) && tr.pupils[grp].length) {
+          anyConfigured = true;
+          tr.pupils[grp].forEach(s => {
+            const num = resolvePupilNumber(s);
+            if (num >= 1 && num <= 20 && !assigned.has(num)) {
+              groups[grp].push(num);
+              assigned.add(num);
+            }
+          });
+        }
+      }
+    }
+    if (prof && prof.pupils && typeof prof.pupils === 'object') {
+      Object.entries(prof.pupils).forEach(([id, info]) => {
+        const num = Number(id);
+        const grp = info && info.group;
+        if (num >= 1 && num <= 20 && ['BUILD', 'GROW', 'LAUNCH'].includes(grp)) {
+          anyConfigured = true;
+          if (!assigned.has(num)) {
+            groups[grp].push(num);
+            assigned.add(num);
+          }
+        }
       });
+    }
+    if (!anyConfigured) {
+      groups.BUILD = [...(DATA.groups.BUILD || [4, 7, 9, 12])];
+      groups.GROW = [...(DATA.groups.GROW || [1, 3, 5, 8, 11])];
+      groups.LAUNCH = [...(DATA.groups.LAUNCH || [2, 6, 10])];
+      [...groups.BUILD, ...groups.GROW, ...groups.LAUNCH].forEach(n => assigned.add(n));
     }
     const max = maxActivePupil();
     for (let n = 13; n <= max; n++) {
-      let inOther = false;
-      if (tr && tr.pupils) {
-        const bList = (tr.pupils.BUILD || []).map(resolvePupilNumber);
-        const gList = (tr.pupils.GROW || []).map(resolvePupilNumber);
-        if (bList.includes(n) || gList.includes(n)) inOther = true;
+      if (!assigned.has(n)) {
+        groups.LAUNCH.push(n);
+        assigned.add(n);
       }
-      if (!inOther) set.add(n);
     }
-    return [...set].sort((a, b) => a - b);
+    return groups;
+  }
+
+  function launchPupilNumbers() {
+    return [...new Set(resolvedGroups().LAUNCH)].sort((a, b) => a - b);
   }
 
   function pupilGroup(n) {
-    const tr = safeReadStorage(KEYS.tracker, {});
-    if (tr && tr.pupils && typeof tr.pupils === 'object') {
-      for (const grp of ['BUILD', 'GROW', 'LAUNCH']) {
-        if ((tr.pupils[grp] || []).some(s => resolvePupilNumber(s) === Number(n))) return grp;
-      }
-    }
-    for (const [grp, list] of Object.entries(DATA.groups)) {
-      if (list.includes(Number(n))) return grp;
+    const groups = resolvedGroups();
+    for (const grp of ['BUILD', 'GROW', 'LAUNCH']) {
+      if (groups[grp].includes(Number(n))) return grp;
     }
     return 'LAUNCH';
   }
@@ -674,20 +701,6 @@ footer {
         source: info.source || 'tally_record.csv',
         status: info.status || 'Absent'
       });
-    });
-
-    const saved = (customAbsences && customAbsences[String(n)]) || {};
-    Object.entries(saved).forEach(([code, info]) => {
-      if (info && info.cleared) {
-        missed.delete(code);
-      } else if (info) {
-        missed.set(code, {
-          code,
-          note: info.note || '',
-          source: info.source || 'Loaded file / page',
-          status: info.status || 'Absent'
-        });
-      }
     });
 
     // Read mbm_exit_tally_v1 from Quick_capture.html
@@ -721,6 +734,7 @@ footer {
     // Read mbm_catchup_tracker_v1 from Catch_up_Tracker.html (4-part or 6-part keys)
     const tracker = safeReadStorage(KEYS.tracker, {});
     const marks = (tracker && tracker.marks && typeof tracker.marks === 'object') ? tracker.marks : {};
+    const openInTracker = new Set();
     Object.entries(marks).forEach(([k, rec]) => {
       if (!rec || typeof rec !== 'object') return;
       const parts = k.split('|');
@@ -744,6 +758,7 @@ footer {
           const code = 'SCI_LAUNCH_A2_W' + pad(wNum) + '_L' + lnum;
           const st = rec.st || rec.state || (rec.done ? 'done' : 'missed');
           if (st !== 'done' && rec.cst !== 'done' && !rec.done) {
+            openInTracker.add(code);
             missed.set(code, {
               code,
               note: rec.note || '',
@@ -754,6 +769,23 @@ footer {
             missed.delete(code);
           }
         }
+      }
+    });
+
+    // Apply mbm_coverage_absences_v1 overrides and Catch-up Tracker Done syncs
+    customAbsences = safeReadStorage(KEYS.covAbsences, {});
+    const saved = (customAbsences && customAbsences[String(n)]) || {};
+    Object.entries(saved).forEach(([code, info]) => {
+      if (info && info.cleared) {
+        if (info.source === 'tracker_sync' && openInTracker.has(code)) return;
+        missed.delete(code);
+      } else if (info) {
+        missed.set(code, {
+          code,
+          note: info.note || '',
+          source: info.source || 'Loaded file / page',
+          status: info.status || 'Absent'
+        });
       }
     });
 
