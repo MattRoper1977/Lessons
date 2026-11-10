@@ -1,0 +1,1067 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="author" content="Lesson resource">
+<meta name="creator" content="Lesson resource">
+<title>Coverage map · Exam science (LAUNCH)</title>
+<style>
+:root {
+  --navy: #0f2a4d;
+  --bg: #f4f6f9;
+  --card: #ffffff;
+  --ink: #14171a;
+  --muted: #3d4650;
+  --line: #c9ced3;
+  --ok-bg: #e6f3e8;
+  --ok-ink: #1d5a2e;
+  --part-bg: #fff4e0;
+  --part-ink: #7c3a0a;
+  --not-bg: #eef2f6;
+  --not-ink: #2c3540;
+  --gap-bg: #fdeaea;
+  --gap-ink: #8a1c1c;
+  --focus: #0b57d0;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 17px/1.45 "Segoe UI", system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+  overflow-wrap: anywhere;
+}
+header {
+  background: var(--navy);
+  color: #ffffff;
+  padding: 14px 16px;
+}
+.head-wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+header h1 {
+  font-size: 22px;
+  margin: 0;
+  line-height: 1.25;
+}
+header .sub {
+  font-size: 14px;
+  opacity: 0.92;
+  margin: 4px 0 0;
+  width: 100%;
+}
+main, footer {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 12px;
+}
+.card {
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+h2 {
+  font-size: 19px;
+  margin: 0 0 8px;
+  color: var(--navy);
+}
+h3 {
+  font-size: 17px;
+  margin: 0 0 6px;
+}
+p {
+  margin: 6px 0;
+}
+.hint {
+  font-size: 15px;
+  color: var(--muted);
+}
+button, label.btn, a.btn, select {
+  font: inherit;
+  font-size: 16px;
+  min-height: 48px;
+  min-width: 48px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 2px solid var(--navy);
+  background: var(--card);
+  color: var(--navy);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  touch-action: manipulation;
+}
+button.primary, label.btn.primary, button[aria-pressed="true"], .tabs button[aria-selected="true"] {
+  background: var(--navy);
+  color: #ffffff;
+}
+button:focus-visible, label.btn:focus-visible, a.btn:focus-visible, select:focus-visible, summary:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+input[type="file"] {
+  display: none;
+}
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.tabs button {
+  padding: 8px 4px;
+  font-size: 15px;
+  text-align: center;
+}
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 10px 0;
+}
+@media (min-width: 560px) {
+  .stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.stat {
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: var(--card);
+}
+.stat b {
+  display: block;
+  font-size: 22px;
+  color: var(--navy);
+}
+.stat span {
+  font-size: 14px;
+  color: var(--muted);
+}
+.filter-row, .action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0;
+}
+.filter-row > *, .action-row > * {
+  flex: 1 1 135px;
+}
+.badge {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  border: 1px solid currentColor;
+}
+.badge.taught {
+  background: var(--ok-bg);
+  color: var(--ok-ink);
+}
+.badge.partly {
+  background: var(--part-bg);
+  color: var(--part-ink);
+}
+.badge.not-yet {
+  background: var(--not-bg);
+  color: var(--not-ink);
+}
+.badge.gap {
+  background: var(--gap-bg);
+  color: var(--gap-ink);
+}
+.spec-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.lesson-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+.pill {
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  font-family: ui-monospace, Consolas, monospace;
+}
+.pill.done {
+  background: var(--ok-bg);
+  color: var(--ok-ink);
+  border-color: var(--ok-ink);
+}
+.pill.missed {
+  background: var(--gap-bg);
+  color: var(--gap-ink);
+  border-color: var(--gap-ink);
+}
+#statusBanner {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 2px solid var(--navy);
+  background: #eef3fa;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.pupil-card {
+  border-left: 6px solid var(--navy);
+}
+.pupil-card.has-missed {
+  border-left-color: var(--part-ink);
+}
+.missed-list {
+  padding-left: 20px;
+  margin: 8px 0;
+}
+.missed-list li {
+  margin: 6px 0;
+}
+details summary {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--navy);
+}
+.toggle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+  gap: 6px;
+  margin-top: 8px;
+}
+.toggle-grid button {
+  font-size: 14px;
+  padding: 6px 8px;
+}
+footer {
+  font-size: 14px;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+  margin-top: 16px;
+  padding-top: 12px;
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="head-wrap">
+    <div>
+      <h1>Coverage map · Exam science (LAUNCH)</h1>
+      <p class="sub" id="autoDateBanner">Calculating date automatically…</p>
+    </div>
+    <a class="btn" href="My_tools.html">My tools</a>
+  </div>
+</header>
+<main>
+  <p id="statusBanner" role="status" aria-live="polite" hidden></p>
+
+  <nav class="tabs" role="tablist" aria-label="Coverage map views">
+    <button id="tabBtnSpec" role="tab" aria-selected="true" aria-controls="panelSpec" data-tab="spec" type="button">Spec points</button>
+    <button id="tabBtnPupils" role="tab" aria-selected="false" aria-controls="panelPupils" data-tab="pupils" type="button">By pupil (1–12)</button>
+    <button id="tabBtnGaps" role="tab" aria-selected="false" aria-controls="panelGaps" data-tab="gaps" type="button">Gaps &amp; files</button>
+  </nav>
+
+  <section class="card" aria-label="Summary and exports">
+    <div class="stats" id="summaryStats"></div>
+    <div class="action-row">
+      <button type="button" id="btnExportCsv" class="primary">Export coverage.csv</button>
+      <button type="button" id="btnExportGaps">Export gaps.txt</button>
+      <label class="btn" for="fileTallyInput">Load tally / tracker file</label>
+      <input id="fileTallyInput" type="file" accept=".csv,.json,text/csv,application/json">
+    </div>
+    <details>
+      <summary>Automatic date &amp; school week view</summary>
+      <p class="hint">Date is calculated automatically from this device's clock and the Autumn 2 timetable (Week 1 Monday: 02 Nov 2026). Use the buttons below to preview coverage at the end of any school week without typing dates.</p>
+      <div class="filter-row" id="weekPresetRow"></div>
+    </details>
+  </section>
+
+  <section id="panelSpec" role="tabpanel" aria-labelledby="tabBtnSpec">
+    <div class="card">
+      <h2>Specification points</h2>
+      <div class="filter-row" id="specFilterRow">
+        <button type="button" data-filter="all" aria-pressed="true">All points</button>
+        <button type="button" data-filter="taught" aria-pressed="false">Taught</button>
+        <button type="button" data-filter="partly" aria-pressed="false">Partly</button>
+        <button type="button" data-filter="not yet" aria-pressed="false">Not yet</button>
+      </div>
+    </div>
+    <div id="specList"></div>
+  </section>
+
+  <section id="panelPupils" role="tabpanel" aria-labelledby="tabBtnPupils" hidden>
+    <div class="card">
+      <h2>Missed specification points by pupil</h2>
+      <p class="hint">Reads <code>tally_record.csv</code> and local device storage (<code>mbm_exit_tally_v1</code>, <code>mbm_catchup_tracker_v1</code>, <code>mbm_pupil_key_v1</code>). Screen labels stay on this device only; every copied list and exported file uses <b>Pupil N</b> only.</p>
+      <div class="filter-row">
+        <button type="button" id="btnFilterLaunchPupils" aria-pressed="true">Exam science group · LAUNCH (Pupil 2, 6, 10)</button>
+        <button type="button" id="btnFilterAllPupils" aria-pressed="false">All pupils (Pupil 1 to Pupil 12)</button>
+      </div>
+    </div>
+    <div id="pupilList"></div>
+  </section>
+
+  <section id="panelGaps" role="tabpanel" aria-labelledby="tabBtnGaps" hidden>
+    <div class="card">
+      <h2>Gaps &amp; scheme sources</h2>
+      <div class="action-row">
+        <button type="button" id="btnCopyGaps">Copy gaps report</button>
+      </div>
+      <div id="gapsContent"></div>
+    </div>
+  </section>
+</main>
+<footer>
+  <p>Made by Matt · Offline coverage map for the exam science group (LAUNCH). Works offline with no external scripts, fonts or images.</p>
+</footer>
+<script id="coverageData" type="application/json">{"termWeek1Monday": "2026-11-02", "generatedDate": "2026-11-10", "groups": {"BUILD": [4, 7, 9, 12], "GROW": [1, 3, 5, 8, 11], "LAUNCH": [2, 6, 10]}, "specPoints": [{"id": "1.1", "code": "1.1 (Aut2 W1 / Aut1 W1)", "topic": "Topic 1 & Topic 2: Cells and control", "term": "Aut2", "weeks": [1], "assess_weeks": [7], "alt_term": "Aut1", "alt_weeks": [1], "alt_assess_weeks": [7], "title": "Explain how sub-cellular structures of eukaryotic cells (nucleus and chromosomes) relate to cell division", "sow_outcome": "Describe mitosis and the cell cycle (animation).", "topic_words": ["cell cycle", "mitosis", "chromosome", "chromosomes", "nucleus", "eukaryotic", "division", "scale"], "teach_codes": ["SCI_LAUNCH_A1_W01_L1", "SCI_LAUNCH_A1_W01_L2", "SCI_LAUNCH_A1_W01_L3", "SCI_LAUNCH_A2_W01_L1", "SCI_LAUNCH_A2_W01_L2", "SCI_LAUNCH_A2_W01_L3"], "candidate_codes": ["SCI_LAUNCH_A1_W01_L1", "SCI_LAUNCH_A1_W01_L2", "SCI_LAUNCH_A1_W01_L3", "SCI_LAUNCH_A2_W01_L1", "SCI_LAUNCH_A2_W01_L2", "SCI_LAUNCH_A2_W01_L3"], "assess_codes": ["SCI_LAUNCH_A1_W07_L1", "SCI_LAUNCH_A1_W07_L2", "SCI_LAUNCH_A1_W07_L3", "SCI_LAUNCH_A2_W07_L1", "SCI_LAUNCH_A2_W07_L2", "SCI_LAUNCH_A2_W07_L3"], "topic_words_matched": true, "not_yet_reason": ""}, {"id": "2.1", "code": "2.1 (Aut2 W1)", "topic": "Topic 2: Cells and control", "term": "Aut2", "weeks": [1], "assess_weeks": [7], "title": "Describe mitosis as part of the cell cycle, including interphase, prophase, metaphase, anaphase, telophase and cytokinesis", "sow_outcome": "Describe mitosis and the cell cycle (animation).", "topic_words": ["mitosis", "cell cycle", "interphase", "prophase", "metaphase", "anaphase", "telophase", "cytokinesis", "sequence"], "teach_codes": ["SCI_LAUNCH_A2_W01_L1", "SCI_LAUNCH_A2_W01_L2", "SCI_LAUNCH_A2_W01_L3"], "candidate_codes": ["SCI_LAUNCH_A2_W01_L1", "SCI_LAUNCH_A2_W01_L2", "SCI_LAUNCH_A2_W01_L3"], "assess_codes": ["SCI_LAUNCH_A2_W07_L1", "SCI_LAUNCH_A2_W07_L2", "SCI_LAUNCH_A2_W07_L3"], "topic_words_matched": true, "not_yet_reason": ""}, {"id": "2.2", "code": "2.2 (Aut2 W1-W2)", "topic": "Topic 2: Cells and control", "term": "Aut2", "weeks": [1, 2], "assess_weeks": [7], "title": "Describe the importance of mitosis in growth, tissue repair and asexual reproduction", "sow_outcome": "Describe mitosis and the cell cycle (animation). / Explain growth and stem cells.", "topic_words": ["mitosis", "growth", "repair", "asexual", "stem"], "teach_codes": ["SCI_LAUNCH_A2_W01_L1", "SCI_LAUNCH_A2_W01_L2", "SCI_LAUNCH_A2_W01_L3", "SCI_LAUNCH_A2_W02_L1", "SCI_LAUNCH_A2_W02_L2", "SCI_LAUNCH_A2_W02_L3"], "candidate_codes": ["SCI_LAUNCH_A2_W01_L1", "SCI_LAUNCH_A2_W01_L2", "SCI_LAUNCH_A2_W01_L3", "SCI_LAUNCH_A2_W02_L1", "SCI_LAUNCH_A2_W02_L2", "SCI_LAUNCH_A2_W02_L3"], "assess_codes": ["SCI_LAUNCH_A2_W07_L1", "SCI_LAUNCH_A2_W07_L2", "SCI_LAUNCH_A2_W07_L3"], "topic_words_matched": true, "not_yet_reason": ""}, {"id": "2.3", "code": "2.3 (Aut2 W1)", "topic": "Topic 2: Cells and control", "term": "Aut2", "weeks": [1], "assess_weeks": [7], "title": "Describe mitosis as producing two daughter cells, each with identical sets of chromosomes in the nucleus to the parent cell", "sow_outcome": "Describe mitosis and the cell cycle (animation).", "topic_words": ["mitosis", "chromosome", "chromosomes", "daughter", "identical", "sets", "repair"], "teach_codes": ["SCI_LAUNCH_A2_W01_L1", "SCI_LAUNCH_A2_W01_L2", "SCI_LAUNCH_A2_W01_L3"], "candidate_codes": ["SCI_LAUNCH_A2_W01_L1", "SCI_LAUNCH_A2_W01_L2", "SCI_LAUNCH_A2_W01_L3"], "assess_codes": ["SCI_LAUNCH_A2_W07_L1", "SCI_LAUNCH_A2_W07_L2", "SCI_LAUNCH_A2_W07_L3"], "topic_words_matched": true, "not_yet_reason": ""}, {"id": "2.4", "code": "2.4 (Topic 2 scheme gap)", "topic": "Topic 2: Cells and control", "term": "Aut2", "weeks": [], "assess_weeks": [], "title": "Describe cancer as the result of changes in cells that lead to uncontrolled cell division", "sow_outcome": "Topic 2 specification range (not scheduled in Autumn 2 weekly lessons)", "topic_words": ["cancer", "uncontrolled", "tumour", "tumor"], "teach_codes": [], "candidate_codes": [], "assess_codes": [], "topic_words_matched": true, "not_yet_reason": "no_file_found"}, {"id": "2.5", "code": "2.5 (Aut2 W2)", "topic": "Topic 2: Cells and control", "term": "Aut2", "weeks": [2], "assess_weeks": [7], "title": "Define growth in organisms as cell division and differentiation in animals, and cell division, elongation and differentiation in plants", "sow_outcome": "Explain growth and stem cells.", "topic_words": ["growth", "differentiation", "elongation", "stem", "specialised", "specialized"], "teach_codes": ["SCI_LAUNCH_A2_W02_L1", "SCI_LAUNCH_A2_W02_L2", "SCI_LAUNCH_A2_W02_L3"], "candidate_codes": ["SCI_LAUNCH_A2_W02_L1", "SCI_LAUNCH_A2_W02_L2", "SCI_LAUNCH_A2_W02_L3"], "assess_codes": ["SCI_LAUNCH_A2_W07_L1", "SCI_LAUNCH_A2_W07_L2", "SCI_LAUNCH_A2_W07_L3"], "topic_words_matched": true, "not_yet_reason": ""}, {"id": "2.6", "code": "2.6 (Aut2 W2)", "topic": "Topic 2: Cells and control", "term": "Aut2", "weeks": [2], "assess_weeks": [7], "title": "Explain the importance of cell differentiation in the development of specialised cells", "sow_outcome": "Explain growth and stem cells.", "topic_words": ["differentiation", "specialised", "specialized", "stem"], "teach_codes": ["SCI_LAUNCH_A2_W02_L1", "SCI_LAUNCH_A2_W02_L2", "SCI_LAUNCH_A2_W02_L3"], "candidate_codes": ["SCI_LAUNCH_A2_W02_L1", "SCI_LAUNCH_A2_W02_L2", "SCI_LAUNCH_A2_W02_L3"], "assess_codes": ["SCI_LAUNCH_A2_W07_L1", "SCI_LAUNCH_A2_W07_L2", "SCI_LAUNCH_A2_W07_L3"], "topic_words_matched": true, "not_yet_reason": ""}, {"id": "2.7", "code": "2.7 (Topic 2 scheme gap)", "topic": "Topic 2: Cells and control", "term": "Aut2", "weeks": [], "assess_weeks": [], "title": "Demonstrate an understanding of the use of percentiles charts to monitor growth", "sow_outcome": "Topic 2 specification range (not scheduled in Autumn 2 weekly lessons)", "topic_words": ["percentile", "percentiles", "chart", "charts", "monitor"], "teach_codes": [], "candidate_codes": [], "assess_codes": [], "topic_words_matched": true, "not_yet_reason": "no_file_found"}, {"id": "2.8", "code": "2.8 (Aut2 W2)", "topic": "Topic 2: Cells and control", "term": "Aut2", "weeks": [2], "assess_weeks": [7], "title": "Describe the function of embryonic and adult stem cells in animals and meristems in plants", "sow_outcome": "Explain growth and stem cells.", "topic_words": ["stem", "embryonic", "meristem", "meristems"], "teach_codes": ["SCI_LAUNCH_A2_W02_L1", "SCI_LAUNCH_A2_W02_L2", "SCI_LAUNCH_A2_W02_L3"], "candidate_codes": ["SCI_LAUNCH_A2_W02_L1", "SCI_LAUNCH_A2_W02_L2", "SCI_LAUNCH_A2_W02_L3"], "assess_codes": ["SCI_LAUNCH_A2_W07_L1", "SCI_LAUNCH_A2_W07_L2", "SCI_LAUNCH_A2_W07_L3"], "topic_words_matched": true, "not_yet_reason": ""}, {"id": "2.9", "code": "2.9 (Aut2 W3)", "topic": "Topic 2: Cells and control", "term": "Aut2", "weeks": [3], "assess_weeks": [7], "title": "Discuss the potential benefits and risks associated with the use of stem cells in medicine", "sow_outcome": "Stem-cell ethics discussion (links RE/PSHE).", "topic_words": ["stem", "stem-cell", "ethics", "decisions", "case", "judgement", "medicine", "risks", "benefits"], "teach_codes": ["SCI_LAUNCH_A2_W03_L1", "SCI_LAUNCH_A2_W03_L2", "SCI_LAUNCH_A2_W03_L3"], "candidate_codes": ["SCI_LAUNCH_A2_W03_L1", "SCI_LAUNCH_A2_W03_L2", "SCI_LAUNCH_A2_W03_L3"], "assess_codes": ["SCI_LAUNCH_A2_W07_L1", "SCI_LAUNCH_A2_W07_L2", "SCI_LAUNCH_A2_W07_L3"], "topic_words_matched": true, "not_yet_reason": "future_scheduled"}, {"id": "3.3", "code": "3.3 (Aut2 W4)", "topic": "Topic 3: Genetics", "term": "Aut2", "weeks": [4], "assess_weeks": [7], "title": "Explain the structure of DNA as a polymer of two strands coiled to form a double helix linked by complementary bases", "sow_outcome": "Describe DNA, genes and chromosomes.", "topic_words": ["dna", "helix", "strand", "strands", "polymer", "base", "bases", "structures", "chromosome", "gene"], "teach_codes": ["SCI_LAUNCH_A2_W04_L1", "SCI_LAUNCH_A2_W04_L2", "SCI_LAUNCH_A2_W04_L3"], "candidate_codes": ["SCI_LAUNCH_A2_W04_L1", "SCI_LAUNCH_A2_W04_L2", "SCI_LAUNCH_A2_W04_L3"], "assess_codes": ["SCI_LAUNCH_A2_W07_L1", "SCI_LAUNCH_A2_W07_L2", "SCI_LAUNCH_A2_W07_L3"], "topic_words_matched": true, "not_yet_reason": "future_scheduled"}, {"id": "3.5", "code": "3.5 (Aut2 W4)", "topic": "Topic 3: Genetics", "term": "Aut2", "weeks": [4], "assess_weeks": [7], "title": "Describe the genome as the entire DNA of an organism and a gene as a section of a DNA molecule that codes for a specific protein", "sow_outcome": "Describe DNA, genes and chromosomes.", "topic_words": ["dna", "genome", "gene", "genes", "protein", "chromosome"], "teach_codes": ["SCI_LAUNCH_A2_W04_L1", "SCI_LAUNCH_A2_W04_L2", "SCI_LAUNCH_A2_W04_L3"], "candidate_codes": ["SCI_LAUNCH_A2_W04_L1", "SCI_LAUNCH_A2_W04_L2", "SCI_LAUNCH_A2_W04_L3"], "assess_codes": ["SCI_LAUNCH_A2_W07_L1", "SCI_LAUNCH_A2_W07_L2", "SCI_LAUNCH_A2_W07_L3"], "topic_words_matched": true, "not_yet_reason": "future_scheduled"}, {"id": "3.12", "code": "3.12 (Aut2 W5-W6)", "topic": "Topic 3: Genetics", "term": "Aut2", "weeks": [5, 6], "assess_weeks": [7], "title": "Explain why there are differences in inherited characteristics as a result of alleles (including sourced genetic condition study)", "sow_outcome": "Complete a genetic cross (digital Punnett square). / Research a genetic condition online; present.", "topic_words": ["genetic", "allele", "alleles", "inherited", "condition", "sourced", "cross"], "teach_codes": ["SCI_LAUNCH_A2_W05_L1", "SCI_LAUNCH_A2_W05_L2", "SCI_LAUNCH_A2_W05_L3", "SCI_LAUNCH_A2_W06_L1", "SCI_LAUNCH_A2_W06_L2", "SCI_LAUNCH_A2_W06_L3"], "candidate_codes": ["SCI_LAUNCH_A2_W05_L1", "SCI_LAUNCH_A2_W05_L2", "SCI_LAUNCH_A2_W05_L3", "SCI_LAUNCH_A2_W06_L1", "SCI_LAUNCH_A2_W06_L2", "SCI_LAUNCH_A2_W06_L3"], "assess_codes": ["SCI_LAUNCH_A2_W07_L1", "SCI_LAUNCH_A2_W07_L2", "SCI_LAUNCH_A2_W07_L3"], "topic_words_matched": true, "not_yet_reason": "future_scheduled"}, {"id": "3.13", "code": "3.13 (Aut2 W4-W6)", "topic": "Topic 3: Genetics", "term": "Aut2", "weeks": [4, 5, 6], "assess_weeks": [7], "title": "Explain the terms chromosome, gene, allele, dominant, recessive, homozygous, heterozygous, genotype and phenotype", "sow_outcome": "Describe DNA, genes and chromosomes. / Complete a genetic cross (digital Punnett square). / Research a genetic condition online; present.", "topic_words": ["chromosome", "chromosomes", "gene", "genes", "allele", "dominant", "recessive", "homozygous", "heterozygous", "genotype", "phenotype", "genetic"], "teach_codes": ["SCI_LAUNCH_A2_W04_L1", "SCI_LAUNCH_A2_W04_L2", "SCI_LAUNCH_A2_W04_L3", "SCI_LAUNCH_A2_W05_L1", "SCI_LAUNCH_A2_W05_L2", "SCI_LAUNCH_A2_W05_L3", "SCI_LAUNCH_A2_W06_L1", "SCI_LAUNCH_A2_W06_L2", "SCI_LAUNCH_A2_W06_L3"], "candidate_codes": ["SCI_LAUNCH_A2_W04_L1", "SCI_LAUNCH_A2_W04_L2", "SCI_LAUNCH_A2_W04_L3", "SCI_LAUNCH_A2_W05_L1", "SCI_LAUNCH_A2_W05_L2", "SCI_LAUNCH_A2_W05_L3", "SCI_LAUNCH_A2_W06_L1", "SCI_LAUNCH_A2_W06_L2", "SCI_LAUNCH_A2_W06_L3"], "assess_codes": ["SCI_LAUNCH_A2_W07_L1", "SCI_LAUNCH_A2_W07_L2", "SCI_LAUNCH_A2_W07_L3"], "topic_words_matched": true, "not_yet_reason": "future_scheduled"}, {"id": "3.14", "code": "3.14 (Aut2 W5)", "topic": "Topic 3: Genetics", "term": "Aut2", "weeks": [5], "assess_weeks": [7], "title": "Explain monohybrid inheritance using genetic diagrams, Punnett squares and family pedigrees", "sow_outcome": "Complete a genetic cross (digital Punnett square).", "topic_words": ["genetic", "cross", "punnett", "monohybrid", "pedigree", "inheritance", "predict"], "teach_codes": ["SCI_LAUNCH_A2_W05_L1", "SCI_LAUNCH_A2_W05_L2", "SCI_LAUNCH_A2_W05_L3"], "candidate_codes": ["SCI_LAUNCH_A2_W05_L1", "SCI_LAUNCH_A2_W05_L2", "SCI_LAUNCH_A2_W05_L3"], "assess_codes": ["SCI_LAUNCH_A2_W07_L1", "SCI_LAUNCH_A2_W07_L2", "SCI_LAUNCH_A2_W07_L3"], "topic_words_matched": true, "not_yet_reason": "future_scheduled"}, {"id": "3.15", "code": "3.15 (Topic 3 scheme gap)", "topic": "Topic 3: Genetics", "term": "Aut2", "weeks": [], "assess_weeks": [], "title": "Describe how the sex of offspring is determined at fertilisation using genetic diagrams (XX and XY chromosomes)", "sow_outcome": "Topic 3 specification range (not scheduled in Autumn 2 weekly lessons)", "topic_words": ["offspring", "fertilisation", "fertilization", "xx", "xy", "sex"], "teach_codes": [], "candidate_codes": [], "assess_codes": [], "topic_words_matched": true, "not_yet_reason": "no_file_found"}, {"id": "3.16", "code": "3.16 (Aut2 W5)", "topic": "Topic 3: Genetics", "term": "Aut2", "weeks": [5], "assess_weeks": [7], "title": "Calculate and analyse outcomes (probabilities, ratios and percentages) from monohybrid crosses", "sow_outcome": "Complete a genetic cross (digital Punnett square).", "topic_words": ["genetic", "cross", "predict", "prediction", "counts", "probability", "probabilities", "ratio", "ratios", "percentage", "monohybrid"], "teach_codes": ["SCI_LAUNCH_A2_W05_L1", "SCI_LAUNCH_A2_W05_L2", "SCI_LAUNCH_A2_W05_L3"], "candidate_codes": ["SCI_LAUNCH_A2_W05_L1", "SCI_LAUNCH_A2_W05_L2", "SCI_LAUNCH_A2_W05_L3"], "assess_codes": ["SCI_LAUNCH_A2_W07_L1", "SCI_LAUNCH_A2_W07_L2", "SCI_LAUNCH_A2_W07_L3"], "topic_words_matched": true, "not_yet_reason": "future_scheduled"}, {"id": "1.2", "code": "1.2 (Aut1 W2)", "topic": "Topic 1: Key concepts in biology", "term": "Aut1", "weeks": [2], "assess_weeks": [7], "title": "Use a light microscope to observe and record animal and plant cells (core practical)", "sow_outcome": "Use a microscope; core practical (observing cells).", "topic_words": ["microscope", "microscopy", "light", "observe", "observing", "specimen", "slide"], "teach_codes": [], "candidate_codes": ["SCI_LAUNCH_A1_W02_L1", "SCI_LAUNCH_A1_W02_L2", "SCI_LAUNCH_A1_W02_L3"], "assess_codes": ["SCI_LAUNCH_A1_W07_L1", "SCI_LAUNCH_A1_W07_L2", "SCI_LAUNCH_A1_W07_L3"], "topic_words_matched": false, "not_yet_reason": "file_found_topic_mismatch"}, {"id": "1.3", "code": "1.3 (Aut1 W3)", "topic": "Topic 1: Key concepts in biology", "term": "Aut1", "weeks": [3], "assess_weeks": [7], "title": "Calculate total magnification and specimen size from microscope measurements", "sow_outcome": "Calculate magnification (links Maths; record in spreadsheet).", "topic_words": ["magnification", "image", "units", "dividing", "bigger", "size", "measurements"], "teach_codes": ["SCI_LAUNCH_A1_W03_L1", "SCI_LAUNCH_A1_W03_L2", "SCI_LAUNCH_A1_W03_L3"], "candidate_codes": ["SCI_LAUNCH_A1_W03_L1", "SCI_LAUNCH_A1_W03_L2", "SCI_LAUNCH_A1_W03_L3"], "assess_codes": ["SCI_LAUNCH_A1_W07_L1", "SCI_LAUNCH_A1_W07_L2", "SCI_LAUNCH_A1_W07_L3"], "topic_words_matched": true, "not_yet_reason": ""}, {"id": "1.15a", "code": "1.15a (Aut1 W4)", "topic": "Topic 1: Key concepts in biology", "term": "Aut1", "weeks": [4], "assess_weeks": [7], "title": "Explain how substances are transported into and out of cells by diffusion", "sow_outcome": "Explain diffusion.", "topic_words": ["diffusion", "diffuse", "particles", "spread", "substances"], "teach_codes": ["SCI_LAUNCH_A1_W04_L1", "SCI_LAUNCH_A1_W04_L2", "SCI_LAUNCH_A1_W04_L3"], "candidate_codes": ["SCI_LAUNCH_A1_W04_L1", "SCI_LAUNCH_A1_W04_L2", "SCI_LAUNCH_A1_W04_L3"], "assess_codes": ["SCI_LAUNCH_A1_W07_L1", "SCI_LAUNCH_A1_W07_L2", "SCI_LAUNCH_A1_W07_L3"], "topic_words_matched": true, "not_yet_reason": ""}, {"id": "1.15b", "code": "1.15b-1.16 (Aut1 W5)", "topic": "Topic 1: Key concepts in biology", "term": "Aut1", "weeks": [5], "assess_weeks": [7], "title": "Explain osmosis and investigate osmosis in plant tissue (core practical)", "sow_outcome": "Explain osmosis (core practical; data-logging).", "topic_words": ["osmosis", "potato", "tissue", "water"], "teach_codes": ["SCI_LAUNCH_A1_W05_L1", "SCI_LAUNCH_A1_W05_L2", "SCI_LAUNCH_A1_W05_L3"], "candidate_codes": ["SCI_LAUNCH_A1_W05_L1", "SCI_LAUNCH_A1_W05_L2", "SCI_LAUNCH_A1_W05_L3"], "assess_codes": ["SCI_LAUNCH_A1_W07_L1", "SCI_LAUNCH_A1_W07_L2", "SCI_LAUNCH_A1_W07_L3"], "topic_words_matched": true, "not_yet_reason": ""}, {"id": "1.15c", "code": "1.15c (Aut1 W6)", "topic": "Topic 1: Key concepts in biology", "term": "Aut1", "weeks": [6], "assess_weeks": [7], "title": "Explain how substances are transported into and out of cells by active transport", "sow_outcome": "Explain active transport.", "topic_words": ["active transport", "active", "mineral", "ions", "roots"], "teach_codes": ["SCI_LAUNCH_A1_W06_L1", "SCI_LAUNCH_A1_W06_L2", "SCI_LAUNCH_A1_W06_L3"], "candidate_codes": ["SCI_LAUNCH_A1_W06_L1", "SCI_LAUNCH_A1_W06_L2", "SCI_LAUNCH_A1_W06_L3"], "assess_codes": ["SCI_LAUNCH_A1_W07_L1", "SCI_LAUNCH_A1_W07_L2", "SCI_LAUNCH_A1_W07_L3"], "topic_words_matched": true, "not_yet_reason": ""}], "lessons": {"SCI_LAUNCH_A2_W06_L3": {"code": "SCI_LAUNCH_A2_W06_L3", "raw_codes": ["SCI_LAUNCH_A2_W06_L3"], "term": "Aut2", "term_code": "A2", "week": 6, "lesson": 3, "period_suffix": null, "day": "Friday", "period": 4, "date": "2026-12-11", "wb": "WB 07 Dec", "title": "Master: Present and peer-mark sourced facts · LAUNCH Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A2_W02_L3": {"code": "SCI_LAUNCH_A2_W02_L3", "raw_codes": ["SCI_LAUNCH_A2_W02_L3"], "term": "Aut2", "term_code": "A2", "week": 2, "lesson": 3, "period_suffix": null, "day": "Friday", "period": 4, "date": "2026-11-13", "wb": "WB 09 Nov", "title": "Growth and Stem-cell Evidence · LAUNCH Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A2_W07_L3": {"code": "SCI_LAUNCH_A2_W07_L3", "raw_codes": ["SCI_LAUNCH_A2_W07_L3"], "term": "Aut2", "term_code": "A2", "week": 7, "lesson": 3, "period_suffix": null, "day": "Friday", "period": 4, "date": "2026-12-18", "wb": "WB 14 Dec", "title": "Master: Mark your own paper and choose a next step · LAUNCH Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A2_W03_L3": {"code": "SCI_LAUNCH_A2_W03_L3", "raw_codes": ["SCI_LAUNCH_A2_W03_L3"], "term": "Aut2", "term_code": "A2", "week": 3, "lesson": 3, "period_suffix": null, "day": "Friday", "period": 4, "date": "2026-11-20", "wb": "WB 16 Nov", "title": "Master: A reasoned written judgement · LAUNCH Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A2_W04_L3": {"code": "SCI_LAUNCH_A2_W04_L3", "raw_codes": ["SCI_LAUNCH_A2_W04_L3"], "term": "Aut2", "term_code": "A2", "week": 4, "lesson": 3, "period_suffix": null, "day": "Friday", "period": 4, "date": "2026-11-27", "wb": "WB 23 Nov", "title": "Master: Match DNA structures to their functions · LAUNCH Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A2_W05_L3": {"code": "SCI_LAUNCH_A2_W05_L3", "raw_codes": ["SCI_LAUNCH_A2_W05_L3"], "term": "Aut2", "term_code": "A2", "week": 5, "lesson": 3, "period_suffix": null, "day": "Friday", "period": 4, "date": "2026-12-04", "wb": "WB 30 Nov", "title": "Master: Evaluate a prediction against real counts · LAUNCH Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A2_W07_L1": {"code": "SCI_LAUNCH_A2_W07_L1", "raw_codes": ["SCI_LAUNCH_A2_W07_L1"], "term": "Aut2", "term_code": "A2", "week": 7, "lesson": 1, "period_suffix": null, "day": "Monday", "period": 4, "date": "2026-12-14", "wb": "WB 14 Dec", "title": "Discover: Topics 2–3 checkpoint · LAUNCH Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A2_W03_L1": {"code": "SCI_LAUNCH_A2_W03_L1", "raw_codes": ["SCI_LAUNCH_A2_W03_L1"], "term": "Aut2", "term_code": "A2", "week": 3, "lesson": 1, "period_suffix": null, "day": "Monday", "period": 4, "date": "2026-11-16", "wb": "WB 16 Nov", "title": "Discover: Stem-cell ethics · LAUNCH Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A2_W04_L1": {"code": "SCI_LAUNCH_A2_W04_L1", "raw_codes": ["SCI_LAUNCH_A2_W04_L1"], "term": "Aut2", "term_code": "A2", "week": 4, "lesson": 1, "period_suffix": null, "day": "Monday", "period": 4, "date": "2026-11-23", "wb": "WB 23 Nov", "title": "Discover: DNA, genes and chromosomes · LAUNCH Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A2_W05_L1": {"code": "SCI_LAUNCH_A2_W05_L1", "raw_codes": ["SCI_LAUNCH_A2_W05_L1"], "term": "Aut2", "term_code": "A2", "week": 5, "lesson": 1, "period_suffix": null, "day": "Monday", "period": 4, "date": "2026-11-30", "wb": "WB 30 Nov", "title": "Discover: A simple genetic cross · LAUNCH Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A2_W06_L1": {"code": "SCI_LAUNCH_A2_W06_L1", "raw_codes": ["SCI_LAUNCH_A2_W06_L1"], "term": "Aut2", "term_code": "A2", "week": 6, "lesson": 1, "period_suffix": null, "day": "Monday", "period": 4, "date": "2026-12-07", "wb": "WB 07 Dec", "title": "Discover: Researching a genetic condition · LAUNCH Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A2_W02_L1": {"code": "SCI_LAUNCH_A2_W02_L1", "raw_codes": ["SCI_LAUNCH_A2_W02_L1"], "term": "Aut2", "term_code": "A2", "week": 2, "lesson": 1, "period_suffix": null, "day": "Monday", "period": 4, "date": "2026-11-09", "wb": "WB 09 Nov", "title": "Discover: Growth and stem cells", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A2_W02_L2": {"code": "SCI_LAUNCH_A2_W02_L2", "raw_codes": ["SCI_LAUNCH_A2_W02_L2"], "term": "Aut2", "term_code": "A2", "week": 2, "lesson": 2, "period_suffix": null, "day": "Wednesday", "period": 2, "date": "2026-11-11", "wb": "WB 09 Nov", "title": "Use · How stem cells become specialised cells · LAUNCH Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A2_W01_L1": {"code": "SCI_LAUNCH_A2_W01_L1", "raw_codes": ["SCI_LAUNCH_A2_W01_L1", "SCI_LAUNCH_A2_W01"], "term": "Aut2", "term_code": "A2", "week": 1, "lesson": 1, "period_suffix": null, "day": "Monday", "period": 4, "date": "2026-11-02", "wb": "WB 02 Nov", "title": "Discover: The cell cycle", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A2_W01_L2": {"code": "SCI_LAUNCH_A2_W01_L2", "raw_codes": ["SCI_LAUNCH_A2_W01_L2", "SCI_LAUNCH_A2_W01"], "term": "Aut2", "term_code": "A2", "week": 1, "lesson": 2, "period_suffix": null, "day": "Wednesday", "period": 2, "date": "2026-11-04", "wb": "WB 02 Nov", "title": "Use: Mitosis in sequence", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A2_W01_L3": {"code": "SCI_LAUNCH_A2_W01_L3", "raw_codes": ["SCI_LAUNCH_A2_W01_L3"], "term": "Aut2", "term_code": "A2", "week": 1, "lesson": 3, "period_suffix": null, "day": "Friday", "period": 4, "date": "2026-11-06", "wb": "WB 02 Nov", "title": "Master: Matching chromosome sets and repair", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A2_W03_L2": {"code": "SCI_LAUNCH_A2_W03_L2", "raw_codes": ["SCI_LAUNCH_A2_W03_L2"], "term": "Aut2", "term_code": "A2", "week": 3, "lesson": 2, "period_suffix": null, "day": "Wednesday", "period": 2, "date": "2026-11-18", "wb": "WB 16 Nov", "title": "Use: Weigh a stem-cell case · LAUNCH Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A2_W04_L2": {"code": "SCI_LAUNCH_A2_W04_L2", "raw_codes": ["SCI_LAUNCH_A2_W04_L2"], "term": "Aut2", "term_code": "A2", "week": 4, "lesson": 2, "period_suffix": null, "day": "Wednesday", "period": 2, "date": "2026-11-25", "wb": "WB 23 Nov", "title": "Use: From chromosome to gene to base · LAUNCH Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A2_W05_L2": {"code": "SCI_LAUNCH_A2_W05_L2", "raw_codes": ["SCI_LAUNCH_A2_W05_L2"], "term": "Aut2", "term_code": "A2", "week": 5, "lesson": 2, "period_suffix": null, "day": "Wednesday", "period": 2, "date": "2026-12-02", "wb": "WB 30 Nov", "title": "Use: Predict and check a genetic cross · LAUNCH Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A2_W06_L2": {"code": "SCI_LAUNCH_A2_W06_L2", "raw_codes": ["SCI_LAUNCH_A2_W06_L2"], "term": "Aut2", "term_code": "A2", "week": 6, "lesson": 2, "period_suffix": null, "day": "Wednesday", "period": 2, "date": "2026-12-09", "wb": "WB 07 Dec", "title": "Use: Build a sourced presentation plan · LAUNCH Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A2_W07_L2": {"code": "SCI_LAUNCH_A2_W07_L2", "raw_codes": ["SCI_LAUNCH_A2_W07_L2"], "term": "Aut2", "term_code": "A2", "week": 7, "lesson": 2, "period_suffix": null, "day": "Wednesday", "period": 2, "date": "2026-12-16", "wb": "WB 14 Dec", "title": "Use: Reason through an assessment question · LAUNCH Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A2_W02": {"code": "SCI_LAUNCH_A2_W02", "raw_codes": ["SCI_LAUNCH_A2_W02"], "term": "Aut2", "term_code": "A2", "week": 2, "lesson": 0, "period_suffix": null, "day": "Monday", "period": 4, "date": "2026-11-09", "wb": "WB 09 Nov", "title": "Growth and stem cells · LAUNCH Science Autumn 2 W2", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A2_W01": {"code": "SCI_LAUNCH_A2_W01", "raw_codes": ["SCI_LAUNCH_A2_W01"], "term": "Aut2", "term_code": "A2", "week": 1, "lesson": 2, "period_suffix": null, "day": "Wednesday", "period": 2, "date": "2026-11-04", "wb": "WB 02 Nov", "title": "Mitosis and the cell cycle · LAUNCH Science Autumn 2 W1", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A1_W01_L1": {"code": "SCI_LAUNCH_A1_W01_L1", "raw_codes": ["SCI_LAUNCH_A1_W01_L1"], "term": "Aut1", "term_code": "A1", "week": 1, "lesson": 1, "period_suffix": null, "day": "Monday", "period": 4, "date": "2026-09-07", "wb": "WB 07 Sep", "title": "cells, images and scale · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A1_W01_L2": {"code": "SCI_LAUNCH_A1_W01_L2", "raw_codes": ["SCI_LAUNCH_A1_W01_L2"], "term": "Aut1", "term_code": "A1", "week": 1, "lesson": 2, "period_suffix": null, "day": "Wednesday", "period": 2, "date": "2026-09-09", "wb": "WB 07 Sep", "title": "movement into and out of cells · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A1_W01_L3": {"code": "SCI_LAUNCH_A1_W01_L3", "raw_codes": ["SCI_LAUNCH_A1_W01_L3"], "term": "Aut1", "term_code": "A1", "week": 1, "lesson": 3, "period_suffix": null, "day": "Friday", "period": 4, "date": "2026-09-11", "wb": "WB 07 Sep", "title": "enzymes, investigations and evidence · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A1_W02_L1": {"code": "SCI_LAUNCH_A1_W02_L1", "raw_codes": ["SCI_LAUNCH_A1_W02_L1"], "term": "Aut1", "term_code": "A1", "week": 2, "lesson": 1, "period_suffix": null, "day": "Monday", "period": 4, "date": "2026-09-14", "wb": "WB 14 Sep", "title": "Cells and scale: further baseline evidence · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A1_W02_L2": {"code": "SCI_LAUNCH_A1_W02_L2", "raw_codes": ["SCI_LAUNCH_A1_W02_L2"], "term": "Aut1", "term_code": "A1", "week": 2, "lesson": 2, "period_suffix": null, "day": "Wednesday", "period": 2, "date": "2026-09-16", "wb": "WB 14 Sep", "title": "Cell transport: further baseline evidence · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A1_W02_L3": {"code": "SCI_LAUNCH_A1_W02_L3", "raw_codes": ["SCI_LAUNCH_A1_W02_L3"], "term": "Aut1", "term_code": "A1", "week": 2, "lesson": 3, "period_suffix": null, "day": "Friday", "period": 4, "date": "2026-09-18", "wb": "WB 14 Sep", "title": "Enzymes and results: further baseline evidence · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A1_W03_L1": {"code": "SCI_LAUNCH_A1_W03_L1", "raw_codes": ["SCI_LAUNCH_A1_W03_L1"], "term": "Aut1", "term_code": "A1", "week": 3, "lesson": 1, "period_suffix": null, "day": "Monday", "period": 4, "date": "2026-09-21", "wb": "WB 21 Sep", "title": "How much bigger is the image? · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A1_W03_L2": {"code": "SCI_LAUNCH_A1_W03_L2", "raw_codes": ["SCI_LAUNCH_A1_W03_L2"], "term": "Aut1", "term_code": "A1", "week": 3, "lesson": 2, "period_suffix": null, "day": "Wednesday", "period": 2, "date": "2026-09-23", "wb": "WB 21 Sep", "title": "Match the units before dividing · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A1_W03_L3": {"code": "SCI_LAUNCH_A1_W03_L3", "raw_codes": ["SCI_LAUNCH_A1_W03_L3"], "term": "Aut1", "term_code": "A1", "week": 3, "lesson": 3, "period_suffix": null, "day": "Friday", "period": 4, "date": "2026-09-25", "wb": "WB 21 Sep", "title": "Record and check magnification in a sheet · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A1_W04_L1": {"code": "SCI_LAUNCH_A1_W04_L1", "raw_codes": ["SCI_LAUNCH_A1_W04_L1"], "term": "Aut1", "term_code": "A1", "week": 4, "lesson": 1, "period_suffix": null, "day": "Monday", "period": 4, "date": "2026-09-28", "wb": "WB 28 Sep", "title": "Why do particles spread out? · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A1_W04_L2": {"code": "SCI_LAUNCH_A1_W04_L2", "raw_codes": ["SCI_LAUNCH_A1_W04_L2"], "term": "Aut1", "term_code": "A1", "week": 4, "lesson": 2, "period_suffix": null, "day": "Wednesday", "period": 2, "date": "2026-09-30", "wb": "WB 28 Sep", "title": "Which way substances diffuse? · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A1_W04_L3": {"code": "SCI_LAUNCH_A1_W04_L3", "raw_codes": ["SCI_LAUNCH_A1_W04_L3"], "term": "Aut1", "term_code": "A1", "week": 4, "lesson": 3, "period_suffix": null, "day": "Friday", "period": 4, "date": "2026-10-02", "wb": "WB 28 Sep", "title": "What changes the rate of diffusion? · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A1_W05_L1": {"code": "SCI_LAUNCH_A1_W05_L1", "raw_codes": ["SCI_LAUNCH_A1_W05_L1"], "term": "Aut1", "term_code": "A1", "week": 5, "lesson": 1, "period_suffix": null, "day": "Monday", "period": 4, "date": "2026-10-05", "wb": "WB 05 Oct", "title": "How does water move by osmosis? · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A1_W05_L2": {"code": "SCI_LAUNCH_A1_W05_L2", "raw_codes": ["SCI_LAUNCH_A1_W05_L2"], "term": "Aut1", "term_code": "A1", "week": 5, "lesson": 2, "period_suffix": null, "day": "Wednesday", "period": 2, "date": "2026-10-07", "wb": "WB 05 Oct", "title": "Can we measure osmosis in potato tissue? · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A1_W05_L3": {"code": "SCI_LAUNCH_A1_W05_L3", "raw_codes": ["SCI_LAUNCH_A1_W05_L3"], "term": "Aut1", "term_code": "A1", "week": 5, "lesson": 3, "period_suffix": null, "day": "Friday", "period": 4, "date": "2026-10-09", "wb": "WB 05 Oct", "title": "What does our osmosis log show? · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A1_W06_L1": {"code": "SCI_LAUNCH_A1_W06_L1", "raw_codes": ["SCI_LAUNCH_A1_W06_L1"], "term": "Aut1", "term_code": "A1", "week": 6, "lesson": 1, "period_suffix": null, "day": "Monday", "period": 4, "date": "2026-10-12", "wb": "WB 12 Oct", "title": "What is active transport? · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A1_W06_L2": {"code": "SCI_LAUNCH_A1_W06_L2", "raw_codes": ["SCI_LAUNCH_A1_W06_L2"], "term": "Aut1", "term_code": "A1", "week": 6, "lesson": 2, "period_suffix": null, "day": "Wednesday", "period": 2, "date": "2026-10-14", "wb": "WB 12 Oct", "title": "How do roots take in mineral ions? · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A1_W06_L3": {"code": "SCI_LAUNCH_A1_W06_L3", "raw_codes": ["SCI_LAUNCH_A1_W06_L3"], "term": "Aut1", "term_code": "A1", "week": 6, "lesson": 3, "period_suffix": null, "day": "Friday", "period": 4, "date": "2026-10-16", "wb": "WB 12 Oct", "title": "How can evidence identify active transport? · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A1_W07_L1": {"code": "SCI_LAUNCH_A1_W07_L1", "raw_codes": ["SCI_LAUNCH_A1_W07_L1"], "term": "Aut1", "term_code": "A1", "week": 7, "lesson": 1, "period_suffix": null, "day": "Monday", "period": 4, "date": "2026-10-19", "wb": "WB 19 Oct", "title": "What can I show about magnification? · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A1_W07_L2": {"code": "SCI_LAUNCH_A1_W07_L2", "raw_codes": ["SCI_LAUNCH_A1_W07_L2"], "term": "Aut1", "term_code": "A1", "week": 7, "lesson": 2, "period_suffix": null, "day": "Wednesday", "period": 2, "date": "2026-10-21", "wb": "WB 19 Oct", "title": "What can I show about transport across cells? · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A1_W07_L3": {"code": "SCI_LAUNCH_A1_W07_L3", "raw_codes": ["SCI_LAUNCH_A1_W07_L3"], "term": "Aut1", "term_code": "A1", "week": 7, "lesson": 3, "period_suffix": null, "day": "Friday", "period": 4, "date": "2026-10-23", "wb": "WB 19 Oct", "title": "What does my half-term evidence show? · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A2_W03": {"code": "SCI_LAUNCH_A2_W03", "raw_codes": ["SCI_LAUNCH_A2_W03"], "term": "Aut2", "term_code": "A2", "week": 3, "lesson": 0, "period_suffix": null, "day": "Monday", "period": 4, "date": "2026-11-16", "wb": "WB 16 Nov", "title": "Stem-cell decisions · LAUNCH Science Autumn 2 W3", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A2_W04": {"code": "SCI_LAUNCH_A2_W04", "raw_codes": ["SCI_LAUNCH_A2_W04"], "term": "Aut2", "term_code": "A2", "week": 4, "lesson": 0, "period_suffix": null, "day": "Monday", "period": 4, "date": "2026-11-23", "wb": "WB 23 Nov", "title": "DNA, genes and chromosomes · LAUNCH Science Autumn 2 W4", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A2_W05": {"code": "SCI_LAUNCH_A2_W05", "raw_codes": ["SCI_LAUNCH_A2_W05"], "term": "Aut2", "term_code": "A2", "week": 5, "lesson": 0, "period_suffix": null, "day": "Monday", "period": 4, "date": "2026-11-30", "wb": "WB 30 Nov", "title": "A simple genetic cross · LAUNCH Science Autumn 2 W5", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A2_W06": {"code": "SCI_LAUNCH_A2_W06", "raw_codes": ["SCI_LAUNCH_A2_W06"], "term": "Aut2", "term_code": "A2", "week": 6, "lesson": 0, "period_suffix": null, "day": "Monday", "period": 4, "date": "2026-12-07", "wb": "WB 07 Dec", "title": "Researching a genetic condition · LAUNCH Science Autumn 2 W6", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A2_W07": {"code": "SCI_LAUNCH_A2_W07", "raw_codes": ["SCI_LAUNCH_A2_W07"], "term": "Aut2", "term_code": "A2", "week": 7, "lesson": 0, "period_suffix": null, "day": "Monday", "period": 4, "date": "2026-12-14", "wb": "WB 14 Dec", "title": "Cells and genetics check · LAUNCH Science Autumn 2 W7", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_SU1_W01_L1": {"code": "SCI_LAUNCH_SU1_W01_L1", "raw_codes": ["SCI_LAUNCH_SU1_W01_L1"], "term": "Aut2", "term_code": "SU1", "week": 1, "lesson": 1, "period_suffix": null, "day": "Monday", "period": 4, "date": "", "wb": "WB 02 Nov", "title": "How do hormones carry a message? · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_SU1_W01_L2": {"code": "SCI_LAUNCH_SU1_W01_L2", "raw_codes": ["SCI_LAUNCH_SU1_W01_L2"], "term": "Aut2", "term_code": "SU1", "week": 1, "lesson": 2, "period_suffix": null, "day": "Wednesday", "period": 2, "date": "", "wb": "WB 02 Nov", "title": "How can feedback keep a body condition stable? · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_SU1_W01_L3": {"code": "SCI_LAUNCH_SU1_W01_L3", "raw_codes": ["SCI_LAUNCH_SU1_W01_L3"], "term": "Aut2", "term_code": "SU1", "week": 1, "lesson": 3, "period_suffix": null, "day": "Friday", "period": 4, "date": "", "wb": "WB 02 Nov", "title": "How can hormone feedback control thyroxine? · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_SU1_W02_L1": {"code": "SCI_LAUNCH_SU1_W02_L1", "raw_codes": ["SCI_LAUNCH_SU1_W02_L1"], "term": "Aut2", "term_code": "SU1", "week": 2, "lesson": 1, "period_suffix": null, "day": "Monday", "period": 4, "date": "", "wb": "WB 09 Nov", "title": "How can a model lower high blood glucose? · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_SU1_W02_L2": {"code": "SCI_LAUNCH_SU1_W02_L2", "raw_codes": ["SCI_LAUNCH_SU1_W02_L2"], "term": "Aut2", "term_code": "SU1", "week": 2, "lesson": 2, "period_suffix": null, "day": "Wednesday", "period": 2, "date": "", "wb": "WB 09 Nov", "title": "How can a model raise low blood glucose? · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_SU1_W02_L3": {"code": "SCI_LAUNCH_SU1_W02_L3", "raw_codes": ["SCI_LAUNCH_SU1_W02_L3"], "term": "Aut2", "term_code": "SU1", "week": 2, "lesson": 3, "period_suffix": null, "day": "Friday", "period": 4, "date": "", "wb": "WB 09 Nov", "title": "Can model evidence explain blood-glucose feedback? · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_SU1_W03_L1": {"code": "SCI_LAUNCH_SU1_W03_L1", "raw_codes": ["SCI_LAUNCH_SU1_W03_L1"], "term": "Aut2", "term_code": "SU1", "week": 3, "lesson": 1, "period_suffix": null, "day": "Monday", "period": 4, "date": "", "wb": "WB 16 Nov", "title": "How does blood move through the heart? · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_SU1_W03_L2": {"code": "SCI_LAUNCH_SU1_W03_L2", "raw_codes": ["SCI_LAUNCH_SU1_W03_L2"], "term": "Aut2", "term_code": "SU1", "week": 3, "lesson": 2, "period_suffix": null, "day": "Wednesday", "period": 2, "date": "", "wb": "WB 16 Nov", "title": "How do the two circulation routes work? · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_SU1_W03_L3": {"code": "SCI_LAUNCH_SU1_W03_L3", "raw_codes": ["SCI_LAUNCH_SU1_W03_L3"], "term": "Aut2", "term_code": "SU1", "week": 3, "lesson": 3, "period_suffix": null, "day": "Friday", "period": 4, "date": "", "wb": "WB 16 Nov", "title": "How do heart structures keep blood moving? · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_SU1_W04_L1": {"code": "SCI_LAUNCH_SU1_W04_L1", "raw_codes": ["SCI_LAUNCH_SU1_W04_L1"], "term": "Aut2", "term_code": "SU1", "week": 4, "lesson": 1, "period_suffix": null, "day": "Monday", "period": 4, "date": "", "wb": "WB 23 Nov", "title": "Where do gases exchange in the lungs? · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_SU1_W04_L2": {"code": "SCI_LAUNCH_SU1_W04_L2", "raw_codes": ["SCI_LAUNCH_SU1_W04_L2"], "term": "Aut2", "term_code": "SU1", "week": 4, "lesson": 2, "period_suffix": null, "day": "Wednesday", "period": 2, "date": "", "wb": "WB 23 Nov", "title": "How do exchange surfaces help gases move? · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_SU1_W04_L3": {"code": "SCI_LAUNCH_SU1_W04_L3", "raw_codes": ["SCI_LAUNCH_SU1_W04_L3"], "term": "Aut2", "term_code": "SU1", "week": 4, "lesson": 3, "period_suffix": null, "day": "Friday", "period": 4, "date": "", "wb": "WB 23 Nov", "title": "How does ventilation move air? · Year A Science", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}, "SCI_LAUNCH_A2_FOODTESTS": {"code": "SCI_LAUNCH_A2_FOODTESTS", "raw_codes": ["SCI_LAUNCH_A2_FOODTESTS"], "term": "Aut2", "term_code": "A2", "week": 0, "lesson": 0, "period_suffix": null, "day": "Monday", "period": 4, "date": "", "wb": "", "title": "Testing foods", "objective": "", "in_calm_v4": false, "in_w03_w07_csv": false, "in_catchup_links": false, "in_authoring_pack": false, "in_lessons_root": true, "sources": ["lessons_root"]}}, "absences": {}, "sowFiles": ["lessons_a1sci/_authoring/science_2026-27/_toolchain/scheme_references/LAUNCH_Science_SOW.json", "lessons_a1sci/_sca1/inputs/LAUNCH_SOW.txt", "lessons_a1sci/_passsl/sow_extract/sow_overview.json", "lessons_a1sci/_passsl/sow_extract/sow_weekly.json", "lessons_a1sci/Science/Launch/W8-W13_2026-27/CURRICULUM_ALIGNMENT.md", "lessons_a1sci/_sciv3/launch/SOW_AND_POLICY_ALIGNMENT.md", "lessons_a1sci/Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W01/SCI_LAUNCH_A2_W01_Teacher_Notes.docx", "lessons_a1sci/find-out-more/science/launch/autumn-2/w01/_staff/STAFF_CARD.md", "lessons_a1sci/Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W02/SCI_LAUNCH_A2_W02_Teacher_Notes.docx", "lessons_a1sci/find-out-more/science/launch/autumn-2/w02/_staff/STAFF_CARD.md", "lessons_a1sci/Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W03/SCI_LAUNCH_A2_W03_Teacher_Notes.docx", "lessons_a1sci/find-out-more/science/launch/autumn-2/w03/_staff/STAFF_CARD.md", "lessons_a1sci/Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W04/SCI_LAUNCH_A2_W04_Teacher_Notes.docx", "lessons_a1sci/find-out-more/science/launch/autumn-2/w04/_staff/STAFF_CARD.md", "lessons_a1sci/Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W05/SCI_LAUNCH_A2_W05_Teacher_Notes.docx", "lessons_a1sci/find-out-more/science/launch/autumn-2/w05/_staff/STAFF_CARD.md", "lessons_a1sci/Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W06/SCI_LAUNCH_A2_W06_Teacher_Notes.docx", "lessons_a1sci/find-out-more/science/launch/autumn-2/w06/_staff/STAFF_CARD.md", "lessons_a1sci/Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W07/SCI_LAUNCH_A2_W07_Teacher_Notes.docx", "lessons_a1sci/find-out-more/science/launch/autumn-2/w07/_staff/STAFF_CARD.md"], "unmappedLaunch": ["SCI_LAUNCH_A2_FOODTESTS", "SCI_LAUNCH_SU1_W01_L1", "SCI_LAUNCH_SU1_W01_L2", "SCI_LAUNCH_SU1_W01_L3", "SCI_LAUNCH_SU1_W02_L1", "SCI_LAUNCH_SU1_W02_L2", "SCI_LAUNCH_SU1_W02_L3", "SCI_LAUNCH_SU1_W03_L1", "SCI_LAUNCH_SU1_W03_L2", "SCI_LAUNCH_SU1_W03_L3", "SCI_LAUNCH_SU1_W04_L1", "SCI_LAUNCH_SU1_W04_L2", "SCI_LAUNCH_SU1_W04_L3"], "otherPathwayScience": ["SCI_BUILD_A1_W01_P1", "SCI_BUILD_A1_W01_P2", "SCI_BUILD_A1_W02_P1", "SCI_BUILD_A1_W02_P2", "SCI_BUILD_A1_W03_P1", "SCI_BUILD_A1_W03_P2", "SCI_BUILD_A1_W04_P1", "SCI_BUILD_A1_W04_P2", "SCI_BUILD_A1_W05_P1", "SCI_BUILD_A1_W05_P2", "SCI_BUILD_A1_W06_P1", "SCI_BUILD_A1_W06_P2", "SCI_BUILD_A1_W07_P1", "SCI_BUILD_A1_W07_P2", "SCI_BUILD_A2_W01", "SCI_BUILD_A2_W01_L1", "SCI_BUILD_A2_W01_P1", "SCI_BUILD_A2_W02", "SCI_BUILD_A2_W02_L1", "SCI_BUILD_A2_W02_L2", "SCI_BUILD_A2_W02_P1", "SCI_BUILD_A2_W02_P2", "SCI_BUILD_A2_W03", "SCI_BUILD_A2_W03_L1", "SCI_BUILD_A2_W03_L2", "SCI_BUILD_A2_W03_P2", "SCI_BUILD_A2_W04", "SCI_BUILD_A2_W04_L1", "SCI_BUILD_A2_W04_L2", "SCI_BUILD_A2_W04_P2", "SCI_BUILD_A2_W05", "SCI_BUILD_A2_W05_L1", "SCI_BUILD_A2_W05_L2", "SCI_BUILD_A2_W05_P2", "SCI_BUILD_A2_W06", "SCI_BUILD_A2_W06_L1", "SCI_BUILD_A2_W06_L2", "SCI_BUILD_A2_W06_P2", "SCI_BUILD_A2_W07", "SCI_BUILD_A2_W07_L1", "SCI_BUILD_A2_W07_L2", "SCI_BUILD_A2_W07_P2", "SCI_BUILD_A2_W08_P1", "SCI_BUILD_A2_W08_P2", "SCI_BUILD_SU1_W01_P1", "SCI_BUILD_SU1_W01_P2", "SCI_BUILD_SU1_W02_P1", "SCI_BUILD_SU1_W02_P2", "SCI_BUILD_SU1_W03_P1", "SCI_BUILD_SU1_W03_P2", "SCI_BUILD_SU1_W04_P1", "SCI_BUILD_SU1_W04_P2"], "defaultGapsText": "EXAM SCIENCE GROUP (LAUNCH) COVERAGE GAPS REPORT\nDate calculated automatically: 2026-11-10\nSkipped 1169 denied folder(s) silently during read-only walk.\n========================================================================\n\n1. SCHEME OF WORK AND SPECIFICATION FILES USED (INPUT 1)\n------------------------------------------------------------------------\n  - lessons_a1sci/_authoring/science_2026-27/_toolchain/scheme_references/LAUNCH_Science_SOW.json\n  - lessons_a1sci/_sca1/inputs/LAUNCH_SOW.txt\n  - lessons_a1sci/_passsl/sow_extract/sow_overview.json\n  - lessons_a1sci/_passsl/sow_extract/sow_weekly.json\n  - lessons_a1sci/Science/Launch/W8-W13_2026-27/CURRICULUM_ALIGNMENT.md\n  - lessons_a1sci/_sciv3/launch/SOW_AND_POLICY_ALIGNMENT.md\n  - lessons_a1sci/Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W01/SCI_LAUNCH_A2_W01_Teacher_Notes.docx\n  - lessons_a1sci/find-out-more/science/launch/autumn-2/w01/_staff/STAFF_CARD.md\n  - lessons_a1sci/Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W02/SCI_LAUNCH_A2_W02_Teacher_Notes.docx\n  - lessons_a1sci/find-out-more/science/launch/autumn-2/w02/_staff/STAFF_CARD.md\n  - lessons_a1sci/Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W03/SCI_LAUNCH_A2_W03_Teacher_Notes.docx\n  - lessons_a1sci/find-out-more/science/launch/autumn-2/w03/_staff/STAFF_CARD.md\n  - lessons_a1sci/Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W04/SCI_LAUNCH_A2_W04_Teacher_Notes.docx\n  - lessons_a1sci/find-out-more/science/launch/autumn-2/w04/_staff/STAFF_CARD.md\n  - lessons_a1sci/Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W05/SCI_LAUNCH_A2_W05_Teacher_Notes.docx\n  - lessons_a1sci/find-out-more/science/launch/autumn-2/w05/_staff/STAFF_CARD.md\n  - lessons_a1sci/Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W06/SCI_LAUNCH_A2_W06_Teacher_Notes.docx\n  - lessons_a1sci/find-out-more/science/launch/autumn-2/w06/_staff/STAFF_CARD.md\n  - lessons_a1sci/Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W07/SCI_LAUNCH_A2_W07_Teacher_Notes.docx\n  - lessons_a1sci/find-out-more/science/launch/autumn-2/w07/_staff/STAFF_CARD.md\n\n2. LESSON LISTS AND BUILT LESSON FOLDERS USED (INPUT 2)\n------------------------------------------------------------------------\n  - Timetable day folders (Monday 9 Nov.. Friday 18 Dec / P*_LAUNCH_Science)\n  - Older editions (not for use)/ (archived Science web editions)\n  - Cover 4–6 Nov (cover)/ (SCI_LAUNCH_A2_W01_L1..L2 cover lessons)\n  - Lane kit CALM v4 (not for school)/returns_w03_w07/ (SCI_LAUNCH_A2_W03..W07 lessons)\n  - Take to school/ (Autumn 2 timetable and subject views)\n  - Autumn 1/All pathways/Science/Week 1..7/candidate_pages/ (SCI_LAUNCH_A1_W01_L1..W07_L3)\n  - School copies by subject/Science/LAUNCH/Autumn 2/Week 1..7/ (SCI_LAUNCH_A2_W01..W07 lessons)\n  - Summer 1/All pathways/Science/Week 1..4/candidate_pages/ (SCI_LAUNCH_SU1_W01..W04)\n\n3. DIAGNOSTIC FOR EACH \"NOT YET\" ROW (NO FILE FOUND VS TOPIC WORDS DID NOT MATCH)\n------------------------------------------------------------------------\n  - 2.4 (Topic 2 scheme gap): Describe cancer as the result of changes in cells that lead to uncontrolled cell division [not yet]: no file was found for this specification point; unmapped file(s) in folder (SCI_LAUNCH_A2_FOODTESTS ('Testing foods'), SCI_LAUNCH_SU1_W01_L1 ('How do hormones carry a message? · Year A Science'), SCI_LAUNCH_SU1_W01_L2 ('How can feedback keep a body condition stable? · Year A Science'), SCI_LAUNCH_SU1_W01_L3 ('How can hormone feedback control thyroxine? · Year A Science'), SCI_LAUNCH_SU1_W02_L1 ('How can a model lower high blood glucose? · Year A Science'), SCI_LAUNCH_SU1_W02_L2 ('How can a model raise low blood glucose? · Year A Science'), SCI_LAUNCH_SU1_W02_L3 ('Can model evidence explain blood-glucose feedback? · Year A Science'), SCI_LAUNCH_SU1_W03_L1 ('How does blood move through the heart? · Year A Science'), SCI_LAUNCH_SU1_W03_L2 ('How do the two circulation routes work? · Year A Science'), SCI_LAUNCH_SU1_W03_L3 ('How do heart structures keep blood moving? · Year A Science'), SCI_LAUNCH_SU1_W04_L1 ('Where do gases exchange in the lungs? · Year A Science'), SCI_LAUNCH_SU1_W04_L2 ('How do exchange surfaces help gases move? · Year A Science'), SCI_LAUNCH_SU1_W04_L3 ('How does ventilation move air? · Year A Science')) were also checked and a file was found in the folder but the topic words (cancer, uncontrolled, tumour, tumor) did not match.\n    Scheme note: Topic 2 specification range (not scheduled in Autumn 2 weekly lessons)\n  - 2.7 (Topic 2 scheme gap): Demonstrate an understanding of the use of percentiles charts to monitor growth [not yet]: no file was found for this specification point; unmapped file(s) in folder (SCI_LAUNCH_A2_FOODTESTS ('Testing foods'), SCI_LAUNCH_SU1_W01_L1 ('How do hormones carry a message? · Year A Science'), SCI_LAUNCH_SU1_W01_L2 ('How can feedback keep a body condition stable? · Year A Science'), SCI_LAUNCH_SU1_W01_L3 ('How can hormone feedback control thyroxine? · Year A Science'), SCI_LAUNCH_SU1_W02_L1 ('How can a model lower high blood glucose? · Year A Science'), SCI_LAUNCH_SU1_W02_L2 ('How can a model raise low blood glucose? · Year A Science'), SCI_LAUNCH_SU1_W02_L3 ('Can model evidence explain blood-glucose feedback? · Year A Science'), SCI_LAUNCH_SU1_W03_L1 ('How does blood move through the heart? · Year A Science'), SCI_LAUNCH_SU1_W03_L2 ('How do the two circulation routes work? · Year A Science'), SCI_LAUNCH_SU1_W03_L3 ('How do heart structures keep blood moving? · Year A Science'), SCI_LAUNCH_SU1_W04_L1 ('Where do gases exchange in the lungs? · Year A Science'), SCI_LAUNCH_SU1_W04_L2 ('How do exchange surfaces help gases move? · Year A Science'), SCI_LAUNCH_SU1_W04_L3 ('How does ventilation move air? · Year A Science')) were also checked and a file was found in the folder but the topic words (percentile, percentiles, chart, charts, monitor) did not match.\n    Scheme note: Topic 2 specification range (not scheduled in Autumn 2 weekly lessons)\n  - 2.9 (Aut2 W3): Discuss the potential benefits and risks associated with the use of stem cells in medicine [not yet]: file was found (SCI_LAUNCH_A2_W03_L1, SCI_LAUNCH_A2_W03_L2, SCI_LAUNCH_A2_W03_L3) and topic words matched (stem, stem-cell, ethics, case, judgement); scheduled after run date 2026-11-10 (2026-11-16 to 2026-11-20).\n  - 3.3 (Aut2 W4): Explain the structure of DNA as a polymer of two strands coiled to form a double helix linked by complementary bases [not yet]: file was found (SCI_LAUNCH_A2_W04_L1, SCI_LAUNCH_A2_W04_L2, SCI_LAUNCH_A2_W04_L3) and topic words matched (dna, base, structures, chromosome, gene); scheduled after run date 2026-11-10 (2026-11-23 to 2026-11-27).\n  - 3.5 (Aut2 W4): Describe the genome as the entire DNA of an organism and a gene as a section of a DNA molecule that codes for a specific protein [not yet]: file was found (SCI_LAUNCH_A2_W04_L1, SCI_LAUNCH_A2_W04_L2, SCI_LAUNCH_A2_W04_L3) and topic words matched (dna, gene, genes, chromosome); scheduled after run date 2026-11-10 (2026-11-23 to 2026-11-27).\n  - 3.12 (Aut2 W5-W6): Explain why there are differences in inherited characteristics as a result of alleles (including sourced genetic condition study) [not yet]: file was found (SCI_LAUNCH_A2_W05_L1, SCI_LAUNCH_A2_W05_L2, SCI_LAUNCH_A2_W05_L3, SCI_LAUNCH_A2_W06_L1, SCI_LAUNCH_A2_W06_L2, SCI_LAUNCH_A2_W06_L3) and topic words matched (genetic, condition, sourced, cross); scheduled after run date 2026-11-10 (2026-11-30 to 2026-12-11).\n  - 3.13 (Aut2 W4-W6): Explain the terms chromosome, gene, allele, dominant, recessive, homozygous, heterozygous, genotype and phenotype [not yet]: file was found (SCI_LAUNCH_A2_W04_L1, SCI_LAUNCH_A2_W04_L2, SCI_LAUNCH_A2_W04_L3, SCI_LAUNCH_A2_W05_L1, SCI_LAUNCH_A2_W05_L2, SCI_LAUNCH_A2_W05_L3, SCI_LAUNCH_A2_W06_L1, SCI_LAUNCH_A2_W06_L2, SCI_LAUNCH_A2_W06_L3) and topic words matched (chromosome, chromosomes, gene, genes, genetic); scheduled after run date 2026-11-10 (2026-11-23 to 2026-12-11).\n  - 3.14 (Aut2 W5): Explain monohybrid inheritance using genetic diagrams, Punnett squares and family pedigrees [not yet]: file was found (SCI_LAUNCH_A2_W05_L1, SCI_LAUNCH_A2_W05_L2, SCI_LAUNCH_A2_W05_L3) and topic words matched (genetic, cross, predict); scheduled after run date 2026-11-10 (2026-11-30 to 2026-12-04).\n  - 3.15 (Topic 3 scheme gap): Describe how the sex of offspring is determined at fertilisation using genetic diagrams (XX and XY chromosomes) [not yet]: no file was found for this specification point; unmapped file(s) in folder (SCI_LAUNCH_A2_FOODTESTS ('Testing foods'), SCI_LAUNCH_SU1_W01_L1 ('How do hormones carry a message? · Year A Science'), SCI_LAUNCH_SU1_W01_L2 ('How can feedback keep a body condition stable? · Year A Science'), SCI_LAUNCH_SU1_W01_L3 ('How can hormone feedback control thyroxine? · Year A Science'), SCI_LAUNCH_SU1_W02_L1 ('How can a model lower high blood glucose? · Year A Science'), SCI_LAUNCH_SU1_W02_L2 ('How can a model raise low blood glucose? · Year A Science'), SCI_LAUNCH_SU1_W02_L3 ('Can model evidence explain blood-glucose feedback? · Year A Science'), SCI_LAUNCH_SU1_W03_L1 ('How does blood move through the heart? · Year A Science'), SCI_LAUNCH_SU1_W03_L2 ('How do the two circulation routes work? · Year A Science'), SCI_LAUNCH_SU1_W03_L3 ('How do heart structures keep blood moving? · Year A Science'), SCI_LAUNCH_SU1_W04_L1 ('Where do gases exchange in the lungs? · Year A Science'), SCI_LAUNCH_SU1_W04_L2 ('How do exchange surfaces help gases move? · Year A Science'), SCI_LAUNCH_SU1_W04_L3 ('How does ventilation move air? · Year A Science')) were also checked and a file was found in the folder but the topic words (offspring, fertilisation, fertilization, xx, xy, sex) did not match.\n    Scheme note: Topic 3 specification range (not scheduled in Autumn 2 weekly lessons)\n  - 3.16 (Aut2 W5): Calculate and analyse outcomes (probabilities, ratios and percentages) from monohybrid crosses [not yet]: file was found (SCI_LAUNCH_A2_W05_L1, SCI_LAUNCH_A2_W05_L2, SCI_LAUNCH_A2_W05_L3) and topic words matched (genetic, cross, predict, prediction, counts); scheduled after run date 2026-11-10 (2026-11-30 to 2026-12-04).\n  - 1.2 (Aut1 W2): Use a light microscope to observe and record animal and plant cells (core practical) [not yet]: a file was found (SCI_LAUNCH_A1_W02_L1, SCI_LAUNCH_A1_W02_L2, SCI_LAUNCH_A1_W02_L3) but the topic words did not match (expected topic words: microscope, microscopy, light, observe, observing, specimen; found file title(s): 'Cells and scale: further baseline evidence · Year A Science'; 'Cell transport: further baseline evidence · Year A Science'; 'Enzymes and results: further baseline evidence · Year A Science') — naming/title problem, not a missing-file teaching gap.\n\n4. SPECIFICATION POINTS WITH NO MATCHING LESSON IN THE LESSON SET\n------------------------------------------------------------------------\n  - 2.4 (Topic 2 scheme gap): Describe cancer as the result of changes in cells that lead to uncontrolled cell division -> no file was found.\n    Scheme note: Topic 2 specification range (not scheduled in Autumn 2 weekly lessons)\n  - 2.7 (Topic 2 scheme gap): Demonstrate an understanding of the use of percentiles charts to monitor growth -> no file was found.\n    Scheme note: Topic 2 specification range (not scheduled in Autumn 2 weekly lessons)\n  - 3.15 (Topic 3 scheme gap): Describe how the sex of offspring is determined at fertilisation using genetic diagrams (XX and XY chromosomes) -> no file was found.\n    Scheme note: Topic 3 specification range (not scheduled in Autumn 2 weekly lessons)\n  - 1.2 (Aut1 W2): Use a light microscope to observe and record animal and plant cells (core practical) -> a file was found (SCI_LAUNCH_A1_W02_L1, SCI_LAUNCH_A1_W02_L2, SCI_LAUNCH_A1_W02_L3: 'Cells and scale: further baseline evidence · Year A Science'; 'Cell transport: further baseline evidence · Year A Science'; 'Enzymes and results: further baseline evidence · Year A Science') but the topic words did not match (naming/title mismatch, not a teaching gap).\n\n5. LESSONS THAT MAP TO NO EXAM SCIENCE (LAUNCH) SPECIFICATION POINT\n------------------------------------------------------------------------\n  Unmapped SCI_LAUNCH lessons:\n    - SCI_LAUNCH_A2_FOODTESTS (title: 'Testing foods'; topic words did not match any untaught specification point)\n    - SCI_LAUNCH_SU1_W01_L1 (title: 'How do hormones carry a message? · Year A Science'; topic words did not match any untaught specification point)\n    - SCI_LAUNCH_SU1_W01_L2 (title: 'How can feedback keep a body condition stable? · Year A Science'; topic words did not match any untaught specification point)\n    - SCI_LAUNCH_SU1_W01_L3 (title: 'How can hormone feedback control thyroxine? · Year A Science'; topic words did not match any untaught specification point)\n    - SCI_LAUNCH_SU1_W02_L1 (title: 'How can a model lower high blood glucose? · Year A Science'; topic words did not match any untaught specification point)\n    - SCI_LAUNCH_SU1_W02_L2 (title: 'How can a model raise low blood glucose? · Year A Science'; topic words did not match any untaught specification point)\n    - SCI_LAUNCH_SU1_W02_L3 (title: 'Can model evidence explain blood-glucose feedback? · Year A Science'; topic words did not match any untaught specification point)\n    - SCI_LAUNCH_SU1_W03_L1 (title: 'How does blood move through the heart? · Year A Science'; topic words did not match any untaught specification point)\n    - SCI_LAUNCH_SU1_W03_L2 (title: 'How do the two circulation routes work? · Year A Science'; topic words did not match any untaught specification point)\n    - SCI_LAUNCH_SU1_W03_L3 (title: 'How do heart structures keep blood moving? · Year A Science'; topic words did not match any untaught specification point)\n    - SCI_LAUNCH_SU1_W04_L1 (title: 'Where do gases exchange in the lungs? · Year A Science'; topic words did not match any untaught specification point)\n    - SCI_LAUNCH_SU1_W04_L2 (title: 'How do exchange surfaces help gases move? · Year A Science'; topic words did not match any untaught specification point)\n    - SCI_LAUNCH_SU1_W04_L3 (title: 'How does ventilation move air? · Year A Science'; topic words did not match any untaught specification point)\n  Non-LAUNCH Science folders in lesson inputs (52 BUILD/GROW pathway lessons, outside exam science group):\n    - SCI_BUILD_A1_W01_P1, SCI_BUILD_A1_W01_P2, SCI_BUILD_A1_W02_P1, SCI_BUILD_A1_W02_P2, SCI_BUILD_A1_W03_P1, SCI_BUILD_A1_W03_P2, SCI_BUILD_A1_W04_P1, SCI_BUILD_A1_W04_P2, SCI_BUILD_A1_W05_P1, SCI_BUILD_A1_W05_P2, SCI_BUILD_A1_W06_P1, SCI_BUILD_A1_W06_P2, SCI_BUILD_A1_W07_P1, SCI_BUILD_A1_W07_P2, SCI_BUILD_A2_W01, SCI_BUILD_A2_W01_L1, SCI_BUILD_A2_W01_P1, SCI_BUILD_A2_W02, SCI_BUILD_A2_W02_L1, SCI_BUILD_A2_W02_L2, SCI_BUILD_A2_W02_P1, SCI_BUILD_A2_W02_P2, SCI_BUILD_A2_W03, SCI_BUILD_A2_W03_L1, SCI_BUILD_A2_W03_L2, SCI_BUILD_A2_W03_P2, SCI_BUILD_A2_W04, SCI_BUILD_A2_W04_L1, SCI_BUILD_A2_W04_L2, SCI_BUILD_A2_W04_P2 ... (+22 more)\n"}</script>
+<script>
+(function() {
+  'use strict';
+  const DATA = JSON.parse(document.getElementById('coverageData').textContent);
+  const KEYS = {
+    key: 'mbm_pupil_key_v1',
+    tally: 'mbm_exit_tally_v1',
+    tracker: 'mbm_catchup_tracker_v1',
+    covAbsences: 'mbm_coverage_absences_v1'
+  };
+  const SLOTS = {
+    1: { day: 'Monday', period: 4, offset: 0 },
+    2: { day: 'Wednesday', period: 2, offset: 2 },
+    3: { day: 'Friday', period: 4, offset: 4 }
+  };
+
+  const $ = id => document.getElementById(id);
+  function el(tag, attrs = {}, text) {
+    const node = document.createElement(tag);
+    Object.entries(attrs).forEach(([k, v]) => {
+      if (v !== undefined && v !== null) node.setAttribute(k, String(v));
+    });
+    if (text !== undefined) node.textContent = text;
+    return node;
+  }
+
+  function showStatus(msg) {
+    const b = $('statusBanner');
+    b.textContent = msg;
+    b.hidden = !msg;
+  }
+
+  function safeReadStorage(key, fallback) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) return fallback;
+      const parsed = JSON.parse(raw);
+      return parsed && typeof parsed === 'object' ? parsed : fallback;
+    } catch (e) {
+      return fallback;
+    }
+  }
+
+  function safeWriteStorage(key, val) {
+    try {
+      localStorage.setItem(key, JSON.stringify(val));
+    } catch (e) {}
+  }
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function formatISO(d) {
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  }
+
+  function autoTodayISO() {
+    const now = new Date();
+    if (isNaN(now.getTime())) return DATA.generatedDate;
+    return formatISO(now);
+  }
+
+  let activeDateISO = autoTodayISO();
+  let activeSpecFilter = 'all';
+  let showAllPupils = false;
+
+  // Merge embedded absences with localStorage exit tally and catch-up tracker
+  let pupilKey = safeReadStorage(KEYS.key, {});
+  let customAbsences = safeReadStorage(KEYS.covAbsences, {});
+
+  function readExtraNames() {
+    const out = [];
+    try {
+      const nRaw = localStorage.getItem('mbm_names_list_v1');
+      if (nRaw) {
+        const arr = JSON.parse(nRaw);
+        if (Array.isArray(arr)) out.push(...arr);
+      }
+    } catch (e) {}
+    try {
+      const cRaw = localStorage.getItem('mbm_class_names_v1');
+      if (cRaw) {
+        let v;
+        try { v = JSON.parse(cRaw); } catch (e) { v = cRaw; }
+        if (typeof v === 'string') out.push(...v.split(/[\r\n]+/));
+        else if (Array.isArray(v)) out.push(...v);
+      }
+    } catch (e) {}
+    return out.map(s => String(s || '').trim()).filter(s => s && !s.startsWith('#'));
+  }
+
+  function escapeRegExp(s) {
+    return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  function redactNote(text) {
+    let out = String(text || '');
+    if (!out) return '';
+    const dict = new Map();
+    Object.entries(pupilKey).forEach(([k, v]) => {
+      const m = String(k).match(/(\d{1,2})/);
+      const lbl = String(v || '').trim();
+      if (m && lbl) dict.set(lbl.toLowerCase(), 'Pupil ' + m[1]);
+    });
+    readExtraNames().forEach(w => {
+      const k = w.toLowerCase();
+      if (k && !dict.has(k)) dict.set(k, '[name]');
+    });
+    const terms = [...dict.keys()].sort((a, b) => b.length - a.length);
+    if (!terms.length) return out;
+    const re = new RegExp('(?<![A-Za-z0-9])(' + terms.map(escapeRegExp).join('|') + ')(?:[\u0027\u2019]s)?(?![A-Za-z0-9])', 'gi');
+    return out.replace(re, (_, matched) => dict.get(matched.toLowerCase()) || '[name]');
+  }
+
+  function pupilScreenName(n) {
+    const lbl = pupilKey[n] || pupilKey['Pupil ' + n];
+    return lbl ? ('Pupil ' + n + ' · ' + String(lbl)) : ('Pupil ' + n);
+  }
+
+  function pupilGroup(n) {
+    for (const [grp, list] of Object.entries(DATA.groups)) {
+      if (list.includes(Number(n))) return grp;
+    }
+    return 'LAUNCH';
+  }
+
+  function collectAbsencesForPupil(n) {
+    const missed = new Map();
+    const embedded = (DATA.absences && DATA.absences[String(n)]) || {};
+    Object.entries(embedded).forEach(([code, info]) => {
+      missed.set(code, {
+        code,
+        note: info.note || '',
+        source: info.source || 'tally_record.csv',
+        status: info.status || 'Absent'
+      });
+    });
+
+    const saved = (customAbsences && customAbsences[String(n)]) || {};
+    Object.entries(saved).forEach(([code, info]) => {
+      if (info && info.cleared) {
+        missed.delete(code);
+      } else if (info) {
+        missed.set(code, {
+          code,
+          note: info.note || '',
+          source: info.source || 'Loaded file / page',
+          status: info.status || 'Absent'
+        });
+      }
+    });
+
+    // Read mbm_exit_tally_v1 from Quick_capture.html
+    const tallies = safeReadStorage(KEYS.tally, {});
+    Object.entries(tallies).forEach(([k, rec]) => {
+      if (!rec || typeof rec !== 'object') return;
+      const parts = k.split('|');
+      if (parts.length === 4 && Number(parts[3]) === Number(n)) {
+        const w = Number(parts[0]);
+        const dName = parts[1];
+        const pNum = Number(parts[2]);
+        const lnum = Object.keys(SLOTS).find(
+          ln => SLOTS[ln].day === dName && SLOTS[ln].period === pNum
+        );
+        if (lnum && w >= 1 && w <= 7) {
+          const code = 'SCI_LAUNCH_A2_W' + pad(w) + '_L' + lnum;
+          if (rec.state === 'absent') {
+            missed.set(code, {
+              code,
+              note: rec.note || '',
+              source: 'Quick capture exit tally',
+              status: 'Absent (exit tally)'
+            });
+          } else if (['got', 'nearly', 'again'].includes(rec.state)) {
+            missed.delete(code);
+          }
+        }
+      }
+    });
+
+    // Read mbm_catchup_tracker_v1 from Catch_up_Tracker.html
+    const tracker = safeReadStorage(KEYS.tracker, {});
+    const marks = (tracker && tracker.marks && typeof tracker.marks === 'object') ? tracker.marks : {};
+    Object.entries(marks).forEach(([k, rec]) => {
+      if (!rec || typeof rec !== 'object') return;
+      const parts = k.split('|');
+      if (parts.length >= 6) {
+        const [wStr, dName, pStr, pathStr, subjStr, pupStr] = parts;
+        if (pathStr === 'LAUNCH' && subjStr === 'Science' && Number(pupStr) === Number(n)) {
+          const lnum = Object.keys(SLOTS).find(
+            ln => SLOTS[ln].day === dName && SLOTS[ln].period === Number(pStr)
+          );
+          if (lnum) {
+            const code = 'SCI_LAUNCH_A2_W' + pad(Number(wStr)) + '_L' + lnum;
+            if ((rec.st === 'missed' || rec.state === 'missed') && rec.cst !== 'done' && !rec.done) {
+              missed.set(code, {
+                code,
+                note: rec.note || '',
+                source: 'Catch-up tracker',
+                status: 'Needs catch-up'
+              });
+            }
+          }
+        }
+      }
+    });
+
+    return missed;
+  }
+
+  function isLessonTaught(code, dateISO) {
+    const lesson = DATA.lessons[code];
+    if (!lesson || !lesson.date) return false;
+    return lesson.date <= dateISO;
+  }
+
+  function evaluateSpecPoints(dateISO) {
+    return DATA.specPoints.map(sp => {
+      let teachCodes = Array.isArray(sp.teach_codes) && sp.teach_codes.length ? [...sp.teach_codes] : [];
+      if (!teachCodes.length && sp.topic_words_matched !== false) {
+        const pref = sp.term === 'Aut1' ? 'A1' : 'A2';
+        (sp.weeks || []).forEach(w => {
+          [1, 2, 3].forEach(lnum => {
+            const c = 'SCI_LAUNCH_' + pref + '_W' + pad(w) + '_L' + lnum;
+            if (DATA.lessons[c]) teachCodes.push(c);
+          });
+        });
+      }
+      let assessCodes = Array.isArray(sp.assess_codes) && sp.assess_codes.length ? [...sp.assess_codes] : [];
+      if (!assessCodes.length) {
+        const pref = sp.term === 'Aut1' ? 'A1' : 'A2';
+        (sp.assess_weeks || []).forEach(aw => {
+          [1, 2, 3].forEach(lnum => {
+            const c = 'SCI_LAUNCH_' + pref + '_W' + pad(aw) + '_L' + lnum;
+            if (DATA.lessons[c]) assessCodes.push(c);
+          });
+        });
+      }
+      const candidateCodes = Array.isArray(sp.candidate_codes) ? sp.candidate_codes : teachCodes;
+      const taughtCodes = teachCodes.filter(c => isLessonTaught(c, dateISO));
+      let status = 'not yet';
+      let csvTaught = 'no (0/' + teachCodes.length + ' taught by ' + dateISO + ')';
+      if (teachCodes.length === 0) {
+        status = 'not yet';
+        if (sp.not_yet_reason === 'file_found_topic_mismatch' && candidateCodes.length) {
+          csvTaught = 'no (file found: ' + candidateCodes.join(', ') + ', but topic words did not match; run ' + dateISO + ')';
+        } else {
+          csvTaught = 'no (no file found; run ' + dateISO + ')';
+        }
+      } else if (taughtCodes.length === teachCodes.length) {
+        status = 'taught';
+        csvTaught = 'yes (' + taughtCodes.length + '/' + teachCodes.length + ' taught by ' + dateISO + ')';
+      } else if (taughtCodes.length > 0) {
+        status = 'partly';
+        csvTaught = 'partly (' + taughtCodes.length + '/' + teachCodes.length + ' taught by ' + dateISO + ')';
+      }
+      return {
+        ...sp,
+        specPointLabel: sp.code + ': ' + sp.title,
+        teachCodes,
+        candidateCodes,
+        assessCodes,
+        taughtCodes,
+        status,
+        csvTaught
+      };
+    });
+  }
+
+  function currentSchoolWeekText(dateISO) {
+    const d = new Date(dateISO + 'T12:00:00');
+    const w1 = new Date(DATA.termWeek1Monday + 'T12:00:00');
+    const diffDays = Math.floor((d - w1) / 86400000);
+    const wk = Math.floor(diffDays / 7) + 1;
+    if (wk < 1) return 'Before Autumn 2 Week 1 (' + dateISO + ')';
+    if (wk > 7) return 'After Autumn 2 Week 7 (' + dateISO + ')';
+    return 'Autumn 2 · Week ' + wk + ' · Date calculated automatically: ' + dateISO;
+  }
+
+  function csvCell(s) {
+    s = String(s ?? '');
+    if (/^[\s]*[=+@-]/.test(s)) s = "'" + s;
+    return '"' + s.replace(/"/g, '""') + '"';
+  }
+
+  function generateCoverageCsvText(dateISO) {
+    const evaluated = evaluateSpecPoints(dateISO);
+    const rows = [['spec point', 'lessons that teach it', 'lesson that assesses it', 'taught yes/no by date run']];
+    evaluated.forEach(r => {
+      rows.push([
+        r.specPointLabel,
+        (r.teachCodes.length ? r.teachCodes : r.candidateCodes).join('; '),
+        r.assessCodes.join('; '),
+        r.csvTaught
+      ]);
+    });
+    return '\uFEFF' + rows.map(r => r.map(csvCell).join(',')).join('\r\n') + '\r\n';
+  }
+
+  function generateGapsText(dateISO) {
+    if (dateISO === DATA.generatedDate && DATA.defaultGapsText) {
+      return DATA.defaultGapsText;
+    }
+    const evaluated = evaluateSpecPoints(dateISO);
+    const notYetRows = evaluated.filter(r => r.status === 'not yet');
+    const lines = [
+      'EXAM SCIENCE GROUP (LAUNCH) COVERAGE GAPS REPORT',
+      'Date calculated automatically: ' + dateISO,
+      '========================================================================',
+      '',
+      '1. SCHEME OF WORK AND SPECIFICATION FILES USED (INPUT 1)',
+      '------------------------------------------------------------------------'
+    ];
+    (DATA.sowFiles || []).forEach(f => lines.push('  - ' + f));
+    lines.push('', '2. DIAGNOSTIC FOR EACH "NOT YET" ROW (NO FILE FOUND VS TOPIC WORDS DID NOT MATCH)', '------------------------------------------------------------------------');
+    if (notYetRows.length) {
+      notYetRows.forEach(r => {
+        if (r.not_yet_reason === 'file_found_topic_mismatch') {
+          lines.push('  - ' + r.specPointLabel + ' [not yet]: a file was found (' + (r.candidateCodes || []).join(', ') + ') but the topic words did not match — naming/title problem, not a missing-file teaching gap.');
+        } else if (r.teachCodes.length === 0) {
+          lines.push('  - ' + r.specPointLabel + ' [not yet]: no file was found for this specification point.');
+        } else {
+          lines.push('  - ' + r.specPointLabel + ' [not yet]: file was found (' + r.teachCodes.join(', ') + ') and topic words matched; scheduled after ' + dateISO + '.');
+        }
+      });
+    } else {
+      lines.push('  - None.');
+    }
+    return lines.join('\r\n') + '\r\n';
+  }
+
+  async function handOffFile(file, targetHint) {
+    if (navigator.share) {
+      let can = true;
+      try { can = !navigator.canShare || navigator.canShare({ files: [file] }); } catch (e) { can = false; }
+      if (can) {
+        try {
+          await navigator.share({ files: [file] });
+          showStatus('Handed off ' + file.name + ' via share sheet (' + targetHint + ').');
+          return true;
+        } catch (e) {
+          if (e && e.name === 'AbortError') {
+            showStatus('Share cancelled.');
+            return false;
+          }
+        }
+      }
+    }
+    const url = URL.createObjectURL(file);
+    const a = el('a', { href: url, download: file.name });
+    document.body.append(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+    showStatus('Downloaded ' + file.name + '. Save in ' + targetHint + '.');
+    return true;
+  }
+
+  async function copyPlainText(text, labelMsg) {
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+        showStatus('Copied ' + labelMsg + ' to clipboard.');
+        return;
+      }
+    } catch (e) {}
+    const ta = el('textarea', { readonly: 'readonly', 'aria-label': labelMsg });
+    ta.value = text;
+    document.body.append(ta);
+    ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    ta.remove();
+    showStatus('Copied ' + labelMsg + ' to clipboard.');
+  }
+
+  function buildPupilCatchupText(n, evaluated) {
+    const missedMap = collectAbsencesForPupil(n);
+    const missedCodes = [...missedMap.keys()].sort();
+    const lines = [
+      'Catch-up list for Pupil ' + n + ' (' + pupilGroup(n) + ' · Exam science coverage map)',
+      'Date calculated: ' + activeDateISO
+    ];
+    if (!missedCodes.length) {
+      lines.push('No exam science (LAUNCH) lessons recorded as missed for Pupil ' + n + '.');
+      return lines.join('\n');
+    }
+    lines.push('Missed lessons (' + missedCodes.length + '):');
+    missedCodes.forEach(code => {
+      const l = DATA.lessons[code] || {};
+      const info = missedMap.get(code) || {};
+      const sheet = 'Catch_up_' + code + '.pdf';
+      const folder = l.wb ? ('Catch-up sheets (Autumn 2)/LAUNCH/' + l.wb + '/') : 'Catch-up sheets (Autumn 2)/LAUNCH/';
+      const safeNote = redactNote(info.note || '');
+      lines.push('- ' + code + (l.date ? ' (' + l.date + ')' : '') + ': ' + (l.title || 'Science lesson') + ' -> Sheet: ' + sheet + ' [' + folder + ']' + (safeNote ? ' · Note: ' + safeNote : ''));
+    });
+    lines.push('Specification points missed through absence:');
+    evaluated.forEach(sp => {
+      const missedForSp = sp.teachCodes.filter(c => missedMap.has(c));
+      const missedAssess = sp.assessCodes.filter(c => missedMap.has(c));
+      if (missedForSp.length || missedAssess.length) {
+        const tag = missedForSp.length === sp.teachCodes.length && sp.teachCodes.length > 0
+          ? 'all teaching lessons missed'
+          : (missedForSp.length > 0 ? (missedForSp.length + '/' + sp.teachCodes.length + ' teaching lessons missed') : 'assessment lesson missed');
+        lines.push('* ' + sp.specPointLabel + ' [' + tag + ': ' + missedForSp.concat(missedAssess).join(', ') + ']');
+      }
+    });
+    return lines.join('\n');
+  }
+
+  function togglePupilLessonAbsence(n, code) {
+    const missed = collectAbsencesForPupil(n);
+    if (!customAbsences[String(n)]) customAbsences[String(n)] = {};
+    if (missed.has(code)) {
+      customAbsences[String(n)][code] = { cleared: true };
+    } else {
+      customAbsences[String(n)][code] = {
+        code,
+        note: '',
+        source: 'Marked on coverage map',
+        status: 'Absent'
+      };
+    }
+    safeWriteStorage(KEYS.covAbsences, customAbsences);
+    renderAll();
+  }
+
+  function renderAll() {
+    $('autoDateBanner').textContent = currentSchoolWeekText(activeDateISO);
+    const evaluated = evaluateSpecPoints(activeDateISO);
+
+    // 1. Summary stats
+    const counts = { taught: 0, partly: 0, 'not yet': 0, gap: 0 };
+    evaluated.forEach(r => {
+      if (r.teachCodes.length === 0) counts.gap++;
+      counts[r.status] = (counts[r.status] || 0) + 1;
+    });
+    const statsBox = $('summaryStats');
+    statsBox.replaceChildren();
+    [
+      ['Taught', counts.taught, 'All lessons taught by date'],
+      ['Partly', counts.partly, 'Some lessons taught by date'],
+      ['Not yet', counts['not yet'], 'Future or untaught points'],
+      ['Scheme gaps', counts.gap, 'Points with no lesson in set']
+    ].forEach(([label, num, desc]) => {
+      const card = el('div', { class: 'stat' });
+      card.append(el('b', {}, String(num)), el('span', {}, label + ' · ' + desc));
+      statsBox.append(card);
+    });
+
+    // 2. Spec list
+    const specBox = $('specList');
+    specBox.replaceChildren();
+    const filtered = evaluated.filter(r => activeSpecFilter === 'all' || r.status === activeSpecFilter);
+    filtered.forEach(r => {
+      const card = el('article', { class: 'card' });
+      const head = el('div', { class: 'spec-head' });
+      head.append(el('h3', {}, r.specPointLabel));
+      const badgeClass = r.teachCodes.length === 0 ? 'gap' : (r.status === 'not yet' ? 'not-yet' : r.status);
+      const badgeText = r.teachCodes.length === 0 ? 'Not yet (no lesson)' : (r.status.charAt(0).toUpperCase() + r.status.slice(1));
+      head.append(el('span', { class: 'badge ' + badgeClass }, badgeText));
+      card.append(head);
+      card.append(el('p', { class: 'hint' }, r.topic + ' · Scheme outcome: ' + r.sow_outcome));
+
+      const teachRow = el('div', {});
+      teachRow.append(el('strong', {}, 'Lessons that teach it: '));
+      if (r.teachCodes.length === 0) {
+        teachRow.append(el('span', { class: 'hint' }, 'None in Autumn 2 lesson set'));
+      } else {
+        const pills = el('div', { class: 'lesson-pills' });
+        r.teachCodes.forEach(c => {
+          const l = DATA.lessons[c] || {};
+          const done = isLessonTaught(c, activeDateISO);
+          pills.append(el('span', { class: 'pill' + (done ? ' done' : '') }, c + (l.date ? ' (' + l.date + (done ? ' · taught' : ' · not yet') + ')' : '')));
+        });
+        teachRow.append(pills);
+      }
+      card.append(teachRow);
+
+      const assessRow = el('p', { class: 'hint', style: 'margin-top:8px' });
+      assessRow.textContent = 'Lesson that assesses it: ' + (r.assessCodes.length ? r.assessCodes.join(', ') : 'None in Autumn 2 set');
+      card.append(assessRow);
+      specBox.append(card);
+    });
+
+    // 3. Pupil cards (Pupil 1 to Pupil 12)
+    const pupilBox = $('pupilList');
+    pupilBox.replaceChildren();
+    const pupilOrder = showAllPupils
+      ? [2, 6, 10, 1, 3, 4, 5, 7, 8, 9, 11, 12]
+      : [2, 6, 10];
+
+    pupilOrder.forEach(n => {
+      const missedMap = collectAbsencesForPupil(n);
+      const missedCodes = [...missedMap.keys()].sort();
+      const card = el('article', { class: 'card pupil-card' + (missedCodes.length ? ' has-missed' : ''), 'data-pupil': 'Pupil ' + n });
+      const head = el('div', { class: 'spec-head' });
+      head.append(
+        el('h3', {}, pupilScreenName(n)),
+        el('span', { class: 'badge ' + (missedCodes.length ? 'partly' : 'taught') },
+           pupilGroup(n) + ' · ' + (missedCodes.length ? (missedCodes.length + ' lesson(s) missed') : 'No missed lessons'))
+      );
+      card.append(head);
+
+      if (!missedCodes.length) {
+        card.append(el('p', { class: 'hint' }, 'No LAUNCH Science absences recorded for Pupil ' + n + '.'));
+      } else {
+        card.append(el('p', {}, 'Missed lessons: ' + missedCodes.join(', ')));
+        const ul = el('ul', { class: 'missed-list' });
+        evaluated.forEach(sp => {
+          const missedTeach = sp.teachCodes.filter(c => missedMap.has(c));
+          const missedAssess = sp.assessCodes.filter(c => missedMap.has(c));
+          if (missedTeach.length || missedAssess.length) {
+            const li = el('li', {});
+            const codesStr = missedTeach.concat(missedAssess).map(c => {
+              const l = DATA.lessons[c] || {};
+              return c + ' (Catch_up_' + c + '.pdf · ' + (l.wb || 'LAUNCH') + ')';
+            }).join('; ');
+            li.append(
+              el('strong', {}, sp.specPointLabel),
+              document.createTextNode(' — missed via ' + codesStr)
+            );
+            ul.append(li);
+          }
+        });
+        card.append(ul);
+      }
+
+      const actions = el('div', { class: 'action-row' });
+      const copyBtn = el('button', { type: 'button', class: 'primary', 'data-copy-pupil': n }, 'Copy catch-up list (Pupil ' + n + ')');
+      copyBtn.onclick = () => copyPlainText(buildPupilCatchupText(n, evaluated), 'catch-up list for Pupil ' + n);
+      const shareBtn = el('button', { type: 'button' }, 'Share / save catch-up file');
+      shareBtn.onclick = () => {
+        const stamp = activeDateISO.replace(/-/g, '');
+        const txt = buildPupilCatchupText(n, evaluated) + '\r\n';
+        const f = new File([txt], 'CATCHUP_MAP_Pupil_' + n + '_' + stamp + '.txt', { type: 'text/plain' });
+        handOffFile(f, '_INBOX or private catch-up folder');
+      };
+      actions.append(copyBtn, shareBtn);
+      card.append(actions);
+
+      const det = el('details', {});
+      det.append(el('summary', {}, 'Mark or clear LAUNCH Science absences for Pupil ' + n));
+      const grid = el('div', { class: 'toggle-grid' });
+      Object.keys(DATA.lessons).sort().forEach(code => {
+        const isAbsent = missedMap.has(code);
+        const b = el('button', { type: 'button', 'aria-pressed': String(isAbsent) }, code.replace('SCI_LAUNCH_A2_', '') + (isAbsent ? ' · Absent' : ''));
+        b.onclick = () => togglePupilLessonAbsence(n, code);
+        grid.append(b);
+      });
+      det.append(grid);
+      card.append(det);
+      pupilBox.append(card);
+    });
+
+    // 4. Gaps panel
+    const gapsBox = $('gapsContent');
+    gapsBox.replaceChildren();
+    const pre = el('pre', { style: 'white-space:pre-wrap;font-size:14px;background:var(--bg);padding:10px;border-radius:8px;border:1px solid var(--line)' }, generateGapsText(activeDateISO));
+    gapsBox.append(pre);
+  }
+
+  // Set up week preset buttons (no hand-typed date inputs)
+  const presetRow = $('weekPresetRow');
+  const autoBtn = el('button', { type: 'button', 'aria-pressed': 'true' }, 'Today (auto: ' + autoTodayISO() + ')');
+  autoBtn.onclick = () => {
+    activeDateISO = autoTodayISO();
+    presetRow.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', 'false'));
+    autoBtn.setAttribute('aria-pressed', 'true');
+    renderAll();
+  };
+  presetRow.append(autoBtn);
+  for (let w = 1; w <= 7; w++) {
+    const fri = new Date(DATA.termWeek1Monday + 'T12:00:00');
+    fri.setDate(fri.getDate() + (w - 1) * 7 + 4);
+    const friISO = formatISO(fri);
+    const b = el('button', { type: 'button', 'aria-pressed': 'false' }, 'End W' + w + ' (' + friISO.slice(5) + ')');
+    b.onclick = () => {
+      activeDateISO = friISO;
+      presetRow.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', 'false'));
+      b.setAttribute('aria-pressed', 'true');
+      renderAll();
+    };
+    presetRow.append(b);
+  }
+
+  // Spec filter buttons
+  $('specFilterRow').querySelectorAll('button').forEach(btn => {
+    btn.onclick = () => {
+      activeSpecFilter = btn.dataset.filter;
+      $('specFilterRow').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === btn)));
+      renderAll();
+    };
+  });
+
+  // Pupil filter buttons
+  $('btnFilterLaunchPupils').onclick = () => {
+    showAllPupils = false;
+    $('btnFilterLaunchPupils').setAttribute('aria-pressed', 'true');
+    $('btnFilterAllPupils').setAttribute('aria-pressed', 'false');
+    renderAll();
+  };
+  $('btnFilterAllPupils').onclick = () => {
+    showAllPupils = true;
+    $('btnFilterLaunchPupils').setAttribute('aria-pressed', 'false');
+    $('btnFilterAllPupils').setAttribute('aria-pressed', 'true');
+    renderAll();
+  };
+
+  // Tabs
+  document.querySelectorAll('[role="tab"]').forEach(tab => {
+    tab.onclick = () => {
+      const target = tab.dataset.tab;
+      document.querySelectorAll('[role="tab"]').forEach(t => t.setAttribute('aria-selected', String(t === tab)));
+      $('panelSpec').hidden = target !== 'spec';
+      $('panelPupils').hidden = target !== 'pupils';
+      $('panelGaps').hidden = target !== 'gaps';
+    };
+  });
+
+  // Exports
+  $('btnExportCsv').onclick = () => {
+    const stamp = activeDateISO.replace(/-/g, '');
+    const f = new File([generateCoverageCsvText(activeDateISO)], 'COVERAGE_MAP_' + stamp + '.csv', { type: 'text/csv' });
+    handOffFile(f, '_OUTBOX / Coverage map');
+  };
+  $('btnExportGaps').onclick = () => {
+    const stamp = activeDateISO.replace(/-/g, '');
+    const f = new File([generateGapsText(activeDateISO)], 'COVERAGE_GAPS_' + stamp + '.txt', { type: 'text/plain' });
+    handOffFile(f, '_OUTBOX / Coverage map');
+  };
+  $('btnCopyGaps').onclick = () => copyPlainText(generateGapsText(activeDateISO), 'gaps report');
+
+  // Parse uploaded tally_record.csv / TALLY_*.csv / tracker CSV or JSON
+  function parseCsvLine(line) {
+    const out = [];
+    let cur = '', inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (inQuotes) {
+        if (ch === '"' && line[i + 1] === '"') { cur += '"'; i++; }
+        else if (ch === '"') inQuotes = false;
+        else cur += ch;
+      } else {
+        if (ch === '"') inQuotes = true;
+        else if (ch === ',') { out.push(cur.trim()); cur = ''; }
+        else cur += ch;
+      }
+    }
+    out.push(cur.trim());
+    return out;
+  }
+
+  $('fileTallyInput').onchange = async e => {
+    const f = e.target.files[0];
+    e.target.value = '';
+    if (!f) return;
+    try {
+      const raw = (await f.text()).replace(/^\uFEFF/, '');
+      let count = 0;
+      if (f.name.toLowerCase().endsWith('.json')) {
+        const data = JSON.parse(raw);
+        const marks = data.marks || data;
+        Object.entries(marks).forEach(([k, v]) => {
+          const parts = k.split('|');
+          if (parts.length >= 6 && parts[3] === 'LAUNCH' && parts[4] === 'Science') {
+            const n = Number(parts[5]);
+            const w = Number(parts[0]);
+            const lnum = Object.keys(SLOTS).find(ln => SLOTS[ln].day === parts[1] && SLOTS[ln].period === Number(parts[2])) || 1;
+            const code = 'SCI_LAUNCH_A2_W' + pad(w) + '_L' + lnum;
+            if ((v.st === 'missed' || v.state === 'missed') && v.cst !== 'done') {
+              if (!customAbsences[String(n)]) customAbsences[String(n)] = {};
+              customAbsences[String(n)][code] = { code, note: v.note || '', source: f.name, status: 'Needs catch-up' };
+              count++;
+            }
+          }
+        });
+      } else {
+        const lines = raw.split(/\r?\n/).filter(x => x.trim());
+        if (lines.length > 1) {
+          const headers = parseCsvLine(lines[0]).map(h => h.toLowerCase());
+          for (let i = 1; i < lines.length; i++) {
+            const cols = parseCsvLine(lines[i]);
+            const row = {};
+            headers.forEach((h, idx) => row[h] = cols[idx] || '');
+            const pupMatch = String(row.pupil || '').match(/(\d{1,2})/);
+            if (!pupMatch) continue;
+            const n = Number(pupMatch[1]);
+            if (n < 1 || n > 12) continue;
+            let code = String(row.code || row.lesson || '').toUpperCase();
+            if (!code.startsWith('SCI_LAUNCH_') && String(row.pathway || '').toUpperCase() === 'LAUNCH' && String(row.subject || '').toLowerCase() === 'science') {
+              const w = Number((String(row.week || '').match(/(\d)/) || [])[1] || 0);
+              const l = Number((String(row.lesson || '').match(/(\d)/) || [])[1] || 0);
+              if (w >= 1 && w <= 7 && l >= 1 && l <= 3) code = 'SCI_LAUNCH_A2_W' + pad(w) + '_L' + l;
+            }
+            if (!code.startsWith('SCI_LAUNCH_')) continue;
+            const st = String(row.state || row.status || '').toLowerCase();
+            if (!customAbsences[String(n)]) customAbsences[String(n)] = {};
+            if (st === 'absent' || st === 'needs catch-up' || st === 'partly done' || st === 'more needed' || st === 'missed') {
+              customAbsences[String(n)][code] = { code, note: row.note || '', source: f.name, status: row.state || row.status || 'Absent' };
+              count++;
+            } else if (['got', 'nearly', 'again', 'done'].includes(st)) {
+              customAbsences[String(n)][code] = { cleared: true };
+            }
+          }
+        }
+      }
+      safeWriteStorage(KEYS.covAbsences, customAbsences);
+      showStatus('Loaded ' + count + ' LAUNCH Science absence record(s) from ' + f.name + '.');
+      renderAll();
+    } catch (err) {
+      showStatus('Could not read file: ' + f.name);
+    }
+  };
+
+  window.addEventListener('storage', () => {
+    pupilKey = safeReadStorage(KEYS.key, {});
+    customAbsences = safeReadStorage(KEYS.covAbsences, {});
+    renderAll();
+  });
+
+  renderAll();
+})();
+</script>
+</body>
+</html>
